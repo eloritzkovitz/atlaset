@@ -1,4 +1,5 @@
 import type { Trip } from "@types";
+import { extractUniqueValues } from "@utils/array";
 import { getYearNumber } from "@utils/date";
 
 /**
@@ -34,10 +35,12 @@ function collectCountryCodes(
  * @returns Array of unique years sorted in ascending order.
  */
 export function getYearsFromTrips(trips: Trip[]) {
-  const allYears = trips
-    .map((trip) => trip.endDate && new Date(trip.endDate).getFullYear())
-    .filter(Boolean) as number[];
-  return Array.from(new Set(allYears)).sort((a, b) => a - b);
+  const allYears = extractUniqueValues(
+    trips,
+    (trip) => (trip.endDate ? new Date(trip.endDate).getFullYear() : undefined),
+    []
+  );
+  return allYears.sort((a, b) => a - b);
 }
 
 /**
