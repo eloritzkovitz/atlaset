@@ -45,7 +45,7 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by first visit ascending", () => {
-    const sorted = sortCountries(countries, "first-visit-asc", mockTrips);    
+    const sorted = sortCountries(countries, "firstVisit-asc", mockTrips);    
     expect(sorted.map((c) => c.isoCode)).toEqual([
       "GP",
       "CA",
@@ -57,19 +57,19 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by first visit descending", () => {
-    const sorted = sortCountries(countries, "first-visit-desc", mockTrips);
+    const sorted = sortCountries(countries, "firstVisit-desc", mockTrips);
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
 
   it("sorts by last visit ascending", () => {
-    const sorted = sortCountries(countries, "last-visit-asc", mockTrips);
+    const sorted = sortCountries(countries, "lastVisit-asc", mockTrips);
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
 
   it("sorts by last visit descending", () => {
-    const sorted = sortCountries(countries, "last-visit-desc", mockTrips);
+    const sorted = sortCountries(countries, "lastVisit-desc", mockTrips);
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });

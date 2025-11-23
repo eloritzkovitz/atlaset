@@ -26,10 +26,10 @@ export function CountrySortSelect({
         <option value="iso-desc">ISO 3166 code (descending)</option>
         {visitedOnly && (
           <>
-            <option value="first-visit-asc">First visit time (ascending)</option>
-            <option value="first-visit-desc">First visit time (descending)</option>
-            <option value="last-visit-asc">Last visit time (ascending)</option>
-            <option value="last-visit-desc">Last visit time (descending)</option>
+            <option value="firstVisit-asc">First visit time (ascending)</option>
+            <option value="firstVisit-desc">First visit time (descending)</option>
+            <option value="lastVisit-asc">Last visit time (ascending)</option>
+            <option value="lastVisit-desc">Last visit time (descending)</option>
           </>
         )}
       </select>
