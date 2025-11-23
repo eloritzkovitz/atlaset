@@ -1,28 +1,8 @@
 /**
- * Utility functions for trip data manipulation.
+ * @file Utility functions for trip data manipulation.
  */
 
 import type { Trip } from "@types";
-
-/**
- * Gets the country names for a given trip based on its country codes.
- * @param trip - The trip object containing country codes.
- * @param countries - An array of country objects with isoCode and name.
- * @returns a string of country names separated by commas.
- */
-export function getCountryNames(
-  trip: Trip,
-  countries: { isoCode: string; name: string }[]
-): string {
-  return trip.countryCodes
-    .map((code) => {
-      const country = countries.find(
-        (c) => c.isoCode?.toLowerCase() === code.toLowerCase()
-      );
-      return country?.name || "";
-    })
-    .join(", ");
-}
 
 /**
  * Gets all country codes that have trips associated with them.

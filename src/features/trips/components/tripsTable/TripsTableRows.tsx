@@ -1,5 +1,5 @@
 import { CardList, Checkbox } from "@components";
-import { CountryWithFlag, createCountryLookup } from "@features/countries";
+import { CountryWithFlag, createCountryMap } from "@features/countries";
 import { type ColumnKey } from "@features/trips/constants/columns";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
 import type { Trip } from "@types";
@@ -36,7 +36,7 @@ export function TripsTableRows({
   const rowSpan = trip.countryCodes?.length || 1;
 
   // Country lookup for fast access
-  const countryLookup = createCountryLookup(countryData.countries);
+  const countryLookup = createCountryMap(countryData.countries, c => c);
 
   return (
     trip.countryCodes && trip.countryCodes.length > 0

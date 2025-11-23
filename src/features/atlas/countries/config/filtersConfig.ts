@@ -1,5 +1,5 @@
 import { SOVEREIGNTY_ORDER } from "@features/countries";
-import type { CountryFilterConfig } from "@features/countries/types/countryFilters";
+import type { CountryFilterConfig } from "@features/countries/types";
 import { mapOptions } from "@features/countries/utils/countryFilters";
 import type { FilterConfig, FilterOption, Overlay, SovereigntyType } from "@types";
 import { createSelectFilter } from "@utils/filter";

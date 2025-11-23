@@ -3,7 +3,7 @@ import type { Country, SovereigntyType } from "@types";
 import {
   getCountryIsoCode,
   getCountryByIsoCode,
-  createCountryLookup,
+  createCountryMap,
   getAllRegions,
   getAllSubregions,
   getSubregionsForRegion,
@@ -60,11 +60,22 @@ describe("countryData utils", () => {
     });
   });
 
-  describe("createCountryLookup", () => {
+  describe("createCountryMap", () => {
+    const countries = mockCountries.filter((c) => c.isoCode === "US");
+    const lookup = createCountryMap(countries, (c) => c);
+    const nameMap = createCountryMap(countries, (c) => c.name);
+
     it("creates a lookup map by isoCode", () => {
-      const countries = [{ isoCode: "US", name: "United States" }];
-      const lookup = createCountryLookup(countries);
       expect(lookup["us"]).toEqual(countries[0]);
+    });
+
+    it("creates a map of isoCode to country name", () => {
+      expect(nameMap["us"]).toBe("United States");
+    });
+
+    it("is case-insensitive for isoCode", () => {
+      expect(lookup["us"]).toEqual(countries[0]);
+      expect(lookup["US"]).toBeUndefined();
     });
   });
 

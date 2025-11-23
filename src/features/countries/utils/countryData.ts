@@ -1,5 +1,5 @@
 /**
- * Utility functions for handling country data.
+ * @file Utility functions for handling country data.
  */
 import { SOVEREIGN_DEPENDENCIES } from "@features/countries/constants/sovereignDependencies";
 import type { Country, SovereigntyType, Overlay } from "@types";
@@ -36,13 +36,17 @@ export function getCountryByIsoCode(
 }
 
 /**
- * Creates a lookup map of countries by their ISO codes.
+ * Creates a map of country ISO codes to values derived from the countries array.
  * @param countries - Array of country objects.
- * @returns A record mapping ISO codes to country objects.
+ * @param valueFn - Function that takes a country and returns the desired value.
+ * @returns A record mapping ISO codes to the values returned by valueFn.
  */
-export function createCountryLookup(countries: any[]): Record<string, any> {
+export function createCountryMap<T>(
+  countries: Country[],
+  valueFn: (c: Country) => T
+): Record<string, T> {
   return Object.fromEntries(
-    countries.map((c) => [c.isoCode?.toLowerCase(), c])
+    countries.map((c) => [c.isoCode.toLowerCase(), valueFn(c)])
   );
 }
 

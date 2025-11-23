@@ -1,5 +1,5 @@
-import { mockTrips } from "@test-utils/mockTrips";
 import { mockCountries } from "@test-utils/mockCountries";
+import { mockTrips } from "@test-utils/mockTrips";
 import { sortTrips } from "./tripSort";
 
 describe("tripSort utils", () => {

@@ -1,26 +1,29 @@
 /**
- * Utilities for sorting trips.
+ * @file Utilities for sorting trips.
  */
 
-import { getCountryNames } from "@features/trips/utils/tripData";
+import { createCountryMap } from "@features/countries";
 import type { TripSortBy } from "@features/trips/types";
-import type { Trip } from "@types";
+import type { Country, Trip } from "@types";
 import { sortItems } from "@utils/sort";
 
 /**
  * Sorts trips based on a given key and order encoded in sortBy (e.g. "name-asc").
  * @param trips - An array of trips to sort.
- * @param countries - An array of country objects with isoCode and name.
+ * @param countries - An array of country objects.
  * @param sortBy - The key and direction to sort by (e.g. "name-asc").
  * @returns - The sorted array of trips.
  */
 export function sortTrips(
   trips: Trip[],
-  countries: { isoCode: string; name: string }[],
+  countries: Country[],
   sortBy: TripSortBy
 ): Trip[] {
   const [key, direction] = sortBy.split("-");
   const asc = direction !== "desc";
+
+  // Create a lookup map for country names by their ISO codes
+  const countryNameMap = createCountryMap(countries, (c) => c.name);
 
   switch (key) {
     case "name":
@@ -28,7 +31,11 @@ export function sortTrips(
     case "countries":
       return sortItems(
         trips,
-        (t) => getCountryNames(t, countries),
+        (t) =>
+          t.countryCodes
+            .map((code) => countryNameMap[code.toLowerCase()] || "")
+            .filter(Boolean)
+            .join(", "),
         asc ? "asc" : "desc"
       );
     case "year":

@@ -10,7 +10,7 @@ export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
 export {
   getCountryIsoCode,
   getCountryByIsoCode,
-  createCountryLookup,
+  createCountryMap,
   getAllRegions,
   getAllSubregions,
   getSubregionsForRegion,
