@@ -6,7 +6,7 @@
  */
 
 import { keyCommands } from "../src/shared/constants/keyCommands.ts";
-import type { KeyCommand } from "../src/shared/types/keyCommand.ts";
+import type { KeyCommand } from "../src/shared/types/keyboard.ts";
 
 /**
  * Generate a Markdown table of keyboard shortcuts from the keyCommands config.

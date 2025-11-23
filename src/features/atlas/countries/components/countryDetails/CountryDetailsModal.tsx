@@ -59,7 +59,7 @@ export function CountryDetailsModal({
       e.preventDefault();
       if (onCenterMap) onCenterMap();
     },
-    ["x"],
+    ["x", "X"],
     isOpen
   );
 

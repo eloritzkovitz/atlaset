@@ -100,31 +100,31 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const closeModal = () => setOpenModal(null);
 
   // Toggle UI visibility with "U"
-  useKeyHandler(toggleUiVisible, ["u"], true);
+  useKeyHandler(toggleUiVisible, ["u", "U"], true);
 
   // Toggle Countries panel with "C"
-  useKeyHandler(toggleCountries, ["c"], true);
+  useKeyHandler(toggleCountries, ["c", "C"], true);
 
   // Toggle Filters panel with "F"
-  useKeyHandler(toggleFilters, ["f"], true);
+  useKeyHandler(toggleFilters, ["f", "F"], true);
 
   // Toggle Markers panel with "M"
-  useKeyHandler(toggleMarkers, ["m"], true);
+  useKeyHandler(toggleMarkers, ["m", "M"], true);
 
   // Toggle Overlays panel with "O"
-  useKeyHandler(toggleOverlays, ["o"], true);
+  useKeyHandler(toggleOverlays, ["o", "O"], true);
 
   // Toggle Legend with "L"
-  useKeyHandler(toggleLegend, ["l"], true);
+  useKeyHandler(toggleLegend, ["l", "L"], true);
 
   // Toggle Timeline panel with "T"
-  useKeyHandler(() => setTimelineMode((prev) => !prev), ["t"], true);
+  useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
 
   // Toggle Export panel with "E"
-  useKeyHandler(toggleExport, ["e"], true);
+  useKeyHandler(toggleExport, ["e", "E"], true);
 
   // Toggle Settings panel with "S"
-  useKeyHandler(toggleSettings, ["s"], true);
+  useKeyHandler(toggleSettings, ["s", "S"], true);
 
   // Open shortcut modal with "?"
   useKeyHandler(toggleShortcuts, ["?"], true);
