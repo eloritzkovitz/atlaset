@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useDebounce } from "@hooks/useDebounce";
 import { getVisitedCountries } from "@features/countries/utils/countryData";
-import { filterCountries, getFilteredIsoCodes } from "@features/countries/utils/countryFilters";
+import {
+  filterCountries,
+  getFilteredIsoCodes,
+} from "@features/countries/utils/countryFilters";
+import { useDebounce } from "@hooks/useDebounce";
 import type { Country, Overlay } from "@types";
 
 type OverlaySelections = Record<string, string>;
@@ -10,12 +13,14 @@ interface UseCountryFiltersProps {
   countries: Country[];
   overlays: Overlay[];
   overlaySelections: OverlaySelections;
+  showVisitedOnly: boolean;
 }
 
 export function useCountryFilters({
   countries,
   overlays,
   overlaySelections,
+  showVisitedOnly,
 }: UseCountryFiltersProps) {
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
@@ -24,7 +29,11 @@ export function useCountryFilters({
   const debouncedSearch = useDebounce(search, 250);
 
   // With overlays applied
-  const filteredIsoCodes = getFilteredIsoCodes(countries, overlays, overlaySelections);
+  const filteredIsoCodes = getFilteredIsoCodes(
+    countries,
+    overlays,
+    overlaySelections
+  );
   const filteredCountries = filterCountries(countries, {
     search: debouncedSearch,
     selectedRegion,
@@ -44,11 +53,16 @@ export function useCountryFilters({
 
   // Counts
   const allCount = filteredCountriesNoOverlay.length;
-  const visitedCountries = getVisitedCountries(filteredCountriesNoOverlay, overlays);
+  const visitedCountries = getVisitedCountries(
+    filteredCountriesNoOverlay,
+    overlays
+  );
   const visitedCount = visitedCountries.length;
 
-  // Visited only state
-  const isVisitedOnly = overlaySelections["visited-countries"] === "only";
+  let finalFilteredCountries = filteredCountries;
+  if (showVisitedOnly) {
+    finalFilteredCountries = getVisitedCountries(filteredCountries, overlays);
+  }
 
   return {
     selectedRegion,
@@ -61,9 +75,8 @@ export function useCountryFilters({
     setSearch,
     debouncedSearch,
     filteredIsoCodes,
-    filteredCountries,
+    filteredCountries: finalFilteredCountries,
     allCount,
     visitedCount,
-    isVisitedOnly,
   };
 }

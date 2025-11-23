@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
@@ -25,6 +25,7 @@ interface CountriesPanelProps {
   selectedIsoCode: string | null;
   hoveredIsoCode: string | null;
   selectedCountry: Country | null;
+  showVisitedOnly: boolean;
   onSelect: (iso: string | null) => void;
   onHover: (iso: string | null) => void;
   onCountryInfo?: (country: Country) => void;
@@ -34,6 +35,7 @@ export function CountriesPanel({
   selectedIsoCode,
   hoveredIsoCode,
   selectedCountry,
+  showVisitedOnly,
   onSelect,
   onHover,
   onCountryInfo,
@@ -65,11 +67,11 @@ export function CountriesPanel({
     filteredCountries,
     allCount,
     visitedCount,
-    isVisitedOnly,
   } = useCountryFilters({
     countries,
     overlays,
     overlaySelections,
+    showVisitedOnly,
   });
 
   // Sort state
@@ -82,6 +84,11 @@ export function CountriesPanel({
     (items, sortBy) => sortCountries(items, sortBy, trips),
     "name-asc"
   );
+
+  // Reset sort when showVisitedOnly changes
+  useEffect(() => {
+    setSortBy("name-asc");
+  }, [showVisitedOnly, setSortBy]);
 
   // Keyboard navigation within country list
   useListNavigation({
@@ -144,7 +151,7 @@ export function CountriesPanel({
             sortBy={sortBy}
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
             count={sortedCountries.length}
-            visitedOnly={isVisitedOnly}
+            visitedOnly={showVisitedOnly}
           />
           <Separator />
           <CountryList
@@ -157,11 +164,11 @@ export function CountriesPanel({
           />
           <Separator />
           <CountriesToolbar
-            onRefresh={refreshData}
-            isVisitedOnly={isVisitedOnly}
-            setOverlaySelections={setOverlaySelections}
+            showVisitedOnly={showVisitedOnly}
             allCount={allCount}
             visitedCount={visitedCount}
+            onRefresh={refreshData}
+            setOverlaySelections={setOverlaySelections}
           />
         </div>
       </Panel>

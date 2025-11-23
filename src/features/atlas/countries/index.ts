@@ -4,3 +4,4 @@ export { CountryDetailsModal } from "./components/countryDetails/CountryDetailsM
 
 // Hooks
 export { useCountrySelection } from "./hooks/useCountrySelection";
+export { useShowVisitedOnly } from "./hooks/useShowVisitedOnly";

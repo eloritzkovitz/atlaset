@@ -20,7 +20,7 @@ interface UIContextType {
   showMarkers: boolean;
   toggleMarkers: () => void;
   showOverlays: boolean;
-  toggleOverlays: () => void;  
+  toggleOverlays: () => void;
   showExport: boolean;
   toggleExport: () => void;
   showSettings: boolean;
@@ -35,7 +35,9 @@ interface UIContextType {
   closeModal: () => void;
   timelineMode: boolean;
   setTimelineMode: (v: boolean | ((prev: boolean) => boolean)) => void;
-}  
+  showVisitedOnly: boolean;
+  setShowVisitedOnly: (v: boolean | ((prev: boolean) => boolean)) => void;
+}
 
 // Type for panel selection
 type PanelSelection =
@@ -54,6 +56,7 @@ const UIContext = createContext<UIContextType | undefined>(undefined);
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
   const [timelineMode, setTimelineMode] = useState(false);
+  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
 
   // State for which panel is open; null means no panel is open
   const [showMenu, setShowMenu] = useState(false);
@@ -142,6 +145,11 @@ export function UIProvider({ children }: { children: ReactNode }) {
     prevOpenPanel.current = openPanel;
   }, [openPanel]);
 
+  // Effect to set showVisitedOnly when timelineMode changes
+  useEffect(() => {
+    setShowVisitedOnly(timelineMode);
+  }, [timelineMode]);
+
   return (
     <UIContext.Provider
       value={{
@@ -171,6 +179,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
         closeModal,
         timelineMode,
         setTimelineMode,
+        showVisitedOnly,
+        setShowVisitedOnly,
       }}
     >
       {children}

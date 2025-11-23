@@ -4,21 +4,21 @@ import { ActionButton, ToolbarToggleGroup } from "@components";
 import type { ToolbarToggleOption } from "@types";
 
 interface CountriesToolbarProps {
+  showVisitedOnly: boolean;
+  allCount: number;
+  visitedCount: number;
   onRefresh?: () => void;
-  isVisitedOnly: boolean;
   setOverlaySelections: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
-  allCount: number;
-  visitedCount: number;
 }
 
 export function CountriesToolbar({
-  onRefresh,
-  isVisitedOnly,
-  setOverlaySelections,
+  showVisitedOnly,
   allCount,
   visitedCount,
+  onRefresh,
+  setOverlaySelections,
 }: CountriesToolbarProps) {
   const visitedOverlayId = "visited-countries";
 
@@ -45,7 +45,7 @@ export function CountriesToolbar({
       icon: <ToolbarIcon icon={<FaList />} count={allCount} />,
       label: "All Countries",
       ariaLabel: `Show all countries (${allCount})`,
-      checked: !isVisitedOnly,
+      checked: !showVisitedOnly,
       onClick: () =>
         setOverlaySelections((prev) => ({
           ...prev,
@@ -57,7 +57,7 @@ export function CountriesToolbar({
       icon: <ToolbarIcon icon={<FaListCheck />} count={visitedCount} />,
       label: "Visited",
       ariaLabel: `Show visited countries (${visitedCount})`,
-      checked: isVisitedOnly,
+      checked: showVisitedOnly,
       onClick: () =>
         setOverlaySelections((prev) => ({
           ...prev,

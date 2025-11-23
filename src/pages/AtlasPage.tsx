@@ -4,7 +4,10 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlayContext";
 import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks/useUiHint";
-import { useCountrySelection } from "@features/atlas/countries";
+import {
+  useCountrySelection,
+  useShowVisitedOnly,
+} from "@features/atlas/countries";
 import {
   WorldMap,
   useGeoData,
@@ -77,6 +80,9 @@ export default function AtlasPage() {
     return <ErrorMessage error={error || geoError || "Unknown error"} />;
   }
 
+  // Determine if only visited countries should be shown
+  const showVisitedOnly = useShowVisitedOnly();
+
   return (
     <>
       {uiHint}
@@ -89,6 +95,7 @@ export default function AtlasPage() {
           setHoveredIsoCode={setHoveredIsoCode}
           selectedCountry={selectedCountry}
           setSelectedCountry={setSelectedCountry}
+          showVisitedOnly={showVisitedOnly}
           centerOnCountry={centerOnCountry}
           centerOnMarker={centerOnMarker}
         />

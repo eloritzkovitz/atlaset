@@ -21,8 +21,9 @@ interface AtlasUiContainerProps {
   setHoveredIsoCode: any;
   selectedCountry: any;
   setSelectedCountry: any;
+  showVisitedOnly: boolean;
   centerOnCountry: any;
-  centerOnMarker: any;
+  centerOnMarker: any;  
 }
 
 export function AtlasUiContainer({
@@ -33,8 +34,9 @@ export function AtlasUiContainer({
   setHoveredIsoCode,
   selectedCountry,
   setSelectedCountry,
+  showVisitedOnly,
   centerOnCountry,
-  centerOnMarker,
+  centerOnMarker,  
 }: AtlasUiContainerProps) {
   // Data state
   const {
@@ -74,9 +76,10 @@ export function AtlasUiContainer({
         selectedIsoCode={selectedIsoCode}
         hoveredIsoCode={hoveredIsoCode}
         selectedCountry={selectedCountry}
+        showVisitedOnly={showVisitedOnly}
         onSelect={setSelectedIsoCode}
         onHover={setHoveredIsoCode}
-        onCountryInfo={setSelectedCountry}
+        onCountryInfo={setSelectedCountry}        
       />
       <MarkersPanel
         onAddMarker={startAddingMarker}
