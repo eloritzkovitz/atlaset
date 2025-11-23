@@ -1,7 +1,7 @@
 import { FaClockRotateLeft, FaMapPin } from "react-icons/fa6";
 import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks/useUiHint";
-import type { VisitColorMode } from "@types";
+import type { OverlayMode } from "@types";
 import { MapCoordinatesDisplay } from "../controls/MapCoordinatesDisplay";
 import { MapLegendModal } from "../legend/MapLegendModal";
 import { useMapLegendItems } from "../legend/useMapLegendItems";
@@ -18,8 +18,8 @@ interface MapUiContainerProps {
   setSelectedYear: (year: number) => void;
   overlays: any[];
   isAddingMarker?: boolean;
-  colorMode: VisitColorMode;
-  setColorMode: React.Dispatch<React.SetStateAction<VisitColorMode>>;
+  overlayMode: OverlayMode;
+  setOverlayMode: React.Dispatch<React.SetStateAction<OverlayMode>>;
 }
 
 export function MapUiContainer({
@@ -32,12 +32,11 @@ export function MapUiContainer({
   setSelectedYear,
   overlays,
   isAddingMarker,
-  colorMode,
-  setColorMode,
+  overlayMode,
+  setOverlayMode,
 }: MapUiContainerProps) {
   const { showLegend, toggleLegend, timelineMode, uiVisible } = useUI();
-  const legendItems = useMapLegendItems(overlays, timelineMode, colorMode);
-
+  const legendItems = useMapLegendItems(overlays, timelineMode, overlayMode);
   // UI hint for adding marker
   const addMarkerHint = useUiHint(
     isAddingMarker ? (
@@ -85,8 +84,8 @@ export function MapUiContainer({
           years={years}
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
-          colorMode={colorMode}
-          setColorMode={setColorMode}
+          overlayMode={overlayMode}
+          setOverlayMode={setOverlayMode}
         />
       )}
       <MapLegendModal

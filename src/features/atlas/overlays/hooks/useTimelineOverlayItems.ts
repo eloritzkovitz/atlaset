@@ -7,7 +7,7 @@ import type { TimelineOverlay, OverlayMode } from "@types";
 export function useTimelineOverlayItems(
   overlays: TimelineOverlay[],
   selectedYear: number,
-  colorMode: OverlayMode
+  overlayMode: OverlayMode
 ) {
   const {
     getVisitedCountriesUpToYear,
@@ -20,7 +20,7 @@ export function useTimelineOverlayItems(
   const newThisYear = getVisitedCountriesForYear(selectedYear);
   const nextUpcomingYearByCountry = getUpcomingCountries();
 
-  const palette = useVisitColorRoles(colorMode);
+  const palette = useVisitColorRoles(overlayMode);
 
   // Collect all country codes from overlays
   const allCountryCodes = Array.from(
@@ -57,7 +57,7 @@ export function useTimelineOverlayItems(
               count,
               isHome,
               MAP_BG_COLOR,
-              colorMode,
+              overlayMode,
               palette,
               isNewThisYear,
               isRevisitThisYear,
@@ -74,7 +74,7 @@ export function useTimelineOverlayItems(
     snapshotCountries,
     newThisYear,
     selectedYear,
-    colorMode,
+    overlayMode,
     homeCountry,
     nextUpcomingYearByCountry,
   ]);

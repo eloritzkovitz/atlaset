@@ -5,23 +5,23 @@ import {
   FaAnglesRight,
 } from "react-icons/fa6";
 import { ActionButton, ToolbarSelectButton } from "@components";
-import type { VisitColorMode } from "@types";
+import type { OverlayMode } from "@types";
 import { useTimelineNavigation } from "./hooks/useTimelineNavigation";
 
 interface TimelineNavigatorProps {
   years: number[];
   selectedYear: number;
   setSelectedYear: (year: number) => void;
-  colorMode: VisitColorMode;
-  setColorMode: (mode: VisitColorMode) => void;
+  overlayMode: OverlayMode;
+  setOverlayMode: (mode: OverlayMode) => void;
 }
 
 export function TimelineNavigator({
   years,
   selectedYear,
   setSelectedYear,
-  colorMode,
-  setColorMode,
+  overlayMode,
+  setOverlayMode,
 }: TimelineNavigatorProps) {
   const {
     currentIndex,
@@ -82,8 +82,8 @@ export function TimelineNavigator({
       />
       <span className="ml-2" />
       <ToolbarSelectButton
-        value={colorMode}
-        onChange={(mode) => setColorMode(mode as VisitColorMode)}
+        value={overlayMode}
+        onChange={(mode) => setOverlayMode(mode as OverlayMode)}
         options={[
           { value: "cumulative", label: "Cumulative visits" },
           { value: "yearly", label: "Yearly visits" },

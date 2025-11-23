@@ -1,14 +1,14 @@
 import { MAP_BG_COLOR } from "@constants/colors";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
-import type { VisitColorMode } from "@types";
+import type { OverlayMode } from "@types";
 
 export function useMapLegendItems(
   overlays: any[],
   timelineMode: boolean,
-  colorMode: VisitColorMode
+  overlayMode: OverlayMode
 ) {
   // Get dynamic color roles for the current mode
-  const colorRoles = useVisitColorRoles(colorMode);
+  const colorRoles = useVisitColorRoles(overlayMode);
 
   // Legend items for static overlays
   const overlayLegendItems = overlays
@@ -40,5 +40,5 @@ export function useMapLegendItems(
   ];
 
   if (!timelineMode) return overlayLegendItems;
-  return colorMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
+  return overlayMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
 }
