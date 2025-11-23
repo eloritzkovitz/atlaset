@@ -8,19 +8,17 @@ export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
 
 // Utils
 export {
-  getRandomCountry,
-  getCountriesWithOwnFlag,
   getCountryIsoCode,
   getCountryByIsoCode,
   createCountryLookup,
-  getLanguagesDisplay,
-  getSovereigntyInfoForTerritory,
-} from "./utils/countryData";
-export {
-  sortCountries,
   getAllRegions,
   getAllSubregions,
   getSubregionsForRegion,
   getAllSovereigntyTypes,
-  mapOptions,
-} from "./utils/countryList";
+  getCountriesWithOwnFlag,
+  getRandomCountry,
+  getLanguagesDisplay,
+  getSovereigntyInfoForTerritory,
+} from "./utils/countryData";
+export { mapOptions } from "./utils/countryFilters";
+export { sortCountries } from "./utils/countrySort";

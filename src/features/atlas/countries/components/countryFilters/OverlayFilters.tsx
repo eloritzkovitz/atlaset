@@ -1,10 +1,10 @@
 import React from "react";
-import { FaLayerGroup } from "react-icons/fa";
+import { FaLayerGroup } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
 import type { Overlay } from "@types";
 import { overlayFilterConfig } from "../../config/filtersConfig";
 
-type OverlayFiltersProps = {
+interface OverlayFiltersProps {
   expanded: boolean;
   onToggle: () => void;
   overlays: Overlay[];
@@ -24,7 +24,7 @@ export function OverlayFilters({
   return (
     <>
       <CollapsibleHeader
-        icon={<FaLayerGroup style={{ marginRight: 6 }} />}
+        icon={<FaLayerGroup />}
         label="Overlay Filters"
         expanded={expanded}
         onToggle={onToggle}

@@ -1,7 +1,7 @@
 import { CountryWithFlag } from "@features/countries";
 import type { Country } from "@types";
 
-type CountryListProps = {
+interface CountryListProps {
   countries: Country[];
   selectedIsoCode: string | null;
   hoveredIsoCode: string | null;

@@ -2,12 +2,12 @@ import React from "react";
 import { FaBrush } from "react-icons/fa6";
 import { CollapsibleHeader, DropdownSelectInput } from "@components";
 import { COLOR_PALETTES } from "@constants/colors";
-import type { OverlayModeKey } from "@types";
+import type { OverlayMode } from "@types";
 import { PaletteDots } from "./PaletteDots";
 import { useOverlayPaletteSettings } from "../../hooks/useOverlayPaletteSettings";
 
 // Overlay modes
-const OVERLAY_MODES: { key: OverlayModeKey; label: string }[] = [
+const OVERLAY_MODES: { key: OverlayMode; label: string }[] = [
   { key: "standard", label: "Standard" },
   { key: "cumulative", label: "Timeline (Cumulative)" },
   { key: "yearly", label: "Timeline (Yearly)" },  

@@ -2,8 +2,17 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Country, Overlay } from "@types";
-import { normalizeString } from "@utils/string";
+import type { Country, FilterOption, Overlay } from "@types";
+import { capitalizeWords, normalizeString } from "@utils/string";
+
+/**
+ * Maps an array of strings to FilterOption objects.
+ * @param options Array of string options
+ * @returns Array of FilterOption objects
+ */
+export function mapOptions(options: string[]): FilterOption[] {
+  return options.map((r) => ({ value: r, label: capitalizeWords(r) }));
+}
 
 /**
  * Filters countries based on search, region, subregion, sovereignty, and overlay criteria.

@@ -62,6 +62,46 @@ export function computeVisitedCountriesFromTrips(
 }
 
 /**
+ * Gets a mapping of country codes to their first visit date.
+ * @param trips - Array of trips to analyze.
+ * @returns Record of country code -> first visit date
+ */
+export function getFirstVisitDateByCountry(
+  trips: Trip[]
+): Record<string, Date> {
+  const map: Record<string, Date> = {};
+  for (const trip of trips) {
+    if (!trip.endDate || !trip.countryCodes) continue;
+    const end = new Date(trip.endDate);
+    for (const code of trip.countryCodes) {
+      if (!map[code] || end < map[code]) {
+        map[code] = end;
+      }
+    }
+  }
+  return map;
+}
+
+/**
+ * Gets a mapping of country codes to their last visit date.
+ * @param trips - Array of trips to analyze.
+ * @returns Record of country code -> last visit date
+ */
+export function getLastVisitDateByCountry(trips: Trip[]): Record<string, Date> {
+  const map: Record<string, Date> = {};
+  for (const trip of trips) {
+    if (!trip.endDate || !trip.countryCodes) continue;
+    const end = new Date(trip.endDate);
+    for (const code of trip.countryCodes) {
+      if (!map[code] || end > map[code]) {
+        map[code] = end;
+      }
+    }
+  }
+  return map;
+}
+
+/**
  * Gets all visited country codes for a specific year, including home country if provided.
  * @param trips - Array of trips to analyze.
  * @param year - The year for which to get visited countries.

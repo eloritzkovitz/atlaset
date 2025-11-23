@@ -12,14 +12,13 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,
-} from "@features/countries/utils/countryList";
+} from "@features/countries/utils/countryData";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { Overlay } from "@types";
 import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
-import { coreFiltersConfig } from "../../config/filtersConfig";
 
-type CountryFiltersPanelProps = {
+interface CountryFiltersPanelProps {
   show: boolean;
   allRegions: string[];
   allSubregions: string[];
@@ -138,7 +137,6 @@ export function CountryFiltersPanel({
       <CoreFilters
         expanded={showCoreFilters}
         onToggle={() => setShowCoreFilters((v) => !v)}
-        coreFiltersConfig={coreFiltersConfig}
         selectedRegion={selectedRegion}
         handleRegionChange={handleRegionChange}
         selectedSubregion={selectedSubregion}

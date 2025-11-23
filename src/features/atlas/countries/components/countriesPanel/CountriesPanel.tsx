@@ -9,9 +9,10 @@ import {
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlayContext";
+import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
 import { useCountryFilters } from "@features/atlas/countries/hooks/useCountryFilters";
-import { sortCountries } from "@features/countries/utils/countryList";
+import { sortCountries } from "@features/countries/utils/countrySort";
 import { useListNavigation } from "@hooks/useListNavigation";
 import { useSort } from "@hooks/useSort";
 import type { Country } from "@types";
@@ -41,6 +42,7 @@ export function CountriesPanel({
   const { countries, allRegions, allSubregions, loading, error, refreshData } =
     useCountryData();
   const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
+  const { trips } = useTrips();
 
   const {
     uiVisible,
@@ -75,7 +77,11 @@ export function CountriesPanel({
     sortBy,
     setSortBy,
     sortedItems: sortedCountries,
-  } = useSort(filteredCountries, sortCountries, "name-asc");
+  } = useSort(
+    filteredCountries,
+    (items, sortBy) => sortCountries(items, sortBy, trips),
+    "name-asc"
+  );
 
   // Keyboard navigation within country list
   useListNavigation({
@@ -138,6 +144,7 @@ export function CountriesPanel({
             sortBy={sortBy}
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
             count={sortedCountries.length}
+            visitedOnly={isVisitedOnly}
           />
           <Separator />
           <CountryList

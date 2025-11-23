@@ -1,11 +1,10 @@
-import { FaShapes } from "react-icons/fa";
+import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import type { FilterConfig } from "@types";
+import { coreFiltersConfig } from "../../config/filtersConfig";
 
-type CoreFiltersProps = {
+interface CoreFiltersProps {
   expanded: boolean;
   onToggle: () => void;
-  coreFiltersConfig: FilterConfig[];
   selectedRegion: string;
   handleRegionChange: (region: string) => void;
   selectedSubregion: string;
@@ -20,7 +19,6 @@ type CoreFiltersProps = {
 export function CoreFilters({
   expanded,
   onToggle,
-  coreFiltersConfig,
   selectedRegion,
   handleRegionChange,
   selectedSubregion,
@@ -34,7 +32,7 @@ export function CoreFilters({
   return (
     <>
       <CollapsibleHeader
-        icon={<FaShapes style={{ marginRight: 6 }} />}
+        icon={<FaShapes />}
         label="Core Filters"
         expanded={expanded}
         onToggle={onToggle}

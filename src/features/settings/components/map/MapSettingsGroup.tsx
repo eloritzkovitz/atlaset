@@ -18,7 +18,7 @@ export function MapSettingsGroup() {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaMap style={{ marginRight: 6 }} />}
+        icon={<FaMap />}
         label="Map"
         expanded={showMapSettings}
         onToggle={() => setShowMapSettings((v) => !v)}

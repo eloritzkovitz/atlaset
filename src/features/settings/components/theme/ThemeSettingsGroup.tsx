@@ -11,7 +11,7 @@ export function ThemeSettingsGroup() {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaPalette className="mr-1.5" />}
+        icon={<FaPalette />}
         label="Theme"
         expanded={showThemeSettings}
         onToggle={() => setShowThemeSettings((v) => !v)}

@@ -1,9 +1,9 @@
 import { SOVEREIGNTY_ORDER } from "@features/countries";
-import { mapOptions } from "@features/countries/utils/countryList";
+import type { CountryFilterConfig } from "@features/countries/types/countryFilters";
+import { mapOptions } from "@features/countries/utils/countryFilters";
 import type { FilterConfig, FilterOption, Overlay, SovereigntyType } from "@types";
 import { createSelectFilter } from "@utils/filter";
 import { capitalize } from "@utils/string";
-import type { CountryFilterConfig } from "../../countries/types/countryFilters";
 
 // "All" option constant
 const allOption: FilterOption = { value: "", label: "All" };

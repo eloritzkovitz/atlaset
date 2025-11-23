@@ -1,5 +1,6 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import {
+  mapOptions,
   filterCountries,
   filterCountriesBySearch,
   getFilteredIsoCodes,
@@ -7,6 +8,13 @@ import {
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;
+
+  it("mapOptions maps strings to FilterOption objects", () => {
+    expect(mapOptions(["foo", "bar"])).toEqual([
+      { value: "foo", label: "Foo" },
+      { value: "bar", label: "Bar" },
+    ]);
+  });
 
   describe("filterCountriesBySearch", () => {
     it("returns all countries if search is empty", () => {
@@ -81,5 +89,5 @@ describe("countryFilters utils", () => {
         getFilteredIsoCodes(countries, overlays as any, { o2: "exclude" })
       ).toEqual(["FR", "DE"]);
     });
-  });  
+  });
 });
