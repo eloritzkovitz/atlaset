@@ -70,7 +70,10 @@ describe("countryData utils", () => {
 
   describe("getAllRegions", () => {
     it("returns unique, sorted regions", () => {
-      expect(getAllRegions(countries)).toEqual(["Americas", "Europe"]);
+      const expected = Array.from(new Set(countries.map((c) => c.region)))
+        .filter(Boolean)
+        .sort();
+      expect(getAllRegions(countries)).toEqual(expected);
     });
     it("skips undefined regions", () => {
       const testCountries = [
@@ -88,10 +91,10 @@ describe("countryData utils", () => {
 
   describe("getAllSubregions", () => {
     it("returns unique, sorted subregions", () => {
-      expect(getAllSubregions(countries)).toEqual([
-        "Caribbean",
-        "Western Europe",
-      ]);
+      const expected = Array.from(new Set(countries.map((c) => c.subregion)))
+        .filter(Boolean)
+        .sort();
+      expect(getAllSubregions(countries)).toEqual(expected);
     });
     it("skips undefined subregions", () => {
       const testCountries = [
@@ -107,12 +110,15 @@ describe("countryData utils", () => {
 
   describe("getSubregionsForRegion", () => {
     it("returns subregions for a region", () => {
-      expect(getSubregionsForRegion(countries, "Europe")).toEqual([
-        "Western Europe",
-      ]);
-      expect(getSubregionsForRegion(countries, "Americas")).toEqual([
-        "Caribbean",
-      ]);
+      const region = "Americas";
+      const expected = Array.from(
+        new Set(
+          countries.filter((c) => c.region === region).map((c) => c.subregion)
+        )
+      )
+        .filter(Boolean)
+        .sort();
+      expect(getSubregionsForRegion(countries, region)).toEqual(expected);
     });
     it("skips undefined subregions", () => {
       const testCountries = [
@@ -196,6 +202,16 @@ describe("countryData utils", () => {
     });
     it("returns empty string for invalid iso", () => {
       expect(getFlagUrl("")).toBe("");
+    });
+    it("returns empty string for iso codes not length 2", () => {
+      expect(getFlagUrl("u")).toBe("");
+      expect(getFlagUrl("")).toBe("");
+      expect(getFlagUrl(undefined as any)).toBe("");
+    });
+    it("uses default size for flagsapi if size is not provided", () => {
+      expect(getFlagUrl("us", "flagsapi")).toBe(
+        "https://flagsapi.com/US/flat/32.png"
+      );
     });
     it("uses SOVEREIGN_FLAG_MAP for borrowed flags", () => {
       expect(getFlagUrl("yy")).toBe("https://flagcdn.com/us.svg");

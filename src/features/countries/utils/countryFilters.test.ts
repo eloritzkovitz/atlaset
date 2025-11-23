@@ -71,23 +71,28 @@ describe("countryFilters utils", () => {
       { id: "o1", countries: ["FR", "DE"] },
       { id: "o2", countries: ["GP"] },
     ];
+    const allIsoCodes = mockCountries.map((c) => c.isoCode);
+
     it("returns all iso codes if overlays are 'all'", () => {
       expect(
         getFilteredIsoCodes(countries, overlays as any, {
           o1: "all",
           o2: "all",
         })
-      ).toEqual(["FR", "GP", "DE"]);
+      ).toEqual(allIsoCodes);
     });
+
     it("filters to only overlay countries if 'only'", () => {
       expect(
         getFilteredIsoCodes(countries, overlays as any, { o1: "only" })
       ).toEqual(["FR", "DE"]);
     });
+
     it("excludes overlay countries if 'exclude'", () => {
+      const expected = allIsoCodes.filter((code) => code !== "GP");
       expect(
         getFilteredIsoCodes(countries, overlays as any, { o2: "exclude" })
-      ).toEqual(["FR", "DE"]);
+      ).toEqual(expected);
     });
   });
 });

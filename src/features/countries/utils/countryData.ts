@@ -140,11 +140,13 @@ export function getFlagUrl(
   const normalizedIso = isoCode.toUpperCase();
 
   // Handle sovereign state flags for territories
-  const flagIso = SOVEREIGN_FLAG_MAP[normalizedIso] || normalizedIso;
+  const flagIso = SOVEREIGN_FLAG_MAP[normalizedIso] || normalizedIso;  
+
+  // Validate ISO code length
+  if (!flagIso || flagIso.length !== 2) return "";
 
   switch (source) {
     case "flagsapi":
-      if (!flagIso || flagIso.length !== 2) return "";
       // Use default size if not provided
       const flagsApiSize = size ? size.split("x")[0] : "32";
       // FlagsAPI: https://flagsapi.com/:country_code/:style/:size.png
