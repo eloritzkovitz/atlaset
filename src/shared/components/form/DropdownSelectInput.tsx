@@ -2,19 +2,20 @@ import { useState, useRef } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import ReactDOM from "react-dom";
 import { useClickOutside } from "@hooks/useClickOutside";
-import type { Option } from "@types";
+import type { DropdownOption } from "@types";
+import { flattenOptions } from "@utils/dropdown";
 import { OptionItem } from "./OptionItem";
 import { SelectedOptions } from "./SelectedOptions";
 
 interface DropdownSelectInputProps<T = string> {
   value: T | T[];
   onChange: (value: T | T[]) => void;
-  options: Option<T>[];
+  options: DropdownOption<T>[];
   placeholder?: string;
   className?: string;
   isMulti?: boolean;
   renderOption?: (opt: any) => React.ReactNode;
-};
+}
 
 export function DropdownSelectInput<T = string>({
   value,
@@ -71,8 +72,9 @@ export function DropdownSelectInput<T = string>({
             options={options}
             onRemove={(val) => onChange(value.filter((v) => v !== val))}
           />
-        ) : !isMulti && options.find((opt) => opt.value === value) ? (
-          options.find((opt) => opt.value === value)?.label
+        ) : !isMulti &&
+          flattenOptions(options).find((opt) => opt.value === value) ? (
+          flattenOptions(options).find((opt) => opt.value === value)?.label
         ) : (
           <span className="text-gray-400">{placeholder}</span>
         )}
@@ -94,18 +96,38 @@ export function DropdownSelectInput<T = string>({
               position: "absolute",
             }}
           >
-            {options.map((opt) => (
-              <OptionItem
-                key={String(opt.value)}
-                opt={opt}
-                isSelected={isSelected}
-                isMulti={isMulti}
-                value={value}
-                onChange={onChange}
-                setOpen={setOpen}
-                renderOption={renderOption}
-              />
-            ))}
+            {options.map((optOrGroup) =>
+              "options" in optOrGroup ? (
+                <div key={optOrGroup.label}>
+                  <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">
+                    {optOrGroup.label}
+                  </div>
+                  {optOrGroup.options.map((opt) => (
+                    <OptionItem
+                      key={String(opt.value)}
+                      opt={opt}
+                      isSelected={isSelected}
+                      isMulti={isMulti}
+                      value={value}
+                      onChange={onChange}
+                      setOpen={setOpen}
+                      renderOption={renderOption}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <OptionItem
+                  key={String(optOrGroup.value)}
+                  opt={optOrGroup}
+                  isSelected={isSelected}
+                  isMulti={isMulti}
+                  value={value}
+                  onChange={onChange}
+                  setOpen={setOpen}
+                  renderOption={renderOption}
+                />
+              )
+            )}
           </div>,
           document.body
         )}

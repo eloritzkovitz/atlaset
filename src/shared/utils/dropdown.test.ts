@@ -1,4 +1,4 @@
-import { toDropdownOptions } from "./dropdown";
+import { toDropdownOptions, flattenOptions } from "./dropdown";
 
 describe("toDropdownOptions", () => {
   it("converts string array to dropdown options with default labelFn", () => {
@@ -41,5 +41,32 @@ describe("toDropdownOptions", () => {
       { value: "us", label: "United States" },
       { value: "ca", label: "Canada" },
     ]);
+  });
+});
+
+describe("flattenOptions", () => {
+  it("flattens an array of options and option groups", () => {
+    const options = [
+      { value: "a", label: "A" },
+      {
+        label: "Group 1",
+        options: [
+          { value: "b", label: "B" },
+          { value: "c", label: "C" },
+        ],
+      },
+      { value: "d", label: "D" },
+    ];
+    const flattened = flattenOptions(options);
+    expect(flattened).toEqual([
+      { value: "a", label: "A" },
+      { value: "b", label: "B" },
+      { value: "c", label: "C" },
+      { value: "d", label: "D" },
+    ]);
+  });
+
+  it("returns empty array for empty input", () => {
+    expect(flattenOptions([])).toEqual([]);
   });
 });

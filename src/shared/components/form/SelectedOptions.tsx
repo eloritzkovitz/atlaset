@@ -1,9 +1,10 @@
 import { FaXmark } from "react-icons/fa6";
-import type { Option } from "@types";
+import type { DropdownOption } from "@types";
+import { flattenOptions } from "@utils/dropdown";
 
 interface SelectedOptionsProps<T> {
   value: T[];
-  options: Option<T>[];
+  options: DropdownOption<T>[];
   onRemove: (val: T) => void;
 }
 
@@ -12,9 +13,11 @@ export function SelectedOptions<T>({
   options,
   onRemove,
 }: SelectedOptionsProps<T>) {
+  const flatOptions = flattenOptions(options);
+
   return (
     <span className="flex flex-wrap gap-1 h-8">
-      {options
+      {flatOptions
         .filter((opt) => value.includes(opt.value))
         .map((opt, i) => (
           <span key={i} className="selected-option">

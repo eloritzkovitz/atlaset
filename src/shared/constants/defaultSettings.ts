@@ -6,8 +6,8 @@ export const defaultSettings: Settings = {
   colorHomeCountry: false,
   theme: "light",
   overlayPalettes: {
-    standard: "Classic",
-    yearly: "Classic",
-    cumulative: "Classic",
+    standard: "Default",
+    yearly: "Default",
+    cumulative: "Default",
   },
 };
