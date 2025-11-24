@@ -1,9 +1,14 @@
 import { SOVEREIGNTY_ORDER } from "@features/countries";
 import type { CountryFilterConfig } from "@features/countries/types";
-import { mapOptions } from "@features/countries/utils/countryFilters";
-import type { FilterConfig, FilterOption, Overlay, SovereigntyType } from "@types";
+import type {
+  FilterConfig,
+  FilterOption,
+  Overlay,
+  SovereigntyType,
+} from "@types";
+import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
-import { capitalize } from "@utils/string";
+import { capitalize, capitalizeWords } from "@utils/string";
 
 // "All" option constant
 const allOption: FilterOption = { value: "", label: "All" };
@@ -13,14 +18,20 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
   createSelectFilter(
     "region",
     "Region",
-    (allRegions) => [allOption, ...mapOptions(allRegions ?? [])],
+    (allRegions) => [
+      allOption,
+      ...mapOptions(allRegions ?? [], capitalizeWords),
+    ],
     (props) => props.selectedRegion,
     (props, val) => props.setSelectedRegion(val)
   ),
   createSelectFilter(
     "subregion",
     "Subregion",
-    (subregionOptions) => [allOption, ...mapOptions(subregionOptions ?? [])],
+    (subregionOptions) => [
+      allOption,
+      ...mapOptions(subregionOptions ?? [], capitalizeWords),
+    ],
     (props) => props.selectedSubregion,
     (props, val) => props.setSelectedSubregion(val)
   ),
@@ -29,12 +40,12 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
     "Sovereignty",
     (options) => [
       allOption,
-      ...SOVEREIGNTY_ORDER.filter((type) =>
-        (options as SovereigntyType[] | undefined)?.includes(type)
-      ).map((type) => ({
-        value: type,
-        label: capitalize(type),
-      })),
+      ...mapOptions(
+        SOVEREIGNTY_ORDER.filter((type) =>
+          (options as SovereigntyType[] | undefined)?.includes(type)
+        ),
+        capitalize
+      ),
     ],
     (props) => props.selectedSovereignty,
     (props, val) => props.setSelectedSovereignty(val)
@@ -44,8 +55,7 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
 // Overlay filter configuration object
 export const overlayFilterConfig: FilterConfig = {
   key: "overlay",
-  label: (overlay: Overlay) =>
-    `${overlay.name} (${overlay.countries.length})`,
+  label: (overlay: Overlay) => `${overlay.name} (${overlay.countries.length})`,
   type: "select",
   getOptions: () => [
     { value: "all", label: "All" },

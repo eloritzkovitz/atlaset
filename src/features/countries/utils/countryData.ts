@@ -3,7 +3,11 @@
  */
 import { SOVEREIGN_DEPENDENCIES } from "@features/countries/constants/sovereignDependencies";
 import type { Country, SovereigntyType, Overlay } from "@types";
-import { EXCLUDED_ISO_CODES, SOVEREIGN_FLAG_MAP } from "../constants/sovereignty";
+import { extractUniqueSorted } from "@utils/array";
+import {
+  EXCLUDED_ISO_CODES,
+  SOVEREIGN_FLAG_MAP,
+} from "../constants/sovereignty";
 import type { FlagSource, FlagStyle, FlagSize } from "../types/flag";
 
 /**
@@ -56,9 +60,7 @@ export function createCountryMap<T>(
  * @returns Sorted array of unique region strings.
  */
 export function getAllRegions(countries: { region?: string }[]) {
-  return Array.from(
-    new Set(countries.map((c) => c.region).filter((r): r is string => !!r))
-  ).sort((a, b) => a.localeCompare(b));
+  return extractUniqueSorted(countries, (c) => c.region);
 }
 
 /**
@@ -67,9 +69,7 @@ export function getAllRegions(countries: { region?: string }[]) {
  * @returns Sorted array of unique subregion strings.
  */
 export function getAllSubregions(countries: { subregion?: string }[]) {
-  return Array.from(
-    new Set(countries.map((c) => c.subregion).filter((r): r is string => !!r))
-  ).sort((a, b) => a.localeCompare(b));
+  return extractUniqueSorted(countries, (c) => c.subregion);
 }
 
 /**
@@ -82,14 +82,10 @@ export function getSubregionsForRegion(
   countries: { region?: string; subregion?: string }[],
   selectedRegion: string
 ) {
-  return Array.from(
-    new Set(
-      countries
-        .filter((c) => c.region === selectedRegion)
-        .map((c) => c.subregion)
-        .filter((r): r is string => !!r)
-    )
-  ).sort((a, b) => a.localeCompare(b));
+  return extractUniqueSorted(
+    countries.filter((c) => c.region === selectedRegion),
+    (c) => c.subregion
+  );
 }
 
 /**
@@ -100,13 +96,10 @@ export function getSubregionsForRegion(
 export function getAllSovereigntyTypes(
   countries: { sovereigntyType?: SovereigntyType }[]
 ): SovereigntyType[] {
-  return Array.from(
-    new Set(
-      countries
-        .map((c) => c.sovereigntyType)
-        .filter((t): t is SovereigntyType => !!t)
-    )
-  ).sort((a, b) => a.localeCompare(b));
+  return extractUniqueSorted(
+    countries,
+    (c) => c.sovereigntyType as SovereigntyType | undefined
+  );
 }
 
 /**
@@ -144,7 +137,7 @@ export function getFlagUrl(
   const normalizedIso = isoCode.toUpperCase();
 
   // Handle sovereign state flags for territories
-  const flagIso = SOVEREIGN_FLAG_MAP[normalizedIso] || normalizedIso;  
+  const flagIso = SOVEREIGN_FLAG_MAP[normalizedIso] || normalizedIso;
 
   // Validate ISO code length
   if (!flagIso || flagIso.length !== 2) return "";

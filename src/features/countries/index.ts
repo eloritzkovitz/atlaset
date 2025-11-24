@@ -20,5 +20,4 @@ export {
   getLanguagesDisplay,
   getSovereigntyInfoForTerritory,
 } from "./utils/countryData";
-export { mapOptions } from "./utils/countryFilters";
 export { sortCountries } from "./utils/countrySort";

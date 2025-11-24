@@ -1,4 +1,4 @@
-import { createSelectFilter } from "./filter";
+import { createSelectFilter, filterBySearch } from "./filter";
 import type { FilterOption } from "@types";
 
 describe("createSelectFilter", () => {
@@ -52,5 +52,37 @@ describe("createSelectFilter", () => {
     // Type assertions
     const key: MyKey = filter.key;
     expect(key).toBe("foo");
+  });
+});
+
+describe("filterBySearch", () => {
+  it("returns all items if search is empty", () => {
+    const items = [{ name: "Alpha" }, { name: "Beta" }];
+    expect(filterBySearch(items, "", (i) => i.name)).toEqual(items);
+  });
+
+  it("filters items by case-insensitive, accent-insensitive match", () => {
+    const items = [{ name: "Café" }, { name: "Cafe" }, { name: "Bar" }];
+    expect(filterBySearch(items, "cafe", (i) => i.name)).toEqual([
+      { name: "Café" },
+      { name: "Cafe" },
+    ]);
+  });
+
+  it("returns only items that include the search string", () => {
+    const items = [{ name: "Alpha" }, { name: "Beta" }, { name: "Gamma" }];
+    expect(filterBySearch(items, "Al", (i) => i.name)).toEqual([
+      { name: "Alpha" },
+    ]);
+  });
+
+  it("returns an empty array if no items match", () => {
+    const items = [{ name: "Alpha" }, { name: "Beta" }];
+    expect(filterBySearch(items, "Zeta", (i) => i.name)).toEqual([]);
+  });
+
+  it("works with fields other than 'name'", () => {
+    const items = [{ code: "US" }, { code: "CA" }, { code: "MX" }];
+    expect(filterBySearch(items, "C", (i) => i.code)).toEqual([{ code: "CA" }]);
   });
 });

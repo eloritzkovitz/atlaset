@@ -2,17 +2,8 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Country, FilterOption, Overlay } from "@types";
-import { capitalizeWords, normalizeString } from "@utils/string";
-
-/**
- * Maps an array of strings to FilterOption objects.
- * @param options Array of string options
- * @returns Array of FilterOption objects
- */
-export function mapOptions(options: string[]): FilterOption[] {
-  return options.map((r) => ({ value: r, label: capitalizeWords(r) }));
-}
+import type { Country, Overlay } from "@types";
+import { filterBySearch } from "@utils/filter";
 
 /**
  * Filters countries based on search, region, subregion, sovereignty, and overlay criteria.
@@ -41,7 +32,7 @@ export function filterCountries(
   }
 ) {
   // Filter by search first
-  let filtered = filterCountriesBySearch(countries, search ?? "");
+  let filtered = filterBySearch(countries, search ?? "", (country) => country.name);
 
   // Apply other filters
   return filtered.filter((country) => {
@@ -54,20 +45,6 @@ export function filterCountries(
       return false;
     return true;
   });
-}
-
-/**
- * Filters a list of countries by search string (accent-insensitive).
- * @param countries - The list of countries to filter.
- * @param search - The search string to filter by.
- * @returns The filtered list of countries.
- */
-export function filterCountriesBySearch(countries: Country[], search: string) {
-  if (!search) return countries;
-  const normalizedSearch = normalizeString(search);
-  return countries.filter((country) =>
-    normalizeString(country.name).includes(normalizedSearch)
-  );
 }
 
 /**

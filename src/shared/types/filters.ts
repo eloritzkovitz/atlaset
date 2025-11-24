@@ -1,13 +1,9 @@
-// Filter key type
+import type { Option } from "./option";
+
 export type FilterKey = string;
 
-// Filter option type
-export type FilterOption = {
-  label: string;
-  value: string | number;
-};
+export type FilterOption = Option<string | number, string>;
 
-// Filter config type
 export type FilterConfig<T = string, P = any, K extends FilterKey = string> = {
   key: K;
   label: string | ((param: P) => string);

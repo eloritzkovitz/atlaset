@@ -1,39 +1,12 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import {
-  mapOptions,
   filterCountries,
-  filterCountriesBySearch,
   getFilteredIsoCodes,
 } from "./countryFilters";
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;
-
-  it("mapOptions maps strings to FilterOption objects", () => {
-    expect(mapOptions(["foo", "bar"])).toEqual([
-      { value: "foo", label: "Foo" },
-      { value: "bar", label: "Bar" },
-    ]);
-  });
-
-  describe("filterCountriesBySearch", () => {
-    it("returns all countries if search is empty", () => {
-      expect(filterCountriesBySearch(countries, "")).toEqual(countries);
-    });
-    it("filters by name (case-insensitive, accent-insensitive)", () => {
-      expect(filterCountriesBySearch(countries, "france")).toEqual([
-        countries[0],
-      ]);
-      expect(filterCountriesBySearch(countries, "germany")).toEqual([
-        countries[2],
-      ]);
-      expect(filterCountriesBySearch(countries, "gua")).toEqual([countries[1]]);
-    });
-    it("returns empty array if no match", () => {
-      expect(filterCountriesBySearch(countries, "xyz")).toEqual([]);
-    });
-  });
-
+  
   describe("filterCountries", () => {
     it("filters by region", () => {
       expect(filterCountries(countries, { selectedRegion: "Europe" })).toEqual([
