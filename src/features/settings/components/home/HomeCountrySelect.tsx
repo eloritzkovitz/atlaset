@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaHome, FaChevronDown } from "react-icons/fa";
+import { FaHouse, FaChevronDown } from "react-icons/fa6";
 import { Checkbox, CollapsibleHeader } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, CountryWithFlag } from "@features/countries";
@@ -13,13 +13,12 @@ export function HomeCountrySelect() {
   const [expanded, setExpanded] = useState(true);
 
   // Find the currently selected country object
-
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
 
   return (
     <div className="settings-group">
       <CollapsibleHeader
-        icon={<FaHome />}
+        icon={<FaHouse />}
         label="Home Country"
         expanded={expanded}
         onToggle={() => setExpanded((prev) => !prev)}
