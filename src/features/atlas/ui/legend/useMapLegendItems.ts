@@ -21,7 +21,8 @@ export function useMapLegendItems(
   // Cumulative mode legend items (dynamic)
   const cumulativeLegendItems = [
     { color: colorRoles.home, label: "Home country" },
-    { color: colorRoles.visitCounts[3], label: "4+ visits" },
+    { color: colorRoles.visitCounts[4], label: "5+ visits" },
+    { color: colorRoles.visitCounts[3], label: "4 visits" },
     { color: colorRoles.visitCounts[2], label: "3 visits" },
     { color: colorRoles.visitCounts[1], label: "2 visits" },
     { color: colorRoles.visitCounts[0], label: "1 visit" },

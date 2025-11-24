@@ -4,7 +4,7 @@ import type { ColorPalette } from "@types";
 export const MAP_BG_COLOR = "#b5bfca";
 
 // Home country color
-export const HOME_COUNTRY_COLOR = "#ecb365";
+export const HOME_COUNTRY_COLOR = "#00dbbe";
 
 // Border colors
 export const MAP_BORDER_COLOR_LIGHT = "#ccc";
@@ -13,7 +13,7 @@ export const MAP_BORDER_COLOR_DARK = "#222";
 
 export const CLASSIC_PALETTE: ColorPalette = {
   name: "Classic",
-  colors: ["#0078d4", "#4a90e2", "#ce9324", "#ecb365", "#b5bfca"],
+  colors: ["#0078d4", "#4a90e2", "#ce9324", "#ecb365", "#e4c08e"],
 };
 
 export const DARK_PALETTE: ColorPalette = {
@@ -73,7 +73,7 @@ export const SUMMER_PALETTE: ColorPalette = {
 
 export const AUTUMN_PALETTE: ColorPalette = {
   name: "Autumn",
-  colors: ["#442d1c", "#743014", "#bb8954", "#9d9167", "#e8d1a7"],
+  colors: ["#996100", "#b17900", "#cc8014", "#e4a331", "#f5ce89"],
 };
 
 export const WINTER_PALETTE: ColorPalette = {
@@ -94,6 +94,11 @@ export const TROPICAL_PALETTE: ColorPalette = {
 export const FOREST_PALETTE: ColorPalette = {
   name: "Forest",
   colors: ["#1e5636", "#578c49", "#99be8f", "#8f8350", "#b6a576"],
+};
+
+export const WOOD_PALETTE: ColorPalette = {
+  name: "Wood",
+  colors: ["#442d1c", "#743014", "#bb8954", "#9d9167", "#e8d1a7"],
 };
 
 export const PLAINS_PALETTE: ColorPalette = {
@@ -129,6 +134,7 @@ export const COLOR_PALETTES: ColorPalette[] = [
   OCEAN_PALETTE,
   TROPICAL_PALETTE,
   FOREST_PALETTE,
+  WOOD_PALETTE,
   PLAINS_PALETTE,
   DESERT_PALETTE,
   MOUNTAIN_PALETTE,

@@ -32,7 +32,7 @@ export function OverlayPaletteSettingsGroup() {
     <>
       <CollapsibleHeader
         icon={<FaBrush />}
-        label="Overlay Color Palettes"
+        label="Overlay Palettes"
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />

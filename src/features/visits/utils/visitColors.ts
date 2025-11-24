@@ -28,11 +28,12 @@ export function getVisitColor(
   if (isHome) return palette.home;
 
   if (mode === "cumulative") {
-    if (count === 0) return defaultFill;
     if (count === 1) return palette.visitCounts[0];
     if (count === 2) return palette.visitCounts[1];
     if (count === 3) return palette.visitCounts[2];
-    return palette.visitCounts[3];
+    if (count === 4) return palette.visitCounts[3];
+    if (count >= 5) return palette.visitCounts[4];
+    return defaultFill;
   }
 
   if (mode === "yearly") {
@@ -50,10 +51,12 @@ export function getVisitColor(
  * @param palette The color palette to extract roles from
  * @returns VisitColorRoles object
  */
-export function getVisitColorRolesFromPalette(palette: ColorPalette): VisitColorRoles {
+export function getVisitColorRolesFromPalette(
+  palette: ColorPalette
+): VisitColorRoles {
   return {
     home: HOME_COUNTRY_COLOR,
-    visitCounts: palette.colors.slice(0, 4).reverse(),
+    visitCounts: [...palette.colors].reverse(),
     yearly: {
       new: palette.colors[0],
       revisit: palette.colors[1],
