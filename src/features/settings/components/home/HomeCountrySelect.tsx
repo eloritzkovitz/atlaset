@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { FaHome, FaChevronDown } from "react-icons/fa";
-import { CollapsibleHeader } from "@components";
+import { Checkbox, CollapsibleHeader } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
 
 export function HomeCountrySelect() {
   const { countries } = useCountryData();
-  const { homeCountry, setHomeCountry } = useHomeCountry();
+  const { homeCountry, setHomeCountry, colorHomeCountry, setColorHomeCountry } =
+    useHomeCountry();
   const [modalOpen, setModalOpen] = useState(false);
   const [expanded, setExpanded] = useState(true);
 
@@ -26,7 +27,7 @@ export function HomeCountrySelect() {
       {expanded && (
         <button
           type="button"
-          className="settings-select-btn flex items-center gap-3 px-3 py-2 rounded border bg-gray-200 dark:bg-gray-600 text-dark hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+          className="settings-select-btn flex items-center gap-3 px-3 py-2 my-4 rounded border bg-gray-200 dark:bg-gray-600 text-dark hover:bg-gray-300 dark:hover:bg-gray-500 transition"
           onClick={() => setModalOpen(true)}
           aria-label="Select home country"
         >
@@ -40,7 +41,12 @@ export function HomeCountrySelect() {
           )}
           <FaChevronDown className="ml-auto text-gray-400" />
         </button>
-      )}
+      )}      
+      <Checkbox
+        checked={!!colorHomeCountry}
+        onChange={setColorHomeCountry}
+        label="Color home country on map"
+      />
       {/* Country selection modal */}
       <CountrySelectModal
         isOpen={modalOpen}

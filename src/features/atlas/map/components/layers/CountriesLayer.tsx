@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
+
 import { useMapGeographyStyle } from "@features/atlas/map/hooks/useMapGeographyStyle";
 import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
 } from "@features/atlas/overlays";
+import { useCountryColors, useHomeCountry } from "@features/settings";
 import type { OverlayItem } from "@types";
 
 type MapCountriesLayerProps = {
@@ -30,6 +32,10 @@ export function CountriesLayer({
 }: MapCountriesLayerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
 
+  // Home country for coloring
+  const { homeCountry, colorHomeCountry } = useHomeCountry();
+  const { HOME_COUNTRY_COLOR } = useCountryColors();
+
   // Group overlay items by isoCode for stacking/blending
   const overlayGroups = useMemo(
     () => groupOverlayItemsByIsoCode(overlayItems),
@@ -43,6 +49,12 @@ export function CountriesLayer({
           geographies.map((geo) => {
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
+
+            // Home country coloring logic
+            const isHomeCountry =
+              colorHomeCountry &&
+              homeCountry &&
+              isoA2 === homeCountry.toUpperCase();
 
             // Highlight logic
             const isSelected =
@@ -63,6 +75,8 @@ export function CountriesLayer({
 
             if (isHovered) {
               style = geographyStyle.hover;
+            } else if (isHomeCountry) {
+              style = { ...geographyStyle.default, fill: HOME_COUNTRY_COLOR };
             } else if (blendedFill) {
               style = { ...geographyStyle.default, fill: blendedFill };
             } else if (isSelected) {

@@ -1,15 +1,11 @@
-import { getMapStyleConfig } from "@constants";
+import { MAP_STYLE_CONFIG } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
 import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 
 export function useMapGeographyStyle(isAddingMarker?: boolean) {
-  const { borderColor, borderWidth } = useMapUI();
+  const { borderColor, borderWidth } = useMapUI();  
+  const { HOVERED_COUNTRY_COLOR, SELECTED_COUNTRY_COLOR } = useCountryColors(); 
   const cursor = isAddingMarker ? "crosshair" : "pointer";
-  const { HOVERED_COUNTRY_COLOR, SELECTED_COUNTRY_COLOR } = useCountryColors();
-  const MAP_STYLE_CONFIG = getMapStyleConfig({
-    hoveredColor: HOVERED_COUNTRY_COLOR,
-    selectedColor: SELECTED_COUNTRY_COLOR,
-  });
 
   return {
     default: {
@@ -20,14 +16,14 @@ export function useMapGeographyStyle(isAddingMarker?: boolean) {
     },
     hover: {
       ...MAP_STYLE_CONFIG.default,
-      ...MAP_STYLE_CONFIG.hovered,
+      fill: HOVERED_COUNTRY_COLOR,
       stroke: borderColor,
       strokeWidth: borderWidth,
       cursor,
     },
     pressed: {
       ...MAP_STYLE_CONFIG.default,
-      ...MAP_STYLE_CONFIG.selected,
+      fill: SELECTED_COUNTRY_COLOR,
       stroke: borderColor,
       strokeWidth: borderWidth,
       cursor,

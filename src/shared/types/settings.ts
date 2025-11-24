@@ -1,6 +1,7 @@
 export type Settings = {
   id: string; // always 'main' for singleton settings
   homeCountry: string;
+  colorHomeCountry: boolean;
   theme: 'light' | 'dark';
   projection?: string;
   borderColor?: string;

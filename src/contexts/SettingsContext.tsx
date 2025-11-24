@@ -1,36 +1,29 @@
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
   type ReactNode,
 } from "react";
-import type { Settings } from "@types";
+import { defaultSettings } from "@constants/defaultSettings";
 import { settingsService } from "@services/settingsService";
-
-const defaultOverlayPalettes = {
-  standard: "Classic",
-  yearly: "Classic",
-  cumulative: "Classic",
-};
+import type { Settings } from "@types";
 
 const SettingsContext = createContext<{
   settings: Settings;
   updateSettings: (updates: Partial<Settings>) => Promise<void>;
+  resetSettings: () => Promise<void>;
   loading: boolean;
 }>({
-  settings: { id: "main", homeCountry: "", theme: "light", overlayPalettes: defaultOverlayPalettes },
+  settings: defaultSettings,
   updateSettings: async () => {},
+  resetSettings: async () => {},
   loading: false,
 });
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<Settings>({
-    id: "main",
-    homeCountry: "",
-    theme: "light",
-    overlayPalettes: defaultOverlayPalettes,
-  });
+  const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [loading, setLoading] = useState(true);
 
   // Load settings from IndexedDB on mount
@@ -65,8 +58,16 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setSettings(newSettings);
   };
 
+  // Reset settings to default
+  const resetSettings = useCallback(async () => {
+    await settingsService.save(defaultSettings);
+    setSettings(defaultSettings);
+  }, []);
+
   return (
-    <SettingsContext.Provider value={{ settings, updateSettings, loading }}>
+    <SettingsContext.Provider
+      value={{ settings, updateSettings, resetSettings, loading }}
+    >
       {children}
     </SettingsContext.Provider>
   );
