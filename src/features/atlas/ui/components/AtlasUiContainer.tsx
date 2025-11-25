@@ -21,7 +21,6 @@ interface AtlasUiContainerProps {
   setHoveredIsoCode: any;
   selectedCountry: any;
   setSelectedCountry: any;
-  showVisitedOnly: boolean;
   centerOnCountry: any;
   centerOnMarker: any;  
 }
@@ -34,7 +33,6 @@ export function AtlasUiContainer({
   setHoveredIsoCode,
   selectedCountry,
   setSelectedCountry,
-  showVisitedOnly,
   centerOnCountry,
   centerOnMarker,  
 }: AtlasUiContainerProps) {
@@ -76,7 +74,6 @@ export function AtlasUiContainer({
         selectedIsoCode={selectedIsoCode}
         hoveredIsoCode={hoveredIsoCode}
         selectedCountry={selectedCountry}
-        showVisitedOnly={showVisitedOnly}
         onSelect={setSelectedIsoCode}
         onHover={setHoveredIsoCode}
         onCountryInfo={setSelectedCountry}        

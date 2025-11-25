@@ -70,3 +70,43 @@ export const overlayFilterConfig: FilterConfig = {
       [overlay.id]: val,
     })),
 };
+
+// Timeline filter configuration object
+export const timelineFiltersConfig = {
+  year: {
+    label: "Year",
+    getValue: ({ selectedYear }: { selectedYear: number }) => selectedYear,
+    setValue: (
+      { setSelectedYear }: { setSelectedYear: (year: number) => void },
+      value: string | number
+    ) => setSelectedYear(Number(value)),
+    getOptions: (years: number[]) =>
+      years.map((year) => ({ value: year, label: String(year) })),
+  },
+  minVisitCount: {
+    label: "Min Visit Count",
+    getValue: ({ minVisitCount }: { minVisitCount: number }) => minVisitCount,
+    setValue: (
+      { setMinVisitCount }: { setMinVisitCount: (count: number) => void },
+      value: string | number
+    ) => setMinVisitCount(Number(value)),
+    getOptions: (max: number) =>
+      Array.from({ length: max }, (_, i) => ({
+        value: i + 1,
+        label: String(i + 1),
+      })),
+  },
+  maxVisitCount: {
+    label: "Max Visit Count",
+    getValue: ({ maxVisitCount }: { maxVisitCount: number }) => maxVisitCount,
+    setValue: (
+      { setMaxVisitCount }: { setMaxVisitCount: (count: number) => void },
+      value: string | number
+    ) => setMaxVisitCount(Number(value)),
+    getOptions: (max: number) =>
+      Array.from({ length: max }, (_, i) => ({
+        value: i + 1,
+        label: String(i + 1),
+      })),
+  },
+};

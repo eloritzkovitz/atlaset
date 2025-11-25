@@ -17,6 +17,8 @@ import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { Overlay } from "@types";
 import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
+import { TimelineFilters } from "./TimelineFilters";
+import { useTimeline } from "@contexts/TimelineContext";
 
 interface CountryFiltersPanelProps {
   show: boolean;
@@ -35,6 +37,10 @@ interface CountryFiltersPanelProps {
   setOverlaySelections: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
+  minVisitCount: number;
+  setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
+  maxVisitCount: number | undefined;
+  setMaxVisitCount: React.Dispatch<React.SetStateAction<number | undefined>>;
 }
 
 export function CountryFiltersPanel({
@@ -52,12 +58,18 @@ export function CountryFiltersPanel({
   overlays,
   overlaySelections,
   setOverlaySelections,
+  minVisitCount,
+  setMinVisitCount,
+  maxVisitCount,
+  setMaxVisitCount,
 }: CountryFiltersPanelProps) {
   const { countries, loading, error } = useCountryData();
+  const { timelineMode } = useTimeline();
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
   const [showOverlayFilters, setShowOverlayFilters] = React.useState(true);
+  const [showTimelineFilters, setShowTimelineFilters] = React.useState(true);
 
   // Dynamic subregion options based on selected region
   const subregionOptions =
@@ -157,6 +169,19 @@ export function CountryFiltersPanel({
             overlays={overlays}
             overlaySelections={overlaySelections}
             setOverlaySelections={setOverlaySelections}
+          />
+        </>
+      )}
+      {timelineMode && (
+        <>
+          <Separator className="my-4" />
+          <TimelineFilters
+            expanded={showTimelineFilters}
+            onToggle={() => setShowTimelineFilters((v) => !v)}
+            minVisitCount={minVisitCount}
+            setMinVisitCount={setMinVisitCount}
+            maxVisitCount={maxVisitCount}
+            setMaxVisitCount={setMaxVisitCount}
           />
         </>
       )}

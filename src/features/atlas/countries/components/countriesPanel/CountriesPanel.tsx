@@ -9,6 +9,7 @@ import {
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlayContext";
+import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
 import { useCountryFilters } from "@features/atlas/countries/hooks/useCountryFilters";
@@ -25,7 +26,6 @@ interface CountriesPanelProps {
   selectedIsoCode: string | null;
   hoveredIsoCode: string | null;
   selectedCountry: Country | null;
-  showVisitedOnly: boolean;
   onSelect: (iso: string | null) => void;
   onHover: (iso: string | null) => void;
   onCountryInfo?: (country: Country) => void;
@@ -35,7 +35,6 @@ export function CountriesPanel({
   selectedIsoCode,
   hoveredIsoCode,
   selectedCountry,
-  showVisitedOnly,
   onSelect,
   onHover,
   onCountryInfo,
@@ -44,8 +43,8 @@ export function CountriesPanel({
   const { countries, allRegions, allSubregions, loading, error, refreshData } =
     useCountryData();
   const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
+  const { showVisitedOnly } = useTimeline();
   const { trips } = useTrips();
-
   const {
     uiVisible,
     showCountries,
@@ -67,11 +66,14 @@ export function CountriesPanel({
     filteredCountries,
     allCount,
     visitedCount,
+    minVisitCount,
+    setMinVisitCount,
+    maxVisitCount,
+    setMaxVisitCount,
   } = useCountryFilters({
     countries,
     overlays,
     overlaySelections,
-    showVisitedOnly,
   });
 
   // Sort state
@@ -190,6 +192,10 @@ export function CountriesPanel({
           overlays={overlays}
           overlaySelections={overlaySelections}
           setOverlaySelections={setOverlaySelections}
+          minVisitCount={minVisitCount}
+          setMinVisitCount={setMinVisitCount}
+          maxVisitCount={maxVisitCount}
+          setMaxVisitCount={setMaxVisitCount}
         />
       )}
     </div>

@@ -33,10 +33,6 @@ interface UIContextType {
   showShortcuts: boolean;
   toggleShortcuts: () => void;
   closeModal: () => void;
-  timelineMode: boolean;
-  setTimelineMode: (v: boolean | ((prev: boolean) => boolean)) => void;
-  showVisitedOnly: boolean;
-  setShowVisitedOnly: (v: boolean | ((prev: boolean) => boolean)) => void;
 }
 
 // Type for panel selection
@@ -55,8 +51,6 @@ const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
-  const [timelineMode, setTimelineMode] = useState(false);
-  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
 
   // State for which panel is open; null means no panel is open
   const [showMenu, setShowMenu] = useState(false);
@@ -118,10 +112,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   useKeyHandler(toggleOverlays, ["o", "O"], true);
 
   // Toggle Legend with "L"
-  useKeyHandler(toggleLegend, ["l", "L"], true);
-
-  // Toggle Timeline panel with "T"
-  useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
+  useKeyHandler(toggleLegend, ["l", "L"], true);  
 
   // Toggle Export panel with "E"
   useKeyHandler(toggleExport, ["e", "E"], true);
@@ -144,11 +135,6 @@ export function UIProvider({ children }: { children: ReactNode }) {
     }
     prevOpenPanel.current = openPanel;
   }, [openPanel]);
-
-  // Effect to set showVisitedOnly when timelineMode changes
-  useEffect(() => {
-    setShowVisitedOnly(timelineMode);
-  }, [timelineMode]);
 
   return (
     <UIContext.Provider
@@ -177,10 +163,6 @@ export function UIProvider({ children }: { children: ReactNode }) {
         showShortcuts,
         toggleShortcuts,
         closeModal,
-        timelineMode,
-        setTimelineMode,
-        showVisitedOnly,
-        setShowVisitedOnly,
       }}
     >
       {children}

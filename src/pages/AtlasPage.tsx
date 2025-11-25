@@ -3,10 +3,7 @@ import { ErrorMessage, SplashScreen } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlayContext";
 import { useUI } from "@contexts/UIContext";
-import {
-  useCountrySelection,
-  useShowVisitedOnly,
-} from "@features/atlas/countries";
+import { useCountrySelection } from "@features/atlas/countries";
 import {
   WorldMap,
   useGeoData,
@@ -22,7 +19,7 @@ import {
 
 export default function AtlasPage() {
   // UI state
-  const { uiVisible, setUiVisible, setTimelineMode } = useUI();
+  const { uiVisible, setUiVisible } = useUI();
 
   // UI toggle hint
   useUiToggleHint(uiVisible, setUiVisible);
@@ -70,9 +67,6 @@ export default function AtlasPage() {
     return <ErrorMessage error={error || geoError || "Unknown error"} />;
   }
 
-  // Determine if only visited countries should be shown
-  const showVisitedOnly = useShowVisitedOnly();
-
   return (
     <>
       <div className="flex h-screen bg-gray-100 relative">
@@ -84,7 +78,6 @@ export default function AtlasPage() {
           setHoveredIsoCode={setHoveredIsoCode}
           selectedCountry={selectedCountry}
           setSelectedCountry={setSelectedCountry}
-          showVisitedOnly={showVisitedOnly}
           centerOnCountry={centerOnCountry}
           centerOnMarker={centerOnMarker}
         />
@@ -109,7 +102,6 @@ export default function AtlasPage() {
             zoom={zoom}
             setZoom={setZoom}
             selectedCoords={selectedCoords}
-            setTimelineMode={setTimelineMode}
             overlays={overlays}
             isAddingMarker={isAddingMarker}
           />

@@ -1,9 +1,9 @@
+import { useTimeline } from "@contexts/TimelineContext";
 import {
   useOverlayItems,
   useTimelineOverlayItems,
   isTimelineOverlay,
 } from "@features/atlas/overlays";
-import { useUI } from "@contexts/UIContext";
 import type { AnyOverlay, OverlayMode } from "@types";
 
 export function useMapOverlayItems(
@@ -11,12 +11,16 @@ export function useMapOverlayItems(
   selectedYear: number,
   overlayMode: OverlayMode
 ) {
-  const { timelineMode } = useUI();
+  const { timelineMode } = useTimeline();
   const timelineOverlays = overlays.filter(isTimelineOverlay);
 
   // Get static and timeline overlay items
   const staticItems = useOverlayItems(overlays);
-  const timelineItems = useTimelineOverlayItems(timelineOverlays, selectedYear, overlayMode);
+  const timelineItems = useTimelineOverlayItems(
+    timelineOverlays,
+    selectedYear,
+    overlayMode
+  );
 
   // Return items based on timeline mode
   return timelineMode ? timelineItems : staticItems;

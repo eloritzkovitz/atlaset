@@ -13,7 +13,6 @@ interface MapUiContainerProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   selectedCoords: [number, number] | null;
-  setTimelineMode: React.Dispatch<React.SetStateAction<boolean>>;
   overlays: any[];
   isAddingMarker?: boolean;
 }
@@ -22,12 +21,11 @@ export function MapUiContainer({
   zoom,
   setZoom,
   selectedCoords,
-  setTimelineMode,
   overlays,
   isAddingMarker,
 }: MapUiContainerProps) {
-  const { showLegend, toggleLegend, timelineMode, uiVisible } = useUI();
-  const { overlayMode } = useTimeline();
+  const { showLegend, toggleLegend, uiVisible } = useUI();
+  const { timelineMode, setTimelineMode, overlayMode } = useTimeline();
   const legendItems = useMapLegendItems(overlays, timelineMode, overlayMode);
 
   // UI hint for adding marker

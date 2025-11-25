@@ -1,8 +1,8 @@
 import { useOverlays } from "@contexts/OverlayContext";
-import { useUI } from "@contexts/UIContext";
+import { useTimeline } from "@contexts/TimelineContext";
 
 export function useShowVisitedOnly() {
-  const { showVisitedOnly: timelineVisitedOnly } = useUI();
+  const { showVisitedOnly: timelineVisitedOnly } = useTimeline();
   const { overlaySelections } = useOverlays();
   return (
     timelineVisitedOnly || overlaySelections["visited-countries"] === "only"

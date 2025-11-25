@@ -9,26 +9,35 @@ import { getVisitedCountriesUpToYear } from "@features/visits";
 import { useDebounce } from "@hooks/useDebounce";
 import type { Country, Overlay } from "@types";
 
-type OverlaySelections = Record<string, string>;
-
 interface UseCountryFiltersProps {
   countries: Country[];
   overlays: Overlay[];
-  overlaySelections: OverlaySelections;
-  showVisitedOnly: boolean;
+  overlaySelections: Record<string, string>;
 }
 
+/**
+ * Manages and applies country filters.
+ * @param countries - List of all countries.
+ * @param overlays - List of all overlays.
+ * @param overlaySelections - Current overlay selections.
+ * @returns Various filter states and the filtered list of countries.
+ */
 export function useCountryFilters({
   countries,
   overlays,
   overlaySelections,
-  showVisitedOnly,
 }: UseCountryFiltersProps) {
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
   const [selectedSovereignty, setSelectedSovereignty] = useState<string>("");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
+
+  // Visit count filters
+  const [minVisitCount, setMinVisitCount] = useState<number>(1);
+  const [maxVisitCount, setMaxVisitCount] = useState<number | undefined>(
+    undefined
+  );
 
   // With overlays applied
   const filteredIsoCodes = getFilteredIsoCodes(
@@ -57,7 +66,7 @@ export function useCountryFilters({
 
   // Counts
   const allCount = filteredCountriesNoOverlay.length;
-  const { selectedYear } = useTimeline();
+  const { selectedYear, showVisitedOnly } = useTimeline();
   const visitedMap = getVisitedCountriesUpToYear(
     trips,
     selectedYear,
@@ -80,6 +89,18 @@ export function useCountryFilters({
     );
   }
 
+  // Apply min/max visit count filters
+  if (minVisitCount > 1) {
+    finalFilteredCountries = finalFilteredCountries.filter(
+      (c) => (visitedMap[c.isoCode] || 0) >= minVisitCount
+    );
+  }
+  if (typeof maxVisitCount === "number") {
+    finalFilteredCountries = finalFilteredCountries.filter(
+      (c) => (visitedMap[c.isoCode] || 0) <= maxVisitCount
+    );
+  }
+
   return {
     selectedRegion,
     setSelectedRegion,
@@ -94,5 +115,9 @@ export function useCountryFilters({
     filteredCountries: finalFilteredCountries,
     allCount,
     visitedCount,
+    minVisitCount,
+    setMinVisitCount,
+    maxVisitCount,
+    setMaxVisitCount,
   };
 }

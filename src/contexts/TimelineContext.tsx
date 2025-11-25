@@ -1,9 +1,20 @@
-import React, { createContext, useContext, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { getYearsFromTrips } from "@features/visits";
+import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { OverlayMode } from "@types";
 
 interface TimelineContextValue {
+  timelineMode: boolean;
+  setTimelineMode: (v: boolean | ((prev: boolean) => boolean)) => void;
+  showVisitedOnly: boolean;
+  setShowVisitedOnly: (v: boolean | ((prev: boolean) => boolean)) => void;
   years: number[];
   selectedYear: number;
   setSelectedYear: (year: number) => void;
@@ -18,9 +29,11 @@ const TimelineContext = createContext<TimelineContextValue | undefined>(
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { trips } = useTrips();
+  const [timelineMode, setTimelineMode] = useState(false);
+  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
 
   // Compute years from trips
+  const { trips } = useTrips();
   const years = useMemo(() => getYearsFromTrips(trips), [trips]);
   const [selectedYear, setSelectedYear] = useState(
     years[years.length - 1] || new Date().getFullYear()
@@ -29,19 +42,28 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   // Overlay mode state
   const [overlayMode, setOverlayMode] = useState<OverlayMode>("cumulative");
 
-  const value = useMemo(
-    () => ({
-      years,
-      selectedYear,
-      setSelectedYear,
-      overlayMode,
-      setOverlayMode,
-    }),
-    [years, selectedYear, overlayMode]
-  );
+  // Toggle Timeline mode with "T"
+  useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
+  
+  // Effect to set showVisitedOnly when timelineMode changes
+  useEffect(() => {
+    setShowVisitedOnly(timelineMode);
+  }, [timelineMode]);
 
   return (
-    <TimelineContext.Provider value={value}>
+    <TimelineContext.Provider
+      value={{
+        timelineMode,
+        setTimelineMode,
+        showVisitedOnly,
+        setShowVisitedOnly,
+        years,
+        selectedYear,
+        setSelectedYear,
+        overlayMode,
+        setOverlayMode,
+      }}
+    >
       {children}
     </TimelineContext.Provider>
   );
