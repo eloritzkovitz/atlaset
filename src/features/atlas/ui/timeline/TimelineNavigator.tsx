@@ -7,22 +7,13 @@ import {
 import { ActionButton, ToolbarSelectButton } from "@components";
 import type { OverlayMode } from "@types";
 import { useTimelineNavigation } from "./hooks/useTimelineNavigation";
+import { useTimeline } from "@contexts/TimelineContext";
 
-interface TimelineNavigatorProps {
-  years: number[];
-  selectedYear: number;
-  setSelectedYear: (year: number) => void;
-  overlayMode: OverlayMode;
-  setOverlayMode: (mode: OverlayMode) => void;
-}
+export function TimelineNavigator({}) {
+  const { years, selectedYear, setSelectedYear, overlayMode, setOverlayMode } =
+    useTimeline();
 
-export function TimelineNavigator({
-  years,
-  selectedYear,
-  setSelectedYear,
-  overlayMode,
-  setOverlayMode,
-}: TimelineNavigatorProps) {
+  // Timeline navigation handlers
   const {
     currentIndex,
     canGoBack,
@@ -31,7 +22,7 @@ export function TimelineNavigator({
     handleForward,
     handleFirst,
     handleLast,
-  } = useTimelineNavigation(years, selectedYear, setSelectedYear);  
+  } = useTimelineNavigation(years, selectedYear, setSelectedYear);
 
   return (
     <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 flex items-center gap-2">

@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { getVisitedCountries } from "@features/countries/utils/countryData";
+import { useTimeline } from "@contexts/TimelineContext";
+import { useTrips } from "@contexts/TripsContext";
 import {
   filterCountries,
   getFilteredIsoCodes,
 } from "@features/countries/utils/countryFilters";
+import { getVisitedCountriesUpToYear } from "@features/visits";
 import { useDebounce } from "@hooks/useDebounce";
 import type { Country, Overlay } from "@types";
 
@@ -51,17 +53,31 @@ export function useCountryFilters({
     overlayCountries: undefined,
   });
 
+  const { trips } = useTrips();
+
   // Counts
   const allCount = filteredCountriesNoOverlay.length;
-  const visitedCountries = getVisitedCountries(
-    filteredCountriesNoOverlay,
-    overlays
+  const { selectedYear } = useTimeline();
+  const visitedMap = getVisitedCountriesUpToYear(
+    trips,
+    selectedYear,
+    undefined
   );
-  const visitedCount = visitedCountries.length;
+  const visitedIsoCodes = Object.keys(visitedMap);
+  const visitedCount = visitedIsoCodes.length;
 
+  // If showing visited only, filter the countries accordingly
   let finalFilteredCountries = filteredCountries;
   if (showVisitedOnly) {
-    finalFilteredCountries = getVisitedCountries(filteredCountries, overlays);
+    const visitedMapForFilter = getVisitedCountriesUpToYear(
+      trips,
+      selectedYear,
+      undefined
+    );
+    const visitedIsoCodesForFilter = Object.keys(visitedMapForFilter);
+    finalFilteredCountries = filteredCountries.filter((c) =>
+      visitedIsoCodesForFilter.includes(c.isoCode)
+    );
   }
 
   return {

@@ -6,6 +6,7 @@ import { MapUIProvider } from "@contexts/MapUIContext";
 import { MarkersProvider } from "@contexts/MarkersContext";
 import { OverlayProvider } from "@contexts/OverlayContext";
 import { useSettings } from "@contexts/SettingsContext";
+import { TimelineProvider } from "@contexts/TimelineContext";
 import { TripsProvider } from "@contexts/TripsContext";
 import { UIProvider } from "@contexts/UIContext";
 import { UIHintProvider } from "@contexts/UIHintContext";
@@ -38,7 +39,9 @@ function App() {
                     <OverlayProvider>
                       <MapUIProvider>
                         <MarkersProvider>
-                          <AtlasPage />
+                          <TimelineProvider>
+                            <AtlasPage />
+                          </TimelineProvider>
                         </MarkersProvider>
                       </MapUIProvider>
                     </OverlayProvider>

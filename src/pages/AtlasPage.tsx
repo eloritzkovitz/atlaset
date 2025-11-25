@@ -17,10 +17,8 @@ import { useMarkerCreation } from "@features/atlas/markers";
 import {
   AtlasUiContainer,
   MapUiContainer,
-  useTimelineState,
   useUiToggleHint,
 } from "@features/atlas/ui";
-import type { OverlayMode } from "@types";
 
 export default function AtlasPage() {
   // UI state
@@ -65,10 +63,6 @@ export default function AtlasPage() {
   // Marker creation state
   const { isAddingMarker } = useMarkerCreation();
 
-  // Timeline state
-  const [overlayMode, setOverlayMode] = useState<OverlayMode>("cumulative");
-  const { years, selectedYear, setSelectedYear } = useTimelineState();
-
   // Derived state
   const isLoading =
     countriesLoading || overlaysLoading || geoLoading || !mapReady;
@@ -110,21 +104,14 @@ export default function AtlasPage() {
             svgRef={svgRef}
             isAddingMarker={isAddingMarker}
             setSelectedCoords={(coords) => setSelectedCoords(coords)}
-            selectedYear={selectedYear}
-            overlayMode={overlayMode}
           />
           <MapUiContainer
             zoom={zoom}
             setZoom={setZoom}
             selectedCoords={selectedCoords}
             setTimelineMode={setTimelineMode}
-            years={years}
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
             overlays={overlays}
             isAddingMarker={isAddingMarker}
-            overlayMode={overlayMode}
-            setOverlayMode={setOverlayMode}
           />
         </div>
       </div>
