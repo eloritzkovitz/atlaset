@@ -1,9 +1,11 @@
-import { useLayoutEffect, useState, type RefObject } from "react";
+import { useLayoutEffect, useState } from "react";
 
-export function useMenuPosition<T extends HTMLElement>(
+export function useMenuPosition(
   open: boolean,
-  btnRef: RefObject<T | null>,
-  menuRef: RefObject<T | null>
+  btnRef: React.RefObject<HTMLElement | null>,
+  menuRef: React.RefObject<HTMLElement | null>,
+  offset?: number,
+  align?: "left" | "right"
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
 
@@ -14,12 +16,15 @@ export function useMenuPosition<T extends HTMLElement>(
       const spaceBelow = window.innerHeight - btnRect.bottom;
       const spaceAbove = btnRect.top;
 
-      let top = btnRect.top + window.scrollY;
-      let left = btnRect.left - menuRect.width + window.scrollX;
+      let top = btnRect.top + window.scrollY + (offset ?? 0);
+      let left =
+        align === "left"
+          ? btnRect.left - menuRect.width + window.scrollX
+          : btnRect.left + window.scrollX;
 
       // Flip above if not enough space below
       if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
-        top = btnRect.top - menuRect.height + window.scrollY;
+        top = btnRect.top + window.scrollY - menuRect.height - (offset ?? 0);
       }
 
       setMenuStyle({
@@ -31,7 +36,7 @@ export function useMenuPosition<T extends HTMLElement>(
     } else {
       setMenuStyle({});
     }
-  }, [open]);
+  }, [open, offset, align]);
 
   return menuStyle;
 }

@@ -12,11 +12,13 @@ export { SplashScreen } from "./feedback/SplashScreen";
 
 // Form components
 export { Checkbox } from "./form/Checkbox";
-export { DropdownSelectInput } from "./form/DropdownSelectInput";
 export { FormButton } from "./form/FormButton";
 export { FormField } from "./form/FormField";
 export { SearchInput } from "./form/SearchInput";
 export { SelectInput } from "./form/SelectInput";
+
+// Dropdown components
+export { DropdownSelectInput } from "./form/Dropdown/DropdownSelectInput";
 
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
