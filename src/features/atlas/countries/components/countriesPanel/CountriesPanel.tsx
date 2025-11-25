@@ -177,6 +177,8 @@ export function CountriesPanel({
       {showCountries && showFilters && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
+          onHide={toggleFilters}
+          showVisitedOnly={showVisitedOnly}
           allRegions={allRegions}
           allSubregions={allSubregions}
           selectedRegion={selectedRegion}
@@ -188,7 +190,6 @@ export function CountriesPanel({
           overlays={overlays}
           overlaySelections={overlaySelections}
           setOverlaySelections={setOverlaySelections}
-          onHide={toggleFilters}
         />
       )}
     </div>

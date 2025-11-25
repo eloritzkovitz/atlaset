@@ -20,6 +20,8 @@ import { OverlayFilters } from "./OverlayFilters";
 
 interface CountryFiltersPanelProps {
   show: boolean;
+  onHide: () => void;
+  showVisitedOnly: boolean;
   allRegions: string[];
   allSubregions: string[];
   selectedRegion: string;
@@ -33,11 +35,12 @@ interface CountryFiltersPanelProps {
   setOverlaySelections: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
-  onHide: () => void;
-};
+}
 
 export function CountryFiltersPanel({
   show,
+  onHide,
+  showVisitedOnly,
   allRegions,
   allSubregions,
   selectedRegion,
@@ -49,7 +52,6 @@ export function CountryFiltersPanel({
   overlays,
   overlaySelections,
   setOverlaySelections,
-  onHide,
 }: CountryFiltersPanelProps) {
   const { countries, loading, error } = useCountryData();
 
@@ -133,7 +135,6 @@ export function CountryFiltersPanel({
         zIndex: 39,
       }}
     >
-      {/* Core Filters Section */}
       <CoreFilters
         expanded={showCoreFilters}
         onToggle={() => setShowCoreFilters((v) => !v)}
@@ -147,17 +148,18 @@ export function CountryFiltersPanel({
         subregionOptions={subregionOptions}
         sovereigntyOptions={sovereigntyOptions}
       />
-
-      <Separator className="my-4" />
-
-      {/* Overlay Filters Section */}
-      <OverlayFilters
-        expanded={showOverlayFilters}
-        onToggle={() => setShowOverlayFilters((v) => !v)}
-        overlays={overlays}
-        overlaySelections={overlaySelections}
-        setOverlaySelections={setOverlaySelections}
-      />
+      {!showVisitedOnly && (
+        <>
+          <Separator className="my-4" />
+          <OverlayFilters
+            expanded={showOverlayFilters}
+            onToggle={() => setShowOverlayFilters((v) => !v)}
+            overlays={overlays}
+            overlaySelections={overlaySelections}
+            setOverlaySelections={setOverlaySelections}
+          />
+        </>
+      )}
     </Panel>
   );
 }
