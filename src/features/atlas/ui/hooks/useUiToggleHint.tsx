@@ -35,7 +35,7 @@ export function useUiToggleHint(
       return {
         message: (
           <>
-            UI is now visible. Press <kbd>U</kbd> to hide.
+            UI shown. Press U to hide the UI.
           </>
         ),
         icon: <FaEye className="text-lg" />,
@@ -44,7 +44,7 @@ export function useUiToggleHint(
       return {
         message: (
           <>
-            UI is hidden. Press <kbd>U</kbd> to show.
+            UI hidden. Press U to show the UI.
           </>
         ),
         icon: <FaEyeSlash className="text-lg" />,
