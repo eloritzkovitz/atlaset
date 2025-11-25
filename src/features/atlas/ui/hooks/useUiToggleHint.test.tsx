@@ -1,70 +1,50 @@
-import { render, act } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import React, { useState } from "react";
 import { useUiToggleHint } from "./useUiToggleHint";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
 
 describe("useUiToggleHint", () => {
-  let stateRef: React.MutableRefObject<any>;
+  let visibleState: boolean;
 
-  beforeEach(() => {
-    vi.useFakeTimers();
-    stateRef = { current: {} };
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+  setupFakeTimers();
 
   function renderWithState(initialVisible: boolean) {
     function Wrapper() {
       const [visible, setUiVisible] = useState(initialVisible);
-      const [key, setHintKey] = useState(0);
-      const [message, setHintMessage] = useState<React.ReactNode>(null);
-      stateRef.current = { visible, key, message };
-      useUiToggleHint(visible, setUiVisible, setHintKey, setHintMessage);
+      visibleState = visible;
+      useUiToggleHint(visible, setUiVisible);
+      // Update visibleState on each render
+      React.useEffect(() => {
+        visibleState = visible;
+      }, [visible]);
       return null;
     }
-    render(<Wrapper />);
+    renderWithUiHintProviders(<Wrapper />);
   }
 
-  it("does not show a hint on initial mount, even if hidden", () => {
+  it("does not toggle on mount", () => {
     renderWithState(false);
-    expect(stateRef.current.visible).toBe(false);
-    expect(stateRef.current.key).toBe(0);
-    expect(stateRef.current.message).toBe(null);
+    expect(visibleState).toBe(false);
   });
 
-  it("shows the hidden hint only when toggling from visible to hidden", () => {
+  it("toggles from visible to hidden on 'u' key", () => {
     renderWithState(true);
 
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "u" }));
     });
 
-    expect(stateRef.current.visible).toBe(false);
-    expect(stateRef.current.key).toBe(1);
-    expect(stateRef.current.message).toEqual(
-      <span>
-        <FaEyeSlash className="inline mr-2" />
-        UI hidden. Press U to show the UI.
-      </span>
-    );
+    expect(visibleState).toBe(false);
   });
 
-  it("shows the shown hint only when toggling from hidden to visible", () => {
+  it("toggles from hidden to visible on 'u' key", () => {
     renderWithState(false);
 
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "u" }));
     });
 
-    expect(stateRef.current.visible).toBe(true);
-    expect(stateRef.current.key).toBe(1);
-    expect(stateRef.current.message).toEqual(
-      <span>
-        <FaEye className="inline mr-2" />
-        UI shown. Press U to hide the UI.
-      </span>
-    );
+    expect(visibleState).toBe(true);
   });
 
   it("does not toggle when typing in input", () => {
@@ -85,22 +65,18 @@ describe("useUiToggleHint", () => {
       );
     });
 
-    expect(stateRef.current.visible).toBe(true);
-    expect(stateRef.current.key).toBe(0);
-    expect(stateRef.current.message).toBe(null);
+    expect(visibleState).toBe(true);
 
     document.body.removeChild(input);
   });
 
-  it("does not toggle or update hint on irrelevant key", () => {
+  it("does not toggle on irrelevant key", () => {
     renderWithState(true);
 
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "x" }));
     });
 
-    expect(stateRef.current.visible).toBe(true);
-    expect(stateRef.current.key).toBe(0);
-    expect(stateRef.current.message).toBe(null);
+    expect(visibleState).toBe(true);
   });
 });

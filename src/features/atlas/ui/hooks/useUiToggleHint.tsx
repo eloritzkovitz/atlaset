@@ -1,11 +1,10 @@
-import React, { useEffect, useRef } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useEffect, useMemo, useRef } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { useUiHint } from "@hooks/useUiHint";
 
 export function useUiToggleHint(
   uiVisible: boolean,
-  setUiVisible: React.Dispatch<React.SetStateAction<boolean>>,
-  setHintKey: React.Dispatch<React.SetStateAction<number>>,
-  setHintMessage: (msg: React.ReactNode) => void
+  setUiVisible: React.Dispatch<React.SetStateAction<boolean>>
 ) {
   // Track previous value of uiVisible
   const prevUiVisible = useRef(uiVisible);
@@ -24,32 +23,38 @@ export function useUiToggleHint(
       }
       if (e.key.toLowerCase() === "u") {
         setUiVisible((v) => !v);
-        if (!uiVisible) {
-          setHintKey((k) => k + 1);
-          setHintMessage(
-            <span>
-              <FaEye className="inline mr-2" />
-              UI shown. Press U to hide the UI.
-            </span>
-          );
-        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [uiVisible, setUiVisible, setHintKey, setHintMessage]);
+  }, [setUiVisible]);
+
+  // Show hint when UI visibility changes
+  const toggleUiHint = useMemo(() => {
+    if (uiVisible) {
+      return {
+        message: (
+          <>
+            UI is now visible. Press <kbd>U</kbd> to hide.
+          </>
+        ),
+        icon: <FaEye className="text-lg" />,
+      };
+    } else {
+      return {
+        message: (
+          <>
+            UI is hidden. Press <kbd>U</kbd> to show.
+          </>
+        ),
+        icon: <FaEyeSlash className="text-lg" />,
+      };
+    }
+  }, [uiVisible]);
+  useUiHint(toggleUiHint, 4000, { key: "toggle-ui" });
 
   // Show hint only when UI transitions from visible to hidden
   useEffect(() => {
-    if (prevUiVisible.current && !uiVisible) {
-      setHintKey((k) => k + 1);
-      setHintMessage(
-        <span>
-          <FaEyeSlash className="inline mr-2" />
-          UI hidden. Press U to show the UI.
-        </span>
-      );
-    }
     prevUiVisible.current = uiVisible;
-  }, [uiVisible, setHintKey, setHintMessage]);
+  }, [uiVisible]);
 }

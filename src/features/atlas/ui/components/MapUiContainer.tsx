@@ -7,6 +7,7 @@ import { MapLegendModal } from "../legend/MapLegendModal";
 import { useMapLegendItems } from "../legend/useMapLegendItems";
 import { MapToolbar } from "../toolbar/MapToolbar";
 import { TimelineNavigator } from "../timeline/TimelineNavigator";
+import { useMemo } from "react";
 
 interface MapUiContainerProps {
   zoom: number;
@@ -37,41 +38,39 @@ export function MapUiContainer({
 }: MapUiContainerProps) {
   const { showLegend, toggleLegend, timelineMode, uiVisible } = useUI();
   const legendItems = useMapLegendItems(overlays, timelineMode, overlayMode);
+
   // UI hint for adding marker
-  const addMarkerHint = useUiHint(
-    isAddingMarker ? (
-      <span>
-        <FaMapPin className="inline mr-2" />
-        Click on the map to place a marker.
-      </span>
-    ) : (
-      ""
-    ),
-    isAddingMarker ? 0 : 1
+  const addMarkerHint = useMemo(
+    () =>
+      isAddingMarker
+        ? {
+            message: <>Click on the map to place a marker.</>,
+            icon: <FaMapPin className="text-lg" />,
+          }
+        : null,
+    [isAddingMarker]
   );
 
   // UI hint for timeline mode
-  const timelineHint = useUiHint(
-    timelineMode && uiVisible ? (
-      <span>
-        <FaClockRotateLeft className="inline mr-2" />
-        Timeline mode enabled. Press T to toggle off.
-      </span>
-    ) : (
-      ""
-    ),
-    0
+  const timelineHint = useMemo(
+    () =>
+      timelineMode && uiVisible
+        ? {
+            message: <>Timeline mode enabled. Press T to toggle off.</>,
+            icon: <FaClockRotateLeft className="text-lg" />,
+          }
+        : null,
+    [timelineMode, uiVisible]
   );
+
+  useUiHint(addMarkerHint, 0, { key: "add-marker", dismissable: false });
+  useUiHint(timelineHint, 0, { key: "timeline", dismissable: true });
 
   // Don't render UI if not visible
   if (!uiVisible) return null;
 
   return (
     <>
-      {/* UI hints */}
-      {addMarkerHint}
-      {timelineHint}
-
       {/* Map UI components */}
       <MapToolbar
         zoom={zoom}

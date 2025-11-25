@@ -3,7 +3,6 @@ import { ErrorMessage, SplashScreen } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlayContext";
 import { useUI } from "@contexts/UIContext";
-import { useUiHint } from "@hooks/useUiHint";
 import {
   useCountrySelection,
   useShowVisitedOnly,
@@ -26,12 +25,9 @@ import type { OverlayMode } from "@types";
 export default function AtlasPage() {
   // UI state
   const { uiVisible, setUiVisible, setTimelineMode } = useUI();
-  const [hintMessage, setHintMessage] = useState<React.ReactNode>("");
-  const [hintKey, setHintKey] = useState(0);
-  const uiHint = useUiHint(hintMessage, 4000, { key: hintKey });
 
-  // Toggle UI visibility with hint
-  useUiToggleHint(uiVisible, setUiVisible, setHintKey, setHintMessage);
+  // UI toggle hint
+  useUiToggleHint(uiVisible, setUiVisible);
 
   // Data state
   const { geoData, geoError, loading: geoLoading } = useGeoData();
@@ -85,7 +81,6 @@ export default function AtlasPage() {
 
   return (
     <>
-      {uiHint}
       <div className="flex h-screen bg-gray-100 relative">
         <AtlasUiContainer
           svgRef={svgRef}

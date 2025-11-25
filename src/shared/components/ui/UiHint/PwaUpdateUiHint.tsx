@@ -1,0 +1,27 @@
+import { FaArrowsRotate } from "react-icons/fa6";
+import { useUiHint } from "@hooks/useUiHint";
+import { usePwaUpdate } from "@hooks/usePwaUpdate";
+
+export function PwaUpdateUiHint() {
+  const { needRefresh, updateServiceWorker } = usePwaUpdate();
+
+  useUiHint(
+    needRefresh
+      ? {
+          message: (
+            <>
+              A new version is available.{" "}
+              <button className="underline" onClick={updateServiceWorker}>
+                Update now
+              </button>
+            </>
+          ),
+          icon: <FaArrowsRotate className="text-lg" />,
+        }
+      : null,
+    0,
+    { key: "pwa-update", dismissable: true }
+  );
+
+  return null;
+}
