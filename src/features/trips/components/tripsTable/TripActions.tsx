@@ -32,7 +32,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
   useKeyHandler(() => setOpen(false), ["Escape"], open);
 
   // Position the menu when open
-  const menuStyle = useMenuPosition(open, btnRef, menuRef, 3, "left");
+  const menuStyle = useMenuPosition(open, btnRef, menuRef, 3, "left", false);
 
   return (
     <>

@@ -1,11 +1,21 @@
 import { useLayoutEffect, useState } from "react";
 
+/**
+ * Calculates and returns the style for a dropdown/menu anchored to a button.
+ * @param open Whether the menu is open
+ * @param btnRef Ref to the anchor/button element
+ * @param menuRef Ref to the menu element
+ * @param offset Optional offset in px
+ * @param align "left" or "right" alignment (default: "right")
+ * @param withWidth If true, menu matches button width (default: true)
+ */
 export function useMenuPosition(
   open: boolean,
   btnRef: React.RefObject<HTMLElement | null>,
   menuRef: React.RefObject<HTMLElement | null>,
   offset?: number,
-  align?: "left" | "right"
+  align?: "left" | "right",
+  withWidth: boolean = true
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
 
@@ -27,16 +37,22 @@ export function useMenuPosition(
         top = btnRect.top + window.scrollY - menuRect.height - (offset ?? 0);
       }
 
-      setMenuStyle({
+      // Set menu style
+      const style: React.CSSProperties = {
         position: "absolute",
         top,
         left,
         zIndex: 1000,
-      });
+      };
+      if (withWidth) {
+        style.width = btnRect.width;
+      }
+
+      setMenuStyle(style);
     } else {
       setMenuStyle({});
     }
-  }, [open, offset, align]);
+  }, [open, offset, align, withWidth]);
 
   return menuStyle;
 }
