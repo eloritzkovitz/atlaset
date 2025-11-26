@@ -195,3 +195,19 @@ export function getNextUpcomingTripYearByCountry(
   }
   return nextYearByCountry;
 }
+
+/**
+ * Gets visit count statistics for trips up to a specific year.
+ * @param trips - Array of trips to analyze.
+ * @param year - The year up to which to include trips.
+ * @returns An object containing the visit count map, minimum, and maximum counts.
+ */
+export function getVisitCountStats(trips: Trip[], year: number) {
+  const map = getVisitedCountriesUpToYear(trips, year, undefined);
+  const counts = Object.values(map);
+  return {
+    map,
+    min: counts.length > 0 ? Math.min(...counts) : 1,
+    max: counts.length > 0 ? Math.max(...counts) : 1,
+  };
+}

@@ -22,7 +22,7 @@ export function CountryList({
   return (
     <div className="flex-1 min-h-0 overflow-y-auto -mx-4">
       <div
-        className="h-full w-full select-none"
+        className="w-full select-none"
         onMouseLeave={() => {
           onHover(null);
           onSelect(null);

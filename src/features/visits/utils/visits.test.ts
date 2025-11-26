@@ -6,6 +6,7 @@ import {
   getVisitedCountriesForYear,
   getVisitedCountriesUpToYear,
   getNextUpcomingTripYearByCountry,
+  getVisitCountStats,
 } from "./visits";
 
 describe("visits utils", () => {
@@ -244,6 +245,50 @@ describe("visits utils", () => {
       expect(result).toEqual({
         JP: nextYear,
       });
+    });
+  });
+
+  describe("getVisitCountStats", () => {
+    it("returns correct map, min, and max for normal trips", () => {
+      const trips = [
+        { endDate: "2022-01-01", countryCodes: ["US", "CA"] },
+        { endDate: "2022-06-01", countryCodes: ["US"] },
+        { endDate: "2023-01-01", countryCodes: ["FR"] },
+      ] as any[];
+      const { map, min, max } = getVisitCountStats(trips, 2022);
+      expect(map).toEqual({ US: 2, CA: 1 });
+      expect(min).toBe(1);
+      expect(max).toBe(2);
+    });
+
+    it("returns min and max as 1 if no visits", () => {
+      const trips = [] as any[];
+      const { map, min, max } = getVisitCountStats(trips, 2022);
+      expect(map).toEqual({});
+      expect(min).toBe(1);
+      expect(max).toBe(1);
+    });
+
+    it("ignores trips after the given year", () => {
+      const trips = [
+        { endDate: "2024-01-01", countryCodes: ["JP"] },
+        { endDate: "2022-01-01", countryCodes: ["US"] },
+      ] as any[];
+      const { map, min, max } = getVisitCountStats(trips, 2022);
+      expect(map).toEqual({ US: 1 });
+      expect(min).toBe(1);
+      expect(max).toBe(1);
+    });
+
+    it("handles multiple countries with same visit count", () => {
+      const trips = [
+        { endDate: "2022-01-01", countryCodes: ["US"] },
+        { endDate: "2022-01-01", countryCodes: ["CA"] },
+      ] as any[];
+      const { map, min, max } = getVisitCountStats(trips, 2022);
+      expect(map).toEqual({ US: 1, CA: 1 });
+      expect(min).toBe(1);
+      expect(max).toBe(1);
     });
   });
 });

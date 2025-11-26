@@ -1,11 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import {
   filterCountries,
   getFilteredIsoCodes,
 } from "@features/countries/utils/countryFilters";
-import { getLatestYear, getVisitedCountriesUpToYear } from "@features/visits";
+import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
+import {
+  getLatestYear,
+  getVisitCountStats,
+  getVisitedCountriesUpToYear,
+} from "@features/visits";
+import {
+  filterByVisited,
+  filterByVisitCount,
+} from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks/useDebounce";
 import { useOverlays } from "@contexts/OverlayContext";
 import { useCountryData } from "@contexts/CountryDataContext";
@@ -17,8 +26,13 @@ import { useCountryData } from "@contexts/CountryDataContext";
 export function useCountryFilters() {
   const { countries } = useCountryData();
   const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
-  const { years, selectedYear, setSelectedYear, showVisitedOnly } =
-    useTimeline();
+  const {
+    timelineMode,
+    years,
+    selectedYear,
+    setSelectedYear,
+    showVisitedOnly,
+  } = useTimeline();
   const { trips } = useTrips();
 
   // Filter states
@@ -59,11 +73,11 @@ export function useCountryFilters() {
 
   // Counts
   const allCount = filteredCountriesNoOverlay.length;
-  const visitedMap = getVisitedCountriesUpToYear(
-    trips,
-    selectedYear,
-    undefined
-  );
+  const {
+    map: visitedMap,
+    min: absoluteMin,
+    max: absoluteMax,
+  } = getVisitCountStats(trips, years[years.length - 1]);
   const visitedIsoCodes = Object.keys(visitedMap);
   const visitedCount = visitedIsoCodes.length;
 
@@ -76,38 +90,49 @@ export function useCountryFilters() {
       undefined
     );
     const visitedIsoCodesForFilter = Object.keys(visitedMapForFilter);
-    finalFilteredCountries = filteredCountries.filter((c) =>
-      visitedIsoCodesForFilter.includes(c.isoCode)
+    finalFilteredCountries = filterByVisited(
+      finalFilteredCountries,
+      visitedIsoCodesForFilter
     );
   }
 
-  // Apply min/max visit count filters
-  if (minVisitCount > 1) {
-    finalFilteredCountries = finalFilteredCountries.filter(
-      (c) => (visitedMap[c.isoCode] || 0) >= minVisitCount
+  // Apply visit count filtering
+  if (showVisitedOnly) {
+    finalFilteredCountries = filterByVisitCount(
+      finalFilteredCountries,
+      visitedMap,
+      minVisitCount,
+      maxVisitCount
     );
   }
-  if (typeof maxVisitCount === "number") {
-    finalFilteredCountries = finalFilteredCountries.filter(
-      (c) => (visitedMap[c.isoCode] || 0) <= maxVisitCount
-    );
+
+  // Reset core filters
+  function resetCoreFilters() {
+    setSelectedRegion("");
+    setSelectedSubregion("");
+    setSelectedSovereignty("");
+  }
+
+  // Reset timeline-related filters
+  function resetTimelineFilters() {
+    setSelectedYear(getLatestYear(years));
+    setMinVisitCount(absoluteMin);
+    setMaxVisitCount(absoluteMax);
   }
 
   // Reset filters
   function resetFilters() {
-    setSelectedRegion("");
-    setSelectedSubregion("");
-    setSelectedSovereignty("");
-    setOverlaySelections(
-      overlays.reduce((acc, overlay) => {
-        acc[overlay.id] = "all";
-        return acc;
-      }, {} as Record<string, string>)
-    );
-    setSelectedYear(getLatestYear(years));
-    setMinVisitCount(1);
-    setMaxVisitCount(undefined);
+    resetCoreFilters();
+    setOverlaySelections(getDefaultOverlaySelections(overlays));
+    resetTimelineFilters();
   }
+
+  // Reset timeline filters when timeline mode is disabled
+  useEffect(() => {
+    if (!timelineMode) {
+      resetTimelineFilters();
+    }
+  }, [timelineMode]);
 
   return {
     selectedRegion,

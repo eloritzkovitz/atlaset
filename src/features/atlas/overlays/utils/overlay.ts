@@ -14,3 +14,15 @@ export function isTimelineOverlay(
 ): overlay is TimelineOverlay {
   return (overlay as TimelineOverlay).timelineEnabled === true;
 }
+
+/**
+ * Generates default overlay selections mapping each overlay ID to "all".
+ * @param overlays- The array of overlays.
+ * @returns A record mapping overlay IDs to the string "all".
+ */
+export function getDefaultOverlaySelections(overlays: AnyOverlay[]) {
+  return overlays.reduce((acc, overlay) => {
+    acc[overlay.id] = "all";
+    return acc;
+  }, {} as Record<string, string>);
+}
