@@ -3,6 +3,7 @@ import { CollapsibleHeader, NumberInput, SelectInput } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getVisitedCountriesUpToYear } from "@features/visits";
+import { clamp } from "@utils/number";
 import { timelineFiltersConfig } from "../../config/filtersConfig";
 
 interface TimelineFiltersProps {
@@ -65,8 +66,8 @@ export function TimelineFilters({
                 label=""
                 value={minVisitCount}
                 min={minPossible}
-                max={maxPossible}
-                onChange={setMinVisitCount}
+                max={maxVisitCount ?? maxPossible}
+                onChange={v => setMinVisitCount(clamp(v, minPossible, maxVisitCount ?? maxPossible))}
                 className="!my-0 flex-1"
               />
               <span className="opacity-70">to</span>
@@ -75,7 +76,7 @@ export function TimelineFilters({
                 value={maxVisitCount ?? maxPossible}
                 min={minVisitCount}
                 max={maxPossible}
-                onChange={(v) => setMaxVisitCount && setMaxVisitCount(v)}
+                onChange={v => setMaxVisitCount && setMaxVisitCount(clamp(v, minVisitCount, maxPossible))}
                 className="!my-0 flex-1"
               />
             </div>
