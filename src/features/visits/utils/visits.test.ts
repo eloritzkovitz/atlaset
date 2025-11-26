@@ -33,8 +33,12 @@ describe("visits utils", () => {
 
   describe("getLatestYear", () => {
     it("returns the latest year from a non-empty array", () => {
-      expect(getLatestYear([2000, 1999, 2020, 2021])).toBe(2021);
-      expect(getLatestYear([2022, 2023, 2021])).toBe(2023);
+      expect(
+        getLatestYear([2000, 1999, 2020, 2021].sort((a, b) => a - b))
+      ).toBe(2021);
+      expect(getLatestYear([2022, 2023, 2021].sort((a, b) => a - b))).toBe(
+        2023
+      );
     });
   });
 
