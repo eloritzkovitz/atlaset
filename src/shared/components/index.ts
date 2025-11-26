@@ -37,6 +37,7 @@ export { PanelListItem } from "./layout/Panel/PanelListItem";
 
 // Toolbar components
 export { ActionsToolbar } from "./layout/Toolbar/ActionsToolbar";
+export { ToolbarIconWithCount } from "./layout/Toolbar/ToolbarIconWithCount";
 export { ToolbarSelectButton } from "./layout/Toolbar/ToolbarSelectButton";
 export { ToolbarSeparator } from "./layout/Toolbar/ToolbarSeparator";
 export { ToolbarToggleGroup } from "./layout/Toolbar/ToolbarToggleGroup";

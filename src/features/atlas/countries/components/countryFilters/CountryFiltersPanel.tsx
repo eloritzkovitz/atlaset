@@ -9,16 +9,15 @@ import {
 } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
+import { useTimeline } from "@contexts/TimelineContext";
 import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,
 } from "@features/countries/utils/countryData";
 import { useKeyHandler } from "@hooks/useKeyHandler";
-import type { Overlay } from "@types";
 import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
 import { TimelineFilters } from "./TimelineFilters";
-import { useTimeline } from "@contexts/TimelineContext";
 
 interface CountryFiltersPanelProps {
   show: boolean;
@@ -32,15 +31,11 @@ interface CountryFiltersPanelProps {
   setSelectedSubregion: (subregion: string) => void;
   selectedSovereignty: string;
   setSelectedSovereignty: (type: string) => void;
-  overlays: Overlay[];
-  overlaySelections: Record<string, string>;
-  setOverlaySelections: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
   minVisitCount: number;
   setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
   maxVisitCount: number | undefined;
   setMaxVisitCount: React.Dispatch<React.SetStateAction<number | undefined>>;
+  resetFilters: () => void;
 }
 
 export function CountryFiltersPanel({
@@ -55,13 +50,11 @@ export function CountryFiltersPanel({
   setSelectedSubregion,
   selectedSovereignty,
   setSelectedSovereignty,
-  overlays,
-  overlaySelections,
-  setOverlaySelections,
   minVisitCount,
   setMinVisitCount,
   maxVisitCount,
   setMaxVisitCount,
+  resetFilters,
 }: CountryFiltersPanelProps) {
   const { countries, loading, error } = useCountryData();
   const { timelineMode } = useTimeline();
@@ -86,24 +79,11 @@ export function CountryFiltersPanel({
     setSelectedSubregion("");
   };
 
-  // Reset filters handler
-  function handleResetFilters() {
-    setSelectedRegion("");
-    setSelectedSubregion("");
-    setSelectedSovereignty("");
-    setOverlaySelections(
-      overlays.reduce((acc, overlay) => {
-        acc[overlay.id] = "all";
-        return acc;
-      }, {} as Record<string, string>)
-    );
-  }
-
   // Key handler for resetting filters with "R" key
   useKeyHandler(
     (e) => {
       e.preventDefault();
-      handleResetFilters();
+      resetFilters();
     },
     ["r", "R"],
     show
@@ -127,7 +107,7 @@ export function CountryFiltersPanel({
       headerActions={
         <>
           <ActionButton
-            onClick={handleResetFilters}
+            onClick={resetFilters}
             ariaLabel="Reset all filters"
             title="Reset filters"
           >
@@ -166,9 +146,6 @@ export function CountryFiltersPanel({
           <OverlayFilters
             expanded={showOverlayFilters}
             onToggle={() => setShowOverlayFilters((v) => !v)}
-            overlays={overlays}
-            overlaySelections={overlaySelections}
-            setOverlaySelections={setOverlaySelections}
           />
         </>
       )}

@@ -1,26 +1,15 @@
-import React from "react";
 import { FaLayerGroup } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import type { Overlay } from "@types";
+import { useOverlays } from "@contexts/OverlayContext";
 import { overlayFilterConfig } from "../../config/filtersConfig";
 
 interface OverlayFiltersProps {
   expanded: boolean;
   onToggle: () => void;
-  overlays: Overlay[];
-  overlaySelections: Record<string, string>;
-  setOverlaySelections: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
-};
+}
 
-export function OverlayFilters({
-  expanded,
-  onToggle,
-  overlays,
-  overlaySelections,
-  setOverlaySelections,
-}: OverlayFiltersProps) {
+export function OverlayFilters({ expanded, onToggle }: OverlayFiltersProps) {
+  const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
   return (
     <>
       <CollapsibleHeader

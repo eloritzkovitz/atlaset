@@ -44,6 +44,15 @@ export function getYearsFromTrips(trips: Trip[]) {
 }
 
 /**
+ * Gets the latest year from an array of years.
+ * @param years - Array of years.
+ * @returns The latest year or the current year if the array is empty.
+ */
+export function getLatestYear(years: number[]): number {
+  return years.length > 0 ? years[years.length - 1] : new Date().getFullYear();
+}
+
+/**
  * Computes a list of unique visited country codes from an array of trips, including home country if provided.
  * @param trips - The array of trips.
  * @param homeCountry - Optional home country code to include.

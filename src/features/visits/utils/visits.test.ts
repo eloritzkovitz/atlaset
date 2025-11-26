@@ -1,6 +1,7 @@
 import { mockTrips } from "@test-utils/mockTrips";
 import {
   getYearsFromTrips,
+  getLatestYear,
   computeVisitedCountriesFromTrips,
   getVisitedCountriesForYear,
   getVisitedCountriesUpToYear,
@@ -27,6 +28,13 @@ describe("visits utils", () => {
         { ...mockTrips[1], endDate: undefined } as any,
       ];
       expect(getYearsFromTrips(trips)).toEqual([]);
+    });
+  });
+
+  describe("getLatestYear", () => {
+    it("returns the latest year from a non-empty array", () => {
+      expect(getLatestYear([2000, 1999, 2020, 2021])).toBe(2021);
+      expect(getLatestYear([2022, 2023, 2021])).toBe(2023);
     });
   });
 

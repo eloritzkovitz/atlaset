@@ -6,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { useTrips } from "@contexts/TripsContext";
-import { getYearsFromTrips } from "@features/visits";
+import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { OverlayMode } from "@types";
 
@@ -35,16 +35,14 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   // Compute years from trips
   const { trips } = useTrips();
   const years = useMemo(() => getYearsFromTrips(trips), [trips]);
-  const [selectedYear, setSelectedYear] = useState(
-    years[years.length - 1] || new Date().getFullYear()
-  );
+  const [selectedYear, setSelectedYear] = useState(getLatestYear(years));
 
   // Overlay mode state
   const [overlayMode, setOverlayMode] = useState<OverlayMode>("cumulative");
 
   // Toggle Timeline mode with "T"
   useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
-  
+
   // Effect to set showVisitedOnly when timelineMode changes
   useEffect(() => {
     setShowVisitedOnly(timelineMode);

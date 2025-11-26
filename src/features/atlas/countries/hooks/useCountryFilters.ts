@@ -5,28 +5,23 @@ import {
   filterCountries,
   getFilteredIsoCodes,
 } from "@features/countries/utils/countryFilters";
-import { getVisitedCountriesUpToYear } from "@features/visits";
+import { getLatestYear, getVisitedCountriesUpToYear } from "@features/visits";
 import { useDebounce } from "@hooks/useDebounce";
-import type { Country, Overlay } from "@types";
-
-interface UseCountryFiltersProps {
-  countries: Country[];
-  overlays: Overlay[];
-  overlaySelections: Record<string, string>;
-}
+import { useOverlays } from "@contexts/OverlayContext";
+import { useCountryData } from "@contexts/CountryDataContext";
 
 /**
  * Manages and applies country filters.
- * @param countries - List of all countries.
- * @param overlays - List of all overlays.
- * @param overlaySelections - Current overlay selections.
  * @returns Various filter states and the filtered list of countries.
  */
-export function useCountryFilters({
-  countries,
-  overlays,
-  overlaySelections,
-}: UseCountryFiltersProps) {
+export function useCountryFilters() {
+  const { countries } = useCountryData();
+  const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
+  const { years, selectedYear, setSelectedYear, showVisitedOnly } =
+    useTimeline();
+  const { trips } = useTrips();
+
+  // Filter states
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
   const [selectedSovereignty, setSelectedSovereignty] = useState<string>("");
@@ -62,11 +57,8 @@ export function useCountryFilters({
     overlayCountries: undefined,
   });
 
-  const { trips } = useTrips();
-
   // Counts
   const allCount = filteredCountriesNoOverlay.length;
-  const { selectedYear, showVisitedOnly } = useTimeline();
   const visitedMap = getVisitedCountriesUpToYear(
     trips,
     selectedYear,
@@ -101,6 +93,22 @@ export function useCountryFilters({
     );
   }
 
+  // Reset filters
+  function resetFilters() {
+    setSelectedRegion("");
+    setSelectedSubregion("");
+    setSelectedSovereignty("");
+    setOverlaySelections(
+      overlays.reduce((acc, overlay) => {
+        acc[overlay.id] = "all";
+        return acc;
+      }, {} as Record<string, string>)
+    );
+    setSelectedYear(getLatestYear(years));
+    setMinVisitCount(1);
+    setMaxVisitCount(undefined);
+  }
+
   return {
     selectedRegion,
     setSelectedRegion,
@@ -119,5 +127,6 @@ export function useCountryFilters({
     setMinVisitCount,
     maxVisitCount,
     setMaxVisitCount,
+    resetFilters,
   };
 }

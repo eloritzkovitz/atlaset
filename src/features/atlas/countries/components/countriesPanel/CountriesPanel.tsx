@@ -8,7 +8,6 @@ import {
   Separator,
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { useOverlays } from "@contexts/OverlayContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -40,9 +39,8 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   // Context data state
-  const { countries, allRegions, allSubregions, loading, error, refreshData } =
+  const { allRegions, allSubregions, loading, error, refreshData } =
     useCountryData();
-  const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
   const { showVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -70,11 +68,8 @@ export function CountriesPanel({
     setMinVisitCount,
     maxVisitCount,
     setMaxVisitCount,
-  } = useCountryFilters({
-    countries,
-    overlays,
-    overlaySelections,
-  });
+    resetFilters,
+  } = useCountryFilters();
 
   // Sort state
   const {
@@ -166,11 +161,9 @@ export function CountriesPanel({
           />
           <Separator />
           <CountriesToolbar
-            showVisitedOnly={showVisitedOnly}
             allCount={allCount}
             visitedCount={visitedCount}
             onRefresh={refreshData}
-            setOverlaySelections={setOverlaySelections}
           />
         </div>
       </Panel>
@@ -189,13 +182,11 @@ export function CountriesPanel({
           setSelectedSubregion={setSelectedSubregion}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
-          overlays={overlays}
-          overlaySelections={overlaySelections}
-          setOverlaySelections={setOverlaySelections}
           minVisitCount={minVisitCount}
           setMinVisitCount={setMinVisitCount}
           maxVisitCount={maxVisitCount}
           setMaxVisitCount={setMaxVisitCount}
+          resetFilters={resetFilters}
         />
       )}
     </div>
