@@ -16,9 +16,8 @@ export { FormButton } from "./form/FormButton";
 export { FormField } from "./form/FormField";
 export { SearchInput } from "./form/SearchInput";
 export { SelectInput } from "./form/SelectInput";
-
-// Dropdown components
 export { DropdownSelectInput } from "./form/Dropdown/DropdownSelectInput";
+export { NumberInput } from "./form/NumberInput/NumberInput";
 
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";

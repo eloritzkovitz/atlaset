@@ -1,5 +1,5 @@
 import { FaClockRotateLeft } from "react-icons/fa6";
-import { CollapsibleHeader, SelectInput } from "@components";
+import { CollapsibleHeader, NumberInput, SelectInput } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getVisitedCountriesUpToYear } from "@features/visits";
@@ -17,7 +17,9 @@ interface TimelineFiltersProps {
 export function TimelineFilters({
   expanded,
   onToggle,
+  minVisitCount,
   setMinVisitCount,
+  maxVisitCount,
   setMaxVisitCount,
 }: TimelineFiltersProps) {
   const { years, selectedYear, setSelectedYear } = useTimeline();
@@ -34,8 +36,8 @@ export function TimelineFilters({
   const visitCounts = Object.values(visitCountMap);
 
   // Compute min and max (default to 1 if no visits)
-  const minVisitCount = visitCounts.length > 0 ? Math.min(...visitCounts) : 1;
-  const maxVisitCount = visitCounts.length > 0 ? Math.max(...visitCounts) : 1;
+  const minPossible = visitCounts.length > 0 ? Math.min(...visitCounts) : 1;
+  const maxPossible = visitCounts.length > 0 ? Math.max(...visitCounts) : 1;
 
   return (
     <>
@@ -55,24 +57,29 @@ export function TimelineFilters({
             }
             options={timelineFiltersConfig.year.getOptions(years)}
           />
-          <SelectInput
-            label={timelineFiltersConfig.minVisitCount.label}
-            value={minVisitCount}
-            onChange={(val) => setMinVisitCount(Number(val))}
-            options={timelineFiltersConfig.minVisitCount.getOptions(
-              maxVisitCount
-            )}
-          />
-          {typeof maxVisitCount === "number" && setMaxVisitCount && (
-            <SelectInput
-              label={timelineFiltersConfig.maxVisitCount.label}
-              value={maxVisitCount}
-              onChange={(val) => setMaxVisitCount(Number(val))}
-              options={timelineFiltersConfig.maxVisitCount.getOptions(
-                maxVisitCount
-              )}
-            />
-          )}
+          <div className="mt-4">
+            <div className="font-medium mb-1">Visit count</div>
+            <div className="flex items-center gap-2 w-full">
+              <span className="opacity-70">From</span>
+              <NumberInput
+                label=""
+                value={minVisitCount}
+                min={minPossible}
+                max={maxPossible}
+                onChange={setMinVisitCount}
+                className="!my-0 flex-1"
+              />
+              <span className="opacity-70">to</span>
+              <NumberInput
+                label=""
+                value={maxVisitCount ?? maxPossible}
+                min={minVisitCount}
+                max={maxPossible}
+                onChange={(v) => setMaxVisitCount && setMaxVisitCount(v)}
+                className="!my-0 flex-1"
+              />
+            </div>
+          </div>
         </>
       )}
     </>
