@@ -14,7 +14,7 @@ export function CountriesToolbar({
   visitedCount,
   onRefresh,
 }: CountriesToolbarProps) {
-  const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
+  const { timelineMode, showVisitedOnly, setShowVisitedOnly } = useTimeline();
 
   // Toolbar toggle options
   const options: ToolbarToggleOption[] = [
@@ -24,6 +24,7 @@ export function CountriesToolbar({
       label: "All Countries",
       ariaLabel: `Show all countries (${allCount})`,
       checked: !showVisitedOnly,
+      disabled: timelineMode,
       onClick: () => setShowVisitedOnly(false),
     },
     {
