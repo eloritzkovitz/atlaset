@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState, type JSX } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks/useUiHint";
 
-export function useUiToggleHint(
-  uiVisible: boolean,
-  setUiVisible: React.Dispatch<React.SetStateAction<boolean>>
-) {
+/**
+ * Manages UI toggle hint display when the UI visibility changes.
+ */
+export function useUiToggleHint() {
+  const { uiVisible, setUiVisible } = useUI();
+
+  // Refs and state to track previous visibility and hint
   const prevUiVisible = useRef(uiVisible);
   const isFirstRender = useRef(true);
   const [hint, setHint] = useState<null | {

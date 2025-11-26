@@ -1,6 +1,10 @@
 import { useSettings } from "@contexts/SettingsContext";
 import { COLOR_PALETTES, HOME_COUNTRY_COLOR } from "@constants/colors";
 
+/**
+ * Returns country colors based on user-selected palette.
+ * @returns Country colors for different states.
+ */
 export function useCountryColors() {
   const { settings } = useSettings();
   const selectedPaletteName = settings.overlayPalettes?.standard || COLOR_PALETTES[0].name;

@@ -1,17 +1,18 @@
+import { useOverlays } from "@contexts/OverlayContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import {
   useOverlayItems,
   useTimelineOverlayItems,
   isTimelineOverlay,
 } from "@features/atlas/overlays";
-import type { AnyOverlay, OverlayMode } from "@types";
 
-export function useMapOverlayItems(
-  overlays: AnyOverlay[],
-  selectedYear: number,
-  overlayMode: OverlayMode
-) {
-  const { timelineMode } = useTimeline();
+/**
+ * Returns map overlay items based on timeline mode.
+ * @returns Array of overlay items based on the current timeline mode.
+ */
+export function useMapOverlayItems() {
+  const { overlays } = useOverlays();
+  const { timelineMode, selectedYear, overlayMode } = useTimeline();
   const timelineOverlays = overlays.filter(isTimelineOverlay);
 
   // Get static and timeline overlay items

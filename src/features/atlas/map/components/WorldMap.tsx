@@ -2,8 +2,6 @@ import { useEffect, useRef } from "react";
 import { ComposableMap, ZoomableGroup } from "react-simple-maps";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
-import { useOverlays } from "@contexts/OverlayContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useContainerDimensions } from "@hooks/useContainerDimensions";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { CountriesLayer } from "./layers/CountriesLayer";
@@ -49,14 +47,10 @@ export function WorldMap({
   const dimensions = useContainerDimensions(containerRef);
 
   // Map projection and data
-  const { projection } = useMapUI();
-
-  // Load overlays data
-  const { overlays } = useOverlays();
+  const { projection } = useMapUI(); 
 
   // Get overlay items based on mode
-  const { selectedYear, overlayMode } = useTimeline();
-  const overlayItems = useMapOverlayItems(overlays, selectedYear, overlayMode);
+  const overlayItems = useMapOverlayItems();
 
   // Handle map event for mouse move or click
   const handleMapEvent = useMapEventHandler({

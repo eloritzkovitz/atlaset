@@ -2,6 +2,10 @@ import { useSettings } from "@contexts/SettingsContext";
 import { COLOR_PALETTES } from "@constants/colors";
 import type { OverlayMode } from "@types";
 
+/**
+ * Manages overlay palette settings.
+ * @returns Current overlay palettes and a function to set them.
+ */
 export function useOverlayPaletteSettings() {
   const { settings, updateSettings } = useSettings();
 

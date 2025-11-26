@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import { ErrorMessage, SplashScreen } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlayContext";
-import { useUI } from "@contexts/UIContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import {
   WorldMap,
@@ -11,19 +10,9 @@ import {
   useMapView,
 } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
-import {
-  AtlasUiContainer,
-  MapUiContainer,
-  useUiToggleHint,
-} from "@features/atlas/ui";
+import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 
 export default function AtlasPage() {
-  // UI state
-  const { uiVisible, setUiVisible } = useUI();
-
-  // UI toggle hint
-  useUiToggleHint(uiVisible, setUiVisible);
-
   // Data state
   const { geoData, geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();

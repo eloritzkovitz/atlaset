@@ -12,6 +12,7 @@ import { SettingsPanel } from "@features/settings";
 import { MapExportPanel } from "../export/components/MapExportPanel";
 import { MenuPanel } from "../menu/MenuPanel";
 import { ShortcutsModal } from "../shortcuts/ShortcutsModal";
+import { useUiToggleHint } from "../hooks/useUiToggleHint";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
@@ -22,7 +23,7 @@ interface AtlasUiContainerProps {
   selectedCountry: any;
   setSelectedCountry: any;
   centerOnCountry: any;
-  centerOnMarker: any;  
+  centerOnMarker: any;
 }
 
 export function AtlasUiContainer({
@@ -34,7 +35,7 @@ export function AtlasUiContainer({
   selectedCountry,
   setSelectedCountry,
   centerOnCountry,
-  centerOnMarker,  
+  centerOnMarker,
 }: AtlasUiContainerProps) {
   // Data state
   const {
@@ -66,6 +67,9 @@ export function AtlasUiContainer({
     setEditingOverlay,
   } = useOverlays();
 
+  // UI toggle hint
+  useUiToggleHint();
+
   return (
     <>
       {/* Panels */}
@@ -76,7 +80,7 @@ export function AtlasUiContainer({
         selectedCountry={selectedCountry}
         onSelect={setSelectedIsoCode}
         onHover={setHoveredIsoCode}
-        onCountryInfo={setSelectedCountry}        
+        onCountryInfo={setSelectedCountry}
       />
       <MarkersPanel
         onAddMarker={startAddingMarker}

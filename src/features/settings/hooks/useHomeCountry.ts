@@ -1,5 +1,9 @@
 import { useSettings } from "@contexts/SettingsContext";
 
+/**
+ * Manages home country settings.
+ * @returns Home country, setter, color flag, and its setter.
+ */
 export function useHomeCountry() {
   const { settings, updateSettings } = useSettings();
 
