@@ -59,7 +59,7 @@ export function TimelineFilters({
             options={timelineFiltersConfig.year.getOptions(years)}
           />
           <div className="mt-4">
-            <div className="font-medium mb-1">Visit count</div>
+            <div className="font-medium mb-2">Visit count</div>
             <div className="flex items-center gap-2 w-full">
               <span className="opacity-70">From</span>
               <NumberInput
