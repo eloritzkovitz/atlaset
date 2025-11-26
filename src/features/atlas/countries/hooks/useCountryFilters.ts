@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import {
@@ -6,15 +6,8 @@ import {
   getFilteredIsoCodes,
 } from "@features/countries/utils/countryFilters";
 import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
-import {
-  getLatestYear,
-  getVisitCountStats,
-  getVisitedCountriesUpToYear,
-} from "@features/visits";
-import {
-  filterByVisited,
-  filterByVisitCount,
-} from "@features/visits/utils/visitFilters";
+import { getLatestYear, getVisitCountStats } from "@features/visits";
+import { filterByVisitCount } from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks/useDebounce";
 import { useOverlays } from "@contexts/OverlayContext";
 import { useCountryData } from "@contexts/CountryDataContext";
@@ -48,28 +41,37 @@ export function useCountryFilters() {
     undefined
   );
 
-  // With overlays applied
-  const filteredIsoCodes = getFilteredIsoCodes(
-    countries,
-    overlays,
-    overlaySelections
-  );
-  const filteredCountries = filterCountries(countries, {
+  // Core filter parameters
+  const filterParams = {
     search: debouncedSearch,
     selectedRegion,
     selectedSubregion,
     selectedSovereignty,
-    overlayCountries: filteredIsoCodes,
-  });
+  };
+
+  // With overlays applied
+  const filteredIsoCodes = useMemo(
+    () => getFilteredIsoCodes(countries, overlays, overlaySelections),
+    [countries, overlays, overlaySelections]
+  );
+  const filteredCountries = useMemo(
+    () =>
+      filterCountries(countries, {
+        ...filterParams,
+        overlayCountries: filteredIsoCodes,
+      }),
+    [countries, filterParams, filteredIsoCodes]
+  );
 
   // Without overlays for counts
-  const filteredCountriesNoOverlay = filterCountries(countries, {
-    search: debouncedSearch,
-    selectedRegion,
-    selectedSubregion,
-    selectedSovereignty,
-    overlayCountries: undefined,
-  });
+  const filteredCountriesNoOverlay = useMemo(
+    () =>
+      filterCountries(countries, {
+        ...filterParams,
+        overlayCountries: undefined,
+      }),
+    [countries, filterParams]
+  );
 
   // Counts
   const allCount = filteredCountriesNoOverlay.length;
@@ -77,34 +79,33 @@ export function useCountryFilters() {
     map: visitedMap,
     min: absoluteMin,
     max: absoluteMax,
-  } = getVisitCountStats(trips, years[years.length - 1]);
+  } = getVisitCountStats(trips, selectedYear);
   const visitedIsoCodes = Object.keys(visitedMap);
-  const visitedCount = visitedIsoCodes.length;
 
-  // If showing visited only, filter the countries accordingly
-  let finalFilteredCountries = filteredCountries;
-  if (showVisitedOnly) {
-    const visitedMapForFilter = getVisitedCountriesUpToYear(
-      trips,
-      selectedYear,
-      undefined
-    );
-    const visitedIsoCodesForFilter = Object.keys(visitedMapForFilter);
-    finalFilteredCountries = filterByVisited(
-      finalFilteredCountries,
-      visitedIsoCodesForFilter
-    );
-  }
+  // Filter visited countries with the same core filters (no overlays)
+  const visitedCountriesFiltered = filteredCountriesNoOverlay.filter((c) =>
+    visitedIsoCodes.includes(c.isoCode)
+  );
+  const visitedCount = visitedCountriesFiltered.length;
 
   // Apply visit count filtering
-  if (showVisitedOnly) {
-    finalFilteredCountries = filterByVisitCount(
-      finalFilteredCountries,
-      visitedMap,
-      minVisitCount,
-      maxVisitCount
-    );
-  }
+  const finalFilteredCountries = useMemo(() => {
+    if (showVisitedOnly) {
+      return filterByVisitCount(
+        filteredCountries,
+        visitedMap,
+        minVisitCount,
+        maxVisitCount
+      );
+    }
+    return filteredCountries;
+  }, [
+    showVisitedOnly,
+    filteredCountries,
+    visitedMap,
+    minVisitCount,
+    maxVisitCount,
+  ]);
 
   // Reset core filters
   function resetCoreFilters() {
