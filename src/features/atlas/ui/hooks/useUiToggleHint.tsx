@@ -7,57 +7,42 @@ import { useUiHint } from "@hooks/useUiHint";
  * Manages UI toggle hint display when the UI visibility changes.
  */
 export function useUiToggleHint() {
-  const { uiVisible, setUiVisible } = useUI();
+  const { uiVisible } = useUI();
 
   // Refs and state to track previous visibility and hint
   const prevUiVisible = useRef(uiVisible);
-  const isFirstRender = useRef(true);
+
+  // Hint state
   const [hint, setHint] = useState<null | {
     message: JSX.Element;
     icon: JSX.Element;
   }>(null);
+  const [hintKey, setHintKey] = useState(0);
 
-  // Keyboard shortcut for toggling UI
+  // Show hint only when UI transitions (never on initial load)
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-      if (e.key.toLowerCase() === "u") {
-        setUiVisible((v) => !v);
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setUiVisible]);
-
-  // Show hint only on toggle, and let it linger for the duration
-  useEffect(() => {
-    if (!isFirstRender.current) {
-      if (!prevUiVisible.current && uiVisible) {
-        setHint({
-          message: <>UI shown. Press U to hide the UI.</>,
-          icon: <FaEye className="text-lg" />,
-        });
-      } else if (prevUiVisible.current && !uiVisible) {
+    if (prevUiVisible.current !== uiVisible) {
+      if (prevUiVisible.current && !uiVisible) {
+        setHintKey((k) => k + 1);
         setHint({
           message: <>UI hidden. Press U to show the UI.</>,
           icon: <FaEyeSlash className="text-lg" />,
         });
+      } else if (!prevUiVisible.current && uiVisible) {
+        setHintKey((k) => k + 1);
+        setHint({
+          message: <>UI shown. Press U to hide the UI.</>,
+          icon: <FaEye className="text-lg" />,
+        });
       }
     }
     prevUiVisible.current = uiVisible;
-    isFirstRender.current = false;
   }, [uiVisible]);
 
-  // Pass the hint to useUiHint, and clear it after duration
-  useUiHint(hint, 4000, { key: "toggle-ui" });
+  // Use the useUiHint hook to display the hint
+  useUiHint(hint, 4000, { key: `toggle-ui-${hintKey}` });
 
+  // Clear hint after 4 seconds
   useEffect(() => {
     if (hint) {
       const timeout = setTimeout(() => setHint(null), 4000);

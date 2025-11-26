@@ -1,25 +1,41 @@
 import { act } from "@testing-library/react";
 import React, { useState } from "react";
+import { UIContext } from "@contexts/UIContext";
 import { useUiToggleHint } from "./useUiToggleHint";
 import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
+import { mockUIContext } from "@test-utils/mockUIContext";
 
 describe("useUiToggleHint", () => {
   let visibleState: boolean;
+  let setUiVisible: React.Dispatch<React.SetStateAction<boolean>>;
 
   setupFakeTimers();
 
   function renderWithState(initialVisible: boolean) {
+    function UiProvider({ children }: { children: React.ReactNode }) {
+      const [uiVisible, _setUiVisible] = useState(initialVisible);
+      visibleState = uiVisible;
+      setUiVisible = _setUiVisible;
+      // Provide all other mock context values, but override uiVisible/setUiVisible
+      return (
+        <UIContext.Provider
+          value={{ ...mockUIContext, uiVisible, setUiVisible: _setUiVisible }}
+        >
+          {children}
+        </UIContext.Provider>
+      );
+    }
+
     function Wrapper() {
-      const [visible, setUiVisible] = useState(initialVisible);
-      visibleState = visible;
-      useUiToggleHint(visible, setUiVisible);
-      // Update visibleState on each render
-      React.useEffect(() => {
-        visibleState = visible;
-      }, [visible]);
+      useUiToggleHint();
       return null;
     }
-    renderWithUiHintProviders(<Wrapper />);
+
+    renderWithUiHintProviders(
+      <UiProvider>
+        <Wrapper />
+      </UiProvider>
+    );
   }
 
   it("does not toggle on mount", () => {
@@ -27,21 +43,21 @@ describe("useUiToggleHint", () => {
     expect(visibleState).toBe(false);
   });
 
-  it("toggles from visible to hidden on 'u' key", () => {
+  it("toggles from visible to hidden", () => {
     renderWithState(true);
 
     act(() => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "u" }));
+      setUiVisible((v) => !v);
     });
 
     expect(visibleState).toBe(false);
   });
 
-  it("toggles from hidden to visible on 'u' key", () => {
+  it("toggles from hidden to visible", () => {
     renderWithState(false);
 
     act(() => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "u" }));
+      setUiVisible((v) => !v);
     });
 
     expect(visibleState).toBe(true);

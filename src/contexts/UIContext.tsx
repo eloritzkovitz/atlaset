@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 
-interface UIContextType {
+export interface UIContextType {
   uiVisible: boolean;
   setUiVisible: (v: boolean | ((prev: boolean) => boolean)) => void;
   showMenu: boolean;
@@ -47,7 +47,7 @@ type PanelSelection =
 // Type for modal selection
 type ModalSelection = "shortcuts" | "legend" | "countryDetails" | null;
 
-const UIContext = createContext<UIContextType | undefined>(undefined);
+export const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
