@@ -6,9 +6,9 @@ import { useUiHint } from "@hooks/useUiHint";
 import { MapCoordinatesDisplay } from "../controls/MapCoordinatesDisplay";
 import { MapLegendModal } from "../legend/MapLegendModal";
 import { useMapLegendItems } from "../legend/useMapLegendItems";
+import { TimelineBar } from "../timeline/components/timelineBar/TimelineBar";
 import { TimelineNavigator } from "../timeline/components/TimelineNavigator";
 import { MapToolbar } from "../toolbar/MapToolbar";
-import { TimelineBar } from "../timeline/components/TimelineBar";
 
 interface MapUiContainerProps {
   zoom: number;
