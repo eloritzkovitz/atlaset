@@ -1,14 +1,7 @@
-interface TimelineBarProps {
-  years: number[];
-  selectedYear: number;
-  onSelectYear: (year: number) => void;
-}
+import { useTimeline } from "@contexts/TimelineContext";
 
-export function TimelineBar({
-  years,
-  selectedYear,
-  onSelectYear,
-}: TimelineBarProps) {
+export function TimelineBar() {
+  const { years, selectedYear, setSelectedYear } = useTimeline();
   const selectedIdx = years.indexOf(selectedYear);
   const total = years.length;
   const maxVisible = 5;
@@ -59,7 +52,7 @@ export function TimelineBar({
                 flex flex-col items-center group focus:outline-none
               `}
               style={{ minWidth: 40 }}
-              onClick={() => onSelectYear(year)}
+              onClick={() => setSelectedYear(year)}
               aria-label={`Select year ${year}`}
             >
               <span
@@ -72,7 +65,9 @@ export function TimelineBar({
                   }
                 `}
               >
-                <span className={year === selectedYear ? "font-bold" : "text-xs"}>
+                <span
+                  className={year === selectedYear ? "font-bold" : "text-xs"}
+                >
                   {year}
                 </span>
               </span>
