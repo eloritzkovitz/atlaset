@@ -24,7 +24,8 @@ export function CountryList({
   onCountryInfo,
 }: CountryListProps) {
   const highlightIsoCode = hoveredIsoCode || selectedIsoCode;
-  const highlightedIsoCodes = useHighlightYearlyCountries();
+  const [highlightedIsoCodes, highlightDirection] =
+    useHighlightYearlyCountries();
   const { selectedYear, years } = useTimeline();
   const { trips } = useTrips();
 
@@ -93,6 +94,7 @@ export function CountryList({
                     <CountryVisitBadge
                       revisit={previouslyVisitedIsoCodes.has(country.isoCode)}
                       count={visitCountByIsoCode[country.isoCode] || 1}
+                      direction={highlightDirection}
                     />
                   )}
                 </li>

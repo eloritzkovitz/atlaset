@@ -54,7 +54,7 @@ export function WorldMap({
   const overlayItems = useMapOverlayItems();
 
   // Get highlighted countries for the current timeline year
-  const highlightedIsoCodes = useHighlightYearlyCountries();
+  const [highlightedIsoCodes, highlightDirection] = useHighlightYearlyCountries();
 
   // Handle map event for mouse move or click
   const handleMapEvent = useMapEventHandler({
@@ -113,7 +113,7 @@ export function WorldMap({
               overlayItems={overlayItems}
               selectedIsoCode={selectedIsoCode}
               hoveredIsoCode={hoveredIsoCode}
-              highlightedIsoCodes={highlightedIsoCodes}
+              highlightedIsoCodes={highlightDirection === "asc" ? highlightedIsoCodes : []}
               onCountryClick={onCountryClick}
               onCountryHover={onCountryHover}
               isAddingMarker={isAddingMarker}
