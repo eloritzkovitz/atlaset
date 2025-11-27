@@ -1,3 +1,4 @@
+import { useHighlightYearlyCountries } from "@features/atlas/ui";
 import { CountryWithFlag } from "@features/countries";
 import type { Country } from "@types";
 
@@ -8,7 +9,7 @@ interface CountryListProps {
   onSelect: (isoCode: string | null) => void;
   onHover: (isoCode: string | null) => void;
   onCountryInfo?: (country: Country) => void;
-};
+}
 
 export function CountryList({
   countries,
@@ -19,6 +20,8 @@ export function CountryList({
   onCountryInfo,
 }: CountryListProps) {
   const highlightIsoCode = hoveredIsoCode || selectedIsoCode;
+  const highlightedIsoCodes = useHighlightYearlyCountries();
+
   return (
     <div className="flex-1 min-h-0 overflow-y-auto -mx-4">
       <div
@@ -36,6 +39,9 @@ export function CountryList({
           ) : (
             countries.map((country) => {
               const isHighlighted = highlightIsoCode === country.isoCode;
+              const isTempHighlight = highlightedIsoCodes.includes(
+                country.isoCode
+              );
               return (
                 <li
                   key={country.isoCode}
@@ -48,12 +54,13 @@ export function CountryList({
                   onMouseEnter={() => onHover(country.isoCode)}
                   onMouseLeave={() => onHover(null)}
                   className={`px-4 py-2 my-1 rounded cursor-pointer flex items-center gap-3 transition
-                ${isHighlighted ? "bg-blue-50 dark:bg-gray-500 font-bold" : ""}
-              `}
+            ${isHighlighted ? "bg-blue-50 dark:bg-gray-500 font-bold" : ""}
+            ${isTempHighlight ? "dark:text-yellow-500 font-bold" : ""}
+          `}
                 >
                   <CountryWithFlag
                     isoCode={country.isoCode}
-                    name={country.name}                    
+                    name={country.name}
                   />
                 </li>
               );

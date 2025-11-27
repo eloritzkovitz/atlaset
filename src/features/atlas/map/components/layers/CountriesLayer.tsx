@@ -15,6 +15,7 @@ type MapCountriesLayerProps = {
   overlayItems?: OverlayItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
+  highlightedIsoCodes?: string[];
   onCountryClick?: (countryIsoCode: string) => void;
   onCountryHover?: (isoCode: string | null) => void;
   defaultColor?: string;
@@ -26,6 +27,7 @@ export function CountriesLayer({
   overlayItems = [],
   selectedIsoCode,
   hoveredIsoCode,
+  highlightedIsoCodes = [],
   onCountryClick,
   onCountryHover,
   isAddingMarker,
@@ -56,7 +58,8 @@ export function CountriesLayer({
               homeCountry &&
               isoA2 === homeCountry.toUpperCase();
 
-            // Highlight logic
+            // Coloring logic
+            const isHighlighted = highlightedIsoCodes.includes(isoA2);
             const isSelected =
               !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
             const isHovered =
@@ -73,7 +76,9 @@ export function CountriesLayer({
             let style = geographyStyle.default;
             let tooltip = geo.properties.name;
 
-            if (isHovered) {
+            if (isHighlighted) {
+              style = geographyStyle.highlight;
+            } else if (isHovered) {
               style = geographyStyle.hover;
             } else if (isHomeCountry) {
               style = { ...geographyStyle.default, fill: HOME_COUNTRY_COLOR };

@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { ComposableMap, ZoomableGroup } from "react-simple-maps";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
+import { useHighlightYearlyCountries } from "@features/atlas/ui";
 import { useContainerDimensions } from "@hooks/useContainerDimensions";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { CountriesLayer } from "./layers/CountriesLayer";
@@ -47,10 +48,13 @@ export function WorldMap({
   const dimensions = useContainerDimensions(containerRef);
 
   // Map projection and data
-  const { projection } = useMapUI(); 
+  const { projection } = useMapUI();
 
   // Get overlay items based on mode
   const overlayItems = useMapOverlayItems();
+
+  // Get highlighted countries for the current timeline year
+  const highlightedIsoCodes = useHighlightYearlyCountries();
 
   // Handle map event for mouse move or click
   const handleMapEvent = useMapEventHandler({
@@ -109,6 +113,7 @@ export function WorldMap({
               overlayItems={overlayItems}
               selectedIsoCode={selectedIsoCode}
               hoveredIsoCode={hoveredIsoCode}
+              highlightedIsoCodes={highlightedIsoCodes}
               onCountryClick={onCountryClick}
               onCountryHover={onCountryHover}
               isAddingMarker={isAddingMarker}
