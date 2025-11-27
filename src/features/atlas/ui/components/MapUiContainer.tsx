@@ -6,8 +6,9 @@ import { useUiHint } from "@hooks/useUiHint";
 import { MapCoordinatesDisplay } from "../controls/MapCoordinatesDisplay";
 import { MapLegendModal } from "../legend/MapLegendModal";
 import { useMapLegendItems } from "../legend/useMapLegendItems";
+import { TimelineNavigator } from "../timeline/components/TimelineNavigator";
 import { MapToolbar } from "../toolbar/MapToolbar";
-import { TimelineNavigator } from "../timeline/TimelineNavigator";
+import { TimelineBar } from "../timeline/components/TimelineBar";
 
 interface MapUiContainerProps {
   zoom: number;
@@ -25,7 +26,14 @@ export function MapUiContainer({
   isAddingMarker,
 }: MapUiContainerProps) {
   const { showLegend, toggleLegend, uiVisible } = useUI();
-  const { timelineMode, setTimelineMode, overlayMode } = useTimeline();
+  const {
+    timelineMode,
+    setTimelineMode,
+    overlayMode,
+    years,
+    selectedYear,
+    setSelectedYear,
+  } = useTimeline();
   const legendItems = useMapLegendItems(overlays, timelineMode, overlayMode);
 
   // UI hint for adding marker
@@ -67,7 +75,18 @@ export function MapUiContainer({
         setTimelineMode={setTimelineMode}
       />
       {selectedCoords && <MapCoordinatesDisplay coords={selectedCoords} />}
-      {timelineMode && <TimelineNavigator />}
+      {timelineMode && (
+        <div className="flex flex-col items-center">
+          <div className="mb-2">
+            <TimelineBar
+              years={years}
+              selectedYear={selectedYear}
+              onSelectYear={setSelectedYear}
+            />
+          </div>
+          <TimelineNavigator />
+        </div>
+      )}
       <MapLegendModal
         open={showLegend}
         onClose={toggleLegend}
