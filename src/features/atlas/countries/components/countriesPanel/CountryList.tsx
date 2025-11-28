@@ -58,7 +58,7 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
         tabIndex={0}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        className="flex-1 min-h-0 overflow-y-auto -mx-4"
+        className="list flex-1 min-h-0 overflow-y-auto -mx-3 focus:outline-none"
       >
         <div
           className="w-full select-none"

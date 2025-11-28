@@ -61,19 +61,19 @@ export function MapUiContainer({
 
   return (
     <>
-      {/* Map UI components */}
-      <MapToolbar
-        zoom={zoom}
-        setZoom={setZoom}
-        setTimelineMode={setTimelineMode}
-      />
-      {selectedCoords && <MapCoordinatesDisplay coords={selectedCoords} />}
+      {/* Map UI components */}      
       {timelineMode && (
         <>
           <TimelineBar />
           <TimelineNavigator />
         </>
       )}
+      <MapToolbar
+        zoom={zoom}
+        setZoom={setZoom}
+        setTimelineMode={setTimelineMode}
+      />
+      {selectedCoords && <MapCoordinatesDisplay coords={selectedCoords} />}
       <MapLegendModal
         open={showLegend}
         onClose={toggleLegend}

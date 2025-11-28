@@ -1,5 +1,6 @@
-import { useRef } from "react";
-import { FaSearch, FaTimes } from "react-icons/fa";
+import { useRef, useState } from "react";
+import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
+import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 
 interface SearchInputProps {
@@ -16,6 +17,10 @@ export function SearchInput({
   className = "",
 }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Focus state and keyboard focus ring
+  const [isFocused, setIsFocused] = useState(false);
+  const showRing = useKeyboardFocusRing();
 
   // Focus search input when / is pressed
   useKeyHandler(
@@ -40,13 +45,19 @@ export function SearchInput({
   );
 
   return (
-    <div className="relative w-full">
-      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+    <div
+      className={`relative w-full rounded-lg transition-shadow ${
+        isFocused && showRing ? "ring-2 ring-blue-500" : ""
+      }`}
+    >
+      <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
       <input
-        ref={inputRef}
+        ref={inputRef}        
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         onKeyDown={(e) => {
           if (e.key === "Escape") {
             e.preventDefault();
@@ -56,7 +67,7 @@ export function SearchInput({
         placeholder={placeholder}
         title={placeholder || "Search"}
         aria-label={placeholder || "Search"}
-        className={`filter-select pl-10 pr-10 py-2 bg-gray-100 rounded border border-none text-base focus:outline-none focus:ring-none w-full ${className}`}
+        className={`w-full pl-10 pr-10 py-2 bg-gray-100 rounded-lg border border-none text-base focus:outline-none ${className}`}
       />
       {value && (
         <button
@@ -66,7 +77,7 @@ export function SearchInput({
           onClick={() => onChange("")}
           className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none"
         >
-          <FaTimes />
+          <FaXmark />
         </button>
       )}
     </div>

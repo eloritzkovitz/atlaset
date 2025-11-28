@@ -71,6 +71,13 @@ export default function AtlasPage() {
           centerOnMarker={centerOnMarker}
         />
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
+          <MapUiContainer
+            zoom={zoom}
+            setZoom={setZoom}
+            selectedCoords={selectedCoords}
+            overlays={overlays}
+            isAddingMarker={isAddingMarker}
+          />
           <WorldMap
             geoData={geoData}
             zoom={zoom}
@@ -86,13 +93,6 @@ export default function AtlasPage() {
             svgRef={svgRef}
             isAddingMarker={isAddingMarker}
             setSelectedCoords={(coords) => setSelectedCoords(coords)}
-          />
-          <MapUiContainer
-            zoom={zoom}
-            setZoom={setZoom}
-            selectedCoords={selectedCoords}
-            overlays={overlays}
-            isAddingMarker={isAddingMarker}
           />
         </div>
       </div>

@@ -56,12 +56,13 @@ export function Modal({
   return ReactDOM.createPortal(
     <>
       <div
-        className={`modal-backdrop ${backdropClassName ?? ""}`}
         onClick={() => {
           if (!disableClose) onClose();
         }}
         aria-modal="true"
+        inert={!isOpen}
         role="dialog"
+        className={`modal-backdrop ${backdropClassName ?? ""}`}
         style={{ pointerEvents: isOpen ? "auto" : "none" }}
       >
         <div
