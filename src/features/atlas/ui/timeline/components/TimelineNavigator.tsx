@@ -28,7 +28,7 @@ export function TimelineNavigator({}) {
     setPlaying,
     speed,
     handleSpeedChange,
-  } = useTimelineNavigation(years, selectedYear, setSelectedYear);
+  } = useTimelineNavigation();
 
   return (
     <div className="absolute bottom-7 left-0 w-full z-50 flex items-center justify-center">

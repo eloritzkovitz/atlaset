@@ -1,13 +1,13 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
+import { useTimeline } from "@contexts/TimelineContext";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 
 const BASE_PLAY_INTERVAL = 4000;
 
-export function useTimelineNavigation(
-  years: number[],
-  selectedYear: number,
-  setSelectedYear: (year: number) => void
-) {
+export function useTimelineNavigation() {
+  const { years, selectedYear, setSelectedYear } = useTimeline();
+
+  // Current index in years array
   const currentIndex = useMemo(
     () => years.indexOf(selectedYear),
     [years, selectedYear]
