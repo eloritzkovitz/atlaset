@@ -1,5 +1,10 @@
 import React from "react";
-import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
+import {
+  FaArrowDown,
+  FaArrowLeft,
+  FaArrowRight,
+  FaArrowUp,
+} from "react-icons/fa6";
 import type { KeyCommand } from "@types";
 
 // Helper to render arrow icons for arrow keys
@@ -9,6 +14,10 @@ function renderKey(key: string) {
       return <FaArrowUp className="inline-block align-middle" />;
     case "ArrowDown":
       return <FaArrowDown className="inline-block align-middle" />;
+    case "ArrowLeft":
+      return <FaArrowLeft className="inline-block align-middle" />;
+    case "ArrowRight":
+      return <FaArrowRight className="inline-block align-middle" />;
     default:
       return key.length === 1 ? key.toLowerCase() : key;
   }
@@ -31,7 +40,7 @@ export function ShortcutRow({ cmd }: { cmd: KeyCommand }) {
         <span className="inline-flex gap-2 justify-center">
           {cmd.modifiers.map((m: string, i) => (
             <React.Fragment key={m}>
-              <kbd className="px-2 py-1 bg-gray-200 border border-gray-400 rounded text-sm font-mono shadow text-gray-800 select-none dark:text-gray-200 dark:bg-gray-600 dark:border-gray-500">
+              <kbd className="px-2 py-1 bg-gray-200 border border-gray-400 rounded text-sm font-mono shadow-sm text-gray-800 select-none dark:text-gray-200 dark:bg-gray-600 dark:border-gray-500">
                 {renderModifier(m)}
               </kbd>
               <span className="px-1 text-gray-600 dark:text-gray-400 select-none">
@@ -39,7 +48,7 @@ export function ShortcutRow({ cmd }: { cmd: KeyCommand }) {
               </span>
             </React.Fragment>
           ))}
-          <kbd className="px-2 py-1 bg-gray-200 border border-gray-400 rounded text-sm font-mono shadow text-gray-800 select-none dark:text-gray-200 dark:bg-gray-600 dark:border-gray-500">
+          <kbd className="px-2 py-1 bg-gray-200 border border-gray-400 rounded text-sm font-mono shadow-sm text-gray-800 select-none dark:text-gray-200 dark:bg-gray-600 dark:border-gray-500">
             {renderKey(cmd.key)}
           </kbd>
         </span>

@@ -32,6 +32,7 @@ export function ShortcutsModal() {
             Keyboard Shortcuts
           </>
         }
+        showSeparator={true}
       >
         <ActionButton onClick={closeModal} ariaLabel="Close" title="Close">
           <FaXmark />

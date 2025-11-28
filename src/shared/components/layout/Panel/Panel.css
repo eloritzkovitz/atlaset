@@ -21,7 +21,7 @@
 /* PanelHeader styles */
 
 .panel-header {
-  @apply px-4 pt-8 pb-0 flex flex-shrink-0 items-center justify-between mb-4;
+  @apply px-4 pt-4 pb-0 flex flex-shrink-0 items-center justify-between mb-4;
 }
 
 .panel-header-title {
