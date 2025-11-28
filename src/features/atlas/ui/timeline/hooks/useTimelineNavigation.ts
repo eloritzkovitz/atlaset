@@ -62,6 +62,16 @@ export function useTimelineNavigation() {
     true
   );
 
+  // Spacebar play/pause toggle
+  useKeyHandler(
+    (e) => {
+      e.preventDefault();
+      setPlaying((p) => !p);
+    },
+    [" "],
+    true
+  );
+
   // Auto-advance when playing
   useEffect(() => {
     if (!playing) return;
