@@ -3,6 +3,8 @@ import {
   FaChevronRight,
   FaAnglesLeft,
   FaAnglesRight,
+  FaPause,
+  FaPlay,
 } from "react-icons/fa6";
 import { ActionButton, ToolbarSelectButton } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
@@ -22,11 +24,29 @@ export function TimelineNavigator({}) {
     handleForward,
     handleFirst,
     handleLast,
+    playing,
+    setPlaying,
+    speed,
+    handleSpeedChange,
   } = useTimelineNavigation(years, selectedYear, setSelectedYear);
 
   return (
-    <div className="absolute bottom-6 left-0 w-full z-50 flex items-center justify-center">
+    <div className="absolute bottom-7 left-0 w-full z-50 flex items-center justify-center">
       <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+        <ActionButton
+          onClick={() => setPlaying((p) => !p)}
+          ariaLabel={playing ? "Pause" : "Play"}
+          title={playing ? "Pause" : "Play"}
+          icon={
+            playing ? (
+              <FaPause />
+            ) : (
+              <FaPlay className={!canGoForward ? "opacity-50" : ""} />
+            )
+          }
+          disabled={!canGoForward}
+          className="toolbar-btn rounded-full transition"
+        />
         <ActionButton
           onClick={handleFirst}
           ariaLabel="First year"
@@ -74,8 +94,16 @@ export function TimelineNavigator({}) {
           disabled={currentIndex === years.length - 1}
           className="toolbar-btn rounded-full transition"
         />
+        <ActionButton
+          onClick={handleSpeedChange}
+          ariaLabel={`Speed: ${speed}x`}
+          title={`Speed: ${speed}x`}
+          className="toolbar-btn rounded-full transition"
+        >
+          <span>{speed}x</span>
+        </ActionButton>
       </div>
-      <div className="relative left-68 flex items-center">
+      <div className="relative left-80 flex items-center">
         <ToolbarSelectButton
           value={overlayMode}
           onChange={(mode) => setOverlayMode(mode as OverlayMode)}

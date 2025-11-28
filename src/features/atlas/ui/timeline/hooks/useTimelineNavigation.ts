@@ -1,5 +1,7 @@
-import { useMemo, useCallback } from "react";
+import { useMemo, useCallback, useState, useEffect } from "react";
 import { useKeyHandler } from "@hooks/useKeyHandler";
+
+const BASE_PLAY_INTERVAL = 4000;
 
 export function useTimelineNavigation(
   years: number[],
@@ -10,8 +12,15 @@ export function useTimelineNavigation(
     () => years.indexOf(selectedYear),
     [years, selectedYear]
   );
+
+  // Navigation availability
   const canGoBack = currentIndex > 0;
   const canGoForward = currentIndex < years.length - 1;
+
+  // Playing state
+  const [playing, setPlaying] = useState(false);
+  const [speed, setSpeed] = useState(1);
+  const speeds = [1, 2, 4];
 
   // Go to previous year
   const handleBack = useCallback(() => {
@@ -49,6 +58,30 @@ export function useTimelineNavigation(
     true
   );
 
+  // Auto-advance when playing
+  useEffect(() => {
+    if (!playing) return;
+    if (!canGoForward) {
+      setPlaying(false);
+      return;
+    }
+    const interval = setInterval(() => {
+      const idx = years.indexOf(selectedYear);
+      if (idx < years.length - 1) {
+        setSelectedYear(years[idx + 1]);
+      } else {
+        setPlaying(false);
+      }
+    }, BASE_PLAY_INTERVAL / speed);
+    return () => clearInterval(interval);
+  }, [playing, canGoForward, years, selectedYear, setSelectedYear, speed]);
+
+  // Speed change handler
+  const handleSpeedChange = () => {
+    const idx = speeds.indexOf(speed);
+    setSpeed(speeds[(idx + 1) % speeds.length]);
+  };
+
   return {
     currentIndex,
     canGoBack,
@@ -57,5 +90,9 @@ export function useTimelineNavigation(
     handleForward,
     handleFirst,
     handleLast,
+    playing,
+    setPlaying,
+    speed,
+    handleSpeedChange,
   };
 }
