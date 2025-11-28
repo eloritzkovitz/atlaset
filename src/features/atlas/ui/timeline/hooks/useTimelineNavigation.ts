@@ -4,6 +4,10 @@ import { useKeyHandler } from "@hooks/useKeyHandler";
 
 const BASE_PLAY_INTERVAL = 4000;
 
+/**
+ * Manages timeline navigation logic including year selection, playback, and keyboard controls.
+ * @returns Navigation state and handlers.
+ */
 export function useTimelineNavigation() {
   const { years, selectedYear, setSelectedYear } = useTimeline();
 
