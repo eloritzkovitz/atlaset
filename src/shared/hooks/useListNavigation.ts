@@ -1,6 +1,6 @@
 import { useKeyHandler } from "@hooks/useKeyHandler";
 
-type UseListNavigationProps<T> = {
+interface UseListNavigationProps<T> {
   items: T[];
   getKey: (item: T) => string;
   selectedKey: string | null;

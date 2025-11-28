@@ -72,8 +72,7 @@ export function AtlasUiContainer({
 
   return (
     <>
-      {/* Panels */}
-      <MenuPanel />
+      {/* Panels */}      
       <CountriesPanel
         selectedIsoCode={selectedIsoCode}
         hoveredIsoCode={hoveredIsoCode}
@@ -94,6 +93,7 @@ export function AtlasUiContainer({
       />
       <MapExportPanel svgRef={svgRef} />
       <SettingsPanel />
+      <MenuPanel />
 
       {/* Modals */}
       <CountryDetailsModal

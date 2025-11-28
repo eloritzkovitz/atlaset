@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
@@ -87,6 +87,10 @@ export function CountriesPanel({
     setSortBy("name-asc");
   }, [showVisitedOnly, setSortBy]);
 
+  // Keyboard navigation state
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [isListFocused, setIsListFocused] = useState(false);
+
   // Keyboard navigation within country list
   useListNavigation({
     items: sortedCountries,
@@ -96,7 +100,7 @@ export function CountriesPanel({
     onSelect,
     onHover,
     onItemInfo: onCountryInfo,
-    enabled: uiVisible && showCountries,
+    enabled: uiVisible && showCountries && isListFocused,
   });
 
   // Handle country info action
@@ -152,6 +156,8 @@ export function CountriesPanel({
           />
           <Separator />
           <CountryList
+            ref={listContainerRef}
+            setIsFocused={setIsListFocused}
             countries={sortedCountries}
             selectedIsoCode={selectedIsoCode}
             hoveredIsoCode={hoveredIsoCode}
