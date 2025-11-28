@@ -45,11 +45,11 @@ export function TimelineBar() {
   ];
 
   return (
-    <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-20 px-4 py-2 flex items-center gap-2">
+    <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-20 px-4 py-2 flex items-center gap-2">
       {/* Timeline line */}
       <div
-        className="absolute left-0 right-0 top-1/2 h-1 bg-gray-300 opacity-20 rounded"
-        style={{ transform: "translateY(-50%)" }}
+        className="absolute left-0 right-0 top-1/2 h-1 bg-gray-300 opacity-20 rounded pointer-events-none"
+        style={{ zIndex: 0 }}
       />
 
       {/* Year markers */}
@@ -82,25 +82,33 @@ export function TimelineBar() {
                 onExpand={() => setExpandedYear(year)}
                 onCollapse={() => setExpandedYear(null)}
               />
+              {/* Year number above */}
+              <span
+                className={`${
+                  year === selectedYear ? "font-bold" : "font-normal"
+                }`}
+                style={{ zIndex: 1 }}
+              >
+                {year}
+              </span>
+              {/* Dot on the line */}
               <button
-                className="flex flex-col items-center group focus:outline-none"
-                style={{ minWidth: YEAR_MARKER_MIN_WIDTH }}
+                className="focus:outline-none mt-1"
                 onClick={() => setSelectedYear(year)}
                 aria-label={`Select year ${year}`}
                 type="button"
+                style={{ zIndex: 1 }}
               >
                 <span
                   className={`
-                    w-8 h-8 rounded-full flex items-center justify-center transition
-                    ${year === selectedYear ? "scale-110" : "text-gray-700"}
+                    rounded-full flex items-center justify-center transition hover:bg-gray-400
+                    ${
+                      year === selectedYear
+                        ? "w-3 h-3 bg-blue-500 mb-5"
+                        : "w-2 h-2 bg-gray-300 mb-2"
+                    }
                   `}
-                >
-                  <span
-                    className={year === selectedYear ? "font-bold" : "text-xs"}
-                  >
-                    {year}
-                  </span>
-                </span>
+                />
               </button>
             </div>
           );
