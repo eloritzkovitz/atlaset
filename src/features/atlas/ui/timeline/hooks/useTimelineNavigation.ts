@@ -48,7 +48,7 @@ export function useTimelineNavigation() {
       setSelectedYear(years[years.length - 1]);
   }, [years, selectedYear, setSelectedYear]);
 
-  // Arrow key navigation
+  // Arrow key and Home/End navigation
   useKeyHandler(
     (e) => {
       const idx = years.indexOf(selectedYear);
@@ -56,9 +56,13 @@ export function useTimelineNavigation() {
         setSelectedYear(years[idx - 1]);
       } else if (e.key === "ArrowRight" && idx < years.length - 1) {
         setSelectedYear(years[idx + 1]);
+      } else if (e.key === "Home") {
+        setSelectedYear(years[0]);
+      } else if (e.key === "End") {
+        setSelectedYear(years[years.length - 1]);
       }
     },
-    ["ArrowLeft", "ArrowRight"],
+    ["ArrowLeft", "ArrowRight", "Home", "End"],
     true
   );
 

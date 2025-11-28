@@ -3,12 +3,13 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
-import { VisitedCountryNames } from "./VisitedCountryNames";
 import {
   CENTER_INDEX,
   YEAR_MARKER_MIN_WIDTH,
   MAX_COUNTRIES_BEFORE_EXPAND,
 } from "./constants";
+import { VisitedCountryNames } from "./VisitedCountryNames";
+import { TimelineDot } from "./TimelineDot";
 
 export function TimelineBar() {
   const { countries } = useCountryData();
@@ -53,19 +54,21 @@ export function TimelineBar() {
       />
 
       {/* Year markers */}
-      <div className="flex justify-center gap-4 relative">
+      <div className="absolute flex bottom-3 justify-center gap-4 relative">
         {paddedYears.map((year, idx) => {
           if (year === null)
             return (
               <span key={idx} style={{ minWidth: YEAR_MARKER_MIN_WIDTH }} />
             );
 
+          // Get visited countries for the year
           const visitedIsoCodes =
             getVisitedCountriesForYear(trips, year, undefined) || [];
           const visited = visitedIsoCodes
             .map((code) => countries.find((c) => c.isoCode === code)?.name)
             .filter(Boolean) as string[];
 
+          // Determine if the current year is expanded
           const isExpanded = expandedYear === year;
           const showExpand = visited.length > MAX_COUNTRIES_BEFORE_EXPAND;
 
@@ -82,34 +85,20 @@ export function TimelineBar() {
                 onExpand={() => setExpandedYear(year)}
                 onCollapse={() => setExpandedYear(null)}
               />
-              {/* Year number above */}
+              {/* Year number */}
               <span
-                className={`${
+                className={`mb-1 ${
                   year === selectedYear ? "font-bold" : "font-normal"
                 }`}
                 style={{ zIndex: 1 }}
               >
                 {year}
               </span>
-              {/* Dot on the line */}
-              <button
-                className="focus:outline-none mt-1"
+              <TimelineDot
+                selected={year === selectedYear}
                 onClick={() => setSelectedYear(year)}
-                aria-label={`Select year ${year}`}
-                type="button"
-                style={{ zIndex: 1 }}
-              >
-                <span
-                  className={`
-                    rounded-full flex items-center justify-center transition hover:bg-gray-400
-                    ${
-                      year === selectedYear
-                        ? "w-3 h-3 bg-blue-500 mb-5"
-                        : "w-2 h-2 bg-gray-300 mb-2"
-                    }
-                  `}
-                />
-              </button>
+                ariaLabel={`Select year ${year}`}
+              />
             </div>
           );
         })}

@@ -17,7 +17,7 @@ export function VisitedCountryNames({
   onCollapse,
 }: VisitedCountryNamesProps) {
   return (
-    <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col-reverse items-start">
+    <div className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col-reverse items-start">
       {showExpand && (
         <ExpandCollapseButton
           expanded={isExpanded}
