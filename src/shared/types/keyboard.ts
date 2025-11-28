@@ -45,7 +45,7 @@ export type Key =
   | "0"
   | "?"
   | "/"
-  | " ";
+  | " " | "Space";
 
 // Modifier type definition
 export type Modifier = "Ctrl" | "Alt" | "Shift" | "Meta";
