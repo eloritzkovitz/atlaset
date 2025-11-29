@@ -38,18 +38,19 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 
 ## Technologies Used
 
-- **React (Typescript)** – UI library for building interactive interfaces
+- **React** & **TypeScript** — Modern, strongly-typed UI development
 - **Vite** – Fast build tool and development server
-- **Tailwind CSS** – Utility-first CSS framework for rapid UI development
+- **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
 - **PWA (Progressive Web App)** – Offline support and installability
 - **Jest / Vitest** – Testing frameworks for unit and integration tests
-- **Cypress** – For End-to-end testing
+- **Cypress** — End-to-end testing for user flows
 
 ## Documentation
 
 - [Getting started](docs/getting-started.md)
 - [Data Sources](docs/data-sources.md)
 - [Overlays](overlays.md)
+- [Trips](trips.md)
 - [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 
 ## Authors

@@ -1,0 +1,8 @@
+{
+  "name": "Summer in Europe",
+  "countries": ["FR", "DE", "IT"],
+  "startDate": "2023-07-01",
+  "endDate": "2023-07-15",
+  "category": "Vacation",
+  "notes": "Visited Paris, Berlin, and Rome."
+}
