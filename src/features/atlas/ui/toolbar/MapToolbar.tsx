@@ -11,7 +11,7 @@ import {
   FaMap,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar, ToolbarSeparator } from "@components";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineOverlay } from "@features/atlas/overlays";
 import { ZoomControls } from "../controls/ZoomControls";

@@ -1,5 +1,5 @@
 import { useMarkers } from "@contexts/MarkersContext";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
 import {
   MarkerDetailsModal,

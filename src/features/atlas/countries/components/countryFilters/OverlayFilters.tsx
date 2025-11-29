@@ -1,6 +1,6 @@
 import { FaLayerGroup } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { overlayFilterConfig } from "../../config/filtersConfig";
 
 interface OverlayFiltersProps {

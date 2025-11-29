@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { ErrorMessage, SplashScreen } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import {
   WorldMap,

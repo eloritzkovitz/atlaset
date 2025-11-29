@@ -1,4 +1,4 @@
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import {
   useOverlayItems,

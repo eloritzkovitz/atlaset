@@ -9,7 +9,7 @@ import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/over
 import { getLatestYear, getVisitCountStats } from "@features/visits";
 import { filterByVisitCount } from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks/useDebounce";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useCountryData } from "@contexts/CountryDataContext";
 
 /**

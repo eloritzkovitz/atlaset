@@ -7,7 +7,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { ActionButton, ErrorMessage, LoadingSpinner, Panel } from "@components";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
 import {
   importOverlaysFromFile,

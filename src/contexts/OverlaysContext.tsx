@@ -4,7 +4,7 @@ import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
 import { overlaysService } from "@services/overlaysService";
 import type { AnyOverlay } from "@types";
 
-interface OverlayContextType {
+interface OverlaysContextType {
   overlays: AnyOverlay[];
   setOverlays: React.Dispatch<React.SetStateAction<AnyOverlay[]>>;
   overlaySelections: Record<string, string>;
@@ -29,9 +29,9 @@ interface OverlayContextType {
   setEditingOverlay: React.Dispatch<React.SetStateAction<AnyOverlay | null>>;
 };
 
-const OverlayContext = createContext<OverlayContextType | undefined>(undefined);
+const OverlaysContext = createContext<OverlaysContextType | undefined>(undefined);
 
-export function OverlayProvider({ children }: { children: React.ReactNode }) {
+export function OverlaysProvider({ children }: { children: React.ReactNode }) {
   // Overlay state
   const [overlays, setOverlays] = useState<AnyOverlay[]>([]);
   const [overlaySelections, setOverlaySelections] = useState<
@@ -160,7 +160,7 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <OverlayContext.Provider
+    <OverlaysContext.Provider
       value={{
         overlays,
         setOverlays,
@@ -185,13 +185,13 @@ export function OverlayProvider({ children }: { children: React.ReactNode }) {
       }}
     >
       {children}
-    </OverlayContext.Provider>
+    </OverlaysContext.Provider>
   );
 }
 
-// Custom hook for consuming the OverlayContext
+// Custom hook for consuming the OverlaysContext
 export function useOverlays() {
-  const ctx = useContext(OverlayContext);
+  const ctx = useContext(OverlaysContext);
   if (!ctx)
     throw new Error("useOverlays must be used within OverlayProvider");
   return ctx;
