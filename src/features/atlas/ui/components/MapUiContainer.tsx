@@ -3,11 +3,10 @@ import { FaClockRotateLeft, FaMapPin } from "react-icons/fa6";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks/useUiHint";
+import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { MapCoordinatesDisplay } from "../controls/MapCoordinatesDisplay";
 import { MapLegendModal } from "../legend/MapLegendModal";
 import { useMapLegendItems } from "../legend/useMapLegendItems";
-import { TimelineBar } from "../timeline/components/timelineBar/TimelineBar";
-import { TimelineNavigator } from "../timeline/components/TimelineNavigator";
 import { MapToolbar } from "../toolbar/MapToolbar";
 
 interface MapUiContainerProps {

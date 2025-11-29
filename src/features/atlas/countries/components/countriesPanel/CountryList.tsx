@@ -1,6 +1,6 @@
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
-import { useHighlightYearlyCountries } from "@features/atlas/ui";
+import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { CountryWithFlag } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import type { Country } from "@types";
