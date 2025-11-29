@@ -38,6 +38,8 @@ export const keyCommands: KeyCommand[] = [
   // Timeline
   { key: "ArrowRight", modifiers: [], action: "Next year", category: "Timeline" },
   { key: "ArrowLeft", modifiers: [], action: "Previous year", category: "Timeline" },
+  { key: "Home", modifiers: [], action: "Go to first year", category: "Timeline" },
+  { key: "End", modifiers: [], action: "Go to last year", category: "Timeline" },
   { key: "Space", modifiers: [], action: "Play/Pause", category: "Timeline" },
 
   // Country list
