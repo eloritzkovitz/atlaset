@@ -39,10 +39,10 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 ## Technologies Used
 
 - **React** & **TypeScript** — Modern, strongly-typed UI development
-- **Vite** – Fast build tool and development server
+- **Vite** — Fast build tool and development server
 - **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
-- **PWA (Progressive Web App)** – Offline support and installability
-- **Jest / Vitest** – Testing frameworks for unit and integration tests
+- **PWA (Progressive Web App)** — Offline support and installability
+- **Jest / Vitest** — Testing frameworks for unit and integration tests
 - **Cypress** — End-to-end testing for user flows
 
 ## Documentation
