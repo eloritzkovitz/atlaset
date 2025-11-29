@@ -4,6 +4,12 @@ A fully-configurable country explorer built with React, Vite, and TypeScript. At
 All map, country and currency data sources are **generic, config-driven and environment-configurable**, loaded from JSON files.  
 Supports user-defined overlays, flexible filters, and easy data extension for any dataset.
 
+## Table of Contents
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Documentation](#documentation)
+- [Authors](#authors)
+
 ## Features
 
 ### **Map & Data**
@@ -30,85 +36,23 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 - **Modern UI:** Responsive design with Tailwind CSS and icons
 - **PWA support:** Install the application as an app on desktop or mobile and use it offline
 
-## Getting Started
+## Technologies Used
 
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
+- **React** & **TypeScript** — Modern, strongly-typed UI development
+- **Vite** – Fast build tool and development server
+- **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
+- **PWA (Progressive Web App)** – Offline support and installability
+- **Jest / Vitest** – Testing frameworks for unit and integration tests
+- **Cypress** — End-to-end testing for user flows
 
-2. **Start the dev server**
-   ```bash
-   npm run dev
-   ```
+## Documentation
 
-3. **Edit `.env` and `public/data/*.json` to customize your data**
+- [Getting started](docs/getting-started.md)
+- [Data Sources](docs/data-sources.md)
+- [Overlays](overlays.md)
+- [Trips](trips.md)
+- [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 
-## Data Sources
+## Authors
 
-All main data sources are loaded from JSON files in the `public/data` folder.  
-You can change their location or swap datasets by editing the `.env` file.
-
-| Data Type        | Default Path                | Environment Variable            |
-|------------------|---------------------------- |---------------------------------|
-| Map GeoJSON      | `/data/countries.geojson`   | `VITE_MAP_GEO_URL`              |
-| Countries        | `/data/countries.json`      | `VITE_COUNTRY_DATA_URL`         |
-| Currencies       | `/data/currencies.json`     | `VITE_CURRENCY_DATA_URL`        |
-
-**Sources:**
-- Country boundaries: [datasets/geo-countries](https://github.com/datasets/geo-countries)
-- Country data: [REST Countries](https://restcountries.com/)
-- Currency data: [Open Exchange Rates](https://openexchangerates.org/api/currencies.json)
-
-## Customizing Overlays
-
-1. **From JSON files**  
-   - See [Overlay JSON Example](docs/overlay-example.md) for a full example.
-
-2. **Via the UI**  
-   - You can create overlays by using the overlay manager or importing them from JSON files.
-
-## Keyboard Shortcuts
-
-See [Keyboard Shortcuts](docs/keyboard-shortcuts.md) for a full list of keyboard shortcuts.
-
-## Project Structure
-
-```
-countries/
-|
-├── public/                    # Static assets
-|   ├── data                   # All JSON data sources 
-|   └── images                 # Images
-|
-├── scripts/                   # Data-related scripts 
-│ 
-├── src/
-│   ├── features/              # Feature modules
-│   │   ├── countries
-│   │   ├── game
-│   │   ├── map
-│   │   ├── markers
-│   │   ├── overlays
-│   │   ├── settings
-│   │   └── trips
-│   │
-│   ├── shared/                # Reusable files
-│   │   ├── components/        # UI/layout components
-│   │   ├── constants/         # Global constants
-│   │   ├── hooks/             # Reusable hooks
-│   │   ├── types/             # Global types/interfaces
-│   │   └── utils/             # Generic utilities
-│   │  
-│   ├── contexts/              # Custom React contexts
-│   ├── pages/                 # Page components
-│   ├── styles/                # Global and component styles
-│   ├── App.tsx                # Main app component
-│   └── main.tsx               # Entry point
-```
-
-## Tips & Customization
-
-- You can add or modify filters by editing `src/config/filtersConfig.ts`
-- All data sources are generic—just swap JSON files and update `.env`
-- Use the overlay manager panel to import/export overlays for backup or sharing
+- [Elor Itzkovitz](https://github.com/eloritzkovitz)

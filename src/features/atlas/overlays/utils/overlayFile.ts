@@ -27,7 +27,11 @@ export function importOverlaysFromFile(
     try {
       const imported = JSON.parse(e.target?.result as string);
       if (Array.isArray(imported)) {
-        importOverlays(imported);
+        // Assign an id if missing
+        const overlaysWithIds = imported.map((o) =>
+          o.id ? o : { ...o, id: crypto.randomUUID() }
+        );
+        importOverlays(overlaysWithIds);
       } else {
         alert("Invalid overlays file format.");
       }

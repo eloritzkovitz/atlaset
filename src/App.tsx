@@ -4,7 +4,7 @@ import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { CountryDataProvider } from "@contexts/CountryDataContext";
 import { MapUIProvider } from "@contexts/MapUIContext";
 import { MarkersProvider } from "@contexts/MarkersContext";
-import { OverlayProvider } from "@contexts/OverlayContext";
+import { OverlaysProvider } from "@contexts/OverlaysContext";
 import { useSettings } from "@contexts/SettingsContext";
 import { TimelineProvider } from "@contexts/TimelineContext";
 import { TripsProvider } from "@contexts/TripsContext";
@@ -36,7 +36,7 @@ function App() {
                 path="/"
                 element={
                   <Suspense fallback={<SplashScreen />}>
-                    <OverlayProvider>
+                    <OverlaysProvider>
                       <MapUIProvider>
                         <MarkersProvider>
                           <TimelineProvider>
@@ -44,7 +44,7 @@ function App() {
                           </TimelineProvider>
                         </MarkersProvider>
                       </MapUIProvider>
-                    </OverlayProvider>
+                    </OverlaysProvider>
                   </Suspense>
                 }
               />

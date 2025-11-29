@@ -1,4 +1,4 @@
-import { useOverlays } from "@contexts/OverlayContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getYear } from "@utils/date";
 

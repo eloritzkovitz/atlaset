@@ -1,0 +1,8 @@
+{
+  "id": "example",
+  "name": "Example",
+  "color": "rgba(255, 255, 255, 1)",
+  "tooltip": "Example",
+  "visible": true,
+  "countries": ["IL", "US", "FR"]
+}

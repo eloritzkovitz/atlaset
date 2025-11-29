@@ -1,0 +1,29 @@
+[
+  {
+    "name": "United States",
+    "flag": "🇺🇸",
+    "callingCode": "+1201",
+    "isoCode": "US",
+    "iso3Code": "USA",
+    "region": "Americas",
+    "subregion": "North America",
+    "capital": "Washington, D.C.",
+    "population": 329484123,
+    "currency": "USD",
+    "languages": ["English"],
+    "sovereigntyType": "Sovereign"
+  },
+  {
+    "name": "United States Minor Outlying Islands",
+    "flag": "🇺🇲",
+    "callingCode": "+268",
+    "isoCode": "UM",
+    "iso3Code": "UMI",
+    "region": "Americas",
+    "subregion": "North America",
+    "population": 300,
+    "currency": "USD",
+    "languages": ["English"],
+    "sovereigntyType": "Dependency"
+  }
+]
