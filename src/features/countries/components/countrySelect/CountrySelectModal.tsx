@@ -9,8 +9,8 @@ import {
   SearchInput,
 } from "@components";
 import type { Country } from "@types";
+import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
-import { filterCountriesBySearch } from "../../utils/countryFilters";
 
 interface CountrySelectModalProps {
   isOpen: boolean;
@@ -41,7 +41,7 @@ export function CountrySelectModal({
   }, [isOpen]);
 
   // Filter options by search (accent-insensitive)
-  const filteredOptions = filterCountriesBySearch(options, search);
+  const filteredOptions = filterBySearch(options, search, (country) => country.name);
 
   return (
     <Modal

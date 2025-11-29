@@ -1,5 +1,6 @@
+import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
-import React from "react";
+import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
 
 interface ToolbarSelectButtonProps<T extends string | number> {
   value: T;
@@ -16,14 +17,21 @@ export function ToolbarSelectButton<T extends string | number>({
   ariaLabel,
   width = "150px",
 }: ToolbarSelectButtonProps<T>) {
+  const [isFocused, setIsFocused] = useState(false);
+  const showRing = useKeyboardFocusRing();
+
   return (
     <div
-      className="toolbar-btn rounded-full flex items-center justify-center relative"
+      className={`toolbar-btn rounded-full flex items-center justify-center relative transition-shadow ${
+        isFocused && showRing ? "ring-2 ring-blue-500" : ""
+      }`}
       style={{ width, height: "48px", padding: 0 }}
     >
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as T)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         className="w-full h-full text-center bg-gray-700 border border-gray-600 rounded-full appearance-none text-blue-800 dark:text-white font-semibold outline-none p-0 m-0 bg-inherit shadow-none border-none select-none"
         aria-label={ariaLabel}
       >

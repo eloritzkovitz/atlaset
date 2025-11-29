@@ -1,36 +1,7 @@
 import { mockTrips } from "@test-utils/mockTrips";
-import {
-  getCountryNames,
-  getUsedCountryCodes,
-  getUsedYears,
-} from "./tripData";
-
-const mockCountries = [
-  { isoCode: "US", name: "United States" },
-  { isoCode: "CA", name: "Canada" },
-  { isoCode: "FR", name: "France" },
-  { isoCode: "DE", name: "Germany" },
-  { isoCode: "JP", name: "Japan" },
-];
+import { getUsedCountryCodes, getUsedYears } from "./tripData";
 
 describe("tripData utils", () => {
-  describe("getCountryNames", () => {
-    it("returns comma-separated country names for a trip", () => {
-      const names = getCountryNames(mockTrips[1], mockCountries);
-      expect(names).toBe("France, Germany");
-    });
-
-    it("returns empty string for unknown codes", () => {
-      const trip = { ...mockTrips[0], countryCodes: ["ZZ"] };
-      expect(getCountryNames(trip, mockCountries)).toBe("");
-    });
-
-    it("handles mixed known and unknown codes", () => {
-      const trip = { ...mockTrips[0], countryCodes: ["US", "ZZ"] };
-      expect(getCountryNames(trip, mockCountries)).toBe("United States, ");
-    });
-  });
-
   describe("getUsedCountryCodes", () => {
     it("returns a set of all used country codes", () => {
       const codes = getUsedCountryCodes(mockTrips);
@@ -56,5 +27,5 @@ describe("tripData utils", () => {
     it("returns empty array for empty trips", () => {
       expect(getUsedYears([])).toEqual([]);
     });
-  });  
+  });
 });

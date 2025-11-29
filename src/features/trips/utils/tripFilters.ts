@@ -1,64 +1,9 @@
 /**
- * Utilities for filtering and sorting trips.
+ * Utilities for filtering trips.
  */
 
-import { getCountryNames } from "@features/trips/utils/tripData";
-import type { TripFilters, TripsSortKey } from "@features/trips/types";
+import type { TripFilters } from "@features/trips/types";
 import type { Trip } from "@types";
-
-/**
- * Sorts trips based on a given key and order.
- * @param trips - An array of trips to sort.
- * @param sortKey - The key to sort by.
- * @param sortAsc - Whether to sort in ascending order.
- * @param countries - An array of country objects with isoCode and name.
- * @returns - The sorted array of trips.
- */
-export function sortTrips(
-  trips: Trip[],
-  sortKey: TripsSortKey,
-  sortAsc: boolean,
-  countries: { isoCode: string; name: string }[]
-): Trip[] {
-  return [...trips].sort((a, b) => {
-    let aValue: any, bValue: any;
-    switch (sortKey) {
-      case "name":
-        aValue = a.name || "";
-        bValue = b.name || "";
-        break;
-      case "countries":
-        aValue = getCountryNames(a, countries);
-        bValue = getCountryNames(b, countries);
-        break;
-      case "year":
-        aValue = a.startDate ? new Date(a.startDate).getFullYear() : 0;
-        bValue = b.startDate ? new Date(b.startDate).getFullYear() : 0;
-        break;
-      case "startDate":
-        aValue = a.startDate || "";
-        bValue = b.startDate || "";
-        break;
-      case "endDate":
-        aValue = a.endDate || "";
-        bValue = b.endDate || "";
-        break;
-      case "fullDays":
-        aValue = a.fullDays || 0;
-        bValue = b.fullDays || 0;
-        break;
-      default:
-        aValue = "";
-        bValue = "";
-    }
-    if (typeof aValue === "number" && typeof bValue === "number") {
-      return sortAsc ? aValue - bValue : bValue - aValue;
-    }
-    return sortAsc
-      ? String(aValue).localeCompare(String(bValue))
-      : String(bValue).localeCompare(String(aValue));
-  });
-}
 
 /**
  * Filters trips based on the provided filters.
@@ -82,7 +27,7 @@ export function filterTrips(trips: Trip[], filters: TripFilters): Trip[] {
       !filters.country.some((code) => trip.countryCodes.includes(code))
     ) {
       return false;
-    }    
+    }
     // Filter by years
     if (
       filters.year.length > 0 &&

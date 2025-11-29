@@ -9,18 +9,20 @@ import {
 } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
+import { useTimeline } from "@contexts/TimelineContext";
 import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,
-} from "@features/countries/utils/countryList";
+} from "@features/countries/utils/countryData";
 import { useKeyHandler } from "@hooks/useKeyHandler";
-import type { Overlay } from "@types";
 import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
-import { coreFiltersConfig } from "../../config/filtersConfig";
+import { TimelineFilters } from "./TimelineFilters";
 
-type CountryFiltersPanelProps = {
+interface CountryFiltersPanelProps {
   show: boolean;
+  onHide: () => void;
+  showVisitedOnly: boolean;
   allRegions: string[];
   allSubregions: string[];
   selectedRegion: string;
@@ -29,16 +31,17 @@ type CountryFiltersPanelProps = {
   setSelectedSubregion: (subregion: string) => void;
   selectedSovereignty: string;
   setSelectedSovereignty: (type: string) => void;
-  overlays: Overlay[];
-  overlaySelections: Record<string, string>;
-  setOverlaySelections: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
-  onHide: () => void;
-};
+  minVisitCount: number;
+  setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
+  maxVisitCount: number | undefined;
+  setMaxVisitCount: React.Dispatch<React.SetStateAction<number | undefined>>;
+  resetFilters: () => void;
+}
 
 export function CountryFiltersPanel({
   show,
+  onHide,
+  showVisitedOnly,
   allRegions,
   allSubregions,
   selectedRegion,
@@ -47,16 +50,19 @@ export function CountryFiltersPanel({
   setSelectedSubregion,
   selectedSovereignty,
   setSelectedSovereignty,
-  overlays,
-  overlaySelections,
-  setOverlaySelections,
-  onHide,
+  minVisitCount,
+  setMinVisitCount,
+  maxVisitCount,
+  setMaxVisitCount,
+  resetFilters,
 }: CountryFiltersPanelProps) {
   const { countries, loading, error } = useCountryData();
+  const { timelineMode } = useTimeline();
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
   const [showOverlayFilters, setShowOverlayFilters] = React.useState(true);
+  const [showTimelineFilters, setShowTimelineFilters] = React.useState(true);
 
   // Dynamic subregion options based on selected region
   const subregionOptions =
@@ -73,24 +79,11 @@ export function CountryFiltersPanel({
     setSelectedSubregion("");
   };
 
-  // Reset filters handler
-  function handleResetFilters() {
-    setSelectedRegion("");
-    setSelectedSubregion("");
-    setSelectedSovereignty("");
-    setOverlaySelections(
-      overlays.reduce((acc, overlay) => {
-        acc[overlay.id] = "all";
-        return acc;
-      }, {} as Record<string, string>)
-    );
-  }
-
   // Key handler for resetting filters with "R" key
   useKeyHandler(
     (e) => {
       e.preventDefault();
-      handleResetFilters();
+      resetFilters();
     },
     ["r", "R"],
     show
@@ -114,7 +107,7 @@ export function CountryFiltersPanel({
       headerActions={
         <>
           <ActionButton
-            onClick={handleResetFilters}
+            onClick={resetFilters}
             ariaLabel="Reset all filters"
             title="Reset filters"
           >
@@ -134,11 +127,9 @@ export function CountryFiltersPanel({
         zIndex: 39,
       }}
     >
-      {/* Core Filters Section */}
       <CoreFilters
         expanded={showCoreFilters}
         onToggle={() => setShowCoreFilters((v) => !v)}
-        coreFiltersConfig={coreFiltersConfig}
         selectedRegion={selectedRegion}
         handleRegionChange={handleRegionChange}
         selectedSubregion={selectedSubregion}
@@ -149,17 +140,28 @@ export function CountryFiltersPanel({
         subregionOptions={subregionOptions}
         sovereigntyOptions={sovereigntyOptions}
       />
-
-      <Separator className="my-4" />
-
-      {/* Overlay Filters Section */}
-      <OverlayFilters
-        expanded={showOverlayFilters}
-        onToggle={() => setShowOverlayFilters((v) => !v)}
-        overlays={overlays}
-        overlaySelections={overlaySelections}
-        setOverlaySelections={setOverlaySelections}
-      />
+      {!showVisitedOnly && (
+        <>
+          <Separator className="my-4" />
+          <OverlayFilters
+            expanded={showOverlayFilters}
+            onToggle={() => setShowOverlayFilters((v) => !v)}
+          />
+        </>
+      )}
+      {timelineMode && (
+        <>
+          <Separator className="my-4" />
+          <TimelineFilters
+            expanded={showTimelineFilters}
+            onToggle={() => setShowTimelineFilters((v) => !v)}
+            minVisitCount={minVisitCount}
+            setMinVisitCount={setMinVisitCount}
+            maxVisitCount={maxVisitCount}
+            setMaxVisitCount={setMaxVisitCount}
+          />
+        </>
+      )}
     </Panel>
   );
 }

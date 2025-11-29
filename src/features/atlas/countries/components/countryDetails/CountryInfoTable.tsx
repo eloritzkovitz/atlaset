@@ -1,7 +1,7 @@
 import type { Country } from "@types";
 import { getLanguagesDisplay } from "@features/countries";
 
-type CountryInfoTableProps = {
+interface CountryInfoTableProps {
   country: Country;
   currencies: Record<string, string>;
 };

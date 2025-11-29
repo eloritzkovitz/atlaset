@@ -5,8 +5,7 @@ import type { SortKey } from "@types";
 interface SortableFilterHeaderProps<T> {
   label: string;
   sortKey: SortKey<T>;
-  currentSortKey: SortKey<T>;
-  sortAsc: boolean;
+  sortBy: string;
   onSort: (key: SortKey<T>) => void;
   filterValue?: string;
   onFilterChange?: (v: string) => void;
@@ -18,14 +17,17 @@ interface SortableFilterHeaderProps<T> {
 export function SortableFilterHeader<T>({
   label,
   sortKey,
-  currentSortKey,
-  sortAsc,
+  sortBy,
   onSort,
   filterValue,
   onFilterChange,
   placeholder = "Filter",
   filterElement,
 }: SortableFilterHeaderProps<T>) {
+  const [currentKey, direction] = sortBy.split("-");
+  const isActive = currentKey === sortKey;
+  const isAsc = direction !== "desc";
+
   return (
     <div className="flex flex-col items-stretch h-full min-w-[10px]">
       <button
@@ -36,9 +38,9 @@ export function SortableFilterHeader<T>({
       >
         <span>{label}</span>
         <span>
-          {currentSortKey !== sortKey ? (
+          {!isActive ? (
             <FaSort className="inline ml-1" />
-          ) : sortAsc ? (
+          ) : isAsc ? (
             <FaSortUp className="inline ml-1" />
           ) : (
             <FaSortDown className="inline ml-1" />

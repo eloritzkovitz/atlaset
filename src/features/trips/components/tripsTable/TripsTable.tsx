@@ -1,14 +1,14 @@
-import { useState } from "react";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DEFAULT_WIDTHS,
   MIN_WIDTHS,
   type ColumnKey,
 } from "@features/trips/constants/columns";
-import type { TripsSortKey } from "@features/trips/types";
-import { sortTrips } from "@features/trips/utils/tripFilters";
+import type { TripSortBy, TripSortByKey } from "@features/trips/types";
 import { getTripRowClass } from "@features/trips/utils/trips";
+import { sortTrips } from "@features/trips/utils/tripSort";
 import { useResizableColumns } from "@hooks/useResizableColumns";
+import { useSort } from "@hooks/useSort";
 import type { Trip } from "@types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
@@ -30,7 +30,7 @@ interface TripsTableProps {
   allSelected: boolean;
   handleSelectAll: () => void;
   showRowNumbers: boolean;
-};
+}
 
 export function TripsTable({
   trips,
@@ -57,25 +57,24 @@ export function TripsTable({
     MIN_WIDTHS
   );
 
-  const [sortKey, setSortKey] = useState<TripsSortKey>("startDate");
-  const [sortAsc, setSortAsc] = useState(true);
-
-  // Sorted state
-  const sortedTrips = sortTrips(
+  const {
+    sortBy,
+    setSortBy,
+    sortedItems: sortedTrips,
+  } = useSort<Trip, TripSortBy>(
     trips ?? [],
-    sortKey,
-    sortAsc,
-    countryData.countries
+    (items, sortBy) => sortTrips(items, countryData.countries, sortBy),
+    "startDate-asc"
   );
 
   // Header click handler
-  const handleSort = (key: TripsSortKey) => {
-    if (sortKey === key) {
-      setSortAsc(!sortAsc);
-    } else {
-      setSortKey(key);
-      setSortAsc(true);
-    }
+  const handleSort = (key: TripSortByKey) => {
+    const [currentKey, currentDir] = sortBy.split("-");
+    setSortBy(
+      (currentKey === key && currentDir === "asc"
+        ? `${key}-desc`
+        : `${key}-asc`) as TripSortBy
+    );
   };
 
   // Helper to render resize handle
@@ -112,8 +111,7 @@ export function TripsTable({
         <TripsTableHeaders
           allSelected={allSelected}
           handleSelectAll={handleSelectAll}
-          sortKey={sortKey}
-          sortAsc={sortAsc}
+          sortBy={sortBy}
           handleSort={handleSort}
           filters={filters}
           updateFilter={updateFilter as (key: string, value: any) => void}

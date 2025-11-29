@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
@@ -8,10 +8,11 @@ import {
   Separator,
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useTimeline } from "@contexts/TimelineContext";
+import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
 import { useCountryFilters } from "@features/atlas/countries/hooks/useCountryFilters";
-import { sortCountries } from "@features/countries/utils/countryList";
+import { sortCountries } from "@features/countries/utils/countrySort";
 import { useListNavigation } from "@hooks/useListNavigation";
 import { useSort } from "@hooks/useSort";
 import type { Country } from "@types";
@@ -38,10 +39,10 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   // Context data state
-  const { countries, allRegions, allSubregions, loading, error, refreshData } =
+  const { allRegions, allSubregions, loading, error, refreshData } =
     useCountryData();
-  const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
-
+  const { showVisitedOnly } = useTimeline();
+  const { trips } = useTrips();
   const {
     uiVisible,
     showCountries,
@@ -63,19 +64,32 @@ export function CountriesPanel({
     filteredCountries,
     allCount,
     visitedCount,
-    isVisitedOnly,
-  } = useCountryFilters({
-    countries,
-    overlays,
-    overlaySelections,
-  });
+    minVisitCount,
+    setMinVisitCount,
+    maxVisitCount,
+    setMaxVisitCount,
+    resetFilters,
+  } = useCountryFilters();
 
   // Sort state
   const {
     sortBy,
     setSortBy,
     sortedItems: sortedCountries,
-  } = useSort(filteredCountries, sortCountries, "name-asc");
+  } = useSort(
+    filteredCountries,
+    (items, sortBy) => sortCountries(items, sortBy, trips),
+    "name-asc"
+  );
+
+  // Reset sort when showVisitedOnly changes
+  useEffect(() => {
+    setSortBy("name-asc");
+  }, [showVisitedOnly, setSortBy]);
+
+  // Keyboard navigation state
+  const listContainerRef = useRef<HTMLDivElement>(null);
+  const [isListFocused, setIsListFocused] = useState(false);
 
   // Keyboard navigation within country list
   useListNavigation({
@@ -86,7 +100,7 @@ export function CountriesPanel({
     onSelect,
     onHover,
     onItemInfo: onCountryInfo,
-    enabled: uiVisible && showCountries,
+    enabled: uiVisible && showCountries && isListFocused,
   });
 
   // Handle country info action
@@ -138,9 +152,12 @@ export function CountriesPanel({
             sortBy={sortBy}
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
             count={sortedCountries.length}
+            visitedOnly={showVisitedOnly}
           />
           <Separator />
           <CountryList
+            ref={listContainerRef}
+            setIsFocused={setIsListFocused}
             countries={sortedCountries}
             selectedIsoCode={selectedIsoCode}
             hoveredIsoCode={hoveredIsoCode}
@@ -150,11 +167,9 @@ export function CountriesPanel({
           />
           <Separator />
           <CountriesToolbar
-            onRefresh={refreshData}
-            isVisitedOnly={isVisitedOnly}
-            setOverlaySelections={setOverlaySelections}
             allCount={allCount}
             visitedCount={visitedCount}
+            onRefresh={refreshData}
           />
         </div>
       </Panel>
@@ -163,6 +178,8 @@ export function CountriesPanel({
       {showCountries && showFilters && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
+          onHide={toggleFilters}
+          showVisitedOnly={showVisitedOnly}
           allRegions={allRegions}
           allSubregions={allSubregions}
           selectedRegion={selectedRegion}
@@ -171,10 +188,11 @@ export function CountriesPanel({
           setSelectedSubregion={setSelectedSubregion}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
-          overlays={overlays}
-          overlaySelections={overlaySelections}
-          setOverlaySelections={setOverlaySelections}
-          onHide={toggleFilters}
+          minVisitCount={minVisitCount}
+          setMinVisitCount={setMinVisitCount}
+          maxVisitCount={maxVisitCount}
+          setMaxVisitCount={setMaxVisitCount}
+          resetFilters={resetFilters}
         />
       )}
     </div>

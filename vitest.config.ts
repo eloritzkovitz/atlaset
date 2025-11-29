@@ -9,6 +9,13 @@ export default defineConfig({
       provider: "v8",
       reportsDirectory: "./coverage",
       reporter: ["text", "html"],
+      exclude: [
+        "src/contexts/**",
+        "src/shared/constants/**",
+        "src/shared/test-utils/**",
+        "src/shared/types/**",
+        "**/index.ts",        
+      ],
     },
   },
   resolve: {

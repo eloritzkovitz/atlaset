@@ -23,7 +23,7 @@ export function ShortcutsModal() {
       isOpen={openModal === "shortcuts"}
       onClose={closeModal}
       position="center"
-      className="min-w-[900px] max-w-[1200px] max-h-[90vh] bg-white rounded-xl shadow-2xl p-4 overflow-y-auto"
+      className="min-w-[1000px] max-w-[1200px] max-h-[90vh] bg-white rounded-xl shadow-xl p-4 overflow-y-auto"
     >
       <PanelHeader
         title={
@@ -32,6 +32,7 @@ export function ShortcutsModal() {
             Keyboard Shortcuts
           </>
         }
+        showSeparator={true}
       >
         <ActionButton onClick={closeModal} ariaLabel="Close" title="Close">
           <FaXmark />

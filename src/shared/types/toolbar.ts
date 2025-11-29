@@ -8,5 +8,6 @@ export type ToolbarToggleOption = {
   ariaLabel?: string;
   title?: string;
   checked: boolean;
+  disabled?: boolean;
   onClick: () => void;
 }

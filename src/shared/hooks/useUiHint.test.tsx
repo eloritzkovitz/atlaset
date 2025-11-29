@@ -1,6 +1,7 @@
 import React from "react";
-import '@testing-library/jest-dom';
-import { render, act } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { act } from "@testing-library/react";
+import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
 import { useUiHint } from "./useUiHint";
 
 function TestComponent({
@@ -12,30 +13,32 @@ function TestComponent({
   duration?: number;
   options?: Record<string, any>;
 }) {
-  const hint = useUiHint(message, duration, options);
-  return <>{hint}</>;
+  useUiHint(message ? { message } : null, duration, {
+    key: "test",
+    ...(options || {}),
+  });
+  return null;
 }
 
-describe("useUiHint", () => {
-  beforeEach(() => {
-    vi.useFakeTimers();
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+setupFakeTimers();
 
+describe("useUiHint", () => {
   it("renders the hint when message is provided", () => {
-    const { getByText } = render(<TestComponent message="Hello" />);
+    const { getByText } = renderWithUiHintProviders(
+      <TestComponent message="Hello" />
+    );
     expect(getByText("Hello")).toBeInTheDocument();
   });
 
   it("does not render when message is falsy", () => {
-    const { queryByText } = render(<TestComponent message={null} />);
+    const { queryByText } = renderWithUiHintProviders(
+      <TestComponent message={null} />
+    );
     expect(queryByText("Hello")).not.toBeInTheDocument();
   });
 
   it("auto-hides after duration", () => {
-    const { queryByText } = render(
+    const { queryByText } = renderWithUiHintProviders(
       <TestComponent message="Bye" duration={1000} />
     );
     expect(queryByText("Bye")).toBeInTheDocument();
@@ -46,7 +49,9 @@ describe("useUiHint", () => {
   });
 
   it("does not auto-hide if duration is 0", () => {
-    const { getByText } = render(<TestComponent message="Stay" duration={0} />);
+    const { getByText } = renderWithUiHintProviders(
+      <TestComponent message="Stay" duration={0} />
+    );
     act(() => {
       vi.advanceTimersByTime(10000);
     });
@@ -54,7 +59,7 @@ describe("useUiHint", () => {
   });
 
   it("shows again if message changes", () => {
-    const { getByText, rerender } = render(
+    const { getByText, rerender } = renderWithUiHintProviders(
       <TestComponent message="First" duration={1000} />
     );
     expect(getByText("First")).toBeInTheDocument();
@@ -66,7 +71,7 @@ describe("useUiHint", () => {
   });
 
   it("applies custom style from options", () => {
-    const { getByText } = render(
+    const { getByText } = renderWithUiHintProviders(
       <TestComponent message="Styled" options={{ style: { color: "red" } }} />
     );
     expect(getByText("Styled")).toHaveStyle({ color: "rgb(255, 0, 0)" });

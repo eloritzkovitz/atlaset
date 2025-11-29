@@ -1,9 +1,14 @@
 import { SOVEREIGNTY_ORDER } from "@features/countries";
-import { mapOptions } from "@features/countries/utils/countryList";
-import type { FilterConfig, FilterOption, Overlay, SovereigntyType } from "@types";
+import type { CountryFilterConfig } from "@features/countries/types";
+import type {
+  FilterConfig,
+  FilterOption,
+  Overlay,
+  SovereigntyType,
+} from "@types";
+import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
-import { capitalize } from "@utils/string";
-import type { CountryFilterConfig } from "../../countries/types/countryFilters";
+import { capitalize, capitalizeWords } from "@utils/string";
 
 // "All" option constant
 const allOption: FilterOption = { value: "", label: "All" };
@@ -13,14 +18,20 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
   createSelectFilter(
     "region",
     "Region",
-    (allRegions) => [allOption, ...mapOptions(allRegions ?? [])],
+    (allRegions) => [
+      allOption,
+      ...mapOptions(allRegions ?? [], capitalizeWords),
+    ],
     (props) => props.selectedRegion,
     (props, val) => props.setSelectedRegion(val)
   ),
   createSelectFilter(
     "subregion",
     "Subregion",
-    (subregionOptions) => [allOption, ...mapOptions(subregionOptions ?? [])],
+    (subregionOptions) => [
+      allOption,
+      ...mapOptions(subregionOptions ?? [], capitalizeWords),
+    ],
     (props) => props.selectedSubregion,
     (props, val) => props.setSelectedSubregion(val)
   ),
@@ -29,12 +40,12 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
     "Sovereignty",
     (options) => [
       allOption,
-      ...SOVEREIGNTY_ORDER.filter((type) =>
-        (options as SovereigntyType[] | undefined)?.includes(type)
-      ).map((type) => ({
-        value: type,
-        label: capitalize(type),
-      })),
+      ...mapOptions(
+        SOVEREIGNTY_ORDER.filter((type) =>
+          (options as SovereigntyType[] | undefined)?.includes(type)
+        ),
+        capitalize
+      ),
     ],
     (props) => props.selectedSovereignty,
     (props, val) => props.setSelectedSovereignty(val)
@@ -44,8 +55,7 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
 // Overlay filter configuration object
 export const overlayFilterConfig: FilterConfig = {
   key: "overlay",
-  label: (overlay: Overlay) =>
-    `${overlay.name} (${overlay.countries.length})`,
+  label: (overlay: Overlay) => `${overlay.name} (${overlay.countries.length})`,
   type: "select",
   getOptions: () => [
     { value: "all", label: "All" },
@@ -59,4 +69,44 @@ export const overlayFilterConfig: FilterConfig = {
       ...sel,
       [overlay.id]: val,
     })),
+};
+
+// Timeline filter configuration object
+export const timelineFiltersConfig = {
+  year: {
+    label: "Year",
+    getValue: ({ selectedYear }: { selectedYear: number }) => selectedYear,
+    setValue: (
+      { setSelectedYear }: { setSelectedYear: (year: number) => void },
+      value: string | number
+    ) => setSelectedYear(Number(value)),
+    getOptions: (years: number[]) =>
+      years.map((year) => ({ value: year, label: String(year) })),
+  },
+  minVisitCount: {
+    label: "Min Visit Count",
+    getValue: ({ minVisitCount }: { minVisitCount: number }) => minVisitCount,
+    setValue: (
+      { setMinVisitCount }: { setMinVisitCount: (count: number) => void },
+      value: string | number
+    ) => setMinVisitCount(Number(value)),
+    getOptions: (max: number) =>
+      Array.from({ length: max }, (_, i) => ({
+        value: i + 1,
+        label: String(i + 1),
+      })),
+  },
+  maxVisitCount: {
+    label: "Max Visit Count",
+    getValue: ({ maxVisitCount }: { maxVisitCount: number }) => maxVisitCount,
+    setValue: (
+      { setMaxVisitCount }: { setMaxVisitCount: (count: number) => void },
+      value: string | number
+    ) => setMaxVisitCount(Number(value)),
+    getOptions: (max: number) =>
+      Array.from({ length: max }, (_, i) => ({
+        value: i + 1,
+        label: String(i + 1),
+      })),
+  },
 };

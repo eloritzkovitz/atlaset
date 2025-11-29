@@ -12,11 +12,12 @@ export { SplashScreen } from "./feedback/SplashScreen";
 
 // Form components
 export { Checkbox } from "./form/Checkbox";
-export { DropdownSelectInput } from "./form/DropdownSelectInput";
 export { FormButton } from "./form/FormButton";
 export { FormField } from "./form/FormField";
 export { SearchInput } from "./form/SearchInput";
 export { SelectInput } from "./form/SelectInput";
+export { DropdownSelectInput } from "./form/Dropdown/DropdownSelectInput";
+export { NumberInput } from "./form/NumberInput/NumberInput";
 
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
@@ -35,6 +36,7 @@ export { PanelListItem } from "./layout/Panel/PanelListItem";
 
 // Toolbar components
 export { ActionsToolbar } from "./layout/Toolbar/ActionsToolbar";
+export { ToolbarIconWithCount } from "./layout/Toolbar/ToolbarIconWithCount";
 export { ToolbarSelectButton } from "./layout/Toolbar/ToolbarSelectButton";
 export { ToolbarSeparator } from "./layout/Toolbar/ToolbarSeparator";
 export { ToolbarToggleGroup } from "./layout/Toolbar/ToolbarToggleGroup";
@@ -47,4 +49,7 @@ export { SortableFilterHeader } from "./table/SortableFilterHeader";
 export { CardList } from "./ui/CardList";
 export { ColorDot } from "./ui/ColorDot";
 export { HomeCard } from "./ui/HomeCard";
-export { PwaUpdateUiHint } from "./ui/PwaUpdateUiHint";
+
+// UI Hint components
+export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";
+export { UIHintContainer } from "./ui/UiHint/UiHintContainer";

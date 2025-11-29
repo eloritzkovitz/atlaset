@@ -1,6 +1,6 @@
 import { FaCircleCheck, FaCircleXmark, FaHouse } from "react-icons/fa6";
 
-type VisitedStatusIndicatorProps = {
+interface VisitedStatusIndicatorProps {
   visited: boolean;
   isHome?: boolean; 
   className?: string;

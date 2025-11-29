@@ -4,6 +4,13 @@ import { overlaysService } from "@services/overlaysService";
 import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 import type { AnyOverlay, Trip } from "@types";
 
+/**
+ * Synchronizes the Visited Countries overlay with the user's trip data.
+ * @param trips - Array of trip objects.
+ * @param overlays - Current array of overlays.
+ * @param setOverlays - Function to update the overlays state.
+ * @param loading - Loading state to prevent premature updates.
+ */
 export function useSyncVisitedCountriesOverlay(
   trips: Trip[],
   overlays: AnyOverlay[],

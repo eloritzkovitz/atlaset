@@ -1,6 +1,10 @@
 import { useEffect } from "react";
 import { useMarkers } from "@contexts/MarkersContext";
 
+/**
+ * Manages marker creation state and handlers.
+ * @returns An object containing marker creation state and handlers.
+ */
 export function useMarkerCreation() {
   const {
     isAddingMarker,

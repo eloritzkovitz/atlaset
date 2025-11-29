@@ -3,6 +3,14 @@ import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { getCountryCenterAndZoom } from "@features/atlas/map";
 import type { Marker } from "@types";
 
+/**
+ * Manages map view state including zoom and center.
+ * @param geoData - GeoJSON data for the map.
+ * @param initialZoom - Initial zoom level.
+ * @param initialCenter - Initial center coordinations.
+ * @param onMarkerDetails - Callback function to handle marker details.
+ * @returns An object containing zoom, center, and handlers to manage map view.
+ */
 export function useMapView(
   geoData: any,
   initialZoom = DEFAULT_MAP_SETTINGS.minZoom,

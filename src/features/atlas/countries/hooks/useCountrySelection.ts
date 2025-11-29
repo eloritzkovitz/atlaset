@@ -1,6 +1,11 @@
 import { useState } from "react";
 import type { Country } from "@types";
 
+/**
+ * Manages country selection and hover states.
+ * @param countries List of all countries.
+ * @returns Object containing selected and hovered country states and handlers.
+ */
 export function useCountrySelection(countries: Country[]) {
   const [selectedIsoCode, setSelectedIsoCode] = useState<string | null>(null);
   const [hoveredIsoCode, setHoveredIsoCode] = useState<string | null>(null);

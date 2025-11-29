@@ -1,20 +1,22 @@
 import { useState, useRef } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import ReactDOM from "react-dom";
+import { useMenuPosition } from "@hooks/useMenuPosition";
 import { useClickOutside } from "@hooks/useClickOutside";
-import type { Option } from "@types";
-import { OptionItem } from "./OptionItem";
+import type { DropdownOption } from "@types";
+import { flattenOptions } from "@utils/dropdown";
+import { DropdownOptions } from "./DropdownOptions";
 import { SelectedOptions } from "./SelectedOptions";
 
 interface DropdownSelectInputProps<T = string> {
   value: T | T[];
   onChange: (value: T | T[]) => void;
-  options: Option<T>[];
+  options: DropdownOption<T>[];
   placeholder?: string;
   className?: string;
   isMulti?: boolean;
   renderOption?: (opt: any) => React.ReactNode;
-};
+}
 
 export function DropdownSelectInput<T = string>({
   value,
@@ -26,13 +28,13 @@ export function DropdownSelectInput<T = string>({
   renderOption,
 }: DropdownSelectInputProps<T>) {
   const [open, setOpen] = useState(false);
-  const [menuPos, setMenuPos] = useState<{
-    top: number;
-    left: number;
-    width: number;
-  } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  
+  // Dynamically calculate offset based on button height
+  const btnHeight = btnRef.current?.offsetHeight ?? 0;
+  const menuStyle = useMenuPosition(open, btnRef, menuRef, btnHeight);
 
   // Close dropdown on outside click
   useClickOutside(
@@ -51,16 +53,11 @@ export function DropdownSelectInput<T = string>({
   return (
     <div className={`relative w-full ${className}`} ref={ref}>
       <button
+        ref={btnRef}
         type="button"
         className="w-full flex items-center text-left disabled:opacity-50"
-        onClick={(e) => {
+        onClick={() => {
           if (options.length === 0) return;
-          const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-          setMenuPos({
-            top: rect.bottom + window.scrollY,
-            left: rect.left + window.scrollX,
-            width: rect.width,
-          });
           setOpen((v) => !v);
         }}
         disabled={options.length === 0}
@@ -71,8 +68,9 @@ export function DropdownSelectInput<T = string>({
             options={options}
             onRemove={(val) => onChange(value.filter((v) => v !== val))}
           />
-        ) : !isMulti && options.find((opt) => opt.value === value) ? (
-          options.find((opt) => opt.value === value)?.label
+        ) : !isMulti &&
+          flattenOptions(options).find((opt) => opt.value === value) ? (
+          flattenOptions(options).find((opt) => opt.value === value)?.label
         ) : (
           <span className="text-gray-400">{placeholder}</span>
         )}
@@ -81,31 +79,22 @@ export function DropdownSelectInput<T = string>({
         </span>
       </button>
       {open &&
-        menuPos &&
         ReactDOM.createPortal(
           <div
             id="dropdown-menu-portal"
             ref={menuRef}
-            className="absolute z-[9999] bg-white border rounded shadow max-h-60 overflow-y-auto overflow-x-hidden min-w-[150px] mt-1"
-            style={{
-              top: menuPos.top,
-              left: menuPos.left,
-              width: menuPos.width,
-              position: "absolute",
-            }}
+            className="z-[9999] bg-white border-none rounded shadow-md max-h-60 overflow-y-auto overflow-x-hidden mt-3"
+            style={menuStyle}
           >
-            {options.map((opt) => (
-              <OptionItem
-                key={String(opt.value)}
-                opt={opt}
-                isSelected={isSelected}
-                isMulti={isMulti}
-                value={value}
-                onChange={onChange}
-                setOpen={setOpen}
-                renderOption={renderOption}
-              />
-            ))}
+            <DropdownOptions
+              options={options}
+              isSelected={isSelected}
+              isMulti={isMulti}
+              value={value}
+              onChange={onChange}
+              setOpen={setOpen}
+              renderOption={renderOption}
+            />
           </div>,
           document.body
         )}

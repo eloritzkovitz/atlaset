@@ -1,5 +1,5 @@
 import type { Option } from "@types";
-import { Checkbox } from "./Checkbox";
+import { Checkbox } from "../Checkbox";
 
 interface OptionItemProps<T> {
   opt: Option<T>;

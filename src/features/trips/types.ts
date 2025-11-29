@@ -1,7 +1,8 @@
 import type { TripCategory, TripStatus, TripTag } from "@types";
 
-// SortKey type definition
-export type TripsSortKey =
+// Sort keys for trips
+
+export type TripSortByKey =
   | "name"
   | "countries"
   | "year"
@@ -12,7 +13,10 @@ export type TripsSortKey =
   | "status"
   | "tags";
 
-// TripFilters type definition
+export type TripSortBy = `${TripSortByKey}-asc` | `${TripSortByKey}-desc`;
+
+// Filter keys for trips
+
 export type TripFilters = {
   name: string;
   country: string[];
@@ -22,7 +26,6 @@ export type TripFilters = {
   tags: TripTag[];
 };
 
-// TripFilterState type definition
 export type TripFilterState = TripFilters & {
   local: boolean;
   abroad: boolean;

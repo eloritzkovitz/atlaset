@@ -6,15 +6,18 @@ import {
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
-import type { TripFilters, TripsSortKey } from "@features/trips/types";
+import type {
+  TripFilters,
+  TripSortBy,
+  TripSortByKey,
+} from "@features/trips/types";
 import type { TripCategory } from "@types";
 
 interface TripsTableHeadersProps {
   allSelected: boolean;
   handleSelectAll: () => void;
-  sortKey: TripsSortKey;
-  sortAsc: boolean;
-  handleSort: (key: TripsSortKey) => void;
+  sortBy: TripSortBy;
+  handleSort: (key: TripSortByKey) => void;
   filters: TripFilters;
   updateFilter: (key: string, value: any) => void;
   countryOptions: any[];
@@ -24,13 +27,12 @@ interface TripsTableHeadersProps {
   tagOptions: any[];
   renderResizeHandle: (key: string) => JSX.Element;
   showRowNumbers: boolean;
-};
+}
 
 export function TripsTableHeaders({
   allSelected,
   handleSelectAll,
-  sortKey,
-  sortAsc,
+  sortBy,
   handleSort,
   filters,
   updateFilter,
@@ -61,8 +63,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Name"
             sortKey="name"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
             filterValue={filters.name}
             placeholder="Search by name..."
@@ -73,8 +74,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Countries"
             sortKey="countries"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
             filterElement={
               <DropdownSelectInput<string>
@@ -105,8 +105,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Year"
             sortKey="year"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
             filterElement={
               <DropdownSelectInput<string>
@@ -127,8 +126,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Start Date"
             sortKey="startDate"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
           />
           {renderResizeHandle("startDate")}
@@ -137,8 +135,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="End Date"
             sortKey="endDate"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
           />
           {renderResizeHandle("endDate")}
@@ -147,8 +144,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Full Days"
             sortKey="fullDays"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
           />
           {renderResizeHandle("fullDays")}
@@ -157,8 +153,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Categories"
             sortKey="categories"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
             filterElement={
               <DropdownSelectInput<TripCategory>
@@ -188,8 +183,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Status"
             sortKey="status"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
             filterElement={
               <DropdownSelectInput
@@ -209,8 +203,7 @@ export function TripsTableHeaders({
           <SortableFilterHeader
             label="Tags"
             sortKey="tags"
-            currentSortKey={sortKey}
-            sortAsc={sortAsc}
+            sortBy={sortBy}
             onSort={handleSort}
             filterElement={
               <DropdownSelectInput

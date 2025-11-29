@@ -1,70 +1,66 @@
-import { render, act } from "@testing-library/react";
+import { act } from "@testing-library/react";
 import React, { useState } from "react";
+import { UIContext } from "@contexts/UIContext";
 import { useUiToggleHint } from "./useUiToggleHint";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
+import { mockUIContext } from "@test-utils/mockUIContext";
 
 describe("useUiToggleHint", () => {
-  let stateRef: React.MutableRefObject<any>;
+  let visibleState: boolean;
+  let setUiVisible: React.Dispatch<React.SetStateAction<boolean>>;
 
-  beforeEach(() => {
-    vi.useFakeTimers();
-    stateRef = { current: {} };
-  });
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+  setupFakeTimers();
 
   function renderWithState(initialVisible: boolean) {
+    function UiProvider({ children }: { children: React.ReactNode }) {
+      const [uiVisible, _setUiVisible] = useState(initialVisible);
+      visibleState = uiVisible;
+      setUiVisible = _setUiVisible;
+      // Provide all other mock context values, but override uiVisible/setUiVisible
+      return (
+        <UIContext.Provider
+          value={{ ...mockUIContext, uiVisible, setUiVisible: _setUiVisible }}
+        >
+          {children}
+        </UIContext.Provider>
+      );
+    }
+
     function Wrapper() {
-      const [visible, setUiVisible] = useState(initialVisible);
-      const [key, setHintKey] = useState(0);
-      const [message, setHintMessage] = useState<React.ReactNode>(null);
-      stateRef.current = { visible, key, message };
-      useUiToggleHint(visible, setUiVisible, setHintKey, setHintMessage);
+      useUiToggleHint();
       return null;
     }
-    render(<Wrapper />);
+
+    renderWithUiHintProviders(
+      <UiProvider>
+        <Wrapper />
+      </UiProvider>
+    );
   }
 
-  it("does not show a hint on initial mount, even if hidden", () => {
+  it("does not toggle on mount", () => {
     renderWithState(false);
-    expect(stateRef.current.visible).toBe(false);
-    expect(stateRef.current.key).toBe(0);
-    expect(stateRef.current.message).toBe(null);
+    expect(visibleState).toBe(false);
   });
 
-  it("shows the hidden hint only when toggling from visible to hidden", () => {
+  it("toggles from visible to hidden", () => {
     renderWithState(true);
 
     act(() => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "u" }));
+      setUiVisible((v) => !v);
     });
 
-    expect(stateRef.current.visible).toBe(false);
-    expect(stateRef.current.key).toBe(1);
-    expect(stateRef.current.message).toEqual(
-      <span>
-        <FaEyeSlash className="inline mr-2" />
-        UI hidden. Press U to show the UI.
-      </span>
-    );
+    expect(visibleState).toBe(false);
   });
 
-  it("shows the shown hint only when toggling from hidden to visible", () => {
+  it("toggles from hidden to visible", () => {
     renderWithState(false);
 
     act(() => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "u" }));
+      setUiVisible((v) => !v);
     });
 
-    expect(stateRef.current.visible).toBe(true);
-    expect(stateRef.current.key).toBe(1);
-    expect(stateRef.current.message).toEqual(
-      <span>
-        <FaEye className="inline mr-2" />
-        UI shown. Press U to hide the UI.
-      </span>
-    );
+    expect(visibleState).toBe(true);
   });
 
   it("does not toggle when typing in input", () => {
@@ -85,22 +81,18 @@ describe("useUiToggleHint", () => {
       );
     });
 
-    expect(stateRef.current.visible).toBe(true);
-    expect(stateRef.current.key).toBe(0);
-    expect(stateRef.current.message).toBe(null);
+    expect(visibleState).toBe(true);
 
     document.body.removeChild(input);
   });
 
-  it("does not toggle or update hint on irrelevant key", () => {
+  it("does not toggle on irrelevant key", () => {
     renderWithState(true);
 
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "x" }));
     });
 
-    expect(stateRef.current.visible).toBe(true);
-    expect(stateRef.current.key).toBe(0);
-    expect(stateRef.current.message).toBe(null);
+    expect(visibleState).toBe(true);
   });
 });

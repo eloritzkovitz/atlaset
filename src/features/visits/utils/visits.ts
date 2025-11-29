@@ -1,4 +1,5 @@
 import type { Trip } from "@types";
+import { extractUniqueValues } from "@utils/array";
 import { getYearNumber } from "@utils/date";
 
 /**
@@ -34,10 +35,21 @@ function collectCountryCodes(
  * @returns Array of unique years sorted in ascending order.
  */
 export function getYearsFromTrips(trips: Trip[]) {
-  const allYears = trips
-    .map((trip) => trip.endDate && new Date(trip.endDate).getFullYear())
-    .filter(Boolean) as number[];
-  return Array.from(new Set(allYears)).sort((a, b) => a - b);
+  const allYears = extractUniqueValues(
+    trips,
+    (trip) => (trip.endDate ? new Date(trip.endDate).getFullYear() : undefined),
+    []
+  );
+  return allYears.sort((a, b) => a - b);
+}
+
+/**
+ * Gets the latest year from an array of years.
+ * @param years - Array of years.
+ * @returns The latest year or the current year if the array is empty.
+ */
+export function getLatestYear(years: number[]): number {
+  return years.length > 0 ? years[years.length - 1] : new Date().getFullYear();
 }
 
 /**
@@ -59,6 +71,46 @@ export function computeVisitedCountriesFromTrips(
     },
     homeCountry
   );
+}
+
+/**
+ * Gets a mapping of country codes to their first visit date.
+ * @param trips - Array of trips to analyze.
+ * @returns Record of country code -> first visit date
+ */
+export function getFirstVisitDateByCountry(
+  trips: Trip[]
+): Record<string, Date> {
+  const map: Record<string, Date> = {};
+  for (const trip of trips) {
+    if (!trip.endDate || !trip.countryCodes) continue;
+    const end = new Date(trip.endDate);
+    for (const code of trip.countryCodes) {
+      if (!map[code] || end < map[code]) {
+        map[code] = end;
+      }
+    }
+  }
+  return map;
+}
+
+/**
+ * Gets a mapping of country codes to their last visit date.
+ * @param trips - Array of trips to analyze.
+ * @returns Record of country code -> last visit date
+ */
+export function getLastVisitDateByCountry(trips: Trip[]): Record<string, Date> {
+  const map: Record<string, Date> = {};
+  for (const trip of trips) {
+    if (!trip.endDate || !trip.countryCodes) continue;
+    const end = new Date(trip.endDate);
+    for (const code of trip.countryCodes) {
+      if (!map[code] || end > map[code]) {
+        map[code] = end;
+      }
+    }
+  }
+  return map;
 }
 
 /**
@@ -142,4 +194,20 @@ export function getNextUpcomingTripYearByCountry(
     }
   }
   return nextYearByCountry;
+}
+
+/**
+ * Gets visit count statistics for trips up to a specific year.
+ * @param trips - Array of trips to analyze.
+ * @param year - The year up to which to include trips.
+ * @returns An object containing the visit count map, minimum, and maximum counts.
+ */
+export function getVisitCountStats(trips: Trip[], year: number) {
+  const map = getVisitedCountriesUpToYear(trips, year, undefined);
+  const counts = Object.values(map);
+  return {
+    map,
+    min: counts.length > 0 ? Math.min(...counts) : 1,
+    max: counts.length > 0 ? Math.max(...counts) : 1,
+  };
 }

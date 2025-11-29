@@ -26,6 +26,7 @@ export function ToolbarToggleGroup({
               : "toolbar-btn-toggle-inactive"
           } ${buttonClassName}`}
           icon={opt.icon}
+          disabled={opt.disabled}
         />
       ))}
     </div>

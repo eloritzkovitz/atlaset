@@ -1,31 +1,12 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import {
   filterCountries,
-  filterCountriesBySearch,
   getFilteredIsoCodes,
 } from "./countryFilters";
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;
-
-  describe("filterCountriesBySearch", () => {
-    it("returns all countries if search is empty", () => {
-      expect(filterCountriesBySearch(countries, "")).toEqual(countries);
-    });
-    it("filters by name (case-insensitive, accent-insensitive)", () => {
-      expect(filterCountriesBySearch(countries, "france")).toEqual([
-        countries[0],
-      ]);
-      expect(filterCountriesBySearch(countries, "germany")).toEqual([
-        countries[2],
-      ]);
-      expect(filterCountriesBySearch(countries, "gua")).toEqual([countries[1]]);
-    });
-    it("returns empty array if no match", () => {
-      expect(filterCountriesBySearch(countries, "xyz")).toEqual([]);
-    });
-  });
-
+  
   describe("filterCountries", () => {
     it("filters by region", () => {
       expect(filterCountries(countries, { selectedRegion: "Europe" })).toEqual([
@@ -63,23 +44,28 @@ describe("countryFilters utils", () => {
       { id: "o1", countries: ["FR", "DE"] },
       { id: "o2", countries: ["GP"] },
     ];
+    const allIsoCodes = mockCountries.map((c) => c.isoCode);
+
     it("returns all iso codes if overlays are 'all'", () => {
       expect(
         getFilteredIsoCodes(countries, overlays as any, {
           o1: "all",
           o2: "all",
         })
-      ).toEqual(["FR", "GP", "DE"]);
+      ).toEqual(allIsoCodes);
     });
+
     it("filters to only overlay countries if 'only'", () => {
       expect(
         getFilteredIsoCodes(countries, overlays as any, { o1: "only" })
       ).toEqual(["FR", "DE"]);
     });
+
     it("excludes overlay countries if 'exclude'", () => {
+      const expected = allIsoCodes.filter((code) => code !== "GP");
       expect(
         getFilteredIsoCodes(countries, overlays as any, { o2: "exclude" })
-      ).toEqual(["FR", "DE"]);
+      ).toEqual(expected);
     });
-  });  
+  });
 });

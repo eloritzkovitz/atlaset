@@ -11,7 +11,7 @@ interface TripActionsProps {
   trip: Trip;
   onEdit: (t: Trip) => void;
   onDelete: (t: Trip) => void;
-};
+}
 
 export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
   const [open, setOpen] = useState(false);
@@ -20,7 +20,10 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
 
   // Close menu when clicking outside
   useClickOutside(
-    [menuRef as React.RefObject<HTMLElement>, btnRef as React.RefObject<HTMLElement>],
+    [
+      menuRef as React.RefObject<HTMLElement>,
+      btnRef as React.RefObject<HTMLElement>,
+    ],
     () => setOpen(false),
     open
   );
@@ -29,7 +32,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
   useKeyHandler(() => setOpen(false), ["Escape"], open);
 
   // Position the menu when open
-  const menuStyle = useMenuPosition(open, btnRef, menuRef);
+  const menuStyle = useMenuPosition(open, btnRef, menuRef, 3, "left", false);
 
   return (
     <>

@@ -1,4 +1,3 @@
-// Overlay type definition
 export type Overlay = {
   id: string;
   name: string;
@@ -9,16 +8,14 @@ export type Overlay = {
   order?: number;
 };
 
-// Timeline overlay type definition
 export type TimelineOverlay = Overlay & {
   timelineEnabled: true;
   timelineSnapshot?: boolean;
 };
 
-// Union type for all overlays
+// Union type for any overlay
 export type AnyOverlay = Overlay | TimelineOverlay;
 
-// Overlay item type definition
 export type OverlayItem = {
   isoCode: string;
   color?: string;

@@ -1,4 +1,11 @@
-export type Option<T = string> = {
+export type Option<T = string, L = React.ReactNode> = {
   value: T;
-  label: React.ReactNode;
+  label: L;
 };
+
+export type OptionGroup<T> = {
+  label: string;
+  options: Option<T>[];
+};
+
+export type DropdownOption<T> = Option<T> | OptionGroup<T>;

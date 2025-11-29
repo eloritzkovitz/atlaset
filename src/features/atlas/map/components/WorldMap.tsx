@@ -2,9 +2,8 @@ import { useEffect, useRef } from "react";
 import { ComposableMap, ZoomableGroup } from "react-simple-maps";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
-import { useOverlays } from "@contexts/OverlayContext";
+import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { useContainerDimensions } from "@hooks/useContainerDimensions";
-import type { VisitColorMode } from "@types";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { CountriesLayer } from "./layers/CountriesLayer";
 import { MapMarkersLayer } from "./layers/MapMarkersLayer";
@@ -29,8 +28,6 @@ interface WorldMapProps {
   svgRef?: React.Ref<SVGSVGElement>;
   isAddingMarker: boolean;
   setSelectedCoords?: (coords: [number, number] | null) => void;
-  selectedYear: number;
-  colorMode: VisitColorMode;
 }
 
 export function WorldMap({
@@ -46,20 +43,18 @@ export function WorldMap({
   svgRef,
   isAddingMarker,
   setSelectedCoords,
-  selectedYear,
-  colorMode,
 }: WorldMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const dimensions = useContainerDimensions(containerRef);
 
   // Map projection and data
-  const { projection } = useMapUI();  
-
-  // Load overlays data
-  const { overlays } = useOverlays();
+  const { projection } = useMapUI();
 
   // Get overlay items based on mode
-  const overlayItems = useMapOverlayItems(overlays, selectedYear, colorMode);
+  const overlayItems = useMapOverlayItems();
+
+  // Get highlighted countries for the current timeline year
+  const [highlightedIsoCodes, highlightDirection] = useHighlightYearlyCountries();
 
   // Handle map event for mouse move or click
   const handleMapEvent = useMapEventHandler({
@@ -118,6 +113,7 @@ export function WorldMap({
               overlayItems={overlayItems}
               selectedIsoCode={selectedIsoCode}
               hoveredIsoCode={hoveredIsoCode}
+              highlightedIsoCodes={highlightDirection === "asc" ? highlightedIsoCodes : []}
               onCountryClick={onCountryClick}
               onCountryHover={onCountryHover}
               isAddingMarker={isAddingMarker}

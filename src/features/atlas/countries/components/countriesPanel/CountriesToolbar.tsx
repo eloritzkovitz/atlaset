@@ -1,68 +1,39 @@
-import React from "react";
 import { FaArrowsRotate, FaList, FaListCheck } from "react-icons/fa6";
-import { ActionButton, ToolbarToggleGroup } from "@components";
+import { ActionButton, ToolbarIconWithCount, ToolbarToggleGroup } from "@components";
 import type { ToolbarToggleOption } from "@types";
+import { useTimeline } from "@contexts/TimelineContext";
 
 interface CountriesToolbarProps {
-  onRefresh?: () => void;
-  isVisitedOnly: boolean;
-  setOverlaySelections: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
   allCount: number;
   visitedCount: number;
+  onRefresh?: () => void;
 }
 
 export function CountriesToolbar({
-  onRefresh,
-  isVisitedOnly,
-  setOverlaySelections,
   allCount,
   visitedCount,
+  onRefresh,
 }: CountriesToolbarProps) {
-  const visitedOverlayId = "visited-countries";
-
-  // Helper component for toolbar icons with counts
-  function ToolbarIcon({
-    icon,
-    count,
-  }: {
-    icon: React.ReactNode;
-    count: number;
-  }) {
-    return (
-      <span className={`flex items-center gap-1`}>
-        {icon}
-        <span className="text-xs font-semibold">{count}</span>
-      </span>
-    );
-  }
+  const { timelineMode, showVisitedOnly, setShowVisitedOnly } = useTimeline();
 
   // Toolbar toggle options
   const options: ToolbarToggleOption[] = [
     {
       value: "all",
-      icon: <ToolbarIcon icon={<FaList />} count={allCount} />,
+      icon: <ToolbarIconWithCount icon={<FaList />} count={allCount} />,
       label: "All Countries",
       ariaLabel: `Show all countries (${allCount})`,
-      checked: !isVisitedOnly,
-      onClick: () =>
-        setOverlaySelections((prev) => ({
-          ...prev,
-          [visitedOverlayId]: "all",
-        })),
+      checked: !showVisitedOnly,
+      disabled: timelineMode,
+      onClick: () => setShowVisitedOnly(false),
     },
     {
       value: "visited",
-      icon: <ToolbarIcon icon={<FaListCheck />} count={visitedCount} />,
+      icon: <ToolbarIconWithCount icon={<FaListCheck />} count={visitedCount} />,
       label: "Visited",
       ariaLabel: `Show visited countries (${visitedCount})`,
-      checked: isVisitedOnly,
-      onClick: () =>
-        setOverlaySelections((prev) => ({
-          ...prev,
-          [visitedOverlayId]: "only",
-        })),
+      checked: showVisitedOnly,
+      onClick: () => setShowVisitedOnly(true),
     },
   ];
 

@@ -1,8 +1,8 @@
-import { type ReactNode, type ReactElement, isValidElement } from "react";
+import React, { type ReactNode, type ReactElement, isValidElement } from "react";
+import ReactDOM from "react-dom";
 import { useFloatingHover as useFloatingHoverHook } from "@hooks/useFloatingHover";
 import { usePanelHide } from "@hooks/usePanelHide";
 import "./Modal.css";
-import React from "react";
 
 type FloatingButtonProps = {
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -22,7 +22,7 @@ interface ModalProps {
   style?: React.CSSProperties;
   disableClose?: boolean;
   containerRef?: React.RefObject<HTMLDivElement | null>;
-};
+}
 
 export function Modal({
   isOpen,
@@ -53,15 +53,16 @@ export function Modal({
   // Don't render anything if the modal is not open
   if (!isOpen) return null;
 
-  return (
+  return ReactDOM.createPortal(
     <>
       <div
-        className={`modal-backdrop ${backdropClassName ?? ""}`}
         onClick={() => {
           if (!disableClose) onClose();
         }}
         aria-modal="true"
+        inert={!isOpen}
         role="dialog"
+        className={`modal-backdrop ${backdropClassName ?? ""}`}
         style={{ pointerEvents: isOpen ? "auto" : "none" }}
       >
         <div
@@ -89,6 +90,7 @@ export function Modal({
           ? shouldShowFloating &&
             React.cloneElement(floatingChildren, floatingHandlers)
           : floatingChildren)}
-    </>
+    </>,
+    document.body
   );
 }

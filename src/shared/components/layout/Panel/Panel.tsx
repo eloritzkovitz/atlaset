@@ -37,8 +37,8 @@ export function Panel({
   return (
     <div
       role="complementary"
-      aria-hidden={!show}
       tabIndex={-1}
+      inert={!show}
       className={`panel ${show ? "panel-show" : "panel-hide"} ${className}`}
       style={{
         width,

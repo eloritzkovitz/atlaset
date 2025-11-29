@@ -1,55 +1,52 @@
-import React, { useEffect, useRef } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useEffect, useRef, useState, type JSX } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { useUI } from "@contexts/UIContext";
+import { useUiHint } from "@hooks/useUiHint";
 
-export function useUiToggleHint(
-  uiVisible: boolean,
-  setUiVisible: React.Dispatch<React.SetStateAction<boolean>>,
-  setHintKey: React.Dispatch<React.SetStateAction<number>>,
-  setHintMessage: (msg: React.ReactNode) => void
-) {
-  // Track previous value of uiVisible
+/**
+ * Manages UI toggle hint display when the UI visibility changes.
+ */
+export function useUiToggleHint() {
+  const { uiVisible } = useUI();
+
+  // Refs and state to track previous visibility and hint
   const prevUiVisible = useRef(uiVisible);
 
-  // Show hint when uiVisible changes
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      const target = e.target as HTMLElement;
-      // Ignore if typing in input, textarea, or contenteditable
-      if (
-        target.tagName === "INPUT" ||
-        target.tagName === "TEXTAREA" ||
-        target.isContentEditable
-      ) {
-        return;
-      }
-      if (e.key.toLowerCase() === "u") {
-        setUiVisible((v) => !v);
-        if (!uiVisible) {
-          setHintKey((k) => k + 1);
-          setHintMessage(
-            <span>
-              <FaEye className="inline mr-2" />
-              UI shown. Press U to hide the UI.
-            </span>
-          );
-        }
-      }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [uiVisible, setUiVisible, setHintKey, setHintMessage]);
+  // Hint state
+  const [hint, setHint] = useState<null | {
+    message: JSX.Element;
+    icon: JSX.Element;
+  }>(null);
+  const [hintKey, setHintKey] = useState(0);
 
-  // Show hint only when UI transitions from visible to hidden
+  // Show hint only when UI transitions (never on initial load)
   useEffect(() => {
-    if (prevUiVisible.current && !uiVisible) {
-      setHintKey((k) => k + 1);
-      setHintMessage(
-        <span>
-          <FaEyeSlash className="inline mr-2" />
-          UI hidden. Press U to show the UI.
-        </span>
-      );
+    if (prevUiVisible.current !== uiVisible) {
+      if (prevUiVisible.current && !uiVisible) {
+        setHintKey((k) => k + 1);
+        setHint({
+          message: <>UI hidden. Press U to show the UI.</>,
+          icon: <FaEyeSlash className="text-lg" />,
+        });
+      } else if (!prevUiVisible.current && uiVisible) {
+        setHintKey((k) => k + 1);
+        setHint({
+          message: <>UI shown. Press U to hide the UI.</>,
+          icon: <FaEye className="text-lg" />,
+        });
+      }
     }
     prevUiVisible.current = uiVisible;
-  }, [uiVisible, setHintKey, setHintMessage]);
+  }, [uiVisible]);
+
+  // Use the useUiHint hook to display the hint
+  useUiHint(hint, 4000, { key: `toggle-ui-${hintKey}` });
+
+  // Clear hint after 4 seconds
+  useEffect(() => {
+    if (hint) {
+      const timeout = setTimeout(() => setHint(null), 4000);
+      return () => clearTimeout(timeout);
+    }
+  }, [hint]);
 }

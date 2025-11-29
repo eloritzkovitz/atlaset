@@ -8,7 +8,7 @@ import {
 } from "react";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 
-interface UIContextType {
+export interface UIContextType {
   uiVisible: boolean;
   setUiVisible: (v: boolean | ((prev: boolean) => boolean)) => void;
   showMenu: boolean;
@@ -20,7 +20,7 @@ interface UIContextType {
   showMarkers: boolean;
   toggleMarkers: () => void;
   showOverlays: boolean;
-  toggleOverlays: () => void;  
+  toggleOverlays: () => void;
   showExport: boolean;
   toggleExport: () => void;
   showSettings: boolean;
@@ -33,9 +33,7 @@ interface UIContextType {
   showShortcuts: boolean;
   toggleShortcuts: () => void;
   closeModal: () => void;
-  timelineMode: boolean;
-  setTimelineMode: (v: boolean | ((prev: boolean) => boolean)) => void;
-}  
+}
 
 // Type for panel selection
 type PanelSelection =
@@ -49,11 +47,10 @@ type PanelSelection =
 // Type for modal selection
 type ModalSelection = "shortcuts" | "legend" | "countryDetails" | null;
 
-const UIContext = createContext<UIContextType | undefined>(undefined);
+export const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
-  const [timelineMode, setTimelineMode] = useState(false);
 
   // State for which panel is open; null means no panel is open
   const [showMenu, setShowMenu] = useState(false);
@@ -100,31 +97,28 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const closeModal = () => setOpenModal(null);
 
   // Toggle UI visibility with "U"
-  useKeyHandler(toggleUiVisible, ["u"], true);
+  useKeyHandler(toggleUiVisible, ["u", "U"], true);
 
   // Toggle Countries panel with "C"
-  useKeyHandler(toggleCountries, ["c"], true);
+  useKeyHandler(toggleCountries, ["c", "C"], true);
 
   // Toggle Filters panel with "F"
-  useKeyHandler(toggleFilters, ["f"], true);
+  useKeyHandler(toggleFilters, ["f", "F"], true);
 
   // Toggle Markers panel with "M"
-  useKeyHandler(toggleMarkers, ["m"], true);
+  useKeyHandler(toggleMarkers, ["m", "M"], true);
 
   // Toggle Overlays panel with "O"
-  useKeyHandler(toggleOverlays, ["o"], true);
+  useKeyHandler(toggleOverlays, ["o", "O"], true);
 
   // Toggle Legend with "L"
-  useKeyHandler(toggleLegend, ["l"], true);
-
-  // Toggle Timeline panel with "T"
-  useKeyHandler(() => setTimelineMode((prev) => !prev), ["t"], true);
+  useKeyHandler(toggleLegend, ["l", "L"], true);  
 
   // Toggle Export panel with "E"
-  useKeyHandler(toggleExport, ["e"], true);
+  useKeyHandler(toggleExport, ["e", "E"], true);
 
   // Toggle Settings panel with "S"
-  useKeyHandler(toggleSettings, ["s"], true);
+  useKeyHandler(toggleSettings, ["s", "S"], true);
 
   // Open shortcut modal with "?"
   useKeyHandler(toggleShortcuts, ["?"], true);
@@ -169,8 +163,6 @@ export function UIProvider({ children }: { children: ReactNode }) {
         showShortcuts,
         toggleShortcuts,
         closeModal,
-        timelineMode,
-        setTimelineMode,
       }}
     >
       {children}

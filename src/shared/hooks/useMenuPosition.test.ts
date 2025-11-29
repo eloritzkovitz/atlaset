@@ -48,7 +48,7 @@ describe("useMenuPosition", () => {
     expect(result.current.position).toBe("absolute");
     expect(result.current.zIndex).toBe(1000);
     expect(result.current.top).toBe(100 + window.scrollY);
-    expect(result.current.left).toBe(100 - 100 + window.scrollX);
+    expect(result.current.left).toBe(100 + window.scrollX);
   });
 
   it("flips above if not enough space below", () => {

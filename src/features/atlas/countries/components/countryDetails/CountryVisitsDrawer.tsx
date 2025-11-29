@@ -3,7 +3,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { FloatingChevronButton, Modal } from "@components";
 import type { Visit } from "@types";
 
-type CountryVisitsDrawerProps = {
+interface CountryVisitsDrawerProps {
   open: boolean;
   onClose: () => void;
   visits: Visit[];

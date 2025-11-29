@@ -1,9 +1,13 @@
 /**
- * Utility functions for handling country data.
+ * @file Utility functions for handling country data.
  */
 import { SOVEREIGN_DEPENDENCIES } from "@features/countries/constants/sovereignDependencies";
 import type { Country, SovereigntyType, Overlay } from "@types";
-import { EXCLUDED_ISO_CODES, SOVEREIGN_FLAG_MAP } from "../constants/sovereignty";
+import { extractUniqueSorted } from "@utils/array";
+import {
+  EXCLUDED_ISO_CODES,
+  SOVEREIGN_FLAG_MAP,
+} from "../constants/sovereignty";
 import type { FlagSource, FlagStyle, FlagSize } from "../types/flag";
 
 /**
@@ -36,14 +40,82 @@ export function getCountryByIsoCode(
 }
 
 /**
- * Creates a lookup map of countries by their ISO codes.
+ * Creates a map of country ISO codes to values derived from the countries array.
  * @param countries - Array of country objects.
- * @returns A record mapping ISO codes to country objects.
+ * @param valueFn - Function that takes a country and returns the desired value.
+ * @returns A record mapping ISO codes to the values returned by valueFn.
  */
-export function createCountryLookup(countries: any[]): Record<string, any> {
+export function createCountryMap<T>(
+  countries: Country[],
+  valueFn: (c: Country) => T
+): Record<string, T> {
   return Object.fromEntries(
-    countries.map((c) => [c.isoCode?.toLowerCase(), c])
+    countries.map((c) => [c.isoCode.toLowerCase(), valueFn(c)])
   );
+}
+
+/**
+ * Returns all unique regions from the countries list, excluding undefined values.
+ * @param countries - Array of country objects with optional region property.
+ * @returns Sorted array of unique region strings.
+ */
+export function getAllRegions(countries: { region?: string }[]) {
+  return extractUniqueSorted(countries, (c) => c.region);
+}
+
+/**
+ * Returns all unique subregions from the countries list, excluding undefined values.
+ * @param countries - Array of country objects with optional subregion property.
+ * @returns Sorted array of unique subregion strings.
+ */
+export function getAllSubregions(countries: { subregion?: string }[]) {
+  return extractUniqueSorted(countries, (c) => c.subregion);
+}
+
+/**
+ * Returns all unique subregions for a given region from the countries list.
+ * @param countries - Array of country objects with region and subregion properties.
+ * @param selectedRegion - The region to filter subregions by.
+ * @returns Sorted array of unique subregion strings for the selected region.
+ */
+export function getSubregionsForRegion(
+  countries: { region?: string; subregion?: string }[],
+  selectedRegion: string
+) {
+  return extractUniqueSorted(
+    countries.filter((c) => c.region === selectedRegion),
+    (c) => c.subregion
+  );
+}
+
+/**
+ * Returns all unique sovereignty types from the countries list.
+ * @param countries - Array of country objects with sovereigntyType property.
+ * @returns Sorted array of unique sovereignty type strings.
+ */
+export function getAllSovereigntyTypes(
+  countries: { sovereigntyType?: SovereigntyType }[]
+): SovereigntyType[] {
+  return extractUniqueSorted(
+    countries,
+    (c) => c.sovereigntyType as SovereigntyType | undefined
+  );
+}
+
+/**
+ * Finds the sovereign country for a terrritory's ISO code.
+ * @param territoryIsoCode - The ISO code of the territory.
+ * @returns The sovereign's name and ISO code, or undefined if not found.
+ */
+export function getSovereigntyInfoForTerritory(territoryIsoCode: string): {
+  type?: SovereigntyType;
+  sovereign?: { name: string; isoCode: string };
+} {
+  if (!territoryIsoCode) return { type: undefined };
+  if (dependencyMap[territoryIsoCode]) return dependencyMap[territoryIsoCode];
+  if (regionMap[territoryIsoCode]) return regionMap[territoryIsoCode];
+  if (disputeMap[territoryIsoCode]) return disputeMap[territoryIsoCode];
+  return { type: "Sovereign" };
 }
 
 /**
@@ -67,9 +139,11 @@ export function getFlagUrl(
   // Handle sovereign state flags for territories
   const flagIso = SOVEREIGN_FLAG_MAP[normalizedIso] || normalizedIso;
 
+  // Validate ISO code length
+  if (!flagIso || flagIso.length !== 2) return "";
+
   switch (source) {
     case "flagsapi":
-      if (!flagIso || flagIso.length !== 2) return "";
       // Use default size if not provided
       const flagsApiSize = size ? size.split("x")[0] : "32";
       // FlagsAPI: https://flagsapi.com/:country_code/:style/:size.png
@@ -145,22 +219,6 @@ for (const [sovereignIso, sovereignObj] of Object.entries(
       sovereign: { name: sovereignObj.name, isoCode: sovereignIso },
     };
   });
-}
-
-/**
- * Finds the sovereign country for a terrritory's ISO code.
- * @param territoryIsoCode - The ISO code of the territory.
- * @returns The sovereign's name and ISO code, or undefined if not found.
- */
-export function getSovereigntyInfoForTerritory(territoryIsoCode: string): {
-  type?: SovereigntyType;
-  sovereign?: { name: string; isoCode: string };
-} {
-  if (!territoryIsoCode) return { type: undefined };
-  if (dependencyMap[territoryIsoCode]) return dependencyMap[territoryIsoCode];
-  if (regionMap[territoryIsoCode]) return regionMap[territoryIsoCode];
-  if (disputeMap[territoryIsoCode]) return disputeMap[territoryIsoCode];
-  return { type: "Sovereign" };
 }
 
 /** Filters and returns the list of visited countries based on overlays.

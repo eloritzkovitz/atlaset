@@ -1,7 +1,7 @@
 import { CountryWithFlag } from "@features/countries";
 import type { SovereigntyType } from "@types";
 
-type SovereigntyBadgeProps = {
+interface SovereigntyBadgeProps {
   type?: SovereigntyType;
   sovereign?: { name: string; isoCode?: string };
 };

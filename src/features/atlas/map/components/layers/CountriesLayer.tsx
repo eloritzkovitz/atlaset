@@ -1,11 +1,13 @@
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
+
 import { useMapGeographyStyle } from "@features/atlas/map/hooks/useMapGeographyStyle";
 import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
 } from "@features/atlas/overlays";
+import { useCountryColors, useHomeCountry } from "@features/settings";
 import type { OverlayItem } from "@types";
 
 type MapCountriesLayerProps = {
@@ -13,6 +15,7 @@ type MapCountriesLayerProps = {
   overlayItems?: OverlayItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
+  highlightedIsoCodes?: string[];
   onCountryClick?: (countryIsoCode: string) => void;
   onCountryHover?: (isoCode: string | null) => void;
   defaultColor?: string;
@@ -24,11 +27,16 @@ export function CountriesLayer({
   overlayItems = [],
   selectedIsoCode,
   hoveredIsoCode,
+  highlightedIsoCodes = [],
   onCountryClick,
   onCountryHover,
   isAddingMarker,
 }: MapCountriesLayerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
+
+  // Home country for coloring
+  const { homeCountry, colorHomeCountry } = useHomeCountry();
+  const { HOME_COUNTRY_COLOR } = useCountryColors();
 
   // Group overlay items by isoCode for stacking/blending
   const overlayGroups = useMemo(
@@ -44,7 +52,14 @@ export function CountriesLayer({
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
 
-            // Highlight logic
+            // Home country coloring logic
+            const isHomeCountry =
+              colorHomeCountry &&
+              homeCountry &&
+              isoA2 === homeCountry.toUpperCase();
+
+            // Coloring logic
+            const isHighlighted = highlightedIsoCodes.includes(isoA2);
             const isSelected =
               !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
             const isHovered =
@@ -61,8 +76,12 @@ export function CountriesLayer({
             let style = geographyStyle.default;
             let tooltip = geo.properties.name;
 
-            if (isHovered) {
+            if (isHighlighted) {
+              style = geographyStyle.highlight;
+            } else if (isHovered) {
               style = geographyStyle.hover;
+            } else if (isHomeCountry) {
+              style = { ...geographyStyle.default, fill: HOME_COUNTRY_COLOR };
             } else if (blendedFill) {
               style = { ...geographyStyle.default, fill: blendedFill };
             } else if (isSelected) {
