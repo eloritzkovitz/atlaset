@@ -4,6 +4,7 @@ import {
   useState,
   useContext,
   type ReactNode,
+  useRef,
 } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
@@ -28,11 +29,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [ready, setReady] = useState(false);
 
   // Track previous user to detect login
-  const [prevUser, setPrevUser] = useState<User | null>(null);
+  const prevUserRef = useRef<User | null>(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      setPrevUser(user);
+      prevUserRef.current = user;
       setUser(firebaseUser);
       setLoading(false);
     });
@@ -44,19 +45,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let cancelled = false;
     async function handleMigration() {
-      if (!prevUser && user) {
+      // Compare previous and current user
+      if (!prevUserRef.current && user) {
         const guestDataExists = await hasGuestData();
         if (guestDataExists) {
           await migrateGuestDataToFirestore();
         }
+        if (!cancelled) setReady(true);
+      } else if (!user) {
+        if (!cancelled) setReady(true);
       }
-      if (!cancelled) setReady(true);
+      prevUserRef.current = user;
     }
     handleMigration();
     return () => {
       cancelled = true;
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   return (
@@ -68,9 +72,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 // Custom hook to use the AuthContext
 export const useAuth = () => useContext(AuthContext);
-
-// Custom hook to check if auth is ready and user is logged in
-export function useAuthReady() {
-  const { user, ready } = useAuth();
-  return user && ready;
-}

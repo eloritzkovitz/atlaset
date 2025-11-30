@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import type { Trip } from "@types";
 import { getAutoTripStatus } from "@features/trips/utils/trips";
 import { tripsService } from "@services/tripsService";
-import { useAuthReady } from "./AuthContext";
+import { useAuth } from "./AuthContext";
 
 interface TripsContextType {
   trips: Trip[];
@@ -22,23 +22,22 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [loading, setLoading] = useState(true);
 
   // Fetch trips on mount
-  const authReady = useAuthReady();
-  
+  const { user, ready } = useAuth();
+
   useEffect(() => {
     let mounted = true;
-    if (authReady) {
-      setLoading(true);
-      tripsService.load().then((allTrips) => {
-        if (mounted) {
-          loadTrips(allTrips);
-          setLoading(false);
-        }
-      });
-    }
+    if (!ready) return;
+    setLoading(true);
+    tripsService.load().then((allTrips) => {
+      if (mounted) {
+        loadTrips(allTrips);
+        setLoading(false);
+      }
+    });
     return () => {
       mounted = false;
     };
-  }, [authReady]);
+  }, [user, ready]);
 
   // Load trips from IndexedDB on mount
   function loadTrips(rawTrips: Trip[]) {

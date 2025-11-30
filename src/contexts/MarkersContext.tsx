@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { markersService } from "@services/markersService";
 import type { Marker } from "@types";
-import { useAuthReady } from "./AuthContext";
+import { useAuth } from "./AuthContext";
 
 interface MarkersContextType {
   markers: Marker[];
@@ -58,11 +58,12 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   } | null>(null);
 
   // Fetch markers on mount
-  const authReady = useAuthReady();
+  const { user, ready } = useAuth();
 
   useEffect(() => {
     let mounted = true;
-    if (authReady) {
+    if (!ready) return;
+    if (user) {
       markersService.load().then((dbMarkers) => {
         if (mounted) setMarkers(dbMarkers);
         setInitialized(true);
@@ -71,7 +72,7 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       mounted = false;
     };
-  }, [authReady]);
+  }, [user, ready]);
 
   // Save markers to IndexedDB whenever they change
   useEffect(() => {

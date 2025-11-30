@@ -9,7 +9,7 @@ import {
 import { defaultSettings } from "@constants/defaultSettings";
 import { settingsService } from "@services/settingsService";
 import type { Settings } from "@types";
-import { useAuthReady } from "./AuthContext";
+import { useAuth } from "./AuthContext";
 
 const SettingsContext = createContext<{
   settings: Settings;
@@ -28,25 +28,22 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Fetch settings on mount
-  const authReady = useAuthReady();
+  const { user, ready } = useAuth();
 
   useEffect(() => {
     let mounted = true;
-    if (authReady) {
-      setLoading(true);
-      settingsService.load().then((s) => {
-        if (mounted) {
-          setSettings(s);
-          setLoading(false);
-        }
-      });
-    } else {
-      setLoading(false);
-    }
+    if (!ready) return;
+    setLoading(true);
+    settingsService.load().then((s) => {
+      if (mounted) {
+        setSettings(s);
+        setLoading(false);
+      }
+    });
     return () => {
       mounted = false;
     };
-  }, [authReady]);
+  }, [user, ready]);
 
   // Apply theme class to document
   useEffect(() => {

@@ -3,7 +3,7 @@ import { useTrips } from "@contexts/TripsContext";
 import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
 import { overlaysService } from "@services/overlaysService";
 import type { AnyOverlay } from "@types";
-import { useAuthReady } from "./AuthContext";
+import { useAuth } from "./AuthContext";
 
 interface OverlaysContextType {
   overlays: AnyOverlay[];
@@ -55,28 +55,27 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
     !!editingOverlay && overlays.some((o) => o.id === editingOverlay.id);
 
   // Fetch overlays on mount
-  const authReady = useAuthReady();
-  
+  const { user, ready } = useAuth();
+
   useEffect(() => {
     let mounted = true;
-    if (authReady) {
-      overlaysService
-        .load()
-        .then((dbOverlays) => {
-          if (mounted) {
-            setOverlays(dbOverlays);
-            setLoading(false);
-          }
-        })
-        .catch((err) => {
-          setError(err.message);
+    if (!ready) return;
+    overlaysService
+      .load()
+      .then((dbOverlays) => {
+        if (mounted) {
+          setOverlays(dbOverlays);
           setLoading(false);
-        });
-    }
+        }
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
     return () => {
       mounted = false;
     };
-  }, [authReady]);
+  }, [user, ready]);
 
   // Sync visited countries overlay with trips
   useSyncVisitedCountriesOverlay(trips, overlays, setOverlays, loading);

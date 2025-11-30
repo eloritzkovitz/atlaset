@@ -24,13 +24,23 @@ export async function hasGuestData(): Promise<boolean> {
 // Migrate all guest data to Firestore for the authenticated user
 export async function migrateGuestDataToFirestore() {
   // Migrate markers
-  const markers = await appDb.markers.toArray();
-  await markersService.save(markers);
+  const guestMarkers = await appDb.markers.toArray();
+  const userMarkers = await markersService.load();
+  const mergedMarkers = [
+    ...guestMarkers,
+    ...userMarkers.filter((m) => !guestMarkers.some((g) => g.id === m.id)),
+  ];
+  await markersService.save(mergedMarkers);
   await appDb.markers.clear();
 
   // Migrate overlays
-  const overlays = await appDb.overlays.toArray();
-  await overlaysService.save(overlays);
+  const guestOverlays = await appDb.overlays.toArray();
+  const userOverlays = await overlaysService.load();
+  const mergedOverlays = [
+    ...guestOverlays,
+    ...userOverlays.filter((o) => !guestOverlays.some((g) => g.id === o.id)),
+  ];
+  await overlaysService.save(mergedOverlays);
   await appDb.overlays.clear();
 
   // Migrate settings
@@ -41,7 +51,12 @@ export async function migrateGuestDataToFirestore() {
   }
 
   // Migrate trips
-  const trips = await appDb.trips.toArray();
-  await tripsService.save(trips);
+  const guestTrips = await appDb.trips.toArray();
+  const userTrips = await tripsService.load();
+  const mergedTrips = [
+    ...guestTrips,
+    ...userTrips.filter((t) => !guestTrips.some((g) => g.id === t.id)),
+  ];
+  await tripsService.save(mergedTrips);
   await appDb.trips.clear();
 }
