@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
-import { AuthProvider } from "@contexts/AuthContext";
 import { CountryDataProvider } from "@contexts/CountryDataContext";
 import { MapUIProvider } from "@contexts/MapUIContext";
 import { MarkersProvider } from "@contexts/MarkersContext";
@@ -26,38 +25,36 @@ function App() {
   }
 
   return (
-    <AuthProvider>
-      <CountryDataProvider>
-        <TripsProvider>
-          <UIProvider>
-            <UIHintProvider>
-              <UIHintContainer />
-              <PwaUpdateUiHint />
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <Suspense fallback={<SplashScreen />}>
-                      <OverlaysProvider>
-                        <MapUIProvider>
-                          <MarkersProvider>
-                            <TimelineProvider>
-                              <AtlasPage />
-                            </TimelineProvider>
-                          </MarkersProvider>
-                        </MapUIProvider>
-                      </OverlaysProvider>
-                    </Suspense>
-                  }
-                />
-                <Route path="/game" element={<GamesPage />} />
-                <Route path="/trips" element={<TripsPage />} />
-              </Routes>
-            </UIHintProvider>
-          </UIProvider>
-        </TripsProvider>
-      </CountryDataProvider>
-    </AuthProvider>
+    <CountryDataProvider>
+      <TripsProvider>
+        <UIProvider>
+          <UIHintProvider>
+            <UIHintContainer />
+            <PwaUpdateUiHint />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <Suspense fallback={<SplashScreen />}>
+                    <OverlaysProvider>
+                      <MapUIProvider>
+                        <MarkersProvider>
+                          <TimelineProvider>
+                            <AtlasPage />
+                          </TimelineProvider>
+                        </MarkersProvider>
+                      </MapUIProvider>
+                    </OverlaysProvider>
+                  </Suspense>
+                }
+              />
+              <Route path="/game" element={<GamesPage />} />
+              <Route path="/trips" element={<TripsPage />} />
+            </Routes>
+          </UIHintProvider>
+        </UIProvider>
+      </TripsProvider>
+    </CountryDataProvider>
   );
 }
 

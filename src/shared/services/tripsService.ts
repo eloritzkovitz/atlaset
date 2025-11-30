@@ -22,6 +22,21 @@ export const tripsService = {
     }
   },
 
+  // Bulk save trips (replace all)
+  async save(trips: Trip[]) {
+    if (isAuthenticated()) {
+      const tripsCol = getUserCollection("trips");
+      for (const trip of trips) {
+        await setDoc(doc(tripsCol, trip.id), trip);
+      }
+    } else {
+      await appDb.trips.clear();
+      if (trips.length > 0) {
+        await appDb.trips.bulkAdd(trips);
+      }
+    }
+  },
+
   // Add a new trip
   async add(trip: Trip) {
     if (isAuthenticated()) {

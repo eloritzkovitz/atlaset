@@ -12,9 +12,11 @@ export const settingsService = {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
       const snapshot = await getDoc(settingsDoc);
-      return snapshot.exists()
-        ? (snapshot.data() as Settings)
-        : defaultSettings;
+      if (snapshot.exists()) {
+        return { id: "main", ...snapshot.data() } as Settings;
+      } else {
+        return defaultSettings;
+      }
     } else {
       return (await appDb.settings.get("main")) || defaultSettings;
     }
@@ -22,12 +24,13 @@ export const settingsService = {
 
   // Save or update settings in Firestore or IndexedDB
   async save(settings: Settings) {
+    const settingsWithId = { ...settings, id: "main" };
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
-      await setDoc(settingsDoc, settings);
+      await setDoc(settingsDoc, settingsWithId);
     } else {
-      await appDb.settings.put(settings);
+      await appDb.settings.put(settingsWithId);
     }
   },
 };

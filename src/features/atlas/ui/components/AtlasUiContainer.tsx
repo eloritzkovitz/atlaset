@@ -13,6 +13,7 @@ import { MapExportPanel } from "../export/components/MapExportPanel";
 import { MenuPanel } from "../menu/MenuPanel";
 import { ShortcutsModal } from "../shortcuts/ShortcutsModal";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
+import { UserMenu } from "@components";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
@@ -72,7 +73,7 @@ export function AtlasUiContainer({
 
   return (
     <>
-      {/* Panels */}      
+      {/* Panels */}
       <CountriesPanel
         selectedIsoCode={selectedIsoCode}
         hoveredIsoCode={hoveredIsoCode}
@@ -94,6 +95,7 @@ export function AtlasUiContainer({
       <MapExportPanel svgRef={svgRef} />
       <SettingsPanel />
       <MenuPanel />
+      <UserMenu />
 
       {/* Modals */}
       <CountryDetailsModal

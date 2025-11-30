@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import type { Trip } from "@types";
 import { getAutoTripStatus } from "@features/trips/utils/trips";
 import { tripsService } from "@services/tripsService";
+import { useAuthReady } from "./AuthContext";
 
 interface TripsContextType {
   trips: Trip[];
@@ -9,8 +10,8 @@ interface TripsContextType {
   addTrip: (trip: Trip) => void;
   updateTrip: (trip: Trip) => void;
   removeTrip: (id: string) => Promise<void>;
-  duplicateTrip: (trip: Trip) => void;  
-};
+  duplicateTrip: (trip: Trip) => void;
+}
 
 const TripsContext = createContext<TripsContextType | undefined>(undefined);
 
@@ -20,22 +21,24 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   const [trips, setTrips] = useState<Trip[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch trips from IndexedDB on mount
+  // Fetch trips on mount
+  const authReady = useAuthReady();
+  
   useEffect(() => {
     let mounted = true;
-    const fetchTrips = async () => {
+    if (authReady) {
       setLoading(true);
-      const allTrips = await tripsService.load();
-      if (mounted) {
-        loadTrips(allTrips);
-        setLoading(false);
-      }
-    };
-    fetchTrips();
+      tripsService.load().then((allTrips) => {
+        if (mounted) {
+          loadTrips(allTrips);
+          setLoading(false);
+        }
+      });
+    }
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [authReady]);
 
   // Load trips from IndexedDB on mount
   function loadTrips(rawTrips: Trip[]) {

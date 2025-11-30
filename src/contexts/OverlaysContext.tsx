@@ -3,6 +3,7 @@ import { useTrips } from "@contexts/TripsContext";
 import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
 import { overlaysService } from "@services/overlaysService";
 import type { AnyOverlay } from "@types";
+import { useAuthReady } from "./AuthContext";
 
 interface OverlaysContextType {
   overlays: AnyOverlay[];
@@ -27,9 +28,11 @@ interface OverlaysContextType {
   saveOverlay: () => void;
   closeOverlayModal: () => void;
   setEditingOverlay: React.Dispatch<React.SetStateAction<AnyOverlay | null>>;
-};
+}
 
-const OverlaysContext = createContext<OverlaysContextType | undefined>(undefined);
+const OverlaysContext = createContext<OverlaysContextType | undefined>(
+  undefined
+);
 
 export function OverlaysProvider({ children }: { children: React.ReactNode }) {
   // Overlay state
@@ -48,27 +51,32 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
   // Editing state
   const [editingOverlay, setEditingOverlay] = useState<AnyOverlay | null>(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const isEditingOverlay = !!editingOverlay && overlays.some((o) => o.id === editingOverlay.id);
+  const isEditingOverlay =
+    !!editingOverlay && overlays.some((o) => o.id === editingOverlay.id);
 
-  // Load overlays from service on mount
+  // Fetch overlays on mount
+  const authReady = useAuthReady();
+  
   useEffect(() => {
     let mounted = true;
-    overlaysService
-      .load()
-      .then((dbOverlays) => {
-        if (mounted) {
-          setOverlays(dbOverlays);
+    if (authReady) {
+      overlaysService
+        .load()
+        .then((dbOverlays) => {
+          if (mounted) {
+            setOverlays(dbOverlays);
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          setError(err.message);
           setLoading(false);
-        }
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+        });
+    }
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [authReady]);
 
   // Sync visited countries overlay with trips
   useSyncVisitedCountriesOverlay(trips, overlays, setOverlays, loading);
@@ -192,7 +200,6 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
 // Custom hook for consuming the OverlaysContext
 export function useOverlays() {
   const ctx = useContext(OverlaysContext);
-  if (!ctx)
-    throw new Error("useOverlays must be used within OverlayProvider");
+  if (!ctx) throw new Error("useOverlays must be used within OverlayProvider");
   return ctx;
 }

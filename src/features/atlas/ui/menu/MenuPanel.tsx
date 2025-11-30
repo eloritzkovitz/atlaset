@@ -84,7 +84,7 @@ export function MenuPanel() {
       <CollapsedPanelButton
         onClick={() => setShowMenu(true)}
         visible={uiVisible && !showMenu}
-        className="fixed top-4 right-4 z-[9999]"
+        className="fixed top-5 right-23 z-[9999]"
       />
     </div>
   );
