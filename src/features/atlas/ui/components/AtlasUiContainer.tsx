@@ -9,11 +9,11 @@ import {
 } from "@features/atlas/markers";
 import { OverlayModal, OverlaysPanel } from "@features/atlas/overlays";
 import { SettingsPanel } from "@features/settings";
+import { UserMenu } from "@features/user";
 import { MapExportPanel } from "../export/components/MapExportPanel";
 import { MenuPanel } from "../menu/MenuPanel";
 import { ShortcutsModal } from "../shortcuts/ShortcutsModal";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
-import { UserMenu } from "@components";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;

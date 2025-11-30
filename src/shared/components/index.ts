@@ -53,6 +53,3 @@ export { HomeCard } from "./ui/HomeCard";
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";
 export { UIHintContainer } from "./ui/UiHint/UiHintContainer";
-
-// User components
-export { UserMenu } from "./user/UserMenu";
