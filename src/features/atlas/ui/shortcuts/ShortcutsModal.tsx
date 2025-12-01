@@ -34,7 +34,12 @@ export function ShortcutsModal() {
         }
         showSeparator={true}
       >
-        <ActionButton onClick={closeModal} ariaLabel="Close" title="Close">
+        <ActionButton
+          onClick={closeModal}
+          ariaLabel="Close"
+          title="Close"
+          className="action-btn action-btn-close"
+        >
           <FaXmark />
         </ActionButton>
       </PanelHeader>
@@ -49,7 +54,6 @@ export function ShortcutsModal() {
                   </div>
                   <table className="w-full mx-auto text-left">
                     <tbody>
-                      {/* Render each command in the category */}
                       {groupedCommands[category].map((cmd) => (
                         <ShortcutRow
                           key={cmd.key + cmd.modifiers.join("+")}
