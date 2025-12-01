@@ -36,6 +36,14 @@ const defaultTripFilterState: TripFilterState = {
   upcoming: true,
 };
 
+/**
+ * Manages trip filtering logic and state.
+ * @param trips List of trips to filter
+ * @param countryData Country data for filtering
+ * @param initialFilters Initial filter state
+ * @param globalSearch Global search string
+ * @returns Filtered trips and filter state handlers
+ */
 export function useTripFilters(
   trips?: Trip[],
   countryData?: any,

@@ -31,7 +31,7 @@ export function DropdownSelectInput<T = string>({
   const ref = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
-  
+
   // Dynamically calculate offset based on button height
   const btnHeight = btnRef.current?.offsetHeight ?? 0;
   const menuStyle = useMenuPosition(open, btnRef, menuRef, btnHeight);
@@ -83,8 +83,11 @@ export function DropdownSelectInput<T = string>({
           <div
             id="dropdown-menu-portal"
             ref={menuRef}
-            className="z-[9999] bg-white border-none rounded shadow-md max-h-60 overflow-y-auto overflow-x-hidden mt-3"
-            style={menuStyle}
+            className="bg-white border-none rounded shadow-md max-h-60 overflow-y-auto overflow-x-hidden mt-3"
+            style={{
+              ...menuStyle,
+              zIndex: 11000,
+            }}
           >
             <DropdownOptions
               options={options}
