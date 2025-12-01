@@ -25,8 +25,8 @@ interface OverlayModalProps {
   overlay: Overlay | null;
   onChange: (overlay: Overlay) => void;
   onSave: () => void;
-  onClose: () => void;  
-};
+  onClose: () => void;
+}
 
 export function OverlayModal({
   isOpen,
@@ -34,7 +34,7 @@ export function OverlayModal({
   overlay,
   onChange,
   onSave,
-  onClose,  
+  onClose,
 }: OverlayModalProps) {
   const { countries } = useCountryData();
   const [countryModalOpen, setCountryModalOpen] = useState(false);
@@ -58,6 +58,12 @@ export function OverlayModal({
 
   // Don't render the modal if no overlay is being edited
   if (!overlay) return null;
+
+  // Validate overlay
+  const isValid =
+    overlay.name.trim() !== "" &&
+    overlay.countries &&
+    overlay.countries.length > 0;
 
   return (
     <>
@@ -182,7 +188,7 @@ export function OverlayModal({
               <div className="flex items-center text-base text-gray-400 mr-4">
                 <FaCircleInfo size={24} className="mr-4" />
                 <span>
-                  This overlay is managed automatically based on your trips.                  
+                  This overlay is managed automatically based on your trips.
                 </span>
               </div>
             )}
@@ -198,7 +204,7 @@ export function OverlayModal({
                 )
               }
               submitLabel={isEditing ? "Save Changes" : "Add Overlay"}
-              disabled={isVisited}
+              disabled={!isValid || isVisited}
             />
           </div>
         </form>
