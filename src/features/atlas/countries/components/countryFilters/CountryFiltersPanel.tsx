@@ -117,6 +117,7 @@ export function CountryFiltersPanel({
             onClick={onHide}
             ariaLabel="Close filters panel"
             title="Close"
+            className="action-btn action-btn-close"
           >
             <FaXmark />
           </ActionButton>

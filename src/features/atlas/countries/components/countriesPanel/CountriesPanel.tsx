@@ -134,12 +134,13 @@ export function CountriesPanel({
               onClick={toggleFilters}
               ariaLabel={showFilters ? "Hide Filters" : "Show Filters"}
               title="Filters"
-              icon={<FaFilter />}
+              icon={<FaFilter/>}
             />
             <ActionButton
               onClick={toggleCountries}
               ariaLabel="Hide countries panel"
               title="Hide"
+              className="action-btn action-btn-close"
               icon={<FaXmark />}
             />
           </>

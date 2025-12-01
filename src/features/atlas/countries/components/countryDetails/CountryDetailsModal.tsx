@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { FaWikipediaW, FaCrosshairs, FaTimes } from "react-icons/fa";
+import { FaWikipediaW, FaCrosshairs, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   ErrorMessage,
@@ -150,7 +150,8 @@ export function CountryDetailsModal({
               onClick={onClose}
               ariaLabel="Close country details"
               title="Close"
-              icon={<FaTimes />}
+              icon={<FaXmark />}
+              className="action-btn action-btn-close"
             />
           </PanelHeader>
           {country.sovereigntyType && sovereigntyInfo && (

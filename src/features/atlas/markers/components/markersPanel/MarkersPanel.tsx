@@ -1,4 +1,4 @@
-import { FaMapPin, FaPlus, FaTimes } from "react-icons/fa";
+import { FaMapPin, FaPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
@@ -49,8 +49,9 @@ export function MarkersPanel({
               onClick={closePanel}
               ariaLabel="Close markers panel"
               title="Close"
+              className="action-btn action-btn-close"
             >
-              <FaTimes />
+              <FaXmark />
             </ActionButton>
           </>
         }

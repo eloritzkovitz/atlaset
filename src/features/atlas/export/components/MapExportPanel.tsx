@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { FaDownload, FaTimes, FaFileImage } from "react-icons/fa";
+import { FaDownload, FaFileImage, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   FormButton,
@@ -22,11 +22,11 @@ import type {
 import { exportSvg, exportSvgAsImage } from "../utils/mapExport";
 import "./MapExportPanel.css";
 
-type MapExportModalProps = {
+export interface MapExportPanelProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
-};
+}
 
-export function MapExportPanel({ svgRef }: MapExportModalProps) {
+export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { showExport, closePanel } = useUI();
 
   // Export options state
@@ -75,10 +75,9 @@ export function MapExportPanel({ svgRef }: MapExportModalProps) {
           ariaLabel="Close export menu"
           title="Close"
         >
-          <FaTimes />
+          <FaXmark />
         </ActionButton>
       }
-      className="relative"
     >
       <div className="pb-20">
         {/* Format selector */}

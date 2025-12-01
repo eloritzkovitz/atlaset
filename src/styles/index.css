@@ -74,34 +74,6 @@ button:focus-visible {
   outline: none !important;
 }
 
-/* Action button */
-
-.action-btn {
-  @apply py-1 px-2 rounded border-none font-bold cursor-pointer flex items-center gap-2 transition-colors;
-}
-
-.action-btn,
-.sort-btn {
-  background-color: theme("colors.gray.100");
-  color: theme("colors.blue.800");
-}
-
-.action-btn:hover {
-  background-color: theme("colors.gray.200");
-  color: theme("colors.blue.900");
-}
-
-.dark .action-btn,
-.dark .sort-btn {
-  background-color: theme("colors.gray.600");
-  color: theme("colors.gray.200");
-}
-
-.dark .action-btn:hover {
-  background-color: theme("colors.gray.500");
-  color: theme("colors.gray.300");
-}
-
 /* Custom scrollbar styles */
 body::-webkit-scrollbar {
   width: 8px;

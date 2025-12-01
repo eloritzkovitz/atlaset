@@ -1,6 +1,7 @@
 import { useMarkers } from "@contexts/MarkersContext";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
+import { MapExportPanel } from "@features/atlas/export";
 import {
   MarkerDetailsModal,
   MarkerModal,
@@ -10,7 +11,6 @@ import {
 import { OverlayModal, OverlaysPanel } from "@features/atlas/overlays";
 import { SettingsPanel } from "@features/settings";
 import { UserMenu } from "@features/user";
-import { MapExportPanel } from "../export/components/MapExportPanel";
 import { MenuPanel } from "../menu/MenuPanel";
 import { ShortcutsModal } from "../shortcuts/ShortcutsModal";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
