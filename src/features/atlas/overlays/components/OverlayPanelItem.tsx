@@ -1,4 +1,5 @@
 import { PanelListItem } from "@components";
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import type { Overlay } from "@types";
 
 interface OverlayPanelItemProps {
@@ -24,7 +25,7 @@ export function OverlayPanelItem({
   onToggleVisibility,
   onRemove,
 }: OverlayPanelItemProps) {
-  const isVisited = overlay.id === "visited-countries";
+  const isVisited = overlay.id === VISITED_OVERLAY_ID;
 
   return (
     <PanelListItem

@@ -1,6 +1,8 @@
 /**
  * @file Utility functions for handling country data.
  */
+
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { SOVEREIGN_DEPENDENCIES } from "@features/countries/constants/sovereignDependencies";
 import type { Country, SovereigntyType, Overlay } from "@types";
 import { extractUniqueSorted } from "@utils/array";
@@ -230,7 +232,7 @@ export function getVisitedCountries(
   countries: Country[],
   overlays: Overlay[]
 ): Country[] {
-  const visitedOverlay = overlays.find((o) => o.id === "visited-countries");
+  const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
   const visitedIsoCodes =
     (visitedOverlay as { countries?: string[] } | undefined)?.countries ?? [];
   return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));

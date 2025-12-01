@@ -11,6 +11,7 @@ import {
   FaMap,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar, ToolbarSeparator } from "@components";
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineOverlay } from "@features/atlas/overlays";
@@ -44,7 +45,7 @@ export function MapToolbar({
 
   // Overlay context
   const { overlays } = useOverlays();
-  const visitedOverlay = overlays.find((o) => o.id === "visited-countries");
+  const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
 
   return (
     <div

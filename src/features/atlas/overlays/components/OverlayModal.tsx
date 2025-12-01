@@ -14,6 +14,7 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal } from "@features/countries";
 import type { Overlay } from "@types";
@@ -41,7 +42,7 @@ export function OverlayModal({
   const [colorModalOpen, setColorModalOpen] = useState(false);
 
   // Check if editing visited countries overlay
-  const isVisited = overlay?.id === "visited-countries";
+  const isVisited = overlay?.id === VISITED_OVERLAY_ID;
 
   // State for country select modal
   const selectedCountries = countries.filter(
