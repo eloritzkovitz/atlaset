@@ -9,6 +9,7 @@ import {
 import { defaultSettings } from "@constants/defaultSettings";
 import { settingsService } from "@services/settingsService";
 import type { Settings } from "@types";
+import { useAuth } from "./AuthContext";
 
 const SettingsContext = createContext<{
   settings: Settings;
@@ -26,22 +27,23 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Settings>(defaultSettings);
   const [loading, setLoading] = useState(true);
 
-  // Load settings from IndexedDB on mount
+  // Fetch settings on mount
+  const { user, ready } = useAuth();
+
   useEffect(() => {
     let mounted = true;
-    const load = async () => {
-      setLoading(true);
-      const s = await settingsService.load();
+    if (!ready) return;
+    setLoading(true);
+    settingsService.load().then((s) => {
       if (mounted) {
         setSettings(s);
         setLoading(false);
       }
-    };
-    load();
+    });
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [user, ready]);
 
   // Apply theme class to document
   useEffect(() => {

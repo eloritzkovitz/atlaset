@@ -12,6 +12,12 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 
 ## Features
 
+### **Authentication**
+- **User accounts:** Sign in with Google to sync your data across devices
+- **Cloud sync:** All trips, overlays, markers, and settings are securely stored in the cloud (Firebase)
+- **Guest mode:** Use the app without signing in; migrate your data to your account anytime
+- **Offline support:** All data is available offline for guests and authenticated users (via IndexedDB and Firestore persistence)
+
 ### **Map & Data**
 - **Interactive map:** Explore a cuztomizable world map
 - **Country details:** View detailed country information
@@ -41,6 +47,8 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 - **React** & **TypeScript** — Modern, strongly-typed UI development
 - **Vite** — Fast build tool and development server
 - **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
+- **Firebase (Firestore & Auth)** — Secure cloud database and authentication
+- **IndexedDB (via Dexie.js)** — Local/offline storage for guest users and offline mode
 - **PWA (Progressive Web App)** — Offline support and installability
 - **Jest / Vitest** — Testing frameworks for unit and integration tests
 - **Cypress** — End-to-end testing for user flows
