@@ -36,7 +36,7 @@ export function useSyncVisitedCountriesOverlay(
     const colorChanged = visitedOverlay.color !== VISITED_COUNTRY_COLOR;
 
     // Only update if something changed
-    if (hasChanged || colorChanged) {
+    if ((hasChanged || colorChanged) && overlays.length > 0) {
       const updated = overlays.map((overlay) =>
         overlay.id === visitedOverlayId
           ? {
