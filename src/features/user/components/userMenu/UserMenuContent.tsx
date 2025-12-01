@@ -1,4 +1,4 @@
-import { FaGear, FaRightFromBracket, FaUser } from "react-icons/fa6";
+import { FaGear, FaKeyboard, FaRightFromBracket, FaUser } from "react-icons/fa6";
 import { Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { MenuButton } from "./MenuButton";
@@ -17,7 +17,7 @@ export function UserMenuContent({
   onSignIn,
   onLogout,
 }: UserMenuProps) {
-  const { toggleSettings } = useUI();
+  const { toggleSettings, toggleShortcuts } = useUI();
 
   if (loading) {
     return <div className="p-2 text-center">Loading...</div>;
@@ -38,6 +38,12 @@ export function UserMenuContent({
           icon={<FaGear className="text-lg mr-2" />}
         >
           Settings
+        </MenuButton>
+        <MenuButton
+          onClick={toggleShortcuts}
+          icon={<FaKeyboard className="text-lg mr-2" />}
+        >
+          Keyboard Shortcuts
         </MenuButton>
         <MenuButton
           onClick={onLogout}
