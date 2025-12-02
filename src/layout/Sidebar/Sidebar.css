@@ -11,7 +11,7 @@
 }
 
 .sidebar-title {
-  @apply flex items-center h-14;
+  @apply flex items-center h-14 mt-1;
 }
 
 .sidebar-header-action {
