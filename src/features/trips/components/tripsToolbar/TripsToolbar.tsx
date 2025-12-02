@@ -1,8 +1,7 @@
 import React from "react";
-import { ActionsToolbar, ToolbarSeparator } from "@components";
+import { ActionsToolbar, SearchInput, ToolbarSeparator } from "@components";
 import type { TripFilterState } from "@features/trips/types";
 import type { Trip } from "@types";
-import { ToolbarNavigationSearch } from "./ToolbarNavigationSearch";
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
 import { ToolbarStatistics } from "./ToolbarStatistics";
@@ -21,7 +20,7 @@ interface ToolbarProps {
   setShowRowNumbers: React.Dispatch<React.SetStateAction<boolean>>;
   onBulkDuplicate: () => void;
   onBulkDelete: () => void;
-};
+}
 
 export function TripsToolbar({
   trips,
@@ -40,10 +39,14 @@ export function TripsToolbar({
     <div className="trips-toolbar-container">
       <ActionsToolbar>
         <div className="flex items-center">
-          {/* Navigation & Search */}
-          <ToolbarNavigationSearch
-            globalSearch={globalSearch}
-            setGlobalSearch={setGlobalSearch}
+          <div className="ml-16"/>
+
+          { /* Search */}
+          <SearchInput
+            value={globalSearch}
+            onChange={setGlobalSearch}
+            placeholder="Search all trips..."
+            className="w-64 h-8 rounded-full"
           />
           <ToolbarSeparator />
 

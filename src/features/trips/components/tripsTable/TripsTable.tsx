@@ -1,3 +1,4 @@
+import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DEFAULT_WIDTHS,
@@ -91,7 +92,11 @@ export function TripsTable({
   return (
     <div
       className="overflow-x-auto w-full"
-      style={{ maxHeight: "93vh", overflowY: "auto" }}
+      style={{
+        maxHeight: "93vh",
+        overflowY: "auto",
+        paddingLeft: `${DEFAULT_SIDEBAR_WIDTH}px`,
+      }}
     >
       <table className="trips-table w-full">
         <colgroup>

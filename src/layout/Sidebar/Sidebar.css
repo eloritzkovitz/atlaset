@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .sidebar-container {
-  @apply fixed top-0 left-0 h-screen z-[10000] bg-zinc-900 transition-all duration-200 px-1;
+  @apply fixed top-0 left-0 h-screen z-[10000] bg-white dark:bg-gray-800 transition-all duration-200 px-1;
 }
 
 .sidebar-backdrop {
@@ -20,6 +20,10 @@
 
 .sidebar-nav {
   @apply flex flex-col gap-2 mt-4;
+}
+
+.sidebar-collapsed {
+  @apply items-center ml-1;
 }
 
 .sidebar-link {

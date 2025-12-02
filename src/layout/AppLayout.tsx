@@ -1,4 +1,3 @@
-// AppLayout.tsx
 import React, { useState } from "react";
 import { Sidebar } from "./Sidebar/Sidebar";
 import { ShortcutsModal } from "./Shortcuts/ShortcutsModal";

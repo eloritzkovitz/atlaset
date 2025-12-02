@@ -23,8 +23,8 @@ export function MenuButton({
     <button
       type={type}
       className={
-        `w-full rounded-lg text-left px-2 py-2 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 ` +
-        (active ? "bg-gray-200 dark:bg-gray-700 font-semibold" : "") +
+        `rounded-lg text-left px-2 py-2 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 ` +
+        (active ? "bg-gray-200 dark:bg-gray-700 font-semibold " : "") +
         className
       }
       onClick={onClick}
@@ -32,7 +32,6 @@ export function MenuButton({
       title={title}
     >
       {icon}
-      <div className="gap-6"></div>
       {children}
     </button>
   );

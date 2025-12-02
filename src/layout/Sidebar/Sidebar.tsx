@@ -5,12 +5,13 @@ import {
   FaGamepad,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
-import { NavLink } from "react-router-dom";
-import { ActionButton, Branding, MenuButton } from "@components";
+import { ActionButton, Branding } from "@components";
 import {
   DEFAULT_SIDEBAR_WIDTH,
   DEFAULT_SIDEBAR_EXPANDED_WIDTH,
 } from "@constants/ui";
+import { useUI } from "@contexts/UIContext";
+import { SidebarMenuLink } from "./SidebarMenuLink";
 import "./Sidebar.css";
 
 interface SidebarProps {
@@ -19,6 +20,14 @@ interface SidebarProps {
 }
 
 export function Sidebar({ expanded, setExpanded }: SidebarProps) {
+  const { uiVisible } = useUI();
+
+  // Hide sidebar if UI is not visible
+  if (!uiVisible) {
+    return null;
+  }
+
+  // Determine sidebar width
   const sidebarWidth = expanded
     ? DEFAULT_SIDEBAR_EXPANDED_WIDTH
     : DEFAULT_SIDEBAR_WIDTH;
@@ -30,7 +39,7 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
         <div className="sidebar-backdrop" onClick={() => setExpanded(false)} />
       )}
       <aside
-        className={`sidebar-container bg-zinc-900 transition-all duration-200`}
+        className={`sidebar-container transition-all duration-200`}
         style={{
           width: sidebarWidth,
           minWidth: sidebarWidth,
@@ -55,45 +64,27 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
 
         {/* Navigation */}
         <nav className="sidebar-nav">
-          <NavLink to="/" end>
-            {({ isActive }) => (
-              <MenuButton
-                icon={<FaEarthAmericas size={24} />}
-                active={isActive}
-                ariaLabel="Atlas"
-                title="Atlas"
-                className="text-2xl gap-3"
-              >
-                {expanded && "Atlas"}
-              </MenuButton>
-            )}
-          </NavLink>
-          <NavLink to="/game" end>
-            {({ isActive }) => (
-              <MenuButton
-                icon={<FaGamepad size={24} />}
-                active={isActive}
-                ariaLabel="Games"
-                title="Games"
-                className="text-2xl gap-3"
-              >
-                {expanded && "Games"}
-              </MenuButton>
-            )}
-          </NavLink>
-          <NavLink to="/trips" end>
-            {({ isActive }) => (
-              <MenuButton
-                icon={<FaSuitcaseRolling size={24} />}
-                active={isActive}
-                ariaLabel="My Trips"
-                title="My Trips"
-                className="text-2xl gap-3"
-              >
-                {expanded && "My Trips"}
-              </MenuButton>
-            )}
-          </NavLink>
+          <SidebarMenuLink
+            to="/"
+            icon={<FaEarthAmericas size={24} />}
+            label="Atlas"
+            expanded={expanded}
+            end
+          />
+          <SidebarMenuLink
+            to="/game"
+            icon={<FaGamepad size={24} />}
+            label="Games"
+            expanded={expanded}
+            end
+          />
+          <SidebarMenuLink
+            to="/trips"
+            icon={<FaSuitcaseRolling size={24} />}
+            label="My Trips"
+            expanded={expanded}
+            end
+          />
         </nav>
       </aside>
     </>
