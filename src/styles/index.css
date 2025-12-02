@@ -20,7 +20,7 @@ a {
 }
 
 .dark a {
-  color: theme("colors.blue.400");
+  color: theme("colors.gray.200");
 }
 
 body {
@@ -125,12 +125,6 @@ body::-webkit-scrollbar-thumb {
     color: #213547;
     background-color: #ffffff;
   }
-  a:hover {
-    color: #747bff;
-  }
-  /* button {
-    background-color: #f9f9f9;
-  } */
 }
 
 /* Focus visible styles */

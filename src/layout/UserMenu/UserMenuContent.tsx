@@ -1,7 +1,6 @@
 import { FaGear, FaKeyboard, FaRightFromBracket, FaUser } from "react-icons/fa6";
-import { Separator } from "@components";
+import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { MenuButton } from "./MenuButton";
 import { UserInfo } from "./UserInfo";
 
 interface UserMenuProps {

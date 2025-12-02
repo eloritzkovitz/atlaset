@@ -1,91 +1,101 @@
+import type { Dispatch, SetStateAction } from "react";
 import {
-  FaRotateRight,
-  FaXmark,
+  FaBars,
   FaEarthAmericas,
   FaGamepad,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
 import { NavLink } from "react-router-dom";
+import { ActionButton, Branding, MenuButton } from "@components";
 import {
-  ActionButton,
-  Branding,
-  CollapsedPanelButton,
-  Panel,
-} from "@components";
-import { useUI } from "@contexts/UIContext";
+  DEFAULT_SIDEBAR_WIDTH,
+  DEFAULT_SIDEBAR_EXPANDED_WIDTH,
+} from "@constants/ui";
 import "./Sidebar.css";
 
-export function Sidebar() {
-  const { uiVisible, showMenu, setShowMenu } = useUI();
+interface SidebarProps {
+  expanded: boolean;
+  setExpanded: Dispatch<SetStateAction<boolean>>;
+}
+
+export function Sidebar({ expanded, setExpanded }: SidebarProps) {
+  const sidebarWidth = expanded
+    ? DEFAULT_SIDEBAR_EXPANDED_WIDTH
+    : DEFAULT_SIDEBAR_WIDTH;
 
   return (
-    <div className="menu-panel-container">
-      <Panel
-        title={
-          <div className="menu-panel-title">
-            <Branding size={42} />
-            <span className="font-bold text-3xl">Atlaset</span>
-          </div>
-        }
-        show={uiVisible && showMenu}
-        showSeparator={false}
-        headerActions={
-          <>
-            <ActionButton
-              onClick={() => window.location.reload()}
-              aria-label="Reload application"
-              title="Reload application"
-            >
-              <FaRotateRight />
-            </ActionButton>
-            <ActionButton
-              onClick={() => setShowMenu(false)}
-              aria-label="Hide sidebar"
-              title="Hide sidebar"
-            >
-              <FaXmark />
-            </ActionButton>
-          </>
-        }
+    <>
+      {/* Backdrop when expanded */}
+      {expanded && (
+        <div className="sidebar-backdrop" onClick={() => setExpanded(false)} />
+      )}
+      <aside
+        className={`sidebar-container bg-zinc-900 transition-all duration-200`}
+        style={{
+          width: sidebarWidth,
+          minWidth: sidebarWidth,
+        }}
       >
+        {/* Expand/Collapse Button */}
+        <div className="sidebar-title h-14 px-2">
+          <ActionButton
+            onClick={() => setExpanded((v: any) => !v)}
+            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+          >
+            <FaBars size={24} />
+          </ActionButton>
+          {expanded && (
+            <div className="flex items-center gap-2 px-4 py-2">
+              <Branding size={36} />
+              <span className="font-bold text-2xl">Atlaset</span>
+            </div>
+          )}
+        </div>
+
         {/* Navigation */}
-        <nav className="menu-panel-nav">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `menu-panel-link${isActive ? " menu-panel-link-active" : ""}`
-            }
-            end
-          >
-            <FaEarthAmericas />
-            Atlas
+        <nav className="sidebar-nav">
+          <NavLink to="/" end>
+            {({ isActive }) => (
+              <MenuButton
+                icon={<FaEarthAmericas size={24} />}
+                active={isActive}
+                ariaLabel="Atlas"
+                title="Atlas"
+                className="text-2xl gap-3"
+              >
+                {expanded && "Atlas"}
+              </MenuButton>
+            )}
           </NavLink>
-          <NavLink
-            to="/game"
-            className={({ isActive }) =>
-              `menu-panel-link${isActive ? " menu-panel-link-active" : ""}`
-            }
-          >
-            <FaGamepad />
-            Games
+          <NavLink to="/game" end>
+            {({ isActive }) => (
+              <MenuButton
+                icon={<FaGamepad size={24} />}
+                active={isActive}
+                ariaLabel="Games"
+                title="Games"
+                className="text-2xl gap-3"
+              >
+                {expanded && "Games"}
+              </MenuButton>
+            )}
           </NavLink>
-          <NavLink
-            to="/trips"
-            className={({ isActive }) =>
-              `menu-panel-link${isActive ? " menu-panel-link-active" : ""}`
-            }
-          >
-            <FaSuitcaseRolling />
-            My Trips
+          <NavLink to="/trips" end>
+            {({ isActive }) => (
+              <MenuButton
+                icon={<FaSuitcaseRolling size={24} />}
+                active={isActive}
+                ariaLabel="My Trips"
+                title="My Trips"
+                className="text-2xl gap-3"
+              >
+                {expanded && "My Trips"}
+              </MenuButton>
+            )}
           </NavLink>
         </nav>
-      </Panel>
-      {/* Collapsed action button */}
-      <CollapsedPanelButton
-        onClick={() => setShowMenu(true)}
-        visible={uiVisible && !showMenu}
-        className="fixed top-5 right-23 z-[9999]"
-      />
-    </div>
+      </aside>
+    </>
   );
 }
