@@ -10,9 +10,6 @@ import {
 } from "@features/atlas/markers";
 import { OverlayModal, OverlaysPanel } from "@features/atlas/overlays";
 import { SettingsPanel } from "@features/settings";
-import { UserMenu } from "@features/user";
-import { MenuPanel } from "../menu/MenuPanel";
-import { ShortcutsModal } from "../shortcuts/ShortcutsModal";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
 
 interface AtlasUiContainerProps {
@@ -93,9 +90,7 @@ export function AtlasUiContainer({
         overlayModalOpen={isEditModalOpen}
       />
       <MapExportPanel svgRef={svgRef} />
-      <SettingsPanel />
-      <MenuPanel />
-      <UserMenu />
+      <SettingsPanel />      
 
       {/* Modals */}
       <CountryDetailsModal
@@ -129,7 +124,6 @@ export function AtlasUiContainer({
         onSave={saveOverlay}
         onClose={closeOverlayModal}
       />
-      <ShortcutsModal />
     </>
   );
 }

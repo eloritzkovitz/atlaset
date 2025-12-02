@@ -13,9 +13,9 @@ import {
   Panel,
 } from "@components";
 import { useUI } from "@contexts/UIContext";
-import "./MenuPanel.css";
+import "./Sidebar.css";
 
-export function MenuPanel() {
+export function Sidebar() {
   const { uiVisible, showMenu, setShowMenu } = useUI();
 
   return (

@@ -1,0 +1,17 @@
+import React from "react";
+import { Sidebar } from "./Sidebar/Sidebar";
+import { ShortcutsModal } from "./Shortcuts/ShortcutsModal";
+import { UserMenu } from "./UserMenu/UserMenu";
+
+export function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="app-layout flex h-screen w-screen">
+      <Sidebar />
+      <div className="flex flex-col flex-1 min-w-0">
+        <UserMenu />
+        <main className="flex-1 overflow-auto">{children}</main>
+      </div>
+      <ShortcutsModal />
+    </div>
+  );
+}

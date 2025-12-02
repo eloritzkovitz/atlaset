@@ -10,6 +10,7 @@ import { TimelineProvider } from "@contexts/TimelineContext";
 import { TripsProvider } from "@contexts/TripsContext";
 import { UIProvider } from "@contexts/UIContext";
 import { UIHintProvider } from "@contexts/UIHintContext";
+import { AppLayout } from "@layout";
 import GamesPage from "./pages/GamesPage";
 import TripsPage from "./pages/TripsPage";
 
@@ -31,26 +32,28 @@ function App() {
           <UIHintProvider>
             <UIHintContainer />
             <PwaUpdateUiHint />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <Suspense fallback={<SplashScreen />}>
-                    <OverlaysProvider>
-                      <MapUIProvider>
-                        <MarkersProvider>
-                          <TimelineProvider>
-                            <AtlasPage />
-                          </TimelineProvider>
-                        </MarkersProvider>
-                      </MapUIProvider>
-                    </OverlaysProvider>
-                  </Suspense>
-                }
-              />
-              <Route path="/game" element={<GamesPage />} />
-              <Route path="/trips" element={<TripsPage />} />
-            </Routes>
+            <AppLayout>
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <Suspense fallback={<SplashScreen />}>
+                      <OverlaysProvider>
+                        <MapUIProvider>
+                          <MarkersProvider>
+                            <TimelineProvider>
+                              <AtlasPage />
+                            </TimelineProvider>
+                          </MarkersProvider>
+                        </MapUIProvider>
+                      </OverlaysProvider>
+                    </Suspense>
+                  }
+                />
+                <Route path="/game" element={<GamesPage />} />
+                <Route path="/trips" element={<TripsPage />} />
+              </Routes>
+            </AppLayout>
           </UIHintProvider>
         </UIProvider>
       </TripsProvider>

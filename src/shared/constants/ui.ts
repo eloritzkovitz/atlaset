@@ -1,1 +1,3 @@
+export const DEFAULT_COLLAPSED_SIDEBAR_WIDTH = 80;
+export const DEFAULT_SIDEBAR_WIDTH = 250;
 export const DEFAULT_PANEL_WIDTH = 350;
