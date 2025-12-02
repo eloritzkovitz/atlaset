@@ -46,16 +46,17 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
         }}
       >
         {/* Expand/Collapse Button */}
-        <div className="sidebar-title h-14 px-2">
+        <div className="sidebar-title">
           <ActionButton
             onClick={() => setExpanded((v: any) => !v)}
             aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
             title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            className="sidebar-header-action"
           >
-            <FaBars size={24} />
+            <FaBars size={20} />
           </ActionButton>
           {expanded && (
-            <div className="flex items-center gap-2 px-4 py-2">
+            <div className="flex items-center gap-2 px-2">
               <Branding size={36} />
               <span className="font-bold text-2xl">Atlaset</span>
             </div>

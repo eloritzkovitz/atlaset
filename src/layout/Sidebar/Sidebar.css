@@ -11,15 +11,15 @@
 }
 
 .sidebar-title {
-  @apply flex items-center gap-2;
+  @apply flex items-center h-14;
 }
 
 .sidebar-header-action {
-  @apply ml-2 p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-400;
+  @apply flex items-center justify-center h-10 w-10 ml-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500;
 }
 
 .sidebar-nav {
-  @apply flex flex-col gap-2 mt-4;
+  @apply flex flex-col gap-2 mt-2;
 }
 
 .sidebar-collapsed {
