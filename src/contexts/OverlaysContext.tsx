@@ -92,22 +92,22 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
   // Add overlay
   async function addOverlay(overlay: AnyOverlay) {
     await overlaysService.add(overlay);
-    setOverlays((prev) => [
-      { ...overlay, order: 0 },
-      ...prev.map((o) => ({ ...o, order: (o.order ?? 0) + 1 })),
-    ]);
+    const dbOverlays = await overlaysService.load();
+    if (dbOverlays.length > 0) setOverlays(dbOverlays);
   }
 
   // Edit overlay
   async function editOverlay(overlay: AnyOverlay) {
     await overlaysService.edit(overlay);
-    setOverlays((prev) => prev.map((o) => (o.id === overlay.id ? overlay : o)));
+    const dbOverlays = await overlaysService.load();
+    if (dbOverlays.length > 0) setOverlays(dbOverlays);
   }
 
   // Remove overlay
   async function removeOverlay(id: string) {
     await overlaysService.remove(id);
-    setOverlays((prev) => prev.filter((o) => o.id !== id));
+    const dbOverlays = await overlaysService.load();
+    setOverlays(dbOverlays);
   }
 
   // Reorder overlays
@@ -117,7 +117,8 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
       order: idx,
     }));
     await overlaysService.save(ordered);
-    setOverlays(ordered);
+    const dbOverlays = await overlaysService.load();
+    setOverlays(dbOverlays);
   }
 
   // Toggle visibility

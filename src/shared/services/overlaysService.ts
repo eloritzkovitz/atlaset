@@ -40,6 +40,13 @@ export const overlaysService = {
   // Save overlays to Firestore or IndexedDB
   async save(overlays: AnyOverlay[]) {
     if (isAuthenticated()) {
+      // Prevent accidental wipe
+      if (!overlays || overlays.length === 0) {
+        console.warn(
+          "Attempted to save empty overlays array. Aborting to prevent data loss."
+        );
+        return;
+      }
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       // Clear all overlays and re-add (batch)
@@ -52,6 +59,12 @@ export const overlaysService = {
       });
       await batch.commit();
     } else {
+      if (!overlays || overlays.length === 0) {
+        console.warn(
+          "Attempted to save empty overlays array. Aborting to prevent data loss."
+        );
+        return;
+      }
       await appDb.overlays.clear();
       await appDb.overlays.bulkPut(overlays);
     }

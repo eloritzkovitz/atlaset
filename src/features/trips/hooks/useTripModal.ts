@@ -1,4 +1,3 @@
-// src/features/trips/hooks/useTripModal.ts
 import { useState } from "react";
 import type { Trip } from "@types";
 
@@ -13,6 +12,13 @@ const emptyTrip: Trip = {
   notes: "",
 };
 
+/**
+ * Manages the state and handlers for the Trip modal.
+ * @param addTrip Function to add a new trip
+ * @param updateTrip Function to update an existing trip
+ * @param trips Current list of trips
+ * @returns State and handlers for the Trip modal
+ */
 export function useTripModal({
   addTrip,
   updateTrip,

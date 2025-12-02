@@ -5,7 +5,7 @@ import { useClickOutside } from "@hooks/useClickOutside";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useMenuPosition } from "@hooks/useMenuPosition";
 import type { Trip } from "@types";
-import { ActionButton } from "@components";
+import { ActionButton, MenuButton } from "@components";
 
 interface TripActionsProps {
   trip: Trip;
@@ -41,14 +41,14 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
           onClick={() => setOpen((v) => !v)}
           ariaLabel="More actions"
           title="More actions"
-          className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           icon={<FaEllipsisV />}
         />
       </div>
       {open &&
         createPortal(
           <div ref={menuRef} className="trips-actions-menu" style={menuStyle}>
-            <ActionButton
+            <MenuButton
               className="trips-actions-button"
               onClick={() => {
                 setTimeout(() => setOpen(false), 300);
@@ -57,8 +57,8 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
               icon={<FaEdit className="mr-2" />}
             >
               Edit
-            </ActionButton>
-            <ActionButton
+            </MenuButton>
+            <MenuButton
               className="trips-actions-button trips-actions-delete"
               onClick={() => {
                 setTimeout(() => setOpen(false), 300);
@@ -67,7 +67,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
               icon={<FaTrash className="mr-2" />}
             >
               Delete
-            </ActionButton>
+            </MenuButton>
           </div>,
           document.body
         )}

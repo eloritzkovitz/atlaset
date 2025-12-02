@@ -3,6 +3,7 @@ import {
   groupOverlayItemsByIsoCode,
   getBlendedOverlayColor,
 } from "./overlayRender";
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { blendColors } from "@utils/color";
 import { mockOverlays } from "@test-utils/mockOverlays";
 
@@ -59,7 +60,7 @@ describe("overlayRender utils", () => {
         {
           isoCode: "US",
           color: "#123",
-          overlayId: "visited-countries",
+          overlayId: VISITED_OVERLAY_ID,
           tooltip: "",
         },
         { isoCode: "US", color: "#456", overlayId: "other", tooltip: "" },

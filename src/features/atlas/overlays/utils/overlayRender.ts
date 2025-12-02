@@ -2,6 +2,7 @@
  * Utilities for overlay rendering.
  */
 
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import type { Overlay, OverlayItem } from "@types";
 import { blendColors } from "@utils/color";
 
@@ -45,7 +46,7 @@ export function getBlendedOverlayColor(
   fallbackColor?: string
 ) {
   // Prioritize visited-countries overlay
-  const visited = overlays.find(o => o.overlayId === "visited-countries");
+  const visited = overlays.find(o => o.overlayId === VISITED_OVERLAY_ID);
   if (visited) return visited.color;
 
   // Otherwise, blend or pick the top-most overlay

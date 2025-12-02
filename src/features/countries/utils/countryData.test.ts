@@ -1,3 +1,4 @@
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { mockCountries } from "@test-utils/mockCountries";
 import type { Country, SovereigntyType } from "@types";
 import {
@@ -270,7 +271,7 @@ describe("countryData utils", () => {
 
     it("returns only countries whose isoCode is in the visited overlay", () => {
       const overlays = [
-        { id: "visited-countries", countries: ["US", "DE"] },
+        { id: VISITED_OVERLAY_ID, countries: ["US", "DE"] },
         { id: "other-overlay", countries: ["FR"] },
       ];
       const result = getVisitedCountries(countries as any, overlays as any);
@@ -287,7 +288,7 @@ describe("countryData utils", () => {
     });
 
     it("returns an empty array if visited overlay has no countries", () => {
-      const overlays = [{ id: "visited-countries", countries: [] }];
+      const overlays = [{ id: VISITED_OVERLAY_ID, countries: [] }];
       const result = getVisitedCountries(countries as any, overlays as any);
       expect(result).toEqual([]);
     });
@@ -299,7 +300,7 @@ describe("countryData utils", () => {
     });
 
     it("returns an empty array if countries is empty", () => {
-      const overlays = [{ id: "visited-countries", countries: ["US"] }];
+      const overlays = [{ id: VISITED_OVERLAY_ID, countries: ["US"] }];
       const result = getVisitedCountries([], overlays as any);
       expect(result).toEqual([]);
     });

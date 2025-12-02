@@ -1,7 +1,8 @@
 import { useEffect } from "react";
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
+import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 import { computeVisitedCountriesFromTrips } from "@features/visits";
 import { overlaysService } from "@services/overlaysService";
-import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 import type { AnyOverlay, Trip } from "@types";
 
 /**
@@ -22,8 +23,7 @@ export function useSyncVisitedCountriesOverlay(
   useEffect(() => {
     if (loading || overlays.length === 0) return;
 
-    const visitedOverlayId = "visited-countries";
-    const visitedOverlay = overlays.find((o) => o.id === visitedOverlayId);
+    const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
     if (!visitedOverlay) return;
 
     const visitedCountries = computeVisitedCountriesFromTrips(trips);
@@ -36,9 +36,9 @@ export function useSyncVisitedCountriesOverlay(
     const colorChanged = visitedOverlay.color !== VISITED_COUNTRY_COLOR;
 
     // Only update if something changed
-    if (hasChanged || colorChanged) {
+    if ((hasChanged || colorChanged) && overlays.length > 0) {
       const updated = overlays.map((overlay) =>
-        overlay.id === visitedOverlayId
+        overlay.id === VISITED_OVERLAY_ID
           ? {
               ...overlay,
               countries: visitedCountries,

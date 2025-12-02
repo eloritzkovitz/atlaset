@@ -1,3 +1,4 @@
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import {
   createDbMock,
   firestoreMocks,
@@ -49,16 +50,16 @@ describe("overlaysService", () => {
     it("loads overlays and adds visited overlay if missing", async () => {
       overlaysMock.toArray.mockResolvedValueOnce([]);
       const overlays = await overlaysService.load();
-      expect(overlays[0].id).toBe("visited-countries");
+      expect(overlays[0].id).toBe(VISITED_OVERLAY_ID);
       expect(overlays[0].name).toBe("Visited Countries");
     });
 
     it("loads overlays and does not add visited overlay if present", async () => {
       overlaysMock.toArray.mockResolvedValueOnce([
-        { id: "visited-countries", name: "Visited Countries" },
+        { id: VISITED_OVERLAY_ID, name: "Visited Countries" },
       ]);
       const overlays = await overlaysService.load();
-      expect(overlays[0].id).toBe("visited-countries");
+      expect(overlays[0].id).toBe(VISITED_OVERLAY_ID);
       expect(overlays.length).toBe(1);
     });
 
@@ -93,9 +94,9 @@ describe("overlaysService", () => {
         { id: "c", order: 1 },
       ]);
       const overlays = await overlaysService.load();
-      // After sorting, order should be: visited-countries, b (order 0), c (order 1), a (order 2)
+      // After sorting, order should be: VISITED_OVERLAY_ID, b (order 0), c (order 1), a (order 2)
       expect(overlays.map((o) => o.id)).toEqual([
-        "visited-countries",
+        VISITED_OVERLAY_ID,
         "b",
         "c",
         "a",
@@ -121,7 +122,7 @@ describe("overlaysService", () => {
       const overlays = await overlaysService.load();
       expect(collection).toHaveBeenCalledWith({}, "users", "abc", "overlays");
       expect(getDocs).toHaveBeenCalledWith(overlaysCol);
-      expect(overlays.some((o) => o.id === "visited-countries")).toBe(true);
+      expect(overlays.some((o) => o.id === VISITED_OVERLAY_ID)).toBe(true);
       expect(overlays).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ id: "x", name: "Overlay X" }),

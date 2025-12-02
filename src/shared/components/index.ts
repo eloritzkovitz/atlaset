@@ -23,13 +23,15 @@ export { NumberInput } from "./form/NumberInput/NumberInput";
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
 export { Separator } from "./layout/Separator";
 
+// Menu components
+export { MenuButton } from "./layout/Menu/MenuButton";
+
 // Modal components
 export { ConfirmModal } from "./layout/Modal/ConfirmModal";
 export { Modal } from "./layout/Modal/Modal";
 export { ModalActions } from "./layout/Modal/ModalActions";
 
 // Panel components
-export { CollapsedPanelButton } from "./layout/Panel/CollapsedPanelButton";
 export { Panel } from "./layout/Panel/Panel";
 export { PanelHeader } from "./layout/Panel/PanelHeader";
 export { PanelListItem } from "./layout/Panel/PanelListItem";

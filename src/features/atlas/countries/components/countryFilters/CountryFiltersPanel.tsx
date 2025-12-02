@@ -7,7 +7,7 @@ import {
   Panel,
   Separator,
 } from "@components";
-import { DEFAULT_PANEL_WIDTH } from "@constants";
+import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import {
@@ -117,13 +117,14 @@ export function CountryFiltersPanel({
             onClick={onHide}
             ariaLabel="Close filters panel"
             title="Close"
+            className="action-btn action-btn-close"
           >
             <FaXmark />
           </ActionButton>
         </>
       }
       style={{
-        left: DEFAULT_PANEL_WIDTH,
+        left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH,
         zIndex: 39,
       }}
     >

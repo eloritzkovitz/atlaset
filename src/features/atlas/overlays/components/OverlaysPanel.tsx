@@ -97,6 +97,7 @@ export function OverlaysPanel({
             onClick={closePanel}
             ariaLabel="Close Overlay Manager"
             title="Close"
+            className="action-btn action-btn-close"
           >
             <FaXmark />
           </ActionButton>

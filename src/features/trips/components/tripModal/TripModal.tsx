@@ -5,14 +5,15 @@ import {
   FormField,
   Modal,
   ModalActions,
+  NumberInput,
   SelectInput,
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, getCountryByIsoCode } from "@features/countries";
 import type { Trip, TripCategory, TripStatus } from "@types";
 import { SelectedCountriesList } from "./SelectedCountriesList";
+import { useTripFilters } from "../../hooks/useTripFilters";
 import "./TripModal.css";
-import { useTripFilters } from "../hooks/useTripFilters";
 
 interface TripModalProps {
   isOpen: boolean;
@@ -21,7 +22,7 @@ interface TripModalProps {
   onSave: (trip: Trip) => Promise<void>;
   onClose: () => void;
   isEditing: boolean;
-};
+}
 
 export function TripModal({
   isOpen,
@@ -115,13 +116,12 @@ export function TripModal({
             </button>
           </FormField>
           <FormField label="Full Days" className="mb-2">
-            <input
-              type="number"
-              min={1}
-              className="form-field"
+            <NumberInput
+              label=""
               value={trip.fullDays}
-              onChange={(e) =>
-                onChange({ ...trip, fullDays: Number(e.target.value) })
+              min={1}
+              onChange={(val) =>
+                onChange({ ...trip, fullDays: Math.max(1, val) })
               }
             />
           </FormField>
@@ -141,7 +141,7 @@ export function TripModal({
               options={categoryOptions}
               placeholder="Select categories"
               isMulti
-              className="form-field"
+              className="select-input bg-gray-100"
             />
           </FormField>
           <FormField label="Status" className="mb-2">
@@ -166,7 +166,7 @@ export function TripModal({
               options={tagOptions}
               placeholder="Add tags"
               isMulti
-              className="form-field"
+              className="select-input bg-gray-100"
             />
           </FormField>
           <FormField label="Notes" className="mb-2">

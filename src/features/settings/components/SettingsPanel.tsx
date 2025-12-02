@@ -1,4 +1,4 @@
-import { FaCog, FaTimes } from "react-icons/fa";
+import { FaGear, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useUI } from "@contexts/UIContext";
@@ -15,7 +15,7 @@ export function SettingsPanel() {
     <Panel
       title={
         <>
-          <FaCog />
+          <FaGear />
           Settings
         </>
       }
@@ -27,8 +27,9 @@ export function SettingsPanel() {
           onClick={closePanel}
           ariaLabel="Close settings panel"
           title="Close"
+          className="action-btn action-btn-close"
         >
-          <FaTimes />
+          <FaXmark />
         </ActionButton>
       }
     >

@@ -14,6 +14,7 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
+import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal } from "@features/countries";
 import type { Overlay } from "@types";
@@ -25,8 +26,8 @@ interface OverlayModalProps {
   overlay: Overlay | null;
   onChange: (overlay: Overlay) => void;
   onSave: () => void;
-  onClose: () => void;  
-};
+  onClose: () => void;
+}
 
 export function OverlayModal({
   isOpen,
@@ -34,14 +35,14 @@ export function OverlayModal({
   overlay,
   onChange,
   onSave,
-  onClose,  
+  onClose,
 }: OverlayModalProps) {
   const { countries } = useCountryData();
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [colorModalOpen, setColorModalOpen] = useState(false);
 
   // Check if editing visited countries overlay
-  const isVisited = overlay?.id === "visited-countries";
+  const isVisited = overlay?.id === VISITED_OVERLAY_ID;
 
   // State for country select modal
   const selectedCountries = countries.filter(
@@ -58,6 +59,12 @@ export function OverlayModal({
 
   // Don't render the modal if no overlay is being edited
   if (!overlay) return null;
+
+  // Validate overlay
+  const isValid =
+    overlay.name.trim() !== "" &&
+    overlay.countries &&
+    overlay.countries.length > 0;
 
   return (
     <>
@@ -182,7 +189,7 @@ export function OverlayModal({
               <div className="flex items-center text-base text-gray-400 mr-4">
                 <FaCircleInfo size={24} className="mr-4" />
                 <span>
-                  This overlay is managed automatically based on your trips.                  
+                  This overlay is managed automatically based on your trips.
                 </span>
               </div>
             )}
@@ -198,7 +205,7 @@ export function OverlayModal({
                 )
               }
               submitLabel={isEditing ? "Save Changes" : "Add Overlay"}
-              disabled={isVisited}
+              disabled={!isValid || isVisited}
             />
           </div>
         </form>

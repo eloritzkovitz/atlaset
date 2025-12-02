@@ -1,4 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import "./ActionButton.css";
 
 interface ActionButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];  

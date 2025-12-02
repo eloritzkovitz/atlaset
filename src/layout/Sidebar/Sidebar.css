@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.sidebar-container {
+  @apply fixed top-0 left-0 h-screen z-[10000] bg-white dark:bg-gray-800 transition-all duration-200 px-1;
+}
+
+.sidebar-backdrop {
+  @apply fixed inset-0 bg-black opacity-20 z-[9999];
+}
+
+.sidebar-title {
+  @apply flex items-center h-14 mt-1;
+}
+
+.sidebar-header-action {
+  @apply flex items-center justify-center h-10 w-10 ml-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-500;
+}
+
+.sidebar-nav {
+  @apply flex flex-col gap-2 mt-2;
+}
+
+.sidebar-collapsed {
+  @apply items-center ml-1;
+}
+
+.sidebar-link {
+  @apply flex items-center gap-2 px-4 py-2 rounded text-xl font-semibold transition hover:bg-gray-100 dark:hover:bg-gray-500;
+}
+
+.sidebar-link-active {
+  @apply bg-blue-100 dark:bg-gray-600;
+}
+
+.dark .sidebar-link-active {
+  @apply bg-gray-600 text-gray-200;
+}

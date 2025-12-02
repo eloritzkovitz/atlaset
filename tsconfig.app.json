@@ -19,6 +19,8 @@
       "@features/*": ["features/*"],
       "@hooks": ["shared/hooks/index.ts"],
       "@hooks/*": ["shared/hooks/*"],
+      "@layout": ["layout/index.ts"],
+      "@layout/*": ["layout/*"],
       "@services": ["shared/services/index.ts"],
       "@services/*": ["shared/services/*"],
       "@test-utils": ["shared/test-utils/index.ts"],
