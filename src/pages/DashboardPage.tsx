@@ -8,6 +8,20 @@ import {
   TripsStats,
 } from "@features/dashboard";
 
+const PANEL_BREADCRUMBS: Record<string, { label: string; key?: string }[]> = {
+  exploration: [{ label: "Dashboard", key: "exploration" }, { label: "Exploration" }],
+  "trips-overview": [
+    { label: "Dashboard", key: "exploration" },
+    { label: "Trips", key: "trips-overview" },
+    { label: "Overview" },
+  ],
+  "trips-month": [
+    { label: "Dashboard", key: "exploration" },
+    { label: "Trips", key: "trips-overview" },
+    { label: "By Month" },
+  ],
+};
+
 export default function DashboardPage() {
   const [selectedPanel, setSelectedPanel] = useState("exploration");
   const { loading, error } = useCountryData();
@@ -28,13 +42,30 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white py-10">
-      <div className="p-6 max-w-6xl mx-auto flex gap-6">
+    <div className="min-h-screen bg-white">
+      <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={setSelectedPanel}
         />
         <div className="flex-1">
+          <div className="flex items-center gap-2 mb-6">
+            {PANEL_BREADCRUMBS[selectedPanel]?.map((crumb, idx, arr) => (
+              <span key={idx} className="flex items-center">
+                {crumb.key ? (
+                  <button
+                    className="text-gray-100 hover:underline font-bold"
+                    onClick={() => setSelectedPanel(crumb.key!)}
+                  >
+                    {crumb.label}
+                  </button>
+                ) : (
+                  <span className="text-gray-400 font-bold">{crumb.label}</span>
+                )}
+                {idx < arr.length - 1 && <span className="mx-2 text-gray-400">/</span>}
+              </span>
+            ))}
+          </div>
           {selectedPanel === "exploration" && <ExplorationStats />}
           {selectedPanel === "trips-overview" && <TripsStats />}
           {selectedPanel === "trips-month" && <TripsByMonth />}
