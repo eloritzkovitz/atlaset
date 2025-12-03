@@ -34,3 +34,26 @@ export function getYearNumber(date?: string): number | undefined {
   const d = new Date(date);
   return isNaN(d.getTime()) ? undefined : d.getFullYear();
 }
+
+/**
+ * Returns the month name for a given month index (0 = Jan, 11 = Dec).
+ * If no index is provided, returns all month names as an array.
+ */
+export function getMonthName(monthIdx?: number): string | string[] {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  if (typeof monthIdx === "number") return months[monthIdx];
+  return months;
+}

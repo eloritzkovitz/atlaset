@@ -5,6 +5,10 @@ export { ActionButton } from "./action/ActionButton";
 export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
 
+// Chart components
+export { PieChart } from "./chart/PieChart";
+export { PieLegendCard } from "./chart/PieLegendCard";
+
 // Feedback components
 export { ErrorMessage } from "./feedback/ErrorMessage";
 export { LoadingSpinner } from "./feedback/LoadingSpinner";

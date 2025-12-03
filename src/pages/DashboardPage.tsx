@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { DashboardPanelMenu, ExplorationStats, TripsStats } from "@features/dashboard";
+import {
+  DashboardPanelMenu,
+  ExplorationStats,
+  TripsByMonth,
+  TripsStats,
+} from "@features/dashboard";
 
 export default function DashboardPage() {
   const [selectedPanel, setSelectedPanel] = useState("exploration");
@@ -23,15 +28,16 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10">
-      <div className="p-6 max-w-4xl mx-auto flex gap-6">
+    <div className="min-h-screen bg-white py-10">
+      <div className="p-6 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={setSelectedPanel}
         />
         <div className="flex-1">
           {selectedPanel === "exploration" && <ExplorationStats />}
-          {selectedPanel === "trips" && <TripsStats />}
+          {selectedPanel === "trips-overview" && <TripsStats />}
+          {selectedPanel === "trips-month" && <TripsByMonth />}
         </div>
       </div>
     </div>

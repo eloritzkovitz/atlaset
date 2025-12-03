@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
-import { Panel } from "@components/layout/Panel/Panel";
-import { MenuButton } from "@components/layout/Menu/MenuButton";
+import { CollapsibleHeader, MenuButton, Panel } from "@components";
 
 const PANEL_ITEMS = [
   {
@@ -8,10 +8,16 @@ const PANEL_ITEMS = [
     label: "Exploration",
     icon: <FaGlobe />,
   },
+];
+
+const TRIPS_SUBMENU = [
   {
-    key: "trips",
-    label: "Trips",
-    icon: <FaSuitcaseRolling />,
+    key: "trips-overview",
+    label: "Overview",
+  },
+  {
+    key: "trips-month",
+    label: "By Month",
   },
 ];
 
@@ -24,6 +30,8 @@ export function DashboardPanelMenu({
   selectedPanel,
   setSelectedPanel,
 }: DashboardPanelMenuProps) {
+  const [tripsExpanded, setTripsExpanded] = useState(true);
+
   return (
     <Panel
       title={
@@ -49,6 +57,31 @@ export function DashboardPanelMenu({
             </MenuButton>
           </li>
         ))}
+        <li className="mb-2">
+          <CollapsibleHeader
+            icon={<FaSuitcaseRolling />}
+            label="Trips"
+            expanded={tripsExpanded}
+            onToggle={() => setTripsExpanded((e) => !e)}
+          >
+            <ul className="ml-4 mt-2">
+              {TRIPS_SUBMENU.map((sub) => (
+                <li key={sub.key} className="mb-1">
+                  <MenuButton
+                    active={selectedPanel === sub.key}
+                    onClick={() => setSelectedPanel(sub.key)}
+                    ariaLabel={sub.label}
+                    title={sub.label}
+                    icon={null}
+                    className="w-full"
+                  >
+                    {sub.label}
+                  </MenuButton>
+                </li>
+              ))}
+            </ul>
+          </CollapsibleHeader>
+        </li>
       </ul>
     </Panel>
   );
