@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { FaClockRotateLeft, FaMapPin } from "react-icons/fa6";
+import { FaMapPin, FaTimeline } from "react-icons/fa6";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks/useUiHint";
@@ -46,7 +46,7 @@ export function MapUiContainer({
       timelineMode && uiVisible
         ? {
             message: <>Timeline mode enabled. Press T to toggle off.</>,
-            icon: <FaClockRotateLeft className="text-lg" />,
+            icon: <FaTimeline className="text-lg" />,
           }
         : null,
     [timelineMode, uiVisible]

@@ -11,6 +11,7 @@ import { TripsProvider } from "@contexts/TripsContext";
 import { UIProvider } from "@contexts/UIContext";
 import { UIHintProvider } from "@contexts/UIHintContext";
 import { AppLayout } from "@layout";
+import DashboardPage from "./pages/DashboardPage";
 import GamesPage from "./pages/GamesPage";
 import TripsPage from "./pages/TripsPage";
 
@@ -50,6 +51,7 @@ function App() {
                     </Suspense>
                   }
                 />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/game" element={<GamesPage />} />
                 <Route path="/trips" element={<TripsPage />} />
               </Routes>

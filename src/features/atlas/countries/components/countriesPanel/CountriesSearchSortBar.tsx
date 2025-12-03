@@ -20,7 +20,7 @@ export function CountriesSearchSortBar({
 }: CountriesSearchSortBarProps) {
   return (
     <div>
-      <div className="flex gap-2 items-stretch pb-0 mt-1">
+      <div className="flex items-stretch pb-0 mt-1">
         <SearchInput
           value={search}
           onChange={setSearch}

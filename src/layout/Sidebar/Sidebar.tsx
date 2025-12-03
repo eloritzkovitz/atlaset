@@ -1,6 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
 import {
   FaBars,
+  FaChartSimple,
   FaEarthAmericas,
   FaGamepad,
   FaSuitcaseRolling,
@@ -69,6 +70,13 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
             to="/"
             icon={<FaEarthAmericas size={24} />}
             label="Atlas"
+            expanded={expanded}
+            end
+          />
+          <SidebarMenuLink
+            to="/dashboard"
+            icon={<FaChartSimple size={24} />}
+            label="Dashboard"
             expanded={expanded}
             end
           />

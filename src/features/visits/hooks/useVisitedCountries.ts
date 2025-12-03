@@ -1,20 +1,18 @@
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
-import { useOverlays } from "@contexts/OverlaysContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getYear } from "@utils/date";
 
 export function useVisitedCountries() {
-  const { overlays } = useOverlays();
   const { trips } = useTrips();
 
   // Get visited countries from overlays
-  const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
-  const visitedCountryCodes = visitedOverlay?.countries ?? [];
+  const visitedCountryCodes = Array.from(
+    new Set(trips.flatMap((trip) => trip.countryCodes ?? []))
+  );
 
   // Check if a country is visited
   function isCountryVisited(isoCode: string) {
     return visitedCountryCodes.includes(isoCode);
-  } 
+  }
 
   // Get all visits for a country (from trips)
   function getCountryVisits(isoCode: string) {
