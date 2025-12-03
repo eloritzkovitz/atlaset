@@ -1,19 +1,11 @@
 import { useState } from "react";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import {
-  DashboardPanelMenu,
-  RegionCard,
-  WorldExplorationCard,
-  TripsStats,
-  useExplorationStats,
-} from "@features/dashboard";
-import { useVisitedCountries } from "@features/visits";
+import { DashboardPanelMenu, ExplorationStats, TripsStats } from "@features/dashboard";
 
 export default function DashboardPage() {
   const [selectedPanel, setSelectedPanel] = useState("exploration");
-  const { countries, loading, error } = useCountryData();
-  const visited = useVisitedCountries();
+  const { loading, error } = useCountryData();
 
   if (loading) {
     return (
@@ -30,44 +22,16 @@ export default function DashboardPage() {
     );
   }
 
-  // Get exploration stats
-  const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
-    countries,
-    visited
-  );
-
   return (
-    <div className="min-h-screen bg-white py-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10">
       <div className="p-6 max-w-4xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={setSelectedPanel}
         />
         <div className="flex-1">
-          {selectedPanel === "exploration" && (
-            <>
-              <WorldExplorationCard
-                visited={visitedCountries}
-                total={totalCountries}
-              />
-              <div className="grid gap-6 md:grid-cols-2">
-                {regionStats.map((region) => (
-                  <RegionCard
-                    key={region.region}
-                    region={region.region}
-                    visited={region.regionVisited}
-                    total={region.regionCountries.length}
-                    subregions={region.subregions}
-                    countries={region.regionCountries}
-                    visitedCountryCodes={visited.visitedCountryCodes}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-          {selectedPanel === "trips" && (
-            <TripsStats />
-          )}
+          {selectedPanel === "exploration" && <ExplorationStats />}
+          {selectedPanel === "trips" && <TripsStats />}
         </div>
       </div>
     </div>

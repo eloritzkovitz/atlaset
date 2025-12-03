@@ -32,6 +32,7 @@ export function DashboardPanelMenu({
           Dashboard
         </>
       }
+      width={220}
     >
       <ul>
         {PANEL_ITEMS.map((item) => (
