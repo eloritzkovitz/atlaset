@@ -75,6 +75,8 @@ export default function DashboardPage() {
                 visited={regionVisited}
                 total={regionCountries.length}
                 subregions={subregions}
+                countries={regionCountries}
+                visitedCountryCodes={visited.visitedCountryCodes}
               />
             );
           })}

@@ -1,4 +1,4 @@
 //Components
 export { DashboardCard } from "./components/DashboardCard";
-export { RegionCard } from "./components/RegionCard";
-export { WorldExplorationCard } from "./components/WorldExplorationCard";
+export { RegionCard } from "./exploration/components/RegionCard";
+export { WorldExplorationCard } from "./exploration/components/WorldExplorationCard";

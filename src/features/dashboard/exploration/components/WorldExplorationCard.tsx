@@ -1,5 +1,5 @@
-import { DashboardCard } from "./DashboardCard";
 import { percent } from "@utils/number";
+import { DashboardCard } from "../../components/DashboardCard";
 
 interface WorldExplorationCardProps {
   visited: number;
