@@ -1,4 +1,4 @@
-import { FaChartSimple, FaGlobe } from "react-icons/fa6";
+import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
 import { Panel } from "@components/layout/Panel/Panel";
 import { MenuButton } from "@components/layout/Menu/MenuButton";
 
@@ -7,6 +7,11 @@ const PANEL_ITEMS = [
     key: "exploration",
     label: "Exploration",
     icon: <FaGlobe />,
+  },
+  {
+    key: "trips",
+    label: "Trips",
+    icon: <FaSuitcaseRolling />,
   },
 ];
 

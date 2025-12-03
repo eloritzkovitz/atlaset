@@ -5,6 +5,7 @@ import {
   DashboardPanelMenu,
   RegionCard,
   WorldExplorationCard,
+  TripsStats,
   useExplorationStats,
 } from "@features/dashboard";
 import { useVisitedCountries } from "@features/visits";
@@ -63,6 +64,9 @@ export default function DashboardPage() {
                 ))}
               </div>
             </>
+          )}
+          {selectedPanel === "trips" && (
+            <TripsStats />
           )}
         </div>
       </div>

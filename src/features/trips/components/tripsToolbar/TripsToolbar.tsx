@@ -4,7 +4,6 @@ import type { TripFilterState } from "@features/trips/types";
 import type { Trip } from "@types";
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
-import { ToolbarStatistics } from "./ToolbarStatistics";
 import { ToolbarActions } from "./ToolbarActions";
 import "./TripsToolbar.css";
 
@@ -63,11 +62,7 @@ export function TripsToolbar({
 
           {/* Import/Export */}
           <ToolbarImportExport trips={trips} />
-          <ToolbarSeparator />
-
-          {/* Statistics */}
-          <ToolbarStatistics trips={trips} />
-          <ToolbarSeparator />
+          <ToolbarSeparator />         
 
           {/* Action Buttons */}
           <ToolbarActions
