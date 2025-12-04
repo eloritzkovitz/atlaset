@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaCrown } from "react-icons/fa6";
-import { DashboardCard, PieChart, PieLegendCard } from "@components";
-import { TripsByMonthTableRow } from "./TripsByMonthTableRow";
+import { DashboardCard, PieChart, PieLegendCard, Table } from "@components";
 import {
   MONTH_TABLE_COLUMNS,
   MONTH_NAMES,
@@ -34,22 +33,6 @@ export function TripsByMonth() {
   const monthLabels = allMonthsData.map((d) => d.name);
   const monthCounts = allMonthsData.map((d) => d.total);
   const monthColors = allMonthsData.map((d) => d.color);
-
-  // Helper to render table header
-  function renderTableHeader() {
-    return (
-      <tr className="text-gray-400">
-        {MONTH_TABLE_COLUMNS.map((col) => (
-          <th key={col.key} className="text-left py-1">
-            <span className="flex items-center gap-1">
-              <col.icon className={`inline-block ${col.iconClass || ""}`} />
-              {col.label}
-            </span>
-          </th>
-        ))}
-      </tr>
-    );
-  }
 
   return (
     <>
@@ -107,19 +90,7 @@ export function TripsByMonth() {
       {/* Table/List of all months */}
       <DashboardCard title="Trips per Month" className="mt-6">
         <div className="overflow-x-auto">
-          <table className="min-w-full text-sm">
-            <thead>{renderTableHeader()}</thead>
-            <tbody>
-              {allMonthsData.map((month) => (
-                <TripsByMonthTableRow
-                  key={month.name}
-                  month={month}
-                  color={month.color}
-                  totalTripsForMonth={totalTripsForMonth}
-                />
-              ))}
-            </tbody>
-          </table>
+          <Table columns={MONTH_TABLE_COLUMNS} data={allMonthsData} />
         </div>
       </DashboardCard>
     </>

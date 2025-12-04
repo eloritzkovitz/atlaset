@@ -7,59 +7,100 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { DashboardCard } from "@components";
+import { Table, type TableColumn, DashboardCard } from "@components";
 import { TRIP_TYPE_COLORS } from "../../constants/trips";
 import { useTripsByYearStats } from "../../hooks/useTripsByYearStats";
+import { useState } from "react";
+
+// Helper to get table columns based on filter
+const getYearTableColumns = (
+  filter: "both" | "local" | "abroad"
+): TableColumn[] => [
+  { key: "year", label: "Year" },
+  ...(filter === "both" || filter === "local"
+    ? [{ key: "local", label: "Local" }]
+    : []),
+  ...(filter === "both" || filter === "abroad"
+    ? [{ key: "abroad", label: "Abroad" }]
+    : []),
+  ...(filter === "both" ? [{ key: "total", label: "Total" }] : []),
+];
 
 export function TripsByYear() {
   const { tripsByYearData } = useTripsByYearStats();
+  const [filter, setFilter] = useState<"both" | "local" | "abroad">("both");
 
-  return (
-    <DashboardCard title="Trips by Year">
-      <div className="w-full h-64 mt-6 mb-6">
+  return (   
+      <> 
+      <DashboardCard title="Trips by Year">
+      {/* Toggle */}
+      <div className="flex gap-2 mb-4 mt-6">
+        <button
+          className={`px-3 py-1 rounded-full text-sm font-semibold ${
+            filter === "both"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 dark:bg-gray-700"
+          }`}
+          onClick={() => setFilter("both")}
+        >
+          Both
+        </button>
+        <button
+          className={`px-3 py-1 rounded-full text-sm font-semibold ${
+            filter === "local"
+              ? "bg-green-500 text-white"
+              : "bg-gray-200 dark:bg-gray-700"
+          }`}
+          onClick={() => setFilter("local")}
+        >
+          Local
+        </button>
+        <button
+          className={`px-3 py-1 rounded-full text-sm font-semibold ${
+            filter === "abroad"
+              ? "bg-purple-500 text-white"
+              : "bg-gray-200 dark:bg-gray-700"
+          }`}
+          onClick={() => setFilter("abroad")}
+        >
+          Abroad
+        </button>
+      </div>
+      {/* Chart */}
+      <div className="w-full h-64 mb-6">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={tripsByYearData}>
             <XAxis dataKey="year" />
             <YAxis allowDecimals={false} />
             <Tooltip />
             <Legend />
-            <Bar
-              dataKey="local"
-              stackId="a"
-              fill={TRIP_TYPE_COLORS[0]}
-              name="Local"
-            />
-            <Bar
-              dataKey="abroad"
-              stackId="a"
-              fill={TRIP_TYPE_COLORS[1]}
-              name="Abroad"
-            />
+            {(filter === "both" || filter === "local") && (
+              <Bar
+                dataKey="local"
+                stackId="a"
+                fill={TRIP_TYPE_COLORS[0]}
+                name="Local"
+              />
+            )}
+            {(filter === "both" || filter === "abroad") && (
+              <Bar
+                dataKey="abroad"
+                stackId="a"
+                fill={TRIP_TYPE_COLORS[1]}
+                name="Abroad"
+              />
+            )}
           </BarChart>
         </ResponsiveContainer>
-      </div>
-      <div>
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="text-gray-400">
-              <th className="text-left py-1">Year</th>
-              <th className="text-left py-1">Local</th>
-              <th className="text-left py-1">Abroad</th>
-              <th className="text-left py-1">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tripsByYearData.map((yearData) => (
-              <tr key={yearData.year} className="border-t border-gray-800">
-                <td className="py-1">{yearData.year}</td>
-                <td className="py-1">{yearData.local}</td>
-                <td className="py-1">{yearData.abroad}</td>
-                <td className="py-1">{yearData.total}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      </div>      
     </DashboardCard>
+
+      {/* Table */}
+      <DashboardCard title="Trips per Year" className="mt-6">
+        <div className="overflow-x-auto">
+          <Table columns={getYearTableColumns(filter)} data={tripsByYearData} />
+        </div>
+      </DashboardCard>
+    </>
   );
 }
