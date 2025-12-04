@@ -42,7 +42,7 @@ export function DashboardPanelMenu({
                     ariaLabel={sub.label}
                     title={sub.label}
                     icon={null}
-                    className="w-full"
+                    className="w-full text-gray-300"
                   >
                     {sub.label}
                   </MenuButton>
@@ -67,7 +67,7 @@ export function DashboardPanelMenu({
                     ariaLabel={sub.label}
                     title={sub.label}
                     icon={null}
-                    className="w-full"
+                    className="w-full text-gray-300"
                   >
                     {sub.label}
                   </MenuButton>
