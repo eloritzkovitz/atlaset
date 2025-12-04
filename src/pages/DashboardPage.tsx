@@ -4,16 +4,25 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DashboardPanelMenu,
   ExplorationStats,
+  TripHistory,
   TripsByMonth,
   TripsStats,
 } from "@features/dashboard";
 
 const PANEL_BREADCRUMBS: Record<string, { label: string; key?: string }[]> = {
-  exploration: [{ label: "Dashboard", key: "exploration" }, { label: "Exploration" }],  
+  exploration: [
+    { label: "Dashboard", key: "exploration" },
+    { label: "Exploration" },
+  ],
   "trips-overview": [
     { label: "Dashboard", key: "exploration" },
     { label: "Trips", key: "trips-overview" },
     { label: "Overview" },
+  ],
+  "trips-history": [
+    { label: "Dashboard", key: "exploration" },
+    { label: "Trips", key: "trips-overview" },
+    { label: "History" },
   ],
   "trips-month": [
     { label: "Dashboard", key: "exploration" },
@@ -62,12 +71,15 @@ export default function DashboardPage() {
                 ) : (
                   <span className="text-gray-400 font-bold">{crumb.label}</span>
                 )}
-                {idx < arr.length - 1 && <span className="mx-2 text-gray-400">/</span>}
+                {idx < arr.length - 1 && (
+                  <span className="mx-2 text-gray-400">/</span>
+                )}
               </span>
             ))}
           </div>
           {selectedPanel === "exploration" && <ExplorationStats />}
-          {selectedPanel === "trips-overview" && <TripsStats />}
+          {selectedPanel === "trips-overview" && <TripsStats />} 
+          {selectedPanel === "trips-history" && <TripHistory />}
           {selectedPanel === "trips-month" && <TripsByMonth />}
         </div>
       </div>
