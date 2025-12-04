@@ -1,9 +1,14 @@
 import { useState } from "react";
 import { FaSuitcaseRolling, FaCrown } from "react-icons/fa6";
 import { PieChart, PieLegendCard } from "@components";
-import { MONTH_NAMES, MONTH_COLORS } from "../constants/date";
-import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
-import { DashboardCard } from "../../components/DashboardCard";
+import {
+  MONTH_TABLE_COLUMNS,
+  MONTH_NAMES,
+  MONTH_COLORS,
+} from "../../constants/month";
+import { useTripsByMonthStats } from "../../hooks/useTripsByMonthStats";
+import { DashboardCard } from "../../../components/DashboardCard";
+import { TripsByMonthTableRow } from "./TripsByMonthTableRow";
 
 export function TripsByMonth() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -13,23 +18,39 @@ export function TripsByMonth() {
   // Ensure all months are represented, even with zero trips
   const allMonthsData = MONTH_NAMES.map((name, idx) => {
     const found = tripsByMonthData.find((m) => m.name === name);
+    const local = found ? found.local : 0;
+    const abroad = found ? found.abroad : 0;
+    const total = local + abroad;
     return {
       name,
-      count: found ? found.value : 0,
+      local,
+      abroad,
+      total,
+      percentage:
+        totalTripsForMonth > 0 ? (total / totalTripsForMonth) * 100 : 0,
       color: MONTH_COLORS[idx % MONTH_COLORS.length],
     };
   });
 
-  // Calculate percentages
-  const total = totalTripsForMonth;
-  const sortedData = allMonthsData.map((d) => ({
-    ...d,
-    percentage: total ? (d.count / total) * 100 : 0,
-  }));
+  const monthLabels = allMonthsData.map((d) => d.name);
+  const monthCounts = allMonthsData.map((d) => d.total);
+  const monthColors = allMonthsData.map((d) => d.color);
 
-  const monthLabels = sortedData.map((d) => d.name);
-  const monthCounts = sortedData.map((d) => d.count);
-  const monthColors = sortedData.map((d) => d.color);
+  // Helper to render table header
+  function renderTableHeader() {
+    return (
+      <tr className="text-gray-400">
+        {MONTH_TABLE_COLUMNS.map((col) => (
+          <th key={col.key} className="text-left py-1">
+            <span className="flex items-center gap-1">
+              <col.icon className={`inline-block ${col.iconClass || ""}`} />
+              {col.label}
+            </span>
+          </th>
+        ))}
+      </tr>
+    );
+  }
 
   return (
     <>
@@ -58,9 +79,11 @@ export function TripsByMonth() {
                 </span>
                 {mostPopularMonth && (
                   <span className="text-gray-400">
-                    ({mostPopularMonth.value} trips,{" "}
-                    {total > 0
-                      ? `${Math.round((mostPopularMonth.value / total) * 100)}%`
+                    ({mostPopularMonth.total} trips,{" "}
+                    {totalTripsForMonth > 0
+                      ? `${Math.round(
+                          (mostPopularMonth.total / totalTripsForMonth) * 100
+                        )}%`
                       : "0%"}
                     )
                   </span>
@@ -69,7 +92,7 @@ export function TripsByMonth() {
 
               {/* Legend */}
               <div className="flex flex-wrap justify-center gap-4">
-                {sortedData.map((d, idx) => (
+                {allMonthsData.map((d, idx) => (
                   <PieLegendCard
                     key={d.name}
                     label={d.name}
@@ -93,28 +116,15 @@ export function TripsByMonth() {
         <div className="font-semibold text-lg mb-2">Trips per Month</div>
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
-            <thead>
-              <tr className="text-gray-400">
-                <th className="text-left py-1">Month</th>
-                <th className="text-left py-1">Trips</th>
-                <th className="text-left py-1">Percentage</th>
-              </tr>
-            </thead>
+            <thead>{renderTableHeader()}</thead>
             <tbody>
-              {sortedData.map((month) => (
-                <tr key={month.name} className="border-t border-gray-800">
-                  <td className="py-1 flex items-center gap-2">
-                    <span
-                      className="inline-block w-3 h-3 rounded-full"
-                      style={{ background: month.color }}
-                    />
-                    {month.name}
-                  </td>
-                  <td className="py-1">{month.count}</td>
-                  <td className="py-1">
-                    {total > 0 ? `${month.percentage.toFixed(1)}%` : "0%"}
-                  </td>
-                </tr>
+              {allMonthsData.map((month) => (
+                <TripsByMonthTableRow
+                  key={month.name}
+                  month={month}
+                  color={month.color}
+                  totalTripsForMonth={totalTripsForMonth}
+                />
               ))}
             </tbody>
           </table>
