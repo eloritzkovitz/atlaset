@@ -7,7 +7,9 @@ export { FloatingChevronButton } from "./action/FloatingChevronButton";
 
 // Card components
 export { Card } from "./ui/Card/Card";
+export { CardList } from "./ui/Card/CardList";
 export { DashboardCard } from "./ui/Card/DashboardCard";
+export { HomeCard } from "./ui/Card/HomeCard";
 
 // Chart components
 export { PieChart } from "./chart/PieChart";
@@ -56,9 +58,7 @@ export { SeparatorRow } from "./table/SeparatorRow";
 export { SortableFilterHeader } from "./table/SortableFilterHeader";
 
 // UI components
-export { CardList } from "./ui/CardList";
 export { ColorDot } from "./ui/ColorDot";
-export { HomeCard } from "./ui/HomeCard";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";
