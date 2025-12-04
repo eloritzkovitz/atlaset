@@ -8,28 +8,7 @@ import {
   TripsByMonth,
   TripsStats,
 } from "@features/dashboard";
-
-const PANEL_BREADCRUMBS: Record<string, { label: string; key?: string }[]> = {
-  exploration: [
-    { label: "Dashboard", key: "exploration" },
-    { label: "Exploration" },
-  ],
-  "trips-overview": [
-    { label: "Dashboard", key: "exploration" },
-    { label: "Trips", key: "trips-overview" },
-    { label: "Overview" },
-  ],
-  "trips-history": [
-    { label: "Dashboard", key: "exploration" },
-    { label: "Trips", key: "trips-overview" },
-    { label: "History" },
-  ],
-  "trips-month": [
-    { label: "Dashboard", key: "exploration" },
-    { label: "Trips", key: "trips-overview" },
-    { label: "By Month" },
-  ],
-};
+import { PANEL_BREADCRUMBS } from "@features/dashboard/menu/menu";
 
 export default function DashboardPage() {
   const [selectedPanel, setSelectedPanel] = useState("exploration");
@@ -78,7 +57,7 @@ export default function DashboardPage() {
             ))}
           </div>
           {selectedPanel === "exploration" && <ExplorationStats />}
-          {selectedPanel === "trips-overview" && <TripsStats />} 
+          {selectedPanel === "trips-overview" && <TripsStats />}
           {selectedPanel === "trips-history" && <TripHistory />}
           {selectedPanel === "trips-month" && <TripsByMonth />}
         </div>

@@ -1,28 +1,7 @@
 import { useState } from "react";
 import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
 import { CollapsibleHeader, MenuButton, Panel } from "@components";
-
-const EXPLORATION_SUBMENU = [
-  {
-    key: "exploration",
-    label: "Overview",
-  },
-];
-
-const TRIPS_SUBMENU = [
-  {
-    key: "trips-overview",
-    label: "Overview",
-  },
-  {
-    key: "trips-history",
-    label: "History",
-  },
-  {
-    key: "trips-month",
-    label: "By Month",
-  },
-];
+import { EXPLORATION_SUBMENU, TRIPS_SUBMENU } from "./menu";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;
