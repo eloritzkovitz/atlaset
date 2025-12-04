@@ -1,3 +1,11 @@
+import {
+  FaCalendarDays,
+  FaClockRotateLeft,
+  FaChartPie,
+  FaCompass,
+  FaRegCalendarDays,
+} from "react-icons/fa6";
+
 export const PANEL_BREADCRUMBS: Record<
   string,
   { label: string; key?: string }[]
@@ -32,6 +40,7 @@ export const EXPLORATION_SUBMENU = [
   {
     key: "exploration",
     label: "Overview",
+    icon: <FaCompass />,
   },
 ];
 
@@ -39,17 +48,21 @@ export const TRIPS_SUBMENU = [
   {
     key: "trips-overview",
     label: "Overview",
+    icon: <FaChartPie />,
   },
   {
     key: "trips-history",
     label: "History",
+    icon: <FaClockRotateLeft />,
   },
   {
     key: "trips-month",
     label: "By Month",
+    icon: <FaCalendarDays />,
   },
   {
     key: "trips-year",
     label: "By Year",
+    icon: <FaRegCalendarDays />,
   },
 ];

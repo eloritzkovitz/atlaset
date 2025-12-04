@@ -1,6 +1,6 @@
 import type { TableColumn } from "@components";
 import {
-  FaCalendarDays,
+  FaRegCalendarDays,
   FaLocationDot,
   FaPlane,
   FaSuitcaseRolling,
@@ -17,7 +17,7 @@ export const YEAR_TABLE_COLUMNS: TableColumn<YearRow>[] = [
   {
     key: "year",
     label: "Year",
-    icon: FaCalendarDays,
+    icon: FaRegCalendarDays,
     iconClass: "text-gray-400",
     sortable: true,
     render: (row) => row.year.toString(),

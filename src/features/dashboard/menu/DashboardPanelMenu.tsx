@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
-import { CollapsibleHeader, MenuButton, Panel } from "@components";
+import { Panel } from "@components";
 import { EXPLORATION_SUBMENU, TRIPS_SUBMENU } from "./menu";
+import { SubmenuSection } from "./SubmenuSection";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;
@@ -26,56 +27,24 @@ export function DashboardPanelMenu({
       width={220}
     >
       <ul>
-        <li className="mb-2">
-          <CollapsibleHeader
-            icon={<FaGlobe />}
-            label="Exploration"
-            expanded={explorationExpanded}
-            onToggle={() => setExplorationExpanded((e) => !e)}
-          >
-            <ul className="ml-4 mt-2">
-              {EXPLORATION_SUBMENU.map((sub) => (
-                <li key={sub.key} className="mb-1">
-                  <MenuButton
-                    active={selectedPanel === sub.key}
-                    onClick={() => setSelectedPanel(sub.key)}
-                    ariaLabel={sub.label}
-                    title={sub.label}
-                    icon={null}
-                    className="w-full text-gray-300"
-                  >
-                    {sub.label}
-                  </MenuButton>
-                </li>
-              ))}
-            </ul>
-          </CollapsibleHeader>
-        </li>
-        <li className="mb-2">
-          <CollapsibleHeader
-            icon={<FaSuitcaseRolling />}
-            label="Trips"
-            expanded={tripsExpanded}
-            onToggle={() => setTripsExpanded((e) => !e)}
-          >
-            <ul className="ml-4 mt-2">
-              {TRIPS_SUBMENU.map((sub) => (
-                <li key={sub.key} className="mb-1">
-                  <MenuButton
-                    active={selectedPanel === sub.key}
-                    onClick={() => setSelectedPanel(sub.key)}
-                    ariaLabel={sub.label}
-                    title={sub.label}
-                    icon={null}
-                    className="w-full text-gray-300"
-                  >
-                    {sub.label}
-                  </MenuButton>
-                </li>
-              ))}
-            </ul>
-          </CollapsibleHeader>
-        </li>
+        <SubmenuSection
+          icon={<FaGlobe />}
+          label="Exploration"
+          expanded={explorationExpanded}
+          onToggle={() => setExplorationExpanded((e) => !e)}
+          submenu={EXPLORATION_SUBMENU}
+          selectedPanel={selectedPanel}
+          setSelectedPanel={setSelectedPanel}
+        />
+        <SubmenuSection
+          icon={<FaSuitcaseRolling />}
+          label="Trips"
+          expanded={tripsExpanded}
+          onToggle={() => setTripsExpanded((e) => !e)}
+          submenu={TRIPS_SUBMENU}
+          selectedPanel={selectedPanel}
+          setSelectedPanel={setSelectedPanel}
+        />
       </ul>
     </Panel>
   );
