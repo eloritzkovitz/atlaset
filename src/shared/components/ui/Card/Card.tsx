@@ -1,14 +1,14 @@
 import React from "react";
 
-interface DashboardCardProps {
+interface CardProps {
   className?: string;
   children: React.ReactNode;
 }
 
-export function DashboardCard({
+export function Card({
   className = "",
   children,
-}: DashboardCardProps) {
+}: CardProps) {
   return (
     <div
       className={`bg-gray-50 dark:bg-gray-800 rounded-2xl shadow p-5 ${className}`}

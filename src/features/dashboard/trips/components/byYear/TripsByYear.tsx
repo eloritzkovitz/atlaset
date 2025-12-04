@@ -7,24 +7,28 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { DashboardCard } from "@components";
 import { TRIP_TYPE_COLORS } from "../../constants/trips";
 import { useTripsByYearStats } from "../../hooks/useTripsByYearStats";
-import { DashboardCard } from "../../../components/DashboardCard";
 
 export function TripsByYear() {
   const { tripsByYearData } = useTripsByYearStats();
 
   return (
-    <DashboardCard>
-      <div className="font-bold text-xl mb-4">Trips by Year</div>
-      <div className="w-full h-64">
+    <DashboardCard title="Trips by Year">
+      <div className="w-full h-64 mt-6 mb-6">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={tripsByYearData}>
             <XAxis dataKey="year" />
             <YAxis allowDecimals={false} />
             <Tooltip />
             <Legend />
-            <Bar dataKey="local" stackId="a" fill={TRIP_TYPE_COLORS[0]} name="Local" />
+            <Bar
+              dataKey="local"
+              stackId="a"
+              fill={TRIP_TYPE_COLORS[0]}
+              name="Local"
+            />
             <Bar
               dataKey="abroad"
               stackId="a"
@@ -34,7 +38,7 @@ export function TripsByYear() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      <div className="mt-6">
+      <div>
         <table className="min-w-full text-sm">
           <thead>
             <tr className="text-gray-400">

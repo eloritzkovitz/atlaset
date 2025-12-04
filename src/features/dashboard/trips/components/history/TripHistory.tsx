@@ -1,8 +1,8 @@
 import { FaFlag, FaClockRotateLeft, FaCalendarDay } from "react-icons/fa6";
+import { DashboardCard } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryFlag, CountryWithFlag } from "@features/countries";
 import { useTripHistoryStats } from "../../hooks/useTripHistoryStats";
-import { DashboardCard } from "../../../components/DashboardCard";
 
 export function TripHistory() {
   const { countries } = useCountryData();
@@ -13,16 +13,12 @@ export function TripHistory() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {/* Most visited country card */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaFlag className="text-yellow-600 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Most visited countries</div>
-            <div className="text-xs text-gray-400">
-              Based on completed abroad trips
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaFlag}
+        iconClass="text-yellow-600"
+        title="Most visited countries"
+        subtitle="Based on completed abroad trips"
+      >
         <div className="flex flex-wrap gap-2 items-center mt-2">
           {mostVisitedCountries.length > 0 ? (
             mostVisitedCountries.map((country, idx) => (
@@ -47,16 +43,12 @@ export function TripHistory() {
       </DashboardCard>
 
       {/* Recent trips */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaClockRotateLeft className="text-pink-400 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Recent trips</div>
-            <div className="text-xs text-gray-400">
-              Your last 3 recorded trips
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaClockRotateLeft}
+        iconClass="text-pink-400"
+        title="Recent trips"
+        subtitle="Your last 3 recorded trips"
+      >
         <ul className="mt-4">
           {recentTrips && recentTrips.length > 0 ? (
             recentTrips.map((trip) => (
@@ -91,16 +83,12 @@ export function TripHistory() {
       </DashboardCard>
 
       {/* First trip */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaCalendarDay className="text-green-400 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">First trip</div>
-            <div className="text-xs text-gray-400">
-              Your earliest recorded trip
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaCalendarDay}
+        iconClass="text-green-400"
+        title="First trip"
+        subtitle="Your earliest recorded trip"
+      >
         {firstTrip ? (
           <div className="text-lg font-bold text-green-400 mb-1">
             {firstTrip.name}
@@ -115,14 +103,12 @@ export function TripHistory() {
       </DashboardCard>
 
       {/* Last trip */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaCalendarDay className="text-indigo-400 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Last trip</div>
-            <div className="text-xs text-gray-400">Your most recent trip</div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaCalendarDay}
+        iconClass="text-indigo-400"
+        title="Last trip"
+        subtitle="Your most recent trip"
+      >
         {lastTrip ? (
           <div className="text-lg font-bold text-indigo-400 mb-1">
             {lastTrip.name}

@@ -5,6 +5,10 @@ export { ActionButton } from "./action/ActionButton";
 export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
 
+// Card components
+export { Card } from "./ui/Card/Card";
+export { DashboardCard } from "./ui/Card/DashboardCard";
+
 // Chart components
 export { PieChart } from "./chart/PieChart";
 export { PieLegendCard } from "./chart/PieLegendCard";

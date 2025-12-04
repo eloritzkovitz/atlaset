@@ -1,10 +1,10 @@
-import { FaCalendar, FaLocationDot, FaPlane, FaSuitcaseRolling, FaPercent } from "react-icons/fa6";
+import { FaCalendarDays, FaLocationDot, FaPlane, FaSuitcaseRolling, FaPercent } from "react-icons/fa6";
 
 export const MONTH_TABLE_COLUMNS = [
   {
     key: "name",
     label: "Month",
-    icon: FaCalendar,
+    icon: FaCalendarDays,
     className: "",
   },
   {

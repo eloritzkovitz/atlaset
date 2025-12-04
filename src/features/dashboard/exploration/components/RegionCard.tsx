@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
+import { Card } from "@components";
+import type { Country } from "@types";
 import { percent } from "@utils/number";
 import { SubregionCountryList } from "./SubregionCountryList";
-import type { Country } from "@types";
 import { regionIcons, defaultRegionIcon } from "../constants/regionIcons";
-import { DashboardCard } from "../../components/DashboardCard";
 import type { SubregionStat } from "../../types";
 
 interface RegionCardProps {
@@ -32,7 +32,7 @@ export function RegionCard({
   // Show all countries in the region
   if (showAllRegionCountries) {
     return (
-      <DashboardCard>
+      <Card>
         <div className="flex items-center mb-4">
           <button
             className="mr-2 text-gray-500 hover:text-blue-600"
@@ -49,7 +49,7 @@ export function RegionCard({
           countries={countries}
           visitedCountryCodes={visitedCountryCodes}
         />
-      </DashboardCard>
+      </Card>
     );
   }
 
@@ -59,7 +59,7 @@ export function RegionCard({
       (c) => c.subregion === selectedSubregion
     );
     return (
-      <DashboardCard>
+      <Card>
         <div className="flex items-center mb-4">
           <button
             className="mr-2 text-gray-500 hover:text-blue-600"
@@ -74,20 +74,20 @@ export function RegionCard({
           countries={subCountries}
           visitedCountryCodes={visitedCountryCodes}
         />
-      </DashboardCard>
+      </Card>
     );
   }
 
   // Default: show subregion stats and clickable region header
   return (
-    <DashboardCard>
+    <Card>
       <button
         className="flex items-center mb-2 text-2xl w-full rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
         onClick={() => setShowAllRegionCountries(true)}
         title={`Show all countries in ${region}`}
         aria-label={`Show all countries in ${region}`}
       >
-        {regionIcons[region] || defaultRegionIcon }
+        {regionIcons[region] || defaultRegionIcon}
         <span className="text-2xl font-semibold">{region}</span>
         <span className="ml-auto text-xl text-blue-600 dark:text-gray-300 font-bold">
           {visited}/{total} ({percent(visited, total)})
@@ -108,6 +108,6 @@ export function RegionCard({
           </button>
         ))}
       </div>
-    </DashboardCard>
+    </Card>
   );
 }

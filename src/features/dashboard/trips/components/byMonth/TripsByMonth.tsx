@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { FaCrown } from "react-icons/fa6";
-import { PieChart, PieLegendCard } from "@components";
+import { DashboardCard, PieChart, PieLegendCard } from "@components";
+import { TripsByMonthTableRow } from "./TripsByMonthTableRow";
 import {
   MONTH_TABLE_COLUMNS,
   MONTH_NAMES,
   MONTH_COLORS,
 } from "../../constants/month";
 import { useTripsByMonthStats } from "../../hooks/useTripsByMonthStats";
-import { DashboardCard } from "../../../components/DashboardCard";
-import { TripsByMonthTableRow } from "./TripsByMonthTableRow";
 
 export function TripsByMonth() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -54,63 +53,59 @@ export function TripsByMonth() {
 
   return (
     <>
-      <DashboardCard>
-        <div className="w-full flex flex-col">
-          <div className="font-bold text-xl mb-4">Trips by Month</div>
-          {monthLabels.length > 0 ? (
-            <>
-              {/* Pie Chart */}
-              <PieChart
-                labels={monthLabels}
-                data={monthCounts}
-                colors={monthColors}
-                hoveredIdx={hoveredIdx}
-                setHoveredIdx={setHoveredIdx}
-              />
+      <DashboardCard title="Trips by Month">
+        {monthLabels.length > 0 ? (
+          <>
+            {/* Pie Chart */}
+            <PieChart
+              labels={monthLabels}
+              data={monthCounts}
+              colors={monthColors}
+              hoveredIdx={hoveredIdx}
+              setHoveredIdx={setHoveredIdx}
+            />
 
-              {/* Most Popular Month */}
-              <div className="my-4 flex items-center gap-2">
-                <FaCrown className="text-yellow-400 text-xl" />
-                <span className="font-semibold">
-                  Most Popular: {mostPopularMonth?.name ?? "—"}
+            {/* Most Popular Month */}
+            <div className="my-4 flex items-center gap-2">
+              <FaCrown className="text-yellow-400 text-xl" />
+              <span className="font-semibold">
+                Most Popular: {mostPopularMonth?.name ?? "—"}
+              </span>
+              {mostPopularMonth && (
+                <span className="text-gray-400">
+                  ({mostPopularMonth.total} trips,{" "}
+                  {totalTripsForMonth > 0
+                    ? `${Math.round(
+                        (mostPopularMonth.total / totalTripsForMonth) * 100
+                      )}%`
+                    : "0%"}
+                  )
                 </span>
-                {mostPopularMonth && (
-                  <span className="text-gray-400">
-                    ({mostPopularMonth.total} trips,{" "}
-                    {totalTripsForMonth > 0
-                      ? `${Math.round(
-                          (mostPopularMonth.total / totalTripsForMonth) * 100
-                        )}%`
-                      : "0%"}
-                    )
-                  </span>
-                )}
-              </div>
+              )}
+            </div>
 
-              {/* Legend */}
-              <div className="flex flex-wrap justify-center gap-4">
-                {allMonthsData.map((d, idx) => (
-                  <PieLegendCard
-                    key={d.name}
-                    label={d.name}
-                    color={d.color}
-                    percentage={d.percentage}
-                    isActive={hoveredIdx === idx}
-                    onMouseEnter={() => setHoveredIdx(idx)}
-                    onMouseLeave={() => setHoveredIdx(null)}
-                  />
-                ))}
-              </div>
-            </>
-          ) : (
-            <p className="text-gray-500">No trip data available.</p>
-          )}
-        </div>
+            {/* Legend */}
+            <div className="flex flex-wrap justify-center gap-4">
+              {allMonthsData.map((d, idx) => (
+                <PieLegendCard
+                  key={d.name}
+                  label={d.name}
+                  color={d.color}
+                  percentage={d.percentage}
+                  isActive={hoveredIdx === idx}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <p className="text-gray-500">No trip data available.</p>
+        )}
       </DashboardCard>
 
       {/* Table/List of all months */}
-      <DashboardCard className="w-full mt-6">
-        <div className="font-semibold text-lg mb-2">Trips per Month</div>
+      <DashboardCard title="Trips per Month" className="mt-6">
         <div className="overflow-x-auto">
           <table className="min-w-full text-sm">
             <thead>{renderTableHeader()}</thead>

@@ -1,5 +1,5 @@
+import { Card } from "@components";
 import { percent } from "@utils/number";
-import { DashboardCard } from "../../components/DashboardCard";
 
 interface WorldExplorationCardProps {
   visited: number;
@@ -11,7 +11,7 @@ export function WorldExplorationCard({
   total,
 }: WorldExplorationCardProps) {
   return (
-    <DashboardCard className="flex flex-col items-center mb-8 bg-gray-200 dark:bg-gray-800 shadow-lg p-6">
+    <Card className="flex flex-col items-center mb-8 bg-gray-200 dark:bg-gray-800 shadow-lg p-6">
       <div className="text-xl font-semibold mb-2">World Exploration</div>
       <div className="text-5xl font-bold text-blue-600 dark:text-gray-300 mb-2">
         {visited} / {total}
@@ -29,6 +29,6 @@ export function WorldExplorationCard({
           />
         </div>
       </div>
-    </DashboardCard>
+    </Card>
   );
 }

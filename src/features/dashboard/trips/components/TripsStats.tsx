@@ -6,11 +6,11 @@ import {
   FaClock,
   FaRegClock,
   FaStar,
+  FaClockRotateLeft
 } from "react-icons/fa6";
+import { DashboardCard, PieChart, PieLegendCard } from "@components";
+import { TRIP_TYPE_COLORS } from "../constants/trips";
 import { useTripsStats } from "../hooks/useTripsStats";
-import { DashboardCard } from "../../components/DashboardCard";
-import { PieChart, PieLegendCard } from "@components";
-import { FaHistory } from "react-icons/fa";
 
 export function TripsStats() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -30,26 +30,21 @@ export function TripsStats() {
   } = useTripsStats();
 
   // Pie chart data for trip types
-  const PIE_COLORS = ["#34d399", "#a78bfa"];
   const tripTypeData = [
-    { name: "Local", value: localTrips.length, color: PIE_COLORS[0] },
-    { name: "Abroad", value: abroadTrips.length, color: PIE_COLORS[1] },
+    { name: "Local", value: localTrips.length, color: TRIP_TYPE_COLORS[0] },
+    { name: "Abroad", value: abroadTrips.length, color: TRIP_TYPE_COLORS[1] },
   ];
   const total = totalTrips;
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {/* Trips Overview */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-4">
-          <FaSuitcaseRolling className="text-blue-600 text-3xl" />
-          <div>
-            <div className="font-bold text-xl">Trip Overview</div>
-            <div className="text-xs text-gray-400">
-              Summary of all your recorded trips
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaSuitcaseRolling}
+        iconClass="text-blue-600"
+        title="Trip Overview"
+        subtitle="Summary of all your recorded trips"
+      >
         <div className="flex flex-col items-center">
           <div className="text-5xl font-extrabold text-blue-500 mb-2">
             {totalTrips}
@@ -75,13 +70,11 @@ export function TripsStats() {
       </DashboardCard>
 
       {/* Trip Type Breakdown Pie Chart */}
-      <DashboardCard>
-        <div className="flex items-center gap-2 mb-10">
-          <span className="text-purple-400">
-            <FaPlane className="text-xl" />
-          </span>
-          <span className="font-bold text-lg">Trip Type Breakdown</span>
-        </div>
+      <DashboardCard
+        icon={FaPlane}
+        iconClass="text-purple-400"
+        title="Trip Type Breakdown"
+      >
         <div className="flex flex-row items-center justify-center gap-36 min-h-[220px] mt-4">
           {/* Pie Chart */}
           <div className="flex items-center justify-center w-48 h-48">
@@ -108,19 +101,15 @@ export function TripsStats() {
             ))}
           </div>
         </div>
-      </DashboardCard>     
+      </DashboardCard>
 
       {/* Longest trip card */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaClock className="text-indigo-600 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Longest trip</div>
-            <div className="text-xs text-gray-400">
-              Your trip with the most days abroad
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaClock}
+        iconClass="text-indigo-600"
+        title="Longest trip"
+        subtitle="Your trip with the most days abroad"
+      >
         <div className="text-4xl font-extrabold text-indigo-400 mb-1">
           {longestTrip ? `${longestTrip} days` : "—"}
         </div>
@@ -133,16 +122,12 @@ export function TripsStats() {
       </DashboardCard>
 
       {/* Shortest trip card */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaRegClock className="text-pink-600 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Shortest trip</div>
-            <div className="text-xs text-gray-400">
-              Your shortest abroad trip
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaRegClock}
+        iconClass="text-pink-600"
+        title="Shortest trip"
+        subtitle="Your shortest abroad trip"
+      >
         <div className="text-4xl font-extrabold text-pink-400 mb-1">
           {shortestTrip !== Infinity && shortestTrip > 0
             ? `${shortestTrip} days`
@@ -157,34 +142,28 @@ export function TripsStats() {
       </DashboardCard>
 
       {/* Average trip duration */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaStar className="text-yellow-400 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Average trip duration</div>
-            <div className="text-xs text-gray-400">Average days per trip</div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaStar}
+        iconClass="text-yellow-400"
+        title="Average trip duration"
+        subtitle="Average days per trip"
+      >
         <div className="text-4xl font-extrabold text-yellow-400 mb-1">
           {averageTripDuration ? `${averageTripDuration.toFixed(1)} days` : "—"}
         </div>
       </DashboardCard>
 
       {/* Total days spent traveling */}
-      <DashboardCard>
-        <div className="flex items-center gap-3 mb-2">
-          <FaHistory className="text-blue-400 text-2xl" />
-          <div>
-            <div className="font-semibold text-lg">Total days traveling</div>
-            <div className="text-xs text-gray-400">
-              Sum of all trip durations
-            </div>
-          </div>
-        </div>
+      <DashboardCard
+        icon={FaClockRotateLeft}
+        iconClass="text-blue-400"
+        title="Total days traveling"
+        subtitle="Sum of all trip durations"
+      >
         <div className="text-4xl font-extrabold text-blue-400 mb-1">
           {totalDaysTraveling ? `${totalDaysTraveling} days` : "—"}
         </div>
-      </DashboardCard>     
+      </DashboardCard>
     </div>
   );
 }
