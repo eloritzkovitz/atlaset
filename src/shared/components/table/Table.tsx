@@ -24,6 +24,7 @@ export function Table<T>({
   // sortBy format: "key-asc" or "key-desc"
   const [sortBy, setSortBy] = useState<string>("");
 
+  // Handle sorting when a column header is clicked
   const handleSort = (key: SortKey<T>) => {
     const [currentKey, direction] = sortBy.split("-");
     if (currentKey === key) {
@@ -33,6 +34,7 @@ export function Table<T>({
     }
   };
 
+  // Sort data based on sortBy state
   const sortedData = React.useMemo(() => {
     if (!sortBy) return data;
     const [key, direction] = sortBy.split("-");
@@ -61,6 +63,8 @@ export function Table<T>({
                   sortKey={col.key}
                   sortBy={sortBy}
                   onSort={handleSort}
+                  icon={col.icon}
+                  iconClass={col.iconClass}
                 />
               ) : (
                 <span className="flex items-center gap-1">
@@ -80,10 +84,10 @@ export function Table<T>({
         {sortedData.map((row, idx) => (
           <tr
             key={(row as any).id || (row as any).key || idx}
-            className="border-t border-gray-800"
+            className="border-t border-gray-100 dark:border-gray-700"
           >
             {columns.map((col) => (
-              <td key={col.key as string} className="py-1">
+              <td key={col.key as string} className="py-2">
                 {col.render ? col.render(row) : (row as any)[col.key]}
               </td>
             ))}
