@@ -6,6 +6,7 @@ import {
   ExplorationStats,
   TripHistory,
   TripsByMonth,
+  TripsByYear,
   TripsStats,
 } from "@features/dashboard";
 import { PANEL_BREADCRUMBS } from "@features/dashboard/menu/menu";
@@ -60,6 +61,7 @@ export default function DashboardPage() {
           {selectedPanel === "trips-overview" && <TripsStats />}
           {selectedPanel === "trips-history" && <TripHistory />}
           {selectedPanel === "trips-month" && <TripsByMonth />}
+          {selectedPanel === "trips-year" && <TripsByYear />}
         </div>
       </div>
     </div>

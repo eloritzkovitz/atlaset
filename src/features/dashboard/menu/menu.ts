@@ -21,6 +21,11 @@ export const PANEL_BREADCRUMBS: Record<
     { label: "Trips", key: "trips-overview" },
     { label: "By Month" },
   ],
+  "trips-year": [
+    { label: "Dashboard", key: "exploration" },
+    { label: "Trips", key: "trips-overview" },
+    { label: "By Year" },
+  ],
 };
 
 export const EXPLORATION_SUBMENU = [
@@ -42,5 +47,9 @@ export const TRIPS_SUBMENU = [
   {
     key: "trips-month",
     label: "By Month",
+  },
+  {
+    key: "trips-year",
+    label: "By Year",
   },
 ];

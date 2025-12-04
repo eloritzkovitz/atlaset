@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaSuitcaseRolling, FaCrown } from "react-icons/fa6";
+import { FaCrown } from "react-icons/fa6";
 import { PieChart, PieLegendCard } from "@components";
 import {
   MONTH_TABLE_COLUMNS,
@@ -55,11 +55,8 @@ export function TripsByMonth() {
   return (
     <>
       <DashboardCard>
-        <div className="w-full flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-            <FaSuitcaseRolling className="text-blue-400" />
-            Trips by Month
-          </h2>
+        <div className="w-full flex flex-col">
+          <div className="font-bold text-xl mb-4">Trips by Month</div>
           {monthLabels.length > 0 ? (
             <>
               {/* Pie Chart */}
