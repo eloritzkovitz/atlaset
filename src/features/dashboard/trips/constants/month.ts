@@ -1,35 +1,58 @@
-import { FaCalendarDays, FaLocationDot, FaPlane, FaSuitcaseRolling, FaPercent } from "react-icons/fa6";
+import type { TableColumn } from "@components";
+import {
+  FaCalendarDays,
+  FaLocationDot,
+  FaPlane,
+  FaSuitcaseRolling,
+  FaPercent,
+} from "react-icons/fa6";
 
-export const MONTH_TABLE_COLUMNS = [
+interface MonthRow {
+  name: string;
+  local: number;
+  abroad: number;
+  total: number;
+  percentage: number;
+}
+
+export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
   {
     key: "name",
     label: "Month",
     icon: FaCalendarDays,
-    className: "",
+    sortable: true,
   },
   {
     key: "local",
     label: "Local",
     icon: FaLocationDot,
     iconClass: "text-green-400",
+    sortable: true,
+    render: (row) => row.local.toLocaleString(),
   },
   {
     key: "abroad",
     label: "Abroad",
     icon: FaPlane,
     iconClass: "text-purple-400",
+    sortable: true,
+    render: (row) => row.abroad.toLocaleString(),
   },
   {
     key: "total",
     label: "Total",
     icon: FaSuitcaseRolling,
     iconClass: "text-blue-400",
+    sortable: true,
+    render: (row) => row.total.toLocaleString(),
   },
   {
     key: "percentage",
     label: "Percentage",
     icon: FaPercent,
     iconClass: "text-yellow-400",
+    sortable: true,
+    render: (row) => `${row.percentage.toFixed(1)}%`,
   },
 ];
 
