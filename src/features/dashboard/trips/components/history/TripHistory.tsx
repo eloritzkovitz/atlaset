@@ -1,9 +1,8 @@
-import { FaFlag } from "react-icons/fa6";
+import { FaFlag, FaClockRotateLeft, FaCalendarDay } from "react-icons/fa6";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryFlag, CountryWithFlag } from "@features/countries";
 import { useTripHistoryStats } from "../../hooks/useTripHistoryStats";
 import { DashboardCard } from "../../../components/DashboardCard";
-import { FaCalendarAlt, FaHistory } from "react-icons/fa";
 
 export function TripHistory() {
   const { countries } = useCountryData();
@@ -50,7 +49,7 @@ export function TripHistory() {
       {/* Recent trips */}
       <DashboardCard>
         <div className="flex items-center gap-3 mb-2">
-          <FaHistory className="text-pink-400 text-2xl" />
+          <FaClockRotateLeft className="text-pink-400 text-2xl" />
           <div>
             <div className="font-semibold text-lg">Recent trips</div>
             <div className="text-xs text-gray-400">
@@ -58,10 +57,10 @@ export function TripHistory() {
             </div>
           </div>
         </div>
-        <ul className="mt-2">
+        <ul className="mt-4">
           {recentTrips && recentTrips.length > 0 ? (
             recentTrips.map((trip) => (
-              <li key={trip.id} className="mb-2 flex items-center gap-2">
+              <li key={trip.id} className="mt-4 mb-2 flex items-center gap-2">
                 {/* Show up to 3 flags */}
                 {trip.countryCodes.slice(0, 3).map((code) => {
                   const country = countries.find((c) => c.isoCode === code);
@@ -94,7 +93,7 @@ export function TripHistory() {
       {/* First trip */}
       <DashboardCard>
         <div className="flex items-center gap-3 mb-2">
-          <FaCalendarAlt className="text-green-400 text-2xl" />
+          <FaCalendarDay className="text-green-400 text-2xl" />
           <div>
             <div className="font-semibold text-lg">First trip</div>
             <div className="text-xs text-gray-400">
@@ -118,7 +117,7 @@ export function TripHistory() {
       {/* Last trip */}
       <DashboardCard>
         <div className="flex items-center gap-3 mb-2">
-          <FaCalendarAlt className="text-indigo-400 text-2xl" />
+          <FaCalendarDay className="text-indigo-400 text-2xl" />
           <div>
             <div className="font-semibold text-lg">Last trip</div>
             <div className="text-xs text-gray-400">Your most recent trip</div>
