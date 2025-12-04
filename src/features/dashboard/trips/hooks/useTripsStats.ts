@@ -11,7 +11,6 @@ import {
   getLongestTrip,
   getShortestTrip,
 } from "@features/trips/utils/tripStats";
-import { getMonthName } from "@utils/date";
 
 export function useTripsStats() {
   const { countries } = useCountryData();
@@ -71,39 +70,38 @@ export function useTripsStats() {
       ? `${shortestTripObj.startDate} – ${shortestTripObj.endDate}`
       : null;
 
-  // Trips by month
-  const tripsByMonth: Record<string, number> = {};
-  trips.forEach((trip) => {
-    if (trip.startDate) {
-      const date = new Date(trip.startDate);
-      if (!isNaN(date.getTime())) {
-        const month = date.getMonth(); // 0 = Jan, 11 = Dec
-        const monthName = String((getMonthName as any)(month)); // e.g. "Jan"
-        tripsByMonth[monthName] = (tripsByMonth[monthName] || 0) + 1;
+  // Calculate trip durations (in days)
+  const tripDurations = trips
+    .map((trip) => {
+      if (trip.startDate && trip.endDate) {
+        const start = new Date(trip.startDate);
+        const end = new Date(trip.endDate);
+        if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+          // +1 to include both start and end dates
+          return Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1);
+        }
       }
-    }
-  });
+      return null;
+    })
+    .filter((d): d is number => d !== null);
 
-  // Prepare pie chart data: [{ name: "Jan", value: 5 }, ...]
-  const tripsByMonthData = Object.entries(tripsByMonth)
-    .map(([name, value]) => ({ name, value }))
-    .sort(
-      (a, b) =>
-        // Sort by month order (Jan, Feb, ...)
-        getMonthName().indexOf(a.name) - getMonthName().indexOf(b.name)
-    );
+  const totalDaysTraveling = tripDurations.reduce((sum, d) => sum + d, 0);
+  const averageTripDuration = tripDurations.length
+    ? totalDaysTraveling / tripDurations.length
+    : 0;
 
-  // Find most popular month
-  const mostPopularMonth = tripsByMonthData.reduce(
-    (max, curr) => (curr.value > (max?.value ?? 0) ? curr : max),
-    null as { name: string; value: number } | null
-  );
+  // First and last trip (by startDate)
+  const sortedTrips = trips
+    .filter((trip) => trip.startDate)
+    .sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
 
-  // Total trips for percentage
-  const totalTripsForMonth = tripsByMonthData.reduce(
-    (sum, m) => sum + m.value,
-    0
-  );
+  const firstTrip = sortedTrips[0] || null;
+  const lastTrip = sortedTrips[sortedTrips.length - 1] || null;
+
+  // Recent trips (last 3, by startDate descending)
+  const recentTrips = [...sortedTrips]
+    .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
+    .slice(0, 3);
 
   return {
     totalTrips,
@@ -118,9 +116,11 @@ export function useTripsStats() {
     longestTripName,
     longestTripRange,
     shortestTripName,
-    shortestTripRange,
-    tripsByMonthData,
-    mostPopularMonth,
-    totalTripsForMonth,
+    shortestTripRange,    
+    averageTripDuration,
+    totalDaysTraveling,
+    firstTrip,
+    lastTrip,
+    recentTrips,
   };
 }

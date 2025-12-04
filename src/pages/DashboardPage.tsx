@@ -9,7 +9,7 @@ import {
 } from "@features/dashboard";
 
 const PANEL_BREADCRUMBS: Record<string, { label: string; key?: string }[]> = {
-  exploration: [{ label: "Dashboard", key: "exploration" }, { label: "Exploration" }],
+  exploration: [{ label: "Dashboard", key: "exploration" }, { label: "Exploration" }],  
   "trips-overview": [
     { label: "Dashboard", key: "exploration" },
     { label: "Trips", key: "trips-overview" },
@@ -42,7 +42,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}

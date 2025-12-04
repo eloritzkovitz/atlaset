@@ -2,13 +2,13 @@ import { useState } from "react";
 import { FaSuitcaseRolling, FaCrown } from "react-icons/fa6";
 import { PieChart, PieLegendCard } from "@components";
 import { MONTH_NAMES, MONTH_COLORS } from "../constants/date";
-import { useTripsStats } from "../hooks/useTripsStats";
+import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 import { DashboardCard } from "../../components/DashboardCard";
 
 export function TripsByMonth() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const { tripsByMonthData, mostPopularMonth, totalTripsForMonth } =
-    useTripsStats();
+    useTripsByMonthStats();
 
   // Ensure all months are represented, even with zero trips
   const allMonthsData = MONTH_NAMES.map((name, idx) => {

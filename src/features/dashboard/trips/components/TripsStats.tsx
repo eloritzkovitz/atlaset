@@ -6,13 +6,19 @@ import {
   FaFlag,
   FaClock,
   FaRegClock,
+  FaStar,
 } from "react-icons/fa6";
-import { CountryWithFlag } from "@features/countries";
+import { useCountryData } from "@contexts/CountryDataContext";
+import { CountryFlag, CountryWithFlag } from "@features/countries";
 import { useTripsStats } from "../hooks/useTripsStats";
 import { DashboardCard } from "../../components/DashboardCard";
 import { PieChart, PieLegendCard } from "@components";
+import { FaCalendarAlt, FaHistory } from "react-icons/fa";
 
 export function TripsStats() {
+  const { countries } = useCountryData();
+  
+  // Hover state for pie chart
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   const {
@@ -27,6 +33,11 @@ export function TripsStats() {
     longestTripRange,
     shortestTripName,
     shortestTripRange,
+    averageTripDuration,
+    totalDaysTraveling,
+    firstTrip,
+    lastTrip,
+    recentTrips,
   } = useTripsStats();
 
   // Pie chart data for trip types
@@ -135,13 +146,57 @@ export function TripsStats() {
                 <span className="text-xs text-gray-400">
                   ({maxCount} times)
                 </span>
-                {idx < mostVisitedCountries.length - 1 && <span>,</span>}
+                {idx < mostVisitedCountries.length - 1}
               </span>
             ))
           ) : (
             <span className="text-gray-400">—</span>
           )}
         </div>
+      </DashboardCard>
+
+      {/* Recent trips */}
+      <DashboardCard>
+        <div className="flex items-center gap-3 mb-2">
+          <FaHistory className="text-pink-400 text-2xl" />
+          <div>
+            <div className="font-semibold text-lg">Recent trips</div>
+            <div className="text-xs text-gray-400">
+              Your last 3 recorded trips
+            </div>
+          </div>
+        </div>
+        <ul className="mt-2">
+          {recentTrips && recentTrips.length > 0 ? (
+            recentTrips.map((trip) => (
+              <li key={trip.id} className="mb-2 flex items-center gap-2">
+                {/* Show up to 3 flags */}
+                {trip.countryCodes.slice(0, 3).map((code) => {
+                  const country = countries.find((c) => c.isoCode === code);
+                  return country ? (
+                    <CountryFlag
+                      key={code}
+                      flag={{
+                        isoCode: country.isoCode,
+                        source: "flagcdn",
+                        style: "flat",
+                        size: "32",
+                      }}
+                      alt={`${country.name} flag`}
+                      className="h-6 w-auto"
+                    />
+                  ) : null;
+                })}
+                <span className="font-semibold">{trip.name}</span>
+                <span className="text-xs text-gray-400">
+                  {trip.startDate} {trip.endDate && `– ${trip.endDate}`}
+                </span>
+              </li>
+            ))
+          ) : (
+            <li className="text-gray-400">—</li>
+          )}
+        </ul>
       </DashboardCard>
 
       {/* Longest trip card */}
@@ -189,6 +244,81 @@ export function TripsStats() {
           </div>
         )}
       </DashboardCard>
+
+      {/* Average trip duration */}
+      <DashboardCard>
+        <div className="flex items-center gap-3 mb-2">
+          <FaStar className="text-yellow-400 text-2xl" />
+          <div>
+            <div className="font-semibold text-lg">Average trip duration</div>
+            <div className="text-xs text-gray-400">Average days per trip</div>
+          </div>
+        </div>
+        <div className="text-4xl font-extrabold text-yellow-400 mb-1">
+          {averageTripDuration ? `${averageTripDuration.toFixed(1)} days` : "—"}
+        </div>
+      </DashboardCard>
+
+      {/* Total days spent traveling */}
+      <DashboardCard>
+        <div className="flex items-center gap-3 mb-2">
+          <FaHistory className="text-blue-400 text-2xl" />
+          <div>
+            <div className="font-semibold text-lg">Total days traveling</div>
+            <div className="text-xs text-gray-400">
+              Sum of all trip durations
+            </div>
+          </div>
+        </div>
+        <div className="text-4xl font-extrabold text-blue-400 mb-1">
+          {totalDaysTraveling ? `${totalDaysTraveling} days` : "—"}
+        </div>
+      </DashboardCard>
+
+      {/* First trip */}
+      <DashboardCard>
+        <div className="flex items-center gap-3 mb-2">
+          <FaCalendarAlt className="text-green-400 text-2xl" />
+          <div>
+            <div className="font-semibold text-lg">First trip</div>
+            <div className="text-xs text-gray-400">
+              Your earliest recorded trip
+            </div>
+          </div>
+        </div>
+        {firstTrip ? (
+          <div className="text-lg font-bold text-green-400 mb-1">
+            {firstTrip.name}
+          </div>
+        ) : (
+          <div className="text-gray-400">—</div>
+        )}
+        <div className="text-sm text-gray-400">
+          {firstTrip?.startDate}{" "}
+          {firstTrip?.endDate && `– ${firstTrip.endDate}`}
+        </div>
+      </DashboardCard>
+
+      {/* Last trip */}
+      <DashboardCard>
+        <div className="flex items-center gap-3 mb-2">
+          <FaCalendarAlt className="text-indigo-400 text-2xl" />
+          <div>
+            <div className="font-semibold text-lg">Last trip</div>
+            <div className="text-xs text-gray-400">Your most recent trip</div>
+          </div>
+        </div>
+        {lastTrip ? (
+          <div className="text-lg font-bold text-indigo-400 mb-1">
+            {lastTrip.name}
+          </div>
+        ) : (
+          <div className="text-gray-400">—</div>
+        )}
+        <div className="text-sm text-gray-400">
+          {lastTrip?.startDate} {lastTrip?.endDate && `– ${lastTrip.endDate}`}
+        </div>
+      </DashboardCard>      
     </div>
   );
 }
