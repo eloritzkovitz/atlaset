@@ -23,8 +23,10 @@ export function MenuButton({
     <button
       type={type}
       className={
-        `rounded-lg text-left px-2 py-2 flex items-center gap-2 hover:bg-gray-100 dark:hover:bg-gray-600 ` +
-        (active ? "bg-gray-200 dark:bg-blue-800/70 font-semibold " : "") +
+        `rounded-lg text-left px-2 py-2 flex items-center gap-2 ` +
+        (active
+          ? "bg-gray-200 dark:bg-blue-800/70 font-semibold "
+          : "hover:bg-gray-100 dark:hover:bg-gray-600 ") +
         className
       }
       onClick={onClick}
