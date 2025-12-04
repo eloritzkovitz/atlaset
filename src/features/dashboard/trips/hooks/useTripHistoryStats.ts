@@ -2,7 +2,7 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { useHomeCountry } from "@features/settings";
 import { useTrips } from "@contexts/TripsContext";
 import { getCompletedTrips, getAbroadTrips } from "@features/trips/utils/trips";
-import { getMostVisitedCountries } from "@features/trips/utils/tripStats";
+import { getMostVisitedCountries } from "../utils/tripStats";
 
 export function useTripHistoryStats() {
   const { countries } = useCountryData();

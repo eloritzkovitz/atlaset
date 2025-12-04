@@ -6,7 +6,9 @@ import {
   FaClock,
   FaRegClock,
   FaStar,
-  FaClockRotateLeft
+  FaClockRotateLeft,
+  FaCalendarDays,
+  FaCheck
 } from "react-icons/fa6";
 import { DashboardCard, PieChart, PieLegendCard } from "@components";
 import { TRIP_TYPE_COLORS } from "../constants/trips";
@@ -19,6 +21,8 @@ export function TripsStats() {
     totalTrips,
     localTrips,
     abroadTrips,
+    completedTrips,
+    upcomingTrips,    
     longestTrip,
     shortestTrip,
     longestTripName,
@@ -46,24 +50,38 @@ export function TripsStats() {
         subtitle="Summary of all your recorded trips"
       >
         <div className="flex flex-col items-center">
-          <div className="text-5xl font-extrabold text-blue-500 mb-2">
+          <div className="text-5xl font-extrabold text-blue-500 mb-2 mt-6">
             {totalTrips}
           </div>
           <div className="text-sm text-gray-400 mb-4">Total Trips</div>
           <div className="flex gap-6">
             <div className="flex flex-col items-center">
-              <span className="flex items-center gap-1 bg-green-100 text-green-700 px-3 py-1 rounded-full font-semibold">
+              <span className="flex text-2xl items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full font-semibold">
                 <FaLocationDot className="text-green-400" />
                 {localTrips.length}
               </span>
               <span className="text-xs text-gray-500 mt-1">Local</span>
             </div>
             <div className="flex flex-col items-center">
-              <span className="flex items-center gap-1 bg-purple-100 text-purple-700 px-3 py-1 rounded-full font-semibold">
+              <span className="flex text-2xl items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">
                 <FaPlane className="text-purple-400" />
                 {abroadTrips.length}
               </span>
               <span className="text-xs text-gray-500 mt-1">Abroad</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="flex text-2xl items-center gap-1 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 px-3 py-1 rounded-full font-semibold">
+                <FaCheck className="text-cyan-400" />
+                {completedTrips.length}
+              </span>
+              <span className="text-xs text-gray-500 mt-1">Completed</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="flex text-2xl items-center gap-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300 px-3 py-1 rounded-full font-semibold">
+                <FaCalendarDays className="text-yellow-400" />
+                {upcomingTrips.length}
+              </span>
+              <span className="text-xs text-gray-500 mt-1">Upcoming</span>
             </div>
           </div>
         </div>
@@ -75,9 +93,9 @@ export function TripsStats() {
         iconClass="text-purple-400"
         title="Trip Type Breakdown"
       >
-        <div className="flex flex-row items-center justify-center gap-36 min-h-[220px] mt-4">
+        <div className="flex flex-row items-center justify-center gap-40 min-h-[220px] mt-4">
           {/* Pie Chart */}
-          <div className="flex items-center justify-center w-48 h-48">
+          <div className="flex items-center justify-center w-48 h-48 mt-10 mb-10">
             <PieChart
               labels={tripTypeData.map((d) => d.name)}
               data={tripTypeData.map((d) => d.value)}

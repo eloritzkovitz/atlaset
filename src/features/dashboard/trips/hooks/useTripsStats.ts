@@ -2,13 +2,11 @@ import { useHomeCountry } from "@features/settings";
 import { useTrips } from "@contexts/TripsContext";
 import {
   getCompletedTrips,
+  getUpcomingTrips,
   getLocalTrips,
   getAbroadTrips,
 } from "@features/trips/utils/trips";
-import {
-  getLongestTrip,
-  getShortestTrip,
-} from "@features/trips/utils/tripStats";
+import { getLongestTrip, getShortestTrip } from "../utils/tripStats";
 
 export function useTripsStats() {
   const { homeCountry } = useHomeCountry();
@@ -22,6 +20,7 @@ export function useTripsStats() {
   // Only completed trips for country stats
   const completedTrips = getCompletedTrips(trips);
   const completedAbroadTrips = getAbroadTrips(completedTrips, homeCountry);
+  const upcomingTrips = getUpcomingTrips(trips);
 
   // Longest and shortest trips (abroad only)
   const longestTripObj = abroadTrips.length
@@ -83,6 +82,7 @@ export function useTripsStats() {
     abroadTrips,
     completedTrips,
     completedAbroadTrips,
+    upcomingTrips,
     longestTrip,
     shortestTrip,
     longestTripName,
