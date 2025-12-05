@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { FaThLarge, FaList } from "react-icons/fa";
+import { FaThLarge, FaList, FaGlobe, FaCheckCircle } from "react-icons/fa";
 import { ActionButton, SearchInput } from "@components";
+import { filterCountries } from "@features/countries/utils/countryFilters";
+import { sortCountries } from "@features/countries";
 import type { Country } from "@types";
 import { CountryDisplay } from "./CountryDisplay";
 
@@ -19,24 +21,26 @@ export function CountrySection({
 }: CountrySectionProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
   const [search, setSearch] = useState("");
+  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
+
+  // Handler to toggle visited/all
+  const handleVisitedToggle = () => {
+    setShowVisitedOnly((prev) => !prev);
+  };
 
   // Handler to toggle between grid and list views
   const handleToggle = () => {
     setViewMode((prev) => (prev === "grid" ? "list" : "grid"));
   };
 
-  // Filter countries by search
-  const filteredCountries = (
-    search
-      ? countries.filter(
-          (c) =>
-            c.name.toLowerCase().includes(search.toLowerCase()) ||
-            c.isoCode.toLowerCase().includes(search.toLowerCase())
-        )
-      : countries
-  )
-    .slice()
-    .sort((a, b) => a.name.localeCompare(b.name));
+  // Filter countries based on search and visited toggle
+  let filtered = filterCountries(countries, { search });
+  if (showVisitedOnly) {
+    filtered = filtered.filter((c) => visitedCountryCodes.includes(c.isoCode));
+  }
+
+  // Sort countries by name ascending
+  const sortedCountries = sortCountries(filtered, "name-asc", []);
 
   return (
     <div className={className}>
@@ -46,6 +50,25 @@ export function CountrySection({
           onChange={setSearch}
           placeholder="Search countries..."
           className="max-w-xs"
+        />
+        <ActionButton
+          onClick={handleVisitedToggle}
+          ariaLabel={
+            showVisitedOnly ? "Show All Countries" : "Show Visited Only"
+          }
+          title={showVisitedOnly ? "Show All Countries" : "Show Visited Only"}
+          icon={
+            showVisitedOnly ? (
+              <span className="flex items-center gap-1 font-semibold text-sm px-2">
+                <FaGlobe className="text-base" />
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 font-semibold text-sm px-2">
+                <FaCheckCircle className="text-base" />
+              </span>
+            )
+          }
+          className="h-10 w-10 flex items-center justify-center rounded-full text-2xl transition hover:bg-gray-700 dark:hover:bg-gray-600"
         />
         <ActionButton
           onClick={handleToggle}
@@ -60,7 +83,7 @@ export function CountrySection({
         />
       </div>
       <CountryDisplay
-        countries={filteredCountries}
+        countries={sortedCountries}
         visitedCountryCodes={visitedCountryCodes}
         view={viewMode}
       />
