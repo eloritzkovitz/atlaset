@@ -33,9 +33,7 @@ export function RegionCard({
 
   // Show all countries in the region
   if (showAllRegionCountries) {
-    const subCountries = countries.filter(
-      (c) => c.subregion === selectedSubregion
-    );
+    const subCountries = countries;
     return (
       <Card loading={loading} skeletonLines={5}>
         {!loading && (

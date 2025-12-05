@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { SegmentedToggle } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useVisitedCountries } from "@features/visits";
 import { useDelayedLoading } from "@hooks/useDelayedLoading";
@@ -9,21 +11,38 @@ export function ExplorationStats() {
   const { countries, loading: countriesLoading } = useCountryData();
   const visited = useVisitedCountries();
 
-  // Manage delayed loading state
+  // Add toggle state
+  const [countryType, setCountryType] = useState<"all" | "sovereign">("all");
+
+  // Filter countries based on toggle
+  const filteredCountries =
+    countryType === "sovereign"
+      ? countries.filter((c) => c.sovereigntyType === "Sovereign")
+      : countries;
+
   const loading = useDelayedLoading(
     countriesLoading || !countries.length,
     [countries.length],
     50
   );
 
-  // Get exploration stats
+  // Compute exploration stats
   const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
-    countries,
+    filteredCountries,
     visited
   );
 
   return (
     <>
+      <SegmentedToggle
+        value={countryType}
+        options={[
+          { value: "all", label: "All Countries" },
+          { value: "sovereign", label: "Sovereign Only" },
+        ]}
+        onChange={setCountryType}
+        className="mb-4"
+      />
       <WorldExplorationCard
         visited={visitedCountries}
         total={totalCountries}
