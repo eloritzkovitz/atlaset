@@ -28,7 +28,7 @@ export function DashboardPanelMenu({
       <ul>
         <SubmenuSection
           icon={<FaGlobe />}
-          label="Exploration"
+          label="Countries"
           expanded={explorationExpanded}
           onToggle={() => setExplorationExpanded((e) => !e)}
           submenu={EXPLORATION_SUBMENU}

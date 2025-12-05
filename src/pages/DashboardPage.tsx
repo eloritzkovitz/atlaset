@@ -12,7 +12,7 @@ import {
 import { PANEL_BREADCRUMBS } from "@features/dashboard/menu/menu";
 
 export default function DashboardPage() {
-  const [selectedPanel, setSelectedPanel] = useState("exploration");
+  const [selectedPanel, setSelectedPanel] = useState("countries");
   const { loading, error } = useCountryData();
 
   // State for selected region and subregion
@@ -29,12 +29,12 @@ export default function DashboardPage() {
   const breadcrumbs: Crumb[] = [
     ...(PANEL_BREADCRUMBS[selectedPanel] || []),
     selectedRegion && { label: selectedRegion, key: "region" },
-    selectedSubregion && { label: selectedSubregion, key: "exploration" },
+    selectedSubregion && { label: selectedSubregion, key: "countries" },
   ].filter(Boolean) as Crumb[];
 
   // Breadcrumb click handler
   const handleCrumbClick = (key: string) => {
-    if (key === "exploration") {
+    if (key === "countries") {
       setSelectedRegion(null);
       setSelectedSubregion(null);
     } else if (key === "region") {
@@ -60,7 +60,7 @@ export default function DashboardPage() {
         />
         <div className="flex-1">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
-          {selectedPanel === "exploration" && (
+          {selectedPanel === "countries" && (
             <ExplorationStats
               selectedRegion={selectedRegion}
               setSelectedRegion={setSelectedRegion}
