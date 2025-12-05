@@ -5,8 +5,8 @@ import {
   MONTH_TABLE_COLUMNS,
   MONTH_NAMES,
   MONTH_COLORS,
-} from "../../constants/month";
-import { useTripsByMonthStats } from "../../hooks/useTripsByMonthStats";
+} from "../constants/month";
+import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 
 export function TripsByMonth() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);

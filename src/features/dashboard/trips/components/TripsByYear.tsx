@@ -14,9 +14,9 @@ import {
   SegmentedToggle,
   type SegmentedToggleOption,
 } from "@components";
-import { TRIP_TYPE_COLORS } from "../../constants/trips";
-import { YEAR_TABLE_COLUMNS } from "../../constants/year";
-import { useTripsByYearStats } from "../../hooks/useTripsByYearStats";
+import { TRIP_TYPE_COLORS } from "../constants/trips";
+import { YEAR_TABLE_COLUMNS } from "../constants/year";
+import { useTripsByYearStats } from "../hooks/useTripsByYearStats";
 
 export function TripsByYear() {
   const { tripsByYearData } = useTripsByYearStats();
