@@ -82,14 +82,14 @@ export function RegionCard({
   return (
     <Card>
       <button
-        className="flex items-center mb-2 text-2xl w-full rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
+        className="flex items-center mb-2 text-2xl w-full rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
         onClick={() => setShowAllRegionCountries(true)}
         title={`Show all countries in ${region}`}
         aria-label={`Show all countries in ${region}`}
       >
         {regionIcons[region] || defaultRegionIcon}
-        <span className="text-2xl font-semibold">{region}</span>
-        <span className="ml-auto text-xl text-blue-600 dark:text-gray-300 font-bold">
+        <span className="text-2xl text-blue-5600 font-semibold">{region}</span>
+        <span className="ml-auto text-xl text-blue-500 font-bold">
           {visited}/{total} ({percent(visited, total)})
         </span>
       </button>
