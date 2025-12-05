@@ -32,6 +32,7 @@ export { NumberInput } from "./form/NumberInput/NumberInput";
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
 export { Separator } from "./layout/Separator";
+export { Breadcrumbs, type Crumb } from "./layout/Breadcrumbs/Breadcrumbs";
 
 // Menu components
 export { MenuButton } from "./layout/Menu/MenuButton";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ErrorMessage, LoadingSpinner } from "@components";
+import { Breadcrumbs, type Crumb, ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DashboardPanelMenu,
@@ -15,49 +15,59 @@ export default function DashboardPage() {
   const [selectedPanel, setSelectedPanel] = useState("exploration");
   const { loading, error } = useCountryData();
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-  if (error) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <ErrorMessage error={error} />
-      </div>
-    );
-  }
+  // State for selected region and subregion
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedSubregion, setSelectedSubregion] = useState<string | null>(
+    null
+  );
+
+  // Handle loading and error states
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage error={error} />;
+
+  // Construct breadcrumbs
+  const breadcrumbs: Crumb[] = [
+    ...(PANEL_BREADCRUMBS[selectedPanel] || []),
+    selectedRegion && { label: selectedRegion, key: "region" },
+    selectedSubregion && { label: selectedSubregion, key: "exploration" },
+  ].filter(Boolean) as Crumb[];
+
+  // Breadcrumb click handler
+  const handleCrumbClick = (key: string) => {
+    if (key === "exploration") {
+      setSelectedRegion(null);
+      setSelectedSubregion(null);
+    } else if (key === "region") {
+      setSelectedSubregion(null);
+    } else {
+      handlePanelChange(key);
+    }
+  };
+
+  // Reset region/subregion when switching panels
+  const handlePanelChange = (key: string) => {
+    setSelectedPanel(key);
+    setSelectedRegion(null);
+    setSelectedSubregion(null);
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}
-          setSelectedPanel={setSelectedPanel}
+          setSelectedPanel={handlePanelChange}
         />
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-6">
-            {PANEL_BREADCRUMBS[selectedPanel]?.map((crumb, idx, arr) => (
-              <span key={idx} className="flex items-center">
-                {crumb.key ? (
-                  <button
-                    className="text-gray-100 hover:underline font-bold"
-                    onClick={() => setSelectedPanel(crumb.key!)}
-                  >
-                    {crumb.label}
-                  </button>
-                ) : (
-                  <span className="text-gray-400 font-bold">{crumb.label}</span>
-                )}
-                {idx < arr.length - 1 && (
-                  <span className="mx-2 text-gray-400">/</span>
-                )}
-              </span>
-            ))}
-          </div>
-          {selectedPanel === "exploration" && <ExplorationStats />}
+          <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
+          {selectedPanel === "exploration" && (
+            <ExplorationStats
+              selectedRegion={selectedRegion}
+              setSelectedRegion={setSelectedRegion}
+              selectedSubregion={selectedSubregion}
+              setSelectedSubregion={setSelectedSubregion}
+            />
+          )}
           {selectedPanel === "trips-overview" && <TripsStats />}
           {selectedPanel === "trips-history" && <TripHistory />}
           {selectedPanel === "trips-month" && <TripsByMonth />}

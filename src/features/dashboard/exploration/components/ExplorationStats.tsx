@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SegmentedToggle } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useVisitedCountries } from "@features/visits";
@@ -6,8 +5,22 @@ import { useDelayedLoading } from "@hooks/useDelayedLoading";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
 import { useExplorationStats } from "../hooks/useExplorationStats";
+import { SubregionCountryList } from "./SubregionCountryList";
+import { useState } from "react";
 
-export function ExplorationStats() {
+interface ExplorationStatsProps {
+  selectedRegion: string | null;
+  setSelectedRegion: (r: string | null) => void;
+  selectedSubregion: string | null;
+  setSelectedSubregion: (s: string | null) => void;
+}
+
+export function ExplorationStats({
+  selectedRegion,
+  setSelectedRegion,
+  selectedSubregion,
+  setSelectedSubregion,
+}: ExplorationStatsProps) {
   const { countries, loading: countriesLoading } = useCountryData();
   const visited = useVisitedCountries();
 
@@ -32,6 +45,27 @@ export function ExplorationStats() {
     visited
   );
 
+  // If a region is selected, show country grid for region or subregion
+  if (selectedRegion) {
+    const region = regionStats.find((r) => r.region === selectedRegion);
+    if (!region) return null;
+
+    // If subregion selected, show only those countries
+    const countriesToShow = selectedSubregion
+      ? region.regionCountries.filter((c) => c.subregion === selectedSubregion)
+      : region.regionCountries;
+
+    return (
+      <div>
+        <SubregionCountryList
+          countries={countriesToShow}
+          visitedCountryCodes={visited.visitedCountryCodes}
+        />
+      </div>
+    );
+  }
+
+  // Default: show region cards
   return (
     <>
       <SegmentedToggle
@@ -56,9 +90,15 @@ export function ExplorationStats() {
             visited={region.regionVisited}
             total={region.regionCountries.length}
             subregions={region.subregions}
-            countries={region.regionCountries}
-            visitedCountryCodes={visited.visitedCountryCodes}
             loading={loading}
+            onRegionClick={() => {
+              setSelectedRegion(region.region);
+              setSelectedSubregion(null);
+            }}
+            onSubregionClick={(sub) => {
+              setSelectedRegion(region.region);
+              setSelectedSubregion(sub);
+            }}
           />
         ))}
       </div>

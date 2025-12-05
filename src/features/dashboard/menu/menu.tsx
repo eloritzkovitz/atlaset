@@ -12,7 +12,7 @@ export const PANEL_BREADCRUMBS: Record<
 > = {
   exploration: [
     { label: "Dashboard", key: "exploration" },
-    { label: "Exploration" },
+    { label: "Exploration", key: "exploration" },
   ],
   "trips-overview": [
     { label: "Dashboard", key: "exploration" },

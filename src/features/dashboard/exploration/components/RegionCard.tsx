@@ -1,9 +1,5 @@
-import { useState } from "react";
-import { FaArrowLeft } from "react-icons/fa6";
 import { Card } from "@components";
-import type { Country } from "@types";
 import { percent } from "@utils/number";
-import { SubregionCountryList } from "./SubregionCountryList";
 import { regionIcons, defaultRegionIcon } from "../constants/regionIcons";
 import type { SubregionStat } from "../../types";
 
@@ -12,9 +8,9 @@ interface RegionCardProps {
   visited: number;
   total: number;
   subregions: SubregionStat[];
-  countries: Country[];
-  visitedCountryCodes: string[];
   loading?: boolean;
+  onRegionClick?: () => void;
+  onSubregionClick?: (subregion: string) => void;
 }
 
 export function RegionCard({
@@ -22,83 +18,17 @@ export function RegionCard({
   visited,
   total,
   subregions,
-  countries,
-  visitedCountryCodes,
   loading = false,
+  onRegionClick,
+  onSubregionClick,
 }: RegionCardProps) {
-  const [selectedSubregion, setSelectedSubregion] = useState<string | null>(
-    null
-  );
-  const [showAllRegionCountries, setShowAllRegionCountries] = useState(false);
-
-  // Show all countries in the region
-  if (showAllRegionCountries) {
-    const subCountries = countries;
-    return (
-      <Card loading={loading} skeletonLines={5}>
-        {!loading && (
-          <>
-            <div className="flex items-center mb-4">
-              <button
-                className="mr-2 text-gray-500 hover:text-blue-600"
-                onClick={() => setShowAllRegionCountries(false)}
-                title="Back to region"
-              >
-                <FaArrowLeft />
-              </button>
-              <span className="text-2xl font-semibold">
-                {region} - All Countries
-              </span>
-            </div>
-            <SubregionCountryList
-              countries={subCountries}
-              visitedCountryCodes={visitedCountryCodes}
-            />
-          </>
-        )}
-      </Card>
-    );
-  }
-
-  // Show countries in a subregion
-  if (selectedSubregion) {
-    const subCountries = countries.filter(
-      (c) => c.subregion === selectedSubregion
-    );
-    return (
-      <Card loading={loading} skeletonLines={5}>
-        {!loading && (
-          <>
-            <div className="flex items-center mb-4">
-              <button
-                className="mr-2 text-gray-500 hover:text-blue-600"
-                onClick={() => setSelectedSubregion(null)}
-                title="Back to region"
-              >
-                <FaArrowLeft />
-              </button>
-              <span className="text-2xl font-semibold">
-                {selectedSubregion}
-              </span>
-            </div>
-            <SubregionCountryList
-              countries={subCountries}
-              visitedCountryCodes={visitedCountryCodes}
-            />
-          </>
-        )}
-      </Card>
-    );
-  }
-
-  // Default: show subregion stats and clickable region header
   return (
     <Card loading={loading} skeletonLines={6}>
       {!loading && (
         <>
           <button
             className="flex items-center mb-2 text-2xl w-full rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
-            onClick={() => setShowAllRegionCountries(true)}
+            onClick={onRegionClick}
             title={`Show all countries in ${region}`}
             aria-label={`Show all countries in ${region}`}
           >
@@ -115,7 +45,7 @@ export function RegionCard({
               <button
                 key={sub.name}
                 className="flex items-center w-full text-base py-1 px-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition"
-                onClick={() => setSelectedSubregion(sub.name)}
+                onClick={() => onSubregionClick?.(sub.name)}
                 title={`Show countries in ${sub.name}`}
               >
                 <span className="text-gray-700 dark:text-gray-300">
