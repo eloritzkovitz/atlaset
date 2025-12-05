@@ -35,6 +35,7 @@ export { Separator } from "./layout/Separator";
 
 // Menu components
 export { MenuButton } from "./layout/Menu/MenuButton";
+export { SubmenuSection } from "./layout/Menu/SubmenuSection";
 
 // Modal components
 export { ConfirmModal } from "./layout/Modal/ConfirmModal";
