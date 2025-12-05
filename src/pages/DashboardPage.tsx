@@ -3,7 +3,7 @@ import { Breadcrumbs, type Crumb, ErrorMessage, LoadingSpinner } from "@componen
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DashboardPanelMenu,
-  ExplorationStats,
+  CountryStats,
   TripHistory,
   TripsByMonth,
   TripsByYear,
@@ -61,7 +61,7 @@ export default function DashboardPage() {
         <div className="flex-1">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           {selectedPanel === "countries" && (
-            <ExplorationStats
+            <CountryStats
               selectedRegion={selectedRegion}
               setSelectedRegion={setSelectedRegion}
               selectedSubregion={selectedSubregion}

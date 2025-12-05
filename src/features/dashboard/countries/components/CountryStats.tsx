@@ -1,30 +1,30 @@
+import { useState } from "react";
 import { SegmentedToggle } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useVisitedCountries } from "@features/visits";
 import { useDelayedLoading } from "@hooks/useDelayedLoading";
+import { CountrySection } from "./CountrySection";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
 import { useExplorationStats } from "../hooks/useExplorationStats";
-import { SubregionCountryList } from "./SubregionCountryList";
-import { useState } from "react";
 
-interface ExplorationStatsProps {
+interface CountryStatsProps {
   selectedRegion: string | null;
   setSelectedRegion: (r: string | null) => void;
   selectedSubregion: string | null;
   setSelectedSubregion: (s: string | null) => void;
 }
 
-export function ExplorationStats({
+export function CountryStats({
   selectedRegion,
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
-}: ExplorationStatsProps) {
+}: CountryStatsProps) {
   const { countries, loading: countriesLoading } = useCountryData();
   const visited = useVisitedCountries();
 
-  // Add toggle state
+  // Toggle state for country type and view mode
   const [countryType, setCountryType] = useState<"all" | "sovereign">("all");
 
   // Filter countries based on toggle
@@ -44,16 +44,14 @@ export function ExplorationStats({
     filteredCountries,
     visited
   );
-
+ 
   // If showing all countries (world view)
   if (selectedRegion === "All Countries") {
     return (
-      <div>
-        <SubregionCountryList
-          countries={filteredCountries}
-          visitedCountryCodes={visited.visitedCountryCodes}
-        />
-      </div>
+      <CountrySection
+        countries={filteredCountries}
+        visitedCountryCodes={visited.visitedCountryCodes}
+      />
     );
   }
 
@@ -62,18 +60,15 @@ export function ExplorationStats({
     const region = regionStats.find((r) => r.region === selectedRegion);
     if (!region) return null;
 
-    // If subregion selected, show only those countries
     const countriesToShow = selectedSubregion
       ? region.regionCountries.filter((c) => c.subregion === selectedSubregion)
       : region.regionCountries;
 
     return (
-      <div>
-        <SubregionCountryList
-          countries={countriesToShow}
-          visitedCountryCodes={visited.visitedCountryCodes}
-        />
-      </div>
+      <CountrySection
+        countries={countriesToShow}
+        visitedCountryCodes={visited.visitedCountryCodes}
+      />
     );
   }
 

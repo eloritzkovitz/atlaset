@@ -1,6 +1,6 @@
 // Components
 export { DashboardPanelMenu } from "./menu/DashboardPanelMenu";
-export { ExplorationStats } from "./exploration/components/ExplorationStats";
+export { CountryStats } from "./countries/components/CountryStats";
 export { TripsStats } from "./trips/components/TripsStats";
 export { TripHistory } from "./trips/components/TripHistory";
 export { TripsByMonth } from "./trips/components/TripsByMonth";
