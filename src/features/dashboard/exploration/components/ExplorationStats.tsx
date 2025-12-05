@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useVisitedCountries } from "@features/visits";
+import { useDelayedLoading } from "@hooks/useDelayedLoading";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
 import { useExplorationStats } from "../hooks/useExplorationStats";
@@ -8,19 +8,13 @@ import { useExplorationStats } from "../hooks/useExplorationStats";
 export function ExplorationStats() {
   const { countries, loading: countriesLoading } = useCountryData();
   const visited = useVisitedCountries();
-  const [showLoading, setShowLoading] = useState(true);
 
-  // Manage loading state with a slight delay to prevent flickering
-  useEffect(() => {
-    if (!countriesLoading && countries.length) {
-      const timer = setTimeout(() => setShowLoading(false), 50);
-      return () => clearTimeout(timer);
-    } else {
-      setShowLoading(true);
-    }
-  }, [countriesLoading, countries.length]);
-
-  const loading = countriesLoading || !countries.length || showLoading;
+  // Manage delayed loading state
+  const loading = useDelayedLoading(
+    countriesLoading || !countries.length,
+    [countries.length],
+    50
+  );
 
   // Get exploration stats
   const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
