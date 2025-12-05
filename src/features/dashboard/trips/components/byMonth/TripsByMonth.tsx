@@ -86,9 +86,7 @@ export function TripsByMonth() {
           <p className="text-gray-500">No trip data available.</p>
         )}
       </DashboardCard>
-
-      {/* Table/List of all months */}
-      <DashboardCard title="Trips per Month" className="mt-6">
+      <DashboardCard title="Monthly Trip Breakdown" className="mt-6">
         <div className="overflow-x-auto">
           <Table columns={MONTH_TABLE_COLUMNS} data={allMonthsData} />
         </div>

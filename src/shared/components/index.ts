@@ -60,6 +60,7 @@ export { Table, type TableColumn } from "./table/Table";
 
 // UI components
 export { ColorDot } from "./ui/ColorDot";
+export { SegmentedToggle, type SegmentedToggleOption } from "./ui/SegmentedToggle";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";

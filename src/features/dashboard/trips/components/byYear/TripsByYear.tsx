@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   BarChart,
   Bar,
@@ -7,15 +8,26 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Table, DashboardCard } from "@components";
+import {
+  Table,
+  DashboardCard,
+  SegmentedToggle,
+  type SegmentedToggleOption,
+} from "@components";
 import { TRIP_TYPE_COLORS } from "../../constants/trips";
 import { YEAR_TABLE_COLUMNS } from "../../constants/year";
 import { useTripsByYearStats } from "../../hooks/useTripsByYearStats";
-import { useState } from "react";
 
 export function TripsByYear() {
   const { tripsByYearData } = useTripsByYearStats();
   const [filter, setFilter] = useState<"both" | "local" | "abroad">("both");
+
+  // Define filter options for the segmented toggle
+  const filterOptions: SegmentedToggleOption<"both" | "local" | "abroad">[] = [
+    { value: "both", label: "Both", colorClass: "bg-blue-500 text-white" },
+    { value: "local", label: "Local", colorClass: "bg-green-500 text-white" },
+    { value: "abroad", label: "Abroad", colorClass: "bg-purple-500 text-white" },  
+  ];
 
   // Filter columns based on selected filter
   const filteredColumns = YEAR_TABLE_COLUMNS.filter(
@@ -30,40 +42,11 @@ export function TripsByYear() {
   return (
     <>
       <DashboardCard title="Trips by Year">
-        {/* Toggle */}
-        <div className="flex gap-2 mb-4 mt-6">
-          <button
-            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-              filter === "both"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700"
-            }`}
-            onClick={() => setFilter("both")}
-          >
-            Both
-          </button>
-          <button
-            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-              filter === "local"
-                ? "bg-green-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700"
-            }`}
-            onClick={() => setFilter("local")}
-          >
-            Local
-          </button>
-          <button
-            className={`px-3 py-1 rounded-full text-sm font-semibold ${
-              filter === "abroad"
-                ? "bg-purple-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700"
-            }`}
-            onClick={() => setFilter("abroad")}
-          >
-            Abroad
-          </button>
-        </div>
-        {/* Chart */}
+        <SegmentedToggle
+          value={filter}
+          options={filterOptions}
+          onChange={setFilter}
+        />
         <div className="w-full h-64 mb-6">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={tripsByYearData}>
@@ -91,9 +74,7 @@ export function TripsByYear() {
           </ResponsiveContainer>
         </div>
       </DashboardCard>
-
-      {/* Table */}
-      <DashboardCard title="Trips per Year" className="mt-6">
+      <DashboardCard title="Yearly Trip Breakdown" className="mt-6">
         <div className="overflow-x-auto">
           <Table columns={filteredColumns} data={tripsByYearData} />
         </div>
