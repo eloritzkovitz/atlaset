@@ -45,6 +45,18 @@ export function ExplorationStats({
     visited
   );
 
+  // If showing all countries (world view)
+  if (selectedRegion === "All Countries") {
+    return (
+      <div>
+        <SubregionCountryList
+          countries={filteredCountries}
+          visitedCountryCodes={visited.visitedCountryCodes}
+        />
+      </div>
+    );
+  }
+
   // If a region is selected, show country grid for region or subregion
   if (selectedRegion) {
     const region = regionStats.find((r) => r.region === selectedRegion);
@@ -81,6 +93,10 @@ export function ExplorationStats({
         visited={visitedCountries}
         total={totalCountries}
         loading={loading}
+        onShowAllCountries={() => {
+          setSelectedRegion("All Countries");
+          setSelectedSubregion(null);
+        }}
       />
       <div className="grid gap-6 md:grid-cols-2">
         {regionStats.map((region) => (

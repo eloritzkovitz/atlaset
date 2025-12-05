@@ -5,18 +5,23 @@ interface WorldExplorationCardProps {
   visited: number;
   total: number;
   loading?: boolean;
+  onShowAllCountries?: () => void;
 }
 
 export function WorldExplorationCard({
   visited,
   total,
   loading = false,
+  onShowAllCountries,
 }: WorldExplorationCardProps) {
   return (
     <Card
-      className="flex flex-col items-center mb-8 bg-gray-200 dark:bg-gray-800 shadow-lg p-6"
+      className="flex flex-col items-center mb-8 bg-gray-200 dark:bg-gray-800 shadow-lg p-6 cursor-pointer"
       loading={loading}
       skeletonLines={3}
+      onClick={onShowAllCountries}
+      title="Show all countries"
+      aria-label="Show all countries"
     >
       {!loading && (
         <>
@@ -36,7 +41,7 @@ export function WorldExplorationCard({
                 }}
               />
             </div>
-          </div>
+          </div>          
         </>
       )}
     </Card>

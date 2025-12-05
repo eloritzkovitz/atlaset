@@ -5,6 +5,9 @@ interface CardProps {
   children: React.ReactNode;
   loading?: boolean;
   skeletonLines?: number;
+  onClick?: () => void;
+  title?: string;
+  ariaLabel?: string;
 }
 
 export function Card({
@@ -12,11 +15,25 @@ export function Card({
   children,
   loading = false,
   skeletonLines = 3,
+  onClick,
+  title,
+  ariaLabel,
 }: CardProps) {
+  const clickable = !!onClick;
+  const baseClass =
+    `bg-gray-50 dark:bg-gray-800 rounded-2xl shadow p-5 ` +
+    (clickable ? "cursor-pointer transition hover:shadow-lg " : "") +
+    className;
+
   if (loading) {
     return (
       <div
-        className={`bg-gray-50 dark:bg-gray-800 rounded-2xl shadow p-5 animate-pulse ${className}`}
+        className={baseClass}
+        title={title}
+        aria-label={ariaLabel}
+        tabIndex={clickable ? 0 : undefined}
+        onClick={onClick}
+        role={clickable ? "button" : undefined}
       >
         {Array.from({ length: skeletonLines }).map((_, idx) => (
           <div
@@ -31,7 +48,12 @@ export function Card({
   }
   return (
     <div
-      className={`bg-gray-50 dark:bg-gray-800 rounded-2xl shadow p-5 ${className}`}
+      className={baseClass}
+      title={title}
+      aria-label={ariaLabel}
+      tabIndex={clickable ? 0 : undefined}
+      onClick={onClick}
+      role={clickable ? "button" : undefined}
     >
       {children}
     </div>
