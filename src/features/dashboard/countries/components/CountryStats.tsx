@@ -72,7 +72,7 @@ export function CountryStats({
           <h1 className="text-2xl font-bold mb-4">{selectedCountry.name}</h1>
           <VisitedStatusIndicator
             visited={visited.isCountryVisited(selectedCountry.isoCode)}
-            isHome={!!homeCountry}
+            isHome={selectedCountry.isoCode === homeCountry}
           />
         </span>
         <CountryDetailsContent
