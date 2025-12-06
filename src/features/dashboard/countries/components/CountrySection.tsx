@@ -2,9 +2,8 @@ import { useState } from "react";
 import { FaThLarge, FaList, FaGlobe, FaCheckCircle } from "react-icons/fa";
 import { ActionButton, SearchInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
-import { sortCountries } from "@features/countries";
+import { CountryDisplayPanel, sortCountries } from "@features/countries";
 import type { Country } from "@types";
-import { CountryDisplay } from "./CountryDisplay";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -82,10 +81,12 @@ export function CountrySection({
           className="h-10 w-10 flex items-center justify-center rounded-full text-2xl transition hover:bg-gray-700 dark:hover:bg-gray-600"
         />
       </div>
-      <CountryDisplay
+      <CountryDisplayPanel
         countries={sortedCountries}
         visitedCountryCodes={visitedCountryCodes}
         view={viewMode}
+        showFlags={true}
+        showBadges={false}
       />
     </div>
   );
