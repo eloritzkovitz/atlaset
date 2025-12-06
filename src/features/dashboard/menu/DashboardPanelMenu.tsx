@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
 import { Panel, SubmenuSection } from "@components";
-import { EXPLORATION_SUBMENU, TRIPS_SUBMENU } from "./menu";
+import { COUNTRIES_SUBMENU, TRIPS_SUBMENU } from "./menu";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;
@@ -12,7 +12,7 @@ export function DashboardPanelMenu({
   selectedPanel,
   setSelectedPanel,
 }: DashboardPanelMenuProps) {
-  const [explorationExpanded, setExplorationExpanded] = useState(true);
+  const [countriesExpanded, setCountriesExpanded] = useState(true);
   const [tripsExpanded, setTripsExpanded] = useState(true);
 
   return (
@@ -29,9 +29,9 @@ export function DashboardPanelMenu({
         <SubmenuSection
           icon={<FaGlobe />}
           label="Countries"
-          expanded={explorationExpanded}
-          onToggle={() => setExplorationExpanded((e) => !e)}
-          submenu={EXPLORATION_SUBMENU}
+          expanded={countriesExpanded}
+          onToggle={() => setCountriesExpanded((e) => !e)}
+          submenu={COUNTRIES_SUBMENU}
           selectedPanel={selectedPanel}
           setSelectedPanel={setSelectedPanel}
         />

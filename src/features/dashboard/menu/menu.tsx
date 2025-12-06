@@ -36,9 +36,9 @@ export const PANEL_BREADCRUMBS: Record<
   ],
 };
 
-export const EXPLORATION_SUBMENU = [
+export const COUNTRIES_SUBMENU = [
   {
-    key: "exploration",
+    key: "countries",
     label: "Overview",
     icon: <FaCompass />,
   },
