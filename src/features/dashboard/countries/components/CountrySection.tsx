@@ -8,6 +8,8 @@ import type { Country } from "@types";
 interface CountrySectionProps {
   countries: Country[];
   visitedCountryCodes: string[];
+  selectedIsoCode: string | null;
+  setSelectedIsoCode: (isoCode: string | null) => void;
   initialView?: "grid" | "list";
   className?: string;
 }
@@ -15,6 +17,8 @@ interface CountrySectionProps {
 export function CountrySection({
   countries,
   visitedCountryCodes,
+  selectedIsoCode,
+  setSelectedIsoCode,
   initialView = "grid",
   className = "",
 }: CountrySectionProps) {
@@ -87,6 +91,8 @@ export function CountrySection({
         view={viewMode}
         showFlags={true}
         showBadges={false}
+        selectedIsoCode={selectedIsoCode}
+        onCountryInfo={(country) => setSelectedIsoCode(country.isoCode)}
       />
     </div>
   );

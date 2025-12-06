@@ -1,4 +1,5 @@
 // Components
+export { CountryDetailsContent } from "./components/countryDetails/CountryDetailsContent";
 export { CountryDisplayPanel } from "./components/countryDisplay/CountryDisplayPanel";
 export { CountrySelectModal } from "./components/countrySelect/CountrySelectModal";
 export { CountryWithFlag } from "./components/countryFlag/CountryWithFlag";

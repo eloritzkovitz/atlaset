@@ -9,18 +9,12 @@ import {
   PanelHeader,
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import {
-  CountryFlag,
-  CountryWithFlag,
-  getSovereigntyInfoForTerritory,
-} from "@features/countries";
+import { CountryDetailsContent, CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { Country } from "@types";
-import { CountryInfoTable } from "./CountryInfoTable";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
-import { SovereigntyBadge } from "./SovereigntyBadge";
 import { VisitedStatusIndicator } from "./VisitedStatusIndicator";
 
 interface CountryDetailsModalProps {
@@ -62,11 +56,6 @@ export function CountryDetailsModal({
     ["x", "X"],
     isOpen
   );
-
-  // Get sovereignty info
-  const sovereigntyInfo = country
-    ? getSovereigntyInfoForTerritory(country.isoCode)
-    : undefined;
 
   // Show loading or error states
   if (loading) return <LoadingSpinner message="Loading..." />;
@@ -154,23 +143,7 @@ export function CountryDetailsModal({
               className="action-btn action-btn-close"
             />
           </PanelHeader>
-          {country.sovereigntyType && sovereigntyInfo && (
-            <SovereigntyBadge
-              type={country.sovereigntyType}
-              sovereign={sovereigntyInfo.sovereign}
-            />
-          )}
-          <CountryFlag
-            flag={{
-              isoCode: country.isoCode,
-              source: "flagcdn",
-              style: "flat",
-              size: "64",
-            }}
-            alt={`${country.name} flag`}
-            className="block mx-auto mb-4 h-16 w-auto"
-          />
-          <CountryInfoTable country={country} currencies={currencies} />
+          <CountryDetailsContent country={country} currencies={currencies} />
         </div>
       </Modal>
     </div>

@@ -7,12 +7,16 @@ import { CountrySection } from "./CountrySection";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
 import { useExplorationStats } from "../hooks/useExplorationStats";
+import { CountryDetailsContent } from "@features/countries/components/countryDetails/CountryDetailsContent";
 
 interface CountryStatsProps {
   selectedRegion: string | null;
-  setSelectedRegion: (r: string | null) => void;
+  setSelectedRegion: (region: string) => void;
   selectedSubregion: string | null;
-  setSelectedSubregion: (s: string | null) => void;
+  setSelectedSubregion: (region: string, subregion: string) => void;
+  selectedIsoCode: string | null;
+  setSelectedIsoCode: (isoCode: string | null) => void;
+  onShowAllCountries: () => void;
 }
 
 export function CountryStats({
@@ -20,8 +24,11 @@ export function CountryStats({
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
+  selectedIsoCode,
+  setSelectedIsoCode,
+  onShowAllCountries,
 }: CountryStatsProps) {
-  const { countries, loading: countriesLoading } = useCountryData();
+  const { countries, loading: countriesLoading, currencies } = useCountryData();
   const visited = useVisitedCountries();
 
   // Toggle state for country type and view mode
@@ -44,13 +51,32 @@ export function CountryStats({
     filteredCountries,
     visited
   );
- 
+
+  const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);
+
+  // If a country is selected, show its details
+  if (selectedCountry) {
+    return (
+      <div>
+        <button onClick={() => setSelectedIsoCode(null)} className="mb-4">
+          Back
+        </button>
+        <CountryDetailsContent
+          country={selectedCountry}
+          currencies={currencies}
+        />
+      </div>
+    );
+  }
+
   // If showing all countries (world view)
   if (selectedRegion === "All Countries") {
     return (
       <CountrySection
         countries={filteredCountries}
         visitedCountryCodes={visited.visitedCountryCodes}
+        selectedIsoCode={selectedIsoCode}
+        setSelectedIsoCode={setSelectedIsoCode}
       />
     );
   }
@@ -68,6 +94,8 @@ export function CountryStats({
       <CountrySection
         countries={countriesToShow}
         visitedCountryCodes={visited.visitedCountryCodes}
+        selectedIsoCode={selectedIsoCode}
+        setSelectedIsoCode={setSelectedIsoCode}
       />
     );
   }
@@ -88,10 +116,7 @@ export function CountryStats({
         visited={visitedCountries}
         total={totalCountries}
         loading={loading}
-        onShowAllCountries={() => {
-          setSelectedRegion("All Countries");
-          setSelectedSubregion(null);
-        }}
+        onShowAllCountries={onShowAllCountries}
       />
       <div className="grid gap-6 md:grid-cols-2">
         {regionStats.map((region) => (
@@ -102,14 +127,8 @@ export function CountryStats({
             total={region.regionCountries.length}
             subregions={region.subregions}
             loading={loading}
-            onRegionClick={() => {
-              setSelectedRegion(region.region);
-              setSelectedSubregion(null);
-            }}
-            onSubregionClick={(sub) => {
-              setSelectedRegion(region.region);
-              setSelectedSubregion(sub);
-            }}
+            onRegionClick={() => setSelectedRegion(region.region)}
+            onSubregionClick={(sub) => setSelectedSubregion(region.region, sub)}
           />
         ))}
       </div>

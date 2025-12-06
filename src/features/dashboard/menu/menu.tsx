@@ -11,26 +11,26 @@ export const PANEL_BREADCRUMBS: Record<
   { label: string; key?: string }[]
 > = {
   countries: [
-    { label: "Dashboard", key: "countries" },
+    { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries" },
   ],
   "trips-overview": [
-    { label: "Dashboard", key: "countries" },
+    { label: "Dashboard", key: "dashboard" },
     { label: "Trips", key: "trips-overview" },
     { label: "Overview" },
   ],
   "trips-history": [
-    { label: "Dashboard", key: "countries" },
+    { label: "Dashboard", key: "dashboard" },
     { label: "Trips", key: "trips-overview" },
     { label: "History" },
   ],
   "trips-month": [
-    { label: "Dashboard", key: "countries" },
+    { label: "Dashboard", key: "dashboard" },
     { label: "Trips", key: "trips-overview" },
     { label: "By Month" },
   ],
   "trips-year": [
-    { label: "Dashboard", key: "countries" },
+    { label: "Dashboard", key: "dashboard" },
     { label: "Trips", key: "trips-overview" },
     { label: "By Year" },
   ],

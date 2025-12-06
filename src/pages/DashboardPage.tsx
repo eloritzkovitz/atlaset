@@ -1,5 +1,9 @@
-import { useState } from "react";
-import { Breadcrumbs, type Crumb, ErrorMessage, LoadingSpinner } from "@components";
+import {
+  Breadcrumbs,
+  type Crumb,
+  ErrorMessage,
+  LoadingSpinner,
+} from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DashboardPanelMenu,
@@ -8,55 +12,45 @@ import {
   TripsByMonth,
   TripsByYear,
   TripsStats,
+  useDashboardNavigation,
 } from "@features/dashboard";
 import { PANEL_BREADCRUMBS } from "@features/dashboard/menu/menu";
 
 export default function DashboardPage() {
-  const [selectedPanel, setSelectedPanel] = useState("countries");
   const { loading, error } = useCountryData();
 
-  // State for selected region and subregion
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
-  const [selectedSubregion, setSelectedSubregion] = useState<string | null>(
-    null
-  );
+  const {
+    selectedPanel,
+    setSelectedPanel,
+    selectedRegion,
+    setSelectedRegion,
+    selectedSubregion,
+    setSelectedSubregion,
+    selectedIsoCode,
+    setSelectedIsoCode,
+    selectedCountry,
+    handleShowAllCountries,
+    handleCrumbClick,
+  } = useDashboardNavigation();
+
+  // Construct breadcrumbs dynamically
+  const breadcrumbs: Crumb[] = [
+    ...(PANEL_BREADCRUMBS[selectedPanel] || []),
+    selectedRegion && { label: selectedRegion, key: "region" },
+    selectedSubregion && { label: selectedSubregion, key: "subregion" },
+    selectedCountry && { label: selectedCountry.name, key: "country" },
+  ].filter(Boolean) as Crumb[];
 
   // Handle loading and error states
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
-
-  // Construct breadcrumbs
-  const breadcrumbs: Crumb[] = [
-    ...(PANEL_BREADCRUMBS[selectedPanel] || []),
-    selectedRegion && { label: selectedRegion, key: "region" },
-    selectedSubregion && { label: selectedSubregion, key: "countries" },
-  ].filter(Boolean) as Crumb[];
-
-  // Breadcrumb click handler
-  const handleCrumbClick = (key: string) => {
-    if (key === "countries") {
-      setSelectedRegion(null);
-      setSelectedSubregion(null);
-    } else if (key === "region") {
-      setSelectedSubregion(null);
-    } else {
-      handlePanelChange(key);
-    }
-  };
-
-  // Reset region/subregion when switching panels
-  const handlePanelChange = (key: string) => {
-    setSelectedPanel(key);
-    setSelectedRegion(null);
-    setSelectedSubregion(null);
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}
-          setSelectedPanel={handlePanelChange}
+          setSelectedPanel={setSelectedPanel}
         />
         <div className="flex-1">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
@@ -66,6 +60,9 @@ export default function DashboardPage() {
               setSelectedRegion={setSelectedRegion}
               selectedSubregion={selectedSubregion}
               setSelectedSubregion={setSelectedSubregion}
+              selectedIsoCode={selectedIsoCode}
+              setSelectedIsoCode={setSelectedIsoCode}
+              onShowAllCountries={handleShowAllCountries}
             />
           )}
           {selectedPanel === "trips-overview" && <TripsStats />}
