@@ -1,13 +1,15 @@
 import { useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
 import { SegmentedToggle } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
+import { CountryDetailsContent, VisitedStatusIndicator } from "@features/countries";
+import { useHomeCountry } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { useDelayedLoading } from "@hooks/useDelayedLoading";
 import { CountrySection } from "./CountrySection";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
 import { useExplorationStats } from "../hooks/useExplorationStats";
-import { CountryDetailsContent } from "@features/countries/components/countryDetails/CountryDetailsContent";
 
 interface CountryStatsProps {
   selectedRegion: string | null;
@@ -29,6 +31,7 @@ export function CountryStats({
   onShowAllCountries,
 }: CountryStatsProps) {
   const { countries, loading: countriesLoading, currencies } = useCountryData();
+  const { homeCountry } = useHomeCountry();
   const visited = useVisitedCountries();
 
   // Toggle state for country type and view mode
@@ -58,9 +61,20 @@ export function CountryStats({
   if (selectedCountry) {
     return (
       <div>
-        <button onClick={() => setSelectedIsoCode(null)} className="mb-4">
+        <button
+          onClick={() => setSelectedIsoCode(null)}
+          className="mb-4 flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300"
+        >
+          <FaArrowLeft className="text-base" />
           Back
         </button>
+        <span className="flex items-center gap-4 mb-4">
+          <h1 className="text-2xl font-bold mb-4">{selectedCountry.name}</h1>
+          <VisitedStatusIndicator
+            visited={visited.isCountryVisited(selectedCountry.isoCode)}
+            isHome={!!homeCountry}
+          />
+        </span>
         <CountryDetailsContent
           country={selectedCountry}
           currencies={currencies}

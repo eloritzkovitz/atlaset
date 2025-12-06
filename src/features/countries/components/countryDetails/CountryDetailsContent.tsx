@@ -1,8 +1,8 @@
-import { CountryFlag } from "@features/countries/components/countryFlag/CountryFlag";
-import { SovereigntyBadge } from "./SovereigntyBadge";
-import { CountryInfoTable } from "./CountryInfoTable";
 import { getSovereigntyInfoForTerritory } from "@features/countries";
 import type { Country } from "@types";
+import { SovereigntyBadge } from "./SovereigntyBadge";
+import { CountryInfoTable } from "./CountryInfoTable";
+import { CountryFlag } from "../countryFlag/CountryFlag";
 
 interface CountryDetailsContentProps {
   country: Country;
@@ -28,10 +28,10 @@ export function CountryDetailsContent({
           isoCode: country.isoCode,
           source: "flagcdn",
           style: "flat",
-          size: "64",
+          size: "128",
         }}
         alt={`${country.name} flag`}
-        className="block mx-auto mb-4 h-16 w-auto"
+        className="block mx-auto mb-4 h-32 w-auto"
       />
       <CountryInfoTable country={country} currencies={currencies} />
     </div>

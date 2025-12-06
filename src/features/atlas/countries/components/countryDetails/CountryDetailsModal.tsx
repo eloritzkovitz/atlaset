@@ -9,13 +9,16 @@ import {
   PanelHeader,
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { CountryDetailsContent, CountryWithFlag } from "@features/countries";
+import {
+  CountryDetailsContent,
+  CountryWithFlag,
+  VisitedStatusIndicator,
+} from "@features/countries";
 import { useHomeCountry } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { Country } from "@types";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
-import { VisitedStatusIndicator } from "./VisitedStatusIndicator";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
