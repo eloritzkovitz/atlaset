@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
 import { Panel, SubmenuSection } from "@components";
-import { COUNTRIES_SUBMENU, TRIPS_SUBMENU } from "./menu";
+import {
+  COUNTRIES_SUBMENU,
+  TRIPS_SUBMENU,
+} from "@features/dashboard/navigation/config/menu";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;

@@ -1,3 +1,4 @@
+import { Route, Routes } from "react-router-dom";
 import {
   Breadcrumbs,
   type Crumb,
@@ -14,34 +15,38 @@ import {
   TripsStats,
   useDashboardNavigation,
 } from "@features/dashboard";
-import { PANEL_BREADCRUMBS } from "@features/dashboard/menu/menu";
+import { useDashboardRouteState } from "@features/dashboard/countries/hooks/useDashboardRouteState";
+import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/breadcrumbs";
 
 export default function DashboardPage() {
-  const { loading, error } = useCountryData();
-
+  const { countries, loading, error } = useCountryData();
   const {
     selectedPanel,
-    setSelectedPanel,
     selectedRegion,
-    setSelectedRegion,
     selectedSubregion,
-    setSelectedSubregion,
     selectedIsoCode,
-    setSelectedIsoCode,
     selectedCountry,
+  } = useDashboardRouteState();
+
+  // Breadcrumbs
+  const breadcrumbs: Crumb[] = getDashboardBreadcrumbs(
+    selectedPanel,
+    selectedRegion,
+    selectedSubregion,
+    selectedCountry
+  );
+
+  // Navigation handlers
+  const {
+    handlePanelChange,
+    handleRegionSelect,
+    handleSubregionSelect,
+    handleCountrySelect,
     handleShowAllCountries,
     handleCrumbClick,
-  } = useDashboardNavigation();
+  } = useDashboardNavigation(countries, selectedRegion, selectedSubregion);
 
-  // Construct breadcrumbs dynamically
-  const breadcrumbs: Crumb[] = [
-    ...(PANEL_BREADCRUMBS[selectedPanel] || []),
-    selectedRegion && { label: selectedRegion, key: "region" },
-    selectedSubregion && { label: selectedSubregion, key: "subregion" },
-    selectedCountry && { label: selectedCountry.name, key: "country" },
-  ].filter(Boolean) as Crumb[];
-
-  // Handle loading and error states
+  // Loading and error states
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
 
@@ -50,25 +55,62 @@ export default function DashboardPage() {
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={selectedPanel}
-          setSelectedPanel={setSelectedPanel}
+          setSelectedPanel={handlePanelChange}
         />
         <div className="flex-1">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
-          {selectedPanel === "countries" && (
-            <CountryStats
-              selectedRegion={selectedRegion}
-              setSelectedRegion={setSelectedRegion}
-              selectedSubregion={selectedSubregion}
-              setSelectedSubregion={setSelectedSubregion}
-              selectedIsoCode={selectedIsoCode}
-              setSelectedIsoCode={setSelectedIsoCode}
-              onShowAllCountries={handleShowAllCountries}
+          <Routes>
+            {/* Overview page */}
+            <Route
+              path="countries"
+              element={
+                <CountryStats
+                  selectedRegion={null}
+                  setSelectedRegion={handleRegionSelect}
+                  selectedSubregion={null}
+                  setSelectedSubregion={handleSubregionSelect}
+                  selectedIsoCode={null}
+                  setSelectedIsoCode={handleCountrySelect}
+                  onShowAllCountries={handleShowAllCountries}
+                />
+              }
             />
-          )}
-          {selectedPanel === "trips-overview" && <TripsStats />}
-          {selectedPanel === "trips-history" && <TripHistory />}
-          {selectedPanel === "trips-month" && <TripsByMonth />}
-          {selectedPanel === "trips-year" && <TripsByYear />}
+            {/* All countries page */}
+            <Route
+              path="countries/all"
+              element={
+                <CountryStats
+                  selectedRegion="all"
+                  setSelectedRegion={handleRegionSelect}
+                  selectedSubregion={null}
+                  setSelectedSubregion={handleSubregionSelect}
+                  selectedIsoCode={null}
+                  setSelectedIsoCode={handleCountrySelect}
+                  onShowAllCountries={handleShowAllCountries}
+                />
+              }
+            />
+            {/* Region, subregion, and country details */}
+            <Route
+              path="countries/:region/:subregion?/:isoCode?"
+              element={
+                <CountryStats
+                  selectedRegion={selectedRegion}
+                  setSelectedRegion={handleRegionSelect}
+                  selectedSubregion={selectedSubregion}
+                  setSelectedSubregion={handleSubregionSelect}
+                  selectedIsoCode={selectedIsoCode}
+                  setSelectedIsoCode={handleCountrySelect}
+                  onShowAllCountries={handleShowAllCountries}
+                />
+              }
+            />
+            {/* Other dashboard panels */}
+            <Route path="trips-overview" element={<TripsStats />} />
+            <Route path="trips-history" element={<TripHistory />} />
+            <Route path="trips-month" element={<TripsByMonth />} />
+            <Route path="trips-year" element={<TripsByYear />} />
+          </Routes>
         </div>
       </div>
     </div>

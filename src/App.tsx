@@ -51,7 +51,7 @@ function App() {
                     </Suspense>
                   }
                 />
-                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/dashboard/*" element={<DashboardPage />} />
                 <Route path="/game" element={<GamesPage />} />
                 <Route path="/trips" element={<TripsPage />} />
               </Routes>

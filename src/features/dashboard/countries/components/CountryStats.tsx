@@ -84,7 +84,7 @@ export function CountryStats({
   }
 
   // If showing all countries (world view)
-  if (selectedRegion === "All Countries") {
+  if (selectedRegion === "all") {
     return (
       <CountrySection
         countries={filteredCountries}

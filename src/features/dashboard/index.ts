@@ -1,5 +1,5 @@
 // Components
-export { DashboardPanelMenu } from "./menu/DashboardPanelMenu";
+export { DashboardPanelMenu } from "./navigation/components/DashboardPanelMenu";
 export { CountryStats } from "./countries/components/CountryStats";
 export { TripsStats } from "./trips/components/TripsStats";
 export { TripHistory } from "./trips/components/TripHistory";
