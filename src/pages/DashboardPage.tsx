@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import {
   Breadcrumbs,
   type Crumb,
@@ -22,6 +22,7 @@ export default function DashboardPage() {
   const { countries, loading, error } = useCountryData();
   const {
     selectedPanel,
+    menuSelectedPanel,
     selectedRegion,
     selectedSubregion,
     selectedIsoCode,
@@ -54,15 +55,19 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
-          selectedPanel={selectedPanel}
+          selectedPanel={menuSelectedPanel}
           setSelectedPanel={handlePanelChange}
         />
         <div className="flex-1">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           <Routes>
+            {/* Redirect /dashboard to /dashboard/countries/overview */}
+            <Route path="" element={<Navigate to="countries/overview" replace />} />
+            <Route path="countries" element={<Navigate to="/dashboard/countries/overview" replace />} />
+
             {/* Overview page */}
             <Route
-              path="countries"
+              path="countries/overview"
               element={
                 <CountryStats
                   selectedRegion={null}
@@ -106,10 +111,10 @@ export default function DashboardPage() {
               }
             />
             {/* Other dashboard panels */}
-            <Route path="trips-overview" element={<TripsStats />} />
-            <Route path="trips-history" element={<TripHistory />} />
-            <Route path="trips-month" element={<TripsByMonth />} />
-            <Route path="trips-year" element={<TripsByYear />} />
+            <Route path="trips/overview" element={<TripsStats />} />
+            <Route path="trips/history" element={<TripHistory />} />
+            <Route path="trips/month" element={<TripsByMonth />} />
+            <Route path="trips/year" element={<TripsByYear />} />
           </Routes>
         </div>
       </div>

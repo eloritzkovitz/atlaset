@@ -78,7 +78,6 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
             icon={<FaChartSimple size={24} />}
             label="Dashboard"
             expanded={expanded}
-            end
           />
           <SidebarMenuLink
             to="/game"

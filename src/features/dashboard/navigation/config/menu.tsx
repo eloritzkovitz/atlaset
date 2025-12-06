@@ -8,7 +8,7 @@ import {
 
 export const COUNTRIES_SUBMENU = [
   {
-    key: "countries",
+    key: "countries/overview",
     label: "Overview",
     icon: <FaCompass />,
   },
@@ -16,22 +16,22 @@ export const COUNTRIES_SUBMENU = [
 
 export const TRIPS_SUBMENU = [
   {
-    key: "trips-overview",
+    key: "trips/overview",
     label: "Overview",
     icon: <FaChartPie />,
   },
   {
-    key: "trips-history",
+    key: "trips/history",
     label: "History",
     icon: <FaClockRotateLeft />,
   },
   {
-    key: "trips-month",
+    key: "trips/month",
     label: "By Month",
     icon: <FaCalendarDays />,
   },
   {
-    key: "trips-year",
+    key: "trips/year",
     label: "By Year",
     icon: <FaRegCalendarDays />,
   },

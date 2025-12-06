@@ -6,24 +6,34 @@ const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries" },
   ],
-  "trips-overview": [
+  "countries/all": [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips-overview" },
+    { label: "Countries", key: "countries/all" },
+    { label: "All Countries" },
+  ],
+  "countries/overview": [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Countries", key: "countries/overview" },
     { label: "Overview" },
   ],
-  "trips-history": [
+  "trips/overview": [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips-overview" },
+    { label: "Trips", key: "trips/overview" },
+    { label: "Overview" },
+  ],
+  "trips/history": [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Trips", key: "trips/overview" },
     { label: "History" },
   ],
-  "trips-month": [
+  "trips/month": [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips-overview" },
+    { label: "Trips", key: "trips/overview" },
     { label: "By Month" },
   ],
-  "trips-year": [
+  "trips/year": [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips-overview" },
+    { label: "Trips", key: "trips/overview" },
     { label: "By Year" },
   ],
 };
@@ -42,13 +52,23 @@ export function getDashboardBreadcrumbs(
   selectedSubregion: string | null,
   selectedCountry: { name: string } | null
 ): Crumb[] {
-  return [
-    ...(PANEL_BREADCRUMBS[selectedPanel] || []),
-    selectedRegion && {
-      label: selectedRegion === "all" ? "All Countries" : selectedRegion,
-      key: "region",
-    },
-    selectedSubregion && { label: selectedSubregion, key: "subregion" },
-    selectedCountry && { label: selectedCountry.name, key: "country" },
-  ].filter(Boolean) as Crumb[];
+  const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
+
+  // Only add dynamic crumbs for countries panel
+  if (selectedPanel === "countries" || selectedPanel.startsWith("countries/")) {
+    if (selectedRegion) {
+      crumbs.push({
+        label: selectedRegion === "all" ? "All Countries" : selectedRegion,
+        key: "region",
+      });
+    }
+    if (selectedSubregion) {
+      crumbs.push({ label: selectedSubregion, key: "subregion" });
+    }
+    if (selectedCountry) {
+      crumbs.push({ label: selectedCountry.name, key: "country" });
+    }
+  }
+
+  return crumbs;
 }

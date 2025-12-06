@@ -11,17 +11,40 @@ export function useDashboardRouteState() {
   const location = useLocation();
 
   const pathParts = location.pathname.replace(/^\/dashboard\/?/, "").split("/");
-  const selectedPanel = pathParts[0] || "countries";
+
+  let selectedPanel = pathParts[0] || "countries";
+  if (
+    (selectedPanel === "countries" || selectedPanel === "trips") &&
+    pathParts[1] &&
+    ["overview", "history", "month", "year", "all"].includes(pathParts[1])
+  ) {
+    selectedPanel = `${selectedPanel}/${pathParts[1]}`;
+  }
+
+  const isCountriesPanel = selectedPanel.startsWith("countries");
+
+  // Normalized for menu selection only
+  let menuSelectedPanel = selectedPanel;
+  if (isCountriesPanel && selectedPanel !== "countries/overview") {
+    menuSelectedPanel = "countries/overview";
+  }
+
   const regionParam =
-    pathParts[1] && pathParts[1] !== "undefined"
+    isCountriesPanel &&
+    pathParts[1] &&
+    !["overview", "all"].includes(pathParts[1])
       ? decodeURIComponent(pathParts[1])
       : null;
   const subregionParam =
-    pathParts[2] && pathParts[2] !== "undefined"
+    isCountriesPanel &&
+    pathParts[2] &&
+    !["overview", "all"].includes(pathParts[1])
       ? decodeURIComponent(pathParts[2])
       : null;
   const isoCodeParam =
-    pathParts[3] && pathParts[3] !== "undefined"
+    isCountriesPanel &&
+    pathParts[3] &&
+    !["overview", "all"].includes(pathParts[1])
       ? decodeURIComponent(pathParts[3])
       : null;
 
@@ -38,6 +61,7 @@ export function useDashboardRouteState() {
 
   return {
     selectedPanel,
+    menuSelectedPanel,
     selectedRegion,
     selectedSubregion,
     selectedIsoCode,
