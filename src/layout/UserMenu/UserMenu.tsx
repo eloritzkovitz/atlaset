@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
-import { logout } from "@services/authService";
+import { useAuthHandlers } from "@features/auth";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 
@@ -14,11 +14,8 @@ export function UserMenu() {
   const { uiVisible } = useUI();
   const navigate = useNavigate();
 
-  // Handle logout
-  const handleLogout = async () => {
-    await logout();
-    setOpen(false);
-  };
+  // Get the logout handler from useAuthHandlers
+  const { handleLogout } = useAuthHandlers();
 
   // Don't render if UI is not visible
   if (!uiVisible) return null;
