@@ -26,7 +26,7 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 - **Export maps:** Export your maps as SVG or PNG images
 
 ### **Overlays & Markers**
-- **User=defined overlays:** Create and manage custom map overlays
+- **User-defined overlays:** Create and manage custom map overlays
 - **Overlay import/export:** Backup, share, or migrate overlays directly from the UI
 - **Markers:** Add, edit, and remove markers on the map for any location
 
