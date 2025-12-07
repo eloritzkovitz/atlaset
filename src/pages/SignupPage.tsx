@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { AuthForm, useAuthHandlers } from "@features/auth";
+import { AuthForm, AuthLayout, useAuthHandlers } from "@features/auth";
 
 export default function SignupPage() {
   const { error, handleSignUp, handleGoogleSignIn } = useAuthHandlers();
 
   return (
-    <div className="min-h-screen bg-gray-700 flex flex-col justify-center">
-      <div className="max-w-md mx-auto p-6 bg-white rounded shadow">
+    <AuthLayout>
+      <div className="max-w-md w-full p-6 bg-white rounded shadow">
         <h2 className="text-2xl font-bold mb-4">
           Track your journeys and adventures around the world
         </h2>
@@ -27,6 +27,6 @@ export default function SignupPage() {
           Sign In
         </Link>
       </div>
-    </div>
+    </AuthLayout>
   );
 }

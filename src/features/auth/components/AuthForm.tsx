@@ -53,6 +53,7 @@ export function AuthForm({
         required
         className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
       />
+      <span className="block h-1" />
       <input
         type="password"
         placeholder="Password"
