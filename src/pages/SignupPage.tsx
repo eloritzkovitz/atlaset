@@ -1,29 +1,14 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { AuthForm, GoogleSignInButton } from "@components";
-import { signUp, signInWithGoogle } from "@services/authService";
+import { Link } from "react-router-dom";
+import { AuthForm, GoogleSignInButton, useAuthHandlers } from "@features/auth";
 
 export default function SignupPage() {
-  const [error, setError] = useState("");
-  const navigate = useNavigate();
-
-  // Email/Password Sign-Up handler
-  const handleSignUp = async (email: string, password: string) => {
-    setError("");
-    await signUp(email, password);
-    navigate("/");
-  };
-
-  // Google Sign-Up handler
-  const handleGoogleSignIn = async () => {
-    setError("");
-    await signInWithGoogle();
-    navigate("/");
-  };
+  const { error, handleSignUp, handleGoogleSignIn } = useAuthHandlers();
 
   return (
     <div className="max-w-md mx-auto mt-16 p-6 bg-white rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Track your journeys and adventures around the world</h2>
+      <h2 className="text-2xl font-bold mb-4">
+        Track your journeys and adventures around the world
+      </h2>
       <AuthForm
         mode="signup"
         onSubmit={handleSignUp}
