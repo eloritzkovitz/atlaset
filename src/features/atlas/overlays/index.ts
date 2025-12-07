@@ -7,6 +7,9 @@ export { useOverlayItems } from "./hooks/useOverlayItems";
 export { useTimelineOverlayItems } from "./hooks/useTimelineOverlayItems";
 export { useSyncVisitedCountriesOverlay } from "./hooks/useSyncVisitedCountriesOverlay";
 
+// Services
+export { overlaysService } from "./services/overlaysService";
+
 // Utils
 export { isTimelineOverlay } from "./utils/overlay";
 export {

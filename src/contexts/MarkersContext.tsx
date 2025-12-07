@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { markersService } from "@services/markersService";
+import { markersService } from "@features/atlas/markers";
 import type { Marker } from "@types";
 import { useAuth } from "./AuthContext";
 

@@ -13,7 +13,7 @@ import {
 import type { AnyOverlay } from "@types";
 import { appDb } from "@utils/db";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
-import { db } from "../../firebase";
+import { db } from "../../../../firebase";
 
 export const overlaysService = {
   // Load all overlays from Firestore or IndexedDB

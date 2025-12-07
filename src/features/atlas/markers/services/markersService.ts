@@ -9,7 +9,7 @@ import {
 import type { Marker } from "@types";
 import { appDb } from "@utils/db";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
-import { db } from "../../firebase";
+import { db } from "../../../../firebase";
 
 export const markersService = {
   // Load all markers from Firestore or IndexedDB

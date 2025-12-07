@@ -5,7 +5,7 @@ import {
   signIn,
   signInWithGoogle,
   logout,
-} from "@services/authService";
+} from "../services/authService";
 
 /**
  * Provides authentication handlers for sign-up, sign-in, Google sign-in, and logout.

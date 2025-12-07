@@ -3,7 +3,7 @@ import { defaultSettings } from "@constants/defaultSettings";
 import type { Settings } from "@types";
 import { appDb } from "@utils/db";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 
 export const settingsService = {
   // Load settings from Firestore or IndexedDB

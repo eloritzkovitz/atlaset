@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
+import { overlaysService } from "@features/atlas/overlays";
 import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 import { computeVisitedCountriesFromTrips } from "@features/visits";
-import { overlaysService } from "@services/overlaysService";
 import type { AnyOverlay, Trip } from "@types";
 
 /**
