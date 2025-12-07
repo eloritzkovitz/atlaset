@@ -13,7 +13,7 @@ export function GoogleSignInButton({
     <FormButton
       onClick={onClick}
       variant="secondary"
-      className="w-full flex items-center justify-center gap-2 rounded-full bg-gray-100 shadow hover:bg-gray-200"
+      className="w-full flex items-center justify-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200"
       type="button"
     >
       <svg className="w-5 h-5" viewBox="0 0 48 48" aria-hidden="true">
