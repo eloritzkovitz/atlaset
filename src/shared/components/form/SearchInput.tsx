@@ -46,7 +46,7 @@ export function SearchInput({
 
   return (
     <div
-      className={`relative w-full rounded-lg transition-shadow ${
+      className={`relative w-full rounded-full transition-shadow ${
         isFocused && showRing ? "ring-2 ring-blue-500" : ""
       }`}
     >
@@ -67,7 +67,7 @@ export function SearchInput({
         placeholder={placeholder}
         title={placeholder || "Search"}
         aria-label={placeholder || "Search"}
-        className={`w-full pl-10 pr-10 py-2 bg-gray-100 rounded-lg border border-none text-base focus:outline-none ${className}`}
+        className={`w-full pl-10 pr-10 py-2 bg-gray-100 rounded-full border border-none text-base focus:outline-none ${className}`}
       />
       {value && (
         <button

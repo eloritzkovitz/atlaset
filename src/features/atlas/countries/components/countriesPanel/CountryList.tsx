@@ -1,7 +1,7 @@
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
-import { CountryWithFlag } from "@features/countries";
+import { CountryDisplayPanel } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import type { Country } from "@types";
 import { CountryVisitBadge } from "./CountryVisitBadge";
@@ -30,7 +30,6 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
     },
     ref
   ) => {
-    const highlightIsoCode = hoveredIsoCode || selectedIsoCode;
     const [highlightedIsoCodes, highlightDirection] =
       useHighlightYearlyCountries();
     const { selectedYear, years } = useTimeline();
@@ -52,6 +51,19 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
         });
       });
 
+    // Render country list with badges
+    const renderBadge = (country: Country) => {
+      const isTempHighlight = highlightedIsoCodes.includes(country.isoCode);
+      if (!isTempHighlight) return null;
+      return (
+        <CountryVisitBadge
+          revisit={previouslyVisitedIsoCodes.has(country.isoCode)}
+          count={visitCountByIsoCode[country.isoCode] || 1}
+          direction={highlightDirection}
+        />
+      );
+    };
+
     return (
       <div
         ref={ref}
@@ -67,54 +79,19 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
             onSelect(null);
           }}
         >
-          <ul className="list-none p-0 m-0 w-full">
-            {countries.length === 0 ? (
-              <li className="px-4 py-8 text-center text-gray-400">
-                No countries found
-              </li>
-            ) : (
-              countries.map((country) => {
-                const isHighlighted = highlightIsoCode === country.isoCode;
-                const isTempHighlight = highlightedIsoCodes.includes(
-                  country.isoCode
-                );
-
-                return (
-                  <li
-                    key={country.isoCode}
-                    id={country.isoCode}
-                    onClick={() =>
-                      onCountryInfo
-                        ? onCountryInfo(country)
-                        : onSelect(country.isoCode)
-                    }
-                    onMouseEnter={() => onHover(country.isoCode)}
-                    onMouseLeave={() => onHover(null)}
-                    className={`px-4 py-2 my-1 rounded cursor-pointer flex items-center gap-3 transition
-                    ${
-                      isHighlighted
-                        ? "bg-blue-50 dark:bg-gray-500 font-bold"
-                        : ""
-                    }
-                    ${isTempHighlight ? "text-yellow-500 font-bold" : ""}
-                  `}
-                  >
-                    <CountryWithFlag
-                      isoCode={country.isoCode}
-                      name={country.name}
-                    />
-                    {isTempHighlight && (
-                      <CountryVisitBadge
-                        revisit={previouslyVisitedIsoCodes.has(country.isoCode)}
-                        count={visitCountByIsoCode[country.isoCode] || 1}
-                        direction={highlightDirection}
-                      />
-                    )}
-                  </li>
-                );
-              })
-            )}
-          </ul>
+          <CountryDisplayPanel
+            countries={countries}
+            showAllAsVisited={true}
+            view="list"
+            selectedIsoCode={selectedIsoCode}
+            hoveredIsoCode={hoveredIsoCode}
+            onSelect={onSelect}
+            onHover={onHover}
+            onCountryInfo={onCountryInfo}
+            renderBadge={renderBadge}
+            showBadges={true}
+            showFlags={true}
+          />
         </div>
       </div>
     );

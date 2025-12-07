@@ -5,7 +5,7 @@ import {
   FaLayerGroup,
   FaDownload,
   FaGear,
-  FaClockRotateLeft,
+  FaTimeline,
   FaChevronLeft,
   FaChevronRight,
   FaMap,
@@ -106,7 +106,7 @@ export function MapToolbar({
               ariaLabel="Timeline"
               title="Timeline"
               className="toolbar-btn rounded-full"
-              icon={<FaClockRotateLeft />}
+              icon={<FaTimeline />}
             />
           )}
           <ActionButton

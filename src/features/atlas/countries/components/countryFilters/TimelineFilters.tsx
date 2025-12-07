@@ -1,4 +1,4 @@
-import { FaClockRotateLeft } from "react-icons/fa6";
+import { FaTimeline } from "react-icons/fa6";
 import { CollapsibleHeader, NumberInput, SelectInput } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
@@ -43,7 +43,7 @@ export function TimelineFilters({
   return (
     <>
       <CollapsibleHeader
-        icon={<FaClockRotateLeft />}
+        icon={<FaTimeline />}
         label="Timeline Filters"
         expanded={expanded}
         onToggle={onToggle}

@@ -1,4 +1,4 @@
-import { formatDate, getYear, getYearNumber } from "./date";
+import { formatDate, getMonthName, getYear, getYearNumber } from "./date";
 
 describe("formatDate", () => {
   it("returns empty string for undefined input", () => {
@@ -58,5 +58,35 @@ describe("getYearNumber", () => {
 
   it("returns undefined for invalid date", () => {
     expect(getYearNumber("not-a-date")).toBeUndefined();
+  });
+});
+
+describe("getMonthName", () => {
+  it("returns correct month name for valid index", () => {
+    expect(getMonthName(0)).toBe("Jan");
+    expect(getMonthName(5)).toBe("Jun");
+    expect(getMonthName(11)).toBe("Dec");
+  });
+
+  it("returns undefined for invalid index", () => {
+    expect(getMonthName(-1)).toBeUndefined();
+    expect(getMonthName(12)).toBeUndefined();
+  });
+
+  it("returns all month names when no index is provided", () => {
+    expect(getMonthName()).toEqual([
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ]);
   });
 });

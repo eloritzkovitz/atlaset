@@ -65,6 +65,7 @@ export function TripsTableHeaders({
             sortKey="name"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
             filterValue={filters.name}
             placeholder="Search by name..."
           />
@@ -76,6 +77,7 @@ export function TripsTableHeaders({
             sortKey="countries"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
             filterElement={
               <DropdownSelectInput<string>
                 value={filters.country}
@@ -107,6 +109,7 @@ export function TripsTableHeaders({
             sortKey="year"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
             filterElement={
               <DropdownSelectInput<string>
                 value={filters.year}
@@ -128,6 +131,7 @@ export function TripsTableHeaders({
             sortKey="startDate"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
           />
           {renderResizeHandle("startDate")}
         </th>
@@ -137,6 +141,7 @@ export function TripsTableHeaders({
             sortKey="endDate"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
           />
           {renderResizeHandle("endDate")}
         </th>
@@ -146,6 +151,7 @@ export function TripsTableHeaders({
             sortKey="fullDays"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
           />
           {renderResizeHandle("fullDays")}
         </th>
@@ -155,6 +161,7 @@ export function TripsTableHeaders({
             sortKey="categories"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
             filterElement={
               <DropdownSelectInput<TripCategory>
                 value={filters.categories}
@@ -185,6 +192,7 @@ export function TripsTableHeaders({
             sortKey="status"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
             filterElement={
               <DropdownSelectInput
                 value={filters.status}
@@ -205,6 +213,7 @@ export function TripsTableHeaders({
             sortKey="tags"
             sortBy={sortBy}
             onSort={handleSort}
+            filterable
             filterElement={
               <DropdownSelectInput
                 value={filters.tags}

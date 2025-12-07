@@ -1,4 +1,19 @@
-import { clamp } from "./number";
+import { clamp, percent } from "./number";
+
+describe("percent", () => {
+  it("returns correct percentage string", () => {
+    expect(percent(50, 200)).toBe("25%");
+  });
+
+  it("rounds to nearest whole number", () => {
+    expect(percent(33, 200)).toBe("17%");
+    expect(percent(67, 200)).toBe("34%");
+  });
+  
+  it("returns '0%' when denominator is zero", () => {
+    expect(percent(50, 0)).toBe("0%");
+  });
+});
 
 describe("clamp", () => {
   it("returns the value if within min and max", () => {

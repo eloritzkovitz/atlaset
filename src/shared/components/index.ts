@@ -5,6 +5,16 @@ export { ActionButton } from "./action/ActionButton";
 export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
 
+// Card components
+export { Card } from "./ui/Card/Card";
+export { CardList } from "./ui/Card/CardList";
+export { DashboardCard } from "./ui/Card/DashboardCard";
+export { HomeCard } from "./ui/Card/HomeCard";
+
+// Chart components
+export { PieChart } from "./chart/PieChart";
+export { PieLegendCard } from "./chart/PieLegendCard";
+
 // Feedback components
 export { ErrorMessage } from "./feedback/ErrorMessage";
 export { LoadingSpinner } from "./feedback/LoadingSpinner";
@@ -22,9 +32,11 @@ export { NumberInput } from "./form/NumberInput/NumberInput";
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
 export { Separator } from "./layout/Separator";
+export { Breadcrumbs, type Crumb } from "./layout/Breadcrumbs/Breadcrumbs";
 
 // Menu components
 export { MenuButton } from "./layout/Menu/MenuButton";
+export { SubmenuSection } from "./layout/Menu/SubmenuSection";
 
 // Modal components
 export { ConfirmModal } from "./layout/Modal/ConfirmModal";
@@ -46,11 +58,11 @@ export { ToolbarToggleGroup } from "./layout/Toolbar/ToolbarToggleGroup";
 // Table components
 export { SeparatorRow } from "./table/SeparatorRow";
 export { SortableFilterHeader } from "./table/SortableFilterHeader";
+export { Table, type TableColumn } from "./table/Table";
 
 // UI components
-export { CardList } from "./ui/CardList";
 export { ColorDot } from "./ui/ColorDot";
-export { HomeCard } from "./ui/HomeCard";
+export { SegmentedToggle, type SegmentedToggleOption } from "./ui/SegmentedToggle";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";
