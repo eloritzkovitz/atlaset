@@ -19,6 +19,7 @@ interface CountryStatsProps {
   selectedIsoCode: string | null;
   setSelectedIsoCode: (isoCode: string | null) => void;
   onShowAllCountries: () => void;
+  onBack?: () => void;
 }
 
 export function CountryStats({
@@ -29,6 +30,7 @@ export function CountryStats({
   selectedIsoCode,
   setSelectedIsoCode,
   onShowAllCountries,
+  onBack,
 }: CountryStatsProps) {
   const { countries, loading: countriesLoading, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
@@ -62,7 +64,7 @@ export function CountryStats({
     return (
       <div>
         <button
-          onClick={() => setSelectedIsoCode(null)}
+          onClick={onBack}
           className="mb-4 flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300"
         >
           <FaArrowLeft className="text-base" />

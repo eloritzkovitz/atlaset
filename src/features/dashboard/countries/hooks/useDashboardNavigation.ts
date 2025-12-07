@@ -46,7 +46,7 @@ export function useDashboardNavigation(
         }`
       );
     }
-  };
+  };  
 
   // Show all countries
   const handleShowAllCountries = () => navigate(`/dashboard/countries/all`);
@@ -76,6 +76,11 @@ export function useDashboardNavigation(
     }
   };
 
+  // Handle back navigation
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return {
     handlePanelChange,
     handleRegionSelect,
@@ -83,5 +88,6 @@ export function useDashboardNavigation(
     handleCountrySelect,
     handleShowAllCountries,
     handleCrumbClick,
+    handleBack,
   };
 }

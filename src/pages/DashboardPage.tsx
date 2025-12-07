@@ -45,6 +45,7 @@ export default function DashboardPage() {
     handleCountrySelect,
     handleShowAllCountries,
     handleCrumbClick,
+    handleBack,
   } = useDashboardNavigation(countries, selectedRegion, selectedSubregion);
 
   // Loading and error states
@@ -107,6 +108,7 @@ export default function DashboardPage() {
                   selectedIsoCode={selectedIsoCode}
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
+                  onBack={handleBack}
                 />
               }
             />
