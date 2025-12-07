@@ -14,6 +14,8 @@ import { AppLayout } from "@layout";
 import DashboardPage from "./pages/DashboardPage";
 import GamesPage from "./pages/GamesPage";
 import TripsPage from "./pages/TripsPage";
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 function App() {
   const { loading } = useSettings();
@@ -54,6 +56,8 @@ function App() {
                 <Route path="/dashboard/*" element={<DashboardPage />} />
                 <Route path="/game" element={<GamesPage />} />
                 <Route path="/trips" element={<TripsPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
               </Routes>
             </AppLayout>
           </UIHintProvider>

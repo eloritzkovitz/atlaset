@@ -23,11 +23,13 @@ a {
   color: theme("colors.gray.200");
 }
 
-body {
+body {  
+  background: theme("colors.gray.100");
   overflow: hidden;
 }
 
 .dark body {
+  background: theme("colors.gray.600");
   color: theme("colors.gray.200");
   scrollbar-color: #4a5568 #2b3342;
   scrollbar-width: thin;

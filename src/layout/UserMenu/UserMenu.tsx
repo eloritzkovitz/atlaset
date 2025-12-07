@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { Modal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
-import { signInWithGoogle, logout } from "@services/authService";
+import { logout } from "@services/authService";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 
@@ -10,13 +11,8 @@ export function UserMenu() {
   const { user, loading } = useAuth();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { uiVisible } = useUI();  
-
-  // Handle sign in
-  const handleSignIn = async () => {
-    await signInWithGoogle();
-    setOpen(false);
-  };
+  const { uiVisible } = useUI();
+  const navigate = useNavigate();
 
   // Handle logout
   const handleLogout = async () => {
@@ -27,6 +23,27 @@ export function UserMenu() {
   // Don't render if UI is not visible
   if (!uiVisible) return null;
 
+  if (!user) {
+    // Show buttons outside the avatar/modal when not logged in
+    return (
+      <div className="fixed top-4 right-10 z-[10000] flex gap-2">
+        <button
+          className="py-2 px-4 bg-blue-800 text-white rounded-full hover:bg-blue-700"
+          onClick={() => navigate("/login")}
+        >
+          Sign in
+        </button>
+        <button
+          className="py-2 px-4 bg-gray-200 text-blue-800 rounded-full hover:bg-gray-300"
+          onClick={() => navigate("/signup")}
+        >
+          Sign up
+        </button>
+      </div>
+    );
+  }
+
+  // Show avatar and modal for logged-in users
   return (
     <div className="fixed top-4 right-10 z-[10000]" ref={menuRef}>
       <UserAvatarButton user={user} onClick={() => setOpen((v) => !v)} />
@@ -42,7 +59,6 @@ export function UserMenu() {
           <UserMenuContent
             user={user}
             loading={loading}
-            onSignIn={handleSignIn}
             onLogout={handleLogout}
           />
         </Modal>
