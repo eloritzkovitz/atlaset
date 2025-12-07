@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
   signUp,
   signIn,
+  resetPassword,
   signInWithGoogle,
   logout,
 } from "../services/authService";
@@ -29,6 +30,12 @@ export function useAuthHandlers() {
     navigate("/");
   };
 
+  // Forgot Password handler
+  const handleForgotPassword = async (email: string) => {
+    setError("");
+    await resetPassword(email);
+  };
+
   // Google Sign-In handler
   const handleGoogleSignIn = async () => {
     setError("");
@@ -47,6 +54,7 @@ export function useAuthHandlers() {
     setError,
     handleSignUp,
     handleSignIn,
+    handleForgotPassword,
     handleGoogleSignIn,
     handleLogout,
   };

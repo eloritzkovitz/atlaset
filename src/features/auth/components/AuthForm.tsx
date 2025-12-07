@@ -5,9 +5,10 @@ interface AuthFormProps {
   mode: "signin" | "signup";
   onSubmit: (email: string, password: string) => Promise<void>;
   onGoogleSignIn?: () => Promise<void>;
+  onForgotPassword?: (email: string) => void;
   buttonText?: string;
   showGoogleSignInButton?: boolean;
-  error?: string;  
+  error?: string;
   children?: React.ReactNode;
 }
 
@@ -15,15 +16,17 @@ export function AuthForm({
   mode,
   onSubmit,
   onGoogleSignIn,
+  onForgotPassword,
   buttonText,
   showGoogleSignInButton = true,
-  error,  
+  error,
   children,
 }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localError, setLocalError] = useState("");
 
+  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError("");
@@ -52,6 +55,19 @@ export function AuthForm({
         required
         className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
       />
+      {/* Show forgot password only for signin */}
+      {mode === "signin" && onForgotPassword && (
+        <div className="text-left">
+          <button
+            type="button"
+            onClick={() => onForgotPassword(email)}
+            className="text-sm text-blue-800 dark:text-gray-200 hover:underline"
+            disabled={!email}
+          >
+            Forgot your password?
+          </button>
+        </div>
+      )}
       {(error || localError) && (
         <div className="text-red-500">{error || localError}</div>
       )}

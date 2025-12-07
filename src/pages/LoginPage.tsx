@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { AuthForm, useAuthHandlers } from "@features/auth";
 
 export default function LoginPage() {
-  const { error, handleSignIn, handleGoogleSignIn } = useAuthHandlers();
+  const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } = useAuthHandlers();
 
   return (
     <>
@@ -12,6 +12,7 @@ export default function LoginPage() {
           mode="signin"
           onSubmit={handleSignIn}
           onGoogleSignIn={handleGoogleSignIn}
+          onForgotPassword={handleForgotPassword}
           buttonText="Sign In"
           error={error}          
         />
