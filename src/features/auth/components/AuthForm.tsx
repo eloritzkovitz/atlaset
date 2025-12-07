@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { Checkbox } from "@components";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
 interface AuthFormProps {
   mode: "signin" | "signup";
-  onSubmit: (email: string, password: string) => Promise<void>;
+  onSubmit: (
+    email: string,
+    password: string,
+    keepLoggedIn: boolean
+  ) => Promise<void>;
   onGoogleSignIn?: () => Promise<void>;
   onForgotPassword?: (email: string) => void;
   buttonText?: string;
@@ -24,6 +29,7 @@ export function AuthForm({
 }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [keepLoggedIn, setKeepLoggedIn] = useState(true);
   const [localError, setLocalError] = useState("");
 
   // Handle form submission
@@ -31,7 +37,7 @@ export function AuthForm({
     e.preventDefault();
     setLocalError("");
     try {
-      await onSubmit(email, password);
+      await onSubmit(email, password, keepLoggedIn);
     } catch (err: any) {
       setLocalError(err.message);
     }
@@ -61,11 +67,20 @@ export function AuthForm({
           <button
             type="button"
             onClick={() => onForgotPassword(email)}
-            className="text-sm text-blue-800 dark:text-gray-200 hover:underline"
+            className="text-sm text-blue-800 dark:text-gray-100 hover:underline"
             disabled={!email}
           >
             Forgot your password?
           </button>
+        </div>
+      )}
+      {mode === "signin" && (
+        <div className="mb-2">
+          <Checkbox
+            checked={keepLoggedIn}
+            onChange={setKeepLoggedIn}
+            label="Keep me logged in"
+          />
         </div>
       )}
       {(error || localError) && (
@@ -73,7 +88,7 @@ export function AuthForm({
       )}
       <button
         type="submit"
-        className="w-full py-2 mt-8 bg-blue-800 text-white rounded-full hover:bg-blue-700 transition"
+        className="w-full py-2 mt-4 bg-blue-800 text-white rounded-full hover:bg-blue-700 transition"
       >
         {buttonText || (mode === "signup" ? "Register" : "Sign In")}
       </button>

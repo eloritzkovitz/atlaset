@@ -1,4 +1,7 @@
 import {
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence,
   signInWithEmailAndPassword,
   signOut,
   createUserWithEmailAndPassword,
@@ -9,10 +12,23 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
-import { auth } from "../../..//firebase";
+import { auth } from "../../../firebase";
 
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
+  return signInWithEmailAndPassword(auth, email, password);
+}
+
+// Sign in with email and password with persistence option
+export async function signInWithPersistence(
+  email: string,
+  password: string,
+  keepLoggedIn: boolean
+) {
+  await setPersistence(
+    auth,
+    keepLoggedIn ? browserLocalPersistence : browserSessionPersistence
+  );
   return signInWithEmailAndPassword(auth, email, password);
 }
 

@@ -6,6 +6,7 @@ import {
   resetPassword,
   signInWithGoogle,
   logout,
+  signInWithPersistence,
 } from "../services/authService";
 
 /**
@@ -27,6 +28,17 @@ export function useAuthHandlers() {
   const handleSignIn = async (email: string, password: string) => {
     setError("");
     await signIn(email, password);
+    navigate("/");
+  };
+
+  // Email/Password Sign-In handler with persistence option
+  const handleSignInWithPersistence = async (
+    email: string,
+    password: string,
+    keepLoggedIn: boolean
+  ) => {
+    setError("");
+    await signInWithPersistence(email, password, keepLoggedIn);
     navigate("/");
   };
 
@@ -54,6 +66,7 @@ export function useAuthHandlers() {
     setError,
     handleSignUp,
     handleSignIn,
+    handleSignInWithPersistence,
     handleForgotPassword,
     handleGoogleSignIn,
     handleLogout,
