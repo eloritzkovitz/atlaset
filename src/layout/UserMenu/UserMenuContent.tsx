@@ -4,6 +4,7 @@ import {
   FaRightFromBracket,
   FaUser,
 } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { UserInfo } from "./UserInfo";
@@ -16,7 +17,8 @@ interface UserMenuProps {
 
 export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   const { toggleSettings, toggleShortcuts } = useUI();
-
+  const navigate = useNavigate();
+  
   if (loading) {
     return <div className="p-2 text-center">Loading...</div>;
   }
@@ -26,7 +28,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         <UserInfo user={user} />
         <Separator />
         <MenuButton
-          onClick={() => {}}
+          onClick={() => navigate("/profile")}
           icon={<FaUser className="text-lg mr-2" />}
           ariaLabel="Profile"
           title="Profile"
