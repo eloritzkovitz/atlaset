@@ -31,16 +31,20 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 - **Markers:** Add, edit, and remove markers on the map for any location
 
 ### **Trips**
-- **Trip management:** Plan, track, and analyze your travels with flexible trip records
+- **Trip management:** Plan, track, and recall your travels with flexible trip records
 - **Timeline mode:** Track your travels showing visited countries on the map
 
 ### **Games**
 - **Flag guessing game:** Test your knowledge with an interactive flag quiz
 
+### **Dashboard**
+- **Dashboard:** View and analyze your visits and travels with interactive statistics 
+
 ### **User Experience**
 - **Accessible design:** All major actions and navigation are keyboard-friendly
 - **Modern UI:** Responsive design with Tailwind CSS and icons
-- **PWA support:** Install the application as an app on desktop or mobile and use it offline
+- **PWA support:** Install Atlaset as an app on desktop or mobile and use it offline
+- **Desktop app:** Run Atlaset as a cross-platform desktop application with Electron
 
 ## Technologies Used
 
@@ -50,6 +54,7 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 - **Firebase (Firestore & Auth)** — Secure cloud database and authentication
 - **IndexedDB (via Dexie.js)** — Local/offline storage for guest users and offline mode
 - **PWA (Progressive Web App)** — Offline support and installability
+- **Electron** — Desktop wrapper for cross-platform app support
 - **Jest / Vitest** — Testing frameworks for unit and integration tests
 - **Cypress** — End-to-end testing for user flows
 
