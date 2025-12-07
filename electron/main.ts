@@ -10,12 +10,8 @@ function createWindow() {
     },
   });
 
-  // Load your renderer (Vite dev server or built index.html)
-  if (process.env.VITE_DEV_SERVER_URL) {
-    win.loadURL(process.env.VITE_DEV_SERVER_URL);
-  } else {
-    win.loadFile("dist/index.html");
-  }
+  // Load the development server URL
+  win.loadURL("http://localhost:5173");  
 }
 
 app.whenReady().then(createWindow);
