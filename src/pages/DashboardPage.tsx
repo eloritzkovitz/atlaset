@@ -5,6 +5,7 @@ import {
   ErrorMessage,
   LoadingSpinner,
 } from "@components";
+import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   DashboardPanelMenu,
@@ -18,8 +19,12 @@ import {
 import { useDashboardRouteState } from "@features/dashboard/countries/hooks/useDashboardRouteState";
 import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/breadcrumbs";
 
+
 export default function DashboardPage() {
-  const { countries, loading, error } = useCountryData();
+  const { user } = useAuth();
+  const { countries, loading, error } = useCountryData();  
+
+  // Dashboard route state
   const {
     selectedPanel,
     menuSelectedPanel,
@@ -51,6 +56,11 @@ export default function DashboardPage() {
   // Loading and error states
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
+  
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
