@@ -1,8 +1,8 @@
 import { appDb } from "@utils/db";
-import { tripsService } from "./tripsService";
-import { overlaysService } from "./overlaysService";
-import { markersService } from "./markersService";
-import { settingsService } from "./settingsService";
+import { markersService } from "@features/atlas/markers";
+import { overlaysService } from "@features/atlas/overlays";
+import { settingsService } from "@features/settings";
+import { tripsService } from "@features/trips";
 
 /**
  * Checks if there is any guest data in IndexedDB

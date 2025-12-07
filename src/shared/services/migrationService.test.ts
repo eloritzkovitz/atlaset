@@ -53,10 +53,10 @@ vi.mock("./tripsService", () => ({
 }));
 
 const { appDb } = await import("@utils/db");
-const { markersService } = await import("./markersService");
-const { overlaysService } = await import("./overlaysService");
-const { settingsService } = await import("./settingsService");
-const { tripsService } = await import("./tripsService");
+const { markersService } = await import("@features/atlas/markers");
+const { overlaysService } = await import("@features/atlas/overlays");
+const { tripsService } = await import("@features/trips");
+const { settingsService } = await import("@features/settings");
 
 describe("migrationService", () => {
   beforeEach(() => {

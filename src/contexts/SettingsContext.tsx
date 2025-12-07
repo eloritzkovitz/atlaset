@@ -7,7 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { defaultSettings } from "@constants/defaultSettings";
-import { settingsService } from "@services/settingsService";
+import { settingsService } from "@features/settings";
 import type { Settings } from "@types";
 import { useAuth } from "./AuthContext";
 

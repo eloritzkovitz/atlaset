@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
-import { overlaysService } from "@services/overlaysService";
+import { overlaysService } from "@features/atlas/overlays";
 import type { AnyOverlay } from "@types";
 import { useAuth } from "./AuthContext";
 

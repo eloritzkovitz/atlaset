@@ -1,4 +1,9 @@
-import { FaGear, FaKeyboard, FaRightFromBracket, FaUser } from "react-icons/fa6";
+import {
+  FaGear,
+  FaKeyboard,
+  FaRightFromBracket,
+  FaUser,
+} from "react-icons/fa6";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { UserInfo } from "./UserInfo";
@@ -6,16 +11,10 @@ import { UserInfo } from "./UserInfo";
 interface UserMenuProps {
   user: any;
   loading: boolean;
-  onSignIn: () => void;
   onLogout: () => void;
 }
 
-export function UserMenuContent({
-  user,
-  loading,
-  onSignIn,
-  onLogout,
-}: UserMenuProps) {
+export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   const { toggleSettings, toggleShortcuts } = useUI();
 
   if (loading) {
@@ -65,12 +64,4 @@ export function UserMenuContent({
       </>
     );
   }
-  return (
-    <button
-      className="w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600"
-      onClick={onSignIn}
-    >
-      Sign in with Google
-    </button>
-  );
 }
