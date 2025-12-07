@@ -1,7 +1,9 @@
 import { app, BrowserWindow } from "electron";
+import path from "path";
 
 function createWindow() {
   const win = new BrowserWindow({
+    icon: path.join(__dirname, "icon.ico"),
     width: 1024,
     height: 768,
     webPreferences: {
