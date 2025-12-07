@@ -1,18 +1,23 @@
 import { useState } from "react";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 
 interface AuthFormProps {
   mode: "signin" | "signup";
   onSubmit: (email: string, password: string) => Promise<void>;
-  error?: string;
+  onGoogleSignIn?: () => Promise<void>;
   buttonText?: string;
+  showGoogleSignInButton?: boolean;
+  error?: string;  
   children?: React.ReactNode;
 }
 
 export function AuthForm({
   mode,
   onSubmit,
-  error,
+  onGoogleSignIn,
   buttonText,
+  showGoogleSignInButton = true,
+  error,  
   children,
 }: AuthFormProps) {
   const [email, setEmail] = useState("");
@@ -56,6 +61,16 @@ export function AuthForm({
       >
         {buttonText || (mode === "signup" ? "Register" : "Sign In")}
       </button>
+      {showGoogleSignInButton && onGoogleSignIn && (
+        <>
+          <div className="flex items-center my-4">
+            <div className="flex-grow border-t border-gray-300 dark:border-gray-500" />
+            <span className="mx-4 text-gray-500 dark:text-gray-300">or</span>
+            <div className="flex-grow border-t border-gray-300 dark:border-gray-500" />
+          </div>
+          <GoogleSignInButton onClick={onGoogleSignIn} />
+        </>
+      )}
       {children}
     </form>
   );
