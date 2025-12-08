@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
@@ -16,6 +16,11 @@ export function UserMenu() {
 
   // Get the logout handler from useAuthHandlers
   const { handleLogout } = useAuthHandlers();
+
+  // Close menu on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   // Don't render if UI is not visible
   if (!uiVisible) return null;
