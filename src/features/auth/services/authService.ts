@@ -12,11 +12,14 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
 } from "firebase/auth";
+import { logUserActivity } from "@utils/firebase";
 import { auth } from "../../../firebase";
 
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
-  return signInWithEmailAndPassword(auth, email, password);
+  const result = await signInWithEmailAndPassword(auth, email, password);
+  await logUserActivity("login", { method: "email" });
+  return result;
 }
 
 // Sign in with email and password with persistence option
@@ -34,17 +37,21 @@ export async function signInWithPersistence(
 
 // Sign up with email and password
 export async function signUp(email: string, password: string) {
-  return createUserWithEmailAndPassword(auth, email, password);
+  const result = await createUserWithEmailAndPassword(auth, email, password);
+  await logUserActivity("signup", { method: "email" });
+  return result;
 }
 
 // Sign out
 export async function logout() {
-  return signOut(auth);
+  await signOut(auth);
+  await logUserActivity("logout");
 }
 
 // Send password reset email
 export async function resetPassword(email: string) {
-  return sendPasswordResetEmail(auth, email);
+  await sendPasswordResetEmail(auth, email);
+  await logUserActivity("reset_password", { email });
 }
 
 // Update user profile
@@ -52,7 +59,8 @@ export async function updateUserProfile(
   user: User,
   data: { displayName?: string; photoURL?: string }
 ) {
-  return updateProfile(user, data);
+  await updateProfile(user, data);
+  await logUserActivity("edit_profile", { ...data });
 }
 
 // Sign in with Google

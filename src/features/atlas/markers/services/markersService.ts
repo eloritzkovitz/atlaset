@@ -8,7 +8,11 @@ import {
 } from "firebase/firestore";
 import type { Marker } from "@types";
 import { appDb } from "@utils/db";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import {
+  isAuthenticated,
+  getCurrentUser,
+  logUserActivity,
+} from "@utils/firebase";
 import { db } from "../../../../firebase";
 
 export const markersService = {
@@ -40,6 +44,7 @@ export const markersService = {
         batch.set(markerDoc, marker);
       });
       await batch.commit();
+      await logUserActivity("save_markers", { count: markers.length });
     } else {
       await appDb.markers.clear();
       if (markers.length > 0) {
@@ -54,6 +59,7 @@ export const markersService = {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await setDoc(doc(markersCol, marker.id), marker);
+      await logUserActivity("add_marker", { markerId: marker.id });
     } else {
       await appDb.markers.add(marker);
     }
@@ -65,6 +71,7 @@ export const markersService = {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await setDoc(doc(markersCol, marker.id), marker);
+      await logUserActivity("edit_marker", { markerId: marker.id });
     } else {
       await appDb.markers.put(marker);
     }
@@ -76,6 +83,7 @@ export const markersService = {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await deleteDoc(doc(markersCol, id));
+      await logUserActivity("remove_marker", { markerId: id });
     } else {
       await appDb.markers.delete(id);
     }

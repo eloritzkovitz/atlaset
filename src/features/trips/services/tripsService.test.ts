@@ -120,7 +120,7 @@ describe("tripsService", () => {
   it("updates a trip in IndexedDB (guest)", async () => {
     (isAuthenticated as any).mockReturnValue(false);
     const trip = { id: "3", name: "Trip 3" };
-    await tripsService.update(trip as any);
+    await tripsService.edit(trip as any);
     expect(tripsMock.put).toHaveBeenCalledWith(trip);
   });
 
@@ -130,7 +130,7 @@ describe("tripsService", () => {
     (getUserCollection as any).mockReturnValue(tripsCol);
     (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
     const trip = { id: "3", name: "Trip 3" };
-    await tripsService.update(trip as any);
+    await tripsService.edit(trip as any);
     expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "3" }, trip);
   });
 

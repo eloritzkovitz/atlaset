@@ -10,7 +10,7 @@ import type { Trip } from "@types";
 
 export default function TripsPage() {
   const countryData = useCountryData();
-  const { trips, loading, addTrip, updateTrip, removeTrip, duplicateTrip } =
+  const { trips, loading, addTrip, editTrip, removeTrip, duplicateTrip } =
     useTrips();
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
@@ -77,7 +77,7 @@ export default function TripsPage() {
     handleAdd,
     handleEdit,
     handleSave,
-  } = useTripModal({ addTrip, updateTrip, trips });
+  } = useTripModal({ addTrip, editTrip, trips });
 
   // Delete trip
   async function handleDelete(trip: Trip) {

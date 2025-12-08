@@ -2,7 +2,11 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { defaultSettings } from "@constants/defaultSettings";
 import type { Settings } from "@types";
 import { appDb } from "@utils/db";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import {
+  isAuthenticated,
+  getCurrentUser,
+  logUserActivity,
+} from "@utils/firebase";
 import { db } from "../../../firebase";
 
 export const settingsService = {
@@ -29,6 +33,7 @@ export const settingsService = {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
       await setDoc(settingsDoc, settingsWithId);
+      await logUserActivity("edit_settings", { settings: settingsWithId });
     } else {
       await appDb.settings.put(settingsWithId);
     }

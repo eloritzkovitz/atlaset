@@ -1,12 +1,11 @@
 import type { Trip } from "@types";
 import { appDb } from "@utils/db";
-import { isAuthenticated, getUserCollection } from "@utils/firebase";
 import {
-  doc,
-  getDocs,
-  setDoc,
-  deleteDoc,
-} from "firebase/firestore";
+  isAuthenticated,
+  getUserCollection,
+  logUserActivity,
+} from "@utils/firebase";
+import { doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
 
 export const tripsService = {
   // Load all trips
@@ -29,6 +28,7 @@ export const tripsService = {
       for (const trip of trips) {
         await setDoc(doc(tripsCol, trip.id), trip);
       }
+      await logUserActivity("save_trips", { count: trips.length });
     } else {
       await appDb.trips.clear();
       if (trips.length > 0) {
@@ -42,16 +42,18 @@ export const tripsService = {
     if (isAuthenticated()) {
       const tripsCol = getUserCollection("trips");
       await setDoc(doc(tripsCol, trip.id), trip);
+      await logUserActivity("add_trip", { tripId: trip.id });
     } else {
       await appDb.trips.add(trip);
     }
   },
 
-  // Update an existing trip
-  async update(trip: Trip) {
+  // Edits an existing trip
+  async edit(trip: Trip) {
     if (isAuthenticated()) {
       const tripsCol = getUserCollection("trips");
       await setDoc(doc(tripsCol, trip.id), trip);
+      await logUserActivity("edit_trip", { tripId: trip.id });
     } else {
       await appDb.trips.put(trip);
     }
@@ -62,6 +64,7 @@ export const tripsService = {
     if (isAuthenticated()) {
       const tripsCol = getUserCollection("trips");
       await deleteDoc(doc(tripsCol, id));
+      await logUserActivity("remove_trip", { tripId: id });
     } else {
       await appDb.trips.delete(id);
     }

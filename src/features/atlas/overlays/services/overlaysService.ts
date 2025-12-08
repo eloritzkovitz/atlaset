@@ -12,7 +12,11 @@ import {
 } from "@constants/overlays";
 import type { AnyOverlay } from "@types";
 import { appDb } from "@utils/db";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import {
+  isAuthenticated,
+  getCurrentUser,
+  logUserActivity,
+} from "@utils/firebase";
 import { db } from "../../../../firebase";
 
 export const overlaysService = {
@@ -58,6 +62,7 @@ export const overlaysService = {
         batch.set(overlayDoc, overlay);
       });
       await batch.commit();
+      await logUserActivity("save_overlays", { count: overlays.length });
     } else {
       if (!overlays || overlays.length === 0) {
         console.warn(
@@ -76,6 +81,7 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
+      await logUserActivity("add_overlay", { overlayId: overlay.id });
     } else {
       await appDb.overlays.add(overlay);
     }
@@ -87,6 +93,7 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
+      await logUserActivity("edit_overlay", { overlayId: overlay.id });
     } else {
       await appDb.overlays.put(overlay);
     }
@@ -98,6 +105,7 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await deleteDoc(doc(overlaysCol, id));
+      await logUserActivity("remove_overlay", { overlayId: id });
     } else {
       await appDb.overlays.delete(id);
     }
