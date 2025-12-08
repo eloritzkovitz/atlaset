@@ -36,7 +36,7 @@ export default function ProfilePage() {
   // Determine selected panel from route
   const selectedPanel = location.pathname.endsWith("/activity")
     ? "activity"
-    : "account";
+    : "profile";
 
   // Handle menu navigation
   function handlePanelChange(panel: string) {

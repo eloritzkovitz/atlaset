@@ -21,7 +21,7 @@ export function ProfilePanelMenu({
       title={
         <span className="flex items-center gap-2">
           {PROFILE_MENU[0].icon}
-          Account
+          Profile
         </span>
       }
       width={220}
