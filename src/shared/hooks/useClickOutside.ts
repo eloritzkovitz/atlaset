@@ -1,9 +1,17 @@
 import { useEffect } from "react";
 
+type UseClickOutsideOptions = {
+  click?: boolean;
+  escape?: boolean;
+  scroll?: boolean;
+  resize?: boolean;
+};
+
 export function useClickOutside<T extends HTMLElement>(
   refs: React.RefObject<T>[],
   onOutside: () => void,
-  enabled = true
+  enabled = true,
+  options: UseClickOutsideOptions = { click: true, escape: true }
 ) {
   useEffect(() => {
     if (!enabled) return;
@@ -41,16 +49,32 @@ export function useClickOutside<T extends HTMLElement>(
       if (e.key === "Escape") onOutside();
     }
 
-    window.addEventListener("mousedown", handleClickOutside);
-    window.addEventListener("scroll", handleScrollOrResize, true);
-    window.addEventListener("resize", handleScrollOrResize);
-    window.addEventListener("keydown", handleKeyDown);
+    if (options.click !== false) {
+      window.addEventListener("mousedown", handleClickOutside);
+    }
+    if (options.scroll) {
+      window.addEventListener("scroll", handleScrollOrResize, true);
+    }
+    if (options.resize) {
+      window.addEventListener("resize", handleScrollOrResize);
+    }
+    if (options.escape !== false) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
 
     return () => {
-      window.removeEventListener("mousedown", handleClickOutside);
-      window.removeEventListener("scroll", handleScrollOrResize, true);
-      window.removeEventListener("resize", handleScrollOrResize);
-      window.removeEventListener("keydown", handleKeyDown);
+      if (options.click !== false) {
+        window.removeEventListener("mousedown", handleClickOutside);
+      }
+      if (options.scroll) {
+        window.removeEventListener("scroll", handleScrollOrResize, true);
+      }
+      if (options.resize) {
+        window.removeEventListener("resize", handleScrollOrResize);
+      }
+      if (options.escape !== false) {
+        window.removeEventListener("keydown", handleKeyDown);
+      }
     };
-  }, [refs, onOutside, enabled]);
+  }, [refs, onOutside, enabled, options]);
 }

@@ -32,6 +32,11 @@
 
 .modal-backdrop {
   @apply fixed inset-0 z-[9999];
+  pointer-events: auto;
+}
+
+.modal-backdrop-scrollable {
+  pointer-events: none;
 }
 
 @keyframes modalFadeIn {

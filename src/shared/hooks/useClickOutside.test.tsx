@@ -2,13 +2,20 @@ import { render, fireEvent } from "@testing-library/react";
 import { useRef, useState, type RefObject } from "react";
 import { useClickOutside } from "./useClickOutside";
 
-function TestComponent({ enabled = true }: { enabled?: boolean }) {
+function TestComponent({
+  enabled = true,
+  options = {},
+}: {
+  enabled?: boolean;
+  options?: any;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const [outside, setOutside] = useState(false);
   useClickOutside(
     [ref as RefObject<HTMLElement>],
     () => setOutside(true),
-    enabled
+    enabled,
+    options
   );
 
   return (
@@ -48,7 +55,9 @@ describe("useClickOutside", () => {
   });
 
   it("calls onOutside on scroll outside element", () => {
-    const { getByTestId } = render(<TestComponent />);
+    const { getByTestId } = render(
+      <TestComponent options={{ scroll: true }} />
+    );
     fireEvent.scroll(getByTestId("outside"));
     expect(getByTestId("result").textContent).toBe("outside");
   });
@@ -56,6 +65,22 @@ describe("useClickOutside", () => {
   it("does not call onOutside when disabled", () => {
     const { getByTestId } = render(<TestComponent enabled={false} />);
     fireEvent.mouseDown(getByTestId("outside"));
+    expect(getByTestId("result").textContent).toBe("inside");
+  });
+
+  it("calls onOutside on window resize when resize option is true", () => {
+    const { getByTestId } = render(
+      <TestComponent options={{ resize: true }} />
+    );
+    fireEvent.resize(window);
+    expect(getByTestId("result").textContent).toBe("outside");
+  });
+
+  it("does not call onOutside on window resize when resize option is false", () => {
+    const { getByTestId } = render(
+      <TestComponent options={{ resize: false }} />
+    );
+    fireEvent.resize(window);
     expect(getByTestId("result").textContent).toBe("inside");
   });
 });

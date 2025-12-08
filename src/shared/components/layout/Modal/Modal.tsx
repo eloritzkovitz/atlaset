@@ -1,6 +1,14 @@
-import React, { type ReactNode, type ReactElement, isValidElement } from "react";
+import React, {
+  type ReactNode,
+  type ReactElement,
+  isValidElement,
+  useRef,
+  useEffect,
+} from "react";
 import ReactDOM from "react-dom";
+import { useUI } from "@contexts/UIContext";
 import { useFloatingHover as useFloatingHoverHook } from "@hooks/useFloatingHover";
+import { useClickOutside } from "@hooks/useClickOutside";
 import { usePanelHide } from "@hooks/usePanelHide";
 import "./Modal.css";
 
@@ -16,12 +24,13 @@ interface ModalProps {
   children: ReactNode;
   floatingChildren?: ReactElement<FloatingButtonProps>;
   useFloatingHover?: boolean;
-  className?: string;
+  scrollable?: boolean;
+  disableClose?: boolean;
   position?: "center" | "custom";
+  className?: string;
   containerClassName?: string;
   backdropClassName?: string;
   style?: React.CSSProperties;
-  disableClose?: boolean;
   containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
@@ -32,14 +41,23 @@ export function Modal({
   children,
   floatingChildren,
   useFloatingHover = false,
-  className = "",
+  scrollable = false,
+  disableClose = false,
   position = "center",
+  className = "",
   containerClassName = "",
   backdropClassName = "",
   style,
-  disableClose = false,
   containerRef,
 }: ModalProps) {
+  const { setModalOpen } = useUI();
+
+  // Set modal open state for UI context
+  useEffect(() => {
+    setModalOpen(isOpen);
+    return () => setModalOpen(false);
+  }, [isOpen, setModalOpen]);
+
   // Handle floating hover logic
   const { hoverHandlers, floatingHandlers, shouldShowFloating } =
     useFloatingHoverHook(useFloatingHover);
@@ -52,23 +70,35 @@ export function Modal({
     escEnabled: disableClose ? false : true,
   });
 
+  const modalRef = containerRef ?? useRef<HTMLDivElement>(null);
+
+  // Close modal on outside click
+  useClickOutside([modalRef as React.RefObject<HTMLElement>], () => {
+    if (!disableClose) onClose();
+  });
+
   // Don't render anything if the modal is not open
   if (!isOpen && !closing) return null;
 
   return ReactDOM.createPortal(
     <>
       <div
-        onClick={() => {
-          if (!disableClose) onClose();
-        }}
         aria-modal="true"
         inert={!isOpen}
         role="dialog"
-        className={`modal-backdrop ${backdropClassName ?? ""}`}
-        style={{ pointerEvents: isOpen ? "auto" : "none" }}
+        className={`modal-backdrop ${
+          scrollable ? "modal-backdrop-scrollable" : ""
+        } ${backdropClassName ?? ""}`}
+        onClick={
+          !scrollable
+            ? () => {
+                if (!disableClose) onClose();
+              }
+            : undefined
+        }
       >
         <div
-          ref={containerRef}
+          ref={modalRef}
           {...hoverHandlers}
           className={
             "group " +

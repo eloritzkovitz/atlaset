@@ -56,10 +56,11 @@ export function UserMenu() {
           isOpen={isOpen}
           closing={closing}
           onClose={closeModal}
+          disableClose={false}
+          scrollable={true}
           position="custom"
           className="absolute right-4 mt-3 w-60 bg-white rounded shadow-lg z-50 p-2"
-          style={{ top: "48px", right: 16 }}
-          disableClose={false}
+          style={{ top: "48px", right: 16 }}          
         >
           <UserMenuContent
             user={user}
