@@ -3,8 +3,8 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
-import { UserAvatar } from "@layout/UserAvatar/UserAvatar";
 import { ProfileField } from "./ProfileField";
+import { UserAvatar } from "./UserAvatar";
 
 interface ProfileInfoCardProps {
   user: any;

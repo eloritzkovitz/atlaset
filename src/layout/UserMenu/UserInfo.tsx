@@ -1,4 +1,4 @@
-import { UserAvatar } from "../UserAvatar/UserAvatar";
+import { UserAvatar } from "@features/user";
 
 export function UserInfo({ user }: { user: any }) {
   return (
