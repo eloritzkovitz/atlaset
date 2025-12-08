@@ -18,6 +18,7 @@ export const firestoreMocks = {
     set: vi.fn(),
     commit: vi.fn(),
   })),
+  addDoc: vi.fn(),
 };
 
 export const authMocks = {
