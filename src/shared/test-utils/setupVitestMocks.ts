@@ -29,8 +29,12 @@ export function mockFirebaseUtils() {
     ...authMocks,
     logUserActivity: vi.fn(),
     getUserCollection: vi.fn(),
-    isAuthenticated: vi.fn(),
-    getCurrentUser: vi.fn(),
+    isAuthenticated: vi.fn(() => true),
+    getCurrentUser: vi.fn(() => ({
+      uid: "testuid",
+      displayName: "Test User",
+      email: "test@example.com",
+    })),
   }));
 }
 
@@ -39,6 +43,18 @@ export function mockFirestore() {
   vi.mock("firebase/firestore", () => ({
     ...firestoreMocks,
     getFirestore: vi.fn(() => ({})),
+    getDocs: vi.fn(async () => ({
+      docs: [
+        {
+          id: "testid",
+          data: () => ({ name: "Test Name", location: "Test Location" }),
+        },
+      ],
+    })),
+    setDoc: vi.fn(),
+    deleteDoc: vi.fn(),
+    doc: vi.fn(),
+    collection: vi.fn(),
   }));
   vi.mock("../../firebase", () => ({
     db: {},
