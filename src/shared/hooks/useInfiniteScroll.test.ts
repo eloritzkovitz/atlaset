@@ -47,4 +47,25 @@ describe("useInfiniteScroll", () => {
     unmount();
     expect(unobserveMock).toHaveBeenCalledWith(ref.current);
   });
+
+  it("calls callback when entry is intersecting", () => {
+    const callback = vi.fn();
+    const ref = { current: document.createElement("div") };
+
+    let observerCallback: any;
+    global.IntersectionObserver = vi.fn(function (cb) {
+      observerCallback = cb;
+      return {
+        observe: observeMock,
+        unobserve: unobserveMock,
+        disconnect: vi.fn(),
+      };
+    }) as any;
+
+    renderHook(() => useInfiniteScroll(ref, callback, true));
+
+    // Simulate intersection
+    observerCallback([{ isIntersecting: true }]);
+    expect(callback).toHaveBeenCalled();
+  });
 });
