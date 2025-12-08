@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AuthForm, AuthLayout, useAuthHandlers } from "@features/auth";
+import { AuthForm, AuthLayout, useAuthHandlers } from "@features/user";
 
 export default function SignupPage() {
   const { error, handleSignUp, handleGoogleSignIn } = useAuthHandlers();

@@ -5,7 +5,7 @@ import {
   EditProfileModal,
   ProfilePanelMenu,
   UserActivitySection,
-} from "@features/auth";
+} from "@features/user";
 import { UserAvatar } from "@layout/UserAvatar/UserAvatar";
 
 export default function ProfilePage() {

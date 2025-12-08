@@ -1,5 +1,5 @@
 import { Panel } from "@components";
-import { PROFILE_MENU } from "@features/auth/constants/profileMenu";
+import { PROFILE_MENU } from "@features/user/profile/constants/profileMenu";
 
 interface ProfilePanelMenuProps {
   selectedPanel: string;

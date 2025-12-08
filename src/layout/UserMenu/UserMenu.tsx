@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Modal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
-import { useAuthHandlers } from "@features/auth";
+import { useAuthHandlers } from "@features/user";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 
