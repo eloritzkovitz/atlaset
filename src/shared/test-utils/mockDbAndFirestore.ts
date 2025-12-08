@@ -1,13 +1,3 @@
-export const commonDbMethods = [
-  "toArray",
-  "clear",
-  "bulkAdd",
-  "bulkPut",
-  "add",
-  "put",
-  "delete",
-];
-
 // Create a mock database object with specified methods
 export function createDbMock(methods: string[]) {
   const mock: Record<string, any> = {};

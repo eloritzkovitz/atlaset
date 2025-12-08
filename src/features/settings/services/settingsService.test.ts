@@ -1,30 +1,23 @@
+import { defaultSettings } from "@constants/defaultSettings";
 import {
-  createDbMock,
   firestoreMocks,
   authMocks,
   resetAllMocks,
 } from "@test-utils/mockDbAndFirestore";
-import { defaultSettings } from "@constants/defaultSettings";
+import {
+  mockIndexedDb,
+  mockFirebaseUtils,
+  mockFirestore,
+  settingsMock,
+} from "@test-utils/setupVitestMocks";
 import { settingsService } from "./settingsService";
-import { vi } from "vitest";
 
-// IndexedDB mock
-vi.mock("@utils/db", () => {
-  const settingsMock = createDbMock(["get", "put"]);
-  return {
-    appDb: { settings: settingsMock },
-    __settingsMock: settingsMock,
-  };
-});
+// Mock IndexedDB, Firebase utils, and Firestore
+mockIndexedDb();
+mockFirebaseUtils();
+mockFirestore();
 
-// Firebase Auth/User mocks
-vi.mock("@utils/firebase", () => authMocks);
-
-// Firestore mocks
-vi.mock("firebase/firestore", () => firestoreMocks);
-vi.mock("../../firebase", () => ({ db: {} }));
-
-const { __settingsMock: settingsMock } = (await import("@utils/db")) as any;
+// Import services and mocks
 const { isAuthenticated, getCurrentUser } = await import("@utils/firebase");
 const { doc, getDoc, setDoc } = await import("firebase/firestore");
 
