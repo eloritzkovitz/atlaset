@@ -62,7 +62,10 @@ export const overlaysService = {
         batch.set(overlayDoc, overlay);
       });
       await batch.commit();
-      await logUserActivity("save_overlays", { count: overlays.length });
+      await logUserActivity("save_overlays", {
+        count: overlays.length,
+        userName: user!.displayName,
+      });
     } else {
       if (!overlays || overlays.length === 0) {
         console.warn(
@@ -81,7 +84,11 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
-      await logUserActivity("add_overlay", { overlayId: overlay.id });
+      await logUserActivity("add_overlay", {
+        overlayId: overlay.id,
+        itemName: overlay.name,
+        userName: user!.displayName,
+      });
     } else {
       await appDb.overlays.add(overlay);
     }
@@ -93,7 +100,11 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
-      await logUserActivity("edit_overlay", { overlayId: overlay.id });
+      await logUserActivity("edit_overlay", {
+        overlayId: overlay.id,
+        itemName: overlay.name,
+        userName: user!.displayName,
+      });
     } else {
       await appDb.overlays.put(overlay);
     }
@@ -104,8 +115,15 @@ export const overlaysService = {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
+      const snapshot = await getDocs(overlaysCol);
+      const overlayDoc = snapshot.docs.find((docSnap) => docSnap.id === id);
+      const overlayName = overlayDoc ? overlayDoc.data().name : undefined;
       await deleteDoc(doc(overlaysCol, id));
-      await logUserActivity("remove_overlay", { overlayId: id });
+      await logUserActivity("remove_overlay", {
+        overlayId: id,
+        itemName: overlayName,
+        userName: user!.displayName,
+      });
     } else {
       await appDb.overlays.delete(id);
     }

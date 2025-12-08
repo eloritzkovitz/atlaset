@@ -18,7 +18,11 @@ import { auth } from "../../../../firebase";
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
   const result = await signInWithEmailAndPassword(auth, email, password);
-  await logUserActivity("login", { method: "email" });
+  await logUserActivity("login", {
+    method: "email",
+    userName: result.user.displayName,
+    email: result.user.email,
+  });
   return result;
 }
 
@@ -32,13 +36,23 @@ export async function signInWithPersistence(
     auth,
     keepLoggedIn ? browserLocalPersistence : browserSessionPersistence
   );
-  return signInWithEmailAndPassword(auth, email, password);
+  const result = await signInWithEmailAndPassword(auth, email, password);
+  await logUserActivity("login", {
+    method: keepLoggedIn ? "email_persistent" : "email_session",
+    userName: result.user.displayName,
+    email: result.user.email,
+  });
+  return result;
 }
 
 // Sign up with email and password
 export async function signUp(email: string, password: string) {
   const result = await createUserWithEmailAndPassword(auth, email, password);
-  await logUserActivity("signup", { method: "email" });
+  await logUserActivity("signup", {
+    method: "email",
+    userName: result.user.displayName,
+    email: result.user.email,
+  });
   return result;
 }
 
@@ -60,16 +74,28 @@ export async function updateUserProfile(
   data: { displayName?: string; photoURL?: string }
 ) {
   await updateProfile(user, data);
-  await logUserActivity("edit_profile", { ...data });
+  await logUserActivity("edit_profile", {
+    ...data,
+    userName: data.displayName,
+    email: user.email,
+  });
 }
 
 // Sign in with Google
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
-  return signInWithPopup(auth, provider);
+  const result = await signInWithPopup(auth, provider);
+  await logUserActivity("login", {
+    method: "google",
+    userName: result.user.displayName,
+    email: result.user.email,
+  });
+  return result;
 }
 
 // Sign in anonymously
 export async function signInAsGuest() {
-  return signInAnonymously(auth);
+  const result = await signInAnonymously(auth);
+  await logUserActivity("login", { method: "guest" });
+  return result;
 }

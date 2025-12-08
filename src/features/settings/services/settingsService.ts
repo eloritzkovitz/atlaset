@@ -33,7 +33,10 @@ export const settingsService = {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
       await setDoc(settingsDoc, settingsWithId);
-      await logUserActivity("edit_settings", { settings: settingsWithId });
+      await logUserActivity("edit_settings", {
+        settings: settingsWithId,
+        userName: user!.displayName,
+      });
     } else {
       await appDb.settings.put(settingsWithId);
     }

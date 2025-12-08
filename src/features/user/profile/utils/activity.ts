@@ -1,45 +1,59 @@
 /**
- * Gets a human-readable description for a user activity action.
+ * Gets a human-readable, full sentence description for a user activity action.
  * @param action The action type.
+ * @param details Optional details about the activity (itemName, location, date, userName).
  * @returns A human-readable description of the action.
  */
-export function getActivityDescription(action: string) {
+export function getActivityDescription(
+  action: string,
+  details?: {
+    itemName?: string;
+    location?: string;
+    date?: string;
+    userName?: string;
+  }
+) {
+  const name = details?.userName || "You";
+  const item = details?.itemName ? ` "${details.itemName}"` : "";
+  const loc = details?.location ? ` in ${details.location}` : "";
+  const date = details?.date ? ` on ${details.date}` : "";
+
   switch (action) {
     case "save_overlays":
-      return "has saved overlays";
+      return `${name} saved overlays${loc}${date}.`;
     case "add_overlay":
-      return "has added an overlay";
+      return `${name} added an overlay${item}${loc}${date}.`;
     case "edit_overlay":
-      return "has edited an overlay";
+      return `${name} edited an overlay${item}${loc}${date}.`;
     case "remove_overlay":
-      return "has removed an overlay";
+      return `${name} removed an overlay${item}${loc}${date}.`;
     case "save_markers":
-      return "has saved markers";
+      return `${name} saved markers${loc}${date}.`;
     case "add_marker":
-      return "has added a marker";
+      return `${name} added a marker${item}${loc}${date}.`;
     case "edit_marker":
-      return "has edited a marker";
+      return `${name} edited a marker${item}${loc}${date}.`;
     case "remove_marker":
-      return "has removed a marker";
+      return `${name} removed a marker${item}${loc}${date}.`;
     case "save_trips":
-      return "has saved trips";
+      return `${name} saved trips${loc}${date}.`;
     case "add_trip":
-      return "has added a trip";
+      return `${name} added a trip${item}${loc}${date}.`;
     case "edit_trip":
-      return "has edited a trip";
+      return `${name} edited a trip${item}${loc}${date}.`;
     case "remove_trip":
-      return "has removed a trip";
+      return `${name} removed a trip${item}${loc}${date}.`;
     case "edit_settings":
-      return "has updated settings";
+      return `${name} updated settings${date}.`;
     case "edit_profile":
-      return "has updated their profile";
+      return `${name} updated their profile${date}.`;
     case "login":
-      return "has signed in";
+      return `${name} signed in${date}.`;
     case "logout":
-      return "has signed out";
+      return `${name} signed out${date}.`;
     case "signup":
-      return "has created an account";
+      return `${name} created an account${date}.`;
     default:
-      return action.replace(/_/g, " ");
+      return `${name} ${action.replace(/_/g, " ")}${item}${loc}${date}.`;
   }
 }

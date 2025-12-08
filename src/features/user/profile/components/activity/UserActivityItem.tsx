@@ -7,7 +7,7 @@ export function UserActivityItem({ act }: { act: any }) {
       <div className="flex items-center gap-2">
         <FaRegClock className="inline-block mr-1" />
         <span className="font-semibold text-base text-white">
-          {getActivityDescription(act.action)}
+          {getActivityDescription(act.action, act.details)}
         </span>
         <span className="flex items-center text-xs text-gray-400 ml-2 gap-1">
           {new Date(act.timestamp).toLocaleString()}
