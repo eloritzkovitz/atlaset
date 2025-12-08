@@ -63,7 +63,7 @@ function App() {
                       <Route path="/dashboard/*" element={<DashboardPage />} />
                       <Route path="/game" element={<GamesPage />} />
                       <Route path="/trips" element={<TripsPage />} />
-                      <Route path="/profile" element={<ProfilePage />} />
+                      <Route path="/profile/*" element={<ProfilePage />} />
                     </Routes>
                   </AppLayout>
                 }
