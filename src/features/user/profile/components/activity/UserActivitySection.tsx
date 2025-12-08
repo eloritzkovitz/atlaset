@@ -1,80 +1,16 @@
-import { query, orderBy, getDocs, limit, startAfter } from "firebase/firestore";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useRef } from "react";
 import { useAuth } from "@contexts/AuthContext";
-import { getUserCollection } from "@utils/firebase";
 import { UserActivityItem } from "./UserActivityItem";
-
-const PAGE_SIZE = 10;
+import { useUserActivity } from "../../hooks/useUserActivity";
+import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
 
 export function UserActivitySection() {
   const { user } = useAuth();
-  const [activity, setActivity] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [lastDoc, setLastDoc] = useState<any>(null);
-  const [hasMore, setHasMore] = useState(true);
-  const loaderRef = useRef<HTMLDivElement | null>(null);
+  const { activity, loading, hasMore, loadMore } = useUserActivity(user?.uid);
 
-  // Initial load
-  useEffect(() => {
-    if (!user?.uid) return;
-    setLoading(true);
-    const fetchInitial = async () => {
-      const activityCol = getUserCollection("activity");
-      const q = query(
-        activityCol,
-        orderBy("timestamp", "desc"),
-        limit(PAGE_SIZE)
-      );
-      const snapshot = await getDocs(q);
-      setActivity(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
-      setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
-      setHasMore(snapshot.docs.length === PAGE_SIZE);
-      setLoading(false);
-    };
-    fetchInitial();
-  }, [user?.uid]);
-
-  // Load more handler
-  const loadMore = useCallback(async () => {
-    if (!user?.uid || !lastDoc || loading || !hasMore) return;
-    setLoading(true);
-    const activityCol = getUserCollection("activity");
-    const q = query(
-      activityCol,
-      orderBy("timestamp", "desc"),
-      startAfter(lastDoc),
-      limit(PAGE_SIZE)
-    );
-    const snapshot = await getDocs(q);
-    setActivity((prev) => [
-      ...prev,
-      ...snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
-    ]);
-    setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
-    setHasMore(snapshot.docs.length === PAGE_SIZE);
-    setLoading(false);
-  }, [user?.uid, lastDoc, loading, hasMore]);
-
-  // Intersection Observer for infinite scroll
-  useEffect(() => {
-    if (!hasMore || loading) return;
-    const observer = new window.IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          loadMore();
-        }
-      },
-      { threshold: 1 }
-    );
-    if (loaderRef.current) {
-      observer.observe(loaderRef.current);
-    }
-    return () => {
-      if (loaderRef.current) {
-        observer.unobserve(loaderRef.current);
-      }
-    };
-  }, [loadMore, hasMore, loading]);
+  // Use infinite scroll
+  const loaderRef = useRef<HTMLDivElement>(null);
+  useInfiniteScroll(loaderRef, loadMore, hasMore && !loading);
 
   return (
     <div>
