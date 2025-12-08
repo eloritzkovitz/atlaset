@@ -6,6 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   EditProfileModal,
@@ -15,7 +16,7 @@ import {
 } from "@features/user";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const [editOpen, setEditOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +28,11 @@ export default function ProfilePage() {
   const joinDate = user?.metadata?.creationTime
     ? new Date(user.metadata.creationTime).toLocaleDateString()
     : null;
+
+  // Show loading spinner while auth state is loading
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
   // Redirect to login if not authenticated
   if (!user) {
