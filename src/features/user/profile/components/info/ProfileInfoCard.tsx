@@ -1,8 +1,10 @@
+import { FaPen } from "react-icons/fa6";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
+import { useVisitedCountries } from "@features/visits";
 import { UserAvatar } from "@layout/UserAvatar/UserAvatar";
-import { FaPen } from "react-icons/fa6";
+import { ProfileField } from "./ProfileField";
 
 interface ProfileInfoCardProps {
   user: any;
@@ -21,13 +23,14 @@ export function ProfileInfoCard({
 }: ProfileInfoCardProps) {
   const { countries } = useCountryData();
   const { homeCountry } = useHomeCountry();
+  const { visitedCountryCodes } = useVisitedCountries();
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
 
   return (
     <>
       {/* Avatar, Name, Edit */}
       <div className="flex items-center mb-6">
-        <UserAvatar user={user} size={80} />
+        <UserAvatar user={user} size={150} />
         <div className="flex-1 ml-6 flex items-center">
           <h1 className="text-3xl font-bold">{user?.displayName}</h1>
         </div>
@@ -43,39 +46,22 @@ export function ProfileInfoCard({
           </div>
         )}
       </div>
-      {/* Email */}
-      <div>
-        <span className="text-gray-500 text-xs uppercase tracking-wide">
-          Email
-        </span>
-        <div className="text-gray-700 dark:text-gray-200 text-lg font-medium mb-4">
-          {email}
-        </div>
-      </div>
-      {/* Country */}
+      <ProfileField label="Email">{email}</ProfileField>
       {homeCountry && (
-        <div>
-          <span className="text-gray-500 text-xs uppercase tracking-wide">
-            Country
-          </span>
-          <div className="flex items-center text-gray-700 dark:text-gray-200 text-lg font-medium mb-4">
+        <ProfileField label="Country">
+          <div className="flex items-center">
             <CountryWithFlag
               isoCode={selectedCountry?.isoCode || ""}
               name={selectedCountry?.name || ""}
               className="mr-2"
             />
           </div>
-        </div>
+        </ProfileField>
       )}
-      {/* Joined */}
-      <div>
-        <span className="text-gray-500 text-xs uppercase tracking-wide">
-          Joined
-        </span>
-        <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">
-          {joinDate}
-        </div>
-      </div>
+      <ProfileField label="Visited Countries">
+        {visitedCountryCodes.length}
+      </ProfileField>
+      <ProfileField label="Joined">{joinDate}</ProfileField>
     </>
   );
 }
