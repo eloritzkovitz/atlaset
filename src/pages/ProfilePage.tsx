@@ -1,9 +1,12 @@
 import { useState } from "react";
-import { useAuth } from "@contexts/AuthContext";
-import { ProfilePanelMenu } from "@features/auth";
-import { UserAvatar } from "@layout/UserAvatar/UserAvatar";
 import { FaPen } from "react-icons/fa6";
-import { EditProfileModal } from "@features/auth/components/profile/EditProfileModal";
+import { useAuth } from "@contexts/AuthContext";
+import {
+  EditProfileModal,
+  ProfilePanelMenu,
+  UserActivitySection,
+} from "@features/auth";
+import { UserAvatar } from "@layout/UserAvatar/UserAvatar";
 
 export default function ProfilePage() {
   const { user } = useAuth();
@@ -11,7 +14,7 @@ export default function ProfilePage() {
   const [editOpen, setEditOpen] = useState(false);
 
   // Only allow editing for email/password users
-  const canEdit = user?.providerData?.[0]?.providerId === "password";  
+  const canEdit = user?.providerData?.[0]?.providerId === "password";
 
   // Format join date from user metadata
   const joinDate = user?.metadata?.creationTime
@@ -78,11 +81,7 @@ export default function ProfilePage() {
               </div>
             </div>
           )}
-          {selectedPanel === "history" && (
-            <div>
-              <h3 className="text-lg font-semibold mb-2">History</h3>
-            </div>
-          )}
+          {selectedPanel === "activity" && <UserActivitySection />}
         </main>
       </div>
       {/* Edit Profile Modal */}
