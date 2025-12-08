@@ -11,6 +11,7 @@ type FloatingButtonProps = {
 
 interface ModalProps {
   isOpen: boolean;
+  closing?: boolean;
   onClose: () => void;
   children: ReactNode;
   floatingChildren?: ReactElement<FloatingButtonProps>;
@@ -26,6 +27,7 @@ interface ModalProps {
 
 export function Modal({
   isOpen,
+  closing,
   onClose,
   children,
   floatingChildren,
@@ -51,7 +53,7 @@ export function Modal({
   });
 
   // Don't render anything if the modal is not open
-  if (!isOpen) return null;
+  if (!isOpen && !closing) return null;
 
   return ReactDOM.createPortal(
     <>
@@ -73,6 +75,7 @@ export function Modal({
             (position === "center" ? "modal-center " : "modal-custom ") +
             "modal " +
             (isOpen ? "modal-show " : "modal-hide ") +
+            (closing ? " modal-closing " : "") +
             className +
             " " +
             containerClassName

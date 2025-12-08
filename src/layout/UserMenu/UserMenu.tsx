@@ -1,25 +1,27 @@
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Modal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
+import { useModalAnimation } from "@hooks/useModalAnimation";
 
 export function UserMenu() {
   const { user, loading } = useAuth();
-  const [open, setOpen] = useState(false);
+  const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
   const { uiVisible } = useUI();
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Get the logout handler from useAuthHandlers
   const { handleLogout } = useAuthHandlers();
 
   // Close menu on route change
   useEffect(() => {
-    setOpen(false);
+    if (isOpen) closeModal();
   }, [location.pathname]);
 
   // Don't render if UI is not visible
@@ -48,11 +50,12 @@ export function UserMenu() {
   // Show avatar and modal for logged-in users
   return (
     <div className="fixed top-4 right-10 z-[10000]" ref={menuRef}>
-      <UserAvatarButton user={user} onClick={() => setOpen((v) => !v)} />
-      {open && (
+      <UserAvatarButton user={user} onClick={() => setIsOpen((v) => !v)} />
+      {(isOpen || closing) && (
         <Modal
-          isOpen={open}
-          onClose={() => setOpen(false)}
+          isOpen={isOpen}
+          closing={closing}
+          onClose={closeModal}
           position="custom"
           className="absolute right-4 mt-3 w-60 bg-white rounded shadow-lg z-50 p-2"
           style={{ top: "48px", right: 16 }}

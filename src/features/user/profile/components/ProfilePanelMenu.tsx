@@ -30,7 +30,7 @@ export function ProfilePanelMenu({
         {menuItems.map((item) => (
           <li key={item.key}>
             <button
-              className={`flex items-center gap-2 w-full text-left px-4 py-2 rounded mb-2 font-medium transition
+              className={`flex items-center gap-2 w-full text-left px-4 py-2 rounded-lg mb-2 font-medium transition
                 ${
                   selectedPanel === item.key
                     ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
