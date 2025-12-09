@@ -3,6 +3,7 @@ import { useUserDevices } from "@features/user/auth/hooks/useUserDevices";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { useUserActivity } from "../../hooks/useUserActivity";
+import { FaDesktop, FaMobile, FaTablet } from "react-icons/fa6";
 
 export function SecurityInfoSection() {
   const { user } = useAuth();
@@ -13,6 +14,14 @@ export function SecurityInfoSection() {
   const lastLogin = activity
     .filter((a) => a.action === "login")
     .sort((a, b) => b.timestamp - a.timestamp)[0];
+
+  // Get device icon based on user agent
+  function getDeviceIcon(device: any) {
+    const ua = device.userAgent || "";
+    if (/mobile/i.test(ua)) return <FaMobile className="mr-2" size={28} />;
+    if (/tablet|ipad/i.test(ua)) return <FaTablet className="mr-2" size={28} />;
+    return <FaDesktop className="mr-2 mb-4" size={64} />;
+  }
 
   return (
     <section className="mb-8">
@@ -43,26 +52,31 @@ export function SecurityInfoSection() {
               : "Unknown"
           }
         />
-        <ul className="space-y-4 mt-8">
-          <h4 className="font-semibold mb-2">Logged-in Devices</h4>
-          {devices.length === 0 ? (
-            <SecurityInfoRow label="Devices" value="No active devices" />
-          ) : (
-            devices.map((device) => (
-              <SecurityInfoRow
-                key={device.id}
-                label={device.deviceName || device.userAgent || "Device"}
-                value={
-                  device.lastActive
-                    ? `Last active: ${new Date(
-                        device.lastActive
-                      ).toLocaleString()}`
-                    : "Unknown"
-                }
-              />
-            ))
-          )}
-        </ul>
+      </ul>
+      <h4 className="font-semibold mb-2 mt-8">Logged-in Devices</h4>
+      <ul className="space-y-4">
+        {devices.length === 0 ? (
+          <SecurityInfoRow label="Devices" value="No active devices" />
+        ) : (
+          devices.map((device) => (
+            <SecurityInfoRow
+              key={device.id}
+              label={
+                <>
+                  {getDeviceIcon(device)}
+                  {device.deviceName || device.userAgent || "Device"}
+                </>
+              }
+              value={
+                device.lastActive
+                  ? `Last active: ${new Date(
+                      device.lastActive
+                    ).toLocaleString()}`
+                  : "Unknown"
+              }
+            />
+          ))
+        )}
       </ul>
     </section>
   );
