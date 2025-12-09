@@ -29,9 +29,12 @@ interface ModalProps {
   position?: "center" | "custom";
   className?: string;
   containerClassName?: string;
+  containerZIndex?: number;
   backdropClassName?: string;
+  backdropZIndex?: number;
   style?: React.CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  extraRefs?: React.RefObject<HTMLElement | null>[];
 }
 
 export function Modal({
@@ -46,9 +49,12 @@ export function Modal({
   position = "center",
   className = "",
   containerClassName = "",
+  containerZIndex,
   backdropClassName = "",
+  backdropZIndex,
   style,
   containerRef,
+  extraRefs = [],
 }: ModalProps) {
   const { setModalOpen } = useUI();
 
@@ -73,9 +79,15 @@ export function Modal({
   const modalRef = containerRef ?? useRef<HTMLDivElement>(null);
 
   // Close modal on outside click
-  useClickOutside([modalRef as React.RefObject<HTMLElement>], () => {
-    if (!disableClose) onClose();
-  });
+  useClickOutside(
+    [
+      modalRef as React.RefObject<HTMLElement>,
+      ...(extraRefs?.map((ref) => ref as React.RefObject<HTMLElement>) ?? []),
+    ],
+    () => {
+      if (!disableClose) onClose();
+    }
+  );
 
   // Don't render anything if the modal is not open
   if (!isOpen && !closing) return null;
@@ -89,6 +101,7 @@ export function Modal({
         className={`modal-backdrop ${
           scrollable ? "modal-backdrop-scrollable" : ""
         } ${backdropClassName ?? ""}`}
+        style={{ zIndex: backdropZIndex }}
         onClick={
           !scrollable
             ? () => {
@@ -110,7 +123,10 @@ export function Modal({
             " " +
             containerClassName
           }
-          style={position === "custom" ? style : undefined}
+          style={{
+            ...(position === "custom" ? style : {}),
+            zIndex: containerZIndex,
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {children}
