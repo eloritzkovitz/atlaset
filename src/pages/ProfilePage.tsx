@@ -12,6 +12,7 @@ import {
   EditProfileModal,
   ProfilePanelMenu,
   ProfileInfoCard,
+  SecurityInfoSection,
   UserActivitySection,
 } from "@features/user";
 
@@ -42,12 +43,16 @@ export default function ProfilePage() {
   // Determine selected panel from route
   const selectedPanel = location.pathname.endsWith("/activity")
     ? "activity"
+    : location.pathname.endsWith("/security")
+    ? "security"
     : "profile";
 
   // Handle menu navigation
   function handlePanelChange(panel: string) {
     if (panel === "activity") {
       navigate("/profile/activity");
+    } else if (panel === "security") {
+      navigate("/profile/security");
     } else {
       navigate("/profile");
     }
@@ -77,6 +82,7 @@ export default function ProfilePage() {
               }
             />
             <Route path="activity" element={<UserActivitySection />} />
+            <Route path="security" element={<SecurityInfoSection />} />
             {/* Redirect unknown profile routes to /profile */}
             <Route path="*" element={<Navigate to="/profile" replace />} />
           </Routes>

@@ -14,6 +14,7 @@ import {
 } from "firebase/auth";
 import { logUserActivity } from "@utils/firebase";
 import { auth } from "../../../../firebase";
+import { getDeviceInfo, logDevice } from "../utils/device";
 
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
@@ -24,9 +25,11 @@ export async function signIn(email: string, password: string) {
       method: "email",
       userName: result.user.displayName,
       email: result.user.email,
+      device: getDeviceInfo().userAgent,
     },
     result.user!.uid
   );
+  await logDevice(result.user!.uid);
   return result;
 }
 
@@ -47,9 +50,11 @@ export async function signInWithPersistence(
       method: keepLoggedIn ? "email_persistent" : "email_session",
       userName: result.user.displayName,
       email: result.user.email,
+      device: getDeviceInfo().userAgent,
     },
     result.user!.uid
   );
+  await logDevice(result.user!.uid);
   return result;
 }
 
@@ -62,9 +67,11 @@ export async function signUp(email: string, password: string) {
       method: "email",
       userName: result.user.displayName,
       email: result.user.email,
+      device: getDeviceInfo().userAgent,
     },
     result.user!.uid
   );
+  await logDevice(result.user!.uid);
   return result;
 }
 
@@ -110,9 +117,11 @@ export async function signInWithGoogle() {
       method: "google",
       userName: result.user.displayName,
       email: result.user.email,
+      device: getDeviceInfo().userAgent,
     },
     result.user!.uid
   );
+  await logDevice(result.user!.uid);
   return result;
 }
 
