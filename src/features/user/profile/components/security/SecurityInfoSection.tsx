@@ -1,12 +1,14 @@
+import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
+import { deleteDoc, doc } from "firebase/firestore";
+import { ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { logout } from "@features/user/auth/services/authService";
 import { useUserDevices } from "@features/user/auth/hooks/useUserDevices";
+import { isCurrentSession } from "@features/user/auth/utils/device";
+import { getUserCollection } from "@utils/firebase";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { useUserActivity } from "../../hooks/useUserActivity";
-import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
-import { getUserCollection } from "@utils/firebase";
-import { deleteDoc, doc } from "firebase/firestore";
-import { ActionButton } from "@components";
 
 export function SecurityInfoSection() {
   const { user } = useAuth();
@@ -27,9 +29,13 @@ export function SecurityInfoSection() {
   }
 
   // Handle device removal
-  async function handleRemoveDevice(deviceId: string) {
+  async function handleRemoveDevice(deviceId: string, sessionId?: string) {
     const devicesCol = getUserCollection("devices");
     await deleteDoc(doc(devicesCol, deviceId));
+    if (isCurrentSession(sessionId)) {
+      await logout();
+      localStorage.removeItem("sessionId");
+    }
   }
 
   return (

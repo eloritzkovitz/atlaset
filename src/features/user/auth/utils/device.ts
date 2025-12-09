@@ -38,6 +38,15 @@ export function getOrCreateSessionId() {
 }
 
 /**
+ * Checks if the given session ID matches the current session.
+ * @param sessionId - The session ID to check.
+ * @returns True if it matches the current session.
+ */
+export function isCurrentSession(sessionId?: string) {
+  return sessionId === getOrCreateSessionId();
+}
+
+/**
  * Logs device information to Firestore.
  * @param userId The ID of the user.
  */
