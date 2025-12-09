@@ -30,10 +30,14 @@ export const tripsService = {
       for (const trip of trips) {
         await setDoc(doc(tripsCol, trip.id), trip);
       }
-      await logUserActivity("save_trips", {
-        count: trips.length,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "save_trips",
+        {
+          count: trips.length,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.trips.clear();
       if (trips.length > 0) {
@@ -48,11 +52,15 @@ export const tripsService = {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
       await setDoc(doc(tripsCol, trip.id), trip);
-      await logUserActivity("add_trip", {
-        tripId: trip.id,
-        itemName: trip.name,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "add_trip",
+        {
+          tripId: trip.id,
+          itemName: trip.name,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.trips.add(trip);
     }
@@ -64,11 +72,15 @@ export const tripsService = {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
       await setDoc(doc(tripsCol, trip.id), trip);
-      await logUserActivity("edit_trip", {
-        tripId: trip.id,
-        itemName: trip.name,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "edit_trip",
+        {
+          tripId: trip.id,
+          itemName: trip.name,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.trips.put(trip);
     }
@@ -83,11 +95,15 @@ export const tripsService = {
       const tripDoc = snapshot.docs.find((docSnap) => docSnap.id === id);
       const tripName = tripDoc ? tripDoc.data().name : undefined;
       await deleteDoc(doc(tripsCol, id));
-      await logUserActivity("remove_trip", {
-        tripId: id,
-        itemName: tripName,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "remove_trip",
+        {
+          tripId: id,
+          itemName: tripName,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.trips.delete(id);
     }

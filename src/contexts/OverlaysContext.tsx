@@ -89,10 +89,14 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
 
     // Log "add_overlay" for each new overlay
     for (const overlay of uniqueNewOverlays) {
-      await logUserActivity("add_overlay", {
-        overlayId: overlay.id,
-        itemName: overlay.name,
-      });
+      await logUserActivity(
+        "add_overlay",
+        {
+          overlayId: overlay.id,
+          itemName: overlay.name,
+        },
+        user!.uid
+      );
     }
 
     // Save all overlays and log "save_overlays" once

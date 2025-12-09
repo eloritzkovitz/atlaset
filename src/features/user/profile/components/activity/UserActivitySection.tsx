@@ -1,4 +1,5 @@
-import { useRef } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
 import { UserActivityItem } from "./UserActivityItem";
 import { useUserActivity } from "../../hooks/useUserActivity";
@@ -6,11 +7,21 @@ import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
 
 export function UserActivitySection() {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
+  // Redirect to login if not authenticated
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
+
+  // Only fetch activity if user is loaded
   const { activity, loading, hasMore, loadMore } = useUserActivity(user?.uid);
 
-  // Use infinite scroll
-  const loaderRef = useRef<HTMLDivElement>(null);
-  useInfiniteScroll(loaderRef, loadMore, hasMore && !loading);
+  const loaderRef = useInfiniteScroll(loadMore, hasMore && !loading);
+
+  if (!user) return null;
 
   return (
     <div>
@@ -26,7 +37,7 @@ export function UserActivitySection() {
               <UserActivityItem key={act.id} act={act} />
             ))}
           </ul>
-          <div ref={loaderRef} />
+          {hasMore && !loading && activity.length > 0 && <div ref={loaderRef} />}
           {loading && (
             <div className="flex justify-center mt-4">
               <span className="text-gray-400">Loading...</span>

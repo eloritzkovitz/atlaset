@@ -38,11 +38,16 @@ export function getUserCollection(path: string) {
  * @param action The action performed (e.g., "edit_profile", "create_trip").
  * @param details Optional details about the action.
  */
-export async function logUserActivity(action: string, details: object = {}) {
+export async function logUserActivity(
+  action: string,
+  details: object = {},
+  userId?: string
+) {
   const activityCollection = getUserCollection("activity");
   await addDoc(activityCollection, {
     action,
     details,
+    userId,
     timestamp: Date.now(),
   });
 }

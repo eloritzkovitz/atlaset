@@ -62,10 +62,14 @@ export const overlaysService = {
         batch.set(overlayDoc, overlay);
       });
       await batch.commit();
-      await logUserActivity("save_overlays", {
-        count: overlays.length,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "save_overlays",
+        {
+          count: overlays.length,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       if (!overlays || overlays.length === 0) {
         console.warn(
@@ -84,11 +88,15 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
-      await logUserActivity("add_overlay", {
-        overlayId: overlay.id,
-        itemName: overlay.name,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "add_overlay",
+        {
+          overlayId: overlay.id,
+          itemName: overlay.name,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.overlays.add(overlay);
     }
@@ -100,11 +108,15 @@ export const overlaysService = {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
-      await logUserActivity("edit_overlay", {
-        overlayId: overlay.id,
-        itemName: overlay.name,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "edit_overlay",
+        {
+          overlayId: overlay.id,
+          itemName: overlay.name,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.overlays.put(overlay);
     }
@@ -119,11 +131,15 @@ export const overlaysService = {
       const overlayDoc = snapshot.docs.find((docSnap) => docSnap.id === id);
       const overlayName = overlayDoc ? overlayDoc.data().name : undefined;
       await deleteDoc(doc(overlaysCol, id));
-      await logUserActivity("remove_overlay", {
-        overlayId: id,
-        itemName: overlayName,
-        userName: user!.displayName,
-      });
+      await logUserActivity(
+        "remove_overlay",
+        {
+          overlayId: id,
+          itemName: overlayName,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.overlays.delete(id);
     }

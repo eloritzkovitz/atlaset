@@ -1,16 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 /**
- * Enables infinite scrolling by observing the given ref element.
- * @param ref - RefObject of the element to observe
+ * Enables infinite scrolling by returning a ref for the sentinel element.
  * @param callback - Function to call when the element is in view
  * @param enabled - Whether the infinite scroll is enabled
+ * @returns sentinelRef - Attach this to your sentinel div
  */
-export function useInfiniteScroll(
-  ref: React.RefObject<HTMLElement | null>,
-  callback: () => void,
-  enabled: boolean
-) {
+export function useInfiniteScroll(callback: () => void, enabled: boolean) {
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Set up Intersection Observer
   useEffect(() => {
     if (!enabled) return;
     const observer = new window.IntersectionObserver(
@@ -21,13 +20,12 @@ export function useInfiniteScroll(
       },
       { threshold: 1 }
     );
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
+    const node = sentinelRef.current;
+    if (node) observer.observe(node);
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
-      }
+      if (node) observer.unobserve(node);
     };
-  }, [callback, enabled, ref]);
+  }, [callback, enabled]);
+
+  return sentinelRef;
 }

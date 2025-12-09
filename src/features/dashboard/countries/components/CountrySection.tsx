@@ -1,10 +1,11 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { FaThLarge, FaList, FaGlobe, FaCheckCircle } from "react-icons/fa";
 import { ActionButton, SearchInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
 import { CountryDisplayPanel, sortCountries } from "@features/countries";
 import type { Country } from "@types";
 import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
+import { usePagination } from "@hooks/usePagination";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -28,8 +29,6 @@ export function CountrySection({
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
   const [search, setSearch] = useState("");
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-    const [page, setPage] = useState(1);
-
 
   // Handler to toggle visited/all
   const handleVisitedToggle = () => {
@@ -51,12 +50,18 @@ export function CountrySection({
   const sortedCountries = sortCountries(filtered, "name-asc", []);
 
   // Paginate countries
-  const paginatedCountries = sortedCountries.slice(0, page * PAGE_SIZE);
-  const hasMore = paginatedCountries.length < sortedCountries.length;
+  const {
+    data: paginatedCountries,
+    hasMore,
+    loadMore,
+  } = usePagination({
+    items: sortedCountries,
+    pageSize: PAGE_SIZE,
+    mode: "local",
+  });
 
   // Infinite scroll sentinel
-  const sentinelRef = useRef<HTMLDivElement>(null);
-  useInfiniteScroll(sentinelRef, () => setPage((p) => p + 1), hasMore);
+  const sentinelRef = useInfiniteScroll(loadMore, hasMore);
 
   return (
     <div className={className}>
