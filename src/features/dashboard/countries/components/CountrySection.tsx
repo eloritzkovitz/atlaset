@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FaThLarge, FaList, FaGlobe, FaCheckCircle } from "react-icons/fa";
 import { ActionButton, SearchInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
 import { CountryDisplayPanel, sortCountries } from "@features/countries";
 import type { Country } from "@types";
+import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -13,6 +14,8 @@ interface CountrySectionProps {
   initialView?: "grid" | "list";
   className?: string;
 }
+
+const PAGE_SIZE = 20;
 
 export function CountrySection({
   countries,
@@ -25,6 +28,8 @@ export function CountrySection({
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
   const [search, setSearch] = useState("");
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
+    const [page, setPage] = useState(1);
+
 
   // Handler to toggle visited/all
   const handleVisitedToggle = () => {
@@ -44,6 +49,14 @@ export function CountrySection({
 
   // Sort countries by name ascending
   const sortedCountries = sortCountries(filtered, "name-asc", []);
+
+  // Paginate countries
+  const paginatedCountries = sortedCountries.slice(0, page * PAGE_SIZE);
+  const hasMore = paginatedCountries.length < sortedCountries.length;
+
+  // Infinite scroll sentinel
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  useInfiniteScroll(sentinelRef, () => setPage((p) => p + 1), hasMore);
 
   return (
     <div className={className}>
@@ -86,7 +99,7 @@ export function CountrySection({
         />
       </div>
       <CountryDisplayPanel
-        countries={sortedCountries}
+        countries={paginatedCountries}
         visitedCountryCodes={visitedCountryCodes}
         view={viewMode}
         showFlags={true}
@@ -94,6 +107,8 @@ export function CountrySection({
         selectedIsoCode={selectedIsoCode}
         onCountryInfo={(country) => setSelectedIsoCode(country.isoCode)}
       />
+      {/* Infinite scroll sentinel */}
+      {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
     </div>
   );
 }
