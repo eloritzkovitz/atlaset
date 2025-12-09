@@ -1,4 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
 import {
   FaBars,
   FaChartSimple,
@@ -14,14 +13,18 @@ import {
 import { useUI } from "@contexts/UIContext";
 import { SidebarMenuLink } from "./SidebarMenuLink";
 import "./Sidebar.css";
+import { usePanelHide } from "@hooks/usePanelHide";
 
-interface SidebarProps {
-  expanded: boolean;
-  setExpanded: Dispatch<SetStateAction<boolean>>;
-}
+export function Sidebar() {
+  const { uiVisible, sidebarExpanded, setSidebarExpanded } = useUI();
 
-export function Sidebar({ expanded, setExpanded }: SidebarProps) {
-  const { uiVisible } = useUI();
+  // Hide sidebar on Escape key or when UI is hidden
+  usePanelHide({
+    show: sidebarExpanded,
+    onHide: () => setSidebarExpanded(false),
+    isModal: false,
+    escEnabled: true,
+  });
 
   // Hide sidebar if UI is not visible
   if (!uiVisible) {
@@ -29,15 +32,18 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
   }
 
   // Determine sidebar width
-  const sidebarWidth = expanded
+  const sidebarWidth = sidebarExpanded
     ? DEFAULT_SIDEBAR_EXPANDED_WIDTH
     : DEFAULT_SIDEBAR_WIDTH;
 
   return (
     <>
       {/* Backdrop when expanded */}
-      {expanded && (
-        <div className="sidebar-backdrop" onClick={() => setExpanded(false)} />
+      {sidebarExpanded && (
+        <div
+          className="sidebar-backdrop"
+          onClick={() => setSidebarExpanded(false)}
+        />
       )}
       <aside
         className={`sidebar-container transition-all duration-200`}
@@ -49,14 +55,14 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
         {/* Expand/Collapse Button */}
         <div className="sidebar-title">
           <ActionButton
-            onClick={() => setExpanded((v: any) => !v)}
-            aria-label={expanded ? "Collapse sidebar" : "Expand sidebar"}
-            title={expanded ? "Collapse sidebar" : "Expand sidebar"}
+            onClick={() => setSidebarExpanded(!sidebarExpanded)}
+            aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
+            title={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
             className="sidebar-header-action"
           >
             <FaBars size={20} />
           </ActionButton>
-          {expanded && (
+          {sidebarExpanded && (
             <div className="flex items-center gap-2 px-2">
               <Branding size={36} />
               <span className="font-bold text-2xl">Atlaset</span>
@@ -70,27 +76,27 @@ export function Sidebar({ expanded, setExpanded }: SidebarProps) {
             to="/"
             icon={<FaEarthAmericas size={24} />}
             label="Atlas"
-            expanded={expanded}
+            expanded={sidebarExpanded}
             end
           />
           <SidebarMenuLink
             to="/dashboard"
             icon={<FaChartSimple size={24} />}
             label="Dashboard"
-            expanded={expanded}
+            expanded={sidebarExpanded}
           />
           <SidebarMenuLink
             to="/game"
             icon={<FaGamepad size={24} />}
             label="Games"
-            expanded={expanded}
+            expanded={sidebarExpanded}
             end
           />
           <SidebarMenuLink
             to="/trips"
             icon={<FaSuitcaseRolling size={24} />}
             label="My Trips"
-            expanded={expanded}
+            expanded={sidebarExpanded}
             end
           />
         </nav>

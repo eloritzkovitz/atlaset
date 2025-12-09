@@ -53,10 +53,18 @@ vi.mock("./tripsService", () => ({
 }));
 
 const { appDb } = await import("@utils/db");
-const { markersService } = await import("@features/atlas/markers");
-const { overlaysService } = await import("@features/atlas/overlays");
-const { tripsService } = await import("@features/trips");
-const { settingsService } = await import("@features/settings");
+const { markersService } = await import(
+  "../../features/atlas/markers/services/markersService"
+);
+const { overlaysService } = await import(
+  "../../features/atlas/overlays/services/overlaysService"
+);
+const { tripsService } = await import(
+  "../../features/trips/services/tripsService"
+);
+const { settingsService } = await import(
+  "../../features/settings/services/settingsService"
+);
 
 describe("migrationService", () => {
   beforeEach(() => {
@@ -94,39 +102,58 @@ describe("migrationService", () => {
     it("merges and migrates all guest data, then clears guest DB", async () => {
       // Markers
       (appDb.markers.toArray as any).mockResolvedValueOnce([{ id: "a" }]);
-      (markersService.load as any).mockResolvedValueOnce([{ id: "b" }]);
-      (markersService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(markersService, "load").mockResolvedValueOnce([
+        {
+          id: "b",
+          name: "",
+          latitude: 0,
+          longitude: 0,
+          visible: false,
+        },
+      ]);
+      vi.spyOn(markersService, "save").mockResolvedValueOnce(undefined);
 
       // Overlays
       (appDb.overlays.toArray as any).mockResolvedValueOnce([{ id: "x" }]);
-      (overlaysService.load as any).mockResolvedValueOnce([{ id: "y" }]);
-      (overlaysService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(overlaysService, "load").mockResolvedValueOnce([
+        { id: "y", name: "", color: "", countries: [], visible: false },
+      ]);
+      vi.spyOn(overlaysService, "save").mockResolvedValueOnce(undefined);
 
       // Settings
       (appDb.settings.get as any).mockResolvedValueOnce({
         id: "main",
         theme: "dark",
       });
-      (settingsService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(settingsService, "save").mockResolvedValueOnce(undefined);
 
       // Trips
       (appDb.trips.toArray as any).mockResolvedValueOnce([{ id: "t1" }]);
-      (tripsService.load as any).mockResolvedValueOnce([{ id: "t2" }]);
-      (tripsService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(tripsService, "load").mockResolvedValueOnce([
+        {
+          id: "t2",
+          name: "",
+          countryCodes: [],
+          startDate: "",
+          endDate: "",
+          fullDays: 0,
+        },
+      ]);
+      vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
 
       await migrateGuestDataToFirestore();
 
       // Markers merged and saved
       expect(markersService.save).toHaveBeenCalledWith([
         { id: "a" },
-        { id: "b" },
+        { id: "b", name: "", latitude: 0, longitude: 0, visible: false },
       ]);
       expect(appDb.markers.clear).toHaveBeenCalled();
 
       // Overlays merged and saved
       expect(overlaysService.save).toHaveBeenCalledWith([
         { id: "x" },
-        { id: "y" },
+        { id: "y", name: "", color: "", countries: [], visible: false },
       ]);
       expect(appDb.overlays.clear).toHaveBeenCalled();
 
@@ -140,25 +167,32 @@ describe("migrationService", () => {
       // Trips merged and saved
       expect(tripsService.save).toHaveBeenCalledWith([
         { id: "t1" },
-        { id: "t2" },
+        {
+          id: "t2",
+          name: "",
+          countryCodes: [],
+          startDate: "",
+          endDate: "",
+          fullDays: 0,
+        },
       ]);
       expect(appDb.trips.clear).toHaveBeenCalled();
     });
 
     it("does not save settings if none exist", async () => {
       (appDb.markers.toArray as any).mockResolvedValueOnce([]);
-      (markersService.load as any).mockResolvedValueOnce([]);
-      (markersService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(markersService, "load").mockResolvedValueOnce([]);
+      vi.spyOn(markersService, "save").mockResolvedValueOnce(undefined);
 
       (appDb.overlays.toArray as any).mockResolvedValueOnce([]);
-      (overlaysService.load as any).mockResolvedValueOnce([]);
-      (overlaysService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(overlaysService, "load").mockResolvedValueOnce([]);
+      vi.spyOn(overlaysService, "save").mockResolvedValueOnce(undefined);
 
       (appDb.settings.get as any).mockResolvedValueOnce(undefined);
 
       (appDb.trips.toArray as any).mockResolvedValueOnce([]);
-      (tripsService.load as any).mockResolvedValueOnce([]);
-      (tripsService.save as any).mockResolvedValueOnce(undefined);
+      vi.spyOn(tripsService, "load").mockResolvedValueOnce([]);
+      vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
 
       await migrateGuestDataToFirestore();
 

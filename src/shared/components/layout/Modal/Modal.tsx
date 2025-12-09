@@ -1,6 +1,14 @@
-import React, { type ReactNode, type ReactElement, isValidElement } from "react";
+import React, {
+  type ReactNode,
+  type ReactElement,
+  isValidElement,
+  useRef,
+  useEffect,
+} from "react";
 import ReactDOM from "react-dom";
+import { useUI } from "@contexts/UIContext";
 import { useFloatingHover as useFloatingHoverHook } from "@hooks/useFloatingHover";
+import { useClickOutside } from "@hooks/useClickOutside";
 import { usePanelHide } from "@hooks/usePanelHide";
 import "./Modal.css";
 
@@ -11,33 +19,51 @@ type FloatingButtonProps = {
 
 interface ModalProps {
   isOpen: boolean;
+  closing?: boolean;
   onClose: () => void;
   children: ReactNode;
   floatingChildren?: ReactElement<FloatingButtonProps>;
   useFloatingHover?: boolean;
-  className?: string;
-  position?: "center" | "custom";
-  containerClassName?: string;
-  backdropClassName?: string;
-  style?: React.CSSProperties;
+  scrollable?: boolean;
   disableClose?: boolean;
+  position?: "center" | "custom";
+  className?: string;
+  containerClassName?: string;
+  containerZIndex?: number;
+  backdropClassName?: string;
+  backdropZIndex?: number;
+  style?: React.CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  extraRefs?: React.RefObject<HTMLElement | null>[];
 }
 
 export function Modal({
   isOpen,
+  closing,
   onClose,
   children,
   floatingChildren,
   useFloatingHover = false,
-  className = "",
-  position = "center",
-  containerClassName = "",
-  backdropClassName = "",
-  style,
+  scrollable = false,
   disableClose = false,
+  position = "center",
+  className = "",
+  containerClassName = "",
+  containerZIndex,
+  backdropClassName = "",
+  backdropZIndex,
+  style,
   containerRef,
+  extraRefs = [],
 }: ModalProps) {
+  const { setModalOpen } = useUI();
+
+  // Set modal open state for UI context
+  useEffect(() => {
+    setModalOpen(isOpen);
+    return () => setModalOpen(false);
+  }, [isOpen, setModalOpen]);
+
   // Handle floating hover logic
   const { hoverHandlers, floatingHandlers, shouldShowFloating } =
     useFloatingHoverHook(useFloatingHover);
@@ -50,34 +76,57 @@ export function Modal({
     escEnabled: disableClose ? false : true,
   });
 
+  const modalRef = containerRef ?? useRef<HTMLDivElement>(null);
+
+  // Close modal on outside click
+  useClickOutside(
+    [
+      modalRef as React.RefObject<HTMLElement>,
+      ...(extraRefs?.map((ref) => ref as React.RefObject<HTMLElement>) ?? []),
+    ],
+    () => {
+      if (!disableClose) onClose();
+    }
+  );
+
   // Don't render anything if the modal is not open
-  if (!isOpen) return null;
+  if (!isOpen && !closing) return null;
 
   return ReactDOM.createPortal(
     <>
       <div
-        onClick={() => {
-          if (!disableClose) onClose();
-        }}
         aria-modal="true"
         inert={!isOpen}
         role="dialog"
-        className={`modal-backdrop ${backdropClassName ?? ""}`}
-        style={{ pointerEvents: isOpen ? "auto" : "none" }}
+        className={`modal-backdrop ${
+          scrollable ? "modal-backdrop-scrollable" : ""
+        } ${backdropClassName ?? ""}`}
+        style={{ zIndex: backdropZIndex }}
+        onClick={
+          !scrollable
+            ? () => {
+                if (!disableClose) onClose();
+              }
+            : undefined
+        }
       >
         <div
-          ref={containerRef}
+          ref={modalRef}
           {...hoverHandlers}
           className={
             "group " +
             (position === "center" ? "modal-center " : "modal-custom ") +
             "modal " +
             (isOpen ? "modal-show " : "modal-hide ") +
+            (closing ? " modal-closing " : "") +
             className +
             " " +
             containerClassName
           }
-          style={position === "custom" ? style : undefined}
+          style={{
+            ...(position === "custom" ? style : {}),
+            zIndex: containerZIndex,
+          }}
           onClick={(e) => e.stopPropagation()}
         >
           {children}

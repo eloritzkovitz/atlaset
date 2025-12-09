@@ -24,7 +24,7 @@ export function MapUiContainer({
   overlays,
   isAddingMarker,
 }: MapUiContainerProps) {
-  const { showLegend, toggleLegend, uiVisible } = useUI();
+  const { showLegend, closeLegend, uiVisible } = useUI();
   const { timelineMode, setTimelineMode, overlayMode } = useTimeline();
   const legendItems = useMapLegendItems(overlays, timelineMode, overlayMode);
 
@@ -75,7 +75,7 @@ export function MapUiContainer({
       {selectedCoords && <MapCoordinatesDisplay coords={selectedCoords} />}
       <MapLegendModal
         open={showLegend}
-        onClose={toggleLegend}
+        onClose={closeLegend}
         items={legendItems}
       />
     </>

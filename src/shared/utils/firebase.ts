@@ -1,10 +1,9 @@
-
 /**
  * Utility functions for Firebase authentication and Firestore user collections.
  */
 
 import { getAuth } from "firebase/auth";
-import { collection } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase";
 
 /**
@@ -32,4 +31,23 @@ export function getUserCollection(path: string) {
   const user = getCurrentUser();
   if (!user) throw new Error("Not authenticated");
   return collection(db, "users", user.uid, path);
+}
+
+/**
+ * Logs a user activity event to Firestore.
+ * @param action The action performed (e.g., "edit_profile", "create_trip").
+ * @param details Optional details about the action.
+ */
+export async function logUserActivity(
+  action: string,
+  details: object = {},
+  userId?: string
+) {
+  const activityCollection = getUserCollection("activity");
+  await addDoc(activityCollection, {
+    action,
+    details,
+    userId,
+    timestamp: Date.now(),
+  });
 }

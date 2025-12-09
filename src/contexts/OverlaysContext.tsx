@@ -3,6 +3,7 @@ import { useTrips } from "@contexts/TripsContext";
 import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
 import { overlaysService } from "@features/atlas/overlays";
 import type { AnyOverlay } from "@types";
+import { logUserActivity } from "@utils/firebase";
 import { useAuth } from "./AuthContext";
 
 interface OverlaysContextType {
@@ -85,6 +86,20 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
     const existingIds = new Set(overlays.map((o) => o.id));
     const uniqueNewOverlays = newOverlays.filter((o) => !existingIds.has(o.id));
     const merged = [...overlays, ...uniqueNewOverlays];
+
+    // Log "add_overlay" for each new overlay
+    for (const overlay of uniqueNewOverlays) {
+      await logUserActivity(
+        "add_overlay",
+        {
+          overlayId: overlay.id,
+          itemName: overlay.name,
+        },
+        user!.uid
+      );
+    }
+
+    // Save all overlays and log "save_overlays" once
     await overlaysService.save(merged);
     setOverlays(merged);
   }

@@ -1,4 +1,4 @@
-import { UserAvatar } from "../UserAvatar/UserAvatar";
+import { UserAvatar } from "@features/user";
 
 interface UserAvatarButtonProps {
   user: any;

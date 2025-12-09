@@ -38,7 +38,6 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [markers, setMarkers] = useState<Marker[]>([]);
-  const [initialized, setInitialized] = useState(false);
 
   // Adding state
   const [isAddingMarker, setIsAddingMarker] = useState(false);
@@ -66,20 +65,12 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
     if (user) {
       markersService.load().then((dbMarkers) => {
         if (mounted) setMarkers(dbMarkers);
-        setInitialized(true);
       });
     }
     return () => {
       mounted = false;
     };
   }, [user, ready]);
-
-  // Save markers to IndexedDB whenever they change
-  useEffect(() => {
-    if (initialized) {
-      markersService.save(markers);
-    }
-  }, [markers, initialized]);
 
   // Start adding a new marker
   function startAddingMarker() {

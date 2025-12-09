@@ -88,6 +88,8 @@ export function DropdownSelectInput<T = string>({
               ...menuStyle,
               zIndex: 11000,
             }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
             <DropdownOptions
               options={options}

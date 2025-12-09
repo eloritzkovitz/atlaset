@@ -1,36 +1,23 @@
+import { vi } from "vitest";
 import {
-  createDbMock,
   firestoreMocks,
   authMocks,
   resetAllMocks,
 } from "@test-utils/mockDbAndFirestore";
+import {
+  mockIndexedDb,
+  mockFirebaseUtils,
+  mockFirestore,
+} from "@test-utils/setupVitestMocks";
 import { markersService } from "./markersService";
-import { vi } from "vitest";
 
-// IndexedDB mock
-vi.mock("@utils/db", () => {
-  const markersMock = createDbMock([
-    "toArray",
-    "clear",
-    "bulkAdd",
-    "add",
-    "put",
-    "delete",
-  ]);
-  return {
-    appDb: { markers: markersMock },
-    __markersMock: markersMock,
-  };
-});
+// Mock IndexedDB, Firebase utils, and Firestore
+mockIndexedDb();
+mockFirebaseUtils();
+mockFirestore();
 
-// Firebase Auth/User mocks
-vi.mock("@utils/firebase", () => authMocks);
-
-// Firestore mocks
-vi.mock("firebase/firestore", () => firestoreMocks);
-vi.mock("../../firebase", () => ({ db: {} }));
-
-const { __markersMock: markersMock } = (await import("@utils/db")) as any;
+// Import services and mocks
+import { markersMock } from "@test-utils/setupVitestMocks";
 const { isAuthenticated, getCurrentUser } = await import("@utils/firebase");
 const { collection, doc, getDocs, setDoc, deleteDoc, writeBatch } =
   await import("firebase/firestore");

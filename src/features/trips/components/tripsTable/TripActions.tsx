@@ -1,11 +1,10 @@
 import { useState, useRef } from "react";
-import { createPortal } from "react-dom";
 import { FaEllipsisV, FaEdit, FaTrash } from "react-icons/fa";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useMenuPosition } from "@hooks/useMenuPosition";
 import type { Trip } from "@types";
-import { ActionButton, MenuButton } from "@components";
+import { ActionButton, MenuButton, Modal } from "@components";
 
 interface TripActionsProps {
   trip: Trip;
@@ -45,32 +44,37 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
           icon={<FaEllipsisV />}
         />
       </div>
-      {open &&
-        createPortal(
-          <div ref={menuRef} className="trips-actions-menu" style={menuStyle}>
-            <MenuButton
-              className="trips-actions-button"
-              onClick={() => {
-                setTimeout(() => setOpen(false), 300);
-                onEdit(trip);
-              }}
-              icon={<FaEdit className="mr-2" />}
-            >
-              Edit
-            </MenuButton>
-            <MenuButton
-              className="trips-actions-button trips-actions-delete"
-              onClick={() => {
-                setTimeout(() => setOpen(false), 300);
-                onDelete(trip);
-              }}
-              icon={<FaTrash className="mr-2" />}
-            >
-              Delete
-            </MenuButton>
-          </div>,
-          document.body
-        )}
+      <Modal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        scrollable={false}
+        position="custom"
+        style={menuStyle}
+        containerRef={menuRef}
+        backdropClassName="trips-actions-backdrop"
+        containerClassName="trips-actions-menu"
+      >
+        <MenuButton
+          className="trips-actions-button"
+          onClick={() => {
+            setTimeout(() => setOpen(false), 300);
+            onEdit(trip);
+          }}
+          icon={<FaEdit className="mr-2" />}
+        >
+          Edit
+        </MenuButton>
+        <MenuButton
+          className="trips-actions-button trips-actions-delete"
+          onClick={() => {
+            setTimeout(() => setOpen(false), 300);
+            onDelete(trip);
+          }}
+          icon={<FaTrash className="mr-2" />}
+        >
+          Delete
+        </MenuButton>
+      </Modal>
     </>
   );
 }

@@ -16,6 +16,7 @@ import GamesPage from "./pages/GamesPage";
 import TripsPage from "./pages/TripsPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const { loading } = useSettings();
@@ -62,6 +63,7 @@ function App() {
                       <Route path="/dashboard/*" element={<DashboardPage />} />
                       <Route path="/game" element={<GamesPage />} />
                       <Route path="/trips" element={<TripsPage />} />
+                      <Route path="/profile/*" element={<ProfilePage />} />
                     </Routes>
                   </AppLayout>
                 }

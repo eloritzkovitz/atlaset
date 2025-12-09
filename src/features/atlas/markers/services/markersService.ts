@@ -8,7 +8,11 @@ import {
 } from "firebase/firestore";
 import type { Marker } from "@types";
 import { appDb } from "@utils/db";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import {
+  isAuthenticated,
+  getCurrentUser,
+  logUserActivity,
+} from "@utils/firebase";
 import { db } from "../../../../firebase";
 
 export const markersService = {
@@ -40,6 +44,14 @@ export const markersService = {
         batch.set(markerDoc, marker);
       });
       await batch.commit();
+      await logUserActivity(
+        "save_markers",
+        {
+          count: markers.length,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.markers.clear();
       if (markers.length > 0) {
@@ -54,6 +66,15 @@ export const markersService = {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await setDoc(doc(markersCol, marker.id), marker);
+      await logUserActivity(
+        "add_marker",
+        {
+          markerId: marker.id,
+          itemName: marker.name,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.markers.add(marker);
     }
@@ -65,6 +86,15 @@ export const markersService = {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await setDoc(doc(markersCol, marker.id), marker);
+      await logUserActivity(
+        "edit_marker",
+        {
+          markerId: marker.id,
+          itemName: marker.name,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.markers.put(marker);
     }
@@ -75,7 +105,19 @@ export const markersService = {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
+      const snapshot = await getDocs(markersCol);
+      const markerDoc = snapshot.docs.find((docSnap) => docSnap.id === id);
+      const markerName = markerDoc ? markerDoc.data().name : undefined;
       await deleteDoc(doc(markersCol, id));
+      await logUserActivity(
+        "remove_marker",
+        {
+          markerId: id,
+          itemName: markerName,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
     } else {
       await appDb.markers.delete(id);
     }

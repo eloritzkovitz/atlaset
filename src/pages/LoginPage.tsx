@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AuthForm, useAuthHandlers, AuthLayout } from "@features/auth";
+import { AuthForm, useAuthHandlers, AuthLayout } from "@features/user";
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =

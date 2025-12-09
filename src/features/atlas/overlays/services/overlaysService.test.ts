@@ -1,38 +1,23 @@
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import {
-  createDbMock,
   firestoreMocks,
   authMocks,
   resetAllMocks,
 } from "@test-utils/mockDbAndFirestore";
+import {
+  mockIndexedDb,
+  mockFirebaseUtils,
+  mockFirestore,
+  overlaysMock,  
+} from "@test-utils/setupVitestMocks";
 import { overlaysService } from "./overlaysService";
-import { vi } from "vitest";
 
-// IndexedDB mock
-vi.mock("@utils/db", () => {
-  const overlaysMock = createDbMock([
-    "toArray",
-    "clear",
-    "bulkAdd",
-    "bulkPut",
-    "add",
-    "put",
-    "delete",
-  ]);
-  return {
-    appDb: { overlays: overlaysMock },
-    __overlaysMock: overlaysMock,
-  };
-});
+// Mock IndexedDB, Firebase utils, and Firestore
+mockIndexedDb();
+mockFirebaseUtils();
+mockFirestore();
 
-// Firebase Auth/User mocks
-vi.mock("@utils/firebase", () => authMocks);
-
-// Firestore mocks
-vi.mock("firebase/firestore", () => firestoreMocks);
-vi.mock("../../firebase", () => ({ db: {} }));
-
-const { __overlaysMock: overlaysMock } = (await import("@utils/db")) as any;
+// Import services and mocks
 const { isAuthenticated, getCurrentUser } = await import("@utils/firebase");
 const { collection, doc, getDocs, setDoc, deleteDoc, writeBatch } =
   await import("firebase/firestore");

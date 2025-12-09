@@ -44,6 +44,9 @@ export function CountryDetailsModal({
 
   // For positioning the drawer and chevron
   const modalRef = useRef<HTMLDivElement>(null);
+  const openChevronRef = useRef<HTMLButtonElement>(null);
+  const closeChevronRef = useRef<HTMLButtonElement>(null);
+  const drawerRef = useRef<HTMLDivElement>(null);
 
   // Auto-close drawer when modal closes
   useEffect(() => {
@@ -74,16 +77,21 @@ export function CountryDetailsModal({
           onClose={() => setShowVisitsDrawer(false)}
           visits={visits}
           targetRef={modalRef}
+          chevronRef={closeChevronRef}
         />
       )}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
         className="bg-white rounded-xl p-8 min-w-[540px] max-w-[100vw] w-[350px] shadow-lg relative"
-        containerRef={modalRef}
+        containerRef={modalRef}        
+        extraRefs={[openChevronRef, closeChevronRef, drawerRef]}       
+        containerZIndex={10050}
+      backdropZIndex={10040} 
         floatingChildren={
           (!showVisitsDrawer && (
             <FloatingChevronButton
+              ref={openChevronRef}
               targetRef={modalRef}
               position="right"
               chevronDirection="right"
@@ -96,7 +104,7 @@ export function CountryDetailsModal({
         }
         useFloatingHover={true}
       >
-        <div ref={modalRef} className="relative overflow-visible">
+        <div className="relative overflow-visible">
           <PanelHeader
             title={
               <span className="flex items-center gap-2">

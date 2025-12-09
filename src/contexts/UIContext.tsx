@@ -11,8 +11,8 @@ import { useKeyHandler } from "@hooks/useKeyHandler";
 export interface UIContextType {
   uiVisible: boolean;
   setUiVisible: (v: boolean | ((prev: boolean) => boolean)) => void;
-  showMenu: boolean;
-  setShowMenu: (v: boolean) => void;
+  sidebarExpanded: boolean;
+  setSidebarExpanded: (v: boolean) => void;
   showCountries: boolean;
   toggleCountries: () => void;
   showFilters: boolean;
@@ -26,13 +26,14 @@ export interface UIContextType {
   showSettings: boolean;
   toggleSettings: () => void;
   closePanel: () => void;
-  openModal: ModalSelection;
-  setOpenModal: (v: ModalSelection) => void;
+  modalOpen: boolean;
+  setModalOpen: (v: boolean) => void;
   showLegend: boolean;
   toggleLegend: () => void;
   showShortcuts: boolean;
   toggleShortcuts: () => void;
-  closeModal: () => void;
+  closeLegend: () => void;  
+  closeShortcuts: () => void;
 }
 
 // Type for panel selection
@@ -44,16 +45,13 @@ type PanelSelection =
   | "settings"
   | null;
 
-// Type for modal selection
-type ModalSelection = "shortcuts" | "legend" | "countryDetails" | null;
-
 export const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
 
   // State for which panel is open; null means no panel is open
-  const [showMenu, setShowMenu] = useState(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [openPanel, setOpenPanel] = useState<PanelSelection>("countries");
   const prevOpenPanel = useRef<PanelSelection>(openPanel);
   const [showFilters, setShowFilters] = useState(false);
@@ -84,17 +82,16 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const closePanel = () => setOpenPanel(null);
 
   // Modal state
-  const [openModal, setOpenModal] = useState<ModalSelection>(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Derived states for individual modals
-  const showShortcuts = openModal === "shortcuts";
-  const showLegend = openModal === "legend";
+  const [showLegend, setShowLegend] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
-  const toggleLegend = () =>
-    setOpenModal((prev) => (prev === "legend" ? null : "legend"));
-  const toggleShortcuts = () =>
-    setOpenModal((prev) => (prev === "shortcuts" ? null : "shortcuts"));
-  const closeModal = () => setOpenModal(null);
+  const toggleLegend = () => setShowLegend((prev) => !prev);
+  const toggleShortcuts = () => setShowShortcuts((prev) => !prev);
+  const closeLegend = () => setShowLegend(false);
+  const closeShortcuts = () => setShowShortcuts(false);
 
   // Toggle UI visibility with "U"
   useKeyHandler(toggleUiVisible, ["u", "U"], true);
@@ -112,7 +109,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   useKeyHandler(toggleOverlays, ["o", "O"], true);
 
   // Toggle Legend with "L"
-  useKeyHandler(toggleLegend, ["l", "L"], true);  
+  useKeyHandler(toggleLegend, ["l", "L"], true);
 
   // Toggle Export panel with "E"
   useKeyHandler(toggleExport, ["e", "E"], true);
@@ -141,8 +138,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
       value={{
         uiVisible,
         setUiVisible,
-        showMenu,
-        setShowMenu,
+        sidebarExpanded,
+        setSidebarExpanded,
         showCountries,
         toggleCountries,
         showFilters,
@@ -156,13 +153,14 @@ export function UIProvider({ children }: { children: ReactNode }) {
         showSettings,
         toggleSettings,
         closePanel,
-        openModal,
-        setOpenModal,
+        modalOpen,
+        setModalOpen,
         showLegend,
         toggleLegend,
+        closeLegend,
         showShortcuts,
-        toggleShortcuts,
-        closeModal,
+        toggleShortcuts,       
+        closeShortcuts,
       }}
     >
       {children}

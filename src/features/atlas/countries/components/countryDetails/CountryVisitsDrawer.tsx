@@ -8,13 +8,15 @@ interface CountryVisitsDrawerProps {
   onClose: () => void;
   visits: Visit[];
   targetRef: React.RefObject<HTMLElement | null>;
-};
+  chevronRef?: React.RefObject<HTMLButtonElement | null>;
+}
 
 export function CountryVisitsDrawer({
   open,
   onClose,
   visits,
   targetRef,
+  chevronRef,
 }: CountryVisitsDrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
   const [drawerStyle, setDrawerStyle] = useState<React.CSSProperties>({});
@@ -30,7 +32,6 @@ export function CountryVisitsDrawer({
         left: rect.right,
         height: rect.height,
         width: 320,
-        zIndex: 10,
       });
     }
   }, [open, targetRef]);
@@ -50,16 +51,17 @@ export function CountryVisitsDrawer({
     <Modal
       isOpen={open || exiting}
       onClose={handleClose}
-      className={`transition-transform duration-300 ease-in-out ${
+      className={`transition-transform duration-300 ease-in-out shadow-lg ${
         exiting ? "-translate-x-full" : "translate-x-0"
       }`}
       style={drawerStyle}
-      position="custom"
-      containerClassName="z-40"
-      backdropClassName="z-30"
+      containerZIndex={10030}
+      backdropZIndex={10020}
+      position="custom"      
       floatingChildren={
         !exiting ? (
           <FloatingChevronButton
+            ref={chevronRef}
             targetRef={drawerRef}
             position="right"
             chevronDirection="left"
@@ -72,6 +74,7 @@ export function CountryVisitsDrawer({
       }
       disableClose
       containerRef={drawerRef}
+      extraRefs={[chevronRef as React.RefObject<HTMLElement>]}
     >
       <div>
         <div className="flex-1 overflow-y-auto p-4">

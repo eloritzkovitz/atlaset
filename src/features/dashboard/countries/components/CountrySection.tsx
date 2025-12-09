@@ -4,6 +4,8 @@ import { ActionButton, SearchInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
 import { CountryDisplayPanel, sortCountries } from "@features/countries";
 import type { Country } from "@types";
+import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
+import { usePagination } from "@hooks/usePagination";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -13,6 +15,8 @@ interface CountrySectionProps {
   initialView?: "grid" | "list";
   className?: string;
 }
+
+const PAGE_SIZE = 20;
 
 export function CountrySection({
   countries,
@@ -44,6 +48,20 @@ export function CountrySection({
 
   // Sort countries by name ascending
   const sortedCountries = sortCountries(filtered, "name-asc", []);
+
+  // Paginate countries
+  const {
+    data: paginatedCountries,
+    hasMore,
+    loadMore,
+  } = usePagination({
+    items: sortedCountries,
+    pageSize: PAGE_SIZE,
+    mode: "local",
+  });
+
+  // Infinite scroll sentinel
+  const sentinelRef = useInfiniteScroll(loadMore, hasMore);
 
   return (
     <div className={className}>
@@ -86,7 +104,7 @@ export function CountrySection({
         />
       </div>
       <CountryDisplayPanel
-        countries={sortedCountries}
+        countries={paginatedCountries}
         visitedCountryCodes={visitedCountryCodes}
         view={viewMode}
         showFlags={true}
@@ -94,6 +112,8 @@ export function CountrySection({
         selectedIsoCode={selectedIsoCode}
         onCountryInfo={(country) => setSelectedIsoCode(country.isoCode)}
       />
+      {/* Infinite scroll sentinel */}
+      {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
     </div>
   );
 }

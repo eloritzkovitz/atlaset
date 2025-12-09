@@ -1,36 +1,22 @@
 import {
-  createDbMock,
   firestoreMocks,
   authMocks,
   resetAllMocks,
 } from "@test-utils/mockDbAndFirestore";
+import {
+  mockIndexedDb,
+  mockFirebaseUtils,
+  mockFirestore,
+  tripsMock,
+} from "@test-utils/setupVitestMocks";
 import { tripsService } from "./tripsService";
-import { vi } from "vitest";
 
-// IndexedDB mock
-vi.mock("@utils/db", () => {
-  const tripsMock = createDbMock([
-    "toArray",
-    "add",
-    "put",
-    "delete",
-    "clear",
-    "bulkAdd",
-  ]);
-  return {
-    appDb: { trips: tripsMock },
-    __tripsMock: tripsMock,
-  };
-});
+// Mock IndexedDB, Firebase utils, and Firestore
+mockIndexedDb();
+mockFirebaseUtils();
+mockFirestore();
 
-// Firebase Auth/User mocks
-vi.mock("@utils/firebase", () => authMocks);
-
-// Firestore mocks
-vi.mock("firebase/firestore", () => firestoreMocks);
-vi.mock("../../firebase", () => ({ db: {} }));
-
-const { __tripsMock: tripsMock } = (await import("@utils/db")) as any;
+// Import services and mocks
 const { isAuthenticated, getUserCollection } = await import("@utils/firebase");
 const { doc, getDocs, setDoc, deleteDoc } = await import("firebase/firestore");
 
@@ -120,7 +106,7 @@ describe("tripsService", () => {
   it("updates a trip in IndexedDB (guest)", async () => {
     (isAuthenticated as any).mockReturnValue(false);
     const trip = { id: "3", name: "Trip 3" };
-    await tripsService.update(trip as any);
+    await tripsService.edit(trip as any);
     expect(tripsMock.put).toHaveBeenCalledWith(trip);
   });
 
@@ -130,7 +116,7 @@ describe("tripsService", () => {
     (getUserCollection as any).mockReturnValue(tripsCol);
     (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
     const trip = { id: "3", name: "Trip 3" };
-    await tripsService.update(trip as any);
+    await tripsService.edit(trip as any);
     expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "3" }, trip);
   });
 

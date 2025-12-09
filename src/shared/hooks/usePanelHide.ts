@@ -15,18 +15,19 @@ export function usePanelHide({
   isModal = false,
   escEnabled = false,
 }: UsePanelHideOptions) {
-  const { uiVisible, openModal } = useUI();
+  const { uiVisible, modalOpen } = useUI();
 
   // Hide on Escape key
   useKeyHandler(
     () => {
-      // Only hide the panel if it's a modal, or if no modal is open
-      if (
-        show &&
-        onHide &&
-        escEnabled &&
-        (isModal || (!isModal && !openModal))
-      ) {
+      if (!show || !onHide || !escEnabled) return;
+
+      // If this is a modal, always allow closing
+      if (isModal) {
+        onHide();
+      }
+      // If this is a panel, only close if no modal is open
+      else if (!modalOpen) {
         onHide();
       }
     },

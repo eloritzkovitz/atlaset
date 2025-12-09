@@ -7,15 +7,20 @@
 }
 
 .dark .modal {
-    @apply bg-gray-700 text-white;
+  @apply bg-gray-700 text-white;
 }
 
 .modal-show {
   @apply opacity-100 pointer-events-auto scale-100;
+  animation: modalFadeIn 0.2s;
 }
 
 .modal-hide {
   @apply opacity-0 pointer-events-none scale-95;
+}
+
+.modal-closing {
+  animation: modalFadeOut 0.2s forwards;
 }
 
 .modal-center {
@@ -27,4 +32,30 @@
 
 .modal-backdrop {
   @apply fixed inset-0 z-[9999];
+  pointer-events: auto;
+}
+
+.modal-backdrop-scrollable {
+  pointer-events: none;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }

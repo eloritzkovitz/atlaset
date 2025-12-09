@@ -14,58 +14,66 @@ interface FloatingChevronButtonProps {
   title?: string;
   className?: string;
   positionKey?: string;
-};
-
-export function FloatingChevronButton({
-  targetRef,
-  position,
-  chevronDirection,
-  offset = 0,
-  onMouseEnter,
-  onMouseLeave,
-  onClick,
-  ariaLabel,
-  title,
-  className = "",
-  positionKey,
-}: FloatingChevronButtonProps) {
-  const [style, setStyle] = useState<React.CSSProperties>({});
-
-  const BUTTON_SIZE = 48;
-  const baseClass = "toolbar-btn rounded-full z-[10000] transition-colors";
-
-  // Update position when targetRef or position changes
-  useLayoutEffect(() => {
-    if (targetRef.current) {
-      const rect = targetRef.current.getBoundingClientRect();
-      setStyle({
-        position: "fixed",
-        top: rect.top + rect.height / 2 - BUTTON_SIZE / 2,
-        left:
-          position === "right"
-            ? rect.right - BUTTON_SIZE / 2 + offset
-            : rect.left - BUTTON_SIZE / 2 - offset,
-        zIndex: 10000,
-      });
-    }
-  }, [targetRef, position, offset, positionKey]);
-
-  return (
-    <ActionButton
-      style={style}
-      className={`${baseClass} ${className}`}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClick={onClick}
-      ariaLabel={ariaLabel}
-      title={title}
-      icon={
-        chevronDirection === "right" ? (
-          <FaChevronRight className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
-        ) : (
-          <FaChevronLeft className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
-        )
-      }
-    />
-  );
 }
+
+export const FloatingChevronButton = React.forwardRef<
+  HTMLButtonElement,
+  FloatingChevronButtonProps
+>(
+  (
+    {
+      targetRef,
+      position,
+      chevronDirection,
+      offset = 0,
+      onMouseEnter,
+      onMouseLeave,
+      onClick,
+      ariaLabel,
+      title,
+      className = "",
+      positionKey,
+    },
+    ref
+  ) => {
+    const [style, setStyle] = useState<React.CSSProperties>({});
+
+    const BUTTON_SIZE = 48;
+    const baseClass = "toolbar-btn rounded-full z-[10000] transition-colors";
+
+    useLayoutEffect(() => {
+      if (targetRef.current) {
+        const rect = targetRef.current.getBoundingClientRect();
+        setStyle({
+          position: "fixed",
+          top: rect.top + rect.height / 2 - BUTTON_SIZE / 2,
+          left:
+            position === "right"
+              ? rect.right - BUTTON_SIZE / 2 + offset
+              : rect.left - BUTTON_SIZE / 2 - offset,
+          zIndex: 10600,
+        });
+      }
+    }, [targetRef, position, offset, positionKey]);
+
+    return (
+      <ActionButton
+        ref={ref}
+        style={style}
+        className={`${baseClass} ${className}`}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+        ariaLabel={ariaLabel}
+        title={title}
+        icon={
+          chevronDirection === "right" ? (
+            <FaChevronRight className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
+          ) : (
+            <FaChevronLeft className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
+          )
+        }
+      />
+    );
+  }
+);
