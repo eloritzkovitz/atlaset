@@ -1,5 +1,11 @@
+import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
+import { deleteDoc, doc } from "firebase/firestore";
+import { ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { logout } from "@features/user/auth/services/authService";
 import { useUserDevices } from "@features/user/auth/hooks/useUserDevices";
+import { isCurrentSession } from "@features/user/auth/utils/device";
+import { getUserCollection } from "@utils/firebase";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { useUserActivity } from "../../hooks/useUserActivity";
@@ -13,6 +19,24 @@ export function SecurityInfoSection() {
   const lastLogin = activity
     .filter((a) => a.action === "login")
     .sort((a, b) => b.timestamp - a.timestamp)[0];
+
+  // Get device icon based on user agent
+  function getDeviceIcon(device: any) {
+    const ua = device.userAgent || "";
+    if (/mobile/i.test(ua)) return <FaMobile className="mr-4" size={64} />;
+    if (/tablet|ipad/i.test(ua)) return <FaTablet className="mr-4" size={64} />;
+    return <FaDesktop className="mr-4" size={64} />;
+  }
+
+  // Handle device removal
+  async function handleRemoveDevice(deviceId: string, sessionId?: string) {
+    const devicesCol = getUserCollection("devices");
+    await deleteDoc(doc(devicesCol, deviceId));
+    if (isCurrentSession(sessionId)) {
+      await logout();
+      localStorage.removeItem("sessionId");
+    }
+  }
 
   return (
     <section className="mb-8">
@@ -43,26 +67,44 @@ export function SecurityInfoSection() {
               : "Unknown"
           }
         />
-        <ul className="space-y-4 mt-8">
-          <h4 className="font-semibold mb-2">Logged-in Devices</h4>
-          {devices.length === 0 ? (
-            <SecurityInfoRow label="Devices" value="No active devices" />
-          ) : (
-            devices.map((device) => (
-              <SecurityInfoRow
-                key={device.id}
-                label={device.deviceName || device.userAgent || "Device"}
-                value={
-                  device.lastActive
+      </ul>
+      <h4 className="font-semibold mb-2 mt-8">Logged-in Devices</h4>
+      <ul className="space-y-4">
+        {devices.length === 0 ? (
+          <SecurityInfoRow label="Devices" value="No active devices" />
+        ) : (
+          devices.map((device) => (
+            <SecurityInfoRow
+              key={device.id}
+              label={
+                <span className="flex items-center">
+                  {getDeviceIcon(device)}
+                  <span className="text-lg">
+                    {device.deviceName || device.userAgent || "Device"}
+                  </span>
+                </span>
+              }
+              value={
+                <div className="flex items-center">
+                  {device.lastActive
                     ? `Last active: ${new Date(
                         device.lastActive
                       ).toLocaleString()}`
-                    : "Unknown"
-                }
-              />
-            ))
-          )}
-        </ul>
+                    : "Unknown"}
+                  <ActionButton
+                    className="py-2 px-4 bg-blue-800 text-white rounded-full hover:bg-blue-700"
+                    icon={<FaPowerOff size={18} />}
+                    title="End this session"
+                    ariaLabel="End session"
+                    onClick={() => handleRemoveDevice(device.id)}
+                  >
+                    End Session
+                  </ActionButton>
+                </div>
+              }
+            />
+          ))
+        )}
       </ul>
     </section>
   );

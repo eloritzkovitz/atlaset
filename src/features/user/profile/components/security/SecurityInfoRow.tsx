@@ -1,7 +1,7 @@
 import React from "react";
 
 interface SecurityInfoRowProps {
-  label: string;
+  label: React.ReactNode;
   value: React.ReactNode;
 }
 
