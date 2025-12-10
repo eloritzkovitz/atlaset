@@ -23,7 +23,7 @@ export function ShortcutsModal() {
       isOpen={showShortcuts}
       onClose={closeShortcuts}
       position="center"
-      className="min-w-[1000px] max-w-[1200px] max-h-[90vh] bg-white rounded-xl shadow-xl p-4 overflow-y-auto"
+      className="min-w-[1000px] max-w-[1200px] max-h-[90vh]"
     >
       <PanelHeader
         title={

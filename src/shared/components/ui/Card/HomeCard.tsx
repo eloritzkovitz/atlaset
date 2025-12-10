@@ -20,9 +20,9 @@ export function HomeCard({
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 w-full md:w-80">
+    <div className="flex flex-col items-center bg-surface rounded-xl shadow-lg p-6 w-full md:w-80">
       <div className="mb-4">{icon}</div>
-      <h2 className="text-xl font-bold mb-2 text-blue-600 dark:text-gray-200">
+      <h2 className="text-xl font-bold mb-2 text-primary">
         {title}
       </h2>
       <p className="text-gray-600 dark:text-gray-300 mb-4 text-center">

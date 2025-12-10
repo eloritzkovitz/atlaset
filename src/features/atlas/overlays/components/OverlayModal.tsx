@@ -72,7 +72,7 @@ export function OverlayModal({
         isOpen={isOpen}
         onClose={handleClose}
         disableClose={countryModalOpen || colorModalOpen}
-        className="bg-white rounded-xl shadow-2xl p-8 min-w-[500px] max-w-[800px] max-h-[90vh] overflow-y-auto"
+        className="rounded-xl shadow-2xl p-8 min-w-[500px] max-w-[800px] max-h-[90vh] overflow-y-auto"
       >
         <PanelHeader
           title={

@@ -24,7 +24,7 @@ export function TripHistory() {
             mostVisitedCountries.map((country, idx) => (
               <span
                 key={country.isoCode}
-                className="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded-full"
+                className="inline-flex items-center gap-1 bg-surface px-2 py-1 rounded-full"
               >
                 <CountryWithFlag
                   isoCode={country.isoCode}

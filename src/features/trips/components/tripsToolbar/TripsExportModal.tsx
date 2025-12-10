@@ -16,7 +16,7 @@ export function TripsExportModal({
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded shadow min-w-[260px]">
+      <div className="p-6 rounded shadow min-w-[260px]">
         <h3 className="text-lg font-bold mb-4">Export Trips</h3>
         <button
           className="toolbar-btn-export-option mb-2"

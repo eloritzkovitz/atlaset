@@ -122,7 +122,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       </div>
 
       {/* Export button */}
-      <div className="absolute bottom-0 left-0 w-full px-4 pb-4 bg-white dark:bg-gray-900">
+      <div className="absolute bottom-0 left-0 w-full px-4 pb-4">
         <FormButton
           onClick={handleExport}
           className="w-full"

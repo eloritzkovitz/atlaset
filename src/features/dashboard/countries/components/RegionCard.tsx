@@ -27,7 +27,7 @@ export function RegionCard({
       {!loading && (
         <>
           <button
-            className="flex items-center mb-2 text-2xl w-full rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
+            className="flex items-center mb-2 text-2xl w-full rounded-lg text-primary hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
             onClick={onRegionClick}
             title={`Show all countries in ${region}`}
             aria-label={`Show all countries in ${region}`}

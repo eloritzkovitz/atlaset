@@ -45,7 +45,7 @@ export function TripsStats() {
       {/* Trips Overview */}
       <DashboardCard
         icon={FaSuitcaseRolling}
-        iconClass="text-blue-600"
+        iconClass="text-primary"
         title="Trip Overview"
         subtitle="Summary of all your recorded trips"
       >

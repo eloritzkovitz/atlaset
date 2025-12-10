@@ -10,5 +10,5 @@ export function ActionsToolbar({
   children,
   className = "",
 }: ActionsToolbarProps) {
-  return <div className={`toolbar-actions-row ${className}`}>{children}</div>;
+  return <div className={`absolute flex flex-row items-center ${className}`}>{children}</div>;
 }

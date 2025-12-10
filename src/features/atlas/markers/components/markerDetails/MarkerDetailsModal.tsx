@@ -23,7 +23,7 @@ export function MarkerDetailsModal({
       isOpen={isOpen}
       onClose={onClose}
       position={position ? "custom" : "center"}
-      className="min-w-[400px] max-w-[600px] bg-white rounded-xl shadow-2xl p-8 overflow-y-auto"
+      className="min-w-[400px] max-w-[600px] rounded-xl shadow-2xl p-8 overflow-y-auto"
       style={
         position
           ? {

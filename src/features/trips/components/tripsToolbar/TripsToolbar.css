@@ -2,10 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-.trips-toolbar-container {
-  @apply w-full px-3 flex items-center justify-between h-[7vh] bg-white dark:bg-gray-900/70;
-}
-
 /* Menu button */
 
 .toolbar-btn-menu {

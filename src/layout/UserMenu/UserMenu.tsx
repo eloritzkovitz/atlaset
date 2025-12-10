@@ -59,7 +59,7 @@ export function UserMenu() {
           disableClose={false}
           scrollable={true}
           position="custom"
-          className="absolute right-4 mt-3 w-60 bg-white rounded shadow-lg z-50 p-2"
+          className="absolute right-4 mt-3 w-60 bg-surface rounded shadow-lg z-50 p-2"
           style={{ top: "48px", right: 16 }}          
         >
           <UserMenuContent

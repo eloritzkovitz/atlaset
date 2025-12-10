@@ -66,11 +66,11 @@ export function MapToolbar({
       <div className="relative flex items-center" style={{ height: "40px" }}>
         {/* Actions: horizontal slide */}
         <ActionsToolbar
-          className={
+          className={`right-14 bg-action rounded-full shadow border border-gray-300 dark:border-gray-700 px-2 transition-all duration-300 ${
             visible
-              ? "toolbar-actions-row-bg toolbar-actions-row-visible"
-              : "toolbar-actions-row-bg toolbar-actions-row-hidden"
-          }
+              ? "opacity-100 pointer-events-auto translate-x-0"
+              : "opacity-0 pointer-events-none translate-x-10"
+          }`}
         >
           <ActionButton
             onClick={toggleCountries}

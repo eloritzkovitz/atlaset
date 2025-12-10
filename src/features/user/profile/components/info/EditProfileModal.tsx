@@ -50,7 +50,7 @@ export function EditProfileModal({
 
   return (
     <Modal isOpen={open} onClose={onClose}>
-      <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-full flex flex-col gap-6">
+      <div className="w-full max-w-2xl mx-auto bg-surface rounded-full flex flex-col gap-6">
         <PanelHeader
           title={
             <span className="flex items-center gap-2 text-2xl font-semibold">

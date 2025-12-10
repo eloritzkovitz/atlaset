@@ -7,7 +7,7 @@ interface ExportMenuProps {
 
 export function ExportMenu({ onExportCSV, onExportJSON }: ExportMenuProps) {
   return (
-    <div className="absolute left-0 bg-white shadow rounded z-10 w-[200px] flex flex-col">
+    <div className="absolute left-0 bg-surface shadow rounded z-10 w-[200px] flex flex-col">
       <button
         className="flex items-center gap-2 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600"
         onClick={onExportCSV}

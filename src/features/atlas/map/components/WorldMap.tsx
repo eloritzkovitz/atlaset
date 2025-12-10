@@ -77,7 +77,7 @@ export function WorldMap({
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 w-full h-[100dvh] bg-gray-700 ${DEFAULT_MAP_SETTINGS.bgColor} overflow-hidden`}
+      className={`fixed inset-0 w-full h-[100dvh] bg-bg ${DEFAULT_MAP_SETTINGS.bgColor} overflow-hidden`}
       style={{ cursor: isAddingMarker ? "crosshair" : "default" }}
     >
       {/* SVG map container */}

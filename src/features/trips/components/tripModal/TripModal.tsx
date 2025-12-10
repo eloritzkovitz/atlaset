@@ -55,7 +55,7 @@ export function TripModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="bg-white w-[800px] max-h-[80vh] flex flex-row"
+        className="w-[800px] max-h-[80vh] flex flex-row"
         disableClose={countryModalOpen}
       >
         {/* Left: Form */}

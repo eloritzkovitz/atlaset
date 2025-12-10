@@ -2,16 +2,16 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Toolbar actions row */
-
-.toolbar-actions-row {
-  @apply absolute flex flex-row items-center;
-}
-
-/* Toolbar buttons */
+/* Toolbar button */
 
 .toolbar-btn {
-  @apply w-12 h-12 flex items-center justify-center p-0 bg-gray-200 dark:bg-gray-800 text-blue-800 dark:text-gray-200 hover:text-blue-900 dark:hover:text-white text-lg;
+  @apply w-12 h-12 flex items-center justify-center p-0 text-lg;
+  background: var(--color-action);
+  color: var(--color-action-text);
+}
+
+.toolbar-btn:hover {
+  color: var(--color-action-text-hover);
 }
 
 /* Toggle button */

@@ -35,7 +35,7 @@ export function TripsToolbar({
   onBulkDelete,
 }: ToolbarProps) {
   return (
-    <div className="trips-toolbar-container">
+    <div className="trips-toolbar-container w-full px-3 flex items-center justify-between h-[7vh] bg-white dark:bg-gray-900/70">
       <ActionsToolbar>
         <div className="flex items-center">
           <div className="ml-16"/>

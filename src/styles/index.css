@@ -2,9 +2,25 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+@theme {  
   --color-bg: theme("colors.white");
+  /* Primary colors */
+  --color-primary: theme("colors.blue.500");
+  --color-primary-hover: theme("colors.blue.600");
+  --color-primary-active: theme("colors.blue.700");
+  /* Secondary colors */
+  --color-secondary: theme("colors.gray.600");
+  --color-secondary-hover: theme("colors.gray.700");
+  --color-secondary-active: theme("colors.gray.800");
+  /* Action colors */
+  --color-action: theme("colors.gray.200");
+  --color-action-hover: theme("colors.gray.300");
+  --color-action-text: theme("colors.blue.800");
+  --color-action-text-hover: theme("colors.blue.900");
+  /* Surface colors */
   --color-surface: theme("colors.white"); 
+  --color-surface-hover: theme("colors.gray.100");
+  /* Input colors */
   --color-input: theme("colors.gray.100");
   --color-text: theme("colors.gray.700"); 
 }
@@ -22,7 +38,23 @@
 
 .dark {
   --color-bg: theme("colors.gray.700");
-  --color-surface: theme("colors.gray.700");  
+  /* Primary colors */
+  --color-primary: theme("colors.blue.500");
+  --color-primary-hover: theme("colors.blue.600");
+  --color-primary-active: theme("colors.blue.700");
+  /* Secondary colors */
+  --color-secondary: theme("colors.gray.400");
+  --color-secondary-hover: theme("colors.gray.500");
+  --color-secondary-active: theme("colors.gray.600");
+  /* Action colors */
+  --color-action: theme("colors.gray.800");
+  --color-action-hover: theme("colors.gray.700");
+  --color-action-text: theme("colors.gray.300");
+  --color-action-text-hover: theme("colors.white");
+  /* Surface colors */
+  --color-surface: theme("colors.gray.700");
+  --color-surface-hover: theme("colors.gray.600");
+  /* Input colors */
   --color-input: theme("colors.gray.600");  
   --color-text: theme("colors.gray.300");
 }

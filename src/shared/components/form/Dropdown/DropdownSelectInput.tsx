@@ -83,7 +83,7 @@ export function DropdownSelectInput<T = string>({
           <div
             id="dropdown-menu-portal"
             ref={menuRef}
-            className="bg-white border-none rounded shadow-md max-h-60 overflow-y-auto overflow-x-hidden mt-3"
+            className="bg-surface border-none rounded shadow-md max-h-60 overflow-y-auto overflow-x-hidden mt-3"
             style={{
               ...menuStyle,
               zIndex: 11000,
