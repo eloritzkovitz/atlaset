@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Checkbox } from "@components";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { Checkbox, FormButton } from "@components";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
 interface AuthFormProps {
@@ -29,6 +30,7 @@ export function AuthForm({
 }: AuthFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(true);
   const [localError, setLocalError] = useState("");
 
@@ -54,14 +56,25 @@ export function AuthForm({
         className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
       />
       <span className="block h-1" />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
-      />
+      <div className="relative">
+        <input
+          type={showPassword ? "text" : "password"}
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
+        />
+        <button
+          type="button"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+          onClick={() => setShowPassword((v) => !v)}
+          tabIndex={-1}
+          aria-label={showPassword ? "Hide password" : "Show password"}
+        >
+          {showPassword ? <FaEyeSlash /> : <FaEye />}
+        </button>
+      </div>
       {/* Show forgot password only for signin */}
       {mode === "signin" && onForgotPassword && (
         <div className="text-left">
@@ -87,12 +100,9 @@ export function AuthForm({
       {(error || localError) && (
         <div className="text-red-500">{error || localError}</div>
       )}
-      <button
-        type="submit"
-        className="w-full py-2 mt-4 bg-primary text-white rounded-full hover:bg-primary-hover transition"
-      >
+      <FormButton type="submit" className="w-full py-2 mt-4 rounded-full">
         {buttonText || (mode === "signup" ? "Register" : "Sign In")}
-      </button>
+      </FormButton>
       {showGoogleSignInButton && onGoogleSignIn && (
         <>
           <div className="flex items-center my-4">
