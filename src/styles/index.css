@@ -139,11 +139,6 @@ body::-webkit-scrollbar-thumb {
   background: theme("colors.gray.600");
 }
 
-/* Separator styles */
-.separator {
-  @apply border-b border-gray-200 dark:border-gray-600;
-}
-
 /* Shadow styles */
 .dark .shadow,
 .dark .shadow-md,
