@@ -3,6 +3,7 @@ import {
   Checkbox,
   DropdownSelectInput,
   SortableFilterHeader,
+  StarRatingInput,
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
@@ -12,6 +13,7 @@ import type {
   TripSortByKey,
 } from "@features/trips/types";
 import type { TripCategory } from "@types";
+import { RATING_OPTIONS } from "@features/trips/constants/trips";
 
 interface TripsTableHeadersProps {
   allSelected: boolean;
@@ -77,7 +79,22 @@ export function TripsTableHeaders({
             sortKey="rating"
             sortBy={sortBy}
             onSort={handleSort}
-            filterable={false}
+            filterable
+            filterElement={
+              <DropdownSelectInput<number>
+                value={typeof filters.rating === "number" ? filters.rating : []}
+                onChange={(v) => updateFilter("rating", v)}
+                options={RATING_OPTIONS}
+                placeholder="All Ratings"
+                className="trips-filter-dropdown"
+                renderOption={(opt) => (
+                  <span className="flex items-center gap-2">
+                    <StarRatingInput value={opt.value} readOnly />
+                    <span className="text-xs text-gray-500">{opt.label}</span>
+                  </span>
+                )}
+              />
+            }
           />
           {renderResizeHandle("rating")}
         </th>

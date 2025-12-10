@@ -20,6 +20,7 @@ export type TripSortBy = `${TripSortByKey}-asc` | `${TripSortByKey}-desc`;
 
 export type TripFilters = {
   name: string;
+  rating: number | null;
   country: string[];
   year: string[];
   categories: TripCategory[];

@@ -25,6 +25,7 @@ import type { Trip } from "@types";
 // Default trip filters
 const defaultTripFilterState: TripFilterState = {
   name: "",
+  rating: null,
   country: [],
   year: [],
   categories: [],
