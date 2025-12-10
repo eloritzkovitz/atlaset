@@ -2,10 +2,15 @@ import { FaStar, FaStarHalf, FaRegStar } from "react-icons/fa6";
 
 interface StarRatingInputProps {
   value: number;
-  onChange: (v: number) => void;
+  onChange?: (v: number) => void;
+  readOnly?: boolean;
 }
 
-export function StarRatingInput({ value, onChange }: StarRatingInputProps) {
+export function StarRatingInput({
+  value,
+  onChange,
+  readOnly,
+}: StarRatingInputProps) {
   const stars = [1, 2, 3, 4, 5];
   return (
     <div className="flex items-center">
@@ -15,11 +20,15 @@ export function StarRatingInput({ value, onChange }: StarRatingInputProps) {
         return (
           <span
             key={star}
-            className="cursor-pointer"
-            onClick={() => onChange(star)}
-            onMouseDown={(e) => {
-              if (e.nativeEvent.offsetX < 12) onChange(star - 0.5);
-            }}
+            className={readOnly ? "" : "cursor-pointer"}
+            onClick={readOnly || !onChange ? undefined : () => onChange(star)}
+            onMouseDown={
+              readOnly || !onChange
+                ? undefined
+                : (e) => {
+                    if (e.nativeEvent.offsetX < 12) onChange(star - 0.5);
+                  }
+            }
           >
             {full ? (
               <FaStar size={28} color="#FFD700" />

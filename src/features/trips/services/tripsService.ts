@@ -66,6 +66,32 @@ export const tripsService = {
     }
   },
 
+  // Update only the rating of a trip
+  async updateRating(tripId: string, rating: number) {
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      const tripsCol = getUserCollection("trips");
+      const tripRef = doc(tripsCol, tripId);
+      // Only update the rating field
+      await setDoc(tripRef, { rating }, { merge: true });
+      await logUserActivity(
+        "update_trip_rating",
+        {
+          tripId,
+          rating,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
+    } else {
+      // For local DB
+      const trip = await appDb.trips.get(tripId);
+      if (trip) {
+        await appDb.trips.put({ ...trip, rating });
+      }
+    }
+  },
+
   // Edits an existing trip
   async edit(trip: Trip) {
     if (isAuthenticated()) {

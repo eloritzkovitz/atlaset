@@ -2,6 +2,7 @@ export type ColumnKey =
   | "select"
   | "idx"
   | "name"
+  | "rating"
   | "countries"
   | "year"
   | "startDate"
@@ -17,6 +18,7 @@ export const MIN_WIDTHS: Record<ColumnKey, number> = {
   select: 10,
   idx: 20,
   name: 80,
+  rating: 40,
   countries: 60,
   year: 30,
   startDate: 30,
@@ -33,6 +35,7 @@ export const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   select: 10,
   idx: 40,
   name: 160,
+  rating: 60,
   countries: 180,
   year: 50,
   startDate: 50,

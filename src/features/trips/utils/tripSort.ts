@@ -28,6 +28,8 @@ export function sortTrips(
   switch (key) {
     case "name":
       return sortItems(trips, (t) => t.name || "", asc ? "asc" : "desc");
+    case "rating":
+      return sortItems(trips, (t) => t.rating || 0, asc ? "asc" : "desc");
     case "countries":
       return sortItems(
         trips,

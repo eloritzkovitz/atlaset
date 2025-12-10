@@ -10,8 +10,15 @@ import type { Trip } from "@types";
 
 export default function TripsPage() {
   const countryData = useCountryData();
-  const { trips, loading, addTrip, editTrip, removeTrip, duplicateTrip } =
-    useTrips();
+  const {
+    trips,
+    loading,
+    addTrip,
+    editTrip,
+    updateTripRating,
+    removeTrip,
+    duplicateTrip,
+  } = useTrips();
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
@@ -123,6 +130,7 @@ export default function TripsPage() {
           <TripsTable
             trips={filteredTrips}
             onEdit={handleEdit}
+            onRatingChange={updateTripRating}
             onDelete={handleDelete}
             filters={filters}
             updateFilter={(key: string, value: any) =>

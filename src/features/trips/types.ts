@@ -4,6 +4,7 @@ import type { TripCategory, TripStatus, TripTag } from "@types";
 
 export type TripSortByKey =
   | "name"
+  | "rating"
   | "countries"
   | "year"
   | "startDate"

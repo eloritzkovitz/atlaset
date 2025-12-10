@@ -73,6 +73,16 @@ export function TripsTableHeaders({
         </th>
         <th className="trips-th">
           <SortableFilterHeader
+            label="Rating"
+            sortKey="rating"
+            sortBy={sortBy}
+            onSort={handleSort}
+            filterable={false}
+          />
+          {renderResizeHandle("rating")}
+        </th>
+        <th className="trips-th">
+          <SortableFilterHeader
             label="Countries"
             sortKey="countries"
             sortBy={sortBy}
