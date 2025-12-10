@@ -18,7 +18,8 @@
   --color-action-text: theme("colors.blue.800");
   --color-action-text-hover: theme("colors.blue.900");
   /* Surface colors */
-  --color-surface: theme("colors.white"); 
+  --color-surface: theme("colors.white");
+  --color-surface-alt: theme("colors.gray.50");
   --color-surface-hover: theme("colors.gray.100");
   /* Input colors */
   --color-input: theme("colors.gray.100");
@@ -53,6 +54,7 @@
   --color-action-text-hover: theme("colors.white");
   /* Surface colors */
   --color-surface: theme("colors.gray.700");
+  --color-surface-alt: theme("colors.gray.800");
   --color-surface-hover: theme("colors.gray.600");
   /* Input colors */
   --color-input: theme("colors.gray.600");  

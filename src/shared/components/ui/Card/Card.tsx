@@ -21,7 +21,7 @@ export function Card({
 }: CardProps) {
   const clickable = !!onClick;
   const baseClass =
-    `bg-gray-50 dark:bg-gray-800 rounded-2xl shadow p-5 ` +
+    `bg-surface dark:bg-surface-alt rounded-2xl shadow p-5 ` +
     (clickable ? "cursor-pointer transition hover:shadow-lg " : "") +
     className;
 

@@ -18,6 +18,7 @@ export default {
         'action-hover': 'var(--color-action-hover)',
         'action-text': 'var(--color-action-text)',
         surface: 'var(--color-surface)',
+        'surface-alt': 'var(--color-surface-alt)',
         'surface-hover': 'var(--color-surface-hover)',        
         input: 'var(--color-input)',
         text: 'var(--color-text)',        
