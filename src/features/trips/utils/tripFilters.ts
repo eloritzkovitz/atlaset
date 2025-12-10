@@ -20,6 +20,14 @@ export function filterTrips(trips: Trip[], filters: TripFilters): Trip[] {
     ) {
       return false;
     }
+    // Filter by rating
+    if (
+      typeof filters.rating === "number" &&
+      filters.rating !== -1 &&
+      (trip.rating === undefined || trip.rating !== filters.rating)
+    ) {
+      return false;
+    }
     // Filter by country codes
     if (
       Array.isArray(filters.country) &&

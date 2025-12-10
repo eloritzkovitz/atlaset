@@ -66,6 +66,55 @@ export const tripsService = {
     }
   },
 
+  // Update only the favorite status of a trip
+  async updateFavorite(tripId: string, favorite: boolean) {
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      const tripsCol = getUserCollection("trips");
+      const tripRef = doc(tripsCol, tripId);
+      await setDoc(tripRef, { favorite }, { merge: true });
+      await logUserActivity(
+        "update_trip_favorite",
+        {
+          tripId,
+          favorite,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
+    } else {
+      const trip = await appDb.trips.get(tripId);
+      if (trip) {
+        await appDb.trips.put({ ...trip, favorite });
+      }
+    }
+  },
+
+  // Update only the rating of a trip
+  async updateRating(tripId: string, rating: number | undefined) {
+    const ratingValue = rating === undefined ? null : rating;
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      const tripsCol = getUserCollection("trips");
+      const tripRef = doc(tripsCol, tripId);
+      await setDoc(tripRef, { rating: ratingValue }, { merge: true });
+      await logUserActivity(
+        "update_trip_rating",
+        {
+          tripId,
+          rating: ratingValue,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
+    } else {
+      const trip = await appDb.trips.get(tripId);
+      if (trip) {
+        await appDb.trips.put({ ...trip, rating: ratingValue });
+      }
+    }
+  },
+
   // Edits an existing trip
   async edit(trip: Trip) {
     if (isAuthenticated()) {

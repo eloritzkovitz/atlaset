@@ -1,4 +1,4 @@
-import { CardList, Checkbox } from "@components";
+import { CardList, Checkbox, StarRatingInput } from "@components";
 import { CountryWithFlag, createCountryMap } from "@features/countries";
 import { type ColumnKey } from "@features/trips/constants/columns";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
@@ -7,6 +7,7 @@ import { formatDate } from "@utils/date";
 import { StatusCell } from "./StatusCell";
 import { TableCell } from "./TableCell";
 import { TripActions } from "./TripActions";
+import { FaHeart } from "react-icons/fa6";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -14,12 +15,13 @@ interface TripsTableRowsProps {
   countryData: any;
   selected: boolean;
   onSelect: (id: string) => void;
+  onRatingChange: (tripId: string, rating: number | undefined) => void;
   getTripRowClass: (trip: Trip, tripIdx: number) => string;
   handleResizeStart: (e: React.MouseEvent, key: ColumnKey) => void;
   onEdit: (trip: Trip) => void;
   onDelete: (trip: Trip) => void;
   showRowNumbers: boolean;
-};
+}
 
 export function TripsTableRows({
   trip,
@@ -27,6 +29,7 @@ export function TripsTableRows({
   countryData,
   selected,
   onSelect,
+  onRatingChange,
   getTripRowClass,
   handleResizeStart,
   onEdit,
@@ -36,7 +39,7 @@ export function TripsTableRows({
   const rowSpan = trip.countryCodes?.length || 1;
 
   // Country lookup for fast access
-  const countryLookup = createCountryMap(countryData.countries, c => c);
+  const countryLookup = createCountryMap(countryData.countries, (c) => c);
 
   return (
     trip.countryCodes && trip.countryCodes.length > 0
@@ -79,7 +82,20 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
+              {trip.favorite && (
+                <FaHeart className="h-5 w-5 inline text-red-400 mr-2" />
+              )}
               {trip.name}
+            </TableCell>
+            <TableCell
+              columnKey="rating"
+              rowSpan={rowSpan}
+              handleResizeStart={handleResizeStart}
+            >
+              <StarRatingInput
+                value={typeof trip.rating === "number" ? trip.rating : 0}
+                onChange={(rating) => onRatingChange(trip.id, rating)}
+              />
             </TableCell>
           </>
         )}

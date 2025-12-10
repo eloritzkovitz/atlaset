@@ -18,6 +18,7 @@ import "./TripsTable.css";
 interface TripsTableProps {
   trips: Trip[];
   onEdit: (trip: Trip) => void;
+  onRatingChange: (tripId: string, rating: number | undefined) => void;
   onDelete: (trip: Trip) => void;
   filters: any;
   updateFilter: (key: string, value: any) => void;
@@ -36,6 +37,7 @@ interface TripsTableProps {
 export function TripsTable({
   trips,
   onEdit,
+  onRatingChange,
   onDelete,
   filters,
   updateFilter,
@@ -76,7 +78,7 @@ export function TripsTable({
         ? `${key}-desc`
         : `${key}-asc`) as TripSortBy
     );
-  };
+  };  
 
   // Helper to render resize handle
   const renderResizeHandle = (key: string) => {
@@ -103,6 +105,7 @@ export function TripsTable({
           <col style={{ width: `${colWidths.idx}px` }} />
           <col style={{ width: `${colWidths.select}px` }} />
           <col style={{ width: `${colWidths.name}px` }} />
+          <col style={{ width: `${colWidths.rating}px` }} />
           <col style={{ width: `${colWidths.countries}px` }} />
           <col style={{ width: `${colWidths.year}px` }} />
           <col style={{ width: `${colWidths.startDate}px` }} />
@@ -136,6 +139,7 @@ export function TripsTable({
               countryData={countryData}
               selected={selectedTripIds.includes(trip.id)}
               onSelect={onSelectTrip}
+              onRatingChange={onRatingChange}
               getTripRowClass={getTripRowClass}
               handleResizeStart={handleResizeStart}
               onEdit={onEdit}

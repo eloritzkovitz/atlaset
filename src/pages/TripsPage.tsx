@@ -6,12 +6,21 @@ import { useTrips } from "@contexts/TripsContext";
 import { TripModal, TripsTable, TripsToolbar } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
+import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
+import { usePagination } from "@hooks/usePagination";
 import type { Trip } from "@types";
 
 export default function TripsPage() {
   const countryData = useCountryData();
-  const { trips, loading, addTrip, editTrip, removeTrip, duplicateTrip } =
-    useTrips();
+  const {
+    trips,
+    loading,
+    addTrip,
+    editTrip,
+    updateTripRating,
+    removeTrip,
+    duplicateTrip,
+  } = useTrips();
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
@@ -29,6 +38,18 @@ export default function TripsPage() {
     statusOptions,
     tagOptions,
   } = useTripFilters(trips, countryData, undefined, globalSearch);
+
+  const {
+    data: paginatedTrips,    
+    hasMore,
+    loadMore,
+  } = usePagination({
+    items: filteredTrips,
+    pageSize: 20,
+    mode: "local",
+  });
+
+  const sentinelRef = useInfiniteScroll(loadMore, hasMore);
 
   // Determine if all trips are selected
   const allSelected =
@@ -120,25 +141,29 @@ export default function TripsPage() {
             No trips yet.
           </div>
         ) : (
-          <TripsTable
-            trips={filteredTrips}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
-            filters={filters}
-            updateFilter={(key: string, value: any) =>
-              updateFilter(key as any, value)
-            }
-            countryOptions={countryOptions}
-            yearOptions={yearOptions}
-            categoryOptions={categoryOptions}
-            statusOptions={statusOptions}
-            tagOptions={tagOptions}
-            selectedTripIds={selectedTripIds}
-            onSelectTrip={handleSelectTrip}
-            allSelected={allSelected}
-            handleSelectAll={handleSelectAll}
-            showRowNumbers={showRowNumbers}
-          />
+          <>
+            <TripsTable
+              trips={paginatedTrips}
+              onEdit={handleEdit}
+              onRatingChange={updateTripRating}
+              onDelete={handleDelete}
+              filters={filters}
+              updateFilter={(key: string, value: any) =>
+                updateFilter(key as any, value)
+              }
+              countryOptions={countryOptions}
+              yearOptions={yearOptions}
+              categoryOptions={categoryOptions}
+              statusOptions={statusOptions}
+              tagOptions={tagOptions}
+              selectedTripIds={selectedTripIds}
+              onSelectTrip={handleSelectTrip}
+              allSelected={allSelected}
+              handleSelectAll={handleSelectAll}
+              showRowNumbers={showRowNumbers}
+            />
+            <div ref={sentinelRef} />
+          </>
         )}
       </div>
       <FloatingActionButton

@@ -4,6 +4,7 @@ import type { TripCategory, TripStatus, TripTag } from "@types";
 
 export type TripSortByKey =
   | "name"
+  | "rating"
   | "countries"
   | "year"
   | "startDate"
@@ -19,6 +20,7 @@ export type TripSortBy = `${TripSortByKey}-asc` | `${TripSortByKey}-desc`;
 
 export type TripFilters = {
   name: string;
+  rating: number | null;
   country: string[];
   year: string[];
   categories: TripCategory[];
@@ -31,4 +33,5 @@ export type TripFilterState = TripFilters & {
   abroad: boolean;
   completed: boolean;
   upcoming: boolean;
+  favorite: boolean;
 };
