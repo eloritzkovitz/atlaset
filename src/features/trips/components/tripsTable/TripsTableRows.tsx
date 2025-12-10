@@ -193,7 +193,7 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
-              <TripActions trip={trip} onEdit={onEdit} onRatingChange={onRatingChange} onDelete={onDelete}  />
+              <TripActions trip={trip} onEdit={onEdit} onDelete={onDelete}  />
             </TableCell>
           </>
         )}

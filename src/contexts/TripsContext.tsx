@@ -8,6 +8,7 @@ interface TripsContextType {
   loading: boolean;
   addTrip: (trip: Trip) => void;
   editTrip: (trip: Trip) => void;
+  updateTripFavorite: (tripId: string, favorite: boolean) => void;
   updateTripRating: (tripId: string, rating: number | undefined) => void;
   removeTrip: (id: string) => Promise<void>;
   duplicateTrip: (trip: Trip) => void;
@@ -63,6 +64,14 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     setTrips((prev) => prev.map((t) => (t.id === trip.id ? updatedTrip : t)));
   }
 
+  // Update trip favorite
+  async function updateTripFavorite(tripId: string, favorite: boolean) {
+    await tripsService.updateFavorite(tripId, favorite);
+    setTrips((prev) =>
+      prev.map((trip) => (trip.id === tripId ? { ...trip, favorite } : trip))
+    );
+  }
+
   // Update trip rating
   async function updateTripRating(tripId: string, rating: number | undefined) {
     await tripsService.updateRating(tripId, rating);
@@ -96,6 +105,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
         loading,
         addTrip,
         editTrip,
+        updateTripFavorite,
         updateTripRating,
         removeTrip,
         duplicateTrip,

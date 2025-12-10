@@ -6,26 +6,30 @@ import {
   FaStar,
   FaChevronRight,
 } from "react-icons/fa";
+import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useMenuPosition } from "@hooks/useMenuPosition";
 import type { Trip } from "@types";
-import { ActionButton, MenuButton, Modal, Separator, StarRatingInput } from "@components";
+import {
+  ActionButton,
+  MenuButton,
+  Modal,
+  Separator,
+  StarRatingInput,
+} from "@components";
 import { RATING_ACTION_OPTIONS } from "@features/trips/constants/trips";
+import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 interface TripActionsProps {
   trip: Trip;
   onEdit: (t: Trip) => void;
   onDelete: (t: Trip) => void;
-  onRatingChange?: (id: string, rating: number | undefined) => void;
 }
 
-export function TripActions({
-  trip,
-  onEdit,
-  onDelete,
-  onRatingChange,
-}: TripActionsProps) {
+export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
+  const { updateTripFavorite, updateTripRating } = useTrips();
+
   const [open, setOpen] = useState(false);
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
@@ -156,12 +160,28 @@ export function TripActions({
         </MenuButton>
         <Separator />
         <MenuButton
+          className="trips-actions-button"
+          onClick={() => {
+            setTimeout(() => setOpen(false), 300);
+            updateTripFavorite(trip.id, !trip.favorite);
+          }}
+          icon={
+            trip.favorite ? (
+              <FaRegHeart className="mr-2 text-yellow-400" />
+            ) : (
+              <FaHeart className="mr-2 text-gray-400" />
+            )
+          }
+        >
+          {trip.favorite ? "Unfavorite" : "Favorite"}
+        </MenuButton>
+        <MenuButton
           className="trips-actions-button flex justify-between items-center"
           onClick={() => setRateMenuOpen(true)}
           icon={<FaStar className="mr-2 text-yellow-400" />}
         >
           Rate
-          <FaChevronRight className="ml-2" />
+          <FaChevronRight className="ml-7" />
         </MenuButton>
       </Modal>
       <Modal
@@ -189,7 +209,7 @@ export function TripActions({
                 setRateMenuOpen(false);
                 setOpen(false);
               }, 300);
-              if (onRatingChange) onRatingChange(trip.id, opt.value);
+              if (updateTripRating) updateTripRating(trip.id, opt.value);
             }}
             icon={
               <span className="flex items-center">
@@ -199,7 +219,7 @@ export function TripActions({
           >
             {opt.label}
           </MenuButton>
-        ))}        
+        ))}
       </Modal>
     </>
   );
