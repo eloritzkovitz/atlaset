@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { SortableFilterHeader } from "./SortableFilterHeader";
+import React from "react";
 import type { SortKey } from "@types";
+import { sortItems } from "@utils/sort";
+import { SortableFilterHeader } from "./SortableFilterHeader";
+import { useSort } from "@hooks/useSort";
 
 export interface TableColumn<T> {
   key: SortKey<T>;
@@ -21,35 +23,30 @@ export function Table<T>({
   data: T[];
   className?: string;
 }) {
-  // sortBy format: "key-asc" or "key-desc"
-  const [sortBy, setSortBy] = useState<string>("");
+  // Sorting state and logic
+  const { sortBy, setSortBy, sortedItems } = useSort(
+    data,
+    (items, sortKeyDir: string) => {
+      if (!sortKeyDir) return items;
+      const [key, direction] = sortKeyDir.split("-");
+      return sortItems(
+        items,
+        (item) => (item as any)[key],
+        direction === "desc" ? "desc" : "asc"
+      );
+    },
+    "" // initial sort
+  );
 
   // Handle sorting when a column header is clicked
   const handleSort = (key: SortKey<T>) => {
-    const [currentKey, direction] = sortBy.split("-");
+    const [currentKey, direction] = (sortBy || "").split("-");
     if (currentKey === key) {
       setSortBy(`${key}-${direction === "desc" ? "asc" : "desc"}`);
     } else {
       setSortBy(`${key}-asc`);
     }
   };
-
-  // Sort data based on sortBy state
-  const sortedData = React.useMemo(() => {
-    if (!sortBy) return data;
-    const [key, direction] = sortBy.split("-");
-    return [...data].sort((a, b) => {
-      const aVal = a[key as keyof T];
-      const bVal = b[key as keyof T];
-      if (aVal === undefined || bVal === undefined) return 0;
-      if (typeof aVal === "number" && typeof bVal === "number") {
-        return direction === "asc" ? aVal - bVal : bVal - aVal;
-      }
-      return direction === "asc"
-        ? String(aVal).localeCompare(String(bVal))
-        : String(bVal).localeCompare(String(aVal));
-    });
-  }, [data, sortBy]);
 
   return (
     <table className={`min-w-full text-sm ${className}`}>
@@ -81,7 +78,7 @@ export function Table<T>({
         </tr>
       </thead>
       <tbody>
-        {sortedData.map((row, idx) => (
+        {sortedItems.map((row, idx) => (
           <tr
             key={(row as any).id || (row as any).key || idx}
             className="border-t border-gray-100 dark:border-gray-700"
