@@ -167,9 +167,9 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
           }}
           icon={
             trip.favorite ? (
-              <FaRegHeart className="mr-2 text-yellow-400" />
+              <FaRegHeart className="mr-2 text-gray-400" />
             ) : (
-              <FaHeart className="mr-2 text-gray-400" />
+              <FaHeart className="mr-2 text-red-400" />
             )
           }
         >

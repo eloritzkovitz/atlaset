@@ -35,6 +35,7 @@ const defaultTripFilterState: TripFilterState = {
   abroad: true,
   completed: true,
   upcoming: true,
+  favorite: false,
 };
 
 /**
@@ -86,7 +87,7 @@ export function useTripFilters(
   const filteredTrips = useMemo(() => {
     let result = trips ?? [];
 
-    // Apply toggle filters (local, abroad, completed, upcoming)
+    // Apply toggle filters (local, abroad, completed, upcoming, favorite)
     result = result.filter((trip) => {
       // Location toggles
       const locationMatch =
@@ -98,8 +99,11 @@ export function useTripFilters(
         (filters.completed && isCompletedTrip(trip)) ||
         (filters.upcoming && isUpcomingTrip(trip));
 
+      const favoriteMatch =
+        !filters.favorite || (filters.favorite && trip.favorite === true);
+
       // Must match one from each group
-      return locationMatch && statusMatch;
+      return locationMatch && statusMatch && favoriteMatch;
     });
 
     // Apply column filters

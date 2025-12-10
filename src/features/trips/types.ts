@@ -33,4 +33,5 @@ export type TripFilterState = TripFilters & {
   abroad: boolean;
   completed: boolean;
   upcoming: boolean;
+  favorite: boolean;
 };

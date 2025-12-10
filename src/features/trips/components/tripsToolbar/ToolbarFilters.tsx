@@ -6,6 +6,7 @@ import {
   FaCheck,
   FaCalendar,
   FaHashtag,
+  FaHeart,
 } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
 import type { TripFilterState } from "@features/trips/types";
@@ -18,7 +19,7 @@ interface ToolbarFiltersProps {
   resetFilters: () => void;
   showRowNumbers: boolean;
   setShowRowNumbers: React.Dispatch<React.SetStateAction<boolean>>;
-};
+}
 
 export function ToolbarFilters({
   filters,
@@ -42,7 +43,8 @@ export function ToolbarFilters({
     setFilters({ ...filters, completed: !filters.completed });
   const toggleUpcoming = () =>
     setFilters({ ...filters, upcoming: !filters.upcoming });
-
+  const toggleFavorite = () =>
+    setFilters({ ...filters, favorite: !filters.favorite });
   const toggleRowNumbers = () => setShowRowNumbers((v) => !v);
 
   const filterToggles: ToolbarToggleOption[] = [
@@ -81,6 +83,15 @@ export function ToolbarFilters({
       title: "Toggle Upcoming Trips",
       checked: filters.upcoming,
       onClick: toggleUpcoming,
+    },
+    {
+      value: "favorite",
+      icon: <FaHeart />,
+      label: "Favorites",
+      ariaLabel: "Show/Hide Favorite Trips",
+      title: "Toggle Favorite Trips",
+      checked: filters.favorite,
+      onClick: toggleFavorite,
     },
     {
       value: "rowNumbers",

@@ -7,6 +7,7 @@ import { formatDate } from "@utils/date";
 import { StatusCell } from "./StatusCell";
 import { TableCell } from "./TableCell";
 import { TripActions } from "./TripActions";
+import { FaHeart } from "react-icons/fa6";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -81,6 +82,9 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
+              {trip.favorite && (
+                <FaHeart className="h-5 w-5 inline text-red-400 mr-2" />
+              )}
               {trip.name}
             </TableCell>
             <TableCell
@@ -193,7 +197,7 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
-              <TripActions trip={trip} onEdit={onEdit} onDelete={onDelete}  />
+              <TripActions trip={trip} onEdit={onEdit} onDelete={onDelete} />
             </TableCell>
           </>
         )}
