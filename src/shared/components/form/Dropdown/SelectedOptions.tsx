@@ -20,7 +20,7 @@ export function SelectedOptions<T>({
       {flatOptions
         .filter((opt) => value.includes(opt.value))
         .map((opt, i) => (
-          <span key={i} className="selected-option">
+          <span key={i} className="flex items-center bg-blue-100 dark:bg-gray-600 text-blue-800 dark:text-gray-200 px-1 rounded text-xs">
             {opt.label}
             <button
               type="button"

@@ -58,7 +58,7 @@ export default function AtlasPage() {
 
   return (
     <>
-      <div className="flex h-screen bg-gray-100 relative">
+      <div className="flex h-screen relative">
         <AtlasUiContainer
           svgRef={svgRef}
           selectedIsoCode={selectedIsoCode}

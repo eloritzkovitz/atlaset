@@ -25,7 +25,7 @@ export function NumberInput({
       <div className="relative w-full">
         <input
           type="number"
-          className="select-input bg-gray-100 pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-blue-400 rounded transition"
+          className="select-input bg-surface pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-blue-400 rounded transition"
           value={value}
           min={min}
           max={max}

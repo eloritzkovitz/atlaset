@@ -65,7 +65,7 @@ export function CountrySelectModal({
         />
       </FormField>
       <FormField label="Countries:">
-        <div className="bg-gray-100 h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
+        <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (
             <div className="text-gray-400 text-center py-8">
               No countries found.

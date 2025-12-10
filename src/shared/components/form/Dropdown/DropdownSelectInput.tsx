@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
-import { FaChevronDown } from "react-icons/fa6";
 import ReactDOM from "react-dom";
 import { useMenuPosition } from "@hooks/useMenuPosition";
 import { useClickOutside } from "@hooks/useClickOutside";
 import type { DropdownOption } from "@types";
 import { flattenOptions } from "@utils/dropdown";
+import { DropdownChevron } from "./DropdownChevron";
 import { DropdownOptions } from "./DropdownOptions";
 import { SelectedOptions } from "./SelectedOptions";
 
@@ -74,9 +74,7 @@ export function DropdownSelectInput<T = string>({
         ) : (
           <span className="text-gray-400">{placeholder}</span>
         )}
-        <span className="chevron-container">
-          <FaChevronDown />
-        </span>
+        <DropdownChevron />
       </button>
       {open &&
         ReactDOM.createPortal(

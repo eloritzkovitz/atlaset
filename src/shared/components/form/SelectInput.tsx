@@ -1,13 +1,13 @@
 import type { FilterOption } from "@types";
-import "./Form.css";
-import { FaChevronDown } from "react-icons/fa6";
+import { DropdownChevron } from "./Dropdown/DropdownChevron";
+import "./SelectInput.css";
 
 interface SelectInputProps {
   label: string;
   value: string | number;
   onChange: (value: string | number) => void;
   options: FilterOption[];
-};
+}
 
 export function SelectInput({
   label,
@@ -22,7 +22,7 @@ export function SelectInput({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="select-input bg-gray-100"
+          className="select-input bg-input"
         >
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -30,9 +30,7 @@ export function SelectInput({
             </option>
           ))}
         </select>
-        <span className="chevron-container">
-          <FaChevronDown />
-        </span>
+        <DropdownChevron />
       </div>
     </div>
   );

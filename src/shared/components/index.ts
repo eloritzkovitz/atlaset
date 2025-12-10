@@ -23,7 +23,7 @@ export { SplashScreen } from "./feedback/SplashScreen";
 // Form components
 export { Checkbox } from "./form/Checkbox";
 export { FormButton } from "./form/FormButton";
-export { FormField } from "./form/FormField";
+export { FormField } from "./form/FormField/FormField";
 export { SearchInput } from "./form/SearchInput";
 export { SelectInput } from "./form/SelectInput";
 export { DropdownSelectInput } from "./form/Dropdown/DropdownSelectInput";
