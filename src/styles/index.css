@@ -2,6 +2,13 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-bg: theme("colors.white");
+  --color-surface: theme("colors.white"); 
+  --color-input: theme("colors.gray.100");
+  --color-text: theme("colors.gray.700"); 
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -10,7 +17,14 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -moz-osx-font-smoothing: grayscale;  
+}
+
+.dark {
+  --color-bg: theme("colors.gray.700");
+  --color-surface: theme("colors.gray.700");  
+  --color-input: theme("colors.gray.600");  
+  --color-text: theme("colors.gray.300");
 }
 
 a {
@@ -29,26 +43,9 @@ body {
 }
 
 .dark body {
-  background: theme("colors.gray.600");
   color: theme("colors.gray.200");
   scrollbar-color: #4a5568 #2b3342;
   scrollbar-width: thin;
-}
-
-.bg-gray-100 {
-  background-color: theme("colors.gray.100");
-}
-
-.dark .bg-gray-100 {
-  background-color: theme("colors.gray.600");
-}
-
-.dark .bg-white {
-  background-color: theme("colors.gray.700");
-}
-
-.dark .text-gray-700 {
-  color: theme("colors.gray.300");
 }
 
 h1 {

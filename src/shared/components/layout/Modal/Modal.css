@@ -3,11 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .modal {
-  @apply bg-white rounded-xl shadow-2xl pt-0 px-4 pb-4 overflow-y-auto transition-all duration-300 ease-in-out;
-}
-
-.dark .modal {
-  @apply bg-gray-700 text-white;
+  @apply rounded-xl shadow-2xl pt-0 px-4 pb-4 overflow-y-auto transition-all duration-300 ease-in-out;
+  background: var(--color-surface);
 }
 
 .modal-show {

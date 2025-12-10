@@ -11,7 +11,7 @@ export function CountryInfoTable({
   currencies,
 }: CountryInfoTableProps) {
   return (
-    <table className="w-full mb-4 text-gray-700 border-separate [border-spacing:0.5rem]">
+    <table className="w-full mb-4 border-separate [border-spacing:0.5rem]">
       <tbody>
         <tr>
           <td className="font-semibold">Region:</td>

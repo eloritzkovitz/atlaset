@@ -67,7 +67,7 @@ export function SearchInput({
         placeholder={placeholder}
         title={placeholder || "Search"}
         aria-label={placeholder || "Search"}
-        className={`w-full pl-10 pr-10 py-2 bg-gray-100 rounded-full border border-none text-base focus:outline-none ${className}`}
+        className={`w-full pl-10 pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
       />
       {value && (
         <button

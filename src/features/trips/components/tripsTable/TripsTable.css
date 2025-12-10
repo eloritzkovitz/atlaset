@@ -3,17 +3,17 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .trips-table {
-  @apply min-w-full border border-gray-300 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100;
+  @apply min-w-full text-gray-900 dark:bg-gray-800 dark:text-gray-100;
 }
 
 /* Header styles */
 
 .trips-th {
-  @apply sticky border-t border-b top-0 border-gray-300 px-2 py-1 z-3 bg-gray-100 dark:border-gray-600 dark:bg-gray-800;
+  @apply sticky top-0 px-2 py-1 z-3 bg-gray-100 dark:bg-gray-900;
 }
 
 .trips-th-unsortable {
-  @apply sticky text-left border-t border-b top-0 border-gray-300 px-2 pb-7 z-3 bg-gray-100 dark:border-gray-600 dark:bg-gray-800;
+  @apply sticky text-left top-0 px-2 pb-7 z-3 bg-gray-100 dark:bg-gray-900;
 }
 
 .trips-filter-dropdown {
@@ -27,29 +27,21 @@
 /* Cell styles */
 
 .trips-td {
-  @apply px-2 py-2 border-t border-b border-gray-300 dark:border-gray-500;
-}
-
-.trips-td-top {
-  @apply border-t border-gray-300 dark:border-gray-500;
+  @apply px-2 py-2;
 }
 
 .trips-td-middle {
-  @apply py-1 border-t-0 border-b-0;
-}
-
-.trips-td-bottom {
-  @apply border-b border-gray-300 dark:border-gray-500;
+  @apply py-1;
 }
 
 /* Row styles */
 
 .trips-row-even {
-  @apply bg-white dark:bg-gray-600;
+  @apply bg-white dark:bg-gray-900/40;
 }
 
 .trips-row-odd {
-  @apply bg-gray-50 dark:bg-gray-700;
+  @apply bg-gray-50 dark:bg-gray-900;
 }
 
 .trips-row-upcoming {
@@ -87,7 +79,7 @@ tbody.trips-group:hover tr {
 /* Trip actions */
 
 .trips-actions-menu {
-  @apply flex flex-col absolute right-0 mt-2 w-40 p-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-10;
+  @apply flex flex-col absolute right-0 mt-2 w-40 p-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded shadow-lg z-10;
 }
 
 .trips-actions-button {
