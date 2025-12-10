@@ -68,7 +68,7 @@ export function AuthForm({
           <button
             type="button"
             onClick={() => onForgotPassword(email)}
-            className="text-sm text-blue-800 dark:text-gray-100 hover:underline"
+            className="text-sm text-primary dark:text-gray-100 hover:underline"
             disabled={!email}
           >
             Forgot your password?
@@ -89,7 +89,7 @@ export function AuthForm({
       )}
       <button
         type="submit"
-        className="w-full py-2 mt-4 bg-blue-800 text-white rounded-full hover:bg-blue-700 transition"
+        className="w-full py-2 mt-4 bg-primary text-white rounded-full hover:bg-primary-hover transition"
       >
         {buttonText || (mode === "signup" ? "Register" : "Sign In")}
       </button>

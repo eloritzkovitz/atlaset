@@ -32,13 +32,13 @@ export function UserMenu() {
     return (
       <div className="fixed top-4 right-10 z-[10000] flex gap-2">
         <button
-          className="py-2 px-4 bg-blue-800 text-white rounded-full hover:bg-blue-700"
+          className="py-2 px-4 bg-primary text-white rounded-full hover:bg-primary-hover"
           onClick={() => navigate("/login")}
         >
           Sign in
         </button>
         <button
-          className="py-2 px-4 bg-gray-200 text-blue-800 rounded-full hover:bg-gray-300"
+          className="py-2 px-4 bg-secondary text-primary rounded-full hover:bg-secondary-hover"
           onClick={() => navigate("/signup")}
         >
           Sign up
