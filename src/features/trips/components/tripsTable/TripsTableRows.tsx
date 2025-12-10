@@ -14,7 +14,7 @@ interface TripsTableRowsProps {
   countryData: any;
   selected: boolean;
   onSelect: (id: string) => void;
-  onRatingChange: (tripId: string, rating: number) => void;
+  onRatingChange: (tripId: string, rating: number | undefined) => void;
   getTripRowClass: (trip: Trip, tripIdx: number) => string;
   handleResizeStart: (e: React.MouseEvent, key: ColumnKey) => void;
   onEdit: (trip: Trip) => void;
@@ -193,7 +193,7 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
-              <TripActions trip={trip} onEdit={onEdit} onDelete={onDelete} />
+              <TripActions trip={trip} onEdit={onEdit} onRatingChange={onRatingChange} onDelete={onDelete}  />
             </TableCell>
           </>
         )}

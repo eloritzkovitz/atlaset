@@ -13,6 +13,15 @@ export const RATING_OPTIONS = [
   { value: 0, label: "No rating" },
 ];
 
+export const RATING_OPTIONS_NO_ALL = RATING_OPTIONS.filter(
+  (opt) => opt.value !== -1
+);
+
+export const RATING_ACTION_OPTIONS = [
+  ...RATING_OPTIONS_NO_ALL.filter((opt) => opt.value !== 0),
+  { value: undefined, label: "No rating" },
+];
+
 export const ALL_TRIP_CATEGORIES = [
   "solo",
   "couple",

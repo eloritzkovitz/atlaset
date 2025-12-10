@@ -89,7 +89,11 @@ export function TripsTableHeaders({
                 className="trips-filter-dropdown"
                 renderOption={(opt) => (
                   <span className="flex items-center gap-2">
-                    <StarRatingInput value={opt.value} readOnly />
+                    {opt.value === -1 ? (
+                      <span />
+                    ) : (
+                      <StarRatingInput value={opt.value} readOnly />
+                    )}
                     <span className="text-xs text-gray-500">{opt.label}</span>
                   </span>
                 )}

@@ -8,7 +8,7 @@ interface TripsContextType {
   loading: boolean;
   addTrip: (trip: Trip) => void;
   editTrip: (trip: Trip) => void;
-  updateTripRating: (tripId: string, rating: number) => void;
+  updateTripRating: (tripId: string, rating: number | undefined) => void;
   removeTrip: (id: string) => Promise<void>;
   duplicateTrip: (trip: Trip) => void;
 }
@@ -64,7 +64,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   // Update trip rating
-  async function updateTripRating(tripId: string, rating: number) {
+  async function updateTripRating(tripId: string, rating: number | undefined) {
     await tripsService.updateRating(tripId, rating);
     setTrips((prev) =>
       prev.map((trip) => (trip.id === tripId ? { ...trip, rating } : trip))
@@ -91,7 +91,15 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   return (
     <TripsContext.Provider
-      value={{ trips, loading, addTrip, editTrip, updateTripRating, removeTrip, duplicateTrip }}
+      value={{
+        trips,
+        loading,
+        addTrip,
+        editTrip,
+        updateTripRating,
+        removeTrip,
+        duplicateTrip,
+      }}
     >
       {children}
     </TripsContext.Provider>

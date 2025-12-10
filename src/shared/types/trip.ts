@@ -4,7 +4,7 @@ export type Trip = {
   id: string;
   name: string;
   description?: string;
-  rating?: number;
+  rating?: number | null;
   countryCodes: string[];
   locations?: Location[];
   startDate: string;

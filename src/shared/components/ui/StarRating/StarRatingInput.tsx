@@ -9,8 +9,8 @@ import {
 import { HalfStar } from "./HalfStar";
 
 interface StarRatingInputProps {
-  value: number;
-  onChange?: (v: number) => void;
+  value: number | null | undefined;
+  onChange?: (v: number | undefined) => void;
   readOnly?: boolean;
 }
 
@@ -26,12 +26,27 @@ export function StarRatingInput({
   const selectedColor = STAR_SELECTED_COLOR;
   const hoverColor = STAR_HOVER_COLOR;
 
+  // If value is undefined or -1, show all empty stars
+  const showEmpty =
+    displayValue === undefined || displayValue === null || displayValue === -1;
+
   return (
     <div
       className="flex items-center"
       onMouseLeave={() => setHoverValue(undefined)}
     >
       {stars.map((star) => {
+        if (showEmpty) {
+          return (
+            <span
+              key={star}
+              className="relative inline-block align-middle w-7 h-7"
+            >
+              <FaStar size={STAR_SIZE} color={STAR_UNSELECTED_COLOR} />
+            </span>
+          );
+        }
+
         const full = displayValue >= star;
         const half = displayValue >= star - 0.5 && displayValue < star;
         const color = isHovering ? hoverColor : selectedColor;

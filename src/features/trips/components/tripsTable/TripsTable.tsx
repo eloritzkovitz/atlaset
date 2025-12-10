@@ -18,7 +18,7 @@ import "./TripsTable.css";
 interface TripsTableProps {
   trips: Trip[];
   onEdit: (trip: Trip) => void;
-  onRatingChange: (tripId: string, rating: number) => void;
+  onRatingChange: (tripId: string, rating: number | undefined) => void;
   onDelete: (trip: Trip) => void;
   filters: any;
   updateFilter: (key: string, value: any) => void;
