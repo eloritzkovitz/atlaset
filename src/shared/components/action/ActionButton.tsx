@@ -58,7 +58,7 @@ export const ActionButton = React.forwardRef<
       secondary: "",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative transition",
-      toggle: "h-8 w-8 px-2 bg-transparent border-none transition-colors duration-200",
+      toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent border-none transition-colors duration-200",
     };
     const buttonClass =
       className && className.trim().length > 0 ? className : defaultStyle;
