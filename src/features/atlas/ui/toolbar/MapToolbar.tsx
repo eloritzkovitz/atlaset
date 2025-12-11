@@ -66,7 +66,7 @@ export function MapToolbar({
       <div className="relative flex items-center" style={{ height: "40px" }}>
         {/* Actions: horizontal slide */}
         <ActionsToolbar
-          className={`right-14 bg-action rounded-full shadow border border-gray-300 dark:border-gray-700 px-2 transition-all duration-300 ${
+          className={`right-14 bg-action rounded-full px-2 transition-all duration-300 ${
             visible
               ? "opacity-100 pointer-events-auto translate-x-0"
               : "opacity-0 pointer-events-none translate-x-10"
@@ -76,53 +76,60 @@ export function MapToolbar({
             onClick={toggleCountries}
             ariaLabel="Countries"
             title="Countries"
-            className="toolbar-btn rounded-full"
             icon={<FaGlobe />}
+            variant="action"
+            rounded
           />
           <ActionButton
             onClick={toggleMarkers}
             ariaLabel="Markers"
             title="Markers"
-            className="toolbar-btn rounded-full"
             icon={<FaMapPin />}
+            variant="action"
+            rounded
           />
           <ActionButton
             onClick={toggleOverlays}
             ariaLabel="Overlays"
             title="Overlays"
-            className="toolbar-btn rounded-full"
             icon={<FaLayerGroup />}
+            variant="action"
+            rounded
           />
           <ActionButton
             onClick={toggleLegend}
             ariaLabel="Legend"
             title="Legend"
-            className="toolbar-btn rounded-full"
             icon={<FaMap />}
+            variant="action"
+            rounded
           />
           {visitedOverlay && isTimelineOverlay(visitedOverlay) && (
             <ActionButton
               onClick={() => setTimelineMode((prev) => !prev)}
               ariaLabel="Timeline"
               title="Timeline"
-              className="toolbar-btn rounded-full"
               icon={<FaTimeline />}
+              variant="action"
+              rounded
             />
           )}
           <ActionButton
             onClick={toggleExport}
             ariaLabel="Export"
             title="Export"
-            className="toolbar-btn rounded-full"
             icon={<FaDownload />}
+            variant="action"
+            rounded
           />
           <ToolbarSeparator />
           <ActionButton
             onClick={toggleSettings}
             ariaLabel="Settings"
             title="Settings"
-            className="toolbar-btn rounded-full"
             icon={<FaGear />}
+            variant="action"
+            rounded
           />
           {children}
         </ActionsToolbar>
@@ -131,10 +138,10 @@ export function MapToolbar({
           onClick={() => setVisible((v) => !v)}
           ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
           title={visible ? "Hide toolbar" : "Show toolbar"}
-          className={`toolbar-btn toolbar-btn-action ${
-            !visible ? "opacity-70" : ""
-          }`}
+          variant="action"
+          className={`${!visible ? "opacity-70" : ""}`}
           icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
+          rounded
         />
       </div>
     </div>

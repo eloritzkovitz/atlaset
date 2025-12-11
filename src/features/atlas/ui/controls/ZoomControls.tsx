@@ -1,8 +1,8 @@
-import { FaPlus, FaMinus, FaCrosshairs } from "react-icons/fa";
 import { useRef } from "react";
+import { FaPlus, FaMinus, FaCrosshairs } from "react-icons/fa6";
+import { ActionButton } from "@components";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useKeyHandler } from "@hooks/useKeyHandler";
-import { ZoomButton } from "./ZoomButton";
 
 interface ZoomControlsProps {
   zoom: number;
@@ -59,34 +59,43 @@ export function ZoomControls({ zoom, setZoom }: ZoomControlsProps) {
 
   return (
     <div className="flex flex-col items-center space-y-0.5">
-      <ZoomButton
+      <ActionButton
         onClick={() =>
           setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom))
         }
-        onContinuousStart={() => startContinuousZoom("in")}
-        onContinuousStop={() => stopContinuousZoom("in")}
+        onMouseDown={() => startContinuousZoom("in")}
+        onMouseUp={() => stopContinuousZoom("in")}
+        onMouseLeave={() => stopContinuousZoom("in")}
+        onTouchStart={() => startContinuousZoom("in")}
+        onTouchEnd={() => stopContinuousZoom("in")}
         ariaLabel="Zoom in"
         title="Zoom in"
-        className="toolbar-btn toolbar-btn-action"
         icon={<FaPlus />}
+        variant="action"
+        rounded
       />
-      <ZoomButton
+      <ActionButton
         onClick={() =>
           setZoom(Math.max(zoom - 1, DEFAULT_MAP_SETTINGS.minZoom))
         }
-        onContinuousStart={() => startContinuousZoom("out")}
-        onContinuousStop={() => stopContinuousZoom("out")}
+        onMouseDown={() => startContinuousZoom("out")}
+        onMouseUp={() => stopContinuousZoom("out")}
+        onMouseLeave={() => stopContinuousZoom("out")}
+        onTouchStart={() => startContinuousZoom("out")}
+        onTouchEnd={() => stopContinuousZoom("out")}
         ariaLabel="Zoom out"
         title="Zoom out"
-        className="toolbar-btn toolbar-btn-action"
         icon={<FaMinus />}
+        variant="action"
+        rounded
       />
-      <ZoomButton
+      <ActionButton
         onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
         ariaLabel="Reset zoom"
         title="Reset zoom"
-        className="toolbar-btn toolbar-btn-action"
         icon={<FaCrosshairs />}
+        variant="action"
+        rounded
       />
     </div>
   );

@@ -74,9 +74,9 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
           onClick={closePanel}
           ariaLabel="Close export menu"
           title="Close"
-        >
-          <FaXmark />
-        </ActionButton>
+          icon={<FaXmark className="text-2xl" />}
+          rounded
+        />
       }
     >
       <div className="pb-20">

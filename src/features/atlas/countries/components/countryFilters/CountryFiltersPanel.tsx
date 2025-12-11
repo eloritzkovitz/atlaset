@@ -110,17 +110,16 @@ export function CountryFiltersPanel({
             onClick={resetFilters}
             ariaLabel="Reset all filters"
             title="Reset filters"
-          >
-            <FaArrowRotateLeft />
-          </ActionButton>
+            icon={<FaArrowRotateLeft />}
+            rounded
+          />
           <ActionButton
             onClick={onHide}
             ariaLabel="Close filters panel"
             title="Close"
-            className="action-btn action-btn-close"
-          >
-            <FaXmark />
-          </ActionButton>
+            icon={<FaXmark className="text-2xl" />}
+            rounded
+          />
         </>
       }
       style={{

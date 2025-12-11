@@ -42,17 +42,16 @@ export function MarkersPanel({
               onClick={onAddMarker}
               ariaLabel="Add Marker"
               title="Add Marker"
-            >
-              <FaPlus />
-            </ActionButton>
+              icon={<FaPlus />}
+              rounded
+            />
             <ActionButton
               onClick={closePanel}
               ariaLabel="Close markers panel"
               title="Close"
-              className="action-btn action-btn-close"
-            >
-              <FaXmark />
-            </ActionButton>
+              icon={<FaXmark className="text-2xl" />}
+              rounded
+            />
           </>
         }
       >

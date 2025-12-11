@@ -8,7 +8,7 @@ interface CollapsibleHeaderProps {
   expanded: boolean;
   onToggle: () => void;
   children?: ReactNode;
-};
+}
 
 export function CollapsibleHeader({
   icon,
@@ -28,9 +28,9 @@ export function CollapsibleHeader({
           onClick={onToggle}
           ariaLabel={expanded ? `Collapse ${label}` : `Expand ${label}`}
           title={expanded ? `Collapse ${label}` : `Expand ${label}`}
-        >
-          {expanded ? <FaChevronUp /> : <FaChevronDown />}
-        </ActionButton>
+          icon={expanded ? <FaChevronUp /> : <FaChevronDown />}
+          rounded
+        />
       </div>
       {expanded && children}
     </div>

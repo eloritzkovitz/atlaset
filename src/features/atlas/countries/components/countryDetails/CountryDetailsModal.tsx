@@ -137,6 +137,7 @@ export function CountryDetailsModal({
               ariaLabel="Open Wikipedia article"
               title="Wikipedia"
               icon={<FaWikipediaW />}
+              rounded
             />
             {onCenterMap && (
               <ActionButton
@@ -144,14 +145,15 @@ export function CountryDetailsModal({
                 ariaLabel="Center map on country"
                 title="Center map"
                 icon={<FaCrosshairs />}
+                rounded
               />
             )}
             <ActionButton
               onClick={onClose}
               ariaLabel="Close country details"
               title="Close"
-              icon={<FaXmark />}
-              className="action-btn action-btn-close"
+              icon={<FaXmark className="text-2xl" />}
+              rounded
             />
           </PanelHeader>
           <CountryDetailsContent country={country} currencies={currencies} />

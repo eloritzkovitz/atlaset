@@ -45,7 +45,8 @@ export function TimelineNavigator({}) {
             )
           }
           disabled={!canGoForward}
-          className="toolbar-btn rounded-full transition"
+          variant="action"
+          rounded
         />
         <ActionButton
           onClick={handleFirst}
@@ -55,7 +56,8 @@ export function TimelineNavigator({}) {
             <FaAnglesLeft className={currentIndex === 0 ? "opacity-50" : ""} />
           }
           disabled={currentIndex === 0}
-          className="toolbar-btn rounded-full transition"
+          variant="action"
+          rounded
         />
         <ActionButton
           onClick={handleBack}
@@ -63,7 +65,8 @@ export function TimelineNavigator({}) {
           title="Previous year"
           icon={<FaChevronLeft className={!canGoBack ? "opacity-50" : ""} />}
           disabled={!canGoBack}
-          className="toolbar-btn rounded-full transition"
+          variant="action"
+          rounded
         />
         <ToolbarSelectButton
           value={selectedYear}
@@ -80,7 +83,8 @@ export function TimelineNavigator({}) {
             <FaChevronRight className={!canGoForward ? "opacity-50" : ""} />
           }
           disabled={!canGoForward}
-          className="toolbar-btn rounded-full transition"
+          variant="action"
+          rounded
         />
         <ActionButton
           onClick={handleLast}
@@ -92,13 +96,15 @@ export function TimelineNavigator({}) {
             />
           }
           disabled={currentIndex === years.length - 1}
-          className="toolbar-btn rounded-full transition"
+          variant="action"
+          rounded
         />
         <ActionButton
           onClick={handleSpeedChange}
           ariaLabel={`Speed: ${speed}x`}
           title={`Speed: ${speed}x`}
-          className="toolbar-btn rounded-full transition"
+          variant="action"
+          rounded
         >
           <span>{speed}x</span>
         </ActionButton>

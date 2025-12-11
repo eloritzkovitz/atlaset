@@ -39,8 +39,8 @@ export const FloatingChevronButton = React.forwardRef<
     const [style, setStyle] = useState<React.CSSProperties>({});
 
     const BUTTON_SIZE = 48;
-    const baseClass = "toolbar-btn rounded-full z-[10000] transition-colors";
 
+    // Update button position based on targetRef
     useLayoutEffect(() => {
       if (targetRef.current) {
         const rect = targetRef.current.getBoundingClientRect();
@@ -60,7 +60,7 @@ export const FloatingChevronButton = React.forwardRef<
       <ActionButton
         ref={ref}
         style={style}
-        className={`${baseClass} ${className}`}
+        className={`z-[10000] transition-colors ${className}`}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onClick={onClick}
@@ -73,6 +73,8 @@ export const FloatingChevronButton = React.forwardRef<
             <FaChevronLeft className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
           )
         }
+        variant="action"
+        rounded
       />
     );
   }

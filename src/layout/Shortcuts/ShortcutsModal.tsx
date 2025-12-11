@@ -38,10 +38,9 @@ export function ShortcutsModal() {
           onClick={closeShortcuts}
           ariaLabel="Close"
           title="Close"
-          className="action-btn action-btn-close"
-        >
-          <FaXmark />
-        </ActionButton>
+          icon={<FaXmark className="text-2xl" />}
+          rounded
+        />
       </PanelHeader>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
         {categoryColumns.map((categories, colIdx) => (

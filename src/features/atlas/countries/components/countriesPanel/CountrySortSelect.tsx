@@ -47,7 +47,7 @@ export function CountrySortSelect({
         )}
       </select>
       <span
-        className="sort-btn flex items-center justify-center h-10 w-10 rounded-lg bg-input text-base relative z-10 focus:outline-none"
+        className="bg-input text-action-header text-base flex items-center justify-center h-10 w-10 rounded-lg relative z-10 focus:outline-none"
         aria-hidden="true"
       >
         <PiArrowsDownUpBold size="24" />

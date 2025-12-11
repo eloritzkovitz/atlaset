@@ -17,6 +17,10 @@
   --color-action-hover: theme("colors.gray.300");
   --color-action-text: theme("colors.blue.800");
   --color-action-text-hover: theme("colors.blue.900");
+  /* Header action colors */
+  --color-action-header: theme("colors.blue.800");
+  --color-action-header-hover: theme("colors.gray.200");
+  --color-action-header-hover-text: theme("colors.blue.900");
   /* Surface colors */
   --color-surface: theme("colors.white");
   --color-surface-alt: theme("colors.gray.50");
@@ -52,6 +56,10 @@
   --color-action-hover: theme("colors.gray.700");
   --color-action-text: theme("colors.gray.300");
   --color-action-text-hover: theme("colors.white");
+  /* Header action colors */
+  --color-action-header: theme("colors.gray.200");
+  --color-action-header-hover: theme("colors.gray.500");
+  --color-action-header-hover-text: theme("colors.gray.300");
   /* Surface colors */
   --color-surface: theme("colors.gray.700");
   --color-surface-alt: theme("colors.gray.800");

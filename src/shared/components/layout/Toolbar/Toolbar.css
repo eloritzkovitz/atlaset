@@ -2,18 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Toolbar button */
-
-.toolbar-btn {
-  @apply w-12 h-12 flex items-center justify-center p-0 text-lg;
-  background: var(--color-action);
-  color: var(--color-action-text);
-}
-
-.toolbar-btn:hover {
-  color: var(--color-action-text-hover);
-}
-
 /* Toggle button */
 
 .toolbar-btn-toggle {

@@ -31,9 +31,3 @@
 .toolbar-zoom-controls-visible {
   @apply opacity-100 pointer-events-auto translate-y-0;
 }
-
-/* Toolbar buttons */
-
-.toolbar-btn-action {
-  @apply rounded-full border-none;
-}

@@ -27,10 +27,9 @@ export function SettingsPanel() {
           onClick={closePanel}
           ariaLabel="Close settings panel"
           title="Close"
-          className="action-btn action-btn-close"
-        >
-          <FaXmark />
-        </ActionButton>
+          icon={<FaXmark className="text-2xl" />}
+          rounded
+        />
       }
     >
       <HomeCountrySelect />

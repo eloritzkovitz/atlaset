@@ -49,6 +49,7 @@ export function MarkerDetailsModal({
             onClick={onClose}
             ariaLabel="Close country details"
             title="Close"
+            rounded
             icon={<FaXmark />}
           />
         </PanelHeader>

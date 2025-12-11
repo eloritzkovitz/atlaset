@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { FaMapPin, FaSave, FaTimes } from "react-icons/fa";
+import { FaMapPin, FaFloppyDisk, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   FormField,
@@ -8,6 +8,7 @@ import {
   PanelHeader,
 } from "@components";
 import type { Marker } from "@types";
+import {  } from "react-icons/fa6";
 
 interface MarkerModalProps {
   marker: Marker | null;
@@ -53,9 +54,9 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           </>
         }
       >
-        <ActionButton onClick={onClose} ariaLabel="Close" title="Close">
-          <FaTimes />
-        </ActionButton>
+        <ActionButton onClick={onClose} ariaLabel="Close" title="Close" icon={<FaXmark className="text-2xl" />} />
+        
+        
       </PanelHeader>
       <form
         className="space-y-4"
@@ -118,7 +119,8 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         </FormField>
         {marker && !isEditing && (
           <div className="text-xs text-gray-500">
-            Location: {marker.longitude.toFixed(4)}, {marker.latitude.toFixed(4)}
+            Location: {marker.longitude.toFixed(4)},{" "}
+            {marker.latitude.toFixed(4)}
           </div>
         )}
         <div className="flex justify-end gap-2 mt-4">
@@ -128,7 +130,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
             submitType="submit"
             submitIcon={
               isEditing ? (
-                <FaSave className="inline" />
+                <FaFloppyDisk className="inline" />
               ) : (
                 <FaMapPin className="inline" />
               )

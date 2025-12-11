@@ -59,9 +59,9 @@ export function Sidebar() {
             aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
             title={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
             className="sidebar-header-action"
-          >
-            <FaBars size={20} />
-          </ActionButton>
+            icon={<FaBars size={20} />}
+            rounded
+          />
           {sidebarExpanded && (
             <div className="flex items-center gap-2 px-2">
               <Branding size={36} />

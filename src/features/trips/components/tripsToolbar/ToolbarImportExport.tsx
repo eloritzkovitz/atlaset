@@ -43,7 +43,6 @@ export function ToolbarImportExport({
         onClick={() => setShowImportNotice(true)}
         ariaLabel="Import"
         title="Import Trips"
-        className="toolbar-btn-menu"
         icon={<FaFileImport />}
       />
       {showImportNotice && (
@@ -76,7 +75,6 @@ export function ToolbarImportExport({
           onClick={() => setShowExportMenu((v) => !v)}
           ariaLabel="Export"
           title="Export Trips"
-          className="toolbar-btn-menu"
           icon={<FaFileExport />}
         />
         {showExportMenu && (
