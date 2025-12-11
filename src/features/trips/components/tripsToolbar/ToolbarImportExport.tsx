@@ -44,6 +44,7 @@ export function ToolbarImportExport({
         ariaLabel="Import"
         title="Import Trips"
         icon={<FaFileImport />}
+        variant="toggle"
       />
       {showImportNotice && (
         <ConfirmModal
@@ -76,6 +77,7 @@ export function ToolbarImportExport({
           ariaLabel="Export"
           title="Export Trips"
           icon={<FaFileExport />}
+          variant="toggle"
         />
         {showExportMenu && (
           <ExportMenu

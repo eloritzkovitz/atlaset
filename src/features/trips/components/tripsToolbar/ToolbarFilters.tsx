@@ -111,8 +111,9 @@ export function ToolbarFilters({
         ariaLabel="Clear Filters"
         title="Clear Filters"
         icon={<FaRotateLeft />}
+        variant="toggle"
       />
-      <ToolbarToggleGroup options={filterToggles} buttonClassName="h-8 w-8" />
+      <ToolbarToggleGroup options={filterToggles} />
     </>
   );
 }

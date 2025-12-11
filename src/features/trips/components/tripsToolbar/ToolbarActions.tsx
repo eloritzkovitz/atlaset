@@ -25,22 +25,20 @@ export function ToolbarActions({
       <ActionButton
         onClick={onBulkDuplicate}
         ariaLabel="Duplicate selected"
-        title="Duplicate selected"
-        className={`toolbar-btn-toggle ${
-          hasSelection ? "toolbar-btn-menu" : "toolbar-btn-toggle-inactive"
-        }`}
+        title="Duplicate selected"        
         icon={<FaCopy />}
+        active={hasSelection}
         disabled={!hasSelection}
+        variant="toggle"
       />
       <ActionButton
         onClick={() => setShowDeleteConfirm(true)}
         ariaLabel="Delete selected"
-        title="Delete selected"
-        className={`toolbar-btn-toggle ${
-          hasSelection ? "toolbar-btn-menu" : "toolbar-btn-toggle-inactive"
-        }`}
+        title="Delete selected"        
         icon={<FaTrash />}
+        active={hasSelection}        
         disabled={!hasSelection}
+        variant="toggle"
       />
 
       {/* Confirm Modals */}

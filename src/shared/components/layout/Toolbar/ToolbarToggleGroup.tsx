@@ -20,11 +20,9 @@ export function ToolbarToggleGroup({
           onClick={opt.onClick}
           ariaLabel={opt.ariaLabel || opt.label}
           title={opt.title || opt.label}
-          className={`toolbar-btn-toggle ${
-            opt.checked
-              ? "toolbar-btn-toggle-active"
-              : "toolbar-btn-toggle-inactive"
-          } ${buttonClassName}`}
+          variant="toggle"
+          active={!!opt.checked}
+          className={buttonClassName}
           icon={opt.icon}
           disabled={opt.disabled}
         />

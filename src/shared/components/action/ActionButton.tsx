@@ -6,12 +6,13 @@ interface ActionButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   icon?: ReactNode;
   children?: ReactNode;
-  variant?: "primary" | "secondary" | "action";
+  variant?: "primary" | "secondary" | "action" | "toggle";
   rounded?: boolean;
   className?: string;
   style?: React.CSSProperties;
   ariaLabel?: string;
   title?: string;
+  active?: boolean;
   disabled?: boolean;
   onClick?: () => void;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
@@ -37,6 +38,7 @@ export const ActionButton = React.forwardRef<
       style,
       ariaLabel = "Action",
       title = "Action",
+      active = true,
       disabled = false,
       onClick,
       onMouseEnter,
@@ -56,6 +58,7 @@ export const ActionButton = React.forwardRef<
       secondary: "",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative transition",
+      toggle: "h-8 w-8 px-2 bg-transparent border-none transition-colors duration-200",
     };
     const buttonClass =
       className && className.trim().length > 0 ? className : defaultStyle;
@@ -72,8 +75,8 @@ export const ActionButton = React.forwardRef<
         onTouchEnd={onTouchEnd}
         onClick={onClick}
         className={`${base} ${variant ? variants[variant] : buttonClass} ${
-          rounded ? "rounded-full" : ""
-        }`}
+          active ? "text-blue-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600" : "text-gray-400 bg-transparent"
+        } ${rounded ? "rounded-full" : ""}`}
         aria-label={ariaLabel}
         title={title}
         disabled={disabled}

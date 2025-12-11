@@ -5,7 +5,6 @@ import type { Trip } from "@types";
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
 import { ToolbarActions } from "./ToolbarActions";
-import "./TripsToolbar.css";
 
 interface ToolbarProps {
   trips: Trip[];
@@ -35,10 +34,10 @@ export function TripsToolbar({
   onBulkDelete,
 }: ToolbarProps) {
   return (
-    <div className="trips-toolbar-container w-full px-3 flex items-center justify-between h-[7vh] bg-white dark:bg-gray-900/70">
+    <div className="trips-toolbar-container w-full px-3 flex items-center justify-between h-[7vh] bg-surface">
       <ActionsToolbar>
         <div className="flex items-center">
-          <div className="ml-16"/>
+          <div className="ml-16 "/>
 
           { /* Search */}
           <SearchInput
