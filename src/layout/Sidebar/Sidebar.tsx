@@ -57,7 +57,7 @@ export function Sidebar() {
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
             aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
             title={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
-            className="flex h-10 w-10 ml-1 hover:bg-sidebar-hover transition"
+            className="flex h-10 w-10 ml-1 hover:bg-sidebar-btn-hover transition"
             icon={<FaBars className="text-2xl" />}
             rounded
           />
