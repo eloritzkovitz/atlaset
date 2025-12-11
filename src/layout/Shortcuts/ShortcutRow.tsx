@@ -8,7 +8,7 @@ export function ShortcutRow({ cmd }: { cmd: KeyCommand }) {
       <td className="py-2 pr-6 min-w-[90px]">
         <KeyCombo keys={keys} />
       </td>
-      <td className="py-1 text-sm text-gray-700 select-none">{cmd.action}</td>
+      <td className="py-1 text-sm select-none">{cmd.action}</td>
     </tr>
   );
 }
