@@ -2,7 +2,7 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {  
+@theme {
   --color-bg: theme("colors.white");
   /* Primary colors */
   --color-primary: theme("colors.blue.800");
@@ -27,7 +27,10 @@
   --color-surface-hover: theme("colors.gray.100");
   /* Input colors */
   --color-input: theme("colors.gray.100");
-  --color-text: theme("colors.gray.700"); 
+  --color-text: theme("colors.gray.700");
+  /* Border colors */
+  --color-ring: theme("colors.blue.500");
+  --color-dashed: theme("colors.gray.500");
 }
 
 :root {
@@ -38,7 +41,7 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;  
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .dark {
@@ -65,8 +68,11 @@
   --color-surface-alt: theme("colors.gray.800");
   --color-surface-hover: theme("colors.gray.600");
   /* Input colors */
-  --color-input: theme("colors.gray.600");  
+  --color-input: theme("colors.gray.600");
   --color-text: theme("colors.gray.300");
+  /* Border colors */
+  --color-ring: theme("colors.blue.500");
+  --color-dashed: theme("colors.gray.500");
 }
 
 a {
@@ -79,7 +85,7 @@ a {
   color: theme("colors.gray.200");
 }
 
-body {  
+body {
   background: theme("colors.gray.100");
   overflow: hidden;
 }

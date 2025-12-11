@@ -40,7 +40,10 @@ export function PanelListItem({
 }: PanelListItemProps) {
   return (
     <li
-      className={`panel-list-item ${dragged ? "ring-dashed" : ""}`}
+      id="panel-list-item"
+      className={`mb-4 flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2 ${
+        dragged ? "ring-dashed" : ""
+      }`}
       draggable={!!onDragStart}
       onDragStart={onDragStart}
       onDragOver={handleDragOver}
