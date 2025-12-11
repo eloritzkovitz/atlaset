@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa6";
 import {
   ActionButton,
+  Chip,
   FormButton,
   FormField,
   Modal,
@@ -86,7 +87,8 @@ export function OverlayModal({
             onClick={onClose}
             ariaLabel="Close Overlay Modal"
             title="Close"
-            icon={<FaXmark />}
+            icon={<FaXmark className="text-2xl" />}
+            rounded
           />
         </PanelHeader>
         <form
@@ -133,32 +135,21 @@ export function OverlayModal({
                 <span className="text-gray-400">No countries selected</span>
               ) : (
                 selectedCountries.map((country) => (
-                  <span
+                  <Chip
                     key={country.isoCode}
-                    className="flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-gray-500 dark:text-gray-200 px-2 py-1 rounded text-sm mr-1 mb-1"
+                    removable={true}
+                    onRemove={() =>
+                      onChange({
+                        ...overlay,
+                        countries: overlay.countries.filter(
+                          (code) => code !== country.isoCode
+                        ),
+                      })
+                    }
+                    disabled={isVisited}
                   >
                     {country.name}
-                    <button
-                      type="button"
-                      className={`ml-auto text-gray-400 ${
-                        isVisited
-                          ? "opacity-50 cursor-not-allowed"
-                          : "hover:text-blue-500 dark:hover:text-gray-300"
-                      }`}
-                      title="Remove"
-                      onClick={() =>
-                        onChange({
-                          ...overlay,
-                          countries: overlay.countries.filter(
-                            (code) => code !== country.isoCode
-                          ),
-                        })
-                      }
-                      disabled={isVisited}
-                    >
-                      <FaXmark />
-                    </button>
-                  </span>
+                  </Chip>
                 ))
               )}
               <FormButton

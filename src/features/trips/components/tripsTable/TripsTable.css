@@ -64,10 +64,6 @@ tbody.trips-group:hover tr {
   @apply text-sm;
 }
 
-.trips-status-card {
-  @apply py-1 font-semibold text-center rounded;
-}
-
 .status-hover {
   @apply group-hover:bg-blue-50/60 dark:group-hover:bg-blue-600/40 group-hover:text-inherit;
 }

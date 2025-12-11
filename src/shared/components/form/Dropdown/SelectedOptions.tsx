@@ -1,6 +1,6 @@
-import { FaXmark } from "react-icons/fa6";
 import type { DropdownOption } from "@types";
 import { flattenOptions } from "@utils/dropdown";
+import { Chip } from "@components";
 
 interface SelectedOptionsProps<T> {
   value: T[];
@@ -20,21 +20,9 @@ export function SelectedOptions<T>({
       {flatOptions
         .filter((opt) => value.includes(opt.value))
         .map((opt, i) => (
-          <span key={i} className="flex items-center bg-blue-100 dark:bg-gray-600 text-blue-800 dark:text-gray-200 px-1 rounded text-xs">
+          <Chip key={i} removable={true} onRemove={() => onRemove(opt.value)}>
             {opt.label}
-            <button
-              type="button"
-              className="ml-1 text-blue-500 dark:text-gray-200 hover:text-gray-400 focus:outline-none"
-              tabIndex={-1}
-              onClick={(e) => {
-                e.stopPropagation();
-                onRemove(opt.value);
-              }}
-              aria-label={`Remove ${opt.label}`}
-            >
-              <FaXmark className="w-3 h-3" />
-            </button>
-          </span>
+          </Chip>
         ))}
     </span>
   );

@@ -1,4 +1,4 @@
-import { CardList, Checkbox, StarRatingInput } from "@components";
+import { Checkbox, ChipList, StarRatingInput } from "@components";
 import { CountryWithFlag, createCountryMap } from "@features/countries";
 import { type ColumnKey } from "@features/trips/constants/columns";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
@@ -157,7 +157,7 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
-              <CardList<{ value: string; label: string }>
+              <ChipList<{ value: string; label: string }>
                 items={(trip.categories ?? []).map((cat) => ({
                   value: cat,
                   label: cat.charAt(0).toUpperCase() + cat.slice(1),
@@ -185,7 +185,7 @@ export function TripsTableRows({
               rowSpan={rowSpan}
               handleResizeStart={handleResizeStart}
             >
-              <CardList
+              <ChipList
                 items={trip.tags}
                 colorClass="bg-purple-100 text-purple-800"
                 moreColorClass="bg-purple-200 text-purple-900"

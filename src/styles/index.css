@@ -15,12 +15,12 @@
   /* Action colors */
   --color-action: theme("colors.gray.200");
   --color-action-hover: theme("colors.gray.300");
-  --color-action-text: theme("colors.blue.800");
-  --color-action-text-hover: theme("colors.blue.900");
+  --color-action-text: theme("colors.gray.600");
+  --color-action-text-hover: theme("colors.gray.700");
   /* Header action colors */
-  --color-action-header: theme("colors.blue.800");
+  --color-action-header: theme("colors.gray.600");
   --color-action-header-hover: theme("colors.gray.200");
-  --color-action-header-hover-text: theme("colors.blue.900");
+  --color-action-header-hover-text: theme("colors.gray.700");
   /* Surface colors */
   --color-surface: theme("colors.white");
   --color-surface-alt: theme("colors.gray.50");
@@ -31,6 +31,17 @@
   /* Border colors */
   --color-ring: theme("colors.blue.500");
   --color-dashed: theme("colors.gray.500");
+  /* Chip colors */
+  --color-chip-bg: theme("colors.gray.200");
+  --color-chip-text: theme("colors.gray.700");
+  --color-chip-planned-bg: theme("colors.yellow.100");
+  --color-chip-planned-text: theme("colors.yellow.900");
+  --color-chip-inprogress-bg: theme("colors.orange.100");
+  --color-chip-inprogress-text: theme("colors.orange.900");
+  --color-chip-completed-bg: theme("colors.green.100");
+  --color-chip-completed-text: theme("colors.green.900");
+  --color-chip-cancelled-bg: theme("colors.red.100");
+  --color-chip-cancelled-text: theme("colors.red.900");
 }
 
 :root {
@@ -73,6 +84,17 @@
   /* Border colors */
   --color-ring: theme("colors.blue.500");
   --color-dashed: theme("colors.gray.500");
+  /* Chip colors */
+  --color-chip-bg: theme("colors.gray.600");
+  --color-chip-text: theme("colors.gray.200");
+  --color-chip-planned-bg: theme("colors.yellow.700");
+  --color-chip-planned-text: theme("colors.yellow.100");
+  --color-chip-inprogress-bg: theme("colors.orange.700");
+  --color-chip-inprogress-text: theme("colors.orange.100");
+  --color-chip-completed-bg: theme("colors.green.700");
+  --color-chip-completed-text: theme("colors.green.100");
+  --color-chip-cancelled-bg: theme("colors.red.700");
+  --color-chip-cancelled-text: theme("colors.red.100");
 }
 
 a {

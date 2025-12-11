@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Chip styles for trip status */
+
+.chip-planned {
+  background: var(--color-chip-planned-bg);
+  color: var(--color-chip-planned-text);
+}
+
+.chip-inprogress {
+  background: var(--color-chip-inprogress-bg);
+  color: var(--color-chip-inprogress-text);
+}
+
+.chip-completed {
+  background: var(--color-chip-completed-bg);
+  color: var(--color-chip-completed-text);
+}
+
+.chip-cancelled {
+  background: var(--color-chip-cancelled-bg);
+  color: var(--color-chip-cancelled-text);
+}

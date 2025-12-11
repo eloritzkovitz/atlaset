@@ -68,7 +68,7 @@ export const ActionButton = React.forwardRef<
     let stateClass = "";
     if (variant === "toggle") {
       stateClass = active
-        ? "text-blue-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600"
+        ? "dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600"
         : "text-gray-400 bg-transparent";
     }
 
