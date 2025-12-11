@@ -58,10 +58,19 @@ export const ActionButton = React.forwardRef<
       secondary: "",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative transition",
-      toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent border-none transition-colors duration-200",
+      toggle:
+        "h-8 min-w-8 max-w-12 px-2 bg-transparent border-none transition-colors duration-200",
     };
     const buttonClass =
       className && className.trim().length > 0 ? className : defaultStyle;
+
+    // Only apply 'active' styling for toggle variant
+    let stateClass = "";
+    if (variant === "toggle") {
+      stateClass = active
+        ? "text-blue-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600"
+        : "text-gray-400 bg-transparent";
+    }
 
     return (
       <button
@@ -74,9 +83,9 @@ export const ActionButton = React.forwardRef<
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onClick={onClick}
-        className={`${base} ${variant ? variants[variant] : buttonClass} ${
-          active ? "text-blue-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600" : "text-gray-400 bg-transparent"
-        } ${rounded ? "rounded-full" : ""}`}
+        className={`${base} ${
+          variant ? variants[variant] : buttonClass
+        } ${stateClass} ${rounded ? "rounded-full" : ""}`}
         aria-label={ariaLabel}
         title={title}
         disabled={disabled}
