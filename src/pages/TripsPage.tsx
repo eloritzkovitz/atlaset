@@ -108,7 +108,7 @@ export default function TripsPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white">
+    <div className="min-h-screen w-full flex flex-col">
       {/* Toolbar */}
       <TripsToolbar
         trips={filteredTrips}

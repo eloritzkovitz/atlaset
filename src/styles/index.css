@@ -42,7 +42,7 @@
 }
 
 .dark {
-  --color-bg: theme("colors.gray.700");
+  --color-bg: theme("colors.gray.900");
   /* Primary colors */
   --color-primary: theme("colors.blue.800");
   --color-primary-hover: theme("colors.blue.700");

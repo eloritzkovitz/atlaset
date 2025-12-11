@@ -67,7 +67,7 @@ export default function ProfilePage() {
           canEdit={canEdit}
         />
 
-        <main className="flex-1 p-8 mt-16 bg-white dark:bg-gray-800 rounded shadow">
+        <main className="flex-1 p-8 mt-16 bg-surface rounded-lg shadow">
           <Routes>
             <Route
               path="/"

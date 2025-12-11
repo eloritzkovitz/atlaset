@@ -90,8 +90,8 @@ export default function GamesPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-gray-100">
+    <div className="min-h-screen flex flex-col items-center justify-center">
+      <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
         Guess the Country!
       </h1>
 
@@ -99,7 +99,7 @@ export default function GamesPage() {
       <Scoreboard score={score} streak={streak} />
 
       {/* Main Content */}
-      <div className="max-w-md w-full p-8 rounded-xl bg-white shadow-lg text-center font-sans">
+      <div className="max-w-md w-full p-8 rounded-xl shadow-lg text-center font-sans">
         <CountryFlag
           flag={{
             isoCode: currentCountry.isoCode,
