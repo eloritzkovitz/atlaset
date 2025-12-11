@@ -8,6 +8,9 @@ export default {
     extend: {
       colors: {
         bg: 'var(--color-bg)',
+        // Sidebar colors
+        sidebar: 'var(--color-sidebar)',
+        'sidebar-hover': 'var(--color-sidebar-hover)',
         // Primary colors
         primary: 'var(--color-primary)',
         'primary-hover': 'var(--color-primary-hover)',

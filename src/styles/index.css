@@ -4,6 +4,9 @@
 
 @theme {
   --color-bg: theme("colors.white");
+  /* Sidebar colors */
+  --color-sidebar: theme("colors.gray.100");
+  --color-sidebar-hover: theme("colors.gray.200");
   /* Primary colors */
   --color-primary: theme("colors.blue.800");
   --color-primary-hover: theme("colors.blue.700");
@@ -57,6 +60,9 @@
 
 .dark {
   --color-bg: theme("colors.gray.900");
+  /* Sidebar colors */
+  --color-sidebar: theme("colors.gray.800");
+  --color-sidebar-hover: theme("colors.gray.600");
   /* Primary colors */
   --color-primary: theme("colors.blue.800");
   --color-primary-hover: theme("colors.blue.700");
