@@ -86,7 +86,7 @@ export function TripsTableHeaders({
                 onChange={(v) => updateFilter("rating", v)}
                 options={RATING_OPTIONS}
                 placeholder="All Ratings"
-                className="trips-filter-dropdown"
+                className="block w-full text-xs"
                 renderOption={(opt) => (
                   <span className="flex items-center gap-2">
                     {opt.value === -1 ? (
@@ -117,7 +117,7 @@ export function TripsTableHeaders({
                 options={countryOptions}
                 placeholder="All Countries"
                 isMulti
-                className="trips-filter-dropdown"
+                className="block w-full text-xs"
                 renderOption={(opt) =>
                   opt.country ? (
                     <CountryWithFlag
@@ -148,7 +148,7 @@ export function TripsTableHeaders({
                 options={yearOptions}
                 placeholder="All Years"
                 isMulti
-                className="trips-filter-dropdown"
+                className="block w-full text-xs"
               />
             }
           />
@@ -202,7 +202,7 @@ export function TripsTableHeaders({
                 options={categoryOptions}
                 placeholder="All Categories"
                 isMulti
-                className="trips-filter-dropdown"
+                className="block w-full text-xs"
                 renderOption={(opt) => (
                   <span className="flex items-center gap-2">
                     {TRIP_CATEGORY_ICONS[opt.value] ?? null}
@@ -228,7 +228,7 @@ export function TripsTableHeaders({
                 }
                 options={statusOptions}
                 placeholder="All Statuses"
-                className="trips-filter-dropdown"
+                className="block w-full text-xs"
               />
             }
           />
@@ -249,7 +249,7 @@ export function TripsTableHeaders({
                 options={tagOptions}
                 placeholder="All Tags"
                 isMulti
-                className="trips-filter-dropdown"
+                className="block w-full text-xs"
               />
             }
           />

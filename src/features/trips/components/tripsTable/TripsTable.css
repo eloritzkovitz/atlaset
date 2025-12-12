@@ -2,10 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-.trips-filter-dropdown {
-  @apply block w-full text-xs;
-}
-
 /* Row styles */
 
 tbody.trips-group:hover tr {
