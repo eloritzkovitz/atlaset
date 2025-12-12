@@ -22,14 +22,14 @@ export function TripsExportModal({
           className="toolbar-btn-export-option mb-2"
           onClick={onExportCSV}
         >
-          <FaFileCsv className="text-blue-600" />
+          <FaFileCsv className="text-info" />
           <span>Export as CSV</span>
         </button>
         <button
           className="toolbar-btn-export-option"
           onClick={onExportJSON}
         >
-          <FaFileAlt className="text-green-600" />
+          <FaFileAlt className="text-success" />
           <span>Export as JSON</span>
         </button>
         <button

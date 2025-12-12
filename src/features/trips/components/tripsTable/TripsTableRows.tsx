@@ -72,7 +72,7 @@ export function TripsTableRows({
             {/* Name column */}
             <TableCell rowSpan={rowSpan}>
               {trip.favorite && (
-                <FaHeart className="h-5 w-5 inline text-red-400 mr-2" />
+                <FaHeart className="h-5 w-5 inline text-danger mr-2" />
               )}
               {trip.name}
             </TableCell>

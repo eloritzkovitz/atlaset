@@ -124,8 +124,8 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
           onClick={() => setOpen((v) => !v)}
           ariaLabel="More actions"
           title="More actions"
-          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           icon={<FaEllipsisV />}
+          rounded
         />
       </div>
       <Modal
@@ -139,7 +139,6 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
         containerClassName="trips-actions-menu"
       >
         <MenuButton
-          className="trips-actions-button"
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
             onEdit(trip);
@@ -149,7 +148,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
           Edit
         </MenuButton>
         <MenuButton
-          className="trips-actions-button trips-actions-delete"
+          className="text-danger"
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
             onDelete(trip);
@@ -160,7 +159,6 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
         </MenuButton>
         <Separator />
         <MenuButton
-          className="trips-actions-button"
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
             updateTripFavorite(trip.id, !trip.favorite);
@@ -169,14 +167,14 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
             trip.favorite ? (
               <FaRegHeart className="mr-2 text-gray-400" />
             ) : (
-              <FaHeart className="mr-2 text-red-400" />
+              <FaHeart className="mr-2 text-danger" />
             )
           }
         >
           {trip.favorite ? "Unfavorite" : "Favorite"}
         </MenuButton>
         <MenuButton
-          className="trips-actions-button flex justify-between items-center"
+          className="justify-between"
           onClick={() => setRateMenuOpen(true)}
           icon={<FaStar className="mr-2 text-yellow-400" />}
         >
@@ -203,7 +201,6 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
         {RATING_ACTION_OPTIONS.map((opt) => (
           <MenuButton
             key={opt.value}
-            className="trips-actions-button"
             onClick={() => {
               setTimeout(() => {
                 setRateMenuOpen(false);

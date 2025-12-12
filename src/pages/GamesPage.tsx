@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { ErrorMessage, LoadingSpinner } from "@components";
+import { Card, ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { CountryFlag, getRandomCountry, getCountriesWithOwnFlag } from "@features/countries";
+import {
+  CountryFlag,
+  getRandomCountry,
+  getCountriesWithOwnFlag,
+} from "@features/countries";
 import { GuessForm, ResultMessage, Scoreboard } from "@features/game";
 import type { Country } from "@types";
 
@@ -99,7 +102,7 @@ export default function GamesPage() {
       <Scoreboard score={score} streak={streak} />
 
       {/* Main Content */}
-      <div className="max-w-md w-full p-8 rounded-xl shadow-lg text-center font-sans">
+      <Card className="max-w-md w-full p-8 rounded-xl shadow-lg text-center font-sans">
         <CountryFlag
           flag={{
             isoCode: currentCountry.isoCode,
@@ -117,21 +120,15 @@ export default function GamesPage() {
           skipFlag={skipFlag}
           disabled={result !== null}
         />
-        {feedback && <div className="text-red-500 mt-2">{feedback}</div>}
+        {feedback && <div className="text-danger mt-2">{feedback}</div>}
         <ResultMessage
           result={result}
           currentCountry={currentCountry}
           nextFlag={nextFlag}
         />
-        <div className="mt-8">
-          <Link
-            to="/"
-            className="text-blue-600 underline font-semibold hover:text-blue-800"
-          >
-            &larr; Back
-          </Link>
+        <div className="mt-8">          
         </div>
-      </div>
+      </Card>
     </div>
   );
 }

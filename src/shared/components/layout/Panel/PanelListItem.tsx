@@ -41,7 +41,7 @@ export function PanelListItem({
   return (
     <li
       id="panel-list-item"
-      className={`mb-4 flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2 ${
+      className={`mb-4 flex items-center gap-2 bg-surface-alt rounded-lg px-3 py-2 ${
         dragged ? "ring-dashed" : ""
       }`}
       draggable={!!onDragStart}
@@ -57,9 +57,7 @@ export function PanelListItem({
           onClick={onToggleVisibility}
           ariaLabel={visible ? "Hide" : "Show"}
           title={visible ? "Hide" : "Show"}
-          className={`mx-1 text-lg ${
-            visible ? "text-blue-500" : "text-gray-400"
-          }`}
+          className="mx-1 text-lg text-muted hover:text-muted-hover"
           icon={visible ? <FaEye /> : <FaEyeSlash />}
         />
       )}
@@ -68,7 +66,7 @@ export function PanelListItem({
           onClick={onCenter}
           ariaLabel="Center"
           title="Center"
-          className="mx-1 text-lg text-blue-600 hover:text-blue-800"
+          className="mx-1 text-lg text-info hover:text-info-hover"
           icon={<FaCrosshairs />}
         />
       )}
@@ -77,7 +75,7 @@ export function PanelListItem({
           onClick={onEdit}
           ariaLabel="Edit"
           title="Edit"
-          className="mx-1 text-lg text-blue-600 hover:text-blue-800"
+          className="mx-1 text-lg text-info hover:text-info-hover"
           icon={<FaPenToSquare />}
         />
       )}
@@ -90,7 +88,7 @@ export function PanelListItem({
               ? "This item is managed automatically and cannot be removed"
               : "Remove"
           }
-          className={`mx-1 text-lg text-red-600 hover:text-red-800 ${
+          className={`mx-1 text-lg text-danger hover:text-danger-hover ${
             removeDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
           icon={removeDisabled ? <FaCircleInfo /> : <FaTrash />}

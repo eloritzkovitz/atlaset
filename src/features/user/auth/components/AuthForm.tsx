@@ -98,7 +98,7 @@ export function AuthForm({
         </div>
       )}
       {(error || localError) && (
-        <div className="text-red-500">{error || localError}</div>
+        <div className="text-danger">{error || localError}</div>
       )}
       <FormButton type="submit" className="w-full py-2 mt-4 rounded-full">
         {buttonText || (mode === "signup" ? "Register" : "Sign In")}

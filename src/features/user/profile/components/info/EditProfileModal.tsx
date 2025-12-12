@@ -94,8 +94,8 @@ export function EditProfileModal({
               autoComplete="new-password"
             />
           </FormField>
-          {error && <div className="text-red-500">{error}</div>}
-          {success && <div className="text-green-600">{success}</div>}
+          {error && <div className="text-danger">{error}</div>}
+          {success && <div className="text-success">{success}</div>}
           <div className="flex gap-4 justify-end mt-6">
             <FormButton type="button" variant="secondary" onClick={onClose}>
               Cancel
