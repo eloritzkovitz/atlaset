@@ -1,26 +1,55 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
-export function useFloatingHover(useFloatingHover: boolean) {
+/**
+ * Manages hover state for floating elements (like menus) that should appear
+ * when either the trigger element or the floating element itself is hovered.
+ * @param useFloatingHover Whether to enable floating hover behavior
+ * @param delay Delay in milliseconds before hiding the floating element after hover out
+ * @returns Handlers and state for managing floating hover behavior
+ */
+export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const closeTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Handlers for hover events
+  // Helper to clear any pending close timeout
+  const clearCloseTimeout = () => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
+    }
+  };
+
+  // Handlers for hover events on the floating element (menu)
   const hoverHandlers = useFloatingHover
     ? {
-        onMouseEnter: () => setIsHovered(true),
-        onMouseLeave: () => setIsHovered(false),
+        onMouseEnter: () => {
+          clearCloseTimeout();
+          setIsHovered(true);
+        },
+        onMouseLeave: () => {
+          closeTimeout.current = setTimeout(() => setIsHovered(false), delay);
+        },
       }
     : {};
 
-  // Handlers for floating button hover events
+  // Handlers for hover events on the trigger (button)
   const floatingHandlers = useFloatingHover
     ? {
-        onMouseEnter: () => setIsButtonHovered(true),
-        onMouseLeave: () => setIsButtonHovered(false),
+        onMouseEnter: () => {
+          clearCloseTimeout();
+          setIsButtonHovered(true);
+        },
+        onMouseLeave: () => {
+          closeTimeout.current = setTimeout(
+            () => setIsButtonHovered(false),
+            delay
+          );
+        },
       }
     : {};
 
-  // Determine if the floating element should be shown
+  // Show the floating element if either is hovered
   const shouldShowFloating =
     !useFloatingHover || (useFloatingHover && (isHovered || isButtonHovered));
 

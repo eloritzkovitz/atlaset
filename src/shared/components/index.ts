@@ -70,6 +70,7 @@ export { TableHeader } from "./table/TableHeader";
 export { ColorDot } from "./ui/ColorDot";
 export { SegmentedToggle, type SegmentedToggleOption } from "./ui/SegmentedToggle";
 export { StarRatingInput } from "./ui/StarRating/StarRatingInput";
+export { RateMenu } from "./ui/StarRating/RateMenu";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";

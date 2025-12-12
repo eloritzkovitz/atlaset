@@ -1,8 +1,17 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useFloatingHover } from "./useFloatingHover";
 
 describe("useFloatingHover", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.runOnlyPendingTimers();
+    vi.useRealTimers();
+  });
+
   it("should always show floating when useFloatingHover is false", () => {
     const { result } = renderHook(() => useFloatingHover(false));
     expect(result.current.shouldShowFloating).toBe(true);
@@ -13,7 +22,7 @@ describe("useFloatingHover", () => {
   });
 
   it("should show floating only on hover when useFloatingHover is true", () => {
-    const { result } = renderHook(() => useFloatingHover(true));
+    const { result } = renderHook(() => useFloatingHover(true, 150));
     expect(result.current.shouldShowFloating).toBe(false);
 
     // Simulate hover on modal
@@ -26,6 +35,13 @@ describe("useFloatingHover", () => {
     act(() => {
       result.current.hoverHandlers.onMouseLeave?.();
     });
+    // Should still be true until timer runs
+    expect(result.current.shouldShowFloating).toBe(true);
+
+    // Fast-forward timers
+    act(() => {
+      vi.runAllTimers();
+    });
     expect(result.current.shouldShowFloating).toBe(false);
 
     // Simulate hover on floating button
@@ -37,6 +53,13 @@ describe("useFloatingHover", () => {
     // Simulate mouse leave from floating button
     act(() => {
       result.current.floatingHandlers.onMouseLeave?.();
+    });
+    // Should still be true until timer runs
+    expect(result.current.shouldShowFloating).toBe(true);
+
+    // Fast-forward timers
+    act(() => {
+      vi.runAllTimers();
     });
     expect(result.current.shouldShowFloating).toBe(false);
   });

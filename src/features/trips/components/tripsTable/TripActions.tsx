@@ -8,19 +8,13 @@ import {
   FaStar,
   FaChevronRight,
 } from "react-icons/fa6";
+import { ActionButton, MenuButton, Menu, Separator, RateMenu } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside } from "@hooks/useClickOutside";
+import { useFloatingHover } from "@hooks/useFloatingHover";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useMenuPosition } from "@hooks/useMenuPosition";
 import type { Trip } from "@types";
-import {
-  ActionButton,
-  MenuButton,
-  Menu,
-  Separator,
-  StarRatingInput,
-} from "@components";
-import { RATING_ACTION_OPTIONS } from "@features/trips/constants/trips";
 
 interface TripActionsProps {
   trip: Trip;
@@ -31,11 +25,15 @@ interface TripActionsProps {
 export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
   const { updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
-  const [rateMenuOpen, setRateMenuOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
-  const rateMenuCloseTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const {
+    hoverHandlers: rateMenuHoverHandlers,
+    floatingHandlers: rateButtonHoverHandlers,
+    shouldShowFloating: rateMenuOpen,
+  } = useFloatingHover(true, 150);
 
   // Close menu when clicking outside
   useClickOutside(
@@ -46,7 +44,6 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
     ],
     () => {
       setOpen(false);
-      setRateMenuOpen(false);
     },
     open || rateMenuOpen
   );
@@ -55,7 +52,6 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
   useKeyHandler(
     () => {
       setOpen(false);
-      setRateMenuOpen(false);
     },
     ["Escape"],
     open || rateMenuOpen
@@ -118,21 +114,6 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
     return top;
   };
 
-  // Handlers for delayed hover menu
-  const handleRateMenuEnter = () => {
-    if (rateMenuCloseTimeout.current) {
-      clearTimeout(rateMenuCloseTimeout.current);
-      rateMenuCloseTimeout.current = null;
-    }
-    setRateMenuOpen(true);
-  };
-
-  const handleRateMenuLeave = () => {
-    rateMenuCloseTimeout.current = setTimeout(() => {
-      setRateMenuOpen(false);
-    }, 150);
-  };
-
   return (
     <>
       <div ref={btnRef}>
@@ -191,54 +172,31 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
         >
           {trip.favorite ? "Unfavorite" : "Favorite"}
         </MenuButton>
-        <div
-          style={{ display: "inline-block", width: "100%" }}
-          onMouseEnter={handleRateMenuEnter}
-          onMouseLeave={handleRateMenuLeave}
-        >
+        <div style={{ display: "inline-block", width: "100%" }}>
           <MenuButton
+            {...rateButtonHoverHandlers}
             icon={<FaStar className="mr-2 text-yellow-400" />}
             className="justify-between w-full"
           >
             Rate
             <FaChevronRight className="ml-7" />
           </MenuButton>
-          <Menu
+          <RateMenu
             open={rateMenuOpen}
-            onClose={() => setRateMenuOpen(false)}
-            className="trips-actions-menu w-full"
-            style={{
+            menuStyle={{
               ...rateMenuStyle,
               left: getRateMenuLeft(),
               top: getRateMenuTop(),
               zIndex: 1000,
               width: 280,
             }}
-            containerRef={rateMenuRef}
-            onMouseEnter={handleRateMenuEnter}
-            onMouseLeave={handleRateMenuLeave}
-          >
-            {RATING_ACTION_OPTIONS.map((opt) => (
-              <MenuButton
-                key={opt.value}
-                onClick={() => {
-                  setTimeout(() => {
-                    setRateMenuOpen(false);
-                    setOpen(false);
-                  }, 300);
-                  if (updateTripRating) updateTripRating(trip.id, opt.value);
-                }}
-                icon={
-                  <span className="flex items-center">
-                    <StarRatingInput value={opt.value} readOnly />
-                  </span>
-                }
-                className="w-full"
-              >
-                {opt.label}
-              </MenuButton>
-            ))}
-          </Menu>
+            menuRef={rateMenuRef}
+            hoverHandlers={rateMenuHoverHandlers}
+            onRate={(value) => {
+              setTimeout(() => setOpen(false), 300);
+              if (updateTripRating) updateTripRating(trip.id, value);
+            }}
+          />
         </div>
       </Menu>
     </>
