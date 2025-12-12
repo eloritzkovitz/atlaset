@@ -120,6 +120,77 @@ describe("tripsService", () => {
     expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "3" }, trip);
   });
 
+  it("updates favorite in IndexedDB (guest)", async () => {
+    (isAuthenticated as any).mockReturnValue(false);
+    tripsMock.get.mockResolvedValueOnce({
+      id: "fav",
+      name: "FavTrip",
+      favorite: false,
+    });
+    await tripsService.updateFavorite("fav", true);
+    expect(tripsMock.get).toHaveBeenCalledWith("fav");
+    expect(tripsMock.put).toHaveBeenCalledWith({
+      id: "fav",
+      name: "FavTrip",
+      favorite: true,
+    });
+  });
+
+  it("updates favorite in Firestore (authenticated)", async () => {
+    (isAuthenticated as any).mockReturnValue(true);
+    const tripsCol = {};
+    (getUserCollection as any).mockReturnValue(tripsCol);
+    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    await tripsService.updateFavorite("fav", true);
+    expect(setDoc).toHaveBeenCalledWith(
+      { _col: tripsCol, id: "fav" },
+      { favorite: true },
+      { merge: true }
+    );
+  });
+
+  it("updates rating in IndexedDB (guest)", async () => {
+    (isAuthenticated as any).mockReturnValue(false);
+    tripsMock.get.mockResolvedValueOnce({
+      id: "rate",
+      name: "RateTrip",
+      rating: 1,
+    });
+    await tripsService.updateRating("rate", 5);
+    expect(tripsMock.get).toHaveBeenCalledWith("rate");
+    expect(tripsMock.put).toHaveBeenCalledWith({
+      id: "rate",
+      name: "RateTrip",
+      rating: 5,
+    });
+  });
+
+  it("updates rating in Firestore (authenticated)", async () => {
+    (isAuthenticated as any).mockReturnValue(true);
+    const tripsCol = {};
+    (getUserCollection as any).mockReturnValue(tripsCol);
+    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    await tripsService.updateRating("rate", 4);
+    expect(setDoc).toHaveBeenCalledWith(
+      { _col: tripsCol, id: "rate" },
+      { rating: 4 },
+      { merge: true }
+    );
+  });
+
+  it("updates rating to undefined in Firestore (authenticated)", async () => {
+    (isAuthenticated as any).mockReturnValue(true);
+    const tripsCol = {};
+    (getUserCollection as any).mockReturnValue(tripsCol);
+    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    await tripsService.updateRating("rate", undefined);
+    expect(setDoc).toHaveBeenCalledWith(
+      { _col: tripsCol, id: "rate" },
+      { rating: null },
+      { merge: true }
+    );
+  });
+
   it("removes a trip from IndexedDB (guest)", async () => {
     (isAuthenticated as any).mockReturnValue(false);
     await tripsService.remove("4");

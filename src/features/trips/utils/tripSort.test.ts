@@ -22,6 +22,24 @@ describe("tripSort utils", () => {
       );
     });
 
+    it("sorts by rating ascending", () => {
+      const sorted = sortTrips(mockTrips, mockCountries, "rating-asc");
+      expect(sorted.map((t) => t.rating || 0)).toEqual(
+        [...mockTrips]
+          .sort((a, b) => (a.rating || 0) - (b.rating || 0))
+          .map((t) => t.rating || 0)
+      );
+    });
+
+    it("sorts by rating descending", () => {
+      const sorted = sortTrips(mockTrips, mockCountries, "rating-desc");
+      expect(sorted.map((t) => t.rating || 0)).toEqual(
+        [...mockTrips]
+          .sort((a, b) => (b.rating || 0) - (a.rating || 0))
+          .map((t) => t.rating || 0)
+      );
+    });
+
     it("sorts by countries ascending", () => {
       const sorted = sortTrips(mockTrips, mockCountries, "countries-asc");
       expect(sorted[0].countryCodes || sorted[0].countryCodes).toBeDefined();

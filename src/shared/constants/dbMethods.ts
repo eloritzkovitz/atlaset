@@ -1,9 +1,10 @@
 export const commonDbMethods = [
+  "get",
   "toArray",
-  "clear",
-  "bulkAdd",
-  "bulkPut",
   "add",
   "put",
+  "bulkAdd",
+  "bulkPut",
   "delete",
+  "clear"
 ];
