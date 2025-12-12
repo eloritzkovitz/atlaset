@@ -4,6 +4,7 @@ import {
   DropdownSelectInput,
   SortableFilterHeader,
   StarRatingInput,
+  TableHeader,
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
@@ -50,18 +51,18 @@ export function TripsTableHeaders({
     <thead>
       <tr>
         {showRowNumbers ? (
-          <th className="trips-th-unsortable">#{renderResizeHandle("idx")}</th>
+          <TableHeader unsortable>#{renderResizeHandle("idx")}</TableHeader>
         ) : (
-          <th className="trips-th-unsortable" />
+          <TableHeader unsortable />
         )}
-        <th className="trips-th-unsortable">
+        <TableHeader unsortable>
           <Checkbox
             checked={allSelected}
             onChange={handleSelectAll}
             aria-label="Select all trips"
           />
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="name" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Name"
             sortKey="name"
@@ -71,9 +72,8 @@ export function TripsTableHeaders({
             filterValue={filters.name}
             placeholder="Search by name..."
           />
-          {renderResizeHandle("name")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="rating" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Rating"
             sortKey="rating"
@@ -100,9 +100,8 @@ export function TripsTableHeaders({
               />
             }
           />
-          {renderResizeHandle("rating")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="countries" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Countries"
             sortKey="countries"
@@ -132,9 +131,8 @@ export function TripsTableHeaders({
               />
             }
           />
-          {renderResizeHandle("countries")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="year" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Year"
             sortKey="year"
@@ -154,9 +152,8 @@ export function TripsTableHeaders({
               />
             }
           />
-          {renderResizeHandle("year")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="startDate" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Start Date"
             sortKey="startDate"
@@ -164,9 +161,8 @@ export function TripsTableHeaders({
             onSort={handleSort}
             filterable
           />
-          {renderResizeHandle("startDate")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="endDate" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="End Date"
             sortKey="endDate"
@@ -174,9 +170,8 @@ export function TripsTableHeaders({
             onSort={handleSort}
             filterable
           />
-          {renderResizeHandle("endDate")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="fullDays" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Full Days"
             sortKey="fullDays"
@@ -184,9 +179,11 @@ export function TripsTableHeaders({
             onSort={handleSort}
             filterable
           />
-          {renderResizeHandle("fullDays")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader
+          colKey="categories"
+          renderResizeHandle={renderResizeHandle}
+        >
           <SortableFilterHeader
             label="Categories"
             sortKey="categories"
@@ -215,9 +212,8 @@ export function TripsTableHeaders({
               />
             }
           />
-          {renderResizeHandle("categories")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="status" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Status"
             sortKey="status"
@@ -236,9 +232,8 @@ export function TripsTableHeaders({
               />
             }
           />
-          {renderResizeHandle("status")}
-        </th>
-        <th className="trips-th">
+        </TableHeader>
+        <TableHeader colKey="tags" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
             label="Tags"
             sortKey="tags"
@@ -258,12 +253,14 @@ export function TripsTableHeaders({
               />
             }
           />
-          {renderResizeHandle("tags")}
-        </th>
-        <th className="trips-th-unsortable">
+        </TableHeader>
+        <TableHeader
+          unsortable
+          colKey="actions"
+          renderResizeHandle={renderResizeHandle}
+        >
           Actions
-          {renderResizeHandle("actions")}
-        </th>
+        </TableHeader>
       </tr>
     </thead>
   );

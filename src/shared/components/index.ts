@@ -62,6 +62,8 @@ export { ToolbarToggleGroup } from "./layout/Toolbar/ToolbarToggleGroup";
 export { SeparatorRow } from "./table/SeparatorRow";
 export { SortableFilterHeader } from "./table/SortableFilterHeader";
 export { Table, type TableColumn } from "./table/Table";
+export { TableCell } from "./table/TableCell";
+export { TableHeader } from "./table/TableHeader";
 
 // UI components
 export { ColorDot } from "./ui/ColorDot";
