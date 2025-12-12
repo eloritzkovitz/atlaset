@@ -7,9 +7,3 @@
 tbody.trips-group:hover tr {
   @apply bg-blue-100 dark:bg-blue-900/60;
 }
-
-/* Trip actions */
-
-.trips-actions-menu {
-  @apply flex flex-col absolute right-0 mt-2 w-40 p-2 bg-white dark:bg-gray-900 rounded-lg shadow-lg z-10;
-}

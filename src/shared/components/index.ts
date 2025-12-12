@@ -38,6 +38,7 @@ export { Separator } from "./layout/Separator";
 export { Breadcrumbs, type Crumb } from "./layout/Breadcrumbs/Breadcrumbs";
 
 // Menu components
+export { Menu } from "./layout/Menu/Menu";
 export { MenuButton } from "./layout/Menu/MenuButton";
 export { SubmenuSection } from "./layout/Menu/SubmenuSection";
 

@@ -1,12 +1,12 @@
 import { useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Modal } from "@components";
+import { Menu } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
+import { useModalAnimation } from "@hooks/useModalAnimation";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
-import { useModalAnimation } from "@hooks/useModalAnimation";
 
 export function UserMenu() {
   const { user, loading } = useAuth();
@@ -52,14 +52,10 @@ export function UserMenu() {
     <div className="fixed top-4 right-10 z-[10000]" ref={menuRef}>
       <UserAvatarButton user={user} onClick={() => setIsOpen((v) => !v)} />
       {(isOpen || closing) && (
-        <Modal
-          isOpen={isOpen}
-          closing={closing}
+        <Menu
+          open={isOpen}
           onClose={closeModal}
-          disableClose={false}
-          scrollable={true}
-          position="custom"
-          className="absolute right-4 mt-3 w-60 bg-surface rounded shadow-lg z-50 p-2"
+          className="absolute right-4 mt-3 w-60 z-50 p-2"
           style={{ top: "48px", right: 16 }}          
         >
           <UserMenuContent
@@ -67,7 +63,7 @@ export function UserMenu() {
             loading={loading}
             onLogout={handleLogout}
           />
-        </Modal>
+        </Menu>
       )}
     </div>
   );

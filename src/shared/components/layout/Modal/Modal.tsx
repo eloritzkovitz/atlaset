@@ -20,6 +20,8 @@ type FloatingButtonProps = {
 interface ModalProps {
   isOpen: boolean;
   closing?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   onClose: () => void;
   children: ReactNode;
   floatingChildren?: ReactElement<FloatingButtonProps>;
@@ -40,6 +42,8 @@ interface ModalProps {
 export function Modal({
   isOpen,
   closing,
+  onMouseEnter,
+  onMouseLeave,
   onClose,
   children,
   floatingChildren,
@@ -128,6 +132,8 @@ export function Modal({
             zIndex: containerZIndex,
           }}
           onClick={(e) => e.stopPropagation()}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           {children}
         </div>

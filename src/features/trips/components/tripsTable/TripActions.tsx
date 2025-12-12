@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
 import {
-  FaEllipsisV,
-  FaEdit,
+  FaEllipsisVertical,
+  FaPenToSquare,
   FaTrash,
+  FaHeart,
+  FaRegHeart,
   FaStar,
   FaChevronRight,
-} from "react-icons/fa";
+} from "react-icons/fa6";
 import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { useKeyHandler } from "@hooks/useKeyHandler";
@@ -14,12 +16,11 @@ import type { Trip } from "@types";
 import {
   ActionButton,
   MenuButton,
-  Modal,
+  Menu,
   Separator,
   StarRatingInput,
 } from "@components";
 import { RATING_ACTION_OPTIONS } from "@features/trips/constants/trips";
-import { FaHeart, FaRegHeart } from "react-icons/fa6";
 
 interface TripActionsProps {
   trip: Trip;
@@ -29,12 +30,12 @@ interface TripActionsProps {
 
 export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
   const { updateTripFavorite, updateTripRating } = useTrips();
-
   const [open, setOpen] = useState(false);
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
+  const rateMenuCloseTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // Close menu when clicking outside
   useClickOutside(
@@ -117,43 +118,59 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
     return top;
   };
 
+  // Handlers for delayed hover menu
+  const handleRateMenuEnter = () => {
+    if (rateMenuCloseTimeout.current) {
+      clearTimeout(rateMenuCloseTimeout.current);
+      rateMenuCloseTimeout.current = null;
+    }
+    setRateMenuOpen(true);
+  };
+
+  const handleRateMenuLeave = () => {
+    rateMenuCloseTimeout.current = setTimeout(() => {
+      setRateMenuOpen(false);
+    }, 150);
+  };
+
   return (
     <>
       <div ref={btnRef}>
         <ActionButton
-          onClick={() => setOpen((v) => !v)}
+          onClick={(e) => {
+            e.stopPropagation();
+            setOpen((v) => !v);
+          }}
           ariaLabel="More actions"
           title="More actions"
-          icon={<FaEllipsisV />}
+          icon={<FaEllipsisVertical />}
           rounded
         />
       </div>
-      <Modal
-        isOpen={open}
+      <Menu
+        open={open}
         onClose={() => setOpen(false)}
-        scrollable={false}
-        position="custom"
+        className="trips-actions-menu !p-2"
         style={menuStyle}
         containerRef={menuRef}
-        backdropClassName="trips-actions-backdrop"
-        containerClassName="trips-actions-menu"
       >
         <MenuButton
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
             onEdit(trip);
           }}
-          icon={<FaEdit className="mr-2" />}
+          icon={<FaPenToSquare className="mr-2" />}
+          className="w-full"
         >
           Edit
         </MenuButton>
         <MenuButton
-          className="text-danger"
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
             onDelete(trip);
           }}
           icon={<FaTrash className="mr-2" />}
+          className="text-danger w-full"
         >
           Delete
         </MenuButton>
@@ -170,54 +187,60 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
               <FaHeart className="mr-2 text-danger" />
             )
           }
+          className="w-full"
         >
           {trip.favorite ? "Unfavorite" : "Favorite"}
         </MenuButton>
-        <MenuButton
-          className="justify-between"
-          onClick={() => setRateMenuOpen(true)}
-          icon={<FaStar className="mr-2 text-yellow-400" />}
+        <div
+          style={{ display: "inline-block", width: "100%" }}
+          onMouseEnter={handleRateMenuEnter}
+          onMouseLeave={handleRateMenuLeave}
         >
-          Rate
-          <FaChevronRight className="ml-7" />
-        </MenuButton>
-      </Modal>
-      <Modal
-        isOpen={rateMenuOpen}
-        onClose={() => setRateMenuOpen(false)}
-        scrollable={false}
-        position="custom"
-        style={{
-          ...rateMenuStyle,
-          left: getRateMenuLeft(),
-          top: getRateMenuTop(),
-          zIndex: 1000,
-          width: 280,
-        }}
-        containerRef={rateMenuRef}
-        backdropClassName="trips-actions-backdrop"
-        containerClassName="trips-actions-menu"
-      >
-        {RATING_ACTION_OPTIONS.map((opt) => (
           <MenuButton
-            key={opt.value}
-            onClick={() => {
-              setTimeout(() => {
-                setRateMenuOpen(false);
-                setOpen(false);
-              }, 300);
-              if (updateTripRating) updateTripRating(trip.id, opt.value);
-            }}
-            icon={
-              <span className="flex items-center">
-                <StarRatingInput value={opt.value} readOnly />
-              </span>
-            }
+            icon={<FaStar className="mr-2 text-yellow-400" />}
+            className="justify-between w-full"
           >
-            {opt.label}
+            Rate
+            <FaChevronRight className="ml-7" />
           </MenuButton>
-        ))}
-      </Modal>
+          <Menu
+            open={rateMenuOpen}
+            onClose={() => setRateMenuOpen(false)}
+            className="trips-actions-menu w-full"
+            style={{
+              ...rateMenuStyle,
+              left: getRateMenuLeft(),
+              top: getRateMenuTop(),
+              zIndex: 1000,
+              width: 280,
+            }}
+            containerRef={rateMenuRef}
+            onMouseEnter={handleRateMenuEnter}
+            onMouseLeave={handleRateMenuLeave}
+          >
+            {RATING_ACTION_OPTIONS.map((opt) => (
+              <MenuButton
+                key={opt.value}
+                onClick={() => {
+                  setTimeout(() => {
+                    setRateMenuOpen(false);
+                    setOpen(false);
+                  }, 300);
+                  if (updateTripRating) updateTripRating(trip.id, opt.value);
+                }}
+                icon={
+                  <span className="flex items-center">
+                    <StarRatingInput value={opt.value} readOnly />
+                  </span>
+                }
+                className="w-full"
+              >
+                {opt.label}
+              </MenuButton>
+            ))}
+          </Menu>
+        </div>
+      </Menu>
     </>
   );
 }
