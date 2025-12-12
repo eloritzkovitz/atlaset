@@ -12,7 +12,7 @@ export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Helper to clear any pending close timeout
+  // Clear any existing close timeout
   const clearCloseTimeout = () => {
     if (closeTimeout.current) {
       clearTimeout(closeTimeout.current);
@@ -20,7 +20,7 @@ export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
     }
   };
 
-  // Handlers for hover events on the floating element (menu)
+  // Handlers for hover events on the floating element
   const hoverHandlers = useFloatingHover
     ? {
         onMouseEnter: () => {
@@ -33,7 +33,7 @@ export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
       }
     : {};
 
-  // Handlers for hover events on the trigger (button)
+  // Handlers for hover events on the trigger/button element
   const floatingHandlers = useFloatingHover
     ? {
         onMouseEnter: () => {
@@ -49,7 +49,6 @@ export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
       }
     : {};
 
-  // Show the floating element if either is hovered
   const shouldShowFloating =
     !useFloatingHover || (useFloatingHover && (isHovered || isButtonHovered));
 

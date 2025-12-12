@@ -17,8 +17,10 @@ import {
 import { useHomeCountry } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useFloatingHover } from "@hooks/useFloatingHover";
 import type { Country } from "@types";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
+import ReactDOM from "react-dom";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
@@ -47,6 +49,10 @@ export function CountryDetailsModal({
   const openChevronRef = useRef<HTMLButtonElement>(null);
   const closeChevronRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
+
+  // Hover logic for floating chevron
+  const { hoverHandlers, floatingHandlers, shouldShowFloating } =
+    useFloatingHover(true, 150);
 
   // Auto-close drawer when modal closes
   useEffect(() => {
@@ -84,25 +90,12 @@ export function CountryDetailsModal({
         isOpen={isOpen}
         onClose={onClose}
         className="p-8 min-w-[540px] max-w-[100vw] w-[350px] shadow-lg relative"
-        containerRef={modalRef}        
-        extraRefs={[openChevronRef, closeChevronRef, drawerRef]}       
+        containerRef={modalRef}
+        extraRefs={[openChevronRef, closeChevronRef, drawerRef]}
         containerZIndex={10050}
-      backdropZIndex={10040} 
-        floatingChildren={
-          (!showVisitsDrawer && (
-            <FloatingChevronButton
-              ref={openChevronRef}
-              targetRef={modalRef}
-              position="right"
-              chevronDirection="right"
-              onClick={() => setShowVisitsDrawer(true)}
-              ariaLabel="Show visits"
-              title="Show visits"
-            />
-          )) ||
-          undefined
-        }
-        useFloatingHover={true}
+        backdropZIndex={10040}
+        onMouseEnter={hoverHandlers.onMouseEnter}
+        onMouseLeave={hoverHandlers.onMouseLeave}
       >
         <div className="relative overflow-visible">
           <PanelHeader
@@ -159,6 +152,21 @@ export function CountryDetailsModal({
           <CountryDetailsContent country={country} currencies={currencies} />
         </div>
       </Modal>
+      {!showVisitsDrawer &&
+        shouldShowFloating &&
+        ReactDOM.createPortal(
+          <FloatingChevronButton
+            ref={openChevronRef}
+            targetRef={modalRef}
+            position="right"
+            chevronDirection="right"
+            onClick={() => setShowVisitsDrawer(true)}
+            ariaLabel="Show visits"
+            title="Show visits"
+            {...floatingHandlers}
+          />,
+          document.body
+        )}
     </div>
   );
 }

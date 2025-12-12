@@ -7,15 +7,9 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useFloatingHover as useFloatingHoverHook } from "@hooks/useFloatingHover";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { usePanelHide } from "@hooks/usePanelHide";
 import "./Modal.css";
-
-type FloatingButtonProps = {
-  onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
-  onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
-};
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,15 +18,12 @@ interface ModalProps {
   onMouseLeave?: () => void;
   onClose: () => void;
   children: ReactNode;
-  floatingChildren?: ReactElement<FloatingButtonProps>;
-  useFloatingHover?: boolean;
+  floatingChildren?: ReactElement;
   scrollable?: boolean;
   disableClose?: boolean;
   position?: "center" | "custom";
   className?: string;
-  containerClassName?: string;
   containerZIndex?: number;
-  backdropClassName?: string;
   backdropZIndex?: number;
   style?: React.CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
@@ -47,14 +38,11 @@ export function Modal({
   onClose,
   children,
   floatingChildren,
-  useFloatingHover = false,
   scrollable = false,
   disableClose = false,
   position = "center",
   className = "",
-  containerClassName = "",
   containerZIndex,
-  backdropClassName = "",
   backdropZIndex,
   style,
   containerRef,
@@ -67,10 +55,6 @@ export function Modal({
     setModalOpen(isOpen);
     return () => setModalOpen(false);
   }, [isOpen, setModalOpen]);
-
-  // Handle floating hover logic
-  const { hoverHandlers, floatingHandlers, shouldShowFloating } =
-    useFloatingHoverHook(useFloatingHover);
 
   // Handle panel hide logic
   usePanelHide({
@@ -104,7 +88,7 @@ export function Modal({
         role="dialog"
         className={`modal-backdrop ${
           scrollable ? "modal-backdrop-scrollable" : ""
-        } ${backdropClassName ?? ""}`}
+        } `}
         style={{ zIndex: backdropZIndex }}
         onClick={
           !scrollable
@@ -116,7 +100,6 @@ export function Modal({
       >
         <div
           ref={modalRef}
-          {...hoverHandlers}
           className={
             "group " +
             (position === "center" ? "modal-center " : "modal-custom ") +
@@ -124,8 +107,7 @@ export function Modal({
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +
             className +
-            " " +
-            containerClassName
+            " "
           }
           style={{
             ...(position === "custom" ? style : {}),
@@ -141,10 +123,7 @@ export function Modal({
       {isOpen &&
         floatingChildren &&
         isValidElement(floatingChildren) &&
-        (useFloatingHover
-          ? shouldShowFloating &&
-            React.cloneElement(floatingChildren, floatingHandlers)
-          : floatingChildren)}
+        floatingChildren}
     </>,
     document.body
   );
