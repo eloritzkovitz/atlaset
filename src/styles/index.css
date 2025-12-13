@@ -30,6 +30,11 @@
   --color-surface-hover: theme("colors.gray.100");
   /* Input colors */
   --color-input: theme("colors.gray.100");
+  /* Table colors */
+  --color-table-row: theme("colors.white");
+  --color-table-row-alt: theme("colors.gray.50");  
+  --color-table-row-hover: theme("colors.gray.100");
+  --color-table-row-upcoming: theme("colors.yellow.100");
   /* Text color */
   --color-text: theme("colors.gray.700");
   --color-success: theme("colors.green.600");
@@ -97,6 +102,11 @@
   --color-surface-hover: theme("colors.gray.600");
   /* Input colors */
   --color-input: theme("colors.gray.600");
+  /* Table colors */
+  --color-table-row: theme("colors.gray.800");
+  --color-table-row-alt: theme("colors.gray.900");
+  --color-table-row-hover: theme("colors.gray.600");
+  --color-table-row-upcoming: theme("colors.yellow.800");
   /* Text color */
   --color-text: theme("colors.gray.300");
   --color-success: theme("colors.green.400");

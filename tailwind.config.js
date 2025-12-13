@@ -32,6 +32,11 @@ export default {
         "surface-hover": "var(--color-surface-hover)",
         // Input colors
         input: "var(--color-input)",
+        // Table colors
+        "table-row": "var(--color-table-row)",
+        "table-row-alt": "var(--color-table-row-alt)",
+        "table-row-hover": "var(--color-table-row-hover)",
+        'table-row-upcoming': "var(--color-table-row-upcoming)",
         // Text colors
         text: "var(--color-text)",
         success: "var(--color-success)",
@@ -57,7 +62,7 @@ export default {
         "chip-completed-bg": "var(--color-chip-completed-bg)",
         "chip-completed-text": "var(--color-chip-completed-text)",
         "chip-cancelled-bg": "var(--color-chip-cancelled-bg)",
-        "chip-cancelled-text": "var(--color-chip-cancelled-text)",
+        "chip-cancelled-text": "var(--color-chip-cancelled-text)",        
       },
     },
   },

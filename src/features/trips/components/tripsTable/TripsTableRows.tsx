@@ -48,8 +48,10 @@ export function TripsTableRows({
       <tr
         key={trip.id + "-" + (code || idx)}
         className={[
-          tripIdx % 2 === 0 ? "bg-white dark:bg-gray-900/40" : "bg-gray-50 dark:bg-gray-900",
-          isUpcomingTrip(trip) ? "bg-yellow-50/60 dark:bg-yellow-300/60" : "",
+          tripIdx % 2 === 0
+            ? "bg-table-row"
+            : "bg-table-row-alt",
+          isUpcomingTrip(trip) ? "bg-table-row-upcoming" : "",
           "group",
         ].join(" ")}
       >
