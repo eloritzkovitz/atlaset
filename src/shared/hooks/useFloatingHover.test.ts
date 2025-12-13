@@ -21,45 +21,75 @@ describe("useFloatingHover", () => {
     expect(result.current.floatingHandlers).toEqual({});
   });
 
-  it("should show floating only on hover when useFloatingHover is true", () => {
-    const { result } = renderHook(() => useFloatingHover(true, 150));
+  it('should show floating when hovering trigger or menu in "menu" mode', () => {
+    const { result } = renderHook(() => useFloatingHover(true, 150, "menu"));
     expect(result.current.shouldShowFloating).toBe(false);
 
-    // Simulate hover on modal
+    // Simulate hover on trigger
     act(() => {
       result.current.hoverHandlers.onMouseEnter?.();
     });
     expect(result.current.shouldShowFloating).toBe(true);
 
-    // Simulate mouse leave from modal
+    // Simulate mouse leave from trigger
     act(() => {
       result.current.hoverHandlers.onMouseLeave?.();
     });
-    // Should still be true until timer runs
-    expect(result.current.shouldShowFloating).toBe(true);
+    expect(result.current.shouldShowFloating).toBe(true); // still true until timer runs
 
-    // Fast-forward timers
     act(() => {
       vi.runAllTimers();
     });
     expect(result.current.shouldShowFloating).toBe(false);
 
-    // Simulate hover on floating button
+    // Simulate hover on floating menu
     act(() => {
       result.current.floatingHandlers.onMouseEnter?.();
     });
     expect(result.current.shouldShowFloating).toBe(true);
 
-    // Simulate mouse leave from floating button
+    // Simulate mouse leave from floating menu
     act(() => {
       result.current.floatingHandlers.onMouseLeave?.();
     });
-    // Should still be true until timer runs
-    expect(result.current.shouldShowFloating).toBe(true);
+    expect(result.current.shouldShowFloating).toBe(true); // still true until timer runs
 
-    // Fast-forward timers
     act(() => {
       vi.runAllTimers();
+    });
+    expect(result.current.shouldShowFloating).toBe(false);
+  });
+
+  it('should show floating only when hovering trigger in "button" mode', () => {
+    const { result } = renderHook(() => useFloatingHover(true, 150, "button"));
+    expect(result.current.shouldShowFloating).toBe(false);
+
+    // Simulate hover on trigger
+    act(() => {
+      result.current.hoverHandlers.onMouseEnter?.();
+    });
+    expect(result.current.shouldShowFloating).toBe(true);
+
+    // Simulate mouse leave from trigger
+    act(() => {
+      result.current.hoverHandlers.onMouseLeave?.();
+    });
+    expect(result.current.shouldShowFloating).toBe(true); // still true until timer runs
+
+    act(() => {
+      vi.runAllTimers();
+    });
+    expect(result.current.shouldShowFloating).toBe(false);
+
+    // Simulate hover on floating button (should not show in "button" mode)
+    act(() => {
+      result.current.floatingHandlers.onMouseEnter?.();
+    });
+    expect(result.current.shouldShowFloating).toBe(false);
+
+    // Simulate mouse leave from floating button
+    act(() => {
+      result.current.floatingHandlers.onMouseLeave?.();
     });
     expect(result.current.shouldShowFloating).toBe(false);
   });

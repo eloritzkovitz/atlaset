@@ -1,13 +1,20 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+type FloatingHoverMode = "menu" | "button";
 
 /**
  * Manages hover state for floating elements (like menus) that should appear
  * when either the trigger element or the floating element itself is hovered.
  * @param useFloatingHover Whether to enable floating hover behavior
  * @param delay Delay in milliseconds before hiding the floating element after hover out
+ * @param mode Optional mode parameter
  * @returns Handlers and state for managing floating hover behavior
  */
-export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
+export function useFloatingHover(
+  useFloatingHover: boolean,
+  delay = 150,
+  mode: FloatingHoverMode = "menu"
+) {
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const closeTimeout = useRef<NodeJS.Timeout | null>(null);
@@ -49,8 +56,19 @@ export function useFloatingHover(useFloatingHover: boolean, delay = 150) {
       }
     : {};
 
+  // Reset isButtonHovered on unmount or when isHovered changes
+  useEffect(() => {
+    if (mode === "button" && !isHovered && isButtonHovered) {
+      setIsButtonHovered(false);
+    }
+  }, [isHovered, isButtonHovered, useFloatingHover, mode]);
+
   const shouldShowFloating =
-    !useFloatingHover || (useFloatingHover && (isHovered || isButtonHovered));
+    !useFloatingHover ||
+    (useFloatingHover &&
+      (mode === "menu"
+        ? isHovered || isButtonHovered
+        : isHovered || isButtonHovered));
 
   return { hoverHandlers, floatingHandlers, shouldShowFloating };
 }
