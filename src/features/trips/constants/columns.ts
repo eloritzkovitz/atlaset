@@ -27,22 +27,22 @@ export const MIN_WIDTHS: Record<ColumnKey, number> = {
   categories: 80,
   status: 60,
   tags: 80,
-  actions: 40,
+  actions: 20,
 };
 
 // Default widths for each column
 export const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   select: 10,
   idx: 40,
-  name: 160,
-  rating: 60,
+  name: 150,
+  rating: 90,
   countries: 180,
-  year: 50,
+  year: 100,
   startDate: 50,
   endDate: 50,
-  fullDays: 80,
+  fullDays: 50,
   categories: 180,
   status: 120,
-  tags: 180,
-  actions: 80,
+  tags: 120,
+  actions: 20,
 };

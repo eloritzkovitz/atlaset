@@ -233,7 +233,7 @@ export function TripsTableHeaders({
                 options={statusOptions}
                 placeholder="All Statuses"
                 isFilter
-                className="block w-full text-xs"                
+                className="block w-full text-xs"
               />
             }
           />
@@ -264,9 +264,7 @@ export function TripsTableHeaders({
           unsortable
           colKey="actions"
           renderResizeHandle={renderResizeHandle}
-        >
-          Actions
-        </TableHeader>
+        ></TableHeader>
       </tr>
     </thead>
   );
