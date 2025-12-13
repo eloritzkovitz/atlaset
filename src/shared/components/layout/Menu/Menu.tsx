@@ -10,6 +10,7 @@ interface MenuProps {
   className?: string;
   style?: CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
+  disableScroll?: boolean;
 }
 
 export function Menu({
@@ -21,7 +22,9 @@ export function Menu({
   className = "",
   style,
   containerRef,
+  disableScroll = false,
 }: MenuProps) {
+  
   return (
     <Modal
       isOpen={open}
@@ -29,11 +32,11 @@ export function Menu({
       onMouseLeave={onMouseLeave}
       onClose={onClose}
       disableClose={false}
-      scrollable={true}
+      disableScroll={disableScroll}
       position="custom"
       className={`menu !bg-surface-alt rounded shadow-lg z-50 !p-2 ${className}`}
       style={style}
-      containerRef={containerRef}
+      containerRef={containerRef}      
     >
       {children}
     </Modal>

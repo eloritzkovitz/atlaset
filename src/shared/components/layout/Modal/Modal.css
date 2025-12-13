@@ -20,15 +20,7 @@
   animation: modalFadeOut 0.2s forwards;
 }
 
-.modal-center {
-  @apply fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
-}
-.modal-custom {
-  @apply fixed;
-}
-
 .modal-backdrop {
-  @apply fixed inset-0 z-[9999];
   pointer-events: auto;
 }
 

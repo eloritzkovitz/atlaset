@@ -19,7 +19,7 @@ interface ModalProps {
   onClose: () => void;
   children: ReactNode;
   floatingChildren?: ReactElement;
-  scrollable?: boolean;
+  disableScroll?: boolean;
   disableClose?: boolean;
   position?: "center" | "custom";
   className?: string;
@@ -38,7 +38,7 @@ export function Modal({
   onClose,
   children,
   floatingChildren,
-  scrollable = false,
+  disableScroll = false,
   disableClose = false,
   position = "center",
   className = "",
@@ -77,6 +77,18 @@ export function Modal({
     }
   );
 
+  // Disable background scroll when modal is open
+  useEffect(() => {
+    if (disableScroll && isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [disableScroll, isOpen]);
+
   // Don't render anything if the modal is not open
   if (!isOpen && !closing) return null;
 
@@ -86,12 +98,10 @@ export function Modal({
         aria-modal="true"
         inert={!isOpen}
         role="dialog"
-        className={`modal-backdrop ${
-          scrollable ? "modal-backdrop-scrollable" : ""
-        } `}
+        className={`modal-backdrop fixed inset-0 z-[9999] ${!disableScroll ? "modal-backdrop-scrollable" : ""}`}
         style={{ zIndex: backdropZIndex }}
         onClick={
-          !scrollable
+          !disableScroll
             ? () => {
                 if (!disableClose) onClose();
               }
@@ -101,8 +111,8 @@ export function Modal({
         <div
           ref={modalRef}
           className={
-            "group " +
-            (position === "center" ? "modal-center " : "modal-custom ") +
+            "group fixed " +
+            (position === "center" ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 " : "") +
             "modal " +
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +

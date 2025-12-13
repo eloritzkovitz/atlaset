@@ -16,8 +16,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
   return (
     <Modal
       isOpen={open}
-      onClose={onClose}
-      scrollable={true}
+      onClose={onClose}      
       position="custom"
       className="fixed top-14 right-6 z-50"
     >

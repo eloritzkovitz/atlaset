@@ -134,6 +134,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
         className="trips-actions-menu !p-2"
         style={menuStyle}
         containerRef={menuRef}
+        disableScroll={true}
       >
         <MenuButton
           onClick={() => {
