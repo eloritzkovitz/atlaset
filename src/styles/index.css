@@ -30,6 +30,7 @@
   --color-surface-hover: theme("colors.gray.100");
   /* Input colors */
   --color-input: theme("colors.gray.100");
+  --color-input-hover: theme("colors.gray.200");
   /* Table colors */
   --color-table-row: theme("colors.white");
   --color-table-row-alt: theme("colors.gray.50");  
@@ -102,6 +103,7 @@
   --color-surface-hover: theme("colors.gray.600");
   /* Input colors */
   --color-input: theme("colors.gray.600");
+  --color-input-hover: theme("colors.gray.500");
   /* Table colors */
   --color-table-row: theme("colors.gray.800");
   --color-table-row-alt: theme("colors.gray.900");

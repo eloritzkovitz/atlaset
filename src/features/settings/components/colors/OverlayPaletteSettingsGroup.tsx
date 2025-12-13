@@ -50,7 +50,7 @@ export function OverlayPaletteSettingsGroup() {
                 onChange={(val: string | string[]) =>
                   setPalette(mode.key, Array.isArray(val) ? val[0] : val)
                 }
-                className="min-w-[180px] select-input bg-gray-100"
+                className="min-w-[180px]"
               />
             </div>
           ))}

@@ -1,5 +1,7 @@
-import { ArrowButton } from "./ArrowButton";
+
 import { clamp } from "@utils/number";
+import { ArrowButton } from "../../buttons/ArrowButton";
+import { InputBox } from "../InputBox/InputBox";
 import "./NumberInput.css";
 
 interface NumberInputProps {
@@ -23,13 +25,15 @@ export function NumberInput({
     <div className={`my-4 ${className}`}>
       {label && <label className="font-bold block mb-2">{label}</label>}
       <div className="relative w-full">
-        <input
+        <InputBox
           type="number"
-          className="select-input bg-surface pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-blue-400 rounded transition"
+          className="pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-blue-400 rounded transition"
           value={value}
           min={min}
           max={max}
-          onChange={(e) => onChange(clamp(Number(e.target.value)))}
+          onChange={(e: { target: { value: any } }) =>
+            onChange(clamp(Number(e.target.value)))
+          }
           style={{ MozAppearance: "textfield" }}
         />
         <div className="absolute right-1 top-1 h-10 flex flex-col justify-center">

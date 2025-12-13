@@ -105,7 +105,7 @@ export function OverlayModal({
               value={overlay.name}
               onChange={(e) => onChange({ ...overlay, name: e.target.value })}
               disabled={isVisited}
-              className={`form-field ${isVisited ? "opacity-50" : ""}`}
+              className={`${isVisited ? "opacity-50" : ""}`}
             />
           </FormField>
 
@@ -172,7 +172,7 @@ export function OverlayModal({
                 onChange({ ...overlay, tooltip: e.target.value })
               }
               disabled={isVisited}
-              className={`form-field ${isVisited ? "opacity-50" : ""}`}
+              className={`${isVisited ? "opacity-50" : ""}`}
             />
           </FormField>
           <div className="flex items-center justify-between mt-6">

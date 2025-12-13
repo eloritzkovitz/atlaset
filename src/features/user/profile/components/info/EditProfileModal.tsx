@@ -72,7 +72,6 @@ export function EditProfileModal({
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-3 rounded-full bg-gray-100"
             />
           </FormField>
           <FormField label="New Password">
@@ -80,7 +79,6 @@ export function EditProfileModal({
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-full bg-gray-100"
               placeholder="Leave blank to keep current password"
               autoComplete="new-password"
             />
@@ -90,7 +88,6 @@ export function EditProfileModal({
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-full bg-gray-100"
               autoComplete="new-password"
             />
           </FormField>

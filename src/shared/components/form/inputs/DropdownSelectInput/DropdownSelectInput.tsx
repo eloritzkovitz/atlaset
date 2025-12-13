@@ -7,6 +7,7 @@ import { flattenOptions } from "@utils/dropdown";
 import { DropdownChevron } from "./DropdownChevron";
 import { DropdownOptions } from "./DropdownOptions";
 import { SelectedOptions } from "./SelectedOptions";
+import { InputBox } from "../InputBox/InputBox";
 
 interface DropdownSelectInputProps<T = string> {
   value: T | T[];
@@ -14,6 +15,7 @@ interface DropdownSelectInputProps<T = string> {
   options: DropdownOption<T>[];
   placeholder?: string;
   className?: string;
+  isFilter?: boolean;
   isMulti?: boolean;
   renderOption?: (opt: any) => React.ReactNode;
 }
@@ -24,6 +26,7 @@ export function DropdownSelectInput<T = string>({
   options,
   placeholder = "Select...",
   className = "",
+  isFilter = false,
   isMulti = false,
   renderOption,
 }: DropdownSelectInputProps<T>) {
@@ -52,7 +55,8 @@ export function DropdownSelectInput<T = string>({
 
   return (
     <div className={`relative w-full ${className}`} ref={ref}>
-      <button
+      <InputBox
+        as="button"
         ref={btnRef}
         type="button"
         className="w-full flex items-center text-left disabled:opacity-50"
@@ -61,6 +65,7 @@ export function DropdownSelectInput<T = string>({
           setOpen((v) => !v);
         }}
         disabled={options.length === 0}
+        isFilter={isFilter}
       >
         {isMulti && Array.isArray(value) && value.length > 0 ? (
           <SelectedOptions
@@ -75,7 +80,7 @@ export function DropdownSelectInput<T = string>({
           <span className="text-gray-400">{placeholder}</span>
         )}
         <DropdownChevron />
-      </button>
+      </InputBox>
       {open &&
         ReactDOM.createPortal(
           <div

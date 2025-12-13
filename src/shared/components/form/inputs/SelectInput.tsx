@@ -1,6 +1,6 @@
 import type { FilterOption } from "@types";
-import { DropdownChevron } from "./Dropdown/DropdownChevron";
-import "./SelectInput.css";
+import { InputBox } from "./InputBox/InputBox";
+import { DropdownChevron } from "./DropdownSelectInput/DropdownChevron";
 
 interface SelectInputProps {
   label: string;
@@ -19,17 +19,19 @@ export function SelectInput({
     <div className="my-4">
       <label className="font-bold block mb-2">{label}</label>
       <div className="relative">
-        <select
+        <InputBox
+          as="select"
           value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="select-input bg-input"
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            onChange(e.target.value)
+          }
         >
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
           ))}
-        </select>
+        </InputBox>
         <DropdownChevron />
       </div>
     </div>

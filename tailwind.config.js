@@ -32,6 +32,8 @@ export default {
         "surface-hover": "var(--color-surface-hover)",
         // Input colors
         input: "var(--color-input)",
+        "input-hover": "var(--color-input-hover)",
+        "select-hover": "var(--color-select-hover)",
         // Table colors
         "table-row": "var(--color-table-row)",
         "table-row-alt": "var(--color-table-row-alt)",

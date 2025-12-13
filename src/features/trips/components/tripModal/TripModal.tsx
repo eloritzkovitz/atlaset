@@ -3,6 +3,7 @@ import { FaSuitcaseRolling, FaGlobe, FaFloppyDisk } from "react-icons/fa6";
 import {
   DropdownSelectInput,
   FormField,
+  InputBox,
   Modal,
   ModalActions,
   NumberInput,
@@ -72,19 +73,19 @@ export function TripModal({
             {isEditing ? "Edit Trip" : "Add Trip"}
           </h2>
           <FormField label="Name" className="mb-2">
-            <input
-              className="form-field"
+            <InputBox
               value={trip.name}
-              onChange={(e) => onChange({ ...trip, name: e.target.value })}
+              onChange={(e: { target: { value: any } }) =>
+                onChange({ ...trip, name: e.target.value })
+              }
               required
             />
           </FormField>
           <FormField label="Start Date" className="mb-2">
-            <input
+            <InputBox
               type="date"
-              className="form-field"
               value={trip.startDate}
-              onChange={(e) => {
+              onChange={(e: { target: { value: any } }) => {
                 const newStart = e.target.value;
                 let newEnd = trip.endDate;
                 if (!trip.endDate || newEnd < newStart) {
@@ -96,12 +97,13 @@ export function TripModal({
             />
           </FormField>
           <FormField label="End Date" className="mb-2">
-            <input
+            <InputBox
               type="date"
-              className="form-field"
               value={trip.endDate}
               min={trip.startDate || undefined}
-              onChange={(e) => onChange({ ...trip, endDate: e.target.value })}
+              onChange={(e: { target: { value: any } }) =>
+                onChange({ ...trip, endDate: e.target.value })
+              }
             />
           </FormField>
           <FormField label="Countries" className="mb-2">
@@ -142,7 +144,6 @@ export function TripModal({
               options={categoryOptions}
               placeholder="Select categories"
               isMulti
-              className="select-input bg-gray-100"
             />
           </FormField>
           <FormField label="Status" className="mb-2">
@@ -167,12 +168,10 @@ export function TripModal({
               options={tagOptions}
               placeholder="Add tags"
               isMulti
-              className="select-input bg-gray-100"
             />
           </FormField>
           <FormField label="Notes" className="mb-2">
             <input
-              className="form-field"
               value={trip.notes}
               onChange={(e) => onChange({ ...trip, notes: e.target.value })}
             />

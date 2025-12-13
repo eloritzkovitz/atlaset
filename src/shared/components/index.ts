@@ -23,13 +23,16 @@ export { LoadingSpinner } from "./feedback/LoadingSpinner";
 export { SplashScreen } from "./feedback/SplashScreen";
 
 // Form components
-export { Checkbox } from "./form/Checkbox";
-export { FormButton } from "./form/FormButton";
-export { FormField } from "./form/FormField/FormField";
-export { SearchInput } from "./form/SearchInput";
-export { SelectInput } from "./form/SelectInput";
-export { DropdownSelectInput } from "./form/Dropdown/DropdownSelectInput";
-export { NumberInput } from "./form/NumberInput/NumberInput";
+export { FormButton } from "./form/buttons/FormButton";
+export { FormField } from "./form/fields/FormField";
+
+// Form Input components
+export { Checkbox } from "./form/inputs/Checkbox";
+export { DropdownSelectInput } from "./form/inputs/DropdownSelectInput/DropdownSelectInput";
+export { InputBox } from "./form/inputs/InputBox/InputBox";
+export { NumberInput } from "./form/inputs/NumberInput/NumberInput";
+export { SearchInput } from "./form/inputs/SearchInput";
+export { SelectInput } from "./form/inputs/SelectInput";
 
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";

@@ -87,6 +87,7 @@ export function TripsTableHeaders({
                 options={RATING_OPTIONS}
                 placeholder="All Ratings"
                 className="block w-full text-xs"
+                isFilter
                 renderOption={(opt) => (
                   <span className="flex items-center gap-2">
                     {opt.value === -1 ? (
@@ -116,6 +117,7 @@ export function TripsTableHeaders({
                 }
                 options={countryOptions}
                 placeholder="All Countries"
+                isFilter
                 isMulti
                 className="block w-full text-xs"
                 renderOption={(opt) =>
@@ -147,6 +149,7 @@ export function TripsTableHeaders({
                 }
                 options={yearOptions}
                 placeholder="All Years"
+                isFilter
                 isMulti
                 className="block w-full text-xs"
               />
@@ -201,6 +204,7 @@ export function TripsTableHeaders({
                 }
                 options={categoryOptions}
                 placeholder="All Categories"
+                isFilter
                 isMulti
                 className="block w-full text-xs"
                 renderOption={(opt) => (
@@ -228,7 +232,8 @@ export function TripsTableHeaders({
                 }
                 options={statusOptions}
                 placeholder="All Statuses"
-                className="block w-full text-xs"
+                isFilter
+                className="block w-full text-xs"                
               />
             }
           />
@@ -248,6 +253,7 @@ export function TripsTableHeaders({
                 }
                 options={tagOptions}
                 placeholder="All Tags"
+                isFilter
                 isMulti
                 className="block w-full text-xs"
               />

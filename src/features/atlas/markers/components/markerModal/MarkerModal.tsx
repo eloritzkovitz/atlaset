@@ -69,7 +69,6 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           <input
             ref={nameRef}
             name="name"
-            className="form-field"
             placeholder="Marker name"
             required
             value={marker?.name || ""}
@@ -104,7 +103,6 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         <FormField label="Description">
           <input
             name="description"
-            className="form-field"
             placeholder="Description (optional)"
             value={marker?.description || ""}
             onChange={(e) =>

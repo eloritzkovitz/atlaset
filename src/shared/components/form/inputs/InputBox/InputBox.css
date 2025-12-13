@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.input-box {
+  appearance: none;
+  background-image: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;  
+}
+
+.input-box:focus {
+  outline: none;
+  box-shadow: none;
+}
