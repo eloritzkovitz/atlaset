@@ -6,7 +6,6 @@ import { OverlayPaletteSettingsGroup } from "./colors/OverlayPaletteSettingsGrou
 import { HomeCountrySelect } from "./home/HomeCountrySelect";
 import { MapSettingsGroup } from "./map/MapSettingsGroup";
 import { ThemeSettingsGroup } from "./theme/ThemeSettingsGroup";
-import "./Settings.css";
 
 export function SettingsPanel() {
   const { showSettings, closePanel } = useUI();

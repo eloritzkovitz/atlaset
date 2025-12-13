@@ -53,7 +53,7 @@ export function AuthForm({
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
-        className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
+        className="bg-input w-full px-3 py-2 border-none rounded-full"
       />
       <span className="block h-1" />
       <div className="relative">
@@ -63,11 +63,11 @@ export function AuthForm({
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full px-3 py-2 border-none rounded-full bg-gray-100"
+          className="bg-input w-full px-3 py-2 border-none rounded-full"
         />
         <button
           type="button"
-          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
           onClick={() => setShowPassword((v) => !v)}
           tabIndex={-1}
           aria-label={showPassword ? "Hide password" : "Show password"}

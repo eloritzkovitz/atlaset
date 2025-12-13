@@ -3,7 +3,7 @@ import "./SplashScreen.css";
 
 export function SplashScreen() {
   return (
-    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-900 bg-opacity-80">
+    <div className="fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-bg">
       <div className="mb-10 flex items-center justify-center">
         <Branding size={156} />
       </div>

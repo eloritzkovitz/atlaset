@@ -8,7 +8,6 @@ export { FloatingChevronButton } from "./action/FloatingChevronButton";
 // Card components
 export { Card } from "./ui/Card/Card";
 export { DashboardCard } from "./ui/Card/DashboardCard";
-export { HomeCard } from "./ui/Card/HomeCard";
 
 // Chip components
 export { Chip } from "./ui/Chip/Chip";
