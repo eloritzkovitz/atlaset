@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaSuitcaseRolling, FaGlobe, FaFloppyDisk } from "react-icons/fa6";
 import {
+  DateSelect,
   DropdownSelectInput,
   FormField,
   InputBox,
@@ -82,8 +83,7 @@ export function TripModal({
             />
           </FormField>
           <FormField label="Start Date" className="mb-2">
-            <InputBox
-              type="date"
+            <DateSelect
               value={trip.startDate}
               onChange={(e: { target: { value: any } }) => {
                 const newStart = e.target.value;
@@ -97,8 +97,7 @@ export function TripModal({
             />
           </FormField>
           <FormField label="End Date" className="mb-2">
-            <InputBox
-              type="date"
+            <DateSelect
               value={trip.endDate}
               min={trip.startDate || undefined}
               onChange={(e: { target: { value: any } }) =>

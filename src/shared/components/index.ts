@@ -28,6 +28,7 @@ export { FormField } from "./form/fields/FormField";
 
 // Form Input components
 export { Checkbox } from "./form/inputs/Checkbox";
+export { DateSelect } from "./form/inputs/DateSelect/DateSelect";
 export { DropdownSelectInput } from "./form/inputs/DropdownSelectInput/DropdownSelectInput";
 export { InputBox } from "./form/inputs/InputBox/InputBox";
 export { NumberInput } from "./form/inputs/NumberInput/NumberInput";
