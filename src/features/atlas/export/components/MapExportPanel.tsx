@@ -96,7 +96,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
         <Separator className="mb-4" />
 
         {/* Options section header */}
-        <div className="mb-4 mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <div className="mb-4 mt-1 text-xs font-semibold uppercase tracking-wide text-muted">
           Options
         </div>
 

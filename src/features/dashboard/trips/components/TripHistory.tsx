@@ -94,11 +94,11 @@ export function TripHistory() {
             {firstTrip.name}
           </div>
         ) : (
-          <div className="text-gray-400">—</div>
+          <div className="text-muted">—</div>
         )}
-        <div className="text-sm text-gray-400">
+        <div className="text-muted text-sm">
           {firstTrip?.startDate}{" "}
-          {firstTrip?.endDate && `– ${firstTrip.endDate}`}
+          {firstTrip?.endDate && `- ${firstTrip.endDate}`}
         </div>
       </DashboardCard>
 
@@ -114,10 +114,10 @@ export function TripHistory() {
             {lastTrip.name}
           </div>
         ) : (
-          <div className="text-gray-400">—</div>
+          <div className="text-muted">—</div>
         )}
-        <div className="text-sm text-gray-400">
-          {lastTrip?.startDate} {lastTrip?.endDate && `– ${lastTrip.endDate}`}
+        <div className="text-muted text-sm">
+          {lastTrip?.startDate} {lastTrip?.endDate && `- ${lastTrip.endDate}`}
         </div>
       </DashboardCard>
     </div>

@@ -106,7 +106,7 @@ export function CountryDetailsModal({
                   name={country.name}
                   className="font-bold text-lg"
                 />
-                <span className="text-gray-500 text-sm">
+                <span className="text-muted text-sm">
                   ({country.isoCode})
                 </span>
                 <VisitedStatusIndicator

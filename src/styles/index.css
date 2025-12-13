@@ -90,7 +90,7 @@
   --color-secondary-active: theme("colors.gray.300");
   /* Action colors */
   --color-action: theme("colors.gray.800");
-  --color-action-hover: theme("colors.gray.700");
+  --color-action-hover: theme("colors.gray.600");
   --color-action-text: theme("colors.gray.300");
   --color-action-text-hover: theme("colors.white");
   /* Header action colors */

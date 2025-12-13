@@ -57,7 +57,7 @@ export function MarkersPanel({
       >
         <div className="p-4">
           {markers.length === 0 ? (
-            <div className="text-sm text-gray-500">No markers yet.</div>
+            <div className="text-muted text-sm">No markers yet.</div>
           ) : (
             <ul className="space-y-2">
               {markers.map((marker, idx) => (

@@ -6,7 +6,7 @@ export function UserInfo({ user }: { user: any }) {
       <UserAvatar user={user} size={40} />
       <div>
         <div className="font-medium mb-1">{user.displayName || user.email}</div>
-        <div className="text-sm text-gray-400">{user.email}</div>
+        <div className="text-muted text-sm">{user.email}</div>
       </div>
     </div>
   );
