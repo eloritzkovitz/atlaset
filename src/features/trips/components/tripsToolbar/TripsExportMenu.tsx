@@ -2,7 +2,7 @@ import React from "react";
 import { Menu, MenuButton } from "@components";
 import { FaFileCsv, FaFileLines } from "react-icons/fa6";
 
-interface ExportMenuProps {
+interface TripsExportMenuProps {
   open: boolean;
   onClose: () => void;
   onExportCSV: () => void;
@@ -11,14 +11,14 @@ interface ExportMenuProps {
   containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export function ExportMenu({
+export function TripsExportMenu({
   open,
   onClose,
   onExportCSV,
   onExportJSON,
   style,
   containerRef,
-}: ExportMenuProps) {
+}: TripsExportMenuProps) {
   return (
     <Menu
       open={open}

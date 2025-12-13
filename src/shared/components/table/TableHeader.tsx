@@ -16,7 +16,7 @@ export function TableHeader({
 }: TableHeaderProps) {
   return (
     <th
-      className={`sticky top-0 px-2 bg-gray-100 dark:bg-gray-900 z-3 ${
+      className={`sticky top-0 px-2 bg-table-row-alt z-3 ${
         unsortable ? " text-left pb-7 " : "py-1 "
       } ${className}`}
       {...props}

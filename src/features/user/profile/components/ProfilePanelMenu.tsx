@@ -1,5 +1,5 @@
-import { Panel } from "@components";
-import { PROFILE_MENU } from "@features/user/profile/constants/profileMenu";
+import { MenuButton, Panel } from "@components";
+import { PROFILE_MENU } from "../constants/profileMenu";
 
 interface ProfilePanelMenuProps {
   selectedPanel: string;
@@ -29,18 +29,14 @@ export function ProfilePanelMenu({
       <ul>
         {menuItems.map((item) => (
           <li key={item.key}>
-            <button
-              className={`flex items-center gap-2 w-full text-left px-4 py-2 rounded-lg mb-2 font-medium transition
-                ${
-                  selectedPanel === item.key
-                    ? "bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200"
-                }`}
+            <MenuButton
+              icon={item.icon}
+              active={selectedPanel === item.key}
               onClick={() => setSelectedPanel(item.key)}
+              className="w-full mb-2"
             >
-              {item.icon}
               {item.label}
-            </button>
+            </MenuButton>
           </li>
         ))}
       </ul>

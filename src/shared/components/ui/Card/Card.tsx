@@ -40,7 +40,7 @@ export function Card({
             key={idx}
             className={`h-5 w-${
               idx === 0 ? "3/4" : "full"
-            } bg-gray-200 dark:bg-gray-700 rounded-full mb-3`}
+            } bg-input rounded-full mb-3`}
           />
         ))}
       </div>

@@ -28,7 +28,7 @@ export function GuessForm({
         <ActionButton
           type="submit"
           aria-label="Submit guess"
-          className="bg-blue-600 text-white hover:bg-blue-700 px-6 py-2 text-base rounded-full font-bold"
+          className="bg-primary text-white hover:bg-primary-hover px-6 py-2 text-base rounded-full font-bold"
           disabled={disabled}          
         >
           Guess
@@ -37,7 +37,7 @@ export function GuessForm({
           type="button"
           aria-label="Skip flag"
           onClick={skipFlag}
-          className="px-6 py-2 text-base rounded-full font-bold bg-gray-200 text-gray-800 hover:bg-gray-300"
+          className="px-6 py-2 text-base rounded-full font-bold bg-input text-muted hover:bg-input-hover"
           disabled={disabled}          
         >
           Skip

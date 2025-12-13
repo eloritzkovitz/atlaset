@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaHouse, FaChevronDown } from "react-icons/fa6";
+import { FaHouse, FaChevronRight } from "react-icons/fa6";
 import { Checkbox, CollapsibleHeader } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, CountryWithFlag } from "@features/countries";
@@ -26,7 +26,7 @@ export function HomeCountrySelect() {
       {expanded && (
         <button
           type="button"
-          className="settings-select-btn flex items-center gap-3 px-3 py-2 my-4 rounded border bg-gray-200 dark:bg-gray-600 text-dark hover:bg-gray-300 dark:hover:bg-gray-500 transition"
+          className="settings-select-btn bg-input hover:bg-input-hover flex items-center gap-3 px-3 py-2 my-4 rounded-lg transition"
           onClick={() => setModalOpen(true)}
           aria-label="Select home country"
         >
@@ -38,7 +38,7 @@ export function HomeCountrySelect() {
           ) : (
             <span className="opacity-50">No country selected</span>
           )}
-          <FaChevronDown className="ml-auto text-gray-400" />
+          <FaChevronRight className="ml-auto text-muted" />
         </button>
       )}      
       <Checkbox
