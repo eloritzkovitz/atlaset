@@ -34,7 +34,7 @@ export function useMenuPosition(
 
       // Flip above if not enough space below
       if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
-        top = btnRect.top + window.scrollY - menuRect.height - (offset ?? 0);
+        top = btnRect.top + window.scrollY - menuRect.height;
       }
 
       // Set menu style
