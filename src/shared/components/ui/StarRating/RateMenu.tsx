@@ -19,7 +19,7 @@ export function RateMenu({
   return (
     <Menu
       open={open}
-      className="trips-actions-menu w-full"
+      className="rate-menu w-full"
       style={menuStyle}
       containerRef={menuRef}
       {...hoverHandlers}

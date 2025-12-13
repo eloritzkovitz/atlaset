@@ -1,27 +1,53 @@
-import { FaFileCsv, FaFileAlt } from "react-icons/fa";
+import React from "react";
+import { Menu, MenuButton } from "@components";
+import { FaFileCsv, FaFileLines } from "react-icons/fa6";
 
 interface ExportMenuProps {
+  open: boolean;
+  onClose: () => void;
   onExportCSV: () => void;
   onExportJSON: () => void;
+  style?: React.CSSProperties;
+  containerRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export function ExportMenu({ onExportCSV, onExportJSON }: ExportMenuProps) {
+export function ExportMenu({
+  open,
+  onClose,
+  onExportCSV,
+  onExportJSON,
+  style,
+  containerRef,
+}: ExportMenuProps) {
   return (
-    <div className="absolute left-0 bg-surface shadow rounded z-10 w-[200px] flex flex-col">
-      <button
-        className="flex items-center gap-2 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600"
-        onClick={onExportCSV}
+    <Menu
+      open={open}
+      onClose={onClose}
+      className="export-menu !p-2 mt-6"
+      style={style}
+      containerRef={containerRef}
+      disableScroll={true}
+    >
+      <MenuButton
+        onClick={() => {
+          onExportCSV();
+          setTimeout(onClose, 300);
+        }}
+        icon={<FaFileCsv />}
+        className="w-full justify-start"
       >
-        <FaFileCsv />
-        <span>Export as CSV</span>
-      </button>
-      <button
-        className="flex items-center gap-2 px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600"
-        onClick={onExportJSON}
+        Export as CSV
+      </MenuButton>
+      <MenuButton
+        onClick={() => {
+          onExportJSON();
+          setTimeout(onClose, 300);
+        }}
+        icon={<FaFileLines />}
+        className="w-full justify-start"
       >
-        <FaFileAlt />
-        <span>Export as JSON</span>
-      </button>
-    </div>
+        Export as JSON
+      </MenuButton>
+    </Menu>
   );
 }
