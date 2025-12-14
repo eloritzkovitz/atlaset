@@ -29,7 +29,7 @@ export function WorldExplorationCard({
           <div className="text-5xl font-bold text-primary mb-2">
             {visited} / {total}
           </div>
-          <div className="text-lg text-gray-500 dark:text-gray-400">
+          <div className="text-lg text-muted">
             {percent(visited, total)} of countries visited
           </div>
           <div className="w-full mt-4">

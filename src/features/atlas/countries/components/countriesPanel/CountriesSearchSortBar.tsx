@@ -33,7 +33,7 @@ export function CountriesSearchSortBar({
           visitedOnly={visitedOnly}
         />
       </div>
-      <div className="text-s text-left text-gray-500 font-semibold mb-2 mt-2 select-none">
+      <div className="text-s text-left text-muted font-semibold mb-2 mt-2 select-none">
         Showing {count} countries
       </div>
     </div>

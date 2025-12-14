@@ -51,7 +51,7 @@ export function RegionCard({
                 <span className="text-gray-700 dark:text-gray-300">
                   {sub.name}
                 </span>
-                <span className="ml-auto text-gray-500 dark:text-gray-400">
+                <span className="ml-auto text-muted">
                   {sub.visited}/{sub.total} ({percent(sub.visited, sub.total)})
                 </span>
               </button>

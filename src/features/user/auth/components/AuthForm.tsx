@@ -107,7 +107,7 @@ export function AuthForm({
         <>
           <div className="flex items-center my-4">
             <div className="flex-grow border-t border-gray-300 dark:border-gray-500" />
-            <span className="mx-4 text-gray-500 dark:text-gray-300">or</span>
+            <span className="mx-4 text-muted">or</span>
             <div className="flex-grow border-t border-gray-300 dark:border-gray-500" />
           </div>
           <GoogleSignInButton onClick={onGoogleSignIn} />

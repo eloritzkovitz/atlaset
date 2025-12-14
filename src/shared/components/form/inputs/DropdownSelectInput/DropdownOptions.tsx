@@ -26,7 +26,7 @@ export function DropdownOptions<T>({
       {options.map((optOrGroup) =>
         "options" in optOrGroup ? (
           <div key={optOrGroup.label}>
-            <div className="px-3 py-1 text-xs font-semibold text-gray-500 uppercase">
+            <div className="px-3 py-1 text-muted text-xs font-semibold uppercase">
               {optOrGroup.label}
             </div>
             {optOrGroup.options.map((opt) => (

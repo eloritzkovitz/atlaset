@@ -83,7 +83,7 @@ export function TripsByMonth() {
             </div>
           </>
         ) : (
-          <p className="text-gray-500">No trip data available.</p>
+          <p className="text-muted">No trip data available.</p>
         )}
       </DashboardCard>
       <DashboardCard title="Monthly Trip Breakdown" className="mt-6">

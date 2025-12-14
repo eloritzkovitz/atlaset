@@ -24,7 +24,7 @@ export function ThemeSettingsGroup() {
             </label>
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
-          <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+          <div className="mt-2 text-xs text-muted">
             Current theme: <strong>{theme === "dark" ? "Dark" : "Light"}</strong>
           </div>
         </div>

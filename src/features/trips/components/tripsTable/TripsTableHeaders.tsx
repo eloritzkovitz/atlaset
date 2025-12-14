@@ -95,7 +95,7 @@ export function TripsTableHeaders({
                     ) : (
                       <StarRatingInput value={opt.value} readOnly />
                     )}
-                    <span className="text-xs text-gray-500">{opt.label}</span>
+                    <span className="text-xs text-muted">{opt.label}</span>
                   </span>
                 )}
               />

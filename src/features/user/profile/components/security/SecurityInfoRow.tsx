@@ -11,7 +11,7 @@ export function SecurityInfoRow({ label, value }: SecurityInfoRowProps) {
       <span className="font-medium text-gray-700 dark:text-gray-200">
         {label}
       </span>
-      <span className="text-gray-500 dark:text-gray-400">{value}</span>
+      <span className="text-muted">{value}</span>
     </li>
   );
 }

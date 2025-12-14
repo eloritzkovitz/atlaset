@@ -120,7 +120,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           />
         </FormField>
         {marker && !isEditing && (
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-muted">
             Location: {marker.longitude.toFixed(4)},{" "}
             {marker.latitude.toFixed(4)}
           </div>
