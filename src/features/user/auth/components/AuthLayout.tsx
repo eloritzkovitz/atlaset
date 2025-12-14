@@ -20,7 +20,7 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
         {children}
       </main>
       {/* Footer */}
-      <footer className="mt-8 py-4 text-center text-gray-400 text-sm">
+      <footer className="mt-8 py-4 text-center text-muted text-sm">
         {footer}
         <div className="mt-2">© {new Date().getFullYear()} Atlaset</div>
       </footer>

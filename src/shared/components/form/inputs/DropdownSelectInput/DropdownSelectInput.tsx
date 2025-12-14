@@ -77,7 +77,7 @@ export function DropdownSelectInput<T = string>({
           flattenOptions(options).find((opt) => opt.value === value) ? (
           flattenOptions(options).find((opt) => opt.value === value)?.label
         ) : (
-          <span className="text-gray-400">{placeholder}</span>
+          <span className="text-muted">{placeholder}</span>
         )}
         <DropdownChevron />
       </InputBox>

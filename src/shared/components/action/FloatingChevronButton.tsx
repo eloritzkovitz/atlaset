@@ -67,11 +67,7 @@ export const FloatingChevronButton = React.forwardRef<
         ariaLabel={ariaLabel}
         title={title}
         icon={
-          chevronDirection === "right" ? (
-            <FaChevronRight className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
-          ) : (
-            <FaChevronLeft className="w-5 h-5 text-blue-600 dark:text-gray-200 hover:text-gray-400" />
-          )
+          chevronDirection === "right" ? <FaChevronRight /> : <FaChevronLeft />
         }
         variant="action"
         rounded

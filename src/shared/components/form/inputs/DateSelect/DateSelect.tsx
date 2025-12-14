@@ -21,7 +21,7 @@ export function DateSelect({
       <div className="relative">
         <InputBox ref={inputRef} type="date" {...props} />
         <FaRegCalendar
-          className="w-4 h-4 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
+          className="w-4 h-4 text-muted absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer"
           onClick={() =>
             inputRef.current?.showPicker?.() || inputRef.current?.focus()
           }

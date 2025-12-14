@@ -8,7 +8,13 @@ import {
   FaStar,
   FaChevronRight,
 } from "react-icons/fa6";
-import { ActionButton, MenuButton, Menu, Separator, RateMenu } from "@components";
+import {
+  ActionButton,
+  MenuButton,
+  Menu,
+  Separator,
+  RateMenu,
+} from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { useFloatingHover } from "@hooks/useFloatingHover";
@@ -164,7 +170,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
           }}
           icon={
             trip.favorite ? (
-              <FaRegHeart className="mr-2 text-gray-400" />
+              <FaRegHeart className="mr-2 text-muted" />
             ) : (
               <FaHeart className="mr-2 text-danger" />
             )

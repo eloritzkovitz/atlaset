@@ -51,7 +51,7 @@ export function Table<T>({
   return (
     <table className={`min-w-full text-sm ${className}`}>
       <thead>
-        <tr className="text-gray-400">
+        <tr className="text-muted">
           {columns.map((col) => (
             <th key={col.key as string} className="text-left py-1">
               {col.sortable ? (

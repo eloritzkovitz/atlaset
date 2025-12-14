@@ -100,7 +100,7 @@ export function TripsTableRows({
           ) : code ? (
             <span>{code}</span>
           ) : (
-            <span className="text-gray-400 italic">No country</span>
+            <span className="text-muted italic">No country</span>
           )}
         </TableCell>
         {idx === 0 && (

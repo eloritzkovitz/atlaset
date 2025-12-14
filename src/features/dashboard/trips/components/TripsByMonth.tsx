@@ -55,7 +55,7 @@ export function TripsByMonth() {
                 Most Popular: {mostPopularMonth?.name ?? "—"}
               </span>
               {mostPopularMonth && (
-                <span className="text-gray-400">
+                <span className="text-muted">
                   ({mostPopularMonth.total} trips,{" "}
                   {totalTripsForMonth > 0
                     ? `${Math.round(

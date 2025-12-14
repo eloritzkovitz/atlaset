@@ -1,5 +1,5 @@
 /**
- * Utils for sorting countries.
+ * @file Utils for sorting countries.
  */
 
 import {
@@ -32,7 +32,7 @@ function buildVisitDateMaps(trips: Trip[]) {
 export function sortCountries(
   countries: Country[],
   sortBy: CountrySortBy,
-  trips: Trip[] 
+  trips: Trip[]
 ) {
   const { firstVisitMap, lastVisitMap } = buildVisitDateMaps(trips);
   const [key, direction] = sortBy.split("-");
@@ -63,3 +63,23 @@ export function sortCountries(
       return countries;
   }
 }
+
+/**
+ * Generates sort options for countries.
+ * @param visitedOnly - Whether to include visit-based sort options.
+ * @returns An array of sort option objects.
+ */
+export const getSortOptions = (visitedOnly?: boolean) => [
+  { value: "name-asc", label: "Name (ascending)" },
+  { value: "name-desc", label: "Name (descending)" },
+  { value: "iso-asc", label: "ISO 3166 code (ascending)" },
+  { value: "iso-desc", label: "ISO 3166 code (descending)" },
+  ...(visitedOnly
+    ? [
+        { value: "firstVisit-asc", label: "First visit time (ascending)" },
+        { value: "firstVisit-desc", label: "First visit time (descending)" },
+        { value: "lastVisit-asc", label: "Last visit time (ascending)" },
+        { value: "lastVisit-desc", label: "Last visit time (descending)" },
+      ]
+    : []),
+];

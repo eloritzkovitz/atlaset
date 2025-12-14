@@ -20,7 +20,7 @@ export function ArrowButton({
       onClick={onClick}
       aria-label={ariaLabel}
     >
-      <Icon className="w-3 h-3 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" />
+      <Icon className="w-3 h-3 text-muted hover:text-muted-hover" />
     </button>
   );
 }

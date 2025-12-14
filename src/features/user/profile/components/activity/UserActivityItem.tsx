@@ -9,7 +9,7 @@ export function UserActivityItem({ act }: { act: any }) {
         <span className="font-semibold text-base text-white">
           {getActivityDescription(act.action, act.details)}
         </span>
-        <span className="flex items-center text-xs text-gray-400 ml-2 gap-1">
+        <span className="flex items-center text-xs text-muted ml-2 gap-1">
           {new Date(act.timestamp).toLocaleString()}
         </span>
       </div>

@@ -50,7 +50,7 @@ export function SearchInput({
         isFocused && showRing ? "ring-2 ring-blue-500" : ""
       }`}
     >
-      <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+      <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
       <input
         ref={inputRef}        
         type="text"
@@ -75,7 +75,7 @@ export function SearchInput({
           aria-label="Clear search"
           title="Clear search"
           onClick={() => onChange("")}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-100 focus:outline-none"
+          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none"
         >
           <FaXmark />
         </button>

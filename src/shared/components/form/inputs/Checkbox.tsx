@@ -21,7 +21,7 @@ export function Checkbox({ checked, disabled, onChange, label }: CheckboxProps) 
       />
       <span
         className={
-          "w-5 h-5 rounded transition-colors border-2 border-gray-400 peer-checked:border-blue-500 flex items-center justify-center"
+          "w-5 h-5 rounded transition-colors border-2 border-muted peer-checked:border-primary flex items-center justify-center"
         }
       >
         <svg
@@ -34,7 +34,7 @@ export function Checkbox({ checked, disabled, onChange, label }: CheckboxProps) 
           <path d="M5 13l4 4L19 7" />
         </svg>
       </span>
-      {label && <span className="ml-2 text-gray-200">{label}</span>}
+      {label && <span className="ml-2">{label}</span>}
     </label>
   );
 }

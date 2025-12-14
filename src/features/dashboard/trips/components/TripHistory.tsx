@@ -30,14 +30,12 @@ export function TripHistory() {
                   isoCode={country.isoCode}
                   name={country.name}
                 />
-                <span className="text-xs text-gray-400">
-                  ({maxCount} times)
-                </span>
+                <span className="text-xs text-muted">({maxCount} times)</span>
                 {idx < mostVisitedCountries.length - 1}
               </span>
             ))
           ) : (
-            <span className="text-gray-400">—</span>
+            <span className="text-muted">—</span>
           )}
         </div>
       </DashboardCard>
@@ -71,13 +69,13 @@ export function TripHistory() {
                   ) : null;
                 })}
                 <span className="font-semibold">{trip.name}</span>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-muted">
                   {trip.startDate} {trip.endDate && `– ${trip.endDate}`}
                 </span>
               </li>
             ))
           ) : (
-            <li className="text-gray-400">—</li>
+            <li className="text-muted">—</li>
           )}
         </ul>
       </DashboardCard>

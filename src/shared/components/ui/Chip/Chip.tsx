@@ -25,10 +25,10 @@ export function Chip({
       {removable && (
         <button
           type="button"
-          className={`ml-auto text-gray-400 ${
+          className={`ml-auto text-muted ${
             disabled
               ? "opacity-50 cursor-not-allowed"
-              : "hover:text-blue-500 dark:hover:text-gray-300"
+              : "hover:text-muted-hover"
           }`}
           title="Remove"
           onClick={onRemove}

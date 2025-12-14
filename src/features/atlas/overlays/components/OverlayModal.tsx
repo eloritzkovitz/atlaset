@@ -123,7 +123,7 @@ export function OverlayModal({
           <FormField label="Countries:">
             <div className="flex items-center gap-2 flex-wrap">
               {selectedCountries.length === 0 ? (
-                <span className="text-gray-400">No countries selected</span>
+                <span className="text-muted">No countries selected</span>
               ) : (
                 selectedCountries.map((country) => (
                   <Chip
@@ -168,7 +168,7 @@ export function OverlayModal({
           </FormField>
           <div className="flex items-center justify-between mt-6">
             {isVisited && (
-              <div className="flex items-center text-base text-gray-400 mr-4">
+              <div className="flex items-center text-base text-muted mr-4">
                 <FaCircleInfo size={24} className="mr-4" />
                 <span>
                   This overlay is managed automatically based on your trips.

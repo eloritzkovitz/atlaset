@@ -46,7 +46,7 @@ export const CountryDisplayPanel = React.forwardRef<
         <div ref={ref} className={`w-full ${className}`}>
           <ul className="list-none p-0 m-0 w-full">
             {countries.length === 0 ? (
-              <li className="px-4 py-8 text-center text-gray-400">
+              <li className="px-4 py-8 text-center text-muted">
                 No countries found
               </li>
             ) : (
@@ -85,7 +85,7 @@ export const CountryDisplayPanel = React.forwardRef<
         className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-2 ${className}`}
       >
         {countries.length === 0 ? (
-          <div className="col-span-full text-center text-gray-400 py-8">
+          <div className="col-span-full text-center text-muted py-8">
             No countries found
           </div>
         ) : (
