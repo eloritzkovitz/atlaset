@@ -1,4 +1,4 @@
-import { ActionButton } from "@components";
+import { ActionButton } from "../../action/ActionButton";
 import type { ToolbarToggleOption } from "@types";
 
 export function ToolbarToggleGroup({

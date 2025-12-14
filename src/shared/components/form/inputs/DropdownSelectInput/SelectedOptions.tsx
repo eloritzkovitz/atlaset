@@ -1,6 +1,6 @@
 import type { DropdownOption } from "@types";
 import { flattenOptions } from "@utils/dropdown";
-import { Chip } from "@components";
+import { Chip } from "../../../../components/ui/Chip/Chip";
 
 interface SelectedOptionsProps<T> {
   value: T[];

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
 import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
-import { ActionButton } from "@components";
+import { ActionButton } from "../../action/ActionButton";
 
 interface ToolbarSelectButtonProps<T extends string | number> {
   value: T;

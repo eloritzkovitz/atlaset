@@ -1,6 +1,6 @@
 import React, { type ReactNode } from "react";
-import { FaChevronDown, FaChevronUp } from "react-icons/fa";
-import { ActionButton } from "@components";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
+import { ActionButton } from "../action/ActionButton";
 
 interface CollapsibleHeaderProps {
   icon: React.ReactNode;

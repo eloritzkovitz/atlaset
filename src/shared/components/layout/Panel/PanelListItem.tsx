@@ -1,3 +1,4 @@
+import type { DragEvent } from "react";
 import {
   FaEye,
   FaEyeSlash,
@@ -6,8 +7,8 @@ import {
   FaCrosshairs,
   FaCircleInfo,
 } from "react-icons/fa6";
-import type { DragEvent } from "react";
-import { ActionButton, ColorDot } from "@components";
+import { ActionButton } from "../../action/ActionButton";
+import { ColorDot } from "../../ui/ColorDot";
 
 interface PanelListItemProps {
   color: string;

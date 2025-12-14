@@ -1,5 +1,5 @@
 import type { ReactNode, CSSProperties } from "react";
-import { Modal } from "@components";
+import { Modal } from "../Modal/Modal";
 
 interface MenuProps {
   open: boolean;

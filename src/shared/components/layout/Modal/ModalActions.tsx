@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { FaTimes } from "react-icons/fa";
-import { FormButton } from "@components";
+import { FaXmark } from "react-icons/fa6";
+import { FormButton } from "../../form/buttons/FormButton";
 
 interface ModalActionsProps {
   onCancel: () => void;
@@ -26,7 +26,7 @@ export function ModalActions({
   return (
     <div className="flex justify-end gap-2 mt-4">
       <FormButton type="button" variant="secondary" onClick={onCancel}>
-        <FaTimes className="inline" /> {cancelLabel}
+        <FaXmark className="inline" /> {cancelLabel}
       </FormButton>
       <FormButton type={submitType} variant={submitVariant} onClick={onSubmit} disabled={disabled}>
         {submitIcon} {submitLabel}
