@@ -52,7 +52,7 @@ export function CountryDetailsModal({
 
   // Hover logic for floating chevron
   const { hoverHandlers, floatingHandlers, shouldShowFloating } =
-    useFloatingHover(true, 150, "button");
+    useFloatingHover(true, 0, "button");
 
   // Auto-close drawer when modal closes
   useEffect(() => {

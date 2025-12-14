@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .modal {
-  @apply rounded-xl shadow-2xl pt-0 px-4 pb-4 overflow-y-auto transition-all duration-300 ease-in-out;
+  @apply rounded-xl shadow-2xl pt-0 px-2 pb-4 overflow-y-auto transition-all duration-300 ease-in-out;
   background: var(--color-surface);
 }
 
