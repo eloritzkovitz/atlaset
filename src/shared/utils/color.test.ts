@@ -4,6 +4,34 @@ describe("hexToRgba", () => {
   it("converts 3-digit hex to rgba", () => {
     expect(hexToRgba("#f0a")).toBe("rgba(255, 0, 170, 1)");
   });
+
+  it("converts 6-digit hex to rgba", () => {
+    expect(hexToRgba("#123456")).toBe("rgba(18, 52, 86, 1)");
+    expect(hexToRgba("#ffffff")).toBe("rgba(255, 255, 255, 1)");
+    expect(hexToRgba("#000000")).toBe("rgba(0, 0, 0, 1)");
+  });
+
+  it("applies custom alpha value", () => {
+    expect(hexToRgba("#f0a", 0.5)).toBe("rgba(255, 0, 170, 0.5)");
+    expect(hexToRgba("#123456", 0.25)).toBe("rgba(18, 52, 86, 0.25)");
+  });
+
+  it("returns white for invalid hex", () => {
+    expect(hexToRgba("invalid")).toBe("rgba(0, 0, 0, 1)");
+    expect(hexToRgba("#12")).toBe("rgba(0, 0, 0, 1)");
+    expect(hexToRgba("")).toBe("rgba(0, 0, 0, 1)");
+  });
+
+  it("returns black for non-string input", () => {
+    // @ts-expect-error testing runtime behavior
+    expect(hexToRgba(null)).toBe("rgba(0, 0, 0, 1)");
+    // @ts-expect-error testing runtime behavior
+    expect(hexToRgba(undefined)).toBe("rgba(0, 0, 0, 1)");
+    // @ts-expect-error testing runtime behavior
+    expect(hexToRgba(123)).toBe("rgba(0, 0, 0, 1)");
+    // @ts-expect-error testing runtime behavior
+    expect(hexToRgba({})).toBe("rgba(0, 0, 0, 1)");
+  });
 });
 
 describe("parseRgba", () => {
