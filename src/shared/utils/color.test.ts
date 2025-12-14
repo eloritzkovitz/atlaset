@@ -1,4 +1,10 @@
-import { parseRgba, blendColors } from "./color";
+import { hexToRgba, parseRgba, blendColors } from "./color";
+
+describe("hexToRgba", () => {
+  it("converts 3-digit hex to rgba", () => {
+    expect(hexToRgba("#f0a")).toBe("rgba(255, 0, 170, 1)");
+  });
+});
 
 describe("parseRgba", () => {
   it("parses a valid RGBA string", () => {

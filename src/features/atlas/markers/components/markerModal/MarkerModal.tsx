@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaMapPin, FaFloppyDisk, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
+  ColorSelectInput,
   FormField,
   Modal,
   ModalActions,
   PanelHeader,
 } from "@components";
 import type { Marker } from "@types";
-import {  } from "react-icons/fa6";
 
 interface MarkerModalProps {
   marker: Marker | null;
@@ -28,6 +28,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
   isEditing,
 }) => {
   const nameRef = useRef<HTMLInputElement>(null);
+  const [colorModalOpen, setColorModalOpen] = useState(false);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -45,6 +46,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       onClose={onClose}
       position="center"
       className="modal min-w-[900px] max-w-[1200px] max-h-[90vh]"
+      disableClose={colorModalOpen}
     >
       <PanelHeader
         title={
@@ -54,9 +56,12 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           </>
         }
       >
-        <ActionButton onClick={onClose} ariaLabel="Close" title="Close" icon={<FaXmark className="text-2xl" />} />
-        
-        
+        <ActionButton
+          onClick={onClose}
+          ariaLabel="Close"
+          title="Close"
+          icon={<FaXmark className="text-2xl" />}
+        />
       </PanelHeader>
       <form
         className="space-y-4"
@@ -85,19 +90,18 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           />
         </FormField>
         <FormField label="Color">
-          <input
-            name="color"
-            type="color"
-            className="w-8 h-8 p-0 border rounded mt-1"
-            value={marker?.color || "#e53e3e"}
-            onChange={(e) =>
+          <ColorSelectInput
+            value={marker.color || "#e53e3e"}
+            onChange={(color) =>
               onChange({
-                ...marker!,
-                color: e.target.value,
-                longitude: marker?.longitude ?? 0,
-                latitude: marker?.latitude ?? 0,
+                ...marker,
+                color,
+                longitude: marker.longitude ?? 0,
+                latitude: marker.latitude ?? 0,
               })
             }
+            onModalOpenChange={setColorModalOpen}
+            disabled={false}
           />
         </FormField>
         <FormField label="Description">

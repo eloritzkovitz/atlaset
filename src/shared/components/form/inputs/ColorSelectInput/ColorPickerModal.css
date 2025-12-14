@@ -1,0 +1,27 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+.colorful-picker {
+  width: 100% !important;
+  background: var(--bg-input, #232b36) !important;
+  border-radius: 12px !important;
+  box-shadow: none !important;
+  padding: 1rem 0.5rem !important;
+}
+
+.colorful-picker .react-colorful__saturation,
+.colorful-picker .react-colorful__hue,
+.colorful-picker .react-colorful__alpha {
+  border-radius: 8px !important;
+}
+
+.colorful-picker .react-colorful__pointer {
+  border: 2px solid var(--color-accent, #2563eb) !important;
+  box-shadow: 0 0 0 2px var(--bg-input, #232b36) !important;
+}
+
+.colorful-picker .react-colorful__saturation-pointer {
+  width: 18px !important;
+  height: 18px !important;
+}

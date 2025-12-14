@@ -9,6 +9,7 @@ import {
 import {
   ActionButton,
   Chip,
+  ColorSelectInput,
   FormButton,
   FormField,
   Modal,
@@ -19,7 +20,6 @@ import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal } from "@features/countries";
 import type { Overlay } from "@types";
-import { ColorPickerModal } from "./ColorPickerModal";
 
 interface OverlayModalProps {
   isOpen: boolean;
@@ -111,21 +111,12 @@ export function OverlayModal({
 
           {/* Color */}
           <FormField label="Color:">
-            <div className="flex items-center gap-2">
-              <div
-                className="w-8 h-8 rounded border"
-                style={{ background: overlay.color }}
-                title={overlay.color}
-              />
-              <FormButton
-                type="button"
-                variant="secondary"
-                onClick={() => setColorModalOpen(true)}
-                disabled={isVisited}
-              >
-                <FaPencil className="inline" /> Edit
-              </FormButton>
-            </div>
+            <ColorSelectInput
+              value={overlay.color}
+              onChange={(color: any) => onChange({ ...overlay, color })}
+              disabled={isVisited}
+              onModalOpenChange={setColorModalOpen}
+            />
           </FormField>
 
           {/* Countries */}
@@ -201,13 +192,6 @@ export function OverlayModal({
           </div>
         </form>
       </Modal>
-      {/* Color Picker Modal */}
-      <ColorPickerModal
-        isOpen={colorModalOpen}
-        color={overlay.color}
-        onChange={(newColor) => onChange({ ...overlay, color: newColor })}
-        onClose={() => setColorModalOpen(false)}
-      />
       {/* Country Select Modal */}
       <CountrySelectModal
         isOpen={countryModalOpen}
