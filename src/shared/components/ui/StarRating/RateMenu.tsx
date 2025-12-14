@@ -1,5 +1,6 @@
-import { Menu, MenuButton, StarRatingInput } from "@components";
+import { Menu, MenuButton } from "@components";
 import { RATING_ACTION_OPTIONS } from "@features/trips/constants/trips";
+import { StarRatingInput } from "./StarRatingInput";
 
 interface RateMenuProps {
   open: boolean;

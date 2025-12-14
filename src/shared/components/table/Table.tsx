@@ -1,8 +1,8 @@
 import React from "react";
+import { useSort } from "@hooks/useSort";
 import type { SortKey } from "@types";
 import { sortItems } from "@utils/sort";
 import { SortableFilterHeader } from "./SortableFilterHeader";
-import { useSort } from "@hooks/useSort";
 
 export interface TableColumn<T> {
   key: SortKey<T>;
