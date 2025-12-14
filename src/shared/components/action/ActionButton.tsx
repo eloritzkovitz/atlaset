@@ -6,7 +6,7 @@ interface ActionButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   icon?: ReactNode;
   children?: ReactNode;
-  variant?: "primary" | "secondary" | "action" | "toggle";
+  variant?: "primary" | "secondary" | "action" | "toggle" | "sort";
   rounded?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -50,16 +50,17 @@ export const ActionButton = React.forwardRef<
     },
     ref
   ) => {
-    const base = "flex flex-row items-center justify-center gap-2 ";
+    const base =
+      "flex flex-row items-center justify-center gap-2 border-none transition-colors ";
     const defaultStyle =
-      "h-8 w-8 bg-transparent text-action-header border-none hover:bg-action-header-hover text-lg transition-colors gap-2";
+      "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg gap-2";
     const variants = {
       primary: "",
       secondary: "",
       action:
-        "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative transition",
-      toggle:
-        "h-8 min-w-8 max-w-12 px-2 bg-transparent border-none transition-colors duration-200",
+        "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
+      toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200",
+      sort: "h-10 w-10 bg-input hover:bg-input-hover gap-2",
     };
     const buttonClass =
       className && className.trim().length > 0 ? className : defaultStyle;

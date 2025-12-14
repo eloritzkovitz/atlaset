@@ -50,11 +50,9 @@ export function CountrySortSelect({
           icon={<PiArrowsDownUpBold size={24} />}
           ariaLabel="Sort countries"
           title="Sort countries"
-          variant="toggle"
+          variant="sort"
           onClick={open ? () => setOpen(false) : handleOpen}
-          className={`bg-action text-action-header text-base h-10 w-10 rounded-lg ${
-            open && showRing ? "ring-2 ring-blue-500" : ""
-          }`}
+          className={open && showRing ? "ring-2 ring-blue-500" : ""}
           rounded
         />
       </div>
