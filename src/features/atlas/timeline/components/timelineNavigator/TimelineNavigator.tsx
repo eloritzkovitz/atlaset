@@ -71,7 +71,7 @@ export function TimelineNavigator({}) {
         <ToolbarSelectButton
           value={selectedYear}
           onChange={(year) => setSelectedYear(Number(year))}
-          options={years.map((y) => ({ value: y, label: y }))}
+          options={years.map((y) => ({ value: y, label: String(y) }))}
           ariaLabel="Select year"
           width="90px"
         />

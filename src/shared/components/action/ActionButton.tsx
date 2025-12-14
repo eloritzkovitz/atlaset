@@ -53,7 +53,7 @@ export const ActionButton = React.forwardRef<
     const base =
       "flex flex-row items-center justify-center gap-2 border-none transition-colors ";
     const defaultStyle =
-      "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg gap-2";
+      "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg ";
     const variants = {
       primary: "",
       secondary: "",

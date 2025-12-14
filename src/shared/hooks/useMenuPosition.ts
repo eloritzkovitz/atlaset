@@ -14,7 +14,7 @@ export function useMenuPosition(
   btnRef: React.RefObject<HTMLElement | null>,
   menuRef: React.RefObject<HTMLElement | null>,
   offset?: number,
-  align?: "left" | "right",
+  align?: "left" | "right" | "top",
   withWidth: boolean = true
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
@@ -26,15 +26,23 @@ export function useMenuPosition(
       const spaceBelow = window.innerHeight - btnRect.bottom;
       const spaceAbove = btnRect.top;
 
-      let top = btnRect.top + window.scrollY + (offset ?? 0);
-      let left =
-        align === "left"
-          ? btnRect.left - menuRect.width + window.scrollX
-          : btnRect.left + window.scrollX;
+      let top: number;
+      let left: number;
 
-      // Flip above if not enough space below
-      if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
-        top = btnRect.top + window.scrollY - menuRect.height;
+      if (align === "top") {
+        top = btnRect.top + window.scrollY - menuRect.height - (offset ?? 0);
+        left = btnRect.left + window.scrollX;
+      } else {
+        top = btnRect.top + window.scrollY + (offset ?? 0);
+        left =
+          align === "left"
+            ? btnRect.left - menuRect.width + window.scrollX
+            : btnRect.left + window.scrollX;
+
+        // Flip above if not enough space below
+        if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
+          top = btnRect.top + window.scrollY - menuRect.height;
+        }
       }
 
       // Set menu style

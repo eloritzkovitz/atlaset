@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { FaChevronDown } from "react-icons/fa6";
-import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
+import { useRef, useState } from "react";
+import { Menu, MenuButton } from "@components";
 import { ActionButton } from "../../action/ActionButton";
+import { FaChevronDown } from "react-icons/fa6";
+import { useMenuPosition } from "@hooks/useMenuPosition";
 
 interface ToolbarSelectButtonProps<T extends string | number> {
   value: T;
   onChange: (value: T) => void;
-  options: { value: T; label: React.ReactNode }[];
+  options: Array<{ value: T; label: string }>;
   ariaLabel: string;
   width?: string;
 }
@@ -18,36 +19,56 @@ export function ToolbarSelectButton<T extends string | number>({
   ariaLabel,
   width = "150px",
 }: ToolbarSelectButtonProps<T>) {
-  const [isFocused, setIsFocused] = useState(false);
-  const showRing = useKeyboardFocusRing();
+  const [open, setOpen] = useState(false);
+  const btnRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Get the button's position for menu placement
+  const menuStyle = useMenuPosition(open, btnRef, menuRef, 4, "top", false);
 
   return (
-    <ActionButton
-      ariaLabel={ariaLabel}
-      title={ariaLabel}
-      style={{ width, height: "48px", padding: 0 }}
-      className={isFocused && showRing ? "ring-2 ring-blue-500" : ""}
-      variant="action"
-      rounded
-    >
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value as T)}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-        className="w-full h-full text-center bg-gray-700 border border-gray-600 rounded-full appearance-none text-blue-800 dark:text-white font-semibold outline-none p-0 m-0 bg-inherit shadow-none border-none select-none"
-        aria-label={ariaLabel}
+    <>
+      <ActionButton
+        ref={btnRef}
+        ariaLabel={ariaLabel}
+        title={ariaLabel}
+        style={{ width, height: "48px", padding: 0 }}
+        variant="action"
+        rounded
+        onClick={() => setOpen((prev) => !prev)}
       >
-        {options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
-      </select>
-      <span className="ml-5" />
-      <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-blue-800 dark:text-white">
-        <FaChevronDown />
-      </span>
-    </ActionButton>
+        <span className="truncate flex-1 text-left pl-3">
+          {options.find((o: { value: any }) => o.value === value)?.label}
+        </span>
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+          <FaChevronDown />
+        </span>
+      </ActionButton>
+      <Menu
+        open={open}
+        onClose={() => setOpen(false)}
+        style={menuStyle}
+        containerRef={menuRef}
+        className="bg-input rounded shadow max-h-[20vh] overflow-y-auto"
+      >
+        <ul>
+          {options.map((opt) => (
+            <li key={opt.value}>
+              <MenuButton
+                icon={null}
+                active={opt.value === value}
+                onClick={() => {
+                  onChange(opt.value as T);
+                  setOpen(false);
+                }}
+                className="w-full"
+              >
+                {opt.label}
+              </MenuButton>
+            </li>
+          ))}
+        </ul>
+      </Menu>
+    </>
   );
 }
