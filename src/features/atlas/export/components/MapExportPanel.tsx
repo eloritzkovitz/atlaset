@@ -75,22 +75,20 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     >
       <div className="pb-20">
         {/* Format selector */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm font-medium">Format:</span>
-          <div className="export-format-select">
-            <SelectInput
-              label=" "
-              value={format}
-              onChange={(val) => setFormat(val as ExportFormat)}
-              options={EXPORT_FORMAT_OPTIONS}
-            />
-          </div>
+        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
+          Format
         </div>
-
+        <SelectInput
+          label=""
+          value={format}
+          onChange={(val) => setFormat(val as ExportFormat)}
+          options={EXPORT_FORMAT_OPTIONS}
+        />
+        
         <Separator className="mb-4" />
 
         {/* Options section header */}
-        <div className="mb-4 mt-1 text-xs font-semibold uppercase tracking-wide text-muted">
+        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
           Options
         </div>
 
@@ -118,13 +116,14 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       {/* Export button */}
       <div className="absolute bottom-0 left-0 w-full px-4 pb-4">
         <ActionButton
+          variant="primary"
           onClick={handleExport}
           className="w-full"
           aria-label={"Export"}
           title={"Export"}
           disabled={!svgRef?.current}
         >
-          <FaFileImage className="inline mr-2" />
+          <FaFileImage className="inline" />
           Export
         </ActionButton>
       </div>

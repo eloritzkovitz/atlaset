@@ -2,8 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Export format select */
-
 .export-format-select {
   margin: 0 !important;
   display: inline-block;
@@ -17,7 +15,7 @@
   margin-bottom: 0 !important;
 }
 .export-format-select select {
-  min-width: 82px;
+  width: 400px !important;
   height: 2rem;
   padding: 0 0.5rem;
   font-size: 0.95rem;

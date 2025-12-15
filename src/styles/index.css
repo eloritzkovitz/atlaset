@@ -31,6 +31,9 @@
   /* Input colors */
   --color-input: theme("colors.gray.100");
   --color-input-hover: theme("colors.gray.200");
+  /* Dropdown colors */
+  --color-dropdown-hover: theme("colors.blue.100");
+  --color-dropdown-selected: theme("colors.blue.200");
   /* Table colors */
   --color-table-row: theme("colors.white");
   --color-table-row-alt: theme("colors.gray.50");  
@@ -85,7 +88,7 @@
   --color-primary-hover: theme("colors.blue.700");
   --color-primary-active: theme("colors.blue.600");
   /* Secondary colors */
-  --color-secondary: theme("colors.gray.100");
+  --color-secondary: theme("colors.gray.600");
   --color-secondary-hover: theme("colors.gray.200");
   --color-secondary-active: theme("colors.gray.300");
   /* Action colors */
@@ -104,6 +107,9 @@
   /* Input colors */
   --color-input: theme("colors.gray.600");
   --color-input-hover: theme("colors.gray.500");
+  /* Dropdown colors */
+  --color-dropdown-hover: theme("colors.blue.500");
+  --color-dropdown-selected: theme("colors.blue.600");
   /* Table colors */
   --color-table-row: theme("colors.gray.800");
   --color-table-row-alt: theme("colors.gray.900");

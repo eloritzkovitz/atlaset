@@ -56,9 +56,9 @@ export const ActionButton = React.forwardRef<
       "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg ";
     const variants = {
       primary:
-        "px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover focus:outline-none",
+        "px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover focus:outline-none",
       secondary:
-        "px-4 py-2 rounded-lg bg-transparent text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none",
+        "px-4 py-2 rounded-lg bg-transparent hover:bg-secondary focus:outline-none",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
       toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200",
@@ -70,9 +70,7 @@ export const ActionButton = React.forwardRef<
     // Only apply 'active' styling for toggle variant
     let stateClass = "";
     if (variant === "toggle") {
-      stateClass = active
-        ? "dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600"
-        : "text-gray-400 bg-transparent";
+      stateClass = active ? "" : "text-muted bg-transparent";
     }
     const disabledStyles = disabled
       ? "opacity-50 cursor-not-allowed pointer-events-none"

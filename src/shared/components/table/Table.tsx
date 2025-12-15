@@ -81,7 +81,7 @@ export function Table<T>({
         {sortedItems.map((row, idx) => (
           <tr
             key={(row as any).id || (row as any).key || idx}
-            className="border-t border-gray-100 dark:border-gray-700"
+            className="border-t border-muted/40"
           >
             {columns.map((col) => (
               <td key={col.key as string} className="px-4 py-2">

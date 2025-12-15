@@ -36,8 +36,8 @@ export function OptionItem<T>({
 
   return (
     <div
-      className={`flex items-center gap-2 px-2 py-1 hover:bg-blue-100 dark:hover:bg-gray-500 cursor-pointer ${
-        isSelected(opt.value) ? "bg-blue-50 dark:bg-gray-600 font-semibold" : ""
+      className={`flex items-center gap-2 px-2 py-1 hover:bg-dropdown-hover cursor-pointer ${
+        isSelected(opt.value) ? "bg-dropdown-selected font-semibold" : ""
       }`}
       onClick={handleToggle}
     >

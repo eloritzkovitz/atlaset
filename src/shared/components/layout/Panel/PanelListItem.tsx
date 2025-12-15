@@ -42,7 +42,7 @@ export function PanelListItem({
   return (
     <li
       id="panel-list-item"
-      className={`mb-4 flex items-center gap-2 bg-surface-alt rounded-lg px-3 py-2 ${
+      className={`mb-4 flex items-center bg-surface-alt rounded-lg px-3 py-2 ${
         dragged ? "ring-dashed" : ""
       }`}
       draggable={!!onDragStart}
@@ -52,48 +52,53 @@ export function PanelListItem({
       style={{ cursor: dragged ? "grabbing" : "grab" }}
     >
       <ColorDot color={color} size={22} />
-      <strong className="flex-1">{name}</strong>
+      <strong className="flex-1 ml-2">{name}</strong>
       {onToggleVisibility && (
         <ActionButton
+          variant="toggle"
           onClick={onToggleVisibility}
           ariaLabel={visible ? "Hide" : "Show"}
           title={visible ? "Hide" : "Show"}
-          className="mx-1 text-lg text-muted hover:text-muted-hover"
+          className="text-muted hover:text-muted-hover"
           icon={visible ? <FaEye /> : <FaEyeSlash />}
         />
       )}
       {onCenter && (
         <ActionButton
+          variant="toggle"
           onClick={onCenter}
           ariaLabel="Center"
           title="Center"
-          className="mx-1 text-lg text-info hover:text-info-hover"
+          className="text-info hover:text-info-hover"
           icon={<FaCrosshairs />}
         />
       )}
       {onEdit && (
         <ActionButton
+          variant="toggle"
           onClick={onEdit}
           ariaLabel="Edit"
           title="Edit"
-          className="mx-1 text-lg text-info hover:text-info-hover"
+          className="text-info hover:text-info-hover"
           icon={<FaPenToSquare />}
         />
       )}
       {onRemove && (
         <ActionButton
-          onClick={onRemove}
+          variant="toggle"
+          onClick={() => {
+            if (!removeDisabled && onRemove) onRemove();
+          }}
           ariaLabel="Remove"
           title={
             removeDisabled
               ? "This item is managed automatically and cannot be removed"
               : "Remove"
           }
-          className={`mx-1 text-lg text-danger hover:text-danger-hover ${
+          className={`text-danger hover:text-danger-hover" ${
             removeDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
           icon={removeDisabled ? <FaCircleInfo /> : <FaTrash />}
-          disabled={removeDisabled}
         />
       )}
     </li>
