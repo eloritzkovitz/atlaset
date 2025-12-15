@@ -1,5 +1,15 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getAllRegions, getAllSubregions, getAllSovereigntyTypes } from "@features/countries";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+import {
+  getAllRegions,
+  getAllSubregions,
+  getAllSovereigntyTypes,
+} from "@features/countries";
 
 interface CountryDataContextType {
   countries: any[];
@@ -10,14 +20,14 @@ interface CountryDataContextType {
   loading: boolean;
   error: string | null;
   refreshData?: () => void;
-};
+}
 
 export const CountryDataContext = createContext<CountryDataContextType>({
   countries: [],
   currencies: {},
   allRegions: [],
-  allSubregions: [], 
-  allSovereigntyTypes: [], 
+  allSubregions: [],
+  allSovereigntyTypes: [],
   loading: true,
   error: null,
   refreshData: undefined,
@@ -39,22 +49,38 @@ export function CountryDataProvider({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [allRegions, setAllRegions] = useState<string[]>([]);
-  const [allSubregions, setAllSubregions] = useState<string[]>([]);  
+  const [allSubregions, setAllSubregions] = useState<string[]>([]);
   const [allSovereigntyTypes, setAllSovereigntyTypes] = useState<string[]>([]);
 
   // Function to fetch country and currency data
   const fetchData = useCallback(() => {
     setLoading(true);
     setError(null);
-    const countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL || "/data/countries.json";
-    const currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL || "/data/currencies.json";
 
+    // Determine URLs based on environment variables
+    const countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL?.startsWith(
+      "/"
+    )
+      ? import.meta.env.VITE_COUNTRY_DATA_URL
+      : import.meta.env.VITE_COUNTRY_DATA_URL
+      ? `${import.meta.env.BASE_URL}${import.meta.env.VITE_COUNTRY_DATA_URL}`
+      : `${import.meta.env.BASE_URL}data/countries.json`;
+
+    const currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL?.startsWith(
+      "/"
+    )
+      ? import.meta.env.VITE_CURRENCY_DATA_URL
+      : import.meta.env.VITE_CURRENCY_DATA_URL
+      ? `${import.meta.env.BASE_URL}${import.meta.env.VITE_CURRENCY_DATA_URL}`
+      : `${import.meta.env.BASE_URL}data/currencies.json`;
+
+    // Fetch both country and currency data
     Promise.all([
-      fetch(countryDataUrl).then(res => {
+      fetch(countryDataUrl).then((res) => {
         if (!res.ok) throw new Error("Failed to load country data");
         return res.json();
       }),
-      fetch(currencyDataUrl).then(res => {
+      fetch(currencyDataUrl).then((res) => {
         if (!res.ok) throw new Error("Failed to load currency data");
         return res.json();
       }),
@@ -83,7 +109,16 @@ export function CountryDataProvider({
 
   return (
     <CountryDataContext.Provider
-      value={{ countries, currencies, allRegions, allSubregions, allSovereigntyTypes, loading, error, refreshData }}
+      value={{
+        countries,
+        currencies,
+        allRegions,
+        allSubregions,
+        allSovereigntyTypes,
+        loading,
+        error,
+        refreshData,
+      }}
     >
       {children}
     </CountryDataContext.Provider>

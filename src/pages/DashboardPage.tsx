@@ -21,7 +21,7 @@ import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/b
 
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const { countries, loading, error } = useCountryData();  
 
   // Dashboard route state
@@ -54,12 +54,17 @@ export default function DashboardPage() {
   } = useDashboardNavigation(countries, selectedRegion, selectedSubregion);
 
   // Loading and error states
-  if (loading) return <LoadingSpinner />;
+  if (loading || !ready ) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
   
   // Redirect to login if not authenticated
   if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Redirect early if at /dashboard
+  if (location.pathname === "/dashboard") {
+    return <Navigate to="/dashboard/countries/overview" replace />;
   }
 
   return (
