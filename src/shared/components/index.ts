@@ -23,7 +23,6 @@ export { LoadingSpinner } from "./feedback/LoadingSpinner";
 export { SplashScreen } from "./feedback/SplashScreen";
 
 // Form components
-export { FormButton } from "./form/buttons/FormButton";
 export { FormField } from "./form/fields/FormField";
 
 // Form Input components

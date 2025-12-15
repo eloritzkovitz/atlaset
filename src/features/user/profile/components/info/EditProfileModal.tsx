@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  ActionButton,
-  FormButton,
-  FormField,
-  Modal,
-  PanelHeader,
-} from "@components";
+import { ActionButton, FormField, Modal, PanelHeader } from "@components";
 import { FaUser, FaXmark } from "react-icons/fa6";
 
 interface EditProfileModalProps {
@@ -94,12 +88,12 @@ export function EditProfileModal({
           {error && <div className="text-danger">{error}</div>}
           {success && <div className="text-success">{success}</div>}
           <div className="flex gap-4 justify-end mt-6">
-            <FormButton type="button" variant="secondary" onClick={onClose}>
+            <ActionButton type="button" variant="secondary" onClick={onClose}>
               Cancel
-            </FormButton>
-            <FormButton type="submit" variant="primary">
+            </ActionButton>
+            <ActionButton type="submit" variant="primary">
               Save Changes
-            </FormButton>
+            </ActionButton>
           </div>
         </form>
       </div>

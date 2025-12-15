@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { HexColorPicker } from "react-colorful";
 import { FaPalette, FaXmark } from "react-icons/fa6";
 import { hexToRgba } from "@utils/color";
-import { FormButton } from "../../buttons/FormButton";
 import { ActionButton } from "../../../action/ActionButton";
 import { Modal } from "../../../layout/Modal/Modal";
 import { PanelHeader } from "../../../layout/Panel/PanelHeader";
@@ -91,9 +90,9 @@ export function ColorPickerModal({
           </div>
         </div>
         {/* Done Button */}
-        <FormButton type="button" variant="primary" onClick={handleDone}>
+        <ActionButton type="button" variant="primary" onClick={handleDone}>
           Done
-        </FormButton>
+        </ActionButton>
       </div>
     </Modal>
   );

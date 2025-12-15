@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
-import { Checkbox, FormButton } from "@components";
+import { ActionButton, Checkbox } from "@components";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
 interface AuthFormProps {
@@ -100,9 +100,13 @@ export function AuthForm({
       {(error || localError) && (
         <div className="text-danger">{error || localError}</div>
       )}
-      <FormButton type="submit" className="w-full py-2 mt-4 rounded-full">
+      <ActionButton
+        type="submit"
+        variant="primary"
+        className="w-full py-2 mt-4 !rounded-full"
+      >
         {buttonText || (mode === "signup" ? "Register" : "Sign In")}
-      </FormButton>
+      </ActionButton>
       {showGoogleSignInButton && onGoogleSignIn && (
         <>
           <div className="flex items-center my-4">

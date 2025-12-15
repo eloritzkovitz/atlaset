@@ -6,7 +6,7 @@ interface ActionButtonProps {
   type?: ButtonHTMLAttributes<HTMLButtonElement>["type"];
   icon?: ReactNode;
   children?: ReactNode;
-  variant?: "primary" | "secondary" | "action" | "toggle" | "sort";
+  variant?: "primary" | "secondary" | "action" | "toggle" | "sort" | "custom";
   rounded?: boolean;
   className?: string;
   style?: React.CSSProperties;
@@ -51,19 +51,21 @@ export const ActionButton = React.forwardRef<
     ref
   ) => {
     const base =
-      "flex flex-row items-center justify-center gap-2 border-none transition-colors ";
+      "flex flex-row items-center justify-center gap-2 font-semibold border-none transition-colors ";
     const defaultStyle =
       "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg ";
     const variants = {
-      primary: "",
-      secondary: "",
+      primary:
+        "px-4 py-2 rounded-lg bg-primary text-white hover:bg-primary-hover focus:outline-none",
+      secondary:
+        "px-4 py-2 rounded-lg bg-transparent text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
       toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200",
       sort: "h-10 w-10 bg-input hover:bg-input-hover gap-2",
+      custom: "",
     };
-    const buttonClass =
-      className && className.trim().length > 0 ? className : defaultStyle;
+    const buttonClass = variant ? variants[variant] : defaultStyle;
 
     // Only apply 'active' styling for toggle variant
     let stateClass = "";
@@ -72,6 +74,9 @@ export const ActionButton = React.forwardRef<
         ? "dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600"
         : "text-gray-400 bg-transparent";
     }
+    const disabledStyles = disabled
+      ? "opacity-50 cursor-not-allowed pointer-events-none"
+      : "";
 
     return (
       <button
@@ -84,9 +89,9 @@ export const ActionButton = React.forwardRef<
         onTouchStart={onTouchStart}
         onTouchEnd={onTouchEnd}
         onClick={onClick}
-        className={`${base} ${
-          variant ? variants[variant] : buttonClass
-        } ${stateClass} ${rounded ? "rounded-full" : ""}`}
+        className={`${base} ${buttonClass} ${stateClass} ${disabledStyles} ${
+          rounded ? "rounded-full" : ""
+        } ${className || ""}`}
         aria-label={ariaLabel}
         title={title}
         disabled={disabled}

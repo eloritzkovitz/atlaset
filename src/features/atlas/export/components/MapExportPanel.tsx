@@ -1,12 +1,6 @@
 import { useRef, useState } from "react";
 import { FaDownload, FaFileImage, FaXmark } from "react-icons/fa6";
-import {
-  ActionButton,
-  FormButton,
-  Panel,
-  SelectInput,
-  Separator,
-} from "@components";
+import { ActionButton, Panel, SelectInput, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { SvgOptions } from "./SvgOptions";
 import { ImageOptions } from "./ImageOptions";
@@ -123,7 +117,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
 
       {/* Export button */}
       <div className="absolute bottom-0 left-0 w-full px-4 pb-4">
-        <FormButton
+        <ActionButton
           onClick={handleExport}
           className="w-full"
           aria-label={"Export"}
@@ -132,7 +126,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
         >
           <FaFileImage className="inline mr-2" />
           Export
-        </FormButton>
+        </ActionButton>
       </div>
     </Panel>
   );

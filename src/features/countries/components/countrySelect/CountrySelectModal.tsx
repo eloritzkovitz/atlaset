@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaGlobe } from "react-icons/fa6";
 import {
+  ActionButton,
   Checkbox,
-  FormButton,
   FormField,
   Modal,
   PanelHeader,
@@ -41,7 +41,11 @@ export function CountrySelectModal({
   }, [isOpen]);
 
   // Filter options by search (accent-insensitive)
-  const filteredOptions = filterBySearch(options, search, (country) => country.name);
+  const filteredOptions = filterBySearch(
+    options,
+    search,
+    (country) => country.name
+  );
 
   return (
     <Modal
@@ -105,12 +109,12 @@ export function CountrySelectModal({
         </div>
       </FormField>
       <div className="flex justify-end gap-2 mt-4">
-        <FormButton type="button" variant="secondary" onClick={onClose}>
+        <ActionButton type="button" variant="secondary" onClick={onClose}>
           Cancel
-        </FormButton>
-        <FormButton type="button" variant="primary" onClick={onClose}>
+        </ActionButton>
+        <ActionButton type="button" variant="primary" onClick={onClose}>
           Confirm
-        </FormButton>
+        </ActionButton>
       </div>
     </Modal>
   );

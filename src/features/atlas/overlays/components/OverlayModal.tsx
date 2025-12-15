@@ -10,7 +10,6 @@ import {
   ActionButton,
   Chip,
   ColorSelectInput,
-  FormButton,
   FormField,
   Modal,
   ModalActions,
@@ -143,14 +142,14 @@ export function OverlayModal({
                   </Chip>
                 ))
               )}
-              <FormButton
+              <ActionButton
                 type="button"
                 variant="secondary"
                 onClick={() => setCountryModalOpen(true)}
                 disabled={isVisited}
               >
                 <FaPencil className="inline" /> Edit
-              </FormButton>
+              </ActionButton>
             </div>
           </FormField>
 
