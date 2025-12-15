@@ -57,12 +57,12 @@ export function TripModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-[800px] max-h-[80vh] flex flex-row"
+        className="w-[800px] max-h-[90vh] flex flex-row shadow"
         disableClose={countryModalOpen}
       >
         {/* Left: Form */}
         <form
-          className="p-4 flex-1 min-w-0"
+          className="p-4 flex-1 min-w-0 flex flex-col gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             if (!isValid) return;
@@ -73,7 +73,7 @@ export function TripModal({
             <FaSuitcaseRolling />
             {isEditing ? "Edit Trip" : "Add Trip"}
           </h2>
-          <FormField label="Name" className="mb-2">
+          <FormField label="Name">
             <InputBox
               value={trip.name}
               onChange={(e: { target: { value: any } }) =>
@@ -82,7 +82,7 @@ export function TripModal({
               required
             />
           </FormField>
-          <FormField label="Start Date" className="mb-2">
+          <FormField label="Start Date">
             <DateSelect
               value={trip.startDate}
               onChange={(e: { target: { value: any } }) => {
@@ -96,7 +96,7 @@ export function TripModal({
               required
             />
           </FormField>
-          <FormField label="End Date" className="mb-2">
+          <FormField label="End Date">
             <DateSelect
               value={trip.endDate}
               min={trip.startDate || undefined}
@@ -105,7 +105,7 @@ export function TripModal({
               }
             />
           </FormField>
-          <FormField label="Countries" className="mb-2">
+          <FormField label="Countries">
             <button
               type="button"
               className="flex items-center gap-2 px-4 py-2 rounded-full hover:text-blue-500 dark:hover:text-gray-300 font-medium"
@@ -117,7 +117,7 @@ export function TripModal({
                 : "Select Countries"}
             </button>
           </FormField>
-          <FormField label="Full Days" className="mb-2">
+          <FormField label="Full Days">
             <NumberInput
               label=""
               value={trip.fullDays}
@@ -127,7 +127,7 @@ export function TripModal({
               }
             />
           </FormField>
-          <FormField label="Categories" className="mb-2">
+          <FormField label="Categories">
             <DropdownSelectInput
               value={trip.categories || []}
               onChange={(v) =>
@@ -145,7 +145,7 @@ export function TripModal({
               isMulti
             />
           </FormField>
-          <FormField label="Status" className="mb-2">
+          <FormField label="Status">
             <SelectInput
               value={trip.status || ""}
               onChange={(v) =>
@@ -158,7 +158,7 @@ export function TripModal({
               label={""}
             />
           </FormField>
-          <FormField label="Tags" className="mb-2">
+          <FormField label="Tags">
             <DropdownSelectInput
               value={trip.tags || []}
               onChange={(v) =>
@@ -169,7 +169,7 @@ export function TripModal({
               isMulti
             />
           </FormField>
-          <FormField label="Notes" className="mb-2">
+          <FormField label="Notes">
             <input
               value={trip.notes}
               onChange={(e) => onChange({ ...trip, notes: e.target.value })}
