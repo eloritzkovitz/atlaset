@@ -54,6 +54,8 @@
   /* Border colors */
   --color-ring: theme("colors.blue.500");
   --color-dashed: theme("colors.gray.500");
+  /* Ring colors */
+  --color-ring-focus: theme("colors.blue.500");
   /* Chip colors */
   --color-chip-bg: theme("colors.gray.200");
   --color-chip-text: theme("colors.gray.700");
@@ -130,6 +132,8 @@
   /* Border colors */
   --color-ring: theme("colors.blue.500");
   --color-dashed: theme("colors.gray.500");
+  /* Ring colors */
+  --color-ring-focus: theme("colors.blue.500");
   /* Chip colors */
   --color-chip-bg: theme("colors.gray.600");
   --color-chip-text: theme("colors.gray.200");

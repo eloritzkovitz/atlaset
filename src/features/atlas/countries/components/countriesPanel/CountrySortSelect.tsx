@@ -52,7 +52,7 @@ export function CountrySortSelect({
           title="Sort countries"
           variant="sort"
           onClick={open ? () => setOpen(false) : handleOpen}
-          className={open && showRing ? "ring-2 ring-blue-500" : ""}
+          className={open && showRing ? "ring-2 ring-ring-focus" : ""}
           rounded
         />
       </div>

@@ -18,7 +18,7 @@ export function FormField({ label, children, className = "" }: FormFieldProps) {
       return React.cloneElement(child, {
         className: [
           child.props.className,
-          "form-field w-full px-3 py-2 bg-input rounded border-none focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400",
+          "form-field w-full px-3 py-2 bg-input rounded border-none focus:outline-none focus:ring-2 focus:ring-ring-focus",
         ]
           .filter(Boolean)
           .join(" "),

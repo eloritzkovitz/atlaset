@@ -68,6 +68,7 @@ export default {
         "chip-cancelled-bg": "var(--color-chip-cancelled-bg)",
         "chip-cancelled-text": "var(--color-chip-cancelled-text)",
       },
+      ringColor: { focus: "var(--color-ring-focus)" },
     },
   },
   plugins: [],

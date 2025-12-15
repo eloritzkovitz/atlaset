@@ -14,7 +14,7 @@ export function TimelineDot({
       className={`
      rounded-full
     ${selected ? "w-3 h-3 bg-primary" : "w-2 h-2 mt-0.5 bg-muted"}
-    focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
+    focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus
     transition
   `}
       onClick={onClick}

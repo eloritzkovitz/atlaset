@@ -27,7 +27,7 @@ export function NumberInput({
       <div className="relative w-full">
         <InputBox
           type="number"
-          className="pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-blue-400 rounded transition"
+          className="pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-ring-focus rounded transition"
           value={value}
           min={min}
           max={max}

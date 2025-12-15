@@ -8,7 +8,7 @@ interface SearchInputProps {
   onChange: (value: string) => void;
   placeholder?: string;
   className?: string;
-};
+}
 
 export function SearchInput({
   value,
@@ -17,7 +17,7 @@ export function SearchInput({
   className = "",
 }: SearchInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  
+
   // Focus state and keyboard focus ring
   const [isFocused, setIsFocused] = useState(false);
   const showRing = useKeyboardFocusRing();
@@ -47,12 +47,12 @@ export function SearchInput({
   return (
     <div
       className={`relative w-full rounded-full transition-shadow ${
-        isFocused && showRing ? "ring-2 ring-blue-500" : ""
+        isFocused && showRing ? "ring-2 ring-ring-focus" : ""
       }`}
     >
       <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
       <input
-        ref={inputRef}        
+        ref={inputRef}
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
