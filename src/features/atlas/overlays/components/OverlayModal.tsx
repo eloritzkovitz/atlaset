@@ -8,7 +8,8 @@ import {
 } from "react-icons/fa6";
 import {
   ActionButton,
-  FormButton,
+  Chip,
+  ColorSelectInput,
   FormField,
   Modal,
   ModalActions,
@@ -18,7 +19,6 @@ import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal } from "@features/countries";
 import type { Overlay } from "@types";
-import { ColorPickerModal } from "./ColorPickerModal";
 
 interface OverlayModalProps {
   isOpen: boolean;
@@ -72,7 +72,7 @@ export function OverlayModal({
         isOpen={isOpen}
         onClose={handleClose}
         disableClose={countryModalOpen || colorModalOpen}
-        className="bg-white rounded-xl shadow-2xl p-8 min-w-[500px] max-w-[800px] max-h-[90vh] overflow-y-auto"
+        className="rounded-xl shadow-2xl w-[800px] max-h-[90vh] overflow-y-auto"
       >
         <PanelHeader
           title={
@@ -86,7 +86,8 @@ export function OverlayModal({
             onClick={onClose}
             ariaLabel="Close Overlay Modal"
             title="Close"
-            icon={<FaXmark />}
+            icon={<FaXmark className="text-2xl" />}
+            rounded
           />
         </PanelHeader>
         <form
@@ -95,58 +96,40 @@ export function OverlayModal({
             onSave();
           }}
         >
-          {/* Name */}
-          <FormField label="Name:">
-            <input
-              type="text"
-              name="name"
-              value={overlay.name}
-              onChange={(e) => onChange({ ...overlay, name: e.target.value })}
-              disabled={isVisited}
-              className={`form-field ${isVisited ? "opacity-50" : ""}`}
-            />
-          </FormField>
-
-          {/* Color */}
-          <FormField label="Color:">
-            <div className="flex items-center gap-2">
-              <div
-                className="w-8 h-8 rounded border"
-                style={{ background: overlay.color }}
-                title={overlay.color}
-              />
-              <FormButton
-                type="button"
-                variant="secondary"
-                onClick={() => setColorModalOpen(true)}
+          <div className="p-2">
+            {/* Name */}
+            <FormField label="Name:">
+              <input
+                type="text"
+                name="name"
+                value={overlay.name}
+                onChange={(e) => onChange({ ...overlay, name: e.target.value })}
                 disabled={isVisited}
-              >
-                <FaPencil className="inline" /> Edit
-              </FormButton>
-            </div>
-          </FormField>
+                className={`${isVisited ? "opacity-50" : ""}`}
+              />
+            </FormField>
 
-          {/* Countries */}
-          <FormField label="Countries:">
-            <div className="flex items-center gap-2 flex-wrap">
-              {selectedCountries.length === 0 ? (
-                <span className="text-gray-400">No countries selected</span>
-              ) : (
-                selectedCountries.map((country) => (
-                  <span
-                    key={country.isoCode}
-                    className="flex items-center gap-1 bg-blue-100 text-blue-800 dark:bg-gray-500 dark:text-gray-200 px-2 py-1 rounded text-sm mr-1 mb-1"
-                  >
-                    {country.name}
-                    <button
-                      type="button"
-                      className={`ml-auto text-gray-400 ${
-                        isVisited
-                          ? "opacity-50 cursor-not-allowed"
-                          : "hover:text-blue-500 dark:hover:text-gray-300"
-                      }`}
-                      title="Remove"
-                      onClick={() =>
+            {/* Color */}
+            <FormField label="Color:">
+              <ColorSelectInput
+                value={overlay.color}
+                onChange={(color: any) => onChange({ ...overlay, color })}
+                disabled={isVisited}
+                onModalOpenChange={setColorModalOpen}
+              />
+            </FormField>
+
+            {/* Countries */}
+            <FormField label="Countries:">
+              <div className="flex items-center gap-2 flex-wrap">
+                {selectedCountries.length === 0 ? (
+                  <span className="text-muted">No countries selected</span>
+                ) : (
+                  selectedCountries.map((country) => (
+                    <Chip
+                      key={country.isoCode}
+                      removable={true}
+                      onRemove={() =>
                         onChange({
                           ...overlay,
                           countries: overlay.countries.filter(
@@ -156,67 +139,60 @@ export function OverlayModal({
                       }
                       disabled={isVisited}
                     >
-                      <FaXmark />
-                    </button>
-                  </span>
-                ))
-              )}
-              <FormButton
-                type="button"
-                variant="secondary"
-                onClick={() => setCountryModalOpen(true)}
-                disabled={isVisited}
-              >
-                <FaPencil className="inline" /> Edit
-              </FormButton>
-            </div>
-          </FormField>
-
-          {/* Tooltip */}
-          <FormField label="Tooltip:">
-            <input
-              type="text"
-              value={overlay.tooltip || ""}
-              onChange={(e) =>
-                onChange({ ...overlay, tooltip: e.target.value })
-              }
-              disabled={isVisited}
-              className={`form-field ${isVisited ? "opacity-50" : ""}`}
-            />
-          </FormField>
-          <div className="flex items-center justify-between mt-6">
-            {isVisited && (
-              <div className="flex items-center text-base text-gray-400 mr-4">
-                <FaCircleInfo size={24} className="mr-4" />
-                <span>
-                  This overlay is managed automatically based on your trips.
-                </span>
+                      {country.name}
+                    </Chip>
+                  ))
+                )}
+                <ActionButton
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setCountryModalOpen(true)}
+                  disabled={isVisited}
+                >
+                  <FaPencil className="inline" /> Edit
+                </ActionButton>
               </div>
-            )}
-            <ModalActions
-              onCancel={onClose}
-              onSubmit={onSave}
-              submitType="submit"
-              submitIcon={
-                isEditing ? (
-                  <FaFloppyDisk className="inline" />
-                ) : (
-                  <FaLayerGroup className="inline" />
-                )
-              }
-              submitLabel={isEditing ? "Save Changes" : "Add Overlay"}
-              disabled={!isValid || isVisited}
-            />
+            </FormField>
+
+            {/* Tooltip */}
+            <FormField label="Tooltip:">
+              <input
+                type="text"
+                value={overlay.tooltip || ""}
+                onChange={(e) =>
+                  onChange({ ...overlay, tooltip: e.target.value })
+                }
+                disabled={isVisited}
+                className={`${isVisited ? "opacity-50" : ""}`}
+              />
+            </FormField>
+            <div className="flex items-center justify-between mt-6">
+              {isVisited && (
+                <div className="flex items-center text-base text-muted mr-4">
+                  <FaCircleInfo size={24} className="mr-4" />
+                  <span>
+                    This overlay is managed automatically based on your trips.
+                  </span>
+                </div>
+              )}
+              <ModalActions
+                onCancel={onClose}
+                onSubmit={onSave}
+                submitType="submit"
+                submitIcon={
+                  isEditing ? (
+                    <FaFloppyDisk className="inline" />
+                  ) : (
+                    <FaLayerGroup className="inline" />
+                  )
+                }
+                submitLabel={isEditing ? "Save Changes" : "Add Overlay"}
+                disabled={!isValid || isVisited}
+              />
+            </div>
           </div>
         </form>
       </Modal>
-      {/* Color Picker Modal */}
-      <ColorPickerModal
-        isOpen={colorModalOpen}
-        color={overlay.color}
-        onChange={(newColor) => onChange({ ...overlay, color: newColor })}
-        onClose={() => setColorModalOpen(false)}
-      />
       {/* Country Select Modal */}
       <CountrySelectModal
         isOpen={countryModalOpen}
@@ -225,7 +201,6 @@ export function OverlayModal({
         onClose={() => setCountryModalOpen(false)}
         onChange={(newCountries) => {
           onChange({ ...overlay, countries: newCountries });
-          setCountryModalOpen(false);
         }}
         disabled={isVisited}
       />

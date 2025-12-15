@@ -39,7 +39,11 @@ export function Panel({
       role="complementary"
       tabIndex={-1}
       inert={!show}
-      className={`panel ${show ? "panel-show" : "panel-hide"} ${className}`}
+      className={`bg-surface flex flex-col h-screen absolute top-0 left-16 z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow ${
+        show
+          ? "translate-x-0 opacity-100 pointer-events-auto"
+          : "-translate-x-full opacity-0 pointer-events-none"
+      } ${className}`}
       style={{
         width,
         minWidth: width,

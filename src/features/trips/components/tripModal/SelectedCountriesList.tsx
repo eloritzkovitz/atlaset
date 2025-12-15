@@ -14,23 +14,23 @@ export function SelectedCountriesList({
   onRemove,
 }: SelectedCountriesListProps) {
   return (
-    <div className="flex flex-col w-[250px] border-l border-gray-200 dark:border-gray-700 p-4 overflow-y-auto">
-      <div className="font-semibold mb-2 text-gray-700 dark:text-gray-200">
+    <div className="flex flex-col w-[250px] p-4 overflow-y-auto">
+      <div className="font-semibold mb-2">
         Selected Countries
       </div>
       <div className="flex flex-col gap-2">
         {selectedCountries.length === 0 && (
-          <span className="text-gray-400 text-sm">No countries selected</span>
+          <span className="text-muted text-sm">No countries selected</span>
         )}
         {selectedCountries.map((country) => (
           <span
             key={country.isoCode}
-            className="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 dark:bg-gray-700"
+            className="flex items-center gap-1 px-2 py-1 bg-surface-alt rounded-lg"
           >
             <CountryWithFlag isoCode={country.isoCode} name={country.name} />
             <button
               type="button"
-              className="ml-auto text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              className="ml-auto text-muted hover:text-muted-hover"
               title="Remove"
               onClick={() => onRemove(country.isoCode)}
             >

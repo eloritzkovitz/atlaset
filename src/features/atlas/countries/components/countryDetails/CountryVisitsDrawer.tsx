@@ -90,7 +90,7 @@ export function CountryVisitsDrawer({
                     <li key={i}>
                       <span className="font-semibold">{visit.yearRange}</span>
                       {visit.tripName && (
-                        <span className="ml-2 text-gray-400">
+                        <span className="ml-2 text-muted">
                           ({visit.tripName})
                         </span>
                       )}
@@ -98,7 +98,7 @@ export function CountryVisitsDrawer({
                   ))}
                 </ul>
               ) : (
-                <div className="text-gray-400 text-sm">No visits recorded.</div>
+                <div className="text-muted text-sm">No visits recorded.</div>
               )}
             </div>
           </div>

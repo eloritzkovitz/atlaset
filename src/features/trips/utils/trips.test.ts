@@ -1,7 +1,6 @@
 import { mockTrips } from "@test-utils/mockTrips";
 import type { Trip } from "@types";
 import {
-  getTripRowClass,
   isLocalTrip,
   isAbroadTrip,
   isCompletedTrip,
@@ -19,19 +18,6 @@ const yesterday = new Date(now.getTime() - 86400000);
 const tomorrow = new Date(now.getTime() + 86400000);
 
 describe("trips utils", () => {
-  describe("getTripRowClass", () => {
-    it("returns correct class for even/odd and upcoming", () => {
-      const trip = { ...mockTrips[2], startDate: tomorrow.toISOString() };
-      expect(getTripRowClass(trip, 0)).toContain("trips-row-even");
-      expect(getTripRowClass(trip, 1)).toContain("trips-row-odd");
-      expect(getTripRowClass(trip, 0)).toContain("trips-row-upcoming");
-    });
-    it("returns correct class for non-upcoming", () => {
-      const trip = { ...mockTrips[0], startDate: yesterday.toISOString() };
-      expect(getTripRowClass(trip, 0)).not.toContain("trips-row-upcoming");
-    });
-  });
-
   describe("isLocalTrip", () => {
     it("returns true if all codes match home country", () => {
       expect(isLocalTrip(mockTrips[0], "US")).toBe(true);

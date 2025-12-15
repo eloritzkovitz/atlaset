@@ -44,9 +44,9 @@ export function CountriesToolbar({
         ariaLabel="Refresh country data"
         title="Refresh country data"
         icon={<FaArrowsRotate />}
-        className="toolbar-btn-menu"
+        variant="toggle"
       />
-      <ToolbarToggleGroup options={options} buttonClassName="h-8 w-12" />
+      <ToolbarToggleGroup options={options} />
     </div>
   );
 }

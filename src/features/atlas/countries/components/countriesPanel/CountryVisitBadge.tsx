@@ -11,17 +11,17 @@ export function CountryVisitBadge({
 }: CountryVisitBadgeProps) {
   if (direction === "desc") {
     return (
-      <span className="py-0.5 text-gray-400 font-bold" title="Past visit">
+      <span className="py-0.5 text-muted font-bold" title="Past visit">
         ({count})
       </span>
     );
   }
   return revisit ? (
-    <span className="py-0.5 text-yellow-600 font-bold" title="Revisit">
+    <span className="py-0.5 text-warning font-bold" title="Revisit">
       +1 ({count})
     </span>
   ) : (
-    <span className="py-0.5 text-green-600 font-bold" title="First visit">
+    <span className="py-0.5 text-success font-bold" title="First visit">
       NEW
     </span>
   );

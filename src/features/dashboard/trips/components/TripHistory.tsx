@@ -24,20 +24,18 @@ export function TripHistory() {
             mostVisitedCountries.map((country, idx) => (
               <span
                 key={country.isoCode}
-                className="inline-flex items-center gap-1 bg-gray-700 px-2 py-1 rounded-full"
+                className="inline-flex items-center gap-1 bg-surface px-2 py-1 rounded-full"
               >
                 <CountryWithFlag
                   isoCode={country.isoCode}
                   name={country.name}
                 />
-                <span className="text-xs text-gray-400">
-                  ({maxCount} times)
-                </span>
+                <span className="text-xs text-muted">({maxCount} times)</span>
                 {idx < mostVisitedCountries.length - 1}
               </span>
             ))
           ) : (
-            <span className="text-gray-400">—</span>
+            <span className="text-muted">—</span>
           )}
         </div>
       </DashboardCard>
@@ -71,13 +69,13 @@ export function TripHistory() {
                   ) : null;
                 })}
                 <span className="font-semibold">{trip.name}</span>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-muted">
                   {trip.startDate} {trip.endDate && `– ${trip.endDate}`}
                 </span>
               </li>
             ))
           ) : (
-            <li className="text-gray-400">—</li>
+            <li className="text-muted">—</li>
           )}
         </ul>
       </DashboardCard>
@@ -94,11 +92,11 @@ export function TripHistory() {
             {firstTrip.name}
           </div>
         ) : (
-          <div className="text-gray-400">—</div>
+          <div className="text-muted">—</div>
         )}
-        <div className="text-sm text-gray-400">
+        <div className="text-muted text-sm">
           {firstTrip?.startDate}{" "}
-          {firstTrip?.endDate && `– ${firstTrip.endDate}`}
+          {firstTrip?.endDate && `- ${firstTrip.endDate}`}
         </div>
       </DashboardCard>
 
@@ -114,10 +112,10 @@ export function TripHistory() {
             {lastTrip.name}
           </div>
         ) : (
-          <div className="text-gray-400">—</div>
+          <div className="text-muted">—</div>
         )}
-        <div className="text-sm text-gray-400">
-          {lastTrip?.startDate} {lastTrip?.endDate && `– ${lastTrip.endDate}`}
+        <div className="text-muted text-sm">
+          {lastTrip?.startDate} {lastTrip?.endDate && `- ${lastTrip.endDate}`}
         </div>
       </DashboardCard>
     </div>

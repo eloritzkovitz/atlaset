@@ -1,5 +1,10 @@
-import { Link } from "react-router-dom";
-import { AuthForm, useAuthHandlers, AuthLayout } from "@features/user";
+import {
+  AuthCard,
+  AuthFooter,
+  AuthForm,
+  AuthLayout,
+  useAuthHandlers,
+} from "@features/user";
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =
@@ -7,7 +12,7 @@ export default function LoginPage() {
 
   return (
     <AuthLayout>
-      <div className="max-w-md w-full p-6 bg-white rounded shadow">
+      <AuthCard>
         <h2 className="text-2xl font-bold mb-4">Sign in</h2>
         <AuthForm
           mode="signin"
@@ -17,16 +22,12 @@ export default function LoginPage() {
           buttonText="Sign In"
           error={error}
         />
-      </div>
-      <div className="mt-8 text-center text-gray-700">
-        Don't have an account?{" "}
-        <Link
-          to="/signup"
-          className="text-blue-800 dark:text-gray-200 font-semibold underline-offset-4 hover:underline transition-colors"
-        >
-          Sign Up
-        </Link>
-      </div>
+      </AuthCard>
+      <AuthFooter
+        prompt="Don't have an account?"
+        linkText="Sign Up"
+        linkTo="/signup"
+      />
     </AuthLayout>
   );
 }

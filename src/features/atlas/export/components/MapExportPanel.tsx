@@ -1,12 +1,6 @@
 import { useRef, useState } from "react";
 import { FaDownload, FaFileImage, FaXmark } from "react-icons/fa6";
-import {
-  ActionButton,
-  FormButton,
-  Panel,
-  SelectInput,
-  Separator,
-} from "@components";
+import { ActionButton, Panel, SelectInput, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { SvgOptions } from "./SvgOptions";
 import { ImageOptions } from "./ImageOptions";
@@ -74,29 +68,27 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
           onClick={closePanel}
           ariaLabel="Close export menu"
           title="Close"
-        >
-          <FaXmark />
-        </ActionButton>
+          icon={<FaXmark className="text-2xl" />}
+          rounded
+        />
       }
     >
       <div className="pb-20">
         {/* Format selector */}
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-sm font-medium">Format:</span>
-          <div className="export-format-select">
-            <SelectInput
-              label=" "
-              value={format}
-              onChange={(val) => setFormat(val as ExportFormat)}
-              options={EXPORT_FORMAT_OPTIONS}
-            />
-          </div>
+        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
+          Format
         </div>
-
+        <SelectInput
+          label=""
+          value={format}
+          onChange={(val) => setFormat(val as ExportFormat)}
+          options={EXPORT_FORMAT_OPTIONS}
+        />
+        
         <Separator className="mb-4" />
 
         {/* Options section header */}
-        <div className="mb-4 mt-1 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
           Options
         </div>
 
@@ -122,17 +114,18 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       </div>
 
       {/* Export button */}
-      <div className="absolute bottom-0 left-0 w-full px-4 pb-4 bg-white dark:bg-gray-900">
-        <FormButton
+      <div className="absolute bottom-0 left-0 w-full px-4 pb-4">
+        <ActionButton
+          variant="primary"
           onClick={handleExport}
           className="w-full"
           aria-label={"Export"}
           title={"Export"}
           disabled={!svgRef?.current}
         >
-          <FaFileImage className="inline mr-2" />
+          <FaFileImage className="inline" />
           Export
-        </FormButton>
+        </ActionButton>
       </div>
     </Panel>
   );

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { FaTimes } from "react-icons/fa";
-import { FormButton } from "@components";
+import { FaXmark } from "react-icons/fa6";
+import { ActionButton } from "../../action/ActionButton";
 
 interface ModalActionsProps {
   onCancel: () => void;
@@ -11,7 +11,7 @@ interface ModalActionsProps {
   submitLabel: string;
   cancelLabel?: string;
   disabled?: boolean;
-};
+}
 
 export function ModalActions({
   onCancel,
@@ -25,12 +25,17 @@ export function ModalActions({
 }: ModalActionsProps) {
   return (
     <div className="flex justify-end gap-2 mt-4">
-      <FormButton type="button" variant="secondary" onClick={onCancel}>
-        <FaTimes className="inline" /> {cancelLabel}
-      </FormButton>
-      <FormButton type={submitType} variant={submitVariant} onClick={onSubmit} disabled={disabled}>
+      <ActionButton type="button" variant="secondary" onClick={onCancel}>
+        <FaXmark className="inline" /> {cancelLabel}
+      </ActionButton>
+      <ActionButton
+        type={submitType}
+        variant={submitVariant}
+        onClick={onSubmit}
+        disabled={disabled}
+      >
         {submitIcon} {submitLabel}
-      </FormButton>
+      </ActionButton>
     </div>
   );
 }

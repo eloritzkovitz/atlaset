@@ -6,7 +6,6 @@ import {
   type ColumnKey,
 } from "@features/trips/constants/columns";
 import type { TripSortBy, TripSortByKey } from "@features/trips/types";
-import { getTripRowClass } from "@features/trips/utils/trips";
 import { sortTrips } from "@features/trips/utils/tripSort";
 import { useResizableColumns } from "@hooks/useResizableColumns";
 import { useSort } from "@hooks/useSort";
@@ -78,14 +77,14 @@ export function TripsTable({
         ? `${key}-desc`
         : `${key}-asc`) as TripSortBy
     );
-  };  
+  };
 
   // Helper to render resize handle
   const renderResizeHandle = (key: string) => {
     const colKey = key as keyof typeof colWidths;
     return (
       <div
-        className="trips-resize-handle"
+        className="absolute right-0 top-0 w-[6px] h-full cursor-col-resize z-[100] select-none bg-transparent opacity-0"
         onMouseDown={(e) => handleResizeStart(e, colKey)}
       />
     );
@@ -100,7 +99,7 @@ export function TripsTable({
         paddingLeft: `${DEFAULT_SIDEBAR_WIDTH}px`,
       }}
     >
-      <table className="trips-table w-full">
+      <table className="min-w-full w-full bg-surface">
         <colgroup>
           <col style={{ width: `${colWidths.idx}px` }} />
           <col style={{ width: `${colWidths.select}px` }} />
@@ -134,14 +133,13 @@ export function TripsTable({
         {sortedTrips.map((trip, tripIdx) => (
           <tbody key={trip.id} className="trips-group">
             <TripsTableRows
+              key={trip.id}
               trip={trip}
               tripIdx={tripIdx}
               countryData={countryData}
               selected={selectedTripIds.includes(trip.id)}
               onSelect={onSelectTrip}
               onRatingChange={onRatingChange}
-              getTripRowClass={getTripRowClass}
-              handleResizeStart={handleResizeStart}
               onEdit={onEdit}
               onDelete={onDelete}
               showRowNumbers={showRowNumbers}

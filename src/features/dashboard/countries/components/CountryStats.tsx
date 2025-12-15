@@ -65,9 +65,9 @@ export function CountryStats({
       <div>
         <button
           onClick={onBack}
-          className="mb-4 flex items-center gap-2 hover:text-gray-700 dark:hover:text-gray-300"
+          className="mb-4 flex items-center gap-2 hover:text-muted"
         >
-          <FaArrowLeft className="text-base" />
+          <FaArrowLeft />
           Back
         </button>
         <span className="flex items-center gap-4 mb-4">

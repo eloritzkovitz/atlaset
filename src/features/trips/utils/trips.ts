@@ -5,17 +5,6 @@
 import type { Trip, TripStatus } from "@types";
 
 /**
- * Generates a CSS class string for a trip row based on its index and whether it's upcoming.
- * @param trip - The trip object. *
- * @param tripIdx - The index of the trip in the list.
- * @returns A string containing the CSS class names.
- */
-export function getTripRowClass(trip: Trip, tripIdx: number): string {
-  const base = tripIdx % 2 === 0 ? "trips-row-even" : "trips-row-odd";
-  return [base, isUpcomingTrip(trip) ? "trips-row-upcoming" : ""].join(" ");
-}
-
-/**
  * Determines if a trip is local (within the home country).
  * @param trip - The trip object to evaluate.
  * @param homeCountry - The home country code to compare against.

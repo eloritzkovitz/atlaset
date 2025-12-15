@@ -1,7 +1,7 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import { mockTrips } from "@test-utils/mockTrips";
 import type { Country, SovereigntyType } from "@types";
-import { sortCountries } from "./countrySort";
+import { getSortOptions, sortCountries } from "./countrySort";
 
 describe("countrySort utils", () => {
   const countries = mockCountries;
@@ -45,7 +45,7 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by first visit ascending", () => {
-    const sorted = sortCountries(countries, "firstVisit-asc", mockTrips);    
+    const sorted = sortCountries(countries, "firstVisit-asc", mockTrips);
     expect(sorted.map((c) => c.isoCode)).toEqual([
       "GP",
       "CA",
@@ -100,5 +100,31 @@ describe("countrySort utils", () => {
     // @ts-expect-error purposely passing an invalid sortBy
     const result = sortCountries(arr, "not-a-sort", mockTrips);
     expect(result).toEqual(arr);
+  });
+
+  describe("getSortOptions", () => {
+    it("returns basic sort options when visitedOnly is false or undefined", () => {
+      const options = getSortOptions();
+      expect(options).toEqual([
+        { value: "name-asc", label: "Name (ascending)" },
+        { value: "name-desc", label: "Name (descending)" },
+        { value: "iso-asc", label: "ISO 3166 code (ascending)" },
+        { value: "iso-desc", label: "ISO 3166 code (descending)" },
+      ]);
+    });
+
+    it("returns all sort options when visitedOnly is true", () => {
+      const options = getSortOptions(true);
+      expect(options).toEqual([
+        { value: "name-asc", label: "Name (ascending)" },
+        { value: "name-desc", label: "Name (descending)" },
+        { value: "iso-asc", label: "ISO 3166 code (ascending)" },
+        { value: "iso-desc", label: "ISO 3166 code (descending)" },
+        { value: "firstVisit-asc", label: "First visit time (ascending)" },
+        { value: "firstVisit-desc", label: "First visit time (descending)" },
+        { value: "lastVisit-asc", label: "Last visit time (ascending)" },
+        { value: "lastVisit-desc", label: "Last visit time (descending)" },
+      ]);
+    });
   });
 });

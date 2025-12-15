@@ -1,5 +1,6 @@
 import { Card } from "@components";
 import { percent } from "@utils/number";
+import { RegionButton } from "./RegionButton";
 import { regionIcons, defaultRegionIcon } from "../constants/regionIcons";
 import type { SubregionStat } from "../../types";
 
@@ -26,35 +27,28 @@ export function RegionCard({
     <Card loading={loading} skeletonLines={6}>
       {!loading && (
         <>
-          <button
-            className="flex items-center mb-2 text-2xl w-full rounded-lg text-blue-500 hover:bg-blue-50 dark:hover:bg-gray-700 transition cursor-pointer focus:outline-none"
+          <RegionButton
+            icon={regionIcons[region] || defaultRegionIcon}
+            label={region}
+            stats={`${visited}/${total} (${percent(visited, total)})`}
             onClick={onRegionClick}
             title={`Show all countries in ${region}`}
-            aria-label={`Show all countries in ${region}`}
-          >
-            {regionIcons[region] || defaultRegionIcon}
-            <span className="text-2xl text-blue-5600 font-semibold">
-              {region}
-            </span>
-            <span className="ml-auto text-xl text-blue-500 font-bold">
-              {visited}/{total} ({percent(visited, total)})
-            </span>
-          </button>
+            className="mb-2 text-2xl" 
+            labelClassName="text-2xl"
+            statsClassName="text-xl"           
+          />
           <div className="ml-2">
             {subregions.map((sub) => (
-              <button
+              <RegionButton
                 key={sub.name}
-                className="flex items-center w-full text-base py-1 px-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-700 transition"
+                label={sub.name}
+                stats={`${sub.visited}/${sub.total} (${percent(sub.visited, sub.total)})`}
                 onClick={() => onSubregionClick?.(sub.name)}
                 title={`Show countries in ${sub.name}`}
-              >
-                <span className="text-gray-700 dark:text-gray-300">
-                  {sub.name}
-                </span>
-                <span className="ml-auto text-gray-500 dark:text-gray-400">
-                  {sub.visited}/{sub.total} ({percent(sub.visited, sub.total)})
-                </span>
-              </button>
+                className="text-base py-1 px-2"
+                labelClassName="text-text"
+                statsClassName="text-muted"
+              />
             ))}
           </div>
         </>

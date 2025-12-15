@@ -9,7 +9,7 @@ export function UIHintContainer() {
       {hints.map((hint) => (
         <div
           key={hint.id}
-          className="px-6 py-3 rounded-lg shadow-lg text-base bg-gray-800/90 text-gray-100 pointer-events-auto flex items-center"
+          className="px-6 py-3 rounded-xl shadow-lg text-base bg-gray-800/95 text-gray-100 pointer-events-auto flex items-center"
           style={{
             ...hint.style,
             minWidth: 200,
@@ -22,7 +22,7 @@ export function UIHintContainer() {
           </span>
           {hint.dismissable && (
             <button
-              className="ml-3 text-gray-400 hover:text-white pointer-events-auto"
+              className="ml-3 text-muted hover:text-muted-hover pointer-events-auto"
               style={{
                 background: "none",
                 border: "none",

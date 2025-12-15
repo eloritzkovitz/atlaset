@@ -7,7 +7,7 @@ interface AuthLayoutProps {
 
 export function AuthLayout({ children, footer }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen bg-gray-700 flex flex-col justify-between">
+    <div className="min-h-screen bg-bg flex flex-col justify-between">
       {/* Header with branding */}
       <header className="flex flex-start items-center mt-2 ml-8">
         <Branding size={56} />
@@ -20,7 +20,7 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
         {children}
       </main>
       {/* Footer */}
-      <footer className="mt-8 py-4 text-center text-gray-400 text-sm">
+      <footer className="mt-8 py-4 text-center text-muted text-sm">
         {footer}
         <div className="mt-2">© {new Date().getFullYear()} Atlaset</div>
       </footer>

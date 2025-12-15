@@ -4,7 +4,7 @@ export const defaultSettings: Settings = {
   id: "main",
   homeCountry: "",
   colorHomeCountry: false,
-  theme: "light",
+  theme: "dark",
   overlayPalettes: {
     standard: "Default",
     yearly: "Default",

@@ -21,7 +21,7 @@ export function UserAvatar({
     />
   ) : (
     <span
-      className={`flex items-center justify-center rounded-full bg-gray-200 text-gray-500 ${sizeClass} ${className}`}
+      className={`flex items-center justify-center rounded-full bg-input text-muted ${sizeClass} ${className}`}
       style={{ width: size, height: size, fontSize: size * 0.8 }}
     >
       <FaCircleUser style={{ width: size * 0.8, height: size * 0.8 }} />

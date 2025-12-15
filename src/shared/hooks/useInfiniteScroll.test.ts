@@ -1,22 +1,23 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { renderHook } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { useInfiniteScroll } from "./useInfiniteScroll";
 
 describe("useInfiniteScroll", () => {
   let observeMock: any;
   let unobserveMock: any;
+  let disconnectMock: any;
   let IntersectionObserverBackup: any;
 
   beforeEach(() => {
     observeMock = vi.fn();
     unobserveMock = vi.fn();
+    disconnectMock = vi.fn();
     IntersectionObserverBackup = global.IntersectionObserver;
-    global.IntersectionObserver = vi.fn(function () {
-      return {
-        observe: observeMock,
-        unobserve: unobserveMock,
-        disconnect: vi.fn(),
-      };
+    global.IntersectionObserver = vi.fn(function (this: any, cb) {
+      this.observe = observeMock;
+      this.unobserve = unobserveMock;
+      this.disconnect = disconnectMock;
+      this.cb = cb;
     }) as any;
   });
   afterEach(() => {
@@ -26,46 +27,70 @@ describe("useInfiniteScroll", () => {
 
   it("should observe the ref when enabled", () => {
     const callback = vi.fn();
-    const ref = { current: document.createElement("div") };
-    renderHook(() => useInfiniteScroll(ref, callback, true));
-    expect(observeMock).toHaveBeenCalledWith(ref.current);
+    const { result } = renderHook(() => useInfiniteScroll(callback, true));
+    const node = document.createElement("div");
+    act(() => {
+      result.current(node);
+    });
+    expect(observeMock).toHaveBeenCalledWith(node);
   });
 
   it("should not observe the ref when not enabled", () => {
     const callback = vi.fn();
-    const ref = { current: document.createElement("div") };
-    renderHook(() => useInfiniteScroll(ref, callback, false));
+    const { result } = renderHook(() => useInfiniteScroll(callback, false));
+    const node = document.createElement("div");
+    act(() => {
+      result.current(node);
+    });
     expect(observeMock).not.toHaveBeenCalled();
   });
 
-  it("should unobserve on cleanup", () => {
+  it("should disconnect when ref is set to null", () => {
     const callback = vi.fn();
-    const ref = { current: document.createElement("div") };
-    const { unmount } = renderHook(() =>
-      useInfiniteScroll(ref, callback, true)
+    const { result } = renderHook(() => useInfiniteScroll(callback, true));
+    const node = document.createElement("div");
+    act(() => {
+      result.current(node);
+    });
+    act(() => {
+      result.current(null);
+    });
+    expect(disconnectMock).toHaveBeenCalled();
+  });
+
+  it("should disconnect on cleanup", () => {
+    const callback = vi.fn();
+    const { result, unmount } = renderHook(() =>
+      useInfiniteScroll(callback, true)
     );
+    const node = document.createElement("div");
+    act(() => {
+      result.current(node);
+    });
     unmount();
-    expect(unobserveMock).toHaveBeenCalledWith(ref.current);
+    expect(disconnectMock).toHaveBeenCalled();
   });
 
   it("calls callback when entry is intersecting", () => {
-    const callback = vi.fn();
-    const ref = { current: document.createElement("div") };
-
     let observerCallback: any;
-    global.IntersectionObserver = vi.fn(function (cb) {
+    global.IntersectionObserver = vi.fn(function (this: any, cb) {
       observerCallback = cb;
-      return {
-        observe: observeMock,
-        unobserve: unobserveMock,
-        disconnect: vi.fn(),
-      };
+      this.observe = observeMock;
+      this.unobserve = unobserveMock;
+      this.disconnect = disconnectMock;
     }) as any;
 
-    renderHook(() => useInfiniteScroll(ref, callback, true));
+    const callback = vi.fn();
+    const { result } = renderHook(() => useInfiniteScroll(callback, true));
+    const node = document.createElement("div");
+    act(() => {
+      result.current(node);
+    });
 
     // Simulate intersection
-    observerCallback([{ isIntersecting: true }]);
+    act(() => {
+      observerCallback([{ isIntersecting: true }]);
+    });
     expect(callback).toHaveBeenCalled();
   });
 });

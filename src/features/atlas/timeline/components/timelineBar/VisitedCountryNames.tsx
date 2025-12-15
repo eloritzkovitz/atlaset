@@ -25,7 +25,7 @@ export function VisitedCountryNames({
           onClick={isExpanded ? onCollapse : onExpand}
         />
       )}
-      <ul className="list-disc list-inside pl-4 space-y-0.5 text-left text-gray-700 dark:text-gray-300 mb-1 select-none">
+      <ul className="list-disc list-inside pl-4 space-y-0.5 text-left text-muted mb-1 select-none">
         {names
           .slice(0, isExpanded ? names.length : MAX_COUNTRIES_BEFORE_EXPAND)
           .map((name) => (

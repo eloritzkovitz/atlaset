@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaGlobe } from "react-icons/fa6";
 import {
+  ActionButton,
   Checkbox,
-  FormButton,
   FormField,
   Modal,
   PanelHeader,
@@ -41,7 +41,11 @@ export function CountrySelectModal({
   }, [isOpen]);
 
   // Filter options by search (accent-insensitive)
-  const filteredOptions = filterBySearch(options, search, (country) => country.name);
+  const filteredOptions = filterBySearch(
+    options,
+    search,
+    (country) => country.name
+  );
 
   return (
     <Modal
@@ -65,9 +69,9 @@ export function CountrySelectModal({
         />
       </FormField>
       <FormField label="Countries:">
-        <div className="bg-gray-100 h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
+        <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (
-            <div className="text-gray-400 text-center py-8">
+            <div className="text-muted text-center py-8">
               No countries found.
             </div>
           ) : (
@@ -76,7 +80,7 @@ export function CountrySelectModal({
               return (
                 <label
                   key={country.isoCode}
-                  className="flex items-center mb-2 cursor-pointer hover:text-blue-500 dark:hover:text-gray-300"
+                  className="flex items-center mb-2 cursor-pointer hover:text-dropdown-hover"
                 >
                   <Checkbox
                     checked={checked}
@@ -105,12 +109,12 @@ export function CountrySelectModal({
         </div>
       </FormField>
       <div className="flex justify-end gap-2 mt-4">
-        <FormButton type="button" variant="secondary" onClick={onClose}>
+        <ActionButton type="button" variant="secondary" onClick={onClose}>
           Cancel
-        </FormButton>
-        <FormButton type="button" variant="primary" onClick={onClose}>
+        </ActionButton>
+        <ActionButton type="button" variant="primary" onClick={onClose}>
           Confirm
-        </FormButton>
+        </ActionButton>
       </div>
     </Modal>
   );

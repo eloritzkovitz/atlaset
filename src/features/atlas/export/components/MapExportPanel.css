@@ -2,8 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Export format select */
-
 .export-format-select {
   margin: 0 !important;
   display: inline-block;
@@ -17,30 +15,10 @@
   margin-bottom: 0 !important;
 }
 .export-format-select select {
-  min-width: 82px;
+  width: 400px !important;
   height: 2rem;
   padding: 0 0.5rem;
   font-size: 0.95rem;
   display: inline-block;
   margin: 0;
-  background: #f3f4f6;
-}
-
-/* Export button */
-
-.export-btn {
-  @apply flex items-center gap-2 w-full rounded-lg justify-start px-3 py-2 whitespace-nowrap text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800;
-}
-
-.section-title {
-  @apply text-xs font-semibold mb-1 text-gray-600 dark:text-gray-300;
-}
-
-/* Scale button */
-
-.scale-btn {
-  @apply px-2 py-1 bg-transparent rounded-lg text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600;
-}
-.scale-btn-active {
-  @apply bg-gray-200 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-800;
 }

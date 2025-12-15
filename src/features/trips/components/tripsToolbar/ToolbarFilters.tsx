@@ -110,10 +110,10 @@ export function ToolbarFilters({
         onClick={handleClearFilters}
         ariaLabel="Clear Filters"
         title="Clear Filters"
-        className="toolbar-btn-menu"
         icon={<FaRotateLeft />}
+        variant="toggle"
       />
-      <ToolbarToggleGroup options={filterToggles} buttonClassName="h-8 w-8" />
+      <ToolbarToggleGroup options={filterToggles} />
     </>
   );
 }

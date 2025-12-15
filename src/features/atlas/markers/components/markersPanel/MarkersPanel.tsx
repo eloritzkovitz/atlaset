@@ -42,23 +42,22 @@ export function MarkersPanel({
               onClick={onAddMarker}
               ariaLabel="Add Marker"
               title="Add Marker"
-            >
-              <FaPlus />
-            </ActionButton>
+              icon={<FaPlus />}
+              rounded
+            />
             <ActionButton
               onClick={closePanel}
               ariaLabel="Close markers panel"
               title="Close"
-              className="action-btn action-btn-close"
-            >
-              <FaXmark />
-            </ActionButton>
+              icon={<FaXmark className="text-2xl" />}
+              rounded
+            />
           </>
         }
       >
         <div className="p-4">
           {markers.length === 0 ? (
-            <div className="text-sm text-gray-500">No markers yet.</div>
+            <div className="text-muted text-sm">No markers yet.</div>
           ) : (
             <ul className="space-y-2">
               {markers.map((marker, idx) => (

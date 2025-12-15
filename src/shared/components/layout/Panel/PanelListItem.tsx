@@ -1,3 +1,4 @@
+import type { DragEvent } from "react";
 import {
   FaEye,
   FaEyeSlash,
@@ -6,8 +7,8 @@ import {
   FaCrosshairs,
   FaCircleInfo,
 } from "react-icons/fa6";
-import type { DragEvent } from "react";
-import { ActionButton, ColorDot } from "@components";
+import { ActionButton } from "../../action/ActionButton";
+import { ColorDot } from "../../ui/ColorDot";
 
 interface PanelListItemProps {
   color: string;
@@ -40,7 +41,10 @@ export function PanelListItem({
 }: PanelListItemProps) {
   return (
     <li
-      className={`panel-list-item ${dragged ? "ring-dashed" : ""}`}
+      id="panel-list-item"
+      className={`mb-4 flex items-center bg-surface-alt rounded-lg px-3 py-2 ${
+        dragged ? "ring-dashed" : ""
+      }`}
       draggable={!!onDragStart}
       onDragStart={onDragStart}
       onDragOver={handleDragOver}
@@ -48,50 +52,53 @@ export function PanelListItem({
       style={{ cursor: dragged ? "grabbing" : "grab" }}
     >
       <ColorDot color={color} size={22} />
-      <strong className="flex-1">{name}</strong>
+      <strong className="flex-1 ml-2">{name}</strong>
       {onToggleVisibility && (
         <ActionButton
+          variant="toggle"
           onClick={onToggleVisibility}
           ariaLabel={visible ? "Hide" : "Show"}
           title={visible ? "Hide" : "Show"}
-          className={`mx-1 text-lg ${
-            visible ? "text-blue-500" : "text-gray-400"
-          }`}
+          className="text-muted hover:text-muted-hover"
           icon={visible ? <FaEye /> : <FaEyeSlash />}
         />
       )}
       {onCenter && (
         <ActionButton
+          variant="toggle"
           onClick={onCenter}
           ariaLabel="Center"
           title="Center"
-          className="mx-1 text-lg text-blue-600 hover:text-blue-800"
+          className="text-info hover:text-info-hover"
           icon={<FaCrosshairs />}
         />
       )}
       {onEdit && (
         <ActionButton
+          variant="toggle"
           onClick={onEdit}
           ariaLabel="Edit"
           title="Edit"
-          className="mx-1 text-lg text-blue-600 hover:text-blue-800"
+          className="text-info hover:text-info-hover"
           icon={<FaPenToSquare />}
         />
       )}
       {onRemove && (
         <ActionButton
-          onClick={onRemove}
+          variant="toggle"
+          onClick={() => {
+            if (!removeDisabled && onRemove) onRemove();
+          }}
           ariaLabel="Remove"
           title={
             removeDisabled
               ? "This item is managed automatically and cannot be removed"
               : "Remove"
           }
-          className={`mx-1 text-lg text-red-600 hover:text-red-800 ${
+          className={`text-danger hover:text-danger-hover" ${
             removeDisabled ? "opacity-50 cursor-not-allowed" : ""
           }`}
           icon={removeDisabled ? <FaCircleInfo /> : <FaTrash />}
-          disabled={removeDisabled}
         />
       )}
     </li>

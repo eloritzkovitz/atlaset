@@ -8,10 +8,10 @@ interface ProfileFieldProps {
 export function ProfileField({ label, children }: ProfileFieldProps) {
   return (
     <div className="mb-4">
-      <span className="text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">
+      <span className="text-muted text-xs uppercase tracking-wide">
         {label}
       </span>
-      <div className="text-gray-700 dark:text-gray-200 text-lg font-medium">
+      <div className="text-lg font-medium">
         {children}
       </div>
     </div>

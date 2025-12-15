@@ -3,11 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .modal {
-  @apply bg-white rounded-xl shadow-2xl pt-0 px-4 pb-4 overflow-y-auto transition-all duration-300 ease-in-out;
-}
-
-.dark .modal {
-  @apply bg-gray-700 text-white;
+  @apply rounded-xl shadow-2xl pt-0 px-2 pb-4 overflow-y-auto transition-all duration-300 ease-in-out;
+  background: var(--color-surface);
 }
 
 .modal-show {
@@ -23,15 +20,7 @@
   animation: modalFadeOut 0.2s forwards;
 }
 
-.modal-center {
-  @apply fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
-}
-.modal-custom {
-  @apply fixed;
-}
-
 .modal-backdrop {
-  @apply fixed inset-0 z-[9999];
   pointer-events: auto;
 }
 

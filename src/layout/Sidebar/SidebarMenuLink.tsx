@@ -17,14 +17,16 @@ export function SidebarMenuLink({
   end,
 }: SidebarMenuLinkProps) {
   return (
-    <NavLink to={to} end={end}>
+    <NavLink to={to} end={end} tabIndex={-1}>
       {({ isActive }) => (
         <MenuButton
           icon={icon}
           active={isActive}
           ariaLabel={label}
           title={label}
-          className={`text-2xl gap-3 ${!expanded ? "ml-1 mr-1 pr-2" : "w-full"}`}
+          className={`text-2xl gap-3 ${
+            !expanded ? "ml-1 mr-1 pr-2" : "w-full"
+          }`}
         >
           {expanded && label}
         </MenuButton>

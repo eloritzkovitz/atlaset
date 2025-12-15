@@ -21,7 +21,7 @@ interface OverlaysPanelProps {
   onEditOverlay: (overlay: Overlay) => void;
   onAddOverlay: () => void;
   overlayModalOpen: boolean;
-};
+}
 
 export function OverlaysPanel({
   onEditOverlay,
@@ -69,16 +69,16 @@ export function OverlaysPanel({
             onClick={onAddOverlay}
             ariaLabel="Add Overlay"
             title="Add Overlay"
-          >
-            <FaPlus />
-          </ActionButton>
+            icon={<FaPlus />}
+            rounded
+          />
           <ActionButton
             onClick={() => fileInputRef.current?.click()}
             ariaLabel="Import Overlays"
             title="Import Overlays"
-          >
-            <FaFileImport />
-          </ActionButton>
+            icon={<FaFileImport />}
+            rounded
+          />
           <input
             type="file"
             accept="application/json"
@@ -90,17 +90,16 @@ export function OverlaysPanel({
             onClick={() => exportOverlaysToFile(overlays)}
             ariaLabel="Export Overlays"
             title="Export Overlays"
-          >
-            <FaFileExport />
-          </ActionButton>
+            icon={<FaFileExport />}
+            rounded
+          />
           <ActionButton
             onClick={closePanel}
             ariaLabel="Close Overlay Manager"
             title="Close"
-            className="action-btn action-btn-close"
-          >
-            <FaXmark />
-          </ActionButton>
+            icon={<FaXmark className="text-2xl" />}
+            rounded
+          />
         </>
       }
     >

@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  ActionButton,
-  FormButton,
-  FormField,
-  Modal,
-  PanelHeader,
-} from "@components";
+import { ActionButton, FormField, Modal, PanelHeader } from "@components";
 import { FaUser, FaXmark } from "react-icons/fa6";
 
 interface EditProfileModalProps {
@@ -50,7 +44,7 @@ export function EditProfileModal({
 
   return (
     <Modal isOpen={open} onClose={onClose}>
-      <div className="w-full max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-full flex flex-col gap-6">
+      <div className="w-full max-w-2xl mx-auto bg-surface rounded-full flex flex-col gap-6">
         <PanelHeader
           title={
             <span className="flex items-center gap-2 text-2xl font-semibold">
@@ -72,7 +66,6 @@ export function EditProfileModal({
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="w-full px-4 py-3 rounded-full bg-gray-100"
             />
           </FormField>
           <FormField label="New Password">
@@ -80,7 +73,6 @@ export function EditProfileModal({
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-full bg-gray-100"
               placeholder="Leave blank to keep current password"
               autoComplete="new-password"
             />
@@ -90,19 +82,18 @@ export function EditProfileModal({
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-full bg-gray-100"
               autoComplete="new-password"
             />
           </FormField>
-          {error && <div className="text-red-500">{error}</div>}
-          {success && <div className="text-green-600">{success}</div>}
+          {error && <div className="text-danger">{error}</div>}
+          {success && <div className="text-success">{success}</div>}
           <div className="flex gap-4 justify-end mt-6">
-            <FormButton type="button" variant="secondary" onClick={onClose}>
+            <ActionButton type="button" variant="secondary" onClick={onClose}>
               Cancel
-            </FormButton>
-            <FormButton type="submit" variant="primary">
+            </ActionButton>
+            <ActionButton type="submit" variant="primary">
               Save Changes
-            </FormButton>
+            </ActionButton>
           </div>
         </form>
       </div>

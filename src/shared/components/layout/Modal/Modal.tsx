@@ -7,30 +7,23 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useFloatingHover as useFloatingHoverHook } from "@hooks/useFloatingHover";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { usePanelHide } from "@hooks/usePanelHide";
 import "./Modal.css";
 
-type FloatingButtonProps = {
-  onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
-  onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
-};
-
 interface ModalProps {
   isOpen: boolean;
   closing?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
   onClose: () => void;
   children: ReactNode;
-  floatingChildren?: ReactElement<FloatingButtonProps>;
-  useFloatingHover?: boolean;
-  scrollable?: boolean;
+  floatingChildren?: ReactElement;
+  disableScroll?: boolean;
   disableClose?: boolean;
   position?: "center" | "custom";
   className?: string;
-  containerClassName?: string;
   containerZIndex?: number;
-  backdropClassName?: string;
   backdropZIndex?: number;
   style?: React.CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
@@ -40,17 +33,16 @@ interface ModalProps {
 export function Modal({
   isOpen,
   closing,
+  onMouseEnter,
+  onMouseLeave,
   onClose,
   children,
   floatingChildren,
-  useFloatingHover = false,
-  scrollable = false,
+  disableScroll = false,
   disableClose = false,
   position = "center",
   className = "",
-  containerClassName = "",
   containerZIndex,
-  backdropClassName = "",
   backdropZIndex,
   style,
   containerRef,
@@ -63,10 +55,6 @@ export function Modal({
     setModalOpen(isOpen);
     return () => setModalOpen(false);
   }, [isOpen, setModalOpen]);
-
-  // Handle floating hover logic
-  const { hoverHandlers, floatingHandlers, shouldShowFloating } =
-    useFloatingHoverHook(useFloatingHover);
 
   // Handle panel hide logic
   usePanelHide({
@@ -89,6 +77,18 @@ export function Modal({
     }
   );
 
+  // Disable background scroll when modal is open
+  useEffect(() => {
+    if (disableScroll && isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [disableScroll, isOpen]);
+
   // Don't render anything if the modal is not open
   if (!isOpen && !closing) return null;
 
@@ -98,12 +98,10 @@ export function Modal({
         aria-modal="true"
         inert={!isOpen}
         role="dialog"
-        className={`modal-backdrop ${
-          scrollable ? "modal-backdrop-scrollable" : ""
-        } ${backdropClassName ?? ""}`}
+        className={`modal-backdrop fixed inset-0 z-[9999] ${!disableScroll ? "modal-backdrop-scrollable" : ""}`}
         style={{ zIndex: backdropZIndex }}
         onClick={
-          !scrollable
+          !disableScroll
             ? () => {
                 if (!disableClose) onClose();
               }
@@ -112,22 +110,22 @@ export function Modal({
       >
         <div
           ref={modalRef}
-          {...hoverHandlers}
           className={
-            "group " +
-            (position === "center" ? "modal-center " : "modal-custom ") +
+            "group fixed " +
+            (position === "center" ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 " : "") +
             "modal " +
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +
             className +
-            " " +
-            containerClassName
+            " "
           }
           style={{
             ...(position === "custom" ? style : {}),
             zIndex: containerZIndex,
           }}
           onClick={(e) => e.stopPropagation()}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           {children}
         </div>
@@ -135,10 +133,7 @@ export function Modal({
       {isOpen &&
         floatingChildren &&
         isValidElement(floatingChildren) &&
-        (useFloatingHover
-          ? shouldShowFloating &&
-            React.cloneElement(floatingChildren, floatingHandlers)
-          : floatingChildren)}
+        floatingChildren}
     </>,
     document.body
   );

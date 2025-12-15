@@ -45,7 +45,7 @@ export function TripsStats() {
       {/* Trips Overview */}
       <DashboardCard
         icon={FaSuitcaseRolling}
-        iconClass="text-blue-600"
+        iconClass="text-primary"
         title="Trip Overview"
         subtitle="Summary of all your recorded trips"
       >
@@ -53,35 +53,35 @@ export function TripsStats() {
           <div className="text-5xl font-extrabold text-blue-500 mb-2 mt-6">
             {totalTrips}
           </div>
-          <div className="text-sm text-gray-400 mb-4">Total Trips</div>
+          <div className="text-muted text-sm mb-4">Total Trips</div>
           <div className="flex gap-6">
             <div className="flex flex-col items-center">
               <span className="flex text-2xl items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full font-semibold">
                 <FaLocationDot className="text-green-400" />
                 {localTrips.length}
               </span>
-              <span className="text-xs text-gray-500 mt-1">Local</span>
+              <span className="text-muted text-xs mt-1">Local</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="flex text-2xl items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">
                 <FaPlane className="text-purple-400" />
                 {abroadTrips.length}
               </span>
-              <span className="text-xs text-gray-500 mt-1">Abroad</span>
+              <span className="text-muted text-xs mt-1">Abroad</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="flex text-2xl items-center gap-1 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 px-3 py-1 rounded-full font-semibold">
                 <FaCheck className="text-cyan-400" />
                 {completedTrips.length}
               </span>
-              <span className="text-xs text-gray-500 mt-1">Completed</span>
+              <span className="text-muted text-xs mt-1">Completed</span>
             </div>
             <div className="flex flex-col items-center">
               <span className="flex text-2xl items-center gap-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300 px-3 py-1 rounded-full font-semibold">
                 <FaCalendarDays className="text-yellow-400" />
                 {upcomingTrips.length}
               </span>
-              <span className="text-xs text-gray-500 mt-1">Upcoming</span>
+              <span className="text-muted text-xs mt-1">Upcoming</span>
             </div>
           </div>
         </div>
@@ -132,7 +132,7 @@ export function TripsStats() {
           {longestTrip ? `${longestTrip} days` : "—"}
         </div>
         {longestTripName && (
-          <div className="text-sm text-gray-400">
+          <div className="text-muted text-sm">
             <span className="font-semibold">{longestTripName}</span>
             {longestTripRange && <span> &middot; {longestTripRange}</span>}
           </div>
@@ -152,7 +152,7 @@ export function TripsStats() {
             : "—"}
         </div>
         {shortestTripName && (
-          <div className="text-sm text-gray-400">
+          <div className="text-muted text-sm">
             <span className="font-semibold">{shortestTripName}</span>
             {shortestTripRange && <span> &middot; {shortestTripRange}</span>}
           </div>

@@ -1,28 +1,74 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export function useFloatingHover(useFloatingHover: boolean) {
+type FloatingHoverMode = "menu" | "button";
+
+/**
+ * Manages hover state for floating elements (like menus) that should appear
+ * when either the trigger element or the floating element itself is hovered.
+ * @param useFloatingHover Whether to enable floating hover behavior
+ * @param delay Delay in milliseconds before hiding the floating element after hover out
+ * @param mode Optional mode parameter
+ * @returns Handlers and state for managing floating hover behavior
+ */
+export function useFloatingHover(
+  useFloatingHover: boolean,
+  delay = 150,
+  mode: FloatingHoverMode = "menu"
+) {
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
+  const closeTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Handlers for hover events
+  // Clear any existing close timeout
+  const clearCloseTimeout = () => {
+    if (closeTimeout.current) {
+      clearTimeout(closeTimeout.current);
+      closeTimeout.current = null;
+    }
+  };
+
+  // Handlers for hover events on the floating element
   const hoverHandlers = useFloatingHover
     ? {
-        onMouseEnter: () => setIsHovered(true),
-        onMouseLeave: () => setIsHovered(false),
+        onMouseEnter: () => {
+          clearCloseTimeout();
+          setIsHovered(true);
+        },
+        onMouseLeave: () => {
+          closeTimeout.current = setTimeout(() => setIsHovered(false), delay);
+        },
       }
     : {};
 
-  // Handlers for floating button hover events
+  // Handlers for hover events on the trigger/button element
   const floatingHandlers = useFloatingHover
     ? {
-        onMouseEnter: () => setIsButtonHovered(true),
-        onMouseLeave: () => setIsButtonHovered(false),
+        onMouseEnter: () => {
+          clearCloseTimeout();
+          setIsButtonHovered(true);
+        },
+        onMouseLeave: () => {
+          closeTimeout.current = setTimeout(
+            () => setIsButtonHovered(false),
+            delay
+          );
+        },
       }
     : {};
 
-  // Determine if the floating element should be shown
+  // Reset isButtonHovered on unmount or when isHovered changes
+  useEffect(() => {
+    if (mode === "button" && !isHovered && isButtonHovered) {
+      setIsButtonHovered(false);
+    }
+  }, [isHovered, isButtonHovered, useFloatingHover, mode]);
+
   const shouldShowFloating =
-    !useFloatingHover || (useFloatingHover && (isHovered || isButtonHovered));
+    !useFloatingHover ||
+    (useFloatingHover &&
+      (mode === "menu"
+        ? isHovered || isButtonHovered
+        : isHovered || isButtonHovered));
 
   return { hoverHandlers, floatingHandlers, shouldShowFloating };
 }

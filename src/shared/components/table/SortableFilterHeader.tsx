@@ -1,6 +1,6 @@
 import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa6";
-import { SearchInput } from "@components";
 import type { SortKey } from "@types";
+import { SearchInput } from "../form/inputs/SearchInput";
 
 interface SortableFilterHeaderProps<T> {
   label: string;

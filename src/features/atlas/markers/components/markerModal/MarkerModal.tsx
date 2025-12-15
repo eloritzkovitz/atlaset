@@ -1,14 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import { FaMapPin, FaSave, FaTimes } from "react-icons/fa";
+import React, { useEffect, useRef, useState } from "react";
+import { FaMapPin, FaFloppyDisk, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
+  ColorSelectInput,
   FormField,
   Modal,
   ModalActions,
   PanelHeader,
 } from "@components";
 import type { Marker } from "@types";
-import "./MarkerModal.css";
 
 interface MarkerModalProps {
   marker: Marker | null;
@@ -28,6 +28,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
   isEditing,
 }) => {
   const nameRef = useRef<HTMLInputElement>(null);
+  const [colorModalOpen, setColorModalOpen] = useState(false);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -45,6 +46,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       onClose={onClose}
       position="center"
       className="modal min-w-[900px] max-w-[1200px] max-h-[90vh]"
+      disableClose={colorModalOpen}
     >
       <PanelHeader
         title={
@@ -54,9 +56,12 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           </>
         }
       >
-        <ActionButton onClick={onClose} ariaLabel="Close" title="Close">
-          <FaTimes />
-        </ActionButton>
+        <ActionButton
+          onClick={onClose}
+          ariaLabel="Close"
+          title="Close"
+          icon={<FaXmark className="text-2xl" />}
+        />
       </PanelHeader>
       <form
         className="space-y-4"
@@ -65,77 +70,76 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           onSave();
         }}
       >
-        <FormField label="Name">
-          <input
-            ref={nameRef}
-            name="name"
-            className="form-field"
-            placeholder="Marker name"
-            required
-            value={marker?.name || ""}
-            onChange={(e) =>
-              onChange({
-                ...marker!,
-                name: e.target.value,
-                // For add: ensure coords are set
-                longitude: marker?.longitude ?? 0,
-                latitude: marker?.latitude ?? 0,
-              })
-            }
-            autoFocus
-          />
-        </FormField>
-        <FormField label="Color">
-          <input
-            name="color"
-            type="color"
-            className="w-8 h-8 p-0 border rounded mt-1"
-            value={marker?.color || "#e53e3e"}
-            onChange={(e) =>
-              onChange({
-                ...marker!,
-                color: e.target.value,
-                longitude: marker?.longitude ?? 0,
-                latitude: marker?.latitude ?? 0,
-              })
-            }
-          />
-        </FormField>
-        <FormField label="Description">
-          <input
-            name="description"
-            className="form-field"
-            placeholder="Description (optional)"
-            value={marker?.description || ""}
-            onChange={(e) =>
-              onChange({
-                ...marker!,
-                description: e.target.value,
-                longitude: marker?.longitude ?? 0,
-                latitude: marker?.latitude ?? 0,
-              })
-            }
-          />
-        </FormField>
-        {marker && !isEditing && (
-          <div className="text-xs text-gray-500">
-            Location: {marker.longitude.toFixed(4)}, {marker.latitude.toFixed(4)}
+        <div className="p-2">
+          <FormField label="Name">
+            <input
+              ref={nameRef}
+              name="name"
+              placeholder="Marker name"
+              required
+              value={marker?.name || ""}
+              onChange={(e) =>
+                onChange({
+                  ...marker!,
+                  name: e.target.value,
+                  longitude: marker?.longitude ?? 0,
+                  latitude: marker?.latitude ?? 0,
+                })
+              }
+              autoFocus
+            />
+          </FormField>
+          <FormField label="Color">
+            <ColorSelectInput
+              value={marker.color || "#e53e3e"}
+              onChange={(color) =>
+                onChange({
+                  ...marker,
+                  color,
+                  longitude: marker.longitude ?? 0,
+                  latitude: marker.latitude ?? 0,
+                })
+              }
+              onModalOpenChange={setColorModalOpen}
+              disabled={false}
+            />
+          </FormField>
+          <FormField label="Description">
+            <input
+              name="description"
+              placeholder="Description (optional)"
+              value={marker?.description || ""}
+              onChange={(e) =>
+                onChange({
+                  ...marker!,
+                  description: e.target.value,
+                  longitude: marker?.longitude ?? 0,
+                  latitude: marker?.latitude ?? 0,
+                })
+              }
+            />
+          </FormField>
+          {marker && !isEditing && (
+            <div className="text-xs text-muted">
+              Location: {marker.longitude.toFixed(4)},{" "}
+              {marker.latitude.toFixed(4)}
+            </div>
+          )}
+          <div className="flex justify-end gap-2 mt-4">
+            <ModalActions
+              onCancel={onClose}
+              onSubmit={onSave}
+              submitType="submit"
+              submitIcon={
+                isEditing ? (
+                  <FaFloppyDisk className="inline" />
+                ) : (
+                  <FaMapPin className="inline" />
+                )
+              }
+              submitLabel={isEditing ? "Save Changes" : "Add Marker"}
+            />
           </div>
-        )}
-        <div className="flex justify-end gap-2 mt-4">
-          <ModalActions
-            onCancel={onClose}
-            onSubmit={onSave}
-            submitType="submit"
-            submitIcon={
-              isEditing ? (
-                <FaSave className="inline" />
-              ) : (
-                <FaMapPin className="inline" />
-              )
-            }
-            submitLabel={isEditing ? "Save Changes" : "Add Marker"}
-          />
         </div>
       </form>
     </Modal>

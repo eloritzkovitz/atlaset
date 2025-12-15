@@ -1,4 +1,4 @@
-import { FormButton } from "@components";
+import { ActionButton } from "@components";
 
 interface GoogleSignInButtonProps {
   onClick: () => void;
@@ -10,10 +10,10 @@ export function GoogleSignInButton({
   text = "Sign in with Google",
 }: GoogleSignInButtonProps) {
   return (
-    <FormButton
+    <ActionButton
       onClick={onClick}
       variant="secondary"
-      className="w-full flex items-center justify-center gap-2 rounded-full bg-gray-100 hover:bg-gray-200"
+      className="w-full !rounded-full !bg-secondary !hover:bg-secondary-hover text-gray-700"
       type="button"
     >
       <svg className="w-5 h-5" viewBox="0 0 48 48" aria-hidden="true">
@@ -37,7 +37,7 @@ export function GoogleSignInButton({
           <path fill="none" d="M0 0h48v48H0z" />
         </g>
       </svg>
-      <span className="font-medium text-gray-700">{text}</span>
-    </FormButton>
+      <span className="font-medium">{text}</span>
+    </ActionButton>
   );
 }

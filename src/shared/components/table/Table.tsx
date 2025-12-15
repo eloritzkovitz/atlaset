@@ -1,8 +1,8 @@
 import React from "react";
+import { useSort } from "@hooks/useSort";
 import type { SortKey } from "@types";
 import { sortItems } from "@utils/sort";
 import { SortableFilterHeader } from "./SortableFilterHeader";
-import { useSort } from "@hooks/useSort";
 
 export interface TableColumn<T> {
   key: SortKey<T>;
@@ -51,7 +51,7 @@ export function Table<T>({
   return (
     <table className={`min-w-full text-sm ${className}`}>
       <thead>
-        <tr className="text-gray-400">
+        <tr className="text-muted">
           {columns.map((col) => (
             <th key={col.key as string} className="text-left py-1">
               {col.sortable ? (
@@ -81,7 +81,7 @@ export function Table<T>({
         {sortedItems.map((row, idx) => (
           <tr
             key={(row as any).id || (row as any).key || idx}
-            className="border-t border-gray-100 dark:border-gray-700"
+            className="border-t border-muted/40"
           >
             {columns.map((col) => (
               <td key={col.key as string} className="px-4 py-2">

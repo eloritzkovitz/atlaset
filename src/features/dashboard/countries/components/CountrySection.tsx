@@ -80,16 +80,17 @@ export function CountrySection({
           title={showVisitedOnly ? "Show All Countries" : "Show Visited Only"}
           icon={
             showVisitedOnly ? (
-              <span className="flex items-center gap-1 font-semibold text-sm px-2">
-                <FaGlobe className="text-base" />
+              <span className="flex items-center gap-1 font-semibold text-sm">
+                <FaGlobe />
               </span>
             ) : (
-              <span className="flex items-center gap-1 font-semibold text-sm px-2">
-                <FaCheckCircle className="text-base" />
+              <span className="flex items-center gap-1 font-semibold text-sm">
+                <FaCheckCircle />
               </span>
             )
           }
-          className="h-10 w-10 flex items-center justify-center rounded-full text-2xl transition hover:bg-gray-700 dark:hover:bg-gray-600"
+          variant="toggle"
+          rounded
         />
         <ActionButton
           onClick={handleToggle}
@@ -100,7 +101,8 @@ export function CountrySection({
             viewMode === "grid" ? "Switch to List View" : "Switch to Grid View"
           }
           icon={viewMode === "grid" ? <FaList /> : <FaThLarge />}
-          className="h-10 w-10 flex items-center justify-center rounded-full text-2xl transition hover:bg-gray-700 dark:hover:bg-gray-600"
+          variant="toggle"
+          rounded
         />
       </div>
       <CountryDisplayPanel

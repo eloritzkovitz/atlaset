@@ -108,7 +108,7 @@ export default function TripsPage() {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-white">
+    <div className="min-h-screen w-full flex flex-col">
       {/* Toolbar */}
       <TripsToolbar
         trips={filteredTrips}
@@ -137,7 +137,7 @@ export default function TripsPage() {
         {loading ? (
           <SplashScreen />
         ) : trips.length === 0 ? (
-          <div className="flex flex-1 items-center justify-center min-h-[300px] text-gray-500 text-lg">
+          <div className="flex flex-1 items-center justify-center min-h-[300px] text-muted text-lg">
             No trips yet.
           </div>
         ) : (

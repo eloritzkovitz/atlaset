@@ -1,6 +1,34 @@
 /**
- * Utility functions for color manipulation.
+ * @file Utility functions for color manipulation.
  */
+
+/**
+ * Converts a hex color string to an rgba string.
+ * @param hex - The hex color string.
+ * @param alpha - The alpha value (default 1).
+ * @returns The rgba color string.
+ */
+export function hexToRgba(hex: string, alpha = 1): string {
+  let r = 0,
+    g = 0,
+    b = 0;
+  if (typeof hex !== "string") return `rgba(0, 0, 0, ${alpha})`;
+  if (hex.startsWith("#")) hex = hex.trim();
+
+  if (/^#[0-9A-Fa-f]{3}$/.test(hex)) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    r = parseInt(hex.slice(1, 3), 16);
+    g = parseInt(hex.slice(3, 5), 16);
+    b = parseInt(hex.slice(5, 7), 16);
+  } else {
+    // Invalid hex, return black
+    return `rgba(0, 0, 0, ${alpha})`;
+  }
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 /**
  * Parses an RGBA color string into its component values.

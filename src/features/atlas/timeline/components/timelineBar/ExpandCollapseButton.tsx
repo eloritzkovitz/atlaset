@@ -14,7 +14,7 @@ export function ExpandCollapseButton({
   return (
     <button
       type="button"
-      className="flex items-center text-xs text-gray-600 dark:text-gray-400 underline cursor-pointer pointer-events-auto ml-4"
+      className="flex items-center text-xs text-muted underline cursor-pointer pointer-events-auto ml-4"
       onClick={(e) => {
         e.stopPropagation();
         onClick();

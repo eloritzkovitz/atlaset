@@ -63,7 +63,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen">
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
         <DashboardPanelMenu
           selectedPanel={menuSelectedPanel}

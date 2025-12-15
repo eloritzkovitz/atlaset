@@ -6,7 +6,6 @@ import { OverlayPaletteSettingsGroup } from "./colors/OverlayPaletteSettingsGrou
 import { HomeCountrySelect } from "./home/HomeCountrySelect";
 import { MapSettingsGroup } from "./map/MapSettingsGroup";
 import { ThemeSettingsGroup } from "./theme/ThemeSettingsGroup";
-import "./Settings.css";
 
 export function SettingsPanel() {
   const { showSettings, closePanel } = useUI();
@@ -27,10 +26,9 @@ export function SettingsPanel() {
           onClick={closePanel}
           ariaLabel="Close settings panel"
           title="Close"
-          className="action-btn action-btn-close"
-        >
-          <FaXmark />
-        </ActionButton>
+          icon={<FaXmark className="text-2xl" />}
+          rounded
+        />
       }
     >
       <HomeCountrySelect />

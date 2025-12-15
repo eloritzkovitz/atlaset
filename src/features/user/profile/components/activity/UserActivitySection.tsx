@@ -27,9 +27,9 @@ export function UserActivitySection() {
     <div>
       <h3 className="text-lg font-semibold mb-4">Activity</h3>
       {loading && activity.length === 0 ? (
-        <div className="text-gray-400">Loading...</div>
+        <div className="text-muted">Loading...</div>
       ) : activity.length === 0 ? (
-        <div className="text-gray-400">No activity yet.</div>
+        <div className="text-muted">No activity yet.</div>
       ) : (
         <>
           <ul className="space-y-4">
@@ -40,7 +40,7 @@ export function UserActivitySection() {
           {hasMore && !loading && activity.length > 0 && <div ref={loaderRef} />}
           {loading && (
             <div className="flex justify-center mt-4">
-              <span className="text-gray-400">Loading...</span>
+              <span className="text-muted">Loading...</span>
             </div>
           )}
         </>

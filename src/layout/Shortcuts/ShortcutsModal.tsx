@@ -23,7 +23,7 @@ export function ShortcutsModal() {
       isOpen={showShortcuts}
       onClose={closeShortcuts}
       position="center"
-      className="min-w-[1000px] max-w-[1200px] max-h-[90vh] bg-white rounded-xl shadow-xl p-4 overflow-y-auto"
+      className="min-w-[1000px] max-w-[1200px] max-h-[90vh]"
     >
       <PanelHeader
         title={
@@ -38,10 +38,9 @@ export function ShortcutsModal() {
           onClick={closeShortcuts}
           ariaLabel="Close"
           title="Close"
-          className="action-btn action-btn-close"
-        >
-          <FaXmark />
-        </ActionButton>
+          icon={<FaXmark className="text-2xl" />}
+          rounded
+        />
       </PanelHeader>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
         {categoryColumns.map((categories, colIdx) => (

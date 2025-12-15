@@ -2,6 +2,73 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@theme {
+  --color-bg: theme("colors.white");
+  /* Sidebar colors */
+  --color-sidebar: theme("colors.gray.100");
+  --color-sidebar-btn-hover: theme("colors.gray.200");
+  /* Primary colors */
+  --color-primary: theme("colors.blue.800");
+  --color-primary-hover: theme("colors.blue.700");
+  --color-primary-active: theme("colors.blue.600");
+  /* Secondary colors */
+  --color-secondary: theme("colors.gray.100");
+  --color-secondary-hover: theme("colors.gray.200");
+  --color-secondary-active: theme("colors.gray.300");
+  /* Action colors */
+  --color-action: theme("colors.gray.200");
+  --color-action-hover: theme("colors.gray.300");
+  --color-action-text: theme("colors.gray.600");
+  --color-action-text-hover: theme("colors.gray.700");
+  /* Header action colors */
+  --color-action-header: theme("colors.gray.600");
+  --color-action-header-hover: theme("colors.gray.200");
+  --color-action-header-hover-text: theme("colors.gray.700");
+  /* Surface colors */
+  --color-surface: theme("colors.white");
+  --color-surface-alt: theme("colors.gray.50");
+  --color-surface-hover: theme("colors.gray.100");
+  /* Input colors */
+  --color-input: theme("colors.gray.100");
+  --color-input-hover: theme("colors.gray.200");
+  /* Dropdown colors */
+  --color-dropdown-hover: theme("colors.blue.100");
+  --color-dropdown-selected: theme("colors.blue.200");
+  /* Table colors */
+  --color-table-row: theme("colors.white");
+  --color-table-row-alt: theme("colors.gray.50");  
+  --color-table-row-hover: theme("colors.gray.100");
+  --color-table-row-upcoming: theme("colors.yellow.100");
+  /* Text color */
+  --color-text: theme("colors.gray.700");
+  --color-success: theme("colors.green.600");
+  --color-success-hover: theme("colors.green.700");
+  --color-warning: theme("colors.yellow.600");  
+  --color-warning-hover: theme("colors.yellow.700");
+  --color-danger: theme("colors.red.600");
+  --color-danger-hover: theme("colors.red.700");
+  --color-info: theme("colors.blue.600");
+  --color-info-hover: theme("colors.blue.700");
+  --color-muted: theme("colors.gray.500");
+  --color-muted-hover: theme("colors.gray.600");
+  /* Border colors */
+  --color-border: theme("colors.gray.300");
+  --color-dashed: theme("colors.gray.500");
+  /* Ring colors */
+  --color-ring-focus: theme("colors.blue.500");
+  /* Chip colors */
+  --color-chip-bg: theme("colors.gray.200");
+  --color-chip-text: theme("colors.gray.700");
+  --color-chip-planned-bg: theme("colors.yellow.100");
+  --color-chip-planned-text: theme("colors.yellow.900");
+  --color-chip-inprogress-bg: theme("colors.orange.100");
+  --color-chip-inprogress-text: theme("colors.orange.900");
+  --color-chip-completed-bg: theme("colors.green.100");
+  --color-chip-completed-text: theme("colors.green.900");
+  --color-chip-cancelled-bg: theme("colors.red.100");
+  --color-chip-cancelled-text: theme("colors.red.900");
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -13,8 +80,75 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.dark {
+  --color-bg: theme("colors.gray.900");
+  /* Sidebar colors */
+  --color-sidebar: theme("colors.gray.800");
+  --color-sidebar-btn-hover: theme("colors.gray.600");
+  /* Primary colors */
+  --color-primary: theme("colors.blue.800");
+  --color-primary-hover: theme("colors.blue.700");
+  --color-primary-active: theme("colors.blue.600");
+  /* Secondary colors */
+  --color-secondary: theme("colors.gray.100");
+  --color-secondary-hover: theme("colors.gray.200");
+  --color-secondary-active: theme("colors.gray.300");
+  /* Action colors */
+  --color-action: theme("colors.gray.800");
+  --color-action-hover: theme("colors.gray.600");
+  --color-action-text: theme("colors.gray.300");
+  --color-action-text-hover: theme("colors.white");
+  /* Header action colors */
+  --color-action-header: theme("colors.gray.200");
+  --color-action-header-hover: theme("colors.gray.500");
+  --color-action-header-hover-text: theme("colors.gray.300");
+  /* Surface colors */
+  --color-surface: theme("colors.gray.700");
+  --color-surface-alt: theme("colors.gray.800");
+  --color-surface-hover: theme("colors.gray.600");
+  /* Input colors */
+  --color-input: theme("colors.gray.600");
+  --color-input-hover: theme("colors.gray.500");
+  /* Dropdown colors */
+  --color-dropdown-hover: theme("colors.blue.500");
+  --color-dropdown-selected: theme("colors.blue.600");
+  /* Table colors */
+  --color-table-row: theme("colors.gray.800");
+  --color-table-row-alt: theme("colors.gray.900");
+  --color-table-row-hover: theme("colors.gray.600");
+  --color-table-row-upcoming: theme("colors.yellow.800");
+  /* Text color */
+  --color-text: theme("colors.gray.300");
+  --color-success: theme("colors.green.400");
+  --color-success-hover: theme("colors.green.500");
+  --color-warning: theme("colors.yellow.400"); 
+  --color-warning-hover: theme("colors.yellow.500"); 
+  --color-danger: theme("colors.red.400");
+  --color-danger-hover: theme("colors.red.500");
+  --color-info: theme("colors.blue.400");
+  --color-info-hover: theme("colors.blue.500");
+  --color-muted: theme("colors.gray.400");
+  --color-muted-hover: theme("colors.gray.500");
+  /* Border colors */
+  --color-border: theme("colors.gray.500");
+  --color-dashed: theme("colors.gray.500");
+  /* Ring colors */
+  --color-ring-focus: theme("colors.blue.500");
+  /* Chip colors */
+  --color-chip-bg: theme("colors.gray.500");
+  --color-chip-text: theme("colors.gray.200");
+  --color-chip-planned-bg: theme("colors.yellow.700");
+  --color-chip-planned-text: theme("colors.yellow.100");
+  --color-chip-inprogress-bg: theme("colors.orange.700");
+  --color-chip-inprogress-text: theme("colors.orange.100");
+  --color-chip-completed-bg: theme("colors.green.700");
+  --color-chip-completed-text: theme("colors.green.100");
+  --color-chip-cancelled-bg: theme("colors.red.700");
+  --color-chip-cancelled-text: theme("colors.red.100");
+}
+
 a {
-  color: theme("colors.blue.800");
+  color: theme("colors.gray.500");
   text-decoration: none;
   transition: color 0.25s;
 }
@@ -23,32 +157,15 @@ a {
   color: theme("colors.gray.200");
 }
 
-body {  
+body {
   background: theme("colors.gray.100");
   overflow: hidden;
 }
 
 .dark body {
-  background: theme("colors.gray.600");
   color: theme("colors.gray.200");
   scrollbar-color: #4a5568 #2b3342;
   scrollbar-width: thin;
-}
-
-.bg-gray-100 {
-  background-color: theme("colors.gray.100");
-}
-
-.dark .bg-gray-100 {
-  background-color: theme("colors.gray.600");
-}
-
-.dark .bg-white {
-  background-color: theme("colors.gray.700");
-}
-
-.dark .text-gray-700 {
-  color: theme("colors.gray.300");
 }
 
 h1 {
@@ -108,11 +225,6 @@ body::-webkit-scrollbar-thumb {
 }
 .dark .filter-select::-webkit-scrollbar-thumb {
   background: theme("colors.gray.600");
-}
-
-/* Separator styles */
-.separator {
-  @apply border-b border-gray-200 dark:border-gray-600;
 }
 
 /* Shadow styles */

@@ -4,33 +4,44 @@ import { ActionButton, ConfirmModal } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useTripIO } from "@features/trips/hooks/useTripsIO";
 import { useClickOutside } from "@hooks/useClickOutside";
+import { useMenuPosition } from "@hooks/useMenuPosition";
 import type { Trip } from "@types";
-import { ExportMenu } from "./ExportMenu";
+import { TripsExportMenu } from "./TripsExportMenu";
 
 interface ToolbarImportExportProps {
   trips: Trip[];
-};
+}
 
-export function ToolbarImportExport({
-  trips,
-}: ToolbarImportExportProps) {
+export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
   const { addTrip } = useTrips();
-  const exportMenuRef = useRef<HTMLDivElement>(null);
+  const exportBtnRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
   const [showImportNotice, setShowImportNotice] = React.useState(false);
   const [showExportMenu, setShowExportMenu] = React.useState(false);
 
   // Import/export logic
-  const {
-    fileInputRef,
-    handleFileChange,
-    handleExportCSV,
-    handleExportJSON,
-  } = useTripIO(trips, addTrip);
+  const { fileInputRef, handleFileChange, handleExportCSV, handleExportJSON } =
+    useTripIO(trips, addTrip);
 
   // Close export menu on outside click
-  useClickOutside([exportMenuRef as React.RefObject<HTMLElement>], () =>
-    setShowExportMenu(false)
-  );  
+  useClickOutside(
+    [
+      menuRef as React.RefObject<HTMLElement>,
+      exportBtnRef as React.RefObject<HTMLElement>,
+    ],
+    () => setShowExportMenu(false),
+    showExportMenu
+  );
+
+  // Menu positioning
+  const menuStyle = useMenuPosition(
+    showExportMenu,
+    exportBtnRef,
+    menuRef,
+    16,
+    "right",
+    false
+  );
 
   // Trigger file input click
   function triggerFileInput() {
@@ -43,8 +54,8 @@ export function ToolbarImportExport({
         onClick={() => setShowImportNotice(true)}
         ariaLabel="Import"
         title="Import Trips"
-        className="toolbar-btn-menu"
         icon={<FaFileImport />}
+        variant="toggle"
       />
       {showImportNotice && (
         <ConfirmModal
@@ -71,21 +82,23 @@ export function ToolbarImportExport({
         style={{ display: "none" }}
         onChange={handleFileChange}
       />
-      <div className="relative" ref={exportMenuRef}>
+      <div ref={exportBtnRef}>
         <ActionButton
           onClick={() => setShowExportMenu((v) => !v)}
           ariaLabel="Export"
           title="Export Trips"
-          className="toolbar-btn-menu"
           icon={<FaFileExport />}
+          variant="toggle"
         />
-        {showExportMenu && (
-          <ExportMenu
-            onExportCSV={handleExportCSV}
-            onExportJSON={handleExportJSON}
-          />
-        )}
-      </div>      
+      </div>
+      <TripsExportMenu
+        open={showExportMenu}
+        onClose={() => setShowExportMenu(false)}
+        onExportCSV={handleExportCSV}
+        onExportJSON={handleExportJSON}
+        style={menuStyle}
+        containerRef={menuRef}
+      />
     </>
   );
 }

@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import "./Toolbar.css"
 
 interface ActionsToolbarProps {
   children?: ReactNode;
@@ -10,5 +9,5 @@ export function ActionsToolbar({
   children,
   className = "",
 }: ActionsToolbarProps) {
-  return <div className={`toolbar-actions-row ${className}`}>{children}</div>;
+  return <div className={`absolute flex flex-row items-center ${className}`}>{children}</div>;
 }
