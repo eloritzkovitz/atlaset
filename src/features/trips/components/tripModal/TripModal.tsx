@@ -108,7 +108,7 @@ export function TripModal({
           <FormField label="Countries">
             <button
               type="button"
-              className="flex items-center gap-2 px-4 py-2 rounded hover:bg-secondary font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded hover:bg-input-hover font-medium"
               onClick={() => setCountryModalOpen(true)}
             >
               <FaGlobe />
