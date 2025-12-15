@@ -14,7 +14,7 @@ export function AuthFooter({
   linkClass,
 }: AuthFooterProps) {
   return (
-    <div className="mt-8 text-center text-gray-700">
+    <div className="mt-8 text-center text-muted">
       {prompt}{" "}
       <Link
         to={linkTo}

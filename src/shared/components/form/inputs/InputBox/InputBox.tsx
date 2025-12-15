@@ -18,7 +18,7 @@ export function InputBox({
     <Component
       className={`input-box ${
         !isFilter ? "px-3 bg-input hover:bg-input-hover" : ""
-      } w-full py-2 rounded border border-none mt-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-200 dark:focus:ring-blue-400 ${className}`}
+      } w-full py-2 rounded border-none mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 ${className}`}
       {...props}
     />
   );

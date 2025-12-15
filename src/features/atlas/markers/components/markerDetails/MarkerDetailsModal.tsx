@@ -54,7 +54,7 @@ export function MarkerDetailsModal({
           />
         </PanelHeader>
       </div>
-      <div className="mb-4 text-gray-700">
+      <div className="mb-4 text-muted">
         {marker.description || "No description provided."}
       </div>
     </Modal>
