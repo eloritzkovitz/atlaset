@@ -12,15 +12,15 @@ interface ChipListProps<T = string> {
 export function ChipList<T>({
   items,
   limit = 2,
-  colorClass = "bg-blue-100 text-blue-800 dark:bg-gray-400 dark:text-gray-900",
-  moreColorClass = "bg-blue-200 text-blue-900 dark:bg-gray-500 dark:text-gray-900",
+  colorClass = "",
+  moreColorClass = "bg-surface hover:bg-primary-hover",
   renderItem,
 }: ChipListProps<T>) {
   if (!items || items.length === 0)
-    return <span className="text-gray-400 text-xs">—</span>;
+    return <span className="text-muted text-xs">—</span>;
 
   return (
-    <div className="flex flex-wrap gap-1">
+    <div className="flex flex-wrap gap-1 select-none">
       {items.slice(0, limit).map((item, idx) => (
         <Chip key={idx} className={`text-xs font-medium ${colorClass}`}>
           {renderItem ? renderItem(item) : String(item)}

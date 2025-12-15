@@ -54,7 +54,7 @@ export default {
         muted: "var(--color-muted)",
         "muted-hover": "var(--color-muted-hover)",
         // Border colors
-        ring: "var(--color-ring)",
+        border: "var(--color-border)",
         dashed: "var(--color-dashed)",
         // Chip colors
         chip: "var(--color-chip)",

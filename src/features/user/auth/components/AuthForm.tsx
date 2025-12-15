@@ -110,9 +110,9 @@ export function AuthForm({
       {showGoogleSignInButton && onGoogleSignIn && (
         <>
           <div className="flex items-center my-4">
-            <div className="flex-grow border-t border-gray-300 dark:border-gray-500" />
+            <div className="flex-grow border-t border-border" />
             <span className="mx-4 text-muted">or</span>
-            <div className="flex-grow border-t border-gray-300 dark:border-gray-500" />
+            <div className="flex-grow border-t border-border" />
           </div>
           <GoogleSignInButton onClick={onGoogleSignIn} />
         </>
