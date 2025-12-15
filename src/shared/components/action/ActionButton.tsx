@@ -72,7 +72,7 @@ export const ActionButton = React.forwardRef<
     if (variant === "toggle") {
       stateClass = active ? "" : "text-muted bg-transparent";
     }
-    const disabledStyles = disabled
+    const disabledStyles = disabled && variant === "toggle"
       ? "opacity-50 cursor-not-allowed pointer-events-none"
       : "";
 

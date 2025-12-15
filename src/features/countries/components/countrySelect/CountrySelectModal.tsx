@@ -80,7 +80,7 @@ export function CountrySelectModal({
               return (
                 <label
                   key={country.isoCode}
-                  className="flex items-center mb-2 cursor-pointer hover:text-blue-500 dark:hover:text-gray-300"
+                  className="flex items-center mb-2 cursor-pointer hover:text-dropdown-hover"
                 >
                   <Checkbox
                     checked={checked}

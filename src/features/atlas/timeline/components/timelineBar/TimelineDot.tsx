@@ -13,7 +13,7 @@ export function TimelineDot({
     <button
       className={`
      rounded-full
-    ${selected ? "w-3 h-3 bg-blue-500" : "w-2 h-2 mt-0.5 bg-gray-300"}
+    ${selected ? "w-3 h-3 bg-primary" : "w-2 h-2 mt-0.5 bg-muted"}
     focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500
     transition
   `}

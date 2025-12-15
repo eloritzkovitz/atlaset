@@ -49,7 +49,7 @@ export function TimelineBar() {
     <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 z-20 px-4 py-2 flex items-center gap-2">
       {/* Timeline line */}
       <div
-        className="absolute left-0 right-0 top-1/2 h-1 bg-gray-300 opacity-20 rounded pointer-events-none"
+        className="absolute left-0 right-0 top-1/2 h-1 bg-muted/20 rounded pointer-events-none"
         style={{ zIndex: 0 }}
       />
 

@@ -70,75 +70,76 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           onSave();
         }}
       >
-        <FormField label="Name">
-          <input
-            ref={nameRef}
-            name="name"
-            placeholder="Marker name"
-            required
-            value={marker?.name || ""}
-            onChange={(e) =>
-              onChange({
-                ...marker!,
-                name: e.target.value,
-                // For add: ensure coords are set
-                longitude: marker?.longitude ?? 0,
-                latitude: marker?.latitude ?? 0,
-              })
-            }
-            autoFocus
-          />
-        </FormField>
-        <FormField label="Color">
-          <ColorSelectInput
-            value={marker.color || "#e53e3e"}
-            onChange={(color) =>
-              onChange({
-                ...marker,
-                color,
-                longitude: marker.longitude ?? 0,
-                latitude: marker.latitude ?? 0,
-              })
-            }
-            onModalOpenChange={setColorModalOpen}
-            disabled={false}
-          />
-        </FormField>
-        <FormField label="Description">
-          <input
-            name="description"
-            placeholder="Description (optional)"
-            value={marker?.description || ""}
-            onChange={(e) =>
-              onChange({
-                ...marker!,
-                description: e.target.value,
-                longitude: marker?.longitude ?? 0,
-                latitude: marker?.latitude ?? 0,
-              })
-            }
-          />
-        </FormField>
-        {marker && !isEditing && (
-          <div className="text-xs text-muted">
-            Location: {marker.longitude.toFixed(4)},{" "}
-            {marker.latitude.toFixed(4)}
+        <div className="p-2">
+          <FormField label="Name">
+            <input
+              ref={nameRef}
+              name="name"
+              placeholder="Marker name"
+              required
+              value={marker?.name || ""}
+              onChange={(e) =>
+                onChange({
+                  ...marker!,
+                  name: e.target.value,
+                  longitude: marker?.longitude ?? 0,
+                  latitude: marker?.latitude ?? 0,
+                })
+              }
+              autoFocus
+            />
+          </FormField>
+          <FormField label="Color">
+            <ColorSelectInput
+              value={marker.color || "#e53e3e"}
+              onChange={(color) =>
+                onChange({
+                  ...marker,
+                  color,
+                  longitude: marker.longitude ?? 0,
+                  latitude: marker.latitude ?? 0,
+                })
+              }
+              onModalOpenChange={setColorModalOpen}
+              disabled={false}
+            />
+          </FormField>
+          <FormField label="Description">
+            <input
+              name="description"
+              placeholder="Description (optional)"
+              value={marker?.description || ""}
+              onChange={(e) =>
+                onChange({
+                  ...marker!,
+                  description: e.target.value,
+                  longitude: marker?.longitude ?? 0,
+                  latitude: marker?.latitude ?? 0,
+                })
+              }
+            />
+          </FormField>
+          {marker && !isEditing && (
+            <div className="text-xs text-muted">
+              Location: {marker.longitude.toFixed(4)},{" "}
+              {marker.latitude.toFixed(4)}
+            </div>
+          )}
+          <div className="flex justify-end gap-2 mt-4">
+            <ModalActions
+              onCancel={onClose}
+              onSubmit={onSave}
+              submitType="submit"
+              submitIcon={
+                isEditing ? (
+                  <FaFloppyDisk className="inline" />
+                ) : (
+                  <FaMapPin className="inline" />
+                )
+              }
+              submitLabel={isEditing ? "Save Changes" : "Add Marker"}
+            />
           </div>
-        )}
-        <div className="flex justify-end gap-2 mt-4">
-          <ModalActions
-            onCancel={onClose}
-            onSubmit={onSave}
-            submitType="submit"
-            submitIcon={
-              isEditing ? (
-                <FaFloppyDisk className="inline" />
-              ) : (
-                <FaMapPin className="inline" />
-              )
-            }
-            submitLabel={isEditing ? "Save Changes" : "Add Marker"}
-          />
         </div>
       </form>
     </Modal>
