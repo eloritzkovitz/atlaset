@@ -144,7 +144,7 @@ export function TripModal({
                     : "Select Countries"}
                 </button>
               </FormField>
-              <FormField label="Full Days">
+              <FormField label="Full Days" disabled={isTentative}>
                 <NumberInput
                   label=""
                   value={trip.fullDays ?? 1}
@@ -152,6 +152,7 @@ export function TripModal({
                   onChange={(val) =>
                     onChange({ ...trip, fullDays: Math.max(1, val) })
                   }
+                  disabled={isTentative}
                 />
               </FormField>
               <FormField label="Categories">
