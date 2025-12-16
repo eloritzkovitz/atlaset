@@ -57,7 +57,7 @@ export function CountryVisitsDrawer({
       style={drawerStyle}
       containerZIndex={10030}
       backdropZIndex={10020}
-      position="custom"      
+      position="custom"
       floatingChildren={
         !exiting ? (
           <FloatingChevronButton
@@ -88,7 +88,9 @@ export function CountryVisitsDrawer({
                 <ul className="list-disc pl-5">
                   {visits.map((visit, i) => (
                     <li key={i}>
-                      <span className="font-semibold">{visit.yearRange}</span>
+                      <span className="font-semibold">
+                        {visit.yearRange ? visit.yearRange : "TBD"}
+                      </span>
                       {visit.tripName && (
                         <span className="ml-2 text-muted">
                           ({visit.tripName})

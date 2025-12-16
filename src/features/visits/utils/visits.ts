@@ -179,9 +179,9 @@ export function getVisitedCountriesUpToYear(
  */
 export function getNextUpcomingTripYearByCountry(
   trips: Trip[]
-): Record<string, number> {
+): Record<string, number | undefined> {
   const now = new Date();
-  const nextYearByCountry: Record<string, number> = {};
+  const nextYearByCountry: Record<string, number | undefined> = {};
   for (const trip of trips) {
     const end = trip.endDate ? new Date(trip.endDate) : undefined;
     if (end && end > now) {
