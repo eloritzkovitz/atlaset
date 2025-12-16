@@ -5,8 +5,8 @@ import type { Trip } from "@types";
 const emptyTrip: Trip = {
   id: "",
   name: "",
-  startDate: "",
-  endDate: "",
+  startDate: undefined,
+  endDate: undefined,
   countryCodes: [],
   fullDays: 1,
   notes: "",
