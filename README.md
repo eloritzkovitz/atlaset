@@ -62,8 +62,8 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 
 - [Getting started](docs/getting-started.md)
 - [Data Sources](docs/data-sources.md)
-- [Overlays](overlays.md)
-- [Trips](trips.md)
+- [Overlays](docs/overlays.md)
+- [Trips](docs/trips.md)
 - [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 
 ## Authors
