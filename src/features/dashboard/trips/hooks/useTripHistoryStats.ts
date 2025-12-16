@@ -30,10 +30,11 @@ export function useTripHistoryStats() {
 
   // First and last trip (by startDate)
   const sortedTrips = trips
-    .filter((trip) => trip.startDate)
+    .filter((trip) => typeof trip.startDate === "string" && trip.startDate)
     .sort(
       (a, b) =>
-        new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+        new Date(a.startDate as string).getTime() -
+        new Date(b.startDate as string).getTime()
     );
 
   const firstTrip = sortedTrips[0] || null;
@@ -43,7 +44,8 @@ export function useTripHistoryStats() {
   const recentTrips = [...sortedTrips]
     .sort(
       (a, b) =>
-        new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+        new Date(b.startDate as string).getTime() -
+        new Date(a.startDate as string).getTime()
     )
     .slice(0, 3);
 

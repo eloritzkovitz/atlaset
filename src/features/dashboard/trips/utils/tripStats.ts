@@ -61,8 +61,13 @@ export function getVisitYearsForCountry(
   return Array.from(
     new Set(
       trips
-        .filter((trip) => trip.countryCodes?.includes(countryCode))
-        .map((trip) => new Date(trip.startDate).getFullYear())
+        .filter(
+          (trip) =>
+            trip.countryCodes?.includes(countryCode) &&
+            typeof trip.startDate === "string" &&
+            trip.startDate
+        )
+        .map((trip) => new Date(trip.startDate as string).getFullYear())
     )
   ).sort((a, b) => a - b);
 }
