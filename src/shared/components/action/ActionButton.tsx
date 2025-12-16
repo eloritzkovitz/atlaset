@@ -58,7 +58,7 @@ export const ActionButton = React.forwardRef<
       primary:
         "px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover focus:outline-none",
       secondary:
-        "px-4 py-2 rounded-lg bg-transparent hover:bg-secondary focus:outline-none",
+        "px-4 py-2 rounded-lg bg-transparent hover:bg-secondary-hover focus:outline-none",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
       toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200",

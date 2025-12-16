@@ -36,14 +36,14 @@
   --color-dropdown-selected: theme("colors.blue.200");
   /* Table colors */
   --color-table-row: theme("colors.white");
-  --color-table-row-alt: theme("colors.gray.50");  
+  --color-table-row-alt: theme("colors.gray.50");
   --color-table-row-hover: theme("colors.gray.100");
   --color-table-row-upcoming: theme("colors.yellow.100");
   /* Text color */
   --color-text: theme("colors.gray.700");
   --color-success: theme("colors.green.600");
   --color-success-hover: theme("colors.green.700");
-  --color-warning: theme("colors.yellow.600");  
+  --color-warning: theme("colors.yellow.600");
   --color-warning-hover: theme("colors.yellow.700");
   --color-danger: theme("colors.red.600");
   --color-danger-hover: theme("colors.red.700");
@@ -90,8 +90,8 @@
   --color-primary-hover: theme("colors.blue.700");
   --color-primary-active: theme("colors.blue.600");
   /* Secondary colors */
-  --color-secondary: theme("colors.gray.100");
-  --color-secondary-hover: theme("colors.gray.200");
+  --color-secondary: theme("colors.gray.200");
+  --color-secondary-hover: theme("colors.gray.600");
   --color-secondary-active: theme("colors.gray.300");
   /* Action colors */
   --color-action: theme("colors.gray.800");
@@ -121,8 +121,8 @@
   --color-text: theme("colors.gray.300");
   --color-success: theme("colors.green.400");
   --color-success-hover: theme("colors.green.500");
-  --color-warning: theme("colors.yellow.400"); 
-  --color-warning-hover: theme("colors.yellow.500"); 
+  --color-warning: theme("colors.yellow.400");
+  --color-warning-hover: theme("colors.yellow.500");
   --color-danger: theme("colors.red.400");
   --color-danger-hover: theme("colors.red.500");
   --color-info: theme("colors.blue.400");

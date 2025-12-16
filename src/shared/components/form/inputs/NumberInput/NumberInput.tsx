@@ -11,6 +11,7 @@ interface NumberInputProps {
   max?: number;
   onChange: (value: number) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 export function NumberInput({
@@ -20,6 +21,7 @@ export function NumberInput({
   max,
   onChange,
   className = "",
+  disabled = false,
 }: NumberInputProps) {
   return (
     <div className={`my-4 ${className}`}>
@@ -35,17 +37,20 @@ export function NumberInput({
             onChange(clamp(Number(e.target.value)))
           }
           style={{ MozAppearance: "textfield" }}
+          disabled={disabled}
         />
         <div className="absolute right-1 top-1 h-10 flex flex-col justify-center">
           <ArrowButton
             onClick={() => onChange(clamp(value + 1))}
             direction="up"
             ariaLabel="Increase"
+            disabled={disabled}
           />
           <ArrowButton
             onClick={() => onChange(clamp(value - 1))}
             direction="down"
             ariaLabel="Decrease"
+            disabled={disabled}
           />
         </div>
       </div>

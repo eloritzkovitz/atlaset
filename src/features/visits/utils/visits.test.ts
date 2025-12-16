@@ -7,6 +7,7 @@ import {
   getVisitedCountriesUpToYear,
   getNextUpcomingTripYearByCountry,
   getVisitCountStats,
+  getVisitsForCountry,
 } from "./visits";
 
 describe("visits utils", () => {
@@ -64,6 +65,25 @@ describe("visits utils", () => {
         homeCountry,
       ]);
     });
+  });
+
+  describe("getVisitsForCountry", () => {
+    it("returns visits for a country sorted by startDate, tentative last", () => {
+      const trips = [
+        { ...mockTrips[0], countryCodes: ["US"], startDate: "2022-01-01" },
+        { ...mockTrips[1], countryCodes: ["US"], startDate: "2023-01-01" },
+        { ...mockTrips[2], countryCodes: ["US"], startDate: undefined },
+      ];
+      const visits = getVisitsForCountry(trips, "US");
+      expect(visits[0].startDate).toBe("2022-01-01");
+      expect(visits[1].startDate).toBe("2023-01-01");
+      expect(visits[2].startDate).toBeUndefined();
+    });
+
+    it("returns empty array if no trips for the country", () => {
+      const visits = getVisitsForCountry(mockTrips, "MX");
+      expect(visits).toEqual([]);
+    });    
   });
 
   describe("getVisitedCountriesForYear", () => {

@@ -117,10 +117,17 @@ export const tripsService = {
 
   // Edits an existing trip
   async edit(trip: Trip) {
+    // Prepare Firestore object with nulls for undefined dates
+    const tripForFirestore = {
+      ...trip,
+      startDate: trip.startDate === undefined ? null : trip.startDate,
+      endDate: trip.endDate === undefined ? null : trip.endDate,
+    };
+
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
-      await setDoc(doc(tripsCol, trip.id), trip);
+      await setDoc(doc(tripsCol, trip.id), tripForFirestore as any);
       await logUserActivity(
         "edit_trip",
         {

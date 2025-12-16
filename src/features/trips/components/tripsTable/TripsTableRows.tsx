@@ -48,9 +48,7 @@ export function TripsTableRows({
       <tr
         key={trip.id + "-" + (code || idx)}
         className={[
-          tripIdx % 2 === 0
-            ? "bg-table-row"
-            : "bg-table-row-alt",
+          tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
           isUpcomingTrip(trip) ? "bg-table-row-upcoming" : "",
           "group",
         ].join(" ")}
@@ -107,13 +105,17 @@ export function TripsTableRows({
           <>
             {/* Dates */}
             <TableCell rowSpan={rowSpan}>
-              {trip.startDate ? new Date(trip.startDate).getFullYear() : ""}
+              {trip.startDate ? new Date(trip.startDate).getFullYear() : "TBD"}
             </TableCell>
             <TableCell rowSpan={rowSpan}>
-              {formatDate(trip.startDate)}
+              {trip.startDate ? formatDate(trip.startDate) : "TBD"}
             </TableCell>
-            <TableCell rowSpan={rowSpan}>{formatDate(trip.endDate)}</TableCell>
-            <TableCell rowSpan={rowSpan}>{trip.fullDays}</TableCell>
+            <TableCell rowSpan={rowSpan}>
+              {trip.endDate ? formatDate(trip.endDate) : "TBD"}
+            </TableCell>
+            <TableCell rowSpan={rowSpan}>
+              {trip.startDate && trip.endDate ? trip.fullDays : "TBD"}
+            </TableCell>
 
             {/* Categories */}
             <TableCell rowSpan={rowSpan}>

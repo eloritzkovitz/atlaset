@@ -10,7 +10,7 @@ import {
   getUpcomingTrips,
   getCompletedTrips,
   getAutoTripStatus,
-  getTripDays,  
+  getTripDays,
 } from "./trips";
 
 const now = new Date();
@@ -28,7 +28,7 @@ describe("trips utils", () => {
     it("returns false if countryCodes is empty", () => {
       const trip: Trip = { ...mockTrips[0], countryCodes: [] };
       expect(isLocalTrip(trip, "US")).toBe(false);
-    });    
+    });
   });
 
   describe("isAbroadTrip", () => {
@@ -41,7 +41,7 @@ describe("trips utils", () => {
     it("returns false if countryCodes is empty", () => {
       const trip: Trip = { ...mockTrips[0], countryCodes: [] };
       expect(isAbroadTrip(trip, "US")).toBe(false);
-    });    
+    });
   });
 
   describe("isCompletedTrip", () => {
@@ -59,7 +59,15 @@ describe("trips utils", () => {
     });
     it("returns false if startDate is in the past", () => {
       expect(isUpcomingTrip(mockTrips[0])).toBe(false);
-    });    
+    });
+    it("returns true if startDate is missing (tentative trip)", () => {
+      const trip: Trip = { ...mockTrips[0], startDate: undefined };
+      expect(isUpcomingTrip(trip)).toBe(true);
+    });
+    it("returns true if startDate is empty string (tentative trip)", () => {
+      const trip: Trip = { ...mockTrips[0], startDate: "" };
+      expect(isUpcomingTrip(trip)).toBe(true);
+    });
   });
 
   describe("getLocalTrips", () => {
@@ -72,14 +80,21 @@ describe("trips utils", () => {
   describe("getAbroadTrips", () => {
     it("filters only abroad trips", () => {
       const result = getAbroadTrips(mockTrips, "US");
-      expect(result).toEqual([mockTrips[1], mockTrips[2], mockTrips[3]]);
+      expect(result).toEqual([
+        mockTrips[1],
+        mockTrips[2],
+        mockTrips[3],
+        mockTrips[4],
+      ]);
     });
   });
 
   describe("getUpcomingTrips", () => {
-    it("filters only upcoming trips", () => {
-      const result = getUpcomingTrips(mockTrips);
-      expect(result).toEqual([mockTrips[2]]);
+    it("filters only upcoming trips, including tentative", () => {
+      const tentativeTrip: Trip = { ...mockTrips[0], startDate: undefined };
+      const result = getUpcomingTrips([...mockTrips, tentativeTrip]);
+      expect(result).toContain(mockTrips[2]);
+      expect(result).toContain(tentativeTrip);
     });
   });
 
@@ -99,6 +114,7 @@ describe("trips utils", () => {
       };
       expect(getAutoTripStatus(trip)).toBe("planned");
     });
+
     it("returns in-progress if now between start and end", () => {
       const trip = {
         ...mockTrips[0],
@@ -107,6 +123,7 @@ describe("trips utils", () => {
       };
       expect(getAutoTripStatus(trip)).toBe("in-progress");
     });
+
     it("returns completed if now > end", () => {
       const trip = {
         ...mockTrips[0],
@@ -114,7 +131,11 @@ describe("trips utils", () => {
         endDate: yesterday.toISOString(),
       };
       expect(getAutoTripStatus(trip)).toBe("completed");
-    });    
+    });
+
+    it("returns trip.status if startDate and endDate are missing (tentative trip)", () => {
+      expect(getAutoTripStatus(mockTrips[4])).toBe("planned");
+    });
   });
 
   describe("getTripDays", () => {
@@ -125,6 +146,6 @@ describe("trips utils", () => {
         endDate: "2023-01-03",
       };
       expect(getTripDays(trip)).toBe(3);
-    });    
+    });
   });
 });

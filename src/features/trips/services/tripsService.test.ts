@@ -115,9 +115,17 @@ describe("tripsService", () => {
     const tripsCol = {};
     (getUserCollection as any).mockReturnValue(tripsCol);
     (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
-    const trip = { id: "3", name: "Trip 3" };
+    const trip = {
+      id: "3",
+      name: "Trip 3",
+      startDate: undefined,
+      endDate: undefined,
+    };
     await tripsService.edit(trip as any);
-    expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "3" }, trip);
+    expect(setDoc).toHaveBeenCalledWith(
+      { _col: tripsCol, id: "3" },
+      { id: "3", name: "Trip 3", startDate: null, endDate: null }
+    );
   });
 
   it("updates favorite in IndexedDB (guest)", async () => {

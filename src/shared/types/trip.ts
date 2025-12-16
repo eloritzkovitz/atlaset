@@ -8,9 +8,9 @@ export type Trip = {
   rating?: number | null;
   countryCodes: string[];
   locations?: Location[];
-  startDate: string;
-  endDate: string;
-  fullDays: number;
+  startDate?: string;
+  endDate?: string;
+  fullDays?: number;
   categories?: TripCategory[];
   status?: TripStatus;
   notes?: string;
