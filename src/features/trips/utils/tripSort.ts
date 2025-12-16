@@ -47,9 +47,27 @@ export function sortTrips(
         asc ? "asc" : "desc"
       );
     case "startDate":
-      return sortItems(trips, (t) => t.startDate || "", asc ? "asc" : "desc");
+      return [...trips].sort((a, b) => {
+        if (a.startDate && b.startDate) {
+          return asc
+            ? a.startDate.localeCompare(b.startDate)
+            : b.startDate.localeCompare(a.startDate);
+        }
+        if (!a.startDate && b.startDate) return 1; // a is tentative, goes last
+        if (a.startDate && !b.startDate) return -1; // b is tentative, goes last
+        return 0; // both tentative
+      });
     case "endDate":
-      return sortItems(trips, (t) => t.endDate || "", asc ? "asc" : "desc");
+      return [...trips].sort((a, b) => {
+        if (a.endDate && b.endDate) {
+          return asc
+            ? a.endDate.localeCompare(b.endDate)
+            : b.endDate.localeCompare(a.endDate);
+        }
+        if (!a.endDate && b.endDate) return 1;
+        if (a.endDate && !b.endDate) return -1;
+        return 0;
+      });
     case "fullDays":
       return sortItems(trips, (t) => t.fullDays || 0, asc ? "asc" : "desc");
     case "categories":

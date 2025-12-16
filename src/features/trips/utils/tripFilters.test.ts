@@ -7,6 +7,7 @@ describe("tripFilters utils", () => {
     it("filters by name substring (case-insensitive)", () => {
       const filtered = filterTrips(mockTrips, {
         name: "local",
+        rating: -1,
         country: [],
         year: [],
         categories: [],
@@ -16,9 +17,28 @@ describe("tripFilters utils", () => {
       expect(filtered).toEqual([mockTrips[0]]);
     });
 
+    it("filters by rating", () => {
+      const trips = [
+        { ...mockTrips[0], rating: 5 },
+        { ...mockTrips[1], rating: 3 },
+        { ...mockTrips[2], rating: undefined },
+      ];
+      const filtered = filterTrips(trips, {
+        rating: 5,
+        year: [],
+        country: [],
+        categories: [],
+        tags: [],
+        name: "",
+        status: "",
+      });
+      expect(filtered).toEqual([trips[0]]);
+    });
+
     it("filters by country code", () => {
       const filtered = filterTrips(mockTrips, {
         country: ["FR"],
+        rating: -1,
         year: [],
         categories: [],
         tags: [],
@@ -31,6 +51,7 @@ describe("tripFilters utils", () => {
     it("filters by year", () => {
       const filtered = filterTrips(mockTrips, {
         year: ["2023"],
+        rating: -1,
         country: [],
         categories: [],
         tags: [],
@@ -54,6 +75,7 @@ describe("tripFilters utils", () => {
       ];
       const filtered = filterTrips(trips, {
         categories: ["adventure"],
+        rating: -1,
         year: [],
         country: [],
         tags: [],
@@ -66,6 +88,7 @@ describe("tripFilters utils", () => {
     it("filters by status", () => {
       const filtered = filterTrips(mockTrips, {
         status: "completed",
+        rating: -1,
         year: [],
         country: [],
         categories: [],
@@ -82,6 +105,7 @@ describe("tripFilters utils", () => {
       ];
       const filtered = filterTrips(trips, {
         tags: ["family"],
+        rating: -1,
         year: [],
         country: [],
         categories: [],
@@ -94,6 +118,7 @@ describe("tripFilters utils", () => {
     it("returns all trips if no filters", () => {
       const filtered = filterTrips(mockTrips, {
         year: [],
+        rating: -1,
         country: [],
         categories: [],
         tags: [],

@@ -80,54 +80,91 @@ describe("tripSort utils", () => {
       );
     });
 
-    it("sorts by startDate ascending", () => {
-      const sorted = sortTrips(mockTrips, mockCountries, "startDate-asc");
-      expect(sorted[0].startDate <= sorted[1].startDate).toBe(true);
+    it("sorts by startDate ascending, trip with date comes before tentative", () => {
+      const tripWithDate = { ...mockTrips[0], startDate: "2025-01-01" };
+      const tentativeTrip = { ...mockTrips[1], startDate: undefined };
+      const trips = [tentativeTrip, tripWithDate];
+      const sorted = sortTrips(trips, mockCountries, "startDate-asc");
+      expect(sorted[0]).toBe(tripWithDate);
+      expect(sorted[1]).toBe(tentativeTrip);
     });
 
-    it("sorts by startDate descending", () => {
-      const sorted = sortTrips(mockTrips, mockCountries, "startDate-desc");
-      expect(sorted[0].startDate >= sorted[1].startDate).toBe(true);
+    it("sorts by startDate ascending, both tentative remain in order", () => {
+      const tentativeTripA = { ...mockTrips[0], startDate: undefined };
+      const tentativeTripB = { ...mockTrips[1], startDate: undefined };
+      const trips = [tentativeTripA, tentativeTripB];
+      const sorted = sortTrips(trips, mockCountries, "startDate-asc");
+      expect(sorted[0]).toBe(tentativeTripA);
+      expect(sorted[1]).toBe(tentativeTripB);
     });
 
-    it("sorts by endDate ascending", () => {
-      const sorted = sortTrips(mockTrips, mockCountries, "endDate-asc");
-      expect(sorted[0].endDate <= sorted[1].endDate).toBe(true);
+    it("sorts by startDate ascending, tentative trips last", () => {
+      const tentativeTrip = { ...mockTrips[0], startDate: undefined };
+      const trips = [...mockTrips, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "startDate-asc");
+      expect(sorted[sorted.length - 1]).toBe(tentativeTrip);
     });
 
-    it("sorts by endDate descending", () => {
-      const sorted = sortTrips(mockTrips, mockCountries, "endDate-desc");
-      expect(sorted[0].endDate >= sorted[1].endDate).toBe(true);
+    it("sorts by startDate descending, tentative trips last", () => {
+      const tentativeTrip = { ...mockTrips[0], startDate: undefined };
+      const trips = [...mockTrips, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "startDate-desc");
+      expect(sorted[sorted.length - 1]).toBe(tentativeTrip);
     });
 
-    it("sorts by fullDays ascending", () => {
-      const tripsWithDays = mockTrips.map((t) => ({
-        ...t,
-        fullDays:
-          t.startDate && t.endDate
-            ? (new Date(t.endDate).getTime() -
-                new Date(t.startDate).getTime()) /
-                86400000 +
-              1
-            : 0,
-      }));
-      const sorted = sortTrips(tripsWithDays, mockCountries, "fullDays-asc");
-      expect(sorted[0].fullDays <= sorted[1].fullDays).toBe(true);
+    it("sorts by endDate ascending, trip with endDate comes before tentative", () => {
+      const tripWithEndDate = { ...mockTrips[0], endDate: "2025-01-01" };
+      const tentativeTrip = { ...mockTrips[1], endDate: undefined };
+      const trips = [tentativeTrip, tripWithEndDate];
+      const sorted = sortTrips(trips, mockCountries, "endDate-asc");
+      expect(sorted[0]).toBe(tripWithEndDate);
+      expect(sorted[1]).toBe(tentativeTrip);
     });
 
-    it("sorts by fullDays descending", () => {
-      const tripsWithDays = mockTrips.map((t) => ({
-        ...t,
-        fullDays:
-          t.startDate && t.endDate
-            ? (new Date(t.endDate).getTime() -
-                new Date(t.startDate).getTime()) /
-                86400000 +
-              1
-            : 0,
-      }));
-      const sorted = sortTrips(tripsWithDays, mockCountries, "fullDays-desc");
-      expect(sorted[0].fullDays >= sorted[1].fullDays).toBe(true);
+    it("sorts by endDate ascending, tentative comes after trip with endDate", () => {
+      const tripWithEndDate = { ...mockTrips[0], endDate: "2025-01-01" };
+      const tentativeTrip = { ...mockTrips[1], endDate: undefined };
+      const trips = [tripWithEndDate, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "endDate-asc");
+      expect(sorted[0]).toBe(tripWithEndDate);
+      expect(sorted[1]).toBe(tentativeTrip);
+    });
+
+    it("sorts by endDate ascending, both tentative remain in order", () => {
+      const tentativeTripA = { ...mockTrips[0], endDate: undefined };
+      const tentativeTripB = { ...mockTrips[1], endDate: undefined };
+      const trips = [tentativeTripA, tentativeTripB];
+      const sorted = sortTrips(trips, mockCountries, "endDate-asc");
+      expect(sorted[0]).toBe(tentativeTripA);
+      expect(sorted[1]).toBe(tentativeTripB);
+    });
+
+    it("sorts by endDate ascending, tentative trips last", () => {
+      const tentativeTrip = { ...mockTrips[0], endDate: undefined };
+      const trips = [...mockTrips, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "endDate-asc");
+      expect(sorted[sorted.length - 1]).toBe(tentativeTrip);
+    });
+
+    it("sorts by endDate descending, tentative trips last", () => {
+      const tentativeTrip = { ...mockTrips[0], endDate: undefined };
+      const trips = [...mockTrips, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "endDate-desc");
+      expect(sorted[sorted.length - 1]).toBe(tentativeTrip);
+    });
+
+    it("sorts by fullDays ascending, tentative trips last", () => {
+      const tentativeTrip = { ...mockTrips[0], fullDays: undefined };
+      const trips = [...mockTrips, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "fullDays-asc");
+      expect(sorted[sorted.length - 1]).toBe(tentativeTrip);
+    });
+
+    it("sorts by fullDays descending, tentative trips last", () => {
+      const tentativeTrip = { ...mockTrips[0], fullDays: undefined };
+      const trips = [...mockTrips, tentativeTrip];
+      const sorted = sortTrips(trips, mockCountries, "fullDays-desc");
+      expect(sorted[sorted.length - 1]).toBe(tentativeTrip);
     });
 
     it("sorts by categories ascending", () => {

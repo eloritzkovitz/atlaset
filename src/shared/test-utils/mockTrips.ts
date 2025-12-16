@@ -4,6 +4,7 @@ export const mockTrips: Trip[] = [
   {
     id: "t1",
     name: "Local Trip",
+    rating: -1,
     countryCodes: ["US"],
     startDate: "2023-01-01",
     endDate: "2023-01-05",
@@ -13,6 +14,7 @@ export const mockTrips: Trip[] = [
   {
     id: "t2",
     name: "Abroad Trip",
+    rating: -1,
     countryCodes: ["FR", "DE"],
     startDate: "2023-06-10",
     endDate: "2023-06-20",
@@ -20,8 +22,9 @@ export const mockTrips: Trip[] = [
     fullDays: 0,
   },
   {
-    id: "t3",
+    id: "t3",    
     name: "Upcoming Trip",
+    rating: -1,
     countryCodes: ["JP"],
     startDate: "2099-12-01",
     endDate: "2099-12-10",
@@ -29,8 +32,9 @@ export const mockTrips: Trip[] = [
     fullDays: 0,
   },
   {
-    id: "t4",
+    id: "t4",    
     name: "Past Trip",
+    rating: -1,
     countryCodes: ["CA"],
     startDate: "2022-03-15",
     endDate: "2022-03-20",

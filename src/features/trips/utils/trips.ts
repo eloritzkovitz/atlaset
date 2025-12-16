@@ -45,7 +45,8 @@ export function isCompletedTrip(trip: Trip) {
  * @returns True if the trip is upcoming, false otherwise.
  */
 export function isUpcomingTrip(trip: Trip): boolean {
-  return !!trip.startDate && new Date(trip.startDate) > new Date();
+  if (!trip.startDate) return true;
+  return new Date(trip.startDate) > new Date();
 }
 
 /**
