@@ -17,6 +17,7 @@ import TripsPage from "./pages/TripsPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const { loading } = useSettings();
@@ -39,35 +40,50 @@ function App() {
             <Routes>
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
+              <Route path="/profile/*" element={<ProfilePage />} />
               <Route
-                path="/*"
+                path="/"
                 element={
                   <AppLayout>
-                    <Routes>
-                      <Route
-                        path="/"
-                        element={
-                          <Suspense fallback={<SplashScreen />}>
-                            <OverlaysProvider>
-                              <MapUIProvider>
-                                <MarkersProvider>
-                                  <TimelineProvider>
-                                    <AtlasPage />
-                                  </TimelineProvider>
-                                </MarkersProvider>
-                              </MapUIProvider>
-                            </OverlaysProvider>
-                          </Suspense>
-                        }
-                      />
-                      <Route path="/dashboard/*" element={<DashboardPage />} />
-                      <Route path="/game" element={<GamesPage />} />
-                      <Route path="/trips" element={<TripsPage />} />
-                      <Route path="/profile/*" element={<ProfilePage />} />
-                    </Routes>
+                    <Suspense fallback={<SplashScreen />}>
+                      <OverlaysProvider>
+                        <MapUIProvider>
+                          <MarkersProvider>
+                            <TimelineProvider>
+                              <AtlasPage />
+                            </TimelineProvider>
+                          </MarkersProvider>
+                        </MapUIProvider>
+                      </OverlaysProvider>
+                    </Suspense>
                   </AppLayout>
                 }
               />
+              <Route
+                path="/dashboard/*"
+                element={
+                  <AppLayout>
+                    <DashboardPage />
+                  </AppLayout>
+                }
+              />
+              <Route
+                path="/game"
+                element={
+                  <AppLayout>
+                    <GamesPage />
+                  </AppLayout>
+                }
+              />
+              <Route
+                path="/trips"
+                element={
+                  <AppLayout>
+                    <TripsPage />
+                  </AppLayout>
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </UIHintProvider>
         </UIProvider>
