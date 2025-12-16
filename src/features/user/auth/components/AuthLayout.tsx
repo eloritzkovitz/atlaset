@@ -1,4 +1,4 @@
-import { Branding } from "@components";
+import { BrandFooter, BrandHeader } from "@components";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -8,22 +8,12 @@ interface AuthLayoutProps {
 export function AuthLayout({ children, footer }: AuthLayoutProps) {
   return (
     <div className="min-h-screen bg-bg flex flex-col justify-between">
-      {/* Header with branding */}
-      <header className="flex flex-start items-center mt-2 ml-8">
-        <Branding size={56} />
-        <h2 className="text-4xl font-bold text-blue-800 dark:text-gray-100 ml-1 mt-4">
-          Atlaset
-        </h2>
-      </header>
+      <BrandHeader />
       {/* Main content */}
       <main className="flex flex-col items-center flex-1 justify-center">
         {children}
       </main>
-      {/* Footer */}
-      <footer className="mt-8 py-4 text-center text-muted text-sm">
-        {footer}
-        <div className="mt-2">© {new Date().getFullYear()} Atlaset</div>
-      </footer>
+      <BrandFooter>{footer}</BrandFooter>
     </div>
   );
 }

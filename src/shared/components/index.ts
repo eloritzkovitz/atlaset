@@ -1,9 +1,12 @@
-export { Branding } from "./Branding";
-
 // Action components
 export { ActionButton } from "./action/ActionButton";
 export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
+
+// Branding components
+export { Branding } from "./branding/Branding";
+export { BrandHeader } from "./branding/BrandHeader";
+export { BrandFooter } from "./branding/BrandFooter";
 
 // Card components
 export { Card } from "./ui/Card/Card";
