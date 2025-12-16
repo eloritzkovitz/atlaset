@@ -2,11 +2,16 @@ import React, { useRef, useLayoutEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FloatingChevronButton, Modal } from "@components";
 import type { Visit } from "@types";
+import { VisitSection } from "./VisitSection";
 
 interface CountryVisitsDrawerProps {
   open: boolean;
   onClose: () => void;
-  visits: Visit[];
+  visits: {
+    past: Visit[];
+    upcoming: Visit[];
+    tentative: Visit[];
+  };
   targetRef: React.RefObject<HTMLElement | null>;
   chevronRef?: React.RefObject<HTMLButtonElement | null>;
 }
@@ -21,6 +26,15 @@ export function CountryVisitsDrawer({
   const drawerRef = useRef<HTMLDivElement>(null);
   const [drawerStyle, setDrawerStyle] = useState<React.CSSProperties>({});
   const [exiting, setExiting] = useState(false);
+
+  // Destructure categorized visits
+  const {
+    past: pastVisits,
+    upcoming: upcomingVisits,
+    tentative: tentativeVisits,
+  } = visits;
+  const totalVisits =
+    pastVisits.length + upcomingVisits.length + tentativeVisits.length;
 
   // Position the drawer to the right of the main modal
   useLayoutEffect(() => {
@@ -81,24 +95,25 @@ export function CountryVisitsDrawer({
           <div className="h-full flex flex-col">
             <div className="flex items-center gap-2 h-8 text-lg font-bold mb-4">
               <FaLocationDot />
-              Visits{visits.length > 0 ? ` (${visits.length})` : ""}
+              Visits{totalVisits > 0 ? ` (${totalVisits})` : ""}
             </div>
             <div className="rounded p-3 mb-2 flex-1 overflow-y-auto">
-              {visits.length ? (
-                <ul className="list-disc pl-5">
-                  {visits.map((visit, i) => (
-                    <li key={i}>
-                      <span className="font-semibold">
-                        {visit.yearRange ? visit.yearRange : "TBD"}
-                      </span>
-                      {visit.tripName && (
-                        <span className="ml-2 text-muted">
-                          ({visit.tripName})
-                        </span>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+              {totalVisits > 0 ? (
+                <>
+                  <VisitSection
+                    title={`Past Visits (${pastVisits.length})`}
+                    visits={pastVisits}
+                  />
+                  <VisitSection
+                    title={`Upcoming Visits (${upcomingVisits.length})`}
+                    visits={upcomingVisits}
+                  />
+                  <VisitSection
+                    title={`Planned (${tentativeVisits.length})`}
+                    visits={tentativeVisits}
+                    getLabel={() => "TBD"}
+                  />
+                </>
               ) : (
                 <div className="text-muted text-sm">No visits recorded.</div>
               )}

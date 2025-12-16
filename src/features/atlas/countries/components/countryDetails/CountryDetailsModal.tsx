@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import ReactDOM from "react-dom";
 import { FaWikipediaW, FaCrosshairs, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
@@ -20,7 +21,6 @@ import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useFloatingHover } from "@hooks/useFloatingHover";
 import type { Country } from "@types";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
-import ReactDOM from "react-dom";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
@@ -36,9 +36,12 @@ export function CountryDetailsModal({
   onClose,
 }: CountryDetailsModalProps) {
   const { currencies, loading, error } = useCountryData();
-  const { isCountryVisited, getCountryVisits } = useVisitedCountries();
+  const { isCountryVisited, getCountryVisitsCategorized } =
+    useVisitedCountries();
   const isVisited = country ? isCountryVisited(country.isoCode) : false;
-  const visits = country ? getCountryVisits(country.isoCode) : [];
+  const categorizedVisits = country
+    ? getCountryVisitsCategorized(country.isoCode)
+    : { past: [], upcoming: [], tentative: [] };
   const [showVisitsDrawer, setShowVisitsDrawer] = useState(false);
 
   // Get home country from settings
@@ -81,7 +84,7 @@ export function CountryDetailsModal({
         <CountryVisitsDrawer
           open={showVisitsDrawer}
           onClose={() => setShowVisitsDrawer(false)}
-          visits={visits}
+          visits={categorizedVisits}
           targetRef={modalRef}
           chevronRef={closeChevronRef}
         />
@@ -106,9 +109,7 @@ export function CountryDetailsModal({
                   name={country.name}
                   className="font-bold text-lg"
                 />
-                <span className="text-muted text-sm">
-                  ({country.isoCode})
-                </span>
+                <span className="text-muted text-sm">({country.isoCode})</span>
                 <VisitedStatusIndicator
                   visited={isVisited}
                   isHome={homeCountry === country.isoCode}

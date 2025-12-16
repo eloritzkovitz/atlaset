@@ -80,7 +80,12 @@ describe("trips utils", () => {
   describe("getAbroadTrips", () => {
     it("filters only abroad trips", () => {
       const result = getAbroadTrips(mockTrips, "US");
-      expect(result).toEqual([mockTrips[1], mockTrips[2], mockTrips[3]]);
+      expect(result).toEqual([
+        mockTrips[1],
+        mockTrips[2],
+        mockTrips[3],
+        mockTrips[4],
+      ]);
     });
   });
 
@@ -109,6 +114,7 @@ describe("trips utils", () => {
       };
       expect(getAutoTripStatus(trip)).toBe("planned");
     });
+
     it("returns in-progress if now between start and end", () => {
       const trip = {
         ...mockTrips[0],
@@ -117,6 +123,7 @@ describe("trips utils", () => {
       };
       expect(getAutoTripStatus(trip)).toBe("in-progress");
     });
+
     it("returns completed if now > end", () => {
       const trip = {
         ...mockTrips[0],
@@ -124,6 +131,10 @@ describe("trips utils", () => {
         endDate: yesterday.toISOString(),
       };
       expect(getAutoTripStatus(trip)).toBe("completed");
+    });
+
+    it("returns trip.status if startDate and endDate are missing (tentative trip)", () => {
+      expect(getAutoTripStatus(mockTrips[4])).toBe("planned");
     });
   });
 

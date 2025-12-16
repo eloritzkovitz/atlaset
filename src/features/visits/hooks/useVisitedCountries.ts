@@ -1,37 +1,47 @@
 import { useTrips } from "@contexts/TripsContext";
-import { getYear } from "@utils/date";
+import {
+  computeVisitedCountriesFromTrips,
+  getVisitsForCountry,
+} from "../utils/visits";
 
 export function useVisitedCountries() {
   const { trips } = useTrips();
 
   // Get visited countries from overlays
-  const visitedCountryCodes = Array.from(
-    new Set(trips.flatMap((trip) => trip.countryCodes ?? []))
-  );
+  const visitedCountryCodes = computeVisitedCountriesFromTrips(trips);
 
   // Check if a country is visited
   function isCountryVisited(isoCode: string) {
     return visitedCountryCodes.includes(isoCode);
   }
 
-  // Get all visits for a country (from trips)
+  // Get visits for a country
   function getCountryVisits(isoCode: string) {
-    return trips
-      .filter((trip) => trip.countryCodes?.includes(isoCode))
-      .map((trip) => ({
-        yearRange: trip.startDate
-          ? getYear(trip.startDate) +
-            (trip.endDate && getYear(trip.endDate) !== getYear(trip.startDate)
-              ? ` - ${getYear(trip.endDate)}`
-              : "")
-          : "",
-        tripName: trip.name,
-      }));
+    return getVisitsForCountry(trips, isoCode).map(
+      ({ yearRange, tripName }) => ({
+        yearRange,
+        tripName,
+      })
+    );
+  }
+
+  // Get categorized visits for a country
+  function getCountryVisitsCategorized(isoCode: string) {
+    const now = new Date();
+    const visits = getVisitsForCountry(trips, isoCode);
+    return {
+      past: visits.filter((v) => v.endDate && new Date(v.endDate) < now),
+      upcoming: visits.filter(
+        (v) => v.startDate && new Date(v.startDate) >= now
+      ),
+      tentative: visits.filter((v) => !v.startDate),
+    };
   }
 
   return {
     visitedCountryCodes,
     isCountryVisited,
     getCountryVisits,
+    getCountryVisitsCategorized,
   };
 }

@@ -22,7 +22,7 @@ export const mockTrips: Trip[] = [
     fullDays: 0,
   },
   {
-    id: "t3",    
+    id: "t3",
     name: "Upcoming Trip",
     rating: -1,
     countryCodes: ["JP"],
@@ -32,13 +32,22 @@ export const mockTrips: Trip[] = [
     fullDays: 0,
   },
   {
-    id: "t4",    
+    id: "t4",
     name: "Past Trip",
     rating: -1,
     countryCodes: ["CA"],
     startDate: "2022-03-15",
     endDate: "2022-03-20",
     status: "completed",
+    fullDays: 0,
+  },
+  {
+    id: "t5",
+    name: "Tentative Trip",
+    rating: -1,
+    countryCodes: ["IT"],
+    startDate: undefined,
+    endDate: undefined,
     fullDays: 0,
   },
 ];

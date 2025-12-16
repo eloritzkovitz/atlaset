@@ -97,10 +97,11 @@ export function getAutoTripStatus(trip: Trip): TripStatus {
   const start = trip.startDate ? new Date(trip.startDate) : null;
   const end = trip.endDate ? new Date(trip.endDate) : null;
 
-  if (!start || !end) return trip.status || "planned";
-  if (now < start) return "planned";
-  if (now >= start && now <= end) return "in-progress";
-  if (now > end) return "completed";
+  if (start && end) {
+    if (now < start) return "planned";
+    if (now >= start && now <= end) return "in-progress";
+    if (now > end) return "completed";
+  }
   return trip.status || "planned";
 }
 

@@ -1,6 +1,10 @@
+/**
+ * @file Utility functions for processing visit and trip data.
+ */
+
 import type { Trip } from "@types";
 import { extractUniqueValues } from "@utils/array";
-import { getYearNumber } from "@utils/date";
+import { getYear, getYearNumber } from "@utils/date";
 
 /**
  * Adds a given home country to a set of country codes.
@@ -71,6 +75,40 @@ export function computeVisitedCountriesFromTrips(
     },
     homeCountry
   );
+}
+
+/**
+ * Gets all visits for a country.
+ * @param trips - Array of trips to analyze, sorted by start date.
+ * @param isoCode - The ISO code of the country.
+ * @returns Array of visits sorted by start date.
+ */
+export function getVisitsForCountry(trips: Trip[], isoCode: string) {
+  return trips
+    .filter((trip) => trip.countryCodes?.includes(isoCode))
+    .sort((a, b) => {
+      // Sort by start date ascending
+      if (a.startDate && b.startDate) {
+        return (
+          new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+        );
+      }  
+      // Handle cases where start date is missing    
+      if (a.startDate && !b.startDate) return -1;
+      if (!a.startDate && b.startDate) return 1;
+      return 0; // Both missing start date
+    })
+    .map((trip) => ({
+      yearRange: trip.startDate
+        ? getYear(trip.startDate) +
+          (trip.endDate && getYear(trip.endDate) !== getYear(trip.startDate)
+            ? ` - ${getYear(trip.endDate)}`
+            : "")
+        : "TBD",
+      tripName: trip.name,
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+    }));
 }
 
 /**
