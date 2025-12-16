@@ -59,20 +59,20 @@ export function CountryDataProvider({
 
     // Determine URLs based on environment variables
     const countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL?.startsWith(
-      "/"
+      "http"
     )
       ? import.meta.env.VITE_COUNTRY_DATA_URL
       : import.meta.env.VITE_COUNTRY_DATA_URL
-      ? `${import.meta.env.BASE_URL}${import.meta.env.VITE_COUNTRY_DATA_URL}`
-      : `${import.meta.env.BASE_URL}data/countries.json`;
+      ? import.meta.env.VITE_COUNTRY_DATA_URL
+      : "/data/countries.json";
 
     const currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL?.startsWith(
-      "/"
+      "http"
     )
       ? import.meta.env.VITE_CURRENCY_DATA_URL
       : import.meta.env.VITE_CURRENCY_DATA_URL
-      ? `${import.meta.env.BASE_URL}${import.meta.env.VITE_CURRENCY_DATA_URL}`
-      : `${import.meta.env.BASE_URL}data/currencies.json`;
+      ? import.meta.env.VITE_CURRENCY_DATA_URL
+      : "/data/currencies.json";
 
     // Fetch both country and currency data
     Promise.all([
