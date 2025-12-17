@@ -25,6 +25,7 @@ export function ProfilePanelMenu({
         </span>
       }
       width={220}
+      className="!left-0"
     >
       <ul>
         {menuItems.map((item) => (

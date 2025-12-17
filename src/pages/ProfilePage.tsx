@@ -59,7 +59,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-bg">
       <div className="p-4 max-w-4xl mx-auto flex gap-6">
         <ProfilePanelMenu
           selectedPanel={selectedPanel}
