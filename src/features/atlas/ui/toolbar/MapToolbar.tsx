@@ -9,12 +9,19 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaMap,
+  FaChevronUp,
 } from "react-icons/fa6";
-import { ActionButton, ActionsToolbar, ToolbarSeparator } from "@components";
+import {
+  ActionButton,
+  ActionsToolbar,
+  MenuButton,
+  ToolbarSeparator,
+} from "@components";
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineOverlay } from "@features/atlas/overlays";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { ZoomControls } from "../controls/ZoomControls";
 import "./MapToolbar.css";
 
@@ -47,6 +54,123 @@ export function MapToolbar({
   const { overlays } = useOverlays();
   const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
 
+  // Detect mobile
+  const isMobile = useIsMobile();
+
+  // Auto-hide toolbar on mobile after a delay
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  if (isMobile) {
+    return (
+      <>
+        {/* Floating FAB */}
+        <button
+          className="fixed bottom-20 right-4 z-50 bg-action rounded-full p-4 shadow"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label={menuOpen ? "Close map actions" : "Open map actions"}
+        >
+          <FaChevronUp
+            className={`text-2xl transition-transform ${
+              menuOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+        {/* Popover/modal menu */}
+        {menuOpen && (
+          <div
+            className="fixed right-4 z-[10020] mb-2"
+            style={{ bottom: "135px" }}
+          >
+            <div
+              className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <MenuButton
+                onClick={() => {
+                  setMenuOpen(false);
+                  toggleCountries();
+                }}
+                icon={<FaGlobe />}
+                ariaLabel="Countries"
+                title="Countries"
+              >
+                Countries
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
+                  setMenuOpen(false);
+                  toggleMarkers();
+                }}
+                icon={<FaMapPin />}
+                ariaLabel="Markers"
+                title="Markers"
+              >
+                Markers
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
+                  setMenuOpen(false);
+                  toggleOverlays();
+                }}
+                icon={<FaLayerGroup />}
+                ariaLabel="Overlays"
+                title="Overlays"
+              >
+                Overlays
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
+                  setMenuOpen(false);
+                  toggleLegend();
+                }}
+                icon={<FaMap />}
+                ariaLabel="Legend"
+                title="Legend"
+              >
+                Legend
+              </MenuButton>
+              {visitedOverlay && isTimelineOverlay(visitedOverlay) && (
+                <MenuButton
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setTimelineMode((prev) => !prev);
+                  }}
+                  icon={<FaTimeline />}
+                  ariaLabel="Timeline"
+                  title="Timeline"
+                >
+                  Timeline
+                </MenuButton>
+              )}
+              <MenuButton
+                onClick={() => {
+                  setMenuOpen(false);
+                  toggleExport();
+                }}
+                icon={<FaDownload />}
+                ariaLabel="Export"
+                title="Export"
+              >
+                Export
+              </MenuButton>
+              <MenuButton
+                onClick={() => {
+                  setMenuOpen(false);
+                  toggleSettings();
+                }}
+                icon={<FaGear />}
+                ariaLabel="Settings"
+                title="Settings"
+              >
+                Settings
+              </MenuButton>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
   return (
     <div
       className={`toolbar-container ${
@@ -63,10 +187,23 @@ export function MapToolbar({
       >
         <ZoomControls zoom={zoom} setZoom={setZoom} />
       </div>
-      <div className="relative flex items-center" style={{ height: "40px" }}>
+      <div
+        className="relative flex items-center w-full justify-end"
+        style={{ height: "40px" }}
+      >
+        {/* Toggle button */}
+        <ActionButton
+          onClick={() => setVisible((v) => !v)}
+          ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
+          title={visible ? "Hide toolbar" : "Show toolbar"}
+          variant="action"
+          className={`${!visible ? "opacity-70" : ""}`}
+          icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
+          rounded
+        />
         {/* Actions: horizontal slide */}
         <ActionsToolbar
-          className={`right-14 bg-action rounded-full px-2 transition-all duration-300 ${
+          className={`right-10 md:right-14 bg-action rounded-full px-2 transition-all duration-300 ${
             visible
               ? "opacity-100 pointer-events-auto translate-x-0"
               : "opacity-0 pointer-events-none translate-x-10"
@@ -133,16 +270,6 @@ export function MapToolbar({
           />
           {children}
         </ActionsToolbar>
-        {/* Toggle button */}
-        <ActionButton
-          onClick={() => setVisible((v) => !v)}
-          ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
-          title={visible ? "Hide toolbar" : "Show toolbar"}
-          variant="action"
-          className={`${!visible ? "opacity-70" : ""}`}
-          icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
-          rounded
-        />
       </div>
     </div>
   );

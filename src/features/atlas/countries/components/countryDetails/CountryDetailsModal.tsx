@@ -92,7 +92,7 @@ export function CountryDetailsModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="p-8 min-w-[540px] max-w-[100vw] w-[350px] shadow-lg relative"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl p-4 sm:p-8 shadow-lg relative"
         containerRef={modalRef}
         extraRefs={[openChevronRef, closeChevronRef, drawerRef]}
         containerZIndex={10050}
