@@ -16,6 +16,7 @@ export function UserAvatar({
     <img
       src={user.photoURL}
       alt="User avatar"
+      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/images/default-profile.png"; }}
       className={`rounded-full object-cover ${sizeClass} ${className}`}
       style={{ width: size, height: size }}
     />
