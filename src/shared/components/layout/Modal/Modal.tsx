@@ -117,7 +117,7 @@ export function Modal({
             (position === "center"
               ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
               : "") +
-            "modal w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
+            "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +
             className +

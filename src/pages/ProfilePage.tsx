@@ -15,6 +15,7 @@ import {
   SecurityInfoSection,
   UserActivitySection,
 } from "@features/user";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
@@ -22,6 +23,7 @@ export default function ProfilePage() {
   const [editOpen, setEditOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
@@ -61,15 +63,16 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <div className="p-4 max-w-4xl mx-auto flex gap-6">
-        <UserMenu />
+      <div className="p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6">
+        {/* Hide UserMenu on mobile for clarity */}
+        {!isMobile && <UserMenu />}
         <ProfilePanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={handlePanelChange}
           canEdit={canEdit}
         />
 
-        <main className="flex-1 p-8 mt-16 bg-surface rounded-lg shadow">
+        <main className="flex-1 p-4 md:p-8 mt-4 md:mt-16 bg-surface rounded-lg shadow">
           <Routes>
             <Route
               path="/"

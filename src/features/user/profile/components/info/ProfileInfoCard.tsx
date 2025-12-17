@@ -29,22 +29,24 @@ export function ProfileInfoCard({
   return (
     <>
       {/* Avatar, Name, Edit */}
-      <div className="flex items-center mb-6">
-        <UserAvatar user={user} size={150} />
-        <div className="flex-1 ml-6 flex items-center">
-          <h1 className="text-3xl font-bold">{user?.displayName}</h1>
+      <div className="flex flex-col sm:flex-row items-center mb-6 gap-4 sm:gap-0">
+        <UserAvatar user={user} size={100} className="sm:size-[150px]" />
+        <div className="flex-1 sm:ml-6 flex flex-col sm:flex-row items-center w-full">
+          <h1 className="text-2xl sm:text-3xl font-bold text-center sm:text-left w-full">
+            {user?.displayName}
+          </h1>
+          {canEdit && (
+            <div className="flex-shrink-0 mt-4 sm:mt-0 sm:ml-auto w-full sm:w-auto">
+              <button
+                className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition"
+                onClick={onEdit}
+              >
+                <FaPen className="text-lg" />
+                Edit Profile
+              </button>
+            </div>
+          )}
         </div>
-        {canEdit && (
-          <div className="flex-shrink-0 ml-auto">
-            <button
-              className="px-4 py-2 flex items-center gap-2 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition"
-              onClick={onEdit}
-            >
-              <FaPen className="text-lg" />
-              Edit Profile
-            </button>
-          </div>
-        )}
       </div>
       <ProfileField label="Email">{email}</ProfileField>
       {homeCountry && (
