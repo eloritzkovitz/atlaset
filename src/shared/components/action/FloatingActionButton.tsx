@@ -26,7 +26,7 @@ export function FloatingActionButton({
       aria-label={ariaLabel}
       title={title}
       disabled={disabled}
-      className={`fixed bottom-8 right-8 bg-blue-600 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center hover:bg-blue-700 transition ${className}`}
+      className={`fixed bg-blue-600 text-white rounded-full shadow-lg w-16 h-16 flex items-center justify-center hover:bg-blue-700 transition ${className}`}
       style={{ aspectRatio: "1 / 1" }}
     >
       <span className="text-2xl flex items-center justify-center">{icon}</span>

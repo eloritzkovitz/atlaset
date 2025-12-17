@@ -17,6 +17,7 @@ export function UserMenu() {
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
+  const isTripsPage = location.pathname.startsWith("/trips");
 
   // Get the logout handler from useAuthHandlers
   const { handleLogout } = useAuthHandlers();
@@ -28,6 +29,7 @@ export function UserMenu() {
 
   // Don't render if UI is not visible
   if (!uiVisible) return null;
+  if (isMobile && isTripsPage) return null;
 
   if (!user) {
     // Show buttons outside the avatar/modal when not logged in

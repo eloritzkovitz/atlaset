@@ -7,6 +7,7 @@ import { TripModal, TripsTable, TripsToolbar } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { usePagination } from "@hooks/usePagination";
 import type { Trip } from "@types";
 
@@ -24,6 +25,7 @@ export default function TripsPage() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
+  const isMobile = useIsMobile();
 
   // Trip filtering hook
   const {
@@ -40,7 +42,7 @@ export default function TripsPage() {
   } = useTripFilters(trips, countryData, undefined, globalSearch);
 
   const {
-    data: paginatedTrips,    
+    data: paginatedTrips,
     hasMore,
     loadMore,
   } = usePagination({
@@ -110,22 +112,24 @@ export default function TripsPage() {
   return (
     <div className="min-h-screen w-full flex flex-col">
       {/* Toolbar */}
-      <TripsToolbar
-        trips={filteredTrips}
-        filters={filters}
-        setFilters={setFilters}
-        globalSearch={globalSearch}
-        setGlobalSearch={setGlobalSearch}
-        resetFilters={resetFilters}
-        selectedTripIds={selectedTripIds}
-        showRowNumbers={showRowNumbers}
-        setShowRowNumbers={setShowRowNumbers}
-        onBulkDuplicate={handleBulkDuplicate}
-        onBulkDelete={handleBulkDelete}
-      />
+      {!isMobile && (
+        <TripsToolbar
+          trips={filteredTrips}
+          filters={filters}
+          setFilters={setFilters}
+          globalSearch={globalSearch}
+          setGlobalSearch={setGlobalSearch}
+          resetFilters={resetFilters}
+          selectedTripIds={selectedTripIds}
+          showRowNumbers={showRowNumbers}
+          setShowRowNumbers={setShowRowNumbers}
+          onBulkDuplicate={handleBulkDuplicate}
+          onBulkDelete={handleBulkDelete}
+        />
+      )}
 
       {/* Table area */}
-      <div className="flex-1 w-full mx-auto flex flex-col overflow-auto">
+      <div className="flex-1 w-full mx-auto flex flex-col">
         <TripModal
           isOpen={modalOpen}
           trip={trip}
@@ -171,6 +175,7 @@ export default function TripsPage() {
         icon={<FaPencilAlt />}
         ariaLabel="Add Trip"
         title="Add Trip"
+        className={!isMobile ? "bottom-8 right-8" : "bottom-20 right-2"}
       />
     </div>
   );

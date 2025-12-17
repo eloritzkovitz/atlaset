@@ -7,6 +7,7 @@ import {
 } from "@features/trips/constants/columns";
 import type { TripSortBy, TripSortByKey } from "@features/trips/types";
 import { sortTrips } from "@features/trips/utils/tripSort";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { useResizableColumns } from "@hooks/useResizableColumns";
 import { useSort } from "@hooks/useSort";
 import type { Trip } from "@types";
@@ -52,6 +53,7 @@ export function TripsTable({
   showRowNumbers,
 }: TripsTableProps) {
   const countryData = useCountryData();
+  const isMobile = useIsMobile();
 
   // Resizable columns
   const { colWidths, handleResizeStart } = useResizableColumns<ColumnKey>(
@@ -96,7 +98,7 @@ export function TripsTable({
       style={{
         maxHeight: "93vh",
         overflowY: "auto",
-        paddingLeft: `${DEFAULT_SIDEBAR_WIDTH}px`,
+        paddingLeft: !isMobile ? `${DEFAULT_SIDEBAR_WIDTH}px` : 0,
       }}
     >
       <table className="min-w-full w-full bg-surface">
