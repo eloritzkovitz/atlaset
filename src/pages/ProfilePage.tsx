@@ -15,6 +15,7 @@ import {
   SecurityInfoSection,
   UserActivitySection,
 } from "@features/user";
+import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -61,6 +62,7 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-bg">
       <div className="p-4 max-w-4xl mx-auto flex gap-6">
+        <UserMenu />
         <ProfilePanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={handlePanelChange}
