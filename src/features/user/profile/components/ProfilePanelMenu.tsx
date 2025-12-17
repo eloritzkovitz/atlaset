@@ -1,4 +1,4 @@
-import { MenuButton, Panel } from "@components";
+import { Branding, MenuButton, Panel } from "@components";
 import { PROFILE_MENU } from "../constants/profileMenu";
 
 interface ProfilePanelMenuProps {
@@ -19,10 +19,10 @@ export function ProfilePanelMenu({
   return (
     <Panel
       title={
-        <span className="flex items-center gap-2">
-          {PROFILE_MENU[0].icon}
-          Profile
-        </span>
+        <div className="flex items-center gap-2 px-2">
+          <Branding size={36} />
+          <span className="font-bold text-2xl">Atlaset</span>
+        </div>
       }
       width={220}
       className="!left-0"
