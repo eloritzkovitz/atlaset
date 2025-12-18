@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
+import { CACHE_TTL } from "@config/cache";
+import { appDb } from "@utils/db";
 import {
   getAllRegions,
   getAllSubregions,
   getAllSovereigntyTypes,
 } from "../utils/countryData";
-import { appDb } from "@utils/db";
-
-// Cache time-to-live: 1  week
-const CACHE_TTL = 7 * 24 * 60 * 60 * 1000;
 
 /**
  * Fetches country and currency data with caching in IndexedDB.
