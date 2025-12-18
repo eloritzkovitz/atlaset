@@ -1,6 +1,7 @@
 # Data Sources
 
-All main data sources are loaded from JSON files in the [public/data](../public/data/) folder.
+All main data sources are loaded from JSON files, either directly from files or through API (from a URL).  
+Locally, they will be fetched from the [public/data](../public/data/) folder by default.
 You can change their location or swap datasets by editing the `.env` file.
 
 ## Data Types and Vriables
@@ -37,3 +38,17 @@ Your JSON mapping should look like this:
 ```
 
 You can find an example showing a few counntry objects [here](../examples/coountries.json).
+
+## Data Caching and Local Database
+
+### Caching Strategy
+
+- **Data sources** are cached locally in the browser using [IndexedDB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) via [Dexie.js](https://dexie.org/).
+- This allows for fast loading, offline access, and reduces backend/API calls.
+- Cached data is stored in the user's browser using IndexedDB (via Dexie), with a **Time-To-Live (TTL)** of 1 week by default. After this period, the app will automatically refresh the data from the server.
+
+### How to clear or refresh the cache
+
+- The cache is automatically refreshed after the TTL expires.
+- You can also manually refresh country data by using the refresh button in the countries panel.
+- To clear all cached data,you can clear your browser's site data or use developer tools to clear IndexedDB.

@@ -1,8 +1,6 @@
 # Atlaset
 
-A fully-configurable country explorer built with React, Vite, and TypeScript. Atlaset supports user-defined overlays, flexible filters, trip management and marker placement, allowing users to manage travel logs or create custom maps.
-All map, country and currency data sources are **generic, config-driven and environment-configurable**, loaded from JSON files.  
-Supports user-defined overlays, flexible filters, and easy data extension for any dataset.
+Atlaset is a modern, interactive country explorer and travel tracker built with React, Vite, and TypeScript. Designed for flexibility and performance, Atlaset allows fellow travelers to manage travel logs and analyze their journeys around the world - centered around an immersive map and powerful, rich features: tinker with the map and add your own overlays and markers, reminisce past trips with the timeline or plan new adventures, view the dashboard or test your knowledge of the world!
 
 ## Table of Contents
 - [Features](#features)
@@ -19,7 +17,7 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 - **Offline support:** All data is available offline for guests and authenticated users (via IndexedDB and Firestore persistence)
 
 ### **Map & Data**
-- **Interactive map:** Explore a cuztomizable world map
+- **Interactive map:** Explore a customizable world map
 - **Country details:** View detailed country information
 - **Configurable filters:** Filter by region, subregion, sovereignty and overlays
 - **Config-driven data:** All sources loaded from JSON files via environment variables
@@ -48,14 +46,28 @@ Supports user-defined overlays, flexible filters, and easy data extension for an
 
 ## Technologies Used
 
+### Frontend
 - **React** & **TypeScript** — Modern, strongly-typed UI development
 - **Vite** — Fast build tool and development server
 - **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
+
+### Backend
+- **Node.js** — Backend API and data processing
+- **Express** — API routing
+
+### Storage & Data
 - **Firebase (Firestore & Auth)** — Secure cloud database and authentication
-- **IndexedDB (via Dexie.js)** — Local/offline storage for guest users and offline mode
+- **IndexedDB (via Dexie.js)** — Local/offline storage and caching for guest sessions and static datasets
+
+### Platform & Deployment
 - **PWA (Progressive Web App)** — Offline support and installability
 - **Electron** — Desktop wrapper for cross-platform app support
+- **Deployed via Vercel** — Frontend hosting
+- **Deployed via Render** — Backend/API hosting
+
+### Testing
 - **Jest / Vitest** — Testing frameworks for unit and integration tests
+- **Testing Library** — Testing framework for React components and hooks
 - **Cypress** — End-to-end testing for user flows
 
 ## Documentation
