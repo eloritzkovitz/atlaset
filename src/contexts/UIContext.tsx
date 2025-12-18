@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 
 export interface UIContextType {
@@ -32,7 +33,7 @@ export interface UIContextType {
   toggleLegend: () => void;
   showShortcuts: boolean;
   toggleShortcuts: () => void;
-  closeLegend: () => void;  
+  closeLegend: () => void;
   closeShortcuts: () => void;
 }
 
@@ -49,10 +50,13 @@ export const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
+  const isMobile = useIsMobile();
 
   // State for which panel is open; null means no panel is open
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
-  const [openPanel, setOpenPanel] = useState<PanelSelection>("countries");
+  const [openPanel, setOpenPanel] = useState<PanelSelection>(
+    isMobile ? null : "countries"
+  );
   const prevOpenPanel = useRef<PanelSelection>(openPanel);
   const [showFilters, setShowFilters] = useState(false);
 
@@ -122,8 +126,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   // Effect to open countries panel when menu closes
   useEffect(() => {
-    // Only reopen countries if a different panel (not countries) was just closed
     if (
+      !isMobile &&
       prevOpenPanel.current !== null &&
       prevOpenPanel.current !== "countries" &&
       openPanel === null
@@ -131,7 +135,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
       setOpenPanel("countries");
     }
     prevOpenPanel.current = openPanel;
-  }, [openPanel]);
+  }, [openPanel, isMobile]);
 
   return (
     <UIContext.Provider
@@ -159,7 +163,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
         toggleLegend,
         closeLegend,
         showShortcuts,
-        toggleShortcuts,       
+        toggleShortcuts,
         closeShortcuts,
       }}
     >

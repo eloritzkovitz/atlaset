@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { LoadingSpinner } from "@components";
+import { HamburgerButton, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   EditProfileModal,
@@ -15,12 +15,16 @@ import {
   SecurityInfoSection,
   UserActivitySection,
 } from "@features/user";
+import { useIsMobile } from "@hooks/useIsMobile";
+import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
   const [editOpen, setEditOpen] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const isMobile = useIsMobile();
 
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
@@ -56,18 +60,25 @@ export default function ProfilePage() {
     } else {
       navigate("/profile");
     }
+    setPanelOpen(false);
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="p-4 max-w-4xl mx-auto flex gap-6">
+    <div className="min-h-screen bg-bg">
+      {/* Hamburger for mobile */}
+      {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
+      <div className="p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6">
+        {/* Hide UserMenu on mobile for clarity */}
+        {!isMobile && <UserMenu />}
         <ProfilePanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={handlePanelChange}
           canEdit={canEdit}
+          open={isMobile ? panelOpen : undefined}
+          onClose={isMobile ? () => setPanelOpen(false) : undefined}
         />
 
-        <main className="flex-1 p-8 mt-16 bg-surface rounded-lg shadow">
+        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow">
           <Routes>
             <Route
               path="/"

@@ -1,10 +1,4 @@
-import {
-  FaBars,
-  FaChartSimple,
-  FaEarthAmericas,
-  FaGamepad,
-  FaSuitcaseRolling,
-} from "react-icons/fa6";
+import { FaBars } from "react-icons/fa6";
 import { ActionButton, Branding } from "@components";
 import {
   DEFAULT_SIDEBAR_WIDTH,
@@ -13,6 +7,7 @@ import {
 import { useUI } from "@contexts/UIContext";
 import { usePanelHide } from "@hooks/usePanelHide";
 import { SidebarMenuLink } from "./SidebarMenuLink";
+import { NAV_LINKS } from "../navLinks";
 
 export function Sidebar() {
   const { uiVisible, sidebarExpanded, setSidebarExpanded } = useUI();
@@ -37,6 +32,7 @@ export function Sidebar() {
 
   return (
     <>
+      {/* Desktop sidebar: hidden on mobile, block on md+ */}
       {/* Backdrop when expanded */}
       {sidebarExpanded && (
         <div
@@ -45,7 +41,7 @@ export function Sidebar() {
         />
       )}
       <aside
-        className={`fixed top-0 left-0 h-screen z-[10000] bg-sidebar transition-all duration-200 px-1 transition-all duration-200`}
+        className={`hidden md:block fixed top-0 left-0 h-screen z-[10000] bg-sidebar transition-all duration-200 px-1`}
         style={{
           width: sidebarWidth,
           minWidth: sidebarWidth,
@@ -71,35 +67,32 @@ export function Sidebar() {
 
         {/* Navigation */}
         <nav className="flex flex-col gap-2 mt-2">
-          <SidebarMenuLink
-            to="/"
-            icon={<FaEarthAmericas className="text-2xl" />}
-            label="Atlas"
-            expanded={sidebarExpanded}
-            end
-          />
-          <SidebarMenuLink
-            to="/dashboard"
-            icon={<FaChartSimple className="text-2xl" />}
-            label="Dashboard"
-            expanded={sidebarExpanded}
-          />
-          <SidebarMenuLink
-            to="/game"
-            icon={<FaGamepad className="text-2xl" />}
-            label="Games"
-            expanded={sidebarExpanded}
-            end
-          />
-          <SidebarMenuLink
-            to="/trips"
-            icon={<FaSuitcaseRolling className="text-2xl" />}
-            label="My Trips"
-            expanded={sidebarExpanded}
-            end
-          />
+          {NAV_LINKS.map((link) => (
+            <SidebarMenuLink
+              key={link.to}
+              to={link.to}
+              icon={link.icon}
+              label={link.label}
+              expanded={sidebarExpanded}
+              end={link.end}
+            />
+          ))}
         </nav>
       </aside>
+
+      {/* Mobile bottom navigation bar: only visible on mobile */}
+      <nav className="fixed bottom-0 left-0 right-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
+        {NAV_LINKS.map((link) => (
+          <SidebarMenuLink
+            key={link.to}
+            to={link.to}
+            icon={link.icon}
+            label={link.label}
+            expanded={sidebarExpanded}
+            end={link.end}
+          />
+        ))}
+      </nav>
     </>
   );
 }

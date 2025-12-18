@@ -98,7 +98,9 @@ export function Modal({
         aria-modal="true"
         inert={!isOpen}
         role="dialog"
-        className={`modal-backdrop fixed inset-0 z-[9999] ${!disableScroll ? "modal-backdrop-scrollable" : ""}`}
+        className={`modal-backdrop fixed inset-0 z-[9999] ${
+          !disableScroll ? "modal-backdrop-scrollable" : ""
+        }`}
         style={{ zIndex: backdropZIndex }}
         onClick={
           !disableScroll
@@ -112,8 +114,10 @@ export function Modal({
           ref={modalRef}
           className={
             "group fixed " +
-            (position === "center" ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 " : "") +
-            "modal " +
+            (position === "center"
+              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
+              : "") +
+            "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +
             className +
