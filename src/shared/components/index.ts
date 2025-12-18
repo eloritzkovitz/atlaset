@@ -2,6 +2,7 @@
 export { ActionButton } from "./action/ActionButton";
 export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
+export { HamburgerButton } from "./action/HamburgerButton";
 
 // Branding components
 export { Branding } from "./branding/Branding";
@@ -57,6 +58,7 @@ export { ModalActions } from "./layout/Modal/ModalActions";
 export { Panel } from "./layout/Panel/Panel";
 export { PanelHeader } from "./layout/Panel/PanelHeader";
 export { PanelListItem } from "./layout/Panel/PanelListItem";
+export { DrawerPanel } from "./layout/Panel/DrawerPanel";
 
 // Toolbar components
 export { ActionsToolbar } from "./layout/Toolbar/ActionsToolbar";

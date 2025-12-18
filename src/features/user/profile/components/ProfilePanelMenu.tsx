@@ -1,22 +1,23 @@
-import { Branding, MenuButton, Panel } from "@components";
-import { PROFILE_MENU } from "../constants/profileMenu";
+import { Branding, DrawerPanel, MenuButton, Panel } from "@components";
 import { useIsMobile } from "@hooks/useIsMobile";
-import { useState } from "react";
-import { FaBars } from "react-icons/fa6";
+import { PROFILE_MENU } from "../constants/profileMenu";
 
 interface ProfilePanelMenuProps {
   selectedPanel: string;
   setSelectedPanel: (key: string) => void;
   canEdit: boolean;
+  open?: boolean;
+  onClose?: () => void;
 }
 
 export function ProfilePanelMenu({
   selectedPanel,
   setSelectedPanel,
   canEdit,
+  open,
+  onClose,
 }: ProfilePanelMenuProps) {
   const isMobile = useIsMobile();
-  const [open, setOpen] = useState(false);
 
   const menuItems = canEdit
     ? PROFILE_MENU
@@ -33,7 +34,7 @@ export function ProfilePanelMenu({
       }
       width={220}
       className="!left-0"
-      onHide={() => setOpen(false)}
+      onHide={onClose}
     >
       <ul>
         {menuItems.map((item) => (
@@ -43,7 +44,7 @@ export function ProfilePanelMenu({
               active={selectedPanel === item.key}
               onClick={() => {
                 setSelectedPanel(item.key);
-                if (isMobile) setOpen(false);
+                if (isMobile && onClose) onClose();
               }}
               className="w-full mb-2"
             >
@@ -55,31 +56,12 @@ export function ProfilePanelMenu({
     </Panel>
   );
 
-  // Mobile: hamburger + drawer
+  // Mobile: drawer
   if (isMobile) {
     return (
-      <>
-        <button
-          className="p-2 m-2"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-        >
-          <FaBars className="text-2xl" />
-        </button>
-        {open && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black/40 z-40"
-              onClick={() => setOpen(false)}
-            />
-            {/* Drawer */}
-            <div className="fixed top-0 left-0 h-full !w-64 z-50 shadow-lg transition-transform duration-300 bg-surface">
-              {panelContent}
-            </div>
-          </>
-        )}
-      </>
+      <DrawerPanel open={!!open} onClose={onClose!} width={256}>
+        {panelContent}
+      </DrawerPanel>
     );
   }
 

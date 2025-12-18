@@ -1,11 +1,6 @@
 import { useState } from "react";
-import {
-  FaBars,
-  FaChartSimple,
-  FaGlobe,
-  FaSuitcaseRolling,
-} from "react-icons/fa6";
-import { Panel, SubmenuSection } from "@components";
+import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
+import { DrawerPanel, Panel, SubmenuSection } from "@components";
 import {
   COUNTRIES_SUBMENU,
   TRIPS_SUBMENU,
@@ -15,17 +10,21 @@ import { useIsMobile } from "@hooks/useIsMobile";
 interface DashboardPanelMenuProps {
   selectedPanel: string;
   setSelectedPanel: (key: string) => void;
+  open?: boolean;
+  onClose?: () => void;
 }
 
 export function DashboardPanelMenu({
   selectedPanel,
   setSelectedPanel,
+  open,
+  onClose,
 }: DashboardPanelMenuProps) {
   const isMobile = useIsMobile();
-  const [open, setOpen] = useState(false);
   const [countriesExpanded, setCountriesExpanded] = useState(true);
   const [tripsExpanded, setTripsExpanded] = useState(true);
 
+  // Panel content
   const panelContent = (
     <Panel
       title={
@@ -35,8 +34,8 @@ export function DashboardPanelMenu({
         </>
       }
       width={220}
-      className="!left-0"
-      onHide={() => setOpen(false)}
+      className={isMobile ? "!left-0" : undefined}
+      onHide={onClose}
     >
       <ul>
         <SubmenuSection
@@ -48,7 +47,7 @@ export function DashboardPanelMenu({
           selectedPanel={selectedPanel}
           setSelectedPanel={(key) => {
             setSelectedPanel(key);
-            if (isMobile) setOpen(false);
+            if (isMobile && onClose) onClose();
           }}
         />
         <SubmenuSection
@@ -60,39 +59,22 @@ export function DashboardPanelMenu({
           selectedPanel={selectedPanel}
           setSelectedPanel={(key) => {
             setSelectedPanel(key);
-            if (isMobile) setOpen(false);
+            if (isMobile && onClose) onClose();
           }}
         />
       </ul>
     </Panel>
   );
 
+  // Mobile: drawer
   if (isMobile) {
     return (
-      <>
-        <button
-          className="p-2 m-2"
-          onClick={() => setOpen(true)}
-          aria-label="Open menu"
-        >
-          <FaBars className="text-2xl" />
-        </button>
-        {open && (
-          <>
-            {/* Backdrop */}
-            <div
-              className="fixed inset-0 bg-black/40 z-40"
-              onClick={() => setOpen(false)}
-            />
-            {/* Drawer */}
-            <div className="fixed top-0 left-0 h-full !w-64 z-50 shadow-lg transition-transform duration-300 bg-surface">
-              {panelContent}
-            </div>
-          </>
-        )}
-      </>
+      <DrawerPanel open={!!open} onClose={onClose!} width={256}>
+        {panelContent}
+      </DrawerPanel>
     );
   }
 
+  // Desktop: always show panel
   return panelContent;
 }

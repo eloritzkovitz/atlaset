@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
   Breadcrumbs,
   type Crumb,
   ErrorMessage,
   LoadingSpinner,
+  HamburgerButton,
 } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@contexts/CountryDataContext";
@@ -18,11 +20,13 @@ import {
 } from "@features/dashboard";
 import { useDashboardRouteState } from "@features/dashboard/countries/hooks/useDashboardRouteState";
 import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/breadcrumbs";
-
+import { useIsMobile } from "@hooks/useIsMobile";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
-  const { countries, loading, error } = useCountryData();  
+  const { countries, loading, error } = useCountryData();
+  const isMobile = useIsMobile();
+  const [panelOpen, setPanelOpen] = useState(false);
 
   // Dashboard route state
   const {
@@ -54,9 +58,9 @@ export default function DashboardPage() {
   } = useDashboardNavigation(countries, selectedRegion, selectedSubregion);
 
   // Loading and error states
-  if (loading || !ready ) return <LoadingSpinner />;
+  if (loading || !ready) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} />;
-  
+
   // Redirect to login if not authenticated
   if (!user) {
     return <Navigate to="/login" replace />;
@@ -68,18 +72,39 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen relative">
+      {/* Mobile: hamburger + drawer */}
+      {isMobile && (
+        <>
+          <HamburgerButton onClick={() => setPanelOpen(true)} />
+          <DashboardPanelMenu
+            open={panelOpen}
+            onClose={() => setPanelOpen(false)}
+            selectedPanel={menuSelectedPanel}
+            setSelectedPanel={handlePanelChange}
+          />
+        </>
+      )}
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
-        <DashboardPanelMenu
-          selectedPanel={menuSelectedPanel}
-          setSelectedPanel={handlePanelChange}
-        />
-        <div className="flex-1">
+        {/* Desktop: panel */}
+        {!isMobile && (
+          <DashboardPanelMenu
+            selectedPanel={menuSelectedPanel}
+            setSelectedPanel={handlePanelChange}
+          />
+        )}
+        <div className="flex-1 mt-12">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           <Routes>
             {/* Redirect /dashboard to /dashboard/countries/overview */}
-            <Route path="" element={<Navigate to="countries/overview" replace />} />
-            <Route path="countries" element={<Navigate to="/dashboard/countries/overview" replace />} />
+            <Route
+              path=""
+              element={<Navigate to="countries/overview" replace />}
+            />
+            <Route
+              path="countries"
+              element={<Navigate to="/dashboard/countries/overview" replace />}
+            />
 
             {/* Overview page */}
             <Route
