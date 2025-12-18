@@ -4,6 +4,8 @@ import type { Marker } from "../types/marker";
 import type { Overlay } from "../types/overlay";
 
 export class AppDB extends Dexie {
+  countryData!: Table<any, string>;
+  currencyData!: Table<any, string>;
   trips!: Table<Trip, string>;
   markers!: Table<Marker, string>;
   overlays!: Table<Overlay, string>;
@@ -12,6 +14,8 @@ export class AppDB extends Dexie {
   constructor(dbName = "AppDB") {
     super(dbName);
     this.version(1).stores({
+      countryData: "id",
+      currencyData: "id",
       trips: "id",
       markers: "id",
       overlays: "id",

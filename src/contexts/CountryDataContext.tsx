@@ -1,15 +1,5 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import {
-  getAllRegions,
-  getAllSubregions,
-  getAllSovereigntyTypes,
-} from "@features/countries";
+import { createContext, useContext } from "react";
+import { useCountryDataSource } from "../features/countries/hooks/useCountryDataSource";
 
 interface CountryDataContextType {
   countries: any[];
@@ -44,82 +34,10 @@ export function CountryDataProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [countries, setCountries] = useState<any[]>([]);
-  const [currencies, setCurrencies] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [allRegions, setAllRegions] = useState<string[]>([]);
-  const [allSubregions, setAllSubregions] = useState<string[]>([]);
-  const [allSovereigntyTypes, setAllSovereigntyTypes] = useState<string[]>([]);
-
-  // Function to fetch country and currency data
-  const fetchData = useCallback(() => {
-    setLoading(true);
-    setError(null);
-
-    // Determine URLs based on environment variables
-    const countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL?.startsWith(
-      "http"
-    )
-      ? import.meta.env.VITE_COUNTRY_DATA_URL
-      : import.meta.env.VITE_COUNTRY_DATA_URL
-      ? import.meta.env.VITE_COUNTRY_DATA_URL
-      : "/data/countries.json";
-
-    const currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL?.startsWith(
-      "http"
-    )
-      ? import.meta.env.VITE_CURRENCY_DATA_URL
-      : import.meta.env.VITE_CURRENCY_DATA_URL
-      ? import.meta.env.VITE_CURRENCY_DATA_URL
-      : "/data/currencies.json";
-
-    // Fetch both country and currency data
-    Promise.all([
-      fetch(countryDataUrl).then((res) => {
-        if (!res.ok) throw new Error("Failed to load country data");
-        return res.json();
-      }),
-      fetch(currencyDataUrl).then((res) => {
-        if (!res.ok) throw new Error("Failed to load currency data");
-        return res.json();
-      }),
-    ])
-      .then(([countryData, currencyData]) => {
-        setCountries(countryData);
-        setAllRegions(getAllRegions(countryData));
-        setAllSubregions(getAllSubregions(countryData));
-        setAllSovereigntyTypes(getAllSovereigntyTypes(countryData));
-        setCurrencies(currencyData);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  // Initial load
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  // Provide a method to refresh data
-  const refreshData = fetchData;
+  const value = useCountryDataSource();
 
   return (
-    <CountryDataContext.Provider
-      value={{
-        countries,
-        currencies,
-        allRegions,
-        allSubregions,
-        allSovereigntyTypes,
-        loading,
-        error,
-        refreshData,
-      }}
-    >
+    <CountryDataContext.Provider value={value}>
       {children}
     </CountryDataContext.Provider>
   );
