@@ -78,7 +78,7 @@ export default function ProfilePage() {
           onClose={isMobile ? () => setPanelOpen(false) : undefined}
         />
 
-        <main className="flex-1 p-4 md:p-8 mt-4 md:mt-16 bg-surface rounded-lg shadow">
+        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow">
           <Routes>
             <Route
               path="/"

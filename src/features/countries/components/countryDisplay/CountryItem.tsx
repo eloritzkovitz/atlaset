@@ -43,8 +43,8 @@ export function CountryItem({
 
   const baseClass =
     view === "list"
-      ? `px-4 py-2 my-1 rounded cursor-pointer flex items-center gap-3 transition`
-      : `flex flex-col items-center justify-center p-2 rounded-lg cursor-pointer transition`;
+      ? `px-2 sm:px-4 py-2 my-1 rounded cursor-pointer flex items-center gap-2 sm:gap-3 transition`
+      : `flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg cursor-pointer transition`;
 
   return (
     <div
@@ -61,24 +61,28 @@ export function CountryItem({
     >
       {showFlags ? (
         view === "list" ? (
-          <CountryWithFlag isoCode={country.isoCode} name={country.name} />
+          <CountryWithFlag
+            isoCode={country.isoCode}
+            name={country.name}
+            className="text-sm sm:text-base"
+          />
         ) : (
           <CountryFlag
             flag={{
               isoCode: country.isoCode,
               source: flagSource || "svg",
               style: "flat",
-              size: flagSize || "64",
+              size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
             }}
             alt={country.name}
-            className="mb-2 shadow"
+            className="mb-1 sm:mb-2 shadow"
           />
         )
       ) : (
-        <span className="text-sm">{country.name}</span>
+        <span className="text-xs sm:text-sm">{country.name}</span>
       )}
       {view === "grid" && (
-        <span className="text-base text-center break-words">
+        <span className="text-xs sm:text-base text-center break-words">
           {country.name}
         </span>
       )}

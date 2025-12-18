@@ -4,7 +4,7 @@ import type { SovereigntyType } from "@types";
 interface SovereigntyBadgeProps {
   type?: SovereigntyType;
   sovereign?: { name: string; isoCode?: string };
-};
+}
 
 // Map sovereignty types to badge colors
 const badgeColors: Record<SovereigntyType, string> = {
@@ -54,7 +54,15 @@ export function SovereigntyBadge({ type, sovereign }: SovereigntyBadgeProps) {
 
   return (
     <div
-      className={`mb-6 text-base text-center font-semibold rounded-full p-2 ${color}`}
+      className={`
+        mb-4 sm:mb-6
+        text-sm sm:text-base
+        text-center font-semibold
+        rounded-full
+        p-2 sm:px-4 sm:py-2
+        break-words
+        ${color}
+      `}
     >
       {label}
     </div>

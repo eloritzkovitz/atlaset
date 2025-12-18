@@ -93,7 +93,7 @@ export default function DashboardPage() {
             setSelectedPanel={handlePanelChange}
           />
         )}
-        <div className="flex-1 mt-12">
+        <div className="flex-1 mt-12 min-w-0">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           <Routes>
             {/* Redirect /dashboard to /dashboard/countries/overview */}

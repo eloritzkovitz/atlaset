@@ -11,7 +11,7 @@ export function HamburgerButton({
 }: HamburgerButtonProps) {
   return (
     <button
-      className={`p-2 absolute top-4 left-4 z-50 ${className}`}
+      className={`p-2 absolute top-3 left-2 z-50 ${className}`}
       onClick={onClick}
       aria-label="Open menu"
       type="button"

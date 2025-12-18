@@ -9,7 +9,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
       <Sidebar />
       <div className="flex flex-col h-full min-w-0">
         <UserMenu />
-        <main className="flex-1 overflow-auto">{children}</main>
+        <main className="flex-1 overflow-auto pb-16 sm:pb-0">{children}</main>
       </div>
       <ShortcutsModal />
     </div>
