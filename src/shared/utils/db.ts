@@ -14,7 +14,7 @@ export class AppDB extends Dexie {
 
   constructor(dbName = "AppDB") {
     super(dbName);
-    this.version(1).stores({
+    this.version(2).stores({
       countryData: "id",
       currencyData: "id",
       geoData: "id",
