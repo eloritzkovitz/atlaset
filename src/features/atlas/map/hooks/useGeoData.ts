@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
+import { CACHE_TTL } from "@config/cache";
+import { appDb } from "@utils/db";
 
 /**
  * Manages fetching and state of geographical data for maps.
@@ -10,21 +12,39 @@ export function useGeoData() {
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(DEFAULT_MAP_SETTINGS.geoUrl)
-      .then((res) => {
-        if (!res.ok) throw new Error("Failed to load map data");
-        return res.json();
-      })
-      .then((data) => {
-        setGeoData(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setGeoError(err.message);
-        setLoading(false);
-      });
+  // Fetch geo data with caching
+  const fetchGeoData = useCallback(async () => {
+    setLoading(true);
+    setGeoError(null);
+
+    const now = Date.now();
+    const cached = await appDb.geoData?.get("geoData");
+
+    // Use cached data if valid
+    if (cached && cached.ts && now - cached.ts < CACHE_TTL) {
+      setGeoData(cached.data);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(DEFAULT_MAP_SETTINGS.geoUrl);
+      if (!res.ok) throw new Error("Failed to load map data");
+      const data = await res.json();
+      setGeoData(data);
+      setLoading(false);
+      // Save to Dexie
+      await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
+    } catch (err: any) {
+      setGeoError(err.message || "Failed to load map data");
+      setLoading(false);
+    }
   }, []);
+
+  // Fetch geo data on mount
+  useEffect(() => {
+    fetchGeoData();
+  }, [fetchGeoData]);
 
   return { geoData, geoError, loading };
 }

@@ -11,6 +11,8 @@
     "paths": {
       "@components": ["shared/components/index.ts"],
       "@components/*": ["shared/components/*"],
+      "@config": ["shared/config/index.ts"],
+      "@config/*": ["shared/config/*"],
       "@constants": ["shared/constants/index.ts"],
       "@constants/*": ["shared/constants/*"],
       "@contexts": ["contexts/index.ts"],
