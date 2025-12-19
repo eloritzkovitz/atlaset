@@ -7,6 +7,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { UserInfo } from "./UserInfo";
 
 interface UserMenuProps {
@@ -16,12 +17,16 @@ interface UserMenuProps {
 }
 
 export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
-  const { toggleSettings, toggleShortcuts } = useUI();
+  const { toggleShortcuts } = useUI();
   const navigate = useNavigate();
-  
+  const isMobile = useIsMobile();
+
+  // Show loading state
   if (loading) {
     return <div className="p-2 text-center">Loading...</div>;
   }
+
+  // Show menu content
   if (user) {
     return (
       <>
@@ -37,7 +42,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           Profile
         </MenuButton>
         <MenuButton
-          onClick={toggleSettings}
+          onClick={() => navigate("/settings")}
           icon={<FaGear className="text-lg mr-2" />}
           ariaLabel="Settings"
           title="Settings"
@@ -45,15 +50,17 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         >
           Settings
         </MenuButton>
-        <MenuButton
-          onClick={toggleShortcuts}
-          icon={<FaKeyboard className="text-lg mr-2" />}
-          ariaLabel="Keyboard Shortcuts"
-          title="Keyboard Shortcuts"
-          className="w-full"
-        >
-          Keyboard Shortcuts
-        </MenuButton>
+        {!isMobile && (
+          <MenuButton
+            onClick={toggleShortcuts}
+            icon={<FaKeyboard className="text-lg mr-2" />}
+            ariaLabel="Keyboard Shortcuts"
+            title="Keyboard Shortcuts"
+            className="w-full"
+          >
+            Keyboard Shortcuts
+          </MenuButton>
+        )}
         <MenuButton
           onClick={onLogout}
           icon={<FaRightFromBracket className="text-lg mr-2" />}

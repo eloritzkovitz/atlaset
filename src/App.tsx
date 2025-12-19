@@ -17,6 +17,7 @@ import TripsPage from "./pages/TripsPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
+import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
@@ -41,6 +42,7 @@ function App() {
               <Route path="/login" element={<LoginPage />} />
               <Route path="/signup" element={<SignupPage />} />
               <Route path="/profile/*" element={<ProfilePage />} />
+              <Route path="/settings/*" element={<SettingsPage />} />
               <Route
                 path="/"
                 element={
