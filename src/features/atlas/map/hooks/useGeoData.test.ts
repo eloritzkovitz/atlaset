@@ -5,14 +5,13 @@ import { DEFAULT_MAP_SETTINGS } from "@constants";
 import * as dbModule from "@utils/db";
 
 describe("useGeoData", () => {
-  let fetchSpy: any;
   let getSpy: any;
   let putSpy: any;
   const fakeData = { foo: "bar" };
   const now = Date.now();
 
   beforeEach(() => {
-    fetchSpy = vi.stubGlobal("fetch", vi.fn());
+    vi.stubGlobal("fetch", vi.fn());
     getSpy = vi.spyOn(dbModule.appDb.geoData, "get");
     putSpy = vi.spyOn(dbModule.appDb.geoData, "put");
   });
