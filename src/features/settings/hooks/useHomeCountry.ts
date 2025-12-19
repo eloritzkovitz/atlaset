@@ -10,9 +10,12 @@ export function useHomeCountry() {
   const setHomeCountry = (country: string) =>
     updateSettings({ homeCountry: country });
 
-  const colorHomeCountry = !!settings?.colorHomeCountry;
+  // Fallback to false if overlays or colorHomeCountry is undefined
+  const colorHomeCountry = !!settings?.overlays?.colorHomeCountry;
   const setColorHomeCountry = (value: boolean) =>
-    updateSettings({ colorHomeCountry: value });
+    updateSettings({
+      overlays: { ...(settings.overlays ?? {}), colorHomeCountry: value },
+    });
 
   return {
     homeCountry: settings?.homeCountry,

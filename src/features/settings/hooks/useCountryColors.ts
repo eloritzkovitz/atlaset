@@ -7,8 +7,8 @@ import { COLOR_PALETTES, HOME_COUNTRY_COLOR } from "@constants/colors";
  */
 export function useCountryColors() {
   const { settings } = useSettings();
-  const selectedPaletteName =
-    settings.overlayPalettes?.standard || COLOR_PALETTES[0].name;
+  const palettes = settings.overlays?.palettes;
+  const selectedPaletteName = palettes?.standard || COLOR_PALETTES[0].name;
   const selectedPalette =
     COLOR_PALETTES.find((p) => p.name === selectedPaletteName) ||
     COLOR_PALETTES[0];

@@ -9,7 +9,10 @@ import type { OverlayMode } from "@types";
 export function useOverlayPaletteSettings() {
   const { settings, updateSettings } = useSettings();
 
-  const overlayPalettes = settings.overlayPalettes ?? {
+  // Fallback to an empty object if overlays is undefined
+  const overlays = settings.overlays ?? {};
+
+  const overlayPalettes = overlays.palettes ?? {
     standard: COLOR_PALETTES[0].name,
     cumulative: COLOR_PALETTES[0].name,
     yearly: COLOR_PALETTES[0].name,
@@ -17,11 +20,14 @@ export function useOverlayPaletteSettings() {
 
   const setPalette = (mode: OverlayMode, paletteName: string) => {
     updateSettings({
-      overlayPalettes: {
-        ...overlayPalettes,
-        [mode]: paletteName,
+      overlays: {
+        ...overlays,
+        palettes: {
+          ...overlayPalettes,
+          [mode]: paletteName,
+        },
       },
-    });    
+    });
   };
 
   return { overlayPalettes, setPalette };

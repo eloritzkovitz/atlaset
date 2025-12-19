@@ -47,11 +47,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   // Apply theme class to document
   useEffect(() => {
-    document.documentElement.classList.toggle(
-      "dark",
-      settings.theme === "dark"
-    );
-  }, [settings.theme]);
+    const theme = settings.display?.theme ?? "dark";
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [settings.display?.theme]);
 
   // Update settings in IndexedDB
   const updateSettings = async (updates: Partial<Settings>) => {

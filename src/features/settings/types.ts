@@ -1,12 +1,24 @@
-import type { OverlayMode } from '@types';
+import type { OverlayMode } from "@types";
+
+export type DisplaySettings = {
+  theme: "light" | "dark";
+};
+
+export type MapSettings = {
+  projection?: string;
+  borderColor?: string;
+  borderWidth?: number;
+};
+
+export type OverlaySettings = {
+  colorHomeCountry: boolean;
+  palettes: Record<OverlayMode, string>;
+};
 
 export type Settings = {
   id: string;
   homeCountry: string;
-  colorHomeCountry: boolean;
-  theme: 'light' | 'dark';
-  projection?: string;
-  borderColor?: string;
-  borderWidth?: number;
-  overlayPalettes?: Record<OverlayMode, string>;
+  display: DisplaySettings;
+  map: MapSettings;
+  overlays: OverlaySettings;
 };
