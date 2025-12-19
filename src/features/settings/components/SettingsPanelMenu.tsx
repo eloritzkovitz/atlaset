@@ -1,8 +1,8 @@
 import { Branding, DrawerPanel, MenuButton, Panel } from "@components";
 import { useIsMobile } from "@hooks/useIsMobile";
-import { PROFILE_MENU } from "../constants/profileMenu";
+import { SETTINGS_MENU } from "../constants/settingsMenu";
 
-interface ProfilePanelMenuProps {
+interface SettingsPanelMenuProps {
   selectedPanel: string;
   setSelectedPanel: (key: string) => void;
   canEdit: boolean;
@@ -10,18 +10,18 @@ interface ProfilePanelMenuProps {
   onClose?: () => void;
 }
 
-export function ProfilePanelMenu({
+export function SettingsPanelMenu({
   selectedPanel,
   setSelectedPanel,
   canEdit,
   open,
   onClose,
-}: ProfilePanelMenuProps) {
+}: SettingsPanelMenuProps) {
   const isMobile = useIsMobile();
 
   const menuItems = canEdit
-    ? PROFILE_MENU
-    : PROFILE_MENU.filter((item) => item.key !== "edit");
+    ? SETTINGS_MENU
+    : SETTINGS_MENU.filter((item) => item.key !== "edit");
 
   // Panel content
   const panelContent = (

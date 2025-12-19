@@ -8,9 +8,15 @@ import {
 } from "react-router-dom";
 import { HamburgerButton, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { SettingsPanelMenu } from "@features/settings";
+import {
+  EditProfileModal,
+  ProfileInfoCard,
+  SecurityInfoSection,
+  UserActivitySection,
+} from "@features/user";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
-import { EditProfileModal, ProfileInfoCard, ProfilePanelMenu, SecurityInfoSection, UserActivitySection } from "@features/user";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -43,16 +49,16 @@ export default function ProfilePage() {
     ? "activity"
     : location.pathname.endsWith("/security")
     ? "security"
-    : "profile";
+    : "account";
 
   // Handle menu navigation
   function handlePanelChange(panel: string) {
     if (panel === "activity") {
-      navigate("/profile/activity");
+      navigate("/settings/activity");
     } else if (panel === "security") {
-      navigate("/profile/security");
+      navigate("/settings/security");
     } else {
-      navigate("/profile");
+      navigate("/settings/account");
     }
     setPanelOpen(false);
   }
@@ -64,7 +70,7 @@ export default function ProfilePage() {
       <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">
         {/* Hide UserMenu on mobile for clarity */}
         {!isMobile && <UserMenu />}
-        <ProfilePanelMenu
+        <SettingsPanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={handlePanelChange}
           canEdit={canEdit}
@@ -73,10 +79,9 @@ export default function ProfilePage() {
         />
 
         <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow overflow-auto min-h-0">
-
           <Routes>
             <Route
-              path="/"
+              path="/account"
               element={
                 <ProfileInfoCard
                   user={user}
@@ -89,8 +94,11 @@ export default function ProfilePage() {
             />
             <Route path="activity" element={<UserActivitySection />} />
             <Route path="security" element={<SecurityInfoSection />} />
-            {/* Redirect unknown profile routes to /profile */}
-            <Route path="*" element={<Navigate to="/profile" replace />} />
+            {/* Redirect unknown profile routes to /settings */}
+            <Route
+              path="*"
+              element={<Navigate to="/settings/account" replace />}
+            />
           </Routes>
         </main>
       </div>

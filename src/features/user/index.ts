@@ -6,7 +6,6 @@ export { AuthLayout } from "./auth/components/AuthLayout";
 export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 
 // Profile Components
-export { ProfilePanelMenu } from "./profile/components/ProfilePanelMenu";
 export { ProfileInfoCard } from "./profile/components/info/ProfileInfoCard";
 export { SecurityInfoSection } from "./profile/components/security/SecurityInfoSection";
 export { EditProfileModal } from "./profile/components/info/EditProfileModal";

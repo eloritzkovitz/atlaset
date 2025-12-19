@@ -1,5 +1,6 @@
 // Components
 export { SettingsPanel } from "./components/SettingsPanel";
+export { SettingsPanelMenu } from "./components/SettingsPanelMenu";
 
 // Hooks
 export { useCountryColors } from "./hooks/useCountryColors";
