@@ -14,7 +14,7 @@ import {
 } from "firebase/auth";
 import { logUserActivity } from "@utils/firebase";
 import { auth } from "../../../../firebase";
-import { getDeviceInfo, logDevice, removeCurrentDevice } from "../utils/device";
+import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
 
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
@@ -78,10 +78,11 @@ export async function signUp(email: string, password: string) {
 // Sign out
 export async function logout() {
   const user = auth.currentUser;
+  const uid = user?.uid;
   await signOut(auth);
-  if (user) {
-    await logUserActivity("logout", {}, user.uid);
-    await removeCurrentDevice(user.uid);
+  if (uid) {
+    await logUserActivity("logout", {}, uid);
+    await removeDevice(uid);
   }
 }
 

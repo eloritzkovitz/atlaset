@@ -50,7 +50,7 @@ export function Panel({
                 ? "translate-y-0 opacity-100"
                 : "translate-y-full opacity-0 pointer-events-none"
             } ${className}`
-          : `bg-surface flex flex-col h-screen absolute top-0 left-16 z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
+          : `fixed bg-surface flex flex-col h-screen top-0 left-16 z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
             ${
               show
                 ? "translate-x-0 opacity-100"

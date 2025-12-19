@@ -64,10 +64,10 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
       {/* Hamburger for mobile */}
       {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
-      <div className="p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6">
+      <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">
         {/* Hide UserMenu on mobile for clarity */}
         {!isMobile && <UserMenu />}
         <ProfilePanelMenu
@@ -78,7 +78,8 @@ export default function ProfilePage() {
           onClose={isMobile ? () => setPanelOpen(false) : undefined}
         />
 
-        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow">
+        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow overflow-auto min-h-0">
+
           <Routes>
             <Route
               path="/"

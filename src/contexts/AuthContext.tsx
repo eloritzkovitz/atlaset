@@ -8,6 +8,7 @@ import {
 } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
+import { removeDevice } from "@features/user/auth/utils/device";
 import {
   hasGuestData,
   migrateGuestDataToFirestore,
@@ -49,7 +50,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     });
     return unsub;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);  
+  }, []);
+
+  // Clean up device info on logout
+  useEffect(() => {
+    if (user === null) {
+      const sessionId = localStorage.getItem("sessionId");
+      const userId = localStorage.getItem("userId");
+      if (sessionId && userId) {
+        removeDevice(userId, sessionId);
+        localStorage.removeItem("sessionId");
+        localStorage.removeItem("userId");
+      }
+    }
+  }, [user]);
 
   return (
     <AuthContext.Provider value={{ user, loading, ready }}>

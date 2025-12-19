@@ -83,18 +83,22 @@ export async function updateCurrentDevice(userId: string) {
 /**
  * Removes the current device from the user's devices in Firestore.
  * @param userId - The ID of the user.
+ * @param sessionId - (Optional) The session ID to remove. If not provided, removes the current session.
  */
-export async function removeCurrentDevice(userId: string) {
-  const sessionId = getOrCreateSessionId();
+export async function removeDevice(userId: string, sessionId?: string) {
+  const targetSessionId = sessionId || getOrCreateSessionId();
   const devicesCol = getUserCollection("devices");
   const q = query(
     devicesCol,
     where("userId", "==", userId),
-    where("sessionId", "==", sessionId)
+    where("sessionId", "==", targetSessionId)
   );
   const snapshot = await getDocs(q);
   for (const doc of snapshot.docs) {
     await deleteDoc(doc.ref);
   }
-  localStorage.removeItem("sessionId");
+  // Only clear localStorage if removing the current session
+  if (!sessionId || sessionId === getOrCreateSessionId()) {
+    localStorage.removeItem("sessionId");
+  }
 }
