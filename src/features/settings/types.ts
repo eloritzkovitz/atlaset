@@ -1,3 +1,5 @@
+import type { OverlayMode } from '@types';
+
 export type Settings = {
   id: string; // always 'main' for singleton settings
   homeCountry: string;
@@ -8,6 +10,3 @@ export type Settings = {
   borderWidth?: number;
   overlayPalettes?: Record<OverlayMode, string>;
 };
-
-// Overlay mode keys type definition
-export type OverlayMode = "standard" | "cumulative" | "yearly";

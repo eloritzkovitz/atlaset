@@ -6,9 +6,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { defaultSettings } from "@constants/defaultSettings";
 import { settingsService } from "@features/settings";
-import type { Settings } from "@types";
+import { defaultSettings } from "@features/settings/constants/defaultSettings";
+import type { Settings } from "@features/settings/types";
 import { useAuth } from "./AuthContext";
 
 const SettingsContext = createContext<{
