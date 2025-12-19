@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { BrandHeader, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { EditProfileModal, ProfileInfoCard } from "@features/user";
+import { isPasswordProvider } from "@features/user/auth/utils/provider";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 
@@ -12,7 +13,7 @@ export default function ProfilePage() {
   const isMobile = useIsMobile();
 
   // Only allow editing for email/password users
-  const canEdit = user?.providerData?.[0]?.providerId === "password";
+  const canEdit = isPasswordProvider(user);
 
   // Format join date from user metadata
   const joinDate = user?.metadata?.creationTime

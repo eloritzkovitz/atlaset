@@ -3,7 +3,7 @@ import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useUI } from "@contexts/UIContext";
 import { OverlayPaletteSettingsGroup } from "./colors/OverlayPaletteSettingsGroup";
-import { HomeCountrySelect } from "./home/HomeCountrySelect";
+import { HomeCountrySelect } from "./account/HomeCountrySelect";
 import { MapSettingsGroup } from "./map/MapSettingsGroup";
 import { ThemeSettingsGroup } from "./theme/ThemeSettingsGroup";
 

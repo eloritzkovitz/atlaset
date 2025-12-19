@@ -8,10 +8,9 @@ import {
 } from "react-router-dom";
 import { HamburgerButton, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { SettingsPanelMenu } from "@features/settings";
+import { AccountSettingsList, SettingsPanelMenu } from "@features/settings";
 import {
   EditProfileModal,
-  ProfileInfoCard,
   SecurityInfoSection,
   UserActivitySection,
 } from "@features/user";
@@ -28,11 +27,6 @@ export default function ProfilePage() {
 
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
-
-  // Format join date from user metadata
-  const joinDate = user?.metadata?.creationTime
-    ? new Date(user.metadata.creationTime).toLocaleDateString()
-    : null;
 
   // Show loading spinner while auth state is loading
   if (loading) {
@@ -82,15 +76,7 @@ export default function ProfilePage() {
           <Routes>
             <Route
               path="/account"
-              element={
-                <ProfileInfoCard
-                  user={user}
-                  email={user?.email || ""}
-                  joinDate={joinDate}
-                  canEdit={canEdit}
-                  onEdit={() => setEditOpen(true)}
-                />
-              }
+              element={<AccountSettingsList />}
             />
             <Route path="activity" element={<UserActivitySection />} />
             <Route path="security" element={<SecurityInfoSection />} />
