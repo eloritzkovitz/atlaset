@@ -3,9 +3,7 @@ import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useUI } from "@contexts/UIContext";
 import { OverlayPaletteSettingsGroup } from "./colors/OverlayPaletteSettingsGroup";
-import { HomeCountrySelect } from "./account/HomeCountrySelect";
 import { MapSettingsGroup } from "./map/MapSettingsGroup";
-import { ThemeSettingsGroup } from "./theme/ThemeSettingsGroup";
 
 export function SettingsPanel() {
   const { showSettings, closePanel } = useUI();
@@ -31,10 +29,6 @@ export function SettingsPanel() {
         />
       }
     >
-      <HomeCountrySelect />
-      <Separator className="my-4" />
-      <ThemeSettingsGroup />
-      <Separator className="my-4" />
       <MapSettingsGroup />
       <Separator className="my-4" />
       <OverlayPaletteSettingsGroup />

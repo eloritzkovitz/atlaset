@@ -2,6 +2,7 @@
 export { SettingsPanel } from "./components/SettingsPanel";
 export { SettingsPanelMenu } from "./components/SettingsPanelMenu";
 export { AccountSettingsList } from "./components/account/AccountSettingsList";
+export { DisplaySettingsSection } from "./components/display/DisplaySettingsSection";
 
 // Hooks
 export { useCountryColors } from "./hooks/useCountryColors";

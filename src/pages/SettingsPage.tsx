@@ -8,7 +8,7 @@ import {
 } from "react-router-dom";
 import { HamburgerButton, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { AccountSettingsList, SettingsPanelMenu } from "@features/settings";
+import { AccountSettingsList, DisplaySettingsSection, SettingsPanelMenu } from "@features/settings";
 import {
   EditProfileModal,
   SecurityInfoSection,
@@ -43,6 +43,8 @@ export default function ProfilePage() {
     ? "activity"
     : location.pathname.endsWith("/security")
     ? "security"
+    : location.pathname.endsWith("/display")
+    ? "display"
     : "account";
 
   // Handle menu navigation
@@ -51,6 +53,8 @@ export default function ProfilePage() {
       navigate("/settings/activity");
     } else if (panel === "security") {
       navigate("/settings/security");
+    } else if (panel === "display") {
+      navigate("/settings/display");
     } else {
       navigate("/settings/account");
     }
@@ -74,10 +78,8 @@ export default function ProfilePage() {
 
         <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow overflow-auto min-h-0">
           <Routes>
-            <Route
-              path="/account"
-              element={<AccountSettingsList />}
-            />
+            <Route path="account" element={<AccountSettingsList />} />
+            <Route path="display" element={<DisplaySettingsSection />} />
             <Route path="activity" element={<UserActivitySection />} />
             <Route path="security" element={<SecurityInfoSection />} />
             {/* Redirect unknown profile routes to /settings */}
