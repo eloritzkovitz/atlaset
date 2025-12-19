@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import { FaMapPin, FaTimeline } from "react-icons/fa6";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
-import { useUiHint } from "@hooks/useUiHint";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
-import { MapFooter } from "../controls/MapFooter";
-import { MapLegendModal } from "../legend/MapLegendModal";
-import { useMapLegendItems } from "../legend/useMapLegendItems";
-import { MapToolbar } from "../toolbar/MapToolbar";
+import { useUiHint } from "@hooks/useUiHint";
+import { MapFooter } from "./controls/MapFooter";
+import { MapLegendModal } from "./legend/MapLegendModal";
+import { MapToolbar } from "./toolbar/MapToolbar";
+import { useMapLegendItems } from "../hooks/useMapLegendItems";
 
 interface MapUiContainerProps {
   zoom: number;
