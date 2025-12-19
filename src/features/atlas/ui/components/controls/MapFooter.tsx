@@ -31,7 +31,7 @@ export const MapFooter: React.FC<MapFooterProps> = ({
           aria-label="Atlaset GitHub repository"
         >
           <FaGithub className="mr-1" size={14} />
-          GitHub
+          atlaset
         </a>
       </div>
       <span title={coords ? `Longitude, Latitude` : undefined}>
