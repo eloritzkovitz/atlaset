@@ -1,7 +1,7 @@
 import type { OverlayMode } from '@types';
 
 export type Settings = {
-  id: string; // always 'main' for singleton settings
+  id: string;
   homeCountry: string;
   colorHomeCountry: boolean;
   theme: 'light' | 'dark';
