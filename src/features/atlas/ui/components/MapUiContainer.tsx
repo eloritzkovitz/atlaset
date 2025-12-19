@@ -4,7 +4,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks/useUiHint";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
-import { MapCoordinatesDisplay } from "../controls/MapCoordinatesDisplay";
+import { MapFooter } from "../controls/MapFooter";
 import { MapLegendModal } from "../legend/MapLegendModal";
 import { useMapLegendItems } from "../legend/useMapLegendItems";
 import { MapToolbar } from "../toolbar/MapToolbar";
@@ -12,6 +12,7 @@ import { MapToolbar } from "../toolbar/MapToolbar";
 interface MapUiContainerProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
+  center: [number, number];
   selectedCoords: [number, number] | null;
   overlays: any[];
   isAddingMarker?: boolean;
@@ -20,6 +21,7 @@ interface MapUiContainerProps {
 export function MapUiContainer({
   zoom,
   setZoom,
+  center,
   selectedCoords,
   overlays,
   isAddingMarker,
@@ -72,7 +74,7 @@ export function MapUiContainer({
         setZoom={setZoom}
         setTimelineMode={setTimelineMode}
       />
-      {selectedCoords && <MapCoordinatesDisplay coords={selectedCoords} />}
+      <MapFooter zoom={zoom} coords={selectedCoords} latitude={center[1]} />
       <MapLegendModal
         open={showLegend}
         onClose={closeLegend}

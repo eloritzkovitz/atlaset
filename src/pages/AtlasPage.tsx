@@ -74,6 +74,7 @@ export default function AtlasPage() {
           <MapUiContainer
             zoom={zoom}
             setZoom={setZoom}
+            center={center}
             selectedCoords={selectedCoords}
             overlays={overlays}
             isAddingMarker={isAddingMarker}

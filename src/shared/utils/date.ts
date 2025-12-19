@@ -25,6 +25,14 @@ export function getYear(date?: string): string | undefined {
 }
 
 /**
+ * Gets the current year as a number.
+ * @returns The current year.
+ */
+export function getCurrentYear(): number {
+  return new Date().getFullYear();
+}
+
+/**
  * Gets the year number from a date string.
  * @param date - The date string to extract the year from.
  * @returns The year as a number, or undefined if the date is not provided.

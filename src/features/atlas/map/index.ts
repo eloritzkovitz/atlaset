@@ -11,4 +11,5 @@ export {
   getProjection,
   getGeoCoordsFromMouseEvent,
   getCountryCenterAndZoom,
+  getScaleBarLabel,
 } from "./utils/map";
