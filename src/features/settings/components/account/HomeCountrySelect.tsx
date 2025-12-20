@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { FaHouse, FaChevronRight } from "react-icons/fa6";
-import { Checkbox, CollapsibleHeader } from "@components";
+import { CollapsibleHeader } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
 
 export function HomeCountrySelect() {
   const { countries } = useCountryData();
-  const { homeCountry, setHomeCountry, colorHomeCountry, setColorHomeCountry } =
-    useHomeCountry();
+  const { homeCountry, setHomeCountry } = useHomeCountry();
   const [modalOpen, setModalOpen] = useState(false);
   const [expanded, setExpanded] = useState(true);
 
@@ -40,12 +39,7 @@ export function HomeCountrySelect() {
           )}
           <FaChevronRight className="ml-auto text-muted" />
         </button>
-      )}      
-      <Checkbox
-        checked={!!colorHomeCountry}
-        onChange={setColorHomeCountry}
-        label="Color home country on map"
-      />
+      )}
       {/* Country selection modal */}
       <CountrySelectModal
         isOpen={modalOpen}
