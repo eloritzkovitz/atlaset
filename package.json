@@ -9,8 +9,9 @@
     "dev:electron": "electron-vite dev",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "type-check": "tsc --noEmit",
     "preview": "vite preview",
-    "test": "vitest",
+    "test": "vitest run --coverage",
     "cypress": "cypress open"
   },
   "dependencies": {
