@@ -4,6 +4,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks/useUiHint";
+import type { Overlay } from "@types";
 import { MapFooter } from "./controls/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
 import { MapToolbar } from "./toolbar/MapToolbar";
@@ -14,7 +15,7 @@ interface MapUiContainerProps {
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   center: [number, number];
   selectedCoords: [number, number] | null;
-  overlays: any[];
+  overlays: Overlay[];
   isAddingMarker?: boolean;
 }
 

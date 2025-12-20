@@ -1,3 +1,4 @@
+import type { User } from "firebase/auth";
 import {
   FaGear,
   FaKeyboard,
@@ -11,7 +12,7 @@ import { useIsMobile } from "@hooks/useIsMobile";
 import { UserInfo } from "./UserInfo";
 
 interface UserMenuProps {
-  user: any;
+  user: User | null;
   loading: boolean;
   onLogout: () => void;
 }

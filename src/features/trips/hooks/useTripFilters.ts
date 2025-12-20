@@ -20,7 +20,7 @@ import {
   isLocalTrip,
   isUpcomingTrip,
 } from "@features/trips/utils/trips";
-import type { Trip } from "@types";
+import type { Country, Trip } from "@types";
 
 // Default trip filters
 const defaultTripFilterState: TripFilterState = {
@@ -48,15 +48,18 @@ const defaultTripFilterState: TripFilterState = {
  */
 export function useTripFilters(
   trips?: Trip[],
-  countryData?: any,
+  countryData?: { countries: Country[] },
   initialFilters?: Partial<TripFilterState>,
   globalSearch?: string
 ) {
   const { homeCountry } = useHomeCountry();
 
   // Ensure trips and countries are defined
-  const tripList = trips ?? [];
-  const countryList = countryData?.countries ?? [];
+  const tripList = useMemo(() => trips ?? [], [trips]);
+  const countryList = useMemo(
+    () => countryData?.countries ?? [],
+    [countryData]
+  );
 
   // Build country name map for fast lookups
   const countryMap = useMemo(
@@ -147,7 +150,7 @@ export function useTripFilters(
         const country = countryMap[opt.value.toLowerCase()];
         return opt.value ? { ...opt, country } : opt;
       }),
-    [rawCountryOptions, countryMap]
+    [rawCountryOptions, countryMap, homeCountry]
   );
 
   // Year options

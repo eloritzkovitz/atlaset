@@ -6,7 +6,7 @@ import { CountryFlag } from "../countryFlag/CountryFlag";
 
 interface CountryDetailsContentProps {
   country: Country;
-  currencies: any;
+  currencies: Record<string, string>;
 }
 
 export function CountryDetailsContent({

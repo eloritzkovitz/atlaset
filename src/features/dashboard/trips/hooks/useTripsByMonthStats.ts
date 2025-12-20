@@ -1,7 +1,24 @@
 import { useTrips } from "@contexts/TripsContext";
 import { useHomeCountry } from "@features/settings";
 import { isAbroadTrip } from "@features/trips/utils/trips";
-import { getMonthName } from "@utils/date";
+
+// Month names array
+export const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+] as const;
+
+export type MonthName = (typeof MONTHS)[number];
 
 export function useTripsByMonthStats() {
   const { trips } = useTrips();
@@ -14,7 +31,7 @@ export function useTripsByMonthStats() {
       const date = new Date(trip.startDate);
       if (!isNaN(date.getTime())) {
         const month = date.getMonth();
-        const monthName = String((getMonthName as any)(month));
+        const monthName = MONTHS[month];
         if (!monthStats[monthName]) {
           monthStats[monthName] = { local: 0, abroad: 0 };
         }
@@ -28,7 +45,7 @@ export function useTripsByMonthStats() {
   });
 
   // Prepare data for all months
-  const allMonths = getMonthName() as string[];
+  const allMonths = MONTHS;
   const tripsByMonthData = allMonths.map((name) => {
     const stats = monthStats[name] || { local: 0, abroad: 0 };
     return {

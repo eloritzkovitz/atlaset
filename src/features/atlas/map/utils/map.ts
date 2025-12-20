@@ -4,6 +4,7 @@
 
 import * as d3geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
+import type { Feature, FeatureCollection, Geometry } from "geojson";
 
 /**
  * Returns a D3 projection instance based on type and map dimensions.
@@ -102,7 +103,7 @@ export function getGeoCoordsFromMouseEvent(
  * @returns = The [longitude, latitude] coordinates of the centroid.
  */
 export function getFeatureCentroid(
-  feature: any,
+  feature: Feature<Geometry, { [key: string]: unknown }>,
   geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid
 ) {
   return geoCentroidFn(feature);
@@ -114,8 +115,8 @@ export function getFeatureCentroid(
  * @returns An object with center coordinates and zoom level, or null if not found.
  */
 export function getCountryCenterAndZoom(
-  geoData: { features: any[] },
-  isoCode: any,
+  geoData: FeatureCollection<Geometry, { [key: string]: unknown }>,
+  isoCode: string,
   geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid,
   geoBoundsFn: typeof d3geo.geoBounds = d3geo.geoBounds
 ) {

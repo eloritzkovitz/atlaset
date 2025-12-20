@@ -4,13 +4,13 @@ import type { Marker } from "../types/marker";
 import type { Overlay } from "../types/overlay";
 
 export class AppDB extends Dexie {
-  countryData!: Table<any, string>;
-  currencyData!: Table<any, string>;
-  geoData!: Table<any, string>;
+  countryData!: Table<Record<string, unknown>, string>;
+  currencyData!: Table<Record<string, unknown>, string>;
+  geoData!: Table<Record<string, unknown>, string>;
   trips!: Table<Trip, string>;
   markers!: Table<Marker, string>;
   overlays!: Table<Overlay, string>;
-  settings!: Table<any, string>;
+  settings!: Table<Record<string, unknown>, string>;
 
   constructor(dbName = "AppDB") {
     super(dbName);
@@ -21,7 +21,7 @@ export class AppDB extends Dexie {
       trips: "id",
       markers: "id",
       overlays: "id",
-      settings: 'id',      
+      settings: "id",
     });
   }
 }

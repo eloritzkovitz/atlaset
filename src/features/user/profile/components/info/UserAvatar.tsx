@@ -1,7 +1,8 @@
+import type { User } from "firebase/auth";
 import { FaCircleUser } from "react-icons/fa6";
 
 interface UserAvatarProps {
-  user: any;
+  user: User | null;
   size?: number;
   className?: string;
 }

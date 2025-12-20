@@ -44,24 +44,13 @@ export function getYearNumber(date?: string): number | undefined {
 }
 
 /**
- * Returns the month name for a given month index (0 = Jan, 11 = Dec).
- * If no index is provided, returns all month names as an array.
+ * Converts a timestamp (string, number, or Date) to a number representing milliseconds since epoch.
+ * @param ts - The timestamp to convert.
+ * @returns The timestamp as a number.
  */
-export function getMonthName(monthIdx?: number): string | string[] {
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  if (typeof monthIdx === "number") return months[monthIdx];
-  return months;
+export function getTimestamp(ts: string | number | Date): number {
+  if (typeof ts === "number") return ts;
+  if (ts instanceof Date) return ts.getTime();
+  // Assume string
+  return new Date(ts).getTime();
 }

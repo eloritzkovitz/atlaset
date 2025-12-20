@@ -16,7 +16,7 @@ export type CountryFilterKey =
   | "sovereignty"
   | "overlay";
 
-export type CountryFilterConfig<T = string, P = any> = FilterConfig<
+export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
   T,
   P,
   CountryFilterKey

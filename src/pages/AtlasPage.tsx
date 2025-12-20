@@ -11,6 +11,21 @@ import {
 } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
+import type { GeoJsonProperties } from "geojson";
+import type { FeatureCollection, Geometry } from "geojson";
+
+function normalizeGeoDataProperties(
+  geoData: FeatureCollection<Geometry, GeoJsonProperties> | null
+): FeatureCollection<Geometry, { [key: string]: unknown }> | null {
+  if (!geoData) return null;
+  return {
+    ...geoData,
+    features: geoData.features.map((feature) => ({
+      ...feature,
+      properties: feature.properties ?? {},
+    })),
+  };
+}
 
 export default function AtlasPage() {
   // Data state
@@ -26,8 +41,8 @@ export default function AtlasPage() {
     setCenter,
     handleMoveEnd,
     centerOnCountry,
-    centerOnMarker,
-  } = useMapView(geoData);
+    centerOnMarkerById,
+  } = useMapView(normalizeGeoDataProperties(geoData));
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(
     null
@@ -68,7 +83,7 @@ export default function AtlasPage() {
           selectedCountry={selectedCountry}
           setSelectedCountry={setSelectedCountry}
           centerOnCountry={centerOnCountry}
-          centerOnMarker={centerOnMarker}
+          centerOnMarker={centerOnMarkerById}
         />
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           <MapUiContainer
@@ -80,7 +95,7 @@ export default function AtlasPage() {
             isAddingMarker={isAddingMarker}
           />
           <WorldMap
-            geoData={geoData}
+            geoData={normalizeGeoDataProperties(geoData)}
             zoom={zoom}
             center={center}
             setZoom={setZoom}

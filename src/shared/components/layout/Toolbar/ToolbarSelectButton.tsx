@@ -38,7 +38,7 @@ export function ToolbarSelectButton<T extends string | number>({
         onClick={() => setOpen((prev) => !prev)}
       >
         <span className="truncate flex-1 text-left pl-3">
-          {options.find((o: { value: any }) => o.value === value)?.label}
+          {options.find((o) => o.value === value)?.label}
         </span>
         <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
           <FaChevronDown />

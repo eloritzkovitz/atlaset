@@ -127,7 +127,10 @@ export const tripsService = {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
-      await setDoc(doc(tripsCol, trip.id), tripForFirestore as any);
+      await setDoc(
+        doc(tripsCol, trip.id),
+        tripForFirestore as Record<string, unknown>
+      );
       await logUserActivity(
         "edit_trip",
         {

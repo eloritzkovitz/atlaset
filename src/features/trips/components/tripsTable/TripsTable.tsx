@@ -5,12 +5,12 @@ import {
   MIN_WIDTHS,
   type ColumnKey,
 } from "@features/trips/constants/columns";
-import type { TripSortBy, TripSortByKey } from "@features/trips/types";
+import type { TripFilters, TripSortBy, TripSortByKey } from "@features/trips/types";
 import { sortTrips } from "@features/trips/utils/tripSort";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { useResizableColumns } from "@hooks/useResizableColumns";
 import { useSort } from "@hooks/useSort";
-import type { Trip } from "@types";
+import type { FilterOption, Trip } from "@types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
 import "./TripsTable.css";
@@ -20,13 +20,13 @@ interface TripsTableProps {
   onEdit: (trip: Trip) => void;
   onRatingChange: (tripId: string, rating: number | undefined) => void;
   onDelete: (trip: Trip) => void;
-  filters: any;
-  updateFilter: (key: string, value: any) => void;
-  countryOptions: any[];
-  yearOptions: any[];
-  categoryOptions: any[];
-  statusOptions: any[];
-  tagOptions: any[];
+  filters: TripFilters;
+  updateFilter: (key: string, value: unknown) => void;
+  countryOptions: FilterOption[];
+  yearOptions: FilterOption[];
+  categoryOptions: FilterOption[];
+  statusOptions: FilterOption[];
+  tagOptions: FilterOption[];
   selectedTripIds: string[];
   onSelectTrip: (id: string) => void;
   allSelected: boolean;
@@ -123,7 +123,7 @@ export function TripsTable({
           sortBy={sortBy}
           handleSort={handleSort}
           filters={filters}
-          updateFilter={updateFilter as (key: string, value: any) => void}
+          updateFilter={updateFilter}
           countryOptions={countryOptions}
           yearOptions={yearOptions}
           categoryOptions={categoryOptions}

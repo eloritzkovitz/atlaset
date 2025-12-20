@@ -9,9 +9,9 @@
  * @param direction - The direction of the sort, either "asc" for ascending or "desc" for descending. Defaults to "asc".
  * @returns A new array of items sorted based on the extracted values and specified direction.
  */
-export function sortItems<T>(
+export function sortItems<T, V = unknown>(
   items: T[],
-  getSortValue: (item: T) => any,
+  getSortValue: (item: T) => V,
   direction: "asc" | "desc" = "asc"
 ): T[] {
   return [...items].sort((a, b) => {

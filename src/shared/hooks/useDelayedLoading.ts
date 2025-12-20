@@ -9,11 +9,15 @@ import { useEffect, useState } from "react";
  */
 export function useDelayedLoading(
   loading: boolean,
-  deps: any[] = [],
+  deps: unknown[] = [],
   minDelay = 300
 ) {
   const [showLoading, setShowLoading] = useState(true);
 
+  // Combine dependencies into a single array for useEffect
+  const allDeps = [loading, minDelay, ...deps];
+
+  // Handle delayed loading effect
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => setShowLoading(false), minDelay);
@@ -21,7 +25,7 @@ export function useDelayedLoading(
     } else {
       setShowLoading(true);
     }
-  }, [loading, minDelay, ...deps]);
+  }, allDeps);
 
   return loading || showLoading;
 }

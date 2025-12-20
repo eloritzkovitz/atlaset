@@ -1,7 +1,8 @@
+import type { User } from "firebase/auth";
 import { UserAvatar } from "@features/user";
 
 interface UserAvatarButtonProps {
-  user: any;
+  user: User | null;
   onClick: () => void;
 }
 

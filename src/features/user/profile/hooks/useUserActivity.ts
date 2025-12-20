@@ -1,6 +1,15 @@
 import { useState, useEffect, useCallback } from "react";
-import { query, orderBy, getDocs, limit, startAfter } from "firebase/firestore";
+import {
+  query,
+  orderBy,
+  getDocs,
+  limit,
+  startAfter,
+  QueryDocumentSnapshot,
+  type DocumentData,
+} from "firebase/firestore";
 import { getUserCollection } from "@utils/firebase";
+import type { UserActivity } from "../../types";
 
 const PAGE_SIZE = 10;
 
@@ -10,9 +19,10 @@ const PAGE_SIZE = 10;
  * @returns An object containing the activity data, loading state, pagination info, and a function to load more data.
  */
 export function useUserActivity(userId?: string) {
-  const [activity, setActivity] = useState<any[]>([]);
+  const [activity, setActivity] = useState<UserActivity[]>([]);
   const [loading, setLoading] = useState(true);
-  const [lastDoc, setLastDoc] = useState<any>(null);
+  const [lastDoc, setLastDoc] =
+    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
   const [hasMore, setHasMore] = useState(true);
 
   // Initial load
@@ -27,7 +37,11 @@ export function useUserActivity(userId?: string) {
         limit(PAGE_SIZE)
       );
       const snapshot = await getDocs(q);
-      setActivity(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+      setActivity(
+        snapshot.docs.map(
+          (doc) => ({ id: doc.id, ...doc.data() } as UserActivity)
+        )
+      );
       setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
       setHasMore(snapshot.docs.length === PAGE_SIZE);
       setLoading(false);
@@ -49,7 +63,9 @@ export function useUserActivity(userId?: string) {
     const snapshot = await getDocs(q);
     setActivity((prev) => [
       ...prev,
-      ...snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+      ...snapshot.docs.map(
+        (doc) => ({ id: doc.id, ...doc.data() } as UserActivity)
+      ),
     ]);
     setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
     setHasMore(snapshot.docs.length === PAGE_SIZE);

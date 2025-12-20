@@ -1,17 +1,21 @@
+import type { Feature, FeatureCollection, Geometry } from "geojson";
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
-
 import { useMapGeographyStyle } from "@features/atlas/map/hooks/useMapGeographyStyle";
 import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
 } from "@features/atlas/overlays";
-import { useCountryColors, useHomeCountry, useOverlayColors } from "@features/settings";
+import {
+  useCountryColors,
+  useHomeCountry,
+  useOverlayColors,
+} from "@features/settings";
 import type { OverlayItem } from "@types";
 
 type MapCountriesLayerProps = {
-  geographyData: string;
+  geographyData: FeatureCollection<Geometry, { [key: string]: unknown }> | null;
   overlayItems?: OverlayItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
@@ -48,7 +52,11 @@ export function CountriesLayer({
   return (
     <g style={isAddingMarker ? { pointerEvents: "none" } : undefined}>
       <Geographies geography={geographyData}>
-        {({ geographies }: { geographies: any[] }) =>
+        {({
+          geographies,
+        }: {
+          geographies: Feature<Geometry, { [key: string]: unknown }>[];
+        }) =>
           geographies.map((geo) => {
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
@@ -91,7 +99,7 @@ export function CountriesLayer({
 
             return (
               <Geography
-                key={geo.rsmKey}
+                key={(geo as unknown as { rsmKey: string }).rsmKey}
                 geography={geo}
                 onMouseEnter={() =>
                   onCountryHover && onCountryHover(isoA2 ?? null)
@@ -104,7 +112,7 @@ export function CountriesLayer({
                   pressed: style,
                 }}
               >
-                <title>{tooltip}</title>
+                <title>{String(tooltip)}</title>
               </Geography>
             );
           })

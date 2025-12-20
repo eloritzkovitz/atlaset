@@ -10,7 +10,7 @@ interface UsePaginationOptions<T> {
  * @param options - Configuration options for pagination.
  * @returns An object containing paginated data, loading state, pagination info, and a function to load more data.
  */
-export function usePagination<T = any>(options: UsePaginationOptions<T>) {
+export function usePagination<T>(options: UsePaginationOptions<T>) {
   const pageSize = options.pageSize ?? 20;
 
   const [page, setPage] = useState(1);

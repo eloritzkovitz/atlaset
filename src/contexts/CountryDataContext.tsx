@@ -1,8 +1,9 @@
 import { createContext, useContext } from "react";
+import type { Country } from "@types";
 import { useCountryDataSource } from "../features/countries/hooks/useCountryDataSource";
 
 interface CountryDataContextType {
-  countries: any[];
+  countries: Country[];
   currencies: Record<string, string>;
   allRegions: string[];
   allSubregions: string[];

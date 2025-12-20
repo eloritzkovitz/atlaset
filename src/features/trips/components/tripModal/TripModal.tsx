@@ -84,7 +84,7 @@ export function TripModal({
               <FormField label="Name">
                 <InputBox
                   value={trip.name}
-                  onChange={(e: { target: { value: any } }) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onChange({ ...trip, name: e.target.value })
                   }
                   required
@@ -93,7 +93,7 @@ export function TripModal({
               <FormField label="Start Date" disabled={isTentative}>
                 <DateSelect
                   value={trip.startDate ?? ""}
-                  onChange={(e: { target: { value: any } }) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     const newStart = e.target.value;
                     let newEnd = trip.endDate;
                     if (!newEnd || newEnd < newStart) {
@@ -109,7 +109,7 @@ export function TripModal({
                 <DateSelect
                   value={trip.endDate ?? ""}
                   min={trip.startDate || undefined}
-                  onChange={(e: { target: { value: any } }) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onChange({ ...trip, endDate: e.target.value })
                   }
                   disabled={isTentative}

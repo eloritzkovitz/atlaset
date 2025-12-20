@@ -6,13 +6,14 @@ import {
   getAllSubregions,
   getAllSovereigntyTypes,
 } from "../utils/countryData";
+import type { Country } from "@types";
 
 /**
  * Fetches country and currency data with caching in IndexedDB.
  * @returns Country and currency data along with loading state and error
  */
 export function useCountryDataSource() {
-  const [countries, setCountries] = useState<any[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [currencies, setCurrencies] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,19 +35,23 @@ export function useCountryDataSource() {
 
     // Validate cache
     const isCountryCacheValid =
-      cachedCountry && cachedCountry.ts && now - cachedCountry.ts < CACHE_TTL;
+      cachedCountry &&
+      typeof cachedCountry.ts === "number" &&
+      now - cachedCountry.ts < CACHE_TTL;
     const isCurrencyCacheValid =
       cachedCurrency &&
-      cachedCurrency.ts &&
+      typeof cachedCurrency.ts === "number" &&
       now - cachedCurrency.ts < CACHE_TTL;
 
     // Use cached data if valid and not forcing refresh
     if (!forceRefresh && isCountryCacheValid && isCurrencyCacheValid) {
-      setCountries(cachedCountry.data);
-      setAllRegions(getAllRegions(cachedCountry.data));
-      setAllSubregions(getAllSubregions(cachedCountry.data));
-      setAllSovereigntyTypes(getAllSovereigntyTypes(cachedCountry.data));
-      setCurrencies(cachedCurrency.data);
+      setCountries(cachedCountry.data as Country[]);
+      setAllRegions(getAllRegions(cachedCountry.data as Country[]));
+      setAllSubregions(getAllSubregions(cachedCountry.data as Country[]));
+      setAllSovereigntyTypes(
+        getAllSovereigntyTypes(cachedCountry.data as Country[])
+      );
+      setCurrencies(cachedCurrency.data as Record<string, string>);
       setLoading(false);
       return;
     }
@@ -81,10 +86,10 @@ export function useCountryDataSource() {
       ]);
 
       // Update state
-      setCountries(countryData);
-      setAllRegions(getAllRegions(countryData));
-      setAllSubregions(getAllSubregions(countryData));
-      setAllSovereigntyTypes(getAllSovereigntyTypes(countryData));
+      setCountries(countryData as Country[]);
+      setAllRegions(getAllRegions(countryData as Country[]));
+      setAllSubregions(getAllSubregions(countryData as Country[]));
+      setAllSovereigntyTypes(getAllSovereigntyTypes(countryData as Country[]));
       setCurrencies(currencyData);
       setLoading(false);
 
@@ -99,8 +104,8 @@ export function useCountryDataSource() {
         data: currencyData,
         ts: Date.now(),
       });
-    } catch (err: any) {
-      setError(err.message || "Failed to load data");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load data");
       setLoading(false);
     }
   }, []);

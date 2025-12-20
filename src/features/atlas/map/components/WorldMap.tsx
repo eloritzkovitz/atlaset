@@ -1,3 +1,4 @@
+import type { FeatureCollection, Geometry } from "geojson";
 import { useEffect, useRef } from "react";
 import { ComposableMap, ZoomableGroup } from "react-simple-maps";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
@@ -11,7 +12,7 @@ import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapOverlayItems } from "../hooks/useMapOverlayItems";
 
 interface WorldMapProps {
-  geoData: string;
+  geoData: FeatureCollection<Geometry, { [key: string]: unknown }> | null;
   zoom: number;
   center: [number, number];
   setZoom: (zoom: number) => void;

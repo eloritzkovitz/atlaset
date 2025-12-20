@@ -1,3 +1,4 @@
+import type { User } from "firebase/auth";
 import { FaPen } from "react-icons/fa6";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryWithFlag } from "@features/countries";
@@ -7,7 +8,7 @@ import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";
 
 interface ProfileInfoCardProps {
-  user: any;
+  user: User | null;
   email?: string;
   joinDate?: string | null;
   canEdit?: boolean;

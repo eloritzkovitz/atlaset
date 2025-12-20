@@ -28,8 +28,8 @@ export function useAccountManagement(user: User | null) {
       await deactivateAccount(user);
       setSuccess("Account hibernated. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
-    } catch (e: any) {
-      setError(e.message || "Failed to hibernate account.");
+    } catch (e: unknown) {
+      setError((e as Error).message || "Failed to hibernate account.");
     } finally {
       setHibernating(false);
     }
@@ -45,8 +45,8 @@ export function useAccountManagement(user: User | null) {
       await deleteAppAccount(user);
       setSuccess("Account deleted. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
-    } catch (e: any) {
-      setError(e.message || "Failed to delete account.");
+    } catch (e: unknown) {
+      setError((e as Error).message || "Failed to delete account.");
     } finally {
       setDeleting(false);
     }

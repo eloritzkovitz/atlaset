@@ -14,9 +14,10 @@ export function usePwaUpdate() {
     if (!isClient) return;
 
     // VitePWA injects a global 'window.__SW_UPDATE__' event
-    const onSWUpdate = (event: any) => {
+    const onSWUpdate = (event: Event) => {
       setNeedRefresh(true);
-      setWaitingWorker(event?.detail?.waiting || null);
+      const customEvent = event as CustomEvent<{ waiting?: ServiceWorker }>;
+      setWaitingWorker(customEvent.detail?.waiting || null);
     };
 
     window.addEventListener("swUpdated", onSWUpdate as EventListener);

@@ -10,6 +10,7 @@ import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { usePagination } from "@hooks/usePagination";
 import type { Trip } from "@types";
+import type { TripFilterState } from "@features/trips/types";
 
 export default function TripsPage() {
   const countryData = useCountryData();
@@ -151,9 +152,14 @@ export default function TripsPage() {
               onRatingChange={updateTripRating}
               onDelete={handleDelete}
               filters={filters}
-              updateFilter={(key: string, value: any) =>
-                updateFilter(key as any, value)
-              }
+              updateFilter={(key, value) => {
+                if (key in filters) {
+                  updateFilter(
+                    key as keyof TripFilterState,
+                    value as TripFilterState[keyof TripFilterState]
+                  );
+                }
+              }}
               countryOptions={countryOptions}
               yearOptions={yearOptions}
               categoryOptions={categoryOptions}

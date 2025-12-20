@@ -5,7 +5,7 @@ export type ColorPalette = {
 };
 
 // Generic ColorRoles type definition
-export type ColorRoles<T extends Record<string, any>> = {
+export type ColorRoles<T> = {
   [K in keyof T]: T[K];
 };
 
