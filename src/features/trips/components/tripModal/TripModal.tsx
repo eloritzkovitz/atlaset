@@ -13,7 +13,7 @@ import {
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, getCountryByIsoCode } from "@features/countries";
-import type { Trip, TripCategory, TripStatus } from "@types";
+import type { Country, Trip, TripCategory, TripStatus } from "@types";
 import { SelectedCountriesList } from "./SelectedCountriesList";
 import { useTripFilters } from "../../hooks/useTripFilters";
 import "./TripModal.css";
@@ -205,7 +205,9 @@ export function TripModal({
             <div className="flex flex-col min-w-0 p-4 gap-2 basis-[40%]">
               <div className="flex-1 min-h-0 overflow-auto">
                 <SelectedCountriesList
-                  selectedCountries={selectedCountries}
+                  selectedCountries={selectedCountries
+                    .filter((c): c is Country => c !== null)
+                    .map(({ isoCode, name }) => ({ isoCode, name }))}
                   onRemove={(isoCode) =>
                     onChange({
                       ...trip,

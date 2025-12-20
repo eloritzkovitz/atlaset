@@ -49,7 +49,7 @@ describe("countryData utils", () => {
   });
 
   describe("getCountryByIsoCode", () => {
-    const countries = [{ isoCode: "US", name: "United States" }];
+    const countries = mockCountries.filter((c) => c.isoCode === "US");
     it("finds country by ISO code", () => {
       expect(getCountryByIsoCode("US", { countries })).toEqual(countries[0]);
     });
