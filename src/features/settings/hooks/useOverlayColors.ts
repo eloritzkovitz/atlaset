@@ -6,8 +6,15 @@ import type { OverlayMode } from "@types";
  * Manages overlay palette settings.
  * @returns Current overlay palettes and a function to set them.
  */
-export function useOverlayPaletteSettings() {
+export function useOverlayColors() {
   const { settings, updateSettings } = useSettings();
+
+  // Fallback to false if overlays or colorHomeCountry is undefined
+  const colorHomeCountry = !!settings?.overlays?.colorHomeCountry;
+  const setColorHomeCountry = (value: boolean) =>
+    updateSettings({
+      overlays: { ...(settings.overlays ?? {}), colorHomeCountry: value },
+    });
 
   // Fallback to an empty object if overlays is undefined
   const overlays = settings.overlays ?? {};
@@ -30,5 +37,5 @@ export function useOverlayPaletteSettings() {
     });
   };
 
-  return { overlayPalettes, setPalette };
+  return { colorHomeCountry, setColorHomeCountry, overlayPalettes, setPalette };
 }

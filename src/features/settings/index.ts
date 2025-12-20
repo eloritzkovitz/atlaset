@@ -7,6 +7,7 @@ export { DisplaySettingsSection } from "./components/display/DisplaySettingsSect
 // Hooks
 export { useCountryColors } from "./hooks/useCountryColors";
 export { useHomeCountry } from "./hooks/useHomeCountry";
+export { useOverlayColors } from "./hooks/useOverlayColors";
 export { useTheme } from "./hooks/useTheme";
 export { useVisitColorRoles } from "./hooks/useVisitColorRoles";
 

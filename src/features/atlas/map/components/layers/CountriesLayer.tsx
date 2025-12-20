@@ -7,7 +7,7 @@ import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
 } from "@features/atlas/overlays";
-import { useCountryColors, useHomeCountry } from "@features/settings";
+import { useCountryColors, useHomeCountry, useOverlayColors } from "@features/settings";
 import type { OverlayItem } from "@types";
 
 type MapCountriesLayerProps = {
@@ -35,7 +35,8 @@ export function CountriesLayer({
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
 
   // Home country for coloring
-  const { homeCountry, colorHomeCountry } = useHomeCountry();
+  const { homeCountry } = useHomeCountry();
+  const { colorHomeCountry } = useOverlayColors();
   const { HOME_COUNTRY_COLOR } = useCountryColors();
 
   // Group overlay items by isoCode for stacking/blending
