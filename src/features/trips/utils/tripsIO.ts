@@ -11,7 +11,10 @@ import type { Trip } from "@types";
  * @param addTrip - The function to call to add each trip.
  * @returns void
  */
-export async function importTripsFromFile(file: File, addTrip: (trip: Trip) => Promise<void>) {
+export async function importTripsFromFile(
+  file: File,
+  addTrip: (trip: Trip) => Promise<void>
+) {
   const ext = file.name.split(".").pop()?.toLowerCase();
   const text = await file.text();
 
@@ -28,8 +31,8 @@ export async function importTripsFromFile(file: File, addTrip: (trip: Trip) => P
     Papa.parse(text, {
       header: true,
       complete: async (results) => {
-        for (const trip of results.data as any[]) {
-          await addTrip({ ...trip, id: crypto.randomUUID() });
+        for (const trip of results.data as unknown[]) {
+          await addTrip({ ...(trip as Trip), id: crypto.randomUUID() });
         }
       },
     });
@@ -44,7 +47,7 @@ export async function importTripsFromFile(file: File, addTrip: (trip: Trip) => P
  * @returns void
  */
 export function exportTripsToCSV(trips: Trip[]) {
-  const tripsNoId = trips.map(({ id, ...rest }) => rest);
+  const tripsNoId = trips.map(({ ...rest }) => rest);
   const headers = Object.keys(tripsNoId[0] || {}).join(",");
   const rows = tripsNoId.map((trip) =>
     Object.values(trip)
@@ -67,7 +70,7 @@ export function exportTripsToCSV(trips: Trip[]) {
  * @returns void
  */
 export function exportTripsToJSON(trips: Trip[]) {
-  const tripsNoId = trips.map(({ id, ...rest }) => rest);
+  const tripsNoId = trips.map(({ ...rest }) => rest);
   const json = JSON.stringify(tripsNoId, null, 2);
   const blob = new Blob([json], { type: "application/json" });
   const url = URL.createObjectURL(blob);

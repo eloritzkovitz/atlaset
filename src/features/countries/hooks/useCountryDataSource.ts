@@ -29,8 +29,8 @@ export function useCountryDataSource() {
     const now = Date.now();
 
     // Try to get from IndexedDB (Dexie)
-    let cachedCountry = await appDb.countryData.get("main");
-    let cachedCurrency = await appDb.currencyData.get("main");
+    const cachedCountry = await appDb.countryData.get("main");
+    const cachedCurrency = await appDb.currencyData.get("main");
 
     // Validate cache
     const isCountryCacheValid =

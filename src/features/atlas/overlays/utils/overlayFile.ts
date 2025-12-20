@@ -7,12 +7,6 @@ import type { Overlay } from "@types";
 /**
  * Imports overlays from a JSON file.
  * @param event The file input change event.
- * @param setOverlays The function to update the overlays state.
- * @returns void
- */
-/**
- * Imports overlays from a JSON file.
- * @param event The file input change event.
  * @param importOverlays The function to merge and persist overlays.
  * @returns void
  */
@@ -50,8 +44,7 @@ export function importOverlaysFromFile(
  */
 export function exportOverlaysToFile(overlays: Overlay[]) {
   if (!overlays) return;
-  // Remove the id property from each overlay
-  const overlaysWithoutId = overlays.map(({ id, ...rest }) => rest);
+  const overlaysWithoutId = overlays.map(({ ...rest }) => rest);
   const pretty = JSON.stringify(overlaysWithoutId, null, 2);
   const blob = new Blob([pretty], { type: "application/json" });
   const url = URL.createObjectURL(blob);

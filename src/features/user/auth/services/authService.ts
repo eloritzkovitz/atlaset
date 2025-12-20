@@ -164,9 +164,5 @@ export async function deleteAppAccount(user: User) {
   }
 
   // 2. Delete Firebase Auth user (removes login for this app)
-  try {
-    await deleteUser(user);
-  } catch (e) {
-    throw e;
-  }
+  await deleteUser(user);
 }

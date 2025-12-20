@@ -75,7 +75,7 @@ export function CountriesLayer({
 
             // Style: highlight takes precedence, then blended overlays, then base
             let style = geographyStyle.default;
-            let tooltip = geo.properties.name;
+            const tooltip = geo.properties.name;
 
             if (isHighlighted) {
               style = geographyStyle.highlight;

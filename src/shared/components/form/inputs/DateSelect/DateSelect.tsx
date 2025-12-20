@@ -16,7 +16,7 @@ export function DateSelect({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div>
+    <div className={className}>
       {label && <label className="block mb-1 font-medium">{label}</label>}
       <div className="relative">
         <InputBox ref={inputRef} type="date" {...props} />

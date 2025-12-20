@@ -158,7 +158,7 @@ export function getScaleBarLabel(
     return "—";
   const metersPerPixel =
     (156543.03392 * Math.cos((latitude * Math.PI) / 180)) / Math.pow(2, zoom);
-  let distance = metersPerPixel * barPx;
+  const distance = metersPerPixel * barPx;
   if (!isFinite(distance) || isNaN(distance)) return "—";
 
   // Round to 1, 2, or 5 × 10^n

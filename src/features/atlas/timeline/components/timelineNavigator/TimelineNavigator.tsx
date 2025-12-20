@@ -11,7 +11,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useTimelineNavigation } from "@features/atlas/timeline";
 import type { OverlayMode } from "@types";
 
-export function TimelineNavigator({}) {
+export function TimelineNavigator() {
   const { years, selectedYear, setSelectedYear, overlayMode, setOverlayMode } =
     useTimeline();
 

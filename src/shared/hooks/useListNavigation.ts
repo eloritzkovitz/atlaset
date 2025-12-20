@@ -26,7 +26,7 @@ export function useListNavigation<T>({
       if (!items.length) return;
 
       // Start from hovered item if present, else selected
-      let currentKey = hoveredKey || selectedKey;
+      const currentKey = hoveredKey || selectedKey;
       let currentIndex = items.findIndex((item) => getKey(item) === currentKey);
       if (currentIndex === -1) currentIndex = 0;
 

@@ -31,7 +31,7 @@ export function getMostVisitedCountries(trips: Trip[], homeCountry: string) {
   });
   const maxCount = Math.max(...Object.values(countryCounts), 0);
   const codes = Object.entries(countryCounts)
-    .filter(([_, count]) => count === maxCount)
+    .filter(([, count]) => count === maxCount)
     .map(([code]) => code);
   return { codes, maxCount };
 }

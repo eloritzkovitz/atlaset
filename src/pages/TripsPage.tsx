@@ -48,7 +48,6 @@ export default function TripsPage() {
   } = usePagination({
     items: filteredTrips,
     pageSize: 20,
-    mode: "local",
   });
 
   const sentinelRef = useInfiniteScroll(loadMore, hasMore);

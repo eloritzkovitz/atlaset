@@ -57,7 +57,6 @@ export function CountrySection({
   } = usePagination({
     items: sortedCountries,
     pageSize: PAGE_SIZE,
-    mode: "local",
   });
 
   // Infinite scroll sentinel
