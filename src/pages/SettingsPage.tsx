@@ -8,7 +8,11 @@ import {
 } from "react-router-dom";
 import { HamburgerButton, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { AccountSettingsList, DisplaySettingsSection, SettingsPanelMenu } from "@features/settings";
+import {
+  AccountSettingsSection,
+  DisplaySettingsSection,
+  SettingsPanelMenu,
+} from "@features/settings";
 import {
   EditProfileModal,
   SecurityInfoSection,
@@ -76,18 +80,20 @@ export default function ProfilePage() {
           onClose={isMobile ? () => setPanelOpen(false) : undefined}
         />
 
-        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow overflow-auto min-h-0">
-          <Routes>
-            <Route path="account" element={<AccountSettingsList />} />
-            <Route path="display" element={<DisplaySettingsSection />} />
-            <Route path="activity" element={<UserActivitySection />} />
-            <Route path="security" element={<SecurityInfoSection />} />
-            {/* Redirect unknown profile routes to /settings */}
-            <Route
-              path="*"
-              element={<Navigate to="/settings/account" replace />}
-            />
-          </Routes>
+        <main className="flex-1 flex flex-col items-center px-2 md:px-12 py-10 md:py-16 min-h-screen">
+          <div className="w-full max-w-2xl">
+            <Routes>
+              <Route path="account" element={<AccountSettingsSection />} />
+              <Route path="display" element={<DisplaySettingsSection />} />
+              <Route path="activity" element={<UserActivitySection />} />
+              <Route path="security" element={<SecurityInfoSection />} />
+              {/* Redirect unknown profile routes to /settings */}
+              <Route
+                path="*"
+                element={<Navigate to="/settings/account" replace />}
+              />
+            </Routes>
+          </div>
         </main>
       </div>
       <EditProfileModal

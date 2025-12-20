@@ -1,7 +1,7 @@
 // Components
 export { SettingsPanel } from "./components/SettingsPanel";
 export { SettingsPanelMenu } from "./components/SettingsPanelMenu";
-export { AccountSettingsList } from "./components/account/AccountSettingsList";
+export { AccountSettingsSection } from "./components/account/AccountSettingsSection";
 export { DisplaySettingsSection } from "./components/display/DisplaySettingsSection";
 
 // Hooks

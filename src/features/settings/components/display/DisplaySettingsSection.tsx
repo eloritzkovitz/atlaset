@@ -1,18 +1,17 @@
+import { FaMoon } from "react-icons/fa6";
 import { useTheme } from "@features/settings/hooks/useTheme";
 import { ThemeToggle } from "./ThemeToggle";
+import { SettingsCard } from "../SettingsCard";
 
 export function DisplaySettingsSection() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <section>
-      <h2 className="text-xl font-semibold mb-4">Display Settings</h2>
-      <div className="space-y-6">
-        <div className="mb-4">
+    <div className="mx-auto max-w-lg w-full flex flex-col items-center">
+      <h2 className="text-2xl font-bold mb-6 self-start">Display Settings</h2>
+      <SettingsCard title="Theme" icon={<FaMoon />}>
+        <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center gap-4 mb-2">
-            <label className="font-medium" htmlFor="theme-toggle">
-              Theme:
-            </label>
             <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </div>
           <div className="mt-2 text-xs text-muted">
@@ -20,7 +19,7 @@ export function DisplaySettingsSection() {
             <strong>{theme === "dark" ? "Dark" : "Light"}</strong>
           </div>
         </div>
-      </div>
-    </section>
+      </SettingsCard>
+    </div>
   );
 }

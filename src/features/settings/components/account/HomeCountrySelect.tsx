@@ -1,45 +1,36 @@
 import { useState } from "react";
 import { FaHouse, FaChevronRight } from "react-icons/fa6";
-import { CollapsibleHeader } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
+import { SettingsCard } from "../SettingsCard";
 
 export function HomeCountrySelect() {
   const { countries } = useCountryData();
   const { homeCountry, setHomeCountry } = useHomeCountry();
   const [modalOpen, setModalOpen] = useState(false);
-  const [expanded, setExpanded] = useState(true);
 
   // Find the currently selected country object
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
 
   return (
-    <div className="settings-group">
-      <CollapsibleHeader
-        icon={<FaHouse />}
-        label="Home Country"
-        expanded={expanded}
-        onToggle={() => setExpanded((prev) => !prev)}
-      />
-      {expanded && (
-        <button
-          type="button"
-          className="settings-select-btn bg-input hover:bg-input-hover flex items-center gap-3 px-3 py-2 my-4 rounded-lg transition"
-          onClick={() => setModalOpen(true)}
-          aria-label="Select home country"
-        >
-          {selectedCountry ? (
-            <CountryWithFlag
-              isoCode={selectedCountry.isoCode}
-              name={selectedCountry.name}
-            />
-          ) : (
-            <span className="opacity-50">No country selected</span>
-          )}
-          <FaChevronRight className="ml-auto text-muted" />
-        </button>
-      )}
+    <SettingsCard title="Home Country" icon={<FaHouse />}>
+      <button
+        type="button"
+        className="settings-select-btn bg-input hover:bg-input-hover flex items-center gap-3 px-3 py-2 my-2 rounded-lg transition w-full"
+        onClick={() => setModalOpen(true)}
+        aria-label="Select home country"
+      >
+        {selectedCountry ? (
+          <CountryWithFlag
+            isoCode={selectedCountry.isoCode}
+            name={selectedCountry.name}
+          />
+        ) : (
+          <span className="opacity-50">No country selected</span>
+        )}
+        <FaChevronRight className="ml-auto text-muted" />
+      </button>
       {/* Country selection modal */}
       <CountrySelectModal
         isOpen={modalOpen}
@@ -54,6 +45,6 @@ export function HomeCountrySelect() {
         onClose={() => setModalOpen(false)}
         multiple={false}
       />
-    </div>
+    </SettingsCard>
   );
 }
