@@ -1,70 +1,22 @@
 import { useState } from "react";
 import { FaPowerOff, FaTrash, FaUserGear } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
-import { ActionButton } from "@components";
+import { ActionButton, ConfirmModal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { deactivateAccount, deleteAppAccount } from "@features/user/auth/services/authService";
+import { useAccountManagement } from "@features/settings/hooks/useAccountManagement";
 import { SettingsCard } from "../SettingsCard";
 
 export function AccountManagementSection() {
   const { user } = useAuth();
-  const [hibernating, setHibernating] = useState(false);
-  const [deleting, setDeleting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const [modal, setModal] = useState<"hibernate" | "delete" | null>(null);
 
-  // Handle account deactivation (hibernate)
-  const handleHibernate = async () => {
-    if (
-      !window.confirm(
-        "Are you sure you want to hibernate (deactivate) your account? You can reactivate by logging in again."
-      )
-    ) {
-      return;
-    }
-    setHibernating(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      if (!user) throw new Error("No authenticated user found.");
-      await deactivateAccount(user);
-      setSuccess("Account hibernated. Redirecting...");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500);
-    } catch (e: any) {
-      setError(e.message || "Failed to hibernate account.");
-    } finally {
-      setHibernating(false);
-    }
-  };
-
-  // Handle account deletion
-  const handleDelete = async () => {
-    if (
-      !window.confirm(
-        "Are you sure you want to delete your account? This action cannot be undone."
-      )
-    ) {
-      return;
-    }
-    setDeleting(true);
-    setError(null);
-    setSuccess(null);
-    try {
-      if (!user) throw new Error("No authenticated user found.");
-      await deleteAppAccount(user);
-      setSuccess("Account deleted. Redirecting...");
-      setTimeout(() => {
-        navigate("/login");
-      }, 1500); // Wait 1.5s before redirecting for user feedback
-    } catch (e: any) {
-      setError(e.message || "Failed to delete account.");
-    } finally {
-      setDeleting(false);
-    }
-  };
+  const {
+    hibernating,
+    deleting,
+    error,
+    success,
+    handleHibernate,
+    handleDelete,
+  } = useAccountManagement(user);
 
   return (
     <SettingsCard title="Account Management" icon={<FaUserGear />}>
@@ -75,7 +27,7 @@ export function AccountManagementSection() {
           className="!bg-warning !hover:bg-warning-hover text-white w-fit"
           icon={<FaPowerOff />}
           disabled={hibernating || deleting}
-          onClick={handleHibernate}
+          onClick={() => setModal("hibernate")}
           ariaLabel="Hibernate Account"
           title="Hibernate Account"
         >
@@ -86,7 +38,7 @@ export function AccountManagementSection() {
           className="!bg-danger !hover:bg-danger-hover text-white w-fit"
           icon={<FaTrash />}
           disabled={deleting}
-          onClick={handleDelete}
+          onClick={() => setModal("delete")}
           ariaLabel="Delete Account"
           title="Delete Account"
         >
@@ -98,6 +50,30 @@ export function AccountManagementSection() {
           This will permanently delete your account and all associated data.
         </span>
       </div>
+
+      {/* Hibernate Modal */}
+      <ConfirmModal
+        isOpen={modal === "hibernate"}
+        title="Hibernate Account"
+        message="Are you sure you want to deactivate your account? You can reactivate by logging in again."
+        onConfirm={handleHibernate}
+        onCancel={() => setModal(null)}
+        submitLabel="Hibernate"
+        cancelLabel="Cancel"
+        submitIcon={<FaPowerOff />}
+      />
+
+      {/* Delete Modal */}
+      <ConfirmModal
+        isOpen={modal === "delete"}
+        title="Delete Account"
+        message="Are you sure you want to delete your account? This action cannot be undone."
+        onConfirm={handleDelete}
+        onCancel={() => setModal(null)}
+        submitLabel="Delete"
+        cancelLabel="Cancel"
+        submitIcon={<FaTrash />}
+      />
     </SettingsCard>
   );
 }
