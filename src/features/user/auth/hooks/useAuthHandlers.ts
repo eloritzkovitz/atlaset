@@ -27,7 +27,10 @@ export function useAuthHandlers() {
   // Email/Password Sign-In handler
   const handleSignIn = async (email: string, password: string) => {
     setError("");
-    await signIn(email, password);
+    const result = await signIn(email, password);
+    if (result?.reactivated) {
+      sessionStorage.setItem("reactivated", "1");
+    }
     navigate("/");
   };
 
@@ -38,7 +41,10 @@ export function useAuthHandlers() {
     keepLoggedIn: boolean
   ) => {
     setError("");
-    await signInWithPersistence(email, password, keepLoggedIn);
+    const result = await signInWithPersistence(email, password, keepLoggedIn);
+    if (result?.reactivated) {
+      sessionStorage.setItem("reactivated", "1");
+    }
     navigate("/");
   };
 

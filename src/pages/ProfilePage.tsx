@@ -3,7 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { BrandHeader, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { EditProfileModal, ProfileInfoCard } from "@features/user";
-import { isPasswordProvider } from "@features/user/auth/utils/provider";
+import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 

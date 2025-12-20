@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { FaUser } from "react-icons/fa6";
+import { FaAddressCard } from "react-icons/fa6";
 import { updatePassword } from "firebase/auth";
 import { FormField, ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { updateUserProfile } from "@features/user/auth/services/authService";
-import { isPasswordProvider } from "@features/user/auth/utils/provider";
+import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { SettingsCard } from "../SettingsCard";
 
 export function ProfileSection() {
@@ -61,7 +61,7 @@ export function ProfileSection() {
   };
 
   return (
-    <SettingsCard title="Profile" icon={<FaUser />}>
+    <SettingsCard title="Profile" icon={<FaAddressCard />}>
       <div className="flex items-center gap-2 mb-2">
         <button
           className="btn btn-xs ml-auto"
