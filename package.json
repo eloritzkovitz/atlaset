@@ -18,6 +18,8 @@
     "country-flag-icons": "1.6.4",
     "dexie": "4.2.1",
     "firebase": "12.7.0",
+    "firebase-admin": "13.6.0",
+    "firebase-functions": "7.0.2",
     "papaparse": "5.5.3",
     "react": "19.2.3",
     "react-chartjs-2": "5.3.1",

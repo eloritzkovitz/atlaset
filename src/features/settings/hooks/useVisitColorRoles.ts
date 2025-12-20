@@ -10,9 +10,14 @@ import type { OverlayMode, VisitColorRoles } from "@types";
  */
 export function useVisitColorRoles(mode: OverlayMode): VisitColorRoles {
   const { settings } = useSettings();
-  const paletteName =
-    settings.overlayPalettes?.[mode] || COLOR_PALETTES[0].name;
+
+  // Fallbacks to prevent undefined errors
+  const overlays = settings.overlays ?? {};
+  const palettes = overlays.palettes ?? {};
+
+  const paletteName = palettes[mode] || COLOR_PALETTES[0].name;
   const palette =
     COLOR_PALETTES.find((p) => p.name === paletteName) || COLOR_PALETTES[0];
+
   return getVisitColorRolesFromPalette(palette);
 }

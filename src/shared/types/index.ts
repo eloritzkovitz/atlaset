@@ -5,7 +5,6 @@ export * from "./keyboard";
 export * from "./marker";
 export * from "./option";
 export * from "./overlay";
-export * from "./settings";
 export * from "./sort";
 export * from "./toolbar";
 export * from "./trip";

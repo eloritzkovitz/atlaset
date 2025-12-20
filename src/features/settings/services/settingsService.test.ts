@@ -1,4 +1,3 @@
-import { defaultSettings } from "@constants/defaultSettings";
 import {
   firestoreMocks,
   authMocks,
@@ -11,6 +10,7 @@ import {
   settingsMock,
 } from "@test-utils/setupVitestMocks";
 import { settingsService } from "./settingsService";
+import { defaultSettings } from "../constants/defaultSettings";
 
 // Mock IndexedDB, Firebase utils, and Firestore
 mockIndexedDb();

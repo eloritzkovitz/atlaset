@@ -6,9 +6,9 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { defaultSettings } from "@constants/defaultSettings";
 import { settingsService } from "@features/settings";
-import type { Settings } from "@types";
+import { defaultSettings } from "@features/settings/constants/defaultSettings";
+import type { Settings } from "@features/settings/types";
 import { useAuth } from "./AuthContext";
 
 const SettingsContext = createContext<{
@@ -47,11 +47,9 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   // Apply theme class to document
   useEffect(() => {
-    document.documentElement.classList.toggle(
-      "dark",
-      settings.theme === "dark"
-    );
-  }, [settings.theme]);
+    const theme = settings.display?.theme ?? "dark";
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [settings.display?.theme]);
 
   // Update settings in IndexedDB
   const updateSettings = async (updates: Partial<Settings>) => {

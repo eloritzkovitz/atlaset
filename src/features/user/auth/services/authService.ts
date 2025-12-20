@@ -8,17 +8,25 @@ import {
   sendPasswordResetEmail,
   updateProfile,
   type User,
-  signInAnonymously,
   signInWithPopup,
   GoogleAuthProvider,
+  deleteUser,
 } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { logUserActivity } from "@utils/firebase";
-import { auth } from "../../../../firebase";
+import { auth, db } from "../../../../firebase";
+import { checkAndReactivateUser } from "../utils/auth";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
 
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
   const result = await signInWithEmailAndPassword(auth, email, password);
+
+  // Check if account is deactivated and reactivate if so
+  const reactivated = await checkAndReactivateUser(result.user);
+
+  // Log user activity
   await logUserActivity(
     "login",
     {
@@ -30,7 +38,8 @@ export async function signIn(email: string, password: string) {
     result.user!.uid
   );
   await logDevice(result.user!.uid);
-  return result;
+
+  return { user: result.user, reactivated };
 }
 
 // Sign in with email and password with persistence option
@@ -44,6 +53,10 @@ export async function signInWithPersistence(
     keepLoggedIn ? browserLocalPersistence : browserSessionPersistence
   );
   const result = await signInWithEmailAndPassword(auth, email, password);
+
+  // Check if account is deactivated and reactivate if so
+  const reactivated = await checkAndReactivateUser(result.user);
+
   await logUserActivity(
     "login",
     {
@@ -55,7 +68,8 @@ export async function signInWithPersistence(
     result.user!.uid
   );
   await logDevice(result.user!.uid);
-  return result;
+
+  return { user: result.user, reactivated };
 }
 
 // Sign up with email and password
@@ -127,8 +141,32 @@ export async function signInWithGoogle() {
   return result;
 }
 
-// Sign in anonymously
-export async function signInAsGuest() {
-  const result = await signInAnonymously(auth);
-  return result;
+// Deactivate user account
+export async function deactivateAccount(user: User) {
+  // Mark the user as deactivated in Firestore
+  await setDoc(
+    doc(db, "users", user.uid),
+    { status: "deactivated", deactivatedAt: new Date().toISOString() },
+    { merge: true }
+  );
+  await logout();
+}
+
+// Delete user account and associated data
+export async function deleteAppAccount(user: User) {
+  // 1. Call the Cloud Function to delete all Firestore user data
+  try {
+    const functions = getFunctions();
+    const deleteUserData = httpsCallable(functions, "deleteUserData");
+    await deleteUserData(); // No arguments needed, uses current user's auth context
+  } catch (e) {
+    console.error("Error deleting user Firestore data via Cloud Function:", e);
+  }
+
+  // 2. Delete Firebase Auth user (removes login for this app)
+  try {
+    await deleteUser(user);
+  } catch (e) {
+    throw e;
+  }
 }

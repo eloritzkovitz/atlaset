@@ -1,4 +1,10 @@
-import { formatDate, getMonthName, getYear, getYearNumber } from "./date";
+import {
+  formatDate,
+  getMonthName,
+  getYear,
+  getYearNumber,
+  getCurrentYear,
+} from "./date";
 
 describe("formatDate", () => {
   it("returns empty string for undefined input", () => {
@@ -40,6 +46,15 @@ describe("getYear", () => {
 
   it("returns undefined for invalid date", () => {
     expect(getYear("not-a-date")).toBeUndefined();
+  });
+});
+
+describe("getCurrentYear", () => {
+  it("returns the current year as a number", () => {
+    const year = getCurrentYear();
+    const actual = new Date().getFullYear();
+    expect(year).toBe(actual);
+    expect(typeof year).toBe("number");
   });
 });
 

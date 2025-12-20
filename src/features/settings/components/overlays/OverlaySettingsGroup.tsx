@@ -1,10 +1,10 @@
 import React from "react";
 import { FaBrush } from "react-icons/fa6";
-import { CollapsibleHeader, DropdownSelectInput } from "@components";
+import { Checkbox, CollapsibleHeader, DropdownSelectInput } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colors";
 import type { OverlayMode } from "@types";
 import { PaletteDots } from "./PaletteDots";
-import { useOverlayPaletteSettings } from "../../hooks/useOverlayPaletteSettings";
+import { useOverlayColors } from "../../hooks/useOverlayColors";
 
 // Overlay modes
 const OVERLAY_MODES: { key: OverlayMode; label: string }[] = [
@@ -13,9 +13,10 @@ const OVERLAY_MODES: { key: OverlayMode; label: string }[] = [
   { key: "yearly", label: "Timeline (Yearly)" },
 ];
 
-export function OverlayPaletteSettingsGroup() {
+export function OverlaySettingsGroup() {
   const [expanded, setExpanded] = React.useState(true);
-  const { overlayPalettes, setPalette } = useOverlayPaletteSettings();
+  const { colorHomeCountry, setColorHomeCountry, overlayPalettes, setPalette } =
+    useOverlayColors();
 
   // Prepare options for DropdownSelectInput
   const groupedPaletteOptions = COLOR_PALETTE_GROUPS.map((group) => ({
@@ -35,10 +36,16 @@ export function OverlayPaletteSettingsGroup() {
     <>
       <CollapsibleHeader
         icon={<FaBrush />}
-        label="Overlay Palettes"
+        label="Overlays"
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />
+      <Checkbox
+        checked={!!colorHomeCountry}
+        onChange={setColorHomeCountry}
+        label="Color home country on map"
+      />
+      <div className="my-2" />
       {expanded && (
         <div className="mb-4">
           {OVERLAY_MODES.map((mode) => (

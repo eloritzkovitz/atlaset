@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { CACHE_TTL } from "@config/cache";
 import { appDb } from "@utils/db";
+import { CACHE_TTL } from "../../../../shared/config/cache";
 
 /**
  * Manages fetching and state of geographical data for maps.

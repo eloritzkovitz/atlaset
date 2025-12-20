@@ -23,3 +23,5 @@ export type OverlayItem = {
   tooltip?: string;
   style?: React.CSSProperties;
 };
+
+export type OverlayMode = "standard" | "cumulative" | "yearly";

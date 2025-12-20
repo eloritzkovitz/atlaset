@@ -1,12 +1,12 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { defaultSettings } from "@constants/defaultSettings";
-import type { Settings } from "@types";
 import { appDb } from "@utils/db";
 import {
   isAuthenticated,
   getCurrentUser,
   logUserActivity,
 } from "@utils/firebase";
+import { defaultSettings } from "../constants/defaultSettings";
+import type { Settings } from "../types";
 import { db } from "../../../firebase";
 
 export const settingsService = {

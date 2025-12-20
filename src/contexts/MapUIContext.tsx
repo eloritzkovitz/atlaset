@@ -9,21 +9,30 @@ interface MapUIContextType {
   setBorderColor: (v: string) => void;
   borderWidth: number;
   setBorderWidth: (v: number) => void;
-};
+}
 
 const MapUIContext = createContext<MapUIContextType | undefined>(undefined);
 
 export function MapUIProvider({ children }: { children: ReactNode }) {
   const { settings, updateSettings } = useSettings();
 
-  // Fallbacks if settings are not yet loaded
-  const projection = settings.projection ?? MAP_OPTIONS.projection[0].value;
-  const borderColor = settings.borderColor ?? MAP_OPTIONS.strokeColor[0].value;
-  const borderWidth = settings.borderWidth ?? MAP_OPTIONS.strokeWidth[0].value;
+  // Ensure settings.map is always defined
+  const map = settings.map ?? {
+    projection: undefined,
+    borderColor: undefined,
+    borderWidth: undefined,
+  };
 
-  const setProjection = (v: string) => updateSettings({ projection: v });
-  const setBorderColor = (v: string) => updateSettings({ borderColor: v });
-  const setBorderWidth = (v: number) => updateSettings({ borderWidth: v });
+  const projection = map.projection ?? MAP_OPTIONS.projection[0].value;
+  const borderColor = map.borderColor ?? MAP_OPTIONS.strokeColor[0].value;
+  const borderWidth = map.borderWidth ?? MAP_OPTIONS.strokeWidth[0].value;
+
+  const setProjection = (v: string) =>
+    updateSettings({ map: { ...map, projection: v } });
+  const setBorderColor = (v: string) =>
+    updateSettings({ map: { ...map, borderColor: v } });
+  const setBorderWidth = (v: number) =>
+    updateSettings({ map: { ...map, borderWidth: v } });
 
   return (
     <MapUIContext.Provider
