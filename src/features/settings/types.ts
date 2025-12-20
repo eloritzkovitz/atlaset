@@ -1,5 +1,9 @@
 import type { OverlayMode } from "@types";
 
+export type AccountSettings = {
+  homeCountry: string;
+};
+
 export type DisplaySettings = {
   theme: "light" | "dark";
 };
@@ -17,7 +21,7 @@ export type OverlaySettings = {
 
 export type Settings = {
   id: string;
-  homeCountry: string;
+  account: AccountSettings;
   display: DisplaySettings;
   map: MapSettings;
   overlays: OverlaySettings;

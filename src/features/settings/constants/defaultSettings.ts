@@ -3,7 +3,7 @@ import type { Settings } from "../types";
 
 export const defaultSettings: Settings = {
   id: "main",
-  homeCountry: "",
+  account: { homeCountry: "" },
   display: { theme: "dark" },
   map: {
     projection: DEFAULT_MAP_SETTINGS.projection,

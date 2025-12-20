@@ -8,10 +8,10 @@ export function useHomeCountry() {
   const { settings, updateSettings } = useSettings();
 
   const setHomeCountry = (country: string) =>
-    updateSettings({ homeCountry: country });
+    updateSettings({ account: { homeCountry: country } });
 
   return {
-    homeCountry: settings?.homeCountry,
+    homeCountry: settings?.account?.homeCountry ?? "",
     setHomeCountry,
   };
 }
