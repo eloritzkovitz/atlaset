@@ -61,7 +61,7 @@ export function ProfileSection() {
   };
 
   return (
-    <SettingsCard title="Name & Password" icon={<FaUser />}>
+    <SettingsCard title="Profile" icon={<FaUser />}>
       <div className="flex items-center gap-2 mb-2">
         <button
           className="btn btn-xs ml-auto"

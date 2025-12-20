@@ -8,10 +8,11 @@ import {
   sendPasswordResetEmail,
   updateProfile,
   type User,
-  signInAnonymously,
   signInWithPopup,
   GoogleAuthProvider,
+  deleteUser,
 } from "firebase/auth";
+import { getFunctions, httpsCallable } from "firebase/functions";
 import { logUserActivity } from "@utils/firebase";
 import { auth } from "../../../../firebase";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
@@ -127,8 +128,21 @@ export async function signInWithGoogle() {
   return result;
 }
 
-// Sign in anonymously
-export async function signInAsGuest() {
-  const result = await signInAnonymously(auth);
-  return result;
+// Delete user account and associated data
+export async function deleteAppAccount(user: User) {
+  // 1. Call the Cloud Function to delete all Firestore user data
+  try {
+    const functions = getFunctions();
+    const deleteUserData = httpsCallable(functions, "deleteUserData");
+    await deleteUserData(); // No arguments needed, uses current user's auth context
+  } catch (e) {
+    console.error("Error deleting user Firestore data via Cloud Function:", e);
+  }
+
+  // 2. Delete Firebase Auth user (removes login for this app)
+  try {
+    await deleteUser(user);
+  } catch (e) {
+    throw e;
+  }
 }
