@@ -4,7 +4,30 @@
 
 import * as d3geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
-import type { Feature, FeatureCollection, Geometry } from "geojson";
+import type {
+  Feature,
+  FeatureCollection,
+  GeoJsonProperties,
+  Geometry,
+} from "geojson";
+
+/**
+ * Normalizes GeoJSON feature properties to ensure they are always defined.
+ * @param geoData - The GeoJSON FeatureCollection to normalize.
+ * @returns The normalized GeoJSON FeatureCollection.
+ */
+export function normalizeGeoDataProperties(
+  geoData: FeatureCollection<Geometry, GeoJsonProperties> | null
+): FeatureCollection<Geometry, { [key: string]: unknown }> | null {
+  if (!geoData || !Array.isArray(geoData.features)) return null;
+  return {
+    ...geoData,
+    features: geoData.features.map((feature) => ({
+      ...feature,
+      properties: feature.properties ?? {},
+    })),
+  };
+}
 
 /**
  * Returns a D3 projection instance based on type and map dimensions.

@@ -1,41 +1,7 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { useKeyHandler } from "@hooks/useKeyHandler";
-
-export interface UIContextType {
-  uiVisible: boolean;
-  setUiVisible: (v: boolean | ((prev: boolean) => boolean)) => void;
-  sidebarExpanded: boolean;
-  setSidebarExpanded: (v: boolean) => void;
-  showCountries: boolean;
-  toggleCountries: () => void;
-  showFilters: boolean;
-  toggleFilters: () => void;
-  showMarkers: boolean;
-  toggleMarkers: () => void;
-  showOverlays: boolean;
-  toggleOverlays: () => void;
-  showExport: boolean;
-  toggleExport: () => void;
-  showSettings: boolean;
-  toggleSettings: () => void;
-  closePanel: () => void;
-  modalOpen: boolean;
-  setModalOpen: (v: boolean) => void;
-  showLegend: boolean;
-  toggleLegend: () => void;
-  showShortcuts: boolean;
-  toggleShortcuts: () => void;
-  closeLegend: () => void;
-  closeShortcuts: () => void;
-}
+import { UIContext } from "./UIContext";
 
 // Type for panel selection
 type PanelSelection =
@@ -45,8 +11,6 @@ type PanelSelection =
   | "export"
   | "settings"
   | null;
-
-export const UIContext = createContext<UIContextType | undefined>(undefined);
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
@@ -170,13 +134,4 @@ export function UIProvider({ children }: { children: ReactNode }) {
       {children}
     </UIContext.Provider>
   );
-}
-
-// Custom hook for easy context access
-export function useUI() {
-  const context = useContext(UIContext);
-  if (!context) {
-    throw new Error("useUI must be used within a UIProvider");
-  }
-  return context;
 }

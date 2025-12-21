@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, HashRouter } from "react-router-dom";
-import { AuthProvider } from "@contexts/AuthContext";
-import { SettingsProvider } from "@contexts/SettingsContext";
+import { AuthProvider } from "@contexts/AuthProvider";
+import { SettingsProvider } from "@contexts/SettingsProvider";
 import App from "./App";
 import "./styles/index.css";
 

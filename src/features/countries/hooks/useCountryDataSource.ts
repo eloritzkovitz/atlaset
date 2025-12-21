@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { CACHE_TTL } from "@config/cache";
 import { appDb } from "@utils/db";
 import {
@@ -17,9 +17,6 @@ export function useCountryDataSource() {
   const [currencies, setCurrencies] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [allRegions, setAllRegions] = useState<string[]>([]);
-  const [allSubregions, setAllSubregions] = useState<string[]>([]);
-  const [allSovereigntyTypes, setAllSovereigntyTypes] = useState<string[]>([]);
 
   // Fetch country and currency data with caching
   const fetchData = useCallback(async (forceRefresh = false) => {
@@ -46,11 +43,6 @@ export function useCountryDataSource() {
     // Use cached data if valid and not forcing refresh
     if (!forceRefresh && isCountryCacheValid && isCurrencyCacheValid) {
       setCountries(cachedCountry.data as Country[]);
-      setAllRegions(getAllRegions(cachedCountry.data as Country[]));
-      setAllSubregions(getAllSubregions(cachedCountry.data as Country[]));
-      setAllSovereigntyTypes(
-        getAllSovereigntyTypes(cachedCountry.data as Country[])
-      );
       setCurrencies(cachedCurrency.data as Record<string, string>);
       setLoading(false);
       return;
@@ -87,9 +79,6 @@ export function useCountryDataSource() {
 
       // Update state
       setCountries(countryData as Country[]);
-      setAllRegions(getAllRegions(countryData as Country[]));
-      setAllSubregions(getAllSubregions(countryData as Country[]));
-      setAllSovereigntyTypes(getAllSovereigntyTypes(countryData as Country[]));
       setCurrencies(currencyData);
       setLoading(false);
 
@@ -109,6 +98,11 @@ export function useCountryDataSource() {
       setLoading(false);
     }
   }, []);
+
+  // Memoized derived data
+  const allRegions = useMemo(() => getAllRegions(countries), [countries]);
+  const allSubregions = useMemo(() => getAllSubregions(countries), [countries]);
+  const allSovereigntyTypes = useMemo(() => getAllSovereigntyTypes(countries), [countries]);
 
   // Initial data fetch
   useEffect(() => {

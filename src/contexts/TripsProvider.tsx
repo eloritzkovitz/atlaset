@@ -1,20 +1,8 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import type { Trip } from "@types";
 import { getAutoTripStatus, tripsService } from "@features/trips";
 import { useAuth } from "./AuthContext";
-
-interface TripsContextType {
-  trips: Trip[];
-  loading: boolean;
-  addTrip: (trip: Trip) => void;
-  editTrip: (trip: Trip) => void;
-  updateTripFavorite: (tripId: string, favorite: boolean) => void;
-  updateTripRating: (tripId: string, rating: number | undefined) => void;
-  removeTrip: (id: string) => Promise<void>;
-  duplicateTrip: (trip: Trip) => void;
-}
-
-const TripsContext = createContext<TripsContextType | undefined>(undefined);
+import { TripsContext } from "./TripsContext";
 
 export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -25,6 +13,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch trips on mount
   const { user, ready } = useAuth();
 
+  // Load trips when user changes
   useEffect(() => {
     let mounted = true;
     if (!ready) return;
@@ -114,11 +103,4 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </TripsContext.Provider>
   );
-};
-
-// Custom hook to use the TripsContext
-export const useTrips = () => {
-  const ctx = useContext(TripsContext);
-  if (!ctx) throw new Error("useTrips must be used within a TripsProvider");
-  return ctx;
 };

@@ -1,11 +1,4 @@
-import {
-  createContext,
-  useEffect,
-  useState,
-  useContext,
-  type ReactNode,
-  useRef,
-} from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { removeDevice } from "@features/user/auth/utils/device";
@@ -13,23 +6,12 @@ import {
   hasGuestData,
   migrateGuestDataToFirestore,
 } from "@services/migrationService";
-
-const AuthContext = createContext<{
-  user: User | null;
-  loading: boolean;
-  ready: boolean;
-}>({
-  user: null,
-  loading: true,
-  ready: false,
-});
+import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [ready, setReady] = useState(false);
-
-  // Track previous user to detect login
   const prevUserRef = useRef<User | null>(null);
 
   // Listen for auth state changes
@@ -39,8 +21,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(firebaseUser);
       setLoading(false);
       setReady(true);
-
-      // Run migration in the background if needed
       if (!prevUserRef.current && firebaseUser) {
         const guestDataExists = await hasGuestData();
         if (guestDataExists) {
@@ -71,6 +51,3 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     </AuthContext.Provider>
   );
 };
-
-// Custom hook to use the AuthContext
-export const useAuth = () => useContext(AuthContext);

@@ -1,7 +1,8 @@
-import type { FeatureCollection } from "geojson";
-import { useCallback, useEffect, useState } from "react";
+import type { FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { appDb } from "@utils/db";
+import { normalizeGeoDataProperties } from "../utils/map";
 import { CACHE_TTL } from "../../../../shared/config/cache";
 
 /**
@@ -9,7 +10,10 @@ import { CACHE_TTL } from "../../../../shared/config/cache";
  * @returns Object containing geoData, geoError, and loading state.
  */
 export function useGeoData() {
-  const [geoData, setGeoData] = useState<FeatureCollection | null>(null);
+  const [geoData, setGeoData] = useState<FeatureCollection<
+    Geometry,
+    GeoJsonProperties
+  > | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,5 +57,10 @@ export function useGeoData() {
     fetchGeoData();
   }, [fetchGeoData]);
 
-  return { geoData, geoError, loading };
+  // Memoize normalized geoData so reference is stable unless data changes
+  const normalizedGeoData = useMemo(
+    () => normalizeGeoDataProperties(geoData),
+    [geoData]
+  );
+  return { geoData: normalizedGeoData, geoError, loading };
 }

@@ -7,7 +7,17 @@ import * as dbModule from "@utils/db";
 describe("useGeoData", () => {
   let getSpy: any;
   let putSpy: any;
-  const fakeData = { foo: "bar" };
+  
+  const fakeData = {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        geometry: { type: "Point", coordinates: [0, 0] },
+        properties: { foo: "bar" },
+      },
+    ],
+  };
   const now = Date.now();
 
   beforeEach(() => {
@@ -36,6 +46,7 @@ describe("useGeoData", () => {
     await act(async () => {
       await Promise.resolve();
     });
+    // The hook returns normalized geoData, which should match fakeData (already valid)
     expect(result.current.geoData).toEqual(fakeData);
     expect(result.current.loading).toBe(false);
     expect(result.current.geoError).toBeNull();
