@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import type { Country } from "@types";
+import type { Country } from "@features/countries";
 
 /**
  * Manages dashboard navigation state and handlers.

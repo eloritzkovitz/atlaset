@@ -3,14 +3,18 @@ import { FaPencilAlt } from "react-icons/fa";
 import { FloatingActionButton, SplashScreen } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useTrips } from "@contexts/TripsContext";
-import { TripModal, TripsTable, TripsToolbar } from "@features/trips";
+import {
+  TripModal,
+  TripsTable,
+  TripsToolbar,
+  type Trip,
+  type TripFilterState,
+} from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { usePagination } from "@hooks/usePagination";
-import type { Trip } from "@types";
-import type { TripFilterState } from "@features/trips/types";
 
 export default function TripsPage() {
   const countryData = useCountryData();

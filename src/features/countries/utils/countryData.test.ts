@@ -1,6 +1,6 @@
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { mockCountries } from "@test-utils/mockCountries";
-import type { Country, SovereigntyType } from "@types";
+import type { Country, SovereigntyType } from "../types";
 import {
   getCountryIsoCode,
   getCountryByIsoCode,

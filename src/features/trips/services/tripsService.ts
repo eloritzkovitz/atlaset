@@ -1,4 +1,4 @@
-import type { Trip } from "@types";
+import { doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
 import { appDb } from "@utils/db";
 import {
   isAuthenticated,
@@ -6,7 +6,7 @@ import {
   logUserActivity,
   getCurrentUser,
 } from "@utils/firebase";
-import { doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
+import type { Trip } from "../types";
 
 export const tripsService = {
   // Load all trips

@@ -1,4 +1,4 @@
-import type { Trip } from "../types/trip";
+import type { Trip } from "@features/trips";
 
 export const mockTrips: Trip[] = [
   {

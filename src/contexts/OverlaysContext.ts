@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { AnyOverlay } from "@types";
+import type { AnyOverlay } from "@features/atlas/overlays";
 
 export interface OverlaysContextType {
   overlays: AnyOverlay[];

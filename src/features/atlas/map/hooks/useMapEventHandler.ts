@@ -1,6 +1,6 @@
 import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { getGeoCoordsFromMouseEvent } from "@features/atlas/map";
 import { useMarkers } from "@contexts/MarkersContext";
+import { getGeoCoordsFromMouseEvent } from "../utils/map";
 
 interface UseMapEventHandlerProps {
   projection: string | null;

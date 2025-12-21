@@ -2,7 +2,7 @@
  * Utility functions for managing overlays.
  */
 
-import type { AnyOverlay, TimelineOverlay } from "@types";
+import type { AnyOverlay, TimelineOverlay } from "../types";
 
 /**
  * Type guard to check if an overlay is a TimelineOverlay.

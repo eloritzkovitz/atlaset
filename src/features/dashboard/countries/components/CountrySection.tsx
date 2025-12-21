@@ -2,8 +2,11 @@ import { useState } from "react";
 import { FaThLarge, FaList, FaGlobe, FaCheckCircle } from "react-icons/fa";
 import { ActionButton, SearchInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
-import { CountryDisplayPanel, sortCountries } from "@features/countries";
-import type { Country } from "@types";
+import {
+  CountryDisplayPanel,
+  sortCountries,
+  type Country,
+} from "@features/countries";
 import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
 import { usePagination } from "@hooks/usePagination";
 

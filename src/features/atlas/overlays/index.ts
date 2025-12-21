@@ -10,6 +10,9 @@ export { useSyncVisitedCountriesOverlay } from "./hooks/useSyncVisitedCountriesO
 // Services
 export { overlaysService } from "./services/overlaysService";
 
+// Types
+export * from "./types";
+
 // Utils
 export { isTimelineOverlay } from "./utils/overlay";
 export {

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
-import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
-import { overlaysService } from "@features/atlas/overlays";
-import type { AnyOverlay } from "@types";
+import {
+  overlaysService,
+  useSyncVisitedCountriesOverlay,
+  type AnyOverlay,
+} from "@features/atlas/overlays";
 import { logUserActivity } from "@utils/firebase";
 import { useAuth } from "./AuthContext";
 import { OverlaysContext } from "./OverlaysContext";

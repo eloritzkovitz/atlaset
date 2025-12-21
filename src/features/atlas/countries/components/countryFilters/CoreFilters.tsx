@@ -1,5 +1,6 @@
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
+import type { SovereigntyType } from "@features/countries";
 import { coreFiltersConfig } from "../../config/filtersConfig";
 
 interface CoreFiltersProps {
@@ -9,8 +10,8 @@ interface CoreFiltersProps {
   handleRegionChange: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
-  selectedSovereignty: string;
-  setSelectedSovereignty: (type: string) => void;
+  selectedSovereignty: SovereigntyType | "";
+  setSelectedSovereignty: (type: SovereigntyType | "") => void;
   allRegions: string[];
   subregionOptions: string[];
   sovereigntyOptions: string[];

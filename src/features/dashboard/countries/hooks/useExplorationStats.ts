@@ -1,5 +1,8 @@
-import { getAllRegions, getSubregionsForRegion } from "@features/countries";
-import type { Country } from "@types";
+import {
+  getAllRegions,
+  getSubregionsForRegion,
+  type Country,
+} from "@features/countries";
 
 export function useExplorationStats(
   countries: Country[],

@@ -3,7 +3,7 @@
  */
 
 import Papa from "papaparse";
-import type { Trip } from "@types";
+import type { Trip } from "../types";
 
 /**
  * Imports trips from a given file (JSON or CSV) and adds them using the provided addTrip function.

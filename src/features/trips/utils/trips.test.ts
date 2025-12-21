@@ -1,5 +1,4 @@
 import { mockTrips } from "@test-utils/mockTrips";
-import type { Trip } from "@types";
 import {
   isLocalTrip,
   isAbroadTrip,
@@ -12,6 +11,7 @@ import {
   getAutoTripStatus,
   getTripDays,
 } from "./trips";
+import type { Trip } from "../types";
 
 const now = new Date();
 const yesterday = new Date(now.getTime() - 86400000);

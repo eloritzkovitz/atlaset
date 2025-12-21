@@ -1,21 +1,22 @@
-import type { Feature, FeatureCollection, Geometry } from "geojson";
+import type { Feature, Geometry } from "geojson";
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
-import { useMapGeographyStyle } from "@features/atlas/map/hooks/useMapGeographyStyle";
 import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
+  type OverlayItem,
 } from "@features/atlas/overlays";
 import {
   useCountryColors,
   useHomeCountry,
   useOverlayColors,
 } from "@features/settings";
-import type { OverlayItem } from "@types";
+import { useMapGeographyStyle } from "../../hooks/useMapGeographyStyle";
+import type { GeoData } from "../../types";
 
 type MapCountriesLayerProps = {
-  geographyData: FeatureCollection<Geometry, { [key: string]: unknown }> | null;
+  geographyData: GeoData;
   overlayItems?: OverlayItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;

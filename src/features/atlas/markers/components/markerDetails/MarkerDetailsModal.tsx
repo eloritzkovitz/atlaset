@@ -1,6 +1,6 @@
 import { FaLocationDot, FaXmark } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
-import type { Marker } from "@types";
+import type { Marker } from "../../types";
 
 interface MarkerDetailsModalProps {
   isOpen: boolean;

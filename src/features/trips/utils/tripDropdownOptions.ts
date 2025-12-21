@@ -2,15 +2,16 @@
  * @file Utility functions for generating dropdown options for trips filtering.
  */
 
+import type { Country } from "@features/countries";
+import { extractUniqueValues } from "@utils/array";
+import { toDropdownOptions } from "@utils/dropdown";
+import { capitalizeWords } from "@utils/string";
 import {
   ALL_TRIP_CATEGORIES,
   ALL_TRIP_STATUSES,
   ALL_TRIP_TAGS,
-} from "@features/trips/constants/trips";
-import type { Country, Trip, TripCategory, TripStatus, TripTag } from "@types";
-import { extractUniqueValues } from "@utils/array";
-import { toDropdownOptions } from "@utils/dropdown";
-import { capitalizeWords } from "@utils/string";
+} from "../constants/trips";
+import type { Trip, TripCategory, TripStatus, TripTag } from "../types";
 
 /**
  * Gets country dropdown options for filtering.

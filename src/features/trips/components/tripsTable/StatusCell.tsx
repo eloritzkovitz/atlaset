@@ -1,5 +1,5 @@
 import { Chip } from "@components";
-import type { TripStatus } from "@types";
+import type { TripStatus } from "../../types";
 import "./StatusCell.css"
 
 // Define colors for each status

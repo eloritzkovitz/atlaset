@@ -8,7 +8,7 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
-import type { Marker } from "@types";
+import type { Marker } from "../../types";
 
 interface MarkerModalProps {
   marker: Marker | null;

@@ -2,7 +2,7 @@
  * Utility functions for importing and exporting overlay files.
  */
 
-import type { Overlay } from "@types";
+import type { Overlay } from "../types";
 
 /**
  * Imports overlays from a JSON file.

@@ -6,13 +6,13 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
-import type { Marker } from "@types";
 import { appDb } from "@utils/db";
 import {
   isAuthenticated,
   getCurrentUser,
   logUserActivity,
 } from "@utils/firebase";
+import type { Marker } from "../types";
 import { db } from "../../../../firebase";
 
 export const markersService = {

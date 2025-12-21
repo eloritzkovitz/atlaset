@@ -1,12 +1,12 @@
 import { FaHeart } from "react-icons/fa6";
 import { Checkbox, ChipList, StarRatingInput, TableCell } from "@components";
-import { CountryWithFlag, createCountryMap } from "@features/countries";
-import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
-import { isUpcomingTrip } from "@features/trips/utils/trips";
-import type { Country, Trip } from "@types";
+import { CountryWithFlag, createCountryMap, type Country } from "@features/countries";
 import { formatDate } from "@utils/date";
 import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
+import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
+import type { Trip } from "../../types";
+import { isUpcomingTrip } from "../../utils/trips";
 
 interface TripsTableRowsProps {
   trip: Trip;

@@ -9,9 +9,9 @@ import {
   useMarkerCreation,
 } from "@features/atlas/markers";
 import { OverlayModal, OverlaysPanel } from "@features/atlas/overlays";
+import type { Country } from "@features/countries";
 import { SettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
-import type { Country } from "@types";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;

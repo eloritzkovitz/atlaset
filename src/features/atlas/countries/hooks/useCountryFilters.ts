@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCountryData } from "@contexts/CountryDataContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
+import type { CountryFilterOptions, SovereigntyType } from "@features/countries";
 import {
   filterCountries,
   getFilteredIsoCodes,
 } from "@features/countries/utils/countryFilters";
-import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
 import { getLatestYear, getVisitCountStats } from "@features/visits";
 import { filterByVisitCount } from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks/useDebounce";
-import { useOverlays } from "@contexts/OverlaysContext";
-import { useCountryData } from "@contexts/CountryDataContext";
 
 /**
  * Manages and applies country filters.
@@ -31,7 +32,7 @@ export function useCountryFilters() {
   // Filter states
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
-  const [selectedSovereignty, setSelectedSovereignty] = useState<string>("");
+  const [selectedSovereignty, setSelectedSovereignty] = useState<SovereigntyType | "">("");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
@@ -42,12 +43,12 @@ export function useCountryFilters() {
   );
 
   // Core filter parameters
-  const filterParams = useMemo(
+  const filterParams: CountryFilterOptions = useMemo(
     () => ({
       search: debouncedSearch,
-      region: selectedRegion,
-      subregion: selectedSubregion,
-      sovereignty: selectedSovereignty,
+      selectedRegion,
+      selectedSubregion,
+      selectedSovereignty,
     }),
     [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty]
   );

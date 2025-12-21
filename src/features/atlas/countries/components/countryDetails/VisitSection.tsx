@@ -1,4 +1,4 @@
-import type { Visit } from "@types";
+import type { Visit } from "@features/visits";
 
 export function VisitSection({
   title,

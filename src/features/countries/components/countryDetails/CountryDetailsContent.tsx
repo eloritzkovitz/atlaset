@@ -1,8 +1,8 @@
-import { getSovereigntyInfoForTerritory } from "@features/countries";
-import type { Country } from "@types";
 import { SovereigntyBadge } from "./SovereigntyBadge";
 import { CountryInfoTable } from "./CountryInfoTable";
 import { CountryFlag } from "../countryFlag/CountryFlag";
+import type { Country } from "../../types";
+import { getSovereigntyInfoForTerritory } from "../../utils/countryData";
 
 interface CountryDetailsContentProps {
   country: Country;

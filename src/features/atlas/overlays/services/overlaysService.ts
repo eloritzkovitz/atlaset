@@ -10,13 +10,13 @@ import {
   VISITED_OVERLAY_ID,
   DEFAULT_VISITED_OVERLAY,
 } from "@constants/overlays";
-import type { AnyOverlay } from "@types";
 import { appDb } from "@utils/db";
 import {
   isAuthenticated,
   getCurrentUser,
   logUserActivity,
 } from "@utils/firebase";
+import type { AnyOverlay } from "../types";
 import { db } from "../../../../firebase";
 
 export const overlaysService = {

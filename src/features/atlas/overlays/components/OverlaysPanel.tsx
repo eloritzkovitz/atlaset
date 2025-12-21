@@ -9,13 +9,13 @@ import {
 import { ActionButton, ErrorMessage, LoadingSpinner, Panel } from "@components";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
+import { useDragReorder } from "@hooks/useDragReorder";
+import { OverlayPanelItem } from "./OverlayPanelItem";
 import {
   importOverlaysFromFile,
   exportOverlaysToFile,
-} from "@features/atlas/overlays/utils/overlayFile";
-import { useDragReorder } from "@hooks/useDragReorder";
-import type { Overlay } from "@types";
-import { OverlayPanelItem } from "./OverlayPanelItem";
+} from "../utils/overlayFile";
+import type { Overlay } from "../types";
 
 interface OverlaysPanelProps {
   onEditOverlay: (overlay: Overlay) => void;

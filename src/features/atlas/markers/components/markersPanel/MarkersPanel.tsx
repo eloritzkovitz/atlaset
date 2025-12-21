@@ -4,8 +4,8 @@ import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useUI } from "@contexts/UIContext";
 import { useDragReorder } from "@hooks/useDragReorder";
-import type { Marker } from "@types";
 import { MarkersPanelItem } from "./MarkersPanelItem";
+import type { Marker } from "../../types";
 
 interface MarkersPanelProps {
   onAddMarker: () => void;

@@ -10,6 +10,7 @@ import {
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
+import type { SovereigntyType } from "@features/countries";
 import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,
@@ -19,6 +20,7 @@ import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
 import { TimelineFilters } from "./TimelineFilters";
 import { useIsMobile } from "@hooks/useIsMobile";
+
 
 interface CountryFiltersPanelProps {
   show: boolean;
@@ -30,8 +32,8 @@ interface CountryFiltersPanelProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
-  selectedSovereignty: string;
-  setSelectedSovereignty: (type: string) => void;
+  selectedSovereignty: SovereigntyType | "";
+  setSelectedSovereignty: (type: SovereigntyType | "") => void;
   minVisitCount: number;
   setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
   maxVisitCount: number | undefined;

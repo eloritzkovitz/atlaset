@@ -2,46 +2,41 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Country, Overlay } from "@types";
+import type { Overlay } from "@features/atlas/overlays";
 import { filterBySearch } from "@utils/filter";
+import type { Country, CountryFilterOptions } from "../types";
 
 /**
- * Filters countries based on search, region, subregion, sovereignty, and overlay criteria.
+ * Filters countries based on various criteria.
  * @param countries - The list of countries to filter.
- * @param search - Search term to filter by country name.
- * @param selectedRegion - Selected region to filter by.
- * @param selectedSubregion - Selected subregion to filter by.
- * @param selectedSovereignty - Selected sovereignty type to filter by.
- * @param overlayCountries - List of country ISO codes to include based on overlay selection.
+ * @param options - Filtering options for countries.
  * @returns Filtered list of countries.
+ * @see CountryFilterOptions
  */
 export function filterCountries(
   countries: Country[],
-  {
-    search,
+  options: CountryFilterOptions
+) {
+  const {
+    search = "",
     selectedRegion,
     selectedSubregion,
     selectedSovereignty,
-    overlayCountries = [],
-  }: {
-    search?: string;
-    selectedRegion?: string;
-    selectedSubregion?: string;
-    selectedSovereignty?: string;
-    overlayCountries?: string[];
-  }
-) {
-  // Filter by search first
-  const filtered = filterBySearch(countries, search ?? "", (country) => country.name);
+    overlayCountries,
+  } = options;
 
-  // Apply other filters
-  return filtered.filter((country) => {
+  // Apply filters
+  return filterBySearch(countries, search, (c) => c.name).filter((country) => {
     if (selectedRegion && country.region !== selectedRegion) return false;
     if (selectedSubregion && country.subregion !== selectedSubregion)
       return false;
     if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
       return false;
-    if (overlayCountries.length && !overlayCountries.includes(country.isoCode))
+    if (
+      overlayCountries &&
+      overlayCountries.length &&
+      !overlayCountries.includes(country.isoCode)
+    )
       return false;
     return true;
   });

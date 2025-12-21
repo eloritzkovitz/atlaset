@@ -1,6 +1,6 @@
 import { MAP_BG_COLOR } from "@constants/colors";
+import type { Overlay, OverlayMode } from "@features/atlas/overlays";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
-import type { Overlay, OverlayMode } from "@types";
 
 export function useMapLegendItems(
   overlays: Overlay[],

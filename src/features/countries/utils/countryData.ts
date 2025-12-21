@@ -3,13 +3,14 @@
  */
 
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
-import { SOVEREIGN_DEPENDENCIES } from "@features/countries/constants/sovereignDependencies";
-import type { Country, SovereigntyType, Overlay } from "@types";
+import { SOVEREIGN_DEPENDENCIES } from "../constants/sovereignDependencies";
+import type { Overlay } from "@features/atlas/overlays";
 import { extractUniqueSorted } from "@utils/array";
 import {
   EXCLUDED_ISO_CODES,
   SOVEREIGN_FLAG_MAP,
 } from "../constants/sovereignty";
+import type { Country, SovereigntyType } from "../types";
 import type { FlagSource, FlagStyle, FlagSize } from "../types/flag";
 
 /**

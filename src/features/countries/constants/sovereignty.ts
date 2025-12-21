@@ -1,4 +1,4 @@
-import type { SovereigntyType } from "@types";
+import type { SovereigntyType } from "../types";
 
 // List of country codes that do not have their own flags
 export const EXCLUDED_ISO_CODES = [

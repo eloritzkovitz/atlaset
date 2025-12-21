@@ -1,5 +1,5 @@
 import { importOverlaysFromFile, exportOverlaysToFile } from "./overlayFile";
-import type { Overlay } from "@types";
+import type { Overlay } from "../types";
 
 describe("overlayFile utils", () => {
   beforeEach(() => {
