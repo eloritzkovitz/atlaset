@@ -9,11 +9,12 @@ import { useEffect, useState } from "react";
  */
 export function useDelayedLoading(
   loading: boolean,
-  deps: any[] = [],
+  deps: unknown[] = [],
   minDelay = 300
 ) {
   const [showLoading, setShowLoading] = useState(true);
 
+  // Handle delayed loading effect
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => setShowLoading(false), minDelay);
@@ -21,6 +22,7 @@ export function useDelayedLoading(
     } else {
       setShowLoading(true);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, minDelay, ...deps]);
 
   return loading || showLoading;

@@ -9,7 +9,7 @@ interface DropdownOptionsProps<T> {
   value: T | T[];
   onChange: (value: T | T[]) => void;
   setOpen: (open: boolean) => void;
-  renderOption?: (opt: any) => React.ReactNode;
+  renderOption?: (opt: DropdownOption<T>) => React.ReactNode;
 }
 
 export function DropdownOptions<T>({

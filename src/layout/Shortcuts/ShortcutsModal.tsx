@@ -16,7 +16,7 @@ export function ShortcutsModal() {
       acc[cmd.category].push(cmd);
       return acc;
     }, {} as Record<string, KeyCommand[]>);
-  }, [keyCommands]);
+  }, []);
 
   return (
     <Modal

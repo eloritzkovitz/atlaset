@@ -4,6 +4,30 @@
 
 import * as d3geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
+import type {
+  Feature,
+  FeatureCollection,
+  GeoJsonProperties,
+  Geometry,
+} from "geojson";
+
+/**
+ * Normalizes GeoJSON feature properties to ensure they are always defined.
+ * @param geoData - The GeoJSON FeatureCollection to normalize.
+ * @returns The normalized GeoJSON FeatureCollection.
+ */
+export function normalizeGeoDataProperties(
+  geoData: FeatureCollection<Geometry, GeoJsonProperties> | null
+): FeatureCollection<Geometry, { [key: string]: unknown }> | null {
+  if (!geoData || !Array.isArray(geoData.features)) return null;
+  return {
+    ...geoData,
+    features: geoData.features.map((feature) => ({
+      ...feature,
+      properties: feature.properties ?? {},
+    })),
+  };
+}
 
 /**
  * Returns a D3 projection instance based on type and map dimensions.
@@ -102,7 +126,7 @@ export function getGeoCoordsFromMouseEvent(
  * @returns = The [longitude, latitude] coordinates of the centroid.
  */
 export function getFeatureCentroid(
-  feature: any,
+  feature: Feature<Geometry, { [key: string]: unknown }>,
   geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid
 ) {
   return geoCentroidFn(feature);
@@ -114,8 +138,8 @@ export function getFeatureCentroid(
  * @returns An object with center coordinates and zoom level, or null if not found.
  */
 export function getCountryCenterAndZoom(
-  geoData: { features: any[] },
-  isoCode: any,
+  geoData: FeatureCollection<Geometry, { [key: string]: unknown }>,
+  isoCode: string,
   geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid,
   geoBoundsFn: typeof d3geo.geoBounds = d3geo.geoBounds
 ) {
@@ -158,7 +182,7 @@ export function getScaleBarLabel(
     return "—";
   const metersPerPixel =
     (156543.03392 * Math.cos((latitude * Math.PI) / 180)) / Math.pow(2, zoom);
-  let distance = metersPerPixel * barPx;
+  const distance = metersPerPixel * barPx;
   if (!isFinite(distance) || isNaN(distance)) return "—";
 
   // Round to 1, 2, or 5 × 10^n

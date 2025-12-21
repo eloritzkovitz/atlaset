@@ -1,10 +1,57 @@
+import type { Feature, FeatureCollection, Geometry, Point } from "geojson";
 import {
   getProjection,
   getGeoCoordsFromMouseEvent,
   getFeatureCentroid,
   getCountryCenterAndZoom,
   getScaleBarLabel,
+  normalizeGeoDataProperties,
 } from "./map";
+
+describe("normalizeGeoDataProperties", () => {
+  it("returns null if input is null", () => {
+    expect(normalizeGeoDataProperties(null)).toBeNull();
+  });
+
+  it("returns a new FeatureCollection with properties as object", () => {
+    const input: FeatureCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [0, 0] },
+          properties: null,
+        },
+        {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [1, 1] },
+          properties: { foo: "bar" },
+        },
+      ],
+    };
+    const result = normalizeGeoDataProperties(input);
+    expect(result).not.toBeNull();
+    expect(result?.features.length).toBe(2);
+    expect(result?.features[0].properties).toEqual({});
+    expect(result?.features[1].properties).toEqual({ foo: "bar" });
+  });
+
+  it("does not mutate the original input", () => {
+    const input: FeatureCollection = {
+      type: "FeatureCollection",
+      features: [
+        {
+          type: "Feature",
+          geometry: { type: "Point", coordinates: [0, 0] },
+          properties: null,
+        },
+      ],
+    };
+    const inputCopy = JSON.parse(JSON.stringify(input));
+    normalizeGeoDataProperties(input);
+    expect(input).toEqual(inputCopy);
+  });
+});
 
 describe("getProjection", () => {
   it("returns a mercator projection by default", () => {
@@ -90,9 +137,10 @@ describe("getGeoCoordsFromMouseEvent", () => {
 
 describe("getFeatureCentroid", () => {
   it("returns centroid from geoCentroid", () => {
-    const feature = {
+    const feature: Feature<Point, { [key: string]: unknown }> = {
       type: "Feature",
       geometry: { type: "Point", coordinates: [1, 2] },
+      properties: {},
     };
     const mockGeoCentroid = (_feature: any): [number, number] => [1, 2];
     expect(getFeatureCentroid(feature, mockGeoCentroid)).toEqual([1, 2]);
@@ -100,9 +148,11 @@ describe("getFeatureCentroid", () => {
 });
 
 describe("getCountryCenterAndZoom", () => {
-  const geoData = {
+  const geoData: FeatureCollection<Geometry, { [key: string]: unknown }> = {
+    type: "FeatureCollection",
     features: [
       {
+        type: "Feature",
         properties: {
           "ISO3166-1-Alpha-2": "FR",
           "ISO3166-1-Alpha-3": "FRA",

@@ -32,7 +32,7 @@ export function filterCountries(
   }
 ) {
   // Filter by search first
-  let filtered = filterBySearch(countries, search ?? "", (country) => country.name);
+  const filtered = filterBySearch(countries, search ?? "", (country) => country.name);
 
   // Apply other filters
   return filtered.filter((country) => {

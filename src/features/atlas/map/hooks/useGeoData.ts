@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import type { FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { appDb } from "@utils/db";
+import { normalizeGeoDataProperties } from "../utils/map";
 import { CACHE_TTL } from "../../../../shared/config/cache";
 
 /**
@@ -8,7 +10,10 @@ import { CACHE_TTL } from "../../../../shared/config/cache";
  * @returns Object containing geoData, geoError, and loading state.
  */
 export function useGeoData() {
-  const [geoData, setGeoData] = useState<any | null>(null);
+  const [geoData, setGeoData] = useState<FeatureCollection<
+    Geometry,
+    GeoJsonProperties
+  > | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -21,8 +26,12 @@ export function useGeoData() {
     const cached = await appDb.geoData?.get("geoData");
 
     // Use cached data if valid
-    if (cached && cached.ts && now - cached.ts < CACHE_TTL) {
-      setGeoData(cached.data);
+    if (
+      cached &&
+      typeof cached.ts === "number" &&
+      now - cached.ts < CACHE_TTL
+    ) {
+      setGeoData(cached.data as FeatureCollection);
       setLoading(false);
       return;
     }
@@ -35,8 +44,10 @@ export function useGeoData() {
       setLoading(false);
       // Save to Dexie
       await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
-    } catch (err: any) {
-      setGeoError(err.message || "Failed to load map data");
+    } catch (err: unknown) {
+      setGeoError(
+        err instanceof Error ? err.message : "Failed to load map data"
+      );
       setLoading(false);
     }
   }, []);
@@ -46,5 +57,10 @@ export function useGeoData() {
     fetchGeoData();
   }, [fetchGeoData]);
 
-  return { geoData, geoError, loading };
+  // Memoize normalized geoData so reference is stable unless data changes
+  const normalizedGeoData = useMemo(
+    () => normalizeGeoDataProperties(geoData),
+    [geoData]
+  );
+  return { geoData: normalizedGeoData, geoError, loading };
 }

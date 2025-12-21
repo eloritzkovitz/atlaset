@@ -1,39 +1,11 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { useSyncVisitedCountriesOverlay } from "@features/atlas/overlays";
 import { overlaysService } from "@features/atlas/overlays";
 import type { AnyOverlay } from "@types";
 import { logUserActivity } from "@utils/firebase";
 import { useAuth } from "./AuthContext";
-
-interface OverlaysContextType {
-  overlays: AnyOverlay[];
-  setOverlays: React.Dispatch<React.SetStateAction<AnyOverlay[]>>;
-  overlaySelections: Record<string, string>;
-  setOverlaySelections: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
-  importOverlays: (newOverlays: AnyOverlay[]) => Promise<void>;
-  addOverlay: (overlay: AnyOverlay) => void;
-  editOverlay: (overlay: AnyOverlay) => void;
-  removeOverlay: (id: string) => void;
-  reorderOverlays: (newOrder: AnyOverlay[]) => void;
-  toggleOverlayVisibility: (id: string) => void;
-  loading: boolean;
-  error: string | null;
-  editingOverlay: AnyOverlay | null;
-  isEditingOverlay: boolean;
-  isEditModalOpen: boolean;
-  openAddOverlay: () => void;
-  openEditOverlay: (overlay: AnyOverlay) => void;
-  saveOverlay: () => void;
-  closeOverlayModal: () => void;
-  setEditingOverlay: React.Dispatch<React.SetStateAction<AnyOverlay | null>>;
-}
-
-const OverlaysContext = createContext<OverlaysContextType | undefined>(
-  undefined
-);
+import { OverlaysContext } from "./OverlaysContext";
 
 export function OverlaysProvider({ children }: { children: React.ReactNode }) {
   // Overlay state
@@ -58,6 +30,7 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
   // Fetch overlays on mount
   const { user, ready } = useAuth();
 
+  // Load overlays when auth state changes
   useEffect(() => {
     let mounted = true;
     if (!ready) return;
@@ -210,11 +183,4 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
       {children}
     </OverlaysContext.Provider>
   );
-}
-
-// Custom hook for consuming the OverlaysContext
-export function useOverlays() {
-  const ctx = useContext(OverlaysContext);
-  if (!ctx) throw new Error("useOverlays must be used within OverlayProvider");
-  return ctx;
 }

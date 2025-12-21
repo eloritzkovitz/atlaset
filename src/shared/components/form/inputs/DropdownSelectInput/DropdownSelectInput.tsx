@@ -17,7 +17,7 @@ interface DropdownSelectInputProps<T = string> {
   className?: string;
   isFilter?: boolean;
   isMulti?: boolean;
-  renderOption?: (opt: any) => React.ReactNode;
+  renderOption?: (opt: DropdownOption<T>) => React.ReactNode;
 }
 
 export function DropdownSelectInput<T = string>({

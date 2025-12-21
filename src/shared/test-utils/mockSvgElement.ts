@@ -15,11 +15,11 @@ export class MockSvgElement {
   removeAttribute(name: string) {
     delete this.attributes[name];
   }
-  appendChild(child: any) {
+  appendChild(child: MockSvgElement) {
     child.parentNode = this;
     this.children.push(child);
   }
-  removeChild(child: any) {
+  removeChild(child: MockSvgElement) {
     this.children = this.children.filter((c) => c !== child);
     child.parentNode = null;
   }
@@ -60,6 +60,7 @@ export class MockSvgElement {
     }
     return results;
   }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   cloneNode(_deep: boolean) {
     const clone = new MockSvgElement(this.tagName);
     clone.attributes = { ...this.attributes };

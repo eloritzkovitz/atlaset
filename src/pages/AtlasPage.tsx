@@ -26,7 +26,7 @@ export default function AtlasPage() {
     setCenter,
     handleMoveEnd,
     centerOnCountry,
-    centerOnMarker,
+    centerOnMarkerById,
   } = useMapView(geoData);
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(
@@ -68,7 +68,7 @@ export default function AtlasPage() {
           selectedCountry={selectedCountry}
           setSelectedCountry={setSelectedCountry}
           centerOnCountry={centerOnCountry}
-          centerOnMarker={centerOnMarker}
+          centerOnMarker={centerOnMarkerById}
         />
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           <MapUiContainer

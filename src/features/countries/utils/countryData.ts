@@ -17,10 +17,12 @@ import type { FlagSource, FlagStyle, FlagSize } from "../types/flag";
  * @param properties - The properties object from a geographical feature.
  * @returns The ISO country code in uppercase, or undefined if not found.
  */
-export function getCountryIsoCode(properties: any): string | undefined {
+export function getCountryIsoCode(
+  properties: Record<string, unknown>
+): string | undefined {
   return (
-    properties.ISO_A2?.toUpperCase?.() ||
-    properties["ISO3166-1-Alpha-2"]?.toUpperCase?.()
+    (properties.ISO_A2 as string)?.toUpperCase?.() ||
+    (properties["ISO3166-1-Alpha-2"] as string)?.toUpperCase?.()
   );
 }
 
@@ -31,8 +33,8 @@ export function getCountryIsoCode(properties: any): string | undefined {
  */
 export function getCountryByIsoCode(
   code: string,
-  countryData: { countries: any[] }
-): any | null {
+  countryData: { countries: Country[] }
+): Country | null {
   if (!code || !countryData?.countries) return null;
   return (
     countryData.countries.find(
@@ -145,11 +147,12 @@ export function getFlagUrl(
   if (!flagIso || flagIso.length !== 2) return "";
 
   switch (source) {
-    case "flagsapi":
+    case "flagsapi": {
       // Use default size if not provided
       const flagsApiSize = size ? size.split("x")[0] : "32";
       // FlagsAPI: https://flagsapi.com/:country_code/:style/:size.png
       return `https://flagsapi.com/${flagIso}/${style}/${flagsApiSize}.png`;
+    }
     case "flagcdn":
     default:
       // FlagCDN: https://flagcdn.com/:country_code.svg

@@ -13,8 +13,20 @@ import { capitalize, capitalizeWords } from "@utils/string";
 // "All" option constant
 const allOption: FilterOption = { value: "", label: "All" };
 
+interface CountryFilterProps {
+  selectedRegion: string;
+  setSelectedRegion: (region: string) => void;
+  selectedSubregion: string;
+  setSelectedSubregion: (subregion: string) => void;
+  selectedSovereignty: string;
+  setSelectedSovereignty: (sovereignty: string) => void;
+}
+
 // Core filters configuration array
-export const coreFiltersConfig: CountryFilterConfig[] = [
+export const coreFiltersConfig: CountryFilterConfig<
+  string,
+  CountryFilterProps
+>[] = [
   createSelectFilter(
     "region",
     "Region",
@@ -52,8 +64,19 @@ export const coreFiltersConfig: CountryFilterConfig[] = [
   ),
 ];
 
+interface OverlayFilterProps {
+  overlaySelections: Record<string, string>;
+  setOverlaySelections: React.Dispatch<
+    React.SetStateAction<Record<string, string>>
+  >;
+}
+
 // Overlay filter configuration object
-export const overlayFilterConfig: FilterConfig = {
+export const overlayFilterConfig: FilterConfig<
+  Overlay,
+  OverlayFilterProps,
+  string
+> = {
   key: "overlay",
   label: (overlay: Overlay) => `${overlay.name} (${overlay.countries.length})`,
   type: "select",
@@ -62,13 +85,15 @@ export const overlayFilterConfig: FilterConfig = {
     { value: "only", label: "Include only" },
     { value: "exclude", label: "Exclude" },
   ],
-  getValue: (props, overlay: Overlay) =>
-    props.overlaySelections[overlay.id] || "all",
-  setValue: (props, val, overlay: Overlay) =>
+  getValue: (props, overlay?: Overlay) =>
+    overlay ? props.overlaySelections[overlay.id] || "all" : "all",
+  setValue: (props, val, overlay?: Overlay) => {
+    if (!overlay) return;
     props.setOverlaySelections((sel: Record<string, string>) => ({
       ...sel,
       [overlay.id]: val,
-    })),
+    }));
+  },
 };
 
 // Timeline filter configuration object

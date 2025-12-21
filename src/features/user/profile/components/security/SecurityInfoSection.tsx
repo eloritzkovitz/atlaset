@@ -5,7 +5,9 @@ import { useAuth } from "@contexts/AuthContext";
 import { logout } from "@features/user/auth/services/authService";
 import { useUserDevices } from "@features/user/auth/hooks/useUserDevices";
 import { isCurrentSession } from "@features/user/auth/utils/device";
+import type { Device } from "@features/user/types";
 import { getUserCollection } from "@utils/firebase";
+import { getTimestamp } from "@utils/date";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { useUserActivity } from "../../hooks/useUserActivity";
@@ -15,13 +17,12 @@ export function SecurityInfoSection() {
   const { activity } = useUserActivity(user?.uid);
   const devices = useUserDevices(user?.uid);
 
-  // Get last login event
   const lastLogin = activity
     .filter((a) => a.action === "login")
-    .sort((a, b) => b.timestamp - a.timestamp)[0];
+    .sort((a, b) => getTimestamp(b.timestamp) - getTimestamp(a.timestamp))[0];
 
   // Get device icon based on user agent
-  function getDeviceIcon(device: any) {
+  function getDeviceIcon(device: Device) {
     const ua = device.userAgent || "";
     if (/mobile/i.test(ua)) return <FaMobile className="mr-4" size={64} />;
     if (/tablet|ipad/i.test(ua)) return <FaTablet className="mr-4" size={64} />;
@@ -62,7 +63,11 @@ export function SecurityInfoSection() {
         <SecurityInfoRow
           label="Last Login Method"
           value={
-            lastLogin?.details?.method
+            lastLogin &&
+            lastLogin.details &&
+            typeof lastLogin.details === "object" &&
+            "method" in lastLogin.details &&
+            typeof lastLogin.details.method === "string"
               ? capitalize(lastLogin.details.method)
               : "Unknown"
           }

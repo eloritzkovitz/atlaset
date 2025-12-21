@@ -3,7 +3,7 @@ import { Checkbox, ChipList, StarRatingInput, TableCell } from "@components";
 import { CountryWithFlag, createCountryMap } from "@features/countries";
 import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
 import { isUpcomingTrip } from "@features/trips/utils/trips";
-import type { Trip } from "@types";
+import type { Country, Trip } from "@types";
 import { formatDate } from "@utils/date";
 import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
@@ -11,7 +11,7 @@ import { TripActions } from "./TripActions";
 interface TripsTableRowsProps {
   trip: Trip;
   tripIdx: number;
-  countryData: any;
+  countryData: { countries: Country[] };
   selected: boolean;
   onSelect: (id: string) => void;
   onRatingChange: (tripId: string, rating: number | undefined) => void;

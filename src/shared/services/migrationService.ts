@@ -3,6 +3,7 @@ import { markersService } from "../../features/atlas/markers/services/markersSer
 import { overlaysService } from "../../features/atlas/overlays/services/overlaysService";
 import { settingsService } from "../../features/settings/services/settingsService";
 import { tripsService } from "../../features/trips/services/tripsService";
+import type { Settings } from "@features/settings/types";
 
 /**
  * Checks if there is any guest data in IndexedDB
@@ -45,8 +46,16 @@ export async function migrateGuestDataToFirestore() {
 
   // Migrate settings
   const settings = await appDb.settings.get("main");
-  if (settings) {
-    await settingsService.save(settings);
+  if (
+    settings &&
+    typeof settings === "object" &&
+    "id" in settings &&
+    "account" in settings &&
+    "display" in settings &&
+    "map" in settings &&
+    "overlays" in settings
+  ) {
+    await settingsService.save(settings as Settings);
     await appDb.settings.clear();
   }
 

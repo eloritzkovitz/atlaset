@@ -1,38 +1,8 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { markersService } from "@features/atlas/markers";
 import type { Marker } from "@types";
 import { useAuth } from "./AuthContext";
-
-interface MarkersContextType {
-  markers: Marker[];
-  isAddingMarker: boolean;
-  startAddingMarker: () => void;
-  handleMapClickForMarker: (coords: [number, number]) => void;
-  cancelMarkerCreation: () => void;
-  addMarker: (marker: Marker) => void;
-  editMarker: (updated: Marker) => void;
-  removeMarker: (id: string) => void;
-  toggleMarkerVisibility: (id: string) => void;
-  reorderMarkers: (newOrder: Marker[]) => void;
-  editingMarker: Marker | null;
-  setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;
-  isEditingMarker: boolean;
-  isMarkerModalOpen: boolean;
-  openAddMarker: (coords?: [number, number]) => void;
-  openEditMarker: (marker: Marker) => void;
-  saveMarker: () => void;
-  closeMarkerModal: () => void;
-  selectedMarker: Marker | null;
-  detailsModalOpen: boolean;
-  detailsModalPosition: { top: number; left: number } | null;
-  showMarkerDetails: (
-    marker: Marker,
-    coords?: { top: number; left: number }
-  ) => void;
-  closeMarkerDetails: () => void;
-}
-
-const MarkersContext = createContext<MarkersContextType | undefined>(undefined);
+import { MarkersContext } from "./MarkersContext";
 
 export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -216,12 +186,4 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
     </MarkersContext.Provider>
   );
-};
-
-// Custom hook to use the MarkersContext
-export const useMarkers = () => {
-  const context = useContext(MarkersContext);
-  if (!context)
-    throw new Error("useMarkers must be used within a MarkersProvider");
-  return context;
 };

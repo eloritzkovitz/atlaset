@@ -11,17 +11,18 @@ import {
 import { OverlayModal, OverlaysPanel } from "@features/atlas/overlays";
 import { SettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
+import type { Country } from "@types";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;
   selectedIsoCode: string | null;
-  setSelectedIsoCode: any;
+  setSelectedIsoCode: (iso: string | null) => void;
   hoveredIsoCode: string | null;
-  setHoveredIsoCode: any;
-  selectedCountry: any;
-  setSelectedCountry: any;
-  centerOnCountry: any;
-  centerOnMarker: any;
+  setHoveredIsoCode: (iso: string | null) => void;
+  selectedCountry: Country | null;
+  setSelectedCountry: (country: Country | null) => void;
+  centerOnCountry: (iso: string) => void;
+  centerOnMarker: (markerId: string) => void;
 }
 
 export function AtlasUiContainer({
@@ -82,7 +83,7 @@ export function AtlasUiContainer({
       <MarkersPanel
         onAddMarker={startAddingMarker}
         onEditMarker={openEditMarker}
-        onCenterMap={centerOnMarker}
+        onCenterMap={(marker) => centerOnMarker(marker.id)}
       />
       <OverlaysPanel
         onEditOverlay={openEditOverlay}
@@ -90,7 +91,7 @@ export function AtlasUiContainer({
         overlayModalOpen={isEditModalOpen}
       />
       <MapExportPanel svgRef={svgRef} />
-      <SettingsPanel />      
+      <SettingsPanel />
 
       {/* Modals */}
       <CountryDetailsModal

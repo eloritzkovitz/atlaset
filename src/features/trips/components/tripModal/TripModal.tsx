@@ -13,7 +13,7 @@ import {
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, getCountryByIsoCode } from "@features/countries";
-import type { Trip, TripCategory, TripStatus } from "@types";
+import type { Country, Trip, TripCategory, TripStatus } from "@types";
 import { SelectedCountriesList } from "./SelectedCountriesList";
 import { useTripFilters } from "../../hooks/useTripFilters";
 import "./TripModal.css";
@@ -84,7 +84,7 @@ export function TripModal({
               <FormField label="Name">
                 <InputBox
                   value={trip.name}
-                  onChange={(e: { target: { value: any } }) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onChange({ ...trip, name: e.target.value })
                   }
                   required
@@ -93,7 +93,7 @@ export function TripModal({
               <FormField label="Start Date" disabled={isTentative}>
                 <DateSelect
                   value={trip.startDate ?? ""}
-                  onChange={(e: { target: { value: any } }) => {
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     const newStart = e.target.value;
                     let newEnd = trip.endDate;
                     if (!newEnd || newEnd < newStart) {
@@ -109,7 +109,7 @@ export function TripModal({
                 <DateSelect
                   value={trip.endDate ?? ""}
                   min={trip.startDate || undefined}
-                  onChange={(e: { target: { value: any } }) =>
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onChange({ ...trip, endDate: e.target.value })
                   }
                   disabled={isTentative}
@@ -205,7 +205,9 @@ export function TripModal({
             <div className="flex flex-col min-w-0 p-4 gap-2 basis-[40%]">
               <div className="flex-1 min-h-0 overflow-auto">
                 <SelectedCountriesList
-                  selectedCountries={selectedCountries}
+                  selectedCountries={selectedCountries
+                    .filter((c): c is Country => c !== null)
+                    .map(({ isoCode, name }) => ({ isoCode, name }))}
                   onRemove={(isoCode) =>
                     onChange({
                       ...trip,

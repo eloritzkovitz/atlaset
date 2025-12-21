@@ -25,7 +25,7 @@ export function UserMenu() {
   // Close menu on route change
   useEffect(() => {
     if (isOpen) closeModal();
-  }, [location.pathname]);
+  }, [closeModal, isOpen, location.pathname]);
 
   // Don't render if UI is not visible
   if (!uiVisible) return null;

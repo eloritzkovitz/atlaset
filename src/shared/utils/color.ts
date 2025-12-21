@@ -52,7 +52,7 @@ export function parseRgba(rgba: string): [number, number, number, number] {
  * @returns The blended RGBA color as a string.
  */
 export function blendColors(colors: string[]): string {
-  let base = [255, 255, 255, 1];
+  const base = [255, 255, 255, 1];
   for (const rgba of colors) {
     const [r, g, b, a] = parseRgba(rgba);
     base[0] = Math.round(r * a + base[0] * (1 - a));

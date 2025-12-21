@@ -1,4 +1,3 @@
-
 import { clamp } from "@utils/number";
 import { ArrowButton } from "../../buttons/ArrowButton";
 import { InputBox } from "../InputBox/InputBox";
@@ -33,7 +32,7 @@ export function NumberInput({
           value={value}
           min={min}
           max={max}
-          onChange={(e: { target: { value: any } }) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             onChange(clamp(Number(e.target.value)))
           }
           style={{ MozAppearance: "textfield" }}

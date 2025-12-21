@@ -1,8 +1,8 @@
 import { createContext, useContext } from "react";
-import { useCountryDataSource } from "../features/countries/hooks/useCountryDataSource";
+import type { Country } from "@types";
 
-interface CountryDataContextType {
-  countries: any[];
+export interface CountryDataContextType {
+  countries: Country[];
   currencies: Record<string, string>;
   allRegions: string[];
   allSubregions: string[];
@@ -23,22 +23,6 @@ export const CountryDataContext = createContext<CountryDataContextType>({
   refreshData: undefined,
 });
 
-// Custom hook for easy context access
 export function useCountryData() {
   return useContext(CountryDataContext);
-}
-
-// Provider component to wrap the app and provide country data context
-export function CountryDataProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const value = useCountryDataSource();
-
-  return (
-    <CountryDataContext.Provider value={value}>
-      {children}
-    </CountryDataContext.Provider>
-  );
 }

@@ -1,17 +1,8 @@
-import { createContext, useContext, type ReactNode } from "react";
+
+import { type ReactNode } from "react";
 import { MAP_OPTIONS } from "@constants";
 import { useSettings } from "./SettingsContext";
-
-interface MapUIContextType {
-  projection: string;
-  setProjection: (v: string) => void;
-  borderColor: string;
-  setBorderColor: (v: string) => void;
-  borderWidth: number;
-  setBorderWidth: (v: number) => void;
-}
-
-const MapUIContext = createContext<MapUIContextType | undefined>(undefined);
+import { MapUIContext } from "./MapUIContext";
 
 export function MapUIProvider({ children }: { children: ReactNode }) {
   const { settings, updateSettings } = useSettings();
@@ -50,11 +41,3 @@ export function MapUIProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Custom hook to use the MapUIContext
-export function useMapUI() {
-  const context = useContext(MapUIContext);
-  if (!context) {
-    throw new Error("useMapUI must be used within a MapUIProvider");
-  }
-  return context;
-}

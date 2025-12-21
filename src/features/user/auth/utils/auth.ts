@@ -2,7 +2,7 @@
  * @file Contains utility functions for user authentication providers
  */
 
-import type { User } from "firebase/auth";
+import type { User, UserInfo } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "../../../../firebase";
 
@@ -11,8 +11,8 @@ import { db } from "../../../../firebase";
  * @param user - The user object
  * @returns True if the user is a password provider, false otherwise
  */
-export function isPasswordProvider(user: any) {
-  return user?.providerData?.some((p: any) => p.providerId === "password");
+export function isPasswordProvider(user: User | null | undefined) {
+  return user?.providerData?.some((p: UserInfo) => p.providerId === "password");
 }
 
 /**

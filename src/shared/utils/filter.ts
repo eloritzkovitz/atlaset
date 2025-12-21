@@ -16,14 +16,14 @@ import { normalizeString } from "./string";
  */
 export function createSelectFilter<
   T = string,
-  P = any,
+  P = unknown,
   K extends string = string
 >(
   key: K,
-  label: string | ((param: P) => string),
+  label: string | ((option: T) => string),
   getOptions: (options?: T[]) => FilterOption[],
-  getValue: (props: any, param?: P) => string,
-  setValue: (props: any, val: string, param?: P) => void
+  getValue: (props: P, option?: T) => string,
+  setValue: (props: P, val: string, option?: T) => void
 ): FilterConfig<T, P, K> {
   return {
     key,

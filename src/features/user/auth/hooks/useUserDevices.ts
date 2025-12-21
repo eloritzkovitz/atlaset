@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
-import { getUserCollection } from "@utils/firebase";
 import { getDocs, query, orderBy } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import type { Device } from "@features/user/types";
+import { getUserCollection } from "@utils/firebase";
 
 /**
  * Fetches and returns the list of devices associated with a user.
@@ -8,7 +9,7 @@ import { getDocs, query, orderBy } from "firebase/firestore";
  * @returns An array of user devices.
  */
 export function useUserDevices(userId?: string) {
-  const [devices, setDevices] = useState<any[]>([]);
+  const [devices, setDevices] = useState<Device[]>([]);
   useEffect(() => {
     if (!userId) return;
     const fetchDevices = async () => {

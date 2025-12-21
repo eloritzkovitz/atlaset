@@ -203,6 +203,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
               setTimeout(() => setOpen(false), 300);
               if (updateTripRating) updateTripRating(trip.id, value);
             }}
+            onClose={() => setOpen(false)}
           />
         </div>
       </Menu>

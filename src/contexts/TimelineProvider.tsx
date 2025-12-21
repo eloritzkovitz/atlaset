@@ -1,30 +1,9 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import type { OverlayMode } from "@types";
-
-interface TimelineContextValue {
-  timelineMode: boolean;
-  setTimelineMode: (v: boolean | ((prev: boolean) => boolean)) => void;
-  showVisitedOnly: boolean;
-  setShowVisitedOnly: (v: boolean | ((prev: boolean) => boolean)) => void;
-  years: number[];
-  selectedYear: number;
-  setSelectedYear: (year: number) => void;
-  overlayMode: OverlayMode;
-  setOverlayMode: React.Dispatch<React.SetStateAction<OverlayMode>>;
-}
-
-const TimelineContext = createContext<TimelineContextValue | undefined>(
-  undefined
-);
+import { TimelineContext } from "./TimelineContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -66,11 +45,3 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     </TimelineContext.Provider>
   );
 };
-
-// Custom hook to use the TimelineContext
-export function useTimeline() {
-  const ctx = useContext(TimelineContext);
-  if (!ctx)
-    throw new Error("useTimeline must be used within a TimelineProvider");
-  return ctx;
-}

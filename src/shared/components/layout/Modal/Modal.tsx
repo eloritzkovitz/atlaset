@@ -64,7 +64,9 @@ export function Modal({
     escEnabled: disableClose ? false : true,
   });
 
-  const modalRef = containerRef ?? useRef<HTMLDivElement>(null);
+  // Use provided ref or create internal ref
+  const internalRef = useRef<HTMLDivElement>(null);
+  const modalRef = containerRef ?? internalRef;
 
   // Close modal on outside click
   useClickOutside(

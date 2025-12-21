@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
 import { CACHE_TTL } from "@config/cache";
 import { appDb } from "@utils/db";
 import {
@@ -6,19 +6,17 @@ import {
   getAllSubregions,
   getAllSovereigntyTypes,
 } from "../utils/countryData";
+import type { Country } from "@types";
 
 /**
  * Fetches country and currency data with caching in IndexedDB.
  * @returns Country and currency data along with loading state and error
  */
 export function useCountryDataSource() {
-  const [countries, setCountries] = useState<any[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [currencies, setCurrencies] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [allRegions, setAllRegions] = useState<string[]>([]);
-  const [allSubregions, setAllSubregions] = useState<string[]>([]);
-  const [allSovereigntyTypes, setAllSovereigntyTypes] = useState<string[]>([]);
 
   // Fetch country and currency data with caching
   const fetchData = useCallback(async (forceRefresh = false) => {
@@ -29,24 +27,23 @@ export function useCountryDataSource() {
     const now = Date.now();
 
     // Try to get from IndexedDB (Dexie)
-    let cachedCountry = await appDb.countryData.get("main");
-    let cachedCurrency = await appDb.currencyData.get("main");
+    const cachedCountry = await appDb.countryData.get("main");
+    const cachedCurrency = await appDb.currencyData.get("main");
 
     // Validate cache
     const isCountryCacheValid =
-      cachedCountry && cachedCountry.ts && now - cachedCountry.ts < CACHE_TTL;
+      cachedCountry &&
+      typeof cachedCountry.ts === "number" &&
+      now - cachedCountry.ts < CACHE_TTL;
     const isCurrencyCacheValid =
       cachedCurrency &&
-      cachedCurrency.ts &&
+      typeof cachedCurrency.ts === "number" &&
       now - cachedCurrency.ts < CACHE_TTL;
 
     // Use cached data if valid and not forcing refresh
     if (!forceRefresh && isCountryCacheValid && isCurrencyCacheValid) {
-      setCountries(cachedCountry.data);
-      setAllRegions(getAllRegions(cachedCountry.data));
-      setAllSubregions(getAllSubregions(cachedCountry.data));
-      setAllSovereigntyTypes(getAllSovereigntyTypes(cachedCountry.data));
-      setCurrencies(cachedCurrency.data);
+      setCountries(cachedCountry.data as Country[]);
+      setCurrencies(cachedCurrency.data as Record<string, string>);
       setLoading(false);
       return;
     }
@@ -81,10 +78,7 @@ export function useCountryDataSource() {
       ]);
 
       // Update state
-      setCountries(countryData);
-      setAllRegions(getAllRegions(countryData));
-      setAllSubregions(getAllSubregions(countryData));
-      setAllSovereigntyTypes(getAllSovereigntyTypes(countryData));
+      setCountries(countryData as Country[]);
       setCurrencies(currencyData);
       setLoading(false);
 
@@ -99,11 +93,16 @@ export function useCountryDataSource() {
         data: currencyData,
         ts: Date.now(),
       });
-    } catch (err: any) {
-      setError(err.message || "Failed to load data");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to load data");
       setLoading(false);
     }
   }, []);
+
+  // Memoized derived data
+  const allRegions = useMemo(() => getAllRegions(countries), [countries]);
+  const allSubregions = useMemo(() => getAllSubregions(countries), [countries]);
+  const allSovereigntyTypes = useMemo(() => getAllSovereigntyTypes(countries), [countries]);
 
   // Initial data fetch
   useEffect(() => {

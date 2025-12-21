@@ -31,7 +31,7 @@ export function Table<T>({
       const [key, direction] = sortKeyDir.split("-");
       return sortItems(
         items,
-        (item) => (item as any)[key],
+        (item) => item[key as keyof T],
         direction === "desc" ? "desc" : "asc"
       );
     },
@@ -47,6 +47,20 @@ export function Table<T>({
       setSortBy(`${key}-asc`);
     }
   };
+
+  // Helper to render cell values
+  function renderCellValue(value: unknown): React.ReactNode {
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean" ||
+      React.isValidElement(value) ||
+      value == null
+    ) {
+      return value as React.ReactNode;
+    }
+    return JSON.stringify(value);
+  }
 
   return (
     <table className={`min-w-full text-sm ${className}`}>
@@ -80,12 +94,20 @@ export function Table<T>({
       <tbody>
         {sortedItems.map((row, idx) => (
           <tr
-            key={(row as any).id || (row as any).key || idx}
+            key={
+              typeof row === "object" && row !== null && "id" in row
+                ? (row as { id: React.Key }).id
+                : typeof row === "object" && row !== null && "key" in row
+                ? (row as { key: React.Key }).key
+                : idx
+            }
             className="border-t border-muted/40"
           >
             {columns.map((col) => (
               <td key={col.key as string} className="px-4 py-2">
-                {col.render ? col.render(row) : (row as any)[col.key]}
+                {col.render
+                  ? col.render(row)
+                  : renderCellValue(row[col.key as keyof T])}
               </td>
             ))}
           </tr>

@@ -21,12 +21,17 @@ export function useUiHint(
   const { addHint, removeHint } = useUIHintContext();
   const { key, style, dismissable } = options;
 
+  const hasContent = !!content;
+  const contentMessage = content?.message;
+  const contentIcon = content?.icon;
+
+  // Manage UI hint lifecycle
   useEffect(() => {
     if (content) {
       addHint({
         id: key,
-        content: content.message,
-        icon: content.icon,
+        content: contentMessage,
+        icon: contentIcon,
         dismissable: dismissable ?? false,
         duration,
         style,
@@ -35,14 +40,14 @@ export function useUiHint(
     } else {
       removeHint(key);
     }
-    // Add content?.message and content?.icon to dependencies for correct updates
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
-    !!content,
+    hasContent,
     key,
     duration,
     style,
     dismissable,
-    content?.message,
-    content?.icon,
+    contentMessage,
+    contentIcon,
   ]);
 }

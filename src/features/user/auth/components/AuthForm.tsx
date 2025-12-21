@@ -40,8 +40,12 @@ export function AuthForm({
     setLocalError("");
     try {
       await onSubmit(email, password, keepLoggedIn);
-    } catch (err: any) {
-      setLocalError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setLocalError(err.message);
+      } else {
+        setLocalError(String(err));
+      }
     }
   };
 

@@ -113,7 +113,7 @@ export function OverlayModal({
             <FormField label="Color:">
               <ColorSelectInput
                 value={overlay.color}
-                onChange={(color: any) => onChange({ ...overlay, color })}
+                onChange={(color: string) => onChange({ ...overlay, color })}
                 disabled={isVisited}
                 onModalOpenChange={setColorModalOpen}
               />

@@ -1,4 +1,52 @@
-import { toDropdownOptions, flattenOptions } from "./dropdown";
+import {
+  toDropdownOptions,
+  flattenOptions,
+  isAllowedOption,
+  isStringOption,
+} from "./dropdown";
+
+describe("isAllowedOption", () => {
+  it("returns true for allowed value in array", () => {
+    const opt = { value: "foo" };
+    expect(isAllowedOption(opt, ["foo", "bar"])).toBe(true);
+  });
+
+  it("returns false for value not in allowed array", () => {
+    const opt = { value: "baz" };
+    expect(isAllowedOption(opt, ["foo", "bar"])).toBe(false);
+  });
+
+  it("returns true for allowed value using function", () => {
+    const opt = { value: 42 };
+    expect(isAllowedOption(opt, (v) => typeof v === "number" && v > 40)).toBe(
+      true
+    );
+  });
+
+  it("returns false for disallowed value using function", () => {
+    const opt = { value: 10 };
+    expect(isAllowedOption(opt, (v) => typeof v === "number" && v > 40)).toBe(
+      false
+    );
+  });
+
+  it("returns false if value property is missing", () => {
+    const opt = {};
+    expect(isAllowedOption(opt, ["foo", "bar"])).toBe(false);
+  });
+});
+
+describe("isStringOption", () => {
+  it("returns true if value is a string", () => {
+    const opt = { value: "hello" };
+    expect(isStringOption(opt)).toBe(true);
+  });
+
+  it("returns false if value is not a string", () => {
+    const opt = { value: 123 };
+    expect(isStringOption(opt)).toBe(false);
+  });  
+});
 
 describe("toDropdownOptions", () => {
   it("converts string array to dropdown options with default labelFn", () => {

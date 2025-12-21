@@ -1,9 +1,9 @@
 import { MAP_BG_COLOR } from "@constants/colors";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
-import type { OverlayMode } from "@types";
+import type { Overlay, OverlayMode } from "@types";
 
 export function useMapLegendItems(
-  overlays: any[],
+  overlays: Overlay[],
   timelineMode: boolean,
   overlayMode: OverlayMode
 ) {

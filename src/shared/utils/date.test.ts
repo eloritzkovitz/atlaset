@@ -1,9 +1,9 @@
 import {
   formatDate,
-  getMonthName,
   getYear,
   getYearNumber,
   getCurrentYear,
+  getTimestamp,
 } from "./date";
 
 describe("formatDate", () => {
@@ -76,32 +76,22 @@ describe("getYearNumber", () => {
   });
 });
 
-describe("getMonthName", () => {
-  it("returns correct month name for valid index", () => {
-    expect(getMonthName(0)).toBe("Jan");
-    expect(getMonthName(5)).toBe("Jun");
-    expect(getMonthName(11)).toBe("Dec");
+describe("getTimestamp", () => {
+  it("returns number input as is", () => {
+    expect(getTimestamp(1625078400000)).toBe(1625078400000);
   });
 
-  it("returns undefined for invalid index", () => {
-    expect(getMonthName(-1)).toBeUndefined();
-    expect(getMonthName(12)).toBeUndefined();
+  it("returns timestamp from Date object", () => {
+    const date = new Date("2021-06-30T00:00:00Z");
+    expect(getTimestamp(date)).toBe(date.getTime());
   });
 
-  it("returns all month names when no index is provided", () => {
-    expect(getMonthName()).toEqual([
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ]);
+  it("returns timestamp from valid date string", () => {
+    const dateStr = "2021-06-30T00:00:00Z";
+    expect(getTimestamp(dateStr)).toBe(new Date(dateStr).getTime());
+  });
+
+  it("returns NaN for invalid date string", () => {
+    expect(isNaN(getTimestamp("not-a-date"))).toBe(true);
   });
 });

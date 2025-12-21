@@ -72,11 +72,15 @@ export { SeparatorRow } from "./table/SeparatorRow";
 export { SortableFilterHeader } from "./table/SortableFilterHeader";
 export { Table, type TableColumn } from "./table/Table";
 export { TableCell } from "./table/TableCell";
+export { TableDropdownFilter } from "./table/TableDropdownFilter";
 export { TableHeader } from "./table/TableHeader";
 
 // UI components
 export { ColorDot } from "./ui/ColorDot";
-export { SegmentedToggle, type SegmentedToggleOption } from "./ui/SegmentedToggle";
+export {
+  SegmentedToggle,
+  type SegmentedToggleOption,
+} from "./ui/SegmentedToggle";
 export { StarRatingInput } from "./ui/StarRating/StarRatingInput";
 export { RateMenu } from "./ui/StarRating/RateMenu";
 

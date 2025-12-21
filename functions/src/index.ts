@@ -29,11 +29,11 @@ export const deleteUserData = functions.https.onCall(async (context) => {
   try {
     await admin.firestore().recursiveDelete(admin.firestore().doc(userDocPath));
     return { success: true };
-  } catch (error: any) {
+  } catch (error: unknown) {
     throw new functions.https.HttpsError(
       "internal",
       "Failed to delete user data",
-      error?.message || error
+      error instanceof Error ? error.message : String(error)
     );
   }
 });

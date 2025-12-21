@@ -71,7 +71,10 @@ export function useTimelineOverlayItems(
       );
   }, [
     overlays,
+    allCountryCodes,
+    palette,
     snapshotCountries,
+    snapshotCountriesPrev,
     newThisYear,
     selectedYear,
     overlayMode,

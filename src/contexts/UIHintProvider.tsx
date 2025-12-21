@@ -1,28 +1,5 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  type ReactNode,
-  useCallback,
-} from "react";
-
-export interface UIHint {
-  id: string;
-  content: React.ReactNode;
-  icon?: React.ReactNode;
-  dismissable?: boolean;
-  duration?: number;
-  style?: React.CSSProperties;
-}
-
-interface UIHintContextType {
-  hints: UIHint[];
-  addHint: (hint: UIHint) => void;
-  removeHint: (id: string) => void;
-  clearHints: () => void;
-}
-
-const UIHintContext = createContext<UIHintContextType | undefined>(undefined);
+import React, { useState, type ReactNode, useCallback } from "react";
+import { UIHintContext, type UIHint } from "./UIHintContext";
 
 export const UIHintProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -70,10 +47,3 @@ export const UIHintProvider: React.FC<{ children: ReactNode }> = ({
     </UIHintContext.Provider>
   );
 };
-
-export function useUIHintContext() {
-  const ctx = useContext(UIHintContext);
-  if (!ctx)
-    throw new Error("useUIHintContext must be used within a UIHintProvider");
-  return ctx;
-}

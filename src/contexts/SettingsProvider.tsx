@@ -1,7 +1,6 @@
 import {
   createContext,
   useCallback,
-  useContext,
   useEffect,
   useState,
   type ReactNode,
@@ -11,12 +10,14 @@ import { defaultSettings } from "@features/settings/constants/defaultSettings";
 import type { Settings } from "@features/settings/types";
 import { useAuth } from "./AuthContext";
 
-const SettingsContext = createContext<{
+interface SettingsContextType {
   settings: Settings;
   updateSettings: (updates: Partial<Settings>) => Promise<void>;
   resetSettings: () => Promise<void>;
   loading: boolean;
-}>({
+}
+
+const SettingsContext = createContext<SettingsContextType>({
   settings: defaultSettings,
   updateSettings: async () => {},
   resetSettings: async () => {},
@@ -30,6 +31,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   // Fetch settings on mount
   const { user, ready } = useAuth();
 
+  // Load settings when auth state changes
   useEffect(() => {
     let mounted = true;
     if (!ready) return;
@@ -72,6 +74,3 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     </SettingsContext.Provider>
   );
 }
-
-// Custom hook to use the SettingsContext
-export const useSettings = () => useContext(SettingsContext);

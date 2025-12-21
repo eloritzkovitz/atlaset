@@ -1,6 +1,7 @@
+import type { User } from "firebase/auth";
 import { UserAvatar } from "@features/user";
 
-export function UserInfo({ user }: { user: any }) {
+export function UserInfo({ user }: { user: User }) {
   return (
     <div className="p-2 flex items-center gap-3">
       <UserAvatar user={user} size={40} />

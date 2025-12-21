@@ -91,22 +91,20 @@ export function prepareSvgClone(original: SVGSVGElement, inlineStyles = true) {
  * @returns corresponding node in the original tree, or null if not found
  */
 export function getCorrespondingOriginal(
-  node: any,
-  originalRoot: any,
-  cloneRoot: any
-): any {
+  node: Element,
+  originalRoot: Element,
+  cloneRoot: Element
+): Element | null {
   // Walk up from node to root, collecting indices
   const path: number[] = [];
-  let current = node;
+  let current: Element | null = node;
   while (current && current !== cloneRoot) {
     if (!current.parentNode) return null; // Not in the tree
-    const idx = Array.prototype.indexOf.call(
-      current.parentNode.children,
-      current
-    );
+    const parent = current.parentNode as Element;
+    const idx = Array.prototype.indexOf.call(parent.children, current);
     if (idx === -1) return null; // Not found among parent's children
     path.unshift(idx);
-    current = current.parentNode;
+    current = parent;
   }
   if (current !== cloneRoot) return null; // Not in the clone tree
 

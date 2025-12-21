@@ -1,6 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
-import { ArcElement, Chart, Legend, Tooltip, type Chart as ChartJS } from "chart.js";
+import {
+  ArcElement,
+  Chart,
+  Legend,
+  Tooltip,
+  type Chart as ChartJS,
+  type TooltipItem,
+} from "chart.js";
 
 // Register required elements for pie/doughnut charts
 Chart.register(ArcElement, Tooltip, Legend);
@@ -32,8 +39,9 @@ export const PieChart: React.FC<PieChartProps> = ({
       {
         data,
         backgroundColor: colors,
-        borderColor: (ctx: any) => (ctx.active ? "#14b8a6" : "rgba(0,0,0,0.2)"),
-        borderWidth: (ctx: any) => (ctx.active ? 4 : 2),
+        borderColor: (ctx: { active?: boolean }) =>
+          ctx.active ? "#14b8a6" : "rgba(0,0,0,0.2)",
+        borderWidth: (ctx: { active?: boolean }) => (ctx.active ? 4 : 2),
         hoverOffset: 16,
       },
     ],
@@ -54,16 +62,22 @@ export const PieChart: React.FC<PieChartProps> = ({
         displayColors: false,
         callbacks: {
           title: () => [],
-          label: function (context: any) {
+          label: function (context: TooltipItem<"pie">) {
             const label = context.label || "";
-            const value = context.parsed;
+            const value = context.parsed as number;
             const percent = total ? ((value / total) * 100).toFixed(1) : 0;
             return [`\u2B24 ${label}`, `${percent}%`];
           },
-          labelTextColor: function (context: any) {
-            return (
-              context.dataset.backgroundColor[context.dataIndex] || "#cccccc"
-            );
+          labelTextColor: function (context: TooltipItem<"pie">) {
+            const dataset = context.dataset;
+            const bg = dataset.backgroundColor;
+            if (Array.isArray(bg)) {
+              return bg[context.dataIndex] || "#cccccc";
+            }
+            if (typeof bg === "string") {
+              return bg;
+            }
+            return "#cccccc";
           },
         },
       },
@@ -71,7 +85,7 @@ export const PieChart: React.FC<PieChartProps> = ({
     maintainAspectRatio: false,
     radius: "85%",
     responsive: true,
-    onHover: (_event: any, elements: any[]) => {
+    onHover: (_event: unknown, elements: Array<{ index: number }>) => {
       if (elements && elements.length > 0) {
         setHoveredIdx(elements[0].index);
       } else {
@@ -79,7 +93,7 @@ export const PieChart: React.FC<PieChartProps> = ({
       }
     },
   };
-
+  
   // Update active segment on hover change
   useEffect(() => {
     const chart = pieRef.current;

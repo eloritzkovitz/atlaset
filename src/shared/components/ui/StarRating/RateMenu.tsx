@@ -6,8 +6,9 @@ interface RateMenuProps {
   open: boolean;
   menuStyle: React.CSSProperties;
   menuRef: React.RefObject<HTMLDivElement | null>;
-  hoverHandlers: any;
+  hoverHandlers: React.HTMLAttributes<HTMLDivElement>;
   onRate: (value: number) => void;
+  onClose: () => void;
 }
 
 export function RateMenu({
@@ -16,6 +17,7 @@ export function RateMenu({
   menuRef,
   hoverHandlers,
   onRate,
+  onClose,
 }: RateMenuProps) {
   return (
     <Menu
@@ -23,22 +25,24 @@ export function RateMenu({
       className="rate-menu w-full"
       style={menuStyle}
       containerRef={menuRef}
-      {...hoverHandlers}
+      onClose={onClose}
     >
-      {RATING_ACTION_OPTIONS.map((opt) => (
-        <MenuButton
-          key={opt.value}
-          onClick={() => opt.value !== undefined && onRate(opt.value)}
-          icon={
-            <span className="flex items-center">
-              <StarRatingInput value={opt.value} readOnly />
-            </span>
-          }
-          className="w-full"
-        >
-          {opt.label}
-        </MenuButton>
-      ))}
+      <div {...hoverHandlers}>
+        {RATING_ACTION_OPTIONS.map((opt) => (
+          <MenuButton
+            key={opt.value}
+            onClick={() => opt.value !== undefined && onRate(opt.value)}
+            icon={
+              <span className="flex items-center">
+                <StarRatingInput value={opt.value} readOnly />
+              </span>
+            }
+            className="w-full"
+          >
+            {opt.label}
+          </MenuButton>
+        ))}
+      </div>
     </Menu>
   );
 }

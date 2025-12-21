@@ -1,9 +1,10 @@
+import type { User } from "firebase/auth";
 import { useState } from "react";
-import { ActionButton, FormField, Modal, PanelHeader } from "@components";
 import { FaUser, FaXmark } from "react-icons/fa6";
+import { ActionButton, FormField, Modal, PanelHeader } from "@components";
 
 interface EditProfileModalProps {
-  user: any;
+  user: User | null;
   open: boolean;
   onClose: () => void;
   onSave?: () => void;
@@ -23,6 +24,7 @@ export function EditProfileModal({
 
   if (!open) return null;
 
+  // Handle saving profile changes
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -37,7 +39,8 @@ export function EditProfileModal({
       setSuccess("Profile updated successfully.");
       if (onSave) onSave();
       setTimeout(onClose, 1000);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      console.error(err);
       setError("Failed to update profile.");
     }
   };

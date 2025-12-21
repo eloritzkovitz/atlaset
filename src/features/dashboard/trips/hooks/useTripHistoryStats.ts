@@ -1,9 +1,14 @@
 import { useCountryData } from "@contexts/CountryDataContext";
-import { useHomeCountry } from "@features/settings";
 import { useTrips } from "@contexts/TripsContext";
+import { useHomeCountry } from "@features/settings";
 import { getCompletedTrips, getAbroadTrips } from "@features/trips/utils/trips";
+import type { Country } from "@types";
 import { getMostVisitedCountries } from "../utils/tripStats";
 
+/**
+ * Computes trip history statistics.
+ * @returns Most visited countries, first/last trip, and recent trips.
+ */
 export function useTripHistoryStats() {
   const { countries } = useCountryData();
   const { homeCountry } = useHomeCountry();
@@ -23,10 +28,10 @@ export function useTripHistoryStats() {
   const mostVisitedCountries = mostVisitedCountryCodes
     .map((code) =>
       countries.find(
-        (c: any) => c.isoCode?.toLowerCase() === code.toLowerCase()
+        (c: Country) => c.isoCode?.toLowerCase() === code.toLowerCase()
       )
     )
-    .filter(Boolean);
+    .filter(Boolean) as Country[];
 
   // First and last trip (by startDate)
   const sortedTrips = trips

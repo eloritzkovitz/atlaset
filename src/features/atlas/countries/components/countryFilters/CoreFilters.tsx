@@ -14,7 +14,7 @@ interface CoreFiltersProps {
   allRegions: string[];
   subregionOptions: string[];
   sovereigntyOptions: string[];
-};
+}
 
 export function CoreFilters({
   expanded,
@@ -58,7 +58,7 @@ export function CoreFilters({
               key={filter.key}
               label={
                 typeof filter.label === "function"
-                  ? filter.label(value)
+                  ? filter.label(value ?? "")
                   : filter.label
               }
               value={value ?? ""}

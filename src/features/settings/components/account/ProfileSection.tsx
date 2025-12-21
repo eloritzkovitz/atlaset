@@ -52,11 +52,14 @@ export function ProfileSection() {
         setPassword("");
         setConfirmPassword("");
       }, 1000);
-    } catch (err: any) {
-      setError(
-        err?.message ||
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(
           "Failed to update profile. Please re-authenticate and try again."
-      );
+        );
+      }
     }
   };
 

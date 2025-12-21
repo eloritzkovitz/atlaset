@@ -27,10 +27,13 @@ export function OverlayFilters({ expanded, onToggle }: OverlayFiltersProps) {
                 ? overlayFilterConfig.label(overlay)
                 : overlayFilterConfig.label
             }
-            value={overlayFilterConfig.getValue({ overlaySelections }, overlay)}
+            value={overlayFilterConfig.getValue(
+              { overlaySelections, setOverlaySelections },
+              overlay
+            )}
             onChange={(val) =>
               overlayFilterConfig.setValue(
-                { setOverlaySelections },
+                { overlaySelections, setOverlaySelections },
                 String(val),
                 overlay
               )
