@@ -1,3 +1,4 @@
+import type { Feature, FeatureCollection, Geometry, Point } from "geojson";
 import {
   getProjection,
   getGeoCoordsFromMouseEvent,
@@ -90,9 +91,10 @@ describe("getGeoCoordsFromMouseEvent", () => {
 
 describe("getFeatureCentroid", () => {
   it("returns centroid from geoCentroid", () => {
-    const feature = {
+    const feature: Feature<Point, { [key: string]: unknown }> = {
       type: "Feature",
       geometry: { type: "Point", coordinates: [1, 2] },
+      properties: {},
     };
     const mockGeoCentroid = (_feature: any): [number, number] => [1, 2];
     expect(getFeatureCentroid(feature, mockGeoCentroid)).toEqual([1, 2]);
@@ -100,9 +102,11 @@ describe("getFeatureCentroid", () => {
 });
 
 describe("getCountryCenterAndZoom", () => {
-  const geoData = {
+  const geoData: FeatureCollection<Geometry, { [key: string]: unknown }> = {
+    type: "FeatureCollection",
     features: [
       {
+        type: "Feature",
         properties: {
           "ISO3166-1-Alpha-2": "FR",
           "ISO3166-1-Alpha-3": "FRA",

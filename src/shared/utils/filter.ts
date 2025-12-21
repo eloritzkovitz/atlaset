@@ -20,10 +20,10 @@ export function createSelectFilter<
   K extends string = string
 >(
   key: K,
-  label: string | ((param: P) => string),
+  label: string | ((option: T) => string),
   getOptions: (options?: T[]) => FilterOption[],
-  getValue: (props: P, param?: P) => string,
-  setValue: (props: P, val: string, param?: P) => void
+  getValue: (props: P, option?: T) => string,
+  setValue: (props: P, val: string, option?: T) => void
 ): FilterConfig<T, P, K> {
   return {
     key,

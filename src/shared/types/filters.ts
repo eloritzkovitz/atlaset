@@ -5,14 +5,14 @@ export type FilterKey = string;
 export type FilterOption = Option<string | number, string>;
 
 export type FilterConfig<
-  T = string,
+  T = unknown,
   P = unknown,
   K extends FilterKey = string
 > = {
   key: K;
-  label: string | ((param: P) => string);
+  label: string | ((option: T) => string);
   type: "select";
   getOptions: (options?: T[]) => FilterOption[];
-  getValue: (props: P, param?: P) => string;
-  setValue: (props: P, val: string, param?: P) => void;
+  getValue: (props: P, param?: T) => string;
+  setValue: (props: P, val: string, param?: T) => void;
 };

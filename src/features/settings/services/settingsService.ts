@@ -22,7 +22,15 @@ export const settingsService = {
         return defaultSettings;
       }
     } else {
-      return (await appDb.settings.get("main")) || defaultSettings;
+      const localSettings = await appDb.settings.get("main");
+      if (
+        localSettings &&
+        typeof localSettings === "object" &&
+        "id" in localSettings
+      ) {
+        return localSettings as Settings;
+      }
+      return defaultSettings;
     }
   },
 

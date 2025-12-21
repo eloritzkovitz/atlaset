@@ -43,7 +43,7 @@ export default function DashboardPage() {
     selectedPanel,
     selectedRegion,
     selectedSubregion,
-    selectedCountry
+    selectedCountry ?? null
   );
 
   // Navigation handlers
@@ -55,7 +55,11 @@ export default function DashboardPage() {
     handleShowAllCountries,
     handleCrumbClick,
     handleBack,
-  } = useDashboardNavigation(countries, selectedRegion, selectedSubregion);
+  } = useDashboardNavigation(
+    countries,
+    selectedRegion ?? "all",
+    selectedSubregion ?? ""
+  );
 
   // Loading and error states
   if (loading || !ready) return <LoadingSpinner />;

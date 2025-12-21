@@ -53,8 +53,9 @@ export function useDashboardRouteState() {
       regionParam
     : null;
   const selectedSubregion = subregionParam
-    ? countries?.find((c) => c.subregion.toLowerCase() === subregionParam)
-        ?.subregion || subregionParam
+    ? countries?.find(
+        (c) => c.subregion && c.subregion.toLowerCase() === subregionParam
+      )?.subregion || subregionParam
     : null;
   const selectedIsoCode = isoCodeParam;
   const selectedCountry = countries?.find((c) => c.isoCode === selectedIsoCode);
