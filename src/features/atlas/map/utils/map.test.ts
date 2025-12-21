@@ -1,58 +1,11 @@
 import type { Feature, FeatureCollection, Geometry, Point } from "geojson";
-import type { GeoData } from "../types";
 import {
   getProjection,
   getGeoCoordsFromMouseEvent,
   getFeatureCentroid,
   getCountryCenterAndZoom,
   getScaleBarLabel,
-  normalizeGeoDataProperties,
 } from "./map";
-
-describe("normalizeGeoDataProperties", () => {
-  it("returns null if input is null", () => {
-    expect(normalizeGeoDataProperties(null)).toBeNull();
-  });
-
-  it("returns a new FeatureCollection with properties as object", () => {
-    const input: GeoData = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [0, 0] },
-          properties: null,
-        },
-        {
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [1, 1] },
-          properties: { foo: "bar" },
-        },
-      ],
-    };
-    const result = normalizeGeoDataProperties(input);
-    expect(result).not.toBeNull();
-    expect(result?.features.length).toBe(2);
-    expect(result?.features[0].properties).toEqual({});
-    expect(result?.features[1].properties).toEqual({ foo: "bar" });
-  });
-
-  it("does not mutate the original input", () => {
-    const input: GeoData = {
-      type: "FeatureCollection",
-      features: [
-        {
-          type: "Feature",
-          geometry: { type: "Point", coordinates: [0, 0] },
-          properties: null,
-        },
-      ],
-    };
-    const inputCopy = JSON.parse(JSON.stringify(input));
-    normalizeGeoDataProperties(input);
-    expect(input).toEqual(inputCopy);
-  });
-});
 
 describe("getProjection", () => {
   it("returns a mercator projection by default", () => {

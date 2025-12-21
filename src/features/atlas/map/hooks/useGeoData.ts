@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { appDb } from "@utils/db";
-import { normalizeGeoDataProperties } from "../utils/map";
 import { CACHE_TTL } from "../../../../shared/config/cache";
 import type { GeoData } from "../types";
 
@@ -10,7 +9,7 @@ import type { GeoData } from "../types";
  * @returns Object containing geoData, geoError, and loading state.
  */
 export function useGeoData() {
-  const [geoData, setGeoData] = useState<GeoData>(null);
+  const [geoData, setGeoData] = useState<GeoData | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -23,11 +22,7 @@ export function useGeoData() {
     const cached = await appDb.geoData?.get("geoData");
 
     // Use cached data if valid
-    if (
-      cached &&
-      typeof cached.ts === "number" &&
-      now - cached.ts < CACHE_TTL
-    ) {
+    if (cached && typeof cached.ts === 'number' && now - cached.ts < CACHE_TTL) {
       setGeoData(cached.data as GeoData);
       setLoading(false);
       return;
@@ -37,19 +32,16 @@ export function useGeoData() {
       const res = await fetch(DEFAULT_MAP_SETTINGS.geoUrl);
       if (!res.ok) throw new Error("Failed to load map data");
       const data = await res.json();
-      const normalized = normalizeGeoDataProperties(data);
-      setGeoData(normalized);
+      setGeoData(data);
       setLoading(false);
       // Save to Dexie
-      await appDb.geoData?.put({
-        id: "geoData",
-        data: normalized,
-        ts: Date.now(),
-      });
-    } catch (err: unknown) {
-      setGeoError(
-        err instanceof Error ? err.message : "Failed to load map data"
-      );
+      await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
+    } catch (err) {
+      if (err instanceof Error) {
+        setGeoError(err.message);
+      } else {
+        setGeoError("Failed to load map data");
+      }
       setLoading(false);
     }
   }, []);

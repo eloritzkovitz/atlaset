@@ -8,22 +8,6 @@ import type { Feature, Geometry } from "geojson";
 import type { GeoData } from "../types";
 
 /**
- * Normalizes GeoJSON feature properties to ensure they are always defined.
- * @param geoData - The GeoJSON FeatureCollection to normalize.
- * @returns The normalized GeoJSON FeatureCollection.
- */
-export function normalizeGeoDataProperties(geoData: GeoData): GeoData {
-  if (!geoData || !Array.isArray(geoData.features)) return null;
-  return {
-    ...geoData,
-    features: geoData.features.map((feature) => ({
-      ...feature,
-      properties: feature.properties ?? {},
-    })),
-  };
-}
-
-/**
  * Returns a D3 projection instance based on type and map dimensions.
  * @param projectionType - The projection name (e.g., "mercator", "naturalEarth1", "equirectangular").
  * @param width - SVG/map width.
