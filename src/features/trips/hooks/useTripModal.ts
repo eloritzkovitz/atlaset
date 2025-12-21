@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Trip } from "@types";
+import type { Trip } from "../types";
 
 // Empty trip template
 const emptyTrip: Trip = {

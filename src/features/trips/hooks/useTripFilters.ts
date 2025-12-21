@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import { createCountryMap, type Country } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
-import type { TripFilterState } from "@features/trips/types";
 import {
   getCountryDropdownOptions,
   getYearDropdownOptions,
@@ -20,7 +19,7 @@ import {
   isLocalTrip,
   isUpcomingTrip,
 } from "@features/trips/utils/trips";
-import type { Trip } from "@types";
+import type { Trip, TripFilterState } from "../types";
 
 // Default trip filters
 const defaultTripFilterState: TripFilterState = {

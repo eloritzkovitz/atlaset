@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Trip } from "@types";
+import type { Trip } from "@features/trips";
 
 export interface TripsContextType {
   trips: Trip[];

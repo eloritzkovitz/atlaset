@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
 import { FaLocationDot } from "react-icons/fa6";
 import { FloatingChevronButton, Modal } from "@components";
-import type { Visit } from "@types";
+import type { Visit } from "@features/visits";
 import { VisitSection } from "./VisitSection";
 
 interface CountryVisitsDrawerProps {

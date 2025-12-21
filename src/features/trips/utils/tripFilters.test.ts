@@ -1,6 +1,6 @@
 import { mockTrips } from "@test-utils/mockTrips";
-import type { TripCategory, TripTag } from "@types";
 import { filterTrips } from "./tripFilters";
+import type { TripCategory, TripTag } from "../types";
 
 describe("tripFilters utils", () => {
   describe("filterTrips", () => {

@@ -2,8 +2,7 @@
  * Utilities for filtering trips.
  */
 
-import type { TripFilters } from "@features/trips/types";
-import type { Trip } from "@types";
+import type { Trip, TripFilters } from "../types";
 
 /**
  * Filters trips based on the provided filters.

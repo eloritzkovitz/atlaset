@@ -12,13 +12,14 @@ import {
   ALL_TRIP_CATEGORIES,
   RATING_OPTIONS,
 } from "@features/trips/constants/trips";
+import type { FilterOption } from "@types";
+import { isAllowedOption, isStringOption } from "@utils/dropdown";
 import type {
+  TripCategory,
   TripFilters,
   TripSortBy,
   TripSortByKey,
-} from "@features/trips/types";
-import type { FilterOption, TripCategory } from "@types";
-import { isAllowedOption, isStringOption } from "@utils/dropdown";
+} from "../../types";
 
 interface TripsTableHeadersProps {
   allSelected: boolean;

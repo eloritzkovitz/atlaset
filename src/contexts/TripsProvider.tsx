@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import type { Trip } from "@types";
-import { getAutoTripStatus, tripsService } from "@features/trips";
+import { getAutoTripStatus, tripsService, type Trip } from "@features/trips";
 import { useAuth } from "./AuthContext";
 import { TripsContext } from "./TripsContext";
 

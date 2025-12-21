@@ -2,7 +2,7 @@
  * @file Utility functions for processing visit and trip data.
  */
 
-import type { Trip } from "@types";
+import type { Trip } from "@features/trips";
 import { extractUniqueValues } from "@utils/array";
 import { getYear, getYearNumber } from "@utils/date";
 

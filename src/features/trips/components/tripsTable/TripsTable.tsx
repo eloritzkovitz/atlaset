@@ -10,9 +10,10 @@ import { sortTrips } from "@features/trips/utils/tripSort";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { useResizableColumns } from "@hooks/useResizableColumns";
 import { useSort } from "@hooks/useSort";
-import type { FilterOption, Trip } from "@types";
+import type { FilterOption } from "@types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
+import type { Trip } from "../../types";
 import "./TripsTable.css";
 
 interface TripsTableProps {

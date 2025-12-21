@@ -1,10 +1,9 @@
 import React from "react";
 import { ActionsToolbar, SearchInput, ToolbarSeparator } from "@components";
-import type { TripFilterState } from "@features/trips/types";
-import type { Trip } from "@types";
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
 import { ToolbarActions } from "./ToolbarActions";
+import type { Trip, TripFilterState } from "../../types";
 
 interface ToolbarProps {
   trips: Trip[];

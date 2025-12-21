@@ -20,7 +20,7 @@ import { useClickOutside } from "@hooks/useClickOutside";
 import { useFloatingHover } from "@hooks/useFloatingHover";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useMenuPosition } from "@hooks/useMenuPosition";
-import type { Trip } from "@types";
+import type { Trip } from "../../types";
 
 interface TripActionsProps {
   trip: Trip;

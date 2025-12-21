@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import type { Trip } from "@types";
+import type { Trip } from "../types";
 import {
   exportTripsToCSV,
   exportTripsToJSON,

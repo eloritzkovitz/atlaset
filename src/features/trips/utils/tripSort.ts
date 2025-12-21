@@ -4,9 +4,8 @@
 
 import type { Country } from "@features/countries";
 import { createCountryMap } from "@features/countries/utils/countryData";
-import type { TripSortBy } from "@features/trips/types";
-import type { Trip } from "@types";
 import { sortItems } from "@utils/sort";
+import type { Trip, TripSortBy } from "../types";
 
 /**
  * Sorts trips based on a given key and order encoded in sortBy (e.g. "name-asc").

@@ -5,8 +5,8 @@ import { useTrips } from "@contexts/TripsContext";
 import { useTripIO } from "@features/trips/hooks/useTripsIO";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { useMenuPosition } from "@hooks/useMenuPosition";
-import type { Trip } from "@types";
 import { TripsExportMenu } from "./TripsExportMenu";
+import type { Trip } from "../../types";
 
 interface ToolbarImportExportProps {
   trips: Trip[];

@@ -9,8 +9,8 @@ import {
   FaHeart,
 } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
-import type { TripFilterState } from "@features/trips/types";
 import type { ToolbarToggleOption } from "@types";
+import type { TripFilterState } from "../../types";
 
 interface ToolbarFiltersProps {
   filters: TripFilterState;

@@ -13,9 +13,9 @@ import {
 } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal, getCountryByIsoCode, type Country } from "@features/countries";
-import type { Trip, TripCategory, TripStatus } from "@types";
 import { SelectedCountriesList } from "./SelectedCountriesList";
 import { useTripFilters } from "../../hooks/useTripFilters";
+import type { Trip, TripCategory, TripStatus } from "../../types";
 import "./TripModal.css";
 
 interface TripModalProps {

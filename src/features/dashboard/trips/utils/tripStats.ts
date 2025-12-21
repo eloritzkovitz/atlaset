@@ -2,8 +2,8 @@
  * @fileoverview Utility functions for trip statistics.
  */
 
+import type { Trip } from "@features/trips";
 import { getTripDays } from "@features/trips/utils/trips";
-import type { Trip } from "@types";
 
 /**
  * Gets a list of unique country codes visited across all trips.

@@ -2,7 +2,7 @@
  * @fileoverview Utility functions for trips.
  */
 
-import type { Trip, TripStatus } from "@types";
+import type { Trip, TripStatus } from "../types";
 
 /**
  * Determines if a trip is local (within the home country).

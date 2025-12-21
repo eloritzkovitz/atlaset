@@ -2,8 +2,8 @@
  * @file Utility functions for trip data manipulation.
  */
 
-import type { Trip } from "@types";
 import { extractUniqueValues } from "@utils/array";
+import type { Trip } from "../types";
 
 /**
  * Gets all country codes that have trips associated with them.
