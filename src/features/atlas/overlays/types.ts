@@ -1,6 +1,4 @@
-/**
- * Represents an overlay on the atlas map.
- */
+/** Represents an overlay on the atlas map. */
 export type Overlay = {
   /** Unique identifier for the overlay. */
   id: string;
@@ -18,9 +16,7 @@ export type Overlay = {
   order?: number;
 };
 
-/**
- * Represents a timeline-enabled overlay on the atlas map.
- */
+/** Represents a timeline-enabled overlay on the atlas map. */
 export type TimelineOverlay = Overlay & {
   /** Indicates that the overlay supports timeline features. */
   timelineEnabled: true;
@@ -28,14 +24,10 @@ export type TimelineOverlay = Overlay & {
   timelineSnapshot?: boolean;
 };
 
-/**
- * Union type for any overlay, either standard or timeline-enabled.
- */
+/** Union type for any overlay, either standard or timeline-enabled. */
 export type AnyOverlay = Overlay | TimelineOverlay;
 
-/**
- * Represents an item to be displayed on the atlas map as part of an overlay.
- */
+/** Represents an item to be displayed on the atlas map as part of an overlay. */
 export type OverlayItem = {
   isoCode: string;
   color?: string;
@@ -44,7 +36,5 @@ export type OverlayItem = {
   style?: React.CSSProperties;
 };
 
-/**
- * Modes for displaying overlays on the atlas map.
- */
+/** Modes for displaying overlays on the atlas map. */
 export type OverlayMode = "standard" | "cumulative" | "yearly";
