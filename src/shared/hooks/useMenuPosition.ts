@@ -19,6 +19,7 @@ export function useMenuPosition(
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
 
+  // Calculate menu position when open or dependencies change
   useLayoutEffect(() => {
     if (open && btnRef.current && menuRef.current) {
       const btnRect = btnRef.current.getBoundingClientRect();
@@ -60,6 +61,7 @@ export function useMenuPosition(
     } else {
       setMenuStyle({});
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, offset, align, withWidth]);
 
   return menuStyle;
