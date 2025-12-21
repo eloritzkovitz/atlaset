@@ -1,19 +1,16 @@
-import type { FeatureCollection, Geometry, GeoJsonProperties } from "geojson";
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { appDb } from "@utils/db";
 import { normalizeGeoDataProperties } from "../utils/map";
 import { CACHE_TTL } from "../../../../shared/config/cache";
+import type { GeoData } from "../types";
 
 /**
  * Manages fetching and state of geographical data for maps.
  * @returns Object containing geoData, geoError, and loading state.
  */
 export function useGeoData() {
-  const [geoData, setGeoData] = useState<FeatureCollection<
-    Geometry,
-    GeoJsonProperties
-  > | null>(null);
+  const [geoData, setGeoData] = useState<GeoData>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +28,7 @@ export function useGeoData() {
       typeof cached.ts === "number" &&
       now - cached.ts < CACHE_TTL
     ) {
-      setGeoData(cached.data as FeatureCollection);
+      setGeoData(cached.data as GeoData);
       setLoading(false);
       return;
     }

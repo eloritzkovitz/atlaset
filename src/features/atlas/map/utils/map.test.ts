@@ -1,4 +1,5 @@
 import type { Feature, FeatureCollection, Geometry, Point } from "geojson";
+import type { GeoData } from "../types";
 import {
   getProjection,
   getGeoCoordsFromMouseEvent,
@@ -14,7 +15,7 @@ describe("normalizeGeoDataProperties", () => {
   });
 
   it("returns a new FeatureCollection with properties as object", () => {
-    const input: FeatureCollection = {
+    const input: GeoData = {
       type: "FeatureCollection",
       features: [
         {
@@ -37,7 +38,7 @@ describe("normalizeGeoDataProperties", () => {
   });
 
   it("does not mutate the original input", () => {
-    const input: FeatureCollection = {
+    const input: GeoData = {
       type: "FeatureCollection",
       features: [
         {

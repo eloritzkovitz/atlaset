@@ -1,9 +1,9 @@
-import type { FeatureCollection, Geometry } from "geojson";
 import { useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
 import { getCountryCenterAndZoom } from "@features/atlas/map";
 import type { Marker } from "@types";
+import type { GeoData } from "../types";
 
 /**
  * Manages map view state including zoom and center.
@@ -14,7 +14,7 @@ import type { Marker } from "@types";
  * @returns An object containing zoom, center, and handlers to manage map view.
  */
 export function useMapView(
-  geoData: FeatureCollection<Geometry, { [key: string]: unknown }> | null,
+  geoData: GeoData,
   initialZoom = DEFAULT_MAP_SETTINGS.minZoom,
   initialCenter: [number, number] = [0, 0],
   onMarkerDetails?: (marker: Marker) => void
@@ -52,7 +52,7 @@ export function useMapView(
 
   // Center map on a marker by its ID
   const centerOnMarkerById = (markerId: string, zoomLevel: number = 20) => {
-    const marker = markers.find(m => m.id === markerId);
+    const marker = markers.find((m) => m.id === markerId);
     if (marker) {
       centerOnMarker(marker, zoomLevel);
     }

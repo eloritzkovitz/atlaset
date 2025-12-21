@@ -4,21 +4,15 @@
 
 import * as d3geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
-import type {
-  Feature,
-  FeatureCollection,
-  GeoJsonProperties,
-  Geometry,
-} from "geojson";
+import type { Feature, Geometry } from "geojson";
+import type { GeoData } from "../types";
 
 /**
  * Normalizes GeoJSON feature properties to ensure they are always defined.
  * @param geoData - The GeoJSON FeatureCollection to normalize.
  * @returns The normalized GeoJSON FeatureCollection.
  */
-export function normalizeGeoDataProperties(
-  geoData: FeatureCollection<Geometry, GeoJsonProperties> | null
-): FeatureCollection<Geometry, { [key: string]: unknown }> | null {
+export function normalizeGeoDataProperties(geoData: GeoData): GeoData {
   if (!geoData || !Array.isArray(geoData.features)) return null;
   return {
     ...geoData,
@@ -138,18 +132,23 @@ export function getFeatureCentroid(
  * @returns An object with center coordinates and zoom level, or null if not found.
  */
 export function getCountryCenterAndZoom(
-  geoData: FeatureCollection<Geometry, { [key: string]: unknown }>,
+  geoData: GeoData,
   isoCode: string,
   geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid,
   geoBoundsFn: typeof d3geo.geoBounds = d3geo.geoBounds
-) {
-  const country = geoData.features.find(
-    (feature) =>
-      feature.properties["ISO3166-1-Alpha-2"] === isoCode ||
-      feature.properties["ISO3166-1-Alpha-3"] === isoCode
-  );
+) {  
+  const country = geoData?.features.find((feature) => {
+    const props = feature.properties ?? {};
+    return (
+      props["ISO3166-1-Alpha-2"] === isoCode ||
+      props["ISO3166-1-Alpha-3"] === isoCode
+    );
+  });
+
+  // Return null if country not found
   if (!country) return null;
 
+  // Calculate centroid and bounds
   const centroid = geoCentroidFn(country);
   const bounds = geoBoundsFn(country);
   const [[minLng, minLat], [maxLng, maxLat]] = bounds;
@@ -157,6 +156,7 @@ export function getCountryCenterAndZoom(
   const lngDiff = Math.abs(maxLng - minLng);
   const maxDiff = Math.max(latDiff, lngDiff);
 
+  // Determine zoom level based on size of the country
   const zoom = Math.max(6, 18 - maxDiff * 40);
 
   return { center: centroid, zoom };

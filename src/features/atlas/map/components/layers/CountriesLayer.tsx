@@ -1,4 +1,4 @@
-import type { Feature, FeatureCollection, Geometry } from "geojson";
+import type { Feature, Geometry } from "geojson";
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
@@ -13,9 +13,10 @@ import {
   useOverlayColors,
 } from "@features/settings";
 import type { OverlayItem } from "@types";
+import type { GeoData } from "../../types";
 
 type MapCountriesLayerProps = {
-  geographyData: FeatureCollection<Geometry, { [key: string]: unknown }> | null;
+  geographyData: GeoData;
   overlayItems?: OverlayItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
