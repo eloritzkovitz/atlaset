@@ -19,6 +19,7 @@ import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
 import { TimelineFilters } from "./TimelineFilters";
 import { useIsMobile } from "@hooks/useIsMobile";
+import type { SovereigntyType } from "@types";
 
 interface CountryFiltersPanelProps {
   show: boolean;
@@ -30,8 +31,8 @@ interface CountryFiltersPanelProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
-  selectedSovereignty: string;
-  setSelectedSovereignty: (type: string) => void;
+  selectedSovereignty: SovereigntyType | "";
+  setSelectedSovereignty: (type: SovereigntyType | "") => void;
   minVisitCount: number;
   setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
   maxVisitCount: number | undefined;
