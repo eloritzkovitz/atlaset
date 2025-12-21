@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { CACHE_TTL } from "@config/cache";
 import { appDb } from "@utils/db";
+import type { Country } from "../types";
 import {
   getAllRegions,
   getAllSubregions,
   getAllSovereigntyTypes,
 } from "../utils/countryData";
-import type { Country } from "@types";
 
 /**
  * Fetches country and currency data with caching in IndexedDB.

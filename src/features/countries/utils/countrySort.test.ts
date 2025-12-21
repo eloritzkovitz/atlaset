@@ -1,7 +1,7 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import { mockTrips } from "@test-utils/mockTrips";
-import type { Country, SovereigntyType } from "@types";
 import { getSortOptions, sortCountries } from "./countrySort";
+import type { Country, SovereigntyType } from "../types";
 
 describe("countrySort utils", () => {
   const countries = mockCountries;

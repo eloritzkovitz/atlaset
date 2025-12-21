@@ -1,12 +1,12 @@
 import { createContext, useContext } from "react";
-import type { Country } from "@types";
+import type { Country, SovereigntyType } from "@features/countries";
 
 export interface CountryDataContextType {
   countries: Country[];
   currencies: Record<string, string>;
   allRegions: string[];
   allSubregions: string[];
-  allSovereigntyTypes: string[];
+  allSovereigntyTypes: SovereigntyType[];
   loading: boolean;
   error: string | null;
   refreshData?: () => void;

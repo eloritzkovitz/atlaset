@@ -2,9 +2,10 @@
  * @file Utilities for sorting trips.
  */
 
+import type { Country } from "@features/countries";
 import { createCountryMap } from "@features/countries/utils/countryData";
 import type { TripSortBy } from "@features/trips/types";
-import type { Country, Trip } from "@types";
+import type { Trip } from "@types";
 import { sortItems } from "@utils/sort";
 
 /**

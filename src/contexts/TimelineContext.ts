@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { OverlayMode } from "@types";
+import type { OverlayMode } from "@features/atlas/overlays";
 
 export interface TimelineContextValue {
   timelineMode: boolean;

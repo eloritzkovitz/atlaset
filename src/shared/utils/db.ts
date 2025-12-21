@@ -1,7 +1,7 @@
 import Dexie, { type Table } from "dexie";
 import type { Trip } from "../types";
-import type { Marker } from "../types/marker";
-import type { Overlay } from "../types/overlay";
+import type { Marker } from "@features/atlas/markers/types";
+import type { Overlay } from "@features/atlas/overlays";
 
 export class AppDB extends Dexie {
   countryData!: Table<Record<string, unknown>, string>;

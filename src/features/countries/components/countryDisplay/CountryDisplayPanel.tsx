@@ -1,6 +1,6 @@
 import React from "react";
-import type { Country } from "@types";
 import { CountryItem } from "./CountryItem";
+import type { Country } from "../../types";
 
 interface CountryDisplayPanelProps {
   countries: Country[];

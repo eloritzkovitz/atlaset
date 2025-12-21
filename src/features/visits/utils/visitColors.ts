@@ -1,5 +1,6 @@
 import { HOME_COUNTRY_COLOR } from "@constants/colors";
-import type { ColorPalette, OverlayMode, VisitColorRoles } from "@types";
+import type { OverlayMode } from "@features/atlas/overlays";
+import type { ColorPalette, VisitColorRoles } from "@types";
 
 /**
  * Get the color for a country based on visit count and mode

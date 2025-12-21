@@ -18,7 +18,7 @@ import {
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal } from "@features/countries";
-import type { Overlay } from "@types";
+import type { Overlay } from "../types";
 
 interface OverlayModalProps {
   isOpen: boolean;

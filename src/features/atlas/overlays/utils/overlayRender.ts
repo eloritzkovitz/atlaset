@@ -3,7 +3,7 @@
  */
 
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
-import type { Overlay, OverlayItem } from "@types";
+import type { Overlay, OverlayItem } from "../types";
 import { blendColors } from "@utils/color";
 
 /**

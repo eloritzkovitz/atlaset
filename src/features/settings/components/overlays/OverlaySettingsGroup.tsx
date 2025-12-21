@@ -2,7 +2,7 @@ import React from "react";
 import { FaBrush } from "react-icons/fa6";
 import { Checkbox, CollapsibleHeader, DropdownSelectInput } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colors";
-import type { OverlayMode } from "@types";
+import type { OverlayMode } from "@features/atlas/overlays";
 import { PaletteDots } from "./PaletteDots";
 import { useOverlayColors } from "../../hooks/useOverlayColors";
 

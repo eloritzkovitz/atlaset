@@ -9,6 +9,9 @@ export { CountryFlag } from "./components/countryFlag/CountryFlag";
 // Constants
 export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
 
+// Types
+export * from "./types";
+
 // Utils
 export {
   getCountryIsoCode,

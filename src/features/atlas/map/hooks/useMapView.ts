@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
 import { getCountryCenterAndZoom } from "@features/atlas/map";
-import type { Marker } from "@types";
 import type { GeoData } from "../types";
+import type { Marker } from "../../markers/types";
 
 /**
  * Manages map view state including zoom and center.

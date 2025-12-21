@@ -1,4 +1,4 @@
-import type { Country, SovereigntyType } from "@types";
+import type { Country, SovereigntyType } from "../../features/countries";
 
 export const mockCountries: Country[] = [
   {

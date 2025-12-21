@@ -5,9 +5,9 @@ import {
   CountryFlag,
   getRandomCountry,
   getCountriesWithOwnFlag,
+  type Country,
 } from "@features/countries";
 import { GuessForm, ResultMessage, Scoreboard } from "@features/game";
-import type { Country } from "@types";
 
 export default function GamesPage() {
   const { countries, loading, error } = useCountryData();

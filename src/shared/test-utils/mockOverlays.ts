@@ -1,4 +1,4 @@
-import type { Overlay, TimelineOverlay } from "../types/overlay";
+import type { Overlay, TimelineOverlay } from "../../features/atlas/overlays";
 
 export const mockOverlays: Overlay[] = [
   {

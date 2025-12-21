@@ -2,9 +2,9 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Country, Overlay } from "@types";
+import type { Overlay } from "@features/atlas/overlays";
 import { filterBySearch } from "@utils/filter";
-import type { CountryFilterOptions } from "../types";
+import type { Country, CountryFilterOptions } from "../types";
 
 /**
  * Filters countries based on various criteria.

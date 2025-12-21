@@ -1,6 +1,6 @@
-import type { Country } from "@types";
 import { CountryFlag } from "../countryFlag/CountryFlag";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import type { Country } from "../../types";
 import type { FlagSize } from "../../types/flag";
 
 interface CountryItemProps {

@@ -1,6 +1,6 @@
-import { PanelListItem } from "@components";
-import type { Marker } from "@types";
 import type { DragEvent } from "react";
+import { PanelListItem } from "@components";
+import type { Marker } from "../../types";
 
 interface MarkersPanelItemProps {
   marker: Marker;

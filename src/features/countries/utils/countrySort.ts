@@ -6,10 +6,10 @@ import {
   getFirstVisitDateByCountry,
   getLastVisitDateByCountry,
 } from "@features/visits/utils/visits";
-import type { Country, Trip } from "@types";
+import type { Trip } from "@types";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
-import type { CountrySortBy } from "../types";
+import type { Country, CountrySortBy } from "../types";
 
 /** Builds lookup maps for first and last visit dates by country.
  * @param trips - Array of Trip objects.

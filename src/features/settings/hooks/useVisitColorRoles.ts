@@ -1,7 +1,8 @@
 import { useSettings } from "@contexts/SettingsContext";
 import { COLOR_PALETTES } from "@constants/colors";
+import type { OverlayMode } from "@features/atlas/overlays";
 import { getVisitColorRolesFromPalette } from "@features/visits";
-import type { OverlayMode, VisitColorRoles } from "@types";
+import type { VisitColorRoles } from "@types";
 
 /**
  * Gets visit color roles based on the selected overlay palette for a given mode.

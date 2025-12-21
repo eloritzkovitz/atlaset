@@ -1,4 +1,4 @@
-import type { Country } from "@types";
+import type { Country } from "@features/countries";
 
 /**
  * Filters countries to only those that have been visited.

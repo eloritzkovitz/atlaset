@@ -1,6 +1,6 @@
 import { useSettings } from "@contexts/SettingsContext";
 import { COLOR_PALETTES } from "@constants/colors";
-import type { OverlayMode } from "@types";
+import type { OverlayMode } from "@features/atlas/overlays";
 
 /**
  * Manages overlay palette settings.

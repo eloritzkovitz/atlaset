@@ -1,7 +1,7 @@
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
+import type { SovereigntyType } from "@features/countries";
 import { coreFiltersConfig } from "../../config/filtersConfig";
-import type { SovereigntyType } from "@types";
 
 interface CoreFiltersProps {
   expanded: boolean;

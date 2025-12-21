@@ -1,4 +1,4 @@
-import type { TimelineOverlay } from "@types";
+import type { TimelineOverlay } from "@features/atlas/overlays";
 
 export const VISITED_OVERLAY_ID = "visited-countries";
 

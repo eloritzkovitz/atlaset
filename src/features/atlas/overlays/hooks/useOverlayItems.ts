@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { getOverlayItems } from "@features/atlas/overlays/utils/overlayRender";
-import type { Overlay } from "@types";
+import type { Overlay } from "../types";
 
 /**
  * Retrieves overlay items that are marked as visible.

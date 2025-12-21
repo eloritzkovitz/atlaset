@@ -1,5 +1,5 @@
-import type { Country } from "@types";
 import { getLanguagesDisplay } from "@features/countries";
+import type { Country } from "../../types";
 
 interface CountryInfoTableProps {
   country: Country;

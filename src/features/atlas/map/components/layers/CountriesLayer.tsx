@@ -6,13 +6,13 @@ import { useMapGeographyStyle } from "@features/atlas/map/hooks/useMapGeographyS
 import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
+  type OverlayItem,
 } from "@features/atlas/overlays";
 import {
   useCountryColors,
   useHomeCountry,
   useOverlayColors,
 } from "@features/settings";
-import type { OverlayItem } from "@types";
 import type { GeoData } from "../../types";
 
 type MapCountriesLayerProps = {

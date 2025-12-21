@@ -1,11 +1,10 @@
-import { SOVEREIGNTY_ORDER } from "@features/countries";
-import type { CountryFilterConfig } from "@features/countries/types";
-import type {
-  FilterConfig,
-  FilterOption,
-  Overlay,
-  SovereigntyType,
-} from "@types";
+import type { Overlay } from "@features/atlas/overlays";
+import {
+  SOVEREIGNTY_ORDER,  
+  type CountryFilterConfig,
+  type SovereigntyType,
+} from "@features/countries";
+import type { FilterConfig, FilterOption } from "@types";
 import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
 import { capitalize, capitalizeWords } from "@utils/string";

@@ -3,7 +3,8 @@ import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { overlaysService } from "@features/atlas/overlays";
 import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 import { computeVisitedCountriesFromTrips } from "@features/visits";
-import type { AnyOverlay, Trip } from "@types";
+import type { AnyOverlay } from "../types";
+import type { Trip } from "@types";
 
 /**
  * Synchronizes the Visited Countries overlay with the user's trip data.

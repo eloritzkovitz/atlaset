@@ -1,11 +1,10 @@
+import React from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
-import { CountryDisplayPanel } from "@features/countries";
+import { CountryDisplayPanel, type Country } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
-import type { Country } from "@types";
 import { CountryVisitBadge } from "./CountryVisitBadge";
-import React from "react";
 
 interface CountryListProps {
   setIsFocused: React.Dispatch<React.SetStateAction<boolean>>;

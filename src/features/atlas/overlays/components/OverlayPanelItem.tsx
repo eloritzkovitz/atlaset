@@ -1,6 +1,6 @@
 import { PanelListItem } from "@components";
 import { VISITED_OVERLAY_ID } from "@constants/overlays";
-import type { Overlay } from "@types";
+import type { Overlay } from "../types";
 
 interface OverlayPanelItemProps {
   overlay: Overlay;

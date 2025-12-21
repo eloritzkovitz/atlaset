@@ -1,4 +1,4 @@
-import type { OverlayMode } from "@types";
+import type { OverlayMode } from "@features/atlas/overlays";
 
 export type AccountSettings = {
   homeCountry: string;

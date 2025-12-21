@@ -1,18 +1,17 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCountryData } from "@contexts/CountryDataContext";
+import { useOverlays } from "@contexts/OverlaysContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
+import type { CountryFilterOptions, SovereigntyType } from "@features/countries";
 import {
   filterCountries,
   getFilteredIsoCodes,
 } from "@features/countries/utils/countryFilters";
-import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
 import { getLatestYear, getVisitCountStats } from "@features/visits";
 import { filterByVisitCount } from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks/useDebounce";
-import { useOverlays } from "@contexts/OverlaysContext";
-import { useCountryData } from "@contexts/CountryDataContext";
-import type { CountryFilterOptions } from "@features/countries/types";
-import type { SovereigntyType } from "@types";
 
 /**
  * Manages and applies country filters.

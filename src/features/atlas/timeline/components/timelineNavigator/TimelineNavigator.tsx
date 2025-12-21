@@ -8,8 +8,8 @@ import {
 } from "react-icons/fa6";
 import { ActionButton, ToolbarSelectButton } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
+import type { OverlayMode } from "@features/atlas/overlays";
 import { useTimelineNavigation } from "@features/atlas/timeline";
-import type { OverlayMode } from "@types";
 
 export function TimelineNavigator() {
   const { years, selectedYear, setSelectedYear, overlayMode, setOverlayMode } =
