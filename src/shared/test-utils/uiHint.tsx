@@ -1,5 +1,5 @@
 import React from "react";
-import { UIHintProvider } from "@contexts/UIHintContext";
+import { UIHintProvider } from "@contexts/UIHintProvider";
 import { UIHintContainer } from "@components/ui/UiHint/UiHintContainer";
 import { render } from "@testing-library/react";
 
