@@ -29,7 +29,7 @@ export function ImageOptions({
       quality: qualityFloat,
       ...(format === "jpeg" ? { backgroundColor } : {}),
     });
-  }, [scale, quality, backgroundColor, format, onOptionsChange]);
+  }, [scale, quality, qualityFloat, backgroundColor, format, onOptionsChange]);
 
   return (
     <div>

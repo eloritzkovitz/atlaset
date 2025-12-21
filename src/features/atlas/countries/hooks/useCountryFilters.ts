@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import {
@@ -42,12 +42,15 @@ export function useCountryFilters() {
   );
 
   // Core filter parameters
-  const filterParams = {
-    search: debouncedSearch,
-    selectedRegion,
-    selectedSubregion,
-    selectedSovereignty,
-  };
+  const filterParams = useMemo(
+    () => ({
+      search: debouncedSearch,
+      region: selectedRegion,
+      subregion: selectedSubregion,
+      sovereignty: selectedSovereignty,
+    }),
+    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty]
+  );
 
   // With overlays applied
   const filteredIsoCodes = useMemo(
@@ -57,7 +60,7 @@ export function useCountryFilters() {
   const filteredCountries = useMemo(
     () =>
       filterCountries(countries, {
-        ...filterParams,
+        ...(filterParams ?? {}),
         overlayCountries: filteredIsoCodes,
       }),
     [countries, filterParams, filteredIsoCodes]
@@ -67,7 +70,7 @@ export function useCountryFilters() {
   const filteredCountriesNoOverlay = useMemo(
     () =>
       filterCountries(countries, {
-        ...filterParams,
+        ...(filterParams ?? {}),
         overlayCountries: undefined,
       }),
     [countries, filterParams]
@@ -115,11 +118,11 @@ export function useCountryFilters() {
   }
 
   // Reset timeline-related filters
-  function resetTimelineFilters() {
+  const resetTimelineFilters = useCallback(() => {
     setSelectedYear(getLatestYear(years));
     setMinVisitCount(absoluteMin);
     setMaxVisitCount(absoluteMax);
-  }
+  }, [setSelectedYear, years, absoluteMin, absoluteMax]);
 
   // Reset filters
   function resetFilters() {
@@ -133,7 +136,7 @@ export function useCountryFilters() {
     if (!timelineMode) {
       resetTimelineFilters();
     }
-  }, [timelineMode]);
+  }, [timelineMode, resetTimelineFilters]);
 
   return {
     selectedRegion,

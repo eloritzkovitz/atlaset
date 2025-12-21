@@ -14,9 +14,6 @@ export function useDelayedLoading(
 ) {
   const [showLoading, setShowLoading] = useState(true);
 
-  // Combine dependencies into a single array for useEffect
-  const allDeps = [loading, minDelay, ...deps];
-
   // Handle delayed loading effect
   useEffect(() => {
     if (!loading) {
@@ -25,7 +22,8 @@ export function useDelayedLoading(
     } else {
       setShowLoading(true);
     }
-  }, allDeps);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, minDelay, ...deps]);
 
   return loading || showLoading;
 }

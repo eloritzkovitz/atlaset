@@ -133,7 +133,13 @@ export function useTripFilters(
       });
     }
     return result;
-  }, [trips, filters, globalSearch, countryData?.countries]);
+  }, [
+    trips,
+    filters,
+    globalSearch,
+    countryMap,
+    homeCountry,
+  ]);
 
   // Country options
   const usedCountryCodes = useMemo(
@@ -150,7 +156,7 @@ export function useTripFilters(
         const country = countryMap[opt.value.toLowerCase()];
         return opt.value ? { ...opt, country } : opt;
       }),
-    [rawCountryOptions, countryMap, homeCountry]
+    [rawCountryOptions, countryMap]
   );
 
   // Year options
