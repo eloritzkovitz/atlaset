@@ -45,9 +45,9 @@ export function useCountryFilters() {
   const filterParams = useMemo(
     () => ({
       search: debouncedSearch,
-      region: selectedRegion,
-      subregion: selectedSubregion,
-      sovereignty: selectedSovereignty,
+      selectedRegion,
+      selectedSubregion,
+      selectedSovereignty,
     }),
     [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty]
   );
