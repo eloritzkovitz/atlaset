@@ -2,7 +2,6 @@ import type { Feature, Geometry } from "geojson";
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
-import { useMapGeographyStyle } from "@features/atlas/map/hooks/useMapGeographyStyle";
 import {
   getBlendedOverlayColor,
   groupOverlayItemsByIsoCode,
@@ -13,6 +12,7 @@ import {
   useHomeCountry,
   useOverlayColors,
 } from "@features/settings";
+import { useMapGeographyStyle } from "../../hooks/useMapGeographyStyle";
 import type { GeoData } from "../../types";
 
 type MapCountriesLayerProps = {

@@ -11,7 +11,6 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
-import { useCountryFilters } from "@features/atlas/countries/hooks/useCountryFilters";
 import type { Country } from "features/countries";
 import { sortCountries } from "@features/countries/utils/countrySort";
 import { useListNavigation } from "@hooks/useListNavigation";
@@ -20,6 +19,7 @@ import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountriesToolbar } from "./CountriesToolbar";
 import { CountryList } from "./CountryList";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
+import { useCountryFilters } from "../../hooks/useCountryFilters";
 
 interface CountriesPanelProps {
   selectedIsoCode: string | null;

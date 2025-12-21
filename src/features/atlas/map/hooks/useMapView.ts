@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
-import { getCountryCenterAndZoom } from "@features/atlas/map";
 import type { GeoData } from "../types";
+import { getCountryCenterAndZoom } from "../utils/map";
 import type { Marker } from "../../markers/types";
 
 /**

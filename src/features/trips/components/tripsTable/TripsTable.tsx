@@ -1,19 +1,18 @@
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
-import {
-  DEFAULT_WIDTHS,
-  MIN_WIDTHS,
-  type ColumnKey,
-} from "@features/trips/constants/columns";
-import type { TripFilters, TripSortBy, TripSortByKey } from "@features/trips/types";
-import { sortTrips } from "@features/trips/utils/tripSort";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { useResizableColumns } from "@hooks/useResizableColumns";
 import { useSort } from "@hooks/useSort";
 import type { FilterOption } from "@types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
-import type { Trip } from "../../types";
+import {
+  DEFAULT_WIDTHS,
+  MIN_WIDTHS,
+  type ColumnKey,
+} from "../../constants/columns";
+import type { Trip, TripFilters, TripSortBy, TripSortByKey } from "../../types";
+import { sortTrips } from "../../utils/tripSort";
 import "./TripsTable.css";
 
 interface TripsTableProps {

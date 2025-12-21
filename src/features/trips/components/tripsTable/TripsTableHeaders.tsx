@@ -7,13 +7,13 @@ import {
   TableHeader,
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
-import { TRIP_CATEGORY_ICONS } from "@features/trips/constants/tripCategoryIcons";
+import type { FilterOption } from "@types";
+import { isAllowedOption, isStringOption } from "@utils/dropdown";
+import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import {
   ALL_TRIP_CATEGORIES,
   RATING_OPTIONS,
-} from "@features/trips/constants/trips";
-import type { FilterOption } from "@types";
-import { isAllowedOption, isStringOption } from "@utils/dropdown";
+} from "../../constants/trips";
 import type {
   TripCategory,
   TripFilters,

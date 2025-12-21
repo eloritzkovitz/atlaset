@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { getOverlayItems } from "@features/atlas/overlays/utils/overlayRender";
+import { getOverlayItems } from "../utils/overlayRender";
 import type { Overlay } from "../types";
 
 /**

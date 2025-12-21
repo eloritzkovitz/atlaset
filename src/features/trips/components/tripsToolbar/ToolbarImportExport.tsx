@@ -2,10 +2,10 @@ import React, { useRef } from "react";
 import { FaFileImport, FaFileExport, FaCheck } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
 import { useTrips } from "@contexts/TripsContext";
-import { useTripIO } from "@features/trips/hooks/useTripsIO";
 import { useClickOutside } from "@hooks/useClickOutside";
 import { useMenuPosition } from "@hooks/useMenuPosition";
 import { TripsExportMenu } from "./TripsExportMenu";
+import { useTripIO } from "../../hooks/useTripsIO";
 import type { Trip } from "../../types";
 
 interface ToolbarImportExportProps {

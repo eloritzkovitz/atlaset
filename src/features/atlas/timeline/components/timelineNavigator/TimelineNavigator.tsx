@@ -9,7 +9,7 @@ import {
 import { ActionButton, ToolbarSelectButton } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import type { OverlayMode } from "@features/atlas/overlays";
-import { useTimelineNavigation } from "@features/atlas/timeline";
+import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {
   const { years, selectedYear, setSelectedYear, overlayMode, setOverlayMode } =

@@ -1,25 +1,25 @@
 import { useMemo, useState } from "react";
 import { createCountryMap, type Country } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
+import type { Trip, TripFilterState } from "../types";
+import {
+  isAbroadTrip,
+  isCompletedTrip,
+  isLocalTrip,
+  isUpcomingTrip,
+} from "../utils/trips";
+import {
+  getUsedCountryCodes,
+  getUsedYears,
+} from "../utils/tripData";
 import {
   getCountryDropdownOptions,
   getYearDropdownOptions,
   getCategoryDropdownOptions,
   getStatusDropdownOptions,
   getTagDropdownOptions,
-} from "@features/trips/utils/tripDropdownOptions";
-import {
-  getUsedCountryCodes,
-  getUsedYears,
-} from "@features/trips/utils/tripData";
-import { filterTrips } from "@features/trips/utils/tripFilters";
-import {
-  isAbroadTrip,
-  isCompletedTrip,
-  isLocalTrip,
-  isUpcomingTrip,
-} from "@features/trips/utils/trips";
-import type { Trip, TripFilterState } from "../types";
+} from "../utils/tripDropdownOptions";
+import { filterTrips } from "../utils/tripFilters";
 
 // Default trip filters
 const defaultTripFilterState: TripFilterState = {

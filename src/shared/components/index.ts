@@ -33,6 +33,7 @@ export { FormField } from "./form/fields/FormField";
 export { Checkbox } from "./form/inputs/Checkbox";
 export { ColorSelectInput } from "./form/inputs/ColorSelectInput/ColorSelectInput";
 export { DateSelect } from "./form/inputs/DateSelect/DateSelect";
+export { DropdownOptions } from "./form/inputs/DropdownSelectInput/DropdownOptions";
 export { DropdownSelectInput } from "./form/inputs/DropdownSelectInput/DropdownSelectInput";
 export { InputBox } from "./form/inputs/InputBox/InputBox";
 export { NumberInput } from "./form/inputs/NumberInput/NumberInput";
