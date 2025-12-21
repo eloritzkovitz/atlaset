@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useMemo } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { appDb } from "@utils/db";
 import { normalizeGeoDataProperties } from "../utils/map";
@@ -37,10 +37,15 @@ export function useGeoData() {
       const res = await fetch(DEFAULT_MAP_SETTINGS.geoUrl);
       if (!res.ok) throw new Error("Failed to load map data");
       const data = await res.json();
-      setGeoData(data);
+      const normalized = normalizeGeoDataProperties(data);
+      setGeoData(normalized);
       setLoading(false);
       // Save to Dexie
-      await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
+      await appDb.geoData?.put({
+        id: "geoData",
+        data: normalized,
+        ts: Date.now(),
+      });
     } catch (err: unknown) {
       setGeoError(
         err instanceof Error ? err.message : "Failed to load map data"
@@ -54,10 +59,5 @@ export function useGeoData() {
     fetchGeoData();
   }, [fetchGeoData]);
 
-  // Memoize normalized geoData so reference is stable unless data changes
-  const normalizedGeoData = useMemo(
-    () => normalizeGeoDataProperties(geoData),
-    [geoData]
-  );
-  return { geoData: normalizedGeoData, geoError, loading };
+  return { geoData, geoError, loading };
 }
