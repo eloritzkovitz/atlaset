@@ -25,7 +25,8 @@ export function UserMenu() {
   // Close menu on route change
   useEffect(() => {
     if (isOpen) closeModal();
-  }, [closeModal, isOpen, location.pathname]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Don't render if UI is not visible
   if (!uiVisible) return null;
