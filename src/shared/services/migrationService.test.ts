@@ -124,6 +124,10 @@ describe("migrationService", () => {
       (appDb.settings.get as any).mockResolvedValueOnce({
         id: "main",
         theme: "dark",
+        account: {},
+        display: {},
+        map: {},
+        overlays: {},
       });
       vi.spyOn(settingsService, "save").mockResolvedValueOnce(undefined);
 
@@ -161,6 +165,10 @@ describe("migrationService", () => {
       expect(settingsService.save).toHaveBeenCalledWith({
         id: "main",
         theme: "dark",
+        account: {},
+        display: {},
+        map: {},
+        overlays: {},
       });
       expect(appDb.settings.clear).toHaveBeenCalled();
 
