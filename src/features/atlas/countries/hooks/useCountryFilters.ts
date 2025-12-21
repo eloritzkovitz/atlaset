@@ -11,6 +11,8 @@ import { filterByVisitCount } from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks/useDebounce";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useCountryData } from "@contexts/CountryDataContext";
+import type { CountryFilterOptions } from "@features/countries/types";
+import type { SovereigntyType } from "@types";
 
 /**
  * Manages and applies country filters.
@@ -31,7 +33,7 @@ export function useCountryFilters() {
   // Filter states
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
-  const [selectedSovereignty, setSelectedSovereignty] = useState<string>("");
+  const [selectedSovereignty, setSelectedSovereignty] = useState<SovereigntyType | "">("");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
@@ -42,7 +44,7 @@ export function useCountryFilters() {
   );
 
   // Core filter parameters
-  const filterParams = useMemo(
+  const filterParams: CountryFilterOptions = useMemo(
     () => ({
       search: debouncedSearch,
       selectedRegion,

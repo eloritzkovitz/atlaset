@@ -1,4 +1,4 @@
-import type { FilterConfig } from "@types";
+import type { FilterConfig, SovereigntyType } from "@types";
 
 // Sort keys for countries
 
@@ -21,3 +21,11 @@ export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
   P,
   CountryFilterKey
 >;
+
+export type CountryFilterOptions = {
+  search?: string;
+  selectedRegion?: string;
+  selectedSubregion?: string;
+  selectedSovereignty?: SovereigntyType | "";
+  overlayCountries?: string[];
+};
