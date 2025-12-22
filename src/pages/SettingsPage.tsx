@@ -11,13 +11,10 @@ import { useAuth } from "@contexts/AuthContext";
 import {
   AccountSettingsSection,
   DisplaySettingsSection,
+  SecurityInfoSection,
   SettingsPanelMenu,
 } from "@features/settings";
-import {
-  EditProfileModal,
-  SecurityInfoSection,
-  UserActivitySection,
-} from "@features/user";
+import { EditProfileModal, UserActivitySection } from "@features/user";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 
