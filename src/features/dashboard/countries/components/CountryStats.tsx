@@ -95,10 +95,10 @@ export function CountryStats({
         />
       </div>
     );
-  }
+  } 
 
   // If no region is selected (overview), show region cards and toggles
-  if (!selectedRegion) {
+  if (selectedRegion === undefined || selectedRegion === "") {
     return (
       <>
         <SegmentedToggle
@@ -140,6 +140,27 @@ export function CountryStats({
           ))}
         </div>
       </>
+    );
+  }
+
+  // Special case: all countries view
+  if (selectedRegion === "all") {
+    return (
+      <CountrySection
+        countries={filteredCountries}
+        visitedCountryCodes={visited.visitedCountryCodes}
+        selectedIsoCode={selectedIsoCode ?? null}
+        setSelectedIsoCode={setSelectedIsoCode}
+        selectedRegion={"all"}
+        setSelectedRegion={setSelectedRegion}
+        selectedSubregion={""}
+        setSelectedSubregion={setSelectedSubregion}
+        search={search}
+        setSearch={setSearch}
+        onSubregionChange={onSubregionChange}
+        onAllCountries={onShowAllCountries}
+        resetFilters={resetFilters}
+      />
     );
   }
 

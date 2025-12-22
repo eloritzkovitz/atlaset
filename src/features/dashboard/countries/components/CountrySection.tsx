@@ -171,20 +171,24 @@ export function CountrySection({
               }) ?? ""
             }
             onChange={(val) => {
-              regionSelectFilter.setValue(
-                {
-                  selectedRegion,
-                  setSelectedRegion,
-                  selectedSubregion,
-                  setSelectedSubregion,
-                  selectedSovereignty: "",
-                  setSelectedSovereignty: () => {},
-                },
-                val as string
-              );
-              setSelectedSubregion("all");
-              if (onAllCountries && val === "all") {
-                onAllCountries();
+              if (val === "all") {
+                // Route to all countries and reset region/subregion
+                setSelectedRegion("all");
+                setSelectedSubregion("");
+                if (onAllCountries) onAllCountries();
+              } else {
+                regionSelectFilter.setValue(
+                  {
+                    selectedRegion,
+                    setSelectedRegion,
+                    selectedSubregion,
+                    setSelectedSubregion,
+                    selectedSovereignty: "",
+                    setSelectedSovereignty: () => {},
+                  },
+                  val as string
+                );
+                setSelectedSubregion("all");
               }
             }}
             options={regionOptions}
@@ -202,19 +206,27 @@ export function CountrySection({
               }) ?? ""
             }
             onChange={(val) => {
-              subregionSelectFilter.setValue(
-                {
-                  selectedRegion,
-                  setSelectedRegion,
-                  selectedSubregion,
-                  setSelectedSubregion,
-                  selectedSovereignty: "",
-                  setSelectedSovereignty: () => {},
-                },
-                val as string
-              );
-              if (onSubregionChange && selectedRegion && val && val !== "all" && val !== "") {
-                onSubregionChange(selectedRegion, val as string);
+              if (val === "all" || val === "") {
+                // Clear subregion filter and update route/view
+                setSelectedSubregion("");
+                if (onSubregionChange && selectedRegion) {
+                  onSubregionChange(selectedRegion, "");
+                }
+              } else {
+                subregionSelectFilter.setValue(
+                  {
+                    selectedRegion,
+                    setSelectedRegion,
+                    selectedSubregion,
+                    setSelectedSubregion,
+                    selectedSovereignty: "",
+                    setSelectedSovereignty: () => {},
+                  },
+                  val as string
+                );
+                if (onSubregionChange && selectedRegion && val) {
+                  onSubregionChange(selectedRegion, val as string);
+                }
               }
             }}
             options={subregionOptions}

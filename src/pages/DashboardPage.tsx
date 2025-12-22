@@ -52,13 +52,18 @@ export default function DashboardPage() {
 
   // Sync route state to filter state
   useEffect(() => {
-    if (routeSelectedRegion !== selectedRegion)
-      setSelectedRegion(routeSelectedRegion || "");
-    if (routeSelectedSubregion !== selectedSubregion)
-      setSelectedSubregion(routeSelectedSubregion || "");
+    // Only update if different, and always preserve 'all' as a valid value
+    if (routeSelectedRegion !== selectedRegion) {
+      setSelectedRegion(routeSelectedRegion ?? "");
+    }
+    if (routeSelectedSubregion !== selectedSubregion) {
+      setSelectedSubregion(routeSelectedSubregion ?? "");
+    }
   }, [
     routeSelectedRegion,
     routeSelectedSubregion,
+    selectedRegion,
+    selectedSubregion,
     setSelectedRegion,
     setSelectedSubregion,
   ]);
