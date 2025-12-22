@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FaThLarge, FaList, FaGlobe, FaCheckCircle } from "react-icons/fa";
 import { ActionButton, SearchInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
@@ -44,13 +44,25 @@ export function CountrySection({
   };
 
   // Filter countries based on search and visited toggle
-  let filtered = filterCountries(countries, { search });
-  if (showVisitedOnly) {
-    filtered = filtered.filter((c) => visitedCountryCodes.includes(c.isoCode));
-  }
+  const filtered = useMemo(
+    () => filterCountries(countries, { search }),
+    [countries, search]
+  );
+
+  // Further filter by visited countries if toggled
+  const filteredVisited = useMemo(
+    () =>
+      showVisitedOnly
+        ? filtered.filter((c) => visitedCountryCodes.includes(c.isoCode))
+        : filtered,
+    [filtered, showVisitedOnly, visitedCountryCodes]
+  );
 
   // Sort countries by name ascending
-  const sortedCountries = sortCountries(filtered, "name-asc", []);
+  const sortedCountries = useMemo(
+    () => sortCountries(filteredVisited, "name-asc", []),
+    [filteredVisited]
+  );
 
   // Paginate countries
   const {
