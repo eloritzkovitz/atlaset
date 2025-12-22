@@ -100,6 +100,27 @@ export default function DashboardPage() {
     return <Navigate to="/dashboard/countries/overview" replace />;
   }
 
+  // Render CountryStats with common props
+  function renderCountryStats(propsOverride = {}) {
+    return (
+      <CountryStats
+        selectedRegion={selectedRegion || ""}
+        setSelectedRegion={handleRegionSelect}
+        selectedSubregion={selectedSubregion || ""}
+        setSelectedSubregion={setSelectedSubregion}
+        search={search}
+        setSearch={setSearch}
+        selectedIsoCode={selectedIsoCode || ""}
+        setSelectedIsoCode={handleCountrySelect}
+        onShowAllCountries={handleShowAllCountries}
+        onSubregionChange={handleSubregionSelect}
+        resetFilters={resetFilters}
+        onBack={undefined}
+        {...propsOverride}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen relative">
       {/* Mobile: hamburger + drawer */}
@@ -134,64 +155,32 @@ export default function DashboardPage() {
               path="countries"
               element={<Navigate to="/dashboard/countries/overview" replace />}
             />
-
             {/* Overview page */}
             <Route
               path="countries/overview"
-              element={
-                <CountryStats
-                  selectedRegion={undefined}
-                  setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={undefined}
-                  setSelectedSubregion={setSelectedSubregion}
-                  search={search}
-                  setSearch={setSearch}
-                  selectedIsoCode={undefined}
-                  setSelectedIsoCode={handleCountrySelect}
-                  onShowAllCountries={handleShowAllCountries}
-                  onSubregionChange={handleSubregionSelect}
-                  resetFilters={resetFilters}
-                />
-              }
+              element={renderCountryStats({
+                selectedRegion: undefined,
+                selectedSubregion: undefined,
+                selectedIsoCode: undefined,
+                onBack: undefined,
+              })}
             />
             {/* All countries page */}
             <Route
               path="countries/all"
-              element={
-                <CountryStats
-                  selectedRegion="all"
-                  setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={""}
-                  setSelectedSubregion={setSelectedSubregion}
-                  search={search}
-                  setSearch={setSearch}
-                  selectedIsoCode={""}
-                  setSelectedIsoCode={handleCountrySelect}
-                  onShowAllCountries={handleShowAllCountries}
-                  onSubregionChange={handleSubregionSelect}
-                  resetFilters={resetFilters}
-                />
-              }
+              element={renderCountryStats({
+                selectedRegion: "all",
+                selectedSubregion: "",
+                selectedIsoCode: "",
+                onBack: undefined,
+              })}
             />
             {/* Region, subregion, and country details */}
             <Route
               path="countries/:region/:subregion?/:isoCode?"
-              element={
-                <CountryStats
-                  selectedRegion={selectedRegion || ""}
-                  setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={selectedSubregion || ""}
-                  setSelectedSubregion={setSelectedSubregion}
-                  search={search}
-                  setSearch={setSearch}
-                  selectedIsoCode={selectedIsoCode || ""}
-                  setSelectedIsoCode={handleCountrySelect}
-                  onShowAllCountries={handleShowAllCountries}
-                  onBack={handleBack}
-                  onSubregionChange={handleSubregionSelect}
-                  resetFilters={resetFilters}
-                />
-              }
+              element={renderCountryStats({
+                onBack: handleBack,
+              })}
             />
             {/* Other dashboard panels */}
             <Route path="trips/overview" element={<TripsStats />} />
