@@ -67,21 +67,28 @@ export function CountryItem({
             className="text-sm sm:text-base"
           />
         ) : (
-          <CountryFlag
-            flag={{
-              isoCode: country.isoCode,
-              source: flagSource || "svg",
-              style: "flat",
-              size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
-            }}
-            alt={country.name}
-            className="mb-1 sm:mb-2 shadow"
-          />
+          <div className="flex flex-col items-center w-[128px] h-[140px]">
+            <div className="flex items-center justify-center w-[128px] h-[96px]">
+              <CountryFlag
+                flag={{
+                  isoCode: country.isoCode,
+                  source: flagSource || "svg",
+                  style: "flat",
+                  size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
+                }}
+                alt={country.name}
+                className="shadow max-w-full max-h-full object-contain"
+              />
+            </div>
+            <span className="block mt-1 text-xs sm:text-base text-center break-words min-h-[20px]">
+              {country.name}
+            </span>
+          </div>
         )
       ) : (
         <span className="text-xs sm:text-sm">{country.name}</span>
       )}
-      {view === "grid" && (
+      {view === "list" && !showFlags && (
         <span className="text-xs sm:text-base text-center break-words">
           {country.name}
         </span>
