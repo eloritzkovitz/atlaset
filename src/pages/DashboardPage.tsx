@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
   Breadcrumbs,
@@ -21,6 +21,7 @@ import {
 import { useDashboardRouteState } from "@features/dashboard/countries/hooks/useDashboardRouteState";
 import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/breadcrumbs";
 import { useIsMobile } from "@hooks/useIsMobile";
+import { useRegionSubregionFilters } from "@features/countries/hooks/useRegionSubregionFilters";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
@@ -28,15 +29,38 @@ export default function DashboardPage() {
   const isMobile = useIsMobile();
   const [panelOpen, setPanelOpen] = useState(false);
 
+  // Use global region/subregion/search filter state
+  const {
+    selectedRegion,
+    setSelectedRegion,
+    selectedSubregion,
+    setSelectedSubregion,
+    search,
+    setSearch,
+  } = useRegionSubregionFilters();
+
   // Dashboard route state
   const {
     selectedPanel,
     menuSelectedPanel,
-    selectedRegion,
-    selectedSubregion,
+    selectedRegion: routeSelectedRegion,
+    selectedSubregion: routeSelectedSubregion,
     selectedIsoCode,
     selectedCountry,
   } = useDashboardRouteState();
+
+  // Sync route state to filter state
+  useEffect(() => {
+    if (routeSelectedRegion !== selectedRegion)
+      setSelectedRegion(routeSelectedRegion || "");
+    if (routeSelectedSubregion !== selectedSubregion)
+      setSelectedSubregion(routeSelectedSubregion || "");
+  }, [
+    routeSelectedRegion,
+    routeSelectedSubregion,
+    setSelectedRegion,
+    setSelectedSubregion,
+  ]);
 
   // Breadcrumbs
   const breadcrumbs: Crumb[] = getDashboardBreadcrumbs(
@@ -50,7 +74,6 @@ export default function DashboardPage() {
   const {
     handlePanelChange,
     handleRegionSelect,
-    handleSubregionSelect,
     handleCountrySelect,
     handleShowAllCountries,
     handleCrumbClick,
@@ -115,11 +138,13 @@ export default function DashboardPage() {
               path="countries/overview"
               element={
                 <CountryStats
-                  selectedRegion={null}
+                  selectedRegion={undefined}
                   setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={null}
-                  setSelectedSubregion={handleSubregionSelect}
-                  selectedIsoCode={null}
+                  selectedSubregion={undefined}
+                  setSelectedSubregion={setSelectedSubregion}
+                  search={search}
+                  setSearch={setSearch}
+                  selectedIsoCode={undefined}
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
                 />
@@ -132,9 +157,11 @@ export default function DashboardPage() {
                 <CountryStats
                   selectedRegion="all"
                   setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={null}
-                  setSelectedSubregion={handleSubregionSelect}
-                  selectedIsoCode={null}
+                  selectedSubregion={""}
+                  setSelectedSubregion={setSelectedSubregion}
+                  search={search}
+                  setSearch={setSearch}
+                  selectedIsoCode={""}
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
                 />
@@ -145,11 +172,13 @@ export default function DashboardPage() {
               path="countries/:region/:subregion?/:isoCode?"
               element={
                 <CountryStats
-                  selectedRegion={selectedRegion}
+                  selectedRegion={selectedRegion || ""}
                   setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={selectedSubregion}
-                  setSelectedSubregion={handleSubregionSelect}
-                  selectedIsoCode={selectedIsoCode}
+                  selectedSubregion={selectedSubregion || ""}
+                  setSelectedSubregion={setSelectedSubregion}
+                  search={search}
+                  setSearch={setSearch}
+                  selectedIsoCode={selectedIsoCode || ""}
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
                   onBack={handleBack}
