@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { BrandHeader, LoadingSpinner } from "@components";
+import { LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { EditProfileModal, ProfileInfoCard, VisitedCountriesCard } from "@features/user";
+import {
+  EditProfileModal,
+  ProfileInfoCard,
+  VisitedCountriesCard,
+} from "@features/user";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
-import { useIsMobile } from "@hooks/useIsMobile";
-import { UserMenu } from "@layout/UserMenu/UserMenu";
+import { Header } from "@layout";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
   const [editOpen, setEditOpen] = useState(false);
-  const isMobile = useIsMobile();
 
   // Only allow editing for email/password users
   const canEdit = isPasswordProvider(user);
@@ -31,29 +33,31 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
-      <BrandHeader />
-      <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">
-        {/* Hide UserMenu on mobile for clarity */}
-        {!isMobile && <UserMenu />}
-        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 overflow-auto min-h-0">
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <>
-                  <ProfileInfoCard
-                    user={user}
-                    email={user?.email || ""}
-                    joinDate={joinDate}
-                    canEdit={canEdit}
-                    onEdit={() => setEditOpen(true)}
-                  />
-                  <VisitedCountriesCard />
-                </>
-              }
-            />
-          </Routes>
+    <>
+      <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
+        <Header />
+        <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
+          <div className="flex flex-col gap-6 items-center">
+            <div className="w-full max-w-4xl">
+              <Routes>
+                <Route
+                  path="/"
+                  element={
+                    <>
+                      <ProfileInfoCard
+                        user={user}
+                        email={user?.email || ""}
+                        joinDate={joinDate}
+                        canEdit={canEdit}
+                        onEdit={() => setEditOpen(true)}
+                      />
+                      <VisitedCountriesCard />
+                    </>
+                  }
+                />
+              </Routes>
+            </div>
+          </div>
         </main>
       </div>
       <EditProfileModal
@@ -61,6 +65,6 @@ export default function ProfilePage() {
         open={editOpen}
         onClose={() => setEditOpen(false)}
       />
-    </div>
+    </>
   );
 }
