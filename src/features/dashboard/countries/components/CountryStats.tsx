@@ -141,28 +141,7 @@ export function CountryStats({
         </div>
       </>
     );
-  }
-
-  // Special case: all countries view
-  if (selectedRegion === "all") {
-    return (
-      <CountrySection
-        countries={filteredCountries}
-        visitedCountryCodes={visited.visitedCountryCodes}
-        selectedIsoCode={selectedIsoCode ?? null}
-        setSelectedIsoCode={setSelectedIsoCode}
-        selectedRegion={"all"}
-        setSelectedRegion={setSelectedRegion}
-        selectedSubregion={""}
-        setSelectedSubregion={setSelectedSubregion}
-        search={search}
-        setSearch={setSearch}
-        onSubregionChange={onSubregionChange}
-        onAllCountries={onShowAllCountries}
-        resetFilters={resetFilters}
-      />
-    );
-  }
+  }  
 
   // If a region is selected, show country grid for region or subregion
   if (selectedRegion) {
