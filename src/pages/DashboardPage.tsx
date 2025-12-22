@@ -9,6 +9,7 @@ import {
 } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@contexts/CountryDataContext";
+import { useRegionSubregionFilters } from "@features/countries";
 import {
   DashboardPanelMenu,
   CountryStats,
@@ -21,7 +22,6 @@ import {
 import { useDashboardRouteState } from "@features/dashboard/countries/hooks/useDashboardRouteState";
 import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/breadcrumbs";
 import { useIsMobile } from "@hooks/useIsMobile";
-import { useRegionSubregionFilters } from "@features/countries/hooks/useRegionSubregionFilters";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
@@ -37,6 +37,7 @@ export default function DashboardPage() {
     setSelectedSubregion,
     search,
     setSearch,
+    resetFilters,
   } = useRegionSubregionFilters();
 
   // Dashboard route state
@@ -74,6 +75,7 @@ export default function DashboardPage() {
   const {
     handlePanelChange,
     handleRegionSelect,
+    handleSubregionSelect,
     handleCountrySelect,
     handleShowAllCountries,
     handleCrumbClick,
@@ -147,6 +149,8 @@ export default function DashboardPage() {
                   selectedIsoCode={undefined}
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
+                  onSubregionChange={handleSubregionSelect}
+                  resetFilters={resetFilters}
                 />
               }
             />
@@ -164,6 +168,8 @@ export default function DashboardPage() {
                   selectedIsoCode={""}
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
+                  onSubregionChange={handleSubregionSelect}
+                  resetFilters={resetFilters}
                 />
               }
             />
@@ -182,6 +188,8 @@ export default function DashboardPage() {
                   setSelectedIsoCode={handleCountrySelect}
                   onShowAllCountries={handleShowAllCountries}
                   onBack={handleBack}
+                  onSubregionChange={handleSubregionSelect}
+                  resetFilters={resetFilters}
                 />
               }
             />

@@ -8,6 +8,7 @@ import {
 } from "react-icons/fa6";
 import { ActionButton, SearchInput, SelectInput } from "@components";
 import { filterCountries } from "@features/countries/utils/countryFilters";
+import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import {
   CountryDisplayPanel,
   sortCountries,
@@ -29,6 +30,9 @@ interface CountrySectionProps {
   setSearch: (search: string) => void;
   initialView?: "grid" | "list";
   className?: string;
+  onSubregionChange?: (region: string, subregion: string) => void;
+  onAllCountries?: () => void;
+  resetFilters?: () => void;
 }
 
 const PAGE_SIZE = 24;
@@ -46,6 +50,9 @@ export function CountrySection({
   setSearch,
   initialView = "grid",
   className = "",
+  onSubregionChange,
+  onAllCountries,
+  resetFilters,
 }: CountrySectionProps) {
   // Normalize 'all' and '' to undefined for filtering
   const normalizedRegion =
@@ -57,31 +64,47 @@ export function CountrySection({
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
 
-  // Compute region and subregion options from filtered countries
-  const allRegions = Array.from(
-    new Set(countries.map((c) => c.region).filter(Boolean))
-  );
-  const subregionOptions = selectedRegion
-    ? Array.from(
-        new Set(
-          countries
-            .filter((c) => c.region === selectedRegion)
-            .map((c) => c.subregion)
-            .filter(Boolean)
-        )
-      )
-    : [];
+  // Generate options for region and subregion filters
+  const regionSelectFilter = coreFiltersConfig.find((f) => f.key === "region")!;
+  const subregionSelectFilter = coreFiltersConfig.find(
+    (f) => f.key === "subregion"
+  )!;
 
-  function resetFilters() {
-    setSelectedRegion("");
-    setSelectedSubregion("");
-    setSearch("");
+  // Compute unique region and subregion arrays for options
+  const uniqueRegions = Array.from(
+    new Set(
+      countries
+        .map((c) => c.region)
+        .filter((r): r is string => typeof r === "string" && !!r)
+    )
+  );
+  const uniqueSubregions =
+    selectedRegion && selectedRegion !== "all"
+      ? Array.from(
+          new Set(
+            countries
+              .filter((c) => c.region === selectedRegion)
+              .map((c) => c.subregion)
+              .filter((s): s is string => typeof s === "string" && !!s)
+          )
+        )
+      : [];
+
+  // Generate options using filter config functions
+  const regionOptions = regionSelectFilter.getOptions(uniqueRegions);
+  const subregionOptions = subregionSelectFilter.getOptions(uniqueSubregions);
+
+  // Handler to reset all filters and route to all countries
+  function handleResetFilters() {
+    if (resetFilters) resetFilters();
+    if (onAllCountries) onAllCountries();
   }
 
   // Handler to toggle visited/all
   const handleVisitedToggle = () => {
     setShowVisitedOnly((prev) => !prev);
   };
+
   // Handler to toggle between grid and list views
   const handleToggle = () => {
     setViewMode((prev) => (prev === "grid" ? "list" : "grid"));
@@ -137,30 +160,71 @@ export function CountrySection({
             className="w-xs"
           />
           <SelectInput
-            label=""
-            value={selectedRegion}
+            value={
+              regionSelectFilter.getValue({
+                selectedRegion,
+                setSelectedRegion,
+                selectedSubregion,
+                setSelectedSubregion,
+                selectedSovereignty: "",
+                setSelectedSovereignty: () => {},
+              }) ?? ""
+            }
             onChange={(val) => {
-              setSelectedRegion(val as string);
-              setSelectedSubregion("");
+              regionSelectFilter.setValue(
+                {
+                  selectedRegion,
+                  setSelectedRegion,
+                  selectedSubregion,
+                  setSelectedSubregion,
+                  selectedSovereignty: "",
+                  setSelectedSovereignty: () => {},
+                },
+                val as string
+              );
+              setSelectedSubregion("all");
+              if (onAllCountries && val === "all") {
+                onAllCountries();
+              }
             }}
-            options={allRegions.map((r) => ({
-              label: r ? r : "All Regions",
-              value: r ? r : "",
-            }))}
+            options={regionOptions}
+            className="ml-5 min-w-[150px] mt-3"
           />
           <SelectInput
-            label=""
-            value={selectedSubregion}
-            onChange={(val) => setSelectedSubregion(val as string)}
-            options={subregionOptions.map((s) => ({
-              label: s ? s : "All Subregions",
-              value: s ? s : "",
-            }))}
+            value={
+              subregionSelectFilter.getValue({
+                selectedRegion,
+                setSelectedRegion,
+                selectedSubregion,
+                setSelectedSubregion,
+                selectedSovereignty: "",
+                setSelectedSovereignty: () => {},
+              }) ?? ""
+            }
+            onChange={(val) => {
+              subregionSelectFilter.setValue(
+                {
+                  selectedRegion,
+                  setSelectedRegion,
+                  selectedSubregion,
+                  setSelectedSubregion,
+                  selectedSovereignty: "",
+                  setSelectedSovereignty: () => {},
+                },
+                val as string
+              );
+              if (onSubregionChange && selectedRegion && val && val !== "all" && val !== "") {
+                onSubregionChange(selectedRegion, val as string);
+              }
+            }}
+            options={subregionOptions}
+            disabled={!selectedRegion || selectedRegion === "all"}
+            className="min-w-[250px] mt-3"
           />
         </div>
         <div className="flex items-center gap-2">
           <ActionButton
-            onClick={resetFilters}
+            onClick={handleResetFilters}
             ariaLabel="Reset Filters"
             title="Reset Filters"
             icon={<FaArrowRotateLeft />}

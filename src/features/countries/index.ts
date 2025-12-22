@@ -9,6 +9,9 @@ export { CountryFlag } from "./components/countryFlag/CountryFlag";
 // Constants
 export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
 
+// Hooks
+export { useRegionSubregionFilters } from "./hooks/useRegionSubregionFilters";
+
 // Types
 export * from "./types";
 

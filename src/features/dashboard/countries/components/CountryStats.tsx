@@ -25,6 +25,8 @@ interface CountryStatsProps {
   setSelectedIsoCode: (isoCode: string | null) => void;
   onShowAllCountries: () => void;
   onBack?: () => void;
+  onSubregionChange?: (region: string, subregion: string) => void;
+  resetFilters?: () => void;
 }
 
 export function CountryStats({
@@ -38,6 +40,8 @@ export function CountryStats({
   setSelectedIsoCode,
   onShowAllCountries,
   onBack,
+  onSubregionChange,
+  resetFilters,
 }: CountryStatsProps) {
   const { countries, loading: countriesLoading, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
@@ -128,6 +132,9 @@ export function CountryStats({
               onSubregionClick={(sub) => {
                 setSelectedRegion(region.region);
                 setSelectedSubregion(sub);
+                if (onSubregionChange) {
+                  onSubregionChange(region.region, sub);
+                }
               }}
             />
           ))}
@@ -150,6 +157,9 @@ export function CountryStats({
         setSelectedSubregion={setSelectedSubregion}
         search={search}
         setSearch={setSearch}
+        onSubregionChange={onSubregionChange}
+        onAllCountries={onShowAllCountries}
+        resetFilters={resetFilters}
       />
     );
   }
