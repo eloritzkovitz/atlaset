@@ -1,5 +1,6 @@
 import type { User } from "firebase/auth";
 import { FaPen } from "react-icons/fa6";
+import { Card } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryWithFlag } from "@features/countries";
 import { useHomeCountry } from "@features/settings";
@@ -28,7 +29,7 @@ export function ProfileInfoCard({
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
 
   return (
-    <>
+    <Card>
       {/* Avatar, Name, Edit */}
       <div className="flex flex-col sm:flex-row items-center mb-6 gap-4 sm:gap-0">
         <UserAvatar user={user} size={100} className="sm:size-[150px]" />
@@ -65,6 +66,6 @@ export function ProfileInfoCard({
         {visitedCountryCodes.length}
       </ProfileField>
       <ProfileField label="Joined">{joinDate}</ProfileField>
-    </>
+    </Card>
   );
 }

@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { BrandHeader, LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { EditProfileModal, ProfileInfoCard } from "@features/user";
+import { VisitedCountriesCard } from "@features/user/profile/components/info/VisitedCountriesCard";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
@@ -36,18 +37,21 @@ export default function ProfilePage() {
       <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">
         {/* Hide UserMenu on mobile for clarity */}
         {!isMobile && <UserMenu />}
-        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 bg-surface rounded-lg shadow overflow-auto min-h-0">
+        <main className="flex-1 p-4 md:p-8 mt-10 md:mt-16 overflow-auto min-h-0">
           <Routes>
             <Route
               path="/"
               element={
-                <ProfileInfoCard
-                  user={user}
-                  email={user?.email || ""}
-                  joinDate={joinDate}
-                  canEdit={canEdit}
-                  onEdit={() => setEditOpen(true)}
-                />
+                <>
+                  <ProfileInfoCard
+                    user={user}
+                    email={user?.email || ""}
+                    joinDate={joinDate}
+                    canEdit={canEdit}
+                    onEdit={() => setEditOpen(true)}
+                  />
+                  <VisitedCountriesCard />
+                </>
               }
             />
           </Routes>
