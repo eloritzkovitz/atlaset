@@ -8,7 +8,7 @@ import {
   VisitedCountriesCard,
 } from "@features/user";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
-import { Header } from "@layout";
+import { Footer, Header } from "@layout";
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
@@ -59,6 +59,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </main>
+        <Footer />
       </div>
       <EditProfileModal
         user={user}
