@@ -1,6 +1,17 @@
 import { vi } from "vitest";
 import { firestoreMocks, authMocks, createDbMock } from "./mockDbAndFirestore";
-import { commonDbMethods } from "@constants/dbMethods";
+
+// Common database methods to be mocked
+const commonDbMethods = [
+  "get",
+  "toArray",
+  "add",
+  "put",
+  "bulkAdd",
+  "bulkPut",
+  "delete",
+  "clear"
+];
 
 // Create and export mock objects for use in tests
 export const markersMock = createDbMock(commonDbMethods);

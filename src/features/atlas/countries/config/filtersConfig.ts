@@ -10,7 +10,7 @@ import { createSelectFilter } from "@utils/filter";
 import { capitalize, capitalizeWords } from "@utils/string";
 
 // "All" option constant
-const allOption: FilterOption = { value: "", label: "All" };
+const allOption: FilterOption = { value: "all", label: "All" };
 
 interface CountryFilterProps {
   selectedRegion: string;
@@ -33,7 +33,7 @@ export const coreFiltersConfig: CountryFilterConfig<
       allOption,
       ...mapOptions(allRegions ?? [], capitalizeWords),
     ],
-    (props) => props.selectedRegion,
+    (props) => (props.selectedRegion === "" ? "all" : props.selectedRegion),
     (props, val) => props.setSelectedRegion(val)
   ),
   createSelectFilter(

@@ -2,7 +2,10 @@ import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { SegmentedToggle } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { CountryDetailsContent, VisitedStatusIndicator } from "@features/countries";
+import {
+  CountryDetailsContent,
+  VisitedStatusIndicator,
+} from "@features/countries";
 import { useHomeCountry } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { useDelayedLoading } from "@hooks/useDelayedLoading";
@@ -12,14 +15,18 @@ import { WorldExplorationCard } from "./WorldExplorationCard";
 import { useExplorationStats } from "../hooks/useExplorationStats";
 
 interface CountryStatsProps {
-  selectedRegion: string | null;
+  selectedRegion?: string;
   setSelectedRegion: (region: string) => void;
-  selectedSubregion: string | null;
-  setSelectedSubregion: (region: string, subregion: string) => void;
-  selectedIsoCode: string | null;
+  selectedSubregion?: string;
+  setSelectedSubregion: (subregion: string) => void;
+  search: string;
+  setSearch: (search: string) => void;
+  selectedIsoCode?: string;
   setSelectedIsoCode: (isoCode: string | null) => void;
   onShowAllCountries: () => void;
   onBack?: () => void;
+  onSubregionChange?: (region: string, subregion: string) => void;
+  resetFilters?: () => void;
 }
 
 export function CountryStats({
@@ -27,16 +34,20 @@ export function CountryStats({
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
+  search,
+  setSearch,
   selectedIsoCode,
   setSelectedIsoCode,
   onShowAllCountries,
   onBack,
+  onSubregionChange,
+  resetFilters,
 }: CountryStatsProps) {
   const { countries, loading: countriesLoading, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const visited = useVisitedCountries();
 
-  // Toggle state for country type and view mode
+  // Toggle state for country type and view mode (remains local, as it's not a filter prop)
   const [countryType, setCountryType] = useState<"all" | "sovereign">("all");
 
   // Filter countries based on toggle
@@ -57,6 +68,7 @@ export function CountryStats({
     visited
   );
 
+  // Find selected country details
   const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);
 
   // If a country is selected, show its details
@@ -83,71 +95,72 @@ export function CountryStats({
         />
       </div>
     );
-  }
+  } 
 
-  // If showing all countries (world view)
-  if (selectedRegion === "all") {
+  // If no region is selected (overview), show region cards and toggles
+  if (selectedRegion === undefined || selectedRegion === "") {
+    return (
+      <>
+        <SegmentedToggle
+          value={countryType}
+          options={[
+            { value: "all", label: "All Countries" },
+            { value: "sovereign", label: "Sovereign Only" },
+          ]}
+          onChange={setCountryType}
+          className="mb-4"
+        />
+        <WorldExplorationCard
+          visited={visitedCountries}
+          total={totalCountries}
+          loading={loading}
+          onShowAllCountries={onShowAllCountries}
+        />
+        <div className="grid gap-6 md:grid-cols-2">
+          {regionStats.map((region) => (
+            <RegionCard
+              key={region.region}
+              region={region.region}
+              visited={region.regionVisited}
+              total={region.regionCountries.length}
+              subregions={region.subregions}
+              loading={loading}
+              onRegionClick={() => {
+                setSelectedRegion(region.region);
+                setSelectedSubregion("");
+              }}
+              onSubregionClick={(sub) => {
+                setSelectedRegion(region.region);
+                setSelectedSubregion(sub);
+                if (onSubregionChange) {
+                  onSubregionChange(region.region, sub);
+                }
+              }}
+            />
+          ))}
+        </div>
+      </>
+    );
+  }  
+
+  // If a region is selected, show country grid for region or subregion
+  if (selectedRegion) {
     return (
       <CountrySection
         countries={filteredCountries}
         visitedCountryCodes={visited.visitedCountryCodes}
-        selectedIsoCode={selectedIsoCode}
+        selectedIsoCode={selectedIsoCode ?? null}
         setSelectedIsoCode={setSelectedIsoCode}
+        selectedRegion={selectedRegion ?? ""}
+        setSelectedRegion={setSelectedRegion}
+        selectedSubregion={selectedSubregion ?? ""}
+        setSelectedSubregion={setSelectedSubregion}
+        search={search}
+        setSearch={setSearch}
+        onSubregionChange={onSubregionChange}
+        onAllCountries={onShowAllCountries}
+        resetFilters={resetFilters}
       />
     );
   }
-
-  // If a region is selected, show country grid for region or subregion
-  if (selectedRegion) {
-    const region = regionStats.find((r) => r.region === selectedRegion);
-    if (!region) return null;
-
-    const countriesToShow = selectedSubregion
-      ? region.regionCountries.filter((c) => c.subregion === selectedSubregion)
-      : region.regionCountries;
-
-    return (
-      <CountrySection
-        countries={countriesToShow}
-        visitedCountryCodes={visited.visitedCountryCodes}
-        selectedIsoCode={selectedIsoCode}
-        setSelectedIsoCode={setSelectedIsoCode}
-      />
-    );
-  }
-
-  // Default: show region cards
-  return (
-    <>
-      <SegmentedToggle
-        value={countryType}
-        options={[
-          { value: "all", label: "All Countries" },
-          { value: "sovereign", label: "Sovereign Only" },
-        ]}
-        onChange={setCountryType}
-        className="mb-4"
-      />
-      <WorldExplorationCard
-        visited={visitedCountries}
-        total={totalCountries}
-        loading={loading}
-        onShowAllCountries={onShowAllCountries}
-      />
-      <div className="grid gap-6 md:grid-cols-2">
-        {regionStats.map((region) => (
-          <RegionCard
-            key={region.region}
-            region={region.region}
-            visited={region.regionVisited}
-            total={region.regionCountries.length}
-            subregions={region.subregions}
-            loading={loading}
-            onRegionClick={() => setSelectedRegion(region.region)}
-            onSubregionClick={(sub) => setSelectedSubregion(region.region, sub)}
-          />
-        ))}
-      </div>
-    </>
-  );
 }

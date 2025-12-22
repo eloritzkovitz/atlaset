@@ -17,6 +17,7 @@ interface DropdownSelectInputProps<T = string> {
   className?: string;
   isFilter?: boolean;
   isMulti?: boolean;
+  disabled?: boolean;
   renderOption?: (opt: DropdownOption<T>) => React.ReactNode;
 }
 
@@ -28,6 +29,7 @@ export function DropdownSelectInput<T = string>({
   className = "",
   isFilter = false,
   isMulti = false,
+  disabled = false,
   renderOption,
 }: DropdownSelectInputProps<T>) {
   const [open, setOpen] = useState(false);
@@ -64,7 +66,7 @@ export function DropdownSelectInput<T = string>({
           if (options.length === 0) return;
           setOpen((v) => !v);
         }}
-        disabled={options.length === 0}
+        disabled={options.length === 0 || disabled}
         isFilter={isFilter}
       >
         {isMulti && Array.isArray(value) && value.length > 0 ? (

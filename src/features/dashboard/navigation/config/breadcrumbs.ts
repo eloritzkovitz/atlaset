@@ -62,7 +62,7 @@ export function getDashboardBreadcrumbs(
         key: "region",
       });
     }
-    if (selectedSubregion) {
+    if (selectedSubregion && selectedSubregion !== "all") {
       crumbs.push({ label: selectedSubregion, key: "subregion" });
     }
     if (selectedCountry) {

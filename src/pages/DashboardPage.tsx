@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
   Breadcrumbs,
@@ -9,6 +9,7 @@ import {
 } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@contexts/CountryDataContext";
+import { useRegionSubregionFilters } from "@features/countries";
 import {
   DashboardPanelMenu,
   CountryStats,
@@ -28,15 +29,44 @@ export default function DashboardPage() {
   const isMobile = useIsMobile();
   const [panelOpen, setPanelOpen] = useState(false);
 
+  // Use global region/subregion/search filter state
+  const {
+    selectedRegion,
+    setSelectedRegion,
+    selectedSubregion,
+    setSelectedSubregion,
+    search,
+    setSearch,
+    resetFilters,
+  } = useRegionSubregionFilters();
+
   // Dashboard route state
   const {
     selectedPanel,
     menuSelectedPanel,
-    selectedRegion,
-    selectedSubregion,
+    selectedRegion: routeSelectedRegion,
+    selectedSubregion: routeSelectedSubregion,
     selectedIsoCode,
     selectedCountry,
   } = useDashboardRouteState();
+
+  // Sync route state to filter state
+  useEffect(() => {
+    // Only update if different, and always preserve 'all' as a valid value
+    if (routeSelectedRegion !== selectedRegion) {
+      setSelectedRegion(routeSelectedRegion ?? "");
+    }
+    if (routeSelectedSubregion !== selectedSubregion) {
+      setSelectedSubregion(routeSelectedSubregion ?? "");
+    }
+  }, [
+    routeSelectedRegion,
+    routeSelectedSubregion,
+    selectedRegion,
+    selectedSubregion,
+    setSelectedRegion,
+    setSelectedSubregion,
+  ]);
 
   // Breadcrumbs
   const breadcrumbs: Crumb[] = getDashboardBreadcrumbs(
@@ -75,6 +105,27 @@ export default function DashboardPage() {
     return <Navigate to="/dashboard/countries/overview" replace />;
   }
 
+  // Render CountryStats with common props
+  function renderCountryStats(propsOverride = {}) {
+    return (
+      <CountryStats
+        selectedRegion={selectedRegion || ""}
+        setSelectedRegion={handleRegionSelect}
+        selectedSubregion={selectedSubregion || ""}
+        setSelectedSubregion={setSelectedSubregion}
+        search={search}
+        setSearch={setSearch}
+        selectedIsoCode={selectedIsoCode || ""}
+        setSelectedIsoCode={handleCountrySelect}
+        onShowAllCountries={handleShowAllCountries}
+        onSubregionChange={handleSubregionSelect}
+        resetFilters={resetFilters}
+        onBack={undefined}
+        {...propsOverride}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen relative">
       {/* Mobile: hamburger + drawer */}
@@ -109,52 +160,32 @@ export default function DashboardPage() {
               path="countries"
               element={<Navigate to="/dashboard/countries/overview" replace />}
             />
-
             {/* Overview page */}
             <Route
               path="countries/overview"
-              element={
-                <CountryStats
-                  selectedRegion={null}
-                  setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={null}
-                  setSelectedSubregion={handleSubregionSelect}
-                  selectedIsoCode={null}
-                  setSelectedIsoCode={handleCountrySelect}
-                  onShowAllCountries={handleShowAllCountries}
-                />
-              }
+              element={renderCountryStats({
+                selectedRegion: undefined,
+                selectedSubregion: undefined,
+                selectedIsoCode: undefined,
+                onBack: undefined,
+              })}
             />
             {/* All countries page */}
             <Route
               path="countries/all"
-              element={
-                <CountryStats
-                  selectedRegion="all"
-                  setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={null}
-                  setSelectedSubregion={handleSubregionSelect}
-                  selectedIsoCode={null}
-                  setSelectedIsoCode={handleCountrySelect}
-                  onShowAllCountries={handleShowAllCountries}
-                />
-              }
+              element={renderCountryStats({
+                selectedRegion: "all",
+                selectedSubregion: "",
+                selectedIsoCode: "",
+                onBack: undefined,
+              })}
             />
             {/* Region, subregion, and country details */}
             <Route
               path="countries/:region/:subregion?/:isoCode?"
-              element={
-                <CountryStats
-                  selectedRegion={selectedRegion}
-                  setSelectedRegion={handleRegionSelect}
-                  selectedSubregion={selectedSubregion}
-                  setSelectedSubregion={handleSubregionSelect}
-                  selectedIsoCode={selectedIsoCode}
-                  setSelectedIsoCode={handleCountrySelect}
-                  onShowAllCountries={handleShowAllCountries}
-                  onBack={handleBack}
-                />
-              }
+              element={renderCountryStats({
+                onBack: handleBack,
+              })}
             />
             {/* Other dashboard panels */}
             <Route path="trips/overview" element={<TripsStats />} />
