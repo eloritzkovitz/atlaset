@@ -1,4 +1,4 @@
-export function BrandFooter({ children }: { children?: React.ReactNode }) {
+export function Footer({ children }: { children?: React.ReactNode }) {
   return (
     <footer className="mt-8 py-4 text-center text-muted text-sm">
       {children}

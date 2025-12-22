@@ -1,4 +1,4 @@
-import { BrandFooter, BrandHeader } from "@components";
+import { Footer, BrandHeader } from "@layout";
 
 interface AuthLayoutProps {
   children: React.ReactNode;
@@ -13,7 +13,7 @@ export function AuthLayout({ children, footer }: AuthLayoutProps) {
       <main className="flex flex-col items-center flex-1 justify-center">
         {children}
       </main>
-      <BrandFooter>{footer}</BrandFooter>
+      <Footer>{footer}</Footer>
     </div>
   );
 }

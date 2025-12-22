@@ -1,4 +1,4 @@
-import { Branding } from "./Branding";
+import { Branding } from "../Branding/Branding";
 
 export function BrandHeader() {
   return (

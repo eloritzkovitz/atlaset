@@ -4,11 +4,6 @@ export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
 export { HamburgerButton } from "./action/HamburgerButton";
 
-// Branding components
-export { Branding } from "./branding/Branding";
-export { BrandHeader } from "./branding/BrandHeader";
-export { BrandFooter } from "./branding/BrandFooter";
-
 // Card components
 export { Card } from "./ui/Card/Card";
 export { DashboardCard } from "./ui/Card/DashboardCard";

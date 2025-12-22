@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { FaCircleCheck } from "react-icons/fa6";
 import {
   AuthCard,
@@ -7,8 +8,6 @@ import {
   useAuthHandlers,
 } from "@features/user";
 import { useUiHint } from "@hooks/useUiHint";
-import { useEffect, useState } from "react";
-
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =

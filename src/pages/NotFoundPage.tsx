@@ -1,4 +1,4 @@
-import { BrandFooter, BrandHeader } from "@components";
+import { Footer, BrandHeader } from "@layout";
 
 export default function NotFoundPage() {
   return (
@@ -24,7 +24,7 @@ export default function NotFoundPage() {
           Go Home
         </a>
       </main>
-      <BrandFooter />
+      <Footer />
     </div>
   );
 }
