@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { createCountryMap, type Country } from "@features/countries";
-import { useHomeCountry } from "@features/settings";
+import { useHomeCountry } from "@features/user";
 import type { Trip, TripFilterState } from "../types";
 import {
   isAbroadTrip,

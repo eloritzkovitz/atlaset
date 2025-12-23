@@ -1,5 +1,5 @@
 import { useTrips } from "@contexts/TripsContext";
-import { useHomeCountry } from "@features/settings";
+import { useHomeCountry } from "@features/user";
 import {
   getVisitedCountriesForYear,
   getVisitedCountriesUpToYear,

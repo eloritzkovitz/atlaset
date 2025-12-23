@@ -1,36 +1,43 @@
-import { useState } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   EditProfileModal,
   ProfileInfoCard,
   VisitedCountriesCard,
+  getUserProfileByUsername,
 } from "@features/user";
-import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { Footer, Header } from "@layout";
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth();
+  const { username } = useParams();
+  const { user: currentUser, loading: authLoading } = useAuth();
+  const [profileUser, setProfileUser] = useState<any>(null);
+  const [profileUid, setProfileUid] = useState<string>("");
+  const [loading, setLoading] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
 
-  // Only allow editing for email/password users
-  const canEdit = isPasswordProvider(user);
+  // Fetch profile user data based on username param
+  useEffect(() => {
+    const fetchProfile = async () => {
+      setLoading(true);
+      const profile = await getUserProfileByUsername(username || "");
+      setProfileUser(profile);
+      setProfileUid(profile?.uid || "");
+      setLoading(false);
+    };
+    if (username) fetchProfile();
+  }, [username]);
 
-  // Format join date from user metadata
-  const joinDate = user?.metadata?.creationTime
-    ? new Date(user.metadata.creationTime).toLocaleDateString()
-    : null;
+  // Show loading spinner while fetching data
+  if (authLoading || loading) return <LoadingSpinner />;
 
-  // Show loading spinner while auth state is loading
-  if (loading) {
-    return <LoadingSpinner />;
-  }
+  // Handle case where user not found
+  if (!profileUser) return <div>User not found</div>;
 
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  // Determine if this is the current user's own profile
+  const canEdit = currentUser && currentUser.uid === profileUid;
 
   return (
     <>
@@ -39,33 +46,30 @@ export default function ProfilePage() {
         <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
           <div className="flex flex-col gap-6 items-center">
             <div className="w-full max-w-4xl">
-              <Routes>
-                <Route
-                  path="/"
-                  element={
-                    <>
-                      <ProfileInfoCard
-                        user={user}
-                        email={user?.email || ""}
-                        joinDate={joinDate}
-                        canEdit={canEdit}
-                        onEdit={() => setEditOpen(true)}
-                      />
-                      <VisitedCountriesCard />
-                    </>
-                  }
-                />
-              </Routes>
+              <ProfileInfoCard
+                user={profileUser}
+                username={username ?? ""}
+                email={profileUser.email ?? ""}
+                joinDate={profileUser.joinDate ?? ""}
+                homeCountry={profileUser.homeCountry}
+                canEdit={!!canEdit}
+                onEdit={() => setEditOpen(true)}                
+              />
+              <VisitedCountriesCard
+                visitedCountryCodes={profileUser.visitedCountryCodes || []}
+              />
             </div>
           </div>
         </main>
         <Footer />
       </div>
-      <EditProfileModal
-        user={user}
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
-      />
+      {canEdit && (
+        <EditProfileModal
+          user={currentUser}
+          open={editOpen}
+          onClose={() => setEditOpen(false)}
+        />
+      )}
     </>
   );
 }

@@ -7,11 +7,8 @@ import {
   groupOverlayItemsByIsoCode,
   type OverlayItem,
 } from "@features/atlas/overlays";
-import {
-  useCountryColors,
-  useHomeCountry,
-  useOverlayColors,
-} from "@features/settings";
+import { useCountryColors, useOverlayColors } from "@features/settings";
+import { useHomeCountry } from "@features/user";
 import { useMapGeographyStyle } from "../../hooks/useMapGeographyStyle";
 import type { GeoData } from "../../types";
 

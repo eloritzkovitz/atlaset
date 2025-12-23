@@ -1,12 +1,19 @@
-import { db } from "firebase";
-import { doc, getDoc, runTransaction } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  runTransaction,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
+import type { UserProfile } from "../../types";
+import { db } from "../../../../firebase";
 
 // Auto-generate a unique username from displayName or email
 export async function generateUniqueUsername(
   displayName: string | null,
   email: string | null
 ): Promise<string> {
-  let base = displayName
+  const base = displayName
     ? displayName.toLowerCase().replace(/[^a-z0-9]/g, "")
     : email
     ? email
@@ -32,6 +39,7 @@ export async function createUserProfileWithUsername(user: {
   displayName: string | null;
   email: string | null;
   photoURL?: string | null;
+  joinDate?: string | null;
 }) {
   const username = await generateUniqueUsername(user.displayName, user.email);
 
@@ -48,12 +56,40 @@ export async function createUserProfileWithUsername(user: {
       uid: user.uid,
       username,
       displayName: user.displayName || "",
+      email: user.email || "",
+      joinDate: user.joinDate
+        ? Timestamp.fromDate(new Date(user.joinDate))
+        : Timestamp.now(),
       photoURL: user.photoURL || "",
       bio: "",
       isPublic: true,
+      homeCountry: "",
+      visitedCountryCodes: [],
     });
   });
   return username;
+}
+
+// Fetch a user profile by username
+export async function getUserProfileByUsername(
+  username: string
+): Promise<UserProfile | null> {
+  // Return null if username is empty
+  if (!username) return null;
+
+  // 1. Get UID from usernames collection
+  const usernameRef = doc(db, "usernames", username);
+  const usernameSnap = await getDoc(usernameRef);
+  if (!usernameSnap.exists()) return null;
+  const uid = usernameSnap.data().uid;
+
+  // 2. Get user profile from users/{uid}
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) return null;
+
+  // Type assertion is safe if Firestore data matches UserProfile
+  return userSnap.data() as UserProfile;
 }
 
 // Change username atomically
@@ -84,4 +120,19 @@ export async function changeUsername({
     transaction.delete(oldUsernameRef);
   });
   return cleanUsername;
+}
+
+// Get home country for a given user ID
+export async function getHomeCountry(uid: string): Promise<string> {
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+  return userSnap.exists() && userSnap.data().homeCountry
+    ? userSnap.data().homeCountry
+    : "";
+}
+
+// Set home country for a given user ID
+export async function setHomeCountry(uid: string, country: string) {
+  const userRef = doc(db, "users", uid);
+  await updateDoc(userRef, { homeCountry: country });
 }

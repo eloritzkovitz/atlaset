@@ -81,6 +81,7 @@ export async function signUp(email: string, password: string) {
     displayName: result.user.displayName,
     email: result.user.email,
     photoURL: result.user.photoURL,
+    joinDate: result.user.metadata.creationTime,
   });
   await logUserActivity(
     "signup",

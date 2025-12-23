@@ -1,11 +1,13 @@
 import { Card } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryFlag } from "@features/countries";
-import { useVisitedCountries } from "@features/visits";
 
-export function VisitedCountriesCard() {
+interface VisitedCountriesCardProps {
+  visitedCountryCodes: string[];
+}
+
+export function VisitedCountriesCard({ visitedCountryCodes }: VisitedCountriesCardProps) {
   const { countries } = useCountryData();
-  const { visitedCountryCodes } = useVisitedCountries();
   const visitedCountries = countries.filter((c) =>
     visitedCountryCodes.includes(c.isoCode)
   );

@@ -1,4 +1,3 @@
-import { useHomeCountry } from "@features/settings";
 import { useTrips } from "@contexts/TripsContext";
 import {
   getCompletedTrips,
@@ -6,6 +5,7 @@ import {
   getLocalTrips,
   getAbroadTrips,
 } from "@features/trips/utils/trips";
+import { useHomeCountry } from "@features/user";
 import { getLongestTrip, getShortestTrip } from "../utils/tripStats";
 
 export function useTripsStats() {

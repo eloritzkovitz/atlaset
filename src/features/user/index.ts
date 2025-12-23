@@ -14,3 +14,8 @@ export { VisitedCountriesCard } from "./profile/components/VisitedCountriesCard"
 
 // Hooks
 export { useAuthHandlers } from "./auth/hooks/useAuthHandlers";
+export { useFirestoreUsername } from "./profile/hooks/useFirestoreUsername";
+export { useHomeCountry } from "./profile/hooks/useHomeCountry";
+
+// Services
+export { getUserProfileByUsername } from "./profile/services/profileService";

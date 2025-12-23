@@ -1,6 +1,6 @@
 import { useTrips } from "@contexts/TripsContext";
-import { useHomeCountry } from "@features/settings";
 import { isAbroadTrip } from "@features/trips/utils/trips";
+import { useHomeCountry } from "@features/user";
 
 // Month names array
 export const MONTHS = [
@@ -20,6 +20,10 @@ export const MONTHS = [
 
 export type MonthName = (typeof MONTHS)[number];
 
+/**
+ * Provides statistics of trips by month.
+ * @returns Trips by month data.
+ */
 export function useTripsByMonthStats() {
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();

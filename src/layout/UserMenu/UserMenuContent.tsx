@@ -10,6 +10,7 @@ import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserInfo } from "./UserInfo";
+import { useFirestoreUsername } from "@features/user";
 
 interface UserMenuProps {
   user: User | null;
@@ -21,6 +22,9 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   const { toggleShortcuts } = useUI();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+
+  // Fetch username for profile link
+  const { username } = useFirestoreUsername(user?.uid);
 
   // Show loading state
   if (loading) {
@@ -34,7 +38,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         <UserInfo user={user} />
         <Separator />
         <MenuButton
-          onClick={() => navigate("/profile")}
+          onClick={() => navigate(`/profile/${username}`)}
           icon={<FaUser className="text-lg mr-2" />}
           ariaLabel="Profile"
           title="Profile"
