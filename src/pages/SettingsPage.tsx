@@ -14,12 +14,17 @@ import {
   SecurityInfoSection,
   SettingsPanelMenu,
 } from "@features/settings";
-import { EditProfileModal, UserActivitySection } from "@features/user";
+import {
+  EditProfileModal,
+  UserActivitySection,
+  useUserProfile,
+} from "@features/user";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth();
+  const { user, loading: userLoading } = useAuth();
+  const { profile, loading: profileLoading } = useUserProfile({ uid: user?.uid });
   const [editOpen, setEditOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const navigate = useNavigate();
@@ -30,7 +35,7 @@ export default function ProfilePage() {
   const canEdit = user?.providerData?.[0]?.providerId === "password";
 
   // Show loading spinner while auth state is loading
-  if (loading) {
+  if (userLoading || profileLoading) {
     return <LoadingSpinner />;
   }
 
@@ -95,6 +100,7 @@ export default function ProfilePage() {
       </div>
       <EditProfileModal
         user={user}
+        profile={profile}
         open={editOpen}
         onClose={() => setEditOpen(false)}
       />

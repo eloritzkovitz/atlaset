@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
@@ -6,38 +6,26 @@ import {
   EditProfileModal,
   ProfileInfoCard,
   VisitedCountriesCard,
-  getUserProfileByUsername,
+  useUserProfile,
 } from "@features/user";
 import { Footer, Header } from "@layout";
 
 export default function ProfilePage() {
   const { username } = useParams();
   const { user: currentUser, loading: authLoading } = useAuth();
-  const [profileUser, setProfileUser] = useState<any>(null);
-  const [profileUid, setProfileUid] = useState<string>("");
-  const [loading, setLoading] = useState(true);
+  const { profile: profileUser, loading: profileLoading } = useUserProfile({
+    username,
+  });
   const [editOpen, setEditOpen] = useState(false);
 
-  // Fetch profile user data based on username param
-  useEffect(() => {
-    const fetchProfile = async () => {
-      setLoading(true);
-      const profile = await getUserProfileByUsername(username || "");
-      setProfileUser(profile);
-      setProfileUid(profile?.uid || "");
-      setLoading(false);
-    };
-    if (username) fetchProfile();
-  }, [username]);
-
   // Show loading spinner while fetching data
-  if (authLoading || loading) return <LoadingSpinner />;
+  if (authLoading || profileLoading) return <LoadingSpinner />;
 
   // Handle case where user not found
   if (!profileUser) return <div>User not found</div>;
 
   // Determine if this is the current user's own profile
-  const canEdit = currentUser && currentUser.uid === profileUid;
+  const canEdit = currentUser && currentUser.uid === profileUser?.uid;
 
   return (
     <>

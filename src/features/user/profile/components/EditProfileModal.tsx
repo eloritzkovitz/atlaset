@@ -10,7 +10,7 @@ import { type UserProfile } from "../../types";
 
 interface EditProfileModalProps {
   user: User | null;
-  profile: UserProfile;
+  profile: UserProfile | null;
   open: boolean;
   onClose: () => void;
   onSave?: () => void;

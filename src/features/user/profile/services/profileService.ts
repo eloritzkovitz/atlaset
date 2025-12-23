@@ -71,6 +71,17 @@ export async function createUserProfileWithUsername(user: {
   return username;
 }
 
+// Fetch a user profile by UID
+export async function getUserProfileByUid(
+  uid: string
+): Promise<UserProfile | null> {
+  if (!uid) return null;
+  const userRef = doc(db, "users", uid);
+  const userSnap = await getDoc(userRef);
+  if (!userSnap.exists()) return null;
+  return userSnap.data() as UserProfile;
+}
+
 // Fetch a user profile by username
 export async function getUserProfileByUsername(
   username: string
