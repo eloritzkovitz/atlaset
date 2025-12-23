@@ -18,6 +18,7 @@ import { logUserActivity } from "@utils/firebase";
 import { auth, db } from "../../../../firebase";
 import { checkAndReactivateUser } from "../utils/auth";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
+import { createUserProfileWithUsername } from "../../profile/services/profileService";
 
 // Sign in with email and password
 export async function signIn(email: string, password: string) {
@@ -75,6 +76,12 @@ export async function signInWithPersistence(
 // Sign up with email and password
 export async function signUp(email: string, password: string) {
   const result = await createUserWithEmailAndPassword(auth, email, password);
+  const username = await createUserProfileWithUsername({
+    uid: result.user.uid,
+    displayName: result.user.displayName,
+    email: result.user.email,
+    photoURL: result.user.photoURL,
+  });
   await logUserActivity(
     "signup",
     {
@@ -86,7 +93,7 @@ export async function signUp(email: string, password: string) {
     result.user!.uid
   );
   await logDevice(result.user!.uid);
-  return result;
+  return { ...result, username };
 }
 
 // Sign out
@@ -127,6 +134,15 @@ export async function updateUserProfile(
 export async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   const result = await signInWithPopup(auth, provider);
+
+  // Create Firestore profile and username if not already present
+  await createUserProfileWithUsername({
+    uid: result.user.uid,
+    displayName: result.user.displayName,
+    email: result.user.email,
+    photoURL: result.user.photoURL,
+  });
+
   await logUserActivity(
     "login",
     {
