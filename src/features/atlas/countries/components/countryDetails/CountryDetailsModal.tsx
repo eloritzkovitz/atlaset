@@ -16,7 +16,7 @@ import {
   VisitedStatusIndicator,
   type Country,
 } from "@features/countries";
-import { useHomeCountry } from "@features/settings";
+import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useFloatingHover } from "@hooks/useFloatingHover";

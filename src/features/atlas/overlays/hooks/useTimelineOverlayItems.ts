@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { MAP_BG_COLOR } from "@constants/colors";
-import { useHomeCountry, useVisitColorRoles } from "@features/settings";
+import { useVisitColorRoles } from "@features/settings";
+import { useHomeCountry } from "@features/user";
 import { getVisitColor, useVisitedCountriesTimeline } from "@features/visits";
 import type { TimelineOverlay, OverlayMode } from "../types";
 

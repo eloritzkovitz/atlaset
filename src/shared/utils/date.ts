@@ -14,6 +14,31 @@ export function formatDate(dateStr?: string, locale: string = "en-GB"): string {
 }
 
 /**
+ * Converts a Firestore Timestamp or string to a formatted date string.
+ * @param date - Firestore Timestamp (with toDate) or string.
+ * @param locale - Optional locale for formatting.
+ */
+export function formatFirestoreDate(
+  date: unknown,
+  locale: string = "en-GB"
+): string {
+  if (
+    date &&
+    typeof date === "object" &&
+    date !== null &&
+    typeof (date as { toDate?: unknown }).toDate === "function"
+  ) {
+    return formatDate(
+      (date as { toDate: () => Date }).toDate().toISOString(),
+      locale
+    );
+  } else if (typeof date === "string" && date) {
+    return formatDate(date, locale);
+  }
+  return "Unknown";
+}
+
+/**
  * Gets the year as a string from a date string.
  * @param date - The date string to extract the year from.
  * @returns The year as a string, or undefined if the date is not provided.

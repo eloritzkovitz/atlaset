@@ -1,6 +1,6 @@
 import { FaRegClock } from "react-icons/fa6";
-import { getActivityDescription } from "../../utils/activity";
-import type { UserActivity, ActivityDetails } from "@features/user/types";
+import { getActivityDescription } from "../utils/activity";
+import type { UserActivity, ActivityDetails } from "../../types";
 
 export function UserActivityItem({ act }: { act: UserActivity }) {
   const details: ActivityDetails | undefined =

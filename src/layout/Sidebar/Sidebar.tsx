@@ -1,13 +1,14 @@
 import { FaBars } from "react-icons/fa6";
-import { ActionButton, Branding } from "@components";
+import { ActionButton } from "@components";
 import {
   DEFAULT_SIDEBAR_WIDTH,
   DEFAULT_SIDEBAR_EXPANDED_WIDTH,
 } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
 import { usePanelHide } from "@hooks/usePanelHide";
+import { NAV_LINKS } from "./navLinks";
 import { SidebarMenuLink } from "./SidebarMenuLink";
-import { NAV_LINKS } from "../navLinks";
+import { Branding } from "../Branding/Branding";
 
 export function Sidebar() {
   const { uiVisible, sidebarExpanded, setSidebarExpanded } = useUI();

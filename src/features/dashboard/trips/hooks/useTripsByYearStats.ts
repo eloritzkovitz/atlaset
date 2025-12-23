@@ -1,7 +1,11 @@
 import { useTrips } from "@contexts/TripsContext";
-import { useHomeCountry } from "@features/settings";
 import { isAbroadTrip } from "@features/trips/utils/trips";
+import { useHomeCountry } from "@features/user";
 
+/**
+ * Provides statistics of trips by year.
+ * @returns Trips by year data.
+ */
 export function useTripsByYearStats() {
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();

@@ -1,5 +1,6 @@
-import { Branding, DrawerPanel, MenuButton, Panel } from "@components";
+import { DrawerPanel, MenuButton, Panel } from "@components";
 import { useIsMobile } from "@hooks/useIsMobile";
+import { Branding } from "@layout";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
 
 interface SettingsPanelMenuProps {

@@ -1,16 +1,39 @@
 import { useTrips } from "@contexts/TripsContext";
+import { useAuth } from "@contexts/AuthContext";
+import { useEffect, useState } from "react";
+import { getVisitedCountryCodes } from "../services/visitedCountriesService";
 import {
   computeVisitedCountriesFromTrips,
   getVisitsForCountry,
 } from "../utils/visits";
 
+/**
+ * Manages visited countries for the current user.
+ * @returns - Visited country codes and related utility functions.
+ */
 export function useVisitedCountries() {
-  const { trips } = useTrips();
+  const { user } = useAuth();
+  const { trips } = useTrips();  
+  const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
+  
+  // Compute as fallback
+  const computedVisited = computeVisitedCountriesFromTrips(trips);
 
-  // Get visited countries from overlays
-  const visitedCountryCodes = computeVisitedCountriesFromTrips(trips);
+  // Fetch visited countries from Firestore on user or trips change
+  useEffect(() => {
+    if (!user) {
+      setVisitedCountryCodes([]);
+      return;
+    }
+    const fetchVisited = async () => {
+      const firestoreCodes = await getVisitedCountryCodes(user.uid); 
+      // Use Firestore codes if available, else computed     
+      setVisitedCountryCodes(firestoreCodes.length > 0 ? firestoreCodes : computedVisited);
+    };
+    fetchVisited();
+  }, [user, trips]);
 
-  // Check if a country is visited
+   // Check if a country is visited
   function isCountryVisited(isoCode: string) {
     return visitedCountryCodes.includes(isoCode);
   }

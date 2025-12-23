@@ -1,6 +1,6 @@
-import { Branding } from "./Branding";
+import { Branding } from "../Branding/Branding";
 
-export function BrandHeader() {
+export function BrandingWithLabel() {
   return (
     <header className="flex flex-start items-center mt-2 ml-8">
       <Branding size={56} />

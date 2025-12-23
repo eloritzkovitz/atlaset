@@ -6,11 +6,14 @@ export { AuthLayout } from "./auth/components/AuthLayout";
 export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 
 // Profile Components
-export { ProfileInfoCard } from "./profile/components/info/ProfileInfoCard";
-export { SecurityInfoSection } from "./profile/components/security/SecurityInfoSection";
-export { EditProfileModal } from "./profile/components/info/EditProfileModal";
-export { UserAvatar } from "./profile/components/info/UserAvatar";
-export { UserActivitySection } from "./profile/components/activity/UserActivitySection";
+export { ProfileInfoCard } from "./profile/components/ProfileInfoCard";
+export { EditProfileModal } from "./profile/components/EditProfileModal";
+export { UserAvatar } from "./profile/components/UserAvatar";
+export { UserActivitySection } from "./activity/components/UserActivitySection";
+export { VisitedCountriesCard } from "./profile/components/VisitedCountriesCard";
 
 // Hooks
 export { useAuthHandlers } from "./auth/hooks/useAuthHandlers";
+export { useFirestoreUsername } from "./profile/hooks/useFirestoreUsername";
+export { useHomeCountry } from "./profile/hooks/useHomeCountry";
+export { useUserProfile } from "./profile/hooks/useUserProfile";

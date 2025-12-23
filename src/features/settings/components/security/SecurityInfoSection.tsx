@@ -5,12 +5,12 @@ import { useAuth } from "@contexts/AuthContext";
 import { logout } from "@features/user/auth/services/authService";
 import { useUserDevices } from "@features/user/auth/hooks/useUserDevices";
 import { isCurrentSession } from "@features/user/auth/utils/device";
+import { useUserActivity } from "@features/user/activity/hooks/useUserActivity";
 import type { Device } from "@features/user/types";
 import { getUserCollection } from "@utils/firebase";
 import { getTimestamp } from "@utils/date";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
-import { useUserActivity } from "../../hooks/useUserActivity";
 
 export function SecurityInfoSection() {
   const { user } = useAuth();

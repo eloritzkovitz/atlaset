@@ -6,7 +6,7 @@ import {
   CountryDetailsContent,
   VisitedStatusIndicator,
 } from "@features/countries";
-import { useHomeCountry } from "@features/settings";
+import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useDelayedLoading } from "@hooks/useDelayedLoading";
 import { CountrySection } from "./CountrySection";
