@@ -5,6 +5,7 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
+import { logUserActivity } from "@utils/firebase";
 import type { UserProfile } from "../../types";
 import { db } from "../../../../firebase";
 
@@ -90,6 +91,25 @@ export async function getUserProfileByUsername(
 
   // Type assertion is safe if Firestore data matches UserProfile
   return userSnap.data() as UserProfile;
+}
+
+/**
+ * Updates user profile fields in Firestore.
+ * @param uid - The user's UID
+ * @param updates - An object with the fields to update
+ */
+export async function editProfile(
+  uid: string,
+  updates: Partial<Record<string, any>>
+) {
+  const userDocRef = doc(db, "users", uid);
+  await updateDoc(userDocRef, updates);
+
+  await logUserActivity(
+    "edit_profile",
+    { updatedFields: Object.keys(updates) },
+    uid
+  );
 }
 
 // Change username atomically

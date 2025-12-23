@@ -47,13 +47,9 @@ export default function ProfilePage() {
           <div className="flex flex-col gap-6 items-center">
             <div className="w-full max-w-4xl">
               <ProfileInfoCard
-                user={profileUser}
-                username={username ?? ""}
-                email={profileUser.email ?? ""}
-                joinDate={profileUser.joinDate ?? ""}
-                homeCountry={profileUser.homeCountry}
+                profile={profileUser}
                 canEdit={!!canEdit}
-                onEdit={() => setEditOpen(true)}                
+                onEdit={() => setEditOpen(true)}
               />
               <VisitedCountriesCard
                 visitedCountryCodes={profileUser.visitedCountryCodes || []}
@@ -66,6 +62,7 @@ export default function ProfilePage() {
       {canEdit && (
         <EditProfileModal
           user={currentUser}
+          profile={profileUser}
           open={editOpen}
           onClose={() => setEditOpen(false)}
         />

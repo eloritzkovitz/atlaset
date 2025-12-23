@@ -13,7 +13,7 @@ export interface UserProfile {
   /** email */
   email?: string;
   /** Short biography */
-  bio: string;
+  biography?: string;
   /** Whether the profile is public */
   isPublic: boolean;
   /** Account creation date */

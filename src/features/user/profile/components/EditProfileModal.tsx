@@ -1,12 +1,16 @@
 import { updateProfile, updatePassword, type User } from "firebase/auth";
+import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useEffect, useState } from "react";
 import { FaUser, FaXmark } from "react-icons/fa6";
 import { ActionButton, FormField, Modal, PanelHeader } from "@components";
 import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
-import { changeUsername } from "../services/profileService";
+import { changeUsername, editProfile } from "../services/profileService";
+import { isPasswordProvider } from "@features/user/auth/utils/auth";
+import { type UserProfile } from "../../types";
 
 interface EditProfileModalProps {
   user: User | null;
+  profile: UserProfile;
   open: boolean;
   onClose: () => void;
   onSave?: () => void;
@@ -14,19 +18,23 @@ interface EditProfileModalProps {
 
 export function EditProfileModal({
   user,
+  profile,
   open,
   onClose,
   onSave,
 }: EditProfileModalProps) {
+    const [biography, setBiography] = useState(profile?.biography ?? "");
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [username, setUsername] = useState("");
   const [initialUsername, setInitialUsername] = useState("");
   const { username: fetchedUsername } = useFirestoreUsername(user?.uid);
-  const [isGoogleUser, setIsGoogleUser] = useState(false);
+  const [isPasswordUser, setIsPasswordUser] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Populate initial form values when modal opens
   useEffect(() => {
@@ -34,13 +42,8 @@ export function EditProfileModal({
       setUsername(fetchedUsername);
       setInitialUsername(fetchedUsername);
     }
-    if (user && user.uid) {
-      setIsGoogleUser(
-        Array.isArray(user.providerData) &&
-        user.providerData.some((p) => p && p.providerId === "google.com")
-      );
-    }
-  }, [fetchedUsername, user, open]);  
+    setIsPasswordUser(!!isPasswordProvider(user));
+  }, [fetchedUsername, user, open]);
 
   // Handle saving profile changes
   const handleSave = async (e: React.FormEvent) => {
@@ -61,14 +64,25 @@ export function EditProfileModal({
         });
         setInitialUsername(username);
       }
-      // Update displayName and photoURL in Firebase Auth
+
+      // Update other profile fields in Firestore
+      if (user) {
+        await editProfile(user.uid, {
+          displayName,
+          biography,
+        });
+      }
+
+      // Update displayName in Firebase Auth if changed
       if (user && displayName !== user.displayName) {
         await updateProfile(user, { displayName });
       }
+
       // Update password if provided
       if (user && password) {
         await updatePassword(user, password);
       }
+
       setSuccess("Profile updated successfully.");
       if (onSave) onSave();
       setTimeout(onClose, 1000);
@@ -86,20 +100,21 @@ export function EditProfileModal({
       <div className="w-full min-w-2xl max-w-4xl mx-auto bg-surface rounded-full flex flex-col gap-6">
         <PanelHeader
           title={
-            <span className="flex items-center gap-2 text-2xl font-semibold">
+            <>
               <FaUser />
-              Edit Profile
-            </span>
+              {"Edit Profile"}
+            </>
           }
         >
           <ActionButton
             onClick={onClose}
             ariaLabel="Close Edit Profile Modal"
             title="Close"
-            icon={<FaXmark />}
+            icon={<FaXmark className="text-2xl" />}
+            rounded
           />
         </PanelHeader>
-        <form onSubmit={handleSave} className="space-y-6">
+        <form onSubmit={handleSave} className="space-y-6 p-4">
           <FormField label="Username">
             <input
               type="text"
@@ -113,26 +128,61 @@ export function EditProfileModal({
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              disabled={isGoogleUser}
+              disabled={!isPasswordUser}
             />
           </FormField>
-          <FormField label="New Password">
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Leave blank to keep current password"
-              autoComplete="new-password"
-              disabled={isGoogleUser}
-            />
-          </FormField>
-          <FormField label="Confirm New Password">
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              autoComplete="new-password"
-              disabled={isGoogleUser}
+          {isPasswordUser && (
+            <>
+              <FormField label="New Password">
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Leave blank to keep current password"
+                    autoComplete="new-password"
+                    className="w-full pr-10"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
+                    onClick={() => setShowPassword((v) => !v)}
+                    tabIndex={-1}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </FormField>
+              <FormField label="Confirm New Password">
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    autoComplete="new-password"
+                    className="w-full pr-10"
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    tabIndex={-1}
+                    aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                  >
+                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+              </FormField>
+            </>
+          )}
+          <FormField label="Biography">
+            <textarea
+              value={biography}
+              onChange={(e) => setBiography(e.target.value)}
+              placeholder="Write something about yourself..."
+              rows={4}
+              maxLength={500}
             />
           </FormField>
           {error && <div className="text-danger">{error}</div>}

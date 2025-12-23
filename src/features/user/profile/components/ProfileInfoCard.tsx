@@ -1,50 +1,46 @@
-import type { User } from "firebase/auth";
 import { FaPen } from "react-icons/fa6";
 import { Card } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryWithFlag } from "@features/countries";
+import { formatFirestoreDate } from "@utils/date";
 import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";
-import { formatDate } from "@utils/date";
+import type { UserProfile } from "../../types";
 
 interface ProfileInfoCardProps {
-  user: User | null;
-  username: string;
-  email?: string;
-  joinDate?: string | null;
+  profile: UserProfile;
   canEdit?: boolean;
   onEdit?: () => void;
-  homeCountry?: string;
 }
 
 export function ProfileInfoCard({
-  user,
-  username,
-  email,
-  joinDate,
+  profile,
   canEdit,
   onEdit,
-  homeCountry,
 }: ProfileInfoCardProps) {
   const { countries } = useCountryData();
-  const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
-  const formattedDate = formatDate(joinDate || "");
+  const selectedCountry = countries.find(
+    (c) => c.isoCode === profile.homeCountry
+  );
+
+  // Default values for fields
+  const displayEmail = profile?.email ?? "No email provided";
+  const displayJoinDate = formatFirestoreDate(profile?.joinDate) ?? "No date provided";
+  const displayBiography = profile?.biography ?? "No biography provided.";
 
   return (
     <Card>
       {/* Avatar, Name, Username, Edit */}
       <div className="flex flex-col sm:flex-row items-center mb-6 gap-4 sm:gap-0">
-        <UserAvatar user={user} size={100} className="sm:size-[150px]" />
+        <UserAvatar user={profile} size={100} className="sm:size-[150px]" />
         <div className="flex-1 sm:ml-6 flex flex-col sm:flex-row items-center w-full">
           <div className="w-full">
             <h1 className="text-2xl sm:text-3xl font-bold text-center sm:text-left w-full">
-              {user?.displayName}
+              {profile.displayName}
             </h1>
-            {username && (
-              <div className="text-center sm:text-left text-gray-500 text-base mt-1">
-                @{username}
-              </div>
-            )}
+            <div className="text-center sm:text-left text-gray-500 text-base mt-1">
+              @{profile.username}
+            </div>
           </div>
           {canEdit && (
             <div className="flex-shrink-0 mt-4 sm:mt-0 sm:ml-auto w-full sm:w-auto">
@@ -59,19 +55,22 @@ export function ProfileInfoCard({
           )}
         </div>
       </div>
-      <ProfileField label="Email">{email}</ProfileField>
-      {homeCountry && (
-        <ProfileField label="Country">
-          <div className="flex items-center">
+      <ProfileField label="Email">{displayEmail}</ProfileField>
+      <ProfileField label="Country">
+        <div className="flex items-center">
+          {selectedCountry ? (
             <CountryWithFlag
-              isoCode={selectedCountry?.isoCode || ""}
-              name={selectedCountry?.name || ""}
+              isoCode={selectedCountry.isoCode}
+              name={selectedCountry.name}
               className="mr-2"
             />
-          </div>
-        </ProfileField>
-      )}
-      <ProfileField label="Joined">{formattedDate}</ProfileField>
+          ) : (
+            "Not specified"
+          )}
+        </div>
+      </ProfileField>
+      <ProfileField label="Joined">{displayJoinDate}</ProfileField>
+      <ProfileField label="Biography">{displayBiography}</ProfileField>
     </Card>
   );
 }
