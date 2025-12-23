@@ -38,7 +38,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         <UserInfo user={user} />
         <Separator />
         <MenuButton
-          onClick={() => navigate(`/profile/${username}`)}
+          onClick={() => navigate(`/users/${username}`)}
           icon={<FaUser className="text-lg mr-2" />}
           ariaLabel="Profile"
           title="Profile"
