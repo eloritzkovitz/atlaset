@@ -1,5 +1,6 @@
 import {
   formatDate,
+  formatFirestoreDate,
   getYear,
   getYearNumber,
   getCurrentYear,
@@ -28,6 +29,35 @@ describe("formatDate", () => {
   it("handles invalid date string gracefully", () => {
     // Invalid date returns "Invalid Date" in most locales
     expect(formatDate("not-a-date")).toMatch(/Invalid/);
+  });
+});
+
+describe("formatFirestoreDate", () => {
+  it("returns formatted date for Firestore Timestamp-like object", () => {
+    const fakeTimestamp = {
+      toDate: () => new Date("2023-01-15T00:00:00Z"),
+    };
+    expect(formatFirestoreDate(fakeTimestamp)).toBe("15/01/2023");
+  });
+
+  it("returns formatted date for string input", () => {
+    expect(formatFirestoreDate("2023-01-15")).toBe("15/01/2023");
+  });
+
+  it("returns 'Unknown' for undefined input", () => {
+    expect(formatFirestoreDate(undefined)).toBe("Unknown");
+  });
+
+  it("returns 'Unknown' for null input", () => {
+    expect(formatFirestoreDate(null)).toBe("Unknown");
+  });
+
+  it("returns 'Unknown' for object without toDate", () => {
+    expect(formatFirestoreDate({})).toBe("Unknown");
+  });
+
+  it("returns 'Unknown' for empty string", () => {
+    expect(formatFirestoreDate("")).toBe("Unknown");
   });
 });
 
