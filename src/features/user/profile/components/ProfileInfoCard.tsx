@@ -5,6 +5,7 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { CountryWithFlag } from "@features/countries";
 import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";
+import { formatDate } from "@utils/date";
 
 interface ProfileInfoCardProps {
   user: User | null;
@@ -27,6 +28,7 @@ export function ProfileInfoCard({
 }: ProfileInfoCardProps) {
   const { countries } = useCountryData();
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
+  const formattedDate = formatDate(joinDate || "");
 
   return (
     <Card>
@@ -69,7 +71,7 @@ export function ProfileInfoCard({
           </div>
         </ProfileField>
       )}
-      <ProfileField label="Joined">{joinDate}</ProfileField>
+      <ProfileField label="Joined">{formattedDate}</ProfileField>
     </Card>
   );
 }
