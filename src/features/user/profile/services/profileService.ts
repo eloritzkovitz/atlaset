@@ -9,6 +9,14 @@ import { logUserActivity } from "@utils/firebase";
 import type { UserProfile } from "../../types";
 import { db } from "../../../../firebase";
 
+// Check if a username exists in the usernames collection
+export async function checkUsernameExists(username: string): Promise<boolean> {
+  if (!username) return false;
+  const usernameRef = doc(db, "usernames", username);
+  const usernameSnap = await getDoc(usernameRef);
+  return usernameSnap.exists();
+}
+
 // Auto-generate a unique username from displayName or email
 export async function generateUniqueUsername(
   displayName: string | null,
@@ -25,9 +33,7 @@ export async function generateUniqueUsername(
   let username = base;
   let suffix = 0;
   while (true) {
-    const usernameRef = doc(db, "usernames", username);
-    const usernameSnap = await getDoc(usernameRef);
-    if (!usernameSnap.exists()) break;
+    if (!(await checkUsernameExists(username))) break;
     suffix++;
     username = `${base}${suffix}`;
   }
