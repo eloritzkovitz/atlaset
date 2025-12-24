@@ -61,6 +61,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           ariaLabel="Close"
           title="Close"
           icon={<FaXmark className="text-2xl" />}
+          rounded
         />
       </PanelHeader>
       <form
