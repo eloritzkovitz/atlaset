@@ -71,7 +71,7 @@ export function UserSearchDropdown() {
           ) : (
             <ul>
               {results.map((user) => (
-                <li key={user.id}>
+                <li key={user.uid}>
                   <MenuButton
                     onClick={() => {
                       navigate(`/users/${user.username}`);
