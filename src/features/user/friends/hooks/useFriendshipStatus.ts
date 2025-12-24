@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { getFriends, getFriendRequests } from "@features/user/friends/services/friendService";
+import {
+  getFriends,
+  getFriendRequests,
+} from "@features/user/friends/services/friendService";
 
 /**
  * Friendship status between current user and profile user.
@@ -8,18 +11,21 @@ import { getFriends, getFriendRequests } from "@features/user/friends/services/f
  * - loading: boolean
  * - refresh: function to re-check status
  */
-export function useFriendshipStatus(currentUserId: string | undefined, profileUserId: string | undefined) {
+export function useFriendshipStatus(
+  currentUserId: string | undefined,
+  profileUserId: string | undefined
+) {
   const [status, setStatus] = useState<"none" | "pending" | "friend">("none");
   const [loading, setLoading] = useState(false);
 
   const checkStatus = async () => {
-    if (!currentUserId || !profileUserId || currentUserId === profileUserId) return;
-    let mounted = true;
+    if (!currentUserId || !profileUserId || currentUserId === profileUserId)
+      return;
     setLoading(true);
     // Check if already friends
     const friends = await getFriends(currentUserId);
     if (friends.some((f) => f.uid === profileUserId)) {
-      if (mounted) setStatus("friend");
+      setStatus("friend");
       setLoading(false);
       return;
     }
@@ -32,23 +38,19 @@ export function useFriendshipStatus(currentUserId: string | undefined, profileUs
       );
     }
     if (pending) {
-      if (mounted) setStatus("pending");
+      setStatus("pending");
       setLoading(false);
       return;
     }
-    if (mounted) setStatus("none");
+    setStatus("none");
     setLoading(false);
   };
 
   useEffect(() => {
-    let mounted = true;
     async function run() {
       await checkStatus();
     }
     run();
-    return () => {
-      mounted = false;
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUserId, profileUserId]);
 

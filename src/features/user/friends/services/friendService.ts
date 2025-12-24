@@ -23,16 +23,6 @@ export async function sendFriendRequest(
     to: targetUserId,
     createdAt: serverTimestamp(),
   };
-  console.log('[sendFriendRequest] Writing to:', ref.path);
-  console.log('[sendFriendRequest] Data:', { from: currentUserId, to: targetUserId });
-  // If you have access to auth.currentUser, log it too:
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { auth } = require('../../../../firebase');
-    console.log('[sendFriendRequest] Authenticated UID:', auth?.currentUser?.uid);
-  } catch (e) {
-    // ignore if not available
-  }
   await setDoc(ref, data);
 }
 
@@ -97,10 +87,14 @@ export async function getFriends(userId: string): Promise<Friend[]> {
 }
 
 // Get all friend requests for a user
-export async function getFriendRequests(userId: string): Promise<FriendRequest[]> {
+export async function getFriendRequests(
+  userId: string
+): Promise<FriendRequest[]> {
   const reqCol = collection(db, `users/${userId}/friendRequests`);
   const snap = await getDocs(reqCol);
-  return snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest));
+  return snap.docs.map(
+    (doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest)
+  );
 }
 
 // Listen for real-time friend updates
@@ -121,6 +115,8 @@ export function listenForFriendRequests(
 ): Unsubscribe {
   const reqCol = collection(db, `users/${userId}/friendRequests`);
   return onSnapshot(reqCol, (snap) => {
-    cb(snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest)));
+    cb(
+      snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest))
+    );
   });
 }

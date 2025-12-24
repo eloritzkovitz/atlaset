@@ -47,7 +47,6 @@ export function ProfileInfoCard({
     if (!currentUser?.uid) return;
     try {
       await sendFriendRequest(currentUser.uid, profile.uid);
-      friendStatus === "pending";
       await refresh();
     } catch (error) {
       console.error("Failed to send friend request:", error);
