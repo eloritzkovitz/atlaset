@@ -53,7 +53,7 @@ export async function createUserProfileWithUsername(user: {
   // Use a transaction to ensure username uniqueness
   await runTransaction(db, async (transaction) => {
     const usernameRef = doc(db, "usernames", username);
-    const userRef = doc(db, "users", username);
+    const userRef = doc(db, "users", user.uid);
     const usernameSnap = await transaction.get(usernameRef);
     if (usernameSnap.exists()) {
       throw new Error("Username taken");
