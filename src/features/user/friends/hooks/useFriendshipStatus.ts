@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import {
   getFriends,
-  getFriendRequests,
-} from "@features/user/friends/services/friendService";
+  getOutgoingFriendRequest,
+} from "../services/friendService";
 
 /**
  * Friendship status between current user and profile user.
@@ -19,8 +19,9 @@ export function useFriendshipStatus(
   const [loading, setLoading] = useState(false);
 
   const checkStatus = async () => {
-    if (!currentUserId || !profileUserId || currentUserId === profileUserId)
+    if (!currentUserId || !profileUserId || currentUserId === profileUserId) {
       return;
+    }
     setLoading(true);
     // Check if already friends
     const friends = await getFriends(currentUserId);
@@ -29,15 +30,15 @@ export function useFriendshipStatus(
       setLoading(false);
       return;
     }
-    // Only check friend requests if viewing own profile
-    let pending = false;
-    if (profileUserId === currentUserId) {
-      const requests = await getFriendRequests(currentUserId);
-      pending = requests.some(
-        (r) => r.from === currentUserId && r.to === profileUserId
-      );
-    }
-    if (pending) {
+
+    // Check if there is a pending outgoing friend request from current user to profile user
+    const outgoingRequest = await getOutgoingFriendRequest(
+      profileUserId,
+      currentUserId
+    );
+
+    // If an outgoing request exists, set status to "pending"
+    if (outgoingRequest) {
       setStatus("pending");
       setLoading(false);
       return;
@@ -46,6 +47,7 @@ export function useFriendshipStatus(
     setLoading(false);
   };
 
+  // Initial check and on dependency changes
   useEffect(() => {
     async function run() {
       await checkStatus();

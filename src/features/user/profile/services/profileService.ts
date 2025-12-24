@@ -117,7 +117,7 @@ export async function getUserProfileByUsername(
  */
 export async function editProfile(
   uid: string,
-  updates: Partial<Record<string, any>>
+  updates: Partial<UserProfile>
 ) {
   const userDocRef = doc(db, "users", uid);
   await updateDoc(userDocRef, updates);

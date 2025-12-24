@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getDoc,
   setDoc,
   deleteDoc,
   getDocs,
@@ -95,6 +96,19 @@ export async function getFriendRequests(
   return snap.docs.map(
     (doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest)
   );
+}
+
+// Check if an outgoing friend request exists from currentUserId to targetUserId
+export async function getOutgoingFriendRequest(
+  targetUserId: string,
+  currentUserId: string
+): Promise<FriendRequest | null> {
+  const reqDoc = doc(db, `users/${targetUserId}/friendRequests`, currentUserId);
+  const snap = await getDoc(reqDoc);
+  if (snap.exists()) {
+    return { uid: snap.id, ...snap.data() } as FriendRequest;
+  }
+  return null;
 }
 
 // Listen for real-time friend updates

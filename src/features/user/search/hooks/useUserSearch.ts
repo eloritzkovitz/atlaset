@@ -7,6 +7,7 @@ import {
   endAt,
   getDocs,
 } from "firebase/firestore";
+import type { UserProfile } from "../../types";
 import { db } from "../../../../firebase";
 
 /**
@@ -15,7 +16,7 @@ import { db } from "../../../../firebase";
  * @returns Search results and loading state.
  */
 export function useUserSearch(searchTerm: string) {
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<UserProfile[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Perform search when searchTerm changes
@@ -45,11 +46,17 @@ export function useUserSearch(searchTerm: string) {
       ([usernameSnap, displayNameSnap]) => {
         // Merge and deduplicate by user id
         const users = [
-          ...usernameSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
-          ...displayNameSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() })),
+          ...usernameSnap.docs.map((doc) => ({
+            uid: doc.id,
+            ...(doc.data() as Omit<UserProfile, "uid">),
+          })),
+          ...displayNameSnap.docs.map((doc) => ({
+            uid: doc.id,
+            ...(doc.data() as Omit<UserProfile, "uid">),
+          })),
         ];
         const uniqueUsers = Array.from(
-          new Map(users.map((u) => [u.id, u])).values()
+          new Map(users.map((u) => [u.uid, u])).values()
         );
         setResults(uniqueUsers);
         setLoading(false);
