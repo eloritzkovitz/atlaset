@@ -18,11 +18,22 @@ export async function sendFriendRequest(
   targetUserId: string
 ) {
   const ref = doc(db, `users/${targetUserId}/friendRequests`, currentUserId);
-  await setDoc(ref, {
+  const data = {
     from: currentUserId,
     to: targetUserId,
     createdAt: serverTimestamp(),
-  });
+  };
+  console.log('[sendFriendRequest] Writing to:', ref.path);
+  console.log('[sendFriendRequest] Data:', { from: currentUserId, to: targetUserId });
+  // If you have access to auth.currentUser, log it too:
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { auth } = require('../../../../firebase');
+    console.log('[sendFriendRequest] Authenticated UID:', auth?.currentUser?.uid);
+  } catch (e) {
+    // ignore if not available
+  }
+  await setDoc(ref, data);
 }
 
 // Accept a friend request
