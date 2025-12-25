@@ -1,7 +1,7 @@
 import type { KeyCommand } from "@types";
 
 export const categoryColumns = [
-  ["General", "Search", "Filters"],
+  ["General", "Search", "Filters", "Friends"],
   ["Toolbar"],
   ["Map", "Timeline"],
   ["Country List"],  
@@ -17,6 +17,9 @@ export const keyCommands: KeyCommand[] = [
   
   // Filters
   { key: "r", modifiers: [], action: "Reset filters", category: "Filters" },  
+
+  // Friends
+  { key: "n", modifiers: [], action: "Toggle friends panel", category: "Friends" },
 
   // Toolbar
   { key: "c", modifiers: [], action: "Toggle countries", category: "Toolbar" },

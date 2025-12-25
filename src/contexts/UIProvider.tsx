@@ -79,8 +79,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
   // Toggle Overlays panel with "O"
   useKeyHandler(toggleOverlays, ["o", "O"], true);
 
-  // Toggle Friends panel with "R"
-  useKeyHandler(toggleFriends, ["r", "R"], true);
+  // Toggle Friends panel with "N"
+  useKeyHandler(toggleFriends, ["n", "N"], true);
 
   // Toggle Legend with "L"
   useKeyHandler(toggleLegend, ["l", "L"], true);

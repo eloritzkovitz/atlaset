@@ -9,6 +9,7 @@ import { MapFooter } from "./controls/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
 import { MapToolbar } from "./toolbar/MapToolbar";
 import { useMapLegendItems } from "../hooks/useMapLegendItems";
+import type { LegendItem } from "../types";
 
 interface MapUiContainerProps {
   zoom: number;
@@ -27,9 +28,13 @@ export function MapUiContainer({
   overlays,
   isAddingMarker,
 }: MapUiContainerProps) {
-  const { showLegend, closeLegend, uiVisible } = useUI();
   const { timelineMode, setTimelineMode, overlayMode } = useTimeline();
-  const legendItems = useMapLegendItems(overlays, timelineMode, overlayMode);
+  const { showLegend, closeLegend, uiVisible } = useUI();  
+  const legendItems: LegendItem[] = useMapLegendItems(
+    overlays,
+    timelineMode,
+    overlayMode
+  );
 
   // UI hint for adding marker
   const addMarkerHint = useMemo(
@@ -63,7 +68,7 @@ export function MapUiContainer({
 
   return (
     <>
-      {/* Map UI components */}      
+      {/* Map UI components */}
       {timelineMode && (
         <>
           <TimelineBar />
