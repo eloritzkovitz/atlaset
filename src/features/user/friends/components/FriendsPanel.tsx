@@ -91,13 +91,15 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
                   <div>
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                      onClick={() => acceptFriendRequest(user?.uid!, req.from)}
+                      onClick={() => user?.uid && acceptFriendRequest(user.uid, req.from)}
+                      disabled={!user?.uid}
                     >
                       Accept
                     </button>
                     <button
                       className="bg-red-500 text-white px-2 py-1 rounded"
-                      onClick={() => rejectFriendRequest(user?.uid!, req.from)}
+                      onClick={() => user?.uid && rejectFriendRequest(user.uid, req.from)}
+                      disabled={!user?.uid}
                     >
                       Reject
                     </button>
