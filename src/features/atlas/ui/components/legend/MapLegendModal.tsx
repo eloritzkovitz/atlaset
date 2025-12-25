@@ -1,4 +1,4 @@
-import { Modal, Separator } from "@components";
+import { Modal } from "@components";
 
 export interface LegendItem {
   color: string;
@@ -18,11 +18,11 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
       isOpen={open}
       onClose={onClose}      
       position="custom"
-      className="fixed top-14 right-6 z-50"
+      className="!bg-transparent !shadow-none fixed top-16 right-6 z-50"
+      disableClose
     >
       <div className="flex flex-col gap-4 py-2">
         <h2 className="text-lg font-semibold">Legend</h2>
-        <Separator />
         {items.map((item, idx) => (
           <LegendRow
             key={idx}
@@ -32,7 +32,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
           />
         ))}
       </div>
-    </Modal>
+    </Modal>    
   );
 }
 
