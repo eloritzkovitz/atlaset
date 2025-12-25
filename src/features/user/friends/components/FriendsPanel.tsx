@@ -44,18 +44,10 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
     <Panel
       show={open}
       onHide={onClose}
+      position="right"
+      width="260px"
       title={
         <>
-          {showRequests ? (
-            <FaUserPlus className="mr-2" />
-          ) : (
-            <FaUserGroup className="mr-2" />
-          )}
-          {showRequests ? "Friend Requests" : "Friends"}
-        </>
-      }
-      headerActions={
-        <div className="flex items-center gap-2">
           <ActionButton
             onClick={() => setShowRequests((prev) => !prev)}
             ariaLabel={showRequests ? "Show Friends" : "Show Requests"}
@@ -63,6 +55,11 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             icon={showRequests ? <FaUserGroup /> : <FaUserPlus />}
             rounded
           />
+          {showRequests ? "Friend Requests" : "Friends"}
+        </>
+      }
+      headerActions={
+        <div className="flex items-center gap-2">
           <ActionButton
             onClick={onClose}
             ariaLabel="Close friends panel"
@@ -73,6 +70,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
         </div>
       }
       showSeparator={showRequests ? true : false}
+      className="!z-[10050]"
     >
       <div className="flex flex-col h-full">
         {loading ? (
@@ -91,14 +89,18 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
                   <div>
                     <button
                       className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                      onClick={() => user?.uid && acceptFriendRequest(user.uid, req.from)}
+                      onClick={() =>
+                        user?.uid && acceptFriendRequest(user.uid, req.from)
+                      }
                       disabled={!user?.uid}
                     >
                       Accept
                     </button>
                     <button
                       className="bg-red-500 text-white px-2 py-1 rounded"
-                      onClick={() => user?.uid && rejectFriendRequest(user.uid, req.from)}
+                      onClick={() =>
+                        user?.uid && rejectFriendRequest(user.uid, req.from)
+                      }
                       disabled={!user?.uid}
                     >
                       Reject

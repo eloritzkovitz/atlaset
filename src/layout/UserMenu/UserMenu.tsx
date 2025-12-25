@@ -1,21 +1,19 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect } from "react";
 import { FaBell, FaUserGroup } from "react-icons/fa6";
-import { FriendsPanel } from "@features/user/friends/components/FriendsPanel";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ActionButton, Menu } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { useModalAnimation } from "@hooks/useModalAnimation";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
-import { useIsMobile } from "@hooks/useIsMobile";
 
 export function UserMenu() {
   const { user, loading } = useAuth();
-  const { uiVisible } = useUI();
+  const { uiVisible, showFriends, toggleFriends } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
-  const [friendsOpen, setFriendsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Router states and navigation
@@ -67,9 +65,9 @@ export function UserMenu() {
         <>
           <ActionButton
             title="Friends"
-            onClick={() => setFriendsOpen((open) => !open)}
+            onClick={toggleFriends}
             icon={<FaUserGroup className="text-xl" />}
-            aria-pressed={friendsOpen}
+            aria-pressed={showFriends}
             rounded
           />
           <ActionButton
@@ -103,12 +101,6 @@ export function UserMenu() {
             onLogout={handleLogout}
           />
         </Menu>
-      )}
-      {!isSettingsPage && (
-        <FriendsPanel
-          open={friendsOpen}
-          onClose={() => setFriendsOpen(false)}
-        />
       )}
     </div>
   );

@@ -17,6 +17,8 @@ export interface UIContextType {
   toggleExport: () => void;
   showSettings: boolean;
   toggleSettings: () => void;
+  showFriends: boolean;
+  toggleFriends: () => void;
   closePanel: () => void;
   modalOpen: boolean;
   setModalOpen: (v: boolean) => void;

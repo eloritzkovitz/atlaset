@@ -10,6 +10,7 @@ type PanelSelection =
   | "overlays"
   | "export"
   | "settings"
+  | "friends"
   | null;
 
 export function UIProvider({ children }: { children: ReactNode }) {
@@ -35,6 +36,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const showOverlays = openPanel === "overlays";
   const showExport = openPanel === "export";
   const showSettings = openPanel === "settings";
+  const [showFriends, setShowFriends] = useState(false);
 
   const toggleUiVisible = () => setUiVisible((prev) => !prev);
   const toggleCountries = () =>
@@ -47,6 +49,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
     setOpenPanel((prev) => (prev === "export" ? null : "export"));
   const toggleSettings = () =>
     setOpenPanel((prev) => (prev === "settings" ? null : "settings"));
+  const toggleFriends = () => setShowFriends((prev) => !prev);
   const closePanel = () => setOpenPanel(null);
 
   // Modal state
@@ -54,11 +57,11 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   // Derived states for individual modals
   const [showLegend, setShowLegend] = useState(false);
-  const [showShortcuts, setShowShortcuts] = useState(false);
-
   const toggleLegend = () => setShowLegend((prev) => !prev);
-  const toggleShortcuts = () => setShowShortcuts((prev) => !prev);
   const closeLegend = () => setShowLegend(false);
+  
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const toggleShortcuts = () => setShowShortcuts((prev) => !prev);  
   const closeShortcuts = () => setShowShortcuts(false);
 
   // Toggle UI visibility with "U"
@@ -75,6 +78,9 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   // Toggle Overlays panel with "O"
   useKeyHandler(toggleOverlays, ["o", "O"], true);
+
+  // Toggle Friends panel with "R"
+  useKeyHandler(toggleFriends, ["r", "R"], true);
 
   // Toggle Legend with "L"
   useKeyHandler(toggleLegend, ["l", "L"], true);
@@ -120,6 +126,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
         toggleExport,
         showSettings,
         toggleSettings,
+        showFriends,
+        toggleFriends,
         closePanel,
         modalOpen,
         setModalOpen,
