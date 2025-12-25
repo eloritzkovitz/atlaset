@@ -7,7 +7,10 @@ import { formatFirestoreDate } from "@utils/date";
 import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
-import { sendFriendRequest } from "../../friends/services/friendService";
+import {
+  sendFriendRequest,
+  removeFriend,
+} from "../../friends/services/friendService";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";
 import type { UserProfile } from "../../types";
 
@@ -43,13 +46,23 @@ export function ProfileInfoCard({
 
   // Handle adding friend
   const handleAddFriend = async () => {
-    console.log("handleAddFriend called", { currentUser, profile });
     if (!currentUser?.uid) return;
     try {
       await sendFriendRequest(currentUser.uid, profile.uid);
       await refresh();
     } catch (error) {
       console.error("Failed to send friend request:", error);
+    }
+  };
+
+  // Handle unfriending
+  const handleUnfriend = async () => {
+    if (!currentUser?.uid) return;
+    try {
+      await removeFriend(currentUser.uid, profile.uid);
+      await refresh();
+    } catch (error) {
+      console.error("Failed to unfriend:", error);
     }
   };
 
@@ -85,6 +98,7 @@ export function ProfileInfoCard({
                 friendStatus={friendStatus}
                 loading={loading}
                 onAddFriend={handleAddFriend}
+                onUnfriend={handleUnfriend}
               />
             </div>
           )}

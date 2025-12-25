@@ -20,31 +20,38 @@ export function useFriendshipStatus(
 
   const checkStatus = async () => {
     if (!currentUserId || !profileUserId || currentUserId === profileUserId) {
+      setStatus("none");
+      setLoading(false);
       return;
     }
     setLoading(true);
-    // Check if already friends
-    const friends = await getFriends(currentUserId);
-    if (friends.some((f) => f.uid === profileUserId)) {
-      setStatus("friend");
-      setLoading(false);
-      return;
-    }
+    try {
+      // Check if already friends
+      const friends = await getFriends(currentUserId);
+      if (friends.some((f) => f.uid === profileUserId)) {
+        setStatus("friend");
+        setLoading(false);
+        return;
+      }
 
-    // Check if there is a pending outgoing friend request from current user to profile user
-    const outgoingRequest = await getOutgoingFriendRequest(
-      profileUserId,
-      currentUserId
-    );
+      // Check if there is a pending outgoing friend request from current user to profile user
+      const outgoingRequest = await getOutgoingFriendRequest(
+        profileUserId,
+        currentUserId
+      );
 
-    // If an outgoing request exists, set status to "pending"
-    if (outgoingRequest) {
-      setStatus("pending");
+      if (outgoingRequest) {
+        setStatus("pending");
+        setLoading(false);
+        return;
+      }
+      setStatus("none");
       setLoading(false);
-      return;
+    } catch (error) {
+      setStatus("none");
+      setLoading(false);
+      console.error('[FriendshipStatus] error:', error);
     }
-    setStatus("none");
-    setLoading(false);
   };
 
   // Initial check and on dependency changes
