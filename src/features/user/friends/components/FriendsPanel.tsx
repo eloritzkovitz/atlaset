@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaUserGroup, FaUserPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { useFriends } from "../hooks/useFriends";
+import { useFriendRequests } from "../hooks/useFriendRequests";
 import {
-  getFriends,
-  getFriendRequests,
   acceptFriendRequest,
   rejectFriendRequest,
-} from "@features/user/friends/services/friendService";
-import type { Friend, FriendRequest } from "../../types";
+} from "../../friends/services/friendService";
+import { UserListItem } from "./UserListItem";
 
 interface FriendsPanelProps {
   open: boolean;
@@ -17,35 +17,18 @@ interface FriendsPanelProps {
 
 export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
   const { user } = useAuth();
-  const [showRequests, setShowRequests] = useState(false);
-  const [friends, setFriends] = useState<Friend[]>([]);
-  const [requests, setRequests] = useState<FriendRequest[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { friends, loading: loadingFriends } = useFriends();
   const [search, setSearch] = useState("");
-
-  // Fetch friends or requests based on current view
-  useEffect(() => {
-    if (!user) return;
-    setLoading(true);
-    if (showRequests) {
-      getFriendRequests(user.uid).then((reqs) => {
-        setRequests(reqs);
-        setLoading(false);
-      });
-    } else {
-      getFriends(user.uid).then((frs) => {
-        setFriends(frs);
-        setLoading(false);
-      });
-    }
-  }, [user, showRequests]);
+  const [showRequests, setShowRequests] = useState(false);
+  const { requests, loading: loadingRequests } = useFriendRequests(
+    showRequests && user ? user.uid : undefined
+  );
 
   return (
     <Panel
       show={open}
       onHide={onClose}
       position="right"
-      width="260px"
       title={
         <>
           <ActionButton
@@ -73,7 +56,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
       className="!z-[10050]"
     >
       <div className="flex flex-col h-full">
-        {loading ? (
+        {(showRequests ? loadingRequests : loadingFriends) ? (
           <div>Loading...</div>
         ) : showRequests ? (
           <ul>
@@ -81,32 +64,20 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
               <li>No friend requests.</li>
             ) : (
               requests.map((req) => (
-                <li
+                <UserListItem
                   key={req.uid}
-                  className="flex justify-between items-center py-2 border-b"
-                >
-                  <span>{req.from}</span>
-                  <div>
-                    <button
-                      className="bg-green-500 text-white px-2 py-1 rounded mr-2"
-                      onClick={() =>
-                        user?.uid && acceptFriendRequest(user.uid, req.from)
-                      }
-                      disabled={!user?.uid}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                      onClick={() =>
-                        user?.uid && rejectFriendRequest(user.uid, req.from)
-                      }
-                      disabled={!user?.uid}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </li>
+                  uid={req.from}
+                  onAccept={
+                    user?.uid
+                      ? () => acceptFriendRequest(user.uid, req.from)
+                      : undefined
+                  }
+                  onReject={
+                    user?.uid
+                      ? () => rejectFriendRequest(user.uid, req.from)
+                      : undefined
+                  }
+                />
               ))
             )}
           </ul>
@@ -120,19 +91,20 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             />
             <Separator className="my-4" />
             <ul>
-              {friends.length === 0 ? (
-                <li>No friends yet.</li>
-              ) : (
-                friends
-                  .filter((friend) =>
-                    friend.uid.toLowerCase().includes(search.toLowerCase())
-                  )
-                  .map((friend) => (
-                    <li key={friend.uid} className="py-2 border-b">
-                      {friend.uid}
-                    </li>
-                  ))
-              )}
+              {(() => {
+                const filtered = friends.filter((friend) =>
+                  friend.uid.toLowerCase().includes(search.toLowerCase())
+                );
+                if (friends.length === 0 && !search) {
+                  return <li>No friends yet.</li>;
+                }
+                if (filtered.length === 0) {
+                  return <li>No users found.</li>;
+                }
+                return filtered.map((friend) => (
+                  <UserListItem key={friend.uid} uid={friend.uid} />
+                ));
+              })()}
             </ul>
           </>
         )}
