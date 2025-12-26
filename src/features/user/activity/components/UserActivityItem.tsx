@@ -3,19 +3,22 @@ import { getActivityDescription } from "../utils/activity";
 import type { UserActivity, ActivityDetails } from "../../types";
 
 export function UserActivityItem({ act }: { act: UserActivity }) {
-  const details: ActivityDetails | undefined =
+  const details: ActivityDetails =
     act.details &&
     typeof act.details === "object" &&
     !Array.isArray(act.details)
       ? act.details
-      : undefined;
+      : ({} as ActivityDetails);
 
   return (
     <li className="p-4 rounded-xl bg-gray-300 dark:bg-gray-600 flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <FaRegClock className="inline-block mr-1" />
         <span className="font-semibold text-base text-white">
-          {getActivityDescription(act.action, details)}
+          {getActivityDescription(
+            act.action,
+            details as Record<string, unknown>
+          )}
         </span>
         <span className="flex items-center text-xs text-muted ml-2 gap-1">
           {new Date(act.timestamp).toLocaleString()}

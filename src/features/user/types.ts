@@ -25,7 +25,7 @@ export interface UserProfile {
 }
 
 /** Activity details associated with a user activity */
-export interface ActivityDetails {
+export interface ActivityDetails extends Record<string, unknown> {
   itemName?: string;
   location?: string;
   date?: string;
