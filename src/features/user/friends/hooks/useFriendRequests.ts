@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listenForFriendRequests } from "../services/friendService";
+import { friendService } from "../services/friendService";
 import type { FriendRequest } from "../../types";
 
 /**
@@ -19,10 +19,13 @@ export function useFriendRequests(userId?: string) {
       return;
     }
     setLoading(true);
-    const unsubscribe = listenForFriendRequests(userId, (reqs) => {
-      setRequests(reqs);
-      setLoading(false);
-    });
+    const unsubscribe = friendService.listenForFriendRequests(
+      userId,
+      (reqs) => {
+        setRequests(reqs);
+        setLoading(false);
+      }
+    );
     return () => unsubscribe();
   }, [userId]);
 

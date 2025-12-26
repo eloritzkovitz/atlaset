@@ -10,17 +10,20 @@ import {
   VISITED_OVERLAY_ID,
   DEFAULT_VISITED_OVERLAY,
 } from "@constants/overlays";
+import { logUserActivity } from "../../../../features/user";
 import { appDb } from "@utils/db";
-import {
-  isAuthenticated,
-  getCurrentUser,
-  logUserActivity,
-} from "@utils/firebase";
+import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { AnyOverlay } from "../types";
 import { db } from "../../../../firebase";
 
+/**
+ * Service for managing user overlays.
+ */
 export const overlaysService = {
-  // Load all overlays from Firestore or IndexedDB
+  /**
+   * Loads all overlays for the current user.
+   * @returns A promise that resolves to an array of overlays.
+   */
   async load(): Promise<AnyOverlay[]> {
     let overlays: AnyOverlay[];
     if (isAuthenticated()) {
@@ -41,7 +44,10 @@ export const overlaysService = {
     return overlays;
   },
 
-  // Save overlays to Firestore or IndexedDB
+  /**
+   * Saves all overlays, replacing existing ones.
+   * @param overlays - The array of overlays to save.
+   */
   async save(overlays: AnyOverlay[]) {
     if (isAuthenticated()) {
       // Prevent accidental wipe
@@ -63,7 +69,7 @@ export const overlaysService = {
       });
       await batch.commit();
       await logUserActivity(
-        "save_overlays",
+        210,
         {
           count: overlays.length,
           userName: user!.displayName,
@@ -82,14 +88,17 @@ export const overlaysService = {
     }
   },
 
-  // Add a new overlay
+  /**
+   * Adds a new overlay.
+   * @param overlay - The overlay to add.
+   */
   async add(overlay: AnyOverlay) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
       await logUserActivity(
-        "add_overlay",
+        211,
         {
           overlayId: overlay.id,
           itemName: overlay.name,
@@ -102,14 +111,17 @@ export const overlaysService = {
     }
   },
 
-  // Edit an existing overlay
+  /**
+   * Edits an existing overlay.
+   * @param overlay - The overlay to edit.
+   */
   async edit(overlay: AnyOverlay) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const overlaysCol = collection(db, "users", user!.uid, "overlays");
       await setDoc(doc(overlaysCol, overlay.id), overlay);
       await logUserActivity(
-        "edit_overlay",
+        212,
         {
           overlayId: overlay.id,
           itemName: overlay.name,
@@ -122,7 +134,10 @@ export const overlaysService = {
     }
   },
 
-  // Remove an overlay by ID
+  /**
+   * Removes an overlay by ID.
+   * @param id - The ID of the overlay to remove.
+   */
   async remove(id: string) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -132,7 +147,7 @@ export const overlaysService = {
       const overlayName = overlayDoc ? overlayDoc.data().name : undefined;
       await deleteDoc(doc(overlaysCol, id));
       await logUserActivity(
-        "remove_overlay",
+        213,
         {
           overlayId: id,
           itemName: overlayName,

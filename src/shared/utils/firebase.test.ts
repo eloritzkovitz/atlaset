@@ -90,14 +90,5 @@ describe("firebase utils", () => {
       expect(result).toEqual({ id: "mockCollection" });
       expect(firestoreMocks.collection).toHaveBeenCalled();
     });
-  });
-
-  describe("logUserActivity", () => {
-    it("calls addDoc with correct arguments", async () => {
-      (firebaseUtils.getCurrentUser as any).mockReturnValue(mockUser);
-      firestoreMocks.addDoc.mockResolvedValueOnce({});
-      await firebaseUtils.logUserActivity("login", { foo: "bar" });
-      expect(firestoreMocks.addDoc).toHaveBeenCalled();
-    });
-  });
+  });  
 });

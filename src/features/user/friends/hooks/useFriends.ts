@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCurrentUser } from "@utils/firebase";
 import type { Friend } from "../../types";
-import { listenForFriends } from "../services/friendService";
+import { friendService } from "../services/friendService";
 
 /**
  * Fetches and manages the current user's friends list.
@@ -21,11 +21,14 @@ export function useFriends() {
       return;
     }
     setLoading(true);
-    const unsubscribe = listenForFriends(currentUser.uid, (friendsList) => {
-      setFriends(friendsList);
-      setLoading(false);
-      setError(null);
-    });
+    const unsubscribe = friendService.listenForFriends(
+      currentUser.uid,
+      (friendsList) => {
+        setFriends(friendsList);
+        setLoading(false);
+        setError(null);
+      }
+    );
     return () => unsubscribe();
   }, [currentUser]);
 

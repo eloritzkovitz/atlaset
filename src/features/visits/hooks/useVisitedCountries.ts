@@ -1,7 +1,7 @@
 import { useTrips } from "@contexts/TripsContext";
 import { useAuth } from "@contexts/AuthContext";
 import { useEffect, useState } from "react";
-import { getVisitedCountryCodes } from "../services/visitedCountriesService";
+import { visitedCountriesService } from "../services/visitedCountriesService";
 import {
   computeVisitedCountriesFromTrips,
   getVisitsForCountry,
@@ -26,7 +26,8 @@ export function useVisitedCountries() {
       return;
     }
     const fetchVisited = async () => {
-      const firestoreCodes = await getVisitedCountryCodes(user.uid);
+      const firestoreCodes =
+        await visitedCountriesService.getVisitedCountryCodes(user.uid);
       // Use Firestore codes if available, else computed
       setVisitedCountryCodes(
         firestoreCodes.length > 0 ? firestoreCodes : computedVisited

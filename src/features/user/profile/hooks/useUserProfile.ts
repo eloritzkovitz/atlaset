@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  getUserProfileByUid,
-  getUserProfileByUsername,
-} from "../services/profileService";
+import { profileService } from "../services/profileService";
 import type { UserProfile } from "../../types";
 
 /**
@@ -27,12 +24,14 @@ export function useUserProfile({
     // If uid is provided, fetch by uid; else if username is provided, fetch by username
     if (uid) {
       setLoading(true);
-      getUserProfileByUid(uid)
+      profileService
+        .getUserProfileByUid(uid)
         .then(setProfile)
         .finally(() => setLoading(false));
     } else if (username) {
       setLoading(true);
-      getUserProfileByUsername(username)
+      profileService
+        .getUserProfileByUsername(username)
         .then(setProfile)
         .finally(() => setLoading(false));
     } else {

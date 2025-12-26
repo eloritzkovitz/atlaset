@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { hasGuestData, migrateGuestDataToFirestore } from "./migrationService";
-import { resetAllMocks } from "@test-utils/mockDbAndFirestore";
+import { migrationService } from "./migrationService";
+import { resetAllMocks } from "../test-utils/mockDbAndFirestore";
 
 // Mocks for appDb and services
 vi.mock("@utils/db", () => ({
@@ -86,7 +86,7 @@ describe("migrationService", () => {
       (appDb.overlays.count as any).mockResolvedValueOnce(2);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
       (appDb.trips.count as any).mockResolvedValueOnce(0);
-      expect(await hasGuestData()).toBe(true);
+      expect(await migrationService.hasGuestData()).toBe(true);
     });
 
     it("returns false if no guest data exists", async () => {
@@ -94,7 +94,7 @@ describe("migrationService", () => {
       (appDb.overlays.count as any).mockResolvedValueOnce(0);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
       (appDb.trips.count as any).mockResolvedValueOnce(0);
-      expect(await hasGuestData()).toBe(false);
+      expect(await migrationService.hasGuestData()).toBe(false);
     });
   });
 
@@ -145,7 +145,7 @@ describe("migrationService", () => {
       ]);
       vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
 
-      await migrateGuestDataToFirestore();
+      await migrationService.migrateGuestDataToFirestore();
 
       // Markers merged and saved
       expect(markersService.save).toHaveBeenCalledWith([
@@ -202,7 +202,7 @@ describe("migrationService", () => {
       vi.spyOn(tripsService, "load").mockResolvedValueOnce([]);
       vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
 
-      await migrateGuestDataToFirestore();
+      await migrationService.migrateGuestDataToFirestore();
 
       expect(settingsService.save).not.toHaveBeenCalled();
       expect(appDb.settings.clear).not.toHaveBeenCalled();

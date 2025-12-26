@@ -1,7 +1,7 @@
 import { Filter } from "bad-words";
 import { useEffect, useState } from "react";
 import forbiddenUsernames from "../constants/forbiddenUsernames.json";
-import { checkUsernameExists } from "../services/profileService";
+import { profileService } from "../services/profileService";
 
 // Regex pattern for valid usernames: alphanumeric and underscores, 3-20 characterss
 const usernamePattern = /^[a-zA-Z0-9_]{3,20}$/;
@@ -55,7 +55,7 @@ export function useUsernameValidation(
     }
     setStatus("checking");
     const timeout = setTimeout(async () => {
-      const exists = await checkUsernameExists(username);
+      const exists = await profileService.checkUsernameExists(username);
       setStatus(exists ? "taken" : "available");
     }, 500);
     return () => clearTimeout(timeout);

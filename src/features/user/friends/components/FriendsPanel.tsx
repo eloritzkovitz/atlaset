@@ -4,10 +4,7 @@ import { ActionButton, Panel, SearchInput, Separator } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useFriends } from "../hooks/useFriends";
 import { useFriendRequests } from "../hooks/useFriendRequests";
-import {
-  acceptFriendRequest,
-  rejectFriendRequest,
-} from "../../friends/services/friendService";
+import { friendService } from "../../friends/services/friendService";
 import { UserListItem } from "./UserListItem";
 
 interface FriendsPanelProps {
@@ -69,12 +66,14 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
                   uid={req.from}
                   onAccept={
                     user?.uid
-                      ? () => acceptFriendRequest(user.uid, req.from)
+                      ? () =>
+                          friendService.acceptFriendRequest(user.uid, req.from)
                       : undefined
                   }
                   onReject={
                     user?.uid
-                      ? () => rejectFriendRequest(user.uid, req.from)
+                      ? () =>
+                          friendService.rejectFriendRequest(user.uid, req.from)
                       : undefined
                   }
                 />

@@ -14,172 +14,224 @@ import {
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { getFunctions, httpsCallable } from "firebase/functions";
-import { logUserActivity } from "@utils/firebase";
-import { auth, db } from "../../../../firebase";
+import { logUserActivity } from "../../activity/utils/activity";
+import { profileService } from "../../profile/services/profileService";
 import { checkAndReactivateUser } from "../utils/auth";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
-import { createUserProfileWithUsername } from "../../profile/services/profileService";
+import { auth, db } from "../../../../firebase";
 
-// Sign in with email and password
-export async function signIn(email: string, password: string) {
-  const result = await signInWithEmailAndPassword(auth, email, password);
+/**
+ * Service for managing user authentication.
+ */
+export const authService = {
+  /**
+   * Signs in a user with email and password.
+   * @param email - The user's email address.
+   * @param password - The user's password.
+   * @returns The signed-in user and reactivation status.
+   */
+  async signIn(email: string, password: string) {
+    const result = await signInWithEmailAndPassword(auth, email, password);
 
-  // Check if account is deactivated and reactivate if so
-  const reactivated = await checkAndReactivateUser(result.user);
+    // Check if account is deactivated and reactivate if so
+    const reactivated = await checkAndReactivateUser(result.user);
 
-  // Log user activity
-  await logUserActivity(
-    "login",
-    {
-      method: "email",
-      userName: result.user.displayName,
+    // Log user activity
+    await logUserActivity(
+      102,
+      {
+        method: "email",
+        userName: result.user.displayName,
+        email: result.user.email,
+        device: getDeviceInfo().userAgent,
+      },
+      result.user!.uid
+    );
+    await logDevice(result.user!.uid);
+
+    return { user: result.user, reactivated };
+  },
+
+  /** * Signs in a user with email and password, with persistence option.
+   * @param email - The user's email address.
+   * @param password - The user's password.
+   * @param keepLoggedIn - Whether to keep the user logged in across sessions.
+   * @returns The signed-in user and reactivation status.
+   */
+  async signInWithPersistence(
+    email: string,
+    password: string,
+    keepLoggedIn: boolean
+  ) {
+    await setPersistence(
+      auth,
+      keepLoggedIn ? browserLocalPersistence : browserSessionPersistence
+    );
+    const result = await signInWithEmailAndPassword(auth, email, password);
+
+    // Check if account is deactivated and reactivate if so
+    const reactivated = await checkAndReactivateUser(result.user);
+    if (reactivated) {
+      await logUserActivity(
+        111,
+        { userName: result.user.displayName, email: result.user.email },
+        result.user.uid
+      );
+    }
+
+    await logUserActivity(
+      102,
+      {
+        method: keepLoggedIn ? "email_persistent" : "email_session",
+        userName: result.user.displayName,
+        email: result.user.email,
+        device: getDeviceInfo().userAgent,
+      },
+      result.user!.uid
+    );
+    await logDevice(result.user!.uid);
+
+    return { user: result.user, reactivated };
+  },
+
+  /**
+   * Signs up a new user with email and password.
+   * @param email - The user's email address.
+   * @param password - The user's password.
+   * @returns The result of the user creation.
+   */
+  async signUp(email: string, password: string) {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    const username = await profileService.createUserProfileWithUsername({
+      uid: result.user.uid,
+      displayName: result.user.displayName,
       email: result.user.email,
-      device: getDeviceInfo().userAgent,
-    },
-    result.user!.uid
-  );
-  await logDevice(result.user!.uid);
+      photoURL: result.user.photoURL,
+      joinDate: result.user.metadata.creationTime,
+    });
+    await logUserActivity(
+      101,
+      {
+        method: "email",
+        userName: result.user.displayName,
+        email: result.user.email,
+        device: getDeviceInfo().userAgent,
+      },
+      result.user!.uid
+    );
+    await logDevice(result.user!.uid);
+    return { ...result, username };
+  },
 
-  return { user: result.user, reactivated };
-}
+  /**
+   * Logs out the current user.
+   */
+  async logout() {
+    const user = auth.currentUser;
+    const uid = user?.uid;
+    await signOut(auth);
+    if (uid) {
+      await logUserActivity(103, {}, uid);
+      await removeDevice(uid);
+    }
+  },
 
-// Sign in with email and password with persistence option
-export async function signInWithPersistence(
-  email: string,
-  password: string,
-  keepLoggedIn: boolean
-) {
-  await setPersistence(
-    auth,
-    keepLoggedIn ? browserLocalPersistence : browserSessionPersistence
-  );
-  const result = await signInWithEmailAndPassword(auth, email, password);
+  /**
+   * Resets the password for the given email.
+   * @param email - The user's email address.
+   */
+  async resetPassword(email: string) {
+    await sendPasswordResetEmail(auth, email);
+    const uid = auth.currentUser?.uid;
+    if (uid) {
+      await logUserActivity(104, { email }, uid);
+    }
+  },
 
-  // Check if account is deactivated and reactivate if so
-  const reactivated = await checkAndReactivateUser(result.user);
+  /**
+   * Updates the user's profile information.
+   * @param user - The Firebase User object.
+   * @param data - An object containing the profile fields to update.
+   */
+  async updateUserProfile(
+    user: User,
+    data: { displayName?: string; photoURL?: string }
+  ) {
+    await updateProfile(user, data);
+    await logUserActivity(
+      120,
+      {
+        ...data,
+        userName: data.displayName,
+        email: user.email,
+      },
+      user.uid
+    );
+  },
 
-  await logUserActivity(
-    "login",
-    {
-      method: keepLoggedIn ? "email_persistent" : "email_session",
-      userName: result.user.displayName,
+  /**
+   * Signs in a user with Google OAuth.
+   * @returns The result of the sign-in operation.
+   */
+  async signInWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+
+    // Create Firestore profile and username if not already present
+    await profileService.createUserProfileWithUsername({
+      uid: result.user.uid,
+      displayName: result.user.displayName,
       email: result.user.email,
-      device: getDeviceInfo().userAgent,
-    },
-    result.user!.uid
-  );
-  await logDevice(result.user!.uid);
+      photoURL: result.user.photoURL,
+    });
 
-  return { user: result.user, reactivated };
-}
+    await logUserActivity(
+      102,
+      {
+        method: "google",
+        userName: result.user.displayName,
+        email: result.user.email,
+        device: getDeviceInfo().userAgent,
+      },
+      result.user!.uid
+    );
+    await logDevice(result.user!.uid);
+    return result;
+  },
 
-// Sign up with email and password
-export async function signUp(email: string, password: string) {
-  const result = await createUserWithEmailAndPassword(auth, email, password);
-  const username = await createUserProfileWithUsername({
-    uid: result.user.uid,
-    displayName: result.user.displayName,
-    email: result.user.email,
-    photoURL: result.user.photoURL,
-    joinDate: result.user.metadata.creationTime,
-  });
-  await logUserActivity(
-    "signup",
-    {
-      method: "email",
-      userName: result.user.displayName,
-      email: result.user.email,
-      device: getDeviceInfo().userAgent,
-    },
-    result.user!.uid
-  );
-  await logDevice(result.user!.uid);
-  return { ...result, username };
-}
+  /** 
+   * Deactivates the user's account.
+   * @param user - The Firebase User object.
+   */
+  async deactivateAccount(user: User) {
+    // Mark the user as deactivated in Firestore
+    await setDoc(
+      doc(db, "users", user.uid),
+      { status: "deactivated", deactivatedAt: new Date().toISOString() },
+      { merge: true }
+    );
+    await logUserActivity(110, {}, user.uid);
+    await this.logout();
+  },
 
-// Sign out
-export async function logout() {
-  const user = auth.currentUser;
-  const uid = user?.uid;
-  await signOut(auth);
-  if (uid) {
-    await logUserActivity("logout", {}, uid);
-    await removeDevice(uid);
-  }
-}
+  /**
+   * Deletes the user's app account and all associated data.
+   * @param user - The Firebase User object.
+   */
+  async deleteAppAccount(user: User) {
+    // 1. Call the Cloud Function to delete all Firestore user data
+    try {
+      const functions = getFunctions();
+      const deleteUserData = httpsCallable(functions, "deleteUserData");
+      await deleteUserData();
+    } catch (e) {
+      console.error(
+        "Error deleting user Firestore data via Cloud Function:",
+        e
+      );
+    }
 
-// Send password reset email
-export async function resetPassword(email: string) {
-  await sendPasswordResetEmail(auth, email);
-  await logUserActivity("reset_password", { email });
-}
-
-// Update user profile
-export async function updateUserProfile(
-  user: User,
-  data: { displayName?: string; photoURL?: string }
-) {
-  await updateProfile(user, data);
-  await logUserActivity(
-    "edit_profile",
-    {
-      ...data,
-      userName: data.displayName,
-      email: user.email,
-    },
-    user.uid
-  );
-}
-
-// Sign in with Google
-export async function signInWithGoogle() {
-  const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(auth, provider);
-
-  // Create Firestore profile and username if not already present
-  await createUserProfileWithUsername({
-    uid: result.user.uid,
-    displayName: result.user.displayName,
-    email: result.user.email,
-    photoURL: result.user.photoURL,
-  });
-
-  await logUserActivity(
-    "login",
-    {
-      method: "google",
-      userName: result.user.displayName,
-      email: result.user.email,
-      device: getDeviceInfo().userAgent,
-    },
-    result.user!.uid
-  );
-  await logDevice(result.user!.uid);
-  return result;
-}
-
-// Deactivate user account
-export async function deactivateAccount(user: User) {
-  // Mark the user as deactivated in Firestore
-  await setDoc(
-    doc(db, "users", user.uid),
-    { status: "deactivated", deactivatedAt: new Date().toISOString() },
-    { merge: true }
-  );
-  await logout();
-}
-
-// Delete user account and associated data
-export async function deleteAppAccount(user: User) {
-  // 1. Call the Cloud Function to delete all Firestore user data
-  try {
-    const functions = getFunctions();
-    const deleteUserData = httpsCallable(functions, "deleteUserData");
-    await deleteUserData(); // No arguments needed, uses current user's auth context
-  } catch (e) {
-    console.error("Error deleting user Firestore data via Cloud Function:", e);
-  }
-
-  // 2. Delete Firebase Auth user (removes login for this app)
-  await deleteUser(user);
-}
+    // 2. Delete Firebase Auth user (removes login for this app)
+    await deleteUser(user);
+  },
+};

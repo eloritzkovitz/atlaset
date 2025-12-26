@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  deactivateAccount,
-  deleteAppAccount,
-} from "@features/user/auth/services/authService";
+import { authService } from "@features/user";
 import type { User } from "firebase/auth";
 
 /**
@@ -25,7 +22,7 @@ export function useAccountManagement(user: User | null) {
     setSuccess(null);
     try {
       if (!user) throw new Error("No authenticated user found.");
-      await deactivateAccount(user);
+      await authService.deactivateAccount(user);
       setSuccess("Account hibernated. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (e: unknown) {
@@ -42,7 +39,7 @@ export function useAccountManagement(user: User | null) {
     setSuccess(null);
     try {
       if (!user) throw new Error("No authenticated user found.");
-      await deleteAppAccount(user);
+      await authService.deleteAppAccount(user);
       setSuccess("Account deleted. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (e: unknown) {

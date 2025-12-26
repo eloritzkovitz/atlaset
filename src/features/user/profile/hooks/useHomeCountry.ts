@@ -1,9 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "@contexts/AuthContext";
-import {
-  getHomeCountry,
-  setHomeCountry as setHomeCountryService,
-} from "../services/profileService";
+import { profileService } from "../services/profileService";
 
 /**
  * Manages home country for the current user.
@@ -20,7 +17,7 @@ export function useHomeCountry() {
       return;
     }
     const fetchHomeCountry = async () => {
-      const country = await getHomeCountry(user.uid);
+      const country = await profileService.getHomeCountry(user.uid);
       setHomeCountryState(country);
     };
     fetchHomeCountry();
@@ -30,7 +27,7 @@ export function useHomeCountry() {
   const setHomeCountry = useCallback(
     async (country: string) => {
       if (!user) return;
-      await setHomeCountryService(user.uid, country);
+      await profileService.setHomeCountry(user.uid, country);
       setHomeCountryState(country);
     },
     [user]
