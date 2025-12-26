@@ -1,15 +1,24 @@
 
-import { vi } from "vitest";
-// --- Vitest mocks hoisted to top (before all other imports) ---
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+// Mock dependencies before importing the service
 vi.mock("@utils/db", () => {
   const settingsMock = {
     get: vi.fn(),
+    count: vi.fn(),
+    toArray: vi.fn(),
+    clear: vi.fn(),
+    add: vi.fn(),
     put: vi.fn(),
+    delete: vi.fn(),
+    bulkAdd: vi.fn(),
+    bulkPut: vi.fn(),
   };
   return {
     appDb: {
       settings: settingsMock,
     },
+    __esModule: true,
   };
 });
 vi.mock("@utils/firebase", () => {
@@ -21,22 +30,32 @@ vi.mock("@utils/firebase", () => {
 });
 vi.mock("firebase/firestore", () => {
   return {
+    collection: vi.fn(),
     doc: vi.fn(),
     getDoc: vi.fn(),
+    getDocs: vi.fn(),
     setDoc: vi.fn(),
+    deleteDoc: vi.fn(),
+    writeBatch: vi.fn(),
     __esModule: true,
   };
 });
-// --- End hoisted mocks ---
-
-import { describe, it, expect, beforeEach } from "vitest";
+vi.mock("@features/user", () => {
+  return {
+    logUserActivity: vi.fn(),
+    __esModule: true,
+  };
+});
+vi.mock("../../../firebase", () => ({
+  db: {},
+  __esModule: true,
+}));
 
 import { settingsService } from "./settingsService";
 import { appDb } from "@utils/db";
 import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
 import { defaultSettings } from "../constants/defaultSettings";
-
 
 // Cast imported mocks to Vitest mock types
 const isAuthenticatedMock = firebaseUtils.isAuthenticated as unknown as ReturnType<typeof vi.fn>;
@@ -45,7 +64,7 @@ const docMock = firestore.doc as unknown as ReturnType<typeof vi.fn>;
 const getDocMock = firestore.getDoc as unknown as ReturnType<typeof vi.fn>;
 const setDocMock = firestore.setDoc as unknown as ReturnType<typeof vi.fn>;
 
-describe.skip("settingsService", () => {
+describe("settingsService", () => {
   beforeEach(() => {
     if (!appDb.settings) {
       throw new Error("appDb.settings is undefined. The mock was not set up correctly.");

@@ -1,70 +1,84 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { migrationService } from "./migrationService";
-import { resetAllMocks } from "../test-utils/mockDbAndFirestore";
 
-// Mocks for appDb and services
 vi.mock("@utils/db", () => ({
   appDb: {
     markers: {
       count: vi.fn(),
       toArray: vi.fn(),
+      get: vi.fn(),
       clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
     overlays: {
       count: vi.fn(),
       toArray: vi.fn(),
+      get: vi.fn(),
       clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
     settings: {
       count: vi.fn(),
       get: vi.fn(),
+      put: vi.fn(),
       clear: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
     trips: {
       count: vi.fn(),
       toArray: vi.fn(),
+      get: vi.fn(),
       clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
   },
+  __esModule: true,
 }));
-
-vi.mock("./markersService", () => ({
+vi.mock("../../features/atlas/markers/services/markersService", () => ({
   markersService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
-vi.mock("./overlaysService", () => ({
+vi.mock("../../features/atlas/overlays/services/overlaysService", () => ({
   overlaysService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
-vi.mock("./settingsService", () => ({
+vi.mock("../../features/settings/services/settingsService", () => ({
   settingsService: {
     save: vi.fn(),
   },
 }));
-vi.mock("./tripsService", () => ({
+vi.mock("../../features/trips/services/tripsService", () => ({
   tripsService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
 
-const { appDb } = await import("@utils/db");
-const { markersService } = await import(
-  "../../features/atlas/markers/services/markersService"
-);
-const { overlaysService } = await import(
-  "../../features/atlas/overlays/services/overlaysService"
-);
-const { tripsService } = await import(
-  "../../features/trips/services/tripsService"
-);
-const { settingsService } = await import(
-  "../../features/settings/services/settingsService"
-);
+import { appDb } from "@utils/db";
+import { markersService } from "../../features/atlas/markers/services/markersService";
+import { overlaysService } from "../../features/atlas/overlays/services/overlaysService";
+import { settingsService } from "../../features/settings/services/settingsService";
+import { tripsService } from "../../features/trips/services/tripsService";
+import { migrationService } from "./migrationService";
+import { resetAllMocks } from "../test-utils/mockDbAndFirestore";
 
 describe("migrationService", () => {
   beforeEach(() => {
