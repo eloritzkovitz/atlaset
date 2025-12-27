@@ -12,13 +12,13 @@ const activityTemplates: Record<string, string> = activityTemplatesJson;
  * @param uid The user ID for whom the activity is logged.
  */
 export async function logUserActivity(
-  event: number,
+  action: number,
   data: object,
   uid: string
 ) {
   const activityCollection = getUserCollection("activity");
   await addDoc(activityCollection, {
-    event,
+    action,
     data,
     uid,
     timestamp: Date.now(),
@@ -32,26 +32,30 @@ export async function logUserActivity(
  * @returns A human-readable description of the event.
  */
 export function getActivityDescription(
-  eventType: number | string,
-  details: Record<string, unknown> = {}
+  action: number | string,
+  details?: {
+    itemName?: string;
+    location?: string;
+    date?: string;
+    userName?: string;
+    [key: string]: any;
+  }
 ) {
   const template =
-    activityTemplates[String(eventType)] || "{userName} did something.";
-  // Replace {placeholders} in the template with values from details
+    activityTemplates[String(action)] || "{userName} did something.";
+  // Provide sensible defaults for placeholders
+  const safeDetails: Record<string, any> = {
+    userName: details?.userName || "You",
+    itemName: details?.itemName || "",
+    location: details?.location || "",
+    date: details?.date || "",
+    ...details,
+  };
   return template.replace(/\{(\w+)\}/g, (_, key: string) => {
-    const value = details[key];
+    const value = safeDetails[key];
     if (value !== undefined && value !== null) {
       return String(value);
     }
-    // Provide some sensible defaults
-    if (key === "userName") return "You";
-    if (
-      key === "date" ||
-      key === "location" ||
-      key === "itemName" ||
-      key === "friendName"
-    )
-      return "";
-    return `{${key}}`;
+    return "";
   });
 }

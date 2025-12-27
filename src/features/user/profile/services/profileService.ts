@@ -145,7 +145,21 @@ export const profileService = {
     const userDocRef = doc(db, "users", uid);
     await updateDoc(userDocRef, updates);
 
-    await logUserActivity(120, { updatedFields: Object.keys(updates) }, uid);
+    // Fetch username for activity details
+    let username = updates.username;
+    if (!username) {
+      const userSnap = await getDoc(userDocRef);
+      username = userSnap.exists() ? userSnap.data().username : undefined;
+    }
+
+    await logUserActivity(
+      120,
+      {
+        updatedFields: Object.keys(updates),
+        userName: username || "",
+      },
+      uid
+    );
   },
 
   /**

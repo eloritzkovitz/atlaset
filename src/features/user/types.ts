@@ -35,7 +35,7 @@ export interface ActivityDetails extends Record<string, unknown> {
 /** User activity log entry */
 export interface UserActivity {
   id: string;
-  action: string;
+  action: number;
   timestamp: number | string | Date;
   details?: ActivityDetails;
 }
