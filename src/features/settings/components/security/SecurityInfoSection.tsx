@@ -18,7 +18,7 @@ export function SecurityInfoSection() {
   const devices = useUserDevices(user?.uid);
 
   const lastLogin = activity
-    .filter((a) => a.action === "login")
+    .filter((a) => a.action === 102)
     .sort((a, b) => getTimestamp(b.timestamp) - getTimestamp(a.timestamp))[0];
 
   // Get device icon based on user agent
