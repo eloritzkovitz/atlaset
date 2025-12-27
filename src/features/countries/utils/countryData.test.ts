@@ -205,12 +205,12 @@ describe("countryData utils", () => {
   describe("getCountriesWithOwnFlag", () => {
     it("filters out excluded iso codes", () => {
       const countries = [
-        { isoCode: "US", flag: true },
-        { isoCode: "XX", flag: true },
-        { isoCode: "FR", flag: false },
+        { isoCode: "US" },
+        { isoCode: "XX" },
+        { isoCode: "FR" },
       ];
       const result = getCountriesWithOwnFlag(countries as any);
-      expect(result).toEqual([{ isoCode: "US", flag: true }]);
+      expect(result).toEqual([{ isoCode: "US" }, { isoCode: "FR" }]);
     });
   });
 
