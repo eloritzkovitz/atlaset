@@ -1,9 +1,14 @@
+/**
+ * @file Utility functions for logging and describing user activity events.
+ */
+
 import { addDoc } from "firebase/firestore";
 import { getUserCollection } from "@utils/firebase";
 import activityTemplatesJson from "./activityTemplates.json";
+import type { ActivityDetails } from "../../types";
 
 // Load activity templates from JSON
-const activityTemplates: Record<string, string> = activityTemplatesJson;
+export const activityTemplates: Record<string, string> = activityTemplatesJson;
 
 /**
  * Logs a user activity event to Firestore.
@@ -33,18 +38,12 @@ export async function logUserActivity(
  */
 export function getActivityDescription(
   action: number | string,
-  details?: {
-    itemName?: string;
-    location?: string;
-    date?: string;
-    userName?: string;
-    [key: string]: any;
-  }
+  details?: ActivityDetails
 ) {
   const template =
     activityTemplates[String(action)] || "{userName} did something.";
   // Provide sensible defaults for placeholders
-  const safeDetails: Record<string, any> = {
+  const safeDetails: Record<string, unknown> = {
     userName: details?.userName || "You",
     itemName: details?.itemName || "",
     location: details?.location || "",

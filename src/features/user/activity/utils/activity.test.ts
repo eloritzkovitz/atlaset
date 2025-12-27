@@ -5,6 +5,9 @@ import * as firebaseUtils from "@utils/firebase";
 import * as activityUtils from "./activity";
 import type { CollectionReference, DocumentData } from "firebase/firestore";
 
+import activityTemplatesJson from "./activityTemplates.json";
+export const activityTemplates: Record<string, string> = activityTemplatesJson;
+
 // Mock Firebase Auth module
 vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(() => ({
@@ -37,6 +40,28 @@ vi.mock("./firebase", async () => {
   };
 });
 
+describe("logUserActivity", () => {
+  it("calls addDoc with correct params", async () => {
+    const mockAddDoc = firestoreMocks.addDoc as unknown as jest.Mock;
+    if (mockAddDoc.mockClear) mockAddDoc.mockClear();
+    // Properly declare mockCollection and mock getUserCollection
+    const mockCollection = {} as unknown as CollectionReference<DocumentData>;
+    const getUserCollection = vi.spyOn(firebaseUtils, "getUserCollection");
+    getUserCollection.mockReturnValue(mockCollection);
+    await activityUtils.logUserActivity(101, { foo: "bar" }, "uid123");
+    expect(firestoreMocks.addDoc).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        action: 101,
+        data: { foo: "bar" },
+        uid: "uid123",
+        timestamp: expect.any(Number),
+      })
+    );
+    getUserCollection.mockRestore();
+  });
+});
+
 describe("getActivityDescription", () => {
   it("renders a template with details", () => {
     const desc = activityUtils.getActivityDescription(101, {
@@ -52,26 +77,19 @@ describe("getActivityDescription", () => {
     const desc = activityUtils.getActivityDescription(999, { userName: "Bob" });
     expect(desc).toContain("Bob did something");
   });
-});
 
-describe("logUserActivity", () => {
-  it("calls addDoc with correct params", async () => {
-    const mockAddDoc = firestoreMocks.addDoc as unknown as jest.Mock;
-    if (mockAddDoc.mockClear) mockAddDoc.mockClear();
-    // Properly declare mockCollection and mock getUserCollection
-    const mockCollection = {} as unknown as CollectionReference<DocumentData>;
-    const getUserCollection = vi.spyOn(firebaseUtils, "getUserCollection");
-    getUserCollection.mockReturnValue(mockCollection);
-    await activityUtils.logUserActivity(101, { foo: "bar" }, "uid123");
-    expect(firestoreMocks.addDoc).toHaveBeenCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        event: 101,
-        data: { foo: "bar" },
-        uid: "uid123",
-        timestamp: expect.any(Number),
-      })
-    );
-    getUserCollection.mockRestore();
+  it("returns empty string for unknown placeholder", () => {
+    // Add a fake template with a unique placeholder using key '0'
+    const testKey = "0";
+    const originalValue = activityUtils.activityTemplates[testKey];
+    activityUtils.activityTemplates[testKey] = "{userName} did {unknownKey}.";
+    const desc = activityUtils.getActivityDescription(0, { userName: "Eve" });
+    expect(desc).toContain("Eve did ."); // unknownKey is not in details, so replaced with ""
+    // Restore original value
+    if (originalValue === undefined) {
+      delete activityUtils.activityTemplates[testKey];
+    } else {
+      activityUtils.activityTemplates[testKey] = originalValue;
+    }
   });
 });
