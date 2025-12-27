@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const BACKEND_URL =
-  process.env.VITE_FLAG_DATA_URL || "https://your-backend.com/flags";
+  process.env.VITE_FLAG_DATA_URL || "https://atlaset-data-server.onrender.com/flags";
 const DEST_DIR = path.join(__dirname, "../public/flags");
 
 fs.mkdirSync(DEST_DIR, { recursive: true });
@@ -35,6 +35,10 @@ function fetchList() {
  */
 function downloadFlag(iso) {
   const filename = iso.endsWith('.svg') ? iso : `${iso}.svg`;
+  const dest = path.join(DEST_DIR, filename);
+  if (fs.existsSync(dest)) {
+    return Promise.resolve(); // Skip if already exists
+  }
   return new Promise((resolve, reject) => {
     const url = `${BACKEND_URL}/${filename}`;
     const dest = path.join(DEST_DIR, filename);
