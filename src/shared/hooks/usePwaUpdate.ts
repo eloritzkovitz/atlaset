@@ -1,41 +1,28 @@
-import { useEffect, useState, useCallback } from "react";
+import { useRegisterSW } from "virtual:pwa-register/react";
 
-// Only import if running in the browser
-const isClient = typeof window !== "undefined";
-
+/**
+ * Manages PWA updates by checking for new service worker versions.
+ * @returns - An object containing:
+ *   - needRefresh: A boolean indicating if a new version is available.
+ *   - updateServiceWorker: A function to update the service worker and refresh the app.
+ */
 export function usePwaUpdate() {
-  const [needRefresh, setNeedRefresh] = useState(false);
-  const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(
-    null
-  );
+  let needRefresh = false;
+  let updateServiceWorker = () => window.location.reload();
 
-  // Listen for the service worker update event
-  useEffect(() => {
-    if (!isClient) return;
+  // useRegisterSW returns a tuple: { needRefresh, updateServiceWorker, ... }
+  const sw = useRegisterSW({
+    onNeedRefresh() {
+      // This callback is invoked when a new service worker is available
+    },
+    onOfflineReady() {
+      // This callback is invoked when the app is ready to work offline
+    },
+  });
 
-    // VitePWA injects a global 'window.__SW_UPDATE__' event
-    const onSWUpdate = (event: Event) => {
-      setNeedRefresh(true);
-      const customEvent = event as CustomEvent<{ waiting?: ServiceWorker }>;
-      setWaitingWorker(customEvent.detail?.waiting || null);
-    };
-
-    window.addEventListener("swUpdated", onSWUpdate as EventListener);
-
-    return () => {
-      window.removeEventListener("swUpdated", onSWUpdate as EventListener);
-    };
-  }, []);
-
-  const updateServiceWorker = useCallback(() => {
-    if (waitingWorker) {
-      waitingWorker.postMessage({ type: "SKIP_WAITING" });
-      window.location.reload();
-    } else {
-      // fallback: reload anyway
-      window.location.reload();
-    }
-  }, [waitingWorker]);
+  // The hook returns an object with needRefresh and updateServiceWorker
+  needRefresh = sw.needRefresh;
+  updateServiceWorker = sw.updateServiceWorker;
 
   return { needRefresh, updateServiceWorker };
 }
