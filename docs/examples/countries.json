@@ -1,7 +1,6 @@
 [
   {
     "name": "United States",
-    "flag": "🇺🇸",
     "callingCode": "+1201",
     "isoCode": "US",
     "iso3Code": "USA",
@@ -15,7 +14,6 @@
   },
   {
     "name": "United States Minor Outlying Islands",
-    "flag": "🇺🇲",
     "callingCode": "+268",
     "isoCode": "UM",
     "iso3Code": "UMI",

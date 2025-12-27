@@ -3,9 +3,7 @@ import type { FilterConfig } from "@types";
 /** Represents a country with various attributes. */
 export type Country = {
   /** The official name of the country */
-  name: string;
-  /** The emoji flag representing the country */
-  flag: string;
+  name: string;  
   /** The international calling code for the country */
   callingCode: string;
   /** The ISO 3166-1 alpha-2 code for the country */

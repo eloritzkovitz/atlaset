@@ -1,3 +1,9 @@
+/**
+ * Fetches country flags from a remote server and stores them locally.
+ * The script retrieves a list of available flags and downloads each one
+ * into the specified directory.
+ */
+
 import fs from "fs";
 import path from "path";
 import https from "https";
@@ -8,7 +14,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const BACKEND_URL =
-  process.env.VITE_FLAG_DATA_URL || "https://atlaset-data-server.onrender.com/flags";
+  process.env.VITE_FLAG_DATA_URL ||
+  "https://atlaset-data-server.onrender.com/flags";
 const DEST_DIR = path.join(__dirname, "../public/flags");
 
 fs.mkdirSync(DEST_DIR, { recursive: true });
@@ -34,7 +41,7 @@ function fetchList() {
  * @returns Promise that resolves when the flag is downloaded
  */
 function downloadFlag(iso) {
-  const filename = iso.endsWith('.svg') ? iso : `${iso}.svg`;
+  const filename = iso.endsWith(".svg") ? iso : `${iso}.svg`;
   const dest = path.join(DEST_DIR, filename);
   if (fs.existsSync(dest)) {
     return Promise.resolve(); // Skip if already exists
