@@ -2,7 +2,7 @@ import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
 import { deleteDoc, doc } from "firebase/firestore";
 import { ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { logout } from "@features/user/auth/services/authService";
+import { authService } from "@features/user";
 import { useUserDevices } from "@features/user/auth/hooks/useUserDevices";
 import { isCurrentSession } from "@features/user/auth/utils/device";
 import { useUserActivity } from "@features/user/activity/hooks/useUserActivity";
@@ -18,7 +18,7 @@ export function SecurityInfoSection() {
   const devices = useUserDevices(user?.uid);
 
   const lastLogin = activity
-    .filter((a) => a.action === "login")
+    .filter((a) => a.action === 102)
     .sort((a, b) => getTimestamp(b.timestamp) - getTimestamp(a.timestamp))[0];
 
   // Get device icon based on user agent
@@ -34,7 +34,7 @@ export function SecurityInfoSection() {
     const devicesCol = getUserCollection("devices");
     await deleteDoc(doc(devicesCol, deviceId));
     if (isCurrentSession(sessionId)) {
-      await logout();
+      await authService.logout();
       localStorage.removeItem("sessionId");
     }
   }

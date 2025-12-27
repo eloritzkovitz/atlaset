@@ -2,10 +2,7 @@ import { type ReactNode, useEffect, useRef, useState } from "react";
 import { auth } from "../firebase";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { removeDevice } from "@features/user/auth/utils/device";
-import {
-  hasGuestData,
-  migrateGuestDataToFirestore,
-} from "@services/migrationService";
+import { migrationService } from "@services/migrationService";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
@@ -22,9 +19,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
       setReady(true);
       if (!prevUserRef.current && firebaseUser) {
-        const guestDataExists = await hasGuestData();
+        const guestDataExists = await migrationService.hasGuestData();
         if (guestDataExists) {
-          await migrateGuestDataToFirestore();
+          await migrationService.migrateGuestDataToFirestore();
         }
       }
     });

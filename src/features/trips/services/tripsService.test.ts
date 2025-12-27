@@ -1,51 +1,119 @@
-import {
-  firestoreMocks,
-  authMocks,
-  resetAllMocks,
-} from "@test-utils/mockDbAndFirestore";
-import {
-  mockIndexedDb,
-  mockFirebaseUtils,
-  mockFirestore,
-  tripsMock,
-} from "@test-utils/setupVitestMocks";
+
+import { describe, it, expect, beforeEach, vi } from "vitest";
+
+vi.mock("@utils/db", () => {
+  const tripsMock = {
+    count: vi.fn(),
+    toArray: vi.fn(),
+    clear: vi.fn(),
+    add: vi.fn(),
+    put: vi.fn(),
+    delete: vi.fn(),
+    bulkAdd: vi.fn(),
+    bulkPut: vi.fn(),
+    get: vi.fn(),
+  };
+  return {
+    appDb: {
+      trips: tripsMock,
+    },
+  };
+});
+vi.mock("@utils/firebase", () => {
+  return {
+    isAuthenticated: vi.fn(),
+    getCurrentUser: vi.fn(),
+    getUserCollection: vi.fn(),
+    __esModule: true,
+  };
+});
+vi.mock("firebase/firestore", () => {
+  return {
+    collection: vi.fn(),
+    doc: vi.fn(),
+    getDocs: vi.fn(),
+    setDoc: vi.fn(),
+    deleteDoc: vi.fn(),
+    writeBatch: vi.fn(),
+    __esModule: true,
+  };
+});
+vi.mock("@features/user", () => {
+  return {
+    logUserActivity: vi.fn(),
+    __esModule: true,
+  };
+});
+vi.mock("../../../firebase", () => ({
+  db: {},
+  __esModule: true,
+}));
+
 import { tripsService } from "./tripsService";
+import { appDb } from "@utils/db";
+import * as firebaseUtils from "@utils/firebase";
+import * as firestore from "firebase/firestore";
+import { logUserActivity } from "@features/user";
 
-// Mock IndexedDB, Firebase utils, and Firestore
-mockIndexedDb();
-mockFirebaseUtils();
-mockFirestore();
-
-// Import services and mocks
-const { isAuthenticated, getUserCollection } = await import("@utils/firebase");
-const { doc, getDocs, setDoc, deleteDoc } = await import("firebase/firestore");
+// Cast imported mocks to Vitest mock types
+const isAuthenticatedMock =
+  firebaseUtils.isAuthenticated as unknown as ReturnType<typeof vi.fn>;
+const getCurrentUserMock =
+  firebaseUtils.getCurrentUser as unknown as ReturnType<typeof vi.fn>;
+const collectionMock = firestore.collection as unknown as ReturnType<
+  typeof vi.fn
+>;
+const docMock = firestore.doc as unknown as ReturnType<typeof vi.fn>;
+const getDocsMock = firestore.getDocs as unknown as ReturnType<typeof vi.fn>;
+const setDocMock = firestore.setDoc as unknown as ReturnType<typeof vi.fn>;
+const deleteDocMock = firestore.deleteDoc as unknown as ReturnType<
+  typeof vi.fn
+>;
+const writeBatchMock = firestore.writeBatch as unknown as ReturnType<
+  typeof vi.fn
+>;
 
 describe("tripsService", () => {
   beforeEach(() => {
-    resetAllMocks(tripsMock, firestoreMocks, authMocks);
+    if (!appDb.trips) {
+      throw new Error("appDb.trips is undefined. The mock was not set up correctly.");
+    }
+    Object.values(appDb.trips).forEach((fn) => (fn as { mockReset: () => void }).mockReset());
+    isAuthenticatedMock.mockReset();
+    getCurrentUserMock.mockReset();
+    collectionMock.mockReset();
+    docMock.mockReset();
+    getDocsMock.mockReset();
+    setDocMock.mockReset();
+    deleteDocMock.mockReset();
+    writeBatchMock.mockReset();
+    vi.mocked(logUserActivity).mockReset();
   });
 
   it("loads trips from IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
-    tripsMock.toArray.mockResolvedValueOnce([{ id: "1", name: "Trip 1" }]);
+    isAuthenticatedMock.mockReturnValue(false);
+    (
+      appDb.trips.toArray as unknown as ReturnType<typeof vi.fn>
+    ).mockResolvedValueOnce([{ id: "1", name: "Trip 1" }]);
     const trips = await tripsService.load();
     expect(trips).toEqual([{ id: "1", name: "Trip 1" }]);
-    expect(tripsMock.toArray).toHaveBeenCalled();
+    expect(appDb.trips.toArray).toHaveBeenCalled();
   });
 
   it("loads trips from Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (getDocs as any).mockResolvedValueOnce({
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    getDocsMock.mockResolvedValueOnce({
       docs: [
         { id: "2", data: () => ({ name: "Trip 2" }) },
         { id: "3", data: () => ({ name: "Trip 3" }) },
       ],
     });
     const trips = await tripsService.load();
-    expect(getUserCollection).toHaveBeenCalledWith("trips");
-    expect(getDocs).toHaveBeenCalledWith(tripsCol);
+    expect(firebaseUtils.getUserCollection).toHaveBeenCalledWith("trips");
+    expect(getDocsMock).toHaveBeenCalledWith(tripsCol);
     expect(trips).toEqual([
       { id: "2", name: "Trip 2" },
       { id: "3", name: "Trip 3" },
@@ -53,68 +121,77 @@ describe("tripsService", () => {
   });
 
   it("saves trips to IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
+    isAuthenticatedMock.mockReturnValue(false);
     const trips = [
       { id: "a", name: "A" },
       { id: "b", name: "B" },
     ];
     await tripsService.save(trips as any);
-    expect(tripsMock.clear).toHaveBeenCalled();
-    expect(tripsMock.bulkAdd).toHaveBeenCalledWith(trips);
+    expect(appDb.trips.clear).toHaveBeenCalled();
+    expect(appDb.trips.bulkAdd).toHaveBeenCalledWith(trips);
   });
 
   it("saves empty trips to IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
+    (isAuthenticatedMock as any).mockReturnValue(false);
     await tripsService.save([]);
-    expect(tripsMock.clear).toHaveBeenCalled();
-    expect(tripsMock.bulkAdd).not.toHaveBeenCalled();
+    expect(appDb.trips.clear).toHaveBeenCalled();
+    expect(appDb.trips.bulkAdd).not.toHaveBeenCalled();
   });
 
   it("saves trips to Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
     const trips = [
       { id: "a", name: "A" },
       { id: "b", name: "B" },
     ];
     await tripsService.save(trips as any);
-    expect(getUserCollection).toHaveBeenCalledWith("trips");
-    expect(setDoc).toHaveBeenCalledTimes(2);
-    expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "a" }, trips[0]);
-    expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "b" }, trips[1]);
+    expect(firebaseUtils.getUserCollection).toHaveBeenCalledWith("trips");
+    expect(setDocMock).toHaveBeenCalledTimes(2);
+    expect(setDocMock).toHaveBeenCalledWith(
+      { _col: tripsCol, id: "a" },
+      trips[0]
+    );
+    expect(setDocMock).toHaveBeenCalledWith(
+      { _col: tripsCol, id: "b" },
+      trips[1]
+    );
   });
 
   it("adds a trip to IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
+    (isAuthenticatedMock as any).mockReturnValue(false);
     const trip = { id: "2", name: "Trip 2" };
     await tripsService.add(trip as any);
-    expect(tripsMock.add).toHaveBeenCalledWith(trip);
+    expect(appDb.trips.add).toHaveBeenCalledWith(trip);
   });
 
   it("adds a trip to Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
     const trip = { id: "2", name: "Trip 2" };
     await tripsService.add(trip as any);
-    expect(setDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "2" }, trip);
+    expect(setDocMock).toHaveBeenCalledWith({ _col: tripsCol, id: "2" }, trip);
   });
 
   it("updates a trip in IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
+    isAuthenticatedMock.mockReturnValue(false);
     const trip = { id: "3", name: "Trip 3" };
     await tripsService.edit(trip as any);
-    expect(tripsMock.put).toHaveBeenCalledWith(trip);
+    expect(appDb.trips.put).toHaveBeenCalledWith(trip);
   });
 
   it("updates a trip in Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
     const trip = {
       id: "3",
       name: "Trip 3",
@@ -122,22 +199,24 @@ describe("tripsService", () => {
       endDate: undefined,
     };
     await tripsService.edit(trip as any);
-    expect(setDoc).toHaveBeenCalledWith(
+    expect(setDocMock).toHaveBeenCalledWith(
       { _col: tripsCol, id: "3" },
       { id: "3", name: "Trip 3", startDate: null, endDate: null }
     );
   });
 
   it("updates favorite in IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
-    tripsMock.get.mockResolvedValueOnce({
+    isAuthenticatedMock.mockReturnValue(false);
+    (
+      appDb.trips.get as unknown as ReturnType<typeof vi.fn>
+    ).mockResolvedValueOnce({
       id: "fav",
       name: "FavTrip",
       favorite: false,
     });
     await tripsService.updateFavorite("fav", true);
-    expect(tripsMock.get).toHaveBeenCalledWith("fav");
-    expect(tripsMock.put).toHaveBeenCalledWith({
+    expect(appDb.trips.get).toHaveBeenCalledWith("fav");
+    expect(appDb.trips.put).toHaveBeenCalledWith({
       id: "fav",
       name: "FavTrip",
       favorite: true,
@@ -145,12 +224,13 @@ describe("tripsService", () => {
   });
 
   it("updates favorite in Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
     await tripsService.updateFavorite("fav", true);
-    expect(setDoc).toHaveBeenCalledWith(
+    expect(setDocMock).toHaveBeenCalledWith(
       { _col: tripsCol, id: "fav" },
       { favorite: true },
       { merge: true }
@@ -158,15 +238,17 @@ describe("tripsService", () => {
   });
 
   it("updates rating in IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
-    tripsMock.get.mockResolvedValueOnce({
+    isAuthenticatedMock.mockReturnValue(false);
+    (
+      appDb.trips.get as unknown as ReturnType<typeof vi.fn>
+    ).mockResolvedValueOnce({
       id: "rate",
       name: "RateTrip",
       rating: 1,
     });
     await tripsService.updateRating("rate", 5);
-    expect(tripsMock.get).toHaveBeenCalledWith("rate");
-    expect(tripsMock.put).toHaveBeenCalledWith({
+    expect(appDb.trips.get).toHaveBeenCalledWith("rate");
+    expect(appDb.trips.put).toHaveBeenCalledWith({
       id: "rate",
       name: "RateTrip",
       rating: 5,
@@ -174,12 +256,13 @@ describe("tripsService", () => {
   });
 
   it("updates rating in Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
     await tripsService.updateRating("rate", 4);
-    expect(setDoc).toHaveBeenCalledWith(
+    expect(setDocMock).toHaveBeenCalledWith(
       { _col: tripsCol, id: "rate" },
       { rating: 4 },
       { merge: true }
@@ -187,12 +270,13 @@ describe("tripsService", () => {
   });
 
   it("updates rating to undefined in Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
     await tripsService.updateRating("rate", undefined);
-    expect(setDoc).toHaveBeenCalledWith(
+    expect(setDocMock).toHaveBeenCalledWith(
       { _col: tripsCol, id: "rate" },
       { rating: null },
       { merge: true }
@@ -200,17 +284,19 @@ describe("tripsService", () => {
   });
 
   it("removes a trip from IndexedDB (guest)", async () => {
-    (isAuthenticated as any).mockReturnValue(false);
+    isAuthenticatedMock.mockReturnValue(false);
     await tripsService.remove("4");
-    expect(tripsMock.delete).toHaveBeenCalledWith("4");
+    expect(appDb.trips.delete).toHaveBeenCalledWith("4");
   });
 
   it("removes a trip from Firestore (authenticated)", async () => {
-    (isAuthenticated as any).mockReturnValue(true);
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
     const tripsCol = {};
-    (getUserCollection as any).mockReturnValue(tripsCol);
-    (doc as any).mockImplementation((_col: any, id: any) => ({ _col, id }));
+    (firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>).mockReturnValue(tripsCol);
+    docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
+    getDocsMock.mockResolvedValueOnce({ docs: [] });
     await tripsService.remove("4");
-    expect(deleteDoc).toHaveBeenCalledWith({ _col: tripsCol, id: "4" });
+    expect(deleteDocMock).toHaveBeenCalledWith({ _col: tripsCol, id: "4" });
   });
 });

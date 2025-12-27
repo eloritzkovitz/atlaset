@@ -38,9 +38,14 @@ export function useUserActivity(userId?: string) {
       );
       const snapshot = await getDocs(q);
       setActivity(
-        snapshot.docs.map(
-          (doc) => ({ id: doc.id, ...doc.data() } as UserActivity)
-        )
+        snapshot.docs.map((doc) => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            ...data,
+            action: data.action,
+          } as UserActivity;
+        })
       );
       setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
       setHasMore(snapshot.docs.length === PAGE_SIZE);
@@ -63,9 +68,14 @@ export function useUserActivity(userId?: string) {
     const snapshot = await getDocs(q);
     setActivity((prev) => [
       ...prev,
-      ...snapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as UserActivity)
-      ),
+      ...snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          ...data,
+          action: data.action,
+        } as UserActivity;
+      }),
     ]);
     setLastDoc(snapshot.docs[snapshot.docs.length - 1]);
     setHasMore(snapshot.docs.length === PAGE_SIZE);

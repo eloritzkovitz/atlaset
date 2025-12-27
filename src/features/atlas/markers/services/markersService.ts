@@ -6,17 +6,20 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
+import { logUserActivity } from "../../../../features/user";
 import { appDb } from "@utils/db";
-import {
-  isAuthenticated,
-  getCurrentUser,
-  logUserActivity,
-} from "@utils/firebase";
+import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { Marker } from "../types";
 import { db } from "../../../../firebase";
 
+/**
+ * Service for managing user markers.
+ */
 export const markersService = {
-  // Load all markers from Firestore or IndexedDB
+  /**
+   * Loads all markers for the current user.
+   * @returns - A promise that resolves to an array of markers.
+   */
   async load(): Promise<Marker[]> {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -30,7 +33,10 @@ export const markersService = {
     }
   },
 
-  // Save markers to Firestore or IndexedDB
+  /**
+   * Saves all markers, replacing existing ones.
+   * @param markers - The array of markers to save.
+   */
   async save(markers: Marker[]) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -45,7 +51,7 @@ export const markersService = {
       });
       await batch.commit();
       await logUserActivity(
-        "save_markers",
+        220,
         {
           count: markers.length,
           userName: user!.displayName,
@@ -60,14 +66,17 @@ export const markersService = {
     }
   },
 
-  // Add a new marker
+  /**
+   * Adds a new marker.
+   * @param marker - The marker to add.
+   */
   async add(marker: Marker) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await setDoc(doc(markersCol, marker.id), marker);
       await logUserActivity(
-        "add_marker",
+        221,
         {
           markerId: marker.id,
           itemName: marker.name,
@@ -80,14 +89,17 @@ export const markersService = {
     }
   },
 
-  // Edit marker by id
+  /**
+   * Edits an existing marker.
+   * @param marker - The marker to edit.
+   */
   async edit(marker: Marker) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const markersCol = collection(db, "users", user!.uid, "markers");
       await setDoc(doc(markersCol, marker.id), marker);
       await logUserActivity(
-        "edit_marker",
+        222,
         {
           markerId: marker.id,
           itemName: marker.name,
@@ -100,7 +112,10 @@ export const markersService = {
     }
   },
 
-  // Remove marker by id
+  /**
+   * Removes a marker by ID.
+   * @param id - The ID of the marker to remove.
+   */
   async remove(id: string) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -110,7 +125,7 @@ export const markersService = {
       const markerName = markerDoc ? markerDoc.data().name : undefined;
       await deleteDoc(doc(markersCol, id));
       await logUserActivity(
-        "remove_marker",
+        223,
         {
           markerId: id,
           itemName: markerName,

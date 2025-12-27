@@ -18,6 +18,7 @@ interface PanelProps {
   headerActions?: ReactNode;
   showSeparator?: boolean;
   scrollable?: boolean;
+  position?: "left" | "right";
 }
 
 export function Panel({
@@ -32,6 +33,7 @@ export function Panel({
   headerActions,
   showSeparator = true,
   scrollable = true,
+  position = "left",
 }: PanelProps) {
   usePanelHide({ show, onHide, escEnabled });
 
@@ -50,11 +52,13 @@ export function Panel({
                 ? "translate-y-0 opacity-100"
                 : "translate-y-full opacity-0 pointer-events-none"
             } ${className}`
-          : `fixed bg-surface flex flex-col h-screen top-0 left-16 z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
+          : `fixed bg-surface flex flex-col h-screen top-0 ${position === "right" ? "right-0" : "left-16"} z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
             ${
               show
                 ? "translate-x-0 opacity-100"
-                : "-translate-x-full opacity-0 pointer-events-none"
+                : position === "right"
+                  ? "translate-x-full opacity-0 pointer-events-none"
+                  : "-translate-x-full opacity-0 pointer-events-none"
             } ${className}`
       }
       style={

@@ -18,6 +18,8 @@ export const mockUIContext: UIContextType = {
   toggleExport: vi.fn(),
   showSettings: false,
   toggleSettings: vi.fn(),
+  showFriends: false,
+  toggleFriends: vi.fn(),
   closePanel: vi.fn(),
   modalOpen: false,
   setModalOpen: vi.fn(),

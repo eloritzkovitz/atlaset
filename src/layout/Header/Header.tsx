@@ -1,4 +1,4 @@
-import { SearchInput } from "@components";
+import { UserSearchDropdown } from "@features/user";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { Branding } from "../Branding/Branding";
 import { UserMenu } from "../UserMenu/UserMenu";
@@ -7,9 +7,10 @@ export function Header() {
   const isMobile = useIsMobile();
   return (
     <header className="sticky top-0 z-30 h-16 bg-surface-alt shadow-sm">
-      <div className="flex items-center justify-between h-full px-6 gap-4">
+      <div className="flex items-center h-full px-6">
         <Branding />
-        <SearchInput value="Search" onChange={() => {}} className="max-w-xs" />
+        <UserSearchDropdown />
+        <div className="flex-1" />
         {!isMobile && <UserMenu />}
       </div>
     </header>

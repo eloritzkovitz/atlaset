@@ -1,23 +1,27 @@
 import { useRef, useEffect } from "react";
+import { FaBell, FaUserGroup } from "react-icons/fa6";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Menu } from "@components";
+import { ActionButton, Menu } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
+import { useIsMobile } from "@hooks/useIsMobile";
 import { useModalAnimation } from "@hooks/useModalAnimation";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
-import { useIsMobile } from "@hooks/useIsMobile";
 
 export function UserMenu() {
   const { user, loading } = useAuth();
+  const { uiVisible, showFriends, toggleFriends } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
-  const { uiVisible } = useUI();
+
+  // Router states and navigation
   const navigate = useNavigate();
   const location = useLocation();
   const isMobile = useIsMobile();
   const isTripsPage = location.pathname.startsWith("/trips");
+  const isSettingsPage = location.pathname.startsWith("/settings");
 
   // Get the logout handler from useAuthHandlers
   const { handleLogout } = useAuthHandlers();
@@ -32,8 +36,8 @@ export function UserMenu() {
   if (!uiVisible) return null;
   if (isMobile && isTripsPage) return null;
 
+  // Show login/signup buttons if not logged in
   if (!user) {
-    // Show buttons outside the avatar/modal when not logged in
     return (
       <div className="fixed top-4 right-4 md:right-10 z-20 flex gap-2">
         <button
@@ -52,9 +56,29 @@ export function UserMenu() {
     );
   }
 
-  // Show avatar and modal for logged-in users
   return (
-    <div className="fixed top-4 right-4 md:right-10 z-20" ref={menuRef}>
+    <div
+      className="fixed top-4 right-4 md:right-10 z-20 flex items-center gap-4"
+      ref={menuRef}
+    >
+      {!isSettingsPage && (
+        <>
+          <ActionButton
+            title="Friends"
+            onClick={toggleFriends}
+            icon={<FaUserGroup className="text-xl" />}
+            aria-pressed={showFriends}
+            rounded
+          />
+          <ActionButton
+            title="Notifications"
+            onClick={() => {}}
+            icon={<FaBell className="text-xl" />}
+            aria-pressed={false}
+            rounded
+          />
+        </>
+      )}
       <UserAvatarButton user={user} onClick={() => setIsOpen((v) => !v)} />
       {(isOpen || closing) && (
         <Menu

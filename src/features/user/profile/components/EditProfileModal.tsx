@@ -5,7 +5,7 @@ import { FaUser, FaXmark } from "react-icons/fa6";
 import { ActionButton, FormField, Modal, PanelHeader } from "@components";
 import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../hooks/useUsernameValidation";
-import { changeUsername, editProfile } from "../services/profileService";
+import { profileService } from "../services/profileService";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { type UserProfile } from "../../types";
 
@@ -47,7 +47,10 @@ export function EditProfileModal({
   }, [fetchedUsername, user, open]);
 
   // Check username availability
-  const { status, label, color } = useUsernameValidation(username, profile?.username);
+  const { status, label, color } = useUsernameValidation(
+    username,
+    profile?.username
+  );
 
   // Handle saving profile changes
   const handleSave = async (e: React.FormEvent) => {
@@ -69,7 +72,7 @@ export function EditProfileModal({
     try {
       // Handle username change if changed
       if (username && username !== initialUsername && user) {
-        await changeUsername({
+        await profileService.changeUsername({
           uid: user.uid,
           oldUsername: initialUsername,
           newUsername: username,
@@ -79,7 +82,7 @@ export function EditProfileModal({
 
       // Update other profile fields in Firestore
       if (user) {
-        await editProfile(user.uid, {
+        await profileService.editProfile(user.uid, {
           displayName,
           biography,
         });
@@ -228,8 +231,10 @@ export function EditProfileModal({
               type="submit"
               variant="primary"
               disabled={
-                (username !== initialUsername &&
-                  (status === "invalid" || status === "taken" || status === "checking"))
+                username !== initialUsername &&
+                (status === "invalid" ||
+                  status === "taken" ||
+                  status === "checking")
               }
             >
               Save Changes

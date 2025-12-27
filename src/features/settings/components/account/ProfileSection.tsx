@@ -3,7 +3,7 @@ import { FaAddressCard } from "react-icons/fa6";
 import { updatePassword } from "firebase/auth";
 import { FormField, ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { updateUserProfile } from "@features/user/auth/services/authService";
+import { authService } from "../../../user/auth/services/authService";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { SettingsCard } from "../SettingsCard";
 
@@ -40,7 +40,7 @@ export function ProfileSection() {
     // Update profile and password
     try {
       if (displayName !== user.displayName) {
-        await updateUserProfile(user, { displayName });
+        await authService.updateUserProfile(user, { displayName });
       }
       if (password) {
         await updatePassword(user, password);

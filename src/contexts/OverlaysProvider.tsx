@@ -5,7 +5,7 @@ import {
   useSyncVisitedCountriesOverlay,
   type AnyOverlay,
 } from "@features/atlas/overlays";
-import { logUserActivity } from "@utils/firebase";
+import { logUserActivity } from "@features/user";
 import { useAuth } from "./AuthContext";
 import { OverlaysContext } from "./OverlaysContext";
 
@@ -65,7 +65,7 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
     // Log "add_overlay" for each new overlay
     for (const overlay of uniqueNewOverlays) {
       await logUserActivity(
-        "add_overlay",
+        211,
         {
           overlayId: overlay.id,
           itemName: overlay.name,

@@ -1,16 +1,19 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { logUserActivity } from "../../../features/user";
 import { appDb } from "@utils/db";
-import {
-  isAuthenticated,
-  getCurrentUser,
-  logUserActivity,
-} from "@utils/firebase";
+import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../types";
 import { db } from "../../../firebase";
 
+/**
+ * Service for managing user settings.
+ */
 export const settingsService = {
-  // Load settings from Firestore or IndexedDB
+  /**
+   * Loads settings for the current user.
+   * @returns - The user settings object.
+   */
   async load(): Promise<Settings> {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -34,7 +37,10 @@ export const settingsService = {
     }
   },
 
-  // Save or update settings in Firestore or IndexedDB
+  /**
+   * Saves user settings to Firestore or IndexedDB.
+   * @param settings - The settings object to save.
+   */
   async save(settings: Settings) {
     const settingsWithId = { ...settings, id: "main" };
     if (isAuthenticated()) {
@@ -42,7 +48,7 @@ export const settingsService = {
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
       await setDoc(settingsDoc, settingsWithId);
       await logUserActivity(
-        "edit_settings",
+        130,
         {
           settings: settingsWithId,
           userName: user!.displayName,

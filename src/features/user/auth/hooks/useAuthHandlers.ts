@@ -1,13 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  signUp,
-  signIn,
-  resetPassword,
-  signInWithGoogle,
-  logout,
-  signInWithPersistence,
-} from "../services/authService";
+import { authService } from "../services/authService";
 
 /**
  * Provides authentication handlers for sign-up, sign-in, Google sign-in, and logout.
@@ -20,14 +13,14 @@ export function useAuthHandlers() {
   // Email/Password Sign-Up handler
   const handleSignUp = async (email: string, password: string) => {
     setError("");
-    await signUp(email, password);
+    await authService.signUp(email, password);
     navigate("/");
   };
 
   // Email/Password Sign-In handler
   const handleSignIn = async (email: string, password: string) => {
     setError("");
-    const result = await signIn(email, password);
+    const result = await authService.signIn(email, password);
     if (result?.reactivated) {
       sessionStorage.setItem("reactivated", "1");
     }
@@ -41,7 +34,11 @@ export function useAuthHandlers() {
     keepLoggedIn: boolean
   ) => {
     setError("");
-    const result = await signInWithPersistence(email, password, keepLoggedIn);
+    const result = await authService.signInWithPersistence(
+      email,
+      password,
+      keepLoggedIn
+    );
     if (result?.reactivated) {
       sessionStorage.setItem("reactivated", "1");
     }
@@ -51,19 +48,19 @@ export function useAuthHandlers() {
   // Forgot Password handler
   const handleForgotPassword = async (email: string) => {
     setError("");
-    await resetPassword(email);
+    await authService.resetPassword(email);
   };
 
   // Google Sign-In handler
   const handleGoogleSignIn = async () => {
     setError("");
-    await signInWithGoogle();
+    await authService.signInWithGoogle();
     navigate("/");
   };
 
   // Logout handler
   const handleLogout = async () => {
-    await logout();
+    await authService.logout();
     navigate("/");
   };
 

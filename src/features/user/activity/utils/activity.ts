@@ -1,59 +1,60 @@
 /**
- * Gets a human-readable, full sentence description for a user activity action.
- * @param action The action type.
- * @param details Optional details about the activity (itemName, location, date, userName).
- * @returns A human-readable description of the action.
+ * @file Utility functions for logging and describing user activity events.
+ */
+
+import { addDoc } from "firebase/firestore";
+import { getUserCollection } from "@utils/firebase";
+import activityTemplatesJson from "./activityTemplates.json";
+import type { ActivityDetails } from "../../types";
+
+// Load activity templates from JSON
+export const activityTemplates: Record<string, string> = activityTemplatesJson;
+
+/**
+ * Logs a user activity event to Firestore.
+ * @param event The event number representing the activity.
+ * @param data Additional data related to the activity.
+ * @param uid The user ID for whom the activity is logged.
+ */
+export async function logUserActivity(
+  action: number,
+  data: object,
+  uid: string
+) {
+  const activityCollection = getUserCollection("activity");
+  await addDoc(activityCollection, {
+    action,
+    data,
+    uid,
+    timestamp: Date.now(),
+  });
+}
+
+/**
+ * Gets a human-readable, full sentence description for a user activity event.
+ * @param eventType The event number (as string or number).
+ * @param details Optional details about the activity (itemName, location, date, userName, etc).
+ * @returns A human-readable description of the event.
  */
 export function getActivityDescription(
-  action: string,
-  details?: {
-    itemName?: string;
-    location?: string;
-    date?: string;
-    userName?: string;
-  }
+  action: number | string,
+  details?: ActivityDetails
 ) {
-  const name = details?.userName || "You";
-  const item = details?.itemName ? ` "${details.itemName}"` : "";
-  const loc = details?.location ? ` in ${details.location}` : "";
-  const date = details?.date ? ` on ${details.date}` : "";
-
-  switch (action) {
-    case "save_overlays":
-      return `${name} saved overlays${loc}${date}.`;
-    case "add_overlay":
-      return `${name} added an overlay${item}${loc}${date}.`;
-    case "edit_overlay":
-      return `${name} edited an overlay${item}${loc}${date}.`;
-    case "remove_overlay":
-      return `${name} removed an overlay${item}${loc}${date}.`;
-    case "save_markers":
-      return `${name} saved markers${loc}${date}.`;
-    case "add_marker":
-      return `${name} added a marker${item}${loc}${date}.`;
-    case "edit_marker":
-      return `${name} edited a marker${item}${loc}${date}.`;
-    case "remove_marker":
-      return `${name} removed a marker${item}${loc}${date}.`;
-    case "save_trips":
-      return `${name} saved trips${loc}${date}.`;
-    case "add_trip":
-      return `${name} added a trip${item}${loc}${date}.`;
-    case "edit_trip":
-      return `${name} edited a trip${item}${loc}${date}.`;
-    case "remove_trip":
-      return `${name} removed a trip${item}${loc}${date}.`;
-    case "edit_settings":
-      return `${name} updated settings${date}.`;
-    case "edit_profile":
-      return `${name} updated their profile${date}.`;
-    case "login":
-      return `${name} signed in${date}.`;
-    case "logout":
-      return `${name} signed out${date}.`;
-    case "signup":
-      return `${name} created an account${date}.`;
-    default:
-      return `${name} ${action.replace(/_/g, " ")}${item}${loc}${date}.`;
-  }
+  const template =
+    activityTemplates[String(action)] || "{userName} did something.";
+  // Provide sensible defaults for placeholders
+  const safeDetails: Record<string, unknown> = {
+    userName: details?.userName || "You",
+    itemName: details?.itemName || "",
+    location: details?.location || "",
+    date: details?.date || "",
+    ...details,
+  };
+  return template.replace(/\{(\w+)\}/g, (_, key: string) => {
+    const value = safeDetails[key];
+    if (value !== undefined && value !== null) {
+      return String(value);
+    }
+    return "";
+  });
 }

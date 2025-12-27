@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { LoadingSpinner } from "@components";
+import { SplashScreen } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   EditProfileModal,
@@ -19,7 +19,7 @@ export default function ProfilePage() {
   const [editOpen, setEditOpen] = useState(false);
 
   // Show loading spinner while fetching data
-  if (authLoading || profileLoading) return <LoadingSpinner />;
+  if (authLoading || profileLoading) return <SplashScreen />;
 
   // Handle case where user not found
   if (!profileUser) return <div>User not found</div>;

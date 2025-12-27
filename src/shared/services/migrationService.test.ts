@@ -1,70 +1,84 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { hasGuestData, migrateGuestDataToFirestore } from "./migrationService";
-import { resetAllMocks } from "@test-utils/mockDbAndFirestore";
 
-// Mocks for appDb and services
 vi.mock("@utils/db", () => ({
   appDb: {
     markers: {
       count: vi.fn(),
       toArray: vi.fn(),
+      get: vi.fn(),
       clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
     overlays: {
       count: vi.fn(),
       toArray: vi.fn(),
+      get: vi.fn(),
       clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
     settings: {
       count: vi.fn(),
       get: vi.fn(),
+      put: vi.fn(),
       clear: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
     trips: {
       count: vi.fn(),
       toArray: vi.fn(),
+      get: vi.fn(),
       clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
     },
   },
+  __esModule: true,
 }));
-
-vi.mock("./markersService", () => ({
+vi.mock("../../features/atlas/markers/services/markersService", () => ({
   markersService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
-vi.mock("./overlaysService", () => ({
+vi.mock("../../features/atlas/overlays/services/overlaysService", () => ({
   overlaysService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
-vi.mock("./settingsService", () => ({
+vi.mock("../../features/settings/services/settingsService", () => ({
   settingsService: {
     save: vi.fn(),
   },
 }));
-vi.mock("./tripsService", () => ({
+vi.mock("../../features/trips/services/tripsService", () => ({
   tripsService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
 
-const { appDb } = await import("@utils/db");
-const { markersService } = await import(
-  "../../features/atlas/markers/services/markersService"
-);
-const { overlaysService } = await import(
-  "../../features/atlas/overlays/services/overlaysService"
-);
-const { tripsService } = await import(
-  "../../features/trips/services/tripsService"
-);
-const { settingsService } = await import(
-  "../../features/settings/services/settingsService"
-);
+import { appDb } from "@utils/db";
+import { markersService } from "../../features/atlas/markers/services/markersService";
+import { overlaysService } from "../../features/atlas/overlays/services/overlaysService";
+import { settingsService } from "../../features/settings/services/settingsService";
+import { tripsService } from "../../features/trips/services/tripsService";
+import { migrationService } from "./migrationService";
+import { resetAllMocks } from "../test-utils/mockDbAndFirestore";
 
 describe("migrationService", () => {
   beforeEach(() => {
@@ -86,7 +100,7 @@ describe("migrationService", () => {
       (appDb.overlays.count as any).mockResolvedValueOnce(2);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
       (appDb.trips.count as any).mockResolvedValueOnce(0);
-      expect(await hasGuestData()).toBe(true);
+      expect(await migrationService.hasGuestData()).toBe(true);
     });
 
     it("returns false if no guest data exists", async () => {
@@ -94,7 +108,7 @@ describe("migrationService", () => {
       (appDb.overlays.count as any).mockResolvedValueOnce(0);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
       (appDb.trips.count as any).mockResolvedValueOnce(0);
-      expect(await hasGuestData()).toBe(false);
+      expect(await migrationService.hasGuestData()).toBe(false);
     });
   });
 
@@ -145,7 +159,7 @@ describe("migrationService", () => {
       ]);
       vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
 
-      await migrateGuestDataToFirestore();
+      await migrationService.migrateGuestDataToFirestore();
 
       // Markers merged and saved
       expect(markersService.save).toHaveBeenCalledWith([
@@ -202,7 +216,7 @@ describe("migrationService", () => {
       vi.spyOn(tripsService, "load").mockResolvedValueOnce([]);
       vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
 
-      await migrateGuestDataToFirestore();
+      await migrationService.migrateGuestDataToFirestore();
 
       expect(settingsService.save).not.toHaveBeenCalled();
       expect(appDb.settings.clear).not.toHaveBeenCalled();

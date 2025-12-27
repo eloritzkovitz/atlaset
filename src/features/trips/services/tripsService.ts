@@ -1,15 +1,21 @@
 import { doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
+import { logUserActivity } from "../../../features/user";
 import { appDb } from "@utils/db";
 import {
   isAuthenticated,
   getUserCollection,
-  logUserActivity,
   getCurrentUser,
 } from "@utils/firebase";
 import type { Trip } from "../types";
 
+/**
+ * Service for managing user trips.
+ */
 export const tripsService = {
-  // Load all trips
+  /**
+   * Loads user trips for the current user.
+   * @returns - An array of trip objects. 
+   */
   async load(): Promise<Trip[]> {
     if (isAuthenticated()) {
       const tripsCol = getUserCollection("trips");
@@ -22,7 +28,10 @@ export const tripsService = {
     }
   },
 
-  // Bulk save trips (replace all)
+  /**
+   * Saves multiple trips.
+   * @param trips - The array of trip objects to save.
+   */
   async save(trips: Trip[]) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -31,7 +40,7 @@ export const tripsService = {
         await setDoc(doc(tripsCol, trip.id), trip);
       }
       await logUserActivity(
-        "save_trips",
+        410,
         {
           count: trips.length,
           userName: user!.displayName,
@@ -46,14 +55,17 @@ export const tripsService = {
     }
   },
 
-  // Add a new trip
+  /**
+   * Add a new trip.
+   * @param trip - The trip object to add.
+   */
   async add(trip: Trip) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
       await setDoc(doc(tripsCol, trip.id), trip);
       await logUserActivity(
-        "add_trip",
+        411,
         {
           tripId: trip.id,
           itemName: trip.name,
@@ -66,7 +78,11 @@ export const tripsService = {
     }
   },
 
-  // Update only the favorite status of a trip
+  /**
+   * Update the favorite status of a trip.
+   * @param tripId - The ID of the trip to update.
+   * @param favorite - The new favorite status.
+   */
   async updateFavorite(tripId: string, favorite: boolean) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -74,11 +90,12 @@ export const tripsService = {
       const tripRef = doc(tripsCol, tripId);
       await setDoc(tripRef, { favorite }, { merge: true });
       await logUserActivity(
-        "update_trip_favorite",
+        413,
         {
           tripId,
-          favorite,
           userName: user!.displayName,
+          favorite,
+          action: favorite ? "favorited" : "unfavorited",
         },
         user!.uid
       );
@@ -90,7 +107,11 @@ export const tripsService = {
     }
   },
 
-  // Update only the rating of a trip
+  /**
+   * Update the rating of a trip.
+   * @param tripId - The ID of the trip to update.
+   * @param rating - The new rating value.
+   */
   async updateRating(tripId: string, rating: number | undefined) {
     const ratingValue = rating === undefined ? null : rating;
     if (isAuthenticated()) {
@@ -99,7 +120,7 @@ export const tripsService = {
       const tripRef = doc(tripsCol, tripId);
       await setDoc(tripRef, { rating: ratingValue }, { merge: true });
       await logUserActivity(
-        "update_trip_rating",
+        414,
         {
           tripId,
           rating: ratingValue,
@@ -115,7 +136,10 @@ export const tripsService = {
     }
   },
 
-  // Edits an existing trip
+  /**
+   * Edits an existing trip.
+   * @param trip - The trip object with updated data.
+   */
   async edit(trip: Trip) {
     // Prepare Firestore object with nulls for undefined dates
     const tripForFirestore = {
@@ -132,7 +156,7 @@ export const tripsService = {
         tripForFirestore as Record<string, unknown>
       );
       await logUserActivity(
-        "edit_trip",
+        412,
         {
           tripId: trip.id,
           itemName: trip.name,
@@ -145,7 +169,10 @@ export const tripsService = {
     }
   },
 
-  // Remove a trip by id
+  /**
+   * Removes a trip by ID.
+   * @param id - The ID of the trip to remove.
+   */
   async remove(id: string) {
     if (isAuthenticated()) {
       const user = getCurrentUser();
@@ -155,7 +182,7 @@ export const tripsService = {
       const tripName = tripDoc ? tripDoc.data().name : undefined;
       await deleteDoc(doc(tripsCol, id));
       await logUserActivity(
-        "remove_trip",
+        415,
         {
           tripId: id,
           itemName: tripName,

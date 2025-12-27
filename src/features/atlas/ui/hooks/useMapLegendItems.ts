@@ -1,17 +1,18 @@
 import { MAP_BG_COLOR } from "@constants/colors";
 import type { Overlay, OverlayMode } from "@features/atlas/overlays";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
+import type { LegendItem } from "../types";
 
 export function useMapLegendItems(
   overlays: Overlay[],
   timelineMode: boolean,
   overlayMode: OverlayMode
-) {
+): LegendItem[] {
   // Get dynamic color roles for the current mode
   const colorRoles = useVisitColorRoles(overlayMode);
 
   // Legend items for static overlays
-  const overlayLegendItems = overlays
+  const overlayLegendItems: LegendItem[] = overlays
     .filter((o) => o.visible)
     .map((o) => ({
       color: o.color,
@@ -19,7 +20,7 @@ export function useMapLegendItems(
     }));
 
   // Cumulative mode legend items (dynamic)
-  const cumulativeLegendItems = [
+  const cumulativeLegendItems: LegendItem[] = [
     { color: colorRoles.home, label: "Home country" },
     { color: colorRoles.visitCounts[4], label: "5+ visits" },
     { color: colorRoles.visitCounts[3], label: "4 visits" },
@@ -30,7 +31,7 @@ export function useMapLegendItems(
   ];
 
   // Yearly mode legend items (dynamic)
-  const yearlyLegendItems = [
+  const yearlyLegendItems: LegendItem[] = [
     { color: colorRoles.home, label: "Home country" },
     { color: colorRoles.yearly.upcoming, label: "Upcoming first visit" },
     { color: colorRoles.yearly.upcomingRevisit, label: "Upcoming revisit" },
@@ -40,6 +41,9 @@ export function useMapLegendItems(
     { color: MAP_BG_COLOR, label: "Not visited" },
   ];
 
+  // Return appropriate legend items based on mode
   if (!timelineMode) return overlayLegendItems;
-  return overlayMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
+  return overlayMode === "cumulative"
+    ? cumulativeLegendItems
+    : yearlyLegendItems;
 }
