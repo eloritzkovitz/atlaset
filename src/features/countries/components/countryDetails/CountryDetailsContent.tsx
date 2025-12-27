@@ -26,8 +26,7 @@ export function CountryDetailsContent({
       <CountryFlag
         flag={{
           isoCode: country.isoCode,
-          source: "flagcdn",
-          style: "flat",
+          ratio: "original",
           size: "128",
         }}
         alt={`${country.name} flag`}

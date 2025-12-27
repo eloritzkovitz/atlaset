@@ -106,8 +106,7 @@ export default function GamesPage() {
         <CountryFlag
           flag={{
             isoCode: currentCountry.isoCode,
-            source: "flagcdn",
-            style: "flat",
+            ratio: "original",
             size: "64",
           }}
           alt={currentCountry.name}
