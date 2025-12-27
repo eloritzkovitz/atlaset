@@ -6,12 +6,8 @@ import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { SOVEREIGN_DEPENDENCIES } from "../constants/sovereignDependencies";
 import type { Overlay } from "@features/atlas/overlays";
 import { extractUniqueSorted } from "@utils/array";
-import {
-  EXCLUDED_ISO_CODES,
-  SOVEREIGN_FLAG_MAP,
-} from "../constants/sovereignty";
+import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";
 import type { Country, SovereigntyType } from "../types";
-import type { FlagSource, FlagStyle, FlagSize } from "../types/flag";
 
 /**
  * Extracts the ISO country code from various possible property names.
@@ -124,50 +120,12 @@ export function getSovereigntyInfoForTerritory(territoryIsoCode: string): {
 }
 
 /**
- * Gets the URL of a country's flag based on its ISO code, source, style, and size.
- * @param source - The flag provider ("flagcdn" or "flagsapi").
- * @param style - The style of the flag ("flat" or "shiny").
- * @param isoCode - The ISO code of the country.
- * @param size - The size of the flag image.
- * @returns The URL of the country's flag image.
- */
-export function getFlagUrl(
-  isoCode: string,
-  source: FlagSource = "flagcdn",
-  style: FlagStyle = "flat",
-  size?: FlagSize
-): string {
-  if (!isoCode) return "";
-
-  const normalizedIso = isoCode.toUpperCase();
-
-  // Handle sovereign state flags for territories
-  const flagIso = SOVEREIGN_FLAG_MAP[normalizedIso] || normalizedIso;
-
-  // Validate ISO code length
-  if (!flagIso || flagIso.length !== 2) return "";
-
-  switch (source) {
-    case "flagsapi": {
-      // Use default size if not provided
-      const flagsApiSize = size ? size.split("x")[0] : "32";
-      // FlagsAPI: https://flagsapi.com/:country_code/:style/:size.png
-      return `https://flagsapi.com/${flagIso}/${style}/${flagsApiSize}.png`;
-    }
-    case "flagcdn":
-    default:
-      // FlagCDN: https://flagcdn.com/:country_code.svg
-      return `https://flagcdn.com/${flagIso.toLowerCase()}.svg`;
-  }
-}
-
-/**
  * Returns countries whose flag matches their own ISO code and is not empty.
  * If you add a flagIsoCode property for borrowed flags, this will skip those.
  */
 export function getCountriesWithOwnFlag(countries: Country[]): Country[] {
   return countries.filter(
-    (country) => country.flag && !EXCLUDED_ISO_CODES.includes(country.isoCode)
+    (country) => !EXCLUDED_ISO_CODES.includes(country.isoCode)
   );
 }
 

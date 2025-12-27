@@ -1,7 +1,7 @@
 import { CountryFlag } from "../countryFlag/CountryFlag";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
-import type { FlagSize } from "../../types/flag";
+import type { FlagRatio, FlagSize } from "../../types/flag";
 
 interface CountryItemProps {
   country: Country;
@@ -10,7 +10,7 @@ interface CountryItemProps {
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
   showFlags: boolean;
-  flagSource?: "svg" | "flagcdn";
+  flagRatio?: FlagRatio;
   flagSize?: FlagSize;
   showBadges: boolean;
   renderBadge?: (country: Country) => React.ReactNode;
@@ -27,7 +27,7 @@ export function CountryItem({
   selectedIsoCode,
   hoveredIsoCode,
   showFlags,
-  flagSource,
+  flagRatio,
   flagSize,
   showBadges,
   renderBadge,
@@ -72,8 +72,7 @@ export function CountryItem({
               <CountryFlag
                 flag={{
                   isoCode: country.isoCode,
-                  source: flagSource || "svg",
-                  style: "flat",
+                  ratio: flagRatio || "original",
                   size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
                 }}
                 alt={country.name}

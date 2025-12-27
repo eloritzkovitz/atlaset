@@ -9,7 +9,6 @@ import {
   getAllSubregions,
   getSubregionsForRegion,
   getAllSovereigntyTypes,
-  getFlagUrl,
   getCountriesWithOwnFlag,
   getRandomCountry,
   getLanguagesDisplay,
@@ -201,34 +200,7 @@ describe("countryData utils", () => {
         getSubregionsForRegion(testCountries as Country[], "Europe")
       ).toEqual(["Alpha", "Mike", "Zulu"]);
     });
-  });
-
-  describe("getFlagUrl", () => {
-    it("returns flagcdn url by default", () => {
-      expect(getFlagUrl("us")).toBe("https://flagcdn.com/us.svg");
-    });
-    it("returns flagsapi url", () => {
-      expect(getFlagUrl("us", "flagsapi", "shiny", "64")).toBe(
-        "https://flagsapi.com/US/shiny/64.png"
-      );
-    });
-    it("returns empty string for invalid iso", () => {
-      expect(getFlagUrl("")).toBe("");
-    });
-    it("returns empty string for iso codes not length 2", () => {
-      expect(getFlagUrl("u")).toBe("");
-      expect(getFlagUrl("")).toBe("");
-      expect(getFlagUrl(undefined as any)).toBe("");
-    });
-    it("uses default size for flagsapi if size is not provided", () => {
-      expect(getFlagUrl("us", "flagsapi")).toBe(
-        "https://flagsapi.com/US/flat/32.png"
-      );
-    });
-    it("uses SOVEREIGN_FLAG_MAP for borrowed flags", () => {
-      expect(getFlagUrl("yy")).toBe("https://flagcdn.com/us.svg");
-    });
-  });
+  });  
 
   describe("getCountriesWithOwnFlag", () => {
     it("filters out excluded iso codes", () => {

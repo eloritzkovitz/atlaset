@@ -7,12 +7,8 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-out
 dist-ssr
 *.local
-public/data
 
 # Editor directories and files
 .vscode/*
@@ -26,7 +22,14 @@ public/data
 *.sw?
 
 # Directories
+node_modules
 coverage
+dist
+out
 
+public/data
+public/flags
+
+# Environment variables
 .env
 .env.production

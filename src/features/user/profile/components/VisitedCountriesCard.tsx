@@ -26,9 +26,8 @@ export function VisitedCountriesCard({ visitedCountryCodes }: VisitedCountriesCa
               <CountryFlag
                 flag={{
                   isoCode: c.isoCode,
-                  source: "svg",
+                  ratio: "fourThree",
                   size: "64",
-                  style: "flat",
                 }}
                 alt={c.name}
               />
