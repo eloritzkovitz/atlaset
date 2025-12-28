@@ -19,23 +19,36 @@ export function useGeoData() {
     setGeoError(null);
 
     const now = Date.now();
-    const cached = await appDb.geoData?.get("geoData");
-
-    // Use cached data if valid
-    if (cached && typeof cached.ts === 'number' && now - cached.ts < CACHE_TTL) {
-      setGeoData(cached.data as GeoData);
-      setLoading(false);
-      return;
+    let cached;
+    if (process.env.NODE_ENV === "production") {
+      cached = await appDb.geoData?.get("geoData");
+      // Use cached data if valid
+      if (
+        cached &&
+        typeof cached.ts === "number" &&
+        now - cached.ts < CACHE_TTL
+      ) {
+        setGeoData(cached.data as GeoData);
+        setLoading(false);
+        return;
+      }
     }
 
     try {
-      const res = await fetch(DEFAULT_MAP_SETTINGS.geoUrl);
+      const res = await fetch(
+        DEFAULT_MAP_SETTINGS.geoUrl,
+        process.env.NODE_ENV === "development"
+          ? { cache: "no-store" }
+          : undefined
+      );
       if (!res.ok) throw new Error("Failed to load map data");
       const data = await res.json();
       setGeoData(data);
       setLoading(false);
-      // Save to Dexie
-      await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
+      // Save to Dexie only in production
+      if (process.env.NODE_ENV === "production") {
+        await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
+      }
     } catch (err) {
       if (err instanceof Error) {
         setGeoError(err.message);

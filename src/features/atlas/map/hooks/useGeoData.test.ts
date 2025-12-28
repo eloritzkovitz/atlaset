@@ -7,7 +7,7 @@ import * as dbModule from "@utils/db";
 describe("useGeoData", () => {
   let getSpy: any;
   let putSpy: any;
-  
+
   const fakeData = {
     type: "FeatureCollection",
     features: [
@@ -21,12 +21,14 @@ describe("useGeoData", () => {
   const now = Date.now();
 
   beforeEach(() => {
+    process.env.NODE_ENV = "production";
     vi.stubGlobal("fetch", vi.fn());
     getSpy = vi.spyOn(dbModule.appDb.geoData, "get");
     putSpy = vi.spyOn(dbModule.appDb.geoData, "put");
   });
 
   afterEach(() => {
+    process.env.NODE_ENV = "test";
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
@@ -65,7 +67,7 @@ describe("useGeoData", () => {
       await Promise.resolve();
       await Promise.resolve();
     });
-    expect(fetch).toHaveBeenCalledWith(DEFAULT_MAP_SETTINGS.geoUrl);
+    expect(fetch).toHaveBeenCalledWith(DEFAULT_MAP_SETTINGS.geoUrl, undefined);
     expect(result.current.geoData).toEqual(fakeData);
     expect(result.current.loading).toBe(false);
     expect(result.current.geoError).toBeNull();
