@@ -38,7 +38,7 @@ export function OverlayFilters({ expanded, onToggle }: OverlayFiltersProps) {
                 overlay
               )
             }
-            options={overlayFilterConfig.getOptions()}
+            options={overlayFilterConfig.getOptions([overlay])}
           />
         ))}
     </>

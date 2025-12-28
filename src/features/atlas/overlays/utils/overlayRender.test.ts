@@ -21,7 +21,6 @@ describe("overlayRender utils", () => {
         expect(item.isoCode).toBe(overlay.countries[idx]);
         expect(item.color).toBe(overlay.color);
         expect(item.overlayId).toBe(overlay.id);
-        expect(item.tooltip).toBe(overlay.tooltip || overlay.name);
       });
     });
   });
@@ -29,9 +28,9 @@ describe("overlayRender utils", () => {
   describe("groupOverlayItemsByIsoCode", () => {
     it("groups overlay items by isoCode (case-insensitive)", () => {
       const items = [
-        { isoCode: "us", color: "#f00", overlayId: "1", tooltip: "A" },
-        { isoCode: "US", color: "#0f0", overlayId: "2", tooltip: "B" },
-        { isoCode: "ca", color: "#00f", overlayId: "1", tooltip: "C" },
+        { isoCode: "us", color: "#f00", overlayId: "1" },
+        { isoCode: "US", color: "#0f0", overlayId: "2" },
+        { isoCode: "ca", color: "#00f", overlayId: "1" },
       ];
       const grouped = groupOverlayItemsByIsoCode(items);
       expect(Object.keys(grouped)).toEqual(["US", "CA"]);
@@ -41,8 +40,8 @@ describe("overlayRender utils", () => {
 
     it("skips items with empty isoCode", () => {
       const items = [
-        { isoCode: "", color: "#f00", overlayId: "1", tooltip: "A" },
-        { isoCode: undefined, color: "#0f0", overlayId: "2", tooltip: "B" },
+        { isoCode: "", color: "#f00", overlayId: "1" },
+        { isoCode: undefined, color: "#0f0", overlayId: "2" },
       ] as any;
       const grouped = groupOverlayItemsByIsoCode(items);
       expect(grouped).toEqual({});
@@ -61,9 +60,8 @@ describe("overlayRender utils", () => {
           isoCode: "US",
           color: "#123",
           overlayId: VISITED_OVERLAY_ID,
-          tooltip: "",
         },
-        { isoCode: "US", color: "#456", overlayId: "other", tooltip: "" },
+        { isoCode: "US", color: "#456", overlayId: "other" },
       ];
       expect(getBlendedOverlayColor(overlays, "#fff")).toBe("#123");
     });
@@ -75,15 +73,15 @@ describe("overlayRender utils", () => {
 
     it("returns the only overlay color if one present", () => {
       const overlays = [
-        { isoCode: "US", color: "#789", overlayId: "other", tooltip: "" },
+        { isoCode: "US", color: "#789", overlayId: "other" },
       ];
       expect(getBlendedOverlayColor(overlays, "#fff")).toBe("#789");
     });
 
     it("blends colors if multiple overlays (excluding visited-countries)", () => {
       const overlays = [
-        { isoCode: "US", color: "#111", overlayId: "a", tooltip: "" },
-        { isoCode: "US", color: "#222", overlayId: "b", tooltip: "" },
+        { isoCode: "US", color: "#111", overlayId: "a" },
+        { isoCode: "US", color: "#222", overlayId: "b" },
       ];
       expect(getBlendedOverlayColor(overlays, "#fff")).toBe("#abcdef");
       expect(blendColors).toHaveBeenCalledWith(["#222", "#111"]);
@@ -91,8 +89,8 @@ describe("overlayRender utils", () => {
 
     it("ignores overlays with missing/empty color", () => {
       const overlays = [
-        { isoCode: "US", color: "", overlayId: "a", tooltip: "" },
-        { isoCode: "US", color: undefined, overlayId: "b", tooltip: "" },
+        { isoCode: "US", color: "", overlayId: "a" },
+        { isoCode: "US", color: undefined, overlayId: "b" },
       ] as any;
       expect(getBlendedOverlayColor(overlays, "#fff")).toBe("#fff");
     });

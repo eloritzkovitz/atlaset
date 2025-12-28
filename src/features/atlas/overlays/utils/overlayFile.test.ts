@@ -78,7 +78,6 @@ describe("overlayFile utils", () => {
           countries: [],
           visible: true,
           order: 1,
-          tooltip: "",
         },
       ];
       const file = new Blob([JSON.stringify(overlays)], {
@@ -119,7 +118,6 @@ describe("overlayFile utils", () => {
           countries: [],
           visible: true,
           order: 1,
-          tooltip: "",
         },
       ];
       const createObjectURL = vi.fn(() => "blob:url");

@@ -7,9 +7,13 @@ export type Overlay = {
   /** Color associated with the overlay. */
   color: string;
   /** List of country codes included in the overlay. */
-  countries: string[];
-  /** Optional tooltip text for the overlay. */
-  tooltip?: string;
+  countries: string[];  
+  /** Optional custom labels for filter options. */
+  filterLabels?: {
+    all?: string;
+    only?: string;
+    exclude?: string;
+  };
   /** Whether the overlay is visible on the map. */
   visible: boolean;
   /** Optional display order for the overlay. */
@@ -32,7 +36,6 @@ export type OverlayItem = {
   isoCode: string;
   color?: string;
   overlayId: string;
-  tooltip?: string;
   style?: React.CSSProperties;
 };
 

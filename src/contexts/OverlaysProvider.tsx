@@ -126,9 +126,13 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
       id: crypto.randomUUID(),
       name: "",
       color: "#2563eb",
-      countries: [],
+      countries: [],      
+      filterLabels: {
+        all: "All",
+        only: "Include only",
+        exclude: "Exclude",
+      },
       visible: true,
-      tooltip: "",
     });
     setEditModalOpen(true);
   }

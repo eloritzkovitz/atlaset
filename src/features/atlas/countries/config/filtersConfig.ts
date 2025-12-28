@@ -1,6 +1,6 @@
 import type { Overlay } from "@features/atlas/overlays";
 import {
-  SOVEREIGNTY_ORDER,  
+  SOVEREIGNTY_ORDER,
   type CountryFilterConfig,
   type SovereigntyType,
 } from "@features/countries";
@@ -43,7 +43,8 @@ export const coreFiltersConfig: CountryFilterConfig<
       allOption,
       ...mapOptions(subregionOptions ?? [], capitalizeWords),
     ],
-    (props) => (props.selectedSubregion === "" ? "all" : props.selectedSubregion),
+    (props) =>
+      props.selectedSubregion === "" ? "all" : props.selectedSubregion,
     (props, val) => props.setSelectedSubregion(val === "all" ? "" : val)
   ),
   createSelectFilter(
@@ -58,7 +59,8 @@ export const coreFiltersConfig: CountryFilterConfig<
         capitalize
       ),
     ],
-    (props) => (props.selectedSovereignty === "" ? "all" : props.selectedSovereignty),
+    (props) =>
+      props.selectedSovereignty === "" ? "all" : props.selectedSovereignty,
     (props, val) => props.setSelectedSovereignty(val === "all" ? "" : val)
   ),
 ];
@@ -79,11 +81,14 @@ export const overlayFilterConfig: FilterConfig<
   key: "overlay",
   label: (overlay: Overlay) => `${overlay.name} (${overlay.countries.length})`,
   type: "select",
-  getOptions: () => [
-    { value: "all", label: "All" },
-    { value: "only", label: "Include only" },
-    { value: "exclude", label: "Exclude" },
-  ],
+  getOptions: (overlays?: Overlay[]) => {
+    const overlay = overlays?.[0];
+    return [
+      { value: "all", label: overlay?.filterLabels?.all ?? "All" },
+      { value: "only", label: overlay?.filterLabels?.only ?? "Include only" },
+      { value: "exclude", label: overlay?.filterLabels?.exclude ?? "Exclude" },      
+    ];
+  },
   getValue: (props, overlay?: Overlay) =>
     overlay ? props.overlaySelections[overlay.id] || "all" : "all",
   setValue: (props, val, overlay?: Overlay) => {
