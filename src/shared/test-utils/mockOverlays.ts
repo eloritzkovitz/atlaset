@@ -8,7 +8,6 @@ export const mockOverlays: Overlay[] = [
     countries: ["US", "CA"],
     visible: true,
     order: 1,
-    tooltip: "First mock overlay",
   },
   {
     id: "2",
@@ -17,7 +16,6 @@ export const mockOverlays: Overlay[] = [
     countries: ["FR"],
     visible: false,
     order: 2,
-    tooltip: "Second mock overlay",
   },
 ];
 
@@ -30,5 +28,4 @@ export const mockTimelineOverlay: TimelineOverlay = {
   order: 3,
   timelineEnabled: true,
   timelineSnapshot: false,
-  tooltip: "Timeline overlay",
 };

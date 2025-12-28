@@ -72,7 +72,7 @@ export function OverlayModal({
         isOpen={isOpen}
         onClose={handleClose}
         disableClose={countryModalOpen || colorModalOpen}
-        className="rounded-xl shadow-2xl w-[800px] max-h-[90vh] overflow-y-auto"
+        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] overflow-y-auto"
       >
         <PanelHeader
           title={
@@ -154,13 +154,53 @@ export function OverlayModal({
               </div>
             </FormField>
 
-            {/* Tooltip */}
-            <FormField label="Tooltip:">
+            {/* Filter Labels */}
+            <FormField label="Filter Labels:">
               <input
                 type="text"
-                value={overlay.tooltip || ""}
+                value={overlay.filterLabels?.all || ""}
                 onChange={(e) =>
-                  onChange({ ...overlay, tooltip: e.target.value })
+                  onChange({
+                    ...overlay,
+                    filterLabels: {
+                      ...overlay.filterLabels,
+                      all: e.target.value,
+                    },
+                  })
+                }
+                disabled={isVisited}
+                className={`${isVisited ? "opacity-50" : ""}`}
+              />
+            </FormField>
+            <FormField label="">
+              <input
+                type="text"
+                value={overlay.filterLabels?.only || ""}
+                onChange={(e) =>
+                  onChange({
+                    ...overlay,
+                    filterLabels: {
+                      ...overlay.filterLabels,
+                      only: e.target.value,
+                    },
+                  })
+                }
+                disabled={isVisited}
+                className={`${isVisited ? "opacity-50" : ""}`}
+              />
+            </FormField>
+            <FormField label="">
+              <input
+                type="text"
+                value={overlay.filterLabels?.exclude || ""}
+                onChange={(e) =>
+                  onChange({
+                    ...overlay,
+                    filterLabels: {
+                      ...overlay.filterLabels,
+                      exclude: e.target.value,
+                    },
+                  })
                 }
                 disabled={isVisited}
                 className={`${isVisited ? "opacity-50" : ""}`}

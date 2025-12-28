@@ -18,13 +18,13 @@ export const activityTemplates: Record<string, string> = activityTemplatesJson;
  */
 export async function logUserActivity(
   action: number,
-  data: object,
+  details: object,
   uid: string
 ) {
   const activityCollection = getUserCollection("activity");
   await addDoc(activityCollection, {
     action,
-    data,
+    details,
     uid,
     timestamp: Date.now(),
   });

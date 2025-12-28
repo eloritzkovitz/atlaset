@@ -6,14 +6,14 @@ In Atlaset, **overlays** let you add custom map layers, highlighting or visualiz
 
 #### Overlay JSON Fields
 
-| Field      | Type      | Description                                       |
-|------------|-----------|---------------------------------------------------|
-| `id`       | string    | Unique identifier for the overlay (*optional*, generated if missing) |
-| `name`     | string    | Display name for the overlay                      |
-| `color`    | string    | RGBA color for the overlay                        |
-| `tooltip`  | string    | Tooltip text shown on hover                       |
-| `visible`  | boolean   | Whether the overlay is visible by default         |
-| `countries`| string[]  | Array of ISO 3166-1 country codes                 |
+| Field           | Type      | Description                                       |
+|-----------------|-----------|---------------------------------------------------|
+| `id`            | string    | Unique identifier for the overlay (*optional*, generated if missing) |
+| `name`          | string    | Display name for the overlay                      |
+| `color`         | string    | RGBA color for the overlay                        |
+| `filterLabels`  | map       | Customized filter labels (*optional*, replacing labels for "All"/"Include Only"/"Exclude")       |
+| `visible`       | boolean   | Whether the overlay is visible by default         |
+| `countries`     | string[]  | Array of ISO 3166-1 country codes                 |
 
 ## Adding Overlays
 
@@ -25,7 +25,11 @@ In Atlaset, **overlays** let you add custom map layers, highlighting or visualiz
 {
   "name": "Example",
   "color": "rgba(255, 255, 255, 1)",
-  "tooltip": "Example",
+  "filterLabels": {
+    "all": "All",
+    "only": "Include Only",
+    "exclude": "Exclude"
+  },
   "visible": true,
   "countries": ["IL", "US", "FR"]
 }

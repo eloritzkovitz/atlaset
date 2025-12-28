@@ -15,22 +15,22 @@
 
   "200": "{userName} performed an atlas action{date}.",
 
-  "210": "{userName} saved overlays{location}{date}.",
-  "211": "{userName} added an overlay '{itemName}'{location}{date}.",
-  "212": "{userName} edited an overlay '{itemName}'{location}{date}.",
-  "213": "{userName} removed an overlay '{itemName}'{location}{date}.",
+  "210": "{userName} saved overlays{date}.",
+  "211": "{userName} added an overlay '{itemName}'{date}.",
+  "212": "{userName} edited an overlay '{itemName}'{date}.",
+  "213": "{userName} removed an overlay '{itemName}'{date}.",
 
-  "220": "{userName} saved markers{location}{date}.",
+  "220": "{userName} saved markers{date}.",
   "221": "{userName} added a marker '{itemName}'{location}{date}.",
   "222": "{userName} edited a marker '{itemName}'{location}{date}.",
   "223": "{userName} removed a marker '{itemName}'{location}{date}.",
 
   "400": "{userName} performed a trips action{date}.",
 
-  "410": "{userName} saved trips{location}{date}.",
-  "411": "{userName} added a trip '{itemName}'{location}{date}.",
-  "412": "{userName} edited a trip '{itemName}'{location}{date}.",  
-  "413": "{userName} {action} a trip '{itemName}'{location}{date}.",
-  "414": "{userName} rated a trip '{itemName}'{location}{date}.",
-  "415": "{userName} removed a trip '{itemName}'{location}{date}."
+  "410": "{userName} saved trips{date}.",
+  "411": "{userName} added a trip '{itemName}'{date}.",
+  "412": "{userName} edited a trip '{itemName}'{date}.",  
+  "413": "{userName} {action} a trip '{itemName}'{date}.",
+  "414": "{userName} rated a trip '{itemName}'{date}.",
+  "415": "{userName} removed a trip '{itemName}'{date}."
 }

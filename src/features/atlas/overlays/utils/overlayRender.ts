@@ -8,15 +8,14 @@ import { blendColors } from "@utils/color";
 
 /**
  * Gets overlay items from an overlay definition.
- * @param overlay - The overlay definition containing countries, color, tooltip, and name.
- * @returns Array of overlay items with isoCode, color, and tooltip.
+ * @param overlay - The overlay definition containing countries, color, and name.
+ * @returns Array of overlay items with isoCode and color.
  */
 export function getOverlayItems(overlay: Overlay): OverlayItem[] {
   return overlay.countries.map((isoCode) => ({
     isoCode,
     color: overlay.color,
     overlayId: overlay.id,
-    tooltip: overlay.tooltip || overlay.name,
   }));
 }
 

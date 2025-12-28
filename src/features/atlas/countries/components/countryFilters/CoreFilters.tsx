@@ -54,16 +54,18 @@ export function CoreFilters({
             setValue = setSelectedSovereignty;
             options = filter.getOptions(sovereigntyOptions);
           }
+          // If value is '', set to 'all' so SelectInput selects the 'All' option
+          const selectValue = value === "" ? "all" : value;
           return setValue ? (
             <SelectInput
               key={filter.key}
               label={
                 typeof filter.label === "function"
-                  ? filter.label(value ?? "")
+                  ? filter.label(selectValue ?? "")
                   : filter.label
               }
-              value={value ?? ""}
-              onChange={(val) => setValue(String(val))}
+              value={selectValue ?? "all"}
+              onChange={(val) => setValue(val === "all" ? "" : String(val))}
               options={options ?? []}
             />
           ) : null;

@@ -2,7 +2,11 @@
   "id": "example",
   "name": "Example",
   "color": "rgba(255, 255, 255, 1)",
-  "tooltip": "Example",
+  "filterLabels": {
+    "all": "All",
+    "only": "Visited",
+    "exclude": "Not Visited"
+  },
   "visible": true,
   "countries": ["IL", "US", "FR"]
 }
