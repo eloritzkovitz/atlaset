@@ -88,6 +88,16 @@ describe("markersService", () => {
   });
 
   describe("guest (IndexedDB) path", () => {
+    it("reorders markers in IndexedDB", async () => {
+      const markers = [
+        { id: "a", order: 1 },
+        { id: "b", order: 2 },
+      ];
+      const putMock = appDb.markers.put as unknown as ReturnType<typeof vi.fn>;
+      await markersService.reorder(markers as any);
+      expect(putMock).toHaveBeenCalledWith({ ...markers[0] });
+      expect(putMock).toHaveBeenCalledWith({ ...markers[1] });
+    });
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValue(false);
     });
@@ -134,6 +144,30 @@ describe("markersService", () => {
   });
 
   describe("authenticated (Firestore) path", () => {
+    it("reorders markers in Firestore", async () => {
+      const markersCol = {};
+      const batch = {
+        update: vi.fn(),
+        commit: vi.fn(),
+      };
+      collectionMock.mockReturnValue(markersCol);
+      writeBatchMock.mockReturnValue(batch);
+      docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
+      const markers = [
+        { id: "foo", order: 1 },
+        { id: "bar", order: 2 },
+      ];
+      await markersService.reorder(markers as any);
+      expect(batch.update).toHaveBeenCalledWith(
+        { _col: markersCol, id: "foo" },
+        { order: 1 }
+      );
+      expect(batch.update).toHaveBeenCalledWith(
+        { _col: markersCol, id: "bar" },
+        { order: 2 }
+      );
+      expect(batch.commit).toHaveBeenCalled();
+    });
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValue(true);
       getCurrentUserMock.mockReturnValue({

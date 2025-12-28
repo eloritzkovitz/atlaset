@@ -113,6 +113,37 @@ export const markersService = {
   },
 
   /**
+   * Batch update markers' order field only for markers whose order changed.
+   * @param markers - Array of markers with updated order.
+   */
+  async reorder(markers: Marker[]) {
+    if (!markers || markers.length === 0) return;
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      const markersCol = collection(db, "users", user!.uid, "markers");
+      const batch = writeBatch(db);
+      markers.forEach((marker) => {
+        const markerDoc = doc(markersCol, marker.id);
+        batch.update(markerDoc, { order: marker.order });
+      });
+      await batch.commit();
+      await logUserActivity(
+        224,
+        {
+          count: markers.length,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
+    } else {
+      // IndexedDB: update markers' order field only
+      for (const marker of markers) {
+        await appDb.markers.put({ ...marker });
+      }
+    }
+  },
+
+  /**
    * Removes a marker by ID.
    * @param id - The ID of the marker to remove.
    */
