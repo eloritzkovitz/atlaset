@@ -2,7 +2,8 @@
  * @file Utility functions for handling country data.
  */
 
-import { VISITED_OVERLAY_ID, type Overlay } from "@features/atlas/overlays";
+import { VISITED_OVERLAY_ID } from "@features/atlas/overlays/constants/overlays";
+import type { Overlay } from "../../atlas/overlays/types";
 import { extractUniqueSorted } from "@utils/array";
 import { SOVEREIGN_DEPENDENCIES } from "../constants/sovereignDependencies";
 import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";

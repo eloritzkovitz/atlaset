@@ -6,7 +6,7 @@ export { OverlaysPanel } from "./components/OverlaysPanel";
 export {
   VISITED_OVERLAY_ID,
   DEFAULT_NEW_OVERLAY,
-} from "../overlays/constants/overlays";
+} from "./constants/overlays";
 
 // Hooks
 export { useOverlayItems } from "./hooks/useOverlayItems";
