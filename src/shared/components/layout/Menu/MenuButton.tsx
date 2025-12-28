@@ -1,6 +1,7 @@
 interface MenuButtonProps {
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
+  onMouseDown?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   icon: React.ReactNode;
@@ -15,6 +16,7 @@ interface MenuButtonProps {
 export function MenuButton({
   type = "button",
   onClick,
+  onMouseDown,
   onMouseEnter,
   onMouseLeave,
   icon,
@@ -34,6 +36,7 @@ export function MenuButton({
         className
       }
       onClick={onClick}
+      onMouseDown={onMouseDown}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       aria-label={ariaLabel}
