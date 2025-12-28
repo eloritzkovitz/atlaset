@@ -53,7 +53,7 @@ describe("logUserActivity", () => {
       expect.anything(),
       expect.objectContaining({
         action: 101,
-        data: { foo: "bar" },
+        details: { foo: "bar" },
         uid: "uid123",
         timestamp: expect.any(Number),
       })
