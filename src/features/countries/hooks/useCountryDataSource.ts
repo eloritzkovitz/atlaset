@@ -23,32 +23,29 @@ export function useCountryDataSource() {
     setLoading(true);
     setError(null);
 
-    // Check cache validity
     const now = Date.now();
 
-    // Try to get from IndexedDB (Dexie)
-    const cachedCountry = await appDb.countryData.get("main");
-    const cachedCurrency = await appDb.currencyData.get("main");
-
-    // Validate cache
-    const isCountryCacheValid =
-      cachedCountry &&
-      typeof cachedCountry.ts === "number" &&
-      now - cachedCountry.ts < CACHE_TTL;
-    const isCurrencyCacheValid =
-      cachedCurrency &&
-      typeof cachedCurrency.ts === "number" &&
-      now - cachedCurrency.ts < CACHE_TTL;
-
-    // Use cached data if valid and not forcing refresh
-    if (!forceRefresh && isCountryCacheValid && isCurrencyCacheValid) {
-      setCountries(cachedCountry.data as Country[]);
-      setCurrencies(cachedCurrency.data as Record<string, string>);
-      setLoading(false);
-      return;
+    // Only use caching in production
+    if (process.env.NODE_ENV === "production") {
+      const cachedCountry = await appDb.countryData.get("main");
+      const cachedCurrency = await appDb.currencyData.get("main");
+      const isCountryCacheValid =
+        cachedCountry &&
+        typeof cachedCountry.ts === "number" &&
+        now - cachedCountry.ts < CACHE_TTL;
+      const isCurrencyCacheValid =
+        cachedCurrency &&
+        typeof cachedCurrency.ts === "number" &&
+        now - cachedCurrency.ts < CACHE_TTL;
+      if (!forceRefresh && isCountryCacheValid && isCurrencyCacheValid) {
+        setCountries(cachedCountry.data as Country[]);
+        setCurrencies(cachedCurrency.data as Record<string, string>);
+        setLoading(false);
+        return;
+      }
     }
 
-    // Fetch from network if not cached or forced
+    // Always fetch fresh in dev, or if cache is invalid in prod
     const countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL?.startsWith(
       "http"
     )
@@ -66,33 +63,38 @@ export function useCountryDataSource() {
       : "/data/currencies.json";
 
     try {
+      const fetchOpts =
+        process.env.NODE_ENV === "development"
+          ? { cache: "no-store" as RequestCache }
+          : undefined;
       const [countryData, currencyData] = await Promise.all([
-        fetch(countryDataUrl).then((res) => {
+        fetch(countryDataUrl, fetchOpts).then((res) => {
           if (!res.ok) throw new Error("Failed to load country data");
           return res.json();
         }),
-        fetch(currencyDataUrl).then((res) => {
+        fetch(currencyDataUrl, fetchOpts).then((res) => {
           if (!res.ok) throw new Error("Failed to load currency data");
           return res.json();
         }),
       ]);
 
-      // Update state
       setCountries(countryData as Country[]);
       setCurrencies(currencyData);
       setLoading(false);
 
-      // Save to Dexie
-      await appDb.countryData.put({
-        id: "main",
-        data: countryData,
-        ts: Date.now(),
-      });
-      await appDb.currencyData.put({
-        id: "main",
-        data: currencyData,
-        ts: Date.now(),
-      });
+      // Save to Dexie only in production
+      if (process.env.NODE_ENV === "production") {
+        await appDb.countryData.put({
+          id: "main",
+          data: countryData,
+          ts: Date.now(),
+        });
+        await appDb.currencyData.put({
+          id: "main",
+          data: currencyData,
+          ts: Date.now(),
+        });
+      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to load data");
       setLoading(false);
@@ -102,7 +104,10 @@ export function useCountryDataSource() {
   // Memoized derived data
   const allRegions = useMemo(() => getAllRegions(countries), [countries]);
   const allSubregions = useMemo(() => getAllSubregions(countries), [countries]);
-  const allSovereigntyTypes = useMemo(() => getAllSovereigntyTypes(countries), [countries]);
+  const allSovereigntyTypes = useMemo(
+    () => getAllSovereigntyTypes(countries),
+    [countries]
+  );
 
   // Initial data fetch
   useEffect(() => {
