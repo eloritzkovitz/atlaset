@@ -16,4 +16,6 @@ export type Marker = {
   description?: string;
   /** Visibility status of the marker */
   visible: boolean;
+  /** Optional display order for the marker */
+  order?: number;
 };

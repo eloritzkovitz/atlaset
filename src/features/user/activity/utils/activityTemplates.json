@@ -19,6 +19,7 @@
   "211": "{userName} added an overlay '{itemName}'{date}.",
   "212": "{userName} edited an overlay '{itemName}'{date}.",
   "213": "{userName} removed an overlay '{itemName}'{date}.",
+  "214": "{userName} reordered overlays{date}.",
 
   "220": "{userName} saved markers{date}.",
   "221": "{userName} added a marker '{itemName}'{location}{date}.",

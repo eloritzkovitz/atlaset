@@ -7,7 +7,7 @@ interface RateMenuProps {
   menuStyle: React.CSSProperties;
   menuRef: React.RefObject<HTMLDivElement | null>;
   hoverHandlers: React.HTMLAttributes<HTMLDivElement>;
-  onRate: (value: number) => void;
+  onRate: (value: number | undefined) => void;
   onClose: () => void;
 }
 
@@ -31,7 +31,10 @@ export function RateMenu({
         {RATING_ACTION_OPTIONS.map((opt) => (
           <MenuButton
             key={opt.value}
-            onClick={() => opt.value !== undefined && onRate(opt.value)}
+            onMouseDown={() => {
+              onRate(opt.value);
+              onClose();
+            }}
             icon={
               <span className="flex items-center">
                 <StarRatingInput value={opt.value} readOnly />

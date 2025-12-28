@@ -188,23 +188,25 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
             Rate
             <FaChevronRight className="ml-7" />
           </MenuButton>
-          <RateMenu
-            open={rateMenuOpen}
-            menuStyle={{
-              ...rateMenuStyle,
-              left: getRateMenuLeft(),
-              top: getRateMenuTop(),
-              zIndex: 1000,
-              width: 280,
-            }}
-            menuRef={rateMenuRef}
-            hoverHandlers={rateMenuHoverHandlers}
-            onRate={(value) => {
-              setTimeout(() => setOpen(false), 300);
-              if (updateTripRating) updateTripRating(trip.id, value);
-            }}
-            onClose={() => setOpen(false)}
-          />
+          {rateMenuOpen && (
+            <RateMenu
+              open={rateMenuOpen}
+              menuStyle={{
+                ...rateMenuStyle,
+                left: getRateMenuLeft(),
+                top: getRateMenuTop(),
+                zIndex: 1000,
+                width: 280,
+              }}
+              menuRef={rateMenuRef}
+              hoverHandlers={rateMenuHoverHandlers}
+              onRate={(value) => {
+                setTimeout(() => setOpen(false), 300);
+                if (updateTripRating) updateTripRating(trip.id, value);
+              }}
+              onClose={() => setOpen(false)}
+            />
+          )}
         </div>
       </Menu>
     </>

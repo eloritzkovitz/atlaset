@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import {
+  DEFAULT_NEW_OVERLAY,
   overlaysService,
   useSyncVisitedCountriesOverlay,
   type AnyOverlay,
@@ -100,39 +101,36 @@ export function OverlaysProvider({ children }: { children: React.ReactNode }) {
     setOverlays(dbOverlays);
   }
 
-  // Reorder overlays
+  // Reorder overlays (only update overlays whose order changed)
   async function reorderOverlays(newOrder: AnyOverlay[]) {
-    const ordered = newOrder.map((overlay, idx) => ({
-      ...overlay,
-      order: idx,
-    }));
-    await overlaysService.save(ordered);
+    const changed: AnyOverlay[] = [];
+    newOrder.forEach((overlay, idx) => {
+      if (overlay.order !== idx) {
+        changed.push({ ...overlay, order: idx });
+      }
+    });
+    if (changed.length > 0) {
+      await overlaysService.reorder(changed);
+    }
     const dbOverlays = await overlaysService.load();
     setOverlays(dbOverlays);
   }
 
   // Toggle visibility
   async function toggleOverlayVisibility(id: string) {
-    const updated = overlays.map((o) =>
-      o.id === id ? { ...o, visible: !o.visible } : o
-    );
-    await overlaysService.save(updated);
-    setOverlays(updated);
+    const overlay = overlays.find((o) => o.id === id);
+    if (!overlay) return;
+    const updatedOverlay = { ...overlay, visible: !overlay.visible };
+    await overlaysService.edit(updatedOverlay);
+    const dbOverlays = await overlaysService.load();
+    setOverlays(dbOverlays);
   }
 
   // Modal handlers
   function openAddOverlay() {
     setEditingOverlay({
+      ...DEFAULT_NEW_OVERLAY,
       id: crypto.randomUUID(),
-      name: "",
-      color: "#2563eb",
-      countries: [],      
-      filterLabels: {
-        all: "All",
-        only: "Include only",
-        exclude: "Exclude",
-      },
-      visible: true,
     });
     setEditModalOpen(true);
   }

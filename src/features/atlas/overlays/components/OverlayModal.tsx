@@ -15,9 +15,9 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useCountryData } from "@contexts/CountryDataContext";
 import { CountrySelectModal } from "@features/countries";
+import { VISITED_OVERLAY_ID } from "../constants/overlays";
 import type { Overlay } from "../types";
 
 interface OverlayModalProps {

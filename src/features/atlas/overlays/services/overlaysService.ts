@@ -6,13 +6,13 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
-import {
-  VISITED_OVERLAY_ID,
-  DEFAULT_VISITED_OVERLAY,
-} from "@constants/overlays";
 import { logUserActivity } from "../../../../features/user";
 import { appDb } from "@utils/db";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import {
+  VISITED_OVERLAY_ID,
+  DEFAULT_VISITED_OVERLAY,
+} from "../constants/overlays";
 import type { AnyOverlay } from "../types";
 import { db } from "../../../../firebase";
 
@@ -131,6 +131,37 @@ export const overlaysService = {
       );
     } else {
       await appDb.overlays.put(overlay);
+    }
+  },
+
+  /**
+   * Batch update overlays' order field only for overlays whose order changed.
+   * @param overlays - Array of overlays with updated order.
+   */
+  async reorder(overlays: AnyOverlay[]) {
+    if (!overlays || overlays.length === 0) return;
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      const overlaysCol = collection(db, "users", user!.uid, "overlays");
+      const batch = writeBatch(db);
+      overlays.forEach((overlay) => {
+        const overlayDoc = doc(overlaysCol, overlay.id);
+        batch.update(overlayDoc, { order: overlay.order });
+      });
+      await batch.commit();
+      await logUserActivity(
+        214,
+        {
+          count: overlays.length,
+          userName: user!.displayName,
+        },
+        user!.uid
+      );
+    } else {
+      // IndexedDB: update overlays' order field only
+      for (const overlay of overlays) {
+        await appDb.overlays.update(overlay.id, { order: overlay.order });
+      }
     }
   },
 

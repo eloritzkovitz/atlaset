@@ -94,10 +94,19 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Reorder markers
+  // Reorder markers (only update markers whose order changed)
   const reorderMarkers = async (newOrder: Marker[]) => {
-    setMarkers(newOrder);
-    await markersService.save(newOrder);
+    const changed: Marker[] = [];
+    newOrder.forEach((marker, idx) => {
+      if (marker.order !== idx) {
+        changed.push({ ...marker, order: idx });
+      }
+    });
+    if (changed.length > 0) {
+      await markersService.reorder(changed);
+    }
+    const dbMarkers = await markersService.load();
+    setMarkers(dbMarkers);
   };
 
   // Open add marker modal

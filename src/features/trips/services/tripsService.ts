@@ -14,7 +14,7 @@ import type { Trip } from "../types";
 export const tripsService = {
   /**
    * Loads user trips for the current user.
-   * @returns - An array of trip objects. 
+   * @returns - An array of trip objects.
    */
   async load(): Promise<Trip[]> {
     if (isAuthenticated()) {
@@ -60,10 +60,15 @@ export const tripsService = {
    * @param trip - The trip object to add.
    */
   async add(trip: Trip) {
+    const tripForFirestore = {
+      ...trip,
+      startDate: trip.startDate === undefined ? null : trip.startDate,
+      endDate: trip.endDate === undefined ? null : trip.endDate,
+    };
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
-      await setDoc(doc(tripsCol, trip.id), trip);
+      await setDoc(doc(tripsCol, trip.id), tripForFirestore);
       await logUserActivity(
         411,
         {
