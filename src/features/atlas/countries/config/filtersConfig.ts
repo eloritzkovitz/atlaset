@@ -34,7 +34,7 @@ export const coreFiltersConfig: CountryFilterConfig<
       ...mapOptions(allRegions ?? [], capitalizeWords),
     ],
     (props) => (props.selectedRegion === "" ? "all" : props.selectedRegion),
-    (props, val) => props.setSelectedRegion(val)
+    (props, val) => props.setSelectedRegion(val === "all" ? "" : val)
   ),
   createSelectFilter(
     "subregion",
@@ -43,8 +43,8 @@ export const coreFiltersConfig: CountryFilterConfig<
       allOption,
       ...mapOptions(subregionOptions ?? [], capitalizeWords),
     ],
-    (props) => props.selectedSubregion,
-    (props, val) => props.setSelectedSubregion(val)
+    (props) => (props.selectedSubregion === "" ? "all" : props.selectedSubregion),
+    (props, val) => props.setSelectedSubregion(val === "all" ? "" : val)
   ),
   createSelectFilter(
     "sovereignty",
@@ -58,8 +58,8 @@ export const coreFiltersConfig: CountryFilterConfig<
         capitalize
       ),
     ],
-    (props) => props.selectedSovereignty,
-    (props, val) => props.setSelectedSovereignty(val)
+    (props) => (props.selectedSovereignty === "" ? "all" : props.selectedSovereignty),
+    (props, val) => props.setSelectedSovereignty(val === "all" ? "" : val)
   ),
 ];
 
