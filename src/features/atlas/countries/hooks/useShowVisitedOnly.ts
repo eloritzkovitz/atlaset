@@ -1,6 +1,6 @@
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useTimeline } from "@contexts/TimelineContext";
+import { VISITED_OVERLAY_ID } from "@features/atlas/overlays";
 
 /**
  * Determines if "show visited only" mode is active, considering both timeline and overlay context.

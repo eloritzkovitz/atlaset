@@ -1,4 +1,4 @@
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
+import { VISITED_OVERLAY_ID } from "@features/atlas/overlays";
 import { mockCountries } from "@test-utils/mockCountries";
 import type { Country, SovereigntyType } from "../types";
 import {

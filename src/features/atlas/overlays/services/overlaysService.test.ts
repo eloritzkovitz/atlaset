@@ -11,6 +11,7 @@ vi.mock("@utils/db", () => {
     delete: vi.fn(),
     bulkAdd: vi.fn(),
     bulkPut: vi.fn(),
+    update: vi.fn(), // Add update mock for reorder overlays
   };
   return {
     appDb: {
@@ -52,7 +53,7 @@ import { appDb } from "@utils/db";
 import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
 import { logUserActivity } from "../../../../features/user";
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
+import { VISITED_OVERLAY_ID } from "../constants/overlays";
 
 // Cast imported mocks to Vitest mock types
 const isAuthenticatedMock =
@@ -73,12 +74,16 @@ const writeBatchMock = firestore.writeBatch as unknown as ReturnType<
 >;
 
 describe("overlaysService", () => {
-   beforeEach(() => {
+  beforeEach(() => {
     // Reset all mocks
     if (!appDb.overlays) {
-      throw new Error("appDb.overlays is undefined. The mock was not set up correctly.");
+      throw new Error(
+        "appDb.overlays is undefined. The mock was not set up correctly."
+      );
     }
-    Object.values(appDb.overlays).forEach((fn) => (fn as { mockReset: () => void }).mockReset());
+    Object.values(appDb.overlays).forEach((fn) =>
+      (fn as { mockReset: () => void }).mockReset()
+    );
     isAuthenticatedMock.mockReset();
     getCurrentUserMock.mockReset();
     collectionMock.mockReset();
@@ -91,28 +96,52 @@ describe("overlaysService", () => {
   });
 
   describe("guest (IndexedDB) path", () => {
+    it("warns and returns if overlays array is empty (IndexedDB)", async () => {
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      await overlaysService.save([]);
+      expect(warnSpy).toHaveBeenCalledWith(
+        "Attempted to save empty overlays array. Aborting to prevent data loss."
+      );
+      warnSpy.mockRestore();
+    });
+
+    it("reorders overlays in IndexedDB", async () => {
+      const overlays = [
+        { id: "a", order: 1 },
+        { id: "b", order: 2 },
+      ];
+      await overlaysService.reorder(overlays as any);
+      expect(appDb.overlays.update).toHaveBeenCalledWith("a", { order: 1 });
+      expect(appDb.overlays.update).toHaveBeenCalledWith("b", { order: 2 });
+    });
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValue(false);
     });
 
     it("loads overlays and adds visited overlay if missing", async () => {
-      (appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce([]);
-            (appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
-              { id: VISITED_OVERLAY_ID, name: "Visited Countries" },
-            ]);
+      (
+        appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>
+      ).mockResolvedValueOnce([]);
+      (
+        appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>
+      ).mockResolvedValueOnce([
+        { id: VISITED_OVERLAY_ID, name: "Visited Countries" },
+      ]);
       const overlays = await overlaysService.load();
       expect(overlays[0].id).toBe(VISITED_OVERLAY_ID);
       expect(overlays[0].name).toBe("Visited Countries");
     });
 
     it("loads overlays and does not add visited overlay if present", async () => {
-      (appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+      (
+        appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>
+      ).mockResolvedValueOnce([
         { id: VISITED_OVERLAY_ID, name: "Visited Countries" },
       ]);
-       const overlays = await overlaysService.load();
-       expect(overlays[0].id).toBe(VISITED_OVERLAY_ID);
-       expect(overlays[0].name).toBe("Visited Countries");
-       expect(overlays).toHaveLength(1);
+      const overlays = await overlaysService.load();
+      expect(overlays[0].id).toBe(VISITED_OVERLAY_ID);
+      expect(overlays[0].name).toBe("Visited Countries");
+      expect(overlays).toHaveLength(1);
     });
 
     it("saves overlays", async () => {
@@ -140,23 +169,63 @@ describe("overlaysService", () => {
     });
 
     it("sorts overlays by order, treating missing order as 0", async () => {
-      (appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>).mockResolvedValueOnce([
+      (
+        appDb.overlays.toArray as unknown as ReturnType<typeof vi.fn>
+      ).mockResolvedValueOnce([
         { id: "a", order: 2 },
         { id: "b" }, // no order property
         { id: "c", order: 1 },
       ]);
-       const overlays = await overlaysService.load();
-       // After sorting, order should be: VISITED_OVERLAY_ID, b (order 0), c (order 1), a (order 2)
-       expect(overlays.map((o) => o.id)).toEqual([
-         VISITED_OVERLAY_ID,
-         "b",
-         "c",
-         "a",
-       ]);
+      const overlays = await overlaysService.load();
+      // After sorting, order should be: VISITED_OVERLAY_ID, b (order 0), c (order 1), a (order 2)
+      expect(overlays.map((o) => o.id)).toEqual([
+        VISITED_OVERLAY_ID,
+        "b",
+        "c",
+        "a",
+      ]);
     });
   });
 
   describe("authenticated (Firestore) path", () => {
+    it("warns and returns if overlays array is empty (Firestore)", async () => {
+      isAuthenticatedMock.mockReturnValue(true);
+      getCurrentUserMock.mockReturnValue({
+        uid: "abc",
+        displayName: "TestUser",
+      });
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      await overlaysService.save([]);
+      expect(warnSpy).toHaveBeenCalledWith(
+        "Attempted to save empty overlays array. Aborting to prevent data loss."
+      );
+      warnSpy.mockRestore();
+    });
+
+    it("reorders overlays in Firestore", async () => {
+      const overlaysCol = {};
+      const batch = {
+        update: vi.fn(),
+        commit: vi.fn(),
+      };
+      collectionMock.mockReturnValue(overlaysCol);
+      writeBatchMock.mockReturnValue(batch);
+      docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
+      const overlays = [
+        { id: "foo", order: 1 },
+        { id: "bar", order: 2 },
+      ];
+      await overlaysService.reorder(overlays as any);
+      expect(batch.update).toHaveBeenCalledWith(
+        { _col: overlaysCol, id: "foo" },
+        { order: 1 }
+      );
+      expect(batch.update).toHaveBeenCalledWith(
+        { _col: overlaysCol, id: "bar" },
+        { order: 2 }
+      );
+      expect(batch.commit).toHaveBeenCalled();
+    });
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValue(true);
       getCurrentUserMock.mockReturnValue({ uid: "abc" });
@@ -172,7 +241,12 @@ describe("overlaysService", () => {
         ],
       });
       const overlays = await overlaysService.load();
-      expect(collectionMock).toHaveBeenCalledWith({}, "users", "abc", "overlays");
+      expect(collectionMock).toHaveBeenCalledWith(
+        {},
+        "users",
+        "abc",
+        "overlays"
+      );
       expect(getDocsMock).toHaveBeenCalledWith(overlaysCol);
       expect(overlays.some((o) => o.id === VISITED_OVERLAY_ID)).toBe(true);
       expect(overlays).toEqual(
@@ -200,7 +274,12 @@ describe("overlaysService", () => {
       const overlays = [{ id: "foo" }, { id: "bar" }];
       await overlaysService.save(overlays as any);
 
-      expect(collectionMock).toHaveBeenCalledWith({}, "users", "abc", "overlays");
+      expect(collectionMock).toHaveBeenCalledWith(
+        {},
+        "users",
+        "abc",
+        "overlays"
+      );
       expect(writeBatchMock).toHaveBeenCalled();
       expect(batch.delete).toHaveBeenCalledTimes(2);
       expect(batch.set).toHaveBeenCalledTimes(2);

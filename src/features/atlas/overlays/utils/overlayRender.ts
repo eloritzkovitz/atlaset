@@ -2,9 +2,9 @@
  * Utilities for overlay rendering.
  */
 
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
-import type { Overlay, OverlayItem } from "../types";
 import { blendColors } from "@utils/color";
+import { VISITED_OVERLAY_ID } from "../constants/overlays";
+import type { Overlay, OverlayItem } from "../types";
 
 /**
  * Gets overlay items from an overlay definition.

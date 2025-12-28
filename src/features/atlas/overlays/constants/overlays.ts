@@ -1,4 +1,4 @@
-import type { TimelineOverlay } from "@features/atlas/overlays";
+import type { AnyOverlay, TimelineOverlay } from "../types";
 
 export const VISITED_OVERLAY_ID = "visited-countries";
 
@@ -15,4 +15,17 @@ export const DEFAULT_VISITED_OVERLAY: TimelineOverlay = {
   },
   timelineEnabled: true,
   timelineSnapshot: true,
+};
+
+export const DEFAULT_NEW_OVERLAY: AnyOverlay = {
+  id: "",
+  name: "",
+  color: "#2563eb",
+  countries: [],
+  filterLabels: {
+    all: "All",
+    only: "Include only",
+    exclude: "Exclude",
+  },
+  visible: true,
 };

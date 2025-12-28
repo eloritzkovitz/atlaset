@@ -17,10 +17,12 @@ import {
   MenuButton,
   ToolbarSeparator,
 } from "@components";
-import { VISITED_OVERLAY_ID } from "@constants/overlays";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
-import { isTimelineOverlay } from "@features/atlas/overlays";
+import {
+  isTimelineOverlay,
+  VISITED_OVERLAY_ID,
+} from "@features/atlas/overlays";
 import { useIsMobile } from "@hooks/useIsMobile";
 import { ZoomControls } from "../controls/ZoomControls";
 import "./MapToolbar.css";
