@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 
 /**
@@ -15,7 +16,7 @@ export function useQuiz<TQuestion>({
   getNextQuestion: (prevQuestion: TQuestion | null) => TQuestion | null;
   checkAnswer: (guess: string, question: TQuestion) => boolean;
   initialQuestion?: TQuestion | null;
-}) {
+}) {  
   const [question, setQuestion] = useState<TQuestion | null>(initialQuestion);
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<null | boolean>(null);
@@ -70,6 +71,16 @@ export function useQuiz<TQuestion>({
     setStreak(0);
   }, [getNextQuestion, question]);
 
+  // Forfeit logic
+  const navigate = useNavigate();
+  const handleForfeit = () => {
+    navigate("/quizzes");
+  };
+  const wrapTimedForfeit = (endSession: () => void) => () => {
+    endSession();
+    handleForfeit();
+  };
+
   return {
     question,
     guess,
@@ -84,5 +95,7 @@ export function useQuiz<TQuestion>({
     setQuestion,
     setResult,
     setFeedback,
+    handleForfeit,
+    wrapTimedForfeit,
   };
 }

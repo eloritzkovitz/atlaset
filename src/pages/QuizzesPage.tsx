@@ -100,11 +100,21 @@ export default function QuizzesPage() {
         />
         <Route
           path="guess-the-flag"
-          element={<FlagQuiz difficulty={difficulty ?? undefined} gameMode={gameMode} />}
+          element={
+            <FlagQuiz
+              difficulty={difficulty ?? undefined}
+              gameMode={gameMode}
+            />
+          }
         />
         <Route
           path="guess-the-capital"
-          element={<CapitalQuiz difficulty={difficulty ?? undefined} gameMode={gameMode} />}
+          element={
+            <CapitalQuiz
+              difficulty={difficulty ?? undefined}
+              gameMode={gameMode}
+            />
+          }
         />
         <Route path="leaderboards" element={<Leaderboards />} />
       </Routes>

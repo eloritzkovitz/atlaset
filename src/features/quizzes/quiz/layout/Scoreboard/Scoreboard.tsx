@@ -41,7 +41,7 @@ export function Scoreboard({
       </span>
       {typeof timeLeft === "number" && showMergedScore && (
         <span className={timeDanger ? "text-danger fast-pulse" : undefined}>
-          Time Left: {" "}
+          Time Left:{" "}
           <b>
             {Math.floor(timeLeft / 60)}:
             {(timeLeft % 60).toString().padStart(2, "0")}
