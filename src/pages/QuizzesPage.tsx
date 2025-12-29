@@ -7,9 +7,9 @@ import {
   getCountriesWithOwnFlag,
   type Country,
 } from "@features/countries";
-import { GuessForm, ResultMessage, Scoreboard } from "@features/game";
+import { GuessForm, ResultMessage, Scoreboard } from "@features/quizzes";
 
-export default function GamesPage() {
+export default function QuizzesPage() {
   const { countries, loading, error } = useCountryData();
   // Only use countries whose flag matches their own ISO code
   const flagCountries = getCountriesWithOwnFlag(countries);

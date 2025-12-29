@@ -12,7 +12,7 @@ import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
 import { AppLayout } from "@layout";
 import DashboardPage from "./pages/DashboardPage";
-import GamesPage from "./pages/GamesPage";
+import QuizzesPage from "./pages/QuizzesPage";
 import TripsPage from "./pages/TripsPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
@@ -70,10 +70,10 @@ function App() {
                 }
               />
               <Route
-                path="/game"
+                path="/quizzes/*"
                 element={
                   <AppLayout>
-                    <GamesPage />
+                    <QuizzesPage />
                   </AppLayout>
                 }
               />

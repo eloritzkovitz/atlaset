@@ -1,7 +1,7 @@
 import {
   FaChartSimple,
   FaEarthAmericas,
-  FaGamepad,
+  FaQuestion,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
 
@@ -18,9 +18,9 @@ export const NAV_LINKS = [
     label: "Dashboard",
   },
   {
-    to: "/game",
-    icon: <FaGamepad className="text-2xl" />,
-    label: "Games",
+    to: "/quizzes",
+    icon: <FaQuestion className="text-2xl" />,
+    label: "Quizzes",
     end: true,
   },
   {
