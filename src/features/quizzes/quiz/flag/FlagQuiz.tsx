@@ -1,4 +1,5 @@
 import { ErrorMessage, LoadingSpinner } from "@components";
+import countryDifficultyRaw from "../constants/countryDifficulty.json";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   CountryFlag,
@@ -11,9 +12,16 @@ import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage";
 
-export function FlagQuiz() {
+const countryDifficulty: Record<string, string> = countryDifficultyRaw;
+
+export function FlagQuiz({ difficulty }: { difficulty?: string }) {
   const { countries, loading, error } = useCountryData();
-  const flagCountries = getCountriesWithOwnFlag(countries);
+  let flagCountries = getCountriesWithOwnFlag(countries);
+  if (difficulty) {
+    flagCountries = flagCountries.filter(
+      (c) => countryDifficulty[c.isoCode] === difficulty
+    );
+  }
 
   // Define how to get the next country (question)
   const getNextCountry = (prevCountry: Country | null) => {

@@ -1,4 +1,6 @@
 import { ErrorMessage, LoadingSpinner } from "@components";
+import countryDifficultyRaw from "../constants/countryDifficulty.json";
+const countryDifficulty: Record<string, string> = countryDifficultyRaw;
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   CountryFlag,
@@ -10,12 +12,16 @@ import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage";
 
-export function CapitalQuiz() {
+export function CapitalQuiz({ difficulty }: { difficulty?: string }) {
   const { countries, loading, error } = useCountryData();
-  // Only use countries with a defined capital
-  const capitalCountries = countries.filter(
+  let capitalCountries = countries.filter(
     (c: Country) => c.capital && c.capital.trim() !== ""
   );
+  if (difficulty) {
+    capitalCountries = capitalCountries.filter(
+      (c) => countryDifficulty[c.isoCode] === difficulty
+    );
+  }
 
   // Get next country for capital quiz
   const getNextCountry = (prevCountry: Country | null) => {
