@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Card, ErrorMessage, LoadingSpinner } from "@components";
+import { ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
   CountryFlag,
@@ -7,9 +7,11 @@ import {
   getCountriesWithOwnFlag,
   type Country,
 } from "@features/countries";
-import { GuessForm, ResultMessage, Scoreboard } from "@features/quizzes";
+import { GuessForm } from "../layout/GuessForm";
+import { QuizLayout } from "../layout/QuizLayout";
+import { ResultMessage } from "../layout/ResultMessage";
 
-export default function FlagQuiz() {
+export function FlagQuiz() {
   const { countries, loading, error } = useCountryData();
   // Only use countries whose flag matches their own ISO code
   const flagCountries = getCountriesWithOwnFlag(countries);
@@ -93,38 +95,30 @@ export default function FlagQuiz() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
-        Guess the Country!
-      </h1>
-      {/* Scoreboard */}
-      <Scoreboard score={score} streak={streak} />
-      {/* Main Content */}
-      <Card className="max-w-md w-full p-8 rounded-xl shadow-lg text-center font-sans">
-        <CountryFlag
-          flag={{
-            isoCode: currentCountry.isoCode,
-            ratio: "original",
-            size: "64",
-          }}
-          alt={currentCountry.name}
-          className="block mx-auto mb-8 h-20 w-auto"
-        />
-        <GuessForm
-          guess={guess}
-          setGuess={setGuess}
-          handleGuess={handleGuess}
-          skipFlag={skipFlag}
-          disabled={result !== null}
-        />
-        {feedback && <div className="text-danger mt-2">{feedback}</div>}
-        <ResultMessage
-          result={result}
-          currentCountry={currentCountry}
-          nextFlag={nextFlag}
-        />
-        <div className="mt-8"></div>
-      </Card>
-    </div>
+    <QuizLayout title="Guess the Country!" score={score} streak={streak}>
+      <CountryFlag
+        flag={{
+          isoCode: currentCountry.isoCode,
+          ratio: "original",
+          size: "64",
+        }}
+        alt={currentCountry.name}
+        className="block mx-auto mb-8 h-20 w-auto"
+      />
+      <GuessForm
+        guess={guess}
+        setGuess={setGuess}
+        handleGuess={handleGuess}
+        skipFlag={skipFlag}
+        disabled={result !== null}
+      />
+      {feedback && <div className="text-danger mt-2">{feedback}</div>}
+      <ResultMessage
+        result={result}
+        currentCountry={currentCountry}
+        nextFlag={nextFlag}
+      />
+      <div className="mt-8"></div>
+    </QuizLayout>
   );
 }

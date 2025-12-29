@@ -1,4 +1,4 @@
 // Components
-export { GuessForm } from "./components/GuessForm";
-export { Scoreboard } from "./components/Scoreboard";
-export { ResultMessage } from "./components/ResultMessage";
+export { FlagQuiz } from "./quiz/flag/FlagQuiz";
+export { CapitalQuiz } from "./quiz/capital/CapitalQuiz";
+export { Leaderboards } from "./leaderboards/Leaderboards";

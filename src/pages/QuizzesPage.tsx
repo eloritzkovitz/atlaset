@@ -1,9 +1,7 @@
 import { FaFlag, FaLandmark, FaTrophy } from "react-icons/fa6";
-import { Card } from "@components";
-import FlagQuiz from "@features/quizzes/FlagQuiz";
-import CapitalQuiz from "@features/quizzes/CapitalQuiz";
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { Leaderboards } from "@features/quizzes/Leaderboards";
+import { Card } from "@components";
+import { CapitalQuiz, FlagQuiz, Leaderboards } from "@features/quizzes";
 
 export default function QuizzesPage() {
   const navigate = useNavigate();
@@ -51,15 +49,7 @@ export default function QuizzesPage() {
                   <div className="flex flex-col items-center">
                     {card.icon}
                     <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
-                    <p
-                      className={
-                        card.muted
-                          ? "text-muted"
-                          : "text-gray-600 dark:text-gray-300"
-                      }
-                    >
-                      {card.description}
-                    </p>
+                    <p className="text-muted">{card.description}</p>
                   </div>
                 </Card>
               ))}

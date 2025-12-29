@@ -1,7 +1,4 @@
-import React from "react";
-
-export default function CapitalQuiz() {
-  // Placeholder for future capital quiz logic
+export function CapitalQuiz() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
