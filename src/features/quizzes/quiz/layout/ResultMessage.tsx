@@ -6,10 +6,12 @@ export function ResultMessage({
   result,
   currentCountry,
   nextFlag,
+  answerLabel,
 }: {
   result: boolean | null;
   currentCountry: Country;
   nextFlag: () => void;
+  answerLabel?: string;
 }) {
   // Handle "Enter" key to go to the next flag if result is not null
   useKeyHandler(
@@ -29,14 +31,14 @@ export function ResultMessage({
         <span className="text-success">Correct! 🎉</span>
       ) : (
         <span className="text-danger">
-          Wrong! It was <b>{currentCountry.name}</b>
+          Wrong! It was <b>{answerLabel ?? currentCountry.name}</b>
         </span>
       )}
       <div className="flex justify-center gap-4 mb-2 mt-4">
         <ActionButton
           onClick={nextFlag}
           className="px-6 py-2 text-base rounded font-bold bg-primary hover:bg-primary-hover"
-          aria-label="Next Flag"
+          aria-label="Next"
         >
           Next Flag
         </ActionButton>

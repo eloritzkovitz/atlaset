@@ -6,13 +6,17 @@ interface QuizLayoutProps {
   title: string;
   score: number;
   streak: number;
-  children: React.ReactNode;
+  prompt?: React.ReactNode;
+  guessForm: React.ReactNode;
+  feedback?: React.ReactNode;
+  resultMessage?: React.ReactNode;
+  children?: React.ReactNode;
 }
 
 /**
  * Generic layout for quizzes: title, scoreboard, and main content card.
  */
-export function QuizLayout({ title, score, streak, children }: QuizLayoutProps) {
+export function QuizLayout({ title, score, streak, prompt, guessForm, feedback, resultMessage, children }: QuizLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
@@ -20,6 +24,10 @@ export function QuizLayout({ title, score, streak, children }: QuizLayoutProps) 
       </h1>
       <Scoreboard score={score} streak={streak} />
       <Card className="max-w-md w-full p-8 rounded-xl shadow-lg text-center font-sans">
+        {prompt && <div className="mb-8">{prompt}</div>}
+        {guessForm}
+        {feedback}
+        {resultMessage}
         {children}
       </Card>
     </div>

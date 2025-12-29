@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import {
@@ -7,77 +6,47 @@ import {
   getCountriesWithOwnFlag,
   type Country,
 } from "@features/countries";
+import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage";
 
 export function FlagQuiz() {
   const { countries, loading, error } = useCountryData();
-  // Only use countries whose flag matches their own ISO code
   const flagCountries = getCountriesWithOwnFlag(countries);
 
-  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
-  const [guess, setGuess] = useState("");
-  const [result, setResult] = useState<null | boolean>(null);
-  const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [feedback, setFeedback] = useState<string>("");
-
-  // Set the initial country when flagCountries are loaded
-  useEffect(() => {
-    if (!loading && flagCountries.length && currentCountry === null) {
-      setCurrentCountry(getRandomCountry(flagCountries));
-    }
-  }, [loading, flagCountries, currentCountry]);
-
-  // Utility to get a different random country than the current one
-  const getNextRandomCountry = () => {
-    if (flagCountries.length <= 1 || !currentCountry) {
+  // Define how to get the next country (question)
+  const getNextCountry = (prevCountry: Country | null) => {
+    if (flagCountries.length <= 1 || !prevCountry) {
       return getRandomCountry(flagCountries);
     }
-    let nextCountry: Country | null = null;
+    let next;
     do {
-      nextCountry = getRandomCountry(flagCountries);
-    } while (nextCountry && nextCountry.isoCode === currentCountry.isoCode);
-    return nextCountry;
+      next = getRandomCountry(flagCountries);
+    } while (next && prevCountry && next.isoCode === prevCountry.isoCode);
+    return next;
   };
 
-  // Handle the guess submission
-  const handleGuess = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentCountry) return;
-    if (!guess.trim()) {
-      setFeedback("Please enter a country name.");
-      return;
-    }
-    const correct =
-      guess.trim().toLowerCase() === currentCountry.name.toLowerCase();
-    setResult(correct);
-    setFeedback("");
-    if (correct) {
-      setScore((s) => s + 1);
-      setStreak((s) => s + 1);
-    } else {
-      setStreak(0);
-    }
-  };
+  // Define how to check the answer
+  const checkAnswer = (guess: string, country: Country) =>
+    guess.trim().toLowerCase() === country.name.toLowerCase();
 
-  // Proceed to the next flag
-  const nextFlag = () => {
-    setCurrentCountry(getNextRandomCountry());
-    setGuess("");
-    setResult(null);
-    setFeedback("");
-  };
-
-  // Skip current flag
-  const skipFlag = () => {
-    setCurrentCountry(getNextRandomCountry());
-    setGuess("");
-    setResult(null);
-    setFeedback("");
-    setStreak(0);
-  };
+  // Use the hook
+  const {
+    question: currentCountry,
+    guess,
+    setGuess,
+    result,
+    score,
+    streak,
+    feedback,
+    handleGuess,
+    nextQuestion,
+    skipQuestion,
+  } = useQuiz({
+    getNextQuestion: getNextCountry,
+    checkAnswer,
+  });
 
   // Show loading or error states
   if (loading) return <LoadingSpinner message="Loading countries..." />;
@@ -95,30 +64,38 @@ export function FlagQuiz() {
   }
 
   return (
-    <QuizLayout title="Guess the Country!" score={score} streak={streak}>
-      <CountryFlag
-        flag={{
-          isoCode: currentCountry.isoCode,
-          ratio: "original",
-          size: "64",
-        }}
-        alt={currentCountry.name}
-        className="block mx-auto mb-8 h-20 w-auto"
-      />
-      <GuessForm
-        guess={guess}
-        setGuess={setGuess}
-        handleGuess={handleGuess}
-        skipFlag={skipFlag}
-        disabled={result !== null}
-      />
-      {feedback && <div className="text-danger mt-2">{feedback}</div>}
-      <ResultMessage
-        result={result}
-        currentCountry={currentCountry}
-        nextFlag={nextFlag}
-      />
-      <div className="mt-8"></div>
-    </QuizLayout>
+    <QuizLayout
+      title="Guess the Country!"
+      score={score}
+      streak={streak}
+      prompt={
+        <CountryFlag
+          flag={{
+            isoCode: currentCountry.isoCode,
+            ratio: "original",
+            size: "64",
+          }}
+          alt={currentCountry.name}
+          className="block mx-auto mb-8 h-20 w-auto"
+        />
+      }
+      guessForm={
+        <GuessForm
+          guess={guess}
+          setGuess={setGuess}
+          handleGuess={handleGuess}
+          skipFlag={skipQuestion}
+          disabled={result !== null}
+        />
+      }
+      feedback={feedback && <div className="text-danger mt-2">{feedback}</div>}
+      resultMessage={
+        <ResultMessage
+          result={result}
+          currentCountry={currentCountry}
+          nextFlag={nextQuestion}
+        />
+      }
+    />
   );
 }
