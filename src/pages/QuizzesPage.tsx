@@ -1,133 +1,75 @@
-import React, { useEffect, useState } from "react";
-import { Card, ErrorMessage, LoadingSpinner } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import {
-  CountryFlag,
-  getRandomCountry,
-  getCountriesWithOwnFlag,
-  type Country,
-} from "@features/countries";
-import { GuessForm, ResultMessage, Scoreboard } from "@features/quizzes";
+import { FaFlag, FaLandmark, FaTrophy } from "react-icons/fa6";
+import { Card } from "@components";
+import FlagQuiz from "@features/quizzes/FlagQuiz";
+import CapitalQuiz from "@features/quizzes/CapitalQuiz";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { Leaderboards } from "@features/quizzes/Leaderboards";
 
 export default function QuizzesPage() {
-  const { countries, loading, error } = useCountryData();
-  // Only use countries whose flag matches their own ISO code
-  const flagCountries = getCountriesWithOwnFlag(countries);
+  const navigate = useNavigate();
 
-  const [currentCountry, setCurrentCountry] = useState<Country | null>(null);
-  const [guess, setGuess] = useState("");
-  const [result, setResult] = useState<null | boolean>(null);
-  const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [feedback, setFeedback] = useState<string>("");
-
-  // Set the initial country when flagCountries are loaded
-  useEffect(() => {
-    if (!loading && flagCountries.length && currentCountry === null) {
-      setCurrentCountry(getRandomCountry(flagCountries));
-    }
-  }, [loading, flagCountries, currentCountry]);
-
-  // Utility to get a different random country than the current one
-  const getNextRandomCountry = () => {
-    if (flagCountries.length <= 1 || !currentCountry) {
-      return getRandomCountry(flagCountries);
-    }
-    let nextCountry: Country | null = null;
-    do {
-      nextCountry = getRandomCountry(flagCountries);
-    } while (nextCountry && nextCountry.isoCode === currentCountry.isoCode);
-    return nextCountry;
-  };
-
-  // Handle the guess submission
-  const handleGuess = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentCountry) return;
-    if (!guess.trim()) {
-      setFeedback("Please enter a country name.");
-      return;
-    }
-    const correct =
-      guess.trim().toLowerCase() === currentCountry.name.toLowerCase();
-    setResult(correct);
-    setFeedback("");
-    if (correct) {
-      setScore((s) => s + 1);
-      setStreak((s) => s + 1);
-    } else {
-      setStreak(0);
-    }
-  };
-
-  // Proceed to the next flag
-  const nextFlag = () => {
-    setCurrentCountry(getNextRandomCountry());
-    setGuess("");
-    setResult(null);
-    setFeedback("");
-  };
-
-  // Skip current flag
-  const skipFlag = () => {
-    setCurrentCountry(getNextRandomCountry());
-    setGuess("");
-    setResult(null);
-    setFeedback("");
-    setStreak(0);
-  };
-
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading countries..." />;
-  if (error) return <ErrorMessage error={error} />;
-  if (!flagCountries.length) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-lg">
-        <div>No countries with their own flag found.</div>
-      </div>
-    );
-  }
-  if (!currentCountry) {
-    // Wait for useEffect to set currentCountry
-    return null;
-  }
+  const cards = [
+    {
+      key: "flag",
+      route: "guess-the-flag",
+      icon: <FaFlag className="text-5xl mb-4" />,
+      title: "Guess the Flag",
+      description: "Can you identify the country by its flag?",
+      muted: false,
+    },
+    {
+      key: "capital",
+      route: "guess-the-capital",
+      icon: <FaLandmark className="text-5xl mb-4" />,
+      title: "Guess the Capital",
+      description: "Test your knowledge of world capitals!",
+      muted: true,
+    },
+    {
+      key: "leaderboards",
+      route: "leaderboards",
+      icon: <FaTrophy className="text-5xl mb-4 text-yellow-500" />,
+      title: "Leaderboards",
+      description: "See top scores and streaks!",
+      muted: true,
+    },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
-        Guess the Country!
-      </h1>
-
-      {/* Scoreboard */}
-      <Scoreboard score={score} streak={streak} />
-
-      {/* Main Content */}
-      <Card className="max-w-md w-full p-8 rounded-xl shadow-lg text-center font-sans">
-        <CountryFlag
-          flag={{
-            isoCode: currentCountry.isoCode,
-            ratio: "original",
-            size: "64",
-          }}
-          alt={currentCountry.name}
-          className="block mx-auto mb-8 h-20 w-auto"
-        />
-        <GuessForm
-          guess={guess}
-          setGuess={setGuess}
-          handleGuess={handleGuess}
-          skipFlag={skipFlag}
-          disabled={result !== null}
-        />
-        {feedback && <div className="text-danger mt-2">{feedback}</div>}
-        <ResultMessage
-          result={result}
-          currentCountry={currentCountry}
-          nextFlag={nextFlag}
-        />
-        <div className="mt-8">          
-        </div>
-      </Card>
-    </div>
+    <Routes>
+      <Route
+        index
+        element={
+          <div className="min-h-screen flex flex-col items-center justify-center">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {cards.map((card) => (
+                <Card
+                  key={card.key}
+                  className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary transition"
+                  onClick={() => navigate(card.route)}
+                >
+                  <div className="flex flex-col items-center">
+                    {card.icon}
+                    <h2 className="text-xl font-semibold mb-2">{card.title}</h2>
+                    <p
+                      className={
+                        card.muted
+                          ? "text-muted"
+                          : "text-gray-600 dark:text-gray-300"
+                      }
+                    >
+                      {card.description}
+                    </p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        }
+      />
+      <Route path="guess-the-flag" element={<FlagQuiz />} />
+      <Route path="guess-the-capital" element={<CapitalQuiz />} />
+      <Route path="leaderboards" element={<Leaderboards />} />
+    </Routes>
   );
 }
