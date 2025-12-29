@@ -12,7 +12,12 @@ import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage";
 
-export function CapitalQuiz({ difficulty }: { difficulty?: string }) {
+interface CapitalQuizProps {
+  difficulty?: string;
+  gameMode?: string;
+}
+
+export function CapitalQuiz({ difficulty, gameMode }: CapitalQuizProps) {
   const { countries, loading, error } = useCountryData();
   let capitalCountries = countries.filter(
     (c: Country) => c.capital && c.capital.trim() !== ""

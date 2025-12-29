@@ -11,10 +11,19 @@ import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage";
+import { TimedQuizSession } from "./TimedQuizSession";
+import type { GameMode } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 const countryDifficulty: Record<string, string> = countryDifficultyRaw;
 
-export function FlagQuiz({ difficulty }: { difficulty?: string }) {
+interface FlagQuizProps {
+  difficulty?: string;
+  gameMode?: GameMode;
+}
+
+export function FlagQuiz({ difficulty, gameMode }: FlagQuizProps) {
+    const navigate = useNavigate();
   const { countries, loading, error } = useCountryData();
   let flagCountries = getCountriesWithOwnFlag(countries);
   if (difficulty) {
@@ -71,6 +80,73 @@ export function FlagQuiz({ difficulty }: { difficulty?: string }) {
     return null;
   }
 
+  // Timed mode logic
+  if (gameMode === "timed") {
+    return (
+      <TimedQuizSession duration={300} maxQuestions={25}>
+        {({
+          timeLeft,
+          questionsAnswered,
+          sessionActive,
+          endSession,
+          incrementQuestions,
+        }) => {
+          const handleForfeit = () => {
+            endSession();
+            navigate("/quizzes");
+          };
+          return (
+            <QuizLayout
+              title="Guess the Country!"
+              score={questionsAnswered}
+              streak={streak}
+              timeLeft={timeLeft}
+              questionsAnswered={questionsAnswered}
+              maxQuestions={25}
+              prompt={
+                <CountryFlag
+                  flag={{
+                    isoCode: currentCountry.isoCode,
+                    ratio: "original",
+                    size: "64",
+                  }}
+                  alt={currentCountry.name}
+                  className="block mx-auto mb-8 h-20 w-auto"
+                />
+              }
+              guessForm={
+                <GuessForm
+                  guess={guess}
+                  setGuess={setGuess}
+                  handleGuess={(e) => {
+                    handleGuess(e);
+                    if (result === null && sessionActive) {
+                      incrementQuestions();
+                    }
+                  }}
+                  skipFlag={skipQuestion}
+                  handleForfeit={handleForfeit}
+                  disabled={!sessionActive || result !== null}
+                />
+              }
+              feedback={
+                feedback && <div className="text-danger mt-2">{feedback}</div>
+              }
+              resultMessage={
+                <ResultMessage
+                  result={result}
+                  currentCountry={currentCountry}
+                  nextFlag={nextQuestion}
+                />
+              }
+            />
+          );
+        }}
+      </TimedQuizSession>
+    );
+  }
+
+  // Sandbox mode (default)
   return (
     <QuizLayout
       title="Guess the Country!"

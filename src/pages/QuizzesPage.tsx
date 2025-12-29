@@ -9,6 +9,7 @@ import {
   QuizSettings,
   type Difficulty,
 } from "@features/quizzes";
+import type { GameMode } from "@features/quizzes/types";
 
 export default function QuizzesPage() {
   const navigate = useNavigate();
@@ -17,7 +18,8 @@ export default function QuizzesPage() {
     route: string;
     key: string;
   }>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>(null);
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [gameMode, setGameMode] = useState<GameMode>("sandbox");
 
   const cards = [
     {
@@ -83,6 +85,8 @@ export default function QuizzesPage() {
                   <QuizSettings
                     difficulty={difficulty}
                     setDifficulty={setDifficulty}
+                    gameMode={gameMode}
+                    setGameMode={setGameMode}
                     onStart={() => {
                       navigate(settingsOpen.route);
                       setSettingsOpen(null);
@@ -96,11 +100,11 @@ export default function QuizzesPage() {
         />
         <Route
           path="guess-the-flag"
-          element={<FlagQuiz difficulty={difficulty ?? undefined} />}
+          element={<FlagQuiz difficulty={difficulty ?? undefined} gameMode={gameMode} />}
         />
         <Route
           path="guess-the-capital"
-          element={<CapitalQuiz difficulty={difficulty ?? undefined} />}
+          element={<CapitalQuiz difficulty={difficulty ?? undefined} gameMode={gameMode} />}
         />
         <Route path="leaderboards" element={<Leaderboards />} />
       </Routes>

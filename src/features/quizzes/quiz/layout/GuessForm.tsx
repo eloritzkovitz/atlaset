@@ -5,8 +5,10 @@ interface GuessFormProps {
   setGuess: (g: string) => void;
   handleGuess: (e: React.FormEvent) => void;
   skipFlag: () => void;
+  handleForfeit?: () => void;
   disabled: boolean;
   placeholder?: string;
+  forfeitButton?: React.ReactNode;
 }
 
 export function GuessForm({
@@ -14,6 +16,7 @@ export function GuessForm({
   setGuess,
   handleGuess,
   skipFlag,
+  handleForfeit,
   disabled,
   placeholder = "Enter country name",
 }: GuessFormProps) {
@@ -30,7 +33,7 @@ export function GuessForm({
         className="mb-4 text-lg rounded-full"
         disabled={disabled}
       />
-      <div className="flex justify-center gap-4 mb-2">
+      <div className="flex justify-center gap-4 mb-2 items-center">
         <ActionButton
           type="submit"
           variant="primary"
@@ -49,6 +52,16 @@ export function GuessForm({
           rounded
         >
           Skip
+        </ActionButton>
+        <ActionButton
+          type="button"
+          variant="secondary"
+          aria-label="Forfeit"
+          onClick={handleForfeit}
+          className="px-4 py-2 !bg-danger/70 text-white rounded font-semibold hover:!bg-danger-hover transition"
+          rounded
+        >
+          Forfeit
         </ActionButton>
       </div>
     </form>
