@@ -1,6 +1,7 @@
 import React from "react";
 import { Card } from "@components";
 import { Scoreboard } from "./Scoreboard";
+import { Link } from "react-router-dom";
 
 interface QuizLayoutProps {
   title: string;
@@ -16,7 +17,16 @@ interface QuizLayoutProps {
 /**
  * Generic layout for quizzes: title, scoreboard, and main content card.
  */
-export function QuizLayout({ title, score, streak, prompt, guessForm, feedback, resultMessage, children }: QuizLayoutProps) {
+export function QuizLayout({
+  title,
+  score,
+  streak,
+  prompt,
+  guessForm,
+  feedback,
+  resultMessage,
+  children,
+}: QuizLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
       <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
@@ -30,6 +40,12 @@ export function QuizLayout({ title, score, streak, prompt, guessForm, feedback, 
         {resultMessage}
         {children}
       </Card>
+      <Link
+        to="/quizzes"
+        className="mt-8 inline-block px-4 py-2 text-white font-semibold"
+      >
+        ← Return
+      </Link>
     </div>
   );
 }
