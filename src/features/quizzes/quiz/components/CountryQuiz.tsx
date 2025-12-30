@@ -27,6 +27,7 @@ export interface CountryQuizProps {
   handleSessionEnd: () => void;
   incrementQuestions: () => void;
   children?: ReactNode;
+  mode?: 'flag' | 'capital'; // Add mode prop
 }
 
 export function CountryQuiz({
@@ -46,6 +47,7 @@ export function CountryQuiz({
   handleSessionEnd,
   incrementQuestions,
   children,
+  mode = 'flag', // Default to 'flag' if not provided
 }: CountryQuizProps) {
   const { countries, loading, error } = useCountryData();
   const quizCountries = filterCountries(countries, difficulty);
@@ -97,9 +99,12 @@ export function CountryQuiz({
   // Wait for currentCountry to be set
   if (!currentCountry) return null;
 
+  // Determine title based on mode
+  const quizTitle = mode === 'capital' ? 'Guess the Capital!' : 'Guess the Flag!';
+
   return (
     <QuizLayout
-      title="Quiz"
+      title={quizTitle}
       score={scoreOverride !== undefined ? scoreOverride : score}
       streak={streak}
       prompt={prompt(currentCountry)}

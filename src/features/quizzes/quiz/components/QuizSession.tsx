@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { GameOverCard } from "./GameOverCard";
 import { useQuizAudio } from "../hooks/useQuizAudio";
+import { useAtomicTimer } from "../hooks/useAtomicTimer";
+import { useTickingSound } from "../hooks/useTickingSound";
 
 interface QuizSessionProps {
   maxQuestions: number;
@@ -23,66 +25,52 @@ export function QuizSession({
     questionsAnswered: 0,
     sessionActive: true,
   });
-  const [timeLeft, setTimeLeft] = useState(duration);
+  const { playWin, playLose, playTick, playTickX2, stopTick } = useQuizAudio();
+  const { timeLeft, startTimer } = useAtomicTimer(
+    typeof duration === "number" ? duration : 0,
+    session.sessionActive
+  );
 
-  // Audio hooks for end session sounds
-  const { playWin, playLose } = useQuizAudio();
-
-  // Timer effect (if duration is provided)
+  // End session when timer runs out
   useEffect(() => {
-    if (typeof duration !== "number") return;
-    setTimeLeft(duration);
-  }, [duration]);
-
-  // Timer countdown effect
-  useEffect(() => {
-    if (typeof duration !== "number" || !session.sessionActive) return;
-    const interval = setInterval(() => {
-      setTimeLeft((t) => {
-        if (t === undefined) return t;
-        if (t <= 1) {
-          clearInterval(interval);
-          setSession((s) => ({ ...s, sessionActive: false }));
-          return 0;
-        }
-        return t - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [duration, session.sessionActive]);
+    if (
+      typeof duration === "number" &&
+      timeLeft === 0 &&
+      session.sessionActive
+    ) {
+      setSession((s) => ({ ...s, sessionActive: false }));
+    }
+  }, [duration, timeLeft, session.sessionActive]);
 
   const endSession = () => setSession((s) => ({ ...s, sessionActive: false }));
   const incrementQuestions = () => {
     setSession((s) => {
       if (s.questionsAnswered >= maxQuestions) {
         // Already at max, ensure session is ended
-        const newState = {
+        return {
           questionsAnswered: maxQuestions,
           sessionActive: false,
         };
-        console.log(
-          "[QuizSession] incrementQuestions: already at max, forcing end",
-          newState
-        );
-        return newState;
       }
       const next = s.questionsAnswered + 1;
       if (next >= maxQuestions) {
-        const newState = {
+        return {
           questionsAnswered: maxQuestions,
           sessionActive: false,
         };
-        console.log(
-          "[QuizSession] incrementQuestions: session ending",
-          newState
-        );
-        return newState;
       }
-      const newState = { ...s, questionsAnswered: next };
-      console.log("[QuizSession] incrementQuestions: incremented", newState);
-      return newState;
+      return { ...s, questionsAnswered: next };
     });
   };
+
+  // Ticking sound hook
+  useTickingSound(
+    typeof timeLeft === "number" ? timeLeft : 0,
+    session.sessionActive,
+    playTick,
+    stopTick,
+    playTickX2
+  );
 
   // Play win/lose sound on session end
   useEffect(() => {
@@ -122,7 +110,7 @@ export function QuizSession({
       }
       onPlayAgain={() => {
         setSession({ questionsAnswered: 0, sessionActive: true });
-        if (typeof duration === "number") setTimeLeft(duration);
+        startTimer();
       }}
     />
   );

@@ -39,6 +39,7 @@ export function GuessForm({
           variant="primary"
           aria-label="Submit guess"
           disabled={disabled}
+          className="!text-2xl"
           rounded
         >
           Guess
@@ -49,6 +50,7 @@ export function GuessForm({
           aria-label="Skip flag"
           onClick={skipFlag}
           disabled={disabled}
+          className="!text-2xl"
           rounded
         >
           Skip
@@ -58,7 +60,7 @@ export function GuessForm({
           variant="secondary"
           aria-label="Forfeit"
           onClick={handleForfeit}
-          className="px-4 py-2 !bg-danger/70 text-white rounded font-semibold hover:!bg-danger-hover transition"
+          className="px-4 py-2  !bg-danger/70 !text-2xl hover:!bg-danger-hover transition"
           rounded
         >
           Forfeit

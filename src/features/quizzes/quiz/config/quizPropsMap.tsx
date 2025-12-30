@@ -29,10 +29,10 @@ export function getCapitalQuizProps(difficulty?: Difficulty) {
             flag={{
               isoCode: country.isoCode,
               ratio: "original",
-              size: "64",
+              size: "128",
             }}
             alt={country.name}
-            className="block mx-auto mb-8 h-20 w-auto"
+            className="block mx-auto mb-8 h-40 w-auto"
           />
           <div className="text-lg font-semibold">{country.name}</div>
         </>
@@ -62,10 +62,10 @@ export function getFlagQuizProps(difficulty?: Difficulty) {
           flag={{
             isoCode: country.isoCode,
             ratio: "original",
-            size: "64",
+            size: "128",
           }}
           alt={country.name}
-          className="block mx-auto mb-8 h-20 w-auto"
+          className="block mx-auto mb-8 h-40 w-auto"
         />
       ),
       noCountriesMessage: "No countries with their own flag found.",
