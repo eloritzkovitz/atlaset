@@ -21,18 +21,27 @@ const DEST_DIR = path.join(__dirname, "../public/flags");
 fs.mkdirSync(DEST_DIR, { recursive: true });
 
 /**
- * Fetch the list of available flags
- * @returns - Promise that resolves to an array of flag ISO codes
+ * Fetch the remote index.json as a string
+ * @returns Promise that resolves to the raw index.json string
  */
-function fetchList() {
+function fetchRemoteIndex() {
   return new Promise((resolve, reject) => {
     https.get(`${BACKEND_URL}/index.json`, (res) => {
       let data = "";
       res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => resolve(JSON.parse(data)));
+      res.on("end", () => resolve(data));
       res.on("error", reject);
     });
   });
+}
+
+/**
+ * Read the local index.json as a string, or null if not present
+ */
+function readLocalIndex() {
+  const localPath = path.join(DEST_DIR, "index.json");
+  if (!fs.existsSync(localPath)) return null;
+  return fs.readFileSync(localPath, "utf8");
 }
 
 /**
@@ -64,11 +73,22 @@ function downloadFlag(iso) {
   });
 }
 
-// Download all flags
-fetchList()
-  .then((flags) => Promise.all(flags.map(downloadFlag)))
-  .then(() => console.log("All flags downloaded!"))
-  .catch((err) => {
+// Main logic: only fetch if index.json changed
+(async () => {
+  try {
+    const remoteIndexRaw = await fetchRemoteIndex();
+    const localIndexRaw = readLocalIndex();
+    if (localIndexRaw && localIndexRaw === remoteIndexRaw) {
+      console.log("Flags are up to date. No download needed.");
+      return;
+    }
+    // Save new index.json
+    fs.writeFileSync(path.join(DEST_DIR, "index.json"), remoteIndexRaw);
+    const flags = JSON.parse(remoteIndexRaw);
+    await Promise.all(flags.map(downloadFlag));
+    console.log("All flags downloaded and index.json updated!");
+  } catch (err) {
     console.error("Error downloading flags:", err);
     process.exit(1);
-  });
+  }
+})();
