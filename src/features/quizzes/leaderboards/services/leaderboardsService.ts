@@ -57,6 +57,7 @@ export const leaderboardsService = {
   ) {
     if (!isAuthenticated()) return;
     const user = getCurrentUser();
+    if (!user) return;
     if (typeof type === "undefined" || typeof difficulty === "undefined") {
       throw new Error(
         "Type and difficulty must be defined for leaderboard entry."
@@ -70,9 +71,9 @@ export const leaderboardsService = {
         type,
         difficulty,
         playerId: entry.playerId,
-        userName: user?.displayName,
+        userName: user.displayName,
       },
-      user?.uid!
+      user.uid
     );
   },
 
@@ -91,7 +92,7 @@ export const leaderboardsService = {
     if (!isAuthenticated()) return;
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
     const docSnap = await getDoc(ref);
-    let games: LeaderboardEntry[] = docSnap.exists()
+    const games: LeaderboardEntry[] = docSnap.exists()
       ? docSnap.data().games || []
       : [];
     games.unshift(entry);
