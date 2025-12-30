@@ -25,6 +25,7 @@ export function useQuiz<TQuestion>({
   const [result, setResult] = useState<null | boolean>(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(0);
   const [feedback, setFeedback] = useState<string>("");
 
   // Audio hooks for feedback sounds
@@ -53,7 +54,11 @@ export function useQuiz<TQuestion>({
       if (correct) {
         playCorrect();
         setScore((s) => s + 1);
-        setStreak((s) => s + 1);
+        setStreak((s) => {
+          const newStreak = s + 1;
+          setMaxStreak((max) => Math.max(max, newStreak));
+          return newStreak;
+        });
       } else {
         playIncorrect();
         setStreak(0);
@@ -104,6 +109,7 @@ export function useQuiz<TQuestion>({
     result,
     score,
     streak,
+    maxStreak,
     feedback,
     handleGuess,
     nextQuestion,

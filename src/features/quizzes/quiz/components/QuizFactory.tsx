@@ -1,5 +1,6 @@
 import { CountryQuiz, type CountryQuizProps } from "../components/CountryQuiz";
 import { QuizSession } from "../components/QuizSession";
+import type { Difficulty, QuizType } from "../../types";
 
 interface QuizFactoryProps {
   quizProps: Omit<
@@ -15,6 +16,8 @@ interface QuizFactoryProps {
   sessionProps: {
     maxQuestions: number;
     duration?: number;
+    quizType: QuizType;
+    difficulty: Difficulty;
     [key: string]: unknown;
   };
   scoreIsQuestions?: boolean;
@@ -26,6 +29,7 @@ interface SessionRenderProps {
   sessionActive: boolean;
   endSession: () => void;
   incrementQuestions: () => void;
+  maxStreak: number;
 }
 
 export function QuizFactory({
@@ -33,8 +37,13 @@ export function QuizFactory({
   sessionProps,
   scoreIsQuestions,
 }: QuizFactoryProps) {
+  const { quizType, difficulty, ...restSessionProps } = sessionProps;
   return (
-    <QuizSession {...sessionProps}>
+    <QuizSession
+      {...restSessionProps}
+      quizType={quizType}
+      difficulty={difficulty}
+    >
       {({
         timeLeft,
         questionsAnswered,

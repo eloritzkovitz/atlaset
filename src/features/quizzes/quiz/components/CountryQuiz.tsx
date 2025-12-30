@@ -27,7 +27,14 @@ export interface CountryQuizProps {
   sessionActive: boolean;
   handleSessionEnd: () => void;
   incrementQuestions: () => void;
-  children?: ReactNode;
+  children?: (session: {
+    timeLeft?: number;
+    questionsAnswered: number;
+    sessionActive: boolean;
+    endSession: () => void;
+    incrementQuestions: () => void;
+    maxStreak: number;
+  }) => React.ReactNode;
 }
 
 export function CountryQuiz({
@@ -65,6 +72,7 @@ export function CountryQuiz({
     result,
     score,
     streak,
+    maxStreak,
     feedback,
     handleGuess,
     nextQuestion,
@@ -146,7 +154,16 @@ export function CountryQuiz({
       questionsAnswered={questionsAnswered}
       maxQuestions={maxQuestions}
     >
-      {children}
+      {typeof children === "function"
+        ? children({
+            timeLeft,
+            questionsAnswered,
+            sessionActive,
+            endSession: handleSessionEnd,
+            incrementQuestions,
+            maxStreak,
+          })
+        : children}
     </QuizLayout>
   );
 }
