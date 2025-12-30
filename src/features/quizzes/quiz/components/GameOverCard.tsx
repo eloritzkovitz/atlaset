@@ -2,12 +2,18 @@ import { Card, ActionButton } from "@components";
 
 export interface GameOverCardProps {
   type?: "gameover" | "victory";
+  score?: number;
+  streak?: number;
+  timeUsed?: number;
   onPlayAgain?: () => void;
   onReturn?: () => void;
 }
 
 export function GameOverCard({
   type = "gameover",
+  score,
+  streak,
+  timeUsed,
   onPlayAgain,
   onReturn,
 }: GameOverCardProps) {
@@ -28,6 +34,27 @@ export function GameOverCard({
               ? "You completed the quiz! Well done."
               : "Better luck next time!"}
           </div>
+          {isVictory && (
+            <div className="mb-4 flex flex-col items-center gap-2">
+              {typeof score === "number" && (
+                <div>
+                  <span className="font-semibold">Score:</span> {score}
+                </div>
+              )}
+              {typeof streak === "number" && (
+                <div>
+                  <span className="font-semibold">Streak:</span> {streak}
+                </div>
+              )}
+              {typeof timeUsed === "number" && (
+                <div>
+                  <span className="font-semibold">Time:</span>{" "}
+                  {Math.floor(timeUsed / 60)}:
+                  {(timeUsed % 60).toString().padStart(2, "0")}
+                </div>
+              )}
+            </div>
+          )}
           <div className="flex flex-col gap-4 w-full items-center">
             <ActionButton
               type="button"

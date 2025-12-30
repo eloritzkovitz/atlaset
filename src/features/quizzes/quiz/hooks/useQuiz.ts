@@ -1,5 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { useQuizAudio } from "./useQuizAudio";
 
 /**
  * Generic quiz logic hook for reusability across different quiz types.
@@ -18,13 +19,16 @@ export function useQuiz<TQuestion>({
   checkAnswer: (guess: string, question: TQuestion) => boolean;
   initialQuestion?: TQuestion | null;
   onQuestionAnswered?: () => void;
-}) {  
+}) {
   const [question, setQuestion] = useState<TQuestion | null>(initialQuestion);
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<null | boolean>(null);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [feedback, setFeedback] = useState<string>("");
+
+  // Audio hooks for feedback sounds
+  const { playCorrect, playIncorrect } = useQuizAudio();
 
   // Set the initial question if not set
   useEffect(() => {
@@ -47,14 +51,23 @@ export function useQuiz<TQuestion>({
       setResult(correct);
       setFeedback("");
       if (correct) {
+        playCorrect();
         setScore((s) => s + 1);
         setStreak((s) => s + 1);
       } else {
+        playIncorrect();
         setStreak(0);
       }
       if (onQuestionAnswered) onQuestionAnswered();
     },
-    [guess, question, checkAnswer, onQuestionAnswered]
+    [
+      guess,
+      question,
+      checkAnswer,
+      onQuestionAnswered,
+      playCorrect,
+      playIncorrect,
+    ]
   );
 
   // Go to next question

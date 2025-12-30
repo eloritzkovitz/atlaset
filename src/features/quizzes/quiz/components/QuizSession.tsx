@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { GameOverCard } from "./GameOverCard";
+import { useQuizAudio } from "../hooks/useQuizAudio";
 
 interface QuizSessionProps {
   maxQuestions: number;
@@ -23,6 +24,9 @@ export function QuizSession({
     sessionActive: true,
   });
   const [timeLeft, setTimeLeft] = useState(duration);
+
+  // Audio hooks for end session sounds
+  const { playWin, playLose } = useQuizAudio();
 
   // Timer effect (if duration is provided)
   useEffect(() => {
@@ -80,6 +84,23 @@ export function QuizSession({
     });
   };
 
+  // Play win/lose sound on session end
+  useEffect(() => {
+    if (!session.sessionActive) {
+      if (session.questionsAnswered >= maxQuestions) {
+        playWin();
+      } else {
+        playLose();
+      }
+    }
+  }, [
+    session.sessionActive,
+    session.questionsAnswered,
+    maxQuestions,
+    playWin,
+    playLose,
+  ]);
+
   return session.sessionActive ? (
     <>
       {children({
@@ -93,6 +114,12 @@ export function QuizSession({
   ) : (
     <GameOverCard
       type={session.questionsAnswered >= maxQuestions ? "victory" : "gameover"}
+      score={session.questionsAnswered}
+      timeUsed={
+        typeof duration === "number" && typeof timeLeft === "number"
+          ? duration - timeLeft
+          : undefined
+      }
       onPlayAgain={() => {
         setSession({ questionsAnswered: 0, sessionActive: true });
         if (typeof duration === "number") setTimeLeft(duration);
