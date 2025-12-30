@@ -6,7 +6,7 @@ import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage/ResultMessage";
-import type { Difficulty } from "../../types";
+import type { Difficulty, QuizType } from "../../types";
 
 export interface CountryQuizProps {
   filterCountries: (countries: Country[], difficulty?: Difficulty) => Country[];
@@ -16,6 +16,7 @@ export interface CountryQuizProps {
   checkAnswer: (guess: string, country: Country) => boolean;
   prompt: (country: Country) => ReactNode;
   resultLabel?: (country: Country) => ReactNode;
+  type?: QuizType;
   difficulty?: Difficulty;
   noCountriesMessage: string;
   guessPlaceholder: string;
@@ -27,7 +28,6 @@ export interface CountryQuizProps {
   handleSessionEnd: () => void;
   incrementQuestions: () => void;
   children?: ReactNode;
-  mode?: 'flag' | 'capital'; // Add mode prop
 }
 
 export function CountryQuiz({
@@ -36,6 +36,7 @@ export function CountryQuiz({
   checkAnswer,
   prompt,
   resultLabel,
+  type = "flag",
   difficulty,
   noCountriesMessage,
   guessPlaceholder,
@@ -47,7 +48,6 @@ export function CountryQuiz({
   handleSessionEnd,
   incrementQuestions,
   children,
-  mode = 'flag', // Default to 'flag' if not provided
 }: CountryQuizProps) {
   const { countries, loading, error } = useCountryData();
   const quizCountries = filterCountries(countries, difficulty);
@@ -70,10 +70,10 @@ export function CountryQuiz({
     nextQuestion,
     skipQuestion,
     handleForfeit,
-    } = useQuiz({
-      getNextQuestion: getNext,
-      checkAnswer,
-      onQuestionAnswered: incrementQuestions,
+  } = useQuiz({
+    getNextQuestion: getNext,
+    checkAnswer,
+    onQuestionAnswered: incrementQuestions,
   });
 
   // Handle forfeit action
@@ -99,8 +99,9 @@ export function CountryQuiz({
   // Wait for currentCountry to be set
   if (!currentCountry) return null;
 
-  // Determine title based on mode
-  const quizTitle = mode === 'capital' ? 'Guess the Capital!' : 'Guess the Flag!';
+  // Determine title based on type
+  const quizTitle =
+    type === "capital" ? "Guess the Capital!" : "Guess the Flag!";
 
   return (
     <QuizLayout
