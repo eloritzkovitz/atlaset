@@ -28,7 +28,6 @@ export function QuizLayout({
   feedback,
   resultMessage,
   timeLeft,
-  questionsAnswered,
   maxQuestions,
   children,
 }: QuizLayoutProps) {
@@ -41,7 +40,6 @@ export function QuizLayout({
         score={score}
         streak={streak}
         timeLeft={timeLeft}
-        questionsAnswered={questionsAnswered}
         maxQuestions={maxQuestions}
       />
       <Card className="max-w-2xl w-full p-8 rounded-xl shadow-lg text-center font-sans">
