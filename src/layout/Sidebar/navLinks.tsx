@@ -21,12 +21,10 @@ export const NAV_LINKS = [
     to: "/quizzes",
     icon: <FaQuestion className="text-2xl" />,
     label: "Quizzes",
-    end: true,
   },
   {
     to: "/trips",
     icon: <FaSuitcaseRolling className="text-2xl" />,
     label: "My Trips",
-    end: true,
   },
 ];
