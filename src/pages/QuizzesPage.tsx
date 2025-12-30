@@ -3,9 +3,8 @@ import { FaFlag, FaLandmark, FaTrophy } from "react-icons/fa6";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Card } from "@components";
 import {
-  CapitalQuiz,
-  FlagQuiz,
   Leaderboards,
+  QuizEntry,
   QuizSettings,
   type Difficulty,
 } from "@features/quizzes";
@@ -101,8 +100,9 @@ export default function QuizzesPage() {
         <Route
           path="guess-the-flag"
           element={
-            <FlagQuiz
-              difficulty={difficulty ?? undefined}
+            <QuizEntry
+              quizType="flag"
+              difficulty={difficulty}
               gameMode={gameMode}
             />
           }
@@ -110,8 +110,9 @@ export default function QuizzesPage() {
         <Route
           path="guess-the-capital"
           element={
-            <CapitalQuiz
-              difficulty={difficulty ?? undefined}
+            <QuizEntry
+              quizType="capital"
+              difficulty={difficulty}
               gameMode={gameMode}
             />
           }

@@ -12,10 +12,12 @@ export function useQuiz<TQuestion>({
   getNextQuestion,
   checkAnswer,
   initialQuestion = null,
+  onQuestionAnswered,
 }: {
   getNextQuestion: (prevQuestion: TQuestion | null) => TQuestion | null;
   checkAnswer: (guess: string, question: TQuestion) => boolean;
   initialQuestion?: TQuestion | null;
+  onQuestionAnswered?: () => void;
 }) {  
   const [question, setQuestion] = useState<TQuestion | null>(initialQuestion);
   const [guess, setGuess] = useState("");
@@ -50,8 +52,9 @@ export function useQuiz<TQuestion>({
       } else {
         setStreak(0);
       }
+      if (onQuestionAnswered) onQuestionAnswered();
     },
-    [guess, question, checkAnswer]
+    [guess, question, checkAnswer, onQuestionAnswered]
   );
 
   // Go to next question

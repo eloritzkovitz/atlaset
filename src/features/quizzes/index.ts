@@ -1,7 +1,6 @@
 // Components
 export { Leaderboards } from "./leaderboards/Leaderboards";
-export { FlagQuiz } from "./quiz/components/FlagQuiz";
-export { CapitalQuiz } from "./quiz/components/CapitalQuiz";
+export { QuizEntry } from "./quiz/components/QuizEntry";
 export { QuizSettings } from "./quiz/components/QuizSettings";
 
 // Types

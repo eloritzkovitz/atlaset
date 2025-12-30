@@ -1,28 +1,31 @@
+import { type ReactNode } from "react";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
+import type { Country } from "@features/countries";
 import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
-import { ResultMessage } from "../layout/ResultMessage";
-import type { Country } from "@features/countries";
-import type { ReactNode } from "react";
+import { ResultMessage } from "../layout/ResultMessage/ResultMessage";
+import type { Difficulty } from "../../types";
 
 export interface CountryQuizProps {
-  filterCountries: (countries: Country[], difficulty?: string) => Country[];
+  filterCountries: (countries: Country[], difficulty?: Difficulty) => Country[];
   getNextCountry: (
     countries: Country[]
   ) => (prevCountry: Country | null) => Country | null;
   checkAnswer: (guess: string, country: Country) => boolean;
   prompt: (country: Country) => ReactNode;
   resultLabel?: (country: Country) => ReactNode;
-  difficulty?: string;
+  difficulty?: Difficulty;
   noCountriesMessage: string;
   guessPlaceholder: string;
   scoreOverride?: number;
   timeLeft?: number;
-  questionsAnswered?: number;
-  maxQuestions?: number;
-  handleSessionEnd?: () => void;
+  questionsAnswered: number;
+  maxQuestions: number;
+  sessionActive: boolean;
+  handleSessionEnd: () => void;
+  incrementQuestions: () => void;
   children?: ReactNode;
 }
 
@@ -39,7 +42,9 @@ export function CountryQuiz({
   timeLeft,
   questionsAnswered,
   maxQuestions,
+  sessionActive,
   handleSessionEnd,
+  incrementQuestions,
   children,
 }: CountryQuizProps) {
   const { countries, loading, error } = useCountryData();
@@ -51,7 +56,6 @@ export function CountryQuiz({
     return result === undefined ? null : result;
   };
 
-  // Use the quiz hook
   const {
     question: currentCountry,
     guess,
@@ -64,14 +68,15 @@ export function CountryQuiz({
     nextQuestion,
     skipQuestion,
     handleForfeit,
-  } = useQuiz({
-    getNextQuestion: getNext,
-    checkAnswer,
+    } = useQuiz({
+      getNextQuestion: getNext,
+      checkAnswer,
+      onQuestionAnswered: incrementQuestions,
   });
 
-  // Compose forfeit handler: call handleSessionEnd (if provided) then handleForfeit
+  // Handle forfeit action
   const onForfeit = () => {
-    if (handleSessionEnd) handleSessionEnd();
+    handleSessionEnd();
     handleForfeit();
   };
 
@@ -85,10 +90,12 @@ export function CountryQuiz({
       </div>
     );
   }
-  if (!currentCountry) {
-    // Wait for useEffect to set currentCountry
-    return null;
-  }
+
+  // Handle end of session
+  if (!sessionActive) return null;
+
+  // Wait for currentCountry to be set
+  if (!currentCountry) return null;
 
   return (
     <QuizLayout
@@ -101,9 +108,12 @@ export function CountryQuiz({
           guess={guess}
           setGuess={setGuess}
           handleGuess={handleGuess}
-          skipFlag={skipQuestion}
+          skipFlag={() => {
+            skipQuestion();
+            incrementQuestions();
+          }}
           handleForfeit={onForfeit}
-          disabled={result !== null}
+          disabled={result !== null || !sessionActive}
           placeholder={guessPlaceholder}
         />
       }
