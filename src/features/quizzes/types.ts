@@ -23,6 +23,20 @@ export type PlayerGames = {
   [playerId: string]: LeaderboardEntry[];
 };
 
+/** Represents the properties of a quiz session. */
+export interface SessionProps {
+  sessionActive: boolean;
+  handleSessionEnd: () => void;
+  maxQuestions: number;
+  questionsAnswered: number; 
+  incrementQuestions: () => void;
+  timeLeft?: number;
+  score: number;
+  setScore: (newScore: number) => void;
+  maxStreak: number;
+  setMaxStreak: (newMaxStreak: number) => void;
+}
+
 /** Represents an entry in the leaderboard. */
 export type LeaderboardEntry = {
   /** Unique identifier for the player. */

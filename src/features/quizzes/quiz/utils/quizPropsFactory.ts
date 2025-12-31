@@ -1,5 +1,6 @@
 import type { Country } from "@features/countries";
 import type { Difficulty } from "../../types";
+import { filterByDifficulty, getNextRandomCountry } from "./quizUtils";
 
 interface QuizPromptConfig {
   prompt: (country: Country) => React.ReactNode;
@@ -39,22 +40,11 @@ export function createQuizProps({
     filterCountries: (countries: Country[], diff?: Difficulty) => {
       let filtered = filterFn(countries);
       if (diff && countryDifficultyMap) {
-        filtered = filtered.filter(
-          (c) => countryDifficultyMap[c.isoCode] === diff
-        );
+        filtered = filterByDifficulty(filtered, diff, countryDifficultyMap);
       }
       return filtered;
     },
-    getNextCountry: (countries: Country[]) => (prevCountry: Country | null) => {
-      if (countries.length <= 1 || !prevCountry) {
-        return countries[Math.floor(Math.random() * countries.length)] || null;
-      }
-      let next;
-      do {
-        next = countries[Math.floor(Math.random() * countries.length)];
-      } while (next && prevCountry && next.isoCode === prevCountry.isoCode);
-      return next;
-    },
+    getNextCountry: (countries: Country[]) => getNextRandomCountry(countries),
     checkAnswer,
     ...promptConfig,
     difficulty,

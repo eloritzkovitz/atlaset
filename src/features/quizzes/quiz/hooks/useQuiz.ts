@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuizAudio } from "./useQuizAudio";
 
@@ -16,12 +16,14 @@ export function useQuiz<TQuestion>({
   initialQuestion = null,
   onQuestionAnswered,
   onMaxStreakChange,
+  onScoreChange,
 }: {
   getNextQuestion: (prevQuestion: TQuestion | null) => TQuestion | null;
   checkAnswer: (guess: string, question: TQuestion) => boolean;
   initialQuestion?: TQuestion | null;
   onQuestionAnswered?: () => void;
   onMaxStreakChange?: (maxStreak: number) => void;
+  onScoreChange?: (score: number) => void;
 }) {
   const [question, setQuestion] = useState<TQuestion | null>(initialQuestion);
   const [usedQuestions, setUsedQuestions] = useState<TQuestion[]>([]);
@@ -86,19 +88,41 @@ export function useQuiz<TQuestion>({
           setMaxStreak((max) => Math.max(max, newStreak));
           return newStreak;
         });
+        // Ensure last answer is counted: if this is the last question, increment before session ends
         if (onQuestionAnswered) onQuestionAnswered();
       } else {
         playIncorrect();
         setStreak(0);
       }
     },
-    [guess, question, result, checkAnswer, onQuestionAnswered, playCorrect, playIncorrect]
+    [
+      guess,
+      question,
+      result,
+      checkAnswer,
+      onQuestionAnswered,
+      playCorrect,
+      playIncorrect,
+    ]
   );
 
-  // Sync maxStreak changes
+  // Only call onMaxStreakChange if value actually changed
+  const prevMaxStreakRef = useRef(maxStreak);
   useEffect(() => {
-    if (onMaxStreakChange) onMaxStreakChange(maxStreak);
+    if (onMaxStreakChange && maxStreak !== prevMaxStreakRef.current) {
+      onMaxStreakChange(maxStreak);
+      prevMaxStreakRef.current = maxStreak;
+    }
   }, [maxStreak, onMaxStreakChange]);
+
+  // Only call onScoreChange if value actually changed
+  const prevScoreRef = useRef(score);
+  useEffect(() => {
+    if (onScoreChange && score !== prevScoreRef.current) {
+      onScoreChange(score);
+      prevScoreRef.current = score;
+    }
+  }, [score, onScoreChange]);
 
   // Go to next question
   const nextQuestion = useCallback(() => {

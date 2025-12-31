@@ -1,6 +1,6 @@
 import { CountryQuiz, type CountryQuizProps } from "../components/CountryQuiz";
 import { QuizSession } from "../components/QuizSession";
-import type { Difficulty, QuizType } from "../../types";
+import type { Difficulty, QuizType, SessionProps } from "../../types";
 
 interface QuizFactoryProps {
   quizProps: Omit<
@@ -24,15 +24,6 @@ interface QuizFactoryProps {
   scoreIsQuestions?: boolean;
 }
 
-interface SessionRenderProps {
-  timeLeft?: number;
-  questionsAnswered: number;
-  sessionActive: boolean;
-  endSession: () => void;
-  incrementQuestions: () => void;
-  setMaxStreak: (newMaxStreak: number) => void;
-}
-
 export function QuizFactory({
   quizProps,
   sessionProps,
@@ -43,7 +34,7 @@ export function QuizFactory({
     // Render CountryQuiz directly, no session logic
     return (
       <CountryQuiz
-        {...quizProps}      
+        {...quizProps}
         timeLeft={undefined}
         questionsAnswered={0}
         maxQuestions={0}
@@ -51,6 +42,7 @@ export function QuizFactory({
         handleSessionEnd={() => {}}
         incrementQuestions={() => {}}
         setMaxStreak={() => {}}
+        setScore={() => {}}
       />
     );
   }
@@ -60,31 +52,11 @@ export function QuizFactory({
       quizType={quizType}
       difficulty={difficulty}
     >
-      {({
-        timeLeft,
-        questionsAnswered,
-        sessionActive,
-        endSession,
-        incrementQuestions,
-        setMaxStreak,
-        score,
-        setScore,
-      }: SessionRenderProps & {
-        score: number;
-        setScore: (score: number) => void;
-      }) => (
+      {(session: SessionProps) => (
         <CountryQuiz
           {...quizProps}
-          {...(scoreIsQuestions
-            ? { scoreOverride: questionsAnswered }
-            : { score, setScore })}
-          timeLeft={timeLeft}
-          questionsAnswered={questionsAnswered}
-          maxQuestions={sessionProps.maxQuestions}
-          sessionActive={sessionActive}
-          handleSessionEnd={endSession}
-          incrementQuestions={incrementQuestions}
-          setMaxStreak={setMaxStreak}
+          {...(scoreIsQuestions ? { scoreOverride: session.questionsAnswered } : {})}
+          {...session}
         />
       )}
     </QuizSession>

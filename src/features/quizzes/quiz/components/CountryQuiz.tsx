@@ -6,7 +6,8 @@ import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage/ResultMessage";
-import type { Difficulty, QuizType } from "../../types";
+import { makeGetNext } from "../utils/quizUtils";
+import type { Difficulty, SessionProps, QuizType } from "../../types";
 
 export interface CountryQuizProps {
   filterCountries: (countries: Country[], difficulty?: Difficulty) => Country[];
@@ -28,15 +29,10 @@ export interface CountryQuizProps {
   handleSessionEnd: () => void;
   incrementQuestions: () => void;
   setMaxStreak: (newMaxStreak: number) => void;
-  children?: (session: {
-    timeLeft?: number;
-    questionsAnswered: number;
-    sessionActive: boolean;
-    endSession: () => void;
-    incrementQuestions: () => void;
-    score: number;
-    maxStreak: number;
-  }) => React.ReactNode;
+  setScore: (newScore: number) => void;
+  children?: (
+    session: SessionProps & { score: number; maxStreak: number }
+  ) => React.ReactNode;
 }
 
 export function CountryQuiz({
@@ -57,16 +53,14 @@ export function CountryQuiz({
   handleSessionEnd,
   incrementQuestions,
   setMaxStreak,
+  setScore,
   children,
 }: CountryQuizProps) {
   const { countries, loading, error } = useCountryData();
   const quizCountries = filterCountries(countries, difficulty);
 
-  // Get next country for quiz
-  const getNext = (prevCountry: Country | null) => {
-    const result = getNextCountry(quizCountries)(prevCountry);
-    return result === undefined ? null : result;
-  };
+  // Get next country for quiz using utility
+  const getNext = makeGetNext(getNextCountry, quizCountries);
 
   const {
     question: currentCountry,
@@ -86,6 +80,7 @@ export function CountryQuiz({
     checkAnswer,
     onQuestionAnswered: incrementQuestions,
     onMaxStreakChange: setMaxStreak,
+    onScoreChange: setScore,
   });
 
   // Handle forfeit action
@@ -160,9 +155,12 @@ export function CountryQuiz({
         ? children({
             timeLeft,
             questionsAnswered,
+            maxQuestions,
             sessionActive,
-            endSession: handleSessionEnd,
+            handleSessionEnd,
             incrementQuestions,
+            setMaxStreak,
+            setScore,
             score,
             maxStreak,
           })

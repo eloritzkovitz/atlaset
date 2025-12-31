@@ -58,6 +58,21 @@ export function getNextRandomCountry<T extends { isoCode: string }>(
 }
 
 /**
+ * Returns a getNext function for useQuiz, given a getNextCountry function and a countries list.
+ * Handles undefined return values as null.
+ */
+export function makeGetNext<T>(
+  getNextCountry: (countries: T[]) => (prev: T | null) => T | null,
+  countries: T[]
+): (prev: T | null) => T | null {
+  const getNext = getNextCountry(countries);
+  return (prev: T | null) => {
+    const result = getNext(prev);
+    return result === undefined ? null : result;
+  };
+}
+
+/**
  * Generates session properties based on game mode.
  * @param gameMode - The game mode ("sandbox" or "timed")
  * @param maxQuestions - Maximum number of questions
