@@ -12,6 +12,7 @@ interface QuizFactoryProps {
     | "incrementQuestions"
     | "timeLeft"
     | "scoreOverride"
+    | "setMaxStreak"
   >;
   sessionProps: {
     maxQuestions: number;
@@ -29,7 +30,7 @@ interface SessionRenderProps {
   sessionActive: boolean;
   endSession: () => void;
   incrementQuestions: () => void;
-  maxStreak: number;
+  setMaxStreak: (newMaxStreak: number) => void;
 }
 
 export function QuizFactory({
@@ -38,6 +39,21 @@ export function QuizFactory({
   scoreIsQuestions,
 }: QuizFactoryProps) {
   const { quizType, difficulty, ...restSessionProps } = sessionProps;
+  if (sessionProps.gameMode === "sandbox") {
+    // Render CountryQuiz directly, no session logic
+    return (
+      <CountryQuiz
+        {...quizProps}      
+        timeLeft={undefined}
+        questionsAnswered={0}
+        maxQuestions={0}
+        sessionActive={true}
+        handleSessionEnd={() => {}}
+        incrementQuestions={() => {}}
+        setMaxStreak={() => {}}
+      />
+    );
+  }
   return (
     <QuizSession
       {...restSessionProps}
@@ -50,16 +66,25 @@ export function QuizFactory({
         sessionActive,
         endSession,
         incrementQuestions,
-      }: SessionRenderProps) => (
+        setMaxStreak,
+        score,
+        setScore,
+      }: SessionRenderProps & {
+        score: number;
+        setScore: (score: number) => void;
+      }) => (
         <CountryQuiz
           {...quizProps}
-          {...(scoreIsQuestions ? { scoreOverride: questionsAnswered } : {})}
+          {...(scoreIsQuestions
+            ? { scoreOverride: questionsAnswered }
+            : { score, setScore })}
           timeLeft={timeLeft}
           questionsAnswered={questionsAnswered}
           maxQuestions={sessionProps.maxQuestions}
           sessionActive={sessionActive}
           handleSessionEnd={endSession}
           incrementQuestions={incrementQuestions}
+          setMaxStreak={setMaxStreak}
         />
       )}
     </QuizSession>

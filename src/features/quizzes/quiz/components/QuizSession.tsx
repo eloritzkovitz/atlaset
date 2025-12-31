@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { GameOverCard } from "./GameOverCard";
 import { useQuizAudio } from "../hooks/useQuizAudio";
 import { useAtomicTimer } from "../hooks/useAtomicTimer";
@@ -18,7 +18,10 @@ interface QuizSessionProps {
     sessionActive: boolean;
     endSession: () => void;
     incrementQuestions: () => void;
+    score: number;
+    setScore: (newScore: number) => void;
     maxStreak: number;
+    setMaxStreak: (newMaxStreak: number) => void;    
   }) => React.ReactNode;
 }
 
@@ -32,6 +35,8 @@ export function QuizSession({
   const [session, setSession] = useState({
     questionsAnswered: 0,
     sessionActive: true,
+    maxStreak: 0,
+    score: 0,
   });
   const { playWin, playLose, playTick, playTickX2, stopTick } = useQuizAudio();
   const { timeLeft, startTimer } = useAtomicTimer(
@@ -46,7 +51,7 @@ export function QuizSession({
       timeLeft === 0 &&
       session.sessionActive
     ) {
-      setSession((s) => ({ ...s, sessionActive: false }));
+      setSession((s) => (s.sessionActive ? { ...s, sessionActive: false } : s));
     }
   }, [duration, timeLeft, session.sessionActive]);
 
@@ -56,6 +61,7 @@ export function QuizSession({
       if (s.questionsAnswered >= maxQuestions) {
         // Already at max, ensure session is ended
         return {
+          ...s,
           questionsAnswered: maxQuestions,
           sessionActive: false,
         };
@@ -63,6 +69,7 @@ export function QuizSession({
       const next = s.questionsAnswered + 1;
       if (next >= maxQuestions) {
         return {
+          ...s,
           questionsAnswered: maxQuestions,
           sessionActive: false,
         };
@@ -70,6 +77,16 @@ export function QuizSession({
       return { ...s, questionsAnswered: next };
     });
   };
+
+  // Provide a setter for score so children can update it
+  const setScore = useCallback((newScore: number) => {
+    setSession((s) => ({ ...s, score: newScore }));
+  }, []);
+  
+  // Provide a setter for maxStreak so children can update it
+  const setMaxStreak = useCallback((newMaxStreak: number) => {
+    setSession((s) => ({ ...s, maxStreak: newMaxStreak }));
+  }, []);  
 
   // Ticking sound hook
   useTickingSound(
@@ -79,9 +96,6 @@ export function QuizSession({
     stopTick,
     playTickX2
   );
-
-  // Store the last maxStreak value received from children
-  const [lastMaxStreak, setLastMaxStreak] = useState(0);
 
   // Play win/lose sound on session end and save game on victory
   useEffect(() => {
@@ -94,12 +108,12 @@ export function QuizSession({
           const entry = {
             playerId: user.uid,
             playerName: user.displayName || "Anonymous",
-            score: session.questionsAnswered,
+            score: session.score,
             time:
               typeof duration === "number" && typeof timeLeft === "number"
                 ? duration - timeLeft
                 : undefined,
-            maxStreak: lastMaxStreak,
+            maxStreak: session.maxStreak,
             date: new Date().toISOString(),
           };
           leaderboardsService.addLeaderboardEntry(quizType, difficulty, entry);
@@ -112,6 +126,7 @@ export function QuizSession({
   }, [
     session.sessionActive,
     session.questionsAnswered,
+    session.maxStreak,
     maxQuestions,
     playWin,
     playLose,
@@ -119,40 +134,34 @@ export function QuizSession({
     timeLeft,
     quizType,
     difficulty,
-    lastMaxStreak,
   ]);
 
   return session.sessionActive ? (
     <>
-      {((sessionProps) => {
-        if (
-          typeof sessionProps.maxStreak === "number" &&
-          sessionProps.maxStreak > lastMaxStreak
-        ) {
-          setLastMaxStreak(sessionProps.maxStreak);
-        }
-        return children(sessionProps);
-      })({
+      {children({
         timeLeft: typeof duration === "number" ? timeLeft : undefined,
         questionsAnswered: session.questionsAnswered,
         sessionActive: session.sessionActive,
         endSession,
-        incrementQuestions,
-        maxStreak: lastMaxStreak,
+        incrementQuestions, 
+        score: session.score,
+        setScore,
+        maxStreak: session.maxStreak,
+        setMaxStreak,
       })}
     </>
   ) : (
     <GameOverCard
       type={session.questionsAnswered >= maxQuestions ? "victory" : "gameover"}
-      score={session.questionsAnswered}
+      score={session.score}
       timeUsed={
         typeof duration === "number" && typeof timeLeft === "number"
           ? duration - timeLeft
           : undefined
       }
+      streak={session.maxStreak}
       onPlayAgain={() => {
-        setSession({ questionsAnswered: 0, sessionActive: true });
-        setLastMaxStreak(0);
+        setSession({ questionsAnswered: 0, sessionActive: true, maxStreak: 0, score: 0 });
         startTimer();
       }}
     />

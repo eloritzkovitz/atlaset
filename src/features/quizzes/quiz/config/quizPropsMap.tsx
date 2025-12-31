@@ -13,9 +13,10 @@ const countryDifficulty: Record<string, string> = countryDifficultyRaw;
 /**
  * Factory function to create quiz props specific to the Capital Quiz
  * @param difficulty - Optional difficulty level
+ * @param gameMode - Optional game mode
  * @returns Quiz props for Capital Quiz
  */
-export function getCapitalQuizProps(difficulty?: Difficulty) {
+export function getCapitalQuizProps(difficulty?: Difficulty, gameMode?: string) {
   return createQuizProps({
     filterFn: (countries: Country[]) => filterByProperty(countries, "capital"),
     checkAnswer: (guess: string, country: Country) => {
@@ -42,6 +43,7 @@ export function getCapitalQuizProps(difficulty?: Difficulty) {
       guessPlaceholder: "Enter the capital city",
     },
     difficulty,
+    gameMode,
     countryDifficultyMap: countryDifficulty,
   });
 }

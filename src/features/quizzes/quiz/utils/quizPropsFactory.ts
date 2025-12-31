@@ -13,6 +13,7 @@ interface QuizPropsFactoryConfig {
   checkAnswer: (guess: string, country: Country) => boolean;
   promptConfig: QuizPromptConfig;
   difficulty?: Difficulty;
+  gameMode?: string;
   countryDifficultyMap?: Record<string, string>;
 }
 
@@ -22,6 +23,7 @@ interface QuizPropsFactoryConfig {
  * @param checkAnswer - Function to check if the answer is correct
  * @param promptConfig - Configuration for prompts and labels
  * @param difficulty - Optional difficulty level
+ * @param gameMode - Optional game mode
  * @param countryDifficultyMap - Optional map of country difficulties
  * @returns = Quiz props object
  */
@@ -30,6 +32,7 @@ export function createQuizProps({
   checkAnswer,
   promptConfig,
   difficulty,
+  gameMode,
   countryDifficultyMap,
 }: QuizPropsFactoryConfig) {
   return {
@@ -55,5 +58,6 @@ export function createQuizProps({
     checkAnswer,
     ...promptConfig,
     difficulty,
+    gameMode,
   };
 }

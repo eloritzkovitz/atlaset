@@ -27,12 +27,14 @@ export interface CountryQuizProps {
   sessionActive: boolean;
   handleSessionEnd: () => void;
   incrementQuestions: () => void;
+  setMaxStreak: (newMaxStreak: number) => void;
   children?: (session: {
     timeLeft?: number;
     questionsAnswered: number;
     sessionActive: boolean;
     endSession: () => void;
     incrementQuestions: () => void;
+    score: number;
     maxStreak: number;
   }) => React.ReactNode;
 }
@@ -54,6 +56,7 @@ export function CountryQuiz({
   sessionActive,
   handleSessionEnd,
   incrementQuestions,
+  setMaxStreak,
   children,
 }: CountryQuizProps) {
   const { countries, loading, error } = useCountryData();
@@ -74,20 +77,20 @@ export function CountryQuiz({
     streak,
     maxStreak,
     feedback,
-    handleGuess,
     nextQuestion,
     skipQuestion,
     handleForfeit,
+    handleGuess,
   } = useQuiz({
     getNextQuestion: getNext,
     checkAnswer,
     onQuestionAnswered: incrementQuestions,
+    onMaxStreakChange: setMaxStreak,
   });
 
   // Handle forfeit action
   const onForfeit = () => {
-    handleSessionEnd();
-    handleForfeit();
+    handleForfeit(handleSessionEnd);
   };
 
   // Show loading or error states
@@ -124,7 +127,6 @@ export function CountryQuiz({
           handleGuess={handleGuess}
           skipFlag={() => {
             skipQuestion();
-            incrementQuestions();
           }}
           handleForfeit={onForfeit}
           disabled={result !== null || !sessionActive}
@@ -161,6 +163,7 @@ export function CountryQuiz({
             sessionActive,
             endSession: handleSessionEnd,
             incrementQuestions,
+            score,
             maxStreak,
           })
         : children}
