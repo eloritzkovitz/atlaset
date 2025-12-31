@@ -5,6 +5,7 @@ import {
   getYearNumber,
   getCurrentYear,
   getTimestamp,
+  formatTimeSeconds,
 } from "./date";
 
 describe("formatDate", () => {
@@ -123,5 +124,27 @@ describe("getTimestamp", () => {
 
   it("returns NaN for invalid date string", () => {
     expect(isNaN(getTimestamp("not-a-date"))).toBe(true);
+  });
+});
+
+describe("formatTimeSeconds", () => {
+  it("returns '-' for undefined input", () => {
+    expect(formatTimeSeconds(undefined)).toBe("-");
+  });
+  
+  it("returns '-' for NaN input", () => {
+    expect(formatTimeSeconds(NaN)).toBe("-");
+  });
+
+  it("formats seconds less than a minute", () => {
+    expect(formatTimeSeconds(45)).toBe("0:45");
+  });
+
+  it("formats seconds more than a minute", () => {
+    expect(formatTimeSeconds(125)).toBe("2:05");
+  });
+
+  it("formats zero seconds", () => {
+    expect(formatTimeSeconds(0)).toBe("0:00");
   });
 });

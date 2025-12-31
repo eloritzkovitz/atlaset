@@ -46,3 +46,6 @@ export type Leaderboard = {
     [difficulty: string]: LeaderboardEntry[];
   };
 };
+
+/** Represents a row in the leaderboard with an added rank property. */
+export type LeaderboardRow = LeaderboardEntry & { rank: number };
