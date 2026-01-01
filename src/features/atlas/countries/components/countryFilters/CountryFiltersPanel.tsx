@@ -15,12 +15,11 @@ import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,
 } from "@features/countries/utils/countryData";
+import { useIsMobile } from "@hooks";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { CoreFilters } from "./CoreFilters";
 import { OverlayFilters } from "./OverlayFilters";
 import { TimelineFilters } from "./TimelineFilters";
-import { useIsMobile } from "@hooks/useIsMobile";
-
 
 interface CountryFiltersPanelProps {
   show: boolean;

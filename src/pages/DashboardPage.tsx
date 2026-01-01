@@ -17,11 +17,11 @@ import {
   TripsByMonth,
   TripsByYear,
   TripsStats,
+  getDashboardBreadcrumbs,
   useDashboardNavigation,
+  useDashboardRouteState,
 } from "@features/dashboard";
-import { useDashboardRouteState } from "@features/dashboard/countries/hooks/useDashboardRouteState";
-import { getDashboardBreadcrumbs } from "@features/dashboard/navigation/config/breadcrumbs";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();

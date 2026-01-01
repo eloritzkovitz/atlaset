@@ -1,6 +1,6 @@
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { useResizableColumns } from "@hooks/useResizableColumns";
 import { useSort } from "@hooks/useSort";
 import type { FilterOption } from "@types";

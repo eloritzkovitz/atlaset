@@ -23,7 +23,7 @@ import {
   isTimelineOverlay,
   VISITED_OVERLAY_ID,
 } from "@features/atlas/overlays";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { ZoomControls } from "../controls/ZoomControls";
 import "./MapToolbar.css";
 

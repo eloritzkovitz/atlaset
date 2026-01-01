@@ -12,8 +12,8 @@ import {
 } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
+import { useIsMobile } from "@hooks";
 import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
-import { useIsMobile } from "@hooks/useIsMobile";
 import { usePagination } from "@hooks/usePagination";
 
 export default function TripsPage() {

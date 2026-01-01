@@ -1,7 +1,7 @@
 import React from "react";
 import type { ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { usePanelHide } from "@hooks/usePanelHide";
 import { PanelHeader } from "./PanelHeader";
 import "./Panel.css";

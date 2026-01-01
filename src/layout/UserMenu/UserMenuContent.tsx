@@ -8,9 +8,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useIsMobile } from "@hooks/useIsMobile";
-import { UserInfo } from "./UserInfo";
 import { useFirestoreUsername } from "@features/user";
+import { useIsMobile } from "@hooks";
+import { UserInfo } from "./UserInfo";
 
 interface UserMenuProps {
   user: User | null;

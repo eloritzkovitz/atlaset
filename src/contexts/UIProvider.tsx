@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { useKeyHandler } from "@hooks/useKeyHandler";
 import { UIContext } from "./UIContext";
 

@@ -19,7 +19,7 @@ import {
   UserActivitySection,
   useUserProfile,
 } from "@features/user";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
