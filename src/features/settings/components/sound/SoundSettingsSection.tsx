@@ -1,19 +1,33 @@
+import React from "react";
 import { FaVolumeUp } from "react-icons/fa";
-import { useSoundSettings } from "@features/settings/hooks/useSoundSettings";
-import { SettingsCard } from "../SettingsCard";
 import { Checkbox } from "@components";
+import { useDebounce } from "@hooks";
+import { SettingsCard } from "../SettingsCard";
+import { useSoundSettings } from "../../hooks/useSoundSettings";
 
 export function SoundSettingsSection() {
   const [sound, setSound] = useSoundSettings();
+  const [localVolume, setLocalVolume] = React.useState(sound.soundEffectsVolume);
+  const debouncedVolume = useDebounce(localVolume, 150);
 
-  // Handlers for changes
+  // Update global settings when debounced volume changes
+  React.useEffect(() => {
+    setSound({ soundEffectsVolume: debouncedVolume });
+  }, [debouncedVolume]);
+
+  // Sync local state with global value
+  React.useEffect(() => {
+    setLocalVolume(sound.soundEffectsVolume);
+  }, [sound.soundEffectsVolume]);
+
+  // Enabled change handler
   const handleEnabledChange = (checked: boolean) => {
     setSound({ soundEffectsEnabled: checked });
   };
 
   // Volume change handler
   const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSound({ soundEffectsVolume: Number(e.target.value) / 100 });
+    setLocalVolume(Number(e.target.value) / 100);
   };
 
   return (
@@ -39,20 +53,15 @@ export function SoundSettingsSection() {
               type="range"
               min={0}
               max={100}
-              value={Math.round(sound.soundEffectsVolume * 100)}
+              value={Math.round(localVolume * 100)}
               onChange={handleVolumeChange}
               disabled={!sound.soundEffectsEnabled}
               className="flex-1"
             />
             <span className="settings-value w-10 text-right">
-              {Math.round(sound.soundEffectsVolume * 100)}%
+              {Math.round(localVolume * 100)}%
             </span>
-          </div>
-          <div className="mt-2 text-xs text-muted">
-            Sound effects are{" "}
-            {sound.soundEffectsEnabled ? "enabled" : "disabled"} at{" "}
-            {Math.round(sound.soundEffectsVolume * 100)}% volume.
-          </div>
+          </div>         
         </div>
       </SettingsCard>
     </div>
