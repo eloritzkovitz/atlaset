@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import "../../styles/animations.css";
+import "../../../styles/animations.css";
 
 export interface FlyTransitionOptions {
   /** Duration in ms */
