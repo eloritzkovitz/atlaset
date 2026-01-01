@@ -16,23 +16,27 @@ export function useQuiz<TQuestion>({
   initialQuestion = null,
   onQuestionAnswered,
   onMaxStreakChange,
-  onScoreChange,
+  score: externalScore,
+  setScore: externalSetScore,
 }: {
   getNextQuestion: (prevQuestion: TQuestion | null) => TQuestion | null;
   checkAnswer: (guess: string, question: TQuestion) => boolean;
   initialQuestion?: TQuestion | null;
   onQuestionAnswered?: () => void;
   onMaxStreakChange?: (maxStreak: number) => void;
-  onScoreChange?: (score: number) => void;
+  score?: number;
+  setScore?: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [question, setQuestion] = useState<TQuestion | null>(initialQuestion);
   const [usedQuestions, setUsedQuestions] = useState<TQuestion[]>([]);
   const [guess, setGuess] = useState("");
   const [result, setResult] = useState<null | boolean>(null);
-  const [score, setScore] = useState(0);
+  const [internalScore, internalSetScore] = useState(0);
   const [streak, setStreak] = useState(0);
   const [maxStreak, setMaxStreak] = useState(0);
   const [feedback, setFeedback] = useState<string>("");
+  const score = externalScore !== undefined ? externalScore : internalScore;
+  const setScore = externalSetScore !== undefined ? externalSetScore : internalSetScore;
 
   // Audio hooks for feedback sounds
   const { playCorrect, playIncorrect } = useQuizAudio();
@@ -82,13 +86,12 @@ export function useQuiz<TQuestion>({
       setFeedback("");
       if (correct) {
         playCorrect();
-        setScore((s) => s + 1); // Only correct answers increase score
+        setScore((prev) => prev + 1);
         setStreak((s) => {
           const newStreak = s + 1;
           setMaxStreak((max) => Math.max(max, newStreak));
           return newStreak;
         });
-        // Ensure last answer is counted: if this is the last question, increment before session ends
         if (onQuestionAnswered) onQuestionAnswered();
       } else {
         playIncorrect();
@@ -115,14 +118,7 @@ export function useQuiz<TQuestion>({
     }
   }, [maxStreak, onMaxStreakChange]);
 
-  // Only call onScoreChange if value actually changed
-  const prevScoreRef = useRef(score);
-  useEffect(() => {
-    if (onScoreChange && score !== prevScoreRef.current) {
-      onScoreChange(score);
-      prevScoreRef.current = score;
-    }
-  }, [score, onScoreChange]);
+  // Remove local score effect; parent manages score
 
   // Go to next question
   const nextQuestion = useCallback(() => {
@@ -151,7 +147,8 @@ export function useQuiz<TQuestion>({
     setResult(null);
     setFeedback("");
     setStreak(0);
-  }, [getNextUniqueQuestion, question]);
+    if (onQuestionAnswered) onQuestionAnswered();
+  }, [getNextUniqueQuestion, question, onQuestionAnswered]);
 
   // Forfeit logic
   const navigate = useNavigate();
@@ -166,6 +163,7 @@ export function useQuiz<TQuestion>({
     setGuess,
     result,
     score,
+    setScore,
     streak,
     maxStreak,
     feedback,

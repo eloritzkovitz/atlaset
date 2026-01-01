@@ -28,11 +28,9 @@ export interface SessionProps {
   sessionActive: boolean;
   handleSessionEnd: () => void;
   maxQuestions: number;
-  questionsAnswered: number; 
+  questionNumber: number; 
   incrementQuestions: () => void;
   timeLeft?: number;
-  score: number;
-  setScore: (newScore: number) => void;
   maxStreak: number;
   setMaxStreak: (newMaxStreak: number) => void;
 }

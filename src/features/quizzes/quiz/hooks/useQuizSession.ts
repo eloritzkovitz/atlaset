@@ -1,10 +1,10 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useQuizAudio } from "../hooks/useQuizAudio";
 import { useAtomicTimer } from "../hooks/useAtomicTimer";
 import { useTickingSound } from "../hooks/useTickingSound";
 import { leaderboardsService } from "../../leaderboards/services/leaderboardsService";
 import { getCurrentUser } from "@utils/firebase";
-import type { QuizType, Difficulty } from "../../types";
+import type { QuizType, Difficulty, SessionProps } from "../../types";
 
 /**
  * Manages the state and logic of a quiz session.
@@ -24,24 +24,22 @@ export function useQuizSession({
   duration?: number;
   quizType: QuizType;
   difficulty: Difficulty;
-}) {
-  const [session, setSession] = useState({
-    questionsAnswered: 0,
+}): Omit<SessionProps, "handleSessionEnd"> & {
+  timeLeft: number | undefined;
+  endSession: () => void;
+} {
+  const [session, setSession] = useState<
+    Pick<SessionProps, "questionNumber" | "sessionActive" | "maxStreak">
+  >({
+    questionNumber: 0,
     sessionActive: true,
     maxStreak: 0,
-    score: 0,
   });
   const { playWin, playLose, playTick, playTickX2, stopTick } = useQuizAudio();
-  const { timeLeft, startTimer } = useAtomicTimer(
+  const { timeLeft } = useAtomicTimer(
     typeof duration === "number" ? duration : 0,
     session.sessionActive
   );
-
-  // Track latest session values for use in effects
-  const sessionRef = useRef(session);
-  useEffect(() => {
-    sessionRef.current = session;
-  }, [session]);
 
   // End session when timer runs out
   useEffect(() => {
@@ -57,25 +55,22 @@ export function useQuizSession({
   // End session
   const endSession = () => setSession((s) => ({ ...s, sessionActive: false }));
 
-  // Update score
-  const setScore = (newScore: number) => {
-    setSession((s) => ({ ...s, score: newScore }));
-  };
-
   // Update max streak
-  const setMaxStreak = (newMaxStreak: number) => {
+  const setMaxStreak: SessionProps["setMaxStreak"] = (newMaxStreak) => {
     setSession((s) => ({ ...s, maxStreak: newMaxStreak }));
   };
 
   // Increment questions answered
-  const incrementQuestions = () => {
+  const incrementQuestions: SessionProps["incrementQuestions"] = () => {
     setSession((s) => {
-      // Only end session after the last answer is submitted
-      const next = s.questionsAnswered + 1;
+      if (!s.sessionActive || s.questionNumber >= maxQuestions) {
+        return s;
+      }
+      const next = s.questionNumber + 1;
       return {
         ...s,
-        questionsAnswered: next,
-        sessionActive: next < maxQuestions + 1,
+        questionNumber: next,
+        sessionActive: next < maxQuestions ? true : false,
       };
     });
   };
@@ -92,17 +87,17 @@ export function useQuizSession({
   // Play win/lose sound and save to leaderboard on session end
   useEffect(() => {
     // Only run when session just ended
-    if (!session.sessionActive && session.questionsAnswered >= maxQuestions) {
+    if (!session.sessionActive && session.questionNumber >= maxQuestions) {
       // Play win sound
       if (playWin) playWin();
       // Save to leaderboard
-      const { score, maxStreak } = sessionRef.current;
+      const { maxStreak } = session;
       const user = getCurrentUser && getCurrentUser();
       if (user) {
         const entry = {
           playerId: user.uid,
           playerName: user.displayName || "Anonymous",
-          score,
+          score: 0,
           time:
             typeof duration === "number" && typeof timeLeft === "number"
               ? duration - timeLeft
@@ -117,14 +112,14 @@ export function useQuizSession({
       }
     } else if (
       !session.sessionActive &&
-      session.questionsAnswered < maxQuestions
+      session.questionNumber < maxQuestions
     ) {
-      // Play lose sound
       if (playLose) playLose();
     }
   }, [
     session.sessionActive,
-    session.questionsAnswered,
+    session.questionNumber,
+    session.maxStreak,
     maxQuestions,
     duration,
     timeLeft,
@@ -135,13 +130,13 @@ export function useQuizSession({
   ]);
 
   return {
-    session,
-    sessionRef,
-    timeLeft,
-    startTimer,
-    endSession,
-    setScore,
-    setMaxStreak,
+    sessionActive: session.sessionActive,
+    questionNumber: session.questionNumber,
+    maxQuestions,
     incrementQuestions,
+    maxStreak: session.maxStreak,
+    setMaxStreak,
+    timeLeft,
+    endSession,
   };
 }

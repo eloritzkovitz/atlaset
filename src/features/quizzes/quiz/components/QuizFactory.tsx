@@ -1,11 +1,12 @@
 import { CountryQuiz, type CountryQuizProps } from "../components/CountryQuiz";
 import { QuizSession } from "../components/QuizSession";
 import type { Difficulty, QuizType, SessionProps } from "../../types";
+import { useState } from "react";
 
 interface QuizFactoryProps {
   quizProps: Omit<
     CountryQuizProps,
-    | "questionsAnswered"
+    | "questionNumber"
     | "maxQuestions"
     | "sessionActive"
     | "handleSessionEnd"
@@ -31,32 +32,43 @@ export function QuizFactory({
 }: QuizFactoryProps) {
   const { quizType, difficulty, ...restSessionProps } = sessionProps;
   if (sessionProps.gameMode === "sandbox") {
-    // Render CountryQuiz directly, no session logic
+    const [score, setScore] = useState(0);
+    const [maxStreak, setMaxStreak] = useState(0);
     return (
       <CountryQuiz
         {...quizProps}
         timeLeft={undefined}
-        questionsAnswered={0}
+        questionNumber={1}
         maxQuestions={0}
         sessionActive={true}
         handleSessionEnd={() => {}}
         incrementQuestions={() => {}}
-        setMaxStreak={() => {}}
-        setScore={() => {}}
+        score={score}
+        setScore={setScore}
+        maxStreak={maxStreak}
+        setMaxStreak={setMaxStreak}
       />
     );
   }
+  // Lift score state up to QuizFactory
+  const [score, setScore] = useState(0);
+
   return (
     <QuizSession
       {...restSessionProps}
       quizType={quizType}
       difficulty={difficulty}
+      score={score}
     >
       {(session: SessionProps) => (
         <CountryQuiz
           {...quizProps}
-          {...(scoreIsQuestions ? { scoreOverride: session.questionsAnswered } : {})}
+          {...(scoreIsQuestions ? { scoreOverride: session.questionNumber } : {})}
           {...session}
+          score={score}
+          setScore={setScore}
+          maxStreak={session.maxStreak}
+          setMaxStreak={session.setMaxStreak}
         />
       )}
     </QuizSession>

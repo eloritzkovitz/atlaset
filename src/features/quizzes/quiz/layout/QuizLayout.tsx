@@ -11,7 +11,7 @@ interface QuizLayoutProps {
   feedback?: React.ReactNode;
   resultMessage?: React.ReactNode;
   timeLeft?: number;
-  questionsAnswered?: number;
+  questionNumber?: number;
   maxQuestions?: number;
   children?: React.ReactNode;
 }
@@ -28,6 +28,7 @@ export function QuizLayout({
   feedback,
   resultMessage,
   timeLeft,
+  questionNumber,
   maxQuestions,
   children,
 }: QuizLayoutProps) {
@@ -37,12 +38,13 @@ export function QuizLayout({
         {title}
       </h1>      
       <Scoreboard
+        questionNumber={questionNumber}
+        maxQuestions={maxQuestions}
         score={score}
         streak={streak}
         timeLeft={timeLeft}
-        maxQuestions={maxQuestions}
       />
-      <Card className="max-w-2xl w-full p-8 rounded-xl shadow-lg text-center font-sans">
+      <Card className="max-w-4xl w-full p-8 rounded-xl shadow-lg text-center font-sans">
         {prompt && <div className="mb-8">{prompt}</div>}
         {guessForm}
         {feedback}

@@ -7,6 +7,7 @@ interface QuizSessionProps {
   duration?: number;
   quizType: QuizType;
   difficulty: Difficulty;
+  score: number;
   children: (session: SessionProps) => React.ReactNode;
 }
 
@@ -18,46 +19,50 @@ export function QuizSession({
   children,
 }: QuizSessionProps) {
   const {
-    session,
-    sessionRef,
     timeLeft,
     endSession,
-    setScore,
-    setMaxStreak,
     incrementQuestions,
+    setMaxStreak,
+    questionNumber,
+    sessionActive,
+    maxStreak,
   } = useQuizSession({ maxQuestions, duration, quizType, difficulty });
 
-  return session.questionsAnswered <= maxQuestions ? (
+  // Get score from props
+  const { score } = arguments[0];
+
+  if (questionNumber >= maxQuestions) {
+    return (
+      <GameOverCard
+        type={"victory"}
+        score={score}
+        timeUsed={
+          typeof duration === "number" && typeof timeLeft === "number"
+            ? duration - timeLeft
+            : undefined
+        }
+        streak={maxStreak}
+        onPlayAgain={() => {
+          // Reset session state and timer
+          window.location.reload();
+        }}
+      />
+    );
+  }
+
+  // Only render questions if not finished
+  return (
     <>
       {children({
         timeLeft: typeof duration === "number" ? timeLeft : undefined,
-        questionsAnswered: session.questionsAnswered,
+        questionNumber,
         maxQuestions,
-        sessionActive: session.sessionActive,
+        sessionActive,
         handleSessionEnd: endSession,
         incrementQuestions,
-        score: sessionRef.current.score,
-        setScore,
-        maxStreak: sessionRef.current.maxStreak,
+        maxStreak,
         setMaxStreak,
       })}
     </>
-  ) : (
-    <GameOverCard
-      type={
-        session.questionsAnswered > maxQuestions - 1 ? "victory" : "gameover"
-      }
-      score={sessionRef.current.score}
-      timeUsed={
-        typeof duration === "number" && typeof timeLeft === "number"
-          ? duration - timeLeft
-          : undefined
-      }
-      streak={sessionRef.current.maxStreak}
-      onPlayAgain={() => {
-        // Reset session state and timer
-        window.location.reload();
-      }}
-    />
   );
 }

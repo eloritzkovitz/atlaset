@@ -1,4 +1,5 @@
-import { type ReactNode } from "react";
+
+import type { ReactNode, Dispatch, SetStateAction } from "react";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData } from "@contexts/CountryDataContext";
 import type { Country } from "@features/countries";
@@ -7,8 +8,7 @@ import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
 import { ResultMessage } from "../layout/ResultMessage/ResultMessage";
 import { makeGetNext } from "../utils/quizUtils";
-import type { Difficulty, SessionProps, QuizType } from "../../types";
-
+import type { Difficulty, QuizType } from "../../types";
 export interface CountryQuizProps {
   filterCountries: (countries: Country[], difficulty?: Difficulty) => Country[];
   getNextCountry: (
@@ -21,18 +21,17 @@ export interface CountryQuizProps {
   difficulty?: Difficulty;
   noCountriesMessage: string;
   guessPlaceholder: string;
-  scoreOverride?: number;
   timeLeft?: number;
-  questionsAnswered: number;
   maxQuestions: number;
   sessionActive: boolean;
   handleSessionEnd: () => void;
+  questionNumber: number;
   incrementQuestions: () => void;
+  score: number;
+  setScore: Dispatch<SetStateAction<number>>;
+  maxStreak: number;
   setMaxStreak: (newMaxStreak: number) => void;
-  setScore: (newScore: number) => void;
-  children?: (
-    session: SessionProps & { score: number; maxStreak: number }
-  ) => React.ReactNode;
+  children?: ReactNode;
 }
 
 export function CountryQuiz({
@@ -45,15 +44,16 @@ export function CountryQuiz({
   difficulty,
   noCountriesMessage,
   guessPlaceholder,
-  scoreOverride,
   timeLeft,
-  questionsAnswered,
   maxQuestions,
   sessionActive,
   handleSessionEnd,
+  questionNumber,
   incrementQuestions,
-  setMaxStreak,
+  score,
   setScore,
+  maxStreak,
+  setMaxStreak,
   children,
 }: CountryQuizProps) {
   const { countries, loading, error } = useCountryData();
@@ -67,9 +67,7 @@ export function CountryQuiz({
     guess,
     setGuess,
     result,
-    score,
     streak,
-    maxStreak,
     feedback,
     nextQuestion,
     skipQuestion,
@@ -79,8 +77,11 @@ export function CountryQuiz({
     getNextQuestion: getNext,
     checkAnswer,
     onQuestionAnswered: incrementQuestions,
-    onMaxStreakChange: setMaxStreak,
-    onScoreChange: setScore,
+    onMaxStreakChange: (newMaxStreak) => {
+      if (newMaxStreak > maxStreak) setMaxStreak(newMaxStreak);
+    },
+    score,
+    setScore,
   });
 
   // Handle forfeit action
@@ -112,7 +113,7 @@ export function CountryQuiz({
   return (
     <QuizLayout
       title={quizTitle}
-      score={scoreOverride !== undefined ? scoreOverride : score}
+      score={score}
       streak={streak}
       prompt={prompt(currentCountry)}
       guessForm={
@@ -120,9 +121,7 @@ export function CountryQuiz({
           guess={guess}
           setGuess={setGuess}
           handleGuess={handleGuess}
-          skipFlag={() => {
-            skipQuestion();
-          }}
+          skipFlag={skipQuestion}
           handleForfeit={onForfeit}
           disabled={result !== null || !sessionActive}
           placeholder={guessPlaceholder}
@@ -148,23 +147,10 @@ export function CountryQuiz({
         />
       }
       timeLeft={timeLeft}
-      questionsAnswered={questionsAnswered}
+      questionNumber={questionNumber}
       maxQuestions={maxQuestions}
     >
-      {typeof children === "function"
-        ? children({
-            timeLeft,
-            questionsAnswered,
-            maxQuestions,
-            sessionActive,
-            handleSessionEnd,
-            incrementQuestions,
-            setMaxStreak,
-            setScore,
-            score,
-            maxStreak,
-          })
-        : children}
+      {children}
     </QuizLayout>
   );
 }

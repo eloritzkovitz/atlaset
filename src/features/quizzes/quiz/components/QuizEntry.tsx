@@ -10,11 +10,12 @@ export function QuizEntry({ quizType, difficulty, gameMode }: Quiz) {
   if (!getQuizProps) throw new Error(`Unknown quiz type: ${quizType}`);
 
   // Generate quiz props and session props
-  // Provide default score and setScore for type safety; real values come from session logic
   const quizProps = {
     ...getQuizProps(difficulty, gameMode),
     score: 0,
     setScore: () => {},
+    maxStreak: 0,
+    setMaxStreak: () => {},
   };
   const sessionProps = {
     ...getSessionProps(gameMode, 25, 300),

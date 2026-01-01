@@ -30,7 +30,7 @@ export function GuessForm({
         onChange={(e: { target: { value: string } }) =>
           setGuess(e.target.value)
         }
-        className="mb-4 text-lg rounded-full"
+        className="max-w-lg mb-4 text-lg rounded-full"
         disabled={disabled}
       />
       <div className="flex justify-center gap-4 mb-2 items-center">
