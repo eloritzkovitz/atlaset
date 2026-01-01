@@ -4,10 +4,11 @@ import { useAnimatedNumber } from "@hooks";
 import { formatTimeSeconds } from "@utils/date";
 
 export interface GameOverCardProps {
-  type?: "gameover" | "victory";
+  type?: "gameover" | "complete";
   score?: number;
   streak?: number;
   timeUsed?: number;
+  maxQuestions?: number;
   onPlayAgain?: () => void;
   onReturn?: () => void;
 }
@@ -17,19 +18,58 @@ export function GameOverCard({
   score,
   streak,
   timeUsed,
+  maxQuestions,
   onPlayAgain,
   onReturn,
 }: GameOverCardProps) {
   const navigate = useNavigate();
   const handleReturn = onReturn || (() => navigate("/quizzes"));
 
-  // Determine if it's a victory
-  const isVictory = type === "victory";
+  // Determine if it's a completed quiz
+  const isComplete = type === "complete";
 
   // Animated numbers for score, streak, time using hook with duration
   const animatedScore = useAnimatedNumber(score ?? 0, 640);
   const animatedStreak = useAnimatedNumber(streak ?? 0, 640);
   const animatedTime = useAnimatedNumber(timeUsed ?? 0, 640);
+
+  // Calculate success percentage if possible
+  let percent: number | null = null;
+  if (typeof score === "number" && typeof maxQuestions === "number" && maxQuestions > 0) {
+    percent = Math.round((score / maxQuestions) * 100);
+  }
+
+  // Dynamic heading, color, and message based on score/percentage
+  let resultHeading = "";
+  let resultMessage = "";
+  let headingColor = "text-success";
+  if (percent !== null) {
+    if (percent === 100) {
+      resultHeading = "Perfect!";
+      resultMessage = "A perfect score! Outstanding!";
+      headingColor = "text-success";
+    } else if (percent >= 80) {
+      resultHeading = "Excellent job!";
+      resultMessage = "You really know your stuff.";
+      headingColor = "text-success/80";
+    } else if (percent >= 60) {
+      resultHeading = "Great effort!";
+      resultMessage = "Keep practicing to improve even more.";
+      headingColor = "text-warning";
+    } else if (percent >= 40) {
+      resultHeading = "Not bad!";
+      resultMessage = "Try again to boost your score.";
+      headingColor = "text-warning/80";
+    } else {
+      resultHeading = "You could do some more practice...";
+      resultMessage = "Keep practicing and you'll get better!";
+      headingColor = "text-danger/80";
+    }
+  } else if (typeof score === "number") {
+    resultHeading = "Quiz Complete!";
+    resultMessage = `Your score: ${score}`;
+    headingColor = "text-success";
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen text-lg">
@@ -37,17 +77,20 @@ export function GameOverCard({
         <div className="card-body items-center text-center">
           <h2
             className={`card-title text-4xl font-bold mb-4 ${
-              isVictory ? "text-success" : "text-danger"
+              isComplete ? headingColor : "text-danger"
             }`}
           >
-            {isVictory ? "Victory!" : "Game Over..."}
+            {isComplete ? resultHeading : "Game Over..."}
           </h2>
           <div className="mb-8 text-lg font-semibold">
-            {isVictory
-              ? "You completed the quiz! Well done!"
+            {isComplete
+              ? resultMessage || "You completed the quiz! Well done!"
               : "Better luck next time!"}
+            {percent !== null && (
+              <div className="text-base text-muted mt-2">Success rate: {percent}%</div>
+            )}
           </div>
-          {isVictory && (
+          {isComplete && (
             <div className="mb-8 flex flex-row items-center justify-center gap-6">
               {typeof score === "number" && (
                 <div className="flex flex-col items-center">

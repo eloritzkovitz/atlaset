@@ -32,13 +32,14 @@ export function QuizSession({
   if (questionNumber >= maxQuestions) {
     return (
       <GameOverCard
-        type={"victory"}
+        type={"complete"}
         score={score}
         timeUsed={
           typeof duration === "number" && typeof timeLeft === "number"
             ? duration - timeLeft
             : undefined
         }
+        maxQuestions={maxQuestions}
         streak={maxStreak}
         onPlayAgain={() => {
           const typePath =
