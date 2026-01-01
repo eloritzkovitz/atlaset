@@ -7,6 +7,13 @@ type UseClickOutsideOptions = {
   resize?: boolean;
 };
 
+/**
+ * Detects clicks outside of the given refs and calls the onOutside callback.
+ * @param refs - Array of refs to monitor
+ * @param onOutside - Callback to invoke on outside click
+ * @param enabled - Whether the hook is enabled
+ * @param options - Options to enable/disable specific event types
+ */
 export function useClickOutside<T extends HTMLElement>(
   refs: React.RefObject<T>[],
   onOutside: () => void,

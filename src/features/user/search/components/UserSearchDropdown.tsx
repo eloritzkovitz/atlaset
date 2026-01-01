@@ -3,9 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FaCircleUser } from "react-icons/fa6";
 import { Menu, MenuButton, SearchInput } from "@components";
 import { useUserSearch } from "@features/user/search/hooks/useUserSearch";
-import { useClickOutside } from "@hooks/useClickOutside";
-import { useDebounce } from "@hooks/useDebounce";
-import { useMenuPosition } from "@hooks/useMenuPosition";
+import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
 
 export function UserSearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -94,9 +92,7 @@ export function UserSearchDropdown() {
                   >
                     <div className="flex flex-col items-start">
                       {user.displayName && (
-                        <span className="font-medium">
-                          {user.displayName}
-                        </span>
+                        <span className="font-medium">{user.displayName}</span>
                       )}
                       <span className="text-sm text-muted">
                         @{user.username}

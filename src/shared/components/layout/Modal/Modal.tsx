@@ -7,8 +7,7 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useClickOutside } from "@hooks/useClickOutside";
-import { usePanelHide } from "@hooks/usePanelHide";
+import { useClickOutside, usePanelHide } from "@hooks";
 import "./Modal.css";
 
 interface ModalProps {

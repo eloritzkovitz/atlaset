@@ -4,7 +4,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import type { Overlay } from "@features/atlas/overlays";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
-import { useUiHint } from "@hooks/useUiHint";
+import { useUiHint } from "@hooks";
 import { MapFooter } from "./controls/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
 import { MapToolbar } from "./toolbar/MapToolbar";

@@ -13,6 +13,12 @@ interface UiHintContent {
   icon?: ReactNode;
 }
 
+/**
+ * Displays a UI hint with the given content and options.
+ * @param content = UiHintContent | null
+ * @param duration = Duration in milliseconds
+ * @param options - Customization options
+ */
 export function useUiHint(
   content: UiHintContent | null,
   duration = 4000,

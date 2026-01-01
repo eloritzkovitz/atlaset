@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+/**
+ * Enables drag-and-drop reordering of a list of items.
+ * @param items - The list of items to reorder
+ * @param setItems - Function to update the list of items
+ * @returns Handlers and state for drag-and-drop functionality
+ */
 export function useDragReorder<T>(
   items: T[],
   setItems: (newItems: T[]) => void

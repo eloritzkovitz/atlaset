@@ -1,5 +1,11 @@
 import { useState, useRef } from "react";
 
+/**
+ * Handles resizable column widths.
+ * @param defaultWidths - Initial column widths
+ * @param minWidths - Minimum column widths
+ * @returns Current column widths and resize handler
+ */
 export function useResizableColumns<T extends string>(
   defaultWidths: Record<T, number>,
   minWidths: Record<T, number>

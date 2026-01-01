@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { ActionButton, DropdownOptions, Menu } from "@components";
 import { getSortOptions } from "@features/countries/utils/countrySort";
-import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
+import { useKeyboardFocusRing } from "@hooks";
 
 interface CountrySortSelectProps {
   value: string;

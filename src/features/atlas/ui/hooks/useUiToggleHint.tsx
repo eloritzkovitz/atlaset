@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type JSX } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa6";
 import { useUI } from "@contexts/UIContext";
-import { useUiHint } from "@hooks/useUiHint";
+import { useUiHint } from "@hooks";
 
 /**
  * Manages UI toggle hint display when the UI visibility changes.

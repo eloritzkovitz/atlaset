@@ -12,9 +12,7 @@ import {
 } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
-import { useIsMobile } from "@hooks";
-import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
-import { usePagination } from "@hooks/usePagination";
+import { useInfiniteScroll, useIsMobile, usePagination } from "@hooks";
 
 export default function TripsPage() {
   const countryData = useCountryData();

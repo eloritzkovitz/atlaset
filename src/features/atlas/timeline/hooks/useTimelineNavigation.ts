@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "@hooks";
 
 const BASE_PLAY_INTERVAL = 4000;
 

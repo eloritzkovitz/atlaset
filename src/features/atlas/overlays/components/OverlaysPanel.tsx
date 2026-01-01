@@ -9,7 +9,7 @@ import {
 import { ActionButton, ErrorMessage, LoadingSpinner, Panel } from "@components";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
-import { useDragReorder } from "@hooks/useDragReorder";
+import { useDragReorder } from "@hooks";
 import { OverlayPanelItem } from "./OverlayPanelItem";
 import {
   importOverlaysFromFile,

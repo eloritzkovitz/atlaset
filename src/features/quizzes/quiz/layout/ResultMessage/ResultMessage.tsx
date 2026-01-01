@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { ActionButton } from "@components";
 import type { Country } from "@features/countries";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "@hooks";
 import "./ResultMessage.css";
 
 interface ResultMessageProps {

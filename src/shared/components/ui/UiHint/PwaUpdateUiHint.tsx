@@ -1,6 +1,5 @@
 import { FaArrowsRotate } from "react-icons/fa6";
-import { useUiHint } from "@hooks/useUiHint";
-import { usePwaUpdate } from "@hooks/usePwaUpdate";
+import { usePwaUpdate, useUiHint } from "@hooks";
 
 export function PwaUpdateUiHint() {
   const { needRefresh, updateServiceWorker } = usePwaUpdate();

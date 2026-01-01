@@ -3,7 +3,7 @@ import { ComposableMap, ZoomableGroup } from "react-simple-maps";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
-import { useContainerDimensions } from "@hooks/useContainerDimensions";
+import { useContainerDimensions } from "@hooks";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { CountriesLayer } from "./layers/CountriesLayer";
 import { MapMarkersLayer } from "./layers/MapMarkersLayer";

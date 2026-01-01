@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { FaPlus, FaMinus, FaCrosshairs } from "react-icons/fa6";
 import { ActionButton } from "@components";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "@hooks";
 
 interface ZoomControlsProps {
   zoom: number;

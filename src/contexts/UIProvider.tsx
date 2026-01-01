@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useIsMobile } from "@hooks";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useIsMobile, useKeyHandler } from "@hooks";
 import { UIContext } from "./UIContext";
 
 // Type for panel selection

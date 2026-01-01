@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useKeyHandler } from "@hooks/useKeyHandler";
 import { useUI } from "@contexts/UIContext";
+import { useKeyHandler } from "../input/useKeyHandler";
 
 interface UsePanelHideOptions {
   show?: boolean;

@@ -8,7 +8,7 @@ import {
   FaStopwatch,
 } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "@hooks";
 import type { Difficulty, GameMode } from "../../types";
 
 interface QuizSettingsProps {

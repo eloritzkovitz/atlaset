@@ -18,8 +18,7 @@ import {
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
-import { useKeyHandler } from "@hooks/useKeyHandler";
-import { useFloatingHover } from "@hooks/useFloatingHover";
+import { useFloatingHover, useKeyHandler } from "@hooks";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
 
 interface CountryDetailsModalProps {

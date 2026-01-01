@@ -16,10 +16,12 @@ import {
   RateMenu,
 } from "@components";
 import { useTrips } from "@contexts/TripsContext";
-import { useClickOutside } from "@hooks/useClickOutside";
-import { useFloatingHover } from "@hooks/useFloatingHover";
-import { useKeyHandler } from "@hooks/useKeyHandler";
-import { useMenuPosition } from "@hooks/useMenuPosition";
+import {
+  useClickOutside,
+  useFloatingHover,
+  useKeyHandler,
+  useMenuPosition,
+} from "@hooks";
 import type { Trip } from "../../types";
 
 interface TripActionsProps {

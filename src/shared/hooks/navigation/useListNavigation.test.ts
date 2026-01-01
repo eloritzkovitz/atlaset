@@ -2,11 +2,11 @@ import { renderHook } from "@testing-library/react";
 import { useListNavigation } from "./useListNavigation";
 import { vi, beforeEach, afterEach, describe, it, expect } from "vitest";
 
-vi.mock("@hooks/useKeyHandler", () => ({
+vi.mock("../input/useKeyHandler", () => ({
   useKeyHandler: vi.fn(),
 }));
 
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "../input/useKeyHandler";
 
 const items = [
   { id: "A", name: "Alpha" },

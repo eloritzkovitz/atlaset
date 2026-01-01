@@ -3,6 +3,10 @@ import { useEffect, useState, useCallback } from "react";
 // Only import if running in the browser
 const isClient = typeof window !== "undefined";
 
+/**
+ * Detects PWA updates via service worker events.
+ * @returns Object with needRefresh flag and updateServiceWorker function
+ */
 export function usePwaUpdate() {
   const [needRefresh, setNeedRefresh] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(

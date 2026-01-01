@@ -1,4 +1,4 @@
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "../input/useKeyHandler";
 
 interface UseListNavigationProps<T> {
   items: T[];
@@ -9,8 +9,19 @@ interface UseListNavigationProps<T> {
   onHover: (key: string | null) => void;
   onItemInfo?: (item: T) => void;
   enabled?: boolean;
-};
+}
 
+/**
+ * Enables keyboard navigation for a list of items.
+ * @param items - List of items to navigate
+ * @param getKey - Function to get unique key for each item
+ * @param selectedKey - Currently selected item's key
+ * @param hoveredKey - Currently hovered item's key
+ * @param onSelect - Callback when an item is selected
+ * @param onHover - Callback when an item is hovered
+ * @param onItemInfo - Optional callback to get more info about an item
+ * @param enabled - Whether navigation is enabled
+ */
 export function useListNavigation<T>({
   items,
   getKey,

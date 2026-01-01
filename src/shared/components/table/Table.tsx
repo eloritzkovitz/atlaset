@@ -1,5 +1,5 @@
 import React from "react";
-import { useSort } from "@hooks/useSort";
+import { useSort } from "@hooks";
 import type { SortKey } from "@types";
 import { sortItems } from "@utils/sort";
 import { SortableFilterHeader } from "./SortableFilterHeader";

@@ -9,12 +9,12 @@ vi.mock("@contexts/UIContext", () => ({
 }));
 
 // Mock useKeyHandler
-vi.mock("@hooks/useKeyHandler", () => ({
+vi.mock("../input/useKeyHandler", () => ({
   useKeyHandler: vi.fn(),
 }));
 
 import { useUI } from "@contexts/UIContext";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "../input/useKeyHandler";
 
 const mockUseUI = vi.mocked(useUI);
 const mockUseKeyHandler = vi.mocked(useKeyHandler);

@@ -1,7 +1,6 @@
 import { useRef, useState, forwardRef } from "react";
 import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
-import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyboardFocusRing, useKeyHandler } from "@hooks";
 
 interface SearchInputProps {
   value: string;

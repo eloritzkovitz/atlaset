@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import type { OverlayMode } from "@features/atlas/overlays";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "@hooks";
 import { TimelineContext } from "./TimelineContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
