@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { GameOverCard } from "./GameOverCard";
 import { useQuizSession } from "../hooks/useQuizSession";
 import type { QuizType, Difficulty, SessionProps } from "../../types";
@@ -29,7 +30,21 @@ export function QuizSession({
     maxStreak,
   } = useQuizSession({ maxQuestions, duration, quizType, difficulty, score });
 
-  if (questionNumber >= maxQuestions) {
+  // Show game over card when session ends
+  const [showGameOver, setShowGameOver] = useState(false);
+  
+  useEffect(() => {
+    if (!sessionActive && questionNumber >= maxQuestions) {
+      // Delay to allow any final UI updates before showing game over
+      const timeout = setTimeout(() => setShowGameOver(true), 0);
+      return () => clearTimeout(timeout);
+    } else if (sessionActive) {
+      setShowGameOver(false);
+    }
+  }, [sessionActive, questionNumber]);
+
+  // Render game over card if session has ended
+  if (showGameOver) {
     return (
       <GameOverCard
         type={"complete"}

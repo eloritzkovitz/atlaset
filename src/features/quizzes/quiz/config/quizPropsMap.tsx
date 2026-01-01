@@ -4,6 +4,7 @@ import {
   getCountriesWithOwnFlag,
   type Country,
 } from "@features/countries";
+import { normalizeString } from "@utils/string";
 import { filterByProperty } from "../utils/quizUtils";
 import { createQuizProps } from "../utils/quizPropsFactory";
 import type { Difficulty } from "../../types";
@@ -21,7 +22,7 @@ export function getCapitalQuizProps(difficulty?: Difficulty, gameMode?: string) 
     filterFn: (countries: Country[]) => filterByProperty(countries, "capital"),
     checkAnswer: (guess: string, country: Country) => {
       if (!country.capital) return false;
-      return guess.trim().toLowerCase() === country.capital.toLowerCase();
+      return normalizeString(guess) === normalizeString(country.capital);
     },
     promptConfig: {
       prompt: (country: Country) => (
@@ -57,7 +58,7 @@ export function getFlagQuizProps(difficulty?: Difficulty) {
   return createQuizProps({
     filterFn: getCountriesWithOwnFlag,
     checkAnswer: (guess: string, country: Country) =>
-      guess.trim().toLowerCase() === country.name.toLowerCase(),
+      normalizeString(guess) === normalizeString(country.name),
     promptConfig: {
       prompt: (country: Country) => (
         <CountryFlag
