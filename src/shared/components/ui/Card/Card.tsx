@@ -8,6 +8,7 @@ interface CardProps {
   onClick?: () => void;
   title?: string;
   ariaLabel?: string;
+  animationClass?: string;
 }
 
 export function Card({
@@ -18,12 +19,14 @@ export function Card({
   onClick,
   title,
   ariaLabel,
+  animationClass = "",
 }: CardProps) {
   const clickable = !!onClick;
   const baseClass =
     `bg-surface dark:bg-surface-alt rounded-2xl shadow-sm p-5 ` +
     (clickable ? "cursor-pointer transition hover:shadow-lg " : "") +
-    className;
+    className +
+    (animationClass ? ` ${animationClass}` : "");
 
   if (loading) {
     return (

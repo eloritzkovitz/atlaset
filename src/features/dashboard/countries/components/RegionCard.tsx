@@ -1,6 +1,8 @@
 import { Card } from "@components";
+import { useAnimatedNumber } from "@hooks";
 import { percent } from "@utils/number";
 import { RegionButton } from "./RegionButton";
+import { SubregionStatsRow } from "./SubregionStatsRow";
 import { regionIcons, defaultRegionIcon } from "../constants/regionIcons";
 import type { SubregionStat } from "../../types";
 
@@ -23,6 +25,8 @@ export function RegionCard({
   onRegionClick,
   onSubregionClick,
 }: RegionCardProps) {
+  const animatedVisited = useAnimatedNumber(visited, 640);
+
   return (
     <Card loading={loading} skeletonLines={6}>
       {!loading && (
@@ -30,24 +34,22 @@ export function RegionCard({
           <RegionButton
             icon={regionIcons[region] || defaultRegionIcon}
             label={region}
-            stats={`${visited}/${total} (${percent(visited, total)})`}
+            stats={`${animatedVisited}/${total} (${percent(
+              animatedVisited,
+              total
+            )})`}
             onClick={onRegionClick}
             title={`Show all countries in ${region}`}
-            className="mb-2 text-2xl" 
+            className="mb-2 text-2xl"
             labelClassName="text-2xl"
-            statsClassName="text-xl"           
+            statsClassName="text-xl"
           />
           <div className="ml-2">
             {subregions.map((sub) => (
-              <RegionButton
+              <SubregionStatsRow
                 key={sub.name}
-                label={sub.name}
-                stats={`${sub.visited}/${sub.total} (${percent(sub.visited, sub.total)})`}
+                sub={sub}
                 onClick={() => onSubregionClick?.(sub.name)}
-                title={`Show countries in ${sub.name}`}
-                className="text-base py-1 px-2"
-                labelClassName="text-text"
-                statsClassName="text-muted"
               />
             ))}
           </div>

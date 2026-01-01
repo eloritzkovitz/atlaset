@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaFlag, FaLandmark, FaTrophy } from "react-icons/fa6";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Card } from "@components";
@@ -9,16 +9,49 @@ import {
   type Difficulty,
 } from "@features/quizzes";
 import type { GameMode } from "@features/quizzes/types";
+import { useFlyTransition } from "@hooks";
 
 export default function QuizzesPage() {
   const navigate = useNavigate();
+  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
+  const [gameMode, setGameMode] = useState<GameMode>("sandbox");
 
+  // UI state
   const [settingsOpen, setSettingsOpen] = useState<null | {
     route: string;
     key: string;
   }>(null);
-  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
-  const [gameMode, setGameMode] = useState<GameMode>("sandbox");
+
+  // Card fly/fly-back animation
+  const {
+    visible: showCards,
+    animating,
+    animationClass,
+    trigger: triggerFlyOut,
+    show: triggerFlyIn,
+  } = useFlyTransition({
+    duration: 500,
+    direction: "left",
+    initialVisible: true,
+  });
+
+  // Show settings after fly-out
+  const [showSettings, setShowSettings] = useState(false);
+
+  // When settingsOpen triggers, start fly-out and show settings after
+  React.useEffect(() => {
+    if (settingsOpen) {
+      setShowSettings(false);
+      triggerFlyOut();
+      setTimeout(() => setShowSettings(true), 500);
+    } else {
+      setShowSettings(false);
+      // Fly cards back in
+      setTimeout(() => {
+        triggerFlyIn();
+      }, 10); // allow settings to close first
+    }
+  }, [settingsOpen, triggerFlyOut, triggerFlyIn]);
 
   const cards = [
     {
@@ -54,12 +87,18 @@ export default function QuizzesPage() {
           index
           element={
             <div className="min-h-screen flex flex-col items-center justify-center relative">
-              {!settingsOpen ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {showCards && (
+                <div
+                  className={
+                    "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all" +
+                    (animating ? " pointer-events-none" : "")
+                  }
+                >
                   {cards.map((card) => (
                     <Card
                       key={card.key}
-                      className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary transition"
+                      className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 animation transition"
+                      animationClass={animationClass}
                       onClick={() =>
                         card.key !== "leaderboards"
                           ? setSettingsOpen({
@@ -79,19 +118,22 @@ export default function QuizzesPage() {
                     </Card>
                   ))}
                 </div>
-              ) : (
+              )}
+              {showSettings && settingsOpen && (
                 <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <QuizSettings
-                    difficulty={difficulty}
-                    setDifficulty={setDifficulty}
-                    gameMode={gameMode}
-                    setGameMode={setGameMode}
-                    onStart={() => {
-                      navigate(settingsOpen.route);
-                      setSettingsOpen(null);
-                    }}
-                    onCancel={() => setSettingsOpen(null)}
-                  />
+                  <div className="animate-fly-in">
+                    <QuizSettings
+                      difficulty={difficulty}
+                      setDifficulty={setDifficulty}
+                      gameMode={gameMode}
+                      setGameMode={setGameMode}
+                      onStart={() => {
+                        navigate(settingsOpen.route);
+                        setSettingsOpen(null);
+                      }}
+                      onCancel={() => setSettingsOpen(null)}
+                    />
+                  </div>
                 </div>
               )}
             </div>

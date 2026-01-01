@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
 import { Card, ActionButton } from "@components";
+import { useAnimatedNumber } from "@hooks";
+import { formatTimeSeconds } from "@utils/date";
 
 export interface GameOverCardProps {
   type?: "gameover" | "victory";
@@ -17,40 +20,57 @@ export function GameOverCard({
   onPlayAgain,
   onReturn,
 }: GameOverCardProps) {
+  const navigate = useNavigate();
+  const handleReturn = onReturn || (() => navigate("/quizzes"));
+
+  // Determine if it's a victory
   const isVictory = type === "victory";
+
+  // Animated numbers for score, streak, time using hook with duration
+  const animatedScore = useAnimatedNumber(score ?? 0, 640);
+  const animatedStreak = useAnimatedNumber(streak ?? 0, 640);
+  const animatedTime = useAnimatedNumber(timeUsed ?? 0, 640);
+
   return (
     <div className="flex items-center justify-center min-h-screen text-lg">
       <Card className="w-full max-w-xl">
         <div className="card-body items-center text-center">
           <h2
-            className={`card-title text-2xl font-bold mb-4 ${
+            className={`card-title text-4xl font-bold mb-4 ${
               isVictory ? "text-success" : "text-danger"
             }`}
           >
-            {isVictory ? "Congratulations!" : "Game Over..."}
+            {isVictory ? "Victory!" : "Game Over..."}
           </h2>
-          <div className="mb-2 text-lg">
+          <div className="mb-8 text-lg font-semibold">
             {isVictory
-              ? "You completed the quiz! Well done."
+              ? "You completed the quiz! Well done!"
               : "Better luck next time!"}
           </div>
           {isVictory && (
-            <div className="mb-4 flex flex-col items-center gap-2">
+            <div className="mb-8 flex flex-row items-center justify-center gap-6">
               {typeof score === "number" && (
-                <div>
-                  <span className="font-semibold">Score:</span> {score}
+                <div className="flex flex-col items-center">
+                  <span className="text-sm text-muted mb-1">Score</span>
+                  <span className="text-2xl font-bold text-success/80">
+                    {animatedScore}
+                  </span>
                 </div>
               )}
               {typeof streak === "number" && (
-                <div>
-                  <span className="font-semibold">Streak:</span> {streak}
+                <div className="flex flex-col items-center">
+                  <span className="text-sm text-muted mb-1">Max Streak</span>
+                  <span className="text-2xl font-bold text-warning">
+                    {animatedStreak}
+                  </span>
                 </div>
               )}
               {typeof timeUsed === "number" && (
-                <div>
-                  <span className="font-semibold">Time:</span>{" "}
-                  {Math.floor(timeUsed / 60)}:
-                  {(timeUsed % 60).toString().padStart(2, "0")}
+                <div className="flex flex-col items-center">
+                  <span className="text-sm text-muted mb-1">Time</span>
+                  <span className="text-2xl font-bold text-info">
+                    {formatTimeSeconds(animatedTime)}
+                  </span>
                 </div>
               )}
             </div>
@@ -65,13 +85,15 @@ export function GameOverCard({
             >
               Play Again
             </ActionButton>
-            <a
-              href="/quizzes"
-              className="btn btn-primary w-full max-w-xs"
-              onClick={onReturn}
+            <ActionButton
+              type="button"
+              variant="custom"
+              className="w-full max-w-xs px-4 py-2 font-bold bg-input rounded-lg hover:bg-input-hover"
+              onClick={handleReturn}
+              rounded
             >
               Return
-            </a>
+            </ActionButton>
           </div>
         </div>
       </Card>
