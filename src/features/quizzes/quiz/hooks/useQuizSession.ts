@@ -33,7 +33,7 @@ export function useQuizSession({
   const [session, setSession] = useState<
     Pick<SessionProps, "questionNumber" | "sessionActive" | "maxStreak">
   >({
-    questionNumber: 0,
+    questionNumber: 1,
     sessionActive: true,
     maxStreak: 0,
   });

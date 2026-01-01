@@ -36,7 +36,8 @@ export function useQuiz<TQuestion>({
   const [maxStreak, setMaxStreak] = useState(0);
   const [feedback, setFeedback] = useState<string>("");
   const score = externalScore !== undefined ? externalScore : internalScore;
-  const setScore = externalSetScore !== undefined ? externalSetScore : internalSetScore;
+  const setScore =
+    externalSetScore !== undefined ? externalSetScore : internalSetScore;
 
   // Audio hooks for feedback sounds
   const { playCorrect, playIncorrect } = useQuizAudio();
@@ -78,7 +79,6 @@ export function useQuiz<TQuestion>({
       e.preventDefault();
       if (!question || result !== null) return;
       if (!guess.trim()) {
-        setFeedback("Please enter an answer.");
         return;
       }
       const correct = checkAnswer(guess, question);
@@ -92,7 +92,6 @@ export function useQuiz<TQuestion>({
           setMaxStreak((max) => Math.max(max, newStreak));
           return newStreak;
         });
-        if (onQuestionAnswered) onQuestionAnswered();
       } else {
         playIncorrect();
         setStreak(0);
@@ -131,6 +130,7 @@ export function useQuiz<TQuestion>({
     setGuess("");
     setResult(null);
     setFeedback("");
+    if (onQuestionAnswered) onQuestionAnswered();
   }, [getNextUniqueQuestion, question]);
 
   // Skip current question

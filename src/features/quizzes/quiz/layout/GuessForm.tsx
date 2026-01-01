@@ -1,4 +1,6 @@
 import { ActionButton, InputBox } from "@components";
+import { useRef, useEffect } from "react";
+import { useKeyHandler } from "@hooks";
 
 interface GuessFormProps {
   guess: string;
@@ -20,9 +22,28 @@ export function GuessForm({
   disabled,
   placeholder = "Enter country name",
 }: GuessFormProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Autofocus on mount and when enabled changes
+  useEffect(() => {
+    if (!disabled && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [disabled]);
+
+  // Refocus input on '/' key
+  useKeyHandler(
+    () => {
+      if (inputRef.current) inputRef.current.focus();
+    },
+    ["/"],
+    !disabled
+  );
+
   return (
     <form onSubmit={handleGuess}>
       <InputBox
+        ref={inputRef}
         type="text"
         placeholder={placeholder}
         aria-label={placeholder}
