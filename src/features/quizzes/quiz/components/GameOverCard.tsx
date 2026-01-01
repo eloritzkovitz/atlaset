@@ -1,9 +1,9 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, ActionButton } from "@components";
+import { useAudio } from "@contexts/AudioContext";
 import { useAnimatedNumber } from "@hooks";
 import { formatTimeSeconds } from "@utils/date";
-import { useQuizAudio } from "../hooks/useQuizAudio";
-import { useEffect } from "react";
 
 export interface GameOverCardProps {
   type?: "gameover" | "complete";
@@ -24,7 +24,7 @@ export function GameOverCard({
   onPlayAgain,
   onReturn,
 }: GameOverCardProps) {
-  const { playPerfect, playGood, playLose, playAww } = useQuizAudio();
+  const { play } = useAudio();
   const navigate = useNavigate();
   const handleReturn = onReturn || (() => navigate("/quizzes"));
 
@@ -46,16 +46,16 @@ export function GameOverCard({
   useEffect(() => {
     if (type === "complete") {
       if (percent === 100) {
-        playPerfect();
+        play("perfect");
       } else if (percent !== null && percent >= 80) {
-        playGood();
+        play("good");
       } else if (percent !== null && percent >= 40) {
-        playAww();
+        play("aww");
       } else {
-        playAww();
+        play("aww");
       }
     } else {
-      playLose();
+      play("lose");
     }
     // Only run on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps

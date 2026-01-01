@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter, HashRouter } from "react-router-dom";
+import { AudioProvider } from "@contexts/AudioProvider";
 import { AuthProvider } from "@contexts/AuthProvider";
 import { SettingsProvider } from "@contexts/SettingsProvider";
 import App from "./App";
@@ -19,7 +20,9 @@ createRoot(document.getElementById("root")!).render(
       <Router>
         <AuthProvider>
           <SettingsProvider>
-            <App />
+            <AudioProvider>
+              <App />
+            </AudioProvider>
           </SettingsProvider>
         </AuthProvider>
       </Router>

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useQuizAudio } from "../hooks/useQuizAudio";
 import { useAtomicTimer } from "../hooks/useAtomicTimer";
 import { useTickingSound } from "../hooks/useTickingSound";
 import { leaderboardsService } from "../../leaderboards/services/leaderboardsService";
@@ -37,7 +36,6 @@ export function useQuizSession({
     sessionActive: true,
     maxStreak: 0,
   });
-  const { playTick, playTickX2, stopTick } = useQuizAudio();
   const { timeLeft } = useAtomicTimer(
     typeof duration === "number" ? duration : 0,
     session.sessionActive
@@ -80,10 +78,7 @@ export function useQuizSession({
   // Ticking sound hook
   useTickingSound(
     typeof timeLeft === "number" ? timeLeft : 0,
-    session.sessionActive,
-    playTick,
-    stopTick,
-    playTickX2
+    session.sessionActive
   );
 
   // Save to leaderboard on session end
@@ -110,15 +105,7 @@ export function useQuizSession({
         }
       }
     }
-  }, [
-    session,
-    maxQuestions,
-    duration,
-    timeLeft,
-    quizType,
-    difficulty,
-    score,
-  ]);
+  }, [session, maxQuestions, duration, timeLeft, quizType, difficulty, score]);
 
   return {
     sessionActive: session.sessionActive,

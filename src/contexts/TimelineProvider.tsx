@@ -1,6 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import type { OverlayMode } from "@features/atlas/overlays";
+import { useAudio } from "@contexts/AudioContext";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { TimelineContext } from "./TimelineContext";
@@ -9,6 +10,8 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [timelineMode, setTimelineMode] = useState(false);
+  const { play } = useAudio();
+  const prevTimelineMode = useRef(false);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
 
   // Compute years from trips
@@ -22,10 +25,14 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   // Toggle Timeline mode with "T"
   useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
 
-  // Effect to set showVisitedOnly when timelineMode changes
+  // When timeline mode changes, update showVisitedOnly and play sound
   useEffect(() => {
     setShowVisitedOnly(timelineMode);
-  }, [timelineMode]);
+    if (timelineMode && !prevTimelineMode.current) {
+      play("swoosh");
+    }
+    prevTimelineMode.current = timelineMode;
+  }, [timelineMode, play]);
 
   return (
     <TimelineContext.Provider

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useQuizAudio } from "./useQuizAudio";
+import { useAudio } from "@contexts/AudioContext";
 
 /**
  * Generic quiz logic hook for reusability across different quiz types.
@@ -40,7 +40,7 @@ export function useQuiz<TQuestion>({
     externalSetScore !== undefined ? externalSetScore : internalSetScore;
 
   // Audio hooks for feedback sounds
-  const { playCorrect, playIncorrect } = useQuizAudio();
+  const { play } = useAudio();
 
   // Helper to get the next unique question
   const getNextUniqueQuestion = useCallback(
@@ -85,7 +85,7 @@ export function useQuiz<TQuestion>({
       setResult(correct);
       setFeedback("");
       if (correct) {
-        playCorrect();
+        play("correct");
         setScore((prev) => prev + 1);
         setStreak((s) => {
           const newStreak = s + 1;
@@ -93,7 +93,7 @@ export function useQuiz<TQuestion>({
           return newStreak;
         });
       } else {
-        playIncorrect();
+        play("incorrect");
         setStreak(0);
       }
     },
@@ -102,10 +102,8 @@ export function useQuiz<TQuestion>({
       question,
       result,
       checkAnswer,
-      onQuestionAnswered,
-      playCorrect,
-      playIncorrect,
       setScore,
+      play,
     ]
   );
 
@@ -131,7 +129,7 @@ export function useQuiz<TQuestion>({
     setResult(null);
     setFeedback("");
     if (onQuestionAnswered) onQuestionAnswered();
-  }, [getNextUniqueQuestion, question]);
+  }, [getNextUniqueQuestion, question, onQuestionAnswered]);
 
   // Skip current question
   const skipQuestion = useCallback(() => {
