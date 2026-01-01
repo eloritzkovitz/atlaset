@@ -7,7 +7,9 @@ import { useRef, type RefObject } from "react";
 export function useQuizAudio() {
   const correctAudio = useRef<HTMLAudioElement | null>(null);
   const incorrectAudio = useRef<HTMLAudioElement | null>(null);
-  const winAudio = useRef<HTMLAudioElement | null>(null);
+  const perfectAudio = useRef<HTMLAudioElement | null>(null);
+  const goodAudio = useRef<HTMLAudioElement | null>(null);
+  const awwAudio = useRef<HTMLAudioElement | null>(null);
   const loseAudio = useRef<HTMLAudioElement | null>(null);
   const tickingAudio = useRef<HTMLAudioElement | null>(null);
 
@@ -54,7 +56,9 @@ export function useQuizAudio() {
   return {
     playCorrect: () => play(correctAudio, "/sounds/quiz/correct.mp3"),
     playIncorrect: () => play(incorrectAudio, "/sounds/quiz/incorrect.mp3"),
-    playWin: () => play(winAudio, "/sounds/quiz/win.mp3"),
+    playPerfect: () => play(perfectAudio, "/sounds/quiz/perfect.mp3"),
+    playGood: () => play(goodAudio, "/sounds/quiz/good.mp3"),
+    playAww: () => play(awwAudio, "/sounds/quiz/aww.mp3"),
     playLose: () => play(loseAudio, "/sounds/quiz/lose.mp3"),
     playTick,
     playTickX2,

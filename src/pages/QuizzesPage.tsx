@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Card } from "@components";
 import { Leaderboards, QuizEntry, QuizSettings } from "@features/quizzes";
-import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes/quiz/quizSettingsSlice";
+import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
 import { useFlyTransition } from "@hooks";
+import type { RootState } from "../store";
 
 export default function QuizzesPage() {
   const dispatch = useDispatch();
@@ -34,8 +35,12 @@ export default function QuizzesPage() {
   const [showSettings, setShowSettings] = useState(false);
 
   // Redux quiz settings
-  const difficulty = useSelector((state: any) => state.quizSettings.difficulty);
-  const gameMode = useSelector((state: any) => state.quizSettings.gameMode);
+  const difficulty = useSelector(
+    (state: RootState) => state.quizSettings.difficulty
+  );
+  const gameMode = useSelector(
+    (state: RootState) => state.quizSettings.gameMode
+  );
 
   // When settingsOpen triggers, start fly-out and show settings after
   React.useEffect(() => {
@@ -127,7 +132,9 @@ export default function QuizzesPage() {
                       gameMode={gameMode}
                       setGameMode={(value) => dispatch(setGameMode(value))}
                       onStart={() => {
-                        dispatch(setQuizType(settingsOpen.key as "flag" | "capital"));
+                        dispatch(
+                          setQuizType(settingsOpen.key as "flag" | "capital")
+                        );
                         navigate(settingsOpen.route);
                         setSettingsOpen(null);
                       }}
@@ -139,14 +146,8 @@ export default function QuizzesPage() {
             </div>
           }
         />
-        <Route
-          path="guess-the-flag"
-          element={<QuizEntry />}
-        />
-        <Route
-          path="guess-the-capital"
-          element={<QuizEntry />}
-        />
+        <Route path="guess-the-flag" element={<QuizEntry />} />
+        <Route path="guess-the-capital" element={<QuizEntry />} />
         <Route path="leaderboards" element={<Leaderboards />} />
       </Routes>
     </>

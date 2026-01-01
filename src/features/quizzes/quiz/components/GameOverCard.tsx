@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { Card, ActionButton } from "@components";
 import { useAnimatedNumber } from "@hooks";
 import { formatTimeSeconds } from "@utils/date";
+import { useQuizAudio } from "../hooks/useQuizAudio";
+import { useEffect } from "react";
 
 export interface GameOverCardProps {
   type?: "gameover" | "complete";
@@ -22,6 +24,7 @@ export function GameOverCard({
   onPlayAgain,
   onReturn,
 }: GameOverCardProps) {
+  const { playPerfect, playGood, playLose, playAww } = useQuizAudio();
   const navigate = useNavigate();
   const handleReturn = onReturn || (() => navigate("/quizzes"));
 
@@ -38,6 +41,25 @@ export function GameOverCard({
   if (typeof score === "number" && typeof maxQuestions === "number" && maxQuestions > 0) {
     percent = Math.round((score / maxQuestions) * 100);
   }
+
+  // Play sound on mount based on result
+  useEffect(() => {
+    if (type === "complete") {
+      if (percent === 100) {
+        playPerfect();
+      } else if (percent !== null && percent >= 80) {
+        playGood();
+      } else if (percent !== null && percent >= 40) {
+        playAww();
+      } else {
+        playAww();
+      }
+    } else {
+      playLose();
+    }
+    // Only run on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Dynamic heading, color, and message based on score/percentage
   let resultHeading = "";

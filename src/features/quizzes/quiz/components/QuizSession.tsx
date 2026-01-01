@@ -41,7 +41,7 @@ export function QuizSession({
     } else if (sessionActive) {
       setShowGameOver(false);
     }
-  }, [sessionActive, questionNumber]);
+  }, [sessionActive, questionNumber, maxQuestions]);
 
   // Render game over card if session has ended
   if (showGameOver) {

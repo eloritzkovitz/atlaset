@@ -37,7 +37,7 @@ export function useQuizSession({
     sessionActive: true,
     maxStreak: 0,
   });
-  const { playWin, playLose, playTick, playTickX2, stopTick } = useQuizAudio();
+  const { playTick, playTickX2, stopTick } = useQuizAudio();
   const { timeLeft } = useAtomicTimer(
     typeof duration === "number" ? duration : 0,
     session.sessionActive
@@ -86,11 +86,10 @@ export function useQuizSession({
     playTickX2
   );
 
-  // Play win/lose sound and save to leaderboard on session end
+  // Save to leaderboard on session end
   useEffect(() => {
     // Only run when session just ended
     if (!session.sessionActive && session.questionNumber >= maxQuestions) {
-      if (playWin) playWin();
       const { maxStreak } = session;
       const user = getCurrentUser && getCurrentUser();
       if (user) {
@@ -110,23 +109,14 @@ export function useQuizSession({
           leaderboardsService.savePlayerGame(user.uid, entry);
         }
       }
-    } else if (
-      !session.sessionActive &&
-      session.questionNumber < maxQuestions
-    ) {
-      if (playLose) playLose();
     }
   }, [
-    session.sessionActive,
-    session.questionNumber,
-    session.maxStreak,
+    session,
     maxQuestions,
     duration,
     timeLeft,
     quizType,
     difficulty,
-    playWin,
-    playLose,
     score,
   ]);
 

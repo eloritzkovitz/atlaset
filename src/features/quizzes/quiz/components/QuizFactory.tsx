@@ -31,9 +31,9 @@ export function QuizFactory({
   scoreIsQuestions,
 }: QuizFactoryProps) {
   const [score, setScore] = useState(0);
+  const [maxStreak, setMaxStreak] = useState(0);
 
   if (sessionProps.gameMode === "sandbox") {
-    const [maxStreak, setMaxStreak] = useState(0);
     return (
       <CountryQuiz
         {...quizProps}

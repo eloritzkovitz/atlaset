@@ -106,6 +106,7 @@ export function useQuiz<TQuestion>({
       onQuestionAnswered,
       playCorrect,
       playIncorrect,
+      setScore,
     ]
   );
 
@@ -117,8 +118,6 @@ export function useQuiz<TQuestion>({
       prevMaxStreakRef.current = maxStreak;
     }
   }, [maxStreak, onMaxStreakChange]);
-
-  // Remove local score effect; parent manages score
 
   // Go to next question
   const nextQuestion = useCallback(() => {
