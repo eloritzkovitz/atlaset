@@ -28,10 +28,11 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   // When timeline mode changes, update showVisitedOnly and play sound
   useEffect(() => {
     setShowVisitedOnly(timelineMode);
-    if (timelineMode && !prevTimelineMode.current) {
+    if (!timelineMode && prevTimelineMode.current) {
+      play("woosh");
+    } else if (timelineMode && !prevTimelineMode.current) {
       play("swoosh");
     }
-    else play("woosh");
     prevTimelineMode.current = timelineMode;
   }, [timelineMode, play]);
 

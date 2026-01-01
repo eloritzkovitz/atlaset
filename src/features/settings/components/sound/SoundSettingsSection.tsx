@@ -7,13 +7,15 @@ import { useSoundSettings } from "../../hooks/useSoundSettings";
 
 export function SoundSettingsSection() {
   const [sound, setSound] = useSoundSettings();
-  const [localVolume, setLocalVolume] = React.useState(sound.soundEffectsVolume);
+  const [localVolume, setLocalVolume] = React.useState(
+    sound.soundEffectsVolume
+  );
   const debouncedVolume = useDebounce(localVolume, 150);
 
   // Update global settings when debounced volume changes
   React.useEffect(() => {
     setSound({ soundEffectsVolume: debouncedVolume });
-  }, [debouncedVolume]);
+  }, [debouncedVolume, setSound]);
 
   // Sync local state with global value
   React.useEffect(() => {
@@ -61,7 +63,7 @@ export function SoundSettingsSection() {
             <span className="settings-value w-10 text-right">
               {Math.round(localVolume * 100)}%
             </span>
-          </div>         
+          </div>
         </div>
       </SettingsCard>
     </div>
