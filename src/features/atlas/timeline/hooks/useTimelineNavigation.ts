@@ -1,4 +1,5 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
+import { useAudio } from "@contexts/AudioContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useKeyHandler } from "@hooks";
 
@@ -10,6 +11,7 @@ const BASE_PLAY_INTERVAL = 4000;
  */
 export function useTimelineNavigation() {
   const { years, selectedYear, setSelectedYear } = useTimeline();
+  const { play } = useAudio();
 
   // Current index in years array
   const currentIndex = useMemo(
@@ -28,13 +30,19 @@ export function useTimelineNavigation() {
 
   // Go to previous year
   const handleBack = useCallback(() => {
-    if (canGoBack) setSelectedYear(years[currentIndex - 1]);
-  }, [canGoBack, years, currentIndex, setSelectedYear]);
+    if (canGoBack) {
+      setSelectedYear(years[currentIndex - 1]);
+      play("click");
+    }
+  }, [canGoBack, years, currentIndex, setSelectedYear, play]);
 
   // Go to next year
   const handleForward = useCallback(() => {
-    if (canGoForward) setSelectedYear(years[currentIndex + 1]);
-  }, [canGoForward, years, currentIndex, setSelectedYear]);
+    if (canGoForward) {
+      setSelectedYear(years[currentIndex + 1]);
+      play("click");
+    }
+  }, [canGoForward, years, currentIndex, setSelectedYear, play]);
 
   // Go to first year
   const handleFirst = useCallback(() => {
@@ -54,12 +62,16 @@ export function useTimelineNavigation() {
       const idx = years.indexOf(selectedYear);
       if (e.key === "ArrowLeft" && idx > 0) {
         setSelectedYear(years[idx - 1]);
+        play("click");
       } else if (e.key === "ArrowRight" && idx < years.length - 1) {
         setSelectedYear(years[idx + 1]);
+        play("click");
       } else if (e.key === "Home") {
         setSelectedYear(years[0]);
+        play("click");
       } else if (e.key === "End") {
         setSelectedYear(years[years.length - 1]);
+        play("click");
       }
     },
     ["ArrowLeft", "ArrowRight", "Home", "End"],

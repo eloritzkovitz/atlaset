@@ -31,6 +31,7 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     if (timelineMode && !prevTimelineMode.current) {
       play("swoosh");
     }
+    else play("woosh");
     prevTimelineMode.current = timelineMode;
   }, [timelineMode, play]);
 

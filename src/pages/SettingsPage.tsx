@@ -13,6 +13,7 @@ import {
   DisplaySettingsSection,
   SecurityInfoSection,
   SettingsPanelMenu,
+  SoundSettingsSection,
 } from "@features/settings";
 import {
   EditProfileModal,
@@ -24,7 +25,9 @@ import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
   const { user, loading: userLoading } = useAuth();
-  const { profile, loading: profileLoading } = useUserProfile({ uid: user?.uid });
+  const { profile, loading: profileLoading } = useUserProfile({
+    uid: user?.uid,
+  });
   const [editOpen, setEditOpen] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);
   const navigate = useNavigate();
@@ -51,6 +54,8 @@ export default function ProfilePage() {
     ? "security"
     : location.pathname.endsWith("/display")
     ? "display"
+    : location.pathname.endsWith("/sound")
+    ? "sound"
     : "account";
 
   // Handle menu navigation
@@ -61,6 +66,8 @@ export default function ProfilePage() {
       navigate("/settings/security");
     } else if (panel === "display") {
       navigate("/settings/display");
+    } else if (panel === "sound") {
+      navigate("/settings/sound");
     } else {
       navigate("/settings/account");
     }
@@ -87,6 +94,7 @@ export default function ProfilePage() {
             <Routes>
               <Route path="account" element={<AccountSettingsSection />} />
               <Route path="display" element={<DisplaySettingsSection />} />
+              <Route path="sound" element={<SoundSettingsSection />} />
               <Route path="activity" element={<UserActivitySection />} />
               <Route path="security" element={<SecurityInfoSection />} />
               {/* Redirect unknown profile routes to /settings */}
