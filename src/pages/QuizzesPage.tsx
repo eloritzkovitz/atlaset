@@ -1,20 +1,15 @@
 import React, { useState } from "react";
 import { FaFlag, FaLandmark, FaTrophy } from "react-icons/fa6";
+import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Card } from "@components";
-import {
-  Leaderboards,
-  QuizEntry,
-  QuizSettings,
-  type Difficulty,
-} from "@features/quizzes";
-import type { GameMode } from "@features/quizzes/types";
+import { Leaderboards, QuizEntry, QuizSettings } from "@features/quizzes";
+import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes/quiz/quizSettingsSlice";
 import { useFlyTransition } from "@hooks";
 
 export default function QuizzesPage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [difficulty, setDifficulty] = useState<Difficulty>("easy");
-  const [gameMode, setGameMode] = useState<GameMode>("sandbox");
 
   // UI state
   const [settingsOpen, setSettingsOpen] = useState<null | {
@@ -37,6 +32,10 @@ export default function QuizzesPage() {
 
   // Show settings after fly-out
   const [showSettings, setShowSettings] = useState(false);
+
+  // Redux quiz settings
+  const difficulty = useSelector((state: any) => state.quizSettings.difficulty);
+  const gameMode = useSelector((state: any) => state.quizSettings.gameMode);
 
   // When settingsOpen triggers, start fly-out and show settings after
   React.useEffect(() => {
@@ -124,10 +123,11 @@ export default function QuizzesPage() {
                   <div className="animate-fly-in">
                     <QuizSettings
                       difficulty={difficulty}
-                      setDifficulty={setDifficulty}
+                      setDifficulty={(value) => dispatch(setDifficulty(value))}
                       gameMode={gameMode}
-                      setGameMode={setGameMode}
+                      setGameMode={(value) => dispatch(setGameMode(value))}
                       onStart={() => {
+                        dispatch(setQuizType(settingsOpen.key as "flag" | "capital"));
                         navigate(settingsOpen.route);
                         setSettingsOpen(null);
                       }}
@@ -141,23 +141,11 @@ export default function QuizzesPage() {
         />
         <Route
           path="guess-the-flag"
-          element={
-            <QuizEntry
-              quizType="flag"
-              difficulty={difficulty}
-              gameMode={gameMode}
-            />
-          }
+          element={<QuizEntry />}
         />
         <Route
           path="guess-the-capital"
-          element={
-            <QuizEntry
-              quizType="capital"
-              difficulty={difficulty}
-              gameMode={gameMode}
-            />
-          }
+          element={<QuizEntry />}
         />
         <Route path="leaderboards" element={<Leaderboards />} />
       </Routes>

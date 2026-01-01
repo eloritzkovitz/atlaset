@@ -30,9 +30,9 @@ export function QuizFactory({
   sessionProps,
   scoreIsQuestions,
 }: QuizFactoryProps) {
-  const { quizType, difficulty, ...restSessionProps } = sessionProps;
+  const [score, setScore] = useState(0);
+
   if (sessionProps.gameMode === "sandbox") {
-    const [score, setScore] = useState(0);
     const [maxStreak, setMaxStreak] = useState(0);
     return (
       <CountryQuiz
@@ -50,9 +50,8 @@ export function QuizFactory({
       />
     );
   }
-  // Lift score state up to QuizFactory
-  const [score, setScore] = useState(0);
 
+  const { quizType, difficulty, ...restSessionProps } = sessionProps;
   return (
     <QuizSession
       {...restSessionProps}

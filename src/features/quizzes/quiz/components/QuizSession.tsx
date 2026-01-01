@@ -16,6 +16,7 @@ export function QuizSession({
   duration,
   quizType,
   difficulty,
+  score,
   children,
 }: QuizSessionProps) {
   const {
@@ -26,10 +27,7 @@ export function QuizSession({
     questionNumber,
     sessionActive,
     maxStreak,
-  } = useQuizSession({ maxQuestions, duration, quizType, difficulty });
-
-  // Get score from props
-  const { score } = arguments[0];
+  } = useQuizSession({ maxQuestions, duration, quizType, difficulty, score });
 
   if (questionNumber >= maxQuestions) {
     return (
@@ -43,8 +41,13 @@ export function QuizSession({
         }
         streak={maxStreak}
         onPlayAgain={() => {
-          // Reset session state and timer
-          window.location.reload();
+          const typePath =
+            quizType === "flag"
+              ? "guess-the-flag"
+              : quizType === "capital"
+              ? "guess-the-capital"
+              : quizType;
+          window.location.assign(`/quizzes/${typePath}`);
         }}
       />
     );

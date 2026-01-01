@@ -19,11 +19,13 @@ export function useQuizSession({
   duration,
   quizType,
   difficulty,
+  score,
 }: {
   maxQuestions: number;
   duration?: number;
   quizType: QuizType;
   difficulty: Difficulty;
+  score: number;
 }): Omit<SessionProps, "handleSessionEnd"> & {
   timeLeft: number | undefined;
   endSession: () => void;
@@ -88,16 +90,14 @@ export function useQuizSession({
   useEffect(() => {
     // Only run when session just ended
     if (!session.sessionActive && session.questionNumber >= maxQuestions) {
-      // Play win sound
       if (playWin) playWin();
-      // Save to leaderboard
       const { maxStreak } = session;
       const user = getCurrentUser && getCurrentUser();
       if (user) {
         const entry = {
           playerId: user.uid,
           playerName: user.displayName || "Anonymous",
-          score: 0,
+          score,
           time:
             typeof duration === "number" && typeof timeLeft === "number"
               ? duration - timeLeft
@@ -127,6 +127,7 @@ export function useQuizSession({
     difficulty,
     playWin,
     playLose,
+    score,
   ]);
 
   return {
