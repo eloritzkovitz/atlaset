@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { FaPlus, FaMinus, FaCrosshairs } from "react-icons/fa6";
 import { ActionButton } from "@components";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyHandler } from "@hooks";
 
 interface ZoomControlsProps {
   zoom: number;
@@ -70,6 +70,7 @@ export function ZoomControls({ zoom, setZoom }: ZoomControlsProps) {
         onTouchEnd={() => stopContinuousZoom("in")}
         ariaLabel="Zoom in"
         title="Zoom in"
+        titlePosition="left"
         icon={<FaPlus />}
         variant="action"
         rounded
@@ -85,6 +86,7 @@ export function ZoomControls({ zoom, setZoom }: ZoomControlsProps) {
         onTouchEnd={() => stopContinuousZoom("out")}
         ariaLabel="Zoom out"
         title="Zoom out"
+        titlePosition="left"
         icon={<FaMinus />}
         variant="action"
         rounded
@@ -93,6 +95,7 @@ export function ZoomControls({ zoom, setZoom }: ZoomControlsProps) {
         onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
         ariaLabel="Reset zoom"
         title="Reset zoom"
+        titlePosition="left"
         icon={<FaCrosshairs />}
         variant="action"
         rounded

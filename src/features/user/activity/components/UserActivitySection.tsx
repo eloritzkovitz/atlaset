@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
-import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
+import { useInfiniteScroll } from "@hooks";
 import { UserActivityItem } from "./UserActivityItem";
 import { useUserActivity } from "../hooks/useUserActivity";
 

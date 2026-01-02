@@ -1,5 +1,5 @@
 /**
- * Utility functions for date manipulation and formatting.
+ * Utility functions for date and time manipulation and formatting.
  */
 
 /**
@@ -78,4 +78,14 @@ export function getTimestamp(ts: string | number | Date): number {
   if (ts instanceof Date) return ts.getTime();
   // Assume string
   return new Date(ts).getTime();
+}
+
+/**
+ * Formats a number of seconds as mm:ss
+ */
+export function formatTimeSeconds(seconds?: number): string {
+  if (typeof seconds !== "number" || isNaN(seconds)) return "-";
+  const m = Math.floor(seconds / 60);
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
 }

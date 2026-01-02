@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { FaXmark } from "react-icons/fa6";
 import { ActionButton } from "../../action/ActionButton";
 
 interface ModalActionsProps {
@@ -26,7 +25,7 @@ export function ModalActions({
   return (
     <div className="flex justify-end gap-2 mt-4">
       <ActionButton type="button" variant="secondary" onClick={onCancel}>
-        <FaXmark className="inline" /> {cancelLabel}
+        {cancelLabel}
       </ActionButton>
       <ActionButton
         type={submitType}

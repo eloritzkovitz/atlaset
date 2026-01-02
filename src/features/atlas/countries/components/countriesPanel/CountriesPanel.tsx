@@ -11,10 +11,8 @@ import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
-import type { Country } from "features/countries";
-import { sortCountries } from "@features/countries/utils/countrySort";
-import { useListNavigation } from "@hooks/useListNavigation";
-import { useSort } from "@hooks/useSort";
+import { sortCountries, type Country } from "@features/countries";
+import { useListNavigation, useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountriesToolbar } from "./CountriesToolbar";
 import { CountryList } from "./CountryList";
@@ -134,13 +132,13 @@ export function CountriesPanel({
               onClick={toggleFilters}
               ariaLabel={showFilters ? "Hide Filters" : "Show Filters"}
               title="Filters"
-              icon={<FaFilter/>}
+              icon={<FaFilter />}
               rounded
             />
             <ActionButton
               onClick={toggleCountries}
-              ariaLabel="Hide countries panel"
-              title="Hide"
+              ariaLabel="Close countries panel"
+              title="Close"
               icon={<FaXmark className="text-2xl" />}
               rounded
             />

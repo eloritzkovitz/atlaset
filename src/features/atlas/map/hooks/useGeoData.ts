@@ -1,7 +1,4 @@
 import { useCallback, useEffect, useState } from "react";
-import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { appDb } from "@utils/db";
-import { CACHE_TTL } from "../../../../shared/config/cache";
 import type { GeoData } from "../types";
 
 /**
@@ -13,42 +10,25 @@ export function useGeoData() {
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch geo data with caching
+  // Fetch geo data from static file in dev, backend in prod
   const fetchGeoData = useCallback(async () => {
     setLoading(true);
     setGeoError(null);
 
-    const now = Date.now();
-    let cached;
-    if (process.env.NODE_ENV === "production") {
-      cached = await appDb.geoData?.get("geoData");
-      // Use cached data if valid
-      if (
-        cached &&
-        typeof cached.ts === "number" &&
-        now - cached.ts < CACHE_TTL
-      ) {
-        setGeoData(cached.data as GeoData);
-        setLoading(false);
-        return;
-      }
-    }
+    const geoDataUrl =
+      import.meta.env.VITE_MAP_GEO_URL || "/data/countries.geojson";
 
     try {
       const res = await fetch(
-        DEFAULT_MAP_SETTINGS.geoUrl,
+        geoDataUrl,
         process.env.NODE_ENV === "development"
-          ? { cache: "no-store" }
+          ? { cache: "no-store" as RequestCache }
           : undefined
       );
       if (!res.ok) throw new Error("Failed to load map data");
       const data = await res.json();
       setGeoData(data);
       setLoading(false);
-      // Save to Dexie only in production
-      if (process.env.NODE_ENV === "production") {
-        await appDb.geoData?.put({ id: "geoData", data, ts: Date.now() });
-      }
     } catch (err) {
       if (err instanceof Error) {
         setGeoError(err.message);

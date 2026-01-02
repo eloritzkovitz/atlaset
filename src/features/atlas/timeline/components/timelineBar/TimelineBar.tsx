@@ -54,7 +54,7 @@ export function TimelineBar() {
       />
 
       {/* Year markers */}
-      <div className="absolute flex bottom-3 justify-center gap-4 relative">
+      <div className="absolute flex bottom-3 justify-center gap-4 relative select-none">
         {paddedYears.map((year, idx) => {
           if (year === null)
             return (

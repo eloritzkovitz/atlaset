@@ -11,7 +11,7 @@ import {
 } from "@features/countries/utils/countryFilters";
 import { getLatestYear, getVisitCountStats } from "@features/visits";
 import { filterByVisitCount } from "@features/visits/utils/visitFilters";
-import { useDebounce } from "@hooks/useDebounce";
+import { useDebounce } from "@hooks";
 
 /**
  * Manages and applies country filters.

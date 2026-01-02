@@ -32,8 +32,10 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Trip management:** Plan, track, and recall your travels with flexible trip records
 - **Timeline mode:** Track your travels showing visited countries on the map
 
-### **Games**
-- **Flag guessing game:** Test your knowledge with an interactive flag quiz
+### **Quizzes**
+- **Competitive quizzes:** Timed challenges to test your speed and accuracy against the clock
+- **Progress tracking:** See your scores, streaks, and improvements over time
+- **Leaderboard:** Compare your results with other users and climb the ranks
 
 ### **Dashboard**
 - **Dashboard:** View and analyze your visits and travels with interactive statistics 
@@ -48,6 +50,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 ### Frontend
 - **React** & **TypeScript** — Modern, strongly-typed UI development
+- **Redux Toolkit** — Predictable state management
 - **Vite** — Fast build tool and development server
 - **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
 
@@ -57,7 +60,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 ### Storage & Data
 - **Firebase (Firestore & Auth)** — Secure cloud database and authentication
-- **IndexedDB (via Dexie.js)** — Local/offline storage and caching for guest sessions and static datasets
+- **IndexedDB (via Dexie.js)** — Local/offline storage and caching for guest sessions
 
 ### Platform & Deployment
 - **PWA (Progressive Web App)** — Offline support and installability

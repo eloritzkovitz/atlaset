@@ -5,6 +5,12 @@ export type AccountSettings = {
   homeCountry: string;
 };
 
+/** Sound-related settings */
+export type SoundSettings = {
+  soundEffectsEnabled: boolean;
+  soundEffectsVolume: number;
+};
+
 /** Display-related settings */
 export type DisplaySettings = {
   theme: "light" | "dark";
@@ -27,7 +33,8 @@ export type OverlaySettings = {
 export type Settings = {
   id: string;
   account: AccountSettings;
+  sound: SoundSettings;
   display: DisplaySettings;
   map: MapSettings;
-  overlays: OverlaySettings;
+  overlays: OverlaySettings;  
 };

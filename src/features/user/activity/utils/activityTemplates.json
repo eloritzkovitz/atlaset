@@ -26,6 +26,10 @@
   "222": "{userName} edited a marker '{itemName}'{location}{date}.",
   "223": "{userName} removed a marker '{itemName}'{location}{date}.",
 
+  "300": "{userName} has played a quiz{date}.",
+  "301": "{userName} completed a {difficulty} {quizType} quiz with a score of {score}{time}{date}.",  
+  "302": "{userName} has entered the leaderboards{date}.",
+
   "400": "{userName} performed a trips action{date}.",
 
   "410": "{userName} saved trips{date}.",

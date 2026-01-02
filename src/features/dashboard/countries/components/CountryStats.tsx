@@ -8,7 +8,7 @@ import {
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
-import { useDelayedLoading } from "@hooks/useDelayedLoading";
+import { useDelayedLoading } from "@hooks";
 import { CountrySection } from "./CountrySection";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";

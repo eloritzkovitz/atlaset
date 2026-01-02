@@ -120,7 +120,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
           onClick={handleExport}
           className="w-full"
           aria-label={"Export"}
-          title={"Export"}
           disabled={!svgRef?.current}
         >
           <FaFileImage className="inline" />

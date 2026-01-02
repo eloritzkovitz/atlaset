@@ -1,6 +1,4 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
-import { CACHE_TTL } from "@config/cache";
-import { appDb } from "@utils/db";
 import type { Country } from "../types";
 import {
   getAllRegions,
@@ -9,7 +7,7 @@ import {
 } from "../utils/countryData";
 
 /**
- * Fetches country and currency data with caching in IndexedDB.
+ * Manages fetching and state of country and currency data.
  * @returns Country and currency data along with loading state and error
  */
 export function useCountryDataSource() {
@@ -18,52 +16,22 @@ export function useCountryDataSource() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch country and currency data with caching
-  const fetchData = useCallback(async (forceRefresh = false) => {
+  // Fetch country and currency data from static file in dev, backend in prod
+  const fetchData = useCallback(async () => {
     setLoading(true);
     setError(null);
 
-    const now = Date.now();
-
-    // Only use caching in production
+    let countryDataUrl, currencyDataUrl;
     if (process.env.NODE_ENV === "production") {
-      const cachedCountry = await appDb.countryData.get("main");
-      const cachedCurrency = await appDb.currencyData.get("main");
-      const isCountryCacheValid =
-        cachedCountry &&
-        typeof cachedCountry.ts === "number" &&
-        now - cachedCountry.ts < CACHE_TTL;
-      const isCurrencyCacheValid =
-        cachedCurrency &&
-        typeof cachedCurrency.ts === "number" &&
-        now - cachedCurrency.ts < CACHE_TTL;
-      if (!forceRefresh && isCountryCacheValid && isCurrencyCacheValid) {
-        setCountries(cachedCountry.data as Country[]);
-        setCurrencies(cachedCurrency.data as Record<string, string>);
-        setLoading(false);
-        return;
-      }
+      countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL;
+      currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL;
+    } else {
+      countryDataUrl = "/data/countries.json";
+      currencyDataUrl = "/data/currencies.json";
     }
 
-    // Always fetch fresh in dev, or if cache is invalid in prod
-    const countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL?.startsWith(
-      "http"
-    )
-      ? import.meta.env.VITE_COUNTRY_DATA_URL
-      : import.meta.env.VITE_COUNTRY_DATA_URL
-      ? import.meta.env.VITE_COUNTRY_DATA_URL
-      : "/data/countries.json";
-
-    const currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL?.startsWith(
-      "http"
-    )
-      ? import.meta.env.VITE_CURRENCY_DATA_URL
-      : import.meta.env.VITE_CURRENCY_DATA_URL
-      ? import.meta.env.VITE_CURRENCY_DATA_URL
-      : "/data/currencies.json";
-
     try {
-      const fetchOpts =
+      const fetchOpts: RequestInit | undefined =
         process.env.NODE_ENV === "development"
           ? { cache: "no-store" as RequestCache }
           : undefined;
@@ -81,20 +49,6 @@ export function useCountryDataSource() {
       setCountries(countryData as Country[]);
       setCurrencies(currencyData);
       setLoading(false);
-
-      // Save to Dexie only in production
-      if (process.env.NODE_ENV === "production") {
-        await appDb.countryData.put({
-          id: "main",
-          data: countryData,
-          ts: Date.now(),
-        });
-        await appDb.currencyData.put({
-          id: "main",
-          data: currencyData,
-          ts: Date.now(),
-        });
-      }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Failed to load data");
       setLoading(false);
@@ -115,7 +69,7 @@ export function useCountryDataSource() {
   }, [fetchData]);
 
   // Refresh data
-  const refreshData = () => fetchData(true);
+  const refreshData = () => fetchData();
 
   return {
     countries,

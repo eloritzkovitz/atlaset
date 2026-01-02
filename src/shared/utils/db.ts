@@ -3,10 +3,7 @@ import type { Marker } from "@features/atlas/markers/types";
 import type { Overlay } from "@features/atlas/overlays";
 import type { Trip } from "@features/trips";
 
-export class AppDB extends Dexie {
-  countryData!: Table<Record<string, unknown>, string>;
-  currencyData!: Table<Record<string, unknown>, string>;
-  geoData!: Table<Record<string, unknown>, string>;
+export class AppDB extends Dexie {  
   trips!: Table<Trip, string>;
   markers!: Table<Marker, string>;
   overlays!: Table<Overlay, string>;
@@ -14,10 +11,7 @@ export class AppDB extends Dexie {
 
   constructor(dbName = "AppDB") {
     super(dbName);
-    this.version(2).stores({
-      countryData: "id",
-      currencyData: "id",
-      geoData: "id",
+    this.version(3).stores({      
       trips: "id",
       markers: "id",
       overlays: "id",

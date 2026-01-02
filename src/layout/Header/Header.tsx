@@ -1,5 +1,5 @@
 import { UserSearchDropdown } from "@features/user";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { Branding } from "../Branding/Branding";
 import { UserMenu } from "../UserMenu/UserMenu";
 

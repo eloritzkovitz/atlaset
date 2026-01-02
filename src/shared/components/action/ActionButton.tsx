@@ -1,5 +1,6 @@
 import React from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface ActionButtonProps {
   ref?: React.RefObject<HTMLElement | null>;
@@ -12,6 +13,7 @@ interface ActionButtonProps {
   style?: React.CSSProperties;
   ariaLabel?: string;
   title?: string;
+  titlePosition?: "top" | "bottom" | "left" | "right";
   active?: boolean;
   disabled?: boolean;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
@@ -37,7 +39,8 @@ export const ActionButton = React.forwardRef<
       className,
       style,
       ariaLabel = "Action",
-      title = "Action",
+      title,
+      titlePosition = "bottom",
       active = true,
       disabled = false,
       onClick,
@@ -76,7 +79,7 @@ export const ActionButton = React.forwardRef<
       ? "opacity-50 cursor-not-allowed pointer-events-none"
       : "";
 
-    return (
+    const button = (
       <button
         ref={ref}
         type={type}
@@ -91,13 +94,17 @@ export const ActionButton = React.forwardRef<
           rounded ? "rounded-full" : ""
         } ${className || ""}`}
         aria-label={ariaLabel}
-        title={title}
         disabled={disabled}
         style={style}
       >
         {icon && <span className="inline-flex">{icon}</span>}
         {children}
       </button>
+    );
+    return title ? (
+      <Tooltip content={title} position={titlePosition}>{button}</Tooltip>
+    ) : (
+      button
     );
   }
 );

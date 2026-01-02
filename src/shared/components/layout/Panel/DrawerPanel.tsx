@@ -1,5 +1,5 @@
-import { useSwipeNavigation } from "@hooks/useSwipeNavigation";
 import type { ReactNode } from "react";
+import { useSwipeNavigation } from "@hooks";
 
 interface DrawerPanelProps {
   open: boolean;

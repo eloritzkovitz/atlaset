@@ -9,7 +9,7 @@ interface FloatingChevronButtonProps {
   offset?: number;
   onMouseEnter?: React.MouseEventHandler<HTMLButtonElement>;
   onMouseLeave?: React.MouseEventHandler<HTMLButtonElement>;
-  onClick: () => void;
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
   ariaLabel?: string;
   title?: string;
   className?: string;

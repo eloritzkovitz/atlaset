@@ -7,7 +7,7 @@ import {
   AuthLayout,
   useAuthHandlers,
 } from "@features/user";
-import { useUiHint } from "@hooks/useUiHint";
+import { useUiHint } from "@hooks";
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =

@@ -8,9 +8,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useIsMobile } from "@hooks/useIsMobile";
-import { UserInfo } from "./UserInfo";
 import { useFirestoreUsername } from "@features/user";
+import { useIsMobile } from "@hooks";
+import { UserInfo } from "./UserInfo";
 
 interface UserMenuProps {
   user: User | null;
@@ -41,7 +41,6 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           onClick={() => navigate(`/users/${username}`)}
           icon={<FaUser className="text-lg mr-2" />}
           ariaLabel="Profile"
-          title="Profile"
           className="w-full"
         >
           Profile
@@ -50,7 +49,6 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           onClick={() => navigate("/settings")}
           icon={<FaGear className="text-lg mr-2" />}
           ariaLabel="Settings"
-          title="Settings"
           className="w-full"
         >
           Settings
@@ -60,7 +58,6 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
             onClick={toggleShortcuts}
             icon={<FaKeyboard className="text-lg mr-2" />}
             ariaLabel="Keyboard Shortcuts"
-            title="Keyboard Shortcuts"
             className="w-full"
           >
             Keyboard Shortcuts
@@ -70,7 +67,6 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           onClick={onLogout}
           icon={<FaRightFromBracket className="text-lg mr-2" />}
           ariaLabel="Sign out"
-          title="Sign out"
           className="w-full"
         >
           Sign out

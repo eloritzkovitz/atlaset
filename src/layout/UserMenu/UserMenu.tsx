@@ -5,8 +5,7 @@ import { ActionButton, Menu } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
-import { useIsMobile } from "@hooks/useIsMobile";
-import { useModalAnimation } from "@hooks/useModalAnimation";
+import { useIsMobile, useModalAnimation } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 

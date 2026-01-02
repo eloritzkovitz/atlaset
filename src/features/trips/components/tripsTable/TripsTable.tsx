@@ -1,8 +1,6 @@
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@contexts/CountryDataContext";
-import { useIsMobile } from "@hooks/useIsMobile";
-import { useResizableColumns } from "@hooks/useResizableColumns";
-import { useSort } from "@hooks/useSort";
+import { useIsMobile, useResizableColumns, useSort } from "@hooks";
 import type { FilterOption } from "@types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";

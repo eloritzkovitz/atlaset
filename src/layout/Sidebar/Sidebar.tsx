@@ -5,7 +5,7 @@ import {
   DEFAULT_SIDEBAR_EXPANDED_WIDTH,
 } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
-import { usePanelHide } from "@hooks/usePanelHide";
+import { usePanelHide } from "@hooks";
 import { NAV_LINKS } from "./navLinks";
 import { SidebarMenuLink } from "./SidebarMenuLink";
 import { Branding } from "../Branding/Branding";

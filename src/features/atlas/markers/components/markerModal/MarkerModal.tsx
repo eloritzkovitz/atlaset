@@ -59,7 +59,6 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         <ActionButton
           onClick={onClose}
           ariaLabel="Close"
-          title="Close"
           icon={<FaXmark className="text-2xl" />}
           rounded
         />

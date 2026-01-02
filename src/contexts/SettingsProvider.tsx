@@ -15,7 +15,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   // Load settings when auth state changes
   useEffect(() => {
     let mounted = true;
-    if (!ready) return;
+    if (!ready || !user) return;
     setLoading(true);
     settingsService.load().then((s) => {
       if (mounted) {

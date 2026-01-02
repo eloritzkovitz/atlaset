@@ -5,7 +5,7 @@ import {
   COUNTRIES_SUBMENU,
   TRIPS_SUBMENU,
 } from "@features/dashboard/navigation/config/menu";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;

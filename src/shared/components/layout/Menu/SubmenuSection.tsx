@@ -35,7 +35,6 @@ export function SubmenuSection({
                 active={selectedPanel === sub.key}
                 onClick={() => setSelectedPanel(sub.key)}
                 ariaLabel={sub.label}
-                title={sub.label}
                 icon={sub.icon}
                 className="w-full text-gray-300 gap-5"
               >

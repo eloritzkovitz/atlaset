@@ -1,10 +1,11 @@
 import { FaCircleCheck, FaCircleXmark, FaHouse } from "react-icons/fa6";
+import { Tooltip } from "@components";
 
 interface VisitedStatusIndicatorProps {
   visited: boolean;
-  isHome?: boolean; 
+  isHome?: boolean;
   className?: string;
-};
+}
 
 export function VisitedStatusIndicator({
   visited,
@@ -13,27 +14,30 @@ export function VisitedStatusIndicator({
 }: VisitedStatusIndicatorProps) {
   if (isHome) {
     return (
-      <FaHouse
-        className={`w-5 h-5 ${className}`}
-        color="#22c55e"
-        title="Home country"
-        aria-label="Home country"
-      />
+      <Tooltip content="Home country" position="bottom">
+        <FaHouse
+          className={`w-5 h-5 ${className}`}
+          color="#22c55e"
+          aria-label="Home country"
+        />
+      </Tooltip>
     );
   }
   return visited ? (
-    <FaCircleCheck
-      className={`w-5 h-5 ${className}`}
-      color="#22c55e"
-      title="Visited"
-      aria-label="Visited"
-    />
+    <Tooltip content="Visited" position="bottom">
+      <FaCircleCheck
+        className={`w-5 h-5 ${className}`}
+        color="#22c55e"
+        aria-label="Visited"
+      />
+    </Tooltip>
   ) : (
-    <FaCircleXmark
-      className={`w-5 h-5 ${className}`}
-      color="#d1d5db"
-      title="Not visited"
-      aria-label="Not visited"
-    />
+    <Tooltip content="Not visited" position="bottom">
+      <FaCircleXmark
+        className={`w-5 h-5 ${className}`}
+        color="#d1d5db"
+        aria-label="Not visited"
+      />
+    </Tooltip>
   );
 }

@@ -7,7 +7,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { Menu, MenuButton } from "@components";
-import { useMenuPosition } from "@hooks/useMenuPosition";
+import { useMenuPosition } from "@hooks";
 
 interface FriendshipButtonProps {
   friendStatus: "none" | "pending" | "friend";

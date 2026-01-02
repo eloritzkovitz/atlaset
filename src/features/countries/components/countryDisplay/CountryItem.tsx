@@ -57,7 +57,6 @@ export function CountryItem({
         ${isHighlighted ? "bg-blue-50 dark:bg-gray-500 font-bold" : ""}
         ${!isVisited ? "opacity-50" : ""}
       `}
-      title={country.name}
     >
       {showFlags ? (
         view === "list" ? (

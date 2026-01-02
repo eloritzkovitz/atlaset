@@ -1,7 +1,6 @@
 import { useRef, useState, forwardRef } from "react";
 import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
-import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
-import { useKeyHandler } from "@hooks/useKeyHandler";
+import { useKeyboardFocusRing, useKeyHandler } from "@hooks";
 
 interface SearchInputProps {
   value: string;
@@ -90,7 +89,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             }
           }}
           placeholder={placeholder}
-          title={placeholder || "Search"}
           aria-label={placeholder || "Search"}
           className={`w-full pl-10 pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
         />

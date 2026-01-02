@@ -23,7 +23,7 @@ import {
   isTimelineOverlay,
   VISITED_OVERLAY_ID,
 } from "@features/atlas/overlays";
-import { useIsMobile } from "@hooks/useIsMobile";
+import { useIsMobile } from "@hooks";
 import { ZoomControls } from "../controls/ZoomControls";
 import "./MapToolbar.css";
 
@@ -198,6 +198,7 @@ export function MapToolbar({
           onClick={() => setVisible((v) => !v)}
           ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
           title={visible ? "Hide toolbar" : "Show toolbar"}
+          titlePosition="left"
           variant="action"
           className={`${!visible ? "opacity-70" : ""}`}
           icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
@@ -215,6 +216,7 @@ export function MapToolbar({
             onClick={toggleCountries}
             ariaLabel="Countries"
             title="Countries"
+            titlePosition="top"
             icon={<FaGlobe />}
             variant="action"
             rounded
@@ -223,6 +225,7 @@ export function MapToolbar({
             onClick={toggleMarkers}
             ariaLabel="Markers"
             title="Markers"
+            titlePosition="top"
             icon={<FaMapPin />}
             variant="action"
             rounded
@@ -231,6 +234,7 @@ export function MapToolbar({
             onClick={toggleOverlays}
             ariaLabel="Overlays"
             title="Overlays"
+            titlePosition="top"
             icon={<FaLayerGroup />}
             variant="action"
             rounded
@@ -239,6 +243,7 @@ export function MapToolbar({
             onClick={toggleLegend}
             ariaLabel="Legend"
             title="Legend"
+            titlePosition="top"
             icon={<FaMap />}
             variant="action"
             rounded
@@ -248,6 +253,7 @@ export function MapToolbar({
               onClick={() => setTimelineMode((prev) => !prev)}
               ariaLabel="Timeline"
               title="Timeline"
+              titlePosition="top"
               icon={<FaTimeline />}
               variant="action"
               rounded
@@ -257,6 +263,7 @@ export function MapToolbar({
             onClick={toggleExport}
             ariaLabel="Export"
             title="Export"
+            titlePosition="top"
             icon={<FaDownload />}
             variant="action"
             rounded
@@ -266,6 +273,7 @@ export function MapToolbar({
             onClick={toggleSettings}
             ariaLabel="Settings"
             title="Settings"
+            titlePosition="top"
             icon={<FaGear />}
             variant="action"
             rounded

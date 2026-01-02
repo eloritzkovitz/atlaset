@@ -21,8 +21,9 @@ export function CountriesToolbar({
     {
       value: "all",
       icon: <ToolbarIconWithCount icon={<FaList />} count={allCount} />,
-      label: "All Countries",
+      label: "Toggle All",
       ariaLabel: `Show all countries (${allCount})`,
+      titlePosition: "top",
       checked: !showVisitedOnly,
       disabled: timelineMode,
       onClick: () => setShowVisitedOnly(false),
@@ -30,8 +31,9 @@ export function CountriesToolbar({
     {
       value: "visited",
       icon: <ToolbarIconWithCount icon={<FaListCheck />} count={visitedCount} />,
-      label: "Visited",
+      label: "Toggle Visited",
       ariaLabel: `Show visited countries (${visitedCount})`,
+      titlePosition: "top",
       checked: showVisitedOnly,
       onClick: () => setShowVisitedOnly(true),
     },
@@ -43,6 +45,7 @@ export function CountriesToolbar({
         onClick={onRefresh}
         ariaLabel="Refresh country data"
         title="Refresh country data"
+        titlePosition="top"
         icon={<FaArrowsRotate />}
         variant="toggle"
       />

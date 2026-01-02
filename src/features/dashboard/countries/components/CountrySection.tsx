@@ -14,8 +14,7 @@ import {
   sortCountries,
   type Country,
 } from "@features/countries";
-import { useInfiniteScroll } from "@hooks/useInfiniteScroll";
-import { usePagination } from "@hooks/usePagination";
+import { useInfiniteScroll, usePagination } from "@hooks";
 
 interface CountrySectionProps {
   countries: Country[];

@@ -2,15 +2,15 @@ import {
   FaCalendarDays,
   FaClockRotateLeft,
   FaChartPie,
-  FaCompass,
   FaRegCalendarDays,
+  FaBookAtlas,
 } from "react-icons/fa6";
 
 export const COUNTRIES_SUBMENU = [
   {
     key: "countries/overview",
     label: "Overview",
-    icon: <FaCompass />,
+    icon: <FaBookAtlas />,
   },
 ];
 

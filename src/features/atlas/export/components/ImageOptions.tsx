@@ -43,7 +43,6 @@ export function ImageOptions({
               scale === s ? "!bg-action" : ""
             }`}
             ariaLabel={`Scale ${s}x`}
-            title={`${s}x`}
           >
             {s}x
           </ActionButton>

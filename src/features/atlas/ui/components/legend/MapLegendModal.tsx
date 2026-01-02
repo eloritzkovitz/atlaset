@@ -1,4 +1,5 @@
-import { Modal } from "@components";
+import { FaXmark } from "react-icons/fa6";
+import { ActionButton, Modal, PanelHeader } from "@components";
 import { LegendRow } from "./LegendRow";
 import type { LegendItem } from "../../types";
 
@@ -17,8 +18,19 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
       className="!bg-transparent !shadow-none fixed top-16 right-6 z-50"
       disableClose
     >
-      <div className="flex flex-col gap-4 py-2">
-        <h2 className="text-lg font-semibold">Legend</h2>
+      <PanelHeader title="Legend" className="!px-0 group">
+        <div className="flex items-center justify-between w-full">
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
+            <ActionButton
+              onClick={onClose}
+              ariaLabel="Close Overlay Modal"
+              icon={<FaXmark className="text-2xl" />}
+              rounded
+            />
+          </span>
+        </div>
+      </PanelHeader>
+      <div className="flex flex-col gap-4">
         {items.map((item, idx) => (
           <LegendRow
             key={idx}

@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { ActionButton, DropdownOptions, Menu } from "@components";
 import { getSortOptions } from "@features/countries/utils/countrySort";
-import { useKeyboardFocusRing } from "@hooks/useKeyboardFocusRing";
+import { useKeyboardFocusRing } from "@hooks";
 
 interface CountrySortSelectProps {
   value: string;
@@ -48,7 +48,6 @@ export function CountrySortSelect({
           ref={btnRef}
           icon={<PiArrowsDownUpBold size={24} />}
           ariaLabel="Sort countries"
-          title="Sort countries"
           variant="sort"
           onClick={open ? () => setOpen(false) : handleOpen}
           className={open && showRing ? "ring-2 ring-ring-focus" : ""}
