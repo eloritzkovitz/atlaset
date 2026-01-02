@@ -56,8 +56,7 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
     const maxLeft = window.innerWidth - tooltipRect.width - 4;
     left = Math.max(4, Math.min(left, maxLeft));
     // Only prevent vertical clipping for non-top positions
-    if (position === "top") {
-    } else {
+    if (position !== "top") {
       const maxTop = window.innerHeight - tooltipRect.height - 4;
       top = Math.max(4, Math.min(top, maxTop));
     }
@@ -73,28 +72,28 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
   // If child is a valid element, clone and attach ref and handlers
   let trigger: React.ReactNode;
   if (isValidElement(children)) {
-    const childProps = (children as React.ReactElement).props as Record<string, any>;
+    const childProps = (children as React.ReactElement).props as Record<string, unknown>;
     const isDOM = typeof (children as React.ReactElement).type === "string";
     // Try to detect if custom component supports ref (forwardRef)
-    const type = (children as React.ReactElement).type as any;
-    const supportsRef = isDOM || (typeof type === "object" && type !== null && "$$typeof" in type && type.$$typeof.toString().includes("Symbol(react.forward_ref)"));
+    const type = (children as React.ReactElement).type as unknown;
+    const supportsRef = isDOM || (typeof type === "object" && type !== null && "$$typeof" in type && String((type as { $$typeof?: unknown }).$$typeof).includes("Symbol(react.forward_ref)"));
     if (supportsRef) {
-      const props: Record<string, any> = {
-        onMouseEnter: (e: any) => {
+      const props: Record<string, unknown> = {
+        onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
           show();
-          if (childProps.onMouseEnter) childProps.onMouseEnter(e);
+          if (childProps.onMouseEnter) (childProps.onMouseEnter as (e: React.MouseEvent<HTMLElement>) => void)(e);
         },
-        onMouseLeave: (e: any) => {
+        onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
           hide();
-          if (childProps.onMouseLeave) childProps.onMouseLeave(e);
+          if (childProps.onMouseLeave) (childProps.onMouseLeave as (e: React.MouseEvent<HTMLElement>) => void)(e);
         },
-        onFocus: (e: any) => {
+        onFocus: (e: React.FocusEvent<HTMLElement>) => {
           show();
-          if (childProps.onFocus) childProps.onFocus(e);
+          if (childProps.onFocus) (childProps.onFocus as (e: React.FocusEvent<HTMLElement>) => void)(e);
         },
-        onBlur: (e: any) => {
+        onBlur: (e: React.FocusEvent<HTMLElement>) => {
           hide();
-          if (childProps.onBlur) childProps.onBlur(e);
+          if (childProps.onBlur) (childProps.onBlur as (e: React.FocusEvent<HTMLElement>) => void)(e);
         },
         tabIndex: childProps.tabIndex ?? 0,
         ref: anchorRef,

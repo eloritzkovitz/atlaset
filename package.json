@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "vite",
     "dev:electron": "electron-vite dev",
-    "prebuild": "node scripts/fetch-flags.js",
+    "prebuild": "node scripts/prebuild.js",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
