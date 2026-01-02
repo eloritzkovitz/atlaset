@@ -3,7 +3,7 @@
  * Runs fetch-flags.js, fetch-country-data.js, and fetch-geodata.js sequentially.
  */
 
-const { execSync } = require("child_process");
+import execSync from "child_process";
 
 /**
  * Runs a given script using Node.js.
