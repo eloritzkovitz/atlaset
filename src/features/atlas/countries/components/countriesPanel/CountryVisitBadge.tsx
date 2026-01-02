@@ -1,3 +1,5 @@
+import { Tooltip } from "@components";
+
 interface CountryVisitBadgeProps {
   revisit: boolean;
   count: number;
@@ -11,18 +13,18 @@ export function CountryVisitBadge({
 }: CountryVisitBadgeProps) {
   if (direction === "desc") {
     return (
-      <span className="py-0.5 text-muted font-bold" title="Past visit">
-        ({count})
-      </span>
+      <Tooltip content="Past visit" position="top">
+        <span className="py-0.5 text-muted font-bold">({count})</span>
+      </Tooltip>
     );
   }
   return revisit ? (
-    <span className="py-0.5 text-warning font-bold" title="Revisit">
-      +1 ({count})
-    </span>
+    <Tooltip content="Revisit" position="top">
+      <span className="py-0.5 text-warning font-bold">+1 ({count})</span>
+    </Tooltip>
   ) : (
-    <span className="py-0.5 text-success font-bold" title="First visit">
-      NEW
-    </span>
+    <Tooltip content="First visit" position="top">
+      <span className="py-0.5 text-success font-bold">NEW</span>
+    </Tooltip>
   );
 }

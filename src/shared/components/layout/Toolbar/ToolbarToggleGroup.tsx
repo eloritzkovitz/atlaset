@@ -14,6 +14,7 @@ export function ToolbarToggleGroup({
           onClick={opt.onClick}
           ariaLabel={opt.ariaLabel || opt.label}
           title={opt.title || opt.label}
+          titlePosition={opt.titlePosition}
           variant="toggle"
           active={!!opt.checked}
           icon={opt.icon}

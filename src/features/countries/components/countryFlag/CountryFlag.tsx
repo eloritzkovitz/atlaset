@@ -33,7 +33,6 @@ export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
     if (FlagSvg) {
       return (
         <FlagSvg
-          title={alt || `${flag.isoCode} flag`}
           style={{ width, height, borderRadius: 4, ...style }}
           className={className}
         />
@@ -51,7 +50,6 @@ export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
           ...style,
         }}
         className={className}
-        title={alt || `${flag.isoCode} flag`}
       />
     );
   }

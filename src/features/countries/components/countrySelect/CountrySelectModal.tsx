@@ -51,7 +51,7 @@ export function CountrySelectModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="modal w-[500px] max-h-[80vh] flex flex-col"
+      className="modal shadow-lg w-[500px] max-h-[80vh] flex flex-col"
     >
       <PanelHeader
         title={

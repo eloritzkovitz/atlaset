@@ -19,7 +19,6 @@ export function SubregionStatsRow({ sub, onClick }: SubregionStatsRowProps) {
         sub.total
       )})`}
       onClick={onClick}
-      title={`Show countries in ${sub.name}`}
       className="text-base py-1 px-2"
       labelClassName="text-text"
       statsClassName="text-muted"

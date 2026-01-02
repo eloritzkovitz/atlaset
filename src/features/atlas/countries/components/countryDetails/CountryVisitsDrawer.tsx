@@ -1,4 +1,5 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import { FloatingChevronButton, Modal } from "@components";
 import type { Visit } from "@features/visits";
@@ -59,68 +60,100 @@ export function CountryVisitsDrawer({
     }, 300);
   };
 
+  // Calculate chevron position for portal
+  const [chevronPos, setChevronPos] = useState<{
+    top: number;
+    left: number;
+  } | null>(null);
+  useLayoutEffect(() => {
+    if (open && drawerRef.current) {
+      const rect = drawerRef.current.getBoundingClientRect();
+      setChevronPos({
+        top: rect.top + 16,
+        left: rect.right - 24,
+      });
+    } else {
+      setChevronPos(null);
+    }
+  }, [open, drawerRef, drawerStyle]);
+
   if (!open && !exiting) return null;
 
   return (
-    <Modal
-      isOpen={open || exiting}
-      onClose={handleClose}
-      className={`transition-transform duration-300 ease-in-out shadow-lg ${
-        exiting ? "-translate-x-full" : "translate-x-0"
-      }`}
-      style={drawerStyle}
-      containerZIndex={10030}
-      backdropZIndex={10020}
-      position="custom"
-      floatingChildren={
-        !exiting ? (
+    <>
+      <Modal
+        isOpen={open || exiting}
+        onClose={handleClose}
+        className={`transition-transform duration-300 ease-in-out shadow-lg ${
+          exiting ? "-translate-x-full" : "translate-x-0"
+        }`}
+        style={drawerStyle}
+        containerZIndex={10030}
+        backdropZIndex={10020}
+        position="custom"
+        disableClose
+        containerRef={drawerRef}
+        extraRefs={[chevronRef as React.RefObject<HTMLElement>]}
+      >
+        <div>
+          <div className="flex-1 overflow-y-auto p-4">
+            <div className="h-full flex flex-col">
+              <div className="flex items-center gap-2 h-8 text-lg font-bold mb-4">
+                <FaLocationDot />
+                Visits{totalVisits > 0 ? ` (${totalVisits})` : ""}
+              </div>
+              <div className="rounded p-3 mb-2 flex-1 overflow-y-auto">
+                {totalVisits > 0 ? (
+                  <>
+                    <VisitSection
+                      title={`Past Visits (${pastVisits.length})`}
+                      visits={pastVisits}
+                    />
+                    <VisitSection
+                      title={`Upcoming Visits (${upcomingVisits.length})`}
+                      visits={upcomingVisits}
+                    />
+                    <VisitSection
+                      title={`Planned (${tentativeVisits.length})`}
+                      visits={tentativeVisits}
+                      getLabel={() => "TBD"}
+                    />
+                  </>
+                ) : (
+                  <div className="text-muted text-sm">No visits recorded.</div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Modal>
+      {/* Floating chevron as portal, above modal backdrop */}
+      {!exiting && chevronPos && ReactDOM.createPortal(
+        <div
+          style={{
+            position: "fixed",
+            top: chevronPos.top,
+            left: chevronPos.left,
+            zIndex: 11000,
+            pointerEvents: "auto",
+          }}
+        >
           <FloatingChevronButton
             ref={chevronRef}
             targetRef={drawerRef}
             position="right"
             chevronDirection="left"
-            onClick={handleClose}
+            onClick={e => {
+              e.stopPropagation();
+              handleClose();
+            }}
             ariaLabel="Collapse visits"
             title="Collapse visits"
             positionKey={JSON.stringify(drawerStyle)}
           />
-        ) : undefined
-      }
-      disableClose
-      containerRef={drawerRef}
-      extraRefs={[chevronRef as React.RefObject<HTMLElement>]}
-    >
-      <div>
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="h-full flex flex-col">
-            <div className="flex items-center gap-2 h-8 text-lg font-bold mb-4">
-              <FaLocationDot />
-              Visits{totalVisits > 0 ? ` (${totalVisits})` : ""}
-            </div>
-            <div className="rounded p-3 mb-2 flex-1 overflow-y-auto">
-              {totalVisits > 0 ? (
-                <>
-                  <VisitSection
-                    title={`Past Visits (${pastVisits.length})`}
-                    visits={pastVisits}
-                  />
-                  <VisitSection
-                    title={`Upcoming Visits (${upcomingVisits.length})`}
-                    visits={upcomingVisits}
-                  />
-                  <VisitSection
-                    title={`Planned (${tentativeVisits.length})`}
-                    visits={tentativeVisits}
-                    getLabel={() => "TBD"}
-                  />
-                </>
-              ) : (
-                <div className="text-muted text-sm">No visits recorded.</div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </Modal>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

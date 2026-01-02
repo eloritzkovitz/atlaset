@@ -32,7 +32,6 @@ export function VisitedCountryNames({
             <li
               key={name}
               className="text-xs truncate max-w-[120px] px-1 rounded"
-              title={name}
             >
               {name}
             </li>

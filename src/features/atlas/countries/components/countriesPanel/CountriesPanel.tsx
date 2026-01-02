@@ -137,8 +137,8 @@ export function CountriesPanel({
             />
             <ActionButton
               onClick={toggleCountries}
-              ariaLabel="Hide countries panel"
-              title="Hide"
+              ariaLabel="Close countries panel"
+              title="Close"
               icon={<FaXmark className="text-2xl" />}
               rounded
             />

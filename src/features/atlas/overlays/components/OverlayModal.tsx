@@ -85,7 +85,6 @@ export function OverlayModal({
           <ActionButton
             onClick={onClose}
             ariaLabel="Close Overlay Modal"
-            title="Close"
             icon={<FaXmark className="text-2xl" />}
             rounded
           />

@@ -23,7 +23,6 @@ export function WorldExplorationCard({
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
-      title="Show all countries"
       aria-label="Show all countries"
     >
       {!loading && (

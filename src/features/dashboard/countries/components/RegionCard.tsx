@@ -39,7 +39,6 @@ export function RegionCard({
               total
             )})`}
             onClick={onRegionClick}
-            title={`Show all countries in ${region}`}
             className="mb-2 text-2xl"
             labelClassName="text-2xl"
             statsClassName="text-xl"

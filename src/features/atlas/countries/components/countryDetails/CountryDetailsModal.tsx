@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import ReactDOM from "react-dom";
-import { FaWikipediaW, FaCrosshairs, FaXmark } from "react-icons/fa6";
+import {
+  FaWikipediaW,
+  FaCrosshairs,
+  FaXmark,
+  FaLocationDot,
+} from "react-icons/fa6";
 import {
   ActionButton,
   ErrorMessage,
-  FloatingChevronButton,
   LoadingSpinner,
   Modal,
   PanelHeader,
@@ -18,7 +21,7 @@ import {
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
-import { useFloatingHover, useKeyHandler } from "@hooks";
+import { useKeyHandler } from "@hooks";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
 
 interface CountryDetailsModalProps {
@@ -51,10 +54,6 @@ export function CountryDetailsModal({
   const openChevronRef = useRef<HTMLButtonElement>(null);
   const closeChevronRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
-
-  // Hover logic for floating chevron
-  const { hoverHandlers, floatingHandlers, shouldShowFloating } =
-    useFloatingHover(true, 0, "button");
 
   // Auto-close drawer when modal closes
   useEffect(() => {
@@ -96,8 +95,7 @@ export function CountryDetailsModal({
         extraRefs={[openChevronRef, closeChevronRef, drawerRef]}
         containerZIndex={10050}
         backdropZIndex={10040}
-        onMouseEnter={hoverHandlers.onMouseEnter}
-        onMouseLeave={hoverHandlers.onMouseLeave}
+        disableClose={showVisitsDrawer}
       >
         <div className="relative overflow-visible">
           <PanelHeader
@@ -117,6 +115,22 @@ export function CountryDetailsModal({
             }
           >
             <ActionButton
+              onClick={() => setShowVisitsDrawer((v) => !v)}
+              ariaLabel={showVisitsDrawer ? "Hide visits" : "Show visits"}
+              title={showVisitsDrawer ? "Hide visits" : "Show visits"}
+              icon={<FaLocationDot />}
+              rounded
+            />
+            {onCenterMap && (
+              <ActionButton
+                onClick={onCenterMap}
+                ariaLabel="Center map on country"
+                title="Center map"
+                icon={<FaCrosshairs />}
+                rounded
+              />
+            )}
+            <ActionButton
               onClick={() =>
                 window.open(
                   `https://en.wikipedia.org/wiki/${country.name.replace(
@@ -132,15 +146,6 @@ export function CountryDetailsModal({
               icon={<FaWikipediaW />}
               rounded
             />
-            {onCenterMap && (
-              <ActionButton
-                onClick={onCenterMap}
-                ariaLabel="Center map on country"
-                title="Center map"
-                icon={<FaCrosshairs />}
-                rounded
-              />
-            )}
             <ActionButton
               onClick={onClose}
               ariaLabel="Close country details"
@@ -152,21 +157,6 @@ export function CountryDetailsModal({
           <CountryDetailsContent country={country} currencies={currencies} />
         </div>
       </Modal>
-      {!showVisitsDrawer &&
-        shouldShowFloating &&
-        ReactDOM.createPortal(
-          <FloatingChevronButton
-            ref={openChevronRef}
-            targetRef={modalRef}
-            position="right"
-            chevronDirection="right"
-            onClick={() => setShowVisitsDrawer(true)}
-            ariaLabel="Show visits"
-            title="Show visits"
-            {...floatingHandlers}
-          />,
-          document.body
-        )}
     </div>
   );
 }

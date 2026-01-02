@@ -1,5 +1,6 @@
 import React from "react";
 import { FaGithub } from "react-icons/fa6";
+import { Tooltip } from "@components";
 import { getScaleBarLabel } from "@features/atlas/map";
 import { getCurrentYear } from "@utils/date";
 
@@ -34,10 +35,14 @@ export const MapFooter: React.FC<MapFooterProps> = ({
           atlaset
         </a>
       </div>
-      <span title={coords ? `Longitude, Latitude` : undefined}>
-        <span className="mr-2" title="Zoom level">{`x${zoom.toFixed(1)}`}</span>
+      <span>
+        <Tooltip content={`Zoom: x${zoom.toFixed(1)}`} position="top">
+          <span className="mr-2">{`x${zoom.toFixed(1)}`}</span>
+        </Tooltip>
         {coords ? (
-          `${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}`
+          <Tooltip content={`Longitude, Latitude`} position="top">
+            <span>{`${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}`}</span>
+          </Tooltip>
         ) : (
           <span className="opacity-50">—</span>
         )}
@@ -48,9 +53,11 @@ export const MapFooter: React.FC<MapFooterProps> = ({
           style={{ width: barPx }}
           aria-hidden="true"
         />
-        <span className="text-xs" aria-label="Scale bar">
-          {getScaleBarLabel(zoom, latitude, barPx)}
-        </span>
+        <Tooltip content="Scale bar" position="top">
+          <span className="text-xs" aria-label="Scale bar">
+            {getScaleBarLabel(zoom, latitude, barPx)}
+          </span>
+        </Tooltip>
       </div>
     </footer>
   );
