@@ -1,6 +1,5 @@
 import { Card } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { CountryFlag } from "@features/countries";
+import { CountryFlag, useCountryData } from "@features/countries";
 
 interface VisitedCountriesCardProps {
   visitedCountryCodes: string[];

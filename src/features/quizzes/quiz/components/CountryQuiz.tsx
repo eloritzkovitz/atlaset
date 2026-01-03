@@ -5,8 +5,7 @@ import {
   type SetStateAction,
 } from "react";
 import { ConfirmModal, ErrorMessage, LoadingSpinner } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import type { Country } from "@features/countries";
+import { useCountryData, type Country } from "@features/countries";
 import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";

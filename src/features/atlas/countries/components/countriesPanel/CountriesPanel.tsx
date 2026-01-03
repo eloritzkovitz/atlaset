@@ -7,11 +7,10 @@ import {
   Panel,
   Separator,
 } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
-import { sortCountries, type Country } from "@features/countries";
+import { sortCountries, useCountryData, type Country } from "@features/countries";
 import { useListNavigation, useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountriesToolbar } from "./CountriesToolbar";

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
 import { FloatingActionButton, SplashScreen } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useTrips } from "@contexts/TripsContext";
+import { useCountryData } from "@features/countries";
 import {
   TripModal,
   TripsTable,

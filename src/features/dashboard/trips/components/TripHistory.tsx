@@ -1,7 +1,10 @@
 import { FaFlag, FaClockRotateLeft, FaCalendarDay } from "react-icons/fa6";
 import { DashboardCard } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { CountryFlag, CountryWithFlag } from "@features/countries";
+import {
+  CountryFlag,
+  CountryWithFlag,
+  useCountryData,
+} from "@features/countries";
 import { useTripHistoryStats } from "../hooks/useTripHistoryStats";
 
 export function TripHistory() {

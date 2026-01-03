@@ -8,8 +8,7 @@ import {
   HamburgerButton,
 } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { useRegionSubregionFilters } from "@features/countries";
+import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
   DashboardPanelMenu,
   CountryStats,

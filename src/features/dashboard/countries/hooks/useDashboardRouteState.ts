@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useCountryData } from "@contexts/CountryDataContext";
+import { useCountryData } from "@features/countries";
 
 /**
  * Manages dashboard route state.

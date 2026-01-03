@@ -12,11 +12,11 @@ import {
   Modal,
   PanelHeader,
 } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
 import {
   CountryDetailsContent,
   CountryWithFlag,
   VisitedStatusIndicator,
+  useCountryData,
   type Country,
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";

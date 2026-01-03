@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
-import type { CountryFilterOptions, SovereigntyType } from "@features/countries";
+import {
+  useCountryData,
+  type CountryFilterOptions,
+  type SovereigntyType,
+} from "@features/countries";
 import {
   filterCountries,
   getFilteredIsoCodes,
@@ -32,7 +35,9 @@ export function useCountryFilters() {
   // Filter states
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
-  const [selectedSovereignty, setSelectedSovereignty] = useState<SovereigntyType | "">("");
+  const [selectedSovereignty, setSelectedSovereignty] = useState<
+    SovereigntyType | ""
+  >("");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 

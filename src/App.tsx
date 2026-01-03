@@ -1,7 +1,6 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
-import { CountryDataProvider } from "@contexts/CountryDataProvider";
 import { MapUIProvider } from "@contexts/MapUIProvider";
 import { MarkersProvider } from "@contexts/MarkersProvider";
 import { OverlaysProvider } from "@contexts/OverlaysProvider";
@@ -32,65 +31,63 @@ function App() {
   }
 
   return (
-    <CountryDataProvider>
-      <TripsProvider>
-        <UIProvider>
-          <UIHintProvider>
-            <UIHintContainer />
-            <PwaUpdateUiHint />
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
-              <Route path="/users/:username" element={<ProfilePage />} />
-              <Route path="/settings/*" element={<SettingsPage />} />
-              <Route
-                path="/"
-                element={
-                  <AppLayout>
-                    <Suspense fallback={<SplashScreen />}>
-                      <OverlaysProvider>
-                        <MapUIProvider>
-                          <MarkersProvider>
-                            <TimelineProvider>
-                              <AtlasPage />
-                            </TimelineProvider>
-                          </MarkersProvider>
-                        </MapUIProvider>
-                      </OverlaysProvider>
-                    </Suspense>
-                  </AppLayout>
-                }
-              />
-              <Route
-                path="/dashboard/*"
-                element={
-                  <AppLayout>
-                    <DashboardPage />
-                  </AppLayout>
-                }
-              />
-              <Route
-                path="/quizzes/*"
-                element={
-                  <AppLayout>
-                    <QuizzesPage />
-                  </AppLayout>
-                }
-              />
-              <Route
-                path="/trips"
-                element={
-                  <AppLayout>
-                    <TripsPage />
-                  </AppLayout>
-                }
-              />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </UIHintProvider>
-        </UIProvider>
-      </TripsProvider>
-    </CountryDataProvider>
+    <TripsProvider>
+      <UIProvider>
+        <UIHintProvider>
+          <UIHintContainer />
+          <PwaUpdateUiHint />
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/users/:username" element={<ProfilePage />} />
+            <Route path="/settings/*" element={<SettingsPage />} />
+            <Route
+              path="/"
+              element={
+                <AppLayout>
+                  <Suspense fallback={<SplashScreen />}>
+                    <OverlaysProvider>
+                      <MapUIProvider>
+                        <MarkersProvider>
+                          <TimelineProvider>
+                            <AtlasPage />
+                          </TimelineProvider>
+                        </MarkersProvider>
+                      </MapUIProvider>
+                    </OverlaysProvider>
+                  </Suspense>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/dashboard/*"
+              element={
+                <AppLayout>
+                  <DashboardPage />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/quizzes/*"
+              element={
+                <AppLayout>
+                  <QuizzesPage />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/trips"
+              element={
+                <AppLayout>
+                  <TripsPage />
+                </AppLayout>
+              }
+            />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </UIHintProvider>
+      </UIProvider>
+    </TripsProvider>
   );
 }
 

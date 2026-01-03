@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { FaHouse, FaChevronRight } from "react-icons/fa6";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { CountrySelectModal, CountryWithFlag } from "@features/countries";
+import {
+  CountrySelectModal,
+  CountryWithFlag,
+  useCountryData,
+} from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { SettingsCard } from "../SettingsCard";
 

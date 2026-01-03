@@ -1,8 +1,7 @@
 import { FaPen } from "react-icons/fa6";
 import { Card } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { CountryWithFlag } from "@features/countries";
+import { CountryWithFlag, useCountryData } from "@features/countries";
 import { formatFirestoreDate } from "@utils/date";
 import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";

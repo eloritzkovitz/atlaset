@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { useCountryData } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import {
   CENTER_INDEX,

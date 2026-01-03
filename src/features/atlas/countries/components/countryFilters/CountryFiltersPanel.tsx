@@ -8,9 +8,8 @@ import {
   Separator,
 } from "@components";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
-import type { SovereigntyType } from "@features/countries";
+import { useCountryData, type SovereigntyType } from "@features/countries";
 import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,

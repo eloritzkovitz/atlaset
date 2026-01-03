@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import { ErrorMessage, SplashScreen } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import {
@@ -11,6 +10,7 @@ import {
 } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
+import { useCountryData } from "@features/countries";
 
 export default function AtlasPage() {
   // Data state
