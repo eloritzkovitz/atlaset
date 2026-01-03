@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { settingsService } from "@features/settings";
 import { defaultSettings } from "@features/settings/constants/defaultSettings";
 import type { Settings } from "@features/settings/types";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@features/user";
 import { SettingsContext } from "./SettingsContext";
 
 export function SettingsProvider({ children }: { children: ReactNode }) {

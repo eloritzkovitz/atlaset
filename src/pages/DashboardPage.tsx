@@ -7,7 +7,6 @@ import {
   LoadingSpinner,
   HamburgerButton,
 } from "@components";
-import { useAuth } from "@contexts/AuthContext";
 import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
   DashboardPanelMenu,
@@ -20,6 +19,7 @@ import {
   useDashboardNavigation,
   useDashboardRouteState,
 } from "@features/dashboard";
+import { useAuth } from "@features/user";
 import { useIsMobile } from "@hooks";
 
 export default function DashboardPage() {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAutoTripStatus, tripsService, type Trip } from "@features/trips";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@features/user";
 import { TripsContext } from "./TripsContext";
 
 export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({

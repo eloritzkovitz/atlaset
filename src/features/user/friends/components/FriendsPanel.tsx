@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { FaUserGroup, FaUserPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
-import { useAuth } from "@contexts/AuthContext";
+import { UserListItem } from "./UserListItem";
 import { useFriends } from "../hooks/useFriends";
 import { useFriendRequests } from "../hooks/useFriendRequests";
+import { useAuth } from "../../auth/hooks/useAuth";
 import { friendService } from "../../friends/services/friendService";
-import { UserListItem } from "./UserListItem";
 
 interface FriendsPanelProps {
   open: boolean;

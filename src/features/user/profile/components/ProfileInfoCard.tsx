@@ -1,10 +1,10 @@
 import { FaPen } from "react-icons/fa6";
 import { Card } from "@components";
-import { useAuth } from "@contexts/AuthContext";
 import { CountryWithFlag, useCountryData } from "@features/countries";
 import { formatFirestoreDate } from "@utils/date";
 import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";
+import { useAuth } from "../../auth/hooks/useAuth";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
 import { friendService } from "../../friends/services/friendService";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";

@@ -2,10 +2,9 @@ import { useState } from "react";
 import { FaAddressCard } from "react-icons/fa6";
 import { updatePassword } from "firebase/auth";
 import { FormField, ActionButton } from "@components";
-import { useAuth } from "@contexts/AuthContext";
-import { authService } from "../../../user/auth/services/authService";
-import { isPasswordProvider } from "@features/user/auth/utils/auth";
+import { isPasswordProvider, useAuth } from "@features/user";
 import { SettingsCard } from "../SettingsCard";
+import { authService } from "../../../user/auth/services/authService";
 
 export function ProfileSection() {
   const { user } = useAuth();

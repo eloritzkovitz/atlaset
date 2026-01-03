@@ -6,8 +6,7 @@ import {
   useSyncVisitedCountriesOverlay,
   type AnyOverlay,
 } from "@features/atlas/overlays";
-import { logUserActivity } from "@features/user";
-import { useAuth } from "./AuthContext";
+import { logUserActivity, useAuth } from "@features/user";
 import { OverlaysContext } from "./OverlaysContext";
 
 export function OverlaysProvider({ children }: { children: React.ReactNode }) {

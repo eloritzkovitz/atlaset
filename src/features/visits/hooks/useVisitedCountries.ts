@@ -1,6 +1,6 @@
-import { useTrips } from "@contexts/TripsContext";
-import { useAuth } from "@contexts/AuthContext";
 import { useEffect, useMemo, useState } from "react";
+import { useTrips } from "@contexts/TripsContext";
+import { useAuth } from "@features/user";
 import { visitedCountriesService } from "../services/visitedCountriesService";
 import {
   computeVisitedCountriesFromTrips,
