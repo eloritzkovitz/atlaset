@@ -1,37 +1,30 @@
-import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { settingsService } from "@features/settings";
-import { defaultSettings } from "@features/settings/constants/defaultSettings";
-import type { Settings } from "@features/settings/types";
-import { useAuth } from "@features/user";
+import { useEffect, type PropsWithChildren } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  loadSettings,
+  saveSettings,
+  resetSettingsThunk,
+  selectSettings,
+  selectSettingsLoading,
+  selectSettingsReady,
+} from "@features/settings";
+import { selectAuthReady } from "@features/user";
 import { SettingsContext } from "./SettingsContext";
+import type { AppDispatch } from "../store";
 
-export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<Settings>(defaultSettings);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch settings on mount
-  const { ready } = useAuth();
-
+export function SettingsProvider({ children }: PropsWithChildren<object>) {
+  const settings = useSelector(selectSettings);
+  const loading = useSelector(selectSettingsLoading);
+  const ready = useSelector(selectSettingsReady);
+  const authReady = useSelector(selectAuthReady);
+  const dispatch = useDispatch<AppDispatch>();
+  
   // Load settings when auth state changes
   useEffect(() => {
-    let mounted = true;
-    if (!ready) return;
-    setLoading(true);
-    settingsService
-      .load()
-      .then((s) => {
-        if (mounted) {
-          setSettings(s);
-          setLoading(false);
-        }
-      })
-      .catch(() => {
-        setLoading(false);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [ready]);
+    if (authReady) {
+      dispatch(loadSettings());
+    }
+  }, [authReady, dispatch]);
 
   // Apply theme class to document
   useEffect(() => {
@@ -39,22 +32,21 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [settings.display?.theme]);
 
-  // Update settings in IndexedDB
-  const updateSettings = async (updates: Partial<Settings>) => {
-    const newSettings = { ...settings, ...updates, id: "main" };
-    await settingsService.save(newSettings);
-    setSettings(newSettings);
+  // Update settings via Redux
+  const updateSettings = async (
+    updates: Partial<typeof settings>
+  ): Promise<void> => {
+    await dispatch(saveSettings(updates));
   };
 
-  // Reset settings to default
-  const resetSettings = useCallback(async () => {
-    await settingsService.save(defaultSettings);
-    setSettings(defaultSettings);
-  }, []);
+  // Reset settings via Redux
+  const resetSettings = async (): Promise<void> => {
+    await dispatch(resetSettingsThunk());
+  };
 
   return (
     <SettingsContext.Provider
-      value={{ settings, updateSettings, resetSettings, loading }}
+      value={{ settings, updateSettings, resetSettings, loading, ready }}
     >
       {children}
     </SettingsContext.Provider>

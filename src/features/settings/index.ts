@@ -12,5 +12,9 @@ export { useOverlayColors } from "./hooks/useOverlayColors";
 export { useTheme } from "./hooks/useTheme";
 export { useVisitColorRoles } from "./hooks/useVisitColorRoles";
 
+// Redux
+export { default as settingsReducer } from "./slices/settingsSlice";
+export * from "./slices/settingsSlice";
+
 // Services
 export { settingsService } from "./services/settingsService";

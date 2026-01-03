@@ -1,4 +1,5 @@
-import { Suspense, lazy } from "react";
+import { useEffect, Suspense, lazy } from "react";
+import { useDispatch } from "react-redux";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { MapUIProvider } from "@contexts/MapUIProvider";
@@ -9,6 +10,7 @@ import { TimelineProvider } from "@contexts/TimelineProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
+import { listenForAuthChanges } from "@features/user";
 import { AppLayout } from "@layout";
 import DashboardPage from "./pages/DashboardPage";
 import QuizzesPage from "./pages/QuizzesPage";
@@ -18,15 +20,22 @@ import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import type { AppDispatch } from "./store";
 
 function App() {
-  const { loading } = useSettings();
+  const { ready } = useSettings();
+
+  // Dispatch auth listener on mount
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    dispatch(listenForAuthChanges());
+  }, [dispatch]);
 
   // Lazy load AtlasPage
   const AtlasPage = lazy(() => import("./pages/AtlasPage"));
 
   // Show splash screen while loading settings
-  if (loading) {
+  if (!ready) {
     return <SplashScreen />;
   }
 

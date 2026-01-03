@@ -4,12 +4,24 @@ import {
   type PayloadAction,
 } from "@reduxjs/toolkit";
 import { onAuthStateChanged, type User } from "firebase/auth";
+import type { RootState } from "../../../../store";
 import { removeDevice } from "@features/user/auth/utils/device";
 import { migrationService } from "@services/migrationService";
 import { auth } from "../../../../firebase";
 
+// Only store serializable user fields in Redux
+export interface SerializableUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  phoneNumber: string | null;
+  providerId: string;
+}
+
 export interface AuthState {
-  user: User | null;
+  user: SerializableUser | null;
   loading: boolean;
   ready: boolean;
 }
@@ -20,13 +32,29 @@ const initialState: AuthState = {
   ready: false,
 };
 
-export const listenForAuthChanges = createAsyncThunk<User | null, void>(
+
+// Helper to extract only serializable fields from Firebase User
+function toSerializableUser(user: User | null): SerializableUser | null {
+  if (!user) return null;
+  return {
+    uid: user.uid,
+    email: user.email,
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    emailVerified: user.emailVerified,
+    phoneNumber: user.phoneNumber,
+    providerId: user.providerId,
+  };
+}
+
+export const listenForAuthChanges = createAsyncThunk<SerializableUser | null, void>(
   "auth/listenForAuthChanges",
   async (_, { dispatch }) => {
-    return new Promise<User | null>((resolve) => {
+    return new Promise<SerializableUser | null>((resolve) => {
       onAuthStateChanged(auth, async (firebaseUser) => {
-        resolve(firebaseUser);
-        dispatch(setUser(firebaseUser));
+        const serializableUser = toSerializableUser(firebaseUser);
+        resolve(serializableUser);
+        dispatch(setUser(serializableUser));
         dispatch(setLoading(false));
         dispatch(setReady(true));
         if (!firebaseUser) {
@@ -48,11 +76,12 @@ export const listenForAuthChanges = createAsyncThunk<User | null, void>(
   }
 );
 
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setUser(state, action: PayloadAction<User | null>) {
+    setUser(state, action: PayloadAction<SerializableUser | null>) {
       state.user = action.payload;
     },
     setLoading(state, action: PayloadAction<boolean>) {
@@ -72,4 +101,6 @@ const authSlice = createSlice({
 });
 
 export const { setUser, setLoading, setReady } = authSlice.actions;
+export const selectAuthReady = (state: RootState) => state.auth.ready;
+export const selectAuthUser = (state: RootState) => state.auth.user;
 export default authSlice.reducer;

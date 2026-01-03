@@ -26,6 +26,7 @@ export { useUserDevices } from "./auth/hooks/useUserDevices";
 
 // Redux
 export { default as authReducer } from "./auth/slices/authSlice";
+export * from "./auth/slices/authSlice";
 
 // Services
 export { authService } from "./auth/services/authService";

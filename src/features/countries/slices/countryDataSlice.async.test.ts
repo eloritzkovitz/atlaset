@@ -4,30 +4,28 @@ beforeAll(() => {
   process.on("unhandledRejection", () => {});
 });
 import { vi } from "vitest";
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const configureStore = require("redux-mock-store").default;
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const thunk = require("redux-thunk").thunk;
+import configureStore from "redux-mock-store";
+import { thunk } from "redux-thunk";
+import type { Middleware } from "@reduxjs/toolkit";
 import { fetchCountryData } from "./countryDataSlice";
 import { mockCountries } from "../../../shared/test-utils/mockCountries";
 
 describe("countryDataSlice async thunk", () => {
-    it("dispatches rejected on thrown non-Error value", async () => {
-      (global.fetch as any)
-        .mockRejectedValueOnce(42) // first fetch throws a number (not Error or string)
-        .mockResolvedValueOnce({ ok: true, json: async () => ({}) }); // second fetch dummy
-      try {
-        await store.dispatch(fetchCountryData());
-      } catch (e) {
-        // ignore, we assert on actions
-      }
-      const actions = store.getActions();
-      expect(actions[0].type).toBe(fetchCountryData.pending.type);
-      expect(actions[1].type).toBe(fetchCountryData.rejected.type);
-      expect(actions[1].error.message).toBe("Failed to load data");
-    });
-  const middlewares = [thunk as any];
+  it("dispatches rejected on thrown non-Error value", async () => {
+    (global.fetch as any)
+      .mockRejectedValueOnce(42) // first fetch throws a number (not Error or string)
+      .mockResolvedValueOnce({ ok: true, json: async () => ({}) }); // second fetch dummy
+    try {
+      await (store.dispatch as any)(fetchCountryData());
+    } catch (e) {
+      // ignore, we assert on actions
+    }
+    const actions = store.getActions();
+    expect(actions[0].type).toBe(fetchCountryData.pending.type);
+    expect(actions[1].type).toBe(fetchCountryData.rejected.type);
+    expect(actions[1].error.message).toBe("Failed to load data");
+  });
+  const middlewares: Middleware[] = [thunk as Middleware];
   const mockStore = configureStore(middlewares);
   let store: ReturnType<typeof mockStore>;
 
@@ -52,7 +50,7 @@ describe("countryDataSlice async thunk", () => {
       });
 
     try {
-      await store.dispatch(fetchCountryData());
+      await (store.dispatch as any)(fetchCountryData());
     } catch (e) {
       // ignore, we assert on actions
     }
@@ -67,7 +65,7 @@ describe("countryDataSlice async thunk", () => {
       .mockResolvedValueOnce({ ok: false }) // first fetch fails
       .mockResolvedValueOnce({ ok: true, json: async () => ({}) }); // second fetch dummy
     try {
-      await store.dispatch(fetchCountryData());
+      await (store.dispatch as any)(fetchCountryData());
     } catch (e) {
       // ignore, we assert on actions
     }
@@ -82,7 +80,7 @@ describe("countryDataSlice async thunk", () => {
       .mockRejectedValueOnce(new Error("network fail")) // first fetch throws
       .mockResolvedValueOnce({ ok: true, json: async () => ({}) }); // second fetch dummy
     try {
-      await store.dispatch(fetchCountryData());
+      await (store.dispatch as any)(fetchCountryData());
     } catch (e) {
       // ignore, we assert on actions
     }
