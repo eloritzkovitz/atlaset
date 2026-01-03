@@ -7,9 +7,14 @@ import { useKeyHandler } from "@hooks";
 interface ZoomControlsProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
+  visible?: boolean;
 }
 
-export function ZoomControls({ zoom, setZoom }: ZoomControlsProps) {
+export function ZoomControls({
+  zoom,
+  setZoom,
+  visible = true,
+}: ZoomControlsProps) {
   const zoomInInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomOutInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -58,48 +63,56 @@ export function ZoomControls({ zoom, setZoom }: ZoomControlsProps) {
   useKeyHandler(() => setZoom(DEFAULT_MAP_SETTINGS.minZoom), ["0"], true);
 
   return (
-    <div className="flex flex-col items-center space-y-0.5">
-      <ActionButton
-        onClick={() =>
-          setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom))
-        }
-        onMouseDown={() => startContinuousZoom("in")}
-        onMouseUp={() => stopContinuousZoom("in")}
-        onMouseLeave={() => stopContinuousZoom("in")}
-        onTouchStart={() => startContinuousZoom("in")}
-        onTouchEnd={() => stopContinuousZoom("in")}
-        ariaLabel="Zoom in"
-        title="Zoom in"
-        titlePosition="left"
-        icon={<FaPlus />}
-        variant="action"
-        rounded
-      />
-      <ActionButton
-        onClick={() =>
-          setZoom(Math.max(zoom - 1, DEFAULT_MAP_SETTINGS.minZoom))
-        }
-        onMouseDown={() => startContinuousZoom("out")}
-        onMouseUp={() => stopContinuousZoom("out")}
-        onMouseLeave={() => stopContinuousZoom("out")}
-        onTouchStart={() => startContinuousZoom("out")}
-        onTouchEnd={() => stopContinuousZoom("out")}
-        ariaLabel="Zoom out"
-        title="Zoom out"
-        titlePosition="left"
-        icon={<FaMinus />}
-        variant="action"
-        rounded
-      />
-      <ActionButton
-        onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
-        ariaLabel="Reset zoom"
-        title="Reset zoom"
-        titlePosition="left"
-        icon={<FaCrosshairs />}
-        variant="action"
-        rounded
-      />
+    <div
+      className={`toolbar-zoom-controls ${
+        visible
+          ? "toolbar-zoom-controls-visible"
+          : "toolbar-zoom-controls-hidden"
+      }`}
+    >
+      <div className="flex flex-col items-center space-y-0.5">
+        <ActionButton
+          onClick={() =>
+            setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom))
+          }
+          onMouseDown={() => startContinuousZoom("in")}
+          onMouseUp={() => stopContinuousZoom("in")}
+          onMouseLeave={() => stopContinuousZoom("in")}
+          onTouchStart={() => startContinuousZoom("in")}
+          onTouchEnd={() => stopContinuousZoom("in")}
+          ariaLabel="Zoom in"
+          title="Zoom in"
+          titlePosition="left"
+          icon={<FaPlus />}
+          variant="action"
+          rounded
+        />
+        <ActionButton
+          onClick={() =>
+            setZoom(Math.max(zoom - 1, DEFAULT_MAP_SETTINGS.minZoom))
+          }
+          onMouseDown={() => startContinuousZoom("out")}
+          onMouseUp={() => stopContinuousZoom("out")}
+          onMouseLeave={() => stopContinuousZoom("out")}
+          onTouchStart={() => startContinuousZoom("out")}
+          onTouchEnd={() => stopContinuousZoom("out")}
+          ariaLabel="Zoom out"
+          title="Zoom out"
+          titlePosition="left"
+          icon={<FaMinus />}
+          variant="action"
+          rounded
+        />
+        <ActionButton
+          onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
+          ariaLabel="Reset zoom"
+          title="Reset zoom"
+          titlePosition="left"
+          icon={<FaCrosshairs />}
+          variant="action"
+          rounded
+        />
+      </div>
     </div>
   );
 }

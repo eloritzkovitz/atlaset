@@ -6,7 +6,7 @@ import {
 } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
 import { usePanelHide } from "@hooks";
-import { NAV_LINKS } from "./navLinks";
+import { NAV_LINKS, SETTINGS_LINK } from "./navLinks";
 import { SidebarMenuLink } from "./SidebarMenuLink";
 import { Branding } from "../Branding/Branding";
 
@@ -79,11 +79,20 @@ export function Sidebar() {
             />
           ))}
         </nav>
+        {/* Settings */}
+        <div className="absolute bottom-2 left-0 w-full px-1">
+          <SidebarMenuLink
+            to={SETTINGS_LINK.to}
+            icon={SETTINGS_LINK.icon}
+            label={SETTINGS_LINK.label}
+            expanded={sidebarExpanded}
+          />
+        </div>
       </aside>
 
       {/* Mobile bottom navigation bar: only visible on mobile */}
       <nav className="fixed bottom-0 left-0 right-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
-        {NAV_LINKS.map((link) => (
+        {[...NAV_LINKS, SETTINGS_LINK].map((link) => (
           <SidebarMenuLink
             key={link.to}
             to={link.to}

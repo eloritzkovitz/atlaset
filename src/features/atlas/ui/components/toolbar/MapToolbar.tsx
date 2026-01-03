@@ -8,15 +8,10 @@ import {
   FaTimeline,
   FaChevronLeft,
   FaChevronRight,
-  FaMap,
   FaChevronUp,
+  FaRectangleList,
 } from "react-icons/fa6";
-import {
-  ActionButton,
-  ActionsToolbar,
-  MenuButton,
-  ToolbarSeparator,
-} from "@components";
+import { ActionButton, ActionsToolbar } from "@components";
 import { useOverlays } from "@contexts/OverlaysContext";
 import { useUI } from "@contexts/UIContext";
 import {
@@ -24,6 +19,7 @@ import {
   VISITED_OVERLAY_ID,
 } from "@features/atlas/overlays";
 import { useIsMobile } from "@hooks";
+import { MapToolbarActions } from "./MapToolbarActions";
 import { ZoomControls } from "../controls/ZoomControls";
 import "./MapToolbar.css";
 
@@ -62,6 +58,83 @@ export function MapToolbar({
   // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Define actions
+  const actions = [
+    {
+      key: "countries",
+      icon: <FaGlobe />,
+      label: "Countries",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleCountries();
+      },
+      show: true,
+    },
+    {
+      key: "markers",
+      icon: <FaMapPin />,
+      label: "Markers",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleMarkers();
+      },
+      show: true,
+    },
+    {
+      key: "overlays",
+      icon: <FaLayerGroup />,
+      label: "Overlays",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleOverlays();
+      },
+      show: true,
+      separatorAfter: true,
+    },
+    {
+      key: "legend",
+      icon: <FaRectangleList />,
+      label: "Legend",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleLegend();
+      },
+      show: true,
+    },
+    {
+      key: "timeline",
+      icon: <FaTimeline />,
+      label: "Timeline",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        setTimelineMode((prev) => !prev);
+      },
+      show: !!(visitedOverlay && isTimelineOverlay(visitedOverlay)),
+      separatorAfter: true,
+    },
+    {
+      key: "export",
+      icon: <FaDownload />,
+      label: "Export",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleExport();
+      },
+      show: true,
+    },
+    {
+      key: "settings",
+      icon: <FaGear />,
+      label: "Settings",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleSettings();
+      },
+      show: true,
+    },
+  ];
+
+  // Mobile toolbar
   if (isMobile) {
     return (
       <>
@@ -87,85 +160,7 @@ export function MapToolbar({
               className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <MenuButton
-                onClick={() => {
-                  setMenuOpen(false);
-                  toggleCountries();
-                }}
-                icon={<FaGlobe />}
-                ariaLabel="Countries"
-                title="Countries"
-              >
-                Countries
-              </MenuButton>
-              <MenuButton
-                onClick={() => {
-                  setMenuOpen(false);
-                  toggleMarkers();
-                }}
-                icon={<FaMapPin />}
-                ariaLabel="Markers"
-                title="Markers"
-              >
-                Markers
-              </MenuButton>
-              <MenuButton
-                onClick={() => {
-                  setMenuOpen(false);
-                  toggleOverlays();
-                }}
-                icon={<FaLayerGroup />}
-                ariaLabel="Overlays"
-                title="Overlays"
-              >
-                Overlays
-              </MenuButton>
-              <MenuButton
-                onClick={() => {
-                  setMenuOpen(false);
-                  toggleLegend();
-                }}
-                icon={<FaMap />}
-                ariaLabel="Legend"
-                title="Legend"
-              >
-                Legend
-              </MenuButton>
-              {visitedOverlay && isTimelineOverlay(visitedOverlay) && (
-                <MenuButton
-                  onClick={() => {
-                    setMenuOpen(false);
-                    setTimelineMode((prev) => !prev);
-                  }}
-                  icon={<FaTimeline />}
-                  ariaLabel="Timeline"
-                  title="Timeline"
-                >
-                  Timeline
-                </MenuButton>
-              )}
-              <MenuButton
-                onClick={() => {
-                  setMenuOpen(false);
-                  toggleExport();
-                }}
-                icon={<FaDownload />}
-                ariaLabel="Export"
-                title="Export"
-              >
-                Export
-              </MenuButton>
-              <MenuButton
-                onClick={() => {
-                  setMenuOpen(false);
-                  toggleSettings();
-                }}
-                icon={<FaGear />}
-                ariaLabel="Settings"
-                title="Settings"
-              >
-                Settings
-              </MenuButton>
+              <MapToolbarActions actions={actions} isDesktop={false} />
             </div>
           </div>
         )}
@@ -173,6 +168,7 @@ export function MapToolbar({
     );
   }
 
+  // Desktop toolbar
   return (
     <div
       className={`toolbar-container ${
@@ -180,15 +176,7 @@ export function MapToolbar({
       }`}
     >
       {/* Zoom controls: vertical slide */}
-      <div
-        className={`toolbar-zoom-controls ${
-          visible
-            ? "toolbar-zoom-controls-visible"
-            : "toolbar-zoom-controls-hidden"
-        }`}
-      >
-        <ZoomControls zoom={zoom} setZoom={setZoom} />
-      </div>
+      <ZoomControls zoom={zoom} setZoom={setZoom} visible={visible} />
       <div
         className="relative flex items-center w-full justify-end"
         style={{ height: "40px" }}
@@ -212,73 +200,9 @@ export function MapToolbar({
               : "opacity-0 pointer-events-none translate-x-10"
           }`}
         >
-          <ActionButton
-            onClick={toggleCountries}
-            ariaLabel="Countries"
-            title="Countries"
-            titlePosition="top"
-            icon={<FaGlobe />}
-            variant="action"
-            rounded
-          />
-          <ActionButton
-            onClick={toggleMarkers}
-            ariaLabel="Markers"
-            title="Markers"
-            titlePosition="top"
-            icon={<FaMapPin />}
-            variant="action"
-            rounded
-          />
-          <ActionButton
-            onClick={toggleOverlays}
-            ariaLabel="Overlays"
-            title="Overlays"
-            titlePosition="top"
-            icon={<FaLayerGroup />}
-            variant="action"
-            rounded
-          />
-          <ActionButton
-            onClick={toggleLegend}
-            ariaLabel="Legend"
-            title="Legend"
-            titlePosition="top"
-            icon={<FaMap />}
-            variant="action"
-            rounded
-          />
-          {visitedOverlay && isTimelineOverlay(visitedOverlay) && (
-            <ActionButton
-              onClick={() => setTimelineMode((prev) => !prev)}
-              ariaLabel="Timeline"
-              title="Timeline"
-              titlePosition="top"
-              icon={<FaTimeline />}
-              variant="action"
-              rounded
-            />
-          )}
-          <ActionButton
-            onClick={toggleExport}
-            ariaLabel="Export"
-            title="Export"
-            titlePosition="top"
-            icon={<FaDownload />}
-            variant="action"
-            rounded
-          />
-          <ToolbarSeparator />
-          <ActionButton
-            onClick={toggleSettings}
-            ariaLabel="Settings"
-            title="Settings"
-            titlePosition="top"
-            icon={<FaGear />}
-            variant="action"
-            rounded
-          />
-          {children}
+          <MapToolbarActions actions={actions} isDesktop={true}>
+            {children}
+          </MapToolbarActions>
         </ActionsToolbar>
       </div>
     </div>

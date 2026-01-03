@@ -10,23 +10,28 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   // Fetch settings on mount
-  const { user, ready } = useAuth();
+  const { ready } = useAuth();
 
   // Load settings when auth state changes
   useEffect(() => {
     let mounted = true;
-    if (!ready || !user) return;
+    if (!ready) return;
     setLoading(true);
-    settingsService.load().then((s) => {
-      if (mounted) {
-        setSettings(s);
+    settingsService
+      .load()
+      .then((s) => {
+        if (mounted) {
+          setSettings(s);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
         setLoading(false);
-      }
-    });
+      });
     return () => {
       mounted = false;
     };
-  }, [user, ready]);
+  }, [ready]);
 
   // Apply theme class to document
   useEffect(() => {

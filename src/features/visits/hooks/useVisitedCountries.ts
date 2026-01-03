@@ -1,6 +1,6 @@
 import { useTrips } from "@contexts/TripsContext";
 import { useAuth } from "@contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { visitedCountriesService } from "../services/visitedCountriesService";
 import {
   computeVisitedCountriesFromTrips,
@@ -17,7 +17,10 @@ export function useVisitedCountries() {
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
 
   // Compute as fallback
-  const computedVisited = computeVisitedCountriesFromTrips(trips);
+  const computedVisited = useMemo(
+    () => computeVisitedCountriesFromTrips(trips),
+    [trips]
+  );
 
   // Fetch visited countries from Firestore on user or trips change
   useEffect(() => {
