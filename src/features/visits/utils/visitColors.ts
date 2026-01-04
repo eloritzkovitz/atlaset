@@ -1,5 +1,5 @@
 import { HOME_COUNTRY_COLOR } from "@constants/colors";
-import type { OverlayMode } from "@features/atlas/overlays";
+import type { LayerMode } from "@features/atlas/layers";
 import type { ColorPalette, VisitColorRoles } from "@types";
 
 /**
@@ -19,7 +19,7 @@ export function getVisitColor(
   count: number,
   isHome: boolean,
   defaultFill: string,
-  mode: OverlayMode = "cumulative",
+  mode: LayerMode = "cumulative",
   palette: VisitColorRoles,
   isNewThisYear?: boolean,
   isRevisitThisYear?: boolean,

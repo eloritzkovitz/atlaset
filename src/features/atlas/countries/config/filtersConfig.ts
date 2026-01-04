@@ -1,4 +1,4 @@
-import type { Overlay } from "@features/atlas/overlays";
+import type { Layer } from "@features/atlas/layers";
 import {
   SOVEREIGNTY_ORDER,
   type CountryFilterConfig,
@@ -65,37 +65,37 @@ export const coreFiltersConfig: CountryFilterConfig<
   ),
 ];
 
-interface OverlayFilterProps {
-  overlaySelections: Record<string, string>;
-  setOverlaySelections: React.Dispatch<
+interface LayerFilterProps {
+  layerSelections: Record<string, string>;
+  setLayerSelections: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
 }
 
-// Overlay filter configuration object
-export const overlayFilterConfig: FilterConfig<
-  Overlay,
-  OverlayFilterProps,
+// Layer filter configuration object
+export const layerFilterConfig: FilterConfig<
+  Layer,
+  LayerFilterProps,
   string
 > = {
-  key: "overlay",
-  label: (overlay: Overlay) => `${overlay.name} (${overlay.countries.length})`,
+  key: "layer",
+  label: (layer: Layer) => `${layer.name} (${layer.countries.length})`,
   type: "select",
-  getOptions: (overlays?: Overlay[]) => {
-    const overlay = overlays?.[0];
+  getOptions: (layers?: Layer[]) => {
+    const layer = layers?.[0];
     return [
-      { value: "all", label: overlay?.filterLabels?.all ?? "All" },
-      { value: "only", label: overlay?.filterLabels?.only ?? "Include only" },
-      { value: "exclude", label: overlay?.filterLabels?.exclude ?? "Exclude" },      
+      { value: "all", label: layer?.filterLabels?.all ?? "All" },
+      { value: "only", label: layer?.filterLabels?.only ?? "Include only" },
+      { value: "exclude", label: layer?.filterLabels?.exclude ?? "Exclude" },      
     ];
   },
-  getValue: (props, overlay?: Overlay) =>
-    overlay ? props.overlaySelections[overlay.id] || "all" : "all",
-  setValue: (props, val, overlay?: Overlay) => {
-    if (!overlay) return;
-    props.setOverlaySelections((sel: Record<string, string>) => ({
+  getValue: (props, layer?: Layer) =>
+    layer ? props.layerSelections[layer.id] || "all" : "all",
+  setValue: (props, val, layer?: Layer) => {
+    if (!layer) return;
+    props.setLayerSelections((sel: Record<string, string>) => ({
       ...sel,
-      [overlay.id]: val,
+      [layer.id]: val,
     }));
   },
 };

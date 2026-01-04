@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useOverlays } from "@contexts/OverlaysContext";
+import { useLayers } from "@contexts/LayersContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
-import { getDefaultOverlaySelections } from "@features/atlas/overlays/utils/overlay";
+import { getDefaultLayerSelections } from "@features/atlas/layers/utils/layer";
 import {
   useCountryData,
   type CountryFilterOptions,
@@ -22,7 +22,7 @@ import { useDebounce } from "@hooks";
  */
 export function useCountryFilters() {
   const { countries } = useCountryData();
-  const { overlays, overlaySelections, setOverlaySelections } = useOverlays();
+  const { layers, layerSelections, setLayerSelections } = useLayers();
   const {
     timelineMode,
     years,
@@ -58,32 +58,32 @@ export function useCountryFilters() {
     [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty]
   );
 
-  // With overlays applied
+  // With layers applied
   const filteredIsoCodes = useMemo(
-    () => getFilteredIsoCodes(countries, overlays, overlaySelections),
-    [countries, overlays, overlaySelections]
+    () => getFilteredIsoCodes(countries, layers, layerSelections),
+    [countries, layers, layerSelections]
   );
   const filteredCountries = useMemo(
     () =>
       filterCountries(countries, {
         ...(filterParams ?? {}),
-        overlayCountries: filteredIsoCodes,
+        layerCountries: filteredIsoCodes,
       }),
     [countries, filterParams, filteredIsoCodes]
   );
 
-  // Without overlays for counts
-  const filteredCountriesNoOverlay = useMemo(
+  // Without layers for counts
+  const filteredCountriesNoLayer = useMemo(
     () =>
       filterCountries(countries, {
         ...(filterParams ?? {}),
-        overlayCountries: undefined,
+        layerCountries: undefined,
       }),
     [countries, filterParams]
   );
 
   // Counts
-  const allCount = filteredCountriesNoOverlay.length;
+  const allCount = filteredCountriesNoLayer.length;
   const {
     map: visitedMap,
     min: absoluteMin,
@@ -91,8 +91,8 @@ export function useCountryFilters() {
   } = getVisitCountStats(trips, selectedYear);
   const visitedIsoCodes = Object.keys(visitedMap);
 
-  // Filter visited countries with the same core filters (no overlays)
-  const visitedCountriesFiltered = filteredCountriesNoOverlay.filter((c) =>
+  // Filter visited countries with the same core filters (no layers)
+  const visitedCountriesFiltered = filteredCountriesNoLayer.filter((c) =>
     visitedIsoCodes.includes(c.isoCode)
   );
   const visitedCount = visitedCountriesFiltered.length;
@@ -133,7 +133,7 @@ export function useCountryFilters() {
   // Reset filters
   function resetFilters() {
     resetCoreFilters();
-    setOverlaySelections(getDefaultOverlaySelections(overlays));
+    setLayerSelections(getDefaultLayerSelections(layers));
     resetTimelineFilters();
   }
 

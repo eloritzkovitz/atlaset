@@ -9,15 +9,12 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaChevronUp,
-  FaRectangleList,
+  FaListUl,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
-import { useOverlays } from "@contexts/OverlaysContext";
+import { useLayers } from "@contexts/LayersContext";
 import { useUI } from "@contexts/UIContext";
-import {
-  isTimelineOverlay,
-  VISITED_OVERLAY_ID,
-} from "@features/atlas/overlays";
+import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { useIsMobile } from "@hooks";
 import { MapToolbarActions } from "./MapToolbarActions";
 import { ZoomControls } from "../controls/ZoomControls";
@@ -41,16 +38,16 @@ export function MapToolbar({
     uiVisible,
     toggleCountries,
     toggleMarkers,
-    toggleOverlays,
+    toggleLayers,
     toggleLegend,
     toggleExport,
     toggleSettings,
   } = useUI();
   const [visible, setVisible] = useState(true);
 
-  // Overlay context
-  const { overlays } = useOverlays();
-  const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
+  // Layer context
+  const { layers } = useLayers();
+  const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
 
   // Detect mobile
   const isMobile = useIsMobile();
@@ -71,33 +68,22 @@ export function MapToolbar({
       show: true,
     },
     {
+      key: "layers",
+      icon: <FaLayerGroup />,
+      label: "Layers",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleLayers();
+      },
+      show: true,
+    },
+    {
       key: "markers",
       icon: <FaMapPin />,
       label: "Markers",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
         toggleMarkers();
-      },
-      show: true,
-    },
-    {
-      key: "overlays",
-      icon: <FaLayerGroup />,
-      label: "Overlays",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleOverlays();
-      },
-      show: true,
-      separatorAfter: true,
-    },
-    {
-      key: "legend",
-      icon: <FaRectangleList />,
-      label: "Legend",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleLegend();
       },
       show: true,
     },
@@ -109,7 +95,17 @@ export function MapToolbar({
         if (isMobile) setMenuOpen(false);
         setTimelineMode((prev) => !prev);
       },
-      show: !!(visitedOverlay && isTimelineOverlay(visitedOverlay)),
+      show: !!(visitedLayer && isTimelineLayer(visitedLayer)),
+    },
+    {
+      key: "legend",
+      icon: <FaListUl />,
+      label: "Legend",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleLegend();
+      },
+      show: true,
       separatorAfter: true,
     },
     {

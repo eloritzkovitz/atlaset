@@ -1,4 +1,4 @@
-import { VISITED_OVERLAY_ID } from "@features/atlas/overlays/constants/overlays";
+import { VISITED_LAYER_ID } from "@features/atlas/layers/constants/layers";
 import { mockCountries } from "@test-utils/mockCountries";
 import type { Country, SovereigntyType } from "../types";
 import {
@@ -200,7 +200,7 @@ describe("countryData utils", () => {
         getSubregionsForRegion(testCountries as Country[], "Europe")
       ).toEqual(["Alpha", "Mike", "Zulu"]);
     });
-  });  
+  });
 
   describe("getCountriesWithOwnFlag", () => {
     it("filters out excluded iso codes", () => {
@@ -241,39 +241,39 @@ describe("countryData utils", () => {
       { isoCode: "DE", name: "Germany" },
     ];
 
-    it("returns only countries whose isoCode is in the visited overlay", () => {
-      const overlays = [
-        { id: VISITED_OVERLAY_ID, countries: ["US", "DE"] },
-        { id: "other-overlay", countries: ["FR"] },
+    it("returns only countries whose isoCode is in the visited layer", () => {
+      const layers = [
+        { id: VISITED_LAYER_ID, countries: ["US", "DE"] },
+        { id: "other-layer", countries: ["FR"] },
       ];
-      const result = getVisitedCountries(countries as any, overlays as any);
+      const result = getVisitedCountries(countries as any, layers as any);
       expect(result).toEqual([
         { isoCode: "US", name: "United States" },
         { isoCode: "DE", name: "Germany" },
       ]);
     });
 
-    it("returns an empty array if no visited overlay is present", () => {
-      const overlays = [{ id: "other-overlay", countries: ["FR"] }];
-      const result = getVisitedCountries(countries as any, overlays as any);
+    it("returns an empty array if no visited layer is present", () => {
+      const layers = [{ id: "other-layer", countries: ["FR"] }];
+      const result = getVisitedCountries(countries as any, layers as any);
       expect(result).toEqual([]);
     });
 
-    it("returns an empty array if visited overlay has no countries", () => {
-      const overlays = [{ id: VISITED_OVERLAY_ID, countries: [] }];
-      const result = getVisitedCountries(countries as any, overlays as any);
+    it("returns an empty array if visited layer has no countries", () => {
+      const layers = [{ id: VISITED_LAYER_ID, countries: [] }];
+      const result = getVisitedCountries(countries as any, layers as any);
       expect(result).toEqual([]);
     });
 
-    it("returns an empty array if overlays is empty", () => {
-      const overlays: any[] = [];
-      const result = getVisitedCountries(countries as any, overlays);
+    it("returns an empty array if layers is empty", () => {
+      const layers: any[] = [];
+      const result = getVisitedCountries(countries as any, layers);
       expect(result).toEqual([]);
     });
 
     it("returns an empty array if countries is empty", () => {
-      const overlays = [{ id: VISITED_OVERLAY_ID, countries: ["US"] }];
-      const result = getVisitedCountries([], overlays as any);
+      const layers = [{ id: VISITED_LAYER_ID, countries: ["US"] }];
+      const result = getVisitedCountries([], layers as any);
       expect(result).toEqual([]);
     });
   });

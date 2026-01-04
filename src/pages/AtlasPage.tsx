@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { ErrorMessage, SplashScreen } from "@components";
-import { useOverlays } from "@contexts/OverlaysContext";
+import { useLayers } from "@contexts/LayersContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import {
   WorldMap,
@@ -16,7 +16,7 @@ export default function AtlasPage() {
   // Data state
   const { geoData, geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
-  const { overlays, loading: overlaysLoading } = useOverlays();
+  const { layers, loading: layersLoading } = useLayers();
 
   // Map state
   const {
@@ -51,7 +51,7 @@ export default function AtlasPage() {
 
   // Derived state
   const isLoading =
-    countriesLoading || overlaysLoading || geoLoading || !mapReady;
+    countriesLoading || layersLoading || geoLoading || !mapReady;
   if (error || geoError) {
     return <ErrorMessage error={error || geoError || "Unknown error"} />;
   }
@@ -76,7 +76,7 @@ export default function AtlasPage() {
             setZoom={setZoom}
             center={center}
             selectedCoords={selectedCoords}
-            overlays={overlays}
+            layers={layers}
             isAddingMarker={isAddingMarker}
           />
           <WorldMap

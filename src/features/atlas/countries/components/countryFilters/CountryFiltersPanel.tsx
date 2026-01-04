@@ -16,7 +16,7 @@ import {
 } from "@features/countries/utils/countryData";
 import { useIsMobile, useKeyHandler } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
-import { OverlayFilters } from "./OverlayFilters";
+import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
 
 interface CountryFiltersPanelProps {
@@ -61,7 +61,7 @@ export function CountryFiltersPanel({
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
-  const [showOverlayFilters, setShowOverlayFilters] = React.useState(true);
+  const [showLayerFilters, setShowLayerFilters] = React.useState(true);
   const [showTimelineFilters, setShowTimelineFilters] = React.useState(true);
 
   // Dynamic subregion options based on selected region
@@ -151,9 +151,9 @@ export function CountryFiltersPanel({
       {!showVisitedOnly && (
         <>
           <Separator className="my-4" />
-          <OverlayFilters
-            expanded={showOverlayFilters}
-            onToggle={() => setShowOverlayFilters((v) => !v)}
+          <LayerFilters
+            expanded={showLayerFilters}
+            onToggle={() => setShowLayerFilters((v) => !v)}
           />
         </>
       )}

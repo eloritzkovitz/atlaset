@@ -2,7 +2,7 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Overlay } from "@features/atlas/overlays";
+import type { Layer } from "@features/atlas/layers";
 import { filterBySearch } from "@utils/filter";
 import type { Country, CountryFilterOptions } from "../types";
 
@@ -22,7 +22,7 @@ export function filterCountries(
     selectedRegion,
     selectedSubregion,
     selectedSovereignty,
-    overlayCountries,
+    layerCountries,
   } = options;
 
   // Apply filters
@@ -33,9 +33,9 @@ export function filterCountries(
     if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
       return false;
     if (
-      overlayCountries &&
-      overlayCountries.length &&
-      !overlayCountries.includes(country.isoCode)
+      layerCountries &&
+      layerCountries.length &&
+      !layerCountries.includes(country.isoCode)
     )
       return false;
     return true;
@@ -43,26 +43,26 @@ export function filterCountries(
 }
 
 /**
- * Filters ISO codes based on overlay selections.
+ * Filters ISO codes based on layer selections.
  * @param countries
- * @param overlays
- * @param overlaySelections
+ * @param layers
+ * @param layerSelections
  * @returns Filtered list of ISO codes.
  */
 export function getFilteredIsoCodes(
   countries: Country[],
-  overlays: Overlay[],
-  overlaySelections: Record<string, string>
+  layers: Layer[],
+  layerSelections: Record<string, string>
 ) {
   const base = countries.map((c) => c.isoCode);
 
-  return overlays.reduce((accIsoCodes, overlay) => {
-    const selection = overlaySelections[overlay.id] || "all";
+  return layers.reduce((accIsoCodes, layer) => {
+    const selection = layerSelections[layer.id] || "all";
     if (selection === "only") {
-      return accIsoCodes.filter((iso) => overlay.countries.includes(iso));
+      return accIsoCodes.filter((iso) => layer.countries.includes(iso));
     }
     if (selection === "exclude") {
-      return accIsoCodes.filter((iso) => !overlay.countries.includes(iso));
+      return accIsoCodes.filter((iso) => !layer.countries.includes(iso));
     }
     return accIsoCodes; // "all"
   }, base as string[]);

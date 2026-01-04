@@ -23,7 +23,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
           <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
             <ActionButton
               onClick={onClose}
-              ariaLabel="Close Overlay Modal"
+              ariaLabel="Close Legend"
               icon={<FaXmark className="text-2xl" />}
               rounded
             />

@@ -15,12 +15,12 @@
 
   "200": "{userName} performed an atlas action{date}.",
 
-  "210": "{userName} saved overlays{date}.",
-  "211": "{userName} added an overlay '{itemName}'{date}.",
-  "212": "{userName} edited an overlay '{itemName}'{date}.",
-  "213": "{userName} removed an overlay '{itemName}'{date}.",
-  "214": "{userName} reordered overlays{date}.",
-
+  "210": "{userName} saved layers{date}.",
+  "211": "{userName} added a layer '{itemName}'{date}.",
+  "212": "{userName} edited a layer '{itemName}'{date}.",
+  "213": "{userName} removed a layer '{itemName}'{date}.",
+  "214": "{userName} reordered layers{date}.",
+  
   "220": "{userName} saved markers{date}.",
   "221": "{userName} added a marker '{itemName}'{location}{date}.",
   "222": "{userName} edited a marker '{itemName}'{location}{date}.",

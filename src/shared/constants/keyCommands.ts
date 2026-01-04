@@ -27,7 +27,7 @@ export const keyCommands: KeyCommand[] = [
   { key: "f", modifiers: [], action: "Toggle filters", category: "Toolbar" },
   { key: "l", modifiers: [], action: "Toggle legend", category: "Toolbar" },  
   { key: "m", modifiers: [], action: "Toggle markers", category: "Toolbar" },
-  { key: "o", modifiers: [], action: "Toggle overlays", category: "Toolbar" },  
+  { key: "o", modifiers: [], action: "Toggle layers", category: "Toolbar" },  
   { key: "s", modifiers: [], action: "Toggle settings", category: "Toolbar" },
   { key: "t", modifiers: [], action: "Toggle timeline", category: "Toolbar" },
   { key: "u", modifiers: [], action: "Toggle UI", category: "Toolbar" },  

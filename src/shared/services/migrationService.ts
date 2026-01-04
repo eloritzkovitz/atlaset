@@ -1,6 +1,6 @@
 import { appDb } from "@utils/db";
+import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
-import { overlaysService } from "../../features/atlas/overlays/services/overlaysService";
 import { settingsService } from "../../features/settings/services/settingsService";
 import { tripsService } from "../../features/trips/services/tripsService";
 import type { Settings } from "../../features/settings/types";
@@ -14,16 +14,16 @@ export const migrationService = {
    * @returns True if there is guest data, false otherwise
    */
   async hasGuestData(): Promise<boolean> {
-    const [markersCount, overlaysCount, settingsCount, tripsCount] =
+    const [layerysCount, markersCount, settingsCount, tripsCount] =
       await Promise.all([
-        appDb.markers.count(),
-        appDb.overlays.count(),
+        appDb.layers.count(),
+        appDb.markers.count(),        
         appDb.settings.count(),
         appDb.trips.count(),
       ]);
     return (
       markersCount > 0 ||
-      overlaysCount > 0 ||
+      layerysCount > 0 ||
       settingsCount > 0 ||
       tripsCount > 0
     );
@@ -43,15 +43,15 @@ export const migrationService = {
     await markersService.save(mergedMarkers);
     await appDb.markers.clear();
 
-    // Migrate overlays
-    const guestOverlays = await appDb.overlays.toArray();
-    const userOverlays = await overlaysService.load();
-    const mergedOverlays = [
-      ...guestOverlays,
-      ...userOverlays.filter((o) => !guestOverlays.some((g) => g.id === o.id)),
+    // Migrate layers
+    const guestLayers = await appDb.layers.toArray();
+    const userLayers = await layersService.load();
+    const mergedLayers = [
+      ...guestLayers,
+      ...userLayers.filter((o) => !guestLayers.some((g) => g.id === o.id)),
     ];
-    await overlaysService.save(mergedOverlays);
-    await appDb.overlays.clear();
+    await layersService.save(mergedLayers);
+    await appDb.layers.clear();
 
     // Migrate settings
     const settings = await appDb.settings.get("main");
@@ -62,7 +62,7 @@ export const migrationService = {
       "account" in settings &&
       "display" in settings &&
       "map" in settings &&
-      "overlays" in settings
+      "layers" in settings
     ) {
       await settingsService.save(settings as Settings);
       await appDb.settings.clear();

@@ -1,5 +1,5 @@
 import { useMarkers } from "@contexts/MarkersContext";
-import { useOverlays } from "@contexts/OverlaysContext";
+import { useLayers } from "@contexts/LayersContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
 import { MapExportPanel } from "@features/atlas/export";
 import {
@@ -8,7 +8,7 @@ import {
   MarkersPanel,
   useMarkerCreation,
 } from "@features/atlas/markers";
-import { OverlayModal, OverlaysPanel } from "@features/atlas/overlays";
+import { LayerModal, LayersPanel } from "@features/atlas/layers";
 import type { Country } from "@features/countries";
 import { SettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
@@ -54,17 +54,17 @@ export function AtlasUiContainer({
   // Markers state
   const { startAddingMarker, cancelMarkerCreation } = useMarkerCreation();
 
-  // Overlays state
+  // Layers state
   const {
-    editingOverlay,
-    isEditingOverlay,
+    editingLayer,
+    isEditingLayer,
     isEditModalOpen,
-    openAddOverlay,
-    openEditOverlay,
-    saveOverlay,
-    closeOverlayModal,
-    setEditingOverlay,
-  } = useOverlays();
+    openAddLayer,
+    openEditLayer,
+    saveLayer,
+    closeLayerModal,
+    setEditingLayer,
+  } = useLayers();
 
   // UI toggle hint
   useUiToggleHint();
@@ -85,10 +85,10 @@ export function AtlasUiContainer({
         onEditMarker={openEditMarker}
         onCenterMap={(marker) => centerOnMarker(marker.id)}
       />
-      <OverlaysPanel
-        onEditOverlay={openEditOverlay}
-        onAddOverlay={openAddOverlay}
-        overlayModalOpen={isEditModalOpen}
+      <LayersPanel
+        onEditLayer={openEditLayer}
+        onAddLayer={openAddLayer}
+        layerModalOpen={isEditModalOpen}
       />
       <MapExportPanel svgRef={svgRef} />
       <SettingsPanel />
@@ -117,13 +117,13 @@ export function AtlasUiContainer({
         isOpen={isMarkerModalOpen}
         isEditing={isEditingMarker}
       />
-      <OverlayModal
+      <LayerModal
         isOpen={isEditModalOpen}
-        isEditing={isEditingOverlay}
-        overlay={editingOverlay}
-        onChange={setEditingOverlay}
-        onSave={saveOverlay}
-        onClose={closeOverlayModal}
+        isEditing={isEditingLayer}
+        layer={editingLayer}
+        onChange={setEditingLayer}
+        onSave={saveLayer}
+        onClose={closeLayerModal}
       />
     </>
   );

@@ -2,8 +2,8 @@ import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { MapUIProvider } from "@contexts/MapUIProvider";
+import { LayersProvider } from "@contexts/LayersProvider";
 import { MarkersProvider } from "@contexts/MarkersProvider";
-import { OverlaysProvider } from "@contexts/OverlaysProvider";
 import { useSettings } from "@contexts/SettingsContext";
 import { TimelineProvider } from "@contexts/TimelineProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
@@ -44,7 +44,7 @@ function App() {
               element={
                 <AppLayout>
                   <Suspense fallback={<SplashScreen />}>
-                    <OverlaysProvider>
+                    <LayersProvider>
                       <MapUIProvider>
                         <MarkersProvider>
                           <TimelineProvider>
@@ -52,7 +52,7 @@ function App() {
                           </TimelineProvider>
                         </MarkersProvider>
                       </MapUIProvider>
-                    </OverlaysProvider>
+                    </LayersProvider>
                   </Suspense>
                 </AppLayout>
               }

@@ -3,11 +3,11 @@ import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
 import { getCountryIsoCode } from "@features/countries";
 import {
-  getBlendedOverlayColor,
-  groupOverlayItemsByIsoCode,
-  type OverlayItem,
-} from "@features/atlas/overlays";
-import { useCountryColors, useOverlayColors } from "@features/settings";
+  getBlendedLayerColor,
+  groupLayerItemsByIsoCode,
+  type LayerItem,
+} from "@features/atlas/layers";
+import { useCountryColors, useLayerColors } from "@features/settings";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { useHomeCountry } from "@features/user";
 import { useMapGeographyStyle } from "../../hooks/useMapGeographyStyle";
@@ -15,7 +15,7 @@ import type { GeoData } from "../../types";
 
 type MapCountriesLayerProps = {
   geographyData: GeoData;
-  overlayItems?: OverlayItem[];
+  layerItems?: LayerItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
   highlightedIsoCodes?: string[];
@@ -27,7 +27,7 @@ type MapCountriesLayerProps = {
 
 export function CountriesLayer({
   geographyData,
-  overlayItems = [],
+  layerItems = [],
   selectedIsoCode,
   hoveredIsoCode,
   highlightedIsoCodes = [],
@@ -39,15 +39,15 @@ export function CountriesLayer({
 
   // Home country for coloring
   const { homeCountry } = useHomeCountry();
-  const { colorHomeCountry, colorUpcomingVisits } = useOverlayColors();
+  const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
   const { HOME_COUNTRY_COLOR, UPCOMING_VISIT_COUNTRY_COLOR } =
     useCountryColors();
   const { upcomingCountryCodes } = useVisitedCountries();
 
-  // Group overlay items by isoCode for stacking/blending
-  const overlayGroups = useMemo(
-    () => groupOverlayItemsByIsoCode(overlayItems),
-    [overlayItems]
+  // Group layer items by isoCode for stacking/blending
+  const layerGroups = useMemo(
+    () => groupLayerItemsByIsoCode(layerItems),
+    [layerItems]
   );
 
   return (
@@ -79,14 +79,14 @@ export function CountriesLayer({
             const isHovered =
               !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
 
-            // Overlay logic: blend all overlays for this country
-            const overlays = overlayGroups[isoA2] || [];
-            const blendedFill = getBlendedOverlayColor(
-              overlays,
+            // Layer logic: blend all layers for this country
+            const layers = layerGroups[isoA2] || [];
+            const blendedFill = getBlendedLayerColor(
+              layers,
               geographyStyle.default.fill
             );
 
-            // Style: highlight takes precedence, then blended overlays, then base
+            // Style: highlight takes precedence, then blended layers, then base
             let style = geographyStyle.default;
             const tooltip = geo.properties.name;
 

@@ -8,11 +8,11 @@ export interface UIContextType {
   showCountries: boolean;
   toggleCountries: () => void;
   showFilters: boolean;
-  toggleFilters: () => void;
+  toggleFilters: () => void;  
+  showLayers: boolean;
+  toggleLayers: () => void;
   showMarkers: boolean;
   toggleMarkers: () => void;
-  showOverlays: boolean;
-  toggleOverlays: () => void;
   showExport: boolean;
   toggleExport: () => void;
   showSettings: boolean;

@@ -3,7 +3,7 @@ import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useUI } from "@contexts/UIContext";
 import { MapSettingsGroup } from "./map/MapSettingsGroup";
-import { OverlaySettingsGroup } from "./overlays/OverlaySettingsGroup";
+import { LayerSettingsGroup } from "./layers/LayerSettingsGroup";
 
 export function SettingsPanel() {
   const { showSettings, closePanel } = useUI();
@@ -31,7 +31,7 @@ export function SettingsPanel() {
     >
       <MapSettingsGroup />
       <Separator className="my-4" />
-      <OverlaySettingsGroup />
+      <LayerSettingsGroup />
     </Panel>
   );
 }

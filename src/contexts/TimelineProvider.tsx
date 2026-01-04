@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { useTrips } from "@contexts/TripsContext";
-import type { OverlayMode } from "@features/atlas/overlays";
 import { useAudio } from "@contexts/AudioContext";
+import { useTrips } from "@contexts/TripsContext";
+import type { LayerMode } from "@features/atlas/layers";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { TimelineContext } from "./TimelineContext";
@@ -19,8 +19,8 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   const years = useMemo(() => getYearsFromTrips(trips), [trips]);
   const [selectedYear, setSelectedYear] = useState(getLatestYear(years));
 
-  // Overlay mode state
-  const [overlayMode, setOverlayMode] = useState<OverlayMode>("cumulative");
+  // Layer mode state
+  const [layerMode, setLayerMode] = useState<LayerMode>("cumulative");
 
   // Toggle Timeline mode with "T"
   useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
@@ -46,8 +46,8 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
         years,
         selectedYear,
         setSelectedYear,
-        overlayMode,
-        setOverlayMode,
+        layerMode,
+        setLayerMode,
       }}
     >
       {children}

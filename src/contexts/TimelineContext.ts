@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { OverlayMode } from "@features/atlas/overlays";
+import type { LayerMode } from "@features/atlas/layers";
 
 export interface TimelineContextValue {
   timelineMode: boolean;
@@ -9,8 +9,8 @@ export interface TimelineContextValue {
   years: number[];
   selectedYear: number;
   setSelectedYear: (year: number) => void;
-  overlayMode: OverlayMode;
-  setOverlayMode: React.Dispatch<React.SetStateAction<OverlayMode>>;
+  layerMode: LayerMode;
+  setLayerMode: React.Dispatch<React.SetStateAction<LayerMode>>;
 }
 
 export const TimelineContext = createContext<TimelineContextValue | undefined>(undefined);

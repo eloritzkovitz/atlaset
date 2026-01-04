@@ -1,6 +1,6 @@
 #Trips
 
-In Atlaset, **trips** let you record, organize, and analyze your travels. Each trip can include multiple countries, dates, categories, and notes. Trips power features like the visited countries overlay, timeline navigation, and trip statistics.
+In Atlaset, **trips** let you record, organize, and analyze your travels. Each trip can include multiple countries, dates, categories, and notes. Trips power features like the visited countries layer, timeline navigation, and trip statistics.
 
 #### Trip JSON Fields
 
@@ -64,7 +64,7 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 - Trips can be easily imported from and exported to JSON or CSV files.
 - Use this to back up your trips or share them with others.
 
-## Timeline & Overlays Integration
+## Timeline & Layers Integration
 
-- Your trips power the Visited Countries overlay and timeline features.
-- Changes to your trips are reflected in overlays and timeline coloring automatically.
+- Your trips power the Visited Countries layer and timeline features.
+- Changes to your trips are reflected in layers and timeline coloring automatically.

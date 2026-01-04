@@ -8,7 +8,7 @@ import { MapSvgContainer } from "./MapSvgContainer";
 import { CountriesLayer } from "./layers/CountriesLayer";
 import { MapMarkersLayer } from "./layers/MapMarkersLayer";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
-import { useMapOverlayItems } from "../hooks/useMapOverlayItems";
+import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData } from "../types";
 
 interface WorldMapProps {
@@ -51,8 +51,8 @@ export function WorldMap({
   // Map projection and data
   const { projection } = useMapUI();
 
-  // Get overlay items based on mode
-  const overlayItems = useMapOverlayItems();
+  // Get layer items based on mode
+  const layerItems = useMapLayerItems();
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
@@ -116,7 +116,7 @@ export function WorldMap({
             {/* Countries layers */}
             <CountriesLayer
               geographyData={geoData}
-              overlayItems={overlayItems}
+              layerItems={layerItems}
               selectedIsoCode={selectedIsoCode}
               hoveredIsoCode={hoveredIsoCode}
               highlightedIsoCodes={
