@@ -3,6 +3,13 @@ import type { Overlay, OverlayMode } from "@features/atlas/overlays";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
 import type { LegendItem } from "../types";
 
+/**
+ * Generates legend items for the map based on current overlays and modes
+ * @param overlays - Array of current overlays
+ * @param timelineMode - Whether timeline mode is active
+ * @param overlayMode - Current overlay mode ("cumulative" or "yearly")
+ * @returns Array of legend items for the map
+ */
 export function useMapLegendItems(
   overlays: Overlay[],
   timelineMode: boolean,

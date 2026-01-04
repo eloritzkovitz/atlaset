@@ -11,6 +11,7 @@ interface MenuProps {
   style?: CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
   disableScroll?: boolean;
+  extraRefs?: React.RefObject<HTMLElement | null>[];
 }
 
 export function Menu({
@@ -23,8 +24,8 @@ export function Menu({
   style,
   containerRef,
   disableScroll = false,
+  extraRefs = [],
 }: MenuProps) {
-  
   return (
     <Modal
       isOpen={open}
@@ -36,7 +37,8 @@ export function Menu({
       position="custom"
       className={`menu !bg-surface-alt rounded shadow-lg z-50 !p-2 ${className}`}
       style={style}
-      containerRef={containerRef}      
+      containerRef={containerRef}
+      extraRefs={extraRefs}
     >
       {children}
     </Modal>
