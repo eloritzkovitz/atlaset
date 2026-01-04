@@ -2,7 +2,6 @@ import { useEffect, useState, type JSX } from "react";
 import {
   FaChevronLeft,
   FaFlag,
-  FaMedal,
   FaQuestion,
   FaLeaf,
   FaCompass,
@@ -12,14 +11,16 @@ import {
 } from "react-icons/fa6";
 import { Card, TableDropdownFilter } from "@components";
 import type { DropdownOption } from "@types";
-import { formatTimeSeconds } from "@utils/date";
-import { leaderboardsService } from "./services/leaderboardsService";
+import { leaderboardsService } from "../services/leaderboardsService";
 import type {
   QuizType,
   Difficulty,
   LeaderboardEntry,
   LeaderboardRow,
-} from "../types";
+} from "../../types";
+import { LeaderboardRowComponent } from "./LeaderboardRow";
+import { useAuth } from "@contexts/AuthContext";
+import { useUserProfile } from "@features/user";
 
 type NonNullDifficulty = Exclude<Difficulty, null>;
 
@@ -92,11 +93,24 @@ export function Leaderboards() {
     };
   }, [type, difficulty]);
 
+  const { user: currentUser } = useAuth();
+  const { profile: currentProfile } = useUserProfile({ uid: currentUser?.uid });
+
   // Add rank property for display
-  const rankedData: LeaderboardRow[] = data.map((row, i) => ({
-    ...row,
-    rank: i + 1,
-  }));
+  const rankedData: LeaderboardRow[] = data.map((row, i) => {
+    let photoURL = row.photoURL;
+    let username = row.username;
+    if (row.playerId === currentUser?.uid) {
+      photoURL = currentProfile?.photoURL ?? currentUser?.photoURL ?? undefined;
+      username = currentProfile?.username ?? row.username;
+    }
+    return {
+      ...row,
+      rank: i + 1,
+      photoURL,
+      username,
+    };
+  });
 
   // Handle loading state
   if (loading) return null;
@@ -155,44 +169,11 @@ export function Leaderboards() {
             </thead>
             <tbody>
               {rankedData.map((row, i) => (
-                <tr
+                <LeaderboardRowComponent
                   key={row.playerName + row.rank}
-                  className={`hover:bg-base-200 transition ${
-                    i % 2 === 0 ? "bg-base-100" : "bg-base-300"
-                  }`}
-                >
-                  <td className="px-4 py-2 font-bold">
-                    {i === 0 ? (
-                      <FaMedal
-                        className="text-yellow-400 drop-shadow-sm"
-                        title="1st Place"
-                      />
-                    ) : i === 1 ? (
-                      <FaMedal
-                        className="text-gray-400 drop-shadow-sm"
-                        title="2nd Place"
-                      />
-                    ) : i === 2 ? (
-                      <FaMedal
-                        className="text-orange-500 drop-shadow-sm"
-                        title="3rd Place"
-                      />
-                    ) : (
-                      row.rank
-                    )}
-                  </td>
-                  <td className="px-4 py-2">{row.playerName}</td>
-                  <td className="px-4 py-2 text-right">{row.score}</td>
-                  <td className="px-4 py-2 text-right">
-                    {row.maxStreak ?? "-"}
-                  </td>
-                  <td className="px-4 py-2 text-right">
-                    {formatTimeSeconds(row.time)}
-                  </td>
-                  <td className="px-4 py-2 text-right">
-                    {new Date(row.date).toLocaleString()}
-                  </td>
-                </tr>
+                  row={row}
+                  index={i}
+                />
               ))}
             </tbody>
           </table>

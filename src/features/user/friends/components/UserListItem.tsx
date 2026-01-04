@@ -1,7 +1,8 @@
-import { FaCircleUser, FaCheck, FaXmark } from "react-icons/fa6";
+import { FaCheck, FaXmark } from "react-icons/fa6";
 import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { Link } from "react-router-dom";
 import { ActionButton } from "@components";
+import { UserInfo } from "../../profile/components/UserInfo";
 
 interface UserListItemProps {
   uid: string;
@@ -23,36 +24,18 @@ export function UserListItem({
   });
   const loading = externalLoading ?? profileLoading;
 
-  const content = (
-    <>
-      {loading ? (
-        <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
-      ) : userProfile?.photoURL ? (
-        <img
-          src={userProfile.photoURL}
-          alt={userProfile.username}
-          className="w-8 h-8 rounded-full object-cover"
-        />
-      ) : (
-        <FaCircleUser className="w-8 h-8 text-muted" />
-      )}
-      <div className="flex flex-col flex-1 min-w-0">
-        {loading ? (
-          <span className="h-4 w-24 bg-muted rounded-lg animate-pulse" />
-        ) : (
-          <>
-            {userProfile?.displayName && (
-              <span className="font-medium truncate">
-                {userProfile.displayName}
-              </span>
-            )}
-            <span className="text-sm text-muted truncate">
-              @{userProfile?.username}
-            </span>
-          </>
-        )}
-      </div>
-    </>
+  const content = loading ? (
+    <div className="flex items-center gap-3 flex-1 min-w-0">
+      <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+      <span className="h-4 w-24 bg-muted rounded-lg animate-pulse" />
+    </div>
+  ) : (
+    <UserInfo
+      user={userProfile}
+      avatarSize={32}
+      showDisplayName={!!userProfile?.displayName}
+      showUsername={!!userProfile?.username}
+    />
   );
 
   return (

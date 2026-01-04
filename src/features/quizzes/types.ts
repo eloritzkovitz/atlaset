@@ -41,6 +41,10 @@ export type LeaderboardEntry = {
   playerId: string;
   /** Name of the player. */
   playerName: string;
+  /** Username of the player (optional). */
+  username?: string;
+  /** URL of the player's avatar (optional). */  
+  photoURL?: string;
   /** Score achieved by the player. */
   score: number;
   /** Time taken by the player (optional). */

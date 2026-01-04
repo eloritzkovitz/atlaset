@@ -9,6 +9,7 @@ export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 export { ProfileInfoCard } from "./profile/components/ProfileInfoCard";
 export { EditProfileModal } from "./profile/components/EditProfileModal";
 export { UserAvatar } from "./profile/components/UserAvatar";
+export { UserInfo } from "./profile/components/UserInfo";
 export { UserActivitySection } from "./activity/components/UserActivitySection";
 export { VisitedCountriesCard } from "./profile/components/VisitedCountriesCard";
 
