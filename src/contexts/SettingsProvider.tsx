@@ -8,7 +8,7 @@ import {
   selectSettingsLoading,
   selectSettingsReady,
 } from "@features/settings";
-import { selectAuthReady } from "@features/user";
+import { selectAuthReady, selectAuthUser } from "@features/user";
 import { SettingsContext } from "./SettingsContext";
 import type { AppDispatch } from "../store";
 
@@ -17,16 +17,22 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
   const loading = useSelector(selectSettingsLoading);
   const ready = useSelector(selectSettingsReady);
   const authReady = useSelector(selectAuthReady);
+  const authUser = useSelector(selectAuthUser);
   const dispatch = useDispatch<AppDispatch>();
-  
-  // Load settings after auth is ready
-  const hasLoadedSettings = useRef(false);
+
+  // Load settings when user changes
+  const hasLoadedSettings = useRef<string | null>(null);
   useEffect(() => {
-    if (authReady && !hasLoadedSettings.current) {
+    const userId = authUser?.uid || null;
+    if (authReady && userId && hasLoadedSettings.current !== userId) {
       dispatch(loadSettings());
-      hasLoadedSettings.current = true;
+      hasLoadedSettings.current = userId;
     }
-  }, [authReady, dispatch]);
+    // If user logs out, reset ref so next login reloads settings
+    if (!userId) {
+      hasLoadedSettings.current = null;
+    }
+  }, [authReady, authUser, dispatch]);
 
   // Apply theme class to document
   useEffect(() => {
