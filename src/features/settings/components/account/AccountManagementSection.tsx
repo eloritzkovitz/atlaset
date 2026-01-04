@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaPowerOff, FaTrash, FaUserGear } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
-import { useAuth } from "@features/user";
+import { useAuth } from "@contexts/AuthContext";
 import { SettingsCard } from "../SettingsCard";
 import { useAccountManagement } from "../../hooks/useAccountManagement";
 

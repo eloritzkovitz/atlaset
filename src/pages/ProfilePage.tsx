@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { SplashScreen } from "@components";
+import { useAuth } from "@contexts/AuthContext";
 import {
   EditProfileModal,
   ProfileInfoCard,
   VisitedCountriesCard,
-  useAuth,
   useUserProfile,
 } from "@features/user";
 import { Footer, Header } from "@layout";

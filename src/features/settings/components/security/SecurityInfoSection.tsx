@@ -1,10 +1,10 @@
 import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
 import { deleteDoc, doc } from "firebase/firestore";
 import { ActionButton } from "@components";
+import { useAuth } from "@contexts/AuthContext";
 import {
   authService,
   isCurrentSession,
-  useAuth,
   useUserActivity,
   useUserDevices,
   type Device,

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { FaAddressCard } from "react-icons/fa6";
 import { updatePassword } from "firebase/auth";
 import { FormField, ActionButton } from "@components";
-import { isPasswordProvider, useAuth } from "@features/user";
+import { useAuth } from "@contexts/AuthContext";
+import { isPasswordProvider } from "@features/user";
 import { SettingsCard } from "../SettingsCard";
 import { authService } from "../../../user/auth/services/authService";
 

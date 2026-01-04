@@ -7,6 +7,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 import { HamburgerButton, LoadingSpinner } from "@components";
+import { useAuth } from "@contexts/AuthContext";
 import {
   AccountSettingsSection,
   DisplaySettingsSection,
@@ -17,7 +18,6 @@ import {
 import {
   EditProfileModal,
   UserActivitySection,
-  useAuth,
   useUserProfile,
 } from "@features/user";
 import { useIsMobile } from "@hooks";

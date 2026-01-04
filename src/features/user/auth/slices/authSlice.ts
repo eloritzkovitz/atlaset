@@ -1,13 +1,9 @@
 import {
   createSlice,
-  createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import { onAuthStateChanged, type User } from "firebase/auth";
+import { type User } from "firebase/auth";
 import type { RootState } from "../../../../store";
-import { removeDevice } from "@features/user/auth/utils/device";
-import { migrationService } from "@services/migrationService";
-import { auth } from "../../../../firebase";
 
 // Only store serializable user fields in Redux
 export interface SerializableUser {
@@ -32,9 +28,8 @@ const initialState: AuthState = {
   ready: false,
 };
 
-
 // Helper to extract only serializable fields from Firebase User
-function toSerializableUser(user: User | null): SerializableUser | null {
+export function toSerializableUser(user: User | null): SerializableUser | null {
   if (!user) return null;
   return {
     uid: user.uid,
@@ -46,36 +41,6 @@ function toSerializableUser(user: User | null): SerializableUser | null {
     providerId: user.providerId,
   };
 }
-
-export const listenForAuthChanges = createAsyncThunk<SerializableUser | null, void>(
-  "auth/listenForAuthChanges",
-  async (_, { dispatch }) => {
-    return new Promise<SerializableUser | null>((resolve) => {
-      onAuthStateChanged(auth, async (firebaseUser) => {
-        const serializableUser = toSerializableUser(firebaseUser);
-        resolve(serializableUser);
-        dispatch(setUser(serializableUser));
-        dispatch(setLoading(false));
-        dispatch(setReady(true));
-        if (!firebaseUser) {
-          const sessionId = localStorage.getItem("sessionId");
-          const userId = localStorage.getItem("userId");
-          if (sessionId && userId) {
-            removeDevice(userId, sessionId);
-            localStorage.removeItem("sessionId");
-            localStorage.removeItem("userId");
-          }
-        } else {
-          const guestDataExists = await migrationService.hasGuestData();
-          if (guestDataExists) {
-            await migrationService.migrateGuestDataToFirestore();
-          }
-        }
-      });
-    });
-  }
-);
-
 
 const authSlice = createSlice({
   name: "auth",
@@ -90,13 +55,6 @@ const authSlice = createSlice({
     setReady(state, action: PayloadAction<boolean>) {
       state.ready = action.payload;
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(listenForAuthChanges.fulfilled, (state, action) => {
-      state.user = action.payload;
-      state.loading = false;
-      state.ready = true;
-    });
   },
 });
 
