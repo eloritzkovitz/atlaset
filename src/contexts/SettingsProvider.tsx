@@ -1,4 +1,4 @@
-import { useEffect, type PropsWithChildren } from "react";
+import { useEffect, useRef, type PropsWithChildren } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   loadSettings,
@@ -19,10 +19,12 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
   const authReady = useSelector(selectAuthReady);
   const dispatch = useDispatch<AppDispatch>();
   
-  // Load settings when auth state changes
+  // Load settings after auth is ready
+  const hasLoadedSettings = useRef(false);
   useEffect(() => {
-    if (authReady) {
+    if (authReady && !hasLoadedSettings.current) {
       dispatch(loadSettings());
+      hasLoadedSettings.current = true;
     }
   }, [authReady, dispatch]);
 
