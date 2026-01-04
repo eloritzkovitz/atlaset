@@ -5,9 +5,9 @@ import { useUI } from "@contexts/UIContext";
 import type { Layer } from "@features/atlas/layers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
-import { MapFooter } from "./controls/MapFooter";
+import { MapToolbar } from "./controls/MapToolbar";
+import { MapFooter } from "./footer/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
-import { MapToolbar } from "./toolbar/MapToolbar";
 import { useMapLegendItems } from "../hooks/useMapLegendItems";
 import type { LegendItem } from "../types";
 

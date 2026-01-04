@@ -1,20 +1,23 @@
 import { useRef } from "react";
-import { FaPlus, FaMinus, FaCrosshairs } from "react-icons/fa6";
+import { FaPlus, FaMinus, FaCrosshairs, FaListUl } from "react-icons/fa6";
 import { ActionButton } from "@components";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
+import { useUI } from "@contexts/UIContext";
 import { useKeyHandler } from "@hooks";
 
-interface ZoomControlsProps {
+interface MapControlsProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   visible?: boolean;
 }
 
-export function ZoomControls({
+export function MapControls({
   zoom,
   setZoom,
   visible = true,
-}: ZoomControlsProps) {
+}: MapControlsProps) {
+  const { toggleLegend } = useUI();
+
   const zoomInInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomOutInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -71,6 +74,16 @@ export function ZoomControls({
       }`}
     >
       <div className="flex flex-col items-center space-y-0.5">
+        <ActionButton
+          onClick={() => toggleLegend()}
+          ariaLabel={"Show legend"}
+          title={"Legend"}
+          titlePosition="left"
+          variant="action"
+          className={"mb-2"}
+          icon={<FaListUl />}
+          rounded
+        />
         <ActionButton
           onClick={() =>
             setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom))

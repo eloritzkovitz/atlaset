@@ -9,15 +9,14 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaChevronUp,
-  FaListUl,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { useIsMobile } from "@hooks";
+import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
-import { ZoomControls } from "../controls/ZoomControls";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {
@@ -39,7 +38,6 @@ export function MapToolbar({
     toggleCountries,
     toggleMarkers,
     toggleLayers,
-    toggleLegend,
     toggleExport,
     toggleSettings,
   } = useUI();
@@ -86,6 +84,7 @@ export function MapToolbar({
         toggleMarkers();
       },
       show: true,
+      separatorAfter: true,
     },
     {
       key: "timeline",
@@ -96,16 +95,6 @@ export function MapToolbar({
         setTimelineMode((prev) => !prev);
       },
       show: !!(visitedLayer && isTimelineLayer(visitedLayer)),
-    },
-    {
-      key: "legend",
-      icon: <FaListUl />,
-      label: "Legend",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleLegend();
-      },
-      show: true,
       separatorAfter: true,
     },
     {
@@ -172,7 +161,7 @@ export function MapToolbar({
       }`}
     >
       {/* Zoom controls: vertical slide */}
-      <ZoomControls zoom={zoom} setZoom={setZoom} visible={visible} />
+      <MapControls zoom={zoom} setZoom={setZoom} visible={visible} />
       <div
         className="relative flex items-center w-full justify-end"
         style={{ height: "40px" }}
