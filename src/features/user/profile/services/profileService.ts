@@ -65,6 +65,14 @@ export const profileService = {
     photoURL?: string | null;
     joinDate?: string | null;
   }) {
+    // Check if user profile already exists
+    const userRef = doc(db, "users", user.uid);
+    const userSnap = await getDoc(userRef);
+    if (userSnap.exists()) {
+      return userSnap.data().username;
+    }
+
+    // Generate a unique username
     const username = await this.generateUniqueUsername(
       user.displayName,
       user.email
