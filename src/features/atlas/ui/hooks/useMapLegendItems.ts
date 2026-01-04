@@ -1,6 +1,7 @@
-import { MAP_BG_COLOR } from "@constants/colors";
+import { MAP_BG_COLOR, COLOR_PALETTES } from "@constants/colors";
 import type { Overlay, OverlayMode } from "@features/atlas/overlays";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
+import { useOverlayColors } from "@features/settings/hooks/useOverlayColors";
 import type { LegendItem } from "../types";
 
 /**
@@ -17,14 +18,42 @@ export function useMapLegendItems(
 ): LegendItem[] {
   // Get dynamic color roles for the current mode
   const colorRoles = useVisitColorRoles(overlayMode);
+  const { colorHomeCountry, colorUpcomingVisits } = useOverlayColors();
 
   // Legend items for static overlays
-  const overlayLegendItems: LegendItem[] = overlays
-    .filter((o) => o.visible)
-    .map((o) => ({
-      color: o.color,
-      label: o.name,
-    }));
+  // Home country legend item (if shown)
+  const homeCountryLegend: LegendItem[] = colorHomeCountry
+    ? [{ color: colorRoles.home, label: "Home country" }]
+    : [];
+
+  // Visited countries overlay (if present)
+  const visitedOverlay = overlays.find(
+    (o) => o.visible && o.name.toLowerCase().includes("visited")
+  );
+  const visitedLegend: LegendItem[] = visitedOverlay
+    ? [{ color: visitedOverlay.color, label: visitedOverlay.name }]
+    : [];
+
+  // Upcoming visit legend item (if shown)
+  const standardPalette =
+    COLOR_PALETTES.find((p) => p.name === "Standard") || COLOR_PALETTES[0];
+  const upcomingLegend: LegendItem[] = colorUpcomingVisits
+    ? [{ color: standardPalette.colors[3], label: "Upcoming Visit" }]
+    : [];
+
+  // Rest of overlays (excluding visited)
+  const restOverlays: LegendItem[] = overlays
+    .filter(
+      (o) => o.visible && (!visitedOverlay || o.name !== visitedOverlay.name)
+    )
+    .map((o) => ({ color: o.color, label: o.name }));
+
+  const overlayLegendItems: LegendItem[] = [
+    ...homeCountryLegend,
+    ...visitedLegend,
+    ...upcomingLegend,
+    ...restOverlays,
+  ];
 
   // Cumulative mode legend items (dynamic)
   const cumulativeLegendItems: LegendItem[] = [

@@ -3,6 +3,7 @@ import {
   getYearsFromTrips,
   getLatestYear,
   computeVisitedCountriesFromTrips,
+  getUpcomingVisitCountries,
   getVisitedCountriesForYear,
   getVisitedCountriesUpToYear,
   getNextUpcomingTripYearByCountry,
@@ -65,6 +66,18 @@ describe("visits utils", () => {
         homeCountry,
       ]);
     });
+  });
+
+  describe("getUpcomingVisitCountries", () => {
+    it("returns country codes with future trips", () => {
+      const upcoming = getUpcomingVisitCountries(mockTrips);
+      expect(upcoming).toEqual(expect.arrayContaining(["JP"]));
+      expect(upcoming).not.toContain("US");
+      expect(upcoming).not.toContain("CA");
+      expect(upcoming).not.toContain("FR");
+      expect(upcoming).not.toContain("DE");
+    }
+    );
   });
 
   describe("getVisitsForCountry", () => {

@@ -26,6 +26,7 @@ export type MapSettings = {
 /** Overlay-related settings */
 export type OverlaySettings = {
   colorHomeCountry: boolean;
+  colorUpcomingVisits: boolean;
   palettes: Record<OverlayMode, string>;
 };
 

@@ -9,11 +9,18 @@ import type { OverlayMode } from "@features/atlas/overlays";
 export function useOverlayColors() {
   const { settings, updateSettings } = useSettings();
 
-  // Fallback to false if overlays or colorHomeCountry is undefined
+  // Home country color setting
   const colorHomeCountry = !!settings?.overlays?.colorHomeCountry;
   const setColorHomeCountry = (value: boolean) =>
     updateSettings({
       overlays: { ...(settings.overlays ?? {}), colorHomeCountry: value },
+    });
+
+  // Upcoming visits color setting
+  const colorUpcomingVisits = !!settings?.overlays?.colorUpcomingVisits;
+  const setColorUpcomingVisits = (value: boolean) =>
+    updateSettings({
+      overlays: { ...(settings.overlays ?? {}), colorUpcomingVisits: value },
     });
 
   // Fallback to an empty object if overlays is undefined
@@ -37,5 +44,12 @@ export function useOverlayColors() {
     });
   };
 
-  return { colorHomeCountry, setColorHomeCountry, overlayPalettes, setPalette };
+  return {
+    colorHomeCountry,
+    setColorHomeCountry,
+    colorUpcomingVisits,
+    setColorUpcomingVisits,
+    overlayPalettes,
+    setPalette,
+  };
 }

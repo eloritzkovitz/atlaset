@@ -15,8 +15,14 @@ const OVERLAY_MODES: { key: OverlayMode; label: string }[] = [
 
 export function OverlaySettingsGroup() {
   const [expanded, setExpanded] = React.useState(true);
-  const { colorHomeCountry, setColorHomeCountry, overlayPalettes, setPalette } =
-    useOverlayColors();
+  const {
+    colorHomeCountry,
+    setColorHomeCountry,
+    colorUpcomingVisits,
+    setColorUpcomingVisits,
+    overlayPalettes,
+    setPalette,
+  } = useOverlayColors();
 
   // Prepare options for DropdownSelectInput
   const groupedPaletteOptions = COLOR_PALETTE_GROUPS.map((group) => ({
@@ -40,11 +46,18 @@ export function OverlaySettingsGroup() {
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />
-      <Checkbox
-        checked={!!colorHomeCountry}
-        onChange={setColorHomeCountry}
-        label="Color home country on map"
-      />
+      <div className="flex flex-col gap-4 mb-4">
+        <Checkbox
+          checked={!!colorHomeCountry}
+          onChange={setColorHomeCountry}
+          label="Show home country"
+        />
+        <Checkbox
+          checked={!!colorUpcomingVisits}
+          onChange={setColorUpcomingVisits}
+          label="Show upcoming new visits"
+        />
+      </div>
       <div className="my-2" />
       {expanded && (
         <div className="mb-4">

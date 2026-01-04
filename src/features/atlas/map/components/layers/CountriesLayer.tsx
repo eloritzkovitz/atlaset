@@ -8,6 +8,7 @@ import {
   type OverlayItem,
 } from "@features/atlas/overlays";
 import { useCountryColors, useOverlayColors } from "@features/settings";
+import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { useHomeCountry } from "@features/user";
 import { useMapGeographyStyle } from "../../hooks/useMapGeographyStyle";
 import type { GeoData } from "../../types";
@@ -38,8 +39,10 @@ export function CountriesLayer({
 
   // Home country for coloring
   const { homeCountry } = useHomeCountry();
-  const { colorHomeCountry } = useOverlayColors();
-  const { HOME_COUNTRY_COLOR } = useCountryColors();
+  const { colorHomeCountry, colorUpcomingVisits } = useOverlayColors();
+  const { HOME_COUNTRY_COLOR, UPCOMING_VISIT_COUNTRY_COLOR } =
+    useCountryColors();
+  const { upcomingCountryCodes } = useVisitedCountries();
 
   // Group overlay items by isoCode for stacking/blending
   const overlayGroups = useMemo(
@@ -65,6 +68,10 @@ export function CountriesLayer({
               homeCountry &&
               isoA2 === homeCountry.toUpperCase();
 
+            // Upcoming visit coloring logic
+            const isUpcomingVisitCountry =
+              colorUpcomingVisits && upcomingCountryCodes.includes(isoA2);
+
             // Coloring logic
             const isHighlighted = highlightedIsoCodes.includes(isoA2);
             const isSelected =
@@ -89,6 +96,11 @@ export function CountriesLayer({
               style = geographyStyle.hover;
             } else if (isHomeCountry) {
               style = { ...geographyStyle.default, fill: HOME_COUNTRY_COLOR };
+            } else if (isUpcomingVisitCountry) {
+              style = {
+                ...geographyStyle.default,
+                fill: UPCOMING_VISIT_COUNTRY_COLOR,
+              };
             } else if (blendedFill) {
               style = { ...geographyStyle.default, fill: blendedFill };
             } else if (isSelected) {

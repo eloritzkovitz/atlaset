@@ -16,6 +16,7 @@ export const defaultSettings: Settings = {
   },
   overlays: {
     colorHomeCountry: false,
+    colorUpcomingVisits: false,
     palettes: {
       standard: "Default",
       yearly: "Default",
