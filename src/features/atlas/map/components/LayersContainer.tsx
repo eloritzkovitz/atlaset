@@ -1,6 +1,7 @@
 import type { Feature, Geometry } from "geojson";
 import { useMemo } from "react";
 import { Geographies, Geography } from "react-simple-maps";
+import { useTimeline } from "@contexts/TimelineContext";
 import { getCountryIsoCode } from "@features/countries";
 import {
   getBlendedLayerColor,
@@ -10,10 +11,10 @@ import {
 import { useCountryColors, useLayerColors } from "@features/settings";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { useHomeCountry } from "@features/user";
-import { useMapGeographyStyle } from "../../hooks/useMapGeographyStyle";
-import type { GeoData } from "../../types";
+import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
+import type { GeoData } from "../types";
 
-type MapCountriesLayerProps = {
+interface LayersContainerProps {
   geographyData: GeoData;
   layerItems?: LayerItem[];
   selectedIsoCode?: string | null;
@@ -25,7 +26,7 @@ type MapCountriesLayerProps = {
   isAddingMarker?: boolean;
 };
 
-export function CountriesLayer({
+export function LayersContainer({
   geographyData,
   layerItems = [],
   selectedIsoCode,
@@ -34,8 +35,9 @@ export function CountriesLayer({
   onCountryClick,
   onCountryHover,
   isAddingMarker,
-}: MapCountriesLayerProps) {
+}: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
+  const { timelineMode } = useTimeline();
 
   // Home country for coloring
   const { homeCountry } = useHomeCountry();
@@ -64,13 +66,16 @@ export function CountriesLayer({
 
             // Home country coloring logic
             const isHomeCountry =
+              !timelineMode &&
               colorHomeCountry &&
               homeCountry &&
               isoA2 === homeCountry.toUpperCase();
 
             // Upcoming visit coloring logic
             const isUpcomingVisitCountry =
-              colorUpcomingVisits && upcomingCountryCodes.includes(isoA2);
+              !timelineMode &&
+              colorUpcomingVisits &&
+              upcomingCountryCodes.includes(isoA2);
 
             // Coloring logic
             const isHighlighted = highlightedIsoCodes.includes(isoA2);

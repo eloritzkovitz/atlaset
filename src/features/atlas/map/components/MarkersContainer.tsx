@@ -1,8 +1,8 @@
 import { useMarkers } from "@contexts/MarkersContext";
 import { Marker } from "@features/atlas/markers";
-import { getProjection } from "../../utils/map";
+import { getProjection } from "../utils/map";
 
-interface MapMarkersLayerProps {
+interface MarkersContainerProps {
   projectionType: string;
   width: number;
   height: number;
@@ -10,13 +10,13 @@ interface MapMarkersLayerProps {
   zoom?: number;
 }
 
-export function MapMarkersLayer({
+export function MarkersContainer({
   projectionType,
   width,
   height,
   scaleDivisor,
   zoom = 1,
-}: MapMarkersLayerProps & { zoom?: number }) {
+}: MarkersContainerProps & { zoom?: number }) {
   const { markers, showMarkerDetails } = useMarkers();
   const proj = getProjection(projectionType, width, height, scaleDivisor);
 

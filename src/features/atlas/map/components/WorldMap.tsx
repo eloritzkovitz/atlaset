@@ -5,8 +5,8 @@ import { useMapUI } from "@contexts/MapUIContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { useContainerDimensions } from "@hooks";
 import { MapSvgContainer } from "./MapSvgContainer";
-import { CountriesLayer } from "./layers/CountriesLayer";
-import { MapMarkersLayer } from "./layers/MapMarkersLayer";
+import { LayersContainer } from "./LayersContainer";
+import { MarkersContainer } from "./MarkersContainer";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData } from "../types";
@@ -113,8 +113,7 @@ export function WorldMap({
             maxZoom={DEFAULT_MAP_SETTINGS.maxZoom}
             onMoveEnd={zoom >= 1 ? handleMoveEnd : undefined}
           >
-            {/* Countries layers */}
-            <CountriesLayer
+            <LayersContainer
               geographyData={geoData}
               layerItems={layerItems}
               selectedIsoCode={selectedIsoCode}
@@ -126,8 +125,7 @@ export function WorldMap({
               onCountryHover={onCountryHover}
               isAddingMarker={isAddingMarker}
             />
-            {/* Markers layer */}
-            <MapMarkersLayer
+            <MarkersContainer
               projectionType={projection || DEFAULT_MAP_SETTINGS.projection}
               width={dimensions.width}
               height={dimensions.height}
