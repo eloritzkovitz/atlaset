@@ -63,9 +63,7 @@ describe("layerIO utils", () => {
       };
 
       importLayersFromFile(event, setLayers);
-      expect(global.alert).toHaveBeenCalledWith(
-        "Invalid layers file format."
-      );
+      expect(global.alert).toHaveBeenCalledWith("Invalid layers file format.");
     });
 
     it("calls importLayers with imported layers array", () => {
@@ -100,6 +98,81 @@ describe("layerIO utils", () => {
 
       importLayersFromFile(event, importLayers);
       expect(importLayers).toHaveBeenCalledWith(layers);
+    });
+
+    it("normalizes rgba color fields to hex", () => {
+      const importLayers = vi.fn();
+      const layers: Layer[] = [
+        {
+          id: "1",
+          name: "Layer",
+          color: "rgba(255, 0, 0, 0.5)",
+          fillColor: "rgba(0, 255, 0, 1)",
+          strokeColor: "rgba(0, 0, 255, 0.25)",
+          countries: [],
+          visible: true,
+          order: 1,
+        } as any,
+      ];
+      const file = new Blob([JSON.stringify(layers)], {
+        type: "application/json",
+      });
+      const event = {
+        target: {
+          files: [file],
+          value: "",
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+      // Mock FileReader
+      const readAsText = vi.fn(function (this: any) {
+        this.onload({ target: { result: JSON.stringify(layers) } });
+      });
+      (window as any).FileReader = function () {
+        this.readAsText = readAsText;
+      };
+
+      importLayersFromFile(event, importLayers);
+      expect(importLayers).toHaveBeenCalledWith([
+        expect.objectContaining({
+          color: "#ff00007f",
+          fillColor: "#00ff00ff",
+          strokeColor: "#0000ff3f",
+        }),
+      ]);
+    });
+
+    it("assigns id if missing", () => {
+      const importLayers = vi.fn();
+      const layers = [
+        {
+          name: "Layer",
+          color: "#fff",
+          countries: [],
+          visible: true,
+          order: 1,
+        },
+      ];
+      const file = new Blob([JSON.stringify(layers)], {
+        type: "application/json",
+      });
+      const event = {
+        target: {
+          files: [file],
+          value: "",
+        },
+      } as unknown as React.ChangeEvent<HTMLInputElement>;
+
+      // Mock FileReader
+      const readAsText = vi.fn(function (this: any) {
+        this.onload({ target: { result: JSON.stringify(layers) } });
+      });
+      (window as any).FileReader = function () {
+        this.readAsText = readAsText;
+      };
+
+      importLayersFromFile(event, importLayers);
+      expect(importLayers.mock.calls[0][0][0].id).toBeDefined();
     });
   });
 

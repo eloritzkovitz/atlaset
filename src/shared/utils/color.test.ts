@@ -1,4 +1,22 @@
-import { hexToRgba, parseRgba, blendColors } from "./color";
+import { rgbaToHex, hexToRgba, parseRgba, blendColors } from "./color";
+
+describe("rgbaToHex", () => {
+  it("converts rgba to hex correctly", () => {
+    expect(rgbaToHex("rgba(255, 0, 0, 1)")).toBe("#ff0000ff");
+    expect(rgbaToHex("rgba(0, 255, 0, 0.5)")).toBe("#00ff007f");
+    expect(rgbaToHex("rgba(0, 0, 255, 0)")).toBe("#0000ff00");
+    expect(rgbaToHex("rgb(255, 255, 255)")).toBe("#ffffffff");
+    expect(rgbaToHex("rgba(10, 20, 30, notanumber)")).toBe("#0a141eff");
+  });
+
+  it("returns original string for invalid input", () => {
+    expect(rgbaToHex("invalid")).toBe("invalid");
+    expect(rgbaToHex("rgb(300, 0, 0)")).toBe("rgb(300, 0, 0)");
+    expect(rgbaToHex("rgba(300, 0, 0, 1)")).toBe("rgba(300, 0, 0, 1)");
+    expect(rgbaToHex("rgba(255, 0, 0)")).toBe("rgba(255, 0, 0)");
+    expect(rgbaToHex("rgba(-1, 0, 0, 1)")).toBe("rgba(-1, 0, 0, 1)");
+  });
+});
 
 describe("hexToRgba", () => {
   it("converts 3-digit hex to rgba", () => {

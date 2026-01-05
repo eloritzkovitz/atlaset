@@ -10,7 +10,7 @@ In Atlaset, **layers** let you add custom map layers, highlighting or visualizin
 |-----------------|-----------|---------------------------------------------------|
 | `id`            | string    | Unique identifier for the layers (*optional*, generated if missing) |
 | `name`          | string    | Display name for the layers                      |
-| `color`         | string    | RGBA color for the layers                        |
+| `color`         | string    | RGBA or hex color for the layers (RGBA will be converted to hex on import)                        |
 | `filterLabels`  | map       | Customized filter labels (*optional*, replacing labels for "All"/"Include Only"/"Exclude")       |
 | `visible`       | boolean   | Whether the layers is visible by default         |
 | `countries`     | string[]  | Array of ISO 3166-1 country codes                 |
@@ -24,7 +24,7 @@ In Atlaset, **layers** let you add custom map layers, highlighting or visualizin
 ```json
 {
   "name": "Example",
-  "color": "rgba(255, 255, 255, 1)",
+  "color": "rgba(255, 255, 255, 1)", //("#ffffffff" if using hex)
   "filterLabels": {
     "all": "All",
     "only": "Include Only",

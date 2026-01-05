@@ -3,6 +3,50 @@
  */
 
 /**
+ * Converts an rgba() string to a hex string (with alpha).
+ * @param rgba - The rgba color string.
+ * @returns The hex color string.
+ */
+export function rgbaToHex(input: string): string {
+  // Match rgb(...) and rgba(..., alpha)
+  const rgbMatch = input.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (rgbMatch) {
+    const r = parseInt(rgbMatch[1], 10);
+    const g = parseInt(rgbMatch[2], 10);
+    const b = parseInt(rgbMatch[3], 10);
+    if ([r, g, b].some((v) => v < 0 || v > 255)) return input;
+    const a = 255;
+    return (
+      "#" +
+      r.toString(16).padStart(2, "0") +
+      g.toString(16).padStart(2, "0") +
+      b.toString(16).padStart(2, "0") +
+      a.toString(16).padStart(2, "0")
+    ).toLowerCase();
+  }
+
+  // Match rgba(..., alpha)
+  const rgbaMatch = input.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([^\)]+)\)/);
+  if (rgbaMatch) {
+    const r = parseInt(rgbaMatch[1], 10);
+    const g = parseInt(rgbaMatch[2], 10);
+    const b = parseInt(rgbaMatch[3], 10);
+    if ([r, g, b].some((v) => v < 0 || v > 255)) return input;
+    let alphaValue = parseFloat(rgbaMatch[4]);
+    let a = isNaN(alphaValue) ? 255 : Math.floor(alphaValue * 255);
+    return (
+      "#" +
+      r.toString(16).padStart(2, "0") +
+      g.toString(16).padStart(2, "0") +
+      b.toString(16).padStart(2, "0") +
+      a.toString(16).padStart(2, "0")
+    ).toLowerCase();
+  }
+  // If not rgb(...) or rgba(..., alpha), return original string
+  return input;
+}
+
+/**
  * Converts a hex color string to an rgba string.
  * @param hex - The hex color string.
  * @param alpha - The alpha value (default 1).
