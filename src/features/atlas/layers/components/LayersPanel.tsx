@@ -6,15 +6,12 @@ import {
   FaFileExport,
   FaXmark,
 } from "react-icons/fa6";
-import { ActionButton, ErrorMessage, LoadingSpinner, Panel } from "@components";
+import { ActionButton, Panel } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useUI } from "@contexts/UIContext";
 import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
-import {
-  importLayersFromFile,
-  exportLayersToFile,
-} from "../utils/layerIO";
+import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 import type { Layer } from "../types";
 
 interface LayersPanelProps {
@@ -36,8 +33,6 @@ export function LayersPanel({
     reorderLayers,
     toggleLayerVisibility,
     removeLayer,
-    loading,
-    error,
   } = useLayers();
 
   // Drag state
@@ -46,10 +41,6 @@ export function LayersPanel({
 
   // File input reference for importing layers
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading layers..." />;
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel

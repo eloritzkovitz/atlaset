@@ -1,12 +1,6 @@
 import React from "react";
 import { FaFilter, FaArrowRotateLeft, FaXmark } from "react-icons/fa6";
-import {
-  ActionButton,
-  ErrorMessage,
-  LoadingSpinner,
-  Panel,
-  Separator,
-} from "@components";
+import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useCountryData, type SovereigntyType } from "@features/countries";
@@ -56,7 +50,7 @@ export function CountryFiltersPanel({
   setMaxVisitCount,
   resetFilters,
 }: CountryFiltersPanelProps) {
-  const { countries, loading, error } = useCountryData();
+  const { countries } = useCountryData();
   const { timelineMode } = useTimeline();
 
   // Collapsible state for filter groups
@@ -91,10 +85,6 @@ export function CountryFiltersPanel({
 
   // Responsive check
   const isMobile = useIsMobile();
-
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading filters..." />;
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
-import { FloatingActionButton, SplashScreen } from "@components";
+import { FloatingActionButton, LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import {
@@ -141,7 +141,7 @@ export default function TripsPage() {
           isEditing={!!trip && !!trip.id}
         />
         {loading ? (
-          <SplashScreen />
+          <LoadingSpinner fullScreen message="Loading trips..." />
         ) : trips.length === 0 ? (
           <div className="flex flex-1 items-center justify-center min-h-[300px] text-muted text-lg">
             No trips yet.

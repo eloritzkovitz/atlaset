@@ -5,13 +5,7 @@ import {
   FaXmark,
   FaLocationDot,
 } from "react-icons/fa6";
-import {
-  ActionButton,
-  ErrorMessage,
-  LoadingSpinner,
-  Modal,
-  PanelHeader,
-} from "@components";
+import { ActionButton, Modal, PanelHeader } from "@components";
 import {
   CountryDetailsContent,
   CountryWithFlag,
@@ -37,7 +31,7 @@ export function CountryDetailsModal({
   onCenterMap,
   onClose,
 }: CountryDetailsModalProps) {
-  const { currencies, loading, error } = useCountryData();
+  const { currencies } = useCountryData();
   const { isCountryVisited, getCountryVisitsCategorized } =
     useVisitedCountries();
   const isVisited = country ? isCountryVisited(country.isoCode) : false;
@@ -70,9 +64,7 @@ export function CountryDetailsModal({
     isOpen
   );
 
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading..." />;
-  if (error) return <ErrorMessage error={error} />;
+  // Do not render if no country is selected
   if (!country) return null;
 
   return (

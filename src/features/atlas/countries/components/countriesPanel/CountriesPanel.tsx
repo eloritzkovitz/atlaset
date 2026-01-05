@@ -1,12 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaArrowsRotate, FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
-import {
-  ActionButton,
-  ErrorMessage,
-  LoadingSpinner,
-  Panel,
-  Separator,
-} from "@components";
+import { ActionButton, Panel, Separator } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -39,8 +33,7 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   // Context data state
-  const { allRegions, allSubregions, loading, error, refreshData } =
-    useCountryData();
+  const { allRegions, allSubregions, refreshData } = useCountryData();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -110,10 +103,6 @@ export function CountriesPanel({
     },
     [onCountryInfo]
   );
-
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading countries..." />;
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">

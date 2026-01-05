@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { SplashScreen } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   EditProfileModal,
@@ -18,11 +17,9 @@ export default function ProfilePage() {
   });
   const [editOpen, setEditOpen] = useState(false);
 
-  // Show loading spinner while fetching data
-  if (authLoading || profileLoading) return <SplashScreen />;
-
   // Handle case where user not found
-  if (!profileUser) return <div>User not found</div>;
+  if (!profileUser && !(authLoading || profileLoading))
+    return <div>User not found</div>;
 
   // Determine if this is the current user's own profile
   const canEdit = currentUser && currentUser.uid === profileUser?.uid;
@@ -34,14 +31,25 @@ export default function ProfilePage() {
         <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
           <div className="flex flex-col gap-6 items-center">
             <div className="w-full max-w-4xl">
-              <ProfileInfoCard
-                profile={profileUser}
-                canEdit={!!canEdit}
-                onEdit={() => setEditOpen(true)}
-              />
-              <VisitedCountriesCard
-                visitedCountryCodes={profileUser.visitedCountryCodes || []}
-              />
+              {authLoading || profileLoading ? (
+                <div className="animate-pulse space-y-6">
+                  <div className="h-32 bg-surface-alt rounded-xl mb-4" />
+                  <div className="h-20 bg-surface-alt rounded-xl" />
+                </div>
+              ) : profileUser ? (
+                <>
+                  <ProfileInfoCard
+                    profile={profileUser}
+                    canEdit={!!canEdit}
+                    onEdit={() => setEditOpen(true)}
+                  />
+                  <VisitedCountriesCard
+                    visitedCountryCodes={profileUser.visitedCountryCodes || []}
+                  />
+                </>
+              ) : (
+                <div>User not found</div>
+              )}
             </div>
           </div>
         </main>

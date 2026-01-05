@@ -6,7 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { HamburgerButton, LoadingSpinner } from "@components";
+import { HamburgerButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   AccountSettingsSection,
@@ -36,11 +36,6 @@ export default function ProfilePage() {
 
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
-
-  // Show loading spinner while auth state is loading
-  if (userLoading || profileLoading) {
-    return <LoadingSpinner />;
-  }
 
   // Redirect to login if not authenticated
   if (!user) {
@@ -91,18 +86,26 @@ export default function ProfilePage() {
 
         <main className="flex-1 flex flex-col items-center px-2 md:px-12 py-10 md:py-16 min-h-screen">
           <div className="w-full max-w-2xl">
-            <Routes>
-              <Route path="account" element={<AccountSettingsSection />} />
-              <Route path="display" element={<DisplaySettingsSection />} />
-              <Route path="sound" element={<SoundSettingsSection />} />
-              <Route path="activity" element={<UserActivitySection />} />
-              <Route path="security" element={<SecurityInfoSection />} />
-              {/* Redirect unknown profile routes to /settings */}
-              <Route
-                path="*"
-                element={<Navigate to="/settings/account" replace />}
-              />
-            </Routes>
+            {userLoading || profileLoading ? (
+              <div className="animate-pulse space-y-6">
+                <div className="h-12 bg-surface-alt rounded-xl mb-4" />
+                <div className="h-40 bg-surface-alt rounded-xl mb-4" />
+                <div className="h-20 bg-surface-alt rounded-xl" />
+              </div>
+            ) : (
+              <Routes>
+                <Route path="account" element={<AccountSettingsSection />} />
+                <Route path="display" element={<DisplaySettingsSection />} />
+                <Route path="sound" element={<SoundSettingsSection />} />
+                <Route path="activity" element={<UserActivitySection />} />
+                <Route path="security" element={<SecurityInfoSection />} />
+                {/* Redirect unknown profile routes to /settings */}
+                <Route
+                  path="*"
+                  element={<Navigate to="/settings/account" replace />}
+                />
+              </Routes>
+            )}
           </div>
         </main>
       </div>

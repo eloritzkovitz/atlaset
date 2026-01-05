@@ -91,8 +91,9 @@ export default function DashboardPage() {
   );
 
   // Loading and error states
-  if (loading || !ready) return <LoadingSpinner />;
-  if (error) return <ErrorMessage error={error} />;
+  if (loading || !ready)
+    return <LoadingSpinner fullScreen message="Loading dashboard..." />;
+  if (error) return <ErrorMessage fullScreen error={error} />;
 
   // Redirect to login if not authenticated
   if (!user) {
