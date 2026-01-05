@@ -9,6 +9,7 @@ interface SegmentedToggleProps<T extends string> {
   options: SegmentedToggleOption<T>[];
   onChange: (val: T) => void;
   className?: string;
+  disabled?: boolean;
 }
 
 export function SegmentedToggle<T extends string>({
@@ -16,6 +17,7 @@ export function SegmentedToggle<T extends string>({
   options,
   onChange,
   className = "",
+  disabled = false,
 }: SegmentedToggleProps<T>) {
   return (
     <div className={`flex gap-2 ${className}`}>
@@ -24,10 +26,11 @@ export function SegmentedToggle<T extends string>({
           key={opt.value}
           className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
             value === opt.value
-              ? opt.colorClass || "bg-primary text-white"
+              ? opt.colorClass || "bg-primary/70 text-white"
               : "bg-surface hover:bg-surface-hover"
           }`}
           onClick={() => onChange(opt.value)}
+          disabled={disabled}
         >
           {opt.label}
         </button>

@@ -108,7 +108,6 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
           onMouseLeave={hide}
           onFocus={show}
           onBlur={hide}
-          tabIndex={0}
         >
           {children}
         </span>
@@ -124,7 +123,6 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
         onMouseLeave={hide}
         onFocus={show}
         onBlur={hide}
-        tabIndex={0}
       >
         {children}
       </span>

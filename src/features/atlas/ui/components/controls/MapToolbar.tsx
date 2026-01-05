@@ -57,7 +57,7 @@ export function MapToolbar({
   const actions = [
     {
       key: "countries",
-      icon: <FaGlobe />,
+      icon: <FaGlobe className="text-lg" />,
       label: "Countries",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
@@ -67,7 +67,7 @@ export function MapToolbar({
     },
     {
       key: "layers",
-      icon: <FaLayerGroup />,
+      icon: <FaLayerGroup className="text-lg" />,
       label: "Layers",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
@@ -77,7 +77,7 @@ export function MapToolbar({
     },
     {
       key: "markers",
-      icon: <FaMapPin />,
+      icon: <FaMapPin className="text-lg" />,
       label: "Markers",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
@@ -88,7 +88,7 @@ export function MapToolbar({
     },
     {
       key: "timeline",
-      icon: <FaTimeline />,
+      icon: <FaTimeline className="text-xl " />,
       label: "Timeline",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
@@ -99,7 +99,7 @@ export function MapToolbar({
     },
     {
       key: "export",
-      icon: <FaDownload />,
+      icon: <FaDownload className="text-lg" />,
       label: "Export",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
@@ -109,7 +109,7 @@ export function MapToolbar({
     },
     {
       key: "settings",
-      icon: <FaGear />,
+      icon: <FaGear className="text-lg" />,
       label: "Settings",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
@@ -179,7 +179,7 @@ export function MapToolbar({
         />
         {/* Actions: horizontal slide */}
         <ActionsToolbar
-          className={`right-10 md:right-14 bg-action rounded-full px-2 transition-all duration-300 ${
+          className={`right-10 md:right-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
             visible
               ? "opacity-100 pointer-events-auto translate-x-0"
               : "opacity-0 pointer-events-none translate-x-10"
