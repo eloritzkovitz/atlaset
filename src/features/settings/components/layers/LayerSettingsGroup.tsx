@@ -46,34 +46,44 @@ export function LayerSettingsGroup() {
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />
-      <div className="flex flex-col gap-4 mb-4">
-        <Checkbox
-          checked={!!colorHomeCountry}
-          onChange={setColorHomeCountry}
-          label="Show home country"
-        />
-        <Checkbox
-          checked={!!colorUpcomingVisits}
-          onChange={setColorUpcomingVisits}
-          label="Show upcoming new visits"
-        />
-      </div>
-      <div className="my-2" />
       {expanded && (
-        <div className="mb-4">
-          {LAYER_MODES.map((mode) => (
-            <div key={mode.key} className="mb-4">
-              <label className="font-medium block mb-1">{mode.label}</label>
-              <DropdownSelectInput
-                options={groupedPaletteOptions}
-                value={layerPalettes[mode.key]}
-                onChange={(val: string | string[]) =>
-                  setPalette(mode.key, Array.isArray(val) ? val[0] : val)
-                }
-                className="min-w-[180px]"
+        <div className="space-y-6">
+          {/* Display Options Section */}
+          <section>
+            <h4 className="font-semibold text-sm text-muted mb-2">DISPLAY OPTIONS</h4>
+            <div className="flex flex-col gap-3 mb-2">
+              <Checkbox
+                checked={!!colorHomeCountry}
+                onChange={setColorHomeCountry}
+                label="Show home country"
+              />
+              <Checkbox
+                checked={!!colorUpcomingVisits}
+                onChange={setColorUpcomingVisits}
+                label="Show upcoming new visits"
               />
             </div>
-          ))}
+          </section>
+
+          {/* Color Palettes Section */}
+          <section>
+            <h4 className="font-semibold text-sm text-muted mb-2">COLOR PALETTES</h4>
+            <div className="mb-2">
+              {LAYER_MODES.map((mode) => (
+                <div key={mode.key} className="mb-4">
+                  <label className="font-medium block mb-1">{mode.label}</label>
+                  <DropdownSelectInput
+                    options={groupedPaletteOptions}
+                    value={layerPalettes[mode.key]}
+                    onChange={(val: string | string[]) =>
+                      setPalette(mode.key, Array.isArray(val) ? val[0] : val)
+                    }
+                    className="min-w-[180px]"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
         </div>
       )}
     </>
