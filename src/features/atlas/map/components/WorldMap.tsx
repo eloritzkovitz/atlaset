@@ -71,10 +71,16 @@ export function WorldMap({
 
   // Call onReady when map is ready
   useEffect(() => {
-    if (onReady) {
+    if (
+      onReady &&
+      geoData &&
+      svgRef &&
+      typeof svgRef !== "function" &&
+      svgRef.current
+    ) {
       onReady();
     }
-  }, [onReady]);
+  }, [onReady, geoData, svgRef]);
 
   return (
     <div
