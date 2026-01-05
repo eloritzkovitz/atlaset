@@ -1,6 +1,6 @@
 # Atlaset
 
-Atlaset is a modern, interactive country explorer and travel tracker built with React, Vite, and TypeScript. Designed for flexibility and performance, Atlaset allows fellow travelers to manage travel logs and analyze their journeys around the world - centered around an immersive map and powerful, rich features: tinker with the map and add your own overlays and markers, reminisce past trips with the timeline or plan new adventures, view the dashboard or test your knowledge of the world!
+Atlaset is a modern, interactive country explorer and travel tracker built with React, Vite, and TypeScript. Designed for flexibility and performance, Atlaset allows fellow travelers to manage travel logs and analyze their journeys around the world - centered around an immersive map and powerful, rich features: tinker with the map and add your own layers and markers, reminisce past trips with the timeline or plan new adventures, view the dashboard or test your knowledge of the world!
 
 ## Table of Contents
 - [Features](#features)
@@ -12,20 +12,20 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 ### **Authentication**
 - **User accounts:** Sign in with Google to sync your data across devices
-- **Cloud sync:** All trips, overlays, markers, and settings are securely stored in the cloud (Firebase)
+- **Cloud sync:** All trips, layers, markers, and settings are securely stored in the cloud (Firebase)
 - **Guest mode:** Use the app without signing in; migrate your data to your account anytime
 - **Offline support:** All data is available offline for guests and authenticated users (via IndexedDB and Firestore persistence)
 
 ### **Map & Data**
 - **Interactive map:** Explore a customizable world map
 - **Country details:** View detailed country information
-- **Configurable filters:** Filter by region, subregion, sovereignty and overlays
+- **Configurable filters:** Filter by region, subregion, sovereignty and layerss
 - **Config-driven data:** All sources loaded from JSON files via environment variables
 - **Export maps:** Export your maps as SVG or PNG images
 
-### **Overlays & Markers**
-- **User-defined overlays:** Create and manage custom map overlays
-- **Overlay import/export:** Backup, share, or migrate overlays directly from the UI
+### **Layers & Markers**
+- **User-defined layerss:** Create and manage custom map layerss
+- **Layer import/export:** Backup, share, or migrate layerss directly from the UI
 - **Markers:** Add, edit, and remove markers on the map for any location
 
 ### **Trips**
@@ -77,7 +77,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 - [Getting started](docs/getting-started.md)
 - [Data Sources](docs/data-sources.md)
-- [Overlays](docs/overlays.md)
+- [Layers](docs/layers.md)
 - [Trips](docs/trips.md)
 - [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 

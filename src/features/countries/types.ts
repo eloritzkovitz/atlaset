@@ -48,7 +48,7 @@ export type CountryFilterKey =
   | "region"
   | "subregion"
   | "sovereignty"
-  | "overlay";
+  | "layer";
 
 /** Configuration for country filters. */
 export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
@@ -63,5 +63,5 @@ export type CountryFilterOptions = {
   selectedRegion?: string;
   selectedSubregion?: string;
   selectedSovereignty?: SovereigntyType | "";
-  overlayCountries?: string[];
+  layerCountries?: string[];
 };

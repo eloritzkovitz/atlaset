@@ -1,23 +1,16 @@
 import React from "react";
 import { FaFilter, FaArrowRotateLeft, FaXmark } from "react-icons/fa6";
-import {
-  ActionButton,
-  ErrorMessage,
-  LoadingSpinner,
-  Panel,
-  Separator,
-} from "@components";
+import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
-import type { SovereigntyType } from "@features/countries";
+import { useCountryData, type SovereigntyType } from "@features/countries";
 import {
   getAllSovereigntyTypes,
   getSubregionsForRegion,
 } from "@features/countries/utils/countryData";
 import { useIsMobile, useKeyHandler } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
-import { OverlayFilters } from "./OverlayFilters";
+import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
 
 interface CountryFiltersPanelProps {
@@ -57,12 +50,12 @@ export function CountryFiltersPanel({
   setMaxVisitCount,
   resetFilters,
 }: CountryFiltersPanelProps) {
-  const { countries, loading, error } = useCountryData();
+  const { countries } = useCountryData();
   const { timelineMode } = useTimeline();
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
-  const [showOverlayFilters, setShowOverlayFilters] = React.useState(true);
+  const [showLayerFilters, setShowLayerFilters] = React.useState(true);
   const [showTimelineFilters, setShowTimelineFilters] = React.useState(true);
 
   // Dynamic subregion options based on selected region
@@ -92,10 +85,6 @@ export function CountryFiltersPanel({
 
   // Responsive check
   const isMobile = useIsMobile();
-
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading filters..." />;
-  if (error) return <ErrorMessage error={error} />;
 
   return (
     <Panel
@@ -152,9 +141,9 @@ export function CountryFiltersPanel({
       {!showVisitedOnly && (
         <>
           <Separator className="my-4" />
-          <OverlayFilters
-            expanded={showOverlayFilters}
-            onToggle={() => setShowOverlayFilters((v) => !v)}
+          <LayerFilters
+            expanded={showLayerFilters}
+            onToggle={() => setShowLayerFilters((v) => !v)}
           />
         </>
       )}

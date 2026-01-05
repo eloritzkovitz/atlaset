@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { useAuth } from "@contexts/AuthContext";
 import { profileService } from "../services/profileService";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 /**
  * Manages home country for the current user.

@@ -1,15 +1,13 @@
-import { useOverlays } from "@contexts/OverlaysContext";
+import { useLayers } from "@contexts/LayersContext";
 import { useTimeline } from "@contexts/TimelineContext";
-import { VISITED_OVERLAY_ID } from "@features/atlas/overlays";
+import { VISITED_LAYER_ID } from "@features/atlas/layers";
 
 /**
- * Determines if "show visited only" mode is active, considering both timeline and overlay context.
+ * Determines if "show visited only" mode is active, considering both timeline and layer context.
  * @returns Boolean indicating if only visited countries should be shown.
  */
 export function useShowVisitedOnly() {
   const { showVisitedOnly: timelineVisitedOnly } = useTimeline();
-  const { overlaySelections } = useOverlays();
-  return (
-    timelineVisitedOnly || overlaySelections[VISITED_OVERLAY_ID] === "only"
-  );
+  const { layerSelections } = useLayers();
+  return timelineVisitedOnly || layerSelections[VISITED_LAYER_ID] === "only";
 }

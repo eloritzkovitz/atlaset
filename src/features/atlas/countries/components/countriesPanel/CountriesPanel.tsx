@@ -1,20 +1,16 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
-import {
-  ActionButton,
-  ErrorMessage,
-  LoadingSpinner,
-  Panel,
-  Separator,
-} from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
+import { FaArrowsRotate, FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
+import { ActionButton, Panel, Separator } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
-import { sortCountries, type Country } from "@features/countries";
+import {
+  sortCountries,
+  useCountryData,
+  type Country,
+} from "@features/countries";
 import { useListNavigation, useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
-import { CountriesToolbar } from "./CountriesToolbar";
 import { CountryList } from "./CountryList";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../hooks/useCountryFilters";
@@ -37,9 +33,8 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   // Context data state
-  const { allRegions, allSubregions, loading, error, refreshData } =
-    useCountryData();
-  const { showVisitedOnly } = useTimeline();
+  const { allRegions, allSubregions, refreshData } = useCountryData();
+  const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
     uiVisible,
@@ -109,10 +104,6 @@ export function CountriesPanel({
     [onCountryInfo]
   );
 
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading countries..." />;
-  if (error) return <ErrorMessage error={error} />;
-
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">
       <Panel
@@ -128,6 +119,15 @@ export function CountriesPanel({
         showSeparator={false}
         headerActions={
           <>
+            {process.env.NODE_ENV === "development" && (
+              <ActionButton
+                onClick={refreshData}
+                ariaLabel={"Refresh country data"}
+                title="Refresh country data"
+                icon={<FaArrowsRotate />}
+                rounded
+              />
+            )}
             <ActionButton
               onClick={toggleFilters}
               ariaLabel={showFilters ? "Hide Filters" : "Show Filters"}
@@ -151,8 +151,10 @@ export function CountriesPanel({
             setSearch={setSearch}
             sortBy={sortBy}
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
-            count={sortedCountries.length}
             visitedOnly={showVisitedOnly}
+            setVisitedOnly={setShowVisitedOnly}
+            allCount={allCount}
+            visitedCount={visitedCount}
           />
           <Separator />
           <CountryList
@@ -164,12 +166,6 @@ export function CountriesPanel({
             onSelect={onSelect}
             onHover={onHover}
             onCountryInfo={handleCountryInfo}
-          />
-          <Separator />
-          <CountriesToolbar
-            allCount={allCount}
-            visitedCount={visitedCount}
-            onRefresh={refreshData}
           />
         </div>
       </Panel>

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
 import { SegmentedToggle } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
 import {
   CountryDetailsContent,
   VisitedStatusIndicator,
+  useCountryData,
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
@@ -95,7 +95,7 @@ export function CountryStats({
         />
       </div>
     );
-  } 
+  }
 
   // If no region is selected (overview), show region cards and toggles
   if (selectedRegion === undefined || selectedRegion === "") {
@@ -141,7 +141,7 @@ export function CountryStats({
         </div>
       </>
     );
-  }  
+  }
 
   // If a region is selected, show country grid for region or subregion
   if (selectedRegion) {

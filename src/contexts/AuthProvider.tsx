@@ -1,49 +1,49 @@
-import { type ReactNode, useEffect, useRef, useState } from "react";
-import { auth } from "../firebase";
+import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
-import { removeDevice } from "@features/user/auth/utils/device";
-import { migrationService } from "@services/migrationService";
+import { useDispatch } from "react-redux";
+import { auth } from "../firebase";
 import { AuthContext } from "./AuthContext";
+import {
+  setUser,
+  setLoading,
+  setReady,
+} from "../features/user/auth/slices/authSlice";
+import { toSerializableUser } from "../features/user/auth/slices/authSlice";
 
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [ready, setReady] = useState(false);
-  const prevUserRef = useRef<User | null>(null);
+interface AuthProviderProps {
+  children: React.ReactNode;
+}
 
-  // Listen for auth state changes
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUserState] = useState<User | null>(null);
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
-      prevUserRef.current = user;
-      setUser(firebaseUser);
-      setLoading(false);
-      setReady(true);
-      if (!prevUserRef.current && firebaseUser) {
-        const guestDataExists = await migrationService.hasGuestData();
-        if (guestDataExists) {
-          await migrationService.migrateGuestDataToFirestore();
-        }
+    let resolved = false;
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUserState(firebaseUser);
+      if (!resolved) {
+        dispatch(setLoading(false));
+        dispatch(setReady(true));
+        resolved = true;
       }
+      dispatch(setUser(toSerializableUser(firebaseUser)));
     });
-    return unsub;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Clean up device info on logout
-  useEffect(() => {
-    if (user === null) {
-      const sessionId = localStorage.getItem("sessionId");
-      const userId = localStorage.getItem("userId");
-      if (sessionId && userId) {
-        removeDevice(userId, sessionId);
-        localStorage.removeItem("sessionId");
-        localStorage.removeItem("userId");
+    // Fallback: ensure loading is set to false after a timeout in case onAuthStateChanged never fires
+    const timeout = setTimeout(() => {
+      if (!resolved) {
+        dispatch(setLoading(false));
+        dispatch(setReady(true));
       }
-    }
-  }, [user]);
+    }, 5000);
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
+  }, [dispatch]);
 
   return (
-    <AuthContext.Provider value={{ user, loading, ready }}>
+    <AuthContext.Provider value={{ user, loading: false }}>
       {children}
     </AuthContext.Provider>
   );

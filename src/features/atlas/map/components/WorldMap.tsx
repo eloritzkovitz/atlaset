@@ -5,10 +5,10 @@ import { useMapUI } from "@contexts/MapUIContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { useContainerDimensions } from "@hooks";
 import { MapSvgContainer } from "./MapSvgContainer";
-import { CountriesLayer } from "./layers/CountriesLayer";
-import { MapMarkersLayer } from "./layers/MapMarkersLayer";
+import { LayersContainer } from "./LayersContainer";
+import { MarkersContainer } from "./MarkersContainer";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
-import { useMapOverlayItems } from "../hooks/useMapOverlayItems";
+import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData } from "../types";
 
 interface WorldMapProps {
@@ -51,8 +51,8 @@ export function WorldMap({
   // Map projection and data
   const { projection } = useMapUI();
 
-  // Get overlay items based on mode
-  const overlayItems = useMapOverlayItems();
+  // Get layer items based on mode
+  const layerItems = useMapLayerItems();
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
@@ -71,10 +71,16 @@ export function WorldMap({
 
   // Call onReady when map is ready
   useEffect(() => {
-    if (onReady) {
+    if (
+      onReady &&
+      geoData &&
+      svgRef &&
+      typeof svgRef !== "function" &&
+      svgRef.current
+    ) {
       onReady();
     }
-  }, [onReady]);
+  }, [onReady, geoData, svgRef]);
 
   return (
     <div
@@ -113,10 +119,9 @@ export function WorldMap({
             maxZoom={DEFAULT_MAP_SETTINGS.maxZoom}
             onMoveEnd={zoom >= 1 ? handleMoveEnd : undefined}
           >
-            {/* Countries layers */}
-            <CountriesLayer
+            <LayersContainer
               geographyData={geoData}
-              overlayItems={overlayItems}
+              layerItems={layerItems}
               selectedIsoCode={selectedIsoCode}
               hoveredIsoCode={hoveredIsoCode}
               highlightedIsoCodes={
@@ -126,8 +131,7 @@ export function WorldMap({
               onCountryHover={onCountryHover}
               isAddingMarker={isAddingMarker}
             />
-            {/* Markers layer */}
-            <MapMarkersLayer
+            <MarkersContainer
               projectionType={projection || DEFAULT_MAP_SETTINGS.projection}
               width={dimensions.width}
               height={dimensions.height}

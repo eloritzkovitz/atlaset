@@ -8,11 +8,11 @@ import {
 } from "react-icons/fa6";
 import { ActionButton, ToolbarSelectButton } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
-import type { OverlayMode } from "@features/atlas/overlays";
+import type { LayerMode } from "@features/atlas/layers";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {
-  const { years, selectedYear, setSelectedYear, overlayMode, setOverlayMode } =
+  const { years, selectedYear, setSelectedYear, layerMode, setLayerMode } =
     useTimeline();
 
   // Timeline navigation handlers
@@ -111,8 +111,8 @@ export function TimelineNavigator() {
       </div>
       <div className="relative left-80 flex items-center">
         <ToolbarSelectButton
-          value={overlayMode}
-          onChange={(mode) => setOverlayMode(mode as OverlayMode)}
+          value={layerMode}
+          onChange={(mode) => setLayerMode(mode as LayerMode)}
           options={[
             { value: "cumulative", label: "Cumulative visits" },
             { value: "yearly", label: "Yearly visits" },

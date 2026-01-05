@@ -4,9 +4,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react";
-import { ConfirmModal, ErrorMessage, LoadingSpinner } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import type { Country } from "@features/countries";
+import { ConfirmModal } from "@components";
+import { useCountryData, type Country } from "@features/countries";
 import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
 import { QuizLayout } from "../layout/QuizLayout";
@@ -61,7 +60,7 @@ export function CountryQuiz({
   setMaxStreak,
   children,
 }: CountryQuizProps) {
-  const { countries, loading, error } = useCountryData();
+  const { countries } = useCountryData();
   const quizCountries = filterCountries(countries, difficulty);
 
   // Get next country for quiz using utility
@@ -98,9 +97,7 @@ export function CountryQuiz({
   };
   const handleCancelForfeit = () => setShowConfirm(false);
 
-  // Show loading or error states
-  if (loading) return <LoadingSpinner message="Loading countries..." />;
-  if (error) return <ErrorMessage error={error} />;
+  // Don't render quiz until countries loaded
   if (!quizCountries.length) {
     return (
       <div className="min-h-screen flex items-center justify-center text-lg">

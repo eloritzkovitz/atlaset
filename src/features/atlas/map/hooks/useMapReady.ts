@@ -5,7 +5,7 @@ import { useState, useCallback } from "react";
  * @param delay - Delay in milliseconds before setting the map as ready.
  * @returns An object containing the mapReady state and a handleMapReady callback.
  */
-export function useMapReady(delay = 150) {
+export function useMapReady(delay = 50) {
   const [mapReady, setMapReady] = useState(false);
 
   // Callback to set map as ready after a delay

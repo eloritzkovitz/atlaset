@@ -2,6 +2,17 @@ import { vi, describe, it, expect, beforeEach } from "vitest";
 
 vi.mock("@utils/db", () => ({
   appDb: {
+    layers: {
+      count: vi.fn(),
+      toArray: vi.fn(),
+      get: vi.fn(),
+      clear: vi.fn(),
+      put: vi.fn(),
+      add: vi.fn(),
+      delete: vi.fn(),
+      bulkAdd: vi.fn(),
+      bulkPut: vi.fn(),
+    },
     markers: {
       count: vi.fn(),
       toArray: vi.fn(),
@@ -12,18 +23,7 @@ vi.mock("@utils/db", () => ({
       delete: vi.fn(),
       bulkAdd: vi.fn(),
       bulkPut: vi.fn(),
-    },
-    overlays: {
-      count: vi.fn(),
-      toArray: vi.fn(),
-      get: vi.fn(),
-      clear: vi.fn(),
-      put: vi.fn(),
-      add: vi.fn(),
-      delete: vi.fn(),
-      bulkAdd: vi.fn(),
-      bulkPut: vi.fn(),
-    },
+    },    
     settings: {
       count: vi.fn(),
       get: vi.fn(),
@@ -48,14 +48,14 @@ vi.mock("@utils/db", () => ({
   },
   __esModule: true,
 }));
-vi.mock("../../features/atlas/markers/services/markersService", () => ({
-  markersService: {
+vi.mock("../../features/atlas/layers/services/layersService", () => ({
+  layersService: {
     load: vi.fn(),
     save: vi.fn(),
   },
 }));
-vi.mock("../../features/atlas/overlays/services/overlaysService", () => ({
-  overlaysService: {
+vi.mock("../../features/atlas/markers/services/markersService", () => ({
+  markersService: {
     load: vi.fn(),
     save: vi.fn(),
   },
@@ -73,8 +73,8 @@ vi.mock("../../features/trips/services/tripsService", () => ({
 }));
 
 import { appDb } from "@utils/db";
+import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
-import { overlaysService } from "../../features/atlas/overlays/services/overlaysService";
 import { settingsService } from "../../features/settings/services/settingsService";
 import { tripsService } from "../../features/trips/services/tripsService";
 import { migrationService } from "./migrationService";
@@ -84,11 +84,11 @@ describe("migrationService", () => {
   beforeEach(() => {
     resetAllMocks(
       appDb.markers,
-      appDb.overlays,
+      appDb.layers,
       appDb.settings,
       appDb.trips,
       markersService,
-      overlaysService,
+      layersService,
       settingsService,
       tripsService
     );
@@ -97,7 +97,7 @@ describe("migrationService", () => {
   describe("hasGuestData", () => {
     it("returns true if any guest data exists", async () => {
       (appDb.markers.count as any).mockResolvedValueOnce(0);
-      (appDb.overlays.count as any).mockResolvedValueOnce(2);
+      (appDb.layers.count as any).mockResolvedValueOnce(2);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
       (appDb.trips.count as any).mockResolvedValueOnce(0);
       expect(await migrationService.hasGuestData()).toBe(true);
@@ -105,7 +105,7 @@ describe("migrationService", () => {
 
     it("returns false if no guest data exists", async () => {
       (appDb.markers.count as any).mockResolvedValueOnce(0);
-      (appDb.overlays.count as any).mockResolvedValueOnce(0);
+      (appDb.layers.count as any).mockResolvedValueOnce(0);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
       (appDb.trips.count as any).mockResolvedValueOnce(0);
       expect(await migrationService.hasGuestData()).toBe(false);
@@ -127,12 +127,12 @@ describe("migrationService", () => {
       ]);
       vi.spyOn(markersService, "save").mockResolvedValueOnce(undefined);
 
-      // Overlays
-      (appDb.overlays.toArray as any).mockResolvedValueOnce([{ id: "x" }]);
-      vi.spyOn(overlaysService, "load").mockResolvedValueOnce([
+      // Layers
+      (appDb.layers.toArray as any).mockResolvedValueOnce([{ id: "x" }]);
+      vi.spyOn(layersService, "load").mockResolvedValueOnce([
         { id: "y", name: "", color: "", countries: [], visible: false },
       ]);
-      vi.spyOn(overlaysService, "save").mockResolvedValueOnce(undefined);
+      vi.spyOn(layersService, "save").mockResolvedValueOnce(undefined);
 
       // Settings
       (appDb.settings.get as any).mockResolvedValueOnce({
@@ -141,7 +141,7 @@ describe("migrationService", () => {
         account: {},
         display: {},
         map: {},
-        overlays: {},
+        layers: {},
       });
       vi.spyOn(settingsService, "save").mockResolvedValueOnce(undefined);
 
@@ -168,12 +168,12 @@ describe("migrationService", () => {
       ]);
       expect(appDb.markers.clear).toHaveBeenCalled();
 
-      // Overlays merged and saved
-      expect(overlaysService.save).toHaveBeenCalledWith([
+      // Layers merged and saved
+      expect(layersService.save).toHaveBeenCalledWith([
         { id: "x" },
         { id: "y", name: "", color: "", countries: [], visible: false },
       ]);
-      expect(appDb.overlays.clear).toHaveBeenCalled();
+      expect(appDb.layers.clear).toHaveBeenCalled();
 
       // Settings saved and cleared
       expect(settingsService.save).toHaveBeenCalledWith({
@@ -182,7 +182,7 @@ describe("migrationService", () => {
         account: {},
         display: {},
         map: {},
-        overlays: {},
+        layers: {},
       });
       expect(appDb.settings.clear).toHaveBeenCalled();
 
@@ -206,9 +206,9 @@ describe("migrationService", () => {
       vi.spyOn(markersService, "load").mockResolvedValueOnce([]);
       vi.spyOn(markersService, "save").mockResolvedValueOnce(undefined);
 
-      (appDb.overlays.toArray as any).mockResolvedValueOnce([]);
-      vi.spyOn(overlaysService, "load").mockResolvedValueOnce([]);
-      vi.spyOn(overlaysService, "save").mockResolvedValueOnce(undefined);
+      (appDb.layers.toArray as any).mockResolvedValueOnce([]);
+      vi.spyOn(layersService, "load").mockResolvedValueOnce([]);
+      vi.spyOn(layersService, "save").mockResolvedValueOnce(undefined);
 
       (appDb.settings.get as any).mockResolvedValueOnce(undefined);
 

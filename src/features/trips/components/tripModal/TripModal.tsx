@@ -11,8 +11,12 @@ import {
   NumberInput,
   SelectInput,
 } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { CountrySelectModal, getCountryByIsoCode, type Country } from "@features/countries";
+import {
+  CountrySelectModal,
+  getCountryByIsoCode,
+  useCountryData,
+  type Country,
+} from "@features/countries";
 import { SelectedCountriesList } from "./SelectedCountriesList";
 import { useTripFilters } from "../../hooks/useTripFilters";
 import type { Trip, TripCategory, TripStatus } from "../../types";

@@ -1,11 +1,12 @@
+import { useEffect, useMemo, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
-import { useAuth } from "@contexts/AuthContext";
-import { useEffect, useState } from "react";
+import { useAuth } from "@features/user";
 import { visitedCountriesService } from "../services/visitedCountriesService";
 import {
   computeVisitedCountriesFromTrips,
   getVisitsForCountry,
 } from "../utils/visits";
+import { getUpcomingVisitCountries } from "../utils/visits";
 
 /**
  * Manages visited countries for the current user.
@@ -15,23 +16,32 @@ export function useVisitedCountries() {
   const { user } = useAuth();
   const { trips } = useTrips();
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
+  const [upcomingCountryCodes, setUpcomingCountryCodes] = useState<string[]>([]);
 
   // Compute as fallback
-  const computedVisited = computeVisitedCountriesFromTrips(trips);
+  const computedVisited = useMemo(
+    () => computeVisitedCountriesFromTrips(trips),
+    [trips]
+  );
 
   // Fetch visited countries from Firestore on user or trips change
   useEffect(() => {
     if (!user) {
       setVisitedCountryCodes([]);
+      setUpcomingCountryCodes([]);
       return;
     }
     const fetchVisited = async () => {
       const firestoreCodes =
         await visitedCountriesService.getVisitedCountryCodes(user.uid);
       // Use Firestore codes if available, else computed
-      setVisitedCountryCodes(
-        firestoreCodes.length > 0 ? firestoreCodes : computedVisited
+      const visited = firestoreCodes.length > 0 ? firestoreCodes : computedVisited;
+      setVisitedCountryCodes(visited);
+      // Compute upcoming countries: those with future trips, not already visited
+      const upcoming = getUpcomingVisitCountries(trips).filter(
+        (code) => !visited.includes(code)
       );
+      setUpcomingCountryCodes(upcoming);
     };
     fetchVisited();
   }, [user, trips, computedVisited]);
@@ -66,6 +76,7 @@ export function useVisitedCountries() {
 
   return {
     visitedCountryCodes,
+    upcomingCountryCodes,
     isCountryVisited,
     getCountryVisits,
     getCountryVisitsCategorized,

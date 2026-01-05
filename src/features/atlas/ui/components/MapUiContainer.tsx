@@ -2,12 +2,12 @@ import { useMemo } from "react";
 import { FaMapPin, FaTimeline } from "react-icons/fa6";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
-import type { Overlay } from "@features/atlas/overlays";
+import type { Layer } from "@features/atlas/layers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
-import { MapFooter } from "./controls/MapFooter";
+import { MapToolbar } from "./controls/MapToolbar";
+import { MapFooter } from "./footer/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
-import { MapToolbar } from "./toolbar/MapToolbar";
 import { useMapLegendItems } from "../hooks/useMapLegendItems";
 import type { LegendItem } from "../types";
 
@@ -16,7 +16,7 @@ interface MapUiContainerProps {
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   center: [number, number];
   selectedCoords: [number, number] | null;
-  overlays: Overlay[];
+  layers: Layer[];
   isAddingMarker?: boolean;
 }
 
@@ -25,15 +25,15 @@ export function MapUiContainer({
   setZoom,
   center,
   selectedCoords,
-  overlays,
+  layers,
   isAddingMarker,
 }: MapUiContainerProps) {
-  const { timelineMode, setTimelineMode, overlayMode } = useTimeline();
+  const { timelineMode, setTimelineMode, layerMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();  
   const legendItems: LegendItem[] = useMapLegendItems(
-    overlays,
+    layers,
     timelineMode,
-    overlayMode
+    layerMode
   );
 
   // UI hint for adding marker

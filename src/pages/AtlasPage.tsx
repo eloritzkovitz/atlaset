@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
-import { ErrorMessage, SplashScreen } from "@components";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { useOverlays } from "@contexts/OverlaysContext";
+import { ErrorMessage, LoadingSpinner } from "@components";
+import { useLayers } from "@contexts/LayersContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import {
   WorldMap,
@@ -11,12 +10,13 @@ import {
 } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
+import { useCountryData } from "@features/countries";
 
 export default function AtlasPage() {
   // Data state
   const { geoData, geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
-  const { overlays, loading: overlaysLoading } = useOverlays();
+  const { layers, loading: layersLoading } = useLayers();
 
   // Map state
   const {
@@ -51,34 +51,40 @@ export default function AtlasPage() {
 
   // Derived state
   const isLoading =
-    countriesLoading || overlaysLoading || geoLoading || !mapReady;
+    countriesLoading || layersLoading || geoLoading || !mapReady;
   if (error || geoError) {
-    return <ErrorMessage error={error || geoError || "Unknown error"} />;
+    return (
+      <ErrorMessage fullScreen error={error || geoError || "Unknown error"} />
+    );
   }
 
   return (
     <>
       <div className="flex h-screen relative">
-        <AtlasUiContainer
-          svgRef={svgRef}
-          selectedIsoCode={selectedIsoCode}
-          setSelectedIsoCode={setSelectedIsoCode}
-          hoveredIsoCode={hoveredIsoCode}
-          setHoveredIsoCode={setHoveredIsoCode}
-          selectedCountry={selectedCountry}
-          setSelectedCountry={setSelectedCountry}
-          centerOnCountry={centerOnCountry}
-          centerOnMarker={centerOnMarkerById}
-        />
-        <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
-          <MapUiContainer
-            zoom={zoom}
-            setZoom={setZoom}
-            center={center}
-            selectedCoords={selectedCoords}
-            overlays={overlays}
-            isAddingMarker={isAddingMarker}
+        {!isLoading && (
+          <AtlasUiContainer
+            svgRef={svgRef}
+            selectedIsoCode={selectedIsoCode}
+            setSelectedIsoCode={setSelectedIsoCode}
+            hoveredIsoCode={hoveredIsoCode}
+            setHoveredIsoCode={setHoveredIsoCode}
+            selectedCountry={selectedCountry}
+            setSelectedCountry={setSelectedCountry}
+            centerOnCountry={centerOnCountry}
+            centerOnMarker={centerOnMarkerById}
           />
+        )}
+        <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
+          {!isLoading && (
+            <MapUiContainer
+              zoom={zoom}
+              setZoom={setZoom}
+              center={center}
+              selectedCoords={selectedCoords}
+              layers={layers}
+              isAddingMarker={isAddingMarker}
+            />
+          )}
           <WorldMap
             geoData={geoData}
             zoom={zoom}
@@ -98,7 +104,7 @@ export default function AtlasPage() {
         </div>
       </div>
       {/* Splash screen */}
-      {isLoading && <SplashScreen />}
+      {isLoading && <LoadingSpinner fullScreen message="Loading map..." />}
     </>
   );
 }

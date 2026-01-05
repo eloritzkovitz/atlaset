@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
-import { Menu, MenuButton } from "@components";
+import { FloatingPortal, Menu, MenuButton } from "@components";
 import { useMenuPosition } from "@hooks";
 import { ActionButton } from "../../action/ActionButton";
 
@@ -26,16 +26,25 @@ export function ToolbarSelectButton<T extends string | number>({
   // Get the button's position for menu placement
   const menuStyle = useMenuPosition(open, btnRef, menuRef, 4, "top", false);
 
+  // Toggle menu open state
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent bubbling to document/click-away
+    setOpen((prev) => !prev);
+  };
+
+  const [showTooltip, setShowTooltip] = useState(false);
+
   return (
     <>
       <ActionButton
         ref={btnRef}
         ariaLabel={ariaLabel}
-        title={ariaLabel}
         style={{ width, height: "48px", padding: 0 }}
         variant="action"
         rounded
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={handleButtonClick}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
         <span className="truncate flex-1 text-left pl-3">
           {options.find((o) => o.value === value)?.label}
@@ -44,11 +53,22 @@ export function ToolbarSelectButton<T extends string | number>({
           <FaChevronDown />
         </span>
       </ActionButton>
+      {showTooltip && btnRef.current && (
+        <FloatingPortal anchorEl={btnRef.current} position="bottom" gap={0} centerX>
+          <span
+            className="whitespace-nowrap px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90"
+            role="tooltip"
+          >
+            {ariaLabel}
+          </span>
+        </FloatingPortal>
+      )}
       <Menu
         open={open}
         onClose={() => setOpen(false)}
         style={menuStyle}
         containerRef={menuRef}
+        extraRefs={[btnRef]}
         className="bg-input rounded shadow max-h-[20vh] overflow-y-auto"
       >
         <ul>

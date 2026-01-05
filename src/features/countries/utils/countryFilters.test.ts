@@ -24,9 +24,9 @@ describe("countryFilters utils", () => {
         filterCountries(countries, { selectedSovereignty: "Dependency" })
       ).toEqual([countries[1]]);
     });
-    it("filters by overlayCountries", () => {
+    it("filters by layerCountries", () => {
       expect(
-        filterCountries(countries, { overlayCountries: ["FR", "DE"] })
+        filterCountries(countries, { layerCountries: ["FR", "DE"] })
       ).toEqual([countries[0], countries[2]]);
     });
     it("filters by search and region together", () => {
@@ -40,31 +40,31 @@ describe("countryFilters utils", () => {
   });
 
   describe("getFilteredIsoCodes", () => {
-    const overlays = [
+    const layers = [
       { id: "o1", countries: ["FR", "DE"] },
       { id: "o2", countries: ["GP"] },
     ];
     const allIsoCodes = mockCountries.map((c) => c.isoCode);
 
-    it("returns all iso codes if overlays are 'all'", () => {
+    it("returns all iso codes if layers are 'all'", () => {
       expect(
-        getFilteredIsoCodes(countries, overlays as any, {
+        getFilteredIsoCodes(countries, layers as any, {
           o1: "all",
           o2: "all",
         })
       ).toEqual(allIsoCodes);
     });
 
-    it("filters to only overlay countries if 'only'", () => {
+    it("filters to only layer countries if 'only'", () => {
       expect(
-        getFilteredIsoCodes(countries, overlays as any, { o1: "only" })
+        getFilteredIsoCodes(countries, layers as any, { o1: "only" })
       ).toEqual(["FR", "DE"]);
     });
 
-    it("excludes overlay countries if 'exclude'", () => {
+    it("excludes layer countries if 'exclude'", () => {
       const expected = allIsoCodes.filter((code) => code !== "GP");
       expect(
-        getFilteredIsoCodes(countries, overlays as any, { o2: "exclude" })
+        getFilteredIsoCodes(countries, layers as any, { o2: "exclude" })
       ).toEqual(expected);
     });
   });

@@ -8,9 +8,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useFirestoreUsername } from "@features/user";
+import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useIsMobile } from "@hooks";
-import { UserInfo } from "./UserInfo";
 
 interface UserMenuProps {
   user: User | null;
@@ -35,7 +34,11 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   if (user) {
     return (
       <>
-        <UserInfo user={user} />
+        <UserInfo
+          user={user}
+          showDisplayName={true}
+          showEmail={true}
+        />
         <Separator />
         <MenuButton
           onClick={() => navigate(`/users/${username}`)}

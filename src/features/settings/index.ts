@@ -8,9 +8,13 @@ export { SoundSettingsSection } from "./components/sound/SoundSettingsSection";
 
 // Hooks
 export { useCountryColors } from "./hooks/useCountryColors";
-export { useOverlayColors } from "./hooks/useOverlayColors";
+export { useLayerColors } from "./hooks/useLayerColors";
 export { useTheme } from "./hooks/useTheme";
 export { useVisitColorRoles } from "./hooks/useVisitColorRoles";
+
+// Redux
+export { default as settingsReducer } from "./slices/settingsSlice";
+export * from "./slices/settingsSlice";
 
 // Services
 export { settingsService } from "./services/settingsService";

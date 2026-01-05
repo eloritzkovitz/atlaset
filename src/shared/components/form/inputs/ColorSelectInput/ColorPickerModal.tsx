@@ -66,7 +66,7 @@ export function ColorPickerModal({
       >
         <ActionButton
           onClick={onClose}
-          ariaLabel="Close Overlay Modal"
+          ariaLabel="Close Color Picker"
           icon={<FaXmark className="text-2xl" />}
           rounded
         />

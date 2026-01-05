@@ -2,8 +2,8 @@
  * @file Utility functions for handling country data.
  */
 
-import { VISITED_OVERLAY_ID } from "@features/atlas/overlays/constants/overlays";
-import type { Overlay } from "../../atlas/overlays/types";
+import { VISITED_LAYER_ID } from "@features/atlas/layers/constants/layers";
+import type { Layer } from "../../atlas/layers/types";
 import { extractUniqueSorted } from "@utils/array";
 import { SOVEREIGN_DEPENDENCIES } from "../constants/sovereignDependencies";
 import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";
@@ -185,17 +185,17 @@ for (const [sovereignIso, sovereignObj] of Object.entries(
   });
 }
 
-/** Filters and returns the list of visited countries based on overlays.
+/** Filters and returns the list of visited countries based on layers.
  * @param countries - Array of country objects.
- * @param overlays - Array of overlay objects containing visited countries data.
+ * @param layers - Array of layer objects containing visited countries data.
  * @returns Array of visited country objects.
  */
 export function getVisitedCountries(
   countries: Country[],
-  overlays: Overlay[]
+  layers: Layer[]
 ): Country[] {
-  const visitedOverlay = overlays.find((o) => o.id === VISITED_OVERLAY_ID);
+  const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
   const visitedIsoCodes =
-    (visitedOverlay as { countries?: string[] } | undefined)?.countries ?? [];
+    (visitedLayer as { countries?: string[] } | undefined)?.countries ?? [];
   return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));
 }

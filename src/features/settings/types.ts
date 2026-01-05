@@ -1,4 +1,4 @@
-import type { OverlayMode } from "@features/atlas/overlays";
+import type { LayerMode } from "@features/atlas/layers";
 
 /** Account-related settings */
 export type AccountSettings = {
@@ -23,10 +23,11 @@ export type MapSettings = {
   borderWidth?: number;
 };
 
-/** Overlay-related settings */
-export type OverlaySettings = {
+/** Layer-related settings */
+export type LayerSettings = {
   colorHomeCountry: boolean;
-  palettes: Record<OverlayMode, string>;
+  colorUpcomingVisits: boolean;
+  palettes: Record<LayerMode, string>;
 };
 
 /** User settings. */
@@ -36,5 +37,5 @@ export type Settings = {
   sound: SoundSettings;
   display: DisplaySettings;
   map: MapSettings;
-  overlays: OverlaySettings;  
+  layers: LayerSettings;  
 };

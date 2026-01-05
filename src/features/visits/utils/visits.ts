@@ -78,6 +78,23 @@ export function computeVisitedCountriesFromTrips(
 }
 
 /**
+ * Gets all country codes with upcoming trips (after today).
+ * @param trips - Array of trips to analyze.
+ * @returns Array of country codes with future trips.
+ */
+export function getUpcomingVisitCountries(trips: Trip[]): string[] {
+  const now = new Date();
+  const codes = new Set<string>();
+  trips.forEach(trip => {
+    const end = trip.endDate ? new Date(trip.endDate) : undefined;
+    if (end && end > now) {
+      trip.countryCodes?.forEach(code => codes.add(code));
+    }
+  });
+  return Array.from(codes);
+}
+
+/**
  * Gets all visits for a country.
  * @param trips - Array of trips to analyze, sorted by start date.
  * @param isoCode - The ISO code of the country.

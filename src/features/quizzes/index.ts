@@ -1,5 +1,5 @@
 // Components
-export { Leaderboards } from "./leaderboards/Leaderboards";
+export { Leaderboards } from "./leaderboards/components/Leaderboards";
 export { QuizEntry } from "./quiz/components/QuizEntry";
 export { QuizSettings } from "./quiz/components/QuizSettings";
 

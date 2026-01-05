@@ -15,7 +15,7 @@ export const HOME_COUNTRY_COLOR = "#00dbbe";
 
 export const DEFAULT_PALETTE: ColorPalette = {
   name: "Default",
-  colors: ["#0078d4", "#4a90e2", "#f58549", "#f9ae5d", "#fcd9b4"],
+  colors: ["#0078d4", "#4a90e2", "#979ba3", "#e4a664", "#fcd9b4"],
 };
 
 export const LIGHT_PALETTE: ColorPalette = {

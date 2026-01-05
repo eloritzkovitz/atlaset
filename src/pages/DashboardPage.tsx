@@ -7,9 +7,7 @@ import {
   LoadingSpinner,
   HamburgerButton,
 } from "@components";
-import { useAuth } from "@contexts/AuthContext";
-import { useCountryData } from "@contexts/CountryDataContext";
-import { useRegionSubregionFilters } from "@features/countries";
+import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
   DashboardPanelMenu,
   CountryStats,
@@ -21,6 +19,7 @@ import {
   useDashboardNavigation,
   useDashboardRouteState,
 } from "@features/dashboard";
+import { useAuth } from "@features/user";
 import { useIsMobile } from "@hooks";
 
 export default function DashboardPage() {
@@ -92,8 +91,9 @@ export default function DashboardPage() {
   );
 
   // Loading and error states
-  if (loading || !ready) return <LoadingSpinner />;
-  if (error) return <ErrorMessage error={error} />;
+  if (loading || !ready)
+    return <LoadingSpinner fullScreen message="Loading dashboard..." />;
+  if (error) return <ErrorMessage fullScreen error={error} />;
 
   // Redirect to login if not authenticated
   if (!user) {

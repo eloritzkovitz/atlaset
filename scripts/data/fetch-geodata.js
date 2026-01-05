@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const BACKEND_URL =
-  process.env.VITE_GEODATA_URL ||
+  process.env.VITE_MAP_GEO_URL ||
   "https://atlaset-data-server.onrender.com/data";
 const DEST_DIR = path.join(__dirname, "../../public/data");
 

@@ -34,7 +34,7 @@ describe("Trips", () => {
     cy.contains("button", /select countries|edit countries/i).click();
 
     // Select the "United Kingdom" checkbox
-    cy.get('[placeholder="Search countries..."]')
+    cy.get('[placeholder="Search countries"]')
       .should("be.visible")
       .clear()
       .type("United Kingdo");

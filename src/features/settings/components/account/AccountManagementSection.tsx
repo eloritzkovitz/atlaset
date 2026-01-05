@@ -2,8 +2,8 @@ import { useState } from "react";
 import { FaPowerOff, FaTrash, FaUserGear } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { useAccountManagement } from "@features/settings/hooks/useAccountManagement";
 import { SettingsCard } from "../SettingsCard";
+import { useAccountManagement } from "../../hooks/useAccountManagement";
 
 export function AccountManagementSection() {
   const { user } = useAuth();

@@ -5,8 +5,8 @@ import { UIContext } from "./UIContext";
 // Type for panel selection
 type PanelSelection =
   | "countries"
+  | "layers"
   | "markers"
-  | "overlays"
   | "export"
   | "settings"
   | "friends"
@@ -32,7 +32,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   // Derived states for individual panels
   const showCountries = openPanel === "countries";
   const showMarkers = openPanel === "markers";
-  const showOverlays = openPanel === "overlays";
+  const showLayers = openPanel === "layers";
   const showExport = openPanel === "export";
   const showSettings = openPanel === "settings";
   const [showFriends, setShowFriends] = useState(false);
@@ -42,8 +42,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
     setOpenPanel((prev) => (prev === "countries" ? null : "countries"));
   const toggleMarkers = () =>
     setOpenPanel((prev) => (prev === "markers" ? null : "markers"));
-  const toggleOverlays = () =>
-    setOpenPanel((prev) => (prev === "overlays" ? null : "overlays"));
+  const toggleLayers = () =>
+    setOpenPanel((prev) => (prev === "layers" ? null : "layers"));
   const toggleExport = () =>
     setOpenPanel((prev) => (prev === "export" ? null : "export"));
   const toggleSettings = () =>
@@ -58,9 +58,9 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const [showLegend, setShowLegend] = useState(false);
   const toggleLegend = () => setShowLegend((prev) => !prev);
   const closeLegend = () => setShowLegend(false);
-  
+
   const [showShortcuts, setShowShortcuts] = useState(false);
-  const toggleShortcuts = () => setShowShortcuts((prev) => !prev);  
+  const toggleShortcuts = () => setShowShortcuts((prev) => !prev);
   const closeShortcuts = () => setShowShortcuts(false);
 
   // Toggle UI visibility with "U"
@@ -69,23 +69,23 @@ export function UIProvider({ children }: { children: ReactNode }) {
   // Toggle Countries panel with "C"
   useKeyHandler(toggleCountries, ["c", "C"], true);
 
+  // Toggle Export panel with "E"
+  useKeyHandler(toggleExport, ["e", "E"], true);
+
   // Toggle Filters panel with "F"
   useKeyHandler(toggleFilters, ["f", "F"], true);
+
+  // Toggle Legend with "G"
+  useKeyHandler(toggleLegend, ["g", "G"], true);
+
+  // Toggle Layers panel with "L"
+  useKeyHandler(toggleLayers, ["l", "L"], true);
 
   // Toggle Markers panel with "M"
   useKeyHandler(toggleMarkers, ["m", "M"], true);
 
-  // Toggle Overlays panel with "O"
-  useKeyHandler(toggleOverlays, ["o", "O"], true);
-
   // Toggle Friends panel with "N"
   useKeyHandler(toggleFriends, ["n", "N"], true);
-
-  // Toggle Legend with "L"
-  useKeyHandler(toggleLegend, ["l", "L"], true);
-
-  // Toggle Export panel with "E"
-  useKeyHandler(toggleExport, ["e", "E"], true);
 
   // Toggle Settings panel with "S"
   useKeyHandler(toggleSettings, ["s", "S"], true);
@@ -117,10 +117,10 @@ export function UIProvider({ children }: { children: ReactNode }) {
         toggleCountries,
         showFilters,
         toggleFilters,
+        showLayers,
+        toggleLayers,
         showMarkers,
         toggleMarkers,
-        showOverlays,
-        toggleOverlays,
         showExport,
         toggleExport,
         showSettings,

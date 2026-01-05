@@ -15,7 +15,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
       isOpen={open}
       onClose={onClose}
       position="custom"
-      className="!bg-transparent !shadow-none fixed top-16 right-6 z-50"
+      className="!bg-bg/50 !shadow-none fixed top-16 right-6 z-50"
       disableClose
     >
       <PanelHeader title="Legend" className="!px-0 group">
@@ -23,7 +23,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
           <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
             <ActionButton
               onClick={onClose}
-              ariaLabel="Close Overlay Modal"
+              ariaLabel="Close Legend"
               icon={<FaXmark className="text-2xl" />}
               rounded
             />

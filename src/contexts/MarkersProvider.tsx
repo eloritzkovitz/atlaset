@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { markersService } from "@features/atlas/markers";
 import type { Marker } from "@features/atlas/markers/types";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "@features/user";
 import { MarkersContext } from "./MarkersContext";
 
 export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({

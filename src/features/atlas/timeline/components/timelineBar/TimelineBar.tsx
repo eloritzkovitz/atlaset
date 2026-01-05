@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useCountryData } from "@contexts/CountryDataContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { useCountryData } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import {
   CENTER_INDEX,
@@ -87,7 +87,7 @@ export function TimelineBar() {
               />
               {/* Year number */}
               <span
-                className={`mb-1 ${
+                className={`bg-bg/50 rounded-full mb-1 px-2 ${
                   year === selectedYear ? "font-bold" : "font-normal"
                 }`}
                 style={{ zIndex: 1 }}

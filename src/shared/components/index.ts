@@ -80,6 +80,7 @@ export {
 export { StarRatingInput } from "./ui/StarRating/StarRatingInput";
 export { RateMenu } from "./ui/StarRating/RateMenu";
 export { Tooltip } from "./ui/Tooltip/Tooltip";
+export { FloatingPortal } from "./ui/Tooltip/FloatingPortal";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";

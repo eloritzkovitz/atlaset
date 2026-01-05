@@ -7,6 +7,7 @@ interface SettingsContextType {
   updateSettings: (updates: Partial<Settings>) => Promise<void>;
   resetSettings: () => Promise<void>;
   loading: boolean;
+  ready: boolean;
 }
 
 export const SettingsContext = createContext<SettingsContextType>({
@@ -14,6 +15,7 @@ export const SettingsContext = createContext<SettingsContextType>({
   updateSettings: async () => {},
   resetSettings: async () => {},
   loading: false,
+  ready: false,
 });
 
 export function useSettings() {

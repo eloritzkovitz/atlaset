@@ -155,7 +155,7 @@ export function CountrySection({
           <SearchInput
             value={search}
             onChange={setSearch}
-            placeholder="Search countries..."
+            placeholder="Search countries"
             className="w-xs"
           />
           <SelectInput
