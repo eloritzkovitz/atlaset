@@ -65,7 +65,7 @@ export function CountrySelectModal({
         <SearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search countries..."
+          placeholder="Search countries"
         />
       </FormField>
       <FormField label="Countries:">

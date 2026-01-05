@@ -24,7 +24,7 @@ export function CountriesSearchSortBar({
         <SearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search countries..."
+          placeholder="Search countries"
           className="flex-1 h-10"
         />
         <CountrySortSelect
