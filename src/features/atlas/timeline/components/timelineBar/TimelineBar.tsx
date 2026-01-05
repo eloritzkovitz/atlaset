@@ -87,7 +87,7 @@ export function TimelineBar() {
               />
               {/* Year number */}
               <span
-                className={`mb-1 ${
+                className={`bg-bg/50 rounded-full mb-1 px-2 ${
                   year === selectedYear ? "font-bold" : "font-normal"
                 }`}
                 style={{ zIndex: 1 }}
