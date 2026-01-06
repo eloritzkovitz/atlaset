@@ -11,6 +11,8 @@ import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
 import { AppLayout, PublicLayout } from "@layout";
 import DashboardPage from "./pages/DashboardPage";
+import AboutPage from "./pages/AboutPage";
+import HomePage from "./pages/HomePage";
 import QuizzesPage from "./pages/QuizzesPage";
 import TripsPage from "./pages/TripsPage";
 import LoginPage from "./pages/LoginPage";
@@ -18,13 +20,13 @@ import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import HomePage from "./pages/HomePage";
 
 function App() {
   const { ready } = useSettings();
 
   const AtlasPage = lazy(() => import("./pages/AtlasPage"));
 
+  // Show splash screen while settings are loading
   if (!ready) {
     return <SplashScreen />;
   }
@@ -57,6 +59,14 @@ function App() {
               element={
                 <PublicLayout>
                   <SignupPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <PublicLayout>
+                  <AboutPage />
                 </PublicLayout>
               }
             />
@@ -111,7 +121,7 @@ function App() {
                   <NotFoundPage />
                 </PublicLayout>
               }
-            />
+            />            
           </Routes>
         </UIHintProvider>
       </UIProvider>
