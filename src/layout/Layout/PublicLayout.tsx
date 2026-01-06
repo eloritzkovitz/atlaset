@@ -13,7 +13,7 @@ export function PublicLayout({
   footer,
 }: PublicLayoutProps) {
   return (
-    <div className="min-h-screen bg-bg flex flex-col justify-between">
+    <div className="h-screen w-full bg-bg overflow-y-auto py-0">
       <PublicHeader showAuthButtons={showAuthButtons} />
       {/* Main content */}
       <main className="flex flex-col items-center flex-1 justify-center">
