@@ -8,14 +8,14 @@ export function AuthButtons() {
     <div className="flex justify-end gap-2 mt-4 mr-4">
       <ActionButton
         variant="secondary"
-        className="py-2 px-4 !rounded-full"
+        className="min-w-[100px] !rounded-full"
         onClick={() => navigate("/login")}
       >
         Login
       </ActionButton>
       <ActionButton
         variant="primary"
-        className="py-2 px-4 !rounded-full"
+          className="min-w-[100px] !rounded-full"
         onClick={() => navigate("/signup")}
       >
         Sign up
