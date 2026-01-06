@@ -1,9 +1,9 @@
 import React from "react";
 import { useUI } from "@contexts/UIContext";
 import { FriendsPanel } from "@features/user/friends/components/FriendsPanel";
-import { Sidebar } from "./Sidebar/Sidebar";
-import { ShortcutsModal } from "./Shortcuts/ShortcutsModal";
-import { UserMenu } from "./UserMenu/UserMenu";
+import { Sidebar } from "../Sidebar/Sidebar";
+import { ShortcutsModal } from "../Shortcuts/ShortcutsModal";
+import { UserMenu } from "../UserMenu/UserMenu";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { showFriends, toggleFriends } = useUI();

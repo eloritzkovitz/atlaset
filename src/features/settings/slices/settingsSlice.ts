@@ -7,6 +7,7 @@ import type { RootState } from "store";
 import { defaultSettings } from "../constants/defaultSettings";
 import { settingsService } from "../services/settingsService";
 import type { Settings } from "../types";
+// Remove selectSettingsReady from here; use selectors.ts instead
 
 export const loadSettings = createAsyncThunk(
   "settings/load",
@@ -76,5 +77,5 @@ const settingsSlice = createSlice({
 
 export const selectSettings = (state: RootState) => state.settings.settings;
 export const selectSettingsLoading = (state: RootState) => state.settings.loading;
-export const selectSettingsReady = (state: RootState) => state.settings.ready;
+// selectSettingsReady is now in ../selectors
 export default settingsSlice.reducer;

@@ -2,7 +2,6 @@
 export { AuthCard } from "./auth/components/AuthCard";
 export { AuthFooter } from "./auth/components/AuthFooter";
 export { AuthForm } from "./auth/components/AuthForm";
-export { AuthLayout } from "./auth/components/AuthLayout";
 export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 
 // Profile Components

@@ -8,7 +8,7 @@ import {
 
 export const NAV_LINKS = [
   {
-    to: "/",
+    to: "/atlas",
     icon: <FaEarthAmericas className="text-2xl" />,
     label: "Atlas",
     end: true,

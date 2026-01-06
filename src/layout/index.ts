@@ -1,5 +1,5 @@
-export { AppLayout } from "./AppLayout";
+export { AppLayout } from "./Layout/AppLayout";
 export { Branding } from "./Branding/Branding";
-export { BrandingWithLabel } from "./Branding/BrandingWithLabel";
 export { Footer } from "./Footer/Footer";
 export { Header } from "./Header/Header";
+export { PublicLayout } from "./Layout/PublicLayout";

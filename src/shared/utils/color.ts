@@ -26,14 +26,14 @@ export function rgbaToHex(input: string): string {
   }
 
   // Match rgba(..., alpha)
-  const rgbaMatch = input.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([^\)]+)\)/);
+  const rgbaMatch = input.match(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*([^)]*)\)/);
   if (rgbaMatch) {
     const r = parseInt(rgbaMatch[1], 10);
     const g = parseInt(rgbaMatch[2], 10);
     const b = parseInt(rgbaMatch[3], 10);
     if ([r, g, b].some((v) => v < 0 || v > 255)) return input;
-    let alphaValue = parseFloat(rgbaMatch[4]);
-    let a = isNaN(alphaValue) ? 255 : Math.floor(alphaValue * 255);
+    const alphaValue = parseFloat(rgbaMatch[4]);
+    const a = isNaN(alphaValue) ? 255 : Math.floor(alphaValue * 255);
     return (
       "#" +
       r.toString(16).padStart(2, "0") +

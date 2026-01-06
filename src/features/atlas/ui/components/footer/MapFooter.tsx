@@ -1,8 +1,8 @@
 import React from "react";
-import { FaGithub } from "react-icons/fa6";
 import { Tooltip } from "@components";
 import { getScaleBarLabel } from "@features/atlas/map";
-import { getCurrentYear } from "@utils/date";
+import { GitHubButton } from "@layout/Footer/GitHubButton";
+import { BrandCopyright } from "@layout/Branding/BrandCopyright";
 
 interface MapFooterProps {
   zoom: number;
@@ -23,17 +23,8 @@ export const MapFooter: React.FC<MapFooterProps> = ({
       aria-label="Map footer"
     >
       <div className="flex items-center gap-2">
-        <span>© {getCurrentYear()} Atlaset</span>
-        <a
-          href="https://github.com/eloritzkovitz/atlaset"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="!text-muted hover:text-muted/70 ml-1 inline-flex items-center"
-          aria-label="Atlaset GitHub repository"
-        >
-          <FaGithub className="mr-1" size={14} />
-          atlaset
-        </a>
+        <BrandCopyright className="text-xs" logoSize={16} />
+        <GitHubButton className="ml-3" />
       </div>
       <span>
         <Tooltip content={`Zoom: x${zoom.toFixed(1)}`} position="top">
