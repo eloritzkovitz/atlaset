@@ -1,4 +1,5 @@
-import { Footer, PublicHeader } from "@layout";
+import { Footer } from "../Footer/Footer";
+import { PublicHeader } from "../Header/PublicHeader";
 
 interface PublicLayoutProps {
   children: React.ReactNode;
