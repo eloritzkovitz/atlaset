@@ -6,8 +6,8 @@ import {
   resetSettingsThunk,
   selectSettings,
   selectSettingsLoading,
-  selectSettingsReady,
 } from "@features/settings";
+import { selectSettingsReady } from "@features/settings/selectors";
 import { selectAuthReady, selectAuthUser } from "@features/user";
 import { SettingsContext } from "./SettingsContext";
 import type { AppDispatch } from "../store";

@@ -1,14 +1,14 @@
-import { BrandingWithLabel, Footer } from "@layout";
+import { Footer, PublicHeader } from "@layout";
 
-interface AuthLayoutProps {
+interface PublicLayoutProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
 }
 
-export function AuthLayout({ children, footer }: AuthLayoutProps) {
+export function PublicLayout({ children, footer }: PublicLayoutProps) {
   return (
     <div className="min-h-screen bg-bg flex flex-col justify-between">
-      <BrandingWithLabel />
+      <PublicHeader />
       {/* Main content */}
       <main className="flex flex-col items-center flex-1 justify-center">
         {children}

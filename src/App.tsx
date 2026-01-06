@@ -18,6 +18,7 @@ import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import HomePage from "./pages/HomePage";
 
 function App() {
   const { ready } = useSettings();
@@ -35,12 +36,13 @@ function App() {
           <UIHintContainer />
           <PwaUpdateUiHint />
           <Routes>
+            <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/users/:username" element={<ProfilePage />} />
-            <Route path="/settings/*" element={<SettingsPage />} />
+            <Route path="/settings/*" element={<SettingsPage />} />            
             <Route
-              path="/"
+              path="/atlas"
               element={
                 <AppLayout>
                   <Suspense fallback={<SplashScreen />}>

@@ -2,15 +2,15 @@ import {
   AuthCard,
   AuthFooter,
   AuthForm,
-  AuthLayout,
   useAuthHandlers,
 } from "@features/user";
+import { PublicLayout } from "@layout";
 
 export default function SignupPage() {
   const { error, handleSignUp, handleGoogleSignIn } = useAuthHandlers();
 
   return (
-    <AuthLayout>
+    <PublicLayout>
       <AuthCard>
         <h2 className="text-2xl font-bold mb-4">
           Track your journeys and adventures around the world
@@ -28,6 +28,6 @@ export default function SignupPage() {
         linkText="Sign In"
         linkTo="/login"
       />
-    </AuthLayout>
+    </PublicLayout>
   );
 }

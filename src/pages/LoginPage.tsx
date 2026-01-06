@@ -4,10 +4,10 @@ import {
   AuthCard,
   AuthFooter,
   AuthForm,
-  AuthLayout,
   useAuthHandlers,
 } from "@features/user";
 import { useUiHint } from "@hooks";
+import { PublicLayout } from "@layout";
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =
@@ -36,7 +36,7 @@ export default function LoginPage() {
   );
 
   return (
-    <AuthLayout>
+    <PublicLayout>
       <AuthCard>
         <h2 className="text-2xl font-bold mb-4">Sign in</h2>
         <AuthForm
@@ -53,6 +53,6 @@ export default function LoginPage() {
         linkText="Sign Up"
         linkTo="/signup"
       />
-    </AuthLayout>
+    </PublicLayout>
   );
 }

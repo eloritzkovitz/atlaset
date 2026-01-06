@@ -1,9 +1,9 @@
-import { BrandingWithLabel, Footer } from "@layout";
+import { Footer, PublicHeader } from "@layout";
 
 export default function NotFoundPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-between">
-      <BrandingWithLabel />
+      <PublicHeader />
       {/* Main content */}
       <main className="flex flex-col items-center flex-1 justify-center">
         <h1 className="text-6xl font-extrabold text-blue-800 dark:text-blue-400 mb-4 drop-shadow">
