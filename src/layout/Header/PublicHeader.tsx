@@ -2,14 +2,14 @@ import { AuthButtons } from "./AuthButtons";
 import { BrandingWithLabel } from "../Branding/BrandingWithLabel";
 
 interface PublicHeaderProps {
-  showButtons?: boolean;
+  showAuthButtons?: boolean;
 }
 
-export function PublicHeader({ showButtons }: PublicHeaderProps) {
+export function PublicHeader({ showAuthButtons }: PublicHeaderProps) {
   return (
     <header className="w-full flex items-center justify-between px-6 py-2">
       <BrandingWithLabel />
-      {showButtons && <AuthButtons />}
+      {showAuthButtons && <AuthButtons />}
     </header>
   );
 }

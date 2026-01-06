@@ -9,7 +9,7 @@ import { TimelineProvider } from "@contexts/TimelineProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { AppLayout } from "@layout";
+import { AppLayout, PublicLayout } from "@layout";
 import DashboardPage from "./pages/DashboardPage";
 import QuizzesPage from "./pages/QuizzesPage";
 import TripsPage from "./pages/TripsPage";
@@ -36,11 +36,32 @@ function App() {
           <UIHintContainer />
           <PwaUpdateUiHint />
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route
+              path="/"
+              element={
+                <PublicLayout showAuthButtons>
+                  <HomePage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicLayout>
+                  <LoginPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicLayout>
+                  <SignupPage />
+                </PublicLayout>
+              }
+            />
             <Route path="/users/:username" element={<ProfilePage />} />
-            <Route path="/settings/*" element={<SettingsPage />} />            
+            <Route path="/settings/*" element={<SettingsPage />} />
             <Route
               path="/atlas"
               element={
@@ -83,7 +104,14 @@ function App() {
                 </AppLayout>
               }
             />
-            <Route path="*" element={<NotFoundPage />} />
+            <Route
+              path="*"
+              element={
+                <PublicLayout>
+                  <NotFoundPage />
+                </PublicLayout>
+              }
+            />
           </Routes>
         </UIHintProvider>
       </UIProvider>
