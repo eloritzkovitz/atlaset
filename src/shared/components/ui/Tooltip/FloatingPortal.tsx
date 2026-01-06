@@ -70,7 +70,7 @@ export function FloatingPortal({
       pointerEvents: "none",
       ...(transform ? { transform } : {}),
     });
-  }, [anchorEl, gap, position]);
+  }, [anchorEl, gap, position, centerX]);
 
   if (!anchorEl) return null;
   return createPortal(
