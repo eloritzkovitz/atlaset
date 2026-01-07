@@ -1,3 +1,4 @@
+import * as topojsonClient from "topojson-client";
 import type { Feature, Geometry } from "geojson";
 import { vi, describe, it, expect, beforeEach, type Mock } from "vitest";
 import {
@@ -81,13 +82,12 @@ describe("getFeatures", () => {
       },
     };
     // Mock feature to return a FeatureCollection
-    const origFeature = require("topojson-client").feature;
-    require("topojson-client").feature = vi.fn(() => ({
+    const spy = vi.spyOn(topojsonClient, "feature").mockImplementation(() => ({
       type: "FeatureCollection",
       features: [feature],
     }));
     expect(getFeatures(topo)).toEqual([feature]);
-    require("topojson-client").feature = origFeature;
+    spy.mockRestore();
   });
 });
 
@@ -107,16 +107,15 @@ describe("getMesh", () => {
       },
     };
     // Mock mesh to return MultiLineString
-    const origMesh = require("topojson-client").mesh;
-    require("topojson-client").mesh = vi.fn(() => ({
+    const spy = vi.spyOn(topojsonClient, "mesh").mockImplementation((() => ({
       type: "MultiLineString",
       coordinates: [],
-    }));
+    })) as typeof topojsonClient.mesh);
     const result = getMesh(topo);
     expect(result).not.toBeNull();
     expect(result!.outline).toBeDefined();
     expect(result!.borders).toBeDefined();
-    require("topojson-client").mesh = origMesh;
+    spy.mockRestore();
   });
 
   it("returns object with undefined outline if mesh returns undefined for outlineGeometry", () => {
@@ -129,18 +128,19 @@ describe("getMesh", () => {
         },
       },
     };
-    const origMesh = require("topojson-client").mesh;
     let call = 0;
-    require("topojson-client").mesh = vi.fn(() => {
+    const spy = vi.spyOn(topojsonClient, "mesh").mockImplementation((() => {
       call++;
-      return call === 1 ? undefined : { type: "MultiLineString", coordinates: [] };
-    });
+      return call === 1
+        ? undefined
+        : { type: "MultiLineString", coordinates: [] };
+    }) as typeof topojsonClient.mesh);
     // outlineGeometry is undefined, bordersGeometry is valid
     const result = getMesh(topo);
     expect(result).not.toBeNull();
     expect(result!.outline).toBeUndefined();
     expect(result!.borders).toBeDefined();
-    require("topojson-client").mesh = origMesh;
+    spy.mockRestore();
   });
 
   it("returns object with undefined borders if mesh returns undefined for bordersGeometry", () => {
@@ -153,18 +153,19 @@ describe("getMesh", () => {
         },
       },
     };
-    const origMesh = require("topojson-client").mesh;
     let call = 0;
-    require("topojson-client").mesh = vi.fn(() => {
+    const spy = vi.spyOn(topojsonClient, "mesh").mockImplementation((() => {
       call++;
-      return call === 1 ? { type: "MultiLineString", coordinates: [] } : undefined;
-    });
+      return call === 1
+        ? { type: "MultiLineString", coordinates: [] }
+        : undefined;
+    }) as typeof topojsonClient.mesh);
     // outlineGeometry is valid, bordersGeometry is undefined
     const result = getMesh(topo);
     expect(result).not.toBeNull();
     expect(result!.outline).toBeDefined();
     expect(result!.borders).toBeUndefined();
-    require("topojson-client").mesh = origMesh;
+    spy.mockRestore();
   });
 
   it("returns object with both undefined if mesh returns undefined for both", () => {
@@ -177,14 +178,17 @@ describe("getMesh", () => {
         },
       },
     };
-    const origMesh = require("topojson-client").mesh;
-    require("topojson-client").mesh = vi.fn(() => undefined);
+    const spy = vi
+      .spyOn(topojsonClient, "mesh")
+      .mockImplementation(
+        (() => undefined) as unknown as typeof topojsonClient.mesh
+      );
     // both outlineGeometry and bordersGeometry are undefined
     const result = getMesh(topo);
     expect(result).not.toBeNull();
     expect(result!.outline).toBeUndefined();
     expect(result!.borders).toBeUndefined();
-    require("topojson-client").mesh = origMesh;
+    spy.mockRestore();
   });
 });
 
