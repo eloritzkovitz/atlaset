@@ -80,7 +80,11 @@ export function getFeatures(
   }
   const topo = geographies as Topology;
   const objectKey = Object.keys(topo.objects)[0];
-  const fc = feature(topo as any, topo.objects[objectKey] as any) as {
+  // topojson-client expects its own Topology type, so cast as unknown
+  const fc = feature(
+    topo as unknown as Parameters<typeof feature>[0],
+    topo.objects[objectKey] as unknown as Parameters<typeof feature>[1]
+  ) as {
     type: string;
     features?: Feature<Geometry, GeoJsonProperties>[];
   };
@@ -109,24 +113,27 @@ export function getMesh(
   if (!isTopojson) return null;
   const topo = geographies as Topology;
   const objectKey = Object.keys(topo.objects)[0];
+  // topojson-client expects its own Topology/GeometryObject types, so cast as unknown
   const outlineGeometry = mesh(
-    topo as any,
-    topo.objects[objectKey] as any,
-    (a: any, b: any) => a === b
+    topo as unknown as Parameters<typeof mesh>[0],
+    topo.objects[objectKey] as unknown as Parameters<typeof mesh>[1],
+    (a: unknown, b: unknown) => a === b
   );
   const bordersGeometry = mesh(
-    topo as any,
-    topo.objects[objectKey] as any,
-    (a: any, b: any) => a !== b
+    topo as unknown as Parameters<typeof mesh>[0],
+    topo.objects[objectKey] as unknown as Parameters<typeof mesh>[1],
+    (a: unknown, b: unknown) => a !== b
   );
   // Wrap MultiLineString geometry in a Feature
-  const outline: Feature<Geometry, Record<string, unknown>> = outlineGeometry
-    ? { type: "Feature", geometry: outlineGeometry, properties: {} }
-    : (undefined as any);
-  const borders: Feature<Geometry, Record<string, unknown>> = bordersGeometry
-    ? { type: "Feature", geometry: bordersGeometry, properties: {} }
-    : (undefined as any);
-  return { outline, borders };
+  const outline: Feature<Geometry, Record<string, unknown>> | undefined =
+    outlineGeometry
+      ? { type: "Feature", geometry: outlineGeometry, properties: {} }
+      : undefined;
+  const borders: Feature<Geometry, Record<string, unknown>> | undefined =
+    bordersGeometry
+      ? { type: "Feature", geometry: bordersGeometry, properties: {} }
+      : undefined;
+  return { outline: outline!, borders: borders! };
 }
 
 /**
@@ -180,10 +187,10 @@ export function prepareFeatures(
  * Creates an SVG path string for a connector with specified offsets and curvature.
  * @param dx - Horizontal offset.
  * @param dy - Vertical offset.
- * @param curve - Curvature of the connector. Can be a single number or an array [curveX, curveY].
+ * @param curve - Curvature of the connector. Can be a single number or a tuple [curveX, curveY].
  * @returns SVG path string for the connector.
  */
-export function createConnectorPath(dx = 30, dy = 30, curve = 0.5): string {
+export function createConnectorPath(dx = 30, dy = 30, curve: number | [number, number] = 0.5): string {
   const curvature = Array.isArray(curve) ? curve : [curve, curve];
   const curveX = (dx / 2) * curvature[0];
   const curveY = (dy / 2) * curvature[1];
