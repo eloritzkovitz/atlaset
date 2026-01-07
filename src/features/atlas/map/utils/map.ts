@@ -2,10 +2,87 @@
  * Map utility functions using D3.js for projections and geographical calculations.
  */
 
-import * as d3geo from "d3-geo";
+import * as d3Geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
 import type { Feature, Geometry } from "geojson";
-import type { GeoData } from "../types";
+import type { GeoData, ProjectionConfig } from "../types";
+
+interface ProjectionConfigurable {
+  center?: (center?: [number, number]) => d3Geo.GeoProjection;
+  rotate?: (rotate?: [number, number, number]) => d3Geo.GeoProjection;
+  scale?: ((scale: number) => d3Geo.GeoProjection) | (() => number);
+  parallels?: (parallels?: [number, number]) => d3Geo.GeoProjection;
+}
+
+const projectionMap: Record<string, () => d3Geo.GeoProjection> = {
+  geoAzimuthalEqualArea: d3Geo.geoAzimuthalEqualArea,
+  geoAzimuthalEquidistant: d3Geo.geoAzimuthalEquidistant,
+  geoConicConformal: d3Geo.geoConicConformal,
+  geoConicEqualArea: d3Geo.geoConicEqualArea,
+  geoConicEquidistant: d3Geo.geoConicEquidistant,
+  geoEquirectangular: d3Geo.geoEquirectangular,
+  geoGnomonic: d3Geo.geoGnomonic,
+  geoMercator: d3Geo.geoMercator,
+  geoOrthographic: d3Geo.geoOrthographic,
+  geoStereographic: d3Geo.geoStereographic,
+  geoTransverseMercator: d3Geo.geoTransverseMercator,
+  geoEqualEarth: d3Geo.geoEqualEarth,
+  geoNaturalEarth1: d3Geo.geoNaturalEarth1,
+};
+
+/**
+ * Creates a D3 GeoProjection based on the provided configuration.
+ * @param projectionConfig - Configuration options for the projection.
+ * @param projection - The projection type as a string or a custom projection function.
+ * @param width - Width of the map for centering the projection.
+ * @param height - Height of the map for centering the projection.
+ * @returns A configured D3 GeoProjection.
+ */
+export function makeProjection({
+  projectionConfig = {},
+  projection = "geoEqualEarth",
+  width = 800,
+  height = 600,
+}: {
+  projectionConfig?: ProjectionConfig;
+  projection?: string | ((...args: unknown[]) => d3Geo.GeoProjection);
+  width?: number;
+  height?: number;
+}): d3Geo.GeoProjection {
+  // Handle custom projection function
+  if (typeof projection === "function") {
+    return projection();
+  }
+
+  // Handle string projection
+  const projConstructor = projectionMap[projection as string];
+  if (!projConstructor) throw new Error(`Unknown projection: ${projection}`);
+  let proj = projConstructor().translate([width / 2, height / 2]);
+
+  // Apply projection configuration
+  const projConfig = proj as ProjectionConfigurable;
+  const supported: (keyof ProjectionConfigurable)[] = [
+    typeof projConfig.center === "function" ? "center" : null,
+    typeof projConfig.rotate === "function" ? "rotate" : null,
+    typeof projConfig.scale === "function" ? "scale" : null,
+    typeof projConfig.parallels === "function" ? "parallels" : null,
+  ].filter(Boolean) as (keyof ProjectionConfigurable)[];
+  supported.forEach((d) => {
+    if (!d) return;
+    const value = projectionConfig[d];
+    // Only pass arrays or numbers, otherwise use the default
+    if (
+      (d === "center" && Array.isArray(value) && value.length === 2) ||
+      (d === "rotate" && Array.isArray(value) && value.length === 3) ||
+      (d === "parallels" && Array.isArray(value) && value.length === 2) ||
+      (d === "scale" && typeof value === "number")
+    ) {
+      // @ts-expect-error: dynamic method access
+      proj = projConfig[d](value);
+    }
+  });
+  return proj;
+}
 
 /**
  * Returns a D3 projection instance based on type and map dimensions.
@@ -28,15 +105,15 @@ export function getProjection(
   zoom: number = 1,
   center: [number, number] = [0, 0],
   geoFns: {
-    geoNaturalEarth1?: typeof d3geo.geoNaturalEarth1;
-    geoEquirectangular?: typeof d3geo.geoEquirectangular;
-    geoMercator?: typeof d3geo.geoMercator;
+    geoNaturalEarth1?: typeof d3Geo.geoNaturalEarth1;
+    geoEquirectangular?: typeof d3Geo.geoEquirectangular;
+    geoMercator?: typeof d3Geo.geoMercator;
   } = {}
 ): GeoProjection {
   const {
-    geoNaturalEarth1 = d3geo.geoNaturalEarth1,
-    geoEquirectangular = d3geo.geoEquirectangular,
-    geoMercator = d3geo.geoMercator,
+    geoNaturalEarth1 = d3Geo.geoNaturalEarth1,
+    geoEquirectangular = d3Geo.geoEquirectangular,
+    geoMercator = d3Geo.geoMercator,
   } = geoFns;
 
   const baseScale = Math.min(width, height) / scaleDivisor;
@@ -59,6 +136,23 @@ export function getProjection(
     .scale(scale)
     .center(center)
     .translate([width / 2, height / 2]);
+}
+
+/**
+ * Converts transformed map coordinates to original SVG coordinates.
+ * @param w - SVG/map width.
+ * @param h - SVG/map height.
+ * @param t - The transform object containing x, y, and k (scale).
+ * @returns - The [x, y] coordinates in the original SVG space.
+ */
+export function getCoords(
+  w: number,
+  h: number,
+  t: { x: number; y: number; k: number }
+): [number, number] {
+  const xOffset = (w * t.k - w) / 2;
+  const yOffset = (h * t.k - h) / 2;
+  return [w / 2 - (xOffset + t.x) / t.k, h / 2 - (yOffset + t.y) / t.k];
 }
 
 /** Converts mouse event coordinates to geographical coordinates.
@@ -105,7 +199,7 @@ export function getGeoCoordsFromMouseEvent(
  */
 export function getFeatureCentroid(
   feature: Feature<Geometry, { [key: string]: unknown }>,
-  geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid
+  geoCentroidFn: typeof d3Geo.geoCentroid = d3Geo.geoCentroid
 ) {
   return geoCentroidFn(feature);
 }
@@ -118,9 +212,9 @@ export function getFeatureCentroid(
 export function getCountryCenterAndZoom(
   geoData: GeoData,
   isoCode: string,
-  geoCentroidFn: typeof d3geo.geoCentroid = d3geo.geoCentroid,
-  geoBoundsFn: typeof d3geo.geoBounds = d3geo.geoBounds
-) {  
+  geoCentroidFn: typeof d3Geo.geoCentroid = d3Geo.geoCentroid,
+  geoBoundsFn: typeof d3Geo.geoBounds = d3Geo.geoBounds
+) {
   const country = geoData?.features.find((feature) => {
     const props = feature.properties ?? {};
     return (

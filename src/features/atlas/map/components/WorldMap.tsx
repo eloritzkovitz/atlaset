@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { ComposableMap, ZoomableGroup } from "react-simple-maps";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
@@ -10,6 +9,8 @@ import { MarkersContainer } from "./MarkersContainer";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData } from "../types";
+import { ComposableMap } from "./ComposableMap";
+import { ZoomableGroup } from "./ZoomableGroup";
 
 interface WorldMapProps {
   geoData: GeoData;
