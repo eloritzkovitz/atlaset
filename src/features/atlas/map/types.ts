@@ -41,3 +41,5 @@ export type ZoomEvent = {
   transform: ZoomTransform;
   sourceEvent?: Event;
 };
+
+export type Coordinates = [number, number];

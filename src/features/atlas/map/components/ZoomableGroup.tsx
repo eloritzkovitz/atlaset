@@ -1,19 +1,28 @@
 import { useContext, forwardRef, type ReactNode } from "react";
-import useZoomPan from "../hooks/useZoomPan";
+import { useZoomPan } from "../hooks/useZoomPan";
 import { MapContext } from "../providers/MapContext";
 import { ZoomPanProvider } from "../providers/ZoomPanProvider";
-import type { ZoomEvent } from "../types";
+import type { ZoomEvent, Coordinates } from "../types";
 
 export interface ZoomableGroupProps {
-  center?: [number, number];
+  center?: Coordinates;
   zoom?: number;
   minZoom?: number;
   maxZoom?: number;
-  translateExtent?: [[number, number], [number, number]];
+  translateExtent?: [Coordinates, Coordinates];
   filterZoomEvent?: (event: ZoomEvent) => boolean;
-  onMoveStart?: () => void;
-  onMove?: (position: { x: number; y: number; k: number }) => void;
-  onMoveEnd?: (position: { x: number; y: number; k: number }) => void;
+  onMoveStart?: (
+    params: { coordinates: Coordinates; zoom: number },
+    event?: ZoomEvent
+  ) => void;
+  onMove?: (
+    params: { x: number; y: number; zoom: number },
+    event?: ZoomEvent
+  ) => void;
+  onMoveEnd?: (
+    params: { coordinates: Coordinates; zoom: number },
+    event?: ZoomEvent
+  ) => void;
   className?: string;
   children?: ReactNode;
   [key: string]: unknown;
@@ -38,8 +47,8 @@ export const ZoomableGroup = forwardRef<SVGGElement, ZoomableGroupProps>(
     ref
   ) => {
     const { width, height } = useContext(MapContext) ?? {};
-    // Ensure center is always [number, number]
-    const safeCenter: [number, number] =
+    // Ensure center is always Coordinates
+    const safeCenter: Coordinates =
       Array.isArray(center) && center.length === 2
         ? [Number(center[0]), Number(center[1])]
         : [0, 0];
@@ -55,31 +64,41 @@ export const ZoomableGroup = forwardRef<SVGGElement, ZoomableGroupProps>(
       Array.isArray(translateExtent[1]) &&
       translateExtent[0].length === 2 &&
       translateExtent[1].length === 2
-        ? (translateExtent as [[number, number], [number, number]])
+        ? (translateExtent as [Coordinates, Coordinates])
         : undefined;
+    // Strict type guards for event handlers
+    const isFilterZoomEvent = (
+      fn: unknown
+    ): fn is (event: ZoomEvent) => boolean =>
+      typeof fn === "function" && fn.length === 1;
+    const isOnMoveStartOrEnd = (
+      fn: unknown
+    ): fn is (
+      params: { coordinates: Coordinates; zoom: number },
+      event?: ZoomEvent
+    ) => void => typeof fn === "function" && fn.length >= 1;
+    const isOnMove = (
+      fn: unknown
+    ): fn is (
+      params: { x: number; y: number; zoom: number },
+      event?: ZoomEvent
+    ) => void => typeof fn === "function" && fn.length >= 1;
+
+    const safeFilterZoomEvent = isFilterZoomEvent(filterZoomEvent)
+      ? filterZoomEvent
+      : undefined;
+    const safeOnMoveStart = isOnMoveStartOrEnd(onMoveStart)
+      ? onMoveStart
+      : undefined;
+    const safeOnMove = isOnMove(onMove) ? onMove : undefined;
+    const safeOnMoveEnd = isOnMoveStartOrEnd(onMoveEnd) ? onMoveEnd : undefined;
+
     const { mapRef, transformString, position } = useZoomPan({
       center: safeCenter,
-      filterZoomEvent: filterZoomEvent as
-        | ((event: ZoomEvent) => boolean)
-        | undefined,
-      onMoveStart: onMoveStart as
-        | ((
-            params: { coordinates: [number, number]; zoom: number },
-            event?: ZoomEvent
-          ) => void)
-        | undefined,
-      onMove: onMove as
-        | ((
-            params: { x: number; y: number; zoom: number },
-            event?: ZoomEvent
-          ) => void)
-        | undefined,
-      onMoveEnd: onMoveEnd as
-        | ((
-            params: { coordinates: [number, number]; zoom: number },
-            event?: ZoomEvent
-          ) => void)
-        | undefined,
+      filterZoomEvent: safeFilterZoomEvent,
+      onMoveStart: safeOnMoveStart,
+      onMove: safeOnMove,
+      onMoveEnd: safeOnMoveEnd,
       scaleExtent: [safeMinZoom, safeMaxZoom],
       translateExtent: safeTranslateExtent,
       zoom: safeZoom,

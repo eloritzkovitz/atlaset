@@ -1,13 +1,14 @@
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
+import type { Coordinates } from "../types";
 import { getGeoCoordsFromMouseEvent } from "../utils/map";
 
-interface UseMapEventHandlerProps {
+export interface UseMapEventHandlerProps {
   projection: string | null;
   dimensions: { width: number; height: number };
   zoom: number;
-  center: [number, number];
-  setSelectedCoords: (coords: [number, number]) => void;
+  center: Coordinates;
+  setSelectedCoords: (coords: Coordinates) => void;
 }
 
 /**
@@ -39,9 +40,9 @@ export function useMapEventHandler({
       center
     );
     if (coords) {
-      setSelectedCoords([coords[0], coords[1]]);
+      setSelectedCoords(coords);
       if (isAddingMarker && handleMapClickForMarker && event.type === "click") {
-        handleMapClickForMarker([coords[0], coords[1]]);
+        handleMapClickForMarker(coords);
       }
     }
   };

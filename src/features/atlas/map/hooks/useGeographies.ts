@@ -67,7 +67,8 @@ export function useGeographies({
     } else {
       processGeos(geography);
     }
-  }, [geography, parseGeographies, path]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [geography, parseGeographies]);
 
   const geographies: GeographyFeature[] = output.geographies || [];
   const outline: GeographyFeature | undefined = output.mesh?.outline;

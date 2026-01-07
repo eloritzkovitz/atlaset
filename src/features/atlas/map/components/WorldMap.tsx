@@ -3,24 +3,24 @@ import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapUI } from "@contexts/MapUIContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { useContainerDimensions } from "@hooks";
+import { ComposableMap } from "./ComposableMap";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { LayersContainer } from "./LayersContainer";
 import { MarkersContainer } from "./MarkersContainer";
+import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
-import type { GeoData } from "../types";
-import { ComposableMap } from "./ComposableMap";
-import { ZoomableGroup } from "./ZoomableGroup";
+import type { GeoData, Coordinates } from "../types";
 
-interface WorldMapProps {
+export interface WorldMapProps {
   geoData: GeoData;
   zoom: number;
-  center: [number, number];
+  center: Coordinates;
   setZoom: (zoom: number) => void;
-  setCenter: (center: [number, number]) => void;
+  setCenter: (center: Coordinates) => void;
   handleMoveEnd: (params: {
     zoom: number;
-    coordinates: [number, number];
+    coordinates: Coordinates;
   }) => void;
   onCountryClick: (countryIsoCode: string | null) => void;
   onCountryHover: (isoCode: string | null) => void;
@@ -29,7 +29,7 @@ interface WorldMapProps {
   onReady?: () => void;
   svgRef?: React.Ref<SVGSVGElement>;
   isAddingMarker: boolean;
-  setSelectedCoords?: (coords: [number, number] | null) => void;
+  setSelectedCoords?: (coords: Coordinates | null) => void;
 }
 
 export function WorldMap({

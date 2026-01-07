@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import type { Coordinates } from "@features/atlas/map";
 import { markersService } from "@features/atlas/markers";
 import type { Marker } from "@features/atlas/markers/types";
 import { useAuth } from "@features/user";
@@ -48,7 +49,7 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   // Handle map click for adding marker
-  const handleMapClickForMarker = (coords: [number, number]) => {
+  const handleMapClickForMarker = (coords: Coordinates) => {
     if (!isAddingMarker) return;
     openAddMarker(coords);
     setIsAddingMarker(false);

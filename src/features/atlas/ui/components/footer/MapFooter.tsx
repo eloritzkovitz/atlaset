@@ -1,12 +1,12 @@
 import React from "react";
 import { Tooltip } from "@components";
-import { getScaleBarLabel } from "@features/atlas/map";
+import { getScaleBarLabel, type Coordinates } from "@features/atlas/map";
 import { GitHubButton } from "@layout/Footer/GitHubButton";
 import { BrandCopyright } from "@layout/Branding/BrandCopyright";
 
 interface MapFooterProps {
   zoom: number;
-  coords: [number, number] | null;
+  coords: Coordinates;
   latitude: number;
   barPx?: number;
 }

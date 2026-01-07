@@ -5,13 +5,13 @@
 import * as d3Geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
 import type { Feature, Geometry } from "geojson";
-import type { GeoData, ProjectionConfig } from "../types";
+import type { Coordinates, GeoData, ProjectionConfig } from "../types";
 
 interface ProjectionConfigurable {
-  center?: (center?: [number, number]) => d3Geo.GeoProjection;
+  center?: (center?: Coordinates) => d3Geo.GeoProjection;
   rotate?: (rotate?: [number, number, number]) => d3Geo.GeoProjection;
   scale?: ((scale: number) => d3Geo.GeoProjection) | (() => number);
-  parallels?: (parallels?: [number, number]) => d3Geo.GeoProjection;
+  parallels?: (parallels?: Coordinates) => d3Geo.GeoProjection;
 }
 
 const projectionMap: Record<string, () => d3Geo.GeoProjection> = {
@@ -103,7 +103,7 @@ export function getProjection(
   height: number,
   scaleDivisor: number,
   zoom: number = 1,
-  center: [number, number] = [0, 0],
+  center: Coordinates = [0, 0],
   geoFns: {
     geoNaturalEarth1?: typeof d3Geo.geoNaturalEarth1;
     geoEquirectangular?: typeof d3Geo.geoEquirectangular;
@@ -145,11 +145,11 @@ export function getProjection(
  * @param t - The transform object containing x, y, and k (scale).
  * @returns - The [x, y] coordinates in the original SVG space.
  */
-export function getCoords(
+export function getSvgCoordsFromTransform(
   w: number,
   h: number,
   t: { x: number; y: number; k: number }
-): [number, number] {
+): Coordinates {
   const xOffset = (w * t.k - w) / 2;
   const yOffset = (h * t.k - h) / 2;
   return [w / 2 - (xOffset + t.x) / t.k, h / 2 - (yOffset + t.y) / t.k];
@@ -173,9 +173,9 @@ export function getGeoCoordsFromMouseEvent(
   height: number,
   scaleDivisor: number,
   zoom: number,
-  center: [number, number],
+  center: Coordinates,
   getProjectionFn: typeof getProjection = getProjection
-): [number, number] | null {
+): Coordinates | null {
   const svg = event.currentTarget;
   const rect = svg.getBoundingClientRect();
   const x = event.clientX - rect.left;
@@ -214,7 +214,7 @@ export function getCountryCenterAndZoom(
   isoCode: string,
   geoCentroidFn: typeof d3Geo.geoCentroid = d3Geo.geoCentroid,
   geoBoundsFn: typeof d3Geo.geoBounds = d3Geo.geoBounds
-) {
+): { center: Coordinates; zoom: number } | null {
   const country = geoData?.features.find((feature) => {
     const props = feature.properties ?? {};
     return (
