@@ -6,7 +6,7 @@ import { BrandCopyright } from "@layout/Branding/BrandCopyright";
 
 interface MapFooterProps {
   zoom: number;
-  coords: Coordinates;
+  coords: Coordinates | null;
   latitude: number;
   barPx?: number;
 }

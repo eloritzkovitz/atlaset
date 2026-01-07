@@ -9,13 +9,14 @@ import { MapToolbar } from "./controls/MapToolbar";
 import { MapFooter } from "./footer/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
 import { useMapLegendItems } from "../hooks/useMapLegendItems";
+import type { Coordinates } from "@features/atlas/map";
 import type { LegendItem } from "../types";
 
 interface MapUiContainerProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   center: [number, number];
-  selectedCoords: [number, number] | null;
+  selectedCoords: Coordinates | null;
   layers: Layer[];
   isAddingMarker?: boolean;
 }

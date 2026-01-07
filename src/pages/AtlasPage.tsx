@@ -7,6 +7,7 @@ import {
   useGeoData,
   useMapReady,
   useMapView,
+  type Coordinates,
 } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
@@ -29,7 +30,7 @@ export default function AtlasPage() {
     centerOnMarkerById,
   } = useMapView(geoData);
   const svgRef = useRef<SVGSVGElement>(null);
-  const [selectedCoords, setSelectedCoords] = useState<[number, number] | null>(
+  const [selectedCoords, setSelectedCoords] = useState<Coordinates | null>(
     null
   );
   const { mapReady, handleMapReady } = useMapReady();
