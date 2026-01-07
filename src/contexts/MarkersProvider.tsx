@@ -117,8 +117,7 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
       name: "",
       color: "#e53e3e",
       description: "",
-      longitude: coords?.[0] ?? 0,
-      latitude: coords?.[1] ?? 0,
+      coordinates: coords || [0, 0],
       visible: true,
     });
     setMarkerModalOpen(true);

@@ -28,7 +28,7 @@ export function MarkersPanel({
 
   // Center map on a marker
   const centerOnMarker = (marker: Marker, zoomLevel: number = 20) => {
-    setCenter([marker.longitude, marker.latitude]);
+    setCenter([marker.coordinates[0], marker.coordinates[1]]);
     setZoom(zoomLevel);
     // If a marker is provided, show its details
     if (onMarkerDetails && "id" in marker) {

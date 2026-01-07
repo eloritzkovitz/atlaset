@@ -82,8 +82,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
                 onChange({
                   ...marker!,
                   name: e.target.value,
-                  longitude: marker?.longitude ?? 0,
-                  latitude: marker?.latitude ?? 0,
+                  coordinates: marker?.coordinates || [0, 0],
                 })
               }
               autoFocus
@@ -96,8 +95,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
                 onChange({
                   ...marker,
                   color,
-                  longitude: marker.longitude ?? 0,
-                  latitude: marker.latitude ?? 0,
+                  coordinates: marker?.coordinates || [0, 0],
                 })
               }
               onModalOpenChange={setColorModalOpen}
@@ -113,16 +111,15 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
                 onChange({
                   ...marker!,
                   description: e.target.value,
-                  longitude: marker?.longitude ?? 0,
-                  latitude: marker?.latitude ?? 0,
+                  coordinates: marker?.coordinates || [0, 0],
                 })
               }
             />
           </FormField>
           {marker && !isEditing && (
             <div className="text-xs text-muted">
-              Location: {marker.longitude.toFixed(4)},{" "}
-              {marker.latitude.toFixed(4)}
+              Location: {marker.coordinates[0].toFixed(4)},{" "}
+              {marker.coordinates[1].toFixed(4)}
             </div>
           )}
           <div className="flex justify-end gap-2 mt-4">
