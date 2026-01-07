@@ -20,6 +20,7 @@
     "@tailwindcss/vite": "4.1.18",
     "bad-words": "4.0.0",
     "country-flag-icons": "1.6.4",
+    "d3-geo": "3.1.1",
     "d3-selection": "3.0.0",
     "d3-zoom": "3.0.0",
     "dexie": "4.2.1",
