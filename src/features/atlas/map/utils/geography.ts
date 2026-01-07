@@ -7,24 +7,6 @@ import type { Feature, Geometry } from "geojson";
 import type { GeographyFeature, Topology, GeoJsonProperties } from "../types";
 
 /**
- * Fetches geographical data from a given URL.
- * @param url - The URL to fetch the geography data from.
- * @returns A promise that resolves to the fetched geography data.
- */
-export async function fetchGeographies(url: string): Promise<unknown> {
-  try {
-    const res = await fetch(url);
-    if (!res.ok) {
-      throw Error(res.statusText);
-    }
-    return await res.json();
-  } catch (error) {
-    console.log("There was a problem when fetching the data: ", error);
-    return undefined;
-  }
-}
-
-/**
  * Extracts GeoJSON features from various geography data formats (GeoJSON or TopoJSON).
  * @param geographies - The geography data which can be GeoJSON FeatureCollection, Feature, or TopoJSON.
  * @param parseGeographies - Optional function to parse and transform the features.

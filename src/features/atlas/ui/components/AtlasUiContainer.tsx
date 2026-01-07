@@ -21,8 +21,6 @@ interface AtlasUiContainerProps {
   setHoveredIsoCode: (iso: string | null) => void;
   selectedCountry: Country | null;
   setSelectedCountry: (country: Country | null) => void;
-  centerOnCountry: (iso: string) => void;
-  centerOnMarker: (markerId: string) => void;
 }
 
 export function AtlasUiContainer({
@@ -33,10 +31,7 @@ export function AtlasUiContainer({
   setHoveredIsoCode,
   selectedCountry,
   setSelectedCountry,
-  centerOnCountry,
-  centerOnMarker,
 }: AtlasUiContainerProps) {
-  // Data state
   const {
     editingMarker,
     setEditingMarker,
@@ -83,7 +78,6 @@ export function AtlasUiContainer({
       <MarkersPanel
         onAddMarker={startAddingMarker}
         onEditMarker={openEditMarker}
-        onCenterMap={(marker) => centerOnMarker(marker.id)}
       />
       <LayersPanel
         onEditLayer={openEditLayer}
@@ -97,7 +91,6 @@ export function AtlasUiContainer({
       <CountryDetailsModal
         isOpen={!!selectedCountry}
         country={selectedCountry}
-        onCenterMap={() => centerOnCountry(selectedCountry?.isoCode ?? "")}
         onClose={() => setSelectedCountry(null)}
       />
       <MarkerDetailsModal

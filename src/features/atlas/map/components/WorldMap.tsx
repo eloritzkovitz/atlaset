@@ -1,27 +1,17 @@
 import { useEffect, useRef } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { useMapUI } from "@contexts/MapUIContext";
+import { useMapView } from "@contexts/MapViewContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { useContainerDimensions } from "@hooks";
-import { ComposableMap } from "./ComposableMap";
+import { MapProvider } from "../providers/MapProvider";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { LayersContainer } from "./LayersContainer";
 import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
-import type { GeoData, Coordinates } from "../types";
 
 export interface WorldMapProps {
-  geoData: GeoData;
-  zoom: number;
-  center: Coordinates;
-  setZoom: (zoom: number) => void;
-  setCenter: (center: Coordinates) => void;
-  handleMoveEnd: (params: {
-    zoom: number;
-    coordinates: Coordinates;
-  }) => void;
   onCountryClick: (countryIsoCode: string | null) => void;
   onCountryHover: (isoCode: string | null) => void;
   selectedIsoCode: string | null;
@@ -29,14 +19,9 @@ export interface WorldMapProps {
   onReady?: () => void;
   svgRef?: React.Ref<SVGSVGElement>;
   isAddingMarker: boolean;
-  setSelectedCoords?: (coords: Coordinates | null) => void;
 }
 
 export function WorldMap({
-  geoData,
-  zoom,
-  center,
-  handleMoveEnd,
   onCountryClick,
   onCountryHover,
   selectedIsoCode,
@@ -44,13 +29,27 @@ export function WorldMap({
   onReady,
   svgRef,
   isAddingMarker,
-  setSelectedCoords,
 }: WorldMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const dimensions = useContainerDimensions(containerRef);
+  const measuredDimensions = useContainerDimensions(containerRef);
 
   // Map projection and data
-  const { projection } = useMapUI();
+  const {
+    geoData,
+    projection,
+    dimensions,
+    setDimensions,
+    zoom,
+    center,
+    handleMoveEnd,
+  } = useMapView();
+
+  // Push measured dimensions into context
+  useEffect(() => {
+    if (measuredDimensions.width > 0 && measuredDimensions.height > 0) {
+      setDimensions(measuredDimensions);
+    }
+  }, [measuredDimensions, setDimensions]);
 
   // Get layer items based on mode
   const layerItems = useMapLayerItems();
@@ -60,15 +59,7 @@ export function WorldMap({
     useHighlightYearlyCountries();
 
   // Handle map event for mouse move or click
-  const handleMapEvent = useMapEventHandler({
-    projection,
-    dimensions,
-    zoom,
-    center,
-    setSelectedCoords: setSelectedCoords
-      ? (coords) => setSelectedCoords(coords)
-      : () => {},
-  });
+  const handleMapEvent = useMapEventHandler();
 
   // Call onReady when map is ready
   useEffect(() => {
@@ -100,7 +91,9 @@ export function WorldMap({
         height={dimensions.height}
         className="map-container"
       >
-        <ComposableMap
+        <MapProvider
+          width={dimensions.width}
+          height={dimensions.height}
           projection={projection || DEFAULT_MAP_SETTINGS.projection}
           projectionConfig={{
             scale:
@@ -108,39 +101,45 @@ export function WorldMap({
               DEFAULT_MAP_SETTINGS.scaleDivisor,
             center: [0, 0],
           }}
-          width={dimensions.width}
-          height={dimensions.height}
-          onMouseMove={handleMapEvent}
-          onClick={handleMapEvent}
         >
-          <ZoomableGroup
-            zoom={zoom}
-            center={center}
-            minZoom={DEFAULT_MAP_SETTINGS.minZoom}
-            maxZoom={DEFAULT_MAP_SETTINGS.maxZoom}
-            onMoveEnd={zoom >= 1 ? handleMoveEnd : undefined}
+          <svg
+            viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
+            width={dimensions.width}
+            height={dimensions.height}
+            className="rsm-svg"
+            onMouseMove={handleMapEvent}
+            onClick={handleMapEvent}
+            ref={svgRef}
           >
-            <LayersContainer
-              geographyData={geoData}
-              layerItems={layerItems}
-              selectedIsoCode={selectedIsoCode}
-              hoveredIsoCode={hoveredIsoCode}
-              highlightedIsoCodes={
-                highlightDirection === "asc" ? highlightedIsoCodes : []
-              }
-              onCountryClick={onCountryClick}
-              onCountryHover={onCountryHover}
-              isAddingMarker={isAddingMarker}
-            />
-            <MarkersContainer
-              projectionType={projection || DEFAULT_MAP_SETTINGS.projection}
-              width={dimensions.width}
-              height={dimensions.height}
-              scaleDivisor={DEFAULT_MAP_SETTINGS.scaleDivisor}
+            <ZoomableGroup
               zoom={zoom}
-            />
-          </ZoomableGroup>
-        </ComposableMap>
+              center={center}
+              minZoom={DEFAULT_MAP_SETTINGS.minZoom}
+              maxZoom={DEFAULT_MAP_SETTINGS.maxZoom}
+              onMoveEnd={zoom >= 1 ? handleMoveEnd : undefined}
+            >
+              <LayersContainer
+                geographyData={geoData}
+                layerItems={layerItems}
+                selectedIsoCode={selectedIsoCode}
+                hoveredIsoCode={hoveredIsoCode}
+                highlightedIsoCodes={
+                  highlightDirection === "asc" ? highlightedIsoCodes : []
+                }
+                onCountryClick={onCountryClick}
+                onCountryHover={onCountryHover}
+                isAddingMarker={isAddingMarker}
+              />
+              <MarkersContainer
+                projectionType={projection || DEFAULT_MAP_SETTINGS.projection}
+                width={dimensions.width}
+                height={dimensions.height}
+                scaleDivisor={DEFAULT_MAP_SETTINGS.scaleDivisor}
+                zoom={zoom}
+              />
+            </ZoomableGroup>
+          </svg>
+        </MapProvider>
       </MapSvgContainer>
     </div>
   );

@@ -1,8 +1,7 @@
 import * as topojsonClient from "topojson-client";
 import type { Feature, Geometry } from "geojson";
-import { vi, describe, it, expect, beforeEach, type Mock } from "vitest";
+import { vi, describe, it, expect } from "vitest";
 import {
-  fetchGeographies,
   getFeatures,
   getMesh,
   prepareMesh,
@@ -11,36 +10,6 @@ import {
   isString,
 } from "./geography";
 import type { GeographyFeature, Topology } from "../types";
-
-describe("fetchGeographies", () => {
-  beforeEach(() => {
-    global.fetch = vi.fn();
-  });
-
-  it("returns data on success", async () => {
-    (global.fetch as unknown as Mock).mockResolvedValue({
-      ok: true,
-      json: async () => ({ foo: "bar" }),
-    });
-    const data = await fetchGeographies("/test");
-    expect(data).toEqual({ foo: "bar" });
-  });
-
-  it("returns undefined on fetch error", async () => {
-    (global.fetch as unknown as Mock).mockRejectedValue(new Error("fail"));
-    const data = await fetchGeographies("/test");
-    expect(data).toBeUndefined();
-  });
-
-  it("returns undefined on non-ok response", async () => {
-    (global.fetch as unknown as Mock).mockResolvedValue({
-      ok: false,
-      statusText: "Bad",
-    });
-    const data = await fetchGeographies("/test");
-    expect(data).toBeUndefined();
-  });
-});
 
 describe("getFeatures", () => {
   const feature: Feature<Geometry, Record<string, unknown>> = {

@@ -1,39 +1,19 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useCountrySelection } from "@features/atlas/countries";
-import {
-  WorldMap,
-  useGeoData,
-  useMapReady,
-  useMapView,
-  type Coordinates,
-} from "@features/atlas/map";
+import { WorldMap, useGeoData } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
+import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
-  // Data state
-  const { geoData, geoError, loading: geoLoading } = useGeoData();
+  const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { layers, loading: layersLoading } = useLayers();
-
-  // Map state
-  const {
-    zoom,
-    setZoom,
-    center,
-    setCenter,
-    handleMoveEnd,
-    centerOnCountry,
-    centerOnMarkerById,
-  } = useMapView(geoData);
+  const { mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
-  const [selectedCoords, setSelectedCoords] = useState<Coordinates | null>(
-    null
-  );
-  const { mapReady, handleMapReady } = useMapReady();
 
   // Country selection state
   const {
@@ -71,28 +51,13 @@ export default function AtlasPage() {
             setHoveredIsoCode={setHoveredIsoCode}
             selectedCountry={selectedCountry}
             setSelectedCountry={setSelectedCountry}
-            centerOnCountry={centerOnCountry}
-            centerOnMarker={centerOnMarkerById}
           />
         )}
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           {!isLoading && (
-            <MapUiContainer
-              zoom={zoom}
-              setZoom={setZoom}
-              center={center}
-              selectedCoords={selectedCoords}
-              layers={layers}
-              isAddingMarker={isAddingMarker}
-            />
+            <MapUiContainer layers={layers} isAddingMarker={isAddingMarker} />
           )}
           <WorldMap
-            geoData={geoData}
-            zoom={zoom}
-            center={center}
-            setZoom={setZoom}
-            setCenter={setCenter}
-            handleMoveEnd={handleMoveEnd}
             onCountryClick={handleCountryClick}
             onCountryHover={handleCountryHover}
             selectedIsoCode={selectedIsoCode}
@@ -100,7 +65,6 @@ export default function AtlasPage() {
             onReady={handleMapReady}
             svgRef={svgRef}
             isAddingMarker={isAddingMarker}
-            setSelectedCoords={(coords) => setSelectedCoords(coords)}
           />
         </div>
       </div>

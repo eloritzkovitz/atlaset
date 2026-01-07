@@ -6,23 +6,43 @@ import { useUI } from "@contexts/UIContext";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
 import type { Marker } from "../../types";
+import { useMapView } from "@contexts/MapViewContext";
 
 interface MarkersPanelProps {
   onAddMarker: () => void;
   onEditMarker: (marker: Marker) => void;
-  onCenterMap: (marker: Marker) => void;
+  onMarkerDetails?: (marker: Marker) => void;
 }
 
 export function MarkersPanel({
   onAddMarker,
   onEditMarker,
-  onCenterMap,
+  onMarkerDetails,
 }: MarkersPanelProps) {
+  const { setCenter, setZoom } = useMapView();
   const { markers, removeMarker, toggleMarkerVisibility, reorderMarkers } =
     useMarkers();
   const { showMarkers, closePanel } = useUI();
   const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
     useDragReorder(markers, reorderMarkers);
+
+  // Center map on a marker
+  const centerOnMarker = (marker: Marker, zoomLevel: number = 20) => {
+    setCenter([marker.longitude, marker.latitude]);
+    setZoom(zoomLevel);
+    // If a marker is provided, show its details
+    if (onMarkerDetails && "id" in marker) {
+      onMarkerDetails(marker);
+    }
+  };
+
+  // Center map on a marker by its ID
+  const centerOnMarkerById = (markerId: string, zoomLevel: number = 20) => {
+    const marker = markers.find((m) => m.id === markerId);
+    if (marker) {
+      centerOnMarker(marker, zoomLevel);
+    }
+  };
 
   return (
     <>
@@ -67,7 +87,7 @@ export function MarkersPanel({
                   idx={idx}
                   onToggleVisibility={() => toggleMarkerVisibility(marker.id)}
                   onEdit={() => onEditMarker(marker)}
-                  onCenter={() => onCenterMap(marker)}
+                  onCenter={() => centerOnMarkerById(marker.id)}
                   onRemove={() => removeMarker(marker.id)}
                   draggedIndex={draggedIndex}
                   handleDragStart={handleDragStart}

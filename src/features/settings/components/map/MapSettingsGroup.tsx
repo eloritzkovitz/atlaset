@@ -2,7 +2,7 @@ import React from "react";
 import { FaMap } from "react-icons/fa";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { MAP_OPTIONS } from "@constants";
-import { useMapUI } from "@contexts/MapUIContext";
+import { useMapView } from "@contexts/MapViewContext";
 
 export function MapSettingsGroup() {
   const [showMapSettings, setShowMapSettings] = React.useState(true);
@@ -13,7 +13,7 @@ export function MapSettingsGroup() {
     setBorderColor,
     borderWidth,
     setBorderWidth,
-  } = useMapUI();
+  } = useMapView();
 
   return (
     <>

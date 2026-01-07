@@ -17,7 +17,7 @@ export interface MarkersContextType {
   setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;
   isEditingMarker: boolean;
   isMarkerModalOpen: boolean;
-  openAddMarker: (coords?: [number, number]) => void;
+  openAddMarker: (coords?: Coordinates) => void;
   openEditMarker: (marker: Marker) => void;
   saveMarker: () => void;
   closeMarkerModal: () => void;

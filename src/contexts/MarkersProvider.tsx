@@ -111,7 +111,7 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Open add marker modal
-  function openAddMarker(coords?: [number, number]) {
+  function openAddMarker(coords?: Coordinates) {
     setEditingMarker({
       id: crypto.randomUUID(),
       name: "",

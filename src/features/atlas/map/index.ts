@@ -3,11 +3,9 @@ export { WorldMap } from "./components/WorldMap";
 
 // Hooks
 export { useGeoData } from "./hooks/useGeoData";
-export { useMapView } from "./hooks/useMapView";
-export { useMapReady } from "./hooks/useMapReady";
 
 // Types
-export type { Coordinates } from "./types";
+export type { Coordinates, GeoData } from "./types";
 
 // Utils
 export {
