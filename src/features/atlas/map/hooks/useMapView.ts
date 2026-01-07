@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
 import type { GeoData } from "../types";
-import { getCountryCenterAndZoom } from "../utils/map";
+import { getCountryCenterAndZoom } from "../utils/projection";
 import type { Marker } from "../../markers/types";
 
 /**

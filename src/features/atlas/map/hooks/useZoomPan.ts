@@ -7,7 +7,7 @@ import {
 } from "d3-zoom";
 import { select as d3Select, type Selection } from "d3-selection";
 import { MapContext } from "../providers/MapContext";
-import { getSvgCoordsFromTransform } from "../utils/map";
+import { getSvgCoordsFromTransform } from "../utils/projection";
 import type { Coordinates, ZoomEvent } from "../types";
 
 export interface UseZoomPanOptions {

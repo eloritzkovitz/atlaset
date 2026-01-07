@@ -1,6 +1,6 @@
 import { useMarkers } from "@contexts/MarkersContext";
 import { Marker } from "@features/atlas/markers";
-import { getProjection } from "../utils/map";
+import { getProjection } from "../utils/projection";
 
 interface MarkersContainerProps {
   projectionType: string;

@@ -14,7 +14,7 @@ interface ProjectionConfigurable {
   parallels?: (parallels?: Coordinates) => d3Geo.GeoProjection;
 }
 
-const projectionMap: Record<string, () => d3Geo.GeoProjection> = {
+export const projectionMap: Record<string, () => d3Geo.GeoProjection> = {
   geoAzimuthalEqualArea: d3Geo.geoAzimuthalEqualArea,
   geoAzimuthalEquidistant: d3Geo.geoAzimuthalEquidistant,
   geoConicConformal: d3Geo.geoConicConformal,

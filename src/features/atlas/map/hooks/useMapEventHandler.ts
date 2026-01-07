@@ -1,7 +1,7 @@
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
 import type { Coordinates } from "../types";
-import { getGeoCoordsFromMouseEvent } from "../utils/map";
+import { getGeoCoordsFromMouseEvent } from "../utils/projection";
 
 export interface UseMapEventHandlerProps {
   projection: string | null;

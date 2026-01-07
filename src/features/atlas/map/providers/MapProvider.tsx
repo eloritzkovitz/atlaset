@@ -3,7 +3,7 @@ import * as d3Geo from "d3-geo";
 const { geoPath } = d3Geo;
 import { MapContext } from "./MapContext";
 import type { ProjectionConfig } from "../types";
-import { makeProjection } from "../utils/map";
+import { makeProjection } from "../utils/projection";
 
 export interface MapProviderProps {
   width?: number;
