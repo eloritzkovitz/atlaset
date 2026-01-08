@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useCountrySelection } from "@features/atlas/countries";
@@ -9,6 +10,10 @@ import { useCountryData } from "@features/countries";
 import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const isReadonly = params.has("map");
+  const mode = isReadonly ? "readonly" : "normal";
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { layers, loading: layersLoading } = useLayers();
@@ -58,6 +63,7 @@ export default function AtlasPage() {
             <MapUiContainer layers={layers} isAddingMarker={isAddingMarker} />
           )}
           <WorldMap
+            mode={mode}
             onCountryClick={handleCountryClick}
             onCountryHover={handleCountryHover}
             selectedIsoCode={selectedIsoCode}

@@ -3,13 +3,13 @@ import {
   FaGlobe,
   FaMapPin,
   FaLayerGroup,
-  FaDownload,
   FaGear,
   FaTimeline,
   FaChevronLeft,
   FaChevronRight,
   FaChevronUp,
   FaListUl,
+  FaShareFromSquare,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
 import { useLayers } from "@contexts/LayersContext";
@@ -39,7 +39,7 @@ export function MapToolbar({
     toggleCountries,
     toggleLayers,
     toggleMarkers,
-    toggleLegend,    
+    toggleLegend,
     toggleExport,
     toggleSettings,
   } = useUI();
@@ -111,7 +111,7 @@ export function MapToolbar({
     },
     {
       key: "export",
-      icon: <FaDownload className="text-lg" />,
+      icon: <FaShareFromSquare className="text-lg" />,
       label: "Export",
       onClick: () => {
         if (isMobile) setMenuOpen(false);

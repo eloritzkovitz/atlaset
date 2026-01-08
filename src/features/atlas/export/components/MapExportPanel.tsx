@@ -1,13 +1,12 @@
 import { useRef, useState } from "react";
-import { FaDownload, FaFileImage, FaXmark } from "react-icons/fa6";
-import { ActionButton, Panel, SelectInput, Separator } from "@components";
+import { FaXmark, FaShareFromSquare } from "react-icons/fa6";
+import { ActionButton, Panel, Separator } from "@components";
+import { useLayers } from "@contexts/LayersContext";
 import { useUI } from "@contexts/UIContext";
-import { SvgOptions } from "./SvgOptions";
-import { ImageOptions } from "./ImageOptions";
-import {
-  EXPORT_FORMAT_OPTIONS,
-  PNG_SCALE_OPTIONS,
-} from "../constants/exportOptions";
+import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
+import { useVisitedCountries } from "@features/visits";
+import { DownloadMapSection } from "./DownloadMapSection";
+import { ShareMapSection } from "./ShareMapSection";
 import type {
   ExportFormat,
   ImageExportOptions,
@@ -22,6 +21,11 @@ export interface MapExportPanelProps {
 
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { showExport, closePanel } = useUI();
+  const { visitedCountryCodes } = useVisitedCountries();
+  const { layers: allLayers } = useLayers();
+
+  // Export mode: 'visited' or 'layers'
+  const [exportMode, setExportMode] = useState<"visited" | "layers">("visited");
 
   // Export options state
   const [format, setFormat] = useState<ExportFormat>("svg");
@@ -31,6 +35,30 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     quality: 1,
     backgroundColor: "#ffffff",
   });
+
+  // Collapsible headers state
+  const [downloadExpanded, setDownloadExpanded] = useState(true);
+  const [shareExpanded, setShareExpanded] = useState(true);
+
+  // Prepare layers for sharing
+  let layersToShare;
+  if (exportMode === "visited") {
+    layersToShare = [
+      {
+        id: DEFAULT_VISITED_LAYER.id,
+        color: DEFAULT_VISITED_LAYER.color,
+        countries: visitedCountryCodes,
+      },
+    ];
+  } else {
+    layersToShare = allLayers
+      .filter((l) => l.visible && l.countries && l.countries.length > 0)
+      .map((l) => ({
+        id: l.id,
+        color: l.color,
+        countries: l.countries,
+      }));
+  }
 
   // Export handler
   const handleExport = () => {
@@ -57,7 +85,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     <Panel
       title={
         <>
-          <FaDownload />
+          <FaShareFromSquare />
           Export
         </>
       }
@@ -74,57 +102,25 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       }
     >
       <div className="pb-20">
-        {/* Format selector */}
-        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
-          Format
-        </div>
-        <SelectInput
-          label=""
-          value={format}
-          onChange={(val) => setFormat(val as ExportFormat)}
-          options={EXPORT_FORMAT_OPTIONS}
+        <DownloadMapSection
+          format={format}
+          setFormat={setFormat}
+          svgOptions={svgOptions}
+          imageOptions={imageOptions}
+          handleExport={handleExport}
+          svgRef={svgRef}
+          downloadExpanded={downloadExpanded}
+          setDownloadExpanded={setDownloadExpanded}
         />
-        
-        <Separator className="mb-4" />
-
-        {/* Options section header */}
-        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
-          Options
-        </div>
-
-        {/* SVG options */}
-        {format === "svg" && (
-          <SvgOptions
-            onOptionsChange={(opts) => {
-              svgOptions.current = opts;
-            }}
-          />
-        )}
-
-        {/* Image options */}
-        {format !== "svg" && (
-          <ImageOptions
-            format={format}
-            scaleOptions={PNG_SCALE_OPTIONS}
-            onOptionsChange={(opts) => {
-              imageOptions.current = opts;
-            }}
-          />
-        )}
-      </div>
-
-      {/* Export button */}
-      <div className="absolute bottom-0 left-0 w-full px-4 pb-4">
-        <ActionButton
-          variant="primary"
-          onClick={handleExport}
-          className="w-full"
-          aria-label={"Export"}
-          disabled={!svgRef?.current}
-        >
-          <FaFileImage className="inline" />
-          Export
-        </ActionButton>
+        <Separator className="my-4" />
+        <ShareMapSection
+          exportMode={exportMode}
+          setExportMode={setExportMode}
+          allLayers={allLayers}
+          visitedCountryCodes={visitedCountryCodes}
+          shareExpanded={shareExpanded}
+          setShareExpanded={setShareExpanded}
+        />
       </div>
     </Panel>
   );

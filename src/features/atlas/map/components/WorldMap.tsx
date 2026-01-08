@@ -12,6 +12,7 @@ import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
 
 export interface WorldMapProps {
+  mode?: "normal" | "readonly";
   onCountryClick: (countryIsoCode: string | null) => void;
   onCountryHover: (isoCode: string | null) => void;
   selectedIsoCode: string | null;
@@ -22,6 +23,7 @@ export interface WorldMapProps {
 }
 
 export function WorldMap({
+  mode = "normal",
   onCountryClick,
   onCountryHover,
   selectedIsoCode,
@@ -52,7 +54,7 @@ export function WorldMap({
   }, [measuredDimensions, setDimensions]);
 
   // Get layer items based on mode
-  const layerItems = useMapLayerItems();
+  const layerItems = useMapLayerItems(mode);
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
