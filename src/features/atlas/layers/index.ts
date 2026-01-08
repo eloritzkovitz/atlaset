@@ -10,6 +10,7 @@ export {
 
 // Hooks
 export { useLayerItems } from "./hooks/useLayerItems";
+export { useSharedLayerItems } from "./hooks/useSharedLayerItems";
 export { useTimelineLayerItems } from "./hooks/useTimelineLayerItems";
 export { useSyncVisitedCountriesLayer } from "./hooks/useSyncVisitedCountriesLayer";
 

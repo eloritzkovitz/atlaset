@@ -49,3 +49,6 @@ export type ZoomEvent = {
   transform: ZoomTransform;
   sourceEvent?: Event;
 };
+
+/** Represents the current mode of the map. */
+export type MapMode = "normal" | "readonly";

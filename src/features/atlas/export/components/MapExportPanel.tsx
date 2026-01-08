@@ -3,7 +3,6 @@ import { FaXmark, FaShareFromSquare } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useUI } from "@contexts/UIContext";
-import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
 import { ShareMapSection } from "./ShareMapSection";
@@ -39,26 +38,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   // Collapsible headers state
   const [downloadExpanded, setDownloadExpanded] = useState(true);
   const [shareExpanded, setShareExpanded] = useState(true);
-
-  // Prepare layers for sharing
-  let layersToShare;
-  if (exportMode === "visited") {
-    layersToShare = [
-      {
-        id: DEFAULT_VISITED_LAYER.id,
-        color: DEFAULT_VISITED_LAYER.color,
-        countries: visitedCountryCodes,
-      },
-    ];
-  } else {
-    layersToShare = allLayers
-      .filter((l) => l.visible && l.countries && l.countries.length > 0)
-      .map((l) => ({
-        id: l.id,
-        color: l.color,
-        countries: l.countries,
-      }));
-  }
 
   // Export handler
   const handleExport = () => {

@@ -2,16 +2,18 @@ import { useLayers } from "@contexts/LayersContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import {
   useLayerItems,
+  useSharedLayerItems,
   useTimelineLayerItems,
   isTimelineLayer,
 } from "@features/atlas/layers";
-import { useSharedLayerItems } from "@features/atlas/layers/hooks/useSharedLayerItems";
+import type { MapMode } from "../types";
 
 /**
  * Returns map layer items based on mode.
+ * @param mode Current map mode.
  * @returns Array of layer items based on the current mode.
  */
-export function useMapLayerItems(mode = "normal") {
+export function useMapLayerItems(mode: MapMode = "normal") {
   const { layers } = useLayers();
   const { timelineMode, selectedYear, layerMode } = useTimeline();
   const timelineLayers = layers.filter(isTimelineLayer);

@@ -10,9 +10,10 @@ import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
+import type { MapMode } from "../types";
 
 export interface WorldMapProps {
-  mode?: "normal" | "readonly";
+  mode?: MapMode;
   onCountryClick: (countryIsoCode: string | null) => void;
   onCountryHover: (isoCode: string | null) => void;
   selectedIsoCode: string | null;

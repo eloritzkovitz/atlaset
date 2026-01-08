@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ActionButton } from "@components";
-import type { ImageFormat } from "../types";
+import type { ImageFormat } from "../../types";
 
 type ImageOptionsProps = {
   format: ImageFormat;
