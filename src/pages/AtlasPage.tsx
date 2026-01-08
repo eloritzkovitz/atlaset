@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { AtlasShortcuts } from "@features/atlas/ui/components/AtlasShortcuts";
 import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
@@ -50,6 +51,7 @@ export default function AtlasPage() {
 
   return (
     <>
+      <AtlasShortcuts />
       <div className="flex h-screen relative">
         {!isLoading && (
           <AtlasUiContainer

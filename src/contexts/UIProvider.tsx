@@ -66,29 +66,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
   // Toggle UI visibility with "U"
   useKeyHandler(toggleUiVisible, ["u", "U"], true);
 
-  // Toggle Countries panel with "C"
-  useKeyHandler(toggleCountries, ["c", "C"], true);
-
-  // Toggle Export panel with "E"
-  useKeyHandler(toggleExport, ["e", "E"], true);
-
-  // Toggle Filters panel with "F"
-  useKeyHandler(toggleFilters, ["f", "F"], true);
-
-  // Toggle Legend with "G"
-  useKeyHandler(toggleLegend, ["g", "G"], true);
-
-  // Toggle Layers panel with "L"
-  useKeyHandler(toggleLayers, ["l", "L"], true);
-
-  // Toggle Markers panel with "M"
-  useKeyHandler(toggleMarkers, ["m", "M"], true);
-
   // Toggle Friends panel with "N"
   useKeyHandler(toggleFriends, ["n", "N"], true);
-
-  // Toggle Settings panel with "S"
-  useKeyHandler(toggleSettings, ["s", "S"], true);
 
   // Open shortcut modal with "?"
   useKeyHandler(toggleShortcuts, ["?"], true);
