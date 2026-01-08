@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { decodeMapLayers } from "@features/atlas/export/utils/mapShare";
+import { decodeMapData } from "@features/atlas/export/utils/mapShare";
 
 /**
  * Returns shared layer items for the readonly (view-only) map mode.
@@ -9,8 +9,11 @@ export function useSharedLayerItems() {
   return useMemo(() => {
     const params = new URLSearchParams(window.location.search);
     const mapParam = params.get("map");
+    
+    // If no map parameter, return empty array
     if (!mapParam) return [];
-    const layers = decodeMapLayers(mapParam);
+    const { layers } = decodeMapData(mapParam);
+    
     // Only include visible layers (default to visible if not present)
     return layers
       .filter((layer) => layer.countries && layer.countries.length > 0)
@@ -18,7 +21,7 @@ export function useSharedLayerItems() {
         layer.countries.map((isoCode) => ({
           isoCode,
           color: layer.color,
-          layerId: layer.id,
+          layerId: layer.name,
         }))
       );
   }, []);

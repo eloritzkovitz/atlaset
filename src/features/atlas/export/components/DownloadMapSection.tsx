@@ -1,10 +1,5 @@
 import { FaDownload } from "react-icons/fa6";
-import {
-  ActionButton,
-  CollapsibleHeader,
-  SelectInput,
-  Separator,
-} from "@components";
+import { ActionButton, CollapsibleHeader, SelectInput } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { SvgOptions } from "./options/SvgOptions";
@@ -102,8 +97,7 @@ export function DownloadMapSection({
         </ActionButton>
       </div>
       {/* Download Data section */}
-      <Separator className="my-4" />
-      <div className="mb-2 mt-2 text-muted text-xs font-semibold uppercase tracking-wide">
+      <div className="mb-4 mt-4 text-muted text-xs font-semibold uppercase tracking-wide">
         Download Data
       </div>
       <ActionButton

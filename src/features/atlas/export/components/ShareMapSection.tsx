@@ -1,21 +1,26 @@
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "@contexts/AuthContext";
 import { FaShareNodes, FaCopy } from "react-icons/fa6";
 import {
   ActionButton,
   Checkbox,
   CollapsibleHeader,
+  FormField,
   InputBox,
 } from "@components";
-import { encodeMapLayers } from "../utils/mapShare";
+import { encodeMapData } from "../utils/mapShare";
+import type { Layer } from "@features/atlas/layers";
+import type { Marker } from "@features/atlas/markers/types";
 import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
 
 interface ShareMapSectionProps {
   exportMode: "visited" | "layers";
   setExportMode: (mode: "visited" | "layers") => void;
-  allLayers: any[];
+  allLayers: Layer[];
   visitedCountryCodes: string[];
   shareExpanded: boolean;
   setShareExpanded: (v: boolean) => void;
+  markers?: Marker[];
 }
 
 export function ShareMapSection({
@@ -25,10 +30,23 @@ export function ShareMapSection({
   visitedCountryCodes,
   shareExpanded,
   setShareExpanded,
+  markers,
 }: ShareMapSectionProps) {
   const [shareCopied, setShareCopied] = useState(false);
+  const [mapName, setMapName] = useState("");
+  const [sharer, setSharer] = useState("");
+  const auth = useContext(AuthContext);
+  const [includeMarkers, setIncludeMarkers] = useState(false);
 
-  // Generate shareable URL
+  // Prefill sharer with authenticated user's displayName if available
+  useEffect(() => {
+    if (!sharer && auth?.user?.displayName) {
+      setSharer(auth.user.displayName);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth?.user?.displayName]);
+
+  // Prepare layers for sharing
   let layersToShare;
   if (exportMode === "visited") {
     const visitedLayer = allLayers.find(
@@ -36,7 +54,7 @@ export function ShareMapSection({
     );
     layersToShare = [
       {
-        id: visitedLayer?.id ?? DEFAULT_VISITED_LAYER.id,
+        name: visitedLayer?.name ?? DEFAULT_VISITED_LAYER.name,
         color: visitedLayer?.color ?? DEFAULT_VISITED_LAYER.color,
         countries: visitedLayer?.countries ?? visitedCountryCodes,
       },
@@ -45,12 +63,33 @@ export function ShareMapSection({
     layersToShare = allLayers
       .filter((l) => l.visible && l.countries && l.countries.length > 0)
       .map((l) => ({
-        id: l.id,
+        name: l.name,
         color: l.color,
         countries: l.countries,
       }));
   }
-  const code = encodeMapLayers(layersToShare);
+
+  // Prepare markers for sharing
+  let markersToShare:
+    | { lat: number; lng: number; label?: string }[]
+    | undefined = undefined;
+  if (includeMarkers) {
+    markersToShare = Array.isArray(markers)
+      ? markers.map((m) => ({
+          lat: m.coordinates[1],
+          lng: m.coordinates[0],
+          label: m.name || undefined,
+        }))
+      : [];
+  }
+
+  // Encode map data into shareable code
+  const code = encodeMapData({
+    layers: layersToShare,
+    mapName: mapName.trim() || undefined,
+    sharer: sharer.trim() || undefined,
+    markers: markersToShare,
+  });
   const shareUrl = `${window.location.origin}/atlas?map=${code}`;
 
   // Copy share URL to clipboard
@@ -68,15 +107,15 @@ export function ShareMapSection({
       onToggle={() => setShareExpanded(!shareExpanded)}
     >
       <div className="mt-4 mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
-        Include
+        Options
       </div>
       <div className="flex flex-col gap-2 mb-4">
         <Checkbox
           checked={exportMode === "visited"}
           onChange={() => setExportMode("visited")}
-          label="Visited countries"
+          label="Visited countries only"
           aria-checked={exportMode === "visited"}
-          aria-label="Visited countries"
+          aria-label="Visited countries only"
         />
         <Checkbox
           checked={exportMode === "layers"}
@@ -85,7 +124,35 @@ export function ShareMapSection({
           aria-checked={exportMode === "layers"}
           aria-label="All visible layers"
         />
+        <Checkbox
+          checked={includeMarkers}
+          onChange={() => setIncludeMarkers((v) => !v)}
+          label="All visible markers"
+          aria-checked={includeMarkers}
+          aria-label="All visible markers"
+        />
       </div>
+      <div className="mt-4 mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
+        Map Details (Optional)
+      </div>
+      <FormField label="Map Name">
+        <input
+          type="text"
+          value={mapName}
+          onChange={(e) => setMapName(e.target.value)}
+          placeholder="My Shared Map"
+          maxLength={64}
+        />
+      </FormField>
+      <FormField label="Your Name">
+        <input
+          type="text"
+          value={sharer}
+          onChange={(e) => setSharer(e.target.value)}
+          placeholder="Your Name"
+          maxLength={32}
+        />
+      </FormField>
       <div className="mt-4 mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
         Shareable Link
       </div>

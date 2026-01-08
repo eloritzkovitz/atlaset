@@ -80,7 +80,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
         />
       }
     >
-      <div className="pb-20">
+      <div>
         <DownloadMapSection
           format={format}
           setFormat={setFormat}
