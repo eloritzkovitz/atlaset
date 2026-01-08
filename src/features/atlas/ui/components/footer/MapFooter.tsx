@@ -31,7 +31,7 @@ export const MapFooter: React.FC<MapFooterProps> = ({
           <span className="mr-2">{`x${zoom.toFixed(1)}`}</span>
         </Tooltip>
         {coords ? (
-          <Tooltip content={`Longitude, Latitude`} position="top">
+          <Tooltip content={`Latitude, Longitude`} position="top">
             <span>{`${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}`}</span>
           </Tooltip>
         ) : (

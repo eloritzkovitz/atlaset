@@ -189,7 +189,9 @@ export function getGeoCoordsFromMouseEvent(
     zoom,
     center
   );
-  return proj?.invert?.([x, y]) ?? null;
+  const result = proj?.invert?.([x, y]) ?? null;
+  // Swap to [latitude, longitude]
+  return result ? [result[1], result[0]] : null;
 }
 
 /**
