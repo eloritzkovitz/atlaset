@@ -1,15 +1,30 @@
-import { FaDownload, FaFileImage } from "react-icons/fa6";
-import { ActionButton, CollapsibleHeader, SelectInput, Separator } from "@components";
+import { FaDownload } from "react-icons/fa6";
+import {
+  ActionButton,
+  CollapsibleHeader,
+  SelectInput,
+  Separator,
+} from "@components";
+import { useLayers } from "@contexts/LayersContext";
+import { useMarkers } from "@contexts/MarkersContext";
 import { SvgOptions } from "./options/SvgOptions";
 import { ImageOptions } from "./options/ImageOptions";
-import { EXPORT_FORMAT_OPTIONS, PNG_SCALE_OPTIONS } from "../constants/exportOptions";
-import type { ExportFormat, ImageExportOptions, SvgExportOptions } from "../types";
+import {
+  EXPORT_FORMAT_OPTIONS,
+  PNG_SCALE_OPTIONS,
+} from "../constants/exportOptions";
+import type {
+  ExportFormat,
+  ImageExportOptions,
+  SvgExportOptions,
+} from "../types";
+import { exportMapDataAsJson } from "../utils/mapExport";
 
 interface DownloadMapSectionProps {
   format: ExportFormat;
   setFormat: (f: ExportFormat) => void;
-  svgOptions: React.MutableRefObject<SvgExportOptions>;
-  imageOptions: React.MutableRefObject<ImageExportOptions>;
+  svgOptions: React.RefObject<SvgExportOptions>;
+  imageOptions: React.RefObject<ImageExportOptions>;
   handleExport: () => void;
   svgRef: React.RefObject<SVGSVGElement | null>;
   downloadExpanded: boolean;
@@ -26,6 +41,14 @@ export function DownloadMapSection({
   downloadExpanded,
   setDownloadExpanded,
 }: DownloadMapSectionProps) {
+  const { layers } = useLayers();
+  const { markers } = useMarkers();
+
+  // Download map data as JSON
+  const handleDownloadJson = () => {
+    exportMapDataAsJson({ layers, markers }, "atlas-data.json");
+  };
+
   return (
     <CollapsibleHeader
       icon={<FaDownload />}
@@ -34,7 +57,7 @@ export function DownloadMapSection({
       onToggle={() => setDownloadExpanded(!downloadExpanded)}
     >
       {/* Format selector */}
-      <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
+      <div className="mt-4 mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
         Format
       </div>
       <SelectInput
@@ -43,7 +66,6 @@ export function DownloadMapSection({
         onChange={(val) => setFormat(val as ExportFormat)}
         options={EXPORT_FORMAT_OPTIONS}
       />
-      <Separator className="mb-4" />
       {/* Options section header */}
       <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
         Options
@@ -75,10 +97,24 @@ export function DownloadMapSection({
           aria-label={"Export"}
           disabled={!svgRef?.current}
         >
-          <FaFileImage className="inline" />
+          <FaDownload className="inline" />
           Download Image
         </ActionButton>
       </div>
+      {/* Download Data section */}
+      <Separator className="my-4" />
+      <div className="mb-2 mt-2 text-muted text-xs font-semibold uppercase tracking-wide">
+        Download Data
+      </div>
+      <ActionButton
+        variant="primary"
+        onClick={handleDownloadJson}
+        className="w-full !bg-info/50 hover:!bg-info-hover/50"
+        aria-label={"Download as JSON"}
+      >
+        <FaDownload className="inline" />
+        Download as JSON
+      </ActionButton>
     </CollapsibleHeader>
   );
 }

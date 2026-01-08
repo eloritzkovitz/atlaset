@@ -295,3 +295,31 @@ export async function exportSvgAsImage(
     console.error("exportSvgAsPng error:", err);
   }
 }
+
+/**
+ * Exports map data (layers, markers) as a JSON file.
+ * @param data - The data to serialize and download.
+ * @param filename - The filename for the download.
+ */
+export function exportMapDataAsJson(
+  data: unknown,
+  filename = "atlas-export.json"
+) {
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  // SSR/document.body may be null
+  if (document.body) {
+    document.body.appendChild(a);
+  }
+  a.click();
+  setTimeout(() => {
+    if (document.body) {
+      document.body.removeChild(a);
+    }
+    URL.revokeObjectURL(url);
+  }, 0);
+}

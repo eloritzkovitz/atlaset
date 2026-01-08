@@ -5,9 +5,9 @@ import {
   prepareSvgClone,
   getCorrespondingOriginal,
   downloadBlob,
+  exportMapDataAsJson,
 } from "./mapExport";
 
-// --- Global Mocks ---
 setupDomMocks();
 
 describe("mapExport utils", () => {
@@ -15,7 +15,6 @@ describe("mapExport utils", () => {
     vi.clearAllMocks();
   });
 
-  // --- exportSvg ---
   it("exportSvg does nothing if svgElement is falsy", () => {
     expect(exportSvg(null as any)).toBeUndefined();
   });
@@ -62,7 +61,6 @@ describe("mapExport utils", () => {
     expect(() => exportSvg(svg, "test.svg")).not.toThrow();
   });
 
-  // --- exportSvgAsImage ---
   describe("exportSvgAsImage", () => {
     let origCreateElement: typeof document.createElement;
 
@@ -243,7 +241,6 @@ describe("mapExport utils", () => {
 
     it("fills background for JPEG if backgroundColor is not provided", async () => {
       const svg = makeSvgMock();
-      // You could spy on ctx.fillStyle or fillRect if you want to assert color
       await expect(
         exportSvgAsImage(svg, "test.jpg", "jpeg", 2, true, 2048, 1)
       ).resolves.toBeUndefined();
@@ -260,7 +257,6 @@ describe("mapExport utils", () => {
     });
   });
 
-  // --- prepareSvgClone ---
   describe("prepareSvgClone", () => {
     it("adds xmlns if missing", () => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -278,17 +274,87 @@ describe("mapExport utils", () => {
       expect(result.getAttribute("viewBox")).toBe("0 0 123 456");
     });
 
-    // it("removes background rects", () => {
-    //   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    //   const rect = document.createElementNS(
-    //     "http://www.w3.org/2000/svg",
-    //     "rect"
-    //   );
-    //   rect.setAttribute("class", "background");
-    //   svg.appendChild(rect);
-    //   const result = prepareSvgClone(svg, false);
-    //   expect(result.querySelector("rect.background")).toBeNull();
-    // });
+    it("removes background rects (class background)", () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      const rect = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "rect"
+      );
+      rect.setAttribute("class", "background");
+      g.appendChild(rect);
+      svg.appendChild(g);
+      const result = prepareSvgClone(svg, false);
+      expect(
+        result.querySelectorAll(
+          "rect[data-export-ignore], rect.background, rect[data-background]"
+        ).length
+      ).toBe(0);
+    });
+
+    it("removes background rects (data-export-ignore, data-background)", () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const rect1 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "rect"
+      );
+      rect1.setAttribute("data-export-ignore", "true");
+      const rect2 = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "rect"
+      );
+      rect2.setAttribute("data-background", "true");
+      svg.appendChild(rect1);
+      svg.appendChild(rect2);
+      const result = prepareSvgClone(svg, false);
+      expect(result.querySelectorAll("rect[data-export-ignore]").length).toBe(
+        0
+      );
+      expect(result.querySelectorAll("rect[data-background]").length).toBe(0);
+    });
+
+    it("inlines computed styles with and without existing style", () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const path = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "path"
+      );
+      svg.appendChild(path);
+      path.setAttribute("style", "stroke:red");
+      const origGetComputedStyle = window.getComputedStyle;
+      window.getComputedStyle = () =>
+        ({
+          getPropertyValue: (prop: string) => (prop === "fill" ? "blue" : ""),
+        } as any);
+      const result = prepareSvgClone(svg, true);
+      const clonedPath = result.querySelector("path");
+      const style1 = clonedPath?.getAttribute("style");
+      if (style1 !== undefined && style1 !== null) {
+        expect(style1).toContain("stroke:red");
+        expect(style1).toContain("fill:blue");
+      }
+      path.removeAttribute("style");
+      const result2 = prepareSvgClone(svg, true);
+      const clonedPath2 = result2.querySelector("path");
+      const style2 = clonedPath2?.getAttribute("style");
+      if (style2 !== undefined && style2 !== null) {
+        expect(style2).toContain("fill:blue");
+      }
+      window.getComputedStyle = origGetComputedStyle;
+    });
+
+    it("falls back to clientWidth/clientHeight if width/height missing", () => {
+      const svg = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "svg"
+      ) as any;
+      svg.width = undefined;
+      svg.height = undefined;
+      svg.clientWidth = 321;
+      svg.clientHeight = 654;
+      const result = prepareSvgClone(svg, false);
+      expect(result.getAttribute("viewBox")).toBe("0 0 321 654");
+    });
 
     it("inlines computed styles and handles errors", () => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -303,7 +369,6 @@ describe("mapExport utils", () => {
     });
   });
 
-  // --- getCorrespondingOriginal ---
   describe("getCorrespondingOriginal", () => {
     it("returns the correct original element for a nested clone", () => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -330,9 +395,29 @@ describe("mapExport utils", () => {
       );
       expect(getCorrespondingOriginal(orphan, svg, clone)).toBeNull();
     });
+
+    it("returns null if not in the clone tree", () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+      svg.appendChild(g);
+      const clone = svg.cloneNode(true) as SVGSVGElement;
+      // Pass a node from a different tree
+      expect(getCorrespondingOriginal(g, svg, clone)).toBeNull();
+    });
+
+    it("returns null if parentNode is missing", () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      const clone = svg.cloneNode(true) as SVGSVGElement;
+      // orphan node
+      const orphan = document.createElementNS(
+        "http://www.w3.org/2000/svg",
+        "g"
+      );
+      Object.defineProperty(orphan, "parentNode", { value: null });
+      expect(getCorrespondingOriginal(orphan, svg, clone)).toBeNull();
+    });
   });
 
-  // --- downloadBlob ---
   describe("downloadBlob", () => {
     it("triggers download and revokes URL", () => {
       const blob = new Blob(["test"], { type: "text/plain" });
@@ -345,7 +430,119 @@ describe("mapExport utils", () => {
       const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       svg.setAttribute("width", "100");
       svg.setAttribute("height", "100");
+      // Mock document.body.appendChild/removeChild to avoid errors
+      const origAppend = document.body.appendChild;
+      const origRemove = document.body.removeChild;
+      document.body.appendChild = vi.fn();
+      document.body.removeChild = vi.fn();
       expect(() => exportSvg(svg, "custom.svg", false)).not.toThrow();
+      document.body.appendChild = origAppend;
+      document.body.removeChild = origRemove;
     });
+    it("does nothing if svgElement is falsy", () => {
+      expect(exportSvg(null as any)).toBeUndefined();
+    });
+    it("exports SVG with inlineStyles true", () => {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("width", "100");
+      svg.setAttribute("height", "100");
+      // Mock document.body.appendChild/removeChild to avoid errors
+      const origAppend = document.body.appendChild;
+      const origRemove = document.body.removeChild;
+      document.body.appendChild = vi.fn();
+      document.body.removeChild = vi.fn();
+      expect(() => exportSvg(svg, "inline.svg", true)).not.toThrow();
+      document.body.appendChild = origAppend;
+      document.body.removeChild = origRemove;
+    });
+  });
+});
+
+describe("exportMapDataAsJson", () => {
+  let origCreateElement: typeof document.createElement;
+  let origAppendChild: typeof document.body.appendChild;
+  let origRemoveChild: typeof document.body.removeChild;
+  let origCreateObjectURL: typeof URL.createObjectURL;
+  let origRevokeObjectURL: typeof URL.revokeObjectURL;
+
+  beforeEach(() => {
+    origCreateElement = document.createElement;
+    origCreateObjectURL = URL.createObjectURL;
+    origRevokeObjectURL = URL.revokeObjectURL;
+    document.createElement = vi.fn((tag) => {
+      if (tag === "a") {
+        return {
+          set href(v) {
+            this._href = v;
+          },
+          get href() {
+            return this._href;
+          },
+          set download(v) {
+            this._download = v;
+          },
+          get download() {
+            return this._download;
+          },
+          click: vi.fn(),
+        } as any;
+      }
+      return origCreateElement.call(document, tag);
+    }) as any;
+    if (document.body) {
+      origAppendChild = document.body.appendChild;
+      origRemoveChild = document.body.removeChild;
+      document.body.appendChild = vi.fn();
+      document.body.removeChild = vi.fn();
+    }
+    URL.createObjectURL = vi.fn(() => "blob:url");
+    URL.revokeObjectURL = vi.fn();
+  });
+
+  afterEach(() => {
+    document.createElement = origCreateElement;
+    if (document.body) {
+      document.body.appendChild = origAppendChild;
+      document.body.removeChild = origRemoveChild;
+    }
+    URL.createObjectURL = origCreateObjectURL;
+    URL.revokeObjectURL = origRevokeObjectURL;
+  });
+
+  it("exports data as JSON with default filename", () => {
+    vi.useFakeTimers();
+    const data = { foo: "bar", arr: [1, 2, 3] };
+    exportMapDataAsJson(data);
+    expect(document.body.appendChild).toHaveBeenCalled();
+    vi.runAllTimers();
+    expect(document.body.removeChild).toHaveBeenCalled();
+    expect(URL.createObjectURL).toHaveBeenCalled();
+    expect(URL.revokeObjectURL).toHaveBeenCalled();
+    vi.useRealTimers();
+  });
+
+  it("exports data as JSON with custom filename", () => {
+    const data = { test: 123 };
+    exportMapDataAsJson(data, "custom.json");
+    const a = (document.createElement as any).mock.results[0].value;
+    expect(a.download).toBe("custom.json");
+  });
+
+  it("handles empty data", () => {
+    exportMapDataAsJson({}, "empty.json");
+    expect(document.body.appendChild).toHaveBeenCalled();
+  });
+
+  it("handles large data", () => {
+    const data = { arr: Array(1000).fill({ x: 1, y: 2 }) };
+    exportMapDataAsJson(data, "large.json");
+    expect(document.body.appendChild).toHaveBeenCalled();
+  });
+
+  it("does not throw if document.body is missing (SSR edge case)", () => {
+    const origBody = document.body;
+    (globalThis as any).document.body = null;
+    expect(() => exportMapDataAsJson({ foo: 1 }, "fail.json")).not.toThrow();
+    (globalThis as any).document.body = origBody;
   });
 });
