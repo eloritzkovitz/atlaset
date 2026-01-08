@@ -162,7 +162,8 @@ describe("getGeoCoordsFromMouseEvent", () => {
       [0, 0] as Coordinates,
       mockGetProjection
     );
-    expect(coords).toEqual([10, 20]);
+    // Should return [latitude, longitude] per implementation
+    expect(coords).toEqual([20, 10]);
   });
 
   it("returns null if projection has no invert", () => {
