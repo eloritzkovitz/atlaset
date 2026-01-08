@@ -3,10 +3,10 @@ import { FaMapPin, FaTimeline, FaShareNodes } from "react-icons/fa6";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
+import { useSharedMapInfo } from "@features/atlas/export";
 import type { Layer } from "@features/atlas/layers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
-import { useSharedMapInfo } from "../hooks/useSharedMapInfo";
 import { MapToolbar } from "./controls/MapToolbar";
 import { MapFooter } from "./footer/MapFooter";
 import { MapLegendModal } from "./legend/MapLegendModal";
@@ -56,7 +56,9 @@ export function MapUiContainer({
   );
 
   // UI hint for shared/readonly map, with map name and sharer if available
-  const { mapName, sharer } = useSharedMapInfo();
+  const sharedMapInfo = useSharedMapInfo() || {};
+  const mapName = sharedMapInfo.mapName;
+  const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
     if (!isReadonly) return null;
     let msg = (

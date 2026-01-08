@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLayers } from "@contexts/LayersContext";
+import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getDefaultLayerSelections } from "@features/atlas/layers/utils/layer";
@@ -8,6 +9,7 @@ import {
   type CountryFilterOptions,
   type SovereigntyType,
 } from "@features/countries";
+import { useSharedMapInfo } from "@features/atlas/export";
 import {
   filterCountries,
   getFilteredIsoCodes,
@@ -31,6 +33,16 @@ export function useCountryFilters() {
     showVisitedOnly,
   } = useTimeline();
   const { trips } = useTrips();
+  const { isReadonly } = useMapView();
+  const sharedMapInfo = useSharedMapInfo();
+  
+  // Determine effective shared visited iso codes in readonly mode
+  const effectiveSharedVisitedIsoCodes = useMemo(() => {
+    if (isReadonly && sharedMapInfo?.layers) {
+      return sharedMapInfo.layers.find((l) => l.name === "Visited Countries")?.countries ?? [];
+    }
+    return undefined;
+  }, [isReadonly, sharedMapInfo]);
 
   // Filter states
   const [selectedRegion, setSelectedRegion] = useState<string>("");
@@ -89,7 +101,12 @@ export function useCountryFilters() {
     min: absoluteMin,
     max: absoluteMax,
   } = getVisitCountStats(trips, selectedYear);
-  const visitedIsoCodes = Object.keys(visitedMap);
+  
+  // Use shared visited iso codes in readonly mode if provided or auto-detected
+  const visitedIsoCodes =
+    isReadonly && effectiveSharedVisitedIsoCodes
+      ? effectiveSharedVisitedIsoCodes
+      : Object.keys(visitedMap);
 
   // Filter visited countries with the same core filters (no layers)
   const visitedCountriesFiltered = filteredCountriesNoLayer.filter((c) =>
@@ -100,6 +117,13 @@ export function useCountryFilters() {
   // Apply visit count filtering
   const finalFilteredCountries = useMemo(() => {
     if (showVisitedOnly) {
+      // In readonly mode with sharedVisitedIsoCodes, filter by those iso codes only
+      if (isReadonly && effectiveSharedVisitedIsoCodes) {
+        return filteredCountries.filter((c) =>
+          effectiveSharedVisitedIsoCodes.includes(c.isoCode)
+        );
+      }
+      // Otherwise, use visit count filtering as before
       return filterByVisitCount(
         filteredCountries,
         visitedMap,
@@ -114,6 +138,8 @@ export function useCountryFilters() {
     visitedMap,
     minVisitCount,
     maxVisitCount,
+    isReadonly,
+    effectiveSharedVisitedIsoCodes,
   ]);
 
   // Reset core filters
