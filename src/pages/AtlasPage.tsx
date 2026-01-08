@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
@@ -13,12 +13,16 @@ export default function AtlasPage() {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const isReadonly = params.has("map");
-  const mode = isReadonly ? "readonly" : "normal";
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { layers, loading: layersLoading } = useLayers();
-  const { mapReady, handleMapReady } = useMapView();
+  const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Set map mode based on URL params
+  useEffect(() => {
+    setMapMode(isReadonly ? "readonly" : "normal");
+  }, [isReadonly, setMapMode]);
 
   // Country selection state
   const {
@@ -63,7 +67,6 @@ export default function AtlasPage() {
             <MapUiContainer layers={layers} isAddingMarker={isAddingMarker} />
           )}
           <WorldMap
-            mode={mode}
             onCountryClick={handleCountryClick}
             onCountryHover={handleCountryHover}
             selectedIsoCode={selectedIsoCode}

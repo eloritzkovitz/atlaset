@@ -10,10 +10,8 @@ import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
-import type { MapMode } from "../types";
 
 export interface WorldMapProps {
-  mode?: MapMode;
   onCountryClick: (countryIsoCode: string | null) => void;
   onCountryHover: (isoCode: string | null) => void;
   selectedIsoCode: string | null;
@@ -24,7 +22,6 @@ export interface WorldMapProps {
 }
 
 export function WorldMap({
-  mode = "normal",
   onCountryClick,
   onCountryHover,
   selectedIsoCode,
@@ -38,6 +35,7 @@ export function WorldMap({
 
   // Map projection and data
   const {
+    mapMode,
     geoData,
     projection,
     dimensions,
@@ -55,7 +53,7 @@ export function WorldMap({
   }, [measuredDimensions, setDimensions]);
 
   // Get layer items based on mode
-  const layerItems = useMapLayerItems(mode);
+  const layerItems = useMapLayerItems(mapMode);
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =

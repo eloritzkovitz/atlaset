@@ -1,6 +1,6 @@
 import { type ReactNode, useState, useEffect, useCallback } from "react";
 import { DEFAULT_MAP_SETTINGS, MAP_OPTIONS } from "@constants";
-import { useGeoData, type Coordinates } from "@features/atlas/map";
+import { useGeoData, type Coordinates, type MapMode } from "@features/atlas/map";
 import { getCountryCenterAndZoom } from "@features/atlas/map";
 import { MapViewContext } from "./MapViewContext";
 import { useSettings } from "./SettingsContext";
@@ -14,11 +14,15 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const { settings, updateSettings } = useSettings();
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
-  // Map ready state
+  // Map mode state
+  const [mapMode, setMapMode] = useState<MapMode>("normal");
+  const isReadonly = mapMode === "readonly";
+  
+  // Map ready state  
   const [mapReady, setMapReady] = useState(false);
   const handleMapReady = useCallback((delay = 50) => {
     setTimeout(() => setMapReady(true), delay);
-  }, []);
+  }, []); 
 
   // Map UI config
   const map = settings.map ?? {
@@ -89,6 +93,9 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   return (
     <MapViewContext.Provider
       value={{
+        mapMode,
+        setMapMode,
+        isReadonly,
         geoData,
         projection,
         setProjection,

@@ -10,6 +10,9 @@ import {
   FaChevronUp,
   FaListUl,
   FaShareFromSquare,
+  FaArrowLeft,
+  FaDownload,
+  FaBookmark,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
 import { useLayers } from "@contexts/LayersContext";
@@ -21,6 +24,7 @@ import { MapToolbarActions } from "./MapToolbarActions";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {
+  isReadonly: boolean;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   setTimelineMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,6 +32,7 @@ interface MapToolbarProps {
 }
 
 export function MapToolbar({
+  isReadonly,
   zoom,
   setZoom,
   setTimelineMode,
@@ -75,7 +80,7 @@ export function MapToolbar({
         if (isMobile) setMenuOpen(false);
         toggleLayers();
       },
-      show: true,
+      show: !isReadonly,
     },
     {
       key: "markers",
@@ -85,7 +90,7 @@ export function MapToolbar({
         if (isMobile) setMenuOpen(false);
         toggleMarkers();
       },
-      show: true,
+      show: !isReadonly,
     },
     {
       key: "legend",
@@ -106,13 +111,24 @@ export function MapToolbar({
         if (isMobile) setMenuOpen(false);
         setTimelineMode((prev) => !prev);
       },
-      show: !!(visitedLayer && isTimelineLayer(visitedLayer)),
+      show: !isReadonly && !!(visitedLayer && isTimelineLayer(visitedLayer)),
       separatorAfter: true,
     },
     {
+      key: "save",
+      icon: <FaBookmark className="text-lg" />,
+      label: "Save",
+      onClick: () => {},
+      show: isReadonly,
+    },
+    {
       key: "export",
-      icon: <FaShareFromSquare className="text-lg" />,
-      label: "Export",
+      icon: !isReadonly ? (
+        <FaShareFromSquare className="text-lg" />
+      ) : (
+        <FaDownload className="text-lg" />
+      ),
+      label: !isReadonly ? "Export" : "Download",
       onClick: () => {
         if (isMobile) setMenuOpen(false);
         toggleExport();
@@ -127,7 +143,26 @@ export function MapToolbar({
         if (isMobile) setMenuOpen(false);
         toggleSettings();
       },
-      show: true,
+      show: !isReadonly,
+    },
+    {
+      key: "exit-shared",
+      icon: <FaArrowLeft className="text-lg" />,
+      label: "Exit Shared View",
+      onClick: () => {
+        // Close menu on mobile
+        if (isMobile) setMenuOpen(false);
+
+        // Remove ?map param and navigate to /atlas (main map)
+        if (window.location.pathname === "/atlas") {
+          const url = new URL(window.location.href);
+          url.searchParams.delete("map");
+          window.location.href = url.pathname + url.search;
+        } else {
+          window.location.href = "/atlas";
+        }
+      },
+      show: isReadonly,
     },
   ];
 

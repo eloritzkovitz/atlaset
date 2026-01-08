@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
-import { FaXmark, FaShareFromSquare } from "react-icons/fa6";
+import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
 import { useLayers } from "@contexts/LayersContext";
+import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
@@ -19,9 +20,10 @@ export interface MapExportPanelProps {
 }
 
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
+  const { isReadonly } = useMapView();
   const { showExport, closePanel } = useUI();
   const { visitedCountryCodes } = useVisitedCountries();
-  const { layers: allLayers } = useLayers();
+  const { layers: allLayers } = useLayers();  
 
   // Export mode: 'visited' or 'layers'
   const [exportMode, setExportMode] = useState<"visited" | "layers">("visited");
@@ -64,8 +66,8 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     <Panel
       title={
         <>
-          <FaShareFromSquare />
-          Export
+          {!isReadonly ? <FaShareFromSquare /> : <FaDownload />}
+          {!isReadonly ? "Export" : "Download"}
         </>
       }
       show={showExport}
@@ -91,15 +93,19 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
           downloadExpanded={downloadExpanded}
           setDownloadExpanded={setDownloadExpanded}
         />
-        <Separator className="my-4" />
-        <ShareMapSection
-          exportMode={exportMode}
-          setExportMode={setExportMode}
-          allLayers={allLayers}
-          visitedCountryCodes={visitedCountryCodes}
-          shareExpanded={shareExpanded}
-          setShareExpanded={setShareExpanded}
-        />
+        {!isReadonly && (
+          <>
+            <Separator className="my-4" />
+            <ShareMapSection
+              exportMode={exportMode}
+              setExportMode={setExportMode}
+              allLayers={allLayers}
+              visitedCountryCodes={visitedCountryCodes}
+              shareExpanded={shareExpanded}
+              setShareExpanded={setShareExpanded}
+            />
+          </>
+        )}
       </div>
     </Panel>
   );
