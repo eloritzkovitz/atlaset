@@ -1,8 +1,7 @@
 import { useRef } from "react";
-import { FaPlus, FaMinus, FaCrosshairs, FaListUl } from "react-icons/fa6";
+import { FaPlus, FaMinus, FaUpRightAndDownLeftFromCenter } from "react-icons/fa6";
 import { ActionButton } from "@components";
 import { DEFAULT_MAP_SETTINGS } from "@constants";
-import { useUI } from "@contexts/UIContext";
 import { useKeyHandler } from "@hooks";
 
 interface MapControlsProps {
@@ -16,8 +15,6 @@ export function MapControls({
   setZoom,
   visible = true,
 }: MapControlsProps) {
-  const { toggleLegend } = useUI();
-
   const zoomInInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomOutInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -75,16 +72,6 @@ export function MapControls({
     >
       <div className="flex flex-col items-center space-y-0.5">
         <ActionButton
-          onClick={() => toggleLegend()}
-          ariaLabel={"Show legend"}
-          title={"Legend"}
-          titlePosition="left"
-          variant="action"
-          className={"mb-2"}
-          icon={<FaListUl />}
-          rounded
-        />
-        <ActionButton
           onClick={() =>
             setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom))
           }
@@ -118,10 +105,10 @@ export function MapControls({
         />
         <ActionButton
           onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
-          ariaLabel="Reset zoom"
-          title="Reset zoom"
+          ariaLabel="Reset view"
+          title="Reset view"
           titlePosition="left"
-          icon={<FaCrosshairs />}
+          icon={<FaUpRightAndDownLeftFromCenter />}
           variant="action"
           rounded
         />

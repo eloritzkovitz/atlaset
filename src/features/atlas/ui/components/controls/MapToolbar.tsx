@@ -9,6 +9,7 @@ import {
   FaChevronLeft,
   FaChevronRight,
   FaChevronUp,
+  FaListUl,
 } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
 import { useLayers } from "@contexts/LayersContext";
@@ -36,8 +37,9 @@ export function MapToolbar({
   const {
     uiVisible,
     toggleCountries,
-    toggleMarkers,
     toggleLayers,
+    toggleMarkers,
+    toggleLegend,    
     toggleExport,
     toggleSettings,
   } = useUI();
@@ -82,6 +84,16 @@ export function MapToolbar({
       onClick: () => {
         if (isMobile) setMenuOpen(false);
         toggleMarkers();
+      },
+      show: true,
+    },
+    {
+      key: "legend",
+      icon: <FaListUl className="text-lg" />,
+      label: "Legend",
+      onClick: () => {
+        if (isMobile) setMenuOpen(false);
+        toggleLegend();
       },
       show: true,
       separatorAfter: true,
