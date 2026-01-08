@@ -120,8 +120,7 @@ describe("migrationService", () => {
         {
           id: "b",
           name: "",
-          latitude: 0,
-          longitude: 0,
+          coordinates: [0, 0],
           visible: false,
         },
       ]);
@@ -164,7 +163,7 @@ describe("migrationService", () => {
       // Markers merged and saved
       expect(markersService.save).toHaveBeenCalledWith([
         { id: "a" },
-        { id: "b", name: "", latitude: 0, longitude: 0, visible: false },
+        { id: "b", name: "", coordinates: [0, 0], visible: false },
       ]);
       expect(appDb.markers.clear).toHaveBeenCalled();
 

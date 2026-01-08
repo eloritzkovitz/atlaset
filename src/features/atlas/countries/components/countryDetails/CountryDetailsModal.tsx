@@ -17,18 +17,17 @@ import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
+import { useMapView } from "@contexts/MapViewContext";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
   country: Country | null;
-  onCenterMap?: () => void;
   onClose: () => void;
 }
 
 export function CountryDetailsModal({
   isOpen,
   country,
-  onCenterMap,
   onClose,
 }: CountryDetailsModalProps) {
   const { currencies } = useCountryData();
@@ -39,6 +38,7 @@ export function CountryDetailsModal({
     ? getCountryVisitsCategorized(country.isoCode)
     : { past: [], upcoming: [], tentative: [] };
   const [showVisitsDrawer, setShowVisitsDrawer] = useState(false);
+  const { centerOnCountry } = useMapView();
 
   // Get home country from settings
   const { homeCountry } = useHomeCountry();
@@ -58,7 +58,7 @@ export function CountryDetailsModal({
   useKeyHandler(
     (e) => {
       e.preventDefault();
-      if (onCenterMap) onCenterMap();
+      centerOnCountry(country?.isoCode || "");
     },
     ["x", "X"],
     isOpen
@@ -113,9 +113,9 @@ export function CountryDetailsModal({
               icon={<FaLocationDot />}
               rounded
             />
-            {onCenterMap && (
+            {centerOnCountry && (
               <ActionButton
-                onClick={onCenterMap}
+                onClick={() => centerOnCountry(country?.isoCode || "")}
                 ariaLabel="Center map on country"
                 title="Center map"
                 icon={<FaCrosshairs />}

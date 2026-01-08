@@ -1,11 +1,12 @@
 import { createContext, useContext } from "react";
+import type { Coordinates } from "@features/atlas/map";
 import type { Marker } from "@features/atlas/markers/types";
 
 export interface MarkersContextType {
   markers: Marker[];
   isAddingMarker: boolean;
   startAddingMarker: () => void;
-  handleMapClickForMarker: (coords: [number, number]) => void;
+  handleMapClickForMarker: (coords: Coordinates) => void;
   cancelMarkerCreation: () => void;
   addMarker: (marker: Marker) => void;
   editMarker: (updated: Marker) => void;
@@ -16,7 +17,7 @@ export interface MarkersContextType {
   setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;
   isEditingMarker: boolean;
   isMarkerModalOpen: boolean;
-  openAddMarker: (coords?: [number, number]) => void;
+  openAddMarker: (coords?: Coordinates) => void;
   openEditMarker: (marker: Marker) => void;
   saveMarker: () => void;
   closeMarkerModal: () => void;

@@ -1,12 +1,12 @@
 import React from "react";
 import { Tooltip } from "@components";
-import { getScaleBarLabel } from "@features/atlas/map";
+import { getScaleBarLabel, type Coordinates } from "@features/atlas/map";
 import { GitHubButton } from "@layout/Footer/GitHubButton";
 import { BrandCopyright } from "@layout/Branding/BrandCopyright";
 
 interface MapFooterProps {
   zoom: number;
-  coords: [number, number] | null;
+  coords: Coordinates | null;
   latitude: number;
   barPx?: number;
 }
@@ -31,7 +31,7 @@ export const MapFooter: React.FC<MapFooterProps> = ({
           <span className="mr-2">{`x${zoom.toFixed(1)}`}</span>
         </Tooltip>
         {coords ? (
-          <Tooltip content={`Longitude, Latitude`} position="top">
+          <Tooltip content={`Latitude, Longitude`} position="top">
             <span>{`${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}`}</span>
           </Tooltip>
         ) : (

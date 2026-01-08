@@ -1,6 +1,4 @@
-import type { Feature, Geometry } from "geojson";
 import { useMemo } from "react";
-import { Geographies, Geography } from "react-simple-maps";
 import { useTimeline } from "@contexts/TimelineContext";
 import { getCountryIsoCode } from "@features/countries";
 import {
@@ -11,8 +9,10 @@ import {
 import { useCountryColors, useLayerColors } from "@features/settings";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { useHomeCountry } from "@features/user";
+import { Geography } from "./Geography";
+import { Geographies } from "./Geographies";
 import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
-import type { GeoData } from "../types";
+import type { GeoData, GeographyFeature } from "../types";
 
 interface LayersContainerProps {
   geographyData: GeoData;
@@ -24,7 +24,7 @@ interface LayersContainerProps {
   onCountryHover?: (isoCode: string | null) => void;
   defaultColor?: string;
   isAddingMarker?: boolean;
-};
+}
 
 export function LayersContainer({
   geographyData,
@@ -55,11 +55,7 @@ export function LayersContainer({
   return (
     <g style={isAddingMarker ? { pointerEvents: "none" } : undefined}>
       <Geographies geography={geographyData}>
-        {({
-          geographies,
-        }: {
-          geographies: Feature<Geometry, { [key: string]: unknown }>[];
-        }) =>
+        {({ geographies }: { geographies: GeographyFeature[] }) =>
           geographies.map((geo) => {
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
@@ -112,9 +108,10 @@ export function LayersContainer({
               style = geographyStyle.hover;
             }
 
+            // geo is guaranteed to have svgPath from useGeographies
             return (
               <Geography
-                key={(geo as unknown as { rsmKey: string }).rsmKey}
+                key={geo.rsmKey}
                 geography={geo}
                 onMouseEnter={() =>
                   onCountryHover && onCountryHover(isoA2 ?? null)

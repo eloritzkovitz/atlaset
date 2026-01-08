@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { FaMapPin, FaTimeline } from "react-icons/fa6";
+import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import type { Layer } from "@features/atlas/layers";
@@ -12,24 +13,17 @@ import { useMapLegendItems } from "../hooks/useMapLegendItems";
 import type { LegendItem } from "../types";
 
 interface MapUiContainerProps {
-  zoom: number;
-  setZoom: React.Dispatch<React.SetStateAction<number>>;
-  center: [number, number];
-  selectedCoords: [number, number] | null;
   layers: Layer[];
   isAddingMarker?: boolean;
 }
 
 export function MapUiContainer({
-  zoom,
-  setZoom,
-  center,
-  selectedCoords,
   layers,
   isAddingMarker,
 }: MapUiContainerProps) {
+  const { zoom, setZoom, center, selectedCoords } = useMapView();
   const { timelineMode, setTimelineMode, layerMode } = useTimeline();
-  const { showLegend, closeLegend, uiVisible } = useUI();  
+  const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     layers,
     timelineMode,

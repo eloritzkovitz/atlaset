@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import type { Coordinates } from "@features/atlas/map";
 import { markersService } from "@features/atlas/markers";
 import type { Marker } from "@features/atlas/markers/types";
 import { useAuth } from "@features/user";
@@ -48,7 +49,7 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   // Handle map click for adding marker
-  const handleMapClickForMarker = (coords: [number, number]) => {
+  const handleMapClickForMarker = (coords: Coordinates) => {
     if (!isAddingMarker) return;
     openAddMarker(coords);
     setIsAddingMarker(false);
@@ -110,14 +111,13 @@ export const MarkersProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Open add marker modal
-  function openAddMarker(coords?: [number, number]) {
+  function openAddMarker(coords?: Coordinates) {
     setEditingMarker({
       id: crypto.randomUUID(),
       name: "",
       color: "#e53e3e",
       description: "",
-      longitude: coords?.[0] ?? 0,
-      latitude: coords?.[1] ?? 0,
+      coordinates: coords || [0, 0],
       visible: true,
     });
     setMarkerModalOpen(true);

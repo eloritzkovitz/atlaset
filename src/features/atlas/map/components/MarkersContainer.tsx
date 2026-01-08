@@ -1,6 +1,6 @@
 import { useMarkers } from "@contexts/MarkersContext";
 import { Marker } from "@features/atlas/markers";
-import { getProjection } from "../utils/map";
+import { getProjection } from "../utils/projection";
 
 interface MarkersContainerProps {
   projectionType: string;
@@ -25,7 +25,7 @@ export function MarkersContainer({
       {markers
         .filter((marker) => marker.visible !== false)
         .map((marker) => {
-          const point = proj ? proj([marker.longitude, marker.latitude]) : null;
+          const point = proj ? proj(marker.coordinates) : null;
           if (!point) return null;
           const [x, y] = point;
           return (

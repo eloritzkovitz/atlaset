@@ -1,5 +1,5 @@
 import { MAP_STYLE_CONFIG } from "@constants";
-import { useMapUI } from "@contexts/MapUIContext";
+import { useMapView } from "@contexts/MapViewContext";
 import { useCountryColors } from "@features/settings/hooks/useCountryColors";
 
 /**
@@ -8,7 +8,7 @@ import { useCountryColors } from "@features/settings/hooks/useCountryColors";
  * @returns Object containing styles for default, hover, and pressed states.
  */
 export function useMapGeographyStyle(isAddingMarker?: boolean) {
-  const { borderColor, borderWidth } = useMapUI();
+  const { borderColor, borderWidth } = useMapView();
   const {
     HIGHLIGHTED_COUNTRY_COLOR,
     HOVERED_COUNTRY_COLOR,
