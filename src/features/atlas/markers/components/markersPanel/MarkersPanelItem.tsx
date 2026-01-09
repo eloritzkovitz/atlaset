@@ -5,14 +5,14 @@ import type { Marker } from "../../types";
 interface MarkersPanelItemProps {
   marker: Marker;
   idx: number;
-  onToggleVisibility: () => void;
+  onToggleVisibility?: () => void;
   onCenter: () => void;
-  onEdit: () => void;
-  onRemove: () => void;
-  draggedIndex: number | null;
-  handleDragStart: (idx: number) => void;
-  handleDragOver: (e: React.DragEvent<HTMLLIElement>, idx: number) => void;
-  handleDragEnd: () => void;
+  onEdit?: () => void;
+  onRemove?: () => void;
+  draggedIndex?: number | null;
+  handleDragStart?: (idx: number) => void;
+  handleDragOver?: (e: React.DragEvent<HTMLLIElement>, idx: number) => void;
+  handleDragEnd?: () => void;
 }
 
 export function MarkersPanelItem({
@@ -37,8 +37,8 @@ export function MarkersPanelItem({
       onEdit={onEdit}
       onRemove={onRemove}
       dragged={draggedIndex === idx}
-      onDragStart={() => handleDragStart(idx)}
-      handleDragOver={(e: DragEvent<HTMLLIElement>) => handleDragOver(e, idx)}
+      onDragStart={handleDragStart ? () => handleDragStart(idx) : undefined}
+      handleDragOver={handleDragOver ? (e: DragEvent<HTMLLIElement>) => handleDragOver(e, idx) : undefined}
       handleDragEnd={handleDragEnd}
     />
   );

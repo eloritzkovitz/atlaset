@@ -9,34 +9,34 @@ import {
   InputBox,
 } from "@components";
 import { encodeMapData } from "../utils/mapShare";
-import type { Layer } from "@features/atlas/layers";
 import type { Marker } from "@features/atlas/markers/types";
 import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
+import { useLayers } from "@contexts/LayersContext";
+import { useMarkers } from "@contexts/MarkersContext";
 
 interface ShareMapSectionProps {
   exportMode: "visited" | "layers";
   setExportMode: (mode: "visited" | "layers") => void;
-  allLayers: Layer[];
   visitedCountryCodes: string[];
   shareExpanded: boolean;
   setShareExpanded: (v: boolean) => void;
-  markers?: Marker[];
 }
 
 export function ShareMapSection({
   exportMode,
   setExportMode,
-  allLayers,
   visitedCountryCodes,
   shareExpanded,
   setShareExpanded,
-  markers,
 }: ShareMapSectionProps) {
   const [shareCopied, setShareCopied] = useState(false);
   const [mapName, setMapName] = useState("");
   const [sharer, setSharer] = useState("");
   const auth = useContext(AuthContext);
   const [includeMarkers, setIncludeMarkers] = useState(false);
+
+  const { layers: allLayers } = useLayers();
+  const { markers } = useMarkers();
 
   // Prefill sharer with authenticated user's displayName if available
   useEffect(() => {
@@ -70,17 +70,24 @@ export function ShareMapSection({
   }
 
   // Prepare markers for sharing
-  let markersToShare:
-    | { lat: number; lng: number; label?: string }[]
-    | undefined = undefined;
+  let markersToShare: Marker[] | undefined = undefined;
   if (includeMarkers) {
     markersToShare = Array.isArray(markers)
-      ? markers.map((m) => ({
-          lat: m.coordinates[1],
-          lng: m.coordinates[0],
-          label: m.name || undefined,
-        }))
+      ? markers
+          .filter((m) => m.visible !== false)
+          .map((m, idx) => ({
+            id: m.id ?? String(idx),
+            name: m.name,
+            coordinates: m.coordinates,
+            color: m.color,
+            description: m.description,
+            visible: true,
+          }))
       : [];
+  }
+
+  if (includeMarkers) {
+    console.log("Markers to share:", markersToShare);
   }
 
   // Encode map data into shareable code

@@ -1,4 +1,5 @@
 import { useMarkers } from "@contexts/MarkersContext";
+import { useEffectiveMarkers } from "@features/atlas/markers/hooks/useEffectiveMarkers";
 import { Marker } from "@features/atlas/markers";
 import { getProjection } from "../utils/projection";
 
@@ -17,7 +18,8 @@ export function MarkersContainer({
   scaleDivisor,
   zoom = 1,
 }: MarkersContainerProps & { zoom?: number }) {
-  const { markers, showMarkerDetails } = useMarkers();
+  const { showMarkerDetails } = useMarkers();
+  const markers = useEffectiveMarkers();
   const proj = getProjection(projectionType, width, height, scaleDivisor);
 
   return (

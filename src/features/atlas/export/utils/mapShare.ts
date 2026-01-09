@@ -9,19 +9,21 @@
  * @param mapData Object with layers and optional markers
  * @returns Base64 encoded string
  */
+import type { Marker } from "@features/atlas/markers/types";
+
 export function encodeMapData(mapData: {
   layers: { name: string; color: string; countries: string[] }[];
-  markers?: { lat: number; lng: number; label?: string }[];
+  markers?: Marker[];
   mapName?: string;
   sharer?: string;
 }): string {
-  // Serialize layers (encode all fields)
+  // Serialize layers
   const layerStrings = mapData.layers
     .map((l) =>
       [
         encodeURIComponent(l.name),
         encodeURIComponent(l.color),
-        l.countries.map(encodeURIComponent).join(",")
+        l.countries.map(encodeURIComponent).join(","),
       ].join(":")
     )
     .join(";");
@@ -30,8 +32,15 @@ export function encodeMapData(mapData: {
   let markerString = "";
   if (Array.isArray(mapData.markers)) {
     markerString = mapData.markers
+      .filter((m) => m.visible !== false)
       .map((m) =>
-        [m.lat, m.lng, m.label ? encodeURIComponent(m.label) : ""].join(",")
+        [
+          encodeURIComponent(m.name ?? ""),
+          Array.isArray(m.coordinates) ? m.coordinates[0] : "",
+          Array.isArray(m.coordinates) ? m.coordinates[1] : "",
+          encodeURIComponent(m.color ?? ""),
+          encodeURIComponent(m.description ?? ""),
+        ].join(",")
       )
       .join("|");
   }
@@ -54,7 +63,12 @@ export function encodeMapData(mapData: {
  */
 export function decodeMapData(code: string): {
   layers: { name: string; color: string; countries: string[] }[];
-  markers?: { lat: number; lng: number; label?: string }[];
+  markers?: Array<{
+    name?: string;
+    coordinates: [number, number];
+    color?: string;
+    description?: string;
+  }>;
   mapName?: string;
   sharer?: string;
 } {
@@ -84,21 +98,37 @@ export function decodeMapData(code: string): {
       .filter((l) => l.name);
 
     // Markers
-    let markers: { lat: number; lng: number; label?: string }[] | undefined =
-      undefined;
+    let markers:
+      | Array<{
+          name?: string;
+          coordinates: [number, number];
+          color?: string;
+          description?: string;
+        }>
+      | undefined = undefined;
     if (markerPart && markerPart.length > 0) {
       markers = markerPart.split("|").map((markerStr) => {
-        const [lat, lng, label] = markerStr.split(",");
+        const [name, lng, lat, color, description] = markerStr.split(",");
         return {
-          lat: Number(lat),
-          lng: Number(lng),
-          ...(label ? { label: decodeURIComponent(label) } : {}),
+          name: decodeURIComponent(name) || undefined,
+          coordinates: [Number(lng), Number(lat)] as [number, number],
+          color: color ? decodeURIComponent(color) : undefined,
+          description: description
+            ? decodeURIComponent(description)
+            : undefined,
         };
       });
     }
+
+    // Construct result
     const result: {
       layers: { name: string; color: string; countries: string[] }[];
-      markers?: { lat: number; lng: number; label?: string }[];
+      markers?: Array<{
+        name?: string;
+        coordinates: [number, number];
+        color?: string;
+        description?: string;
+      }>;
       mapName?: string;
       sharer?: string;
     } = { layers };

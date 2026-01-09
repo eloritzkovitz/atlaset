@@ -1,7 +1,6 @@
 import { useRef, useState } from "react";
 import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
-import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useVisitedCountries } from "@features/visits";
@@ -23,7 +22,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { isReadonly } = useMapView();
   const { showExport, closePanel } = useUI();
   const { visitedCountryCodes } = useVisitedCountries();
-  const { layers: allLayers } = useLayers();  
 
   // Export mode: 'visited' or 'layers'
   const [exportMode, setExportMode] = useState<"visited" | "layers">("visited");
@@ -99,7 +97,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
             <ShareMapSection
               exportMode={exportMode}
               setExportMode={setExportMode}
-              allLayers={allLayers}
               visitedCountryCodes={visitedCountryCodes}
               shareExpanded={shareExpanded}
               setShareExpanded={setShareExpanded}

@@ -2,18 +2,13 @@ import { useMemo } from "react";
 import { decodeMapData } from "../utils/mapShare";
 import type { Layer } from "@features/atlas/layers";
 import { VISITED_LAYER_ID } from "@features/atlas/layers/constants/layers";
-
-export interface SharedMapMarker {
-  lat: number;
-  lng: number;
-  label?: string;
-}
+import type { Marker } from "@features/atlas/markers/types";
 
 export interface SharedMapInfo {
   mapName?: string;
   sharer?: string;
   layers?: Layer[];
-  markers?: SharedMapMarker[];
+  markers?: Marker[];
   [key: string]: unknown;
 }
 
@@ -73,11 +68,23 @@ export function useSharedMapInfo(): SharedMapInfo {
         })
       : undefined;
 
+    // Normalize markers: add id and visible (like with layers)
+    const normalizedMarkers: Marker[] | undefined = Array.isArray(markers)
+      ? markers.map((m, idx) => ({
+          id: typeof (m as any).id === "string" ? (m as any).id : `shared-marker-${idx}`,
+          name: m.name || `Marker ${idx + 1}`,
+          coordinates: Array.isArray(m.coordinates) && m.coordinates.length === 2 ? m.coordinates as [number, number] : [0, 0],
+          color: m.color,
+          description: m.description,
+          visible: typeof (m as any).visible === "boolean" ? (m as any).visible : true,
+        }))
+      : undefined;
+
     return {
       mapName,
       sharer,
       layers: normalizedLayers,
-      markers,
+      markers: normalizedMarkers,
       ...rest,
     };
   }, []);
