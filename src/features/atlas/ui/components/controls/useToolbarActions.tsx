@@ -24,9 +24,9 @@ export interface ToolbarActionsParams {
 /**
  * Gets toolbar actions for the map toolbar.
  * @param params Toolbar actions parameters.
- * @returns
+ * @returns Toolbar actions array
  */
-export function getToolbarActions({
+export function useToolbarActions({
   isMobile,
   setMenuOpen,
 }: ToolbarActionsParams) {

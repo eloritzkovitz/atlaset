@@ -36,17 +36,16 @@ export function useSharedMapInfo(): SharedMapInfo {
       ...rest
     } = decoded || {};
 
-    // Ensure layers have id and visible (as before)
+    // Normalize layers
     const normalizedLayers = Array.isArray(layers)
       ? layers.map((layer, idx) => {
-          // Type guard for possible missing properties
           const l = layer as Partial<Layer> & {
             name: string;
             color: string;
             countries: string[] | string;
           };
 
-          // Heuristic: treat first layer or layer named 'visited' as visited layer
+          // Determine if this is the visited layer
           const isVisited =
             idx === 0 ||
             (typeof l.name === "string" &&
@@ -68,15 +67,18 @@ export function useSharedMapInfo(): SharedMapInfo {
         })
       : undefined;
 
-    // Normalize markers: add id and visible (like with layers)
+    // Normalize markers
     const normalizedMarkers: Marker[] | undefined = Array.isArray(markers)
-      ? markers.map((m, idx) => ({
-          id: typeof (m as any).id === "string" ? (m as any).id : `shared-marker-${idx}`,
+      ? markers.map((m: Partial<Marker>, idx) => ({
+          id: typeof m.id === "string" ? m.id : `shared-marker-${idx}`,
           name: m.name || `Marker ${idx + 1}`,
-          coordinates: Array.isArray(m.coordinates) && m.coordinates.length === 2 ? m.coordinates as [number, number] : [0, 0],
+          coordinates:
+            Array.isArray(m.coordinates) && m.coordinates.length === 2
+              ? (m.coordinates as [number, number])
+              : [0, 0],
           color: m.color,
           description: m.description,
-          visible: typeof (m as any).visible === "boolean" ? (m as any).visible : true,
+          visible: typeof m.visible === "boolean" ? m.visible : true,
         }))
       : undefined;
 

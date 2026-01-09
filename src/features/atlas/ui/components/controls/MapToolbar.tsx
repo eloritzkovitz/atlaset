@@ -3,9 +3,9 @@ import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { useIsMobile } from "@hooks";
-import { getToolbarActions } from "./actionsConfig";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
+import { useToolbarActions } from "./useToolbarActions";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {
@@ -26,7 +26,7 @@ export function MapToolbar({ zoom, setZoom, children }: MapToolbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   // Use config for actions
-  const actions = getToolbarActions({
+  const actions = useToolbarActions({
     isMobile,
     setMenuOpen,
   });
