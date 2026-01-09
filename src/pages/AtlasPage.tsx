@@ -1,4 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { AtlasShortcuts } from "@features/atlas/ui/components/AtlasShortcuts";
+import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useCountrySelection } from "@features/atlas/countries";
@@ -9,11 +11,19 @@ import { useCountryData } from "@features/countries";
 import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const isReadonly = params.has("map");
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { layers, loading: layersLoading } = useLayers();
-  const { mapReady, handleMapReady } = useMapView();
+  const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Set map mode based on URL params
+  useEffect(() => {
+    setMapMode(isReadonly ? "readonly" : "normal");
+  }, [isReadonly, setMapMode]);
 
   // Country selection state
   const {
@@ -41,6 +51,7 @@ export default function AtlasPage() {
 
   return (
     <>
+      <AtlasShortcuts />
       <div className="flex h-screen relative">
         {!isLoading && (
           <AtlasUiContainer

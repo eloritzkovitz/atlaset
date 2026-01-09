@@ -8,12 +8,13 @@ interface LayerPanelItemProps {
   onDragStart?: () => void;
   handleDragOver?: (e: React.DragEvent<HTMLLIElement>) => void;
   handleDragEnd?: () => void;
-  onEdit: (layer: Layer) => void;
-  onToggleVisibility: (id: string) => void;
-  onRemove: (id: string) => void;
   showEdit?: boolean;
+  onEdit?: (layer: Layer) => void;
+  onToggleVisibility?: (id: string) => void;
+  showRemove?: boolean;
+  onRemove?: (id: string) => void;
   showCenter?: boolean;
-};
+}
 
 export function LayerPanelItem({
   layer,
@@ -21,8 +22,10 @@ export function LayerPanelItem({
   onDragStart,
   handleDragOver,
   handleDragEnd,
+  showEdit,
   onEdit,
   onToggleVisibility,
+  showRemove,
   onRemove,
 }: LayerPanelItemProps) {
   const isVisited = layer.id === VISITED_LAYER_ID;
@@ -32,14 +35,20 @@ export function LayerPanelItem({
       color={layer.color}
       name={layer.name}
       visible={layer.visible}
-      onToggleVisibility={() => onToggleVisibility(layer.id)}
-      onEdit={() => onEdit(layer)}
-      onRemove={() => onRemove(layer.id)}
+      onToggleVisibility={
+        showEdit !== false && onToggleVisibility
+          ? () => onToggleVisibility(layer.id)
+          : undefined
+      }
+      onEdit={showEdit !== false && onEdit ? () => onEdit(layer) : undefined}
+      onRemove={
+        showRemove !== false && onRemove ? () => onRemove(layer.id) : undefined
+      }
       removeDisabled={isVisited}
       dragged={dragged}
       onDragStart={onDragStart}
       handleDragOver={handleDragOver}
-      handleDragEnd={handleDragEnd}      
+      handleDragEnd={handleDragEnd}
     />
   );
 }

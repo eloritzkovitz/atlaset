@@ -1,13 +1,11 @@
 import { useRef, useState } from "react";
-import { FaDownload, FaFileImage, FaXmark } from "react-icons/fa6";
-import { ActionButton, Panel, SelectInput, Separator } from "@components";
+import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
+import { ActionButton, Panel, Separator } from "@components";
+import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
-import { SvgOptions } from "./SvgOptions";
-import { ImageOptions } from "./ImageOptions";
-import {
-  EXPORT_FORMAT_OPTIONS,
-  PNG_SCALE_OPTIONS,
-} from "../constants/exportOptions";
+import { useVisitedCountries } from "@features/visits";
+import { DownloadMapSection } from "./DownloadMapSection";
+import { ShareMapSection } from "./ShareMapSection";
 import type {
   ExportFormat,
   ImageExportOptions,
@@ -21,7 +19,12 @@ export interface MapExportPanelProps {
 }
 
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
+  const { isReadonly } = useMapView();
   const { showExport, closePanel } = useUI();
+  const { visitedCountryCodes } = useVisitedCountries();
+
+  // Export mode: 'visited' or 'layers'
+  const [exportMode, setExportMode] = useState<"visited" | "layers">("visited");
 
   // Export options state
   const [format, setFormat] = useState<ExportFormat>("svg");
@@ -31,6 +34,10 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     quality: 1,
     backgroundColor: "#ffffff",
   });
+
+  // Collapsible headers state
+  const [downloadExpanded, setDownloadExpanded] = useState(true);
+  const [shareExpanded, setShareExpanded] = useState(true);
 
   // Export handler
   const handleExport = () => {
@@ -57,8 +64,8 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     <Panel
       title={
         <>
-          <FaDownload />
-          Export
+          {!isReadonly ? <FaShareFromSquare /> : <FaDownload />}
+          {!isReadonly ? "Export" : "Download"}
         </>
       }
       show={showExport}
@@ -73,58 +80,29 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
         />
       }
     >
-      <div className="pb-20">
-        {/* Format selector */}
-        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
-          Format
-        </div>
-        <SelectInput
-          label=""
-          value={format}
-          onChange={(val) => setFormat(val as ExportFormat)}
-          options={EXPORT_FORMAT_OPTIONS}
+      <div>
+        <DownloadMapSection
+          format={format}
+          setFormat={setFormat}
+          svgOptions={svgOptions}
+          imageOptions={imageOptions}
+          handleExport={handleExport}
+          svgRef={svgRef}
+          downloadExpanded={downloadExpanded}
+          setDownloadExpanded={setDownloadExpanded}
         />
-        
-        <Separator className="mb-4" />
-
-        {/* Options section header */}
-        <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
-          Options
-        </div>
-
-        {/* SVG options */}
-        {format === "svg" && (
-          <SvgOptions
-            onOptionsChange={(opts) => {
-              svgOptions.current = opts;
-            }}
-          />
+        {!isReadonly && (
+          <>
+            <Separator className="my-4" />
+            <ShareMapSection
+              exportMode={exportMode}
+              setExportMode={setExportMode}
+              visitedCountryCodes={visitedCountryCodes}
+              shareExpanded={shareExpanded}
+              setShareExpanded={setShareExpanded}
+            />
+          </>
         )}
-
-        {/* Image options */}
-        {format !== "svg" && (
-          <ImageOptions
-            format={format}
-            scaleOptions={PNG_SCALE_OPTIONS}
-            onOptionsChange={(opts) => {
-              imageOptions.current = opts;
-            }}
-          />
-        )}
-      </div>
-
-      {/* Export button */}
-      <div className="absolute bottom-0 left-0 w-full px-4 pb-4">
-        <ActionButton
-          variant="primary"
-          onClick={handleExport}
-          className="w-full"
-          aria-label={"Export"}
-          disabled={!svgRef?.current}
-        >
-          <FaFileImage className="inline" />
-          Export
-        </ActionButton>
       </div>
     </Panel>
   );

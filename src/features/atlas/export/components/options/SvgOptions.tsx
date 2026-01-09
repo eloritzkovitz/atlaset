@@ -14,7 +14,7 @@ export function SvgOptions({
   }, [svgInlineStyles, onOptionsChange]);
 
   return (
-    <div className="flex items-center gap-2 mb-4 text-sm">
+    <div className="flex items-center gap-2 mb-4">
       <Checkbox checked={svgInlineStyles} onChange={setSvgInlineStyles} />
       <span className="whitespace-nowrap">
         Inline styles

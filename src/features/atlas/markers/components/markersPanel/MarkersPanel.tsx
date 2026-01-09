@@ -2,11 +2,12 @@ import { FaMapPin, FaPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
+import { useMapView } from "@contexts/MapViewContext";
+import { useEffectiveMarkers } from "@features/atlas/markers/hooks/useEffectiveMarkers";
 import { useUI } from "@contexts/UIContext";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
 import type { Marker } from "../../types";
-import { useMapView } from "@contexts/MapViewContext";
 
 interface MarkersPanelProps {
   onAddMarker: () => void;
@@ -20,11 +21,13 @@ export function MarkersPanel({
   onMarkerDetails,
 }: MarkersPanelProps) {
   const { setCenter, setZoom } = useMapView();
-  const { markers, removeMarker, toggleMarkerVisibility, reorderMarkers } =
-    useMarkers();
+  const { removeMarker, toggleMarkerVisibility, reorderMarkers } = useMarkers();
   const { showMarkers, closePanel } = useUI();
+  const { isReadonly } = useMapView();
+  const effectiveMarkers = useEffectiveMarkers();
+
   const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
-    useDragReorder(markers, reorderMarkers);
+    useDragReorder(effectiveMarkers, reorderMarkers);
 
   // Center map on a marker
   const centerOnMarker = (marker: Marker, zoomLevel: number = 20) => {
@@ -38,7 +41,7 @@ export function MarkersPanel({
 
   // Center map on a marker by its ID
   const centerOnMarkerById = (markerId: string, zoomLevel: number = 20) => {
-    const marker = markers.find((m) => m.id === markerId);
+    const marker = effectiveMarkers.find((m) => m.id === markerId);
     if (marker) {
       centerOnMarker(marker, zoomLevel);
     }
@@ -58,13 +61,15 @@ export function MarkersPanel({
         onHide={closePanel}
         headerActions={
           <>
-            <ActionButton
-              onClick={onAddMarker}
-              ariaLabel="Add Marker"
-              title="Add Marker"
-              icon={<FaPlus />}
-              rounded
-            />
+            {!isReadonly && (
+              <ActionButton
+                onClick={onAddMarker}
+                ariaLabel="Add Marker"
+                title="Add Marker"
+                icon={<FaPlus />}
+                rounded
+              />
+            )}
             <ActionButton
               onClick={closePanel}
               ariaLabel="Close markers panel"
@@ -75,29 +80,33 @@ export function MarkersPanel({
           </>
         }
       >
-        <div className="p-4">
-          {markers.length === 0 ? (
-            <div className="text-muted text-sm">No markers yet.</div>
-          ) : (
-            <ul className="space-y-2">
-              {markers.map((marker, idx) => (
-                <MarkersPanelItem
-                  key={marker.id}
-                  marker={marker}
-                  idx={idx}
-                  onToggleVisibility={() => toggleMarkerVisibility(marker.id)}
-                  onEdit={() => onEditMarker(marker)}
-                  onCenter={() => centerOnMarkerById(marker.id)}
-                  onRemove={() => removeMarker(marker.id)}
-                  draggedIndex={draggedIndex}
-                  handleDragStart={handleDragStart}
-                  handleDragOver={handleDragOver}
-                  handleDragEnd={handleDragEnd}
-                />
-              ))}
-            </ul>
-          )}
-        </div>
+        {effectiveMarkers.length === 0 ? (
+          <div className="text-muted text-sm">No markers yet.</div>
+        ) : (
+          <ul className="space-y-2">
+            {effectiveMarkers.map((marker, idx) => (
+              <MarkersPanelItem
+                key={marker.id}
+                marker={marker}
+                idx={idx}
+                onCenter={() => centerOnMarkerById(marker.id)}
+                onToggleVisibility={
+                  !isReadonly
+                    ? () => toggleMarkerVisibility(marker.id)
+                    : undefined
+                }
+                onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
+                onRemove={
+                  !isReadonly ? () => removeMarker(marker.id) : undefined
+                }
+                draggedIndex={!isReadonly ? draggedIndex : undefined}
+                handleDragStart={!isReadonly ? handleDragStart : undefined}
+                handleDragOver={!isReadonly ? handleDragOver : undefined}
+                handleDragEnd={!isReadonly ? handleDragEnd : undefined}
+              />
+            ))}
+          </ul>
+        )}
       </Panel>
     </>
   );

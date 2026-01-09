@@ -35,6 +35,7 @@ export function WorldMap({
 
   // Map projection and data
   const {
+    mapMode,
     geoData,
     projection,
     dimensions,
@@ -52,7 +53,7 @@ export function WorldMap({
   }, [measuredDimensions, setDimensions]);
 
   // Get layer items based on mode
-  const layerItems = useMapLayerItems();
+  const layerItems = useMapLayerItems(mapMode);
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =

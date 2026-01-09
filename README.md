@@ -16,17 +16,11 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Guest mode:** Use the app without signing in; migrate your data to your account anytime
 - **Offline support:** All data is available offline for guests and authenticated users (via IndexedDB and Firestore persistence)
 
-### **Map & Data**
-- **Interactive map:** Explore a customizable world map
-- **Country details:** View detailed country information
-- **Configurable filters:** Filter by region, subregion, sovereignty and layerss
-- **Config-driven data:** All sources loaded from JSON files via environment variables
-- **Export maps:** Export your maps as SVG or PNG images
-
-### **Layers & Markers**
-- **User-defined layerss:** Create and manage custom map layerss
-- **Layer import/export:** Backup, share, or migrate layerss directly from the UI
-- **Markers:** Add, edit, and remove markers on the map for any location
+### **Map, Data & Customization**
+- **Interactive map:** Explore a customizable world map with detailed country information and dynamic filters
+- **Custom Layers and markers:** Create, import, export and manage your own layers and markers
+- **Export maps:** Export your maps as images or backup your entire data as JSON
+- **Share maps:** Instantly share your maps (including layers and markers) via s a special URL
 
 ### **Trips**
 - **Trip management:** Plan, track, and recall your travels with flexible trip records
@@ -77,7 +71,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 - [Getting started](docs/getting-started.md)
 - [Data Sources](docs/data-sources.md)
-- [Layers](docs/layers.md)
+- [Map Data & customization](docs/map-data.md)
 - [Trips](docs/trips.md)
 - [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 

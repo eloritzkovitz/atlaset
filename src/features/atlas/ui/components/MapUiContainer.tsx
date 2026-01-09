@@ -1,8 +1,9 @@
 import { useMemo } from "react";
-import { FaMapPin, FaTimeline } from "react-icons/fa6";
+import { FaMapPin, FaTimeline, FaShareNodes } from "react-icons/fa6";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
+import { useSharedMapInfo } from "@features/atlas/export";
 import type { Layer } from "@features/atlas/layers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
@@ -21,8 +22,8 @@ export function MapUiContainer({
   layers,
   isAddingMarker,
 }: MapUiContainerProps) {
-  const { zoom, setZoom, center, selectedCoords } = useMapView();
-  const { timelineMode, setTimelineMode, layerMode } = useTimeline();
+  const { isReadonly, zoom, setZoom, center, selectedCoords } = useMapView();
+  const { timelineMode, layerMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     layers,
@@ -54,8 +55,42 @@ export function MapUiContainer({
     [timelineMode, uiVisible]
   );
 
+  // UI hint for shared/readonly map, with map name and sharer if available
+  const sharedMapInfo = useSharedMapInfo() || {};
+  const mapName = sharedMapInfo.mapName;
+  const sharer = sharedMapInfo.sharer;
+  const sharedHint = useMemo(() => {
+    if (!isReadonly) return null;
+    let msg = (
+      <>
+        Viewing a <b>shared map</b>. Editing is disabled.
+      </>
+    );
+    if (mapName || sharer) {
+      msg = (
+        <>
+          Viewing <b>{mapName || "a shared map"}</b>
+          {sharer ? (
+            <span>
+              {" "}
+              by <b>{sharer}</b>.
+            </span>
+          ) : (
+            "."
+          )}
+          Editing is disabled.
+        </>
+      );
+    }
+    return {
+      message: msg,
+      icon: <FaShareNodes className="text-lg" />,
+    };
+  }, [isReadonly, mapName, sharer]);
+
   useUiHint(addMarkerHint, 0, { key: "add-marker", dismissable: false });
   useUiHint(timelineHint, 0, { key: "timeline", dismissable: true });
+  useUiHint(sharedHint, 0, { key: "shared-map", dismissable: true });
 
   // Don't render UI if not visible
   if (!uiVisible) return null;
@@ -69,11 +104,7 @@ export function MapUiContainer({
           <TimelineNavigator />
         </>
       )}
-      <MapToolbar
-        zoom={zoom}
-        setZoom={setZoom}
-        setTimelineMode={setTimelineMode}
-      />
+      <MapToolbar zoom={zoom} setZoom={setZoom} />
       <MapFooter zoom={zoom} coords={selectedCoords} latitude={center[1]} />
       <MapLegendModal
         open={showLegend}

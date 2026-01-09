@@ -1,7 +1,10 @@
 import { createContext, useContext } from "react";
-import type { Coordinates, GeoData } from "@features/atlas/map";
+import type { Coordinates, GeoData, MapMode } from "@features/atlas/map";
 
 export interface MapViewContextType {
+  mapMode: MapMode;
+  setMapMode: (v: MapMode) => void;
+  isReadonly: boolean;
   geoData: GeoData | null;
   projection: string;
   setProjection: (v: string) => void;
