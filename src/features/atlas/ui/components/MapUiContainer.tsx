@@ -23,7 +23,7 @@ export function MapUiContainer({
   isAddingMarker,
 }: MapUiContainerProps) {
   const { isReadonly, zoom, setZoom, center, selectedCoords } = useMapView();
-  const { timelineMode, setTimelineMode, layerMode } = useTimeline();
+  const { timelineMode, layerMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     layers,
@@ -104,12 +104,7 @@ export function MapUiContainer({
           <TimelineNavigator />
         </>
       )}
-      <MapToolbar
-        isReadonly={isReadonly}
-        zoom={zoom}
-        setZoom={setZoom}
-        setTimelineMode={setTimelineMode}
-      />
+      <MapToolbar zoom={zoom} setZoom={setZoom} />
       <MapFooter zoom={zoom} coords={selectedCoords} latitude={center[1]} />
       <MapLegendModal
         open={showLegend}

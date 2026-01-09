@@ -1,58 +1,23 @@
 import { useState } from "react";
-import {
-  FaGlobe,
-  FaMapPin,
-  FaLayerGroup,
-  FaGear,
-  FaTimeline,
-  FaChevronLeft,
-  FaChevronRight,
-  FaChevronUp,
-  FaListUl,
-  FaShareFromSquare,
-  FaArrowLeft,
-  FaDownload,
-  FaBookmark,
-} from "react-icons/fa6";
+import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
-import { useLayers } from "@contexts/LayersContext";
 import { useUI } from "@contexts/UIContext";
-import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { useIsMobile } from "@hooks";
+import { getToolbarActions } from "./actionsConfig";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {
-  isReadonly: boolean;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
-  setTimelineMode: React.Dispatch<React.SetStateAction<boolean>>;
   children?: React.ReactNode;
 }
 
-export function MapToolbar({
-  isReadonly,
-  zoom,
-  setZoom,
-  setTimelineMode,
-  children,
-}: MapToolbarProps) {
+export function MapToolbar({ zoom, setZoom, children }: MapToolbarProps) {
   // UI state
-  const {
-    uiVisible,
-    toggleCountries,
-    toggleLayers,
-    toggleMarkers,
-    toggleLegend,
-    toggleExport,
-    toggleSettings,
-  } = useUI();
+  const { uiVisible } = useUI();
   const [visible, setVisible] = useState(true);
-
-  // Layer context
-  const { layers } = useLayers();
-  const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
 
   // Detect mobile
   const isMobile = useIsMobile();
@@ -60,111 +25,11 @@ export function MapToolbar({
   // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Define actions
-  const actions = [
-    {
-      key: "countries",
-      icon: <FaGlobe className="text-lg" />,
-      label: "Countries",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleCountries();
-      },
-      show: true,
-    },
-    {
-      key: "layers",
-      icon: <FaLayerGroup className="text-lg" />,
-      label: "Layers",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleLayers();
-      },
-      show: !isReadonly,
-    },
-    {
-      key: "markers",
-      icon: <FaMapPin className="text-lg" />,
-      label: "Markers",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleMarkers();
-      },
-      show: !isReadonly,
-    },
-    {
-      key: "legend",
-      icon: <FaListUl className="text-lg" />,
-      label: "Legend",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleLegend();
-      },
-      show: true,
-      separatorAfter: true,
-    },
-    {
-      key: "timeline",
-      icon: <FaTimeline className="text-xl " />,
-      label: "Timeline",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        setTimelineMode((prev) => !prev);
-      },
-      show: !isReadonly && !!(visitedLayer && isTimelineLayer(visitedLayer)),
-      separatorAfter: true,
-    },
-    {
-      key: "save",
-      icon: <FaBookmark className="text-lg" />,
-      label: "Save",
-      onClick: () => {},
-      show: isReadonly,
-    },
-    {
-      key: "export",
-      icon: !isReadonly ? (
-        <FaShareFromSquare className="text-lg" />
-      ) : (
-        <FaDownload className="text-lg" />
-      ),
-      label: !isReadonly ? "Export" : "Download",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleExport();
-      },
-      show: true,
-    },
-    {
-      key: "settings",
-      icon: <FaGear className="text-lg" />,
-      label: "Settings",
-      onClick: () => {
-        if (isMobile) setMenuOpen(false);
-        toggleSettings();
-      },
-      show: !isReadonly,
-    },
-    {
-      key: "exit-shared",
-      icon: <FaArrowLeft className="text-lg" />,
-      label: "Exit Shared View",
-      onClick: () => {
-        // Close menu on mobile
-        if (isMobile) setMenuOpen(false);
-
-        // Remove ?map param and navigate to /atlas (main map)
-        if (window.location.pathname === "/atlas") {
-          const url = new URL(window.location.href);
-          url.searchParams.delete("map");
-          window.location.href = url.pathname + url.search;
-        } else {
-          window.location.href = "/atlas";
-        }
-      },
-      show: isReadonly,
-    },
-  ];
+  // Use config for actions
+  const actions = getToolbarActions({
+    isMobile,
+    setMenuOpen,
+  });
 
   // Mobile toolbar
   if (isMobile) {
