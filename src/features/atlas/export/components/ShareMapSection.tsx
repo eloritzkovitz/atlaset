@@ -9,7 +9,6 @@ import {
   InputBox,
 } from "@components";
 import { encodeMapData } from "../utils/mapShare";
-// import type { Marker } from "@features/atlas/markers/types";
 import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
 import { useLayers } from "@contexts/LayersContext";
 import { useMarkers } from "@contexts/MarkersContext";
@@ -46,7 +45,7 @@ export function ShareMapSection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth?.user?.displayName]);
 
-  // Prepare layers for sharing (minimal type, not Layer[])
+  // Prepare layers for sharing
   let layersToShare: Array<{
     name: string;
     color: string;
@@ -73,7 +72,7 @@ export function ShareMapSection({
       }));
   }
 
-  // Prepare markers for sharing (minimal type, not Marker[])
+  // Prepare markers for sharing
   let markersToShare:
     | Array<{
         name?: string;

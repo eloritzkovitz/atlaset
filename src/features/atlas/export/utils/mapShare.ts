@@ -3,13 +3,10 @@
  */
 
 /**
- * Encode map data (layers and optional markers) as a base64 string.
- * Layers: { name, color, countries[] }, Markers: { lat, lng, label? } *
- * Format: layers|markers (both as compact strings)
- * @param mapData Object with layers and optional markers
+ * Encode map data (layers and optional markers) as a base64 string. 
+ * @param mapData Object with layers and optional markers, mapName, and sharer
  * @returns Base64 encoded string
  */
-
 export function encodeMapData(mapData: {
   layers: { name: string; color: string; countries: string[] }[];
   markers?: Array<{
