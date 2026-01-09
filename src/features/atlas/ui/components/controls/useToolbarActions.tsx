@@ -71,7 +71,7 @@ export function useToolbarActions({
       icon: <FaMapPin className="text-lg" />,
       label: "Markers",
       onClick: withMenuClose(toggleMarkers),
-      show: !isReadonly,
+      show: true,
     },
     {
       key: "legend",
