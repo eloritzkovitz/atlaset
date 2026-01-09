@@ -1,6 +1,7 @@
 import { FaLayerGroup } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { useLayers } from "@contexts/LayersContext";
+import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 import { layerFilterConfig } from "../../config/filtersConfig";
 
 interface LayerFiltersProps {
@@ -9,7 +10,9 @@ interface LayerFiltersProps {
 }
 
 export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
-  const { layers, layerSelections, setLayerSelections } = useLayers();
+  const { layerSelections, setLayerSelections } = useLayers();
+  const effectiveLayers = useEffectiveLayers();
+
   return (
     <>
       <CollapsibleHeader
@@ -19,7 +22,7 @@ export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
         onToggle={onToggle}
       />
       {expanded &&
-        layers.map((layer) => (
+        effectiveLayers.map((layer) => (
           <SelectInput
             key={layer.id}
             label={

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLayers } from "@contexts/LayersContext";
+import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
@@ -24,7 +25,8 @@ import { useDebounce } from "@hooks";
  */
 export function useCountryFilters() {
   const { countries } = useCountryData();
-  const { layers, layerSelections, setLayerSelections } = useLayers();
+  const { layerSelections, setLayerSelections } = useLayers();
+  const layers = useEffectiveLayers();
   const {
     timelineMode,
     years,
@@ -35,11 +37,14 @@ export function useCountryFilters() {
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
-  
+
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
     if (isReadonly && sharedMapInfo?.layers) {
-      return sharedMapInfo.layers.find((l) => l.name === "Visited Countries")?.countries ?? [];
+      return (
+        sharedMapInfo.layers.find((l) => l.name === "Visited Countries")
+          ?.countries ?? []
+      );
     }
     return undefined;
   }, [isReadonly, sharedMapInfo]);
@@ -95,13 +100,14 @@ export function useCountryFilters() {
   );
 
   // Counts
-  const allCount = filteredCountriesNoLayer.length;
+  const allCount = filteredCountries.length;
+  const allCountWithoutLayers = filteredCountriesNoLayer.length;
   const {
     map: visitedMap,
     min: absoluteMin,
     max: absoluteMax,
   } = getVisitCountStats(trips, selectedYear);
-  
+
   // Use shared visited iso codes in readonly mode if provided or auto-detected
   const visitedIsoCodes =
     isReadonly && effectiveSharedVisitedIsoCodes
@@ -183,6 +189,7 @@ export function useCountryFilters() {
     filteredIsoCodes,
     filteredCountries: finalFilteredCountries,
     allCount,
+    allCountWithoutLayers,
     visitedCount,
     minVisitCount,
     setMinVisitCount,

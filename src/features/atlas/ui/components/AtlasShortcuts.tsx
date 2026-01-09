@@ -31,10 +31,10 @@ export function AtlasShortcuts() {
   useKeyHandler(toggleLegend, ["g", "G"], true);
 
   // Toggle Layers panel with "L"
-  useKeyHandler(toggleLayers, ["l", "L"], !isReadonly);
+  useKeyHandler(toggleLayers, ["l", "L"], true);
 
   // Toggle Markers panel with "M"
-  useKeyHandler(toggleMarkers, ["m", "M"], !isReadonly); 
+  useKeyHandler(toggleMarkers, ["m", "M"], true); 
 
   // Toggle Settings panel with "S"
   useKeyHandler(toggleSettings, ["s", "S"], !isReadonly);

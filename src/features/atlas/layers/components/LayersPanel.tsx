@@ -13,6 +13,7 @@ import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
 import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 import type { Layer } from "../types";
+import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 
 interface LayersPanelProps {
   onEditLayer: (layer: Layer) => void;
@@ -26,7 +27,6 @@ export function LayersPanel({
   layerModalOpen,
 }: LayersPanelProps) {
   const { showLayers, closePanel } = useUI();
-
   const {
     layers,
     importLayers,
@@ -34,6 +34,8 @@ export function LayersPanel({
     toggleLayerVisibility,
     removeLayer,
   } = useLayers();
+  const effectiveLayers = useEffectiveLayers();
+  const isReadonly = effectiveLayers !== layers;
 
   // Drag state
   const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
@@ -55,28 +57,31 @@ export function LayersPanel({
       escEnabled={!layerModalOpen}
       headerActions={
         <>
-          {/* Action buttons */}
-          <ActionButton
-            onClick={onAddLayer}
-            ariaLabel="Add Layer"
-            title="Add Layer"
-            icon={<FaPlus />}
-            rounded
-          />
-          <ActionButton
-            onClick={() => fileInputRef.current?.click()}
-            ariaLabel="Import Layers"
-            title="Import Layers"
-            icon={<FaFileImport />}
-            rounded
-          />
-          <input
-            type="file"
-            accept="application/json"
-            ref={fileInputRef}
-            onChange={(e) => importLayersFromFile(e, importLayers)}
-            style={{ display: "none" }}
-          />
+          {!isReadonly && (
+            <>
+              <ActionButton
+                onClick={onAddLayer}
+                ariaLabel="Add Layer"
+                title="Add Layer"
+                icon={<FaPlus />}
+                rounded
+              />
+              <ActionButton
+                onClick={() => fileInputRef.current?.click()}
+                ariaLabel="Import Layers"
+                title="Import Layers"
+                icon={<FaFileImport />}
+                rounded
+              />
+              <input
+                type="file"
+                accept="application/json"
+                ref={fileInputRef}
+                onChange={(e) => importLayersFromFile(e, importLayers)}
+                style={{ display: "none" }}
+              />
+            </>
+          )}
           <ActionButton
             onClick={() => exportLayersToFile(layers)}
             ariaLabel="Export Layers"
@@ -95,18 +100,20 @@ export function LayersPanel({
       }
     >
       <ul className="list-none p-0">
-        {layers.map((layer, index) => (
+        {effectiveLayers.map((layer, index) => (
           <LayerPanelItem
             key={layer.id}
             layer={layer}
-            onToggleVisibility={toggleLayerVisibility}
-            onEdit={onEditLayer}
-            onRemove={removeLayer}
+            onToggleVisibility={!isReadonly ? toggleLayerVisibility : undefined}
+            onEdit={!isReadonly ? onEditLayer : undefined}
+            onRemove={!isReadonly ? removeLayer : undefined}
             dragged={draggedIndex === index}
-            onDragStart={() => handleDragStart(index)}
-            handleDragOver={(e) => handleDragOver(e, index)}
-            handleDragEnd={handleDragEnd}
-            showEdit={true}
+            onDragStart={!isReadonly ? () => handleDragStart(index) : undefined}
+            handleDragOver={
+              !isReadonly ? (e) => handleDragOver(e, index) : undefined
+            }
+            handleDragEnd={!isReadonly ? handleDragEnd : undefined}
+            showRemove={!isReadonly}
             showCenter={false}
           />
         ))}

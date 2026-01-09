@@ -1,11 +1,7 @@
 import { useMemo } from "react";
 import { decodeMapData } from "../utils/mapShare";
-
-export interface SharedMapLayer {
-  name: string;
-  color: string;
-  countries: string[];
-}
+import type { Layer } from "@features/atlas/layers";
+import { VISITED_LAYER_ID } from "@features/atlas/layers/constants/layers";
 
 export interface SharedMapMarker {
   lat: number;
@@ -16,7 +12,7 @@ export interface SharedMapMarker {
 export interface SharedMapInfo {
   mapName?: string;
   sharer?: string;
-  layers?: SharedMapLayer[];
+  layers?: Layer[];
   markers?: SharedMapMarker[];
   [key: string]: unknown;
 }
@@ -25,7 +21,7 @@ export interface SharedMapInfo {
  * Returns shared map information from the URL.
  * @returns
  */
-  export function useSharedMapInfo(): SharedMapInfo {
+export function useSharedMapInfo(): SharedMapInfo {
   return useMemo((): SharedMapInfo => {
     const params = new URLSearchParams(window.location.search);
     const mapParam = params.get("map");
@@ -44,6 +40,45 @@ export interface SharedMapInfo {
       // add any other fields your decodeMapData returns
       ...rest
     } = decoded || {};
-    return { mapName, sharer, layers, markers, ...rest };
+
+    // Ensure layers have id and visible (as before)
+    const normalizedLayers = Array.isArray(layers)
+      ? layers.map((layer, idx) => {
+          // Type guard for possible missing properties
+          const l = layer as Partial<Layer> & {
+            name: string;
+            color: string;
+            countries: string[] | string;
+          };
+
+          // Heuristic: treat first layer or layer named 'visited' as visited layer
+          const isVisited =
+            idx === 0 ||
+            (typeof l.name === "string" &&
+              l.name.toLowerCase().includes("visited"));
+          return {
+            ...l,
+            id: isVisited
+              ? VISITED_LAYER_ID
+              : typeof l.id === "string"
+              ? l.id
+              : `shared-layer-${idx}`,
+            visible: typeof l.visible === "boolean" ? l.visible : true,
+            countries: Array.isArray(l.countries)
+              ? l.countries
+              : typeof l.countries === "string"
+              ? [l.countries]
+              : [],
+          };
+        })
+      : undefined;
+
+    return {
+      mapName,
+      sharer,
+      layers: normalizedLayers,
+      markers,
+      ...rest,
+    };
   }, []);
 }

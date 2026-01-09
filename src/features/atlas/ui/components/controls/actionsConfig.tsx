@@ -64,7 +64,7 @@ export function getToolbarActions({
       icon: <FaLayerGroup className="text-lg" />,
       label: "Layers",
       onClick: withMenuClose(toggleLayers),
-      show: !isReadonly,
+      show: true,
     },
     {
       key: "markers",
