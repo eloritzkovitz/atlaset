@@ -9,11 +9,15 @@
  * @param mapData Object with layers and optional markers
  * @returns Base64 encoded string
  */
-import type { Marker } from "@features/atlas/markers/types";
 
 export function encodeMapData(mapData: {
   layers: { name: string; color: string; countries: string[] }[];
-  markers?: Marker[];
+  markers?: Array<{
+    name?: string;
+    coordinates: [number, number];
+    color?: string;
+    description?: string;
+  }>;
   mapName?: string;
   sharer?: string;
 }): string {
@@ -32,7 +36,6 @@ export function encodeMapData(mapData: {
   let markerString = "";
   if (Array.isArray(mapData.markers)) {
     markerString = mapData.markers
-      .filter((m) => m.visible !== false)
       .map((m) =>
         [
           encodeURIComponent(m.name ?? ""),

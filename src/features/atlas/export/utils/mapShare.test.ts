@@ -30,16 +30,16 @@ describe("mapShare encode/decode", () => {
     const data = {
       layers: [{ name: "L", color: "#fff", countries: ["FR"] }],
       markers: [
-        { lat: 1, lng: 2, label: "A" },
-        { lat: 3, lng: 4 },
+        { name: "A", coordinates: [2, 1] as [number, number] },
+        { coordinates: [4, 3] as [number, number] },
       ],
     };
     const code = encodeMapData(data);
     const decoded = decodeMapData(code);
     expect(decoded.layers).toEqual(data.layers);
     expect(decoded.markers).toEqual([
-      { lat: 1, lng: 2, label: "A" },
-      { lat: 3, lng: 4 },
+      { name: "A", coordinates: [2, 1], color: undefined, description: undefined },
+      { name: undefined, coordinates: [4, 3], color: undefined, description: undefined },
     ]);
   });
 
@@ -67,14 +67,14 @@ describe("mapShare encode/decode", () => {
   it("handles special characters in names and labels", () => {
     const data = {
       layers: [{ name: "L|:;=", color: "#fff", countries: ["FR"] }],
-      markers: [{ lat: 1, lng: 2, label: "A|,;= %" }],
+      markers: [{ name: "A|,;= %", coordinates: [2, 1] as [number, number] }],
       mapName: "M|=;ap",
       sharer: "Sh|=;arer",
     };
     const code = encodeMapData(data);
     const decoded = decodeMapData(code);
     expect(decoded.layers[0].name).toBe("L|:;=");
-    expect(decoded.markers?.[0].label).toBe("A|,;= %");
+    expect(decoded.markers?.[0].name).toBe("A|,;= %");
     expect(decoded.mapName).toBe("M|=;ap");
     expect(decoded.sharer).toBe("Sh|=;arer");
   });

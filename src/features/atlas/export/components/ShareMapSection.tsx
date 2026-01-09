@@ -9,7 +9,7 @@ import {
   InputBox,
 } from "@components";
 import { encodeMapData } from "../utils/mapShare";
-import type { Marker } from "@features/atlas/markers/types";
+// import type { Marker } from "@features/atlas/markers/types";
 import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
 import { useLayers } from "@contexts/LayersContext";
 import { useMarkers } from "@contexts/MarkersContext";
@@ -46,8 +46,12 @@ export function ShareMapSection({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth?.user?.displayName]);
 
-  // Prepare layers for sharing
-  let layersToShare;
+  // Prepare layers for sharing (minimal type, not Layer[])
+  let layersToShare: Array<{
+    name: string;
+    color: string;
+    countries: string[];
+  }>;
   if (exportMode === "visited") {
     const visitedLayer = allLayers.find(
       (l) => l.id === DEFAULT_VISITED_LAYER.id
@@ -69,19 +73,24 @@ export function ShareMapSection({
       }));
   }
 
-  // Prepare markers for sharing
-  let markersToShare: Marker[] | undefined = undefined;
+  // Prepare markers for sharing (minimal type, not Marker[])
+  let markersToShare:
+    | Array<{
+        name?: string;
+        coordinates: [number, number];
+        color?: string;
+        description?: string;
+      }>
+    | undefined = undefined;
   if (includeMarkers) {
     markersToShare = Array.isArray(markers)
       ? markers
           .filter((m) => m.visible !== false)
-          .map((m, idx) => ({
-            id: m.id ?? String(idx),
+          .map((m) => ({
             name: m.name,
             coordinates: m.coordinates,
             color: m.color,
             description: m.description,
-            visible: true,
           }))
       : [];
   }
