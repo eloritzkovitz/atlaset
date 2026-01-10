@@ -1,15 +1,24 @@
 import { useState } from "react";
 import { FaCode, FaCopy } from "react-icons/fa6";
 import { CollapsibleHeader, InputBox, ActionButton } from "@components";
-import { useLayers } from "@contexts/LayersContext";
-import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
 import { encodeMapData } from "../utils/mapShare";
 
 interface EmbedMapSectionProps {
-  visitedCountryCodes: string[];
-  exportMode: "visited" | "layers";
   expanded: boolean;
   setExpanded: (v: boolean) => void;
+  layers: Array<{
+    name: string;
+    color: string;
+    countries: string[];
+  }>;
+  markers:
+    | Array<{
+        name?: string;
+        coordinates: [number, number];
+        color?: string;
+        description?: string;
+      }>
+    | undefined;
 }
 
 // Generate embed URL with encoded map data
@@ -18,28 +27,17 @@ function getEmbedUrl(code: string) {
 }
 
 export function EmbedMapSection({
-  visitedCountryCodes,
-  exportMode,
   expanded,
   setExpanded,
+  layers,
+  markers,
 }: EmbedMapSectionProps) {
-  const { layers: allLayers } = useLayers();
-
   const [embedCopied, setEmbedCopied] = useState(false);
 
-  // Prepare layers for embedding
-  const visitedLayer = allLayers.find((l) => l.id === DEFAULT_VISITED_LAYER.id);
-  const layersToEmbed = [
-    {
-      name: visitedLayer?.name ?? DEFAULT_VISITED_LAYER.name,
-      color: visitedLayer?.color ?? DEFAULT_VISITED_LAYER.color,
-      countries: visitedLayer?.countries ?? visitedCountryCodes,
-    },
-  ];
-
-  // Prepare map data for embedding
+  // Encode map data into shareable code
   const code = encodeMapData({
-    layers: layersToEmbed,
+    layers: layers,
+    markers: markers,
   });
 
   // Generate embed URL and code snippet
