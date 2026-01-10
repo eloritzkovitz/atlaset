@@ -6,6 +6,7 @@ import { useUI } from "@contexts/UIContext";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
 import { ShareMapSection } from "./ShareMapSection";
+import { EmbedMapSection } from "./EmbedMapSection";
 import type {
   ExportFormat,
   ImageExportOptions,
@@ -38,6 +39,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   // Collapsible headers state
   const [downloadExpanded, setDownloadExpanded] = useState(true);
   const [shareExpanded, setShareExpanded] = useState(true);
+  const [embedExpanded, setEmbedExpanded] = useState(true);
 
   // Export handler
   const handleExport = () => {
@@ -100,6 +102,13 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
               visitedCountryCodes={visitedCountryCodes}
               shareExpanded={shareExpanded}
               setShareExpanded={setShareExpanded}
+            />
+            <Separator className="my-4" />
+            <EmbedMapSection
+              visitedCountryCodes={visitedCountryCodes}
+              exportMode={exportMode}
+              expanded={embedExpanded}
+              setExpanded={setEmbedExpanded}
             />
           </>
         )}

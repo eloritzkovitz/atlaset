@@ -12,18 +12,21 @@ import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const isReadonly = params.has("map");
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { layers, loading: layersLoading } = useLayers();
   const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
 
+  // Determine map mode based on URL params
+  const params = new URLSearchParams(location.search);
+  const isReadonly = params.has("map");
+  const isEmbed = params.has("embed");
+
   // Set map mode based on URL params
   useEffect(() => {
-    setMapMode(isReadonly ? "readonly" : "normal");
-  }, [isReadonly, setMapMode]);
+    setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
+  }, [isReadonly, isEmbed, setMapMode]);
 
   // Country selection state
   const {
@@ -46,6 +49,21 @@ export default function AtlasPage() {
   if (error || geoError) {
     return (
       <ErrorMessage fullScreen error={error || geoError || "Unknown error"} />
+    );
+  }
+
+  // Render simplified map for embed mode
+  if (isEmbed) {
+    return (
+      <WorldMap
+        onCountryClick={handleCountryClick}
+        onCountryHover={handleCountryHover}
+        selectedIsoCode={selectedIsoCode}
+        hoveredIsoCode={hoveredIsoCode}
+        onReady={handleMapReady}
+        svgRef={svgRef}
+        isAddingMarker={isAddingMarker}
+      />
     );
   }
 
