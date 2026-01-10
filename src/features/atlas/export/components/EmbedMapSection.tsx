@@ -42,7 +42,7 @@ export function EmbedMapSection({
 
   // Generate embed URL and code snippet
   const embedUrl = getEmbedUrl(code);
-  const embedCode = `<iframe src=\"${embedUrl}\" width=\"960\" height=\"500\" frameborder=\"0\" style=\"border:0;max-width:100%\"></iframe>`;
+  const embedCode = `<iframe src="${embedUrl}" width="960" height="500" frameborder="0" style="border:0;max-width:100%"></iframe>`;
 
   // Copy embed code to clipboard
   const handleCopyEmbed = () => {
