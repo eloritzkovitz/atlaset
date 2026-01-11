@@ -1,4 +1,13 @@
-import type { ImageFormat } from "../types";
+/**
+ * @file Utility functions for exporting map SVGs and data.
+ */
+
+import type {
+  ExportFormat,
+  ImageExportOptions,
+  ImageFormat,
+  SvgExportOptions,
+} from "../types";
 
 /**
  * Prepare an SVG clone for export by normalizing attributes and inlining styles.
@@ -293,6 +302,43 @@ export async function exportSvgAsImage(
     });
   } catch (err) {
     console.error("exportSvgAsPng error:", err);
+  }
+}
+
+/**
+ * Exports the map based on the provided parameters.
+ * @param svgRef - Reference to the SVG element to export.
+ * @param format - The export format ("svg", "png", "jpeg", "webp").
+ * @param svgOptions - Options for SVG export.
+ * @param imageOptions - Options for image export.
+ * @returns
+ */
+export function exportMap({
+  svgRef,
+  format,
+  svgOptions,
+  imageOptions,
+}: {
+  svgRef: React.RefObject<SVGSVGElement | null>;
+  format: ExportFormat;
+  svgOptions: React.RefObject<SvgExportOptions>;
+  imageOptions: React.RefObject<ImageExportOptions>;
+}) {
+  if (!svgRef?.current) return;
+  if (format === "svg") {
+    exportSvg(svgRef.current, "map.svg", svgOptions.current.svgInlineStyles);
+  } else {
+    const ext = format === "jpeg" ? "jpg" : format;
+    exportSvgAsImage(
+      svgRef.current,
+      `map@${imageOptions.current.scale}x.${ext}`,
+      format,
+      imageOptions.current.scale,
+      true,
+      8192,
+      imageOptions.current.quality,
+      imageOptions.current.backgroundColor
+    );
   }
 }
 

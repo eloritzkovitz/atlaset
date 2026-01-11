@@ -17,7 +17,6 @@ import type {
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
-import { exportSvg, exportSvgAsImage } from "../utils/mapExport";
 import { encodeMapData } from "../utils/mapShare";
 import "./MapExportPanel.css";
 
@@ -52,27 +51,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     quality: 1,
     backgroundColor: "#ffffff",
   });
-
-  // Export handler
-  const handleExport = () => {
-    if (!svgRef?.current) return;
-    if (format === "svg") {
-      exportSvg(svgRef.current, "map.svg", svgOptions.current.svgInlineStyles);
-    } else {
-      const ext = format === "jpeg" ? "jpg" : format;
-      exportSvgAsImage(
-        svgRef.current,
-        `map@${imageOptions.current.scale}x.${ext}`,
-        format,
-        imageOptions.current.scale,
-        true,
-        8192,
-        imageOptions.current.quality,
-        imageOptions.current.backgroundColor
-      );
-    }
-    closePanel();
-  };
 
   // Prepare export data
   const { layersToShare, markersToShare } = useExportData({
@@ -132,14 +110,13 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
         />
         <Separator className="my-4" />
         <DownloadMapSection
+          expanded={downloadExpanded}
+          setExpanded={setDownloadExpanded}
+          svgRef={svgRef}
           format={format}
           setFormat={setFormat}
           svgOptions={svgOptions}
-          imageOptions={imageOptions}
-          handleExport={handleExport}
-          svgRef={svgRef}
-          downloadExpanded={downloadExpanded}
-          setDownloadExpanded={setDownloadExpanded}
+          imageOptions={imageOptions}          
         />
         {!isReadonly && (
           <>

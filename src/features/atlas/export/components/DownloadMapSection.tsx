@@ -13,31 +13,39 @@ import type {
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
-import { exportMapDataAsJson } from "../utils/mapExport";
+import { exportMap, exportMapDataAsJson } from "../utils/mapExport";
 
 interface DownloadMapSectionProps {
+  expanded: boolean;
+  setExpanded: (v: boolean) => void;
+  svgRef: React.RefObject<SVGSVGElement | null>;
   format: ExportFormat;
   setFormat: (f: ExportFormat) => void;
   svgOptions: React.RefObject<SvgExportOptions>;
   imageOptions: React.RefObject<ImageExportOptions>;
-  handleExport: () => void;
-  svgRef: React.RefObject<SVGSVGElement | null>;
-  downloadExpanded: boolean;
-  setDownloadExpanded: (v: boolean) => void;
 }
 
 export function DownloadMapSection({
+  expanded,
+  setExpanded,
+  svgRef,
   format,
   setFormat,
   svgOptions,
   imageOptions,
-  handleExport,
-  svgRef,
-  downloadExpanded,
-  setDownloadExpanded,
 }: DownloadMapSectionProps) {
   const { layers } = useLayers();
   const { markers } = useMarkers();
+
+  // Export map as SVG or image
+  const handleExport = () => {
+    exportMap({
+      svgRef,
+      format,
+      svgOptions,
+      imageOptions,
+    });
+  };
 
   // Download map data as JSON
   const handleDownloadJson = () => {
@@ -48,8 +56,8 @@ export function DownloadMapSection({
     <CollapsibleHeader
       icon={<FaDownload />}
       label="Download"
-      expanded={downloadExpanded}
-      onToggle={() => setDownloadExpanded(!downloadExpanded)}
+      expanded={expanded}
+      onToggle={() => setExpanded(!expanded)}
     >
       {/* Format selector */}
       <div className="mt-4 mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
