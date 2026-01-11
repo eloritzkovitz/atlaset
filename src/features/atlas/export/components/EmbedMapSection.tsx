@@ -1,24 +1,11 @@
 import { useState } from "react";
 import { FaCode, FaCopy } from "react-icons/fa6";
 import { CollapsibleHeader, InputBox, ActionButton } from "@components";
-import { encodeMapData } from "../utils/mapShare";
 
 interface EmbedMapSectionProps {
   expanded: boolean;
   setExpanded: (v: boolean) => void;
-  layers: Array<{
-    name: string;
-    color: string;
-    countries: string[];
-  }>;
-  markers:
-    | Array<{
-        name?: string;
-        coordinates: [number, number];
-        color?: string;
-        description?: string;
-      }>
-    | undefined;
+  code: string;
 }
 
 // Generate embed URL with encoded map data
@@ -29,16 +16,9 @@ function getEmbedUrl(code: string) {
 export function EmbedMapSection({
   expanded,
   setExpanded,
-  layers,
-  markers,
+  code,
 }: EmbedMapSectionProps) {
   const [embedCopied, setEmbedCopied] = useState(false);
-
-  // Encode map data into shareable code
-  const code = encodeMapData({
-    layers: layers,
-    markers: markers,
-  });
 
   // Generate embed URL and code snippet
   const embedUrl = getEmbedUrl(code);

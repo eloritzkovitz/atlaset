@@ -4,7 +4,7 @@ import { useSettings } from "@contexts/SettingsContext";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { AppLayout, PublicLayout } from "@layout";
+import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import AboutPage from "./pages/AboutPage";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
@@ -70,7 +70,9 @@ function App() {
               path="/atlas"
               element={
                 window.location.search.includes("embed") ? (
-                  <AtlasProviders />
+                  <EmbedLayout mapCode={new URLSearchParams(window.location.search).get("map") || undefined}>
+                    <AtlasProviders />
+                  </EmbedLayout>
                 ) : (
                   <AppLayout>
                     <AtlasProviders />

@@ -4,9 +4,14 @@ import { useTheme } from "@features/settings";
 interface BrandingProps {
   title?: string;
   size?: number;
+  forceExternal?: boolean;
 }
 
-export function Branding({ title, size = 48 }: BrandingProps) {
+export function Branding({
+  title,
+  size = 48,
+  forceExternal = false,
+}: BrandingProps) {
   const { theme } = useTheme();
 
   // Light theme colors
@@ -21,12 +26,9 @@ export function Branding({ title, size = 48 }: BrandingProps) {
   const bgColor = theme === "dark" ? darkBg : lightBg;
   const fgColor = theme === "dark" ? darkFg : lightFg;
 
-  return (
-    <Link
-      to="/"
-      aria-label={title ? `Go to home page (${title})` : "Go to home page"}
-      className="flex items-center gap-2 focus:outline-none focus:ring-none"
-    >
+  // Branding SVG content
+  const brandingContent = (
+    <>
       <svg
         width={size}
         height={size}
@@ -61,6 +63,34 @@ export function Branding({ title, size = 48 }: BrandingProps) {
       {title ? (
         <span className="font-bold text-lg dark:text-gray-200">{title}</span>
       ) : null}
+    </>
+  );
+
+  // If forceExternal, use <a> with dynamic target/rel based on iframe context
+  if (forceExternal) {
+    const isIframe =
+      typeof window !== "undefined" && window.self !== window.top;
+    return (
+      <a
+        href="/"
+        aria-label={title ? `Go to home page (${title})` : "Go to home page"}
+        className="flex items-center gap-2 focus:outline-none focus:ring-none"
+        target={isIframe ? "_blank" : undefined}
+        rel={isIframe ? "noopener noreferrer" : undefined}
+      >
+        {brandingContent}
+      </a>
+    );
+  }
+
+  // Render as internal link
+  return (
+    <Link
+      to="/"
+      aria-label={title ? `Go to home page (${title})` : "Go to home page"}
+      className="flex items-center gap-2 focus:outline-none focus:ring-none"
+    >
+      {brandingContent}
     </Link>
   );
 }

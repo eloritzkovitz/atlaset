@@ -1,5 +1,9 @@
-export { AppLayout } from "./Layout/AppLayout";
+// Components
 export { Branding } from "./Branding/Branding";
-export { Footer } from "./Footer/Footer";
 export { Header } from "./Header/Header";
+export { Footer } from "./Footer/Footer";
+
+// Layouts
+export { AppLayout } from "./Layout/AppLayout";
+export { EmbedLayout } from "./Layout/EmbedLayout";
 export { PublicLayout } from "./Layout/PublicLayout";
