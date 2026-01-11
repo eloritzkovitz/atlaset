@@ -20,7 +20,7 @@ export function PanelHeader({
         <div className="flex items-center gap-2 h-8 text-lg font-bold">{title}</div>
         <div className="flex gap-2">{children}</div>
       </div>
-      {showSeparator && <Separator className="mt-4 my-4" />}
+      {showSeparator && <Separator className="mt-4" />}
     </div>
   );
 }

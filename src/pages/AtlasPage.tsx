@@ -12,18 +12,21 @@ import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
   const location = useLocation();
-  const params = new URLSearchParams(location.search);
-  const isReadonly = params.has("map");
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { layers, loading: layersLoading } = useLayers();
   const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
 
+  // Determine map mode based on URL params
+  const params = new URLSearchParams(location.search);
+  const isReadonly = params.has("map");
+  const isEmbed = params.has("embed");
+
   // Set map mode based on URL params
   useEffect(() => {
-    setMapMode(isReadonly ? "readonly" : "normal");
-  }, [isReadonly, setMapMode]);
+    setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
+  }, [isReadonly, isEmbed, setMapMode]);
 
   // Country selection state
   const {
@@ -51,22 +54,28 @@ export default function AtlasPage() {
 
   return (
     <>
-      <AtlasShortcuts />
       <div className="flex h-screen relative">
-        {!isLoading && (
-          <AtlasUiContainer
-            svgRef={svgRef}
-            selectedIsoCode={selectedIsoCode}
-            setSelectedIsoCode={setSelectedIsoCode}
-            hoveredIsoCode={hoveredIsoCode}
-            setHoveredIsoCode={setHoveredIsoCode}
-            selectedCountry={selectedCountry}
-            setSelectedCountry={setSelectedCountry}
-          />
+        {!isLoading && !isEmbed && (
+          <>
+            <AtlasShortcuts />
+            <AtlasUiContainer
+              svgRef={svgRef}
+              selectedIsoCode={selectedIsoCode}
+              setSelectedIsoCode={setSelectedIsoCode}
+              hoveredIsoCode={hoveredIsoCode}
+              setHoveredIsoCode={setHoveredIsoCode}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+            />
+          </>
         )}
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           {!isLoading && (
-            <MapUiContainer layers={layers} isAddingMarker={isAddingMarker} />
+            <MapUiContainer
+              layers={layers}
+              isAddingMarker={isAddingMarker}
+              isEmbed={isEmbed}
+            />
           )}
           <WorldMap
             onCountryClick={handleCountryClick}

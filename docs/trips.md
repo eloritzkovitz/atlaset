@@ -51,8 +51,8 @@ name,countries,startDate,endDate,category,notes
 Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berlin, and Rome."
 ```
 
-[Download a full example trip JSON](../examples/trips.json)  
-[Download a full example trip CSV](../examples/trips.csv)
+[Download a full example trip JSON](examples/trips.json)  
+[Download a full example trip CSV](examples/trips.csv)
 
 ### 2. Via the UI
 

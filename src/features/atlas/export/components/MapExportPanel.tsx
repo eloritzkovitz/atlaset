@@ -1,17 +1,24 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { useAuth } from "@contexts/AuthContext";
+import { useMarkers } from "@contexts/MarkersContext";
+import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
+import { useExportData } from "../hooks/useExportData";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
+import { EmbedMapSection } from "./EmbedMapSection";
+import { ExportOptionsSection } from "./ExportOptionsSection";
 import { ShareMapSection } from "./ShareMapSection";
 import type {
   ExportFormat,
+  ExportMode,
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
-import { exportSvg, exportSvgAsImage } from "../utils/mapExport";
+import { encodeMapData } from "../utils/mapShare";
 import "./MapExportPanel.css";
 
 export interface MapExportPanelProps {
@@ -19,14 +26,25 @@ export interface MapExportPanelProps {
 }
 
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
+  const { user } = useAuth();
   const { isReadonly } = useMapView();
   const { showExport, closePanel } = useUI();
   const { visitedCountryCodes } = useVisitedCountries();
-
-  // Export mode: 'visited' or 'layers'
-  const [exportMode, setExportMode] = useState<"visited" | "layers">("visited");
+  const { layers: allLayers } = useLayers();
+  const { markers } = useMarkers();
 
   // Export options state
+  const [exportMode, setExportMode] = useState<ExportMode>("visited");
+  const [includeMarkers, setIncludeMarkers] = useState(false);
+  const [mapName, setMapName] = useState("");
+  const [sharer, setSharer] = useState("");
+
+  // Collapsible headers state
+  const [downloadExpanded, setDownloadExpanded] = useState(true);
+  const [shareExpanded, setShareExpanded] = useState(true);
+  const [embedExpanded, setEmbedExpanded] = useState(true);
+
+  // Image export options state
   const [format, setFormat] = useState<ExportFormat>("svg");
   const svgOptions = useRef<SvgExportOptions>({ svgInlineStyles: true });
   const imageOptions = useRef<ImageExportOptions>({
@@ -35,30 +53,30 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     backgroundColor: "#ffffff",
   });
 
-  // Collapsible headers state
-  const [downloadExpanded, setDownloadExpanded] = useState(true);
-  const [shareExpanded, setShareExpanded] = useState(true);
+  // Prepare export data
+  const { layersToShare, markersToShare } = useExportData({
+    exportMode,
+    allLayers,
+    visitedCountryCodes,
+    includeMarkers,
+    markers,
+  });
 
-  // Export handler
-  const handleExport = () => {
-    if (!svgRef?.current) return;
-    if (format === "svg") {
-      exportSvg(svgRef.current, "map.svg", svgOptions.current.svgInlineStyles);
-    } else {
-      const ext = format === "jpeg" ? "jpg" : format;
-      exportSvgAsImage(
-        svgRef.current,
-        `map@${imageOptions.current.scale}x.${ext}`,
-        format,
-        imageOptions.current.scale,
-        true,
-        8192,
-        imageOptions.current.quality,
-        imageOptions.current.backgroundColor
-      );
+  // Prefill sharer with authenticated user's displayName if available
+  useEffect(() => {
+    if (!sharer && user?.displayName) {
+      setSharer(user.displayName);
     }
-    closePanel();
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user?.displayName]);
+
+  // Encode map data into shareable code
+  const code = encodeMapData({
+    layers: layersToShare,
+    mapName: mapName.trim() || undefined,
+    sharer: sharer.trim() || undefined,
+    markers: markersToShare,
+  });
 
   return (
     <Panel
@@ -81,25 +99,39 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       }
     >
       <div>
+        <ExportOptionsSection
+          exportMode={exportMode}
+          setExportMode={setExportMode}
+          includeMarkers={includeMarkers}
+          setIncludeMarkers={setIncludeMarkers}
+          mapName={mapName}
+          setMapName={setMapName}
+          sharer={sharer}
+          setSharer={setSharer}
+        />
+        <Separator className="my-4" />
         <DownloadMapSection
+          expanded={downloadExpanded}
+          setExpanded={setDownloadExpanded}
+          svgRef={svgRef}
           format={format}
           setFormat={setFormat}
           svgOptions={svgOptions}
           imageOptions={imageOptions}
-          handleExport={handleExport}
-          svgRef={svgRef}
-          downloadExpanded={downloadExpanded}
-          setDownloadExpanded={setDownloadExpanded}
         />
         {!isReadonly && (
           <>
             <Separator className="my-4" />
             <ShareMapSection
-              exportMode={exportMode}
-              setExportMode={setExportMode}
-              visitedCountryCodes={visitedCountryCodes}
-              shareExpanded={shareExpanded}
-              setShareExpanded={setShareExpanded}
+              expanded={shareExpanded}
+              setExpanded={setShareExpanded}
+              code={code}
+            />
+            <Separator className="my-4" />
+            <EmbedMapSection
+              expanded={embedExpanded}
+              setExpanded={setEmbedExpanded}
+              code={code}
             />
           </>
         )}

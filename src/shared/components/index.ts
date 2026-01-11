@@ -37,6 +37,7 @@ export { SelectInput } from "./form/inputs/SelectInput";
 
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
+export { SectionHeader } from "./layout/SectionHeader";
 export { Separator } from "./layout/Separator";
 export { Breadcrumbs, type Crumb } from "./layout/Breadcrumbs/Breadcrumbs";
 

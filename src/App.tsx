@@ -1,17 +1,12 @@
-import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
-import { MapViewProvider } from "@contexts/MapViewProvider";
-import { LayersProvider } from "@contexts/LayersProvider";
-import { MarkersProvider } from "@contexts/MarkersProvider";
 import { useSettings } from "@contexts/SettingsContext";
-import { TimelineProvider } from "@contexts/TimelineProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { AppLayout, PublicLayout } from "@layout";
-import DashboardPage from "./pages/DashboardPage";
+import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import AboutPage from "./pages/AboutPage";
+import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
 import QuizzesPage from "./pages/QuizzesPage";
 import TripsPage from "./pages/TripsPage";
@@ -20,11 +15,10 @@ import SignupPage from "./pages/SignupPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import { AtlasProviders } from "./pages/AtlasProvider";
 
 function App() {
   const { ready } = useSettings();
-
-  const AtlasPage = lazy(() => import("./pages/AtlasPage"));
 
   // Show splash screen while settings are loading
   if (!ready) {
@@ -75,19 +69,15 @@ function App() {
             <Route
               path="/atlas"
               element={
-                <AppLayout>
-                  <Suspense fallback={<SplashScreen />}>
-                    <LayersProvider>
-                      <MapViewProvider>
-                        <MarkersProvider>
-                          <TimelineProvider>
-                            <AtlasPage />
-                          </TimelineProvider>
-                        </MarkersProvider>
-                      </MapViewProvider>
-                    </LayersProvider>
-                  </Suspense>
-                </AppLayout>
+                window.location.search.includes("embed") ? (
+                  <EmbedLayout mapCode={new URLSearchParams(window.location.search).get("map") || undefined}>
+                    <AtlasProviders />
+                  </EmbedLayout>
+                ) : (
+                  <AppLayout>
+                    <AtlasProviders />
+                  </AppLayout>
+                )
               }
             />
             <Route
@@ -121,7 +111,7 @@ function App() {
                   <NotFoundPage />
                 </PublicLayout>
               }
-            />            
+            />
           </Routes>
         </UIHintProvider>
       </UIProvider>

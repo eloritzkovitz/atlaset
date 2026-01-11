@@ -38,7 +38,7 @@ Atlaset lets you customize your map with **layers** (highlighting groups of coun
 }
 ```
 
-[Download a full example layers JSON](../examples/layers.json)
+[Download a full example layers JSON](examples/layers.json)
 
 - To import, use the Layers panel in the app and select your JSON file.
 
@@ -102,3 +102,11 @@ Atlaset supports sharing your maps (layers and markers) via a special URL:
 - Selectable options include layers, markers, map name and sharer info.
 - Anyone with the link can view the map and its information in readonly mode.
 - The map data is encoded in the URL and is independent of the sharer's data.
+
+## Embedding Maps
+
+Atlaset supports embedding maps directly into your website or blog using an HTML `<iframe>`. This allows you to display interactive maps anywhere online.
+
+- Use the **Embed** feature to generate an iframe link.
+- Copy the provided HTML `<iframe>` code into and paste it into your website's HTML where you want the map to appear.
+- You can see an example [here](examples/embedded-map.html).

@@ -29,9 +29,11 @@ export function SettingsPanel() {
         />
       }
     >
-      <MapSettingsGroup />
-      <Separator className="my-4" />
-      <LayerSettingsGroup />
+      <div className="mt-4">
+        <MapSettingsGroup />
+        <Separator className="my-4" />
+        <LayerSettingsGroup />
+      </div>
     </Panel>
   );
 }

@@ -99,25 +99,31 @@ export function LayersPanel({
         </>
       }
     >
-      <ul className="list-none p-0">
-        {effectiveLayers.map((layer, index) => (
-          <LayerPanelItem
-            key={layer.id}
-            layer={layer}
-            onToggleVisibility={!isReadonly ? toggleLayerVisibility : undefined}
-            onEdit={!isReadonly ? onEditLayer : undefined}
-            onRemove={!isReadonly ? removeLayer : undefined}
-            dragged={draggedIndex === index}
-            onDragStart={!isReadonly ? () => handleDragStart(index) : undefined}
-            handleDragOver={
-              !isReadonly ? (e) => handleDragOver(e, index) : undefined
-            }
-            handleDragEnd={!isReadonly ? handleDragEnd : undefined}
-            showRemove={!isReadonly}
-            showCenter={false}
-          />
-        ))}
-      </ul>
+      <div className="mt-4">
+        <ul className="list-none p-0">
+          {effectiveLayers.map((layer, index) => (
+            <LayerPanelItem
+              key={layer.id}
+              layer={layer}
+              onToggleVisibility={
+                !isReadonly ? toggleLayerVisibility : undefined
+              }
+              onEdit={!isReadonly ? onEditLayer : undefined}
+              onRemove={!isReadonly ? removeLayer : undefined}
+              dragged={draggedIndex === index}
+              onDragStart={
+                !isReadonly ? () => handleDragStart(index) : undefined
+              }
+              handleDragOver={
+                !isReadonly ? (e) => handleDragOver(e, index) : undefined
+              }
+              handleDragEnd={!isReadonly ? handleDragEnd : undefined}
+              showRemove={!isReadonly}
+              showCenter={false}
+            />
+          ))}
+        </ul>
+      </div>
     </Panel>
   );
 }

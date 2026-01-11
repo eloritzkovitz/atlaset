@@ -1,15 +1,18 @@
-// Supported export formats
+/** Export modes for the map */
+export type ExportMode = "visited" | "layers";
+
+/** Export formats for the map */
 export type ExportFormat = "svg" | "png" | "jpeg" | "webp";
 
-// Image export formats
+/** Image formats for export */
 export type ImageFormat = "png" | "jpeg" | "webp";
 
-// SVG export options
+/** Options for exporting SVG */
 export type SvgExportOptions = {
   svgInlineStyles: boolean;
 };
 
-// Image export options
+/** Options for exporting images */
 export type ImageExportOptions = {
   scale: number;
   quality: number;

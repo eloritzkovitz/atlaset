@@ -1,0 +1,57 @@
+<!-- docs/embed-demo.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="../../public/icons/icon.svg" />
+    <title>Atlaset - Embedded Map Example</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: #f8f8f8;
+        margin: 0;
+        padding: 2rem;
+      }
+      .container {
+        max-width: 900px;
+        margin: auto;
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px #0001;
+      }
+      iframe {
+        display: block;
+        margin: 2rem auto;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      code {
+        background: #f4f4f4;
+        padding: 2px 4px;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Atlaset Embedded Map Example</h1>
+      <p>
+        This is a demonstration of how to embed an Atlaset map in your website
+        using an <code>&lt;iframe&gt;</code>.
+      </p>
+      <iframe
+        src="https://atlaset.vercel.app/atlas?map=fHx8fFZpc2l0ZWQlMjBDb3VudHJpZXM6JTIzNGE5MGUyOnx8&embed"
+        width="960"
+        height="500"
+        frameborder="0"
+        style="border: 0; max-width: 100%"
+        title="Atlaset Embedded Map"
+        allowfullscreen
+        loading="lazy"
+      ></iframe>
+      </p>
+    </div>
+  </body>
+</html>

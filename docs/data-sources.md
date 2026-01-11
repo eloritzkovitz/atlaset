@@ -44,4 +44,4 @@ Your JSON mapping should look like this:
 }
 ```
 
-You can find an example showing a few country objects [here](../examples/countries.json).
+You can find an example showing a few country objects [here](examples/countries.json).

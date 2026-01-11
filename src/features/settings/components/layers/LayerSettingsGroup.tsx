@@ -1,6 +1,6 @@
 import React from "react";
 import { FaLayerGroup } from "react-icons/fa6";
-import { Checkbox, CollapsibleHeader, DropdownSelectInput } from "@components";
+import { Checkbox, CollapsibleHeader, DropdownSelectInput, SectionHeader } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colors";
 import type { LayerMode } from "@features/atlas/layers";
 import { PaletteDots } from "./PaletteDots";
@@ -50,7 +50,7 @@ export function LayerSettingsGroup() {
         <div className="space-y-6">
           {/* Display Options Section */}
           <section>
-            <h4 className="font-semibold text-sm text-muted mb-2">DISPLAY OPTIONS</h4>
+            <SectionHeader title="Display Options" />
             <div className="flex flex-col gap-3 mb-2">
               <Checkbox
                 checked={!!colorHomeCountry}
@@ -67,7 +67,7 @@ export function LayerSettingsGroup() {
 
           {/* Color Palettes Section */}
           <section>
-            <h4 className="font-semibold text-sm text-muted mb-2">COLOR PALETTES</h4>
+            <SectionHeader title="Color Palettes" />
             <div className="mb-2">
               {LAYER_MODES.map((mode) => (
                 <div key={mode.key} className="mb-4">
