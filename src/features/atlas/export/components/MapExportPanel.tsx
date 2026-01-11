@@ -1,22 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
-import {
-  ActionButton,
-  Checkbox,
-  FormField,
-  Panel,
-  Separator,
-} from "@components";
+import { ActionButton, Panel, Separator } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
-import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
+import { useExportData } from "../hooks/useExportData";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
-import { ShareMapSection } from "./ShareMapSection";
 import { EmbedMapSection } from "./EmbedMapSection";
+import { ExportOptionsSection } from "./ExportOptionsSection";
+import { ShareMapSection } from "./ShareMapSection";
 import type {
   ExportFormat,
   ImageExportOptions,
@@ -56,7 +51,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     scale: 2,
     quality: 1,
     backgroundColor: "#ffffff",
-  });  
+  });
 
   // Export handler
   const handleExport = () => {
@@ -79,54 +74,14 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     closePanel();
   };
 
-  // Prepare layers for sharing
-  let layersToShare: Array<{
-    name: string;
-    color: string;
-    countries: string[];
-  }>;
-  if (exportMode === "visited") {
-    const visitedLayer = allLayers.find(
-      (l) => l.id === DEFAULT_VISITED_LAYER.id
-    );
-    layersToShare = [
-      {
-        name: visitedLayer?.name ?? DEFAULT_VISITED_LAYER.name,
-        color: visitedLayer?.color ?? DEFAULT_VISITED_LAYER.color,
-        countries: visitedLayer?.countries ?? visitedCountryCodes,
-      },
-    ];
-  } else {
-    layersToShare = allLayers
-      .filter((l) => l.visible && l.countries && l.countries.length > 0)
-      .map((l) => ({
-        name: l.name,
-        color: l.color,
-        countries: l.countries,
-      }));
-  }
-
-  // Prepare markers for sharing
-  let markersToShare:
-    | Array<{
-        name?: string;
-        coordinates: [number, number];
-        color?: string;
-        description?: string;
-      }>
-    | undefined = undefined;
-  if (includeMarkers) {
-    markersToShare = Array.isArray(markers)
-      ? markers
-          .filter((m) => m.visible !== false)
-          .map((m) => ({
-            name: m.name,
-            coordinates: m.coordinates,
-            color: m.color,
-            description: m.description,
-          }))
-      : [];
-  }
+  // Prepare export data
+  const { layersToShare, markersToShare } = useExportData({
+    exportMode,
+    allLayers,
+    visitedCountryCodes,
+    includeMarkers,
+    markers,
+  });
 
   // Prefill sharer with authenticated user's displayName if available
   useEffect(() => {
@@ -165,53 +120,17 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       }
     >
       <div>
-        <div className="mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
-          Options
-        </div>
-        <div className="flex flex-col gap-2 mb-4">
-          <Checkbox
-            checked={exportMode === "visited"}
-            onChange={() => setExportMode("visited")}
-            label="Visited countries only"
-            aria-checked={exportMode === "visited"}
-            aria-label="Visited countries only"
-          />
-          <Checkbox
-            checked={exportMode === "layers"}
-            onChange={() => setExportMode("layers")}
-            label="All visible layers"
-            aria-checked={exportMode === "layers"}
-            aria-label="All visible layers"
-          />
-          <Checkbox
-            checked={includeMarkers}
-            onChange={() => setIncludeMarkers((v) => !v)}
-            label="All visible markers"
-            aria-checked={includeMarkers}
-            aria-label="All visible markers"
-          />
-        </div>
-        <div className="mt-4 mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
-          Map Details (Optional)
-        </div>
-        <FormField label="Map Name">
-          <input
-            type="text"
-            value={mapName}
-            onChange={(e) => setMapName(e.target.value)}
-            placeholder="My Shared Map"
-            maxLength={64}
-          />
-        </FormField>
-        <FormField label="Your Name">
-          <input
-            type="text"
-            value={sharer}
-            onChange={(e) => setSharer(e.target.value)}
-            placeholder="Your Name"
-            maxLength={32}
-          />
-        </FormField>
+        <ExportOptionsSection
+          exportMode={exportMode}
+          setExportMode={setExportMode}
+          includeMarkers={includeMarkers}
+          setIncludeMarkers={setIncludeMarkers}
+          mapName={mapName}
+          setMapName={setMapName}
+          sharer={sharer}
+          setSharer={setSharer}
+        />
+        <Separator className="my-4" />
         <DownloadMapSection
           format={format}
           setFormat={setFormat}
