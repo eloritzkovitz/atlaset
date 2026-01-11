@@ -27,5 +27,7 @@
         }
       ]
     }
-  ]
+  ],
+  "redirects": [{ "source": "/", "destination": "/atlas", "permanent": false }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
 }

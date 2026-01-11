@@ -55,33 +55,23 @@ export function MapUiContainer({
     [timelineMode, uiVisible]
   );
 
-  // UI hint for shared/readonly map, with map name and sharer if available
+  // UI hint for shared/readonly map
   const sharedMapInfo = useSharedMapInfo() || {};
   const mapName = sharedMapInfo.mapName;
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
     if (!isReadonly) return null;
-    let msg = (
+    const displayMapName = mapName ? mapName : "a shared map";
+    const displaySharer = sharer ? sharer : "an anonymous user";
+    const msg = (
       <>
-        Viewing a <b>shared map</b>. Editing is disabled.
+        Viewing <b>{displayMapName}</b>
+        <span>
+         by <b>{displaySharer}</b>.
+        </span>
+        Editing is disabled.
       </>
     );
-    if (mapName || sharer) {
-      msg = (
-        <>
-          Viewing <b>{mapName || "a shared map"}</b>
-          {sharer ? (
-            <span>
-              {" "}
-              by <b>{sharer}</b>.
-            </span>
-          ) : (
-            "."
-          )}
-          Editing is disabled.
-        </>
-      );
-    }
     return {
       message: msg,
       icon: <FaShareNodes className="text-lg" />,

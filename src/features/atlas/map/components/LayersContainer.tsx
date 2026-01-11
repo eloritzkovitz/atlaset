@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { getCountryIsoCode } from "@features/countries";
 import {
@@ -37,7 +38,8 @@ export function LayersContainer({
   isAddingMarker,
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
-  const { timelineMode } = useTimeline();
+  const { isReadonly } = useMapView();
+  const { timelineMode } = useTimeline();  
 
   // Home country for coloring
   const { homeCountry } = useHomeCountry();
@@ -57,11 +59,12 @@ export function LayersContainer({
       <Geographies geography={geographyData}>
         {({ geographies }: { geographies: GeographyFeature[] }) =>
           geographies.map((geo) => {
-            const isoA2 = getCountryIsoCode(geo.properties);
+            const isoA2 = getCountryIsoCode(geo.properties);            
             if (!isoA2) return null;
 
             // Home country coloring logic
             const isHomeCountry =
+              !isReadonly &&
               !timelineMode &&
               colorHomeCountry &&
               homeCountry &&
@@ -69,6 +72,7 @@ export function LayersContainer({
 
             // Upcoming visit coloring logic
             const isUpcomingVisitCountry =
+              !isReadonly &&
               !timelineMode &&
               colorUpcomingVisits &&
               upcomingCountryCodes.includes(isoA2);
