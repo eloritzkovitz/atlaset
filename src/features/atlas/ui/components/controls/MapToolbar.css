@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .toolbar-container {
-  @apply absolute right-0 md:right-8 bottom-8 z-[101] flex flex-col items-end transition-transform transition-opacity duration-300;
+  @apply absolute z-[101] flex flex-col items-end transition-transform transition-opacity duration-300;
 }
 
 .toolbar-container-hidden {

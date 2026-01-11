@@ -11,10 +11,16 @@ import "./MapToolbar.css";
 interface MapToolbarProps {
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
+  isEmbed?: boolean;
   children?: React.ReactNode;
 }
 
-export function MapToolbar({ zoom, setZoom, children }: MapToolbarProps) {
+export function MapToolbar({
+  zoom,
+  setZoom,
+  isEmbed,
+  children,
+}: MapToolbarProps) {
   // UI state
   const { uiVisible } = useUI();
   const [visible, setVisible] = useState(true);
@@ -69,39 +75,43 @@ export function MapToolbar({ zoom, setZoom, children }: MapToolbarProps) {
   return (
     <div
       className={`toolbar-container ${
+        isEmbed ? "!right-2 !bottom-0" : "right-0 md:right-4 bottom-8"
+      } ${
         uiVisible ? "toolbar-container-visible" : "toolbar-container-hidden"
       }`}
     >
       {/* Zoom controls: vertical slide */}
       <MapControls zoom={zoom} setZoom={setZoom} visible={visible} />
-      <div
-        className="relative flex items-center w-full justify-end"
-        style={{ height: "40px" }}
-      >
-        {/* Toggle button */}
-        <ActionButton
-          onClick={() => setVisible((v) => !v)}
-          ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
-          title={visible ? "Hide toolbar" : "Show toolbar"}
-          titlePosition="left"
-          variant="action"
-          className={`${!visible ? "opacity-70" : ""}`}
-          icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
-          rounded
-        />
-        {/* Actions: horizontal slide */}
-        <ActionsToolbar
-          className={`right-10 md:right-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
-            visible
-              ? "opacity-100 pointer-events-auto translate-x-0"
-              : "opacity-0 pointer-events-none translate-x-10"
-          }`}
+      {!isEmbed && (
+        <div
+          className="relative flex items-center w-full justify-end"
+          style={{ height: "40px" }}
         >
-          <MapToolbarActions actions={actions} isDesktop={true}>
-            {children}
-          </MapToolbarActions>
-        </ActionsToolbar>
-      </div>
+          {/* Toggle button */}
+          <ActionButton
+            onClick={() => setVisible((v) => !v)}
+            ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
+            title={visible ? "Hide toolbar" : "Show toolbar"}
+            titlePosition="left"
+            variant="action"
+            className={`${!visible ? "opacity-70" : ""}`}
+            icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
+            rounded
+          />
+          {/* Actions: horizontal slide */}
+          <ActionsToolbar
+            className={`right-10 md:right-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
+              visible
+                ? "opacity-100 pointer-events-auto translate-x-0"
+                : "opacity-0 pointer-events-none translate-x-10"
+            }`}
+          >
+            <MapToolbarActions actions={actions} isDesktop={true}>
+              {children}
+            </MapToolbarActions>
+          </ActionsToolbar>
+        </div>
+      )}
     </div>
   );
 }

@@ -52,39 +52,30 @@ export default function AtlasPage() {
     );
   }
 
-  // Render simplified map for embed mode
-  if (isEmbed) {
-    return (
-      <WorldMap
-        onCountryClick={handleCountryClick}
-        onCountryHover={handleCountryHover}
-        selectedIsoCode={selectedIsoCode}
-        hoveredIsoCode={hoveredIsoCode}
-        onReady={handleMapReady}
-        svgRef={svgRef}
-        isAddingMarker={isAddingMarker}
-      />
-    );
-  }
-
   return (
     <>
-      <AtlasShortcuts />
       <div className="flex h-screen relative">
-        {!isLoading && (
-          <AtlasUiContainer
-            svgRef={svgRef}
-            selectedIsoCode={selectedIsoCode}
-            setSelectedIsoCode={setSelectedIsoCode}
-            hoveredIsoCode={hoveredIsoCode}
-            setHoveredIsoCode={setHoveredIsoCode}
-            selectedCountry={selectedCountry}
-            setSelectedCountry={setSelectedCountry}
-          />
+        {!isLoading && !isEmbed && (
+          <>
+            <AtlasShortcuts />
+            <AtlasUiContainer
+              svgRef={svgRef}
+              selectedIsoCode={selectedIsoCode}
+              setSelectedIsoCode={setSelectedIsoCode}
+              hoveredIsoCode={hoveredIsoCode}
+              setHoveredIsoCode={setHoveredIsoCode}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+            />
+          </>
         )}
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           {!isLoading && (
-            <MapUiContainer layers={layers} isAddingMarker={isAddingMarker} />
+            <MapUiContainer
+              layers={layers}
+              isAddingMarker={isAddingMarker}
+              isEmbed={isEmbed}
+            />
           )}
           <WorldMap
             onCountryClick={handleCountryClick}

@@ -16,11 +16,13 @@ import type { LegendItem } from "../types";
 interface MapUiContainerProps {
   layers: Layer[];
   isAddingMarker?: boolean;
+  isEmbed?: boolean;
 }
 
 export function MapUiContainer({
   layers,
   isAddingMarker,
+  isEmbed,
 }: MapUiContainerProps) {
   const { isReadonly, zoom, setZoom, center, selectedCoords } = useMapView();
   const { timelineMode, layerMode } = useTimeline();
@@ -34,7 +36,7 @@ export function MapUiContainer({
   // UI hint for adding marker
   const addMarkerHint = useMemo(
     () =>
-      isAddingMarker
+      isAddingMarker && !isEmbed
         ? {
             message: <>Click on the map to place a marker.</>,
             icon: <FaMapPin className="text-lg" />,
@@ -46,7 +48,7 @@ export function MapUiContainer({
   // UI hint for timeline mode
   const timelineHint = useMemo(
     () =>
-      timelineMode && uiVisible
+      timelineMode && uiVisible && !isEmbed
         ? {
             message: <>Timeline mode enabled. Press T to toggle off.</>,
             icon: <FaTimeline className="text-lg" />,
@@ -60,14 +62,14 @@ export function MapUiContainer({
   const mapName = sharedMapInfo.mapName;
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
-    if (!isReadonly) return null;
+    if (!isReadonly || isEmbed) return null;
     const displayMapName = mapName ? mapName : "a shared map";
     const displaySharer = sharer ? sharer : "an anonymous user";
     const msg = (
       <>
         Viewing <b>{displayMapName}</b>
         <span>
-         by <b>{displaySharer}</b>.
+          by <b>{displaySharer}</b>.
         </span>
         Editing is disabled.
       </>
@@ -88,19 +90,23 @@ export function MapUiContainer({
   return (
     <>
       {/* Map UI components */}
-      {timelineMode && (
+      {timelineMode && !isEmbed && (
         <>
           <TimelineBar />
           <TimelineNavigator />
         </>
       )}
-      <MapToolbar zoom={zoom} setZoom={setZoom} />
-      <MapFooter zoom={zoom} coords={selectedCoords} latitude={center[1]} />
-      <MapLegendModal
-        open={showLegend}
-        onClose={closeLegend}
-        items={legendItems}
-      />
+      <MapToolbar zoom={zoom} setZoom={setZoom} isEmbed={isEmbed} />
+      {!isEmbed && (
+        <>
+          <MapFooter zoom={zoom} coords={selectedCoords} latitude={center[1]} />
+          <MapLegendModal
+            open={showLegend}
+            onClose={closeLegend}
+            items={legendItems}
+          />
+        </>
+      )}
     </>
   );
 }

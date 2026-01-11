@@ -46,7 +46,7 @@ export function UserMenu() {
 
   return (
     <div
-      className="fixed top-4 right-4 md:right-10 z-20 flex items-center gap-4"
+      className="fixed top-4 right-4 z-20 flex items-center gap-4"
       ref={menuRef}
     >
       {!isSettingsPage && (
