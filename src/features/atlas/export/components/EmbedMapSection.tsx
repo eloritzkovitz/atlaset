@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaCode, FaCopy } from "react-icons/fa6";
-import { CollapsibleHeader, InputBox, ActionButton } from "@components";
+import { CollapsibleHeader, InputBox, ActionButton, SectionHeader } from "@components";
 
 interface EmbedMapSectionProps {
   expanded: boolean;
@@ -38,9 +38,7 @@ export function EmbedMapSection({
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
-      <div className="mt-2 mb-2 text-muted text-xs font-semibold uppercase tracking-wide">
-        Embed Code
-      </div>
+      <SectionHeader title="Embed Code" />
       <div className="flex items-center gap-1 mb-2">
         <InputBox
           value={embedCode}
