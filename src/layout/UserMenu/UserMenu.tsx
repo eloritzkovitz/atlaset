@@ -10,7 +10,7 @@ import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 import { AuthButtons } from "../Header/AuthButtons";
 
-export function UserMenu() {
+export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const { user, loading } = useAuth();
   const { uiVisible, showFriends, toggleFriends } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
@@ -46,7 +46,9 @@ export function UserMenu() {
 
   return (
     <div
-      className="fixed top-4 right-4 z-20 flex items-center gap-4"
+      className={`${
+        fixed ? "fixed top-4 right-4" : ""
+      } z-20 flex items-center gap-4`}
       ref={menuRef}
     >
       {!isSettingsPage && (
