@@ -14,6 +14,7 @@ import { ExportOptionsSection } from "./ExportOptionsSection";
 import { ShareMapSection } from "./ShareMapSection";
 import type {
   ExportFormat,
+  ExportMode,
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
@@ -33,7 +34,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { markers } = useMarkers();
 
   // Export options state
-  const [exportMode, setExportMode] = useState<"visited" | "layers">("visited");
+  const [exportMode, setExportMode] = useState<ExportMode>("visited");
   const [includeMarkers, setIncludeMarkers] = useState(false);
   const [mapName, setMapName] = useState("");
   const [sharer, setSharer] = useState("");
@@ -116,7 +117,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
           format={format}
           setFormat={setFormat}
           svgOptions={svgOptions}
-          imageOptions={imageOptions}          
+          imageOptions={imageOptions}
         />
         {!isReadonly && (
           <>

@@ -1,8 +1,9 @@
 import { Checkbox, FormField, SectionHeader } from "@components";
+import type { ExportMode } from "../types";
 
 interface ExportOptionsSectionProps {
-  exportMode: "visited" | "layers";
-  setExportMode: (mode: "visited" | "layers") => void;
+  exportMode: ExportMode;
+  setExportMode: (mode: ExportMode) => void;
   includeMarkers: boolean;
   setIncludeMarkers: (v: boolean) => void;
   mapName: string;

@@ -83,29 +83,31 @@ export function MarkersPanel({
         {effectiveMarkers.length === 0 ? (
           <div className="text-muted text-sm">No markers yet.</div>
         ) : (
-          <ul className="space-y-2">
-            {effectiveMarkers.map((marker, idx) => (
-              <MarkersPanelItem
-                key={marker.id}
-                marker={marker}
-                idx={idx}
-                onCenter={() => centerOnMarkerById(marker.id)}
-                onToggleVisibility={
-                  !isReadonly
-                    ? () => toggleMarkerVisibility(marker.id)
-                    : undefined
-                }
-                onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
-                onRemove={
-                  !isReadonly ? () => removeMarker(marker.id) : undefined
-                }
-                draggedIndex={!isReadonly ? draggedIndex : undefined}
-                handleDragStart={!isReadonly ? handleDragStart : undefined}
-                handleDragOver={!isReadonly ? handleDragOver : undefined}
-                handleDragEnd={!isReadonly ? handleDragEnd : undefined}
-              />
-            ))}
-          </ul>
+          <div className="mt-4">
+            <ul className="space-y-2">
+              {effectiveMarkers.map((marker, idx) => (
+                <MarkersPanelItem
+                  key={marker.id}
+                  marker={marker}
+                  idx={idx}
+                  onCenter={() => centerOnMarkerById(marker.id)}
+                  onToggleVisibility={
+                    !isReadonly
+                      ? () => toggleMarkerVisibility(marker.id)
+                      : undefined
+                  }
+                  onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
+                  onRemove={
+                    !isReadonly ? () => removeMarker(marker.id) : undefined
+                  }
+                  draggedIndex={!isReadonly ? draggedIndex : undefined}
+                  handleDragStart={!isReadonly ? handleDragStart : undefined}
+                  handleDragOver={!isReadonly ? handleDragOver : undefined}
+                  handleDragEnd={!isReadonly ? handleDragEnd : undefined}
+                />
+              ))}
+            </ul>
+          </div>
         )}
       </Panel>
     </>
