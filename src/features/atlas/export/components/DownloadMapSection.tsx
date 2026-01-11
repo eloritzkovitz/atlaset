@@ -1,5 +1,10 @@
 import { FaDownload } from "react-icons/fa6";
-import { ActionButton, CollapsibleHeader, SelectInput } from "@components";
+import {
+  ActionButton,
+  CollapsibleHeader,
+  SectionHeader,
+  SelectInput,
+} from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { SvgOptions } from "./options/SvgOptions";
@@ -60,9 +65,7 @@ export function DownloadMapSection({
       onToggle={() => setExpanded(!expanded)}
     >
       {/* Format selector */}
-      <div className="mt-4 mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
-        Format
-      </div>
+      <SectionHeader title="Format" className="!-mb-2" />
       <SelectInput
         label=""
         value={format}
@@ -70,9 +73,7 @@ export function DownloadMapSection({
         options={EXPORT_FORMAT_OPTIONS}
       />
       {/* Options section header */}
-      <div className="mb-4 mt-1 text-muted text-xs font-semibold uppercase tracking-wide">
-        Options
-      </div>
+      <SectionHeader title="Options" />
       {/* SVG options */}
       {format === "svg" && (
         <SvgOptions
@@ -105,9 +106,7 @@ export function DownloadMapSection({
         </ActionButton>
       </div>
       {/* Download Data section */}
-      <div className="mb-4 mt-4 text-muted text-xs font-semibold uppercase tracking-wide">
-        Download Data
-      </div>
+      <SectionHeader title="Download Data" />
       <ActionButton
         variant="primary"
         onClick={handleDownloadJson}

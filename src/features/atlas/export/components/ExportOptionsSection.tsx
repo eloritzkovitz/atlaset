@@ -1,4 +1,4 @@
-import { Checkbox, FormField } from "@components";
+import { Checkbox, FormField, SectionHeader } from "@components";
 
 interface ExportOptionsSectionProps {
   exportMode: "visited" | "layers";
@@ -23,9 +23,7 @@ export function ExportOptionsSection({
 }: ExportOptionsSectionProps) {
   return (
     <>
-      <div className="mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
-        Options
-      </div>
+      <SectionHeader title="Options" />
       <div className="flex flex-col gap-2 mb-4">
         <Checkbox
           checked={exportMode === "visited"}
@@ -49,9 +47,7 @@ export function ExportOptionsSection({
           aria-label="All visible markers"
         />
       </div>
-      <div className="mt-4 mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
-        Map Details (Optional)
-      </div>
+      <SectionHeader title="Map Details (Optional)" />
       <FormField label="Map Name">
         <input
           type="text"

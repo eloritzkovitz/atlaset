@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { FaShareNodes, FaCopy } from "react-icons/fa6";
-import { ActionButton, CollapsibleHeader, InputBox } from "@components";
+import {
+  ActionButton,
+  CollapsibleHeader,
+  InputBox,
+  SectionHeader,
+} from "@components";
 
 interface ShareMapSectionProps {
   expanded: boolean;
@@ -32,9 +37,7 @@ export function ShareMapSection({
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
-      <div className="mt-4 mb-4 text-muted text-xs font-semibold uppercase tracking-wide">
-        Shareable Link
-      </div>
+      <SectionHeader title="Shareable Link" />
       <div className="flex items-center gap-1 mb-4">
         <InputBox
           value={shareUrl}
