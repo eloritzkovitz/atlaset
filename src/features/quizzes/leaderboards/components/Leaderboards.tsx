@@ -1,4 +1,4 @@
-import { useEffect, useState, type JSX } from "react";
+import { useEffect, useState } from "react";
 import {
   FaChevronLeft,
   FaFlag,
@@ -24,53 +24,35 @@ import { useUserProfile } from "@features/user";
 
 type NonNullDifficulty = Exclude<Difficulty, null>;
 
-const TYPE_OPTIONS: Array<DropdownOption<QuizType> & { icon: JSX.Element }> = [
+const TYPE_OPTIONS: Array<
+  DropdownOption<QuizType> & {
+    icon?: React.ComponentType<{ className?: string }>;
+  }
+> = [
   {
     value: "flag",
     label: "Guess the Flag",
-    icon: <FaFlag className="inline mr-2" />,
+    icon: FaFlag,
   },
   {
     value: "capital",
     label: "Guess the Capital",
-    icon: <FaLandmark className="inline mr-2" />,
+    icon: FaLandmark,
   },
 ];
 
 const DIFFICULTY_OPTIONS: Array<
-  DropdownOption<NonNullDifficulty> & { icon: JSX.Element }
+  DropdownOption<NonNullDifficulty> & {
+    icon?: React.ComponentType<{ className?: string }>;
+  }
 > = [
-  { value: "easy", label: "Easy", icon: <FaLeaf className="inline mr-2" /> },
-  {
-    value: "medium",
-    label: "Medium",
-    icon: <FaCompass className="inline mr-2" />,
-  },
-  {
-    value: "hard",
-    label: "Hard",
-    icon: <FaBinoculars className="inline mr-2" />,
-  },
-  {
-    value: "expert",
-    label: "Expert",
-    icon: <FaHatWizard className="inline mr-2" />,
-  },
+  { value: "easy", label: "Easy", icon: FaLeaf },
+  { value: "medium", label: "Medium", icon: FaCompass },
+  { value: "hard", label: "Hard", icon: FaBinoculars },
+  { value: "expert", label: "Expert", icon: FaHatWizard },
 ];
 
 export function Leaderboards() {
-  // Generic option renderer for dropdowns
-  function renderOption(opt: {
-    label: React.ReactNode;
-    icon?: JSX.Element;
-  }): React.ReactNode {
-    return (
-      <span>
-        {opt.icon ?? <FaQuestion className="inline mr-2" />}
-        {String(opt.label)}
-      </span>
-    );
-  }
   const [type, setType] = useState<QuizType>("flag");
   const [difficulty, setDifficulty] = useState<NonNullDifficulty>("easy");
   const [data, setData] = useState<LeaderboardEntry[]>([]);
@@ -111,6 +93,28 @@ export function Leaderboards() {
       username,
     };
   });
+
+  // Generic option renderer for dropdowns
+  function renderOption(opt: {
+    label: React.ReactNode;
+    icon?: React.ComponentType<{ size?: number }>;
+  }): React.ReactNode {
+    const Icon = opt.icon;
+    return (
+      <span>
+        {Icon ? (
+          <span className="inline mr-2">
+            <Icon size={18} />
+          </span>
+        ) : (
+          <span className="inline mr-2">
+            <FaQuestion size={18} />
+          </span>
+        )}
+        {String(opt.label)}
+      </span>
+    );
+  }
 
   // Handle loading state
   if (loading) return null;
