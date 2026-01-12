@@ -108,6 +108,11 @@ export function useCountryFilters() {
     max: absoluteMax,
   } = getVisitCountStats(trips, selectedYear);
 
+  // Count of sovereign countries
+  const sovereignCount = filteredCountries.filter(
+    (c) => c.sovereigntyType === "Sovereign"
+  ).length;
+
   // Use shared visited iso codes in readonly mode if provided or auto-detected
   const visitedIsoCodes =
     isReadonly && effectiveSharedVisitedIsoCodes
@@ -190,6 +195,7 @@ export function useCountryFilters() {
     filteredCountries: finalFilteredCountries,
     allCount,
     allCountWithoutLayers,
+    sovereignCount,
     visitedCount,
     minVisitCount,
     setMinVisitCount,

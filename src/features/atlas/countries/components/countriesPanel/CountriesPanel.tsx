@@ -35,6 +35,7 @@ export function CountriesPanel({
   // Context data state
   const { allRegions, allSubregions, refreshData } = useCountryData();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
+  const [sovereignOnly, setSovereignOnly] = useState(false);
   const { trips } = useTrips();
   const {
     uiVisible,
@@ -56,6 +57,7 @@ export function CountriesPanel({
     setSearch,
     filteredCountries,
     allCount,
+    sovereignCount,
     visitedCount,
     minVisitCount,
     setMinVisitCount,
@@ -64,21 +66,27 @@ export function CountriesPanel({
     resetFilters,
   } = useCountryFilters();
 
+  // Filter countries by toggles
+  const filteredByMode = filteredCountries.filter((c) => {
+    if (sovereignOnly) return c.sovereigntyType === "Sovereign";
+    return true;
+  });
+
   // Sort state
   const {
     sortBy,
     setSortBy,
     sortedItems: sortedCountries,
   } = useSort(
-    filteredCountries,
+    filteredByMode,
     (items, sortBy) => sortCountries(items, sortBy, trips),
     "name-asc"
   );
 
-  // Reset sort when showVisitedOnly changes
+  // Reset sort when toggles change
   useEffect(() => {
     setSortBy("name-asc");
-  }, [showVisitedOnly, setSortBy]);
+  }, [showVisitedOnly, sovereignOnly, setSortBy]);
 
   // Keyboard navigation state
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -153,7 +161,10 @@ export function CountriesPanel({
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
             visitedOnly={showVisitedOnly}
             setVisitedOnly={setShowVisitedOnly}
+            sovereignOnly={sovereignOnly}
+            setSovereignOnly={setSovereignOnly}
             allCount={allCount}
+            sovereignCount={sovereignCount}
             visitedCount={visitedCount}
           />
           <Separator />
