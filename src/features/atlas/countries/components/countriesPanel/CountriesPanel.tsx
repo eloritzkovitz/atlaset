@@ -35,7 +35,6 @@ export function CountriesPanel({
   // Context data state
   const { allRegions, allSubregions, refreshData } = useCountryData();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
-  const [sovereignOnly, setSovereignOnly] = useState(false);
   const { trips } = useTrips();
   const {
     uiVisible,
@@ -58,6 +57,8 @@ export function CountriesPanel({
     filteredCountries,
     allCount,
     sovereignCount,
+    sovereignOnly,
+    setSovereignOnly,
     visitedCount,
     minVisitCount,
     setMinVisitCount,
@@ -66,19 +67,13 @@ export function CountriesPanel({
     resetFilters,
   } = useCountryFilters();
 
-  // Filter countries by toggles
-  const filteredByMode = filteredCountries.filter((c) => {
-    if (sovereignOnly) return c.sovereigntyType === "Sovereign";
-    return true;
-  });
-
   // Sort state
   const {
     sortBy,
     setSortBy,
     sortedItems: sortedCountries,
   } = useSort(
-    filteredByMode,
+    filteredCountries,
     (items, sortBy) => sortCountries(items, sortBy, trips),
     "name-asc"
   );
