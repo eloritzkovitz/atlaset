@@ -3,12 +3,10 @@ export { LayerModal } from "./components/LayerModal";
 export { LayersPanel } from "./components/LayersPanel";
 
 // Constants
-export {
-  VISITED_LAYER_ID,
-  DEFAULT_NEW_LAYER,
-} from "./constants/layers";
+export { VISITED_LAYER_ID, DEFAULT_NEW_LAYER } from "./constants/layers";
 
 // Hooks
+export { useEffectiveLayers } from "./hooks/useEffectiveLayers";
 export { useLayerItems } from "./hooks/useLayerItems";
 export { useSharedLayerItems } from "./hooks/useSharedLayerItems";
 export { useTimelineLayerItems } from "./hooks/useTimelineLayerItems";
@@ -21,7 +19,7 @@ export { layersService } from "./services/layersService";
 export * from "./types";
 
 // Utils
-export { isTimelineLayer } from "./utils/layer";
+export { isTimelineLayer, getDefaultLayerSelections } from "./utils/layer";
 export {
   groupLayerItemsByIsoCode,
   getBlendedLayerColor,

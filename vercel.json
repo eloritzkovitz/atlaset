@@ -10,6 +10,15 @@
       ]
     },
     {
+      "source": "/(.*)\\.(js|css)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/assets/(.*)",
       "headers": [
         {
@@ -19,7 +28,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.(js|css|woff2|woff|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico)",
+      "source": "/(.*)\\.(woff2|woff|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -29,5 +38,13 @@
     }
   ],
   "redirects": [{ "source": "/", "destination": "/atlas", "permanent": false }],
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+  "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/data/(.*)", "destination": "/data/$1" },
+    { "source": "/flags/(.*)", "destination": "/flags/$1" },
+    { "source": "/icons/(.*)", "destination": "/icons/$1" },
+    { "source": "/images/(.*)", "destination": "/images/$1" },
+    { "source": "/sounds/(.*)", "destination": "/sounds/$1" },
+    { "source": "/(.*)", "destination": "/" }
+  ]
 }

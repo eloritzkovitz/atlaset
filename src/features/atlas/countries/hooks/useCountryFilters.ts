@@ -1,20 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useLayers } from "@contexts/LayersContext";
-import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
-import { getDefaultLayerSelections } from "@features/atlas/layers/utils/layer";
 import {
+  getDefaultLayerSelections,
+  useEffectiveLayers,
+} from "@features/atlas/layers";
+import { useSharedMapInfo } from "@features/atlas/export";
+import {
+  filterCountries,
+  getCountryCounts,
+  getFilteredIsoCodes,
   useCountryData,
   type CountryFilterOptions,
   type SovereigntyType,
 } from "@features/countries";
-import { useSharedMapInfo } from "@features/atlas/export";
-import {
-  filterCountries,
-  getFilteredIsoCodes,
-} from "@features/countries/utils/countryFilters";
 import { getLatestYear, getVisitCountStats } from "@features/visits";
 import { filterByVisitCount } from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks";
@@ -37,6 +38,9 @@ export function useCountryFilters() {
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
+
+  // Sovereign toggle
+  const [sovereignOnly, setSovereignOnly] = useState(false);
 
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
@@ -99,47 +103,52 @@ export function useCountryFilters() {
     [countries, filterParams]
   );
 
-  // Counts
-  const allCount = filteredCountries.length;
-  const allCountWithoutLayers = filteredCountriesNoLayer.length;
+  // Counts and visit map
   const {
     map: visitedMap,
     min: absoluteMin,
     max: absoluteMax,
   } = getVisitCountStats(trips, selectedYear);
 
-  // Use shared visited iso codes in readonly mode if provided or auto-detected
+  // Determine visited iso codes based on mode
   const visitedIsoCodes =
     isReadonly && effectiveSharedVisitedIsoCodes
       ? effectiveSharedVisitedIsoCodes
       : Object.keys(visitedMap);
 
-  // Filter visited countries with the same core filters (no layers)
-  const visitedCountriesFiltered = filteredCountriesNoLayer.filter((c) =>
-    visitedIsoCodes.includes(c.isoCode)
-  );
-  const visitedCount = visitedCountriesFiltered.length;
+  // Country counts
+  const { allCount, allCountWithoutLayers, sovereignCount, visitedCount } =
+    getCountryCounts({
+      filteredCountries,
+      filteredCountriesNoLayer,
+      visitedIsoCodes,
+    });
 
-  // Apply visit count filtering
+  // Apply visit count and sovereign filtering
   const finalFilteredCountries = useMemo(() => {
+    let result = filteredCountries;
     if (showVisitedOnly) {
       // In readonly mode with sharedVisitedIsoCodes, filter by those iso codes only
       if (isReadonly && effectiveSharedVisitedIsoCodes) {
-        return filteredCountries.filter((c) =>
+        result = filteredCountries.filter((c) =>
           effectiveSharedVisitedIsoCodes.includes(c.isoCode)
         );
+      } else {
+        result = filterByVisitCount(
+          filteredCountries,
+          visitedMap,
+          minVisitCount,
+          maxVisitCount
+        );
       }
-      // Otherwise, use visit count filtering as before
-      return filterByVisitCount(
-        filteredCountries,
-        visitedMap,
-        minVisitCount,
-        maxVisitCount
-      );
     }
-    return filteredCountries;
+    if (sovereignOnly) {
+      result = result.filter((c) => c.sovereigntyType === "Sovereign");
+    }
+    return result;
   }, [
     showVisitedOnly,
+    sovereignOnly,
     filteredCountries,
     visitedMap,
     minVisitCount,
@@ -190,7 +199,11 @@ export function useCountryFilters() {
     filteredCountries: finalFilteredCountries,
     allCount,
     allCountWithoutLayers,
+    sovereignCount,
+    sovereignOnly,
+    setSovereignOnly,
     visitedCount,
+    visitedIsoCodes,
     minVisitCount,
     setMinVisitCount,
     maxVisitCount,

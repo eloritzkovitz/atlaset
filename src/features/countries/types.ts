@@ -43,6 +43,13 @@ export type CountrySortBy =
   | `${CountrySortByKey}-asc`
   | `${CountrySortByKey}-desc`;
 
+/** Dropdown option for sort, with optional icon */
+export type CountrySortOption = {
+  value: CountrySortBy;
+  label: string;
+  icon?: React.ComponentType<{ size?: number }>;
+};
+
 /** Filter keys for countries */
 export type CountryFilterKey =
   | "region"

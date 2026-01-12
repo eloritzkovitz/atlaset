@@ -34,4 +34,9 @@ export {
   getLanguagesDisplay,
   getSovereigntyInfoForTerritory,
 } from "./utils/countryData";
+export {
+  filterCountries,
+  getFilteredIsoCodes,
+  getCountryCounts,
+} from "./utils/countryFilters";
 export { sortCountries } from "./utils/countrySort";

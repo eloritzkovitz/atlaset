@@ -5,7 +5,7 @@ export function AuthButtons() {
   const navigate = useNavigate();
   
   return (
-    <div className="flex justify-end gap-2 mt-4 mr-4">
+    <div className="flex justify-end gap-2">
       <ActionButton
         variant="secondary"
         className="min-w-[100px] !rounded-full"

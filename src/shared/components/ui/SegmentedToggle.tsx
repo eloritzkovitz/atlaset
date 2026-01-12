@@ -1,6 +1,7 @@
 export interface SegmentedToggleOption<T extends string> {
   value: T;
   label: string;
+  count?: number;
   colorClass?: string;
 }
 
@@ -33,6 +34,11 @@ export function SegmentedToggle<T extends string>({
           disabled={disabled}
         >
           {opt.label}
+          {typeof opt.count === "number" && (
+            <span className="ml-1 text-xs text-muted align-middle">
+              ({opt.count})
+            </span>
+          )}
         </button>
       ))}
     </div>

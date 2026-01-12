@@ -4,10 +4,8 @@ import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useCountryData, type SovereigntyType } from "@features/countries";
-import {
-  getAllSovereigntyTypes,
-  getSubregionsForRegion,
-} from "@features/countries/utils/countryData";
+import { getAllSovereigntyTypes } from "@features/countries/utils/countryData";
+import { useRegionSubregionSelection } from "../../hooks/useRegionSubregionSelection";
 import { useIsMobile, useKeyHandler } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
@@ -17,8 +15,6 @@ interface CountryFiltersPanelProps {
   show: boolean;
   onHide: () => void;
   showVisitedOnly: boolean;
-  allRegions: string[];
-  allSubregions: string[];
   selectedRegion: string;
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
@@ -36,8 +32,6 @@ export function CountryFiltersPanel({
   show,
   onHide,
   showVisitedOnly,
-  allRegions,
-  allSubregions,
   selectedRegion,
   setSelectedRegion,
   selectedSubregion,
@@ -58,11 +52,12 @@ export function CountryFiltersPanel({
   const [showLayerFilters, setShowLayerFilters] = React.useState(true);
   const [showTimelineFilters, setShowTimelineFilters] = React.useState(true);
 
-  // Dynamic subregion options based on selected region
-  const subregionOptions =
-    selectedRegion && selectedRegion !== ""
-      ? getSubregionsForRegion(countries, selectedRegion)
-      : allSubregions;
+  // Subregion options based on selected region
+  const { subregionOptions } = useRegionSubregionSelection(
+    selectedRegion,
+    selectedSubregion,
+    setSelectedRegion
+  );
 
   // All sovereignty types from country data
   const sovereigntyOptions = getAllSovereigntyTypes(countries);
@@ -125,41 +120,42 @@ export function CountryFiltersPanel({
           : undefined
       }
     >
-      <CoreFilters
-        expanded={showCoreFilters}
-        onToggle={() => setShowCoreFilters((v) => !v)}
-        selectedRegion={selectedRegion}
-        handleRegionChange={handleRegionChange}
-        selectedSubregion={selectedSubregion}
-        setSelectedSubregion={setSelectedSubregion}
-        selectedSovereignty={selectedSovereignty}
-        setSelectedSovereignty={setSelectedSovereignty}
-        allRegions={allRegions}
-        subregionOptions={subregionOptions}
-        sovereigntyOptions={sovereigntyOptions}
-      />
-      {!showVisitedOnly && (
-        <>
-          <Separator className="my-4" />
-          <LayerFilters
-            expanded={showLayerFilters}
-            onToggle={() => setShowLayerFilters((v) => !v)}
-          />
-        </>
-      )}
-      {timelineMode && (
-        <>
-          <Separator className="my-4" />
-          <TimelineFilters
-            expanded={showTimelineFilters}
-            onToggle={() => setShowTimelineFilters((v) => !v)}
-            minVisitCount={minVisitCount}
-            setMinVisitCount={setMinVisitCount}
-            maxVisitCount={maxVisitCount}
-            setMaxVisitCount={setMaxVisitCount}
-          />
-        </>
-      )}
+      <div className="mt-4">
+        <CoreFilters
+          expanded={showCoreFilters}
+          onToggle={() => setShowCoreFilters((v) => !v)}
+          selectedRegion={selectedRegion}
+          handleRegionChange={handleRegionChange}
+          selectedSubregion={selectedSubregion}
+          setSelectedSubregion={setSelectedSubregion}
+          selectedSovereignty={selectedSovereignty}
+          setSelectedSovereignty={setSelectedSovereignty}
+          subregionOptions={subregionOptions}
+          sovereigntyOptions={sovereigntyOptions}
+        />
+        {!showVisitedOnly && (
+          <>
+            <Separator className="my-4" />
+            <LayerFilters
+              expanded={showLayerFilters}
+              onToggle={() => setShowLayerFilters((v) => !v)}
+            />
+          </>
+        )}
+        {timelineMode && (
+          <>
+            <Separator className="my-4" />
+            <TimelineFilters
+              expanded={showTimelineFilters}
+              onToggle={() => setShowTimelineFilters((v) => !v)}
+              minVisitCount={minVisitCount}
+              setMinVisitCount={setMinVisitCount}
+              maxVisitCount={maxVisitCount}
+              setMaxVisitCount={setMaxVisitCount}
+            />
+          </>
+        )}
+      </div>
     </Panel>
   );
 }

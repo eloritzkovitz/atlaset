@@ -30,6 +30,7 @@ export { ColorSelectInput } from "./form/inputs/ColorSelectInput/ColorSelectInpu
 export { DateSelect } from "./form/inputs/DateSelect/DateSelect";
 export { DropdownOptions } from "./form/inputs/DropdownSelectInput/DropdownOptions";
 export { DropdownSelectInput } from "./form/inputs/DropdownSelectInput/DropdownSelectInput";
+export { OptionItem } from "./form/inputs/DropdownSelectInput/OptionItem";
 export { InputBox } from "./form/inputs/InputBox/InputBox";
 export { NumberInput } from "./form/inputs/NumberInput/NumberInput";
 export { SearchInput } from "./form/inputs/SearchInput";

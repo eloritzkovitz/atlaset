@@ -33,7 +33,7 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   // Context data state
-  const { allRegions, allSubregions, refreshData } = useCountryData();
+  const { refreshData } = useCountryData();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -56,6 +56,9 @@ export function CountriesPanel({
     setSearch,
     filteredCountries,
     allCount,
+    sovereignCount,
+    sovereignOnly,
+    setSovereignOnly,
     visitedCount,
     minVisitCount,
     setMinVisitCount,
@@ -75,10 +78,10 @@ export function CountriesPanel({
     "name-asc"
   );
 
-  // Reset sort when showVisitedOnly changes
+  // Reset sort when toggles change
   useEffect(() => {
     setSortBy("name-asc");
-  }, [showVisitedOnly, setSortBy]);
+  }, [showVisitedOnly, sovereignOnly, setSortBy]);
 
   // Keyboard navigation state
   const listContainerRef = useRef<HTMLDivElement>(null);
@@ -153,7 +156,10 @@ export function CountriesPanel({
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
             visitedOnly={showVisitedOnly}
             setVisitedOnly={setShowVisitedOnly}
+            sovereignOnly={sovereignOnly}
+            setSovereignOnly={setSovereignOnly}
             allCount={allCount}
+            sovereignCount={sovereignCount}
             visitedCount={visitedCount}
           />
           <Separator />
@@ -171,13 +177,11 @@ export function CountriesPanel({
       </Panel>
 
       {/* Filters panel */}
-      {showCountries && showFilters && (
+      {showCountries && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
           showVisitedOnly={showVisitedOnly}
-          allRegions={allRegions}
-          allSubregions={allSubregions}
           selectedRegion={selectedRegion}
           setSelectedRegion={setSelectedRegion}
           selectedSubregion={selectedSubregion}

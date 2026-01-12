@@ -1,8 +1,11 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
+import { OptionItem, SectionHeader } from "@components";
+import { FaCheck } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
-import { ActionButton, DropdownOptions, Menu } from "@components";
-import { getSortOptions } from "@features/countries/utils/countrySort";
-import { useKeyboardFocusRing } from "@hooks";
+import { ActionButton, Menu, Separator } from "@components";
+import { useCountrySortDropdownState } from "@features/atlas/countries/hooks/useCountrySortDropdownState";
+import { useKeyboardFocusRing, useModalAnimation } from "@hooks";
+import type { Option, OptionGroup } from "@types";
 
 interface CountrySortSelectProps {
   value: string;
@@ -15,68 +18,121 @@ export function CountrySortSelect({
   onChange,
   visitedOnly,
 }: CountrySortSelectProps) {
-  const [open, setOpen] = useState(false);
+  const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation();
   const showRing = useKeyboardFocusRing();
   const btnRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Get sort options
-  const options = getSortOptions(visitedOnly);
+  // Sort dropdown state
+  const {
+    sortKey,
+    sortDirection,
+    keyGroup,
+    dirGroup,
+    selectedKeyOption,
+    selectedDirOption,
+  } = useCountrySortDropdownState(value, visitedOnly);
 
-  // Calculate menu position relative to the button
-  const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
-  const handleOpen = () => {
-    setOpen(true);
-    setTimeout(() => {
-      if (btnRef.current) {
-        const rect = btnRef.current.getBoundingClientRect();
-        setMenuStyle({
-          position: "fixed",
-          left: rect.left,
-          top: rect.bottom + 4,
-          minWidth: rect.width,
-          zIndex: 1000,
-        });
-      }
-    }, 0);
-  };
+  // Centralized group renderer
+  const renderOptionGroup = (
+    group: OptionGroup<string> | undefined,
+    selected: string,
+    handleChange: (v: string) => void,
+    isDirection = false
+  ) =>
+    group ? (
+      <>
+        <SectionHeader title={group.label} className="ml-1 -my-4" />
+        {group.options.map((opt: Option<string>) => (
+          <div key={opt.value}>
+            <OptionItem
+              key={opt.value}
+              opt={opt}
+              isSelected={(v) => v === selected}
+              isMulti={false}
+              value={selected}
+              onChange={(v) => {
+                const newVal = Array.isArray(v) ? v[0] : v;
+                handleChange(newVal);
+                closeModal();
+              }}
+              setOpen={setIsOpen}
+              renderOption={(o: Option<string>) => (
+                <span className="flex items-center gap-2">
+                  {isDirection ? (
+                    o.icon ? (
+                      <o.icon />
+                    ) : null
+                  ) : o.value === selected ? (
+                    <FaCheck />
+                  ) : (
+                    <span className="w-4 inline-block" />
+                  )}
+                  <span>{o.label}</span>
+                </span>
+              )}
+            />
+          </div>
+        ))}
+      </>
+    ) : null;
 
   return (
     <>
       <div className="relative ml-2 flex items-center">
         <ActionButton
           ref={btnRef}
-          icon={<PiArrowsDownUpBold size={24} />}
-          ariaLabel="Sort countries"
+          icon={
+            selectedDirOption && selectedDirOption.icon ? (
+              <selectedDirOption.icon size={20} />
+            ) : (
+              <PiArrowsDownUpBold size={24} />
+            )
+          }
+          ariaLabel="Sort"
+          title={
+            selectedKeyOption && selectedDirOption
+              ? `Sort by: ${selectedKeyOption.label} (${selectedDirOption.label})`
+              : "Sort"
+          }
           variant="sort"
-          onClick={open ? () => setOpen(false) : handleOpen}
-          className={open && showRing ? "ring-2 ring-ring-focus" : ""}
+          onClick={() => {
+            setIsOpen((v) => {
+              if (v) {
+                closeModal();
+                return false;
+              } else {
+                return true;
+              }
+            });
+          }}
+          className={isOpen && showRing ? "ring-2 ring-ring-focus" : ""}
           rounded
         />
       </div>
-      <Menu
-        open={open}
-        onClose={() => setOpen(false)}
-        style={menuStyle}
-        containerRef={menuRef}
-        className="!bg-input rounded shadow"
-      >
-        <DropdownOptions
-          options={options}
-          isSelected={() => false}
-          isMulti={false}
-          value={value}
-          onChange={(val) => {
-            if (Array.isArray(val)) {
-              onChange(val[0]);
-            } else {
-              onChange(val);
-            }
-            setOpen(false);
-          }}
-          setOpen={setOpen}
-        />
-      </Menu>
+      {(isOpen || closing) && (
+        <Menu
+          open={isOpen}
+          onClose={closeModal}
+          containerRef={menuRef}
+          className="!bg-input rounded shadow top-28 left-80"
+        >
+          {/* Sort Key Group */}
+          <div className="-mt-2">
+            {renderOptionGroup(keyGroup, sortKey, (newKey) =>
+              onChange(`${newKey}-${sortDirection}`)
+            )}
+          </div>
+          <Separator className="mt-2" />
+          {/* Sort Direction Group */}
+          {renderOptionGroup(
+            dirGroup,
+            sortDirection,
+            (newDir) => onChange(`${sortKey}-${newDir}`),
+            true
+          )}
+        </Menu>
+      )}
     </>
   );
 }

@@ -2,11 +2,12 @@ import { mockCountries } from "@test-utils/mockCountries";
 import {
   filterCountries,
   getFilteredIsoCodes,
+  getCountryCounts,
 } from "./countryFilters";
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;
-  
+
   describe("filterCountries", () => {
     it("filters by region", () => {
       expect(filterCountries(countries, { selectedRegion: "Europe" })).toEqual([
@@ -14,21 +15,25 @@ describe("countryFilters utils", () => {
         countries[2],
       ]);
     });
+
     it("filters by subregion", () => {
       expect(
         filterCountries(countries, { selectedSubregion: "Caribbean" })
       ).toEqual([countries[1]]);
     });
+
     it("filters by sovereignty", () => {
       expect(
         filterCountries(countries, { selectedSovereignty: "Dependency" })
       ).toEqual([countries[1]]);
     });
+
     it("filters by layerCountries", () => {
       expect(
         filterCountries(countries, { layerCountries: ["FR", "DE"] })
       ).toEqual([countries[0], countries[2]]);
     });
+
     it("filters by search and region together", () => {
       expect(
         filterCountries(countries, {
@@ -66,6 +71,46 @@ describe("countryFilters utils", () => {
       expect(
         getFilteredIsoCodes(countries, layers as any, { o2: "exclude" })
       ).toEqual(expected);
+    });
+  });
+
+  describe("getCountryCounts", () => {
+    const countries = mockCountries;
+    const visitedIsoCodes = ["FR", "GP"];
+    const filteredCountries = countries;
+    const filteredCountriesNoLayer = countries;
+
+    it("returns correct counts for all, sovereign, and visited", () => {
+      const counts = getCountryCounts({
+        filteredCountries,
+        filteredCountriesNoLayer,
+        visitedIsoCodes,
+      });
+      expect(counts.allCount).toBe(filteredCountries.length);
+      expect(counts.allCountWithoutLayers).toBe(
+        filteredCountriesNoLayer.length
+      );
+      expect(counts.sovereignCount).toBe(
+        filteredCountries.filter((c) => c.sovereigntyType === "Sovereign")
+          .length
+      );
+      expect(counts.visitedCount).toBe(
+        filteredCountriesNoLayer.filter((c) =>
+          visitedIsoCodes.includes(c.isoCode)
+        ).length
+      );
+    });
+
+    it("returns zero counts for empty arrays", () => {
+      const counts = getCountryCounts({
+        filteredCountries: [],
+        filteredCountriesNoLayer: [],
+        visitedIsoCodes: [],
+      });
+      expect(counts.allCount).toBe(0);
+      expect(counts.allCountWithoutLayers).toBe(0);
+      expect(counts.sovereignCount).toBe(0);
+      expect(counts.visitedCount).toBe(0);
     });
   });
 });

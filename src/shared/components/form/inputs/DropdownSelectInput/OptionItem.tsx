@@ -36,8 +36,8 @@ export function OptionItem<T>({
 
   return (
     <div
-      className={`flex items-center gap-2 px-2 py-1 hover:bg-dropdown-hover cursor-pointer ${
-        isSelected(opt.value) ? "bg-dropdown-selected font-semibold" : ""
+      className={`flex items-center gap-2 px-2 py-1 hover:bg-dropdown-hover cursor-pointer rounded ${
+        isSelected(opt.value) ? "bg-primary font-semibold" : ""
       }`}
       onClick={handleToggle}
     >
@@ -47,7 +47,7 @@ export function OptionItem<T>({
           onChange={handleToggle}
           onClick={(e) => e.stopPropagation()}
         />
-      )}
+      )}     
       {renderOption ? renderOption(opt) : opt.label}
     </div>
   );
