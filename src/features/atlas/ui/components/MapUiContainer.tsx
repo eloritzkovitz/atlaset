@@ -42,7 +42,7 @@ export function MapUiContainer({
             icon: <FaMapPin className="text-lg" />,
           }
         : null,
-    [isAddingMarker]
+    [isAddingMarker, isEmbed]
   );
 
   // UI hint for timeline mode
@@ -54,7 +54,7 @@ export function MapUiContainer({
             icon: <FaTimeline className="text-lg" />,
           }
         : null,
-    [timelineMode, uiVisible]
+    [timelineMode, uiVisible, isEmbed]
   );
 
   // UI hint for shared/readonly map
@@ -78,7 +78,7 @@ export function MapUiContainer({
       message: msg,
       icon: <FaShareNodes className="text-lg" />,
     };
-  }, [isReadonly, mapName, sharer]);
+  }, [isReadonly, isEmbed, mapName, sharer]);
 
   useUiHint(addMarkerHint, 0, { key: "add-marker", dismissable: false });
   useUiHint(timelineHint, 0, { key: "timeline", dismissable: true });
