@@ -29,6 +29,13 @@ export function UIProvider({ children }: { children: ReactNode }) {
     if (openPanel === "countries") setShowFilters((prev) => !prev);
   };
 
+  // Ensure showFilters is false whenever countries panel is closed
+  useEffect(() => {
+    if (openPanel !== "countries" && showFilters) {
+      setShowFilters(false);
+    }
+  }, [openPanel, showFilters]);
+
   // Derived states for individual panels
   const showCountries = openPanel === "countries";
   const showMarkers = openPanel === "markers";

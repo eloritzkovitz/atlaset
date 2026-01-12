@@ -177,7 +177,7 @@ export function CountriesPanel({
       </Panel>
 
       {/* Filters panel */}
-      {showCountries && showFilters && (
+      {showCountries && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
