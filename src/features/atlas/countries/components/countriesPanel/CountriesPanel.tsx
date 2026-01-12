@@ -33,7 +33,7 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   // Context data state
-  const { allRegions, allSubregions, refreshData } = useCountryData();
+  const { refreshData } = useCountryData();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -182,8 +182,6 @@ export function CountriesPanel({
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
           showVisitedOnly={showVisitedOnly}
-          allRegions={allRegions}
-          allSubregions={allSubregions}
           selectedRegion={selectedRegion}
           setSelectedRegion={setSelectedRegion}
           selectedSubregion={selectedSubregion}
