@@ -38,7 +38,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   // Show login/signup buttons if not logged in
   if (!user) {
     return (
-      <div className="fixed md:right-6 z-20">
+      <div className="fixed top-0 right-2 z-20">
         <AuthButtons />
       </div>
     );
