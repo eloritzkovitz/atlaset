@@ -2,6 +2,7 @@
  * @file Utils for sorting countries.
  */
 
+import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import type { Trip } from "@features/trips";
 import {
   getFirstVisitDateByCountry,
@@ -69,17 +70,34 @@ export function sortCountries(
  * @param visitedOnly - Whether to include visit-based sort options.
  * @returns An array of sort option objects.
  */
-export const getSortOptions = (visitedOnly?: boolean) => [
-  { value: "name-asc", label: "Name (ascending)" },
-  { value: "name-desc", label: "Name (descending)" },
-  { value: "iso-asc", label: "ISO 3166 code (ascending)" },
-  { value: "iso-desc", label: "ISO 3166 code (descending)" },
-  ...(visitedOnly
-    ? [
-        { value: "firstVisit-asc", label: "First visit time (ascending)" },
-        { value: "firstVisit-desc", label: "First visit time (descending)" },
-        { value: "lastVisit-asc", label: "Last visit time (ascending)" },
-        { value: "lastVisit-desc", label: "Last visit time (descending)" },
-      ]
-    : []),
-];
+export function getCountrySortOptions(visitedOnly: boolean): Array<{
+  label: string;
+  options: Array<{
+    value: string;
+    label: string;
+    icon?: React.ComponentType<{ size?: number }>;
+  }>;
+}> {
+  // Declarative config for all possible sort keys
+  const allKeyOptions = [
+    { value: "name", label: "Name" },
+    { value: "iso", label: "ISO 3166-1 code" },
+    { value: "firstVisit", label: "First visit time" },
+    { value: "lastVisit", label: "Last visit time" },
+  ];
+
+  // Only include timeline options if visitedOnly
+  const keyOptions = visitedOnly
+    ? allKeyOptions
+    : allKeyOptions.filter(opt => opt.value === "name" || opt.value === "iso");
+
+  const directionOptions = [
+    { value: "asc", label: "Ascending", icon: FaArrowUp },
+    { value: "desc", label: "Descending", icon: FaArrowDown },
+  ];
+
+  return [
+    { label: "SORT BY", options: keyOptions },
+    { label: "SORT DIRECTION", options: directionOptions },
+  ];
+}

@@ -1,6 +1,6 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import { mockTrips } from "@test-utils/mockTrips";
-import { getSortOptions, sortCountries } from "./countrySort";
+import { getCountrySortOptions, sortCountries } from "./countrySort";
 import type { Country, SovereigntyType } from "../types";
 
 describe("countrySort utils", () => {
@@ -100,29 +100,37 @@ describe("countrySort utils", () => {
     expect(result).toEqual(arr);
   });
 
-  describe("getSortOptions", () => {
+  describe("getCountrySortOptions", () => {
     it("returns basic sort options when visitedOnly is false or undefined", () => {
-      const options = getSortOptions();
-      expect(options).toEqual([
-        { value: "name-asc", label: "Name (ascending)" },
-        { value: "name-desc", label: "Name (descending)" },
-        { value: "iso-asc", label: "ISO 3166 code (ascending)" },
-        { value: "iso-desc", label: "ISO 3166 code (descending)" },
-      ]);
+      const options = getCountrySortOptions(false);
+      const keyGroup = options.find(g => g.label === "SORT BY");
+      const dirGroup = options.find(g => g.label === "SORT DIRECTION");
+      // Only name and iso keys
+      expect(keyGroup?.options.map(opt => opt.value)).toEqual(["name", "iso"]);
+      expect(dirGroup?.options.map(opt => opt.value)).toEqual(["asc", "desc"]);
     });
 
     it("returns all sort options when visitedOnly is true", () => {
-      const options = getSortOptions(true);
-      expect(options).toEqual([
-        { value: "name-asc", label: "Name (ascending)" },
-        { value: "name-desc", label: "Name (descending)" },
-        { value: "iso-asc", label: "ISO 3166 code (ascending)" },
-        { value: "iso-desc", label: "ISO 3166 code (descending)" },
-        { value: "firstVisit-asc", label: "First visit time (ascending)" },
-        { value: "firstVisit-desc", label: "First visit time (descending)" },
-        { value: "lastVisit-asc", label: "Last visit time (ascending)" },
-        { value: "lastVisit-desc", label: "Last visit time (descending)" },
+      const options = getCountrySortOptions(true);
+      const keyGroup = options.find(g => g.label === "SORT BY");
+      const dirGroup = options.find(g => g.label === "SORT DIRECTION");
+      expect(keyGroup?.options.map(opt => opt.value)).toEqual([
+        "name", "iso", "firstVisit", "lastVisit"
       ]);
+      expect(dirGroup?.options.map(opt => opt.value)).toEqual(["asc", "desc"]);
+    });
+
+    it("produces all combinations of key and direction", () => {
+      const options = getCountrySortOptions(true);
+      const keyGroup = options.find(g => g.label === "SORT BY");
+      const dirGroup = options.find(g => g.label === "SORT DIRECTION");
+      const allCombos = keyGroup?.options.flatMap(keyOpt =>
+        dirGroup?.options.map(dirOpt => `${keyOpt.value}-${dirOpt.value}`)
+      );
+      expect(allCombos).toContain("name-asc");
+      expect(allCombos).toContain("name-desc");
+      expect(allCombos).toContain("firstVisit-asc");
+      expect(allCombos).toContain("lastVisit-desc");
     });
   });
 });
