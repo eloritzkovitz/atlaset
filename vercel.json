@@ -37,13 +37,5 @@
       ]
     }
   ],
-  "redirects": [{ "source": "/", "destination": "/atlas", "permanent": false }],
-  "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
-    { "source": "/data/(.*)", "destination": "/data/$1" },
-    { "source": "/flags/(.*)", "destination": "/flags/$1" },
-    { "source": "/icons/(.*)", "destination": "/icons/$1" },
-    { "source": "/images/(.*)", "destination": "/images/$1" },
-    { "source": "/sounds/(.*)", "destination": "/sounds/$1" }
-  ]
+  "redirects": [{ "source": "/", "destination": "/atlas", "permanent": false }]  
 }
