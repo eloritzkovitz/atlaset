@@ -26,7 +26,9 @@ export function useGeoData() {
       try {
         const res = await fetch(staticUrl, fetchOpts);
         if (res.ok) return await res.json();
-      } catch {}
+      } catch {
+        // ignore static fetch error, try backend
+      }
       if (backendUrl) {
         const res = await fetch(backendUrl, fetchOpts);
         if (res.ok) return await res.json();

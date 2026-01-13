@@ -51,47 +51,37 @@ export const fetchCountryData = createAsyncThunk(
         const res = await fetch(staticUrl, fetchOpts);
         if (res && res.ok) return await res.json();
         // If 404 or error, fall through
-      } catch (e) {
+      } catch {
         // If fetch throws, ignore and try backend
       }
       // Try backend if provided
       if (backendUrl) {
-        let res;
-        try {
-          res = await fetch(backendUrl, fetchOpts);
-        } catch (e) {
-          // Always propagate backend fetch errors as-is (string, Error, etc)
-          throw e;
-        }
+        const res = await fetch(backendUrl, fetchOpts);
         if (res && res.ok) return await res.json();
         throw new Error(`Failed to load ${label || "data"} from backend`);
       }
       throw new Error(`Failed to load ${label || "data"}`);
     }
 
-    try {
-      const [countryData, currencyData] = await Promise.all([
-        fetchWithFallback(
-          staticCountryUrl,
-          backendCountryUrl,
-          "country data"
-        ),
-        fetchWithFallback(
-          staticCurrencyUrl,
-          backendCurrencyUrl,
-          "currency data"
-        ),
-      ]);
-      return {
-        countries: countryData as Country[],
-        currencies: currencyData as Record<string, string>,
-        allRegions: getAllRegions(countryData as Country[]),
-        allSubregions: getAllSubregions(countryData as Country[]),
-        allSovereigntyTypes: getAllSovereigntyTypes(countryData as Country[]),
-      };
-    } catch (err) {
-      throw err;
-    }
+    const [countryData, currencyData] = await Promise.all([
+      fetchWithFallback(
+        staticCountryUrl,
+        backendCountryUrl,
+        "country data"
+      ),
+      fetchWithFallback(
+        staticCurrencyUrl,
+        backendCurrencyUrl,
+        "currency data"
+      ),
+    ]);
+    return {
+      countries: countryData as Country[],
+      currencies: currencyData as Record<string, string>,
+      allRegions: getAllRegions(countryData as Country[]),
+      allSubregions: getAllSubregions(countryData as Country[]),
+      allSovereigntyTypes: getAllSovereigntyTypes(countryData as Country[]),
+    };
   }
 );
 
