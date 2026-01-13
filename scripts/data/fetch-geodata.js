@@ -16,29 +16,20 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const BACKEND_URL =
+const GEO_DATA_URL =
   process.env.VITE_MAP_GEO_URL ||
-  "https://atlaset-data-server.onrender.com/data";
+  "https://atlaset-data-server.onrender.com/data/countries.geojson";
 const DEST_DIR = path.join(__dirname, "../../public/data");
 
 ensureDirExists(DEST_DIR);
 
 const FILENAME = "countries.geojson";
 
-/**
- * Fetch a remote file as a string
- * @param {string} filename
- * @returns {Promise<string>}
- */
-async function fetchRemoteFile(filename, retries = 5, delayMs = 2000) {
-  const url = `${BACKEND_URL}/${filename}`;
-  return fetchWithRetries(url, retries, delayMs);
-}
-
 // Main logic: only fetch if file changed
 (async () => {
   try {
-    const remoteRaw = await fetchRemoteFile(FILENAME);
+    console.log(`Fetching: ${FILENAME} -> ${GEO_DATA_URL}`);
+    const remoteRaw = await fetchWithRetries(GEO_DATA_URL);
     const localRaw = readLocalFile(DEST_DIR, FILENAME);
     if (localRaw && localRaw === remoteRaw) {
       console.log(`${FILENAME} is up to date. No download needed.`);
