@@ -6,12 +6,16 @@
 import fs from "fs";
 import path from "path";
 import https from "https";
+import { fileURLToPath } from "url";
 
 // Configuration
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const BACKEND_URL =
   process.env.VITE_COUNTRY_DATA_URL ||
   "https://atlaset-data-server.onrender.com/data";
-const DEST_DIR = path.join(process.cwd(), "public/data");
+const DEST_DIR = path.join(__dirname, "../../public/data");
 
 fs.mkdirSync(DEST_DIR, { recursive: true });
 
@@ -25,11 +29,16 @@ const FILES = ["countries.json", "currencies.json"];
 function fetchRemoteFile(filename) {
   return new Promise((resolve, reject) => {
     https.get(`${BACKEND_URL}/${filename}`, (res) => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`Failed to fetch ${filename}: ${res.statusCode}`));
+        res.resume(); // Consume response data to free up memory
+        return;
+      }
       let data = "";
       res.on("data", (chunk) => (data += chunk));
       res.on("end", () => resolve(data));
       res.on("error", reject);
-    });
+    }).on("error", reject);
   });
 }
 

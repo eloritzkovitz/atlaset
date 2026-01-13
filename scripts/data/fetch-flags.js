@@ -7,12 +7,16 @@
 import fs from "fs";
 import path from "path";
 import https from "https";
+import { fileURLToPath } from "url";
 
 // Configuration
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const BACKEND_URL =
   process.env.VITE_FLAG_DATA_URL ||
   "https://atlaset-data-server.onrender.com/flags";
-const DEST_DIR = path.join(process.cwd(), "public/flags");
+const DEST_DIR = path.join(__dirname, "../../public/flags");
 
 fs.mkdirSync(DEST_DIR, { recursive: true });
 
