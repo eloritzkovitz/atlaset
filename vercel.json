@@ -46,5 +46,8 @@
       ]
     }
   ],
-  "rewrites": [{ "source": "/atlas/(.*)", "destination": "/" }]
+  "rewrites": [
+    { "source": "/atlas", "destination": "/" },
+    { "source": "/atlas/(.*)", "destination": "/" }
+  ]
 }
