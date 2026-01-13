@@ -32,6 +32,8 @@ describe("countryDataSlice async thunk", () => {
   beforeEach(() => {
     store = mockStore({ countryData: undefined });
     global.fetch = vi.fn();
+    (import.meta.env as any).VITE_COUNTRY_DATA_URL = 'http://dummy';
+    (import.meta.env as any).VITE_CURRENCY_DATA_URL = 'http://dummy';
   });
 
   afterEach(() => {
