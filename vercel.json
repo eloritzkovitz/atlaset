@@ -35,15 +35,16 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
+    },
+    {
+      "source": "/(data|flags|assets|icons|images|sounds)/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
-  "rewrites": [
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
-    { "source": "/data/(.*)", "destination": "/data/$1" },
-    { "source": "/flags/(.*)", "destination": "/flags/$1" },
-    { "source": "/icons/(.*)", "destination": "/icons/$1" },
-    { "source": "/images/(.*)", "destination": "/images/$1" },
-    { "source": "/sounds/(.*)", "destination": "/sounds/$1" },
-    { "source": "/atlas/(.*)", "destination": "/" }
-  ]
+  "rewrites": [{ "source": "/atlas/(.*)", "destination": "/" }]
 }
