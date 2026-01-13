@@ -3,10 +3,9 @@
  * Only downloads if the remote data has changed.
  */
 
-import fs from "fs";
 import path from "path";
-import https from "https";
 import { fileURLToPath } from "url";
+import { fetchWithRetries, ensureDirExists, readLocalFile, writeLocalFile } from "./fetchUtils.js";
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -17,39 +16,18 @@ const BACKEND_URL =
   "https://atlaset-data-server.onrender.com/data";
 const DEST_DIR = path.join(__dirname, "../../public/data");
 
-fs.mkdirSync(DEST_DIR, { recursive: true });
+ensureDirExists(DEST_DIR);
 
 const FILES = ["countries.json", "currencies.json"];
 
 /**
- * Fetch a remote file as a string
+ * Fetch a remote file as a string using fetchWithRetries utility
  * @param {string} filename
  * @returns {Promise<string>}
  */
-function fetchRemoteFile(filename) {
-  return new Promise((resolve, reject) => {
-    https.get(`${BACKEND_URL}/${filename}`, (res) => {
-      if (res.statusCode !== 200) {
-        reject(new Error(`Failed to fetch ${filename}: ${res.statusCode}`));
-        res.resume(); // Consume response data to free up memory
-        return;
-      }
-      let data = "";
-      res.on("data", (chunk) => (data += chunk));
-      res.on("end", () => resolve(data));
-      res.on("error", reject);
-    }).on("error", reject);
-  });
-}
-
-/**
- * Read a local file as a string, or null if not present
- * @param {string} filename
- */
-function readLocalFile(filename) {
-  const localPath = path.join(DEST_DIR, filename);
-  if (!fs.existsSync(localPath)) return null;
-  return fs.readFileSync(localPath, "utf8");
+async function fetchRemoteFile(filename, retries = 5, delayMs = 2000) {
+  const url = `${BACKEND_URL}/${filename}`;
+  return fetchWithRetries(url, retries, delayMs);
 }
 
 // Main logic: only fetch if file changed
@@ -57,12 +35,12 @@ function readLocalFile(filename) {
   try {
     for (const filename of FILES) {
       const remoteRaw = await fetchRemoteFile(filename);
-      const localRaw = readLocalFile(filename);
+      const localRaw = readLocalFile(DEST_DIR, filename);
       if (localRaw && localRaw === remoteRaw) {
         console.log(`${filename} is up to date. No download needed.`);
         continue;
       }
-      fs.writeFileSync(path.join(DEST_DIR, filename), remoteRaw);
+      writeLocalFile(DEST_DIR, filename, remoteRaw);
       console.log(`${filename} downloaded and updated!`);
     }
     console.log("All country data files checked and updated.");

@@ -4,10 +4,15 @@
  * into the specified directory.
  */
 
-import fs from "fs";
 import path from "path";
 import https from "https";
 import { fileURLToPath } from "url";
+import {
+  fetchWithRetries,
+  ensureDirExists,
+  readLocalFile,
+  writeLocalFile,
+} from "./fetchUtils.js";
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
@@ -18,51 +23,15 @@ const BACKEND_URL =
   "https://atlaset-data-server.onrender.com/flags";
 const DEST_DIR = path.join(__dirname, "../../public/flags");
 
-fs.mkdirSync(DEST_DIR, { recursive: true });
+ensureDirExists(DEST_DIR);
 
 /**
  * Fetch the remote index.json as a string, with retries
  * @returns Promise that resolves to the raw index.json string
  */
-async function fetchRemoteIndex(retries = 3, delayMs = 1000) {
-  for (let attempt = 1; attempt <= retries; attempt++) {
-    try {
-      return await new Promise((resolve, reject) => {
-        https
-          .get(`${BACKEND_URL}/index.json`, (res) => {
-            let data = "";
-            res.on("data", (chunk) => (data += chunk));
-            res.on("end", () => {
-              if (res.statusCode !== 200) {
-                reject(
-                  new Error(`Failed to fetch index.json: ${res.statusCode}`)
-                );
-              } else {
-                resolve(data);
-              }
-            });
-            res.on("error", reject);
-          })
-          .on("error", reject);
-      });
-    } catch (err) {
-      console.error(`[fetchRemoteIndex] Attempt ${attempt} failed:`, err);
-      if (attempt < retries) {
-        await new Promise((r) => setTimeout(r, delayMs * attempt));
-      } else {
-        throw err;
-      }
-    }
-  }
-}
-
-/**
- * Read the local index.json as a string, or null if not present
- */
-function readLocalIndex() {
-  const localPath = path.join(DEST_DIR, "index.json");
-  if (!fs.existsSync(localPath)) return null;
-  return fs.readFileSync(localPath, "utf8");
+async function fetchRemoteIndex(retries = 5, delayMs = 2000) {
+  const url = `${BACKEND_URL}/index.json`;
+  return fetchWithRetries(url, retries, delayMs);
 }
 
 /**
@@ -70,7 +39,7 @@ function readLocalIndex() {
  * @param iso - ISO country code
  * @returns Promise that resolves when the flag is downloaded
  */
-async function downloadFlag(iso, retries = 3, delayMs = 1000) {
+async function downloadFlag(iso, retries = 5, delayMs = 2000) {
   const filename = iso.endsWith(".svg") ? iso : `${iso}.svg`;
   const dest = path.join(DEST_DIR, filename);
   if (fs.existsSync(dest)) {
@@ -118,7 +87,7 @@ async function downloadFlag(iso, retries = 3, delayMs = 1000) {
 (async () => {
   try {
     const remoteIndexRaw = await fetchRemoteIndex();
-    const localIndexRaw = readLocalIndex();
+    const localIndexRaw = readLocalFile(DEST_DIR, "index.json");
     if (localIndexRaw && localIndexRaw === remoteIndexRaw) {
       console.log("[fetch-flags] Flags are up to date. No download needed.");
       return;
@@ -127,7 +96,7 @@ async function downloadFlag(iso, retries = 3, delayMs = 1000) {
       "[fetch-flags] index.json changed or missing, downloading flags..."
     );
     // Save new index.json
-    fs.writeFileSync(path.join(DEST_DIR, "index.json"), remoteIndexRaw);
+    writeLocalFile(DEST_DIR, "index.json", remoteIndexRaw);
     const flags = JSON.parse(remoteIndexRaw);
     // Download flags sequentially for better error tracking
     for (const flag of flags) {
