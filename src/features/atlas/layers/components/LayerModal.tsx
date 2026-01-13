@@ -15,7 +15,8 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
-import { CountrySelectModal, useCountryData } from "@features/countries";
+import { CountrySelectModal } from "@features/countries/components/countrySelect/CountrySelectModal";
+import { useCountryData } from "@features/countries";
 import { VISITED_LAYER_ID } from "../constants/layers";
 import type { Layer } from "../types";
 

@@ -9,10 +9,10 @@ import { ActionButton, Modal, PanelHeader } from "@components";
 import {
   CountryDetailsContent,
   CountryWithFlag,
-  VisitedStatusIndicator,
   useCountryData,
   type Country,
 } from "@features/countries";
+import { VisitedStatusIndicator } from "@features/countries/components/countryDetails/VisitedStatusIndicator";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
