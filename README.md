@@ -64,7 +64,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Deployed via Render** — Backend/API hosting
 
 ### Testing
-- **Jest / Vitest** — Testing frameworks for unit and integration tests
+- **Vitest** — Testing frameworks for unit and integration tests
 - **Testing Library** — Testing framework for React components and hooks
 - **Cypress** — End-to-end testing for user flows
 
