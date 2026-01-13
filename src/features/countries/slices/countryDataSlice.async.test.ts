@@ -23,7 +23,7 @@ describe("countryDataSlice async thunk", () => {
     const actions = store.getActions();
     expect(actions[0].type).toBe(fetchCountryData.pending.type);
     expect(actions[1].type).toBe(fetchCountryData.rejected.type);
-    expect(actions[1].error.message).toBe("Failed to load data");
+    expect(actions[1].error.message).toBe("Failed to load country data from backend");
   });
   const middlewares: Middleware[] = [thunk as Middleware];
   const mockStore = configureStore(middlewares);
@@ -72,7 +72,7 @@ describe("countryDataSlice async thunk", () => {
     const actions = store.getActions();
     expect(actions[0].type).toBe(fetchCountryData.pending.type);
     expect(actions[1].type).toBe(fetchCountryData.rejected.type);
-    expect(actions[1].error.message).toMatch(/Failed to load country data/);
+    expect(actions[1].error.message).toBe("Failed to load country data from backend");
   });
 
   it("dispatches rejected on thrown error", async () => {
@@ -87,6 +87,6 @@ describe("countryDataSlice async thunk", () => {
     const actions = store.getActions();
     expect(actions[0].type).toBe(fetchCountryData.pending.type);
     expect(actions[1].type).toBe(fetchCountryData.rejected.type);
-    expect(actions[1].error.message).toBe("network fail");
+    expect(actions[1].error.message).toBe("Failed to load country data from backend");
   });
 });

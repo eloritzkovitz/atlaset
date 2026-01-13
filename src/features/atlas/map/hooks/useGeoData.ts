@@ -10,23 +10,33 @@ export function useGeoData() {
   const [geoError, setGeoError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Fetch geo data from static file in dev, backend in prod
+  // Fetch geo data from static file first, then backend if missing
   const fetchGeoData = useCallback(async () => {
     setLoading(true);
     setGeoError(null);
 
-    const geoDataUrl =
-      import.meta.env.VITE_MAP_GEO_URL || "/data/countries.geojson";
+    const staticGeoUrl = "/data/countries.geojson";
+    const backendGeoUrl = import.meta.env.VITE_MAP_GEO_URL;
+    const fetchOpts: RequestInit | undefined =
+      process.env.NODE_ENV === "development"
+        ? { cache: "no-store" as RequestCache }
+        : undefined;
+
+    async function fetchWithFallback(staticUrl: string, backendUrl?: string) {
+      try {
+        const res = await fetch(staticUrl, fetchOpts);
+        if (res.ok) return await res.json();
+      } catch {}
+      if (backendUrl) {
+        const res = await fetch(backendUrl, fetchOpts);
+        if (res.ok) return await res.json();
+        throw new Error("Failed to load map data from backend");
+      }
+      throw new Error("Failed to load map data");
+    }
 
     try {
-      const res = await fetch(
-        geoDataUrl,
-        process.env.NODE_ENV === "development"
-          ? { cache: "no-store" as RequestCache }
-          : undefined
-      );
-      if (!res.ok) throw new Error("Failed to load map data");
-      const data = await res.json();
+      const data = await fetchWithFallback(staticGeoUrl, backendGeoUrl);
       setGeoData(data);
       setLoading(false);
     } catch (err) {

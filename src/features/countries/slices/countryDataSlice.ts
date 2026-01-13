@@ -29,32 +29,59 @@ const initialState: CountryDataState = {
 export const fetchCountryData = createAsyncThunk(
   "countryData/fetchCountryData",
   async () => {
-    let countryDataUrl, currencyDataUrl;
-    // istanbul ignore next
-    if (process.env.NODE_ENV === "production") {
-      countryDataUrl = import.meta.env.VITE_COUNTRY_DATA_URL;
-      currencyDataUrl = import.meta.env.VITE_CURRENCY_DATA_URL;
-    } else {
-      countryDataUrl = "/data/countries.json";
-      currencyDataUrl = "/data/currencies.json";
+    // Try static files first
+    const staticCountryUrl = "/data/countries.json";
+    const staticCurrencyUrl = "/data/currencies.json";
+    const backendCountryUrl = import.meta.env.VITE_COUNTRY_DATA_URL;
+    const backendCurrencyUrl = import.meta.env.VITE_CURRENCY_DATA_URL;
+
+    // Fetch options to avoid caching in development
+    const fetchOpts: RequestInit | undefined =
+      process.env.NODE_ENV === "development"
+        ? { cache: "no-store" as RequestCache }
+        : undefined;
+
+    async function fetchWithFallback(
+      staticUrl: string,
+      backendUrl?: string,
+      label?: string
+    ) {
+      // Try static first
+      try {
+        const res = await fetch(staticUrl, fetchOpts);
+        if (res && res.ok) return await res.json();
+        // If 404 or error, fall through
+      } catch (e) {
+        // If fetch throws, ignore and try backend
+      }
+      // Try backend if provided
+      if (backendUrl) {
+        let res;
+        try {
+          res = await fetch(backendUrl, fetchOpts);
+        } catch (e) {
+          // Always propagate backend fetch errors as-is (string, Error, etc)
+          throw e;
+        }
+        if (res && res.ok) return await res.json();
+        throw new Error(`Failed to load ${label || "data"} from backend`);
+      }
+      throw new Error(`Failed to load ${label || "data"}`);
     }
 
     try {
-      const fetchOpts: RequestInit | undefined =
-        process.env.NODE_ENV === "development"
-          ? { cache: "no-store" as RequestCache }
-          : undefined;
       const [countryData, currencyData] = await Promise.all([
-        fetch(countryDataUrl, fetchOpts).then((res) => {
-          if (!res.ok) throw new Error("Failed to load country data");
-          return res.json();
-        }),
-        fetch(currencyDataUrl, fetchOpts).then((res) => {
-          if (!res.ok) throw new Error("Failed to load currency data");
-          return res.json();
-        }),
+        fetchWithFallback(
+          staticCountryUrl,
+          backendCountryUrl,
+          "country data"
+        ),
+        fetchWithFallback(
+          staticCurrencyUrl,
+          backendCurrencyUrl,
+          "currency data"
+        ),
       ]);
-
       return {
         countries: countryData as Country[],
         currencies: currencyData as Record<string, string>,
@@ -63,11 +90,7 @@ export const fetchCountryData = createAsyncThunk(
         allSovereigntyTypes: getAllSovereigntyTypes(countryData as Country[]),
       };
     } catch (err) {
-      if (err instanceof Error) {
-        throw new Error(err.message);
-      } else {
-        throw new Error("Failed to load data");
-      }
+      throw err;
     }
   }
 );
