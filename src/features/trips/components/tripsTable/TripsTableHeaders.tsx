@@ -75,7 +75,7 @@ export function TripsTableHeaders({
             onSort={handleSort}
             filterable
             filterValue={filters.name}
-            placeholder="Search by name..."
+            placeholder="Search by name"
           />
         </TableHeader>
         <TableHeader colKey="rating" renderResizeHandle={renderResizeHandle}>

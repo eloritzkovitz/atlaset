@@ -14,7 +14,7 @@ export function SectionHeader({
   return (
     <div
       className={
-        "mt-4 mb-2 text-muted text-xs font-semibold uppercase tracking-wide " +
+        "mt-4 mb-2 text-muted text-xs font-semibold uppercase tracking-wide select-none " +
         className
       }
     >

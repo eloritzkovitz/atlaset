@@ -85,7 +85,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             <SearchInput
               value={search}
               onChange={setSearch}
-              placeholder="Search friends..."
+              placeholder="Search friends"
               className="flex-1 h-10"
             />
             <Separator className="my-4" />
@@ -101,7 +101,9 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
                   return <li>No users found.</li>;
                 }
                 return filtered.map((friend) => (
-                  <UserListItem key={friend.uid} uid={friend.uid} />
+                  <div className="mb-2" key={friend.uid}>
+                     <UserListItem uid={friend.uid} />
+                  </div>
                 ));
               })()}
             </ul>

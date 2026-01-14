@@ -29,7 +29,13 @@ export function UserInfo({
         {showEmail && <div className="text-muted text-sm">{user?.email}</div>}
         {showUsername && (
           <div className="text-muted text-sm">
-            @{user?.displayName?.replace(/\s+/g, "").toLowerCase() || "user"}
+            @
+            {
+              // Prefer username if present, else fallback to displayName/email
+              (user && "username" in user && user.username) ||
+                user?.displayName?.replace(/\s+/g, "").toLowerCase() ||
+                (user?.email ? user.email.split("@")[0] : "user")
+            }
           </div>
         )}
       </div>

@@ -10,7 +10,7 @@ interface BreadcrumbsProps {
 
 export function Breadcrumbs({ crumbs, onCrumbClick }: BreadcrumbsProps) {
   return (
-    <div className="max-w-full overflow-x-auto px-1 sm:px-0 mb-6 scrollbar-hide">
+    <div className="max-w-full overflow-x-auto px-1 sm:px-0 mb-6 scrollbar-hide select-none">
       <div className="inline-flex items-center gap-2 text-sm sm:text-base whitespace-nowrap">
         {crumbs.map((crumb, idx, arr) => {
           const isLast = idx === arr.length - 1;

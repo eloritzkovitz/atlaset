@@ -19,7 +19,7 @@ export function CollapsibleHeader({
 }: CollapsibleHeaderProps) {
   return (
     <div className="w-full mb-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between select-none">
         <span className="flex items-center gap-2 h-8 text-lg font-bold">
           {icon}
           {label}

@@ -51,7 +51,7 @@ export function UserSearchDropdown() {
         value={searchTerm}
         onChange={handleChange}
         className="max-w-xs"
-        placeholder="Search users..."
+        placeholder="Search users"
         onFocus={handleFocus}
       />
       {dropdownOpen && (

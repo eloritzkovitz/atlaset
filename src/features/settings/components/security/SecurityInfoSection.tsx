@@ -86,20 +86,21 @@ export function SecurityInfoSection() {
               label={
                 <span className="flex items-center">
                   {getDeviceIcon(device)}
-                  <span className="text-lg">
+                  <span className="text">
                     {device.deviceName || device.userAgent || "Device"}
                   </span>
                 </span>
               }
               value={
-                <div className="flex items-center">
+                <div className="flex items-center min-w-[20rem] mx-4">
                   {device.lastActive
                     ? `Last active: ${new Date(
                         device.lastActive
                       ).toLocaleString()}`
                     : "Unknown"}
                   <ActionButton
-                    className="py-2 px-4 bg-blue-800 text-white rounded-full hover:bg-blue-700"
+                    variant="primary"
+                    className="text-white !rounded-xl"
                     icon={<FaPowerOff size={18} />}
                     title="End this session"
                     ariaLabel="End session"

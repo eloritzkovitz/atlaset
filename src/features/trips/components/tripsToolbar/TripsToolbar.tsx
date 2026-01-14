@@ -42,7 +42,7 @@ export function TripsToolbar({
           <SearchInput
             value={globalSearch}
             onChange={setGlobalSearch}
-            placeholder="Search all trips..."
+            placeholder="Search all trips"
             className="w-64 h-8 rounded-full"
           />
           <ToolbarSeparator />
