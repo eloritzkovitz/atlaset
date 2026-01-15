@@ -7,7 +7,7 @@ import {
   TableHeader,
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
-import type { FilterOption } from "@types";
+import type { FilterOption, Option } from "@types";
 import { isAllowedOption, isStringOption } from "@utils/dropdown";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import {
@@ -29,7 +29,8 @@ interface TripsTableHeadersProps {
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
-  yearOptions: FilterOption[];
+  yearOptions: FilterOption[]; 
+  participantsOptions: Option<string, string>[];
   categoryOptions: FilterOption[];
   statusOptions: FilterOption[];
   tagOptions: FilterOption[];
@@ -45,7 +46,8 @@ export function TripsTableHeaders({
   filters,
   updateFilter,
   countryOptions,
-  yearOptions,
+  yearOptions,  
+  participantsOptions,
   categoryOptions,
   statusOptions,
   tagOptions,
@@ -187,6 +189,31 @@ export function TripsTableHeaders({
             sortBy={sortBy}
             onSort={handleSort}
             filterable
+          />
+        </TableHeader>
+        <TableHeader colKey="participants" renderResizeHandle={renderResizeHandle}>
+          <SortableFilterHeader
+            label="Participants"
+            sortKey="participants"
+            sortBy={sortBy}
+            onSort={handleSort}
+            filterable
+            filterElement={
+              <TableDropdownFilter<string>
+                value={filters.participants}
+                onChange={(v) =>
+                  updateFilter("participants", Array.isArray(v) ? v : v ? [v] : [])
+                }
+                options={participantsOptions}
+                placeholder="All Participants"
+                isMulti
+                renderOption={(opt) =>
+                  "label" in opt ? (
+                    <span>{opt.label}</span>
+                  ) : null
+                }
+              />
+            }
           />
         </TableHeader>
         <TableHeader

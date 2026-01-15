@@ -39,6 +39,7 @@ export default function TripsPage() {
     resetFilters,
     countryOptions,
     yearOptions,
+    participantsOptions,
     categoryOptions,
     statusOptions,
     tagOptions,
@@ -164,6 +165,7 @@ export default function TripsPage() {
               }}
               countryOptions={countryOptions}
               yearOptions={yearOptions}
+              participantsOptions={participantsOptions}
               categoryOptions={categoryOptions}
               statusOptions={statusOptions}
               tagOptions={tagOptions}

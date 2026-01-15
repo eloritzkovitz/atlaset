@@ -20,7 +20,7 @@ export function SelectedOptions<T>({
       {flatOptions
         .filter((opt) => value.includes(opt.value))
         .map((opt, i) => (
-          <Chip key={i} removable={true} onRemove={() => onRemove(opt.value)}>
+          <Chip key={i} removable={true} onRemove={() => onRemove(opt.value)} noButton>
             {opt.label}
           </Chip>
         ))}

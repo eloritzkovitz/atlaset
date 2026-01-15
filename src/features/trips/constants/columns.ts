@@ -8,6 +8,7 @@ export type ColumnKey =
   | "startDate"
   | "endDate"
   | "fullDays"
+  | "participants"
   | "categories"
   | "status"
   | "tags"
@@ -24,6 +25,7 @@ export const MIN_WIDTHS: Record<ColumnKey, number> = {
   startDate: 30,
   endDate: 30,
   fullDays: 40,
+  participants: 80,
   categories: 80,
   status: 60,
   tags: 80,
@@ -41,6 +43,7 @@ export const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   startDate: 50,
   endDate: 50,
   fullDays: 50,
+  participants: 150,
   categories: 180,
   status: 120,
   tags: 120,

@@ -62,6 +62,7 @@ export type TripSortByKey =
   | "startDate"
   | "endDate"
   | "fullDays"
+  | "participants"
   | "categories"
   | "status"
   | "tags";
@@ -75,6 +76,7 @@ export type TripFilters = {
   rating: number | null;
   country: string[];
   year: string[];
+  participants: string[];
   categories: TripCategory[];
   status: TripStatus | "";
   tags: TripTag[];

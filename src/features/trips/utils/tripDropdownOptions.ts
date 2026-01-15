@@ -1,3 +1,5 @@
+import type { UserProfile } from "@features/user";
+
 /**
  * @file Utility functions for generating dropdown options for trips filtering.
  */
@@ -41,6 +43,25 @@ export function getCountryDropdownOptions(
 export function getYearDropdownOptions(usedYears: number[]) {
   const years = usedYears.map(String);
   return toDropdownOptions(years, (y) => y);
+}
+
+/**
+ * Gets participants dropdown options for filtering.
+ * @param participantUids - Array of participant UIDs.
+ * @param participantProfiles - Array of user profiles for those UIDs.
+ * @returns An array of dropdown options with display names as labels.
+ */
+export function getParticipantsDropdownOptions(
+  participantUids: string[],
+  participantProfiles: UserProfile[]
+) {
+  return participantUids.map((uid) => {
+    const profile = participantProfiles.find((p) => p.uid === uid);
+    return {
+      value: uid,
+      label: profile?.displayName || uid,
+    };
+  });
 }
 
 /**
