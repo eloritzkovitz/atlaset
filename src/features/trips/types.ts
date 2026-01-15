@@ -78,7 +78,7 @@ export type TripFilters = {
   year: string[];
   participants: string[];
   categories: TripCategory[];
-  status: TripStatus | "";
+  status: TripStatus | null;
   tags: TripTag[];
 };
 

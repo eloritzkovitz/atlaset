@@ -13,7 +13,7 @@ import {
   ALL_TRIP_STATUSES,
   ALL_TRIP_TAGS,
 } from "../constants/trips";
-import type { Trip, TripCategory, TripStatus, TripTag } from "../types";
+import type { Trip, TripCategory, TripTag } from "../types";
 
 /**
  * Gets country dropdown options for filtering.
@@ -84,18 +84,16 @@ export function getCategoryDropdownOptions(trips: Trip[] = []) {
 
 /**
  * Gets status dropdown options for filtering.
- * @param trips - Array of trips to extract statuses from.
  * @returns An array of dropdown options.
  */
-export function getStatusDropdownOptions(trips: Trip[] = []) {
-  const statuses: TripStatus[] = extractUniqueValues(
-    trips,
-    (t) => t.status,
-    ALL_TRIP_STATUSES
-  );
-  return toDropdownOptions<TripStatus>(statuses, (s) =>
-    capitalizeWords(s.replace(/-/g, " "))
-  );
+export function getStatusDropdownOptions() {
+  return [
+    { value: "", label: "All Statuses" },
+    ...ALL_TRIP_STATUSES.map((s) => ({
+      value: s,
+      label: capitalizeWords(s.replace(/-/g, " ")),
+    })),
+  ];
 }
 
 /**

@@ -28,7 +28,7 @@ const defaultTripFilterState: TripFilterState = {
   year: [],
   participants: [],
   categories: [],
-  status: "",
+  status: null,
   tags: [],
   local: true,
   abroad: true,
@@ -191,7 +191,7 @@ export function useTripFilters(
   );
 
   // Status and Tag options
-  const statusOptions = getStatusDropdownOptions(tripList);
+  const statusOptions = getStatusDropdownOptions();
   const tagOptions = getTagDropdownOptions(tripList);
 
   return {

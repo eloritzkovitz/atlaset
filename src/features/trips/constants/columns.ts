@@ -36,7 +36,7 @@ export const MIN_WIDTHS: Record<ColumnKey, number> = {
 export const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   select: 10,
   idx: 20,
-  name: 160,
+  name: 150,
   rating: 150,
   countries: 200,
   year: 110,
@@ -45,7 +45,7 @@ export const DEFAULT_WIDTHS: Record<ColumnKey, number> = {
   fullDays: 40,
   participants: 150,
   categories: 180,
-  status: 100,
+  status: 120,
   tags: 120,
   actions: 10,
 };
