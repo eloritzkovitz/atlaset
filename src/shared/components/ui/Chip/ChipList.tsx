@@ -1,5 +1,5 @@
-
-import { Chip } from "@components/ui/Chip/Chip";
+import { Chip } from "./Chip";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 interface ChipListProps<T = string> {
   items?: T[];
@@ -27,9 +27,35 @@ export function ChipList<T>({
         </Chip>
       ))}
       {items.length > limit && (
-        <Chip className={`text-xs font-medium ${moreColorClass}`}>
-          +{items.length - limit} more
-        </Chip>
+        <Tooltip
+          content={
+            items
+              .slice(limit)
+              .map((item) => {
+                if (typeof item === "object" && item !== null) {
+                  if (
+                    "label" in item &&
+                    typeof (item as { label: unknown }).label === "string"
+                  ) {
+                    return (item as { label: string }).label;
+                  }
+                  if (
+                    "value" in item &&
+                    typeof (item as { value: unknown }).value === "string"
+                  ) {
+                    return (item as { value: string }).value;
+                  }
+                }
+                return String(item);
+              })
+              .join("\n")
+          }
+          position="bottom"
+        >
+          <Chip className={`text-xs font-medium ${moreColorClass}`}>
+            +{items.length - limit} more
+          </Chip>
+        </Tooltip>
       )}
     </div>
   );

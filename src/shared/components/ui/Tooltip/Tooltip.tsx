@@ -136,8 +136,11 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
         createPortal(
           <span
             ref={tooltipRef}
-            style={tooltipStyle}
-            className="whitespace-nowrap px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90"
+            style={{
+              ...tooltipStyle,
+              whiteSpace: 'pre-line',
+            }}
+            className="px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90"
             role="tooltip"
           >
             {content}
