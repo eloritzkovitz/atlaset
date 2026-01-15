@@ -12,7 +12,7 @@ describe("tripFilters utils", () => {
         year: [],
         participants: [],
         categories: [],
-        status: "",
+        status: null,
         tags: [],
       });
       expect(filtered).toEqual([mockTrips[0]]);
@@ -32,7 +32,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([trips[0]]);
     });
@@ -46,7 +46,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([mockTrips[1]]);
     });
@@ -60,7 +60,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(
         filtered.map(
@@ -85,7 +85,7 @@ describe("tripFilters utils", () => {
         country: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([trips[0]]);
     });
@@ -117,7 +117,7 @@ describe("tripFilters utils", () => {
         country: [],
         categories: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([trips[0]]);
     });
@@ -137,7 +137,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([trips[0]]);
     });
@@ -156,7 +156,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([trips[0], trips[1], trips[2]]);
     });
@@ -174,7 +174,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([]);
     });
@@ -192,7 +192,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual([]);
     });
@@ -206,7 +206,7 @@ describe("tripFilters utils", () => {
         categories: [],
         tags: [],
         name: "",
-        status: "",
+        status: null,
       });
       expect(filtered).toEqual(mockTrips);
     });
