@@ -34,6 +34,7 @@ vi.mock("firebase/firestore", () => {
     setDoc: vi.fn(),
     deleteDoc: vi.fn(),
     writeBatch: vi.fn(),
+    getDoc: vi.fn(),
     __esModule: true,
   };
 });
@@ -54,7 +55,6 @@ import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
 import { logUserActivity } from "@features/user";
 
-// Cast imported mocks to Vitest mock types
 const isAuthenticatedMock =
   firebaseUtils.isAuthenticated as unknown as ReturnType<typeof vi.fn>;
 const getCurrentUserMock =
@@ -73,6 +73,61 @@ const writeBatchMock = firestore.writeBatch as unknown as ReturnType<
 >;
 
 describe("tripsService", () => {
+  it("loads shared trips from Firestore (authenticated)", async () => {
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc" });
+    const tripsCol = {};
+    (
+      firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue(tripsCol);
+
+    getDocsMock
+      .mockResolvedValueOnce({
+        docs: [{ id: "2", data: () => ({ name: "Trip 2" }) }],
+      })
+      .mockResolvedValueOnce({
+        docs: [{ data: () => ({ ownerUid: "friend1", tripId: "shared1" }) }],
+      });
+
+    const sharedTripDoc = {
+      id: "shared1",
+      exists: () => true,
+      data: () => ({ name: "Shared Trip" }),
+    };
+    const getDocSpy = vi
+      .spyOn(firestore, "getDoc")
+      .mockResolvedValue(sharedTripDoc as any);
+    const trips = await tripsService.load();
+    expect(trips).toEqual([
+      { id: "2", name: "Trip 2" },
+      { id: "shared1", name: "Shared Trip" },
+    ]);
+    getDocSpy.mockRestore();
+  });
+
+  it("save does nothing if trips is empty (authenticated)", async () => {
+    isAuthenticatedMock.mockReturnValue(true);
+    getCurrentUserMock.mockReturnValue({ uid: "abc", displayName: "TestUser" });
+    const tripsCol = {};
+    (
+      firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
+    ).mockReturnValue(tripsCol);
+    await tripsService.save([]);
+    expect(setDocMock).not.toHaveBeenCalled();
+    expect(logUserActivity).toHaveBeenCalledWith(
+      410,
+      expect.objectContaining({ count: 0, userName: "TestUser" }),
+      "abc"
+    );
+  });
+
+  it("save does nothing if trips is empty (guest)", async () => {
+    isAuthenticatedMock.mockReturnValue(false);
+    await tripsService.save([]);
+    expect(appDb.trips.clear).toHaveBeenCalled();
+    expect(appDb.trips.bulkAdd).not.toHaveBeenCalled();
+  });
+
   beforeEach(() => {
     if (!appDb.trips) {
       throw new Error(
@@ -110,12 +165,15 @@ describe("tripsService", () => {
     (
       firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
     ).mockReturnValue(tripsCol);
-    getDocsMock.mockResolvedValueOnce({
-      docs: [
-        { id: "2", data: () => ({ name: "Trip 2" }) },
-        { id: "3", data: () => ({ name: "Trip 3" }) },
-      ],
-    });
+
+    getDocsMock
+      .mockResolvedValueOnce({
+        docs: [
+          { id: "2", data: () => ({ name: "Trip 2" }) },
+          { id: "3", data: () => ({ name: "Trip 3" }) },
+        ],
+      })
+      .mockResolvedValueOnce({ docs: [] });
     const trips = await tripsService.load();
     expect(firebaseUtils.getUserCollection).toHaveBeenCalledWith("trips");
     expect(getDocsMock).toHaveBeenCalledWith(tripsCol);
@@ -183,12 +241,32 @@ describe("tripsService", () => {
       firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
     ).mockReturnValue(tripsCol);
     docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
-    const trip = { id: "2", name: "Trip 2" };
+    
+    // Test with participants
+    const trip = {
+      id: "2",
+      name: "Trip 2",
+      participants: ["abc", "friend1", "friend2"],
+    };
     await tripsService.add(trip as any);
+    
+    // Main trip doc
     expect(setDocMock).toHaveBeenCalledWith(
       { _col: tripsCol, id: "2" },
-      { id: "2", name: "Trip 2", startDate: null, endDate: null }
+      {
+        id: "2",
+        name: "Trip 2",
+        participants: ["abc", "friend1", "friend2"],
+        startDate: null,
+        endDate: null,
+      }
     );
+    
+    expect(setDocMock).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "2" }),
+      expect.objectContaining({ ownerUid: "abc", tripId: "2" })
+    );
+    expect(setDocMock).toHaveBeenCalledTimes(3);
     expect(logUserActivity).toHaveBeenCalledWith(
       411,
       expect.objectContaining({
@@ -226,16 +304,50 @@ describe("tripsService", () => {
       firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
     ).mockReturnValue(tripsCol);
     docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
+
+    getDocsMock.mockResolvedValueOnce({ docs: [] });
+    const prevTripDoc = {
+      id: "5",
+      exists: () => true,
+      data: () => ({ participants: ["abc", "friend1"] }),
+      ref: {},
+      metadata: {
+        hasPendingWrites: false,
+        fromCache: false,
+        isEqual: () => false,
+      },
+      get: () => undefined,
+      toJSON: () => ({}),
+    };
+    const getDocSpy = vi
+      .spyOn(firestore, "getDoc")
+      .mockResolvedValue(prevTripDoc as any);
     const trip = {
       id: "5",
       name: "Trip 5",
+      participants: ["abc", "friend2"],
       startDate: undefined,
       endDate: undefined,
     };
     await tripsService.edit(trip as any);
+
     expect(setDocMock).toHaveBeenCalledWith(
       { _col: tripsCol, id: "5" },
-      { id: "5", name: "Trip 5", startDate: null, endDate: null }
+      {
+        id: "5",
+        name: "Trip 5",
+        participants: ["abc", "friend2"],
+        startDate: null,
+        endDate: null,
+      }
+    );
+
+    expect(setDocMock).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "5" }),
+      expect.objectContaining({ ownerUid: "abc", tripId: "5" })
+    );
+    expect(deleteDocMock).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "5" })
     );
     expect(logUserActivity).toHaveBeenCalledWith(
       412,
@@ -246,6 +358,7 @@ describe("tripsService", () => {
       }),
       "abc"
     );
+    getDocSpy.mockRestore();
   });
 
   it("remove logs activity with tripName if found in Firestore", async () => {
@@ -319,6 +432,9 @@ describe("tripsService", () => {
       firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
     ).mockReturnValue(tripsCol);
     docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
+    const getDocSpy = vi
+      .spyOn(firestore, "getDoc")
+      .mockResolvedValue({ exists: () => false } as any);
     const trip = {
       id: "3",
       name: "Trip 3",
@@ -330,6 +446,7 @@ describe("tripsService", () => {
       { _col: tripsCol, id: "3" },
       { id: "3", name: "Trip 3", startDate: null, endDate: null }
     );
+    getDocSpy.mockRestore();
   });
 
   it("updates favorite in IndexedDB (guest)", async () => {
@@ -430,8 +547,23 @@ describe("tripsService", () => {
       firebaseUtils.getUserCollection as unknown as ReturnType<typeof vi.fn>
     ).mockReturnValue(tripsCol);
     docMock.mockImplementation((_col: any, id: any) => ({ _col, id }));
-    getDocsMock.mockResolvedValueOnce({ docs: [] });
+
+    getDocsMock.mockResolvedValueOnce({
+      docs: [
+        {
+          id: "4",
+          data: () => ({
+            name: "Trip 4",
+            participants: ["abc", "friend1", "friend2"],
+          }),
+        },
+      ],
+    });
     await tripsService.remove("4");
+
     expect(deleteDocMock).toHaveBeenCalledWith({ _col: tripsCol, id: "4" });
+    expect(deleteDocMock).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "4" })
+    );
   });
 });

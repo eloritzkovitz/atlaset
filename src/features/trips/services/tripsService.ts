@@ -1,5 +1,11 @@
-import { doc, getDocs, setDoc, deleteDoc } from "firebase/firestore";
-import { logUserActivity } from "../../../features/user";
+import {
+  doc,
+  getDocs,
+  setDoc,
+  deleteDoc,
+  collection,
+  getDoc,
+} from "firebase/firestore";
 import { appDb } from "@utils/db";
 import {
   isAuthenticated,
@@ -7,6 +13,8 @@ import {
   getCurrentUser,
 } from "@utils/firebase";
 import type { Trip } from "../types";
+import { logUserActivity } from "../../../features/user";
+import { db } from "../../../firebase";
 
 /**
  * Service for managing user trips.
@@ -18,11 +26,34 @@ export const tripsService = {
    */
   async load(): Promise<Trip[]> {
     if (isAuthenticated()) {
+      const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
-      const snapshot = await getDocs(tripsCol);
-      return snapshot.docs.map(
+
+      // Fetch trips owned by the user
+      const ownedSnapshot = await getDocs(tripsCol);
+      const ownedTrips = ownedSnapshot.docs.map(
         (doc) => ({ id: doc.id, ...doc.data() } as Trip)
       );
+
+      // Fetch shared trip references
+      const sharedRefsCol = collection(db, `users/${user?.uid}/sharedTrips`);
+      const sharedRefsSnap = await getDocs(sharedRefsCol);
+      const sharedRefs = sharedRefsSnap.docs.map(
+        (doc) => doc.data() as { ownerUid: string; tripId: string }
+      );
+
+      // Fetch each shared trip from the owner's collection
+      const sharedTrips: Trip[] = [];
+      for (const ref of sharedRefs) {
+        const ownerTripsCol = collection(db, `users/${ref.ownerUid}/trips`);
+        const tripDoc = await getDoc(doc(ownerTripsCol, ref.tripId));
+        if (tripDoc.exists()) {
+          sharedTrips.push({ id: tripDoc.id, ...tripDoc.data() } as Trip);
+        }
+      }
+
+      // Merge owned and shared trips
+      return [...ownedTrips, ...sharedTrips];
     } else {
       return await appDb.trips.toArray();
     }
@@ -69,6 +100,17 @@ export const tripsService = {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
       await setDoc(doc(tripsCol, trip.id), tripForFirestore);
+      
+      // Add shared trip references for participants (excluding owner)
+      if (trip.participants && Array.isArray(trip.participants)) {
+        for (const participantUid of trip.participants) {
+          if (participantUid !== user!.uid) {
+            const sharedRefDoc = doc(collection(db, `users/${participantUid}/sharedTrips`), trip.id);
+            await setDoc(sharedRefDoc, { ownerUid: user!.uid, tripId: trip.id });
+          }
+        }
+      }
+
       await logUserActivity(
         411,
         {
@@ -156,10 +198,41 @@ export const tripsService = {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const tripsCol = getUserCollection("trips");
+      
+      // Fetch previous trip to compare participants
+      const prevTripDoc = await getDoc(doc(tripsCol, trip.id));
+      let prevParticipants: string[] = [];
+      if (prevTripDoc.exists()) {
+        const prevData = prevTripDoc.data() as Trip;
+        prevParticipants = prevData.participants || [];
+      }
+
       await setDoc(
         doc(tripsCol, trip.id),
         tripForFirestore as Record<string, unknown>
       );
+
+      // Update shared trip references for participants
+      const newParticipants = trip.participants || [];
+      const added = newParticipants.filter(
+        (uid) => uid !== user!.uid && !prevParticipants.includes(uid)
+      );
+      const removed = prevParticipants.filter(
+        (uid) => uid !== user!.uid && !newParticipants.includes(uid)
+      );
+
+      // Add new shared trip references
+      for (const participantUid of added) {
+        const sharedRefDoc = doc(collection(db, `users/${participantUid}/sharedTrips`), trip.id);
+        await setDoc(sharedRefDoc, { ownerUid: user!.uid, tripId: trip.id });
+      }
+      
+      // Remove shared trip references for removed participants
+      for (const participantUid of removed) {
+        const sharedRefDoc = doc(collection(db, `users/${participantUid}/sharedTrips`), trip.id);
+        await deleteDoc(sharedRefDoc);
+      }
+
       await logUserActivity(
         412,
         {
@@ -185,6 +258,19 @@ export const tripsService = {
       const snapshot = await getDocs(tripsCol);
       const tripDoc = snapshot.docs.find((docSnap) => docSnap.id === id);
       const tripName = tripDoc ? tripDoc.data().name : undefined;
+
+      // Remove shared trip references for all participants
+      if (tripDoc) {
+        const tripData = tripDoc.data() as Trip;
+        const participants = tripData.participants || [];
+        for (const participantUid of participants) {
+          if (participantUid !== user!.uid) {
+            const sharedRefDoc = doc(collection(db, `users/${participantUid}/sharedTrips`), id);
+            await deleteDoc(sharedRefDoc);
+          }
+        }
+      }
+
       await deleteDoc(doc(tripsCol, id));
       await logUserActivity(
         415,
