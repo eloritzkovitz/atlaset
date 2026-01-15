@@ -33,7 +33,7 @@ export function TripsToolbar({
   onBulkDelete,
 }: ToolbarProps) {
   return (
-    <div className="trips-toolbar-container w-full px-3 flex items-center justify-between h-[7vh] bg-surface">
+    <div className="trips-toolbar-container w-full px-3 flex items-center justify-between h-[7vh] bg-surface-alt">
       <ActionsToolbar>
         <div className="flex items-center">
           <div className="ml-16 "/>
@@ -42,7 +42,7 @@ export function TripsToolbar({
           <SearchInput
             value={globalSearch}
             onChange={setGlobalSearch}
-            placeholder="Search all trips"
+            placeholder="Search trips"
             className="w-64 h-8 rounded-full"
           />
           <ToolbarSeparator />
