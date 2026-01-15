@@ -1,8 +1,7 @@
-import { appDb } from "@utils/db";
+import { appDb } from "../../db";
 import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
 import { settingsService } from "../../features/settings/services/settingsService";
-import { tripsService } from "../../features/trips/services/tripsService";
 import type { Settings } from "../../features/settings/types";
 
 /**
@@ -14,19 +13,12 @@ export const migrationService = {
    * @returns True if there is guest data, false otherwise
    */
   async hasGuestData(): Promise<boolean> {
-    const [layerysCount, markersCount, settingsCount, tripsCount] =
-      await Promise.all([
-        appDb.layers.count(),
-        appDb.markers.count(),        
-        appDb.settings.count(),
-        appDb.trips.count(),
-      ]);
-    return (
-      markersCount > 0 ||
-      layerysCount > 0 ||
-      settingsCount > 0 ||
-      tripsCount > 0
-    );
+    const [layerysCount, markersCount, settingsCount] = await Promise.all([
+      appDb.layers.count(),
+      appDb.markers.count(),
+      appDb.settings.count(),
+    ]);
+    return markersCount > 0 || layerysCount > 0 || settingsCount > 0;
   },
 
   /**
@@ -67,15 +59,5 @@ export const migrationService = {
       await settingsService.save(settings as Settings);
       await appDb.settings.clear();
     }
-
-    // Migrate trips
-    const guestTrips = await appDb.trips.toArray();
-    const userTrips = await tripsService.load();
-    const mergedTrips = [
-      ...guestTrips,
-      ...userTrips.filter((t) => !guestTrips.some((g) => g.id === t.id)),
-    ];
-    await tripsService.save(mergedTrips);
-    await appDb.trips.clear();
   },
 };

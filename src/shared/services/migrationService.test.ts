@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
-vi.mock("@utils/db", () => ({
+vi.mock("../../db", () => ({
   appDb: {
     layers: {
       count: vi.fn(),
@@ -23,7 +23,7 @@ vi.mock("@utils/db", () => ({
       delete: vi.fn(),
       bulkAdd: vi.fn(),
       bulkPut: vi.fn(),
-    },    
+    },
     settings: {
       count: vi.fn(),
       get: vi.fn(),
@@ -65,18 +65,11 @@ vi.mock("../../features/settings/services/settingsService", () => ({
     save: vi.fn(),
   },
 }));
-vi.mock("../../features/trips/services/tripsService", () => ({
-  tripsService: {
-    load: vi.fn(),
-    save: vi.fn(),
-  },
-}));
 
-import { appDb } from "@utils/db";
+import { appDb } from "../../db";
 import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
 import { settingsService } from "../../features/settings/services/settingsService";
-import { tripsService } from "../../features/trips/services/tripsService";
 import { migrationService } from "./migrationService";
 import { resetAllMocks } from "../test-utils/mockDbAndFirestore";
 
@@ -86,11 +79,9 @@ describe("migrationService", () => {
       appDb.markers,
       appDb.layers,
       appDb.settings,
-      appDb.trips,
       markersService,
       layersService,
-      settingsService,
-      tripsService
+      settingsService
     );
   });
 
@@ -99,7 +90,7 @@ describe("migrationService", () => {
       (appDb.markers.count as any).mockResolvedValueOnce(0);
       (appDb.layers.count as any).mockResolvedValueOnce(2);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
-      (appDb.trips.count as any).mockResolvedValueOnce(0);
+      // (appDb.trips.count as any).mockResolvedValueOnce(0);
       expect(await migrationService.hasGuestData()).toBe(true);
     });
 
@@ -107,7 +98,7 @@ describe("migrationService", () => {
       (appDb.markers.count as any).mockResolvedValueOnce(0);
       (appDb.layers.count as any).mockResolvedValueOnce(0);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
-      (appDb.trips.count as any).mockResolvedValueOnce(0);
+      // (appDb.trips.count as any).mockResolvedValueOnce(0);
       expect(await migrationService.hasGuestData()).toBe(false);
     });
   });
@@ -143,21 +134,7 @@ describe("migrationService", () => {
         layers: {},
       });
       vi.spyOn(settingsService, "save").mockResolvedValueOnce(undefined);
-
-      // Trips
-      (appDb.trips.toArray as any).mockResolvedValueOnce([{ id: "t1" }]);
-      vi.spyOn(tripsService, "load").mockResolvedValueOnce([
-        {
-          id: "t2",
-          name: "",
-          countryCodes: [],
-          startDate: "",
-          endDate: "",
-          fullDays: 0,
-        },
-      ]);
-      vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
-
+      
       await migrationService.migrateGuestDataToFirestore();
 
       // Markers merged and saved
@@ -184,20 +161,6 @@ describe("migrationService", () => {
         layers: {},
       });
       expect(appDb.settings.clear).toHaveBeenCalled();
-
-      // Trips merged and saved
-      expect(tripsService.save).toHaveBeenCalledWith([
-        { id: "t1" },
-        {
-          id: "t2",
-          name: "",
-          countryCodes: [],
-          startDate: "",
-          endDate: "",
-          fullDays: 0,
-        },
-      ]);
-      expect(appDb.trips.clear).toHaveBeenCalled();
     });
 
     it("does not save settings if none exist", async () => {
@@ -209,11 +172,7 @@ describe("migrationService", () => {
       vi.spyOn(layersService, "load").mockResolvedValueOnce([]);
       vi.spyOn(layersService, "save").mockResolvedValueOnce(undefined);
 
-      (appDb.settings.get as any).mockResolvedValueOnce(undefined);
-
-      (appDb.trips.toArray as any).mockResolvedValueOnce([]);
-      vi.spyOn(tripsService, "load").mockResolvedValueOnce([]);
-      vi.spyOn(tripsService, "save").mockResolvedValueOnce(undefined);
+      (appDb.settings.get as any).mockResolvedValueOnce(undefined);     
 
       await migrationService.migrateGuestDataToFirestore();
 

@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock dependencies before importing the service
-vi.mock("@utils/db", () => {
+vi.mock("../../../../db", () => {
   const markersMock = {
     count: vi.fn(),
     toArray: vi.fn(),
@@ -49,9 +49,9 @@ vi.mock("../../../../firebase", () => ({
 }));
 
 import { markersService } from "./markersService";
-import { appDb } from "@utils/db";
 import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
+import { appDb } from "../../../../db";
 import { logUserActivity } from "../../../../features/user";
 
 // Cast imported mocks to Vitest mock types
