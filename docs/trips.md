@@ -1,4 +1,4 @@
-#Trips
+# Trips
 
 In Atlaset, **trips** let you record, organize, and analyze your travels. Each trip can include multiple countries, dates, categories, and notes. Trips power features like the visited countries layer, timeline navigation, and trip statistics.
 
