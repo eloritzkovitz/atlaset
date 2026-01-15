@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { FaUserGroup, FaUserPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
 import { UserListItem } from "./UserListItem";
 import { useFriends } from "../hooks/useFriends";
+import { useFriendProfiles } from "../hooks/useFriendProfiles";
 import { useFriendRequests } from "../hooks/useFriendRequests";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { friendService } from "../../friends/services/friendService";
@@ -17,6 +18,11 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
   const { friends, loading: loadingFriends } = useFriends();
   const [search, setSearch] = useState("");
   const [showRequests, setShowRequests] = useState(false);
+
+  // Memoize friend UIDs to avoid unnecessary re-fetches
+  const friendUids = useMemo(() => friends.map((f) => f.uid), [friends]);
+  const { profiles: friendProfiles, loading: loadingProfiles } =
+    useFriendProfiles(friendUids);
   const { requests, loading: loadingRequests } = useFriendRequests(
     showRequests && user ? user.uid : undefined
   );
@@ -53,7 +59,9 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
       className="!z-[10050]"
     >
       <div className="flex flex-col h-full">
-        {(showRequests ? loadingRequests : loadingFriends) ? (
+        {(
+          showRequests ? loadingRequests : loadingFriends || loadingProfiles
+        ) ? (
           <div>Loading...</div>
         ) : showRequests ? (
           <ul>
@@ -91,18 +99,21 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             <Separator className="my-4" />
             <ul>
               {(() => {
-                const filtered = friends.filter((friend) =>
-                  friend.uid.toLowerCase().includes(search.toLowerCase())
+                const q = search.toLowerCase();
+                const filtered = friendProfiles.filter(
+                  (profile) =>
+                    profile.username.toLowerCase().includes(q) ||
+                    profile.displayName.toLowerCase().includes(q)
                 );
-                if (friends.length === 0 && !search) {
+                if (friendProfiles.length === 0 && !search) {
                   return <li>No friends yet.</li>;
                 }
                 if (filtered.length === 0) {
                   return <li>No users found.</li>;
                 }
-                return filtered.map((friend) => (
-                  <div className="mb-2" key={friend.uid}>
-                     <UserListItem uid={friend.uid} />
+                return filtered.map((profile) => (
+                  <div className="mb-2" key={profile.uid}>
+                    <UserListItem uid={profile.uid} />
                   </div>
                 ));
               })()}
