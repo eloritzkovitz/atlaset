@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAutoTripStatus, tripsService, type Trip } from "@features/trips";
+import { getSharedTripIds } from "@features/trips/services/sharedTripsService";
 import { useAuth } from "@features/user";
 import { TripsContext } from "./TripsContext";
 
@@ -7,6 +8,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [trips, setTrips] = useState<Trip[]>([]);
+  const [sharedTripIds, setSharedTripIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
   // Fetch trips on mount
@@ -15,17 +17,18 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Load trips when user changes
   useEffect(() => {
     let mounted = true;
-    
+
     // Skip if auth not ready
     if (!ready) return;
-    
+
     // Only load trips if user is authenticated
     if (!user) {
       setTrips([]);
+      setSharedTripIds(new Set());
       setLoading(false);
       return;
     }
-    
+
     setLoading(true);
     tripsService.load().then((allTrips) => {
       if (mounted) {
@@ -33,6 +36,12 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
         setLoading(false);
       }
     });
+
+    // Fetch shared trip IDs for the user
+    getSharedTripIds(user?.uid).then((ids) => {      
+      if (mounted) setSharedTripIds(new Set(ids));
+    });
+
     return () => {
       mounted = false;
     };
@@ -100,6 +109,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     <TripsContext.Provider
       value={{
         trips,
+        sharedTripIds,
         loading,
         addTrip,
         editTrip,

@@ -31,7 +31,7 @@ interface TripActionsProps {
 }
 
 export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
-  const { updateTripFavorite, updateTripRating } = useTrips();
+  const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -121,6 +121,22 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
     }
     return top;
   };
+
+  // Check if trip is shared
+  const isShared = sharedTripIds?.has(trip.id);
+
+  // Access sharedTripIds from context
+  if (isShared) {
+    return (
+      <ActionButton
+        ariaLabel="Shared trip actions disabled"
+        title="Shared trips cannot be edited"
+        icon={<FaEllipsisVertical />}
+        rounded
+        disabled
+      />
+    );
+  }
 
   return (
     <>

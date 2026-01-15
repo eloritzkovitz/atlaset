@@ -20,6 +20,7 @@ export default function TripsPage() {
   const countryData = useCountryData();
   const {
     trips,
+    sharedTripIds,
     loading,
     addTrip,
     editTrip,
@@ -67,8 +68,16 @@ export default function TripsPage() {
     selectedTripIds.includes(trip.id)
   );
 
+  // Only allow non-shared trips for bulk actions
+  const nonSharedSelectedTrips = selectedTrips.filter(
+    (trip) => !sharedTripIds.has(trip.id)
+  );
+
   // Selection handlers
   function handleSelectTrip(id: string) {
+    // Prevent selecting shared trips
+    if (sharedTripIds.has(id)) return;
+
     setSelectedTripIds((prev) =>
       prev.includes(id) ? prev.filter((tripId) => tripId !== id) : [...prev, id]
     );
@@ -76,22 +85,30 @@ export default function TripsPage() {
 
   // Select all handler
   function handleSelectAll() {
-    if (selectedTripIds.length === filteredTrips.length) {
+    // Get all non-shared trip ids from filteredTrips
+    const nonSharedTripIds = filteredTrips
+      .filter((trip) => !sharedTripIds.has(trip.id))
+      .map((trip) => trip.id);
+    if (
+      selectedTripIds.length === nonSharedTripIds.length &&
+      nonSharedTripIds.length > 0 &&
+      selectedTripIds.every((id) => nonSharedTripIds.includes(id))
+    ) {
       setSelectedTripIds([]);
     } else {
-      setSelectedTripIds(filteredTrips.map((trip) => trip.id));
+      setSelectedTripIds(nonSharedTripIds);
     }
   }
 
   // Bulk duplicate handler
   function handleBulkDuplicate() {
-    selectedTrips.forEach((trip) => duplicateTrip(trip));
+    nonSharedSelectedTrips.forEach((trip) => duplicateTrip(trip));
   }
 
   // Bulk delete handler
   async function handleBulkDelete() {
-    for (const id of selectedTripIds) {
-      await removeTrip(id);
+    for (const trip of nonSharedSelectedTrips) {
+      await removeTrip(trip.id);
     }
     setSelectedTripIds([]);
   }
@@ -135,7 +152,7 @@ export default function TripsPage() {
           setShowRowNumbers={setShowRowNumbers}
           onAddTrip={handleAdd}
           onBulkDuplicate={handleBulkDuplicate}
-          onBulkDelete={handleBulkDelete}          
+          onBulkDelete={handleBulkDelete}
         />
       )}
 

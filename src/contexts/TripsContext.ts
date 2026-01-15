@@ -3,6 +3,7 @@ import type { Trip } from "@features/trips";
 
 export interface TripsContextType {
   trips: Trip[];
+  sharedTripIds: Set<string>;
   loading: boolean;
   addTrip: (trip: Trip) => void;
   editTrip: (trip: Trip) => void;
