@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaPencilAlt } from "react-icons/fa";
+import { Navigate } from "react-router-dom";
 import { FloatingActionButton, LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
@@ -12,9 +13,11 @@ import {
 } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
+import { useAuth } from "@features/user";
 import { useInfiniteScroll, useIsMobile, usePagination } from "@hooks";
 
 export default function TripsPage() {
+  const { user} = useAuth();
   const countryData = useCountryData();
   const {
     trips,
@@ -110,6 +113,11 @@ export default function TripsPage() {
     if (confirm(`Are you sure you want to delete the trip "${trip.name}"?`)) {
       await removeTrip(trip.id);
     }
+  }
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
   return (

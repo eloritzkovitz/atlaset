@@ -4,9 +4,11 @@ export interface UIHint {
   id: string;
   content: React.ReactNode;
   icon?: React.ReactNode;
+  position: "top" | "bottom";
   dismissable?: boolean;
   duration?: number;
   style?: React.CSSProperties;
+  onHide?: () => void;
 }
 
 export interface UIHintContextType {
@@ -16,7 +18,9 @@ export interface UIHintContextType {
   clearHints: () => void;
 }
 
-export const UIHintContext = React.createContext<UIHintContextType | undefined>(undefined);
+export const UIHintContext = React.createContext<UIHintContextType | undefined>(
+  undefined
+);
 
 export function useUIHintContext() {
   const context = React.useContext(UIHintContext);

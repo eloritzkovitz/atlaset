@@ -15,7 +15,17 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   // Load trips when user changes
   useEffect(() => {
     let mounted = true;
+    
+    // Skip if auth not ready
     if (!ready) return;
+    
+    // Only load trips if user is authenticated
+    if (!user) {
+      setTrips([]);
+      setLoading(false);
+      return;
+    }
+    
     setLoading(true);
     tripsService.load().then((allTrips) => {
       if (mounted) {
