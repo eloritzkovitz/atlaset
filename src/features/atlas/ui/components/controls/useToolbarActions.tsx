@@ -15,6 +15,7 @@ import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
+import { isAuthenticated } from "@utils/firebase";
 
 export interface ToolbarActionsParams {
   isMobile: boolean;
@@ -86,7 +87,10 @@ export function useToolbarActions({
       icon: <FaTimeline className="text-xl" />,
       label: "Timeline",
       onClick: withMenuClose(() => setTimelineMode((prev) => !prev)),
-      show: !isReadonly && !!(visitedLayer && isTimelineLayer(visitedLayer)),
+      show:
+        !isReadonly &&
+        isAuthenticated() &&
+        !!(visitedLayer && isTimelineLayer(visitedLayer)),
       separatorAfter: true,
     },
     {

@@ -6,11 +6,11 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
-import { logUserActivity } from "../../../../features/user";
-import { appDb } from "@utils/db";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { Marker } from "../types";
+import { appDb } from "../../../../db";
 import { db } from "../../../../firebase";
+import { logUserActivity } from "../../../../features/user";
 
 /**
  * Service for managing user markers.

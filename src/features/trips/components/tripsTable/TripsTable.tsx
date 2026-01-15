@@ -1,7 +1,7 @@
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@features/countries";
 import { useIsMobile, useResizableColumns, useSort } from "@hooks";
-import type { FilterOption } from "@types";
+import type { FilterOption, Option } from "@types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
 import {
@@ -22,6 +22,7 @@ interface TripsTableProps {
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
   yearOptions: FilterOption[];
+  participantsOptions: Option<string, string>[];
   categoryOptions: FilterOption[];
   statusOptions: FilterOption[];
   tagOptions: FilterOption[];
@@ -41,6 +42,7 @@ export function TripsTable({
   updateFilter,
   countryOptions,
   yearOptions,
+  participantsOptions,
   categoryOptions,
   statusOptions,
   tagOptions,
@@ -110,6 +112,7 @@ export function TripsTable({
           <col style={{ width: `${colWidths.startDate}px` }} />
           <col style={{ width: `${colWidths.endDate}px` }} />
           <col style={{ width: `${colWidths.fullDays}px` }} />
+          <col style={{ width: `${colWidths.participants}px` }} />
           <col style={{ width: `${colWidths.categories}px` }} />
           <col style={{ width: `${colWidths.status}px` }} />
           <col style={{ width: `${colWidths.tags}px` }} />
@@ -127,6 +130,7 @@ export function TripsTable({
           categoryOptions={categoryOptions}
           statusOptions={statusOptions}
           tagOptions={tagOptions}
+          participantsOptions={participantsOptions}
           renderResizeHandle={renderResizeHandle}
           showRowNumbers={showRowNumbers}
         />

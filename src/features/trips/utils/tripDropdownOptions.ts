@@ -1,3 +1,5 @@
+import type { UserProfile } from "@features/user";
+
 /**
  * @file Utility functions for generating dropdown options for trips filtering.
  */
@@ -11,7 +13,7 @@ import {
   ALL_TRIP_STATUSES,
   ALL_TRIP_TAGS,
 } from "../constants/trips";
-import type { Trip, TripCategory, TripStatus, TripTag } from "../types";
+import type { Trip, TripCategory, TripTag } from "../types";
 
 /**
  * Gets country dropdown options for filtering.
@@ -44,6 +46,25 @@ export function getYearDropdownOptions(usedYears: number[]) {
 }
 
 /**
+ * Gets participants dropdown options for filtering.
+ * @param participantUids - Array of participant UIDs.
+ * @param participantProfiles - Array of user profiles for those UIDs.
+ * @returns An array of dropdown options with display names as labels.
+ */
+export function getParticipantsDropdownOptions(
+  participantUids: string[],
+  participantProfiles: UserProfile[]
+) {
+  return participantUids.map((uid) => {
+    const profile = participantProfiles.find((p) => p.uid === uid);
+    return {
+      value: uid,
+      label: profile?.displayName || uid,
+    };
+  });
+}
+
+/**
  * Gets category dropdown options for filtering.
  * @param trips - Array of trips to extract categories from.
  * @returns An array of dropdown options.
@@ -63,18 +84,16 @@ export function getCategoryDropdownOptions(trips: Trip[] = []) {
 
 /**
  * Gets status dropdown options for filtering.
- * @param trips - Array of trips to extract statuses from.
  * @returns An array of dropdown options.
  */
-export function getStatusDropdownOptions(trips: Trip[] = []) {
-  const statuses: TripStatus[] = extractUniqueValues(
-    trips,
-    (t) => t.status,
-    ALL_TRIP_STATUSES
-  );
-  return toDropdownOptions<TripStatus>(statuses, (s) =>
-    capitalizeWords(s.replace(/-/g, " "))
-  );
+export function getStatusDropdownOptions() {
+  return [
+    { value: "", label: "All Statuses" },
+    ...ALL_TRIP_STATUSES.map((s) => ({
+      value: s,
+      label: capitalizeWords(s.replace(/-/g, " ")),
+    })),
+  ];
 }
 
 /**

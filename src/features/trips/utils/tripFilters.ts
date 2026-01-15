@@ -45,6 +45,15 @@ export function filterTrips(trips: Trip[], filters: TripFilters): Trip[] {
     ) {
       return false;
     }
+    // Filter by participants
+    if (
+      Array.isArray(filters.participants) &&
+      filters.participants.length > 0 &&
+      (!trip.participants ||
+        !filters.participants.some((uid) => trip.participants?.includes(uid)))
+    ) {
+      return false;
+    }
     // Filter by categories
     if (
       filters.categories &&

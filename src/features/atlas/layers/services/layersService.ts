@@ -6,14 +6,11 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
-import { logUserActivity } from "../../../user";
-import { appDb } from "@utils/db";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
-import {
-  VISITED_LAYER_ID,
-  DEFAULT_VISITED_LAYER,
-} from "../constants/layers";
+import { VISITED_LAYER_ID, DEFAULT_VISITED_LAYER } from "../constants/layers";
 import type { AnyLayer } from "../types";
+import { logUserActivity } from "../../../user";
+import { appDb } from "../../../../db";
 import { db } from "../../../../firebase";
 
 /**

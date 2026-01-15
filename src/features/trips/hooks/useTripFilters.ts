@@ -8,17 +8,16 @@ import {
   isLocalTrip,
   isUpcomingTrip,
 } from "../utils/trips";
-import {
-  getUsedCountryCodes,
-  getUsedYears,
-} from "../utils/tripData";
+import { getUsedCountryCodes, getUsedYears } from "../utils/tripData";
 import {
   getCountryDropdownOptions,
   getYearDropdownOptions,
   getCategoryDropdownOptions,
   getStatusDropdownOptions,
   getTagDropdownOptions,
+  getParticipantsDropdownOptions,
 } from "../utils/tripDropdownOptions";
+import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { filterTrips } from "../utils/tripFilters";
 
 // Default trip filters
@@ -27,8 +26,9 @@ const defaultTripFilterState: TripFilterState = {
   rating: null,
   country: [],
   year: [],
+  participants: [],
   categories: [],
-  status: "",
+  status: null,
   tags: [],
   local: true,
   abroad: true,
@@ -132,13 +132,7 @@ export function useTripFilters(
       });
     }
     return result;
-  }, [
-    trips,
-    filters,
-    globalSearch,
-    countryMap,
-    homeCountry,
-  ]);
+  }, [trips, filters, globalSearch, countryMap, homeCountry]);
 
   // Country options
   const usedCountryCodes = useMemo(
@@ -162,6 +156,25 @@ export function useTripFilters(
   const usedYears = useMemo(() => getUsedYears(tripList), [tripList]);
   const yearOptions = getYearDropdownOptions(usedYears);
 
+  // Participants options
+  const participantUids = useMemo(() => {
+    const set = new Set<string>();
+    for (const trip of tripList) {
+      if (Array.isArray(trip.participants)) {
+        for (const uidRaw of trip.participants) {
+          set.add(String(uidRaw));
+        }
+      }
+    }
+    return Array.from(set);
+  }, [tripList]);
+
+  const { profiles: participantProfiles } = useFriendProfiles(participantUids);
+  const participantsOptions = useMemo(
+    () => getParticipantsDropdownOptions(participantUids, participantProfiles),
+    [participantUids, participantProfiles]
+  );
+
   // Category options
   const allCategoryOptions = useMemo(() => getCategoryDropdownOptions(), []);
   const usedCategories = useMemo(
@@ -178,7 +191,7 @@ export function useTripFilters(
   );
 
   // Status and Tag options
-  const statusOptions = getStatusDropdownOptions(tripList);
+  const statusOptions = getStatusDropdownOptions();
   const tagOptions = getTagDropdownOptions(tripList);
 
   return {
@@ -189,6 +202,7 @@ export function useTripFilters(
     filteredTrips,
     countryOptions,
     yearOptions,
+    participantsOptions,
     categoryOptions,
     statusOptions,
     tagOptions,

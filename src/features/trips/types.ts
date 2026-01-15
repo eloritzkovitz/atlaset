@@ -4,7 +4,7 @@ import {
   ALL_TRIP_TAGS,
 } from "./constants/trips";
 
-/** Represents a trip with various attributes. */
+/** Represents a trip. */
 export type Trip = {
   /** The unique identifier for the trip */
   id: string;
@@ -26,6 +26,8 @@ export type Trip = {
   endDate?: string;
   /** Total number of full days spent on the trip */
   fullDays?: number;
+  /** UIDs of participants in this trip */
+  participants?: string[];
   /** Additional attributes for the trip */
   categories?: TripCategory[];
   /** The current status of the trip */
@@ -33,7 +35,7 @@ export type Trip = {
   /** Additional notes about the trip */
   notes?: string;
   /** Tags associated with the trip */
-  tags?: TripTag[];
+  tags?: TripTag[];  
 };
 
 /** Represents a geographical location with region and cities. */
@@ -60,6 +62,7 @@ export type TripSortByKey =
   | "startDate"
   | "endDate"
   | "fullDays"
+  | "participants"
   | "categories"
   | "status"
   | "tags";
@@ -73,8 +76,9 @@ export type TripFilters = {
   rating: number | null;
   country: string[];
   year: string[];
+  participants: string[];
   categories: TripCategory[];
-  status: TripStatus | "";
+  status: TripStatus | null;
   tags: TripTag[];
 };
 

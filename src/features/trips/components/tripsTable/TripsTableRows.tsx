@@ -1,7 +1,12 @@
 import { FaHeart } from "react-icons/fa6";
 import { Checkbox, ChipList, StarRatingInput, TableCell } from "@components";
-import { CountryWithFlag, createCountryMap, type Country } from "@features/countries";
+import {
+  CountryWithFlag,
+  createCountryMap,
+  type Country,
+} from "@features/countries";
 import { formatDate } from "@utils/date";
+import { ParticipantAvatar } from "./ParticipantAvatar";
 import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
@@ -115,6 +120,15 @@ export function TripsTableRows({
             </TableCell>
             <TableCell rowSpan={rowSpan}>
               {trip.startDate && trip.endDate ? trip.fullDays : "TBD"}
+            </TableCell>
+
+            {/* Participants */}
+            <TableCell rowSpan={rowSpan}>
+              <div className="flex -space-x-2">
+                {(trip.participants ?? []).map((uid) => (
+                  <ParticipantAvatar key={uid} uid={uid} />
+                ))}
+              </div>
             </TableCell>
 
             {/* Categories */}

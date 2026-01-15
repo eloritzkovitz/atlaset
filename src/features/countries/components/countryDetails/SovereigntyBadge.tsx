@@ -60,7 +60,7 @@ export function SovereigntyBadge({ type, sovereign }: SovereigntyBadgeProps) {
         text-center font-semibold
         rounded-full
         p-2 sm:px-4 sm:py-2
-        break-words
+        break-words select-none
         ${color}
       `}
     >

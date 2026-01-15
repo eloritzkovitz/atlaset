@@ -1,10 +1,12 @@
-import React, { useState } from "react";
-import { FaFlag, FaLandmark, FaTrophy } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
+import { FaFlag, FaLandmark, FaTrophy, FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { Card } from "@components";
 import { Leaderboards, QuizEntry, QuizSettings } from "@features/quizzes";
 import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
+import { useUiHint } from "@hooks";
+import { isAuthenticated } from "@utils/firebase";
 import { useFlyTransition } from "@hooks";
 import type { RootState } from "../store";
 
@@ -57,6 +59,27 @@ export default function QuizzesPage() {
     }
   }, [settingsOpen, triggerFlyOut, triggerFlyIn]);
 
+  // Timed leaderboard hint
+  const [leaderboardHint, setLeaderboardHint] = useState<null | {
+    message: string;
+    icon: React.ReactNode;
+  }>(null);
+  const [hintKey, setHintKey] = useState(0);
+
+  useUiHint(leaderboardHint, 4000, {
+    key: `leaderboard-auth-${hintKey}`,
+    position: "bottom",
+    dismissable: true,
+  });
+
+  // Clear hint after 4 seconds
+  useEffect(() => {
+    if (leaderboardHint) {
+      const timeout = setTimeout(() => setLeaderboardHint(null), 4000);
+      return () => clearTimeout(timeout);
+    }
+  }, [leaderboardHint]);
+
   const cards = [
     {
       key: "flag",
@@ -103,14 +126,27 @@ export default function QuizzesPage() {
                       key={card.key}
                       className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 animation transition"
                       animationClass={animationClass}
-                      onClick={() =>
-                        card.key !== "leaderboards"
-                          ? setSettingsOpen({
-                              route: card.route,
-                              key: card.key,
-                            })
-                          : navigate(card.route)
-                      }
+                      onClick={() => {
+                        if (card.key !== "leaderboards") {
+                          setSettingsOpen({
+                            route: card.route,
+                            key: card.key,
+                          });
+                        } else {
+                          if (isAuthenticated()) {
+                            navigate(card.route);
+                          } else if (!leaderboardHint) {
+                            setHintKey((k) => k + 1);
+                            setLeaderboardHint({
+                              message:
+                                "You must be signed in to view leaderboards.",
+                              icon: (
+                                <FaCircleXmark className="text-danger text-xl" />
+                              ),
+                            });
+                          }
+                        }
+                      }}
                     >
                       <div className="flex flex-col items-center">
                         {card.icon}

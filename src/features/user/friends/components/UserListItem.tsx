@@ -21,7 +21,7 @@ export function UserListItem({
 }: UserListItemProps) {
   const { profile: userProfile, loading: profileLoading } = useUserProfile({
     uid,
-  });
+  });  
   const loading = externalLoading ?? profileLoading;
 
   const content = loading ? (

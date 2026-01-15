@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { FaPencilAlt } from "react-icons/fa";
-import { FloatingActionButton, LoadingSpinner } from "@components";
+import { Navigate } from "react-router-dom";
+import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import {
@@ -12,12 +12,15 @@ import {
 } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
+import { useAuth } from "@features/user";
 import { useInfiniteScroll, useIsMobile, usePagination } from "@hooks";
 
 export default function TripsPage() {
+  const { user } = useAuth();
   const countryData = useCountryData();
   const {
     trips,
+    sharedTripIds,
     loading,
     addTrip,
     editTrip,
@@ -39,6 +42,7 @@ export default function TripsPage() {
     resetFilters,
     countryOptions,
     yearOptions,
+    participantsOptions,
     categoryOptions,
     statusOptions,
     tagOptions,
@@ -64,8 +68,16 @@ export default function TripsPage() {
     selectedTripIds.includes(trip.id)
   );
 
+  // Only allow non-shared trips for bulk actions
+  const nonSharedSelectedTrips = selectedTrips.filter(
+    (trip) => !sharedTripIds.has(trip.id)
+  );
+
   // Selection handlers
   function handleSelectTrip(id: string) {
+    // Prevent selecting shared trips
+    if (sharedTripIds.has(id)) return;
+
     setSelectedTripIds((prev) =>
       prev.includes(id) ? prev.filter((tripId) => tripId !== id) : [...prev, id]
     );
@@ -73,22 +85,30 @@ export default function TripsPage() {
 
   // Select all handler
   function handleSelectAll() {
-    if (selectedTripIds.length === filteredTrips.length) {
+    // Get all non-shared trip ids from filteredTrips
+    const nonSharedTripIds = filteredTrips
+      .filter((trip) => !sharedTripIds.has(trip.id))
+      .map((trip) => trip.id);
+    if (
+      selectedTripIds.length === nonSharedTripIds.length &&
+      nonSharedTripIds.length > 0 &&
+      selectedTripIds.every((id) => nonSharedTripIds.includes(id))
+    ) {
       setSelectedTripIds([]);
     } else {
-      setSelectedTripIds(filteredTrips.map((trip) => trip.id));
+      setSelectedTripIds(nonSharedTripIds);
     }
   }
 
   // Bulk duplicate handler
   function handleBulkDuplicate() {
-    selectedTrips.forEach((trip) => duplicateTrip(trip));
+    nonSharedSelectedTrips.forEach((trip) => duplicateTrip(trip));
   }
 
   // Bulk delete handler
   async function handleBulkDelete() {
-    for (const id of selectedTripIds) {
-      await removeTrip(id);
+    for (const trip of nonSharedSelectedTrips) {
+      await removeTrip(trip.id);
     }
     setSelectedTripIds([]);
   }
@@ -111,6 +131,11 @@ export default function TripsPage() {
     }
   }
 
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
   return (
     <div className="min-h-screen w-full flex flex-col">
       {/* Toolbar */}
@@ -125,6 +150,7 @@ export default function TripsPage() {
           selectedTripIds={selectedTripIds}
           showRowNumbers={showRowNumbers}
           setShowRowNumbers={setShowRowNumbers}
+          onAddTrip={handleAdd}
           onBulkDuplicate={handleBulkDuplicate}
           onBulkDelete={handleBulkDelete}
         />
@@ -164,6 +190,7 @@ export default function TripsPage() {
               }}
               countryOptions={countryOptions}
               yearOptions={yearOptions}
+              participantsOptions={participantsOptions}
               categoryOptions={categoryOptions}
               statusOptions={statusOptions}
               tagOptions={tagOptions}
@@ -177,13 +204,6 @@ export default function TripsPage() {
           </>
         )}
       </div>
-      <FloatingActionButton
-        onClick={handleAdd}
-        icon={<FaPencilAlt />}
-        ariaLabel="Add Trip"
-        title="Add Trip"
-        className={!isMobile ? "bottom-8 right-8" : "bottom-20 right-2"}
-      />
     </div>
   );
 }

@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 interface UiHintOptions {
   style?: React.CSSProperties;
   key: string;
+  position?: "top" | "bottom";
   dismissable?: boolean;
 }
 
@@ -25,7 +26,7 @@ export function useUiHint(
   options: UiHintOptions
 ) {
   const { addHint, removeHint } = useUIHintContext();
-  const { key, style, dismissable } = options;
+  const { key, style, position, dismissable } = options;
 
   const hasContent = !!content;
   const contentMessage = content?.message;
@@ -38,6 +39,7 @@ export function useUiHint(
         id: key,
         content: contentMessage,
         icon: contentIcon,
+        position: position || "top",
         dismissable: dismissable ?? false,
         duration,
         style,
@@ -52,6 +54,7 @@ export function useUiHint(
     key,
     duration,
     style,
+    position,
     dismissable,
     contentMessage,
     contentIcon,

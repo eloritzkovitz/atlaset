@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { FaSuitcaseRolling, FaGlobe, FaFloppyDisk } from "react-icons/fa6";
 import {
   Checkbox,
@@ -11,6 +11,8 @@ import {
   NumberInput,
   SelectInput,
 } from "@components";
+import { useFriends } from "@features/user/friends/hooks/useFriends";
+import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import {
   CountrySelectModal,
   getCountryByIsoCode,
@@ -47,6 +49,20 @@ export function TripModal({
 
   // Tentative state (no dates)
   const [isTentative, setIsTentative] = useState(false);
+
+  // Friends/participants logic
+  const { friends } = useFriends();
+  const friendUids = useMemo(() => friends.map((f) => f.uid), [friends]);
+  const { profiles: friendProfiles } = useFriendProfiles(friendUids);
+  const participantOptions = useMemo(
+    () =>
+      friendProfiles.map((profile) => ({
+        value: profile.uid,
+        label: profile.displayName || profile.username || profile.uid,
+        profile,
+      })),
+    [friendProfiles]
+  );
 
   // If no trip is provided, don't render anything
   if (!trip) return null;
@@ -157,6 +173,24 @@ export function TripModal({
                     onChange({ ...trip, fullDays: Math.max(1, val) })
                   }
                   disabled={isTentative}
+                />
+              </FormField>
+              <FormField label="Participants">
+                <DropdownSelectInput
+                  value={trip.participants || []}
+                  onChange={(v) =>
+                    onChange({
+                      ...trip,
+                      participants: Array.isArray(v)
+                        ? (v as string[])
+                        : v
+                        ? [v as string]
+                        : [],
+                    })
+                  }
+                  options={participantOptions}
+                  placeholder="Select participants"
+                  isMulti
                 />
               </FormField>
               <FormField label="Categories">

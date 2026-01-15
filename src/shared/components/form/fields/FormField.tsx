@@ -38,7 +38,7 @@ export function FormField({
     <div
       className={`grid grid-cols-[120px_1fr] items-center gap-2 mb-4 ${disabled ? "opacity-60" : ""} ${className}`}
     >
-      <label className="font-semibold text-text">{label}</label>
+      <label className="font-semibold text-text select-none">{label}</label>
       {enhancedChildren}
     </div>
   );

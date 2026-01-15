@@ -14,7 +14,7 @@ export function Checkbox({
 }: CheckboxProps) {
   return (
     <label
-      className="inline-flex items-center cursor-pointer relative"
+      className="inline-flex items-center cursor-pointer relative select-none"
       onClick={(e) => e.stopPropagation()}
     >
       <input

@@ -40,7 +40,7 @@ export function StarRatingInput({
           return (
             <span
               key={star}
-              className="relative inline-block align-middle w-7 h-7"
+              className="relative inline-block align-middle w-6 h-6"
             >
               <FaStar size={STAR_SIZE} color={STAR_UNSELECTED_COLOR} />
             </span>
@@ -56,7 +56,7 @@ export function StarRatingInput({
             key={star}
             className={
               (readOnly ? "" : "cursor-pointer ") +
-              "relative inline-block align-middle w-7 h-7"
+              "relative inline-block align-middle w-6 h-6"
             }
             onMouseMove={
               readOnly

@@ -16,7 +16,7 @@ export function StatusCell({ status }: { status?: TripStatus }) {
   const label =
     status.charAt(0).toUpperCase() + status.slice(1).replace("-", " ");
   return (
-    <Chip className={`py-1 font-semibold justify-center rounded-full ${color}`}>
+    <Chip className={`py-1 font-semibold justify-center rounded-full select-none ${color}`}>
       {label}
     </Chip>
   );
