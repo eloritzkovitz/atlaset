@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { FaPencilAlt } from "react-icons/fa";
 import { Navigate } from "react-router-dom";
-import { FloatingActionButton, LoadingSpinner } from "@components";
+import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import {
@@ -17,7 +16,7 @@ import { useAuth } from "@features/user";
 import { useInfiniteScroll, useIsMobile, usePagination } from "@hooks";
 
 export default function TripsPage() {
-  const { user} = useAuth();
+  const { user } = useAuth();
   const countryData = useCountryData();
   const {
     trips,
@@ -134,8 +133,9 @@ export default function TripsPage() {
           selectedTripIds={selectedTripIds}
           showRowNumbers={showRowNumbers}
           setShowRowNumbers={setShowRowNumbers}
+          onAddTrip={handleAdd}
           onBulkDuplicate={handleBulkDuplicate}
-          onBulkDelete={handleBulkDelete}
+          onBulkDelete={handleBulkDelete}          
         />
       )}
 
@@ -187,13 +187,6 @@ export default function TripsPage() {
           </>
         )}
       </div>
-      <FloatingActionButton
-        onClick={handleAdd}
-        icon={<FaPencilAlt />}
-        ariaLabel="Add Trip"
-        title="Add Trip"
-        className={!isMobile ? "bottom-8 right-8" : "bottom-20 right-2"}
-      />
     </div>
   );
 }

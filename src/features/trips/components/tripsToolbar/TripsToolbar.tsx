@@ -15,6 +15,7 @@ interface ToolbarProps {
   selectedTripIds: string[];
   showRowNumbers: boolean;
   setShowRowNumbers: React.Dispatch<React.SetStateAction<boolean>>;
+  onAddTrip?: () => void;
   onBulkDuplicate: () => void;
   onBulkDelete: () => void;
 }
@@ -29,6 +30,7 @@ export function TripsToolbar({
   selectedTripIds,
   showRowNumbers,
   setShowRowNumbers,
+  onAddTrip,
   onBulkDuplicate,
   onBulkDelete,
 }: ToolbarProps) {
@@ -36,9 +38,9 @@ export function TripsToolbar({
     <div className="trips-toolbar-container w-full px-3 flex items-center justify-between h-[7vh] bg-surface-alt">
       <ActionsToolbar>
         <div className="flex items-center">
-          <div className="ml-16 "/>
+          <div className="ml-16 " />
 
-          { /* Search */}
+          {/* Search */}
           <SearchInput
             value={globalSearch}
             onChange={setGlobalSearch}
@@ -60,11 +62,12 @@ export function TripsToolbar({
 
           {/* Import/Export */}
           <ToolbarImportExport trips={trips} />
-          <ToolbarSeparator />         
+          <ToolbarSeparator />
 
           {/* Action Buttons */}
           <ToolbarActions
             selectedTripIds={selectedTripIds}
+            onAddTrip={onAddTrip}
             onBulkDuplicate={onBulkDuplicate}
             onBulkDelete={onBulkDelete}
           />

@@ -1,9 +1,10 @@
 import React from "react";
-import { FaCopy, FaTrash } from "react-icons/fa6";
+import { FaCopy, FaPlus, FaTrash } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
 
 interface ToolbarActionsProps {
   selectedTripIds: string[];
+  onAddTrip?: () => void;
   onBulkDuplicate: () => void;
   onBulkDelete: () => void;
   onBulkArchive?: () => void;
@@ -12,6 +13,7 @@ interface ToolbarActionsProps {
 
 export function ToolbarActions({
   selectedTripIds,
+  onAddTrip,
   onBulkDuplicate,
   onBulkDelete,
 }: ToolbarActionsProps) {
@@ -21,25 +23,37 @@ export function ToolbarActions({
   const hasSelection = selectedTripIds.length > 0;
 
   return (
-    <>
-      <ActionButton
-        onClick={onBulkDuplicate}
-        ariaLabel="Duplicate selected"
-        title="Duplicate selected"        
-        icon={<FaCopy />}
-        active={hasSelection}
-        disabled={!hasSelection}
-        variant="toggle"
-      />
-      <ActionButton
-        onClick={() => setShowDeleteConfirm(true)}
-        ariaLabel="Delete selected"
-        title="Delete selected"        
-        icon={<FaTrash />}
-        active={hasSelection}        
-        disabled={!hasSelection}
-        variant="toggle"
-      />
+    <div className="flex w-full items-center justify-between gap-2">
+      <div className="flex items-center gap-2">
+        <ActionButton
+          onClick={onBulkDuplicate}
+          ariaLabel="Duplicate selected"
+          title="Duplicate selected"
+          icon={<FaCopy />}
+          active={hasSelection}
+          disabled={!hasSelection}
+          variant="toggle"
+        />
+        <ActionButton
+          onClick={() => setShowDeleteConfirm(true)}
+          ariaLabel="Delete selected"
+          title="Delete selected"
+          icon={<FaTrash />}
+          active={hasSelection}
+          disabled={!hasSelection}
+          variant="toggle"
+        />
+        <div className="relative left-200">
+          <ActionButton
+            variant="primary"
+            onClick={onAddTrip}
+            icon={<FaPlus className="text-xl mr-2" />}
+            className="ml-4"
+          >
+            Add Trip
+          </ActionButton>
+        </div>
+      </div>
 
       {/* Confirm Modals */}
       {showDeleteConfirm && (
@@ -56,6 +70,6 @@ export function ToolbarActions({
           submitIcon={<FaTrash className="inline" />}
         />
       )}
-    </>
+    </div>
   );
 }
