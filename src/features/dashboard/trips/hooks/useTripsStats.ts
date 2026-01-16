@@ -22,14 +22,27 @@ export function useTripsStats() {
   const completedAbroadTrips = getAbroadTrips(completedTrips, homeCountry);
   const upcomingTrips = getUpcomingTrips(trips);
 
-  // Longest and shortest trips (abroad only)
-  const longestTripObj = abroadTrips.length
-    ? abroadTrips.reduce((a, b) =>
+  // Only consider valid, completed abroad trips with valid dates and positive duration
+  const now = Date.now();
+  const validAbroadTrips = abroadTrips.filter((trip) => {
+    return (
+      trip.status === "completed" &&
+      typeof trip.startDate === "string" &&
+      typeof trip.endDate === "string" &&
+      !!trip.startDate &&
+      !!trip.endDate &&
+      new Date(trip.endDate).getTime() > new Date(trip.startDate).getTime() &&
+      new Date(trip.endDate).getTime() < now
+    );
+  });
+
+  const longestTripObj = validAbroadTrips.length
+    ? validAbroadTrips.reduce((a, b) =>
         getLongestTrip([a]) >= getLongestTrip([b]) ? a : b
       )
     : null;
-  const shortestTripObj = abroadTrips.length
-    ? abroadTrips.reduce((a, b) =>
+  const shortestTripObj = validAbroadTrips.length
+    ? validAbroadTrips.reduce((a, b) =>
         getShortestTrip([a]) <= getShortestTrip([b]) ? a : b
       )
     : null;
