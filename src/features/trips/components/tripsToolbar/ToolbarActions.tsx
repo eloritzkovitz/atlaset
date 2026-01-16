@@ -24,35 +24,35 @@ export function ToolbarActions({
 
   return (
     <div className="flex w-full items-center justify-between gap-2">
-      <div className="flex items-center gap-2">
-        <ActionButton
-          onClick={onBulkDuplicate}
-          ariaLabel="Duplicate selected"
-          title="Duplicate selected"
-          icon={<FaCopy />}
-          active={hasSelection}
-          disabled={!hasSelection}
-          variant="toggle"
-        />
-        <ActionButton
-          onClick={() => setShowDeleteConfirm(true)}
-          ariaLabel="Delete selected"
-          title="Delete selected"
-          icon={<FaTrash />}
-          active={hasSelection}
-          disabled={!hasSelection}
-          variant="toggle"
-        />
-        <div className="relative left-200">
+      <div className="flex flex-wrap items-center gap-2 w-full justify-between">
+        <div className="flex items-center gap-2">
           <ActionButton
-            variant="primary"
-            onClick={onAddTrip}
-            icon={<FaPlus className="text-xl mr-2" />}
-            className="ml-4"
-          >
-            Add Trip
-          </ActionButton>
+            onClick={onBulkDuplicate}
+            ariaLabel="Duplicate selected"
+            title="Duplicate selected"
+            icon={<FaCopy />}
+            active={hasSelection}
+            disabled={!hasSelection}
+            variant="toggle"
+          />
+          <ActionButton
+            onClick={() => setShowDeleteConfirm(true)}
+            ariaLabel="Delete selected"
+            title="Delete selected"
+            icon={<FaTrash />}
+            active={hasSelection}
+            disabled={!hasSelection}
+            variant="toggle"
+          />
         </div>
+        <ActionButton
+          variant="primary"
+          onClick={onAddTrip}
+          icon={<FaPlus className="text-xl mr-2" />}
+          className="ml-4"
+        >
+          Add Trip
+        </ActionButton>
       </div>
 
       {/* Confirm Modals */}
