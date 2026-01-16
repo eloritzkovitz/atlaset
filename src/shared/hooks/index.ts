@@ -24,6 +24,7 @@ export * from "./navigation/usePagination";
 export * from "./navigation/useResizableColumns";
 export * from "./navigation/useSort";
 export * from "./navigation/useSwipeNavigation";
+export * from "./navigation/useTablePagination";
 
 // State
 export * from "./state/useDebounce";

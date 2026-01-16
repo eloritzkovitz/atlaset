@@ -15,7 +15,7 @@ import { sortTrips } from "@features/trips/utils/tripSort";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { useAuth } from "@features/user";
-import { useIsMobile } from "@hooks";
+import { useIsMobile, useTablePagination } from "@hooks";
 
 export default function TripsPage() {
   const { user } = useAuth();
@@ -33,8 +33,6 @@ export default function TripsPage() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(20);
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
   const isMobile = useIsMobile();
 
@@ -60,12 +58,20 @@ export default function TripsPage() {
     sortBy
   );
 
-  // Paginate trips
-  const totalPages = Math.ceil(sortedTrips.length / pageSize);
-  const paginatedTrips = sortedTrips.slice(
-    (currentPage - 1) * pageSize,
-    (currentPage - 1) * pageSize + pageSize
-  );
+  // Table pagination hook
+  const {
+    currentPage,
+    setCurrentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    paginatedItems: paginatedTrips,
+    totalCount: totalTripsCount,
+  } = useTablePagination({
+    items: sortedTrips,
+    initialPage: 1,
+    initialPageSize: 20,
+  });
 
   // Determine if all trips are selected
   const allSelected =
@@ -210,7 +216,7 @@ export default function TripsPage() {
               totalPages={totalPages}
               onPageChange={setCurrentPage}
               pageSize={pageSize}
-              totalCount={sortedTrips.length}
+              totalCount={totalTripsCount}
               onPageSizeChange={setPageSize}
               sortBy={sortBy}
               onSort={setSortBy}

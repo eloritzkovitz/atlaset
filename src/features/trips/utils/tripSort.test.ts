@@ -10,7 +10,7 @@ function getExpectedOrder(
   fallback?: string | number
 ): string[] {
   const tentative = trips.filter((t) => !t.startDate);
-  let sortedNonTentative = trips.filter((t) => t.startDate);
+  const sortedNonTentative = trips.filter((t) => t.startDate);
   const getStr = (arr?: string[]) =>
     arr ? arr.join(",") : (fallback as string) || "";
   switch (key) {
