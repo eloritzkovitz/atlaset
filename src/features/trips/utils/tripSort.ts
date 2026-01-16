@@ -25,14 +25,29 @@ export function sortTrips(
   // Create a lookup map for country names by their ISO codes
   const countryNameMap = createCountryMap(countries, (c) => c.name);
 
+  // Separate tentative (no startDate) and non-tentative trips
+  const tentative = trips.filter((t) => !t.startDate);
+  const nonTentative = trips.filter((t) => t.startDate);
+
+  let sortedNonTentative: Trip[];
   switch (key) {
     case "name":
-      return sortItems(trips, (t) => t.name || "", asc ? "asc" : "desc");
+      sortedNonTentative = sortItems(
+        nonTentative,
+        (t) => t.name || "",
+        asc ? "asc" : "desc"
+      );
+      break;
     case "rating":
-      return sortItems(trips, (t) => t.rating || 0, asc ? "asc" : "desc");
+      sortedNonTentative = sortItems(
+        nonTentative,
+        (t) => t.rating || 0,
+        asc ? "asc" : "desc"
+      );
+      break;
     case "countries":
-      return sortItems(
-        trips,
+      sortedNonTentative = sortItems(
+        nonTentative,
         (t) =>
           t.countryCodes
             .map((code) => countryNameMap[code.toLowerCase()] || "")
@@ -40,25 +55,23 @@ export function sortTrips(
             .join(", "),
         asc ? "asc" : "desc"
       );
+      break;
     case "year":
-      return sortItems(
-        trips,
+      sortedNonTentative = sortItems(
+        nonTentative,
         (t) => (t.startDate ? new Date(t.startDate).getFullYear() : 0),
         asc ? "asc" : "desc"
       );
+      break;
     case "startDate":
-      return [...trips].sort((a, b) => {
-        if (a.startDate && b.startDate) {
-          return asc
-            ? a.startDate.localeCompare(b.startDate)
-            : b.startDate.localeCompare(a.startDate);
-        }
-        if (!a.startDate && b.startDate) return 1; // a is tentative, goes last
-        if (a.startDate && !b.startDate) return -1; // b is tentative, goes last
-        return 0; // both tentative
+      sortedNonTentative = [...nonTentative].sort((a, b) => {
+        return asc
+          ? a.startDate!.localeCompare(b.startDate!)
+          : b.startDate!.localeCompare(a.startDate!);
       });
+      break;
     case "endDate":
-      return [...trips].sort((a, b) => {
+      sortedNonTentative = [...nonTentative].sort((a, b) => {
         if (a.endDate && b.endDate) {
           return asc
             ? a.endDate.localeCompare(b.endDate)
@@ -68,23 +81,39 @@ export function sortTrips(
         if (a.endDate && !b.endDate) return -1;
         return 0;
       });
+      break;
     case "fullDays":
-      return sortItems(trips, (t) => t.fullDays || 0, asc ? "asc" : "desc");
+      sortedNonTentative = sortItems(
+        nonTentative,
+        (t) => t.fullDays || 0,
+        asc ? "asc" : "desc"
+      );
+      break;
     case "categories":
-      return sortItems(
-        trips,
+      sortedNonTentative = sortItems(
+        nonTentative,
         (t) => (t.categories ? t.categories.join(",") : ""),
         asc ? "asc" : "desc"
       );
+      break;
     case "status":
-      return sortItems(trips, (t) => t.status || "", asc ? "asc" : "desc");
+      sortedNonTentative = sortItems(
+        nonTentative,
+        (t) => t.status || "",
+        asc ? "asc" : "desc"
+      );
+      break;
     case "tags":
-      return sortItems(
-        trips,
+      sortedNonTentative = sortItems(
+        nonTentative,
         (t) => (t.tags ? t.tags.join(",") : ""),
         asc ? "asc" : "desc"
       );
+      break;
     default:
-      return trips;
+      sortedNonTentative = nonTentative;
   }
+
+  // Always put tentative trips first
+  return [...tentative, ...sortedNonTentative];
 }

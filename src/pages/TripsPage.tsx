@@ -9,11 +9,13 @@ import {
   TripsToolbar,
   type Trip,
   type TripFilterState,
+  type TripSortBy,
 } from "@features/trips";
+import { sortTrips } from "@features/trips/utils/tripSort";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { useAuth } from "@features/user";
-import { useInfiniteScroll, useIsMobile, usePagination } from "@hooks";
+import { useIsMobile } from "@hooks";
 
 export default function TripsPage() {
   const { user } = useAuth();
@@ -31,6 +33,9 @@ export default function TripsPage() {
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
+  const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
   const isMobile = useIsMobile();
 
   // Trip filtering hook
@@ -48,16 +53,19 @@ export default function TripsPage() {
     tagOptions,
   } = useTripFilters(trips, countryData, undefined, globalSearch);
 
-  const {
-    data: paginatedTrips,
-    hasMore,
-    loadMore,
-  } = usePagination({
-    items: filteredTrips,
-    pageSize: 20,
-  });
+  // Sort trips
+  const sortedTrips = sortTrips(
+    filteredTrips,
+    countryData?.countries ?? [],
+    sortBy
+  );
 
-  const sentinelRef = useInfiniteScroll(loadMore, hasMore);
+  // Paginate trips
+  const totalPages = Math.ceil(sortedTrips.length / pageSize);
+  const paginatedTrips = sortedTrips.slice(
+    (currentPage - 1) * pageSize,
+    (currentPage - 1) * pageSize + pageSize
+  );
 
   // Determine if all trips are selected
   const allSelected =
@@ -85,7 +93,6 @@ export default function TripsPage() {
 
   // Select all handler
   function handleSelectAll() {
-    // Get all non-shared trip ids from filteredTrips
     const nonSharedTripIds = filteredTrips
       .filter((trip) => !sharedTripIds.has(trip.id))
       .map((trip) => trip.id);
@@ -199,8 +206,15 @@ export default function TripsPage() {
               allSelected={allSelected}
               handleSelectAll={handleSelectAll}
               showRowNumbers={showRowNumbers}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+              pageSize={pageSize}
+              totalCount={sortedTrips.length}
+              onPageSizeChange={setPageSize}
+              sortBy={sortBy}
+              onSort={setSortBy}
             />
-            <div ref={sentinelRef} />
           </>
         )}
       </div>

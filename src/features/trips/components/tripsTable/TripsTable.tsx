@@ -1,7 +1,9 @@
+import { Pagination } from "@components";
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@features/countries";
-import { useIsMobile, useResizableColumns, useSort } from "@hooks";
+import { useIsMobile, useResizableColumns } from "@hooks";
 import type { FilterOption, Option } from "@types";
+import type { TripSortBy, TripSortByKey } from "../../types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
 import {
@@ -9,8 +11,7 @@ import {
   MIN_WIDTHS,
   type ColumnKey,
 } from "../../constants/columns";
-import type { Trip, TripFilters, TripSortBy, TripSortByKey } from "../../types";
-import { sortTrips } from "../../utils/tripSort";
+import type { Trip, TripFilters } from "../../types";
 import "./TripsTable.css";
 
 interface TripsTableProps {
@@ -31,6 +32,14 @@ interface TripsTableProps {
   allSelected: boolean;
   handleSelectAll: () => void;
   showRowNumbers: boolean;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+  pageSize: number;
+  totalCount: number;
+  onPageSizeChange: (size: number) => void;
+  sortBy: TripSortBy;
+  onSort: (sortBy: TripSortBy) => void;
 }
 
 export function TripsTable({
@@ -51,6 +60,14 @@ export function TripsTable({
   allSelected,
   handleSelectAll,
   showRowNumbers,
+  currentPage,
+  totalPages,
+  onPageChange,
+  pageSize,
+  totalCount,
+  onPageSizeChange,
+  sortBy,
+  onSort,
 }: TripsTableProps) {
   const countryData = useCountryData();
   const isMobile = useIsMobile();
@@ -61,26 +78,6 @@ export function TripsTable({
     MIN_WIDTHS
   );
 
-  const {
-    sortBy,
-    setSortBy,
-    sortedItems: sortedTrips,
-  } = useSort<Trip, TripSortBy>(
-    trips ?? [],
-    (items, sortBy) => sortTrips(items, countryData.countries, sortBy),
-    "startDate-asc"
-  );
-
-  // Header click handler
-  const handleSort = (key: TripSortByKey) => {
-    const [currentKey, currentDir] = sortBy.split("-");
-    setSortBy(
-      (currentKey === key && currentDir === "asc"
-        ? `${key}-desc`
-        : `${key}-asc`) as TripSortBy
-    );
-  };
-
   // Helper to render resize handle
   const renderResizeHandle = (key: string) => {
     const colKey = key as keyof typeof colWidths;
@@ -90,6 +87,16 @@ export function TripsTable({
         onMouseDown={(e) => handleResizeStart(e, colKey)}
       />
     );
+  };
+
+  // Sorting handler
+  const handleSort = (key: TripSortByKey) => {
+    const [currentKey, currentDir] = sortBy.split("-");
+    let nextDir: "asc" | "desc" = "asc";
+    if (currentKey === key) {
+      nextDir = currentDir === "asc" ? "desc" : "asc";
+    }
+    onSort(`${key}-${nextDir}` as TripSortBy);
   };
 
   return (
@@ -134,7 +141,7 @@ export function TripsTable({
           renderResizeHandle={renderResizeHandle}
           showRowNumbers={showRowNumbers}
         />
-        {sortedTrips.map((trip, tripIdx) => (
+        {trips.map((trip, tripIdx) => (
           <tbody key={trip.id} className="trips-group">
             <TripsTableRows
               key={trip.id}
@@ -151,6 +158,15 @@ export function TripsTable({
           </tbody>
         ))}
       </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+        pageSize={pageSize}
+        totalCount={totalCount}
+        onPageSizeChange={onPageSizeChange}
+        itemLabel="trip"
+      />
     </div>
   );
 }
