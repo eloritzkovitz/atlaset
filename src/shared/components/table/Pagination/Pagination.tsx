@@ -73,6 +73,7 @@ export function Pagination({
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
             ariaLabel="Previous page"
+            className="min-h-[2.5rem] text-base"
           >
             <span
               className={`inline-flex items-center gap-1${
@@ -109,6 +110,7 @@ export function Pagination({
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
             ariaLabel="Next page"
+            className="min-h-[2.5rem] text-base"
           >
             <span
               className={`inline-flex items-center gap-1${
