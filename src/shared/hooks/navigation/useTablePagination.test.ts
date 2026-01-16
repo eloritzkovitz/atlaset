@@ -31,7 +31,6 @@ describe("useTablePagination", () => {
     });
     expect(result.current.currentPage).toBe(4);
     rerender({ items: makeItems(25) });
-    // Now only 3 pages, should clamp to 1
     expect(result.current.currentPage).toBe(1);
   });
 
@@ -79,10 +78,9 @@ describe("useTablePagination", () => {
     act(() => {
       result.current.setCurrentPage(5);
     });
-    expect(result.current.currentPage).toBe(1); // Should reset to 1 (out of bounds)
-    // Remove items so only 2 pages remain
+    expect(result.current.currentPage).toBe(1);
     rerender({ items: makeItems(15) });
-    expect(result.current.currentPage).toBe(1); // Should stay at 1
+    expect(result.current.currentPage).toBe(1);
   });
 
   it("clamps currentPage to 1 if set to < 1", () => {

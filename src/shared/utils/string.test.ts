@@ -4,6 +4,7 @@ import {
   truncate,
   normalizeString,
   slugify,
+  pluralize,
 } from "./string";
 
 describe("string utils", () => {
@@ -38,5 +39,11 @@ describe("string utils", () => {
     expect(slugify("Café au lait")).toBe("cafe-au-lait");
     expect(slugify("  Multiple   Spaces  ")).toBe("multiple-spaces");
     expect(slugify("")).toBe("");
+  });
+
+  it("pluralize adds 's' for counts not equal to 1", () => {
+    expect(pluralize("item", 1)).toBe("item");
+    expect(pluralize("item", 0)).toBe("items");
+    expect(pluralize("item", 2)).toBe("items");
   });
 });

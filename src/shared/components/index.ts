@@ -66,7 +66,7 @@ export { ToolbarSeparator } from "./layout/Toolbar/ToolbarSeparator";
 export { ToolbarToggleGroup } from "./layout/Toolbar/ToolbarToggleGroup";
 
 // Table components
-export { Pagination } from "./table/Pagination";
+export { Pagination } from "./table/Pagination/Pagination";
 export { SeparatorRow } from "./table/SeparatorRow";
 export { SortableFilterHeader } from "./table/SortableFilterHeader";
 export { Table, type TableColumn } from "./table/Table";

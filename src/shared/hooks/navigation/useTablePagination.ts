@@ -26,7 +26,7 @@ export function useTablePagination<T>({
     [totalCount, pageSize]
   );
 
-  // Only reset to page 1 if items or pageSize change after initial mount and currentPage is out of bounds
+  // Adjust currentPage if items or pageSize change
   const isFirstRender = useRef(true);
   useEffect(() => {
     if (isFirstRender.current) {
@@ -41,7 +41,7 @@ export function useTablePagination<T>({
     });
   }, [items, pageSize]);
 
-  // Clamp currentPage if totalPages changes (but not on items/pageSize change)
+  // Clamp currentPage within valid range when totalPages changes
   useEffect(() => {
     setCurrentPage((prev) => {
       if (prev > totalPages) return totalPages;
