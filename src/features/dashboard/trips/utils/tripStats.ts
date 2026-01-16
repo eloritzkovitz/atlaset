@@ -90,6 +90,23 @@ export function getLongestTrip(trips: Trip[]): number {
  * @returns The shortest trip duration in days.
  */
 export function getShortestTrip(trips: Trip[]): number {
-  const durations = trips.map(getTripDays).filter((days) => days > 0);
+  const now = Date.now();
+  const durations = trips
+    .filter((trip) => {
+      if (
+        trip.status !== "completed" ||
+        typeof trip.startDate !== "string" ||
+        typeof trip.endDate !== "string" ||
+        !trip.startDate ||
+        !trip.endDate
+      ) {
+        return false;
+      }
+      const start = new Date(trip.startDate).getTime();
+      const end = new Date(trip.endDate).getTime();
+      return end > start && end < now;
+    })
+    .map(getTripDays)
+    .filter((days) => days > 0);
   return durations.length > 0 ? Math.min(...durations) : 0;
 }

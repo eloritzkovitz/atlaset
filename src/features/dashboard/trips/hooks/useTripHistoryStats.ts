@@ -44,8 +44,15 @@ export function useTripHistoryStats() {
   const firstTrip = sortedTrips[0] || null;
   const lastTrip = sortedTrips[sortedTrips.length - 1] || null;
 
-  // Recent trips (last 3, by startDate descending)
+  // Recent trips
+  const now = Date.now();
   const recentTrips = [...sortedTrips]
+    .filter(
+      (trip) =>
+        typeof trip.endDate === "string" &&
+        trip.endDate &&
+        new Date(trip.endDate).getTime() < now
+    )
     .sort(
       (a, b) =>
         new Date(b.startDate as string).getTime() -

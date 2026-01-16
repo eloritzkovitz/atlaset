@@ -4,8 +4,8 @@
 
 /**
  * Capitalizes the first letter of a string.
- * @param str 
- * @returns 
+ * @param str
+ * @returns
  */
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -16,7 +16,7 @@ export function capitalize(str: string) {
  * @returns The string with each word capitalized.
  */
 export function capitalizeWords(str: string) {
-  return str.replace(/\b\w/g, c => c.toUpperCase());
+  return str.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 /**
@@ -50,4 +50,14 @@ export function slugify(str: string) {
   return normalizeString(str)
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+/**
+ * Pluralizes a label based on the count.
+ * @param label - The label to pluralize
+ * @param count - The count determining singular/plural
+ * @returns - The pluralized label
+ */
+export function pluralize(label: string, count: number) {
+  return count === 1 ? label : label + "s";
 }
