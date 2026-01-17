@@ -1,9 +1,15 @@
 import { useState } from "react";
-import { FaChartSimple, FaGlobe, FaSuitcaseRolling } from "react-icons/fa6";
+import {
+  FaChartSimple,
+  FaGlobe,
+  FaMedal,
+  FaSuitcaseRolling,
+} from "react-icons/fa6";
 import { DrawerPanel, Panel, SubmenuSection } from "@components";
 import {
   COUNTRIES_SUBMENU,
   TRIPS_SUBMENU,
+  ACHIEVEMENTS_MENU,
 } from "@features/dashboard/navigation/config/menu";
 import { useIsMobile } from "@hooks";
 
@@ -44,6 +50,18 @@ export function DashboardPanelMenu({
           expanded={countriesExpanded}
           onToggle={() => setCountriesExpanded((e) => !e)}
           submenu={COUNTRIES_SUBMENU}
+          selectedPanel={selectedPanel}
+          setSelectedPanel={(key) => {
+            setSelectedPanel(key);
+            if (isMobile && onClose) onClose();
+          }}
+        />
+        <SubmenuSection
+          icon={<FaMedal />}
+          label="Achievements"
+          expanded={true}
+          onToggle={() => {}}
+          submenu={ACHIEVEMENTS_MENU}
           selectedPanel={selectedPanel}
           setSelectedPanel={(key) => {
             setSelectedPanel(key);

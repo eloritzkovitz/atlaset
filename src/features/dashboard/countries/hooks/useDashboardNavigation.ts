@@ -54,7 +54,7 @@ export function useDashboardNavigation(
   // Breadcrumb click handler
   const handleCrumbClick = (key: string) => {
     if (key === "dashboard") {
-      navigate(`/dashboard/countries/overview`);
+      navigate(`/dashboard/countries/exploration`);
     } else if (key === "countries") {
       navigate(`/dashboard/countries/all`);
     } else if (key === "region") {
