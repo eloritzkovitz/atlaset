@@ -3,7 +3,7 @@
  */
 
 import type { Country } from "@features/countries";
-import type { Achievement } from "../../types";
+import type { Achievement, AchievementStatus } from "../../types";
 
 /**
  * Gets the list of countries relevant to the achievement criteria.
@@ -114,13 +114,13 @@ export function progressFraction(
 }
 
 /**
- * Determines if the achievement is unlocked
+ * Determines if the achievement is completed
  * @param achievement - The achievement object
  * @param countries - List of all countries
  * @param visited - Visited countries utility
- * @returns True if unlocked, false otherwise
+ * @returns True if completed, false otherwise
  */
-export function isUnlocked(
+export function isCompleted(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
@@ -138,14 +138,14 @@ export function isUnlocked(
  * @param achievement - The achievement object
  * @param countries - List of all countries
  * @param visited - Visited countries utility
- * @returns "locked", "progress", or "unlocked" based on achievement status
+ * @returns "locked", "progress", or "completed" based on achievement status
  */
 export function getAchievementStatus(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
-): "locked" | "progress" | "unlocked" {
-  if (isUnlocked(achievement, countries, visited)) return "unlocked";
+): AchievementStatus {
+  if (isCompleted(achievement, countries, visited)) return "completed";
   if (progressFraction(achievement, countries, visited) > 0) return "progress";
   return "locked";
 }
@@ -202,7 +202,7 @@ export function getMergedAchievements(
     );
     worldToShow = sorted[0];
     for (let i = sorted.length - 1; i >= 0; i--) {
-      if (isUnlocked(sorted[i], countries, visited)) {
+      if (isCompleted(sorted[i], countries, visited)) {
         worldToShow = sorted[i];
         if (i === sorted.length - 1) {
           break;
@@ -224,7 +224,7 @@ export function getMergedAchievements(
     );
     let toShow = sorted[0];
     for (let i = sorted.length - 1; i >= 0; i--) {
-      if (isUnlocked(sorted[i], countries, visited)) {
+      if (isCompleted(sorted[i], countries, visited)) {
         toShow = sorted[i];
         if (i === sorted.length - 1) {
           merged.push(toShow);

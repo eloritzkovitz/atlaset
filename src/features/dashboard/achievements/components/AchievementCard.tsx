@@ -3,17 +3,17 @@ import type { Country } from "@features/countries";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import {
   getProgress,
-  getAchievementStatus,
   getTier,
+  getAchievementStatus,
 } from "../utils/achievements";
-import type { Achievement } from "../../types";
+import type { Achievement, AchievementStatus } from "../../types";
 
 interface AchievementCardProps {
   achievement: Achievement;
   countries: Country[];
   visited: { isCountryVisited: (iso: string) => boolean };
   tierBgClasses: Record<number, string>;
-  statusBgClasses: Record<string, string>;
+  statusBgClasses: Record<AchievementStatus, string>;
 }
 
 export function AchievementCard({
@@ -50,15 +50,15 @@ export function AchievementCard({
         className={`text-xs font-bold`}
         style={{
           color:
-            status === "unlocked"
+            status === "completed"
               ? "var(--color-success)"
               : status === "progress"
                 ? "var(--color-info)"
                 : "var(--color-muted)",
         }}
       >
-        {status === "unlocked"
-          ? "Unlocked!"
+        {status === "completed"
+          ? "Completed!"
           : status === "progress"
             ? "In Progress"
             : "Locked"}

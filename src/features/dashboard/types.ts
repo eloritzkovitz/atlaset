@@ -4,6 +4,7 @@ export interface SubregionStat {
   total: number;
 }
 
+/** Represents an achievement. */
 export interface Achievement {
   id: string;
   name: string;
@@ -12,3 +13,6 @@ export interface Achievement {
   criteria: any;
   icon: string;
 }
+
+/** Represents the status of an achievement */
+export type AchievementStatus = "locked" | "progress" | "completed";

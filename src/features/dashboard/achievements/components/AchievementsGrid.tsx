@@ -3,13 +3,14 @@ import { AchievementCard } from "./AchievementCard";
 import { useCountryData } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
 import { getMergedAchievements } from "../utils/achievements";
-import type { Achievement } from "../../types";
+import type { Achievement, AchievementStatus } from "../../types";
 
 export function AchievementsGrid() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const { countries } = useCountryData();
   const visited = useVisitedCountries();
 
+  // Fetch achievements data on component mount
   useEffect(() => {
     fetch("/data/achievements.json")
       .then((res) => res.json())
@@ -27,10 +28,10 @@ export function AchievementsGrid() {
   };
 
   // Status-based backgrounds for non-tiered cards
-  const statusBgClasses: Record<string, string> = {
+  const statusBgClasses: Record<AchievementStatus, string> = {
     locked: "bg-surface-alt/30",
     progress: "bg-surface-alt",
-    unlocked: "bg-input",
+    completed: "bg-input",
   };
 
   return (
