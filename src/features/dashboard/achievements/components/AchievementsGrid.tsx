@@ -31,7 +31,7 @@ export function AchievementsGrid() {
   const statusBgClasses: Record<AchievementStatus, string> = {
     locked: "bg-surface-alt/30",
     progress: "bg-surface-alt",
-    completed: "bg-input",
+    completed: "bg-success/20",
   };
 
   return (

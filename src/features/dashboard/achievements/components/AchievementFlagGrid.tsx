@@ -1,4 +1,5 @@
 import { CountryFlag } from "@features/countries";
+import "./AchievementFlagGrid.css";
 import type { Flag } from "@features/countries/types/flag";
 import type { Country } from "@features/countries";
 
@@ -46,11 +47,9 @@ export function AchievementFlagGrid({
               width: 36,
               height: 28,
             }}
+            className={visitedFlag ? undefined : "flag-grayscale-hover"}
           >
-            <CountryFlag
-              flag={flag}
-              style={{ filter: visitedFlag ? undefined : "grayscale(1)" }}
-            />
+            <CountryFlag flag={flag} />
           </span>
         );
       })}

@@ -1,6 +1,7 @@
-import { FaMedal } from "react-icons/fa6";
+import { Chip } from "@components";
 import type { Country } from "@features/countries";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
+import { AchievementMedal } from "./AchievementMedal";
 import {
   getProgress,
   getTier,
@@ -25,55 +26,90 @@ export function AchievementCard({
 }: AchievementCardProps) {
   const tier = getTier(achievement);
   const status = getAchievementStatus(achievement, countries, visited);
-  const bgClass = tier
-    ? tierBgClasses[tier] || tierBgClasses[6]
-    : statusBgClasses[status];
+
+  // Determine background class based on tier or status
+  const bgClass =
+    tier && status !== "locked"
+      ? tierBgClasses[tier] || tierBgClasses[6]
+      : statusBgClasses[status];
   const textClass = status === "locked" ? "text-muted" : "";
+  const statusLabel =
+    status === "completed"
+      ? "Completed"
+      : status === "progress"
+        ? "In Progress"
+        : "Locked";
+
+  // Chip color classes for status
+  const statusChipClass =
+    status === "completed"
+      ? "bg-success/50"
+      : status === "progress"
+        ? "bg-info/70"
+        : "bg-muted/20 text-muted";
+
+  // Chip color classes for progress
+  const progressChipClass = "bg-surface";
 
   return (
     <div
-      className={`rounded-lg p-4 flex flex-col items-center ${bgClass} ${textClass}`}
-      style={{}}
+      className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg`}
+      style={{ minHeight: 320, position: "relative" }}
     >
-      <span
-        className="w-16 h-16 mb-2 rounded-full flex items-center justify-center bg-gradient-to-br from-yellow-300 via-yellow-500 to-amber-400 shadow-sm"
-        aria-label="Achievement"
-      >
-        <FaMedal className="w-10 h-10 text-white" />
-      </span>
-      <h2 className="text-lg font-semibold mb-1">{achievement.name}</h2>
-      <p className="text-sm mb-2 text-center">{achievement.description}</p>
-      <span className="font-mono text-xs mb-1">
-        Progress: {getProgress(achievement, countries, visited)}
-      </span>
-      <span
-        className={`text-xs font-bold`}
-        style={{
-          color:
-            status === "completed"
-              ? "var(--color-success)"
-              : status === "progress"
-                ? "var(--color-info)"
-                : "var(--color-muted)",
-        }}
-      >
-        {status === "completed"
-          ? "Completed!"
-          : status === "progress"
-            ? "In Progress"
-            : "Locked"}
-      </span>
-      {achievement.criteria.countries &&
-        Array.isArray(achievement.criteria.countries) && (
-          <>
-            <div style={{ height: 12 }} />
-            <AchievementFlagGrid
-              countries={countries}
-              countryCodes={achievement.criteria.countries}
-              visited={visited}
-            />
-          </>
-        )}
+      <AchievementMedal locked={status === "locked"} />
+      <h2 className="text-lg font-semibold mb-2 text-center leading-tight">
+        {achievement.name}
+      </h2>
+      <p className="text-sm mb-3 text-center text-muted max-w-xs">
+        {achievement.description}
+      </p>
+      <div className="flex gap-2 items-center mb-2">
+        <Chip className={progressChipClass}>
+          Progress: {getProgress(achievement, countries, visited)}
+        </Chip>
+        <Chip className={statusChipClass}>{statusLabel}</Chip>
+      </div>
+      {/* Show flags for country or subregion criteria */}
+      {(() => {
+        // If criteria is countries
+        if (achievement.criteria.countries && Array.isArray(achievement.criteria.countries)) {
+          return (
+            <>
+              <div style={{ height: 12 }} />
+              <AchievementFlagGrid
+                countries={countries}
+                countryCodes={achievement.criteria.countries}
+                visited={visited}
+              />
+            </>
+          );
+        }
+        // If criteria is subregion
+        if (achievement.criteria.subregion && typeof achievement.criteria.subregion === "string") {
+          // Only include sovereign countries in the subregion
+          const subregionCountryCodes = countries
+            .filter(
+              (c) =>
+                c.subregion === achievement.criteria.subregion &&
+                (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
+            )
+            .map((c) => c.isoCode)
+            .filter(Boolean);
+          if (subregionCountryCodes.length > 0) {
+            return (
+              <>
+                <div style={{ height: 12 }} />
+                <AchievementFlagGrid
+                  countries={countries}
+                  countryCodes={subregionCountryCodes}
+                  visited={visited}
+                />
+              </>
+            );
+          }
+        }
+        return null;
+      })()}
     </div>
   );
 }
