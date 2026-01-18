@@ -58,7 +58,7 @@ export function AchievementCard({
 
   return (
     <div
-      className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg`}
+      className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg select-none`}
       style={{ minHeight: 320, position: "relative" }}
     >
       <AchievementMedal locked={status === "locked"} />
@@ -68,7 +68,7 @@ export function AchievementCard({
       <p className="text-sm mb-3 text-center text-muted max-w-xs">
         {achievement.description}
       </p>
-      <div className="flex gap-2 items-center mb-2">
+      <div className="flex gap-2 items-center mb-2 select-none">
         {/* Custom progress for trip-based achievements */}
         {achievement.criteria.trip_countries_count && achievement.criteria.region ? (
           <Chip className={progressChipClass}>
