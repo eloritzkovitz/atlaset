@@ -1,25 +1,20 @@
-import { useEffect, useState } from "react";
+import { ErrorMessage, LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
 import { useHomeCountry } from "@features/user";
 import { AchievementCard } from "./AchievementCard";
 import { getMergedAchievements } from "../utils/achievements";
-import type { Achievement, AchievementStatus } from "../../types";
+import type { AchievementStatus } from "../../types";
+import { useAchievementsData } from "../hooks/useAchievementsData";
 
 export function AchievementsGrid() {
-  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const { achievementsData, achievementsError, loading } =
+    useAchievementsData();
   const { countries } = useCountryData();
   const visited = useVisitedCountries();
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
-
-  // Fetch achievements data on component mount
-  useEffect(() => {
-    fetch("/data/achievements.json")
-      .then((res) => res.json())
-      .then(setAchievements);
-  }, []);
 
   // Tier-based backgrounds for tiered cards
   const tierBgClasses: Record<number, string> = {
@@ -38,25 +33,50 @@ export function AchievementsGrid() {
     completed: "bg-success/20",
   };
 
+  // Handle loading and error states
+  if (loading) {
+    return (
+      <div className="p-4 flex justify-center items-center">
+        <LoadingSpinner message="Loading achievements..." />
+      </div>
+    );
+  }
+  if (achievementsError) {
+    return (
+      <div className="p-4">
+        <ErrorMessage error={achievementsError} />
+      </div>
+    );
+  }
+
+  // Handle case with no data
+  if (!achievementsData) {
+    return <div className="p-4">No achievements data found.</div>;
+  }
+
   return (
     <div className="p-4">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {getMergedAchievements(achievements, countries, visited, trips, homeCountry).map(
-          (achievement) => {
-            return (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-                countries={countries}
-                visited={visited}
-                trips={trips}
-                homeCountry={homeCountry}
-                tierBgClasses={tierBgClasses}
-                statusBgClasses={statusBgClasses}
-              />
-            );
-          },
-        )}
+        {getMergedAchievements(
+          achievementsData,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+        ).map((achievement) => {
+          return (
+            <AchievementCard
+              key={achievement.id}
+              achievement={achievement}
+              countries={countries}
+              visited={visited}
+              trips={trips}
+              homeCountry={homeCountry}
+              tierBgClasses={tierBgClasses}
+              statusBgClasses={statusBgClasses}
+            />
+          );
+        })}
       </div>
     </div>
   );
