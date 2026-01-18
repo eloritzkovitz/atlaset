@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import { AchievementCard } from "./AchievementCard";
+import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
+import { useHomeCountry } from "@features/user";
+import { AchievementCard } from "./AchievementCard";
 import { getMergedAchievements } from "../utils/achievements";
 import type { Achievement, AchievementStatus } from "../../types";
 
@@ -9,6 +11,8 @@ export function AchievementsGrid() {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
   const { countries } = useCountryData();
   const visited = useVisitedCountries();
+  const { trips } = useTrips();
+  const { homeCountry } = useHomeCountry();
 
   // Fetch achievements data on component mount
   useEffect(() => {
@@ -37,7 +41,7 @@ export function AchievementsGrid() {
   return (
     <div className="p-4">
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {getMergedAchievements(achievements, countries, visited).map(
+        {getMergedAchievements(achievements, countries, visited, trips, homeCountry).map(
           (achievement) => {
             return (
               <AchievementCard
@@ -45,6 +49,8 @@ export function AchievementsGrid() {
                 achievement={achievement}
                 countries={countries}
                 visited={visited}
+                trips={trips}
+                homeCountry={homeCountry}
                 tierBgClasses={tierBgClasses}
                 statusBgClasses={statusBgClasses}
               />

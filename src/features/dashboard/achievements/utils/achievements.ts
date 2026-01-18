@@ -3,6 +3,13 @@
  */
 
 import type { Country } from "@features/countries";
+import type { Trip } from "@features/trips";
+import {
+  getLocalTrips,
+  getAbroadTrips,
+  getCompletedTrips,
+} from "@features/trips/utils/trips";
+import { getVisitedCountriesUpToYear } from "@features/visits";
 import type { Achievement, AchievementStatus } from "../../types";
 
 /**
@@ -80,6 +87,35 @@ export function getTotalCount(achievement: Achievement, countries: Country[]) {
 }
 
 /**
+ * Gets the set of unique abroad countries visited in completed trips
+ * @param trips - Array of user trips
+ * @param homeCountry - The user's home country code
+ * @returns Set of unique abroad country codes
+ */
+function getUniqueAbroadCountries(
+  trips: Trip[],
+  homeCountry: string,
+): Set<string> {
+  const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
+  return new Set(
+    abroadTrips.flatMap((t) => t.countryCodes.filter((c) => c !== homeCountry)),
+  );
+}
+
+/**
+ * Gets the count of repeat visits across all trips
+ * @param trips - Array of user trips
+ * @returns Number of repeat visits
+ */
+function getRepeatVisitCount(trips: Trip[]): number {
+  const visitCounts = getVisitedCountriesUpToYear(
+    getCompletedTrips(trips),
+    9999,
+  );
+  return Object.values(visitCounts).filter((count) => count > 1).length;
+}
+
+/**
  * Gets progress string for the achievement
  * @param achievement - The achievement object
  * @param countries - List of all countries
@@ -90,7 +126,49 @@ export function getProgress(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
 ) {
+  // Trip-based: trip_countries_count (optionally with region)
+  if (achievement.criteria.trip_countries_count && trips) {
+    if (achievement.criteria.region) {
+      const regionCodes = countries
+        .filter((c) => c.region === achievement.criteria.region)
+        .map((c) => c.isoCode);
+      const completed = hasTripAchievement(
+        trips,
+        regionCodes,
+        achievement.criteria.trip_countries_count,
+      );
+      return completed ? `Trip completed` : `No qualifying trip yet`;
+    } else {
+      // Any trip with N+ countries
+      const completed = trips.some(
+        (trip) =>
+          new Set(trip.countryCodes).size >=
+          achievement.criteria.trip_countries_count,
+      );
+      return completed ? `Trip completed` : `No qualifying trip yet`;
+    }
+  }
+  // Local trips
+  if (achievement.criteria.local_trips_count && trips && homeCountry) {
+    const completedLocalTrips = getCompletedTrips(
+      getLocalTrips(trips, homeCountry),
+    );
+    return `${completedLocalTrips.length}/${achievement.criteria.local_trips_count}`;
+  }
+  // Abroad trips
+  if (achievement.criteria.abroad_countries_count && trips && homeCountry) {
+    const abroadCountrySet = getUniqueAbroadCountries(trips, homeCountry);
+    return `${abroadCountrySet.size}/${achievement.criteria.abroad_countries_count}`;
+  }
+  // Repeat visits
+  if (achievement.criteria.repeat_visits_count && trips) {
+    const repeats = getRepeatVisitCount(trips);
+    return `${repeats}/${achievement.criteria.repeat_visits_count}`;
+  }
+  // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);
   const total = getTotalCount(achievement, countries);
   return total ? `${visitedCount}/${total}` : "";
@@ -124,7 +202,47 @@ export function isCompleted(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
 ) {
+  // Trip-based: trip_countries_count (optionally with region)
+  if (achievement.criteria.trip_countries_count && trips) {
+    if (achievement.criteria.region) {
+      const regionCodes = countries
+        .filter((c) => c.region === achievement.criteria.region)
+        .map((c) => c.isoCode);
+      return hasTripAchievement(
+        trips,
+        regionCodes,
+        achievement.criteria.trip_countries_count,
+      );
+    } else {
+      // Any trip with N+ countries
+      return trips.some(
+        (trip) =>
+          new Set(trip.countryCodes).size >=
+          achievement.criteria.trip_countries_count,
+      );
+    }
+  }
+  // Local trips
+  if (achievement.criteria.local_trips_count && trips && homeCountry) {
+    const completedLocalTrips = getCompletedTrips(
+      getLocalTrips(trips, homeCountry),
+    );
+    return completedLocalTrips.length >= achievement.criteria.local_trips_count;
+  }
+  // Abroad trips
+  if (achievement.criteria.abroad_countries_count && trips && homeCountry) {
+    const abroadCountrySet = getUniqueAbroadCountries(trips, homeCountry);
+    return abroadCountrySet.size >= achievement.criteria.abroad_countries_count;
+  }
+  // Repeat visits
+  if (achievement.criteria.repeat_visits_count && trips) {
+    const repeats = getRepeatVisitCount(trips);
+    return repeats >= achievement.criteria.repeat_visits_count;
+  }
+  // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);
   const total = getTotalCount(achievement, countries);
   if (achievement.criteria.count) {
@@ -144,8 +262,11 @@ export function getAchievementStatus(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
 ): AchievementStatus {
-  if (isCompleted(achievement, countries, visited)) return "completed";
+  if (isCompleted(achievement, countries, visited, trips, homeCountry))
+    return "completed";
   if (progressFraction(achievement, countries, visited) > 0) return "progress";
   return "locked";
 }
@@ -166,12 +287,16 @@ export function getTier(achievement: Achievement): number | undefined {
  * @param achievements - List of all achievements
  * @param countries - List of all countries
  * @param visited - Visited countries utility
+ * @param trips - Array of user trips
+ * @param homeCountry - The user's home country
  * @returns Array of merged achievements
  */
 export function getMergedAchievements(
   achievements: Achievement[],
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
 ) {
   const worldTiers: Achievement[] = [];
   const regionTiers: Record<string, Achievement[]> = {};
@@ -202,7 +327,7 @@ export function getMergedAchievements(
     );
     worldToShow = sorted[0];
     for (let i = sorted.length - 1; i >= 0; i--) {
-      if (isCompleted(sorted[i], countries, visited)) {
+      if (isCompleted(sorted[i], countries, visited, trips, homeCountry)) {
         worldToShow = sorted[i];
         if (i === sorted.length - 1) {
           break;
@@ -224,7 +349,7 @@ export function getMergedAchievements(
     );
     let toShow = sorted[0];
     for (let i = sorted.length - 1; i >= 0; i--) {
-      if (isCompleted(sorted[i], countries, visited)) {
+      if (isCompleted(sorted[i], countries, visited, trips, homeCountry)) {
         toShow = sorted[i];
         if (i === sorted.length - 1) {
           merged.push(toShow);
@@ -245,4 +370,24 @@ export function getMergedAchievements(
   const result: Achievement[] = [];
   if (worldToShow) result.push(worldToShow);
   return [...result, ...merged, ...others];
+}
+
+/**
+ * Checks if any trip meets the criteria for a trip-based achievement.
+ * @param trips - Array of user trips
+ * @param regionCountryCodes - Array of country codes in the region
+ * @param minCountries - Minimum number of countries in the region required in a single trip
+ * @returns True if any trip meets the criteria
+ */
+export function hasTripAchievement(
+  trips: Trip[],
+  regionCountryCodes: string[],
+  minCountries: number,
+): boolean {
+  return trips.some((trip) => {
+    const visited = trip.countryCodes.filter((code) =>
+      regionCountryCodes.includes(code),
+    );
+    return new Set(visited).size >= minCountries;
+  });
 }

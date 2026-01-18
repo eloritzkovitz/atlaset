@@ -1,5 +1,6 @@
 import { Chip } from "@components";
 import type { Country } from "@features/countries";
+import type { Trip } from "@features/trips";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import { AchievementMedal } from "./AchievementMedal";
 import {
@@ -13,6 +14,8 @@ interface AchievementCardProps {
   achievement: Achievement;
   countries: Country[];
   visited: { isCountryVisited: (iso: string) => boolean };
+  trips?: Trip[];
+  homeCountry?: string;
   tierBgClasses: Record<number, string>;
   statusBgClasses: Record<AchievementStatus, string>;
 }
@@ -21,11 +24,13 @@ export function AchievementCard({
   achievement,
   countries,
   visited,
+  trips,
+  homeCountry,
   tierBgClasses,
   statusBgClasses,
 }: AchievementCardProps) {
   const tier = getTier(achievement);
-  const status = getAchievementStatus(achievement, countries, visited);
+  const status = getAchievementStatus(achievement, countries, visited, trips, homeCountry);
 
   // Determine background class based on tier or status
   const bgClass =
@@ -64,15 +69,27 @@ export function AchievementCard({
         {achievement.description}
       </p>
       <div className="flex gap-2 items-center mb-2">
-        <Chip className={progressChipClass}>
-          Progress: {getProgress(achievement, countries, visited)}
-        </Chip>
+        {/* Custom progress for trip-based achievements */}
+        {achievement.criteria.trip_countries_count && achievement.criteria.region ? (
+          <Chip className={progressChipClass}>
+            {status === "completed"
+              ? `Trip completed`
+              : `No qualifying trip yet`}
+          </Chip>
+        ) : (
+          <Chip className={progressChipClass}>
+            Progress: {getProgress(achievement, countries, visited, trips, homeCountry)}
+          </Chip>
+        )}
         <Chip className={statusChipClass}>{statusLabel}</Chip>
       </div>
       {/* Show flags for country or subregion criteria */}
       {(() => {
         // If criteria is countries
-        if (achievement.criteria.countries && Array.isArray(achievement.criteria.countries)) {
+        if (
+          achievement.criteria.countries &&
+          Array.isArray(achievement.criteria.countries)
+        ) {
           return (
             <>
               <div style={{ height: 12 }} />
@@ -85,13 +102,17 @@ export function AchievementCard({
           );
         }
         // If criteria is subregion
-        if (achievement.criteria.subregion && typeof achievement.criteria.subregion === "string") {
+        if (
+          achievement.criteria.subregion &&
+          typeof achievement.criteria.subregion === "string"
+        ) {
           // Only include sovereign countries in the subregion
           const subregionCountryCodes = countries
             .filter(
               (c) =>
                 c.subregion === achievement.criteria.subregion &&
-                (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
+                (c.sovereigntyType === undefined ||
+                  c.sovereigntyType === "Sovereign"),
             )
             .map((c) => c.isoCode)
             .filter(Boolean);
