@@ -168,6 +168,17 @@ export function getProgress(
     const repeats = getRepeatVisitCount(trips);
     return `${repeats}/${achievement.criteria.repeat_visits_count}`;
   }
+  // Custom count-based criteria
+  if (
+    (achievement.criteria.countries ||
+      achievement.criteria.region ||
+      achievement.criteria.subregion) &&
+    achievement.criteria.count
+  ) {
+    const visitedCount = getVisitedCount(achievement, countries, visited);
+    const count = achievement.criteria.count;
+    return `${Math.min(visitedCount, count)}/${count}`;
+  }
   // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);
   const total = getTotalCount(achievement, countries);
