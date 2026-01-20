@@ -103,16 +103,18 @@ function getUniqueAbroadCountries(
 }
 
 /**
- * Gets the count of repeat visits across all trips
+ * Gets the count of countries with at least X visits across all trips
  * @param trips - Array of user trips
- * @returns Number of repeat visits
+ * @param minVisits - Minimum number of visits to count (default 2)
+ * @returns Number of countries with at least minVisits visits
  */
-function getRepeatVisitCount(trips: Trip[]): number {
+function getRepeatVisitCount(trips: Trip[], minVisits: number = 2): number {
   const visitCounts = getVisitedCountriesUpToYear(
     getCompletedTrips(trips),
     9999,
   );
-  return Object.values(visitCounts).filter((count) => count > 1).length;
+  return Object.values(visitCounts).filter((count) => count >= minVisits)
+    .length;
 }
 
 /**
@@ -158,14 +160,20 @@ export function getProgress(
     );
     return `${completedLocalTrips.length}/${achievement.criteria.local_trips_count}`;
   }
-  // Abroad trips
+  // Abroad trips (unique countries)
   if (achievement.criteria.abroad_countries_count && trips && homeCountry) {
     const abroadCountrySet = getUniqueAbroadCountries(trips, homeCountry);
     return `${abroadCountrySet.size}/${achievement.criteria.abroad_countries_count}`;
   }
+  // Abroad trips (number of trips)
+  if (achievement.criteria.abroad_trips_count && trips && homeCountry) {
+    const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
+    return `${abroadTrips.length}/${achievement.criteria.abroad_trips_count}`;
+  }
   // Repeat visits
   if (achievement.criteria.repeat_visits_count && trips) {
-    const repeats = getRepeatVisitCount(trips);
+    const minVisits = achievement.criteria.repeat_min_visits || 2;
+    const repeats = getRepeatVisitCount(trips, minVisits);
     return `${repeats}/${achievement.criteria.repeat_visits_count}`;
   }
   // Custom count-based criteria
@@ -243,14 +251,20 @@ export function isCompleted(
     );
     return completedLocalTrips.length >= achievement.criteria.local_trips_count;
   }
-  // Abroad trips
+  // Abroad trips (unique countries)
   if (achievement.criteria.abroad_countries_count && trips && homeCountry) {
     const abroadCountrySet = getUniqueAbroadCountries(trips, homeCountry);
     return abroadCountrySet.size >= achievement.criteria.abroad_countries_count;
   }
+  // Abroad trips (number of trips)
+  if (achievement.criteria.abroad_trips_count && trips && homeCountry) {
+    const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
+    return abroadTrips.length >= achievement.criteria.abroad_trips_count;
+  }
   // Repeat visits
   if (achievement.criteria.repeat_visits_count && trips) {
-    const repeats = getRepeatVisitCount(trips);
+    const minVisits = achievement.criteria.repeat_min_visits || 2;
+    const repeats = getRepeatVisitCount(trips, minVisits);
     return repeats >= achievement.criteria.repeat_visits_count;
   }
   // Default logic
