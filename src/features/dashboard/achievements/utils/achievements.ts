@@ -1,3 +1,18 @@
+// Helper to calculate days between two ISO date strings (inclusive)
+function getTripDurationDays(trip: Trip): number {
+  if (trip.fullDays !== undefined && trip.fullDays !== null)
+    return trip.fullDays;
+  if (trip.startDate && trip.endDate) {
+    const start = new Date(trip.startDate);
+    const end = new Date(trip.endDate);
+    // Add 1 to include both start and end dates as full days
+    return Math.max(
+      1,
+      Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1,
+    );
+  }
+  return 0;
+}
 /**
  * Utility functions for handling achievements in the dashboard.
  */
@@ -131,6 +146,22 @@ export function getProgress(
   trips?: Trip[],
   homeCountry?: string,
 ) {
+  // Region-based: regions array (e.g., continents)
+  if (
+    achievement.criteria.regions &&
+    Array.isArray(achievement.criteria.regions)
+  ) {
+    const completedCount = achievement.criteria.regions.filter(
+      (region: string) => {
+        const countriesInRegion = countries.filter((c) => c.region === region);
+        return countriesInRegion.some((c) =>
+          visited.isCountryVisited(c.isoCode),
+        );
+      },
+    ).length;
+    const requiredCount = achievement.criteria.min_regions || achievement.criteria.regions.length;
+    return `${completedCount}/${requiredCount}`;
+  }
   // Trip-based: trip_countries_count (optionally with region)
   if (achievement.criteria.trip_countries_count && trips) {
     if (achievement.criteria.region) {
@@ -173,7 +204,11 @@ export function getProgress(
   // Repeat visits
   if (achievement.criteria.repeat_visits_count && trips) {
     const minVisits = achievement.criteria.repeat_min_visits || 2;
-    const repeats = getRepeatVisitCount(trips, minVisits);
+    let tripsToCheck = trips;
+    if (achievement.criteria.only_abroad && homeCountry) {
+      tripsToCheck = getAbroadTrips(trips, homeCountry);
+    }
+    const repeats = getRepeatVisitCount(tripsToCheck, minVisits);
     return `${repeats}/${achievement.criteria.repeat_visits_count}`;
   }
   // Custom count-based criteria
@@ -186,6 +221,15 @@ export function getProgress(
     const visitedCount = getVisitedCount(achievement, countries, visited);
     const count = achievement.criteria.count;
     return `${Math.min(visitedCount, count)}/${count}`;
+  }
+  // Trip duration (longest trip in days)
+  if (achievement.criteria.trip_duration_days && trips) {
+    const completedTrips = getCompletedTrips(trips);
+    const maxDuration =
+      completedTrips.length > 0
+        ? Math.max(...completedTrips.map((t) => getTripDurationDays(t)))
+        : 0;
+    return `${maxDuration}/${achievement.criteria.trip_duration_days}`;
   }
   // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);
@@ -205,6 +249,22 @@ export function progressFraction(
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
 ) {
+  // Region-based: regions array
+  if (
+    achievement.criteria.regions &&
+    Array.isArray(achievement.criteria.regions)
+  ) {
+    const completedCount = achievement.criteria.regions.filter(
+      (region: string) => {
+        const countriesInRegion = countries.filter((c) => c.region === region);
+        return countriesInRegion.some((c) =>
+          visited.isCountryVisited(c.isoCode),
+        );
+      },
+    ).length;
+    const requiredCount = achievement.criteria.min_regions || achievement.criteria.regions.length;
+    return requiredCount > 0 ? Math.min(completedCount / requiredCount, 1) : 0;
+  }
   const visitedCount = getVisitedCount(achievement, countries, visited);
   const total = getTotalCount(achievement, countries);
   return total > 0 ? Math.min(visitedCount / total, 1) : 0;
@@ -224,6 +284,22 @@ export function isCompleted(
   trips?: Trip[],
   homeCountry?: string,
 ) {
+  // Region-based: regions array
+  if (
+    achievement.criteria.regions &&
+    Array.isArray(achievement.criteria.regions)
+  ) {
+    const completedCount = achievement.criteria.regions.filter(
+      (region: string) => {
+        const countriesInRegion = countries.filter((c) => c.region === region);
+        return countriesInRegion.some((c) =>
+          visited.isCountryVisited(c.isoCode),
+        );
+      },
+    ).length;
+    const requiredCount = achievement.criteria.min_regions || achievement.criteria.regions.length;
+    return completedCount >= requiredCount && requiredCount > 0;
+  }
   // Trip-based: trip_countries_count (optionally with region)
   if (achievement.criteria.trip_countries_count && trips) {
     if (achievement.criteria.region) {
@@ -264,8 +340,21 @@ export function isCompleted(
   // Repeat visits
   if (achievement.criteria.repeat_visits_count && trips) {
     const minVisits = achievement.criteria.repeat_min_visits || 2;
-    const repeats = getRepeatVisitCount(trips, minVisits);
+    let tripsToCheck = trips;
+    if (achievement.criteria.only_abroad && homeCountry) {
+      tripsToCheck = getAbroadTrips(trips, homeCountry);
+    }
+    const repeats = getRepeatVisitCount(tripsToCheck, minVisits);
     return repeats >= achievement.criteria.repeat_visits_count;
+  }
+  // Trip duration (longest trip in days)
+  if (achievement.criteria.trip_duration_days && trips) {
+    const completedTrips = getCompletedTrips(trips);
+    const maxDuration =
+      completedTrips.length > 0
+        ? Math.max(...completedTrips.map((t) => getTripDurationDays(t)))
+        : 0;
+    return maxDuration >= achievement.criteria.trip_duration_days;
   }
   // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);

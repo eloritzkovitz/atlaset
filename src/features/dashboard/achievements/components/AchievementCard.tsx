@@ -1,13 +1,12 @@
 import { Chip } from "@components";
+import { Checklist } from "./Checklist";
+import { AchievementStatusChip } from "./AchievementStatusChip";
+import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
 import type { Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import { AchievementMedal } from "./AchievementMedal";
-import {
-  getProgress,
-  getTier,
-  getAchievementStatus,
-} from "../utils/achievements";
+import { getTier, getAchievementStatus } from "../utils/achievements";
 import type { Achievement, AchievementStatus } from "../../types";
 
 interface AchievementCardProps {
@@ -30,7 +29,13 @@ export function AchievementCard({
   statusBgClasses,
 }: AchievementCardProps) {
   const tier = getTier(achievement);
-  const status = getAchievementStatus(achievement, countries, visited, trips, homeCountry);
+  const status = getAchievementStatus(
+    achievement,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  );
 
   // Determine background class based on tier or status
   const bgClass =
@@ -38,23 +43,19 @@ export function AchievementCard({
       ? tierBgClasses[tier] || tierBgClasses[6]
       : statusBgClasses[status];
   const textClass = status === "locked" ? "text-muted" : "";
-  const statusLabel =
-    status === "completed"
-      ? "Completed"
-      : status === "progress"
-        ? "In Progress"
-        : "Locked";
-
-  // Chip color classes for status
-  const statusChipClass =
-    status === "completed"
-      ? "bg-success/50"
-      : status === "progress"
-        ? "bg-info/70"
-        : "bg-muted/20 text-muted";
 
   // Chip color classes for progress
   const progressChipClass = "bg-surface";
+
+  // Use hook for progress label
+  const progressLabel = useAchievementProgressLabel(
+    achievement,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+    status,
+  );
 
   return (
     <div
@@ -69,23 +70,29 @@ export function AchievementCard({
         {achievement.description}
       </p>
       <div className="flex gap-2 items-center mb-2 select-none">
-        {/* Custom progress for trip-based achievements */}
-        {achievement.criteria.trip_countries_count && achievement.criteria.region ? (
-          <Chip className={progressChipClass}>
-            {status === "completed"
-              ? `Trip completed`
-              : `No qualifying trip yet`}
-          </Chip>
-        ) : (
-          <Chip className={progressChipClass}>
-            Progress: {getProgress(achievement, countries, visited, trips, homeCountry)}
-          </Chip>
-        )}
-        <Chip className={statusChipClass}>{statusLabel}</Chip>
+        <Chip className={progressChipClass}>{progressLabel}</Chip>
+        <AchievementStatusChip status={status} />
       </div>
-      {/* Show flags for country or subregion criteria */}
+      {/* Region details for region achievements */}
+      {achievement.criteria.regions &&
+        Array.isArray(achievement.criteria.regions) && (
+          <div className="flex flex-col items-start w-full mb-2">
+            <div className="ml-12">
+              <Checklist
+                items={achievement.criteria.regions.map((region: string) => {
+                  const countriesInRegion = countries.filter(
+                    (c) => c.region === region,
+                  );
+                  const visitedAny = countriesInRegion.some((c) =>
+                    visited.isCountryVisited(c.isoCode),
+                  );
+                  return { label: region, completed: visitedAny };
+                })}
+              />
+            </div>
+          </div>
+        )}
       {(() => {
-        // If criteria is countries
         if (
           achievement.criteria.countries &&
           Array.isArray(achievement.criteria.countries)
@@ -101,12 +108,10 @@ export function AchievementCard({
             </>
           );
         }
-        // If criteria is subregion
         if (
           achievement.criteria.subregion &&
           typeof achievement.criteria.subregion === "string"
         ) {
-          // Only include sovereign countries in the subregion
           const subregionCountryCodes = countries
             .filter(
               (c) =>
