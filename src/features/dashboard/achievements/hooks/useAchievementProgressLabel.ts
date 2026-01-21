@@ -23,40 +23,53 @@ export function useAchievementProgressLabel(
   status?: string,
 ) {
   return useMemo(() => {
-    if (
-      achievement.criteria.regions &&
-      Array.isArray(achievement.criteria.regions)
-    ) {
-      const completedCount = achievement.criteria.regions.filter(
-        (region: string) => {
-          const countriesInRegion = countries.filter(
-            (c) => c.region === region,
-          );
-          return countriesInRegion.some((c) =>
-            visited.isCountryVisited(c.isoCode),
-          );
-        },
-      ).length;
-      const minRequired =
-        achievement.criteria.min_regions || achievement.criteria.regions.length;
+    const criteria = achievement.criteria || {};
+    // Region-based (multiple regions)
+    if (criteria.regions && Array.isArray(criteria.regions)) {
+      const completedCount = criteria.regions.filter((region: string) => {
+        const countriesInRegion = countries.filter((c) => c.region === region);
+        return countriesInRegion.some((c) =>
+          visited.isCountryVisited(c.isoCode),
+        );
+      }).length;
+      const minRequired = criteria.min_regions || criteria.regions.length;
       return `${completedCount}/${minRequired}`;
     }
-    if (
-      achievement.criteria.trip_countries_count &&
-      achievement.criteria.region
-    ) {
+    // Trip-based: trip_countries_count (optionally with region)
+    if (criteria.trip_countries_count && criteria.region) {
       return status === "completed"
         ? "Trip completed"
         : "No qualifying trip yet";
     }
-    if (achievement.criteria.trip_duration_days) {
+    // Trip-based: trip_countries_count (any region)
+    if (criteria.trip_countries_count && !criteria.region) {
       return status === "completed"
         ? "Trip completed"
         : "No qualifying trip yet";
     }
-    if (achievement.criteria.abroad_trips_count) {
+    // Trip duration
+    if (criteria.trip_duration_days) {
+      return status === "completed"
+        ? "Trip completed"
+        : "No qualifying trip yet";
+    }
+    // Local trips
+    if (criteria.local_trips_count) {
+      return getProgress(achievement, countries, visited, trips, homeCountry);
+    }
+    // Abroad trips (unique countries)
+    if (criteria.abroad_countries_count) {
+      return getProgress(achievement, countries, visited, trips, homeCountry);
+    }
+    // Abroad trips (number of trips)
+    if (criteria.abroad_trips_count) {
       return `Abroad trips: ${getProgress(achievement, countries, visited, trips, homeCountry)}`;
     }
+    // Repeat visits
+    if (criteria.repeat_visits_count) {
+      return getProgress(achievement, countries, visited, trips, homeCountry);
+    }
+    // Default
     return getProgress(achievement, countries, visited, trips, homeCountry);
   }, [achievement, countries, visited, trips, homeCountry, status]);
 }

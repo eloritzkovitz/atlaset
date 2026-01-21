@@ -23,33 +23,102 @@ export function getAchievementCountries(
   achievement: Achievement,
   countries: Country[],
 ) {
-  if (achievement.criteria.region) {
+  const criteria = achievement.criteria || {};
+  if (achievement.countries && Array.isArray(achievement.countries)) {
+    return countries.filter((c) => achievement.countries!.includes(c.isoCode));
+  }
+  if (criteria.region) {
+    return countries.filter(
+      (c) => c.region === criteria.region && c.sovereigntyType === "Sovereign",
+    );
+  }
+  if (criteria.subregion) {
     return countries.filter(
       (c) =>
-        c.region === achievement.criteria.region &&
-        c.sovereigntyType === "Sovereign",
+        c.subregion === criteria.subregion && c.sovereigntyType === "Sovereign",
     );
   }
-  if (achievement.criteria.subregion) {
-    return countries.filter(
-      (c) =>
-        c.subregion === achievement.criteria.subregion &&
-        c.sovereigntyType === "Sovereign",
-    );
+  if (criteria.countries) {
+    return countries.filter((c) => criteria.countries?.includes(c.isoCode));
   }
-  if (achievement.criteria.countries) {
-    return countries.filter((c) =>
-      achievement.criteria.countries.includes(c.isoCode),
-    );
-  }
-  // For world achievements, return all sovereign countries
   if (
-    achievement.criteria.count &&
-    !achievement.criteria.region &&
-    !achievement.criteria.subregion &&
-    !achievement.criteria.countries
+    criteria.count &&
+    !criteria.region &&
+    !criteria.subregion &&
+    !criteria.countries
   ) {
     return countries.filter((c) => c.sovereigntyType === "Sovereign");
+  }
+  return [];
+}
+
+/**
+ * Gets the countries to display flags for an achievement
+ * @param achievement - The achievement object
+ * @param displayCriteria - Criteria to use for display
+ * @param countries - List of all countries
+ * @param tierCount - Optional tier count to limit countries
+ * @returns Array of countries to display flags for
+ */
+export function getDisplayFlagCountries(
+  achievement: Achievement,
+  displayCriteria: any,
+  countries: Country[],
+  tierCount?: number,
+) {
+  // Helper to check for trip-based criteria
+  const isTripBased = [
+    "trip_countries_count",
+    "local_trips_count",
+    "abroad_countries_count",
+    "abroad_trips_count",
+    "repeat_visits_count",
+    "trip_duration_days",
+  ].some((key) => displayCriteria[key]);
+  if (isTripBased) return [];
+
+  // Countries explicitly defined
+  if (
+    (achievement.countries && achievement.countries.length > 0) ||
+    (displayCriteria.countries && displayCriteria.countries.length > 0)
+  ) {
+    let achCountries = getAchievementCountries(
+      { ...achievement, criteria: displayCriteria },
+      countries,
+    );
+    if (typeof tierCount === "number" && achievement.countries) {
+      achCountries = achCountries.slice(0, tierCount);
+    }
+    return achCountries;
+  }
+
+  // Region or subregion
+  if (
+    (displayCriteria.subregion &&
+      typeof displayCriteria.subregion === "string") ||
+    (displayCriteria.region && typeof displayCriteria.region === "string")
+  ) {
+    return countries.filter((c) => {
+      if (
+        displayCriteria.subregion &&
+        typeof displayCriteria.subregion === "string"
+      ) {
+        return (
+          c.subregion === displayCriteria.subregion &&
+          (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
+        );
+      }
+      if (
+        displayCriteria.region &&
+        typeof displayCriteria.region === "string"
+      ) {
+        return (
+          c.region === displayCriteria.region &&
+          (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
+        );
+      }
+      return false;
+    });
   }
   return [];
 }
@@ -65,8 +134,13 @@ export function getVisitedCount(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
+  tierCount?: number,
 ) {
-  const achCountries = getAchievementCountries(achievement, countries);
+  let achCountries = getAchievementCountries(achievement, countries);
+  // If using root-level countries and a tier count, only consider the first N
+  if (achievement.countries && typeof tierCount === "number") {
+    achCountries = achCountries.slice(0, tierCount);
+  }
   return achCountries.filter((c) => visited.isCountryVisited(c.isoCode)).length;
 }
 
@@ -76,13 +150,22 @@ export function getVisitedCount(
  * @param countries - List of all countries
  * @returns Total number of countries relevant to the achievement
  */
-export function getTotalCount(achievement: Achievement, countries: Country[]) {
-  if (achievement.criteria.countries) {
-    return achievement.criteria.countries.length;
+export function getTotalCount(
+  achievement: Achievement,
+  countries: Country[],
+  tierCount?: number,
+) {
+  // If using root-level countries and a tier count, return the tier count
+  if (achievement.countries && typeof tierCount === "number") {
+    return Math.min(achievement.countries.length, tierCount);
+  }
+  const criteria = achievement.criteria || {};
+  if (criteria.countries) {
+    return criteria.countries.length;
   }
   const achCountries = getAchievementCountries(achievement, countries);
-  if (achievement.criteria.count) {
-    return achievement.criteria.count;
+  if (criteria.count) {
+    return criteria.count;
   }
   return achCountries.length;
 }
@@ -132,91 +215,81 @@ export function getProgress(
   trips?: Trip[],
   homeCountry?: string,
 ) {
+  const criteria = achievement.criteria || {};
   // Region-based: regions array (e.g., continents)
-  if (
-    achievement.criteria.regions &&
-    Array.isArray(achievement.criteria.regions)
-  ) {
-    const completedCount = achievement.criteria.regions.filter(
-      (region: string) => {
-        const countriesInRegion = countries.filter((c) => c.region === region);
-        return countriesInRegion.some((c) =>
-          visited.isCountryVisited(c.isoCode),
-        );
-      },
-    ).length;
-    const requiredCount =
-      achievement.criteria.min_regions || achievement.criteria.regions.length;
+  if (criteria.regions && Array.isArray(criteria.regions)) {
+    const completedCount = criteria.regions.filter((region: string) => {
+      const countriesInRegion = countries.filter((c) => c.region === region);
+      return countriesInRegion.some((c) => visited.isCountryVisited(c.isoCode));
+    }).length;
+    const requiredCount = criteria.min_regions || criteria.regions.length;
     return `${completedCount}/${requiredCount}`;
   }
   // Trip-based: trip_countries_count (optionally with region)
-  if (achievement.criteria.trip_countries_count && trips) {
-    if (achievement.criteria.region) {
+  if (criteria.trip_countries_count && trips) {
+    if (criteria.region) {
       const regionCodes = countries
-        .filter((c) => c.region === achievement.criteria.region)
+        .filter((c) => c.region === criteria.region)
         .map((c) => c.isoCode);
       const completed = hasTripAchievement(
         trips,
         regionCodes,
-        achievement.criteria.trip_countries_count,
+        criteria.trip_countries_count ?? 0,
       );
       return completed ? `Trip completed` : `No qualifying trip yet`;
     } else {
       // Any trip with N+ countries
-      const completed = trips.some(
+      return trips.some(
         (trip) =>
           new Set(trip.countryCodes).size >=
-          achievement.criteria.trip_countries_count,
+          (criteria.trip_countries_count ?? 0),
       );
-      return completed ? `Trip completed` : `No qualifying trip yet`;
     }
   }
   // Local trips
-  if (achievement.criteria.local_trips_count && trips && homeCountry) {
+  if (criteria.local_trips_count && trips && homeCountry) {
     const completedLocalTrips = getCompletedTrips(
       getLocalTrips(trips, homeCountry),
     );
-    return `${completedLocalTrips.length}/${achievement.criteria.local_trips_count}`;
+    return `${completedLocalTrips.length}/${criteria.local_trips_count}`;
   }
   // Abroad trips (unique countries)
-  if (achievement.criteria.abroad_countries_count && trips && homeCountry) {
+  if (criteria.abroad_countries_count && trips && homeCountry) {
     const abroadCountrySet = getUniqueAbroadCountries(trips, homeCountry);
-    return `${abroadCountrySet.size}/${achievement.criteria.abroad_countries_count}`;
+    return `${abroadCountrySet.size}/${criteria.abroad_countries_count}`;
   }
   // Abroad trips (number of trips)
-  if (achievement.criteria.abroad_trips_count && trips && homeCountry) {
+  if (criteria.abroad_trips_count && trips && homeCountry) {
     const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
-    return `${abroadTrips.length}/${achievement.criteria.abroad_trips_count}`;
+    return `${abroadTrips.length}/${criteria.abroad_trips_count}`;
   }
   // Repeat visits
-  if (achievement.criteria.repeat_visits_count && trips) {
-    const minVisits = achievement.criteria.repeat_min_visits || 2;
+  if (criteria.repeat_visits_count && trips) {
+    const minVisits = criteria.repeat_min_visits || 2;
     let tripsToCheck = trips;
-    if (achievement.criteria.only_abroad && homeCountry) {
+    if (criteria.only_abroad && homeCountry) {
       tripsToCheck = getAbroadTrips(trips, homeCountry);
     }
     const repeats = getRepeatVisitCount(tripsToCheck, minVisits);
-    return `${repeats}/${achievement.criteria.repeat_visits_count}`;
+    return `${repeats}/${criteria.repeat_visits_count}`;
   }
   // Custom count-based criteria
   if (
-    (achievement.criteria.countries ||
-      achievement.criteria.region ||
-      achievement.criteria.subregion) &&
-    achievement.criteria.count
+    (criteria.countries || criteria.region || criteria.subregion) &&
+    criteria.count
   ) {
     const visitedCount = getVisitedCount(achievement, countries, visited);
-    const count = achievement.criteria.count;
+    const count = criteria.count;
     return `${Math.min(visitedCount, count)}/${count}`;
   }
   // Trip duration (longest trip in days)
-  if (achievement.criteria.trip_duration_days && trips) {
+  if (criteria.trip_duration_days && trips) {
     const completedTrips = getCompletedTrips(trips);
     const maxDuration =
       completedTrips.length > 0
         ? Math.max(...completedTrips.map((t) => getTripDays(t)))
         : 0;
-    return `${maxDuration}/${achievement.criteria.trip_duration_days}`;
+    return `${maxDuration}/${criteria.trip_duration_days}`;
   }
   // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);
@@ -236,21 +309,14 @@ export function progressFraction(
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
 ) {
+  const criteria = achievement.criteria || {};
   // Region-based: regions array
-  if (
-    achievement.criteria.regions &&
-    Array.isArray(achievement.criteria.regions)
-  ) {
-    const completedCount = achievement.criteria.regions.filter(
-      (region: string) => {
-        const countriesInRegion = countries.filter((c) => c.region === region);
-        return countriesInRegion.some((c) =>
-          visited.isCountryVisited(c.isoCode),
-        );
-      },
-    ).length;
-    const requiredCount =
-      achievement.criteria.min_regions || achievement.criteria.regions.length;
+  if (criteria.regions && Array.isArray(criteria.regions)) {
+    const completedCount = criteria.regions.filter((region: string) => {
+      const countriesInRegion = countries.filter((c) => c.region === region);
+      return countriesInRegion.some((c) => visited.isCountryVisited(c.isoCode));
+    }).length;
+    const requiredCount = criteria.min_regions || criteria.regions.length;
     return requiredCount > 0 ? Math.min(completedCount / requiredCount, 1) : 0;
   }
   const visitedCount = getVisitedCount(achievement, countries, visited);
@@ -290,89 +356,82 @@ export function isCompleted(
   homeCountry?: string,
   achievementStatusMap?: Record<string, boolean>,
 ) {
+  const criteria = achievement.criteria || {};
   // Check achievement dependencies first
   if (achievement.requires && achievementStatusMap) {
     if (!areRequirementsCompleted(achievement, achievementStatusMap))
       return false;
   }
   // Region-based: regions array
-  if (
-    achievement.criteria.regions &&
-    Array.isArray(achievement.criteria.regions)
-  ) {
-    const completedCount = achievement.criteria.regions.filter(
-      (region: string) => {
-        const countriesInRegion = countries.filter((c) => c.region === region);
-        return countriesInRegion.some((c) =>
-          visited.isCountryVisited(c.isoCode),
-        );
-      },
-    ).length;
-    const requiredCount =
-      achievement.criteria.min_regions || achievement.criteria.regions.length;
+  if (criteria.regions && Array.isArray(criteria.regions)) {
+    const completedCount = criteria.regions.filter((region: string) => {
+      const countriesInRegion = countries.filter((c) => c.region === region);
+      return countriesInRegion.some((c) => visited.isCountryVisited(c.isoCode));
+    }).length;
+    const requiredCount = criteria.min_regions || criteria.regions.length;
     return completedCount >= requiredCount && requiredCount > 0;
   }
   // Trip-based: trip_countries_count (optionally with region)
-  if (achievement.criteria.trip_countries_count && trips) {
-    if (achievement.criteria.region) {
+  if (criteria.trip_countries_count && trips) {
+    if (criteria.region) {
       const regionCodes = countries
-        .filter((c) => c.region === achievement.criteria.region)
+        .filter((c) => c.region === criteria.region)
         .map((c) => c.isoCode);
       return hasTripAchievement(
         trips,
         regionCodes,
-        achievement.criteria.trip_countries_count,
+        criteria.trip_countries_count ?? 0,
       );
     } else {
       // Any trip with N+ countries
       return trips.some(
         (trip) =>
           new Set(trip.countryCodes).size >=
-          achievement.criteria.trip_countries_count,
+          (criteria.trip_countries_count ?? 0),
       );
     }
   }
   // Local trips
-  if (achievement.criteria.local_trips_count && trips && homeCountry) {
+  if (criteria.local_trips_count && trips && homeCountry) {
     const completedLocalTrips = getCompletedTrips(
       getLocalTrips(trips, homeCountry),
     );
-    return completedLocalTrips.length >= achievement.criteria.local_trips_count;
+    return completedLocalTrips.length >= criteria.local_trips_count;
   }
   // Abroad trips (unique countries)
-  if (achievement.criteria.abroad_countries_count && trips && homeCountry) {
+  if (criteria.abroad_countries_count && trips && homeCountry) {
     const abroadCountrySet = getUniqueAbroadCountries(trips, homeCountry);
-    return abroadCountrySet.size >= achievement.criteria.abroad_countries_count;
+    return abroadCountrySet.size >= criteria.abroad_countries_count;
   }
   // Abroad trips (number of trips)
-  if (achievement.criteria.abroad_trips_count && trips && homeCountry) {
+  if (criteria.abroad_trips_count && trips && homeCountry) {
     const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
-    return abroadTrips.length >= achievement.criteria.abroad_trips_count;
+    return abroadTrips.length >= criteria.abroad_trips_count;
   }
   // Repeat visits
-  if (achievement.criteria.repeat_visits_count && trips) {
-    const minVisits = achievement.criteria.repeat_min_visits || 2;
+  if (criteria.repeat_visits_count && trips) {
+    const minVisits = criteria.repeat_min_visits || 2;
     let tripsToCheck = trips;
-    if (achievement.criteria.only_abroad && homeCountry) {
+    if (criteria.only_abroad && homeCountry) {
       tripsToCheck = getAbroadTrips(trips, homeCountry);
     }
     const repeats = getRepeatVisitCount(tripsToCheck, minVisits);
-    return repeats >= achievement.criteria.repeat_visits_count;
+    return repeats >= criteria.repeat_visits_count;
   }
   // Trip duration (longest trip in days)
-  if (achievement.criteria.trip_duration_days && trips) {
+  if (criteria.trip_duration_days && trips) {
     const completedTrips = getCompletedTrips(trips);
     const maxDuration =
       completedTrips.length > 0
         ? Math.max(...completedTrips.map((t) => getTripDays(t)))
         : 0;
-    return maxDuration >= achievement.criteria.trip_duration_days;
+    return maxDuration >= criteria.trip_duration_days;
   }
   // Default logic
   const visitedCount = getVisitedCount(achievement, countries, visited);
   const total = getTotalCount(achievement, countries);
-  if (achievement.criteria.count) {
-    return visitedCount >= achievement.criteria.count;
+  if (criteria.count) {
+    return visitedCount >= criteria.count;
   }
   return visitedCount === total && total > 0;
 }
@@ -403,9 +462,8 @@ export function getAchievementStatus(
  * @returns - Tier number or undefined if not tiered
  */
 export function getTier(achievement: Achievement): number | undefined {
-  return achievement.criteria && typeof achievement.criteria.tier === "number"
-    ? achievement.criteria.tier
-    : undefined;
+  const criteria = achievement.criteria || {};
+  return typeof criteria.tier === "number" ? criteria.tier : undefined;
 }
 
 /**
@@ -428,17 +486,17 @@ export function getMergedAchievements(
   const regionTiers: Record<string, Achievement[]> = {};
   const others: Achievement[] = [];
   for (const ach of achievements) {
+    const criteria = ach.criteria || {};
     if (
-      ach.criteria &&
-      ach.criteria.tier &&
-      ach.criteria.count &&
-      !ach.criteria.region &&
-      !ach.criteria.subregion &&
-      !ach.criteria.countries
+      criteria.tier &&
+      criteria.count &&
+      !criteria.region &&
+      !criteria.subregion &&
+      !criteria.countries
     ) {
       worldTiers.push(ach);
-    } else if (ach.criteria && ach.criteria.region && ach.criteria.tier) {
-      const key = ach.criteria.region;
+    } else if (criteria.region && criteria.tier) {
+      const key = criteria.region;
       if (!regionTiers[key]) regionTiers[key] = [];
       regionTiers[key].push(ach);
     } else {
@@ -449,7 +507,7 @@ export function getMergedAchievements(
   let worldToShow: Achievement | null = null;
   if (worldTiers.length > 0) {
     const sorted = [...worldTiers].sort(
-      (a, b) => (a.criteria.tier || 0) - (b.criteria.tier || 0),
+      (a, b) => (a.criteria?.tier ?? 0) - (b.criteria?.tier ?? 0),
     );
     worldToShow = sorted[0];
     for (let i = sorted.length - 1; i >= 0; i--) {
@@ -471,7 +529,7 @@ export function getMergedAchievements(
   const merged: Achievement[] = [];
   Object.values(regionTiers).forEach((tiers) => {
     const sorted = [...tiers].sort(
-      (a, b) => (a.criteria.tier || 0) - (b.criteria.tier || 0),
+      (a, b) => (a.criteria?.tier ?? 0) - (b.criteria?.tier ?? 0),
     );
     let toShow = sorted[0];
     for (let i = sorted.length - 1; i >= 0; i--) {
@@ -490,12 +548,12 @@ export function getMergedAchievements(
         }
       }
     }
-    merged.push(sorted[0]);
+    merged.push(toShow);
   });
 
-  const result: Achievement[] = [];
-  if (worldToShow) result.push(worldToShow);
-  return [...result, ...merged, ...others];
+  if (worldToShow) merged.push(worldToShow);
+  merged.push(...others);
+  return merged;
 }
 
 /**

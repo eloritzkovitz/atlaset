@@ -6,7 +6,11 @@ import type { Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import { AchievementIcon } from "./AchievementIcon";
-import { getTier, getAchievementStatus } from "../utils/achievements";
+import {
+  getTier,
+  getAchievementStatus,
+  getDisplayFlagCountries,
+} from "../utils/achievements";
 import type { Achievement, AchievementStatus } from "../../types";
 
 interface AchievementCardProps {
@@ -56,12 +60,15 @@ export function AchievementCard({
     }
   }
 
+  // Defensive criteria default
+  const criteria = achievement.criteria || {};
+
   // Check if achievement is dependency-only
   const isDependencyOnly =
     achievement.requires &&
     Array.isArray(achievement.requires) &&
     achievement.requires.length > 0 &&
-    (!achievement.criteria || Object.keys(achievement.criteria).length === 0);
+    (!achievement.criteria || Object.keys(criteria).length === 0);
 
   // Determine achievement status, prioritizing dependency status if applicable
   const status =
@@ -75,24 +82,98 @@ export function AchievementCard({
           homeCountry,
         );
 
+  // Determine tier object and status
+  let tierIndex = 0;
+  let tierObj = null;
+  let tierStatus: AchievementStatus = status;
+  let tierCount: number | undefined = undefined;
+  if (
+    achievement.tiers &&
+    Array.isArray(achievement.tiers) &&
+    achievement.tiers.length > 0
+  ) {
+    // Find highest completed tier, or next incomplete tier
+    for (let i = achievement.tiers.length - 1; i >= 0; i--) {
+      const t = achievement.tiers[i];
+      // If using count-based tier, build a pseudo-achievement for status
+      let tierAch = { ...achievement };
+      if (typeof t.count === "number" && achievement.countries) {
+        tierAch = {
+          ...achievement,
+          criteria: { countries: achievement.countries.slice(0, t.count) },
+        };
+      } else if (t.criteria) {
+        tierAch = { ...achievement, criteria: t.criteria };
+      }
+      const completed =
+        getAchievementStatus(
+          tierAch,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+        ) === "completed";
+      if (completed) {
+        tierIndex = i;
+        break;
+      }
+    }
+    // If not completed, show next incomplete tier
+    if (tierIndex < achievement.tiers.length - 1) {
+      tierIndex++;
+    }
+    tierObj = achievement.tiers[tierIndex];
+    let tierAch = { ...achievement };
+    if (typeof tierObj.count === "number" && achievement.countries) {
+      tierAch = {
+        ...achievement,
+        criteria: { countries: achievement.countries.slice(0, tierObj.count) },
+      };
+      tierCount = tierObj.count;
+    } else if (tierObj.criteria) {
+      tierAch = { ...achievement, criteria: tierObj.criteria };
+    }
+    tierStatus = getAchievementStatus(
+      tierAch,
+      countries,
+      visited,
+      trips,
+      homeCountry,
+    );
+  }
+
+  const displayName = tierObj?.name || achievement.name;
+  const displayDescription = tierObj?.description || achievement.description;
+  let displayCriteria = tierObj?.criteria || criteria;
+  if (typeof tierCount === "number" && achievement.countries) {
+    displayCriteria = { countries: achievement.countries.slice(0, tierCount) };
+  }
+  const displayTier = tierObj?.tier || tier;
+
   // Determine background class based on tier or status
   const bgClass =
-    tier && status !== "locked"
-      ? tierBgClasses[tier] || tierBgClasses[6]
-      : statusBgClasses[status];
-  const textClass = status === "locked" ? "text-muted" : "";
+    tierStatus === "completed"
+      ? statusBgClasses["completed"]
+      : displayTier && tierStatus !== "locked"
+        ? tierBgClasses[displayTier] || tierBgClasses[6]
+        : statusBgClasses[tierStatus];
+  const textClass = tierStatus === "locked" ? "text-muted" : "";
 
   // Chip color classes for progress
   const progressChipClass = "bg-surface";
+  const tierChipClass =
+    displayTier && tierStatus !== "locked"
+      ? tierBgClasses[displayTier] || tierBgClasses[6]
+      : "bg-surface text-primary";
 
   // Get progress label
   const normalProgressLabel = useAchievementProgressLabel(
-    achievement,
+    { ...achievement, criteria: displayCriteria },
     countries,
     visited,
     trips,
     homeCountry,
-    status,
+    tierStatus,
   );
 
   // Use dependency progress for dependency-only achievements, else normal progress
@@ -102,25 +183,37 @@ export function AchievementCard({
       : normalProgressLabel;
 
   // Prepend "Progress: " for fraction-style progress labels
-  if (/^\d+\/\d+$/.test(progressLabel)) {
+  if (typeof progressLabel === "string" && /^\d+\/\d+$/.test(progressLabel)) {
     progressLabel = `Progress: ${progressLabel}`;
   }
+
+  // Tier chip label
+  const tierLabel =
+    displayTier && achievement.tiers && achievement.tiers.length > 0
+      ? `Tier ${displayTier}/${achievement.tiers.length}`
+      : displayTier
+        ? `Tier ${displayTier}`
+        : null;
 
   return (
     <div
       className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg select-none`}
       style={{ minHeight: 320, position: "relative" }}
     >
-      <AchievementIcon type={achievement.type} locked={status === "locked"} />
+      <AchievementIcon
+        type={achievement.type}
+        locked={tierStatus === "locked"}
+      />
       <h2 className="text-lg font-semibold mb-2 text-center leading-tight">
-        {achievement.name}
+        {displayName}
       </h2>
       <p className="text-sm mb-3 text-center text-muted max-w-xs">
-        {achievement.description}
+        {displayDescription}
       </p>
       <div className="flex gap-2 items-center mb-2 select-none">
+        {tierLabel && <Chip className={tierChipClass}>{tierLabel}</Chip>}
         <Chip className={progressChipClass}>{progressLabel}</Chip>
-        <AchievementStatusChip status={status} />
+        <AchievementStatusChip status={tierStatus} />
       </div>
 
       {/* Checklist for required achievements (dependencies) */}
@@ -146,65 +239,41 @@ export function AchievementCard({
         )}
 
       {/* Region details for region achievements */}
-      {achievement.criteria.regions &&
-        Array.isArray(achievement.criteria.regions) && (
-          <div className="flex flex-col items-start w-full mb-2">
-            <div className="ml-12">
-              <Checklist
-                items={achievement.criteria.regions.map((region: string) => {
-                  const countriesInRegion = countries.filter(
-                    (c) => c.region === region,
-                  );
-                  const visitedAny = countriesInRegion.some((c) =>
-                    visited.isCountryVisited(c.isoCode),
-                  );
-                  return { label: region, completed: visitedAny };
-                })}
-              />
-            </div>
+      {displayCriteria.regions && Array.isArray(displayCriteria.regions) && (
+        <div className="flex flex-col items-start w-full mb-2">
+          <div className="ml-12">
+            <Checklist
+              items={displayCriteria.regions.map((region: string) => {
+                const countriesInRegion = countries.filter(
+                  (c) => c.region === region,
+                );
+                const visitedAny = countriesInRegion.some((c) =>
+                  visited.isCountryVisited(c.isoCode),
+                );
+                return { label: region, completed: visitedAny };
+              })}
+            />
           </div>
-        )}
+        </div>
+      )}
       {(() => {
-        if (
-          achievement.criteria.countries &&
-          Array.isArray(achievement.criteria.countries)
-        ) {
+        const achCountries = getDisplayFlagCountries(
+          achievement,
+          displayCriteria,
+          countries,
+          tierCount,
+        );
+        if (achCountries.length > 0) {
           return (
             <>
               <div style={{ height: 12 }} />
               <AchievementFlagGrid
                 countries={countries}
-                countryCodes={achievement.criteria.countries}
+                countryCodes={achCountries.map((c) => c.isoCode)}
                 visited={visited}
               />
             </>
           );
-        }
-        if (
-          achievement.criteria.subregion &&
-          typeof achievement.criteria.subregion === "string"
-        ) {
-          const subregionCountryCodes = countries
-            .filter(
-              (c) =>
-                c.subregion === achievement.criteria.subregion &&
-                (c.sovereigntyType === undefined ||
-                  c.sovereigntyType === "Sovereign"),
-            )
-            .map((c) => c.isoCode)
-            .filter(Boolean);
-          if (subregionCountryCodes.length > 0) {
-            return (
-              <>
-                <div style={{ height: 12 }} />
-                <AchievementFlagGrid
-                  countries={countries}
-                  countryCodes={subregionCountryCodes}
-                  visited={visited}
-                />
-              </>
-            );
-          }
         }
         return null;
       })()}
