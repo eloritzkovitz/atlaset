@@ -39,7 +39,7 @@ export function useAchievementProgressLabel(
       ).length;
       const minRequired =
         achievement.criteria.min_regions || achievement.criteria.regions.length;
-      return `Progress: ${completedCount}/${minRequired}`;
+      return `${completedCount}/${minRequired}`;
     }
     if (
       achievement.criteria.trip_countries_count &&
@@ -57,6 +57,6 @@ export function useAchievementProgressLabel(
     if (achievement.criteria.abroad_trips_count) {
       return `Abroad trips: ${getProgress(achievement, countries, visited, trips, homeCountry)}`;
     }
-    return `Progress: ${getProgress(achievement, countries, visited, trips, homeCountry)}`;
+    return getProgress(achievement, countries, visited, trips, homeCountry);
   }, [achievement, countries, visited, trips, homeCountry, status]);
 }

@@ -85,18 +85,26 @@ export function AchievementCard({
   // Chip color classes for progress
   const progressChipClass = "bg-surface";
 
+  // Get progress label
+  const normalProgressLabel = useAchievementProgressLabel(
+    achievement,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+    status,
+  );
+
   // Use dependency progress for dependency-only achievements, else normal progress
-  const progressLabel =
+  let progressLabel =
     isDependencyOnly && dependencyProgress
       ? dependencyProgress
-      : useAchievementProgressLabel(
-          achievement,
-          countries,
-          visited,
-          trips,
-          homeCountry,
-          status,
-        );
+      : normalProgressLabel;
+
+  // Prepend "Progress: " for fraction-style progress labels
+  if (/^\d+\/\d+$/.test(progressLabel)) {
+    progressLabel = `Progress: ${progressLabel}`;
+  }
 
   return (
     <div
