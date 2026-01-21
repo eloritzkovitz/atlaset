@@ -11,7 +11,11 @@ import { useVisitedCountries } from "@features/visits";
 import { useHomeCountry } from "@features/user";
 import { AchievementCard } from "./AchievementCard";
 import { useAchievementsData } from "../hooks/useAchievementsData";
-import { getMergedAchievements, getAchievementStatus } from "../utils/achievements";
+import {
+  getMergedAchievements,
+  getAchievementStatus,
+  isCompleted,
+} from "../utils/achievements";
 import type { AchievementStatus } from "../../types";
 
 const typeOptions = [
@@ -74,8 +78,10 @@ export function AchievementsGrid() {
       filtered = filtered.filter((a) => a.type === typeFilter);
     }
     if (statusFilter !== "all") {
-      filtered = filtered.filter((a) =>
-        getAchievementStatus(a, countries, visited, trips, homeCountry) === statusFilter
+      filtered = filtered.filter(
+        (a) =>
+          getAchievementStatus(a, countries, visited, trips, homeCountry) ===
+          statusFilter,
       );
     }
     if (search.trim()) {
@@ -83,11 +89,20 @@ export function AchievementsGrid() {
       filtered = filtered.filter(
         (a) =>
           a.name.toLowerCase().includes(q) ||
-          (a.description && a.description.toLowerCase().includes(q))
+          (a.description && a.description.toLowerCase().includes(q)),
       );
     }
     return filtered;
   }, [mergedAchievements, search, typeFilter, statusFilter]);
+
+  const achievementStatusMap = useMemo(() => {
+    if (!achievementsData) return {};
+    const map: Record<string, boolean> = {};
+    for (const ach of achievementsData) {
+      map[ach.id] = isCompleted(ach, countries, visited, trips, homeCountry);
+    }
+    return map;
+  }, [achievementsData, countries, visited, trips, homeCountry]);
 
   // handle conditional rendering
   if (loading) {
@@ -151,6 +166,8 @@ export function AchievementsGrid() {
               homeCountry={homeCountry}
               tierBgClasses={tierBgClasses}
               statusBgClasses={statusBgClasses}
+              achievementStatusMap={achievementStatusMap}
+              allAchievements={mergedAchievements}
             />
           );
         })}

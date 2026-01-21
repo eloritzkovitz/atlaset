@@ -1,18 +1,3 @@
-// Helper to calculate days between two ISO date strings (inclusive)
-function getTripDurationDays(trip: Trip): number {
-  if (trip.fullDays !== undefined && trip.fullDays !== null)
-    return trip.fullDays;
-  if (trip.startDate && trip.endDate) {
-    const start = new Date(trip.startDate);
-    const end = new Date(trip.endDate);
-    // Add 1 to include both start and end dates as full days
-    return Math.max(
-      1,
-      Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1,
-    );
-  }
-  return 0;
-}
 /**
  * Utility functions for handling achievements in the dashboard.
  */
@@ -23,6 +8,7 @@ import {
   getLocalTrips,
   getAbroadTrips,
   getCompletedTrips,
+  getTripDays,
 } from "@features/trips/utils/trips";
 import { getVisitedCountriesUpToYear } from "@features/visits";
 import type { Achievement, AchievementStatus } from "../../types";
@@ -159,7 +145,8 @@ export function getProgress(
         );
       },
     ).length;
-    const requiredCount = achievement.criteria.min_regions || achievement.criteria.regions.length;
+    const requiredCount =
+      achievement.criteria.min_regions || achievement.criteria.regions.length;
     return `${completedCount}/${requiredCount}`;
   }
   // Trip-based: trip_countries_count (optionally with region)
@@ -227,7 +214,7 @@ export function getProgress(
     const completedTrips = getCompletedTrips(trips);
     const maxDuration =
       completedTrips.length > 0
-        ? Math.max(...completedTrips.map((t) => getTripDurationDays(t)))
+        ? Math.max(...completedTrips.map((t) => getTripDays(t)))
         : 0;
     return `${maxDuration}/${achievement.criteria.trip_duration_days}`;
   }
@@ -262,7 +249,8 @@ export function progressFraction(
         );
       },
     ).length;
-    const requiredCount = achievement.criteria.min_regions || achievement.criteria.regions.length;
+    const requiredCount =
+      achievement.criteria.min_regions || achievement.criteria.regions.length;
     return requiredCount > 0 ? Math.min(completedCount / requiredCount, 1) : 0;
   }
   const visitedCount = getVisitedCount(achievement, countries, visited);
@@ -271,10 +259,27 @@ export function progressFraction(
 }
 
 /**
- * Determines if the achievement is completed
+ * Checks if all required achievements are completed
+ * @param achievement - The achievement object
+ * @param achievementStatusMap - Map of achievementId to completion status
+ * @returns True if all requirements are completed or none required
+ */
+export function areRequirementsCompleted(
+  achievement: Achievement,
+  achievementStatusMap: Record<string, boolean>,
+): boolean {
+  if (!achievement.requires || achievement.requires.length === 0) return true;
+  return achievement.requires.every((id) => achievementStatusMap[id]);
+}
+
+/**
+ * Determines if the achievement is completed, including dependency requirements
  * @param achievement - The achievement object
  * @param countries - List of all countries
  * @param visited - Visited countries utility
+ * @param trips - Array of user trips
+ * @param homeCountry - The user's home country
+ * @param achievementStatusMap - Map of achievementId to completion status (for dependency achievements)
  * @returns True if completed, false otherwise
  */
 export function isCompleted(
@@ -283,7 +288,13 @@ export function isCompleted(
   visited: { isCountryVisited: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
+  achievementStatusMap?: Record<string, boolean>,
 ) {
+  // Check achievement dependencies first
+  if (achievement.requires && achievementStatusMap) {
+    if (!areRequirementsCompleted(achievement, achievementStatusMap))
+      return false;
+  }
   // Region-based: regions array
   if (
     achievement.criteria.regions &&
@@ -297,7 +308,8 @@ export function isCompleted(
         );
       },
     ).length;
-    const requiredCount = achievement.criteria.min_regions || achievement.criteria.regions.length;
+    const requiredCount =
+      achievement.criteria.min_regions || achievement.criteria.regions.length;
     return completedCount >= requiredCount && requiredCount > 0;
   }
   // Trip-based: trip_countries_count (optionally with region)
@@ -352,7 +364,7 @@ export function isCompleted(
     const completedTrips = getCompletedTrips(trips);
     const maxDuration =
       completedTrips.length > 0
-        ? Math.max(...completedTrips.map((t) => getTripDurationDays(t)))
+        ? Math.max(...completedTrips.map((t) => getTripDays(t)))
         : 0;
     return maxDuration >= achievement.criteria.trip_duration_days;
   }

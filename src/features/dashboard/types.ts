@@ -12,6 +12,7 @@ export interface Achievement {
   type: string;
   criteria: any;
   icon: string;
+  requires?: string[];
 }
 
 /** Represents the status of an achievement */

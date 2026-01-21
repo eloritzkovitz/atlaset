@@ -17,6 +17,8 @@ interface AchievementCardProps {
   homeCountry?: string;
   tierBgClasses: Record<number, string>;
   statusBgClasses: Record<AchievementStatus, string>;
+  achievementStatusMap?: Record<string, boolean>;
+  allAchievements?: Achievement[];
 }
 
 export function AchievementCard({
@@ -27,15 +29,51 @@ export function AchievementCard({
   homeCountry,
   tierBgClasses,
   statusBgClasses,
+  achievementStatusMap,
+  allAchievements,
 }: AchievementCardProps) {
   const tier = getTier(achievement);
-  const status = getAchievementStatus(
-    achievement,
-    countries,
-    visited,
-    trips,
-    homeCountry,
-  );
+
+  // Dependency progress logic
+  let dependencyProgress = null;
+  let dependencyStatus: AchievementStatus | null = null;
+  if (
+    achievement.requires &&
+    Array.isArray(achievement.requires) &&
+    achievement.requires.length > 0 &&
+    achievementStatusMap
+  ) {
+    const completedCount = achievement.requires.filter(
+      (reqId) => achievementStatusMap[reqId],
+    ).length;
+    dependencyProgress = `${completedCount}/${achievement.requires.length}`;
+    if (completedCount === achievement.requires.length) {
+      dependencyStatus = "completed";
+    } else if (completedCount > 0) {
+      dependencyStatus = "progress";
+    } else {
+      dependencyStatus = "locked";
+    }
+  }
+
+  // Check if achievement is dependency-only
+  const isDependencyOnly =
+    achievement.requires &&
+    Array.isArray(achievement.requires) &&
+    achievement.requires.length > 0 &&
+    (!achievement.criteria || Object.keys(achievement.criteria).length === 0);
+
+  // Determine achievement status, prioritizing dependency status if applicable
+  const status =
+    isDependencyOnly && dependencyStatus
+      ? dependencyStatus
+      : getAchievementStatus(
+          achievement,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+        );
 
   // Determine background class based on tier or status
   const bgClass =
@@ -47,15 +85,18 @@ export function AchievementCard({
   // Chip color classes for progress
   const progressChipClass = "bg-surface";
 
-  // Use hook for progress label
-  const progressLabel = useAchievementProgressLabel(
-    achievement,
-    countries,
-    visited,
-    trips,
-    homeCountry,
-    status,
-  );
+  // Use dependency progress for dependency-only achievements, else normal progress
+  const progressLabel =
+    isDependencyOnly && dependencyProgress
+      ? dependencyProgress
+      : useAchievementProgressLabel(
+          achievement,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+          status,
+        );
 
   return (
     <div
@@ -73,6 +114,29 @@ export function AchievementCard({
         <Chip className={progressChipClass}>{progressLabel}</Chip>
         <AchievementStatusChip status={status} />
       </div>
+
+      {/* Checklist for required achievements (dependencies) */}
+      {achievement.requires &&
+        Array.isArray(achievement.requires) &&
+        achievement.requires.length > 0 &&
+        achievementStatusMap &&
+        allAchievements && (
+          <div className="flex flex-col items-start w-full mb-2">
+            <div className="ml-12">
+              <Checklist
+                items={achievement.requires.map((reqId) => {
+                  const completed = achievementStatusMap[reqId] || false;
+                  const reqAchievement = allAchievements.find(
+                    (a) => a.id === reqId,
+                  );
+                  const label = reqAchievement ? reqAchievement.name : reqId;
+                  return { label, completed };
+                })}
+              />
+            </div>
+          </div>
+        )}
+
       {/* Region details for region achievements */}
       {achievement.criteria.regions &&
         Array.isArray(achievement.criteria.regions) && (
