@@ -5,7 +5,7 @@ import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabe
 import type { Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
-import { AchievementMedal } from "./AchievementMedal";
+import { AchievementIcon } from "./AchievementIcon";
 import { getTier, getAchievementStatus } from "../utils/achievements";
 import type { Achievement, AchievementStatus } from "../../types";
 
@@ -111,7 +111,7 @@ export function AchievementCard({
       className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg select-none`}
       style={{ minHeight: 320, position: "relative" }}
     >
-      <AchievementMedal locked={status === "locked"} />
+      <AchievementIcon type={achievement.type} locked={status === "locked"} />
       <h2 className="text-lg font-semibold mb-2 text-center leading-tight">
         {achievement.name}
       </h2>
