@@ -10,7 +10,10 @@ import {
   getCompletedTrips,
   getTripDays,
 } from "@features/trips/utils/trips";
-import { getVisitedCountriesUpToYear } from "@features/visits";
+import {
+  getRepeatVisitCount,
+  getUniqueAbroadCountries,
+} from "../../trips/utils/tripStats";
 import type { Achievement, AchievementStatus } from "../../types";
 
 /**
@@ -48,77 +51,6 @@ export function getAchievementCountries(
     !criteria.countries
   ) {
     return countries.filter((c) => c.sovereigntyType === "Sovereign");
-  }
-  return [];
-}
-
-/**
- * Gets the countries to display flags for an achievement
- * @param achievement - The achievement object
- * @param displayCriteria - Criteria to use for display
- * @param countries - List of all countries
- * @param tierCount - Optional tier count to limit countries
- * @returns Array of countries to display flags for
- */
-export function getDisplayFlagCountries(
-  achievement: Achievement,
-  displayCriteria: any,
-  countries: Country[],
-  tierCount?: number,
-) {
-  // Helper to check for trip-based criteria
-  const isTripBased = [
-    "trip_countries_count",
-    "local_trips_count",
-    "abroad_countries_count",
-    "abroad_trips_count",
-    "repeat_visits_count",
-    "trip_duration_days",
-  ].some((key) => displayCriteria[key]);
-  if (isTripBased) return [];
-
-  // Countries explicitly defined
-  if (
-    (achievement.countries && achievement.countries.length > 0) ||
-    (displayCriteria.countries && displayCriteria.countries.length > 0)
-  ) {
-    let achCountries = getAchievementCountries(
-      { ...achievement, criteria: displayCriteria },
-      countries,
-    );
-    if (typeof tierCount === "number" && achievement.countries) {
-      achCountries = achCountries.slice(0, tierCount);
-    }
-    return achCountries;
-  }
-
-  // Region or subregion
-  if (
-    (displayCriteria.subregion &&
-      typeof displayCriteria.subregion === "string") ||
-    (displayCriteria.region && typeof displayCriteria.region === "string")
-  ) {
-    return countries.filter((c) => {
-      if (
-        displayCriteria.subregion &&
-        typeof displayCriteria.subregion === "string"
-      ) {
-        return (
-          c.subregion === displayCriteria.subregion &&
-          (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
-        );
-      }
-      if (
-        displayCriteria.region &&
-        typeof displayCriteria.region === "string"
-      ) {
-        return (
-          c.region === displayCriteria.region &&
-          (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
-        );
-      }
-      return false;
-    });
   }
   return [];
 }
@@ -168,37 +100,6 @@ export function getTotalCount(
     return criteria.count;
   }
   return achCountries.length;
-}
-
-/**
- * Gets the set of unique abroad countries visited in completed trips
- * @param trips - Array of user trips
- * @param homeCountry - The user's home country code
- * @returns Set of unique abroad country codes
- */
-function getUniqueAbroadCountries(
-  trips: Trip[],
-  homeCountry: string,
-): Set<string> {
-  const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
-  return new Set(
-    abroadTrips.flatMap((t) => t.countryCodes.filter((c) => c !== homeCountry)),
-  );
-}
-
-/**
- * Gets the count of countries with at least X visits across all trips
- * @param trips - Array of user trips
- * @param minVisits - Minimum number of visits to count (default 2)
- * @returns Number of countries with at least minVisits visits
- */
-function getRepeatVisitCount(trips: Trip[], minVisits: number = 2): number {
-  const visitCounts = getVisitedCountriesUpToYear(
-    getCompletedTrips(trips),
-    9999,
-  );
-  return Object.values(visitCounts).filter((count) => count >= minVisits)
-    .length;
 }
 
 /**
@@ -454,16 +355,6 @@ export function getAchievementStatus(
     return "completed";
   if (progressFraction(achievement, countries, visited) > 0) return "progress";
   return "locked";
-}
-
-/**
- * Gets the tier of the achievement if applicable
- * @param achievement - The achievement object
- * @returns - Tier number or undefined if not tiered
- */
-export function getTier(achievement: Achievement): number | undefined {
-  const criteria = achievement.criteria || {};
-  return typeof criteria.tier === "number" ? criteria.tier : undefined;
 }
 
 /**

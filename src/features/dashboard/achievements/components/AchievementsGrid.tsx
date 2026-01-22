@@ -76,6 +76,7 @@ export function AchievementsGrid() {
       );
     }
     return filtered;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mergedAchievements, search, typeFilter, statusFilter]);
 
   const achievementStatusMap = useMemo(() => {

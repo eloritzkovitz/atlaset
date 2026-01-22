@@ -1,4 +1,4 @@
-import { Chip } from "@components";
+import { AchievementProgressChip } from "./AchievementProgressChip";
 import { Checklist } from "./Checklist";
 import { AchievementStatusChip } from "./AchievementStatusChip";
 import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
@@ -7,11 +7,8 @@ import type { Trip } from "@features/trips";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementTierChip } from "./AchievementTierChip";
-import {
-  getTier,
-  getAchievementStatus,
-  getDisplayFlagCountries,
-} from "../utils/achievements";
+import { getDisplayFlagCountries } from "../utils/achievementsDisplay";
+import { getTier, getCurrentTier } from "../utils/achievementsTiers";
 import type { Achievement, AchievementStatus } from "../../types";
 
 interface AchievementCardProps {
@@ -33,119 +30,26 @@ export function AchievementCard({
   achievementStatusMap,
   allAchievements,
 }: AchievementCardProps) {
-  const tier = getTier(achievement);
-
-  // Dependency progress logic
-  let dependencyProgress = null;
-  let dependencyStatus: AchievementStatus | null = null;
-  if (
-    achievement.requires &&
-    Array.isArray(achievement.requires) &&
-    achievement.requires.length > 0 &&
-    achievementStatusMap
-  ) {
-    const completedCount = achievement.requires.filter(
-      (reqId) => achievementStatusMap[reqId],
-    ).length;
-    dependencyProgress = `${completedCount}/${achievement.requires.length}`;
-    if (completedCount === achievement.requires.length) {
-      dependencyStatus = "completed";
-    } else if (completedCount > 0) {
-      dependencyStatus = "progress";
-    } else {
-      dependencyStatus = "locked";
-    }
-  }
-
   // Defensive criteria default
   const criteria = achievement.criteria || {};
 
-  // Check if achievement is dependency-only
-  const isDependencyOnly =
-    achievement.requires &&
-    Array.isArray(achievement.requires) &&
-    achievement.requires.length > 0 &&
-    (!achievement.criteria || Object.keys(criteria).length === 0);
+  // Get current tier info
+  const { tierObj, tierStatus, tierCount } = getCurrentTier(
+    achievement,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  );
 
-  // Determine achievement status, prioritizing dependency status if applicable
-  const status =
-    isDependencyOnly && dependencyStatus
-      ? dependencyStatus
-      : getAchievementStatus(
-          achievement,
-          countries,
-          visited,
-          trips,
-          homeCountry,
-        );
-
-  // Determine tier object and status
-  let tierIndex = 0;
-  let tierObj = null;
-  let tierStatus: AchievementStatus = status;
-  let tierCount: number | undefined = undefined;
-  if (
-    achievement.tiers &&
-    Array.isArray(achievement.tiers) &&
-    achievement.tiers.length > 0
-  ) {
-    // Find highest completed tier, or next incomplete tier
-    for (let i = achievement.tiers.length - 1; i >= 0; i--) {
-      const t = achievement.tiers[i];
-      // If using count-based tier, build a pseudo-achievement for status
-      let tierAch = { ...achievement };
-      if (typeof t.count === "number" && achievement.countries) {
-        tierAch = {
-          ...achievement,
-          criteria: { countries: achievement.countries.slice(0, t.count) },
-        };
-      } else if (t.criteria) {
-        tierAch = { ...achievement, criteria: t.criteria };
-      }
-      const completed =
-        getAchievementStatus(
-          tierAch,
-          countries,
-          visited,
-          trips,
-          homeCountry,
-        ) === "completed";
-      if (completed) {
-        tierIndex = i;
-        break;
-      }
-    }
-    // If not completed, show next incomplete tier
-    if (tierIndex < achievement.tiers.length - 1) {
-      tierIndex++;
-    }
-    tierObj = achievement.tiers[tierIndex];
-    let tierAch = { ...achievement };
-    if (typeof tierObj.count === "number" && achievement.countries) {
-      tierAch = {
-        ...achievement,
-        criteria: { countries: achievement.countries.slice(0, tierObj.count) },
-      };
-      tierCount = tierObj.count;
-    } else if (tierObj.criteria) {
-      tierAch = { ...achievement, criteria: tierObj.criteria };
-    }
-    tierStatus = getAchievementStatus(
-      tierAch,
-      countries,
-      visited,
-      trips,
-      homeCountry,
-    );
-  }
-
+  // Display values
   const displayName = tierObj?.name || achievement.name;
   const displayDescription = tierObj?.description || achievement.description;
   let displayCriteria = tierObj?.criteria || criteria;
   if (typeof tierCount === "number" && achievement.countries) {
     displayCriteria = { countries: achievement.countries.slice(0, tierCount) };
   }
-  const displayTier = tierObj?.tier || tier;
+  const displayTier = tierObj?.tier || getTier(achievement);
 
   // Background and text color classes based on status
   const statusBgClasses: Record<AchievementStatus, string> = {
@@ -160,25 +64,14 @@ export function AchievementCard({
   const progressChipClass = "bg-surface";
 
   // Get progress label
-  const normalProgressLabel = useAchievementProgressLabel(
+  const progressLabel = useAchievementProgressLabel(
     { ...achievement, criteria: displayCriteria },
     countries,
     visited,
     trips,
     homeCountry,
-    tierStatus,
+    achievementStatusMap,
   );
-
-  // Use dependency progress for dependency-only achievements, else normal progress
-  let progressLabel =
-    isDependencyOnly && dependencyProgress
-      ? dependencyProgress
-      : normalProgressLabel;
-
-  // Prepend "Progress: " for fraction-style progress labels
-  if (typeof progressLabel === "string" && /^\d+\/\d+$/.test(progressLabel)) {
-    progressLabel = `Progress: ${progressLabel}`;
-  }
 
   // Only show tier chip if there is a tier
   const showTierChip =
@@ -206,7 +99,10 @@ export function AchievementCard({
             totalTiers={achievement.tiers?.length}
           />
         )}
-        <Chip className={progressChipClass}>{progressLabel}</Chip>
+        <AchievementProgressChip
+          label={progressLabel}
+          className={progressChipClass}
+        />
         <AchievementStatusChip status={tierStatus} />
       </div>
 

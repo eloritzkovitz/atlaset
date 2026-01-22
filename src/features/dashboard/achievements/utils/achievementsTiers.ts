@@ -1,0 +1,105 @@
+/**
+ * Utility functions for handling tiered achievements.
+ */
+
+import type { Country } from "@features/countries";
+import type { Trip } from "@features/trips";
+import { getAchievementStatus } from "./achievements";
+import type { Achievement, AchievementStatus, Tier } from "../../types";
+
+/**
+ * Gets the tier of the achievement if applicable.
+ * @param achievement - The achievement object
+ * @returns - Tier number or undefined if not tiered
+ */
+export function getTier(achievement: Achievement): number | undefined {
+  const criteria = achievement.criteria || {};
+  return typeof criteria.tier === "number" ? criteria.tier : undefined;
+}
+
+/**
+ * Gets the current tier of a tiered achievement.
+ * @param achievement - The achievement object
+ * @param countries - List of all countries
+ * @param visited - Visited countries utility
+ * @param trips - Array of user trips
+ * @param homeCountry - The user's home country
+ * @returns Object containing tier details
+ */
+export function getCurrentTier(
+  achievement: Achievement,
+  countries: Country[],
+  visited: { isCountryVisited: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
+): {
+  tierObj: Tier | null;
+  tierIndex: number;
+  tierStatus: AchievementStatus;
+  tierCount?: number;
+} {
+  let tierIndex = 0;
+  let tierObj = null;
+  let tierStatus: AchievementStatus = getAchievementStatus(
+    achievement,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  );
+  let tierCount: number | undefined = undefined;
+
+  if (
+    achievement.tiers &&
+    Array.isArray(achievement.tiers) &&
+    achievement.tiers.length > 0
+  ) {
+    for (let i = achievement.tiers.length - 1; i >= 0; i--) {
+      const t = achievement.tiers[i];
+      let tierAch = { ...achievement };
+      if (typeof t.count === "number" && achievement.countries) {
+        tierAch = {
+          ...achievement,
+          criteria: { countries: achievement.countries.slice(0, t.count) },
+        };
+      } else if (t.criteria) {
+        tierAch = { ...achievement, criteria: t.criteria };
+      }
+      const completed =
+        getAchievementStatus(
+          tierAch,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+        ) === "completed";
+      if (completed) {
+        tierIndex = i;
+        break;
+      }
+    }
+    if (tierIndex < achievement.tiers.length - 1) {
+      tierIndex++;
+    }
+    tierObj = achievement.tiers[tierIndex];
+    let tierAch = { ...achievement };
+    if (typeof tierObj.count === "number" && achievement.countries) {
+      tierAch = {
+        ...achievement,
+        criteria: { countries: achievement.countries.slice(0, tierObj.count) },
+      };
+      tierCount = tierObj.count;
+    } else if (tierObj.criteria) {
+      tierAch = { ...achievement, criteria: tierObj.criteria };
+    }
+    tierStatus = getAchievementStatus(
+      tierAch,
+      countries,
+      visited,
+      trips,
+      homeCountry,
+    );
+  }
+
+  return { tierObj, tierIndex, tierStatus, tierCount };
+}
