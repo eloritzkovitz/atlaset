@@ -6,6 +6,7 @@ import type { Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import { AchievementIcon } from "./AchievementIcon";
+import { AchievementTierChip } from "./AchievementTierChip";
 import {
   getTier,
   getAchievementStatus,
@@ -19,8 +20,6 @@ interface AchievementCardProps {
   visited: { isCountryVisited: (iso: string) => boolean };
   trips?: Trip[];
   homeCountry?: string;
-  tierBgClasses: Record<number, string>;
-  statusBgClasses: Record<AchievementStatus, string>;
   achievementStatusMap?: Record<string, boolean>;
   allAchievements?: Achievement[];
 }
@@ -31,8 +30,6 @@ export function AchievementCard({
   visited,
   trips,
   homeCountry,
-  tierBgClasses,
-  statusBgClasses,
   achievementStatusMap,
   allAchievements,
 }: AchievementCardProps) {
@@ -150,21 +147,17 @@ export function AchievementCard({
   }
   const displayTier = tierObj?.tier || tier;
 
-  // Determine background class based on tier or status
-  const bgClass =
-    tierStatus === "completed"
-      ? statusBgClasses["completed"]
-      : displayTier && tierStatus !== "locked"
-        ? tierBgClasses[displayTier] || tierBgClasses[6]
-        : statusBgClasses[tierStatus];
+  // Background and text color classes based on status
+  const statusBgClasses: Record<AchievementStatus, string> = {
+    locked: "bg-surface-alt/30",
+    progress: "bg-surface-alt",
+    completed: "bg-success/20",
+  };
+  const bgClass = statusBgClasses[tierStatus];
   const textClass = tierStatus === "locked" ? "text-muted" : "";
 
-  // Chip color classes for progress
+  // Chip color class for progress
   const progressChipClass = "bg-surface";
-  const tierChipClass =
-    displayTier && tierStatus !== "locked"
-      ? tierBgClasses[displayTier] || tierBgClasses[6]
-      : "bg-surface text-primary";
 
   // Get progress label
   const normalProgressLabel = useAchievementProgressLabel(
@@ -187,13 +180,9 @@ export function AchievementCard({
     progressLabel = `Progress: ${progressLabel}`;
   }
 
-  // Tier chip label
-  const tierLabel =
-    displayTier && achievement.tiers && achievement.tiers.length > 0
-      ? `Tier ${displayTier}/${achievement.tiers.length}`
-      : displayTier
-        ? `Tier ${displayTier}`
-        : null;
+  // Only show tier chip if there is a tier
+  const showTierChip =
+    displayTier && achievement.tiers && achievement.tiers.length > 0;
 
   return (
     <div
@@ -211,7 +200,12 @@ export function AchievementCard({
         {displayDescription}
       </p>
       <div className="flex gap-2 items-center mb-2 select-none">
-        {tierLabel && <Chip className={tierChipClass}>{tierLabel}</Chip>}
+        {showTierChip && (
+          <AchievementTierChip
+            tier={displayTier}
+            totalTiers={achievement.tiers?.length}
+          />
+        )}
         <Chip className={progressChipClass}>{progressLabel}</Chip>
         <AchievementStatusChip status={tierStatus} />
       </div>

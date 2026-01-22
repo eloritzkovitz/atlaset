@@ -16,12 +16,12 @@ import {
   getAchievementStatus,
   isCompleted,
 } from "../utils/achievements";
-import type { AchievementStatus } from "../../types";
 
 const typeOptions = [
   { value: "all", label: "All Types" },
   { value: "milestone", label: "Milestone" },
   { value: "general", label: "General" },
+  { value: "collection", label: "Collection" },
   { value: "cultural", label: "Cultural" },
   { value: "geographic", label: "Geographic" },
   { value: "historic", label: "Historic" },
@@ -43,23 +43,6 @@ export function AchievementsGrid() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-
-  // Tier-based backgrounds for tiered cards
-  const tierBgClasses: Record<number, string> = {
-    1: "bg-amber-600/30",
-    2: "bg-gray-300/30",
-    3: "bg-yellow-300/30",
-    4: "bg-slate-200/30",
-    5: "bg-cyan-200/30",
-    6: "bg-purple-200/30",
-  };
-
-  // Status-based backgrounds for non-tiered cards
-  const statusBgClasses: Record<AchievementStatus, string> = {
-    locked: "bg-surface-alt/30",
-    progress: "bg-surface-alt",
-    completed: "bg-success/20",
-  };
 
   const mergedAchievements = useMemo(() => {
     if (!achievementsData) return [];
@@ -164,8 +147,6 @@ export function AchievementsGrid() {
               visited={visited}
               trips={trips}
               homeCountry={homeCountry}
-              tierBgClasses={tierBgClasses}
-              statusBgClasses={statusBgClasses}
               achievementStatusMap={achievementStatusMap}
               allAchievements={mergedAchievements}
             />
