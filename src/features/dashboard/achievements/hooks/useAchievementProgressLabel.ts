@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import type { Country } from "@features/countries";
-import type { Trip } from "@features/trips";
 import { getProgress } from "../utils/achievements";
 import type { Achievement } from "../../types";
 
@@ -17,9 +16,7 @@ import type { Achievement } from "../../types";
 export function useAchievementProgressLabel(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
-  trips?: Trip[],
-  homeCountry?: string,
+  visited: { isCountryVisited: (iso: string) => boolean }, 
   achievementStatusMap?: Record<string, boolean>,
 ) {
   return useMemo(() => {
@@ -52,9 +49,7 @@ export function useAchievementProgressLabel(
 
     // Trip-based achievements - local or abroad countries count
     if (criteria.local_trips_count || criteria.abroad_countries_count) {
-      return String(
-        getProgress(achievement, countries, visited, trips, homeCountry),
-      );
+      return String(getProgress(achievement, countries, visited));
     }
 
     // Criterias that do not have a progress label
@@ -68,15 +63,6 @@ export function useAchievementProgressLabel(
     }
 
     // Default
-    return String(
-      getProgress(achievement, countries, visited, trips, homeCountry),
-    );
-  }, [
-    achievement,
-    countries,
-    visited,
-    trips,
-    homeCountry,
-    achievementStatusMap,
-  ]);
+    return String(getProgress(achievement, countries, visited));
+  }, [achievement, countries, visited, achievementStatusMap]);
 }

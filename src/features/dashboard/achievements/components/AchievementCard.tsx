@@ -60,16 +60,11 @@ export function AchievementCard({
   const bgClass = statusBgClasses[tierStatus];
   const textClass = tierStatus === "locked" ? "text-muted" : "";
 
-  // Chip color class for progress
-  const progressChipClass = "bg-surface";
-
   // Get progress label
   const progressLabel = useAchievementProgressLabel(
     { ...achievement, criteria: displayCriteria },
     countries,
     visited,
-    trips,
-    homeCountry,
     achievementStatusMap,
   );
 
@@ -99,10 +94,7 @@ export function AchievementCard({
             totalTiers={achievement.tiers?.length}
           />
         )}
-        <AchievementProgressChip
-          label={progressLabel}
-          className={progressChipClass}
-        />
+        <AchievementProgressChip label={progressLabel} className="bg-surface" />
         <AchievementStatusChip status={tierStatus} />
       </div>
 
