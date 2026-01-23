@@ -19,7 +19,7 @@
     "@reduxjs/toolkit": "2.11.2",
     "@tailwindcss/vite": "4.1.18",
     "bad-words": "4.0.0",
-    "country-flag-icons": "1.6.7",
+    "country-flag-icons": "1.6.8",
     "d3-geo": "3.1.1",
     "d3-selection": "3.0.0",
     "d3-zoom": "3.0.0",
@@ -34,7 +34,7 @@
     "react-dom": "19.2.3",
     "react-icons": "5.5.0",
     "react-redux": "9.2.0",
-    "react-router-dom": "7.12.0",
+    "react-router-dom": "7.13.0",
     "react-select": "5.10.2",
     "recharts": "3.7.0",
     "topojson-client": "3.1.0",
@@ -56,7 +56,7 @@
     "@types/react-router-dom": "5.3.3",
     "@types/topojson-client": "3.1.5",
     "@vitejs/plugin-react": "5.1.2",
-    "@vitest/coverage-v8": "4.0.17",
+    "@vitest/coverage-v8": "4.0.18",
     "autoprefixer": "10.4.23",
     "cypress": "15.9.0",
     "electron": "40.0.0",
@@ -66,7 +66,7 @@
     "eslint-plugin-react-hooks": "7.0.1",
     "eslint-plugin-react-refresh": "0.4.26",
     "fake-indexeddb": "6.2.5",
-    "globals": "17.0.0",
+    "globals": "17.1.0",
     "jsdom": "27.4.0",
     "postcss": "8.5.6",
     "redux-mock-store": "1.5.5",
@@ -75,6 +75,6 @@
     "typescript-eslint": "8.53.1",
     "vite": "7.3.1",
     "vite-plugin-pwa": "1.2.0",
-    "vitest": "4.0.17"
+    "vitest": "4.0.18"
   }
 }
