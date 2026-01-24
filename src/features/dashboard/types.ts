@@ -6,21 +6,22 @@ export interface SubregionStat {
 
 /** Represents the criteria for an achievement. */
 export interface Criteria {
-  region?: string;
-  subregion?: string;
   countries?: string[];
-  count?: number;
   regions?: string[];
+  region?: string;
+  subregion?: string;  
+  sovereign_only?: boolean;
+  count?: number;
   min_regions?: number;
+  tier?: number;
   trip_countries_count?: number;
   trip_duration_days?: number;
-  abroad_trips_count?: number;
   local_trips_count?: number;
+  abroad_trips_count?: number;  
   abroad_countries_count?: number;
   repeat_visits_count?: number;
   repeat_min_visits?: number;
   only_abroad?: boolean;
-  tier?: number;
 }
 
 /** Represents a tier within an achievement. */

@@ -2,7 +2,7 @@
  * Utility functions for handling achievements in the dashboard.
  */
 
-import type { Country } from "@features/countries";
+import { createSovereigntyFilter, type Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import {
   getLocalTrips,
@@ -27,22 +27,28 @@ export function getAchievementCountries(
   countries: Country[],
 ) {
   const criteria = achievement.criteria || {};
+  const sovereignOnly = criteria.sovereign_only === true;
+  const sovereigntyFilter = createSovereigntyFilter(sovereignOnly);
+
   if (achievement.countries && Array.isArray(achievement.countries)) {
-    return countries.filter((c) => achievement.countries!.includes(c.isoCode));
+    return countries.filter(
+      (c) => achievement.countries!.includes(c.isoCode) && sovereigntyFilter(c),
+    );
   }
   if (criteria.region) {
     return countries.filter(
-      (c) => c.region === criteria.region && c.sovereigntyType === "Sovereign",
+      (c) => c.region === criteria.region && sovereigntyFilter(c),
     );
   }
   if (criteria.subregion) {
     return countries.filter(
-      (c) =>
-        c.subregion === criteria.subregion && c.sovereigntyType === "Sovereign",
+      (c) => c.subregion === criteria.subregion && sovereigntyFilter(c),
     );
   }
   if (criteria.countries) {
-    return countries.filter((c) => criteria.countries?.includes(c.isoCode));
+    return countries.filter(
+      (c) => criteria.countries?.includes(c.isoCode) && sovereigntyFilter(c),
+    );
   }
   if (
     criteria.count &&
@@ -50,7 +56,7 @@ export function getAchievementCountries(
     !criteria.subregion &&
     !criteria.countries
   ) {
-    return countries.filter((c) => c.sovereigntyType === "Sovereign");
+    return countries.filter(sovereigntyFilter);
   }
   return [];
 }

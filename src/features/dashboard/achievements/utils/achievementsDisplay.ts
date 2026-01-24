@@ -1,4 +1,4 @@
-import type { Country } from "@features/countries";
+import { createSovereigntyFilter, type Country } from "@features/countries";
 import { getAchievementCountries } from "./achievements";
 import type { Achievement, Criteria } from "../../types";
 
@@ -62,24 +62,21 @@ export function getDisplayFlagCountries(
       typeof displayCriteria.subregion === "string") ||
     (displayCriteria.region && typeof displayCriteria.region === "string")
   ) {
+    const sovereigntyFilter = createSovereigntyFilter(true);
     return countries.filter((c) => {
       if (
         displayCriteria.subregion &&
         typeof displayCriteria.subregion === "string"
       ) {
         return (
-          c.subregion === displayCriteria.subregion &&
-          (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
+          c.subregion === displayCriteria.subregion && sovereigntyFilter(c)
         );
       }
       if (
         displayCriteria.region &&
         typeof displayCriteria.region === "string"
       ) {
-        return (
-          c.region === displayCriteria.region &&
-          (c.sovereigntyType === undefined || c.sovereigntyType === "Sovereign")
-        );
+        return c.region === displayCriteria.region && sovereigntyFilter(c);
       }
       return false;
     });

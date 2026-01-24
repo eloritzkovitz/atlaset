@@ -38,5 +38,6 @@ export {
   filterCountries,
   getFilteredIsoCodes,
   getCountryCounts,
+  createSovereigntyFilter,
 } from "./utils/countryFilters";
 export { sortCountries } from "./utils/countrySort";

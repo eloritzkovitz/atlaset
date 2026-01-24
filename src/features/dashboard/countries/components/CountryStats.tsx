@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { createSovereigntyFilter } from "@features/countries/utils/countryFilters";
 import { FaArrowLeft } from "react-icons/fa6";
 import { SegmentedToggle } from "@components";
 import {
@@ -53,19 +54,19 @@ export function CountryStats({
   // Filter countries based on toggle
   const filteredCountries =
     countryType === "sovereign"
-      ? countries.filter((c) => c.sovereigntyType === "Sovereign")
+      ? countries.filter(createSovereigntyFilter(true))
       : countries;
 
   const loading = useDelayedLoading(
     countriesLoading || !countries.length,
     [countries.length],
-    50
+    50,
   );
 
   // Compute exploration stats
   const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
     filteredCountries,
-    visited
+    visited,
   );
 
   // Find selected country details

@@ -15,7 +15,7 @@ import type { Country, CountryFilterOptions } from "../types";
  */
 export function filterCountries(
   countries: Country[],
-  options: CountryFilterOptions
+  options: CountryFilterOptions,
 ) {
   const {
     search = "",
@@ -52,7 +52,7 @@ export function filterCountries(
 export function getFilteredIsoCodes(
   countries: Country[],
   layers: Layer[],
-  layerSelections: Record<string, string>
+  layerSelections: Record<string, string>,
 ) {
   const base = countries.map((c) => c.isoCode);
 
@@ -87,10 +87,10 @@ export function getCountryCounts({
   const allCount = filteredCountries.length;
   const allCountWithoutLayers = filteredCountriesNoLayer.length;
   const sovereignCount = filteredCountries.filter(
-    (c) => c.sovereigntyType === "Sovereign"
+    (c) => c.sovereigntyType === "Sovereign",
   ).length;
   const visitedCount = filteredCountriesNoLayer.filter((c) =>
-    visitedIsoCodes.includes(c.isoCode)
+    visitedIsoCodes.includes(c.isoCode),
   ).length;
   return {
     allCount,
@@ -98,4 +98,13 @@ export function getCountryCounts({
     sovereignCount,
     visitedCount,
   };
+}
+
+/**
+ * Returns a filter function for sovereignty based on the criteria.
+ * @param sovereignOnly - If true, only matches countries with sovereigntyType "Sovereign".
+ */
+export function createSovereigntyFilter(sovereignOnly?: boolean) {
+  return (c: Country) =>
+    sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
 }
