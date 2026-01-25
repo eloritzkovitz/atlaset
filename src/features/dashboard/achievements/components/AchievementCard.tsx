@@ -104,39 +104,31 @@ export function AchievementCard({
         achievement.requires.length > 0 &&
         achievementStatusMap &&
         allAchievements && (
-          <div className="flex flex-col items-start w-full mb-2">
-            <div className="ml-12">
-              <Checklist
-                items={achievement.requires.map((reqId) => {
-                  const completed = achievementStatusMap[reqId] || false;
-                  const reqAchievement = allAchievements.find(
-                    (a) => a.id === reqId,
-                  );
-                  const label = reqAchievement ? reqAchievement.name : reqId;
-                  return { label, completed };
-                })}
-              />
-            </div>
-          </div>
+          <Checklist
+            items={achievement.requires.map((reqId) => {
+              const completed = achievementStatusMap[reqId] || false;
+              const reqAchievement = allAchievements.find(
+                (a) => a.id === reqId,
+              );
+              const label = reqAchievement ? reqAchievement.name : reqId;
+              return { label, completed };
+            })}
+          />
         )}
 
       {/* Region details for region achievements */}
       {displayCriteria.regions && Array.isArray(displayCriteria.regions) && (
-        <div className="flex flex-col items-start w-full mb-2">
-          <div className="ml-12">
-            <Checklist
-              items={displayCriteria.regions.map((region: string) => {
-                const countriesInRegion = countries.filter(
-                  (c) => c.region === region,
-                );
-                const visitedAny = countriesInRegion.some((c) =>
-                  visited.isCountryVisited(c.isoCode),
-                );
-                return { label: region, completed: visitedAny };
-              })}
-            />
-          </div>
-        </div>
+        <Checklist
+          items={displayCriteria.regions.map((region: string) => {
+            const countriesInRegion = countries.filter(
+              (c) => c.region === region,
+            );
+            const visitedAny = countriesInRegion.some((c) =>
+              visited.isCountryVisited(c.isoCode),
+            );
+            return { label: region, completed: visitedAny };
+          })}
+        />
       )}
       {(() => {
         const achCountries = getDisplayFlagCountries(
@@ -148,7 +140,7 @@ export function AchievementCard({
         if (achCountries.length > 0) {
           return (
             <>
-              <div style={{ height: 12 }} />
+              <div className="mt-4" />
               <AchievementFlagGrid
                 countries={countries}
                 countryCodes={achCountries.map((c) => c.isoCode)}
