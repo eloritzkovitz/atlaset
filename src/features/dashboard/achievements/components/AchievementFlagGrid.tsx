@@ -1,8 +1,7 @@
-import { CountryFlag } from "@features/countries";
-import "./AchievementFlagGrid.css";
+import { Tooltip } from "@components";
+import { CountryFlag, type Country } from "@features/countries";
 import type { Flag } from "@features/countries/types/flag";
-import type { Country } from "@features/countries";
-import { Tooltip } from "@components/ui/Tooltip/Tooltip";
+import "./AchievementFlagGrid.css";
 
 interface AchievementFlagGridProps {
   countries: Country[];
@@ -17,38 +16,30 @@ export function AchievementFlagGrid({
 }: AchievementFlagGridProps) {
   return (
     <div
-      className="grid mb-2"
-      style={{
-        gridTemplateColumns: `repeat(auto-fit, minmax(36px, 1fr))`,
-        gap: 8,
-        justifyItems: "center",
-        alignItems: "center",
-        maxWidth: 220,
-        margin: "0 auto",
-      }}
+      className="grid gap-2 justify-items-center items-center max-w-xs mx-auto mb-2"
+      style={{ gridTemplateColumns: `repeat(5, minmax(36px, 1fr))` }}
     >
       {countryCodes.map((isoCode: string) => {
         const country = countries.find((c) => c.isoCode === isoCode);
+
+        // If country not found, skip rendering
         if (!country) return null;
+
+        // Prepare flag props
         const flag: Flag = {
           isoCode: country.isoCode,
           ratio: "fourThree",
           size: "32",
         };
         const visitedFlag = visited.isCountryVisited(country.isoCode);
+
         return (
-          <Tooltip content={country.name} position="bottom">
+          <Tooltip content={country.name} position="bottom" key={isoCode}>
             <span
-              key={isoCode}
               style={{
                 opacity: visitedFlag ? 1 : 0.4,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                width: 36,
-                height: 28,
               }}
-              className={visitedFlag ? undefined : "flag-grayscale-hover"}
+              className={`${visitedFlag ? "" : "flag-grayscale-hover"} flex justify-center items-center w-9 h-7`}
             >
               <CountryFlag flag={flag} />
             </span>
