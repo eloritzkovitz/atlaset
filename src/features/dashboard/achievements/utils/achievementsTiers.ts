@@ -54,6 +54,7 @@ export function getCurrentTier(
     Array.isArray(achievement.tiers) &&
     achievement.tiers.length > 0
   ) {
+    let foundCompleted = false;
     for (let i = achievement.tiers.length - 1; i >= 0; i--) {
       const t = achievement.tiers[i];
       let tierAch = { ...achievement };
@@ -75,10 +76,12 @@ export function getCurrentTier(
         ) === "completed";
       if (completed) {
         tierIndex = i;
+        foundCompleted = true;
         break;
       }
     }
-    if (tierIndex < achievement.tiers.length - 1) {
+    // Only increment tierIndex if a tier was completed
+    if (foundCompleted && tierIndex < achievement.tiers.length - 1) {
       tierIndex++;
     }
     tierObj = achievement.tiers[tierIndex];
