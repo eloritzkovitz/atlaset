@@ -5,6 +5,7 @@ import {
   FaCrown,
   FaLandmark,
   FaBoxesStacked,
+  FaSuitcaseRolling,
 } from "react-icons/fa6";
 import type { Achievement } from "../../types";
 
@@ -49,6 +50,11 @@ export function AchievementIcon({ type, locked }: AchievementIconProps) {
       icon = <FaLandmark {...iconProps} />;
       bgClass =
         "bg-gradient-to-br from-purple-300 via-purple-500 to-fuchsia-400 ring-2 ring-purple-300";
+      break;
+    case "trips":
+      icon = <FaSuitcaseRolling {...iconProps} />;
+      bgClass =
+        "bg-gradient-to-br from-orange-300 via-orange-500 to-amber-400 ring-2 ring-orange-300";
       break;
     default:
       icon = <FaMedal {...iconProps} />;

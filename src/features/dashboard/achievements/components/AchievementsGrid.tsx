@@ -22,9 +22,10 @@ const typeOptions = [
   { value: "milestone", label: "Milestone" },
   { value: "general", label: "General" },
   { value: "collection", label: "Collection" },
-  { value: "cultural", label: "Cultural" },
   { value: "geographic", label: "Geographic" },
   { value: "historic", label: "Historic" },
+  { value: "cultural", label: "Cultural" },
+  { value: "trips", label: "Trips" },
 ];
 const statusOptions = [
   { value: "all", label: "All Statuses" },
