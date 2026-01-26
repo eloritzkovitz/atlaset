@@ -14,17 +14,18 @@ export function AchievementFlagGrid({
   countryCodes,
   visited,
 }: AchievementFlagGridProps) {
+  // Map isoCodes to country objects, filter out missing, then sort by name
+  const sortedCountries = countryCodes
+    .map((isoCode) => countries.find((c) => c.isoCode === isoCode))
+    .filter((c): c is Country => !!c)
+    .sort((a, b) => a.name.localeCompare(b.name));
+
   return (
     <div
       className="grid gap-2 justify-items-center items-center max-w-xs mx-auto mb-2"
       style={{ gridTemplateColumns: `repeat(auto-fit, minmax(36px, 1fr))` }}
     >
-      {countryCodes.map((isoCode: string) => {
-        const country = countries.find((c) => c.isoCode === isoCode);
-
-        // If country not found, skip rendering
-        if (!country) return null;
-
+      {sortedCountries.map((country) => {
         // Prepare flag props
         const flag: Flag = {
           isoCode: country.isoCode,
@@ -34,7 +35,11 @@ export function AchievementFlagGrid({
         const visitedFlag = visited.isCountryVisited(country.isoCode);
 
         return (
-          <Tooltip content={country.name} position="bottom" key={isoCode}>
+          <Tooltip
+            content={country.name}
+            position="bottom"
+            key={country.isoCode}
+          >
             <span
               style={{
                 opacity: visitedFlag ? 1 : 0.4,
