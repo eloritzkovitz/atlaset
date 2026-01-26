@@ -17,7 +17,7 @@ export function AchievementFlagGrid({
   return (
     <div
       className="grid gap-2 justify-items-center items-center max-w-xs mx-auto mb-2"
-      style={{ gridTemplateColumns: `repeat(5, minmax(36px, 1fr))` }}
+      style={{ gridTemplateColumns: `repeat(auto-fit, minmax(36px, 1fr))` }}
     >
       {countryCodes.map((isoCode: string) => {
         const country = countries.find((c) => c.isoCode === isoCode);
