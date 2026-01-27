@@ -19,7 +19,7 @@ export function CountryWithFlag({
       <CountryFlag
         flag={{
           isoCode,
-          ratio: "fourThree",
+          ratio: "3x2",
           size,
         }}
       />

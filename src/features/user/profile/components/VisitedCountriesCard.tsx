@@ -5,10 +5,12 @@ interface VisitedCountriesCardProps {
   visitedCountryCodes: string[];
 }
 
-export function VisitedCountriesCard({ visitedCountryCodes }: VisitedCountriesCardProps) {
+export function VisitedCountriesCard({
+  visitedCountryCodes,
+}: VisitedCountriesCardProps) {
   const { countries } = useCountryData();
   const visitedCountries = countries.filter((c) =>
-    visitedCountryCodes.includes(c.isoCode)
+    visitedCountryCodes.includes(c.isoCode),
   );
 
   return (
@@ -25,7 +27,7 @@ export function VisitedCountriesCard({ visitedCountryCodes }: VisitedCountriesCa
               <CountryFlag
                 flag={{
                   isoCode: c.isoCode,
-                  ratio: "fourThree",
+                  ratio: "3x2",
                   size: "64",
                 }}
                 alt={c.name}

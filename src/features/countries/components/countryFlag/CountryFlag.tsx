@@ -15,40 +15,33 @@ interface CountryFlagProps {
 const CustomFlags = { ...Flags, JS };
 
 export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
-  // Convert flag.size (string | undefined) to number, default to 32
   const size = Number(flag.size);
-  // For 4:3 flags, use a 4:3 aspect ratio (e.g., 32x24)
   const validSize = Number.isFinite(size) && size > 0 ? size : 32;
   const width = validSize;
-  const height = Math.round(validSize * 0.75);
 
   // Map to sovereign flag if applicable
   const mappedIso =
     SOVEREIGN_FLAG_MAP?.[flag.isoCode.toUpperCase()] ||
     flag.isoCode.toUpperCase();
 
-  // Handle custom 4:3 flags
-  if (flag.ratio === "fourThree") {
+  // Handle special case for 3:2 ratio flags
+  if (flag.ratio === "3x2") {
     const FlagSvg = CustomFlags[mappedIso as keyof typeof CustomFlags];
+    const testHeight = Math.round((width * 2) / 3);
+    const flagStyle = {
+      width,
+      height: testHeight,
+      borderRadius: 4,
+      ...style,
+    };
     if (FlagSvg) {
-      return (
-        <FlagSvg
-          style={{ width, height, borderRadius: 4, ...style }}
-          className={className}
-        />
-      );
+      return <FlagSvg style={flagStyle} className={className} />;
     }
+
     // Fallback: white flag
     return (
       <div
-        style={{
-          width,
-          height,
-          background: "#fff",
-          borderRadius: 4,
-          display: "inline-block",
-          ...style,
-        }}
+        style={{ ...flagStyle, background: "#fff", display: "inline-block" }}
         className={className}
       />
     );
@@ -60,7 +53,7 @@ export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
       src={`/flags/${mappedIso.toLowerCase()}.svg`}
       alt={alt || `${flag.isoCode} flag`}
       width={width}
-      height={height}
+      height={Math.round((width * 2) / 3)}
       className={className}
       style={style}
       loading="lazy"
