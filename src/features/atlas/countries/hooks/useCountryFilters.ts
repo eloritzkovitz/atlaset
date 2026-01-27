@@ -9,6 +9,7 @@ import {
 } from "@features/atlas/layers";
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
+  createSovereigntyFilter,
   filterCountries,
   getCountryCounts,
   getFilteredIsoCodes,
@@ -65,7 +66,7 @@ export function useCountryFilters() {
   // Visit count filters
   const [minVisitCount, setMinVisitCount] = useState<number>(1);
   const [maxVisitCount, setMaxVisitCount] = useState<number | undefined>(
-    undefined
+    undefined,
   );
 
   // Core filter parameters
@@ -76,13 +77,13 @@ export function useCountryFilters() {
       selectedSubregion,
       selectedSovereignty,
     }),
-    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty]
+    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty],
   );
 
   // With layers applied
   const filteredIsoCodes = useMemo(
     () => getFilteredIsoCodes(countries, layers, layerSelections),
-    [countries, layers, layerSelections]
+    [countries, layers, layerSelections],
   );
   const filteredCountries = useMemo(
     () =>
@@ -90,7 +91,7 @@ export function useCountryFilters() {
         ...(filterParams ?? {}),
         layerCountries: filteredIsoCodes,
       }),
-    [countries, filterParams, filteredIsoCodes]
+    [countries, filterParams, filteredIsoCodes],
   );
 
   // Without layers for counts
@@ -100,7 +101,7 @@ export function useCountryFilters() {
         ...(filterParams ?? {}),
         layerCountries: undefined,
       }),
-    [countries, filterParams]
+    [countries, filterParams],
   );
 
   // Counts and visit map
@@ -131,19 +132,19 @@ export function useCountryFilters() {
       // In readonly mode with sharedVisitedIsoCodes, filter by those iso codes only
       if (isReadonly && effectiveSharedVisitedIsoCodes) {
         result = filteredCountries.filter((c) =>
-          effectiveSharedVisitedIsoCodes.includes(c.isoCode)
+          effectiveSharedVisitedIsoCodes.includes(c.isoCode),
         );
       } else {
         result = filterByVisitCount(
           filteredCountries,
           visitedMap,
           minVisitCount,
-          maxVisitCount
+          maxVisitCount,
         );
       }
     }
     if (sovereignOnly) {
-      result = result.filter((c) => c.sovereigntyType === "Sovereign");
+      result = result.filter(createSovereigntyFilter(true));
     }
     return result;
   }, [

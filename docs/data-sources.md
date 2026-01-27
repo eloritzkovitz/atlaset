@@ -5,11 +5,12 @@ You can change their location or swap datasets by editing the `.env` file.
 
 ## Data Types and Variables
 
-| Data Type   | Default Path              | Environment Variable     |
-| ----------- | ------------------------- | ------------------------ |
-| Map GeoJSON | `/data/countries.geojson` | `VITE_MAP_GEO_URL`       |
-| Countries   | `/data/countries.json`    | `VITE_COUNTRY_DATA_URL`  |
-| Currencies  | `/data/currencies.json`   | `VITE_CURRENCY_DATA_URL` |
+| Data Type    | Default Path              | Environment Variable         |
+| ------------ | ------------------------- | ---------------------------- |
+| Map GeoJSON  | `/data/countries.geojson` | `VITE_MAP_GEO_URL`           |
+| Countries    | `/data/countries.json`    | `VITE_COUNTRY_DATA_URL`      |
+| Currencies   | `/data/currencies.json`   | `VITE_CURRENCY_DATA_URL`     |
+| Achievements | `/data/achievements.json` | `VITE_ACHIEVEMENTS_DATA_URL` | 
 
 ## Sources
 

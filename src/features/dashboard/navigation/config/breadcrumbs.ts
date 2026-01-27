@@ -2,6 +2,10 @@ import type { Crumb } from "@components";
 
 // Predefined breadcrumbs for dashboard panels
 const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
+  achievements: [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Achievements", key: "achievements" },
+  ],
   countries: [
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries" },
@@ -11,10 +15,10 @@ const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Countries", key: "countries/all" },
     { label: "All Countries" },
   ],
-  "countries/overview": [
+  "countries/exploration": [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Countries", key: "countries/overview" },
-    { label: "Overview" },
+    { label: "Countries", key: "countries/exploration" },
+    { label: "Exploration" },
   ],
   "trips/overview": [
     { label: "Dashboard", key: "dashboard" },
@@ -50,7 +54,7 @@ export function getDashboardBreadcrumbs(
   selectedPanel: string,
   selectedRegion: string | null,
   selectedSubregion: string | null,
-  selectedCountry: { name: string } | null
+  selectedCountry: { name: string } | null,
 ): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
 

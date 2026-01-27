@@ -16,7 +16,7 @@ export function useDashboardRouteState() {
   if (
     (selectedPanel === "countries" || selectedPanel === "trips") &&
     pathParts[1] &&
-    ["overview", "history", "month", "year", "all"].includes(pathParts[1])
+    ["exploration", "overview", "history", "month", "year", "all"].includes(pathParts[1])
   ) {
     selectedPanel = `${selectedPanel}/${pathParts[1]}`;
   }
@@ -25,26 +25,26 @@ export function useDashboardRouteState() {
 
   // Normalized for menu selection only
   let menuSelectedPanel = selectedPanel;
-  if (isCountriesPanel && selectedPanel !== "countries/overview") {
-    menuSelectedPanel = "countries/overview";
+  if (isCountriesPanel && selectedPanel !== "countries/exploration") {
+    menuSelectedPanel = "countries/exploration";
   }
 
   const regionParam =
     isCountriesPanel &&
     pathParts[1] &&
-    !["overview", "all"].includes(pathParts[1])
+    !["exploration", "all"].includes(pathParts[1])
       ? decodeURIComponent(pathParts[1])
       : null;
   const subregionParam =
     isCountriesPanel &&
     pathParts[2] &&
-    !["overview", "all"].includes(pathParts[1])
+    !["exploration", "all"].includes(pathParts[1])
       ? decodeURIComponent(pathParts[2])
       : null;
   const isoCodeParam =
     isCountriesPanel &&
     pathParts[3] &&
-    !["overview", "all"].includes(pathParts[1])
+    !["exploration", "all"].includes(pathParts[1])
       ? decodeURIComponent(pathParts[3])
       : null;
 

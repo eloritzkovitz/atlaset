@@ -4,13 +4,22 @@ import {
   FaChartPie,
   FaRegCalendarDays,
   FaBookAtlas,
+  FaAward,
 } from "react-icons/fa6";
 
 export const COUNTRIES_SUBMENU = [
   {
-    key: "countries/overview",
-    label: "Overview",
+    key: "countries/exploration",
+    label: "Exploration",
     icon: <FaBookAtlas />,
+  },
+];
+
+export const ACHIEVEMENTS_MENU = [
+  {
+    key: "achievements",
+    label: "Overview",
+    icon: <FaAward />,
   },
 ];
 

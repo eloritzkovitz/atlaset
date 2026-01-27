@@ -1,0 +1,8 @@
+/* Grayscale hover effect for unvisited flags */
+.flag-grayscale-hover > * {
+  filter: grayscale(1);
+  transition: filter 0.2s;
+}
+.flag-grayscale-hover:hover > * {
+  filter: grayscale(0.1);
+}

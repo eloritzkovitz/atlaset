@@ -1,9 +1,14 @@
 /**
- * @fileoverview Utility functions for trip statistics.
+ * @file Utility functions for trip statistics.
  */
 
 import type { Trip } from "@features/trips";
-import { getTripDays } from "@features/trips/utils/trips";
+import {
+  getAbroadTrips,
+  getCompletedTrips,
+  getTripDays,
+} from "@features/trips/utils/trips";
+import { getVisitedCountriesUpToYear } from "@features/visits";
 
 /**
  * Gets a list of unique country codes visited across all trips.
@@ -56,7 +61,7 @@ export function getTripsPerCountry(trips: Trip[]): Record<string, number> {
  */
 export function getVisitYearsForCountry(
   trips: Trip[],
-  countryCode: string
+  countryCode: string,
 ): number[] {
   return Array.from(
     new Set(
@@ -65,10 +70,10 @@ export function getVisitYearsForCountry(
           (trip) =>
             trip.countryCodes?.includes(countryCode) &&
             typeof trip.startDate === "string" &&
-            trip.startDate
+            trip.startDate,
         )
-        .map((trip) => new Date(trip.startDate as string).getFullYear())
-    )
+        .map((trip) => new Date(trip.startDate as string).getFullYear()),
+    ),
   ).sort((a, b) => a - b);
 }
 
@@ -109,4 +114,38 @@ export function getShortestTrip(trips: Trip[]): number {
     .map(getTripDays)
     .filter((days) => days > 0);
   return durations.length > 0 ? Math.min(...durations) : 0;
+}
+
+/**
+ * Gets the set of unique abroad countries visited in completed trips
+ * @param trips - Array of user trips
+ * @param homeCountry - The user's home country code
+ * @returns Set of unique abroad country codes
+ */
+export function getUniqueAbroadCountries(
+  trips: Trip[],
+  homeCountry: string,
+): Set<string> {
+  const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
+  return new Set(
+    abroadTrips.flatMap((t) => t.countryCodes.filter((c) => c !== homeCountry)),
+  );
+}
+
+/**
+ * Gets the count of countries with at least X visits across all trips
+ * @param trips - Array of user trips
+ * @param minVisits - Minimum number of visits to count (default 2)
+ * @returns Number of countries with at least minVisits visits
+ */
+export function getRepeatVisitCount(
+  trips: Trip[],
+  minVisits: number = 2,
+): number {
+  const visitCounts = getVisitedCountriesUpToYear(
+    getCompletedTrips(trips),
+    9999,
+  );
+  return Object.values(visitCounts).filter((count) => count >= minVisits)
+    .length;
 }

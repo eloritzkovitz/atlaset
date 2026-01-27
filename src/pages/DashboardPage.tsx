@@ -18,6 +18,7 @@ import {
   getDashboardBreadcrumbs,
   useDashboardNavigation,
   useDashboardRouteState,
+  AchievementsGrid,
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { useIsMobile } from "@hooks";
@@ -102,7 +103,7 @@ export default function DashboardPage() {
 
   // Redirect early if at /dashboard
   if (location.pathname === "/dashboard") {
-    return <Navigate to="/dashboard/countries/overview" replace />;
+    return <Navigate to="/dashboard/countries/exploration" replace />;
   }
 
   // Render CountryStats with common props
@@ -151,25 +152,25 @@ export default function DashboardPage() {
         <div className="flex-1 mt-12 min-w-0">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           <Routes>
-            {/* Redirect /dashboard to /dashboard/countries/overview */}
+            {/* Redirect /dashboard to /dashboard/countries/exploration */}
             <Route
               path=""
-              element={<Navigate to="countries/overview" replace />}
+              element={<Navigate to="countries/exploration" replace />}
             />
             <Route
               path="countries"
-              element={<Navigate to="/dashboard/countries/overview" replace />}
+              element={<Navigate to="/dashboard/countries/exploration" replace />}
             />
-            {/* Overview page */}
+            {/* Exploration page */}
             <Route
-              path="countries/overview"
+              path="countries/exploration"
               element={renderCountryStats({
                 selectedRegion: undefined,
                 selectedSubregion: undefined,
                 selectedIsoCode: undefined,
                 onBack: undefined,
               })}
-            />
+            />            
             {/* All countries page */}
             <Route
               path="countries/all"
@@ -186,6 +187,11 @@ export default function DashboardPage() {
               element={renderCountryStats({
                 onBack: handleBack,
               })}
+            />
+            {/* Achievements page */}
+            <Route
+              path="achievements"
+              element={<AchievementsGrid />}
             />
             {/* Other dashboard panels */}
             <Route path="trips/overview" element={<TripsStats />} />
