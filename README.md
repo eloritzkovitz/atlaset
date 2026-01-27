@@ -21,7 +21,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Custom layers and markers:** Create, import, export and manage your own layers and markers
 - **Export maps:** Export your maps as images or backup your entire data as JSON
 - **Share maps:** Instantly share your maps (including layers and markers) via s a special URL
-- **Embed maps:** Embed maps directly into your website using an customized HTML iframe.
+- **Embed maps:** Embed maps directly into your website using a customized HTML iframe.
 
 ### **Trips**
 - **Trip management:** Plan, track, and recall your travels with flexible trip records
@@ -33,7 +33,8 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Leaderboard:** Compare your results with other users and climb the ranks
 
 ### **Dashboard**
-- **Dashboard:** View and analyze your visits and travels with interactive statistics 
+- **Statistics:** View and analyze your visits and travels with interactive statistics 
+- **Achievements:** Earn personal achievements as you explore the world and interact with the application
 
 ### **User Experience**
 - **Accessible design:** All major actions and navigation are keyboard-friendly
@@ -70,10 +71,11 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 ## Documentation
 
-- [Getting started](docs/getting-started.md)
+- [Getting Started](docs/getting-started.md)
 - [Data Sources](docs/data-sources.md)
-- [Map Data & customization](docs/map-data.md)
-- [Trips](docs/trips.md)
+- [Map Data & Customization](docs/map-data.md)
+- [Managing Trips](docs/trips.md)
+- [The Dashboard](docs/dashboard.md)
 - [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 
 ## Authors
