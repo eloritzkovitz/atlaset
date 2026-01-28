@@ -6,7 +6,7 @@ interface CountryWithFlagProps {
   name: string;
   size?: FlagSize;
   className?: string;
-};
+}
 
 export function CountryWithFlag({
   isoCode,
@@ -22,6 +22,7 @@ export function CountryWithFlag({
           ratio: "3x2",
           size,
         }}
+        className="flex-shrink-0"
       />
       <span className="ml-2">{name}</span>
     </span>
