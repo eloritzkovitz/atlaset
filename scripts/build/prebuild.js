@@ -20,7 +20,6 @@ function runScript(script) {
 }
 
 // Run the fetch scripts sequentially
-runScript("scripts/data/fetch-flags.js");
 runScript("scripts/data/fetch-country-data.js");
 runScript("scripts/data/fetch-geodata.js");
 runScript("scripts/data/fetch-achievements.js");
