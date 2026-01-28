@@ -31,7 +31,6 @@ export function VisitedCountriesCard({
                     ratio: "3x2",
                     size: "64",
                   }}
-                  alt={c.name}
                 />
               </Tooltip>
             </li>

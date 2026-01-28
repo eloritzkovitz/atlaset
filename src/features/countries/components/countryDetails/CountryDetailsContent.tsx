@@ -27,9 +27,8 @@ export function CountryDetailsContent({
         flag={{
           isoCode: country.isoCode,
           ratio: "original",
-          size: "128",
+          size: "256",
         }}
-        alt={`${country.name} flag`}
         className="block mx-auto mb-4 h-32 w-auto"
       />
       <CountryInfoTable country={country} currencies={currencies} />

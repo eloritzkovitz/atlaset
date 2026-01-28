@@ -33,7 +33,6 @@ export function getCapitalQuizProps(difficulty?: Difficulty, gameMode?: string) 
               ratio: "original",
               size: "128",
             }}
-            alt={country.name}
             className="block mx-auto mb-8 h-40 w-auto"
           />
           <div className="text-lg font-semibold">{country.name}</div>
@@ -67,7 +66,6 @@ export function getFlagQuizProps(difficulty?: Difficulty) {
             ratio: "original",
             size: "128",
           }}
-          alt={country.name}
           className="block mx-auto mb-8 h-40 w-auto"
         />
       ),
