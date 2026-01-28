@@ -1,8 +1,7 @@
 import React from "react";
-import * as Flags from "country-flag-icons/react/3x2";
+import { _3x2 as Flags } from "@eloritzkovitz/atlaset-flags";
 import { SOVEREIGN_FLAG_MAP } from "../../constants/sovereignty";
 import type { Flag } from "../../types/flag";
-import JS from "./JS";
 
 interface CountryFlagProps {
   flag: Flag;
@@ -10,9 +9,6 @@ interface CountryFlagProps {
   style?: React.CSSProperties;
   className?: string;
 }
-
-// Combine imported flags with custom flags
-const CustomFlags = { ...Flags, JS };
 
 export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
   const size = Number(flag.size);
@@ -26,7 +22,7 @@ export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
 
   // Handle special case for 3:2 ratio flags
   if (flag.ratio === "3x2") {
-    const FlagSvg = CustomFlags[mappedIso as keyof typeof CustomFlags];
+    const FlagSvg = Flags[mappedIso as keyof typeof Flags];
     const testHeight = Math.round((width * 2) / 3);
     const flagStyle = {
       width,

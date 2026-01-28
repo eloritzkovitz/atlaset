@@ -33,3 +33,4 @@ public/flags
 # Environment variables
 .env
 .env.production
+.npmrc
