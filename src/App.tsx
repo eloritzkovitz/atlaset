@@ -1,21 +1,25 @@
 import { Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { useSettings } from "@contexts/SettingsContext";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
 import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
+import { AtlasProviders } from "./pages/AtlasProvider";
 import AboutPage from "./pages/AboutPage";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
-import QuizzesPage from "./pages/QuizzesPage";
-import TripsPage from "./pages/TripsPage";
 import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
-import ProfilePage from "./pages/ProfilePage";
-import SettingsPage from "./pages/SettingsPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import { AtlasProviders } from "./pages/AtlasProvider";
+import ProfilePage from "./pages/ProfilePage";
+import QuizzesPage from "./pages/QuizzesPage";
+import SettingsPage from "./pages/SettingsPage";
+import SignupPage from "./pages/SignupPage";
+import TripsPage from "./pages/TripsPage";
+
+// Lazy-loaded pages
+const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
 
 function App() {
   const { ready } = useSettings();
@@ -64,13 +68,28 @@ function App() {
                 </PublicLayout>
               }
             />
+            <Route
+              path="/changelog"
+              element={
+                <Suspense>
+                  <PublicLayout>
+                    <ChangelogPage />
+                  </PublicLayout>
+                </Suspense>
+              }
+            />
             <Route path="/users/:username" element={<ProfilePage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
             <Route
               path="/atlas"
               element={
                 window.location.search.includes("embed") ? (
-                  <EmbedLayout mapCode={new URLSearchParams(window.location.search).get("map") || undefined}>
+                  <EmbedLayout
+                    mapCode={
+                      new URLSearchParams(window.location.search).get("map") ||
+                      undefined
+                    }
+                  >
                     <AtlasProviders />
                   </EmbedLayout>
                 ) : (

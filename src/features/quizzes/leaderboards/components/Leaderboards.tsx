@@ -121,7 +121,7 @@ export function Leaderboards() {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <div className="flex items-center gap-2 mb-12">
+      <div className="flex items-center gap-2 mb-12 mt-14">
         <a
           href="/quizzes"
           className="text-text transition-colors flex items-center"

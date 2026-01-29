@@ -22,6 +22,11 @@ import {
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { useIsMobile } from "@hooks";
+import {
+  COUNTRIES_SUBMENU,
+  ACHIEVEMENTS_MENU,
+  TRIPS_SUBMENU,
+} from "@features/dashboard/navigation/config/menu";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
@@ -73,7 +78,7 @@ export default function DashboardPage() {
     selectedPanel,
     selectedRegion,
     selectedSubregion,
-    selectedCountry ?? null
+    selectedCountry ?? null,
   );
 
   // Navigation handlers
@@ -88,7 +93,7 @@ export default function DashboardPage() {
   } = useDashboardNavigation(
     countries,
     selectedRegion ?? "all",
-    selectedSubregion ?? ""
+    selectedSubregion ?? "",
   );
 
   // Loading and error states
@@ -127,8 +132,24 @@ export default function DashboardPage() {
     );
   }
 
+  // Menu configuration for finding current panel
+  const dashboardMenuConfig = [
+    ...COUNTRIES_SUBMENU,
+    ...ACHIEVEMENTS_MENU,
+    ...TRIPS_SUBMENU,
+  ];
+
+  // Find the label for the current panel
+  const currentPanel = dashboardMenuConfig.find(
+    (item) => item.key === menuSelectedPanel,
+  );
+  const pageTitle = currentPanel
+    ? `${currentPanel.title} | Atlaset`
+    : "Dashboard | Atlaset";
+
   return (
     <div className="min-h-screen relative">
+      <title>{pageTitle}</title>
       {/* Mobile: hamburger + drawer */}
       {isMobile && (
         <>
@@ -159,7 +180,9 @@ export default function DashboardPage() {
             />
             <Route
               path="countries"
-              element={<Navigate to="/dashboard/countries/exploration" replace />}
+              element={
+                <Navigate to="/dashboard/countries/exploration" replace />
+              }
             />
             {/* Exploration page */}
             <Route
@@ -170,7 +193,7 @@ export default function DashboardPage() {
                 selectedIsoCode: undefined,
                 onBack: undefined,
               })}
-            />            
+            />
             {/* All countries page */}
             <Route
               path="countries/all"
@@ -189,10 +212,7 @@ export default function DashboardPage() {
               })}
             />
             {/* Achievements page */}
-            <Route
-              path="achievements"
-              element={<AchievementsGrid />}
-            />
+            <Route path="achievements" element={<AchievementsGrid />} />
             {/* Other dashboard panels */}
             <Route path="trips/overview" element={<TripsStats />} />
             <Route path="trips/history" element={<TripHistory />} />

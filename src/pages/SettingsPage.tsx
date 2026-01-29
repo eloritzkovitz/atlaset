@@ -46,12 +46,12 @@ export default function ProfilePage() {
   const selectedPanel = location.pathname.endsWith("/activity")
     ? "activity"
     : location.pathname.endsWith("/security")
-    ? "security"
-    : location.pathname.endsWith("/display")
-    ? "display"
-    : location.pathname.endsWith("/sound")
-    ? "sound"
-    : "account";
+      ? "security"
+      : location.pathname.endsWith("/display")
+        ? "display"
+        : location.pathname.endsWith("/sound")
+          ? "sound"
+          : "account";
 
   // Handle menu navigation
   function handlePanelChange(panel: string) {
@@ -69,8 +69,19 @@ export default function ProfilePage() {
     setPanelOpen(false);
   }
 
+  // Page title based on selected panel
+  const panelTitles: Record<string, string> = {
+    account: "Account",
+    display: "Display",
+    sound: "Sound",
+    activity: "User Activity",
+    security: "Security",
+  };
+  const pageTitle = `${panelTitles[selectedPanel] || "Settings"} | Atlaset`;
+
   return (
     <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
+      <title>{pageTitle}</title>
       {/* Hamburger for mobile */}
       {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
       <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">

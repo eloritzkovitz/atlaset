@@ -151,6 +151,7 @@ export default function TripsPage() {
 
   return (
     <div className="min-h-screen w-full flex flex-col">
+      <title>Trips | Atlaset</title>
       {/* Toolbar */}
       {!isMobile && (
         <TripsToolbar

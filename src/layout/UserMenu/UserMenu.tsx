@@ -1,5 +1,5 @@
 import { useRef, useEffect } from "react";
-import { FaBell, FaUserGroup } from "react-icons/fa6";
+import { FaBell, FaCircleQuestion } from "react-icons/fa6";
 import { useLocation } from "react-router-dom";
 import { ActionButton, Menu } from "@components";
 import { useAuth } from "@contexts/AuthContext";
@@ -12,7 +12,7 @@ import { AuthButtons } from "../Header/AuthButtons";
 
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const { user, loading } = useAuth();
-  const { uiVisible, showFriends, toggleFriends } = useUI();
+  const { uiVisible } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -54,16 +54,16 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
       {!isSettingsPage && (
         <>
           <ActionButton
-            title="Friends"
-            onClick={toggleFriends}
-            icon={<FaUserGroup className="text-xl" />}
-            aria-pressed={showFriends}
-            rounded
-          />
-          <ActionButton
             title="Notifications"
             onClick={() => {}}
             icon={<FaBell className="text-xl" />}
+            aria-pressed={false}
+            rounded
+          />
+          <ActionButton
+            title="Help"
+            onClick={() => {}}
+            icon={<FaCircleQuestion className="text-xl" />}
             aria-pressed={false}
             rounded
           />

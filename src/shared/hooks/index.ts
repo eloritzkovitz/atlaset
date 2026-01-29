@@ -16,6 +16,9 @@ export * from "./dom/useMenuPosition";
 // Input
 export * from "./input/useKeyHandler";
 
+// Markdown
+export * from "./markdown/useMarkdownRenderer";
+
 // Navigation
 export * from "./navigation/useDragReorder";
 export * from "./navigation/useInfiniteScroll";
