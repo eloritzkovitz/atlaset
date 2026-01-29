@@ -1,10 +1,20 @@
 import type { ComponentProps } from "react";
 import ReactMarkdown from "react-markdown";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
+import js from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
+import ts from "react-syntax-highlighter/dist/esm/languages/hljs/typescript";
+import bash from "react-syntax-highlighter/dist/esm/languages/hljs/bash";
 import remarkGfm from "remark-gfm";
 import { Separator } from "@components";
 import changelog from "../../CHANGELOG.md?raw";
+
+// Register languages for syntax highlighter
+SyntaxHighlighter.registerLanguage("js", js);
+SyntaxHighlighter.registerLanguage("javascript", js);
+SyntaxHighlighter.registerLanguage("ts", ts);
+SyntaxHighlighter.registerLanguage("typescript", ts);
+SyntaxHighlighter.registerLanguage("bash", bash);
 
 export default function ChangelogPage() {
   return (
@@ -21,7 +31,7 @@ export default function ChangelogPage() {
                 <h2 className="mt-8 mb-2 text-xl text-muted" {...props} />
               </>
             );
-          },          
+          },
           ul: ({ ...props }) => (
             <ul className="list-disc ml-6 mb-4" {...props} />
           ),
@@ -39,7 +49,7 @@ export default function ChangelogPage() {
             return (
               <SyntaxHighlighter
                 style={oneLight}
-                language=""
+                language={className?.replace("language-", "") || ""}
                 PreTag="div"
                 className={className}
               >

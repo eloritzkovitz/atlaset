@@ -7,19 +7,19 @@ import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
 import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import { AtlasProviders } from "./pages/AtlasProvider";
+import AboutPage from "./pages/AboutPage";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import QuizzesPage from "./pages/QuizzesPage";
 import SettingsPage from "./pages/SettingsPage";
+import SignupPage from "./pages/SignupPage";
 import TripsPage from "./pages/TripsPage";
 
 // Lazy-loaded pages
-const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
-const LoginPage = lazy(() => import("./pages/LoginPage"));
-const SignupPage = lazy(() => import("./pages/SignupPage"));
-const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 function App() {
   const { ready } = useSettings();
@@ -47,31 +47,25 @@ function App() {
             <Route
               path="/login"
               element={
-                <Suspense>
-                  <PublicLayout>
-                    <LoginPage />
-                  </PublicLayout>
-                </Suspense>
+                <PublicLayout>
+                  <LoginPage />
+                </PublicLayout>
               }
             />
             <Route
               path="/signup"
               element={
-                <Suspense>
-                  <PublicLayout>
-                    <SignupPage />
-                  </PublicLayout>
-                </Suspense>
+                <PublicLayout>
+                  <SignupPage />
+                </PublicLayout>
               }
             />
             <Route
               path="/about"
               element={
-                <Suspense>
-                  <PublicLayout>
-                    <AboutPage />
-                  </PublicLayout>
-                </Suspense>
+                <PublicLayout>
+                  <AboutPage />
+                </PublicLayout>
               }
             />
             <Route
@@ -132,11 +126,9 @@ function App() {
             <Route
               path="*"
               element={
-                <Suspense>
-                  <PublicLayout>
-                    <NotFoundPage />
-                  </PublicLayout>
-                </Suspense>
+                <PublicLayout>
+                  <NotFoundPage />
+                </PublicLayout>
               }
             />
           </Routes>
