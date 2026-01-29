@@ -9,16 +9,16 @@ import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import { AtlasProviders } from "./pages/AtlasProvider";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
 import ProfilePage from "./pages/ProfilePage";
 import QuizzesPage from "./pages/QuizzesPage";
-import SignupPage from "./pages/SignupPage";
 import SettingsPage from "./pages/SettingsPage";
 import TripsPage from "./pages/TripsPage";
 
 // Lazy-loaded pages
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const SignupPage = lazy(() => import("./pages/SignupPage"));
 const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 function App() {
@@ -47,41 +47,41 @@ function App() {
             <Route
               path="/login"
               element={
-                <PublicLayout>
-                  <LoginPage />
-                </PublicLayout>
+                <Suspense>
+                  <PublicLayout>
+                    <LoginPage />
+                  </PublicLayout>
+                </Suspense>
               }
             />
             <Route
               path="/signup"
               element={
-                <PublicLayout>
-                  <SignupPage />
-                </PublicLayout>
+                <Suspense>
+                  <PublicLayout>
+                    <SignupPage />
+                  </PublicLayout>
+                </Suspense>
               }
             />
             <Route
               path="/about"
               element={
-                <PublicLayout>
-                  <Suspense
-                    fallback={<div className="p-8 text-center">Loading…</div>}
-                  >
+                <Suspense>
+                  <PublicLayout>
                     <AboutPage />
-                  </Suspense>
-                </PublicLayout>
+                  </PublicLayout>
+                </Suspense>
               }
             />
             <Route
               path="/changelog"
               element={
-                <PublicLayout>
-                  <Suspense
-                    fallback={<div className="p-8 text-center">Loading…</div>}
-                  >
+                <Suspense>
+                  <PublicLayout>
                     <ChangelogPage />
-                  </Suspense>
-                </PublicLayout>
+                  </PublicLayout>
+                </Suspense>
               }
             />
             <Route path="/users/:username" element={<ProfilePage />} />
@@ -132,13 +132,11 @@ function App() {
             <Route
               path="*"
               element={
-                <PublicLayout>
-                  <Suspense
-                    fallback={<div className="p-8 text-center">Loading…</div>}
-                  >
+                <Suspense>
+                  <PublicLayout>
                     <NotFoundPage />
-                  </Suspense>
-                </PublicLayout>
+                  </PublicLayout>
+                </Suspense>
               }
             />
           </Routes>
