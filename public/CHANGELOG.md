@@ -4,7 +4,8 @@
 
 - **Countries:** Replaced 3x2 flags with own package and made some improvements <span class="changelog-tag chore">chore</span>
 - **General:** Added changelog page <span class="changelog-tag docs">docs</span>
-- **UI:** Fixed some layouts <span class="changelog-tag bugfix">bugfix</span>
+- **General:** Added dynamic page titles <span class="changelog-tag chore">chore</span>
+- **UI:** Updated user menu and some layouts <span class="changelog-tag chore">chore</span>
 - **User:** Added menu option for bug reporting <span class="changelog-tag feature">feature</span>
 
 ## 2026-01-27
