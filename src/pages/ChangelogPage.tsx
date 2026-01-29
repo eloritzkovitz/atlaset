@@ -1,20 +1,9 @@
 import type { ComponentProps } from "react";
 import ReactMarkdown from "react-markdown";
-import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import js from "react-syntax-highlighter/dist/esm/languages/hljs/javascript";
-import ts from "react-syntax-highlighter/dist/esm/languages/hljs/typescript";
-import bash from "react-syntax-highlighter/dist/esm/languages/hljs/bash";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 import { Separator } from "@components";
 import changelog from "../../CHANGELOG.md?raw";
-
-// Register languages for syntax highlighter
-SyntaxHighlighter.registerLanguage("js", js);
-SyntaxHighlighter.registerLanguage("javascript", js);
-SyntaxHighlighter.registerLanguage("ts", ts);
-SyntaxHighlighter.registerLanguage("typescript", ts);
-SyntaxHighlighter.registerLanguage("bash", bash);
 
 export default function ChangelogPage() {
   return (
@@ -22,6 +11,7 @@ export default function ChangelogPage() {
       <h1 className="mb-20 text-3xl font-bold text-center">Changelog</h1>
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
         components={{
           h2: ({ node, ...props }) => {
             const isFirst = node?.position?.start.line === 2;
@@ -32,13 +22,43 @@ export default function ChangelogPage() {
               </>
             );
           },
-          ul: ({ ...props }) => (
-            <ul className="list-disc ml-6 mb-4" {...props} />
-          ),
-          li: ({ ...props }) => <li className="mb-1" {...props} />,
+          ul: ({ ...props }) => <ul className="ml-0 mb-4" {...props} />,
+          li: ({ children, ...props }) => {
+            let tag = null;
+            let text = children;
+            if (Array.isArray(children)) {
+              const tagIdx = children.findIndex(
+                (c) =>
+                  c &&
+                  typeof c === "object" &&
+                  c.type === "span" &&
+                  c.props?.className?.includes("changelog-tag"),
+              );
+              if (tagIdx !== -1) {
+                tag = children[tagIdx];
+                text = [
+                  ...children.slice(0, tagIdx),
+                  ...children.slice(tagIdx + 1),
+                ];
+              }
+            }
+            return (
+              <li
+                className="flex items-start list-none pl-0 py-2"
+                style={{ minHeight: "2.25rem" }}
+                {...props}
+              >
+                {tag && (
+                  <span className="flex-shrink-0 self-center inline-flex justify-center text-center min-w-[5.5em] mr-2">
+                    {tag}
+                  </span>
+                )}
+                <span className="leading-relaxed">{text}</span>
+              </li>
+            );
+          },
           code({
             inline,
-            className,
             children,
           }: ComponentProps<"code"> & { inline?: boolean }) {
             if (inline) {
@@ -47,14 +67,9 @@ export default function ChangelogPage() {
               );
             }
             return (
-              <SyntaxHighlighter
-                style={oneLight}
-                language={className?.replace("language-", "") || ""}
-                PreTag="div"
-                className={className}
-              >
-                {String(children ?? "").replace(/\n$/, "")}
-              </SyntaxHighlighter>
+              <pre className="bg-input rounded p-3 overflow-x-auto my-4">
+                <code className="text-sm">{children}</code>
+              </pre>
             );
           },
         }}

@@ -242,7 +242,46 @@ body::-webkit-scrollbar-thumb {
 .dark .shadow,
 .dark .shadow-md,
 .dark .shadow-lg {
-  box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.5), 0 1.5px 4px 0 rgba(0, 0, 0, 0.4);
+  box-shadow:
+    0 4px 24px 0 rgba(0, 0, 0, 0.5),
+    0 1.5px 4px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Changelog tag styles */
+.changelog-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  font-weight: 600;
+  margin-left: 0;
+  padding: 0.1em 0.7em;
+  border-radius: 0.5em;
+  background: #2563eb;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: 5.5em;
+  text-align: center;
+}
+
+.changelog-tag.breaking {
+  background: #f59e42;
+}
+.changelog-tag.bugfix {
+  background: #dc2626;
+}
+.changelog-tag.chore {
+  background: #22c55e;
+}
+.changelog-tag.docs {
+  background: #7c3aed;
+}
+.changelog-tag.security {
+  background: #f43f5e;
+}
+.changelog-tag.test {
+  background: #a21caf;
 }
 
 @media (prefers-color-scheme: light) {

@@ -2,242 +2,242 @@
 
 ## 2026-01-29
 
-- Replaced 3x2 flags with own package and made some improvements
-- Added menu option for bug reporting
-- Added changelog page
-- Some other minor fixes
+- **Countries:** Replaced 3x2 flags with own package and made some improvements <span class="changelog-tag chore">chore</span>
+- **General:** Added changelog page <span class="changelog-tag docs">docs</span>
+- **UI:** Fixed some layouts <span class="changelog-tag bugfix">bugfix</span>
+- **User:** Added menu option for bug reporting <span class="changelog-tag feature">feature</span>
 
 ## 2026-01-27
 
-- Added personal achievements
+- **Dashboard:** Added personal achievements <span class="changelog-tag feature">feature</span>
 
 ## 2026-01-16
 
-- Added pagination to the trips table
+- **Trips:** Added pagination to the trips table <span class="changelog-tag feature">feature</span>
 
 ## 2026-01-15
 
-- Added trip participants, allowing users to share the same trips with family and friends
-- Removed support for trips in guest mode
-- Some UI updates and fixes
+- **Trips:** Added trip participants, allowing users to share the same trips with family and friends <span class="changelog-tag feature">feature</span>
+- **Trips:** Removed support for trips in guest mode <span class="changelog-tag breaking">breaking</span>
+- **UI:** Some UI updates and fixes <span class="changelog-tag bugfix">bugfix</span>
 
 ## 2026-01-12
 
-- Added new toggle for sovereign countries
-- Updated sort button and menu
-- Fixed some bugs
+- **Atlas | Countries:** Updated sort button and menu <span class="changelog-tag feature">feature</span>
+- **Countries:** Added new toggle for sovereign countries <span class="changelog-tag feature">feature</span>
+- **General:** Fixed some bugs <span class="changelog-tag bugfix">bugfix</span>
 
 ## 2026-01-11
 
-- Added an option to embed maps with an HTML iframe
-- Updated some layouts to be more flexible
+- **Atlas | Export:** Added an option to embed maps with an HTML iframe <span class="changelog-tag feature">feature</span>
+- **UI:** Updated some layouts to be more flexible <span class="changelog-tag chore">chore</span>
 
 ## 2026-01-09
 
-- Expanded map export to allow sharing maps via an encoded URL
-- Added download data as JSON option
-- Updated UI to show interactive elements and data based on map mode
+- **Atlas | Export:** Expanded map export to allow sharing maps via an encoded URL <span class="changelog-tag feature">feature</span>
+- **Atlas | Export:** Added download data as JSON option <span class="changelog-tag feature">feature</span>
+- **Atlas | Map:** Updated UI to show interactive elements and data based on map mode <span class="changelog-tag feature">feature</span>
 
 ## 2026-01-08
 
-- Replaced use of react-simple-maps with updated and improved components for better control and maintainability
-- Centralized map state management
-- Some other map fixes
+- **Atlas | Map:** Replaced use of react-simple-maps with updated and improved components for better control and maintainability <span class="changelog-tag chore">chore</span>
+- **Atlas | Map:** Centralized map state management <span class="changelog-tag chore">chore</span>
+- **Atlas | Map:** Some other map fixes <span class="changelog-tag bugfix">bugfix</span>
 
 ## 2026-01-06
 
-- Added a new homepage
-- Added a new about page
-- Updated layouts for some pages
+- **General:** Added a new homepage <span class="changelog-tag feature">feature</span>
+- **General:** Added a new about page <span class="changelog-tag feature">feature</span>
+- **UI:** Updated layouts for some pages <span class="changelog-tag chore">chore</span>
 
 ## 2026-01-05
 
-- Moved auth and settings management to Redux
-- Updated loading spinners and error messages across pages
-- Reorganized some UI components and layouts in the atlas page
+- **Atlas:** Reorganized some UI components and layouts in the atlas page <span class="changelog-tag chore">chore</span>
+- **General:** Moved auth and settings management to Redux <span class="changelog-tag chore">chore</span>
+- **UI:** Updated loading spinners and error messages across pages <span class="changelog-tag feature">feature</span>
 
 ## 2026-01-02
 
-- Renamed games to quizzes
-- Redesigned quizzes to allow types, modes and difficulties, and updated logic accordingly
-- Added leaderboards to show 25 best results for each category
-- Added audio and animation effects in various places
-- Redesigned tooltips and removed some unnecessary ones
-- Updated all static data fetching to be prebuilt and not cached
+- **General:** Added audio and animation effects in various places <span class="changelog-tag feature">feature</span>
+- **General:** Redesigned tooltips and removed some unnecessary ones <span class="changelog-tag chore">chore</span>
+- **General:** Updated all static data fetching to be prebuilt and not cached <span class="changelog-tag chore">chore</span>
+- **Quizzes:** Renamed games to quizzes <span class="changelog-tag chore">chore</span>
+- **Quizzes:** Redesigned quizzes to allow types, modes and difficulties, and updated logic accordingly <span class="changelog-tag feature">feature</span>
+- **Quizzes:** Added leaderboards to show 25 best results for each category <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-28
 
-- Fixed default selection for core filters
-- Updated overlays to support custom filter labels
+- **Atlas | Filters:** Fixed default selection for core filters <span class="changelog-tag bugfix">bugfix</span>
+- **Atlas | Layers:** Updated layers to support custom filter labels <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-27
 
-- Users can now add and manage friends
-- Updated activity actions to be based on a number value
-- Updated service structures to be consistent
-- Redesigned map legend
+- **Atlas | UI** Redesigned map legend <span class="changelog-tag feature">feature</span>
+- **General:** Updated service structures to be consistent <span class="changelog-tag chore">chore</span>
+- **User | Friends:** Users can now add and manage friends <span class="changelog-tag feature">feature</span>
+- **User | Activity:** Updated activity actions to be based on a number value <span class="changelog-tag chore">chore</span>
 
 ## 2025-12-23
 
-- User profiles are now public, accessible through dynamic routes
-- Added various profile display fields
-- Home country and visited countries are now stored in the user profile and in the case of the latter synced automatically
+- **User | Profile:** User profiles are now public, accessible through dynamic routes <span class="changelog-tag feature">feature</span>
+- **User | Profile:** Added various profile display fields <span class="changelog-tag feature">feature</span>
+- **User | Profile:** Home country and visited countries are now stored in the user profile and in the case of the latter synced automatically <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-22
 
-- Fixed a bug with pagination
-- Improved text and flag alignment in the display
-- Added new options to filter countries in the display by region and subregion
+- **UI:** Fixed a bug with pagination <span class="changelog-tag bugfix">bugfix</span>
+- **Countries:** Improved text and flag alignment in the display <span class="changelog-tag chore">chore</span>
+- **Countries:** Added new options to filter countries in the display by region and subregion <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-21
 
-- Added CI workflow on every push and PR
-- Updated some types, contexts, providers and hooks to satisfy linting rules
+- **General:** Added CI workflow on every push and PR <span class="changelog-tag chore">chore</span>
+- **General:** Updated some types, contexts, providers and hooks to satisfy linting rules <span class="changelog-tag chore">chore</span>
 
 ## 2025-12-20
 
-- Reorganized settings into groups
-- Moved settings to a dedicated settings page
-- Moved account activity and security to settings
-- Added account management actions for deactivation and deletion
+- **Settings:** Reorganized settings into groups <span class="changelog-tag chore">chore</span>
+- **Settings:** Moved settings to a dedicated settings page <span class="changelog-tag feature">feature</span>
+- **Settings:** Moved account activity and security to settings <span class="changelog-tag feature">feature</span>
+- **Settings:** Added account management actions for deactivation and deletion <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-18
 
-- Updated layout to be responsive
-- Added drawer panels and swipe navigation for mobile screens
-- Removed committed .env files and moved values to the gitignored .env
-- Added app check handling in production and Firestore rules
-- Added local data caching for static data to reduce API calls and cold loading
-- Fixed some bugs
+- **General:** Removed committed .env files and moved values to the gitignored .env <span class="changelog-tag security">security</span>
+- **General:** Added app check handling in production and Firestore rules <span class="changelog-tag security">security</span>
+- **General:** Added local data caching for static data to reduce API calls and cold loading <span class="changelog-tag chore">chore</span>
+- **General:** Fixed some bugs <span class="changelog-tag bugfix">bugfix</span>
+- **UI:** Updated layout to be responsive <span class="changelog-tag chore">chore</span>
+- **UI:** Added drawer panels and swipe navigation for mobile screens <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-17
 
-- Deployed application
+- **General:** Deployed application <span class="changelog-tag chore">chore</span>
 
 ## 2025-12-16
 
-- Trips can now be added without dates, if the "tentative dates" checkbox is selected
-- Updated visit logic to show visits chronologically and grouped by categories (past visits, upcoming, planned)
-- Added a not found page
+- **Trips:** Trips can now be added without dates, if the "tentative dates" checkbox is selected <span class="changelog-tag feature">feature</span>
+- **Visits:** Updated visit logic to show visits chronologically and grouped by categories (past visits, upcoming, planned) <span class="changelog-tag feature">feature</span>
+- **General:** Added a not found page <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-15
 
-- Replaced color classes with defined theme colors
-- Improved styling for menus, dropdowns, inputs and other elements
-- Dark theme will now be the default theme
+- **UI:** Replaced color classes with defined theme colors <span class="changelog-tag chore">chore</span>
+- **UI:** Improved styling for menus, dropdowns, inputs and other elements <span class="changelog-tag chore">chore</span>
+- **UI:** Dark theme will now be the default theme <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-10
 
-- Added the option to rate and favorite trips
-- Updated the trips table to use pagination and infinite scrolling
+- **Trips:** Added the option to rate and favorite trips <span class="changelog-tag feature">feature</span>
+- **Trips:** Updated the trips table to use pagination and infinite scrolling <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-09
 
-- Added user profile page
-- Added logging and displaying actions in the profile page
-- Added a security section showing some information
-- Implemented pagination for loading lists
-- Fixed some bugs
+- **General:** Implemented pagination for loading lists <span class="changelog-tag feature">feature</span>
+- **General:** Fixed some bugs <span class="changelog-tag bugfix">bugfix</span>
+- **User | Profile:** Added user profile page <span class="changelog-tag feature">feature</span>
+- **User | Profile:** Added logging and displaying actions in the profile page <span class="changelog-tag feature">feature</span>
+- **User | Profile:** Added a security section showing some information <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-07
 
-- Added dashboard feature, showing statistics and information
-- Moved the old trips statistics from trips to the dashboard
-- Added Electron desktop wrapper for cross-platform support
-- Implemented UI for login and signup to allow authentication with email/password in addition to Google sign-in
-- Added password reset and session persistence support
+- **Dashboard:** Added dashboard feature, showing statistics and information <span class="changelog-tag feature">feature</span>
+- **Dashboard:** Moved the old trips statistics from trips to the dashboard <span class="changelog-tag chore">chore</span>
+- **General:** Added Electron desktop wrapper for cross-platform support <span class="changelog-tag feature">feature</span>
+- **User | Auth:** Implemented UI for login and signup to allow authentication with email/password in addition to Google sign-in <span class="changelog-tag feature">feature</span>
+- **User | Auth:** Added password reset and session persistence support <span class="changelog-tag feature">feature</span>
 
 ## 2025-12-02
 
-- Redesigned the main layout
-- Updated menu to a sidebar menu, available across all pages
-- Fixed some panel and menu bugs
+- **UI:** Redesigned the main layout <span class="changelog-tag chore">chore</span>
+- **UI:** Updated menu to a sidebar menu, available across all pages <span class="changelog-tag feature">feature</span>
+- **UI:** Fixed some panel and menu bugs <span class="changelog-tag bugfix">bugfix</span>
 
 ## 2025-12-01
 
-- Connected app with Firebase Authentication and Firestore to support user authentication and data persistence
-- IndexedDB now works for guest sessions
-- Upon login, current guest session data will be merged with the account's data
+- **User | Auth:** Connected app with Firebase Authentication and Firestore to support user authentication and data persistence <span class="changelog-tag feature">feature</span>
+- **User | Auth:** IndexedDB now works for guest sessions <span class="changelog-tag feature">feature</span>
+- **User | Auth:** Upon login, current guest session data will be merged with the account's data <span class="changelog-tag feature">feature</span>
 
 ## 2025-11-29
 
-- Updated timeline mode with new features: play/pause controls, a timeline bar with years and visited countries, timeline filters
-- Visited countries will now be highlighted on the map and in the country list when moving between years
-- Updated settings to allow coloring home country and grouped color palettes
-- Improved keyboard focus support for accessibility
+- **Atlas | Timeline:** Updated timeline mode with new features: play/pause controls, a timeline bar with years and visited countries, timeline filters <span class="changelog-tag feature">feature</span>
+- **Atlas | Timeline:** Visited countries will now be highlighted on the map and in the country list when moving between years <span class="changelog-tag feature">feature</span>
+- **General:** Improved keyboard focus support for accessibility <span class="changelog-tag feature">feature</span>
+- **Settings:** Updated settings to allow coloring home country and grouped color palettes <span class="changelog-tag feature">feature</span>
 
 ## 2025-11-18
 
-- Timeline mode can now be navigated with arrow keys
-- Added an additional yearly mode
-- Added color settings for overlays and timeline modes, which can be chosen from the settings
+- **Atlas | Timeline:** Timeline mode can now be navigated with arrow keys <span class="changelog-tag feature">feature</span>
+- **Atlas | Timeline:** Added an additional yearly mode <span class="changelog-tag feature">feature</span>
+- **Settings:** Added color settings for overlays and timeline modes, which can be chosen from the settings <span class="changelog-tag feature">feature</span>
 
 ## 2025-11-16
 
-- Some UI updates
+- **UI:** Some UI updates <span class="changelog-tag chore">chore</span>
 
 ## 2025-11-15
 
-- Added Vitest unit tests for shared and feature hooks and utilities
-- Added Cypress E2E tests for various main flows
-- Improved component testability
-- Added visit status badge next to countries in the details modal
-- Improved timeline mode to color countries by visit count
-- Expanded map export formats to include JPEG and WebP as well
+- **Atlas | Countries:** Added visit status badge next to countries in the details modal <span class="changelog-tag feature">feature</span>
+- **Atlas | Export:** Expanded map export formats to include JPEG and WebP as well <span class="changelog-tag feature">feature</span>
+- **Atlas | Timeline:** Improved timeline mode to color countries by visit count <span class="changelog-tag feature">feature</span>
+- **Test:** Added Vitest unit tests for shared and feature hooks and utilities <span class="changelog-tag test">test</span>
+- **Test:** Added Cypress E2E tests for various main flows <span class="changelog-tag test">test</span>
+- **Test:** Improved component testability <span class="changelog-tag test">test</span>
 
 ## 2025-11-06
 
-- Implemented PWA support
+- **General:** Implemented PWA support <span class="changelog-tag feature">feature</span>
 
 ## 2025-11-05
 
-- Moved data logic to services
+- **General:** Moved data logic to services <span class="changelog-tag chore">chore</span>
 
 ## 2025-11-04
 
-- Added branding
+- **UI:** Added branding <span class="changelog-tag feature">feature</span>
 
 ## 2025-11-01
 
-- Added trip management
-- Switched data persistence from LocalStorage to IndexedDB
-- Various other updates to components, hooks and other shared files
+- **Trips:** Added trip management <span class="changelog-tag feature">feature</span>
+- **General:** Switched data persistence from LocalStorage to IndexedDB <span class="changelog-tag chore">chore</span>
+- **General:** Various other updates to components, hooks and other shared files <span class="changelog-tag chore">chore</span>
 
 ## 2025-10-22
 
-- Non-sovereign countries will now show their sovereign/claimant
-- Fixed some UI bugs
-- Reorganized and improved components, utility functions and style classes
+- **Atlas | Countries:** Non-sovereign countries will now show their sovereign/claimant <span class="changelog-tag feature">feature</span>
+- **General:** Reorganized and improved components, utility functions and style classes <span class="changelog-tag chore">chore</span>
+- **UI:** Fixed some UI bugs <span class="changelog-tag bugfix">bugfix</span>
 
 ## 2025-10-19
 
-- Added map markers
+- **Atlas | Markers:** Added map markers <span class="changelog-tag feature">feature</span>
 
 ## 2025-10-18
 
-- Layers can now be reordered by dragging them
-- Modals in the toolbar will now close when clicking outside the modal area
-- Fixed some other minor bugs
+- **Atlas | Layers:** Layers can now be reordered by dragging them <span class="changelog-tag feature">feature</span>
+- **General:** Modals in the toolbar will now close when clicking outside the modal area <span class="changelog-tag feature">feature</span>
+- **General:** Fixed some other minor bugs <span class="changelog-tag bugfix">bugfix</span>
 
 ## 2025-10-17
 
-- Reorganized project and updated some styles
+- **General:** Reorganized project and updated some styles <span class="changelog-tag chore">chore</span>
 
 ## 2025-10-16
 
-- Updated map UI and styles
-- Updated UI, toolbars and other components
-- Added option to export map as SVG/PNG
-- Added settings for better configuration
-- Added key command shortcuts for better accessibility
+- **Atlas | Export:** Added option to export map as SVG/PNG <span class="changelog-tag feature">feature</span>
+- **Atlas | Map:** Updated map UI and styles <span class="changelog-tag chore">chore</span>
+- **General:** Added key command shortcuts for better feature <span class="changelog-tag feature">feature</span>
+- **Settings:** Added settings for better configuration <span class="changelog-tag feature">feature</span>
+- **UI:** Updated UI, toolbars and other components <span class="changelog-tag chore">chore</span>
 
 ## 2025-10-08
 
-- Various updates to UI, themes, styles, types and some bugfixes
+- **UI:** Various updates to UI, themes, styles, types and some bugfixes <span class="changelog-tag chore">chore</span>
 
 ## 2025-10-05
 
-- Updated UX
+- **UI:** Updated UX <span class="changelog-tag chore">chore</span>
 
 ## 2025-10-04
 

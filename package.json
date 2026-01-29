@@ -35,8 +35,8 @@
     "react-redux": "9.2.0",
     "react-router-dom": "7.13.0",
     "react-select": "5.10.2",
-    "react-syntax-highlighter": "16.1.0",
     "recharts": "3.7.0",
+    "rehype-raw": "7.0.0",
     "remark-gfm": "4.0.1",
     "topojson-client": "3.1.0",
     "ts-node": "10.9.2"
@@ -55,7 +55,6 @@
     "@types/react-color": "3.0.13",
     "@types/react-dom": "19.2.3",
     "@types/react-router-dom": "5.3.3",
-    "@types/react-syntax-highlighter": "15.5.13",
     "@types/topojson-client": "3.1.5",
     "@vitejs/plugin-react": "5.1.2",
     "@vitest/coverage-v8": "4.0.18",
