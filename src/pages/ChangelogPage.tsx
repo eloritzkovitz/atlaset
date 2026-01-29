@@ -22,10 +22,10 @@ export default function ChangelogPage() {
               </>
             );
           },          
-          ul: ({ node, ...props }) => (
+          ul: ({ ...props }) => (
             <ul className="list-disc ml-6 mb-4" {...props} />
           ),
-          li: ({ node, ...props }) => <li className="mb-1" {...props} />,
+          li: ({ ...props }) => <li className="mb-1" {...props} />,
           code({
             inline,
             className,
