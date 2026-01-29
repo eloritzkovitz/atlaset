@@ -10,6 +10,7 @@ export default function SignupPage() {
 
   return (
     <div className="flex flex-col flex-1 min-h-[70vh] w-full">
+      <title>Sign Up | Atlaset</title>
       <div className="flex flex-1 flex-col items-center justify-center">
         <AuthCard>
           <h2 className="text-2xl font-bold mb-4">

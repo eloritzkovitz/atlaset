@@ -1,6 +1,7 @@
 export default function NotFoundPage() {
   return (
     <>
+      <title>Page not found | Atlaset</title>
       <h1 className="text-6xl font-extrabold text-blue-800 dark:text-blue-400 mb-4 drop-shadow">
         404
       </h1>

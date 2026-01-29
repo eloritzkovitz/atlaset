@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaFlag, FaLandmark, FaTrophy, FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@components";
 import { Leaderboards, QuizEntry, QuizSettings } from "@features/quizzes";
 import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
@@ -11,6 +11,20 @@ import { useFlyTransition } from "@hooks";
 import type { RootState } from "../store";
 
 export default function QuizzesPage() {
+  const location = useLocation();
+
+  // Dynamic title logic
+  useEffect(() => {
+    let title = "Quizzes | Atlaset";
+    if (location.pathname.endsWith("guess-the-flag")) {
+      title = "Guess the Flag | Atlaset";
+    } else if (location.pathname.endsWith("guess-the-capital")) {
+      title = "Guess the Capital | Atlaset";
+    } else if (location.pathname.endsWith("leaderboards")) {
+      title = "Leaderboards | Atlaset";
+    }
+    document.title = title;
+  }, [location.pathname]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,10 +52,10 @@ export default function QuizzesPage() {
 
   // Redux quiz settings
   const difficulty = useSelector(
-    (state: RootState) => state.quizSettings.difficulty
+    (state: RootState) => state.quizSettings.difficulty,
   );
   const gameMode = useSelector(
-    (state: RootState) => state.quizSettings.gameMode
+    (state: RootState) => state.quizSettings.gameMode,
   );
 
   // When settingsOpen triggers, start fly-out and show settings after
@@ -108,84 +122,82 @@ export default function QuizzesPage() {
   ];
 
   return (
-    <>
-      <Routes>
-        <Route
-          index
-          element={
-            <div className="min-h-screen flex flex-col items-center justify-center relative">
-              {showCards && (
-                <div
-                  className={
-                    "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all" +
-                    (animating ? " pointer-events-none" : "")
-                  }
-                >
-                  {cards.map((card) => (
-                    <Card
-                      key={card.key}
-                      className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 animation transition"
-                      animationClass={animationClass}
-                      onClick={() => {
-                        if (card.key !== "leaderboards") {
-                          setSettingsOpen({
-                            route: card.route,
-                            key: card.key,
+    <Routes>
+      <Route
+        index
+        element={
+          <div className="min-h-screen flex flex-col items-center justify-center relative">
+            {showCards && (
+              <div
+                className={
+                  "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all" +
+                  (animating ? " pointer-events-none" : "")
+                }
+              >
+                {cards.map((card) => (
+                  <Card
+                    key={card.key}
+                    className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 animation transition"
+                    animationClass={animationClass}
+                    onClick={() => {
+                      if (card.key !== "leaderboards") {
+                        setSettingsOpen({
+                          route: card.route,
+                          key: card.key,
+                        });
+                      } else {
+                        if (isAuthenticated()) {
+                          navigate(card.route);
+                        } else if (!leaderboardHint) {
+                          setHintKey((k) => k + 1);
+                          setLeaderboardHint({
+                            message:
+                              "You must be signed in to view leaderboards.",
+                            icon: (
+                              <FaCircleXmark className="text-danger text-xl" />
+                            ),
                           });
-                        } else {
-                          if (isAuthenticated()) {
-                            navigate(card.route);
-                          } else if (!leaderboardHint) {
-                            setHintKey((k) => k + 1);
-                            setLeaderboardHint({
-                              message:
-                                "You must be signed in to view leaderboards.",
-                              icon: (
-                                <FaCircleXmark className="text-danger text-xl" />
-                              ),
-                            });
-                          }
                         }
-                      }}
-                    >
-                      <div className="flex flex-col items-center">
-                        {card.icon}
-                        <h2 className="text-xl font-semibold mb-2">
-                          {card.title}
-                        </h2>
-                        <p className="text-muted">{card.description}</p>
-                      </div>
-                    </Card>
-                  ))}
+                      }
+                    }}
+                  >
+                    <div className="flex flex-col items-center">
+                      {card.icon}
+                      <h2 className="text-xl font-semibold mb-2">
+                        {card.title}
+                      </h2>
+                      <p className="text-muted">{card.description}</p>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            )}
+            {showSettings && settingsOpen && (
+              <div className="absolute inset-0 flex items-center justify-center z-10">
+                <div className="animate-fly-in">
+                  <QuizSettings
+                    difficulty={difficulty}
+                    setDifficulty={(value) => dispatch(setDifficulty(value))}
+                    gameMode={gameMode}
+                    setGameMode={(value) => dispatch(setGameMode(value))}
+                    onStart={() => {
+                      dispatch(
+                        setQuizType(settingsOpen.key as "flag" | "capital"),
+                      );
+                      navigate(settingsOpen.route);
+                      setSettingsOpen(null);
+                    }}
+                    onCancel={() => setSettingsOpen(null)}
+                  />
                 </div>
-              )}
-              {showSettings && settingsOpen && (
-                <div className="absolute inset-0 flex items-center justify-center z-10">
-                  <div className="animate-fly-in">
-                    <QuizSettings
-                      difficulty={difficulty}
-                      setDifficulty={(value) => dispatch(setDifficulty(value))}
-                      gameMode={gameMode}
-                      setGameMode={(value) => dispatch(setGameMode(value))}
-                      onStart={() => {
-                        dispatch(
-                          setQuizType(settingsOpen.key as "flag" | "capital")
-                        );
-                        navigate(settingsOpen.route);
-                        setSettingsOpen(null);
-                      }}
-                      onCancel={() => setSettingsOpen(null)}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          }
-        />
-        <Route path="guess-the-flag" element={<QuizEntry />} />
-        <Route path="guess-the-capital" element={<QuizEntry />} />
-        <Route path="leaderboards" element={<Leaderboards />} />
-      </Routes>
-    </>
+              </div>
+            )}
+          </div>
+        }
+      />
+      <Route path="guess-the-flag" element={<QuizEntry />} />
+      <Route path="guess-the-capital" element={<QuizEntry />} />
+      <Route path="leaderboards" element={<Leaderboards />} />
+    </Routes>
   );
 }

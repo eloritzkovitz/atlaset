@@ -27,6 +27,7 @@ export default function ProfilePage() {
   return (
     <>
       <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
+        <title>Profile | Atlaset</title>
         <Header />
         <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
           <div className="flex flex-col gap-6 items-center">

@@ -20,10 +20,13 @@ export default function HomePage() {
 
   // Not loading and no user: show homepage content
   return (
-    <main>
-      <HeroSection />
-      <FeaturesSection />
-      <CallToActionSection />
-    </main>
+    <>
+      <title>Atlaset: Your travel companion</title>
+      <main>
+        <HeroSection />
+        <FeaturesSection />
+        <CallToActionSection />
+      </main>
+    </>
   );
 }

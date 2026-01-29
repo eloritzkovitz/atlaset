@@ -66,7 +66,7 @@ export function CountrySection({
   // Generate options for region and subregion filters
   const regionSelectFilter = coreFiltersConfig.find((f) => f.key === "region")!;
   const subregionSelectFilter = coreFiltersConfig.find(
-    (f) => f.key === "subregion"
+    (f) => f.key === "subregion",
   )!;
 
   // Compute unique region and subregion arrays for options
@@ -74,8 +74,8 @@ export function CountrySection({
     new Set(
       countries
         .map((c) => c.region)
-        .filter((r): r is string => typeof r === "string" && !!r)
-    )
+        .filter((r): r is string => typeof r === "string" && !!r),
+    ),
   );
   const uniqueSubregions =
     selectedRegion && selectedRegion !== "all"
@@ -84,8 +84,8 @@ export function CountrySection({
             countries
               .filter((c) => c.region === selectedRegion)
               .map((c) => c.subregion)
-              .filter((s): s is string => typeof s === "string" && !!s)
-          )
+              .filter((s): s is string => typeof s === "string" && !!s),
+          ),
         )
       : [];
 
@@ -117,7 +117,7 @@ export function CountrySection({
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
       }),
-    [countries, search, normalizedRegion, normalizedSubregion]
+    [countries, search, normalizedRegion, normalizedSubregion],
   );
 
   // Further filter by visited countries if toggled
@@ -126,13 +126,13 @@ export function CountrySection({
       showVisitedOnly
         ? filtered.filter((c) => visitedCountryCodes.includes(c.isoCode))
         : filtered,
-    [filtered, showVisitedOnly, visitedCountryCodes]
+    [filtered, showVisitedOnly, visitedCountryCodes],
   );
 
   // Sort countries by name ascending
   const sortedCountries = useMemo(
     () => sortCountries(filteredVisited, "name-asc", []),
-    [filteredVisited]
+    [filteredVisited],
   );
 
   // Paginate countries
@@ -148,8 +148,18 @@ export function CountrySection({
   // Infinite scroll sentinel
   const sentinelRef = useInfiniteScroll(loadMore, hasMore);
 
+  // Compute display name
+  let filterName = "All Regions";
+  if (selectedSubregion && selectedSubregion !== "all") {
+    filterName = selectedSubregion;
+  } else if (selectedRegion && selectedRegion !== "all") {
+    filterName = selectedRegion;
+  }
+  const pageTitle = `${filterName} | Atlaset`;
+
   return (
     <div className={className}>
+      <title>{pageTitle}</title>
       <div className="flex items-center justify-between mb-4 gap-4">
         <div className="flex items-center gap-2">
           <SearchInput
@@ -185,7 +195,7 @@ export function CountrySection({
                     selectedSovereignty: "",
                     setSelectedSovereignty: () => {},
                   },
-                  val as string
+                  val as string,
                 );
                 setSelectedSubregion("all");
               }
@@ -221,7 +231,7 @@ export function CountrySection({
                     selectedSovereignty: "",
                     setSelectedSovereignty: () => {},
                   },
-                  val as string
+                  val as string,
                 );
                 if (onSubregionChange && selectedRegion && val) {
                   onSubregionChange(selectedRegion, val as string);

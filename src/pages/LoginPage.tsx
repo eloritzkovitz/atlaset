@@ -34,6 +34,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col flex-1 min-h-[70vh] w-full">
+      <title>Login | Atlaset</title>
       <div className="flex flex-1 flex-col items-center justify-center">
         <AuthCard>
           <h2 className="text-2xl font-bold mb-4">Sign in</h2>
