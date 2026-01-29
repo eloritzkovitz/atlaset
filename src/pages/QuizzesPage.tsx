@@ -1,29 +1,63 @@
-import React, { useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { FaFlag, FaLandmark, FaTrophy, FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@components";
-import { Leaderboards, QuizEntry, QuizSettings } from "@features/quizzes";
+import { QuizEntry, QuizSettings } from "@features/quizzes";
 import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
 import { useUiHint } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
 import { useFlyTransition } from "@hooks";
 import type { RootState } from "../store";
 
+// Lazy load leaderboards component
+const Leaderboards = lazy(() =>
+  import("@features/quizzes/leaderboards/components/Leaderboards").then(
+    (mod) => ({ default: mod.Leaderboards }),
+  ),
+);
+
 export default function QuizzesPage() {
   const location = useLocation();
 
+  // Cards config
+  const cards = [
+    {
+      key: "flag",
+      route: "guess-the-flag",
+      icon: <FaFlag className="text-5xl mb-4" />,
+      title: "Guess the Flag",
+      description: "Can you identify the country by its flag?",
+      muted: false,
+    },
+    {
+      key: "capital",
+      route: "guess-the-capital",
+      icon: <FaLandmark className="text-5xl mb-4" />,
+      title: "Guess the Capital",
+      description: "Test your knowledge of world capitals!",
+      muted: true,
+    },
+    {
+      key: "leaderboards",
+      route: "leaderboards",
+      icon: <FaTrophy className="text-5xl mb-4 text-yellow-500" />,
+      title: "Leaderboards",
+      description: "See top scores and streaks!",
+      muted: true,
+    },
+  ];
+
   // Dynamic title logic
   useEffect(() => {
-    let title = "Quizzes | Atlaset";
-    if (location.pathname.endsWith("guess-the-flag")) {
-      title = "Guess the Flag | Atlaset";
-    } else if (location.pathname.endsWith("guess-the-capital")) {
-      title = "Guess the Capital | Atlaset";
-    } else if (location.pathname.endsWith("leaderboards")) {
-      title = "Leaderboards | Atlaset";
+    // Find a matching card by route
+    const match = cards.find((card) => location.pathname.endsWith(card.route));
+    if (match) {
+      document.title = `${match.title} | Atlaset`;
+    } else {
+      document.title = "Quizzes | Atlaset";
     }
-    document.title = title;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -93,33 +127,6 @@ export default function QuizzesPage() {
       return () => clearTimeout(timeout);
     }
   }, [leaderboardHint]);
-
-  const cards = [
-    {
-      key: "flag",
-      route: "guess-the-flag",
-      icon: <FaFlag className="text-5xl mb-4" />,
-      title: "Guess the Flag",
-      description: "Can you identify the country by its flag?",
-      muted: false,
-    },
-    {
-      key: "capital",
-      route: "guess-the-capital",
-      icon: <FaLandmark className="text-5xl mb-4" />,
-      title: "Guess the Capital",
-      description: "Test your knowledge of world capitals!",
-      muted: true,
-    },
-    {
-      key: "leaderboards",
-      route: "leaderboards",
-      icon: <FaTrophy className="text-5xl mb-4 text-yellow-500" />,
-      title: "Leaderboards",
-      description: "See top scores and streaks!",
-      muted: true,
-    },
-  ];
 
   return (
     <Routes>
@@ -197,7 +204,14 @@ export default function QuizzesPage() {
       />
       <Route path="guess-the-flag" element={<QuizEntry />} />
       <Route path="guess-the-capital" element={<QuizEntry />} />
-      <Route path="leaderboards" element={<Leaderboards />} />
+      <Route
+        path="leaderboards"
+        element={
+          <Suspense>
+            <Leaderboards />
+          </Suspense>
+        }
+      />
     </Routes>
   );
 }
