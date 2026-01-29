@@ -1,10 +1,12 @@
 import type { User } from "firebase/auth";
 import {
+  FaBookmark,
   FaBug,
   FaGear,
   FaKeyboard,
   FaRightFromBracket,
   FaUser,
+  FaUserGroup,
 } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
@@ -19,7 +21,7 @@ interface UserMenuProps {
 }
 
 export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
-  const { toggleShortcuts } = useUI();
+  const { toggleFriends, toggleShortcuts } = useUI();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -35,7 +37,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   if (user) {
     return (
       <>
-        <UserInfo user={user} showDisplayName={true} showEmail={true} />
+        <UserInfo user={user} showDisplayName={true} showUsername={true} />
         <Separator />
         <MenuButton
           onClick={() => navigate(`/users/${username}`)}
@@ -46,13 +48,22 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           Profile
         </MenuButton>
         <MenuButton
-          onClick={() => navigate("/settings")}
-          icon={<FaGear className="text-lg mr-2" />}
-          ariaLabel="Settings"
+          onClick={toggleFriends}
+          icon={<FaUserGroup className="text-lg mr-2" />}
+          ariaLabel="Friends"
           className="w-full"
         >
-          Settings
+          Friends
         </MenuButton>
+        <MenuButton
+          onClick={undefined}
+          icon={<FaBookmark className="text-lg mr-2" />}
+          ariaLabel="Saved"
+          className="w-full"
+        >
+          Saved
+        </MenuButton>
+        <Separator className="my-1" />
         <MenuButton
           onClick={() =>
             window.open(
@@ -76,6 +87,16 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
             Keyboard Shortcuts
           </MenuButton>
         )}
+        <Separator className="my-1" />
+        <MenuButton
+          onClick={() => navigate("/settings")}
+          icon={<FaGear className="text-lg mr-2" />}
+          ariaLabel="Settings"
+          className="w-full"
+        >
+          Settings
+        </MenuButton>
+        <Separator className="my-1" />
         <MenuButton
           onClick={onLogout}
           icon={<FaRightFromBracket className="text-lg mr-2" />}
