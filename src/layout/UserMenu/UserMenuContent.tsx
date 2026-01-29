@@ -1,5 +1,6 @@
 import type { User } from "firebase/auth";
 import {
+  FaBug,
   FaGear,
   FaKeyboard,
   FaRightFromBracket,
@@ -34,11 +35,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   if (user) {
     return (
       <>
-        <UserInfo
-          user={user}
-          showDisplayName={true}
-          showEmail={true}
-        />
+        <UserInfo user={user} showDisplayName={true} showEmail={true} />
         <Separator />
         <MenuButton
           onClick={() => navigate(`/users/${username}`)}
@@ -55,6 +52,19 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           className="w-full"
         >
           Settings
+        </MenuButton>
+        <MenuButton
+          onClick={() =>
+            window.open(
+              "https://github.com/eloritzkovitz/atlaset/issues",
+              "_blank",
+            )
+          }
+          icon={<FaBug className="text-lg mr-2" />}
+          ariaLabel="Report a Bug"
+          className="w-full"
+        >
+          Report a Bug
         </MenuButton>
         {!isMobile && (
           <MenuButton
