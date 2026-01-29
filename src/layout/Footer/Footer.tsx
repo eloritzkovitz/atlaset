@@ -13,6 +13,12 @@ export function Footer({ children }: { children?: React.ReactNode }) {
         >
           About
         </a>
+        <a
+          href="/changelog"
+          className="ml-3 !text-muted hover:text-muted/70 underline"
+        >
+          Changelog
+        </a>
         <GitHubButton className="ml-3" />
       </div>
     </footer>

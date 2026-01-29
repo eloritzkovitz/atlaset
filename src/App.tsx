@@ -6,6 +6,7 @@ import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
 import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import AboutPage from "./pages/AboutPage";
+import ChangelogPage from "./pages/ChangelogPage";
 import DashboardPage from "./pages/DashboardPage";
 import HomePage from "./pages/HomePage";
 import QuizzesPage from "./pages/QuizzesPage";
@@ -64,6 +65,7 @@ function App() {
                 </PublicLayout>
               }
             />
+            <Route path="/changelog" element={<PublicLayout><ChangelogPage /></PublicLayout>} />
             <Route path="/users/:username" element={<ProfilePage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
             <Route
