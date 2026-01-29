@@ -62,10 +62,9 @@ export function TripHistory() {
                       key={code}
                       flag={{
                         isoCode: country.isoCode,
-                        ratio: "fourThree",
+                        ratio: "3x2",
                         size: "32",
                       }}
-                      alt={`${country.name} flag`}
                       className="h-6 w-auto"
                     />
                   ) : null;

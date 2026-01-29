@@ -29,7 +29,7 @@ export function AchievementFlagGrid({
         // Prepare flag props
         const flag: Flag = {
           isoCode: country.isoCode,
-          ratio: "fourThree",
+          ratio: "3x2",
           size: "32",
         };
         const visitedFlag = visited.isCountryVisited(country.isoCode);

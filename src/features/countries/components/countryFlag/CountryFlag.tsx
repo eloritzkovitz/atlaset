@@ -1,35 +1,27 @@
 import React from "react";
-import * as Flags from "country-flag-icons/react/3x2";
+import { _3x2 as Flags } from "@eloritzkovitz/atlaset-flags";
 import { SOVEREIGN_FLAG_MAP } from "../../constants/sovereignty";
 import type { Flag } from "../../types/flag";
-import JS from "./JS";
 
 interface CountryFlagProps {
   flag: Flag;
-  alt?: string;
   style?: React.CSSProperties;
   className?: string;
 }
 
-// Combine imported flags with custom flags
-const CustomFlags = { ...Flags, JS };
-
-export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
-  // Convert flag.size (string | undefined) to number, default to 32
+export function CountryFlag({ flag, style, className }: CountryFlagProps) {
   const size = Number(flag.size);
-  // For 4:3 flags, use a 4:3 aspect ratio (e.g., 32x24)
+  // For 3x2 flags, use a 3:2 aspect ratio
   const validSize = Number.isFinite(size) && size > 0 ? size : 32;
   const width = validSize;
-  const height = Math.round(validSize * 0.75);
+  const height = Math.round((width * 2) / 3);
 
   // Map to sovereign flag if applicable
-  const mappedIso =
-    SOVEREIGN_FLAG_MAP?.[flag.isoCode.toUpperCase()] ||
-    flag.isoCode.toUpperCase();
+  const mappedIso = SOVEREIGN_FLAG_MAP?.[flag.isoCode] || flag.isoCode;
 
-  // Handle custom 4:3 flags
-  if (flag.ratio === "fourThree") {
-    const FlagSvg = CustomFlags[mappedIso as keyof typeof CustomFlags];
+  // Handle 3x2 flags
+  if (flag.ratio === "3x2") {
+    const FlagSvg = Flags[mappedIso as keyof typeof Flags];
     if (FlagSvg) {
       return (
         <FlagSvg
@@ -38,6 +30,7 @@ export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
         />
       );
     }
+
     // Fallback: white flag
     return (
       <div
@@ -57,8 +50,8 @@ export function CountryFlag({ flag, alt, style, className }: CountryFlagProps) {
   // Default: use original aspect ratio
   return (
     <img
-      src={`/flags/${mappedIso.toLowerCase()}.svg`}
-      alt={alt || `${flag.isoCode} flag`}
+      src={`/flags/${mappedIso}.svg`}
+      alt={`${flag.isoCode} flag`}
       width={width}
       height={height}
       className={className}

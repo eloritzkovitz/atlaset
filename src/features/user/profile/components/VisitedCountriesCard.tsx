@@ -1,14 +1,16 @@
-import { Card } from "@components";
+import { Card, Tooltip } from "@components";
 import { CountryFlag, useCountryData } from "@features/countries";
 
 interface VisitedCountriesCardProps {
   visitedCountryCodes: string[];
 }
 
-export function VisitedCountriesCard({ visitedCountryCodes }: VisitedCountriesCardProps) {
+export function VisitedCountriesCard({
+  visitedCountryCodes,
+}: VisitedCountriesCardProps) {
   const { countries } = useCountryData();
   const visitedCountries = countries.filter((c) =>
-    visitedCountryCodes.includes(c.isoCode)
+    visitedCountryCodes.includes(c.isoCode),
   );
 
   return (
@@ -19,17 +21,18 @@ export function VisitedCountriesCard({ visitedCountryCodes }: VisitedCountriesCa
       {visitedCountries.length === 0 ? (
         <div className="text-muted">No countries visited yet.</div>
       ) : (
-        <ul className="grid grid-cols-2 md:grid-cols-10 gap-2">
+        <ul className="grid grid-cols-2 md:grid-cols-10 gap-6">
           {visitedCountries.map((c) => (
             <li key={c.isoCode} className="flex items-center justify-center">
-              <CountryFlag
-                flag={{
-                  isoCode: c.isoCode,
-                  ratio: "fourThree",
-                  size: "64",
-                }}
-                alt={c.name}
-              />
+              <Tooltip content={c.name} position="bottom">
+                <CountryFlag
+                  flag={{
+                    isoCode: c.isoCode,
+                    ratio: "3x2",
+                    size: "64",
+                  }}
+                />
+              </Tooltip>
             </li>
           ))}
         </ul>

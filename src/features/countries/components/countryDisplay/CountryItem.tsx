@@ -53,7 +53,7 @@ export function CountryItem({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className={`${baseClass}
+      className={`group ${baseClass}
         ${isHighlighted ? "bg-blue-50 dark:bg-gray-500 font-bold" : ""}
         ${!isVisited ? "opacity-50" : ""}
       `}
@@ -67,17 +67,14 @@ export function CountryItem({
           />
         ) : (
           <div className="flex flex-col items-center w-[128px] h-[140px]">
-            <div className="flex items-center justify-center w-[128px] h-[96px]">
-              <CountryFlag
-                flag={{
-                  isoCode: country.isoCode,
-                  ratio: flagRatio || "original",
-                  size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
-                }}
-                alt={country.name}
-                className="shadow max-w-full max-h-full object-contain"
-              />
-            </div>
+            <CountryFlag
+              flag={{
+                isoCode: country.isoCode,
+                ratio: flagRatio || "original",
+                size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
+              }}
+              className="max-w-full max-h-[96px] object-contain transition-transform duration-200 group-hover:scale-110"
+            />
             <span className="block mt-1 text-xs sm:text-base text-center break-words min-h-[20px]">
               {country.name}
             </span>
