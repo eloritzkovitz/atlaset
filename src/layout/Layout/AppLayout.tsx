@@ -1,12 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useUI } from "@contexts/UIContext";
-import { FriendsPanel } from "@features/user/friends/components/FriendsPanel";
+import { HelpPanel } from "@features/help";
+import { FriendsPanel } from "@features/user";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { ShortcutsModal } from "../Shortcuts/ShortcutsModal";
 import { UserMenu } from "../UserMenu/UserMenu";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { showFriends, toggleFriends } = useUI();
+  const { showFriends, toggleFriends, showHelp, toggleHelp } = useUI();
   const mainRef = useRef<HTMLMapElement>(null);
   const [showUserMenu, setShowUserMenu] = useState(true);
   const [isScrollable, setIsScrollable] = useState(false);
@@ -61,6 +62,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <UserMenu fixed={false} />
         </div>
         <FriendsPanel open={showFriends} onClose={toggleFriends} />
+        <HelpPanel open={showHelp} onClose={toggleHelp} />
         <main
           ref={mainRef}
           className="flex-1 h-0 min-h-0 overflow-auto pb-16 sm:pb-0"

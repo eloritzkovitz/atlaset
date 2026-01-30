@@ -4,6 +4,9 @@ export { AuthFooter } from "./auth/components/AuthFooter";
 export { AuthForm } from "./auth/components/AuthForm";
 export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 
+// Friends Components
+export { FriendsPanel } from "./friends/components/FriendsPanel";
+
 // Profile Components
 export { ProfileInfoCard } from "./profile/components/ProfileInfoCard";
 export { EditProfileModal } from "./profile/components/EditProfileModal";

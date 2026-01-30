@@ -12,7 +12,7 @@ import { AuthButtons } from "../Header/AuthButtons";
 
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const { user, loading } = useAuth();
-  const { uiVisible } = useUI();
+  const { uiVisible, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -62,7 +62,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
           />
           <ActionButton
             title="Help"
-            onClick={() => {}}
+            onClick={() => {toggleHelp()}}
             icon={<FaCircleQuestion className="text-xl" />}
             aria-pressed={false}
             rounded
