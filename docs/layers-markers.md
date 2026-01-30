@@ -1,4 +1,4 @@
-# Map Data & Customization
+# Layers & Markers
 
 Atlaset lets you customize your map with **layers** (highlighting groups of countries) and **markers** (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from JSON files.
 
@@ -92,21 +92,4 @@ Each marker can have:
 
 - Layers can be easily imported from and exported to JSON files.
 - Use this to back up your layers or share them with others.
-- You can also download the entire map data (including markers) through the **Export** panel, "**Download as JSON**".
-
-## Sharing Maps
-
-Atlaset supports sharing your maps (layers and markers) via a special URL:
-
-- Use the **Share** feature to generate a link.
-- Selectable options include layers, markers, map name and sharer info.
-- Anyone with the link can view the map and its information in readonly mode.
-- The map data is encoded in the URL and is independent of the sharer's data.
-
-## Embedding Maps
-
-Atlaset supports embedding maps directly into your website or blog using an HTML `<iframe>`. This allows you to display interactive maps anywhere online.
-
-- Use the **Embed** feature to generate an iframe link.
-- Copy the provided HTML `<iframe>` code into and paste it into your website's HTML where you want the map to appear.
-- You can see an example [here](examples/embedded-map.html).
+- You can also download the entire map data through the **Export** panel, "**Download as JSON**".
