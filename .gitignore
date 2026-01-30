@@ -28,6 +28,7 @@ dist
 out
 
 public/data
+public/docs
 public/flags
 
 # Environment variables
