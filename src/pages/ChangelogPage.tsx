@@ -19,9 +19,23 @@ export default function ChangelogPage() {
   }, []);
 
   // Custom components for markdown rendering
-  type H2Props = { node?: { position?: { start?: { line?: number } } }; [key: string]: unknown };
+  type H2Props = {
+    node?: { position?: { start?: { line?: number } } };
+    [key: string]: unknown;
+  };
   type LiProps = { children: React.ReactNode[]; [key: string]: unknown };
 
+  // Type guard for ReactElement with string children
+  function hasStringChildren(props: unknown): props is { children: string } {
+    return (
+      typeof props === "object" &&
+      props !== null &&
+      "children" in props &&
+      typeof (props as { children: unknown }).children === "string"
+    );
+  }
+
+  // Define custom components for markdown elements
   const components = {
     h2: ({ node, ...props }: H2Props) => {
       const isFirst = node?.position?.start?.line === 2;
@@ -32,23 +46,32 @@ export default function ChangelogPage() {
         </>
       );
     },
-    ul: (props: React.HTMLProps<HTMLUListElement>) => <ul className="ml-0 mb-4" {...props} />,
+    ul: (props: React.HTMLProps<HTMLUListElement>) => (
+      <ul className="ml-0 mb-4" {...props} />
+    ),
     li: ({ children, ...props }: LiProps) => {
       let tag: React.ReactNode = null;
       let text: React.ReactNode[] = children;
       if (Array.isArray(children)) {
-        const tagIdx = children.findIndex(
-          (c) => {
-            if (React.isValidElement(c) && c.type === "span") {
-              const el = c as React.ReactElement<{ className?: string }>;
-              return el.props.className?.includes("changelog-tag");
-            }
-            return false;
+        const first = children[0];
+        if (
+          React.isValidElement(first) &&
+          first.type === "strong" &&
+          hasStringChildren(first.props)
+        ) {
+          const strongText = first.props.children.trim();
+          const match = strongText.match(/^\[(\w+)\]$/);
+          if (match) {
+            const badgeText = match[1];
+            tag = (
+              <span
+                className={`changelog-tag changelog-tag-${badgeText.toLowerCase()}`}
+              >
+                {badgeText}
+              </span>
+            );
+            text = children.slice(1);
           }
-        );
-        if (tagIdx !== -1) {
-          tag = children[tagIdx];
-          text = [...children.slice(0, tagIdx), ...children.slice(tagIdx + 1)];
         }
       }
       return (

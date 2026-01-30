@@ -265,22 +265,22 @@ body::-webkit-scrollbar-thumb {
   text-align: center;
 }
 
-.changelog-tag.breaking {
+.changelog-tag-breaking {
   background: #f59e42;
 }
-.changelog-tag.bugfix {
+.changelog-tag-bugfix {
   background: #dc2626;
 }
-.changelog-tag.chore {
+.changelog-tag-chore {
   background: #22c55e;
 }
-.changelog-tag.docs {
+.changelog-tag-docs {
   background: #7c3aed;
 }
-.changelog-tag.security {
+.changelog-tag-security {
   background: #f43f5e;
 }
-.changelog-tag.test {
+.changelog-tag-test {
   background: #a21caf;
 }
 
