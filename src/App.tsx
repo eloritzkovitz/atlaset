@@ -19,6 +19,7 @@ import SettingsPage from "./pages/SettingsPage";
 import SignupPage from "./pages/SignupPage";
 import TripsPage from "./pages/TripsPage";
 
+
 // Lazy-loaded pages
 const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
 
@@ -82,6 +83,7 @@ function App() {
             <Route path="/users/:username" element={<ProfilePage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
             <Route path="/documentation" element={<DocsPage />} />
+            <Route path="/documentation/:slug" element={<DocsPage />} />
             <Route
               path="/atlas"
               element={

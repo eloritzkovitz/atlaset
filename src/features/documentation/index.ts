@@ -6,3 +6,6 @@ export { HelpPanel } from "./components/HelpPanel";
 
 // Config
 export { DOCS, DOCS_PATH } from "./config/docs";
+
+// Utils
+export { getDocBySlug, navigateToDoc } from "./utils/documentation";

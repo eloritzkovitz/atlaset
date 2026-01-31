@@ -1,32 +1,34 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import { HamburgerButton, MarkdownFileRenderer } from "@components";
 import {
-  DOCS,
   DOCS_PATH,
   DocsPanelMenu,
+  getDocBySlug,
   getDocsMarkdownComponents,
+  navigateToDoc,
 } from "@features/documentation";
 import { useIsMobile, useMarkdownFile } from "@hooks";
 
 export default function DocsPage() {
-  const [selectedPanel, setSelectedPanel] = useState(DOCS[0].file);
-  const [panelOpen, setPanelOpen] = useState(false);
+  const { slug } = useParams<{ slug?: string }>();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [panelOpen, setPanelOpen] = useState(false);
 
-  // Load selected doc content
-  const { content, error } = useMarkdownFile(DOCS_PATH + selectedPanel);
+  // Find doc by slug or default to first
+  const doc = useMemo(() => getDocBySlug(slug), [slug]);
+  const { content, error } = useMarkdownFile(DOCS_PATH + doc.file);
 
   return (
     <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
-      <title>Documentation | Atlaset</title>
-      {/* Hamburger for mobile */}
+      <title>{doc.label} | Documentation | Atlaset</title>
       {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
       <div className="flex flex-row h-full w-full max-w-4xl mx-auto gap-6">
-        {/* Sidebar menu at left edge */}
         <div className="flex-shrink-0 flex flex-col justify-start h-full">
           <DocsPanelMenu
-            selectedPanel={selectedPanel}
-            setSelectedPanel={setSelectedPanel}
+            selectedPanel={doc.file}
+            setSelectedPanel={(file: string) => navigateToDoc(navigate, file)}
             open={isMobile ? panelOpen : undefined}
             onClose={isMobile ? () => setPanelOpen(false) : undefined}
           />
@@ -36,7 +38,9 @@ export default function DocsPage() {
             <MarkdownFileRenderer
               content={content}
               error={error}
-              components={getDocsMarkdownComponents(setSelectedPanel)}
+              components={getDocsMarkdownComponents((file) =>
+                navigateToDoc(navigate, file),
+              )}
             />
           </div>
         </main>

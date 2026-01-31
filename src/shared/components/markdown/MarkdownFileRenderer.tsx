@@ -15,9 +15,16 @@ export function MarkdownFileRenderer({
   components,
   title,
 }: MarkdownFileRendererProps) {
-  const { ReactMarkdown, remarkGfm, rehypeRaw, rehypePrism } = useMarkdownRenderer();
+  const { ReactMarkdown, remarkGfm, rehypeRaw, rehypePrism } =
+    useMarkdownRenderer();
+
+  // Show error if any
   if (error) return <ErrorMessage error={error} />;
-  if (!content || !ReactMarkdown || !remarkGfm || !rehypeRaw) return null;
+
+  // Wait until everything is loaded
+  if (!content || !ReactMarkdown || !remarkGfm || !rehypeRaw || !rehypePrism)
+    return null;
+  
   return (
     <div className="prose prose-slate dark:prose-invert mx-auto mb-30">
       {title && <h1>{title}</h1>}
