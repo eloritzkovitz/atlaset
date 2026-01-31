@@ -1,6 +1,7 @@
 # Data Sources
 
 All main data sources are loaded from static JSON files, either directly from the [public/data](../public/data/) folder (in development) or from a remote URL (in production, if configured).  
+
 You can change their location or swap datasets by editing the `.env` file.
 
 ## Data Types and Variables
@@ -10,7 +11,7 @@ You can change their location or swap datasets by editing the `.env` file.
 | Map GeoJSON  | `/data/countries.geojson` | `VITE_MAP_GEO_URL`           |
 | Countries    | `/data/countries.json`    | `VITE_COUNTRY_DATA_URL`      |
 | Currencies   | `/data/currencies.json`   | `VITE_CURRENCY_DATA_URL`     |
-| Achievements | `/data/achievements.json` | `VITE_ACHIEVEMENTS_DATA_URL` | 
+| Achievements | `/data/achievements.json` | `VITE_ACHIEVEMENTS_DATA_URL` |
 
 ## Sources
 
@@ -20,7 +21,7 @@ You can change their location or swap datasets by editing the `.env` file.
 
 ## Keeping Data Up to Date
 
-To automatically fetch and update all static data files (flags, countries, currencies, and geojson), a prebuild script is provided and run before every build:
+To automatically fetch and update all static data files (flags, countries, currencies, geodata, achievements, documentation), a prebuild script is provided and run before every build:
 
 ```bash
 npm run prebuild
@@ -45,4 +46,4 @@ Your JSON mapping should look like this:
 }
 ```
 
-You can find an example showing a few country objects [here](examples/countries.json).
+You can find an example showing a few country objects [here](/docs/examples/countries.json).

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useUI } from "@contexts/UIContext";
-import { HelpPanel } from "@features/help";
+import { HelpPanel } from "@features/documentation";
 import { FriendsPanel } from "@features/user";
 import { Sidebar } from "../Sidebar/Sidebar";
 import { ShortcutsModal } from "../Shortcuts/ShortcutsModal";

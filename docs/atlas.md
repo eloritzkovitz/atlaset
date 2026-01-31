@@ -36,7 +36,7 @@ The **Atlas** is the heart of Atlaset, providing an interactive world map where 
 
 ## Learn More
 
-- [Countries](./countries.md)
-- [Layers & Markers](./layers-markers.md)
-- [Timeline](./timeline.md)
-- [Exporting & Sharing Maps](./export.md)
+[Countries](/docs/countries.md)  
+[Layers & Markers](/docs/layers-markers.md)  
+[Timeline](/docs/timeline.md)  
+[Exporting & Sharing Maps](/docs/export.md)  

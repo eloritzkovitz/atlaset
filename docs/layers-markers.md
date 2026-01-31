@@ -38,7 +38,7 @@ Atlaset lets you customize your map with **layers** (highlighting groups of coun
 }
 ```
 
-[Download a full example layers JSON](examples/layers.json)
+[Download a full example layers JSON](/docs/examples/layers.json)
 
 - To import, use the Layers panel in the app and select your JSON file.
 

@@ -42,6 +42,10 @@ export { SectionHeader } from "./layout/SectionHeader";
 export { Separator } from "./layout/Separator";
 export { Breadcrumbs, type Crumb } from "./layout/Breadcrumbs/Breadcrumbs";
 
+// Markdown components
+export { getBaseMarkdownComponents } from "./markdown/MarkdownComponents";
+export { MarkdownFileRenderer } from "./markdown/MarkdownFileRenderer";
+
 // Menu components
 export { Menu } from "./layout/Menu/Menu";
 export { MenuButton } from "./layout/Menu/MenuButton";

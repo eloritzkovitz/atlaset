@@ -284,6 +284,15 @@ body::-webkit-scrollbar-thumb {
   background: #a21caf;
 }
 
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+/* Remove border from last row in markdown tables */
+.prose table tr:last-child td {
+  border-bottom: none !important;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

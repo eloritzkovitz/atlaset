@@ -9,6 +9,7 @@ import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import { AtlasProviders } from "./pages/AtlasProvider";
 import AboutPage from "./pages/AboutPage";
 import DashboardPage from "./pages/DashboardPage";
+import DocsPage from "./pages/DocsPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -80,6 +81,7 @@ function App() {
             />
             <Route path="/users/:username" element={<ProfilePage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
+            <Route path="/documentation" element={<DocsPage />} />
             <Route
               path="/atlas"
               element={

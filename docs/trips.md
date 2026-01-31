@@ -31,7 +31,7 @@ Each trip can include a list of participants. This allows you to include family 
 
 > **Note**
 > When importing trips with categories, the category and each tag must match one of the supported values listed above. Invalid values will be ignored or may cause an error.  
-> See the full list of [supported categories and tags](categories-and-tags.html).
+> See the full list of [supported categories and tags](/docs/categories-and-tags.html).
 
 ## Adding Trips
 
@@ -59,8 +59,8 @@ name,countries,startDate,endDate,category,notes
 Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berlin, and Rome."
 ```
 
-[Download a full example trip JSON](examples/trips.json)  
-[Download a full example trip CSV](examples/trips.csv)
+[Download a full example trip JSON](/docs/examples/trips.json)  
+[Download a full example trip CSV](/docs/examples/trips.csv)
 
 ### 2. Via the UI
 

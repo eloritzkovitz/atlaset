@@ -2,7 +2,7 @@
 
 **Timeline** lets you visualize your travel history year by year. See how your journeys have evolved, explore visited countries over time and discover patterns in your travels.
 
-Timeline Mode can be toggled on/off from the map toolbar or by pressing the `T` key.
+Timeline Mode can be toggled on/off from the map toolbar or by pressing the <kbd>T</kbd> key.
 
 ## What the Timeline Does
 
@@ -18,11 +18,11 @@ Timeline Mode can be toggled on/off from the map toolbar or by pressing the `T` 
 
 ## Cumulative vs. Yearly Mode
 
-**Cumulative Mode:**
+### Cumulative Mode:
 
 Colors countries based on visit count up to the selected year.
 
-**Yearly Visits Mode:**
+### Yearly Visits Mode:
 
 Colors countries based on visit status for the year:
 - **Upcoming first visit**

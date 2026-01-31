@@ -32,7 +32,7 @@ Atlaset supports embedding maps directly into your website or blog using an HTML
 
 - Use the **Embed** feature to generate an iframe link.
 - Copy the provided HTML `<iframe>` code into and paste it into your website's HTML where you want the map to appear.
-- You can see an example [here](examples/embedded-map.html).
+- You can see an example [here](/docs/examples/embedded-map.html).
 
 ## Privacy
 
