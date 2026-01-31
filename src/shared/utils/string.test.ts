@@ -5,6 +5,7 @@ import {
   normalizeString,
   slugify,
   pluralize,
+  hasStringChildren,
 } from "./string";
 
 describe("string utils", () => {
@@ -45,5 +46,12 @@ describe("string utils", () => {
     expect(pluralize("item", 1)).toBe("item");
     expect(pluralize("item", 0)).toBe("items");
     expect(pluralize("item", 2)).toBe("items");
+  });
+
+  it("hasStringChildren detects string children", () => {
+    expect(hasStringChildren({ children: "hello" })).toBe(true);
+    expect(hasStringChildren({ children: 123 })).toBe(false);
+    expect(hasStringChildren({})).toBe(false);
+    expect(hasStringChildren({ children: null })).toBe(false);
   });
 });

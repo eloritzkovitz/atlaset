@@ -8,6 +8,7 @@ import { SettingsProvider } from "@contexts/SettingsProvider";
 import App from "./App";
 import { store } from "./store";
 import "./styles/index.css";
+import "./styles/markdown.css";
 
 // Detect Electron environment
 const isElectron = !!window?.process?.versions?.electron;

@@ -51,6 +51,8 @@ export default {
         "danger-hover": "var(--color-danger-hover)",
         info: "var(--color-info)",
         "info-hover": "var(--color-info-hover)",
+        code: "var(--color-code)",
+        "code-hover": "var(--color-code-hover)",
         muted: "var(--color-muted)",
         "muted-hover": "var(--color-muted-hover)",
         // Border colors

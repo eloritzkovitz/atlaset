@@ -8,6 +8,7 @@ interface CollapsibleHeaderProps {
   expanded: boolean;
   onToggle: () => void;
   children?: ReactNode;
+  className?: string;
 }
 
 export function CollapsibleHeader({
@@ -16,18 +17,26 @@ export function CollapsibleHeader({
   expanded,
   onToggle,
   children,
+  className = "",
 }: CollapsibleHeaderProps) {
   return (
     <div className="w-full mb-4">
-      <div className="flex items-center justify-between select-none">
-        <span className="flex items-center gap-2 h-8 text-lg font-bold">
+      <div
+        className={`flex items-center justify-between select-none ${className}`}
+      >
+        <span
+          className="flex items-center gap-2 h-8 text-lg font-bold cursor-pointer"
+          onClick={onToggle}
+          tabIndex={0}
+          role="button"
+          aria-pressed={expanded}
+        >
           {icon}
           {label}
         </span>
         <ActionButton
           onClick={onToggle}
           ariaLabel={expanded ? `Collapse ${label}` : `Expand ${label}`}
-          title={expanded ? `Collapse ${label}` : `Expand ${label}`}
           icon={expanded ? <FaChevronUp /> : <FaChevronDown />}
           rounded
         />

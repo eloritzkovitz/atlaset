@@ -9,8 +9,10 @@ type PanelSelection =
   | "markers"
   | "export"
   | "settings"
-  | "friends"
   | null;
+
+// Type for user panels
+type UserPanelSelection = "friends" | "help" | null;
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
@@ -19,10 +21,11 @@ export function UIProvider({ children }: { children: ReactNode }) {
   // State for which panel is open; null means no panel is open
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const [openPanel, setOpenPanel] = useState<PanelSelection>(
-    isMobile ? null : "countries"
+    isMobile ? null : "countries",
   );
   const prevOpenPanel = useRef<PanelSelection>(openPanel);
   const [showFilters, setShowFilters] = useState(false);
+  const [rightPanel, setRightPanel] = useState<UserPanelSelection>(null);
 
   // Filters toggle: only works if countries panel is open
   const toggleFilters = () => {
@@ -42,8 +45,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const showLayers = openPanel === "layers";
   const showExport = openPanel === "export";
   const showSettings = openPanel === "settings";
-  const [showFriends, setShowFriends] = useState(false);
 
+  // Map panels
   const toggleUiVisible = () => setUiVisible((prev) => !prev);
   const toggleCountries = () =>
     setOpenPanel((prev) => (prev === "countries" ? null : "countries"));
@@ -55,12 +58,21 @@ export function UIProvider({ children }: { children: ReactNode }) {
     setOpenPanel((prev) => (prev === "export" ? null : "export"));
   const toggleSettings = () =>
     setOpenPanel((prev) => (prev === "settings" ? null : "settings"));
-  const toggleFriends = () => setShowFriends((prev) => !prev);
-  const closePanel = () => setOpenPanel(null);
+
+  // User panels
+  const toggleFriends = () => {
+    setRightPanel((prev) => (prev === "friends" ? null : "friends"));
+  };
+  const toggleHelp = () => {
+    setRightPanel((prev) => (prev === "help" ? null : "help"));
+  };
+  const showFriends = rightPanel === "friends";
+  const showHelp = rightPanel === "help";
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
-
+  const closePanel = () => setOpenPanel(null);
+  
   // Derived states for individual modals
   const [showLegend, setShowLegend] = useState(false);
   const toggleLegend = () => setShowLegend((prev) => !prev);
@@ -75,6 +87,9 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   // Toggle Friends panel with "N"
   useKeyHandler(toggleFriends, ["n", "N"], true);
+
+  // Toggle Help panel with "H"
+  useKeyHandler(toggleHelp, ["h", "H"], true);
 
   // Open shortcut modal with "?"
   useKeyHandler(toggleShortcuts, ["?"], true);
@@ -113,6 +128,8 @@ export function UIProvider({ children }: { children: ReactNode }) {
         toggleSettings,
         showFriends,
         toggleFriends,
+        showHelp,
+        toggleHelp,
         closePanel,
         modalOpen,
         setModalOpen,

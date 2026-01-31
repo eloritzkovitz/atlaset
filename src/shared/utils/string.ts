@@ -61,3 +61,19 @@ export function slugify(str: string) {
 export function pluralize(label: string, count: number) {
   return count === 1 ? label : label + "s";
 }
+
+/**
+ * Type guard to check if props has string children.
+ * @param props - The props to check.
+ * @returns Whether the props has string children.
+ */
+export function hasStringChildren(
+  props: unknown,
+): props is { children: string } {
+  return (
+    typeof props === "object" &&
+    props !== null &&
+    "children" in props &&
+    typeof (props as { children: unknown }).children === "string"
+  );
+}
