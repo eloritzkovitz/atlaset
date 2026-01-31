@@ -1,12 +1,12 @@
 # Dashboard
 
-The **Dashboard** in Atlaset is your personal travel hub, providing a comprehensive overview of your journeys, achievements and travel statistics. It is designed to help you analyze your travel history, celebrate milestones, and discover new goals—all in one place.
+The **Dashboard** in Atlaset is your personal travel hub, providing a comprehensive overview of your journeys, achievements and travel statistics. It is designed to help you analyze your travel history, celebrate milestones and discover new goals—all in one place.
 
 ## Dashboard Sections
 
 ### Countries
 
-The **Countries** section gives you a detailed view of your visited and unvisited countries, regions, and subregions. You can:
+The **Countries** section gives you a detailed view of your visited and unvisited countries, regions and subregions. You can:
 
 - **Browse and search** all countries, filter by region or subregion and quickly find places you've visited or want to visit.
 - **View visited status**: Instantly see which countries you've visited, with visual highlights and badges.

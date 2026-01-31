@@ -1,6 +1,6 @@
 # Atlaset
 
-Atlaset is a modern, interactive country explorer and travel tracker built with React, Vite, and TypeScript. Designed for flexibility and performance, Atlaset allows fellow travelers to manage travel logs and analyze their journeys around the world - centered around an immersive map and powerful, rich features: tinker with the map and add your own layers and markers, reminisce past trips with the timeline or plan new adventures, view the dashboard or test your knowledge of the world!
+Atlaset is a modern, interactive country explorer and travel tracker built with React, Vite and TypeScript. Designed for flexibility and performance, Atlaset allows fellow travelers to manage travel logs and analyze their journeys around the world - centered around an immersive map and powerful, rich features: tinker with the map and add your own layers and markers, reminisce past trips with the timeline or plan new adventures, view the dashboard or test your knowledge of the world!
 
 ## Table of Contents
 - [Features](#features)
@@ -12,7 +12,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 ### **Authentication**
 - **User accounts:** Sign in with Google to sync your data across devices
-- **Cloud sync:** All trips, layers, markers, and settings are securely stored in the cloud (Firebase)
+- **Cloud sync:** All trips, layers, markers and settings are securely stored in the cloud (Firebase)
 - **Guest mode:** Use the app without signing in; migrate your data to your account anytime
 - **Offline support:** All data is available offline for guests and authenticated users (via IndexedDB and Firestore persistence)
 
@@ -24,12 +24,12 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Embed maps:** Embed maps directly into your website using a customized HTML iframe.
 
 ### **Trips**
-- **Trip management:** Plan, track, and recall your travels with flexible trip records
+- **Trip management:** Plan, track and recall your travels with flexible trip records
 - **Timeline mode:** Track your travels showing visited countries on the map
 
 ### **Quizzes**
 - **Competitive quizzes:** Timed challenges to test your speed and accuracy against the clock
-- **Progress tracking:** See your scores, streaks, and improvements over time
+- **Progress tracking:** See your scores, streaks and improvements over time
 - **Leaderboard:** Compare your results with other users and climb the ranks
 
 ### **Dashboard**
@@ -72,10 +72,10 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 ## Documentation
 
 - [Getting Started](docs/getting-started.md)
-- [Data Sources](docs/data-sources.md)
-- [Map Data & Customization](docs/map-data.md)
+- [Atlas](docs/atlas.md)
 - [Managing Trips](docs/trips.md)
 - [The Dashboard](docs/dashboard.md)
+- [Developer Guide](docs/developers.md)
 - [Keyboard Shortcuts](docs/keyboard-shortcuts.md)
 
 ## Authors

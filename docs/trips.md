@@ -1,6 +1,6 @@
 # Trips
 
-In Atlaset, **trips** let you record, organize, and analyze your travels. Each trip can include multiple countries, dates, categories, and notes. Trips power features like the visited countries layer, timeline navigation, and trip statistics.
+In Atlaset, **trips** let you record, organize and analyze your travels. Each trip can include multiple countries, dates, categories and notes. Trips data powers many features - including visited countries, timeline navigation and statistics.
 
 #### Trip JSON Fields
 
@@ -48,7 +48,7 @@ Each trip can include a list of participants. This allows you to include family 
   "startDate": "2023-07-01",
   "endDate": "2023-07-15",
   "category": "Vacation",
-  "notes": "Visited Paris, Berlin, and Rome."
+  "notes": "Visited Paris, Berlin and Rome."
 }
 ```
 
@@ -56,7 +56,7 @@ Each trip can include a list of participants. This allows you to include family 
 
 ```csv
 name,countries,startDate,endDate,category,notes
-Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berlin, and Rome."
+Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berlin and Rome."
 ```
 
 [Download a full example trip JSON](/docs/examples/trips.json)  
@@ -65,7 +65,7 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 ### 2. Via the UI
 
 - Use the Trips panel to create, edit, or delete trips.
-- Fill in the trip name, select countries (by ISO code), set dates, choose a category, and add notes if desired.
+- Fill in the trip name, select countries (by ISO code), set dates, choose a category and add notes if desired.
 
 ## Importing/Exporting Trips
 

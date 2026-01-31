@@ -1,6 +1,6 @@
 # Countries
 
-Atlaset lets you explore, filter, and track countries on the interactive world map. You can view details and use powerful filters to organize your travel data.
+Atlaset lets you explore, filter and track countries on the interactive world map. You can view details and use powerful filters to organize your travel data.
 
 ## Browsing Countries
 

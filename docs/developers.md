@@ -1,7 +1,7 @@
 # Developer Guide
 
 Welcome to **Atlaset!**  
-This guide will help you set up the project locally, configure your data sources, and run the app for development or production.
+This guide will help you set up the project locally, configure your data sources and run the app for development or production.
 
 ## Prerequisites
 
@@ -35,7 +35,7 @@ cp .env.example .env
 
 2. **Data Sources**
 
-Atlaset loads map, country, and currency data from JSON files in [public/data](../public/data/).
+Atlaset loads map, country and currency data from JSON files in [public/data](../public/data/).
 You can customize these sources or swap datasets by editing the .env file.
 
 See [Data Sources](/docs/data-sources.md) for details on file formats and environment variables.

@@ -24,7 +24,7 @@ Atlaset supports sharing your maps (layers and markers) via a special URL:
 
 - Use the **Share** feature to generate a special URL containing your map data.
 - Share the link with friends—anyone with the link can view your map in read-only mode.
-- You can choose to include layers, markers, map name, and sharer info.
+- You can choose to include layers, markers, map name and sharer info.
 
 ## Embedding Maps
 
