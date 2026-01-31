@@ -12,6 +12,19 @@ describe("useMarkdownRenderer", () => {
   });
 
   it("should not update state after unmount (cleanup)", async () => {
+    // Mock dynamic imports to resolve immediately
+    const origImport = (globalThis as any).import;
+    const importMock = vi.fn((mod) => {
+      if (mod === "react-markdown")
+        return Promise.resolve({ default: () => null });
+      if (mod === "remark-gfm") return Promise.resolve({ default: () => null });
+      if (mod === "rehype-raw") return Promise.resolve({ default: () => null });
+      if (mod === "rehype-prism-plus")
+        return Promise.resolve({ default: () => null });
+      return origImport ? origImport(mod) : Promise.resolve({});
+    });
+    // @ts-ignore
+    globalThis.import = importMock;
     const { result, unmount } = renderHook(() => useMarkdownRenderer());
     unmount();
     // Wait a tick to allow any pending promises to resolve
@@ -21,6 +34,9 @@ describe("useMarkdownRenderer", () => {
     expect(result.current.remarkGfm).toBeNull();
     expect(result.current.rehypeRaw).toBeNull();
     expect(result.current.rehypePrism).toBeNull();
+    // Restore import
+    // @ts-ignore
+    globalThis.import = origImport;
   });
 
   it("should eventually provide ReactMarkdown, remarkGfm, rehypeRaw, and rehypePrism", async () => {
