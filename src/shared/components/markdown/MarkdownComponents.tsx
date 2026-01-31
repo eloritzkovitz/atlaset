@@ -26,11 +26,21 @@ export function getBaseMarkdownComponents(
 ) {
   return {
     hr: () => <Separator className="my-6 opacity-60" />,
+    blockquote: (props: React.HTMLProps<HTMLElement>) => {
+      return (
+        <blockquote className="relative my-6 p-4 pl-6 border-l-4 border-surface bg-surface-alt/40 dark:bg-surface/30 text-base rounded-md shadow-sm">
+          <span className="block">{props.children}</span>
+        </blockquote>
+      );
+    },
     h1:
       overrides.h1 ||
       ((props: React.HTMLAttributes<HTMLHeadingElement>) => (
         <>
-          <h1 className="mt-0 mb-6 text-xl font-bold" {...props} />
+          <h1
+            className="mt-0 mb-6 text-xl text-action-text-hover font-bold"
+            {...props}
+          />
           <Separator className="mb-4 opacity-50" />
         </>
       )),
@@ -46,15 +56,24 @@ export function getBaseMarkdownComponents(
         return (
           <>
             {!isFirst && <Separator className="my-6 opacity-60" />}
-            <h2 className="mt-8 mb-2 text-xl text-muted" {...rest} />
+            <h2
+              className="mt-8 mb-2 text-xl text-action-text-hover"
+              {...rest}
+            />
           </>
         );
       }),
     h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-      <h3 className="mt-6 mb-2 text-lg font-bold text-muted" {...props} />
+      <h3
+        className="mt-6 mb-2 text-lg font-bold text-action-text-hover"
+        {...props}
+      />
     ),
     h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-      <h4 className="mt-6 mb-2 text-md font-semibold text-muted" {...props} />
+      <h4
+        className="mt-6 mb-2 text-md font-semibold text-action-text-hover"
+        {...props}
+      />
     ),
     a:
       overrides.a ||
@@ -90,24 +109,26 @@ export function getBaseMarkdownComponents(
     code({
       inline,
       children,
+      className,
       ...props
     }: React.ComponentProps<"code"> & { inline?: boolean }) {
-      if (inline) {
+      // Inline code styling
+      const isBlock = className && className.startsWith("language-");
+      if (!isBlock) {
         return (
           <code
-            className="rounded px-1 py-0.5 text-sm align-baseline"
+            className="bg-surface text-code rounded px-1 py-0.5 text-sm align-baseline font-mono"
             {...props}
           >
             {children}
           </code>
         );
       }
+      // Block code styling
       return (
-        <pre className="bg-surface/50 inline-block w-auto p-1 rounded-lg mb-4">
-          <code className="text-sm" {...props}>
-            {children}
-          </code>
-        </pre>
+        <code className={className} {...props}>
+          {children}
+        </code>
       );
     },
     kbd: (props: React.HTMLAttributes<HTMLElement>) => {
@@ -133,7 +154,7 @@ export function getBaseMarkdownComponents(
       </th>
     ),
     tr: (props: React.HTMLProps<HTMLTableRowElement>) => (
-      <tr className="bg-surface-alt/40 hover:bg-surface-alt">
+      <tr className="bg-surface-alt/40 hover:bg-primary-hover/10 transition-colors">
         {props.children}
       </tr>
     ),

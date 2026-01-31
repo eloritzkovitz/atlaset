@@ -8,6 +8,7 @@ describe("useMarkdownRenderer", () => {
     expect(result.current.ReactMarkdown).toBeNull();
     expect(result.current.remarkGfm).toBeNull();
     expect(result.current.rehypeRaw).toBeNull();
+    expect(result.current.rehypePrism).toBeNull();
   });
 
   it("should not update state after unmount (cleanup)", async () => {
@@ -19,15 +20,17 @@ describe("useMarkdownRenderer", () => {
     expect(result.current.ReactMarkdown).toBeNull();
     expect(result.current.remarkGfm).toBeNull();
     expect(result.current.rehypeRaw).toBeNull();
+    expect(result.current.rehypePrism).toBeNull();
   });
 
-  it("should eventually provide ReactMarkdown, remarkGfm, and rehypeRaw", async () => {
+  it("should eventually provide ReactMarkdown, remarkGfm, rehypeRaw, and rehypePrism", async () => {
     const { result } = renderHook(() => useMarkdownRenderer());
 
     await waitFor(() => {
       expect(result.current.ReactMarkdown).toBeDefined();
       expect(result.current.remarkGfm).toBeDefined();
       expect(result.current.rehypeRaw).toBeDefined();
+      expect(result.current.rehypePrism).toBeDefined();
     });
   });
 
@@ -42,6 +45,9 @@ describe("useMarkdownRenderer", () => {
     vi.mock("rehype-raw", () => {
       throw new Error("fail");
     });
+    vi.mock("rehype-prism-plus", () => {
+      throw new Error("fail");
+    });
 
     // Dynamically import the hook file to reset its state
     const { useMarkdownRenderer: useMarkdownRendererError } =
@@ -54,8 +60,10 @@ describe("useMarkdownRenderer", () => {
     expect(result.current.ReactMarkdown).toBeNull();
     expect(result.current.remarkGfm).toBeNull();
     expect(result.current.rehypeRaw).toBeNull();
+    expect(result.current.rehypePrism).toBeNull();
     vi.unmock("react-markdown");
     vi.unmock("remark-gfm");
     vi.unmock("rehype-raw");
+    vi.unmock("rehype-prism-plus");
   });
 });

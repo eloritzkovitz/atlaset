@@ -1,0 +1,47 @@
+@import "prismjs/themes/prism-tomorrow.css";
+
+/* Changelog tag styles */
+.changelog-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75em;
+  font-weight: 600;
+  margin-left: 0;
+  padding: 0.1em 0.7em;
+  border-radius: 0.5em;
+  background: #2563eb;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-width: 5.5em;
+  text-align: center;
+}
+
+.changelog-tag-breaking {
+  background: #f59e42;
+}
+.changelog-tag-bugfix {
+  background: #dc2626;
+}
+.changelog-tag-chore {
+  background: #22c55e;
+}
+.changelog-tag-docs {
+  background: #7c3aed;
+}
+.changelog-tag-security {
+  background: #f43f5e;
+}
+.changelog-tag-test {
+  background: #a21caf;
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+}
+
+/* Remove border from last row in markdown tables */
+.prose table tr:last-child td {
+  border-bottom: none !important;
+}
