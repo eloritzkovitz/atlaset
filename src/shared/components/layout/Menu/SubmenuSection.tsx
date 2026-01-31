@@ -27,6 +27,7 @@ export function SubmenuSection({
         label={label}
         expanded={expanded}
         onToggle={onToggle}
+        className="px-2 py-1 rounded-lg hover:bg-sidebar-btn-hover transition-colors"
       >
         <ul className="mt-2">
           {submenu.map((sub) => (
@@ -36,7 +37,7 @@ export function SubmenuSection({
                 onClick={() => setSelectedPanel(sub.key)}
                 ariaLabel={sub.label}
                 icon={sub.icon}
-                className="w-full text-gray-300 gap-5"
+                className="w-full mx-2 text-gray-300 gap-5"
               >
                 {sub.label}
               </MenuButton>

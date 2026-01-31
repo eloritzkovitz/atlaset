@@ -1,7 +1,8 @@
-import { DrawerPanel, MenuButton, Panel, SectionHeader } from "@components";
+import { useState } from "react";
+import { DrawerPanel, Panel, SubmenuSection } from "@components";
 import { useIsMobile } from "@hooks";
 import { Branding } from "@layout";
-import { DEV_DOCS, DOCS } from "../config/docs";
+import { DOCS_GROUPS } from "../config/docs";
 
 interface DocsPanelMenuProps {
   selectedPanel: string;
@@ -17,6 +18,11 @@ export function DocsPanelMenu({
   onClose,
 }: DocsPanelMenuProps) {
   const isMobile = useIsMobile();
+  // Track expanded state for each section by key
+  const groupEntries = Object.entries(DOCS_GROUPS);
+  const [expanded, setExpanded] = useState(() =>
+    Object.fromEntries(groupEntries.map(([key]) => [key, false])),
+  );
 
   // Panel content
   const panelContent = (
@@ -24,56 +30,37 @@ export function DocsPanelMenu({
       title={
         <div className="flex items-center gap-2 px-2">
           <Branding size={36} />
-          <span className="font-bold text-2xl">Atlaset</span>
+          <span className="font-bold text-2xl">Atlaset Docs</span>
         </div>
       }
-      width={280}
+      width={320}
       className="!left-0"
       onHide={onClose}
     >
-      <ul>
-        <li>
-          <SectionHeader className="mb-2">Using Atlaset</SectionHeader>
-        </li>
-        {DOCS.map((doc) => (
-          <li key={doc.file}>
-            <MenuButton
-              icon={doc.icon}
-              active={selectedPanel === doc.file}
-              onClick={() => {
-                setSelectedPanel(doc.file);
-                if (isMobile && onClose) onClose();
-              }}
-              className="w-full mb-2"
-            >
-              {doc.label}
-            </MenuButton>
-          </li>
+      <ul className="mt-2">
+        {groupEntries.map(([key, group]) => (
+          <SubmenuSection
+            key={key}
+            icon={group.header.icon}
+            label={group.header.label}
+            expanded={expanded[key]}
+            onToggle={() =>
+              setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))
+            }
+            submenu={group.items
+              .filter((doc) => doc.file)
+              .map((doc) => ({
+                key: doc.file,
+                label: doc.label,
+                icon: doc.icon,
+              }))}
+            selectedPanel={selectedPanel}
+            setSelectedPanel={(panelKey) => {
+              setSelectedPanel(panelKey);
+              if (isMobile && onClose) onClose();
+            }}
+          />
         ))}
-        {DEV_DOCS && DEV_DOCS.length > 0 && (
-          <>
-            <li>
-              <SectionHeader className="mt-4 mb-2">
-                For Developers
-              </SectionHeader>
-            </li>
-            {DEV_DOCS.map((doc) => (
-              <li key={doc.file}>
-                <MenuButton
-                  icon={doc.icon}
-                  active={selectedPanel === doc.file}
-                  onClick={() => {
-                    setSelectedPanel(doc.file);
-                    if (isMobile && onClose) onClose();
-                  }}
-                  className="w-full mb-2"
-                >
-                  {doc.label}
-                </MenuButton>
-              </li>
-            ))}
-          </>
-        )}
       </ul>
     </Panel>
   );

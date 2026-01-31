@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-01-31
+
+- **[feature]** **Documentation:** Added Help panel and Documentation page
+- **[docs]** **General:** Expanded documentation
+- **[chore]** **General:** Updated markdown formatting
+
 ## 2026-01-29
 
 - **[chore]** **Countries:** Replaced 3x2 flags with own package and made some improvements 

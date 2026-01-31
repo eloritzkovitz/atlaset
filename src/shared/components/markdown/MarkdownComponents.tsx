@@ -106,14 +106,9 @@ export function getBaseMarkdownComponents(
           <span className="leading-relaxed">{props.children}</span>
         </li>
       )),
-    code({
-      inline,
-      children,
-      className,
-      ...props
-    }: React.ComponentProps<"code"> & { inline?: boolean }) {
-      // Inline code styling
+    code({ children, className, ...props }: React.ComponentProps<"code">) {
       const isBlock = className && className.startsWith("language-");
+      // Inline code styling
       if (!isBlock) {
         return (
           <code

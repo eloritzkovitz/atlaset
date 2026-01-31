@@ -5,4 +5,4 @@ export { DocsPanelMenu } from "./components/DocsPanelMenu";
 export { HelpPanel } from "./components/HelpPanel";
 
 // Config
-export { DOCS, DEV_DOCS, DOCS_PATH } from "./config/docs";
+export { DOCS, DOCS_PATH } from "./config/docs";
