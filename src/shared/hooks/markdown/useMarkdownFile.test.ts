@@ -3,6 +3,17 @@ import { vi } from "vitest";
 import { useMarkdownFile } from "./useMarkdownFile";
 
 describe("useMarkdownFile", () => {
+  beforeAll(() => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        Promise.resolve({ ok: true, text: () => Promise.resolve("") }),
+      ),
+    );
+  });
+  beforeEach(() => {
+    vi.mocked(global.fetch).mockClear();
+  });
   afterEach(() => {
     vi.restoreAllMocks();
   });
@@ -17,7 +28,10 @@ describe("useMarkdownFile", () => {
         }),
       ),
     );
-    const { result } = renderHook(() => useMarkdownFile("/test.md"));
+    const { result } = renderHook(
+      (props?: { path?: string }) => useMarkdownFile(props?.path),
+      { initialProps: { path: "/test.md" } },
+    );
     await waitFor(() => {
       expect(result.current.content).toBe(
         "# Test\nThis is a test markdown file.",
@@ -31,7 +45,10 @@ describe("useMarkdownFile", () => {
       "fetch",
       vi.fn(() => Promise.resolve({ ok: false })),
     );
-    const { result } = renderHook(() => useMarkdownFile("/test.md"));
+    const { result } = renderHook(
+      (props?: { path?: string }) => useMarkdownFile(props?.path),
+      { initialProps: { path: "/test.md" } },
+    );
     await waitFor(() => {
       expect(result.current.error).toMatch(/Failed to load file/);
     });
@@ -43,7 +60,10 @@ describe("useMarkdownFile", () => {
       "fetch",
       vi.fn(() => Promise.reject(new Error("Network error"))),
     );
-    const { result } = renderHook(() => useMarkdownFile("/test.md"));
+    const { result } = renderHook(
+      (props?: { path?: string }) => useMarkdownFile(props?.path),
+      { initialProps: { path: "/test.md" } },
+    );
     await waitFor(() => {
       expect(result.current.error).toMatch(/Network error/);
     });
@@ -59,7 +79,10 @@ describe("useMarkdownFile", () => {
       "fetch",
       vi.fn(() => fetchPromise),
     );
-    const { result, unmount } = renderHook(() => useMarkdownFile("/test.md"));
+    const { result, unmount } = renderHook(
+      (props?: { path?: string }) => useMarkdownFile(props?.path),
+      { initialProps: { path: "/test.md" } },
+    );
     unmount();
     // Simulate fetch resolving after unmount
     resolveFetch!({ ok: true, text: () => Promise.resolve("Should not set") });
@@ -92,7 +115,7 @@ describe("useMarkdownFile", () => {
       }),
     );
     const { result, rerender } = renderHook(
-      ({ path }) => useMarkdownFile(path),
+      (props?: { path?: string }) => useMarkdownFile(props?.path),
       {
         initialProps: { path: "/a.md" },
       },
@@ -105,5 +128,19 @@ describe("useMarkdownFile", () => {
       expect(result.current.content).toBe("B");
     });
     expect(fetchCount).toBe(2);
+  });
+
+  it("resets content and error when path is undefined", async () => {
+    const { result, rerender } = renderHook(
+      (props?: { path?: string }) => useMarkdownFile(props?.path),
+      { initialProps: { path: "/test.md" } },
+    );
+    await waitFor(() => {
+      expect(vi.mocked(global.fetch)).toHaveBeenCalledWith("/test.md");
+    });
+    rerender();
+    expect(result.current.content).toBe("");
+    expect(result.current.error).toBeNull();
+    expect(vi.mocked(global.fetch)).toHaveBeenCalledTimes(1);
   });
 });

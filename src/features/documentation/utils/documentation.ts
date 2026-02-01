@@ -18,5 +18,5 @@ export function getDocBySlug(slug: string | undefined) {
 export function navigateToDoc(navigate: (path: string) => void, file: string) {
   if (!file) return;
   const slug = file.replace(/\.md$/, "");
-  navigate(`/documentation/${slug}`);
+  navigate(`/docs/${slug}`);
 }

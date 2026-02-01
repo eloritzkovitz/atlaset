@@ -7,6 +7,7 @@ import {
   VisitedCountriesCard,
   useUserProfile,
 } from "@features/user";
+import { usePageTitle } from "@hooks";
 import { Footer, Header } from "@layout";
 
 export default function ProfilePage() {
@@ -16,6 +17,13 @@ export default function ProfilePage() {
     username,
   });
   const [editOpen, setEditOpen] = useState(false);
+
+  // Set the page title to the profile user's displayName if available
+  usePageTitle(
+    profileUser && profileUser.displayName
+      ? `${profileUser.displayName} | Atlaset`
+      : "Profile | Atlaset",
+  );
 
   // Handle case where user not found
   if (!profileUser && !(authLoading || profileLoading))
@@ -27,7 +35,6 @@ export default function ProfilePage() {
   return (
     <>
       <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
-        <title>Profile | Atlaset</title>
         <Header />
         <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
           <div className="flex flex-col gap-6 items-center">

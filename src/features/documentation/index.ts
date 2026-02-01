@@ -3,6 +3,7 @@ export { changelogMarkdownComponents } from "./components/ChangelogMarkdownCompo
 export { getDocsMarkdownComponents } from "./components/DocsMarkdownComponents";
 export { DocsPanelMenu } from "./components/DocsPanelMenu";
 export { HelpPanel } from "./components/HelpPanel";
+export { WelcomeDocsSection } from "./components/WelcomeSection";
 
 // Config
 export { DOCS, DOCS_PATH } from "./config/docs";

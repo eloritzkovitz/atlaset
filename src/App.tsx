@@ -82,8 +82,8 @@ function App() {
             />
             <Route path="/users/:username" element={<ProfilePage />} />
             <Route path="/settings/*" element={<SettingsPage />} />
-            <Route path="/documentation" element={<DocsPage />} />
-            <Route path="/documentation/:slug" element={<DocsPage />} />
+            <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs/:slug" element={<DocsPage />} />
             <Route
               path="/atlas"
               element={

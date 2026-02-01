@@ -1,5 +1,6 @@
 import {
   FaChartSimple,
+  FaCode,
   FaCompass,
   FaDatabase,
   FaEarthAmericas,
@@ -13,6 +14,8 @@ import {
   FaTimeline,
   FaUser,
 } from "react-icons/fa6";
+
+export const DOCS_PATH = "/docs/";
 
 export const DOCS_GROUPS = {
   usingAtlaset: {
@@ -47,7 +50,7 @@ export const DOCS_GROUPS = {
     ],
   },
   forDevelopers: {
-    header: { label: "For Developers", file: null, icon: <FaLaptopCode /> },
+    header: { label: "For Developers", file: null, icon: <FaCode /> },
     items: [
       {
         label: "Developer Guide",
@@ -64,4 +67,42 @@ export const DOCS = [
   ...DOCS_GROUPS.forDevelopers.items,
 ];
 
-export const DOCS_PATH = "/docs/";
+// Cards displayed on the welcome documentation page
+export const DOCS_CARDS = [
+  {
+    icon: <FaRocket className="text-5xl mb-4 text-danger" />,
+    title: "Getting Started",
+    description: "Learn the basics and set up your Atlaset experience.",
+    file: "getting-started.md",
+  },
+  {
+    icon: <FaUser className="text-5xl mb-4 text-code" />,
+    title: "Account & Profile",
+    description: "Manage your account settings and personalize your profile.",
+    file: "account-profile.md",
+  },
+  {
+    icon: <FaEarthAmericas className="text-5xl mb-4 text-info" />,
+    title: "Atlas",
+    description: "Explore the interactive world map and its features.",
+    file: "atlas.md",
+  },
+  {
+    icon: <FaSuitcaseRolling className="text-5xl mb-4 text-primary" />,
+    title: "Trips",
+    description: "Plan, track and relive your journeys and adventures.",
+    file: "trips.md",
+  },
+  {
+    icon: <FaChartSimple className="text-5xl mb-4 text-warning" />,
+    title: "Dashboard",
+    description: "View your stats and achievements.",
+    file: "dashboard.md",
+  },
+  {
+    icon: <FaQuestion className="text-5xl mb-4 text-muted" />,
+    title: "Quizzes",
+    description: "Test your knowledge of the world.",
+    file: "quizzes.md",
+  },
+];

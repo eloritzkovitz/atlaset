@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-02-01
+
+- **[docs]** **Documentation:** Updated docs navigation
+- **[chore]** **General:** Improved dynamic page titles
+
 ## 2026-01-31
 
 - **[feature]** **Documentation:** Added Help panel and Documentation page

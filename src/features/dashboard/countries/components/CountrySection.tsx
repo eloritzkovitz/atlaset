@@ -148,18 +148,8 @@ export function CountrySection({
   // Infinite scroll sentinel
   const sentinelRef = useInfiniteScroll(loadMore, hasMore);
 
-  // Compute display name
-  let filterName = "All Regions";
-  if (selectedSubregion && selectedSubregion !== "all") {
-    filterName = selectedSubregion;
-  } else if (selectedRegion && selectedRegion !== "all") {
-    filterName = selectedRegion;
-  }
-  const pageTitle = `${filterName} | Atlaset`;
-
   return (
     <div className={className}>
-      <title>{pageTitle}</title>
       <div className="flex items-center justify-between mb-4 gap-4">
         <div className="flex items-center gap-2">
           <SearchInput

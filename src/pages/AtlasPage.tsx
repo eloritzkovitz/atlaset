@@ -8,6 +8,7 @@ import { WorldMap, useGeoData } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
+import { usePageTitle } from "@hooks";
 import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
@@ -17,6 +18,9 @@ export default function AtlasPage() {
   const { layers, loading: layersLoading } = useLayers();
   const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Set page title
+  usePageTitle("Atlaset");
 
   // Determine map mode based on URL params
   const params = new URLSearchParams(location.search);
