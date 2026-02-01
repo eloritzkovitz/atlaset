@@ -1,4 +1,3 @@
-import { FaBookOpen } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@components";
 import { DOCS_CARDS } from "@features/documentation/config/docs";
@@ -6,11 +5,10 @@ import { DocSearchResults } from "./DocSearchResults";
 
 export function WelcomeDocsSection() {
   const navigate = useNavigate();
-  
+
   return (
     <div className="flex flex-col items-center justify-center h-full text-center gap-2 animate-fade-in">
       <div className="w-full max-w-xl mx-auto flex flex-col items-center gap-4">
-        <FaBookOpen className="text-6xl" />
         <h1 className="text-4xl md:text-5xl font-extrabold mb-1 tracking-tight">
           Atlaset Docs
         </h1>

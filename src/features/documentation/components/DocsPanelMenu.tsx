@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { FaHouse } from "react-icons/fa6";
+import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { DrawerPanel, Panel, SubmenuSection, ActionButton } from "@components";
+import { DrawerPanel, MenuButton, Panel, SubmenuSection } from "@components";
 import { useIsMobile } from "@hooks";
 import { Branding } from "@layout";
 import { DOCS_GROUPS } from "../config/docs";
@@ -39,7 +39,7 @@ export function DocsPanelMenu({
       const [foundKey] = found;
       setExpanded((prev) => ({ ...prev, [foundKey]: true }));
     }
-  }, [selectedPanel]);
+  }, [selectedPanel, groupEntries]);
 
   // Panel content
   const panelContent = (
@@ -56,14 +56,14 @@ export function DocsPanelMenu({
     >
       {selectedPanel && (
         <div className="flex justify-center mb-2 mt-2">
-          <ActionButton
-            icon={<FaHouse />}
+          <MenuButton
+            icon={<FaChevronLeft />}
             className="w-full"
             onClick={() => navigate("/docs")}
             ariaLabel="Return to docs home"
           >
             Return to Home
-          </ActionButton>
+          </MenuButton>
         </div>
       )}
       <ul className="mt-2">

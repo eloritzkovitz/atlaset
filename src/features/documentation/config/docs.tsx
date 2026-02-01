@@ -1,5 +1,6 @@
 import {
   FaChartSimple,
+  FaCode,
   FaCompass,
   FaDatabase,
   FaEarthAmericas,
@@ -49,7 +50,7 @@ export const DOCS_GROUPS = {
     ],
   },
   forDevelopers: {
-    header: { label: "For Developers", file: null, icon: <FaLaptopCode /> },
+    header: { label: "For Developers", file: null, icon: <FaCode /> },
     items: [
       {
         label: "Developer Guide",
