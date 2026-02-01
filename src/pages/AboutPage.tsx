@@ -1,9 +1,11 @@
+import { usePageTitle } from "@hooks";
 import { Branding } from "@layout";
 
 export default function AboutPage() {
+  usePageTitle("About Atlaset | Atlaset");
+
   return (
     <main className="w-full max-w-2xl mx-auto py-16 px-4 flex flex-col items-center text-center">
-      <title>About | Atlaset</title>
       <div className="flex flex-col items-center gap-3 mb-8">
         <span className="w-30 h-30 inline-block">
           <Branding size={120} />

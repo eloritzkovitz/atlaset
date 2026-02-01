@@ -7,7 +7,7 @@ import { QuizEntry, QuizSettings } from "@features/quizzes";
 import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
 import { useUiHint } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
-import { useFlyTransition } from "@hooks";
+import { useFlyTransition, usePageTitle } from "@hooks";
 import type { RootState } from "../store";
 
 // Lazy load leaderboards component
@@ -19,6 +19,8 @@ const Leaderboards = lazy(() =>
 
 export default function QuizzesPage() {
   const location = useLocation();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   // Cards config
   const cards = [
@@ -48,19 +50,12 @@ export default function QuizzesPage() {
     },
   ];
 
-  // Dynamic title logic
-  useEffect(() => {
-    // Find a matching card by route
-    const match = cards.find((card) => location.pathname.endsWith(card.route));
-    if (match) {
-      document.title = `${match.title} | Atlaset`;
-    } else {
-      document.title = "Quizzes | Atlaset";
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // Set page titles dynamically
+  const match = cards.find((card) => location.pathname.endsWith(card.route));
+  usePageTitle(match ? match.title : "Quizzes", {
+    suffix: " | Atlaset",
+    fallback: "Quizzes | Atlaset",
+  });
 
   // UI state
   const [settingsOpen, setSettingsOpen] = useState<null | {

@@ -20,7 +20,7 @@ import {
   UserActivitySection,
   useUserProfile,
 } from "@features/user";
-import { useIsMobile } from "@hooks";
+import { useIsMobile, usePageTitle } from "@hooks";
 import { UserMenu } from "@layout/UserMenu/UserMenu";
 
 export default function ProfilePage() {
@@ -34,14 +34,6 @@ export default function ProfilePage() {
   const location = useLocation();
   const isMobile = useIsMobile();
 
-  // Only allow editing for email/password users
-  const canEdit = user?.providerData?.[0]?.providerId === "password";
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
   // Determine selected panel from route
   const selectedPanel = location.pathname.endsWith("/activity")
     ? "activity"
@@ -52,6 +44,27 @@ export default function ProfilePage() {
         : location.pathname.endsWith("/sound")
           ? "sound"
           : "account";
+
+  // Page title based on selected panel
+  const panelTitles: Record<string, string> = {
+    account: "Account",
+    display: "Display",
+    sound: "Sound",
+    activity: "User Activity",
+    security: "Security",
+  };
+  const pageTitle = `${panelTitles[selectedPanel] || "Settings"}`;
+
+  // Set page title dynamically
+  usePageTitle(pageTitle);
+
+  // Only allow editing for email/password users
+  const canEdit = user?.providerData?.[0]?.providerId === "password";
+
+  // Redirect to login if not authenticated
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   // Handle menu navigation
   function handlePanelChange(panel: string) {
@@ -69,19 +82,8 @@ export default function ProfilePage() {
     setPanelOpen(false);
   }
 
-  // Page title based on selected panel
-  const panelTitles: Record<string, string> = {
-    account: "Account",
-    display: "Display",
-    sound: "Sound",
-    activity: "User Activity",
-    security: "Security",
-  };
-  const pageTitle = `${panelTitles[selectedPanel] || "Settings"} | Atlaset`;
-
   return (
     <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
-      <title>{pageTitle}</title>
       {/* Hamburger for mobile */}
       {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
       <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">

@@ -12,4 +12,4 @@ export { useDashboardNavigation } from "./countries/hooks/useDashboardNavigation
 export { useDashboardRouteState } from "./countries/hooks/useDashboardRouteState";
 
 // Utils
-export { getDashboardBreadcrumbs } from "./navigation/config/breadcrumbs";
+export { getDashboardMeta } from "./navigation/utils/dashboardNavigation";

@@ -15,7 +15,7 @@ import { sortTrips } from "@features/trips/utils/tripSort";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { useAuth } from "@features/user";
-import { useIsMobile, useTablePagination } from "@hooks";
+import { useIsMobile, useTablePagination, usePageTitle } from "@hooks";
 
 export default function TripsPage() {
   const { user } = useAuth();
@@ -36,6 +36,9 @@ export default function TripsPage() {
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
   const isMobile = useIsMobile();
 
+  // Set page title
+  usePageTitle("Trips | Atlaset");
+
   // Trip filtering hook
   const {
     filteredTrips,
@@ -55,7 +58,7 @@ export default function TripsPage() {
   const sortedTrips = sortTrips(
     filteredTrips,
     countryData?.countries ?? [],
-    sortBy
+    sortBy,
   );
 
   // Table pagination hook
@@ -79,12 +82,12 @@ export default function TripsPage() {
 
   // Get selected trips for bulk actions
   const selectedTrips = filteredTrips.filter((trip) =>
-    selectedTripIds.includes(trip.id)
+    selectedTripIds.includes(trip.id),
   );
 
   // Only allow non-shared trips for bulk actions
   const nonSharedSelectedTrips = selectedTrips.filter(
-    (trip) => !sharedTripIds.has(trip.id)
+    (trip) => !sharedTripIds.has(trip.id),
   );
 
   // Selection handlers
@@ -93,7 +96,9 @@ export default function TripsPage() {
     if (sharedTripIds.has(id)) return;
 
     setSelectedTripIds((prev) =>
-      prev.includes(id) ? prev.filter((tripId) => tripId !== id) : [...prev, id]
+      prev.includes(id)
+        ? prev.filter((tripId) => tripId !== id)
+        : [...prev, id],
     );
   }
 
@@ -151,7 +156,6 @@ export default function TripsPage() {
 
   return (
     <div className="min-h-screen w-full flex flex-col">
-      <title>Trips | Atlaset</title>
       {/* Toolbar */}
       {!isMobile && (
         <TripsToolbar
@@ -198,7 +202,7 @@ export default function TripsPage() {
                 if (key in filters) {
                   updateFilter(
                     key as keyof TripFilterState,
-                    value as TripFilterState[keyof TripFilterState]
+                    value as TripFilterState[keyof TripFilterState],
                   );
                 }
               }}

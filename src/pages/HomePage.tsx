@@ -4,9 +4,13 @@ import { useAuth } from "@contexts/AuthContext";
 import { CallToActionSection } from "@layout/Home/CallToActionSection";
 import { FeaturesSection } from "@layout/Home/FeaturesSection";
 import { HeroSection } from "@layout/Home/HeroSection";
+import { usePageTitle } from "@hooks";
 
 export default function HomePage() {
   const { user, loading } = useAuth();
+
+  // Set page title
+  usePageTitle("Atlaset: Your travel companion");
 
   // Show loading spinner while auth state is loading
   if (loading) {
@@ -20,13 +24,10 @@ export default function HomePage() {
 
   // Not loading and no user: show homepage content
   return (
-    <>
-      <title>Atlaset: Your travel companion</title>
-      <main>
-        <HeroSection />
-        <FeaturesSection />
-        <CallToActionSection />
-      </main>
-    </>
+    <main>
+      <HeroSection />
+      <FeaturesSection />
+      <CallToActionSection />
+    </main>
   );
 }

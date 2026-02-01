@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { HamburgerButton, MarkdownFileRenderer } from "@components";
 import {
@@ -9,7 +9,7 @@ import {
   navigateToDoc,
   WelcomeDocsSection,
 } from "@features/documentation";
-import { useIsMobile, useMarkdownFile } from "@hooks";
+import { useIsMobile, useMarkdownFile, usePageTitle } from "@hooks";
 
 export default function DocsPage() {
   const { slug } = useParams<{ slug?: string }>();
@@ -23,21 +23,19 @@ export default function DocsPage() {
     doc ? DOCS_PATH + doc.file : undefined,
   );
 
-  // Set dynamic page title
-  useEffect(() => {
-    if (doc) {
-      document.title = `${doc.label} | Atlaset Documentation`;
-    } else {
-      document.title = "Atlaset Documentation";
-    }
-    return () => {
-      document.title = "Atlaset";
-    };
-  }, [doc]);
+  // Set page titles dynamically
+  usePageTitle(
+    doc ? doc.label : "Atlaset Documentation",
+    doc
+      ? {
+          suffix: " | Atlaset Documentation",
+          fallback: "Atlaset Documentation",
+        }
+      : { suffix: "", fallback: "Atlaset Documentation" },
+  );
 
   return (
     <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
-      {/* Title is now set dynamically via useEffect */}
       {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
       <div className="flex flex-row h-full w-full max-w-4xl mx-auto gap-6">
         <div className="flex-shrink-0 flex flex-col justify-start h-full">

@@ -6,12 +6,15 @@ import {
   AuthForm,
   useAuthHandlers,
 } from "@features/user";
-import { useUiHint } from "@hooks";
+import { useUiHint, usePageTitle } from "@hooks";
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =
     useAuthHandlers();
   const [showReactivatedHint, setShowReactivatedHint] = useState(false);
+
+  // Set the page title
+  usePageTitle("Login | Atlaset");
 
   // Show reactivation hint if needed
   useEffect(() => {
@@ -34,7 +37,6 @@ export default function LoginPage() {
 
   return (
     <div className="flex flex-col flex-1 min-h-[70vh] w-full">
-      <title>Login | Atlaset</title>
       <div className="flex flex-1 flex-col items-center justify-center">
         <AuthCard>
           <h2 className="text-2xl font-bold mb-4">Sign in</h2>

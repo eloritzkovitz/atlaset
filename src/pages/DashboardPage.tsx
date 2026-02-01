@@ -2,31 +2,30 @@ import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import {
   Breadcrumbs,
-  type Crumb,
   ErrorMessage,
   LoadingSpinner,
   HamburgerButton,
 } from "@components";
 import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
+  AchievementsGrid,
   DashboardPanelMenu,
   CountryStats,
   TripHistory,
   TripsByMonth,
   TripsByYear,
   TripsStats,
-  getDashboardBreadcrumbs,
-  useDashboardNavigation,
   useDashboardRouteState,
-  AchievementsGrid,
+  useDashboardNavigation,
+  getDashboardMeta,
 } from "@features/dashboard";
-import { useAuth } from "@features/user";
-import { useIsMobile } from "@hooks";
 import {
   COUNTRIES_SUBMENU,
   ACHIEVEMENTS_MENU,
   TRIPS_SUBMENU,
 } from "@features/dashboard/navigation/config/menu";
+import { useAuth } from "@features/user";
+import { useIsMobile, usePageTitle } from "@hooks";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
@@ -34,16 +33,21 @@ export default function DashboardPage() {
   const isMobile = useIsMobile();
   const [panelOpen, setPanelOpen] = useState(false);
 
-  // Use global region/subregion/search filter state
-  const {
-    selectedRegion,
-    setSelectedRegion,
-    selectedSubregion,
-    setSelectedSubregion,
-    search,
-    setSearch,
-    resetFilters,
-  } = useRegionSubregionFilters();
+  // Full dashboard menu config
+  const dashboardMenuConfig = [
+    ...COUNTRIES_SUBMENU,
+    ...ACHIEVEMENTS_MENU,
+    ...TRIPS_SUBMENU,
+  ];
+
+  // Determine current panel from URL
+  const dashboardPath =
+    typeof window !== "undefined"
+      ? window.location.pathname.replace(/^\/dashboard\//, "")
+      : undefined;
+  const currentPanel = dashboardMenuConfig.find(
+    (item) => item.key === dashboardPath,
+  );
 
   // Dashboard route state
   const {
@@ -54,6 +58,30 @@ export default function DashboardPage() {
     selectedIsoCode,
     selectedCountry,
   } = useDashboardRouteState();
+
+  const {
+    selectedRegion,
+    setSelectedRegion,
+    selectedSubregion,
+    setSelectedSubregion,
+    search,
+    setSearch,
+    resetFilters,
+  } = useRegionSubregionFilters();
+
+  // Build dashboard meta (title and breadcrumbs)
+  const { pageTitle, breadcrumbs } = getDashboardMeta({
+    selectedPanel,
+    selectedCountry,
+    routeSelectedRegion,
+    routeSelectedSubregion,
+    currentPanel,
+    selectedRegion,
+    selectedSubregion,
+  });
+  usePageTitle(pageTitle, {
+    fallback: "Dashboard | Atlaset",
+  });
 
   // Sync route state to filter state
   useEffect(() => {
@@ -72,14 +100,6 @@ export default function DashboardPage() {
     setSelectedRegion,
     setSelectedSubregion,
   ]);
-
-  // Breadcrumbs
-  const breadcrumbs: Crumb[] = getDashboardBreadcrumbs(
-    selectedPanel,
-    selectedRegion,
-    selectedSubregion,
-    selectedCountry ?? null,
-  );
 
   // Navigation handlers
   const {
@@ -132,24 +152,8 @@ export default function DashboardPage() {
     );
   }
 
-  // Menu configuration for finding current panel
-  const dashboardMenuConfig = [
-    ...COUNTRIES_SUBMENU,
-    ...ACHIEVEMENTS_MENU,
-    ...TRIPS_SUBMENU,
-  ];
-
-  // Find the label for the current panel
-  const currentPanel = dashboardMenuConfig.find(
-    (item) => item.key === menuSelectedPanel,
-  );
-  const pageTitle = currentPanel
-    ? `${currentPanel.title} | Atlaset`
-    : "Dashboard | Atlaset";
-
   return (
     <div className="min-h-screen relative">
-      <title>{pageTitle}</title>
       {/* Mobile: hamburger + drawer */}
       {isMobile && (
         <>

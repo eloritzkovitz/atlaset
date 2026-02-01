@@ -1,7 +1,7 @@
 import type { Crumb } from "@components";
 
 // Predefined breadcrumbs for dashboard panels
-const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
+export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
   achievements: [
     { label: "Dashboard", key: "dashboard" },
     { label: "Achievements", key: "achievements" },
@@ -41,38 +41,3 @@ const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "By Year" },
   ],
 };
-
-/**
- * Generate breadcrumbs for the dashboard based on navigation state
- * @param selectedPanel - Currently selected dashboard panel
- * @param selectedRegion - Currently selected region
- * @param selectedSubregion - Currently selected subregion
- * @param selectedCountry - Currently selected country
- * @returns Array of breadcrumb objects
- */
-export function getDashboardBreadcrumbs(
-  selectedPanel: string,
-  selectedRegion: string | null,
-  selectedSubregion: string | null,
-  selectedCountry: { name: string } | null,
-): Crumb[] {
-  const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
-
-  // Only add dynamic crumbs for countries panel
-  if (selectedPanel === "countries" || selectedPanel.startsWith("countries/")) {
-    if (selectedRegion) {
-      crumbs.push({
-        label: selectedRegion === "all" ? "All Countries" : selectedRegion,
-        key: "region",
-      });
-    }
-    if (selectedSubregion && selectedSubregion !== "all") {
-      crumbs.push({ label: selectedSubregion, key: "subregion" });
-    }
-    if (selectedCountry) {
-      crumbs.push({ label: selectedCountry.name, key: "country" });
-    }
-  }
-
-  return crumbs;
-}
