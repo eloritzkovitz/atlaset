@@ -39,7 +39,8 @@ export function DocsPanelMenu({
       const [foundKey] = found;
       setExpanded((prev) => ({ ...prev, [foundKey]: true }));
     }
-  }, [selectedPanel, groupEntries]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedPanel]);
 
   // Panel content
   const panelContent = (
