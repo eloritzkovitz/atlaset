@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { DrawerPanel, Panel, SubmenuSection } from "@components";
+import { useState, useEffect } from "react";
+import { FaHouse } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
+import { DrawerPanel, Panel, SubmenuSection, ActionButton } from "@components";
 import { useIsMobile } from "@hooks";
 import { Branding } from "@layout";
 import { DOCS_GROUPS } from "../config/docs";
 
 interface DocsPanelMenuProps {
-  selectedPanel: string;
+  selectedPanel?: string;
   setSelectedPanel: (panel: string) => void;
   open?: boolean;
   onClose?: () => void;
@@ -18,11 +20,26 @@ export function DocsPanelMenu({
   onClose,
 }: DocsPanelMenuProps) {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+
   // Track expanded state for each section by key
   const groupEntries = Object.entries(DOCS_GROUPS);
   const [expanded, setExpanded] = useState(() =>
     Object.fromEntries(groupEntries.map(([key]) => [key, false])),
   );
+
+  // Expand the relevant section if selectedPanel changes
+  useEffect(() => {
+    if (!selectedPanel) return;
+    // Find which group contains the selectedPanel
+    const found = groupEntries.find(([, group]) =>
+      group.items.some((doc) => doc.file === selectedPanel),
+    );
+    if (found) {
+      const [foundKey] = found;
+      setExpanded((prev) => ({ ...prev, [foundKey]: true }));
+    }
+  }, [selectedPanel]);
 
   // Panel content
   const panelContent = (
@@ -37,6 +54,18 @@ export function DocsPanelMenu({
       className="!left-0"
       onHide={onClose}
     >
+      {selectedPanel && (
+        <div className="flex justify-center mb-2 mt-2">
+          <ActionButton
+            icon={<FaHouse />}
+            className="w-full"
+            onClick={() => navigate("/documentation")}
+            ariaLabel="Return to documentation home"
+          >
+            Return to Home
+          </ActionButton>
+        </div>
+      )}
       <ul className="mt-2">
         {groupEntries.map(([key, group]) => (
           <SubmenuSection

@@ -7,7 +7,7 @@ interface SubmenuSectionProps {
   expanded: boolean;
   onToggle: () => void;
   submenu: { key: string; label: string; icon?: React.ReactNode }[];
-  selectedPanel: string;
+  selectedPanel?: string;
   setSelectedPanel: (key: string) => void;
 }
 
