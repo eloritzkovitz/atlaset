@@ -12,7 +12,7 @@ export function WelcomeDocsSection() {
       <div className="w-full max-w-xl mx-auto flex flex-col items-center gap-4">
         <FaBookOpen className="text-6xl" />
         <h1 className="text-4xl md:text-5xl font-extrabold mb-1 tracking-tight">
-          Atlaset Documentation
+          Atlaset Docs
         </h1>
         <p className="text-lg md:text-xl text-muted font-medium max-w-xl mx-auto">
           Your companion for mastering Atlaset.
@@ -28,7 +28,7 @@ export function WelcomeDocsSection() {
                   key={card.title}
                   className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans flex flex-col items-center hover:bg-primary/50 hover:scale-105 transition"
                   onClick={() =>
-                    navigate(`/documentation/${card.file.replace(/\.md$/, "")}`)
+                    navigate(`/docs/${card.file.replace(/\.md$/, "")}`)
                   }
                 >
                   {card.icon}

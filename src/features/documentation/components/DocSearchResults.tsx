@@ -32,7 +32,7 @@ export function DocSearchResults({
                     icon={doc.icon}
                     className="w-full mb-1"
                     onClick={() =>
-                      (window.location.href = `/documentation/${doc.file.replace(/\.md$/, "")}`)
+                      (window.location.href = `/docs/${doc.file.replace(/\.md$/, "")}`)
                     }
                   >
                     {doc.label}

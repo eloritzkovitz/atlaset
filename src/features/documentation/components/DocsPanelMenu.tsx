@@ -59,8 +59,8 @@ export function DocsPanelMenu({
           <ActionButton
             icon={<FaHouse />}
             className="w-full"
-            onClick={() => navigate("/documentation")}
-            ariaLabel="Return to documentation home"
+            onClick={() => navigate("/docs")}
+            ariaLabel="Return to docs home"
           >
             Return to Home
           </ActionButton>

@@ -25,13 +25,13 @@ export default function DocsPage() {
 
   // Set page titles dynamically
   usePageTitle(
-    doc ? doc.label : "Atlaset Documentation",
+    doc ? doc.label : "Atlaset Docs",
     doc
       ? {
-          suffix: " | Atlaset Documentation",
-          fallback: "Atlaset Documentation",
+          suffix: " | Atlaset Docs",
+          fallback: "Atlaset Docs",
         }
-      : { suffix: "", fallback: "Atlaset Documentation" },
+      : { suffix: "", fallback: "Atlaset Docs" },
   );
 
   return (
