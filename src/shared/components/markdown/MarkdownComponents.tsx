@@ -51,7 +51,7 @@ export function getBaseMarkdownComponents(
           node?: { position?: { start?: { line?: number } } };
         },
       ) => {
-        const isFirst = props.node?.position?.start?.line === 2;
+        const isFirst = props.node?.position?.start?.line === 3;
         const { ...rest } = props;
         return (
           <>

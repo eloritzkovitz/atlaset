@@ -2,12 +2,12 @@
 
 ## 2026-02-01
 
-- **[docs]** **Documentation:** Updated docs navigation
+- **[docs]** **Docs:** Added welcome section and updated navigation
 - **[chore]** **General:** Improved dynamic page titles
 
 ## 2026-01-31
 
-- **[feature]** **Documentation:** Added Help panel and Documentation page
+- **[feature]** **Docs:** Added Help panel and Docs page
 - **[docs]** **General:** Expanded documentation
 - **[chore]** **General:** Updated markdown formatting
 

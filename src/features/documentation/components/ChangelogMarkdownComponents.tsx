@@ -3,6 +3,12 @@ import { getBaseMarkdownComponents } from "@components";
 import { hasStringChildren } from "@utils/string";
 
 export const changelogMarkdownComponents = getBaseMarkdownComponents({
+  h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h1
+      className="mt-0 mb-6 text-xl text-action-text-hover flex justify-center font-bold"
+      {...props}
+    />
+  ),
   ul: (props: React.HTMLProps<HTMLUListElement>) => (
     <ul className="ml-0 mb-4" {...props} />
   ),

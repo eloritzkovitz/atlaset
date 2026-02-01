@@ -11,9 +11,8 @@ export default function ChangelogPage() {
   
   return (
     <div className="prose prose-slate dark:prose-invert mx-auto p-4 max-w-3xl">
-      <h1 className="mb-20 text-3xl font-bold text-center">Changelog</h1>
       <MarkdownFileRenderer
-        content={content ? content.split("\n").slice(1).join("\n") : ""}
+        content={content}
         error={error}
         components={components}
       />

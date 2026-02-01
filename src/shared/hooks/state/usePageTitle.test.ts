@@ -10,7 +10,7 @@ describe("usePageTitle", () => {
 
   it("sets the document title with default suffix", () => {
     renderHook(() => usePageTitle("Test Page"));
-    expect(document.title).toBe("Test Page | Atlaset");
+    expect(document.title).toBe("Test Page");
   });
 
   it("sets the document title with custom suffix and fallback", () => {
@@ -31,7 +31,7 @@ describe("usePageTitle", () => {
     const { unmount } = renderHook(() =>
       usePageTitle("Unmount Test", { fallback: "Restored" }),
     );
-    expect(document.title).toBe("Unmount Test | Atlaset");
+    expect(document.title).toBe("Unmount Test");
     unmount();
     expect(document.title).toBe("Restored");
   });
@@ -40,8 +40,8 @@ describe("usePageTitle", () => {
     const { rerender } = renderHook(({ title }) => usePageTitle(title), {
       initialProps: { title: "First" },
     });
-    expect(document.title).toBe("First | Atlaset");
+    expect(document.title).toBe("First");
     rerender({ title: "Second" });
-    expect(document.title).toBe("Second | Atlaset");
+    expect(document.title).toBe("Second");
   });
 });
