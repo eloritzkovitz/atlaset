@@ -62,7 +62,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
               color: m.color,
               description: m.description,
             }))
-          : undefined,
+          : [],
         createdAt: new Date().toISOString(),
       },
       false,
@@ -88,11 +88,17 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   // Save changes to the saved map
   const handleSavedMapSave = async () => {
     if (!editingSavedMap) return;
+    // Always ensure markers is an array before saving
+    const mapToSave = {
+      ...editingSavedMap,
+      markers: Array.isArray(editingSavedMap.markers)
+        ? editingSavedMap.markers
+        : [],
+    };
     if (isEditingSavedMap) {
-      // Update existing map (by id)
-      await exportSaveService.add(editingSavedMap);
+      await exportSaveService.add(mapToSave);
     } else {
-      await addMap(editingSavedMap);
+      await addMap(mapToSave);
     }
     closeSavedMapModal();
     await reload();
