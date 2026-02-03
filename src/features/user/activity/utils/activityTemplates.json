@@ -26,6 +26,11 @@
   "222": "{userName} edited a marker '{itemName}'{location}{date}.",
   "223": "{userName} removed a marker '{itemName}'{location}{date}.",
 
+  "330": "{userName} exported a map{date}.",
+  "331": "{userName} saved a map '{itemName}'{date}.",
+  "332": "{userName} edited a saved map '{itemName}'{date}.",
+  "333": "{userName} removed a saved map '{itemName}'{date}.",
+
   "300": "{userName} has played a quiz{date}.",
   "301": "{userName} completed a {difficulty} {quizType} quiz with a score of {score}{time}{date}.",  
   "302": "{userName} has entered the leaderboards{date}.",
