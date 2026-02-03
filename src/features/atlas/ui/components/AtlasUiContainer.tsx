@@ -1,14 +1,15 @@
 import { useMarkers } from "@contexts/MarkersContext";
 import { useLayers } from "@contexts/LayersContext";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
-import { MapExportPanel } from "@features/atlas/export";
+import { MapExportPanel, SavedMapsModal } from "@features/atlas/export";
+import { LayerModal, LayersPanel } from "@features/atlas/layers";
 import {
   MarkerDetailsModal,
   MarkerModal,
   MarkersPanel,
   useMarkerCreation,
 } from "@features/atlas/markers";
-import { LayerModal, LayersPanel } from "@features/atlas/layers";
 import type { Country } from "@features/countries";
 import { SettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
@@ -60,6 +61,16 @@ export function AtlasUiContainer({
     closeLayerModal,
     setEditingLayer,
   } = useLayers();
+
+  // Saved maps state
+  const {
+    isSavedMapModalOpen,
+    editingSavedMap,
+    isEditingSavedMap,
+    handleSavedMapChange,
+    handleSavedMapSave,
+    closeSavedMapModal,
+  } = useSavedMaps();
 
   // UI toggle hint
   useUiToggleHint();
@@ -117,6 +128,14 @@ export function AtlasUiContainer({
         onChange={setEditingLayer}
         onSave={saveLayer}
         onClose={closeLayerModal}
+      />
+      <SavedMapsModal
+        isOpen={isSavedMapModalOpen}
+        savedMap={editingSavedMap}
+        onChange={handleSavedMapChange}
+        onSave={handleSavedMapSave}
+        onClose={closeSavedMapModal}
+        isEditing={isEditingSavedMap}
       />
     </>
   );

@@ -1,12 +1,18 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { SavedMapsContext } from "./SavedMapsContext";
+import { decodeMapData } from "@features/atlas/export/utils/mapShare";
 import type { SavedMap } from "@features/atlas/export/types";
 import { exportSaveService } from "@features/atlas/export/services/exportSaveService";
+import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const [savedMaps, setSavedMaps] = useState<SavedMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
+
+  // Modal state for add/edit saved map
+  const [isSavedMapModalOpen, setSavedMapModalOpen] = useState(false);
+  const [editingSavedMap, setEditingSavedMap] = useState<SavedMap | null>(null);
+  const [isEditingSavedMap, setIsEditingSavedMap] = useState(false);
 
   // Function to reload saved maps
   const reload = async () => {
@@ -34,7 +40,64 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   };
 
-  // Load saved maps on mount
+  // Save current map from URL (open modal for user to confirm/save)
+  const saveCurrentMap = () => {
+    // Get the map code from the current URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("map");
+    if (!code) {
+      return;
+    }
+    const exportData = decodeMapData(code);
+    // Open modal with decoded map data, empty name
+    openSavedMapModal(
+      {
+        id: crypto.randomUUID(),
+        name: "",
+        layers: exportData.layers,
+        markers: exportData.markers
+          ? exportData.markers.map((m) => ({
+              name: m.name ?? "",
+              coordinates: m.coordinates,
+              color: m.color,
+              description: m.description,
+            }))
+          : undefined,
+        createdAt: new Date().toISOString(),
+      },
+      false,
+    );
+  };
+
+  // Open modal for adding or editing a saved map
+  const openSavedMapModal = (map: SavedMap | null = null, editing = false) => {
+    setEditingSavedMap(map);
+    setIsEditingSavedMap(editing);
+    setSavedMapModalOpen(true);
+  };
+
+  // Close modal and reset state
+  const closeSavedMapModal = () => {
+    setSavedMapModalOpen(false);
+    setEditingSavedMap(null);
+  };
+
+  // Handle changes to the saved map being edited
+  const handleSavedMapChange = (map: SavedMap) => setEditingSavedMap(map);
+
+  // Save changes to the saved map
+  const handleSavedMapSave = async () => {
+    if (!editingSavedMap) return;
+    if (isEditingSavedMap) {
+      // Update existing map (by id)
+      await exportSaveService.add(editingSavedMap);
+    } else {
+      await addMap(editingSavedMap);
+    }
+    closeSavedMapModal();
+    await reload();
+  };
+
   useEffect(() => {
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,7 +105,22 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <SavedMapsContext.Provider
-      value={{ savedMaps, loading, error, reload, addMap, deleteMap }}
+      value={{
+        savedMaps,
+        loading,
+        error,
+        reload,
+        addMap,
+        deleteMap,
+        saveCurrentMap,
+        isSavedMapModalOpen,
+        editingSavedMap,
+        isEditingSavedMap,
+        openSavedMapModal,
+        closeSavedMapModal,
+        handleSavedMapChange,
+        handleSavedMapSave,
+      }}
     >
       {children}
     </SavedMapsContext.Provider>

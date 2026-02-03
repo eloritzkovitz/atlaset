@@ -8,6 +8,14 @@ export interface SavedMapsContextValue {
   reload: () => Promise<void>;
   addMap: (map: SavedMap) => Promise<void>;
   deleteMap: (id: string) => Promise<void>;
+  saveCurrentMap: () => void;
+  isSavedMapModalOpen: boolean;
+  editingSavedMap: SavedMap | null;
+  isEditingSavedMap: boolean;
+  openSavedMapModal: (map?: SavedMap | null) => void;
+  closeSavedMapModal: () => void;
+  handleSavedMapChange: (map: SavedMap) => void;
+  handleSavedMapSave: () => Promise<void>;
 }
 
 export const SavedMapsContext = createContext<

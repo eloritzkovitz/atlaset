@@ -16,6 +16,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { isAuthenticated } from "@utils/firebase";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 
 export interface ToolbarActionsParams {
   isMobile: boolean;
@@ -42,6 +43,7 @@ export function useToolbarActions({
   const { setTimelineMode } = useTimeline();
   const { isReadonly } = useMapView();
   const { layers } = useLayers();
+  const { saveCurrentMap } = useSavedMaps();
   const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
 
   // Centralized menu close helper
@@ -50,7 +52,7 @@ export function useToolbarActions({
       if (isMobile) setMenuOpen(false);
       action();
     };
-  }
+  } 
 
   return [
     {
@@ -97,8 +99,8 @@ export function useToolbarActions({
       key: "save",
       icon: <FaBookmark className="text-lg" />,
       label: "Save",
-      onClick: () => {},
-      show: isReadonly,
+      onClick: saveCurrentMap,
+      show: isReadonly && isAuthenticated(),
     },
     {
       key: "export",
