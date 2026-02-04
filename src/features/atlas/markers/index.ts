@@ -10,3 +10,9 @@ export { useMarkerSelection } from "./hooks/useMarkerSelection";
 
 // Services
 export { markersService } from "./services/markersService";
+
+// Types
+export { type Marker as MarkerType } from "./types";
+
+// Utils
+export { normalizeMarkers } from "./utils/markers";

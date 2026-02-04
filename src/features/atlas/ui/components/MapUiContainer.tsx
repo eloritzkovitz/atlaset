@@ -1,9 +1,15 @@
 import { useMemo } from "react";
-import { FaEye, FaMapPin, FaTimeline, FaShareNodes } from "react-icons/fa6";
+import {
+  FaArrowsToEye,
+  FaMapPin,
+  FaShareNodes,
+  FaTimeline,
+} from "react-icons/fa6";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 import type { Layer } from "@features/atlas/layers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
@@ -60,7 +66,8 @@ export function MapUiContainer({
 
   // UI hint for shared/saved maps
   const sharedMapInfo = useSharedMapInfo() || {};
-  const mapName = sharedMapInfo.mapName;
+  const { editingSavedMap } = useSavedMaps();
+  const mapName = editingSavedMap?.name || sharedMapInfo.mapName;
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
     if ((!isReadonly && !isEdit) || isEmbed) return null;
@@ -80,7 +87,7 @@ export function MapUiContainer({
     return {
       message: msg,
       icon: isEdit ? (
-        <FaEye className="text-lg" />
+        <FaArrowsToEye className="text-lg" />
       ) : (
         <FaShareNodes className="text-lg" />
       ),

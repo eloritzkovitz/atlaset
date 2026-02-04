@@ -44,7 +44,7 @@ export function useToolbarActions({
   const { setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
   const { layers } = useLayers();
-  const { saveCurrentMap } = useSavedMaps();
+  const { saveCurrentMap, exitEditMode } = useSavedMaps();
   const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
 
   // Centralized menu close helper
@@ -131,7 +131,9 @@ export function useToolbarActions({
       icon: <FaArrowLeft className="text-lg" />,
       label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
       onClick: withMenuClose(() => {
-        if (window.location.pathname === "/atlas") {
+        if (typeof exitEditMode === "function") {
+          exitEditMode();
+        } else if (window.location.pathname === "/atlas") {
           const url = new URL(window.location.href);
           url.searchParams.delete("map");
           window.location.href = url.pathname + url.search;

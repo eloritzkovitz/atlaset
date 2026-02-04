@@ -43,7 +43,7 @@ export const UIHintProvider: React.FC<{ children: ReactNode }> = ({
 
   return (
     <UIHintContext.Provider value={{ hints, addHint, removeHint, clearHints }}>
-      {children}
+      <div className="select-none">{children}</div>
     </UIHintContext.Provider>
   );
 };

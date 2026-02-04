@@ -1,6 +1,7 @@
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   setDoc,
   deleteDoc,
@@ -15,6 +16,62 @@ import { db } from "../../../../firebase";
  */
 export const savedMapsService = {
   /**
+   * Loads all saved maps for the current user.
+   * @returns A promise that resolves to an array of saved maps.
+   */
+  async load(): Promise<SavedMap[]> {
+    if (!isAuthenticated())
+      throw new Error("User must be authenticated to load saved maps.");
+    const user = getCurrentUser();
+    const mapsCol = collection(db, "users", user!.uid, "savedMaps");
+    const snapshot = await getDocs(mapsCol);
+    return snapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        ...data,
+      } as SavedMap;
+    });
+  },
+
+  /**
+   * Loads a single saved map by id for the current user.
+   * @param id The id of the saved map
+   * @returns The SavedMap or null if not found
+   */
+  async get(id: string): Promise<SavedMap | null> {
+    if (!isAuthenticated())
+      throw new Error("User must be authenticated to load saved maps.");
+    const user = getCurrentUser();
+    const mapDoc = doc(collection(db, "users", user!.uid, "savedMaps"), id);
+    const snapshot = await getDoc(mapDoc);
+    if (!snapshot.exists()) return null;
+    const data = snapshot.data();
+    return { id: snapshot.id, ...data } as SavedMap;
+  },
+
+  /**
+   * Creates or updates a saved map by id.
+   * @param map - The map to create or update.
+   */
+  async set(map: SavedMap) {
+    if (!isAuthenticated())
+      throw new Error("User must be authenticated to save maps.");
+    const user = getCurrentUser();
+    const mapsCol = collection(db, "users", user!.uid, "savedMaps");
+    await setDoc(doc(mapsCol, map.id), map, { merge: true });
+    await logUserActivity(
+      332,
+      {
+        mapId: map.id,
+        mapName: map.name,
+        userName: user!.displayName,
+      },
+      user!.uid,
+    );
+  },
+
+  /**
    * Adds a new saved map.
    * @param map - The map to save.
    */
@@ -23,6 +80,7 @@ export const savedMapsService = {
       throw new Error("User must be authenticated to save maps.");
     const user = getCurrentUser();
     const mapsCol = collection(db, "users", user!.uid, "savedMaps");
+    // Save layers as-is; assume ids are already valid
     await setDoc(doc(mapsCol, map.id), map);
     await logUserActivity(
       331,
@@ -52,21 +110,6 @@ export const savedMapsService = {
         userName: user!.displayName,
       },
       user!.uid,
-    );
-  },
-
-  /**
-   * Loads all saved maps for the current user.
-   * @returns A promise that resolves to an array of saved maps.
-   */
-  async load(): Promise<SavedMap[]> {
-    if (!isAuthenticated())
-      throw new Error("User must be authenticated to load saved maps.");
-    const user = getCurrentUser();
-    const mapsCol = collection(db, "users", user!.uid, "savedMaps");
-    const snapshot = await getDocs(mapsCol);
-    return snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as SavedMap,
     );
   },
 };

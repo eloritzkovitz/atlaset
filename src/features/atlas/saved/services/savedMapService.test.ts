@@ -9,11 +9,12 @@ vi.mock("@utils/firebase", () => {
 });
 vi.mock("firebase/firestore", () => {
   return {
-    collection: vi.fn(),
-    doc: vi.fn(),
+    collection: vi.fn(() => ({ __collection: true })),
+    doc: vi.fn(() => ({ __doc: true })),
     getDocs: vi.fn(),
     setDoc: vi.fn(),
     deleteDoc: vi.fn(),
+    getDoc: vi.fn(),
     __esModule: true,
   };
 });
@@ -45,19 +46,30 @@ const setDocMock = firestore.setDoc as unknown as ReturnType<typeof vi.fn>;
 const deleteDocMock = firestore.deleteDoc as unknown as ReturnType<
   typeof vi.fn
 >;
+const getDocMock = vi.mocked(firestore.getDoc);
 
 describe("savedMapsService", () => {
   const mockUser = { uid: "user123", displayName: "Test User" };
   const mockMap: SavedMap = {
     id: "map1",
     name: "Test Map",
-    layers: [{ name: "Layer1", color: "#fff", countries: ["US"] }],
+    layers: [
+      {
+        id: "layer1",
+        name: "Layer1",
+        color: "#fff",
+        countries: ["US"],
+        visible: true,
+      },
+    ],
     markers: [
       {
+        id: "marker1",
         name: "Marker1",
         coordinates: [0, 0],
         color: "#000",
         description: "desc",
+        visible: true,
       },
     ],
     createdAt: new Date().toISOString(),
@@ -78,12 +90,56 @@ describe("savedMapsService", () => {
 
   it("should add a saved map for authenticated user", async () => {
     await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
-    expect(setDocMock).toHaveBeenCalled();
+    expect(setDocMock).toHaveBeenCalledWith(expect.anything(), mockMap);
     expect(logUserActivity).toHaveBeenCalledWith(
       331,
       expect.objectContaining({ mapId: mockMap.id }),
       mockUser.uid,
     );
+  });
+
+  it("should set (create/update) a saved map for authenticated user", async () => {
+    await expect(savedMapsService.set(mockMap)).resolves.not.toThrow();
+    expect(setDocMock).toHaveBeenCalledWith(expect.anything(), mockMap, {
+      merge: true,
+    });
+    expect(logUserActivity).toHaveBeenCalledWith(
+      332,
+      expect.objectContaining({ mapId: mockMap.id }),
+      mockUser.uid,
+    );
+  });
+
+  it("should throw if not authenticated on set", async () => {
+    isAuthenticatedMock.mockReturnValue(false);
+    await expect(savedMapsService.set(mockMap)).rejects.toThrow();
+  });
+
+  it("should get a saved map for authenticated user", async () => {
+    const mockSnapshot = {
+      exists: () => true,
+      id: mockMap.id,
+      data: () => ({ ...mockMap }),
+    };
+    getDocMock.mockResolvedValue(mockSnapshot as any);
+    const result = await savedMapsService.get(mockMap.id);
+    expect(result).toEqual(
+      expect.objectContaining({ id: mockMap.id, name: mockMap.name }),
+    );
+  });
+
+  it("should return null if map does not exist on get", async () => {
+    const mockSnapshot = {
+      exists: () => false,
+    };
+    getDocMock.mockResolvedValue(mockSnapshot as any);
+    const result = await savedMapsService.get("nonexistent");
+    expect(result).toBeNull();
+  });
+
+  it("should throw if not authenticated on get", async () => {
+    isAuthenticatedMock.mockReturnValue(false);
+    await expect(savedMapsService.get(mockMap.id)).rejects.toThrow();
   });
 
   it("should throw if not authenticated on add", async () => {
