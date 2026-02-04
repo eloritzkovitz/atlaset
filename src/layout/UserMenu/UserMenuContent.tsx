@@ -21,7 +21,7 @@ interface UserMenuProps {
 }
 
 export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
-  const { toggleFriends, toggleShortcuts } = useUI();
+  const { toggleFriends, toggleSaved, toggleShortcuts } = useUI();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -56,7 +56,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           Friends
         </MenuButton>
         <MenuButton
-          onClick={undefined}
+          onClick={toggleSaved}
           icon={<FaBookmark className="text-lg mr-2" />}
           ariaLabel="Saved"
           className="w-full"

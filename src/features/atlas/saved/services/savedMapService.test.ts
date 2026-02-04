@@ -29,7 +29,7 @@ vi.mock("@features/user", () => ({
 import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
 import { logUserActivity } from "@features/user";
-import { exportSaveService } from "./exportSaveService";
+import { savedMapsService } from "./savedMapsService";
 import type { SavedMap } from "../types";
 
 const isAuthenticatedMock =
@@ -46,7 +46,7 @@ const deleteDocMock = firestore.deleteDoc as unknown as ReturnType<
   typeof vi.fn
 >;
 
-describe("exportSaveService", () => {
+describe("savedMapsService", () => {
   const mockUser = { uid: "user123", displayName: "Test User" };
   const mockMap: SavedMap = {
     id: "map1",
@@ -77,10 +77,10 @@ describe("exportSaveService", () => {
   });
 
   it("should add a saved map for authenticated user", async () => {
-    await expect(exportSaveService.add(mockMap)).resolves.not.toThrow();
+    await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
     expect(setDocMock).toHaveBeenCalled();
     expect(logUserActivity).toHaveBeenCalledWith(
-      310,
+      331,
       expect.objectContaining({ mapId: mockMap.id }),
       mockUser.uid,
     );
@@ -88,14 +88,14 @@ describe("exportSaveService", () => {
 
   it("should throw if not authenticated on add", async () => {
     isAuthenticatedMock.mockReturnValue(false);
-    await expect(exportSaveService.add(mockMap)).rejects.toThrow();
+    await expect(savedMapsService.add(mockMap)).rejects.toThrow();
   });
 
   it("should delete a saved map for authenticated user", async () => {
-    await expect(exportSaveService.delete(mockMap.id)).resolves.not.toThrow();
+    await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
     expect(deleteDocMock).toHaveBeenCalled();
     expect(logUserActivity).toHaveBeenCalledWith(
-      311,
+      333,
       expect.objectContaining({ mapId: mockMap.id }),
       mockUser.uid,
     );
@@ -103,13 +103,13 @@ describe("exportSaveService", () => {
 
   it("should throw if not authenticated on delete", async () => {
     isAuthenticatedMock.mockReturnValue(false);
-    await expect(exportSaveService.delete(mockMap.id)).rejects.toThrow();
+    await expect(savedMapsService.delete(mockMap.id)).rejects.toThrow();
   });
 
   it("should load saved maps for authenticated user", async () => {
     const mockDocs = [{ id: mockMap.id, data: () => ({ ...mockMap }) }];
     getDocsMock.mockResolvedValue({ docs: mockDocs });
-    const result = await exportSaveService.load();
+    const result = await savedMapsService.load();
     expect(result).toEqual([
       expect.objectContaining({ id: mockMap.id, name: mockMap.name }),
     ]);
@@ -117,6 +117,6 @@ describe("exportSaveService", () => {
 
   it("should throw if not authenticated on load", async () => {
     isAuthenticatedMock.mockReturnValue(false);
-    await expect(exportSaveService.load()).rejects.toThrow();
+    await expect(savedMapsService.load()).rejects.toThrow();
   });
 });

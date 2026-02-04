@@ -2,7 +2,7 @@ import { useMarkers } from "@contexts/MarkersContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
-import { MapExportPanel, SavedMapsModal } from "@features/atlas/export";
+import { MapExportPanel } from "@features/atlas/export";
 import { LayerModal, LayersPanel } from "@features/atlas/layers";
 import {
   MarkerDetailsModal,
@@ -10,6 +10,7 @@ import {
   MarkersPanel,
   useMarkerCreation,
 } from "@features/atlas/markers";
+import { SavedMapsModal } from "@features/atlas/saved";
 import type { Country } from "@features/countries";
 import { SettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";

@@ -1,7 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
-import type { SavedMap } from "@features/atlas/export/types";
-import { exportSaveService } from "@features/atlas/export/services/exportSaveService";
+import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
@@ -19,7 +18,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     setError(null);
     try {
-      const maps = await exportSaveService.load();
+      const maps = await savedMapsService.load();
       setSavedMaps(maps);
     } catch (err) {
       setError(err as Error);
@@ -30,13 +29,13 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Function to add a new saved map
   const addMap = async (map: SavedMap) => {
-    await exportSaveService.add(map);
+    await savedMapsService.add(map);
     await reload();
   };
 
   // Function to delete a saved map by ID
   const deleteMap = async (id: string) => {
-    await exportSaveService.delete(id);
+    await savedMapsService.delete(id);
     await reload();
   };
 
@@ -96,7 +95,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         : [],
     };
     if (isEditingSavedMap) {
-      await exportSaveService.add(mapToSave);
+      await savedMapsService.add(mapToSave);
     } else {
       await addMap(mapToSave);
     }
@@ -104,9 +103,9 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   };
 
+  // Load saved maps on mount
   useEffect(() => {
     reload();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

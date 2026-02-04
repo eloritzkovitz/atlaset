@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { SavedMap } from "@features/atlas/export/types";
+import type { SavedMap } from "@features/atlas/saved";
 
 export interface SavedMapsContextValue {
   savedMaps: SavedMap[];

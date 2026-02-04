@@ -5,15 +5,15 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore";
+import { logUserActivity } from "@features/user";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { SavedMap } from "../types";
 import { db } from "../../../../firebase";
-import { logUserActivity } from "../../../../features/user";
 
 /**
  * Service for managing user saved exported maps.
  */
-export const exportSaveService = {
+export const savedMapsService = {
   /**
    * Adds a new saved map.
    * @param map - The map to save.

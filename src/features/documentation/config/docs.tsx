@@ -1,4 +1,5 @@
 import {
+  FaBookmark,
   FaChartSimple,
   FaCode,
   FaCompass,
@@ -6,6 +7,7 @@ import {
   FaEarthAmericas,
   FaGlobe,
   FaLaptopCode,
+  FaListUl,
   FaMapLocationDot,
   FaQuestion,
   FaRocket,
@@ -38,11 +40,17 @@ export const DOCS_GROUPS = {
         file: "layers-markers.md",
         icon: <FaMapLocationDot />,
       },
+      { label: "Legend", file: "legend.md", icon: <FaListUl /> },
       { label: "Timeline", file: "timeline.md", icon: <FaTimeline /> },
       {
         label: "Exporting & Sharing Maps",
         file: "export.md",
         icon: <FaShareFromSquare />,
+      },
+      {
+        label: "Saving Maps",
+        file: "saving-maps.md",
+        icon: <FaBookmark />,
       },
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
       { label: "Dashboard", file: "dashboard.md", icon: <FaChartSimple /> },

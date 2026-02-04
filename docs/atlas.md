@@ -26,11 +26,11 @@ The **`Atlas`** is the heart of Atlaset, providing an interactive world map wher
    - Add personalized `markers` to the map.  
    - Change layer/marker colors and visibility.
 
-4. **Use the Timeline`:**
+4. **Use the Timeline:**
    - Navigate through years to see your travel history.
    - Switch between cumulative and yearly views.
 
-5. **Export & Share`:**
+5. **Export & Share:**
    - Download your map data as `JSON`.
    - Share your map with a link or embed it in your website.
 

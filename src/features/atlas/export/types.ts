@@ -1,5 +1,3 @@
-import type { Marker } from "@features/atlas/markers/types";
-
 //** Export modes for the map. */
 export type ExportMode = "visited" | "layers";
 
@@ -20,18 +18,3 @@ export type ImageExportOptions = {
   quality: number;
   backgroundColor?: string;
 };
-
-/** Represents a saved map. */
-export interface SavedMap {
-  id: string;
-  name: string;
-  layers: Array<{
-    name: string;
-    color: string;
-    countries: string[];
-  }>;
-  markers?: Array<
-    Pick<Marker, "name" | "coordinates" | "color" | "description">
-  >;
-  createdAt: Date | string;
-}
