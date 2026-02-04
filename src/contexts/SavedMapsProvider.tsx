@@ -1,5 +1,8 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { decodeMapData, encodeMapData } from "@features/atlas/export/utils/mapShare";
+import {
+  decodeMapData,
+  encodeMapData,
+} from "@features/atlas/export/utils/mapShare";
 import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { SavedMapsContext } from "./SavedMapsContext";
 
@@ -39,10 +42,14 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   };
 
-  // View a saved map in readonly mode
+  // View a saved map (opens in edit mode)
   const viewSavedMap = (map: SavedMap) => {
-    const code = encodeMapData({ layers: map.layers, markers: map.markers });
-    window.location.href = `/atlas?map=${code}`;
+    const code = encodeMapData({
+      layers: map.layers,
+      markers: map.markers,
+      mapName: map.name,
+    });
+    window.location.href = `/atlas?map=${code}&edit=true`;
   };
 
   // Save current map from URL (open modal for user to confirm/save)

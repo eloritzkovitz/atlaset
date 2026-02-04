@@ -24,13 +24,18 @@ export default function AtlasPage() {
 
   // Determine map mode based on URL params
   const params = new URLSearchParams(location.search);
-  const isReadonly = params.has("map");
+  const isReadonly = params.has("map") && !params.has("edit");
   const isEmbed = params.has("embed");
+  const isEdit = params.get("edit") === "true" || params.has("edit");
 
   // Set map mode based on URL params
   useEffect(() => {
-    setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
-  }, [isReadonly, isEmbed, setMapMode]);
+    if (isEdit) {
+      setMapMode("edit");
+    } else {
+      setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
+    }
+  }, [isReadonly, isEmbed, isEdit, setMapMode]);
 
   // Country selection state
   const {

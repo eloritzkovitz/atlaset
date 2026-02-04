@@ -9,6 +9,7 @@ import {
   FaArrowLeft,
   FaDownload,
   FaBookmark,
+  FaFloppyDisk,
 } from "react-icons/fa6";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
@@ -41,7 +42,7 @@ export function useToolbarActions({
     toggleSettings,
   } = useUI();
   const { setTimelineMode } = useTimeline();
-  const { isReadonly } = useMapView();
+  const { isReadonly, isEdit } = useMapView();
   const { layers } = useLayers();
   const { saveCurrentMap } = useSavedMaps();
   const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
@@ -52,7 +53,7 @@ export function useToolbarActions({
       if (isMobile) setMenuOpen(false);
       action();
     };
-  } 
+  }
 
   return [
     {
@@ -91,16 +92,21 @@ export function useToolbarActions({
       onClick: withMenuClose(() => setTimelineMode((prev) => !prev)),
       show:
         !isReadonly &&
+        !isEdit &&
         isAuthenticated() &&
         !!(visitedLayer && isTimelineLayer(visitedLayer)),
       separatorAfter: true,
     },
     {
       key: "save",
-      icon: <FaBookmark className="text-lg" />,
-      label: "Save",
-      onClick: saveCurrentMap,
-      show: isReadonly && isAuthenticated(),
+      icon: isEdit ? (
+        <FaFloppyDisk className="text-lg" />
+      ) : (
+        <FaBookmark className="text-lg" />
+      ),
+      label: `${isEdit ? "Save Changes" : "Save"}`,
+      onClick: withMenuClose(saveCurrentMap),
+      show: (isReadonly || isEdit) && isAuthenticated(),
     },
     {
       key: "export",
@@ -118,12 +124,12 @@ export function useToolbarActions({
       icon: <FaGear className="text-lg" />,
       label: "Settings",
       onClick: withMenuClose(toggleSettings),
-      show: !isReadonly,
+      show: !isReadonly && !isEdit,
     },
     {
-      key: "exit-shared",
+      key: "exit",
       icon: <FaArrowLeft className="text-lg" />,
-      label: "Exit Shared View",
+      label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
       onClick: withMenuClose(() => {
         if (window.location.pathname === "/atlas") {
           const url = new URL(window.location.href);
@@ -133,7 +139,7 @@ export function useToolbarActions({
           window.location.href = "/atlas";
         }
       }),
-      show: isReadonly,
+      show: isReadonly || isEdit,
     },
   ];
 }

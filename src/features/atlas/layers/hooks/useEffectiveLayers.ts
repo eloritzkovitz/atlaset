@@ -9,7 +9,12 @@ import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo"
  */
 export function useEffectiveLayers() {
   const { layers } = useLayers();
-  const { isReadonly } = useMapView();
+  const { isEdit, isReadonly } = useMapView();
   const { layers: sharedLayers } = useSharedMapInfo();
-  return isReadonly && sharedLayers ? sharedLayers : layers;
+
+  // In edit or readonly mode, use shared layers if available
+  if ((isEdit || isReadonly) && sharedLayers) {
+    return sharedLayers;
+  }
+  return layers;
 }

@@ -101,7 +101,7 @@ export function LayersPanel({
     >
       <div className="mt-4">
         <ul className="list-none p-0">
-          {effectiveLayers.map((layer, index) => (
+          {(effectiveLayers ?? []).map((layer, index) => (
             <LayerPanelItem
               key={layer.id}
               layer={layer}

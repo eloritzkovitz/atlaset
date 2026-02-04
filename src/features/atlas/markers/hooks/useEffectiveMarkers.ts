@@ -11,13 +11,13 @@ import type { Marker } from "../types";
  */
 export function useEffectiveMarkers(): Marker[] {
   const { markers } = useMarkers();
-  const { isReadonly } = useMapView();
+  const { isReadonly, isEdit } = useMapView();
   const { markers: sharedMarkers } = useSharedMapInfo();
 
   return useMemo(() => {
-    if (isReadonly && Array.isArray(sharedMarkers)) {
+    if ((isReadonly || isEdit) && Array.isArray(sharedMarkers)) {
       return sharedMarkers;
     }
     return markers;
-  }, [isReadonly, sharedMarkers, markers]);
+  }, [isReadonly, isEdit, sharedMarkers, markers]);
 }

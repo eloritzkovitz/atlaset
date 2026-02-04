@@ -23,13 +23,14 @@ export function useMapLayerItems(mode: MapMode = "normal") {
   const timelineItems = useTimelineLayerItems(
     timelineLayers,
     selectedYear,
-    layerMode
+    layerMode,
   );
 
-  // Use shared layer items hook for readonly mode
-  const readonlyLayerItems = useSharedLayerItems();
-  if (mode === "readonly") {
-    return readonlyLayerItems;
+  // Use shared layer items hook for readonly and edit modes
+  const sharedLayerItems = useSharedLayerItems();
+  if (mode === "readonly" || mode === "edit") {
+    return sharedLayerItems;
   }
+  
   return timelineMode ? timelineItems : staticItems;
 }
