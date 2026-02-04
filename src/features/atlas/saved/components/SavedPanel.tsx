@@ -13,7 +13,7 @@ export function SavedPanel({ open, onClose }: SavedPanelProps) {
     savedMaps,
     viewSavedMap,
     isSavedMapModalOpen,
-    openSavedMapModal,
+    openEditSavedMapModal,
     deleteMap,
   } = useSavedMaps();
 
@@ -49,9 +49,8 @@ export function SavedPanel({ open, onClose }: SavedPanelProps) {
               key={map.id}
               map={map}
               onView={() => viewSavedMap(map)}
-              onEdit={openSavedMapModal}
+              onRename={() => openEditSavedMapModal(map)}
               onRemove={deleteMap}
-              showEdit={true}
               showRemove={true}
             />
           ))}

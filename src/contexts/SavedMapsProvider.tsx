@@ -77,14 +77,20 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
           : [],
         createdAt: new Date().toISOString(),
       },
-      false,
     );
   };
 
-  // Open modal for adding or editing a saved map
-  const openSavedMapModal = (map: SavedMap | null = null, editing = false) => {
+  // Open modal for adding a new saved map
+  const openSavedMapModal = (map: SavedMap | null = null) => {
     setEditingSavedMap(map);
-    setIsEditingSavedMap(editing);
+    setIsEditingSavedMap(false);
+    setSavedMapModalOpen(true);
+  };
+
+  // Open modal for editing an existing saved map (rename/metadata)
+  const openEditSavedMapModal = (map: SavedMap) => {
+    setEditingSavedMap({ ...map });
+    setIsEditingSavedMap(true);
     setSavedMapModalOpen(true);
   };
 
@@ -136,6 +142,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         editingSavedMap,
         isEditingSavedMap,
         openSavedMapModal,
+        openEditSavedMapModal,
         closeSavedMapModal,
         handleSavedMapChange,
         handleSavedMapSave,

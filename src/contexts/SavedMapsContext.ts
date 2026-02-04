@@ -14,6 +14,7 @@ export interface SavedMapsContextValue {
   editingSavedMap: SavedMap | null;
   isEditingSavedMap: boolean;
   openSavedMapModal: (map?: SavedMap | null) => void;
+  openEditSavedMapModal: (map: SavedMap) => void;
   closeSavedMapModal: () => void;
   handleSavedMapChange: (map: SavedMap) => void;
   handleSavedMapSave: () => Promise<void>;

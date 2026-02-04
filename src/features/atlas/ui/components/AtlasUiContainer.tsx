@@ -112,6 +112,8 @@ export function AtlasUiContainer({
         onClose={() => closeMarkerDetails()}
       />
       <MarkerModal
+        isOpen={isMarkerModalOpen}
+        isEditing={isEditingMarker}
         marker={editingMarker}
         onChange={setEditingMarker}
         onSave={saveMarker}
@@ -119,8 +121,6 @@ export function AtlasUiContainer({
           closeMarkerModal();
           cancelMarkerCreation();
         }}
-        isOpen={isMarkerModalOpen}
-        isEditing={isEditingMarker}
       />
       <LayerModal
         isOpen={isEditModalOpen}
@@ -132,11 +132,11 @@ export function AtlasUiContainer({
       />
       <SavedMapsModal
         isOpen={isSavedMapModalOpen}
+        isEditing={isEditingSavedMap}
         savedMap={editingSavedMap}
         onChange={handleSavedMapChange}
         onSave={handleSavedMapSave}
         onClose={closeSavedMapModal}
-        isEditing={isEditingSavedMap}
       />
     </>
   );

@@ -29,6 +29,7 @@ export function SavedMapsModal({
   const nameRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
 
+  // Focus the name input when the modal opens
   useEffect(() => {
     if (isOpen && savedMap) {
       setName(savedMap.name ?? "");
@@ -36,8 +37,10 @@ export function SavedMapsModal({
     }
   }, [isOpen, savedMap]);
 
+  // Return null if the modal is not open or there's no saved map
   if (!isOpen || !savedMap) return null;
 
+  // Handle changes to the map name
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
     onChange({ ...savedMap, name: e.target.value });
@@ -56,7 +59,7 @@ export function SavedMapsModal({
         title={
           <>
             <FaBookmark />
-            {isEditing ? "Edit Saved Map" : "Save Map"}
+            {isEditing ? "Rename Map" : "Save Map"}
           </>
         }
       >
