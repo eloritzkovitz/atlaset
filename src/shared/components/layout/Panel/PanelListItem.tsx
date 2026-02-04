@@ -7,6 +7,7 @@ import {
   FaCrosshairs,
   FaCircleInfo,
   FaPencil,
+  FaArrowsToEye,
 } from "react-icons/fa6";
 import { ActionButton } from "../../action/ActionButton";
 import { ColorDot } from "../../ui/ColorDot";
@@ -67,7 +68,7 @@ export function PanelListItem({
           ariaLabel={"View"}
           title={"View"}
           className="text-code hover:text-code-hover"
-          icon={<FaEye />}
+          icon={<FaArrowsToEye className="text-xl" />}
         />
       )}
       {onToggleVisibility && (
