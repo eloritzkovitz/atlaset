@@ -9,7 +9,6 @@ import {
   FaArrowLeft,
   FaDownload,
   FaBookmark,
-  FaFloppyDisk,
 } from "react-icons/fa6";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
@@ -99,14 +98,10 @@ export function useToolbarActions({
     },
     {
       key: "save",
-      icon: isEdit ? (
-        <FaFloppyDisk className="text-lg" />
-      ) : (
-        <FaBookmark className="text-lg" />
-      ),
-      label: `${isEdit ? "Save Changes" : "Save"}`,
+      icon: <FaBookmark className="text-lg" />,
+      label: "Save",
       onClick: withMenuClose(saveCurrentMap),
-      show: (isReadonly || isEdit) && isAuthenticated(),
+      show: isReadonly && isAuthenticated(),
     },
     {
       key: "export",

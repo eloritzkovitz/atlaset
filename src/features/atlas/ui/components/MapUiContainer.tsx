@@ -10,7 +10,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
-import type { Layer } from "@features/atlas/layers";
+import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
 import { MapToolbar } from "./controls/MapToolbar";
@@ -20,22 +20,21 @@ import { useMapLegendItems } from "../hooks/useMapLegendItems";
 import type { LegendItem } from "../types";
 
 interface MapUiContainerProps {
-  layers: Layer[];
   isAddingMarker?: boolean;
   isEmbed?: boolean;
 }
 
 export function MapUiContainer({
-  layers,
   isAddingMarker,
   isEmbed,
 }: MapUiContainerProps) {
+  const effectiveLayers = useEffectiveLayers();
   const { isReadonly, isEdit, zoom, setZoom, center, selectedCoords } =
     useMapView();
   const { timelineMode, layerMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
-    layers,
+    effectiveLayers,
     timelineMode,
     layerMode,
   );

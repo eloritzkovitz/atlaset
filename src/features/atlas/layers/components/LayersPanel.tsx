@@ -8,13 +8,13 @@ import {
 } from "react-icons/fa6";
 import { ActionButton, Panel } from "@components";
 import { useLayers } from "@contexts/LayersContext";
+import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useDragReorder } from "@hooks";
+import { useEffectiveLayers } from "@features/atlas/layers";
 import { LayerPanelItem } from "./LayerPanelItem";
-import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 import type { Layer } from "../types";
-import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
-import { useMapView } from "@contexts/MapViewContext";
+import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 
 interface LayersPanelProps {
   onEditLayer: (layer: Layer) => void;

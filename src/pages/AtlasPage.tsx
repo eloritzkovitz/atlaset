@@ -15,7 +15,7 @@ export default function AtlasPage() {
   const location = useLocation();
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
-  const { layers, loading: layersLoading } = useLayers();
+  const { loading: layersLoading } = useLayers();
   const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -80,11 +80,7 @@ export default function AtlasPage() {
         )}
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           {!isLoading && (
-            <MapUiContainer
-              layers={layers}
-              isAddingMarker={isAddingMarker}
-              isEmbed={isEmbed}
-            />
+            <MapUiContainer isAddingMarker={isAddingMarker} isEmbed={isEmbed} />
           )}
           <WorldMap
             onCountryClick={handleCountryClick}
