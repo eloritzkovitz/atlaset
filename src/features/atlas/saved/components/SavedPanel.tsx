@@ -9,8 +9,13 @@ interface SavedPanelProps {
 }
 
 export function SavedPanel({ open, onClose }: SavedPanelProps) {
-  const { savedMaps, isSavedMapModalOpen, openSavedMapModal, deleteMap } =
-    useSavedMaps();
+  const {
+    savedMaps,
+    viewSavedMap,
+    isSavedMapModalOpen,
+    openSavedMapModal,
+    deleteMap,
+  } = useSavedMaps();
 
   return (
     <Panel
@@ -43,6 +48,7 @@ export function SavedPanel({ open, onClose }: SavedPanelProps) {
             <SavedMapPanelItem
               key={map.id}
               map={map}
+              onView={() => viewSavedMap(map)}
               onEdit={openSavedMapModal}
               onRemove={deleteMap}
               showEdit={true}

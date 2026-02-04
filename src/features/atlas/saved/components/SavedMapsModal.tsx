@@ -7,7 +7,7 @@ import {
   ActionButton,
   FormField,
 } from "@components";
-import type { SavedMap } from "@features/atlas/export/types";
+import type { SavedMap } from "../types";
 
 interface SavedMapsModalProps {
   isOpen: boolean;

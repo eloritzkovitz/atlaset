@@ -9,6 +9,7 @@ export interface SavedMapsContextValue {
   addMap: (map: SavedMap) => Promise<void>;
   deleteMap: (id: string) => Promise<void>;
   saveCurrentMap: () => void;
+  viewSavedMap: (map: SavedMap) => void;
   isSavedMapModalOpen: boolean;
   editingSavedMap: SavedMap | null;
   isEditingSavedMap: boolean;

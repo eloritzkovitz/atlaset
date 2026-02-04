@@ -13,7 +13,8 @@ import { ColorDot } from "../../ui/ColorDot";
 interface PanelListItemProps {
   color: string;
   name: string;
-  visible: boolean;
+  onView?: () => void;
+  visible: boolean;  
   onToggleVisibility?: () => void;
   onCenter?: () => void;
   onEdit?: () => void;
@@ -28,6 +29,7 @@ interface PanelListItemProps {
 export function PanelListItem({
   color,
   name,
+  onView,
   visible,
   onToggleVisibility,
   onCenter,
@@ -53,6 +55,16 @@ export function PanelListItem({
     >
       <ColorDot color={color} size={22} />
       <strong className="flex-1 ml-2">{name}</strong>
+      {onView && (
+        <ActionButton
+          variant="toggle"
+          onClick={onView}
+          ariaLabel={"View"}
+          title={"View"}
+          className="text-muted hover:text-muted-hover"
+          icon={<FaEye />}
+        />
+      )}
       {onToggleVisibility && (
         <ActionButton
           variant="toggle"
