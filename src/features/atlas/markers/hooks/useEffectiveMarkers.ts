@@ -14,15 +14,15 @@ export function useEffectiveMarkers(): Marker[] {
   const { markers } = useMarkers();
   const { isReadonly, isEdit } = useMapView();
   const { markers: sharedMarkers } = useSharedMapInfo();
-  const { editingSavedMap } = useSavedMaps();
+  const { savedMapMarkers } = useSavedMaps();
 
   return useMemo(() => {
-    if (isEdit && editingSavedMap && Array.isArray(editingSavedMap.markers)) {
-      return editingSavedMap.markers;
+    if (isEdit) {
+      return savedMapMarkers;
     }
     if (isReadonly && Array.isArray(sharedMarkers)) {
       return sharedMarkers;
     }
     return markers;
-  }, [isReadonly, isEdit, sharedMarkers, markers, editingSavedMap]);
+  }, [isReadonly, isEdit, sharedMarkers, markers, savedMapMarkers]);
 }

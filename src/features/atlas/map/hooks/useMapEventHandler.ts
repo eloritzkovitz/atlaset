@@ -1,5 +1,6 @@
 import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMarkers } from "@contexts/MarkersContext";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { getGeoCoordsFromMouseEvent } from "../utils/projection";
 import { useMapView } from "@contexts/MapViewContext";
 
@@ -8,9 +9,13 @@ import { useMapView } from "@contexts/MapViewContext";
  * @returns A function that processes mouse events on the map SVG element.
  */
 export function useMapEventHandler() {
-  const { projection, zoom, center, setSelectedCoords, dimensions } =
+  const { projection, zoom, center, setSelectedCoords, dimensions, isEdit } =
     useMapView();
-  const { isAddingMarker, handleMapClickForMarker } = useMarkers();
+  const main = useMarkers();
+  const saved = useSavedMaps();
+  const ctx = isEdit ? saved : main;
+  const isAddingMarker = ctx.isAddingMarker;
+  const handleMapClickForMarker = ctx.handleMapClickForMarker;
 
   return (event: React.MouseEvent<SVGSVGElement>) => {
     const coords = getGeoCoordsFromMouseEvent(
@@ -20,7 +25,7 @@ export function useMapEventHandler() {
       dimensions.height,
       DEFAULT_MAP_SETTINGS.scaleDivisor,
       zoom,
-      center
+      center,
     );
     if (coords) {
       setSelectedCoords(coords);

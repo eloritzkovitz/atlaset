@@ -25,7 +25,7 @@ interface LayerModalProps {
   isEditing: boolean;
   layer: Layer | null;
   onChange: (layer: Layer) => void;
-  onSave: () => void;
+  onSave: (layer: Layer) => void;
   onClose: () => void;
 }
 
@@ -92,7 +92,9 @@ export function LayerModal({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            onSave();
+            if (isValid) {
+              onSave(layer);
+            }
           }}
         >
           <div className="p-2">
@@ -216,7 +218,7 @@ export function LayerModal({
               )}
               <ModalActions
                 onCancel={onClose}
-                onSubmit={onSave}
+                onSubmit={() => isValid && onSave(layer)}
                 submitType="submit"
                 submitIcon={
                   isEditing ? (

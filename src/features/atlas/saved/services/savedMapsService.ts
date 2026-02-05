@@ -61,7 +61,7 @@ export const savedMapsService = {
     const mapsCol = collection(db, "users", user!.uid, "savedMaps");
     await setDoc(doc(mapsCol, map.id), map, { merge: true });
     await logUserActivity(
-      332,
+      232,
       {
         mapId: map.id,
         mapName: map.name,
@@ -83,7 +83,7 @@ export const savedMapsService = {
     // Save layers as-is; assume ids are already valid
     await setDoc(doc(mapsCol, map.id), map);
     await logUserActivity(
-      331,
+      231,
       {
         mapId: map.id,
         mapName: map.name,
@@ -104,7 +104,7 @@ export const savedMapsService = {
     const mapsCol = collection(db, "users", user!.uid, "savedMaps");
     await deleteDoc(doc(mapsCol, id));
     await logUserActivity(
-      333,
+      233,
       {
         mapId: id,
         userName: user!.displayName,

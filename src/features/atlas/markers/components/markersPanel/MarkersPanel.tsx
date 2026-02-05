@@ -13,21 +13,40 @@ interface MarkersPanelProps {
   onAddMarker: () => void;
   onEditMarker: (marker: Marker) => void;
   onMarkerDetails?: (marker: Marker) => void;
+  editingSavedMapMarkers?: Marker[];
+  handleSavedMapChange?: {
+    removeMarker: (id: string) => void;
+    toggleMarkerVisibility: (id: string) => void;
+    reorderMarkers: (markers: Marker[]) => void;
+  };
 }
 
 export function MarkersPanel({
   onAddMarker,
   onEditMarker,
   onMarkerDetails,
+  editingSavedMapMarkers,
+  handleSavedMapChange,
 }: MarkersPanelProps) {
   const { setCenter, setZoom } = useMapView();
   const { removeMarker, toggleMarkerVisibility, reorderMarkers } = useMarkers();
   const { showMarkers, closePanel } = useUI();
-  const { isReadonly } = useMapView();
-  const effectiveMarkers = useEffectiveMarkers();
+  const effectiveMarkersFromContext = useEffectiveMarkers();
+  const effectiveMarkers =
+    editingSavedMapMarkers ?? effectiveMarkersFromContext;
+  const isEditingSavedMap = !!editingSavedMapMarkers && !!handleSavedMapChange;
 
+  const { isReadonly } = useMapView();
+
+  // Drag state
+  const dragMarkers = isEditingSavedMap
+    ? editingSavedMapMarkers!
+    : effectiveMarkers;
+  const dragReorder = isEditingSavedMap
+    ? handleSavedMapChange?.reorderMarkers
+    : reorderMarkers;
   const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
-    useDragReorder(effectiveMarkers, reorderMarkers);
+    useDragReorder(dragMarkers, dragReorder);
 
   // Center map on a marker
   const centerOnMarker = (marker: Marker, zoomLevel: number = 20) => {
@@ -93,16 +112,29 @@ export function MarkersPanel({
                   onCenter={() => centerOnMarkerById(marker.id)}
                   onToggleVisibility={
                     !isReadonly
-                      ? () => toggleMarkerVisibility(marker.id)
+                      ? isEditingSavedMap
+                        ? () =>
+                            handleSavedMapChange?.toggleMarkerVisibility(
+                              marker.id,
+                            )
+                        : () => toggleMarkerVisibility(marker.id)
                       : undefined
                   }
                   onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
                   onRemove={
-                    !isReadonly ? () => removeMarker(marker.id) : undefined
+                    !isReadonly
+                      ? isEditingSavedMap
+                        ? () => handleSavedMapChange?.removeMarker(marker.id)
+                        : () => removeMarker(marker.id)
+                      : undefined
                   }
                   draggedIndex={!isReadonly ? draggedIndex : undefined}
-                  handleDragStart={!isReadonly ? handleDragStart : undefined}
-                  handleDragOver={!isReadonly ? handleDragOver : undefined}
+                  handleDragStart={
+                    !isReadonly ? () => handleDragStart(idx) : undefined
+                  }
+                  handleDragOver={
+                    !isReadonly ? (e) => handleDragOver(e, idx) : undefined
+                  }
                   handleDragEnd={!isReadonly ? handleDragEnd : undefined}
                 />
               ))}

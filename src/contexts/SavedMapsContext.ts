@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import type { SavedMap } from "@features/atlas/saved";
 import type { Layer } from "@features/atlas/layers/types";
+import type { Marker } from "@features/atlas/markers/types";
 
 export interface SavedMapsContextValue {
   savedMaps: SavedMap[];
@@ -17,6 +18,8 @@ export interface SavedMapsContextValue {
   openSavedMapModal: (map?: SavedMap | null) => void;
   closeSavedMapModal: () => void;
   saveSavedMap: () => Promise<void>;
+  // Layers
+  addLayer: (layer: Layer) => void;
   importLayers: (layers: Layer[]) => void;
   reorderLayers: (layers: Layer[]) => void;
   toggleLayerVisibility: (layerId: string) => void;
@@ -25,9 +28,32 @@ export interface SavedMapsContextValue {
   editingSavedMapLayer: Layer | null;
   setEditingSavedMapLayer: (layer: Layer | null) => void;
   isEditSavedMapLayerModalOpen: boolean;
-  openEditSavedMapLayerModal: (layer: Layer) => void;
-  closeSavedMapLayerModal: () => void;
+  openAddLayer: () => void;
+  openEditLayer: (layer: Layer) => void;
+  closeLayerModal: () => void;
   saveSavedMapLayer: () => void;
+  // Markers
+  savedMapMarkers: Marker[];
+  setSavedMapMarkers: (markers: Marker[]) => void;
+  editingSavedMapMarker: Marker | null;
+  setEditingSavedMapMarker: (marker: Marker | null) => void;
+  isEditingSavedMapMarker: boolean;
+  isEditSavedMapMarkerModalOpen: boolean;
+  addMarker: (marker: Marker) => Promise<void>;
+  editMarker: (marker: Marker) => Promise<void>;
+  removeMarker: (id: string) => Promise<void>;
+  reorderMarkers: (markers: Marker[]) => Promise<void>;
+  toggleMarkerVisibilityMarker: (id: string) => Promise<void>;
+  openAddMarker: (coords?: any) => void;
+  openEditMarker: (marker: Marker) => void;
+  saveSavedMapMarker: () => Promise<void>;
+  closeMarkerModal: () => void;
+
+  // Marker creation state/handlers for saved maps
+  isAddingMarker: boolean;
+  startAddingMarker: () => void;
+  handleMapClickForMarker: (coords: any) => void;
+  cancelMarkerCreation: () => void;
   exitEditMode: () => void;
 }
 

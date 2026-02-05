@@ -22,6 +22,7 @@ interface LayersPanelProps {
   layerModalOpen: boolean;
   editingSavedMapLayers?: Layer[];
   handleSavedMapChange?: {
+    addLayer: (layer: Layer) => void;
     importLayers: (layers: Layer[]) => void;
     reorderLayers: (layers: Layer[]) => void;
     toggleLayerVisibility: (layerId: string) => void;

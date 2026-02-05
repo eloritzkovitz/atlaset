@@ -8,6 +8,7 @@ export { VISITED_LAYER_ID, DEFAULT_NEW_LAYER } from "./constants/layers";
 // Hooks
 export { useEffectiveLayers } from "./hooks/useEffectiveLayers";
 export { useLayerItems } from "./hooks/useLayerItems";
+export { useLayerManager } from "./hooks/useLayerManager";
 export { useTimelineLayerItems } from "./hooks/useTimelineLayerItems";
 export { useSyncVisitedCountriesLayer } from "./hooks/useSyncVisitedCountriesLayer";
 

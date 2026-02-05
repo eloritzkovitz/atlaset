@@ -92,7 +92,7 @@ describe("savedMapsService", () => {
     await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
     expect(setDocMock).toHaveBeenCalledWith(expect.anything(), mockMap);
     expect(logUserActivity).toHaveBeenCalledWith(
-      331,
+      231,
       expect.objectContaining({ mapId: mockMap.id }),
       mockUser.uid,
     );
@@ -104,7 +104,7 @@ describe("savedMapsService", () => {
       merge: true,
     });
     expect(logUserActivity).toHaveBeenCalledWith(
-      332,
+      232,
       expect.objectContaining({ mapId: mockMap.id }),
       mockUser.uid,
     );
@@ -151,7 +151,7 @@ describe("savedMapsService", () => {
     await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
     expect(deleteDocMock).toHaveBeenCalled();
     expect(logUserActivity).toHaveBeenCalledWith(
-      333,
+      233,
       expect.objectContaining({ mapId: mockMap.id }),
       mockUser.uid,
     );
