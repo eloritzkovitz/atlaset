@@ -31,7 +31,7 @@ export const AchievementTierChip: React.FC<AchievementTierChipProps> = ({
   if (tiers && tiers.length > 1) {
     tooltipContent = tiers
       .map((t) => {
-        let countText = t.count !== undefined ? t.count : undefined;
+        const countText = t.count !== undefined ? t.count : undefined;
         return `Tier ${t.tier}${countText !== undefined ? ` - ${countText}` : t.description ? ` - ${t.description}` : ""}`;
       })
       .join("\n");
