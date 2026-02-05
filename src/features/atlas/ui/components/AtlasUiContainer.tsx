@@ -107,7 +107,7 @@ export function AtlasUiContainer({
           isEdit
             ? {
                 removeMarker: savedMaps.removeMarker,
-                toggleMarkerVisibility: savedMaps.toggleMarkerVisibilityMarker,
+                toggleMarkerVisibility: savedMaps.toggleMarkerVisibility,
                 reorderMarkers: savedMaps.reorderMarkers,
               }
             : undefined

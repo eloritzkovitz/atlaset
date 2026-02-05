@@ -23,6 +23,26 @@ export function useMarkerManager({
   const isEditingMarker =
     !!editingMarker && markers.some((m) => m.id === editingMarker.id);
 
+  // Marker creation state/handlers
+  const [isAddingMarker, setIsAddingMarker] = useState(false);
+
+  // Start adding marker
+  function startAddingMarker() {
+    setIsAddingMarker(true);
+  }
+
+  // Cancel marker creation
+  function cancelMarkerCreation() {
+    setIsAddingMarker(false);
+  }
+
+  // Handle map click for marker creation
+  function handleMapClickForMarker(coords: Coordinates) {
+    if (!isAddingMarker) return;
+    openAddMarker(coords);
+    setIsAddingMarker(false);
+  }
+
   // Sync markers state with initialMarkers prop only on first load
   useEffect(() => {
     if (markers.length === 0 && initialMarkers.length > 0) {
@@ -120,5 +140,10 @@ export function useMarkerManager({
     openEditMarker,
     saveMarker,
     closeMarkerModal,
+    // Marker creation state/handlers
+    isAddingMarker,
+    startAddingMarker,
+    handleMapClickForMarker,
+    cancelMarkerCreation,
   };
 }

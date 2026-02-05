@@ -12,18 +12,19 @@ export function useMarkerCreation() {
   const main = useMarkers();
   const saved = useSavedMaps();
   const ctx = isEdit ? saved : main;
+  const { isAddingMarker, cancelMarkerCreation } = ctx;
 
   // Handle Escape key to cancel marker creation
   useEffect(() => {
-    if (!ctx.isAddingMarker) return;
+    if (!isAddingMarker) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        ctx.cancelMarkerCreation();
+        cancelMarkerCreation();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [ctx.isAddingMarker, ctx.cancelMarkerCreation]);
+  }, [isAddingMarker, cancelMarkerCreation]);
 
   return {
     isAddingMarker: ctx.isAddingMarker,

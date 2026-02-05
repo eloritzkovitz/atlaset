@@ -1,7 +1,8 @@
 import { createContext, useContext } from "react";
-import type { SavedMap } from "@features/atlas/saved";
 import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
+import type { Coordinates } from "@features/atlas/map";
+import type { SavedMap } from "@features/atlas/saved";
 
 export interface SavedMapsContextValue {
   savedMaps: SavedMap[];
@@ -43,16 +44,15 @@ export interface SavedMapsContextValue {
   editMarker: (marker: Marker) => Promise<void>;
   removeMarker: (id: string) => Promise<void>;
   reorderMarkers: (markers: Marker[]) => Promise<void>;
-  toggleMarkerVisibilityMarker: (id: string) => Promise<void>;
-  openAddMarker: (coords?: any) => void;
+  toggleMarkerVisibility: (id: string) => Promise<void>;
+  openAddMarker: (coords?: Coordinates) => void;
   openEditMarker: (marker: Marker) => void;
   saveSavedMapMarker: () => Promise<void>;
   closeMarkerModal: () => void;
-
   // Marker creation state/handlers for saved maps
   isAddingMarker: boolean;
   startAddingMarker: () => void;
-  handleMapClickForMarker: (coords: any) => void;
+  handleMapClickForMarker: (coords: Coordinates) => void;
   cancelMarkerCreation: () => void;
   exitEditMode: () => void;
 }

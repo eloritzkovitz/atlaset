@@ -58,11 +58,15 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     editMarker,
     removeMarker: removeMarker,
     reorderMarkers,
-    toggleMarkerVisibility: toggleMarkerVisibilityMarker,
+    toggleMarkerVisibility,
     openAddMarker,
     openEditMarker,
     saveMarker: saveSavedMapMarker,
     closeMarkerModal,
+    isAddingMarker,
+    startAddingMarker,
+    handleMapClickForMarker,
+    cancelMarkerCreation,
   } = useMarkerManager({
     initialMarkers: editingSavedMap?.markers ?? [],
     persistMarkers: async (markers) => {
@@ -230,23 +234,6 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     await reload();
   }
 
-  // Marker creation state for saved maps
-  const [isAddingMarker, setIsAddingMarker] = useState(false);
-
-  function startAddingMarker() {
-    setIsAddingMarker(true);
-  }
-
-  function cancelMarkerCreation() {
-    setIsAddingMarker(false);
-  }
-
-  function handleMapClickForMarker(coords: any) {
-    if (!isAddingMarker) return;
-    openAddMarker(coords);
-    setIsAddingMarker(false);
-  }
-
   // Keep hook's layers/markers in sync with editingSavedMap
   useEffect(() => {
     if (editingSavedMap) {
@@ -302,7 +289,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         editMarker,
         removeMarker,
         reorderMarkers,
-        toggleMarkerVisibilityMarker,
+        toggleMarkerVisibility,
         openAddMarker,
         openEditMarker,
         saveSavedMapMarker,

@@ -7,6 +7,7 @@ export { MarkersPanel } from "./components/markersPanel/MarkersPanel";
 // Hooks
 export { useEffectiveMarkers } from "./hooks/useEffectiveMarkers";
 export { useMarkerCreation } from "./hooks/useMarkerCreation";
+export { useMarkerManager } from "./hooks/useMarkerManager";
 export { useMarkerSelection } from "./hooks/useMarkerSelection";
 
 // Services
