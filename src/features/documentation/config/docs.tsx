@@ -1,5 +1,7 @@
 import {
+  FaBookAtlas,
   FaBookmark,
+  FaChartPie,
   FaChartSimple,
   FaCode,
   FaCompass,
@@ -9,6 +11,7 @@ import {
   FaLaptopCode,
   FaListUl,
   FaMapLocationDot,
+  FaMedal,
   FaQuestion,
   FaRocket,
   FaShareFromSquare,
@@ -54,6 +57,21 @@ export const DOCS_GROUPS = {
       },
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
       { label: "Dashboard", file: "dashboard.md", icon: <FaChartSimple /> },
+      {
+        label: "Exploration",
+        file: "exploration.md",
+        icon: <FaBookAtlas />,
+      },
+      {
+        label: "Achievements",
+        file: "achievements.md",
+        icon: <FaMedal />,
+      },
+      {
+        label: "Trip Statistics",
+        file: "trip-statistics.md",
+        icon: <FaChartPie />,
+      },
       { label: "Quizzes", file: "quizzes.md", icon: <FaQuestion /> },
     ],
   },
