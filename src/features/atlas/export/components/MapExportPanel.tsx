@@ -2,16 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { useMarkers } from "@contexts/MarkersContext";
-import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { useSharedMapInfo } from "@features/atlas/export";
 import { useUI } from "@contexts/UIContext";
-import { useExportData } from "../hooks/useExportData";
+import { useEffectiveLayers } from "@features/atlas/layers";
+import { useEffectiveMarkers } from "@features/atlas/markers";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
 import { EmbedMapSection } from "./EmbedMapSection";
 import { ExportOptionsSection } from "./ExportOptionsSection";
 import { ShareMapSection } from "./ShareMapSection";
+import { useExportData } from "../hooks/useExportData";
 import type {
   ExportFormat,
   ExportMode,
@@ -28,10 +30,12 @@ export interface MapExportPanelProps {
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { user } = useAuth();
   const { isReadonly } = useMapView();
+  const { editingSavedMap } = useSavedMaps();
+  const sharedMapInfo = useSharedMapInfo() || {};
   const { showExport, closePanel } = useUI();
   const { visitedCountryCodes } = useVisitedCountries();
-  const { layers: allLayers } = useLayers();
-  const { markers } = useMarkers();
+  const allLayers = useEffectiveLayers();
+  const markers = useEffectiveMarkers();
 
   // Export options state
   const [exportMode, setExportMode] = useState<ExportMode>("visited");
@@ -61,6 +65,18 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     includeMarkers,
     markers,
   });
+
+  // Prefill mapName with saved map name if available
+  useEffect(() => {
+    if (!mapName) {
+      if (editingSavedMap?.name) {
+        setMapName(editingSavedMap.name);
+      } else if (sharedMapInfo.mapName) {
+        setMapName(sharedMapInfo.mapName);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editingSavedMap?.name, sharedMapInfo.mapName]);
 
   // Prefill sharer with authenticated user's displayName if available
   useEffect(() => {

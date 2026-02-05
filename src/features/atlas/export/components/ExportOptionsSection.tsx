@@ -1,4 +1,5 @@
 import { Checkbox, FormField, SectionHeader } from "@components";
+import { useMapView } from "@contexts/MapViewContext";
 import type { ExportMode } from "../types";
 
 interface ExportOptionsSectionProps {
@@ -22,17 +23,21 @@ export function ExportOptionsSection({
   sharer,
   setSharer,
 }: ExportOptionsSectionProps) {
+  const { isEdit } = useMapView();
+
   return (
     <>
       <SectionHeader title="Options" />
       <div className="flex flex-col gap-2 mb-4">
-        <Checkbox
-          checked={exportMode === "visited"}
-          onChange={() => setExportMode("visited")}
-          label="Visited countries only"
-          aria-checked={exportMode === "visited"}
-          aria-label="Visited countries only"
-        />
+        {!isEdit && (
+          <Checkbox
+            checked={exportMode === "visited"}
+            onChange={() => setExportMode("visited")}
+            label="Visited countries only"
+            aria-checked={exportMode === "visited"}
+            aria-label="Visited countries only"
+          />
+        )}
         <Checkbox
           checked={exportMode === "layers"}
           onChange={() => setExportMode("layers")}

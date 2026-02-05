@@ -5,6 +5,7 @@ export { MarkerModal } from "./components/markerModal/MarkerModal";
 export { MarkersPanel } from "./components/markersPanel/MarkersPanel";
 
 // Hooks
+export { useEffectiveMarkers } from "./hooks/useEffectiveMarkers";
 export { useMarkerCreation } from "./hooks/useMarkerCreation";
 export { useMarkerSelection } from "./hooks/useMarkerSelection";
 
