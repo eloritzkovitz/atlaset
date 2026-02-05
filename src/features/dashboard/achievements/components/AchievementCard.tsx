@@ -92,6 +92,15 @@ export function AchievementCard({
           <AchievementTierChip
             tier={displayTier}
             totalTiers={achievement.tiers?.length}
+            tiers={
+              achievement.tiers
+                ? achievement.tiers.map((t, idx) => ({
+                    tier: t.tier ?? idx + 1,
+                     count: t.criteria?.count ?? t.count,
+                    description: t.description,
+                  }))
+                : undefined
+            }
           />
         )}
         <AchievementProgressChip label={progressLabel} className="bg-surface" />
