@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-02-05
+
+- **[feature]** **Atlas | Saved Maps:** Added saving and managing maps, independently from the main map
+- **[feature]** **Dashboard | Achievements:** Added tooltips displaying all available tiers to tier chips
+- **[docs]** **Docs:** Updated keyboard shortcuts docs
+
 ## 2026-02-01
 
 - **[docs]** **Docs:** Added welcome section and updated navigation

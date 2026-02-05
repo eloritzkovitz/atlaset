@@ -1,47 +1,88 @@
 import type { KeyCommand } from "@types";
 
 export const categoryColumns = [
-  ["General", "Search", "Filters", "Friends"],
-  ["Toolbar"],
+  ["General", "User"],
+  ["Atlas"],
+  ["Countries"],
   ["Map", "Timeline"],
-  ["Country List"],
 ];
 
 export const keyCommands: KeyCommand[] = [
   // General
-  { key: "h", modifiers: [], action: "Toggle help", category: "General" },
   {
     key: "?",
     modifiers: ["Shift"],
     action: "Show shortcuts",
     category: "General",
   },
+  { key: "/", modifiers: [], action: "Focus search", category: "General" },
   { key: "Esc", modifiers: [], action: "Unfocus / Close", category: "General" },
+  { key: "h", modifiers: [], action: "Toggle help", category: "General" },
+  { key: "r", modifiers: [], action: "Reset filters", category: "General" },
 
-  // Search
-  { key: "/", modifiers: [], action: "Focus search", category: "Search" },
-
-  // Filters
-  { key: "r", modifiers: [], action: "Reset filters", category: "Filters" },
-
-  // Friends
+  // User
+  { key: "b", modifiers: [], action: "Toggle saved maps", category: "User" },
   {
     key: "n",
     modifiers: [],
-    action: "Toggle friends panel",
-    category: "Friends",
+    action: "Toggle friends",
+    category: "User",
   },
 
-  // Toolbar
-  { key: "c", modifiers: [], action: "Toggle countries", category: "Toolbar" },
-  { key: "e", modifiers: [], action: "Toggle export", category: "Toolbar" },
-  { key: "f", modifiers: [], action: "Toggle filters", category: "Toolbar" },
-  { key: "l", modifiers: [], action: "Toggle legend", category: "Toolbar" },
-  { key: "m", modifiers: [], action: "Toggle markers", category: "Toolbar" },
-  { key: "o", modifiers: [], action: "Toggle layers", category: "Toolbar" },
-  { key: "s", modifiers: [], action: "Toggle settings", category: "Toolbar" },
-  { key: "t", modifiers: [], action: "Toggle timeline", category: "Toolbar" },
-  { key: "u", modifiers: [], action: "Toggle UI", category: "Toolbar" },
+  // Atlas
+  { key: "c", modifiers: [], action: "Toggle countries", category: "Atlas" },
+  { key: "e", modifiers: [], action: "Toggle export", category: "Atlas" },
+  { key: "f", modifiers: [], action: "Toggle filters", category: "Atlas" },
+  { key: "l", modifiers: [], action: "Toggle legend", category: "Atlas" },
+  { key: "m", modifiers: [], action: "Toggle markers", category: "Atlas" },
+  { key: "o", modifiers: [], action: "Toggle layers", category: "Atlas" },
+  { key: "s", modifiers: [], action: "Toggle settings", category: "Atlas" },
+  { key: "t", modifiers: [], action: "Toggle timeline", category: "Atlas" },
+  { key: "u", modifiers: [], action: "Toggle UI", category: "Atlas" },
+
+  // Countries
+  {
+    key: "ArrowUp",
+    modifiers: [],
+    action: "Scroll up",
+    category: "Countries",
+  },
+  {
+    key: "ArrowDown",
+    modifiers: [],
+    action: "Scroll down",
+    category: "Countries",
+  },
+  {
+    key: "Home",
+    modifiers: [],
+    action: "Go to first country",
+    category: "Countries",
+  },
+  {
+    key: "End",
+    modifiers: [],
+    action: "Go to last country",
+    category: "Countries",
+  },
+  {
+    key: "PgUp",
+    modifiers: [],
+    action: "Scroll up one page",
+    category: "Countries",
+  },
+  {
+    key: "PgDn",
+    modifiers: [],
+    action: "Scroll down one page",
+    category: "Countries",
+  },
+  {
+    key: "Enter",
+    modifiers: [],
+    action: "Select country",
+    category: "Countries",
+  },
 
   // Map
   { key: "+", modifiers: [], action: "Zoom in", category: "Map" },
@@ -75,48 +116,4 @@ export const keyCommands: KeyCommand[] = [
     category: "Timeline",
   },
   { key: "Space", modifiers: [], action: "Play/Pause", category: "Timeline" },
-
-  // Country list
-  {
-    key: "ArrowUp",
-    modifiers: [],
-    action: "Scroll up",
-    category: "Country List",
-  },
-  {
-    key: "ArrowDown",
-    modifiers: [],
-    action: "Scroll down",
-    category: "Country List",
-  },
-  {
-    key: "Home",
-    modifiers: [],
-    action: "Go to first country",
-    category: "Country List",
-  },
-  {
-    key: "End",
-    modifiers: [],
-    action: "Go to last country",
-    category: "Country List",
-  },
-  {
-    key: "PgUp",
-    modifiers: [],
-    action: "Scroll up one page",
-    category: "Country List",
-  },
-  {
-    key: "PgDn",
-    modifiers: [],
-    action: "Scroll down one page",
-    category: "Country List",
-  },
-  {
-    key: "Enter",
-    modifiers: [],
-    action: "Select country",
-    category: "Country List",
-  },
 ];

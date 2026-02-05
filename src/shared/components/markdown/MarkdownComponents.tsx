@@ -139,7 +139,12 @@ export function getBaseMarkdownComponents(
       return <KeyCombo keys={keys} />;
     },
     table: (props: React.HTMLProps<HTMLTableElement>) => (
-      <table className="min-w-full border-collapse my-6 rounded-xl overflow-hidden">
+      <table
+        className={
+          (props.className ? props.className + " " : "") +
+          "min-w-full border-collapse my-6 rounded-xl overflow-hidden"
+        }
+      >
         {props.children}
       </table>
     ),

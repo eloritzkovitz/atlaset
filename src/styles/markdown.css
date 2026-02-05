@@ -45,3 +45,24 @@
 .prose table tr:last-child td {
   border-bottom: none !important;
 }
+
+/* Styles for keyboard shortcuts table */
+.shortcut-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 350px;
+  margin-bottom: 2em;
+}
+.shortcut-table th,
+.shortcut-table td {
+  vertical-align: middle;
+  padding: 0.5em 1em;
+}
+.shortcut-table th:first-child,
+.shortcut-table td:first-child {
+  width: 60%;
+}
+.shortcut-table th:last-child,
+.shortcut-table td:last-child {
+  width: 40%;
+}

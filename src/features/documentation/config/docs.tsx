@@ -8,6 +8,7 @@ import {
   FaDatabase,
   FaEarthAmericas,
   FaGlobe,
+  FaKeyboard,
   FaLaptopCode,
   FaListUl,
   FaMapLocationDot,
@@ -17,6 +18,7 @@ import {
   FaShareFromSquare,
   FaSuitcaseRolling,
   FaTimeline,
+  FaUniversalAccess,
   FaUser,
 } from "react-icons/fa6";
 
@@ -75,6 +77,16 @@ export const DOCS_GROUPS = {
       { label: "Quizzes", file: "quizzes.md", icon: <FaQuestion /> },
     ],
   },
+  accessibility: {
+    header: { label: "Accessibility", file: null, icon: <FaUniversalAccess /> },
+    items: [
+      {
+        label: "Keyboard Shortcuts",
+        file: "keyboard-shortcuts.md",
+        icon: <FaKeyboard />,
+      },
+    ],
+  },
   forDevelopers: {
     header: { label: "For Developers", file: null, icon: <FaCode /> },
     items: [
@@ -90,6 +102,7 @@ export const DOCS_GROUPS = {
 
 export const DOCS = [
   ...DOCS_GROUPS.usingAtlaset.items,
+  ...DOCS_GROUPS.accessibility.items,
   ...DOCS_GROUPS.forDevelopers.items,
 ];
 
