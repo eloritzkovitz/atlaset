@@ -14,7 +14,7 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   const [timelineMode, _setTimelineMode] = useState(false);
   const prevTimelineMode = useRef(false);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-  const { isReadonly } = useMapView();
+  const { isEdit, isReadonly } = useMapView();
   const { play } = useAudio();
 
   // Compute years from trips
@@ -25,13 +25,13 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   // Layer mode state
   const [layerMode, setLayerMode] = useState<LayerMode>("cumulative");
 
-  // Only allow timeline mode if authenticated and not readonly
+  // Only allow timeline mode if authenticated and not readonly/edit
   const setTimelineMode = (
     fnOrValue: boolean | ((prev: boolean) => boolean)
   ) => {
     const next =
       typeof fnOrValue === "function" ? fnOrValue(timelineMode) : fnOrValue;
-    if (next && (!isAuthenticated() || isReadonly)) {
+    if (next && (!isAuthenticated() || isReadonly || isEdit)) {
       // Block enabling timeline mode if not allowed
       return;
     }

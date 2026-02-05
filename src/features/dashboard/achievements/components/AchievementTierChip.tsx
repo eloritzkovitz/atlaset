@@ -1,14 +1,16 @@
 import React from "react";
-import { Chip } from "@components";
+import { Chip, Tooltip } from "@components";
 
 interface AchievementTierChipProps {
   tier: number;
   totalTiers?: number;
   className?: string;
+  tiers?: Array<{ tier: number; count?: number; description?: string }>;
 }
 
 export const AchievementTierChip: React.FC<AchievementTierChipProps> = ({
   tier,
+  tiers,
   totalTiers,
   className,
 }) => {
@@ -23,5 +25,22 @@ export const AchievementTierChip: React.FC<AchievementTierChipProps> = ({
   };
   const colorClass =
     tierBgClasses[tier] || tierBgClasses[6] || "bg-surface text-primary";
-  return <Chip className={className || colorClass}>{label}</Chip>;
+
+  // Tooltip content for stacked tiers
+  let tooltipContent: string | undefined;
+  if (tiers && tiers.length > 1) {
+    tooltipContent = tiers
+      .map((t) => {
+        const countText = t.count !== undefined ? t.count : undefined;
+        return `Tier ${t.tier}${countText !== undefined ? ` - ${countText}` : t.description ? ` - ${t.description}` : ""}`;
+      })
+      .join("\n");
+  }
+
+  const chip = <Chip className={className || colorClass}>{label}</Chip>;
+  return tooltipContent ? (
+    <Tooltip content={tooltipContent}>{chip}</Tooltip>
+  ) : (
+    chip
+  );
 };

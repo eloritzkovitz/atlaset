@@ -1,4 +1,4 @@
-import type { DragEvent } from "react";
+import type { DragEvent, ReactNode } from "react";
 import {
   FaEye,
   FaEyeSlash,
@@ -6,17 +6,22 @@ import {
   FaTrash,
   FaCrosshairs,
   FaCircleInfo,
+  FaPencil,
+  FaArrowsToEye,
 } from "react-icons/fa6";
 import { ActionButton } from "../../action/ActionButton";
 import { ColorDot } from "../../ui/ColorDot";
 
 interface PanelListItemProps {
   color: string;
+  icon?: ReactNode;
   name: string;
+  onView?: () => void;
   visible: boolean;
   onToggleVisibility?: () => void;
   onCenter?: () => void;
   onEdit?: () => void;
+  onRename?: () => void;
   onRemove?: () => void;
   removeDisabled?: boolean;
   dragged?: boolean;
@@ -27,11 +32,14 @@ interface PanelListItemProps {
 
 export function PanelListItem({
   color,
+  icon,
   name,
+  onView,
   visible,
   onToggleVisibility,
   onCenter,
   onEdit,
+  onRename,
   onRemove,
   removeDisabled = false,
   dragged,
@@ -51,8 +59,18 @@ export function PanelListItem({
       onDragEnd={handleDragEnd}
       style={{ cursor: dragged ? "grabbing" : "grab" }}
     >
-      <ColorDot color={color} size={22} />
+      {!icon ? <ColorDot color={color} size={22} /> : icon}
       <strong className="flex-1 ml-2">{name}</strong>
+      {onView && (
+        <ActionButton
+          variant="toggle"
+          onClick={onView}
+          ariaLabel={"View"}
+          title={"View"}
+          className="text-code hover:text-code-hover"
+          icon={<FaArrowsToEye className="text-xl" />}
+        />
+      )}
       {onToggleVisibility && (
         <ActionButton
           variant="toggle"
@@ -81,6 +99,16 @@ export function PanelListItem({
           title="Edit"
           className="text-info hover:text-info-hover"
           icon={<FaPenToSquare />}
+        />
+      )}
+      {onRename && (
+        <ActionButton
+          variant="toggle"
+          onClick={onRename}
+          ariaLabel="Rename"
+          title="Rename"
+          className="text-info hover:text-info-hover"
+          icon={<FaPencil />}
         />
       )}
       {onRemove && (

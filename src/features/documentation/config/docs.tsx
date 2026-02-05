@@ -1,17 +1,24 @@
 import {
+  FaBookAtlas,
+  FaBookmark,
+  FaChartPie,
   FaChartSimple,
   FaCode,
   FaCompass,
   FaDatabase,
   FaEarthAmericas,
   FaGlobe,
+  FaKeyboard,
   FaLaptopCode,
+  FaListUl,
   FaMapLocationDot,
+  FaMedal,
   FaQuestion,
   FaRocket,
   FaShareFromSquare,
   FaSuitcaseRolling,
   FaTimeline,
+  FaUniversalAccess,
   FaUser,
 } from "react-icons/fa6";
 
@@ -38,15 +45,46 @@ export const DOCS_GROUPS = {
         file: "layers-markers.md",
         icon: <FaMapLocationDot />,
       },
+      { label: "Legend", file: "legend.md", icon: <FaListUl /> },
       { label: "Timeline", file: "timeline.md", icon: <FaTimeline /> },
       {
         label: "Exporting & Sharing Maps",
         file: "export.md",
         icon: <FaShareFromSquare />,
       },
+      {
+        label: "Saving Maps",
+        file: "saving-maps.md",
+        icon: <FaBookmark />,
+      },
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
       { label: "Dashboard", file: "dashboard.md", icon: <FaChartSimple /> },
+      {
+        label: "Exploration",
+        file: "exploration.md",
+        icon: <FaBookAtlas />,
+      },
+      {
+        label: "Achievements",
+        file: "achievements.md",
+        icon: <FaMedal />,
+      },
+      {
+        label: "Trip Statistics",
+        file: "trip-statistics.md",
+        icon: <FaChartPie />,
+      },
       { label: "Quizzes", file: "quizzes.md", icon: <FaQuestion /> },
+    ],
+  },
+  accessibility: {
+    header: { label: "Accessibility", file: null, icon: <FaUniversalAccess /> },
+    items: [
+      {
+        label: "Keyboard Shortcuts",
+        file: "keyboard-shortcuts.md",
+        icon: <FaKeyboard />,
+      },
     ],
   },
   forDevelopers: {
@@ -64,6 +102,7 @@ export const DOCS_GROUPS = {
 
 export const DOCS = [
   ...DOCS_GROUPS.usingAtlaset.items,
+  ...DOCS_GROUPS.accessibility.items,
   ...DOCS_GROUPS.forDevelopers.items,
 ];
 

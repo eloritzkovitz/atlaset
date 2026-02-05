@@ -15,7 +15,7 @@ export default function AtlasPage() {
   const location = useLocation();
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
-  const { layers, loading: layersLoading } = useLayers();
+  const { loading: layersLoading } = useLayers();
   const { setMapMode, mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -24,13 +24,18 @@ export default function AtlasPage() {
 
   // Determine map mode based on URL params
   const params = new URLSearchParams(location.search);
-  const isReadonly = params.has("map");
+  const isReadonly = params.has("map") && !params.has("edit");
   const isEmbed = params.has("embed");
+  const isEdit = params.get("edit") === "true" || params.has("edit");
 
   // Set map mode based on URL params
   useEffect(() => {
-    setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
-  }, [isReadonly, isEmbed, setMapMode]);
+    if (isEdit) {
+      setMapMode("edit");
+    } else {
+      setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
+    }
+  }, [isReadonly, isEmbed, isEdit, setMapMode]);
 
   // Country selection state
   const {
@@ -75,11 +80,7 @@ export default function AtlasPage() {
         )}
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           {!isLoading && (
-            <MapUiContainer
-              layers={layers}
-              isAddingMarker={isAddingMarker}
-              isEmbed={isEmbed}
-            />
+            <MapUiContainer isAddingMarker={isAddingMarker} isEmbed={isEmbed} />
           )}
           <WorldMap
             onCountryClick={handleCountryClick}

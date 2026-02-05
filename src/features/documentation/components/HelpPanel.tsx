@@ -32,7 +32,7 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
     >
       <div className="flex flex-col h-full">
         <div className="mb-3">
-          <DocSearchResults placeholder="Search documentation" />
+          <DocSearchResults placeholder="Search help" />
           <Separator className="my-4" />
         </div>
         <div className="text-sm text-muted">

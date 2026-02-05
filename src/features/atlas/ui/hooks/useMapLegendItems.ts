@@ -1,4 +1,5 @@
 import { MAP_BG_COLOR, COLOR_PALETTES } from "@constants/colors";
+import { useMapView } from "@contexts/MapViewContext";
 import type { Layer, LayerMode } from "@features/atlas/layers";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
 import { useLayerColors } from "@features/settings/hooks/useLayerColors";
@@ -14,38 +15,39 @@ import type { LegendItem } from "../types";
 export function useMapLegendItems(
   layers: Layer[],
   timelineMode: boolean,
-  layerMode: LayerMode
+  layerMode: LayerMode,
 ): LegendItem[] {
   // Get dynamic color roles for the current mode
   const colorRoles = useVisitColorRoles(layerMode);
   const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
+  const { isReadonly, isEdit } = useMapView();
 
   // Legend items for static layers
-  // Home country legend item (if shown)
-  const homeCountryLegend: LegendItem[] = colorHomeCountry
-    ? [{ color: colorRoles.home, label: "Home country" }]
-    : [];
+  // Home country legend item (if shown, not readonly/edit)
+  const homeCountryLegend: LegendItem[] =
+    colorHomeCountry && !isReadonly && !isEdit
+      ? [{ color: colorRoles.home, label: "Home country" }]
+      : [];
 
   // Visited countries layer (if present)
   const visitedLayer = layers.find(
-    (o) => o.visible && o.name.toLowerCase().includes("visited")
+    (o) => o.visible && o.name.toLowerCase().includes("visited"),
   );
   const visitedLegend: LegendItem[] = visitedLayer
     ? [{ color: visitedLayer.color, label: visitedLayer.name }]
     : [];
 
-  // Upcoming visit legend item (if shown)
+  // Upcoming visit legend item (if shown, not readonly/edit)
   const standardPalette =
     COLOR_PALETTES.find((p) => p.name === "Standard") || COLOR_PALETTES[0];
-  const upcomingLegend: LegendItem[] = colorUpcomingVisits
-    ? [{ color: standardPalette.colors[3], label: "Upcoming Visit" }]
-    : [];
+  const upcomingLegend: LegendItem[] =
+    colorUpcomingVisits && !isReadonly && !isEdit
+      ? [{ color: standardPalette.colors[3], label: "Upcoming Visit" }]
+      : [];
 
   // Rest of layers (excluding visited)
   const restLayers: LegendItem[] = layers
-    .filter(
-      (o) => o.visible && (!visitedLayer || o.name !== visitedLayer.name)
-    )
+    .filter((o) => o.visible && (!visitedLayer || o.name !== visitedLayer.name))
     .map((o) => ({ color: o.color, label: o.name }));
 
   const layerLegendItems: LegendItem[] = [
@@ -79,7 +81,5 @@ export function useMapLegendItems(
 
   // Return appropriate legend items based on mode
   if (!timelineMode) return layerLegendItems;
-  return layerMode === "cumulative"
-    ? cumulativeLegendItems
-    : yearlyLegendItems;
+  return layerMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
 }

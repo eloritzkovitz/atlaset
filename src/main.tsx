@@ -13,6 +13,7 @@ import "./styles/markdown.css";
 // Detect Electron environment
 const isElectron = !!window?.process?.versions?.electron;
 
+// eslint-disable-next-line react-refresh/only-export-components
 const Router = isElectron ? HashRouter : BrowserRouter;
 
 createRoot(document.getElementById("root")!).render(

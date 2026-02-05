@@ -16,6 +16,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { isAuthenticated } from "@utils/firebase";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 
 export interface ToolbarActionsParams {
   isMobile: boolean;
@@ -40,8 +41,9 @@ export function useToolbarActions({
     toggleSettings,
   } = useUI();
   const { setTimelineMode } = useTimeline();
-  const { isReadonly } = useMapView();
+  const { isReadonly, isEdit } = useMapView();
   const { layers } = useLayers();
+  const { saveCurrentMap, exitEditMode } = useSavedMaps();
   const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
 
   // Centralized menu close helper
@@ -89,6 +91,7 @@ export function useToolbarActions({
       onClick: withMenuClose(() => setTimelineMode((prev) => !prev)),
       show:
         !isReadonly &&
+        !isEdit &&
         isAuthenticated() &&
         !!(visitedLayer && isTimelineLayer(visitedLayer)),
       separatorAfter: true,
@@ -97,8 +100,8 @@ export function useToolbarActions({
       key: "save",
       icon: <FaBookmark className="text-lg" />,
       label: "Save",
-      onClick: () => {},
-      show: isReadonly,
+      onClick: withMenuClose(saveCurrentMap),
+      show: isReadonly && isAuthenticated(),
     },
     {
       key: "export",
@@ -116,14 +119,16 @@ export function useToolbarActions({
       icon: <FaGear className="text-lg" />,
       label: "Settings",
       onClick: withMenuClose(toggleSettings),
-      show: !isReadonly,
+      show: !isReadonly && !isEdit,
     },
     {
-      key: "exit-shared",
+      key: "exit",
       icon: <FaArrowLeft className="text-lg" />,
-      label: "Exit Shared View",
+      label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
       onClick: withMenuClose(() => {
-        if (window.location.pathname === "/atlas") {
+        if (typeof exitEditMode === "function") {
+          exitEditMode();
+        } else if (window.location.pathname === "/atlas") {
           const url = new URL(window.location.href);
           url.searchParams.delete("map");
           window.location.href = url.pathname + url.search;
@@ -131,7 +136,7 @@ export function useToolbarActions({
           window.location.href = "/atlas";
         }
       }),
-      show: isReadonly,
+      show: isReadonly || isEdit,
     },
   ];
 }

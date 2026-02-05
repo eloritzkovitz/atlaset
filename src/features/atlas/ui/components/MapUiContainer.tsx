@@ -1,10 +1,16 @@
 import { useMemo } from "react";
-import { FaMapPin, FaTimeline, FaShareNodes } from "react-icons/fa6";
+import {
+  FaArrowsToEye,
+  FaMapPin,
+  FaShareNodes,
+  FaTimeline,
+} from "react-icons/fa6";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
-import type { Layer } from "@features/atlas/layers";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
 import { MapToolbar } from "./controls/MapToolbar";
@@ -14,23 +20,23 @@ import { useMapLegendItems } from "../hooks/useMapLegendItems";
 import type { LegendItem } from "../types";
 
 interface MapUiContainerProps {
-  layers: Layer[];
   isAddingMarker?: boolean;
   isEmbed?: boolean;
 }
 
 export function MapUiContainer({
-  layers,
   isAddingMarker,
   isEmbed,
 }: MapUiContainerProps) {
-  const { isReadonly, zoom, setZoom, center, selectedCoords } = useMapView();
+  const effectiveLayers = useEffectiveLayers();
+  const { isReadonly, isEdit, zoom, setZoom, center, selectedCoords } =
+    useMapView();
   const { timelineMode, layerMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
-    layers,
+    effectiveLayers,
     timelineMode,
-    layerMode
+    layerMode,
   );
 
   // UI hint for adding marker
@@ -42,7 +48,7 @@ export function MapUiContainer({
             icon: <FaMapPin className="text-lg" />,
           }
         : null,
-    [isAddingMarker, isEmbed]
+    [isAddingMarker, isEmbed],
   );
 
   // UI hint for timeline mode
@@ -54,31 +60,38 @@ export function MapUiContainer({
             icon: <FaTimeline className="text-lg" />,
           }
         : null,
-    [timelineMode, uiVisible, isEmbed]
+    [timelineMode, uiVisible, isEmbed],
   );
 
-  // UI hint for shared/readonly map
+  // UI hint for shared/saved maps
   const sharedMapInfo = useSharedMapInfo() || {};
-  const mapName = sharedMapInfo.mapName;
+  const { editingSavedMap } = useSavedMaps();
+  const mapName = editingSavedMap?.name || sharedMapInfo.mapName;
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
-    if (!isReadonly || isEmbed) return null;
+    if ((!isReadonly && !isEdit) || isEmbed) return null;
     const displayMapName = mapName ? mapName : "a shared map";
     const displaySharer = sharer ? sharer : "an anonymous user";
     const msg = (
       <>
         Viewing <b>{displayMapName}</b>
-        <span>
-          by <b>{displaySharer}</b>.
-        </span>
-        Editing is disabled.
+        {isReadonly && !isEdit && (
+          <span>
+            by <b>{displaySharer}</b>.
+          </span>
+        )}
+        {isEdit ? <>in Edit Mode.</> : <>Editing is disabled.</>}
       </>
     );
     return {
       message: msg,
-      icon: <FaShareNodes className="text-lg" />,
+      icon: isEdit ? (
+        <FaArrowsToEye className="text-lg" />
+      ) : (
+        <FaShareNodes className="text-lg" />
+      ),
     };
-  }, [isReadonly, isEmbed, mapName, sharer]);
+  }, [isReadonly, isEdit, isEmbed, mapName, sharer]);
 
   useUiHint(addMarkerHint, 0, { key: "add-marker", dismissable: false });
   useUiHint(timelineHint, 0, { key: "timeline", dismissable: true });
@@ -90,7 +103,7 @@ export function MapUiContainer({
   return (
     <>
       {/* Map UI components */}
-      {timelineMode && !isEmbed && (
+      {timelineMode && !isEmbed && !isEdit && (
         <>
           <TimelineBar />
           <TimelineNavigator />

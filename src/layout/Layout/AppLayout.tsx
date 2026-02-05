@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useUI } from "@contexts/UIContext";
+import { SavedPanel } from "@features/atlas/saved";
 import { HelpPanel } from "@features/documentation";
 import { FriendsPanel } from "@features/user";
 import { Sidebar } from "../Sidebar/Sidebar";
@@ -7,7 +8,7 @@ import { ShortcutsModal } from "../Shortcuts/ShortcutsModal";
 import { UserMenu } from "../UserMenu/UserMenu";
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
-  const { showFriends, toggleFriends, showHelp, toggleHelp } = useUI();
+  const { showFriends, toggleFriends, showSaved, toggleSaved, showHelp, toggleHelp } = useUI();
   const mainRef = useRef<HTMLMapElement>(null);
   const [showUserMenu, setShowUserMenu] = useState(true);
   const [isScrollable, setIsScrollable] = useState(false);
@@ -62,6 +63,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
           <UserMenu fixed={false} />
         </div>
         <FriendsPanel open={showFriends} onClose={toggleFriends} />
+        <SavedPanel open={showSaved} onClose={toggleSaved} />
         <HelpPanel open={showHelp} onClose={toggleHelp} />
         <main
           ref={mainRef}

@@ -1,4 +1,5 @@
 import { useLayers } from "@contexts/LayersContext";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
 
@@ -9,7 +10,18 @@ import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo"
  */
 export function useEffectiveLayers() {
   const { layers } = useLayers();
-  const { isReadonly } = useMapView();
+  const { isEdit, isReadonly } = useMapView();
+  const { editingSavedMap } = useSavedMaps();
   const { layers: sharedLayers } = useSharedMapInfo();
-  return isReadonly && sharedLayers ? sharedLayers : layers;
+
+  // In edit mode, use editingSavedMap.layers if available
+  if (isEdit && editingSavedMap && Array.isArray(editingSavedMap.layers)) {
+    return editingSavedMap.layers;
+  }
+  
+  // In readonly mode, use shared layers if available
+  if (isReadonly && sharedLayers) {
+    return sharedLayers;
+  }
+  return layers;
 }

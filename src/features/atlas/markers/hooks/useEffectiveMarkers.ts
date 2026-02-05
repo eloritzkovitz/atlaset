@@ -1,6 +1,7 @@
 import { useMarkers } from "@contexts/MarkersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSharedMapInfo } from "@features/atlas/export";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useMemo } from "react";
 import type { Marker } from "../types";
 
@@ -11,13 +12,17 @@ import type { Marker } from "../types";
  */
 export function useEffectiveMarkers(): Marker[] {
   const { markers } = useMarkers();
-  const { isReadonly } = useMapView();
+  const { isReadonly, isEdit } = useMapView();
   const { markers: sharedMarkers } = useSharedMapInfo();
+  const { savedMapMarkers } = useSavedMaps();
 
   return useMemo(() => {
+    if (isEdit) {
+      return savedMapMarkers;
+    }
     if (isReadonly && Array.isArray(sharedMarkers)) {
       return sharedMarkers;
     }
     return markers;
-  }, [isReadonly, sharedMarkers, markers]);
+  }, [isReadonly, isEdit, sharedMarkers, markers, savedMapMarkers]);
 }

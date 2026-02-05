@@ -14,11 +14,13 @@ export interface UIContextType {
   showMarkers: boolean;
   toggleMarkers: () => void;
   showExport: boolean;
-  toggleExport: () => void;
+  toggleExport: () => void;  
   showSettings: boolean;
   toggleSettings: () => void;
   showFriends: boolean;
   toggleFriends: () => void;
+  showSaved: boolean;
+  toggleSaved: () => void;
   showHelp: boolean;
   toggleHelp: () => void;
   closePanel: () => void;

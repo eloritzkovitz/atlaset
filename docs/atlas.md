@@ -26,17 +26,22 @@ The **`Atlas`** is the heart of Atlaset, providing an interactive world map wher
    - Add personalized `markers` to the map.  
    - Change layer/marker colors and visibility.
 
-4. **Use the Timeline`:**
+4. **Use the Timeline:**
    - Navigate through years to see your travel history.
    - Switch between cumulative and yearly views.
 
-5. **Export & Share`:**
+5. **Export & Share:**
    - Download your map data as `JSON`.
    - Share your map with a link or embed it in your website.
+
+6. **Save Maps:**
+   - You can save shared maps outside of the main user collections.
+   - View, edit and manage shared maps.
 
 ## **Learn More**
 
 [Countries](/docs/countries.md)  
 [Layers & Markers](/docs/layers-markers.md)  
 [Timeline](/docs/timeline.md)  
-[Exporting & Sharing Maps](/docs/export.md)  
+[Exporting & Sharing Maps](/docs/export.md)
+[Saving Maps](/docs/saving-maps.md)

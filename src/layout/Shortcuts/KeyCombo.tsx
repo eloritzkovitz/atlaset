@@ -33,7 +33,7 @@ export function KeyCombo({ keys }: { keys: string[] }) {
     <span className="inline-flex gap-2 justify-center">
       {keys.map((key, i) => (
         <React.Fragment key={key + i}>
-          <kbd className="px-2 py-1 bg-input border border-gray-400 dark:border-gray-500 rounded text-sm font-mono shadow-sm select-none">
+          <kbd className="px-2 py-1 bg-input rounded text-sm font-mono shadow-sm select-none">
             {displayKey(key)}
           </kbd>
           {i < keys.length - 1 && (

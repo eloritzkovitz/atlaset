@@ -17,6 +17,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   // Map mode state
   const [mapMode, setMapMode] = useState<MapMode>("normal");
   const isReadonly = mapMode === "readonly";
+  const isEdit = mapMode === "edit";
   
   // Map ready state  
   const [mapReady, setMapReady] = useState(false);
@@ -96,6 +97,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         mapMode,
         setMapMode,
         isReadonly,
+        isEdit,
         geoData,
         projection,
         setProjection,

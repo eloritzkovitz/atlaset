@@ -16,7 +16,7 @@ export function AtlasShortcuts() {
     toggleMarkers,
     toggleSettings,
   } = useUI();
-  const { isReadonly } = useMapView(); 
+  const { isReadonly, isEdit } = useMapView();
 
   // Toggle Countries panel with "C"
   useKeyHandler(toggleCountries, ["c", "C"], true);
@@ -34,10 +34,10 @@ export function AtlasShortcuts() {
   useKeyHandler(toggleLayers, ["l", "L"], true);
 
   // Toggle Markers panel with "M"
-  useKeyHandler(toggleMarkers, ["m", "M"], true); 
+  useKeyHandler(toggleMarkers, ["m", "M"], true);
 
   // Toggle Settings panel with "S"
-  useKeyHandler(toggleSettings, ["s", "S"], !isReadonly);
+  useKeyHandler(toggleSettings, ["s", "S"], !isReadonly && !isEdit);
 
   return null;
 }

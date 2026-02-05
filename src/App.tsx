@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { useSettings } from "@contexts/SettingsContext";
+import { SavedMapsProvider } from "@contexts/SavedMapsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
@@ -19,7 +20,6 @@ import SettingsPage from "./pages/SettingsPage";
 import SignupPage from "./pages/SignupPage";
 import TripsPage from "./pages/TripsPage";
 
-
 // Lazy-loaded pages
 const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
 
@@ -33,111 +33,114 @@ function App() {
 
   return (
     <TripsProvider>
-      <UIProvider>
-        <UIHintProvider>
-          <UIHintContainer />
-          <PwaUpdateUiHint />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <PublicLayout showAuthButtons>
-                  <HomePage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <PublicLayout>
-                  <LoginPage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <PublicLayout>
-                  <SignupPage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <PublicLayout>
-                  <AboutPage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/changelog"
-              element={
-                <Suspense>
-                  <PublicLayout>
-                    <ChangelogPage />
+      <SavedMapsProvider>
+        <UIProvider>
+          <UIHintProvider>
+            <UIHintContainer />
+            <PwaUpdateUiHint />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <PublicLayout showAuthButtons>
+                    <HomePage />
                   </PublicLayout>
-                </Suspense>
-              }
-            />
-            <Route path="/users/:username" element={<ProfilePage />} />
-            <Route path="/settings/*" element={<SettingsPage />} />
-            <Route path="/docs" element={<DocsPage />} />
-            <Route path="/docs/:slug" element={<DocsPage />} />
-            <Route
-              path="/atlas"
-              element={
-                window.location.search.includes("embed") ? (
-                  <EmbedLayout
-                    mapCode={
-                      new URLSearchParams(window.location.search).get("map") ||
-                      undefined
-                    }
-                  >
-                    <AtlasProviders />
-                  </EmbedLayout>
-                ) : (
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <PublicLayout>
+                    <LoginPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <PublicLayout>
+                    <SignupPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <PublicLayout>
+                    <AboutPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/changelog"
+                element={
+                  <Suspense>
+                    <PublicLayout>
+                      <ChangelogPage />
+                    </PublicLayout>
+                  </Suspense>
+                }
+              />
+              <Route path="/users/:username" element={<ProfilePage />} />
+              <Route path="/settings/*" element={<SettingsPage />} />
+              <Route path="/docs" element={<DocsPage />} />
+              <Route path="/docs/:slug" element={<DocsPage />} />
+              <Route
+                path="/atlas"
+                element={
+                  window.location.search.includes("embed") ? (
+                    <EmbedLayout
+                      mapCode={
+                        new URLSearchParams(window.location.search).get(
+                          "map",
+                        ) || undefined
+                      }
+                    >
+                      <AtlasProviders />
+                    </EmbedLayout>
+                  ) : (
+                    <AppLayout>
+                      <AtlasProviders />
+                    </AppLayout>
+                  )
+                }
+              />
+              <Route
+                path="/dashboard/*"
+                element={
                   <AppLayout>
-                    <AtlasProviders />
+                    <DashboardPage />
                   </AppLayout>
-                )
-              }
-            />
-            <Route
-              path="/dashboard/*"
-              element={
-                <AppLayout>
-                  <DashboardPage />
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/quizzes/*"
-              element={
-                <AppLayout>
-                  <QuizzesPage />
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/trips"
-              element={
-                <AppLayout>
-                  <TripsPage />
-                </AppLayout>
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <PublicLayout>
-                  <NotFoundPage />
-                </PublicLayout>
-              }
-            />
-          </Routes>
-        </UIHintProvider>
-      </UIProvider>
+                }
+              />
+              <Route
+                path="/quizzes/*"
+                element={
+                  <AppLayout>
+                    <QuizzesPage />
+                  </AppLayout>
+                }
+              />
+              <Route
+                path="/trips"
+                element={
+                  <AppLayout>
+                    <TripsPage />
+                  </AppLayout>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <PublicLayout>
+                    <NotFoundPage />
+                  </PublicLayout>
+                }
+              />
+            </Routes>
+          </UIHintProvider>
+        </UIProvider>
+      </SavedMapsProvider>
     </TripsProvider>
   );
 }

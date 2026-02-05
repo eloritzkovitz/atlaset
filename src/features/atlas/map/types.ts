@@ -51,4 +51,4 @@ export type ZoomEvent = {
 };
 
 /** Represents the current mode of the map. */
-export type MapMode = "normal" | "readonly";
+export type MapMode = "normal" | "readonly" | "edit";

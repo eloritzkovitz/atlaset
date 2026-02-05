@@ -38,7 +38,7 @@ export function LayersContainer({
   isAddingMarker,
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
-  const { isReadonly } = useMapView();
+  const { isEdit, isReadonly } = useMapView();
   const { timelineMode } = useTimeline();  
 
   // Home country for coloring
@@ -65,6 +65,7 @@ export function LayersContainer({
             // Home country coloring logic
             const isHomeCountry =
               !isReadonly &&
+              !isEdit &&
               !timelineMode &&
               colorHomeCountry &&
               homeCountry &&
@@ -73,6 +74,7 @@ export function LayersContainer({
             // Upcoming visit coloring logic
             const isUpcomingVisitCountry =
               !isReadonly &&
+              !isEdit &&
               !timelineMode &&
               colorUpcomingVisits &&
               upcomingCountryCodes.includes(isoA2);

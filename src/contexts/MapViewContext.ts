@@ -5,6 +5,7 @@ export interface MapViewContextType {
   mapMode: MapMode;
   setMapMode: (v: MapMode) => void;
   isReadonly: boolean;
+  isEdit: boolean;
   geoData: GeoData | null;
   projection: string;
   setProjection: (v: string) => void;
