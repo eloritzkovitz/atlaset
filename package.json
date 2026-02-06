@@ -62,7 +62,7 @@
     "@vitest/coverage-v8": "4.0.18",
     "autoprefixer": "10.4.24",
     "cypress": "15.10.0",
-    "electron": "40.1.0",
+    "electron": "40.2.1",
     "electron-vite": "5.0.0",
     "eslint": "9.39.2",
     "eslint-plugin-import": "2.32.0",

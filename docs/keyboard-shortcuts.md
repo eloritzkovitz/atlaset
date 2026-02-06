@@ -1,5 +1,9 @@
 # Keyboard Shortcuts
 
+**`Keyboard shortcuts`** let you use various actions with a keyboard in a quicker and more accessible way. You can also press the <kbd>Tab</kbd> key to focus and navigate between page elements for easier access.
+
+To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</kbd>.
+
 ## **General**
 
 <table class="shortcut-table">
@@ -7,7 +11,7 @@
 	<tr><td>Show shortcuts</td><td><kbd>Shift + ?</kbd></td></tr>
 	<tr><td>Focus search</td><td><kbd>/</kbd></td></tr>
 	<tr><td>Unfocus / Close</td><td><kbd>Esc</kbd></td></tr>
-	<tr><td>Toggle Help</td><td><kbd>h</kbd></td></tr>
+	<tr><td>Toggle help</td><td><kbd>h</kbd></td></tr>
 	<tr><td>Reset filters</td><td><kbd>r</kbd></td></tr>
 </table>
 

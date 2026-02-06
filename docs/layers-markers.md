@@ -4,7 +4,7 @@ Atlaset lets you customize your map with `layers` (highlighting groups of `count
 
 ## **Layers**
 
-`Countries` are stored in `layers` by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).  
+`Countries` are stored in `layers` by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
 **Layer colors** use `RGBA` or `8-digit hex` color formats to support optional alpha transparency. You can find the correct value by using [this tool](https://rgbacolorpicker.com/).
 
@@ -49,8 +49,6 @@ Atlaset lets you customize your map with `layers` (highlighting groups of `count
 - Fill the `countries` array with `ISO 3166-1 codes` for the relevant countries.
 - You can also change the layer's color by changing the `RGBA` value.
 
-## **Special Layers**
-
 ### **Visited Countries Layer**
 
 Atlaset automatically creates and manages a special `layer` for `visited countries` based on your `trip data`.
@@ -58,26 +56,8 @@ Atlaset automatically creates and manages a special `layer` for `visited countri
 - Changes to your `trips` will be synchronized with this layer accordingly.
 - This layer **cannot be edited or deleted**, but can be hidden by toggling its visibility off, as well as reordered.
 
----
-
-### **Timeline Layers & Layer Palettes**
-
-Both the `Visited Countries` layer and `Timeline Mode` layers use `color palettes` defined in your `settings` to visually distinguish `countries` on the map.
-
-- **Layer Palettes**:  
-You can customize `color palettes` for `layers` in the app’s `settings`. These palettes determine how `countries` are colored in `layers`, including the `visited countries` layers and `timeline` layers.
-
-- **Standard**:  
-The `visited countries` layers and the map use the `standard palette` to color `countries`. `Visited countries` will use the second color in the palette.
-
-- **Timeline Mode**:  
-When `Timeline Mode` is active, `countries` are colored according to the selected palette and the `timeline`’s current year or cumulative mode.
-
-- In `Cumulative mode`, `countries` are colored based on all visits up to the selected year.
-- In `Yearly mode`, the color will depend on the `visit status` for the year.
-
 > **Tip:**
-> To change how `layers` and `timeline` colors appear, in the map toolbar's `Settings`, look for `Color Palettes` and select or customize your preferred palette for each mode.
+> To change the color of the `visited countries` layer, in the map toolbar's `Settings`, look for `Color Palettes` and select or customize your preferred palette. The layer will use the second value in the palette.
 
 ## **Markers**
 

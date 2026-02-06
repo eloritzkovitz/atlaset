@@ -13,7 +13,7 @@ import {
 } from "@features/atlas/markers";
 import { SavedMapsModal } from "@features/atlas/saved";
 import type { Country } from "@features/countries";
-import { SettingsPanel } from "@features/settings";
+import { MapSettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
 
 interface AtlasUiContainerProps {
@@ -133,7 +133,7 @@ export function AtlasUiContainer({
         }
       />
       <MapExportPanel svgRef={svgRef} />
-      <SettingsPanel />
+      <MapSettingsPanel />
 
       {/* Modals */}
       <CountryDetailsModal

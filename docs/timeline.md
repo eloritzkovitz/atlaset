@@ -25,6 +25,7 @@ Colors `countries` based on `visit count` up to the selected `year`.
 ### **Yearly Visits Mode:**
 
 Colors `countries` based on `visit status` for the year:
+
 - `Upcoming first visit`
 - `Upcoming revisit`
 - `First visit this year`
@@ -33,5 +34,8 @@ Colors `countries` based on `visit status` for the year:
 
 ## **Customization**
 
-- `Timeline` uses `color palettes` to visually distinguish `years` and `visited countries`.
-- Customize `palettes` through the `map settings` for a personalized look.
+`Timeline` uses `color palettes` to visually distinguish how countries are colored. You can customize the appearance by selecting your desired color palettes through the `map settings`.
+
+## **Learn More**
+
+[Map Settings](/docs/map-settings.md)

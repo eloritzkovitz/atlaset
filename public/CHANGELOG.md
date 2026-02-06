@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-02-06
+
+- **[chore]** **Atlas | Map Settings:** Renamed sections in map settings
+- **[docs]** **Docs:** Updated docs for map and map settings
+
 ## 2026-02-05
 
 - **[feature]** **Atlas | Saved Maps:** Added saving and managing maps, independently from the main map

@@ -57,7 +57,7 @@ export function getBaseMarkdownComponents(
           <>
             {!isFirst && <Separator className="my-6 opacity-60" />}
             <h2
-              className="mt-8 mb-2 text-xl text-action-text-hover"
+              className="mt-8 mb-2 text-3xl text-action-text-hover"
               {...rest}
             />
           </>
@@ -65,13 +65,13 @@ export function getBaseMarkdownComponents(
       }),
     h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h3
-        className="mt-6 mb-2 text-lg font-bold text-action-text-hover"
+        className="mt-6 mb-2 text-xl font-semibold text-action-text-hover"
         {...props}
       />
     ),
     h4: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
       <h4
-        className="mt-6 mb-2 text-md font-semibold text-action-text-hover"
+        className="mt-6 mb-2 text-lg font-semibold text-action-text-hover"
         {...props}
       />
     ),

@@ -2,10 +2,10 @@ import { FaGear, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useUI } from "@contexts/UIContext";
-import { MapSettingsGroup } from "./map/MapSettingsGroup";
-import { LayerSettingsGroup } from "./layers/LayerSettingsGroup";
+import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
+import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";
 
-export function SettingsPanel() {
+export function MapSettingsPanel() {
   const { showSettings, closePanel } = useUI();
 
   return (
@@ -13,7 +13,7 @@ export function SettingsPanel() {
       title={
         <>
           <FaGear />
-          Settings
+          Map Settings
         </>
       }
       show={showSettings}
@@ -30,9 +30,9 @@ export function SettingsPanel() {
       }
     >
       <div className="mt-4">
-        <MapSettingsGroup />
+        <ConfigurationSettingsGroup />
         <Separator className="my-4" />
-        <LayerSettingsGroup />
+        <ColorsSettingsGroup />
       </div>
     </Panel>
   );

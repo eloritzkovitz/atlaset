@@ -1,3 +1,4 @@
+import { FaDraftingCompass } from "react-icons/fa";
 import {
   FaBookAtlas,
   FaBookmark,
@@ -11,6 +12,7 @@ import {
   FaKeyboard,
   FaLaptopCode,
   FaListUl,
+  FaMap,
   FaMapLocationDot,
   FaMedal,
   FaQuestion,
@@ -39,6 +41,12 @@ export const DOCS_GROUPS = {
         icon: <FaUser />,
       },
       { label: "Atlas", file: "atlas.md", icon: <FaEarthAmericas /> },
+      { label: "The Map", file: "map.md", icon: <FaMap /> },
+      {
+        label: "Map Settings",
+        file: "map-settings.md",
+        icon: <FaDraftingCompass />,
+      },
       { label: "Countries", file: "countries.md", icon: <FaGlobe /> },
       {
         label: "Layers & Markers",

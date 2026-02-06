@@ -1,8 +1,8 @@
 // Components
-export { SettingsPanel } from "./components/SettingsPanel";
 export { SettingsPanelMenu } from "./components/SettingsPanelMenu";
 export { AccountSettingsSection } from "./components/account/AccountSettingsSection";
 export { DisplaySettingsSection } from "./components/display/DisplaySettingsSection";
+export { MapSettingsPanel } from "./components/map/MapSettingsPanel";
 export { SecurityInfoSection } from "./components/security/SecurityInfoSection";
 export { SoundSettingsSection } from "./components/sound/SoundSettingsSection";
 

@@ -1,6 +1,11 @@
 import React from "react";
-import { FaLayerGroup } from "react-icons/fa6";
-import { Checkbox, CollapsibleHeader, DropdownSelectInput, SectionHeader } from "@components";
+import { FaPalette } from "react-icons/fa6";
+import {
+  Checkbox,
+  CollapsibleHeader,
+  DropdownSelectInput,
+  SectionHeader,
+} from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colors";
 import type { LayerMode } from "@features/atlas/layers";
 import { PaletteDots } from "./PaletteDots";
@@ -13,7 +18,7 @@ const LAYER_MODES: { key: LayerMode; label: string }[] = [
   { key: "yearly", label: "Timeline (Yearly)" },
 ];
 
-export function LayerSettingsGroup() {
+export function ColorsSettingsGroup() {
   const [expanded, setExpanded] = React.useState(true);
   const {
     colorHomeCountry,
@@ -41,8 +46,8 @@ export function LayerSettingsGroup() {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaLayerGroup />}
-        label="Layers"
+        icon={<FaPalette />}
+        label="Colors"
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />

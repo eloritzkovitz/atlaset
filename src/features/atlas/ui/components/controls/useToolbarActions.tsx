@@ -117,7 +117,7 @@ export function useToolbarActions({
     {
       key: "settings",
       icon: <FaGear className="text-lg" />,
-      label: "Settings",
+      label: "Map Settings",
       onClick: withMenuClose(toggleSettings),
       show: !isReadonly && !isEdit,
     },

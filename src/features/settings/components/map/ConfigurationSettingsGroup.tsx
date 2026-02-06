@@ -1,10 +1,10 @@
 import React from "react";
-import { FaMap } from "react-icons/fa";
+import { FaDraftingCompass } from "react-icons/fa";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { MAP_OPTIONS } from "@constants";
 import { useMapView } from "@contexts/MapViewContext";
 
-export function MapSettingsGroup() {
+export function ConfigurationSettingsGroup() {
   const [showMapSettings, setShowMapSettings] = React.useState(true);
   const {
     projection,
@@ -18,8 +18,8 @@ export function MapSettingsGroup() {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaMap />}
-        label="Map"
+        icon={<FaDraftingCompass />}
+        label="Configuration"
         expanded={showMapSettings}
         onToggle={() => setShowMapSettings((v) => !v)}
       />
