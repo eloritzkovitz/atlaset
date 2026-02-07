@@ -1,10 +1,10 @@
 import { useState } from "react";
 import {
-  FaChartSimple,
   FaGlobe,
   FaMedal,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { DrawerPanel, Panel, SubmenuSection } from "@components";
 import {
   COUNTRIES_SUBMENU,
@@ -35,7 +35,7 @@ export function DashboardPanelMenu({
     <Panel
       title={
         <>
-          <FaChartSimple />
+          <TbLayoutDashboardFilled />
           Dashboard
         </>
       }
