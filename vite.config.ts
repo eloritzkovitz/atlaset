@@ -1,4 +1,5 @@
 import path from "path";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 import react from "@vitejs/plugin-react";
@@ -12,6 +13,7 @@ export default defineConfig({
     VitePWA({
       registerType: "autoUpdate",
     }),
+    ...(process.env.ANALYZE ? [visualizer({ open: true })] : []),
   ],
   resolve: {
     alias: {

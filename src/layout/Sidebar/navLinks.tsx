@@ -1,10 +1,10 @@
 import {
-  FaChartSimple,
   FaEarthAmericas,
   FaGear,
   FaQuestion,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
 
 export const NAV_LINKS = [
   {
@@ -21,7 +21,7 @@ export const NAV_LINKS = [
   },
   {
     to: "/dashboard",
-    icon: <FaChartSimple className="text-2xl" />,
+    icon: <TbLayoutDashboardFilled className="text-2xl" />,
     label: "Dashboard",
     end: false,
   },

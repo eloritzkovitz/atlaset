@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-02-07
+
+- **[chore]** **General:** Reduced app bundle size and added script for bunzle analysis
+
 ## 2026-02-06
 
 - **[chore]** **Atlas | Map Settings:** Renamed sections in map settings

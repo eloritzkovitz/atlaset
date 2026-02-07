@@ -13,7 +13,6 @@ export { Chip } from "./ui/Chip/Chip";
 export { ChipList } from "./ui/Chip/ChipList";
 
 // Chart components
-export { PieChart } from "./chart/PieChart";
 export { PieLegendCard } from "./chart/PieLegendCard";
 
 // Feedback components

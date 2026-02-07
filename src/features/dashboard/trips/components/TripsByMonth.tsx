@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { FaCrown } from "react-icons/fa6";
-import { DashboardCard, PieChart, PieLegendCard, Table } from "@components";
+import { DashboardCard, PieLegendCard, Table } from "@components";
 import {
   MONTH_TABLE_COLUMNS,
   MONTH_NAMES,
   MONTH_COLORS,
 } from "../constants/month";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
+
+const PieChart = lazy(() => import("@components/chart/PieChart"));
 
 export function TripsByMonth() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -40,13 +42,15 @@ export function TripsByMonth() {
         {monthLabels.length > 0 ? (
           <>
             {/* Pie Chart */}
-            <PieChart
-              labels={monthLabels}
-              data={monthCounts}
-              colors={monthColors}
-              hoveredIdx={hoveredIdx}
-              setHoveredIdx={setHoveredIdx}
-            />
+            <Suspense fallback={<div>Loading chart...</div>}>
+              <PieChart
+                labels={monthLabels}
+                data={monthCounts}
+                colors={monthColors}
+                hoveredIdx={hoveredIdx}
+                setHoveredIdx={setHoveredIdx}
+              />
+            </Suspense>
 
             {/* Most Popular Month */}
             <div className="my-4 flex items-center gap-2">
@@ -59,7 +63,7 @@ export function TripsByMonth() {
                   ({mostPopularMonth.total} trips,{" "}
                   {totalTripsForMonth > 0
                     ? `${Math.round(
-                        (mostPopularMonth.total / totalTripsForMonth) * 100
+                        (mostPopularMonth.total / totalTripsForMonth) * 100,
                       )}%`
                     : "0%"}
                   )

@@ -10,7 +10,18 @@ lerna-debug.log*
 dist-ssr
 *.local
 
-# Editor directories and files
+# Dependency directories
+node_modules
+
+# Build output
+dist
+out
+
+# Reports and analysis output
+coverage
+stats.html
+
+# Editor and IDE files
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -21,12 +32,7 @@ dist-ssr
 *.sln
 *.sw?
 
-# Directories
-node_modules
-coverage
-dist
-out
-
+# Public assets (untracked)
 public/data
 public/docs
 public/flags

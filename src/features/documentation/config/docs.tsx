@@ -3,7 +3,6 @@ import {
   FaBookAtlas,
   FaBookmark,
   FaChartPie,
-  FaChartSimple,
   FaCode,
   FaCompass,
   FaDatabase,
@@ -23,6 +22,7 @@ import {
   FaUniversalAccess,
   FaUser,
 } from "react-icons/fa6";
+import { TbLayoutDashboardFilled } from "react-icons/tb";
 
 export const DOCS_PATH = "/docs/";
 
@@ -66,7 +66,11 @@ export const DOCS_GROUPS = {
         icon: <FaBookmark />,
       },
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
-      { label: "Dashboard", file: "dashboard.md", icon: <FaChartSimple /> },
+      {
+        label: "Dashboard",
+        file: "dashboard.md",
+        icon: <TbLayoutDashboardFilled />,
+      },
       {
         label: "Exploration",
         file: "exploration.md",
@@ -141,7 +145,7 @@ export const DOCS_CARDS = [
     file: "trips.md",
   },
   {
-    icon: <FaChartSimple className="text-5xl mb-4 text-warning" />,
+    icon: <TbLayoutDashboardFilled className="text-5xl mb-4 text-warning" />,
     title: "Dashboard",
     description: "View your stats and achievements.",
     file: "dashboard.md",
