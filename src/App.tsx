@@ -1,6 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
-import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
+import {
+  LoadingSpinner,
+  PwaUpdateUiHint,
+  SplashScreen,
+  UIHintContainer,
+} from "@components";
 import { useSettings } from "@contexts/SettingsContext";
 import { SavedMapsProvider } from "@contexts/SavedMapsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
@@ -74,7 +79,7 @@ function App() {
               <Route
                 path="/changelog"
                 element={
-                  <Suspense>
+                  <Suspense fallback={<LoadingSpinner />}>
                     <PublicLayout>
                       <ChangelogPage />
                     </PublicLayout>

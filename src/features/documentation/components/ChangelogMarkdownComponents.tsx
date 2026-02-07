@@ -9,6 +9,12 @@ export const changelogMarkdownComponents = getBaseMarkdownComponents({
       {...props}
     />
   ),
+  h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h2
+      className="mt-8 mb-2 text-2xl font-semibold text-action-text-hover"
+      {...props}
+    />
+  ),
   ul: (props: React.HTMLProps<HTMLUListElement>) => (
     <ul className="ml-0 mb-4" {...props} />
   ),

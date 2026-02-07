@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import {
   FaSuitcaseRolling,
   FaLocationDot,
@@ -8,11 +8,13 @@ import {
   FaStar,
   FaClockRotateLeft,
   FaCalendarDays,
-  FaCheck
+  FaCheck,
 } from "react-icons/fa6";
-import { DashboardCard, PieChart, PieLegendCard } from "@components";
+import { DashboardCard, PieLegendCard } from "@components";
 import { TRIP_TYPE_COLORS } from "../constants/trips";
 import { useTripsStats } from "../hooks/useTripsStats";
+
+const PieChart = lazy(() => import("@components/chart/PieChart"));
 
 export function TripsStats() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -22,7 +24,7 @@ export function TripsStats() {
     localTrips,
     abroadTrips,
     completedTrips,
-    upcomingTrips,    
+    upcomingTrips,
     longestTrip,
     shortestTrip,
     longestTripName,
@@ -96,13 +98,15 @@ export function TripsStats() {
         <div className="flex flex-row items-center justify-center gap-40 min-h-[220px] mt-4">
           {/* Pie Chart */}
           <div className="flex items-center justify-center w-48 h-48 mt-10 mb-10">
-            <PieChart
-              labels={tripTypeData.map((d) => d.name)}
-              data={tripTypeData.map((d) => d.value)}
-              colors={tripTypeData.map((d) => d.color)}
-              hoveredIdx={hoveredIdx}
-              setHoveredIdx={setHoveredIdx}
-            />
+            <Suspense fallback={<div>Loading chart...</div>}>
+              <PieChart
+                labels={tripTypeData.map((d) => d.name)}
+                data={tripTypeData.map((d) => d.value)}
+                colors={tripTypeData.map((d) => d.color)}
+                hoveredIdx={hoveredIdx}
+                setHoveredIdx={setHoveredIdx}
+              />
+            </Suspense>
           </div>
           {/* Vertical Legend */}
           <div className="flex flex-col gap-4">
