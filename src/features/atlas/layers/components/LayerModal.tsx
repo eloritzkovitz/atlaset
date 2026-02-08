@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  FaLayerGroup,
-  FaPencil,
-  FaXmark,
-  FaFloppyDisk,
-  FaCircleInfo,
-} from "react-icons/fa6";
+import { FaLayerGroup, FaPencil, FaXmark, FaFloppyDisk } from "react-icons/fa6";
 import {
   ActionButton,
   Chip,
@@ -17,7 +11,6 @@ import {
 } from "@components";
 import { CountrySelectModal } from "@features/countries/components/countrySelect/CountrySelectModal";
 import { useCountryData } from "@features/countries";
-import { VISITED_LAYER_ID } from "../constants/layers";
 import type { Layer } from "../types";
 
 interface LayerModalProps {
@@ -41,12 +34,9 @@ export function LayerModal({
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [colorModalOpen, setColorModalOpen] = useState(false);
 
-  // Check if editing visited countries layer
-  const isVisited = layer?.id === VISITED_LAYER_ID;
-
   // State for country select modal
   const selectedCountries = countries.filter(
-    (country) => layer && layer.countries.includes(country.isoCode)
+    (country) => layer && layer.countries.includes(country.isoCode),
   );
 
   // Handle modal close
@@ -62,9 +52,7 @@ export function LayerModal({
 
   // Validate layer
   const isValid =
-    layer.name.trim() !== "" &&
-    layer.countries &&
-    layer.countries.length > 0;
+    layer.name.trim() !== "" && layer.countries && layer.countries.length > 0;
 
   return (
     <>
@@ -105,8 +93,6 @@ export function LayerModal({
                 name="name"
                 value={layer.name}
                 onChange={(e) => onChange({ ...layer, name: e.target.value })}
-                disabled={isVisited}
-                className={`${isVisited ? "opacity-50" : ""}`}
               />
             </FormField>
 
@@ -115,7 +101,6 @@ export function LayerModal({
               <ColorSelectInput
                 value={layer.color}
                 onChange={(color: string) => onChange({ ...layer, color })}
-                disabled={isVisited}
                 onModalOpenChange={setColorModalOpen}
               />
             </FormField>
@@ -134,11 +119,10 @@ export function LayerModal({
                         onChange({
                           ...layer,
                           countries: layer.countries.filter(
-                            (code) => code !== country.isoCode
+                            (code) => code !== country.isoCode,
                           ),
                         })
                       }
-                      disabled={isVisited}
                     >
                       {country.name}
                     </Chip>
@@ -148,7 +132,6 @@ export function LayerModal({
                   type="button"
                   variant="secondary"
                   onClick={() => setCountryModalOpen(true)}
-                  disabled={isVisited}
                 >
                   <FaPencil className="inline" /> Edit
                 </ActionButton>
@@ -169,8 +152,6 @@ export function LayerModal({
                     },
                   })
                 }
-                disabled={isVisited}
-                className={`${isVisited ? "opacity-50" : ""}`}
               />
             </FormField>
             <FormField label="">
@@ -186,8 +167,6 @@ export function LayerModal({
                     },
                   })
                 }
-                disabled={isVisited}
-                className={`${isVisited ? "opacity-50" : ""}`}
               />
             </FormField>
             <FormField label="">
@@ -203,19 +182,9 @@ export function LayerModal({
                     },
                   })
                 }
-                disabled={isVisited}
-                className={`${isVisited ? "opacity-50" : ""}`}
               />
             </FormField>
             <div className="flex items-center justify-between mt-6">
-              {isVisited && (
-                <div className="flex items-center text-base text-muted mr-4">
-                  <FaCircleInfo size={24} className="mr-4" />
-                  <span>
-                    This layer is managed automatically based on your trips.
-                  </span>
-                </div>
-              )}
               <ModalActions
                 onCancel={onClose}
                 onSubmit={() => isValid && onSave(layer)}
@@ -228,7 +197,7 @@ export function LayerModal({
                   )
                 }
                 submitLabel={isEditing ? "Save Changes" : "Add Layer"}
-                disabled={!isValid || isVisited}
+                disabled={!isValid}
               />
             </div>
           </div>
@@ -243,7 +212,6 @@ export function LayerModal({
         onChange={(newCountries) => {
           onChange({ ...layer, countries: newCountries });
         }}
-        disabled={isVisited}
       />
     </>
   );

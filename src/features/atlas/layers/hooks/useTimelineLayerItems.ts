@@ -5,10 +5,17 @@ import { useHomeCountry } from "@features/user";
 import { getVisitColor, useVisitedCountriesTimeline } from "@features/visits";
 import type { TimelineLayer, LayerMode } from "../types";
 
+/**
+ * Generates timeline layer items with appropriate colors based on visit data and layer settings.
+ * @param layers - Array of timeline layers to generate items for
+ * @param selectedYear - The currently selected year in the timeline
+ * @param layerMode - The current layer mode
+ * @returns Array of timeline layer items with isoCode, color, layerId, and visit count
+ */
 export function useTimelineLayerItems(
   layers: TimelineLayer[],
   selectedYear: number,
-  layerMode: LayerMode
+  layerMode: LayerMode,
 ) {
   const {
     getVisitedCountriesUpToYear,
@@ -30,8 +37,8 @@ export function useTimelineLayerItems(
         .filter((l) => l.visible && l.timelineEnabled)
         .flatMap((l) => l.countries || []),
       ...Object.keys(nextUpcomingYearByCountry),
-    ])
-  );  
+    ]),
+  );
 
   return useMemo(() => {
     return layers
@@ -63,12 +70,12 @@ export function useTimelineLayerItems(
               isNewThisYear,
               isRevisitThisYear,
               isUpcomingVisit,
-              isUpcomingRevisit
+              isUpcomingRevisit,
             ),
             layerId: layer.id,
             count,
           };
-        })
+        }),
       );
   }, [
     layers,

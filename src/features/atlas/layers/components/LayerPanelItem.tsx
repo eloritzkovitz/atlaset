@@ -1,5 +1,4 @@
 import { PanelListItem } from "@components";
-import { VISITED_LAYER_ID } from "../constants/layers";
 import type { Layer } from "../types";
 
 interface LayerPanelItemProps {
@@ -28,8 +27,6 @@ export function LayerPanelItem({
   showRemove,
   onRemove,
 }: LayerPanelItemProps) {
-  const isVisited = layer.id === VISITED_LAYER_ID;
-
   return (
     <PanelListItem
       color={layer.color}
@@ -44,7 +41,6 @@ export function LayerPanelItem({
       onRemove={
         showRemove !== false && onRemove ? () => onRemove(layer.id) : undefined
       }
-      removeDisabled={isVisited}
       dragged={dragged}
       onDragStart={onDragStart}
       handleDragOver={handleDragOver}

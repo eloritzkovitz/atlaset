@@ -10,11 +10,9 @@ import {
   FaDownload,
   FaBookmark,
 } from "react-icons/fa6";
-import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
-import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { isAuthenticated } from "@utils/firebase";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 
@@ -42,9 +40,7 @@ export function useToolbarActions({
   } = useUI();
   const { setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
-  const { layers } = useLayers();
   const { saveCurrentMap, exitEditMode } = useSavedMaps();
-  const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
 
   // Centralized menu close helper
   function withMenuClose(action: () => void) {
@@ -89,11 +85,7 @@ export function useToolbarActions({
       icon: <FaTimeline className="text-xl" />,
       label: "Timeline",
       onClick: withMenuClose(() => setTimelineMode((prev) => !prev)),
-      show:
-        !isReadonly &&
-        !isEdit &&
-        isAuthenticated() &&
-        !!(visitedLayer && isTimelineLayer(visitedLayer)),
+      show: !isReadonly && !isEdit && isAuthenticated(),
       separatorAfter: true,
     },
     {
