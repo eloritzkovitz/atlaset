@@ -23,6 +23,8 @@ export function ColorsSettingsGroup() {
   const {
     colorHomeCountry,
     setColorHomeCountry,
+    colorVisitedCountries,
+    setColorVisitedCountries,
     colorUpcomingVisits,
     setColorUpcomingVisits,
     layerPalettes,
@@ -61,6 +63,11 @@ export function ColorsSettingsGroup() {
                 checked={!!colorHomeCountry}
                 onChange={setColorHomeCountry}
                 label="Show home country"
+              />
+              <Checkbox
+                checked={!!colorVisitedCountries}
+                onChange={setColorVisitedCountries}
+                label="Show visited countries"
               />
               <Checkbox
                 checked={!!colorUpcomingVisits}

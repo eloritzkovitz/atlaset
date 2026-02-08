@@ -24,8 +24,9 @@ export type MapSettings = {
 };
 
 /** Layer-related settings */
-export type LayerSettings = {
+export type ColorsSettings = {
   colorHomeCountry: boolean;
+  colorVisitedCountries: boolean;
   colorUpcomingVisits: boolean;
   palettes: Record<LayerMode, string>;
 };
@@ -37,5 +38,5 @@ export type Settings = {
   sound: SoundSettings;
   display: DisplaySettings;
   map: MapSettings;
-  layers: LayerSettings;  
+  colors: ColorsSettings;
 };

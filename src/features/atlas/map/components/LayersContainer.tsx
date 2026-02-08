@@ -43,7 +43,8 @@ export function LayersContainer({
 
   // Home country for coloring
   const { homeCountry } = useHomeCountry();
-  const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
+  const { colorHomeCountry, colorVisitedCountries, colorUpcomingVisits } =
+    useLayerColors();
   const {
     HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,
@@ -79,6 +80,7 @@ export function LayersContainer({
               !isReadonly &&
               !isEdit &&
               !timelineMode &&
+              colorVisitedCountries &&
               visitedCountryCodes &&
               visitedCountryCodes.includes(isoA2);
 

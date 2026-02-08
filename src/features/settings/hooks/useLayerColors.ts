@@ -10,23 +10,30 @@ export function useLayerColors() {
   const { settings, updateSettings } = useSettings();
 
   // Home country color setting
-  const colorHomeCountry = !!settings?.layers?.colorHomeCountry;
+  const colorHomeCountry = !!settings?.colors?.colorHomeCountry;
   const setColorHomeCountry = (value: boolean) =>
     updateSettings({
-      layers: { ...(settings.layers ?? {}), colorHomeCountry: value },
+      colors: { ...(settings.colors ?? {}), colorHomeCountry: value },
+    });
+
+  // Visited countries color setting
+  const colorVisitedCountries = !!settings?.colors?.colorVisitedCountries;
+  const setColorVisitedCountries = (value: boolean) =>
+    updateSettings({
+      colors: { ...(settings.colors ?? {}), colorVisitedCountries: value },
     });
 
   // Upcoming visits color setting
-  const colorUpcomingVisits = !!settings?.layers?.colorUpcomingVisits;
+  const colorUpcomingVisits = !!settings?.colors?.colorUpcomingVisits;
   const setColorUpcomingVisits = (value: boolean) =>
     updateSettings({
-      layers: { ...(settings.layers ?? {}), colorUpcomingVisits: value },
+      colors: { ...(settings.colors ?? {}), colorUpcomingVisits: value },
     });
 
   // Fallback to an empty object if layers is undefined
-  const layers = settings.layers ?? {};
+  const colors = settings.colors ?? {};
 
-  const layerPalettes = layers.palettes ?? {
+  const layerPalettes = colors.palettes ?? {
     standard: COLOR_PALETTES[0].name,
     cumulative: COLOR_PALETTES[0].name,
     yearly: COLOR_PALETTES[0].name,
@@ -34,8 +41,8 @@ export function useLayerColors() {
 
   const setPalette = (mode: LayerMode, paletteName: string) => {
     updateSettings({
-      layers: {
-        ...layers,
+      colors: {
+        ...colors,
         palettes: {
           ...layerPalettes,
           [mode]: paletteName,
@@ -45,6 +52,8 @@ export function useLayerColors() {
   };
 
   return {
+    colorVisitedCountries,
+    setColorVisitedCountries,
     colorHomeCountry,
     setColorHomeCountry,
     colorUpcomingVisits,
