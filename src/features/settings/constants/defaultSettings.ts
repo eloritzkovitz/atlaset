@@ -14,8 +14,9 @@ export const defaultSettings: Settings = {
     borderColor: MAP_OPTIONS.strokeColor[0].value,
     borderWidth: MAP_OPTIONS.strokeWidth[0].value,
   },
-  layers: {
+  colors: {
     colorHomeCountry: false,
+    colorVisitedCountries: true,
     colorUpcomingVisits: false,
     palettes: {
       standard: "Default",
