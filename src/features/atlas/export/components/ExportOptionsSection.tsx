@@ -1,10 +1,11 @@
 import { Checkbox, FormField, SectionHeader } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
-import type { ExportMode } from "../types";
 
 interface ExportOptionsSectionProps {
-  exportMode: ExportMode;
-  setExportMode: (mode: ExportMode) => void;
+  includeVisitedCountries: boolean;
+  setIncludeVisitedCountries: (v: boolean) => void;
+  includeLayers: boolean;
+  setIncludeLayers: (v: boolean) => void;
   includeMarkers: boolean;
   setIncludeMarkers: (v: boolean) => void;
   mapName: string;
@@ -14,8 +15,10 @@ interface ExportOptionsSectionProps {
 }
 
 export function ExportOptionsSection({
-  exportMode,
-  setExportMode,
+  includeVisitedCountries,
+  setIncludeVisitedCountries,
+  includeLayers,
+  setIncludeLayers,
   includeMarkers,
   setIncludeMarkers,
   mapName,
@@ -31,18 +34,20 @@ export function ExportOptionsSection({
       <div className="flex flex-col gap-2 mb-4">
         {!isEdit && (
           <Checkbox
-            checked={exportMode === "visited"}
-            onChange={() => setExportMode("visited")}
-            label="Visited countries only"
-            aria-checked={exportMode === "visited"}
-            aria-label="Visited countries only"
+            checked={includeVisitedCountries}
+            onChange={() =>
+              setIncludeVisitedCountries(!includeVisitedCountries)
+            }
+            label="Visited countries"
+            aria-checked={includeVisitedCountries}
+            aria-label="Visited countries"
           />
         )}
         <Checkbox
-          checked={exportMode === "layers"}
-          onChange={() => setExportMode("layers")}
+          checked={includeLayers}
+          onChange={() => setIncludeLayers(!includeLayers)}
           label="All visible layers"
-          aria-checked={exportMode === "layers"}
+          aria-checked={includeLayers}
           aria-label="All visible layers"
         />
         <Checkbox

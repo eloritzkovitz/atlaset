@@ -16,7 +16,6 @@ import { ShareMapSection } from "./ShareMapSection";
 import { useExportData } from "../hooks/useExportData";
 import type {
   ExportFormat,
-  ExportMode,
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
@@ -38,7 +37,8 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const markers = useEffectiveMarkers();
 
   // Export options state
-  const [exportMode, setExportMode] = useState<ExportMode>("visited");
+  const [includeVisitedCountries, setIncludeVisitedCountries] = useState(true);
+  const [includeLayers, setIncludeLayers] = useState(true);
   const [includeMarkers, setIncludeMarkers] = useState(false);
   const [mapName, setMapName] = useState("");
   const [sharer, setSharer] = useState("");
@@ -58,13 +58,13 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   });
 
   // Prepare export data
-  const { layersToShare, markersToShare } = useExportData({
-    exportMode,
-    allLayers,
-    visitedCountryCodes,
-    includeMarkers,
-    markers,
-  });
+  const { visitedCountriesLayer, layersToShare, markersToShare } =
+    useExportData({
+      allLayers: includeLayers ? allLayers : [],
+      visitedCountryCodes: includeVisitedCountries ? visitedCountryCodes : [],
+      includeMarkers,
+      markers,
+    });
 
   // Prefill mapName with saved map name if available
   useEffect(() => {
@@ -88,7 +88,12 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
 
   // Encode map data into shareable code
   const code = encodeMapData({
-    layers: layersToShare,
+    layers: [
+      ...(includeLayers ? layersToShare : []),
+      ...(includeVisitedCountries && visitedCountriesLayer.countries.length > 0
+        ? [visitedCountriesLayer]
+        : []),
+    ],
     mapName: mapName.trim() || undefined,
     sharer: sharer.trim() || undefined,
     markers: markersToShare,
@@ -116,8 +121,10 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     >
       <div>
         <ExportOptionsSection
-          exportMode={exportMode}
-          setExportMode={setExportMode}
+          includeVisitedCountries={includeVisitedCountries}
+          setIncludeVisitedCountries={setIncludeVisitedCountries}
+          includeLayers={includeLayers}
+          setIncludeLayers={setIncludeLayers}
           includeMarkers={includeMarkers}
           setIncludeMarkers={setIncludeMarkers}
           mapName={mapName}
