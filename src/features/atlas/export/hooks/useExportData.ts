@@ -4,35 +4,21 @@ import type { Layer } from "@features/atlas/layers";
 import type { Marker } from "@features/atlas/markers/types";
 
 /**
- * Prepares export data (layers and markers) based on user selections.
- * @param allLayers - All available layers in the atlas.
+ * Prepares map export data based on user selections.
  * @param visitedCountryCodes - List of country codes that have been visited.
- * @param includeMarkers - Whether to include markers in the export.
+ * @param layers - All available layers in the atlas.
  * @param markers - All available markers in the atlas.
  * @returns An object containing layers and markers to be exported.
  */
 export function useExportData({
-  allLayers,
   visitedCountryCodes,
-  includeMarkers,
+  layers,
   markers,
 }: {
-  allLayers: Layer[];
   visitedCountryCodes: string[];
-  includeMarkers: boolean;
-  markers: Marker[] | undefined;
+  layers: Layer[];
+  markers: Marker[];
 }) {
-  // Prepare layers for sharing
-  const layersToShare = useMemo(() => {
-    return allLayers
-      .filter((l) => l.visible && l.countries && l.countries.length > 0)
-      .map((l) => ({
-        name: l.name,
-        color: l.color,
-        countries: l.countries,
-      }));
-  }, [allLayers]);
-
   // Prepare visited countries for sharing
   const visitedCountriesLayer = useMemo(() => {
     return {
@@ -42,9 +28,19 @@ export function useExportData({
     };
   }, [visitedCountryCodes]);
 
+  // Prepare layers for sharing
+  const layersToShare = useMemo(() => {
+    return layers
+      .filter((l) => l.visible && l.countries && l.countries.length > 0)
+      .map((l) => ({
+        name: l.name,
+        color: l.color,
+        countries: l.countries,
+      }));
+  }, [layers]);
+
   // Prepare markers for sharing
   const markersToShare = useMemo(() => {
-    if (!includeMarkers) return undefined;
     return Array.isArray(markers)
       ? markers
           .filter((m) => m.visible !== false)
@@ -55,7 +51,7 @@ export function useExportData({
             description: m.description,
           }))
       : [];
-  }, [includeMarkers, markers]);
+  }, [markers]);
 
   return { visitedCountriesLayer, layersToShare, markersToShare };
 }

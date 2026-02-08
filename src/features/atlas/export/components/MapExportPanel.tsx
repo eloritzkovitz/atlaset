@@ -60,10 +60,9 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   // Prepare export data
   const { visitedCountriesLayer, layersToShare, markersToShare } =
     useExportData({
-      allLayers: includeLayers ? allLayers : [],
       visitedCountryCodes: includeVisitedCountries ? visitedCountryCodes : [],
-      includeMarkers,
-      markers,
+      layers: includeLayers ? allLayers : [],
+      markers: includeMarkers ? markers : [],
     });
 
   // Prefill mapName with saved map name if available
