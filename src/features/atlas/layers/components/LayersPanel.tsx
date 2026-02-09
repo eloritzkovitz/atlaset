@@ -10,8 +10,8 @@ import { ActionButton, Panel } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
-import { useDragReorder } from "@hooks";
 import { useEffectiveLayers } from "@features/atlas/layers";
+import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
 import type { Layer } from "../types";
 import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
@@ -117,7 +117,7 @@ export function LayersPanel({
           />
           <ActionButton
             onClick={closePanel}
-            ariaLabel="Close Layer Manager"
+            ariaLabel="Close Layers Panel"
             title="Close"
             icon={<FaXmark className="text-2xl" />}
             rounded
@@ -137,6 +137,9 @@ export function LayersPanel({
                     ? handleSavedMapChange?.toggleLayerVisibility
                     : toggleLayerVisibility
                   : undefined
+              }
+              onDownload={
+                !isReadonly ? () => exportLayersToFile(layer) : undefined
               }
               onEdit={!isReadonly ? onEditLayer : undefined}
               onNameChange={

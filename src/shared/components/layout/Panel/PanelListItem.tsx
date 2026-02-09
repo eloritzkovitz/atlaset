@@ -22,6 +22,7 @@ interface PanelListItemProps {
   visible: boolean;
   onToggleVisibility?: () => void;
   onCenter?: () => void;
+  onDownload?: () => void;
   onEdit?: () => void;
   onNameChange?: (newName: string) => void;
   onRemove?: () => void;
@@ -40,6 +41,7 @@ export function PanelListItem({
   visible,
   onToggleVisibility,
   onCenter,
+  onDownload,
   onEdit,
   onRemove,
   removeDisabled = false,
@@ -129,65 +131,74 @@ export function PanelListItem({
           icon={visible ? <FaEye /> : <FaEyeSlash />}
         />
       )}
-      {!isEditing && (onCenter || onEdit || onNameChange || onRemove) && (
-        <div ref={btnRef} style={{ position: "relative" }}>
-          <ActionButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setMenuOpen((v) => !v);
-            }}
-            ariaLabel="More actions"
-            title="More actions"
-            icon={<FaEllipsisVertical />}
-            rounded
-          />
-          <Menu
-            open={menuOpen}
-            onClose={() => setMenuOpen(false)}
-            className="panel-listitem-menu !p-2"
-            style={menuStyle}
-            containerRef={menuRef}
-            disableScroll={true}
-          >
-            <PanelListItemMenuActions
-              onCenter={
-                onCenter
-                  ? () => {
-                      setTimeout(() => setMenuOpen(false), 200);
-                      onCenter();
-                    }
-                  : undefined
-              }
-              onEdit={
-                onEdit
-                  ? () => {
-                      setTimeout(() => setMenuOpen(false), 200);
-                      onEdit();
-                    }
-                  : undefined
-              }
-              onNameChange={
-                onNameChange
-                  ? () => {
-                      setTimeout(() => setMenuOpen(false), 200);
-                      handleEdit();
-                    }
-                  : null
-              }
-              onRemove={
-                onRemove
-                  ? () => {
-                      setTimeout(() => setMenuOpen(false), 200);
-                      if (!removeDisabled && onRemove) onRemove();
-                    }
-                  : null
-              }
-              removeDisabled={removeDisabled}
-              handleEdit={handleEdit}
+      {!isEditing &&
+        (onCenter || onEdit || onNameChange || onRemove || onDownload) && (
+          <div ref={btnRef} style={{ position: "relative" }}>
+            <ActionButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen((v) => !v);
+              }}
+              ariaLabel="More actions"
+              title="More actions"
+              icon={<FaEllipsisVertical />}
+              rounded
             />
-          </Menu>
-        </div>
-      )}
+            <Menu
+              open={menuOpen}
+              onClose={() => setMenuOpen(false)}
+              className="panel-listitem-menu !p-2"
+              style={menuStyle}
+              containerRef={menuRef}
+              disableScroll={true}
+            >
+              <PanelListItemMenuActions
+                onCenter={
+                  onCenter
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        onCenter();
+                      }
+                    : undefined
+                }
+                onDownload={
+                  onDownload
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        onDownload();
+                      }
+                    : undefined
+                }
+                onEdit={
+                  onEdit
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        onEdit();
+                      }
+                    : undefined
+                }
+                onNameChange={
+                  onNameChange
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        handleEdit();
+                      }
+                    : undefined
+                }
+                onRemove={
+                  onRemove
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        if (!removeDisabled && onRemove) onRemove();
+                      }
+                    : undefined
+                }
+                removeDisabled={removeDisabled}
+                handleEdit={handleEdit}
+              />
+            </Menu>
+          </div>
+        )}
     </li>
   );
 }

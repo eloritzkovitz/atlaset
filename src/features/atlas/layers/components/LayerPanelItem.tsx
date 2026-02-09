@@ -7,7 +7,7 @@ interface LayerPanelItemProps {
   onDragStart?: () => void;
   handleDragOver?: (e: React.DragEvent<HTMLLIElement>) => void;
   handleDragEnd?: () => void;
-  showEdit?: boolean;
+  onDownload?: () => void;
   onEdit?: (layer: Layer) => void;
   onNameChange?: (newName: string) => void;
   onToggleVisibility?: (id: string) => void;
@@ -20,6 +20,7 @@ export function LayerPanelItem({
   onDragStart,
   handleDragOver,
   handleDragEnd,
+  onDownload,
   onEdit,
   onNameChange,
   onToggleVisibility,
@@ -33,8 +34,9 @@ export function LayerPanelItem({
       onToggleVisibility={
         onToggleVisibility ? () => onToggleVisibility(layer.id) : undefined
       }
+      onDownload={onDownload}
       onEdit={onEdit ? () => onEdit(layer) : undefined}
-      onNameChange={onNameChange}
+      onNameChange={onNameChange}      
       onRemove={onRemove ? () => onRemove(layer.id) : undefined}
       dragged={dragged}
       onDragStart={onDragStart}

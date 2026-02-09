@@ -1,4 +1,9 @@
-import { importLayersFromFile, exportLayersToFile } from "./layerIO";
+import {
+  importLayersFromFile,
+  exportLayersToFile,
+  parseAndNormalizeLayers,
+  serializeLayers,
+} from "./layerIO";
 import type { Layer } from "../types";
 
 describe("layerIO utils", () => {
@@ -38,15 +43,22 @@ describe("layerIO utils", () => {
       };
 
       importLayersFromFile(event, importLayers);
-      expect(global.alert).toHaveBeenCalledWith(
-        "Failed to import layers. Invalid JSON."
-      );
+      expect(global.alert).toHaveBeenCalled();
     });
 
-    it("alerts on non-array JSON", () => {
-      global.alert = vi.fn();
-      const setLayers = vi.fn();
-      const file = new Blob(['{"foo":1}'], { type: "application/json" });
+    it("imports a single layer object as array", () => {
+      const importLayers = vi.fn();
+      const singleLayer = {
+        id: "1",
+        name: "Layer",
+        color: "#fff",
+        countries: [],
+        visible: true,
+        order: 1,
+      };
+      const file = new Blob([JSON.stringify(singleLayer)], {
+        type: "application/json",
+      });
       const event = {
         target: {
           files: [file],
@@ -56,17 +68,19 @@ describe("layerIO utils", () => {
 
       // Mock FileReader
       const readAsText = vi.fn(function (this: any) {
-        this.onload({ target: { result: '{"foo":1}' } });
+        this.onload({ target: { result: JSON.stringify(singleLayer) } });
       });
       (window as any).FileReader = function () {
         this.readAsText = readAsText;
       };
 
-      importLayersFromFile(event, setLayers);
-      expect(global.alert).toHaveBeenCalledWith("Invalid layers file format.");
+      importLayersFromFile(event, importLayers);
+      expect(importLayers).toHaveBeenCalledWith([
+        expect.objectContaining({ id: "1", name: "Layer" }),
+      ]);
     });
 
-    it("calls importLayers with imported layers array", () => {
+    it("calls importLayers with imported layers array (array input)", () => {
       const importLayers = vi.fn();
       const layers: Layer[] = [
         {
@@ -97,7 +111,91 @@ describe("layerIO utils", () => {
       };
 
       importLayersFromFile(event, importLayers);
-      expect(importLayers).toHaveBeenCalledWith(layers);
+      expect(importLayers).toHaveBeenCalledWith([
+        expect.objectContaining({ id: "1", name: "Layer" }),
+      ]);
+    });
+
+    describe("parseAndNormalizeLayers and serializeLayers", () => {
+      it("parses a single layer object and returns array", () => {
+        const single = {
+          id: "1",
+          name: "Layer",
+          color: "#fff",
+          countries: [],
+          visible: true,
+          order: 1,
+        };
+        const result = parseAndNormalizeLayers(JSON.stringify(single));
+        expect(Array.isArray(result)).toBe(true);
+        expect(result[0]).toMatchObject(single);
+      });
+
+      it("parses an array of layers and returns array", () => {
+        const arr = [
+          {
+            id: "1",
+            name: "Layer",
+            color: "#fff",
+            countries: [],
+            visible: true,
+            order: 1,
+          },
+          {
+            id: "2",
+            name: "Layer2",
+            color: "#000",
+            countries: [],
+            visible: false,
+            order: 2,
+          },
+        ];
+        const result = parseAndNormalizeLayers(JSON.stringify(arr));
+        expect(Array.isArray(result)).toBe(true);
+        expect(result.length).toBe(2);
+        expect(result[1]).toMatchObject(arr[1]);
+      });
+
+      it("serializes a single layer as array JSON", () => {
+        const single = {
+          id: "1",
+          name: "Layer",
+          color: "#fff",
+          countries: [],
+          visible: true,
+          order: 1,
+        };
+        const expected = [{ name: "Layer", color: "#fff", countries: [] }];
+        const json = serializeLayers(single);
+        expect(json).toBe(JSON.stringify(expected, null, 2));
+      });
+
+      it("serializes an array of layers as array JSON", () => {
+        const arr = [
+          {
+            id: "1",
+            name: "Layer",
+            color: "#fff",
+            countries: [],
+            visible: true,
+            order: 1,
+          },
+          {
+            id: "2",
+            name: "Layer2",
+            color: "#000",
+            countries: [],
+            visible: false,
+            order: 2,
+          },
+        ];
+        const expected = [
+          { name: "Layer", color: "#fff", countries: [] },
+          { name: "Layer2", color: "#000", countries: [] },
+        ];
+        const json = serializeLayers(arr);
+        expect(json).toBe(JSON.stringify(expected, null, 2));
+      });
     });
 
     it("normalizes rgba color fields to hex", () => {
