@@ -53,7 +53,6 @@ import { appDb } from "../../../../db";
 import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
 import { logUserActivity } from "../../../user";
-import { VISITED_LAYER_ID } from "../constants/layers";
 
 // Cast imported mocks to Vitest mock types
 const isAuthenticatedMock =
@@ -78,11 +77,11 @@ describe("layersService", () => {
     // Reset all mocks
     if (!appDb.layers) {
       throw new Error(
-        "appDb.layers is undefined. The mock was not set up correctly."
+        "appDb.layers is undefined. The mock was not set up correctly.",
       );
     }
     Object.values(appDb.layers).forEach((fn) =>
-      (fn as { mockReset: () => void }).mockReset()
+      (fn as { mockReset: () => void }).mockReset(),
     );
     isAuthenticatedMock.mockReset();
     getCurrentUserMock.mockReset();
@@ -100,7 +99,7 @@ describe("layersService", () => {
       const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       await layersService.save([]);
       expect(warnSpy).toHaveBeenCalledWith(
-        "Attempted to save empty layers array. Aborting to prevent data loss."
+        "Attempted to save empty layers array. Aborting to prevent data loss.",
       );
       warnSpy.mockRestore();
     });
@@ -116,32 +115,6 @@ describe("layersService", () => {
     });
     beforeEach(() => {
       isAuthenticatedMock.mockReturnValue(false);
-    });
-
-    it("loads layers and adds visited layer if missing", async () => {
-      (
-        appDb.layers.toArray as unknown as ReturnType<typeof vi.fn>
-      ).mockResolvedValueOnce([]);
-      (
-        appDb.layers.toArray as unknown as ReturnType<typeof vi.fn>
-      ).mockResolvedValueOnce([
-        { id: VISITED_LAYER_ID, name: "Visited Countries" },
-      ]);
-      const layers = await layersService.load();
-      expect(layers[0].id).toBe(VISITED_LAYER_ID);
-      expect(layers[0].name).toBe("Visited Countries");
-    });
-
-    it("loads layers and does not add visited layer if present", async () => {
-      (
-        appDb.layers.toArray as unknown as ReturnType<typeof vi.fn>
-      ).mockResolvedValueOnce([
-        { id: VISITED_LAYER_ID, name: "Visited Countries" },
-      ]);
-      const layers = await layersService.load();
-      expect(layers[0].id).toBe(VISITED_LAYER_ID);
-      expect(layers[0].name).toBe("Visited Countries");
-      expect(layers).toHaveLength(1);
     });
 
     it("saves layers", async () => {
@@ -177,13 +150,8 @@ describe("layersService", () => {
         { id: "c", order: 1 },
       ]);
       const layers = await layersService.load();
-      // After sorting, order should be: VISITED_LAYER_ID, b (order 0), c (order 1), a (order 2)
-      expect(layers.map((o) => o.id)).toEqual([
-        VISITED_LAYER_ID,
-        "b",
-        "c",
-        "a",
-      ]);
+      // After sorting, order should be: b (order 0), c (order 1), a (order 2)
+      expect(layers.map((o) => o.id)).toEqual(["b", "c", "a"]);
     });
   });
 
@@ -197,7 +165,7 @@ describe("layersService", () => {
       const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
       await layersService.save([]);
       expect(warnSpy).toHaveBeenCalledWith(
-        "Attempted to save empty layers array. Aborting to prevent data loss."
+        "Attempted to save empty layers array. Aborting to prevent data loss.",
       );
       warnSpy.mockRestore();
     });
@@ -218,11 +186,11 @@ describe("layersService", () => {
       await layersService.reorder(layers as any);
       expect(batch.update).toHaveBeenCalledWith(
         { _col: layersCol, id: "foo" },
-        { order: 1 }
+        { order: 1 },
       );
       expect(batch.update).toHaveBeenCalledWith(
         { _col: layersCol, id: "bar" },
-        { order: 2 }
+        { order: 2 },
       );
       expect(batch.commit).toHaveBeenCalled();
     });
@@ -231,7 +199,7 @@ describe("layersService", () => {
       getCurrentUserMock.mockReturnValue({ uid: "abc" });
     });
 
-    it("loads layers from Firestore and adds visited layer if missing", async () => {
+    it("loads layers from Firestore", async () => {
       const layersCol = {};
       collectionMock.mockReturnValue(layersCol);
       getDocsMock.mockResolvedValueOnce({
@@ -243,12 +211,11 @@ describe("layersService", () => {
       const layers = await layersService.load();
       expect(collectionMock).toHaveBeenCalledWith({}, "users", "abc", "layers");
       expect(getDocsMock).toHaveBeenCalledWith(layersCol);
-      expect(layers.some((o) => o.id === VISITED_LAYER_ID)).toBe(true);
       expect(layers).toEqual(
         expect.arrayContaining([
           expect.objectContaining({ id: "x", name: "Layer X" }),
           expect.objectContaining({ id: "y", name: "Layer Y" }),
-        ])
+        ]),
       );
     });
 
@@ -275,11 +242,11 @@ describe("layersService", () => {
       expect(batch.set).toHaveBeenCalledTimes(2);
       expect(batch.set).toHaveBeenCalledWith(
         { _col: layersCol, id: "foo" },
-        layers[0]
+        layers[0],
       );
       expect(batch.set).toHaveBeenCalledWith(
         { _col: layersCol, id: "bar" },
-        layers[1]
+        layers[1],
       );
       expect(batch.commit).toHaveBeenCalled();
     });
@@ -292,7 +259,7 @@ describe("layersService", () => {
       await layersService.add(layer as any);
       expect(setDocMock).toHaveBeenCalledWith(
         { _col: layersCol, id: "bar" },
-        layer
+        layer,
       );
     });
 
@@ -304,7 +271,7 @@ describe("layersService", () => {
       await layersService.edit(layer as any);
       expect(setDocMock).toHaveBeenCalledWith(
         { _col: layersCol, id: "baz" },
-        layer
+        layer,
       );
     });
 

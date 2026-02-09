@@ -11,9 +11,10 @@ export interface LayersContextType {
   importLayers: (newLayers: AnyLayer[]) => Promise<void>;
   addLayer: (layer: AnyLayer) => void;
   editLayer: (layer: AnyLayer) => void;
-  removeLayer: (id: string) => void;
+  updateLayerName: (id: string, newName: string) => void;
   reorderLayers: (newOrder: AnyLayer[]) => void;
   toggleLayerVisibility: (id: string) => void;
+  removeLayer: (id: string) => void;
   loading: boolean;
   error: string | null;
   editingLayer: AnyLayer | null;

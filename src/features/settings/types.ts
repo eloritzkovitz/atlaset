@@ -1,17 +1,17 @@
-import type { LayerMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 
-/** Account-related settings */
+/** Account-related settings. */
 export type AccountSettings = {
   homeCountry: string;
 };
 
-/** Sound-related settings */
+/** Sound-related settings. */
 export type SoundSettings = {
   soundEffectsEnabled: boolean;
   soundEffectsVolume: number;
 };
 
-/** Display-related settings */
+/** Display-related settings. */
 export type DisplaySettings = {
   theme: "light" | "dark";
 };
@@ -23,11 +23,12 @@ export type MapSettings = {
   borderWidth?: number;
 };
 
-/** Layer-related settings */
-export type LayerSettings = {
+/** Colors-related settings. */
+export type ColorsSettings = {
   colorHomeCountry: boolean;
+  colorVisitedCountries: boolean;
   colorUpcomingVisits: boolean;
-  palettes: Record<LayerMode, string>;
+  palettes: Record<ColorMode, string>;
 };
 
 /** User settings. */
@@ -37,5 +38,5 @@ export type Settings = {
   sound: SoundSettings;
   display: DisplaySettings;
   map: MapSettings;
-  layers: LayerSettings;  
+  colors: ColorsSettings;
 };

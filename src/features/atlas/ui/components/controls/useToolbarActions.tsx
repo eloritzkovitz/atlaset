@@ -10,11 +10,9 @@ import {
   FaDownload,
   FaBookmark,
 } from "react-icons/fa6";
-import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
-import { isTimelineLayer, VISITED_LAYER_ID } from "@features/atlas/layers";
 import { isAuthenticated } from "@utils/firebase";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 
@@ -39,12 +37,11 @@ export function useToolbarActions({
     toggleLegend,
     toggleExport,
     toggleSettings,
+    toggleSaved,
   } = useUI();
-  const { setTimelineMode } = useTimeline();
+  const { timelineMode, setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
-  const { layers } = useLayers();
-  const { saveCurrentMap, exitEditMode } = useSavedMaps();
-  const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
+  const { exitEditMode } = useSavedMaps();
 
   // Centralized menu close helper
   function withMenuClose(action: () => void) {
@@ -82,27 +79,23 @@ export function useToolbarActions({
       label: "Legend",
       onClick: withMenuClose(toggleLegend),
       show: true,
-      separatorAfter: true,
+      separatorAfter: true,      
+    },
+    {
+      key: "savedmaps",
+      icon: <FaBookmark className="text-lg" />,
+      label: "My Maps",
+      onClick: withMenuClose(toggleSaved),
+      show: isAuthenticated(),
     },
     {
       key: "timeline",
       icon: <FaTimeline className="text-xl" />,
       label: "Timeline",
-      onClick: withMenuClose(() => setTimelineMode((prev) => !prev)),
-      show:
-        !isReadonly &&
-        !isEdit &&
-        isAuthenticated() &&
-        !!(visitedLayer && isTimelineLayer(visitedLayer)),
+      onClick: withMenuClose(() => setTimelineMode(!timelineMode)),
+      show: !isReadonly && !isEdit && isAuthenticated(),
       separatorAfter: true,
-    },
-    {
-      key: "save",
-      icon: <FaBookmark className="text-lg" />,
-      label: "Save",
-      onClick: withMenuClose(saveCurrentMap),
-      show: isReadonly && isAuthenticated(),
-    },
+    },   
     {
       key: "export",
       icon: !isReadonly ? (

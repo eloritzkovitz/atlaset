@@ -5,7 +5,7 @@ import type { SavedMap } from "../types";
 interface SavedMapPanelItemProps {
   map: SavedMap;
   onView?: () => void;
-  onRename?: (map: SavedMap) => void;
+  onNameChange?: (newName: string) => void;
   onRemove?: (id: string) => void;
   showEdit?: boolean;
   showRemove?: boolean;
@@ -14,7 +14,7 @@ interface SavedMapPanelItemProps {
 export function SavedMapPanelItem({
   map,
   onView,
-  onRename,
+  onNameChange,
   onRemove,
   showEdit = true,
   showRemove = true,
@@ -25,7 +25,7 @@ export function SavedMapPanelItem({
       color="#ffffff"
       icon={<FaMap className="text-xl" />}
       onView={onView}
-      onRename={showEdit && onRename ? () => onRename(map) : undefined}
+      onNameChange={showEdit && onNameChange ? (newName) => onNameChange(newName) : undefined}
       onRemove={showRemove && onRemove ? () => onRemove(map.id) : undefined}
       removeDisabled={false}
       visible={true}

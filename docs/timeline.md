@@ -16,13 +16,13 @@
 - The `map` updates to show only the `countries` visited up to that year.
 - You can use `Play` to automatically navigate through the years. Use `Speed` to control the speed.
 
-## **Cumulative vs. Yearly Mode**
+## **Timeline Color Modes**
 
-### **Cumulative Mode:**
+### **Cumulative**
 
 Colors `countries` based on `visit count` up to the selected `year`.
 
-### **Yearly Visits Mode:**
+### **Yearly Visits**
 
 Colors `countries` based on `visit status` for the year:
 

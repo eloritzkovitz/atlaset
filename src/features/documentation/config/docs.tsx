@@ -54,17 +54,17 @@ export const DOCS_GROUPS = {
         icon: <FaMapLocationDot />,
       },
       { label: "Legend", file: "legend.md", icon: <FaListUl /> },
+      {
+        label: "Saved Maps",
+        file: "saved-maps.md",
+        icon: <FaBookmark />,
+      },
       { label: "Timeline", file: "timeline.md", icon: <FaTimeline /> },
       {
         label: "Exporting & Sharing Maps",
         file: "export.md",
         icon: <FaShareFromSquare />,
-      },
-      {
-        label: "Saving Maps",
-        file: "saving-maps.md",
-        icon: <FaBookmark />,
-      },
+      },      
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
       {
         label: "Dashboard",

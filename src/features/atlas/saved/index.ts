@@ -1,6 +1,6 @@
 // Components
 export { SavedMapsModal } from "./components/SavedMapsModal";
-export { SavedPanel } from "./components/SavedPanel";
+export { SavedMapsPanel } from "./components/SavedMapsPanel";
 
 // Services
 export { savedMapsService } from "./services/savedMapsService";

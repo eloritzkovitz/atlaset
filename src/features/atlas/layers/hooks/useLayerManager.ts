@@ -30,55 +30,55 @@ export function useLayerManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLayers]);
 
+  // Update layers and persist changes
+  async function updateLayers(updated: Layer[]) {
+    setLayers(updated);
+    await persistLayers(updated);
+  }
+
+  // Update a specific layer by id
+  function mapLayer(id: string, updater: (layer: Layer) => Layer) {
+    return layers.map((l) => (l.id === id ? updater(l) : l));
+  }
+
   // Import layers
   async function importLayers(newLayers: Layer[]) {
     const existingIds = new Set(layers.map((l) => l.id));
     const uniqueNewLayers = newLayers.filter((l) => !existingIds.has(l.id));
-
-    // If no new unique layers, do nothing
     if (uniqueNewLayers.length === 0) return layers;
     const merged = [...layers, ...uniqueNewLayers];
-    setLayers(merged);
-
-    await persistLayers(merged);
-
+    await updateLayers(merged);
     return merged;
   }
 
   // Add layer
   async function addLayer(layer: Layer) {
-    const updated = [...layers, layer];
-    setLayers(updated);
-    await persistLayers(updated);
+    await updateLayers([...layers, layer]);
   }
 
   // Edit layer
   async function editLayer(layer: Layer) {
-    const updated = layers.map((l) => (l.id === layer.id ? layer : l));
-    setLayers(updated);
-    await persistLayers(updated);
+    await updateLayers(mapLayer(layer.id, () => layer));
   }
 
-  // Remove layer
-  async function removeLayer(id: string) {
-    const updated = layers.filter((l) => l.id !== id);
-    setLayers(updated);
-    await persistLayers(updated);
+  // Rename layer
+  async function updateLayerName(id: string, newName: string) {
+    await updateLayers(mapLayer(id, (l) => ({ ...l, name: newName })));
   }
 
   // Reorder layers
   async function reorderLayers(newOrder: Layer[]) {
-    setLayers(newOrder);
-    await persistLayers(newOrder);
+    await updateLayers(newOrder);
   }
 
   // Toggle visibility
   async function toggleLayerVisibility(id: string) {
-    const updated = layers.map((l) =>
-      l.id === id ? { ...l, visible: !l.visible } : l,
-    );
-    setLayers(updated);
-    await persistLayers(updated);
+    await updateLayers(mapLayer(id, (l) => ({ ...l, visible: !l.visible })));
+  }
+
+  // Remove layer
+  async function removeLayer(id: string) {
+    await updateLayers(layers.filter((l) => l.id !== id));
   }
 
   // Open add layer modal
@@ -124,9 +124,10 @@ export function useLayerManager({
     importLayers,
     addLayer,
     editLayer,
-    removeLayer,
+    updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
+    removeLayer,
     openAddLayer,
     openEditLayer,
     closeLayerModal,

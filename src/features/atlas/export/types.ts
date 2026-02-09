@@ -1,6 +1,3 @@
-//** Export modes for the map. */
-export type ExportMode = "visited" | "layers";
-
 /** Export formats for the map. */
 export type ExportFormat = "svg" | "png" | "jpeg" | "webp";
 

@@ -7,7 +7,6 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
-import { VISITED_LAYER_ID, DEFAULT_VISITED_LAYER } from "../constants/layers";
 import type { AnyLayer } from "../types";
 import { logUserActivity } from "../../../user";
 import { appDb } from "../../../../db";
@@ -28,16 +27,12 @@ export const layersService = {
       const layersCol = collection(db, "users", user!.uid, "layers");
       const snapshot = await getDocs(layersCol);
       layers = snapshot.docs.map(
-        (doc) => ({ id: doc.id, ...doc.data() } as AnyLayer)
+        (doc) => ({ id: doc.id, ...doc.data() }) as AnyLayer,
       );
     } else {
       layers = await appDb.layers.toArray();
     }
     layers = layers.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-    // Ensure visited layer exists
-    if (!layers.some((o) => o.id === VISITED_LAYER_ID)) {
-      layers.unshift({ ...DEFAULT_VISITED_LAYER });
-    }
     return layers;
   },
 
@@ -50,7 +45,7 @@ export const layersService = {
       // Prevent accidental wipe
       if (!layers || layers.length === 0) {
         console.warn(
-          "Attempted to save empty layers array. Aborting to prevent data loss."
+          "Attempted to save empty layers array. Aborting to prevent data loss.",
         );
         return;
       }
@@ -71,12 +66,12 @@ export const layersService = {
           count: layers.length,
           userName: user!.displayName,
         },
-        user!.uid
+        user!.uid,
       );
     } else {
       if (!layers || layers.length === 0) {
         console.warn(
-          "Attempted to save empty layers array. Aborting to prevent data loss."
+          "Attempted to save empty layers array. Aborting to prevent data loss.",
         );
         return;
       }
@@ -101,7 +96,7 @@ export const layersService = {
           itemName: layer.name,
           userName: user!.displayName,
         },
-        user!.uid
+        user!.uid,
       );
     } else {
       await appDb.layers.add(layer);
@@ -124,7 +119,7 @@ export const layersService = {
           itemName: layer.name,
           userName: user!.displayName,
         },
-        user!.uid
+        user!.uid,
       );
     } else {
       await appDb.layers.put(layer);
@@ -152,7 +147,7 @@ export const layersService = {
           count: layers.length,
           userName: user!.displayName,
         },
-        user!.uid
+        user!.uid,
       );
     } else {
       // IndexedDB: update layers' order field only
@@ -181,7 +176,7 @@ export const layersService = {
           itemName: layerName,
           userName: user!.displayName,
         },
-        user!.uid
+        user!.uid,
       );
     } else {
       await appDb.layers.delete(id);

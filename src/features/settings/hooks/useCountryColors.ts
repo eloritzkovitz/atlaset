@@ -7,7 +7,7 @@ import { COLOR_PALETTES, HOME_COUNTRY_COLOR } from "@constants/colors";
  */
 export function useCountryColors() {
   const { settings } = useSettings();
-  const palettes = settings.layers?.palettes;
+  const palettes = settings.colors?.palettes;
   const selectedPaletteName = palettes?.standard || COLOR_PALETTES[0].name;
   const selectedPalette =
     COLOR_PALETTES.find((p) => p.name === selectedPaletteName) ||

@@ -1,6 +1,6 @@
 import { useSettings } from "@contexts/SettingsContext";
 import { COLOR_PALETTES } from "@constants/colors";
-import type { LayerMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 
 /**
  * Manages layer palette settings.
@@ -10,34 +10,41 @@ export function useLayerColors() {
   const { settings, updateSettings } = useSettings();
 
   // Home country color setting
-  const colorHomeCountry = !!settings?.layers?.colorHomeCountry;
+  const colorHomeCountry = !!settings?.colors?.colorHomeCountry;
   const setColorHomeCountry = (value: boolean) =>
     updateSettings({
-      layers: { ...(settings.layers ?? {}), colorHomeCountry: value },
+      colors: { ...(settings.colors ?? {}), colorHomeCountry: value },
+    });
+
+  // Visited countries color setting
+  const colorVisitedCountries = !!settings?.colors?.colorVisitedCountries;
+  const setColorVisitedCountries = (value: boolean) =>
+    updateSettings({
+      colors: { ...(settings.colors ?? {}), colorVisitedCountries: value },
     });
 
   // Upcoming visits color setting
-  const colorUpcomingVisits = !!settings?.layers?.colorUpcomingVisits;
+  const colorUpcomingVisits = !!settings?.colors?.colorUpcomingVisits;
   const setColorUpcomingVisits = (value: boolean) =>
     updateSettings({
-      layers: { ...(settings.layers ?? {}), colorUpcomingVisits: value },
+      colors: { ...(settings.colors ?? {}), colorUpcomingVisits: value },
     });
 
   // Fallback to an empty object if layers is undefined
-  const layers = settings.layers ?? {};
+  const colors = settings.colors ?? {};
 
-  const layerPalettes = layers.palettes ?? {
+  const colorPalettes = colors.palettes ?? {
     standard: COLOR_PALETTES[0].name,
     cumulative: COLOR_PALETTES[0].name,
     yearly: COLOR_PALETTES[0].name,
   };
 
-  const setPalette = (mode: LayerMode, paletteName: string) => {
+  const setPalette = (mode: ColorMode, paletteName: string) => {
     updateSettings({
-      layers: {
-        ...layers,
+      colors: {
+        ...colors,
         palettes: {
-          ...layerPalettes,
+          ...colorPalettes,
           [mode]: paletteName,
         },
       },
@@ -45,11 +52,13 @@ export function useLayerColors() {
   };
 
   return {
+    colorVisitedCountries,
+    setColorVisitedCountries,
     colorHomeCountry,
     setColorHomeCountry,
     colorUpcomingVisits,
     setColorUpcomingVisits,
-    layerPalettes,
+    colorPalettes,
     setPalette,
   };
 }

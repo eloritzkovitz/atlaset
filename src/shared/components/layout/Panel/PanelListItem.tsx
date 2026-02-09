@@ -2,15 +2,17 @@ import type { DragEvent, ReactNode } from "react";
 import {
   FaEye,
   FaEyeSlash,
-  FaPenToSquare,
-  FaTrash,
-  FaCrosshairs,
-  FaCircleInfo,
-  FaPencil,
   FaArrowsToEye,
+  FaEllipsisVertical,
 } from "react-icons/fa6";
+import { useState, useRef } from "react";
+import { useRenameControls } from "@hooks";
+import { useMenuPosition } from "@hooks";
+import { RenameControls } from "./RenameControls";
 import { ActionButton } from "../../action/ActionButton";
 import { ColorDot } from "../../ui/ColorDot";
+import { Menu } from "@components";
+import { PanelListItemMenuActions } from "./PanelListItemMenuActions";
 
 interface PanelListItemProps {
   color: string;
@@ -20,8 +22,9 @@ interface PanelListItemProps {
   visible: boolean;
   onToggleVisibility?: () => void;
   onCenter?: () => void;
+  onDownload?: () => void;
   onEdit?: () => void;
-  onRename?: () => void;
+  onNameChange?: (newName: string) => void;
   onRemove?: () => void;
   removeDisabled?: boolean;
   dragged?: boolean;
@@ -38,15 +41,44 @@ export function PanelListItem({
   visible,
   onToggleVisibility,
   onCenter,
+  onDownload,
   onEdit,
-  onRename,
   onRemove,
   removeDisabled = false,
   dragged,
   onDragStart,
   handleDragOver,
   handleDragEnd,
+  onNameChange,
 }: PanelListItemProps) {
+  const {
+    isEditing,
+    editName,
+    setEditName,
+    handleEdit,
+    handleSave,
+    handleCancel,
+    handleBlur,
+    handleKeyDown,
+  } = useRenameControls({ name, onNameChange });
+
+  const [menuOpen, setMenuOpen] = useState(false);
+  const btnRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Position menu
+  const menuStyle = useMenuPosition(
+    menuOpen,
+    btnRef,
+    menuRef,
+    30,
+    "right",
+    false,
+  );
+
+  // Close menu when renaming
+  if (isEditing && menuOpen) setMenuOpen(false);
+
   return (
     <li
       id="panel-list-item"
@@ -60,8 +92,26 @@ export function PanelListItem({
       style={{ cursor: dragged ? "grabbing" : "grab" }}
     >
       {!icon ? <ColorDot color={color} size={22} /> : icon}
-      <strong className="flex-1 ml-2">{name}</strong>
-      {onView && (
+      <div className="flex-1 ml-2 flex items-center">
+        {isEditing ? (
+          <RenameControls
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
+            onSave={handleSave}
+            onCancel={handleCancel}
+          />
+        ) : (
+          <strong
+            className="cursor-pointer truncate"
+            onDoubleClick={handleEdit}
+          >
+            {name}
+          </strong>
+        )}
+      </div>
+      {!isEditing && onView && (
         <ActionButton
           variant="toggle"
           onClick={onView}
@@ -71,7 +121,7 @@ export function PanelListItem({
           icon={<FaArrowsToEye className="text-xl" />}
         />
       )}
-      {onToggleVisibility && (
+      {!isEditing && onToggleVisibility && (
         <ActionButton
           variant="toggle"
           onClick={onToggleVisibility}
@@ -81,54 +131,74 @@ export function PanelListItem({
           icon={visible ? <FaEye /> : <FaEyeSlash />}
         />
       )}
-      {onCenter && (
-        <ActionButton
-          variant="toggle"
-          onClick={onCenter}
-          ariaLabel="Center"
-          title="Center"
-          className="text-info hover:text-info-hover"
-          icon={<FaCrosshairs />}
-        />
-      )}
-      {onEdit && (
-        <ActionButton
-          variant="toggle"
-          onClick={onEdit}
-          ariaLabel="Edit"
-          title="Edit"
-          className="text-info hover:text-info-hover"
-          icon={<FaPenToSquare />}
-        />
-      )}
-      {onRename && (
-        <ActionButton
-          variant="toggle"
-          onClick={onRename}
-          ariaLabel="Rename"
-          title="Rename"
-          className="text-info hover:text-info-hover"
-          icon={<FaPencil />}
-        />
-      )}
-      {onRemove && (
-        <ActionButton
-          variant="toggle"
-          onClick={() => {
-            if (!removeDisabled && onRemove) onRemove();
-          }}
-          ariaLabel="Remove"
-          title={
-            removeDisabled
-              ? "This item is managed automatically and cannot be removed"
-              : "Remove"
-          }
-          className={`text-danger hover:text-danger-hover" ${
-            removeDisabled ? "opacity-50 cursor-not-allowed" : ""
-          }`}
-          icon={removeDisabled ? <FaCircleInfo /> : <FaTrash />}
-        />
-      )}
+      {!isEditing &&
+        (onCenter || onEdit || onNameChange || onRemove || onDownload) && (
+          <div ref={btnRef} style={{ position: "relative" }}>
+            <ActionButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen((v) => !v);
+              }}
+              ariaLabel="More actions"
+              title="More actions"
+              icon={<FaEllipsisVertical />}
+              rounded
+            />
+            <Menu
+              open={menuOpen}
+              onClose={() => setMenuOpen(false)}
+              className="panel-listitem-menu !p-2"
+              style={menuStyle}
+              containerRef={menuRef}
+              disableScroll={true}
+            >
+              <PanelListItemMenuActions
+                onCenter={
+                  onCenter
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        onCenter();
+                      }
+                    : undefined
+                }
+                onDownload={
+                  onDownload
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        onDownload();
+                      }
+                    : undefined
+                }
+                onEdit={
+                  onEdit
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        onEdit();
+                      }
+                    : undefined
+                }
+                onNameChange={
+                  onNameChange
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        handleEdit();
+                      }
+                    : undefined
+                }
+                onRemove={
+                  onRemove
+                    ? () => {
+                        setTimeout(() => setMenuOpen(false), 200);
+                        if (!removeDisabled && onRemove) onRemove();
+                      }
+                    : undefined
+                }
+                removeDisabled={removeDisabled}
+                handleEdit={handleEdit}
+              />
+            </Menu>
+          </div>
+        )}
     </li>
   );
 }

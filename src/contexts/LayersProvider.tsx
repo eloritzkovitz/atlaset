@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { useTrips } from "@contexts/TripsContext";
 import {
   layersService,
   useLayerManager,
-  useSyncVisitedCountriesLayer,
   type AnyLayer,
 } from "@features/atlas/layers";
 import { logUserActivity, useAuth } from "@features/user";
@@ -19,8 +17,7 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Trips context for syncing visited countries layer
-  const { trips } = useTrips();
+  // Auth state for loading layers
   const { user, ready } = useAuth();
 
   // Main layers state, loaded from service
@@ -58,9 +55,10 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     importLayers: _importLayers,
     addLayer,
     editLayer,
-    removeLayer,
+    updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
+    removeLayer,
     openAddLayer,
     openEditLayer,
     saveLayer,
@@ -71,9 +69,6 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
       await layersService.save(updatedLayers);
     },
   });
-
-  // Sync visited countries layer with trips
-  useSyncVisitedCountriesLayer(trips, layers, setLayers, loading);
 
   // Import layers from JSON
   async function importLayers(newLayers: AnyLayer[]) {
@@ -102,9 +97,10 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
         importLayers,
         addLayer,
         editLayer,
-        removeLayer,
+        updateLayerName,        
         reorderLayers,
         toggleLayerVisibility,
+        removeLayer,
         loading,
         error,
         editingLayer,

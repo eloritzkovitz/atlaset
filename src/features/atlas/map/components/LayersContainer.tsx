@@ -39,19 +39,23 @@ export function LayersContainer({
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const { isEdit, isReadonly } = useMapView();
-  const { timelineMode } = useTimeline();  
+  const { timelineMode } = useTimeline();
 
   // Home country for coloring
   const { homeCountry } = useHomeCountry();
-  const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
-  const { HOME_COUNTRY_COLOR, UPCOMING_VISIT_COUNTRY_COLOR } =
-    useCountryColors();
-  const { upcomingCountryCodes } = useVisitedCountries();
+  const { colorHomeCountry, colorVisitedCountries, colorUpcomingVisits } =
+    useLayerColors();
+  const {
+    HOME_COUNTRY_COLOR,
+    VISITED_COUNTRY_COLOR,
+    UPCOMING_VISIT_COUNTRY_COLOR,
+  } = useCountryColors();
+  const { visitedCountryCodes, upcomingCountryCodes } = useVisitedCountries();
 
   // Group layer items by isoCode for stacking/blending
   const layerGroups = useMemo(
     () => groupLayerItemsByIsoCode(layerItems),
-    [layerItems]
+    [layerItems],
   );
 
   return (
@@ -59,7 +63,7 @@ export function LayersContainer({
       <Geographies geography={geographyData}>
         {({ geographies }: { geographies: GeographyFeature[] }) =>
           geographies.map((geo) => {
-            const isoA2 = getCountryIsoCode(geo.properties);            
+            const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
 
             // Home country coloring logic
@@ -70,6 +74,15 @@ export function LayersContainer({
               colorHomeCountry &&
               homeCountry &&
               isoA2 === homeCountry.toUpperCase();
+
+            // Visited country coloring logic
+            const isVisitedCountry =
+              !isReadonly &&
+              !isEdit &&
+              !timelineMode &&
+              colorVisitedCountries &&
+              visitedCountryCodes &&
+              visitedCountryCodes.includes(isoA2);
 
             // Upcoming visit coloring logic
             const isUpcomingVisitCountry =
@@ -90,7 +103,7 @@ export function LayersContainer({
             const layers = layerGroups[isoA2] || [];
             const blendedFill = getBlendedLayerColor(
               layers,
-              geographyStyle.default.fill
+              geographyStyle.default.fill,
             );
 
             // Style: highlight takes precedence, then blended layers, then base
@@ -107,6 +120,11 @@ export function LayersContainer({
               style = {
                 ...geographyStyle.default,
                 fill: UPCOMING_VISIT_COUNTRY_COLOR,
+              };
+            } else if (isVisitedCountry) {
+              style = {
+                ...geographyStyle.default,
+                fill: VISITED_COUNTRY_COLOR,
               };
             } else if (blendedFill) {
               style = { ...geographyStyle.default, fill: blendedFill };

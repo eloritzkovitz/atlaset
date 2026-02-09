@@ -65,12 +65,14 @@ export function useMarkerManager({
     await persistMarkers(updated);
   }
 
-  // Remove marker
-  async function removeMarker(id: string) {
-    const updated = markers.filter((m) => m.id !== id);
+  // Rename marker
+  async function updateMarkerName(id: string, newName: string) {
+    const updated = markers.map((m) =>
+      m.id === id ? { ...m, name: newName } : m,
+    );
     setMarkers(updated);
     await persistMarkers(updated);
-  }
+  }  
 
   // Toggle marker visibility
   async function toggleMarkerVisibility(id: string) {
@@ -85,6 +87,13 @@ export function useMarkerManager({
   async function reorderMarkers(newOrder: Marker[]) {
     setMarkers(newOrder);
     await persistMarkers(newOrder);
+  }
+
+  // Remove marker
+  async function removeMarker(id: string) {
+    const updated = markers.filter((m) => m.id !== id);
+    setMarkers(updated);
+    await persistMarkers(updated);
   }
 
   // Open add marker modal
@@ -133,9 +142,10 @@ export function useMarkerManager({
     isMarkerModalOpen,
     addMarker,
     editMarker,
-    removeMarker,
+    updateMarkerName,
     toggleMarkerVisibility,
     reorderMarkers,
+    removeMarker,
     openAddMarker,
     openEditMarker,
     saveMarker,

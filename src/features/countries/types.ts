@@ -1,3 +1,4 @@
+import type { VisitedStatus } from "@features/visits";
 import type { FilterConfig } from "@types";
 
 /** Represents a country with various attributes. */
@@ -55,6 +56,7 @@ export type CountryFilterKey =
   | "region"
   | "subregion"
   | "sovereignty"
+  | "visited"
   | "layer";
 
 /** Configuration for country filters. */
@@ -70,5 +72,6 @@ export type CountryFilterOptions = {
   selectedRegion?: string;
   selectedSubregion?: string;
   selectedSovereignty?: SovereigntyType | "";
+  selectedVisited?: VisitedStatus;
   layerCountries?: string[];
 };

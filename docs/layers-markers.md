@@ -6,6 +6,8 @@ Atlaset lets you customize your map with `layers` (highlighting groups of `count
 
 `Countries` are stored in `layers` by their `ISO 3166-1 code`, the values of which you can find [here](https://en.wikipedia.org/wiki/List_of_ISO_3166_country_codes).
 
+You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L</kbd> key.
+
 **Layer colors** use `RGBA` or `8-digit hex` color formats to support optional alpha transparency. You can find the correct value by using [this tool](https://rgbacolorpicker.com/).
 
 #### Layer JSON Fields
@@ -49,28 +51,28 @@ Atlaset lets you customize your map with `layers` (highlighting groups of `count
 - Fill the `countries` array with `ISO 3166-1 codes` for the relevant countries.
 - You can also change the layer's color by changing the `RGBA` value.
 
-### **Visited Countries Layer**
-
-Atlaset automatically creates and manages a special `layer` for `visited countries` based on your `trip data`.
-
-- Changes to your `trips` will be synchronized with this layer accordingly.
-- This layer **cannot be edited or deleted**, but can be hidden by toggling its visibility off, as well as reordered.
-
-> **Tip:**
-> To change the color of the `visited countries` layer, in the map toolbar's `Settings`, look for `Color Palettes` and select or customize your preferred palette. The layer will use the second value in the palette.
-
 ## **Markers**
 
 `Markers` are custom points you can add to your map. `Markers` are placed on the map by clicking on a location.
-Each `marker` can have:
 
-- `name (optional)`: Display name
-- `coordinates`: `[longitude, latitude]` (as numbers)
-- `color (optional)`: Marker color (`hex`)
-- `description (optional)`: Additional information
+You can open the `markers panel` from the `map toolbar` or by pressing the <kbd>M</kbd> key.
+
+#### Marker JSON Fields
+
+| Field         | Type              | Description                                                         |
+| ------------- | ----------------- | ------------------------------------------------------------------- |
+| `id`          | `string`          | Unique identifier for the marker (_optional_, generated if missing) |
+| `name`        | `string`          | Display name for the mmearker (_optional_)                          |
+| `coordinates` | `[number,number]` | Longitude and latitude as numbers (e.g., `[34.8, 32.1]`)            |
+| `color`       | `string`          | Marker color in hex or RGBA format (_optional_)                     |
+| `description` | `string`          | Additional information about the marker (_optional_)                |
+
+### **Adding Markers**
+
+Markers can be added and managed the same way as layers, but with their own respective fields (if importing from JSON).
 
 ## **Importing/Exporting Map Data**
 
-- `Layers` can be easily imported from and exported to `JSON` files.
-- Use this to back up your `layers` or share them with others.
+- `Layers` and `markers` can be easily imported from and exported to `JSON` files.
+- Use this to back up your data or share it with others.
 - You can also download the entire `map data` through the `Export` panel, `"Download as JSON"`.

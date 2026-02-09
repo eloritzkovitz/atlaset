@@ -7,7 +7,6 @@ import {
   UIHintContainer,
 } from "@components";
 import { useSettings } from "@contexts/SettingsContext";
-import { SavedMapsProvider } from "@contexts/SavedMapsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
@@ -38,7 +37,6 @@ function App() {
 
   return (
     <TripsProvider>
-      <SavedMapsProvider>
         <UIProvider>
           <UIHintProvider>
             <UIHintContainer />
@@ -145,7 +143,6 @@ function App() {
             </Routes>
           </UIHintProvider>
         </UIProvider>
-      </SavedMapsProvider>
     </TripsProvider>
   );
 }

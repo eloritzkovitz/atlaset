@@ -1,4 +1,3 @@
-import { VISITED_LAYER_ID } from "@features/atlas/layers/constants/layers";
 import { mockCountries } from "@test-utils/mockCountries";
 import type { Country, SovereigntyType } from "../types";
 import {
@@ -13,7 +12,6 @@ import {
   getRandomCountry,
   getLanguagesDisplay,
   getSovereigntyInfoForTerritory,
-  getVisitedCountries,
 } from "./countryData";
 
 // Mock constants
@@ -124,8 +122,8 @@ describe("countryData utils", () => {
       const region = "Americas";
       const expected = Array.from(
         new Set(
-          countries.filter((c) => c.region === region).map((c) => c.subregion)
-        )
+          countries.filter((c) => c.region === region).map((c) => c.subregion),
+        ),
       )
         .filter(Boolean)
         .sort();
@@ -138,7 +136,7 @@ describe("countryData utils", () => {
         { region: "Americas", subregion: "Caribbean" },
       ] as Partial<Country>[];
       expect(
-        getSubregionsForRegion(testCountries as Country[], "Europe")
+        getSubregionsForRegion(testCountries as Country[], "Europe"),
       ).toEqual(["Western Europe"]);
     });
   });
@@ -197,7 +195,7 @@ describe("countryData utils", () => {
         { region: "Americas", subregion: "Caribbean" },
       ] as Partial<Country>[];
       expect(
-        getSubregionsForRegion(testCountries as Country[], "Europe")
+        getSubregionsForRegion(testCountries as Country[], "Europe"),
       ).toEqual(["Alpha", "Mike", "Zulu"]);
     });
   });
@@ -225,56 +223,12 @@ describe("countryData utils", () => {
   describe("getLanguagesDisplay", () => {
     it("returns comma-separated string", () => {
       expect(getLanguagesDisplay(["English", "French"])).toBe(
-        "English, French"
+        "English, French",
       );
     });
     it("returns 'None' for empty or undefined", () => {
       expect(getLanguagesDisplay([])).toBe("None");
       expect(getLanguagesDisplay(undefined)).toBe("None");
-    });
-  });
-
-  describe("getVisitedCountries", () => {
-    const countries = [
-      { isoCode: "US", name: "United States" },
-      { isoCode: "FR", name: "France" },
-      { isoCode: "DE", name: "Germany" },
-    ];
-
-    it("returns only countries whose isoCode is in the visited layer", () => {
-      const layers = [
-        { id: VISITED_LAYER_ID, countries: ["US", "DE"] },
-        { id: "other-layer", countries: ["FR"] },
-      ];
-      const result = getVisitedCountries(countries as any, layers as any);
-      expect(result).toEqual([
-        { isoCode: "US", name: "United States" },
-        { isoCode: "DE", name: "Germany" },
-      ]);
-    });
-
-    it("returns an empty array if no visited layer is present", () => {
-      const layers = [{ id: "other-layer", countries: ["FR"] }];
-      const result = getVisitedCountries(countries as any, layers as any);
-      expect(result).toEqual([]);
-    });
-
-    it("returns an empty array if visited layer has no countries", () => {
-      const layers = [{ id: VISITED_LAYER_ID, countries: [] }];
-      const result = getVisitedCountries(countries as any, layers as any);
-      expect(result).toEqual([]);
-    });
-
-    it("returns an empty array if layers is empty", () => {
-      const layers: any[] = [];
-      const result = getVisitedCountries(countries as any, layers);
-      expect(result).toEqual([]);
-    });
-
-    it("returns an empty array if countries is empty", () => {
-      const layers = [{ id: VISITED_LAYER_ID, countries: ["US"] }];
-      const result = getVisitedCountries([], layers as any);
-      expect(result).toEqual([]);
     });
   });
 });

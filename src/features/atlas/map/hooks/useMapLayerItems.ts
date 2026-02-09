@@ -1,6 +1,8 @@
+import { useMemo } from "react";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { useCountryColors } from "@features/settings";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
 import {
@@ -8,61 +10,65 @@ import {
   useLayerItems,
   useTimelineLayerItems,
   getLayerItems,
+  normalizeLayers,
+  type TimelineLayer,
 } from "@features/atlas/layers";
+import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import type { MapMode } from "../types";
-import { useMemo } from "react";
 
 /**
  * Returns map layer items based on map mode.
  * @param mode Current map mode.
  * @returns Array of layer items based on the current mode.
  */
-export function useMapLayerItems(mode: MapMode = "normal") {
+export function useMapLayerItems(mode: MapMode = "view") {
   const { layers } = useLayers();
   const { isEdit } = useMapView();
-  const { editingSavedMap } = useSavedMaps();
+  const { activeSavedMap } = useSavedMaps();
   const { layers: sharedLayers } = useSharedMapInfo();
-  const { timelineMode, selectedYear, layerMode } = useTimeline();
-  const timelineLayers = layers.filter(isTimelineLayer);
+  const { timelineMode, selectedYear, colorMode } = useTimeline();
+
+  // Timeline mode: add virtual visited countries layer
+  const { visitedCountryCodes } = useVisitedCountries();
+  const { VISITED_COUNTRY_COLOR } = useCountryColors();
+
+  const virtualVisitedLayer: TimelineLayer = {
+    id: "timeline-visited",
+    name: "Visited",
+    color: VISITED_COUNTRY_COLOR,
+    countries: visitedCountryCodes,
+    visible: true,
+    timelineEnabled: true,
+  };
+
+  // Combine virtual visited layer with actual timeline layers
+  const timelineLayers: TimelineLayer[] = [
+    virtualVisitedLayer,
+    ...layers.filter(isTimelineLayer),
+  ];
 
   // Get static and timeline layer items
   const staticItems = useLayerItems(layers);
   const timelineItems = useTimelineLayerItems(
     timelineLayers,
     selectedYear,
-    layerMode,
+    colorMode,
   );
 
   // Editing saved map layer items
   const editingItems = useMemo(
     () =>
-      isEdit && editingSavedMap && Array.isArray(editingSavedMap.layers)
-        ? editingSavedMap.layers.flatMap(getLayerItems)
+      isEdit && activeSavedMap && Array.isArray(activeSavedMap.layers)
+        ? activeSavedMap.layers.flatMap(getLayerItems)
         : [],
-    [isEdit, editingSavedMap],
+    [isEdit, activeSavedMap],
   );
 
   // Shared layer items
-  const sharedLayerItems = useMemo(
-    () =>
-      sharedLayers
-        ? sharedLayers.flatMap((layer, idx) =>
-            getLayerItems({
-              ...layer,
-              id:
-                typeof layer.id === "string" ? layer.id : `shared-layer-${idx}`,
-              visible:
-                typeof layer.visible === "boolean" ? layer.visible : true,
-              countries: Array.isArray(layer.countries)
-                ? layer.countries
-                : layer.countries != null
-                  ? [layer.countries]
-                  : [],
-            }),
-          )
-        : [],
-    [sharedLayers],
-  );
+  const sharedLayerItems = useMemo(() => {
+    const normalized = normalizeLayers(sharedLayers) ?? [];
+    return normalized.flatMap(getLayerItems);
+  }, [sharedLayers]);
 
   // Select result conditionally
   if (mode === "edit") {

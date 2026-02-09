@@ -15,7 +15,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   // Map mode state
-  const [mapMode, setMapMode] = useState<MapMode>("normal");
+  const [mapMode, setMapMode] = useState<MapMode>("view");
   const isReadonly = mapMode === "readonly";
   const isEdit = mapMode === "edit";
   

@@ -1,9 +1,7 @@
 /**
  * Utilities for layer rendering.
  */
-
 import { blendColors } from "@utils/color";
-import { VISITED_LAYER_ID } from "../constants/layers";
 import type { Layer, LayerItem } from "../types";
 
 /**
@@ -42,13 +40,9 @@ export function groupLayerItemsByIsoCode(layerItems: LayerItem[] = []) {
  */
 export function getBlendedLayerColor(
   layerItems: LayerItem[] = [],
-  fallbackColor?: string
+  fallbackColor?: string,
 ) {
-  // Prioritize visited-countries layer
-  const visited = layerItems.find(o => o.layerId === VISITED_LAYER_ID);
-  if (visited) return visited.color;
-
-  // Otherwise, blend or pick the top-most layer
+  // Blend or pick the top-most layer
   const layerColors = layerItems
     .map((o) => o.color)
     .filter((c): c is string => typeof c === "string" && c.length > 0);

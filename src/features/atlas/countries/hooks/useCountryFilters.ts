@@ -17,8 +17,15 @@ import {
   type CountryFilterOptions,
   type SovereigntyType,
 } from "@features/countries";
-import { getLatestYear, getVisitCountStats } from "@features/visits";
-import { filterByVisitCount } from "@features/visits/utils/visitFilters";
+import {
+  getLatestYear,
+  getVisitCountStats,
+  type VisitedStatus,
+} from "@features/visits";
+import {
+  filterByVisitCount,
+  filterByVisitStatus,
+} from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks";
 
 /**
@@ -60,6 +67,7 @@ export function useCountryFilters() {
   const [selectedSovereignty, setSelectedSovereignty] = useState<
     SovereigntyType | ""
   >("");
+  const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
@@ -80,30 +88,6 @@ export function useCountryFilters() {
     [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty],
   );
 
-  // With layers applied
-  const filteredIsoCodes = useMemo(
-    () => getFilteredIsoCodes(countries, layers, layerSelections),
-    [countries, layers, layerSelections],
-  );
-  const filteredCountries = useMemo(
-    () =>
-      filterCountries(countries, {
-        ...(filterParams ?? {}),
-        layerCountries: filteredIsoCodes,
-      }),
-    [countries, filterParams, filteredIsoCodes],
-  );
-
-  // Without layers for counts
-  const filteredCountriesNoLayer = useMemo(
-    () =>
-      filterCountries(countries, {
-        ...(filterParams ?? {}),
-        layerCountries: undefined,
-      }),
-    [countries, filterParams],
-  );
-
   // Counts and visit map
   const {
     map: visitedMap,
@@ -116,6 +100,34 @@ export function useCountryFilters() {
     isReadonly && effectiveSharedVisitedIsoCodes
       ? effectiveSharedVisitedIsoCodes
       : Object.keys(visitedMap);
+
+  // With layers applied, including visited filter
+  const filteredIsoCodes = useMemo(
+    () => getFilteredIsoCodes(countries, layers, layerSelections),
+    [countries, layers, layerSelections],
+  );
+  const filteredCountries = useMemo(() => {
+    const base = filterCountries(countries, {
+      ...(filterParams ?? {}),
+      layerCountries: filteredIsoCodes,
+    });
+    return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
+  }, [
+    countries,
+    filterParams,
+    filteredIsoCodes,
+    selectedVisited,
+    visitedIsoCodes,
+  ]);
+
+  // Without layers for counts, including visited filter
+  const filteredCountriesNoLayer = useMemo(() => {
+    const base = filterCountries(countries, {
+      ...(filterParams ?? {}),
+      layerCountries: undefined,
+    });
+    return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
+  }, [countries, filterParams, selectedVisited, visitedIsoCodes]);
 
   // Country counts
   const { allCount, allCountWithoutLayers, sovereignCount, visitedCount } =
@@ -163,6 +175,7 @@ export function useCountryFilters() {
     setSelectedRegion("");
     setSelectedSubregion("");
     setSelectedSovereignty("");
+    setSelectedVisited("any");
   }
 
   // Reset timeline-related filters
@@ -193,6 +206,8 @@ export function useCountryFilters() {
     setSelectedSubregion,
     selectedSovereignty,
     setSelectedSovereignty,
+    selectedVisited,
+    setSelectedVisited,
     search,
     setSearch,
     debouncedSearch,

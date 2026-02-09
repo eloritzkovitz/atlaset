@@ -10,7 +10,6 @@ export { useEffectiveLayers } from "./hooks/useEffectiveLayers";
 export { useLayerItems } from "./hooks/useLayerItems";
 export { useLayerManager } from "./hooks/useLayerManager";
 export { useTimelineLayerItems } from "./hooks/useTimelineLayerItems";
-export { useSyncVisitedCountriesLayer } from "./hooks/useSyncVisitedCountriesLayer";
 
 // Services
 export { layersService } from "./services/layersService";

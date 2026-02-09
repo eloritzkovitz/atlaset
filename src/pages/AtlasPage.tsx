@@ -1,41 +1,29 @@
-import { useEffect, useRef } from "react";
-import { AtlasShortcuts } from "@features/atlas/ui/components/AtlasShortcuts";
+import { useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
+import { useMapView } from "@contexts/MapViewContext";
 import { useCountrySelection } from "@features/atlas/countries";
-import { WorldMap, useGeoData } from "@features/atlas/map";
+import { WorldMap, useGeoData, useMapMode } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
+import { AtlasShortcuts } from "@features/atlas/ui/components/AtlasShortcuts";
 import { useCountryData } from "@features/countries";
 import { usePageTitle } from "@hooks";
-import { useMapView } from "@contexts/MapViewContext";
 
 export default function AtlasPage() {
   const location = useLocation();
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { loading: layersLoading } = useLayers();
-  const { setMapMode, mapReady, handleMapReady } = useMapView();
+  const { mapReady, handleMapReady } = useMapView();
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Set page title
   usePageTitle("Atlaset");
 
-  // Determine map mode based on URL params
-  const params = new URLSearchParams(location.search);
-  const isReadonly = params.has("map") && !params.has("edit");
-  const isEmbed = params.has("embed");
-  const isEdit = params.get("edit") === "true" || params.has("edit");
-
   // Set map mode based on URL params
-  useEffect(() => {
-    if (isEdit) {
-      setMapMode("edit");
-    } else {
-      setMapMode(isReadonly || isEmbed ? "readonly" : "normal");
-    }
-  }, [isReadonly, isEmbed, isEdit, setMapMode]);
+  useMapMode();
 
   // Country selection state
   const {
@@ -53,6 +41,8 @@ export default function AtlasPage() {
   const { isAddingMarker } = useMarkerCreation();
 
   // Derived state
+  const params = new URLSearchParams(location.search);
+  const isEmbed = params.has("embed");
   const isLoading =
     countriesLoading || layersLoading || geoLoading || !mapReady;
   if (error || geoError) {

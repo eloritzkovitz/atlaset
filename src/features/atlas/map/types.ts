@@ -32,8 +32,10 @@ export interface ProjectionConfig {
 }
 
 /** Represents a geographical feature with additional SVG path and key properties. */
-export interface GeographyFeature
-  extends Feature<Geometry, Record<string, unknown>> {
+export interface GeographyFeature extends Feature<
+  Geometry,
+  Record<string, unknown>
+> {
   svgPath: string;
   rsmKey: string;
 }
@@ -51,4 +53,7 @@ export type ZoomEvent = {
 };
 
 /** Represents the current mode of the map. */
-export type MapMode = "normal" | "readonly" | "edit";
+export type MapMode = "view" | "readonly" | "edit" | "timeline";
+
+/** Modes for coloring countries on the map. */
+export type ColorMode = "standard" | "cumulative" | "yearly";

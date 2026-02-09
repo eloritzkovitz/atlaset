@@ -1,6 +1,7 @@
 import { useUI } from "@contexts/UIContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useKeyHandler } from "@hooks";
+import { isAuthenticated } from "@utils/firebase";
 
 /**
  * AtlasShortcuts: Handles keyboard shortcuts specific to the Atlas page/UI.
@@ -14,9 +15,13 @@ export function AtlasShortcuts() {
     toggleLegend,
     toggleLayers,
     toggleMarkers,
+    toggleSaved,
     toggleSettings,
   } = useUI();
   const { isReadonly, isEdit } = useMapView();
+
+  // Toggle Saved Maps panel with "B"
+  useKeyHandler(toggleSaved, ["b", "B"], isAuthenticated());
 
   // Toggle Countries panel with "C"
   useKeyHandler(toggleCountries, ["c", "C"], true);

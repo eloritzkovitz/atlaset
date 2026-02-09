@@ -1,16 +1,24 @@
 import type { Country } from "@features/countries";
+import type { VisitedStatus } from "../types";
 
 /**
- * Filters countries to only those that have been visited.
+ * Filters countries by visited status.
  * @param countries - The list of countries to filter.
  * @param visitedIsoCodes - The list of visited country ISO codes.
- * @returns Filtered list of countries that have been visited.
+ * @param status - The visited status to filter by.
+ * @returns Filtered list of countries by visited status.
  */
-export function filterByVisited(
+export function filterByVisitStatus(
   countries: Country[],
-  visitedIsoCodes: string[]
+  visitedIsoCodes: string[],
+  status: VisitedStatus,
 ) {
-  return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));
+  if (status === "visited") {
+    return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));
+  } else if (status === "not_visited") {
+    return countries.filter((c) => !visitedIsoCodes.includes(c.isoCode));
+  }
+  return countries;
 }
 
 /**
@@ -25,7 +33,7 @@ export function filterByVisitCount(
   countries: Country[],
   visitedMap: Record<string, number>,
   min: number,
-  max?: number
+  max?: number,
 ) {
   return countries.filter((c) => {
     const count = visitedMap[c.isoCode] || 0;

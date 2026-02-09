@@ -2,8 +2,6 @@
  * @file Utility functions for handling country data.
  */
 
-import { VISITED_LAYER_ID } from "@features/atlas/layers/constants/layers";
-import type { Layer } from "../../atlas/layers/types";
 import { extractUniqueSorted } from "@utils/array";
 import { SOVEREIGN_DEPENDENCIES } from "../constants/sovereignDependencies";
 import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";
@@ -183,19 +181,4 @@ for (const [sovereignIso, sovereignObj] of Object.entries(
       sovereign: { name: sovereignObj.name, isoCode: sovereignIso },
     };
   });
-}
-
-/** Filters and returns the list of visited countries based on layers.
- * @param countries - Array of country objects.
- * @param layers - Array of layer objects containing visited countries data.
- * @returns Array of visited country objects.
- */
-export function getVisitedCountries(
-  countries: Country[],
-  layers: Layer[]
-): Country[] {
-  const visitedLayer = layers.find((o) => o.id === VISITED_LAYER_ID);
-  const visitedIsoCodes =
-    (visitedLayer as { countries?: string[] } | undefined)?.countries ?? [];
-  return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));
 }

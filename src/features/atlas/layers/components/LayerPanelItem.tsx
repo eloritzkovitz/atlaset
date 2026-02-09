@@ -1,5 +1,4 @@
 import { PanelListItem } from "@components";
-import { VISITED_LAYER_ID } from "../constants/layers";
 import type { Layer } from "../types";
 
 interface LayerPanelItemProps {
@@ -8,12 +7,11 @@ interface LayerPanelItemProps {
   onDragStart?: () => void;
   handleDragOver?: (e: React.DragEvent<HTMLLIElement>) => void;
   handleDragEnd?: () => void;
-  showEdit?: boolean;
+  onDownload?: () => void;
   onEdit?: (layer: Layer) => void;
+  onNameChange?: (newName: string) => void;
   onToggleVisibility?: (id: string) => void;
-  showRemove?: boolean;
   onRemove?: (id: string) => void;
-  showCenter?: boolean;
 }
 
 export function LayerPanelItem({
@@ -22,29 +20,24 @@ export function LayerPanelItem({
   onDragStart,
   handleDragOver,
   handleDragEnd,
-  showEdit,
+  onDownload,
   onEdit,
+  onNameChange,
   onToggleVisibility,
-  showRemove,
   onRemove,
 }: LayerPanelItemProps) {
-  const isVisited = layer.id === VISITED_LAYER_ID;
-
   return (
     <PanelListItem
       color={layer.color}
       name={layer.name}
       visible={layer.visible}
       onToggleVisibility={
-        showEdit !== false && onToggleVisibility
-          ? () => onToggleVisibility(layer.id)
-          : undefined
+        onToggleVisibility ? () => onToggleVisibility(layer.id) : undefined
       }
-      onEdit={showEdit !== false && onEdit ? () => onEdit(layer) : undefined}
-      onRemove={
-        showRemove !== false && onRemove ? () => onRemove(layer.id) : undefined
-      }
-      removeDisabled={isVisited}
+      onDownload={onDownload}
+      onEdit={onEdit ? () => onEdit(layer) : undefined}
+      onNameChange={onNameChange}      
+      onRemove={onRemove ? () => onRemove(layer.id) : undefined}
       dragged={dragged}
       onDragStart={onDragStart}
       handleDragOver={handleDragOver}

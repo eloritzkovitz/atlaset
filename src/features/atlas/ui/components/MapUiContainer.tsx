@@ -31,12 +31,12 @@ export function MapUiContainer({
   const effectiveLayers = useEffectiveLayers();
   const { isReadonly, isEdit, zoom, setZoom, center, selectedCoords } =
     useMapView();
-  const { timelineMode, layerMode } = useTimeline();
+  const { timelineMode, colorMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     effectiveLayers,
     timelineMode,
-    layerMode,
+    colorMode,
   );
 
   // UI hint for adding marker
@@ -65,8 +65,8 @@ export function MapUiContainer({
 
   // UI hint for shared/saved maps
   const sharedMapInfo = useSharedMapInfo() || {};
-  const { editingSavedMap } = useSavedMaps();
-  const mapName = editingSavedMap?.name || sharedMapInfo.mapName;
+  const { activeSavedMap } = useSavedMaps();
+  const mapName = activeSavedMap?.name || sharedMapInfo.mapName;
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
     if ((!isReadonly && !isEdit) || isEmbed) return null;

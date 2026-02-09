@@ -1,6 +1,7 @@
 import { MAP_BG_COLOR, COLOR_PALETTES } from "@constants/colors";
 import { useMapView } from "@contexts/MapViewContext";
-import type { Layer, LayerMode } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
 import { useLayerColors } from "@features/settings/hooks/useLayerColors";
 import type { LegendItem } from "../types";
@@ -9,16 +10,16 @@ import type { LegendItem } from "../types";
  * Generates legend items for the map based on current layers and modes
  * @param layers - Array of current layers
  * @param timelineMode - Whether timeline mode is active
- * @param layerMode - Current layer mode ("cumulative" or "yearly")
+ * @param colorMode - Current color mode ("cumulative" or "yearly")
  * @returns Array of legend items for the map
  */
 export function useMapLegendItems(
   layers: Layer[],
   timelineMode: boolean,
-  layerMode: LayerMode,
+  colorMode: ColorMode,
 ): LegendItem[] {
   // Get dynamic color roles for the current mode
-  const colorRoles = useVisitColorRoles(layerMode);
+  const colorRoles = useVisitColorRoles(colorMode);
   const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
   const { isReadonly, isEdit } = useMapView();
 
@@ -81,5 +82,5 @@ export function useMapLegendItems(
 
   // Return appropriate legend items based on mode
   if (!timelineMode) return layerLegendItems;
-  return layerMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
+  return colorMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
 }

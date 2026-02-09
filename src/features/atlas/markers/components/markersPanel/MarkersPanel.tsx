@@ -1,23 +1,35 @@
-import { FaMapPin, FaPlus, FaXmark } from "react-icons/fa6";
+import { useRef } from "react";
+import {
+  FaFileImport,
+  FaFileExport,
+  FaMapPin,
+  FaPlus,
+  FaXmark,
+} from "react-icons/fa6";
 import { ActionButton, Panel } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
-import { useMarkers } from "@contexts/MarkersContext";
 import { useMapView } from "@contexts/MapViewContext";
-import { useEffectiveMarkers } from "@features/atlas/markers/hooks/useEffectiveMarkers";
+import { useMarkers } from "@contexts/MarkersContext";
 import { useUI } from "@contexts/UIContext";
+import { useEffectiveMarkers } from "@features/atlas/markers";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
 import type { Marker } from "../../types";
+import {
+  exportMarkersToFile,
+  importMarkersFromFile,
+} from "../../utils/markerIO";
 
 interface MarkersPanelProps {
   onAddMarker: () => void;
   onEditMarker: (marker: Marker) => void;
   onMarkerDetails?: (marker: Marker) => void;
-  editingSavedMapMarkers?: Marker[];
+  activeSavedMapMarkers?: Marker[];
   handleSavedMapChange?: {
-    removeMarker: (id: string) => void;
+    updateMarkerName: (id: string, newName: string) => void;
     toggleMarkerVisibility: (id: string) => void;
     reorderMarkers: (markers: Marker[]) => void;
+    removeMarker: (id: string) => void;
   };
 }
 
@@ -25,22 +37,24 @@ export function MarkersPanel({
   onAddMarker,
   onEditMarker,
   onMarkerDetails,
-  editingSavedMapMarkers,
+  activeSavedMapMarkers,
   handleSavedMapChange,
 }: MarkersPanelProps) {
-  const { setCenter, setZoom } = useMapView();
-  const { removeMarker, toggleMarkerVisibility, reorderMarkers } = useMarkers();
+  const { setCenter, setZoom, isReadonly } = useMapView();
+  const {
+    removeMarker,
+    toggleMarkerVisibility,
+    reorderMarkers,
+    updateMarkerName,
+  } = useMarkers();
   const { showMarkers, closePanel } = useUI();
   const effectiveMarkersFromContext = useEffectiveMarkers();
-  const effectiveMarkers =
-    editingSavedMapMarkers ?? effectiveMarkersFromContext;
-  const isEditingSavedMap = !!editingSavedMapMarkers && !!handleSavedMapChange;
-
-  const { isReadonly } = useMapView();
+  const effectiveMarkers = activeSavedMapMarkers ?? effectiveMarkersFromContext;
+  const isEditingSavedMap = !!activeSavedMapMarkers && !!handleSavedMapChange;
 
   // Drag state
   const dragMarkers = isEditingSavedMap
-    ? editingSavedMapMarkers!
+    ? activeSavedMapMarkers!
     : effectiveMarkers;
   const dragReorder = isEditingSavedMap
     ? handleSavedMapChange?.reorderMarkers
@@ -66,6 +80,8 @@ export function MarkersPanel({
     }
   };
 
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   return (
     <>
       <Panel
@@ -81,13 +97,43 @@ export function MarkersPanel({
         headerActions={
           <>
             {!isReadonly && (
-              <ActionButton
-                onClick={onAddMarker}
-                ariaLabel="Add Marker"
-                title="Add Marker"
-                icon={<FaPlus />}
-                rounded
-              />
+              <>
+                <ActionButton
+                  onClick={onAddMarker}
+                  ariaLabel="Add Marker"
+                  title="Add Marker"
+                  icon={<FaPlus />}
+                  rounded
+                />
+                <ActionButton
+                  onClick={() => fileInputRef.current?.click()}
+                  ariaLabel="Import Markers"
+                  title="Import Markers"
+                  icon={<FaFileImport />}
+                  rounded
+                />
+                <input
+                  type="file"
+                  accept="application/json"
+                  ref={fileInputRef}
+                  onChange={(e) =>
+                    importMarkersFromFile(
+                      e,
+                      isEditingSavedMap && handleSavedMapChange
+                        ? handleSavedMapChange.reorderMarkers
+                        : reorderMarkers,
+                    )
+                  }
+                  style={{ display: "none" }}
+                />
+                <ActionButton
+                  onClick={() => exportMarkersToFile(effectiveMarkers)}
+                  ariaLabel="Export Markers"
+                  title="Export Markers"
+                  icon={<FaFileExport />}
+                  rounded
+                />
+              </>
             )}
             <ActionButton
               onClick={closePanel}
@@ -100,7 +146,9 @@ export function MarkersPanel({
         }
       >
         {effectiveMarkers.length === 0 ? (
-          <div className="text-muted text-sm">No markers yet.</div>
+          <div className="mt-4 text-muted text-sm flex justify-center">
+            No markers yet.
+          </div>
         ) : (
           <div className="mt-4">
             <ul className="space-y-2">
@@ -120,7 +168,26 @@ export function MarkersPanel({
                         : () => toggleMarkerVisibility(marker.id)
                       : undefined
                   }
+                  onDownload={
+                    !isReadonly
+                      ? () => {
+                          exportMarkersToFile(marker);
+                        }
+                      : undefined
+                  }
                   onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
+                  onNameChange={
+                    !isReadonly
+                      ? isEditingSavedMap
+                        ? (newName: string) =>
+                            handleSavedMapChange?.updateMarkerName(
+                              marker.id,
+                              newName,
+                            )
+                        : (newName: string) =>
+                            updateMarkerName(marker.id, newName)
+                      : undefined
+                  }
                   onRemove={
                     !isReadonly
                       ? isEditingSavedMap

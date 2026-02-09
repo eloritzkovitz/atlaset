@@ -1,6 +1,7 @@
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { useCountryData, type SovereigntyType } from "@features/countries";
+import type { VisitedStatus } from "@features/visits";
 import { coreFiltersConfig } from "../../config/filtersConfig";
 
 interface CoreFiltersProps {
@@ -12,6 +13,8 @@ interface CoreFiltersProps {
   setSelectedSubregion: (subregion: string) => void;
   selectedSovereignty: SovereigntyType | "";
   setSelectedSovereignty: (type: SovereigntyType | "") => void;
+  selectedVisited: VisitedStatus;
+  setSelectedVisited: (visited: VisitedStatus) => void;
   subregionOptions: string[];
   sovereigntyOptions: string[];
 }
@@ -25,6 +28,8 @@ export function CoreFilters({
   setSelectedSubregion,
   selectedSovereignty,
   setSelectedSovereignty,
+  selectedVisited,
+  setSelectedVisited,
   subregionOptions,
   sovereigntyOptions,
 }: CoreFiltersProps) {
@@ -53,8 +58,12 @@ export function CoreFilters({
             value = selectedSovereignty;
             setValue = setSelectedSovereignty;
             options = filter.getOptions(sovereigntyOptions);
+          } else if (filter.key === "visited") {
+            value = selectedVisited;
+            setValue = setSelectedVisited;
+            options = filter.getOptions();
           }
-          // If value is '', set to 'all' so SelectInput selects the 'All' option
+          // For select filters, render a SelectInput
           const selectValue = value === "" ? "all" : value;
           return setValue ? (
             <SelectInput

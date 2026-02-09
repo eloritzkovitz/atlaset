@@ -5,7 +5,6 @@ import {
 } from "./layerRender";
 import { blendColors } from "@utils/color";
 import { mockLayers } from "@test-utils/mockLayers";
-import { VISITED_LAYER_ID } from "../constants/layers";
 
 vi.mock("@utils/color", () => ({
   blendColors: vi.fn(() => "#abcdef"),
@@ -54,18 +53,6 @@ describe("layerRender utils", () => {
   });
 
   describe("getBlendedLayerColor", () => {
-    it("returns visited-countries color if present", () => {
-      const layers = [
-        {
-          isoCode: "US",
-          color: "#123",
-          layerId: VISITED_LAYER_ID,
-        },
-        { isoCode: "US", color: "#456", layerId: "other" },
-      ];
-      expect(getBlendedLayerColor(layers, "#fff")).toBe("#123");
-    });
-
     it("returns fallback color if layers is empty", () => {
       expect(getBlendedLayerColor([], "#fff")).toBe("#fff");
       expect(getBlendedLayerColor(undefined, "#abc")).toBe("#abc");
@@ -76,7 +63,7 @@ describe("layerRender utils", () => {
       expect(getBlendedLayerColor(layers, "#fff")).toBe("#789");
     });
 
-    it("blends colors if multiple layers (excluding visited-countries)", () => {
+    it("blends colors if multiple layers", () => {
       const layers = [
         { isoCode: "US", color: "#111", layerId: "a" },
         { isoCode: "US", color: "#222", layerId: "b" },

@@ -16,7 +16,6 @@ import { ShareMapSection } from "./ShareMapSection";
 import { useExportData } from "../hooks/useExportData";
 import type {
   ExportFormat,
-  ExportMode,
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
@@ -30,7 +29,7 @@ export interface MapExportPanelProps {
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { user } = useAuth();
   const { isReadonly } = useMapView();
-  const { editingSavedMap } = useSavedMaps();
+  const { activeSavedMap } = useSavedMaps();
   const sharedMapInfo = useSharedMapInfo() || {};
   const { showExport, closePanel } = useUI();
   const { visitedCountryCodes } = useVisitedCountries();
@@ -38,9 +37,11 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const markers = useEffectiveMarkers();
 
   // Export options state
-  const [exportMode, setExportMode] = useState<ExportMode>("visited");
+  const [includeVisitedCountries, setIncludeVisitedCountries] = useState(true);
+  const [includeLayers, setIncludeLayers] = useState(true);
   const [includeMarkers, setIncludeMarkers] = useState(false);
   const [mapName, setMapName] = useState("");
+  const effectiveMapName = activeSavedMap?.name || mapName;
   const [sharer, setSharer] = useState("");
 
   // Collapsible headers state
@@ -58,25 +59,19 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   });
 
   // Prepare export data
-  const { layersToShare, markersToShare } = useExportData({
-    exportMode,
-    allLayers,
-    visitedCountryCodes,
-    includeMarkers,
-    markers,
-  });
+  const { visitedCountriesLayer, layersToShare, markersToShare } =
+    useExportData({
+      visitedCountryCodes: includeVisitedCountries ? visitedCountryCodes : [],
+      layers: includeLayers ? allLayers : [],
+      markers: includeMarkers ? markers : [],
+    });
 
-  // Prefill mapName with saved map name if available
+  // Prefill mapName with shared map info if available and no map is selected
   useEffect(() => {
-    if (!mapName) {
-      if (editingSavedMap?.name) {
-        setMapName(editingSavedMap.name);
-      } else if (sharedMapInfo.mapName) {
-        setMapName(sharedMapInfo.mapName);
-      }
+    if (!activeSavedMap && !mapName && sharedMapInfo.mapName) {
+      setMapName(sharedMapInfo.mapName);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editingSavedMap?.name, sharedMapInfo.mapName]);
+  }, [activeSavedMap, mapName, sharedMapInfo.mapName]);
 
   // Prefill sharer with authenticated user's displayName if available
   useEffect(() => {
@@ -88,8 +83,13 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
 
   // Encode map data into shareable code
   const code = encodeMapData({
-    layers: layersToShare,
-    mapName: mapName.trim() || undefined,
+    layers: [
+      ...(includeLayers ? layersToShare : []),
+      ...(includeVisitedCountries && visitedCountriesLayer.countries.length > 0
+        ? [visitedCountriesLayer]
+        : []),
+    ],
+    mapName: effectiveMapName.trim() || undefined,
     sharer: sharer.trim() || undefined,
     markers: markersToShare,
   });
@@ -116,11 +116,13 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     >
       <div>
         <ExportOptionsSection
-          exportMode={exportMode}
-          setExportMode={setExportMode}
+          includeVisitedCountries={includeVisitedCountries}
+          setIncludeVisitedCountries={setIncludeVisitedCountries}
+          includeLayers={includeLayers}
+          setIncludeLayers={setIncludeLayers}
           includeMarkers={includeMarkers}
           setIncludeMarkers={setIncludeMarkers}
-          mapName={mapName}
+          mapName={effectiveMapName}
           setMapName={setMapName}
           sharer={sharer}
           setSharer={setSharer}

@@ -10,8 +10,8 @@ import { ActionButton, Panel } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
-import { useDragReorder } from "@hooks";
 import { useEffectiveLayers } from "@features/atlas/layers";
+import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
 import type { Layer } from "../types";
 import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
@@ -20,10 +20,11 @@ interface LayersPanelProps {
   onEditLayer: (layer: Layer) => void;
   onAddLayer: () => void;
   layerModalOpen: boolean;
-  editingSavedMapLayers?: Layer[];
+  activeSavedMapLayers?: Layer[];
   handleSavedMapChange?: {
     addLayer: (layer: Layer) => void;
     importLayers: (layers: Layer[]) => void;
+    updateLayerName: (id: string, newName: string) => void;
     reorderLayers: (layers: Layer[]) => void;
     toggleLayerVisibility: (layerId: string) => void;
     removeLayer: (layerId: string) => void;
@@ -34,25 +35,26 @@ export function LayersPanel({
   onEditLayer,
   onAddLayer,
   layerModalOpen,
-  editingSavedMapLayers,
+  activeSavedMapLayers,
   handleSavedMapChange,
 }: LayersPanelProps) {
   const { showLayers, closePanel } = useUI();
   const {
     layers,
     importLayers,
+    updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
     removeLayer,
   } = useLayers();
   const effectiveLayersFromContext = useEffectiveLayers();
-  const effectiveLayers = editingSavedMapLayers ?? effectiveLayersFromContext;
-  const isEditingSavedMap = !!editingSavedMapLayers && !!handleSavedMapChange;
+  const effectiveLayers = activeSavedMapLayers ?? effectiveLayersFromContext;
+  const isEditingSavedMap = !!activeSavedMapLayers && !!handleSavedMapChange;
 
   const { isReadonly } = useMapView();
 
   // Drag state
-  const dragLayers = isEditingSavedMap ? editingSavedMapLayers! : layers;
+  const dragLayers = isEditingSavedMap ? activeSavedMapLayers! : layers;
   const dragReorder = isEditingSavedMap
     ? handleSavedMapChange?.reorderLayers
     : reorderLayers;
@@ -115,7 +117,7 @@ export function LayersPanel({
           />
           <ActionButton
             onClick={closePanel}
-            ariaLabel="Close Layer Manager"
+            ariaLabel="Close Layers Panel"
             title="Close"
             icon={<FaXmark className="text-2xl" />}
             rounded
@@ -124,39 +126,57 @@ export function LayersPanel({
       }
     >
       <div className="mt-4">
-        <ul className="list-none p-0">
-          {(effectiveLayers ?? []).map((layer, index) => (
-            <LayerPanelItem
-              key={layer.id}
-              layer={layer}
-              onToggleVisibility={
-                !isReadonly
-                  ? isEditingSavedMap
-                    ? handleSavedMapChange?.toggleLayerVisibility
-                    : toggleLayerVisibility
-                  : undefined
-              }
-              onEdit={!isReadonly ? onEditLayer : undefined}
-              onRemove={
-                !isReadonly
-                  ? isEditingSavedMap
-                    ? handleSavedMapChange?.removeLayer
-                    : removeLayer
-                  : undefined
-              }
-              dragged={draggedIndex === index}
-              onDragStart={
-                !isReadonly ? () => handleDragStart(index) : undefined
-              }
-              handleDragOver={
-                !isReadonly ? (e) => handleDragOver(e, index) : undefined
-              }
-              handleDragEnd={!isReadonly ? handleDragEnd : undefined}
-              showRemove={!isReadonly}
-              showCenter={false}
-            />
-          ))}
-        </ul>
+        {!effectiveLayers || effectiveLayers.length === 0 ? (
+          <div className="mt-4 text-muted text-sm flex justify-center">
+            No layers yet.
+          </div>
+        ) : (
+          <ul className="list-none p-0">
+            {effectiveLayers.map((layer, index) => (
+              <LayerPanelItem
+                key={layer.id}
+                layer={layer}
+                onToggleVisibility={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? handleSavedMapChange?.toggleLayerVisibility
+                      : toggleLayerVisibility
+                    : undefined
+                }
+                onDownload={
+                  !isReadonly ? () => exportLayersToFile(layer) : undefined
+                }
+                onEdit={!isReadonly ? onEditLayer : undefined}
+                onNameChange={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? (newName) =>
+                          handleSavedMapChange?.updateLayerName(
+                            layer.id,
+                            newName,
+                          )
+                      : (newName) => updateLayerName(layer.id, newName)
+                    : undefined
+                }
+                onRemove={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? handleSavedMapChange?.removeLayer
+                      : removeLayer
+                    : undefined
+                }
+                dragged={draggedIndex === index}
+                onDragStart={
+                  !isReadonly ? () => handleDragStart(index) : undefined
+                }
+                handleDragOver={
+                  !isReadonly ? (e) => handleDragOver(e, index) : undefined
+                }
+                handleDragEnd={!isReadonly ? handleDragEnd : undefined}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </Panel>
   );
