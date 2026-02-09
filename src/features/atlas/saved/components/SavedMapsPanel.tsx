@@ -8,11 +8,12 @@ import { SavedMapPanelItem } from "./SavedMapPanelItem";
 export function SavedMapsPanel() {
   const {
     savedMaps,
+    createNewMap,
     saveCurrentMap,
     viewSavedMap,
     isSavedMapModalOpen,
     openSavedMapModal,
-    deleteMap,
+    deleteSavedMap,
   } = useSavedMaps();
   const { isReadonly } = useMapView();
   const { showSaved, toggleSaved } = useUI();
@@ -40,7 +41,7 @@ export function SavedMapsPanel() {
             />
           ) : (
             <ActionButton
-              onClick={saveCurrentMap}
+              onClick={createNewMap}
               ariaLabel="Create new map"
               title="Create new map"
               icon={<FaPlus className="text-xl" />}
@@ -68,7 +69,7 @@ export function SavedMapsPanel() {
               map={map}
               onView={() => viewSavedMap(map)}
               onRename={() => openSavedMapModal(map)}
-              onRemove={deleteMap}
+              onRemove={() => deleteSavedMap(map.id)}
               showRemove={true}
             />
           ))}

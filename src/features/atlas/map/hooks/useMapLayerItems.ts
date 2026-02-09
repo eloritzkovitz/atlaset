@@ -24,7 +24,7 @@ import type { MapMode } from "../types";
 export function useMapLayerItems(mode: MapMode = "view") {
   const { layers } = useLayers();
   const { isEdit } = useMapView();
-  const { editingSavedMap } = useSavedMaps();
+  const { activeSavedMap } = useSavedMaps();
   const { layers: sharedLayers } = useSharedMapInfo();
   const { timelineMode, selectedYear, colorMode } = useTimeline();
 
@@ -58,10 +58,10 @@ export function useMapLayerItems(mode: MapMode = "view") {
   // Editing saved map layer items
   const editingItems = useMemo(
     () =>
-      isEdit && editingSavedMap && Array.isArray(editingSavedMap.layers)
-        ? editingSavedMap.layers.flatMap(getLayerItems)
+      isEdit && activeSavedMap && Array.isArray(activeSavedMap.layers)
+        ? activeSavedMap.layers.flatMap(getLayerItems)
         : [],
-    [isEdit, editingSavedMap],
+    [isEdit, activeSavedMap],
   );
 
   // Shared layer items

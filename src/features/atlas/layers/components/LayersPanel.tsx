@@ -20,7 +20,7 @@ interface LayersPanelProps {
   onEditLayer: (layer: Layer) => void;
   onAddLayer: () => void;
   layerModalOpen: boolean;
-  editingSavedMapLayers?: Layer[];
+  activeSavedMapLayers?: Layer[];
   handleSavedMapChange?: {
     addLayer: (layer: Layer) => void;
     importLayers: (layers: Layer[]) => void;
@@ -34,7 +34,7 @@ export function LayersPanel({
   onEditLayer,
   onAddLayer,
   layerModalOpen,
-  editingSavedMapLayers,
+  activeSavedMapLayers,
   handleSavedMapChange,
 }: LayersPanelProps) {
   const { showLayers, closePanel } = useUI();
@@ -46,13 +46,13 @@ export function LayersPanel({
     removeLayer,
   } = useLayers();
   const effectiveLayersFromContext = useEffectiveLayers();
-  const effectiveLayers = editingSavedMapLayers ?? effectiveLayersFromContext;
-  const isEditingSavedMap = !!editingSavedMapLayers && !!handleSavedMapChange;
+  const effectiveLayers = activeSavedMapLayers ?? effectiveLayersFromContext;
+  const isEditingSavedMap = !!activeSavedMapLayers && !!handleSavedMapChange;
 
   const { isReadonly } = useMapView();
 
   // Drag state
-  const dragLayers = isEditingSavedMap ? editingSavedMapLayers! : layers;
+  const dragLayers = isEditingSavedMap ? activeSavedMapLayers! : layers;
   const dragReorder = isEditingSavedMap
     ? handleSavedMapChange?.reorderLayers
     : reorderLayers;

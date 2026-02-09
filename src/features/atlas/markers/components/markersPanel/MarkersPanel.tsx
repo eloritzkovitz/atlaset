@@ -13,7 +13,7 @@ interface MarkersPanelProps {
   onAddMarker: () => void;
   onEditMarker: (marker: Marker) => void;
   onMarkerDetails?: (marker: Marker) => void;
-  editingSavedMapMarkers?: Marker[];
+  activeSavedMapMarkers?: Marker[];
   handleSavedMapChange?: {
     removeMarker: (id: string) => void;
     toggleMarkerVisibility: (id: string) => void;
@@ -25,7 +25,7 @@ export function MarkersPanel({
   onAddMarker,
   onEditMarker,
   onMarkerDetails,
-  editingSavedMapMarkers,
+  activeSavedMapMarkers,
   handleSavedMapChange,
 }: MarkersPanelProps) {
   const { setCenter, setZoom } = useMapView();
@@ -33,14 +33,14 @@ export function MarkersPanel({
   const { showMarkers, closePanel } = useUI();
   const effectiveMarkersFromContext = useEffectiveMarkers();
   const effectiveMarkers =
-    editingSavedMapMarkers ?? effectiveMarkersFromContext;
-  const isEditingSavedMap = !!editingSavedMapMarkers && !!handleSavedMapChange;
+    activeSavedMapMarkers ?? effectiveMarkersFromContext;
+  const isEditingSavedMap = !!activeSavedMapMarkers && !!handleSavedMapChange;
 
   const { isReadonly } = useMapView();
 
   // Drag state
   const dragMarkers = isEditingSavedMap
-    ? editingSavedMapMarkers!
+    ? activeSavedMapMarkers!
     : effectiveMarkers;
   const dragReorder = isEditingSavedMap
     ? handleSavedMapChange?.reorderMarkers

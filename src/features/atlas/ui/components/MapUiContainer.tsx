@@ -65,8 +65,8 @@ export function MapUiContainer({
 
   // UI hint for shared/saved maps
   const sharedMapInfo = useSharedMapInfo() || {};
-  const { editingSavedMap } = useSavedMaps();
-  const mapName = editingSavedMap?.name || sharedMapInfo.mapName;
+  const { activeSavedMap } = useSavedMaps();
+  const mapName = activeSavedMap?.name || sharedMapInfo.mapName;
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
     if ((!isReadonly && !isEdit) || isEmbed) return null;

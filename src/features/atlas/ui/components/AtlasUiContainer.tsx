@@ -58,7 +58,7 @@ export function AtlasUiContainer({
   // Saved maps state
   const {
     isSavedMapModalOpen,
-    editingSavedMap,
+    activeSavedMap,
     openSavedMapModal,
     closeSavedMapModal,
     saveSavedMap,
@@ -69,15 +69,15 @@ export function AtlasUiContainer({
     removeLayer,
     isEditingSavedMapLayer,
     isEditSavedMapLayerModalOpen,
-    editingSavedMapLayer,
-    setEditingSavedMapLayer,
+    activeSavedMapLayer,
+    setActiveSavedMapLayer,
     saveSavedMapLayer,
     openAddLayer: openAddSavedMapLayer,
     openEditLayer: openEditSavedMapLayer,
     closeLayerModal: closeSavedMapLayer,
     // Marker fields
-    editingSavedMapMarker,
-    setEditingSavedMapMarker,
+    activeSavedMapMarker,
+    setActiveSavedMapMarker,
     isEditingSavedMapMarker,
     isEditSavedMapMarkerModalOpen,
     openEditMarker,
@@ -102,8 +102,8 @@ export function AtlasUiContainer({
       <MarkersPanel
         onAddMarker={startAddingMarker}
         onEditMarker={isEdit ? openEditMarker : mainMarkers.openEditMarker}
-        editingSavedMapMarkers={
-          isEdit && editingSavedMap ? savedMaps.savedMapMarkers : undefined
+        activeSavedMapMarkers={
+          isEdit && activeSavedMap ? savedMaps.savedMapMarkers : undefined
         }
         handleSavedMapChange={
           isEdit
@@ -119,8 +119,8 @@ export function AtlasUiContainer({
         onEditLayer={isEdit ? openEditSavedMapLayer : openEditLayer}
         onAddLayer={isEdit ? openAddSavedMapLayer : openAddLayer}
         layerModalOpen={isEdit ? isEditSavedMapLayerModalOpen : isEditModalOpen}
-        editingSavedMapLayers={
-          isEdit && editingSavedMap ? editingSavedMap.layers : undefined
+        activeSavedMapLayers={
+          isEdit && activeSavedMap ? activeSavedMap.layers : undefined
         }
         handleSavedMapChange={
           isEdit
@@ -148,7 +148,7 @@ export function AtlasUiContainer({
         isOpen={
           isEdit ? isEditSavedMapMarkerModalOpen : mainMarkers.detailsModalOpen
         }
-        marker={isEdit ? editingSavedMapMarker : mainMarkers.selectedMarker}
+        marker={isEdit ? activeSavedMapMarker : mainMarkers.selectedMarker}
         position={isEdit ? null : (mainMarkers.detailsModalPosition ?? null)}
         onClose={() =>
           isEdit ? closeMarkerModal() : mainMarkers.closeMarkerDetails()
@@ -161,9 +161,9 @@ export function AtlasUiContainer({
         isEditing={
           isEdit ? isEditingSavedMapMarker : mainMarkers.isEditingMarker
         }
-        marker={isEdit ? editingSavedMapMarker : mainMarkers.editingMarker}
+        marker={isEdit ? activeSavedMapMarker : mainMarkers.editingMarker}
         onChange={
-          isEdit ? setEditingSavedMapMarker : mainMarkers.setEditingMarker
+          isEdit ? setActiveSavedMapMarker : mainMarkers.setEditingMarker
         }
         onSave={isEdit ? saveSavedMapMarker : mainMarkers.saveMarker}
         onClose={() => {
@@ -180,8 +180,8 @@ export function AtlasUiContainer({
         <LayerModal
           isOpen={isEditSavedMapLayerModalOpen}
           isEditing={isEditingSavedMapLayer}
-          layer={editingSavedMapLayer}
-          onChange={setEditingSavedMapLayer}
+          layer={activeSavedMapLayer}
+          onChange={setActiveSavedMapLayer}
           onSave={saveSavedMapLayer}
           onClose={closeSavedMapLayer}
         />
@@ -197,8 +197,13 @@ export function AtlasUiContainer({
       )}
       <SavedMapsModal
         isOpen={isSavedMapModalOpen}
-        isEditing={!!(editingSavedMap && editingSavedMap.id)}
-        savedMap={editingSavedMap}
+        isEditing={
+          !!(
+            activeSavedMap &&
+            savedMaps.savedMaps.some((m) => m.id === activeSavedMap.id)
+          )
+        }
+        savedMap={activeSavedMap}
         onChange={openSavedMapModal}
         onSave={saveSavedMap}
         onClose={closeSavedMapModal}
