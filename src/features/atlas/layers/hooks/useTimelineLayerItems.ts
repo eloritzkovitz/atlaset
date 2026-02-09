@@ -1,21 +1,22 @@
 import { useMemo } from "react";
 import { MAP_BG_COLOR } from "@constants/colors";
+import type { ColorMode } from "@features/atlas/map";
 import { useVisitColorRoles } from "@features/settings";
 import { useHomeCountry } from "@features/user";
 import { getVisitColor, useVisitedCountriesTimeline } from "@features/visits";
-import type { TimelineLayer, LayerMode } from "../types";
+import type { TimelineLayer } from "../types";
 
 /**
  * Generates timeline layer items with appropriate colors based on visit data and layer settings.
  * @param layers - Array of timeline layers to generate items for
  * @param selectedYear - The currently selected year in the timeline
- * @param layerMode - The current layer mode
+ * @param colorMode - The current color mode
  * @returns Array of timeline layer items with isoCode, color, layerId, and visit count
  */
 export function useTimelineLayerItems(
   layers: TimelineLayer[],
   selectedYear: number,
-  layerMode: LayerMode,
+  colorMode: ColorMode,
 ) {
   const {
     getVisitedCountriesUpToYear,
@@ -28,7 +29,7 @@ export function useTimelineLayerItems(
   const newThisYear = getVisitedCountriesForYear(selectedYear);
   const nextUpcomingYearByCountry = getUpcomingCountries();
 
-  const palette = useVisitColorRoles(layerMode);
+  const palette = useVisitColorRoles(colorMode);
 
   // Collect all country codes from layers
   const allCountryCodes = Array.from(
@@ -65,7 +66,7 @@ export function useTimelineLayerItems(
               count,
               isHome,
               MAP_BG_COLOR,
-              layerMode,
+              colorMode,
               palette,
               isNewThisYear,
               isRevisitThisYear,
@@ -85,7 +86,7 @@ export function useTimelineLayerItems(
     snapshotCountriesPrev,
     newThisYear,
     selectedYear,
-    layerMode,
+    colorMode,
     homeCountry,
     nextUpcomingYearByCountry,
   ]);

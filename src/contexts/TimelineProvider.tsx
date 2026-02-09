@@ -1,11 +1,10 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useAudio } from "@contexts/AudioContext";
 import { useTrips } from "@contexts/TripsContext";
-import { isAuthenticated } from "@utils/firebase";
-import { useMapMode } from "@features/atlas/map/hooks/useMapMode";
-import type { LayerMode } from "@features/atlas/layers";
+import { useMapMode, type ColorMode } from "@features/atlas/map";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
+import { isAuthenticated } from "@utils/firebase";
 import { TimelineContext } from "./TimelineContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -23,7 +22,7 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedYear, setSelectedYear] = useState(getLatestYear(years));
 
   // Layer mode state
-  const [layerMode, setLayerMode] = useState<LayerMode>("cumulative");
+  const [colorMode, setColorMode] = useState<ColorMode>("cumulative");
 
   // Only allow timeline mode if authenticated and not readonly/edit
   const handleSetTimelineMode = (v: boolean | ((prev: boolean) => boolean)) => {
@@ -62,8 +61,8 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
         years,
         selectedYear,
         setSelectedYear,
-        layerMode,
-        setLayerMode,
+        colorMode,
+        setColorMode,
       }}
     >
       {children}

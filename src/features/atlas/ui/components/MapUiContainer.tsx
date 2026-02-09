@@ -31,12 +31,12 @@ export function MapUiContainer({
   const effectiveLayers = useEffectiveLayers();
   const { isReadonly, isEdit, zoom, setZoom, center, selectedCoords } =
     useMapView();
-  const { timelineMode, layerMode } = useTimeline();
+  const { timelineMode, colorMode } = useTimeline();
   const { showLegend, closeLegend, uiVisible } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     effectiveLayers,
     timelineMode,
-    layerMode,
+    colorMode,
   );
 
   // UI hint for adding marker

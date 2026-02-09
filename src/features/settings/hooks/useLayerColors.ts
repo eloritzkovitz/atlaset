@@ -1,6 +1,6 @@
 import { useSettings } from "@contexts/SettingsContext";
 import { COLOR_PALETTES } from "@constants/colors";
-import type { LayerMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 
 /**
  * Manages layer palette settings.
@@ -33,18 +33,18 @@ export function useLayerColors() {
   // Fallback to an empty object if layers is undefined
   const colors = settings.colors ?? {};
 
-  const layerPalettes = colors.palettes ?? {
+  const colorPalettes = colors.palettes ?? {
     standard: COLOR_PALETTES[0].name,
     cumulative: COLOR_PALETTES[0].name,
     yearly: COLOR_PALETTES[0].name,
   };
 
-  const setPalette = (mode: LayerMode, paletteName: string) => {
+  const setPalette = (mode: ColorMode, paletteName: string) => {
     updateSettings({
       colors: {
         ...colors,
         palettes: {
-          ...layerPalettes,
+          ...colorPalettes,
           [mode]: paletteName,
         },
       },
@@ -58,7 +58,7 @@ export function useLayerColors() {
     setColorHomeCountry,
     colorUpcomingVisits,
     setColorUpcomingVisits,
-    layerPalettes,
+    colorPalettes,
     setPalette,
   };
 }

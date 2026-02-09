@@ -7,12 +7,12 @@ import {
   SectionHeader,
 } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colors";
-import type { LayerMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 import { PaletteDots } from "./PaletteDots";
 import { useLayerColors } from "../../hooks/useLayerColors";
 
-// Layer modes
-const LAYER_MODES: { key: LayerMode; label: string }[] = [
+// Color modes
+const COLOR_MODES: { key: ColorMode; label: string }[] = [
   { key: "standard", label: "Standard" },
   { key: "cumulative", label: "Timeline (Cumulative)" },
   { key: "yearly", label: "Timeline (Yearly)" },
@@ -27,7 +27,7 @@ export function ColorsSettingsGroup() {
     setColorVisitedCountries,
     colorUpcomingVisits,
     setColorUpcomingVisits,
-    layerPalettes,
+    colorPalettes,
     setPalette,
   } = useLayerColors();
 
@@ -81,12 +81,12 @@ export function ColorsSettingsGroup() {
           <section>
             <SectionHeader title="Color Palettes" />
             <div className="mb-2">
-              {LAYER_MODES.map((mode) => (
+              {COLOR_MODES.map((mode) => (
                 <div key={mode.key} className="mb-4">
                   <label className="font-medium block mb-1">{mode.label}</label>
                   <DropdownSelectInput
                     options={groupedPaletteOptions}
-                    value={layerPalettes[mode.key]}
+                    value={colorPalettes[mode.key]}
                     onChange={(val: string | string[]) =>
                       setPalette(mode.key, Array.isArray(val) ? val[0] : val)
                     }

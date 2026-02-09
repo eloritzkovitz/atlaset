@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { LayerMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/layers";
 
 export interface TimelineContextValue {
   timelineMode: boolean;
@@ -9,8 +9,8 @@ export interface TimelineContextValue {
   years: number[];
   selectedYear: number;
   setSelectedYear: (year: number) => void;
-  layerMode: LayerMode;
-  setLayerMode: React.Dispatch<React.SetStateAction<LayerMode>>;
+  colorMode: ColorMode;
+  setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
 }
 
 export const TimelineContext = createContext<TimelineContextValue | undefined>(undefined);

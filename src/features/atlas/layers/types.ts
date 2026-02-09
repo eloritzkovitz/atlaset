@@ -38,6 +38,3 @@ export type LayerItem = {
   layerId: string;
   style?: React.CSSProperties;
 };
-
-/** Modes for displaying layers on the atlas map. */
-export type LayerMode = "standard" | "cumulative" | "yearly";

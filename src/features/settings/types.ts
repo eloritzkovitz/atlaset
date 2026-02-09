@@ -1,4 +1,4 @@
-import type { LayerMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/layers";
 
 /** Account-related settings. */
 export type AccountSettings = {
@@ -28,7 +28,7 @@ export type ColorsSettings = {
   colorHomeCountry: boolean;
   colorVisitedCountries: boolean;
   colorUpcomingVisits: boolean;
-  palettes: Record<LayerMode, string>;
+  palettes: Record<ColorMode, string>;
 };
 
 /** User settings. */

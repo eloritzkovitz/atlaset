@@ -26,7 +26,7 @@ export function useMapLayerItems(mode: MapMode = "view") {
   const { isEdit } = useMapView();
   const { editingSavedMap } = useSavedMaps();
   const { layers: sharedLayers } = useSharedMapInfo();
-  const { timelineMode, selectedYear, layerMode } = useTimeline();
+  const { timelineMode, selectedYear, colorMode } = useTimeline();
 
   // Timeline mode: add virtual visited countries layer
   const { visitedCountryCodes } = useVisitedCountries();
@@ -52,7 +52,7 @@ export function useMapLayerItems(mode: MapMode = "view") {
   const timelineItems = useTimelineLayerItems(
     timelineLayers,
     selectedYear,
-    layerMode,
+    colorMode,
   );
 
   // Editing saved map layer items
