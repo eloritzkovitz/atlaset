@@ -37,10 +37,11 @@ export function useToolbarActions({
     toggleLegend,
     toggleExport,
     toggleSettings,
+    toggleSaved,
   } = useUI();
   const { timelineMode, setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
-  const { saveCurrentMap, exitEditMode } = useSavedMaps();
+  const { exitEditMode } = useSavedMaps();
 
   // Centralized menu close helper
   function withMenuClose(action: () => void) {
@@ -78,6 +79,14 @@ export function useToolbarActions({
       label: "Legend",
       onClick: withMenuClose(toggleLegend),
       show: true,
+      separatorAfter: !isAuthenticated(),      
+    },
+    {
+      key: "savedmaps",
+      icon: <FaBookmark className="text-lg" />,
+      label: "My Maps",
+      onClick: withMenuClose(toggleSaved),
+      show: isAuthenticated(),
       separatorAfter: true,
     },
     {
@@ -87,14 +96,7 @@ export function useToolbarActions({
       onClick: withMenuClose(() => setTimelineMode(!timelineMode)),
       show: !isReadonly && !isEdit && isAuthenticated(),
       separatorAfter: true,
-    },
-    {
-      key: "save",
-      icon: <FaBookmark className="text-lg" />,
-      label: "Save",
-      onClick: withMenuClose(saveCurrentMap),
-      show: isReadonly && isAuthenticated(),
-    },
+    },   
     {
       key: "export",
       icon: !isReadonly ? (

@@ -7,12 +7,13 @@ type PanelSelection =
   | "countries"
   | "layers"
   | "markers"
+  | "savedmaps"
   | "export"
   | "settings"
   | null;
 
 // Type for user panels
-type UserPanelSelection = "friends" | "saved" | "help" | null;
+type UserPanelSelection = "friends" | "help" | null;
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
@@ -43,6 +44,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const showCountries = openPanel === "countries";
   const showMarkers = openPanel === "markers";
   const showLayers = openPanel === "layers";
+  const showSaved = openPanel === "savedmaps";
   const showExport = openPanel === "export";
   const showSettings = openPanel === "settings";
 
@@ -50,10 +52,12 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const toggleUiVisible = () => setUiVisible((prev) => !prev);
   const toggleCountries = () =>
     setOpenPanel((prev) => (prev === "countries" ? null : "countries"));
-  const toggleMarkers = () =>
-    setOpenPanel((prev) => (prev === "markers" ? null : "markers"));
   const toggleLayers = () =>
     setOpenPanel((prev) => (prev === "layers" ? null : "layers"));
+  const toggleMarkers = () =>
+    setOpenPanel((prev) => (prev === "markers" ? null : "markers"));
+  const toggleSaved = () =>
+    setOpenPanel((prev) => (prev === "savedmaps" ? null : "savedmaps"));
   const toggleExport = () =>
     setOpenPanel((prev) => (prev === "export" ? null : "export"));
   const toggleSettings = () =>
@@ -63,22 +67,18 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const toggleFriends = () => {
     setRightPanel((prev) => (prev === "friends" ? null : "friends"));
   };
-  const toggleSaved = () => {
-    setRightPanel((prev) => (prev === "saved" ? null : "saved"));
-  };
   const toggleHelp = () => {
     setRightPanel((prev) => (prev === "help" ? null : "help"));
   };
 
   // Derived states for user panels
   const showFriends = rightPanel === "friends";
-  const showSaved = rightPanel === "saved";
   const showHelp = rightPanel === "help";
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
   const closePanel = () => setOpenPanel(null);
-  
+
   // Derived states for individual modals
   const [showLegend, setShowLegend] = useState(false);
   const toggleLegend = () => setShowLegend((prev) => !prev);
@@ -93,9 +93,6 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   // Toggle Friends panel with "N"
   useKeyHandler(toggleFriends, ["n", "N"], true);
-
-  // Toggle Saved Maps panel with "B"
-  useKeyHandler(toggleSaved, ["b", "B"], true);
 
   // Toggle Help panel with "H"
   useKeyHandler(toggleHelp, ["h", "H"], true);
@@ -132,7 +129,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
         showMarkers,
         toggleMarkers,
         showExport,
-        toggleExport,        
+        toggleExport,
         showSettings,
         toggleSettings,
         showFriends,

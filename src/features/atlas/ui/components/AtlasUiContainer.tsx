@@ -11,7 +11,7 @@ import {
   MarkersPanel,
   useMarkerCreation,
 } from "@features/atlas/markers";
-import { SavedMapsModal } from "@features/atlas/saved";
+import { SavedMapsModal, SavedMapsPanel } from "@features/atlas/saved";
 import type { Country } from "@features/countries";
 import { MapSettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
@@ -102,7 +102,9 @@ export function AtlasUiContainer({
       <MarkersPanel
         onAddMarker={startAddingMarker}
         onEditMarker={isEdit ? openEditMarker : mainMarkers.openEditMarker}
-        editingSavedMapMarkers={isEdit && editingSavedMap ? savedMaps.savedMapMarkers : undefined}
+        editingSavedMapMarkers={
+          isEdit && editingSavedMap ? savedMaps.savedMapMarkers : undefined
+        }
         handleSavedMapChange={
           isEdit
             ? {
@@ -132,6 +134,7 @@ export function AtlasUiContainer({
             : undefined
         }
       />
+      <SavedMapsPanel />
       <MapExportPanel svgRef={svgRef} />
       <MapSettingsPanel />
 
