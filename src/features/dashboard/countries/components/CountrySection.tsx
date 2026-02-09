@@ -93,6 +93,18 @@ export function CountrySection({
   const regionOptions = regionSelectFilter.getOptions(uniqueRegions);
   const subregionOptions = subregionSelectFilter.getOptions(uniqueSubregions);
 
+  // Shared filter props for select filters
+  const filterProps = {
+    selectedRegion,
+    setSelectedRegion,
+    selectedSubregion,
+    setSelectedSubregion,
+    selectedSovereignty: "",
+    setSelectedSovereignty: () => {},
+    selectedVisited: "any",
+    setSelectedVisited: () => {},
+  };
+
   // Handler to reset all filters and route to all countries
   function handleResetFilters() {
     if (resetFilters) resetFilters();
@@ -159,34 +171,14 @@ export function CountrySection({
             className="w-xs"
           />
           <SelectInput
-            value={
-              regionSelectFilter.getValue({
-                selectedRegion,
-                setSelectedRegion,
-                selectedSubregion,
-                setSelectedSubregion,
-                selectedSovereignty: "",
-                setSelectedSovereignty: () => {},
-              }) ?? ""
-            }
+            value={regionSelectFilter.getValue(filterProps) ?? ""}
             onChange={(val) => {
               if (val === "all") {
-                // Route to all countries and reset region/subregion
                 setSelectedRegion("all");
                 setSelectedSubregion("");
                 if (onAllCountries) onAllCountries();
               } else {
-                regionSelectFilter.setValue(
-                  {
-                    selectedRegion,
-                    setSelectedRegion,
-                    selectedSubregion,
-                    setSelectedSubregion,
-                    selectedSovereignty: "",
-                    setSelectedSovereignty: () => {},
-                  },
-                  val as string,
-                );
+                regionSelectFilter.setValue(filterProps, val as string);
                 setSelectedSubregion("all");
               }
             }}
@@ -194,35 +186,15 @@ export function CountrySection({
             className="ml-5 min-w-[150px] mt-3"
           />
           <SelectInput
-            value={
-              subregionSelectFilter.getValue({
-                selectedRegion,
-                setSelectedRegion,
-                selectedSubregion,
-                setSelectedSubregion,
-                selectedSovereignty: "",
-                setSelectedSovereignty: () => {},
-              }) ?? ""
-            }
+            value={subregionSelectFilter.getValue(filterProps) ?? ""}
             onChange={(val) => {
               if (val === "all" || val === "") {
-                // Clear subregion filter and update route/view
                 setSelectedSubregion("");
                 if (onSubregionChange && selectedRegion) {
                   onSubregionChange(selectedRegion, "");
                 }
               } else {
-                subregionSelectFilter.setValue(
-                  {
-                    selectedRegion,
-                    setSelectedRegion,
-                    selectedSubregion,
-                    setSelectedSubregion,
-                    selectedSovereignty: "",
-                    setSelectedSovereignty: () => {},
-                  },
-                  val as string,
-                );
+                subregionSelectFilter.setValue(filterProps, val as string);
                 if (onSubregionChange && selectedRegion && val) {
                   onSubregionChange(selectedRegion, val as string);
                 }

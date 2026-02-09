@@ -71,7 +71,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     if (!activeSavedMap && !mapName && sharedMapInfo.mapName) {
       setMapName(sharedMapInfo.mapName);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSavedMap, mapName, sharedMapInfo.mapName]);
 
   // Prefill sharer with authenticated user's displayName if available

@@ -2,19 +2,6 @@ import type { Country } from "@features/countries";
 import type { VisitedStatus } from "../types";
 
 /**
- * Filters countries to only those that have been visited.
- * @param countries - The list of countries to filter.
- * @param visitedIsoCodes - The list of visited country ISO codes.
- * @returns Filtered list of countries that have been visited.
- */
-export function filterByVisited(
-  countries: Country[],
-  visitedIsoCodes: string[],
-) {
-  return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));
-}
-
-/**
  * Filters countries by visited status.
  * @param countries - The list of countries to filter.
  * @param visitedIsoCodes - The list of visited country ISO codes.
