@@ -9,10 +9,9 @@ interface LayerPanelItemProps {
   handleDragEnd?: () => void;
   showEdit?: boolean;
   onEdit?: (layer: Layer) => void;
+  onNameChange?: (newName: string) => void;
   onToggleVisibility?: (id: string) => void;
-  showRemove?: boolean;
   onRemove?: (id: string) => void;
-  showCenter?: boolean;
 }
 
 export function LayerPanelItem({
@@ -21,10 +20,9 @@ export function LayerPanelItem({
   onDragStart,
   handleDragOver,
   handleDragEnd,
-  showEdit,
   onEdit,
+  onNameChange,
   onToggleVisibility,
-  showRemove,
   onRemove,
 }: LayerPanelItemProps) {
   return (
@@ -33,14 +31,11 @@ export function LayerPanelItem({
       name={layer.name}
       visible={layer.visible}
       onToggleVisibility={
-        showEdit !== false && onToggleVisibility
-          ? () => onToggleVisibility(layer.id)
-          : undefined
+        onToggleVisibility ? () => onToggleVisibility(layer.id) : undefined
       }
-      onEdit={showEdit !== false && onEdit ? () => onEdit(layer) : undefined}
-      onRemove={
-        showRemove !== false && onRemove ? () => onRemove(layer.id) : undefined
-      }
+      onEdit={onEdit ? () => onEdit(layer) : undefined}
+      onNameChange={onNameChange}
+      onRemove={onRemove ? () => onRemove(layer.id) : undefined}
       dragged={dragged}
       onDragStart={onDragStart}
       handleDragOver={handleDragOver}

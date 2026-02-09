@@ -24,6 +24,7 @@ interface LayersPanelProps {
   handleSavedMapChange?: {
     addLayer: (layer: Layer) => void;
     importLayers: (layers: Layer[]) => void;
+    updateLayerName: (id: string, newName: string) => void;
     reorderLayers: (layers: Layer[]) => void;
     toggleLayerVisibility: (layerId: string) => void;
     removeLayer: (layerId: string) => void;
@@ -41,6 +42,7 @@ export function LayersPanel({
   const {
     layers,
     importLayers,
+    updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
     removeLayer,
@@ -137,6 +139,14 @@ export function LayersPanel({
                   : undefined
               }
               onEdit={!isReadonly ? onEditLayer : undefined}
+              onNameChange={
+                !isReadonly
+                  ? isEditingSavedMap
+                    ? (newName) =>
+                        handleSavedMapChange?.updateLayerName(layer.id, newName)
+                    : (newName) => updateLayerName(layer.id, newName)
+                  : undefined
+              }
               onRemove={
                 !isReadonly
                   ? isEditingSavedMap
@@ -152,8 +162,6 @@ export function LayersPanel({
                 !isReadonly ? (e) => handleDragOver(e, index) : undefined
               }
               handleDragEnd={!isReadonly ? handleDragEnd : undefined}
-              showRemove={!isReadonly}
-              showCenter={false}
             />
           ))}
         </ul>

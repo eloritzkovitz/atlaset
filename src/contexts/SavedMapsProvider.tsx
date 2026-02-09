@@ -13,7 +13,7 @@ import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { logUserActivity, useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
-export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
+export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {    
   const [savedMaps, setSavedMaps] = useState<SavedMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -33,9 +33,10 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     isEditingLayer: isEditingSavedMapLayer,
     isEditModalOpen: isEditSavedMapLayerModalOpen,
     addLayer,
-    removeLayer,
+    updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
+    removeLayer,
     openAddLayer,
     openEditLayer,
     saveLayer: saveSavedMapLayer,
@@ -61,9 +62,10 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     isMarkerModalOpen: isEditSavedMapMarkerModalOpen,
     addMarker,
     editMarker,
-    removeMarker: removeMarker,
+    updateMarkerName,
     reorderMarkers,
     toggleMarkerVisibility,
+    removeMarker,
     openAddMarker,
     openEditMarker,
     saveMarker: saveSavedMapMarker,
@@ -81,8 +83,8 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       setSavedMapMarkers(markers);
       await savedMapsService.set(updated);
     },
-  });  
-  
+  });
+
   // Reload saved maps
   async function reload() {
     setLoading(true);
@@ -203,6 +205,29 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     }
   }
 
+  // Update map name and persist
+  async function updateSavedMapName(id: string, newName: string) {
+    // Update local state
+    setSavedMaps((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, name: newName } : m)),
+    );
+    const mapToUpdate =
+      activeSavedMap && activeSavedMap.id === id
+        ? { ...activeSavedMap, name: newName }
+        : savedMaps.find((m) => m.id === id);
+
+    // Persist updated name
+    if (mapToUpdate && mapToUpdate.id) {
+      await savedMapsService.set(mapToUpdate);
+
+      // Reload and set activeSavedMap from the new maps
+      const maps = await savedMapsService.load();
+      setSavedMaps(maps);
+      const updated = maps.find((m) => m.id === id);
+      if (updated) setActiveSavedMap({ ...updated });
+    }
+  }
+
   // Save edited or new saved map
   async function saveSavedMap() {
     if (!activeSavedMap) return;
@@ -254,7 +279,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         savedMaps,
         loading,
         error,
-        reload,        
+        reload,
         createNewMap,
         saveCurrentMap,
         viewSavedMap,
@@ -265,6 +290,8 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         closeSavedMapModal,
         saveSavedMap,
         deleteSavedMap,
+        updateSavedMapName,
+        updateLayerName,
         // Layers
         addLayer,
         importLayers,
@@ -288,9 +315,10 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         isEditSavedMapMarkerModalOpen,
         addMarker,
         editMarker,
-        removeMarker,
+        updateMarkerName,
         reorderMarkers,
         toggleMarkerVisibility,
+        removeMarker,
         openAddMarker,
         openEditMarker,
         saveSavedMapMarker,

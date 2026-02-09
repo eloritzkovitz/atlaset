@@ -59,12 +59,14 @@ export function useLayerManager({
     await persistLayers(updated);
   }
 
-  // Remove layer
-  async function removeLayer(id: string) {
-    const updated = layers.filter((l) => l.id !== id);
+  // Rename layer
+  async function updateLayerName(id: string, newName: string) {
+    const updated = layers.map((l) =>
+      l.id === id ? { ...l, name: newName } : l,
+    );
     setLayers(updated);
     await persistLayers(updated);
-  }
+  }  
 
   // Reorder layers
   async function reorderLayers(newOrder: Layer[]) {
@@ -77,6 +79,13 @@ export function useLayerManager({
     const updated = layers.map((l) =>
       l.id === id ? { ...l, visible: !l.visible } : l,
     );
+    setLayers(updated);
+    await persistLayers(updated);
+  }
+
+  // Remove layer
+  async function removeLayer(id: string) {
+    const updated = layers.filter((l) => l.id !== id);
     setLayers(updated);
     await persistLayers(updated);
   }
@@ -123,10 +132,11 @@ export function useLayerManager({
     isEditModalOpen,
     importLayers,
     addLayer,
-    editLayer,
-    removeLayer,
+    editLayer,    
+    updateLayerName,    
     reorderLayers,
     toggleLayerVisibility,
+    removeLayer,
     openAddLayer,
     openEditLayer,
     closeLayerModal,

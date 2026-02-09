@@ -37,3 +37,6 @@ export * from "./state/usePageTitle";
 export * from "./state/usePanelHide";
 export * from "./state/usePwaUpdate";
 export * from "./state/useUiHint";
+
+// UI
+export * from "./ui/useRenameControls";

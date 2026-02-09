@@ -8,6 +8,7 @@ interface MarkersPanelItemProps {
   onToggleVisibility?: () => void;
   onCenter: () => void;
   onEdit?: () => void;
+  onNameChange?: (newName: string) => void;
   onRemove?: () => void;
   draggedIndex?: number | null;
   handleDragStart?: (idx: number) => void;
@@ -21,6 +22,7 @@ export function MarkersPanelItem({
   onToggleVisibility,
   onCenter,
   onEdit,
+  onNameChange,
   onRemove,
   draggedIndex,
   handleDragStart,
@@ -35,6 +37,7 @@ export function MarkersPanelItem({
       onToggleVisibility={onToggleVisibility}
       onCenter={onCenter}
       onEdit={onEdit}
+      onNameChange={onNameChange}
       onRemove={onRemove}
       dragged={draggedIndex === idx}
       onDragStart={handleDragStart ? () => handleDragStart(idx) : undefined}

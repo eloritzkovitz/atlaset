@@ -12,8 +12,8 @@ export function SavedMapsPanel() {
     saveCurrentMap,
     viewSavedMap,
     isSavedMapModalOpen,
-    openSavedMapModal,
     deleteSavedMap,
+    updateSavedMapName,
   } = useSavedMaps();
   const { isReadonly } = useMapView();
   const { showSaved, toggleSaved } = useUI();
@@ -68,7 +68,15 @@ export function SavedMapsPanel() {
               key={map.id}
               map={map}
               onView={() => viewSavedMap(map)}
-              onRename={() => openSavedMapModal(map)}
+              onNameChange={(newName: string) => {
+                if (
+                  newName &&
+                  newName !== map.name &&
+                  typeof updateSavedMapName === "function"
+                ) {
+                  updateSavedMapName(map.id, newName);
+                }
+              }}
               onRemove={() => deleteSavedMap(map.id)}
               showRemove={true}
             />

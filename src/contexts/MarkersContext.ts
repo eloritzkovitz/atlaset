@@ -10,9 +10,10 @@ export interface MarkersContextType {
   cancelMarkerCreation: () => void;
   addMarker: (marker: Marker) => void;
   editMarker: (updated: Marker) => void;
-  removeMarker: (id: string) => void;
+  updateMarkerName: (id: string, newName: string) => void;
   toggleMarkerVisibility: (id: string) => void;
   reorderMarkers: (newOrder: Marker[]) => void;
+  removeMarker: (id: string) => void;
   editingMarker: Marker | null;
   setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;
   isEditingMarker: boolean;

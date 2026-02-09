@@ -15,9 +15,10 @@ interface MarkersPanelProps {
   onMarkerDetails?: (marker: Marker) => void;
   activeSavedMapMarkers?: Marker[];
   handleSavedMapChange?: {
-    removeMarker: (id: string) => void;
+    updateMarkerName: (id: string, newName: string) => void;
     toggleMarkerVisibility: (id: string) => void;
     reorderMarkers: (markers: Marker[]) => void;
+    removeMarker: (id: string) => void;
   };
 }
 
@@ -32,8 +33,7 @@ export function MarkersPanel({
   const { removeMarker, toggleMarkerVisibility, reorderMarkers } = useMarkers();
   const { showMarkers, closePanel } = useUI();
   const effectiveMarkersFromContext = useEffectiveMarkers();
-  const effectiveMarkers =
-    activeSavedMapMarkers ?? effectiveMarkersFromContext;
+  const effectiveMarkers = activeSavedMapMarkers ?? effectiveMarkersFromContext;
   const isEditingSavedMap = !!activeSavedMapMarkers && !!handleSavedMapChange;
 
   const { isReadonly } = useMapView();
@@ -121,6 +121,18 @@ export function MarkersPanel({
                       : undefined
                   }
                   onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
+                  onNameChange={
+                    !isReadonly
+                      ? isEditingSavedMap
+                        ? (newName: string) =>
+                            handleSavedMapChange?.updateMarkerName(
+                              marker.id,
+                              newName,
+                            )
+                        : (newName: string) =>
+                            useMarkers().updateMarkerName(marker.id, newName)
+                      : undefined
+                  }
                   onRemove={
                     !isReadonly
                       ? isEditingSavedMap
