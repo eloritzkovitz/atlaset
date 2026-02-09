@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { ColorMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 
 export interface TimelineContextValue {
   timelineMode: boolean;

@@ -1,4 +1,4 @@
-import type { ColorMode } from "@features/atlas/layers";
+import type { ColorMode } from "@features/atlas/map";
 
 /** Account-related settings. */
 export type AccountSettings = {
