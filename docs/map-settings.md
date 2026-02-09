@@ -16,9 +16,11 @@ With the `colors` section, you can control how countries are visually distinguis
 
 **`Show home country`** will visually color the user's `home country`. You can set it in the `user settings`.
 
-**`Show upcoming new visits`** will highlight any upcoming new visits, complimenting the visited countries layer. It is based on the user's trip data, counting upcoming trips to unvisited countries.
+**`Show visited countries`** will color the user's `visited countries`.
 
-These options are disabled by default, and can be enabled by checking their respective boxes.
+**`Show upcoming new visits`** will highlight any `upcoming new visits`, complimenting the visited countries layer. It is based on the user's trip data, counting upcoming trips to unvisited countries.
+
+By default, `Show visited countries` is enabled, while the other two are disabled. You can enable or disable them by checking or unchecking their respective boxes.
 
 ### **Color Palettes**
 
@@ -35,7 +37,7 @@ Color palettes are grouped into various categories:
 
 #### **Standard**
 
-The standard palette affects the appearance of the main map:
+The `standard` palette affects the appearance of the main map:
 
 | Country State       | Palette Index | Description                                         |
 | ------------------- | ------------- | --------------------------------------------------- |

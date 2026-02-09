@@ -21,7 +21,7 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   const years = useMemo(() => getYearsFromTrips(trips), [trips]);
   const [selectedYear, setSelectedYear] = useState(getLatestYear(years));
 
-  // Layer mode state
+  // Color mode state
   const [colorMode, setColorMode] = useState<ColorMode>("cumulative");
 
   // Only allow timeline mode if authenticated and not readonly/edit

@@ -44,5 +44,5 @@ You can customize the map's appearance with the `map settings`. For more informa
 ## **Learn More**
 
 [Map Settings](/docs/map-settings.md)  
-[Exporting & Sharing Maps](/docs/export.md)  
-[Saving Maps](/docs/saving-maps.md)
+[Saved Maps](/docs/saved-maps.md)  
+[Exporting & Sharing Maps](/docs/export.md)

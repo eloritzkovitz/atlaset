@@ -25,13 +25,13 @@ Atlaset lets you explore, filter and track `countries` on the interactive world 
 ## **Filtering & Sorting**
 
 - Use the `Filters` panel to:
-  - Filter by `region`, `subregion`, `sovereignty` or custom criteria
-  - Show only `visited` or `unvisited` countries
+  - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
   - Apply `layer` or `timeline` filters (depending on active `map mode`)
 - Sort `countries` by `name`, `ISO 3166 code` or `first/last visit times` (in `timeline` mode).
 - Use the `segmented toggles` to quickly select between all countries, sovereign only and visited.
 
 > **Tips:**
+>
 > - Use the `search bar` to quickly find a `country` by name.
 > - Explore the `timeline` to see how your `visited countries` change over time.
 > - Use `layers` to group `countries` for custom lists or travel plans.
