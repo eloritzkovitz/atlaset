@@ -29,13 +29,13 @@ export function PanelListItemMenuActions({
 }: PanelListItemMenuActionsProps) {
   return (
     <>
-      {onCenter && (
+      {onDownload && (
         <MenuButton
-          onClick={onCenter}
-          icon={<FaCrosshairs className="mr-2" />}
+          onClick={onDownload}
+          icon={<FaDownload className="mr-2" />}
           className="w-full"
         >
-          Center
+          Download
         </MenuButton>
       )}
       {onEdit && (
@@ -47,15 +47,6 @@ export function PanelListItemMenuActions({
           Edit
         </MenuButton>
       )}
-      {onDownload && (
-        <MenuButton
-          onClick={onDownload}
-          icon={<FaDownload className="mr-2" />}
-          className="w-full"
-        >
-          Download
-        </MenuButton>
-      )}
       {onNameChange && (
         <MenuButton
           onClick={handleEdit}
@@ -63,6 +54,15 @@ export function PanelListItemMenuActions({
           className="w-full"
         >
           Rename
+        </MenuButton>
+      )}
+      {onCenter && (
+        <MenuButton
+          onClick={onCenter}
+          icon={<FaCrosshairs className="mr-2" />}
+          className="w-full"
+        >
+          Center
         </MenuButton>
       )}
       {onRemove && (
