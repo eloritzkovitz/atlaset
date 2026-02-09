@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-02-09
+
+- **[breaking]** **Atlas | Layers:** Removed visited countries layer and all associated logic and moved it into a map setting
+- **[chore]** **Atlas | Export:** Changed map export options to reflect the new change (exporting visited countries will generate a layer in the JSON)
+- **[feature]** **Atlas | Map:** Added option to create blank saved maps, moved saved maps panel to map toolbar and expanded importing and exporting layers and markers
+- **[feature]** **General:** Redesigned panel list item actions as a menu, and added more options
+- **[chore]** **General:** Updated map mode management and included timeline mode in the centralized control
+- **[chore]** **General:** Renamed LayerMode to ColorMode for better clarity
+
 ## 2026-02-07
 
 - **[chore]** **General:** Reduced app bundle size and added script for bunzle analysis
@@ -28,7 +37,7 @@
 
 ## 2026-01-29
 
-- **[chore]** **Countries:** Replaced 3x2 flags with own package and made some improvements 
+- **[chore]** **Countries:** Replaced 3x2 flags with own package and made some improvements
 - **[docs]** **General:** Added changelog page
 - **[chore]** **General:** Added dynamic page titles
 - **[chore]** **UI:** Updated user menu and some layouts
