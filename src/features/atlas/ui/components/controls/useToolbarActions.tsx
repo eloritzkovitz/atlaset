@@ -79,7 +79,7 @@ export function useToolbarActions({
       label: "Legend",
       onClick: withMenuClose(toggleLegend),
       show: true,
-      separatorAfter: !isAuthenticated(),      
+      separatorAfter: true,      
     },
     {
       key: "savedmaps",
@@ -87,7 +87,6 @@ export function useToolbarActions({
       label: "My Maps",
       onClick: withMenuClose(toggleSaved),
       show: isAuthenticated(),
-      separatorAfter: true,
     },
     {
       key: "timeline",

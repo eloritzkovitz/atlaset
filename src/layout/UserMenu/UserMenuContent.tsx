@@ -1,6 +1,5 @@
 import type { User } from "firebase/auth";
 import {
-  FaBookmark,
   FaBug,
   FaGear,
   FaKeyboard,
@@ -21,7 +20,7 @@ interface UserMenuProps {
 }
 
 export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
-  const { toggleFriends, toggleSaved, toggleShortcuts } = useUI();
+  const { toggleFriends, toggleShortcuts } = useUI();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
 
@@ -54,15 +53,7 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           className="w-full"
         >
           Friends
-        </MenuButton>
-        <MenuButton
-          onClick={toggleSaved}
-          icon={<FaBookmark className="text-lg mr-2" />}
-          ariaLabel="Saved"
-          className="w-full"
-        >
-          Saved
-        </MenuButton>
+        </MenuButton>        
         <Separator className="my-1" />
         <MenuButton
           onClick={() =>
