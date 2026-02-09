@@ -52,6 +52,8 @@ export function CountriesPanel({
     setSelectedSubregion,
     selectedSovereignty,
     setSelectedSovereignty,
+    selectedVisited,
+    setSelectedVisited,
     search,
     setSearch,
     filteredCountries,
@@ -188,6 +190,8 @@ export function CountriesPanel({
           setSelectedSubregion={setSelectedSubregion}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
+          selectedVisited={selectedVisited}
+          setSelectedVisited={setSelectedVisited}
           minVisitCount={minVisitCount}
           setMinVisitCount={setMinVisitCount}
           maxVisitCount={maxVisitCount}

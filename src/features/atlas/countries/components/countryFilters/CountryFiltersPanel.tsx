@@ -5,11 +5,12 @@ import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useCountryData, type SovereigntyType } from "@features/countries";
 import { getAllSovereigntyTypes } from "@features/countries/utils/countryData";
-import { useRegionSubregionSelection } from "../../hooks/useRegionSubregionSelection";
+import type { VisitedStatus } from "@features/visits";
 import { useIsMobile, useKeyHandler } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
+import { useRegionSubregionSelection } from "../../hooks/useRegionSubregionSelection";
 
 interface CountryFiltersPanelProps {
   show: boolean;
@@ -21,6 +22,8 @@ interface CountryFiltersPanelProps {
   setSelectedSubregion: (subregion: string) => void;
   selectedSovereignty: SovereigntyType | "";
   setSelectedSovereignty: (type: SovereigntyType | "") => void;
+  selectedVisited: VisitedStatus;
+  setSelectedVisited: (visited: VisitedStatus) => void;
   minVisitCount: number;
   setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
   maxVisitCount: number | undefined;
@@ -38,6 +41,8 @@ export function CountryFiltersPanel({
   setSelectedSubregion,
   selectedSovereignty,
   setSelectedSovereignty,
+  selectedVisited,
+  setSelectedVisited,
   minVisitCount,
   setMinVisitCount,
   maxVisitCount,
@@ -56,7 +61,7 @@ export function CountryFiltersPanel({
   const { subregionOptions } = useRegionSubregionSelection(
     selectedRegion,
     selectedSubregion,
-    setSelectedRegion
+    setSelectedRegion,
   );
 
   // All sovereignty types from country data
@@ -75,7 +80,7 @@ export function CountryFiltersPanel({
       resetFilters();
     },
     ["r", "R"],
-    show
+    show,
   );
 
   // Responsive check
@@ -130,6 +135,8 @@ export function CountryFiltersPanel({
           setSelectedSubregion={setSelectedSubregion}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
+          selectedVisited={selectedVisited}
+          setSelectedVisited={setSelectedVisited}
           subregionOptions={subregionOptions}
           sovereigntyOptions={sovereigntyOptions}
         />

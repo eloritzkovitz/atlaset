@@ -19,6 +19,8 @@ interface CountryFilterProps {
   setSelectedSubregion: (subregion: string) => void;
   selectedSovereignty: string;
   setSelectedSovereignty: (sovereignty: string) => void;
+  selectedVisited: string;
+  setSelectedVisited: (visited: string) => void;
 }
 
 // Core filters configuration array
@@ -34,7 +36,7 @@ export const coreFiltersConfig: CountryFilterConfig<
       ...mapOptions(allRegions ?? [], capitalizeWords),
     ],
     (props) => (props.selectedRegion === "" ? "all" : props.selectedRegion),
-    (props, val) => props.setSelectedRegion(val === "all" ? "" : val)
+    (props, val) => props.setSelectedRegion(val === "all" ? "" : val),
   ),
   createSelectFilter(
     "subregion",
@@ -45,7 +47,7 @@ export const coreFiltersConfig: CountryFilterConfig<
     ],
     (props) =>
       props.selectedSubregion === "" ? "all" : props.selectedSubregion,
-    (props, val) => props.setSelectedSubregion(val === "all" ? "" : val)
+    (props, val) => props.setSelectedSubregion(val === "all" ? "" : val),
   ),
   createSelectFilter(
     "sovereignty",
@@ -54,15 +56,29 @@ export const coreFiltersConfig: CountryFilterConfig<
       allOption,
       ...mapOptions(
         SOVEREIGNTY_ORDER.filter((type) =>
-          (options as SovereigntyType[] | undefined)?.includes(type)
+          (options as SovereigntyType[] | undefined)?.includes(type),
         ),
-        capitalize
+        capitalize,
       ),
     ],
     (props) =>
       props.selectedSovereignty === "" ? "all" : props.selectedSovereignty,
-    (props, val) => props.setSelectedSovereignty(val === "all" ? "" : val)
+    (props, val) => props.setSelectedSovereignty(val === "all" ? "" : val),
   ),
+  {
+    key: "visited",
+    label: "Visited Status",
+    type: "select",
+    getOptions: () => [
+      { value: "any", label: "All" },
+      { value: "visited", label: "Visited" },
+      { value: "not_visited", label: "Not Visited" },
+    ],
+    getValue: (props) => props.selectedVisited || "any",
+    setValue: (props, val) => {
+      props.setSelectedVisited(val);
+    },
+  },
 ];
 
 interface LayerFilterProps {
@@ -73,32 +89,29 @@ interface LayerFilterProps {
 }
 
 // Layer filter configuration object
-export const layerFilterConfig: FilterConfig<
-  Layer,
-  LayerFilterProps,
-  string
-> = {
-  key: "layer",
-  label: (layer: Layer) => `${layer.name} (${layer.countries.length})`,
-  type: "select",
-  getOptions: (layers?: Layer[]) => {
-    const layer = layers?.[0];
-    return [
-      { value: "all", label: layer?.filterLabels?.all ?? "All" },
-      { value: "only", label: layer?.filterLabels?.only ?? "Include only" },
-      { value: "exclude", label: layer?.filterLabels?.exclude ?? "Exclude" },      
-    ];
-  },
-  getValue: (props, layer?: Layer) =>
-    layer ? props.layerSelections[layer.id] || "all" : "all",
-  setValue: (props, val, layer?: Layer) => {
-    if (!layer) return;
-    props.setLayerSelections((sel: Record<string, string>) => ({
-      ...sel,
-      [layer.id]: val,
-    }));
-  },
-};
+export const layerFilterConfig: FilterConfig<Layer, LayerFilterProps, string> =
+  {
+    key: "layer",
+    label: (layer: Layer) => `${layer.name} (${layer.countries.length})`,
+    type: "select",
+    getOptions: (layers?: Layer[]) => {
+      const layer = layers?.[0];
+      return [
+        { value: "all", label: layer?.filterLabels?.all ?? "All" },
+        { value: "only", label: layer?.filterLabels?.only ?? "Include only" },
+        { value: "exclude", label: layer?.filterLabels?.exclude ?? "Exclude" },
+      ];
+    },
+    getValue: (props, layer?: Layer) =>
+      layer ? props.layerSelections[layer.id] || "all" : "all",
+    setValue: (props, val, layer?: Layer) => {
+      if (!layer) return;
+      props.setLayerSelections((sel: Record<string, string>) => ({
+        ...sel,
+        [layer.id]: val,
+      }));
+    },
+  };
 
 // Timeline filter configuration object
 export const timelineFiltersConfig = {
@@ -107,7 +120,7 @@ export const timelineFiltersConfig = {
     getValue: ({ selectedYear }: { selectedYear: number }) => selectedYear,
     setValue: (
       { setSelectedYear }: { setSelectedYear: (year: number) => void },
-      value: string | number
+      value: string | number,
     ) => setSelectedYear(Number(value)),
     getOptions: (years: number[]) =>
       years.map((year) => ({ value: year, label: String(year) })),
@@ -117,7 +130,7 @@ export const timelineFiltersConfig = {
     getValue: ({ minVisitCount }: { minVisitCount: number }) => minVisitCount,
     setValue: (
       { setMinVisitCount }: { setMinVisitCount: (count: number) => void },
-      value: string | number
+      value: string | number,
     ) => setMinVisitCount(Number(value)),
     getOptions: (max: number) =>
       Array.from({ length: max }, (_, i) => ({
@@ -130,7 +143,7 @@ export const timelineFiltersConfig = {
     getValue: ({ maxVisitCount }: { maxVisitCount: number }) => maxVisitCount,
     setValue: (
       { setMaxVisitCount }: { setMaxVisitCount: (count: number) => void },
-      value: string | number
+      value: string | number,
     ) => setMaxVisitCount(Number(value)),
     getOptions: (max: number) =>
       Array.from({ length: max }, (_, i) => ({
