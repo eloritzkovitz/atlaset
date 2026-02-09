@@ -7,6 +7,7 @@ interface MarkersPanelItemProps {
   idx: number;
   onToggleVisibility?: () => void;
   onCenter: () => void;
+  onDownload?: () => void;
   onEdit?: () => void;
   onNameChange?: (newName: string) => void;
   onRemove?: () => void;
@@ -21,6 +22,7 @@ export function MarkersPanelItem({
   idx,
   onToggleVisibility,
   onCenter,
+  onDownload,
   onEdit,
   onNameChange,
   onRemove,
@@ -36,12 +38,17 @@ export function MarkersPanelItem({
       visible={marker.visible}
       onToggleVisibility={onToggleVisibility}
       onCenter={onCenter}
+      onDownload={onDownload}
       onEdit={onEdit}
       onNameChange={onNameChange}
       onRemove={onRemove}
       dragged={draggedIndex === idx}
       onDragStart={handleDragStart ? () => handleDragStart(idx) : undefined}
-      handleDragOver={handleDragOver ? (e: DragEvent<HTMLLIElement>) => handleDragOver(e, idx) : undefined}
+      handleDragOver={
+        handleDragOver
+          ? (e: DragEvent<HTMLLIElement>) => handleDragOver(e, idx)
+          : undefined
+      }
       handleDragEnd={handleDragEnd}
     />
   );

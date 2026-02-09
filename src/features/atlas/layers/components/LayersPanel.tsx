@@ -126,48 +126,57 @@ export function LayersPanel({
       }
     >
       <div className="mt-4">
-        <ul className="list-none p-0">
-          {(effectiveLayers ?? []).map((layer, index) => (
-            <LayerPanelItem
-              key={layer.id}
-              layer={layer}
-              onToggleVisibility={
-                !isReadonly
-                  ? isEditingSavedMap
-                    ? handleSavedMapChange?.toggleLayerVisibility
-                    : toggleLayerVisibility
-                  : undefined
-              }
-              onDownload={
-                !isReadonly ? () => exportLayersToFile(layer) : undefined
-              }
-              onEdit={!isReadonly ? onEditLayer : undefined}
-              onNameChange={
-                !isReadonly
-                  ? isEditingSavedMap
-                    ? (newName) =>
-                        handleSavedMapChange?.updateLayerName(layer.id, newName)
-                    : (newName) => updateLayerName(layer.id, newName)
-                  : undefined
-              }
-              onRemove={
-                !isReadonly
-                  ? isEditingSavedMap
-                    ? handleSavedMapChange?.removeLayer
-                    : removeLayer
-                  : undefined
-              }
-              dragged={draggedIndex === index}
-              onDragStart={
-                !isReadonly ? () => handleDragStart(index) : undefined
-              }
-              handleDragOver={
-                !isReadonly ? (e) => handleDragOver(e, index) : undefined
-              }
-              handleDragEnd={!isReadonly ? handleDragEnd : undefined}
-            />
-          ))}
-        </ul>
+        {!effectiveLayers || effectiveLayers.length === 0 ? (
+          <div className="mt-4 text-muted text-sm flex justify-center">
+            No layers yet.
+          </div>
+        ) : (
+          <ul className="list-none p-0">
+            {effectiveLayers.map((layer, index) => (
+              <LayerPanelItem
+                key={layer.id}
+                layer={layer}
+                onToggleVisibility={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? handleSavedMapChange?.toggleLayerVisibility
+                      : toggleLayerVisibility
+                    : undefined
+                }
+                onDownload={
+                  !isReadonly ? () => exportLayersToFile(layer) : undefined
+                }
+                onEdit={!isReadonly ? onEditLayer : undefined}
+                onNameChange={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? (newName) =>
+                          handleSavedMapChange?.updateLayerName(
+                            layer.id,
+                            newName,
+                          )
+                      : (newName) => updateLayerName(layer.id, newName)
+                    : undefined
+                }
+                onRemove={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? handleSavedMapChange?.removeLayer
+                      : removeLayer
+                    : undefined
+                }
+                dragged={draggedIndex === index}
+                onDragStart={
+                  !isReadonly ? () => handleDragStart(index) : undefined
+                }
+                handleDragOver={
+                  !isReadonly ? (e) => handleDragOver(e, index) : undefined
+                }
+                handleDragEnd={!isReadonly ? handleDragEnd : undefined}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </Panel>
   );

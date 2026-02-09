@@ -59,29 +59,32 @@ export function SavedMapsPanel() {
       }
     >
       <div className="mt-4">
-        <ul className="list-none p-0">
-          {savedMaps.length === 0 && (
-            <li className="text-muted px-4 py-2">No saved maps yet.</li>
-          )}
-          {savedMaps.map((map) => (
-            <SavedMapPanelItem
-              key={map.id}
-              map={map}
-              onView={() => viewSavedMap(map)}
-              onNameChange={(newName: string) => {
-                if (
-                  newName &&
-                  newName !== map.name &&
-                  typeof updateSavedMapName === "function"
-                ) {
-                  updateSavedMapName(map.id, newName);
-                }
-              }}
-              onRemove={() => deleteSavedMap(map.id)}
-              showRemove={true}
-            />
-          ))}
-        </ul>
+        {savedMaps.length === 0 ? (
+          <div className="mt-4 text-muted text-sm flex justify-center">
+            No saved maps yet.
+          </div>
+        ) : (
+          <ul className="list-none p-0">
+            {savedMaps.map((map) => (
+              <SavedMapPanelItem
+                key={map.id}
+                map={map}
+                onView={() => viewSavedMap(map)}
+                onNameChange={(newName: string) => {
+                  if (
+                    newName &&
+                    newName !== map.name &&
+                    typeof updateSavedMapName === "function"
+                  ) {
+                    updateSavedMapName(map.id, newName);
+                  }
+                }}
+                onRemove={() => deleteSavedMap(map.id)}
+                showRemove={true}
+              />
+            ))}
+          </ul>
+        )}
       </div>
     </Panel>
   );

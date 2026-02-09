@@ -116,88 +116,6 @@ describe("layerIO utils", () => {
       ]);
     });
 
-    describe("parseAndNormalizeLayers and serializeLayers", () => {
-      it("parses a single layer object and returns array", () => {
-        const single = {
-          id: "1",
-          name: "Layer",
-          color: "#fff",
-          countries: [],
-          visible: true,
-          order: 1,
-        };
-        const result = parseAndNormalizeLayers(JSON.stringify(single));
-        expect(Array.isArray(result)).toBe(true);
-        expect(result[0]).toMatchObject(single);
-      });
-
-      it("parses an array of layers and returns array", () => {
-        const arr = [
-          {
-            id: "1",
-            name: "Layer",
-            color: "#fff",
-            countries: [],
-            visible: true,
-            order: 1,
-          },
-          {
-            id: "2",
-            name: "Layer2",
-            color: "#000",
-            countries: [],
-            visible: false,
-            order: 2,
-          },
-        ];
-        const result = parseAndNormalizeLayers(JSON.stringify(arr));
-        expect(Array.isArray(result)).toBe(true);
-        expect(result.length).toBe(2);
-        expect(result[1]).toMatchObject(arr[1]);
-      });
-
-      it("serializes a single layer as array JSON", () => {
-        const single = {
-          id: "1",
-          name: "Layer",
-          color: "#fff",
-          countries: [],
-          visible: true,
-          order: 1,
-        };
-        const expected = [{ name: "Layer", color: "#fff", countries: [] }];
-        const json = serializeLayers(single);
-        expect(json).toBe(JSON.stringify(expected, null, 2));
-      });
-
-      it("serializes an array of layers as array JSON", () => {
-        const arr = [
-          {
-            id: "1",
-            name: "Layer",
-            color: "#fff",
-            countries: [],
-            visible: true,
-            order: 1,
-          },
-          {
-            id: "2",
-            name: "Layer2",
-            color: "#000",
-            countries: [],
-            visible: false,
-            order: 2,
-          },
-        ];
-        const expected = [
-          { name: "Layer", color: "#fff", countries: [] },
-          { name: "Layer2", color: "#000", countries: [] },
-        ];
-        const json = serializeLayers(arr);
-        expect(json).toBe(JSON.stringify(expected, null, 2));
-      });
-    });
-
     it("normalizes rgba color fields to hex", () => {
       const importLayers = vi.fn();
       const layers: Layer[] = [
@@ -271,6 +189,88 @@ describe("layerIO utils", () => {
 
       importLayersFromFile(event, importLayers);
       expect(importLayers.mock.calls[0][0][0].id).toBeDefined();
+    });
+  });
+
+  describe("parseAndNormalizeLayers and serializeLayers", () => {
+    it("parses a single layer object and returns array", () => {
+      const single = {
+        id: "1",
+        name: "Layer",
+        color: "#fff",
+        countries: [],
+        visible: true,
+        order: 1,
+      };
+      const result = parseAndNormalizeLayers(JSON.stringify(single));
+      expect(Array.isArray(result)).toBe(true);
+      expect(result[0]).toMatchObject(single);
+    });
+
+    it("parses an array of layers and returns array", () => {
+      const arr = [
+        {
+          id: "1",
+          name: "Layer",
+          color: "#fff",
+          countries: [],
+          visible: true,
+          order: 1,
+        },
+        {
+          id: "2",
+          name: "Layer2",
+          color: "#000",
+          countries: [],
+          visible: false,
+          order: 2,
+        },
+      ];
+      const result = parseAndNormalizeLayers(JSON.stringify(arr));
+      expect(Array.isArray(result)).toBe(true);
+      expect(result.length).toBe(2);
+      expect(result[1]).toMatchObject(arr[1]);
+    });
+
+    it("serializes a single layer as array JSON", () => {
+      const single = {
+        id: "1",
+        name: "Layer",
+        color: "#fff",
+        countries: [],
+        visible: true,
+        order: 1,
+      };
+      const expected = [{ name: "Layer", color: "#fff", countries: [] }];
+      const json = serializeLayers(single);
+      expect(json).toBe(JSON.stringify(expected, null, 2));
+    });
+
+    it("serializes an array of layers as array JSON", () => {
+      const arr = [
+        {
+          id: "1",
+          name: "Layer",
+          color: "#fff",
+          countries: [],
+          visible: true,
+          order: 1,
+        },
+        {
+          id: "2",
+          name: "Layer2",
+          color: "#000",
+          countries: [],
+          visible: false,
+          order: 2,
+        },
+      ];
+      const expected = [
+        { name: "Layer", color: "#fff", countries: [] },
+        { name: "Layer2", color: "#000", countries: [] },
+      ];
+      const json = serializeLayers(arr);
+      expect(json).toBe(JSON.stringify(expected, null, 2));
     });
   });
 

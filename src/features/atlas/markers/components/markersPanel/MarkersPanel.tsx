@@ -8,6 +8,7 @@ import { useUI } from "@contexts/UIContext";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
 import type { Marker } from "../../types";
+import { exportMarkersToFile } from "../../utils/markerIO";
 
 interface MarkersPanelProps {
   onAddMarker: () => void;
@@ -103,7 +104,9 @@ export function MarkersPanel({
         }
       >
         {effectiveMarkers.length === 0 ? (
-          <div className="text-muted text-sm">No markers yet.</div>
+          <div className="mt-4 text-muted text-sm flex justify-center">
+            No markers yet.
+          </div>
         ) : (
           <div className="mt-4">
             <ul className="space-y-2">
@@ -121,6 +124,13 @@ export function MarkersPanel({
                               marker.id,
                             )
                         : () => toggleMarkerVisibility(marker.id)
+                      : undefined
+                  }
+                  onDownload={
+                    !isReadonly
+                      ? () => {
+                          exportMarkersToFile(marker);
+                        }
                       : undefined
                   }
                   onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
