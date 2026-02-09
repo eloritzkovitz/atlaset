@@ -2,17 +2,17 @@ import type { DragEvent, ReactNode } from "react";
 import {
   FaEye,
   FaEyeSlash,
-  FaPenToSquare,
-  FaTrash,
-  FaCrosshairs,
-  FaCircleInfo,
-  FaPencil,
   FaArrowsToEye,
+  FaEllipsisVertical,
 } from "react-icons/fa6";
+import { useState, useRef } from "react";
 import { useRenameControls } from "@hooks";
+import { useMenuPosition } from "@hooks";
 import { RenameControls } from "./RenameControls";
 import { ActionButton } from "../../action/ActionButton";
 import { ColorDot } from "../../ui/ColorDot";
+import { Menu } from "@components";
+import { PanelListItemMenuActions } from "./PanelListItemMenuActions";
 
 interface PanelListItemProps {
   color: string;
@@ -60,6 +60,23 @@ export function PanelListItem({
     handleKeyDown,
   } = useRenameControls({ name, onNameChange });
 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const btnRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Position menu
+  const menuStyle = useMenuPosition(
+    menuOpen,
+    btnRef,
+    menuRef,
+    30,
+    "right",
+    false,
+  );
+
+  // Close menu when renaming
+  if (isEditing && menuOpen) setMenuOpen(false);
+
   return (
     <li
       id="panel-list-item"
@@ -92,77 +109,84 @@ export function PanelListItem({
           </strong>
         )}
       </div>
-      {!isEditing && (
-        <>
-          {onView && (
-            <ActionButton
-              variant="toggle"
-              onClick={onView}
-              ariaLabel={"View"}
-              title={"View"}
-              className="text-code hover:text-code-hover"
-              icon={<FaArrowsToEye className="text-xl" />}
-            />
-          )}
-          {onToggleVisibility && (
-            <ActionButton
-              variant="toggle"
-              onClick={onToggleVisibility}
-              ariaLabel={visible ? "Hide" : "Show"}
-              title={visible ? "Hide" : "Show"}
-              className="text-muted hover:text-muted-hover"
-              icon={visible ? <FaEye /> : <FaEyeSlash />}
-            />
-          )}
-          {onCenter && (
-            <ActionButton
-              variant="toggle"
-              onClick={onCenter}
-              ariaLabel="Center"
-              title="Center"
-              className="text-info hover:text-info-hover"
-              icon={<FaCrosshairs />}
-            />
-          )}
-          {onEdit && (
-            <ActionButton
-              variant="toggle"
-              onClick={onEdit}
-              ariaLabel="Edit"
-              title="Edit"
-              className="text-info hover:text-info-hover"
-              icon={<FaPenToSquare />}
-            />
-          )}
-          {onNameChange && (
-            <ActionButton
-              variant="toggle"
-              onClick={handleEdit}
-              ariaLabel="Rename"
-              title="Rename"
-              className="text-info hover:text-info-hover"
-              icon={<FaPencil />}
-            />
-          )}
-          {onRemove && (
-            <ActionButton
-              variant="toggle"
-              onClick={() => {
-                if (!removeDisabled && onRemove) onRemove();
-              }}
-              ariaLabel="Remove"
-              title={
-                removeDisabled
-                  ? "This item is managed automatically and cannot be removed"
-                  : "Remove"
+      {!isEditing && onView && (
+        <ActionButton
+          variant="toggle"
+          onClick={onView}
+          ariaLabel={"View"}
+          title={"View"}
+          className="text-code hover:text-code-hover"
+          icon={<FaArrowsToEye className="text-xl" />}
+        />
+      )}
+      {!isEditing && onToggleVisibility && (
+        <ActionButton
+          variant="toggle"
+          onClick={onToggleVisibility}
+          ariaLabel={visible ? "Hide" : "Show"}
+          title={visible ? "Hide" : "Show"}
+          className="text-muted hover:text-muted-hover"
+          icon={visible ? <FaEye /> : <FaEyeSlash />}
+        />
+      )}
+      {!isEditing && (onCenter || onEdit || onNameChange || onRemove) && (
+        <div ref={btnRef} style={{ position: "relative" }}>
+          <ActionButton
+            onClick={(e) => {
+              e.stopPropagation();
+              setMenuOpen((v) => !v);
+            }}
+            ariaLabel="More actions"
+            title="More actions"
+            icon={<FaEllipsisVertical />}
+            rounded
+          />
+          <Menu
+            open={menuOpen}
+            onClose={() => setMenuOpen(false)}
+            className="panel-listitem-menu !p-2"
+            style={menuStyle}
+            containerRef={menuRef}
+            disableScroll={true}
+          >
+            <PanelListItemMenuActions
+              onCenter={
+                onCenter
+                  ? () => {
+                      setTimeout(() => setMenuOpen(false), 200);
+                      onCenter();
+                    }
+                  : undefined
               }
-              className={`text-danger hover:text-danger-hover" ${
-                removeDisabled ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              icon={removeDisabled ? <FaCircleInfo /> : <FaTrash />}
+              onEdit={
+                onEdit
+                  ? () => {
+                      setTimeout(() => setMenuOpen(false), 200);
+                      onEdit();
+                    }
+                  : undefined
+              }
+              onNameChange={
+                onNameChange
+                  ? () => {
+                      setTimeout(() => setMenuOpen(false), 200);
+                      handleEdit();
+                    }
+                  : null
+              }
+              onRemove={
+                onRemove
+                  ? () => {
+                      setTimeout(() => setMenuOpen(false), 200);
+                      if (!removeDisabled && onRemove) onRemove();
+                    }
+                  : null
+              }
+              removeDisabled={removeDisabled}
+              handleEdit={handleEdit}
             />
-          )}
-        </>
+          </Menu>
+        </div>
       )}
     </li>
   );
