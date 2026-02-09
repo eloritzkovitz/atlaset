@@ -21,7 +21,7 @@ import type { MapMode } from "../types";
  * @param mode Current map mode.
  * @returns Array of layer items based on the current mode.
  */
-export function useMapLayerItems(mode: MapMode = "normal") {
+export function useMapLayerItems(mode: MapMode = "view") {
   const { layers } = useLayers();
   const { isEdit } = useMapView();
   const { editingSavedMap } = useSavedMaps();

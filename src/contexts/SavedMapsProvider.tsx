@@ -1,15 +1,16 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { logUserActivity, useAuth } from "@features/user";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
 import {
   normalizeLayers,
   useLayerManager,
   type Layer,
 } from "@features/atlas/layers";
+import { useMapMode } from "@features/atlas/map";
 import { normalizeMarkers } from "@features/atlas/markers";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { type SavedMap, savedMapsService } from "@features/atlas/saved";
+import { logUserActivity, useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
@@ -80,24 +81,21 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   const { user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // Watch URL for map/edit and load map for editing on mount or URL change
+  // Get mapMode and mapId
+  const { mapMode, mapId } = useMapMode();
+
+  // Watch mapMode and mapId from hook and load/clear editingSavedMap accordingly
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const mapId = params.get("map");
-    const isEdit = params.get("edit") === "true" || params.has("edit");
-    if (mapId && isEdit) {
-      // Only load if not already loaded or if id changed
+    if (mapMode === "edit" && mapId) {
       if (!editingSavedMap || editingSavedMap.id !== mapId) {
         loadSavedMapForEditing(mapId);
       }
     } else {
-      // If not in edit mode, clear editingSavedMap
       if (editingSavedMap) setEditingSavedMap(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.search]);
+  }, [mapMode, mapId]);
 
   // Exit edit mode: remove edit/map from URL and clear editingSavedMap
   function exitEditMode() {

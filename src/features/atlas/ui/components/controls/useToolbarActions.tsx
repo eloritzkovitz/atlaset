@@ -38,7 +38,7 @@ export function useToolbarActions({
     toggleExport,
     toggleSettings,
   } = useUI();
-  const { setTimelineMode } = useTimeline();
+  const { timelineMode, setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
   const { saveCurrentMap, exitEditMode } = useSavedMaps();
 
@@ -84,7 +84,7 @@ export function useToolbarActions({
       key: "timeline",
       icon: <FaTimeline className="text-xl" />,
       label: "Timeline",
-      onClick: withMenuClose(() => setTimelineMode((prev) => !prev)),
+      onClick: withMenuClose(() => setTimelineMode(!timelineMode)),
       show: !isReadonly && !isEdit && isAuthenticated(),
       separatorAfter: true,
     },

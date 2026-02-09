@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useAudio } from "@contexts/AudioContext";
 import { useTrips } from "@contexts/TripsContext";
 import { isAuthenticated } from "@utils/firebase";
-import { useMapView } from "@contexts/MapViewContext";
+import { useMapMode } from "@features/atlas/map/hooks/useMapMode";
 import type { LayerMode } from "@features/atlas/layers";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
@@ -11,10 +11,10 @@ import { TimelineContext } from "./TimelineContext";
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [timelineMode, _setTimelineMode] = useState(false);
+  const { mapMode } = useMapMode();
+  const [timelineMode, setTimelineMode] = useState(false);
   const prevTimelineMode = useRef(false);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-  const { isEdit, isReadonly } = useMapView();
   const { play } = useAudio();
 
   // Compute years from trips
@@ -26,20 +26,20 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   const [layerMode, setLayerMode] = useState<LayerMode>("cumulative");
 
   // Only allow timeline mode if authenticated and not readonly/edit
-  const setTimelineMode = (
-    fnOrValue: boolean | ((prev: boolean) => boolean)
-  ) => {
-    const next =
-      typeof fnOrValue === "function" ? fnOrValue(timelineMode) : fnOrValue;
-    if (next && (!isAuthenticated() || isReadonly || isEdit)) {
-      // Block enabling timeline mode if not allowed
-      return;
+  const handleSetTimelineMode = (v: boolean | ((prev: boolean) => boolean)) => {
+    const next = typeof v === "function" ? v(timelineMode) : v;
+    if (next) {
+      if (!isAuthenticated() || mapMode === "edit" || mapMode === "readonly") {
+        return;
+      }
+      setTimelineMode(true);
+    } else {
+      setTimelineMode(false);
     }
-    _setTimelineMode(next);
   };
 
   // Toggle Timeline mode with "T"
-  useKeyHandler(() => setTimelineMode((prev) => !prev), ["t", "T"], true);
+  useKeyHandler(() => handleSetTimelineMode((prev) => !prev), ["t", "T"], true);
 
   // When timeline mode changes, update showVisitedOnly and play sound
   useEffect(() => {
@@ -56,7 +56,7 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     <TimelineContext.Provider
       value={{
         timelineMode,
-        setTimelineMode,
+        setTimelineMode: handleSetTimelineMode,
         showVisitedOnly,
         setShowVisitedOnly,
         years,
