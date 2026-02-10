@@ -102,12 +102,12 @@ export function PanelListItem({
         className={`mb-4 flex items-center bg-surface-alt rounded-lg px-3 py-2 ${
           dragged ? "ring-dashed" : ""
         }`}
-        draggable={!!onDragStart}
+        draggable={onDragStart ? true : false}
         onDragStart={onDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
         style={{
-          cursor: !!onDragStart ? (dragged ? "grabbing" : "grab") : "default",
+          cursor: onDragStart ? (dragged ? "grabbing" : "grab") : "default",
         }}
       >
         {!icon ? <ColorDot color={color} size={22} /> : icon}
