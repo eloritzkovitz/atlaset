@@ -3,6 +3,7 @@
 ## 2026-02-10
 
 - **[chore]** **General:** Updated confirmation modal titles and content
+- **[bugfix]** **User:** Fixed updating visited countries on trip actions
 
 ## 2026-02-09
 
