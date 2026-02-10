@@ -30,6 +30,14 @@ vi.mock("../../../firebase", () => ({
   db: {},
   __esModule: true,
 }));
+vi.mock("../../user/profile/services/profileService", () => ({
+  profileService: {
+    updateVisitedCountryCodes: vi.fn(),
+  },
+  __esModule: true,
+}));
+import { profileService } from "../../user/profile/services/profileService";
+const updateVisitedCountryCodesMock = profileService.updateVisitedCountryCodes as unknown as ReturnType<typeof vi.fn>;
 
 import { tripsService } from "./tripsService";
 import * as firebaseUtils from "@utils/firebase";
@@ -84,6 +92,7 @@ describe("tripsService", () => {
       { id: "shared1", name: "Shared Trip" },
     ]);
     getDocSpy.mockRestore();
+    updateVisitedCountryCodesMock.mockReset();
   });
 
   it("save does nothing if trips is empty (authenticated)", async () => {
@@ -164,7 +173,7 @@ describe("tripsService", () => {
     );
   });
 
-  it("adds a trip to Firestore (authenticated) and logs activity", async () => {
+  it("adds a trip to Firestore (authenticated) and logs activity and updates visitedCountryCodes", async () => {
     isAuthenticatedMock.mockReturnValue(true);
     getCurrentUserMock.mockReturnValue({ uid: "abc", displayName: "TestUser" });
     const tripsCol = {};
@@ -205,9 +214,10 @@ describe("tripsService", () => {
       }),
       "abc"
     );
+    expect(updateVisitedCountryCodesMock).toHaveBeenCalledWith("abc");
   });
 
-  it("edit sets null for undefined dates in Firestore", async () => {
+  it("edit sets null for undefined dates in Firestore and updates visitedCountryCodes", async () => {
     isAuthenticatedMock.mockReturnValue(true);
     getCurrentUserMock.mockReturnValue({ uid: "abc", displayName: "TestUser" });
     const tripsCol = {};
@@ -269,10 +279,11 @@ describe("tripsService", () => {
       }),
       "abc"
     );
+    expect(updateVisitedCountryCodesMock).toHaveBeenCalledWith("abc");
     getDocSpy.mockRestore();
   });
 
-  it("remove logs activity with tripName if found in Firestore", async () => {
+  it("remove logs activity with tripName if found in Firestore and updates visitedCountryCodes", async () => {
     isAuthenticatedMock.mockReturnValue(true);
     getCurrentUserMock.mockReturnValue({ uid: "abc", displayName: "TestUser" });
     const tripsCol = {};
@@ -294,9 +305,10 @@ describe("tripsService", () => {
       }),
       "abc"
     );
+    expect(updateVisitedCountryCodesMock).toHaveBeenCalledWith("abc");
   });
 
-  it("remove logs activity with undefined tripName if not found in Firestore", async () => {
+  it("remove logs activity with undefined tripName if not found in Firestore and updates visitedCountryCodes", async () => {
     isAuthenticatedMock.mockReturnValue(true);
     getCurrentUserMock.mockReturnValue({ uid: "abc", displayName: "TestUser" });
     const tripsCol = {};
@@ -316,6 +328,7 @@ describe("tripsService", () => {
       }),
       "abc"
     );
+    expect(updateVisitedCountryCodesMock).toHaveBeenCalledWith("abc");
   });
 
   it("updates a trip in Firestore (authenticated)", async () => {
