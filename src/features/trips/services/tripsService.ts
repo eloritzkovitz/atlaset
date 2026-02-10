@@ -14,6 +14,7 @@ import {
 import type { Trip } from "../types";
 import { logUserActivity } from "../../../features/user";
 import { db } from "../../../firebase";
+import { profileService } from "../../user/profile/services/profileService";
 
 /**
  * Service for managing user trips.
@@ -32,14 +33,14 @@ export const tripsService = {
     // Fetch trips owned by the user
     const ownedSnapshot = await getDocs(tripsCol);
     const ownedTrips = ownedSnapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() } as Trip)
+      (doc) => ({ id: doc.id, ...doc.data() }) as Trip,
     );
 
     // Fetch shared trip references
     const sharedRefsCol = collection(db, `users/${user?.uid}/sharedTrips`);
     const sharedRefsSnap = await getDocs(sharedRefsCol);
     const sharedRefs = sharedRefsSnap.docs.map(
-      (doc) => doc.data() as { ownerUid: string; tripId: string }
+      (doc) => doc.data() as { ownerUid: string; tripId: string },
     );
 
     // Fetch each shared trip from the owner's collection
@@ -74,7 +75,7 @@ export const tripsService = {
         count: trips.length,
         userName: user!.displayName,
       },
-      user!.uid
+      user!.uid,
     );
   },
 
@@ -86,7 +87,7 @@ export const tripsService = {
     if (!isAuthenticated())
       throw new Error("Authentication required to add a trip.");
     const user = getCurrentUser();
-    
+
     // Ensure owner is always in participants
     const participants = Array.isArray(trip.participants)
       ? [...trip.participants]
@@ -102,18 +103,18 @@ export const tripsService = {
     };
     const tripsCol = getUserCollection("trips");
     await setDoc(doc(tripsCol, trip.id), tripForFirestore);
-    
+
     // Add shared trip references for participants (excluding owner)
     for (const participantUid of participants) {
       if (participantUid !== user!.uid) {
         const sharedRefDoc = doc(
           collection(db, `users/${participantUid}/sharedTrips`),
-          trip.id
+          trip.id,
         );
         await setDoc(sharedRefDoc, { ownerUid: user!.uid, tripId: trip.id });
       }
     }
-    
+
     await logUserActivity(
       411,
       {
@@ -121,8 +122,9 @@ export const tripsService = {
         itemName: trip.name,
         userName: user!.displayName,
       },
-      user!.uid
+      user!.uid,
     );
+    await profileService.updateVisitedCountryCodes(user!.uid);
   },
 
   /**
@@ -145,7 +147,7 @@ export const tripsService = {
         favorite,
         action: favorite ? "favorited" : "unfavorited",
       },
-      user!.uid
+      user!.uid,
     );
   },
 
@@ -169,7 +171,7 @@ export const tripsService = {
         rating: ratingValue,
         userName: user!.displayName,
       },
-      user!.uid
+      user!.uid,
     );
   },
 
@@ -208,23 +210,23 @@ export const tripsService = {
     }
     await setDoc(
       doc(tripsCol, trip.id),
-      tripForFirestore as Record<string, unknown>
+      tripForFirestore as Record<string, unknown>,
     );
 
     // Update shared trip references for participants
     const newParticipants = participants;
     const added = newParticipants.filter(
-      (uid) => uid !== user!.uid && !prevParticipants.includes(uid)
+      (uid) => uid !== user!.uid && !prevParticipants.includes(uid),
     );
     const removed = prevParticipants.filter(
-      (uid) => uid !== user!.uid && !newParticipants.includes(uid)
+      (uid) => uid !== user!.uid && !newParticipants.includes(uid),
     );
 
     // Add new shared trip references
     for (const participantUid of added) {
       const sharedRefDoc = doc(
         collection(db, `users/${participantUid}/sharedTrips`),
-        trip.id
+        trip.id,
       );
       await setDoc(sharedRefDoc, { ownerUid: user!.uid, tripId: trip.id });
     }
@@ -233,7 +235,7 @@ export const tripsService = {
     for (const participantUid of removed) {
       const sharedRefDoc = doc(
         collection(db, `users/${participantUid}/sharedTrips`),
-        trip.id
+        trip.id,
       );
       await deleteDoc(sharedRefDoc);
     }
@@ -244,8 +246,9 @@ export const tripsService = {
         itemName: trip.name,
         userName: user!.displayName,
       },
-      user!.uid
+      user!.uid,
     );
+    await profileService.updateVisitedCountryCodes(user!.uid);
   },
 
   /**
@@ -269,7 +272,7 @@ export const tripsService = {
         if (participantUid !== user!.uid) {
           const sharedRefDoc = doc(
             collection(db, `users/${participantUid}/sharedTrips`),
-            id
+            id,
           );
           await deleteDoc(sharedRefDoc);
         }
@@ -284,7 +287,8 @@ export const tripsService = {
         itemName: tripName,
         userName: user!.displayName,
       },
-      user!.uid
+      user!.uid,
     );
+    await profileService.updateVisitedCountryCodes(user!.uid);
   },
 };

@@ -1,6 +1,8 @@
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   runTransaction,
   Timestamp,
   updateDoc,
@@ -33,16 +35,16 @@ export const profileService = {
    */
   async generateUniqueUsername(
     displayName: string | null,
-    email: string | null
+    email: string | null,
   ): Promise<string> {
     const base = displayName
       ? displayName.toLowerCase().replace(/[^a-z0-9]/g, "")
       : email
-      ? email
-          .split("@")[0]
-          .toLowerCase()
-          .replace(/[^a-z0-9]/g, "")
-      : "user";
+        ? email
+            .split("@")[0]
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, "")
+        : "user";
     let username = base;
     let suffix = 0;
     while (true) {
@@ -75,7 +77,7 @@ export const profileService = {
     // Generate a unique username
     const username = await this.generateUniqueUsername(
       user.displayName,
-      user.email
+      user.email,
     );
 
     // Use a transaction to ensure username uniqueness
@@ -124,7 +126,7 @@ export const profileService = {
    * @returns - The UserProfile object or null if not found.
    */
   async getUserProfileByUsername(
-    username: string
+    username: string,
   ): Promise<UserProfile | null> {
     // Return null if username is empty
     if (!username) return null;
@@ -166,7 +168,7 @@ export const profileService = {
         updatedFields: Object.keys(updates),
         userName: username || "",
       },
-      uid
+      uid,
     );
   },
 
@@ -226,5 +228,54 @@ export const profileService = {
   async setHomeCountry(uid: string, country: string) {
     const userRef = doc(db, "users", uid);
     await updateDoc(userRef, { homeCountry: country });
+  },
+
+  /**
+   * Updates the user's visitedCountryCodes based on all completed owned and shared trips.
+   * @param uid - The user ID.
+   */
+  async updateVisitedCountryCodes(uid: string) {
+    // Fetch owned trips
+    const tripsCol = collection(db, `users/${uid}/trips`);
+    const ownedSnapshot = await getDocs(tripsCol);
+    const ownedTrips = ownedSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    // Fetch shared trip references
+    const sharedRefsCol = collection(db, `users/${uid}/sharedTrips`);
+    const sharedRefsSnap = await getDocs(sharedRefsCol);
+    const sharedRefs = sharedRefsSnap.docs.map(
+      (doc) => doc.data() as { ownerUid: string; tripId: string },
+    );
+
+    // Fetch each shared trip from the owner's collection
+    const sharedTrips = [];
+    for (const ref of sharedRefs) {
+      const ownerTripsCol = collection(db, `users/${ref.ownerUid}/trips`);
+      const tripDoc = await getDoc(doc(ownerTripsCol, ref.tripId));
+      if (tripDoc.exists()) {
+        sharedTrips.push({ id: tripDoc.id, ...tripDoc.data() });
+      }
+    }
+
+    // Merge owned and shared trips
+    const allTrips = [...ownedTrips, ...sharedTrips];
+    // Collect all unique country codes from completed trips
+    const visited = new Set();
+    allTrips.forEach((tripDoc) => {
+      const { countryCodes = [], status } = tripDoc as {
+        countryCodes?: string[];
+        status?: string;
+      };
+      if (status === "completed" && Array.isArray(countryCodes)) {
+        countryCodes.forEach((code) => visited.add(code));
+      }
+    });
+
+    // Update the user's profile
+    const userDoc = doc(db, "users", uid);
+    await updateDoc(userDoc, { visitedCountryCodes: Array.from(visited) });
   },
 };

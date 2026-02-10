@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { ConfirmModal } from "@components";
 import {
   FaUserPlus,
   FaHourglassHalf,
@@ -34,21 +35,25 @@ export function FriendshipButton({
     btnRef,
     menuRef,
     45,
-    "left",
-    false
+    "right",
+    false,
   );
 
   // Handlers for menu actions
+  // Confirmation modal states
+  const [confirmUnfriend, setConfirmUnfriend] = useState(false);
+  const [confirmWithdraw, setConfirmWithdraw] = useState(false);
+
   const handleUnfriend = () => {
     setShowMenu(false);
     setTimeout(() => {
-      if (onUnfriend) onUnfriend();
+      setConfirmUnfriend(true);
     }, 100);
   };
   const handleWithdraw = () => {
     setShowMenu(false);
     setTimeout(() => {
-      if (onWithdrawRequest) onWithdrawRequest();
+      setConfirmWithdraw(true);
     }, 100);
   };
 
@@ -68,70 +73,100 @@ export function FriendshipButton({
 
   if (friendStatus === "pending") {
     return (
-      <div ref={containerRef} className="inline-block relative">
-        <button
-          ref={btnRef}
-          className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 bg-warning text-white rounded-full hover:bg-yellow-600 transition"
-          onClick={() => setShowMenu((v) => !v)}
-          type="button"
-          disabled={loading}
-        >
-          <FaHourglassHalf className="text-lg" />
-          Pending
-        </button>
-        <Menu
-          open={showMenu}
-          onClose={() => setShowMenu(false)}
-          containerRef={containerRef}
-          style={menuStyle}
-        >
-          <div ref={menuRef}>
-            <MenuButton
-              icon={<FaXmark className="text-danger" />}
-              onClick={handleWithdraw}
-              ariaLabel="Withdraw Request"
-              title="Withdraw Request"
-              className="text-danger"
-            >
-              Withdraw Request
-            </MenuButton>
-          </div>
-        </Menu>
-      </div>
+      <>
+        <div ref={containerRef} className="inline-block relative">
+          <button
+            ref={btnRef}
+            className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 bg-warning text-white rounded-full hover:bg-yellow-600 transition"
+            onClick={() => setShowMenu((v) => !v)}
+            type="button"
+            disabled={loading}
+          >
+            <FaHourglassHalf className="text-lg" />
+            Pending
+          </button>
+          <Menu
+            open={showMenu}
+            onClose={() => setShowMenu(false)}
+            containerRef={containerRef}
+            style={menuStyle}
+          >
+            <div ref={menuRef}>
+              <MenuButton
+                icon={<FaXmark className="text-danger" />}
+                onClick={handleWithdraw}
+                ariaLabel="Withdraw Request"
+                className="text-danger"
+              >
+                Withdraw Request
+              </MenuButton>
+            </div>
+          </Menu>
+        </div>
+        {confirmWithdraw && (
+          <ConfirmModal
+            isOpen={confirmWithdraw}
+            title={"Withdraw friend request"}
+            message={"Are you sure you want to withdraw your friend request?"}
+            onConfirm={() => {
+              setConfirmWithdraw(false);
+              if (onWithdrawRequest) onWithdrawRequest();
+            }}
+            onCancel={() => setConfirmWithdraw(false)}
+            submitLabel="Withdraw"
+            cancelLabel="Cancel"
+          />
+        )}
+      </>
     );
   }
 
   if (friendStatus === "friend") {
     return (
-      <div ref={containerRef} className="inline-block relative">
-        <button
-          ref={btnRef}
-          className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 bg-info text-white rounded-full hover:bg-blue-700 transition"
-          onClick={() => setShowMenu((v) => !v)}
-          type="button"
-        >
-          <FaUserCheck className="text-lg" />
-          Friend
-        </button>
-        <Menu
-          open={showMenu}
-          onClose={() => setShowMenu(false)}
-          containerRef={containerRef}
-          style={menuStyle}
-        >
-          <div ref={menuRef}>
-            <MenuButton
-              icon={<FaUserMinus className="text-danger" />}
-              onClick={handleUnfriend}
-              ariaLabel="Unfriend"
-              title="Unfriend"
-              className="text-danger"
-            >
-              Unfriend
-            </MenuButton>
-          </div>
-        </Menu>
-      </div>
+      <>
+        <div ref={containerRef} className="inline-block relative">
+          <button
+            ref={btnRef}
+            className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 bg-info text-white rounded-full hover:bg-blue-700 transition"
+            onClick={() => setShowMenu((v) => !v)}
+            type="button"
+          >
+            <FaUserCheck className="text-lg" />
+            Friend
+          </button>
+          <Menu
+            open={showMenu}
+            onClose={() => setShowMenu(false)}
+            containerRef={containerRef}
+            style={menuStyle}
+          >
+            <div ref={menuRef}>
+              <MenuButton
+                icon={<FaUserMinus className="text-danger" />}
+                onClick={handleUnfriend}
+                ariaLabel="Unfriend"
+                className="text-danger"
+              >
+                Unfriend
+              </MenuButton>
+            </div>
+          </Menu>
+        </div>
+        {confirmUnfriend && (
+          <ConfirmModal
+            isOpen={confirmUnfriend}
+            title={"Remove friend"}
+            message={"Are you sure you want to remove this friend?"}
+            onConfirm={() => {
+              setConfirmUnfriend(false);
+              if (onUnfriend) onUnfriend();
+            }}
+            onCancel={() => setConfirmUnfriend(false)}
+            submitLabel="Remove"
+            cancelLabel="Cancel"
+          />
+        )}
+      </>
     );
   }
   return null;

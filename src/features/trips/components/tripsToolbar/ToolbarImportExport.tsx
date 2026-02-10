@@ -29,7 +29,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
       exportBtnRef as React.RefObject<HTMLElement>,
     ],
     () => setShowExportMenu(false),
-    showExportMenu
+    showExportMenu,
   );
 
   // Menu positioning
@@ -39,7 +39,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
     menuRef,
     16,
     "right",
-    false
+    false,
   );
 
   // Trigger file input click
@@ -58,6 +58,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
       />
       {showImportNotice && (
         <ConfirmModal
+          title="Import trips?"
           message={
             <>
               Importing will <b>add</b> trips to your current list. Existing
