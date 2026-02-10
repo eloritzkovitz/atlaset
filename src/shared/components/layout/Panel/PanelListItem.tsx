@@ -16,7 +16,7 @@ import { ColorDot } from "../../ui/ColorDot";
 interface PanelListItemProps {
   color: string;
   icon?: ReactNode;
-  name: string;
+  name: ReactNode;
   onView?: () => void;
   visible: boolean;
   onToggleVisibility?: () => void;
@@ -30,6 +30,9 @@ interface PanelListItemProps {
   onDragStart?: () => void;
   handleDragOver?: (e: DragEvent<HTMLLIElement>) => void;
   handleDragEnd?: () => void;
+  menuContent?: ReactNode;
+  menuPosition?: "left" | "right";
+  children?: ReactNode;
 }
 
 export function PanelListItem({
@@ -49,7 +52,16 @@ export function PanelListItem({
   handleDragOver,
   handleDragEnd,
   onNameChange,
+  menuContent,
+  menuPosition = "right",
+  children,
 }: PanelListItemProps) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const btnRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Rename controls state and handlers
+  const nameString = typeof name === "string" ? name : "";
   const {
     isEditing,
     editName,
@@ -59,11 +71,7 @@ export function PanelListItem({
     handleCancel,
     handleBlur,
     handleKeyDown,
-  } = useRenameControls({ name, onNameChange });
-
-  const [menuOpen, setMenuOpen] = useState(false);
-  const btnRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
+  } = useRenameControls({ name: nameString, onNameChange });
 
   // Confirmation modal state
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -74,7 +82,7 @@ export function PanelListItem({
     btnRef,
     menuRef,
     30,
-    "right",
+    menuPosition,
     false,
   );
 
@@ -98,7 +106,9 @@ export function PanelListItem({
         onDragStart={onDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
-        style={{ cursor: dragged ? "grabbing" : "grab" }}
+        style={{
+          cursor: !!onDragStart ? (dragged ? "grabbing" : "grab") : "default",
+        }}
       >
         {!icon ? <ColorDot color={color} size={22} /> : icon}
         <div className="flex-1 ml-2 flex items-center">
@@ -119,6 +129,7 @@ export function PanelListItem({
               {name}
             </strong>
           )}
+          {children}
         </div>
         {!isEditing && onView && (
           <ActionButton
@@ -140,27 +151,29 @@ export function PanelListItem({
             icon={visible ? <FaEye /> : <FaEyeSlash />}
           />
         )}
-        {!isEditing &&
-          (onCenter || onEdit || onNameChange || onRemove || onDownload) && (
-            <div ref={btnRef} style={{ position: "relative" }}>
-              <ActionButton
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMenuOpen((v) => !v);
-                }}
-                ariaLabel="More actions"
-                title="More actions"
-                icon={<FaEllipsisVertical />}
-                rounded
-              />
-              <Menu
-                open={menuOpen}
-                onClose={() => setMenuOpen(false)}
-                className="panel-listitem-menu !p-2"
-                style={menuStyle}
-                containerRef={menuRef}
-                disableScroll={true}
-              >
+        {!isEditing && (
+          <div ref={btnRef} style={{ position: "relative" }}>
+            <ActionButton
+              onClick={(e) => {
+                e.stopPropagation();
+                setMenuOpen((v) => !v);
+              }}
+              ariaLabel="More actions"
+              title="More actions"
+              icon={<FaEllipsisVertical />}
+              rounded
+            />
+            <Menu
+              open={menuOpen}
+              onClose={() => setMenuOpen(false)}
+              className="panel-listitem-menu !p-2 !z-[10100]"
+              style={menuStyle}
+              containerRef={menuRef}
+              disableScroll={true}
+            >
+              {menuContent ? (
+                menuContent
+              ) : (
                 <PanelListItemMenuActions
                   onCenter={
                     onCenter ? () => closeMenuAndCall(onCenter) : undefined
@@ -185,9 +198,10 @@ export function PanelListItem({
                   removeDisabled={removeDisabled}
                   handleEdit={handleEdit}
                 />
-              </Menu>
-            </div>
-          )}
+              )}
+            </Menu>
+          </div>
+        )}
       </li>
       {confirmOpen && onRemove && (
         <ConfirmModal
