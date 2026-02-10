@@ -164,7 +164,8 @@ export function CountryQuiz({
       {showConfirm && (
         <ConfirmModal
           isOpen={showConfirm}
-          title="Are you sure?"
+          showWarningIcon={true}
+          messageTitle="Are you sure?"
           message="Do you really want to forfeit this quiz? Your progress will be lost."
           onConfirm={handleConfirmForfeit}
           onCancel={handleCancelForfeit}

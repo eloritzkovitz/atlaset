@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-02-10
+
+- **[chore]** **General:** Updated confirmation modal titles and content
+
 ## 2026-02-09
 
 - **[breaking]** **Atlas | Layers:** Removed visited countries layer and all associated logic and moved it into a map setting

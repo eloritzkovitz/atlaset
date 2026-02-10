@@ -8,6 +8,8 @@ import { ActionButton } from "../../action/ActionButton";
 interface ConfirmModalProps {
   isOpen?: boolean;
   title?: ReactNode;
+  showWarningIcon?: boolean;
+  messageTitle?: ReactNode;
   message: ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
@@ -19,7 +21,9 @@ interface ConfirmModalProps {
 export function ConfirmModal({
   isOpen = true,
   title,
+  showWarningIcon = false,
   message,
+  messageTitle,
   onConfirm,
   onCancel,
   submitLabel = "Continue",
@@ -28,10 +32,10 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onCancel}>
-      <PanelHeader title={<>{""}</>}>
+      <PanelHeader title={title} showSeparator={!!title}>
         <ActionButton
           onClick={onCancel}
-          ariaLabel="Close Edit Profile Modal"
+          ariaLabel="Close modal"
           title="Close"
           icon={<FaXmark className="text-2xl" />}
           rounded
@@ -39,9 +43,13 @@ export function ConfirmModal({
       </PanelHeader>
       <div className="p-4">
         <div className="flex flex-col items-center mb-2">
-          <FaCircleExclamation className="text-danger text-6xl mb-2" />
-          {title && (
-            <div className="mb-2 text-2xl font-bold text-center">{title}</div>
+          {showWarningIcon && (
+            <FaCircleExclamation className="text-danger text-6xl mb-2" />
+          )}
+          {messageTitle && (
+            <div className="mb-2 text-2xl font-bold text-center">
+              {messageTitle}
+            </div>
           )}
         </div>
         <div className="mb-8 text-base text-center text-text">{message}</div>

@@ -58,7 +58,7 @@ export function ToolbarActions({
       {/* Confirm Modals */}
       {showDeleteConfirm && (
         <ConfirmModal
-          title="Delete Trips"
+          title="Delete trips?"
           message={`Delete ${selectedTripIds.length} selected trips?`}
           onConfirm={() => {
             setShowDeleteConfirm(false);

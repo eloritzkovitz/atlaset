@@ -54,7 +54,7 @@ export function AccountManagementSection() {
       {/* Hibernate Modal */}
       <ConfirmModal
         isOpen={modal === "hibernate"}
-        title="Hibernate Account"
+        title="Hibernate account?"
         message="Are you sure you want to deactivate your account? You can reactivate by logging in again."
         onConfirm={handleHibernate}
         onCancel={() => setModal(null)}
@@ -66,7 +66,7 @@ export function AccountManagementSection() {
       {/* Delete Modal */}
       <ConfirmModal
         isOpen={modal === "delete"}
-        title="Delete Account"
+        title="Delete account?"
         message="Are you sure you want to delete your account? This action cannot be undone."
         onConfirm={handleDelete}
         onCancel={() => setModal(null)}
