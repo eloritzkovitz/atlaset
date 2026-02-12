@@ -6,7 +6,7 @@ import {
   FaPlus,
   FaXmark,
 } from "react-icons/fa6";
-import { ActionButton, Panel } from "@components";
+import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { DEFAULT_PANEL_WIDTH } from "@constants";
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
@@ -146,9 +146,7 @@ export function MarkersPanel({
         }
       >
         {effectiveMarkers.length === 0 ? (
-          <div className="mt-4 text-muted text-sm flex justify-center">
-            No markers yet.
-          </div>
+          <EmptyListMessage message="No markers yet." />
         ) : (
           <div className="mt-4">
             <ul className="space-y-2">

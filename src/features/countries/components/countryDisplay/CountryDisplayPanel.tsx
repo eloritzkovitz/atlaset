@@ -1,4 +1,5 @@
 import React from "react";
+import { EmptyListMessage } from "@components";
 import { CountryItem } from "./CountryItem";
 import type { Country } from "../../types";
 
@@ -38,7 +39,7 @@ export const CountryDisplayPanel = React.forwardRef<
       showBadges = false,
       className = "",
     },
-    ref
+    ref,
   ) => {
     // List view
     if (view === "list") {
@@ -46,9 +47,7 @@ export const CountryDisplayPanel = React.forwardRef<
         <div ref={ref} className={`w-full ${className}`}>
           <ul className="list-none p-0 m-0 w-full">
             {countries.length === 0 ? (
-              <li className="px-4 py-8 text-center text-muted">
-                No countries found
-              </li>
+              <EmptyListMessage message="No countries found." />
             ) : (
               countries.map((country) => (
                 <li key={country.isoCode}>
@@ -97,7 +96,7 @@ export const CountryDisplayPanel = React.forwardRef<
               showAllAsVisited={showAllAsVisited}
               selectedIsoCode={selectedIsoCode}
               hoveredIsoCode={hoveredIsoCode}
-              showFlags={showFlags}             
+              showFlags={showFlags}
               flagSize="128"
               showBadges={showBadges}
               renderBadge={renderBadge}
@@ -114,5 +113,5 @@ export const CountryDisplayPanel = React.forwardRef<
         )}
       </div>
     );
-  }
+  },
 );

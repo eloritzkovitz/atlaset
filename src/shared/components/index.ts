@@ -60,6 +60,7 @@ export { Panel } from "./layout/Panel/Panel";
 export { PanelHeader } from "./layout/Panel/PanelHeader";
 export { PanelListItem } from "./layout/Panel/PanelListItem";
 export { DrawerPanel } from "./layout/Panel/DrawerPanel";
+export { EmptyListMessage } from "./layout/Panel/EmptyListMessage";
 
 // Toolbar components
 export { ActionsToolbar } from "./layout/Toolbar/ActionsToolbar";

@@ -1,5 +1,6 @@
 import { UserListItem } from "./UserListItem";
 import { friendService } from "../../friends/services/friendService";
+import { EmptyListMessage } from "@components";
 
 interface FriendRequestListProps {
   requests: Array<{ uid: string; from: string }>;
@@ -16,11 +17,7 @@ export function FriendRequestList({
     return <div>Loading...</div>;
   }
   if (requests.length === 0) {
-    return (
-      <div className="mt-4 text-muted text-sm flex justify-center">
-        No friend requests.
-      </div>
-    );
+    return <EmptyListMessage message="No friend requests." />;
   }
   return (
     <ul>

@@ -6,7 +6,7 @@ import {
   FaFileExport,
   FaXmark,
 } from "react-icons/fa6";
-import { ActionButton, Panel } from "@components";
+import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
@@ -127,9 +127,7 @@ export function LayersPanel({
     >
       <div className="mt-4">
         {!effectiveLayers || effectiveLayers.length === 0 ? (
-          <div className="mt-4 text-muted text-sm flex justify-center">
-            No layers yet.
-          </div>
+          <EmptyListMessage message="No layers yet." />
         ) : (
           <ul className="list-none p-0">
             {effectiveLayers.map((layer, index) => (

@@ -1,5 +1,5 @@
 import { FaBookmark, FaFloppyDisk, FaPlus, FaXmark } from "react-icons/fa6";
-import { ActionButton, Panel } from "@components";
+import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useUI } from "@contexts/UIContext";
@@ -60,9 +60,7 @@ export function SavedMapsPanel() {
     >
       <div className="mt-4">
         {savedMaps.length === 0 ? (
-          <div className="mt-4 text-muted text-sm flex justify-center">
-            No saved maps yet.
-          </div>
+          <EmptyListMessage message="No saved maps yet." />
         ) : (
           <ul className="list-none p-0">
             {savedMaps.map((map) => (
