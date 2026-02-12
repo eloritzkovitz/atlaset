@@ -7,3 +7,4 @@ export { Footer } from "./Footer/Footer";
 export { AppLayout } from "./Layout/AppLayout";
 export { EmbedLayout } from "./Layout/EmbedLayout";
 export { PublicLayout } from "./Layout/PublicLayout";
+export { SidebarLayout } from "./Layout/SidebarLayout";

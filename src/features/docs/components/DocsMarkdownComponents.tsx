@@ -20,7 +20,8 @@ export function getDocsMarkdownComponents(
         return (
           <a
             href={href}
-            className="!text-info underline hover:!text-info-hover transition-colors cursor-pointer"
+            className="!text-info underline hover:!text-info-hover transition-colors cursor-pointer break-words"
+            style={{ wordBreak: "break-word" }}
             onClick={(e) => {
               e.preventDefault();
               setSelectedPanel(panel);
@@ -37,7 +38,8 @@ export function getDocsMarkdownComponents(
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="!text-info underline hover:!text-info-hover transition-colors"
+          className="!text-info underline hover:!text-info-hover transition-colors break-words"
+          style={{ wordBreak: "break-word" }}
           {...props}
         >
           {children}

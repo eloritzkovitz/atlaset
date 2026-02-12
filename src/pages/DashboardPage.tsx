@@ -1,11 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import {
-  Breadcrumbs,
-  ErrorMessage,
-  LoadingSpinner,
-  HamburgerButton,
-} from "@components";
+import { Breadcrumbs, ErrorMessage, LoadingSpinner } from "@components";
 import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
   AchievementsGrid,
@@ -25,13 +20,12 @@ import {
   TRIPS_SUBMENU,
 } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
-import { useIsMobile, usePageTitle } from "@hooks";
+import { usePageTitle } from "@hooks";
+import { SidebarLayout } from "@layout";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
   const { countries, loading, error } = useCountryData();
-  const isMobile = useIsMobile();
-  const [panelOpen, setPanelOpen] = useState(false);
 
   // Full dashboard menu config
   const dashboardMenuConfig = [
@@ -153,78 +147,61 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen relative">
-      {/* Mobile: hamburger + drawer */}
-      {isMobile && (
-        <>
-          <HamburgerButton onClick={() => setPanelOpen(true)} />
-          <DashboardPanelMenu
-            open={panelOpen}
-            onClose={() => setPanelOpen(false)}
-            selectedPanel={menuSelectedPanel}
-            setSelectedPanel={handlePanelChange}
-          />
-        </>
-      )}
-      <div className="p-4 max-w-6xl mx-auto flex gap-6">
-        {/* Desktop: panel */}
-        {!isMobile && (
-          <DashboardPanelMenu
-            selectedPanel={menuSelectedPanel}
-            setSelectedPanel={handlePanelChange}
-          />
-        )}
-        <div className="flex-1 mt-12 min-w-0">
-          <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
-          <Routes>
-            {/* Redirect /dashboard to /dashboard/countries/exploration */}
-            <Route
-              path=""
-              element={<Navigate to="countries/exploration" replace />}
-            />
-            <Route
-              path="countries"
-              element={
-                <Navigate to="/dashboard/countries/exploration" replace />
-              }
-            />
-            {/* Exploration page */}
-            <Route
-              path="countries/exploration"
-              element={renderCountryStats({
-                selectedRegion: undefined,
-                selectedSubregion: undefined,
-                selectedIsoCode: undefined,
-                onBack: undefined,
-              })}
-            />
-            {/* All countries page */}
-            <Route
-              path="countries/all"
-              element={renderCountryStats({
-                selectedRegion: "all",
-                selectedSubregion: "",
-                selectedIsoCode: "",
-                onBack: undefined,
-              })}
-            />
-            {/* Region, subregion, and country details */}
-            <Route
-              path="countries/:region/:subregion?/:isoCode?"
-              element={renderCountryStats({
-                onBack: handleBack,
-              })}
-            />
-            {/* Achievements page */}
-            <Route path="achievements" element={<AchievementsGrid />} />
-            {/* Other dashboard panels */}
-            <Route path="trips/overview" element={<TripsStats />} />
-            <Route path="trips/history" element={<TripHistory />} />
-            <Route path="trips/month" element={<TripsByMonth />} />
-            <Route path="trips/year" element={<TripsByYear />} />
-          </Routes>
-        </div>
-      </div>
-    </div>
+    <SidebarLayout
+      menu={
+        <DashboardPanelMenu
+          selectedPanel={menuSelectedPanel}
+          setSelectedPanel={handlePanelChange}
+        />
+      }
+      contentClassName="flex-1 mt-12 min-w-0"
+    >
+      <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
+      <Routes>
+        {/* Redirect /dashboard to /dashboard/countries/exploration */}
+        <Route
+          path=""
+          element={<Navigate to="countries/exploration" replace />}
+        />
+        <Route
+          path="countries"
+          element={<Navigate to="/dashboard/countries/exploration" replace />}
+        />
+        {/* Exploration page */}
+        <Route
+          path="countries/exploration"
+          element={renderCountryStats({
+            selectedRegion: undefined,
+            selectedSubregion: undefined,
+            selectedIsoCode: undefined,
+            onBack: undefined,
+          })}
+        />
+        {/* All countries page */}
+        <Route
+          path="countries/all"
+          element={renderCountryStats({
+            selectedRegion: "all",
+            selectedSubregion: "",
+            selectedIsoCode: "",
+            onBack: undefined,
+          })}
+        />
+        {/* Region, subregion, and country details */}
+        <Route
+          path="countries/:region/:subregion?/:isoCode?"
+          element={renderCountryStats({
+            onBack: handleBack,
+          })}
+        />
+        {/* Achievements page */}
+        <Route path="achievements" element={<AchievementsGrid />} />
+        {/* Other dashboard panels */}
+        <Route path="trips/overview" element={<TripsStats />} />
+        <Route path="trips/history" element={<TripHistory />} />
+        <Route path="trips/month" element={<TripsByMonth />} />
+        <Route path="trips/year" element={<TripsByYear />} />
+      </Routes>
+    </SidebarLayout>
   );
 }
