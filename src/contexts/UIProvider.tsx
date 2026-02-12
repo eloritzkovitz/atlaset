@@ -81,7 +81,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
-  const closePanel = () => setOpenUserPanel(null);
+  const closePanel = () => setOpenMapToolbarPanel(null);
 
   // Derived states for individual modals
   const [showLegend, setShowLegend] = useState(false);
