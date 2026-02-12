@@ -11,13 +11,8 @@ interface LeaderboardTableProps {
 
 export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   entries,
-  maxEntries,
 }) => {
-  let sorted = (entries ?? []).sort((a, b) => b.score - a.score);
-  if (typeof maxEntries === "number") {
-    sorted = sorted.slice(0, maxEntries);
-  }
-  const rankedData = sorted.map((row, i) => ({
+  const rankedData = (entries ?? []).map((row, i) => ({
     ...row,
     rank: i + 1,
   }));

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
-import { useProfileLeaderboardScores } from "@features/quizzes";
+import { useUserLeaderboardScores } from "@features/quizzes";
 import {
   BestScoresCard,
   EditProfileModal,
@@ -19,7 +19,7 @@ export default function ProfilePage() {
     username,
   });
   const [editOpen, setEditOpen] = useState(false);
-  const bestScores = useProfileLeaderboardScores(profileUser?.uid);
+  const bestScores = useUserLeaderboardScores(profileUser?.uid);
 
   // Set the page title to the profile user's displayName if available
   usePageTitle(

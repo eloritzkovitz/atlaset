@@ -5,7 +5,7 @@ export { QuizEntry } from "./quiz/components/QuizEntry";
 export { QuizSettings } from "./quiz/components/QuizSettings";
 
 // Hooks
-export { useProfileLeaderboardScores } from "./leaderboards/hooks/useProfileLeaderboardScores";
+export { useUserLeaderboardScores } from "./leaderboards/hooks/useUserLeaderboardScores";
 
 // Slices
 export { default as quizSettingsReducer } from "./quiz/quizSettingsSlice";
