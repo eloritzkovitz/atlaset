@@ -3,10 +3,12 @@ import {
   FaBookAtlas,
   FaBookmark,
   FaChartPie,
+  FaCircleUser,
   FaCode,
   FaCompass,
   FaDatabase,
   FaEarthAmericas,
+  FaGear,
   FaGlobe,
   FaKeyboard,
   FaLaptopCode,
@@ -21,6 +23,8 @@ import {
   FaTimeline,
   FaUniversalAccess,
   FaUser,
+  FaUserGear,
+  FaUserGroup,
 } from "react-icons/fa6";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 
@@ -36,9 +40,19 @@ export const DOCS_GROUPS = {
         icon: <FaRocket />,
       },
       {
-        label: "Account & Profile",
-        file: "account-profile.md",
+        label: "Creating an Account",
+        file: "account.md",
+        icon: <FaCircleUser />,
+      },
+      {
+        label: "Your Profile",
+        file: "profile.md",
         icon: <FaUser />,
+      },
+      {
+        label: "Friends",
+        file: "friends.md",
+        icon: <FaUserGroup />,
       },
       { label: "Atlas", file: "atlas.md", icon: <FaEarthAmericas /> },
       { label: "The Map", file: "map.md", icon: <FaMap /> },
@@ -64,7 +78,7 @@ export const DOCS_GROUPS = {
         label: "Exporting & Sharing Maps",
         file: "export.md",
         icon: <FaShareFromSquare />,
-      },      
+      },
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
       {
         label: "Dashboard",
@@ -87,6 +101,20 @@ export const DOCS_GROUPS = {
         icon: <FaChartPie />,
       },
       { label: "Quizzes", file: "quizzes.md", icon: <FaQuestion /> },
+    ],
+  },
+  account: {
+    header: {
+      label: "Managing Your Account",
+      file: null,
+      icon: <FaUserGear />,
+    },
+    items: [
+      {
+        label: "Account Settings",
+        file: "account-settings.md",
+        icon: <FaGear />,
+      },
     ],
   },
   accessibility: {
