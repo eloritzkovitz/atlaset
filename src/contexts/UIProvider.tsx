@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useIsMobile, useKeyHandler } from "@hooks";
+import { useKeyHandler, useScreenSize } from "@hooks";
 import { UIContext } from "./UIContext";
 
 // Map toolbar panel selection
@@ -17,7 +17,7 @@ export type UserPanelSelection = "friends" | "help" | null;
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   // State for which panel is open; null means no panel is open
   const [sidebarExpanded, setSidebarExpanded] = useState(false);

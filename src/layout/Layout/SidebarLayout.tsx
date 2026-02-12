@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HamburgerButton } from "@components";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 
 interface SidebarLayoutProps {
   menu: React.ReactNode;
@@ -18,7 +18,7 @@ export function SidebarLayout({
   className = "",
   contentClassName = "",
 }: SidebarLayoutProps) {
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
   // If the menu is a valid React element, clone it with additional props for mobile behavior

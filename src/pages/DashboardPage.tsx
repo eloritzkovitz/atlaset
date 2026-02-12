@@ -25,12 +25,12 @@ import {
   TRIPS_SUBMENU,
 } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
-import { useIsMobile, usePageTitle } from "@hooks";
+import { usePageTitle, useScreenSize } from "@hooks";
 
 export default function DashboardPage() {
   const { user, ready } = useAuth();
   const { countries, loading, error } = useCountryData();
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
   // Full dashboard menu config

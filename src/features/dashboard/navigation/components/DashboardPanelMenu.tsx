@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  FaGlobe,
-  FaMedal,
-  FaSuitcaseRolling,
-} from "react-icons/fa6";
+import { FaGlobe, FaMedal, FaSuitcaseRolling } from "react-icons/fa6";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { DrawerPanel, Panel, SubmenuSection } from "@components";
 import {
@@ -11,7 +7,7 @@ import {
   TRIPS_SUBMENU,
   ACHIEVEMENTS_MENU,
 } from "@features/dashboard/navigation/config/menu";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;
@@ -26,7 +22,7 @@ export function DashboardPanelMenu({
   open,
   onClose,
 }: DashboardPanelMenuProps) {
-  const isMobile = useIsMobile();
+  const { isLaptop, isMobile } = useScreenSize();
   const [countriesExpanded, setCountriesExpanded] = useState(true);
   const [tripsExpanded, setTripsExpanded] = useState(true);
 
@@ -53,7 +49,7 @@ export function DashboardPanelMenu({
           selectedPanel={selectedPanel}
           setSelectedPanel={(key) => {
             setSelectedPanel(key);
-            if (isMobile && onClose) onClose();
+            if ((isMobile || isLaptop) && onClose) onClose();
           }}
         />
         <SubmenuSection
@@ -84,8 +80,8 @@ export function DashboardPanelMenu({
     </Panel>
   );
 
-  // Mobile: drawer
-  if (isMobile) {
+  // Mobile and laptop: drawer
+  if (isMobile || isLaptop) {
     return (
       <DrawerPanel open={!!open} onClose={onClose!} width={256}>
         {panelContent}
@@ -93,6 +89,6 @@ export function DashboardPanelMenu({
     );
   }
 
-  // Desktop: always show panel
+  // Desktop (lg and up): always show panel
   return panelContent;
 }

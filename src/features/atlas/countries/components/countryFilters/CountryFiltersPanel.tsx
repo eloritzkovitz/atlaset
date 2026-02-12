@@ -6,7 +6,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useCountryData, type SovereigntyType } from "@features/countries";
 import { getAllSovereigntyTypes } from "@features/countries/utils/countryData";
 import type { VisitedStatus } from "@features/visits";
-import { useIsMobile, useKeyHandler } from "@hooks";
+import { useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
@@ -84,7 +84,7 @@ export function CountryFiltersPanel({
   );
 
   // Responsive check
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   return (
     <Panel

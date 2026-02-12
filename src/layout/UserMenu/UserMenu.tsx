@@ -5,7 +5,7 @@ import { ActionButton, Menu } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
-import { useIsMobile, useModalAnimation } from "@hooks";
+import { useModalAnimation, useScreenSize } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 import { AuthButtons } from "../Header/AuthButtons";
@@ -18,7 +18,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
 
   // Router states and navigation
   const location = useLocation();
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   const isTripsPage = location.pathname.startsWith("/trips");
   const isSettingsPage = location.pathname.startsWith("/settings");
 
@@ -62,7 +62,9 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
           />
           <ActionButton
             title="Help"
-            onClick={() => {toggleHelp()}}
+            onClick={() => {
+              toggleHelp();
+            }}
             icon={<FaCircleQuestion className="text-xl" />}
             aria-pressed={false}
             rounded
