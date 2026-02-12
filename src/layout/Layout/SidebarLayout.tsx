@@ -24,10 +24,13 @@ export function SidebarLayout({
   // If the menu is a valid React element, clone it with additional props for mobile behavior
   const menuWithProps =
     isMobile && React.isValidElement(menu)
-      ? React.cloneElement(menu as React.ReactElement<any>, {
-          open: panelOpen,
-          onClose: () => setPanelOpen(false),
-        })
+      ? React.cloneElement(
+          menu as React.ReactElement<Record<string, unknown>>,
+          {
+            open: panelOpen,
+            onClose: () => setPanelOpen(false),
+          },
+        )
       : menu;
 
   return (

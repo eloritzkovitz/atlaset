@@ -10,7 +10,7 @@ export function isWindowDefined() {
  * Returns an object with boolean flags for isMobile, isLaptop, and isDesktop.
  */
 export function useScreenSize() {
-  const [width, setWidth] = useState(isWindowDefined() ? window.innerWidth : 0);
+  const [width, setWidth] = useState(() => isWindowDefined() ? window.innerWidth : 0);
 
   useEffect(() => {
     if (!isWindowDefined()) return;
