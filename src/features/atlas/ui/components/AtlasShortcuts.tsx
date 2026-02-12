@@ -15,13 +15,13 @@ export function AtlasShortcuts() {
     toggleLegend,
     toggleLayers,
     toggleMarkers,
-    toggleSaved,
+    toggleSavedMaps,
     toggleSettings,
   } = useUI();
   const { isReadonly, isEdit } = useMapView();
 
   // Toggle Saved Maps panel with "B"
-  useKeyHandler(toggleSaved, ["b", "B"], isAuthenticated());
+  useKeyHandler(toggleSavedMaps, ["b", "B"], isAuthenticated());
 
   // Toggle Countries panel with "C"
   useKeyHandler(toggleCountries, ["c", "C"], true);

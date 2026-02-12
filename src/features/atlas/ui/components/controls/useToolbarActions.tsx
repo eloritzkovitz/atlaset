@@ -35,9 +35,9 @@ export function useToolbarActions({
     toggleLayers,
     toggleMarkers,
     toggleLegend,
+    toggleSavedMaps,
     toggleExport,
-    toggleSettings,
-    toggleSaved,
+    toggleSettings,    
   } = useUI();
   const { timelineMode, setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
@@ -85,7 +85,7 @@ export function useToolbarActions({
       key: "savedmaps",
       icon: <FaBookmark className="text-lg" />,
       label: "My Maps",
-      onClick: withMenuClose(toggleSaved),
+      onClick: withMenuClose(toggleSavedMaps),
       show: isAuthenticated(),
     },
     {
