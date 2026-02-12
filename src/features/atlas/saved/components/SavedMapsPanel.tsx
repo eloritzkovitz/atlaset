@@ -16,7 +16,7 @@ export function SavedMapsPanel() {
     updateSavedMapName,
   } = useSavedMaps();
   const { isReadonly } = useMapView();
-  const { showSaved, toggleSaved } = useUI();
+  const { showSavedMaps, toggleSavedMaps } = useUI();
 
   return (
     <Panel
@@ -25,8 +25,8 @@ export function SavedMapsPanel() {
           <FaBookmark /> My Maps
         </>
       }
-      show={showSaved}
-      onHide={toggleSaved}
+      show={showSavedMaps}
+      onHide={toggleSavedMaps}
       escEnabled={!isSavedMapModalOpen}
       position="left"
       headerActions={
@@ -49,7 +49,7 @@ export function SavedMapsPanel() {
             />
           )}
           <ActionButton
-            onClick={toggleSaved}
+            onClick={toggleSavedMaps}
             ariaLabel="Close Saved Panel"
             title="Close"
             icon={<FaXmark className="text-2xl" />}

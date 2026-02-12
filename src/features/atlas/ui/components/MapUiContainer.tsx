@@ -32,7 +32,7 @@ export function MapUiContainer({
   const { isReadonly, isEdit, zoom, setZoom, center, selectedCoords } =
     useMapView();
   const { timelineMode, colorMode } = useTimeline();
-  const { showLegend, closeLegend, uiVisible } = useUI();
+  const { uiVisible, openUserPanel, showLegend, closeLegend } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     effectiveLayers,
     timelineMode,
@@ -109,15 +109,23 @@ export function MapUiContainer({
           <TimelineNavigator />
         </>
       )}
-      <MapToolbar zoom={zoom} setZoom={setZoom} isEmbed={isEmbed} />
-      {!isEmbed && (
+      {!openUserPanel && (
         <>
-          <MapFooter zoom={zoom} coords={selectedCoords} latitude={center[1]} />
-          <MapLegendModal
-            open={showLegend}
-            onClose={closeLegend}
-            items={legendItems}
-          />
+          <MapToolbar zoom={zoom} setZoom={setZoom} isEmbed={isEmbed} />
+          {!isEmbed && (
+            <>
+              <MapFooter
+                zoom={zoom}
+                coords={selectedCoords}
+                latitude={center[1]}
+              />
+              <MapLegendModal
+                open={showLegend}
+                onClose={closeLegend}
+                items={legendItems}
+              />
+            </>
+          )}
         </>
       )}
     </>

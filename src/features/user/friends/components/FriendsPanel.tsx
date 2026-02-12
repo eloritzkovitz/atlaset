@@ -24,7 +24,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
   const { profiles: friendProfiles, loading: loadingProfiles } =
     useFriendProfiles(friendUids);
   const { requests, loading: loadingRequests } = useFriendRequests(
-    showRequests && user ? user.uid : undefined
+    showRequests && user ? user.uid : undefined,
   );
 
   return (
@@ -33,7 +33,13 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
       onHide={onClose}
       position="right"
       title={
-        <>
+        <span className="flex items-center gap-2">
+          {showRequests ? <FaUserPlus /> : <FaUserGroup />}
+          {showRequests ? "Friend Requests" : "Friends"}
+        </span>
+      }
+      headerActions={
+        <div className="flex items-center gap-2">
           <ActionButton
             onClick={() => setShowRequests((prev) => !prev)}
             ariaLabel={showRequests ? "Show Friends" : "Show Requests"}
@@ -41,11 +47,6 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             icon={showRequests ? <FaUserGroup /> : <FaUserPlus />}
             rounded
           />
-          {showRequests ? "Friend Requests" : "Friends"}
-        </>
-      }
-      headerActions={
-        <div className="flex items-center gap-2">
           <ActionButton
             onClick={onClose}
             ariaLabel="Close friends panel"
@@ -56,7 +57,6 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
         </div>
       }
       showSeparator={showRequests ? true : false}
-      className="!z-[10050]"
     >
       <div className="flex flex-col h-full">
         {(
@@ -103,7 +103,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
                 const filtered = friendProfiles.filter(
                   (profile) =>
                     profile.username.toLowerCase().includes(q) ||
-                    profile.displayName.toLowerCase().includes(q)
+                    profile.displayName.toLowerCase().includes(q),
                 );
                 if (friendProfiles.length === 0 && !search) {
                   return <li>No friends yet.</li>;
