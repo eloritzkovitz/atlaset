@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
+import { useProfileLeaderboardScores } from "@features/quizzes";
 import {
+  BestScoresCard,
   EditProfileModal,
   ProfileInfoCard,
   VisitedCountriesCard,
@@ -17,6 +19,7 @@ export default function ProfilePage() {
     username,
   });
   const [editOpen, setEditOpen] = useState(false);
+  const bestScores = useProfileLeaderboardScores(profileUser?.uid);
 
   // Set the page title to the profile user's displayName if available
   usePageTitle(
@@ -54,6 +57,9 @@ export default function ProfilePage() {
                   <VisitedCountriesCard
                     visitedCountryCodes={profileUser.visitedCountryCodes || []}
                   />
+                  {bestScores.length > 0 && (
+                    <BestScoresCard scores={bestScores} />
+                  )}
                 </>
               ) : (
                 <div>User not found</div>
