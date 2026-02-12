@@ -66,7 +66,9 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
         ) : showRequests ? (
           <ul>
             {requests.length === 0 ? (
-              <li>No friend requests.</li>
+              <div className="mt-4 text-muted text-sm flex justify-center">
+                No friend requests.
+              </div>
             ) : (
               requests.map((req) => (
                 <UserListItem
@@ -106,10 +108,18 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
                     profile.displayName.toLowerCase().includes(q),
                 );
                 if (friendProfiles.length === 0 && !search) {
-                  return <li>No friends yet.</li>;
+                  return (
+                    <div className="mt-4 text-muted text-sm flex justify-center">
+                      No friends yet.
+                    </div>
+                  );
                 }
                 if (filtered.length === 0) {
-                  return <li>No users found.</li>;
+                  return (
+                    <div className="mt-4 text-muted text-sm flex justify-center">
+                      No friends found.
+                    </div>
+                  );
                 }
                 return filtered.map((profile) => (
                   <div className="mb-2" key={profile.uid}>

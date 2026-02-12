@@ -1,9 +1,9 @@
 import { FaCheck, FaXmark } from "react-icons/fa6";
-import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { Link } from "react-router-dom";
-import { ActionButton } from "@components";
+import { ActionButton, PanelListItem } from "@components";
+import { FriendListItemMenuActions } from "./FriendListItemMenuActions";
+import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { UserInfo } from "../../profile/components/UserInfo";
-import { PanelListItem } from "@components";
 
 interface UserListItemProps {
   uid: string;
@@ -37,7 +37,7 @@ export function UserListItem({
     />
   );
 
-  // Custom name/content for PanelListItem
+  // Name content with display name and username, or skeleton if loading
   const nameContent = loading ? (
     <span className="h-4 w-24 bg-muted rounded-lg animate-pulse" />
   ) : (
@@ -97,6 +97,15 @@ export function UserListItem({
         )
       }
       visible={true}
+      menuContent={
+        !onAccept && !onReject ? (
+          <FriendListItemMenuActions
+            uid={uid}
+            username={userProfile?.username}
+          />
+        ) : undefined
+      }
+      menuPosition="left"
     >
       {actions}
     </PanelListItem>
