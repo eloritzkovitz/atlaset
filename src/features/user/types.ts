@@ -2,7 +2,7 @@ import type { Timestamp } from "firebase/firestore";
 
 /** Supported social platforms for user profiles. */
 export type SocialPlatform =
-  | "twitter"
+  | "x"
   | "instagram"
   | "facebook"
   | "linkedin"

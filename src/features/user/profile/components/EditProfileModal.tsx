@@ -10,7 +10,7 @@ import {
   PanelHeader,
 } from "@components";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
-import { getPlatformIcon } from "./SocialLinks";
+import { getPlatformIcon, platformOrder } from "./SocialLinks";
 import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../hooks/useUsernameValidation";
 import { profileService } from "../services/profileService";
@@ -254,17 +254,7 @@ export function EditProfileModal({
           </FormField>
           <FormField label="Social Links">
             <div className="flex flex-col gap-2">
-              {(Object.keys(socialLinks).length > 0
-                ? Object.keys(socialLinks)
-                : ([
-                    "twitter",
-                    "instagram",
-                    "facebook",
-                    "linkedin",
-                    "github",
-                    "website",
-                  ] as SocialPlatform[])
-              ).map((platform) => (
+              {platformOrder.map((platform) => (
                 <div key={platform} className="flex items-center gap-2">
                   <span
                     className="w-8 flex justify-center items-center"

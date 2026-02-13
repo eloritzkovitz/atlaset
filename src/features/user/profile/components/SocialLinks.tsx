@@ -1,19 +1,19 @@
 import React from "react";
 import {
-  FaTwitter,
   FaInstagram,
   FaFacebook,
   FaLinkedin,
   FaGithub,
   FaLink,
+  FaXTwitter,
 } from "react-icons/fa6";
 import { ProfileField } from "./ProfileField";
 
 // Order of platforms for display
-const platformOrder = [
-  "twitter",
-  "instagram",
+export const platformOrder = [
   "facebook",
+  "instagram",
+  "x",
   "linkedin",
   "github",
   "website",
@@ -22,7 +22,7 @@ const platformOrder = [
 /** Returns the appropriate icon for a given platform. */
 export const getPlatformIcon = (platform: string) => {
   const icons: Record<string, React.ReactNode> = {
-    twitter: <FaTwitter className="inline-block" />,
+    x: <FaXTwitter className="inline-block" />,
     instagram: <FaInstagram className="inline-block" />,
     facebook: <FaFacebook className="inline-block" />,
     linkedin: <FaLinkedin className="inline-block" />,
