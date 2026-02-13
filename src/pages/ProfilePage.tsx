@@ -11,6 +11,9 @@ import {
 } from "@features/user";
 import { usePageTitle } from "@hooks";
 import { Footer, Header } from "@layout";
+import { ProfileAboutCard } from "@features/user/profile/components/ProfileAboutCard";
+import { useCountryData } from "@features/countries";
+import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
   const { username } = useParams();
@@ -35,6 +38,12 @@ export default function ProfilePage() {
   // Determine if this is the current user's own profile
   const canEdit = currentUser && currentUser.uid === profileUser?.uid;
 
+  // Get country data for the profile user's home country
+  const { countries } = useCountryData();
+  const selectedCountry = profileUser
+    ? countries.find((c) => c.isoCode === profileUser.homeCountry) ?? null
+    : null;
+
   return (
     <>
       <div className="flex flex-col min-h-screen h-screen w-screen bg-bg overflow-x-hidden">
@@ -53,6 +62,27 @@ export default function ProfilePage() {
                     profile={profileUser}
                     canEdit={!!canEdit}
                     onEdit={() => setEditOpen(true)}
+                  />
+                  <ProfileAboutCard
+                    displayEmail={profileUser.email ?? "No email provided"}
+                    selectedCountry={selectedCountry}
+                    displayBirthday={
+                      formatFirestoreDate(profileUser.birthday) ??
+                      "Not specified"
+                    }
+                    displayJoinDate={
+                      formatFirestoreDate(profileUser.joinDate) ??
+                      "No date provided"
+                    }
+                    displayBiography={
+                      profileUser.biography ?? "No biography provided."
+                    }
+                    displaySocialLinks={
+                      profileUser.socialLinks &&
+                      Object.keys(profileUser.socialLinks).length > 0
+                        ? profileUser.socialLinks
+                        : null
+                    }
                   />
                   <VisitedCountriesCard
                     visitedCountryCodes={profileUser.visitedCountryCodes || []}

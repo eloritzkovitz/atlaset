@@ -1,13 +1,20 @@
 import { updateProfile, updatePassword, type User } from "firebase/auth";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { FaUser, FaXmark } from "react-icons/fa6";
-import { ActionButton, FormField, Modal, PanelHeader } from "@components";
+import { FaEye, FaEyeSlash, FaUser, FaXmark } from "react-icons/fa6";
+import {
+  ActionButton,
+  FormField,
+  InputBox,
+  Modal,
+  PanelHeader,
+} from "@components";
+import { isPasswordProvider } from "@features/user/auth/utils/auth";
+import { getPlatformIcon } from "./profileSections";
 import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../hooks/useUsernameValidation";
 import { profileService } from "../services/profileService";
-import { isPasswordProvider } from "@features/user/auth/utils/auth";
-import { type UserProfile } from "../../types";
+import { type UserProfile, type SocialPlatform } from "../../types";
 
 interface EditProfileModalProps {
   user: User | null;
@@ -32,6 +39,14 @@ export function EditProfileModal({
   const [isPasswordUser, setIsPasswordUser] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [birthday, setBirthday] = useState<string>(
+    profile?.birthday instanceof Timestamp
+      ? profile.birthday.toDate().toISOString().slice(0, 10)
+      : "",
+  );
+  const [socialLinks, setSocialLinks] = useState<
+    Partial<Record<SocialPlatform, string>>
+  >(profile?.socialLinks ?? {});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -49,7 +64,7 @@ export function EditProfileModal({
   // Check username availability
   const { status, label, color } = useUsernameValidation(
     username,
-    profile?.username
+    profile?.username,
   );
 
   // Handle saving profile changes
@@ -80,11 +95,20 @@ export function EditProfileModal({
         setInitialUsername(username);
       }
 
-      // Update other profile fields in Firestore
+      // Update profile fields in Firestore
       if (user) {
+        let birthdayValue: Timestamp | undefined = undefined;
+        if (birthday) {
+          const dateObj = new Date(birthday);
+          if (!isNaN(dateObj.getTime())) {
+            birthdayValue = Timestamp.fromDate(dateObj);
+          }
+        }
         await profileService.editProfile(user.uid, {
           displayName,
           biography,
+          birthday: birthdayValue,
+          socialLinks,
         });
       }
 
@@ -146,10 +170,10 @@ export function EditProfileModal({
                 (color === "green"
                   ? "text-success "
                   : color === "red"
-                  ? "text-danger "
-                  : color === "yellow"
-                  ? "text-warning "
-                  : "")
+                    ? "text-danger "
+                    : color === "yellow"
+                      ? "text-warning "
+                      : "")
               }
             >
               {label}
@@ -212,6 +236,13 @@ export function EditProfileModal({
               </FormField>
             </>
           )}
+          <FormField label="Birthday">
+            <input
+              type="date"
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
+            />
+          </FormField>
           <FormField label="Biography">
             <textarea
               value={biography}
@@ -220,6 +251,44 @@ export function EditProfileModal({
               rows={4}
               maxLength={500}
             />
+          </FormField>
+          <FormField label="Social Links">
+            <div className="flex flex-col gap-2">
+              {(Object.keys(socialLinks).length > 0
+                ? Object.keys(socialLinks)
+                : ([
+                    "twitter",
+                    "instagram",
+                    "facebook",
+                    "linkedin",
+                    "github",
+                    "website",
+                  ] as SocialPlatform[])
+              ).map((platform) => (
+                <div key={platform} className="flex items-center gap-2">
+                  <span
+                    className="w-8 flex justify-center items-center"
+                    title={platform}
+                    aria-label={platform}
+                  >
+                    {getPlatformIcon(platform) ??
+                      platform.charAt(0).toUpperCase() + platform.slice(1)}
+                  </span>
+                  <InputBox
+                    id={`social-${platform}`}
+                    type="url"
+                    placeholder={`https://${platform}.com/yourprofile`}
+                    value={socialLinks[platform as SocialPlatform] ?? ""}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setSocialLinks((prev) => ({
+                        ...prev,
+                        [platform as SocialPlatform]: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              ))}
+            </div>
           </FormField>
           {error && <div className="text-danger">{error}</div>}
           {success && <div className="text-success">{success}</div>}

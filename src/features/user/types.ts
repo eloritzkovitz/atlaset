@@ -1,5 +1,14 @@
 import type { Timestamp } from "firebase/firestore";
 
+/** Supported social platforms for user profiles. */
+export type SocialPlatform =
+  | "twitter"
+  | "instagram"
+  | "facebook"
+  | "linkedin"
+  | "github"
+  | "website";
+
 /** User profile information. */
 export interface UserProfile {
   /** User ID */
@@ -12,14 +21,18 @@ export interface UserProfile {
   photoURL?: string;
   /** email */
   email?: string;
+  /** Home country code (ISO 3166-1 alpha-2) */
+  homeCountry?: string;
+  /** Birthday */
+  birthday?: Timestamp;
   /** Short biography */
   biography?: string;
+  /** Social links */
+  socialLinks?: Partial<Record<SocialPlatform, string>>;
   /** Whether the profile is public */
   isPublic: boolean;
   /** Account creation date */
   joinDate?: Timestamp;
-  /** Home country code (ISO 3166-1 alpha-2) */
-  homeCountry?: string;
   /** List of visited country codes (ISO 3166-1 alpha-2) */
   visitedCountryCodes: string[];
 }

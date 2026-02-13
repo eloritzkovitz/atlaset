@@ -22,7 +22,7 @@ import {
 import { usePageTitle } from "@hooks";
 import { SidebarLayout } from "@layout";
 
-export default function ProfilePage() {
+export default function SettingsPage() {
   const { user, loading: userLoading } = useAuth();
   const { profile, loading: profileLoading } = useUserProfile({
     uid: user?.uid,

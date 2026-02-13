@@ -1,8 +1,5 @@
 import { FaPen } from "react-icons/fa6";
 import { Card } from "@components";
-import { CountryWithFlag, useCountryData } from "@features/countries";
-import { formatFirestoreDate } from "@utils/date";
-import { ProfileField } from "./ProfileField";
 import { UserAvatar } from "./UserAvatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
@@ -21,17 +18,7 @@ export function ProfileInfoCard({
   canEdit,
   onEdit,
 }: ProfileInfoCardProps) {
-  const { countries } = useCountryData();
   const { user: currentUser } = useAuth();
-  const selectedCountry = countries.find(
-    (c) => c.isoCode === profile.homeCountry
-  );
-
-  // Default values for fields
-  const displayEmail = profile?.email ?? "No email provided";
-  const displayJoinDate =
-    formatFirestoreDate(profile?.joinDate) ?? "No date provided";
-  const displayBiography = profile?.biography ?? "No biography provided.";
 
   // Friendship status logic
   const {
@@ -100,22 +87,6 @@ export function ProfileInfoCard({
           )}
         </div>
       </div>
-      <ProfileField label="Email">{displayEmail}</ProfileField>
-      <ProfileField label="Country">
-        <div className="flex items-center">
-          {selectedCountry ? (
-            <CountryWithFlag
-              isoCode={selectedCountry.isoCode}
-              name={selectedCountry.name}
-              className="mr-2"
-            />
-          ) : (
-            "Not specified"
-          )}
-        </div>
-      </ProfileField>
-      <ProfileField label="Joined">{displayJoinDate}</ProfileField>
-      <ProfileField label="Biography">{displayBiography}</ProfileField>
     </Card>
   );
 }
