@@ -31,18 +31,18 @@ export default function ProfilePage() {
       : "Profile | Atlaset",
   );
 
-  // Handle case where user not found
-  if (!profileUser && !(authLoading || profileLoading))
-    return <div>User not found</div>;
-
   // Determine if this is the current user's own profile
   const canEdit = currentUser && currentUser.uid === profileUser?.uid;
 
-  // Get country data for the profile user's home country
+  // Get country data for the user's home country
   const { countries } = useCountryData();
   const selectedCountry = profileUser
-    ? countries.find((c) => c.isoCode === profileUser.homeCountry) ?? null
+    ? (countries.find((c) => c.isoCode === profileUser.homeCountry) ?? null)
     : null;
+
+  // Handle case where user not found
+  if (!profileUser && !(authLoading || profileLoading))
+    return <div>User not found</div>;
 
   return (
     <>

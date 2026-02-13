@@ -63,7 +63,11 @@ export function getProfileSections({
   displayBiography,
 }: {
   displayEmail: string;
-  selectedCountry: any;
+  selectedCountry: {
+    isoCode: string;
+    name: string;
+    className?: string;
+  } | null;
   displayBirthday: string;
   displayJoinDate: string;
   displayBiography: string;
