@@ -21,12 +21,12 @@ export const platformOrder = [
 /** Returns the appropriate icon for a given platform. */
 export const getPlatformIcon = (platform: string) => {
   const icons: Record<string, React.ReactNode> = {
-    x: <FaXTwitter className="inline-block" />,
-    instagram: <FaInstagram className="inline-block" />,
-    facebook: <FaFacebook className="inline-block" />,
-    linkedin: <FaLinkedin className="inline-block" />,
-    github: <FaGithub className="inline-block" />,
-    website: <FaLink className="inline-block" />,
+    x: <FaXTwitter />,
+    instagram: <FaInstagram />,
+    facebook: <FaFacebook />,
+    linkedin: <FaLinkedin />,
+    github: <FaGithub />,
+    website: <FaLink />,
   };
   return icons[platform.toLowerCase()] ?? null;
 };

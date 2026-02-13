@@ -41,7 +41,7 @@ export function ProfileAboutCard({
   return (
     <Card className="mt-6">
       <h2 className="text-xl font-bold">About</h2>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2">
         <TabButton
           active={activeTab === "personal-details"}
           onClick={() => setActiveTab("personal-details")}
