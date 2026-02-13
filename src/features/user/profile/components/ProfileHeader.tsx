@@ -2,21 +2,25 @@ import { FaPen } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
 import { UserAvatar } from "./UserAvatar";
 import { useAuth } from "../../auth/hooks/useAuth";
+import { FriendshipButton } from "../../friends/components/FriendshipButton";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
 import { friendService } from "../../friends/services/friendService";
-import { FriendshipButton } from "../../friends/components/FriendshipButton";
 import type { UserProfile } from "../../types";
 
 interface ProfileHeaderProps {
   profile: UserProfile;
   canEdit?: boolean;
   onEdit?: () => void;
+  friendCount?: number;
+  onFriendCountClick?: () => void;
 }
 
 export function ProfileHeader({
   profile,
   canEdit,
   onEdit,
+  friendCount,
+  onFriendCountClick,
 }: ProfileHeaderProps) {
   const { user: currentUser } = useAuth();
 
@@ -51,42 +55,57 @@ export function ProfileHeader({
 
   return (
     <Card>
-      {/* Avatar, Name, Username, Edit, Friend Button */}
       <div className="flex flex-col sm:flex-row items-center mb-6 gap-4 sm:gap-0">
         <UserAvatar user={profile} size={100} className="sm:size-[150px]" />
-        <div className="flex-1 sm:ml-6 flex flex-col sm:flex-row items-center w-full">
-          <div className="w-full">
-            <h1 className="text-2xl sm:text-3xl font-bold text-center sm:text-left w-full">
-              {profile.displayName}
-            </h1>
-            <div className="text-center sm:text-left text-gray-500 text-base mt-1">
-              @{profile.username}
+        <div className="flex-1 sm:ml-6 w-full">
+          <div className="flex flex-row items-center w-full gap-3">
+            <div className="flex-1 min-w-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-left w-full truncate">
+                {profile.displayName}
+              </h1>
             </div>
-          </div>
-          {/* Edit Button: only show if canEdit is true */}
-          {canEdit && (
-            <div className="flex-shrink-0">
+            {/* Edit Button: only show if canEdit is true */}
+            {canEdit && (
               <ActionButton
                 variant="primary"
-                className="!rounded-full"
+                className="!rounded-full mt-4"
                 onClick={onEdit}
                 icon={<FaPen className="text-lg" />}
               >
                 Edit Profile
               </ActionButton>
-            </div>
-          )}
-          {/* Friend Button: only show if not me */}
-          {!canEdit && currentUser && currentUser.uid !== profile.uid && (
-            <div className="flex-shrink-0">
+            )}
+            {/* Friend Button: only show if not me */}
+            {!canEdit && currentUser && currentUser.uid !== profile.uid && (
               <FriendshipButton
                 friendStatus={friendStatus}
                 loading={loading}
                 onAddFriend={handleAddFriend}
                 onUnfriend={handleUnfriend}
               />
+            )}
+          </div>
+          <div className="text-left text-gray-500 text-base mt-1">
+            @{profile.username}
+          </div>
+          <div className="text-left font-semibold text-muted text-base mt-1">
+            <div className="text-center font-semibold sm:text-left text-muted text-base mt-1">
+              {typeof friendCount === "number" ? (
+                <button
+                  type="button"
+                  className="hover:underline focus:outline-none"
+                  onClick={onFriendCountClick}
+                  tabIndex={0}
+                  aria-label="Show friends list"
+                  disabled={!onFriendCountClick}
+                >
+                  {friendCount} friend{friendCount === 1 ? "" : "s"}
+                </button>
+              ) : (
+                "Loading friends..."
+              )}
             </div>
-          )}
+          </div>
         </div>
       </div>
     </Card>

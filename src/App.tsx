@@ -84,7 +84,7 @@ function App() {
                   </Suspense>
                 }
               />
-              <Route path="/users/:username" element={<ProfilePage />} />
+              <Route path="/users/:username/*" element={<ProfilePage />} />
               <Route path="/settings/*" element={<SettingsPage />} />
               <Route path="/docs" element={<DocsPage />} />
               <Route path="/docs/:slug" element={<DocsPage />} />

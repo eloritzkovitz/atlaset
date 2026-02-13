@@ -1,27 +1,34 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
+import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes";
 import {
   BestScoresCard,
   EditProfileModal,
+  FriendsListSection,
+  ProfileAboutCard,
   ProfileHeader,
   VisitedCountriesCard,
   useUserProfile,
+  useUserFriendCount,
+  useFriendProfiles,
 } from "@features/user";
 import { usePageTitle } from "@hooks";
 import { Footer, Header } from "@layout";
-import { ProfileAboutCard } from "@features/user/profile/components/ProfileAboutCard";
-import { useCountryData } from "@features/countries";
 import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { username } = useParams();
   const { user: currentUser, loading: authLoading } = useAuth();
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
     username,
   });
   const [editOpen, setEditOpen] = useState(false);
+  // Modal open state is now based on route
+  const friendsOpen = location.pathname.endsWith("/friends");
   const bestScores = useUserLeaderboardScores(profileUser?.uid);
 
   // Set the page title to the profile user's displayName if available
@@ -40,9 +47,30 @@ export default function ProfilePage() {
     ? (countries.find((c) => c.isoCode === profileUser.homeCountry) ?? null)
     : null;
 
-  // Handle case where user not found
+  // Get friend count and friend profiles for the profile user
+  const { count: friendCount } = useUserFriendCount(profileUser?.uid);
+  const [friendUids, setFriendUids] = useState<string[]>([]);
+  const { profiles: friendProfiles, loading: loadingFriendProfiles } =
+    useFriendProfiles(friendUids);
+
+  // Show loading state while fetching auth and profile data
   if (!profileUser && !(authLoading || profileLoading))
     return <div>User not found</div>;
+
+  // When opening the modal, fetch the friend UIDs
+  const handleOpenFriends = async () => {
+    if (!profileUser?.uid) return;
+    const { friendService } =
+      await import("@features/user/friends/services/friendService");
+    const friends = await friendService.getFriends(profileUser.uid);
+    setFriendUids(friends.map((f) => f.uid));
+    navigate(`/users/${profileUser.username}/friends`, { replace: false });
+  };
+
+  // Handle closing the modal by navigating back to the main profile route
+  const handleCloseFriends = () => {
+    navigate(`/users/${profileUser?.username}`);
+  };
 
   return (
     <>
@@ -62,33 +90,47 @@ export default function ProfilePage() {
                     profile={profileUser}
                     canEdit={!!canEdit}
                     onEdit={() => setEditOpen(true)}
+                    friendCount={friendCount}
+                    onFriendCountClick={handleOpenFriends}
                   />
-                  <ProfileAboutCard
-                    displayEmail={profileUser.email ?? "No email provided"}
-                    selectedCountry={selectedCountry}
-                    displayBirthday={
-                      formatFirestoreDate(profileUser.birthday) ??
-                      "Not specified"
-                    }
-                    displayJoinDate={
-                      formatFirestoreDate(profileUser.joinDate) ??
-                      "No date provided"
-                    }
-                    displayBiography={
-                      profileUser.biography ?? "No biography provided."
-                    }
-                    displaySocialLinks={
-                      profileUser.socialLinks &&
-                      Object.keys(profileUser.socialLinks).length > 0
-                        ? profileUser.socialLinks
-                        : null
-                    }
-                  />
-                  <VisitedCountriesCard
-                    visitedCountryCodes={profileUser.visitedCountryCodes || []}
-                  />
-                  {bestScores.length > 0 && (
-                    <BestScoresCard scores={bestScores} />
+                  {friendsOpen ? (
+                    <FriendsListSection
+                      loading={loadingFriendProfiles}
+                      profiles={friendProfiles}
+                      onBack={handleCloseFriends}
+                    />
+                  ) : (
+                    <>
+                      <ProfileAboutCard
+                        displayEmail={profileUser.email ?? "No email provided"}
+                        selectedCountry={selectedCountry}
+                        displayBirthday={
+                          formatFirestoreDate(profileUser.birthday) ??
+                          "Not specified"
+                        }
+                        displayJoinDate={
+                          formatFirestoreDate(profileUser.joinDate) ??
+                          "No date provided"
+                        }
+                        displayBiography={
+                          profileUser.biography ?? "No biography provided."
+                        }
+                        displaySocialLinks={
+                          profileUser.socialLinks &&
+                          Object.keys(profileUser.socialLinks).length > 0
+                            ? profileUser.socialLinks
+                            : null
+                        }
+                      />
+                      <VisitedCountriesCard
+                        visitedCountryCodes={
+                          profileUser.visitedCountryCodes || []
+                        }
+                      />
+                      {bestScores.length > 0 && (
+                        <BestScoresCard scores={bestScores} />
+                      )}
+                    </>
                   )}
                 </>
               ) : (

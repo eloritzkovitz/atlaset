@@ -1,9 +1,9 @@
 import React from "react";
 import {
   FaCakeCandles,
-  FaCalendar,
   FaHand,
   FaLocationDot,
+  FaRegCalendarDays,
 } from "react-icons/fa6";
 import { CountryWithFlag } from "@features/countries";
 import { ProfileField } from "../components/ProfileField";
@@ -74,7 +74,7 @@ export function getProfileSections({
     {
       key: "joined",
       label: "Joined",
-      icon: <FaCalendar />,
+      icon: <FaRegCalendarDays />,
       content: displayJoinDate,
     },
     {
