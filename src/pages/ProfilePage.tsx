@@ -13,6 +13,7 @@ import {
   useUserProfile,
   useUserFriendCount,
   useFriendProfiles,
+  useUserFriends,
 } from "@features/user";
 import { usePageTitle } from "@hooks";
 import { Footer, Header } from "@layout";
@@ -49,7 +50,10 @@ export default function ProfilePage() {
 
   // Get friend count and friend profiles for the profile user
   const { count: friendCount } = useUserFriendCount(profileUser?.uid);
-  const [friendUids, setFriendUids] = useState<string[]>([]);
+  const { friends: friendObjs } = useUserFriends(
+    friendsOpen && profileUser?.uid ? profileUser.uid : undefined,
+  );
+  const friendUids = friendObjs.map((f) => f.uid);
   const { profiles: friendProfiles, loading: loadingFriendProfiles } =
     useFriendProfiles(friendUids);
 
@@ -57,13 +61,9 @@ export default function ProfilePage() {
   if (!profileUser && !(authLoading || profileLoading))
     return <div>User not found</div>;
 
-  // When opening the modal, fetch the friend UIDs
-  const handleOpenFriends = async () => {
+  // When opening the modal, just navigate
+  const handleOpenFriends = () => {
     if (!profileUser?.uid) return;
-    const { friendService } =
-      await import("@features/user/friends/services/friendService");
-    const friends = await friendService.getFriends(profileUser.uid);
-    setFriendUids(friends.map((f) => f.uid));
     navigate(`/users/${profileUser.username}/friends`, { replace: false });
   };
 

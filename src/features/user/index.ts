@@ -33,6 +33,7 @@ export { useUserActivity } from "./activity/hooks/useUserActivity";
 export { useUserDevices } from "./auth/hooks/useUserDevices";
 export { useUserFriendCount } from "./friends/hooks/useUserFriendCount";
 export { useFriendProfiles } from "./friends/hooks/useFriendProfiles";
+export { useUserFriends } from "./friends/hooks/useUserFriends";
 
 // Redux
 export { default as authReducer } from "./auth/slices/authSlice";

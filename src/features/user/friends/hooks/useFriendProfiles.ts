@@ -12,7 +12,6 @@ export function useFriendProfiles(friendUids: string[]) {
   const [loadingProfiles, setLoadingProfiles] = useState(true);
 
   // Fetch profiles when friendUids changes
-  // Memoize UIDs to avoid unnecessary effect triggers
   useEffect(() => {
     let cancelled = false;
     async function fetchProfiles() {
@@ -33,8 +32,10 @@ export function useFriendProfiles(friendUids: string[]) {
       setFriendProfiles([]);
       setLoadingProfiles(false);
     }
-    return () => { cancelled = true; };
-  }, [friendUids]);
+    return () => {
+      cancelled = true;
+    };
+  }, [JSON.stringify(friendUids)]);
 
   return { profiles: friendProfiles, loading: loadingProfiles };
 }

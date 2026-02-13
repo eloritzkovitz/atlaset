@@ -31,17 +31,20 @@ export function FriendListItemMenuActions({
       >
         View Profile
       </MenuButton>
-      <MenuButton
-        onClick={() => {
-          if (user?.uid) {
-            friendService.removeFriend(user.uid, uid);
-          }
-        }}
-        icon={<FaUserMinus className="mr-2" />}
-        className="w-full text-danger"
-      >
-        Unfriend
-      </MenuButton>
+      {/* Only render Unfriend if viewing your own friends list (user.uid !== uid) */}
+      {user && user.uid !== uid && (
+        <MenuButton
+          onClick={() => {
+            if (user?.uid) {
+              friendService.removeFriend(user.uid, uid);
+            }
+          }}
+          icon={<FaUserMinus className="mr-2" />}
+          className="w-full text-danger"
+        >
+          Unfriend
+        </MenuButton>
+      )}
     </>
   );
 }
