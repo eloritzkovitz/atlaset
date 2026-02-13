@@ -1,17 +1,16 @@
 import type { ReactNode } from "react";
+import { SectionHeader } from "@components";
 
 interface ProfileFieldProps {
-  label: string;
+  label: ReactNode;
   children: ReactNode;
 }
 
 export function ProfileField({ label, children }: ProfileFieldProps) {
   return (
-    <div className="mb-4">
-      <span className="text-muted text-xs uppercase tracking-wide">
-        {label}
-      </span>
-      <div className="text-lg font-medium">
+    <div className="mb-2">
+      <SectionHeader>{label}</SectionHeader>
+      <div className="flex items-center gap-3 text-lg font-medium">
         {children}
       </div>
     </div>

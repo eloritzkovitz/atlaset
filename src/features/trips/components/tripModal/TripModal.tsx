@@ -11,7 +11,7 @@ import {
   NumberInput,
   SelectInput,
 } from "@components";
-import { useFriends } from "@features/user/friends/hooks/useFriends";
+import { useUserFriends } from "@features/user";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import {
   CountrySelectModal,
@@ -51,7 +51,7 @@ export function TripModal({
   const [isTentative, setIsTentative] = useState(false);
 
   // Friends/participants logic
-  const { friends } = useFriends();
+  const { friends } = useUserFriends();
   const friendUids = useMemo(() => friends.map((f) => f.uid), [friends]);
   const { profiles: friendProfiles } = useFriendProfiles(friendUids);
   const participantOptions = useMemo(

@@ -26,7 +26,7 @@ export function TableDropdownFilter<T>({
       placeholder={placeholder}
       isFilter
       isMulti={isMulti}
-      className="block w-full text-xs"
+      className="block w-full text-xs bg-surface/20 rounded-lg"
       renderOption={renderOption}
     />
   );

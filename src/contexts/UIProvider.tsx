@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { useIsMobile, useKeyHandler } from "@hooks";
+import { useKeyHandler, useScreenSize } from "@hooks";
 import { UIContext } from "./UIContext";
 
-// Type for panel selection
-type PanelSelection =
+// Map toolbar panel selection
+export type MapToolbarPanelSelection =
   | "countries"
   | "layers"
   | "markers"
@@ -12,72 +12,76 @@ type PanelSelection =
   | "settings"
   | null;
 
-// Type for user panels
-type UserPanelSelection = "friends" | "help" | null;
+// User panel selection
+export type UserPanelSelection = "friends" | "help" | null;
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   // State for which panel is open; null means no panel is open
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
-  const [openPanel, setOpenPanel] = useState<PanelSelection>(
-    isMobile ? null : "countries",
-  );
-  const prevOpenPanel = useRef<PanelSelection>(openPanel);
+  const [openMapToolbarPanel, setOpenMapToolbarPanel] =
+    useState<MapToolbarPanelSelection>(isMobile ? null : "countries");
+  const prevOpenMapToolbarPanel =
+    useRef<MapToolbarPanelSelection>(openMapToolbarPanel);
   const [showFilters, setShowFilters] = useState(false);
-  const [rightPanel, setRightPanel] = useState<UserPanelSelection>(null);
+  const [openUserPanel, setOpenUserPanel] = useState<UserPanelSelection>(null);
 
   // Filters toggle: only works if countries panel is open
   const toggleFilters = () => {
-    if (openPanel === "countries") setShowFilters((prev) => !prev);
+    if (openMapToolbarPanel === "countries") setShowFilters((prev) => !prev);
   };
 
   // Ensure showFilters is false whenever countries panel is closed
   useEffect(() => {
-    if (openPanel !== "countries" && showFilters) {
+    if (openMapToolbarPanel !== "countries" && showFilters) {
       setShowFilters(false);
     }
-  }, [openPanel, showFilters]);
+  }, [openMapToolbarPanel, showFilters]);
 
-  // Derived states for individual panels
-  const showCountries = openPanel === "countries";
-  const showMarkers = openPanel === "markers";
-  const showLayers = openPanel === "layers";
-  const showSaved = openPanel === "savedmaps";
-  const showExport = openPanel === "export";
-  const showSettings = openPanel === "settings";
+  // Derived states for map toolbar panels
+  const showCountries = openMapToolbarPanel === "countries";
+  const showMarkers = openMapToolbarPanel === "markers";
+  const showLayers = openMapToolbarPanel === "layers";
+  const showSavedMaps = openMapToolbarPanel === "savedmaps";
+  const showExport = openMapToolbarPanel === "export";
+  const showSettings = openMapToolbarPanel === "settings";
 
   // Map panels
   const toggleUiVisible = () => setUiVisible((prev) => !prev);
   const toggleCountries = () =>
-    setOpenPanel((prev) => (prev === "countries" ? null : "countries"));
+    setOpenMapToolbarPanel((prev) =>
+      prev === "countries" ? null : "countries",
+    );
   const toggleLayers = () =>
-    setOpenPanel((prev) => (prev === "layers" ? null : "layers"));
+    setOpenMapToolbarPanel((prev) => (prev === "layers" ? null : "layers"));
   const toggleMarkers = () =>
-    setOpenPanel((prev) => (prev === "markers" ? null : "markers"));
-  const toggleSaved = () =>
-    setOpenPanel((prev) => (prev === "savedmaps" ? null : "savedmaps"));
+    setOpenMapToolbarPanel((prev) => (prev === "markers" ? null : "markers"));
+  const toggleSavedMaps = () =>
+    setOpenMapToolbarPanel((prev) =>
+      prev === "savedmaps" ? null : "savedmaps",
+    );
   const toggleExport = () =>
-    setOpenPanel((prev) => (prev === "export" ? null : "export"));
+    setOpenMapToolbarPanel((prev) => (prev === "export" ? null : "export"));
   const toggleSettings = () =>
-    setOpenPanel((prev) => (prev === "settings" ? null : "settings"));
+    setOpenMapToolbarPanel((prev) => (prev === "settings" ? null : "settings"));
 
   // User panels
   const toggleFriends = () => {
-    setRightPanel((prev) => (prev === "friends" ? null : "friends"));
+    setOpenUserPanel((prev) => (prev === "friends" ? null : "friends"));
   };
   const toggleHelp = () => {
-    setRightPanel((prev) => (prev === "help" ? null : "help"));
+    setOpenUserPanel((prev) => (prev === "help" ? null : "help"));
   };
 
   // Derived states for user panels
-  const showFriends = rightPanel === "friends";
-  const showHelp = rightPanel === "help";
+  const showFriends = openUserPanel === "friends";
+  const showHelp = openUserPanel === "help";
 
   // Modal state
   const [modalOpen, setModalOpen] = useState(false);
-  const closePanel = () => setOpenPanel(null);
+  const closePanel = () => setOpenMapToolbarPanel(null);
 
   // Derived states for individual modals
   const [showLegend, setShowLegend] = useState(false);
@@ -104,14 +108,14 @@ export function UIProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (
       !isMobile &&
-      prevOpenPanel.current !== null &&
-      prevOpenPanel.current !== "countries" &&
-      openPanel === null
+      prevOpenMapToolbarPanel.current !== null &&
+      prevOpenMapToolbarPanel.current !== "countries" &&
+      openMapToolbarPanel === null
     ) {
-      setOpenPanel("countries");
+      setOpenMapToolbarPanel("countries");
     }
-    prevOpenPanel.current = openPanel;
-  }, [openPanel, isMobile]);
+    prevOpenMapToolbarPanel.current = openMapToolbarPanel;
+  }, [openMapToolbarPanel, isMobile]);
 
   return (
     <UIContext.Provider
@@ -120,6 +124,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
         setUiVisible,
         sidebarExpanded,
         setSidebarExpanded,
+        openMapToolbarPanel,
         showCountries,
         toggleCountries,
         showFilters,
@@ -128,14 +133,15 @@ export function UIProvider({ children }: { children: ReactNode }) {
         toggleLayers,
         showMarkers,
         toggleMarkers,
+        showSavedMaps,
+        toggleSavedMaps,
         showExport,
         toggleExport,
         showSettings,
         toggleSettings,
+        openUserPanel,
         showFriends,
         toggleFriends,
-        showSaved,
-        toggleSaved,
         showHelp,
         toggleHelp,
         closePanel,

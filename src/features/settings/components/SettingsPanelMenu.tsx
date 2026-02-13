@@ -1,5 +1,5 @@
 import { DrawerPanel, MenuButton, Panel } from "@components";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 import { Branding } from "@layout";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
 
@@ -18,7 +18,7 @@ export function SettingsPanelMenu({
   open,
   onClose,
 }: SettingsPanelMenuProps) {
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   const menuItems = canEdit
     ? SETTINGS_MENU

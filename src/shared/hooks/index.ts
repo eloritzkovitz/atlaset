@@ -4,7 +4,7 @@ export * from "./animation/useFlyTransition";
 export * from "./animation/useModalAnimation";
 
 // Device
-export * from "./device/useIsMobile";
+export * from "./device/useScreenSize";
 
 // DOM
 export * from "./dom/useClickOutside";

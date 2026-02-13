@@ -9,4 +9,4 @@ export { WelcomeDocsSection } from "./components/WelcomeSection";
 export { DOCS, DOCS_PATH } from "./config/docs";
 
 // Utils
-export { getDocBySlug, navigateToDoc } from "./utils/documentation";
+export { getDocBySlug, navigateToDoc } from "./utils/docs";

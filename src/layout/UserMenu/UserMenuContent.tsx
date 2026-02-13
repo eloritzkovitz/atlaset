@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { useFirestoreUsername, UserInfo } from "@features/user";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 
 interface UserMenuProps {
   user: User | null;
@@ -22,7 +22,7 @@ interface UserMenuProps {
 export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
   const { toggleFriends, toggleShortcuts } = useUI();
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   // Fetch username for profile link
   const { username } = useFirestoreUsername(user?.uid);

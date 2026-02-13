@@ -1,26 +1,32 @@
 import { createContext, useContext } from "react";
+import type {
+  MapToolbarPanelSelection,
+  UserPanelSelection,
+} from "./UIProvider";
 
 export interface UIContextType {
   uiVisible: boolean;
   setUiVisible: (v: boolean | ((prev: boolean) => boolean)) => void;
   sidebarExpanded: boolean;
   setSidebarExpanded: (v: boolean) => void;
+  openMapToolbarPanel: MapToolbarPanelSelection;
   showCountries: boolean;
   toggleCountries: () => void;
   showFilters: boolean;
-  toggleFilters: () => void;  
+  toggleFilters: () => void;
   showLayers: boolean;
   toggleLayers: () => void;
   showMarkers: boolean;
   toggleMarkers: () => void;
-  showSaved: boolean;
-  toggleSaved: () => void;
+  showSavedMaps: boolean;
+  toggleSavedMaps: () => void;
   showExport: boolean;
-  toggleExport: () => void;  
+  toggleExport: () => void;
   showSettings: boolean;
   toggleSettings: () => void;
+  openUserPanel: UserPanelSelection;
   showFriends: boolean;
-  toggleFriends: () => void;  
+  toggleFriends: () => void;
   showHelp: boolean;
   toggleHelp: () => void;
   closePanel: () => void;

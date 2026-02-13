@@ -3,6 +3,7 @@ import { FaGlobe } from "react-icons/fa6";
 import {
   ActionButton,
   Checkbox,
+  EmptyListMessage,
   FormField,
   Modal,
   PanelHeader,
@@ -44,7 +45,7 @@ export function CountrySelectModal({
   const filteredOptions = filterBySearch(
     options,
     search,
-    (country) => country.name
+    (country) => country.name,
   );
 
   return (
@@ -71,9 +72,7 @@ export function CountrySelectModal({
       <FormField label="Countries:">
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (
-            <div className="text-muted text-center py-8">
-              No countries found.
-            </div>
+            <EmptyListMessage message="No countries found." />
           ) : (
             filteredOptions.map((country) => {
               const checked = selected.includes(country.isoCode);

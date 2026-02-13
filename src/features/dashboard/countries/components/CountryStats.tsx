@@ -111,13 +111,13 @@ export function CountryStats({
           onChange={setCountryType}
           className="mb-4"
         />
-        <WorldExplorationCard
-          visited={visitedCountries}
-          total={totalCountries}
-          loading={loading}
-          onShowAllCountries={onShowAllCountries}
-        />
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="w-full grid gap-6 md:grid-cols-2">
+          <WorldExplorationCard
+            visited={visitedCountries}
+            total={totalCountries}
+            loading={loading}
+            onShowAllCountries={onShowAllCountries}
+          />
           {regionStats.map((region) => (
             <RegionCard
               key={region.region}

@@ -12,29 +12,37 @@ export function useFriendProfiles(friendUids: string[]) {
   const [loadingProfiles, setLoadingProfiles] = useState(true);
 
   // Fetch profiles when friendUids changes
-  // Memoize UIDs to avoid unnecessary effect triggers
+  const serializedUids = JSON.stringify(friendUids);
   useEffect(() => {
     let cancelled = false;
+    setLoadingProfiles(true);
     async function fetchProfiles() {
-      setLoadingProfiles(true);
       const profiles: UserProfile[] = [];
+      // Fetch each profile sequentially
       for (const uid of friendUids) {
         const profile = await profileService.getUserProfileByUid(uid);
         if (profile) profiles.push(profile);
       }
+
+      // Only update state if the component is still mounted
       if (!cancelled) {
         setFriendProfiles(profiles);
         setLoadingProfiles(false);
       }
     }
+
+    // Only fetch if there are friend UIDs to fetch
     if (friendUids.length > 0) {
       fetchProfiles();
     } else {
       setFriendProfiles([]);
       setLoadingProfiles(false);
     }
-    return () => { cancelled = true; };
-  }, [friendUids]);
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serializedUids]);
 
   return { profiles: friendProfiles, loading: loadingProfiles };
 }

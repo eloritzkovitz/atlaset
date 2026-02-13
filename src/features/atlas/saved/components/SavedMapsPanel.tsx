@@ -1,5 +1,5 @@
 import { FaBookmark, FaFloppyDisk, FaPlus, FaXmark } from "react-icons/fa6";
-import { ActionButton, Panel } from "@components";
+import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useUI } from "@contexts/UIContext";
@@ -16,7 +16,7 @@ export function SavedMapsPanel() {
     updateSavedMapName,
   } = useSavedMaps();
   const { isReadonly } = useMapView();
-  const { showSaved, toggleSaved } = useUI();
+  const { showSavedMaps, toggleSavedMaps } = useUI();
 
   return (
     <Panel
@@ -25,8 +25,8 @@ export function SavedMapsPanel() {
           <FaBookmark /> My Maps
         </>
       }
-      show={showSaved}
-      onHide={toggleSaved}
+      show={showSavedMaps}
+      onHide={toggleSavedMaps}
       escEnabled={!isSavedMapModalOpen}
       position="left"
       headerActions={
@@ -49,7 +49,7 @@ export function SavedMapsPanel() {
             />
           )}
           <ActionButton
-            onClick={toggleSaved}
+            onClick={toggleSavedMaps}
             ariaLabel="Close Saved Panel"
             title="Close"
             icon={<FaXmark className="text-2xl" />}
@@ -60,9 +60,7 @@ export function SavedMapsPanel() {
     >
       <div className="mt-4">
         {savedMaps.length === 0 ? (
-          <div className="mt-4 text-muted text-sm flex justify-center">
-            No saved maps yet.
-          </div>
+          <EmptyListMessage message="No saved maps yet." />
         ) : (
           <ul className="list-none p-0">
             {savedMaps.map((map) => (

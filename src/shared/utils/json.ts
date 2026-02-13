@@ -89,7 +89,7 @@ export function exportToFile<T extends Record<string, unknown>>(
   a.download =
     filename ||
     (arr.length === 1
-      ? `${(arr[0] as any)?.name || defaultName}.json`
+      ? `${(arr[0] as Record<string, unknown>)?.name || defaultName}.json`
       : `${defaultName}s.json`);
   a.click();
   URL.revokeObjectURL(url);

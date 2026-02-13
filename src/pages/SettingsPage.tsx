@@ -6,7 +6,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { HamburgerButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import {
   AccountSettingsSection,
@@ -20,19 +19,17 @@ import {
   UserActivitySection,
   useUserProfile,
 } from "@features/user";
-import { useIsMobile, usePageTitle } from "@hooks";
-import { UserMenu } from "@layout/UserMenu/UserMenu";
+import { usePageTitle } from "@hooks";
+import { SidebarLayout } from "@layout";
 
-export default function ProfilePage() {
+export default function SettingsPage() {
   const { user, loading: userLoading } = useAuth();
   const { profile, loading: profileLoading } = useUserProfile({
     uid: user?.uid,
   });
   const [editOpen, setEditOpen] = useState(false);
-  const [panelOpen, setPanelOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const isMobile = useIsMobile();
 
   // Determine selected panel from route
   const selectedPanel = location.pathname.endsWith("/activity")
@@ -79,48 +76,40 @@ export default function ProfilePage() {
     } else {
       navigate("/settings/account");
     }
-    setPanelOpen(false);
   }
 
   return (
-    <div className="relative h-screen w-screen bg-bg overflow-x-hidden">
-      {/* Hamburger for mobile */}
-      {isMobile && <HamburgerButton onClick={() => setPanelOpen(true)} />}
-      <div className="flex-1 p-4 max-w-4xl mx-auto flex flex-col md:flex-row gap-6 w-full">
-        {/* Hide UserMenu on mobile for clarity */}
-        {!isMobile && <UserMenu />}
+    <SidebarLayout
+      menu={
         <SettingsPanelMenu
           selectedPanel={selectedPanel}
           setSelectedPanel={handlePanelChange}
           canEdit={canEdit}
-          open={isMobile ? panelOpen : undefined}
-          onClose={isMobile ? () => setPanelOpen(false) : undefined}
         />
-
-        <main className="flex-1 flex flex-col items-center px-2 md:px-12 py-10 md:py-16 min-h-screen">
-          <div className="w-full max-w-2xl">
-            {userLoading || profileLoading ? (
-              <div className="animate-pulse space-y-6">
-                <div className="h-12 bg-surface-alt rounded-xl mb-4" />
-                <div className="h-40 bg-surface-alt rounded-xl mb-4" />
-                <div className="h-20 bg-surface-alt rounded-xl" />
-              </div>
-            ) : (
-              <Routes>
-                <Route path="account" element={<AccountSettingsSection />} />
-                <Route path="display" element={<DisplaySettingsSection />} />
-                <Route path="sound" element={<SoundSettingsSection />} />
-                <Route path="activity" element={<UserActivitySection />} />
-                <Route path="security" element={<SecurityInfoSection />} />
-                {/* Redirect unknown profile routes to /settings */}
-                <Route
-                  path="*"
-                  element={<Navigate to="/settings/account" replace />}
-                />
-              </Routes>
-            )}
+      }
+      contentClassName="min-h-screen"
+    >
+      <div className="w-full max-w-2xl">
+        {userLoading || profileLoading ? (
+          <div className="animate-pulse space-y-6">
+            <div className="h-12 bg-surface-alt rounded-xl mb-4" />
+            <div className="h-40 bg-surface-alt rounded-xl mb-4" />
+            <div className="h-20 bg-surface-alt rounded-xl" />
           </div>
-        </main>
+        ) : (
+          <Routes>
+            <Route path="account" element={<AccountSettingsSection />} />
+            <Route path="display" element={<DisplaySettingsSection />} />
+            <Route path="sound" element={<SoundSettingsSection />} />
+            <Route path="activity" element={<UserActivitySection />} />
+            <Route path="security" element={<SecurityInfoSection />} />
+            {/* Redirect unknown profile routes to /settings */}
+            <Route
+              path="*"
+              element={<Navigate to="/settings/account" replace />}
+            />
+          </Routes>
+        )}
       </div>
       <EditProfileModal
         user={user}
@@ -128,6 +117,6 @@ export default function ProfilePage() {
         open={editOpen}
         onClose={() => setEditOpen(false)}
       />
-    </div>
+    </SidebarLayout>
   );
 }

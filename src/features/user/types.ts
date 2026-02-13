@@ -1,6 +1,15 @@
 import type { Timestamp } from "firebase/firestore";
 
-/** User profile information */
+/** Supported social platforms for user profiles. */
+export type SocialPlatform =
+  | "x"
+  | "instagram"
+  | "facebook"
+  | "linkedin"
+  | "github"
+  | "website";
+
+/** User profile information. */
 export interface UserProfile {
   /** User ID */
   uid: string;
@@ -12,19 +21,23 @@ export interface UserProfile {
   photoURL?: string;
   /** email */
   email?: string;
+  /** Home country code (ISO 3166-1 alpha-2) */
+  homeCountry?: string;
+  /** Birthday */
+  birthday?: Timestamp;
   /** Short biography */
   biography?: string;
+  /** Social links */
+  socialLinks?: Partial<Record<SocialPlatform, string>>;
   /** Whether the profile is public */
   isPublic: boolean;
   /** Account creation date */
   joinDate?: Timestamp;
-  /** Home country code (ISO 3166-1 alpha-2) */
-  homeCountry?: string;
   /** List of visited country codes (ISO 3166-1 alpha-2) */
   visitedCountryCodes: string[];
 }
 
-/** Activity details associated with a user activity */
+/** Activity details associated with a user activity. */
 export interface ActivityDetails extends Record<string, unknown> {
   itemName?: string;
   location?: string;
@@ -32,7 +45,7 @@ export interface ActivityDetails extends Record<string, unknown> {
   userName?: string;
 }
 
-/** User activity log entry */
+/** User activity log entry. */
 export interface UserActivity {
   id: string;
   action: number;
@@ -40,7 +53,7 @@ export interface UserActivity {
   details?: ActivityDetails;
 }
 
-/** Device information associated with a user */
+/** Device information associated with a user. */
 export type Device = {
   userAgent?: string;
   deviceName?: string;
@@ -48,7 +61,7 @@ export type Device = {
   lastActive?: number;
 };
 
-/** Friend request information */
+/** Friend request information. */
 export interface FriendRequest {
   /** User ID of the friend request */
   uid: string;
@@ -60,10 +73,18 @@ export interface FriendRequest {
   createdAt: Timestamp;
 }
 
-/** Friend information */
+/** Friend information. */
 export interface Friend {
   /** User ID of the friend */
   uid: string;
   /** Timestamp when the friendship was created */
   createdAt: Timestamp;
 }
+
+/**
+ * Friend profile information (subset of UserProfile, used for friend lists/search)
+ */
+export type FriendProfile = Pick<
+  UserProfile,
+  "uid" | "username" | "displayName" | "photoURL"
+>;

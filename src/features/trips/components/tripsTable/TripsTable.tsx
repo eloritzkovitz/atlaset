@@ -1,7 +1,7 @@
 import { Pagination } from "@components";
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
 import { useCountryData } from "@features/countries";
-import { useIsMobile, useResizableColumns } from "@hooks";
+import { useScreenSize, useResizableColumns } from "@hooks";
 import type { FilterOption, Option } from "@types";
 import type { TripSortBy, TripSortByKey } from "../../types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
@@ -70,7 +70,7 @@ export function TripsTable({
   onSort,
 }: TripsTableProps) {
   const countryData = useCountryData();
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   // Resizable columns
   const { colWidths, handleResizeStart } = useResizableColumns<ColumnKey>(

@@ -1,10 +1,10 @@
 import { UserSearchDropdown } from "@features/user";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 import { Branding } from "../Branding/Branding";
 import { UserMenu } from "../UserMenu/UserMenu";
 
 export function Header() {
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   return (
     <header className="sticky top-0 z-30 h-16 bg-surface-alt shadow-sm">
       <div className="flex items-center h-full px-6">

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
 import { ActionButton, ActionsToolbar } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
 import { useToolbarActions } from "./useToolbarActions";
@@ -26,7 +26,7 @@ export function MapToolbar({
   const [visible, setVisible] = useState(true);
 
   // Detect mobile
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
 
   // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);

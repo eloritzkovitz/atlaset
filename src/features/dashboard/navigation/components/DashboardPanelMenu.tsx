@@ -1,9 +1,6 @@
 import { useState } from "react";
-import {
-  FaGlobe,
-  FaMedal,
-  FaSuitcaseRolling,
-} from "react-icons/fa6";
+import { HamburgerButton } from "@components";
+import { FaGlobe, FaList, FaMedal, FaSuitcaseRolling } from "react-icons/fa6";
 import { TbLayoutDashboardFilled } from "react-icons/tb";
 import { DrawerPanel, Panel, SubmenuSection } from "@components";
 import {
@@ -11,7 +8,7 @@ import {
   TRIPS_SUBMENU,
   ACHIEVEMENTS_MENU,
 } from "@features/dashboard/navigation/config/menu";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;
@@ -23,12 +20,18 @@ interface DashboardPanelMenuProps {
 export function DashboardPanelMenu({
   selectedPanel,
   setSelectedPanel,
-  open,
-  onClose,
+  open: openProp,
+  onClose: onCloseProp,
 }: DashboardPanelMenuProps) {
-  const isMobile = useIsMobile();
+  const { isLaptop, isMobile } = useScreenSize();
   const [countriesExpanded, setCountriesExpanded] = useState(true);
   const [tripsExpanded, setTripsExpanded] = useState(true);
+
+  // Support both controlled (via props) and uncontrolled (internal state) open state for the panel
+  const [localOpen, setLocalOpen] = useState(false);
+  const open = openProp !== undefined ? openProp : localOpen;
+  const onClose =
+    onCloseProp !== undefined ? onCloseProp : () => setLocalOpen(false);
 
   // Panel content
   const panelContent = (
@@ -84,12 +87,22 @@ export function DashboardPanelMenu({
     </Panel>
   );
 
-  // Mobile: drawer
-  if (isMobile) {
+  // Mobile and laptop: show hamburger button and drawer if open
+  if (isMobile || isLaptop) {
     return (
-      <DrawerPanel open={!!open} onClose={onClose!} width={256}>
-        {panelContent}
-      </DrawerPanel>
+      <>
+        {/* Hamburger button only if not controlled by parent */}
+        {openProp === undefined && (
+          <HamburgerButton
+            onClick={() => setLocalOpen(true)}
+            className="left-18 !top-2.5"
+            icon={<FaList className="text-2xl" />}
+          />
+        )}
+        <DrawerPanel open={!!open} onClose={onClose} width={280}>
+          {panelContent}
+        </DrawerPanel>
+      </>
     );
   }
 

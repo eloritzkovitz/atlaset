@@ -5,13 +5,13 @@ import { hasStringChildren } from "@utils/string";
 export const changelogMarkdownComponents = getBaseMarkdownComponents({
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1
-      className="mt-0 mb-6 text-xl text-action-text-hover flex justify-center font-bold"
+      className="mt-0 mb-6 text-lg sm:text-xl text-action-text-hover flex justify-center font-bold"
       {...props}
     />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2
-      className="mt-8 mb-2 text-2xl font-semibold text-action-text-hover"
+      className="mt-8 mb-2 text-base sm:text-2xl font-semibold text-action-text-hover"
       {...props}
     />
   ),
@@ -46,7 +46,7 @@ export const changelogMarkdownComponents = getBaseMarkdownComponents({
     }
     return (
       <li
-        className="flex items-start list-none pl-0 py-2"
+        className="flex items-start list-none pl-0 py-2 text-sm sm:text-base"
         style={{ minHeight: "2.25rem" }}
         {...rest}
       >

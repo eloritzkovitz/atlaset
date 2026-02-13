@@ -19,7 +19,7 @@ export function WorldExplorationCard({
   
   return (
     <Card
-      className="flex flex-col items-center mb-8 bg-surface shadow-lg p-6 cursor-pointer"
+      className="flex flex-col items-center bg-surface shadow-lg p-6 cursor-pointer md:col-span-2"
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}

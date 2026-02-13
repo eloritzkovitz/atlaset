@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { DrawerPanel, MenuButton, Panel, SubmenuSection } from "@components";
-import { useIsMobile } from "@hooks";
+import { useScreenSize } from "@hooks";
 import { Branding } from "@layout";
 import { DOCS_GROUPS } from "../config/docs";
 
@@ -19,7 +19,7 @@ export function DocsPanelMenu({
   open,
   onClose,
 }: DocsPanelMenuProps) {
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   const navigate = useNavigate();
 
   // Track expanded state for each section by key

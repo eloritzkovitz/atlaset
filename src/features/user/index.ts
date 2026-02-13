@@ -1,3 +1,6 @@
+// Activity Components
+export { UserActivitySection } from "./activity/components/UserActivitySection";
+
 // Auth components
 export { AuthCard } from "./auth/components/AuthCard";
 export { AuthFooter } from "./auth/components/AuthFooter";
@@ -8,11 +11,13 @@ export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 export { FriendsPanel } from "./friends/components/FriendsPanel";
 
 // Profile Components
-export { ProfileInfoCard } from "./profile/components/ProfileInfoCard";
+export { BestScoresCard } from "./profile/components/BestScoresCard";
 export { EditProfileModal } from "./profile/components/EditProfileModal";
+export { FriendsListSection } from "./profile/components/FriendsListSection";
+export { ProfileAboutCard } from "./profile/components/ProfileAboutCard";
+export { ProfileHeader } from "./profile/components/ProfileHeader";
 export { UserAvatar } from "./profile/components/UserAvatar";
 export { UserInfo } from "./profile/components/UserInfo";
-export { UserActivitySection } from "./activity/components/UserActivitySection";
 export { VisitedCountriesCard } from "./profile/components/VisitedCountriesCard";
 
 // Search Components
@@ -26,6 +31,9 @@ export { useHomeCountry } from "./profile/hooks/useHomeCountry";
 export { useUserProfile } from "./profile/hooks/useUserProfile";
 export { useUserActivity } from "./activity/hooks/useUserActivity";
 export { useUserDevices } from "./auth/hooks/useUserDevices";
+export { useUserFriendCount } from "./friends/hooks/useUserFriendCount";
+export { useFriendProfiles } from "./friends/hooks/useFriendProfiles";
+export { useUserFriends } from "./friends/hooks/useUserFriends";
 
 // Redux
 export { default as authReducer } from "./auth/slices/authSlice";

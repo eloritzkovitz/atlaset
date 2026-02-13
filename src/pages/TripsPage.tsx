@@ -15,7 +15,7 @@ import { sortTrips } from "@features/trips/utils/tripSort";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { useAuth } from "@features/user";
-import { useIsMobile, useTablePagination, usePageTitle } from "@hooks";
+import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
 
 export default function TripsPage() {
   const { user } = useAuth();
@@ -30,11 +30,12 @@ export default function TripsPage() {
     removeTrip,
     duplicateTrip,
   } = useTrips();
+  const { isMobile } = useScreenSize();
+
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
-  const isMobile = useIsMobile();
 
   // Set page title
   usePageTitle("Trips | Atlaset");
