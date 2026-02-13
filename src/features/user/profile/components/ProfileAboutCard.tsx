@@ -2,9 +2,12 @@ import { useState } from "react";
 import { FaEnvelope } from "react-icons/fa6";
 import { Card, TabButton } from "@components";
 import { type Country } from "@features/countries";
-import { getProfileSections, renderProfileFields } from "./profileSections";
 import { ProfileField } from "./ProfileField";
 import { SocialLinks } from "./SocialLinks";
+import {
+  getProfileSections,
+  renderProfileFields,
+} from "../config/profileSections";
 
 interface ProfileAboutCardProps {
   displayEmail: string;
