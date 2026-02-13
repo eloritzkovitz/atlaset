@@ -1,5 +1,5 @@
 import { FaPen } from "react-icons/fa6";
-import { Card } from "@components";
+import { ActionButton, Card } from "@components";
 import { UserAvatar } from "./UserAvatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
@@ -7,17 +7,17 @@ import { friendService } from "../../friends/services/friendService";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";
 import type { UserProfile } from "../../types";
 
-interface ProfileInfoCardProps {
+interface ProfileHeaderProps {
   profile: UserProfile;
   canEdit?: boolean;
   onEdit?: () => void;
 }
 
-export function ProfileInfoCard({
+export function ProfileHeader({
   profile,
   canEdit,
   onEdit,
-}: ProfileInfoCardProps) {
+}: ProfileHeaderProps) {
   const { user: currentUser } = useAuth();
 
   // Friendship status logic
@@ -63,20 +63,22 @@ export function ProfileInfoCard({
               @{profile.username}
             </div>
           </div>
+          {/* Edit Button: only show if canEdit is true */}
           {canEdit && (
-            <div className="flex-shrink-0 mt-4 sm:mt-0 sm:ml-auto w-full sm:w-auto">
-              <button
-                className="w-full sm:w-auto px-4 py-2 flex items-center justify-center gap-2 bg-blue-700 text-white rounded-full hover:bg-blue-800 transition"
+            <div className="flex-shrink-0">
+              <ActionButton
+                variant="primary"
+                className="!rounded-full"
                 onClick={onEdit}
+                icon={<FaPen className="text-lg" />}
               >
-                <FaPen className="text-lg" />
                 Edit Profile
-              </button>
+              </ActionButton>
             </div>
           )}
           {/* Friend Button: only show if not me */}
           {!canEdit && currentUser && currentUser.uid !== profile.uid && (
-            <div className="flex-shrink-0 mt-4 sm:mt-0 sm:ml-auto w-full sm:w-auto">
+            <div className="flex-shrink-0">
               <FriendshipButton
                 friendStatus={friendStatus}
                 loading={loading}

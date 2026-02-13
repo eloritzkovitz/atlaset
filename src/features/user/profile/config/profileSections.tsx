@@ -2,12 +2,11 @@ import React from "react";
 import {
   FaCakeCandles,
   FaCalendar,
-  FaEnvelope,
-  FaHouse,
   FaHand,
+  FaLocationDot,
 } from "react-icons/fa6";
 import { CountryWithFlag } from "@features/countries";
-import { ProfileField } from "./ProfileField";
+import { ProfileField } from "../components/ProfileField";
 
 export type ProfileSection = {
   key: string;
@@ -37,13 +36,11 @@ export function renderProfileFields(
 
 /** Generates profile sections based on user profile data. */
 export function getProfileSections({
-  displayEmail,
   selectedCountry,
   displayBirthday,
   displayJoinDate,
   displayBiography,
 }: {
-  displayEmail: string;
   selectedCountry: {
     isoCode: string;
     name: string;
@@ -55,15 +52,9 @@ export function getProfileSections({
 }): ProfileSection[] {
   return [
     {
-      key: "email",
-      label: "Email",
-      icon: <FaEnvelope />,
-      content: displayEmail,
-    },
-    {
-      key: "country",
-      label: "Country",
-      icon: <FaHouse />,
+      key: "location",
+      label: "Location",
+      icon: <FaLocationDot />,
       content: selectedCountry ? (
         <CountryWithFlag
           isoCode={selectedCountry.isoCode}

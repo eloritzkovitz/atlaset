@@ -8,7 +8,7 @@ export { GoogleSignInButton } from "./auth/components/GoogleSignInButton";
 export { FriendsPanel } from "./friends/components/FriendsPanel";
 
 // Profile Components
-export { ProfileInfoCard } from "./profile/components/ProfileInfoCard";
+export { ProfileHeader } from "./profile/components/ProfileHeader";
 export { EditProfileModal } from "./profile/components/EditProfileModal";
 export { UserAvatar } from "./profile/components/UserAvatar";
 export { UserInfo } from "./profile/components/UserInfo";

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { SectionHeader } from "@components";
 
 interface ProfileFieldProps {
   label: ReactNode;
@@ -7,10 +8,8 @@ interface ProfileFieldProps {
 
 export function ProfileField({ label, children }: ProfileFieldProps) {
   return (
-    <div className="mb-4">
-      <div className="text-muted text-xs uppercase tracking-wide mb-1">
-        {label}
-      </div>
+    <div className="mb-2">
+      <SectionHeader>{label}</SectionHeader>
       <div className="flex items-center gap-3 text-lg font-medium">
         {children}
       </div>

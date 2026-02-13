@@ -5,7 +5,7 @@ import { useUserLeaderboardScores } from "@features/quizzes";
 import {
   BestScoresCard,
   EditProfileModal,
-  ProfileInfoCard,
+  ProfileHeader,
   VisitedCountriesCard,
   useUserProfile,
 } from "@features/user";
@@ -58,7 +58,7 @@ export default function ProfilePage() {
                 </div>
               ) : profileUser ? (
                 <>
-                  <ProfileInfoCard
+                  <ProfileHeader
                     profile={profileUser}
                     canEdit={!!canEdit}
                     onEdit={() => setEditOpen(true)}

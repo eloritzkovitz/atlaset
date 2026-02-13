@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { FaEnvelope } from "react-icons/fa6";
 import { Card, TabButton } from "@components";
 import { type Country } from "@features/countries";
 import { getProfileSections, renderProfileFields } from "./profileSections";
+import { ProfileField } from "./ProfileField";
 import { SocialLinks } from "./SocialLinks";
 
 interface ProfileAboutCardProps {
@@ -21,11 +23,12 @@ export function ProfileAboutCard({
   displayBiography,
   displaySocialLinks,
 }: ProfileAboutCardProps) {
-  const [activeTab, setActiveTab] = useState<"about" | "social">("about");
+  const [activeTab, setActiveTab] = useState<"personal-details" | "contact">(
+    "personal-details",
+  );
 
   // Generate profile sections based on provided data
   const sections = getProfileSections({
-    displayEmail,
     selectedCountry,
     displayBirthday,
     displayJoinDate,
@@ -34,25 +37,40 @@ export function ProfileAboutCard({
 
   return (
     <Card className="mt-6">
+      <h2 className="text-xl font-bold">About</h2>
       <div className="flex gap-2 mb-4">
         <TabButton
-          active={activeTab === "about"}
-          onClick={() => setActiveTab("about")}
+          active={activeTab === "personal-details"}
+          onClick={() => setActiveTab("personal-details")}
         >
-          About
+          Personal Details
         </TabButton>
         {displaySocialLinks && (
           <TabButton
-            active={activeTab === "social"}
-            onClick={() => setActiveTab("social")}
+            active={activeTab === "contact"}
+            onClick={() => setActiveTab("contact")}
           >
-            Social Links
+            Contact Info
           </TabButton>
         )}
       </div>
-      {activeTab === "about" && renderProfileFields(sections)}
-      {activeTab === "social" && displaySocialLinks && (
-        <SocialLinks links={displaySocialLinks} />
+      {activeTab === "personal-details" && renderProfileFields(sections)}
+      {activeTab === "contact" && displaySocialLinks && (
+        <div className="flex flex-col">
+          {displayEmail && (
+            <ProfileField label="Email">
+              <div className="flex items-center gap-3">
+                <FaEnvelope />
+                <a href={`mailto:${displayEmail}`}>{displayEmail}</a>
+              </div>
+            </ProfileField>
+          )}
+          <SocialLinks
+            links={Object.fromEntries(
+              Object.entries(displaySocialLinks).filter(([k]) => k !== "email"),
+            )}
+          />
+        </div>
       )}
     </Card>
   );
