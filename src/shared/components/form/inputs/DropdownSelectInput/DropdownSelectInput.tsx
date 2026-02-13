@@ -60,7 +60,7 @@ export function DropdownSelectInput<T = string>({
         as="button"
         ref={btnRef}
         type="button"
-        className="w-full flex items-center text-left disabled:opacity-50"
+        className="w-full flex items-center text-left disabled:opacity-50 px-2"
         onClick={() => {
           if (options.length === 0) return;
           setOpen((v) => !v);

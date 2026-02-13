@@ -2,6 +2,15 @@ import React from "react";
 import { LeaderboardRowComponent } from "./LeaderboardRow";
 import type { LeaderboardEntry, QuizType, Difficulty } from "../../types";
 
+const TABLE_HEADERS = [
+  { label: "#", align: "left" },
+  { label: "Player", align: "left" },
+  { label: "Score", align: "right" },
+  { label: "Max Streak", align: "right" },
+  { label: "Time", align: "right" },
+  { label: "Date", align: "right" },
+];
+
 interface LeaderboardTableProps {
   entries?: LeaderboardEntry[];
   initialType?: QuizType;
@@ -22,24 +31,20 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       <table className="min-w-full table-auto border-separate border-spacing-y-2">
         <thead>
           <tr className="bg-base-200">
-            <th className="px-4 py-2 text-left text-lg font-semibold">#</th>
-            <th className="px-4 py-2 text-left text-lg font-semibold">
-              Player
-            </th>
-            <th className="px-4 py-2 text-right text-lg font-semibold">
-              Score
-            </th>
-            <th className="px-4 py-2 text-right text-lg font-semibold">
-              Max Streak
-            </th>
-            <th className="px-4 py-2 text-right text-lg font-semibold">Time</th>
-            <th className="px-4 py-2 text-right text-lg font-semibold">Date</th>
+            {TABLE_HEADERS.map((header) => (
+              <th
+                key={header.label}
+                className={`px-4 py-2 text-${header.align} text-lg font-semibold`}
+              >
+                {header.label}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
           {rankedData.length === 0 ? (
             <tr>
-              <td colSpan={6} className="text-center text-gray-500 py-4">
+              <td colSpan={6} className="text-center text-muted py-4">
                 No scores found.
               </td>
             </tr>

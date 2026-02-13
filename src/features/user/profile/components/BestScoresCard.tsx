@@ -29,7 +29,7 @@ export function BestScoresCard({ scores }: BestScoresCardProps) {
     .slice(0, 3);
 
   return (
-    <Card className="mt-6 w-full p-6 rounded-xl shadow-lg text-center font-sans">
+    <Card className="mt-6 w-full p-6 rounded-xl shadow-lg font-sans">
       <h2 className="text-xl font-bold mb-2">Best Quiz Scores</h2>
       <LeaderboardFilterBar
         mode={mode}
