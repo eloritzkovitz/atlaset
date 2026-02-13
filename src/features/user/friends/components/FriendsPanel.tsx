@@ -3,7 +3,7 @@ import { FaUserGroup, FaUserPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
 import { FriendList } from "./FriendList";
 import { FriendRequestList } from "./FriendRequestList";
-import { useFriends } from "../hooks/useFriends";
+import { useUserFriends } from "../hooks/useUserFriends";
 import { useFriendProfiles } from "../hooks/useFriendProfiles";
 import { useFriendRequests } from "../hooks/useFriendRequests";
 import { useAuth } from "../../auth/hooks/useAuth";
@@ -15,7 +15,7 @@ interface FriendsPanelProps {
 
 export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
   const { user } = useAuth();
-  const { friends } = useFriends();
+  const { friends } = useUserFriends();
   const [search, setSearch] = useState("");
   const [showRequests, setShowRequests] = useState(false);
 

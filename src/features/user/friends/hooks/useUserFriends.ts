@@ -1,27 +1,34 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../../firebase";
+import { getCurrentUser } from "@utils/firebase";
 import type { Friend } from "../../types";
+import { db } from "../../../../firebase";
 
 /**
  * Fetches the friends list for any user by uid, with real-time updates.
- * @param uid The user ID to fetch friends for.
+ * If no uid is provided, fetches the current user's friends.
+ * @param uid The user ID to fetch friends for (optional).
  * @returns An object containing the friends list, loading state, and any error encountered.
  */
-export function useUserFriends(uid: string | undefined) {
+export function useUserFriends(uid?: string) {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   // Listen for friends in real-time when uid changes
   useEffect(() => {
-    if (!uid) {
+    let resolvedUid = uid;
+    if (!resolvedUid) {
+      const currentUser = getCurrentUser();
+      resolvedUid = currentUser?.uid;
+    }
+    if (!resolvedUid) {
       setFriends([]);
       setLoading(false);
       return;
     }
     setLoading(true);
-    const friendsCol = collection(db, `users/${uid}/friends`);
+    const friendsCol = collection(db, `users/${resolvedUid}/friends`);
     const unsubscribe = onSnapshot(
       friendsCol,
       (snap) => {
