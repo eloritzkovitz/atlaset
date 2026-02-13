@@ -5,12 +5,6 @@ import {
   FaEnvelope,
   FaHouse,
   FaHand,
-  FaLink,
-  FaTwitter,
-  FaInstagram,
-  FaFacebook,
-  FaLinkedin,
-  FaGithub,
 } from "react-icons/fa6";
 import { CountryWithFlag } from "@features/countries";
 import { ProfileField } from "./ProfileField";
@@ -20,19 +14,6 @@ export type ProfileSection = {
   label: string;
   icon: React.ReactNode;
   content: React.ReactNode;
-};
-
-/** Returns the appropriate icon for a given platform. */
-export const getPlatformIcon = (platform: string) => {
-  const icons: Record<string, React.ReactNode> = {
-    twitter: <FaTwitter className="inline-block" />,
-    instagram: <FaInstagram className="inline-block" />,
-    facebook: <FaFacebook className="inline-block" />,
-    linkedin: <FaLinkedin className="inline-block" />,
-    github: <FaGithub className="inline-block" />,
-    website: <FaLink className="inline-block" />,
-  };
-  return icons[platform.toLowerCase()] ?? null;
 };
 
 /** Generates profile sections based on user profile data. */

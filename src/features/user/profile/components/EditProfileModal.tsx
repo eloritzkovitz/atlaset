@@ -10,7 +10,7 @@ import {
   PanelHeader,
 } from "@components";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
-import { getPlatformIcon } from "./profileSections";
+import { getPlatformIcon } from "./SocialLinks";
 import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../hooks/useUsernameValidation";
 import { profileService } from "../services/profileService";

@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { Card, TabButton } from "@components";
 import { type Country } from "@features/countries";
-import {
-  getPlatformIcon,
-  getProfileSections,
-  renderProfileFields,
-} from "./profileSections";
+import { getProfileSections, renderProfileFields } from "./profileSections";
+import { SocialLinks } from "./SocialLinks";
 
 interface ProfileAboutCardProps {
   displayEmail: string;
@@ -35,30 +32,6 @@ export function ProfileAboutCard({
     displayBiography,
   });
 
-  // Prepare social link fields for ProfileField rendering only if present
-  const socialLinksArray = displaySocialLinks
-    ? Object.entries(displaySocialLinks).map(([platform, url]) => ({
-        key: platform,
-        label: platform.charAt(0).toUpperCase() + platform.slice(1),
-        icon: (
-          <div className="flex items-center gap-2 mb-1">
-            {getPlatformIcon(platform)}
-          </div>
-        ),
-        content: (
-          <a
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:underline break-all"
-            title={platform}
-          >
-            {url}
-          </a>
-        ),
-      }))
-    : null;
-
   return (
     <Card className="mt-6">
       <div className="flex gap-2 mb-4">
@@ -68,7 +41,7 @@ export function ProfileAboutCard({
         >
           About
         </TabButton>
-        {socialLinksArray && (
+        {displaySocialLinks && (
           <TabButton
             active={activeTab === "social"}
             onClick={() => setActiveTab("social")}
@@ -78,9 +51,9 @@ export function ProfileAboutCard({
         )}
       </div>
       {activeTab === "about" && renderProfileFields(sections)}
-      {activeTab === "social" &&
-        socialLinksArray &&
-        renderProfileFields(socialLinksArray)}
+      {activeTab === "social" && displaySocialLinks && (
+        <SocialLinks links={displaySocialLinks} />
+      )}
     </Card>
   );
 }
