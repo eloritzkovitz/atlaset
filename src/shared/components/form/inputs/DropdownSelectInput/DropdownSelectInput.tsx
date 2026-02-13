@@ -47,7 +47,7 @@ export function DropdownSelectInput<T = string>({
       menuRef as React.RefObject<HTMLElement>,
     ],
     () => setOpen(false),
-    open
+    open,
   );
 
   // For multi-select, value is T[]
@@ -60,7 +60,7 @@ export function DropdownSelectInput<T = string>({
         as="button"
         ref={btnRef}
         type="button"
-        className="w-full flex items-center text-left disabled:opacity-50 px-2"
+        className="w-full flex items-center text-left disabled:opacity-50 px-2 hover:bg-surface-hover/50"
         onClick={() => {
           if (options.length === 0) return;
           setOpen((v) => !v);
@@ -107,7 +107,7 @@ export function DropdownSelectInput<T = string>({
               renderOption={renderOption}
             />
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );
