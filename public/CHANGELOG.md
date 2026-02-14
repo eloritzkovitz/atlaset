@@ -2,8 +2,8 @@
 
 ## 2026-02-13
 
-- **[feature]** **General:** Added friend actions in the friends panel
-- **[feature]** **General:** Updated user profiles with more information
+- **[feature]** **User | Friends:** Added friend actions in the friends panel
+- **[feature]** **User | Profile:** Updated user profiles with more information
 - **[bugfix]** **General:** Fixed UI responsiveness for small and medium screens
 
 ## 2026-02-10
