@@ -17,6 +17,7 @@ import {
 } from "@features/user";
 import { usePageTitle } from "@hooks";
 import { Header } from "@layout";
+import { AppPanels } from "@layout/Layout/AppPanels";
 import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
@@ -148,6 +149,7 @@ export default function ProfilePage() {
           onClose={() => setEditOpen(false)}
         />
       )}
+      <AppPanels />
     </>
   );
 }
