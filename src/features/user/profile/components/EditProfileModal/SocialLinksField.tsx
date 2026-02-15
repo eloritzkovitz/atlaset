@@ -1,6 +1,6 @@
 import { FormField, InputBox } from "@components";
-import { getPlatformIcon, platformOrder } from "../config/socialLinks";
-import type { SocialPlatform } from "../../types";
+import { getPlatformIcon, platformOrder } from "../../config/socialLinks";
+import type { SocialPlatform } from "../../../types";
 
 interface SocialLinksFieldProps {
   socialLinks: Partial<Record<SocialPlatform, string>>;

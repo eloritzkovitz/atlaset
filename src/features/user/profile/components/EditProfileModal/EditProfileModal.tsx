@@ -12,10 +12,10 @@ import {
 } from "@components";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { SocialLinksField } from "./SocialLinksField";
-import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
-import { useUsernameValidation } from "../hooks/useUsernameValidation";
-import { profileService } from "../services/profileService";
-import { type UserProfile, type SocialPlatform } from "../../types";
+import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
+import { useUsernameValidation } from "../../hooks/useUsernameValidation";
+import { profileService } from "../../services/profileService";
+import { type UserProfile, type SocialPlatform } from "../../../types";
 
 interface EditProfileModalProps {
   user: User | null;
