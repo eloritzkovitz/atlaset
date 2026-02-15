@@ -16,7 +16,7 @@ import { SecurityInfoRow } from "./SecurityInfoRow";
 
 export function SecurityInfoSection() {
   const { user } = useAuth();
-  const { activity } = useUserActivity(user?.uid);
+  const { activity } = useUserActivity();
   const devices = useUserDevices(user?.uid);
 
   const lastLogin = activity
