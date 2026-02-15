@@ -33,7 +33,7 @@ export function SoundSettingsSection() {
   };
 
   return (
-    <div className="mx-auto max-w-lg w-full flex flex-col items-center">
+    <div className="mx-auto w-full flex flex-col items-center">
       <h2 className="text-2xl font-bold mb-6 self-start">Sound Settings</h2>
       <SettingsCard title="Sound Effects" icon={<FaVolumeUp />}>
         <div className="flex flex-col gap-2 w-full">

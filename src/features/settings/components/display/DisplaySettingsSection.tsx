@@ -7,7 +7,7 @@ export function DisplaySettingsSection() {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="mx-auto max-w-lg w-full flex flex-col items-center">
+    <div className="mx-auto w-full flex flex-col items-center">
       <h2 className="text-2xl font-bold mb-6 self-start">Display Settings</h2>
       <SettingsCard title="Theme" icon={<FaBrush />}>
         <div className="flex flex-col gap-2 w-full">

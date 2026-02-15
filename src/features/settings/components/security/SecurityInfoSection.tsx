@@ -43,7 +43,7 @@ export function SecurityInfoSection() {
 
   return (
     <section className="mb-8">
-      <h3 className="text-lg font-semibold mb-4">Security</h3>
+      <h2 className="text-2xl font-bold mb-6 self-start">Security</h2>
       <ul className="space-y-4">
         <SecurityInfoRow label="Email" value={user?.email || "No email"} />
         <SecurityInfoRow
@@ -75,7 +75,7 @@ export function SecurityInfoSection() {
           }
         />
       </ul>
-      <h4 className="font-semibold mb-2 mt-8">Logged-in Devices</h4>
+      <h2 className="text-2xl font-bold mb-6 mt-8 self-start">Logged-in Devices</h2>
       <ul className="space-y-4">
         {devices.length === 0 ? (
           <SecurityInfoRow label="Devices" value="No active devices" />

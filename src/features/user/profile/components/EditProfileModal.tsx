@@ -1,6 +1,6 @@
 import { updateProfile, updatePassword, type User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { FaEye, FaEyeSlash, FaUser, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
@@ -8,6 +8,7 @@ import {
   InputBox,
   Modal,
   PanelHeader,
+  SectionHeader,
 } from "@components";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { getPlatformIcon, platformOrder } from "../config/socialLinks";
@@ -68,7 +69,7 @@ export function EditProfileModal({
   );
 
   // Handle saving profile changes
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -136,7 +137,7 @@ export function EditProfileModal({
 
   return (
     <Modal isOpen={open} onClose={onClose}>
-      <div className="w-full min-w-2xl max-w-4xl mx-auto bg-surface rounded-full flex flex-col gap-6">
+      <div className="w-full min-w-2xl max-w-4xl mx-auto bg-surface rounded-full flex flex-col gap-2">
         <PanelHeader
           title={
             <>
@@ -153,7 +154,8 @@ export function EditProfileModal({
             rounded
           />
         </PanelHeader>
-        <form onSubmit={handleSave} className="space-y-6 p-4">
+        <form onSubmit={handleSave} className="space-y-6 px-4">
+          <SectionHeader title="Personal Information" />
           <FormField label="Username">
             <input
               type="text"
@@ -252,6 +254,7 @@ export function EditProfileModal({
               maxLength={500}
             />
           </FormField>
+          <SectionHeader title="Contact Information" />
           <FormField label="Social Links">
             <div className="flex flex-col gap-2">
               {platformOrder.map((platform) => (
