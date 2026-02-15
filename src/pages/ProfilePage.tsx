@@ -16,7 +16,7 @@ import {
   useUserFriends,
 } from "@features/user";
 import { usePageTitle } from "@hooks";
-import { Footer, Header } from "@layout";
+import { Header } from "@layout";
 import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
@@ -139,7 +139,6 @@ export default function ProfilePage() {
             </div>
           </div>
         </main>
-        <Footer />
       </div>
       {canEdit && (
         <EditProfileModal
