@@ -18,19 +18,19 @@ export function useClickOutside<T extends HTMLElement>(
   refs: React.RefObject<T>[],
   onOutside: () => void,
   enabled = true,
-  options: UseClickOutsideOptions = { click: true, escape: true }
+  options: UseClickOutsideOptions = { click: true, escape: true },
 ) {
   useEffect(() => {
     if (!enabled) return;
 
-    // Handle click outside of all refs
-    function handleClickOutside(e: MouseEvent) {
+    // Handle click outside of all refs (for mouse and pointer events)
+    function handleClickOutside(e: MouseEvent | PointerEvent) {
       if (
         refs.every(
           (ref) =>
             !ref.current ||
             !(e.target instanceof Node) ||
-            !ref.current.contains(e.target)
+            !ref.current.contains(e.target),
         )
       ) {
         onOutside();
@@ -44,7 +44,7 @@ export function useClickOutside<T extends HTMLElement>(
           (ref) =>
             !ref.current ||
             !(e.target instanceof Node) ||
-            !ref.current.contains(e.target)
+            !ref.current.contains(e.target),
         )
       ) {
         onOutside();
@@ -58,6 +58,7 @@ export function useClickOutside<T extends HTMLElement>(
 
     if (options.click !== false) {
       window.addEventListener("mousedown", handleClickOutside);
+      window.addEventListener("pointerdown", handleClickOutside);
     }
     if (options.scroll) {
       window.addEventListener("scroll", handleScrollOrResize, true);
@@ -72,6 +73,7 @@ export function useClickOutside<T extends HTMLElement>(
     return () => {
       if (options.click !== false) {
         window.removeEventListener("mousedown", handleClickOutside);
+        window.removeEventListener("pointerdown", handleClickOutside);
       }
       if (options.scroll) {
         window.removeEventListener("scroll", handleScrollOrResize, true);
