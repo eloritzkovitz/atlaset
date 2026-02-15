@@ -22,6 +22,7 @@ export { SplashScreen } from "./feedback/SplashScreen";
 
 // Form components
 export { FormField } from "./form/fields/FormField";
+export { PasswordField } from "./form/fields/PasswordField";
 
 // Form Input components
 export { Checkbox } from "./form/inputs/Checkbox";
