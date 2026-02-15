@@ -17,15 +17,18 @@ export function UserActivitySection() {
   }, [user, navigate]);
 
   // Only fetch activity if user is loaded
-  const { activity, loading, hasMore, loadMore } = useUserActivity(user?.uid);
+  const { activity, loading, hasMore, loadMore, deleteActivity } =
+    useUserActivity();
 
+  // Infinite scroll hook
   const loaderRef = useInfiniteScroll(loadMore, hasMore && !loading);
 
+  // If user is not authenticated, don't render the activity section
   if (!user) return null;
 
   return (
     <div>
-      <h3 className="text-lg font-semibold mb-4">Activity</h3>
+      <h2 className="text-2xl font-bold mb-6 self-start">Activity Log</h2>
       {loading && activity.length === 0 ? (
         <div className="text-muted">Loading...</div>
       ) : activity.length === 0 ? (
@@ -34,10 +37,16 @@ export function UserActivitySection() {
         <>
           <ul className="space-y-4">
             {activity.map((act) => (
-              <UserActivityItem key={act.id} act={act} />
+              <UserActivityItem
+                key={act.id}
+                activity={act}
+                onDelete={deleteActivity}
+              />
             ))}
           </ul>
-          {hasMore && !loading && activity.length > 0 && <div ref={loaderRef} />}
+          {hasMore && !loading && activity.length > 0 && (
+            <div ref={loaderRef} />
+          )}
           {loading && (
             <div className="flex justify-center mt-4">
               <span className="text-muted">Loading...</span>

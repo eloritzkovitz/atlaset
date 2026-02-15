@@ -1,13 +1,23 @@
-import { FaRegClock } from "react-icons/fa6";
+import { FaRegClock, FaTrash } from "react-icons/fa6";
+import { ActionButton } from "@components";
 import { getActivityDescription } from "../utils/activity";
 import type { UserActivity, ActivityDetails } from "../../types";
 
-export function UserActivityItem({ act }: { act: UserActivity }) {
+interface UserActivityItemProps {
+  activity: UserActivity;
+  onDelete?: (id: string) => void;
+}
+
+/** Renders a single user activity item.
+ * @param act - The user activity data to display.
+ * @param onDelete - Optional callback to delete the activity.
+ */
+export function UserActivityItem({ activity, onDelete }: UserActivityItemProps) {
   const details: ActivityDetails =
-    act.details &&
-    typeof act.details === "object" &&
-    !Array.isArray(act.details)
-      ? act.details
+    activity.details &&
+    typeof activity.details === "object" &&
+    !Array.isArray(activity.details)
+      ? activity.details
       : ({} as ActivityDetails);
 
   return (
@@ -16,13 +26,22 @@ export function UserActivityItem({ act }: { act: UserActivity }) {
         <FaRegClock className="inline-block mr-1" />
         <span className="font-semibold text-base text-white">
           {getActivityDescription(
-            act.action,
-            details as Record<string, unknown>
+            activity.action,
+            details as Record<string, unknown>,
           )}
         </span>
         <span className="flex items-center text-xs text-muted ml-2 gap-1">
-          {new Date(act.timestamp).toLocaleString()}
+          {new Date(activity.timestamp).toLocaleString()}
         </span>
+        {onDelete && (
+          <ActionButton
+            className="ml-auto"
+            icon={<FaTrash />}
+            ariaLabel="Delete activity"
+            title="Delete activity"
+            onClick={() => onDelete(activity.id)}
+          />
+        )}
       </div>
     </li>
   );
