@@ -17,9 +17,15 @@ interface UserMenuProps {
   user: User | null;
   loading: boolean;
   onLogout: () => void;
+  onClose?: () => void;
 }
 
-export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
+export function UserMenuContent({
+  user,
+  loading,
+  onLogout,
+  onClose,
+}: UserMenuProps) {
   const { toggleFriends, toggleShortcuts } = useUI();
   const navigate = useNavigate();
   const { isMobile } = useScreenSize();
@@ -39,7 +45,10 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         <UserInfo user={user} showDisplayName={true} showUsername={true} />
         <Separator />
         <MenuButton
-          onClick={() => navigate(`/users/${username}`)}
+          onClick={() => {
+            navigate(`/users/${username}`);
+            onClose?.();
+          }}
           icon={<FaUser className="text-lg mr-2" />}
           ariaLabel="Profile"
           className="w-full"
@@ -47,21 +56,25 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
           Profile
         </MenuButton>
         <MenuButton
-          onClick={toggleFriends}
+          onClick={() => {
+            toggleFriends();
+            onClose?.();
+          }}
           icon={<FaUserGroup className="text-lg mr-2" />}
           ariaLabel="Friends"
           className="w-full"
         >
           Friends
-        </MenuButton>        
+        </MenuButton>
         <Separator className="my-1" />
         <MenuButton
-          onClick={() =>
+          onClick={() => {
             window.open(
               "https://github.com/eloritzkovitz/atlaset/issues",
               "_blank",
-            )
-          }
+            );
+            onClose?.();
+          }}
           icon={<FaBug className="text-lg mr-2" />}
           ariaLabel="Report a Bug"
           className="w-full"
@@ -70,7 +83,10 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         </MenuButton>
         {!isMobile && (
           <MenuButton
-            onClick={toggleShortcuts}
+            onClick={() => {
+              toggleShortcuts();
+              onClose?.();
+            }}
             icon={<FaKeyboard className="text-lg mr-2" />}
             ariaLabel="Keyboard Shortcuts"
             className="w-full"
@@ -80,7 +96,10 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         )}
         <Separator className="my-1" />
         <MenuButton
-          onClick={() => navigate("/settings")}
+          onClick={() => {
+            navigate("/settings");
+            onClose?.();
+          }}
           icon={<FaGear className="text-lg mr-2" />}
           ariaLabel="Settings"
           className="w-full"
@@ -89,7 +108,10 @@ export function UserMenuContent({ user, loading, onLogout }: UserMenuProps) {
         </MenuButton>
         <Separator className="my-1" />
         <MenuButton
-          onClick={onLogout}
+          onClick={() => {
+            onLogout();
+            onClose?.();
+          }}
           icon={<FaRightFromBracket className="text-lg mr-2" />}
           ariaLabel="Sign out"
           className="w-full"

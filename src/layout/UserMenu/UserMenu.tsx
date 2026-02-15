@@ -91,6 +91,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
             user={user}
             loading={loading}
             onLogout={handleLogout}
+            onClose={closeModal}
           />
         </Menu>
       )}
