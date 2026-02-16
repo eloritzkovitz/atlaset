@@ -54,6 +54,7 @@ export function SavedMapsModal({
       onClose={onClose}
       className="rounded-xl shadow-2xl !min-w-[400px] max-h-[90vh] overflow-y-auto"
       position="center"
+      draggable
     >
       <PanelHeader
         title={

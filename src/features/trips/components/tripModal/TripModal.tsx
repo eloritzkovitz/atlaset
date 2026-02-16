@@ -85,6 +85,7 @@ export function TripModal({
         onClose={onClose}
         className="w-[900px] max-h-[92vh] flex flex-col shadow"
         disableClose={countryModalOpen}
+        draggable
       >
         <form
           className="flex flex-col w-full h-full"

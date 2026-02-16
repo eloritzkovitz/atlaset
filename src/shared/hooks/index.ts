@@ -7,6 +7,7 @@ export * from "./animation/useModalAnimation";
 export * from "./device/useScreenSize";
 
 // DOM
+export * from "./dom/useBodyScrollLock";
 export * from "./dom/useClickOutside";
 export * from "./dom/useContainerDimensions";
 export * from "./dom/useFloatingHover";
@@ -33,6 +34,7 @@ export * from "./navigation/useTablePagination";
 // State
 export * from "./state/useDebounce";
 export * from "./state/useDelayedLoading";
+export * from "./state/useDraggableModal";
 export * from "./state/usePageTitle";
 export * from "./state/usePanelHide";
 export * from "./state/usePwaUpdate";
