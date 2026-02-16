@@ -31,6 +31,7 @@ interface ModalProps {
   draggable?: boolean;
 }
 
+/** Renders a modal component. */
 export function Modal({
   isOpen,
   closing,
@@ -70,7 +71,7 @@ export function Modal({
 
   // Draggable modal logic
   const { dragging, handlePointerDown, setModalDomRef, modalStyle } =
-    useDraggableModal?.(draggable, isOpen, null, () => {}) || {
+    useDraggableModal?.(draggable, isOpen) || {
       dragging: false,
       handlePointerDown: undefined,
       setModalDomRef: undefined,
@@ -119,11 +120,9 @@ export function Modal({
           }}
           className={
             "group fixed " +
-            (draggable
-              ? ""
-              : position === "center"
-                ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
-                : "") +
+            (!draggable && position === "center"
+              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
+              : "") +
             "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +
