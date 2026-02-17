@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-02-17
+
+- **[feature]** **User | Settings:** Added option to delete activities
+- **[feature]** **General:** Some modals are now draggable
+- **[bugfix]** **General:** Some minor UI fixes and improvements
+
 ## 2026-02-13
 
 - **[feature]** **User | Friends:** Added friend actions in the friends panel
