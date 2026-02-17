@@ -12,7 +12,7 @@ export { FriendsPanel } from "./friends/components/FriendsPanel";
 
 // Profile Components
 export { BestScoresCard } from "./profile/components/BestScoresCard";
-export { EditProfileModal } from "./profile/components/EditProfileModal";
+export { EditProfileModal } from "./profile/components/EditProfileModal/EditProfileModal";
 export { FriendsListSection } from "./profile/components/FriendsListSection";
 export { ProfileAboutCard } from "./profile/components/ProfileAboutCard";
 export { ProfileHeader } from "./profile/components/ProfileHeader";

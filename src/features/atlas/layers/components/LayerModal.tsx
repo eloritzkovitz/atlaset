@@ -59,8 +59,9 @@ export function LayerModal({
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
+        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] overflow-y-auto" 
         disableClose={countryModalOpen || colorModalOpen}
-        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] overflow-y-auto"
+        draggable                  
       >
         <PanelHeader
           title={

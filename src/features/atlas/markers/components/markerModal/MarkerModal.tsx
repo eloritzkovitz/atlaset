@@ -47,6 +47,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       position="center"
       className="modal min-w-[900px] max-w-[1200px] max-h-[90vh]"
       disableClose={colorModalOpen}
+      draggable
     >
       <PanelHeader
         title={

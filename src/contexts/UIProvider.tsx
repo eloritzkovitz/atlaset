@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { useKeyHandler, useScreenSize } from "@hooks";
+import { isAuthenticated } from "@utils/firebase";
 import { UIContext } from "./UIContext";
 
 // Map toolbar panel selection
@@ -96,12 +97,12 @@ export function UIProvider({ children }: { children: ReactNode }) {
   useKeyHandler(toggleUiVisible, ["u", "U"], true);
 
   // Toggle Friends panel with "N"
-  useKeyHandler(toggleFriends, ["n", "N"], true);
+  useKeyHandler(toggleFriends, ["n", "N"], isAuthenticated());
 
   // Toggle Help panel with "H"
   useKeyHandler(toggleHelp, ["h", "H"], true);
 
-  // Open shortcut modal with "?"
+  // Open Shortcuts modal with "?"
   useKeyHandler(toggleShortcuts, ["?"], true);
 
   // Effect to open countries panel when menu closes

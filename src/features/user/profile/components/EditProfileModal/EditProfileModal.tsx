@@ -1,20 +1,21 @@
 import { updateProfile, updatePassword, type User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { FaEye, FaEyeSlash, FaUser, FaXmark } from "react-icons/fa6";
+import { useEffect, useState, type SubmitEvent } from "react";
+import { FaUser, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   FormField,
-  InputBox,
   Modal,
   PanelHeader,
+  PasswordField,
+  SectionHeader,
 } from "@components";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
-import { getPlatformIcon, platformOrder } from "../config/socialLinks";
-import { useFirestoreUsername } from "../hooks/useFirestoreUsername";
-import { useUsernameValidation } from "../hooks/useUsernameValidation";
-import { profileService } from "../services/profileService";
-import { type UserProfile, type SocialPlatform } from "../../types";
+import { SocialLinksField } from "./SocialLinksField";
+import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
+import { useUsernameValidation } from "../../hooks/useUsernameValidation";
+import { profileService } from "../../services/profileService";
+import { type UserProfile, type SocialPlatform } from "../../../types";
 
 interface EditProfileModalProps {
   user: User | null;
@@ -49,8 +50,6 @@ export function EditProfileModal({
   >(profile?.socialLinks ?? {});
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Populate initial form values when modal opens
   useEffect(() => {
@@ -68,7 +67,7 @@ export function EditProfileModal({
   );
 
   // Handle saving profile changes
-  const handleSave = async (e: React.FormEvent) => {
+  const handleSave = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
@@ -136,7 +135,7 @@ export function EditProfileModal({
 
   return (
     <Modal isOpen={open} onClose={onClose}>
-      <div className="w-full min-w-2xl max-w-4xl mx-auto bg-surface rounded-full flex flex-col gap-6">
+      <div className="w-full min-w-2xl max-w-4xl mx-auto bg-surface rounded-full flex flex-col gap-2">
         <PanelHeader
           title={
             <>
@@ -153,7 +152,8 @@ export function EditProfileModal({
             rounded
           />
         </PanelHeader>
-        <form onSubmit={handleSave} className="space-y-6 p-4">
+        <form onSubmit={handleSave} className="space-y-6 px-4">
+          <SectionHeader title="Personal Information" />
           <FormField label="Username">
             <input
               type="text"
@@ -189,51 +189,19 @@ export function EditProfileModal({
           </FormField>
           {isPasswordUser && (
             <>
-              <FormField label="New Password">
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Leave blank to keep current password"
-                    autoComplete="new-password"
-                    className="w-full pr-10"
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
-                    onClick={() => setShowPassword((v) => !v)}
-                    tabIndex={-1}
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-              </FormField>
-              <FormField label="Confirm New Password">
-                <div className="relative">
-                  <input
-                    type={showConfirmPassword ? "text" : "password"}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    autoComplete="new-password"
-                    className="w-full pr-10"
-                  />
-                  <button
-                    type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
-                    onClick={() => setShowConfirmPassword((v) => !v)}
-                    tabIndex={-1}
-                    aria-label={
-                      showConfirmPassword ? "Hide password" : "Show password"
-                    }
-                  >
-                    {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-              </FormField>
+              <PasswordField
+                label="New Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Leave blank to keep current password"
+                autoComplete="new-password"
+              />
+              <PasswordField
+                label="Confirm New Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                autoComplete="new-password"
+              />
             </>
           )}
           <FormField label="Birthday">
@@ -252,34 +220,13 @@ export function EditProfileModal({
               maxLength={500}
             />
           </FormField>
-          <FormField label="Social Links">
-            <div className="flex flex-col gap-2">
-              {platformOrder.map((platform) => (
-                <div key={platform} className="flex items-center gap-2">
-                  <span
-                    className="w-8 flex justify-center items-center"
-                    title={platform}
-                    aria-label={platform}
-                  >
-                    {getPlatformIcon(platform) ??
-                      platform.charAt(0).toUpperCase() + platform.slice(1)}
-                  </span>
-                  <InputBox
-                    id={`social-${platform}`}
-                    type="url"
-                    placeholder={`https://${platform}.com/yourprofile`}
-                    value={socialLinks[platform as SocialPlatform] ?? ""}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setSocialLinks((prev) => ({
-                        ...prev,
-                        [platform as SocialPlatform]: e.target.value,
-                      }))
-                    }
-                  />
-                </div>
-              ))}
-            </div>
-          </FormField>
+          <SectionHeader title="Contact Information" />
+          <SocialLinksField
+            socialLinks={socialLinks}
+            onChange={(platform, value) =>
+              setSocialLinks((prev) => ({ ...prev, [platform]: value }))
+            }
+          />
           {error && <div className="text-danger">{error}</div>}
           {success && <div className="text-success">{success}</div>}
           <div className="flex gap-4 justify-end mt-6">

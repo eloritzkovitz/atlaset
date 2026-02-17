@@ -1,13 +1,14 @@
 import React, {
-  type ReactNode,
-  type ReactElement,
   isValidElement,
   useRef,
   useEffect,
+  type ReactNode,
+  type ReactElement,
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useClickOutside, usePanelHide } from "@hooks";
+import { useBodyScrollLock, useClickOutside, usePanelHide } from "@hooks";
+import { useDraggableModal } from "@hooks/state/useDraggableModal";
 import "./Modal.css";
 
 interface ModalProps {
@@ -27,8 +28,10 @@ interface ModalProps {
   style?: React.CSSProperties;
   containerRef?: React.RefObject<HTMLDivElement | null>;
   extraRefs?: React.RefObject<HTMLElement | null>[];
+  draggable?: boolean;
 }
 
+/** Renders a modal component. */
 export function Modal({
   isOpen,
   closing,
@@ -46,8 +49,11 @@ export function Modal({
   style,
   containerRef,
   extraRefs = [],
+  draggable = false,
 }: ModalProps) {
   const { setModalOpen } = useUI();
+  const internalRef = useRef<HTMLDivElement>(null);
+  const modalRef = containerRef ?? internalRef;
 
   // Set modal open state for UI context
   useEffect(() => {
@@ -60,12 +66,17 @@ export function Modal({
     show: isOpen,
     onHide: onClose,
     isModal: true,
-    escEnabled: disableClose ? false : true,
+    escEnabled: !disableClose,
   });
 
-  // Use provided ref or create internal ref
-  const internalRef = useRef<HTMLDivElement>(null);
-  const modalRef = containerRef ?? internalRef;
+  // Draggable modal logic
+  const { dragging, handlePointerDown, setModalDomRef, modalStyle } =
+    useDraggableModal?.(draggable, isOpen) || {
+      dragging: false,
+      handlePointerDown: undefined,
+      setModalDomRef: undefined,
+      modalStyle: {},
+    };
 
   // Close modal on outside click
   useClickOutside(
@@ -75,20 +86,11 @@ export function Modal({
     ],
     () => {
       if (!disableClose) onClose();
-    }
+    },
   );
 
   // Disable background scroll when modal is open
-  useEffect(() => {
-    if (disableScroll && isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [disableScroll, isOpen]);
+  useBodyScrollLock(disableScroll && isOpen);
 
   // Don't render anything if the modal is not open
   if (!isOpen && !closing) return null;
@@ -112,10 +114,13 @@ export function Modal({
         }
       >
         <div
-          ref={modalRef}
+          ref={(el) => {
+            modalRef.current = el;
+            if (draggable && setModalDomRef) setModalDomRef(el);
+          }}
           className={
             "group fixed " +
-            (position === "center"
+            (!draggable && position === "center"
               ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
               : "") +
             "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
@@ -127,10 +132,14 @@ export function Modal({
           style={{
             ...(position === "custom" ? style : {}),
             zIndex: containerZIndex,
+            ...modalStyle,
+            cursor: draggable ? (dragging ? "grabbing" : "grab") : undefined,
+            userSelect: draggable ? "none" : undefined,
           }}
           onClick={(e) => e.stopPropagation()}
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
+          onPointerDown={draggable ? handlePointerDown : undefined}
         >
           {children}
         </div>
@@ -140,6 +149,6 @@ export function Modal({
         isValidElement(floatingChildren) &&
         floatingChildren}
     </>,
-    document.body
+    document.body,
   );
 }
