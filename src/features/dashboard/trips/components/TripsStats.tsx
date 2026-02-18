@@ -1,12 +1,8 @@
 import { lazy, Suspense, useState } from "react";
 import {
-  FaCalendarDays,
   FaChartPie,
-  FaCheck,
   FaClock,
   FaClockRotateLeft,
-  FaLocationDot,
-  FaPlane,
   FaRegClock,
   FaStar,
   FaSuitcaseRolling,
@@ -14,7 +10,16 @@ import {
 import { DashboardCard, PieLegendCard, SegmentedToggle } from "@components";
 import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
-import { TRIP_TYPE_COLORS } from "../constants/trips";
+import {
+  TRIP_TYPE_COLORS,
+  TRIP_TYPE_LABELS,
+  TRIP_TYPE_ICONS,
+  TRIP_TYPE_COLOR_CLASSES,
+  TRIP_STATUS_COLORS,
+  TRIP_STATUS_LABELS,
+  TRIP_STATUS_ICONS,
+  TRIP_STATUS_COLOR_CLASSES,
+} from "../constants/trips";
 import { useTripsStats } from "../hooks/useTripsStats";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));
@@ -37,15 +42,28 @@ export function TripsStats() {
   } = useTripsStats();
 
   // Pie chart data for trip types and statuses
-  const tripTypeData = [
-    { name: "Local", value: localTrips.length, color: TRIP_TYPE_COLORS[0] },
-    { name: "Abroad", value: abroadTrips.length, color: TRIP_TYPE_COLORS[1] },
+  const tripTypeCounts = [localTrips.length, abroadTrips.length];
+  const tripTypeData = TRIP_TYPE_LABELS.map((label, i) => ({
+    name: label,
+    value: tripTypeCounts[i],
+    color: TRIP_TYPE_COLORS[i],
+    icon: TRIP_TYPE_ICONS[i],
+    colorClass: TRIP_TYPE_COLOR_CLASSES[i],
+  }));
+
+  const tripStatusCounts = [
+    plannedTrips.length,
+    upcomingTrips.length,
+    completedTrips.length,
   ];
-  const tripStatusData = [
-    { name: "Planned", value: plannedTrips.length, color: "#a3a3a3" },
-    { name: "Upcoming", value: upcomingTrips.length, color: "#fde047" },
-    { name: "Completed", value: completedTrips.length, color: "#22d3ee" },
-  ];
+  const tripStatusData = TRIP_STATUS_LABELS.map((label, i) => ({
+    name: label,
+    value: tripStatusCounts[i],
+    color: TRIP_STATUS_COLORS[i],
+    icon: TRIP_STATUS_ICONS[i],
+    colorClass: TRIP_STATUS_COLOR_CLASSES[i],
+  }));
+
   const pieData = pieMode === "type" ? tripTypeData : tripStatusData;
   const total = pieData.reduce((sum, d) => sum + d.value, 0);
 
@@ -54,7 +72,7 @@ export function TripsStats() {
       {/* Trips Overview */}
       <DashboardCard
         icon={FaSuitcaseRolling}
-        iconClass="text-primary"
+        iconClass="text-blue-500"
         title="Trip Overview"
         subtitle="Summary of all your recorded trips"
       >
@@ -63,39 +81,27 @@ export function TripsStats() {
             {totalTrips}
           </div>
           <div className="text-muted text-sm mb-4">Total Trips</div>
-          <div className="flex gap-6 mb-4">
-            <TripTypeChip
-              icon={FaRegClock}
-              value={plannedTrips.length}
-              label="Planned"
-              colorClass="bg-gray-400/60 text-gray-100"
-            />
-            <TripTypeChip
-              icon={FaCalendarDays}
-              value={upcomingTrips.length}
-              label="Upcoming"
-              colorClass="bg-yellow-400/60 text-yellow-100"
-            />
-            <TripTypeChip
-              icon={FaCheck}
-              value={completedTrips.length}
-              label="Completed"
-              colorClass="bg-cyan-400/60 text-cyan-100"
-            />
+          <div className="flex gap-6 mb-6">
+            {tripStatusData.map((d) => (
+              <TripTypeChip
+                key={d.name}
+                icon={d.icon}
+                value={d.value}
+                label={d.name}
+                colorClass={d.colorClass}
+              />
+            ))}
           </div>
           <div className="flex gap-6">
-            <TripTypeChip
-              icon={FaLocationDot}
-              value={localTrips.length}
-              label="Local"
-              colorClass="bg-green-400/60 text-green-100"
-            />
-            <TripTypeChip
-              icon={FaPlane}
-              value={abroadTrips.length}
-              label="Abroad"
-              colorClass="bg-purple-400/60 text-purple-100"
-            />
+            {tripTypeData.map((d) => (
+              <TripTypeChip
+                key={d.name}
+                icon={d.icon}
+                value={d.value}
+                label={d.name}
+                colorClass={d.colorClass}
+              />
+            ))}
           </div>
         </div>
       </DashboardCard>
@@ -119,7 +125,7 @@ export function TripsStats() {
               { value: "type", label: "Type" },
               { value: "status", label: "Status" },
             ]}
-            className="mb-4"
+            className="mt-4 mb-4"
           />
           <div className="flex flex-row items-center justify-center gap-40 min-h-[220px] mt-2">
             {/* Pie Chart */}
@@ -195,11 +201,11 @@ export function TripsStats() {
       {/* Total days spent traveling */}
       <DashboardCard
         icon={FaClockRotateLeft}
-        iconClass="text-blue-400"
+        iconClass="text-sky-400"
         title="Total days traveling"
         subtitle="Sum of all trip durations"
       >
-        <div className="text-4xl font-extrabold text-blue-400 mb-1">
+        <div className="text-4xl font-extrabold text-sky-400 mb-1">
           {totalDaysTraveling ? `${totalDaysTraveling} days` : "—"}
         </div>
       </DashboardCard>
