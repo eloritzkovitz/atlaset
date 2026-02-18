@@ -19,7 +19,7 @@ export const COUNTRIES_SUBMENU = [
 export const ACHIEVEMENTS_MENU = [
   {
     key: "achievements",
-    label: "Overview",
+    label: "My Achievements",
     title: "Achievements",
     icon: <FaAward />,
   },

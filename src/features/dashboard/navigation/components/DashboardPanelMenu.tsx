@@ -25,9 +25,10 @@ export function DashboardPanelMenu({
 }: DashboardPanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
   const [countriesExpanded, setCountriesExpanded] = useState(true);
+  const [achievementsExpanded, setAchievementsExpanded] = useState(true);
   const [tripsExpanded, setTripsExpanded] = useState(true);
 
-  // Support both controlled (via props) and uncontrolled (internal state) open state for the panel
+  // If open prop is provided, use it. Otherwise, manage local open state for mobile/laptop.
   const [localOpen, setLocalOpen] = useState(false);
   const open = openProp !== undefined ? openProp : localOpen;
   const onClose =
@@ -42,7 +43,7 @@ export function DashboardPanelMenu({
           Dashboard
         </>
       }
-      width={220}
+      width={250}
       className={isMobile ? "!left-0" : undefined}
       onHide={onClose}
     >
@@ -62,8 +63,8 @@ export function DashboardPanelMenu({
         <SubmenuSection
           icon={<FaMedal />}
           label="Achievements"
-          expanded={true}
-          onToggle={() => {}}
+          expanded={achievementsExpanded}
+          onToggle={() => setAchievementsExpanded((e) => !e)}
           submenu={ACHIEVEMENTS_MENU}
           selectedPanel={selectedPanel}
           setSelectedPanel={(key) => {
