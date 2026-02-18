@@ -52,11 +52,6 @@ export const PieChart: React.FC<PieChartProps> = ({
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "#f3f4f6",
-        titleColor: "#111827",
-        bodyColor: "#111827",
-        borderColor: "#e5e7eb",
-        borderWidth: 1,
         padding: 12,
         cornerRadius: 8,
         displayColors: false,
@@ -93,7 +88,7 @@ export const PieChart: React.FC<PieChartProps> = ({
       }
     },
   };
-  
+
   // Update active segment on hover change
   useEffect(() => {
     const chart = pieRef.current;

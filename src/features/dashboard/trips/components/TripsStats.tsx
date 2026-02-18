@@ -1,16 +1,19 @@
 import { lazy, Suspense, useState } from "react";
 import {
-  FaSuitcaseRolling,
+  FaCalendarDays,
+  FaChartPie,
+  FaCheck,
+  FaClock,
+  FaClockRotateLeft,
   FaLocationDot,
   FaPlane,
-  FaClock,
   FaRegClock,
   FaStar,
-  FaClockRotateLeft,
-  FaCalendarDays,
-  FaCheck,
+  FaSuitcaseRolling,
 } from "react-icons/fa6";
-import { DashboardCard, PieLegendCard } from "@components";
+import { DashboardCard, PieLegendCard, SegmentedToggle } from "@components";
+import { TripList } from "./TripList";
+import { TripTypeChip } from "./TripTypeChip";
 import { TRIP_TYPE_COLORS } from "../constants/trips";
 import { useTripsStats } from "../hooks/useTripsStats";
 
@@ -18,6 +21,7 @@ const PieChart = lazy(() => import("@components/chart/PieChart"));
 
 export function TripsStats() {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const [pieMode, setPieMode] = useState<"type" | "status">("type");
 
   const {
     totalTrips,
@@ -25,22 +29,25 @@ export function TripsStats() {
     abroadTrips,
     completedTrips,
     upcomingTrips,
+    plannedTrips,
     longestTrip,
     shortestTrip,
-    longestTripName,
-    longestTripRange,
-    shortestTripName,
-    shortestTripRange,
     averageTripDuration,
     totalDaysTraveling,
   } = useTripsStats();
 
-  // Pie chart data for trip types
+  // Pie chart data for trip types and statuses
   const tripTypeData = [
     { name: "Local", value: localTrips.length, color: TRIP_TYPE_COLORS[0] },
     { name: "Abroad", value: abroadTrips.length, color: TRIP_TYPE_COLORS[1] },
   ];
-  const total = totalTrips;
+  const tripStatusData = [
+    { name: "Planned", value: plannedTrips.length, color: "#a3a3a3" },
+    { name: "Upcoming", value: upcomingTrips.length, color: "#fde047" },
+    { name: "Completed", value: completedTrips.length, color: "#22d3ee" },
+  ];
+  const pieData = pieMode === "type" ? tripTypeData : tripStatusData;
+  const total = pieData.reduce((sum, d) => sum + d.value, 0);
 
   return (
     <div className="grid gap-6 md:grid-cols-2">
@@ -56,71 +63,91 @@ export function TripsStats() {
             {totalTrips}
           </div>
           <div className="text-muted text-sm mb-4">Total Trips</div>
+          <div className="flex gap-6 mb-4">
+            <TripTypeChip
+              icon={FaRegClock}
+              value={plannedTrips.length}
+              label="Planned"
+              colorClass="bg-gray-400/60 text-gray-100"
+            />
+            <TripTypeChip
+              icon={FaCalendarDays}
+              value={upcomingTrips.length}
+              label="Upcoming"
+              colorClass="bg-yellow-400/60 text-yellow-100"
+            />
+            <TripTypeChip
+              icon={FaCheck}
+              value={completedTrips.length}
+              label="Completed"
+              colorClass="bg-cyan-400/60 text-cyan-100"
+            />
+          </div>
           <div className="flex gap-6">
-            <div className="flex flex-col items-center">
-              <span className="flex text-2xl items-center gap-1 bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300 px-3 py-1 rounded-full font-semibold">
-                <FaLocationDot className="text-green-400" />
-                {localTrips.length}
-              </span>
-              <span className="text-muted text-xs mt-1">Local</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="flex text-2xl items-center gap-1 bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300 px-3 py-1 rounded-full font-semibold">
-                <FaPlane className="text-purple-400" />
-                {abroadTrips.length}
-              </span>
-              <span className="text-muted text-xs mt-1">Abroad</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="flex text-2xl items-center gap-1 bg-cyan-100 text-cyan-700 dark:bg-cyan-900 dark:text-cyan-300 px-3 py-1 rounded-full font-semibold">
-                <FaCheck className="text-cyan-400" />
-                {completedTrips.length}
-              </span>
-              <span className="text-muted text-xs mt-1">Completed</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <span className="flex text-2xl items-center gap-1 bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300 px-3 py-1 rounded-full font-semibold">
-                <FaCalendarDays className="text-yellow-400" />
-                {upcomingTrips.length}
-              </span>
-              <span className="text-muted text-xs mt-1">Upcoming</span>
-            </div>
+            <TripTypeChip
+              icon={FaLocationDot}
+              value={localTrips.length}
+              label="Local"
+              colorClass="bg-green-400/60 text-green-100"
+            />
+            <TripTypeChip
+              icon={FaPlane}
+              value={abroadTrips.length}
+              label="Abroad"
+              colorClass="bg-purple-400/60 text-purple-100"
+            />
           </div>
         </div>
       </DashboardCard>
 
-      {/* Trip Type Breakdown Pie Chart */}
+      {/* Trip Breakdown Pie Chart */}
       <DashboardCard
-        icon={FaPlane}
-        iconClass="text-purple-400"
-        title="Trip Type Breakdown"
+        icon={FaChartPie}
+        iconClass={"text-purple-400"}
+        title={"Trip Breakdown"}
+        subtitle={
+          pieMode === "type"
+            ? "Distribution of trips (local and abroad)"
+            : "Distribution of trip statuses"
+        }
       >
-        <div className="flex flex-row items-center justify-center gap-40 min-h-[220px] mt-4">
-          {/* Pie Chart */}
-          <div className="flex items-center justify-center w-48 h-48 mt-10 mb-10">
-            <Suspense fallback={<div>Loading chart...</div>}>
-              <PieChart
-                labels={tripTypeData.map((d) => d.name)}
-                data={tripTypeData.map((d) => d.value)}
-                colors={tripTypeData.map((d) => d.color)}
-                hoveredIdx={hoveredIdx}
-                setHoveredIdx={setHoveredIdx}
-              />
-            </Suspense>
-          </div>
-          {/* Vertical Legend */}
-          <div className="flex flex-col gap-4">
-            {tripTypeData.map((d, idx) => (
-              <PieLegendCard
-                key={d.name}
-                label={d.name}
-                color={d.color}
-                percentage={total ? (d.value / total) * 100 : 0}
-                isActive={hoveredIdx === idx}
-                onMouseEnter={() => setHoveredIdx(idx)}
-                onMouseLeave={() => setHoveredIdx(null)}
-              />
-            ))}
+        <div className="flex flex-col items-center">
+          <SegmentedToggle
+            value={pieMode}
+            onChange={setPieMode}
+            options={[
+              { value: "type", label: "Type" },
+              { value: "status", label: "Status" },
+            ]}
+            className="mb-4"
+          />
+          <div className="flex flex-row items-center justify-center gap-40 min-h-[220px] mt-2">
+            {/* Pie Chart */}
+            <div className="flex items-center justify-center w-48 h-48 mt-10 mb-10">
+              <Suspense fallback={<div>Loading chart...</div>}>
+                <PieChart
+                  labels={pieData.map((d) => d.name)}
+                  data={pieData.map((d) => d.value)}
+                  colors={pieData.map((d) => d.color)}
+                  hoveredIdx={hoveredIdx}
+                  setHoveredIdx={setHoveredIdx}
+                />
+              </Suspense>
+            </div>
+            {/* Vertical Legend */}
+            <div className="flex flex-col gap-4">
+              {pieData.map((d, idx) => (
+                <PieLegendCard
+                  key={d.name}
+                  label={d.name}
+                  color={d.color}
+                  percentage={total ? (d.value / total) * 100 : 0}
+                  isActive={hoveredIdx === idx}
+                  onMouseEnter={() => setHoveredIdx(idx)}
+                  onMouseLeave={() => setHoveredIdx(null)}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </DashboardCard>
@@ -132,14 +159,10 @@ export function TripsStats() {
         title="Longest trip"
         subtitle="Your trip with the most days abroad"
       >
-        <div className="text-4xl font-extrabold text-indigo-400 mb-1">
-          {longestTrip ? `${longestTrip} days` : "—"}
-        </div>
-        {longestTripName && (
-          <div className="text-muted text-sm">
-            <span className="font-semibold">{longestTripName}</span>
-            {longestTripRange && <span> &middot; {longestTripRange}</span>}
-          </div>
+        {longestTrip ? (
+          <TripList trips={[longestTrip]} className="mt-2" showDuration />
+        ) : (
+          <div className="text-4xl font-extrabold text-indigo-400 mb-1">—</div>
         )}
       </DashboardCard>
 
@@ -150,16 +173,10 @@ export function TripsStats() {
         title="Shortest trip"
         subtitle="Your shortest abroad trip"
       >
-        <div className="text-4xl font-extrabold text-pink-400 mb-1">
-          {shortestTrip !== Infinity && shortestTrip > 0
-            ? `${shortestTrip} days`
-            : "—"}
-        </div>
-        {shortestTripName && (
-          <div className="text-muted text-sm">
-            <span className="font-semibold">{shortestTripName}</span>
-            {shortestTripRange && <span> &middot; {shortestTripRange}</span>}
-          </div>
+        {shortestTrip ? (
+          <TripList trips={[shortestTrip]} className="mt-2" showDuration />
+        ) : (
+          <div className="text-4xl font-extrabold text-pink-400 mb-1">—</div>
         )}
       </DashboardCard>
 

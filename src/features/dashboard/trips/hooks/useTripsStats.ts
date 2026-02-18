@@ -2,6 +2,7 @@ import { useTrips } from "@contexts/TripsContext";
 import {
   getCompletedTrips,
   getUpcomingTrips,
+  getPlannedTrips,
   getLocalTrips,
   getAbroadTrips,
 } from "@features/trips/utils/trips";
@@ -16,11 +17,10 @@ export function useTripsStats() {
   const totalTrips = trips.length;
   const localTrips = getLocalTrips(trips, homeCountry);
   const abroadTrips = getAbroadTrips(trips, homeCountry);
-
-  // Only completed trips for country stats
   const completedTrips = getCompletedTrips(trips);
   const completedAbroadTrips = getAbroadTrips(completedTrips, homeCountry);
   const upcomingTrips = getUpcomingTrips(trips);
+  const plannedTrips = getPlannedTrips(trips);
 
   // Only consider valid, completed abroad trips with valid dates and positive duration
   const now = Date.now();
@@ -36,33 +36,17 @@ export function useTripsStats() {
     );
   });
 
-  const longestTripObj = validAbroadTrips.length
+  // Get longest and shortest trip objects based on valid abroad trips
+  const longestTrip = validAbroadTrips.length
     ? validAbroadTrips.reduce((a, b) =>
-        getLongestTrip([a]) >= getLongestTrip([b]) ? a : b
+        getLongestTrip([a]) >= getLongestTrip([b]) ? a : b,
       )
     : null;
-  const shortestTripObj = validAbroadTrips.length
+  const shortestTrip = validAbroadTrips.length
     ? validAbroadTrips.reduce((a, b) =>
-        getShortestTrip([a]) <= getShortestTrip([b]) ? a : b
+        getShortestTrip([a]) <= getShortestTrip([b]) ? a : b,
       )
     : null;
-
-  // Longest and shortest trips (abroad only)
-  const longestTrip = getLongestTrip(abroadTrips);
-  const shortestTrip = getShortestTrip(abroadTrips);
-
-  // Extract trip name and date range if available
-  const longestTripName = longestTripObj?.name || null;
-  const longestTripRange =
-    longestTripObj?.startDate && longestTripObj?.endDate
-      ? `${longestTripObj.startDate} – ${longestTripObj.endDate}`
-      : null;
-
-  const shortestTripName = shortestTripObj?.name || null;
-  const shortestTripRange =
-    shortestTripObj?.startDate && shortestTripObj?.endDate
-      ? `${shortestTripObj.startDate} – ${shortestTripObj.endDate}`
-      : null;
 
   // Calculate trip durations (in days)
   const tripDurations = trips
@@ -75,8 +59,8 @@ export function useTripsStats() {
           return Math.max(
             1,
             Math.round(
-              (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)
-            ) + 1
+              (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
+            ) + 1,
           );
         }
       }
@@ -96,12 +80,9 @@ export function useTripsStats() {
     completedTrips,
     completedAbroadTrips,
     upcomingTrips,
+    plannedTrips,
     longestTrip,
     shortestTrip,
-    longestTripName,
-    longestTripRange,
-    shortestTripName,
-    shortestTripRange,
     averageTripDuration,
     totalDaysTraveling,
   };

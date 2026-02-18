@@ -40,13 +40,28 @@ export function isCompletedTrip(trip: Trip) {
 }
 
 /**
- * Determines if a trip is upcoming based on its start date.
+ * Determines if a trip is planned (a future trip with tentative dates).
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip is planned, false otherwise.
+ */
+export function isPlannedTrip(trip: Trip): boolean {
+  // Planned: missing, empty, or invalid startDate
+  if (!trip.startDate || typeof trip.startDate !== "string" || trip.startDate.trim() === "") return true;
+  const start = new Date(trip.startDate);
+  if (isNaN(start.getTime())) return true;
+  // If startDate is valid and in the future, it's upcoming, not planned
+  return false;
+}
+
+/**
+ * Determines if a trip is upcoming (a future trip with definite dates).
  * @param trip - The trip object to evaluate.
  * @returns True if the trip is upcoming, false otherwise.
  */
 export function isUpcomingTrip(trip: Trip): boolean {
-  if (!trip.startDate) return true;
-  return new Date(trip.startDate) > new Date();
+  if (!trip.startDate) return false;
+  const start = new Date(trip.startDate);
+  return !isNaN(start.getTime()) && start > new Date();
 }
 
 /**
@@ -76,6 +91,15 @@ export function getAbroadTrips(trips: Trip[], homeCountry: string): Trip[] {
  */
 export function getUpcomingTrips(trips: Trip[]): Trip[] {
   return trips.filter(isUpcomingTrip);
+}
+
+/**
+ * Gets a filtered list of planned trips.
+ * @param trips - Array of trips to analyze.
+ * @returns An array of planned trips.
+ */
+export function getPlannedTrips(trips: Trip[]): Trip[] {
+  return trips.filter(isPlannedTrip);
 }
 
 /**
