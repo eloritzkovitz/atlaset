@@ -1,6 +1,11 @@
-import { FaBookAtlas, FaChartSimple, FaMedal } from "react-icons/fa6";
+import { FaBookAtlas, FaChartSimple, FaHouse, FaMedal } from "react-icons/fa6";
 
 export const DASHBOARD_MENU = [
+  {
+    key: "overview",
+    label: "Overview",
+    icon: FaHouse,
+  },
   {
     key: "countries/exploration",
     label: "Exploration",

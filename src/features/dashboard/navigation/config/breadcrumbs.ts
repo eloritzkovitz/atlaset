@@ -2,9 +2,9 @@ import type { Crumb } from "@components";
 
 // Predefined breadcrumbs for dashboard panels
 export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
-  achievements: [
+  overview: [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Achievements", key: "achievements" },
+    { label: "Overview", key: "overview" },
   ],
   countries: [
     { label: "Dashboard", key: "dashboard" },
@@ -19,6 +19,10 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries/exploration" },
     { label: "Exploration" },
+  ],
+  achievements: [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Achievements", key: "achievements" },
   ],
   statistics: [
     { label: "Dashboard", key: "dashboard" },

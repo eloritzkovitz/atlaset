@@ -7,8 +7,8 @@ import {
   MenuButton,
   Panel,
 } from "@components";
-import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useScreenSize } from "@hooks";
+import { DASHBOARD_MENU } from "../config/menu";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;

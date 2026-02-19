@@ -1,0 +1,64 @@
+import { useTrips } from "@contexts/TripsContext";
+import { useCountryData } from "@features/countries";
+import { useAuth, useHomeCountry, useUserProfile } from "@features/user";
+import { useVisitedCountries } from "@features/visits";
+import { UserOverviewCard } from "./UserOverviewCard";
+import { StatsGrid } from "./StatsGrid";
+import { getStatsConfig } from "../config/stats";
+import { useAchievementsData } from "../../achievements/hooks/useAchievementsData";
+import { isCompleted } from "../../achievements/utils/achievements";
+import { useExplorationStats } from "../../countries/hooks/useExplorationStats";
+
+export function OverviewGrid() {
+  const { user } = useAuth();
+  const { profile: userProfile, loading: userProfileLoading } = useUserProfile({
+    uid: user?.uid,
+  });
+  const { countries, loading: countriesLoading } = useCountryData();
+  const { trips } = useTrips();
+  const { homeCountry } = useHomeCountry();
+
+  // Get visited countries and exploration stats
+  const visited = useVisitedCountries();
+  const { totalCountries, visitedCountries } = useExplorationStats(
+    countries,
+    visited,
+  );
+
+  // Get achievements data and calculate completed achievements
+  const { achievementsData, loading: achievementsLoading } =
+    useAchievementsData();
+  const achievementsCount = achievementsData?.length ?? 0;
+  const completedCount =
+    achievementsData?.filter((a) =>
+      isCompleted(a, countries, visited, trips, homeCountry),
+    ).length ?? 0;
+
+  // Use extracted stats config
+  const stats = getStatsConfig({
+    countriesLoading,
+    visitedCountries,
+    totalCountries,
+    achievementsLoading,
+    completedCount,
+    achievementsCount,
+  });
+
+  // Extract first name for personalized heading
+  const firstName =
+    userProfile?.displayName?.split(" ")[0] ?? userProfile?.username ?? "User";
+
+  return (
+    <div className="mt-8">
+      {userProfile && !userProfileLoading && (
+        <UserOverviewCard
+          userProfile={userProfile}
+          user={user}
+          loading={userProfileLoading}
+        />
+      )}
+      <h2 className="text-3xl font-bold mb-6">{firstName}&apos;s Overview</h2>
+      <StatsGrid stats={stats} />
+    </div>
+  );
+}

@@ -14,9 +14,9 @@ export function useDashboardRouteState() {
 
   let selectedPanel = pathParts[0] || "countries";
   if (
-    (selectedPanel === "countries" || selectedPanel === "trips") &&
+    selectedPanel === "countries" &&
     pathParts[1] &&
-    ["exploration", "overview", "history", "month", "year", "all"].includes(pathParts[1])
+    ["exploration", "all"].includes(pathParts[1])
   ) {
     selectedPanel = `${selectedPanel}/${pathParts[1]}`;
   }
@@ -54,7 +54,7 @@ export function useDashboardRouteState() {
     : null;
   const selectedSubregion = subregionParam
     ? countries?.find(
-        (c) => c.subregion && c.subregion.toLowerCase() === subregionParam
+        (c) => c.subregion && c.subregion.toLowerCase() === subregionParam,
       )?.subregion || subregionParam
     : null;
   const selectedIsoCode = isoCodeParam;

@@ -11,7 +11,7 @@ import type { Country } from "@features/countries";
 export function useDashboardNavigation(
   countries: Country[],
   selectedRegion: string,
-  selectedSubregion: string
+  selectedSubregion: string,
 ) {
   const navigate = useNavigate();
 
@@ -21,13 +21,13 @@ export function useDashboardNavigation(
   // Handle region and subregion selection
   const handleRegionSelect = (region: string) =>
     navigate(
-      `/dashboard/countries/${encodeURIComponent(region.toLowerCase())}`
+      `/dashboard/countries/${encodeURIComponent(region.toLowerCase())}`,
     );
   const handleSubregionSelect = (region: string, subregion: string) =>
     navigate(
       `/dashboard/countries/${encodeURIComponent(
-        region.toLowerCase()
-      )}/${encodeURIComponent(subregion.toLowerCase())}`
+        region.toLowerCase(),
+      )}/${encodeURIComponent(subregion.toLowerCase())}`,
     );
 
   // Handle country selection
@@ -40,13 +40,13 @@ export function useDashboardNavigation(
     if (country && country.subregion) {
       navigate(
         `/dashboard/countries/${encodeURIComponent(
-          country.region.toLowerCase()
+          country.region.toLowerCase(),
         )}/${encodeURIComponent(country.subregion.toLowerCase())}/${
           country.isoCode
-        }`
+        }`,
       );
     }
-  };  
+  };
 
   // Show all countries
   const handleShowAllCountries = () => navigate(`/dashboard/countries/all`);
@@ -54,20 +54,20 @@ export function useDashboardNavigation(
   // Breadcrumb click handler
   const handleCrumbClick = (key: string) => {
     if (key === "dashboard") {
-      navigate(`/dashboard/countries/exploration`);
+      navigate(`/dashboard/overview`);
     } else if (key === "countries") {
       navigate(`/dashboard/countries/all`);
     } else if (key === "region") {
       navigate(
         `/dashboard/countries/${encodeURIComponent(
-          selectedRegion?.toLowerCase() ?? ""
-        )}`
+          selectedRegion?.toLowerCase() ?? "",
+        )}`,
       );
     } else if (key === "subregion") {
       navigate(
         `/dashboard/countries/${encodeURIComponent(
-          selectedRegion?.toLowerCase() ?? ""
-        )}/${encodeURIComponent(selectedSubregion?.toLowerCase() ?? "")}`
+          selectedRegion?.toLowerCase() ?? "",
+        )}/${encodeURIComponent(selectedSubregion?.toLowerCase() ?? "")}`,
       );
     } else if (key === "country") {
       // No-op

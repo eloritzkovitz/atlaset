@@ -14,6 +14,7 @@ import {
   useDashboardRouteState,
   useDashboardNavigation,
   getDashboardMeta,
+  OverviewGrid,
   StatisticsGrid,
 } from "@features/dashboard";
 import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
@@ -117,7 +118,7 @@ export default function DashboardPage() {
 
   // Redirect early if at /dashboard
   if (location.pathname === "/dashboard") {
-    return <Navigate to="/dashboard/countries/exploration" replace />;
+    return <Navigate to="/dashboard/overview" replace />;
   }
 
   // Render CountryStats with common props
@@ -166,11 +167,8 @@ export default function DashboardPage() {
         <div className="flex-1 mt-12 min-w-0">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           <Routes>
-            {/* Redirect /dashboard to /dashboard/countries/exploration */}
-            <Route
-              path=""
-              element={<Navigate to="countries/exploration" replace />}
-            />
+            <Route path="overview" element={<OverviewGrid />} />
+            <Route path="" element={<Navigate to="overview" replace />} />
             <Route
               path="countries"
               element={
@@ -204,9 +202,7 @@ export default function DashboardPage() {
                 onBack: handleBack,
               })}
             />
-            {/* Achievements page */}
             <Route path="achievements" element={<AchievementsGrid />} />
-            {/* Other dashboard panels */}
             <Route path="statistics/*" element={<StatisticsGrid />} />
           </Routes>
         </div>
