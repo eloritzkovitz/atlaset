@@ -127,7 +127,7 @@ export function TripsStats() {
             ]}
             className="mt-4 mb-4"
           />
-          <div className="flex flex-row items-center justify-center gap-40 min-h-[220px] mt-2">
+          <div className="flex flex-row justify-center gap-25 min-h-[220px] mt-2">
             {/* Pie Chart */}
             <div className="flex items-center justify-center w-48 h-48 mt-10 mb-10">
               <Suspense fallback={<div>Loading chart...</div>}>
@@ -151,6 +151,7 @@ export function TripsStats() {
                   isActive={hoveredIdx === idx}
                   onMouseEnter={() => setHoveredIdx(idx)}
                   onMouseLeave={() => setHoveredIdx(null)}
+                  direction="horizontal"
                 />
               ))}
             </div>

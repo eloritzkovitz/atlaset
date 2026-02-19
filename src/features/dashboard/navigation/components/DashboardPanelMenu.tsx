@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { HamburgerButton } from "@components";
-import { FaGlobe, FaList, FaMedal, FaSuitcaseRolling } from "react-icons/fa6";
-import { TbLayoutDashboardFilled } from "react-icons/tb";
-import { DrawerPanel, Panel, SubmenuSection } from "@components";
+import { FaList } from "react-icons/fa6";
 import {
-  COUNTRIES_SUBMENU,
-  TRIPS_SUBMENU,
-  ACHIEVEMENTS_MENU,
-} from "@features/dashboard/navigation/config/menu";
+  DashboardIcon,
+  DrawerPanel,
+  HamburgerButton,
+  MenuButton,
+  Panel,
+} from "@components";
+import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useScreenSize } from "@hooks";
 
 interface DashboardPanelMenuProps {
@@ -24,9 +24,6 @@ export function DashboardPanelMenu({
   onClose: onCloseProp,
 }: DashboardPanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
-  const [countriesExpanded, setCountriesExpanded] = useState(true);
-  const [achievementsExpanded, setAchievementsExpanded] = useState(true);
-  const [tripsExpanded, setTripsExpanded] = useState(true);
 
   // If open prop is provided, use it. Otherwise, manage local open state for mobile/laptop.
   const [localOpen, setLocalOpen] = useState(false);
@@ -39,7 +36,7 @@ export function DashboardPanelMenu({
     <Panel
       title={
         <>
-          <TbLayoutDashboardFilled />
+          <DashboardIcon size={20} className="mr-1" />
           Dashboard
         </>
       }
@@ -47,43 +44,24 @@ export function DashboardPanelMenu({
       className={isMobile ? "!left-0" : undefined}
       onHide={onClose}
     >
-      <ul>
-        <SubmenuSection
-          icon={<FaGlobe />}
-          label="Countries"
-          expanded={countriesExpanded}
-          onToggle={() => setCountriesExpanded((e) => !e)}
-          submenu={COUNTRIES_SUBMENU}
-          selectedPanel={selectedPanel}
-          setSelectedPanel={(key) => {
-            setSelectedPanel(key);
-            if (isMobile && onClose) onClose();
-          }}
-        />
-        <SubmenuSection
-          icon={<FaMedal />}
-          label="Achievements"
-          expanded={achievementsExpanded}
-          onToggle={() => setAchievementsExpanded((e) => !e)}
-          submenu={ACHIEVEMENTS_MENU}
-          selectedPanel={selectedPanel}
-          setSelectedPanel={(key) => {
-            setSelectedPanel(key);
-            if (isMobile && onClose) onClose();
-          }}
-        />
-        <SubmenuSection
-          icon={<FaSuitcaseRolling />}
-          label="Trips"
-          expanded={tripsExpanded}
-          onToggle={() => setTripsExpanded((e) => !e)}
-          submenu={TRIPS_SUBMENU}
-          selectedPanel={selectedPanel}
-          setSelectedPanel={(key) => {
-            setSelectedPanel(key);
-            if (isMobile && onClose) onClose();
-          }}
-        />
+      <ul className="flex flex-col gap-2">
+        {DASHBOARD_MENU.map((item) => {
+          const Icon = item.icon;
+          return (
+            <MenuButton
+              key={item.key}
+              icon={<Icon />}
+              active={selectedPanel === item.key}
+              onClick={() => {
+                setSelectedPanel(item.key);
+                if (isMobile && onClose) onClose();
+              }}
+              className="w-full px-2 !text-lg font-semibold"
+            >
+              {item.label}
+            </MenuButton>
+          );
+        })}
       </ul>
     </Panel>
   );

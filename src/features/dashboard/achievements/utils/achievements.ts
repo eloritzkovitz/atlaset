@@ -13,7 +13,7 @@ import {
 import {
   getRepeatVisitCount,
   getUniqueAbroadCountries,
-} from "../../trips/utils/tripStats";
+} from "../../statistics/utils/tripStats";
 import type { Achievement, AchievementStatus } from "../../types";
 
 /**

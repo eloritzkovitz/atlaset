@@ -26,7 +26,7 @@ import {
   FaUserGear,
   FaUserGroup,
 } from "react-icons/fa6";
-import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { DashboardIcon } from "@components";
 
 export const DOCS_PATH = "/docs/";
 
@@ -83,7 +83,7 @@ export const DOCS_GROUPS = {
       {
         label: "Dashboard",
         file: "dashboard.md",
-        icon: <TbLayoutDashboardFilled />,
+        icon: <DashboardIcon />,
       },
       {
         label: "Exploration",
@@ -173,7 +173,7 @@ export const DOCS_CARDS = [
     file: "trips.md",
   },
   {
-    icon: <TbLayoutDashboardFilled className="text-5xl mb-4 text-warning" />,
+    icon: <DashboardIcon className="text-5xl mb-4 text-warning" />,
     title: "Dashboard",
     description: "View your stats and achievements.",
     file: "dashboard.md",

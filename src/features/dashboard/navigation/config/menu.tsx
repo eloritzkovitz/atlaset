@@ -1,53 +1,19 @@
-import {
-  FaCalendarDays,
-  FaClockRotateLeft,
-  FaChartPie,
-  FaRegCalendarDays,
-  FaBookAtlas,
-  FaAward,
-} from "react-icons/fa6";
+import { FaBookAtlas, FaChartSimple, FaMedal } from "react-icons/fa6";
 
-export const COUNTRIES_SUBMENU = [
+export const DASHBOARD_MENU = [
   {
     key: "countries/exploration",
     label: "Exploration",
-    title: "World Exploration",
-    icon: <FaBookAtlas />,
+    icon: FaBookAtlas,
   },
-];
-
-export const ACHIEVEMENTS_MENU = [
   {
     key: "achievements",
-    label: "My Achievements",
-    title: "Achievements",
-    icon: <FaAward />,
-  },
-];
-
-export const TRIPS_SUBMENU = [
-  {
-    key: "trips/overview",
-    label: "Overview",
-    title: "Trips Overview",
-    icon: <FaChartPie />,
+    label: "Achievements",
+    icon: FaMedal,
   },
   {
-    key: "trips/history",
-    label: "History",
-    title: "Trip History",
-    icon: <FaClockRotateLeft />,
-  },
-  {
-    key: "trips/month",
-    label: "By Month",
-    title: "Trips By Month",
-    icon: <FaCalendarDays />,
-  },
-  {
-    key: "trips/year",
-    label: "By Year",
-    title: "Trips By Year",
-    icon: <FaRegCalendarDays />,
+    key: "statistics",
+    label: "Statistics",
+    icon: FaChartSimple,
   },
 ];

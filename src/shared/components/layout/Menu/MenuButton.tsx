@@ -32,9 +32,9 @@ export function MenuButton({
     <button
       type={type}
       className={
-        `rounded-lg text-left px-2 py-2 flex items-center gap-2 ` +
+        `rounded-lg text-left px-2 py-2 text-text flex items-center gap-2 ` +
         (active
-          ? "bg-primary dark:bg-primary/70 text-gray-200 font-semibold "
+          ? "bg-primary dark:bg-primary/70 text-white font-semibold "
           : "hover:bg-sidebar-btn-hover ") +
         className
       }

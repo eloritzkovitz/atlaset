@@ -63,18 +63,25 @@ export function useTripsByMonthStats() {
   // Find most popular month
   const mostPopularMonth = tripsByMonthData.reduce(
     (max, curr) => (curr.total > (max?.total ?? 0) ? curr : max),
+    null as (typeof tripsByMonthData)[0] | null,
+  );
+
+  // Find least popular month
+  const leastPopularMonth = tripsByMonthData.reduce(
+    (min, curr) => (curr.total < (min?.total ?? Infinity) ? curr : min),
     null as (typeof tripsByMonthData)[0] | null
   );
 
   // Total trips for percentage
   const totalTripsForMonth = tripsByMonthData.reduce(
     (sum, m) => sum + m.total,
-    0
+    0,
   );
 
   return {
     tripsByMonthData,
     mostPopularMonth,
+    leastPopularMonth,
     totalTripsForMonth,
   };
 }

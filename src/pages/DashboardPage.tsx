@@ -11,19 +11,12 @@ import {
   AchievementsGrid,
   DashboardPanelMenu,
   CountryStats,
-  TripHistory,
-  TripsByMonth,
-  TripsByYear,
-  TripsStats,
   useDashboardRouteState,
   useDashboardNavigation,
   getDashboardMeta,
+  StatisticsGrid,
 } from "@features/dashboard";
-import {
-  COUNTRIES_SUBMENU,
-  ACHIEVEMENTS_MENU,
-  TRIPS_SUBMENU,
-} from "@features/dashboard/navigation/config/menu";
+import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
 
@@ -34,11 +27,7 @@ export default function DashboardPage() {
   const [panelOpen, setPanelOpen] = useState(false);
 
   // Full dashboard menu config
-  const dashboardMenuConfig = [
-    ...COUNTRIES_SUBMENU,
-    ...ACHIEVEMENTS_MENU,
-    ...TRIPS_SUBMENU,
-  ];
+  const dashboardMenuConfig = DASHBOARD_MENU;
 
   // Determine current panel from URL
   const dashboardPath =
@@ -75,7 +64,7 @@ export default function DashboardPage() {
     selectedCountry,
     routeSelectedRegion,
     routeSelectedSubregion,
-    currentPanel,
+    currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
   });
@@ -218,10 +207,7 @@ export default function DashboardPage() {
             {/* Achievements page */}
             <Route path="achievements" element={<AchievementsGrid />} />
             {/* Other dashboard panels */}
-            <Route path="trips/overview" element={<TripsStats />} />
-            <Route path="trips/history" element={<TripHistory />} />
-            <Route path="trips/month" element={<TripsByMonth />} />
-            <Route path="trips/year" element={<TripsByYear />} />
+            <Route path="statistics/*" element={<StatisticsGrid />} />
           </Routes>
         </div>
       </div>

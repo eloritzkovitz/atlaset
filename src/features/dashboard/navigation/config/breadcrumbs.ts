@@ -20,24 +20,8 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Countries", key: "countries/exploration" },
     { label: "Exploration" },
   ],
-  "trips/overview": [
+  statistics: [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "Overview" },
-  ],
-  "trips/history": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "History" },
-  ],
-  "trips/month": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "By Month" },
-  ],
-  "trips/year": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "By Year" },
+    { label: "Statistics", key: "statistics" },
   ],
 };

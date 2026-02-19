@@ -36,6 +36,9 @@ export { NumberInput } from "./form/inputs/NumberInput/NumberInput";
 export { SearchInput } from "./form/inputs/SearchInput";
 export { SelectInput } from "./form/inputs/SelectInput";
 
+// Icon components
+export { DashboardIcon } from "./icons/DashboardIcon";
+
 // Layout components
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
 export { SectionHeader } from "./layout/SectionHeader";

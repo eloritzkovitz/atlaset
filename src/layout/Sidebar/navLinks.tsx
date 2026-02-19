@@ -4,7 +4,7 @@ import {
   FaQuestion,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
-import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { DashboardIcon } from "@components";
 
 export const NAV_LINKS = [
   {
@@ -21,7 +21,7 @@ export const NAV_LINKS = [
   },
   {
     to: "/dashboard",
-    icon: <TbLayoutDashboardFilled className="text-2xl" />,
+    icon: <DashboardIcon className="text-2xl" />,
     label: "Dashboard",
     end: false,
   },
