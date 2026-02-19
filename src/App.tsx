@@ -13,6 +13,7 @@ import { UIHintProvider } from "@contexts/UIHintProvider";
 import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
 import { AtlasProviders } from "./pages/AtlasProvider";
 import AboutPage from "./pages/AboutPage";
+import ActivityPage from "./pages/ActivityPage";
 import DashboardPage from "./pages/DashboardPage";
 import DocsPage from "./pages/DocsPage";
 import HomePage from "./pages/HomePage";
@@ -37,112 +38,112 @@ function App() {
 
   return (
     <TripsProvider>
-        <UIProvider>
-          <UIHintProvider>
-            <UIHintContainer />
-            <PwaUpdateUiHint />
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <PublicLayout showAuthButtons>
-                    <HomePage />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/login"
-                element={
+      <UIProvider>
+        <UIHintProvider>
+          <UIHintContainer />
+          <PwaUpdateUiHint />
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <PublicLayout showAuthButtons>
+                  <HomePage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicLayout>
+                  <LoginPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <PublicLayout>
+                  <SignupPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <PublicLayout>
+                  <AboutPage />
+                </PublicLayout>
+              }
+            />
+            <Route
+              path="/changelog"
+              element={
+                <Suspense fallback={<LoadingSpinner />}>
                   <PublicLayout>
-                    <LoginPage />
+                    <ChangelogPage />
                   </PublicLayout>
-                }
-              />
-              <Route
-                path="/signup"
-                element={
-                  <PublicLayout>
-                    <SignupPage />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/about"
-                element={
-                  <PublicLayout>
-                    <AboutPage />
-                  </PublicLayout>
-                }
-              />
-              <Route
-                path="/changelog"
-                element={
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <PublicLayout>
-                      <ChangelogPage />
-                    </PublicLayout>
-                  </Suspense>
-                }
-              />
-              <Route path="/users/:username/*" element={<ProfilePage />} />
-              <Route path="/settings/*" element={<SettingsPage />} />
-              <Route path="/docs" element={<DocsPage />} />
-              <Route path="/docs/:slug" element={<DocsPage />} />
-              <Route
-                path="/atlas"
-                element={
-                  window.location.search.includes("embed") ? (
-                    <EmbedLayout
-                      mapCode={
-                        new URLSearchParams(window.location.search).get(
-                          "map",
-                        ) || undefined
-                      }
-                    >
-                      <AtlasProviders />
-                    </EmbedLayout>
-                  ) : (
-                    <AppLayout>
-                      <AtlasProviders />
-                    </AppLayout>
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/*"
-                element={
+                </Suspense>
+              }
+            />
+            <Route path="/users/:username/*" element={<ProfilePage />} />
+            <Route path="/activity" element={<ActivityPage />} />
+            <Route path="/settings/*" element={<SettingsPage />} />
+            <Route path="/docs" element={<DocsPage />} />
+            <Route path="/docs/:slug" element={<DocsPage />} />
+            <Route
+              path="/atlas"
+              element={
+                window.location.search.includes("embed") ? (
+                  <EmbedLayout
+                    mapCode={
+                      new URLSearchParams(window.location.search).get("map") ||
+                      undefined
+                    }
+                  >
+                    <AtlasProviders />
+                  </EmbedLayout>
+                ) : (
                   <AppLayout>
-                    <DashboardPage />
+                    <AtlasProviders />
                   </AppLayout>
-                }
-              />
-              <Route
-                path="/quizzes/*"
-                element={
-                  <AppLayout>
-                    <QuizzesPage />
-                  </AppLayout>
-                }
-              />
-              <Route
-                path="/trips"
-                element={
-                  <AppLayout>
-                    <TripsPage />
-                  </AppLayout>
-                }
-              />
-              <Route
-                path="*"
-                element={
-                  <PublicLayout>
-                    <NotFoundPage />
-                  </PublicLayout>
-                }
-              />
-            </Routes>
-          </UIHintProvider>
-        </UIProvider>
+                )
+              }
+            />
+            <Route
+              path="/dashboard/*"
+              element={
+                <AppLayout>
+                  <DashboardPage />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/quizzes/*"
+              element={
+                <AppLayout>
+                  <QuizzesPage />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/trips"
+              element={
+                <AppLayout>
+                  <TripsPage />
+                </AppLayout>
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <PublicLayout>
+                  <NotFoundPage />
+                </PublicLayout>
+              }
+            />
+          </Routes>
+        </UIHintProvider>
+      </UIProvider>
     </TripsProvider>
   );
 }

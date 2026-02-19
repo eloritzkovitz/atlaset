@@ -1,5 +1,6 @@
-import { FaPen } from "react-icons/fa6";
+import { FaPen, FaListUl } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
+import { Link } from "react-router-dom";
 import { UserAvatar } from "./UserAvatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";
@@ -88,8 +89,8 @@ export function ProfileHeader({
           <div className="text-left text-gray-500 text-base mt-1">
             @{profile.username}
           </div>
-          <div className="text-left font-semibold text-muted text-base mt-1">
-            <div className="text-center font-semibold sm:text-left text-muted text-base mt-1">
+          <div className="flex flex-row items-center gap-2 text-left font-semibold text-muted text-base mt-1">
+            <div className="text-center font-semibold sm:text-left text-muted text-base">
               {typeof friendCount === "number" ? (
                 <button
                   type="button"
@@ -106,6 +107,20 @@ export function ProfileHeader({
               )}
             </div>
           </div>
+          {/* Activity Log Button */}
+          {canEdit && (
+            <div className="flex flex-col items-end -mt-12">
+              <Link to="/activity">
+                <ActionButton
+                  variant="secondary"
+                  className="!rounded-full"
+                  icon={<FaListUl className="text-lg" />}
+                >
+                  Activity Log
+                </ActionButton>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </Card>
