@@ -15,10 +15,10 @@ export function DashboardIcon({
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <rect x="3" y="3" width="8" height="8" rx="2.5" fill={color} />
-      <rect x="13" y="3" width="8" height="8" rx="2.5" fill={color} />
-      <rect x="3" y="13" width="8" height="8" rx="2.5" fill={color} />
-      <rect x="13" y="13" width="8" height="8" rx="2.5" fill={color} />
+      <rect x="2" y="2" width="9" height="9" rx="2.5" fill={color} />
+      <rect x="13" y="2" width="9" height="9" rx="2.5" fill={color} />
+      <rect x="2" y="13" width="9" height="9" rx="2.5" fill={color} />
+      <rect x="13" y="13" width="9" height="9" rx="2.5" fill={color} />
     </svg>
   );
 }
