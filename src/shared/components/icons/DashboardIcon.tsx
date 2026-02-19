@@ -2,10 +2,10 @@ import React from "react";
 
 /** Renders a dashboard icon composed of four evenly spaced rounded squares in a 2x2 grid. */
 export function DashboardIcon({
-  size = 24,
   color = "currentColor",
+  size = "1em",
   ...props
-}: React.SVGProps<SVGSVGElement> & { size?: number; color?: string }) {
+}: React.SVGProps<SVGSVGElement> & { size?: string | number; color?: string }) {
   return (
     <svg
       width={size}

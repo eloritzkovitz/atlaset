@@ -2,7 +2,7 @@ import { FaDraftingCompass } from "react-icons/fa";
 import {
   FaBookAtlas,
   FaBookmark,
-  FaChartPie,
+  FaChartSimple,
   FaCircleUser,
   FaCode,
   FaCompass,
@@ -96,9 +96,9 @@ export const DOCS_GROUPS = {
         icon: <FaMedal />,
       },
       {
-        label: "Trip Statistics",
-        file: "trip-statistics.md",
-        icon: <FaChartPie />,
+        label: "Statistics",
+        file: "statistics.md",
+        icon: <FaChartSimple />,
       },
       { label: "Quizzes", file: "quizzes.md", icon: <FaQuestion /> },
     ],
