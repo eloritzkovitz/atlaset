@@ -6,10 +6,11 @@ import {
   FaArrowsToEye,
   FaEllipsisVertical,
 } from "react-icons/fa6";
-import { ConfirmModal, Menu } from "@components";
 import { useMenuPosition, useRenameControls } from "@hooks";
 import { PanelListItemMenuActions } from "./PanelListItemMenuActions";
 import { RenameControls } from "./RenameControls";
+import { Menu } from "../Menu/Menu";
+import { ConfirmModal } from "../Modal/ConfirmModal";
 import { ActionButton } from "../../action/ActionButton";
 import { ColorDot } from "../../ui/ColorDot";
 
