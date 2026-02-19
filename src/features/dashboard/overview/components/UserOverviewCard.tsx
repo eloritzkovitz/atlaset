@@ -20,9 +20,7 @@ export function UserOverviewCard({
   if (!userProfile || loading) return null;
   return (
     <Link
-      to={
-        userProfile.username ? `/profile/${userProfile.username}` : "/profile"
-      }
+      to={`/users/${userProfile.username}`}
       className="block mb-8"
       tabIndex={0}
       aria-label="Go to your profile"
