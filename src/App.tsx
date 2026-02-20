@@ -1,7 +1,8 @@
-import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense } from "react";
+import { Routes, Route } from "react-router-dom";
 import {
   LoadingSpinner,
+  ProtectedRoute,
   PwaUpdateUiHint,
   SplashScreen,
   UIHintContainer,
@@ -86,8 +87,6 @@ function App() {
               }
             />
             <Route path="/users/:username/*" element={<ProfilePage />} />
-            <Route path="/activity" element={<ActivityPage />} />
-            <Route path="/settings/*" element={<SettingsPage />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/docs/:slug" element={<DocsPage />} />
             <Route
@@ -112,9 +111,11 @@ function App() {
             <Route
               path="/dashboard/*"
               element={
-                <AppLayout>
-                  <DashboardPage />
-                </AppLayout>
+                <ProtectedRoute>
+                  <AppLayout>
+                    <DashboardPage />
+                  </AppLayout>
+                </ProtectedRoute>
               }
             />
             <Route
@@ -128,9 +129,31 @@ function App() {
             <Route
               path="/trips"
               element={
-                <AppLayout>
-                  <TripsPage />
-                </AppLayout>
+                <ProtectedRoute>
+                  <AppLayout>
+                    <TripsPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings/*"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <SettingsPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/activity"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <ActivityPage />
+                  </AppLayout>
+                </ProtectedRoute>
               }
             />
             <Route

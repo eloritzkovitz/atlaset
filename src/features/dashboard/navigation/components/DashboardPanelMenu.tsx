@@ -1,13 +1,4 @@
-import { useState } from "react";
-import { FaList } from "react-icons/fa6";
-import {
-  DashboardIcon,
-  DrawerPanel,
-  HamburgerButton,
-  MenuButton,
-  Panel,
-} from "@components";
-import { useScreenSize } from "@hooks";
+import { DashboardIcon, SidePanelMenu } from "@components";
 import { DASHBOARD_MENU } from "../config/menu";
 
 interface DashboardPanelMenuProps {
@@ -20,71 +11,32 @@ interface DashboardPanelMenuProps {
 export function DashboardPanelMenu({
   selectedPanel,
   setSelectedPanel,
-  open: openProp,
-  onClose: onCloseProp,
+  open,
+  onClose,
 }: DashboardPanelMenuProps) {
-  const { isLaptop, isMobile } = useScreenSize();
+  const menuItems = DASHBOARD_MENU.map((item) => {
+    const Icon = item.icon;
+    return {
+      key: item.key,
+      label: item.label,
+      icon: <Icon />,
+    };
+  });
 
-  // If open prop is provided, use it. Otherwise, manage local open state for mobile/laptop.
-  const [localOpen, setLocalOpen] = useState(false);
-  const open = openProp !== undefined ? openProp : localOpen;
-  const onClose =
-    onCloseProp !== undefined ? onCloseProp : () => setLocalOpen(false);
-
-  // Panel content
-  const panelContent = (
-    <Panel
+  return (
+    <SidePanelMenu
       title={
         <>
-          <DashboardIcon size={20} className="mr-1" />
+          <DashboardIcon className="mr-1" />
           Dashboard
         </>
       }
+      menuItems={menuItems}
+      selectedPanel={selectedPanel}
+      setSelectedPanel={setSelectedPanel}
+      open={open}
+      onClose={onClose}
       width={250}
-      className={isMobile ? "!left-0" : undefined}
-      onHide={onClose}
-    >
-      <ul className="flex flex-col gap-2">
-        {DASHBOARD_MENU.map((item) => {
-          const Icon = item.icon;
-          return (
-            <MenuButton
-              key={item.key}
-              icon={<Icon />}
-              active={selectedPanel === item.key}
-              onClick={() => {
-                setSelectedPanel(item.key);
-                if (isMobile && onClose) onClose();
-              }}
-              className="w-full px-2 !text-lg font-semibold"
-            >
-              {item.label}
-            </MenuButton>
-          );
-        })}
-      </ul>
-    </Panel>
+    />
   );
-
-  // Mobile and laptop: show hamburger button and drawer if open
-  if (isMobile || isLaptop) {
-    return (
-      <>
-        {/* Hamburger button only if not controlled by parent */}
-        {openProp === undefined && (
-          <HamburgerButton
-            onClick={() => setLocalOpen(true)}
-            className="left-18 !top-2.5"
-            icon={<FaList className="text-2xl" />}
-          />
-        )}
-        <DrawerPanel open={!!open} onClose={onClose} width={280}>
-          {panelContent}
-        </DrawerPanel>
-      </>
-    );
-  }
-
-  // Desktop: always show panel
-  return panelContent;
 }

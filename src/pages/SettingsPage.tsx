@@ -54,11 +54,6 @@ export default function SettingsPage() {
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
 
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
   // Handle menu navigation
   function handlePanelChange(panel: string) {
     if (panel === "privacy") {

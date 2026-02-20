@@ -59,12 +59,16 @@ export { ConfirmModal } from "./layout/Modal/ConfirmModal";
 export { Modal } from "./layout/Modal/Modal";
 export { ModalActions } from "./layout/Modal/ModalActions";
 
+// Navigation components
+export { ProtectedRoute } from "./navigation/ProtectedRoute";
+
 // Panel components
+export { DrawerPanel } from "./layout/Panel/DrawerPanel";
+export { EmptyListMessage } from "./layout/Panel/EmptyListMessage";
 export { Panel } from "./layout/Panel/Panel";
 export { PanelHeader } from "./layout/Panel/PanelHeader";
 export { PanelListItem } from "./layout/Panel/PanelListItem";
-export { DrawerPanel } from "./layout/Panel/DrawerPanel";
-export { EmptyListMessage } from "./layout/Panel/EmptyListMessage";
+export { SidePanelMenu } from "./layout/Panel/SidePanelMenu";
 
 // Toolbar components
 export { ActionsToolbar } from "./layout/Toolbar/ActionsToolbar";

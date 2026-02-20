@@ -10,6 +10,7 @@ import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 import { AuthButtons } from "../Header/AuthButtons";
 
+/** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const { user, loading } = useAuth();
   const { uiVisible, toggleHelp } = useUI();
@@ -20,7 +21,6 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const location = useLocation();
   const { isMobile } = useScreenSize();
   const isTripsPage = location.pathname.startsWith("/trips");
-  const isSettingsPage = location.pathname.startsWith("/settings");
 
   // Get the logout handler from useAuthHandlers
   const { handleLogout } = useAuthHandlers();
@@ -51,26 +51,22 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
       } z-20 flex items-center gap-4`}
       ref={menuRef}
     >
-      {!isSettingsPage && (
-        <>
-          <ActionButton
-            title="Notifications"
-            onClick={() => {}}
-            icon={<FaBell className="text-xl" />}
-            aria-pressed={false}
-            rounded
-          />
-          <ActionButton
-            title="Help"
-            onClick={() => {
-              toggleHelp();
-            }}
-            icon={<FaCircleQuestion className="text-xl" />}
-            aria-pressed={false}
-            rounded
-          />
-        </>
-      )}
+      <ActionButton
+        title="Notifications"
+        onClick={() => {}}
+        icon={<FaBell className="text-xl" />}
+        aria-pressed={false}
+        rounded
+      />
+      <ActionButton
+        title="Help"
+        onClick={() => {
+          toggleHelp();
+        }}
+        icon={<FaCircleQuestion className="text-xl" />}
+        aria-pressed={false}
+        rounded
+      />
       <UserAvatarButton user={user} onClick={() => setIsOpen((v) => !v)} />
       {(isOpen || closing) && (
         <Menu

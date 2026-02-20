@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+  Navigate,
+} from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes";
@@ -58,10 +63,6 @@ export default function ProfilePage() {
   const { profiles: friendProfiles, loading: loadingFriendProfiles } =
     useFriendProfiles(friendUids);
 
-  // Show loading state while fetching auth and profile data
-  if (!profileUser && !(authLoading || profileLoading))
-    return <div>User not found</div>;
-
   // When opening the modal, just navigate
   const handleOpenFriends = () => {
     if (!profileUser?.uid) return;
@@ -72,6 +73,15 @@ export default function ProfilePage() {
   const handleCloseFriends = () => {
     navigate(`/users/${profileUser?.username}`);
   };
+
+  // Show loading state while fetching auth and profile data
+  if (!profileUser && !(authLoading || profileLoading))
+    return <div>User not found</div>;
+
+  // Redirect to login if not authenticated
+  if (!currentUser) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <>

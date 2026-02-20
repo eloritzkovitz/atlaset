@@ -1,6 +1,5 @@
-import { DrawerPanel, MenuButton, Panel } from "@components";
-import { useScreenSize } from "@hooks";
-import { Branding } from "@layout";
+import { FaGear } from "react-icons/fa6";
+import { SidePanelMenu } from "@components";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
 
 interface SettingsPanelMenuProps {
@@ -18,54 +17,30 @@ export function SettingsPanelMenu({
   open,
   onClose,
 }: SettingsPanelMenuProps) {
-  const { isMobile } = useScreenSize();
+  const menuItems = (
+    canEdit
+      ? SETTINGS_MENU
+      : SETTINGS_MENU.filter((item) => item.key !== "edit")
+  ).map((item) => ({
+    key: item.key,
+    label: item.label,
+    icon: item.icon,
+  }));
 
-  const menuItems = canEdit
-    ? SETTINGS_MENU
-    : SETTINGS_MENU.filter((item) => item.key !== "edit");
-
-  // Panel content
-  const panelContent = (
-    <Panel
+  return (
+    <SidePanelMenu
       title={
-        <div className="flex items-center gap-2 px-2">
-          <Branding size={36} />
-          <span className="font-bold text-2xl">Atlaset</span>
-        </div>
+        <>
+          <FaGear className="mr-1" />
+          Settings
+        </>
       }
-      width={220}
-      className="!left-0"
-      onHide={onClose}
-    >
-      <ul>
-        {menuItems.map((item) => (
-          <li key={item.key}>
-            <MenuButton
-              icon={item.icon}
-              active={selectedPanel === item.key}
-              onClick={() => {
-                setSelectedPanel(item.key);
-                if (isMobile && onClose) onClose();
-              }}
-              className="w-full mb-2"
-            >
-              {item.label}
-            </MenuButton>
-          </li>
-        ))}
-      </ul>
-    </Panel>
+      menuItems={menuItems}
+      selectedPanel={selectedPanel}
+      setSelectedPanel={setSelectedPanel}
+      open={open}
+      onClose={onClose}
+      width={250}
+    />
   );
-
-  // Mobile: drawer
-  if (isMobile) {
-    return (
-      <DrawerPanel open={!!open} onClose={onClose!} width={256}>
-        {panelContent}
-      </DrawerPanel>
-    );
-  }
-
-  // Desktop: always show panel
-  return panelContent;
 }

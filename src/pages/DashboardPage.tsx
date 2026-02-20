@@ -22,7 +22,7 @@ import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
 
 export default function DashboardPage() {
-  const { user, ready } = useAuth();
+  const { ready } = useAuth();
   const { countries, loading, error } = useCountryData();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
@@ -110,11 +110,6 @@ export default function DashboardPage() {
   if (loading || !ready)
     return <LoadingSpinner fullScreen message="Loading dashboard..." />;
   if (error) return <ErrorMessage fullScreen error={error} />;
-
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
 
   // Redirect early if at /dashboard
   if (location.pathname === "/dashboard") {
