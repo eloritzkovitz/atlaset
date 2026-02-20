@@ -7,7 +7,7 @@ export default function ActivityPage() {
   const { user } = useAuth();
 
   // Set page title
-  usePageTitle("Activity Log");
+  usePageTitle("Activity Log | Atlaset");
 
   // If user is not authenticated, return null
   if (!user) return null;
@@ -17,7 +17,7 @@ export default function ActivityPage() {
       <Header />
       <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
         <div className="flex flex-col gap-6 items-center">
-          <div className="w-full max-w-2xl">
+          <div className="w-full max-w-4xl">
             <UserActivitySection />
           </div>
         </div>

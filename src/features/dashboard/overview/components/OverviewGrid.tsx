@@ -1,9 +1,11 @@
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useAuth, useHomeCountry, useUserProfile } from "@features/user";
+import { RecentActivitySection } from "@features/user/activity/components/RecentActivitySection";
 import { useVisitedCountries } from "@features/visits";
-import { UserOverviewCard } from "./UserOverviewCard";
+import { AppLinks } from "@layout";
 import { StatsGrid } from "./StatsGrid";
+import { UserOverviewCard } from "./UserOverviewCard";
 import { getStatsConfig } from "../config/stats";
 import { useAchievementsData } from "../../achievements/hooks/useAchievementsData";
 import { isCompleted } from "../../achievements/utils/achievements";
@@ -59,6 +61,8 @@ export function OverviewGrid() {
       )}
       <h2 className="text-3xl font-bold mb-6">{firstName}&apos;s Overview</h2>
       <StatsGrid stats={stats} />
+      <RecentActivitySection />
+      <AppLinks className="mb-10 mt-6 text-sm font-semibold" />
     </div>
   );
 }

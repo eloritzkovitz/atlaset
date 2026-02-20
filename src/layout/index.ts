@@ -1,4 +1,5 @@
 // Components
+export { AppLinks } from "./Footer/AppLinks";
 export { Branding } from "./Branding/Branding";
 export { Header } from "./Header/Header";
 export { Footer } from "./Footer/Footer";

@@ -1,5 +1,6 @@
 import { FaCircleQuestion, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { AppLinks } from "@layout";
 import { DocSearchResults } from "./DocSearchResults";
 
 interface HelpPanelProps {
@@ -37,19 +38,15 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
         </div>
         <div className="text-sm text-muted">
           Need help? Access guides, tips and developer docs in the full
-          <a href="/docs" className="ml-1 underline hover:!text-info">
+          <a href="/docs" className="ml-1 hover:!text-info">
             documentation
           </a>
           .
         </div>
-        <div className="flex mt-4 text-sm font-semibold items-start gap-2">
-          <a href="/about" className="ml-3 hover:!text-info">
-            About
-          </a>
-          <a href="/changelog" className="ml-3 hover:!text-info">
-            Changelog
-          </a>
-        </div>
+        <AppLinks
+          className="mt-4 text-sm font-semibold items-start"
+          showDocs={false}
+        />
       </div>
     </Panel>
   );

@@ -9,10 +9,13 @@ interface UserActivityItemProps {
 }
 
 /** Renders a single user activity item.
- * @param act - The user activity data to display.
+ * @param activity - The user activity data to display.
  * @param onDelete - Optional callback to delete the activity.
  */
-export function UserActivityItem({ activity, onDelete }: UserActivityItemProps) {
+export function UserActivityItem({
+  activity,
+  onDelete,
+}: UserActivityItemProps) {
   const details: ActivityDetails =
     activity.details &&
     typeof activity.details === "object" &&
@@ -21,7 +24,7 @@ export function UserActivityItem({ activity, onDelete }: UserActivityItemProps) 
       : ({} as ActivityDetails);
 
   return (
-    <li className="p-4 rounded-xl bg-gray-300 dark:bg-gray-600 flex flex-col gap-2">
+    <li className="p-4 rounded-xl bg-surface-alt hover:bg-primary/30 flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <FaRegClock className="inline-block mr-1" />
         <span className="font-semibold text-base text-white">
@@ -30,16 +33,17 @@ export function UserActivityItem({ activity, onDelete }: UserActivityItemProps) 
             details as Record<string, unknown>,
           )}
         </span>
-        <span className="flex items-center text-xs text-muted ml-2 gap-1">
+        <span className="flex items-center text-xs text-muted ml-auto gap-1">
           {new Date(activity.timestamp).toLocaleString()}
         </span>
         {onDelete && (
           <ActionButton
-            className="ml-auto"
+            className="ml-2 hover:text-hover"
             icon={<FaTrash />}
             ariaLabel="Delete activity"
             title="Delete activity"
             onClick={() => onDelete(activity.id)}
+            rounded
           />
         )}
       </div>

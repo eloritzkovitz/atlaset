@@ -1,5 +1,5 @@
-import { FaGithub } from "react-icons/fa6";
 import React from "react";
+import { FaGithub } from "react-icons/fa6";
 
 interface GitHubButtonProps {
   repoUrl?: string;
@@ -18,7 +18,7 @@ export const GitHubButton: React.FC<GitHubButtonProps> = ({
     href={repoUrl}
     target="_blank"
     rel="noopener noreferrer"
-    className={`inline-flex items-center !text-muted hover:text-muted/70 ${className}`}
+    className={`inline-flex items-center hover:text-muted/70 ${className}`}
     aria-label="Atlaset GitHub repository"
   >
     <FaGithub className="mr-1" size={iconSize} />
