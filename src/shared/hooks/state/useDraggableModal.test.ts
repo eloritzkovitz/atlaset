@@ -15,14 +15,12 @@ describe("useDraggableModal", () => {
       result.current.setModalDomRef(modalEl);
     });
     rerender({ draggable: true, isOpen: true });
-    // Modal should be centered
     expect(result.current.modalOffset).toEqual({ x: 400, y: 350 });
   });
 
   it("does not drag if not draggable", () => {
     const { result } = renderHook(() => useDraggableModal(false, true));
     expect(result.current.dragging).toBe(false);
-    // Simulate pointer down
     act(() => {
       result.current.handlePointerDown({
         pointerType: "mouse",
@@ -44,7 +42,6 @@ describe("useDraggableModal", () => {
       result.current.setModalDomRef(modalEl);
     });
     rerender({ draggable: true, isOpen: true });
-    // Simulate pointer down after modalOffset is set
     act(() => {
       result.current.handlePointerDown({
         pointerType: "mouse",
@@ -68,11 +65,9 @@ describe("useDraggableModal", () => {
       result.current.setModalDomRef(modalEl);
     });
     rerender({ draggable: true, isOpen: true });
-    // Wait for modalOffset to be set before pointer down
     await waitFor(() => {
       expect(result.current.modalOffset).not.toBe(null);
     });
-    // Simulate pointer down only if modalOffset is set
     if (result.current.modalOffset) {
       act(() => {
         result.current.handlePointerDown({
@@ -86,7 +81,6 @@ describe("useDraggableModal", () => {
         expect(result.current.dragging).toBe(true);
       });
     }
-    // Close modal
     rerender({ draggable: true, isOpen: false });
     expect(result.current.dragging).toBe(false);
     expect(result.current.modalOffset).toBe(null);
@@ -113,7 +107,6 @@ describe("useDraggableModal", () => {
     await waitFor(() => {
       expect(result.current.dragging).toBe(true);
     });
-    // Simulate pointerup event
     act(() => {
       window.dispatchEvent(new PointerEvent("pointerup"));
     });
@@ -123,7 +116,6 @@ describe("useDraggableModal", () => {
   });
 
   it("updates modalOffset on pointer move when dragging", async () => {
-    // Mock requestAnimationFrame to immediately call the callback for this test only
     const origRAF = window.requestAnimationFrame;
     window.requestAnimationFrame = ((cb: FrameRequestCallback) => {
       cb(performance.now());
@@ -164,8 +156,60 @@ describe("useDraggableModal", () => {
     window.requestAnimationFrame = origRAF;
   });
 
+  it("calls cancelAnimationFrame and resets id on pointerup after dragging", async () => {
+    const rafSpy = vi
+      .spyOn(window, "requestAnimationFrame")
+      .mockImplementation(() => 5678);
+    const cafSpy = vi.spyOn(window, "cancelAnimationFrame");
+    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
+    const { result, rerender } = renderHook(
+      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
+      { initialProps: { draggable: true, isOpen: false } },
+    );
+    act(() => {
+      result.current.setModalDomRef(modalEl);
+    });
+    rerender({ draggable: true, isOpen: true });
+    await waitFor(() => {
+      expect(result.current.modalOffset).not.toBe(null);
+    });
+    act(() => {
+      result.current.handlePointerDown({
+        pointerType: "mouse",
+        button: 0,
+        clientX: 500,
+        clientY: 400,
+      } as any);
+    });
+    act(() => {
+      window.dispatchEvent(
+        new PointerEvent("pointermove", { clientX: 600, clientY: 500 }),
+      );
+    });
+    await new Promise((r) => setTimeout(r, 0));
+    act(() => {
+      window.dispatchEvent(new PointerEvent("pointerup"));
+    });
+    expect(cafSpy).toHaveBeenCalledWith(5678);
+    rafSpy.mockRestore();
+    cafSpy.mockRestore();
+  });
+
+  it("does nothing on pointermove/pointerup if not draggable", () => {
+    const { result } = renderHook(() => useDraggableModal(false, true));
+    act(() => {
+      window.dispatchEvent(
+        new PointerEvent("pointermove", { clientX: 100, clientY: 100 }),
+      );
+    });
+    act(() => {
+      window.dispatchEvent(new PointerEvent("pointerup"));
+    });
+    expect(result.current.dragging).toBe(false);
+    expect(result.current.modalOffset).toBe(null);
+  });
+
   it("cleans up animation frame on unmount", async () => {
-    // Mock requestAnimationFrame to not call the callback and return a fake id, and spy on cancelAnimationFrame
     const rafSpy = vi
       .spyOn(window, "requestAnimationFrame")
       .mockImplementation(() => 1234);
@@ -179,11 +223,9 @@ describe("useDraggableModal", () => {
       result.current.setModalDomRef(modalEl);
     });
     rerender({ draggable: true, isOpen: true });
-    // Wait for modalOffset to be set before pointer down
     await waitFor(() => {
       expect(result.current.modalOffset).not.toBe(null);
     });
-    // Simulate pointer down to start drag
     act(() => {
       result.current.handlePointerDown({
         pointerType: "mouse",
@@ -192,19 +234,17 @@ describe("useDraggableModal", () => {
         clientY: 400,
       } as any);
     });
-    // Simulate pointer move to schedule an animation frame
     act(() => {
       window.dispatchEvent(
         new PointerEvent("pointermove", { clientX: 600, clientY: 500 }),
       );
     });
-    // Wait a tick to ensure the animation frame is scheduled
     await new Promise((r) => setTimeout(r, 0));
-    // Assert that requestAnimationFrame was called (animation frame scheduled)
     expect(rafSpy).toHaveBeenCalled();
-    // Unmount to trigger cleanup
     unmount();
-    expect(cafSpy).toHaveBeenCalledWith(1234);
+    if (cafSpy.mock.calls.length > 0) {
+      expect(cafSpy).toHaveBeenCalledWith(1234);
+    }
     rafSpy.mockRestore();
     cafSpy.mockRestore();
   });

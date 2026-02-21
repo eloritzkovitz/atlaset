@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Achievement } from "../../../dashboard/types";
+import type { Achievement } from "../types";
 
 /**
  * Manages fetching and state of achievements data.

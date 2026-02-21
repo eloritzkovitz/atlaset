@@ -6,7 +6,8 @@ import {
   FaPencil,
   FaDownload,
 } from "react-icons/fa6";
-import { MenuButton, Separator } from "@components";
+import { MenuButton } from "../Menu/MenuButton";
+import { Separator } from "../Separator";
 
 interface PanelListItemMenuActionsProps {
   onCenter?: () => void;

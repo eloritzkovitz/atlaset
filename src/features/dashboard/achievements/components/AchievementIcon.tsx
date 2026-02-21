@@ -7,7 +7,7 @@ import {
   FaBoxesStacked,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
-import type { Achievement } from "../../types";
+import type { Achievement } from "../types";
 
 interface AchievementIconProps {
   type: Achievement["type"];

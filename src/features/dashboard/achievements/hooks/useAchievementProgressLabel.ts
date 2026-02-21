@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import type { Country } from "@features/countries";
 import { getProgress } from "../utils/achievements";
-import type { Achievement } from "../../types";
+import type { Achievement } from "../types";
 
 /**
  * Generates a progress label for an achievement card.

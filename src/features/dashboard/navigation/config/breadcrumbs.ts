@@ -2,9 +2,13 @@ import type { Crumb } from "@components";
 
 // Predefined breadcrumbs for dashboard panels
 export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
-  achievements: [
+  overview: [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Achievements", key: "achievements" },
+    { label: "Overview", key: "overview" },
+  ],
+  exploration: [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Exploration", key: "exploration" },
   ],
   countries: [
     { label: "Dashboard", key: "dashboard" },
@@ -15,29 +19,12 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Countries", key: "countries/all" },
     { label: "All Countries" },
   ],
-  "countries/exploration": [
+  achievements: [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Countries", key: "countries/exploration" },
-    { label: "Exploration" },
+    { label: "Achievements", key: "achievements" },
   ],
-  "trips/overview": [
+  statistics: [
     { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "Overview" },
-  ],
-  "trips/history": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "History" },
-  ],
-  "trips/month": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "By Month" },
-  ],
-  "trips/year": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Trips", key: "trips/overview" },
-    { label: "By Year" },
+    { label: "Statistics", key: "statistics" },
   ],
 };

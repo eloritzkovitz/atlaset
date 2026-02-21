@@ -13,6 +13,7 @@ export * from "./dom/useContainerDimensions";
 export * from "./dom/useFloatingHover";
 export * from "./dom/useKeyboardFocusRing";
 export * from "./dom/useMenuPosition";
+export * from "./dom/useScrollVisibility";
 
 // Input
 export * from "./input/useKeyHandler";

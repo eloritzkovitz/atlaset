@@ -19,6 +19,7 @@ interface PieChartProps {
   hoveredIdx: number | null;
   setHoveredIdx: (idx: number | null) => void;
   tooltipLabel?: (label: string, value: number, percent: string) => string[];
+  size?: number;
 }
 
 export const PieChart: React.FC<PieChartProps> = ({
@@ -27,6 +28,7 @@ export const PieChart: React.FC<PieChartProps> = ({
   colors,
   hoveredIdx,
   setHoveredIdx,
+  size = 292,
 }) => {
   const pieRef = useRef<ChartJS<"pie"> | null>(null);
 
@@ -38,11 +40,10 @@ export const PieChart: React.FC<PieChartProps> = ({
     datasets: [
       {
         data,
-        backgroundColor: colors,
-        borderColor: (ctx: { active?: boolean }) =>
-          ctx.active ? "#14b8a6" : "rgba(0,0,0,0.2)",
-        borderWidth: (ctx: { active?: boolean }) => (ctx.active ? 4 : 2),
-        hoverOffset: 16,
+        backgroundColor: colors,   
+        borderColor: "transparent",     
+        borderWidth: 0,
+        hoverOffset: 32,
       },
     ],
   };
@@ -52,11 +53,6 @@ export const PieChart: React.FC<PieChartProps> = ({
     plugins: {
       legend: { display: false },
       tooltip: {
-        backgroundColor: "#f3f4f6",
-        titleColor: "#111827",
-        bodyColor: "#111827",
-        borderColor: "#e5e7eb",
-        borderWidth: 1,
         padding: 12,
         cornerRadius: 8,
         displayColors: false,
@@ -93,7 +89,7 @@ export const PieChart: React.FC<PieChartProps> = ({
       }
     },
   };
-  
+
   // Update active segment on hover change
   useEffect(() => {
     const chart = pieRef.current;
@@ -111,8 +107,8 @@ export const PieChart: React.FC<PieChartProps> = ({
     <div
       className="relative mx-auto mb-6 overflow-visible"
       style={{
-        width: "min(90vw, 292px)",
-        height: "min(90vw, 292px)",
+        width: `min(90vw, ${size}px)`,
+        height: `min(90vw, ${size}px)`,
       }}
     >
       <Pie ref={pieRef} data={pieData} options={pieOptions} />

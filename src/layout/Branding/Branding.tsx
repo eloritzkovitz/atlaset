@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTheme } from "@features/settings";
+import { isWindowDefined } from "@utils/env";
 
 interface BrandingProps {
   title?: string;
@@ -68,8 +69,7 @@ export function Branding({
 
   // If forceExternal, use <a> with dynamic target/rel based on iframe context
   if (forceExternal) {
-    const isIframe =
-      typeof window !== "undefined" && window.self !== window.top;
+    const isIframe = isWindowDefined() && window.self !== window.top;
     return (
       <a
         href="/"

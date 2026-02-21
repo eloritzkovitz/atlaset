@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-02-21
+
+- **[feature]** **Dashboard:** Added dashboard overview with information summary
+- **[feature]** **Dashboard:** Updated dashboard menu and navigation 
+- **[chore]** **User | Activity:** Moved activity log to dashboard and added another link from the user profile 
+
 ## 2026-02-17
 
 - **[feature]** **User | Settings:** Added option to delete activities

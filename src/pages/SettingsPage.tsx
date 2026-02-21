@@ -14,11 +14,7 @@ import {
   SettingsPanelMenu,
   SoundSettingsSection,
 } from "@features/settings";
-import {
-  EditProfileModal,
-  UserActivitySection,
-  useUserProfile,
-} from "@features/user";
+import { EditProfileModal, useUserProfile } from "@features/user";
 import { usePageTitle } from "@hooks";
 import { SidebarLayout } from "@layout";
 
@@ -32,8 +28,8 @@ export default function SettingsPage() {
   const location = useLocation();
 
   // Determine selected panel from route
-  const selectedPanel = location.pathname.endsWith("/activity")
-    ? "activity"
+  const selectedPanel = location.pathname.endsWith("/privacy")
+    ? "privacy"
     : location.pathname.endsWith("/security")
       ? "security"
       : location.pathname.endsWith("/display")
@@ -47,7 +43,7 @@ export default function SettingsPage() {
     account: "Account",
     display: "Display",
     sound: "Sound",
-    activity: "User Activity",
+    privacy: "Privacy",
     security: "Security",
   };
   const pageTitle = `${panelTitles[selectedPanel] || "Settings"}`;
@@ -58,15 +54,10 @@ export default function SettingsPage() {
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
 
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
   // Handle menu navigation
   function handlePanelChange(panel: string) {
-    if (panel === "activity") {
-      navigate("/settings/activity");
+    if (panel === "privacy") {
+      navigate("/settings/privacy");
     } else if (panel === "security") {
       navigate("/settings/security");
     } else if (panel === "display") {
@@ -101,7 +92,7 @@ export default function SettingsPage() {
             <Route path="account" element={<AccountSettingsSection />} />
             <Route path="display" element={<DisplaySettingsSection />} />
             <Route path="sound" element={<SoundSettingsSection />} />
-            <Route path="activity" element={<UserActivitySection />} />
+            <Route path="privacy" element={undefined} />
             <Route path="security" element={<SecurityInfoSection />} />
             {/* Redirect unknown profile routes to /settings */}
             <Route

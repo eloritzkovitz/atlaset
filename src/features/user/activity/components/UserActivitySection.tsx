@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { useInfiniteScroll } from "@hooks";
 import { UserActivityItem } from "./UserActivityItem";
@@ -28,7 +29,17 @@ export function UserActivitySection() {
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6 self-start">Activity Log</h2>
+      <div className="flex items-center gap-2 mb-6">
+        <button
+          type="button"
+          onClick={() => navigate(-1) || navigate("/dashboard")}
+          className="flex items-center focus:outline-none"
+          aria-label="Go back"
+        >
+          <FaChevronLeft className="text-lg mr-1" />
+          <h2 className="text-xl font-bold self-start">Activity Log</h2>
+        </button>
+      </div>
       {loading && activity.length === 0 ? (
         <div className="text-muted">Loading...</div>
       ) : activity.length === 0 ? (

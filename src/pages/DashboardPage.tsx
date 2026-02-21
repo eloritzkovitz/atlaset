@@ -11,40 +11,30 @@ import {
   AchievementsGrid,
   DashboardPanelMenu,
   CountryStats,
-  TripHistory,
-  TripsByMonth,
-  TripsByYear,
-  TripsStats,
   useDashboardRouteState,
   useDashboardNavigation,
   getDashboardMeta,
+  OverviewGrid,
+  StatisticsGrid,
 } from "@features/dashboard";
-import {
-  COUNTRIES_SUBMENU,
-  ACHIEVEMENTS_MENU,
-  TRIPS_SUBMENU,
-} from "@features/dashboard/navigation/config/menu";
+import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
+import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
-  const { user, ready } = useAuth();
+  const { ready } = useAuth();
   const { countries, loading, error } = useCountryData();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
   // Full dashboard menu config
-  const dashboardMenuConfig = [
-    ...COUNTRIES_SUBMENU,
-    ...ACHIEVEMENTS_MENU,
-    ...TRIPS_SUBMENU,
-  ];
+  const dashboardMenuConfig = DASHBOARD_MENU;
 
   // Determine current panel from URL
-  const dashboardPath =
-    typeof window !== "undefined"
-      ? window.location.pathname.replace(/^\/dashboard\//, "")
-      : undefined;
+  const dashboardPath = isWindowDefined()
+    ? window.location.pathname.replace(/^\/dashboard\//, "")
+    : undefined;
   const currentPanel = dashboardMenuConfig.find(
     (item) => item.key === dashboardPath,
   );
@@ -75,7 +65,7 @@ export default function DashboardPage() {
     selectedCountry,
     routeSelectedRegion,
     routeSelectedSubregion,
-    currentPanel,
+    currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
   });
@@ -121,14 +111,9 @@ export default function DashboardPage() {
     return <LoadingSpinner fullScreen message="Loading dashboard..." />;
   if (error) return <ErrorMessage fullScreen error={error} />;
 
-  // Redirect to login if not authenticated
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
-
   // Redirect early if at /dashboard
   if (location.pathname === "/dashboard") {
-    return <Navigate to="/dashboard/countries/exploration" replace />;
+    return <Navigate to="/dashboard/overview" replace />;
   }
 
   // Render CountryStats with common props
@@ -177,20 +162,17 @@ export default function DashboardPage() {
         <div className="flex-1 mt-12 min-w-0">
           <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
           <Routes>
-            {/* Redirect /dashboard to /dashboard/countries/exploration */}
-            <Route
-              path=""
-              element={<Navigate to="countries/exploration" replace />}
-            />
+            <Route path="overview" element={<OverviewGrid />} />
+            <Route path="" element={<Navigate to="overview" replace />} />
             <Route
               path="countries"
               element={
-                <Navigate to="/dashboard/countries/exploration" replace />
+                <Navigate to="/dashboard/exploration" replace />
               }
             />
             {/* Exploration page */}
             <Route
-              path="countries/exploration"
+              path="exploration"
               element={renderCountryStats({
                 selectedRegion: undefined,
                 selectedSubregion: undefined,
@@ -215,13 +197,8 @@ export default function DashboardPage() {
                 onBack: handleBack,
               })}
             />
-            {/* Achievements page */}
             <Route path="achievements" element={<AchievementsGrid />} />
-            {/* Other dashboard panels */}
-            <Route path="trips/overview" element={<TripsStats />} />
-            <Route path="trips/history" element={<TripHistory />} />
-            <Route path="trips/month" element={<TripsByMonth />} />
-            <Route path="trips/year" element={<TripsByYear />} />
+            <Route path="statistics/*" element={<StatisticsGrid />} />
           </Routes>
         </div>
       </div>

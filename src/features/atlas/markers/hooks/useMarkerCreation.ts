@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { useEventListener } from "@hooks/dom/useEventListener";
 
 /**
  * Manages marker creation state and handlers.
@@ -14,17 +14,16 @@ export function useMarkerCreation() {
   const ctx = isEdit ? saved : main;
   const { isAddingMarker, cancelMarkerCreation } = ctx;
 
-  // Handle Escape key to cancel marker creation
-  useEffect(() => {
-    if (!isAddingMarker) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
+  // Handle Escape key to cancel marker creation using useEventListener
+  useEventListener(
+    "keydown",
+    (e: KeyboardEvent) => {
+      if (isAddingMarker && e.key === "Escape") {
         cancelMarkerCreation();
       }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isAddingMarker, cancelMarkerCreation]);
+    },
+    window,
+  );
 
   return {
     isAddingMarker: ctx.isAddingMarker,

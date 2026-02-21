@@ -2,7 +2,8 @@ import React from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
-import { CountryDisplayPanel, type Country } from "@features/countries";
+import { CountryDisplayPanel } from "@features/countries/components/countryDisplay/CountryDisplayPanel";
+import { type Country } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import { CountryVisitBadge } from "./CountryVisitBadge";
 
@@ -27,7 +28,7 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
       onHover,
       onCountryInfo,
     },
-    ref
+    ref,
   ) => {
     const [highlightedIsoCodes, highlightDirection] =
       useHighlightYearlyCountries();
@@ -37,7 +38,7 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
     // Precompute previous years' visits for efficiency
     const previousYears = years.filter((y) => y < selectedYear);
     const previouslyVisitedIsoCodes = new Set(
-      previousYears.flatMap((y) => getVisitedCountriesForYear(trips, y) || [])
+      previousYears.flatMap((y) => getVisitedCountriesForYear(trips, y) || []),
     );
 
     // Precompute visit counts for badges
@@ -94,5 +95,5 @@ export const CountryList = React.forwardRef<HTMLDivElement, CountryListProps>(
         </div>
       </div>
     );
-  }
+  },
 );

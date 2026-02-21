@@ -1,4 +1,5 @@
 import { useState, useEffect, type RefObject } from "react";
+import { useEventListener } from "./useEventListener";
 
 /**
  * Gets the dimensions of a container element.
@@ -10,18 +11,26 @@ export function useContainerDimensions(ref: RefObject<HTMLElement | null>) {
 
   // Update dimensions on mount and when ref changes
   useEffect(() => {
-    function updateSize() {
+    if (ref.current) {
+      setDimensions({
+        width: ref.current.offsetWidth,
+        height: ref.current.offsetHeight,
+      });
+    }
+  }, [ref]);
+
+  useEventListener(
+    "resize",
+    () => {
       if (ref.current) {
         setDimensions({
           width: ref.current.offsetWidth,
           height: ref.current.offsetHeight,
         });
       }
-    }
-    updateSize();
-    window.addEventListener("resize", updateSize);
-    return () => window.removeEventListener("resize", updateSize);
-  }, [ref]);
+    },
+    window,
+  );
 
   return dimensions;
 }

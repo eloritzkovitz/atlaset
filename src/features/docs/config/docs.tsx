@@ -2,7 +2,7 @@ import { FaDraftingCompass } from "react-icons/fa";
 import {
   FaBookAtlas,
   FaBookmark,
-  FaChartPie,
+  FaChartSimple,
   FaCircleUser,
   FaCode,
   FaCompass,
@@ -26,7 +26,7 @@ import {
   FaUserGear,
   FaUserGroup,
 } from "react-icons/fa6";
-import { TbLayoutDashboardFilled } from "react-icons/tb";
+import { DashboardIcon } from "@components";
 
 export const DOCS_PATH = "/docs/";
 
@@ -83,7 +83,7 @@ export const DOCS_GROUPS = {
       {
         label: "Dashboard",
         file: "dashboard.md",
-        icon: <TbLayoutDashboardFilled />,
+        icon: <DashboardIcon />,
       },
       {
         label: "Exploration",
@@ -96,9 +96,9 @@ export const DOCS_GROUPS = {
         icon: <FaMedal />,
       },
       {
-        label: "Trip Statistics",
-        file: "trip-statistics.md",
-        icon: <FaChartPie />,
+        label: "Statistics",
+        file: "statistics.md",
+        icon: <FaChartSimple />,
       },
       { label: "Quizzes", file: "quizzes.md", icon: <FaQuestion /> },
     ],
@@ -173,7 +173,7 @@ export const DOCS_CARDS = [
     file: "trips.md",
   },
   {
-    icon: <TbLayoutDashboardFilled className="text-5xl mb-4 text-warning" />,
+    icon: <DashboardIcon className="text-5xl mb-4 text-warning" />,
     title: "Dashboard",
     description: "View your stats and achievements.",
     file: "dashboard.md",

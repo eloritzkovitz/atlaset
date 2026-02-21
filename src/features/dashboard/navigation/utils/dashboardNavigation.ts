@@ -57,10 +57,10 @@ export function getDashboardPageTitle({
   const safePanel = selectedPanel ?? "";
   const isCountryPanel =
     safePanel.startsWith("countries") ||
-    ["countries", "countries/all", "countries/exploration"].includes(safePanel);
+    ["countries", "countries/all", "exploration"].includes(safePanel);
 
-  // Special case: /countries/exploration route
-  const isExploration = safePanel === "countries/exploration";
+  // Special case: exploration route
+  const isExploration = safePanel === "exploration";
   if (isExploration) return "World Exploration | Atlaset";
   if (isCountryPanel) {
     if (selectedCountry && selectedCountry.name) {

@@ -1,7 +1,6 @@
-import { useEffect, useState, useCallback } from "react";
-
-// Only import if running in the browser
-const isClient = typeof window !== "undefined";
+import { useState, useCallback } from "react";
+import { useEventListener } from "../dom/useEventListener";
+import { isWindowDefined } from "../../utils/env";
 
 /**
  * Detects PWA updates via service worker events.
@@ -10,26 +9,22 @@ const isClient = typeof window !== "undefined";
 export function usePwaUpdate() {
   const [needRefresh, setNeedRefresh] = useState(false);
   const [waitingWorker, setWaitingWorker] = useState<ServiceWorker | null>(
-    null
+    null,
   );
 
-  // Listen for the service worker update event
-  useEffect(() => {
-    if (!isClient) return;
-
-    // VitePWA injects a global 'window.__SW_UPDATE__' event
-    const onSWUpdate = (event: Event) => {
-      setNeedRefresh(true);
-      const customEvent = event as CustomEvent<{ waiting?: ServiceWorker }>;
-      setWaitingWorker(customEvent.detail?.waiting || null);
-    };
-
-    window.addEventListener("swUpdated", onSWUpdate as EventListener);
-
-    return () => {
-      window.removeEventListener("swUpdated", onSWUpdate as EventListener);
-    };
+  // Listen for the service worker update event using useEventListener
+  const onSWUpdate = useCallback((event: Event) => {
+    setNeedRefresh(true);
+    const customEvent = event as CustomEvent<{ waiting?: ServiceWorker }>;
+    setWaitingWorker(customEvent.detail?.waiting || null);
   }, []);
+
+  // Listen for the custom "swUpdated" event dispatched by the service worker registration logic
+  useEventListener(
+    "swUpdated",
+    onSWUpdate,
+    isWindowDefined() ? window : undefined,
+  );
 
   const updateServiceWorker = useCallback(() => {
     if (waitingWorker) {

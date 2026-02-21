@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEventListener } from "./useEventListener";
 
 type UseClickOutsideOptions = {
   click?: boolean;
@@ -20,70 +20,46 @@ export function useClickOutside<T extends HTMLElement>(
   enabled = true,
   options: UseClickOutsideOptions = { click: true, escape: true },
 ) {
-  useEffect(() => {
-    if (!enabled) return;
+  // Handler for click outside
+  const handleClickOutside = (e: MouseEvent | PointerEvent) => {
+    if (!enabled || options.click === false) return;
+    if (
+      refs.every(
+        (ref) =>
+          !ref.current ||
+          !(e.target instanceof Node) ||
+          !ref.current.contains(e.target),
+      )
+    ) {
+      onOutside();
+    }
+  };
 
-    // Handle click outside of all refs (for mouse and pointer events)
-    function handleClickOutside(e: MouseEvent | PointerEvent) {
-      if (
-        refs.every(
-          (ref) =>
-            !ref.current ||
-            !(e.target instanceof Node) ||
-            !ref.current.contains(e.target),
-        )
-      ) {
-        onOutside();
-      }
+  // Handler for scroll or resize outside
+  const handleScrollOrResize = (e: Event) => {
+    if (!enabled || (!options.scroll && !options.resize)) return;
+    if (
+      refs.every(
+        (ref) =>
+          !ref.current ||
+          !(e.target instanceof Node) ||
+          !ref.current.contains(e.target),
+      )
+    ) {
+      onOutside();
     }
+  };
 
-    // Handle scroll or resize outside of all refs
-    function handleScrollOrResize(e: Event) {
-      if (
-        refs.every(
-          (ref) =>
-            !ref.current ||
-            !(e.target instanceof Node) ||
-            !ref.current.contains(e.target),
-        )
-      ) {
-        onOutside();
-      }
-    }
+  // Handler for Escape key
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!enabled || options.escape === false) return;
+    if (e.key === "Escape") onOutside();
+  };
 
-    // Handle Escape key press
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") onOutside();
-    }
-
-    if (options.click !== false) {
-      window.addEventListener("mousedown", handleClickOutside);
-      window.addEventListener("pointerdown", handleClickOutside);
-    }
-    if (options.scroll) {
-      window.addEventListener("scroll", handleScrollOrResize, true);
-    }
-    if (options.resize) {
-      window.addEventListener("resize", handleScrollOrResize);
-    }
-    if (options.escape !== false) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-
-    return () => {
-      if (options.click !== false) {
-        window.removeEventListener("mousedown", handleClickOutside);
-        window.removeEventListener("pointerdown", handleClickOutside);
-      }
-      if (options.scroll) {
-        window.removeEventListener("scroll", handleScrollOrResize, true);
-      }
-      if (options.resize) {
-        window.removeEventListener("resize", handleScrollOrResize);
-      }
-      if (options.escape !== false) {
-        window.removeEventListener("keydown", handleKeyDown);
-      }
-    };
-  }, [refs, onOutside, enabled, options]);
+  // Always call hooks, handlers check options/enabled
+  useEventListener("mousedown", handleClickOutside, window);
+  useEventListener("pointerdown", handleClickOutside, window);
+  useEventListener("scroll", handleScrollOrResize, window, { capture: true });
+  useEventListener("resize", handleScrollOrResize, window);
+  useEventListener("keydown", handleKeyDown, window);
 }

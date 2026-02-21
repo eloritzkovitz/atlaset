@@ -5,7 +5,7 @@
 import type { Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { getAchievementStatus } from "./achievements";
-import type { Achievement, AchievementStatus, Tier } from "../../types";
+import type { Achievement, AchievementStatus, Tier } from "../types";
 
 /**
  * Gets the tier of the achievement if applicable.

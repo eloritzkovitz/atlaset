@@ -1,19 +1,16 @@
 # Dashboard
 
-The **`Dashboard`** in Atlaset is your personal travel hub, providing a comprehensive overview of your journeys, achievements and travel statistics. It is designed to help you analyze your travel history, celebrate milestones, and discover new goals—all in one place.
+The **`Dashboard`** is your personal hub, providing a comprehensive overview of your activity. You can view and analyze your app activity, see travel statistics or celebrate new milestones and achievements.
 
 ## **Key Features**
 
+- **`Activity`:** See a complete log of your activity across the application.
 - **`Countries`:** See a detailed view of your world exploration.
 - **`Achievements`:** Track your personal travel with milestones and goals.
-- **`Trip Statistics`:** Provides insights and analytics about your travel history.
-
-> **Tips:**
-> - **Keep your trip data up to date** to back up your travel history or share with friends.
-> - **Check achievements regularly** to stay motivated and discover new travel goals.
+- **`Statistics`:** Provides insights and analytics about your travel history.
 
 ## **Learn More**
 
 [Exploration](/docs/exploration.md)  
 [Achievements](/docs/achievements.md)  
-[Trip Statistics](/docs/trip-statistics.md)  
+[Statistics](/docs/statistics.md)

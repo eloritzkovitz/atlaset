@@ -13,8 +13,8 @@ import {
 import {
   getRepeatVisitCount,
   getUniqueAbroadCountries,
-} from "../../trips/utils/tripStats";
-import type { Achievement, AchievementStatus } from "../../types";
+} from "../../statistics/utils/visitStats";
+import type { Achievement, AchievementStatus } from "../types";
 
 /**
  * Gets the list of countries relevant to the achievement criteria.
