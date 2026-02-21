@@ -74,7 +74,7 @@ describe("useScrollVisibility", () => {
   });
 
   it("should clean up mutation observer on unmount", () => {
-    const { div, ref } = createDivRef();
+    const { ref } = createDivRef();
     const disconnectSpy = vi.spyOn(MutationObserver.prototype, "disconnect");
     const { unmount } = renderHook(() => useScrollVisibility(ref));
     unmount();

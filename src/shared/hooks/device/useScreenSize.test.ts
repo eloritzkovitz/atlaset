@@ -35,9 +35,9 @@ it("initial width is 0 when window is undefined (SSR)", async () => {
     // @ts-ignore
     global.window = {
       innerWidth: 0,
-      addEventListener: () => {},
-      removeEventListener: () => {},
-      dispatchEvent: () => {},
+      addEventListener: () => true,
+      removeEventListener: () => true,
+      dispatchEvent: () => true,
     };
     const { useScreenSize } = await import("./useScreenSize");
     const { result } = renderHook(() => useScreenSize());
@@ -147,7 +147,9 @@ describe("useScreenSize", () => {
     const originalWindow = global.window;
     // @ts-ignore
     global.window = undefined;
-    const addListenerSpy = vi.spyOn(document, "addEventListener");
+    const addListenerSpy = vi
+      .spyOn(document, "addEventListener")
+      .mockImplementation(() => true);
     let error: any = null;
     try {
       renderHook(() => useScreenSize());
@@ -165,7 +167,9 @@ describe("useScreenSize", () => {
   });
 
   it("removes event listener on unmount", () => {
-    const removeListenerSpy = vi.spyOn(window, "removeEventListener");
+    const removeListenerSpy = vi
+      .spyOn(window, "removeEventListener")
+      .mockImplementation(() => true);
     const { unmount } = renderHook(() => useScreenSize());
     unmount();
     const callArgs = removeListenerSpy.mock.calls.find(

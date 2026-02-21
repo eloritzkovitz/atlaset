@@ -22,7 +22,7 @@ describe("useMutationObserver", () => {
   });
 
   it("should disconnect observer on unmount", () => {
-    const { div, ref } = createDivRef();
+    const { ref } = createDivRef();
     const callback = vi.fn();
     const disconnectSpy = vi.spyOn(MutationObserver.prototype, "disconnect");
     const { unmount } = renderHook(() => useMutationObserver(ref, callback));

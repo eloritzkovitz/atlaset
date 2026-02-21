@@ -7,9 +7,9 @@ import { useEffect, useRef } from "react";
  * @param handler - event handler function
  * @param options - event listener options
  */
-export function useEventListener(
+export function useEventListener<T extends Event = Event>(
   event: string,
-  handler: (event: Event) => void,
+  handler: (event: T) => void,
   target?: EventTarget | null,
   options?: AddEventListenerOptions,
 ) {
@@ -23,7 +23,7 @@ export function useEventListener(
   // Add event listener on mount and clean up on unmount
   useEffect(() => {
     const tgt = target ?? window;
-    const eventListener = (event: Event) => savedHandler.current(event);
+    const eventListener = (event: Event) => savedHandler.current(event as T);
     if (tgt) {
       tgt.addEventListener(event, eventListener, options);
     }

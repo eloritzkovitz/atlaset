@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
