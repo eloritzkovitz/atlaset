@@ -9,11 +9,11 @@ import { Sidebar } from "../Sidebar/Sidebar";
 /** Renders the main application layout. */
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const mainRef = useRef<HTMLElement>(null);
-  const [showHeader, isScrollable] = useScrollVisibility(
+  const [showHeader] = useScrollVisibility(
     mainRef,
     (scrollTop) => scrollTop === 0,
     [children],
-    true // initial header visible
+    true,
   );
   const location = useLocation();
   const { openMapToolbarPanel } = useUI();
@@ -25,7 +25,6 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
         <AppHeader
           show={showHeader}
           showSearch={location.pathname !== "/atlas" || !openMapToolbarPanel}
-          isScrollable={isScrollable}
         />
         <main
           ref={mainRef}

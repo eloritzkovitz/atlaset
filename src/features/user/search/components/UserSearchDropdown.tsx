@@ -89,7 +89,6 @@ export function UserSearchDropdown() {
                     }
                     className="w-full flex items-center gap-3 px-2 py-2"
                     ariaLabel={`Go to ${user.username}'s profile`}
-                    title={`Go to ${user.username}'s profile`}
                   >
                     <div className="flex flex-col items-start">
                       {user.displayName && (
