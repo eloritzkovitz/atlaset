@@ -20,6 +20,7 @@ import {
 import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
+import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
@@ -31,10 +32,9 @@ export default function DashboardPage() {
   const dashboardMenuConfig = DASHBOARD_MENU;
 
   // Determine current panel from URL
-  const dashboardPath =
-    typeof window !== "undefined"
-      ? window.location.pathname.replace(/^\/dashboard\//, "")
-      : undefined;
+  const dashboardPath = isWindowDefined()
+    ? window.location.pathname.replace(/^\/dashboard\//, "")
+    : undefined;
   const currentPanel = dashboardMenuConfig.find(
     (item) => item.key === dashboardPath,
   );

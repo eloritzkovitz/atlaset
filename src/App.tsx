@@ -86,7 +86,6 @@ function App() {
                 </Suspense>
               }
             />
-            <Route path="/users/:username/*" element={<ProfilePage />} />
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/docs/:slug" element={<DocsPage />} />
             <Route
@@ -142,6 +141,16 @@ function App() {
                 <ProtectedRoute>
                   <AppLayout>
                     <SettingsPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/users/:username/*"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <ProfilePage />
                   </AppLayout>
                 </ProtectedRoute>
               }

@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useEventListener } from "./useEventListener";
 
 /**
  * Manages keyboard focus ring visibility.
@@ -7,19 +8,15 @@ import { useEffect, useState } from "react";
 export function useKeyboardFocusRing() {
   const [showRing, setShowRing] = useState(false);
 
-  // Track if last interaction was keyboard
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Tab") setShowRing(true);
-    };
-    const handleMouseDown = () => setShowRing(false);
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("mousedown", handleMouseDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("mousedown", handleMouseDown);
-    };
-  }, []);
+  // Track if last interaction was keyboard or mouse
+  useEventListener(
+    "keydown",
+    (e: Event) => {
+      if ((e as KeyboardEvent).key === "Tab") setShowRing(true);
+    },
+    window,
+  );
+  useEventListener("mousedown", () => setShowRing(false), window);
 
   return showRing;
 }

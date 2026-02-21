@@ -21,7 +21,6 @@ import {
   useUserFriends,
 } from "@features/user";
 import { usePageTitle } from "@hooks";
-import { Header } from "@layout";
 import { AppPanels } from "@layout/Layout/AppPanels";
 import { formatFirestoreDate } from "@utils/date";
 
@@ -85,72 +84,69 @@ export default function ProfilePage() {
 
   return (
     <>
-      <div className="flex flex-col min-h-screen h-screen w-screen bg-bg overflow-x-hidden">
-        <Header />
-        <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0">
-          <div className="flex flex-col gap-6 items-center">
-            <div className="w-full max-w-4xl">
-              {authLoading || profileLoading ? (
-                <div className="animate-pulse space-y-6">
-                  <div className="h-32 bg-surface-alt rounded-xl mb-4" />
-                  <div className="h-20 bg-surface-alt rounded-xl" />
-                </div>
-              ) : profileUser ? (
-                <>
-                  <ProfileHeader
-                    profile={profileUser}
-                    canEdit={!!canEdit}
-                    onEdit={() => setEditOpen(true)}
-                    friendCount={friendCount}
-                    onFriendCountClick={handleOpenFriends}
+      <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0 mt-12">
+        <div className="flex flex-col gap-6 items-center">
+          <div className="w-full max-w-4xl">
+            {authLoading || profileLoading ? (
+              <div className="animate-pulse space-y-6">
+                <div className="h-32 bg-surface-alt rounded-xl mb-4" />
+                <div className="h-20 bg-surface-alt rounded-xl" />
+              </div>
+            ) : profileUser ? (
+              <>
+                <ProfileHeader
+                  profile={profileUser}
+                  canEdit={!!canEdit}
+                  onEdit={() => setEditOpen(true)}
+                  friendCount={friendCount}
+                  onFriendCountClick={handleOpenFriends}
+                />
+                {friendsOpen ? (
+                  <FriendsListSection
+                    loading={loadingFriendProfiles}
+                    profiles={friendProfiles}
+                    onBack={handleCloseFriends}
                   />
-                  {friendsOpen ? (
-                    <FriendsListSection
-                      loading={loadingFriendProfiles}
-                      profiles={friendProfiles}
-                      onBack={handleCloseFriends}
+                ) : (
+                  <>
+                    <ProfileAboutCard
+                      displayEmail={profileUser.email ?? "No email provided"}
+                      selectedCountry={selectedCountry}
+                      displayBirthday={
+                        formatFirestoreDate(profileUser.birthday) ??
+                        "Not specified"
+                      }
+                      displayJoinDate={
+                        formatFirestoreDate(profileUser.joinDate) ??
+                        "No date provided"
+                      }
+                      displayBiography={
+                        profileUser.biography ?? "No biography provided."
+                      }
+                      displaySocialLinks={
+                        profileUser.socialLinks &&
+                        Object.keys(profileUser.socialLinks).length > 0
+                          ? profileUser.socialLinks
+                          : null
+                      }
                     />
-                  ) : (
-                    <>
-                      <ProfileAboutCard
-                        displayEmail={profileUser.email ?? "No email provided"}
-                        selectedCountry={selectedCountry}
-                        displayBirthday={
-                          formatFirestoreDate(profileUser.birthday) ??
-                          "Not specified"
-                        }
-                        displayJoinDate={
-                          formatFirestoreDate(profileUser.joinDate) ??
-                          "No date provided"
-                        }
-                        displayBiography={
-                          profileUser.biography ?? "No biography provided."
-                        }
-                        displaySocialLinks={
-                          profileUser.socialLinks &&
-                          Object.keys(profileUser.socialLinks).length > 0
-                            ? profileUser.socialLinks
-                            : null
-                        }
-                      />
-                      <VisitedCountriesCard
-                        visitedCountryCodes={
-                          profileUser.visitedCountryCodes || []
-                        }
-                      />
-                      {bestScores.length > 0 && (
-                        <BestScoresCard scores={bestScores} />
-                      )}
-                    </>
-                  )}
-                </>
-              ) : (
-                <div>User not found</div>
-              )}
-            </div>
+                    <VisitedCountriesCard
+                      visitedCountryCodes={
+                        profileUser.visitedCountryCodes || []
+                      }
+                    />
+                    {bestScores.length > 0 && (
+                      <BestScoresCard scores={bestScores} />
+                    )}
+                  </>
+                )}
+              </>
+            ) : (
+              <div>User not found</div>
+            )}
           </div>
-        </main>
-      </div>
+        </div>
+      </main>
       {canEdit && (
         <EditProfileModal
           user={currentUser}

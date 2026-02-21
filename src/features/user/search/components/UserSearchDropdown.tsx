@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaCircleUser } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, SearchInput } from "@components";
-import { useUserSearch } from "@features/user/search/hooks/useUserSearch";
 import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
+import { useUserSearch } from "../hooks/useUserSearch";
 
 export function UserSearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +18,8 @@ export function UserSearchDropdown() {
   const handleFocus = () => {
     if (searchTerm) setDropdownOpen(true);
   };
+
+  // Handle search input changes
   const handleChange = (val: string) => {
     setSearchTerm(val);
     if (val) setDropdownOpen(true);
@@ -31,27 +33,26 @@ export function UserSearchDropdown() {
       dropdownRef as React.RefObject<HTMLElement>,
     ],
     () => setDropdownOpen(false),
-    dropdownOpen
+    dropdownOpen,
   );
 
-  // Use menu position hook to control dropdown position
+  // Calculate dropdown position
   const menuStyle = useMenuPosition(
     dropdownOpen,
     inputRef as React.RefObject<HTMLElement>,
     dropdownRef as React.RefObject<HTMLElement>,
     42,
     "right",
-    true
+    true,
   );
 
   return (
-    <div className="relative ml-4 w-full max-w-xs">
+    <div className="relative w-full max-w-xs">
       <SearchInput
         ref={inputRef}
         value={searchTerm}
         onChange={handleChange}
-        className="max-w-xs"
-        placeholder="Search users"
+        placeholder="Search"
         onFocus={handleFocus}
       />
       {dropdownOpen && (

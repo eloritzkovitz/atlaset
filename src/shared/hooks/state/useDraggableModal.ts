@@ -6,6 +6,7 @@ import {
   useState,
   useRef,
 } from "react";
+import { useEventListener } from "../dom/useEventListener";
 
 /** Represents the position of a modal. */
 type ModalPosition = { x: number; y: number };
@@ -89,45 +90,42 @@ export function useDraggableModal(draggable: boolean, isOpen: boolean) {
   }, [isOpen]);
 
   // Handle pointer move and pointer up events for dragging
-  useEffect(() => {
+  let animationFrameId: number | null = null;
+  const latestPos = { x: 0, y: 0 };
+  const updatePosition = () => {
+    if (dragState.current) {
+      const x = latestPos.x - dragState.current.x;
+      const y = latestPos.y - dragState.current.y;
+      setModalOffset({ x, y });
+    }
+    animationFrameId = null;
+  };
+  const handlePointerMove = (e: Event) => {
     if (!draggable) return;
-    let animationFrameId: number | null = null;
-    const latestPos = { x: 0, y: 0 };
-    const updatePosition = () => {
-      if (dragState.current) {
-        const x = latestPos.x - dragState.current.x;
-        const y = latestPos.y - dragState.current.y;
-        setModalOffset({ x, y });
+    const pointerEvent = e as PointerEvent;
+    latestPos.x = pointerEvent.clientX;
+    latestPos.y = pointerEvent.clientY;
+    if (dragState.current) {
+      if (animationFrameId == null) {
+        animationFrameId = window.requestAnimationFrame(updatePosition);
       }
+    }
+  };
+  const handlePointerUp = () => {
+    if (!draggable) return;
+    if (dragState.current) {
+      dragState.current = null;
+      setDragging(false);
+    }
+    document.body.style.userSelect = "";
+    if (animationFrameId != null) {
+      window.cancelAnimationFrame(animationFrameId);
       animationFrameId = null;
-    };
-    const handlePointerMove = (e: PointerEvent) => {
-      latestPos.x = e.clientX;
-      latestPos.y = e.clientY;
-      if (dragState.current) {
-        if (animationFrameId == null) {
-          animationFrameId = window.requestAnimationFrame(updatePosition);
-        }
-      }
-    };
-    const handlePointerUp = () => {
-      if (dragState.current) {
-        dragState.current = null;
-        setDragging(false);
-      }
-      document.body.style.userSelect = "";
-    };
-    window.addEventListener("pointermove", handlePointerMove);
-    window.addEventListener("pointerup", handlePointerUp);
-    return () => {
-      window.removeEventListener("pointermove", handlePointerMove);
-      window.removeEventListener("pointerup", handlePointerUp);
-      if (animationFrameId != null) {
-        window.cancelAnimationFrame(animationFrameId);
-      }
-      document.body.style.userSelect = "";
-    };
-  }, [draggable, isOpen]);
+    }
+  };
+
+  useEventListener("pointermove", handlePointerMove, window);
+  useEventListener("pointerup", handlePointerUp, window);
 
   // Expose a ref setter for the modal element
   const setModalDomRef = useCallback((el: HTMLElement | null) => {
