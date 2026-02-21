@@ -37,7 +37,7 @@ export function UserActivitySection() {
           aria-label="Go back"
         >
           <FaChevronLeft className="text-lg mr-1" />
-          <h2 className="text-2xl font-bold self-start">Activity Log</h2>
+          <h2 className="text-xl font-bold self-start">Activity Log</h2>
         </button>
       </div>
       {loading && activity.length === 0 ? (
