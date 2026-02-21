@@ -28,7 +28,7 @@ export function getStatsConfig({
       label: "Countries Explored",
       value: countriesLoading ? "..." : `${visitedCountries}/${totalCountries}`,
       icon: <FaBookAtlas className="text-5xl text-info" />,
-      link: "/dashboard/countries/exploration",
+      link: "/dashboard/exploration",
     },
     {
       label: "Achievements",

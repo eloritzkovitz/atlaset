@@ -4,6 +4,8 @@ import {
   type Country,
 } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
+import type { RegionStat, SubregionStat } from "../types";
+import { countVisited } from "../../statistics/utils/visitStats";
 
 /**
  * Calculates exploration statistics for the countries panel.
@@ -17,19 +19,19 @@ export function useExplorationStats(countries: Country[]) {
   const regions = getAllRegions(countries);
 
   // Compute stats for each region and its subregions
-  const regionStats = regions.map((region) => {
+  const regionStats: RegionStat[] = regions.map((region) => {
     const regionCountries = countries.filter((c) => c.region === region);
-    const regionVisited = regionCountries.filter((c) =>
-      isCountryVisited(c.isoCode),
-    ).length;
-    const subregions = getSubregionsForRegion(countries, region).map((sub) => {
+    const regionVisited = countVisited(regionCountries, isCountryVisited);
+    const subregions: SubregionStat[] = getSubregionsForRegion(
+      countries,
+      region,
+    ).map((sub) => {
       const subCountries = regionCountries.filter((c) => c.subregion === sub);
-      const subVisited = subCountries.filter((c) =>
-        isCountryVisited(c.isoCode),
-      ).length;
+      const subVisited = countVisited(subCountries, isCountryVisited);
       return {
-        name: sub,
-        visited: subVisited,
+        subregion: sub,
+        subregionVisited: subVisited,
+        subregionCountries: subCountries,
         total: subCountries.length,
       };
     });

@@ -16,6 +16,7 @@ interface RegionCardProps {
   onSubregionClick?: (subregion: string) => void;
 }
 
+/** Renders a region card. */
 export function RegionCard({
   region,
   visited,
@@ -36,7 +37,7 @@ export function RegionCard({
             label={region}
             stats={`${animatedVisited}/${total} (${percent(
               animatedVisited,
-              total
+              total,
             )})`}
             onClick={onRegionClick}
             className="mb-2 text-2xl"
@@ -44,11 +45,11 @@ export function RegionCard({
             statsClassName="text-xl"
           />
           <div className="ml-2">
-            {subregions.map((sub) => (
+            {subregions.map((subregion) => (
               <SubregionStatsRow
-                key={sub.name}
-                sub={sub}
-                onClick={() => onSubregionClick?.(sub.name)}
+                key={subregion.subregion}
+                subregion={subregion}
+                onClick={() => onSubregionClick?.(subregion.subregion)}
               />
             ))}
           </div>

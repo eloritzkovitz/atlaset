@@ -4,19 +4,23 @@ import { RegionButton } from "./RegionButton";
 import type { SubregionStat } from "../types";
 
 interface SubregionStatsRowProps {
-  sub: SubregionStat;
+  subregion: SubregionStat;
   onClick?: () => void;
 }
 
-export function SubregionStatsRow({ sub, onClick }: SubregionStatsRowProps) {
-  const animatedVisited = useAnimatedNumber(sub.visited, 640);
+/** Renders a subregion stats row. */
+export function SubregionStatsRow({
+  subregion,
+  onClick,
+}: SubregionStatsRowProps) {
+  const animatedVisited = useAnimatedNumber(subregion.subregionVisited, 640);
   return (
     <RegionButton
-      key={sub.name}
-      label={sub.name}
-      stats={`${animatedVisited}/${sub.total} (${percent(
+      key={subregion.subregion}
+      label={subregion.subregion}
+      stats={`${animatedVisited}/${subregion.subregionCountries.length} (${percent(
         animatedVisited,
-        sub.total
+        subregion.subregionCountries.length,
       )})`}
       onClick={onClick}
       className="text-base py-1 px-2"

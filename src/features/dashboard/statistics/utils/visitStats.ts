@@ -2,9 +2,23 @@
  * @file Utility functions for visit statistics.
  */
 
+import type { Country } from "@features/countries/types";
 import type { Trip } from "@features/trips";
 import { getAbroadTrips, getCompletedTrips } from "@features/trips/utils/trips";
 import { getVisitedCountriesUpToYear } from "@features/visits";
+
+/**
+ * Counts how many countries in the given list have been visited based on the provided function.
+ * @param countries - List of countries to check.
+ * @param isCountryVisited - Function that takes a country ISO code and returns whether it has been visited.
+ * @returns The count of visited countries in the list.
+ */
+export function countVisited(
+  countries: Country[],
+  isCountryVisited: (iso: string) => boolean,
+): number {
+  return countries.filter((c) => isCountryVisited(c.isoCode)).length;
+}
 
 /**
  * Gets the most visited countries from a list of trips.

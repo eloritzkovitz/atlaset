@@ -7,7 +7,7 @@ export const DASHBOARD_MENU = [
     icon: FaHouse,
   },
   {
-    key: "countries/exploration",
+    key: "exploration",
     label: "Exploration",
     icon: FaBookAtlas,
   },

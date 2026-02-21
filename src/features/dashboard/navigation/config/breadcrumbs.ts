@@ -6,6 +6,10 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Dashboard", key: "dashboard" },
     { label: "Overview", key: "overview" },
   ],
+  exploration: [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Exploration", key: "exploration" },
+  ],
   countries: [
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries" },
@@ -14,11 +18,6 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries/all" },
     { label: "All Countries" },
-  ],
-  "countries/exploration": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Countries", key: "countries/exploration" },
-    { label: "Exploration" },
   ],
   achievements: [
     { label: "Dashboard", key: "dashboard" },

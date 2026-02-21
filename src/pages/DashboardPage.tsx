@@ -167,12 +167,12 @@ export default function DashboardPage() {
             <Route
               path="countries"
               element={
-                <Navigate to="/dashboard/countries/exploration" replace />
+                <Navigate to="/dashboard/exploration" replace />
               }
             />
             {/* Exploration page */}
             <Route
-              path="countries/exploration"
+              path="exploration"
               element={renderCountryStats({
                 selectedRegion: undefined,
                 selectedSubregion: undefined,

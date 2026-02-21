@@ -25,8 +25,8 @@ export function useDashboardRouteState() {
 
   // Normalized for menu selection only
   let menuSelectedPanel = selectedPanel;
-  if (isCountriesPanel && selectedPanel !== "countries/exploration") {
-    menuSelectedPanel = "countries/exploration";
+  if (isCountriesPanel && selectedPanel !== "exploration") {
+    menuSelectedPanel = "exploration";
   }
 
   const regionParam =

@@ -9,6 +9,7 @@ interface WorldExplorationCardProps {
   onShowAllCountries?: () => void;
 }
 
+/** Renders the world exploration card. */
 export function WorldExplorationCard({
   visited,
   total,
@@ -16,10 +17,10 @@ export function WorldExplorationCard({
   onShowAllCountries,
 }: WorldExplorationCardProps) {
   const animatedVisited = useAnimatedNumber(visited, 640);
-  
+
   return (
     <Card
-      className="flex flex-col items-center bg-surface shadow-lg p-6 cursor-pointer md:col-span-2"
+      className="flex flex-col items-center p-6 cursor-pointer md:col-span-2 hover:bg-primary/20 hover:scale-101 transition-transform duration-200"
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
