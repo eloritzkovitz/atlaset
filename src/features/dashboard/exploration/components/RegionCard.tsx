@@ -4,7 +4,7 @@ import { percent } from "@utils/number";
 import { RegionButton } from "./RegionButton";
 import { SubregionStatsRow } from "./SubregionStatsRow";
 import { regionIcons, defaultRegionIcon } from "../constants/regionIcons";
-import type { SubregionStat } from "../../types";
+import type { SubregionStat } from "../types";
 
 interface RegionCardProps {
   region: string;

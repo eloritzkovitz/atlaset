@@ -1,7 +1,7 @@
 import { useAnimatedNumber } from "@hooks";
 import { percent } from "@utils/number";
 import { RegionButton } from "./RegionButton";
-import type { SubregionStat } from "../../types";
+import type { SubregionStat } from "../types";
 
 interface SubregionStatsRowProps {
   sub: SubregionStat;

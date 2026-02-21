@@ -64,10 +64,8 @@ export function CountryStats({
   );
 
   // Compute exploration stats
-  const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
-    filteredCountries,
-    visited,
-  );
+  const { totalCountries, visitedCountries, regionStats } =
+    useExplorationStats(filteredCountries);
 
   // Find selected country details
   const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);

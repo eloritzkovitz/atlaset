@@ -2,7 +2,8 @@ import { useTrips } from "@contexts/TripsContext";
 import { useCountryData, type Country } from "@features/countries";
 import { getCompletedTrips, getAbroadTrips } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user";
-import { getMostVisitedCountries } from "../utils/tripStats";
+import { getFirstAndLastTrip, getRecentTrips } from "../utils/tripStats";
+import { getMostVisitedCountries } from "../utils/visitStats";
 
 /**
  * Computes trip history statistics.
@@ -20,45 +21,23 @@ export function useTripHistoryStats() {
   // Most visited country (abroad only, completed)
   const { codes: mostVisitedCountryCodes, maxCount } = getMostVisitedCountries(
     completedAbroadTrips,
-    homeCountry
+    homeCountry,
   );
 
   // Get country info for display
   const mostVisitedCountries = mostVisitedCountryCodes
     .map((code) =>
       countries.find(
-        (c: Country) => c.isoCode?.toLowerCase() === code.toLowerCase()
-      )
+        (c: Country) => c.isoCode?.toLowerCase() === code.toLowerCase(),
+      ),
     )
     .filter(Boolean) as Country[];
 
   // First and last trip (by startDate)
-  const sortedTrips = trips
-    .filter((trip) => typeof trip.startDate === "string" && trip.startDate)
-    .sort(
-      (a, b) =>
-        new Date(a.startDate as string).getTime() -
-        new Date(b.startDate as string).getTime()
-    );
-
-  const firstTrip = sortedTrips[0] || null;
-  const lastTrip = sortedTrips[sortedTrips.length - 1] || null;
+  const { firstTrip, lastTrip } = getFirstAndLastTrip(trips);
 
   // Recent trips
-  const now = Date.now();
-  const recentTrips = [...sortedTrips]
-    .filter(
-      (trip) =>
-        typeof trip.endDate === "string" &&
-        trip.endDate &&
-        new Date(trip.endDate).getTime() < now
-    )
-    .sort(
-      (a, b) =>
-        new Date(b.startDate as string).getTime() -
-        new Date(a.startDate as string).getTime()
-    )
-    .slice(0, 3);
+  const recentTrips = getRecentTrips(trips, 3);
 
   return {
     mostVisitedCountries,

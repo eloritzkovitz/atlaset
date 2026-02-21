@@ -1,15 +1,9 @@
-export interface SubregionStat {
-  name: string;
-  visited: number;
-  total: number;
-}
-
 /** Represents the criteria for an achievement. */
 export interface Criteria {
   countries?: string[];
   regions?: string[];
   region?: string;
-  subregion?: string;  
+  subregion?: string;
   sovereign_only?: boolean;
   count?: number;
   min_regions?: number;
@@ -17,7 +11,7 @@ export interface Criteria {
   trip_countries_count?: number;
   trip_duration_days?: number;
   local_trips_count?: number;
-  abroad_trips_count?: number;  
+  abroad_trips_count?: number;
   abroad_countries_count?: number;
   repeat_visits_count?: number;
   repeat_min_visits?: number;

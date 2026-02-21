@@ -3,33 +3,29 @@ import {
   getSubregionsForRegion,
   type Country,
 } from "@features/countries";
+import { useVisitedCountries } from "@features/visits";
 
-export function useExplorationStats(
-  countries: Country[],
-  visited: {
-    isCountryVisited: (iso: string) => boolean;
-    visitedCountryCodes: string[];
-  }
-) {
-  // Calculate overall stats
+/**
+ * Calculates exploration statistics for the countries panel.
+ * @param countries - List of all countries
+ * @returns Exploration statistics including total countries, visited countries, and stats by region and subregion.
+ */
+export function useExplorationStats(countries: Country[]) {
+  const { isCountryVisited, visitedCountryCodes } = useVisitedCountries();
   const totalCountries = countries.length;
-  const visitedCountries = countries.filter((c) =>
-    visited.isCountryVisited(c.isoCode)
-  ).length;
+  const visitedCountries = visitedCountryCodes.length;
   const regions = getAllRegions(countries);
 
-  // Compute stats per region and subregion
+  // Compute stats for each region and its subregions
   const regionStats = regions.map((region) => {
     const regionCountries = countries.filter((c) => c.region === region);
     const regionVisited = regionCountries.filter((c) =>
-      visited.isCountryVisited(c.isoCode)
+      isCountryVisited(c.isoCode),
     ).length;
     const subregions = getSubregionsForRegion(countries, region).map((sub) => {
-      const subCountries = countries.filter(
-        (c) => c.region === region && c.subregion === sub
-      );
+      const subCountries = regionCountries.filter((c) => c.subregion === sub);
       const subVisited = subCountries.filter((c) =>
-        visited.isCountryVisited(c.isoCode)
+        isCountryVisited(c.isoCode),
       ).length;
       return {
         name: sub,

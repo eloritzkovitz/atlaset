@@ -5,9 +5,10 @@ import {
   getPlannedTrips,
   getLocalTrips,
   getAbroadTrips,
+  getTripDays,
 } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user";
-import { getLongestTrip, getShortestTrip } from "../utils/tripStats";
+import { findLongestTrip, findShortestTrip } from "../utils/tripStats";
 
 export function useTripsStats() {
   const { homeCountry } = useHomeCountry();
@@ -37,36 +38,11 @@ export function useTripsStats() {
   });
 
   // Get longest and shortest trip objects based on valid abroad trips
-  const longestTrip = validAbroadTrips.length
-    ? validAbroadTrips.reduce((a, b) =>
-        getLongestTrip([a]) >= getLongestTrip([b]) ? a : b,
-      )
-    : null;
-  const shortestTrip = validAbroadTrips.length
-    ? validAbroadTrips.reduce((a, b) =>
-        getShortestTrip([a]) <= getShortestTrip([b]) ? a : b,
-      )
-    : null;
+  const longestTrip = findLongestTrip(validAbroadTrips);
+  const shortestTrip = findShortestTrip(validAbroadTrips);
 
   // Calculate trip durations (in days)
-  const tripDurations = trips
-    .map((trip) => {
-      if (trip.startDate && trip.endDate) {
-        const start = new Date(trip.startDate);
-        const end = new Date(trip.endDate);
-        if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
-          // +1 to include both start and end dates
-          return Math.max(
-            1,
-            Math.round(
-              (end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24),
-            ) + 1,
-          );
-        }
-      }
-      return null;
-    })
-    .filter((d): d is number => d !== null);
+  const tripDurations = trips.map(getTripDays).filter((d) => d > 0);
 
   const totalDaysTraveling = tripDurations.reduce((sum, d) => sum + d, 0);
   const averageTripDuration = tripDurations.length

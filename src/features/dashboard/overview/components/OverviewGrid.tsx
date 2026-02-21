@@ -9,7 +9,7 @@ import { UserOverviewCard } from "./UserOverviewCard";
 import { getStatsConfig } from "../config/stats";
 import { useAchievementsData } from "../../achievements/hooks/useAchievementsData";
 import { isCompleted } from "../../achievements/utils/achievements";
-import { useExplorationStats } from "../../countries/hooks/useExplorationStats";
+import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 
 export function OverviewGrid() {
   const { user } = useAuth();
@@ -24,7 +24,6 @@ export function OverviewGrid() {
   const visited = useVisitedCountries();
   const { totalCountries, visitedCountries } = useExplorationStats(
     countries,
-    visited,
   );
 
   // Get achievements data and calculate completed achievements

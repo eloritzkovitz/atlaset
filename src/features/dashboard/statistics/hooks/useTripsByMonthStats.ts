@@ -1,24 +1,9 @@
 import { useTrips } from "@contexts/TripsContext";
 import { isAbroadTrip } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user";
+import { MONTH_NAMES } from "../constants/month";
 
-// Month names array
-export const MONTHS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-] as const;
-
-export type MonthName = (typeof MONTHS)[number];
+export type MonthName = (typeof MONTH_NAMES)[number];
 
 /**
  * Provides statistics of trips by month.
@@ -28,17 +13,19 @@ export function useTripsByMonthStats() {
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
 
-  // Prepare month stats
+  // Initialize monthStats for all months
   const monthStats: Record<string, { local: number; abroad: number }> = {};
+  MONTH_NAMES.forEach((name) => {
+    monthStats[name] = { local: 0, abroad: 0 };
+  });
+
+  // Collect trips by month
   trips.forEach((trip) => {
     if (trip.startDate) {
       const date = new Date(trip.startDate);
       if (!isNaN(date.getTime())) {
         const month = date.getMonth();
-        const monthName = MONTHS[month];
-        if (!monthStats[monthName]) {
-          monthStats[monthName] = { local: 0, abroad: 0 };
-        }
+        const monthName = MONTH_NAMES[month];
         if (isAbroadTrip(trip, homeCountry)) {
           monthStats[monthName].abroad += 1;
         } else {
@@ -49,7 +36,7 @@ export function useTripsByMonthStats() {
   });
 
   // Prepare data for all months
-  const allMonths = MONTHS;
+  const allMonths = MONTH_NAMES;
   const tripsByMonthData = allMonths.map((name) => {
     const stats = monthStats[name] || { local: 0, abroad: 0 };
     return {
@@ -69,7 +56,7 @@ export function useTripsByMonthStats() {
   // Find least popular month
   const leastPopularMonth = tripsByMonthData.reduce(
     (min, curr) => (curr.total < (min?.total ?? Infinity) ? curr : min),
-    null as (typeof tripsByMonthData)[0] | null
+    null as (typeof tripsByMonthData)[0] | null,
   );
 
   // Total trips for percentage

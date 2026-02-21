@@ -9,7 +9,7 @@ import { AchievementIcon } from "./AchievementIcon";
 import { AchievementTierChip } from "./AchievementTierChip";
 import { getDisplayFlagCountries } from "../utils/achievementsDisplay";
 import { getTier, getCurrentTier } from "../utils/achievementsTiers";
-import type { Achievement, AchievementStatus } from "../../types";
+import type { Achievement, AchievementStatus } from "../types";
 
 interface AchievementCardProps {
   achievement: Achievement;
@@ -57,7 +57,7 @@ export function AchievementCard({
     progress: "bg-surface-alt",
     completed: "bg-success/20",
   };
-  const bgClass = statusBgClasses[tierStatus];
+  const bgClass = statusBgClasses[tierStatus as AchievementStatus];
   const textClass = tierStatus === "locked" ? "text-muted" : "";
 
   // Get progress label
@@ -96,7 +96,7 @@ export function AchievementCard({
               achievement.tiers
                 ? achievement.tiers.map((t, idx) => ({
                     tier: t.tier ?? idx + 1,
-                     count: t.criteria?.count ?? t.count,
+                    count: t.criteria?.count ?? t.count,
                     description: t.description,
                   }))
                 : undefined

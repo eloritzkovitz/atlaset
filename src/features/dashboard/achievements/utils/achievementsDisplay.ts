@@ -1,6 +1,6 @@
 import { createSovereigntyFilter, type Country } from "@features/countries";
 import { getAchievementCountries } from "./achievements";
-import type { Achievement, Criteria } from "../../types";
+import type { Achievement, Criteria } from "../types";
 
 /**
  * Formats the progress chip label for an achievement
