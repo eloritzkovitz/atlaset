@@ -7,8 +7,12 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useBodyScrollLock, useClickOutside, usePanelHide } from "@hooks";
-import { useDraggableModal } from "@hooks/state/useDraggableModal";
+import {
+  useBodyScrollLock,
+  useClickOutside,
+  useDraggableModal,
+  usePanelHide,
+} from "@hooks";
 import "./Modal.css";
 
 interface ModalProps {
