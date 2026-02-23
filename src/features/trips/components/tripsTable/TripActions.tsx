@@ -218,10 +218,10 @@ export function TripActions({
           <MenuButton
             {...rateButtonHoverHandlers}
             icon={<FaStar className="mr-2 text-yellow-400" />}
-            className="justify-between w-full"
+            className="w-full flex items-center justify-between"
           >
             Rate
-            <FaChevronRight className="ml-7" />
+            <FaChevronRight className="ml-auto" />
           </MenuButton>
           {rateMenuOpen && (
             <RateMenu

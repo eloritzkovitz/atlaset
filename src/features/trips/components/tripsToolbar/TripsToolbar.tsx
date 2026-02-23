@@ -71,8 +71,8 @@ export function TripsToolbar({
           {/* Calendar Button */}
           <ActionButton
             onClick={() => setCalendarOpen(true)}
-            ariaLabel="Show calendar"
-            title="Show calendar"
+            ariaLabel="Show Calendar"
+            title="Show Calendar"
             icon={<FaCalendar />}
             variant="toggle"
             className="ml-2"
