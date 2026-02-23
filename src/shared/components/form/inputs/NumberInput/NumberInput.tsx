@@ -13,6 +13,7 @@ interface NumberInputProps {
   disabled?: boolean;
 }
 
+/** Renders a number input with increment/decrement buttons. */
 export function NumberInput({
   label,
   value,
@@ -23,7 +24,7 @@ export function NumberInput({
   disabled = false,
 }: NumberInputProps) {
   return (
-    <div className={`my-4 ${className}`}>
+    <div className={className}>
       {label && <label className="font-bold block mb-2">{label}</label>}
       <div className="relative w-full">
         <InputBox
