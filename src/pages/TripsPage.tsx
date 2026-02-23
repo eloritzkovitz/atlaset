@@ -3,6 +3,7 @@ import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import {
+  TripsCalendarModal,
   TripModal,
   TripsTable,
   TripsToolbar,
@@ -33,6 +34,10 @@ export default function TripsPage() {
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
+
+  // Calendar state
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const [calendarDate, setCalendarDate] = useState<Date | undefined>();
 
   // Set page title
   usePageTitle("Trips | Atlaset");
@@ -87,6 +92,12 @@ export default function TripsPage() {
   const nonSharedSelectedTrips = selectedTrips.filter(
     (trip) => !sharedTripIds.has(trip.id),
   );
+
+  // Handler for viewing trip in calendar
+  function handleViewInCalendar(trip: Trip) {
+    if (trip.startDate) setCalendarDate(new Date(trip.startDate));
+    setCalendarOpen(true);
+  }
 
   // Selection handlers
   function handleSelectTrip(id: string) {
@@ -161,6 +172,7 @@ export default function TripsPage() {
           selectedTripIds={selectedTripIds}
           showRowNumbers={showRowNumbers}
           setShowRowNumbers={setShowRowNumbers}
+          setCalendarOpen={setCalendarOpen}
           onAddTrip={handleAdd}
           onBulkDuplicate={handleBulkDuplicate}
           onBulkDelete={handleBulkDelete}
@@ -177,6 +189,12 @@ export default function TripsPage() {
           onClose={() => setModalOpen(false)}
           isEditing={!!trip && !!trip.id}
         />
+        <TripsCalendarModal
+          isOpen={calendarOpen}
+          onClose={() => setCalendarOpen(false)}
+          trips={trips}
+          date={calendarDate}
+        />
         {loading ? (
           <LoadingSpinner fullScreen message="Loading trips..." />
         ) : trips.length === 0 ? (
@@ -187,6 +205,7 @@ export default function TripsPage() {
           <>
             <TripsTable
               trips={paginatedTrips}
+              onViewInCalendar={handleViewInCalendar}
               onEdit={handleEdit}
               onRatingChange={updateTripRating}
               onDelete={handleDelete}

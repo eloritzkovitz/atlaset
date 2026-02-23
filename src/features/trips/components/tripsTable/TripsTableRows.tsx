@@ -20,6 +20,7 @@ interface TripsTableRowsProps {
   selected: boolean;
   onSelect: (id: string) => void;
   onRatingChange: (tripId: string, rating: number | undefined) => void;
+  onViewInCalendar?: (t: Trip) => void;
   onEdit: (trip: Trip) => void;
   onDelete: (trip: Trip) => void;
   showRowNumbers: boolean;
@@ -32,6 +33,7 @@ export function TripsTableRows({
   selected,
   onSelect,
   onRatingChange,
+  onViewInCalendar,
   onEdit,
   onDelete,
   showRowNumbers,
@@ -163,7 +165,12 @@ export function TripsTableRows({
 
             {/* Actions */}
             <TableCell rowSpan={rowSpan}>
-              <TripActions trip={trip} onEdit={onEdit} onDelete={onDelete} />
+              <TripActions
+                trip={trip}
+                onViewInCalendar={onViewInCalendar}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
             </TableCell>
           </>
         )}

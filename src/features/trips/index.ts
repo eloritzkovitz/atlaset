@@ -1,4 +1,5 @@
 // Components
+export { TripsCalendarModal } from "./components/tripsCalendar/TripsCalendarModal";
 export { TripModal } from "./components/tripModal/TripModal";
 export { TripsTable } from "./components/tripsTable/TripsTable";
 export { TripsToolbar } from "./components/tripsToolbar/TripsToolbar";

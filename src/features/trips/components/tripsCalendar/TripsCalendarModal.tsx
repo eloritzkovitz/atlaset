@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FaCalendar, FaXmark } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
 import { useKeyHandler } from "@hooks";
@@ -10,16 +10,27 @@ interface TripsCalendarModalProps {
   isOpen: boolean;
   onClose: () => void;
   trips: Trip[];
+  date?: Date;
 }
 
 export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
   isOpen,
   onClose,
   trips,
+  date: controlledDate,
 }) => {
   // State for calendar view and date
   const [view, setView] = useState<CalendarView>("month");
-  const [date, setDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(controlledDate ?? new Date());
+
+  // Sync internal date with controlled prop
+  useEffect(() => {
+    if (controlledDate && controlledDate.getTime() !== date.getTime()) {
+      setDate(controlledDate);
+    }
+    // Only run when controlledDate changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [controlledDate]);
 
   // Handler for arrow keys
   const handleArrow = useCallback((event: KeyboardEvent) => {
@@ -80,7 +91,7 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
         title={
           <>
             <FaCalendar />
-            Trips Calendar
+            Calendar
           </>
         }
         showSeparator={true}

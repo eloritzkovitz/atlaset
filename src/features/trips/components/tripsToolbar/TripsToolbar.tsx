@@ -9,7 +9,6 @@ import {
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
 import { ToolbarActions } from "./ToolbarActions";
-import { TripsCalendarModal } from "../tripsCalendar/TripsCalendarModal";
 import type { Trip, TripFilterState } from "../../types";
 
 interface ToolbarProps {
@@ -22,6 +21,7 @@ interface ToolbarProps {
   selectedTripIds: string[];
   showRowNumbers: boolean;
   setShowRowNumbers: React.Dispatch<React.SetStateAction<boolean>>;
+  setCalendarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onAddTrip?: () => void;
   onBulkDuplicate: () => void;
   onBulkDelete: () => void;
@@ -37,11 +37,11 @@ export function TripsToolbar({
   selectedTripIds,
   showRowNumbers,
   setShowRowNumbers,
+  setCalendarOpen,
   onAddTrip,
   onBulkDuplicate,
   onBulkDelete,
 }: ToolbarProps) {
-  const [calendarOpen, setCalendarOpen] = React.useState(false);
   return (
     <div className="trips-toolbar-container z-90 w-full px-3 flex items-center justify-between min-h-16 h-[7vh] bg-surface-alt">
       <ActionsToolbar>
@@ -92,11 +92,6 @@ export function TripsToolbar({
           />
         </div>
       </ActionsToolbar>
-      <TripsCalendarModal
-        isOpen={calendarOpen}
-        onClose={() => setCalendarOpen(false)}
-        trips={trips}
-      />
     </div>
   );
 }

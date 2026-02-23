@@ -7,6 +7,7 @@ import {
   FaRegHeart,
   FaStar,
   FaChevronRight,
+  FaCalendar,
 } from "react-icons/fa6";
 import {
   ActionButton,
@@ -26,11 +27,17 @@ import type { Trip } from "../../types";
 
 interface TripActionsProps {
   trip: Trip;
+  onViewInCalendar?: (t: Trip) => void;
   onEdit: (t: Trip) => void;
   onDelete: (t: Trip) => void;
 }
 
-export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
+export function TripActions({
+  trip,
+  onViewInCalendar,
+  onEdit,
+  onDelete,
+}: TripActionsProps) {
   const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
@@ -53,7 +60,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
     () => {
       setOpen(false);
     },
-    open || rateMenuOpen
+    open || rateMenuOpen,
   );
 
   // Close menu on ESC key
@@ -62,7 +69,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
       setOpen(false);
     },
     ["Escape"],
-    open || rateMenuOpen
+    open || rateMenuOpen,
   );
 
   // Position the menu when open
@@ -73,7 +80,7 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
     rateMenuRef,
     0,
     "right",
-    false
+    false,
   );
 
   // Calculate left offset for rate menu (side-by-side)
@@ -160,6 +167,16 @@ export function TripActions({ trip, onEdit, onDelete }: TripActionsProps) {
         containerRef={menuRef}
         disableScroll={true}
       >
+        <MenuButton
+          onClick={() => {
+            setTimeout(() => setOpen(false), 300);
+            onViewInCalendar?.(trip);
+          }}
+          icon={<FaCalendar className="mr-2" />}
+          className="w-full"
+        >
+          View in Calendar
+        </MenuButton>
         <MenuButton
           onClick={() => {
             setTimeout(() => setOpen(false), 300);

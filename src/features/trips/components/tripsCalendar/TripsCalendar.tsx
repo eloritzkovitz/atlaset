@@ -43,13 +43,15 @@ export function TripsCalendar({
   onDateChange,
 }: TripsCalendarProps) {
   // Map trips to calendar events
-  const events: TripEvent[] = trips.map((trip) => ({
-    title: trip.name,
-    start: trip.startDate ? new Date(trip.startDate) : new Date(),
-    end: trip.endDate ? new Date(trip.endDate) : new Date(),
-    allDay: true,
-    resource: trip,
-  }));
+  const events: TripEvent[] = trips
+    .filter((trip) => trip.startDate)
+    .map((trip) => ({
+      title: trip.name,
+      start: new Date(trip.startDate!),
+      end: trip.endDate ? new Date(trip.endDate) : new Date(trip.startDate!),
+      allDay: true,
+      resource: trip,
+    }));
 
   // Controlled state for view and date
   const [internalView, setInternalView] = useState<CalendarView>("month");
