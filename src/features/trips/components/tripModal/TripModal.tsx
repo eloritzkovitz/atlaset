@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
-import { FaSuitcaseRolling, FaGlobe, FaFloppyDisk } from "react-icons/fa6";
+import { FaFloppyDisk, FaSuitcaseRolling, FaXmark } from "react-icons/fa6";
 import {
+  ActionButton,
   Checkbox,
   DateSelect,
   DropdownSelectInput,
@@ -9,8 +10,9 @@ import {
   Modal,
   ModalActions,
   NumberInput,
-  SelectInput,
+  PanelHeader,
 } from "@components";
+import { CountriesSection } from "./CountriesSection";
 import { useUserFriends } from "@features/user";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import {
@@ -19,9 +21,8 @@ import {
   useCountryData,
   type Country,
 } from "@features/countries";
-import { SelectedCountriesList } from "./SelectedCountriesList";
 import { useTripFilters } from "../../hooks/useTripFilters";
-import type { Trip, TripCategory, TripStatus } from "../../types";
+import type { Trip, TripCategory } from "../../types";
 import "./TripModal.css";
 
 interface TripModalProps {
@@ -45,7 +46,7 @@ export function TripModal({
   const [countryModalOpen, setCountryModalOpen] = useState(false);
 
   // Dropdown options
-  const { categoryOptions, statusOptions, tagOptions } = useTripFilters();
+  const { categoryOptions, tagOptions } = useTripFilters();
 
   // Tentative state (no dates)
   const [isTentative, setIsTentative] = useState(false);
@@ -61,7 +62,7 @@ export function TripModal({
         label: profile.displayName || profile.username || profile.uid,
         profile,
       })),
-    [friendProfiles]
+    [friendProfiles],
   );
 
   // If no trip is provided, don't render anything
@@ -87,6 +88,23 @@ export function TripModal({
         disableClose={countryModalOpen}
         draggable
       >
+        <PanelHeader
+          title={
+            <>
+              <FaSuitcaseRolling />
+              {isEditing ? "Edit Trip" : "Add Trip"}
+            </>
+          }
+          showSeparator={true}
+        >
+          <ActionButton
+            onClick={onClose}
+            ariaLabel="Close"
+            title="Close"
+            icon={<FaXmark className="text-2xl" />}
+            rounded
+          />
+        </PanelHeader>
         <form
           className="flex flex-col w-full h-full"
           onSubmit={(e) => {
@@ -98,10 +116,6 @@ export function TripModal({
           <div className="flex flex-row w-full flex-1">
             {/* Left: Form fields */}
             <div className="p-4 min-w-0 flex flex-col gap-2 basis-[60%]">
-              <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                <FaSuitcaseRolling />
-                {isEditing ? "Edit Trip" : "Add Trip"}
-              </h2>
               <FormField label="Name">
                 <InputBox
                   value={trip.name}
@@ -153,18 +167,6 @@ export function TripModal({
                   }}
                 />
               </FormField>
-              <FormField label="Countries">
-                <button
-                  type="button"
-                  className="flex items-center gap-2 px-4 py-2 rounded hover:bg-input-hover font-medium"
-                  onClick={() => setCountryModalOpen(true)}
-                >
-                  <FaGlobe />
-                  {selectedCountries.length > 0
-                    ? `Edit Countries (${selectedCountries.length})`
-                    : "Select Countries"}
-                </button>
-              </FormField>
               <FormField label="Full Days" disabled={isTentative}>
                 <NumberInput
                   label=""
@@ -185,8 +187,8 @@ export function TripModal({
                       participants: Array.isArray(v)
                         ? (v as string[])
                         : v
-                        ? [v as string]
-                        : [],
+                          ? [v as string]
+                          : [],
                     })
                   }
                   options={participantOptions}
@@ -203,26 +205,13 @@ export function TripModal({
                       categories: Array.isArray(v)
                         ? (v as TripCategory[])
                         : v
-                        ? [v as TripCategory]
-                        : [],
+                          ? [v as TripCategory]
+                          : [],
                     })
                   }
                   options={categoryOptions}
                   placeholder="Select categories"
                   isMulti
-                />
-              </FormField>
-              <FormField label="Status">
-                <SelectInput
-                  value={trip.status || ""}
-                  onChange={(v) =>
-                    onChange({
-                      ...trip,
-                      status: v as TripStatus,
-                    })
-                  }
-                  options={statusOptions}
-                  label={""}
                 />
               </FormField>
               <FormField label="Tags">
@@ -242,21 +231,20 @@ export function TripModal({
             </div>
             {/* Right: Selected Countries & Notes */}
             <div className="flex flex-col min-w-0 p-4 gap-2 basis-[40%]">
-              <div className="flex-1 min-h-0 overflow-auto">
-                <SelectedCountriesList
-                  selectedCountries={selectedCountries
-                    .filter((c): c is Country => c !== null)
-                    .map(({ isoCode, name }) => ({ isoCode, name }))}
-                  onRemove={(isoCode) =>
-                    onChange({
-                      ...trip,
-                      countryCodes: trip.countryCodes.filter(
-                        (code) => code !== isoCode
-                      ),
-                    })
-                  }
-                />
-              </div>
+              <CountriesSection
+                selectedCountries={selectedCountries
+                  .filter((c): c is Country => c !== null)
+                  .map(({ isoCode, name }) => ({ isoCode, name }))}
+                onEdit={() => setCountryModalOpen(true)}
+                onRemove={(isoCode) =>
+                  onChange({
+                    ...trip,
+                    countryCodes: trip.countryCodes.filter(
+                      (code) => code !== isoCode,
+                    ),
+                  })
+                }
+              />
               <div className="flex-1 min-h-0 flex flex-col">
                 <div className="font-semibold mb-2">Notes</div>
                 <InputBox
