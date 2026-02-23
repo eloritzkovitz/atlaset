@@ -40,8 +40,8 @@ export const CalendarLegend: React.FC = () => (
     style={{ minWidth: 160 }}
     className="CalendarLegend flex flex-col gap-3 p-3 text-sm"
   >
-    <LegendRow color={TRIP_TYPE_COLORS[0]} label="Local trip" />
-    <LegendRow color={TRIP_TYPE_COLORS[1]} label="Non-local trip" />
+    <LegendRow color={TRIP_TYPE_COLORS[0]} label={"Local trip"} />
+    <LegendRow color={TRIP_TYPE_COLORS[1]} label={"Abroad trip"} />
     <LegendRow color="#fff" label="Upcoming trip" dashed />
   </div>
 );
