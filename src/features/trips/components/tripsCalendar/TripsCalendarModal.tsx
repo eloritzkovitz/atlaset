@@ -1,10 +1,11 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { FaCalendar, FaXmark } from "react-icons/fa6";
-import { ActionButton, Modal, PanelHeader } from "@components";
+import { ActionButton, LoadingSpinner, Modal, PanelHeader } from "@components";
 import { useKeyHandler } from "@hooks";
 import { CalendarDateControls } from "./CalendarDateControls";
-import { TripsCalendar } from "./TripsCalendar";
 import { type CalendarView, type Trip } from "../../types";
+
+const TripsCalendar = React.lazy(() => import("./TripsCalendar"));
 
 interface TripsCalendarModalProps {
   isOpen: boolean;
@@ -114,13 +115,21 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
           view={view}
           onViewChange={setView}
         />
-        <TripsCalendar
-          trips={trips}
-          view={view}
-          date={date}
-          onViewChange={setView}
-          onDateChange={setDate}
-        />
+        <Suspense
+          fallback={
+            <div className="h-[600px] w-full flex items-center justify-center">
+              <LoadingSpinner />
+            </div>
+          }
+        >
+          <TripsCalendar
+            trips={trips}
+            view={view}
+            date={date}
+            onViewChange={setView}
+            onDateChange={setDate}
+          />
+        </Suspense>
       </div>
     </Modal>
   );

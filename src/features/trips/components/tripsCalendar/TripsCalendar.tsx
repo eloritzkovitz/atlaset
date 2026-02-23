@@ -33,7 +33,7 @@ interface TripsCalendarProps {
   onDateChange?: (date: Date) => void;
 }
 
-export function TripsCalendar({
+export default function TripsCalendar({
   trips,
   onSelectTrip,
   onSelectSlot,
