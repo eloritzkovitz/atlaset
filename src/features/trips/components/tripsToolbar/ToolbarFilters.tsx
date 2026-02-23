@@ -1,12 +1,12 @@
 import React from "react";
 import {
-  FaRotateLeft,
-  FaLocationDot,
-  FaPlane,
-  FaCheck,
-  FaCalendar,
+  FaCalendarDay,
+  FaCheck,  
   FaHashtag,
   FaHeart,
+  FaLocationDot,
+  FaPlane,
+  FaRotateLeft,
 } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
 import type { ToolbarToggleOption } from "@types";
@@ -77,7 +77,7 @@ export function ToolbarFilters({
     },
     {
       value: "upcoming",
-      icon: <FaCalendar />,
+      icon: <FaCalendarDay />,
       label: "Upcoming",
       ariaLabel: "Show/Hide Upcoming Trips",
       title: "Toggle Upcoming Trips",

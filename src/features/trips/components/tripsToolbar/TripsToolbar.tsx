@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCalendarDays } from "react-icons/fa6";
+import { FaCalendar } from "react-icons/fa6";
 import {
   ActionsToolbar,
   SearchInput,
@@ -73,7 +73,7 @@ export function TripsToolbar({
             onClick={() => setCalendarOpen(true)}
             ariaLabel="Show calendar"
             title="Show calendar"
-            icon={<FaCalendarDays />}
+            icon={<FaCalendar />}
             variant="toggle"
             className="ml-2"
           />

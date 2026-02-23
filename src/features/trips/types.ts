@@ -35,7 +35,7 @@ export type Trip = {
   /** Additional notes about the trip */
   notes?: string;
   /** Tags associated with the trip */
-  tags?: TripTag[];  
+  tags?: TripTag[];
 };
 
 /** Represents a geographical location with region and cities. */
@@ -89,4 +89,16 @@ export type TripFilterState = TripFilters & {
   completed: boolean;
   upcoming: boolean;
   favorite: boolean;
+};
+
+/** Represents a calendar view. */
+export type CalendarView = "day" | "week" | "month";
+
+/** Represents a trip event in the calendar. */
+export type TripEvent = {
+  title: string;
+  start: Date;
+  end: Date;
+  allDay: boolean;
+  resource: Trip;
 };

@@ -6,7 +6,8 @@ import { parse } from "date-fns/parse";
 import { startOfWeek } from "date-fns/startOfWeek";
 import { getDay } from "date-fns/getDay";
 import { enUS } from "date-fns/locale/en-US";
-import { type Trip } from "../../types";
+import { CalendarToolbar } from "./CalendarToolbar";
+import { type CalendarView, type Trip, type TripEvent } from "../../types";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./TripsCalendar.css";
 
@@ -22,24 +23,24 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-interface TripEvent {
-  title: string;
-  start: Date;
-  end: Date;
-  allDay: boolean;
-  resource: Trip;
-}
-
 interface TripsCalendarProps {
   trips: Trip[];
   onSelectTrip?: (trip: Trip) => void;
   onSelectSlot?: (slotInfo: { start: Date; end: Date }) => void;
+  view?: CalendarView;
+  date?: Date;
+  onViewChange?: (view: CalendarView) => void;
+  onDateChange?: (date: Date) => void;
 }
 
 export function TripsCalendar({
   trips,
   onSelectTrip,
   onSelectSlot,
+  view,
+  date,
+  onViewChange,
+  onDateChange,
 }: TripsCalendarProps) {
   // Map trips to calendar events
   const events: TripEvent[] = trips.map((trip) => ({
@@ -51,8 +52,14 @@ export function TripsCalendar({
   }));
 
   // Controlled state for view and date
-  const [view, setView] = useState<"month" | "week" | "day">("month");
-  const [date, setDate] = useState<Date>(new Date());
+  const [internalView, setInternalView] = useState<CalendarView>("month");
+  const [internalDate, setInternalDate] = useState<Date>(new Date());
+
+  // Use controlled props if provided, otherwise fallback to internal state
+  const calendarView = view ?? internalView;
+  const calendarDate = date ?? internalDate;
+  const handleViewChange = onViewChange ?? setInternalView;
+  const handleDateChange = onDateChange ?? setInternalDate;
 
   return (
     <div style={{ height: 600 }}>
@@ -67,10 +74,11 @@ export function TripsCalendar({
         onSelectSlot={onSelectSlot}
         views={["month", "week", "day"]}
         popup
-        view={view}
-        onView={setView as (view: View) => void}
-        date={date}
-        onNavigate={setDate}
+        view={calendarView}
+        onView={handleViewChange as (view: View) => void}
+        date={calendarDate}
+        onNavigate={handleDateChange}
+        components={{ toolbar: CalendarToolbar }}
       />
     </div>
   );
