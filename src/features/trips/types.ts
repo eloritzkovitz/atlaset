@@ -102,4 +102,5 @@ export type TripEvent = {
   end: Date;
   allDay: boolean;
   resource: Trip;
+  color?: string;
 };

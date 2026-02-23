@@ -41,8 +41,7 @@
 }
 
 .rbc-event {
-  background: var(--color-primary) !important;
-  color: var(--color-text) !important;
+  font-weight: normal !important;
 }
 
 .rbc-selected {

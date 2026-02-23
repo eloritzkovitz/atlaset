@@ -6,8 +6,12 @@ import { parse } from "date-fns/parse";
 import { startOfWeek } from "date-fns/startOfWeek";
 import { getDay } from "date-fns/getDay";
 import { enUS } from "date-fns/locale/en-US";
+import { TRIP_TYPE_COLORS } from "@features/dashboard/statistics/constants/trips";
+import { useHomeCountry } from "@features/user";
+import { darkenHexColor } from "@utils/color";
 import { CalendarToolbar } from "./CalendarToolbar";
 import { type CalendarView, type Trip, type TripEvent } from "../../types";
+import { isLocalTrip } from "../../utils/trips";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./TripsCalendar.css";
 
@@ -42,6 +46,8 @@ export default function TripsCalendar({
   onViewChange,
   onDateChange,
 }: TripsCalendarProps) {
+  const { homeCountry } = useHomeCountry();
+
   // Map trips to calendar events
   const events: TripEvent[] = trips
     .filter((trip) => trip.startDate)
@@ -51,6 +57,9 @@ export default function TripsCalendar({
       end: trip.endDate ? new Date(trip.endDate) : new Date(trip.startDate!),
       allDay: true,
       resource: trip,
+      color: isLocalTrip(trip, homeCountry)
+        ? TRIP_TYPE_COLORS[0]
+        : TRIP_TYPE_COLORS[1],
     }));
 
   // Controlled state for view and date
@@ -81,6 +90,19 @@ export default function TripsCalendar({
         date={calendarDate}
         onNavigate={handleDateChange}
         components={{ toolbar: CalendarToolbar }}
+        eventPropGetter={(event) => {
+          const bg = event.color || "#3174ad";
+          return {
+            style: {
+              backgroundColor: bg,
+              color: darkenHexColor(bg, 0.35),
+              borderRadius: 6,
+              border: "none",
+              paddingLeft: 8,
+              paddingRight: 8,
+            },
+          };
+        }}
       />
     </div>
   );
