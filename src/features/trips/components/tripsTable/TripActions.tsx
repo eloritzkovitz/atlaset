@@ -20,10 +20,12 @@ import { useTrips } from "@contexts/TripsContext";
 import {
   useClickOutside,
   useFloatingHover,
+  useFloatingMenuPosition,
   useKeyHandler,
   useMenuPosition,
 } from "@hooks";
 import type { Trip } from "../../types";
+import { hasValidStartDate } from "../../utils/trips";
 
 interface TripActionsProps {
   trip: Trip;
@@ -83,51 +85,17 @@ export function TripActions({
     false,
   );
 
-  // Calculate left offset for rate menu (side-by-side)
+  // Calculate rate menu left position to prevent overflow
   const rateMenuLeft =
     (typeof rateMenuStyle.left === "number" ? rateMenuStyle.left : 0) +
     (menuRef.current?.offsetWidth ?? 180);
-
-  // Adjust rate menu position if not enough space
-  const getRateMenuLeft = () => {
-    const mainMenu = menuRef.current;
-    const rateMenu = rateMenuRef.current;
-    if (!mainMenu || !rateMenu) return rateMenuLeft;
-
-    const mainRect = mainMenu.getBoundingClientRect();
-    const rateWidth = rateMenu.offsetWidth || 180;
-    const windowWidth = window.innerWidth;
-
-    // If not enough space on the right, position to the left
-    if (mainRect.right + rateWidth > windowWidth) {
-      return mainRect.left - rateWidth;
-    }
-    // Otherwise, position to the right
-    return mainRect.right;
-  };
-
-  const getRateMenuTop = () => {
-    const mainMenu = menuRef.current;
-    const rateMenu = rateMenuRef.current;
-    if (!mainMenu || !rateMenu) return rateMenuStyle.top;
-
-    const mainRect = mainMenu.getBoundingClientRect();
-    const rateHeight = rateMenu.offsetHeight || 300;
-    const windowHeight = window.innerHeight;
-
-    // Default: align tops
-    let top = mainRect.top;
-
-    // If bottom would overflow, adjust top
-    if (top + rateHeight > windowHeight) {
-      top = Math.max(windowHeight - rateHeight - 8, 8); // 8px margin from edge
-    }
-    // If top would overflow, adjust top
-    if (top < 8) {
-      top = 8;
-    }
-    return top;
-  };
+  const { left: rateMenuLeftFinal, top: rateMenuTopFinal } =
+    useFloatingMenuPosition(
+      menuRef,
+      rateMenuRef,
+      rateMenuLeft,
+      rateMenuStyle.top as number,
+    );
 
   // Check if trip is shared
   const isShared = sharedTripIds?.has(trip.id);
@@ -167,16 +135,18 @@ export function TripActions({
         containerRef={menuRef}
         disableScroll={true}
       >
-        <MenuButton
-          onClick={() => {
-            setTimeout(() => setOpen(false), 300);
-            onViewInCalendar?.(trip);
-          }}
-          icon={<FaCalendar className="mr-2" />}
-          className="w-full"
-        >
-          View in Calendar
-        </MenuButton>
+        {hasValidStartDate(trip) && (
+          <MenuButton
+            onClick={() => {
+              setTimeout(() => setOpen(false), 300);
+              onViewInCalendar?.(trip);
+            }}
+            icon={<FaCalendar className="mr-2" />}
+            className="w-full"
+          >
+            View in Calendar
+          </MenuButton>
+        )}
         <MenuButton
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
@@ -185,19 +155,9 @@ export function TripActions({
           icon={<FaPenToSquare className="mr-2" />}
           className="w-full"
         >
-          Edit
+          Edit Trip
         </MenuButton>
-        <MenuButton
-          onClick={() => {
-            setTimeout(() => setOpen(false), 300);
-            onDelete(trip);
-          }}
-          icon={<FaTrash className="mr-2" />}
-          className="text-danger w-full"
-        >
-          Delete
-        </MenuButton>
-        <Separator />
+        <Separator className="my-2" />
         <MenuButton
           onClick={() => {
             setTimeout(() => setOpen(false), 300);
@@ -228,8 +188,8 @@ export function TripActions({
               open={rateMenuOpen}
               menuStyle={{
                 ...rateMenuStyle,
-                left: getRateMenuLeft(),
-                top: getRateMenuTop(),
+                left: rateMenuLeftFinal,
+                top: rateMenuTopFinal,
                 zIndex: 1000,
                 width: 280,
               }}
@@ -242,6 +202,17 @@ export function TripActions({
               onClose={() => setOpen(false)}
             />
           )}
+          <Separator className="my-2" />
+          <MenuButton
+            onClick={() => {
+              setTimeout(() => setOpen(false), 300);
+              onDelete(trip);
+            }}
+            icon={<FaTrash className="mr-2" />}
+            className="!text-danger w-full"
+          >
+            Delete Trip
+          </MenuButton>
         </div>
       </Menu>
     </>

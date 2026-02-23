@@ -11,6 +11,7 @@ export * from "./dom/useBodyScrollLock";
 export * from "./dom/useClickOutside";
 export * from "./dom/useContainerDimensions";
 export * from "./dom/useFloatingHover";
+export * from "./dom/useFloatingMenuPosition";
 export * from "./dom/useKeyboardFocusRing";
 export * from "./dom/useMenuPosition";
 export * from "./dom/useScrollVisibility";

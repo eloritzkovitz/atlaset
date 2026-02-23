@@ -1,8 +1,40 @@
 /**
- * @fileoverview Utility functions for trips.
+ * Utility functions for trips.
  */
 
 import type { Trip, TripStatus } from "../types";
+
+/**
+ * Checks if a trip has a valid start date.
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip has a valid start date, false otherwise.
+ */
+export function hasValidStartDate(trip: Trip) {
+  if (
+    !trip.startDate ||
+    typeof trip.startDate !== "string" ||
+    trip.startDate.trim() === ""
+  )
+    return false;
+  const start = new Date(trip.startDate);
+  return !isNaN(start.getTime());
+}
+
+/**
+ * Calculates the number of trip days (inclusive of start and end date).
+ * @param trip - The trip object with startDate and endDate.
+ * @returns The number of trip days, or 0 if dates are missing.
+ */
+export function getTripDays(trip: Trip): number {
+  if (!trip.startDate || !trip.endDate) return 0;
+  const start = new Date(trip.startDate);
+  const end = new Date(trip.endDate);
+  if (isNaN(start.getTime()) || isNaN(end.getTime())) return 0;
+  // Add 1 to include both start and end dates
+  return (
+    Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
+  );
+}
 
 /**
  * Determines if a trip is local (within the home country).
@@ -45,16 +77,7 @@ export function isCompletedTrip(trip: Trip) {
  * @returns True if the trip is planned, false otherwise.
  */
 export function isPlannedTrip(trip: Trip): boolean {
-  // Planned: missing, empty, or invalid startDate
-  if (
-    !trip.startDate ||
-    typeof trip.startDate !== "string" ||
-    trip.startDate.trim() === ""
-  )
-    return true;
-  const start = new Date(trip.startDate);
-  if (isNaN(start.getTime())) return true;
-  // If startDate is valid and in the future, it's upcoming, not planned
+  if (!hasValidStartDate(trip)) return true;
   return false;
 }
 
@@ -64,9 +87,9 @@ export function isPlannedTrip(trip: Trip): boolean {
  * @returns True if the trip is upcoming, false otherwise.
  */
 export function isUpcomingTrip(trip: Trip): boolean {
-  if (!trip.startDate) return false;
-  const start = new Date(trip.startDate);
-  return !isNaN(start.getTime()) && start > new Date();
+  if (!hasValidStartDate(trip)) return false;
+  const start = new Date(trip.startDate!);
+  return start > new Date();
 }
 
 /**
@@ -124,14 +147,8 @@ export function getCompletedTrips(trips: Trip[]): Trip[] {
 export function getAutoTripStatus(trip: Trip): TripStatus {
   const now = new Date();
   // Planned: missing, empty, or invalid startDate
-  if (
-    !trip.startDate ||
-    typeof trip.startDate !== "string" ||
-    trip.startDate.trim() === ""
-  )
-    return "planned";
-  const start = new Date(trip.startDate);
-  if (isNaN(start.getTime())) return "planned";
+  if (!hasValidStartDate(trip)) return "planned";
+  const start = new Date(trip.startDate!);
   const end = trip.endDate ? new Date(trip.endDate) : null;
 
   // Upcoming: start date is in the future
@@ -142,19 +159,4 @@ export function getAutoTripStatus(trip: Trip): TripStatus {
   // If no end date, but start is in the past, consider completed if not in-progress
   if (!end && now > start) return "completed";
   return trip.status || "planned";
-}
-
-/**
- * Calculates the number of trip days (inclusive of start and end date).
- * @param trip - The trip object with startDate and endDate.
- * @returns The number of trip days, or 0 if dates are missing.
- */
-export function getTripDays(trip: Trip): number {
-  if (!trip.startDate || !trip.endDate) return 0;
-  const start = new Date(trip.startDate);
-  const end = new Date(trip.endDate);
-  // Add 1 to include both start and end dates
-  return (
-    Math.floor((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)) + 1
-  );
 }
