@@ -91,11 +91,11 @@ export default function TripsCalendar({
         onNavigate={handleDateChange}
         components={{ toolbar: CalendarToolbar }}
         eventPropGetter={(event) => {
-          const bg = event.color || "#3174ad";
+          const bg = event.color || "bg-primary-active";
           return {
             style: {
               backgroundColor: bg,
-              color: darkenHexColor(bg, 0.35),
+              color: darkenHexColor(bg, 0.75),
               borderRadius: 6,
               border: "none",
               paddingLeft: 8,
