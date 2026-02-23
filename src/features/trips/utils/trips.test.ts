@@ -147,7 +147,6 @@ describe("trips utils", () => {
       };
       const result = getUpcomingTrips([...mockTrips, futureTrip]);
       expect(result).toContain(futureTrip);
-      // Should not include trips with missing/invalid startDate
       const tentativeTrip: Trip = { ...mockTrips[0], startDate: undefined };
       expect(result).not.toContain(tentativeTrip);
     });
@@ -164,7 +163,6 @@ describe("trips utils", () => {
       ]);
       expect(result).toContain(tentativeTrip);
       expect(result).toContain(invalidTrip);
-      // Should not include trips with valid future or past startDate
       const futureTrip: Trip = {
         ...mockTrips[0],
         startDate: tomorrow.toISOString(),
@@ -186,13 +184,13 @@ describe("trips utils", () => {
   });
 
   describe("getAutoTripStatus", () => {
-    it("returns planned if now < start", () => {
+    it("returns upcoming if now < start", () => {
       const trip = {
         ...mockTrips[2],
         startDate: tomorrow.toISOString(),
         endDate: tomorrow.toISOString(),
       };
-      expect(getAutoTripStatus(trip)).toBe("planned");
+      expect(getAutoTripStatus(trip)).toBe("upcoming");
     });
 
     it("returns in-progress if now between start and end", () => {
@@ -213,8 +211,33 @@ describe("trips utils", () => {
       expect(getAutoTripStatus(trip)).toBe("completed");
     });
 
-    it("returns trip.status if startDate and endDate are missing (tentative trip)", () => {
+    it("returns completed if startDate is in the past and no endDate", () => {
+      const trip = {
+        ...mockTrips[0],
+        startDate: yesterday.toISOString(),
+        endDate: undefined,
+      };
+      expect(getAutoTripStatus(trip)).toBe("completed");
+    });
+
+    it("returns planned if startDate and endDate are missing (tentative trip)", () => {
       expect(getAutoTripStatus(mockTrips[4])).toBe("planned");
+    });
+
+    it("returns planned if startDate is invalid", () => {
+      const trip = { ...mockTrips[0], startDate: "not-a-date" };
+      expect(getAutoTripStatus(trip)).toBe("planned");
+    });
+
+    it("returns trip.status if present and not covered by other conditions", () => {
+      const nowIso = new Date().toISOString();
+      const trip2: Trip = {
+        ...mockTrips[0],
+        startDate: nowIso,
+        endDate: undefined,
+        status: "in-progress" as Trip["status"],
+      };
+      expect(getAutoTripStatus(trip2)).toBe("in-progress");
     });
   });
 

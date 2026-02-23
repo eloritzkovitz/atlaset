@@ -58,6 +58,7 @@ export const ALL_TRIP_CATEGORIES = [
 
 export const ALL_TRIP_STATUSES = [
   "planned",
+  "upcoming",
   "in-progress",
   "completed",
   "cancelled",

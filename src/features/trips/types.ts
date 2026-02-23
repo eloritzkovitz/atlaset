@@ -88,6 +88,7 @@ export type TripFilterState = TripFilters & {
   abroad: boolean;
   completed: boolean;
   upcoming: boolean;
+  planned: boolean;
   favorite: boolean;
 };
 

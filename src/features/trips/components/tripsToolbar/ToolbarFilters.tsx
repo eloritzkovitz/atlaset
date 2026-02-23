@@ -1,7 +1,8 @@
 import React from "react";
 import {
   FaCalendarDay,
-  FaCheck,  
+  FaCheck,
+  FaClipboardList,
   FaHashtag,
   FaHeart,
   FaLocationDot,
@@ -45,6 +46,8 @@ export function ToolbarFilters({
     setFilters({ ...filters, upcoming: !filters.upcoming });
   const toggleFavorite = () =>
     setFilters({ ...filters, favorite: !filters.favorite });
+  const togglePlanned = () =>
+    setFilters({ ...filters, planned: !filters.planned });
   const toggleRowNumbers = () => setShowRowNumbers((v) => !v);
 
   const filterToggles: ToolbarToggleOption[] = [
@@ -83,6 +86,15 @@ export function ToolbarFilters({
       title: "Toggle Upcoming Trips",
       checked: filters.upcoming,
       onClick: toggleUpcoming,
+    },
+    {
+      value: "planned",
+      icon: <FaClipboardList />,
+      label: "Planned",
+      ariaLabel: "Show/Hide Planned Trips",
+      title: "Toggle Planned Trips",
+      checked: filters.planned,
+      onClick: togglePlanned,
     },
     {
       value: "favorite",

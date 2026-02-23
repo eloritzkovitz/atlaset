@@ -5,6 +5,7 @@ import "./StatusCell.css"
 // Define colors for each status
 const statusColors: Record<TripStatus, string> = {
   planned: "chip-planned",
+  upcoming: "chip-upcoming",
   "in-progress": "chip-inprogress",
   completed: "chip-completed",
   cancelled: "chip-cancelled",

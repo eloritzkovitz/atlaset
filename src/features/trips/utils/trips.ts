@@ -46,7 +46,12 @@ export function isCompletedTrip(trip: Trip) {
  */
 export function isPlannedTrip(trip: Trip): boolean {
   // Planned: missing, empty, or invalid startDate
-  if (!trip.startDate || typeof trip.startDate !== "string" || trip.startDate.trim() === "") return true;
+  if (
+    !trip.startDate ||
+    typeof trip.startDate !== "string" ||
+    trip.startDate.trim() === ""
+  )
+    return true;
   const start = new Date(trip.startDate);
   if (isNaN(start.getTime())) return true;
   // If startDate is valid and in the future, it's upcoming, not planned
@@ -118,14 +123,24 @@ export function getCompletedTrips(trips: Trip[]): Trip[] {
  */
 export function getAutoTripStatus(trip: Trip): TripStatus {
   const now = new Date();
-  const start = trip.startDate ? new Date(trip.startDate) : null;
+  // Planned: missing, empty, or invalid startDate
+  if (
+    !trip.startDate ||
+    typeof trip.startDate !== "string" ||
+    trip.startDate.trim() === ""
+  )
+    return "planned";
+  const start = new Date(trip.startDate);
+  if (isNaN(start.getTime())) return "planned";
   const end = trip.endDate ? new Date(trip.endDate) : null;
 
-  if (start && end) {
-    if (now < start) return "planned";
-    if (now >= start && now <= end) return "in-progress";
-    if (now > end) return "completed";
-  }
+  // Upcoming: start date is in the future
+  if (now < start) return "upcoming";
+  if (end && now >= start && now <= end) return "in-progress";
+  if (end && now > end) return "completed";
+
+  // If no end date, but start is in the past, consider completed if not in-progress
+  if (!end && now > start) return "completed";
   return trip.status || "planned";
 }
 
