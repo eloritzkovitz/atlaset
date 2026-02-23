@@ -4,6 +4,7 @@ import { ActionButton, LoadingSpinner, Modal, PanelHeader } from "@components";
 import { useKeyHandler } from "@hooks";
 import { CalendarDateControls } from "./CalendarDateControls";
 import { type CalendarView, type Trip } from "../../types";
+import { CalendarLegend } from "./CalendarLegend";
 
 const TripsCalendar = React.lazy(() => import("./TripsCalendar"));
 
@@ -85,7 +86,7 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="w-[950px] max-h-[92vh] flex flex-col shadow"
+      className="calendar-modal-container flex flex-col shadow relative"
       draggable
     >
       <PanelHeader
@@ -105,31 +106,34 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
           rounded
         />
       </PanelHeader>
-      <div className="flex flex-col w-full h-full">
-        <CalendarDateControls
-          month={currentMonth}
-          year={currentYear}
-          onMonthChange={handleMonthChange}
-          onYearChange={handleYearChange}
-          onToday={handleToday}
-          view={view}
-          onViewChange={setView}
-        />
-        <Suspense
-          fallback={
-            <div className="h-[600px] w-full flex items-center justify-center">
-              <LoadingSpinner />
-            </div>
-          }
-        >
-          <TripsCalendar
-            trips={trips}
+      <div className="flex flex-row w-full h-full">
+        <CalendarLegend />
+        <div className="flex flex-col flex-1 min-w-0">
+          <CalendarDateControls
+            month={currentMonth}
+            year={currentYear}
+            onMonthChange={handleMonthChange}
+            onYearChange={handleYearChange}
+            onToday={handleToday}
             view={view}
-            date={date}
             onViewChange={setView}
-            onDateChange={setDate}
           />
-        </Suspense>
+          <Suspense
+            fallback={
+              <div className="h-[600px] w-full flex items-center justify-center">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            <TripsCalendar
+              trips={trips}
+              view={view}
+              date={date}
+              onViewChange={setView}
+              onDateChange={setDate}
+            />
+          </Suspense>
+        </div>
       </div>
     </Modal>
   );

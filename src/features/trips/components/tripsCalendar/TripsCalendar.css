@@ -1,3 +1,10 @@
+.calendar-modal-container {
+  width: 1200px !important;
+  height: 780px !important;
+  max-width: 1200px !important;
+  min-width: 1200px !important;
+}
+
 .rbc-calendar,
 .rbc-month-view {
   background: var(--color-surface);
@@ -42,6 +49,12 @@
 
 .rbc-event {
   font-weight: normal !important;
+}
+
+.rbc-event.upcoming-trip-event {
+  border: 2px dashed #fde047 !important;
+  box-sizing: border-box;
+  z-index: 2;
 }
 
 .rbc-selected {
