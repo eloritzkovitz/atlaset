@@ -86,7 +86,7 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="calendar-modal-container flex flex-col shadow relative"
+      className="!min-w-[1200px] flex flex-col shadow relative"
       draggable
     >
       <PanelHeader
