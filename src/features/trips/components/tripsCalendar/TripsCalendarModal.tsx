@@ -1,10 +1,15 @@
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { FaCalendar, FaXmark } from "react-icons/fa6";
 import { ActionButton, LoadingSpinner, Modal, PanelHeader } from "@components";
+import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useKeyHandler } from "@hooks";
 import { CalendarDateControls } from "./CalendarDateControls";
-import { type CalendarView, type Trip } from "../../types";
 import { CalendarLegend } from "./CalendarLegend";
+import {
+  type CalendarView,
+  type Trip,
+  type TripEventTypeKey,
+} from "../../types";
 
 const TripsCalendar = React.lazy(() => import("./TripsCalendar"));
 
@@ -21,16 +26,22 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
   trips,
   date: controlledDate,
 }) => {
-  // State for calendar view and date
   const [view, setView] = useState<CalendarView>("month");
   const [date, setDate] = useState<Date>(controlledDate ?? new Date());
+
+  // Trip filtering logic
+  const { filters, setFilters, filteredTrips } = useTripFilters(trips);
+
+  // Handler for toggling trip event types
+  const handleToggleType = (type: TripEventTypeKey) => {
+    setFilters((prev) => ({ ...prev, [type]: !prev[type] }));
+  };
 
   // Sync internal date with controlled prop
   useEffect(() => {
     if (controlledDate && controlledDate.getTime() !== date.getTime()) {
       setDate(controlledDate);
     }
-    // Only run when controlledDate changes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [controlledDate]);
 
@@ -107,7 +118,16 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
         />
       </PanelHeader>
       <div className="flex flex-row w-full h-full">
-        <CalendarLegend />
+        <div className="mt-35">
+          <CalendarLegend
+            shown={{
+              local: filters.local,
+              abroad: filters.abroad,
+              upcoming: filters.upcoming,
+            }}
+            onToggle={handleToggleType}
+          />
+        </div>
         <div className="flex flex-col flex-1 min-w-0">
           <CalendarDateControls
             month={currentMonth}
@@ -126,7 +146,7 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
             }
           >
             <TripsCalendar
-              trips={trips}
+              trips={filteredTrips}
               view={view}
               date={date}
               onViewChange={setView}

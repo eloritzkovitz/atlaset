@@ -4,13 +4,16 @@ interface CheckboxProps {
   onChange: (checked: boolean) => void;
   label?: string;
   onClick?: React.MouseEventHandler<HTMLInputElement>;
+  color?: string;
 }
 
+/** Renders a styled checkbox component. */
 export function Checkbox({
   checked,
   disabled,
   onChange,
   label,
+  color,
 }: CheckboxProps) {
   return (
     <label
@@ -29,10 +32,21 @@ export function Checkbox({
           w-5 h-5 rounded transition-colors border-2 flex items-center justify-center
           border-muted bg-transparent
           hover:border-muted-hover
-          peer-checked:border-primary peer-checked:bg-primary
-          peer-checked:hover:border-primary-hover peer-checked:hover:bg-primary-hover
+          ${
+            color
+              ? ""
+              : "peer-checked:border-primary peer-checked:bg-primary peer-checked:hover:border-primary-hover peer-checked:hover:bg-primary-hover"
+          }
           ${disabled ? "bg-muted border-muted" : ""}
-          `}
+        `}
+        style={
+          color && checked
+            ? {
+                borderColor: color,
+                background: color,
+              }
+            : undefined
+        }
       >
         <svg
           className={`w-3 h-3 transition-colors duration-150 ${

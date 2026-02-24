@@ -104,3 +104,6 @@ export type TripEvent = {
   resource: Trip;
   color?: string;
 };
+
+/** Represents a trip event type key. */
+export type TripEventTypeKey = "local" | "abroad" | "upcoming";
