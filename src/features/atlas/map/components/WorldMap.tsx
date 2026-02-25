@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useMapView } from "@contexts/MapViewContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { useContainerDimensions } from "@hooks";
@@ -8,6 +7,7 @@ import { MapSvgContainer } from "./MapSvgContainer";
 import { LayersContainer } from "./LayersContainer";
 import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
+import { DEFAULT_MAP_SETTINGS } from "../constants/map";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
 

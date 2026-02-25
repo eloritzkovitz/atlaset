@@ -1,4 +1,50 @@
-import { rgbaToHex, hexToRgba, parseRgba, blendColors } from "./color";
+import {
+  rgbaToHex,
+  hexToRgba,
+  parseRgba,
+  blendColors,
+  getContrastingTextColor,
+  darkenHexColor,
+} from "./color";
+
+describe("getContrastingTextColor", () => {
+  it("returns #222 for light backgrounds", () => {
+    expect(getContrastingTextColor("#ffffff")).toBe("#222");
+    expect(getContrastingTextColor("#eeeeee")).toBe("#222");
+  });
+
+  it("returns #f3f3f3 for dark backgrounds", () => {
+    expect(getContrastingTextColor("#000000")).toBe("#f3f3f3");
+    expect(getContrastingTextColor("#222222")).toBe("#f3f3f3");
+  });
+
+  it("returns #222 for invalid hex", () => {
+    expect(getContrastingTextColor("#12")).toBe("#222");
+    expect(getContrastingTextColor("")).toBe("#222");
+    // Covers NaN branch in parseHexColor
+    expect(getContrastingTextColor("#gggggg")).toBe("#222");
+  });
+});
+
+describe("darkenHexColor", () => {
+  it("darkens a color by default amount", () => {
+    expect(darkenHexColor("#888888")).toBe("#666666");
+    expect(darkenHexColor("#ff0000")).toBe("#bf0000");
+    expect(darkenHexColor("#00ff00")).toBe("#00bf00");
+    expect(darkenHexColor("#0000ff")).toBe("#0000bf");
+  });
+
+  it("darkens a color by custom amount", () => {
+    expect(darkenHexColor("#888888", 0.5)).toBe("#444444");
+    expect(darkenHexColor("#ff0000", 0.1)).toBe("#e50000");
+  });
+
+  it("returns original hex for invalid input", () => {
+    expect(darkenHexColor("#12")).toBe("#12");
+    expect(darkenHexColor("")).toBe("");
+    expect(darkenHexColor("#gggggg")).toBe("#gggggg");
+  });
+});
 
 describe("rgbaToHex", () => {
   it("converts rgba to hex correctly", () => {
@@ -70,7 +116,7 @@ describe("blendColors", () => {
     expect(blendColors(["rgba(0,0,255,0.5)"])).toBe("#8080ff");
     // Blend two colors
     expect(blendColors(["rgba(255,0,0,0.5)", "rgba(0,255,0,0.5)"])).toBe(
-      "#80c040"
+      "#80c040",
     );
   });
 

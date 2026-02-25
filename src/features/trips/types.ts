@@ -35,7 +35,7 @@ export type Trip = {
   /** Additional notes about the trip */
   notes?: string;
   /** Tags associated with the trip */
-  tags?: TripTag[];  
+  tags?: TripTag[];
 };
 
 /** Represents a geographical location with region and cities. */
@@ -88,5 +88,6 @@ export type TripFilterState = TripFilters & {
   abroad: boolean;
   completed: boolean;
   upcoming: boolean;
+  planned: boolean;
   favorite: boolean;
 };

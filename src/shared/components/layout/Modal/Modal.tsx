@@ -7,8 +7,12 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useBodyScrollLock, useClickOutside, usePanelHide } from "@hooks";
-import { useDraggableModal } from "@hooks/state/useDraggableModal";
+import {
+  useBodyScrollLock,
+  useClickOutside,
+  useDraggableModal,
+  usePanelHide,
+} from "@hooks";
 import "./Modal.css";
 
 interface ModalProps {
@@ -85,7 +89,7 @@ export function Modal({
       ...(extraRefs?.map((ref) => ref as React.RefObject<HTMLElement>) ?? []),
     ],
     () => {
-      if (!disableClose) onClose();
+      if (!disableClose && !dragging) onClose();
     },
   );
 
@@ -108,7 +112,7 @@ export function Modal({
         onClick={
           !disableScroll
             ? () => {
-                if (!disableClose) onClose();
+                if (!disableClose && !dragging) onClose();
               }
             : undefined
         }
@@ -133,7 +137,7 @@ export function Modal({
             ...(position === "custom" ? style : {}),
             zIndex: containerZIndex,
             ...modalStyle,
-            cursor: draggable ? (dragging ? "grabbing" : "grab") : undefined,
+            cursor: draggable ? (dragging ? "grabbing" : "auto") : undefined,
             userSelect: draggable ? "none" : undefined,
           }}
           onClick={(e) => e.stopPropagation()}

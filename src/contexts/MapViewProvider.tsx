@@ -1,7 +1,14 @@
 import { type ReactNode, useState, useEffect, useCallback } from "react";
-import { DEFAULT_MAP_SETTINGS, MAP_OPTIONS } from "@constants";
-import { useGeoData, type Coordinates, type MapMode } from "@features/atlas/map";
+import {
+  useGeoData,
+  type Coordinates,
+  type MapMode,
+} from "@features/atlas/map";
 import { getCountryCenterAndZoom } from "@features/atlas/map";
+import {
+  DEFAULT_MAP_SETTINGS,
+  MAP_OPTIONS,
+} from "@features/atlas/map/constants/map";
 import { MapViewContext } from "./MapViewContext";
 import { useSettings } from "./SettingsContext";
 
@@ -18,12 +25,12 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const [mapMode, setMapMode] = useState<MapMode>("view");
   const isReadonly = mapMode === "readonly";
   const isEdit = mapMode === "edit";
-  
-  // Map ready state  
+
+  // Map ready state
   const [mapReady, setMapReady] = useState(false);
   const handleMapReady = useCallback((delay = 50) => {
     setTimeout(() => setMapReady(true), delay);
-  }, []); 
+  }, []);
 
   // Map UI config
   const map = settings.map ?? {
@@ -36,7 +43,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const projection = map.projection ?? MAP_OPTIONS.projection[0].value;
   const borderColor = map.borderColor ?? MAP_OPTIONS.strokeColor[0].value;
   const borderWidth = map.borderWidth ?? MAP_OPTIONS.strokeWidth[0].value;
- 
+
   // Update functions
   const setProjection = (v: string) =>
     updateSettings({ map: { ...map, projection: v } });
@@ -49,7 +56,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const [zoom, setZoom] = useState(DEFAULT_MAP_SETTINGS.minZoom);
   const [center, setCenter] = useState<Coordinates>([0, 0]);
   const [selectedCoords, setSelectedCoords] = useState<Coordinates | null>(
-    null
+    null,
   );
 
   // Snap to center at zoom 1
@@ -69,7 +76,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         setZoom(result.zoom);
       }
     },
-    [geoData]
+    [geoData],
   );
 
   // Handler for map move end
@@ -88,7 +95,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         setCenter(coordinates);
       }
     },
-    []
+    [],
   );
 
   return (

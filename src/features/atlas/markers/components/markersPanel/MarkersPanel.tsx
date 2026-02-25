@@ -7,7 +7,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
-import { DEFAULT_PANEL_WIDTH } from "@constants";
+import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useUI } from "@contexts/UIContext";

@@ -1,12 +1,13 @@
 import React from "react";
 import {
-  FaRotateLeft,
-  FaLocationDot,
-  FaPlane,
+  FaCalendarDay,
   FaCheck,
-  FaCalendar,
+  FaClipboardList,
   FaHashtag,
   FaHeart,
+  FaLocationDot,
+  FaPlane,
+  FaRotateLeft,
 } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
 import type { ToolbarToggleOption } from "@types";
@@ -45,6 +46,8 @@ export function ToolbarFilters({
     setFilters({ ...filters, upcoming: !filters.upcoming });
   const toggleFavorite = () =>
     setFilters({ ...filters, favorite: !filters.favorite });
+  const togglePlanned = () =>
+    setFilters({ ...filters, planned: !filters.planned });
   const toggleRowNumbers = () => setShowRowNumbers((v) => !v);
 
   const filterToggles: ToolbarToggleOption[] = [
@@ -67,6 +70,24 @@ export function ToolbarFilters({
       onClick: toggleAbroad,
     },
     {
+      value: "planned",
+      icon: <FaClipboardList />,
+      label: "Planned",
+      ariaLabel: "Show/Hide Planned Trips",
+      title: "Toggle Planned Trips",
+      checked: filters.planned,
+      onClick: togglePlanned,
+    },
+    {
+      value: "upcoming",
+      icon: <FaCalendarDay />,
+      label: "Upcoming",
+      ariaLabel: "Show/Hide Upcoming Trips",
+      title: "Toggle Upcoming Trips",
+      checked: filters.upcoming,
+      onClick: toggleUpcoming,
+    },
+    {
       value: "completed",
       icon: <FaCheck />,
       label: "Completed",
@@ -74,15 +95,6 @@ export function ToolbarFilters({
       title: "Toggle Completed Trips",
       checked: filters.completed,
       onClick: toggleCompleted,
-    },
-    {
-      value: "upcoming",
-      icon: <FaCalendar />,
-      label: "Upcoming",
-      ariaLabel: "Show/Hide Upcoming Trips",
-      title: "Toggle Upcoming Trips",
-      checked: filters.upcoming,
-      onClick: toggleUpcoming,
     },
     {
       value: "favorite",

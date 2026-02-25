@@ -9,8 +9,8 @@ import {
   TRIP_TYPE_COLORS,
   TRIP_TYPE_LABELS,
   TRIP_TYPE_COLOR_CLASSES,
-} from "../constants/trips";
-import { YEAR_TABLE_COLUMNS } from "../constants/year";
+} from "@features/trips/constants/trips";
+import { YEAR_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByYearStats } from "../hooks/useTripsByYearStats";
 
 const TripsBarChart = lazy(() => import("./TripsByYearBarChart"));

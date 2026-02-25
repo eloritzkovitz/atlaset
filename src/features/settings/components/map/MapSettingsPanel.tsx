@@ -1,6 +1,6 @@
 import { FaGear, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
-import { DEFAULT_PANEL_WIDTH } from "@constants";
+import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
 import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
 import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";

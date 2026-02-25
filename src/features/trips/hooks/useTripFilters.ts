@@ -6,6 +6,7 @@ import {
   isAbroadTrip,
   isCompletedTrip,
   isLocalTrip,
+  isPlannedTrip,
   isUpcomingTrip,
 } from "../utils/trips";
 import { getUsedCountryCodes, getUsedYears } from "../utils/tripData";
@@ -34,6 +35,7 @@ const defaultTripFilterState: TripFilterState = {
   abroad: true,
   completed: true,
   upcoming: true,
+  planned: true,
   favorite: false,
 };
 
@@ -49,7 +51,7 @@ export function useTripFilters(
   trips?: Trip[],
   countryData?: { countries: Country[] },
   initialFilters?: Partial<TripFilterState>,
-  globalSearch?: string
+  globalSearch?: string,
 ) {
   const { homeCountry } = useHomeCountry();
 
@@ -57,13 +59,13 @@ export function useTripFilters(
   const tripList = useMemo(() => trips ?? [], [trips]);
   const countryList = useMemo(
     () => countryData?.countries ?? [],
-    [countryData]
+    [countryData],
   );
 
   // Build country name map for fast lookups
   const countryMap = useMemo(
     () => createCountryMap(countryList, (c) => c),
-    [countryList]
+    [countryList],
   );
 
   // Unified filter state
@@ -75,7 +77,7 @@ export function useTripFilters(
   // Update a single filter
   function updateFilter<K extends keyof TripFilterState>(
     key: K,
-    value: TripFilterState[K]
+    value: TripFilterState[K],
   ) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }
@@ -99,8 +101,10 @@ export function useTripFilters(
       // Status toggles
       const statusMatch =
         (filters.completed && isCompletedTrip(trip)) ||
-        (filters.upcoming && isUpcomingTrip(trip));
+        (filters.upcoming && isUpcomingTrip(trip)) ||
+        (filters.planned && isPlannedTrip(trip));
 
+      // Favorite toggle
       const favoriteMatch =
         !filters.favorite || (filters.favorite && trip.favorite === true);
 
@@ -126,7 +130,7 @@ export function useTripFilters(
           countryNames.some((name) => name.includes(search)) ||
           (trip.tags ?? []).some((tag) => tag.toLowerCase().includes(search)) ||
           (trip.categories ?? []).some((cat) =>
-            cat.toLowerCase().includes(search)
+            cat.toLowerCase().includes(search),
           )
         );
       });
@@ -137,11 +141,11 @@ export function useTripFilters(
   // Country options
   const usedCountryCodes = useMemo(
     () => getUsedCountryCodes(tripList),
-    [tripList]
+    [tripList],
   );
   const rawCountryOptions = getCountryDropdownOptions(
     countryList,
-    usedCountryCodes
+    usedCountryCodes,
   );
   const countryOptions = useMemo(
     () =>
@@ -149,7 +153,7 @@ export function useTripFilters(
         const country = countryMap[opt.value.toLowerCase()];
         return opt.value ? { ...opt, country } : opt;
       }),
-    [rawCountryOptions, countryMap]
+    [rawCountryOptions, countryMap],
   );
 
   // Year options
@@ -172,14 +176,14 @@ export function useTripFilters(
   const { profiles: participantProfiles } = useFriendProfiles(participantUids);
   const participantsOptions = useMemo(
     () => getParticipantsDropdownOptions(participantUids, participantProfiles),
-    [participantUids, participantProfiles]
+    [participantUids, participantProfiles],
   );
 
   // Category options
   const allCategoryOptions = useMemo(() => getCategoryDropdownOptions(), []);
   const usedCategories = useMemo(
     () => new Set(tripList.flatMap((trip) => trip.categories ?? [])),
-    [tripList]
+    [tripList],
   );
 
   const categoryOptions = useMemo(
@@ -187,7 +191,7 @@ export function useTripFilters(
       tripList.length === 0
         ? allCategoryOptions
         : allCategoryOptions.filter((opt) => usedCategories.has(opt.value)),
-    [tripList, allCategoryOptions, usedCategories]
+    [tripList, allCategoryOptions, usedCategories],
   );
 
   // Status and Tag options

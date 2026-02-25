@@ -11,7 +11,7 @@ import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import type { Trip } from "../../types";
-import { isUpcomingTrip } from "../../utils/trips";
+import { isPlannedTrip, isUpcomingTrip } from "../../utils/trips";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -20,6 +20,7 @@ interface TripsTableRowsProps {
   selected: boolean;
   onSelect: (id: string) => void;
   onRatingChange: (tripId: string, rating: number | undefined) => void;
+  onViewInCalendar?: (t: Trip) => void;
   onEdit: (trip: Trip) => void;
   onDelete: (trip: Trip) => void;
   showRowNumbers: boolean;
@@ -32,6 +33,7 @@ export function TripsTableRows({
   selected,
   onSelect,
   onRatingChange,
+  onViewInCalendar,
   onEdit,
   onDelete,
   showRowNumbers,
@@ -54,7 +56,11 @@ export function TripsTableRows({
         key={trip.id + "-" + (code || idx)}
         className={[
           tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
-          isUpcomingTrip(trip) ? "bg-table-row-upcoming" : "",
+          isUpcomingTrip(trip)
+            ? "bg-table-row-upcoming/80"
+            : isPlannedTrip(trip)
+              ? "bg-table-row-planned/80"
+              : "",
           "group",
         ].join(" ")}
       >
@@ -163,7 +169,12 @@ export function TripsTableRows({
 
             {/* Actions */}
             <TableCell rowSpan={rowSpan}>
-              <TripActions trip={trip} onEdit={onEdit} onDelete={onDelete} />
+              <TripActions
+                trip={trip}
+                onViewInCalendar={onViewInCalendar}
+                onEdit={onEdit}
+                onDelete={onDelete}
+              />
             </TableCell>
           </>
         )}

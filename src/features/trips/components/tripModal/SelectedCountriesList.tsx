@@ -1,4 +1,5 @@
 import { FaXmark } from "react-icons/fa6";
+import { EmptyListMessage } from "@components";
 import { CountryWithFlag } from "@features/countries";
 
 interface SelectedCountriesListProps {
@@ -15,10 +16,9 @@ export function SelectedCountriesList({
 }: SelectedCountriesListProps) {
   return (
     <div>
-      <div className="font-semibold mb-2">Selected Countries</div>
       <div className="flex flex-col gap-2">
         {selectedCountries.length === 0 && (
-          <span className="text-muted text-sm">No countries selected</span>
+          <EmptyListMessage message="No countries selected" />
         )}
         {selectedCountries.map((country) => (
           <span

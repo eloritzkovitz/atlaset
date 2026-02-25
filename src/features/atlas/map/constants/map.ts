@@ -3,7 +3,7 @@ import {
   MAP_BORDER_COLOR_DARK,
   MAP_BORDER_COLOR_GRAY,
   MAP_BORDER_COLOR_LIGHT,
-} from "./colors";
+} from "@constants/colors";
 
 export const DEFAULT_MAP_SETTINGS = {
   geoUrl: import.meta.env.VITE_MAP_GEO_URL || "/data/countries.geojson",

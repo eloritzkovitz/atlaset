@@ -1,5 +1,7 @@
 import { mockTrips } from "@test-utils/mockTrips";
 import {
+  hasValidStartDate,
+  getTripDays,
   isLocalTrip,
   isAbroadTrip,
   isCompletedTrip,
@@ -11,7 +13,6 @@ import {
   getPlannedTrips,
   getCompletedTrips,
   getAutoTripStatus,
-  getTripDays,
 } from "./trips";
 import type { Trip } from "../types";
 
@@ -20,6 +21,55 @@ const yesterday = new Date(now.getTime() - 86400000);
 const tomorrow = new Date(now.getTime() + 86400000);
 
 describe("trips utils", () => {
+  describe("hasValidStartDate", () => {
+    it("returns false if startDate is missing", () => {
+      const trip: Trip = { ...mockTrips[0], startDate: undefined };
+      expect(hasValidStartDate(trip)).toBe(false);
+    });
+
+    it("returns false if startDate is empty string", () => {
+      const trip: Trip = { ...mockTrips[0], startDate: "" };
+      expect(hasValidStartDate(trip)).toBe(false);
+    });
+
+    it("returns false if startDate is invalid", () => {
+      const trip: Trip = { ...mockTrips[0], startDate: "not-a-date" };
+      expect(hasValidStartDate(trip)).toBe(false);
+    });
+
+    it("returns true if startDate is valid", () => {
+      const trip: Trip = { ...mockTrips[0], startDate: tomorrow.toISOString() };
+      expect(hasValidStartDate(trip)).toBe(true);
+    });
+  });
+
+  describe("getTripDays", () => {
+    it("returns correct number of days (inclusive)", () => {
+      const trip = {
+        ...mockTrips[0],
+        startDate: "2023-01-01",
+        endDate: "2023-01-03",
+      };
+      expect(getTripDays(trip)).toBe(3);
+    });
+    it("returns 0 if startDate is invalid", () => {
+      const trip = {
+        ...mockTrips[0],
+        startDate: "not-a-date",
+        endDate: "2023-01-03",
+      };
+      expect(getTripDays(trip)).toBe(0);
+    });
+    it("returns 0 if endDate is invalid", () => {
+      const trip = {
+        ...mockTrips[0],
+        startDate: "2023-01-01",
+        endDate: "not-a-date",
+      };
+      expect(getTripDays(trip)).toBe(0);
+    });
+  });
+
   describe("isLocalTrip", () => {
     it("returns true if all codes match home country", () => {
       expect(isLocalTrip(mockTrips[0], "US")).toBe(true);
@@ -147,7 +197,6 @@ describe("trips utils", () => {
       };
       const result = getUpcomingTrips([...mockTrips, futureTrip]);
       expect(result).toContain(futureTrip);
-      // Should not include trips with missing/invalid startDate
       const tentativeTrip: Trip = { ...mockTrips[0], startDate: undefined };
       expect(result).not.toContain(tentativeTrip);
     });
@@ -164,7 +213,6 @@ describe("trips utils", () => {
       ]);
       expect(result).toContain(tentativeTrip);
       expect(result).toContain(invalidTrip);
-      // Should not include trips with valid future or past startDate
       const futureTrip: Trip = {
         ...mockTrips[0],
         startDate: tomorrow.toISOString(),
@@ -186,13 +234,13 @@ describe("trips utils", () => {
   });
 
   describe("getAutoTripStatus", () => {
-    it("returns planned if now < start", () => {
+    it("returns upcoming if now < start", () => {
       const trip = {
         ...mockTrips[2],
         startDate: tomorrow.toISOString(),
         endDate: tomorrow.toISOString(),
       };
-      expect(getAutoTripStatus(trip)).toBe("planned");
+      expect(getAutoTripStatus(trip)).toBe("upcoming");
     });
 
     it("returns in-progress if now between start and end", () => {
@@ -213,19 +261,43 @@ describe("trips utils", () => {
       expect(getAutoTripStatus(trip)).toBe("completed");
     });
 
-    it("returns trip.status if startDate and endDate are missing (tentative trip)", () => {
-      expect(getAutoTripStatus(mockTrips[4])).toBe("planned");
-    });
-  });
-
-  describe("getTripDays", () => {
-    it("returns correct number of days (inclusive)", () => {
+    it("returns completed if startDate is in the past and no endDate", () => {
       const trip = {
         ...mockTrips[0],
-        startDate: "2023-01-01",
-        endDate: "2023-01-03",
+        startDate: yesterday.toISOString(),
+        endDate: undefined,
       };
-      expect(getTripDays(trip)).toBe(3);
+      expect(getAutoTripStatus(trip)).toBe("completed");
+    });
+
+    it("returns planned if startDate and endDate are missing (tentative trip)", () => {
+      expect(getAutoTripStatus(mockTrips[4])).toBe("planned");
+    });
+
+    it("returns planned if startDate is invalid", () => {
+      const trip = { ...mockTrips[0], startDate: "not-a-date" };
+      expect(getAutoTripStatus(trip)).toBe("planned");
+    });
+
+    it("returns trip.status if present and not covered by other conditions", () => {
+      const nowIso = new Date().toISOString();
+      const trip2: Trip = {
+        ...mockTrips[0],
+        startDate: nowIso,
+        endDate: undefined,
+        status: "in-progress" as Trip["status"],
+      };
+      expect(getAutoTripStatus(trip2)).toBe("in-progress");
+    });
+    it("returns trip.status if startDate is valid but not in the past/future and endDate is missing", () => {
+      const nowIso = new Date().toISOString();
+      const trip: Trip = {
+        ...mockTrips[0],
+        startDate: nowIso,
+        endDate: undefined,
+        status: "custom-status" as Trip["status"],
+      };
+      expect(getAutoTripStatus(trip)).toBe("custom-status");
     });
   });
 });

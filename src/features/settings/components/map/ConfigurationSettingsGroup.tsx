@@ -1,8 +1,8 @@
 import React from "react";
 import { FaDraftingCompass } from "react-icons/fa";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { MAP_OPTIONS } from "@constants";
 import { useMapView } from "@contexts/MapViewContext";
+import { MAP_OPTIONS } from "@features/atlas/map/constants/map";
 
 export function ConfigurationSettingsGroup() {
   const [showMapSettings, setShowMapSettings] = React.useState(true);

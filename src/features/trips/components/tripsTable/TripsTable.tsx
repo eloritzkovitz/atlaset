@@ -1,5 +1,5 @@
 import { Pagination } from "@components";
-import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
+import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryData } from "@features/countries";
 import { useScreenSize, useResizableColumns } from "@hooks";
 import type { FilterOption, Option } from "@types";
@@ -16,7 +16,8 @@ import "./TripsTable.css";
 
 interface TripsTableProps {
   trips: Trip[];
-  onEdit: (trip: Trip) => void;
+  onViewInCalendar?: (trip: Trip) => void;
+  onEdit: (trip: Trip) => void;  
   onRatingChange: (tripId: string, rating: number | undefined) => void;
   onDelete: (trip: Trip) => void;
   filters: TripFilters;
@@ -44,6 +45,7 @@ interface TripsTableProps {
 
 export function TripsTable({
   trips,
+  onViewInCalendar,
   onEdit,
   onRatingChange,
   onDelete,
@@ -151,6 +153,7 @@ export function TripsTable({
               selected={selectedTripIds.includes(trip.id)}
               onSelect={onSelectTrip}
               onRatingChange={onRatingChange}
+              onViewInCalendar={onViewInCalendar}
               onEdit={onEdit}
               onDelete={onDelete}
               showRowNumbers={showRowNumbers}

@@ -1,9 +1,9 @@
+import { MONTH_NAMES_SHORT } from "@constants/date";
 import { useTrips } from "@contexts/TripsContext";
 import { isAbroadTrip } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user";
-import { MONTH_NAMES } from "../constants/month";
 
-export type MonthName = (typeof MONTH_NAMES)[number];
+export type MonthName = (typeof MONTH_NAMES_SHORT)[number];
 
 /**
  * Provides statistics of trips by month.
@@ -15,7 +15,7 @@ export function useTripsByMonthStats() {
 
   // Initialize monthStats for all months
   const monthStats: Record<string, { local: number; abroad: number }> = {};
-  MONTH_NAMES.forEach((name) => {
+  MONTH_NAMES_SHORT.forEach((name) => {
     monthStats[name] = { local: 0, abroad: 0 };
   });
 
@@ -25,7 +25,7 @@ export function useTripsByMonthStats() {
       const date = new Date(trip.startDate);
       if (!isNaN(date.getTime())) {
         const month = date.getMonth();
-        const monthName = MONTH_NAMES[month];
+        const monthName = MONTH_NAMES_SHORT[month];
         if (isAbroadTrip(trip, homeCountry)) {
           monthStats[monthName].abroad += 1;
         } else {
@@ -36,7 +36,7 @@ export function useTripsByMonthStats() {
   });
 
   // Prepare data for all months
-  const allMonths = MONTH_NAMES;
+  const allMonths = MONTH_NAMES_SHORT;
   const tripsByMonthData = allMonths.map((name) => {
     const stats = monthStats[name] || { local: 0, abroad: 0 };
     return {

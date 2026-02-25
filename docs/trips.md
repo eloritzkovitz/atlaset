@@ -1,6 +1,6 @@
 # Trips
 
-In Atlaset, `trips` let you record, organize and analyze your travels. Each `trip` can include multiple `countries`, `dates`, `categories` and `notes`. `Trips` data powers many features - including `visited countries`, `timeline navigation` and `statistics`.
+In Atlaset, `trips` let you record, organize and analyze your travels. Each `trip` can include multiple `countries`, `dates`, `categories` and `notes`. `Trips` data powers many features - including `visited countries`, `timeline navigation`, `statistics` and `calendar events`.
 
 #### Trip JSON Fields
 
@@ -22,9 +22,19 @@ In Atlaset, `trips` let you record, organize and analyze your travels. Each `tri
 
 If a `trip` has no `startDate` or `endDate`, it is considered _tentative_. In the UI, tentative trips will display `TBD` for dates and duration.
 
+### **Trip Status**
+
+A `trip`'s `status` is based on `startDate` and is calculated according to the following guidelines:
+- **Planned**: A future `tentative trip`, which has no `startDate` or `endDate`.
+- **Upcoming**: A future `trip`, which has valid `startDate` and `endDate`.
+- **In Progress**: A `trip` that is currently ongoing.
+- **Completed**: A `trip` that has already ended.
+
+> `Status` is not stored in the database and is only shown in the UI.
+
 ### **Participants**
 
-Each `trip` can include a list of `participants`. This allows you to include family and friends in your `trips`, while effectively sharing the same `trips`. 
+Each `trip` can include a list of `participants`. This allows you to include family and friends in your `trips`, while effectively sharing the same `trips`.
 
 - After a successful creation of a `trip`, the trip's creator (and owner) will be automatically added as a `participant`.
 - You can add, remove or edit other `participants` from your `friends` when creating or editing `trips`.
@@ -77,3 +87,9 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 
 - Your `trips` power the `Visited Countries` layer and `timeline` features.
 - Changes to your `trips` are reflected in `layers` and `timeline` coloring automatically.
+
+**Learn More:**
+
+[Calendar](/docs/calendar.md)
+[Statistics](/docs/statistics.md)
+[Timeline](/docs/timeline.md)

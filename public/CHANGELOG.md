@@ -1,10 +1,18 @@
 # Changelog
 
+## 2026-02-25
+
+- **[feature]** **Calendar:** Added calendar feature with events
+- **[feature]** **Trips:** Redesigned the trip modal
+- **[breaking]** **Trips:** Trip statuses are now managed automatically only; removed the status field from the trip modal
+- **[bugfix]** **General:** Fixed a minor bug with draggable modals
+- **[bugfix]** **General:** Dropdown selection inputs with multiple selection will no longer overflow the field when more than two items are selected
+
 ## 2026-02-21
 
 - **[feature]** **Dashboard:** Added dashboard overview with information summary
-- **[feature]** **Dashboard:** Updated dashboard menu and navigation 
-- **[chore]** **User | Activity:** Moved activity log to dashboard and added another link from the user profile 
+- **[feature]** **Dashboard:** Updated dashboard menu and navigation
+- **[chore]** **User | Activity:** Moved activity log to dashboard and added another link from the user profile
 
 ## 2026-02-17
 

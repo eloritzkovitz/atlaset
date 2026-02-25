@@ -9,6 +9,11 @@
   color: var(--color-chip-planned-text);
 }
 
+.chip-upcoming {
+  background: var(--color-chip-upcoming-bg);
+  color: var(--color-chip-upcoming-text);
+}
+
 .chip-inprogress {
   background: var(--color-chip-inprogress-bg);
   color: var(--color-chip-inprogress-text);

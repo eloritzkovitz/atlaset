@@ -75,6 +75,18 @@ export function hexToRgba(hex: string, alpha = 1): string {
 }
 
 /**
+ * Converts [r, g, b] to hex string.
+ */
+function rgbToHex(r: number, g: number, b: number): string {
+  return (
+    "#" +
+    r.toString(16).padStart(2, "0") +
+    g.toString(16).padStart(2, "0") +
+    b.toString(16).padStart(2, "0")
+  );
+}
+
+/**
  * Parses an RGBA color string into its component values.
  * @param rgba - The RGBA color string to parse.
  * @returns An array containing the red, green, blue, and alpha values.
@@ -88,6 +100,19 @@ export function parseRgba(rgba: string): [number, number, number, number] {
     parseInt(match[3], 10),
     parseFloat(match[4]),
   ];
+}
+
+/**
+ * Parses a hex color string (e.g., #RRGGBB) into [r, g, b]. Returns null if invalid.
+ */
+function parseHexColor(hex: string): [number, number, number] | null {
+  const color = hex.replace("#", "");
+  if (color.length !== 6) return null;
+  const r = parseInt(color.substring(0, 2), 16);
+  const g = parseInt(color.substring(2, 4), 16);
+  const b = parseInt(color.substring(4, 6), 16);
+  if ([r, g, b].some((v) => isNaN(v))) return null;
+  return [r, g, b];
 }
 
 /**
@@ -111,4 +136,38 @@ export function blendColors(colors: string[]): string {
       .map((v) => v.toString(16).padStart(2, "0"))
       .join("")
   );
+}
+
+/**
+ * Determines a contrasting text color (black or white) based on the brightness of the background color.
+ * @param bgColor - The background color in hex format (e.g., "#RRGGBB" or "#RRGGBBAA").
+ * @returns - A hex color string for the contrasting text color.
+ */
+export function getContrastingTextColor(bgColor: string): string {
+  const rgb = parseHexColor(bgColor);
+  if (!rgb) return "#222";
+  const [r, g, b] = rgb;
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return luminance > 0.6 ? "#222" : "#f3f3f3";
+}
+
+/**
+ * Returns a slightly darker version of a hex color.
+ * @param hex - The hex color string (e.g., #RRGGBB)
+ * @param amount - How much to darken (0-1, default 0.25)
+ * @returns The darkened hex color string.
+ */
+export function darkenHexColor(hex: string, amount = 0.25): string {
+  const rgb = parseHexColor(hex);
+
+  // If parsing fails, return original hex
+  if (!rgb) return hex;
+
+  // Darken each channel by the specified amount
+  let [r, g, b] = rgb;
+  r = Math.max(0, Math.floor(r * (1 - amount)));
+  g = Math.max(0, Math.floor(g * (1 - amount)));
+  b = Math.max(0, Math.floor(b * (1 - amount)));
+
+  return rgbToHex(r, g, b);
 }
