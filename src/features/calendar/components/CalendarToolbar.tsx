@@ -29,6 +29,16 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
   onNavigate,
 }) => (
   <div className="flex items-center gap-2 px-4 mb-2">
+    {onToday && (
+      <ActionButton
+        onClick={onToday}
+        ariaLabel="Go to Today"
+        variant="primary"
+        className="mt-1 text-white !rounded-full"
+      >
+        Today
+      </ActionButton>
+    )}
     <ActionButton
       icon={<FaChevronLeft />}
       ariaLabel="Previous"
@@ -44,26 +54,14 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
       rounded
       onClick={() => onNavigate("NEXT")}
     />
-    <div className="flex-1 flex justify-center">
-      {onViewChange && (
-        <SegmentedToggle
-          value={view}
-          options={viewOptions}
-          onChange={onViewChange}
-          className="inline-flex rounded-full bg-surface-alt/50 p-1 shadow-inner"
-        />
-      )}
-    </div>
     <div className="flex-1" />
-    {onToday && (
-      <ActionButton
-        onClick={onToday}
-        ariaLabel="Go to Today"
-        variant="primary"
-        className="mt-1 text-white !rounded-full"
-      >
-        Today
-      </ActionButton>
+    {onViewChange && (
+      <SegmentedToggle
+        value={view}
+        options={viewOptions}
+        onChange={onViewChange}
+        className="inline-flex rounded-full bg-surface-alt/50 p-1 shadow-inner"
+      />
     )}
   </div>
 );

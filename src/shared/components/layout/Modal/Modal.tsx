@@ -137,7 +137,7 @@ export function Modal({
             ...(position === "custom" ? style : {}),
             zIndex: containerZIndex,
             ...modalStyle,
-            cursor: draggable ? (dragging ? "grabbing" : "grab") : undefined,
+            cursor: draggable ? (dragging ? "grabbing" : "auto") : undefined,
             userSelect: draggable ? "none" : undefined,
           }}
           onClick={(e) => e.stopPropagation()}

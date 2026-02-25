@@ -2,6 +2,7 @@ import { FaDraftingCompass } from "react-icons/fa";
 import {
   FaBookAtlas,
   FaBookmark,
+  FaCalendar,
   FaChartSimple,
   FaCircleUser,
   FaCode,
@@ -80,6 +81,11 @@ export const DOCS_GROUPS = {
         icon: <FaShareFromSquare />,
       },
       { label: "Trips", file: "trips.md", icon: <FaSuitcaseRolling /> },
+      {
+        label: "Calendar",
+        file: "calendar.md",
+        icon: <FaCalendar />,
+      },
       {
         label: "Dashboard",
         file: "dashboard.md",

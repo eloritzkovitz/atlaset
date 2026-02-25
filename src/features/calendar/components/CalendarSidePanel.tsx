@@ -24,7 +24,7 @@ export const CalendarSidePanel: React.FC<CalendarSidePanelProps> = ({
         if (d) setDate(d);
       }}
       inline
-      calendarClassName="rounded-lg !border-none !bg-surface-alt/30"
+      calendarClassName="rounded-lg !border-none !bg-surface"
       dayClassName={() => "text-sm !text-text"}
     />
     <div className="items-left self-stretch">

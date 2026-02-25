@@ -6,6 +6,7 @@ import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useKeyHandler } from "@hooks";
 import { CalendarSidePanel } from "./CalendarSidePanel";
 import { type CalendarView, type TripEventTypeKey } from "../types";
+import { getNextCalendarDate } from "../utils/navigation";
 
 const AppCalendar = React.lazy(() => import("./AppCalendar"));
 
@@ -42,23 +43,14 @@ export const CalendarModal: React.FC<CalendarModalProps> = ({
   }, [controlledDate]);
 
   // Handler for arrow keys
-  const handleArrow = useCallback((event: KeyboardEvent) => {
-    if (event.key === "ArrowLeft") {
-      // Go to previous month
-      setDate((prev) => {
-        const d = new Date(prev);
-        d.setMonth(d.getMonth() - 1);
-        return d;
-      });
-    } else if (event.key === "ArrowRight") {
-      // Go to next month
-      setDate((prev) => {
-        const d = new Date(prev);
-        d.setMonth(d.getMonth() + 1);
-        return d;
-      });
-    }
-  }, []);
+  const handleArrow = useCallback(
+    (event: KeyboardEvent) => {
+      setDate((prev) =>
+        getNextCalendarDate(prev, view, event.key === "ArrowRight" ? 1 : -1),
+      );
+    },
+    [view],
+  );
 
   useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], isOpen);
 

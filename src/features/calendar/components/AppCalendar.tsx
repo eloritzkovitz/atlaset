@@ -16,6 +16,7 @@ import { useHomeCountry } from "@features/user";
 import { darkenHexColor } from "@utils/color";
 import { CalendarToolbar } from "./CalendarToolbar";
 import { type CalendarView, type TripEvent } from "../types";
+import { getNextCalendarDate } from "../utils/navigation";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./Calendar.css";
 
@@ -93,7 +94,6 @@ export default function AppCalendar({
         onView={handleViewChange as (view: View) => void}
         date={calendarDate}
         onNavigate={(actionOrDate, newDate) => {
-          // Use global Date constructor for instanceof
           const isDate = (d: unknown): d is Date =>
             Object.prototype.toString.call(d) === "[object Date]";
           if (isDate(actionOrDate)) {
@@ -104,9 +104,12 @@ export default function AppCalendar({
             } else if (actionOrDate === "TODAY") {
               handleDateChange(new Date());
             } else if (actionOrDate === "PREV" || actionOrDate === "NEXT") {
-              // Calculate new month
-              const d = new Date(calendarDate);
-              d.setMonth(d.getMonth() + (actionOrDate === "NEXT" ? 1 : -1));
+              const direction = actionOrDate === "NEXT" ? 1 : -1;
+              const d = getNextCalendarDate(
+                calendarDate,
+                calendarView,
+                direction,
+              );
               handleDateChange(d);
             }
           }
@@ -122,8 +125,12 @@ export default function AppCalendar({
                 if (action === "TODAY") {
                   handleDateChange(new Date());
                 } else if (action === "PREV" || action === "NEXT") {
-                  const d = new Date(calendarDate);
-                  d.setMonth(d.getMonth() + (action === "NEXT" ? 1 : -1));
+                  const direction = action === "NEXT" ? 1 : -1;
+                  const d = getNextCalendarDate(
+                    calendarDate,
+                    calendarView,
+                    direction,
+                  );
                   handleDateChange(d);
                 }
               }}
