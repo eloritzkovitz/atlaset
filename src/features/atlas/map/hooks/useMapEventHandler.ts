@@ -1,8 +1,8 @@
-import { DEFAULT_MAP_SETTINGS } from "@constants";
+import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { DEFAULT_MAP_SETTINGS } from "../constants/map";
 import { getGeoCoordsFromMouseEvent } from "../utils/projection";
-import { useMapView } from "@contexts/MapViewContext";
 
 /**
  * Handles map events to get geographic coordinates from mouse events.

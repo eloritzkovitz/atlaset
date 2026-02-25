@@ -8,8 +8,6 @@ import {
   FaSuitcaseRolling,
 } from "react-icons/fa6";
 import { DashboardCard, PieLegendCard, SegmentedToggle } from "@components";
-import { TripList } from "./TripList";
-import { TripTypeChip } from "./TripTypeChip";
 import {
   TRIP_TYPE_COLORS,
   TRIP_TYPE_LABELS,
@@ -19,7 +17,9 @@ import {
   TRIP_STATUS_LABELS,
   TRIP_STATUS_ICONS,
   TRIP_STATUS_COLOR_CLASSES,
-} from "../constants/trips";
+} from "@features/trips/constants/trips";
+import { TripList } from "./TripList";
+import { TripTypeChip } from "./TripTypeChip";
 import { useTripsStats } from "../hooks/useTripsStats";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));

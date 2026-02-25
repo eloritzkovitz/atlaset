@@ -1,11 +1,8 @@
 import { lazy, Suspense, useState } from "react";
 import { FaCrown } from "react-icons/fa6";
 import { DashboardCard, PieLegendCard, Table, Chip } from "@components";
-import {
-  MONTH_TABLE_COLUMNS,
-  MONTH_NAMES,
-  MONTH_COLORS,
-} from "../constants/month";
+import { MONTH_NAMES_SHORT, MONTH_COLORS } from "@constants/date";
+import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));
@@ -20,8 +17,10 @@ export function TripsByMonth() {
   } = useTripsByMonthStats();
 
   // Ensure all months are represented, even with zero trips
-  const allMonthsData = MONTH_NAMES.map((name, idx) => {
-    const found = tripsByMonthData.find((m) => m.name === name);
+  const allMonthsData = MONTH_NAMES_SHORT.map((name, idx) => {
+    const found = tripsByMonthData.find(
+      (m: { name: string }) => m.name === name,
+    );
     const local = found ? found.local : 0;
     const abroad = found ? found.abroad : 0;
     const total = local + abroad;

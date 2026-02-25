@@ -1,6 +1,6 @@
 import React from "react";
-import { SelectInput, NumberInput, ActionButton } from "@components";
-import { monthOptions, viewOptions } from "../../constants/calendar";
+import { ActionButton, NumberInput, SelectInput } from "@components";
+import { MONTH_OPTIONS } from "@constants/date";
 import { type CalendarView } from "../../types";
 
 interface CalendarDateControlsProps {
@@ -15,6 +15,12 @@ interface CalendarDateControlsProps {
   view?: CalendarView;
   onViewChange?: (view: CalendarView) => void;
 }
+
+export const viewOptions: { label: string; value: CalendarView }[] = [
+  { label: "Day", value: "day" },
+  { label: "Week", value: "week" },
+  { label: "Month", value: "month" },
+];
 
 export const CalendarDateControls: React.FC<CalendarDateControlsProps> = ({
   month,
@@ -32,7 +38,7 @@ export const CalendarDateControls: React.FC<CalendarDateControlsProps> = ({
     <div className={`flex gap-2 px-4 mb-4 items-center ${className}`}>
       <SelectInput
         value={month}
-        options={monthOptions}
+        options={MONTH_OPTIONS}
         onChange={onMonthChange}
         className="w-36"
       />

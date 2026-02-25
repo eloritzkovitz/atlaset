@@ -1,7 +1,7 @@
 import React from "react";
 import { FaFilter, FaArrowRotateLeft, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
-import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants";
+import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useCountryData, type SovereigntyType } from "@features/countries";
 import { getAllSovereigntyTypes } from "@features/countries/utils/countryData";

@@ -1,6 +1,6 @@
 import React from "react";
 import type { ReactNode } from "react";
-import { DEFAULT_PANEL_WIDTH } from "@constants";
+import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { usePanelHide, useScreenSize } from "@hooks";
 import { PanelHeader } from "./PanelHeader";
 import "./Panel.css";
@@ -20,6 +20,7 @@ interface PanelProps {
   position?: "left" | "right";
 }
 
+/** Renders a panel component. */
 export function Panel({
   title,
   children,

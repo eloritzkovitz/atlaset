@@ -1,5 +1,5 @@
 import { Pagination } from "@components";
-import { DEFAULT_SIDEBAR_WIDTH } from "@constants";
+import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryData } from "@features/countries";
 import { useScreenSize, useResizableColumns } from "@hooks";
 import type { FilterOption, Option } from "@types";

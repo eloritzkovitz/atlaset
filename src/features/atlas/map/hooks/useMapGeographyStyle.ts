@@ -1,6 +1,6 @@
-import { MAP_STYLE_CONFIG } from "@constants";
 import { useMapView } from "@contexts/MapViewContext";
 import { useCountryColors } from "@features/settings/hooks/useCountryColors";
+import { MAP_STYLE_CONFIG } from "../constants/map";
 
 /**
  * Returns map geography styles based on UI settings and marker mode.

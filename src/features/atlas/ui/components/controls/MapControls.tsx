@@ -1,8 +1,12 @@
 import { useRef } from "react";
-import { FaPlus, FaMinus, FaUpRightAndDownLeftFromCenter } from "react-icons/fa6";
+import {
+  FaPlus,
+  FaMinus,
+  FaUpRightAndDownLeftFromCenter,
+} from "react-icons/fa6";
 import { ActionButton } from "@components";
-import { DEFAULT_MAP_SETTINGS } from "@constants";
 import { useKeyHandler } from "@hooks";
+import { DEFAULT_MAP_SETTINGS } from "../../../map/constants/map";
 
 interface MapControlsProps {
   zoom: number;
@@ -25,8 +29,8 @@ export function MapControls({
       setZoom((prev) =>
         Math.max(
           DEFAULT_MAP_SETTINGS.minZoom,
-          Math.min(prev + step, DEFAULT_MAP_SETTINGS.maxZoom)
-        )
+          Math.min(prev + step, DEFAULT_MAP_SETTINGS.maxZoom),
+        ),
       );
     }, 100);
     if (direction === "in") zoomInInterval.current = interval;
@@ -49,14 +53,14 @@ export function MapControls({
   useKeyHandler(
     () => setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom)),
     ["+", "="],
-    true
+    true,
   );
 
   // Zoom out
   useKeyHandler(
     () => setZoom(Math.max(zoom - 1, DEFAULT_MAP_SETTINGS.minZoom)),
     ["-"],
-    true
+    true,
   );
 
   // Reset zoom

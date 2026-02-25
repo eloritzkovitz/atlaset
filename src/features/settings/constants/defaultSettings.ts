@@ -1,4 +1,7 @@
-import { DEFAULT_MAP_SETTINGS, MAP_OPTIONS } from "@constants";
+import {
+  DEFAULT_MAP_SETTINGS,
+  MAP_OPTIONS,
+} from "@features/atlas/map/constants/map";
 import type { Settings } from "../types";
 
 export const defaultSettings: Settings = {
