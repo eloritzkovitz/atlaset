@@ -1,8 +1,10 @@
 // Components
-export { TripsCalendarModal } from "./components/tripsCalendar/TripsCalendarModal";
 export { TripModal } from "./components/tripModal/TripModal";
 export { TripsTable } from "./components/tripsTable/TripsTable";
 export { TripsToolbar } from "./components/tripsToolbar/TripsToolbar";
+
+// Constants
+export * from "./constants/trips";
 
 // Services
 export { tripsService } from "./services/tripsService";
@@ -11,4 +13,4 @@ export { tripsService } from "./services/tripsService";
 export * from "./types";
 
 // Utils
-export { getAutoTripStatus } from "./utils/trips";
+export * from "./utils/trips";

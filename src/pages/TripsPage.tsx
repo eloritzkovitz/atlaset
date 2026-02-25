@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
+import { CalendarModal } from "@features/calendar";
 import { useCountryData } from "@features/countries";
 import {
-  TripsCalendarModal,
   TripModal,
   TripsTable,
   TripsToolbar,
@@ -189,7 +189,7 @@ export default function TripsPage() {
           onClose={() => setModalOpen(false)}
           isEditing={!!trip && !!trip.id}
         />
-        <TripsCalendarModal
+        <CalendarModal
           isOpen={calendarOpen}
           onClose={() => setCalendarOpen(false)}
           trips={trips}

@@ -1,26 +1,22 @@
 import React, { Suspense, useCallback, useEffect, useState } from "react";
 import { FaCalendar, FaXmark } from "react-icons/fa6";
 import { ActionButton, LoadingSpinner, Modal, PanelHeader } from "@components";
+import { type Trip } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useKeyHandler } from "@hooks";
-import { CalendarDateControls } from "./CalendarDateControls";
-import { CalendarLegend } from "./CalendarLegend";
-import {
-  type CalendarView,
-  type Trip,
-  type TripEventTypeKey,
-} from "../../types";
+import { CalendarSidePanel } from "./CalendarSidePanel";
+import { type CalendarView, type TripEventTypeKey } from "../types";
 
-const TripsCalendar = React.lazy(() => import("./TripsCalendar"));
+const AppCalendar = React.lazy(() => import("./AppCalendar"));
 
-interface TripsCalendarModalProps {
+interface CalendarModalProps {
   isOpen: boolean;
   onClose: () => void;
   trips: Trip[];
   date?: Date;
 }
 
-export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
+export const CalendarModal: React.FC<CalendarModalProps> = ({
   isOpen,
   onClose,
   trips,
@@ -66,38 +62,11 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
 
   useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], isOpen);
 
-  // Month and year controls
-  const currentMonth = date.getMonth();
-  const currentYear = date.getFullYear();
-
-  // Handler for month change
-  const handleMonthChange = (val: string | number) => {
-    const month = typeof val === "string" ? parseInt(val, 10) : val;
-    setDate((prev) => {
-      const d = new Date(prev);
-      d.setMonth(month);
-      return d;
-    });
-  };
-
-  // Handler for year change
-  const handleYearChange = (val: string | number) => {
-    const year = typeof val === "string" ? parseInt(val, 10) : val;
-    setDate((prev) => {
-      const d = new Date(prev);
-      d.setFullYear(year);
-      return d;
-    });
-  };
-
-  // Handler for 'Today' button
-  const handleToday = () => setDate(new Date());
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      className="!min-w-[1200px] flex flex-col shadow relative"
+      className="!min-w-4/5 min-h-[890px] !h-[890px] flex flex-col shadow relative"
       draggable
     >
       <PanelHeader
@@ -118,34 +87,21 @@ export const TripsCalendarModal: React.FC<TripsCalendarModalProps> = ({
         />
       </PanelHeader>
       <div className="flex flex-row w-full h-full">
-        <div className="mt-35">
-          <CalendarLegend
-            shown={{
-              local: filters.local,
-              abroad: filters.abroad,
-              upcoming: filters.upcoming,
-            }}
-            onToggle={handleToggleType}
-          />
-        </div>
+        <CalendarSidePanel
+          date={date}
+          setDate={setDate}
+          filters={filters}
+          onToggleType={handleToggleType}
+        />
         <div className="flex flex-col flex-1 min-w-0">
-          <CalendarDateControls
-            month={currentMonth}
-            year={currentYear}
-            onMonthChange={handleMonthChange}
-            onYearChange={handleYearChange}
-            onToday={handleToday}
-            view={view}
-            onViewChange={setView}
-          />
           <Suspense
             fallback={
-              <div className="h-[600px] w-full flex items-center justify-center">
+              <div className="!h-[890px] w-full flex items-center justify-center">
                 <LoadingSpinner />
               </div>
             }
           >
-            <TripsCalendar
+            <AppCalendar
               trips={filteredTrips}
               view={view}
               date={date}

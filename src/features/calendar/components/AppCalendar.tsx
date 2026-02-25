@@ -6,14 +6,18 @@ import { parse } from "date-fns/parse";
 import { startOfWeek } from "date-fns/startOfWeek";
 import { getDay } from "date-fns/getDay";
 import { enUS } from "date-fns/locale/en-US";
+import {
+  TRIP_TYPE_COLORS,
+  isLocalTrip,
+  isUpcomingTrip,
+  type Trip,
+} from "@features/trips";
 import { useHomeCountry } from "@features/user";
 import { darkenHexColor } from "@utils/color";
 import { CalendarToolbar } from "./CalendarToolbar";
-import { TRIP_TYPE_COLORS } from "../../constants/trips";
-import { type CalendarView, type Trip, type TripEvent } from "../../types";
-import { isLocalTrip, isUpcomingTrip } from "../../utils/trips";
+import { type CalendarView, type TripEvent } from "../types";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./TripsCalendar.css";
+import "./Calendar.css";
 
 const locales = {
   "en-US": enUS,
@@ -27,7 +31,7 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-interface TripsCalendarProps {
+interface AppCalendarProps {
   trips: Trip[];
   onSelectTrip?: (trip: Trip) => void;
   onSelectSlot?: (slotInfo: { start: Date; end: Date }) => void;
@@ -37,7 +41,7 @@ interface TripsCalendarProps {
   onDateChange?: (date: Date) => void;
 }
 
-export default function TripsCalendar({
+export default function AppCalendar({
   trips,
   onSelectTrip,
   onSelectSlot,
@@ -45,7 +49,7 @@ export default function TripsCalendar({
   date,
   onViewChange,
   onDateChange,
-}: TripsCalendarProps) {
+}: AppCalendarProps) {
   const { homeCountry } = useHomeCountry();
 
   // Map trips to calendar events
@@ -73,7 +77,7 @@ export default function TripsCalendar({
   const handleDateChange = onDateChange ?? setInternalDate;
 
   return (
-    <div style={{ height: 600 }}>
+    <div style={{ height: 800 }}>
       <Calendar<TripEvent>
         localizer={localizer}
         events={events}
@@ -88,8 +92,44 @@ export default function TripsCalendar({
         view={calendarView}
         onView={handleViewChange as (view: View) => void}
         date={calendarDate}
-        onNavigate={handleDateChange}
-        components={{ toolbar: CalendarToolbar }}
+        onNavigate={(actionOrDate, newDate) => {
+          // Use global Date constructor for instanceof
+          const isDate = (d: unknown): d is Date =>
+            Object.prototype.toString.call(d) === "[object Date]";
+          if (isDate(actionOrDate)) {
+            handleDateChange(actionOrDate);
+          } else if (typeof actionOrDate === "string") {
+            if (actionOrDate === "DATE" && isDate(newDate)) {
+              handleDateChange(newDate);
+            } else if (actionOrDate === "TODAY") {
+              handleDateChange(new Date());
+            } else if (actionOrDate === "PREV" || actionOrDate === "NEXT") {
+              // Calculate new month
+              const d = new Date(calendarDate);
+              d.setMonth(d.getMonth() + (actionOrDate === "NEXT" ? 1 : -1));
+              handleDateChange(d);
+            }
+          }
+        }}
+        components={{
+          toolbar: (props) => (
+            <CalendarToolbar
+              label={props.label}
+              view={calendarView}
+              onViewChange={handleViewChange}
+              onToday={() => handleDateChange(new Date())}
+              onNavigate={(action) => {
+                if (action === "TODAY") {
+                  handleDateChange(new Date());
+                } else if (action === "PREV" || action === "NEXT") {
+                  const d = new Date(calendarDate);
+                  d.setMonth(d.getMonth() + (action === "NEXT" ? 1 : -1));
+                  handleDateChange(d);
+                }
+              }}
+            />
+          ),
+        }}
         eventPropGetter={(event) => {
           const bg = event.color || "bg-primary-active";
           const isUpcoming = isUpcomingTrip(event.resource);
