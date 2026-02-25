@@ -89,7 +89,7 @@ export function Modal({
       ...(extraRefs?.map((ref) => ref as React.RefObject<HTMLElement>) ?? []),
     ],
     () => {
-      if (!disableClose) onClose();
+      if (!disableClose && !dragging) onClose();
     },
   );
 
@@ -112,7 +112,7 @@ export function Modal({
         onClick={
           !disableScroll
             ? () => {
-                if (!disableClose) onClose();
+                if (!disableClose && !dragging) onClose();
               }
             : undefined
         }
