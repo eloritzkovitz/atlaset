@@ -14,6 +14,7 @@ export interface LayersContextType {
   updateLayerName: (id: string, newName: string) => void;
   reorderLayers: (newOrder: AnyLayer[]) => void;
   toggleLayerVisibility: (id: string) => void;
+  duplicateLayer: (id: string) => void;
   removeLayer: (id: string) => void;
   loading: boolean;
   error: string | null;

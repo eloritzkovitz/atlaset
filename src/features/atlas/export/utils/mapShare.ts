@@ -3,7 +3,7 @@
  */
 
 /**
- * Encode map data (layers and optional markers) as a base64 string. 
+ * Encode map data as a base64 string.
  * @param mapData Object with layers and optional markers, mapName, and sharer
  * @returns Base64 encoded string
  */
@@ -25,7 +25,7 @@ export function encodeMapData(mapData: {
         encodeURIComponent(l.name),
         encodeURIComponent(l.color),
         l.countries.map(encodeURIComponent).join(","),
-      ].join(":")
+      ].join(":"),
     )
     .join(";");
 
@@ -40,7 +40,7 @@ export function encodeMapData(mapData: {
           Array.isArray(m.coordinates) ? m.coordinates[1] : "",
           encodeURIComponent(m.color ?? ""),
           encodeURIComponent(m.description ?? ""),
-        ].join(",")
+        ].join(","),
       )
       .join("|");
   }
@@ -138,5 +138,14 @@ export function decodeMapData(code: string): {
     return result;
   } catch {
     return { layers: [] };
-  }
+  }  
+}
+
+/**
+ * Generates a shareable URL for a map based on the provided base64 encoded map data.
+ * @param code Base64 encoded map data
+ * @returns Full URL to share the map
+ */
+export function getSharedMapUrl(code: string): string {
+  return `${window.location.origin}/atlas?map=${code}`;
 }

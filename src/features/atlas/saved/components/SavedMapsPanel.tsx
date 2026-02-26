@@ -9,6 +9,7 @@ export function SavedMapsPanel() {
   const {
     savedMaps,
     createNewMap,
+    duplicateSavedMap,
     saveCurrentMap,
     viewSavedMap,
     isSavedMapModalOpen,
@@ -77,6 +78,7 @@ export function SavedMapsPanel() {
                     updateSavedMapName(map.id, newName);
                   }
                 }}
+                onDuplicate={() => duplicateSavedMap(map)}
                 onRemove={() => deleteSavedMap(map.id)}
                 showRemove={true}
               />

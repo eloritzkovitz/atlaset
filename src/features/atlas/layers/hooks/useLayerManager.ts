@@ -76,6 +76,18 @@ export function useLayerManager({
     await updateLayers(mapLayer(id, (l) => ({ ...l, visible: !l.visible })));
   }
 
+  // Duplicate layer
+  async function duplicateLayer(id: string) {
+    const layer = layers.find((l) => l.id === id);
+    if (!layer) return;
+    const newLayer = {
+      ...layer,
+      id: crypto.randomUUID(),
+      name: layer.name + " (Copy)",
+    };
+    await addLayer(newLayer);
+  }
+
   // Remove layer
   async function removeLayer(id: string) {
     await updateLayers(layers.filter((l) => l.id !== id));
@@ -127,6 +139,7 @@ export function useLayerManager({
     updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
+    duplicateLayer,
     removeLayer,
     openAddLayer,
     openEditLayer,

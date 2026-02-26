@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-02-26
+
+- **[feature]** **Atlas | Saved Maps:** Added thumbnails to saved maps
+- **[feature]** **Atlas:** Added additional actions for maps, layers and markers, including duplicate, download and copy link
+
 ## 2026-02-25
 
 - **[feature]** **Calendar:** Added calendar feature with events

@@ -1,10 +1,5 @@
 import { useMemo } from "react";
-import {
-  FaArrowsToEye,
-  FaMapPin,
-  FaShareNodes,
-  FaTimeline,
-} from "react-icons/fa6";
+import { FaMap, FaMapPin, FaShareNodes, FaTimeline } from "react-icons/fa6";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
@@ -86,7 +81,7 @@ export function MapUiContainer({
     return {
       message: msg,
       icon: isEdit ? (
-        <FaArrowsToEye className="text-lg" />
+        <FaMap className="text-lg" />
       ) : (
         <FaShareNodes className="text-lg" />
       ),

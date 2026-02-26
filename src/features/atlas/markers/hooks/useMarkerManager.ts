@@ -72,7 +72,7 @@ export function useMarkerManager({
     );
     setMarkers(updated);
     await persistMarkers(updated);
-  }  
+  }
 
   // Toggle marker visibility
   async function toggleMarkerVisibility(id: string) {
@@ -87,6 +87,18 @@ export function useMarkerManager({
   async function reorderMarkers(newOrder: Marker[]) {
     setMarkers(newOrder);
     await persistMarkers(newOrder);
+  }
+
+  // Duplicate marker
+  async function duplicateMarker(id: string) {
+    const marker = markers.find((m) => m.id === id);
+    if (!marker) return;
+    const newMarker = {
+      ...marker,
+      id: crypto.randomUUID(),
+      name: marker.name + " (Copy)",
+    };
+    await addMarker(newMarker);
   }
 
   // Remove marker
@@ -145,6 +157,7 @@ export function useMarkerManager({
     updateMarkerName,
     toggleMarkerVisibility,
     reorderMarkers,
+    duplicateMarker,
     removeMarker,
     openAddMarker,
     openEditMarker,

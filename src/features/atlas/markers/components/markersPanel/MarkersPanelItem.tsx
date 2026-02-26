@@ -10,6 +10,7 @@ interface MarkersPanelItemProps {
   onDownload?: () => void;
   onEdit?: () => void;
   onNameChange?: (newName: string) => void;
+  onDuplicate?: () => void;
   onRemove?: () => void;
   draggedIndex?: number | null;
   handleDragStart?: (idx: number) => void;
@@ -25,6 +26,7 @@ export function MarkersPanelItem({
   onDownload,
   onEdit,
   onNameChange,
+  onDuplicate,
   onRemove,
   draggedIndex,
   handleDragStart,
@@ -41,6 +43,7 @@ export function MarkersPanelItem({
       onDownload={onDownload}
       onEdit={onEdit}
       onNameChange={onNameChange}
+      onDuplicate={onDuplicate}
       onRemove={onRemove}
       dragged={draggedIndex === idx}
       onDragStart={handleDragStart ? () => handleDragStart(idx) : undefined}

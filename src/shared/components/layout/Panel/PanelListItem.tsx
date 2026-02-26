@@ -1,11 +1,6 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
-import {
-  FaEye,
-  FaEyeSlash,
-  FaArrowsToEye,
-  FaEllipsisVertical,
-} from "react-icons/fa6";
+import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
 import { useMenuPosition, useRenameControls } from "@hooks";
 import { PanelListItemMenuActions } from "./PanelListItemMenuActions";
 import { RenameControls } from "./RenameControls";
@@ -25,6 +20,8 @@ interface PanelListItemProps {
   onDownload?: () => void;
   onEdit?: () => void;
   onNameChange?: (newName: string) => void;
+  onDuplicate?: () => void;
+  onCopytoClipboard?: () => void;
   onRemove?: () => void;
   removeDisabled?: boolean;
   dragged?: boolean;
@@ -46,13 +43,15 @@ export function PanelListItem({
   onCenter,
   onDownload,
   onEdit,
+  onNameChange,
+  onDuplicate,
+  onCopytoClipboard,
   onRemove,
   removeDisabled = false,
   dragged,
   onDragStart,
   handleDragOver,
   handleDragEnd,
-  onNameChange,
   menuContent,
   menuPosition = "right",
   children,
@@ -89,12 +88,47 @@ export function PanelListItem({
 
   // Helper to close menu and call action
   const closeMenuAndCall = (action?: () => void) => {
-    setTimeout(() => setMenuOpen(false), 200);
+    setTimeout(() => setMenuOpen(false), 100);
     if (action) action();
   };
 
   // Close menu when renaming
   if (isEditing && menuOpen) setMenuOpen(false);
+
+  // Action configs for quick actions
+  const quickActions = [
+    onToggleVisibility && {
+      variant: "toggle" as const,
+      onClick: onToggleVisibility,
+      ariaLabel: visible ? "Hide" : "Show",
+      title: visible ? "Hide" : "Show",
+      className: `${visible ? "text-muted" : "text-muted/50"} hover:text-muted-hover`,
+      icon: visible ? <FaEye /> : <FaEyeSlash />,
+    },
+  ].filter(Boolean);
+
+  // Wrap menu actions to close menu after action
+  const wrapMenuAction = (action?: () => void) =>
+    action ? () => closeMenuAndCall(action) : undefined;
+
+  // Menu actions config
+  const menuActions = {
+    onView: wrapMenuAction(onView),
+    onCenter: wrapMenuAction(onCenter),
+    onDownload: wrapMenuAction(onDownload),
+    onEdit: wrapMenuAction(onEdit),
+    onNameChange: wrapMenuAction(onNameChange ? handleEdit : undefined),
+    onDuplicate: wrapMenuAction(onDuplicate),
+    onCopytoClipboard: wrapMenuAction(onCopytoClipboard),
+    onRemove: onRemove
+      ? () =>
+          closeMenuAndCall(() => {
+            if (!removeDisabled) setConfirmOpen(true);
+          })
+      : undefined,
+    removeDisabled,
+    handleEdit,
+  };
 
   return (
     <>
@@ -102,14 +136,35 @@ export function PanelListItem({
         id="panel-list-item"
         className={`mb-4 flex items-center bg-surface-alt rounded-lg px-3 py-2 ${
           dragged ? "ring-dashed" : ""
-        }`}
+        } ${onView ? "cursor-pointer transition" : ""}`}
         draggable={onDragStart ? true : false}
         onDragStart={onDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
         style={{
-          cursor: onDragStart ? (dragged ? "grabbing" : "grab") : "default",
+          cursor: onDragStart
+            ? dragged
+              ? "grabbing"
+              : "grab"
+            : onView
+              ? "pointer"
+              : "default",
         }}
+        onClick={
+          !isEditing && onView
+            ? (e) => {
+                // Prevent menu or other actions from triggering view
+                const target = e.target as HTMLElement;
+                if (
+                  target &&
+                  target.closest &&
+                  target.closest(".panel-listitem-menu")
+                )
+                  return;
+                onView();
+              }
+            : undefined
+        }
       >
         {!icon ? <ColorDot color={color} size={22} /> : icon}
         <div className="flex-1 ml-2 flex items-center">
@@ -132,26 +187,8 @@ export function PanelListItem({
           )}
           {children}
         </div>
-        {!isEditing && onView && (
-          <ActionButton
-            variant="toggle"
-            onClick={onView}
-            ariaLabel={"View"}
-            title={"View"}
-            className="text-code hover:text-code-hover"
-            icon={<FaArrowsToEye className="text-xl" />}
-          />
-        )}
-        {!isEditing && onToggleVisibility && (
-          <ActionButton
-            variant="toggle"
-            onClick={onToggleVisibility}
-            ariaLabel={visible ? "Hide" : "Show"}
-            title={visible ? "Hide" : "Show"}
-            className={`${visible ? "text-muted" : "text-muted/50"} hover:text-muted-hover`}
-            icon={visible ? <FaEye /> : <FaEyeSlash />}
-          />
-        )}
+        {!isEditing &&
+          quickActions.map((action, i) => <ActionButton key={i} {...action} />)}
         {!isEditing && (
           <div ref={btnRef} style={{ position: "relative" }}>
             <ActionButton
@@ -175,30 +212,7 @@ export function PanelListItem({
               {menuContent ? (
                 menuContent
               ) : (
-                <PanelListItemMenuActions
-                  onCenter={
-                    onCenter ? () => closeMenuAndCall(onCenter) : undefined
-                  }
-                  onDownload={
-                    onDownload ? () => closeMenuAndCall(onDownload) : undefined
-                  }
-                  onEdit={onEdit ? () => closeMenuAndCall(onEdit) : undefined}
-                  onNameChange={
-                    onNameChange
-                      ? () => closeMenuAndCall(handleEdit)
-                      : undefined
-                  }
-                  onRemove={
-                    onRemove
-                      ? () =>
-                          closeMenuAndCall(() => {
-                            if (!removeDisabled) setConfirmOpen(true);
-                          })
-                      : undefined
-                  }
-                  removeDisabled={removeDisabled}
-                  handleEdit={handleEdit}
-                />
+                <PanelListItemMenuActions {...menuActions} />
               )}
             </Menu>
           </div>

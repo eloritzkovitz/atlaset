@@ -13,7 +13,7 @@ import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { logUserActivity, useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
-export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {    
+export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const [savedMaps, setSavedMaps] = useState<SavedMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -36,6 +36,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
+    duplicateLayer,
     removeLayer,
     openAddLayer,
     openEditLayer,
@@ -65,6 +66,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     updateMarkerName,
     reorderMarkers,
     toggleMarkerVisibility,
+    duplicateMarker,
     removeMarker,
     openAddMarker,
     openEditMarker,
@@ -161,6 +163,20 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       markers: [],
       createdAt: new Date().toISOString(),
     });
+  }
+
+  // Duplicate a saved map
+  async function duplicateSavedMap(original: SavedMap) {
+    const newMap: SavedMap = {
+      ...original,
+      id: crypto.randomUUID(),
+      name: `${original.name} (Copy)`,
+      createdAt: new Date().toISOString(),
+      layers: original.layers.map((l) => ({ ...l })),
+      markers: original.markers?.map((m) => ({ ...m })) ?? [],
+    };
+    await savedMapsService.set(newMap);
+    await reload();
   }
 
   // Save current map from URL
@@ -281,6 +297,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         error,
         reload,
         createNewMap,
+        duplicateSavedMap,
         saveCurrentMap,
         viewSavedMap,
         loadSavedMapForEditing,
@@ -296,6 +313,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         addLayer,
         importLayers,
         saveSavedMapLayer,
+        duplicateLayer,
         removeLayer,
         reorderLayers,
         toggleLayerVisibility,
@@ -318,6 +336,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         updateMarkerName,
         reorderMarkers,
         toggleMarkerVisibility,
+        duplicateMarker,
         removeMarker,
         openAddMarker,
         openEditMarker,

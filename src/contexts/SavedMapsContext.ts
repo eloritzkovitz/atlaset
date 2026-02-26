@@ -11,22 +11,24 @@ export interface SavedMapsContextValue {
   reload: () => Promise<void>;
   openSavedMapModal: (map?: SavedMap | null) => void;
   closeSavedMapModal: () => void;
-  exitEditMode: () => void;  
+  exitEditMode: () => void;
   createNewMap: () => void;
-  saveCurrentMap: () => void;  
+  duplicateSavedMap: (original: SavedMap) => Promise<void>;
+  saveCurrentMap: () => void;
   viewSavedMap: (map: SavedMap) => void;
   loadSavedMapForEditing: (id: string) => Promise<void>;
   updateSavedMapName: (id: string, newName: string) => Promise<void>;
   saveSavedMap: () => Promise<void>;
   isSavedMapModalOpen: boolean;
-  activeSavedMap: SavedMap | null;  
-  deleteSavedMap: (id: string) => Promise<void>;  
+  activeSavedMap: SavedMap | null;
+  deleteSavedMap: (id: string) => Promise<void>;
   // Layers
   addLayer: (layer: Layer) => void;
   updateLayerName: (id: string, newName: string) => void;
   importLayers: (layers: Layer[]) => void;
   reorderLayers: (layers: Layer[]) => void;
   toggleLayerVisibility: (layerId: string) => void;
+  duplicateLayer: (layerId: string) => void;
   removeLayer: (layerId: string) => void;
   isEditingSavedMapLayer: boolean;
   activeSavedMapLayer: Layer | null;
@@ -48,6 +50,7 @@ export interface SavedMapsContextValue {
   updateMarkerName: (id: string, newName: string) => Promise<void>;
   reorderMarkers: (markers: Marker[]) => Promise<void>;
   toggleMarkerVisibility: (id: string) => Promise<void>;
+  duplicateMarker: (id: string) => Promise<void>;
   removeMarker: (id: string) => Promise<void>;
   openAddMarker: (coords?: Coordinates) => void;
   openEditMarker: (marker: Marker) => void;
@@ -57,7 +60,7 @@ export interface SavedMapsContextValue {
   isAddingMarker: boolean;
   startAddingMarker: () => void;
   handleMapClickForMarker: (coords: Coordinates) => void;
-  cancelMarkerCreation: () => void;  
+  cancelMarkerCreation: () => void;
 }
 
 export const SavedMapsContext = createContext<
