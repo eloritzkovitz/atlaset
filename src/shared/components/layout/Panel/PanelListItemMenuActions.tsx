@@ -78,10 +78,10 @@ export function PanelListItemMenuActions({
                 <FaTrash className="mr-2" />
               )
             }
-            className={`w-full text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={removeDisabled}
           >
-            {removeDisabled ? "Cannot remove" : "Remove"}
+            {removeDisabled ? "Cannot delete" : "Delete"}
           </MenuButton>
         </>
       )}

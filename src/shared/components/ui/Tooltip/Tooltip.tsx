@@ -12,9 +12,21 @@ export interface TooltipProps {
   content: ReactNode;
   children: ReactNode;
   position?: "top" | "bottom" | "left" | "right";
+  className?: string;
 }
 
-export function Tooltip({ content, children, position = "top" }: TooltipProps) {
+/** Renders a tooltip.
+ * @param content - The content to show inside the tooltip.
+ * @param children - The element that triggers the tooltip on hover/focus.
+ * @param position - The position of the tooltip relative to the trigger (default: top).
+ * @param className - Additional classes for the tooltip container.
+ */
+export function Tooltip({
+  content,
+  children,
+  position = "top",
+  className,
+}: TooltipProps) {
   const [visible, setVisible] = useState(false);
   const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({});
   const timeoutRef = useRef<number | null>(null);
@@ -72,28 +84,54 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
   // If child is a valid element, clone and attach ref and handlers
   let trigger: React.ReactNode;
   if (isValidElement(children)) {
-    const childProps = (children as React.ReactElement).props as Record<string, unknown>;
+    const childProps = (children as React.ReactElement).props as Record<
+      string,
+      unknown
+    >;
     const isDOM = typeof (children as React.ReactElement).type === "string";
     // Try to detect if custom component supports ref (forwardRef)
     const type = (children as React.ReactElement).type as unknown;
-    const supportsRef = isDOM || (typeof type === "object" && type !== null && "$$typeof" in type && String((type as { $$typeof?: unknown }).$$typeof).includes("Symbol(react.forward_ref)"));
+    const supportsRef =
+      isDOM ||
+      (typeof type === "object" &&
+        type !== null &&
+        "$$typeof" in type &&
+        String((type as { $$typeof?: unknown }).$$typeof).includes(
+          "Symbol(react.forward_ref)",
+        ));
     if (supportsRef) {
       const props: Record<string, unknown> = {
         onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
           show();
-          if (childProps.onMouseEnter) (childProps.onMouseEnter as (e: React.MouseEvent<HTMLElement>) => void)(e);
+          if (childProps.onMouseEnter)
+            (
+              childProps.onMouseEnter as (
+                e: React.MouseEvent<HTMLElement>,
+              ) => void
+            )(e);
         },
         onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
           hide();
-          if (childProps.onMouseLeave) (childProps.onMouseLeave as (e: React.MouseEvent<HTMLElement>) => void)(e);
+          if (childProps.onMouseLeave)
+            (
+              childProps.onMouseLeave as (
+                e: React.MouseEvent<HTMLElement>,
+              ) => void
+            )(e);
         },
         onFocus: (e: React.FocusEvent<HTMLElement>) => {
           show();
-          if (childProps.onFocus) (childProps.onFocus as (e: React.FocusEvent<HTMLElement>) => void)(e);
+          if (childProps.onFocus)
+            (childProps.onFocus as (e: React.FocusEvent<HTMLElement>) => void)(
+              e,
+            );
         },
         onBlur: (e: React.FocusEvent<HTMLElement>) => {
           hide();
-          if (childProps.onBlur) (childProps.onBlur as (e: React.FocusEvent<HTMLElement>) => void)(e);
+          if (childProps.onBlur)
+            (childProps.onBlur as (e: React.FocusEvent<HTMLElement>) => void)(
+              e,
+            );
         },
         tabIndex: childProps.tabIndex ?? 0,
         ref: anchorRef,
@@ -138,14 +176,14 @@ export function Tooltip({ content, children, position = "top" }: TooltipProps) {
             ref={tooltipRef}
             style={{
               ...tooltipStyle,
-              whiteSpace: 'pre-line',
+              whiteSpace: "pre-line",
             }}
-            className="px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90"
+            className={`px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90 ${className}`}
             role="tooltip"
           >
             {content}
           </span>,
-          document.body
+          document.body,
         )}
     </>
   );
