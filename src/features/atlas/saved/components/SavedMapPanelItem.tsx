@@ -1,8 +1,11 @@
+import { useRef } from "react";
 import { FaMap } from "react-icons/fa6";
 import { PanelListItem, Tooltip } from "@components";
-import type { SavedMap } from "../types";
-import { useRef } from "react";
+import { useAuth } from "@contexts/AuthContext";
+import { useMapShare } from "@features/atlas/export/hooks/useMapShare";
 import { MapPreview } from "./MapPreview";
+import type { SavedMap } from "../types";
+import { encodeMapData } from "@features/atlas/export/utils/mapShare";
 
 interface SavedMapPanelItemProps {
   map: SavedMap;
@@ -22,6 +25,31 @@ export function SavedMapPanelItem({
   showRemove = true,
 }: SavedMapPanelItemProps) {
   const ref = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
+
+  // Encode map data for sharing
+  const code = encodeMapData({
+    layers: (map.layers || [])
+      .filter((l) => l.visible && l.countries && l.countries.length > 0)
+      .map((l) => ({
+        name: l.name,
+        color: l.color,
+        countries: l.countries,
+      })),
+    markers: Array.isArray(map.markers)
+      ? map.markers
+          .filter((m) => m.visible !== false)
+          .map((m) => ({
+            name: m.name,
+            coordinates: m.coordinates,
+            color: m.color,
+            description: m.description,
+          }))
+      : [],
+    mapName: map.name,
+    sharer: user?.displayName || undefined,
+  });
+  const { copyShareUrl } = useMapShare(code);
 
   return (
     <div ref={ref} style={{ position: "relative" }}>
@@ -47,10 +75,11 @@ export function SavedMapPanelItem({
             ? (newName) => onNameChange(newName)
             : undefined
         }
+        onCopytoClipboard={copyShareUrl}
         onRemove={showRemove && onRemove ? () => onRemove(map.id) : undefined}
         removeDisabled={false}
         visible={true}
-      />
+      ></PanelListItem>
     </div>
   );
 }

@@ -1,10 +1,11 @@
 import {
+  FaCircleInfo,
+  FaCrosshairs,
+  FaDownload,
+  FaLink,
+  FaPencil,
   FaPenToSquare,
   FaTrash,
-  FaCrosshairs,
-  FaCircleInfo,
-  FaPencil,
-  FaDownload,
 } from "react-icons/fa6";
 import { MenuButton } from "../Menu/MenuButton";
 import { Separator } from "../Separator";
@@ -14,6 +15,7 @@ interface PanelListItemMenuActionsProps {
   onDownload?: (() => void) | null;
   onEdit?: () => void;
   onNameChange?: (() => void) | null;
+  onCopytoClipboard?: () => void;
   onRemove?: (() => void) | null;
   removeDisabled?: boolean;
   handleEdit: () => void;
@@ -24,6 +26,7 @@ export function PanelListItemMenuActions({
   onDownload,
   onEdit,
   onNameChange,
+  onCopytoClipboard,
   onRemove,
   removeDisabled = false,
   handleEdit,
@@ -64,6 +67,15 @@ export function PanelListItemMenuActions({
           className="w-full"
         >
           Center
+        </MenuButton>
+      )}
+      {onCopytoClipboard && (
+        <MenuButton
+          onClick={onCopytoClipboard}
+          icon={<FaLink className="mr-2" />}
+          className="w-full"
+        >
+          Copy Link
         </MenuButton>
       )}
       {onRemove && (

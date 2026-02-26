@@ -85,7 +85,9 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const code = encodeMapData({
     layers: [
       ...(includeLayers ? layersToShare : []),
-      ...(includeVisitedCountries && visitedCountriesLayer.countries.length > 0
+      ...(!activeSavedMap &&
+      includeVisitedCountries &&
+      visitedCountriesLayer.countries.length > 0
         ? [visitedCountriesLayer]
         : []),
     ],

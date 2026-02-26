@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FaShareNodes, FaCopy } from "react-icons/fa6";
 import {
   ActionButton,
@@ -6,6 +5,7 @@ import {
   InputBox,
   SectionHeader,
 } from "@components";
+import { useMapShare } from "../hooks/useMapShare";
 
 interface ShareMapSectionProps {
   expanded: boolean;
@@ -18,17 +18,7 @@ export function ShareMapSection({
   setExpanded,
   code,
 }: ShareMapSectionProps) {
-  const [shareCopied, setShareCopied] = useState(false);
-
-  // Generate share URL with encoded map data
-  const shareUrl = `${window.location.origin}/atlas?map=${code}`;
-
-  // Copy share URL to clipboard
-  const handleCopyShare = () => {
-    navigator.clipboard.writeText(shareUrl);
-    setShareCopied(true);
-    setTimeout(() => setShareCopied(false), 1500);
-  };
+  const { shareUrl, copyShareUrl, copied } = useMapShare(code);
 
   return (
     <CollapsibleHeader
@@ -48,9 +38,9 @@ export function ShareMapSection({
         />
         <ActionButton
           variant="action"
-          onClick={handleCopyShare}
+          onClick={copyShareUrl}
           ariaLabel="Copy link"
-          title={shareCopied ? "Copied!" : "Copy link"}
+          title={copied ? "Copied!" : "Copy link"}
           icon={<FaCopy className="text-xl" />}
           className="bg-transparent !h-10 !w-10 mt-1 rounded-lg"
         />

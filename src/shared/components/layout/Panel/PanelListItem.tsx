@@ -25,6 +25,7 @@ interface PanelListItemProps {
   onDownload?: () => void;
   onEdit?: () => void;
   onNameChange?: (newName: string) => void;
+  onCopytoClipboard?: () => void;
   onRemove?: () => void;
   removeDisabled?: boolean;
   dragged?: boolean;
@@ -46,13 +47,14 @@ export function PanelListItem({
   onCenter,
   onDownload,
   onEdit,
+  onNameChange,
+  onCopytoClipboard,
   onRemove,
   removeDisabled = false,
   dragged,
   onDragStart,
   handleDragOver,
   handleDragEnd,
-  onNameChange,
   menuContent,
   menuPosition = "right",
   children,
@@ -186,6 +188,11 @@ export function PanelListItem({
                   onNameChange={
                     onNameChange
                       ? () => closeMenuAndCall(handleEdit)
+                      : undefined
+                  }
+                  onCopytoClipboard={
+                    onCopytoClipboard
+                      ? () => closeMenuAndCall(onCopytoClipboard)
                       : undefined
                   }
                   onRemove={

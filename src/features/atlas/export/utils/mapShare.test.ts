@@ -1,4 +1,4 @@
-import { encodeMapData, decodeMapData } from "./mapShare";
+import { encodeMapData, decodeMapData, getSharedMapUrl } from "./mapShare";
 
 describe("mapShare encode/decode", () => {
   it("encodes and decodes minimal layers", () => {
@@ -38,8 +38,18 @@ describe("mapShare encode/decode", () => {
     const decoded = decodeMapData(code);
     expect(decoded.layers).toEqual(data.layers);
     expect(decoded.markers).toEqual([
-      { name: "A", coordinates: [2, 1], color: undefined, description: undefined },
-      { name: undefined, coordinates: [4, 3], color: undefined, description: undefined },
+      {
+        name: "A",
+        coordinates: [2, 1],
+        color: undefined,
+        description: undefined,
+      },
+      {
+        name: undefined,
+        coordinates: [4, 3],
+        color: undefined,
+        description: undefined,
+      },
     ]);
   });
 
@@ -91,5 +101,28 @@ describe("mapShare encode/decode", () => {
     expect(decoded.sharer).toBe("Sharer");
     expect(decoded.layers[0].name).toBe("L");
     expect(decoded.markers).toBeUndefined();
+  });
+
+  it("getSharedMapUrl returns correct URL for code", () => {
+    const code = "abc123";
+    const url = getSharedMapUrl(code);
+    expect(url).toBe(`${window.location.origin}/atlas?map=abc123`);
+  });
+
+  it("getSharedMapUrl works with empty code", () => {
+    const url = getSharedMapUrl("");
+    expect(url).toBe(`${window.location.origin}/atlas?map=`);
+  });
+
+  it("getSharedMapUrl returns a valid URL for a real encoded map", () => {
+    const data = {
+      layers: [{ name: "L", color: "#fff", countries: ["FR"] }],
+      mapName: "Test",
+      sharer: "User",
+    };
+    const code = encodeMapData(data);
+    const url = getSharedMapUrl(code);
+    expect(url.startsWith(`${window.location.origin}/atlas?map=`)).toBe(true);
+    expect(url.includes(code)).toBe(true);
   });
 });
