@@ -27,6 +27,7 @@ interface LayersPanelProps {
     updateLayerName: (id: string, newName: string) => void;
     reorderLayers: (layers: Layer[]) => void;
     toggleLayerVisibility: (layerId: string) => void;
+    duplicateLayer: (layerId: string) => void;
     removeLayer: (layerId: string) => void;
   };
 }
@@ -45,6 +46,7 @@ export function LayersPanel({
     updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
+    duplicateLayer,
     removeLayer,
   } = useLayers();
   const effectiveLayersFromContext = useEffectiveLayers();
@@ -154,6 +156,13 @@ export function LayersPanel({
                             newName,
                           )
                       : (newName) => updateLayerName(layer.id, newName)
+                    : undefined
+                }
+                onDuplicate={
+                  !isReadonly
+                    ? isEditingSavedMap
+                      ? () => handleSavedMapChange?.duplicateLayer(layer.id)
+                      : () => duplicateLayer(layer.id)
                     : undefined
                 }
                 onRemove={

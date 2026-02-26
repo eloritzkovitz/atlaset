@@ -12,7 +12,8 @@ export interface MarkersContextType {
   editMarker: (updated: Marker) => void;
   updateMarkerName: (id: string, newName: string) => void;
   toggleMarkerVisibility: (id: string) => void;
-  reorderMarkers: (newOrder: Marker[]) => void;
+  duplicateMarker: (id: string) => void;
+  reorderMarkers: (newOrder: Marker[]) => void;  
   removeMarker: (id: string) => void;
   editingMarker: Marker | null;
   setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;

@@ -62,12 +62,6 @@ export function AtlasUiContainer({
     openSavedMapModal,
     closeSavedMapModal,
     saveSavedMap,
-    addLayer,
-    updateLayerName,
-    importLayers,
-    reorderLayers,
-    toggleLayerVisibility,
-    removeLayer,
     isEditingSavedMapLayer,
     isEditSavedMapLayerModalOpen,
     activeSavedMapLayer,
@@ -112,6 +106,7 @@ export function AtlasUiContainer({
                 updateMarkerName: savedMaps.updateMarkerName,
                 toggleMarkerVisibility: savedMaps.toggleMarkerVisibility,
                 reorderMarkers: savedMaps.reorderMarkers,
+                duplicateMarker: savedMaps.duplicateMarker,
                 removeMarker: savedMaps.removeMarker,
               }
             : undefined
@@ -127,12 +122,13 @@ export function AtlasUiContainer({
         handleSavedMapChange={
           isEdit
             ? {
-                addLayer,
-                updateLayerName,
-                importLayers,
-                reorderLayers,
-                toggleLayerVisibility,
-                removeLayer,
+                addLayer: savedMaps.addLayer,
+                updateLayerName: savedMaps.updateLayerName,
+                importLayers: savedMaps.importLayers,
+                reorderLayers: savedMaps.reorderLayers,
+                toggleLayerVisibility: savedMaps.toggleLayerVisibility,
+                duplicateLayer: savedMaps.duplicateLayer,
+                removeLayer: savedMaps.removeLayer,
               }
             : undefined
         }
