@@ -13,7 +13,7 @@ import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { logUserActivity, useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
-export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {    
+export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const [savedMaps, setSavedMaps] = useState<SavedMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -163,6 +163,20 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     });
   }
 
+  // Duplicate a saved map
+  async function duplicateSavedMap(original: SavedMap) {
+    const newMap: SavedMap = {
+      ...original,
+      id: crypto.randomUUID(),
+      name: `${original.name} (Copy)`,
+      createdAt: new Date().toISOString(),
+      layers: original.layers.map((l) => ({ ...l })),
+      markers: original.markers?.map((m) => ({ ...m })) ?? [],
+    };
+    await savedMapsService.set(newMap);
+    await reload();
+  }
+
   // Save current map from URL
   function saveCurrentMap() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -281,6 +295,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         error,
         reload,
         createNewMap,
+        duplicateSavedMap,
         saveCurrentMap,
         viewSavedMap,
         loadSavedMapForEditing,

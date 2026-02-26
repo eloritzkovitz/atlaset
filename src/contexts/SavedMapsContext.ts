@@ -11,16 +11,17 @@ export interface SavedMapsContextValue {
   reload: () => Promise<void>;
   openSavedMapModal: (map?: SavedMap | null) => void;
   closeSavedMapModal: () => void;
-  exitEditMode: () => void;  
+  exitEditMode: () => void;
   createNewMap: () => void;
-  saveCurrentMap: () => void;  
+  duplicateSavedMap: (original: SavedMap) => Promise<void>;
+  saveCurrentMap: () => void;
   viewSavedMap: (map: SavedMap) => void;
   loadSavedMapForEditing: (id: string) => Promise<void>;
   updateSavedMapName: (id: string, newName: string) => Promise<void>;
   saveSavedMap: () => Promise<void>;
   isSavedMapModalOpen: boolean;
-  activeSavedMap: SavedMap | null;  
-  deleteSavedMap: (id: string) => Promise<void>;  
+  activeSavedMap: SavedMap | null;
+  deleteSavedMap: (id: string) => Promise<void>;
   // Layers
   addLayer: (layer: Layer) => void;
   updateLayerName: (id: string, newName: string) => void;
@@ -57,7 +58,7 @@ export interface SavedMapsContextValue {
   isAddingMarker: boolean;
   startAddingMarker: () => void;
   handleMapClickForMarker: (coords: Coordinates) => void;
-  cancelMarkerCreation: () => void;  
+  cancelMarkerCreation: () => void;
 }
 
 export const SavedMapsContext = createContext<

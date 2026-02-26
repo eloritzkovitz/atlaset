@@ -1,20 +1,26 @@
 import {
   FaCircleInfo,
+  FaCopy,
   FaCrosshairs,
   FaDownload,
   FaLink,
   FaPencil,
   FaPenToSquare,
+  FaRegEye,
   FaTrash,
+  FaUserPlus,
 } from "react-icons/fa6";
 import { MenuButton } from "../Menu/MenuButton";
 import { Separator } from "../Separator";
 
 interface PanelListItemMenuActionsProps {
+  onView?: () => void;
   onCenter?: () => void;
   onDownload?: (() => void) | null;
   onEdit?: () => void;
   onNameChange?: (() => void) | null;
+  onDuplicate?: () => void;
+  onShare?: () => void;
   onCopytoClipboard?: () => void;
   onRemove?: (() => void) | null;
   removeDisabled?: boolean;
@@ -22,10 +28,13 @@ interface PanelListItemMenuActionsProps {
 }
 
 export function PanelListItemMenuActions({
+  onView,
   onCenter,
   onDownload,
   onEdit,
   onNameChange,
+  onDuplicate,
+  onShare,
   onCopytoClipboard,
   onRemove,
   removeDisabled = false,
@@ -33,6 +42,18 @@ export function PanelListItemMenuActions({
 }: PanelListItemMenuActionsProps) {
   return (
     <>
+      {onView && (
+        <>
+          <MenuButton
+            onClick={onView}
+            icon={<FaRegEye className="mr-2" />}
+            className="w-full"
+          >
+            View
+          </MenuButton>
+          <Separator className="my-1" />
+        </>
+      )}
       {onDownload && (
         <MenuButton
           onClick={onDownload}
@@ -69,6 +90,25 @@ export function PanelListItemMenuActions({
           Center
         </MenuButton>
       )}
+      {onDuplicate && (
+        <MenuButton
+          onClick={onDuplicate}
+          icon={<FaCopy className="mr-2" />}
+          className="w-full"
+        >
+          Duplicate
+        </MenuButton>
+      )}
+      {(onShare || onCopytoClipboard) && <Separator className="my-1" />}
+      {onShare && (
+        <MenuButton
+          onClick={onShare}
+          icon={<FaUserPlus className="mr-2" />}
+          className="w-full"
+        >
+          Share
+        </MenuButton>
+      )}
       {onCopytoClipboard && (
         <MenuButton
           onClick={onCopytoClipboard}
@@ -80,7 +120,7 @@ export function PanelListItemMenuActions({
       )}
       {onRemove && (
         <>
-          <Separator />
+          <Separator className="my-1" />
           <MenuButton
             onClick={onRemove}
             icon={

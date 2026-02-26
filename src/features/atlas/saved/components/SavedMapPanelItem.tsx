@@ -6,11 +6,13 @@ import { useMapShare } from "@features/atlas/export/hooks/useMapShare";
 import { MapPreview } from "./MapPreview";
 import type { SavedMap } from "../types";
 import { encodeMapData } from "@features/atlas/export/utils/mapShare";
+import { exportMapDataAsJson } from "@features/atlas/export/utils/mapExport";
 
 interface SavedMapPanelItemProps {
   map: SavedMap;
   onView?: () => void;
   onNameChange?: (newName: string) => void;
+  onDuplicate?: () => void;
   onRemove?: (id: string) => void;
   showEdit?: boolean;
   showRemove?: boolean;
@@ -20,6 +22,7 @@ export function SavedMapPanelItem({
   map,
   onView,
   onNameChange,
+  onDuplicate,
   onRemove,
   showEdit = true,
   showRemove = true,
@@ -51,6 +54,11 @@ export function SavedMapPanelItem({
   });
   const { copyShareUrl } = useMapShare(code);
 
+  // Quick download handler
+  const handleDownload = () => {
+    exportMapDataAsJson(map);
+  };
+
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <PanelListItem
@@ -76,6 +84,8 @@ export function SavedMapPanelItem({
             : undefined
         }
         onCopytoClipboard={copyShareUrl}
+        onDownload={handleDownload}
+        onDuplicate={onDuplicate}
         onRemove={showRemove && onRemove ? () => onRemove(map.id) : undefined}
         removeDisabled={false}
         visible={true}
