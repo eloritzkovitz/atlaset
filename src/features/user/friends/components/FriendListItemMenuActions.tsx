@@ -1,9 +1,9 @@
+import type { ReactNode } from "react";
 import { FaUserMinus, FaUser } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { MenuButton } from "@components";
 import { friendService } from "../services/friendService";
 import { useAuth } from "../../auth/hooks/useAuth";
-import type { ReactNode } from "react";
 
 interface FriendListItemMenuActionsProps {
   uid: string;
@@ -16,6 +16,7 @@ export function FriendListItemMenuActions({
 }: FriendListItemMenuActionsProps): ReactNode {
   const navigate = useNavigate();
   const { user } = useAuth();
+  
   return (
     <>
       <MenuButton
@@ -31,7 +32,6 @@ export function FriendListItemMenuActions({
       >
         View Profile
       </MenuButton>
-      {/* Only render Unfriend if viewing your own friends list (user.uid !== uid) */}
       {user && user.uid !== uid && (
         <MenuButton
           onClick={() => {

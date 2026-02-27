@@ -22,6 +22,7 @@ import {
   useFloatingHover,
   useFloatingMenuPosition,
   useKeyHandler,
+  useMenuActions,
   useMenuPosition,
 } from "@hooks";
 import type { Trip } from "../../types";
@@ -100,7 +101,16 @@ export function TripActions({
   // Check if trip is shared
   const isShared = sharedTripIds?.has(trip.id);
 
-  // Access sharedTripIds from context
+  // Menu actions (must be called unconditionally)
+  const menuActions = useMenuActions(
+    {
+      onEdit: () => onEdit(trip),
+      onDelete: () => onDelete(trip),
+      onFavorite: () => updateTripFavorite(trip.id, !trip.favorite),
+    },
+    setOpen,
+  );
+
   if (isShared) {
     return (
       <ActionButton
@@ -148,10 +158,7 @@ export function TripActions({
           </MenuButton>
         )}
         <MenuButton
-          onClick={() => {
-            setTimeout(() => setOpen(false), 300);
-            onEdit(trip);
-          }}
+          onClick={menuActions.onEdit}
           icon={<FaPenToSquare className="mr-2" />}
           className="w-full"
         >
@@ -159,10 +166,7 @@ export function TripActions({
         </MenuButton>
         <Separator className="my-2" />
         <MenuButton
-          onClick={() => {
-            setTimeout(() => setOpen(false), 300);
-            updateTripFavorite(trip.id, !trip.favorite);
-          }}
+          onClick={menuActions.onFavorite}
           icon={
             trip.favorite ? (
               <FaRegHeart className="mr-2 text-muted" />
@@ -204,10 +208,7 @@ export function TripActions({
           )}
           <Separator className="my-2" />
           <MenuButton
-            onClick={() => {
-              setTimeout(() => setOpen(false), 300);
-              onDelete(trip);
-            }}
+            onClick={menuActions.onDelete}
             icon={<FaTrash className="mr-2" />}
             className="!text-danger w-full"
           >

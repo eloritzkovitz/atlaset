@@ -1,10 +1,10 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
 import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
-import { useMenuPosition, useRenameControls } from "@hooks";
-import { PanelListItemMenuActions } from "./PanelListItemMenuActions";
+import { useMenuActions, useMenuPosition, useRenameControls } from "@hooks";
 import { RenameControls } from "./RenameControls";
 import { Menu } from "../Menu/Menu";
+import { MenuActions } from "../Menu/MenuActions";
 import { ConfirmModal } from "../Modal/ConfirmModal";
 import { ActionButton } from "../../action/ActionButton";
 import { ColorDot } from "../../ui/ColorDot";
@@ -86,12 +86,6 @@ export function PanelListItem({
     false,
   );
 
-  // Helper to close menu and call action
-  const closeMenuAndCall = (action?: () => void) => {
-    setTimeout(() => setMenuOpen(false), 100);
-    if (action) action();
-  };
-
   // Close menu when renaming
   if (isEditing && menuOpen) setMenuOpen(false);
 
@@ -107,28 +101,24 @@ export function PanelListItem({
     },
   ].filter(Boolean);
 
-  // Wrap menu actions to close menu after action
-  const wrapMenuAction = (action?: () => void) =>
-    action ? () => closeMenuAndCall(action) : undefined;
-
-  // Menu actions config
-  const menuActions = {
-    onView: wrapMenuAction(onView),
-    onCenter: wrapMenuAction(onCenter),
-    onDownload: wrapMenuAction(onDownload),
-    onEdit: wrapMenuAction(onEdit),
-    onNameChange: wrapMenuAction(onNameChange ? handleEdit : undefined),
-    onDuplicate: wrapMenuAction(onDuplicate),
-    onCopytoClipboard: wrapMenuAction(onCopytoClipboard),
-    onRemove: onRemove
-      ? () =>
-          closeMenuAndCall(() => {
+  // Generic menu actions config using useMenuActions
+  const menuActions = useMenuActions(
+    {
+      onView,
+      onCenter,
+      onDownload,
+      onEdit,
+      onNameChange: onNameChange ? handleEdit : undefined,
+      onDuplicate,
+      onCopytoClipboard,
+      onRemove: onRemove
+        ? () => {
             if (!removeDisabled) setConfirmOpen(true);
-          })
-      : undefined,
-    removeDisabled,
-    handleEdit,
-  };
+          }
+        : undefined,
+    },
+    setMenuOpen,
+  );
 
   return (
     <>
@@ -212,7 +202,11 @@ export function PanelListItem({
               {menuContent ? (
                 menuContent
               ) : (
-                <PanelListItemMenuActions {...menuActions} />
+                <MenuActions
+                  {...menuActions}
+                  handleEdit={handleEdit}
+                  removeDisabled={removeDisabled}
+                />
               )}
             </Menu>
           </div>

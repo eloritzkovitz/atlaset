@@ -13,7 +13,7 @@ import {
 import { MenuButton } from "../Menu/MenuButton";
 import { Separator } from "../Separator";
 
-interface PanelListItemMenuActionsProps {
+interface MenuActionsProps {
   onView?: () => void;
   onCenter?: () => void;
   onDownload?: (() => void) | null;
@@ -27,7 +27,7 @@ interface PanelListItemMenuActionsProps {
   handleEdit: () => void;
 }
 
-export function PanelListItemMenuActions({
+export function MenuActions({
   onView,
   onCenter,
   onDownload,
@@ -39,7 +39,7 @@ export function PanelListItemMenuActions({
   onRemove,
   removeDisabled = false,
   handleEdit,
-}: PanelListItemMenuActionsProps) {
+}: MenuActionsProps) {
   return (
     <>
       {onView && (
