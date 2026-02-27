@@ -30,8 +30,8 @@ export function RateMenu({
       <div {...hoverHandlers}>
         {RATING_ACTION_OPTIONS.map((opt) => (
           <MenuButton
-            key={opt.value}
-            onMouseDown={() => {
+            key={String(opt.value) + "-rate"}
+            onPointerDown={() => {
               onRate(opt.value);
               onClose();
             }}
