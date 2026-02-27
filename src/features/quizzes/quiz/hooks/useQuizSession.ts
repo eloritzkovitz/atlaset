@@ -32,7 +32,7 @@ export function useQuizSession({
   const [session, setSession] = useState<
     Pick<SessionProps, "questionNumber" | "sessionActive" | "maxStreak">
   >({
-    questionNumber: 1,
+    questionNumber: 0,
     sessionActive: true,
     maxStreak: 0,
   });
@@ -70,7 +70,7 @@ export function useQuizSession({
       return {
         ...s,
         questionNumber: next,
-        sessionActive: next < maxQuestions ? true : false,
+        sessionActive: next < maxQuestions,
       };
     });
   };

@@ -29,7 +29,7 @@ export function Scoreboard({
           <span>
             Question:{" "}
             <b>
-              {questionNumber}/{maxQuestions}
+              {questionNumber + 1}/{maxQuestions}
             </b>
           </span>
         )}

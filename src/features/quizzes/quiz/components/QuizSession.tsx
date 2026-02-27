@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
 import { GameOverCard } from "./GameOverCard";
 import { useQuizSession } from "../hooks/useQuizSession";
-import type { QuizType, Difficulty, SessionProps } from "../../types";
+import type {
+  QuizType,
+  Difficulty,
+  SessionProps,
+  QuizSessionEndType,
+} from "../../types";
 
 interface QuizSessionProps {
   maxQuestions: number;
@@ -30,24 +35,31 @@ export function QuizSession({
     maxStreak,
   } = useQuizSession({ maxQuestions, duration, quizType, difficulty, score });
 
-  // Show game over card when session ends
-  const [showGameOver, setShowGameOver] = useState(false);
-  
+  // Session end type state
+  const [endType, setEndType] = useState<QuizSessionEndType>(null);
+
+  // Determine end type when session ends
   useEffect(() => {
-    if (!sessionActive && questionNumber >= maxQuestions) {
-      // Delay to allow any final UI updates before showing game over
-      const timeout = setTimeout(() => setShowGameOver(true), 0);
-      return () => clearTimeout(timeout);
-    } else if (sessionActive) {
-      setShowGameOver(false);
+    if (!sessionActive) {
+      if (questionNumber >= maxQuestions) {
+        setEndType("complete");
+      } else if (
+        typeof duration === "number" &&
+        timeLeft === 0 &&
+        questionNumber < maxQuestions
+      ) {
+        setEndType("gameover");
+      }
+    } else {
+      setEndType(null);
     }
-  }, [sessionActive, questionNumber, maxQuestions]);
+  }, [sessionActive, questionNumber, maxQuestions, duration, timeLeft]);
 
   // Render game over card if session has ended
-  if (showGameOver) {
+  function renderGameOverCard(type: "complete" | "gameover") {
     return (
       <GameOverCard
-        type={"complete"}
+        type={type}
         score={score}
         timeUsed={
           typeof duration === "number" && typeof timeLeft === "number"
@@ -61,13 +73,17 @@ export function QuizSession({
             quizType === "flag"
               ? "guess-the-flag"
               : quizType === "capital"
-              ? "guess-the-capital"
-              : quizType;
+                ? "guess-the-capital"
+                : quizType;
           window.location.assign(`/quizzes/${typePath}`);
         }}
       />
     );
   }
+
+  // Render game over card if session has ended
+  if (endType === "complete") return renderGameOverCard("complete");
+  if (endType === "gameover") return renderGameOverCard("gameover");
 
   // Only render questions if not finished
   return (
