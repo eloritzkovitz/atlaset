@@ -1,7 +1,6 @@
-import { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
-import { CalendarModal } from "@features/calendar";
 import { useCountryData } from "@features/countries";
 import {
   TripModal,
@@ -15,6 +14,10 @@ import { sortTrips } from "@features/trips/utils/tripSort";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
+
+const CalendarModal = React.lazy(
+  () => import("@features/calendar/components/CalendarModal"),
+);
 
 export default function TripsPage() {
   const countryData = useCountryData();
@@ -189,12 +192,16 @@ export default function TripsPage() {
           onClose={() => setModalOpen(false)}
           isEditing={!!trip && !!trip.id}
         />
-        <CalendarModal
-          isOpen={calendarOpen}
-          onClose={() => setCalendarOpen(false)}
-          trips={trips}
-          date={calendarDate}
-        />
+        <Suspense
+          fallback={<LoadingSpinner fullScreen message="Loading calendar..." />}
+        >
+          <CalendarModal
+            isOpen={calendarOpen}
+            onClose={() => setCalendarOpen(false)}
+            trips={trips}
+            date={calendarDate}
+          />
+        </Suspense>
         {loading ? (
           <LoadingSpinner fullScreen message="Loading trips..." />
         ) : trips.length === 0 ? (

@@ -1,10 +1,7 @@
 import React from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import {
-  ActionButton,
-  SegmentedToggle,
-  type SegmentedToggleOption,
-} from "@components";
+import { ActionButton, SegmentedToggle } from "@components";
+import { viewOptions } from "../constants/calendarToolbarOptions";
 import { type CalendarView } from "../types";
 
 interface CalendarToolbarProps {
@@ -14,12 +11,6 @@ interface CalendarToolbarProps {
   onToday?: () => void;
   onNavigate: (action: "PREV" | "NEXT" | "TODAY" | "DATE") => void;
 }
-
-export const viewOptions: SegmentedToggleOption<CalendarView>[] = [
-  { label: "Day", value: "day" },
-  { label: "Week", value: "week" },
-  { label: "Month", value: "month" },
-];
 
 export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
   label,

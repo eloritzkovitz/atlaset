@@ -35,57 +35,17 @@ export function AtlasUiContainer({
   selectedCountry,
   setSelectedCountry,
 }: AtlasUiContainerProps) {
+  const layers = useLayers();
   const { isEdit } = useMapView();
-
-  // Markers state
   const mainMarkers = useMarkers();
-  const savedMaps = useSavedMaps();
-
   const { startAddingMarker, cancelMarkerCreation } = useMarkerCreation();
-
-  // Layers state
-  const {
-    editingLayer,
-    isEditingLayer,
-    isEditModalOpen,
-    openAddLayer,
-    openEditLayer,
-    saveLayer,
-    closeLayerModal,
-    setEditingLayer,
-  } = useLayers();
-
-  // Saved maps state
-  const {
-    isSavedMapModalOpen,
-    activeSavedMap,
-    openSavedMapModal,
-    closeSavedMapModal,
-    saveSavedMap,
-    isEditingSavedMapLayer,
-    isEditSavedMapLayerModalOpen,
-    activeSavedMapLayer,
-    setActiveSavedMapLayer,
-    saveSavedMapLayer,
-    openAddLayer: openAddSavedMapLayer,
-    openEditLayer: openEditSavedMapLayer,
-    closeLayerModal: closeSavedMapLayer,
-    // Marker fields
-    activeSavedMapMarker,
-    setActiveSavedMapMarker,
-    isEditingSavedMapMarker,
-    isEditSavedMapMarkerModalOpen,
-    openEditMarker,
-    saveSavedMapMarker,
-    closeMarkerModal,
-  } = savedMaps;
+  const savedMaps = useSavedMaps();
 
   // UI toggle hint
   useUiToggleHint();
 
   return (
     <>
-      {/* Panels */}
       <CountriesPanel
         selectedIsoCode={selectedIsoCode}
         hoveredIsoCode={hoveredIsoCode}
@@ -96,9 +56,13 @@ export function AtlasUiContainer({
       />
       <MarkersPanel
         onAddMarker={startAddingMarker}
-        onEditMarker={isEdit ? openEditMarker : mainMarkers.openEditMarker}
+        onEditMarker={
+          isEdit ? savedMaps.openEditMarker : mainMarkers.openEditMarker
+        }
         activeSavedMapMarkers={
-          isEdit && activeSavedMap ? savedMaps.savedMapMarkers : undefined
+          isEdit && savedMaps.activeSavedMap
+            ? savedMaps.savedMapMarkers
+            : undefined
         }
         handleSavedMapChange={
           isEdit
@@ -113,11 +77,17 @@ export function AtlasUiContainer({
         }
       />
       <LayersPanel
-        onEditLayer={isEdit ? openEditSavedMapLayer : openEditLayer}
-        onAddLayer={isEdit ? openAddSavedMapLayer : openAddLayer}
-        layerModalOpen={isEdit ? isEditSavedMapLayerModalOpen : isEditModalOpen}
+        onEditLayer={isEdit ? savedMaps.openEditLayer : layers.openEditLayer}
+        onAddLayer={isEdit ? savedMaps.openAddLayer : layers.openAddLayer}
+        layerModalOpen={
+          isEdit
+            ? savedMaps.isEditSavedMapLayerModalOpen
+            : layers.isEditModalOpen
+        }
         activeSavedMapLayers={
-          isEdit && activeSavedMap ? activeSavedMap.layers : undefined
+          isEdit && savedMaps.activeSavedMap
+            ? savedMaps.activeSavedMap.layers
+            : undefined
         }
         handleSavedMapChange={
           isEdit
@@ -137,7 +107,6 @@ export function AtlasUiContainer({
       <MapExportPanel svgRef={svgRef} />
       <MapSettingsPanel />
 
-      {/* Modals */}
       <CountryDetailsModal
         isOpen={!!selectedCountry}
         country={selectedCountry}
@@ -145,67 +114,79 @@ export function AtlasUiContainer({
       />
       <MarkerDetailsModal
         isOpen={
-          isEdit ? isEditSavedMapMarkerModalOpen : mainMarkers.detailsModalOpen
+          isEdit
+            ? savedMaps.isEditSavedMapMarkerModalOpen
+            : mainMarkers.detailsModalOpen
         }
-        marker={isEdit ? activeSavedMapMarker : mainMarkers.selectedMarker}
+        marker={
+          isEdit ? savedMaps.activeSavedMapMarker : mainMarkers.selectedMarker
+        }
         position={isEdit ? null : (mainMarkers.detailsModalPosition ?? null)}
         onClose={() =>
-          isEdit ? closeMarkerModal() : mainMarkers.closeMarkerDetails()
+          isEdit
+            ? savedMaps.closeMarkerModal()
+            : mainMarkers.closeMarkerDetails()
         }
       />
       <MarkerModal
         isOpen={
-          isEdit ? isEditSavedMapMarkerModalOpen : mainMarkers.isMarkerModalOpen
+          isEdit
+            ? savedMaps.isEditSavedMapMarkerModalOpen
+            : mainMarkers.isMarkerModalOpen
         }
         isEditing={
-          isEdit ? isEditingSavedMapMarker : mainMarkers.isEditingMarker
+          isEdit
+            ? savedMaps.isEditingSavedMapMarker
+            : mainMarkers.isEditingMarker
         }
-        marker={isEdit ? activeSavedMapMarker : mainMarkers.editingMarker}
+        marker={
+          isEdit ? savedMaps.activeSavedMapMarker : mainMarkers.editingMarker
+        }
         onChange={
-          isEdit ? setActiveSavedMapMarker : mainMarkers.setEditingMarker
+          isEdit
+            ? savedMaps.setActiveSavedMapMarker
+            : mainMarkers.setEditingMarker
         }
-        onSave={isEdit ? saveSavedMapMarker : mainMarkers.saveMarker}
+        onSave={isEdit ? savedMaps.saveSavedMapMarker : mainMarkers.saveMarker}
         onClose={() => {
           if (isEdit) {
-            closeMarkerModal();
+            savedMaps.closeMarkerModal();
           } else {
             mainMarkers.closeMarkerModal();
             cancelMarkerCreation();
           }
         }}
       />
-      {/* LayerModal for main map or saved map layers */}
-      {isEdit ? (
-        <LayerModal
-          isOpen={isEditSavedMapLayerModalOpen}
-          isEditing={isEditingSavedMapLayer}
-          layer={activeSavedMapLayer}
-          onChange={setActiveSavedMapLayer}
-          onSave={saveSavedMapLayer}
-          onClose={closeSavedMapLayer}
-        />
-      ) : (
-        <LayerModal
-          isOpen={isEditModalOpen}
-          isEditing={isEditingLayer}
-          layer={editingLayer}
-          onChange={setEditingLayer}
-          onSave={saveLayer}
-          onClose={closeLayerModal}
-        />
-      )}
+      <LayerModal
+        isOpen={
+          isEdit
+            ? savedMaps.isEditSavedMapLayerModalOpen
+            : layers.isEditModalOpen
+        }
+        isEditing={
+          isEdit ? savedMaps.isEditingSavedMapLayer : layers.isEditingLayer
+        }
+        layer={isEdit ? savedMaps.activeSavedMapLayer : layers.editingLayer}
+        onChange={
+          isEdit ? savedMaps.setActiveSavedMapLayer : layers.setEditingLayer
+        }
+        onSave={isEdit ? savedMaps.saveSavedMapLayer : layers.saveLayer}
+        onClose={isEdit ? savedMaps.closeLayerModal : layers.closeLayerModal}
+      />
       <SavedMapsModal
-        isOpen={isSavedMapModalOpen}
+        isOpen={savedMaps.isSavedMapModalOpen}
         isEditing={
           !!(
-            activeSavedMap &&
-            savedMaps.savedMaps.some((m) => m.id === activeSavedMap.id)
+            savedMaps.activeSavedMap &&
+            savedMaps.savedMaps.some(
+              (m) => m.id === savedMaps.activeSavedMap?.id,
+            )
           )
         }
-        savedMap={activeSavedMap}
-        onChange={openSavedMapModal}
-        onSave={saveSavedMap}
-        onClose={closeSavedMapModal}
+        savedMap={savedMaps.activeSavedMap ?? null}
+        onChange={savedMaps.openSavedMapModal}
+        onSave={savedMaps.saveSavedMap}
+        onClose={savedMaps.closeSavedMapModal}
       />
     </>
   );

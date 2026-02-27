@@ -42,7 +42,7 @@ interface AppCalendarProps {
   onDateChange?: (date: Date) => void;
 }
 
-export default function AppCalendar({
+export function AppCalendar({
   trips,
   onSelectTrip,
   onSelectSlot,

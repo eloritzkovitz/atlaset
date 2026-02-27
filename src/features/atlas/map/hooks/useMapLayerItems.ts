@@ -59,7 +59,7 @@ export function useMapLayerItems(mode: MapMode = "view") {
   const editingItems = useMemo(
     () =>
       isEdit && activeSavedMap && Array.isArray(activeSavedMap.layers)
-        ? activeSavedMap.layers.flatMap(getLayerItems)
+        ? activeSavedMap.layers.filter((l) => l.visible).flatMap(getLayerItems)
         : [],
     [isEdit, activeSavedMap],
   );
