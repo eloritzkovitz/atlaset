@@ -1,12 +1,6 @@
-import { describe, it, expect, vi } from "vitest";
-import { useMenuActions } from "./useMenuActions";
 
-function setup(
-  actions: Record<string, (() => void) | undefined>,
-  setMenuOpen: (open: boolean) => void,
-) {
-  return useMenuActions(actions, setMenuOpen);
-}
+import { renderHook, act } from '@testing-library/react';
+import { useMenuActions } from "./useMenuActions";
 
 describe("useMenuActions", () => {
   beforeEach(() => {
@@ -20,9 +14,13 @@ describe("useMenuActions", () => {
     const setMenuOpen = vi.fn();
     const action = vi.fn();
     const actions = { test: action };
-    const wrapped = setup(actions, setMenuOpen);
-    wrapped.test && wrapped.test();
-    vi.runAllTimers();
+    const { result } = renderHook(() => useMenuActions(actions, setMenuOpen));
+    act(() => {
+      if (result.current.test) {
+        result.current.test();
+      }
+      vi.runAllTimers();
+    });
     expect(setMenuOpen).toHaveBeenCalledWith(false);
     expect(action).toHaveBeenCalled();
   });
@@ -30,16 +28,18 @@ describe("useMenuActions", () => {
   it("returns undefined for missing actions", () => {
     const setMenuOpen = vi.fn();
     const actions = { test: undefined };
-    const wrapped = setup(actions, setMenuOpen);
-    expect(wrapped.test).toBeUndefined();
+    const { result } = renderHook(() => useMenuActions(actions, setMenuOpen));
+    expect(result.current.test).toBeUndefined();
   });
 
   it("does not call action if undefined", () => {
     const setMenuOpen = vi.fn();
     const actions = { test: undefined };
-    const wrapped = setup(actions, setMenuOpen);
-    if (wrapped.test) wrapped.test();
-    vi.runAllTimers();
+    const { result } = renderHook(() => useMenuActions(actions, setMenuOpen));
+    act(() => {
+      if (result.current.test) result.current.test();
+      vi.runAllTimers();
+    });
     expect(setMenuOpen).not.toHaveBeenCalled();
   });
 });
