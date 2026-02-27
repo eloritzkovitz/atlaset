@@ -29,8 +29,10 @@ export default function ProfilePage() {
   const location = useLocation();
   const { username } = useParams();
   const { user: currentUser, loading: authLoading } = useAuth();
+  const [profileRefreshKey, setProfileRefreshKey] = useState(0);
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
     username,
+    refreshKey: profileRefreshKey,
   });
   const [editOpen, setEditOpen] = useState(false);
   // Modal open state is now based on route
@@ -153,6 +155,7 @@ export default function ProfilePage() {
           profile={profileUser}
           open={editOpen}
           onClose={() => setEditOpen(false)}
+          onSave={() => setProfileRefreshKey((k) => k + 1)}
         />
       )}
       <AppPanels />
