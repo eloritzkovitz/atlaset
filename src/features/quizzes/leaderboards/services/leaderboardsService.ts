@@ -8,6 +8,7 @@ import {
   limit,
   getDocs,
   where,
+  deleteDoc,
 } from "firebase/firestore";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
@@ -29,7 +30,7 @@ export const leaderboardsService = {
    */
   async getLeaderboard(
     type: QuizType,
-    difficulty: Difficulty
+    difficulty: Difficulty,
   ): Promise<LeaderboardEntry[]> {
     if (!isAuthenticated()) return [];
     const q = query(
@@ -38,7 +39,7 @@ export const leaderboardsService = {
       where("difficulty", "==", difficulty),
       orderBy("score", "desc"),
       orderBy("time", "asc"),
-      limit(25)
+      limit(25),
     );
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data() as LeaderboardEntry);
@@ -53,18 +54,36 @@ export const leaderboardsService = {
   async addLeaderboardEntry(
     type: QuizType,
     difficulty: Difficulty,
-    entry: LeaderboardEntry
+    entry: LeaderboardEntry,
   ) {
     if (!isAuthenticated()) return;
     const user = getCurrentUser();
     if (!user) return;
     if (typeof type === "undefined" || typeof difficulty === "undefined") {
       throw new Error(
-        "Type and difficulty must be defined for leaderboard entry."
+        "Type and difficulty must be defined for leaderboard entry.",
       );
     }
     const ref = collection(db, LEADERBOARD_COLLECTION);
+    // Add the new entry
     await setDoc(doc(ref), { ...entry, type, difficulty });
+    // Enforce top 25 limit: fetch all entries for this mode/difficulty, ordered by score/time
+    const q = query(
+      ref,
+      where("type", "==", type),
+      where("difficulty", "==", difficulty),
+      orderBy("score", "desc"),
+      orderBy("time", "asc"),
+    );
+    const snapshot = await getDocs(q);
+    const docs = snapshot.docs;
+    // Delete entries beyond the top 25
+    if (docs.length > 25) {
+      const toDelete = docs.slice(25);
+      for (const docSnap of toDelete) {
+        await deleteDoc(docSnap.ref);
+      }
+    }
     await logUserActivity(
       301,
       {
@@ -73,7 +92,7 @@ export const leaderboardsService = {
         playerId: entry.playerId,
         userName: user.displayName,
       },
-      user.uid
+      user.uid,
     );
   },
 
@@ -87,7 +106,7 @@ export const leaderboardsService = {
   async savePlayerGame(
     playerId: string,
     entry: LeaderboardEntry,
-    maxGames = 10
+    maxGames = 10,
   ) {
     if (!isAuthenticated()) return;
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
@@ -108,7 +127,7 @@ export const leaderboardsService = {
    */
   async getPlayerGames(
     playerId: string,
-    maxGames = 10
+    maxGames = 10,
   ): Promise<LeaderboardEntry[]> {
     if (!isAuthenticated()) return [];
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
