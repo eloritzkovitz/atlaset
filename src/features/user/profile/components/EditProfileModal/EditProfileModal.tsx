@@ -122,8 +122,10 @@ export function EditProfileModal({
       }
 
       setSuccess("Profile updated successfully.");
-      if (onSave) onSave();
-      setTimeout(onClose, 1000);
+      setTimeout(() => {
+        onClose();
+        if (onSave) onSave();
+      }, 500);
     } catch (err: unknown) {
       console.error(err);
       setError((err as Error)?.message || "Failed to update profile.");
@@ -209,6 +211,7 @@ export function EditProfileModal({
               type="date"
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
+              required={false}
             />
           </FormField>
           <FormField label="Biography">

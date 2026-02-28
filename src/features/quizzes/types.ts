@@ -28,12 +28,15 @@ export interface SessionProps {
   sessionActive: boolean;
   handleSessionEnd: () => void;
   maxQuestions: number;
-  questionNumber: number; 
+  questionNumber: number;
   incrementQuestions: () => void;
   timeLeft?: number;
   maxStreak: number;
   setMaxStreak: (newMaxStreak: number) => void;
 }
+
+/** Represents the reason a quiz session ended. */
+export type QuizSessionEndType = "complete" | "gameover" | null;
 
 /** Represents an entry in the leaderboard. */
 export type LeaderboardEntry = {
@@ -43,7 +46,7 @@ export type LeaderboardEntry = {
   playerName: string;
   /** Username of the player (optional). */
   username?: string;
-  /** URL of the player's avatar (optional). */  
+  /** URL of the player's avatar (optional). */
   photoURL?: string;
   /** Score achieved by the player. */
   score: number;

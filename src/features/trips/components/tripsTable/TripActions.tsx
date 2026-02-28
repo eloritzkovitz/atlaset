@@ -43,6 +43,7 @@ export function TripActions({
 }: TripActionsProps) {
   const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
+  const [rateMenuOpen, setRateMenuOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
@@ -50,10 +51,9 @@ export function TripActions({
   const {
     hoverHandlers: rateMenuHoverHandlers,
     floatingHandlers: rateButtonHoverHandlers,
-    shouldShowFloating: rateMenuOpen,
   } = useFloatingHover(true, 150);
 
-  // Close menu when clicking outside
+  // Close both menus when clicking outside
   useClickOutside(
     [
       menuRef as React.RefObject<HTMLElement>,
@@ -62,14 +62,16 @@ export function TripActions({
     ],
     () => {
       setOpen(false);
+      setRateMenuOpen(false);
     },
     open || rateMenuOpen,
   );
 
-  // Close menu on ESC key
+  // Close both menus on ESC key
   useKeyHandler(
     () => {
       setOpen(false);
+      setRateMenuOpen(false);
     },
     ["Escape"],
     open || rateMenuOpen,
@@ -101,7 +103,7 @@ export function TripActions({
   // Check if trip is shared
   const isShared = sharedTripIds?.has(trip.id);
 
-  // Menu actions (must be called unconditionally)
+  // Menu actions
   const menuActions = useMenuActions(
     {
       onEdit: () => onEdit(trip),
@@ -178,7 +180,11 @@ export function TripActions({
         >
           {trip.favorite ? "Unfavorite" : "Favorite"}
         </MenuButton>
-        <div style={{ display: "inline-block", width: "100%" }}>
+        <div
+          style={{ display: "inline-block", width: "100%" }}
+          onMouseEnter={() => setRateMenuOpen(true)}
+          onMouseLeave={() => setRateMenuOpen(false)}
+        >
           <MenuButton
             {...rateButtonHoverHandlers}
             icon={<FaStar className="mr-2 text-yellow-400" />}
