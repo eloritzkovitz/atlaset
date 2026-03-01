@@ -26,7 +26,9 @@ export function filterCountries(
   } = options;
 
   // Apply filters
-  return filterBySearch(countries, search, (c) => c.name).filter((country) => {
+  return filterBySearch(countries, search, (c) =>
+    [c.name, ...(c.aliases ?? [])].join(" "),
+  ).filter((country) => {
     if (selectedRegion && country.region !== selectedRegion) return false;
     if (selectedSubregion && country.subregion !== selectedSubregion)
       return false;

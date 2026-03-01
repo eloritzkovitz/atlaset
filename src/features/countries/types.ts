@@ -4,7 +4,7 @@ import type { FilterConfig } from "@types";
 /** Represents a country with various attributes. */
 export type Country = {
   /** The official name of the country */
-  name: string;  
+  name: string;
   /** The international calling code for the country */
   callingCode: string;
   /** The ISO 3166-1 alpha-2 code for the country */
@@ -25,6 +25,8 @@ export type Country = {
   languages?: string[];
   /** The sovereignty type of the country */
   sovereigntyType?: SovereigntyType;
+  /** Alternative names or abbreviations for the country */
+  aliases?: string[];
 };
 
 /** Sovereignty types for countries. */

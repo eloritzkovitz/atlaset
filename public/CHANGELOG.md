@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-03-01
+- **[feature]** **Countries:** Added aliases to some countries
+- **[bugfix]** **General:** Fixed some UI bugs
+
 ## 2026-02-26
 
 - **[feature]** **Atlas | Saved Maps:** Added thumbnails to saved maps

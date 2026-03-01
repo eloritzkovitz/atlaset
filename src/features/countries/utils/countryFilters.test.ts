@@ -43,6 +43,17 @@ describe("countryFilters utils", () => {
         }),
       ).toEqual([countries[2]]);
     });
+
+    it("filters by alias in search", () => {
+      // Add an alias to the first country
+      const countriesWithAlias = [
+        { ...countries[0], aliases: ["Testland"] },
+        ...countries.slice(1),
+      ];
+      expect(
+        filterCountries(countriesWithAlias, { search: "Testland" }),
+      ).toEqual([countriesWithAlias[0]]);
+    });
   });
 
   describe("getFilteredIsoCodes", () => {
