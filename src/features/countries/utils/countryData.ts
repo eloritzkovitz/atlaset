@@ -13,7 +13,7 @@ import type { Country, SovereigntyType } from "../types";
  * @returns The ISO country code in uppercase, or undefined if not found.
  */
 export function getCountryIsoCode(
-  properties: Record<string, unknown>
+  properties: Record<string, unknown>,
 ): string | undefined {
   return (
     (properties.ISO_A2 as string)?.toUpperCase?.() ||
@@ -28,12 +28,12 @@ export function getCountryIsoCode(
  */
 export function getCountryByIsoCode(
   code: string,
-  countryData: { countries: Country[] }
+  countryData: { countries: Country[] },
 ): Country | null {
   if (!code || !countryData?.countries) return null;
   return (
     countryData.countries.find(
-      (c) => c.isoCode?.toLowerCase() === code.toLowerCase()
+      (c) => c.isoCode?.toLowerCase() === code.toLowerCase(),
     ) || null
   );
 }
@@ -46,10 +46,10 @@ export function getCountryByIsoCode(
  */
 export function createCountryMap<T>(
   countries: Country[],
-  valueFn: (c: Country) => T
+  valueFn: (c: Country) => T,
 ): Record<string, T> {
   return Object.fromEntries(
-    countries.map((c) => [c.isoCode.toLowerCase(), valueFn(c)])
+    countries.map((c) => [c.isoCode.toLowerCase(), valueFn(c)]),
   );
 }
 
@@ -79,11 +79,11 @@ export function getAllSubregions(countries: { subregion?: string }[]) {
  */
 export function getSubregionsForRegion(
   countries: { region?: string; subregion?: string }[],
-  selectedRegion: string
+  selectedRegion: string,
 ) {
   return extractUniqueSorted(
     countries.filter((c) => c.region === selectedRegion),
-    (c) => c.subregion
+    (c) => c.subregion,
   );
 }
 
@@ -93,11 +93,11 @@ export function getSubregionsForRegion(
  * @returns Sorted array of unique sovereignty type strings.
  */
 export function getAllSovereigntyTypes(
-  countries: { sovereigntyType?: SovereigntyType }[]
+  countries: { sovereigntyType?: SovereigntyType }[],
 ): SovereigntyType[] {
   return extractUniqueSorted(
     countries,
-    (c) => c.sovereigntyType as SovereigntyType | undefined
+    (c) => c.sovereigntyType as SovereigntyType | undefined,
   );
 }
 
@@ -123,7 +123,7 @@ export function getSovereigntyInfoForTerritory(territoryIsoCode: string): {
  */
 export function getCountriesWithOwnFlag(countries: Country[]): Country[] {
   return countries.filter(
-    (country) => !EXCLUDED_ISO_CODES.includes(country.isoCode)
+    (country) => !EXCLUDED_ISO_CODES.includes(country.isoCode),
   );
 }
 
@@ -146,6 +146,16 @@ export function getLanguagesDisplay(languages?: string[]) {
   return languages.join(", ");
 }
 
+/**
+ * Gets a formatted string of aliases.
+ * @param aliases - An array of aliases.
+ * @returns A comma-separated string of aliases or "None" if empty.
+ */
+export function getAliasesDisplay(aliases?: string[]) {
+  if (!aliases || aliases.length === 0) return "None";
+  return aliases.join(", ");
+}
+
 // Precompute lookup maps
 const dependencyMap: Record<
   string,
@@ -161,7 +171,7 @@ const disputeMap: Record<
 > = {};
 
 for (const [sovereignIso, sovereignObj] of Object.entries(
-  SOVEREIGN_DEPENDENCIES
+  SOVEREIGN_DEPENDENCIES,
 )) {
   sovereignObj.dependencies?.forEach((dep) => {
     dependencyMap[dep.isoCode] = {

@@ -12,6 +12,7 @@ import {
   getRandomCountry,
   getLanguagesDisplay,
   getSovereigntyInfoForTerritory,
+  getAliasesDisplay,
 } from "./countryData";
 
 // Mock constants
@@ -229,6 +230,16 @@ describe("countryData utils", () => {
     it("returns 'None' for empty or undefined", () => {
       expect(getLanguagesDisplay([])).toBe("None");
       expect(getLanguagesDisplay(undefined)).toBe("None");
+    });
+  });
+
+  describe("getAliasesDisplay", () => {
+    it("returns comma-separated string", () => {
+      expect(getAliasesDisplay(["USA", "America"])).toBe("USA, America");
+    });
+    it("returns 'None' for empty or undefined", () => {
+      expect(getAliasesDisplay([])).toBe("None");
+      expect(getAliasesDisplay(undefined)).toBe("None");
     });
   });
 });

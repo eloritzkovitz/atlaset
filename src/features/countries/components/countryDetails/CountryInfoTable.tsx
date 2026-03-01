@@ -1,10 +1,13 @@
 import type { Country } from "../../types";
-import { getLanguagesDisplay } from "../../utils/countryData";
+import {
+  getAliasesDisplay,
+  getLanguagesDisplay,
+} from "../../utils/countryData";
 
 interface CountryInfoTableProps {
   country: Country;
   currencies: Record<string, string>;
-};
+}
 
 export function CountryInfoTable({
   country,
@@ -48,6 +51,10 @@ export function CountryInfoTable({
         <tr>
           <td className="font-semibold">ISO 3166 Code:</td>
           <td>{country.isoCode}</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Aliases:</td>
+          <td>{getAliasesDisplay(country.aliases)}</td>
         </tr>
       </tbody>
     </table>

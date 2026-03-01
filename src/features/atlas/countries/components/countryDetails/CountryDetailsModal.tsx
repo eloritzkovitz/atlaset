@@ -92,7 +92,7 @@ export function CountryDetailsModal({
         <div className="relative overflow-visible">
           <PanelHeader
             title={
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 break-words max-w-[15vw]">
                 <CountryWithFlag
                   isoCode={country.isoCode}
                   name={country.name}

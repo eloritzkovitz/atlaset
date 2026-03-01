@@ -17,7 +17,10 @@ const countryDifficulty: Record<string, string> = countryDifficultyRaw;
  * @param gameMode - Optional game mode
  * @returns Quiz props for Capital Quiz
  */
-export function getCapitalQuizProps(difficulty?: Difficulty, gameMode?: string) {
+export function getCapitalQuizProps(
+  difficulty?: Difficulty,
+  gameMode?: string,
+) {
   return createQuizProps({
     filterFn: (countries: Country[]) => filterByProperty(countries, "capital"),
     checkAnswer: (guess: string, country: Country) => {
@@ -56,8 +59,13 @@ export function getCapitalQuizProps(difficulty?: Difficulty, gameMode?: string) 
 export function getFlagQuizProps(difficulty?: Difficulty) {
   return createQuizProps({
     filterFn: getCountriesWithOwnFlag,
-    checkAnswer: (guess: string, country: Country) =>
-      normalizeString(guess) === normalizeString(country.name),
+    checkAnswer: (guess: string, country: Country) => {
+      const normalizedGuess = normalizeString(guess);
+      const validAnswers = [country.name, ...(country.aliases ?? [])].map(
+        normalizeString,
+      );
+      return validAnswers.includes(normalizedGuess);
+    },
     promptConfig: {
       prompt: (country: Country) => (
         <CountryFlag
