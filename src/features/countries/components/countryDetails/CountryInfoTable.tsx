@@ -49,13 +49,15 @@ export function CountryInfoTable({
           <td>{country.callingCode}</td>
         </tr>
         <tr>
-          <td className="font-semibold">ISO 3166 Code:</td>
+          <td className="font-semibold">ISO 3166-1 Code:</td>
           <td>{country.isoCode}</td>
         </tr>
-        <tr>
-          <td className="font-semibold">Aliases:</td>
-          <td>{getAliasesDisplay(country.aliases)}</td>
-        </tr>
+        {country.aliases && country.aliases.length > 0 && (
+          <tr>
+            <td className="font-semibold">Also known as:</td>
+            <td>{getAliasesDisplay(country.aliases)}</td>
+          </tr>
+        )}
       </tbody>
     </table>
   );
