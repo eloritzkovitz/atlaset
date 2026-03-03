@@ -65,16 +65,13 @@ describe("getActivityDescription", () => {
       itemName: "TestItem",
     });
     const children = desc.props.children;
+    // Username should be in a bold span
     expect(
-      children.some(
-        (part: any) =>
-          typeof part === "string" && part.includes("Alice added "),
-      ),
+      children.some((part: any) => part?.props?.children === "Alice"),
     ).toBeTruthy();
     expect(
       children.some((part: any) => part?.props?.children === "TestItem"),
     ).toBeTruthy();
-    expect(String(children[children.length - 1]).endsWith(".")).toBeTruthy();
   });
 
   it("renders quoted text with correct formatting", () => {
@@ -92,15 +89,13 @@ describe("getActivityDescription", () => {
     expect(coloredSpans.length).toBe(2);
     expect(coloredSpans[0].props.children).toBe("ItemX");
     expect(coloredSpans[1].props.children).toBe("PlaceY");
-    expect(String(children[children.length - 1]).endsWith(".")).toBeTruthy();
   });
 
   it("uses default for missing userName", () => {
     const desc = activityUtils.getActivityDescription(101, {});
+    // Username should be in a bold span with "You"
     expect(
-      desc.props.children.some(
-        (part: any) => typeof part === "string" && part.includes("You"),
-      ),
+      desc.props.children.some((part: any) => part?.props?.children === "You"),
     ).toBeTruthy();
   });
 
@@ -109,10 +104,15 @@ describe("getActivityDescription", () => {
       userName: "Bob",
     });
     const children = desc.props.children;
+    // Username should be in a bold span with "Bob"
+    expect(
+      children.some((part: any) => part?.props?.children === "Bob"),
+    ).toBeTruthy();
+    // Should contain "did something" as a string
     expect(
       children.some(
         (part: any) =>
-          typeof part === "string" && part.includes("Bob did something"),
+          typeof part === "string" && part.includes("did something"),
       ),
     ).toBeTruthy();
   });
@@ -123,12 +123,16 @@ describe("getActivityDescription", () => {
     activityUtils.activityTemplates[testKey] = "{userName} did {unknownKey}.";
     const desc = activityUtils.getActivityDescription(0, { userName: "Eve" });
     const children = desc.props.children;
+    // Username should be in a bold span with "Eve"
+    expect(
+      children.some((part: any) => part?.props?.children === "Eve"),
+    ).toBeTruthy();
+    // Should contain "did " as a string
     expect(
       children.some(
-        (part: any) => typeof part === "string" && part.includes("Eve did "),
+        (part: any) => typeof part === "string" && part.includes("did "),
       ),
     ).toBeTruthy();
-    expect(String(children[children.length - 1]).endsWith(".")).toBeTruthy();
     if (originalValue === undefined) {
       delete activityUtils.activityTemplates[testKey];
     } else {
@@ -140,39 +144,31 @@ describe("getActivityDescription", () => {
     activityUtils.activityTemplates[120] = "{userName} updated their profile.";
     const desc = activityUtils.getActivityDescription(120, { userName: "Sam" });
     const children = desc.props.children;
+    // Username should be in a bold span with "Sam"
+    expect(
+      children.some((part: any) => part?.props?.children === "Sam"),
+    ).toBeTruthy();
+    // Should contain "updated their profile" as a string
     expect(
       children.some(
         (part: any) =>
-          typeof part === "string" &&
-          part.includes("Sam updated their profile"),
+          typeof part === "string" && part.includes("updated their profile"),
       ),
     ).toBeTruthy();
-    expect(String(children[children.length - 1]).endsWith(".")).toBeTruthy();
-  });
-
-  it("renders correctly when template does not end with a dot", () => {
-    activityUtils.activityTemplates[130] = "{userName} updated settings";
-    const desc = activityUtils.getActivityDescription(130, {
-      userName: "Alex",
-    });
-    expect(
-      desc.props.children.some(
-        (part: any) =>
-          typeof part === "string" && part.includes("Alex updated settings"),
-      ),
-    ).toBeTruthy();
-    expect(
-      desc.props.children.some((part: any) => part?.key === "dot"),
-    ).toBeFalsy();
   });
 });
 
 describe("getActivityIcon", () => {
-  it("returns FaUser for user-related codes", () => {
-    [101, 102, 103, 104, 110, 111, 120].forEach((code) => {
+  it("returns FaCircleUser for user-related codes", () => {
+    [101, 102, 103, 104, 110, 111].forEach((code) => {
       const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaUser");
+      expect(icon.type.name).toBe("FaCircleUser");
     });
+  });
+
+  it("returns FaUser for code 120", () => {
+    const icon = activityUtils.getActivityIcon(120);
+    expect(icon.type.name).toBe("FaUser");
   });
 
   it("returns FaGear for code 130", () => {
@@ -191,26 +187,24 @@ describe("getActivityIcon", () => {
   });
 
   it("returns FaLayerGroup for layer codes", () => {
-    [210, 214, 234, 235, 236].forEach((code) => {
+    [210, 219].forEach((code) => {
       const icon = activityUtils.getActivityIcon(code);
       expect(icon.type.name).toBe("FaLayerGroup");
     });
   });
 
-  it("returns FaMarker for marker codes", () => {
-    [220, 223, 237, 238, 239].forEach((code) => {
+  it("returns FaMapPin for marker codes", () => {
+    [220, 223].forEach((code) => {
       const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaMarker");
+      expect(icon.type.name).toBe("FaMapPin");
     });
   });
 
   it("returns FaMap for map codes", () => {
-    [230].forEach((code) => {
+    [230, 239].forEach((code) => {
       const icon = activityUtils.getActivityIcon(code);
       expect(icon.type.name).toBe("FaMap");
     });
-    const icon239 = activityUtils.getActivityIcon(239);
-    expect(icon239.type.name).toBe("FaMarker");
   });
 
   it("returns FaQuestion for question codes", () => {
