@@ -1,3 +1,4 @@
+import React from "react";
 import { FaTrash } from "react-icons/fa6";
 import { ActionButton } from "@components";
 import { getActivityDescription, getActivityIcon } from "../utils/activity";
@@ -12,7 +13,7 @@ interface UserActivityItemProps {
  * @param activity - The user activity data to display.
  * @param onDelete - Optional callback to delete the activity.
  */
-export function UserActivityItem({
+export const UserActivityItem = React.memo(function UserActivityItem({
   activity,
   onDelete,
 }: UserActivityItemProps) {
@@ -51,4 +52,4 @@ export function UserActivityItem({
       </div>
     </li>
   );
-}
+});
