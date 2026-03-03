@@ -1,6 +1,6 @@
-import { FaRegClock, FaTrash } from "react-icons/fa6";
+import { FaTrash } from "react-icons/fa6";
 import { ActionButton } from "@components";
-import { getActivityDescription } from "../utils/activity";
+import { getActivityDescription, getActivityIcon } from "../utils/activity";
 import type { UserActivity, ActivityDetails } from "../../types";
 
 interface UserActivityItemProps {
@@ -25,8 +25,10 @@ export function UserActivityItem({
 
   return (
     <li className="p-4 rounded-xl bg-surface-alt hover:bg-primary/30 flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <FaRegClock className="inline-block mr-1" />
+      <div className="flex items-center gap-4">
+        <span className="inline-block mr-1 text-lg">
+          {getActivityIcon(activity.action)}
+        </span>
         <span className="font-semibold text-base text-white">
           {getActivityDescription(
             activity.action,

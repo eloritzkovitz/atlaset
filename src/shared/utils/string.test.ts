@@ -1,6 +1,7 @@
 import {
   capitalize,
   capitalizeWords,
+  getArticle,
   truncate,
   normalizeString,
   slugify,
@@ -20,6 +21,12 @@ describe("string utils", () => {
     expect(capitalizeWords("foo bar baz")).toBe("Foo Bar Baz");
     expect(capitalizeWords("a")).toBe("A");
     expect(capitalizeWords("")).toBe("");
+  });
+
+  it("getArticle returns correct article", () => {
+    expect(getArticle("apple")).toBe("an");
+    expect(getArticle("banana")).toBe("a");
+    expect(getArticle("")).toBe("a");
   });
 
   it("truncate adds ellipsis if needed", () => {

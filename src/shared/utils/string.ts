@@ -19,6 +19,14 @@ export function capitalizeWords(str: string) {
   return str.replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+/** Gets the appropriate article (a/an) for a given word.
+ * @param word - The word for which to get the article.
+ * @returns The article ("a" or "an").
+ */
+export function getArticle(word: string) {
+  return /^[aeiou]/i.test(word) ? "an" : "a";
+}
+
 /**
  * Truncates a string to a specified maximum length, adding an ellipsis if truncated.
  * @param str - The input string.

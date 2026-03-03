@@ -167,7 +167,7 @@ export const tripsService = {
     await logUserActivity(
       414,
       {
-        tripId,
+        itemName: tripId,
         rating: ratingValue,
         userName: user!.displayName,
       },
