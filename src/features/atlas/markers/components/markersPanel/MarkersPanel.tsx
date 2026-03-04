@@ -1,12 +1,6 @@
 import { useRef } from "react";
-import {
-  FaFileImport,
-  FaFileExport,
-  FaMapPin,
-  FaPlus,
-  FaXmark,
-} from "react-icons/fa6";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
+import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
@@ -89,7 +83,7 @@ export function MarkersPanel({
       <Panel
         title={
           <>
-            <FaMapPin />
+            <ICONS.markers />
             Markers
           </>
         }
@@ -104,14 +98,14 @@ export function MarkersPanel({
                   onClick={onAddMarker}
                   ariaLabel="Add Marker"
                   title="Add Marker"
-                  icon={<FaPlus />}
+                  icon={<ICONS.add />}
                   rounded
                 />
                 <ActionButton
                   onClick={() => fileInputRef.current?.click()}
                   ariaLabel="Import Markers"
                   title="Import Markers"
-                  icon={<FaFileImport />}
+                  icon={<ICONS.importFile />}
                   rounded
                 />
                 <input
@@ -132,7 +126,7 @@ export function MarkersPanel({
                   onClick={() => exportMarkersToFile(effectiveMarkers)}
                   ariaLabel="Export Markers"
                   title="Export Markers"
-                  icon={<FaFileExport />}
+                  icon={<ICONS.exportFile />}
                   rounded
                 />
               </>
@@ -141,7 +135,7 @@ export function MarkersPanel({
               onClick={closePanel}
               ariaLabel="Close markers panel"
               title="Close"
-              icon={<FaXmark className="text-2xl" />}
+              icon={<ICONS.close className="text-2xl" />}
               rounded
             />
           </>

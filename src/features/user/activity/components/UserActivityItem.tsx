@@ -1,6 +1,7 @@
-import { FaRegClock, FaTrash } from "react-icons/fa6";
+import React from "react";
+import { FaTrash } from "react-icons/fa6";
 import { ActionButton } from "@components";
-import { getActivityDescription } from "../utils/activity";
+import { getActivityDescription, getActivityIcon } from "../utils/activity";
 import type { UserActivity, ActivityDetails } from "../../types";
 
 interface UserActivityItemProps {
@@ -12,7 +13,7 @@ interface UserActivityItemProps {
  * @param activity - The user activity data to display.
  * @param onDelete - Optional callback to delete the activity.
  */
-export function UserActivityItem({
+export const UserActivityItem = React.memo(function UserActivityItem({
   activity,
   onDelete,
 }: UserActivityItemProps) {
@@ -25,20 +26,26 @@ export function UserActivityItem({
 
   return (
     <li className="p-4 rounded-xl bg-surface-alt hover:bg-primary/30 flex flex-col gap-2">
-      <div className="flex items-center gap-2">
-        <FaRegClock className="inline-block mr-1" />
-        <span className="font-semibold text-base text-white">
-          {getActivityDescription(
-            activity.action,
-            details as Record<string, unknown>,
-          )}
+      <div className="flex items-center gap-4">
+        <span className="inline-block mr-1">
+          <span className="flex items-center justify-center w-10 h-10 rounded-full bg-surface">
+            <span className="text-lg">{getActivityIcon(activity.action)}</span>
+          </span>
         </span>
-        <span className="flex items-center text-xs text-muted ml-auto gap-1">
-          {new Date(activity.timestamp).toLocaleString()}
-        </span>
+        <div className="flex-1 flex flex-col">
+          <span className="font-semibold text-base">
+            {getActivityDescription(
+              activity.action,
+              details as Record<string, unknown>,
+            )}
+          </span>
+          <span className="flex items-center text-xs text-muted mt-1">
+            {new Date(activity.timestamp).toLocaleString()}
+          </span>
+        </div>
         {onDelete && (
           <ActionButton
-            className="ml-2 hover:text-hover"
+            className="ml-2 text-danger hover:text-hover"
             icon={<FaTrash />}
             ariaLabel="Delete activity"
             title="Delete activity"
@@ -49,4 +56,4 @@ export function UserActivityItem({
       </div>
     </li>
   );
-}
+});

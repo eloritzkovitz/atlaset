@@ -1,11 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import {
-  FaWikipediaW,
-  FaCrosshairs,
-  FaXmark,
-  FaLocationDot,
-} from "react-icons/fa6";
+import { FaWikipediaW } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import {
   CountryDetailsContent,
   CountryWithFlag,
@@ -61,7 +57,7 @@ export function CountryDetailsModal({
       centerOnCountry(country?.isoCode || "");
     },
     ["x", "X"],
-    isOpen
+    isOpen,
   );
 
   // Do not render if no country is selected
@@ -110,7 +106,7 @@ export function CountryDetailsModal({
               onClick={() => setShowVisitsDrawer((v) => !v)}
               ariaLabel={showVisitsDrawer ? "Hide visits" : "Show visits"}
               title={showVisitsDrawer ? "Hide visits" : "Show visits"}
-              icon={<FaLocationDot />}
+              icon={<ICONS.visits />}
               rounded
             />
             {centerOnCountry && (
@@ -118,7 +114,7 @@ export function CountryDetailsModal({
                 onClick={() => centerOnCountry(country?.isoCode || "")}
                 ariaLabel="Center map on country"
                 title="Center map"
-                icon={<FaCrosshairs />}
+                icon={<ICONS.center />}
                 rounded
               />
             )}
@@ -127,10 +123,10 @@ export function CountryDetailsModal({
                 window.open(
                   `https://en.wikipedia.org/wiki/${country.name.replace(
                     / /g,
-                    "_"
+                    "_",
                   )}`,
                   "_blank",
-                  "noopener,noreferrer"
+                  "noopener,noreferrer",
                 )
               }
               ariaLabel="Open Wikipedia article"
@@ -142,7 +138,7 @@ export function CountryDetailsModal({
               onClick={onClose}
               ariaLabel="Close country details"
               title="Close"
-              icon={<FaXmark className="text-2xl" />}
+              icon={<ICONS.close className="text-2xl" />}
               rounded
             />
           </PanelHeader>

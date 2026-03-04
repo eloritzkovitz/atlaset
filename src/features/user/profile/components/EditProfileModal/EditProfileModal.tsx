@@ -1,7 +1,6 @@
 import { updateProfile, updatePassword, type User } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { useEffect, useState, type SubmitEvent } from "react";
-import { FaUser, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   FormField,
@@ -10,6 +9,7 @@ import {
   PasswordField,
   SectionHeader,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { SocialLinksField } from "./SocialLinksField";
 import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
@@ -141,7 +141,7 @@ export function EditProfileModal({
         <PanelHeader
           title={
             <>
-              <FaUser />
+              <ICONS.profile />
               {"Edit Profile"}
             </>
           }
@@ -150,7 +150,7 @@ export function EditProfileModal({
             onClick={onClose}
             ariaLabel="Close Edit Profile Modal"
             title="Close"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </PanelHeader>

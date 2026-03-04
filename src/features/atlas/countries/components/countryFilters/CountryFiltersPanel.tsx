@@ -1,6 +1,6 @@
 import React from "react";
-import { FaFilter, FaArrowRotateLeft, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useCountryData, type SovereigntyType } from "@features/countries";
@@ -90,7 +90,7 @@ export function CountryFiltersPanel({
     <Panel
       title={
         <>
-          <FaFilter />
+          <ICONS.filters />
           Filters
         </>
       }
@@ -103,14 +103,14 @@ export function CountryFiltersPanel({
             onClick={resetFilters}
             ariaLabel="Reset all filters"
             title="Reset filters"
-            icon={<FaArrowRotateLeft />}
+            icon={<ICONS.reset />}
             rounded
           />
           <ActionButton
             onClick={onHide}
             ariaLabel="Close filters panel"
             title="Close"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </>

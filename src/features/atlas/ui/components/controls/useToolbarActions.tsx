@@ -1,20 +1,9 @@
-import {
-  FaGlobe,
-  FaMapPin,
-  FaLayerGroup,
-  FaGear,
-  FaTimeline,
-  FaListUl,
-  FaShareFromSquare,
-  FaArrowLeft,
-  FaDownload,
-  FaBookmark,
-} from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
+import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { isAuthenticated } from "@utils/firebase";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
 
 export interface ToolbarActionsParams {
   isMobile: boolean;
@@ -54,28 +43,28 @@ export function useToolbarActions({
   return [
     {
       key: "countries",
-      icon: <FaGlobe className="text-lg" />,
+      icon: <ICONS.countries className="text-lg" />,
       label: "Countries",
       onClick: withMenuClose(toggleCountries),
       show: true,
     },
     {
       key: "layers",
-      icon: <FaLayerGroup className="text-lg" />,
+      icon: <ICONS.layers className="text-lg" />,
       label: "Layers",
       onClick: withMenuClose(toggleLayers),
       show: true,
     },
     {
       key: "markers",
-      icon: <FaMapPin className="text-lg" />,
+      icon: <ICONS.markers className="text-lg" />,
       label: "Markers",
       onClick: withMenuClose(toggleMarkers),
       show: true,
     },
     {
       key: "legend",
-      icon: <FaListUl className="text-lg" />,
+      icon: <ICONS.legend className="text-lg" />,
       label: "Legend",
       onClick: withMenuClose(toggleLegend),
       show: true,
@@ -83,14 +72,14 @@ export function useToolbarActions({
     },
     {
       key: "savedmaps",
-      icon: <FaBookmark className="text-lg" />,
+      icon: <ICONS.saved className="text-lg" />,
       label: "My Maps",
       onClick: withMenuClose(toggleSavedMaps),
       show: isAuthenticated(),
     },
     {
       key: "timeline",
-      icon: <FaTimeline className="text-xl" />,
+      icon: <ICONS.timeline className="text-xl" />,
       label: "Timeline",
       onClick: withMenuClose(() => setTimelineMode(!timelineMode)),
       show: !isReadonly && !isEdit && isAuthenticated(),
@@ -99,9 +88,9 @@ export function useToolbarActions({
     {
       key: "export",
       icon: !isReadonly ? (
-        <FaShareFromSquare className="text-lg" />
+        <ICONS.export className="text-lg" />
       ) : (
-        <FaDownload className="text-lg" />
+        <ICONS.download className="text-lg" />
       ),
       label: !isReadonly ? "Export" : "Download",
       onClick: withMenuClose(toggleExport),
@@ -109,14 +98,14 @@ export function useToolbarActions({
     },
     {
       key: "settings",
-      icon: <FaGear className="text-lg" />,
+      icon: <ICONS.settings className="text-lg" />,
       label: "Map Settings",
       onClick: withMenuClose(toggleSettings),
       show: !isReadonly && !isEdit,
     },
     {
       key: "exit",
-      icon: <FaArrowLeft className="text-lg" />,
+      icon: <ICONS.back className="text-lg" />,
       label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
       onClick: withMenuClose(() => {
         if (typeof exitEditMode === "function") {

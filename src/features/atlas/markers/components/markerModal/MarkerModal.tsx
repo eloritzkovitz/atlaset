@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaMapPin, FaFloppyDisk, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   ColorSelectInput,
@@ -8,6 +7,7 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import type { Marker } from "../../types";
 
 interface MarkerModalProps {
@@ -52,7 +52,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       <PanelHeader
         title={
           <>
-            <FaMapPin />
+            <ICONS.markers />
             {isEditing ? "Edit Marker" : "Add Marker"}
           </>
         }
@@ -60,7 +60,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         <ActionButton
           onClick={onClose}
           ariaLabel="Close"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       </PanelHeader>
@@ -130,9 +130,9 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
               submitType="submit"
               submitIcon={
                 isEditing ? (
-                  <FaFloppyDisk className="inline" />
+                  <ICONS.save className="inline" />
                 ) : (
-                  <FaMapPin className="inline" />
+                  <ICONS.add className="inline" />
                 )
               }
               submitLabel={isEditing ? "Save Changes" : "Add Marker"}

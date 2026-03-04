@@ -1,14 +1,7 @@
 import type { User } from "firebase/auth";
-import {
-  FaBug,
-  FaGear,
-  FaKeyboard,
-  FaRightFromBracket,
-  FaUser,
-  FaUserGroup,
-} from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
@@ -49,7 +42,7 @@ export function UserMenuContent({
             navigate(`/users/${username}`);
             onClose?.();
           }}
-          icon={<FaUser className="text-lg mr-2" />}
+          icon={<ICONS.profile className="text-lg mr-2" />}
           ariaLabel="Profile"
           className="w-full"
         >
@@ -60,7 +53,7 @@ export function UserMenuContent({
             toggleFriends();
             onClose?.();
           }}
-          icon={<FaUserGroup className="text-lg mr-2" />}
+          icon={<ICONS.friends className="text-lg mr-2" />}
           ariaLabel="Friends"
           className="w-full"
         >
@@ -75,7 +68,7 @@ export function UserMenuContent({
             );
             onClose?.();
           }}
-          icon={<FaBug className="text-lg mr-2" />}
+          icon={<ICONS.reportBug className="text-lg mr-2" />}
           ariaLabel="Report a Bug"
           className="w-full"
         >
@@ -87,7 +80,7 @@ export function UserMenuContent({
               toggleShortcuts();
               onClose?.();
             }}
-            icon={<FaKeyboard className="text-lg mr-2" />}
+            icon={<ICONS.shortcuts className="text-lg mr-2" />}
             ariaLabel="Keyboard Shortcuts"
             className="w-full"
           >
@@ -100,7 +93,7 @@ export function UserMenuContent({
             navigate("/settings");
             onClose?.();
           }}
-          icon={<FaGear className="text-lg mr-2" />}
+          icon={<ICONS.settings className="text-lg mr-2" />}
           ariaLabel="Settings"
           className="w-full"
         >
@@ -112,7 +105,7 @@ export function UserMenuContent({
             onLogout();
             onClose?.();
           }}
-          icon={<FaRightFromBracket className="text-lg mr-2" />}
+          icon={<ICONS.signOut className="text-lg mr-2" />}
           ariaLabel="Sign out"
           className="w-full"
         >

@@ -162,11 +162,13 @@ export const profileService = {
       username = userSnap.exists() ? userSnap.data().username : undefined;
     }
 
+    // Log activity with updated fields and username
+    const profile = await this.getUserProfileByUid(uid);
     await logUserActivity(
       120,
       {
         updatedFields: Object.keys(updates),
-        userName: username || "",
+        userName: profile?.displayName || "",
       },
       uid,
     );

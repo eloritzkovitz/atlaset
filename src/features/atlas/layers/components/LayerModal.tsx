@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FaLayerGroup, FaPencil, FaXmark, FaFloppyDisk } from "react-icons/fa6";
 import {
   ActionButton,
   Chip,
@@ -9,6 +8,7 @@ import {
   ModalActions,
   PanelHeader,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { CountrySelectModal } from "@features/countries/components/countrySelect/CountrySelectModal";
 import { useCountryData } from "@features/countries";
 import type { Layer } from "../types";
@@ -66,7 +66,7 @@ export function LayerModal({
         <PanelHeader
           title={
             <>
-              <FaLayerGroup />
+              <ICONS.layers />
               {isEditing ? "Edit Layer" : "Add Layer"}
             </>
           }
@@ -74,7 +74,7 @@ export function LayerModal({
           <ActionButton
             onClick={onClose}
             ariaLabel="Close Layer Modal"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </PanelHeader>
@@ -134,7 +134,7 @@ export function LayerModal({
                   variant="secondary"
                   onClick={() => setCountryModalOpen(true)}
                 >
-                  <FaPencil className="inline" /> Edit
+                  <ICONS.edit className="inline" /> Edit
                 </ActionButton>
               </div>
             </FormField>
@@ -192,9 +192,9 @@ export function LayerModal({
                 submitType="submit"
                 submitIcon={
                   isEditing ? (
-                    <FaFloppyDisk className="inline" />
+                    <ICONS.save className="inline" />
                   ) : (
-                    <FaLayerGroup className="inline" />
+                    <ICONS.add className="inline" />
                   )
                 }
                 submitLabel={isEditing ? "Save Changes" : "Add Layer"}

@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { FaUserGroup, FaUserPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { FriendList } from "./FriendList";
 import { FriendRequestList } from "./FriendRequestList";
 import { useUserFriends } from "../hooks/useUserFriends";
@@ -33,7 +33,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
       position="right"
       title={
         <span className="flex items-center gap-2">
-          {showRequests ? <FaUserPlus /> : <FaUserGroup />}
+          {showRequests ? <ICONS.friendRequests /> : <ICONS.friends />}
           {showRequests ? "Friend Requests" : "Friends"}
         </span>
       }
@@ -43,14 +43,14 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             onClick={() => setShowRequests((prev) => !prev)}
             ariaLabel={showRequests ? "Show Friends" : "Show Requests"}
             title={showRequests ? "Friends" : "Requests"}
-            icon={showRequests ? <FaUserGroup /> : <FaUserPlus />}
+            icon={showRequests ? <ICONS.friends /> : <ICONS.friendRequests />}
             rounded
           />
           <ActionButton
             onClick={onClose}
             ariaLabel="Close friends panel"
             title="Close"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </div>

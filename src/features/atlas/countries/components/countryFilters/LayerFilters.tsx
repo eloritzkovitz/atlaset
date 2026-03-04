@@ -1,5 +1,5 @@
-import { FaLayerGroup } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
+import { ICONS } from "@constants/icons";
 import { useLayers } from "@contexts/LayersContext";
 import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
 import { layerFilterConfig } from "../../config/filtersConfig";
@@ -16,7 +16,7 @@ export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaLayerGroup />}
+        icon={<ICONS.layers />}
         label="Layer Filters"
         expanded={expanded}
         onToggle={onToggle}

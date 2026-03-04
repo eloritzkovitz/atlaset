@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { FaPencil } from "react-icons/fa6";
 import { ColorPickerModal } from "./ColorPickerModal";
 import { ActionButton } from "../../../action/ActionButton";
+import { ICONS } from "../../../../constants/icons";
 
 interface ColorSelectInputProps {
   label?: string;
@@ -39,7 +39,7 @@ export function ColorSelectInput({
         onClick={() => setModalOpen(true)}
         disabled={disabled}
       >
-        <FaPencil className="inline" /> Edit
+        <ICONS.edit className="inline" /> Edit
       </ActionButton>
       <ColorPickerModal
         isOpen={modalOpen}

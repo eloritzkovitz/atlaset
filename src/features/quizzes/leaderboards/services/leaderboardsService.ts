@@ -11,6 +11,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import { getArticle } from "@utils/string";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 import { logUserActivity } from "../../../user";
 import { db } from "../../../../firebase";
@@ -84,11 +85,17 @@ export const leaderboardsService = {
         await deleteDoc(docSnap.ref);
       }
     }
+    // Log user activity
+    const safeDifficulty = difficulty ?? "";
+    const difficultyWithArticle = `${getArticle(safeDifficulty)} ${safeDifficulty}`;
     await logUserActivity(
       301,
       {
-        type,
-        difficulty,
+        difficultyWithArticle,
+        quizType: type,
+        score: entry.score,
+        time: entry.time,
+        date: new Date().toISOString(),
         playerId: entry.playerId,
         userName: user.displayName,
       },

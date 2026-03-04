@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { FaKeyboard, FaXmark } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import { categoryColumns, keyCommands } from "@constants/keyCommands";
 import { useUI } from "@contexts/UIContext";
 import type { KeyCommand } from "@types";
@@ -28,7 +28,7 @@ export function ShortcutsModal() {
       <PanelHeader
         title={
           <>
-            <FaKeyboard />
+            <ICONS.shortcuts />
             Keyboard Shortcuts
           </>
         }
@@ -38,7 +38,7 @@ export function ShortcutsModal() {
           onClick={closeShortcuts}
           ariaLabel="Close"
           title="Close"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       </PanelHeader>

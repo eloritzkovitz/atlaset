@@ -1,8 +1,9 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
-import { FaFlag, FaLandmark, FaTrophy, FaCircleXmark } from "react-icons/fa6";
+import { FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@components";
+import { ICONS } from "@constants/icons";
 import { QuizEntry, QuizSettings } from "@features/quizzes";
 import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
 import { useUiHint } from "@hooks";
@@ -27,7 +28,7 @@ export default function QuizzesPage() {
     {
       key: "flag",
       route: "guess-the-flag",
-      icon: <FaFlag className="text-5xl mb-4" />,
+      icon: <ICONS.quizFlag className="text-5xl mb-4" />,
       title: "Guess the Flag",
       description: "Can you identify the country by its flag?",
       muted: false,
@@ -35,7 +36,7 @@ export default function QuizzesPage() {
     {
       key: "capital",
       route: "guess-the-capital",
-      icon: <FaLandmark className="text-5xl mb-4" />,
+      icon: <ICONS.quizCapital className="text-5xl mb-4" />,
       title: "Guess the Capital",
       description: "Test your knowledge of world capitals!",
       muted: true,
@@ -43,7 +44,7 @@ export default function QuizzesPage() {
     {
       key: "leaderboards",
       route: "leaderboards",
-      icon: <FaTrophy className="text-5xl mb-4 text-yellow-500" />,
+      icon: <ICONS.leaderboards className="text-5xl mb-4 text-yellow-500" />,
       title: "Leaderboards",
       description: "See top scores and streaks!",
       muted: true,

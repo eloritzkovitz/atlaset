@@ -1,15 +1,7 @@
+import React from "react";
+import { ICONS } from "@constants/icons";
 import type { QuizType, Difficulty } from "@features/quizzes/types";
 import type { DropdownOption } from "@types";
-import {
-  FaFlag,
-  FaLandmark,
-  FaLeaf,
-  FaCompass,
-  FaBinoculars,
-  FaHatWizard,
-  FaQuestion,
-} from "react-icons/fa6";
-import React from "react";
 
 // Type options with icons
 export const TYPE_OPTIONS: Array<
@@ -17,8 +9,8 @@ export const TYPE_OPTIONS: Array<
     icon?: React.ComponentType<{ className?: string }>;
   }
 > = [
-  { value: "flag", label: "Guess the Flag", icon: FaFlag },
-  { value: "capital", label: "Guess the Capital", icon: FaLandmark },
+  { value: "flag", label: "Guess the Flag", icon: ICONS.quizFlag },
+  { value: "capital", label: "Guess the Capital", icon: ICONS.quizCapital },
 ];
 
 // Difficulty options with icons
@@ -27,10 +19,10 @@ export const DIFFICULTY_OPTIONS: Array<
     icon?: React.ComponentType<{ className?: string }>;
   }
 > = [
-  { value: "easy", label: "Easy", icon: FaLeaf },
-  { value: "medium", label: "Medium", icon: FaCompass },
-  { value: "hard", label: "Hard", icon: FaBinoculars },
-  { value: "expert", label: "Expert", icon: FaHatWizard },
+  { value: "easy", label: "Easy", icon: ICONS.quizEasy },
+  { value: "medium", label: "Medium", icon: ICONS.quizMedium },
+  { value: "hard", label: "Hard", icon: ICONS.quizHard },
+  { value: "expert", label: "Expert", icon: ICONS.quizExpert },
 ];
 
 /** Renders a dropdown option with an optional icon */
@@ -47,7 +39,7 @@ export function renderOption(opt: {
         </span>
       ) : (
         <span className="mr-2">
-          <FaQuestion size={18} />
+          <ICONS.quizzes size={18} />
         </span>
       )}
       <span>{opt.label}</span>

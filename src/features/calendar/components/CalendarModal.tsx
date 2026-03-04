@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { FaCalendar, FaXmark } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import { type Trip } from "@features/trips";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useKeyHandler } from "@hooks";
@@ -63,7 +63,7 @@ export default function CalendarModal({
       <PanelHeader
         title={
           <>
-            <FaCalendar />
+            <ICONS.calendar />
             Calendar
           </>
         }
@@ -73,7 +73,7 @@ export default function CalendarModal({
           onClick={onClose}
           ariaLabel="Close"
           title="Close"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       </PanelHeader>

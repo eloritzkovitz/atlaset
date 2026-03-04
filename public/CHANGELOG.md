@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-03-04
+- **[feature]** **User | Activity:** Redesigned activity log and updated formatting
+
 ## 2026-03-01
 - **[feature]** **Countries:** Added aliases to some countries
 - **[bugfix]** **General:** Fixed some UI bugs

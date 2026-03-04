@@ -1,17 +1,6 @@
-import {
-  FaCircleInfo,
-  FaCopy,
-  FaCrosshairs,
-  FaDownload,
-  FaLink,
-  FaPencil,
-  FaPenToSquare,
-  FaRegEye,
-  FaTrash,
-  FaUserPlus,
-} from "react-icons/fa6";
 import { MenuButton } from "../Menu/MenuButton";
 import { Separator } from "../Separator";
+import { ICONS} from "../../../constants/icons";
 
 interface MenuActionsProps {
   onView?: () => void;
@@ -46,7 +35,7 @@ export function MenuActions({
         <>
           <MenuButton
             onClick={onView}
-            icon={<FaRegEye className="mr-2" />}
+            icon={<ICONS.view className="mr-2" />}
             className="w-full"
           >
             View
@@ -57,7 +46,7 @@ export function MenuActions({
       {onDownload && (
         <MenuButton
           onClick={onDownload}
-          icon={<FaDownload className="mr-2" />}
+          icon={<ICONS.download className="mr-2" />}
           className="w-full"
         >
           Download
@@ -66,7 +55,7 @@ export function MenuActions({
       {onEdit && (
         <MenuButton
           onClick={onEdit}
-          icon={<FaPenToSquare className="mr-2" />}
+          icon={<ICONS.edit className="mr-2" />}
           className="w-full"
         >
           Edit
@@ -75,7 +64,7 @@ export function MenuActions({
       {onNameChange && (
         <MenuButton
           onClick={handleEdit}
-          icon={<FaPencil className="mr-2" />}
+          icon={<ICONS.rename className="mr-2" />}
           className="w-full"
         >
           Rename
@@ -84,7 +73,7 @@ export function MenuActions({
       {onCenter && (
         <MenuButton
           onClick={onCenter}
-          icon={<FaCrosshairs className="mr-2" />}
+          icon={<ICONS.center className="mr-2" />}
           className="w-full"
         >
           Center
@@ -93,7 +82,7 @@ export function MenuActions({
       {onDuplicate && (
         <MenuButton
           onClick={onDuplicate}
-          icon={<FaCopy className="mr-2" />}
+          icon={<ICONS.duplicate className="mr-2" />}
           className="w-full"
         >
           Duplicate
@@ -103,7 +92,7 @@ export function MenuActions({
       {onShare && (
         <MenuButton
           onClick={onShare}
-          icon={<FaUserPlus className="mr-2" />}
+          icon={<ICONS.share className="mr-2" />}
           className="w-full"
         >
           Share
@@ -112,7 +101,7 @@ export function MenuActions({
       {onCopytoClipboard && (
         <MenuButton
           onClick={onCopytoClipboard}
-          icon={<FaLink className="mr-2" />}
+          icon={<ICONS.copyLink className="mr-2" />}
           className="w-full"
         >
           Copy Link
@@ -125,9 +114,9 @@ export function MenuActions({
             onClick={onRemove}
             icon={
               removeDisabled ? (
-                <FaCircleInfo className="mr-2" />
+                <ICONS.info className="mr-2" />
               ) : (
-                <FaTrash className="mr-2" />
+                <ICONS.remove className="mr-2" />
               )
             }
             className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
