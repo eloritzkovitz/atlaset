@@ -3,20 +3,8 @@
  */
 
 import type { JSX } from "react";
-import {
-  FaUser,
-  FaGear,
-  FaEarthAmericas,
-  FaLayerGroup,
-  FaMap,
-  FaMapPin,
-  FaQuestion,
-  FaRegClock,
-  FaSuitcaseRolling,
-  FaUsers,
-  FaCircleUser,
-} from "react-icons/fa6";
 import { addDoc } from "firebase/firestore";
+import { ICONS } from "@constants/icons";
 import { getUserCollection } from "@utils/firebase";
 import activityTemplatesJson from "./activityTemplates.json";
 import type { ActivityDetails } from "../../types";
@@ -117,17 +105,17 @@ export function getActivityDescription(
 // Map activity codes to icons
 function getActivityIconByCode(code: number | string): JSX.Element {
   const n = typeof code === "string" ? parseInt(code, 10) : code;
-  if (n >= 101 && n <= 119) return <FaCircleUser />;
-  if (n === 120) return <FaUser />;
-  if (n === 130) return <FaGear />;
-  if (n === 140) return <FaUsers />;
-  if (n === 200) return <FaEarthAmericas />;
-  if (n >= 210 && n <= 219) return <FaLayerGroup />;
-  if (n >= 220 && n <= 229) return <FaMapPin />;
-  if (n >= 230 && n <= 239) return <FaMap />;
-  if (n >= 300 && n <= 309) return <FaQuestion />;
-  if (n >= 400 && n <= 415) return <FaSuitcaseRolling />;
-  return <FaRegClock />;
+  if (n >= 101 && n <= 119) return <ICONS.account />;
+  if (n === 120) return <ICONS.profile />;
+  if (n === 130) return <ICONS.settings />;
+  if (n === 140) return <ICONS.friends />;
+  if (n === 200) return <ICONS.atlas />;
+  if (n >= 210 && n <= 219) return <ICONS.layers />;
+  if (n >= 220 && n <= 229) return <ICONS.markers />;
+  if (n >= 230 && n <= 239) return <ICONS.map />;
+  if (n >= 300 && n <= 309) return <ICONS.quizzes />;
+  if (n >= 400 && n <= 415) return <ICONS.trips />;
+  return <ICONS.activity />;
 }
 
 /** Gets the icon for a user activity based on its action code.

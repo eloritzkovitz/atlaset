@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
-import { FaBell, FaCircleQuestion } from "react-icons/fa6";
 import { useLocation } from "react-router-dom";
 import { ActionButton, Menu } from "@components";
+import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
@@ -54,7 +54,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
       <ActionButton
         title="Notifications"
         onClick={() => {}}
-        icon={<FaBell className="text-xl" />}
+        icon={<ICONS.notifications className="text-xl" />}
         aria-pressed={false}
         rounded
       />
@@ -63,7 +63,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
         onClick={() => {
           toggleHelp();
         }}
-        icon={<FaCircleQuestion className="text-xl" />}
+        icon={<ICONS.help className="text-xl" />}
         aria-pressed={false}
         rounded
       />

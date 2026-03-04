@@ -1,24 +1,24 @@
-import { FaBookAtlas, FaChartSimple, FaHouse, FaMedal } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 
 export const DASHBOARD_MENU = [
   {
     key: "overview",
     label: "Overview",
-    icon: FaHouse,
+    icon: ICONS.overview,
   },
   {
     key: "exploration",
     label: "Exploration",
-    icon: FaBookAtlas,
+    icon: ICONS.exploration,
   },
   {
     key: "achievements",
     label: "Achievements",
-    icon: FaMedal,
+    icon: ICONS.achievements,
   },
   {
     key: "statistics",
     label: "Statistics",
-    icon: FaChartSimple,
+    icon: ICONS.statistics,
   },
 ];
