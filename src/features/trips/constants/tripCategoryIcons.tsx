@@ -5,7 +5,6 @@ import {
   FaBriefcase,
   FaBuilding,
   FaCar,
-  FaClipboardList,
   FaFutbol,
   FaGem,
   FaGraduationCap,
@@ -30,6 +29,7 @@ import {
   FaUser,  
   FaUsers,
   FaUtensils,
+  FaClipboard,
 } from "react-icons/fa6";
 import { MdBackpack } from "react-icons/md";
 
@@ -39,7 +39,7 @@ export const TRIP_CATEGORY_ICONS: Record<string, JSX.Element> = {
   couple: <FaHeart />,
   family: <FaUsers />,
   group: <FaPeopleGroup />,
-  organized: <FaClipboardList />,
+  organized: <FaClipboard />,
   business: <FaBriefcase />,
   educational: <FaGraduationCap />,
   volunteering: <FaHandshakeAngle />,

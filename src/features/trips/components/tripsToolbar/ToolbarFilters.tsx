@@ -1,15 +1,7 @@
 import React from "react";
-import {
-  FaCalendarDay,
-  FaCheck,
-  FaClipboardList,
-  FaHashtag,
-  FaHeart,
-  FaLocationDot,
-  FaPlane,
-  FaRotateLeft,
-} from "react-icons/fa6";
+import { FaHashtag, FaHeart } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
+import { ICONS } from "@constants/icons";
 import type { ToolbarToggleOption } from "@types";
 import type { TripFilterState } from "../../types";
 
@@ -53,7 +45,7 @@ export function ToolbarFilters({
   const filterToggles: ToolbarToggleOption[] = [
     {
       value: "local",
-      icon: <FaLocationDot />,
+      icon: <ICONS.tripLocal />,
       label: "Local",
       ariaLabel: "Show/Hide Local Trips",
       title: "Toggle Local Trips",
@@ -62,7 +54,7 @@ export function ToolbarFilters({
     },
     {
       value: "abroad",
-      icon: <FaPlane />,
+      icon: <ICONS.tripAbroad />,
       label: "Abroad",
       ariaLabel: "Show/Hide Abroad Trips",
       title: "Toggle Abroad Trips",
@@ -71,7 +63,7 @@ export function ToolbarFilters({
     },
     {
       value: "planned",
-      icon: <FaClipboardList />,
+      icon: <ICONS.tripPlanned />,
       label: "Planned",
       ariaLabel: "Show/Hide Planned Trips",
       title: "Toggle Planned Trips",
@@ -80,7 +72,7 @@ export function ToolbarFilters({
     },
     {
       value: "upcoming",
-      icon: <FaCalendarDay />,
+      icon: <ICONS.tripUpcoming />,
       label: "Upcoming",
       ariaLabel: "Show/Hide Upcoming Trips",
       title: "Toggle Upcoming Trips",
@@ -89,7 +81,7 @@ export function ToolbarFilters({
     },
     {
       value: "completed",
-      icon: <FaCheck />,
+      icon: <ICONS.tripCompleted />,
       label: "Completed",
       ariaLabel: "Show/Hide Completed Trips",
       title: "Toggle Completed Trips",
@@ -122,7 +114,7 @@ export function ToolbarFilters({
         onClick={handleClearFilters}
         ariaLabel="Clear Filters"
         title="Clear Filters"
-        icon={<FaRotateLeft />}
+        icon={<ICONS.reset />}
         variant="toggle"
       />
       <ToolbarToggleGroup options={filterToggles} />

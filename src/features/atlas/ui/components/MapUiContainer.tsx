@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { FaMap, FaMapPin, FaShareNodes, FaTimeline } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
@@ -40,7 +40,7 @@ export function MapUiContainer({
       isAddingMarker && !isEmbed
         ? {
             message: <>Click on the map to place a marker.</>,
-            icon: <FaMapPin className="text-lg" />,
+            icon: <ICONS.markers className="text-lg" />,
           }
         : null,
     [isAddingMarker, isEmbed],
@@ -52,7 +52,7 @@ export function MapUiContainer({
       timelineMode && uiVisible && !isEmbed
         ? {
             message: <>Timeline mode enabled. Press T to toggle off.</>,
-            icon: <FaTimeline className="text-lg" />,
+            icon: <ICONS.timeline className="text-lg" />,
           }
         : null,
     [timelineMode, uiVisible, isEmbed],
@@ -81,9 +81,9 @@ export function MapUiContainer({
     return {
       message: msg,
       icon: isEdit ? (
-        <FaMap className="text-lg" />
+        <ICONS.map className="text-lg" />
       ) : (
-        <FaShareNodes className="text-lg" />
+        <ICONS.share className="text-lg" />
       ),
     };
   }, [isReadonly, isEdit, isEmbed, mapName, sharer]);

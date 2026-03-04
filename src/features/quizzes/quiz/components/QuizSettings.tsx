@@ -1,13 +1,7 @@
 import { type JSX } from "react";
-import {
-  FaBinoculars,
-  FaHatWizard,
-  FaCompass,
-  FaLeaf,
-  FaUmbrellaBeach,
-  FaStopwatch,
-} from "react-icons/fa6";
+import { FaUmbrellaBeach, FaStopwatch } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
+import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
 import type { Difficulty, GameMode } from "../../types";
 
@@ -30,28 +24,28 @@ const LEVELS: {
   {
     key: "easy",
     label: "Easy",
-    icon: <FaLeaf className="mr-2" />,
+    icon: <ICONS.quizEasy className="mr-2" />,
     description: "Familiar countries you likely know.",
     color: "bg-success/50 hover:bg-success-hover/50",
   },
   {
     key: "medium",
     label: "Medium",
-    icon: <FaCompass className="mr-2" />,
+    icon: <ICONS.quizMedium className="mr-2" />,
     description: "A mix of common and less-known countries.",
     color: "bg-warning/40 hover:bg-warning-hover/40",
   },
   {
     key: "hard",
     label: "Hard",
-    icon: <FaBinoculars className="mr-2" />,
+    icon: <ICONS.quizHard className="mr-2" />,
     description: "Challenging countries that will test your knowledge!",
     color: "bg-warning/70 hover:bg-warning-hover/70",
   },
   {
     key: "expert",
     label: "Expert",
-    icon: <FaHatWizard className="mr-2" />,
+    icon: <ICONS.quizExpert className="mr-2" />,
     description: "Obscure countries and dependencies, only for true experts!",
     color: "!bg-danger/50 hover:!bg-danger-hover/50",
   },
@@ -75,19 +69,19 @@ export function QuizSettings({
     (e) => {
       if (!document.activeElement || document.activeElement === document.body) {
         const currentIdx = LEVELS.findIndex(
-          (l) => l.key === (difficulty ?? "easy")
+          (l) => l.key === (difficulty ?? "easy"),
         );
         if (e.key === "ArrowRight") {
           setDifficulty(LEVELS[(currentIdx + 1) % LEVELS.length].key);
         } else if (e.key === "ArrowLeft") {
           setDifficulty(
-            LEVELS[(currentIdx - 1 + LEVELS.length) % LEVELS.length].key
+            LEVELS[(currentIdx - 1 + LEVELS.length) % LEVELS.length].key,
           );
         }
       }
     },
     ["ArrowLeft", "ArrowRight"],
-    true
+    true,
   );
 
   const selected = LEVELS.find((l) => l.key === difficulty);

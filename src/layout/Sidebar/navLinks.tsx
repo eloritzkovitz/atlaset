@@ -1,33 +1,27 @@
-import {
-  FaEarthAmericas,
-  FaGear,
-  FaQuestion,
-  FaSuitcaseRolling,
-} from "react-icons/fa6";
-import { DashboardIcon } from "@components";
+import { ICONS } from "@constants/icons";
 
 export const NAV_LINKS = [
   {
     to: "/atlas",
-    icon: <FaEarthAmericas className="text-2xl" />,
+    icon: <ICONS.atlas className="text-2xl" />,
     label: "Atlas",
     end: true,
   },
   {
     to: "/trips",
-    icon: <FaSuitcaseRolling className="text-2xl" />,
+    icon: <ICONS.trips className="text-2xl" />,
     label: "My Trips",
     end: false,
   },
   {
     to: "/dashboard",
-    icon: <DashboardIcon className="text-2xl" />,
+    icon: <ICONS.dashboard className="text-2xl" />,
     label: "Dashboard",
     end: false,
   },
   {
     to: "/quizzes",
-    icon: <FaQuestion className="text-2xl" />,
+    icon: <ICONS.quizzes className="text-2xl" />,
     label: "Quizzes",
     end: false,
   },
@@ -35,7 +29,7 @@ export const NAV_LINKS = [
 
 export const SETTINGS_LINK = {
   to: "/settings",
-  icon: <FaGear className="text-2xl" />,
+  icon: <ICONS.settings className="text-2xl" />,
   label: "Settings",
   end: false,
 };
