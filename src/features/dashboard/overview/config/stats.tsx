@@ -37,7 +37,7 @@ export function getStatsConfig({
       label: "Statistics",
       value: (
         <span className="flex items-center gap-2">
-          View <ICONS.navigate />
+          View <ICONS.forward />
         </span>
       ),
       icon: <ICONS.statistics className="text-5xl text-success" />,

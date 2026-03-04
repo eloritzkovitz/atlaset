@@ -105,7 +105,7 @@ export function useToolbarActions({
     },
     {
       key: "exit",
-      icon: <ICONS.exit className="text-lg" />,
+      icon: <ICONS.back className="text-lg" />,
       label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
       onClick: withMenuClose(() => {
         if (typeof exitEditMode === "function") {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { FaArrowsRotate, FaFilter, FaGlobe, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -77,7 +77,7 @@ export function CountriesPanel({
   } = useSort(
     filteredCountries,
     (items, sortBy) => sortCountries(items, sortBy, trips),
-    "name-asc"
+    "name-asc",
   );
 
   // Reset sort when toggles change
@@ -106,7 +106,7 @@ export function CountriesPanel({
     (country: Country) => {
       if (onCountryInfo) onCountryInfo(country);
     },
-    [onCountryInfo]
+    [onCountryInfo],
   );
 
   return (
@@ -114,7 +114,7 @@ export function CountriesPanel({
       <Panel
         title={
           <>
-            <FaGlobe />
+            <ICONS.countries />
             Countries
           </>
         }
@@ -129,7 +129,7 @@ export function CountriesPanel({
                 onClick={refreshData}
                 ariaLabel={"Refresh country data"}
                 title="Refresh country data"
-                icon={<FaArrowsRotate />}
+                icon={<ICONS.refresh />}
                 rounded
               />
             )}
@@ -137,14 +137,14 @@ export function CountriesPanel({
               onClick={toggleFilters}
               ariaLabel={showFilters ? "Hide Filters" : "Show Filters"}
               title="Filters"
-              icon={<FaFilter />}
+              icon={<ICONS.filters />}
               rounded
             />
             <ActionButton
               onClick={toggleCountries}
               ariaLabel="Close countries panel"
               title="Close"
-              icon={<FaXmark className="text-2xl" />}
+              icon={<ICONS.close className="text-2xl" />}
               rounded
             />
           </>

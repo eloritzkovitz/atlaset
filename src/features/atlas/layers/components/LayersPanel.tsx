@@ -1,12 +1,6 @@
 import { useRef } from "react";
-import {
-  FaLayerGroup,
-  FaPlus,
-  FaFileImport,
-  FaFileExport,
-  FaXmark,
-} from "react-icons/fa6";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
+import { ICONS } from "@constants/icons";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
@@ -70,7 +64,7 @@ export function LayersPanel({
     <Panel
       title={
         <>
-          <FaLayerGroup />
+          <ICONS.layers />
           Layers
         </>
       }
@@ -85,14 +79,14 @@ export function LayersPanel({
                 onClick={onAddLayer}
                 ariaLabel="Add Layer"
                 title="Add Layer"
-                icon={<FaPlus />}
+                icon={<ICONS.add />}
                 rounded
               />
               <ActionButton
                 onClick={() => fileInputRef.current?.click()}
                 ariaLabel="Import Layers"
                 title="Import Layers"
-                icon={<FaFileImport />}
+                icon={<ICONS.importFile />}
                 rounded
               />
               <input
@@ -114,14 +108,14 @@ export function LayersPanel({
             onClick={() => exportLayersToFile(effectiveLayers)}
             ariaLabel="Export Layers"
             title="Export Layers"
-            icon={<FaFileExport />}
+            icon={<ICONS.exportFile />}
             rounded
           />
           <ActionButton
             onClick={closePanel}
             ariaLabel="Close Layers Panel"
             title="Close"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </>

@@ -1,5 +1,5 @@
-import { FaBookmark, FaFloppyDisk, FaPlus, FaXmark } from "react-icons/fa6";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
+import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useUI } from "@contexts/UIContext";
@@ -23,7 +23,7 @@ export function SavedMapsPanel() {
     <Panel
       title={
         <>
-          <FaBookmark /> My Maps
+          <ICONS.saved /> My Maps
         </>
       }
       show={showSavedMaps}
@@ -37,7 +37,7 @@ export function SavedMapsPanel() {
               onClick={saveCurrentMap}
               ariaLabel="Save current map"
               title="Save current map"
-              icon={<FaFloppyDisk />}
+              icon={<ICONS.save />}
               rounded
             />
           ) : (
@@ -45,7 +45,7 @@ export function SavedMapsPanel() {
               onClick={createNewMap}
               ariaLabel="Create new map"
               title="Create new map"
-              icon={<FaPlus className="text-xl" />}
+              icon={<ICONS.add className="text-xl" />}
               rounded
             />
           )}
@@ -53,7 +53,7 @@ export function SavedMapsPanel() {
             onClick={toggleSavedMaps}
             ariaLabel="Close Saved Panel"
             title="Close"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </>

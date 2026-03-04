@@ -1,5 +1,5 @@
-import { FaCircleQuestion, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { AppLinks } from "@layout";
 import { DocSearchResults } from "./DocSearchResults";
 
@@ -16,7 +16,7 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
       position="right"
       title={
         <>
-          <FaCircleQuestion className="mr-2" /> Help
+          <ICONS.help className="mr-2" /> Help
         </>
       }
       headerActions={
@@ -24,7 +24,7 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
           onClick={onClose}
           ariaLabel="Close help panel"
           title="Close"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       }

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { FaXmark, FaShareFromSquare, FaDownload } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
@@ -100,7 +100,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     <Panel
       title={
         <>
-          {!isReadonly ? <FaShareFromSquare /> : <FaDownload />}
+          {!isReadonly ? <ICONS.share /> : <ICONS.download />}
           {!isReadonly ? "Export" : "Download"}
         </>
       }
@@ -111,7 +111,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
           onClick={closePanel}
           ariaLabel="Close export menu"
           title="Close"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       }
