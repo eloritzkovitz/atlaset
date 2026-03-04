@@ -74,7 +74,8 @@ import { DashboardIcon } from "../components/icons/DashboardIcon";
 export const ICONS = {
   // User
   account: FaCircleUser,
-  profile: FaUser,
+  profile: FaUser,  
+  location: FaLocationDot,
   friends: FaUserGroup,
   friendRequests: FaUserPlus,
   settings: FaGear,
@@ -85,6 +86,7 @@ export const ICONS = {
   map: FaMap,
   mapData: FaMapLocationDot,
   countries: FaGlobe,
+  visits: FaLocationDot,
   filters: FaFilter,
   layers: FaLayerGroup,
   markers: FaMapPin,

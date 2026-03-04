@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { FaFloppyDisk, FaSuitcaseRolling, FaXmark } from "react-icons/fa6";
 import {
   ActionButton,
   Checkbox,
@@ -12,6 +11,7 @@ import {
   NumberInput,
   PanelHeader,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { CountriesSection } from "./CountriesSection";
 import { useUserFriends } from "@features/user";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
@@ -91,7 +91,7 @@ export function TripModal({
         <PanelHeader
           title={
             <>
-              <FaSuitcaseRolling />
+              <ICONS.trips />
               {isEditing ? "Edit Trip" : "Add Trip"}
             </>
           }
@@ -101,7 +101,7 @@ export function TripModal({
             onClick={onClose}
             ariaLabel="Close"
             title="Close"
-            icon={<FaXmark className="text-2xl" />}
+            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </PanelHeader>
@@ -265,9 +265,9 @@ export function TripModal({
               onCancel={onClose}
               submitIcon={
                 isEditing ? (
-                  <FaFloppyDisk className="inline" />
+                  <ICONS.save className="inline" />
                 ) : (
-                  <FaSuitcaseRolling className="inline" />
+                  <ICONS.add className="inline" />
                 )
               }
               submitLabel={isEditing ? "Save Changes" : "Add Trip"}

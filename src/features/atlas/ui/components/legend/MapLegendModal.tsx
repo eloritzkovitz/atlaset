@@ -1,5 +1,5 @@
-import { FaXmark } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import { LegendRow } from "./LegendRow";
 import type { LegendItem } from "../../types";
 
@@ -24,7 +24,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
             <ActionButton
               onClick={onClose}
               ariaLabel="Close Legend"
-              icon={<FaXmark className="text-2xl" />}
+              icon={<ICONS.close className="text-2xl" />}
               rounded
             />
           </span>

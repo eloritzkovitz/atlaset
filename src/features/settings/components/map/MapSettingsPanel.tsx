@@ -1,5 +1,5 @@
-import { FaGear, FaXmark } from "react-icons/fa6";
 import { ActionButton, Panel, Separator } from "@components";
+import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
 import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
@@ -12,7 +12,7 @@ export function MapSettingsPanel() {
     <Panel
       title={
         <>
-          <FaGear />
+          <ICONS.settings />
           Map Settings
         </>
       }
@@ -24,7 +24,7 @@ export function MapSettingsPanel() {
           onClick={closePanel}
           ariaLabel="Close settings panel"
           title="Close"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       }

@@ -1,7 +1,7 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { FaLocationDot } from "react-icons/fa6";
 import { FloatingChevronButton, Modal } from "@components";
+import { ICONS } from "@constants/icons";
 import type { Visit } from "@features/visits";
 import { VisitSection } from "./VisitSection";
 
@@ -99,7 +99,7 @@ export function CountryVisitsDrawer({
           <div className="flex-1 overflow-y-auto p-4">
             <div className="h-full flex flex-col">
               <div className="flex items-center gap-2 h-8 text-lg font-bold mb-4">
-                <FaLocationDot />
+                <ICONS.visits />
                 Visits{totalVisits > 0 ? ` (${totalVisits})` : ""}
               </div>
               <div className="rounded p-3 mb-2 flex-1 overflow-y-auto">
@@ -128,32 +128,34 @@ export function CountryVisitsDrawer({
         </div>
       </Modal>
       {/* Floating chevron as portal, above modal backdrop */}
-      {!exiting && chevronPos && ReactDOM.createPortal(
-        <div
-          style={{
-            position: "fixed",
-            top: chevronPos.top,
-            left: chevronPos.left,
-            zIndex: 11000,
-            pointerEvents: "auto",
-          }}
-        >
-          <FloatingChevronButton
-            ref={chevronRef}
-            targetRef={drawerRef}
-            position="right"
-            chevronDirection="left"
-            onClick={e => {
-              e.stopPropagation();
-              handleClose();
+      {!exiting &&
+        chevronPos &&
+        ReactDOM.createPortal(
+          <div
+            style={{
+              position: "fixed",
+              top: chevronPos.top,
+              left: chevronPos.left,
+              zIndex: 11000,
+              pointerEvents: "auto",
             }}
-            ariaLabel="Collapse visits"
-            title="Collapse visits"
-            positionKey={JSON.stringify(drawerStyle)}
-          />
-        </div>,
-        document.body
-      )}
+          >
+            <FloatingChevronButton
+              ref={chevronRef}
+              targetRef={drawerRef}
+              position="right"
+              chevronDirection="left"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClose();
+              }}
+              ariaLabel="Collapse visits"
+              title="Collapse visits"
+              positionKey={JSON.stringify(drawerStyle)}
+            />
+          </div>,
+          document.body,
+        )}
     </>
   );
 }

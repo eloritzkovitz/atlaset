@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaBookmark, FaXmark, FaFloppyDisk, FaPlus } from "react-icons/fa6";
 import {
   Modal,
   PanelHeader,
@@ -7,6 +6,8 @@ import {
   ActionButton,
   FormField,
 } from "@components";
+import { ICONS } from "@constants/icons";
+import { useMapView } from "@contexts/MapViewContext";
 import type { SavedMap } from "../types";
 
 interface SavedMapsModalProps {
@@ -28,6 +29,7 @@ export function SavedMapsModal({
 }: SavedMapsModalProps) {
   const nameRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
+  const { isReadonly } = useMapView();
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -59,15 +61,15 @@ export function SavedMapsModal({
       <PanelHeader
         title={
           <>
-            <FaBookmark />
-            {isEditing ? "Rename Map" : "Save Map"}
+            <ICONS.saved />
+            {isEditing ? "Rename Map" : isReadonly ? "Save Map" : "Add Map"}
           </>
         }
       >
         <ActionButton
           onClick={onClose}
           ariaLabel="Close Saved Map Modal"
-          icon={<FaXmark className="text-2xl" />}
+          icon={<ICONS.close className="text-2xl" />}
           rounded
         />
       </PanelHeader>
@@ -96,9 +98,9 @@ export function SavedMapsModal({
             submitType="submit"
             submitIcon={
               isEditing ? (
-                <FaFloppyDisk className="inline" />
+                <ICONS.save className="inline" />
               ) : (
-                <FaPlus className="inline" />
+                <ICONS.add className="inline" />
               )
             }
             submitLabel={isEditing ? "Save Changes" : "Add Map"}

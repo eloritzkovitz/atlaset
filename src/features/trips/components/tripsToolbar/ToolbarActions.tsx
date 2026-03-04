@@ -1,6 +1,6 @@
 import React from "react";
-import { FaCopy, FaPlus, FaTrash } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
+import { ICONS } from "@constants/icons";
 
 interface ToolbarActionsProps {
   selectedTripIds: string[];
@@ -30,7 +30,7 @@ export function ToolbarActions({
             onClick={onBulkDuplicate}
             ariaLabel="Duplicate selected"
             title="Duplicate selected"
-            icon={<FaCopy />}
+            icon={<ICONS.duplicate />}
             active={hasSelection}
             disabled={!hasSelection}
             variant="toggle"
@@ -39,7 +39,7 @@ export function ToolbarActions({
             onClick={() => setShowDeleteConfirm(true)}
             ariaLabel="Delete selected"
             title="Delete selected"
-            icon={<FaTrash />}
+            icon={<ICONS.remove />}
             active={hasSelection}
             disabled={!hasSelection}
             variant="toggle"
@@ -48,7 +48,7 @@ export function ToolbarActions({
         <ActionButton
           variant="primary"
           onClick={onAddTrip}
-          icon={<FaPlus className="text-xl mr-2" />}
+          icon={<ICONS.add className="text-xl mr-2" />}
           className="ml-4"
         >
           Add Trip
@@ -67,7 +67,7 @@ export function ToolbarActions({
           onCancel={() => setShowDeleteConfirm(false)}
           submitLabel="Delete"
           cancelLabel="Cancel"
-          submitIcon={<FaTrash className="inline" />}
+          submitIcon={<ICONS.remove className="inline" />}
         />
       )}
     </div>

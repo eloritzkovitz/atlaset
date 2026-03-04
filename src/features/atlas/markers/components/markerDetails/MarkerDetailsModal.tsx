@@ -1,5 +1,5 @@
-import { FaLocationDot, FaXmark } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import type { Marker } from "../../types";
 
 interface MarkerDetailsModalProps {
@@ -40,7 +40,7 @@ export function MarkerDetailsModal({
         <PanelHeader
           title={
             <span className="flex items-center gap-2">
-              <FaLocationDot />
+              <ICONS.markers />
               {marker.name}
             </span>
           }
@@ -50,7 +50,7 @@ export function MarkerDetailsModal({
             ariaLabel="Close country details"
             title="Close"
             rounded
-            icon={<FaXmark />}
+            icon={<ICONS.close />}
           />
         </PanelHeader>
       </div>
