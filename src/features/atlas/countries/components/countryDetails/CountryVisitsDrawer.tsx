@@ -1,7 +1,12 @@
 import React, { useRef, useLayoutEffect, useState } from "react";
-import ReactDOM from "react-dom";
-import { FloatingChevronButton, Modal } from "@components";
+import {
+  EmptyListMessage,
+  Modal,
+  PanelHeader,
+  ActionButton,
+} from "@components";
 import { ICONS } from "@constants/icons";
+import { FaChevronLeft } from "react-icons/fa6";
 import type { Visit } from "@features/visits";
 import { VisitSection } from "./VisitSection";
 
@@ -60,102 +65,66 @@ export function CountryVisitsDrawer({
     }, 300);
   };
 
-  // Calculate chevron position for portal
-  const [chevronPos, setChevronPos] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
-  useLayoutEffect(() => {
-    if (open && drawerRef.current) {
-      const rect = drawerRef.current.getBoundingClientRect();
-      setChevronPos({
-        top: rect.top + 16,
-        left: rect.right - 24,
-      });
-    } else {
-      setChevronPos(null);
-    }
-  }, [open, drawerRef, drawerStyle]);
-
+  // Don't render anything if not open and not exiting
   if (!open && !exiting) return null;
 
   return (
-    <>
-      <Modal
-        isOpen={open || exiting}
-        onClose={handleClose}
-        className={`transition-transform duration-300 ease-in-out shadow-lg ${
-          exiting ? "-translate-x-full" : "translate-x-0"
-        }`}
-        style={drawerStyle}
-        containerZIndex={10030}
-        backdropZIndex={10020}
-        position="custom"
-        disableClose
-        containerRef={drawerRef}
-        extraRefs={[chevronRef as React.RefObject<HTMLElement>]}
-      >
-        <div>
-          <div className="flex-1 overflow-y-auto p-4">
-            <div className="h-full flex flex-col">
-              <div className="flex items-center gap-2 h-8 text-lg font-bold mb-4">
-                <ICONS.visits />
-                Visits{totalVisits > 0 ? ` (${totalVisits})` : ""}
-              </div>
-              <div className="rounded p-3 mb-2 flex-1 overflow-y-auto">
-                {totalVisits > 0 ? (
-                  <>
-                    <VisitSection
-                      title={`Past Visits (${pastVisits.length})`}
-                      visits={pastVisits}
-                    />
-                    <VisitSection
-                      title={`Upcoming Visits (${upcomingVisits.length})`}
-                      visits={upcomingVisits}
-                    />
-                    <VisitSection
-                      title={`Planned (${tentativeVisits.length})`}
-                      visits={tentativeVisits}
-                      getLabel={() => "TBD"}
-                    />
-                  </>
-                ) : (
-                  <div className="text-muted text-sm">No visits recorded.</div>
-                )}
-              </div>
-            </div>
-          </div>
+    <Modal
+      isOpen={open || exiting}
+      onClose={handleClose}
+      className={`transition-transform duration-300 ease-in-out shadow-lg ${
+        exiting ? "-translate-x-full" : "translate-x-0"
+      }`}
+      style={drawerStyle}
+      containerZIndex={10030}
+      backdropZIndex={10020}
+      position="custom"
+      disableClose
+      containerRef={drawerRef}
+      extraRefs={[chevronRef as React.RefObject<HTMLElement>]}
+    >
+      <div className="h-full flex flex-col overflow-y-auto">
+        <PanelHeader
+          title={
+            <span className="flex items-center gap-2">
+              <ICONS.visits />
+              Visits{totalVisits > 0 ? ` (${totalVisits})` : ""}
+            </span>
+          }
+          showSeparator={true}
+        >
+          <ActionButton
+            icon={<FaChevronLeft />}
+            ariaLabel="Collapse"
+            title="Collapse"
+            rounded
+            onClick={handleClose}
+          />
+        </PanelHeader>
+        <div className="rounded flex-1 p-4 overflow-y-auto ">
+          {totalVisits > 0 ? (
+            <>
+              <VisitSection
+                icon={<ICONS.tripPlanned />}
+                title={`Planned (${tentativeVisits.length})`}
+                visits={tentativeVisits}
+              />
+              <VisitSection
+                icon={<ICONS.tripUpcoming />}
+                title={`Upcoming (${upcomingVisits.length})`}
+                visits={upcomingVisits}
+              />
+              <VisitSection
+                icon={<ICONS.tripCompleted />}
+                title={`Completed (${pastVisits.length})`}
+                visits={pastVisits}
+              />
+            </>
+          ) : (
+            <EmptyListMessage message="No visits recorded." />
+          )}
         </div>
-      </Modal>
-      {/* Floating chevron as portal, above modal backdrop */}
-      {!exiting &&
-        chevronPos &&
-        ReactDOM.createPortal(
-          <div
-            style={{
-              position: "fixed",
-              top: chevronPos.top,
-              left: chevronPos.left,
-              zIndex: 11000,
-              pointerEvents: "auto",
-            }}
-          >
-            <FloatingChevronButton
-              ref={chevronRef}
-              targetRef={drawerRef}
-              position="right"
-              chevronDirection="left"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleClose();
-              }}
-              ariaLabel="Collapse visits"
-              title="Collapse visits"
-              positionKey={JSON.stringify(drawerStyle)}
-            />
-          </div>,
-          document.body,
-        )}
-    </>
+      </div>
+    </Modal>
   );
 }

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ActionButton, Modal, PanelHeader } from "@components";
 import { ICONS } from "@constants/icons";
+import { useMapView } from "@contexts/MapViewContext";
 import {
   CountryDetailsContent,
   CountryWithFlag,
@@ -13,7 +14,6 @@ import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
-import { useMapView } from "@contexts/MapViewContext";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
@@ -27,22 +27,18 @@ export function CountryDetailsModal({
   onClose,
 }: CountryDetailsModalProps) {
   const { currencies } = useCountryData();
+  const { homeCountry } = useHomeCountry();
+  const { centerOnCountry } = useMapView();
   const { isCountryVisited, getCountryVisitsCategorized } =
     useVisitedCountries();
   const isVisited = country ? isCountryVisited(country.isoCode) : false;
   const categorizedVisits = country
     ? getCountryVisitsCategorized(country.isoCode)
     : { past: [], upcoming: [], tentative: [] };
+
+  // Visit drawer state
   const [showVisitsDrawer, setShowVisitsDrawer] = useState(false);
-  const { centerOnCountry } = useMapView();
-
-  // Get home country from settings
-  const { homeCountry } = useHomeCountry();
-
-  // For positioning the drawer and chevron
   const modalRef = useRef<HTMLDivElement>(null);
-  const openChevronRef = useRef<HTMLButtonElement>(null);
-  const closeChevronRef = useRef<HTMLButtonElement>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Auto-close drawer when modal closes
@@ -65,14 +61,12 @@ export function CountryDetailsModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center select-none">
-      {/* Visits Drawer */}
       {showVisitsDrawer && (
         <CountryVisitsDrawer
           open={showVisitsDrawer}
           onClose={() => setShowVisitsDrawer(false)}
           visits={categorizedVisits}
           targetRef={modalRef}
-          chevronRef={closeChevronRef}
         />
       )}
       <Modal
@@ -80,7 +74,7 @@ export function CountryDetailsModal({
         onClose={onClose}
         className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] p-4 sm:p-8 shadow-lg relative"
         containerRef={modalRef}
-        extraRefs={[openChevronRef, closeChevronRef, drawerRef]}
+        extraRefs={[drawerRef]}
         containerZIndex={10050}
         backdropZIndex={10040}
         disableClose={showVisitsDrawer}
