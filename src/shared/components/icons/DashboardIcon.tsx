@@ -1,6 +1,4 @@
-import React from "react";
-
-/** Renders a dashboard icon composed of four evenly spaced rounded squares in a 2x2 grid. */
+/** Renders a dashboard icon composed of four evenly spaced rounded squares. */
 export function DashboardIcon({
   color = "currentColor",
   size = "1em",

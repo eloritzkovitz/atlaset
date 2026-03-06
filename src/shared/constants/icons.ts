@@ -69,6 +69,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { DashboardIcon } from "../components/icons/DashboardIcon";
+import { VisitIcon } from "../components/icons/VisitIcon";
 
 // Centralized icon mapping for shared concepts
 export const ICONS = {
@@ -86,7 +87,7 @@ export const ICONS = {
   map: FaMap,
   mapData: FaMapLocationDot,
   countries: FaGlobe,
-  visits: FaLocationDot,
+  visits: VisitIcon,
   filters: FaFilter,
   layers: FaLayerGroup,
   markers: FaMapPin,
