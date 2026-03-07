@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-03-07
+- **[feature]** **Atlas | Visits:** Updated visits display and linked visits with calendar
+
 ## 2026-03-04
 - **[feature]** **User | Activity:** Redesigned activity log and updated formatting
 
