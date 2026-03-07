@@ -2,6 +2,7 @@
 export type Visit = {
   yearRange: string;
   tripName?: string;
+  tripId?: string;
 };
 
 /** Represents the visited status filter for countries. */

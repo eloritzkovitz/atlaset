@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import { ActionButton, Modal, PanelHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
@@ -45,12 +46,17 @@ export default function CalendarModal() {
 
   useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], showCalendar);
 
-  return (
+  // Don't render the modal if it's not open
+  if (!showCalendar) return null;
+
+  return ReactDOM.createPortal(
     <Modal
       isOpen={showCalendar}
       onClose={closeCalendar}
       className="!min-w-4/5 min-h-[890px] !h-[890px] flex flex-col shadow relative"
       draggable
+      containerZIndex={10060}
+      backdropZIndex={10059}
     >
       <PanelHeader
         title={
@@ -86,6 +92,7 @@ export default function CalendarModal() {
           />
         </div>
       </div>
-    </Modal>
+    </Modal>,
+    document.body,
   );
 }

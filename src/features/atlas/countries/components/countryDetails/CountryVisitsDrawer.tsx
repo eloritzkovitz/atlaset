@@ -9,6 +9,8 @@ import { ICONS } from "@constants/icons";
 import { FaChevronLeft } from "react-icons/fa6";
 import type { Visit } from "@features/visits";
 import { VisitSection } from "./VisitSection";
+import { useUI } from "@contexts/UIContext";
+import { useTrips } from "@contexts/TripsContext";
 
 interface CountryVisitsDrawerProps {
   open: boolean;
@@ -29,6 +31,10 @@ export function CountryVisitsDrawer({
   targetRef,
   chevronRef,
 }: CountryVisitsDrawerProps) {
+  const { trips } = useTrips();
+  const { handleViewInCalendar } = useUI();
+
+  // Refs and state for animation
   const drawerRef = useRef<HTMLDivElement>(null);
   const [drawerStyle, setDrawerStyle] = useState<React.CSSProperties>({});
   const [exiting, setExiting] = useState(false);
@@ -63,6 +69,13 @@ export function CountryVisitsDrawer({
       setExiting(false);
       onClose();
     }, 300);
+  };
+
+  // Handle visit chip click to view in calendar
+  const handleVisitChipClick = (tripId: string | undefined) => {
+    if (!tripId) return;
+    const trip = trips.find(t => t.id === tripId);
+    if (trip) handleViewInCalendar(trip);
   };
 
   // Don't render anything if not open and not exiting
@@ -113,11 +126,13 @@ export function CountryVisitsDrawer({
                 icon={<ICONS.tripUpcoming />}
                 title={`Upcoming (${upcomingVisits.length})`}
                 visits={upcomingVisits}
+                onVisitClick={handleVisitChipClick}
               />
               <VisitSection
                 icon={<ICONS.tripCompleted />}
                 title={`Completed (${pastVisits.length})`}
                 visits={pastVisits}
+                onVisitClick={handleVisitChipClick}
               />
             </>
           ) : (
