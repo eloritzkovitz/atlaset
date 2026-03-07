@@ -25,10 +25,10 @@ export function VisitSection({
       onToggle={() => setExpanded((e) => !e)}
     >
       <ul className="pl-0">
-        {visits.map((visit, i) => (
+        {[...visits].reverse().map((visit, i) => (
           <li key={`${title}-${i}`} className="my-2">
             <Chip
-              className="flex items-center gap-2 px-3 py-2 bg-surface-alt/50 cursor-pointer"
+              className={`bg-surface-alt/80 flex items-center gap-2 px-3 py-2 ${onVisitClick ? "cursor-pointer" : ""}`}
               onClick={() => visit.tripId && onVisitClick?.(visit.tripId)}
             >
               <span className="font-semibold">{visit.yearRange || "TBD"}</span>
