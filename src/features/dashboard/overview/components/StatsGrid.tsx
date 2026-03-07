@@ -26,7 +26,6 @@ export function StatsGrid({ stats }: StatsGridProps) {
         >
           <Card
             className="cursor-pointer w-full h-full min-h-[220px] min-w-0 flex flex-col items-center justify-between p-6 sm:p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 transition"
-            title={stat.label}
             ariaLabel={`Go to ${stat.label}`}
           >
             {stat.icon}

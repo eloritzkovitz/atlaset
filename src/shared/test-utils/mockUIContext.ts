@@ -35,4 +35,9 @@ export const mockUIContext: UIContextType = {
   showShortcuts: false,
   toggleShortcuts: vi.fn(),
   closeShortcuts: vi.fn(),
+  showCalendar: false,
+  calendarDate: undefined,
+  handleViewInCalendar: vi.fn(),
+  toggleCalendar: vi.fn(),
+  closeCalendar: vi.fn(),
 };

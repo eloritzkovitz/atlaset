@@ -1,7 +1,8 @@
-/** Represents a visit to a country with a year range and optional trip name. */
+/** Represents a visit to a country. */
 export type Visit = {
   yearRange: string;
   tripName?: string;
+  tripId?: string;
 };
 
 /** Represents the visited status filter for countries. */

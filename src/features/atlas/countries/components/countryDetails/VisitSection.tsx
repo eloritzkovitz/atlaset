@@ -1,36 +1,46 @@
+import { useState } from "react";
+import { CollapsibleHeader, Chip } from "@components";
 import type { Visit } from "@features/visits";
 
-export function VisitSection({
-  title,
-  visits,
-  getLabel,
-  emptyMessage,
-}: {
+interface VisitSectionProps {
+  icon: React.ReactNode;
   title: string;
   visits: Visit[];
-  getLabel?: (visit: Visit) => React.ReactNode;
-  emptyMessage?: string;
-}) {
-  if (!visits.length) {
-    return emptyMessage ? (
-      <div className="text-muted text-sm">{emptyMessage}</div>
-    ) : null;
-  }
+  onVisitClick?: (tripId: string) => void;
+}
+
+export function VisitSection({
+  icon,
+  title,
+  visits,
+  onVisitClick,
+}: VisitSectionProps) {
+  const [expanded, setExpanded] = useState(visits.length > 0);
+
   return (
-    <section className="mb-4">
-      <h3 className="font-semibold mb-1">{title}</h3>
-      <ul className="list-disc pl-5">
-        {visits.map((visit, i) => (
-          <li key={`${title}-${i}`}>
-            <span className="font-semibold">
-              {getLabel ? getLabel(visit) : visit.yearRange || "TBD"}
-            </span>
-            {visit.tripName && (
-              <span className="ml-2 text-muted">({visit.tripName})</span>
-            )}
+    <CollapsibleHeader
+      icon={icon}
+      label={title}
+      expanded={expanded}
+      onToggle={() => setExpanded((e) => !e)}
+    >
+      <ul className="pl-0">
+        {[...visits].reverse().map((visit, i) => (
+          <li key={`${title}-${i}`} className="my-2">
+            <Chip
+              className={`bg-surface-alt/80 flex items-center gap-2 px-3 py-2 ${onVisitClick ? "cursor-pointer" : ""}`}
+              onClick={() => visit.tripId && onVisitClick?.(visit.tripId)}
+            >
+              <span className="font-semibold">{visit.yearRange || "TBD"}</span>
+              {visit.tripName && (
+                <span className="text-muted tracking-wide select-none ml-2">
+                  {visit.tripName}
+                </span>
+              )}
+            </Chip>
           </li>
         ))}
       </ul>
-    </section>
+    </CollapsibleHeader>
   );
 }

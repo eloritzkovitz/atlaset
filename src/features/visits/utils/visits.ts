@@ -123,6 +123,7 @@ export function getVisitsForCountry(trips: Trip[], isoCode: string) {
             : "")
         : "TBD",
       tripName: trip.name,
+      tripId: trip.id,
       startDate: trip.startDate,
       endDate: trip.endDate,
     }));

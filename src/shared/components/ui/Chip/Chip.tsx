@@ -4,6 +4,7 @@ import { FaXmark } from "react-icons/fa6";
 interface ChipProps {
   children: React.ReactNode;
   removable?: boolean;
+  onClick?: () => void;
   onRemove?: () => void;
   className?: string;
   disabled?: boolean;
@@ -13,6 +14,7 @@ interface ChipProps {
 export function Chip({
   children,
   removable,
+  onClick,
   onRemove,
   className = "",
   disabled,
@@ -22,7 +24,10 @@ export function Chip({
     "bg-chip-bg hover:bg-info-hover text-chip-text rounded-xl flex items-center gap-1 px-2 py-1 text-sm mr-1 mb-1";
 
   return (
-    <span className={`${defaultStyle}${className ? ` ${className}` : ""}`}>
+    <span
+      className={`${defaultStyle}${className ? ` ${className}` : ""}`}
+      onClick={disabled ? undefined : onClick}
+    >
       {children}
       {removable &&
         (noButton ? (
