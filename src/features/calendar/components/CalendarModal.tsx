@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { ActionButton, Modal, PanelHeader } from "@components";
 import { ICONS } from "@constants/icons";
-import { type Trip } from "@features/trips";
+import { useTrips } from "@contexts/TripsContext";
+import { useUI } from "@contexts/UIContext";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useKeyHandler } from "@hooks";
 import { AppCalendar } from "./AppCalendar";
@@ -9,24 +10,15 @@ import { CalendarSidePanel } from "./CalendarSidePanel";
 import { type CalendarView, type TripEventTypeKey } from "../types";
 import { getNextCalendarDate } from "../utils/navigation";
 
-interface CalendarModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  trips: Trip[];
-  date?: Date;
-}
-
-export default function CalendarModal({
-  isOpen,
-  onClose,
-  trips,
-  date: controlledDate,
-}: CalendarModalProps) {
-  const [view, setView] = useState<CalendarView>("month");
-  const [date, setDate] = useState<Date>(controlledDate ?? new Date());
-
-  // Trip filtering logic
+/** Renders the calendar modal. */
+export default function CalendarModal() {
+  const { trips } = useTrips();
   const { filters, setFilters, filteredTrips } = useTripFilters(trips);
+  const { showCalendar, calendarDate, closeCalendar } = useUI();
+
+  // Date navigation state
+  const [view, setView] = useState<CalendarView>("month");
+  const [date, setDate] = useState<Date>(calendarDate ?? new Date());
 
   // Handler for toggling trip event types
   const handleToggleType = (type: TripEventTypeKey) => {
@@ -35,11 +27,11 @@ export default function CalendarModal({
 
   // Sync internal date with controlled prop
   useEffect(() => {
-    if (controlledDate && controlledDate.getTime() !== date.getTime()) {
-      setDate(controlledDate);
+    if (calendarDate && calendarDate.getTime() !== date.getTime()) {
+      setDate(calendarDate);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [controlledDate]);
+  }, [calendarDate]);
 
   // Handler for arrow keys
   const handleArrow = useCallback(
@@ -51,12 +43,12 @@ export default function CalendarModal({
     [view],
   );
 
-  useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], isOpen);
+  useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], showCalendar);
 
   return (
     <Modal
-      isOpen={isOpen}
-      onClose={onClose}
+      isOpen={showCalendar}
+      onClose={closeCalendar}
       className="!min-w-4/5 min-h-[890px] !h-[890px] flex flex-col shadow relative"
       draggable
     >
@@ -70,7 +62,7 @@ export default function CalendarModal({
         showSeparator={true}
       >
         <ActionButton
-          onClick={onClose}
+          onClick={closeCalendar}
           ariaLabel="Close"
           title="Close"
           icon={<ICONS.close className="text-2xl" />}

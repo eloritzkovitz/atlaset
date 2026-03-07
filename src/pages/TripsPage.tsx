@@ -1,6 +1,7 @@
-import React, { Suspense, useState } from "react";
+import { useState } from "react";
 import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
+import { useUI } from "@contexts/UIContext";
 import { useCountryData } from "@features/countries";
 import {
   TripModal,
@@ -15,10 +16,6 @@ import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
 
-const CalendarModal = React.lazy(
-  () => import("@features/calendar/components/CalendarModal"),
-);
-
 export default function TripsPage() {
   const countryData = useCountryData();
   const {
@@ -32,15 +29,12 @@ export default function TripsPage() {
     duplicateTrip,
   } = useTrips();
   const { isMobile } = useScreenSize();
+  const { toggleCalendar, handleViewInCalendar } = useUI();
 
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [showRowNumbers, setShowRowNumbers] = useState(false);
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
-
-  // Calendar state
-  const [calendarOpen, setCalendarOpen] = useState(false);
-  const [calendarDate, setCalendarDate] = useState<Date | undefined>();
 
   // Set page title
   usePageTitle("Trips | Atlaset");
@@ -95,12 +89,6 @@ export default function TripsPage() {
   const nonSharedSelectedTrips = selectedTrips.filter(
     (trip) => !sharedTripIds.has(trip.id),
   );
-
-  // Handler for viewing trip in calendar
-  function handleViewInCalendar(trip: Trip) {
-    if (trip.startDate) setCalendarDate(new Date(trip.startDate));
-    setCalendarOpen(true);
-  }
 
   // Selection handlers
   function handleSelectTrip(id: string) {
@@ -175,7 +163,7 @@ export default function TripsPage() {
           selectedTripIds={selectedTripIds}
           showRowNumbers={showRowNumbers}
           setShowRowNumbers={setShowRowNumbers}
-          setCalendarOpen={setCalendarOpen}
+          setCalendarOpen={toggleCalendar}
           onAddTrip={handleAdd}
           onBulkDuplicate={handleBulkDuplicate}
           onBulkDelete={handleBulkDelete}
@@ -192,16 +180,6 @@ export default function TripsPage() {
           onClose={() => setModalOpen(false)}
           isEditing={!!trip && !!trip.id}
         />
-        <Suspense
-          fallback={<LoadingSpinner fullScreen message="Loading calendar..." />}
-        >
-          <CalendarModal
-            isOpen={calendarOpen}
-            onClose={() => setCalendarOpen(false)}
-            trips={trips}
-            date={calendarDate}
-          />
-        </Suspense>
         {loading ? (
           <LoadingSpinner fullScreen message="Loading trips..." />
         ) : trips.length === 0 ? (

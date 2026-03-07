@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import type { Trip } from "@features/trips";
 import { useKeyHandler, useScreenSize } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
 import { UIContext } from "./UIContext";
@@ -93,6 +94,19 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const toggleShortcuts = () => setShowShortcuts((prev) => !prev);
   const closeShortcuts = () => setShowShortcuts(false);
 
+  const [showCalendar, setShowCalendar] = useState(false);
+  const toggleCalendar = () => setShowCalendar((prev) => !prev);
+  const closeCalendar = () => setShowCalendar(false);
+
+  // Calendar state
+  const [calendarDate, setCalendarDate] = useState<Date | undefined>();
+
+  // Handler to open calendar modal on a specific date
+  function handleViewInCalendar(trip: Trip) {
+    if (trip.startDate) setCalendarDate(new Date(trip.startDate));
+    setShowCalendar(true);
+  }
+
   // Toggle UI visibility with "U"
   useKeyHandler(toggleUiVisible, ["u", "U"], true);
 
@@ -154,6 +168,11 @@ export function UIProvider({ children }: { children: ReactNode }) {
         showShortcuts,
         toggleShortcuts,
         closeShortcuts,
+        showCalendar,
+        calendarDate,
+        handleViewInCalendar,
+        toggleCalendar,
+        closeCalendar,
       }}
     >
       {children}

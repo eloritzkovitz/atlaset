@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type { Trip } from "@features/trips/types";
 import type {
   MapToolbarPanelSelection,
   UserPanelSelection,
@@ -38,6 +39,11 @@ export interface UIContextType {
   toggleShortcuts: () => void;
   closeLegend: () => void;
   closeShortcuts: () => void;
+  showCalendar: boolean;
+  calendarDate?: Date;
+  handleViewInCalendar: (trip: Trip) => void;
+  toggleCalendar: () => void;
+  closeCalendar: () => void;
 }
 
 export const UIContext = createContext<UIContextType | undefined>(undefined);
