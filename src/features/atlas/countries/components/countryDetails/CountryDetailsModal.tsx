@@ -1,19 +1,18 @@
-import { useState, useRef, useEffect } from "react";
-import { FaWikipediaW } from "react-icons/fa6";
-import { ActionButton, Modal, PanelHeader } from "@components";
-import { ICONS } from "@constants/icons";
+import { useState, useRef, useMemo } from "react";
+import { Modal } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
+import { useUI } from "@contexts/UIContext";
 import {
   CountryDetailsContent,
-  CountryWithFlag,
   useCountryData,
   type Country,
 } from "@features/countries";
-import { VisitedStatusIndicator } from "@features/countries/components/countryDetails/VisitedStatusIndicator";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
-import { CountryVisitsDrawer } from "./CountryVisitsDrawer";
+import { CountryVisitsContent } from "./CountryVisitsContent";
+import { CountryDetailsTabs } from "./CountryDetailsTabs";
+import { CountryDetailsHeader } from "./CountryDetailsHeader";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
@@ -29,22 +28,23 @@ export function CountryDetailsModal({
   const { currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const { centerOnCountry } = useMapView();
+  const { showCalendar } = useUI();
+
+  // Visited status and categorized visits
   const { isCountryVisited, getCountryVisitsCategorized } =
     useVisitedCountries();
   const isVisited = country ? isCountryVisited(country.isoCode) : false;
-  const categorizedVisits = country
-    ? getCountryVisitsCategorized(country.isoCode)
-    : { past: [], upcoming: [], tentative: [] };
+  const categorizedVisits = useMemo(
+    () =>
+      country
+        ? getCountryVisitsCategorized(country.isoCode)
+        : { past: [], upcoming: [], tentative: [] },
+    [country, getCountryVisitsCategorized],
+  );
 
-  // Visit drawer state
-  const [showVisitsDrawer, setShowVisitsDrawer] = useState(false);
+  // Tab state
+  const [activeTab, setActiveTab] = useState<"details" | "visits">("details");
   const modalRef = useRef<HTMLDivElement>(null);
-  const drawerRef = useRef<HTMLDivElement>(null);
-
-  // Auto-close drawer when modal closes
-  useEffect(() => {
-    if (!isOpen) setShowVisitsDrawer(false);
-  }, [isOpen]);
 
   // Center map handler
   useKeyHandler(
@@ -61,82 +61,40 @@ export function CountryDetailsModal({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center select-none">
-      {showVisitsDrawer && (
-        <CountryVisitsDrawer
-          open={showVisitsDrawer}
-          onClose={() => setShowVisitsDrawer(false)}
-          visits={categorizedVisits}
-          targetRef={modalRef}
-        />
-      )}
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] p-4 sm:p-8 shadow-lg relative"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] min-h-[640px] sm:p-8 shadow-lg relative"
         containerRef={modalRef}
-        extraRefs={[drawerRef]}
-        containerZIndex={10050}
-        backdropZIndex={10040}
-        disableClose={showVisitsDrawer}
+        disableClose={showCalendar}
       >
-        <div className="relative overflow-visible">
-          <PanelHeader
-            title={
-              <span className="flex items-center gap-2 break-words max-w-[15vw]">
-                <CountryWithFlag
-                  isoCode={country.isoCode}
-                  name={country.name}
-                  className="font-bold text-lg"
+        <div className="relative overflow-visible flex flex-col">
+          <CountryDetailsHeader
+            country={{ isoCode: country.isoCode, name: country.name }}
+            isVisited={isVisited}
+            isHome={homeCountry === country.isoCode}
+            centerOnCountry={centerOnCountry}
+            onClose={onClose}
+          />
+          <CountryDetailsTabs
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+          />
+          <div className="flex-1 relative">
+            <div
+              key={activeTab}
+              className={"absolute inset-0 transition-opacity duration-300"}
+            >
+              {activeTab === "details" ? (
+                <CountryDetailsContent
+                  country={country}
+                  currencies={currencies}
                 />
-                <span className="text-muted text-sm">({country.isoCode})</span>
-                <VisitedStatusIndicator
-                  visited={isVisited}
-                  isHome={homeCountry === country.isoCode}
-                />
-              </span>
-            }
-          >
-            <ActionButton
-              onClick={() => setShowVisitsDrawer((v) => !v)}
-              ariaLabel={showVisitsDrawer ? "Hide visits" : "Show visits"}
-              title={showVisitsDrawer ? "Hide visits" : "Show visits"}
-              icon={<ICONS.visits />}
-              rounded
-            />
-            {centerOnCountry && (
-              <ActionButton
-                onClick={() => centerOnCountry(country?.isoCode || "")}
-                ariaLabel="Center map on country"
-                title="Center map"
-                icon={<ICONS.center />}
-                rounded
-              />
-            )}
-            <ActionButton
-              onClick={() =>
-                window.open(
-                  `https://en.wikipedia.org/wiki/${country.name.replace(
-                    / /g,
-                    "_",
-                  )}`,
-                  "_blank",
-                  "noopener,noreferrer",
-                )
-              }
-              ariaLabel="Open Wikipedia article"
-              title="Wikipedia"
-              icon={<FaWikipediaW />}
-              rounded
-            />
-            <ActionButton
-              onClick={onClose}
-              ariaLabel="Close country details"
-              title="Close"
-              icon={<ICONS.close className="text-2xl" />}
-              rounded
-            />
-          </PanelHeader>
-          <CountryDetailsContent country={country} currencies={currencies} />
+              ) : (
+                <CountryVisitsContent visits={categorizedVisits} />
+              )}
+            </div>
+          </div>
         </div>
       </Modal>
     </div>
