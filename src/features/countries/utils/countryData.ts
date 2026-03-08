@@ -112,6 +112,7 @@ export function getCountryRelations(isoCode: string): {
   sovereign?: { name: string; isoCode: string };
   type: SovereigntyType | "Sovereign";
   dependencies?: { name: string; isoCode: string }[];
+  countries?: { name: string; isoCode: string }[];
   regions?: { name: string; isoCode: string }[];
   disputes?: { name: string; isoCode: string }[];
   hasRelations?: boolean;
@@ -131,11 +132,13 @@ export function getCountryRelations(isoCode: string): {
   const dependencies = group?.dependencies || [];
   const regions = group?.regions || [];
   const disputes = group?.disputes || [];
+  const countries = group?.countries || [];
   const hasRelations =
     dependencies.length > 0 || regions.length > 0 || disputes.length > 0;
   return {
     type: "Sovereign",
     dependencies,
+    countries,
     regions,
     disputes,
     hasRelations,

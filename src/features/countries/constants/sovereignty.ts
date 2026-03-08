@@ -1,7 +1,7 @@
 import type { SovereigntyType } from "../types";
 
 // List of country codes that do not have their own flags
-export const EXCLUDED_ISO_CODES = [  
+export const EXCLUDED_ISO_CODES = [
   "BV", // Bouvet Island
   "CP", // Clipperton Island
   "HM", // Heard Island and McDonald Islands
@@ -11,8 +11,8 @@ export const EXCLUDED_ISO_CODES = [
   "UM", // United States Minor Outlying Islands
 ];
 
-// Mapping of dependencies that use the flag of their sovereign state
-export const SOVEREIGN_FLAG_MAP: Record<string, string> = {  
+// Mapping of dependencies that use the flag of their sovereign state and special cases
+export const SOVEREIGN_FLAG_MAP: Record<string, string> = {
   BV: "NO", // Bouvet Island → Norway
   CP: "FR", // Clipperton Island → France
   GF: "FR", // French Guiana → France
@@ -20,7 +20,11 @@ export const SOVEREIGN_FLAG_MAP: Record<string, string> = {
   MF: "FR", // Saint Martin → France
   SJ: "NO", // Svalbard and Jan Mayen → Norway
   UK: "GB", // Akrotiri and Dhekelia → United Kingdom
-  UM: "US", // United States Minor Outlying Islands → United States
+  UM: "US", // United States Minor Outlying Islands → United States,
+  "GB-ENG": "GBENG", // England
+  "GB-NIR": "GBNIR", // Scotland
+  "GB-SCT": "GBSCT", // Northern Ireland
+  "GB-WLS": "GBWLS", // Wales
 };
 
 // Predefined sovereignty order for consistent dropdown ordering
@@ -29,5 +33,5 @@ export const SOVEREIGNTY_ORDER: SovereigntyType[] = [
   "Dependency",
   "Overseas Region",
   "Disputed",
-  "Unrecognized",  
+  "Unrecognized",
 ];

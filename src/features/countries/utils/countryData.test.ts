@@ -182,6 +182,7 @@ describe("countryData utils", () => {
       const result = getCountryRelations("US");
       expect(result.type).toBe("Sovereign");
       expect(result.hasRelations).toBe(true);
+      expect(Array.isArray(result.countries)).toBe(true);
       expect(Array.isArray(result.dependencies)).toBe(true);
       expect(Array.isArray(result.regions)).toBe(true);
       expect(Array.isArray(result.disputes)).toBe(true);
@@ -191,6 +192,7 @@ describe("countryData utils", () => {
       const result = getCountryRelations("FR");
       expect(result).toEqual({
         type: "Sovereign",
+        countries: [],
         dependencies: [],
         regions: [],
         disputes: [],
@@ -202,6 +204,7 @@ describe("countryData utils", () => {
       const result = getCountryRelations("");
       expect(result).toEqual({
         type: "Sovereign",
+        countries: [],
         dependencies: [],
         regions: [],
         disputes: [],

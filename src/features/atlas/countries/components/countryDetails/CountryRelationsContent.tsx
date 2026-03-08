@@ -25,6 +25,15 @@ export function CountryRelationsContent({
   const sections = useMemo(
     () => [
       {
+        key: "countries",
+        label: "Countries",
+        data: sortCountries(
+          (group.countries as Country[]) || [],
+          "name-asc",
+          [],
+        ),
+      },
+      {
         key: "dependencies",
         label: "Dependencies",
         data: sortCountries(
@@ -81,11 +90,11 @@ export function CountryRelationsContent({
               onToggle={() => handleToggle(section.key)}
             >
               <div className="flex flex-col">
-                {section.data.map((country: Country) => (
+                {section.data.map((item) => (
                   <CountryWithFlag
-                    key={country.isoCode}
-                    isoCode={country.isoCode}
-                    name={country.name}
+                    key={item.isoCode}
+                    isoCode={item.isoCode}
+                    name={item.name}
                     className="py-2 px-2"
                   />
                 ))}

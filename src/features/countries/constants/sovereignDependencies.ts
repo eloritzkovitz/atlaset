@@ -23,7 +23,7 @@ export const SOVEREIGN_DEPENDENCIES: Record<string, SovereigntyGroup> = {
     disputes: [{ name: "Taiwan", isoCode: "TW" }],
     dependencies: [
       { name: "Hong Kong", isoCode: "HK" },
-      { name: "Macao", isoCode: "MO" },
+      { name: "Macau", isoCode: "MO" },
     ],
   },
   DK: {
@@ -35,7 +35,7 @@ export const SOVEREIGN_DEPENDENCIES: Record<string, SovereigntyGroup> = {
   },
   FI: {
     name: "Finland",
-    dependencies: [{ name: "Åland Islands", isoCode: "AX" }],
+    dependencies: [{ name: "Åland", isoCode: "AX" }],
   },
   FR: {
     name: "France",
@@ -60,10 +60,10 @@ export const SOVEREIGN_DEPENDENCIES: Record<string, SovereigntyGroup> = {
   GB: {
     name: "United Kingdom",
     countries: [
-      { name: "England", isoCode: "ENG" },
-      { name: "Northern Ireland", isoCode: "NIR" },
-      { name: "Scotland", isoCode: "SCT" },
-      { name: "Wales", isoCode: "WLS" },
+      { name: "England", isoCode: "GB-ENG" },
+      { name: "Northern Ireland", isoCode: "GB-NIR" },
+      { name: "Scotland", isoCode: "GB-SCT" },
+      { name: "Wales", isoCode: "GB-WLS" },
     ],
     dependencies: [
       { name: "Anguilla", isoCode: "AI" },
