@@ -1,63 +1,40 @@
 import { useMemo, useState } from "react";
 import { CollapsibleHeader, EmptyListMessage } from "@components";
 import {
+  COUNTRY_RELATIONS,
+  COUNTRY_RELATION_SECTIONS,
   CountryWithFlag,
-  sortCountries,
-  type Country,
+  getCountryName,
+  useCountryData,
 } from "@features/countries";
-import { SOVEREIGN_DEPENDENCIES } from "@features/countries/constants/sovereignDependencies";
 
 interface CountryRelationsContentProps {
-  country: Country;
+  country: { isoCode: string };
 }
 
 export function CountryRelationsContent({
   country,
 }: CountryRelationsContentProps) {
-  const group = SOVEREIGN_DEPENDENCIES[country.isoCode];
-  if (!group) {
-    return (
-      <EmptyListMessage message="No dependencies or disputes for this country." />
-    );
-  }
+  const { countries } = useCountryData();
+  const group = COUNTRY_RELATIONS[country.isoCode];
 
-  // Prepare sections with sorted countries
+  // Helper to sort isoCodes by country name
+  const sortByName = (arr: string[]) =>
+    arr.slice().sort((a, b) => {
+      const nameA = getCountryName(a, countries) || "";
+      const nameB = getCountryName(b, countries) || "";
+      return nameA.localeCompare(nameB);
+    });
+
+  // Prepare sections with sorted isoCodes
   const sections = useMemo(
-    () => [
-      {
-        key: "countries",
-        label: "Countries",
-        data: sortCountries(
-          (group.countries as Country[]) || [],
-          "name-asc",
-          [],
-        ),
-      },
-      {
-        key: "dependencies",
-        label: "Dependencies",
-        data: sortCountries(
-          (group.dependencies as Country[]) || [],
-          "name-asc",
-          [],
-        ),
-      },
-      {
-        key: "regions",
-        label: "Regions",
-        data: sortCountries((group.regions as Country[]) || [], "name-asc", []),
-      },
-      {
-        key: "disputes",
-        label: "Disputes",
-        data: sortCountries(
-          (group.disputes as Country[]) || [],
-          "name-asc",
-          [],
-        ),
-      },
-    ],
-    [group],
+    () =>
+      COUNTRY_RELATION_SECTIONS.map((def) => ({
+        key: def.key,
+        label: def.label,
+        data: sortByName(group[def.prop] || []),
+      })),
+    [group, countries, sortByName],
   );
 
   // Expanded state for each section
@@ -76,6 +53,13 @@ export function CountryRelationsContent({
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  // If no relations, show empty message
+  if (!group) {
+    return (
+      <EmptyListMessage message="No dependencies or disputes for this country." />
+    );
+  }
+
   return (
     <div className="flex-1 overflow-y-auto max-h-full">
       {sections.map(
@@ -90,11 +74,11 @@ export function CountryRelationsContent({
               onToggle={() => handleToggle(section.key)}
             >
               <div className="flex flex-col">
-                {section.data.map((item) => (
+                {section.data.map((isoCode: string) => (
                   <CountryWithFlag
-                    key={item.isoCode}
-                    isoCode={item.isoCode}
-                    name={item.name}
+                    key={isoCode}
+                    isoCode={isoCode}
+                    name={getCountryName(isoCode, countries)}
                     className="py-2 px-2"
                   />
                 ))}

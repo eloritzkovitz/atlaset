@@ -15,7 +15,6 @@ export const EXCLUDED_ISO_CODES = [
 export const SOVEREIGN_FLAG_MAP: Record<string, string> = {
   BV: "NO", // Bouvet Island → Norway
   CP: "FR", // Clipperton Island → France
-  GF: "FR", // French Guiana → France
   HM: "AU", // Heard Island and McDonald Islands → Australia
   MF: "FR", // Saint Martin → France
   SJ: "NO", // Svalbard and Jan Mayen → Norway

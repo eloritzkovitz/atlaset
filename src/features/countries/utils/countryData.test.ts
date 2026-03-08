@@ -3,6 +3,7 @@ import type { Country, SovereigntyType } from "../types";
 import {
   getCountryIsoCode,
   getCountryByIsoCode,
+  getCountryName,
   createCountryMap,
   getAllRegions,
   getAllSubregions,
@@ -20,14 +21,18 @@ vi.mock("../constants/sovereignty", () => ({
   EXCLUDED_ISO_CODES: ["XX"],
   SOVEREIGN_FLAG_MAP: { YY: "US" },
 }));
-vi.mock("../constants/sovereignDependencies", () => ({
-  SOVEREIGN_DEPENDENCIES: {
+vi.mock("../constants/countryRelations", () => ({
+  COUNTRY_RELATIONS: {
     US: {
       name: "United States",
-      dependencies: [{ isoCode: "GU" }],
-      regions: [{ isoCode: "PR" }],
-      disputes: [{ isoCode: "VI" }],
-    },
+      dependencies: ["GU"],
+      regions: ["PR"],
+      disputes: ["VI"],
+    },    
+  },
+
+  SPECIAL_COUNTRIES: {
+    "GB-ENG": { name: "England" },
   },
 }));
 
@@ -56,6 +61,20 @@ describe("countryData utils", () => {
     });
     it("returns null for invalid input", () => {
       expect(getCountryByIsoCode("", null as any)).toBeNull();
+    });
+  });
+
+  describe("getCountryName", () => {
+    it("returns the name of a country from SPECIAL_COUNTRIES", () => {
+      expect(getCountryName("GB-ENG", countries)).toBe("England");
+    });
+
+    it("returns the name if country is found", () => {
+      expect(getCountryName("FR", countries)).toBe("France");
+    });
+
+    it("returns isoCode if country is not found", () => {
+      expect(getCountryName("ZZ", countries)).toBe("ZZ");
     });
   });
 
@@ -130,6 +149,7 @@ describe("countryData utils", () => {
         .sort();
       expect(getSubregionsForRegion(countries, region)).toEqual(expected);
     });
+
     it("skips undefined subregions", () => {
       const testCountries = [
         { region: "Europe", subregion: "Western Europe" },
@@ -149,6 +169,7 @@ describe("countryData utils", () => {
         "Sovereign",
       ]);
     });
+
     it("skips undefined sovereigntyType", () => {
       const testCountries = [
         { sovereigntyType: "Sovereign" as SovereigntyType },
@@ -165,16 +186,24 @@ describe("countryData utils", () => {
     it("returns dependency info with sovereign and dependencyOf", () => {
       expect(getCountryRelations("GU")).toEqual({
         type: "Dependency",
-        sovereign: { name: "United States", isoCode: "US" },
-        dependencyOf: { name: "United States", isoCode: "US" },
+        sovereign: { isoCode: "US" },
+        dependencyOf: { isoCode: "US" },
+      });
+    });
+
+    it("returns region info with sovereign and regionOf", () => {
+      expect(getCountryRelations("PR")).toEqual({
+        type: "Overseas Region",
+        sovereign: { isoCode: "US" },
+        regionOf: { isoCode: "US" },
       });
     });
 
     it("returns dispute info with sovereign and disputeOf", () => {
       expect(getCountryRelations("VI")).toEqual({
         type: "Disputed",
-        sovereign: { name: "United States", isoCode: "US" },
-        disputeOf: { name: "United States", isoCode: "US" },
+        sovereign: { isoCode: "US" },
+        disputeOf: { isoCode: "US" },
       });
     });
 
