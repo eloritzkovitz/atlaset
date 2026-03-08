@@ -1,9 +1,10 @@
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { Modal } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import {
   CountryDetailsContent,
+  getCountryRelations,
   useCountryData,
   type Country,
 } from "@features/countries";
@@ -11,8 +12,12 @@ import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryVisitsContent } from "./CountryVisitsContent";
-import { CountryDetailsTabs } from "./CountryDetailsTabs";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
+import {
+  CountryDetailsTabs,
+  type CountryDetailsTab,
+} from "./CountryDetailsTabs";
+import { CountryRelationsContent } from "./CountryRelationsContent";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
@@ -43,7 +48,12 @@ export function CountryDetailsModal({
   );
 
   // Tab state
-  const [activeTab, setActiveTab] = useState<"details" | "visits">("details");
+  const [activeTab, setActiveTab] = useState<CountryDetailsTab>("overview");
+
+  // Reset tab to overview when modal closes
+  useEffect(() => {
+    if (!isOpen) setActiveTab("overview");
+  }, [isOpen]);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Center map handler
@@ -59,16 +69,21 @@ export function CountryDetailsModal({
   // Do not render if no country is selected
   if (!country) return null;
 
+  // Determine if the country has relations for showing the dependencies tab
+  const hasRelationsTab = country
+    ? getCountryRelations(country.isoCode).hasRelations
+    : false;
+
   return (
     <div className="fixed inset-0 flex items-center justify-center select-none">
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] min-h-[640px] sm:p-8 shadow-lg relative"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] min-h-[650px] sm:p-8 shadow-lg relative"
         containerRef={modalRef}
         disableClose={showCalendar}
       >
-        <div className="relative overflow-visible flex flex-col">
+        <div className="relative overflow-visible flex flex-col h-full">
           <CountryDetailsHeader
             country={{ isoCode: country.isoCode, name: country.name }}
             isVisited={isVisited}
@@ -79,20 +94,20 @@ export function CountryDetailsModal({
           <CountryDetailsTabs
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            showDependenciesTab={hasRelationsTab}
           />
-          <div className="flex-1 relative">
-            <div
-              key={activeTab}
-              className={"absolute inset-0 transition-opacity duration-300"}
-            >
-              {activeTab === "details" ? (
+          <div className="relative flex-1 max-h-[510px] overflow-y-auto mt-4">
+            <div key={activeTab} className={"transition-opacity duration-300"}>
+              {activeTab === "overview" ? (
                 <CountryDetailsContent
                   country={country}
                   currencies={currencies}
                 />
-              ) : (
+              ) : activeTab === "visits" ? (
                 <CountryVisitsContent visits={categorizedVisits} />
-              )}
+              ) : hasRelationsTab ? (
+                <CountryRelationsContent country={country} />
+              ) : null}
             </div>
           </div>
         </div>

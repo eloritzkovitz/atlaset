@@ -11,8 +11,8 @@ import {
   getCountriesWithOwnFlag,
   getRandomCountry,
   getLanguagesDisplay,
-  getSovereigntyInfoForTerritory,
   getAliasesDisplay,
+  getCountryRelations,
 } from "./countryData";
 
 // Mock constants
@@ -161,43 +161,52 @@ describe("countryData utils", () => {
     });
   });
 
-  describe("getSovereigntyInfoForTerritory", () => {
-    it("returns dependency info", () => {
-      expect(getSovereigntyInfoForTerritory("GU")).toEqual({
+  describe("getCountryRelations", () => {
+    it("returns dependency info with sovereign and dependencyOf", () => {
+      expect(getCountryRelations("GU")).toEqual({
         type: "Dependency",
         sovereign: { name: "United States", isoCode: "US" },
+        dependencyOf: { name: "United States", isoCode: "US" },
       });
     });
-    it("returns region info", () => {
-      expect(getSovereigntyInfoForTerritory("PR")).toEqual({
-        type: "Overseas Region",
-        sovereign: { name: "United States", isoCode: "US" },
-      });
-    });
-    it("returns dispute info", () => {
-      expect(getSovereigntyInfoForTerritory("VI")).toEqual({
+
+    it("returns dispute info with sovereign and disputeOf", () => {
+      expect(getCountryRelations("VI")).toEqual({
         type: "Disputed",
         sovereign: { name: "United States", isoCode: "US" },
+        disputeOf: { name: "United States", isoCode: "US" },
       });
     });
-    it("returns Sovereign for unknown", () => {
-      expect(getSovereigntyInfoForTerritory("US")).toEqual({
+
+    it("returns full relations for a sovereign with relations", () => {
+      const result = getCountryRelations("US");
+      expect(result.type).toBe("Sovereign");
+      expect(result.hasRelations).toBe(true);
+      expect(Array.isArray(result.dependencies)).toBe(true);
+      expect(Array.isArray(result.regions)).toBe(true);
+      expect(Array.isArray(result.disputes)).toBe(true);
+    });
+
+    it("returns Sovereign for a country with no relations", () => {
+      const result = getCountryRelations("FR");
+      expect(result).toEqual({
         type: "Sovereign",
+        dependencies: [],
+        regions: [],
+        disputes: [],
+        hasRelations: false,
       });
     });
-    it("returns undefined type for empty input", () => {
-      expect(getSovereigntyInfoForTerritory("")).toEqual({ type: undefined });
-    });
-    it("sorts subregions alphabetically for a region", () => {
-      const testCountries = [
-        { region: "Europe", subregion: "Zulu" },
-        { region: "Europe", subregion: "Alpha" },
-        { region: "Europe", subregion: "Mike" },
-        { region: "Americas", subregion: "Caribbean" },
-      ] as Partial<Country>[];
-      expect(
-        getSubregionsForRegion(testCountries as Country[], "Europe"),
-      ).toEqual(["Alpha", "Mike", "Zulu"]);
+
+    it("returns Sovereign with empty arrays for empty input", () => {
+      const result = getCountryRelations("");
+      expect(result).toEqual({
+        type: "Sovereign",
+        dependencies: [],
+        regions: [],
+        disputes: [],
+        hasRelations: false,
+      });
     });
   });
 

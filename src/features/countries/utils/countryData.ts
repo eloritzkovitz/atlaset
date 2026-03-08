@@ -102,19 +102,44 @@ export function getAllSovereigntyTypes(
 }
 
 /**
- * Finds the sovereign country for a terrritory's ISO code.
- * @param territoryIsoCode - The ISO code of the territory.
- * @returns The sovereign's name and ISO code, or undefined if not found.
+ * Finds the sovereign country or relations for a country's ISO code.
+ * @param isoCode - The ISO code of the country or territory.
+ * @returns Relation info: dependencyOf, disputeOf, sovereign, or all relations if sovereign.
  */
-export function getSovereigntyInfoForTerritory(territoryIsoCode: string): {
-  type?: SovereigntyType;
+export function getCountryRelations(isoCode: string): {
+  dependencyOf?: { name: string; isoCode: string };
+  disputeOf?: { name: string; isoCode: string };
   sovereign?: { name: string; isoCode: string };
+  type: SovereigntyType | "Sovereign";
+  dependencies?: { name: string; isoCode: string }[];
+  regions?: { name: string; isoCode: string }[];
+  disputes?: { name: string; isoCode: string }[];
+  hasRelations?: boolean;
 } {
-  if (!territoryIsoCode) return { type: undefined };
-  if (dependencyMap[territoryIsoCode]) return dependencyMap[territoryIsoCode];
-  if (regionMap[territoryIsoCode]) return regionMap[territoryIsoCode];
-  if (disputeMap[territoryIsoCode]) return disputeMap[territoryIsoCode];
-  return { type: "Sovereign" };
+  const dependency = dependencyMap[isoCode];
+  const dispute = disputeMap[isoCode];
+  if (dependency || dispute) {
+    const rel = dependency || dispute;
+    return {
+      dependencyOf: dependency ? rel.sovereign : undefined,
+      disputeOf: dispute ? rel.sovereign : undefined,
+      sovereign: rel.sovereign,
+      type: rel.type,
+    };
+  }
+  const group = SOVEREIGN_DEPENDENCIES[isoCode];
+  const dependencies = group?.dependencies || [];
+  const regions = group?.regions || [];
+  const disputes = group?.disputes || [];
+  const hasRelations =
+    dependencies.length > 0 || regions.length > 0 || disputes.length > 0;
+  return {
+    type: "Sovereign",
+    dependencies,
+    regions,
+    disputes,
+    hasRelations,
+  };
 }
 
 /**

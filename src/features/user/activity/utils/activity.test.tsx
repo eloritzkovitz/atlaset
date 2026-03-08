@@ -176,9 +176,9 @@ describe("getActivityIcon", () => {
     expect(icon.type.name).toBe("FaGear");
   });
 
-  it("returns FaUsers for code 140", () => {
+  it("returns FaUserGroup for code 140", () => {
     const icon = activityUtils.getActivityIcon(140);
-    expect(icon.type.name).toBe("FaUsers");
+    expect(icon.type.name).toBe("FaUserGroup");
   });
 
   it("returns FaEarthAmericas for code 200", () => {

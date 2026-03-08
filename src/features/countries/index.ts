@@ -32,7 +32,7 @@ export {
   getCountriesWithOwnFlag,
   getRandomCountry,
   getLanguagesDisplay,
-  getSovereigntyInfoForTerritory,
+  getCountryRelations,
 } from "./utils/countryData";
 export {
   filterCountries,

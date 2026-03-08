@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-03-08
+- **[feature]** **Atlas | Countries:** Updated country details to also show relations for a country (dependencies, regions, disputes)
+
 ## 2026-03-07
 - **[feature]** **Atlas | Visits:** Updated visits display and linked visits with calendar
 
