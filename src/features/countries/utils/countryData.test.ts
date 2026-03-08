@@ -28,7 +28,7 @@ vi.mock("../constants/countryRelations", () => ({
       dependencies: ["GU"],
       regions: ["PR"],
       disputes: ["VI"],
-    },
+    },    
   },
 
   SPECIAL_COUNTRIES: {
@@ -67,7 +67,7 @@ describe("countryData utils", () => {
   describe("getCountryName", () => {
     it("returns the name of a country from SPECIAL_COUNTRIES", () => {
       expect(getCountryName("GB-ENG", countries)).toBe("England");
-    });    
+    });
 
     it("returns the name if country is found", () => {
       expect(getCountryName("FR", countries)).toBe("France");
@@ -149,6 +149,7 @@ describe("countryData utils", () => {
         .sort();
       expect(getSubregionsForRegion(countries, region)).toEqual(expected);
     });
+
     it("skips undefined subregions", () => {
       const testCountries = [
         { region: "Europe", subregion: "Western Europe" },
@@ -168,6 +169,7 @@ describe("countryData utils", () => {
         "Sovereign",
       ]);
     });
+
     it("skips undefined sovereigntyType", () => {
       const testCountries = [
         { sovereigntyType: "Sovereign" as SovereigntyType },
@@ -186,6 +188,14 @@ describe("countryData utils", () => {
         type: "Dependency",
         sovereign: { isoCode: "US" },
         dependencyOf: { isoCode: "US" },
+      });
+    });
+
+    it("returns region info with sovereign and regionOf", () => {
+      expect(getCountryRelations("PR")).toEqual({
+        type: "Overseas Region",
+        sovereign: { isoCode: "US" },
+        regionOf: { isoCode: "US" },
       });
     });
 

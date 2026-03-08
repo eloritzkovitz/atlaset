@@ -83,4 +83,5 @@ export const SPECIAL_COUNTRIES: Record<string, { name: string }> = {
   "GB-NIR": { name: "Northern Ireland" },
   "GB-SCT": { name: "Scotland" },
   "GB-WLS": { name: "Wales" },
+  CP: { name: "Clipperton Island" },
 };

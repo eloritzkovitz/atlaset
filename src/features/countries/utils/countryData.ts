@@ -127,6 +127,7 @@ export function getAllSovereigntyTypes(
  */
 export function getCountryRelations(isoCode: string): {
   dependencyOf?: { isoCode: string };
+  regionOf?: { isoCode: string };
   disputeOf?: { isoCode: string };
   sovereign?: { isoCode: string };
   type: SovereigntyType | "Sovereign";
@@ -137,13 +138,15 @@ export function getCountryRelations(isoCode: string): {
   hasRelations?: boolean;
 } {
   const dependency = dependencyMap[isoCode];
+  const region = regionMap[isoCode];
   const dispute = disputeMap[isoCode];
 
   // If it's a dependency or disputed territory, return its sovereign/dispute info
-  if (dependency || dispute) {
-    const rel = dependency || dispute;
+  if (dependency || region || dispute) {
+    const rel = dependency || region || dispute;
     return {
       dependencyOf: dependency ? { isoCode: rel.sovereign.isoCode } : undefined,
+      regionOf: region ? { isoCode: rel.sovereign.isoCode } : undefined,
       disputeOf: dispute ? { isoCode: rel.sovereign.isoCode } : undefined,
       sovereign: { isoCode: rel.sovereign.isoCode },
       type: rel.type,

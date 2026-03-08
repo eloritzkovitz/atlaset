@@ -96,8 +96,8 @@ export function CountryDetailsModal({
             onTabChange={setActiveTab}
             showDependenciesTab={hasRelationsTab}
           />
-          <div className="relative flex-1 max-h-[510px] overflow-y-auto mt-4">
-            <div key={activeTab} className={"transition-opacity duration-300"}>
+          <div className="relative flex-1 max-h-[510px] overflow-y-auto mt-4 -mx-2">
+            <div key={activeTab} className={"transition-opacity duration-300 px-4"}>
               {activeTab === "overview" ? (
                 <CountryDetailsContent
                   country={country}
