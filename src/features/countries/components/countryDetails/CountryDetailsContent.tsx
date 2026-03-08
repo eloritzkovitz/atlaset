@@ -20,7 +20,7 @@ export function CountryDetailsContent({
       {country.sovereigntyType && sovereigntyInfo && (
         <SovereigntyBadge
           type={country.sovereigntyType}
-          sovereign={sovereigntyInfo.sovereign}
+          sovereignIsoCode={sovereigntyInfo.sovereign?.isoCode}
         />
       )}
       <CountryFlag

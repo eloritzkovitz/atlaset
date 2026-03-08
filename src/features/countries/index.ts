@@ -8,6 +8,10 @@ export { CountryFlag } from "./components/countryFlag/CountryFlag";
 
 // Constants
 export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
+export {
+  COUNTRY_RELATIONS,
+  COUNTRY_RELATION_SECTIONS,
+} from "./constants/countryRelations";
 
 // Hooks
 export { useCountryData } from "./hooks/useCountryData";
@@ -24,6 +28,7 @@ export * from "./types";
 export {
   getCountryIsoCode,
   getCountryByIsoCode,
+  getCountryName,
   createCountryMap,
   getAllRegions,
   getAllSubregions,

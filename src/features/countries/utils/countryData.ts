@@ -3,7 +3,10 @@
  */
 
 import { extractUniqueSorted } from "@utils/array";
-import { SOVEREIGN_DEPENDENCIES } from "../constants/sovereignDependencies";
+import {
+  COUNTRY_RELATIONS,
+  SPECIAL_COUNTRIES,
+} from "../constants/countryRelations";
 import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";
 import type { Country, SovereigntyType } from "../types";
 
@@ -36,6 +39,22 @@ export function getCountryByIsoCode(
       (c) => c.isoCode?.toLowerCase() === code.toLowerCase(),
     ) || null
   );
+}
+
+/** Returns the name of a country based on its ISO code.
+ * @param isoCode - The ISO code of the country.
+ * @param countryData - An object containing an array of countries.
+ * @returns The name of the country if found, otherwise returns the ISO code.
+ */
+export function getCountryName(isoCode: string, countries: Country[]) {
+  // Check SPECIAL_COUNTRIES first
+  if (SPECIAL_COUNTRIES[isoCode]?.name) {
+    return SPECIAL_COUNTRIES[isoCode].name;
+  }
+
+  // Then find in the main countries list
+  const country = countries.find((c) => c.isoCode === isoCode);
+  return country ? country.name : isoCode;
 }
 
 /**
@@ -107,34 +126,42 @@ export function getAllSovereigntyTypes(
  * @returns Relation info: dependencyOf, disputeOf, sovereign, or all relations if sovereign.
  */
 export function getCountryRelations(isoCode: string): {
-  dependencyOf?: { name: string; isoCode: string };
-  disputeOf?: { name: string; isoCode: string };
-  sovereign?: { name: string; isoCode: string };
+  dependencyOf?: { isoCode: string };
+  disputeOf?: { isoCode: string };
+  sovereign?: { isoCode: string };
   type: SovereigntyType | "Sovereign";
-  dependencies?: { name: string; isoCode: string }[];
-  countries?: { name: string; isoCode: string }[];
-  regions?: { name: string; isoCode: string }[];
-  disputes?: { name: string; isoCode: string }[];
+  dependencies?: string[];
+  countries?: string[];
+  regions?: string[];
+  disputes?: string[];
   hasRelations?: boolean;
 } {
   const dependency = dependencyMap[isoCode];
   const dispute = disputeMap[isoCode];
+
+  // If it's a dependency or disputed territory, return its sovereign/dispute info
   if (dependency || dispute) {
     const rel = dependency || dispute;
     return {
-      dependencyOf: dependency ? rel.sovereign : undefined,
-      disputeOf: dispute ? rel.sovereign : undefined,
-      sovereign: rel.sovereign,
+      dependencyOf: dependency ? { isoCode: rel.sovereign.isoCode } : undefined,
+      disputeOf: dispute ? { isoCode: rel.sovereign.isoCode } : undefined,
+      sovereign: { isoCode: rel.sovereign.isoCode },
       type: rel.type,
     };
   }
-  const group = SOVEREIGN_DEPENDENCIES[isoCode];
+
+  // Otherwise, treat it as a sovereign and return its relations, if any
+  const group = COUNTRY_RELATIONS[isoCode];
+  const countries = group?.countries || [];
   const dependencies = group?.dependencies || [];
   const regions = group?.regions || [];
   const disputes = group?.disputes || [];
-  const countries = group?.countries || [];
   const hasRelations =
-    dependencies.length > 0 || regions.length > 0 || disputes.length > 0;
+    countries.length > 0 ||
+    dependencies.length > 0 ||
+    regions.length > 0 ||
+    disputes.length > 0;
+
   return {
     type: "Sovereign",
     dependencies,
@@ -184,39 +211,40 @@ export function getAliasesDisplay(aliases?: string[]) {
   return aliases.join(", ");
 }
 
-// Precompute lookup maps
-const dependencyMap: Record<
+// Precompute maps for quick lookups of country relations
+type RelationMap = Record<
   string,
-  { type: SovereigntyType; sovereign: { name: string; isoCode: string } }
-> = {};
-const regionMap: Record<
-  string,
-  { type: SovereigntyType; sovereign: { name: string; isoCode: string } }
-> = {};
-const disputeMap: Record<
-  string,
-  { type: SovereigntyType; sovereign: { name: string; isoCode: string } }
-> = {};
+  { type: SovereigntyType; sovereign: { isoCode: string } }
+>;
 
-for (const [sovereignIso, sovereignObj] of Object.entries(
-  SOVEREIGN_DEPENDENCIES,
-)) {
-  sovereignObj.dependencies?.forEach((dep) => {
-    dependencyMap[dep.isoCode] = {
-      type: "Dependency",
-      sovereign: { name: sovereignObj.name, isoCode: sovereignIso },
-    };
+const dependencyMap: RelationMap = {};
+const regionMap: RelationMap = {};
+const disputeMap: RelationMap = {};
+
+// Populate the maps based on COUNTRY_RELATIONS data
+function addRelation(
+  map: Record<
+    string,
+    { type: SovereigntyType; sovereign: { isoCode: string } }
+  >,
+  isoList: string[] | undefined,
+  type: SovereigntyType,
+  sovereignIso: string,
+) {
+  if (!isoList) return;
+  isoList.forEach((iso) => {
+    map[iso] = { type, sovereign: { isoCode: sovereignIso } };
   });
-  sovereignObj.regions?.forEach((region) => {
-    regionMap[region.isoCode] = {
-      type: "Overseas Region",
-      sovereign: { name: sovereignObj.name, isoCode: sovereignIso },
-    };
-  });
-  sovereignObj.disputes?.forEach((dep) => {
-    disputeMap[dep.isoCode] = {
-      type: "Disputed",
-      sovereign: { name: sovereignObj.name, isoCode: sovereignIso },
-    };
-  });
+}
+
+// Loop through COUNTRY_RELATIONS to fill the maps for dependencies, regions, and disputes
+for (const [sovereignIso, sovereignObj] of Object.entries(COUNTRY_RELATIONS)) {
+  addRelation(
+    dependencyMap,
+    sovereignObj.dependencies,
+    "Dependency",
+    sovereignIso,
+  );
+  addRelation(regionMap, sovereignObj.regions, "Overseas Region", sovereignIso);
+  addRelation(disputeMap, sovereignObj.disputes, "Disputed", sovereignIso);
 }

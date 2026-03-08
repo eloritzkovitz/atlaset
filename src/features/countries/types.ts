@@ -38,6 +38,15 @@ export type SovereigntyType =
   | "Disputed"
   | "Unknown";
 
+/** Represents a country's relations with other geopolitical entities. */
+export type CountryRelations = {
+  countries?: string[];
+  dependencies?: string[];
+  regions?: string[];
+  territories?: string[];
+  disputes?: string[];
+};
+
 /** Sort keys for countries. */
 export type CountrySortByKey = "name" | "iso" | "firstVisit" | "lastVisit";
 

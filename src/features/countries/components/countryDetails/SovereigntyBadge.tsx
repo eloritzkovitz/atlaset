@@ -1,9 +1,11 @@
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
+import { useCountryData } from "../../hooks/useCountryData";
+import { getCountryName } from "../../utils/countryData";
 import type { SovereigntyType } from "../../types";
 
 interface SovereigntyBadgeProps {
   type?: SovereigntyType;
-  sovereign?: { name: string; isoCode?: string };
+  sovereignIsoCode?: string;
 }
 
 // Map sovereignty types to badge colors
@@ -24,30 +26,30 @@ const labelPrefixes: Partial<Record<SovereigntyType, string>> = {
   Dependency: "Dependency of ",
 };
 
-export function SovereigntyBadge({ type, sovereign }: SovereigntyBadgeProps) {
+export function SovereigntyBadge({
+  type,
+  sovereignIsoCode,
+}: SovereigntyBadgeProps) {
+  const { countries } = useCountryData();
+
+  // If no type is provided, don't render anything
   if (!type) return null;
 
+  // Determine badge color based on type, defaulting to Dependency style
   const color = badgeColors[type] || badgeColors.Dependency;
-
   let label: React.ReactNode = type;
 
-  if (
-    sovereign &&
-    sovereign.name &&
-    labelPrefixes[type as keyof typeof labelPrefixes]
-  ) {
+  // Add sovereign name with flag for certain types
+  if (sovereignIsoCode && labelPrefixes[type as keyof typeof labelPrefixes]) {
+    const name = getCountryName(sovereignIsoCode, countries);
     label = (
       <>
         {labelPrefixes[type as keyof typeof labelPrefixes]}
-        {sovereign.isoCode ? (
-          <CountryWithFlag
-            isoCode={sovereign.isoCode}
-            name={sovereign.name}
-            className="mx-[3px] inline-block align-middle"
-          />
-        ) : (
-          sovereign.name
-        )}
+        <CountryWithFlag
+          isoCode={sovereignIsoCode}
+          name={name}
+          className="mx-[3px] inline-block align-middle"
+        />
       </>
     );
   }
