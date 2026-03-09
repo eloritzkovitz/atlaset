@@ -1,5 +1,4 @@
 import React, { Suspense } from "react";
-import { LoadingSpinner } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { HelpPanel } from "@features/docs";
 import { FriendsPanel } from "@features/user";
@@ -21,9 +20,7 @@ export function AppPanels() {
       )}
       <HelpPanel open={showHelp} onClose={toggleHelp} />
       <ShortcutsModal />
-      <Suspense
-        fallback={<LoadingSpinner fullScreen message="Loading calendar..." />}
-      >
+      <Suspense>
         <CalendarModal />
       </Suspense>
     </>
