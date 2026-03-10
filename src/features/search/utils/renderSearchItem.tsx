@@ -1,5 +1,6 @@
+import type { User } from "firebase/auth";
 import { CountryFlag } from "@features/countries";
-import { useAuth, UserAvatar, useUserFriends } from "@features/user";
+import { UserAvatar, type Friend } from "@features/user";
 import { getUserLabel } from "./search";
 import { SearchItem } from "../components/SearchItem";
 import { type SearchResult } from "../types";
@@ -7,15 +8,19 @@ import { type SearchResult } from "../types";
 interface RenderSearchItemOptions {
   navigate: (url: string) => void;
   setDropdownOpen: (open: boolean) => void;
+  currentUser: User | null;
+  friendList: Friend[];
 }
 
 export function renderSearchItem(
   item: SearchResult,
-  { navigate, setDropdownOpen }: RenderSearchItemOptions,
+  {
+    navigate,
+    setDropdownOpen,
+    currentUser,
+    friendList,
+  }: RenderSearchItemOptions,
 ) {
-  const { user: currentUser } = useAuth();
-  const { friends: friendList } = useUserFriends(currentUser?.uid);
-
   if (item.type === "user") {
     return (
       <SearchItem

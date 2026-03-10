@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
 import { EmptyListMessage, Menu, SearchInput } from "@components";
+import { useAuth } from "@contexts/AuthContext";
+import { useUserFriends } from "@features/user";
 import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
 import { useSearch } from "../hooks/useSearch";
 import { renderSearchItem } from "../utils/renderSearchItem";
@@ -7,6 +9,10 @@ import { renderSearchItem } from "../utils/renderSearchItem";
 export function SearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // User and friend data for rendering search results
+  const { user: currentUser } = useAuth();
+  const { friends: friendList } = useUserFriends(currentUser?.uid);
 
   // Refs for input and dropdown elements
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -75,6 +81,8 @@ export function SearchDropdown() {
                 renderSearchItem(item, {
                   navigate: (url) => window.location.assign(url),
                   setDropdownOpen,
+                  currentUser: currentUser,
+                  friendList: friendList,
                 }),
               )}
             </ul>
