@@ -10,6 +10,7 @@ interface SearchResultsListProps {
   currentUser: User | null;
   friendList: Friend[];
   setDropdownOpen: (open: boolean) => void;
+  saveRecentSearch: (term: string) => void;
 }
 
 export function SearchResultsList({
@@ -18,6 +19,7 @@ export function SearchResultsList({
   currentUser,
   friendList,
   setDropdownOpen,
+  saveRecentSearch,
 }: SearchResultsListProps) {
   return (
     <ul className="text-left">
@@ -37,6 +39,7 @@ export function SearchResultsList({
               icon={null}
               ariaLabel="See all results"
               onClick={() => {
+                saveRecentSearch(searchTerm);
                 window.location.assign(
                   `/search?query=${encodeURIComponent(searchTerm)}`,
                 );

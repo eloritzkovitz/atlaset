@@ -71,6 +71,9 @@ export function SearchDropdown() {
         onKeyDown={(e) => {
           if (e.key === "Enter" && searchTerm) {
             saveRecentSearch(searchTerm);
+            window.location.assign(
+              `/search?query=${encodeURIComponent(searchTerm)}`,
+            );
           }
         }}
       />
@@ -94,6 +97,7 @@ export function SearchDropdown() {
                 currentUser={currentUser}
                 friendList={friendList}
                 setDropdownOpen={setDropdownOpen}
+                saveRecentSearch={saveRecentSearch}
               />
             )
           ) : recentSearches.length > 0 ? (
