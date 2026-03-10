@@ -27,7 +27,7 @@ export function SearchItem<T>({
         aria-label={`Go to ${displayName}`}
       >
         {icon}
-        <div className="flex flex-col items-start">
+        <div className="flex flex-col items-start text-left">
           <span className="font-medium">{displayName}</span>
           <span className="text-sm text-muted">
             {label ? label : <>&nbsp;</>}

@@ -1,18 +1,12 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import { EmptyListMessage, Menu, SearchInput } from "@components";
-import { UserAvatar, useAuth, useUserFriends } from "@features/user";
 import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
-import { SearchItem } from "./SearchItem";
-import { useUserSearch } from "../hooks/useUserSearch";
-import { getUserLabel } from "../utils/search";
+import { useSearch } from "../hooks/useSearch";
+import { renderSearchItem } from "../utils/renderSearchItem";
 
 export function SearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const { user: currentUser } = useAuth();
-  const { friends: friendList } = useUserFriends(currentUser?.uid);
-  const navigate = useNavigate();
 
   // Refs for input and dropdown elements
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -20,7 +14,7 @@ export function SearchDropdown() {
 
   // Debounce search term to reduce query frequency
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { results, loading } = useUserSearch(debouncedSearchTerm);
+  const { results, loading } = useSearch(debouncedSearchTerm);
 
   // Open dropdown when searchTerm is non-empty and input is focused
   const handleFocus = () => {
@@ -76,20 +70,13 @@ export function SearchDropdown() {
           ) : results.length === 0 ? (
             <EmptyListMessage message="No results found." />
           ) : (
-            <ul>
-              {results.map((profile) => (
-                <SearchItem
-                  key={profile.uid}
-                  item={profile}
-                  displayName={profile.displayName || profile.username}
-                  label={getUserLabel(profile, currentUser, friendList)}
-                  icon={<UserAvatar user={profile} size={32} />}
-                  onClick={(user) => {
-                    navigate(`/users/${user.username}`);
-                    setDropdownOpen(false);
-                  }}
-                />
-              ))}
+            <ul className="text-left">
+              {results.map((item) =>
+                renderSearchItem(item, {
+                  navigate: (url) => window.location.assign(url),
+                  setDropdownOpen,
+                }),
+              )}
             </ul>
           )}
         </Menu>
