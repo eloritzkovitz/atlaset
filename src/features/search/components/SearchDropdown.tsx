@@ -1,37 +1,48 @@
 import { useState, useRef } from "react";
-import { EmptyListMessage, Menu, SearchInput } from "@components";
+import {
+  EmptyListMessage,
+  Menu,
+  SearchInput,
+  SectionHeader,
+} from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUserFriends } from "@features/user";
 import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
 import { useSearch } from "../hooks/useSearch";
 import { renderSearchItem } from "../utils/renderSearchItem";
+import { useRecentSearches } from "../hooks/useRecentSearches";
+import { RecentSearchItem } from "./RecentSearchItem";
+import { ActionButton } from "@components/action/ActionButton";
 
 export function SearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 100);
+  const { results, loading } = useSearch(debouncedSearchTerm);
+  const {
+    recentSearches,
+    saveRecentSearch,
+    removeRecentSearch,
+    clearAllRecentSearches,
+  } = useRecentSearches(5);
+
+  // Dropdown state and refs
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // User and friend data for rendering search results
   const { user: currentUser } = useAuth();
   const { friends: friendList } = useUserFriends(currentUser?.uid);
 
-  // Refs for input and dropdown elements
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-
-  // Debounce search term to reduce query frequency
-  const debouncedSearchTerm = useDebounce(searchTerm, 300);
-  const { results, loading } = useSearch(debouncedSearchTerm);
-
-  // Open dropdown when searchTerm is non-empty and input is focused
+  // Open dropdown when input is focused
   const handleFocus = () => {
-    if (searchTerm) setDropdownOpen(true);
+    setDropdownOpen(true);
   };
 
   // Handle search input changes
   const handleChange = (val: string) => {
     setSearchTerm(val);
-    if (val) setDropdownOpen(true);
-    else setDropdownOpen(false);
+    setDropdownOpen(true);
   };
 
   // Close dropdown when clicking outside
@@ -63,6 +74,11 @@ export function SearchDropdown() {
         onFocus={handleFocus}
         placeholder="Search"
         showClear={false}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && searchTerm) {
+            saveRecentSearch(searchTerm);
+          }
+        }}
       />
       {dropdownOpen && (
         <Menu
@@ -74,20 +90,51 @@ export function SearchDropdown() {
         >
           {loading ? (
             <EmptyListMessage message="Searching..." />
-          ) : results.length === 0 ? (
-            <EmptyListMessage message="No results found." />
-          ) : (
-            <ul className="text-left">
-              {results.map((item) =>
-                renderSearchItem(item, {
-                  navigate: (url) => window.location.assign(url),
-                  setDropdownOpen,
-                  currentUser: currentUser,
-                  friendList: friendList,
-                }),
-              )}
-            </ul>
-          )}
+          ) : searchTerm ? (
+            results.length === 0 ? (
+              <EmptyListMessage message="No results found." />
+            ) : (
+              <ul className="text-left">
+                {results.map((item) =>
+                  renderSearchItem(item, {
+                    navigate: (url) => window.location.assign(url),
+                    setDropdownOpen,
+                    currentUser: currentUser,
+                    friendList: friendList,
+                  }),
+                )}
+              </ul>
+            )
+          ) : recentSearches.length > 0 ? (
+            <div>
+              <div className="flex items-center">
+                <SectionHeader title="Recent" className="ml-2 flex-1" />
+                <ActionButton
+                  variant="secondary"
+                  ariaLabel="Clear all recent searches"
+                  onClick={clearAllRecentSearches}
+                  className="text-muted !text-sm !p-1 mt-2 mr-1"
+                  rounded
+                >
+                  Clear
+                </ActionButton>
+              </div>
+              <ul className="text-left">
+                {recentSearches.map((term) => (
+                  <li key={term}>
+                    <RecentSearchItem
+                      term={term}
+                      onSelect={(selectedTerm) => {
+                        handleChange(selectedTerm);
+                        saveRecentSearch(selectedTerm);
+                      }}
+                      onClear={(clearedTerm) => removeRecentSearch(clearedTerm)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
         </Menu>
       )}
     </div>
