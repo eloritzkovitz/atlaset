@@ -12,9 +12,8 @@ export function useSearch(searchTerm: string) {
   const [loading, setLoading] = useState(false);
 
   // Get search results for individual types
-  const { results: userResults, loading: userLoading } =
-    useUserSearch(searchTerm);
-  const { countries, loading: countryLoading } = useCountryData();
+  const { results: userResults } = useUserSearch(searchTerm);
+  const { countries } = useCountryData();
 
   // Combine search results
   useEffect(() => {
@@ -23,7 +22,9 @@ export function useSearch(searchTerm: string) {
       setLoading(false);
       return;
     }
-    setLoading(userLoading || countryLoading);
+
+    // Only set loading true if a new search is starting
+    setLoading(true);
 
     // Filter countries by search term
     const filteredCountries = countries
@@ -49,9 +50,10 @@ export function useSearch(searchTerm: string) {
       }),
     );
 
-    // Combine and sort (optional: sort by displayName)
+    // Combine and sort
     setResults([...mappedUsers, ...mappedCountries]);
-  }, [searchTerm, userResults, countries, userLoading, countryLoading]);
+    setLoading(false);
+  }, [searchTerm, userResults, countries]);
 
   return { results, loading };
 }

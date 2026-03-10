@@ -34,7 +34,7 @@ export function CountryRelationsContent({
         label: def.label,
         data: sortByName(group[def.prop] || []),
       })),
-    [group, countries, sortByName],
+    [group, sortByName],
   );
 
   // Expanded state for each section
