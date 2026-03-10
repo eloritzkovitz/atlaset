@@ -1,18 +1,12 @@
 import { useState, useRef } from "react";
-import {
-  EmptyListMessage,
-  Menu,
-  SearchInput,
-  SectionHeader,
-} from "@components";
+import { EmptyListMessage, Menu, SearchInput } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useUserFriends } from "@features/user";
 import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
-import { useSearch } from "../hooks/useSearch";
-import { renderSearchItem } from "../utils/renderSearchItem";
+import { RecentSearchesList } from "./RecentSearchesList";
+import { SearchResultsList } from "./SearchResultsList";
 import { useRecentSearches } from "../hooks/useRecentSearches";
-import { RecentSearchItem } from "./RecentSearchItem";
-import { ActionButton } from "@components/action/ActionButton";
+import { useSearch } from "../hooks/useSearch";
 
 export function SearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -94,46 +88,22 @@ export function SearchDropdown() {
             results.length === 0 ? (
               <EmptyListMessage message="No results found." />
             ) : (
-              <ul className="text-left">
-                {results.map((item) =>
-                  renderSearchItem(item, {
-                    navigate: (url) => window.location.assign(url),
-                    setDropdownOpen,
-                    currentUser: currentUser,
-                    friendList: friendList,
-                  }),
-                )}
-              </ul>
+              <SearchResultsList
+                results={results}
+                searchTerm={searchTerm}
+                currentUser={currentUser}
+                friendList={friendList}
+                setDropdownOpen={setDropdownOpen}
+              />
             )
           ) : recentSearches.length > 0 ? (
-            <div>
-              <div className="flex items-center">
-                <SectionHeader title="Recent" className="ml-2 flex-1" />
-                <ActionButton
-                  variant="secondary"
-                  ariaLabel="Clear all recent searches"
-                  onClick={clearAllRecentSearches}
-                  className="text-muted !text-sm !p-1 mt-2 mr-1"
-                  rounded
-                >
-                  Clear
-                </ActionButton>
-              </div>
-              <ul className="text-left">
-                {recentSearches.map((term) => (
-                  <li key={term}>
-                    <RecentSearchItem
-                      term={term}
-                      onSelect={(selectedTerm) => {
-                        handleChange(selectedTerm);
-                        saveRecentSearch(selectedTerm);
-                      }}
-                      onClear={(clearedTerm) => removeRecentSearch(clearedTerm)}
-                    />
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <RecentSearchesList
+              recentSearches={recentSearches}
+              handleChange={handleChange}
+              saveRecentSearch={saveRecentSearch}
+              removeRecentSearch={removeRecentSearch}
+              clearAllRecentSearches={clearAllRecentSearches}
+            />
           ) : null}
         </Menu>
       )}
