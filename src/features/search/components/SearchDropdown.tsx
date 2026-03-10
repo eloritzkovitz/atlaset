@@ -60,8 +60,9 @@ export function SearchDropdown() {
         ref={inputRef}
         value={searchTerm}
         onChange={handleChange}
-        placeholder="Search"
         onFocus={handleFocus}
+        placeholder="Search"
+        showClear={false}
       />
       {dropdownOpen && (
         <Menu
