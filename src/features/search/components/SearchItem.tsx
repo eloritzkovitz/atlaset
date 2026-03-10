@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { MenuButton } from "@components";
 
 interface SearchItemProps<T> {
   item: T;
@@ -20,13 +21,13 @@ export function SearchItem<T>({
 }: SearchItemProps<T>) {
   return (
     <li>
-      <button
+      <MenuButton
         type="button"
-        className="w-full flex items-center gap-3 px-2 py-2"
         onClick={() => onClick(item)}
-        aria-label={`Go to ${displayName}`}
+        icon={icon}
+        ariaLabel={`Go to ${displayName}`}
+        className="w-full flex items-center gap-3 px-2 py-2"
       >
-        {icon}
         <div className="flex flex-col items-start text-left">
           <span className="font-medium">{displayName}</span>
           <span className="text-sm text-muted">
@@ -34,7 +35,7 @@ export function SearchItem<T>({
           </span>
           {children}
         </div>
-      </button>
+      </MenuButton>
     </li>
   );
 }
