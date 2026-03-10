@@ -1,7 +1,8 @@
-// Components
-export { AppLinks } from "./Footer/AppLinks";
+// Branding
 export { Branding } from "./Branding/Branding";
-export { Header } from "./Header/Header";
+
+// Footer
+export { AppLinks } from "./Footer/AppLinks";
 export { Footer } from "./Footer/Footer";
 
 // Layouts

@@ -7,8 +7,8 @@ import {
   endAt,
   getDocs,
 } from "firebase/firestore";
-import type { UserProfile } from "../../types";
-import { db } from "../../../../firebase";
+import type { UserProfile } from "@features/user";
+import { db } from "../../../firebase";
 
 /**
  * Searches users by username or display name.
@@ -32,13 +32,13 @@ export function useUserSearch(searchTerm: string) {
       usersRef,
       orderBy("username"),
       startAt(searchTerm.toLowerCase()),
-      endAt(searchTerm.toLowerCase() + "\uf8ff")
+      endAt(searchTerm.toLowerCase() + "\uf8ff"),
     );
     const displayNameQ = query(
       usersRef,
       orderBy("displayName"),
       startAt(searchTerm),
-      endAt(searchTerm + "\uf8ff")
+      endAt(searchTerm + "\uf8ff"),
     );
 
     // Fetch both username and displayName matches
@@ -56,11 +56,11 @@ export function useUserSearch(searchTerm: string) {
           })),
         ];
         const uniqueUsers = Array.from(
-          new Map(users.map((u) => [u.uid, u])).values()
+          new Map(users.map((u) => [u.uid, u])).values(),
         );
         setResults(uniqueUsers);
         setLoading(false);
-      }
+      },
     );
   }, [searchTerm]);
 

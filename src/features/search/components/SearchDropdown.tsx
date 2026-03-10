@@ -1,18 +1,26 @@
 import { useState, useRef } from "react";
-import { FaCircleUser } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuButton, SearchInput } from "@components";
+import { EmptyListMessage, Menu, SearchInput } from "@components";
+import { UserAvatar, useAuth, useUserFriends } from "@features/user";
 import { useClickOutside, useDebounce, useMenuPosition } from "@hooks";
+import { SearchItem } from "./SearchItem";
 import { useUserSearch } from "../hooks/useUserSearch";
+import { getUserLabel } from "../utils/search";
 
-export function UserSearchDropdown() {
+export function SearchDropdown() {
   const [searchTerm, setSearchTerm] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { user: currentUser } = useAuth();
+  const { friends: friendList } = useUserFriends(currentUser?.uid);
+  const navigate = useNavigate();
+
+  // Refs for input and dropdown elements
   const inputRef = useRef<HTMLInputElement | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  // Debounce search term to reduce query frequency
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const { results, loading } = useUserSearch(debouncedSearchTerm);
-  const navigate = useNavigate();
 
   // Open dropdown when searchTerm is non-empty and input is focused
   const handleFocus = () => {
@@ -64,42 +72,23 @@ export function UserSearchDropdown() {
           style={menuStyle}
         >
           {loading ? (
-            <div className="p-4 text-center text-muted">Searching...</div>
+            <EmptyListMessage message="Searching..." />
           ) : results.length === 0 ? (
-            <div className="p-4 text-center text-muted">No users found</div>
+            <EmptyListMessage message="No results found." />
           ) : (
             <ul>
-              {results.map((user) => (
-                <li key={user.uid}>
-                  <MenuButton
-                    onClick={() => {
-                      navigate(`/users/${user.username}`);
-                      setDropdownOpen(false);
-                    }}
-                    icon={
-                      user.photoURL ? (
-                        <img
-                          src={user.photoURL}
-                          alt={user.username}
-                          className="w-8 h-8 rounded-full object-cover"
-                        />
-                      ) : (
-                        <FaCircleUser className="w-8 h-8 text-muted" />
-                      )
-                    }
-                    className="w-full flex items-center gap-3 px-2 py-2"
-                    ariaLabel={`Go to ${user.username}'s profile`}
-                  >
-                    <div className="flex flex-col items-start">
-                      {user.displayName && (
-                        <span className="font-medium">{user.displayName}</span>
-                      )}
-                      <span className="text-sm text-muted">
-                        @{user.username}
-                      </span>
-                    </div>
-                  </MenuButton>
-                </li>
+              {results.map((profile) => (
+                <SearchItem
+                  key={profile.uid}
+                  item={profile}
+                  displayName={profile.displayName || profile.username}
+                  label={getUserLabel(profile, currentUser, friendList)}
+                  icon={<UserAvatar user={profile} size={32} />}
+                  onClick={(user) => {
+                    navigate(`/users/${user.username}`);
+                    setDropdownOpen(false);
+                  }}
+                />
               ))}
             </ul>
           )}

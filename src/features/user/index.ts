@@ -20,9 +20,6 @@ export { UserAvatar } from "./profile/components/UserAvatar";
 export { UserInfo } from "./profile/components/UserInfo";
 export { VisitedCountriesCard } from "./profile/components/VisitedCountriesCard";
 
-// Search Components
-export { UserSearchDropdown } from "./search/components/UserSearchDropdown";
-
 // Hooks
 export { useAuth } from "./auth/hooks/useAuth";
 export { useAuthHandlers } from "./auth/hooks/useAuthHandlers";
