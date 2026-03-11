@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { EmptyListMessage, SegmentedToggle } from "@components";
 import { useAuth } from "@contexts/AuthContext";
@@ -11,17 +11,9 @@ export default function SearchPage() {
   const { friends: friendList } = useUserFriends(currentUser?.uid);
   const location = useLocation();
   const queryParam = new URLSearchParams(location.search).get("query") || "";
-  const [searchTerm, setSearchTerm] = useState(queryParam);
-  const { results, loading } = useSearch(searchTerm);
+  const { results, loading } = useSearch(queryParam);
 
-  usePageTitle(`${searchTerm ? `${searchTerm}` : ""} - Atlaset`);
-
-  // Update searchTerm if query param changes
-  useEffect(() => {
-    if (queryParam && queryParam !== searchTerm) {
-      setSearchTerm(queryParam);
-    }
-  }, [queryParam, searchTerm]);
+  usePageTitle(`${queryParam ? `${queryParam}` : ""} - Atlaset`);
 
   const sections = [
     {
@@ -44,7 +36,7 @@ export default function SearchPage() {
     <main className="p-4 max-w-6xl mx-auto mt-12">
       {loading ? (
         <EmptyListMessage message="Searching..." />
-      ) : searchTerm ? (
+      ) : queryParam ? (
         results.length === 0 ? (
           <EmptyListMessage message="No results found." />
         ) : (
