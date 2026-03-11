@@ -7,9 +7,10 @@ import { RecentSearchesList } from "./RecentSearchesList";
 import { SearchResultsList } from "./SearchResultsList";
 import { useRecentSearches } from "../hooks/useRecentSearches";
 import { useSearch } from "../hooks/useSearch";
+import { useSyncedSearchTerm } from "../hooks/useSyncedSearchTerm";
 
 export function SearchDropdown() {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useSyncedSearchTerm();
   const debouncedSearchTerm = useDebounce(searchTerm, 100);
   const { results, loading } = useSearch(debouncedSearchTerm);
   const {
