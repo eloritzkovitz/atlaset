@@ -3,18 +3,16 @@ import { RecentSearchItem } from "./RecentSearchItem";
 
 interface RecentSearchesListProps {
   recentSearches: string[];
-  handleChange: (val: string) => void;
-  saveRecentSearch: (term: string) => void;
-  removeRecentSearch: (term: string) => void;
-  clearAllRecentSearches: () => void;
+  onSearchSubmit: (term: string) => void;
+  onRemove: (term: string) => void;
+  onClear: () => void;
 }
 
 export function RecentSearchesList({
   recentSearches,
-  handleChange,
-  saveRecentSearch,
-  removeRecentSearch,
-  clearAllRecentSearches,
+  onSearchSubmit,
+  onRemove,
+  onClear,
 }: RecentSearchesListProps) {
   return (
     <div>
@@ -23,7 +21,7 @@ export function RecentSearchesList({
         <ActionButton
           variant="secondary"
           ariaLabel="Clear all recent searches"
-          onClick={clearAllRecentSearches}
+          onClick={onClear}
           className="text-muted !text-sm !p-1 mt-2 mr-1"
           rounded
         >
@@ -35,11 +33,8 @@ export function RecentSearchesList({
           <li key={term}>
             <RecentSearchItem
               term={term}
-              onSelect={(selectedTerm) => {
-                handleChange(selectedTerm);
-                saveRecentSearch(selectedTerm);
-              }}
-              onClear={(clearedTerm) => removeRecentSearch(clearedTerm)}
+              onSelect={onSearchSubmit}
+              onRemove={onRemove}
             />
           </li>
         ))}

@@ -4,13 +4,13 @@ import { ActionButton, MenuButton } from "@components";
 interface RecentSearchItemProps {
   term: string;
   onSelect: (term: string) => void;
-  onClear?: (term: string) => void;
+  onRemove?: (term: string) => void;
 }
 
 export function RecentSearchItem({
   term,
   onSelect,
-  onClear,
+  onRemove,
 }: RecentSearchItemProps) {
   return (
     <MenuButton
@@ -23,14 +23,14 @@ export function RecentSearchItem({
         <FaRegClock className="mr-3 text-muted" />
         {term}
       </span>
-      {onClear && (
+      {onRemove && (
         <ActionButton
           icon={<FaXmark />}
           ariaLabel={`Delete ${term} from history`}
           className="ml-2 text-muted"
           onClick={(e) => {
             e.stopPropagation();
-            onClear(term);
+            onRemove(term);
           }}
           rounded
         />

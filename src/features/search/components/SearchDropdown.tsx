@@ -107,10 +107,9 @@ export function SearchDropdown() {
           ) : recentSearches.length > 0 ? (
             <RecentSearchesList
               recentSearches={recentSearches}
-              handleChange={handleChange}
-              saveRecentSearch={saveRecentSearch}
-              removeRecentSearch={removeRecentSearch}
-              clearAllRecentSearches={clearAllRecentSearches}
+              onSearchSubmit={handleSearchSubmit}
+              onRemove={removeRecentSearch}
+              onClear={clearAllRecentSearches}
             />
           ) : null}
         </Menu>
