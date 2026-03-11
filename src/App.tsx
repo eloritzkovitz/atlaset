@@ -22,6 +22,7 @@ import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProfilePage from "./pages/ProfilePage";
 import QuizzesPage from "./pages/QuizzesPage";
+import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import SignupPage from "./pages/SignupPage";
 import TripsPage from "./pages/TripsPage";
@@ -161,6 +162,16 @@ function App() {
                 <ProtectedRoute>
                   <AppLayout>
                     <ActivityPage />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <SearchPage />
                   </AppLayout>
                 </ProtectedRoute>
               }

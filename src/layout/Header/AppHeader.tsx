@@ -1,5 +1,5 @@
 import { UserMenu } from "../UserMenu/UserMenu";
-import { UserSearchDropdown } from "@features/user/search/components/UserSearchDropdown";
+import { SearchDropdown } from "@features/search/components/SearchDropdown";
 
 interface AppHeaderProps {
   show: boolean;
@@ -22,7 +22,7 @@ export function AppHeader({ show, showSearch = true }: AppHeaderProps) {
       `}
     >
       <div className="flex flex-1 justify-end gap-4 h-10">
-        {showSearch && <UserSearchDropdown />}
+        {showSearch && <SearchDropdown />}
         <UserMenu fixed={false} />
       </div>
     </header>

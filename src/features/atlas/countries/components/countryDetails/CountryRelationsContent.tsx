@@ -18,24 +18,20 @@ export function CountryRelationsContent({
   const { countries } = useCountryData();
   const group = COUNTRY_RELATIONS[country.isoCode];
 
-  // Helper to sort isoCodes by country name
-  const sortByName = (arr: string[]) =>
-    arr.slice().sort((a, b) => {
-      const nameA = getCountryName(a, countries) || "";
-      const nameB = getCountryName(b, countries) || "";
-      return nameA.localeCompare(nameB);
-    });
-
   // Prepare sections with sorted isoCodes
-  const sections = useMemo(
-    () =>
-      COUNTRY_RELATION_SECTIONS.map((def) => ({
-        key: def.key,
-        label: def.label,
-        data: sortByName(group[def.prop] || []),
-      })),
-    [group, countries, sortByName],
-  );
+  const sections = useMemo(() => {
+    const sortByName = (arr: string[]) =>
+      arr.slice().sort((a, b) => {
+        const nameA = getCountryName(a, countries) || "";
+        const nameB = getCountryName(b, countries) || "";
+        return nameA.localeCompare(nameB);
+      });
+    return COUNTRY_RELATION_SECTIONS.map((def) => ({
+      key: def.key,
+      label: def.label,
+      data: sortByName(group[def.prop] || []),
+    }));
+  }, [group, countries]);
 
   // Expanded state for each section
   const [expanded, setExpanded] = useState(() =>

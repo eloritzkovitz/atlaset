@@ -15,7 +15,7 @@ export type MapToolbarPanelSelection =
   | null;
 
 // User panel selection
-export type UserPanelSelection = "friends" | "help" | null;
+export type UserPanelSelection = "friends" | "search" | "help" | null;
 
 export function UIProvider({ children }: { children: ReactNode }) {
   const [uiVisible, setUiVisible] = useState(true);
@@ -73,12 +73,16 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const toggleFriends = () => {
     setOpenUserPanel((prev) => (prev === "friends" ? null : "friends"));
   };
+  const toggleSearch = () => {
+    setOpenUserPanel((prev) => (prev === "search" ? null : "search"));
+  };
   const toggleHelp = () => {
     setOpenUserPanel((prev) => (prev === "help" ? null : "help"));
   };
 
   // Derived states for user panels
   const showFriends = openUserPanel === "friends";
+  const showSearch = openUserPanel === "search" && isMobile;
   const showHelp = openUserPanel === "help";
 
   // Modal state
@@ -157,7 +161,9 @@ export function UIProvider({ children }: { children: ReactNode }) {
         openUserPanel,
         showFriends,
         toggleFriends,
-        showHelp,
+        showSearch,
+        toggleSearch,
+        showHelp,        
         toggleHelp,
         closePanel,
         modalOpen,

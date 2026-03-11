@@ -6,28 +6,14 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
-  type TooltipProps,
+  type TooltipContentProps,
 } from "recharts";
 
-interface BarPayload {
-  dataKey: string;
-  name: string;
-  value: number;
-}
-
-type CustomTooltipProps = TooltipProps<number, string> & {
-  tripTypeColors: string[];
-  payload?: readonly BarPayload[];
-  label?: string | number;
-  [key: string]: unknown;
-};
-
-function CustomTooltip({
-  active,
-  payload = [],
-  label,
-  tripTypeColors,
-}: CustomTooltipProps) {
+function CustomTooltip(
+  props: TooltipContentProps<number, string>,
+  tripTypeColors: string[],
+) {
+  const { active, payload = [], label } = props;
   if (!active || !payload.length) return null;
   return (
     <div
@@ -42,9 +28,14 @@ function CustomTooltip({
       <div style={{ color: "#2b7fff", fontWeight: 700, marginBottom: 4 }}>
         {label}
       </div>
-      {payload.map((entry) => (
+      {payload.map((entry, idx) => (
         <div
-          key={entry.dataKey}
+          key={
+            typeof entry.dataKey === "string" ||
+            typeof entry.dataKey === "number"
+              ? entry.dataKey
+              : String(idx)
+          }
           style={{
             color:
               entry.dataKey === "local" ? tripTypeColors[0] : tripTypeColors[1],
@@ -76,9 +67,12 @@ export default function TripsBarChart({
         <XAxis dataKey="year" />
         <YAxis allowDecimals={false} />
         <Tooltip
-          content={(props: TooltipProps<number, string>) => (
-            <CustomTooltip {...props} tripTypeColors={tripTypeColors} />
-          )}
+          content={(props) =>
+            CustomTooltip(
+              props as TooltipContentProps<number, string>,
+              tripTypeColors,
+            )
+          }
         />
         <Legend />
         {(filter === "both" || filter === "local") && (

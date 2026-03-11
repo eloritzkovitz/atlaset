@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-03-11
+- **[feature]** **Search:** Added global search feature
+
 ## 2026-03-08
 - **[feature]** **Atlas | Countries:** Updated country details to also show relations for a country (dependencies, regions, disputes)
 
