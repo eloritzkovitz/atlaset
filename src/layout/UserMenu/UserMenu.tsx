@@ -13,7 +13,7 @@ import { AuthButtons } from "../Header/AuthButtons";
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const { user, loading } = useAuth();
-  const { uiVisible, toggleHelp } = useUI();
+  const { uiVisible, toggleSearch, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -51,6 +51,18 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
       } z-20 flex items-center gap-4`}
       ref={menuRef}
     >
+      {isMobile && (
+        <>
+          <ActionButton
+            title="Search"
+            onClick={() => {
+              toggleSearch();
+            }}
+            icon={<ICONS.search className="text-xl" />}
+            aria-pressed={false}
+          />
+        </>
+      )}
       <ActionButton
         title="Notifications"
         onClick={() => {}}

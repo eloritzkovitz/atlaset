@@ -1,5 +1,5 @@
 import { FaRegClock, FaXmark } from "react-icons/fa6";
-import { ActionButton, MenuButton } from "@components";
+import { MenuButton } from "@components";
 
 interface RecentSearchItemProps {
   term: string;
@@ -24,16 +24,25 @@ export function RecentSearchItem({
         {term}
       </span>
       {onRemove && (
-        <ActionButton
-          icon={<FaXmark />}
-          ariaLabel={`Delete ${term} from history`}
-          className="ml-2 text-muted"
+        <span
+          role="button"
+          tabIndex={0}
+          aria-label={`Delete ${term} from history`}
+          className="ml-2 text-muted p-1 rounded hover:bg-hover focus:bg-hover cursor-pointer outline-none"
           onClick={(e) => {
             e.stopPropagation();
             onRemove(term);
           }}
-          rounded
-        />
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              e.stopPropagation();
+              onRemove(term);
+            }
+          }}
+        >
+          <FaXmark />
+        </span>
       )}
     </MenuButton>
   );

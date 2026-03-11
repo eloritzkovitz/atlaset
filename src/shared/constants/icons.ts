@@ -40,6 +40,7 @@ import {
   FaLink,
   FaListUl,
   FaLocationDot,
+  FaMagnifyingGlass,
   FaMap,
   FaMapLocationDot,
   FaMapPin,
@@ -75,7 +76,7 @@ import { VisitIcon } from "../components/icons/VisitIcon";
 export const ICONS = {
   // User
   account: FaCircleUser,
-  profile: FaUser,  
+  profile: FaUser,
   location: FaLocationDot,
   friends: FaUserGroup,
   friendRequests: FaUserPlus,
@@ -123,6 +124,7 @@ export const ICONS = {
   leaderboards: FaTrophy,
   // Misc
   shortcuts: FaKeyboard,
+  search: FaMagnifyingGlass,
   calendar: FaCalendar,
   notifications: FaBell,
   help: FaCircleQuestion,
