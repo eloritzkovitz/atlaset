@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   collection,
   query,
@@ -8,15 +8,22 @@ import {
   getDocs,
 } from "firebase/firestore";
 import type { UserProfile } from "@features/user";
+import type { UserSearchResult } from "../types";
 import { db } from "../../../firebase";
 
 /**
  * Searches users by username or display name.
  * @param searchTerm - The term to search for.
+ * @param currentUserId - The current user's UID.
+ * @param friendIds - Array of friend UIDs.
  * @returns Search results and loading state.
  */
-export function useUserSearch(searchTerm: string) {
-  const [results, setResults] = useState<UserProfile[]>([]);
+export function useUserSearch(
+  searchTerm: string,
+  currentUserId: string | null | undefined,
+  friendIds: string[],
+) {
+  const [results, setResults] = useState<UserSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Perform search when searchTerm changes
@@ -44,7 +51,6 @@ export function useUserSearch(searchTerm: string) {
     // Fetch both username and displayName matches
     Promise.all([getDocs(usernameQ), getDocs(displayNameQ)]).then(
       ([usernameSnap, displayNameSnap]) => {
-        // Merge and deduplicate by user id
         const users = [
           ...usernameSnap.docs.map((doc) => ({
             uid: doc.id,
@@ -55,14 +61,19 @@ export function useUserSearch(searchTerm: string) {
             ...(doc.data() as Omit<UserProfile, "uid">),
           })),
         ];
-        const uniqueUsers = Array.from(
+        const uniqueUsers: UserSearchResult[] = Array.from(
           new Map(users.map((u) => [u.uid, u])).values(),
-        );
+        ).map((u) => ({
+          ...u,
+          isCurrentUser: currentUserId ? u.uid === currentUserId : false,
+          isFriend: friendIds.includes(u.uid),
+          type: "user",
+        }));
         setResults(uniqueUsers);
         setLoading(false);
       },
     );
-  }, [searchTerm]);
+  }, [searchTerm, currentUserId, friendIds]);
 
   return { results, loading };
 }

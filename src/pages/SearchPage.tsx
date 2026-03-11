@@ -22,7 +22,7 @@ export default function SearchPage() {
     if (queryParam && queryParam !== searchTerm) {
       setSearchTerm(queryParam);
     }
-  }, [queryParam]);
+  }, [queryParam, searchTerm]);
 
   // Group results by type
   const userResults = results.filter((item) => item.type === "user");
@@ -63,7 +63,9 @@ export default function SearchPage() {
             {[
               { title: "Users", items: userResults },
               { title: "Countries", items: countryResults },
-            ].map(({ title, items }) => renderSection(title, items))}
+            ].map(({ title, items }) => (
+              <div key={title}>{renderSection(title, items)}</div>
+            ))}
           </div>
         )
       ) : null}

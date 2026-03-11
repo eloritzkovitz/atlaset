@@ -19,3 +19,28 @@ export function getUserLabel(
   }
   return "";
 }
+
+/**
+ * Ranks items by whether their label starts with or contains the search term.
+ * Items whose label starts with the search term are ranked higher than those that only contain it.
+ * @param items - The array of items to rank.
+ * @param getLabel - A function that returns the label for an item.
+ * @param searchTerm - The term to search for.
+ * @returns A new array of items ranked by relevance to the search term.
+ */
+export function rankByStartsWithAndContains<T>(
+  items: T[],
+  getLabel: (item: T) => string | undefined,
+  searchTerm: string,
+): T[] {
+  const lowerTerm = searchTerm.toLowerCase();
+  const startsWith = items.filter((item) =>
+    getLabel(item)?.toLowerCase().startsWith(lowerTerm),
+  );
+  const contains = items.filter(
+    (item) =>
+      !getLabel(item)?.toLowerCase().startsWith(lowerTerm) &&
+      getLabel(item)?.toLowerCase().includes(lowerTerm),
+  );
+  return [...startsWith, ...contains];
+}
