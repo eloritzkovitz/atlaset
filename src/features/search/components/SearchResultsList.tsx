@@ -10,7 +10,7 @@ interface SearchResultsListProps {
   currentUser: User | null;
   friendList: Friend[];
   setDropdownOpen: (open: boolean) => void;
-  saveRecentSearch: (term: string) => void;
+  onSearchSubmit: (term: string) => void;
 }
 
 export function SearchResultsList({
@@ -19,7 +19,7 @@ export function SearchResultsList({
   currentUser,
   friendList,
   setDropdownOpen,
-  saveRecentSearch,
+  onSearchSubmit,
 }: SearchResultsListProps) {
   return (
     <ul className="text-left">
@@ -38,13 +38,7 @@ export function SearchResultsList({
             <MenuButton
               icon={null}
               ariaLabel="See all results"
-              onClick={() => {
-                saveRecentSearch(searchTerm);
-                window.location.assign(
-                  `/search?query=${encodeURIComponent(searchTerm)}`,
-                );
-                setDropdownOpen(false);
-              }}
+              onClick={() => onSearchSubmit(searchTerm)}
               className="w-full justify-center"
             >
               See all results

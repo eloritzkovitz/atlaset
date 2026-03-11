@@ -39,6 +39,13 @@ export function SearchDropdown() {
     setDropdownOpen(true);
   };
 
+  // Handle search submission
+  const handleSearchSubmit = (term: string) => {
+    saveRecentSearch(term);
+    window.location.assign(`/search?query=${encodeURIComponent(term)}`);
+    setDropdownOpen(false);
+  };
+
   // Close dropdown when clicking outside
   useClickOutside(
     [
@@ -70,10 +77,7 @@ export function SearchDropdown() {
         showClear={false}
         onKeyDown={(e) => {
           if (e.key === "Enter" && searchTerm) {
-            saveRecentSearch(searchTerm);
-            window.location.assign(
-              `/search?query=${encodeURIComponent(searchTerm)}`,
-            );
+            handleSearchSubmit(searchTerm);
           }
         }}
       />
@@ -97,7 +101,7 @@ export function SearchDropdown() {
                 currentUser={currentUser}
                 friendList={friendList}
                 setDropdownOpen={setDropdownOpen}
-                saveRecentSearch={saveRecentSearch}
+                onSearchSubmit={handleSearchSubmit}
               />
             )
           ) : recentSearches.length > 0 ? (
