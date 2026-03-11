@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { EmptyListMessage, SegmentedToggle } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { useSearch } from "@features/search/hooks/useSearch";
-import { renderSearchItem } from "@features/search/utils/renderSearchItem";
+import { SearchSection, useSearch } from "@features/search";
 import { useUserFriends } from "@features/user";
 import { usePageTitle } from "@hooks";
-import { EmptyListMessage } from "@components";
 
 export default function SearchPage() {
   const { user: currentUser } = useAuth();
@@ -24,32 +23,22 @@ export default function SearchPage() {
     }
   }, [queryParam, searchTerm]);
 
-  // Group results by type
-  const userResults = results.filter((item) => item.type === "user");
-  const countryResults = results.filter((item) => item.type === "country");
+  const sections = [
+    {
+      key: "users" as const,
+      title: "Users",
+      items: results.filter((item) => item.type === "user"),
+    },
+    {
+      key: "countries" as const,
+      title: "Countries",
+      items: results.filter((item) => item.type === "country"),
+    },
+  ];
 
-  // Render a section for a given result type
-  function renderSection(
-    title: string,
-    items: typeof userResults | typeof countryResults,
-  ) {
-    if (!items.length) return null;
-    return (
-      <section className="bg-surface-alt rounded-xl shadow p-6">
-        <h2 className="text-xl font-bold mb-4">{title}</h2>
-        <ul>
-          {items.map((item) =>
-            renderSearchItem(item, {
-              navigate: (url) => window.location.assign(url),
-              setDropdownOpen: () => {},
-              currentUser,
-              friendList: friendList || [],
-            }),
-          )}
-        </ul>
-      </section>
-    );
-  }
+  const [activeSection, setActiveSection] = useState<
+    "all" | "users" | "countries"
+  >("all");
 
   return (
     <main className="p-4 max-w-6xl mx-auto mt-12">
@@ -59,14 +48,36 @@ export default function SearchPage() {
         results.length === 0 ? (
           <EmptyListMessage message="No results found." />
         ) : (
-          <div className="mt-6 grid gap-8">
-            {[
-              { title: "Users", items: userResults },
-              { title: "Countries", items: countryResults },
-            ].map(({ title, items }) => (
-              <div key={title}>{renderSection(title, items)}</div>
-            ))}
-          </div>
+          <>
+            <SegmentedToggle
+              value={activeSection}
+              onChange={setActiveSection}
+              options={[
+                { value: "all", label: "All" },
+                ...sections.map((section) => ({
+                  value: section.key,
+                  label: section.title,
+                  count: section.items.length,
+                })),
+              ]}
+              className="mb-6"
+            />
+            <div className="mt-6 grid gap-8">
+              {sections.map(
+                (section) =>
+                  (activeSection === "all" ||
+                    activeSection === section.key) && (
+                    <SearchSection
+                      key={section.key}
+                      title={section.title}
+                      items={section.items}
+                      currentUser={currentUser}
+                      friendList={friendList || []}
+                    />
+                  ),
+              )}
+            </div>
+          </>
         )
       ) : null}
     </main>
