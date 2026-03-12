@@ -23,6 +23,9 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     disputes: ["TW"],
     dependencies: ["HK", "MO"],
   },
+  CY: {
+    disputes: ["XC"],
+  },
   DK: {
     dependencies: ["FO", "GL"],
   },
@@ -54,6 +57,9 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
       "VG",
     ],
   },
+  GE: {
+    disputes: ["XA", "XO"],
+  },
   MA: {
     disputes: ["EH"],
   },
@@ -71,7 +77,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     disputes: ["XK"],
   },
   SO: {
-    disputes: ["JS"],
+    disputes: ["XS"],
   },
   US: {
     dependencies: ["AS", "GU", "MP", "PR", "UM", "VI"],
@@ -84,4 +90,7 @@ export const SPECIAL_COUNTRIES: Record<string, { name: string }> = {
   "GB-SCT": { name: "Scotland" },
   "GB-WLS": { name: "Wales" },
   CP: { name: "Clipperton Island" },
+  XA: { name: "Abkhazia" },
+  XO: { name: "South Ossetia" },
+  XC: { name: "Northern Cyprus" },
 };
