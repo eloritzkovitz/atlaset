@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { createSovereigntyFilter } from "@features/countries/utils/countryFilters";
 import { FaArrowLeft } from "react-icons/fa6";
 import { SegmentedToggle } from "@components";
 import {
-  CountryDetailsContent,
+  CountryDetailsPanel,
   VisitedStatusIndicator,
+  createSovereigntyFilter,
+  getCountryRelations,
   useCountryData,
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
@@ -47,8 +48,6 @@ export function CountryStats({
   const { countries, loading: countriesLoading, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const visited = useVisitedCountries();
-
-  // Toggle state for country type and view mode (remains local, as it's not a filter prop)
   const [countryType, setCountryType] = useState<"all" | "sovereign">("all");
 
   // Filter countries based on toggle
@@ -70,6 +69,16 @@ export function CountryStats({
   // Find selected country details
   const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);
 
+  // Determine if the country has relations for showing the dependencies tab
+  const hasRelationsTab = selectedCountry
+    ? (getCountryRelations(selectedCountry.isoCode)?.hasRelations ?? false)
+    : false;
+
+  // Get categorized visits for selected country
+  const categorizedVisits = selectedCountry
+    ? visited.getCountryVisitsCategorized(selectedCountry.isoCode)
+    : { past: [], upcoming: [], tentative: [] };
+
   // If a country is selected, show its details
   if (selectedCountry) {
     return (
@@ -88,9 +97,11 @@ export function CountryStats({
             isHome={selectedCountry.isoCode === homeCountry}
           />
         </span>
-        <CountryDetailsContent
+        <CountryDetailsPanel
           country={selectedCountry}
           currencies={currencies}
+          categorizedVisits={categorizedVisits}
+          hasRelationsTab={hasRelationsTab}
         />
       </div>
     );

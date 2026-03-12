@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { CollapsibleHeader, EmptyListMessage } from "@components";
+import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import {
   COUNTRY_RELATIONS,
   COUNTRY_RELATION_SECTIONS,
-  CountryWithFlag,
-  getCountryName,
-  useCountryData,
-} from "@features/countries";
+} from "../../constants/countryRelations";
+import { useCountryData } from "../../hooks/useCountryData";
+import { getCountryName } from "../../utils/countryData";
 
 interface CountryRelationsContentProps {
   country: { isoCode: string };
@@ -57,7 +57,7 @@ export function CountryRelationsContent({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto max-h-full">
+    <div className="flex-1 overflow-y-auto">
       {sections.map(
         (section) =>
           section.data &&

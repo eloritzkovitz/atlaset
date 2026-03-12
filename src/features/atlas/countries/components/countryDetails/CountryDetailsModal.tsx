@@ -1,9 +1,9 @@
-import { useState, useRef, useMemo, useEffect } from "react";
+import { useMemo, useRef } from "react";
 import { Modal } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import {
-  CountryDetailsContent,
+  CountryDetailsPanel,
   getCountryRelations,
   useCountryData,
   type Country,
@@ -11,13 +11,7 @@ import {
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
-import { CountryVisitsContent } from "./CountryVisitsContent";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
-import {
-  CountryDetailsTabs,
-  type CountryDetailsTab,
-} from "./CountryDetailsTabs";
-import { CountryRelationsContent } from "./CountryRelationsContent";
 
 interface CountryDetailsModalProps {
   isOpen: boolean;
@@ -47,13 +41,6 @@ export function CountryDetailsModal({
     [country, getCountryVisitsCategorized],
   );
 
-  // Tab state
-  const [activeTab, setActiveTab] = useState<CountryDetailsTab>("overview");
-
-  // Reset tab to overview when modal closes
-  useEffect(() => {
-    if (!isOpen) setActiveTab("overview");
-  }, [isOpen]);
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Center map handler
@@ -91,25 +78,15 @@ export function CountryDetailsModal({
             centerOnCountry={centerOnCountry}
             onClose={onClose}
           />
-          <CountryDetailsTabs
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            showDependenciesTab={hasRelationsTab}
+          <CountryDetailsPanel
+            country={country}
+            currencies={currencies}
+            categorizedVisits={categorizedVisits}
+            hasRelationsTab={!!hasRelationsTab}
+            resetTabOnClose={true}
+            isOpen={!!isOpen}
+            className="max-h-[515px]"
           />
-          <div className="relative flex-1 max-h-[510px] overflow-y-auto mt-4 -mx-2">
-            <div key={activeTab} className={"transition-opacity duration-300 px-4"}>
-              {activeTab === "overview" ? (
-                <CountryDetailsContent
-                  country={country}
-                  currencies={currencies}
-                />
-              ) : activeTab === "visits" ? (
-                <CountryVisitsContent visits={categorizedVisits} />
-              ) : hasRelationsTab ? (
-                <CountryRelationsContent country={country} />
-              ) : null}
-            </div>
-          </div>
         </div>
       </Modal>
     </div>

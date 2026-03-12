@@ -1,5 +1,6 @@
 // Components
 export { CountryDetailsContent } from "./components/countryDetails/CountryDetailsContent";
+export { CountryDetailsPanel } from "./components/countryDetails/CountryDetailsPanel";
 export { CountryDisplayPanel } from "./components/countryDisplay/CountryDisplayPanel";
 export { VisitedStatusIndicator } from "./components/countryDetails/VisitedStatusIndicator";
 export { CountrySelectModal } from "./components/countrySelect/CountrySelectModal";
