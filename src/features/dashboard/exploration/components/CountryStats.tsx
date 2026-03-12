@@ -6,7 +6,6 @@ import {
   CountryFlag,
   VisitedStatusIndicator,
   createSovereigntyFilter,
-  getCountryRelations,
   useCountryData,
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
@@ -71,11 +70,6 @@ export function CountryStats({
   // Find selected country details
   const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);
 
-  // Determine if the country has relations for showing the dependencies tab
-  const hasRelationsTab = selectedCountry
-    ? (getCountryRelations(selectedCountry.isoCode)?.hasRelations ?? false)
-    : false;
-
   // Get categorized visits for selected country
   const categorizedVisits = selectedCountry
     ? visited.getCountryVisitsCategorized(selectedCountry.isoCode)
@@ -116,7 +110,7 @@ export function CountryStats({
           country={selectedCountry}
           currencies={currencies}
           categorizedVisits={categorizedVisits}
-          hasRelationsTab={hasRelationsTab}
+          onSelectCountry={setSelectedIsoCode}
           className="text-lg"
         />
       </div>

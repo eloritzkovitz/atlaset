@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { CollapsibleHeader, EmptyListMessage } from "@components";
+import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import {
   COUNTRY_RELATIONS,
@@ -10,13 +10,15 @@ import { getCountryName } from "../../utils/countryData";
 
 interface CountryRelationsContentProps {
   country: { isoCode: string };
+  onSelectCountry?: (isoCode: string) => void;
 }
 
 export function CountryRelationsContent({
   country,
+  onSelectCountry,
 }: CountryRelationsContentProps) {
   const { countries } = useCountryData();
-  const group = COUNTRY_RELATIONS[country.isoCode];
+  const group = country && country.isoCode ? COUNTRY_RELATIONS[country.isoCode] : undefined;
 
   // Prepare sections with sorted isoCodes
   const sections = useMemo(() => {
@@ -29,7 +31,7 @@ export function CountryRelationsContent({
     return COUNTRY_RELATION_SECTIONS.map((def) => ({
       key: def.key,
       label: def.label,
-      data: sortByName(group[def.prop] || []),
+      data: group ? sortByName(group[def.prop] || []) : [],
     }));
   }, [group, countries]);
 
@@ -71,12 +73,19 @@ export function CountryRelationsContent({
             >
               <div className="flex flex-col">
                 {section.data.map((isoCode: string) => (
-                  <CountryWithFlag
+                  <MenuButton
+                    icon={undefined}
                     key={isoCode}
-                    isoCode={isoCode}
-                    name={getCountryName(isoCode, countries)}
+                    onClick={() => onSelectCountry && onSelectCountry(isoCode)}
                     className="py-2 px-2"
-                  />
+                    title={getCountryName(isoCode, countries)}
+                  >
+                    <CountryWithFlag
+                      isoCode={isoCode}
+                      name={getCountryName(isoCode, countries)}
+                      className=""
+                    />
+                  </MenuButton>
                 ))}
               </div>
             </CollapsibleHeader>
