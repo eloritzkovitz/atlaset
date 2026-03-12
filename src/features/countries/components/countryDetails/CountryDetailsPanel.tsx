@@ -98,7 +98,11 @@ export function CountryDetailsPanel({
       >
         <div key={activeTab} className="transition-opacity duration-300 px-4">
           {activeTab === "overview" && (
-            <CountryDetailsContent country={country} currencies={currencies} />
+            <CountryDetailsContent
+              country={country}
+              currencies={currencies}
+              onSelectCountry={onSelectCountry}
+            />
           )}
           {activeTab === "relations" && currentHasRelationsTab && (
             <CountryRelationsContent

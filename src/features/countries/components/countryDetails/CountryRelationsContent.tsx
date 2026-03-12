@@ -18,7 +18,8 @@ export function CountryRelationsContent({
   onSelectCountry,
 }: CountryRelationsContentProps) {
   const { countries } = useCountryData();
-  const group = country && country.isoCode ? COUNTRY_RELATIONS[country.isoCode] : undefined;
+  const group =
+    country && country.isoCode ? COUNTRY_RELATIONS[country.isoCode] : undefined;
 
   // Prepare sections with sorted isoCodes
   const sections = useMemo(() => {
@@ -78,12 +79,10 @@ export function CountryRelationsContent({
                     key={isoCode}
                     onClick={() => onSelectCountry && onSelectCountry(isoCode)}
                     className="py-2 px-2"
-                    title={getCountryName(isoCode, countries)}
                   >
                     <CountryWithFlag
                       isoCode={isoCode}
                       name={getCountryName(isoCode, countries)}
-                      className=""
                     />
                   </MenuButton>
                 ))}

@@ -7,11 +7,13 @@ import { getCountryRelations } from "../../utils/countryData";
 interface CountryDetailsContentProps {
   country: Country;
   currencies: Record<string, string>;
+  onSelectCountry?: (isoCode: string) => void;
 }
 
 export function CountryDetailsContent({
   country,
   currencies,
+  onSelectCountry,
 }: CountryDetailsContentProps) {
   const sovereigntyInfo = getCountryRelations(country.isoCode);
 
@@ -21,6 +23,7 @@ export function CountryDetailsContent({
         <SovereigntyBadge
           type={country.sovereigntyType}
           sovereignIsoCode={sovereigntyInfo.sovereign?.isoCode}
+          onSelectCountry={onSelectCountry}
         />
       )}
       <CountryFlag
