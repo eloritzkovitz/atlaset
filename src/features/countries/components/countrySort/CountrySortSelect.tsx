@@ -1,11 +1,16 @@
 import { useRef } from "react";
-import { OptionItem, SectionHeader } from "@components";
 import { FaCheck } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
-import { ActionButton, Menu, Separator } from "@components";
-import { useCountrySortDropdownState } from "@features/atlas/countries/hooks/useCountrySortDropdownState";
+import {
+  ActionButton,
+  Menu,
+  OptionItem,
+  SectionHeader,
+  Separator,
+} from "@components";
 import { useKeyboardFocusRing, useModalAnimation } from "@hooks";
 import type { Option, OptionGroup } from "@types";
+import { useCountrySortDropdownState } from "../../hooks/useCountrySortDropdownState";
 
 interface CountrySortSelectProps {
   value: string;
@@ -38,7 +43,7 @@ export function CountrySortSelect({
     group: OptionGroup<string> | undefined,
     selected: string,
     handleChange: (v: string) => void,
-    isDirection = false
+    isDirection = false,
   ) =>
     group ? (
       <>
@@ -120,7 +125,7 @@ export function CountrySortSelect({
           {/* Sort Key Group */}
           <div className="-mt-2">
             {renderOptionGroup(keyGroup, sortKey, (newKey) =>
-              onChange(`${newKey}-${sortDirection}`)
+              onChange(`${newKey}-${sortDirection}`),
             )}
           </div>
           <Separator className="mt-2" />
@@ -129,7 +134,7 @@ export function CountrySortSelect({
             dirGroup,
             sortDirection,
             (newDir) => onChange(`${sortKey}-${newDir}`),
-            true
+            true,
           )}
         </Menu>
       )}

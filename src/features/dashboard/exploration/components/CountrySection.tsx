@@ -7,14 +7,15 @@ import {
   FaArrowRotateLeft,
 } from "react-icons/fa6";
 import { ActionButton, SearchInput, SelectInput } from "@components";
-import { filterCountries } from "@features/countries/utils/countryFilters";
-import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import {
   CountryDisplayPanel,
+  CountrySortSelect,
+  filterCountries,
   sortCountries,
   type Country,
 } from "@features/countries";
-import { useInfiniteScroll, usePagination } from "@hooks";
+import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
+import { useInfiniteScroll, usePagination, useSort } from "@hooks";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -141,10 +142,15 @@ export function CountrySection({
     [filtered, showVisitedOnly, visitedCountryCodes],
   );
 
-  // Sort countries by name ascending
-  const sortedCountries = useMemo(
-    () => sortCountries(filteredVisited, "name-asc", []),
-    [filteredVisited],
+  // Sort state
+  const {
+    sortBy,
+    setSortBy,
+    sortedItems: sortedCountries,
+  } = useSort(
+    filteredVisited,
+    (items, sortBy) => sortCountries(items, sortBy, []),
+    "name-asc",
   );
 
   // Paginate countries
@@ -168,7 +174,12 @@ export function CountrySection({
             value={search}
             onChange={setSearch}
             placeholder="Search countries"
-            className="w-xs"
+            className="flex-1 h-10"
+          />
+          <CountrySortSelect
+            value={sortBy}
+            onChange={(v: string) => setSortBy(v as typeof sortBy)}
+            visitedOnly={undefined}
           />
           <SelectInput
             value={regionSelectFilter.getValue(filterProps) ?? ""}
@@ -183,7 +194,7 @@ export function CountrySection({
               }
             }}
             options={regionOptions}
-            className="ml-5 min-w-[150px] mt-3"
+            className="ml-5 min-w-[110px] mt-3"
           />
           <SelectInput
             value={subregionSelectFilter.getValue(filterProps) ?? ""}
@@ -202,7 +213,7 @@ export function CountrySection({
             }}
             options={subregionOptions}
             disabled={!selectedRegion || selectedRegion === "all"}
-            className="min-w-[250px] mt-3"
+            className="min-w-[240px] mt-3"
           />
         </div>
         <div className="flex items-center gap-2">
