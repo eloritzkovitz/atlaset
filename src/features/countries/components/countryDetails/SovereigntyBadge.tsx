@@ -6,17 +6,17 @@ import type { SovereigntyType } from "../../types";
 interface SovereigntyBadgeProps {
   type?: SovereigntyType;
   sovereignIsoCode?: string;
+  onSelectCountry?: (isoCode: string) => void;
 }
 
 // Map sovereignty types to badge colors
 const badgeColors: Record<SovereigntyType, string> = {
-  Sovereign: "bg-blue-300 text-gray-700 dark:bg-blue-700 dark:text-gray-100",
-  Dependency: "bg-gray-300 text-gray-700 dark:bg-gray-500 dark:text-gray-100",
-  "Overseas Region":
-    "bg-green-300 text-gray-700 dark:bg-green-700 dark:text-gray-100",
-  Unrecognized: "bg-red-300 text-gray-700 dark:bg-red-700 dark:text-gray-100",
-  Disputed: "bg-yellow-300 text-gray-700 dark:bg-yellow-700 dark:text-gray-100",
-  Unknown: "bg-gray-300 text-gray-700 dark:bg-gray-500 dark:text-gray-100",
+  Sovereign: "bg-info-hover/70",
+  Dependency: "bg-muted/70",
+  "Overseas Region": "bg-success-hover/50",
+  Unrecognized: "bg-danger-hover/70",
+  Disputed: "bg-warning-hover/70",
+  Unknown: "bg-muted-hover",
 };
 
 // Optional label prefixes for sovereignty types
@@ -29,6 +29,7 @@ const labelPrefixes: Partial<Record<SovereigntyType, string>> = {
 export function SovereigntyBadge({
   type,
   sovereignIsoCode,
+  onSelectCountry,
 }: SovereigntyBadgeProps) {
   const { countries } = useCountryData();
 
@@ -45,11 +46,22 @@ export function SovereigntyBadge({
     label = (
       <>
         {labelPrefixes[type as keyof typeof labelPrefixes]}
-        <CountryWithFlag
-          isoCode={sovereignIsoCode}
-          name={name}
-          className="mx-[3px] inline-block align-middle"
-        />
+        {onSelectCountry ? (
+          <button
+            type="button"
+            className="mx-[3px] inline-block align-middle hover:text-info focus:outline-none"
+            onClick={() => onSelectCountry(sovereignIsoCode)}
+            tabIndex={0}
+          >
+            <CountryWithFlag isoCode={sovereignIsoCode} name={name} />
+          </button>
+        ) : (
+          <CountryWithFlag
+            isoCode={sovereignIsoCode}
+            name={name}
+            className="mx-[3px] inline-block align-middle"
+          />
+        )}
       </>
     );
   }

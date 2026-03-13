@@ -3,14 +3,14 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { SegmentedToggle } from "@components";
 import {
   CountryDetailsPanel,
+  CountryFlag,
   VisitedStatusIndicator,
   createSovereigntyFilter,
-  getCountryRelations,
   useCountryData,
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
-import { useDelayedLoading } from "@hooks";
+import { useDelayedLoading, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
@@ -49,6 +49,7 @@ export function CountryStats({
   const { homeCountry } = useHomeCountry();
   const visited = useVisitedCountries();
   const [countryType, setCountryType] = useState<"all" | "sovereign">("all");
+  const { isMobile } = useScreenSize();
 
   // Filter countries based on toggle
   const filteredCountries =
@@ -69,11 +70,6 @@ export function CountryStats({
   // Find selected country details
   const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);
 
-  // Determine if the country has relations for showing the dependencies tab
-  const hasRelationsTab = selectedCountry
-    ? (getCountryRelations(selectedCountry.isoCode)?.hasRelations ?? false)
-    : false;
-
   // Get categorized visits for selected country
   const categorizedVisits = selectedCountry
     ? visited.getCountryVisitsCategorized(selectedCountry.isoCode)
@@ -83,15 +79,28 @@ export function CountryStats({
   if (selectedCountry) {
     return (
       <div>
-        <button
-          onClick={onBack}
-          className="mb-4 flex items-center gap-2 hover:text-muted"
-        >
-          <FaArrowLeft />
-          Back
-        </button>
         <span className="flex items-center gap-4 mb-4">
-          <h1 className="text-2xl font-bold mb-4">{selectedCountry.name}</h1>
+          <button
+            onClick={onBack}
+            className="flex items-center gap-2 hover:text-muted"
+          >
+            <FaArrowLeft className="text-xl" />
+          </button>
+          <span className={`${isMobile ? "" : "mb-2"}`}>
+            <CountryFlag
+              flag={{
+                isoCode: selectedCountry.isoCode,
+                ratio: "3x2",
+                size: `${isMobile ? "32" : "64"}`,
+              }}
+            />
+          </span>
+          <h1 className={`!text-${isMobile ? "2xl" : "4xl mb-4"} font-bold`}>
+            {selectedCountry.name}
+          </h1>
+          <span className={`text-${isMobile ? "sm" : "2xl mb-2"} text-muted`}>
+            ({selectedCountry.isoCode})
+          </span>
           <VisitedStatusIndicator
             visited={visited.isCountryVisited(selectedCountry.isoCode)}
             isHome={selectedCountry.isoCode === homeCountry}
@@ -101,7 +110,8 @@ export function CountryStats({
           country={selectedCountry}
           currencies={currencies}
           categorizedVisits={categorizedVisits}
-          hasRelationsTab={hasRelationsTab}
+          onSelectCountry={setSelectedIsoCode}
+          className="text-lg"
         />
       </div>
     );

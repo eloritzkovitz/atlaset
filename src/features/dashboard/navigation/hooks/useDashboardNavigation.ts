@@ -37,13 +37,13 @@ export function useDashboardNavigation(
       return;
     }
     const country = countries?.find((c) => c.isoCode === isoCode);
-    if (country && country.subregion) {
+    if (country) {
+      const region = encodeURIComponent(country.region.toLowerCase());
+      const subregion = country.subregion
+        ? encodeURIComponent(country.subregion.toLowerCase())
+        : "all";
       navigate(
-        `/dashboard/countries/${encodeURIComponent(
-          country.region.toLowerCase(),
-        )}/${encodeURIComponent(country.subregion.toLowerCase())}/${
-          country.isoCode
-        }`,
+        `/dashboard/countries/${region}/${subregion}/${country.isoCode}`,
       );
     }
   };

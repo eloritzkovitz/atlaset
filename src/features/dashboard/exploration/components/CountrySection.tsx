@@ -7,14 +7,15 @@ import {
   FaArrowRotateLeft,
 } from "react-icons/fa6";
 import { ActionButton, SearchInput, SelectInput } from "@components";
-import { filterCountries } from "@features/countries/utils/countryFilters";
-import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import {
   CountryDisplayPanel,
+  CountrySortSelect,
+  filterCountries,
   sortCountries,
   type Country,
 } from "@features/countries";
-import { useInfiniteScroll, usePagination } from "@hooks";
+import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
+import { useSort } from "@hooks";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -34,8 +35,6 @@ interface CountrySectionProps {
   resetFilters?: () => void;
 }
 
-const PAGE_SIZE = 24;
-
 export function CountrySection({
   countries,
   visitedCountryCodes,
@@ -53,7 +52,6 @@ export function CountrySection({
   onAllCountries,
   resetFilters,
 }: CountrySectionProps) {
-  // Normalize 'all' and '' to undefined for filtering
   const normalizedRegion =
     !selectedRegion || selectedRegion === "all" ? undefined : selectedRegion;
   const normalizedSubregion =
@@ -141,119 +139,124 @@ export function CountrySection({
     [filtered, showVisitedOnly, visitedCountryCodes],
   );
 
-  // Sort countries by name ascending
-  const sortedCountries = useMemo(
-    () => sortCountries(filteredVisited, "name-asc", []),
-    [filteredVisited],
-  );
-
-  // Paginate countries
+  // Sort state
   const {
-    data: paginatedCountries,
-    hasMore,
-    loadMore,
-  } = usePagination({
-    items: sortedCountries,
-    pageSize: PAGE_SIZE,
-  });
-
-  // Infinite scroll sentinel
-  const sentinelRef = useInfiniteScroll(loadMore, hasMore);
+    sortBy,
+    setSortBy,
+    sortedItems: sortedCountries,
+  } = useSort(
+    filteredVisited,
+    (items, sortBy) => sortCountries(items, sortBy, []),
+    "name-asc",
+  );
 
   return (
     <div className={className}>
-      <div className="flex items-center justify-between mb-4 gap-4">
-        <div className="flex items-center gap-2">
-          <SearchInput
-            value={search}
-            onChange={setSearch}
-            placeholder="Search countries"
-            className="w-xs"
-          />
-          <SelectInput
-            value={regionSelectFilter.getValue(filterProps) ?? ""}
-            onChange={(val) => {
-              if (val === "all") {
-                setSelectedRegion("all");
-                setSelectedSubregion("");
-                if (onAllCountries) onAllCountries();
-              } else {
-                regionSelectFilter.setValue(filterProps, val as string);
-                setSelectedSubregion("all");
-              }
-            }}
-            options={regionOptions}
-            className="ml-5 min-w-[150px] mt-3"
-          />
-          <SelectInput
-            value={subregionSelectFilter.getValue(filterProps) ?? ""}
-            onChange={(val) => {
-              if (val === "all" || val === "") {
-                setSelectedSubregion("");
-                if (onSubregionChange && selectedRegion) {
-                  onSubregionChange(selectedRegion, "");
+      <div className="mb-4 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div className={"flex flex-col sm:flex-row sm:items-center gap-2"}>
+            <SearchInput
+              value={search}
+              onChange={setSearch}
+              placeholder="Search countries"
+              className="mt-1 rounded-md"
+            />
+            <div className="flex flex-row gap-2 w-full">
+              <SelectInput
+                value={regionSelectFilter.getValue(filterProps) ?? ""}
+                onChange={(val) => {
+                  if (val === "all") {
+                    setSelectedRegion("all");
+                    setSelectedSubregion("");
+                    if (onAllCountries) onAllCountries();
+                  } else {
+                    regionSelectFilter.setValue(filterProps, val as string);
+                    setSelectedSubregion("all");
+                  }
+                }}
+                options={regionOptions}
+                className="min-w-[110px]"
+              />
+              <SelectInput
+                value={subregionSelectFilter.getValue(filterProps) ?? ""}
+                onChange={(val) => {
+                  if (val === "all" || val === "") {
+                    setSelectedSubregion("");
+                    if (onSubregionChange && selectedRegion) {
+                      onSubregionChange(selectedRegion, "");
+                    }
+                  } else {
+                    subregionSelectFilter.setValue(filterProps, val as string);
+                    if (onSubregionChange && selectedRegion && val) {
+                      onSubregionChange(selectedRegion, val as string);
+                    }
+                  }
+                }}
+                options={subregionOptions}
+                disabled={!selectedRegion || selectedRegion === "all"}
+                className="min-w-[240px]"
+              />
+            </div>
+          </div>
+          <div className="flex flex-row gap-2 mt-2 sm:mt-0">
+            <CountrySortSelect
+              value={sortBy}
+              onChange={(v: string) => setSortBy(v as typeof sortBy)}
+              visitedOnly={undefined}
+            />
+            <div className="flex flex-row gap-2 ml-auto justify-end">
+              <ActionButton
+                onClick={handleResetFilters}
+                ariaLabel="Reset Filters"
+                title="Reset Filters"
+                icon={<FaArrowRotateLeft />}
+                variant="toggle"
+                rounded
+              />
+              <ActionButton
+                onClick={handleVisitedToggle}
+                ariaLabel={
+                  showVisitedOnly ? "Show All Countries" : "Show Visited Only"
                 }
-              } else {
-                subregionSelectFilter.setValue(filterProps, val as string);
-                if (onSubregionChange && selectedRegion && val) {
-                  onSubregionChange(selectedRegion, val as string);
+                title={
+                  showVisitedOnly ? "Show All Countries" : "Show Visited Only"
                 }
-              }
-            }}
-            options={subregionOptions}
-            disabled={!selectedRegion || selectedRegion === "all"}
-            className="min-w-[250px] mt-3"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <ActionButton
-            onClick={handleResetFilters}
-            ariaLabel="Reset Filters"
-            title="Reset Filters"
-            icon={<FaArrowRotateLeft />}
-            variant="toggle"
-            rounded
-          />
-          <ActionButton
-            onClick={handleVisitedToggle}
-            ariaLabel={
-              showVisitedOnly ? "Show All Countries" : "Show Visited Only"
-            }
-            title={showVisitedOnly ? "Show All Countries" : "Show Visited Only"}
-            icon={
-              showVisitedOnly ? (
-                <span className="flex items-center gap-1 font-semibold text-sm">
-                  <FaGlobe />
-                </span>
-              ) : (
-                <span className="flex items-center gap-1 font-semibold text-sm">
-                  <FaCircleCheck />
-                </span>
-              )
-            }
-            variant="toggle"
-            rounded
-          />
-          <ActionButton
-            onClick={handleToggle}
-            ariaLabel={
-              viewMode === "grid"
-                ? "Switch to List View"
-                : "Switch to Grid View"
-            }
-            title={
-              viewMode === "grid"
-                ? "Switch to List View"
-                : "Switch to Grid View"
-            }
-            icon={viewMode === "grid" ? <FaList /> : <FaThLarge />}
-            variant="toggle"
-            rounded
-          />
+                icon={
+                  showVisitedOnly ? (
+                    <span className="flex items-center gap-1 font-semibold text-sm">
+                      <FaGlobe />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 font-semibold text-sm">
+                      <FaCircleCheck />
+                    </span>
+                  )
+                }
+                variant="toggle"
+                rounded
+              />
+              <ActionButton
+                onClick={handleToggle}
+                ariaLabel={
+                  viewMode === "grid"
+                    ? "Switch to List View"
+                    : "Switch to Grid View"
+                }
+                title={
+                  viewMode === "grid"
+                    ? "Switch to List View"
+                    : "Switch to Grid View"
+                }
+                icon={viewMode === "grid" ? <FaList /> : <FaThLarge />}
+                variant="toggle"
+                rounded
+              />
+            </div>
+          </div>
         </div>
       </div>
       <CountryDisplayPanel
-        countries={paginatedCountries}
+        countries={sortedCountries}
         visitedCountryCodes={visitedCountryCodes}
         view={viewMode}
         showFlags={true}
@@ -261,8 +264,6 @@ export function CountrySection({
         selectedIsoCode={selectedIsoCode}
         onCountryInfo={(country) => setSelectedIsoCode(country.isoCode)}
       />
-      {/* Infinite scroll sentinel */}
-      {hasMore && <div ref={sentinelRef} style={{ height: 1 }} />}
     </div>
   );
 }

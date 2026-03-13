@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-03-13
+- **[feature]** **Countries:** Related countries are now clickable
+- **[feature]** **Dashboard | Exploration:** Updated country pages to match the atlas's country details
+- **[feature]** **Search:** Regions and subregions are now searchable
+
 ## 2026-03-11
 - **[feature]** **Search:** Added global search feature
 

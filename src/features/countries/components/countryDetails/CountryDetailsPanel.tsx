@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import { TabButton } from "@components";
-import { CountryDetailsContent, type Country } from "@features/countries";
+import {
+  CountryDetailsContent,
+  getCountryRelations,
+  type Country,
+} from "@features/countries";
 import type { Visit } from "@features/visits";
 import { CountryRelationsContent } from "./CountryRelationsContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
@@ -21,11 +25,11 @@ interface CountryDetailsPanelProps {
     upcoming: Visit[];
     tentative: Visit[];
   };
-  hasRelationsTab: boolean;
   initialTab?: CountryDetailsTab;
   resetTabOnClose?: boolean;
   isOpen?: boolean;
   onTabChange?: (tab: CountryDetailsTab) => void;
+  onSelectCountry?: (isoCode: string) => void;
   className?: string;
 }
 
@@ -33,11 +37,11 @@ export function CountryDetailsPanel({
   country,
   currencies,
   categorizedVisits,
-  hasRelationsTab,
   initialTab = "overview",
   resetTabOnClose = false,
   isOpen = true,
   onTabChange,
+  onSelectCountry,
   className,
 }: CountryDetailsPanelProps) {
   const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
@@ -47,14 +51,32 @@ export function CountryDetailsPanel({
     if (resetTabOnClose && !isOpen) setActiveTab("overview");
   }, [resetTabOnClose, isOpen]);
 
+  // Reset to overview tab when country changes
+  useEffect(() => {
+    setActiveTab("overview");
+  }, [country?.isoCode]);
+
   // Handle tab change
   const handleTabChange = (tab: CountryDetailsTab) => {
     setActiveTab(tab);
     onTabChange?.(tab);
   };
 
-  // Determine which tabs to show based on dependencies presence
-  const tabs: CountryDetailsTab[] = hasRelationsTab
+  // Recalculate hasRelationsTab for the current country
+  const getRelationsTab = (country: Country) => {
+    try {
+      const rel =
+        country && country.isoCode
+          ? getCountryRelations(country.isoCode)
+          : undefined;
+      return rel && rel.hasRelations;
+    } catch {
+      return false;
+    }
+  };
+
+  const currentHasRelationsTab = getRelationsTab(country);
+  const tabs: CountryDetailsTab[] = currentHasRelationsTab
     ? ["overview", "relations", "visits"]
     : ["overview", "visits"];
 
@@ -76,10 +98,17 @@ export function CountryDetailsPanel({
       >
         <div key={activeTab} className="transition-opacity duration-300 px-4">
           {activeTab === "overview" && (
-            <CountryDetailsContent country={country} currencies={currencies} />
+            <CountryDetailsContent
+              country={country}
+              currencies={currencies}
+              onSelectCountry={onSelectCountry}
+            />
           )}
-          {activeTab === "relations" && hasRelationsTab && (
-            <CountryRelationsContent country={country} />
+          {activeTab === "relations" && currentHasRelationsTab && (
+            <CountryRelationsContent
+              country={country}
+              onSelectCountry={onSelectCountry}
+            />
           )}
           {activeTab === "visits" && (
             <CountryVisitsContent visits={categorizedVisits} />

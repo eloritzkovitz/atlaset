@@ -1,53 +1,49 @@
 import { useRef } from "react";
 import { SearchInput, EmptyListMessage } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { useCountryData } from "@features/countries";
 import { useUserFriends } from "@features/user";
 import { useDebounce } from "@hooks";
 import { RecentSearchesList } from "./RecentSearchesList";
 import { SearchResultsList } from "./SearchResultsList";
-import { useRecentSearches } from "../hooks/useRecentSearches";
 import { useSearch } from "../hooks/useSearch";
-import { useSyncedSearchTerm } from "../hooks/useSyncedSearchTerm";
 
 interface SearchContentProps {
-  onResultSelect?: () => void;
+  searchTerm: string;
+  setSearchTerm: (val: string) => void;
+  onSearchSubmit: (term: string) => void;
+  recentSearches: string[];
+  removeRecentSearch: (term: string) => void;
+  clearAllRecentSearches: () => void;
   inputClassName?: string;
   containerClassName?: string;
   hideInput?: boolean;
 }
 
 export function SearchContent({
-  onResultSelect,
+  searchTerm,
+  setSearchTerm,
+  onSearchSubmit,
+  recentSearches,
+  removeRecentSearch,
+  clearAllRecentSearches,
   inputClassName = "",
   containerClassName = "",
   hideInput = false,
 }: SearchContentProps) {
-  const [searchTerm, setSearchTerm] = useSyncedSearchTerm();
   const debouncedSearchTerm = useDebounce(searchTerm, 100);
-  const { results, loading } = useSearch(debouncedSearchTerm);
-  const {
-    recentSearches,
-    saveRecentSearch,
-    removeRecentSearch,
-    clearAllRecentSearches,
-  } = useRecentSearches(5);
+  const { results, loading } = useSearch(debouncedSearchTerm);  
 
   // Get current user and friends for result ranking and display
   const { user: currentUser } = useAuth();
   const { friends: friendList } = useUserFriends(currentUser?.uid);
+  const { countries } = useCountryData();
 
   // Ref for the search input to manage focus and dropdown behavior
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Handle search term changes
-  const handleChange = (val: string) => setSearchTerm(val);
-
-  // Handle search submission
-  const handleSearchSubmit = (term: string) => {
-    saveRecentSearch(term);
-    window.location.assign(`/search?query=${encodeURIComponent(term)}`);
-    if (onResultSelect) onResultSelect();
-  };
+  const handleChange = (val: string) => setSearchTerm(val);  
 
   return (
     <div className={`flex flex-col h-full ${containerClassName}`}>
@@ -62,7 +58,7 @@ export function SearchContent({
             className={inputClassName}
             onKeyDown={(e) => {
               if (e.key === "Enter" && searchTerm) {
-                handleSearchSubmit(searchTerm);
+                onSearchSubmit(searchTerm);
               }
             }}
           />
@@ -80,14 +76,15 @@ export function SearchContent({
               searchTerm={searchTerm}
               currentUser={currentUser}
               friendList={friendList}
+              countries={countries}
               setDropdownOpen={() => {}}
-              onSearchSubmit={handleSearchSubmit}
+              onSearchSubmit={onSearchSubmit}
             />
           )
         ) : recentSearches.length > 0 ? (
           <RecentSearchesList
             recentSearches={recentSearches}
-            onSearchSubmit={handleSearchSubmit}
+            onSearchSubmit={onSearchSubmit}
             onRemove={removeRecentSearch}
             onClear={clearAllRecentSearches}
           />

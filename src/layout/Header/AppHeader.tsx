@@ -13,7 +13,7 @@ interface AppHeaderProps {
 export function AppHeader({ show, showSearch = true }: AppHeaderProps) {
   return (
     <header
-      className={`absolute transition-transform duration-300 z-30 w-auto w-full flex items-center right-6
+      className={`absolute transition-transform duration-300 z-30 w-auto flex items-center right-6
         ${
           show
             ? "top-4 translate-y-0 opacity-100"

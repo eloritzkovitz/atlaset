@@ -1,5 +1,6 @@
 import type { User } from "firebase/auth";
 import { MenuButton, Separator } from "@components";
+import type { Country } from "@features/countries";
 import type { Friend } from "@features/user";
 import type { SearchResult } from "../types";
 import { renderSearchItem } from "../utils/renderSearchItem";
@@ -9,6 +10,7 @@ interface SearchResultsListProps {
   searchTerm: string;
   currentUser: User | null;
   friendList: Friend[];
+  countries: Country[];
   setDropdownOpen: (open: boolean) => void;
   onSearchSubmit: (term: string) => void;
 }
@@ -18,6 +20,7 @@ export function SearchResultsList({
   searchTerm,
   currentUser,
   friendList,
+  countries,
   setDropdownOpen,
   onSearchSubmit,
 }: SearchResultsListProps) {
@@ -29,6 +32,7 @@ export function SearchResultsList({
           setDropdownOpen,
           currentUser,
           friendList,
+          countries,
         }),
       )}
       {results.length > 8 && (

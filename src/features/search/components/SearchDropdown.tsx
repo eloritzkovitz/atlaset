@@ -1,17 +1,17 @@
 import { useState, useRef } from "react";
-import { Menu } from "@components";
+import { Menu, SearchInput } from "@components";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import { SearchContent } from "./SearchContent";
-import { SearchInput } from "@components";
-import { useSyncedSearchTerm } from "../hooks/useSyncedSearchTerm";
+import { useSearchController } from "../hooks/useSearchController";
 
-/** Renders the search dropdown, which contains the SearchContent component. */
+/** Renders the search dropdown. */
 export function SearchDropdown() {
+  const search = useSearchController();
+
   // Dropdown state and refs
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [searchTerm, setSearchTerm] = useSyncedSearchTerm();
 
   // Open dropdown when input is focused
   const handleFocus = () => {
@@ -38,18 +38,26 @@ export function SearchDropdown() {
     true,
   );
 
+  // Shared search submit handler
+  const handleSearchSubmit = (term: string) => {
+    if (term) {
+      setDropdownOpen(false);
+      search.handleSearchSubmit(term);
+    }
+  };
+
   return (
     <div className="relative w-full max-w-xs">
       <SearchInput
         ref={inputRef}
-        value={searchTerm}
-        onChange={setSearchTerm}
+        value={search.searchTerm}
+        onChange={search.setSearchTerm}
         onFocus={handleFocus}
         placeholder="Search"
         showClear={false}
         onKeyDown={(e) => {
-          if (e.key === "Enter" && searchTerm) {
-            setDropdownOpen(false);
+          if (e.key === "Enter" && search.searchTerm) {
+            handleSearchSubmit(search.searchTerm);
           }
         }}
       />
@@ -61,7 +69,15 @@ export function SearchDropdown() {
           disableScroll
           style={menuStyle}
         >
-          <SearchContent hideInput />
+          <SearchContent
+            searchTerm={search.searchTerm}
+            setSearchTerm={search.setSearchTerm}
+            onSearchSubmit={handleSearchSubmit}
+            recentSearches={search.recentSearches}
+            removeRecentSearch={search.removeRecentSearch}
+            clearAllRecentSearches={search.clearAllRecentSearches}
+            hideInput
+          />
         </Menu>
       )}
     </div>

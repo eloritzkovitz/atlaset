@@ -2,10 +2,11 @@
 export { CountryDetailsContent } from "./components/countryDetails/CountryDetailsContent";
 export { CountryDetailsPanel } from "./components/countryDetails/CountryDetailsPanel";
 export { CountryDisplayPanel } from "./components/countryDisplay/CountryDisplayPanel";
-export { VisitedStatusIndicator } from "./components/countryDetails/VisitedStatusIndicator";
-export { CountrySelectModal } from "./components/countrySelect/CountrySelectModal";
-export { CountryWithFlag } from "./components/countryFlag/CountryWithFlag";
 export { CountryFlag } from "./components/countryFlag/CountryFlag";
+export { CountryWithFlag } from "./components/countryFlag/CountryWithFlag";
+export { CountrySelectModal } from "./components/countrySelect/CountrySelectModal";
+export { CountrySortSelect } from "./components/countrySort/CountrySortSelect";
+export { VisitedStatusIndicator } from "./components/countryDetails/VisitedStatusIndicator";
 
 // Constants
 export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
@@ -13,6 +14,7 @@ export {
   COUNTRY_RELATIONS,
   COUNTRY_RELATION_SECTIONS,
 } from "./constants/countryRelations";
+export { regionIcons, defaultRegionIcon } from "./constants/regionIcons";
 
 // Hooks
 export { useCountryData } from "./hooks/useCountryData";

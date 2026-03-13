@@ -1,3 +1,4 @@
+import { useScreenSize } from "@hooks";
 import { CountryFlag } from "../countryFlag/CountryFlag";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
@@ -36,6 +37,9 @@ export function CountryItem({
   onMouseLeave,
   view,
 }: CountryItemProps) {
+  const { isMobile } = useScreenSize();
+
+  // Determine visited and highlighted status
   const isVisited =
     showAllAsVisited || visitedCountryCodes.includes(country.isoCode);
   const isHighlighted =
@@ -67,17 +71,21 @@ export function CountryItem({
           />
         ) : (
           <div className="flex flex-col items-center w-[128px] h-[140px]">
-            <CountryFlag
-              flag={{
-                isoCode: country.isoCode,
-                ratio: flagRatio || "original",
-                size: flagSize || (window.innerWidth < 640 ? "32" : "64"),
-              }}
-              className="max-w-full max-h-[96px] object-contain transition-transform duration-200 group-hover:scale-110"
-            />
-            <span className="block mt-1 text-xs sm:text-base text-center break-words min-h-[20px]">
-              {country.name}
-            </span>
+            <div className="flex items-center justify-center w-full h-20">
+              <CountryFlag
+                flag={{
+                  isoCode: country.isoCode,
+                  ratio: flagRatio || "original",
+                  size: flagSize || (isMobile ? "32" : "64"),
+                }}
+                className="max-w-full max-h-[96px] object-contain transition-transform duration-200 group-hover:scale-110"
+              />
+            </div>
+            <div className="w-full flex items-end justify-center mt-4">
+              <span className="w-full block text-center break-words min-h-[20px]">
+                {country.name}
+              </span>
+            </div>
           </div>
         )
       ) : (

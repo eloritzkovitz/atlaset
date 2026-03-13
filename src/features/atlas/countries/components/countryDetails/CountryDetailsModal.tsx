@@ -1,10 +1,9 @@
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import {
   CountryDetailsPanel,
-  getCountryRelations,
   useCountryData,
   type Country,
 } from "@features/countries";
@@ -14,20 +13,22 @@ import { useKeyHandler } from "@hooks";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
 
 interface CountryDetailsModalProps {
-  isOpen: boolean;
   country: Country | null;
+  isOpen: boolean;
   onClose: () => void;
 }
 
 export function CountryDetailsModal({
-  isOpen,
   country,
+  isOpen,
   onClose,
 }: CountryDetailsModalProps) {
-  const { currencies } = useCountryData();
+  const { countries, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const { centerOnCountry } = useMapView();
   const { showCalendar } = useUI();
+
+  const [currentCountry, setCurrentCountry] = useState<Country | null>(country);
 
   // Visited status and categorized visits
   const { isCountryVisited, getCountryVisitsCategorized } =
@@ -53,13 +54,19 @@ export function CountryDetailsModal({
     isOpen,
   );
 
-  // Do not render if no country is selected
-  if (!country) return null;
+  // Update state when modal opens/closes or country prop changes
+  useEffect(() => {
+    setCurrentCountry(country);
+  }, [country, isOpen]);
 
-  // Determine if the country has relations for showing the dependencies tab
-  const hasRelationsTab = country
-    ? getCountryRelations(country.isoCode).hasRelations
-    : false;
+  // Handler to change country
+  const handleSelectCountry = (isoCode: string) => {
+    const found = countries.find((c) => c.isoCode === isoCode);
+    if (found) setCurrentCountry(found);
+  };
+
+  // Do not render if no country is selected
+  if (!currentCountry) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center select-none">
@@ -72,19 +79,22 @@ export function CountryDetailsModal({
       >
         <div className="relative overflow-visible flex flex-col h-full">
           <CountryDetailsHeader
-            country={{ isoCode: country.isoCode, name: country.name }}
+            country={{
+              isoCode: currentCountry.isoCode,
+              name: currentCountry.name,
+            }}
             isVisited={isVisited}
-            isHome={homeCountry === country.isoCode}
+            isHome={homeCountry === currentCountry.isoCode}
             centerOnCountry={centerOnCountry}
             onClose={onClose}
           />
           <CountryDetailsPanel
-            country={country}
+            country={currentCountry}
             currencies={currencies}
             categorizedVisits={categorizedVisits}
-            hasRelationsTab={!!hasRelationsTab}
             resetTabOnClose={true}
             isOpen={!!isOpen}
+            onSelectCountry={handleSelectCountry}
             className="max-h-[515px]"
           />
         </div>
