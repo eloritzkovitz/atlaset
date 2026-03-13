@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { SearchInput, EmptyListMessage } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { useCountryData } from "@features/countries";
 import { useUserFriends } from "@features/user";
 import { useDebounce } from "@hooks";
 import { RecentSearchesList } from "./RecentSearchesList";
@@ -36,6 +37,7 @@ export function SearchContent({
   // Get current user and friends for result ranking and display
   const { user: currentUser } = useAuth();
   const { friends: friendList } = useUserFriends(currentUser?.uid);
+  const { countries } = useCountryData();
 
   // Ref for the search input to manage focus and dropdown behavior
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -74,6 +76,7 @@ export function SearchContent({
               searchTerm={searchTerm}
               currentUser={currentUser}
               friendList={friendList}
+              countries={countries}
               setDropdownOpen={() => {}}
               onSearchSubmit={onSearchSubmit}
             />

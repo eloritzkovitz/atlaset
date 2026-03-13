@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { EmptyListMessage, SegmentedToggle } from "@components";
 import { useAuth } from "@contexts/AuthContext";
+import { useCountryData } from "@features/countries";
 import { SearchSection, useSearch } from "@features/search";
 import { useUserFriends } from "@features/user";
 import { usePageTitle } from "@hooks";
@@ -9,6 +10,7 @@ import { usePageTitle } from "@hooks";
 export default function SearchPage() {
   const { user: currentUser } = useAuth();
   const { friends: friendList } = useUserFriends(currentUser?.uid);
+  const { countries } = useCountryData();
   const location = useLocation();
   const queryParam = new URLSearchParams(location.search).get("query") || "";
   const { results, loading } = useSearch(queryParam);
@@ -65,6 +67,7 @@ export default function SearchPage() {
                       items={section.items}
                       currentUser={currentUser}
                       friendList={friendList || []}
+                      countries={countries}
                     />
                   ),
               )}

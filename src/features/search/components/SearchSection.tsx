@@ -1,4 +1,5 @@
 import type { User } from "firebase/auth";
+import type { Country } from "@features/countries";
 import type { Friend } from "@features/user";
 import type { SearchResult } from "../types";
 import { renderSearchItem } from "../utils/renderSearchItem";
@@ -8,6 +9,7 @@ interface SearchSectionProps {
   items: SearchResult[];
   currentUser: User | null;
   friendList: Friend[];
+  countries: Country[];
 }
 
 export function SearchSection({
@@ -15,6 +17,7 @@ export function SearchSection({
   items,
   currentUser,
   friendList,
+  countries,
 }: SearchSectionProps) {
   if (!items.length) return null;
   return (
@@ -27,6 +30,7 @@ export function SearchSection({
             setDropdownOpen: () => {},
             currentUser,
             friendList: friendList || [],
+            countries: countries,
           }),
         )}
       </ul>
