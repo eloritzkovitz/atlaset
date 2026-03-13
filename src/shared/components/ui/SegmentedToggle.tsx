@@ -36,7 +36,7 @@ export function SegmentedToggle<T extends string>({
           {opt.label}
           {typeof opt.count === "number" && (
             <span className="ml-1 text-xs text-muted align-middle">
-              ({opt.count})
+              {opt.count}
             </span>
           )}
         </button>
