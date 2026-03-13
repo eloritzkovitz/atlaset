@@ -28,10 +28,20 @@ export default function SearchPage() {
       title: "Countries",
       items: results.filter((item) => item.type === "country"),
     },
+    {
+      key: "regions" as const,
+      title: "Regions",
+      items: results.filter((item) => item.type === "region"),
+    },
+    {
+      key: "subregions" as const,
+      title: "Subregions",
+      items: results.filter((item) => item.type === "subregion"),
+    },
   ];
 
   const [activeSection, setActiveSection] = useState<
-    "all" | "users" | "countries"
+    "all" | "users" | "countries" | "regions" | "subregions"
   >("all");
 
   return (

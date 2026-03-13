@@ -3,6 +3,8 @@ import {
   CountryFlag,
   getCountryName,
   getCountryRelations,
+  regionIcons,
+  defaultRegionIcon,
   type Country,
 } from "@features/countries";
 import { UserAvatar, type Friend } from "@features/user";
@@ -29,7 +31,6 @@ function getCountryLabel(item: Country, countries: Country[]) {
     getCountryRelations(item.isoCode).sovereign?.isoCode || "Unknown",
     countries,
   );
-
   switch (item.sovereigntyType) {
     case "Dependency":
       return sovereignName ? `Dependency of ${sovereignName}` : "Country";
@@ -40,6 +41,51 @@ function getCountryLabel(item: Country, countries: Country[]) {
   }
 }
 
+/**
+ * Gets the icon for a region based on its name.
+ * @param region - The name of the region.
+ */
+function getRegionIcon(region: string) {
+  return regionIcons[region] || defaultRegionIcon;
+}
+
+/**
+ * Renders a search item for a region or subregion.
+ * @param item - The search result item representing a region or subregion.
+ * @param navigate - Function to navigate to a different URL.
+ * @param setDropdownOpen - Function to set the dropdown open state.
+ * @returns A JSX element representing the search item.
+ */
+function renderAreaItem(
+  item: Extract<SearchResult, { type: "region" | "subregion" }>,
+  navigate: (url: string) => void,
+  setDropdownOpen: (open: boolean) => void,
+) {
+  const icon = getRegionIcon(item.region);
+  const isSubregion = item.type === "subregion";
+  return (
+    <SearchItem
+      key={isSubregion ? `${item.region}-${item.subregion}` : item.region}
+      item={item}
+      displayName={isSubregion ? item.subregion : item.region}
+      label={isSubregion ? `Subregion in ${item.region}` : "Region"}
+      icon={icon}
+      onClick={() => {
+        navigate(
+          isSubregion
+            ? `/dashboard/countries/${item.region}/${item.subregion}`
+            : `/dashboard/countries/${item.region}`,
+        );
+        setDropdownOpen(false);
+      }}
+    />
+  );
+}
+
+/**
+ * Renders a search item based on its type.
+ * @param item - The search result item.
+ */
 export function renderSearchItem(
   item: SearchResult,
   {
@@ -50,41 +96,49 @@ export function renderSearchItem(
     countries,
   }: RenderSearchItemOptions,
 ) {
-  if (item.type === "user") {
-    return (
-      <SearchItem
-        key={item.uid}
-        item={item}
-        displayName={item.displayName || item.username}
-        label={getUserLabel(item, currentUser, friendList)}
-        icon={<UserAvatar user={item} size={32} />}
-        onClick={() => {
-          navigate(`/users/${item.username}`);
-          setDropdownOpen(false);
-        }}
-      />
-    );
+  switch (item.type) {
+    case "user":
+      return (
+        <SearchItem
+          key={item.uid}
+          item={item}
+          displayName={item.displayName || item.username}
+          label={getUserLabel(item, currentUser, friendList)}
+          icon={<UserAvatar user={item} size={32} />}
+          onClick={() => {
+            navigate(`/users/${item.username}`);
+            setDropdownOpen(false);
+          }}
+        />
+      );
+    case "country":
+      return (
+        <SearchItem
+          key={item.isoCode || item.name}
+          item={item}
+          displayName={item.name}
+          label={getCountryLabel(item, countries)}
+          icon={
+            <CountryFlag
+              flag={{ isoCode: item.isoCode, ratio: "3x2", size: "32" }}
+            />
+          }
+          onClick={() => {
+            navigate(
+              `/dashboard/countries/${item.region}/${item.subregion}/${item.isoCode}`,
+            );
+            setDropdownOpen(false);
+          }}
+        />
+      );
+    case "region":
+    case "subregion":
+      return renderAreaItem(
+        item as Extract<SearchResult, { type: "region" | "subregion" }>,
+        navigate,
+        setDropdownOpen,
+      );
+    default:
+      return null;
   }
-  if (item.type === "country") {
-    return (
-      <SearchItem
-        key={item.isoCode || item.name}
-        item={item}
-        displayName={item.name}
-        label={getCountryLabel(item, countries)}
-        icon={
-          <CountryFlag
-            flag={{ isoCode: item.isoCode, ratio: "3x2", size: "32" }}
-          />
-        }
-        onClick={() => {
-          navigate(
-            `/dashboard/countries/${item.region}/${item.subregion}/${item.isoCode}`,
-          );
-          setDropdownOpen(false);
-        }}
-      />
-    );
-  }
-  return null;
 }

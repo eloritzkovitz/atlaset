@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useCountryData } from "@features/countries";
+import { getAllRegions } from "@features/countries/utils/countryData";
 import { useUserSearch } from "../hooks/useUserSearch";
 import { useAuth } from "@contexts/AuthContext";
 import { useUserFriends } from "@features/user";
@@ -34,7 +35,7 @@ export function useSearch(searchTerm: string) {
     currentUserId,
     friendIds,
   );
-  const { countries } = useCountryData();
+  const { countries, allRegions, allSubregions } = useCountryData();
 
   // Combine search results
   useEffect(() => {
@@ -72,10 +73,51 @@ export function useSearch(searchTerm: string) {
       type: "country",
     }));
 
+    // Regions
+    const allRegionStrings = Array.from(
+      new Set(getAllRegions(countries || [])),
+    );
+    const rankedRegions = rankByStartsWithAndContains(
+      allRegionStrings,
+      (r) => r,
+      searchTerm,
+    )
+      // Deduplicate after ranking
+      .filter((region, idx, arr) => arr.findIndex((r) => r === region) === idx)
+      .map((region) => ({ type: "region" as const, region }));
+
+    // Subregion pairs
+    const regionSubregionPairs = Array.from(
+      new Set(
+        (countries || [])
+          .filter(
+            (c) => c.region && typeof c.subregion === "string" && c.subregion,
+          )
+          .map((c) => `${c.region}|||${c.subregion}`),
+      ),
+    ).map((pair) => {
+      const [region, subregion] = pair.split("|||");
+      return { region, subregion };
+    });
+    const rankedSubregions = rankByStartsWithAndContains(
+      regionSubregionPairs,
+      (s) => s.subregion,
+      searchTerm,
+    ).map((s) => ({
+      type: "subregion" as const,
+      region: s.region,
+      subregion: s.subregion,
+    }));
+
     // Combine and sort
-    setResults([...rankedUsers, ...mappedCountries]);
+    setResults([
+      ...rankedUsers,
+      ...mappedCountries,
+      ...rankedRegions,
+      ...rankedSubregions,
+    ]);
     setLoading(false);
-  }, [searchTerm, userResults, countries]);
+  }, [searchTerm, userResults, countries, allRegions, allSubregions]);
 
   return { results, loading };
 }

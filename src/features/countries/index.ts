@@ -14,6 +14,7 @@ export {
   COUNTRY_RELATIONS,
   COUNTRY_RELATION_SECTIONS,
 } from "./constants/countryRelations";
+export { regionIcons, defaultRegionIcon } from "./constants/regionIcons";
 
 // Hooks
 export { useCountryData } from "./hooks/useCountryData";

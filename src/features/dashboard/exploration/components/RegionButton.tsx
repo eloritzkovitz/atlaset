@@ -21,7 +21,7 @@ export function RegionButton({
 }: RegionButtonProps) {
   return (
     <button
-      className={`flex items-center w-full rounded-lg transition cursor-pointer focus:outline-none text-blue-500 hover:bg-surface-hover ${className}`}
+      className={`flex items-center w-full rounded-lg transition cursor-pointer focus:outline-none text-blue-500 hover:bg-surface-hover gap-2 ${className}`}
       onClick={onClick}
       title={title}
       aria-label={title}
