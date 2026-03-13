@@ -15,10 +15,8 @@ export function useSyncedSearchTerm(
 
   // Update searchTerm whenever the query param changes
   useEffect(() => {
-    if (queryParam !== searchTerm) {
-      setSearchTerm(queryParam);
-    }
-  }, [queryParam, searchTerm]);
+    setSearchTerm(queryParam);
+  }, [queryParam]);
 
   return [searchTerm, setSearchTerm] as const;
 }

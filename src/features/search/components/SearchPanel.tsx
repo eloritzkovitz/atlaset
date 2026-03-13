@@ -1,6 +1,7 @@
 import { ActionButton, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { SearchContent } from "./SearchContent";
+import { useSearchController } from "../hooks/useSearchController";
 
 interface SearchPanelProps {
   open: boolean;
@@ -8,6 +9,8 @@ interface SearchPanelProps {
 }
 
 export function SearchPanel({ open, onClose }: SearchPanelProps) {
+  const search = useSearchController();
+
   return (
     <Panel
       show={open}
@@ -30,7 +33,15 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
       className="!z-[10050]"
       showSeparator={false}
     >
-      <SearchContent containerClassName="!z-[10051]" />
+      <SearchContent
+        searchTerm={search.searchTerm}
+        setSearchTerm={search.setSearchTerm}
+        onSearchSubmit={search.handleSearchSubmit}
+        recentSearches={search.recentSearches}
+        removeRecentSearch={search.removeRecentSearch}
+        clearAllRecentSearches={search.clearAllRecentSearches}
+        containerClassName="!z-[10051]"
+      />
     </Panel>
   );
 }
