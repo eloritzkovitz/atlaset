@@ -39,11 +39,12 @@ const staticCountries = [
     subregion: "Western Europe",
   },
 ];
+const staticRegions = ["Europe"];
 
 vi.mock("@features/countries", () => ({
   useCountryData: () => ({
     countries: staticCountries,
-    allRegions: ["Europe"],
+    allRegions: staticRegions,
   }),
   getSubregionsForRegion: (_: any[], region: string) =>
     region === "Europe" ? ["Western Europe"] : [],

@@ -92,7 +92,7 @@ export function useSearch(searchTerm: string) {
       ...mappedSubregions,
     ]);
     setLoading(false);
-  }, [searchTerm, userResults, countries]);
+  }, [searchTerm, userResults, countries, allRegions]);
 
   return { results, loading };
 }
