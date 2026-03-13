@@ -44,3 +44,26 @@ export function rankByStartsWithAndContains<T>(
   );
   return [...startsWith, ...contains];
 }
+
+/**
+ * Ranks, deduplicates, and maps items by search term.
+ * Items whose label starts with the search term are ranked higher than those that only contain it.
+ * @param items - The array of items to rank.
+ * @param getLabel - A function that returns the label for an item.
+ * @param searchTerm - The term to search for.
+ * @param mapFn - Function to map each item to desired result.
+ * @returns Array of mapped items ranked and deduplicated.
+ */
+export function rankAndMap<T, R>(
+  items: T[],
+  getLabel: (item: T) => string | undefined,
+  searchTerm: string,
+  mapFn: (item: T) => R,
+): R[] {
+  return rankByStartsWithAndContains(items, getLabel, searchTerm)
+    .filter(
+      (item, idx, arr) =>
+        arr.findIndex((i) => getLabel(i) === getLabel(item)) === idx,
+    )
+    .map(mapFn);
+}

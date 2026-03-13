@@ -8,8 +8,8 @@ import { useLocation } from "react-router-dom";
 export function useSyncedSearchTerm(
   locationOverride?: ReturnType<typeof useLocation>,
 ) {
-  const locationFromHook = useLocation();
-  const location = locationOverride ? locationOverride : locationFromHook;
+  // Only call useLocation if locationOverride is not provided
+  const location = locationOverride !== undefined ? locationOverride : useLocation();
   const queryParam = new URLSearchParams(location.search).get("query") || "";
   const [searchTerm, setSearchTerm] = useState(queryParam);
 

@@ -1,15 +1,10 @@
 import { useState, useEffect, useMemo } from "react";
-import { useCountryData } from "@features/countries";
-import { getAllRegions } from "@features/countries/utils/countryData";
-import { useUserSearch } from "../hooks/useUserSearch";
 import { useAuth } from "@contexts/AuthContext";
+import { getSubregionsForRegion, useCountryData } from "@features/countries";
 import { useUserFriends } from "@features/user";
-import type {
-  SearchResult,
-  UserSearchResult,
-  CountrySearchResult,
-} from "../types";
-import { rankByStartsWithAndContains } from "../utils/search";
+import { useUserSearch } from "../hooks/useUserSearch";
+import type { SearchResult, UserSearchResult } from "../types";
+import { rankAndMap } from "../utils/search";
 
 /**
  * Performs a search across multiple types and combines results.
@@ -35,89 +30,69 @@ export function useSearch(searchTerm: string) {
     currentUserId,
     friendIds,
   );
-  const { countries, allRegions, allSubregions } = useCountryData();
+  const { countries, allRegions } = useCountryData();
 
-  // Combine search results
+  // Combine and rank results whenever search term or source data changes
   useEffect(() => {
     if (!searchTerm) {
       setResults([]);
       setLoading(false);
       return;
     }
-
-    // Only set loading true if a new search is starting
     setLoading(true);
 
-    // Rank and sort users
+    // Users
     const getUserRank = (
       u: UserSearchResult & { isCurrentUser?: boolean; isFriend?: boolean },
-    ) => {
-      if (u.isCurrentUser) return 0;
-      if (u.isFriend) return 1;
-      return 2;
-    };
-    const rankedUsers = rankByStartsWithAndContains(
+    ) => (u.isCurrentUser ? 0 : u.isFriend ? 1 : 2);
+    const rankedUsers = rankAndMap(
       userResults,
       (u) => u.displayName,
       searchTerm,
+      (u) => u,
     ).sort((a, b) => getUserRank(a) - getUserRank(b));
 
-    // Rank and map countries
-    const rankedCountries = rankByStartsWithAndContains(
+    // Countries
+    const mappedCountries = rankAndMap(
       countries || [],
       (c) => c.name,
       searchTerm,
+      (c) => ({ ...c, type: "country" as const }),
     );
-    const mappedCountries: CountrySearchResult[] = rankedCountries.map((c) => ({
-      ...c,
-      type: "country",
-    }));
 
     // Regions
-    const allRegionStrings = Array.from(
-      new Set(getAllRegions(countries || [])),
-    );
-    const rankedRegions = rankByStartsWithAndContains(
-      allRegionStrings,
+    const mappedRegions = rankAndMap(
+      allRegions || [],
       (r) => r,
       searchTerm,
-    )
-      // Deduplicate after ranking
-      .filter((region, idx, arr) => arr.findIndex((r) => r === region) === idx)
-      .map((region) => ({ type: "region" as const, region }));
+      (region) => ({ type: "region" as const, region }),
+    );
 
-    // Subregion pairs
-    const regionSubregionPairs = Array.from(
-      new Set(
-        (countries || [])
-          .filter(
-            (c) => c.region && typeof c.subregion === "string" && c.subregion,
-          )
-          .map((c) => `${c.region}|||${c.subregion}`),
-      ),
-    ).map((pair) => {
-      const [region, subregion] = pair.split("|||");
-      return { region, subregion };
-    });
-    const rankedSubregions = rankByStartsWithAndContains(
-      regionSubregionPairs,
-      (s) => s.subregion,
-      searchTerm,
-    ).map((s) => ({
-      type: "subregion" as const,
-      region: s.region,
-      subregion: s.subregion,
-    }));
+    // Subregions
+    const mappedSubregions: SearchResult[] = (allRegions || []).flatMap(
+      (region) => {
+        const subregions = getSubregionsForRegion(countries || [], region);
+        return rankAndMap(
+          subregions.map((subregion) => ({ region, subregion })),
+          (s) => s.subregion,
+          searchTerm,
+          (s) => ({
+            type: "subregion" as const,
+            region: s.region,
+            subregion: s.subregion,
+          }),
+        );
+      },
+    );
 
-    // Combine and sort
     setResults([
       ...rankedUsers,
       ...mappedCountries,
-      ...rankedRegions,
-      ...rankedSubregions,
+      ...mappedRegions,
+      ...mappedSubregions,
     ]);
     setLoading(false);
-  }, [searchTerm, userResults, countries, allRegions, allSubregions]);
+  }, [searchTerm, userResults, countries]);
 
   return { results, loading };
 }
