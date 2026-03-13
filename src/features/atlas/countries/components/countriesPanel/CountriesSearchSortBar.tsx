@@ -40,11 +40,6 @@ export function CountriesSearchSortBar({
           placeholder="Search countries"
           className="flex-1 h-10"
         />
-        <CountrySortSelect
-          value={sortBy}
-          onChange={(v: string) => setSortBy(v)}
-          visitedOnly={visitedOnly}
-        />
       </div>
       <div className="mt-2 mb-2">
         <SegmentedToggle
@@ -68,6 +63,14 @@ export function CountriesSearchSortBar({
           }}
           disabled={timelineMode}
         />
+        <div className="flex mt-2">
+          <CountrySortSelect
+            value={sortBy}
+            onChange={(v: string) => setSortBy(v)}
+            visitedOnly={visitedOnly}
+            showLabel
+          />
+        </div>
       </div>
     </div>
   );

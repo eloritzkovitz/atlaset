@@ -65,7 +65,7 @@ export const ActionButton = React.forwardRef<
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
       toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200",
-      sort: "h-10 w-10 bg-input hover:bg-input-hover gap-2",
+      sort: "h-8 w-8 bg-input hover:bg-input-hover gap-2",
       custom: "",
     };
     const buttonClass = variant ? variants[variant] : defaultStyle;

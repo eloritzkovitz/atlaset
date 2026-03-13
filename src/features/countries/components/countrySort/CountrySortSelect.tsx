@@ -8,7 +8,11 @@ import {
   SectionHeader,
   Separator,
 } from "@components";
-import { useKeyboardFocusRing, useModalAnimation } from "@hooks";
+import {
+  useKeyboardFocusRing,
+  useMenuPosition,
+  useModalAnimation,
+} from "@hooks";
 import type { Option, OptionGroup } from "@types";
 import { useCountrySortDropdownState } from "../../hooks/useCountrySortDropdownState";
 
@@ -16,16 +20,18 @@ interface CountrySortSelectProps {
   value: string;
   onChange: (value: string) => void;
   visitedOnly?: boolean;
+  showLabel?: boolean;
 }
 
 export function CountrySortSelect({
   value,
   onChange,
   visitedOnly,
+  showLabel = false,
 }: CountrySortSelectProps) {
   const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation();
   const showRing = useKeyboardFocusRing();
-  const btnRef = useRef<HTMLButtonElement>(null);
+  const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Sort dropdown state
@@ -37,6 +43,16 @@ export function CountrySortSelect({
     selectedKeyOption,
     selectedDirOption,
   } = useCountrySortDropdownState(value, visitedOnly);
+
+  // Menu positioning
+  const menuStyle = useMenuPosition(
+    isOpen,
+    btnRef,
+    menuRef,
+    35,
+    "right",
+    false,
+  );
 
   // Centralized group renderer
   const renderOptionGroup = (
@@ -83,15 +99,14 @@ export function CountrySortSelect({
     ) : null;
 
   return (
-    <>
-      <div className="relative ml-2 flex items-center">
+    <div className="relative ml-2 flex items-center">
+      <div ref={btnRef}>
         <ActionButton
-          ref={btnRef}
           icon={
             selectedDirOption && selectedDirOption.icon ? (
-              <selectedDirOption.icon size={20} />
+              <selectedDirOption.icon size={18} />
             ) : (
-              <PiArrowsDownUpBold size={24} />
+              <PiArrowsDownUpBold size={18} />
             )
           }
           ariaLabel="Sort"
@@ -115,12 +130,17 @@ export function CountrySortSelect({
           rounded
         />
       </div>
+      {showLabel && (
+        <span className="ml-2 text-sm text-muted">
+          {selectedKeyOption?.label}
+        </span>
+      )}
       {(isOpen || closing) && (
         <Menu
           open={isOpen}
           onClose={closeModal}
+          style={menuStyle}
           containerRef={menuRef}
-          className="!bg-input rounded shadow top-28 left-80"
         >
           {/* Sort Key Group */}
           <div className="-mt-2">
@@ -138,6 +158,6 @@ export function CountrySortSelect({
           )}
         </Menu>
       )}
-    </>
+    </div>
   );
 }
