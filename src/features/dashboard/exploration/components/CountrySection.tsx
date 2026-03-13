@@ -204,52 +204,54 @@ export function CountrySection({
               onChange={(v: string) => setSortBy(v as typeof sortBy)}
               visitedOnly={undefined}
             />
-            <ActionButton
-              onClick={handleResetFilters}
-              ariaLabel="Reset Filters"
-              title="Reset Filters"
-              icon={<FaArrowRotateLeft />}
-              variant="toggle"
-              rounded
-            />
-            <ActionButton
-              onClick={handleVisitedToggle}
-              ariaLabel={
-                showVisitedOnly ? "Show All Countries" : "Show Visited Only"
-              }
-              title={
-                showVisitedOnly ? "Show All Countries" : "Show Visited Only"
-              }
-              icon={
-                showVisitedOnly ? (
-                  <span className="flex items-center gap-1 font-semibold text-sm">
-                    <FaGlobe />
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1 font-semibold text-sm">
-                    <FaCircleCheck />
-                  </span>
-                )
-              }
-              variant="toggle"
-              rounded
-            />
-            <ActionButton
-              onClick={handleToggle}
-              ariaLabel={
-                viewMode === "grid"
-                  ? "Switch to List View"
-                  : "Switch to Grid View"
-              }
-              title={
-                viewMode === "grid"
-                  ? "Switch to List View"
-                  : "Switch to Grid View"
-              }
-              icon={viewMode === "grid" ? <FaList /> : <FaThLarge />}
-              variant="toggle"
-              rounded
-            />
+            <div className="flex flex-row gap-2 ml-auto justify-end">
+              <ActionButton
+                onClick={handleResetFilters}
+                ariaLabel="Reset Filters"
+                title="Reset Filters"
+                icon={<FaArrowRotateLeft />}
+                variant="toggle"
+                rounded
+              />
+              <ActionButton
+                onClick={handleVisitedToggle}
+                ariaLabel={
+                  showVisitedOnly ? "Show All Countries" : "Show Visited Only"
+                }
+                title={
+                  showVisitedOnly ? "Show All Countries" : "Show Visited Only"
+                }
+                icon={
+                  showVisitedOnly ? (
+                    <span className="flex items-center gap-1 font-semibold text-sm">
+                      <FaGlobe />
+                    </span>
+                  ) : (
+                    <span className="flex items-center gap-1 font-semibold text-sm">
+                      <FaCircleCheck />
+                    </span>
+                  )
+                }
+                variant="toggle"
+                rounded
+              />
+              <ActionButton
+                onClick={handleToggle}
+                ariaLabel={
+                  viewMode === "grid"
+                    ? "Switch to List View"
+                    : "Switch to Grid View"
+                }
+                title={
+                  viewMode === "grid"
+                    ? "Switch to List View"
+                    : "Switch to Grid View"
+                }
+                icon={viewMode === "grid" ? <FaList /> : <FaThLarge />}
+                variant="toggle"
+                rounded
+              />
+            </div>
           </div>
         </div>
       </div>
