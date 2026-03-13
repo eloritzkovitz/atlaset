@@ -42,14 +42,6 @@ function getCountryLabel(item: Country, countries: Country[]) {
 }
 
 /**
- * Gets the icon for a region based on its name.
- * @param region - The name of the region.
- */
-function getRegionIcon(region: string) {
-  return regionIcons[region] || defaultRegionIcon;
-}
-
-/**
  * Renders a search item for a region or subregion.
  * @param item - The search result item representing a region or subregion.
  * @param navigate - Function to navigate to a different URL.
@@ -61,7 +53,7 @@ function renderAreaItem(
   navigate: (url: string) => void,
   setDropdownOpen: (open: boolean) => void,
 ) {
-  const icon = getRegionIcon(item.region);
+  const icon = regionIcons[item.region] || defaultRegionIcon;
   const isSubregion = item.type === "subregion";
   return (
     <SearchItem
