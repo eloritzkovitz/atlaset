@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
 import { Menu, SearchInput } from "@components";
+import { useAuth } from "@contexts/AuthContext";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
 
 /** Renders the search dropdown. */
 export function SearchDropdown() {
+  const { user } = useAuth();
   const search = useSearchController();
 
   // Dropdown state and refs
@@ -48,6 +50,9 @@ export function SearchDropdown() {
 
   // Determine if SearchContent will render anything
   const hasContent = !!search.searchTerm || !!search.recentSearches.length;
+
+  // Don't render if no user
+  if (!user) return null;
 
   return (
     <div className="relative w-full max-w-xs">

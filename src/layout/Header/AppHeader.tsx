@@ -1,6 +1,7 @@
 import { useUI } from "@contexts/UIContext";
-import { UserMenu } from "../UserMenu/UserMenu";
 import { SearchDropdown } from "@features/search/components/SearchDropdown";
+import { useScreenSize } from "@hooks";
+import { UserMenu } from "../UserMenu/UserMenu";
 
 interface AppHeaderProps {
   show: boolean;
@@ -9,9 +10,9 @@ interface AppHeaderProps {
 
 /** Renders the application header.
  * @param show - whether to show the header
- * @param showSearch - whether to show the search dropdown
  */
-export function AppHeader({ show, showSearch = true }: AppHeaderProps) {
+export function AppHeader({ show }: AppHeaderProps) {
+  const { isDesktop } = useScreenSize();
   const { uiVisible } = useUI();
 
   // Don't render if UI is not visible
@@ -28,7 +29,7 @@ export function AppHeader({ show, showSearch = true }: AppHeaderProps) {
       `}
     >
       <div className="flex flex-1 justify-end gap-4 h-10">
-        {showSearch && <SearchDropdown />}
+        {isDesktop && <SearchDropdown />}
         <UserMenu fixed={false} />
       </div>
     </header>
