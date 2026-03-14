@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
+import { FaArrowRotateLeft } from "react-icons/fa6";
 import {
+  ActionButton,
   ErrorMessage,
   LoadingSpinner,
   SearchInput,
@@ -7,8 +9,8 @@ import {
 } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
-import { useVisitedCountries } from "@features/visits";
 import { useHomeCountry } from "@features/user";
+import { useVisitedCountries } from "@features/visits";
 import { AchievementCard } from "./AchievementCard";
 import { useAchievementsData } from "../hooks/useAchievementsData";
 import {
@@ -89,6 +91,13 @@ export function AchievementsGrid() {
     return map;
   }, [achievementsData, countries, visited, trips, homeCountry]);
 
+  // Reset filters to default
+  const handleResetFilters = () => {
+    setSearch("");
+    setTypeFilter("all");
+    setStatusFilter("all");
+  };
+
   // handle conditional rendering
   if (loading) {
     return (
@@ -111,33 +120,45 @@ export function AchievementsGrid() {
   }
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between mb-4 gap-4">
-        <div className="flex items-center gap-2">
+    <div className="mb-4 gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2">
           <SearchInput
             value={search}
             onChange={setSearch}
             placeholder="Search achievements"
-            className="w-xs"
+            className="mt-1 rounded-md"
           />
-          <SelectInput
-            value={typeFilter}
-            onChange={(v) => setTypeFilter(String(v))}
-            options={typeOptions}
-            className="ml-5 min-w-[150px] mt-3"
-          />
-          <SelectInput
-            value={statusFilter}
-            onChange={(v) => setStatusFilter(String(v))}
-            options={statusOptions}
-            className="min-w-[250px] mt-3"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="text-xs text-muted md:text-sm md:whitespace-nowrap select-none">
-            Showing {filteredAchievements.length} achievements
+          <div className="flex flex-row gap-2 w-full">
+            <SelectInput
+              value={typeFilter}
+              onChange={(v) => setTypeFilter(String(v))}
+              options={typeOptions}
+              className="min-w-[150px]"
+            />
+            <SelectInput
+              value={statusFilter}
+              onChange={(v) => setStatusFilter(String(v))}
+              options={statusOptions}
+              className="min-w-[150px]"
+            />
           </div>
         </div>
+        <div className="flex flex-row gap-2 mt-2 sm:mt-0">
+          <div className="flex flex-row gap-2 ml-auto justify-end">
+            <ActionButton
+              onClick={handleResetFilters}
+              ariaLabel="Reset Filters"
+              title="Reset Filters"
+              icon={<FaArrowRotateLeft />}
+              variant="toggle"
+              rounded
+            />
+          </div>
+        </div>
+      </div>
+      <div className="text-sm text-muted md:text-sm md:whitespace-nowrap select-none mb-4">
+        Showing {filteredAchievements.length} achievements
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {filteredAchievements.map((achievement) => {

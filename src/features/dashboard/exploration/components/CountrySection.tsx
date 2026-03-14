@@ -154,7 +154,7 @@ export function CountrySection({
     <div className={className}>
       <div className="mb-4 gap-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div className={"flex flex-col sm:flex-row sm:items-center gap-2"}>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2">
             <SearchInput
               value={search}
               onChange={setSearch}
