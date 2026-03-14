@@ -1,3 +1,4 @@
+import { useUI } from "@contexts/UIContext";
 import { UserMenu } from "../UserMenu/UserMenu";
 import { SearchDropdown } from "@features/search/components/SearchDropdown";
 
@@ -11,6 +12,11 @@ interface AppHeaderProps {
  * @param showSearch - whether to show the search dropdown
  */
 export function AppHeader({ show, showSearch = true }: AppHeaderProps) {
+  const { uiVisible } = useUI();
+
+  // Don't render if UI is not visible
+  if (!uiVisible) return null;
+
   return (
     <header
       className={`absolute transition-transform duration-300 z-30 w-auto flex items-center right-6

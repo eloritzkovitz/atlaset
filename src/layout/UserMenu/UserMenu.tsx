@@ -13,7 +13,7 @@ import { AuthButtons } from "../Header/AuthButtons";
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   const { user, loading } = useAuth();
-  const { uiVisible, toggleSearch, toggleHelp } = useUI();
+  const { toggleSearch, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -31,8 +31,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  // Don't render if UI is not visible
-  if (!uiVisible) return null;
+  // Don't render if viewing trips in mobile
   if (isMobile && isTripsPage) return null;
 
   // Show login/signup buttons if not logged in
