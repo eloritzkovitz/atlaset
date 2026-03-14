@@ -23,8 +23,12 @@ export function SearchItem<T>({
     <li>
       <MenuButton
         type="button"
+        icon={
+          <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
+            {icon}
+          </div>
+        }
         onClick={() => onClick(item)}
-        icon={icon}
         ariaLabel={`Go to ${displayName}`}
         className="w-full flex items-center gap-3 px-2 py-2"
       >
