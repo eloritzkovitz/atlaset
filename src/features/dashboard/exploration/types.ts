@@ -1,6 +1,9 @@
 import type { Country } from "@features/countries";
 
-/** Represent a region's statistics.*/
+/** Represents the type of countries to display. */
+export type CountryType = "all" | "sovereign";
+
+/** Represents a region's statistics.*/
 export interface RegionStat {
   region: string;
   regionVisited: number;
@@ -8,7 +11,7 @@ export interface RegionStat {
   subregions: SubregionStat[];
 }
 
-/** Represent a subregion's statistics. */
+/** Represents a subregion's statistics. */
 export interface SubregionStat {
   subregion: string;
   subregionVisited: number;

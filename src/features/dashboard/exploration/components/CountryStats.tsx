@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { FaArrowLeft } from "react-icons/fa6";
-import { SegmentedToggle } from "@components";
 import {
   CountryDetailsPanel,
   CountryFlag,
@@ -10,11 +9,11 @@ import {
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
-import { useDelayedLoading, useScreenSize } from "@hooks";
+import { useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
-import { RegionCard } from "./RegionCard";
-import { WorldExplorationCard } from "./WorldExplorationCard";
+import { ExplorationOverviewGrid } from "./ExplorationOverviewGrid";
 import { useExplorationStats } from "../hooks/useExplorationStats";
+import { type CountryType } from "../types";
 
 interface CountryStatsProps {
   selectedRegion?: string;
@@ -45,23 +44,29 @@ export function CountryStats({
   onSubregionChange,
   resetFilters,
 }: CountryStatsProps) {
-  const { countries, loading: countriesLoading, currencies } = useCountryData();
+  const { countries, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const visited = useVisitedCountries();
-  const [countryType, setCountryType] = useState<"all" | "sovereign">("all");
+  const [countryType, setCountryType] = useState<CountryType>("all");
   const { isMobile } = useScreenSize();
+
+  // Region props shared between overview and section views
+  const regionProps = {
+    selectedRegion: selectedRegion ?? "",
+    setSelectedRegion,
+    selectedSubregion: selectedSubregion ?? "",
+    setSelectedSubregion,
+    search,
+    setSearch,
+    selectedIsoCode: selectedIsoCode ?? null,
+    setSelectedIsoCode,
+  };
 
   // Filter countries based on toggle
   const filteredCountries =
     countryType === "sovereign"
       ? countries.filter(createSovereigntyFilter(true))
       : countries;
-
-  const loading = useDelayedLoading(
-    countriesLoading || !countries.length,
-    [countries.length],
-    50,
-  );
 
   // Compute exploration stats
   const { totalCountries, visitedCountries, regionStats } =
@@ -117,49 +122,19 @@ export function CountryStats({
     );
   }
 
-  // If no region is selected (overview), show region cards and toggles
+  // If no region is selected, show overview grid
   if (selectedRegion === undefined || selectedRegion === "") {
     return (
-      <>
-        <SegmentedToggle
-          value={countryType}
-          options={[
-            { value: "all", label: "All Countries" },
-            { value: "sovereign", label: "Sovereign Only" },
-          ]}
-          onChange={setCountryType}
-          className="mb-4"
-        />
-        <div className="w-full grid gap-6 md:grid-cols-2">
-          <WorldExplorationCard
-            visited={visitedCountries}
-            total={totalCountries}
-            loading={loading}
-            onShowAllCountries={onShowAllCountries}
-          />
-          {regionStats.map((region) => (
-            <RegionCard
-              key={region.region}
-              region={region.region}
-              visited={region.regionVisited}
-              total={region.regionCountries.length}
-              subregions={region.subregions}
-              loading={loading}
-              onRegionClick={() => {
-                setSelectedRegion(region.region);
-                setSelectedSubregion("");
-              }}
-              onSubregionClick={(sub) => {
-                setSelectedRegion(region.region);
-                setSelectedSubregion(sub);
-                if (onSubregionChange) {
-                  onSubregionChange(region.region, sub);
-                }
-              }}
-            />
-          ))}
-        </div>
-      </>
+      <ExplorationOverviewGrid
+        countryType={countryType}
+        setCountryType={setCountryType}
+        visitedCountries={visitedCountries}
+        totalCountries={totalCountries}
+        onShowAllCountries={onShowAllCountries}
+        regionStats={regionStats}
+        onSubregionChange={onSubregionChange}
+        {...regionProps}
+      />
     );
   }
 
@@ -169,17 +144,10 @@ export function CountryStats({
       <CountrySection
         countries={filteredCountries}
         visitedCountryCodes={visited.visitedCountryCodes}
-        selectedIsoCode={selectedIsoCode ?? null}
-        setSelectedIsoCode={setSelectedIsoCode}
-        selectedRegion={selectedRegion ?? ""}
-        setSelectedRegion={setSelectedRegion}
-        selectedSubregion={selectedSubregion ?? ""}
-        setSelectedSubregion={setSelectedSubregion}
-        search={search}
-        setSearch={setSearch}
         onSubregionChange={onSubregionChange}
         onAllCountries={onShowAllCountries}
         resetFilters={resetFilters}
+        {...regionProps}
       />
     );
   }
