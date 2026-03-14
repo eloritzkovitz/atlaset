@@ -46,6 +46,9 @@ export function SearchDropdown() {
     }
   };
 
+  // Determine if SearchContent will render anything
+  const hasContent = !!search.searchTerm || !!search.recentSearches.length;
+
   return (
     <div className="relative w-full max-w-xs">
       <SearchInput
@@ -61,7 +64,7 @@ export function SearchDropdown() {
           }
         }}
       />
-      {dropdownOpen && (
+      {dropdownOpen && hasContent && (
         <Menu
           open={dropdownOpen}
           onClose={() => setDropdownOpen(false)}
