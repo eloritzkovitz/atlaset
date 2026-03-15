@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { EmptyListMessage, SearchInput } from "@components";
 import { type Currency } from "@features/countries";
-import { Link } from "react-router-dom";
 
 interface CurrenciesGridProps {
   currencies: Currency[];
