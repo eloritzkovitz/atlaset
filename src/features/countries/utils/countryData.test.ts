@@ -14,6 +14,7 @@ import {
   getLanguagesDisplay,
   getAliasesDisplay,
   getCountryRelations,
+  getCurrencyDisplay,
 } from "./countryData";
 
 // Mock constants
@@ -28,7 +29,7 @@ vi.mock("../constants/countryRelations", () => ({
       dependencies: ["GU"],
       regions: ["PR"],
       disputes: ["VI"],
-    },    
+    },
   },
 
   SPECIAL_COUNTRIES: {
@@ -262,12 +263,43 @@ describe("countryData utils", () => {
     });
   });
 
+  describe("getCurrencyDisplay", () => {
+    it("returns formatted string for known currency code", () => {
+      const currencies = [
+        { code: "USD", name: "United States Dollar" },
+        { code: "EUR", name: "Euro" },
+      ];
+      expect(getCurrencyDisplay("USD", currencies)).toBe(
+        "United States Dollar (USD)",
+      );
+    });
+
+    it("returns code if currency code is not found", () => {
+      const currencies = [{ code: "USD", name: "United States Dollar" }];
+      expect(getCurrencyDisplay("EUR", currencies)).toBe("EUR");
+    });
+
+    it("returns 'N/A' for undefined code", () => {
+      const currencies = [{ code: "USD", name: "United States Dollar" }];
+      expect(getCurrencyDisplay(undefined, currencies)).toBe("N/A");
+    });
+
+    it("returns 'N/A' for empty currencies array and undefined code", () => {
+      expect(getCurrencyDisplay(undefined, [])).toBe("N/A");
+    });
+
+    it("returns code for empty currencies array and known code", () => {
+      expect(getCurrencyDisplay("USD", [])).toBe("USD");
+    });
+  });
+
   describe("getLanguagesDisplay", () => {
     it("returns comma-separated string", () => {
       expect(getLanguagesDisplay(["English", "French"])).toBe(
         "English, French",
       );
     });
+
     it("returns 'None' for empty or undefined", () => {
       expect(getLanguagesDisplay([])).toBe("None");
       expect(getLanguagesDisplay(undefined)).toBe("None");
@@ -278,6 +310,7 @@ describe("countryData utils", () => {
     it("returns comma-separated string", () => {
       expect(getAliasesDisplay(["USA", "America"])).toBe("USA, America");
     });
+
     it("returns 'None' for empty or undefined", () => {
       expect(getAliasesDisplay([])).toBe("None");
       expect(getAliasesDisplay(undefined)).toBe("None");

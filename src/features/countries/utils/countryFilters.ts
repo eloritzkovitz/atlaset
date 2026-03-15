@@ -110,3 +110,46 @@ export function createSovereigntyFilter(sovereignOnly?: boolean) {
   return (c: Country) =>
     sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
 }
+
+export interface CountryPropertyMap {
+  [key: string]: keyof Country;
+}
+
+export const COUNTRY_PROPERTY_MAP: CountryPropertyMap = {
+  isocode: "isoCode",
+  region: "region",
+  subregion: "subregion",
+  capital: "capital",
+  currency: "currency",
+  language: "languages",
+  sovereignty: "sovereigntyType",
+};
+
+/**
+ * Filters countries by a property and value, supporting arrays and strings.
+ * @param countries - Array of Country objects
+ * @param property - Property name (e.g. "currency", "language")
+ * @param value - Value to match (case-insensitive, partial match)
+ */
+export function filterCountriesByProperty(
+  countries: Country[],
+  property: string,
+  value: string,
+): Country[] {
+  const key = COUNTRY_PROPERTY_MAP[property.toLowerCase()];
+  if (!key) return [];
+  const searchValue = value.toLowerCase();
+  return countries.filter((country) => {
+    const propValue = country[key];
+    if (Array.isArray(propValue)) {
+      // Handle array of strings (e.g., currencies, languages, aliases)
+      return propValue.some(
+        (v) => typeof v === "string" && v.toLowerCase().includes(searchValue),
+      );
+    }
+    if (typeof propValue === "string") {
+      return propValue.toLowerCase().includes(searchValue);
+    }
+    return false;
+  });
+}

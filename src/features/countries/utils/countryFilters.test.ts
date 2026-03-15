@@ -4,6 +4,7 @@ import {
   getFilteredIsoCodes,
   getCountryCounts,
   createSovereigntyFilter,
+  filterCountriesByProperty,
 } from "./countryFilters";
 
 describe("countryFilters utils", () => {
@@ -45,7 +46,6 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by alias in search", () => {
-      // Add an alias to the first country
       const countriesWithAlias = [
         { ...countries[0], aliases: ["Testland"] },
         ...countries.slice(1),
@@ -125,21 +125,93 @@ describe("countryFilters utils", () => {
       expect(counts.visitedCount).toBe(0);
     });
   });
-});
 
-describe("createSovereigntyFilter", () => {
-  it("returns all countries when sovereignOnly is false or undefined", () => {
-    const filter = createSovereigntyFilter();
-    expect(mockCountries.filter(filter)).toEqual(mockCountries);
-    const filterFalse = createSovereigntyFilter(false);
-    expect(mockCountries.filter(filterFalse)).toEqual(mockCountries);
+  describe("createSovereigntyFilter", () => {
+    it("returns all countries when sovereignOnly is false or undefined", () => {
+      const filter = createSovereigntyFilter();
+      expect(mockCountries.filter(filter)).toEqual(mockCountries);
+      const filterFalse = createSovereigntyFilter(false);
+      expect(mockCountries.filter(filterFalse)).toEqual(mockCountries);
+    });
+
+    it("returns only sovereign countries when sovereignOnly is true", () => {
+      const filter = createSovereigntyFilter(true);
+      const expected = mockCountries.filter(
+        (c) => c.sovereigntyType === "Sovereign",
+      );
+      expect(mockCountries.filter(filter)).toEqual(expected);
+    });
   });
 
-  it("returns only sovereign countries when sovereignOnly is true", () => {
-    const filter = createSovereigntyFilter(true);
-    const expected = mockCountries.filter(
-      (c) => c.sovereigntyType === "Sovereign",
-    );
-    expect(mockCountries.filter(filter)).toEqual(expected);
+  describe("filterCountriesByProperty", () => {
+    const testCases = [
+      {
+        label: "currency",
+        property: "currency",
+        value: "EUR",
+        expected: [countries[0], countries[1], countries[2]],
+      },
+      {
+        label: "currency (partial, insensitive)",
+        property: "currency",
+        value: "eur",
+        expected: [countries[0], countries[1], countries[2]],
+      },
+      {
+        label: "language (array property)",
+        property: "language",
+        value: "french",
+        expected: [countries[0], countries[1]],
+      },
+      {
+        label: "language (partial, insensitive)",
+        property: "language",
+        value: "fren",
+        expected: [countries[0], countries[1]],
+      },
+      {
+        label: "region",
+        property: "region",
+        value: "europe",
+        expected: [countries[0], countries[2]],
+      },
+      {
+        label: "capital",
+        property: "capital",
+        value: "paris",
+        expected: [countries[0]],
+      },
+      {
+        label: "subregion",
+        property: "subregion",
+        value: "caribbean",
+        expected: [countries[1]],
+      },
+      {
+        label: "sovereignty",
+        property: "sovereignty",
+        value: "dependency",
+        expected: [countries[1]],
+      },
+      {
+        label: "isoCode",
+        property: "isocode",
+        value: "FR",
+        expected: [countries[0]],
+      },
+      {
+        label: "unknown property",
+        property: "unknown",
+        value: "value",
+        expected: [],
+      },
+    ];
+
+    testCases.forEach(({ label, property, value, expected }) => {
+      it(`filters by ${label}`, () => {
+        const result = filterCountriesByProperty(countries, property, value);
+        expect(result).toEqual(expected);
+      });
+    });
   });
 });

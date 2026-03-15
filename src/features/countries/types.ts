@@ -86,3 +86,9 @@ export type CountryFilterOptions = {
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
 };
+
+/** Represents a currency. */
+export interface Currency {
+  code: string;
+  name: string;
+}

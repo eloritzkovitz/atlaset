@@ -1,12 +1,12 @@
 import { SovereigntyBadge } from "./SovereigntyBadge";
 import { CountryInfoTable } from "./CountryInfoTable";
 import { CountryFlag } from "../countryFlag/CountryFlag";
-import type { Country } from "../../types";
+import type { Country, Currency } from "../../types";
 import { getCountryRelations } from "../../utils/countryData";
 
 interface CountryDetailsContentProps {
   country: Country;
-  currencies: Record<string, string>;
+  currencies: Currency[];
   onSelectCountry?: (isoCode: string) => void;
 }
 

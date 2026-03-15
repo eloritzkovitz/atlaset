@@ -1,4 +1,5 @@
 import type { User } from "firebase/auth";
+import { ICONS } from "@constants/icons";
 import {
   CountryFlag,
   getCountryName,
@@ -119,6 +120,20 @@ export function renderSearchItem(
             navigate(
               `/dashboard/countries/${item.region}/${item.subregion}/${item.isoCode}`,
             );
+            setDropdownOpen(false);
+          }}
+        />
+      );
+    case "currency":
+      return (
+        <SearchItem
+          key={item.code}
+          item={item}
+          displayName={`${item.name} (${item.code})`}
+          label="Currency"
+          icon={<ICONS.currencies className="2xl" />}
+          onClick={() => {
+            navigate(`/dashboard/currencies/${item.code}`);
             setDropdownOpen(false);
           }}
         />

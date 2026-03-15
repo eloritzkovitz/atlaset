@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-03-15
+- **[feature]** **Countries:** Added property search for countries
+- **[feature]** **Dashboard | Currencies:** Added a new section for currencies and a currency exchange widget
+- **[feature]** **Search:** Currencies are now searchable
+
 ## 2026-03-13
 - **[feature]** **Countries:** Related countries are now clickable
 - **[feature]** **Dashboard | Exploration:** Updated country pages to match the atlas's country details

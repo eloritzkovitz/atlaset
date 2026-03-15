@@ -19,14 +19,19 @@ export default function SearchPage() {
 
   const sections = [
     {
-      key: "users" as const,
-      title: "Users",
+      key: "people" as const,
+      title: "People",
       items: results.filter((item) => item.type === "user"),
     },
     {
       key: "countries" as const,
       title: "Countries",
       items: results.filter((item) => item.type === "country"),
+    },
+    {
+      key: "currencies" as const,
+      title: "Currencies",
+      items: results.filter((item) => item.type === "currency"),
     },
     {
       key: "regions" as const,
@@ -41,7 +46,7 @@ export default function SearchPage() {
   ];
 
   const [activeSection, setActiveSection] = useState<
-    "all" | "users" | "countries" | "regions" | "subregions"
+    "all" | "people" | "countries" | "currencies" | "regions" | "subregions"
   >("all");
 
   return (

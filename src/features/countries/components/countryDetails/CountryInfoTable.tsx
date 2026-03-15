@@ -1,12 +1,13 @@
-import type { Country } from "../../types";
+import type { Country, Currency } from "../../types";
 import {
   getAliasesDisplay,
+  getCurrencyDisplay,
   getLanguagesDisplay,
 } from "../../utils/countryData";
 
 interface CountryInfoTableProps {
   country: Country;
-  currencies: Record<string, string>;
+  currencies: Currency[];
 }
 
 export function CountryInfoTable({
@@ -34,11 +35,7 @@ export function CountryInfoTable({
         </tr>
         <tr>
           <td className="font-semibold">Currency:</td>
-          <td>
-            {country.currency && currencies[country.currency]
-              ? `${currencies[country.currency]} (${country.currency})`
-              : country.currency || "N/A"}
-          </td>
+          <td>{getCurrencyDisplay(country.currency, currencies)}</td>
         </tr>
         <tr>
           <td className="font-semibold">Languages:</td>

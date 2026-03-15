@@ -7,6 +7,12 @@ export type UserSearchResult = UserProfile & { type: "user" };
 /** Represents a search result for a country. */
 export type CountrySearchResult = Country & { type: "country" };
 
+export type CurrencySearchResult = {
+	type: "currency";
+	code: string;
+	name: string;
+};
+
 /** Represents a search result for a region. */
 export type RegionSearchResult = {
 	type: "region";
@@ -24,5 +30,6 @@ export type SubregionSearchResult = {
 export type SearchResult =
 	| UserSearchResult
 	| CountrySearchResult
+	| CurrencySearchResult
 	| RegionSearchResult
 	| SubregionSearchResult;

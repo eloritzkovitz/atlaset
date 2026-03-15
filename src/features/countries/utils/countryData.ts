@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for handling country data.
+ * Utility functions for handling country data.
  */
 
 import { extractUniqueSorted } from "@utils/array";
@@ -8,7 +8,7 @@ import {
   SPECIAL_COUNTRIES,
 } from "../constants/countryRelations";
 import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";
-import type { Country, SovereigntyType } from "../types";
+import type { Country, Currency, SovereigntyType } from "../types";
 
 /**
  * Extracts the ISO country code from various possible property names.
@@ -192,6 +192,20 @@ export function getCountriesWithOwnFlag(countries: Country[]): Country[] {
  */
 export function getRandomCountry(countries: Country[]) {
   return countries[Math.floor(Math.random() * countries.length)];
+}
+
+/** Gets a formatted string for a currency based on its code.
+ * @param code - The ISO code of the currency.
+ * @param currencies - An array of currency objects with code and name.
+ * @returns A string in the format "Currency Name (CODE)" or just the code if not found.
+ */
+export function getCurrencyDisplay(
+  code: string | undefined,
+  currencies: Currency[],
+): string {
+  if (!code) return "N/A";
+  const currencyObj = currencies.find((c) => c.code === code);
+  return currencyObj ? `${currencyObj.name} (${currencyObj.code})` : code;
 }
 
 /**

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
-import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { EmptyListMessage } from "@components";
+import { CountryListGroup } from "./CountryListGroup";
 import {
   COUNTRY_RELATIONS,
   COUNTRY_RELATION_SECTIONS,
@@ -65,29 +65,15 @@ export function CountryRelationsContent({
         (section) =>
           section.data &&
           section.data.length > 0 && (
-            <CollapsibleHeader
+            <CountryListGroup
               key={section.key}
-              icon={undefined}
-              label={`${section.label} (${section.data.length})`}
+              label={section.label}
+              isoCodes={section.data}
+              countries={countries}
               expanded={expanded[section.key]}
               onToggle={() => handleToggle(section.key)}
-            >
-              <div className="flex flex-col">
-                {section.data.map((isoCode: string) => (
-                  <MenuButton
-                    icon={undefined}
-                    key={isoCode}
-                    onClick={() => onSelectCountry && onSelectCountry(isoCode)}
-                    className="py-2 px-2"
-                  >
-                    <CountryWithFlag
-                      isoCode={isoCode}
-                      name={getCountryName(isoCode, countries)}
-                    />
-                  </MenuButton>
-                ))}
-              </div>
-            </CollapsibleHeader>
+              onSelectCountry={onSelectCountry}
+            />
           ),
       )}
     </div>

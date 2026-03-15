@@ -17,7 +17,7 @@ describe("countryDataSlice reducer", () => {
           sovereigntyType: "independent" as SovereigntyType,
         },
       ],
-      currencies: { EUR: "Euro" },
+      currencies: [{ code: "EUR", name: "Euro" }],
       allRegions: ["Europe"],
       allSubregions: ["Western Europe"],
       allSovereigntyTypes: [],
@@ -32,7 +32,7 @@ describe("countryDataSlice reducer", () => {
   it("should return the initial state", () => {
     expect(countryDataReducer(undefined, { type: "" })).toEqual({
       countries: [],
-      currencies: {},
+      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyTypes: [],
@@ -46,7 +46,7 @@ describe("countryDataSlice reducer", () => {
     const state = countryDataReducer(undefined, action);
     expect(state).toEqual({
       countries: [],
-      currencies: {},
+      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyTypes: [],
@@ -60,7 +60,10 @@ describe("countryDataSlice reducer", () => {
       type: fetchCountryData.fulfilled.type,
       payload: {
         countries: mockCountries,
-        currencies: { USD: "United States Dollar", CAD: "Canadian Dollar" },
+        currencies: [
+          { code: "USD", name: "United States Dollar" },
+          { code: "CAD", name: "Canadian Dollar" },
+        ],
         allRegions: ["Americas"],
         allSubregions: ["Northern America"],
         allSovereigntyTypes: [],
@@ -69,7 +72,10 @@ describe("countryDataSlice reducer", () => {
     const state = countryDataReducer(undefined, action);
     expect(state).toEqual({
       countries: mockCountries,
-      currencies: { USD: "United States Dollar", CAD: "Canadian Dollar" },
+      currencies: [
+        { code: "USD", name: "United States Dollar" },
+        { code: "CAD", name: "Canadian Dollar" },
+      ],
       allRegions: ["Americas"],
       allSubregions: ["Northern America"],
       allSovereigntyTypes: [],
@@ -86,7 +92,7 @@ describe("countryDataSlice reducer", () => {
     const state = countryDataReducer(undefined, action);
     expect(state).toEqual({
       countries: [],
-      currencies: {},
+      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyTypes: [],
@@ -103,12 +109,55 @@ describe("countryDataSlice reducer", () => {
     const state = countryDataReducer(undefined, action);
     expect(state).toEqual({
       countries: [],
-      currencies: {},
+      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyTypes: [],
       loading: false,
       error: "Failed to load country data",
     });
+  });
+});
+
+describe("currency mapping logic", () => {
+  // Helper to simulate the mapping logic
+  function mapCurrencyData(currencyData: any) {
+    return currencyData && typeof currencyData === "object"
+      ? Object.entries(currencyData).map(([code, name]) => ({
+          code,
+          name: String(name),
+        }))
+      : [];
+  }
+
+  it("maps valid object to array of code/name", () => {
+    const input = { USD: "United States Dollar", EUR: "Euro" };
+    const result = mapCurrencyData(input);
+    expect(result).toEqual([
+      { code: "USD", name: "United States Dollar" },
+      { code: "EUR", name: "Euro" },
+    ]);
+  });
+
+  it("casts all names to string", () => {
+    const input = { BTC: 123, ETH: null };
+    const result = mapCurrencyData(input);
+    expect(result).toEqual([
+      { code: "BTC", name: "123" },
+      { code: "ETH", name: "null" },
+    ]);
+  });
+
+  it("returns empty array for empty object", () => {
+    const input = {};
+    const result = mapCurrencyData(input);
+    expect(result).toEqual([]);
+  });
+
+  it("returns empty array for non-object input", () => {
+    expect(mapCurrencyData(undefined)).toEqual([]);
+    expect(mapCurrencyData(null)).toEqual([]);
+    expect(mapCurrencyData(42)).toEqual([]);
+    expect(mapCurrencyData("string")).toEqual([]);
   });
 });

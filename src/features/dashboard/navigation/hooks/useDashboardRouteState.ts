@@ -13,12 +13,16 @@ export function useDashboardRouteState() {
   const pathParts = location.pathname.replace(/^\/dashboard\/?/, "").split("/");
 
   let selectedPanel = pathParts[0] || "countries";
+
+  // Handle special panels
   if (
     selectedPanel === "countries" &&
     pathParts[1] &&
     ["exploration", "all"].includes(pathParts[1])
   ) {
     selectedPanel = `${selectedPanel}/${pathParts[1]}`;
+  } else if (selectedPanel === "currencies" && pathParts[1] === "exchange") {
+    selectedPanel = "currencies/exchange";
   }
 
   const isCountriesPanel = selectedPanel.startsWith("countries");

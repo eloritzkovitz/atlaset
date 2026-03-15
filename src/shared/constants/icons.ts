@@ -16,6 +16,7 @@ import {
   FaCircleUser,
   FaClipboardList,
   FaCode,
+  FaCoins,
   FaCompass,
   FaCompassDrafting,
   FaCopy,
@@ -111,6 +112,7 @@ export const ICONS = {
   dashboard: DashboardIcon,
   overview: FaHouse,
   exploration: FaBookAtlas,
+  currencies: FaCoins,
   achievements: FaMedal,
   statistics: FaChartSimple,
   // Quizzes
