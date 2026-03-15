@@ -1,13 +1,13 @@
-import type { Country } from "../../types";
+import type { Country, Currency } from "../../types";
 import {
   getAliasesDisplay,
   getCurrencyDisplay,
-  getLanguagesDisplay,  
+  getLanguagesDisplay,
 } from "../../utils/countryData";
 
 interface CountryInfoTableProps {
   country: Country;
-  currencies: { code: string; name: string }[];
+  currencies: Currency[];
 }
 
 export function CountryInfoTable({

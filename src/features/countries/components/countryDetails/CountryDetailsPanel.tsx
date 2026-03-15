@@ -4,6 +4,7 @@ import {
   CountryDetailsContent,
   getCountryRelations,
   type Country,
+  type Currency,
 } from "@features/countries";
 import type { Visit } from "@features/visits";
 import { CountryRelationsContent } from "./CountryRelationsContent";
@@ -19,7 +20,7 @@ type CountryDetailsTab = "overview" | "relations" | "visits";
 
 interface CountryDetailsPanelProps {
   country: Country;
-  currencies: Record<string, string>;
+  currencies: Currency[];
   categorizedVisits: {
     past: Visit[];
     upcoming: Visit[];
