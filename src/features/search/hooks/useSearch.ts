@@ -30,7 +30,7 @@ export function useSearch(searchTerm: string) {
     currentUserId,
     friendIds,
   );
-  const { countries, allRegions } = useCountryData();
+  const { countries, currencies, allRegions } = useCountryData();
 
   // Combine and rank results whenever search term or source data changes
   useEffect(() => {
@@ -60,6 +60,18 @@ export function useSearch(searchTerm: string) {
       (c) => ({ ...c, type: "country" as const }),
     );
 
+    // Currencies
+    const currencyArray =
+      currencies && !Array.isArray(currencies)
+        ? Object.entries(currencies).map(([code, name]) => ({ code, name }))
+        : currencies || [];
+    const mappedCurrencies = rankAndMap(
+      currencyArray,
+      (c) => c.name,
+      searchTerm,
+      (c) => ({ ...c, type: "currency" as const }),
+    );
+
     // Regions
     const mappedRegions = rankAndMap(
       allRegions || [],
@@ -83,16 +95,17 @@ export function useSearch(searchTerm: string) {
           }),
         );
       },
-    );
+    );    
 
     setResults([
       ...rankedUsers,
-      ...mappedCountries,
+      ...mappedCountries,      
+      ...mappedCurrencies,
       ...mappedRegions,
       ...mappedSubregions,
     ]);
     setLoading(false);
-  }, [searchTerm, userResults, countries, allRegions]);
+  }, [searchTerm, userResults, countries, currencies, allRegions]);
 
   return { results, loading };
 }

@@ -11,6 +11,7 @@ import { UserAvatar, type Friend } from "@features/user";
 import { getUserLabel } from "./search";
 import { SearchItem } from "../components/SearchItem";
 import { type SearchResult } from "../types";
+import { FaCoins } from "react-icons/fa6";
 
 interface RenderSearchItemOptions {
   navigate: (url: string) => void;
@@ -119,6 +120,20 @@ export function renderSearchItem(
             navigate(
               `/dashboard/countries/${item.region}/${item.subregion}/${item.isoCode}`,
             );
+            setDropdownOpen(false);
+          }}
+        />
+      );
+    case "currency":
+      return (
+        <SearchItem
+          key={item.code}
+          item={item}
+          displayName={`${item.name} (${item.code})`}
+          label="Currency"
+          icon={<FaCoins className="2xl" />}
+          onClick={() => {
+            navigate(`/dashboard/currencies/${item.code}`);
             setDropdownOpen(false);
           }}
         />
