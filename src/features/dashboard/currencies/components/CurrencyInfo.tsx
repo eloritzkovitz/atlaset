@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
-import { FaChevronLeft } from "react-icons/fa6";
+import React, { useEffect, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { EmptyListMessage, MenuButton } from "@components";
+import { EmptyListMessage, MenuButton, CollapsibleHeader } from "@components";
 import {
   CountryWithFlag,
   type Currency,
   type Country,
 } from "@features/countries";
+import { useScreenSize } from "@hooks";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 
 interface CurrencyInfoProps {
@@ -20,6 +21,11 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
 }) => {
   const navigate = useNavigate();
   const { handleCountrySelect } = useDashboardNavigation(countries, "", "");
+  const { isMobile } = useScreenSize();
+
+  // Collapsible header state
+  const [expanded, setExpanded] = useState(true);
+  const handleToggle = () => setExpanded((prev) => !prev);
 
   // If currency not found, redirect to currencies dashboard
   useEffect(() => {
@@ -38,46 +44,53 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
     .filter((c) => c.currency === currency.code)
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  // Use centralized handler for country navigation
+  // Country click handler
   const handleCountryClick = (country: Country) => {
     handleCountrySelect(country.isoCode);
   };
 
   return (
     <section className="max-w-6xl mx-auto p-4">
-      <div className="flex items-center mb-4">
+      <span className="flex items-center gap-4 mb-4">
         <button
-          type="button"
           onClick={() => navigate(-1)}
-          className="flex items-center focus:outline-none"
-          aria-label="Go back"
+          className="flex items-center gap-2 hover:text-muted"
         >
-          <FaChevronLeft className="text-lg mr-1" />
-          <h2 className="text-2xl font-bold">
-            {currency.name}{" "}
-            <span className="text-muted">({currency.code})</span>
-          </h2>
+          <FaArrowLeft className="text-xl" />
         </button>
-      </div>
-      <h3 className="text-lg font-semibold mt-6 mb-2">
-        Countries using {currency.code} ({countriesUsing.length}):
-      </h3>
-      {countriesUsing.length === 0 ? (
-        <EmptyListMessage message="No countries use this currency." />
-      ) : (
-        <div className="flex flex-col space-y-2">
-          {countriesUsing.map((country) => (
-            <MenuButton
-              key={country.isoCode}
-              icon={undefined}
-              onClick={() => handleCountryClick(country)}
-              className="py-2 px-2"
-            >
-              <CountryWithFlag isoCode={country.isoCode} name={country.name} />
-            </MenuButton>
-          ))}
-        </div>
-      )}
+        <h1 className={`!text-${isMobile ? "2xl" : "4xl mb-4"} font-bold`}>
+          {currency.name}
+        </h1>
+        <span className={`text-${isMobile ? "sm" : "2xl mb-2"} text-muted`}>
+          ({currency.code})
+        </span>
+      </span>
+      <CollapsibleHeader
+        label={`Countries using ${currency.code} (${countriesUsing.length})`}
+        expanded={expanded}
+        icon={undefined}
+        onToggle={handleToggle}
+      >
+        {countriesUsing.length === 0 ? (
+          <EmptyListMessage message="No countries use this currency." />
+        ) : (
+          <div className="flex flex-col space-y-2">
+            {countriesUsing.map((country) => (
+              <MenuButton
+                key={country.isoCode}
+                icon={undefined}
+                onClick={() => handleCountryClick(country)}
+                className="py-2 px-2"
+              >
+                <CountryWithFlag
+                  isoCode={country.isoCode}
+                  name={country.name}
+                />
+              </MenuButton>
+            ))}
+          </div>
+        )}
+      </CollapsibleHeader>
     </section>
   );
 };
