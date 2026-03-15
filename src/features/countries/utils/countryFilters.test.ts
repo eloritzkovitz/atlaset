@@ -205,30 +205,13 @@ describe("countryFilters utils", () => {
         value: "value",
         expected: [],
       },
-      {
-        label: "aliases (array property)",
-        property: "aliases",
-        value: "Testland",
-        countries: [
-          { ...countries[0], aliases: ["Testland"] },
-          ...countries.slice(1),
-        ],
-        expected: [{ ...countries[0], aliases: ["Testland"] }],
-      },
     ];
 
-    testCases.forEach(
-      ({ label, property, value, expected, countries: customCountries }) => {
-        it(`filters by ${label}`, () => {
-          const inputCountries = customCountries || countries;
-          const result = filterCountriesByProperty(
-            inputCountries,
-            property,
-            value,
-          );
-          expect(result).toEqual(expected);
-        });
-      },
-    );
+    testCases.forEach(({ label, property, value, expected }) => {
+      it(`filters by ${label}`, () => {
+        const result = filterCountriesByProperty(countries, property, value);
+        expect(result).toEqual(expected);
+      });
+    });
   });
 });

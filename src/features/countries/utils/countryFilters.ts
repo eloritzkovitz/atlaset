@@ -123,7 +123,6 @@ export const COUNTRY_PROPERTY_MAP: CountryPropertyMap = {
   currency: "currency",
   language: "languages",
   sovereignty: "sovereigntyType",
-  aliases: "aliases",
 };
 
 /**
@@ -144,7 +143,9 @@ export function filterCountriesByProperty(
     const propValue = country[key];
     if (Array.isArray(propValue)) {
       // Handle array of strings (e.g., currencies, languages, aliases)
-      return propValue.some((v) => typeof v === "string" && v.toLowerCase().includes(searchValue));
+      return propValue.some(
+        (v) => typeof v === "string" && v.toLowerCase().includes(searchValue),
+      );
     }
     if (typeof propValue === "string") {
       return propValue.toLowerCase().includes(searchValue);

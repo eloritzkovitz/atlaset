@@ -72,6 +72,11 @@ export const DOCS_GROUPS = {
         icon: <ICONS.exploration />,
       },
       {
+        label: "Currencies",
+        file: "currencies.md",
+        icon: <ICONS.currencies />,
+      },
+      {
         label: "Achievements",
         file: "achievements.md",
         icon: <ICONS.achievements />,
