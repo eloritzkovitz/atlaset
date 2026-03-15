@@ -71,6 +71,8 @@ export function useDashboardNavigation(
       );
     } else if (key === "country") {
       // No-op
+    } else if (key === "currencies/exchange") {
+      navigate(`/dashboard/currencies/exchange`);
     } else {
       handlePanelChange(key);
     }

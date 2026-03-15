@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { EmptyListMessage, SearchInput } from "@components";
 import { type Currency } from "@features/countries";
+import { FaChevronRight } from "react-icons/fa6";
 
 interface CurrenciesGridProps {
   currencies: Currency[];
@@ -19,11 +20,21 @@ export const CurrenciesGrid: React.FC<CurrenciesGridProps> = ({
 
   return (
     <section className="max-w-6xl mx-auto p-4">
-      <SearchInput
-        value={search}
-        onChange={setSearch}
-        placeholder="Search by name or code"
-      />
+      <Link
+        to="/dashboard/currencies/exchange"
+        className="flex items-center justify-end text-xl font-semibold mb-4 gap-2 focus:outline-none"
+        aria-label="View full activity log"
+      >
+        <span>Currency Exchange</span>
+        <FaChevronRight className="text-base" />
+      </Link>
+      <div className="flex justify-between items-center mb-4">
+        <SearchInput
+          value={search}
+          onChange={setSearch}
+          placeholder="Search by name or code"
+        />
+      </div>
       <ul className="divide-y divide-input bg-surface-alt rounded shadow mt-4">
         {filtered.length === 0 ? (
           <div className="p-4">

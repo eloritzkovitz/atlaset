@@ -9,11 +9,7 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
   exploration: [
     { label: "Dashboard", key: "dashboard" },
     { label: "Exploration", key: "exploration" },
-  ],
-  currencies: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Currencies", key: "currencies" },
-  ],
+  ],  
   countries: [
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries" },
@@ -22,6 +18,15 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries/all" },
     { label: "All Countries" },
+  ],
+  currencies: [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Currencies", key: "currencies" },
+  ],
+  "currencies/exchange": [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Currencies", key: "currencies" },
+    { label: "Currency Exchange", key: "currencies/exchange" },
   ],
   achievements: [
     { label: "Dashboard", key: "dashboard" },
