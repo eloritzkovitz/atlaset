@@ -9,6 +9,9 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Sovereign" as SovereigntyType,
     callingCode: "+33",
     iso3Code: "FRA",
+    currency: "EUR",
+    languages: ["French"],
+    capital: "Paris",
   },
   {
     name: "Guadeloupe",
@@ -18,6 +21,8 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Dependency" as SovereigntyType,
     callingCode: "+590",
     iso3Code: "GLP",
+    currency: "EUR",
+    languages: ["French"],
   },
   {
     name: "Germany",
@@ -27,6 +32,8 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Sovereign" as SovereigntyType,
     callingCode: "+49",
     iso3Code: "DEU",
+    currency: "EUR",
+    languages: ["German"],
   },
   {
     name: "Canada",

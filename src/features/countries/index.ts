@@ -45,6 +45,7 @@ export {
 } from "./utils/countryData";
 export {
   filterCountries,
+  filterCountriesByProperty,
   getFilteredIsoCodes,
   getCountryCounts,
   createSovereigntyFilter,

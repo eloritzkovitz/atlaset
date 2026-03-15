@@ -11,6 +11,7 @@ import { useSharedMapInfo } from "@features/atlas/export";
 import {
   createSovereigntyFilter,
   filterCountries,
+  filterCountriesByProperty,
   getCountryCounts,
   getFilteredIsoCodes,
   useCountryData,
@@ -107,10 +108,20 @@ export function useCountryFilters() {
     [countries, layers, layerSelections],
   );
   const filteredCountries = useMemo(() => {
-    const base = filterCountries(countries, {
-      ...(filterParams ?? {}),
-      layerCountries: filteredIsoCodes,
-    });
+    // Property search logic
+    const propertySearchRegex = /^(\w+):\s*(.+)$/i;
+    const match = debouncedSearch.match(propertySearchRegex);
+    let base;
+    if (match) {
+      const property = match[1];
+      const value = match[2];
+      base = filterCountriesByProperty(countries, property, value);
+    } else {
+      base = filterCountries(countries, {
+        ...(filterParams ?? {}),
+        layerCountries: filteredIsoCodes,
+      });
+    }
     return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
   }, [
     countries,
@@ -118,6 +129,7 @@ export function useCountryFilters() {
     filteredIsoCodes,
     selectedVisited,
     visitedIsoCodes,
+    debouncedSearch,
   ]);
 
   // Without layers for counts, including visited filter
