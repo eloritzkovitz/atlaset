@@ -39,11 +39,18 @@ const staticCountries = [
     subregion: "Western Europe",
   },
 ];
+const staticCurrencies = [
+  {
+    code: "EUR",
+    name: "Euro",
+  },
+];
 const staticRegions = ["Europe"];
 
 vi.mock("@features/countries", () => ({
   useCountryData: () => ({
     countries: staticCountries,
+    currencies: staticCurrencies,
     allRegions: staticRegions,
   }),
   getSubregionsForRegion: (_: any[], region: string) =>
@@ -191,4 +198,32 @@ describe("useSearch", () => {
       }
     },
   );
+});
+
+it("returns currency results when searching by currency name", () => {
+  const { result } = renderHook(() => useSearch("Euro"), { wrapper });
+  const currencyResults = getResultsByType(result.current.results, "currency");
+  expect(currencyResults.length).toBe(1);
+  expect(currencyResults[0].name).toBe("Euro");
+  expect(currencyResults[0].code).toBe("EUR");
+});
+
+it("returns currency results when searching by currency code", () => {
+  const { result } = renderHook(() => useSearch("EUR"), { wrapper });
+  const currencyResults = getResultsByType(result.current.results, "currency");
+  expect(currencyResults.length).toBe(1);
+  expect(currencyResults[0].name).toBe("Euro");
+  expect(currencyResults[0].code).toBe("EUR");
+});
+
+it("includes currency results in combined results", () => {
+  const { result } = renderHook(() => useSearch("Euro"), { wrapper });
+  const allResults = result.current.results;
+  const currencyResults = getResultsByType(allResults, "currency");
+  expect(allResults.some((r) => r.type === "currency")).toBe(true);
+  expect(currencyResults[0]).toMatchObject({
+    code: "EUR",
+    name: "Euro",
+    type: "currency",
+  });
 });

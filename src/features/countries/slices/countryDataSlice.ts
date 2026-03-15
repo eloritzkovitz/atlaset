@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { Country, SovereigntyType } from "../types";
+import type { Country, Currency, SovereigntyType } from "../types";
+
 import {
   getAllRegions,
   getAllSubregions,
   getAllSovereigntyTypes,
 } from "../utils/countryData";
 
-export interface CountryDataState {
+interface CountryDataState {
   countries: Country[];
-  currencies: Record<string, string>;
+  currencies: Currency[];
   allRegions: string[];
   allSubregions: string[];
   allSovereigntyTypes: SovereigntyType[];
@@ -18,7 +19,7 @@ export interface CountryDataState {
 
 const initialState: CountryDataState = {
   countries: [],
-  currencies: {},
+  currencies: [],
   allRegions: [],
   allSubregions: [],
   allSovereigntyTypes: [],
@@ -44,7 +45,7 @@ export const fetchCountryData = createAsyncThunk(
     async function fetchWithFallback(
       staticUrl: string,
       backendUrl?: string,
-      label?: string
+      label?: string,
     ) {
       // Try static first
       try {
@@ -64,25 +65,27 @@ export const fetchCountryData = createAsyncThunk(
     }
 
     const [countryData, currencyData] = await Promise.all([
-      fetchWithFallback(
-        staticCountryUrl,
-        backendCountryUrl,
-        "country data"
-      ),
-      fetchWithFallback(
-        staticCurrencyUrl,
-        backendCurrencyUrl,
-        "currency data"
-      ),
+      fetchWithFallback(staticCountryUrl, backendCountryUrl, "country data"),
+      fetchWithFallback(staticCurrencyUrl, backendCurrencyUrl, "currency data"),
     ]);
+
+    // Map currency object to array
+    const currenciesArr =
+      currencyData && typeof currencyData === "object"
+        ? Object.entries(currencyData).map(([code, name]) => ({
+            code,
+            name: String(name),
+          }))
+        : [];
+
     return {
       countries: countryData as Country[],
-      currencies: currencyData as Record<string, string>,
+      currencies: currenciesArr,
       allRegions: getAllRegions(countryData as Country[]),
       allSubregions: getAllSubregions(countryData as Country[]),
       allSovereigntyTypes: getAllSovereigntyTypes(countryData as Country[]),
     };
-  }
+  },
 );
 
 const countryDataSlice = createSlice({

@@ -61,12 +61,8 @@ export function useSearch(searchTerm: string) {
     );
 
     // Currencies
-    const currencyArray =
-      currencies && !Array.isArray(currencies)
-        ? Object.entries(currencies).map(([code, name]) => ({ code, name }))
-        : currencies || [];
     const mappedCurrencies = rankAndMap(
-      currencyArray,
+      currencies || [],
       (c) => c.name,
       searchTerm,
       (c) => ({ ...c, type: "currency" as const }),
@@ -95,11 +91,11 @@ export function useSearch(searchTerm: string) {
           }),
         );
       },
-    );    
+    );
 
     setResults([
       ...rankedUsers,
-      ...mappedCountries,      
+      ...mappedCountries,
       ...mappedCurrencies,
       ...mappedRegions,
       ...mappedSubregions,
