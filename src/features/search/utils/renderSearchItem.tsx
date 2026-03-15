@@ -1,4 +1,5 @@
 import type { User } from "firebase/auth";
+import { ICONS } from "@constants/icons";
 import {
   CountryFlag,
   getCountryName,
@@ -11,7 +12,6 @@ import { UserAvatar, type Friend } from "@features/user";
 import { getUserLabel } from "./search";
 import { SearchItem } from "../components/SearchItem";
 import { type SearchResult } from "../types";
-import { FaCoins } from "react-icons/fa6";
 
 interface RenderSearchItemOptions {
   navigate: (url: string) => void;
@@ -131,7 +131,7 @@ export function renderSearchItem(
           item={item}
           displayName={`${item.name} (${item.code})`}
           label="Currency"
-          icon={<FaCoins className="2xl" />}
+          icon={<ICONS.currencies className="2xl" />}
           onClick={() => {
             navigate(`/dashboard/currencies/${item.code}`);
             setDropdownOpen(false);

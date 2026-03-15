@@ -9,22 +9,25 @@ import {
 import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
   AchievementsGrid,
-  DashboardPanelMenu,
   CountryStats,
+  CurrenciesGrid,
+  DashboardPanelMenu,
+  OverviewGrid,
+  StatisticsGrid,
   useDashboardRouteState,
   useDashboardNavigation,
   getDashboardMeta,
-  OverviewGrid,
-  StatisticsGrid,
+  CurrencyInfo,
 } from "@features/dashboard";
 import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
 import { isWindowDefined } from "@utils/env";
+import {} from "@features/dashboard";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
-  const { countries, loading, error } = useCountryData();
+  const { countries, currencies, loading, error } = useCountryData();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
@@ -166,9 +169,7 @@ export default function DashboardPage() {
             <Route path="" element={<Navigate to="overview" replace />} />
             <Route
               path="countries"
-              element={
-                <Navigate to="/dashboard/exploration" replace />
-              }
+              element={<Navigate to="/dashboard/exploration" replace />}
             />
             {/* Exploration page */}
             <Route
@@ -196,6 +197,22 @@ export default function DashboardPage() {
               element={renderCountryStats({
                 onBack: handleBack,
               })}
+            />
+            <Route
+              path="currencies/"
+              element={<CurrenciesGrid currencies={currencies} />}
+            />
+            <Route
+              path="currencies/:code"
+              element={
+                <CurrencyInfo
+                  currency={currencies.find(
+                    (c) =>
+                      c.code === (location.pathname.split("/").pop() || ""),
+                  )}
+                  countries={countries}
+                />
+              }
             />
             <Route path="achievements" element={<AchievementsGrid />} />
             <Route path="statistics/*" element={<StatisticsGrid />} />

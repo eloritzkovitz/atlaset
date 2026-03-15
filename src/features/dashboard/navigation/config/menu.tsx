@@ -12,6 +12,11 @@ export const DASHBOARD_MENU = [
     icon: ICONS.exploration,
   },
   {
+    key: "currencies",
+    label: "Currencies",
+    icon: ICONS.currencies,
+  },
+  {
     key: "achievements",
     label: "Achievements",
     icon: ICONS.achievements,

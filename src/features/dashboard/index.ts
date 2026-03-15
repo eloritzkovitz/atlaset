@@ -1,7 +1,9 @@
 // Components
 export { AchievementsGrid } from "./achievements/components/AchievementsGrid";
-export { DashboardPanelMenu } from "./navigation/components/DashboardPanelMenu";
 export { CountryStats } from "./exploration/components/CountryStats";
+export { CurrenciesGrid } from "./currencies/components/CurrenciesGrid";
+export { CurrencyInfo } from "./currencies/components/CurrencyInfo";
+export { DashboardPanelMenu } from "./navigation/components/DashboardPanelMenu";
 export { OverviewGrid } from "./overview/components/OverviewGrid";
 export { StatisticsGrid } from "./statistics/components/StatisticsGrid";
 export { TripsStats } from "./statistics/components/TripsStats";

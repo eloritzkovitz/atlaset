@@ -10,6 +10,10 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { label: "Dashboard", key: "dashboard" },
     { label: "Exploration", key: "exploration" },
   ],
+  currencies: [
+    { label: "Dashboard", key: "dashboard" },
+    { label: "Currencies", key: "currencies" },
+  ],
   countries: [
     { label: "Dashboard", key: "dashboard" },
     { label: "Countries", key: "countries" },
