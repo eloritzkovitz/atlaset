@@ -1,6 +1,7 @@
 import React from "react";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { SPECIAL_COUNTRIES } from "../../constants/countryRelations";
 import { type Country } from "../../types";
 
 interface CountryListGroupProps {
@@ -22,7 +23,20 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
 }) => {
   // Map isoCodes to country objects and sort by name
   const sortedCountries = isoCodes
-    .map((iso) => countries.find((c) => c.isoCode === iso))
+    .map((iso) => {
+      const found = countries.find((c) => c.isoCode === iso);
+      if (found) return found;
+
+      // Check SPECIAL_COUNTRIES for any missing entries
+      const special = SPECIAL_COUNTRIES[iso];
+      if (special) {
+        return {
+          isoCode: iso,
+          name: special.name,
+        } as Country;
+      }
+      return undefined;
+    })
     .filter(Boolean)
     .sort((a, b) => a!.name.localeCompare(b!.name));
 

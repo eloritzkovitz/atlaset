@@ -43,7 +43,6 @@ export type CountryRelations = {
   countries?: string[];
   dependencies?: string[];
   regions?: string[];
-  territories?: string[];
   disputes?: string[];
 };
 

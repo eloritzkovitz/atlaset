@@ -16,6 +16,9 @@ export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
 ];
 
 export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
+  AR: {
+    disputes: ["FK", "GS"],
+  },
   AU: {
     dependencies: ["CC", "CX", "HM", "NF"],
   },
@@ -24,7 +27,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     dependencies: ["HK", "MO"],
   },
   CY: {
-    disputes: ["XC"],
+    disputes: ["UK", "XC"],
   },
   DK: {
     dependencies: ["FO", "GL"],
@@ -60,8 +63,23 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   GE: {
     disputes: ["XA", "XO"],
   },
+  KM: {
+    disputes: ["YT"],
+  },
+  KP: {
+    disputes: ["KR"],
+  },
+  KR: {
+    disputes: ["KP"],
+  },
   MA: {
     disputes: ["EH"],
+  },
+  MU: {
+    disputes: ["IO"],
+  },
+  MV: {
+    disputes: ["IO"],
   },
   NL: {
     dependencies: ["AW", "CW", "SX"],

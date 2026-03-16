@@ -17,7 +17,6 @@ import {
   getCurrencyDisplay,
 } from "./countryData";
 
-// Mock constants
 vi.mock("../constants/sovereignty", () => ({
   EXCLUDED_ISO_CODES: ["XX"],
   SOVEREIGN_FLAG_MAP: { YY: "US" },
@@ -30,6 +29,11 @@ vi.mock("../constants/countryRelations", () => ({
       regions: ["PR"],
       disputes: ["VI"],
     },
+    GU: {}, // Dependency of US
+    PR: {}, // Region of US
+    VI: {}, // Dispute of US
+    AA: { disputes: ["BB"] },
+    BB: { disputes: ["AA"] },
   },
 
   SPECIAL_COUNTRIES: {
@@ -184,62 +188,44 @@ describe("countryData utils", () => {
   });
 
   describe("getCountryRelations", () => {
-    it("returns dependency info with sovereign and dependencyOf", () => {
-      expect(getCountryRelations("GU")).toEqual({
-        type: "Dependency",
-        sovereign: { isoCode: "US" },
-        dependencyOf: { isoCode: "US" },
-      });
+    it("returns dependencyOf and sovereign for a dependency", () => {
+      const result = getCountryRelations("GU");
+      expect(result.dependencyOf).toEqual({ isoCode: "US" });
+      expect(result.sovereign).toEqual({ isoCode: "US" });
     });
 
-    it("returns region info with sovereign and regionOf", () => {
-      expect(getCountryRelations("PR")).toEqual({
-        type: "Overseas Region",
-        sovereign: { isoCode: "US" },
-        regionOf: { isoCode: "US" },
-      });
+    it("returns regionOf and sovereign for a region", () => {
+      const result = getCountryRelations("PR");
+      expect(result.regionOf).toEqual({ isoCode: "US" });
+      expect(result.sovereign).toEqual({ isoCode: "US" });
     });
 
-    it("returns dispute info with sovereign and disputeOf", () => {
-      expect(getCountryRelations("VI")).toEqual({
-        type: "Disputed",
-        sovereign: { isoCode: "US" },
-        disputeOf: { isoCode: "US" },
-      });
+    it("returns disputeOf and sovereign for a dispute", () => {
+      const result = getCountryRelations("VI");
+      expect(result.disputeOf).toEqual({ isoCode: "US" });
+      expect(result.sovereign).toEqual({ isoCode: "US" });
+    });
+
+    it("returns mutual disputes for both sides", () => {
+      expect(getCountryRelations("AA").disputes).toContain("BB");
+      expect(getCountryRelations("BB").disputes).toContain("AA");
+    });
+
+    it.each([
+      ["country with no relations", "FR"],
+      ["empty input", ""],
+      ["special country", "GB-ENG"],
+    ])("returns hasRelations: false for %s", (_, iso) => {
+      expect(getCountryRelations(iso)).toMatchObject({ hasRelations: false });
     });
 
     it("returns full relations for a sovereign with relations", () => {
       const result = getCountryRelations("US");
-      expect(result.type).toBe("Sovereign");
       expect(result.hasRelations).toBe(true);
       expect(Array.isArray(result.countries)).toBe(true);
       expect(Array.isArray(result.dependencies)).toBe(true);
       expect(Array.isArray(result.regions)).toBe(true);
       expect(Array.isArray(result.disputes)).toBe(true);
-    });
-
-    it("returns Sovereign for a country with no relations", () => {
-      const result = getCountryRelations("FR");
-      expect(result).toEqual({
-        type: "Sovereign",
-        countries: [],
-        dependencies: [],
-        regions: [],
-        disputes: [],
-        hasRelations: false,
-      });
-    });
-
-    it("returns Sovereign with empty arrays for empty input", () => {
-      const result = getCountryRelations("");
-      expect(result).toEqual({
-        type: "Sovereign",
-        countries: [],
-        dependencies: [],
-        regions: [],
-        disputes: [],
-        hasRelations: false,
-      });
     });
   });
 

@@ -1,12 +1,9 @@
 import { useMemo, useState } from "react";
 import { EmptyListMessage } from "@components";
 import { CountryListGroup } from "./CountryListGroup";
-import {
-  COUNTRY_RELATIONS,
-  COUNTRY_RELATION_SECTIONS,
-} from "../../constants/countryRelations";
+import { COUNTRY_RELATION_SECTIONS } from "../../constants/countryRelations";
 import { useCountryData } from "../../hooks/useCountryData";
-import { getCountryName } from "../../utils/countryData";
+import { getCountryName, getCountryRelations } from "../../utils/countryData";
 
 interface CountryRelationsContentProps {
   country: { isoCode: string };
@@ -19,7 +16,9 @@ export function CountryRelationsContent({
 }: CountryRelationsContentProps) {
   const { countries } = useCountryData();
   const group =
-    country && country.isoCode ? COUNTRY_RELATIONS[country.isoCode] : undefined;
+    country && country.isoCode
+      ? getCountryRelations(country.isoCode)
+      : undefined;
 
   // Prepare sections with sorted isoCodes
   const sections = useMemo(() => {
@@ -32,7 +31,7 @@ export function CountryRelationsContent({
     return COUNTRY_RELATION_SECTIONS.map((def) => ({
       key: def.key,
       label: def.label,
-      data: group ? sortByName(group[def.prop] || []) : [],
+      data: sortByName((group?.[def.prop] ?? []) as string[]),
     }));
   }, [group, countries]);
 

@@ -130,7 +130,6 @@ export function getCountryRelations(isoCode: string): {
   regionOf?: { isoCode: string };
   disputeOf?: { isoCode: string };
   sovereign?: { isoCode: string };
-  type: SovereigntyType | "Sovereign";
   dependencies?: string[];
   countries?: string[];
   regions?: string[];
@@ -140,25 +139,35 @@ export function getCountryRelations(isoCode: string): {
   const dependency = dependencyMap[isoCode];
   const region = regionMap[isoCode];
   const dispute = disputeMap[isoCode];
-
-  // If it's a dependency or disputed territory, return its sovereign/dispute info
-  if (dependency || region || dispute) {
-    const rel = dependency || region || dispute;
-    return {
-      dependencyOf: dependency ? { isoCode: rel.sovereign.isoCode } : undefined,
-      regionOf: region ? { isoCode: rel.sovereign.isoCode } : undefined,
-      disputeOf: dispute ? { isoCode: rel.sovereign.isoCode } : undefined,
-      sovereign: { isoCode: rel.sovereign.isoCode },
-      type: rel.type,
-    };
-  }
-
-  // Otherwise, treat it as a sovereign and return its relations, if any
   const group = COUNTRY_RELATIONS[isoCode];
   const countries = group?.countries || [];
   const dependencies = group?.dependencies || [];
   const regions = group?.regions || [];
-  const disputes = group?.disputes || [];
+
+  // Dynamically compute all disputes involving this country
+  const disputes = Object.entries(disputeMap)
+    .filter(
+      ([otherIso, rel]) =>
+        rel.sovereign.isoCode === isoCode && otherIso !== isoCode,
+    )
+    .map(([otherIso]) => otherIso);
+
+  // If this is a dependency, region, or dispute, return its sovereign info and mutual disputes
+  if (dependency || region || dispute) {
+    return {
+      dependencyOf: dependency
+        ? { isoCode: dependency.sovereign.isoCode }
+        : undefined,
+      regionOf: region ? { isoCode: region.sovereign.isoCode } : undefined,
+      disputeOf: dispute ? { isoCode: dispute.sovereign.isoCode } : undefined,
+      sovereign:
+        dependency?.sovereign || region?.sovereign || dispute?.sovereign,
+      disputes,
+      hasRelations: disputes.length > 0,
+    };
+  }
+
+  // Otherwise, treat it as a sovereign and return its relations, if any
   const hasRelations =
     countries.length > 0 ||
     dependencies.length > 0 ||
@@ -166,7 +175,6 @@ export function getCountryRelations(isoCode: string): {
     disputes.length > 0;
 
   return {
-    type: "Sovereign",
     dependencies,
     countries,
     regions,
