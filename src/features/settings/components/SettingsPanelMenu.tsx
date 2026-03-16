@@ -1,5 +1,5 @@
 import { FaGear } from "react-icons/fa6";
-import { SidePanelMenu } from "@components";
+import { mapMenuItems, SidePanelMenu } from "@components";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
 
 interface SettingsPanelMenuProps {
@@ -17,15 +17,10 @@ export function SettingsPanelMenu({
   open,
   onClose,
 }: SettingsPanelMenuProps) {
-  const menuItems = (
-    canEdit
-      ? SETTINGS_MENU
-      : SETTINGS_MENU.filter((item) => item.key !== "edit")
-  ).map((item) => ({
-    key: item.key,
-    label: item.label,
-    icon: item.icon,
-  }));
+  const menuConfig = canEdit
+    ? SETTINGS_MENU
+    : SETTINGS_MENU.filter((item) => item.key !== "edit");
+  const menuItems = mapMenuItems(menuConfig);
 
   return (
     <SidePanelMenu

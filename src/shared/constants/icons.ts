@@ -41,11 +41,13 @@ import {
   FaLink,
   FaListUl,
   FaLocationDot,
+  FaLock,
   FaMagnifyingGlass,
   FaMap,
   FaMapLocationDot,
   FaMapPin,
   FaMedal,
+  FaPaintbrush,
   FaPencil,
   FaPenToSquare,
   FaPercent,
@@ -59,6 +61,7 @@ import {
   FaRotateLeft,
   FaShareFromSquare,
   FaShareNodes,
+  FaShieldHalved,
   FaSuitcaseRolling,
   FaTimeline,
   FaTrash,
@@ -68,6 +71,7 @@ import {
   FaUserGear,
   FaUserGroup,
   FaUserPlus,
+  FaVolumeHigh,
   FaXmark,
 } from "react-icons/fa6";
 import { DashboardIcon } from "../components/icons/DashboardIcon";
@@ -124,6 +128,12 @@ export const ICONS = {
   quizHard: FaBinoculars,
   quizExpert: FaHatWizard,
   leaderboards: FaTrophy,
+  //Settings
+  accountSettings: FaUserGear,
+  SoundSettingsSection: FaVolumeHigh,
+  displaySettings: FaPaintbrush,
+  privacySettings: FaShieldHalved,
+  securitySettings: FaLock,
   // Misc
   shortcuts: FaKeyboard,
   search: FaMagnifyingGlass,
