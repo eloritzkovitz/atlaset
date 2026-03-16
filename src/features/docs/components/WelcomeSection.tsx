@@ -1,11 +1,9 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Card } from "@components";
 import { DocSearchResults } from "./DocSearchResults";
-import { DOCS_CARDS } from "../config/docs";
+import { DOCS_CARDS } from "../constants/docsCards";
 
 export function WelcomeDocsSection() {
-  const navigate = useNavigate();
-
   return (
     <div className="flex flex-col items-center justify-center h-full text-center gap-2 animate-fade-in px-2 sm:px-4">
       <div className="w-full flex flex-col items-center gap-4">
@@ -25,11 +23,11 @@ export function WelcomeDocsSection() {
                 <Card
                   key={card.title}
                   className="cursor-pointer w-full h-full min-h-[220px] min-w-0 flex flex-col items-center justify-between p-6 sm:p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 transition"
-                  onClick={() =>
-                    navigate(`/docs/${card.file.replace(/\.md$/, "")}`)
-                  }
                 >
-                  <div className="flex flex-col items-center flex-1 w-full">
+                  <Link
+                    to={`/docs/${card.file.replace(/\.md$/, "")}`}
+                    className="flex flex-col items-center flex-1 w-full h-full"
+                  >
                     {card.icon}
                     <h2 className="text-lg sm:text-xl font-semibold mb-2 mt-2">
                       {card.title}
@@ -37,7 +35,7 @@ export function WelcomeDocsSection() {
                     <p className="text-muted text-xs sm:text-sm flex-1 flex items-center justify-center w-full">
                       {card.description}
                     </p>
-                  </div>
+                  </Link>
                 </Card>
               ))}
             </div>

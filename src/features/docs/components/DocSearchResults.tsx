@@ -27,15 +27,13 @@ export function DocSearchResults({
           {searchResults.length > 0 ? (
             <ul className="flex flex-col gap-2 items-center">
               {searchResults.map((doc) => (
-                <li key={doc.file} className="w-full max-w-lg">
+                <li key={doc.file} className="w-full">
                   <MenuButton
-                    icon={doc.icon}
-                    className="w-full mb-1"
-                    onClick={() =>
-                      (window.location.href = `/docs/${doc.file.replace(/\.md$/, "")}`)
-                    }
+                    icon={<doc.icon />}
+                    className="text-xl mb-1"
+                    url={`/docs/${doc.file}`}
                   >
-                    {doc.label}
+                    <span className="font-semibold">{doc.label}</span>
                   </MenuButton>
                 </li>
               ))}

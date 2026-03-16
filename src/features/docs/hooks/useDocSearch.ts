@@ -1,4 +1,4 @@
-import { DOCS_GROUPS } from "../config/docs";
+import { DOCS_GROUPS } from "../constants/docsMenu";
 
 /**
  * Search documentation items based on a search string.

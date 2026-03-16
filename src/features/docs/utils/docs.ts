@@ -1,4 +1,4 @@
-import { DOCS } from "../config/docs";
+import { DOCS } from "../constants/docsMenu";
 
 /**
  * Gets a documentation entry by its slug.

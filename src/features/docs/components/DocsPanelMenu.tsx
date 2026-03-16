@@ -1,10 +1,16 @@
 import { useState, useEffect } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import { DrawerPanel, MenuButton, Panel, SubmenuSection } from "@components";
+import {
+  DrawerPanel,
+  mapMenuItems,
+  MenuButton,
+  Panel,
+  SubmenuSection,
+} from "@components";
 import { useScreenSize } from "@hooks";
 import { Branding } from "@layout";
-import { DOCS_GROUPS } from "../config/docs";
+import { DOCS_GROUPS } from "../constants/docsMenu";
 
 interface DocsPanelMenuProps {
   selectedPanel?: string;
@@ -31,7 +37,7 @@ export function DocsPanelMenu({
   // Expand the relevant section if selectedPanel changes
   useEffect(() => {
     if (!selectedPanel) return;
-    // Find which group contains the selectedPanel
+    // Find which group contains the selectedPanel (by file)
     const found = groupEntries.find(([, group]) =>
       group.items.some((doc) => doc.file === selectedPanel),
     );
@@ -39,7 +45,7 @@ export function DocsPanelMenu({
       const [foundKey] = found;
       setExpanded((prev) => ({ ...prev, [foundKey]: true }));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedPanel]);
 
   // Panel content
@@ -71,22 +77,18 @@ export function DocsPanelMenu({
         {groupEntries.map(([key, group]) => (
           <SubmenuSection
             key={key}
-            icon={group.header.icon}
+            icon={group.header.icon ? <group.header.icon /> : null}
             label={group.header.label}
             expanded={expanded[key]}
             onToggle={() =>
               setExpanded((prev) => ({ ...prev, [key]: !prev[key] }))
             }
-            submenu={group.items
-              .filter((doc) => doc.file)
-              .map((doc) => ({
-                key: doc.file,
-                label: doc.label,
-                icon: doc.icon,
-              }))}
+            submenu={mapMenuItems(
+              group.items.map((item) => ({ ...item, key: item.file })),
+            )}
             selectedPanel={selectedPanel}
-            setSelectedPanel={(panelKey) => {
-              setSelectedPanel(panelKey);
+            setSelectedPanel={(panelFile) => {
+              setSelectedPanel(panelFile);
               if (isMobile && onClose) onClose();
             }}
           />

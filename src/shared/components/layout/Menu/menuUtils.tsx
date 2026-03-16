@@ -3,6 +3,7 @@ export interface MenuConfigItem {
   label: string;
   icon: React.ComponentType<any>;
   url?: string;
+  file?: string;
 }
 
 /**
@@ -18,6 +19,7 @@ export function mapMenuItems(menuConfig: MenuConfigItem[]) {
       label: item.label,
       icon: <Icon />,
       url: item.url,
+      file: item.file,
     };
   });
 }
