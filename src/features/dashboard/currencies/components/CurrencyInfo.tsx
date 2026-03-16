@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import {
   CountryListGroup,
   type Currency,
   type Country,
 } from "@features/countries";
-import { useScreenSize } from "@hooks";
+import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 
 interface CurrencyInfoProps {
@@ -19,8 +18,11 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
   countries,
 }) => {
   const navigate = useNavigate();
-  const { handleCountrySelect } = useDashboardNavigation(countries, "", "");
-  const { isMobile } = useScreenSize();
+  const { handleCountrySelect, handleBack } = useDashboardNavigation(
+    countries,
+    "",
+    "",
+  );
   const [expandedSovereign, setExpandedSovereign] = useState(true);
   const [expandedDependencies, setExpandedDependencies] = useState(true);
 
@@ -40,21 +42,12 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
     .map((c) => c.isoCode);
 
   return (
-    <section className="max-w-6xl mx-auto p-4">
-      <span className="flex items-center gap-4 mb-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 hover:text-muted"
-        >
-          <FaArrowLeft className="text-xl" />
-        </button>
-        <h1 className={`!text-${isMobile ? "2xl" : "4xl mb-4"} font-bold`}>
-          {currency.name}
-        </h1>
-        <span className={`text-${isMobile ? "sm" : "2xl mb-2"} text-muted`}>
-          ({currency.code})
-        </span>
-      </span>
+    <section className="max-w-6xl mx-auto">
+      <DashboardHeader
+        title={currency.name}
+        subtitle={`(${currency.code})`}
+        onBack={handleBack}
+      />
       {sovereignIsoCodes.length > 0 && (
         <CountryListGroup
           label={`Countries using ${currency.code}`}

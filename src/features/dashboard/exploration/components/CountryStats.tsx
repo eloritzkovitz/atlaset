@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { FaArrowLeft } from "react-icons/fa6";
 import {
   CountryDetailsPanel,
   CountryFlag,
@@ -14,6 +13,7 @@ import { CountrySection } from "./CountrySection";
 import { ExplorationOverviewGrid } from "./ExplorationOverviewGrid";
 import { useExplorationStats } from "../hooks/useExplorationStats";
 import { type CountryType } from "../types";
+import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 
 interface CountryStatsProps {
   selectedRegion?: string;
@@ -25,9 +25,9 @@ interface CountryStatsProps {
   selectedIsoCode?: string;
   setSelectedIsoCode: (isoCode: string | null) => void;
   onShowAllCountries: () => void;
-  onBack?: () => void;
   onSubregionChange?: (region: string, subregion: string) => void;
-  resetFilters?: () => void;
+  onResetFilters?: () => void;
+  onBack?: () => void;
 }
 
 export function CountryStats({
@@ -40,9 +40,9 @@ export function CountryStats({
   selectedIsoCode,
   setSelectedIsoCode,
   onShowAllCountries,
-  onBack,
   onSubregionChange,
-  resetFilters,
+  onResetFilters,
+  onBack,
 }: CountryStatsProps) {
   const { countries, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
@@ -84,33 +84,28 @@ export function CountryStats({
   if (selectedCountry) {
     return (
       <div>
-        <span className="flex items-center gap-4 mb-4">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 hover:text-muted"
-          >
-            <FaArrowLeft className="text-xl" />
-          </button>
-          <span className={`${isMobile ? "" : "mb-2"}`}>
-            <CountryFlag
-              flag={{
-                isoCode: selectedCountry.isoCode,
-                ratio: "3x2",
-                size: `${isMobile ? "32" : "64"}`,
-              }}
+        <DashboardHeader
+          title={selectedCountry.name}
+          subtitle={`(${selectedCountry.isoCode})`}
+          onBack={onBack}
+          leading={
+            <span className={`${isMobile ? "" : "mb-2"}`}>
+              <CountryFlag
+                flag={{
+                  isoCode: selectedCountry.isoCode,
+                  ratio: "3x2",
+                  size: `${isMobile ? "32" : "64"}`,
+                }}
+              />
+            </span>
+          }
+          actions={
+            <VisitedStatusIndicator
+              visited={visited.isCountryVisited(selectedCountry.isoCode)}
+              isHome={selectedCountry.isoCode === homeCountry}
             />
-          </span>
-          <h1 className={`!text-${isMobile ? "2xl" : "4xl mb-4"} font-bold`}>
-            {selectedCountry.name}
-          </h1>
-          <span className={`text-${isMobile ? "sm" : "2xl mb-2"} text-muted`}>
-            ({selectedCountry.isoCode})
-          </span>
-          <VisitedStatusIndicator
-            visited={visited.isCountryVisited(selectedCountry.isoCode)}
-            isHome={selectedCountry.isoCode === homeCountry}
-          />
-        </span>
+          }
+        />
         <CountryDetailsPanel
           country={selectedCountry}
           currencies={currencies}
@@ -146,7 +141,7 @@ export function CountryStats({
         visitedCountryCodes={visited.visitedCountryCodes}
         onSubregionChange={onSubregionChange}
         onAllCountries={onShowAllCountries}
-        resetFilters={resetFilters}
+        resetFilters={onResetFilters}
         {...regionProps}
       />
     );
