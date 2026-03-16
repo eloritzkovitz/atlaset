@@ -1,15 +1,15 @@
 export interface MenuConfigItem {
   key: string;
   label: string;
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<{}>;
   url?: string;
   file?: string;
 }
 
 /**
  * Maps a menu configuration array to a format suitable for rendering in the UI.
- * @param menuConfig
- * @returns
+ * @param menuConfig - Array of menu configuration items, each containing key, label, icon, and optional url/file.
+ * @returns Array of menu items with React nodes for icons and additional properties for rendering.
  */
 export function mapMenuItems(menuConfig: MenuConfigItem[]) {
   return menuConfig.map((item) => {
