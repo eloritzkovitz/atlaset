@@ -46,6 +46,7 @@ export default function DashboardPage() {
     selectedCountry,
   } = useDashboardRouteState();
 
+  // Region and subregion filter state
   const {
     selectedRegion,
     setSelectedRegion,
@@ -149,11 +150,9 @@ export default function DashboardPage() {
             selectedIsoCode={selectedIsoCode || ""}
             setSelectedIsoCode={handleCountrySelect}
             onShowAllCountries={handleShowAllCountries}
-            onSubregionChange={(subregion) =>
-              handleSubregionSelect(selectedRegion, subregion)
-            }
-            resetFilters={resetFilters}
-            handleBack={handleBack}
+            onSubregionChange={handleSubregionSelect}
+            onResetFilters={resetFilters}
+            onBack={handleBack}
           />
         </div>
       </div>

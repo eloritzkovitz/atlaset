@@ -20,9 +20,9 @@ interface DashboardRoutesProps {
   selectedIsoCode: string;
   setSelectedIsoCode: (isoCode: string | null) => void;
   onShowAllCountries: () => void;
-  onSubregionChange: (subregion: string) => void;
-  resetFilters: () => void;
-  handleBack: () => void;
+  onSubregionChange: (region: string, subregion: string) => void;
+  onResetFilters: () => void;
+  onBack: () => void;
 }
 
 export function DashboardRoutes({
@@ -38,8 +38,8 @@ export function DashboardRoutes({
   setSelectedIsoCode,
   onShowAllCountries,
   onSubregionChange,
-  resetFilters,
-  handleBack,
+  onResetFilters,
+  onBack,
 }: DashboardRoutesProps) {
   const countryStatsBaseProps = {
     setSelectedRegion,
@@ -47,8 +47,14 @@ export function DashboardRoutes({
     setSearch,
     setSelectedIsoCode,
     onShowAllCountries,
-    onSubregionChange,
-    resetFilters,
+    onResetFilters,
+  };
+
+  // Subregion selection handler
+  const handleSubregionChange = (region: string, subregion: string) => {
+    setSelectedRegion(region);
+    setSelectedSubregion(subregion);
+    onSubregionChange(region, subregion);
   };
 
   return (
@@ -68,6 +74,7 @@ export function DashboardRoutes({
             selectedSubregion={selectedSubregion}
             search={search}
             selectedIsoCode={selectedIsoCode}
+            onSubregionChange={handleSubregionChange}
             onBack={undefined}
           />
         }
@@ -81,6 +88,7 @@ export function DashboardRoutes({
             selectedSubregion={""}
             search={search}
             selectedIsoCode={""}
+            onSubregionChange={handleSubregionChange}
             onBack={undefined}
           />
         }
@@ -94,7 +102,8 @@ export function DashboardRoutes({
             selectedSubregion={selectedSubregion}
             search={search}
             selectedIsoCode={selectedIsoCode}
-            onBack={handleBack}
+            onSubregionChange={handleSubregionChange}
+            onBack={onBack}
           />
         }
       />
