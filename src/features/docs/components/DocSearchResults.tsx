@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { SearchInput, MenuButton } from "@components";
+import { Link } from "react-router-dom";
+import { SearchInput, MenuButton, EmptyListMessage } from "@components";
 import { useDocSearch } from "../hooks/useDocSearch";
 
 interface DocSearchResultsProps {
@@ -27,21 +28,20 @@ export function DocSearchResults({
           {searchResults.length > 0 ? (
             <ul className="flex flex-col gap-2 items-center">
               {searchResults.map((doc) => (
-                <li key={doc.file} className="w-full max-w-lg">
+                <li key={doc.file} className="w-full">
                   <MenuButton
-                    icon={doc.icon}
-                    className="w-full mb-1"
-                    onClick={() =>
-                      (window.location.href = `/docs/${doc.file.replace(/\.md$/, "")}`)
-                    }
+                    icon={<doc.icon />}
+                    className="w-full block text-xl mb-1"
                   >
-                    {doc.label}
+                    <Link to={doc.url} className="w-full block font-semibold">
+                      {doc.label}
+                    </Link>
                   </MenuButton>
                 </li>
               ))}
             </ul>
           ) : (
-            <div className="text-sm text-muted px-2">No results found.</div>
+            <EmptyListMessage message="No results found." />
           )}
         </div>
       ) : (

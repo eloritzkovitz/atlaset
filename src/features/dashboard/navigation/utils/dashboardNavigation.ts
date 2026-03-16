@@ -3,7 +3,7 @@
  */
 
 import type { Crumb } from "@components";
-import { PANEL_BREADCRUMBS } from "../config/breadcrumbs";
+import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
 
 /**
  * Generate breadcrumbs for the dashboard based on navigation state

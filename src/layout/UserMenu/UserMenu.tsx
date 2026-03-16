@@ -12,7 +12,7 @@ import { AuthButtons } from "../Header/AuthButtons";
 
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
   const { toggleSearch, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -96,7 +96,6 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
         >
           <UserMenuContent
             user={user}
-            loading={loading}
             onLogout={handleLogout}
             onClose={closeModal}
           />

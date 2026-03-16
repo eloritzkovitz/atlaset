@@ -8,6 +8,9 @@ export { TripHistory } from "./statistics/components/TripHistory";
 export { TripsByMonth } from "./statistics/components/TripsByMonth";
 export { TripsByYear } from "./statistics/components/TripsByYear";
 
+// Constants
+export { DASHBOARD_MENU } from "./navigation/constants/dashboardMenu";
+
 // Hooks
 export { useDashboardNavigation } from "./navigation/hooks/useDashboardNavigation";
 export { useDashboardRouteState } from "./navigation/hooks/useDashboardRouteState";

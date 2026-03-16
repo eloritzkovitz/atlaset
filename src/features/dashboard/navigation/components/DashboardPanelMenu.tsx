@@ -1,5 +1,5 @@
-import { DashboardIcon, SidePanelMenu } from "@components";
-import { DASHBOARD_MENU } from "../config/menu";
+import { DashboardIcon, mapMenuItems, SidePanelMenu } from "@components";
+import { DASHBOARD_MENU } from "../constants/dashboardMenu";
 
 interface DashboardPanelMenuProps {
   selectedPanel: string;
@@ -14,14 +14,7 @@ export function DashboardPanelMenu({
   open,
   onClose,
 }: DashboardPanelMenuProps) {
-  const menuItems = DASHBOARD_MENU.map((item) => {
-    const Icon = item.icon;
-    return {
-      key: item.key,
-      label: item.label,
-      icon: <Icon />,
-    };
-  });
+  const menuItems = mapMenuItems(DASHBOARD_MENU);
 
   return (
     <SidePanelMenu

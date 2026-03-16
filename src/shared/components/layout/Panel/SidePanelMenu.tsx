@@ -9,6 +9,7 @@ export interface SidePanelMenuItem {
   key: string;
   label: string;
   icon?: React.ReactNode;
+  url?: string;
 }
 
 export interface SidePanelMenuProps {
@@ -56,13 +57,14 @@ export function SidePanelMenu({
         {menuItems.map((item) => (
           <li key={item.key}>
             <MenuButton
+              url={item.url}
               icon={item.icon}
               active={selectedPanel === item.key}
+              className={menuButtonClassName}
               onClick={() => {
                 setSelectedPanel(item.key);
                 if (isMobile && onClose) onClose();
               }}
-              className={menuButtonClassName}
             >
               {item.label}
             </MenuButton>

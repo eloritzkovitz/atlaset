@@ -8,13 +8,13 @@ import {
 } from "@components";
 import { useCountryData, useRegionSubregionFilters } from "@features/countries";
 import {
+  DASHBOARD_MENU,
   DashboardPanelMenu,
   DashboardRoutes,
   useDashboardRouteState,
   useDashboardNavigation,
   getDashboardMeta,
 } from "@features/dashboard";
-import { DASHBOARD_MENU } from "@features/dashboard/navigation/config/menu";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
 import { isWindowDefined } from "@utils/env";

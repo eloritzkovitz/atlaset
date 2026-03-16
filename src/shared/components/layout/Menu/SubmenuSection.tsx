@@ -6,7 +6,12 @@ interface SubmenuSectionProps {
   label: string;
   expanded: boolean;
   onToggle: () => void;
-  submenu: { key: string; label: string; icon?: React.ReactNode }[];
+  submenu: {
+    key: string;
+    label: string;
+    icon?: React.ReactNode;
+    url?: string;
+  }[];
   selectedPanel?: string;
   setSelectedPanel: (key: string) => void;
 }
@@ -37,7 +42,8 @@ export function SubmenuSection({
                 onClick={() => setSelectedPanel(sub.key)}
                 ariaLabel={sub.label}
                 icon={sub.icon}
-                className="w-full mx-2 text-gray-300 gap-5"
+                className="w-full mx-2 font-semibold gap-5"
+                url={sub.url}
               >
                 {sub.label}
               </MenuButton>

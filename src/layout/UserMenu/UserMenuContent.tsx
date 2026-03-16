@@ -8,110 +8,103 @@ import { useScreenSize } from "@hooks";
 
 interface UserMenuProps {
   user: User | null;
-  loading: boolean;
   onLogout: () => void;
   onClose?: () => void;
 }
 
-export function UserMenuContent({
-  user,
-  loading,
-  onLogout,
-  onClose,
-}: UserMenuProps) {
+export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
   const { toggleFriends, toggleShortcuts } = useUI();
   const navigate = useNavigate();
   const { isMobile } = useScreenSize();
-
-  // Fetch username for profile link
   const { username } = useFirestoreUsername(user?.uid);
 
-  // Show loading state
-  if (loading) {
-    return <div className="p-2 text-center">Loading...</div>;
-  }
+  // Don't render if no user
+  if (!user) return null;
 
-  // Show menu content
-  if (user) {
-    return (
-      <>
-        <UserInfo user={user} showDisplayName={true} showUsername={true} />
-        <Separator />
-        <MenuButton
-          onClick={() => {
-            navigate(`/users/${username}`);
-            onClose?.();
-          }}
-          icon={<ICONS.profile className="text-lg mr-2" />}
-          ariaLabel="Profile"
-          className="w-full"
-        >
-          Profile
-        </MenuButton>
-        <MenuButton
-          onClick={() => {
-            toggleFriends();
-            onClose?.();
-          }}
-          icon={<ICONS.friends className="text-lg mr-2" />}
-          ariaLabel="Friends"
-          className="w-full"
-        >
-          Friends
-        </MenuButton>
-        <Separator className="my-1" />
-        <MenuButton
-          onClick={() => {
-            window.open(
-              "https://github.com/eloritzkovitz/atlaset/issues",
-              "_blank",
-            );
-            onClose?.();
-          }}
-          icon={<ICONS.reportBug className="text-lg mr-2" />}
-          ariaLabel="Report a Bug"
-          className="w-full"
-        >
-          Report a Bug
-        </MenuButton>
-        {!isMobile && (
-          <MenuButton
-            onClick={() => {
+  const menuItems = [
+    {
+      label: "Profile",
+      icon: <ICONS.profile className="text-lg mr-2" />,
+      onClick: () => {
+        navigate(`/users/${username}`);
+        onClose?.();
+      },
+      url: `/users/${username}`,
+    },
+    {
+      label: "Friends",
+      icon: <ICONS.friends className="text-lg mr-2" />,
+      onClick: () => {
+        toggleFriends();
+        onClose?.();
+      },
+    },
+    { separator: true },
+    {
+      label: "Report a Bug",
+      icon: <ICONS.reportBug className="text-lg mr-2" />,
+      onClick: () => {
+        window.open(
+          "https://github.com/eloritzkovitz/atlaset/issues",
+          "_blank",
+        );
+        onClose?.();
+      },
+      url: "https://github.com/eloritzkovitz/atlaset/issues",
+    },
+    ...(!isMobile
+      ? [
+          {
+            label: "Keyboard Shortcuts",
+            icon: <ICONS.shortcuts className="text-lg mr-2" />,
+            onClick: () => {
               toggleShortcuts();
               onClose?.();
-            }}
-            icon={<ICONS.shortcuts className="text-lg mr-2" />}
-            ariaLabel="Keyboard Shortcuts"
+            },
+          },
+        ]
+      : []),
+    { separator: true },
+    {
+      label: "Settings",
+      icon: <ICONS.settings className="text-lg mr-2" />,
+      onClick: () => {
+        navigate("/settings");
+        onClose?.();
+      },
+      url: "/settings",
+    },
+    { separator: true },
+    {
+      label: "Sign out",
+      icon: <ICONS.signOut className="text-lg mr-2" />,
+      onClick: () => {
+        onLogout();
+        onClose?.();
+      },
+    },
+  ];
+
+  return (
+    <>
+      <UserInfo user={user} showDisplayName showUsername />
+      <Separator />
+      {menuItems.map((item, idx) =>
+        item.separator ? (
+          <Separator className="my-1" key={idx} />
+        ) : (
+          <MenuButton
+            key={idx}
+            onClick={item.onClick}
+            icon={item.icon}
+            ariaLabel={item.label}
             className="w-full"
+            url={item.url}
           >
-            Keyboard Shortcuts
+            <span className="font-semibold">{item.label}</span>
           </MenuButton>
-        )}
-        <Separator className="my-1" />
-        <MenuButton
-          onClick={() => {
-            navigate("/settings");
-            onClose?.();
-          }}
-          icon={<ICONS.settings className="text-lg mr-2" />}
-          ariaLabel="Settings"
-          className="w-full"
-        >
-          Settings
-        </MenuButton>
-        <Separator className="my-1" />
-        <MenuButton
-          onClick={() => {
-            onLogout();
-            onClose?.();
-          }}
-          icon={<ICONS.signOut className="text-lg mr-2" />}
-          ariaLabel="Sign out"
-          className="w-full"
-        >
-          Sign out
-        </MenuButton>
-      </>
-    );
-  }
+        ),
+      )}
+    </>
+  );
 }

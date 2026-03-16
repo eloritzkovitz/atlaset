@@ -53,6 +53,7 @@ export { MarkdownFileRenderer } from "./markdown/MarkdownFileRenderer";
 export { Menu } from "./layout/Menu/Menu";
 export { MenuButton } from "./layout/Menu/MenuButton";
 export { SubmenuSection } from "./layout/Menu/SubmenuSection";
+export * from "./layout/Menu/menuUtils";
 
 // Modal components
 export { ConfirmModal } from "./layout/Modal/ConfirmModal";

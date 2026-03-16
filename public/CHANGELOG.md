@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-03-16
+- **[chore]** **General:** Updated menu buttons for better internal navigation
+- **[bugfix]** **General:** Fixed some bugs
+
 ## 2026-03-15
 - **[feature]** **Countries:** Added property search for countries
 - **[feature]** **Dashboard | Currencies:** Added a new section for currencies and a currency exchange widget
