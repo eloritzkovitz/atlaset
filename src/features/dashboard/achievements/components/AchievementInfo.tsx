@@ -55,6 +55,31 @@ export function AchievementInfo() {
           achievementStatusMap={achievementStatusMap}
         />
       )}
+      {achievement.criteria?.regions &&
+        Array.isArray(achievement.criteria.regions) && (
+          <AchievementListGroup
+            achievements={
+              achievement.criteria.regions.map((region) => ({
+                id: region,
+                name: region,
+                type: "region",
+                description: `Visit at least one country in ${region}`,
+              })) as Achievement[]
+            }
+            label="Regions"
+            achievementStatusMap={Object.fromEntries(
+              achievement.criteria.regions.map((region) => [
+                region,
+                countries.some(
+                  (c) => c.region === region && isCountryVisited(c.isoCode),
+                ),
+              ]),
+            )}
+            onAchievementClick={(region) => {
+              window.location.href = `/dashboard/countries/${encodeURIComponent(region)}`;
+            }}
+          />
+        )}
       {isoCodes.length > 0 && (
         <CountryListGroup
           label="Countries"

@@ -7,12 +7,14 @@ interface AchievementListGroupProps {
   achievements: Achievement[];
   achievementStatusMap?: Record<string, boolean>;
   label?: string;
+  onAchievementClick?: (id: string) => void;
 }
 
 export function AchievementListGroup({
   achievements,
   achievementStatusMap,
   label,
+  onAchievementClick,
 }: AchievementListGroupProps) {
   const navigate = useNavigate();
   return (
@@ -30,15 +32,25 @@ export function AchievementListGroup({
                 completed ? (
                   <FaCheck className="text-success" />
                 ) : (
-                  <span style={{ width: "1em", display: "inline-block" }}></span>
+                  <span
+                    style={{ width: "1em", display: "inline-block" }}
+                  ></span>
                 )
               }
               onClick={() =>
-                navigate(`/dashboard/achievements/${achievement.id}`)
+                onAchievementClick
+                  ? onAchievementClick(String(achievement.id))
+                  : navigate(`/dashboard/achievements/${achievement.id}`)
               }
               className="py-2 px-2"
             >
-              <span className={"font-medium text-base" + (completed ? "" : " text-muted")}>{achievement.name}</span>
+              <span
+                className={
+                  "font-medium text-base" + (completed ? "" : " text-muted")
+                }
+              >
+                {achievement.name}
+              </span>
             </MenuButton>
           );
         })}
