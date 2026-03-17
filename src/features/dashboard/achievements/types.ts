@@ -5,6 +5,8 @@ export interface Criteria {
   region?: string;
   subregion?: string;
   sovereign_only?: boolean;
+  currency?: string;
+  language?: string;
   count?: number;
   min_regions?: number;
   tier?: number;

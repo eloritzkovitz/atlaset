@@ -30,31 +30,37 @@ export function getAchievementCountries(
   const sovereignOnly = criteria.sovereign_only === true;
   const sovereigntyFilter = createSovereigntyFilter(sovereignOnly);
 
+  // Map criteria keys to filter functions
+  const filterMap: { [key: string]: (c: Country) => boolean } = {
+    countries: (c) => criteria.countries?.includes(c.isoCode) ?? false,
+    region: (c) => c.region === criteria.region!,
+    subregion: (c) => c.subregion === criteria.subregion!,
+    currency: (c) => c.currency === criteria.currency!,
+    language: (c) => c.languages?.includes(criteria.language!) ?? false,
+  };
+
+  // Root-level countries array
   if (achievement.countries && Array.isArray(achievement.countries)) {
     return countries.filter(
       (c) => achievement.countries!.includes(c.isoCode) && sovereigntyFilter(c),
     );
   }
-  if (criteria.region) {
-    return countries.filter(
-      (c) => c.region === criteria.region && sovereigntyFilter(c),
-    );
+
+  // Find first matching criteria key
+  for (const key of Object.keys(filterMap)) {
+    if (criteria[key as keyof typeof criteria]) {
+      return countries.filter((c) => filterMap[key](c) && sovereigntyFilter(c));
+    }
   }
-  if (criteria.subregion) {
-    return countries.filter(
-      (c) => c.subregion === criteria.subregion && sovereigntyFilter(c),
-    );
-  }
-  if (criteria.countries) {
-    return countries.filter(
-      (c) => criteria.countries?.includes(c.isoCode) && sovereigntyFilter(c),
-    );
-  }
+
+  // Fallback: count with no other criteria
   if (
     criteria.count &&
     !criteria.region &&
     !criteria.subregion &&
-    !criteria.countries
+    !criteria.countries &&
+    !criteria.currency &&
+    !criteria.language
   ) {
     return countries.filter(sovereigntyFilter);
   }

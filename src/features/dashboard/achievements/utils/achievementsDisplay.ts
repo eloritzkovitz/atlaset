@@ -56,30 +56,19 @@ export function getDisplayFlagCountries(
     return achCountries;
   }
 
-  // Region or subregion
-  if (
-    (displayCriteria.subregion &&
-      typeof displayCriteria.subregion === "string") ||
-    (displayCriteria.region && typeof displayCriteria.region === "string")
-  ) {
-    const sovereigntyFilter = createSovereigntyFilter(true);
-    return countries.filter((c) => {
-      if (
-        displayCriteria.subregion &&
-        typeof displayCriteria.subregion === "string"
-      ) {
-        return (
-          c.subregion === displayCriteria.subregion && sovereigntyFilter(c)
-        );
-      }
-      if (
-        displayCriteria.region &&
-        typeof displayCriteria.region === "string"
-      ) {
-        return c.region === displayCriteria.region && sovereigntyFilter(c);
-      }
-      return false;
-    });
+  // Country filters based on criteria
+  const filterMap: { [key: string]: (c: Country) => boolean } = {
+    region: (c) => c.region === displayCriteria.region!,
+    subregion: (c) => c.subregion === displayCriteria.subregion!,
+    currency: (c) => c.currency === displayCriteria.currency!,
+    language: (c) => c.languages?.includes(displayCriteria.language!) ?? false,
+  };
+
+  const sovereigntyFilter = createSovereigntyFilter(true);
+  for (const key of Object.keys(filterMap)) {
+    if (displayCriteria[key as keyof typeof displayCriteria]) {
+      return countries.filter((c) => filterMap[key](c) && sovereigntyFilter(c));
+    }
   }
   return [];
 }
