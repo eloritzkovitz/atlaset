@@ -91,7 +91,7 @@ export function getCountryCounts({
   const sovereignCount = filteredCountries.filter(
     (c) => c.sovereigntyType === "Sovereign",
   ).length;
-  const visitedCount = filteredCountriesNoLayer.filter((c) =>
+  const visitedCount = filteredCountries.filter((c) =>
     visitedIsoCodes.includes(c.isoCode),
   ).length;
   return {
@@ -137,12 +137,16 @@ export function filterCountriesByProperty(
   value: string,
 ): Country[] {
   const key = COUNTRY_PROPERTY_MAP[property.toLowerCase()];
+
+  // If the property is not recognized, return an empty array
   if (!key) return [];
+
   const searchValue = value.toLowerCase();
+
+  // Filter countries based on the specified property
   return countries.filter((country) => {
     const propValue = country[key];
     if (Array.isArray(propValue)) {
-      // Handle array of strings (e.g., currencies, languages, aliases)
       return propValue.some(
         (v) => typeof v === "string" && v.toLowerCase().includes(searchValue),
       );
