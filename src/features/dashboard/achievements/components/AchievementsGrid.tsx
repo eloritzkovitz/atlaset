@@ -15,6 +15,7 @@ import { useCountryData } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementCard } from "./AchievementCard";
+import { AchievementInfo } from "./AchievementInfo";
 import { useAchievementsData } from "../hooks/useAchievementsData";
 import { useAchievementFilters } from "../hooks/useAchievementFilters";
 
@@ -84,6 +85,11 @@ export function AchievementsGrid() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("id-asc");
 
+  // Modal state for achievement info
+  const [selectedAchievement, setSelectedAchievement] = useState<
+    null | (typeof sortedAchievements)[0]
+  >(null);
+
   // Filter and sort achievements based on current filters and search query
   const { mergedAchievements, sortedAchievements, achievementStatusMap } =
     useAchievementFilters({
@@ -123,6 +129,15 @@ export function AchievementsGrid() {
   }
   if (!achievementsData) {
     return <EmptyListMessage message="No achievements data found." />;
+  }
+  if (selectedAchievement) {
+    return (
+      <AchievementInfo
+        achievement={selectedAchievement}
+        countries={countries}
+        onBack={() => setSelectedAchievement(null)}
+      />
+    );
   }
 
   return (
@@ -184,6 +199,7 @@ export function AchievementsGrid() {
               homeCountry={homeCountry}
               achievementStatusMap={achievementStatusMap}
               allAchievements={mergedAchievements}
+              onClick={() => setSelectedAchievement(achievement)}
             />
           );
         })}

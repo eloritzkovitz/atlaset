@@ -6,6 +6,7 @@ interface CountryWithFlagProps {
   name: string;
   size?: FlagSize;
   className?: string;
+  visited?: boolean;
 }
 
 export function CountryWithFlag({
@@ -13,7 +14,10 @@ export function CountryWithFlag({
   name,
   size,
   className = "",
+  visited = true,
 }: CountryWithFlagProps) {
+  const flagClass = `flex-shrink-0${visited ? "" : " grayscale opacity-60"}`;
+
   return (
     <span className={`inline-flex items-center ${className}`}>
       <CountryFlag
@@ -22,7 +26,7 @@ export function CountryWithFlag({
           ratio: "3x2",
           size,
         }}
-        className="flex-shrink-0"
+        className={flagClass}
       />
       <span className="ml-2">{name}</span>
     </span>

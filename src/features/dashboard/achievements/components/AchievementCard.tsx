@@ -19,6 +19,7 @@ interface AchievementCardProps {
   homeCountry?: string;
   achievementStatusMap?: Record<string, boolean>;
   allAchievements?: Achievement[];
+  onClick?: () => void;
 }
 
 export function AchievementCard({
@@ -29,6 +30,7 @@ export function AchievementCard({
   homeCountry,
   achievementStatusMap,
   allAchievements,
+  onClick,
 }: AchievementCardProps) {
   // Defensive criteria default
   const criteria = achievement.criteria || {};
@@ -75,7 +77,12 @@ export function AchievementCard({
   return (
     <div
       className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg select-none`}
-      style={{ minHeight: 320, position: "relative" }}
+      style={{
+        minHeight: 320,
+        position: "relative",
+        cursor: onClick ? "pointer" : undefined,
+      }}
+      onClick={onClick}
     >
       <AchievementIcon
         type={achievement.type}

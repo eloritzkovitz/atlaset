@@ -8,6 +8,7 @@ interface CountryListGroupProps {
   label: string;
   isoCodes: string[];
   countries: Country[];
+  visited: (iso: string) => boolean;
   expanded: boolean;
   onToggle: () => void;
   onSelectCountry?: (isoCode: string) => void;
@@ -17,6 +18,7 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
   label,
   isoCodes,
   countries,
+  visited,
   expanded,
   onToggle,
   onSelectCountry,
@@ -51,21 +53,30 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
         <EmptyListMessage message="No countries found." />
       ) : (
         <div className="flex flex-col text-lg">
-          {sortedCountries.map((country) => (
-            <MenuButton
-              key={country!.isoCode}
-              icon={undefined}
-              onClick={() =>
-                onSelectCountry && onSelectCountry(country!.isoCode)
-              }
-              className="py-2 px-2"
-            >
-              <CountryWithFlag
-                isoCode={country!.isoCode}
-                name={country!.name}
-              />
-            </MenuButton>
-          ))}
+          {sortedCountries.map((country) => {
+            const isVisited = visited(country!.isoCode);
+            return (
+              <MenuButton
+                key={country!.isoCode}
+                icon={undefined}
+                onClick={() =>
+                  onSelectCountry && onSelectCountry(country!.isoCode)
+                }
+                className="py-2 px-2"
+              >
+                <span
+                  style={{ opacity: isVisited ? 1 : 0.4 }}
+                  className={isVisited ? "" : "flag-grayscale-hover"}
+                >
+                  <CountryWithFlag
+                    isoCode={country!.isoCode}
+                    name={country!.name}
+                    visited={isVisited}
+                  />
+                </span>
+              </MenuButton>
+            );
+          })}
         </div>
       )}
     </CollapsibleHeader>
