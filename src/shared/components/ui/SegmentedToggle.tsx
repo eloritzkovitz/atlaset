@@ -21,7 +21,7 @@ export function SegmentedToggle<T extends string>({
   disabled = false,
 }: SegmentedToggleProps<T>) {
   return (
-    <div className={`flex gap-2 ${className}`}>
+    <div className={`flex flex-wrap gap-2 ${className}`}>
       {options.map((opt) => (
         <button
           key={opt.value}

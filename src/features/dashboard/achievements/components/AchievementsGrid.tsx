@@ -1,12 +1,14 @@
 import { useState, useMemo } from "react";
-import { FaArrowRotateLeft } from "react-icons/fa6";
 import {
   ActionButton,
+  EmptyListMessage,
   ErrorMessage,
   LoadingSpinner,
   SearchInput,
+  SegmentedToggle,
   SelectInput,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useHomeCountry } from "@features/user";
@@ -20,14 +22,42 @@ import {
 } from "../utils/achievements";
 
 const typeOptions = [
-  { value: "all", label: "All Types" },
-  { value: "milestone", label: "Milestone" },
-  { value: "general", label: "General" },
-  { value: "collection", label: "Collection" },
-  { value: "geographic", label: "Geographic" },
-  { value: "historic", label: "Historic" },
-  { value: "cultural", label: "Cultural" },
-  { value: "trips", label: "Trips" },
+  { value: "all", label: "All" },
+  {
+    value: "milestone",
+    label: "Milestone",
+    colorClass: "bg-zinc-600",
+  },
+  {
+    value: "general",
+    label: "General",
+    colorClass: "bg-yellow-600",
+  },
+  {
+    value: "collection",
+    label: "Collection",
+    colorClass: "bg-green-600",
+  },
+  {
+    value: "geographic",
+    label: "Geographic",
+    colorClass: "bg-blue-600",
+  },
+  {
+    value: "historic",
+    label: "Historic",
+    colorClass: "bg-red-600",
+  },
+  {
+    value: "cultural",
+    label: "Cultural",
+    colorClass: "bg-purple-600",
+  },
+  {
+    value: "trips",
+    label: "Trips",
+    colorClass: "bg-orange-600",
+  },
 ];
 const statusOptions = [
   { value: "all", label: "All Statuses" },
@@ -113,29 +143,28 @@ export function AchievementsGrid() {
       </div>
     );
   }
-
-  // Handle case with no data
   if (!achievementsData) {
-    return <div className="p-4">No achievements data found.</div>;
+    return <EmptyListMessage message="No achievements data found." />;
   }
 
   return (
     <div className="mb-4 gap-4">
+      <div className="flex">
+        <SegmentedToggle
+          value={typeFilter}
+          onChange={(v) => setTypeFilter(String(v))}
+          options={typeOptions}
+        />
+      </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div className="flex flex-col sm:flex-row sm:items-center gap-2">
           <SearchInput
             value={search}
             onChange={setSearch}
             placeholder="Search achievements"
-            className="mt-1 rounded-md"
+            className="min-w-[250px] mt-1 rounded-md"
           />
           <div className="flex flex-row gap-2 w-full">
-            <SelectInput
-              value={typeFilter}
-              onChange={(v) => setTypeFilter(String(v))}
-              options={typeOptions}
-              className="min-w-[150px]"
-            />
             <SelectInput
               value={statusFilter}
               onChange={(v) => setStatusFilter(String(v))}
@@ -150,7 +179,7 @@ export function AchievementsGrid() {
               onClick={handleResetFilters}
               ariaLabel="Reset Filters"
               title="Reset Filters"
-              icon={<FaArrowRotateLeft />}
+              icon={<ICONS.reset />}
               variant="toggle"
               rounded
             />
