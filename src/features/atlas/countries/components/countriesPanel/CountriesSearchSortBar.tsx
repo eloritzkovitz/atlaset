@@ -1,6 +1,6 @@
 import { SearchInput, SegmentedToggle } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
-import { CountrySortSelect } from "@features/countries";
+import { CountrySortSelect } from "@features/countries/components/countrySort/CountrySortSelect";
 
 interface CountriesSearchSortBarProps {
   search: string;
