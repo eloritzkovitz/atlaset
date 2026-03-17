@@ -14,7 +14,39 @@ import {
   getRepeatVisitCount,
   getUniqueAbroadCountries,
 } from "../../statistics/utils/visitStats";
-import type { Achievement, AchievementStatus } from "../types";
+import type {
+  Achievement,
+  AchievementStatus,
+  CountryCriteriaFilterMap,
+} from "../types";
+
+/**
+ * Returns a map of criteria keys to filter functions for countries.
+ * @param criteria - Achievement criteria object
+ * @returns Map of filter functions
+ */
+export function getCountryCriteriaFilters(
+  criteria: Record<string, unknown>,
+): CountryCriteriaFilterMap {
+  return {
+    countries: (c: Country) =>
+      Array.isArray(criteria.countries) &&
+      criteria.countries.includes(c.isoCode),
+    region: (c: Country) =>
+      typeof criteria.region === "string" && c.region === criteria.region,
+    subregion: (c: Country) =>
+      typeof criteria.subregion === "string" &&
+      c.subregion === criteria.subregion,
+    currency: (c: Country) =>
+      typeof criteria.currency === "string" && c.currency === criteria.currency,
+    languages: (c: Country) =>
+      Array.isArray(criteria.languages)
+        ? (c.languages?.some((lang) =>
+            (criteria.languages as string[]).includes(lang),
+          ) ?? false)
+        : false,
+  };
+}
 
 /**
  * Gets the list of countries relevant to the achievement criteria.
@@ -30,19 +62,6 @@ export function getAchievementCountries(
   const sovereignOnly = criteria.sovereign_only === true;
   const sovereigntyFilter = createSovereigntyFilter(sovereignOnly);
 
-  // Map criteria keys to filter functions
-  const filterMap: { [key: string]: (c: Country) => boolean } = {
-    countries: (c) => criteria.countries?.includes(c.isoCode) ?? false,
-    region: (c) => c.region === criteria.region!,
-    subregion: (c) => c.subregion === criteria.subregion!,
-    currency: (c) => c.currency === criteria.currency!,
-    languages: (c) =>
-      Array.isArray(criteria.languages)
-        ? (c.languages?.some((lang) => criteria.languages!.includes(lang)) ??
-          false)
-        : false,
-  };
-
   // Root-level countries array
   if (achievement.countries && Array.isArray(achievement.countries)) {
     return countries.filter(
@@ -51,6 +70,7 @@ export function getAchievementCountries(
   }
 
   // Find first matching criteria key
+  const filterMap = getCountryCriteriaFilters(criteria);
   for (const key of Object.keys(filterMap)) {
     if (criteria[key as keyof typeof criteria]) {
       return countries.filter((c) => filterMap[key](c) && sovereigntyFilter(c));

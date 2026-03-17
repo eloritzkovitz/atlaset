@@ -1,5 +1,8 @@
+import type { Country } from "@features/countries";
+
 /** Represents the criteria for an achievement. */
 export interface Criteria {
+  [key: string]: unknown;
   countries?: string[];
   regions?: string[];
   region?: string;
@@ -43,5 +46,20 @@ export interface Achievement {
   tiers?: Tier[];
 }
 
-/** Represents the status of an achievement */
+/** Represents the status of an achievement. */
 export type AchievementStatus = "locked" | "progress" | "completed";
+
+/** Represents the keys for country criteria filters. */
+export type CountryCriteriaKey =
+  | "countries"
+  | "region"
+  | "subregion"
+  | "currency"
+  | "languages";
+
+/** Represents a map of country criteria filters. */
+export type CountryCriteriaFilterMap = {
+  [K in CountryCriteriaKey]: (c: Country) => boolean;
+} & {
+  [key: string]: (c: Country) => boolean;
+};
