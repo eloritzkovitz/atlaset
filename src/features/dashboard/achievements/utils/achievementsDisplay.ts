@@ -61,7 +61,12 @@ export function getDisplayFlagCountries(
     region: (c) => c.region === displayCriteria.region!,
     subregion: (c) => c.subregion === displayCriteria.subregion!,
     currency: (c) => c.currency === displayCriteria.currency!,
-    language: (c) => c.languages?.includes(displayCriteria.language!) ?? false,
+    languages: (c) =>
+      Array.isArray(displayCriteria.languages)
+        ? (c.languages?.some((lang) =>
+            displayCriteria.languages!.includes(lang),
+          ) ?? false)
+        : false,
   };
 
   const sovereigntyFilter = createSovereigntyFilter(true);

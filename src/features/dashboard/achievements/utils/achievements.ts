@@ -36,7 +36,11 @@ export function getAchievementCountries(
     region: (c) => c.region === criteria.region!,
     subregion: (c) => c.subregion === criteria.subregion!,
     currency: (c) => c.currency === criteria.currency!,
-    language: (c) => c.languages?.includes(criteria.language!) ?? false,
+    languages: (c) =>
+      Array.isArray(criteria.languages)
+        ? (c.languages?.some((lang) => criteria.languages!.includes(lang)) ??
+          false)
+        : false,
   };
 
   // Root-level countries array
@@ -60,7 +64,7 @@ export function getAchievementCountries(
     !criteria.subregion &&
     !criteria.countries &&
     !criteria.currency &&
-    !criteria.language
+    !criteria.languages
   ) {
     return countries.filter(sovereigntyFilter);
   }
