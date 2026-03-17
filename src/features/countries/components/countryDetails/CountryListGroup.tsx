@@ -8,7 +8,7 @@ interface CountryListGroupProps {
   label: string;
   isoCodes: string[];
   countries: Country[];
-  visited: (iso: string) => boolean;
+  visited?: (iso: string) => boolean;
   expanded: boolean;
   onToggle: () => void;
   onSelectCountry?: (isoCode: string) => void;
@@ -54,7 +54,7 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
       ) : (
         <div className="flex flex-col text-lg">
           {sortedCountries.map((country) => {
-            const isVisited = visited(country!.isoCode);
+            const isVisited = visited?.(country!.isoCode);
             return (
               <MenuButton
                 key={country!.isoCode}

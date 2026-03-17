@@ -11,13 +11,9 @@ import {
   SortSelect,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTrips } from "@contexts/TripsContext";
-import { useCountryData } from "@features/countries";
-import { useHomeCountry } from "@features/user";
-import { useVisitedCountries } from "@features/visits";
 import { AchievementCard } from "./AchievementCard";
+import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import { useAchievementsData } from "../hooks/useAchievementsData";
-import { useAchievementFilters } from "../hooks/useAchievementFilters";
 
 const typeOptions = [
   { value: "all", label: "All" },
@@ -72,12 +68,17 @@ const sortKeyGroup = {
 };
 
 export function AchievementsGrid() {
-  const { achievementsData, achievementsError, loading } =
+  const { loading, achievementsData, achievementsError } =
     useAchievementsData();
-  const { countries } = useCountryData();
-  const visited = useVisitedCountries();
-  const { trips } = useTrips();
-  const { homeCountry } = useHomeCountry();
+  const {
+    mergedAchievements,
+    sortedAchievements,
+    achievementStatusMap,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  } = useAchievementStatus();
   const navigate = useNavigate();
 
   // Local state for filters and search
@@ -85,20 +86,6 @@ export function AchievementsGrid() {
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("id-asc");
-
-  // Filter and sort achievements based on current filters and search query
-  const { mergedAchievements, sortedAchievements, achievementStatusMap } =
-    useAchievementFilters({
-      typeFilter,
-      statusFilter,
-      search,
-      sortBy,
-      achievementsData,
-      countries,
-      visited,
-      trips,
-      homeCountry,
-    });
 
   // Reset filters to default
   const handleResetFilters = () => {
@@ -186,7 +173,9 @@ export function AchievementsGrid() {
               homeCountry={homeCountry}
               achievementStatusMap={achievementStatusMap}
               allAchievements={mergedAchievements}
-              onClick={() => navigate(`/dashboard/achievements/${achievement.id}`)}
+              onClick={() =>
+                navigate(`/dashboard/achievements/${achievement.id}`)
+              }
             />
           );
         })}

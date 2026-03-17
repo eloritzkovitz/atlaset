@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { CountryListGroup, type Country } from "@features/countries";
+import { useParams } from "react-router-dom";
+import { useAchievementStatus } from "../hooks/useAchievementStatus";
+import { CountryListGroup } from "@features/countries";
+import { AchievementListGroup } from "./AchievementListGroup";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
 import type { Achievement } from "../types";
@@ -7,23 +10,26 @@ import { getAchievementCountries } from "../utils/achievements";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 
-interface AchievementInfoProps {
-  achievement: Achievement;
-  countries: Country[];
-}
-
-export function AchievementInfo({
-  achievement,
-  countries,
-}: AchievementInfoProps) {
+export function AchievementInfo() {
+  const { achievementId } = useParams();
+  const { mergedAchievements, achievementStatusMap, countries } =
+    useAchievementStatus();
+  const achievement = mergedAchievements.find(
+    (a) => String(a.id) === achievementId,
+  );
   const [expandedCountries, setExpandedCountries] = useState(true);
-  const achCountries = getAchievementCountries(achievement, countries);
+  const achCountries = achievement
+    ? getAchievementCountries(achievement, countries)
+    : [];
   const { isCountryVisited } = useVisitedCountries();
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
     "",
     "",
   );
+
+  // Defensive check for achievement existence
+  if (!achievement) return <div className="p-4">Achievement not found.</div>;
 
   // Defensive check for criteria countries
   const isoCodes = achCountries.map((c) => c.isoCode);
@@ -36,6 +42,19 @@ export function AchievementInfo({
         onBack={handleBack}
       />
       <div className="mb-4 text-muted text-base">{achievement.description}</div>
+      {achievement.requires && achievement.requires.length > 0 && (
+        <AchievementListGroup
+          achievements={
+            achievement.requires
+              .map((reqId) =>
+                mergedAchievements.find((a) => String(a.id) === String(reqId)),
+              )
+              .filter(Boolean) as Achievement[]
+          }
+          label="Required Achievements"
+          achievementStatusMap={achievementStatusMap}
+        />
+      )}
       {isoCodes.length > 0 && (
         <CountryListGroup
           label="Countries"
