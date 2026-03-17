@@ -12,9 +12,15 @@ import {
   GoogleAuthProvider,
   deleteUser,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import { getFunctions, httpsCallable } from "firebase/functions";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import { logUserActivity } from "../../activity/utils/activity";
+import { friendService } from "../../friends/services/friendService";
 import { profileService } from "../../profile/services/profileService";
 import { checkAndReactivateUser } from "../utils/auth";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
@@ -45,7 +51,7 @@ export const authService = {
         email: result.user.email,
         device: getDeviceInfo().userAgent,
       },
-      result.user!.uid
+      result.user!.uid,
     );
     await logDevice(result.user!.uid);
 
@@ -61,11 +67,11 @@ export const authService = {
   async signInWithPersistence(
     email: string,
     password: string,
-    keepLoggedIn: boolean
+    keepLoggedIn: boolean,
   ) {
     await setPersistence(
       auth,
-      keepLoggedIn ? browserLocalPersistence : browserSessionPersistence
+      keepLoggedIn ? browserLocalPersistence : browserSessionPersistence,
     );
     const result = await signInWithEmailAndPassword(auth, email, password);
 
@@ -75,7 +81,7 @@ export const authService = {
       await logUserActivity(
         111,
         { userName: result.user.displayName, email: result.user.email },
-        result.user.uid
+        result.user.uid,
       );
     }
 
@@ -87,7 +93,7 @@ export const authService = {
         email: result.user.email,
         device: getDeviceInfo().userAgent,
       },
-      result.user!.uid
+      result.user!.uid,
     );
     await logDevice(result.user!.uid);
 
@@ -117,7 +123,7 @@ export const authService = {
         email: result.user.email,
         device: getDeviceInfo().userAgent,
       },
-      result.user!.uid
+      result.user!.uid,
     );
     await logDevice(result.user!.uid);
     return { ...result, username };
@@ -155,7 +161,7 @@ export const authService = {
    */
   async updateUserProfile(
     user: User,
-    data: { displayName?: string; photoURL?: string }
+    data: { displayName?: string; photoURL?: string },
   ) {
     await updateProfile(user, data);
     await logUserActivity(
@@ -165,7 +171,7 @@ export const authService = {
         userName: data.displayName,
         email: user.email,
       },
-      user.uid
+      user.uid,
     );
   },
 
@@ -193,13 +199,13 @@ export const authService = {
         email: result.user.email,
         device: getDeviceInfo().userAgent,
       },
-      result.user!.uid
+      result.user!.uid,
     );
     await logDevice(result.user!.uid);
     return result;
   },
 
-  /** 
+  /**
    * Deactivates the user's account.
    * @param user - The Firebase User object.
    */
@@ -208,7 +214,7 @@ export const authService = {
     await setDoc(
       doc(db, "users", user.uid),
       { status: "deactivated", deactivatedAt: new Date().toISOString() },
-      { merge: true }
+      { merge: true },
     );
     await logUserActivity(110, {}, user.uid);
     await this.logout();
@@ -219,19 +225,49 @@ export const authService = {
    * @param user - The Firebase User object.
    */
   async deleteAppAccount(user: User) {
-    // 1. Call the Cloud Function to delete all Firestore user data
-    try {
-      const functions = getFunctions();
-      const deleteUserData = httpsCallable(functions, "deleteUserData");
-      await deleteUserData();
-    } catch (e) {
-      console.error(
-        "Error deleting user Firestore data via Cloud Function:",
-        e
-      );
+    // Remove deleted user from other users' friends lists
+    const usersSnap = await getDocs(collection(db, "users"));
+    for (const userDoc of usersSnap.docs) {
+      if (userDoc.id !== user.uid) {
+        // Remove friendship both ways
+        await friendService.removeFriend(userDoc.id, user.uid);
+      }
     }
 
-    // 2. Delete Firebase Auth user (removes login for this app)
+    // Remove from usernames collection
+    const usernamesCol = collection(db, "usernames");
+    const usernamesSnap = await getDocs(usernamesCol);
+    for (const docSnap of usernamesSnap.docs) {
+      const data = docSnap.data();
+      if (data.uid === user.uid) {
+        await deleteDoc(docSnap.ref);
+      }
+    }
+
+    // Delete all Firestore user data client-side
+    const uid = user.uid;
+    const userSubcollections = [
+      "activity",
+      "devices",
+      "friends",
+      "friendRequests",
+      "layers",
+      "markers",
+      "savedMaps",
+      "trips",
+      "sharedTrips",
+      "settings",
+    ];
+    for (const sub of userSubcollections) {
+      const subColRef = collection(db, `users/${uid}/${sub}`);
+      const snapshot = await getDocs(subColRef);
+      for (const docSnap of snapshot.docs) {
+        await deleteDoc(docSnap.ref);
+      }
+    }
+    await deleteDoc(doc(db, "users", uid));
+
+    // Delete Firebase Auth user (removes login for this app)
     await deleteUser(user);
   },
 };
