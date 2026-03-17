@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   ActionButton,
   EmptyListMessage,
@@ -16,11 +16,7 @@ import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementCard } from "./AchievementCard";
 import { useAchievementsData } from "../hooks/useAchievementsData";
-import {
-  getMergedAchievements,
-  getAchievementStatus,
-  isCompleted,
-} from "../utils/achievements";
+import { useAchievementFilters } from "../hooks/useAchievementFilters";
 
 const typeOptions = [
   { value: "all", label: "All" },
@@ -81,86 +77,33 @@ export function AchievementsGrid() {
   const visited = useVisitedCountries();
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
+
+  // Local state for filters and search
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("id-asc");
 
-  // Merge achievements with user data to determine status and progress
-  const mergedAchievements = useMemo(() => {
-    if (!achievementsData) return [];
-    return getMergedAchievements(
+  // Filter and sort achievements based on current filters and search query
+  const { mergedAchievements, sortedAchievements, achievementStatusMap } =
+    useAchievementFilters({
+      typeFilter,
+      statusFilter,
+      search,
+      sortBy,
       achievementsData,
       countries,
       visited,
       trips,
       homeCountry,
-    );
-  }, [achievementsData, countries, visited, trips, homeCountry]);
-
-  // Filter achievements based on search, type, and status
-  const filteredAchievements = useMemo(() => {
-    let filtered = mergedAchievements;
-    if (typeFilter !== "all") {
-      filtered = filtered.filter((a) => a.type === typeFilter);
-    }
-    if (statusFilter !== "all") {
-      filtered = filtered.filter(
-        (a) =>
-          getAchievementStatus(a, countries, visited, trips, homeCountry) ===
-          statusFilter,
-      );
-    }
-    if (search.trim()) {
-      const q = search.trim().toLowerCase();
-      filtered = filtered.filter(
-        (a) =>
-          a.name.toLowerCase().includes(q) ||
-          (a.description && a.description.toLowerCase().includes(q)),
-      );
-    }
-    return filtered;
-  }, [
-    mergedAchievements,
-    search,
-    typeFilter,
-    statusFilter,
-    countries,
-    visited,
-    trips,
-    homeCountry,
-  ]);
-
-  // Sort filtered achievements
-  const sortedAchievements = useMemo(() => {
-    const [key, dir] = sortBy.split("-");
-    return [...filteredAchievements].sort((a, b) => {
-      let cmp = 0;
-      if (key === "name") {
-        cmp = a.name.localeCompare(b.name);
-      } else if (key === "id") {
-        cmp = String(a.id).localeCompare(String(b.id));
-      }
-      return dir === "asc" ? cmp : -cmp;
     });
-  }, [filteredAchievements, sortBy]);
-
-  // Create a map of achievement ID to completion status for quick lookup
-  const achievementStatusMap = useMemo(() => {
-    if (!achievementsData) return {};
-    const map: Record<string, boolean> = {};
-    for (const ach of achievementsData) {
-      map[ach.id] = isCompleted(ach, countries, visited, trips, homeCountry);
-    }
-    return map;
-  }, [achievementsData, countries, visited, trips, homeCountry]);
 
   // Reset filters to default
   const handleResetFilters = () => {
     setSearch("");
     setTypeFilter("all");
     setStatusFilter("all");
-    setSortBy("name-asc");
+    setSortBy("id-asc");
   };
 
   // handle conditional rendering
