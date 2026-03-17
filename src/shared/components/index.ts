@@ -88,6 +88,7 @@ export { TableDropdownFilter } from "./table/TableDropdownFilter";
 export { TableHeader } from "./table/TableHeader";
 
 // UI components
+export { SortSelect } from "./ui/SortSelect/SortSelect";
 export { RateMenu } from "./ui/StarRating/RateMenu";
 export { Tooltip } from "./ui/Tooltip/Tooltip";
 export { FloatingPortal } from "./ui/Tooltip/FloatingPortal";
@@ -97,7 +98,6 @@ export {
   SegmentedToggle,
   type SegmentedToggleOption,
 } from "./ui/SegmentedToggle";
-export { SortSelect } from "./ui/SortSelect";
 export { TabButton } from "./ui/TabButton";
 
 // UI Hint components

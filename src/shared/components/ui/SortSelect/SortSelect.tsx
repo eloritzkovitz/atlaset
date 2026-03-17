@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FaCheck, FaArrowUp, FaArrowDown } from "react-icons/fa6";
+import { FaCheck } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import {
   useKeyboardFocusRing,
@@ -7,16 +7,12 @@ import {
   useModalAnimation,
 } from "@hooks";
 import type { Option, OptionGroup } from "@types";
-import { ActionButton } from "../action/ActionButton";
-import { OptionItem } from "../form/inputs/DropdownSelectInput/OptionItem";
-import { Menu } from "../layout/Menu/Menu";
-import { SectionHeader } from "../layout/SectionHeader";
-import { Separator } from "../layout/Separator";
-
-export const directionOptions = [
-  { value: "asc", label: "Ascending", icon: FaArrowUp },
-  { value: "desc", label: "Descending", icon: FaArrowDown },
-];
+import { directionOptions } from "./directionOptions";
+import { ActionButton } from "../../action/ActionButton";
+import { OptionItem } from "../../form/inputs/DropdownSelectInput/OptionItem";
+import { Menu } from "../../layout/Menu/Menu";
+import { SectionHeader } from "../../layout/SectionHeader";
+import { Separator } from "../../layout/Separator";
 
 export interface SortSelectProps<T extends string> {
   value: T;
