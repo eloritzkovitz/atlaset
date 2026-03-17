@@ -39,7 +39,7 @@ export function getCurrentTier(
   tierCount?: number;
 } {
   let tierIndex = 0;
-  let tierObj = null;
+  let tierObj: Tier | null = null;
   let tierStatus: AchievementStatus = getAchievementStatus(
     achievement,
     countries,
@@ -47,7 +47,6 @@ export function getCurrentTier(
     trips,
     homeCountry,
   );
-  let tierCount: number | undefined = undefined;
 
   if (
     achievement.tiers &&
@@ -57,15 +56,9 @@ export function getCurrentTier(
     let foundCompleted = false;
     for (let i = achievement.tiers.length - 1; i >= 0; i--) {
       const t = achievement.tiers[i];
-      let tierAch = { ...achievement };
-      if (typeof t.count === "number" && achievement.countries) {
-        tierAch = {
-          ...achievement,
-          criteria: { countries: achievement.countries.slice(0, t.count) },
-        };
-      } else if (t.criteria) {
-        tierAch = { ...achievement, criteria: t.criteria };
-      }
+      const tierAch = t.criteria
+        ? { ...achievement, criteria: t.criteria }
+        : { ...achievement };
       const completed =
         getAchievementStatus(
           tierAch,
@@ -80,21 +73,13 @@ export function getCurrentTier(
         break;
       }
     }
-    // Only increment tierIndex if a tier was completed
     if (foundCompleted && tierIndex < achievement.tiers.length - 1) {
       tierIndex++;
     }
     tierObj = achievement.tiers[tierIndex];
-    let tierAch = { ...achievement };
-    if (typeof tierObj.count === "number" && achievement.countries) {
-      tierAch = {
-        ...achievement,
-        criteria: { countries: achievement.countries.slice(0, tierObj.count) },
-      };
-      tierCount = tierObj.count;
-    } else if (tierObj.criteria) {
-      tierAch = { ...achievement, criteria: tierObj.criteria };
-    }
+    const tierAch = tierObj.criteria
+      ? { ...achievement, criteria: tierObj.criteria }
+      : { ...achievement };
     tierStatus = getAchievementStatus(
       tierAch,
       countries,
@@ -104,5 +89,5 @@ export function getCurrentTier(
     );
   }
 
-  return { tierObj, tierIndex, tierStatus, tierCount };
+  return { tierObj, tierIndex, tierStatus };
 }
