@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FaCheck } from "react-icons/fa6";
+import { FaCheck, FaArrowUp, FaArrowDown } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import {
   useKeyboardFocusRing,
@@ -13,11 +13,15 @@ import { Menu } from "../layout/Menu/Menu";
 import { SectionHeader } from "../layout/SectionHeader";
 import { Separator } from "../layout/Separator";
 
+export const directionOptions = [
+  { value: "asc", label: "Ascending", icon: FaArrowUp },
+  { value: "desc", label: "Descending", icon: FaArrowDown },
+];
+
 export interface SortSelectProps<T extends string> {
   value: T;
   onChange: (value: T) => void;
   keyGroup: OptionGroup<T>;
-  dirGroup: OptionGroup<T>;
   showLabel?: boolean;
 }
 
@@ -25,13 +29,18 @@ export function SortSelect<T extends string>({
   value,
   onChange,
   keyGroup,
-  dirGroup,
   showLabel = false,
 }: SortSelectProps<T>) {
   const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation();
   const showRing = useKeyboardFocusRing();
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Direction group
+  const dirGroup = {
+    label: "Direction",
+    options: directionOptions as Option<T>[],
+  };
 
   // Parse value into key and direction
   const [sortKey, sortDirection] = value.split("-") as [T, T];

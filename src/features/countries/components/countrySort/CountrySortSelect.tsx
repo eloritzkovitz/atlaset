@@ -22,9 +22,6 @@ export function CountrySortSelect({
 
   // Extract key and direction groups
   const keyGroup = options.find((g) => g.label === "SORT BY");
-  const dirGroup = options.find((g) => g.label === "SORT DIRECTION");
-
-  // Fallback to empty group if undefined
   const emptyGroup = { label: "", options: [] };
 
   return (
@@ -32,7 +29,6 @@ export function CountrySortSelect({
       value={value}
       onChange={onChange}
       keyGroup={keyGroup ?? emptyGroup}
-      dirGroup={dirGroup ?? emptyGroup}
       showLabel={showLabel}
     />
   );

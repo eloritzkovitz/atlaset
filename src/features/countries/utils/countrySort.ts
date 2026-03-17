@@ -2,7 +2,7 @@
  * @file Utils for sorting countries.
  */
 
-import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
+// Direction options moved to SortSelect.tsx
 import type { Trip } from "@features/trips";
 import {
   getFirstVisitDateByCountry,
@@ -33,7 +33,7 @@ function buildVisitDateMaps(trips: Trip[]) {
 export function sortCountries(
   countries: Country[],
   sortBy: CountrySortBy,
-  trips: Trip[]
+  trips: Trip[],
 ) {
   const { firstVisitMap, lastVisitMap } = buildVisitDateMaps(trips);
   const [key, direction] = sortBy.split("-");
@@ -44,7 +44,7 @@ export function sortCountries(
       return sortItems(
         countries,
         (c) => normalizeString(c.name),
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
     case "iso":
       return sortItems(countries, (c) => c.isoCode || "", asc ? "asc" : "desc");
@@ -52,13 +52,13 @@ export function sortCountries(
       return sortItems(
         countries,
         (c) => firstVisitMap[c.isoCode]?.getTime() ?? 0,
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
     case "lastVisit":
       return sortItems(
         countries,
         (c) => lastVisitMap[c.isoCode]?.getTime() ?? 0,
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
     default:
       return countries;
@@ -89,15 +89,9 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
   // Only include timeline options if visitedOnly
   const keyOptions = visitedOnly
     ? allKeyOptions
-    : allKeyOptions.filter(opt => opt.value === "name" || opt.value === "iso");
+    : allKeyOptions.filter(
+        (opt) => opt.value === "name" || opt.value === "iso",
+      );
 
-  const directionOptions = [
-    { value: "asc", label: "Ascending", icon: FaArrowUp },
-    { value: "desc", label: "Descending", icon: FaArrowDown },
-  ];
-
-  return [
-    { label: "SORT BY", options: keyOptions },
-    { label: "SORT DIRECTION", options: directionOptions },
-  ];
+  return [{ label: "SORT BY", options: keyOptions }];
 }

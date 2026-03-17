@@ -7,6 +7,7 @@ import {
   SearchInput,
   SegmentedToggle,
   SelectInput,
+  SortSelect,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
@@ -65,6 +66,13 @@ const statusOptions = [
   { value: "progress", label: "In Progress" },
   { value: "completed", label: "Completed" },
 ];
+const sortKeyGroup = {
+  label: "Sort By",
+  options: [
+    { value: "id", label: "ID" },
+    { value: "name", label: "Name" },
+  ],
+};
 
 export function AchievementsGrid() {
   const { achievementsData, achievementsError, loading } =
@@ -76,7 +84,9 @@ export function AchievementsGrid() {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("id-asc");
 
+  // Merge achievements with user data to determine status and progress
   const mergedAchievements = useMemo(() => {
     if (!achievementsData) return [];
     return getMergedAchievements(
@@ -88,6 +98,7 @@ export function AchievementsGrid() {
     );
   }, [achievementsData, countries, visited, trips, homeCountry]);
 
+  // Filter achievements based on search, type, and status
   const filteredAchievements = useMemo(() => {
     let filtered = mergedAchievements;
     if (typeFilter !== "all") {
@@ -109,9 +120,32 @@ export function AchievementsGrid() {
       );
     }
     return filtered;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mergedAchievements, search, typeFilter, statusFilter]);
+  }, [
+    mergedAchievements,
+    search,
+    typeFilter,
+    statusFilter,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  ]);
 
+  // Sort filtered achievements
+  const sortedAchievements = useMemo(() => {
+    const [key, dir] = sortBy.split("-");
+    return [...filteredAchievements].sort((a, b) => {
+      let cmp = 0;
+      if (key === "name") {
+        cmp = a.name.localeCompare(b.name);
+      } else if (key === "id") {
+        cmp = String(a.id).localeCompare(String(b.id));
+      }
+      return dir === "asc" ? cmp : -cmp;
+    });
+  }, [filteredAchievements, sortBy]);
+
+  // Create a map of achievement ID to completion status for quick lookup
   const achievementStatusMap = useMemo(() => {
     if (!achievementsData) return {};
     const map: Record<string, boolean> = {};
@@ -126,6 +160,7 @@ export function AchievementsGrid() {
     setSearch("");
     setTypeFilter("all");
     setStatusFilter("all");
+    setSortBy("name-asc");
   };
 
   // handle conditional rendering
@@ -174,6 +209,11 @@ export function AchievementsGrid() {
           </div>
         </div>
         <div className="flex flex-row gap-2 mt-2 sm:mt-0">
+          <SortSelect
+            value={sortBy}
+            onChange={setSortBy}
+            keyGroup={sortKeyGroup}
+          />
           <div className="flex flex-row gap-2 ml-auto justify-end">
             <ActionButton
               onClick={handleResetFilters}
@@ -187,10 +227,10 @@ export function AchievementsGrid() {
         </div>
       </div>
       <div className="text-sm text-muted md:text-sm md:whitespace-nowrap select-none mb-4">
-        Showing {filteredAchievements.length} achievements
+        Showing {sortedAchievements.length} achievements
       </div>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {filteredAchievements.map((achievement) => {
+        {sortedAchievements.map((achievement) => {
           return (
             <AchievementCard
               key={achievement.id}
