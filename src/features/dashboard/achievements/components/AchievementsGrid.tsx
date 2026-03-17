@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   ActionButton,
   EmptyListMessage,
@@ -15,7 +16,6 @@ import { useCountryData } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementCard } from "./AchievementCard";
-import { AchievementInfo } from "./AchievementInfo";
 import { useAchievementsData } from "../hooks/useAchievementsData";
 import { useAchievementFilters } from "../hooks/useAchievementFilters";
 
@@ -78,17 +78,13 @@ export function AchievementsGrid() {
   const visited = useVisitedCountries();
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
+  const navigate = useNavigate();
 
   // Local state for filters and search
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("id-asc");
-
-  // Modal state for achievement info
-  const [selectedAchievement, setSelectedAchievement] = useState<
-    null | (typeof sortedAchievements)[0]
-  >(null);
 
   // Filter and sort achievements based on current filters and search query
   const { mergedAchievements, sortedAchievements, achievementStatusMap } =
@@ -129,15 +125,6 @@ export function AchievementsGrid() {
   }
   if (!achievementsData) {
     return <EmptyListMessage message="No achievements data found." />;
-  }
-  if (selectedAchievement) {
-    return (
-      <AchievementInfo
-        achievement={selectedAchievement}
-        countries={countries}
-        onBack={() => setSelectedAchievement(null)}
-      />
-    );
   }
 
   return (
@@ -199,7 +186,7 @@ export function AchievementsGrid() {
               homeCountry={homeCountry}
               achievementStatusMap={achievementStatusMap}
               allAchievements={mergedAchievements}
-              onClick={() => setSelectedAchievement(achievement)}
+              onClick={() => navigate(`/dashboard/achievements/${achievement.id}`)}
             />
           );
         })}

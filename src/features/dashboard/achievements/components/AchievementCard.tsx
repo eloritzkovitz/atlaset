@@ -76,7 +76,7 @@ export function AchievementCard({
 
   return (
     <div
-      className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:shadow-lg select-none`}
+      className={`rounded-xl p-5 flex flex-col items-center transition-shadow duration-200 ${bgClass} ${textClass} shadow-sm hover:scale-105 hover:bg-primary/20 select-none`}
       style={{
         minHeight: 320,
         position: "relative",

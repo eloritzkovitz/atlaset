@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import type { Country, Currency } from "@features/countries";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
@@ -7,6 +7,8 @@ import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
 import { CountryStats } from "../../exploration/components/CountryStats";
 import { OverviewGrid } from "../../overview/components/OverviewGrid";
 import { StatisticsGrid } from "../../statistics/components/StatisticsGrid";
+import { AchievementInfo } from "@features/dashboard/achievements/components/AchievementInfo";
+import { useAchievementsData } from "@features/dashboard/achievements/hooks/useAchievementsData";
 
 interface DashboardRoutesProps {
   countries: Country[];
@@ -56,6 +58,16 @@ export function DashboardRoutes({
     setSelectedSubregion(subregion);
     onSubregionChange(region, subregion);
   };
+
+  function AchievementInfoRoute({ countries }: { countries: Country[] }) {
+    const { achievementId } = useParams();
+    const { achievementsData } = useAchievementsData();
+    const achievement = achievementsData?.find(
+      (a) => String(a.id) === achievementId,
+    );
+    if (!achievement) return <div className="p-4">Achievement not found.</div>;
+    return <AchievementInfo achievement={achievement} countries={countries} />;
+  }
 
   return (
     <Routes>
@@ -128,6 +140,10 @@ export function DashboardRoutes({
         }
       />
       <Route path="achievements" element={<AchievementsGrid />} />
+      <Route
+        path="achievements/:achievementId"
+        element={<AchievementInfoRoute countries={countries} />}
+      />
       <Route path="statistics/*" element={<StatisticsGrid />} />
     </Routes>
   );
