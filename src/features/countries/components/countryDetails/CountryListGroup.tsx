@@ -54,7 +54,12 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
       ) : (
         <div className="flex flex-col text-lg">
           {sortedCountries.map((country) => {
-            const isVisited = visited?.(country!.isoCode);
+            // Determine visited status if visited function is provided
+            let isVisited: boolean | undefined = undefined;
+            if (visited) {
+              isVisited = visited(country!.isoCode);
+            }
+
             return (
               <MenuButton
                 key={country!.isoCode}
@@ -65,8 +70,10 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
                 className="py-2 px-2"
               >
                 <span
-                  style={{ opacity: isVisited ? 1 : 0.4 }}
-                  className={isVisited ? "" : "flag-grayscale-hover"}
+                  style={{ opacity: visited ? (isVisited ? 1 : 0.4) : 1 }}
+                  className={
+                    visited && !isVisited ? "flag-grayscale-hover" : ""
+                  }
                 >
                   <CountryWithFlag
                     isoCode={country!.isoCode}
