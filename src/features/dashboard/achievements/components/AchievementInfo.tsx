@@ -17,16 +17,30 @@ export function AchievementInfo() {
   const achievement = mergedAchievements.find(
     (a) => String(a.id) === achievementId,
   );
-  const [expandedCountries, setExpandedCountries] = useState(true);
-  const achCountries = achievement
-    ? getAchievementCountries(achievement, countries)
-    : [];
   const { isCountryVisited } = useVisitedCountries();
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
     "",
     "",
   );
+
+  const [expandedCountries, setExpandedCountries] = useState(true);
+  let achCountries: typeof countries = [];
+
+  // First try to get region from achievement criteria or tiers, then fallback to achievement countries
+  if (achievement) {
+    // Find region from any tier
+    let region = achievement.criteria?.region;
+    if (!region && achievement.tiers && achievement.tiers.length) {
+      region = achievement.tiers.find((t) => t.criteria?.region)?.criteria
+        ?.region;
+    }
+    if (region) {
+      achCountries = countries.filter((c) => c.region === region);
+    } else {
+      achCountries = getAchievementCountries(achievement, countries);
+    }
+  }
 
   // Defensive check for achievement existence
   if (!achievement) return <div className="p-4">Achievement not found.</div>;
@@ -82,7 +96,11 @@ export function AchievementInfo() {
         )}
       {isoCodes.length > 0 && (
         <CountryListGroup
-          label="Countries"
+          label={
+            achievement.criteria?.region
+              ? `Countries in ${achievement.criteria.region}`
+              : "Countries"
+          }
           isoCodes={isoCodes}
           countries={countries}
           visited={isCountryVisited}
