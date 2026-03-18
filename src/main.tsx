@@ -10,6 +10,19 @@ import { store } from "./store";
 import "./styles/index.css";
 import "./styles/markdown.css";
 
+// Register service worker for PWA update detection
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  // Dynamically import virtual:pwa-register for VitePWA
+  import("virtual:pwa-register").then(({ registerSW }) => {
+    registerSW({
+      onNeedRefresh() {
+        // Dispatch swUpdated event for usePwaUpdate hook
+        window.dispatchEvent(new CustomEvent("swUpdated"));
+      },
+    });
+  });
+}
+
 // Detect Electron environment
 const isElectron = !!window?.process?.versions?.electron;
 
@@ -29,5 +42,5 @@ createRoot(document.getElementById("root")!).render(
         </AuthProvider>
       </Router>
     </Provider>
-  </StrictMode>
+  </StrictMode>,
 );
