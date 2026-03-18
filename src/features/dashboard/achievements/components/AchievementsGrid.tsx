@@ -70,6 +70,13 @@ const sortKeyGroup = {
 export function AchievementsGrid() {
   const { loading, achievementsData, achievementsError } =
     useAchievementsData();
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [typeFilter, setTypeFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("id-asc");
+
+  // Get achievement status and merged achievements based on user data and filters
   const {
     mergedAchievements,
     sortedAchievements,
@@ -78,14 +85,12 @@ export function AchievementsGrid() {
     visited,
     trips,
     homeCountry,
-  } = useAchievementStatus();
-  const navigate = useNavigate();
-
-  // Local state for filters and search
-  const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("id-asc");
+  } = useAchievementStatus({
+    typeFilter,
+    statusFilter,
+    search,
+    sortBy,
+  });
 
   // Reset filters to default
   const handleResetFilters = () => {
