@@ -86,6 +86,9 @@
     "vitest": "4.1.0"
   },
   "overrides": {
+    "electron-vite": {
+      "vite": "8.0.0"
+    },
     "vite-plugin-pwa": {
       "vite": "8.0.0"
     }
