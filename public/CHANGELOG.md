@@ -1,32 +1,45 @@
 # Changelog
 
 ## 2026-03-16
+
+- **[chore]** **Dashboard | Achievements:** Updated achievements with new achievements, improved filtering, sorting and details
+- **[chore]** **Dashboard:** Updated breadcrumbs and navigation for currencies and achievements
+
+## 2026-03-16
+
 - **[chore]** **General:** Updated menu buttons for better internal navigation
 - **[bugfix]** **General:** Fixed some bugs
 
 ## 2026-03-15
+
 - **[feature]** **Countries:** Added property search for countries
 - **[feature]** **Dashboard | Currencies:** Added a new section for currencies and a currency exchange widget
 - **[feature]** **Search:** Currencies are now searchable
 
 ## 2026-03-13
+
 - **[feature]** **Countries:** Related countries are now clickable
 - **[feature]** **Dashboard | Exploration:** Updated country pages to match the atlas's country details
 - **[feature]** **Search:** Regions and subregions are now searchable
 
 ## 2026-03-11
+
 - **[feature]** **Search:** Added global search feature
 
 ## 2026-03-08
+
 - **[feature]** **Atlas | Countries:** Updated country details to also show relations for a country (dependencies, regions, disputes)
 
 ## 2026-03-07
+
 - **[feature]** **Atlas | Visits:** Updated visits display and linked visits with calendar
 
 ## 2026-03-04
+
 - **[feature]** **User | Activity:** Redesigned activity log and updated formatting
 
 ## 2026-03-01
+
 - **[feature]** **Countries:** Added aliases to some countries
 - **[bugfix]** **General:** Fixed some UI bugs
 
