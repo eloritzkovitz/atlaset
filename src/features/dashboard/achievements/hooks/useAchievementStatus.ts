@@ -1,8 +1,8 @@
-import { useAchievementsData } from "./useAchievementsData";
-import { useVisitedCountries } from "@features/visits";
+import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
-import { useHomeCountry } from "@features/user";
 import { useCountryData } from "@features/countries";
+import { useHomeCountry } from "@features/user";
+import { useVisitedCountries } from "@features/visits";
 import { useAchievementFilters } from "./useAchievementFilters";
 
 /**
@@ -19,7 +19,7 @@ export function useAchievementStatus({
   search = "",
   sortBy = "id-asc",
 } = {}) {
-  const { achievementsData } = useAchievementsData();
+  const { achievements } = useAchievements();
   const { countries } = useCountryData();
   const visited = useVisitedCountries();
   const { trips } = useTrips();
@@ -30,7 +30,7 @@ export function useAchievementStatus({
     statusFilter,
     search,
     sortBy,
-    achievementsData,
+    achievements,
     countries,
     visited,
     trips,

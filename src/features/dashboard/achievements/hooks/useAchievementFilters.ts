@@ -13,7 +13,7 @@ export interface AchievementFilters {
   statusFilter: string;
   search: string;
   sortBy: string;
-  achievementsData: Achievement[] | null;
+  achievements: Achievement[] | null;
   countries: Country[];
   visited: { isCountryVisited: (iso: string) => boolean };
   trips: Trip[];
@@ -25,7 +25,7 @@ export function useAchievementFilters({
   statusFilter,
   search,
   sortBy,
-  achievementsData,
+  achievements,
   countries,
   visited,
   trips,
@@ -33,15 +33,15 @@ export function useAchievementFilters({
 }: AchievementFilters) {
   // Merge achievements with user data to determine status and progress
   const mergedAchievements = useMemo(() => {
-    if (!achievementsData) return [];
+    if (!achievements) return [];
     return getMergedAchievements(
-      achievementsData,
+      achievements,
       countries,
       visited,
       trips,
       homeCountry,
     );
-  }, [achievementsData, countries, visited, trips, homeCountry]);
+  }, [achievements, countries, visited, trips, homeCountry]);
 
   // Filter and sort achievements based on current filters and search query
   const sortedAchievements = useMemo(() => {
@@ -86,13 +86,13 @@ export function useAchievementFilters({
 
   // Create a map of achievement ID to completion status for quick lookup
   const achievementStatusMap = useMemo(() => {
-    if (!achievementsData) return {};
+    if (!achievements) return {};
     const map: Record<string, boolean> = {};
-    for (const ach of achievementsData) {
+    for (const ach of achievements) {
       map[ach.id] = isCompleted(ach, countries, visited, trips, homeCountry);
     }
     return map;
-  }, [achievementsData, countries, visited, trips, homeCountry]);
+  }, [achievements, countries, visited, trips, homeCountry]);
 
   return {
     mergedAchievements,

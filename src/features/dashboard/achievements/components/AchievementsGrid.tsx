@@ -11,9 +11,9 @@ import {
   SortSelect,
 } from "@components";
 import { ICONS } from "@constants/icons";
+import { useAchievements } from "@contexts/AchievementsContext";
 import { AchievementCard } from "./AchievementCard";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
-import { useAchievementsData } from "../hooks/useAchievementsData";
 
 const typeOptions = [
   { value: "all", label: "All" },
@@ -68,8 +68,7 @@ const sortKeyGroup = {
 };
 
 export function AchievementsGrid() {
-  const { loading, achievementsData, achievementsError } =
-    useAchievementsData();
+  const { achievements, loading, error } = useAchievements();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -108,14 +107,14 @@ export function AchievementsGrid() {
       </div>
     );
   }
-  if (achievementsError) {
+  if (error) {
     return (
       <div className="p-4">
-        <ErrorMessage error={achievementsError} />
+        <ErrorMessage error={error} />
       </div>
     );
   }
-  if (!achievementsData) {
+  if (!achievements) {
     return <EmptyListMessage message="No achievements data found." />;
   }
 

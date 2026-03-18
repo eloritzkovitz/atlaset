@@ -1,3 +1,4 @@
+import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useAuth, useHomeCountry, useUserProfile } from "@features/user";
@@ -7,7 +8,6 @@ import { AppLinks } from "@layout";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
 import { getStatsConfig } from "../config/stats";
-import { useAchievementsData } from "../../achievements/hooks/useAchievementsData";
 import { isCompleted } from "../../achievements/utils/achievements";
 import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 
@@ -22,16 +22,13 @@ export function OverviewGrid() {
 
   // Get visited countries and exploration stats
   const visited = useVisitedCountries();
-  const { totalCountries, visitedCountries } = useExplorationStats(
-    countries,
-  );
+  const { totalCountries, visitedCountries } = useExplorationStats(countries);
 
   // Get achievements data and calculate completed achievements
-  const { achievementsData, loading: achievementsLoading } =
-    useAchievementsData();
-  const achievementsCount = achievementsData?.length ?? 0;
+  const { achievements, loading: achievementsLoading } = useAchievements();
+  const achievementsCount = achievements?.length ?? 0;
   const completedCount =
-    achievementsData?.filter((a) =>
+    achievements?.filter((a) =>
       isCompleted(a, countries, visited, trips, homeCountry),
     ).length ?? 0;
 
