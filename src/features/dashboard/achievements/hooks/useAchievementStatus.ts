@@ -1,0 +1,47 @@
+import { useAchievements } from "@contexts/AchievementsContext";
+import { useTrips } from "@contexts/TripsContext";
+import { useCountryData } from "@features/countries";
+import { useHomeCountry } from "@features/user";
+import { useVisitedCountries } from "@features/visits";
+import { useAchievementFilters } from "./useAchievementFilters";
+
+/**
+ * Gets the achievement status map for all achievements based on the user's data.
+ * @param typeFilters - Optional filter for achievement types
+ * @param statusFilter - Optional filter for achievement status
+ * @param search - Optional search query to filter achievements by name or description
+ * @param sortBy - Optional sorting criteria
+ * @returns Object containing the achievement status map and the merged achievements with user data
+ */
+export function useAchievementStatus({
+  typeFilter = "all",
+  statusFilter = "all",
+  search = "",
+  sortBy = "id-asc",
+} = {}) {
+  const { achievements } = useAchievements();
+  const { countries } = useCountryData();
+  const visited = useVisitedCountries();
+  const { trips } = useTrips();
+  const { homeCountry } = useHomeCountry();
+
+  const filterResult = useAchievementFilters({
+    typeFilter,
+    statusFilter,
+    search,
+    sortBy,
+    achievements,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  });
+
+  return {
+    ...filterResult,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  };
+}

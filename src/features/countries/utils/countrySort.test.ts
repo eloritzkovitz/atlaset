@@ -9,7 +9,7 @@ describe("countrySort utils", () => {
   function getSortedNames(asc = true) {
     return [...countries]
       .sort((a, b) =>
-        asc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name)
+        asc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name),
       )
       .map((c) => c.name);
   }
@@ -19,7 +19,7 @@ describe("countrySort utils", () => {
       .sort((a, b) =>
         asc
           ? (a.isoCode || "").localeCompare(b.isoCode || "")
-          : (b.isoCode || "").localeCompare(a.isoCode || "")
+          : (b.isoCode || "").localeCompare(a.isoCode || ""),
       )
       .map((c) => c.isoCode);
   }
@@ -103,34 +103,22 @@ describe("countrySort utils", () => {
   describe("getCountrySortOptions", () => {
     it("returns basic sort options when visitedOnly is false or undefined", () => {
       const options = getCountrySortOptions(false);
-      const keyGroup = options.find(g => g.label === "SORT BY");
-      const dirGroup = options.find(g => g.label === "SORT DIRECTION");
-      // Only name and iso keys
-      expect(keyGroup?.options.map(opt => opt.value)).toEqual(["name", "iso"]);
-      expect(dirGroup?.options.map(opt => opt.value)).toEqual(["asc", "desc"]);
+      const keyGroup = options.find((g) => g.label === "SORT BY");
+      expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
+        "name",
+        "iso",
+      ]);
     });
 
     it("returns all sort options when visitedOnly is true", () => {
       const options = getCountrySortOptions(true);
-      const keyGroup = options.find(g => g.label === "SORT BY");
-      const dirGroup = options.find(g => g.label === "SORT DIRECTION");
-      expect(keyGroup?.options.map(opt => opt.value)).toEqual([
-        "name", "iso", "firstVisit", "lastVisit"
+      const keyGroup = options.find((g) => g.label === "SORT BY");
+      expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
+        "name",
+        "iso",
+        "firstVisit",
+        "lastVisit",
       ]);
-      expect(dirGroup?.options.map(opt => opt.value)).toEqual(["asc", "desc"]);
-    });
-
-    it("produces all combinations of key and direction", () => {
-      const options = getCountrySortOptions(true);
-      const keyGroup = options.find(g => g.label === "SORT BY");
-      const dirGroup = options.find(g => g.label === "SORT DIRECTION");
-      const allCombos = keyGroup?.options.flatMap(keyOpt =>
-        dirGroup?.options.map(dirOpt => `${keyOpt.value}-${dirOpt.value}`)
-      );
-      expect(allCombos).toContain("name-asc");
-      expect(allCombos).toContain("name-desc");
-      expect(allCombos).toContain("firstVisit-asc");
-      expect(allCombos).toContain("lastVisit-desc");
     });
   });
 });

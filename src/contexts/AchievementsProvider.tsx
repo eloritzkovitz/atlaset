@@ -1,31 +1,26 @@
-import { useCallback, useEffect, useState } from "react";
-import type { Achievement } from "../types";
+import { useState, useEffect, useCallback } from "react";
+import { AchievementsContext } from "./AchievementsContext";
+import type { Achievement } from "@features/dashboard/achievements/types";
 
-/**
- * Manages fetching and state of achievements data.
- * @returns Object containing achievementsData, achievementsError, and loading state.
- */
-export function useAchievementsData() {
-  const [achievementsData, setAchievementsData] = useState<
-    Achievement[] | null
-  >(null);
-  const [achievementsError, setAchievementsError] = useState<string | null>(
-    null,
-  );
+export function AchievementsProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [achievements, setAchievements] = useState<Achievement[] | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Fetch achievements data from static file first, then backend if missing
-  const fetchAchievementsData = useCallback(async () => {
+  const fetchAchievements = useCallback(async () => {
     setLoading(true);
-    setAchievementsError(null);
-
+    setError(null);
     const staticAchievementsUrl = "/data/achievements.json";
     const backendAchievementsUrl = import.meta.env.VITE_ACHIEVEMENTS_DATA_URL;
     const fetchOpts: RequestInit | undefined =
       process.env.NODE_ENV === "development"
         ? { cache: "no-store" as RequestCache }
         : undefined;
-
     async function fetchWithFallback(staticUrl: string, backendUrl?: string) {
       try {
         const res = await fetch(staticUrl, fetchOpts);
@@ -40,28 +35,29 @@ export function useAchievementsData() {
       }
       throw new Error("Failed to load achievements data");
     }
-
     try {
       const data = await fetchWithFallback(
         staticAchievementsUrl,
         backendAchievementsUrl,
       );
-      setAchievementsData(data);
+      setAchievements(data);
       setLoading(false);
     } catch (err) {
-      if (err instanceof Error) {
-        setAchievementsError(err.message);
-      } else {
-        setAchievementsError("Failed to load achievements data");
-      }
+      setError(
+        err instanceof Error ? err.message : "Failed to load achievements data",
+      );
       setLoading(false);
     }
   }, []);
 
   // Fetch achievements data on mount
   useEffect(() => {
-    fetchAchievementsData();
-  }, [fetchAchievementsData]);
+    fetchAchievements();
+  }, [fetchAchievements]);
 
-  return { achievementsData, achievementsError, loading };
+  return (
+    <AchievementsContext.Provider value={{ achievements, loading, error }}>
+      {children}
+    </AchievementsContext.Provider>
+  );
 }

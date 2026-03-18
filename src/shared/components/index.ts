@@ -88,15 +88,16 @@ export { TableDropdownFilter } from "./table/TableDropdownFilter";
 export { TableHeader } from "./table/TableHeader";
 
 // UI components
+export { SortSelect } from "./ui/SortSelect/SortSelect";
+export { RateMenu } from "./ui/StarRating/RateMenu";
+export { Tooltip } from "./ui/Tooltip/Tooltip";
+export { FloatingPortal } from "./ui/Tooltip/FloatingPortal";
+export { StarRatingInput } from "./ui/StarRating/StarRatingInput";
 export { ColorDot } from "./ui/ColorDot";
 export {
   SegmentedToggle,
   type SegmentedToggleOption,
 } from "./ui/SegmentedToggle";
-export { StarRatingInput } from "./ui/StarRating/StarRatingInput";
-export { RateMenu } from "./ui/StarRating/RateMenu";
-export { Tooltip } from "./ui/Tooltip/Tooltip";
-export { FloatingPortal } from "./ui/Tooltip/FloatingPortal";
 export { TabButton } from "./ui/TabButton";
 
 // UI Hint components

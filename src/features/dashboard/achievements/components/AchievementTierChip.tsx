@@ -39,7 +39,7 @@ export const AchievementTierChip: React.FC<AchievementTierChipProps> = ({
 
   const chip = <Chip className={className || colorClass}>{label}</Chip>;
   return tooltipContent ? (
-    <Tooltip content={tooltipContent}>{chip}</Tooltip>
+    <Tooltip content={tooltipContent} position="bottom">{chip}</Tooltip>
   ) : (
     chip
   );

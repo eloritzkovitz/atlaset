@@ -8,6 +8,7 @@ import {
   UIHintContainer,
 } from "@components";
 import { useSettings } from "@contexts/SettingsContext";
+import { AchievementsProvider } from "@contexts/AchievementsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
@@ -39,155 +40,158 @@ function App() {
   }
 
   return (
-    <TripsProvider>
-      <UIProvider>
-        <UIHintProvider>
-          <UIHintContainer />
-          <PwaUpdateUiHint />
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <PublicLayout showAuthButtons>
-                  <HomePage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <PublicLayout>
-                  <LoginPage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <PublicLayout>
-                  <SignupPage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <PublicLayout>
-                  <AboutPage />
-                </PublicLayout>
-              }
-            />
-            <Route
-              path="/changelog"
-              element={
-                <Suspense fallback={<LoadingSpinner />}>
-                  <PublicLayout>
-                    <ChangelogPage />
+    <AchievementsProvider>
+      <TripsProvider>
+        <UIProvider>
+          <UIHintProvider>
+            <UIHintContainer />
+            <PwaUpdateUiHint />
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <PublicLayout showAuthButtons>
+                    <HomePage />
                   </PublicLayout>
-                </Suspense>
-              }
-            />
-            <Route path="/docs" element={<DocsPage />} />
-            <Route path="/docs/:slug" element={<DocsPage />} />
-            <Route
-              path="/atlas"
-              element={
-                window.location.search.includes("embed") ? (
-                  <EmbedLayout
-                    mapCode={
-                      new URLSearchParams(window.location.search).get("map") ||
-                      undefined
-                    }
-                  >
-                    <AtlasProviders />
-                  </EmbedLayout>
-                ) : (
+                }
+              />
+              <Route
+                path="/login"
+                element={
+                  <PublicLayout>
+                    <LoginPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/signup"
+                element={
+                  <PublicLayout>
+                    <SignupPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/about"
+                element={
+                  <PublicLayout>
+                    <AboutPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/changelog"
+                element={
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <PublicLayout>
+                      <ChangelogPage />
+                    </PublicLayout>
+                  </Suspense>
+                }
+              />
+              <Route path="/docs" element={<DocsPage />} />
+              <Route path="/docs/:slug" element={<DocsPage />} />
+              <Route
+                path="/atlas"
+                element={
+                  window.location.search.includes("embed") ? (
+                    <EmbedLayout
+                      mapCode={
+                        new URLSearchParams(window.location.search).get(
+                          "map",
+                        ) || undefined
+                      }
+                    >
+                      <AtlasProviders />
+                    </EmbedLayout>
+                  ) : (
+                    <AppLayout>
+                      <AtlasProviders />
+                    </AppLayout>
+                  )
+                }
+              />
+              <Route
+                path="/dashboard/*"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <DashboardPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/quizzes/*"
+                element={
                   <AppLayout>
-                    <AtlasProviders />
+                    <QuizzesPage />
                   </AppLayout>
-                )
-              }
-            />
-            <Route
-              path="/dashboard/*"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <DashboardPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/quizzes/*"
-              element={
-                <AppLayout>
-                  <QuizzesPage />
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/trips"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <TripsPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/settings/*"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <SettingsPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/users/:username/*"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <ProfilePage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/activity"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <ActivityPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/search"
-              element={
-                <ProtectedRoute>
-                  <AppLayout>
-                    <SearchPage />
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="*"
-              element={
-                <PublicLayout>
-                  <NotFoundPage />
-                </PublicLayout>
-              }
-            />
-          </Routes>
-        </UIHintProvider>
-      </UIProvider>
-    </TripsProvider>
+                }
+              />
+              <Route
+                path="/trips"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <TripsPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/settings/*"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <SettingsPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/users/:username/*"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <ProfilePage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/activity"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <ActivityPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/search"
+                element={
+                  <ProtectedRoute>
+                    <AppLayout>
+                      <SearchPage />
+                    </AppLayout>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <PublicLayout>
+                    <NotFoundPage />
+                  </PublicLayout>
+                }
+              />
+            </Routes>
+          </UIHintProvider>
+        </UIProvider>
+      </TripsProvider>
+    </AchievementsProvider>
   );
 }
 

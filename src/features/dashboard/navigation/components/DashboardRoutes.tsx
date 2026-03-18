@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { Country, Currency } from "@features/countries";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
+import { AchievementInfo } from "../../achievements/components/AchievementInfo";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
@@ -128,6 +129,7 @@ export function DashboardRoutes({
         }
       />
       <Route path="achievements" element={<AchievementsGrid />} />
+      <Route path="achievements/:achievementId" element={<AchievementInfo />} />
       <Route path="statistics/*" element={<StatisticsGrid />} />
     </Routes>
   );

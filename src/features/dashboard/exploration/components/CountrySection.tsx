@@ -106,6 +106,7 @@ export function CountrySection({
   // Handler to reset all filters and route to all countries
   function handleResetFilters() {
     if (resetFilters) resetFilters();
+    setSortBy("name-asc");
     if (onAllCountries) onAllCountries();
   }
 

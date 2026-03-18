@@ -1,5 +1,8 @@
 import { createSovereigntyFilter, type Country } from "@features/countries";
-import { getAchievementCountries } from "./achievements";
+import {
+  getAchievementCountries,
+  getCountryCriteriaFilters,
+} from "./achievements";
 import type { Achievement, Criteria } from "../types";
 
 /**
@@ -38,7 +41,7 @@ export function getDisplayFlagCountries(
   ].some((key) => (displayCriteria as Record<string, unknown>)[key]);
   if (isTripBased) return [];
 
-  // Countries explicitly defined
+  // If achievement has explicit countries or display criteria includes countries, use those
   const displayCountries = displayCriteria.countries;
   const hasDisplayCountries =
     Array.isArray(displayCountries) && displayCountries.length > 0;
@@ -56,30 +59,13 @@ export function getDisplayFlagCountries(
     return achCountries;
   }
 
-  // Region or subregion
-  if (
-    (displayCriteria.subregion &&
-      typeof displayCriteria.subregion === "string") ||
-    (displayCriteria.region && typeof displayCriteria.region === "string")
-  ) {
-    const sovereigntyFilter = createSovereigntyFilter(true);
-    return countries.filter((c) => {
-      if (
-        displayCriteria.subregion &&
-        typeof displayCriteria.subregion === "string"
-      ) {
-        return (
-          c.subregion === displayCriteria.subregion && sovereigntyFilter(c)
-        );
-      }
-      if (
-        displayCriteria.region &&
-        typeof displayCriteria.region === "string"
-      ) {
-        return c.region === displayCriteria.region && sovereigntyFilter(c);
-      }
-      return false;
-    });
+  // If no explicit countries, use criteria-based filters
+  const filterMap = getCountryCriteriaFilters(displayCriteria);
+  const sovereigntyFilter = createSovereigntyFilter(true);
+  for (const key of Object.keys(filterMap)) {
+    if (displayCriteria[key as keyof Criteria]) {
+      return countries.filter((c) => filterMap[key](c) && sovereigntyFilter(c));
+    }
   }
   return [];
 }

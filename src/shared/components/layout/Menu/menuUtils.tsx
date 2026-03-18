@@ -1,7 +1,7 @@
 export interface MenuConfigItem {
   key: string;
   label: string;
-  icon: React.ComponentType<{}>;
+  icon: React.ComponentType<object>;
   url?: string;
   file?: string;
 }
