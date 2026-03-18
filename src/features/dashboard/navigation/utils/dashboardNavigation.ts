@@ -1,7 +1,6 @@
 /**
  * @file Utilities for dashboard navigation
  */
-
 import type { Crumb } from "@components";
 import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
 
@@ -11,6 +10,8 @@ import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
  * @param selectedRegion - Currently selected region
  * @param selectedSubregion - Currently selected subregion
  * @param selectedCountry - Currently selected country
+ * @param selectedCurrency - Currently selected currency
+ * @param selectedAchievement - Currently selected achievement
  * @returns Array of breadcrumb objects
  */
 export function getDashboardBreadcrumbs(
@@ -18,10 +19,11 @@ export function getDashboardBreadcrumbs(
   selectedRegion: string | null,
   selectedSubregion: string | null,
   selectedCountry: { name: string } | null,
+  selectedCurrency: { name: string } | null,
+  selectedAchievement: { name: string } | null,
 ): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
 
-  // Only add dynamic crumbs for countries panel
   if (selectedPanel === "countries" || selectedPanel.startsWith("countries/")) {
     if (selectedRegion) {
       crumbs.push({
@@ -36,13 +38,35 @@ export function getDashboardBreadcrumbs(
       crumbs.push({ label: selectedCountry.name, key: "country" });
     }
   }
-
+  if (
+    (selectedPanel === "currencies" ||
+      selectedPanel.startsWith("currencies/")) &&
+    selectedCurrency &&
+    selectedCurrency.name
+  ) {
+    crumbs.push({
+      label: selectedCurrency.name,
+      key: `currency:${selectedCurrency.name}`,
+    });
+  }
+  if (
+    selectedPanel === "achievements" &&
+    selectedAchievement &&
+    selectedAchievement.name
+  ) {
+    crumbs.push({
+      label: selectedAchievement.name,
+      key: `achievement:${selectedAchievement.name}`,
+    });
+  }
   return crumbs;
 }
 
 interface DashboardPageTitleArgs {
   selectedPanel?: string;
   selectedCountry?: { name?: string } | null;
+  selectedCurrency?: { name: string } | null;
+  selectedAchievement?: { name: string } | null;
   filterName?: string;
   baseTitle?: string;
 }
@@ -50,16 +74,18 @@ interface DashboardPageTitleArgs {
 export function getDashboardPageTitle({
   selectedPanel,
   selectedCountry,
+  selectedCurrency,
+  selectedAchievement,
   filterName = "",
   baseTitle = "",
 }: DashboardPageTitleArgs) {
-  // Consider all country-related panels for dynamic title
   const safePanel = selectedPanel ?? "";
   const isCountryPanel =
     safePanel.startsWith("countries") ||
     ["countries", "countries/all", "exploration"].includes(safePanel);
+  const isCurrencyPanel = safePanel.startsWith("currencies");
+  const isAchievementPanel = safePanel.startsWith("achievements");
 
-  // Special case: exploration route
   const isExploration = safePanel === "exploration";
   if (isExploration) return "World Exploration | Atlaset";
   if (isCountryPanel) {
@@ -68,7 +94,22 @@ export function getDashboardPageTitle({
     }
     return `${filterName} | Atlaset`;
   }
+  if (isCurrencyPanel && selectedCurrency && selectedCurrency.name) {
+    return `${selectedCurrency.name} | Atlaset`;
+  }
+  if (isAchievementPanel && selectedAchievement && selectedAchievement.name) {
+    return `${selectedAchievement.name} | Atlaset`;
+  }
   return `${baseTitle} | Atlaset`;
+}
+
+// Helper to safely extract name from objects that may be null or have missing name
+function safeName(
+  obj: { name?: string } | null | undefined,
+): { name: string } | null {
+  return obj && typeof obj.name === "string" && obj.name
+    ? { name: obj.name }
+    : null;
 }
 
 /**
@@ -82,6 +123,8 @@ export function getDashboardMeta({
   currentPanel,
   selectedRegion,
   selectedSubregion,
+  selectedCurrency,
+  selectedAchievement,
 }: {
   selectedPanel: string | undefined;
   selectedCountry: { name?: string } | null | undefined;
@@ -90,6 +133,8 @@ export function getDashboardMeta({
   currentPanel: { title: string } | undefined;
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
+  selectedCurrency: { name: string } | null | undefined;
+  selectedAchievement: { name: string } | null | undefined;
 }) {
   let filterName = "All Countries";
   if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
@@ -99,27 +144,47 @@ export function getDashboardMeta({
   }
   const baseTitle = currentPanel ? currentPanel.title : "Dashboard";
   const safePanel = selectedPanel ?? "";
-  const pageTitle = getDashboardPageTitle({
-    selectedPanel: safePanel,
-    selectedCountry,
-    filterName,
-    baseTitle,
-  });
   const safeRegion = selectedRegion ?? null;
   const safeSubregion = selectedSubregion ?? null;
-  let safeCountry: { name: string } | null = null;
-  if (
-    selectedCountry &&
-    typeof selectedCountry.name === "string" &&
-    selectedCountry.name
-  ) {
-    safeCountry = { name: selectedCountry.name };
+  const safeCountry = safeName(selectedCountry);
+  const safeCurrency = safeName(selectedCurrency);
+  const safeAchievement = safeName(selectedAchievement);
+
+  // Determine page title based on panel and selection
+  let pageTitle = baseTitle + " | Atlaset";
+  const isCountryPanel =
+    safePanel.startsWith("countries") ||
+    ["countries", "countries/all", "exploration"].includes(safePanel);
+  const isCurrencyPanel = safePanel.startsWith("currencies");
+  const isAchievementPanel = safePanel.startsWith("achievements");
+
+  switch (true) {
+    case safePanel === "exploration":
+      pageTitle = "World Exploration | Atlaset";
+      break;
+    case isCountryPanel && !!safeCountry:
+      pageTitle = `${safeCountry.name} | Atlaset`;
+      break;
+    case isCurrencyPanel && !!safeCurrency:
+      pageTitle = `${safeCurrency.name} | Atlaset`;
+      break;
+    case isAchievementPanel && !!safeAchievement:
+      pageTitle = `${safeAchievement.name} | Atlaset`;
+      break;
+    case isCountryPanel:
+      pageTitle = `${filterName} | Atlaset`;
+      break;
+    default:
+      pageTitle = `${baseTitle} | Atlaset`;
   }
+
   const breadcrumbs = getDashboardBreadcrumbs(
     safePanel,
     safeRegion,
     safeSubregion,
     safeCountry,
+    safeCurrency,
+    safeAchievement,
   );
   return { pageTitle, breadcrumbs };
 }

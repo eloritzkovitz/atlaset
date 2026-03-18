@@ -44,6 +44,8 @@ export default function DashboardPage() {
     selectedSubregion: routeSelectedSubregion,
     selectedIsoCode,
     selectedCountry,
+    selectedCurrency,
+    selectedAchievement,
   } = useDashboardRouteState();
 
   // Region and subregion filter state
@@ -66,6 +68,8 @@ export default function DashboardPage() {
     currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
+    selectedCurrency,
+    selectedAchievement,
   });
   usePageTitle(pageTitle, {
     fallback: "Dashboard | Atlaset",
