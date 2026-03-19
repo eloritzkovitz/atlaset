@@ -48,24 +48,23 @@ export function CountriesSearchSortBar({
   useDragScroll(togglesRef);
 
   // Build toggle options
-  const defaultOptions = [
+  const options = [
     { value: "all", label: "All", count: allCount },
     { value: "sovereign", label: "Sovereign", count: sovereignCount },
     { value: "visited", label: "Visited", count: visitedCount },
+    ...countryLists.map((list) => ({
+      value: list.id,
+      label: list.name,
+      count: list.count ?? list.countryCodes.length,
+    })),
   ];
-  const customOptions = countryLists.map((list) => ({
-    value: list.id,
-    label: list.name,
-    count:
-      typeof list.count === "number" ? list.count : list.countryCodes.length,
-  }));
-  const options = [...defaultOptions, ...customOptions];
 
   // Determine selected toggle
-  let selectedToggle = "all";
-  if (visitedOnly) selectedToggle = "visited";
-  else if (sovereignOnly) selectedToggle = "sovereign";
-  else if (selectedListId) selectedToggle = selectedListId;
+  const selectedToggle = visitedOnly
+    ? "visited"
+    : sovereignOnly
+      ? "sovereign"
+      : selectedListId || "all";
 
   return (
     <div className="items-center">
@@ -104,7 +103,6 @@ export function CountriesSearchSortBar({
               setSovereignOnly?.(false);
               setSelectedListId?.(null);
             } else {
-              // Custom list selected
               setVisitedOnly?.(false);
               setSovereignOnly?.(false);
               setSelectedListId?.(val);

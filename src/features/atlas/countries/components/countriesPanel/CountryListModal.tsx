@@ -82,7 +82,6 @@ export function CountryListModal({
           }}
         >
           <div className="p-2">
-            {/* Name */}
             <FormField label="Name:">
               <input
                 type="text"
@@ -91,8 +90,6 @@ export function CountryListModal({
                 onChange={(e) => onChange({ ...list, name: e.target.value })}
               />
             </FormField>
-
-            {/* Countries */}
             <FormField label="Countries:">
               <div className="flex items-center gap-2 flex-wrap">
                 {selectedCountries.length === 0 ? (
@@ -124,7 +121,6 @@ export function CountryListModal({
                 </ActionButton>
               </div>
             </FormField>
-
             <div className="flex items-center justify-between mt-6">
               <ModalActions
                 onCancel={onClose}

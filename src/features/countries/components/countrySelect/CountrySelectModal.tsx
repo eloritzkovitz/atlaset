@@ -41,12 +41,10 @@ export function CountrySelectModal({
     }
   }, [isOpen]);
 
-  // Filter options by search (accent-insensitive)
-  const filteredOptions = filterBySearch(
-    options,
-    search,
-    (country) => country.name,
-  );
+  // Filter options by search and sort alphabetically
+  const filteredOptions = [
+    ...filterBySearch(options, search, (country) => country.name),
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Modal
