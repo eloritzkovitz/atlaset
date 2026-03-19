@@ -10,6 +10,7 @@ interface SegmentedToggleProps<T extends string> {
   options: SegmentedToggleOption<T>[];
   onChange: (val: T) => void;
   className?: string;
+  wrap?: boolean;
   disabled?: boolean;
 }
 
@@ -18,10 +19,11 @@ export function SegmentedToggle<T extends string>({
   options,
   onChange,
   className = "",
+  wrap = false,
   disabled = false,
 }: SegmentedToggleProps<T>) {
   return (
-    <div className={`flex flex-wrap gap-2 ${className}`}>
+    <div className={`flex gap-2 ${wrap ? "flex-wrap" : ""} ${className}`}>
       {options.map((opt) => (
         <button
           key={opt.value}

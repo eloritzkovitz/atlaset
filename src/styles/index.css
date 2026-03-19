@@ -248,6 +248,14 @@ body::-webkit-scrollbar-thumb {
   scrollbar-width: none;
 }
 
+/* Hide scrollbar for toggles-scroll */
+.toggles-scroll {
+  scrollbar-width: none;
+}
+.toggles-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 /* Shadow styles */
 .dark .shadow,
 .dark .shadow-md,
