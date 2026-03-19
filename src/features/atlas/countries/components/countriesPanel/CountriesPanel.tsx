@@ -16,6 +16,7 @@ import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryList } from "./CountryList";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../hooks/useCountryFilters";
+import { useCountryListModal } from "../../hooks/useCountryListModal";
 
 interface CountriesPanelProps {
   selectedIsoCode: string | null;
@@ -42,13 +43,21 @@ export function CountriesPanel({
     addList,
     deleteList,
   } = useCountryLists();
-
-  // Modal state for creating/editing a list
-  const [listModalOpen, setListModalOpen] = useState(false);
-  const [newList, setNewList] = useState(
-    null as null | { id: string; name: string; countryCodes: string[] },
-  );
-  const [isEditingList, setIsEditingList] = useState(false);
+  const {
+    modalOpen,
+    isEditing,
+    currentList,
+    openAddModal,
+    openEditModal,
+    handleSave,
+    handleDelete,
+    handleClose,
+    handleChange,
+  } = useCountryListModal({
+    addList,
+    deleteList,
+    countryLists,
+  });
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -124,23 +133,6 @@ export function CountriesPanel({
     enabled: uiVisible && showCountries && isListFocused,
   });
 
-  // Handler for editing a list
-  const handleEditList = (listId: string) => {
-    const list = countryLists.find((l) => l.id === listId);
-    if (list) {
-      setNewList({ ...list });
-      setIsEditingList(true);
-      setListModalOpen(true);
-    }
-  };
-
-  // Handler for deleting a list
-  const handleDeleteList = (listId: string) => {
-    if (deleteList) {
-      deleteList(listId);
-    }
-  };
-
   // Handle country info action
   const handleCountryInfo = useCallback(
     (country: Country) => {
@@ -212,16 +204,8 @@ export function CountriesPanel({
             countryLists={customListOptions}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}
-            onAddList={() => {
-              setNewList({
-                id: crypto.randomUUID(),
-                name: "",
-                countryCodes: [],
-              });
-              setIsEditingList(false);
-              setListModalOpen(true);
-            }}
-            onEditList={handleEditList}
+            onAddList={openAddModal}
+            onEditList={openEditModal}
           />
           <Separator />
           <CountryList
@@ -237,24 +221,15 @@ export function CountriesPanel({
         </div>
       </Panel>
 
-      {/* List creation/editing modal */}
+      {/* List modal */}
       <CountryListModal
-        isOpen={listModalOpen}
-        isEditing={isEditingList}
-        list={newList}
-        onChange={setNewList}
-        onDelete={handleDeleteList}
-        onSave={async (list) => {
-          await addList(list);
-          setListModalOpen(false);
-          setNewList(null);
-          setIsEditingList(false);
-        }}
-        onClose={() => {
-          setListModalOpen(false);
-          setNewList(null);
-          setIsEditingList(false);
-        }}
+        isOpen={modalOpen}
+        isEditing={isEditing}
+        list={currentList}
+        onChange={handleChange}
+        onDelete={handleDelete}
+        onSave={handleSave}
+        onClose={handleClose}
       />
 
       {/* Filters panel */}
