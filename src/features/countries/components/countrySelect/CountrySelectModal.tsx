@@ -62,6 +62,7 @@ export function CountrySelectModal({
         <ActionButton
           onClick={onClose}
           ariaLabel="Close List Modal"
+          title="Close"
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />
