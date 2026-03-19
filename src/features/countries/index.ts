@@ -25,6 +25,9 @@ export { useRegionSubregionFilters } from "./hooks/useRegionSubregionFilters";
 export { default as countryDataReducer } from "./slices/countryDataSlice";
 export { fetchCountryData } from "./slices/countryDataSlice";
 
+// Services
+export { countryListService } from "./services/countryListService";
+
 // Types
 export * from "./types";
 

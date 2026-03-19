@@ -46,6 +46,13 @@ export type CountryRelations = {
   disputes?: string[];
 };
 
+/** Represents a list of countries. */
+export type CountryList = {
+  id: string;
+  name: string;
+  countryCodes: string[];
+};
+
 /** Sort keys for countries. */
 export type CountrySortByKey = "name" | "iso" | "firstVisit" | "lastVisit";
 

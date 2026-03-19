@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
+import { useCountryLists } from "@contexts/CountryListsContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -32,8 +33,8 @@ export function CountriesPanel({
   onHover,
   onCountryInfo,
 }: CountriesPanelProps) {
-  // Context data state
   const { refreshData } = useCountryData();
+  const { countryLists, selectedListId, setSelectedListId } = useCountryLists();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -169,6 +170,9 @@ export function CountriesPanel({
             allCount={allCount}
             sovereignCount={sovereignCount}
             visitedCount={visitedCount}
+            countryLists={countryLists}
+            selectedListId={selectedListId}
+            setSelectedListId={setSelectedListId}
           />
           <Separator />
           <CountryList
