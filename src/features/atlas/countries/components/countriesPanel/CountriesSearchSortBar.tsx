@@ -3,6 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { SearchInput, SegmentedToggle, ActionButton } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import { CountrySortSelect } from "@features/countries/components/countrySort/CountrySortSelect";
+import type { CountryList } from "@features/countries/types";
 import { useDragScroll } from "@hooks";
 
 interface CountriesSearchSortBarProps {
@@ -17,9 +18,10 @@ interface CountriesSearchSortBarProps {
   visitedCount?: number;
   visitedOnly?: boolean;
   setVisitedOnly?: (value: boolean) => void;
-  countryLists?: { id: string; name: string; countryCodes: string[] }[];
+  countryLists?: (CountryList & { count?: number })[];
   selectedListId?: string | null;
   setSelectedListId?: (id: string | null) => void;
+  onAddList?: () => void;
 }
 
 export function CountriesSearchSortBar({
@@ -37,6 +39,7 @@ export function CountriesSearchSortBar({
   countryLists = [],
   selectedListId = null,
   setSelectedListId,
+  onAddList,
 }: CountriesSearchSortBarProps) {
   const { timelineMode } = useTimeline();
 
@@ -53,7 +56,8 @@ export function CountriesSearchSortBar({
   const customOptions = countryLists.map((list) => ({
     value: list.id,
     label: list.name,
-    count: list.countryCodes.length,
+    count:
+      typeof list.count === "number" ? list.count : list.countryCodes.length,
   }));
   const options = [...defaultOptions, ...customOptions];
 
@@ -113,7 +117,7 @@ export function CountriesSearchSortBar({
           ariaLabel="New list"
           title="New list"
           variant="secondary"
-          onClick={() => {}}
+          onClick={onAddList}
           className="!rounded-full !px-2"
         />
       </div>

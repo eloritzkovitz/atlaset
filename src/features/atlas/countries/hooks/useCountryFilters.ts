@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCountryLists } from "@contexts/CountryListsContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
@@ -35,6 +36,7 @@ import { useDebounce } from "@hooks";
  */
 export function useCountryFilters() {
   const { countries } = useCountryData();
+  const { countryLists, selectedListId } = useCountryLists();
   const { layerSelections, setLayerSelections } = useLayers();
   const layers = useEffectiveLayers();
   const {
@@ -50,7 +52,6 @@ export function useCountryFilters() {
 
   // Sovereign toggle
   const [sovereignOnly, setSovereignOnly] = useState(false);
-
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
     if (isReadonly && sharedMapInfo?.layers) {
@@ -107,6 +108,8 @@ export function useCountryFilters() {
     () => getFilteredIsoCodes(countries, layers, layerSelections),
     [countries, layers, layerSelections],
   );
+
+  // Main filtering logic
   const filteredCountries = useMemo(() => {
     // Property search logic
     const propertySearchRegex = /^(\w+):\s*(.+)$/i;
@@ -122,6 +125,16 @@ export function useCountryFilters() {
         layerCountries: filteredIsoCodes,
       });
     }
+
+    // If a custom list is selected, filter by its countryCodes
+    if (selectedListId) {
+      const selectedList = countryLists.find(
+        (l: { id: string; countryCodes: string[] }) => l.id === selectedListId,
+      );
+      base = base.filter((c: { isoCode: string }) =>
+        selectedList?.countryCodes?.includes(c.isoCode),
+      );
+    }
     return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
   }, [
     countries,
@@ -130,6 +143,8 @@ export function useCountryFilters() {
     selectedVisited,
     visitedIsoCodes,
     debouncedSearch,
+    countryLists,
+    selectedListId,
   ]);
 
   // Without layers for counts, including visited filter

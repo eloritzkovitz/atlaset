@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
+import { CountryListModal } from "./CountryListModal";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -34,7 +35,14 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   const { refreshData } = useCountryData();
-  const { countryLists, selectedListId, setSelectedListId } = useCountryLists();
+  const { countryLists, selectedListId, setSelectedListId, addList } =
+    useCountryLists();
+
+  // Modal state for creating a new list
+  const [listModalOpen, setListModalOpen] = useState(false);
+  const [newList, setNewList] = useState(
+    null as null | { id: string; name: string; countryCodes: string[] },
+  );
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -116,6 +124,14 @@ export function CountriesPanel({
     setSortBy("name-asc");
   };
 
+  // Compute filtered iso codes for custom list counts
+  const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
+  const customListOptions = countryLists.map((list) => ({
+    ...list,
+    count: filteredIsoCodes.filter((code) => list.countryCodes.includes(code))
+      .length,
+  }));
+
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">
       <Panel
@@ -170,9 +186,17 @@ export function CountriesPanel({
             allCount={allCount}
             sovereignCount={sovereignCount}
             visitedCount={visitedCount}
-            countryLists={countryLists}
+            countryLists={customListOptions}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}
+            onAddList={() => {
+              setNewList({
+                id: crypto.randomUUID(),
+                name: "",
+                countryCodes: [],
+              });
+              setListModalOpen(true);
+            }}
           />
           <Separator />
           <CountryList
@@ -187,6 +211,23 @@ export function CountriesPanel({
           />
         </div>
       </Panel>
+
+      {/* List creation modal */}
+      <CountryListModal
+        isOpen={listModalOpen}
+        isEditing={false}
+        list={newList}
+        onChange={setNewList}
+        onSave={async (list) => {
+          await addList(list);
+          setListModalOpen(false);
+          setNewList(null);
+        }}
+        onClose={() => {
+          setListModalOpen(false);
+          setNewList(null);
+        }}
+      />
 
       {/* Filters panel */}
       {showCountries && (
