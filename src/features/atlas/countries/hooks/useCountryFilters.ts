@@ -4,11 +4,11 @@ import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { useSharedMapInfo } from "@features/atlas/export";
 import {
   getDefaultLayerSelections,
   useEffectiveLayers,
 } from "@features/atlas/layers";
-import { useSharedMapInfo } from "@features/atlas/export";
 import {
   createSovereigntyFilter,
   filterCountries,
@@ -20,14 +20,12 @@ import {
   type SovereigntyType,
 } from "@features/countries";
 import {
+  filterByVisitCount,
+  filterByVisitStatus,
   getLatestYear,
   getVisitCountStats,
   type VisitedStatus,
 } from "@features/visits";
-import {
-  filterByVisitCount,
-  filterByVisitStatus,
-} from "@features/visits/utils/visitFilters";
 import { useDebounce } from "@hooks";
 
 /**
@@ -50,8 +48,6 @@ export function useCountryFilters() {
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
 
-  // Sovereign toggle
-  const [sovereignOnly, setSovereignOnly] = useState(false);
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
     if (isReadonly && sharedMapInfo?.layers) {
@@ -69,6 +65,7 @@ export function useCountryFilters() {
   const [selectedSovereignty, setSelectedSovereignty] = useState<
     SovereigntyType | ""
   >("");
+  const [sovereignOnly, setSovereignOnly] = useState(false);
   const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
@@ -114,26 +111,36 @@ export function useCountryFilters() {
     // Property search logic
     const propertySearchRegex = /^(\w+):\s*(.+)$/i;
     const match = debouncedSearch.match(propertySearchRegex);
-    let base;
-    if (match) {
-      const property = match[1];
-      const value = match[2];
-      base = filterCountriesByProperty(countries, property, value);
-    } else {
-      base = filterCountries(countries, {
-        ...(filterParams ?? {}),
-        layerCountries: filteredIsoCodes,
-      });
-    }
+    let base = match
+      ? filterCountriesByProperty(countries, match[1], match[2])
+      : filterCountries(countries, {
+          ...filterParams,
+          layerCountries: filteredIsoCodes,
+        });
 
-    // If a custom list is selected, filter by its countryCodes
     if (selectedListId) {
-      const selectedList = countryLists.find(
-        (l: { id: string; countryCodes: string[] }) => l.id === selectedListId,
-      );
-      base = base.filter((c: { isoCode: string }) =>
+      const selectedList = countryLists.find((l) => l.id === selectedListId);
+      base = base.filter((c) =>
         selectedList?.countryCodes?.includes(c.isoCode),
       );
+    }
+
+    if (showVisitedOnly) {
+      if (isReadonly && effectiveSharedVisitedIsoCodes) {
+        base = base.filter((c) =>
+          effectiveSharedVisitedIsoCodes.includes(c.isoCode),
+        );
+      } else {
+        base = filterByVisitCount(
+          base,
+          visitedMap,
+          minVisitCount,
+          maxVisitCount,
+        );
+      }
+    }
+    if (sovereignOnly) {
+      base = base.filter(createSovereigntyFilter(true));
     }
     return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
   }, [
@@ -145,12 +152,19 @@ export function useCountryFilters() {
     debouncedSearch,
     countryLists,
     selectedListId,
+    showVisitedOnly,
+    isReadonly,
+    effectiveSharedVisitedIsoCodes,
+    visitedMap,
+    minVisitCount,
+    maxVisitCount,
+    sovereignOnly,
   ]);
 
-  // Without layers for counts, including visited filter
+  // Filtered countries without layer filtering for count calculations
   const filteredCountriesNoLayer = useMemo(() => {
     const base = filterCountries(countries, {
-      ...(filterParams ?? {}),
+      ...filterParams,
       layerCountries: undefined,
     });
     return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
@@ -163,39 +177,6 @@ export function useCountryFilters() {
       filteredCountriesNoLayer,
       visitedIsoCodes,
     });
-
-  // Apply visit count and sovereign filtering
-  const finalFilteredCountries = useMemo(() => {
-    let result = filteredCountries;
-    if (showVisitedOnly) {
-      // In readonly mode with sharedVisitedIsoCodes, filter by those iso codes only
-      if (isReadonly && effectiveSharedVisitedIsoCodes) {
-        result = filteredCountries.filter((c) =>
-          effectiveSharedVisitedIsoCodes.includes(c.isoCode),
-        );
-      } else {
-        result = filterByVisitCount(
-          filteredCountries,
-          visitedMap,
-          minVisitCount,
-          maxVisitCount,
-        );
-      }
-    }
-    if (sovereignOnly) {
-      result = result.filter(createSovereigntyFilter(true));
-    }
-    return result;
-  }, [
-    showVisitedOnly,
-    sovereignOnly,
-    filteredCountries,
-    visitedMap,
-    minVisitCount,
-    maxVisitCount,
-    isReadonly,
-    effectiveSharedVisitedIsoCodes,
-  ]);
 
   // Reset core filters
   function resetCoreFilters() {
@@ -239,7 +220,7 @@ export function useCountryFilters() {
     setSearch,
     debouncedSearch,
     filteredIsoCodes,
-    filteredCountries: finalFilteredCountries,
+    filteredCountries,
     allCount,
     allCountWithoutLayers,
     sovereignCount,

@@ -6,6 +6,6 @@ export { useVisitedCountriesTimeline } from "./hooks/useVisitedCountriesTimeline
 export * from "./types";
 
 // Utils
-export * from "./utils/visitColors"
+export * from "./utils/visitColors";
+export * from "./utils/visitFilters";
 export * from "./utils/visits";
-
