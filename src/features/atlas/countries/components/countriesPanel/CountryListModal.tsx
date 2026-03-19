@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   ActionButton,
   Chip,
+  EmptyListMessage,
   FormField,
   Modal,
   ModalActions,
@@ -18,6 +19,7 @@ interface CountryListModalProps {
   list: CountryList | null;
   onChange: (list: CountryList) => void;
   onSave: (list: CountryList) => void;
+  onDelete?: (id: string) => void;
   onClose: () => void;
 }
 
@@ -27,6 +29,7 @@ export function CountryListModal({
   list,
   onChange,
   onSave,
+  onDelete,
   onClose,
 }: CountryListModalProps) {
   const { countries } = useCountryData();
@@ -69,6 +72,7 @@ export function CountryListModal({
           <ActionButton
             onClick={onClose}
             ariaLabel="Close List Modal"
+            title="Close"
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -81,7 +85,7 @@ export function CountryListModal({
             }
           }}
         >
-          <div className="p-2">
+          <div className="p-4">
             <FormField label="Name:">
               <input
                 type="text"
@@ -93,7 +97,7 @@ export function CountryListModal({
             <FormField label="Countries:">
               <div className="flex items-center gap-2 flex-wrap">
                 {selectedCountries.length === 0 ? (
-                  <span className="text-muted">No countries selected</span>
+                  <EmptyListMessage message="No countries selected." />
                 ) : (
                   selectedCountries.map((country) => (
                     <Chip
@@ -121,10 +125,13 @@ export function CountryListModal({
                 </ActionButton>
               </div>
             </FormField>
-            <div className="flex items-center justify-between mt-6">
+            <div className="flex items-center justify-end mt-6">
               <ModalActions
                 onCancel={onClose}
                 onSubmit={() => isValid && onSave(list)}
+                onDelete={
+                  isEditing && onDelete ? () => onDelete(list.id) : undefined
+                }
                 submitType="submit"
                 submitIcon={
                   isEditing ? (
@@ -134,6 +141,7 @@ export function CountryListModal({
                   )
                 }
                 submitLabel={isEditing ? "Save Changes" : "Add List"}
+                deleteLabel="Delete List"
                 disabled={!isValid}
               />
             </div>

@@ -35,14 +35,20 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   const { refreshData } = useCountryData();
-  const { countryLists, selectedListId, setSelectedListId, addList } =
-    useCountryLists();
+  const {
+    countryLists,
+    selectedListId,
+    setSelectedListId,
+    addList,
+    deleteList,
+  } = useCountryLists();
 
-  // Modal state for creating a new list
+  // Modal state for creating/editing a list
   const [listModalOpen, setListModalOpen] = useState(false);
   const [newList, setNewList] = useState(
     null as null | { id: string; name: string; countryCodes: string[] },
   );
+  const [isEditingList, setIsEditingList] = useState(false);
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -78,6 +84,14 @@ export function CountriesPanel({
     resetFilters,
   } = useCountryFilters();
 
+  // Compute filtered iso codes for custom list counts
+  const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
+  const customListOptions = countryLists.map((list) => ({
+    ...list,
+    count: filteredIsoCodes.filter((code) => list.countryCodes.includes(code))
+      .length,
+  }));
+
   // Sort state
   const {
     sortBy,
@@ -110,6 +124,23 @@ export function CountriesPanel({
     enabled: uiVisible && showCountries && isListFocused,
   });
 
+  // Handler for editing a list
+  const handleEditList = (listId: string) => {
+    const list = countryLists.find((l) => l.id === listId);
+    if (list) {
+      setNewList({ ...list });
+      setIsEditingList(true);
+      setListModalOpen(true);
+    }
+  };
+
+  // Handler for deleting a list
+  const handleDeleteList = (listId: string) => {
+    if (deleteList) {
+      deleteList(listId);
+    }
+  };
+
   // Handle country info action
   const handleCountryInfo = useCallback(
     (country: Country) => {
@@ -123,14 +154,6 @@ export function CountriesPanel({
     resetFilters();
     setSortBy("name-asc");
   };
-
-  // Compute filtered iso codes for custom list counts
-  const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
-  const customListOptions = countryLists.map((list) => ({
-    ...list,
-    count: filteredIsoCodes.filter((code) => list.countryCodes.includes(code))
-      .length,
-  }));
 
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">
@@ -195,8 +218,10 @@ export function CountriesPanel({
                 name: "",
                 countryCodes: [],
               });
+              setIsEditingList(false);
               setListModalOpen(true);
             }}
+            onEditList={handleEditList}
           />
           <Separator />
           <CountryList
@@ -212,20 +237,23 @@ export function CountriesPanel({
         </div>
       </Panel>
 
-      {/* List creation modal */}
+      {/* List creation/editing modal */}
       <CountryListModal
         isOpen={listModalOpen}
-        isEditing={false}
+        isEditing={isEditingList}
         list={newList}
         onChange={setNewList}
+        onDelete={handleDeleteList}
         onSave={async (list) => {
           await addList(list);
           setListModalOpen(false);
           setNewList(null);
+          setIsEditingList(false);
         }}
         onClose={() => {
           setListModalOpen(false);
           setNewList(null);
+          setIsEditingList(false);
         }}
       />
 

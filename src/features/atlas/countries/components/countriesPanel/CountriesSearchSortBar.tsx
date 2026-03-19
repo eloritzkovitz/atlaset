@@ -22,6 +22,7 @@ interface CountriesSearchSortBarProps {
   selectedListId?: string | null;
   setSelectedListId?: (id: string | null) => void;
   onAddList?: () => void;
+  onEditList?: (id: string) => void;
 }
 
 export function CountriesSearchSortBar({
@@ -40,6 +41,7 @@ export function CountriesSearchSortBar({
   selectedListId = null,
   setSelectedListId,
   onAddList,
+  onEditList,  
 }: CountriesSearchSortBarProps) {
   const { timelineMode } = useTimeline();
 
@@ -66,6 +68,13 @@ export function CountriesSearchSortBar({
       ? "sovereign"
       : selectedListId || "all";
 
+  // Handler for double-click editing
+  const handleToggleDoubleClick = (val: string) => {
+    if (typeof onEditList === "function") {
+      onEditList(val);
+    }
+  };
+
   return (
     <div className="items-center">
       <div className="flex items-stretch pb-0 mt-1">
@@ -86,30 +95,38 @@ export function CountriesSearchSortBar({
         className="mt-2 mb-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap toggles-scroll"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
-        <SegmentedToggle
-          value={selectedToggle}
-          options={options}
-          onChange={(val) => {
-            if (val === "visited") {
-              setVisitedOnly?.(true);
-              setSovereignOnly?.(false);
-              setSelectedListId?.(null);
-            } else if (val === "sovereign") {
-              setVisitedOnly?.(false);
-              setSovereignOnly?.(true);
-              setSelectedListId?.(null);
-            } else if (val === "all") {
-              setVisitedOnly?.(false);
-              setSovereignOnly?.(false);
-              setSelectedListId?.(null);
-            } else {
-              setVisitedOnly?.(false);
-              setSovereignOnly?.(false);
-              setSelectedListId?.(val);
-            }
-          }}
-          disabled={timelineMode}
-        />
+        {options.map((opt) => (
+          <div
+            key={opt.value}
+            className="inline-block cursor-pointer"
+            onDoubleClick={() => handleToggleDoubleClick(opt.value)}
+          >
+            <SegmentedToggle
+              value={selectedToggle}
+              options={[opt]}
+              onChange={(val) => {
+                if (val === "visited") {
+                  setVisitedOnly?.(true);
+                  setSovereignOnly?.(false);
+                  setSelectedListId?.(null);
+                } else if (val === "sovereign") {
+                  setVisitedOnly?.(false);
+                  setSovereignOnly?.(true);
+                  setSelectedListId?.(null);
+                } else if (val === "all") {
+                  setVisitedOnly?.(false);
+                  setSovereignOnly?.(false);
+                  setSelectedListId?.(null);
+                } else {
+                  setVisitedOnly?.(false);
+                  setSovereignOnly?.(false);
+                  setSelectedListId?.(val);
+                }
+              }}
+              disabled={timelineMode}
+            />
+          </div>
+        ))}
         <ActionButton
           icon={<FaPlus />}
           ariaLabel="New list"
