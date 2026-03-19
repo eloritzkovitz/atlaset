@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react";
-import { FaGlobe } from "react-icons/fa6";
 import {
   ActionButton,
   Checkbox,
   EmptyListMessage,
-  FormField,
   Modal,
   PanelHeader,
   SearchInput,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
@@ -55,19 +54,24 @@ export function CountrySelectModal({
       <PanelHeader
         title={
           <>
-            <FaGlobe />
+            <ICONS.countries />
             Select Countries
           </>
         }
-      />
-      <FormField label="Search:">
+      >
+        <ActionButton
+          onClick={onClose}
+          ariaLabel="Close List Modal"
+          icon={<ICONS.close className="text-2xl" />}
+          rounded
+        />
+      </PanelHeader>
+      <div className="flex flex-col h-full px-4 gap-4">
         <SearchInput
           value={search}
           onChange={setSearch}
           placeholder="Search countries"
         />
-      </FormField>
-      <FormField label="Countries:">
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (
             <EmptyListMessage message="No countries found." />
@@ -104,14 +108,14 @@ export function CountrySelectModal({
             })
           )}
         </div>
-      </FormField>
-      <div className="flex justify-end gap-2 mt-4">
-        <ActionButton type="button" variant="secondary" onClick={onClose}>
-          Cancel
-        </ActionButton>
-        <ActionButton type="button" variant="primary" onClick={onClose}>
-          Confirm
-        </ActionButton>
+        <div className="flex justify-end gap-2">
+          <ActionButton type="button" variant="secondary" onClick={onClose}>
+            Cancel
+          </ActionButton>
+          <ActionButton type="button" variant="primary" onClick={onClose}>
+            Confirm
+          </ActionButton>
+        </div>
       </div>
     </Modal>
   );
