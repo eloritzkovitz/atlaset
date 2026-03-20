@@ -21,7 +21,8 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Adds a new list and reloads all lists
   const addList = async (list: CountryList) => {
-    await countryListService.save(list);
+    const withId = { ...list, id: list.id ?? crypto.randomUUID() };
+    await countryListService.save(withId);
     await reload();
   };
 
