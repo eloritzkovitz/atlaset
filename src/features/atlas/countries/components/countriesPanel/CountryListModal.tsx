@@ -1,17 +1,17 @@
 import { useState } from "react";
 import {
   ActionButton,
-  Chip,
-  EmptyListMessage,
   FormField,
   Modal,
   ModalActions,
   PanelHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { CountrySelectModal } from "@features/countries/components/countrySelect/CountrySelectModal";
-import { useCountryData } from "@features/countries";
-import type { CountryList } from "@features/countries/types";
+import {
+  CountrySelectField,
+  useCountryData,
+  type CountryList,
+} from "@features/countries";
 
 interface CountryListModalProps {
   isOpen: boolean;
@@ -33,20 +33,16 @@ export function CountryListModal({
   onClose,
 }: CountryListModalProps) {
   const { countries } = useCountryData();
-  const [countryModalOpen, setCountryModalOpen] = useState(false);
-
-  // State for country select modal
-  const selectedCountries = countries.filter(
-    (country) => list && list.countryCodes.includes(country.isoCode),
-  );
+  const [countrySelectOpen, setCountrySelectOpen] = useState(false);
 
   // Handle modal close
   const handleClose = () => {
-    if (!countryModalOpen) {
+    if (!countrySelectOpen) {
       onClose();
     }
   };
 
+  // Don't render the modal if no list is being edited
   if (!list) return null;
 
   // Validate list
@@ -58,7 +54,7 @@ export function CountryListModal({
         isOpen={isOpen}
         onClose={handleClose}
         className="rounded-xl shadow-2xl !min-w-[600px] max-h-[90vh] overflow-y-auto"
-        disableClose={countryModalOpen}
+        disableClose={countrySelectOpen}
         draggable
       >
         <PanelHeader
@@ -94,37 +90,16 @@ export function CountryListModal({
                 onChange={(e) => onChange({ ...list, name: e.target.value })}
               />
             </FormField>
-            <FormField label="Countries:">
-              <div className="flex items-center gap-2 flex-wrap">
-                {selectedCountries.length === 0 ? (
-                  <EmptyListMessage message="No countries selected." />
-                ) : (
-                  selectedCountries.map((country) => (
-                    <Chip
-                      key={country.isoCode}
-                      removable={true}
-                      onRemove={() =>
-                        onChange({
-                          ...list,
-                          countryCodes: list.countryCodes.filter(
-                            (code) => code !== country.isoCode,
-                          ),
-                        })
-                      }
-                    >
-                      {country.name}
-                    </Chip>
-                  ))
-                )}
-                <ActionButton
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setCountryModalOpen(true)}
-                >
-                  <ICONS.edit className="inline" /> Edit
-                </ActionButton>
-              </div>
-            </FormField>
+            <CountrySelectField
+              countryCodes={list.countryCodes}
+              countries={countries}
+              onChange={(newCodes) =>
+                onChange({ ...list, countryCodes: newCodes })
+              }
+              isOpen={countrySelectOpen}
+              onOpen={() => setCountrySelectOpen(true)}
+              onClose={() => setCountrySelectOpen(false)}
+            />
             <div className="flex items-center justify-end mt-6">
               <ModalActions
                 onCancel={onClose}
@@ -148,16 +123,6 @@ export function CountryListModal({
           </div>
         </form>
       </Modal>
-      {/* Country Select Modal */}
-      <CountrySelectModal
-        isOpen={countryModalOpen}
-        selected={list.countryCodes}
-        options={countries}
-        onClose={() => setCountryModalOpen(false)}
-        onChange={(newCodes) => {
-          onChange({ ...list, countryCodes: newCodes });
-        }}
-      />
     </>
   );
 }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   ActionButton,
-  Chip,
   ColorSelectInput,
   FormField,
   Modal,
@@ -9,8 +8,7 @@ import {
   PanelHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { CountrySelectModal } from "@features/countries/components/countrySelect/CountrySelectModal";
-import { useCountryData } from "@features/countries";
+import { CountrySelectField, useCountryData } from "@features/countries";
 import type { Layer } from "../types";
 
 interface LayerModalProps {
@@ -34,14 +32,8 @@ export function LayerModal({
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [colorModalOpen, setColorModalOpen] = useState(false);
 
-  // State for country select modal
-  const selectedCountries = countries.filter(
-    (country) => layer && layer.countries.includes(country.isoCode),
-  );
-
   // Handle modal close
   const handleClose = () => {
-    // Only allow closing if no submodal is open
     if (!colorModalOpen && !countryModalOpen) {
       onClose();
     }
@@ -59,9 +51,9 @@ export function LayerModal({
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] overflow-y-auto" 
+        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] overflow-y-auto"
         disableClose={countryModalOpen || colorModalOpen}
-        draggable                  
+        draggable
       >
         <PanelHeader
           title={
@@ -87,7 +79,6 @@ export function LayerModal({
           }}
         >
           <div className="p-2">
-            {/* Name */}
             <FormField label="Name:">
               <input
                 type="text"
@@ -96,8 +87,6 @@ export function LayerModal({
                 onChange={(e) => onChange({ ...layer, name: e.target.value })}
               />
             </FormField>
-
-            {/* Color */}
             <FormField label="Color:">
               <ColorSelectInput
                 value={layer.color}
@@ -105,41 +94,16 @@ export function LayerModal({
                 onModalOpenChange={setColorModalOpen}
               />
             </FormField>
-
-            {/* Countries */}
-            <FormField label="Countries:">
-              <div className="flex items-center gap-2 flex-wrap">
-                {selectedCountries.length === 0 ? (
-                  <span className="text-muted">No countries selected</span>
-                ) : (
-                  selectedCountries.map((country) => (
-                    <Chip
-                      key={country.isoCode}
-                      removable={true}
-                      onRemove={() =>
-                        onChange({
-                          ...layer,
-                          countries: layer.countries.filter(
-                            (code) => code !== country.isoCode,
-                          ),
-                        })
-                      }
-                    >
-                      {country.name}
-                    </Chip>
-                  ))
-                )}
-                <ActionButton
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setCountryModalOpen(true)}
-                >
-                  <ICONS.edit className="inline" /> Edit
-                </ActionButton>
-              </div>
-            </FormField>
-
-            {/* Filter Labels */}
+            <CountrySelectField
+              countryCodes={layer.countries}
+              countries={countries}
+              onChange={(newCodes) =>
+                onChange({ ...layer, countries: newCodes })
+              }
+              isOpen={countryModalOpen}
+              onOpen={() => setCountryModalOpen(true)}
+              onClose={() => setCountryModalOpen(false)}
+            />
             <FormField label="Filter Labels:">
               <input
                 type="text"
@@ -204,16 +168,6 @@ export function LayerModal({
           </div>
         </form>
       </Modal>
-      {/* Country Select Modal */}
-      <CountrySelectModal
-        isOpen={countryModalOpen}
-        selected={layer.countries}
-        options={countries}
-        onClose={() => setCountryModalOpen(false)}
-        onChange={(newCountries) => {
-          onChange({ ...layer, countries: newCountries });
-        }}
-      />
     </>
   );
 }
