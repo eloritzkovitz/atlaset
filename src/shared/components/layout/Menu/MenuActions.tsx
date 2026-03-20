@@ -93,7 +93,7 @@ export function MenuActions({
       {onCreateList && (
         <MenuButton
           onClick={onCreateList}
-          icon={<ICONS.countryLists className="mr-2" />}
+          icon={<ICONS.createList className="mr-2" />}
           className="w-full"
         >
           Create List
