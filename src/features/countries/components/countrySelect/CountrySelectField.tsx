@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import { ActionButton, Chip, EmptyListMessage, FormField } from "@components";
+import { ActionButton, Chip, FormField } from "@components";
 import { ICONS } from "@constants/icons";
 import { CountrySelectModal } from "./CountrySelectModal";
 import type { Country } from "../../types";
@@ -33,7 +33,7 @@ export function CountrySelectField({
       <FormField label={label}>
         <div className="flex items-center gap-2 flex-wrap">
           {countryCodes.length === 0 ? (
-            <EmptyListMessage message="No countries selected." />
+            <span className="text-muted">No countries selected.</span>
           ) : (
             selectedCountries.map((country) => (
               <Chip

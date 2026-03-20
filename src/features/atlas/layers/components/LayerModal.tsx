@@ -11,6 +11,9 @@ import { ICONS } from "@constants/icons";
 import { CountrySelectField, useCountryData } from "@features/countries";
 import type { Layer } from "../types";
 
+type FilterLabelKey = "all" | "only" | "exclude";
+const filterLabelKeys: FilterLabelKey[] = ["all", "only", "exclude"];
+
 interface LayerModalProps {
   isOpen: boolean;
   isEditing: boolean;
@@ -41,6 +44,17 @@ export function LayerModal({
 
   // Don't render the modal if no layer is being edited
   if (!layer) return null;
+
+  // Handle filter label change
+  const handleFilterLabelChange = (key: FilterLabelKey, value: string) => {
+    onChange({
+      ...layer,
+      filterLabels: {
+        ...layer.filterLabels,
+        [key]: value,
+      },
+    });
+  };
 
   // Validate layer
   const isValid =
@@ -104,51 +118,15 @@ export function LayerModal({
               onOpen={() => setCountryModalOpen(true)}
               onClose={() => setCountryModalOpen(false)}
             />
-            <FormField label="Filter Labels:">
-              <input
-                type="text"
-                value={layer.filterLabels?.all || ""}
-                onChange={(e) =>
-                  onChange({
-                    ...layer,
-                    filterLabels: {
-                      ...layer.filterLabels,
-                      all: e.target.value,
-                    },
-                  })
-                }
-              />
-            </FormField>
-            <FormField label="">
-              <input
-                type="text"
-                value={layer.filterLabels?.only || ""}
-                onChange={(e) =>
-                  onChange({
-                    ...layer,
-                    filterLabels: {
-                      ...layer.filterLabels,
-                      only: e.target.value,
-                    },
-                  })
-                }
-              />
-            </FormField>
-            <FormField label="">
-              <input
-                type="text"
-                value={layer.filterLabels?.exclude || ""}
-                onChange={(e) =>
-                  onChange({
-                    ...layer,
-                    filterLabels: {
-                      ...layer.filterLabels,
-                      exclude: e.target.value,
-                    },
-                  })
-                }
-              />
-            </FormField>
+            {filterLabelKeys.map((key, idx) => (
+              <FormField label={idx === 0 ? "Filter Labels:" : ""} key={key}>
+                <input
+                  type="text"
+                  value={layer.filterLabels?.[key as FilterLabelKey] || ""}
+                  onChange={(e) => handleFilterLabelChange(key, e.target.value)}
+                />
+              </FormField>
+            ))}
             <div className="flex items-center justify-between mt-6">
               <ModalActions
                 onCancel={onClose}
