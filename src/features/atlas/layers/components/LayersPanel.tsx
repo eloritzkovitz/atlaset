@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
+import { useCountryLists } from "@contexts/CountryListsContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
@@ -11,8 +12,8 @@ import type { Layer } from "../types";
 import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 
 interface LayersPanelProps {
-  onEditLayer: (layer: Layer) => void;
   onAddLayer: () => void;
+  onEditLayer: (layer: Layer) => void;
   layerModalOpen: boolean;
   activeSavedMapLayers?: Layer[];
   handleSavedMapChange?: {
@@ -27,12 +28,13 @@ interface LayersPanelProps {
 }
 
 export function LayersPanel({
-  onEditLayer,
   onAddLayer,
+  onEditLayer,
   layerModalOpen,
   activeSavedMapLayers,
   handleSavedMapChange,
 }: LayersPanelProps) {
+  const { addList } = useCountryLists();
   const { showLayers, closePanel } = useUI();
   const {
     layers,
@@ -59,6 +61,15 @@ export function LayersPanel({
 
   // File input reference for importing layers
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Convert layer to country list
+  function createListFromLayer(layer: Layer) {
+    addList({
+      id: crypto.randomUUID(),
+      name: layer.name,
+      countryCodes: layer.countries,
+    });
+  }
 
   return (
     <Panel
@@ -158,6 +169,9 @@ export function LayersPanel({
                       ? () => handleSavedMapChange?.duplicateLayer(layer.id)
                       : () => duplicateLayer(layer.id)
                     : undefined
+                }
+                onCreateList={
+                  !isReadonly ? () => createListFromLayer(layer) : undefined
                 }
                 onRemove={
                   !isReadonly

@@ -23,6 +23,7 @@ interface PanelListItemProps {
   onDuplicate?: () => void;
   onCopytoClipboard?: () => void;
   onRemove?: () => void;
+  onCreateList?: () => void;
   removeDisabled?: boolean;
   dragged?: boolean;
   onDragStart?: () => void;
@@ -47,6 +48,7 @@ export function PanelListItem({
   onDuplicate,
   onCopytoClipboard,
   onRemove,
+  onCreateList,
   removeDisabled = false,
   dragged,
   onDragStart,
@@ -111,6 +113,7 @@ export function PanelListItem({
       onNameChange: onNameChange ? handleEdit : undefined,
       onDuplicate,
       onCopytoClipboard,
+      onCreateList,
       onRemove: onRemove
         ? () => {
             if (!removeDisabled) setConfirmOpen(true);
