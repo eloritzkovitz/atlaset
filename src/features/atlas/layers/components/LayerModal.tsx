@@ -45,6 +45,7 @@ export function LayerModal({
   if (!layer) return null;
 
   // Validate layer
+  const isListManaged = !!layer.listId && isEditing;
   const isValid =
     layer.name.trim() !== "" && layer.countries && layer.countries.length > 0;
 
@@ -122,6 +123,7 @@ export function LayerModal({
                   name="name"
                   value={layer.name}
                   onChange={(e) => onChange({ ...layer, name: e.target.value })}
+                  disabled={isListManaged}
                 />
               </FormField>
               <FormField label="Color:">
@@ -140,6 +142,7 @@ export function LayerModal({
                 isOpen={countryModalOpen}
                 onOpen={() => setCountryModalOpen(true)}
                 onClose={() => setCountryModalOpen(false)}
+                disabled={isListManaged}
               />
               {!isEditing && (
                 <FormField label="">
@@ -181,6 +184,13 @@ export function LayerModal({
                   />
                 </FormField>
               ))}
+              {isListManaged && (
+                <div className="flex px-3 py-2 mb-2 items-center text-danger ">
+                  <ICONS.info className="inline mr-2" />
+                  This layer is linked with a list. To edit its name or
+                  countries, update the list itself.
+                </div>
+              )}
               <div className="flex items-center justify-between mt-6">
                 <ModalActions
                   onCancel={onClose}

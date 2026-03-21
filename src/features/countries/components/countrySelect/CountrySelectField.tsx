@@ -12,6 +12,7 @@ interface CountrySelectFieldProps {
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
+  disabled?: boolean;
 }
 
 export function CountrySelectField({
@@ -22,6 +23,7 @@ export function CountrySelectField({
   isOpen,
   onOpen,
   onClose,
+  disabled,
 }: CountrySelectFieldProps) {
   // Map codes to countries and sort alphabetically
   const selectedCountries = countries
@@ -38,8 +40,9 @@ export function CountrySelectField({
             selectedCountries.map((country) => (
               <Chip
                 key={country.isoCode}
-                removable={true}
+                removable={!disabled}
                 onRemove={() =>
+                  !disabled &&
                   onChange(
                     countryCodes.filter((code) => code !== country.isoCode),
                   )
@@ -49,9 +52,16 @@ export function CountrySelectField({
               </Chip>
             ))
           )}
-          <ActionButton type="button" variant="secondary" onClick={onOpen}>
-            <ICONS.edit className="inline" /> Edit
-          </ActionButton>
+          {!disabled && (
+            <ActionButton
+              type="button"
+              variant="secondary"
+              onClick={onOpen}
+              disabled={disabled}
+            >
+              <ICONS.edit className="inline" /> Edit
+            </ActionButton>
+          )}
         </div>
       </FormField>
       {isOpen &&
