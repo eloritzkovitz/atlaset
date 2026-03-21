@@ -11,9 +11,10 @@ Atlaset lets you explore, filter and track `countries` on the interactive world 
 ## **Country Details**
 
 Country details include the following sections:
- - **`Overview`**: Including `name` and `flag`, `sovereignty status`, `region`, `subregion`, `capital`, `currency`, `languages` and more.
- - **`Relations`**: If any, including `dependencies`, `internal regions` and `disputes`.
- - **`Visits`**: See below.
+
+- **`Overview`**: Including `name` and `flag`, `sovereignty status`, `region`, `subregion`, `capital`, `currency`, `languages` and more.
+- **`Relations`**: If any, including `dependencies`, `internal regions` and `disputes`.
+- **`Visits`**: See below.
 
 ## **Your Visits**
 
@@ -44,13 +45,12 @@ property:query
 You can create and manage your own custom `country lists`, which allow quick, dynamic filtering and toggling. Use lists to group countries for travel plans, tracking or any custom criteria.
 
 - To add a new list, press the `+` button in the list toggles bar.
+- Lists can also be created from `layers`, as explained below.
 - To edit an existing list, double-click on its toggle.
 
-### **Layers**
+### **Creating Lists from Layers**
 
-`Layers` are advanced, visual representations of country lists on the map. You can convert any list into a layer for map visualization or turn a layer back into a list for easier management and filtering. This gives you full flexibility to plan, track and visualize your travels.  
-
-For more details and advanced usage, see the [Layers documentation](/docs/layers-markers.md).
+`Layers` are advanced, visual representations of country lists on the map. When creating lists from layers, the `name` and `countries` fields will be shared between both objects. Updating a linked list will also update the relevant content in the layer, allowing for easier management.
 
 ## **Learn More**
 
