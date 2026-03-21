@@ -46,6 +46,7 @@ export function CountryListModal({
   if (!list) return null;
 
   // Validate list
+  const isLinked = !!list.layerId && isEditing;
   const isValid = list.name.trim() !== "" && list.countryCodes.length > 0;
 
   return (
@@ -101,6 +102,12 @@ export function CountryListModal({
               onOpen={() => setCountrySelectOpen(true)}
               onClose={() => setCountrySelectOpen(false)}
             />
+            {isEditing && isLinked && (
+              <div className="flex px-3 py-2 mb-2 items-center text-danger ">
+                <ICONS.info className="inline mr-2" />
+                Changes to this list will update all layers linked to it.
+              </div>
+            )}
             <div className="flex items-center justify-end mt-6">
               <ModalActions
                 onCancel={onClose}
