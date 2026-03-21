@@ -33,6 +33,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     isEditingLayer: isEditingSavedMapLayer,
     isEditModalOpen: isEditSavedMapLayerModalOpen,
     addLayer,
+    editLayer,
     updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
@@ -88,7 +89,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   });
 
   // Reload saved maps
-  async function reload() {
+  async function reloadSavedMaps() {
     setLoading(true);
     setError(null);
     try {
@@ -103,7 +104,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Initial load
   useEffect(() => {
-    reload();
+    reloadSavedMaps();
   }, []);
 
   // Sync activeSavedMap layers/markers with layer/marker managers
@@ -176,7 +177,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       markers: original.markers?.map((m) => ({ ...m })) ?? [],
     };
     await savedMapsService.set(newMap);
-    await reload();
+    await reloadSavedMaps();
   }
 
   // Save current map from URL
@@ -255,7 +256,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     };
     await savedMapsService.set(mapToSave);
     closeSavedMapModal();
-    await reload();
+    await reloadSavedMaps();
   }
 
   // Import layers into the editing saved map
@@ -280,13 +281,13 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     const updated = { ...activeSavedMap, layers: merged };
     setActiveSavedMap(updated);
     await savedMapsService.set(updated);
-    await reload();
+    await reloadSavedMaps();
   }
 
   // Delete a saved map
   async function deleteSavedMap(id: string) {
     await savedMapsService.delete(id);
-    await reload();
+    await reloadSavedMaps();
   }
 
   return (
@@ -295,7 +296,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         savedMaps,
         loading,
         error,
-        reload,
+        reloadSavedMaps,
         createNewMap,
         duplicateSavedMap,
         saveCurrentMap,
@@ -310,9 +311,10 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         updateSavedMapName,
         updateLayerName,
         // Layers
-        addLayer,
-        importLayers,
         saveSavedMapLayer,
+        addLayer,        
+        importLayers,
+        editLayer,
         duplicateLayer,
         removeLayer,
         reorderLayers,

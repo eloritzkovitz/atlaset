@@ -8,6 +8,7 @@ export interface LayersContextType {
   setLayerSelections: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
+  reloadLayers: () => Promise<void>;
   importLayers: (newLayers: AnyLayer[]) => Promise<void>;
   addLayer: (layer: AnyLayer) => void;
   editLayer: (layer: AnyLayer) => void;

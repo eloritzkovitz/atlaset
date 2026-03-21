@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   layersService,
   useLayerManager,
@@ -8,41 +8,13 @@ import { logUserActivity, useAuth } from "@features/user";
 import { LayersContext } from "./LayersContext";
 
 export function LayersProvider({ children }: { children: React.ReactNode }) {
-  // Layer selections state
+  const { user, ready } = useAuth();
   const [layerSelections, setLayerSelections] = useState<
     Record<string, string>
   >({});
-
-  // Loading and error state
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Auth state for loading layers
-  const { user, ready } = useAuth();
-
-  // Main layers state, loaded from service
   const [initialLayers, setInitialLayers] = useState<AnyLayer[]>([]);
-
-  // Load layers when auth state changes
-  useEffect(() => {
-    let mounted = true;
-    if (!ready) return;
-    layersService
-      .load()
-      .then((dbLayers) => {
-        if (mounted) {
-          setInitialLayers(dbLayers);
-          setLoading(false);
-        }
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [user, ready]);
 
   // Layer manager for layers state and operations
   const {
@@ -71,6 +43,27 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
+  // Reload layers
+  const reloadLayers = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const dbLayers = await layersService.load();
+      setInitialLayers(dbLayers);
+      setLayers(dbLayers);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setLoading(false);
+    }
+  }, [setLayers]);
+
+  // Load layers when auth state changes
+  useEffect(() => {
+    if (!ready) return;
+    reloadLayers();
+  }, [user, ready, reloadLayers]);
+
   // Import layers from JSON
   async function importLayers(newLayers: AnyLayer[]) {
     const before = layers;
@@ -95,14 +88,15 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
         setLayers,
         layerSelections,
         setLayerSelections,
+        reloadLayers,
         importLayers,
         addLayer,
         editLayer,
-        updateLayerName,        
+        updateLayerName,
         reorderLayers,
         toggleLayerVisibility,
         duplicateLayer,
-        removeLayer,        
+        removeLayer,
         loading,
         error,
         editingLayer,

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
+import { useCountryLists } from "@contexts/CountryListsContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
@@ -11,14 +12,15 @@ import type { Layer } from "../types";
 import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 
 interface LayersPanelProps {
-  onEditLayer: (layer: Layer) => void;
   onAddLayer: () => void;
+  onEditLayer: (layer: Layer) => void;
   layerModalOpen: boolean;
   activeSavedMapLayers?: Layer[];
   handleSavedMapChange?: {
     addLayer: (layer: Layer) => void;
     importLayers: (layers: Layer[]) => void;
     updateLayerName: (id: string, newName: string) => void;
+    editLayer: (layer: Layer) => void;
     reorderLayers: (layers: Layer[]) => void;
     toggleLayerVisibility: (layerId: string) => void;
     duplicateLayer: (layerId: string) => void;
@@ -27,16 +29,18 @@ interface LayersPanelProps {
 }
 
 export function LayersPanel({
-  onEditLayer,
   onAddLayer,
+  onEditLayer,
   layerModalOpen,
   activeSavedMapLayers,
   handleSavedMapChange,
 }: LayersPanelProps) {
+  const { createListFromLayer } = useCountryLists();
   const { showLayers, closePanel } = useUI();
   const {
     layers,
     importLayers,
+    editLayer,
     updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
@@ -157,6 +161,20 @@ export function LayersPanel({
                     ? isEditingSavedMap
                       ? () => handleSavedMapChange?.duplicateLayer(layer.id)
                       : () => duplicateLayer(layer.id)
+                    : undefined
+                }
+                onCreateList={
+                  !isReadonly
+                    ? async () => {
+                        await createListFromLayer(layer, (newListId) => {
+                          const update = { ...layer, listId: newListId };
+                          if (isEditingSavedMap && handleSavedMapChange) {
+                            handleSavedMapChange.editLayer(update);
+                          } else {
+                            editLayer(update);
+                          }
+                        });
+                      }
                     : undefined
                 }
                 onRemove={

@@ -1,6 +1,6 @@
 import { MenuButton } from "../Menu/MenuButton";
 import { Separator } from "../Separator";
-import { ICONS} from "../../../constants/icons";
+import { ICONS } from "../../../constants/icons";
 
 interface MenuActionsProps {
   onView?: () => void;
@@ -9,6 +9,7 @@ interface MenuActionsProps {
   onEdit?: () => void;
   onNameChange?: (() => void) | null;
   onDuplicate?: () => void;
+  onCreateList?: () => void;
   onShare?: () => void;
   onCopytoClipboard?: () => void;
   onRemove?: (() => void) | null;
@@ -23,6 +24,7 @@ export function MenuActions({
   onEdit,
   onNameChange,
   onDuplicate,
+  onCreateList,
   onShare,
   onCopytoClipboard,
   onRemove,
@@ -86,6 +88,15 @@ export function MenuActions({
           className="w-full"
         >
           Duplicate
+        </MenuButton>
+      )}
+      {onCreateList && (
+        <MenuButton
+          onClick={onCreateList}
+          icon={<ICONS.createList className="mr-2" />}
+          className="w-full"
+        >
+          Create List
         </MenuButton>
       )}
       {(onShare || onCopytoClipboard) && <Separator className="my-1" />}

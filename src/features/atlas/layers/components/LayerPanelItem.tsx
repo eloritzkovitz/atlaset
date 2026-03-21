@@ -11,6 +11,7 @@ interface LayerPanelItemProps {
   onEdit?: (layer: Layer) => void;
   onNameChange?: (newName: string) => void;
   onDuplicate?: () => void;
+  onCreateList?: (layer: Layer) => void;
   onToggleVisibility?: (id: string) => void;
   onRemove?: (id: string) => void;
 }
@@ -25,6 +26,7 @@ export function LayerPanelItem({
   onEdit,
   onNameChange,
   onDuplicate,
+  onCreateList,
   onToggleVisibility,
   onRemove,
 }: LayerPanelItemProps) {
@@ -40,6 +42,7 @@ export function LayerPanelItem({
       onEdit={onEdit ? () => onEdit(layer) : undefined}
       onNameChange={onNameChange}
       onDuplicate={onDuplicate ? () => onDuplicate() : undefined}
+      onCreateList={onCreateList ? () => onCreateList(layer) : undefined}
       onRemove={onRemove ? () => onRemove(layer.id) : undefined}
       dragged={dragged}
       onDragStart={onDragStart}

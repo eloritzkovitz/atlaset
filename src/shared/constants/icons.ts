@@ -39,6 +39,7 @@ import {
   FaLayerGroup,
   FaLeaf,
   FaLink,
+  FaList,
   FaListUl,
   FaLocationDot,
   FaLock,
@@ -76,6 +77,7 @@ import {
 } from "react-icons/fa6";
 import { DashboardIcon } from "../components/icons/DashboardIcon";
 import { VisitIcon } from "../components/icons/VisitIcon";
+import { FaPlusSquare } from "react-icons/fa";
 
 // Centralized icon mapping for shared concepts
 export const ICONS = {
@@ -93,6 +95,7 @@ export const ICONS = {
   map: FaMap,
   mapData: FaMapLocationDot,
   countries: FaGlobe,
+  countryLists: FaList,
   visits: VisitIcon,
   filters: FaFilter,
   layers: FaLayerGroup,
@@ -153,6 +156,7 @@ export const ICONS = {
   rename: FaPencil,
   center: FaCrosshairs,
   duplicate: FaCopy,
+  createList: FaPlusSquare,
   shareWith: FaUserPlus,
   copyLink: FaLink,
   remove: FaTrash,

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
+import { useCountryLists } from "@contexts/CountryListsContext";
+import { CountryListModal } from "./CountryListModal";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -14,6 +16,7 @@ import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryList } from "./CountryList";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../hooks/useCountryFilters";
+import { useCountryListModal } from "../../hooks/useCountryListModal";
 
 interface CountriesPanelProps {
   selectedIsoCode: string | null;
@@ -32,8 +35,29 @@ export function CountriesPanel({
   onHover,
   onCountryInfo,
 }: CountriesPanelProps) {
-  // Context data state
   const { refreshData } = useCountryData();
+  const {
+    countryLists,
+    selectedListId,
+    setSelectedListId,
+    addList,
+    deleteList,
+  } = useCountryLists();
+  const {
+    modalOpen,
+    isEditing,
+    currentList,
+    openAddModal,
+    openEditModal,
+    handleSave,
+    handleDelete,
+    handleClose,
+    handleChange,
+  } = useCountryListModal({
+    addList,
+    deleteList,
+    countryLists,
+  });
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -68,6 +92,14 @@ export function CountriesPanel({
     setMaxVisitCount,
     resetFilters,
   } = useCountryFilters();
+
+  // Compute filtered iso codes for custom list counts
+  const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
+  const customListOptions = countryLists.map((list) => ({
+    ...list,
+    count: filteredIsoCodes.filter((code) => list.countryCodes.includes(code))
+      .length,
+  }));
 
   // Sort state
   const {
@@ -113,7 +145,7 @@ export function CountriesPanel({
   const handleResetFilters = () => {
     resetFilters();
     setSortBy("name-asc");
-  };
+  };  
 
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">
@@ -169,6 +201,11 @@ export function CountriesPanel({
             allCount={allCount}
             sovereignCount={sovereignCount}
             visitedCount={visitedCount}
+            countryLists={customListOptions}
+            selectedListId={selectedListId}
+            setSelectedListId={setSelectedListId}
+            onAddList={openAddModal}
+            onEditList={openEditModal}
           />
           <Separator />
           <CountryList
@@ -183,8 +220,15 @@ export function CountriesPanel({
           />
         </div>
       </Panel>
-
-      {/* Filters panel */}
+      <CountryListModal
+        isOpen={modalOpen}
+        isEditing={isEditing}
+        list={currentList}
+        onChange={handleChange}
+        onDelete={handleDelete}
+        onSave={handleSave}
+        onClose={handleClose}
+      />
       {showCountries && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}

@@ -1,10 +1,11 @@
 import { lazy, Suspense } from "react";
+import { SplashScreen } from "@components";
+import { CountryListsProvider } from "@contexts/CountryListsProvider";
 import { LayersProvider } from "@contexts/LayersProvider";
 import { MapViewProvider } from "@contexts/MapViewProvider";
 import { MarkersProvider } from "@contexts/MarkersProvider";
 import { SavedMapsProvider } from "@contexts/SavedMapsProvider";
 import { TimelineProvider } from "@contexts/TimelineProvider";
-import { SplashScreen } from "@components";
 
 export function AtlasProviders() {
   const AtlasPage = lazy(() => import("./AtlasPage"));
@@ -12,15 +13,17 @@ export function AtlasProviders() {
   return (
     <Suspense fallback={<SplashScreen />}>
       <MapViewProvider>
-        <SavedMapsProvider>
-          <LayersProvider>
-            <MarkersProvider>
-              <TimelineProvider>
-                <AtlasPage />
-              </TimelineProvider>
-            </MarkersProvider>
-          </LayersProvider>
-        </SavedMapsProvider>
+        <CountryListsProvider>
+          <SavedMapsProvider>
+            <LayersProvider>
+              <MarkersProvider>
+                <TimelineProvider>
+                  <AtlasPage />
+                </TimelineProvider>
+              </MarkersProvider>
+            </LayersProvider>
+          </SavedMapsProvider>
+        </CountryListsProvider>
       </MapViewProvider>
     </Suspense>
   );

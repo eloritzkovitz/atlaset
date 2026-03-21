@@ -125,6 +125,7 @@ export function AchievementsGrid() {
           value={typeFilter}
           onChange={(v) => setTypeFilter(String(v))}
           options={typeOptions}
+          wrap
         />
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">

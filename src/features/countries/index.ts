@@ -5,6 +5,7 @@ export { CountryDisplayPanel } from "./components/countryDisplay/CountryDisplayP
 export { CountryFlag } from "./components/countryFlag/CountryFlag";
 export { CountryWithFlag } from "./components/countryFlag/CountryWithFlag";
 export { CountryListGroup } from "./components/countryDetails/CountryListGroup";
+export { CountrySelectField } from "./components/countrySelect/CountrySelectField";
 export { CountrySelectModal } from "./components/countrySelect/CountrySelectModal";
 export { CountrySortSelect } from "./components/countrySort/CountrySortSelect";
 export { VisitedStatusIndicator } from "./components/countryDetails/VisitedStatusIndicator";
@@ -24,6 +25,9 @@ export { useRegionSubregionFilters } from "./hooks/useRegionSubregionFilters";
 // Redux
 export { default as countryDataReducer } from "./slices/countryDataSlice";
 export { fetchCountryData } from "./slices/countryDataSlice";
+
+// Services
+export { countryListService } from "./services/countryListService";
 
 // Types
 export * from "./types";

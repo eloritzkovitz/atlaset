@@ -79,5 +79,10 @@ export function importLayersFromFile(
  * @param filename - Optional filename (default: layers.json or <name>.json for single layer)
  */
 export function exportLayersToFile(layers: Layer | Layer[], filename?: string) {
-  exportToFile<Layer>(layers, filename, ["id", "order", "visible"], "layer");
+  exportToFile<Layer>(
+    layers,
+    filename,
+    ["id", "order", "visible", "listId"],
+    "layer",
+  );
 }

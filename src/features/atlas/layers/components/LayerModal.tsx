@@ -1,17 +1,21 @@
 import { useState } from "react";
 import {
   ActionButton,
-  Chip,
+  Checkbox,
   ColorSelectInput,
   FormField,
   Modal,
   ModalActions,
   PanelHeader,
+  SelectInput,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { CountrySelectModal } from "@features/countries/components/countrySelect/CountrySelectModal";
-import { useCountryData } from "@features/countries";
+import { useCountryLists } from "@contexts/CountryListsContext";
+import { CountrySelectField, useCountryData } from "@features/countries";
 import type { Layer } from "../types";
+
+type FilterLabelKey = "all" | "only" | "exclude";
+const filterLabelKeys: FilterLabelKey[] = ["all", "only", "exclude"];
 
 interface LayerModalProps {
   isOpen: boolean;
@@ -30,190 +34,183 @@ export function LayerModal({
   onSave,
   onClose,
 }: LayerModalProps) {
+  const { countryLists } = useCountryLists();
   const { countries } = useCountryData();
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [colorModalOpen, setColorModalOpen] = useState(false);
-
-  // State for country select modal
-  const selectedCountries = countries.filter(
-    (country) => layer && layer.countries.includes(country.isoCode),
-  );
-
-  // Handle modal close
-  const handleClose = () => {
-    // Only allow closing if no submodal is open
-    if (!colorModalOpen && !countryModalOpen) {
-      onClose();
-    }
-  };
+  const [useList, setUseList] = useState(false);
+  const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
   // Don't render the modal if no layer is being edited
   if (!layer) return null;
 
   // Validate layer
+  const isListManaged = !!layer.listId && isEditing;
   const isValid =
     layer.name.trim() !== "" && layer.countries && layer.countries.length > 0;
+
+  // Handle list selection
+  const handleListSelect = (listId: string | number) => {
+    const selectedList = countryLists.find((l) => l.id === listId);
+    if (selectedList) {
+      onChange({
+        ...layer,
+        name: selectedList.name,
+        countries: selectedList.countryCodes,
+      });
+    }
+    setSelectedListId(listId as string);
+  };
+
+  // Handle filter label change
+  const handleFilterLabelChange = (key: FilterLabelKey, value: string) => {
+    onChange({
+      ...layer,
+      filterLabels: {
+        ...layer.filterLabels,
+        [key]: value,
+      },
+    });
+  };
+
+  // Handle modal close
+  const handleClose = () => {
+    if (!colorModalOpen && !countryModalOpen) {
+      onClose();
+    }
+  };
 
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] overflow-y-auto" 
+        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] flex flex-col"
         disableClose={countryModalOpen || colorModalOpen}
-        draggable                  
+        draggable
       >
-        <PanelHeader
-          title={
-            <>
-              <ICONS.layers />
-              {isEditing ? "Edit Layer" : "Add Layer"}
-            </>
-          }
-        >
-          <ActionButton
-            onClick={onClose}
-            ariaLabel="Close Layer Modal"
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
-        </PanelHeader>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (isValid) {
-              onSave(layer);
+        <div className="flex-shrink-0">
+          <PanelHeader
+            title={
+              <>
+                <ICONS.layers />
+                {isEditing ? "Edit Layer" : "Add Layer"}
+              </>
             }
-          }}
-        >
-          <div className="p-2">
-            {/* Name */}
-            <FormField label="Name:">
-              <input
-                type="text"
-                name="name"
-                value={layer.name}
-                onChange={(e) => onChange({ ...layer, name: e.target.value })}
+            showSeparator
+          >
+            <ActionButton
+              onClick={onClose}
+              ariaLabel="Close Layer Modal"
+              icon={<ICONS.close className="text-2xl" />}
+              rounded
+            />
+          </PanelHeader>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              if (isValid) {
+                onSave(layer);
+              }
+            }}
+          >
+            <div className="flex flex-col p-4">
+              <FormField label="Name:">
+                <input
+                  type="text"
+                  name="name"
+                  value={layer.name}
+                  onChange={(e) => onChange({ ...layer, name: e.target.value })}
+                  disabled={isListManaged}
+                />
+              </FormField>
+              <FormField label="Color:">
+                <ColorSelectInput
+                  value={layer.color}
+                  onChange={(color: string) => onChange({ ...layer, color })}
+                  onModalOpenChange={setColorModalOpen}
+                />
+              </FormField>
+              <CountrySelectField
+                countryCodes={layer.countries}
+                countries={countries}
+                onChange={(newCodes) =>
+                  onChange({ ...layer, countries: newCodes })
+                }
+                isOpen={countryModalOpen}
+                onOpen={() => setCountryModalOpen(true)}
+                onClose={() => setCountryModalOpen(false)}
+                disabled={isListManaged}
               />
-            </FormField>
-
-            {/* Color */}
-            <FormField label="Color:">
-              <ColorSelectInput
-                value={layer.color}
-                onChange={(color: string) => onChange({ ...layer, color })}
-                onModalOpenChange={setColorModalOpen}
-              />
-            </FormField>
-
-            {/* Countries */}
-            <FormField label="Countries:">
-              <div className="flex items-center gap-2 flex-wrap">
-                {selectedCountries.length === 0 ? (
-                  <span className="text-muted">No countries selected</span>
-                ) : (
-                  selectedCountries.map((country) => (
-                    <Chip
-                      key={country.isoCode}
-                      removable={true}
-                      onRemove={() =>
-                        onChange({
-                          ...layer,
-                          countries: layer.countries.filter(
-                            (code) => code !== country.isoCode,
-                          ),
-                        })
-                      }
-                    >
-                      {country.name}
-                    </Chip>
-                  ))
-                )}
-                <ActionButton
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setCountryModalOpen(true)}
-                >
-                  <ICONS.edit className="inline" /> Edit
-                </ActionButton>
+              {!isEditing && (
+                <FormField label="">
+                  <div className="flex items-center gap-2">
+                    <Checkbox
+                      checked={useList}
+                      onChange={(
+                        checked: boolean | ((prevState: boolean) => boolean),
+                      ) => {
+                        setUseList(checked);
+                        if (!checked) {
+                          setSelectedListId(null);
+                        }
+                      }}
+                      label="From List:"
+                    />
+                    <SelectInput
+                      value={selectedListId || ""}
+                      onChange={(val) => handleListSelect(val as string)}
+                      options={countryLists.map((list) => ({
+                        value: list.id,
+                        label: list.name,
+                      }))}
+                      placeholder="Select a list..."
+                      disabled={!useList}
+                      className="min-w-[220px]"
+                    />
+                  </div>
+                </FormField>
+              )}
+              {filterLabelKeys.map((key, idx) => (
+                <FormField label={idx === 0 ? "Filter Labels:" : ""} key={key}>
+                  <input
+                    type="text"
+                    value={layer.filterLabels?.[key as FilterLabelKey] || ""}
+                    onChange={(e) =>
+                      handleFilterLabelChange(key, e.target.value)
+                    }
+                  />
+                </FormField>
+              ))}
+              {isListManaged && (
+                <div className="flex px-3 py-2 mb-2 items-center text-danger ">
+                  <ICONS.info className="inline mr-2" />
+                  This layer is linked with a list. To edit its name or
+                  countries, update the list itself.
+                </div>
+              )}
+              <div className="flex items-center justify-between mt-6">
+                <ModalActions
+                  onCancel={onClose}
+                  onSubmit={() => isValid && onSave(layer)}
+                  submitType="submit"
+                  submitIcon={
+                    isEditing ? (
+                      <ICONS.save className="inline" />
+                    ) : (
+                      <ICONS.add className="inline" />
+                    )
+                  }
+                  submitLabel={isEditing ? "Save Changes" : "Add Layer"}
+                  disabled={!isValid}
+                />
               </div>
-            </FormField>
-
-            {/* Filter Labels */}
-            <FormField label="Filter Labels:">
-              <input
-                type="text"
-                value={layer.filterLabels?.all || ""}
-                onChange={(e) =>
-                  onChange({
-                    ...layer,
-                    filterLabels: {
-                      ...layer.filterLabels,
-                      all: e.target.value,
-                    },
-                  })
-                }
-              />
-            </FormField>
-            <FormField label="">
-              <input
-                type="text"
-                value={layer.filterLabels?.only || ""}
-                onChange={(e) =>
-                  onChange({
-                    ...layer,
-                    filterLabels: {
-                      ...layer.filterLabels,
-                      only: e.target.value,
-                    },
-                  })
-                }
-              />
-            </FormField>
-            <FormField label="">
-              <input
-                type="text"
-                value={layer.filterLabels?.exclude || ""}
-                onChange={(e) =>
-                  onChange({
-                    ...layer,
-                    filterLabels: {
-                      ...layer.filterLabels,
-                      exclude: e.target.value,
-                    },
-                  })
-                }
-              />
-            </FormField>
-            <div className="flex items-center justify-between mt-6">
-              <ModalActions
-                onCancel={onClose}
-                onSubmit={() => isValid && onSave(layer)}
-                submitType="submit"
-                submitIcon={
-                  isEditing ? (
-                    <ICONS.save className="inline" />
-                  ) : (
-                    <ICONS.add className="inline" />
-                  )
-                }
-                submitLabel={isEditing ? "Save Changes" : "Add Layer"}
-                disabled={!isValid}
-              />
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </Modal>
-      {/* Country Select Modal */}
-      <CountrySelectModal
-        isOpen={countryModalOpen}
-        selected={layer.countries}
-        options={countries}
-        onClose={() => setCountryModalOpen(false)}
-        onChange={(newCountries) => {
-          onChange({ ...layer, countries: newCountries });
-        }}
-      />
     </>
   );
 }

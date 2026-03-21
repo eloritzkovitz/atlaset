@@ -20,6 +20,7 @@ You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L
 | `filterLabels` | `map`      | Customized filter labels (_optional_, replacing labels for `All`/`Include Only`/`Exclude`) |
 | `visible`      | `boolean`  | Whether the layers is visible by default                                                   |
 | `countries`    | `string[]` | Array of ISO 3166-1 country codes                                                          |
+| `listId`       | `string`   | Optional id of a linked list (sharing `name` and `countries`)                              |
 
 ### **Adding Layers**
 
