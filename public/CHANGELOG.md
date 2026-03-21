@@ -1,6 +1,10 @@
 # Changelog
 
-## 2026-03-16
+## 2026-03-21
+
+- **[feature]** **Atlas | Countries:** Added country lists for quick filtering, interchangeable with layers
+
+## 2026-03-18
 
 - **[chore]** **Dashboard | Achievements:** Updated achievements with new achievements, improved filtering, sorting and details
 - **[chore]** **Dashboard:** Updated breadcrumbs and navigation for currencies and achievements
@@ -19,7 +23,7 @@
 ## 2026-03-13
 
 - **[feature]** **Countries:** Related countries are now clickable
-- **[feature]** **Dashboard | Exploration:** Updated country pages to match the atlas's country details
+- **[chore]** **Dashboard | Exploration:** Updated country pages to match the atlas's country details
 - **[feature]** **Search:** Regions and subregions are now searchable
 
 ## 2026-03-11
@@ -32,26 +36,26 @@
 
 ## 2026-03-07
 
-- **[feature]** **Atlas | Visits:** Updated visits display and linked visits with calendar
+- **[chore]** **Atlas | Visits:** Updated visits display and linked visits with calendar
 
 ## 2026-03-04
 
-- **[feature]** **User | Activity:** Redesigned activity log and updated formatting
+- **[chore]** **User | Activity:** Redesigned activity log and updated formatting
 
 ## 2026-03-01
 
-- **[feature]** **Countries:** Added aliases to some countries
+- **[chore]** **Countries:** Added aliases to some countries
 - **[bugfix]** **General:** Fixed some UI bugs
 
 ## 2026-02-26
 
-- **[feature]** **Atlas | Saved Maps:** Added thumbnails to saved maps
+- **[feature]** **Atlas | Saved Maps:** Saved maps now have thumbnails when hovering over the map icon
 - **[feature]** **Atlas:** Added additional actions for maps, layers and markers, including duplicate, download and copy link
 
 ## 2026-02-25
 
 - **[feature]** **Calendar:** Added calendar feature with events
-- **[feature]** **Trips:** Redesigned the trip modal
+- **[chore]** **Trips:** Redesigned the trip modal
 - **[breaking]** **Trips:** Trip statuses are now managed automatically only; removed the status field from the trip modal
 - **[bugfix]** **General:** Fixed a minor bug with draggable modals
 - **[bugfix]** **General:** Dropdown selection inputs with multiple selection will no longer overflow the field when more than two items are selected
@@ -59,19 +63,19 @@
 ## 2026-02-21
 
 - **[feature]** **Dashboard:** Added dashboard overview with information summary
-- **[feature]** **Dashboard:** Updated dashboard menu and navigation
+- **[chore]** **Dashboard:** Updated dashboard menu and navigation
 - **[chore]** **User | Activity:** Moved activity log to dashboard and added another link from the user profile
 
 ## 2026-02-17
 
 - **[feature]** **User | Settings:** Added option to delete activities
-- **[feature]** **General:** Some modals are now draggable
+- **[feature]** **General:** Added drag functionality to modals
 - **[bugfix]** **General:** Some minor UI fixes and improvements
 
 ## 2026-02-13
 
 - **[feature]** **User | Friends:** Added friend actions in the friends panel
-- **[feature]** **User | Profile:** Updated user profiles with more information
+- **[chore]** **User | Profile:** Updated user profiles with more information
 - **[bugfix]** **General:** Fixed UI responsiveness for small and medium screens
 
 ## 2026-02-10
@@ -84,7 +88,7 @@
 - **[breaking]** **Atlas | Layers:** Removed visited countries layer and all associated logic and moved it into a map setting
 - **[chore]** **Atlas | Export:** Changed map export options to reflect the new change (exporting visited countries will generate a layer in the JSON)
 - **[feature]** **Atlas | Map:** Added option to create blank saved maps, moved saved maps panel to map toolbar and expanded importing and exporting layers and markers
-- **[feature]** **General:** Redesigned panel list item actions as a menu, and added more options
+- **[chore]** **General:** Redesigned panel list item actions as a menu, and added more options
 - **[chore]** **General:** Updated map mode management and included timeline mode in the centralized control
 - **[chore]** **General:** Renamed LayerMode to ColorMode for better clarity
 
