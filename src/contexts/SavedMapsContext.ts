@@ -8,7 +8,7 @@ export interface SavedMapsContextValue {
   savedMaps: SavedMap[];
   loading: boolean;
   error: Error | null;
-  reload: () => Promise<void>;
+  reloadSavedMaps: () => Promise<void>;
   openSavedMapModal: (map?: SavedMap | null) => void;
   closeSavedMapModal: () => void;
   exitEditMode: () => void;
@@ -26,6 +26,7 @@ export interface SavedMapsContextValue {
   addLayer: (layer: Layer) => void;
   updateLayerName: (id: string, newName: string) => void;
   importLayers: (layers: Layer[]) => void;
+  editLayer: (layer: Layer) => void;
   reorderLayers: (layers: Layer[]) => void;
   toggleLayerVisibility: (layerId: string) => void;
   duplicateLayer: (layerId: string) => void;

@@ -64,6 +64,7 @@ export function CountryListModal({
               {isEditing ? "Edit List" : "Add List"}
             </>
           }
+          showSeparator
         >
           <ActionButton
             onClick={onClose}

@@ -7,7 +7,7 @@ export type Layer = {
   /** Color associated with the layer. */
   color: string;
   /** List of country codes included in the layer. */
-  countries: string[];  
+  countries: string[];
   /** Optional custom labels for filter options. */
   filterLabels?: {
     all?: string;
@@ -18,6 +18,8 @@ export type Layer = {
   visible: boolean;
   /** Optional display order for the layer. */
   order?: number;
+  /** Optional ID for a linked country list. */
+  listId?: string | null;
 };
 
 /** Represents a timeline-enabled layer on the atlas map. */

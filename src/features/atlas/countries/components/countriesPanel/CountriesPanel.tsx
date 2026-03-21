@@ -145,7 +145,7 @@ export function CountriesPanel({
   const handleResetFilters = () => {
     resetFilters();
     setSortBy("name-asc");
-  };
+  };  
 
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">
@@ -220,8 +220,6 @@ export function CountriesPanel({
           />
         </div>
       </Panel>
-
-      {/* List modal */}
       <CountryListModal
         isOpen={modalOpen}
         isEditing={isEditing}
@@ -231,8 +229,6 @@ export function CountriesPanel({
         onSave={handleSave}
         onClose={handleClose}
       />
-
-      {/* Filters panel */}
       {showCountries && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}

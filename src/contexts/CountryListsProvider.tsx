@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { countryListService } from "@features/countries/services/countryListService";
-import type { CountryList } from "@features/countries";
+import type { Layer } from "@features/atlas/layers";
+import { countryListService, type CountryList } from "@features/countries";
 import {
   CountryListsContext,
   type CountryListsContextValue,
@@ -12,45 +12,62 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
   // Reloads the country lists from the service
-  const reload = async () => {
+  const reloadCountryLists = async () => {
     setLoading(true);
     const lists = await countryListService.load();
     setCountryLists(lists);
     setLoading(false);
   };
 
+  // Load lists on mount
+  useEffect(() => {
+    reloadCountryLists();
+  }, []);
+
   // Adds a new list and reloads all lists
   const addList = async (list: CountryList) => {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
-    await reload();
+    await reloadCountryLists();
+  };
+
+  // Creates a new country list from a layer and returns the new list id
+  const createListFromLayer = async (
+    layer: Layer,
+    onLinked?: (listId: string) => void,
+  ) => {
+    const newListId = crypto.randomUUID();
+    await addList({
+      id: newListId,
+      name: layer.name,
+      countryCodes: layer.countries,
+      layerId: layer.id,
+    });
+    if (onLinked) onLinked(newListId);
+    return newListId;
   };
 
   // Updates a list by saving it and reloading all lists
   const updateList = async (list: CountryList) => {
     await countryListService.save(list);
-    await reload();
+    await reloadCountryLists();
   };
 
   // Deletes a list and clears selection if it was the selected one
   const deleteList = async (id: string) => {
     await countryListService.delete(id);
-    await reload();
+    await reloadCountryLists();
     if (selectedListId === id) setSelectedListId(null);
   };
-
-  // Load lists on mount
-  useEffect(() => {
-    reload();
-  }, []);
 
   const value: CountryListsContextValue = {
     countryLists,
     loading,
     selectedListId,
     setSelectedListId,
-    reload,
+    reloadCountryLists,
     addList,
+    createListFromLayer,
     updateList,
     deleteList,
   };

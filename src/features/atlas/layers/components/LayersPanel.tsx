@@ -20,6 +20,7 @@ interface LayersPanelProps {
     addLayer: (layer: Layer) => void;
     importLayers: (layers: Layer[]) => void;
     updateLayerName: (id: string, newName: string) => void;
+    editLayer: (layer: Layer) => void;
     reorderLayers: (layers: Layer[]) => void;
     toggleLayerVisibility: (layerId: string) => void;
     duplicateLayer: (layerId: string) => void;
@@ -34,11 +35,12 @@ export function LayersPanel({
   activeSavedMapLayers,
   handleSavedMapChange,
 }: LayersPanelProps) {
-  const { addList } = useCountryLists();
+  const { createListFromLayer } = useCountryLists();
   const { showLayers, closePanel } = useUI();
   const {
     layers,
     importLayers,
+    editLayer,
     updateLayerName,
     reorderLayers,
     toggleLayerVisibility,
@@ -61,15 +63,6 @@ export function LayersPanel({
 
   // File input reference for importing layers
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Convert layer to country list
-  function createListFromLayer(layer: Layer) {
-    addList({
-      id: crypto.randomUUID(),
-      name: layer.name,
-      countryCodes: layer.countries,
-    });
-  }
 
   return (
     <Panel
@@ -171,7 +164,18 @@ export function LayersPanel({
                     : undefined
                 }
                 onCreateList={
-                  !isReadonly ? () => createListFromLayer(layer) : undefined
+                  !isReadonly
+                    ? async () => {
+                        await createListFromLayer(layer, (newListId) => {
+                          const update = { ...layer, listId: newListId };
+                          if (isEditingSavedMap && handleSavedMapChange) {
+                            handleSavedMapChange.editLayer(update);
+                          } else {
+                            editLayer(update);
+                          }
+                        });
+                      }
+                    : undefined
                 }
                 onRemove={
                   !isReadonly

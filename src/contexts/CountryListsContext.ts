@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import type { Layer } from "@features/atlas/layers";
 import type { CountryList } from "@features/countries/types";
 
 export interface CountryListsContextValue {
@@ -6,8 +7,12 @@ export interface CountryListsContextValue {
   loading: boolean;
   selectedListId: string | null;
   setSelectedListId: (id: string | null) => void;
-  reload: () => Promise<void>;
+  reloadCountryLists: () => Promise<void>;
   addList: (list: CountryList) => Promise<void>;
+  createListFromLayer: (
+    layer: Layer,
+    onLinked?: (listId: string) => void,
+  ) => Promise<string>;
   updateList: (list: CountryList) => Promise<void>;
   deleteList: (id: string) => Promise<void>;
 }

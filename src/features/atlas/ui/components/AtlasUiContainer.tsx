@@ -35,8 +35,8 @@ export function AtlasUiContainer({
   selectedCountry,
   setSelectedCountry,
 }: AtlasUiContainerProps) {
-  const layers = useLayers();
   const { isEdit } = useMapView();
+  const layers = useLayers();
   const mainMarkers = useMarkers();
   const { startAddingMarker, cancelMarkerCreation } = useMarkerCreation();
   const savedMaps = useSavedMaps();
@@ -94,6 +94,7 @@ export function AtlasUiContainer({
             ? {
                 addLayer: savedMaps.addLayer,
                 updateLayerName: savedMaps.updateLayerName,
+                editLayer: savedMaps.editLayer,
                 importLayers: savedMaps.importLayers,
                 reorderLayers: savedMaps.reorderLayers,
                 toggleLayerVisibility: savedMaps.toggleLayerVisibility,

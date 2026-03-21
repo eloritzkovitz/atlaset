@@ -13,17 +13,17 @@ export function AtlasProviders() {
   return (
     <Suspense fallback={<SplashScreen />}>
       <MapViewProvider>
-        <SavedMapsProvider>
-          <LayersProvider>
-            <MarkersProvider>
-              <TimelineProvider>
-                <CountryListsProvider>
+        <CountryListsProvider>
+          <SavedMapsProvider>
+            <LayersProvider>
+              <MarkersProvider>
+                <TimelineProvider>
                   <AtlasPage />
-                </CountryListsProvider>
-              </TimelineProvider>
-            </MarkersProvider>
-          </LayersProvider>
-        </SavedMapsProvider>
+                </TimelineProvider>
+              </MarkersProvider>
+            </LayersProvider>
+          </SavedMapsProvider>
+        </CountryListsProvider>
       </MapViewProvider>
     </Suspense>
   );

@@ -51,6 +51,7 @@ export type CountryList = {
   id: string;
   name: string;
   countryCodes: string[];
+  layerId?: string | null;
 };
 
 /** Sort keys for countries. */
