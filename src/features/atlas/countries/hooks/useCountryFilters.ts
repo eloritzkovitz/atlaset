@@ -118,7 +118,6 @@ export function useCountryFilters() {
 
   // Main filtering logic
   const filteredCountries = useMemo(() => {
-    // Property search logic
     const propertySearchRegex = /^(\w+):\s*(.+)$/i;
     const match = debouncedSearch.match(propertySearchRegex);
     let base = match
@@ -149,6 +148,7 @@ export function useCountryFilters() {
         );
       }
     }
+    
     if (sovereignOnly) {
       base = base.filter(createSovereigntyFilter(true));
     }
@@ -169,7 +169,6 @@ export function useCountryFilters() {
     minVisitCount,
     maxVisitCount,
     sovereignOnly,
-    includeTranscontinental,
   ]);
 
   // Filtered countries without layer filtering for count calculations

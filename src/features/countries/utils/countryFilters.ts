@@ -184,7 +184,7 @@ export function filterCountriesByProperty(
       if (includeTC) {
         const extra = TRANSCONTINENTAL_MAP.get(
           country.isoCode?.toUpperCase?.() ?? "",
-        ) as any;
+        );
         const extraVal =
           key === "region"
             ? extra?.additionalRegion

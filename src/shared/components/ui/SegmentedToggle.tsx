@@ -29,13 +29,17 @@ export function SegmentedToggle<T extends string>({
 }: SegmentedToggleProps<T>) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // Auto-scroll and focus the selected option when it changes
   useAutoScrollFocus(containerRef, `[data-seg-value="${value}"]`, {
     enabled: autoFocusOnSelect,
     centerInline: true,
   });
 
   return (
-    <div ref={containerRef} className={`flex gap-2 ${wrap ? "flex-wrap" : ""} ${className}`}>
+    <div
+      ref={containerRef}
+      className={`flex gap-2 ${wrap ? "flex-wrap" : ""} ${className}`}
+    >
       {options.map((opt) => (
         <button
           key={opt.value}

@@ -7,6 +7,31 @@ interface UseAutoScrollFocusOptions {
   centerInline?: boolean;
 }
 
+// Track last input modality so we avoid showing a focus ring after a mouse/pointer
+// interaction. Listeners are attached once when running in a browser.
+let lastInputWasKeyboard = false;
+let lastInputListenersAttached = false;
+
+function onKeydown() {
+  lastInputWasKeyboard = true;
+}
+
+function onPointerDown() {
+  lastInputWasKeyboard = false;
+}
+
+function ensureLastInputListeners() {
+  if (lastInputListenersAttached) return;
+  if (typeof window === "undefined") return;
+
+  window.addEventListener("keydown", onKeydown, true);
+  window.addEventListener("pointerdown", onPointerDown, true);
+  window.addEventListener("mousedown", onPointerDown, true);
+  window.addEventListener("touchstart", onPointerDown, true);
+
+  lastInputListenersAttached = true;
+}
+
 /**
  * Scrolls a child element (found by selector) into view inside a container and focuses it.
  * Useful for segmented toggles and similar horizontal lists.
@@ -14,9 +39,12 @@ interface UseAutoScrollFocusOptions {
 export function useAutoScrollFocus(
   containerRef: Ref<HTMLElement>,
   targetSelector: string | null,
-  options: UseAutoScrollFocusOptions = {}
+  options: UseAutoScrollFocusOptions = {},
 ) {
   const { enabled = true, centerInline = true } = options;
+
+  // Ensure we know the last input modality, then scroll and (maybe) focus
+  ensureLastInputListeners();
 
   // Scroll and focus logic
   useEffect(() => {
@@ -34,17 +62,23 @@ export function useAutoScrollFocus(
         inline: centerInline ? "center" : "nearest",
         block: "nearest",
       } as ScrollIntoViewOptions);
-    } catch (e) {
+    } catch {
       el.scrollIntoView();
     }
 
-    // Focus if possible without scrolling again
-    try {
-      el.focus({ preventScroll: true });
-    } catch (e) {
+    // Only programmatically focus when the last input was keyboard. This
+    // prevents a visible focus ring after mouse/touch interactions while
+    // preserving accessibility for keyboard users.
+    if (lastInputWasKeyboard) {
       try {
-        el.focus();
-      } catch {}
+        el.focus({ preventScroll: true });
+      } catch {
+        try {
+          el.focus();
+        } catch {
+          void 0;
+        }
+      }
     }
   }, [containerRef, targetSelector, enabled, centerInline]);
 }
