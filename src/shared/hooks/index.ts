@@ -7,16 +7,17 @@ export * from "./animation/useModalAnimation";
 export * from "./device/useScreenSize";
 
 // DOM
+export * from "./dom/useAutoScrollFocus";
 export * from "./dom/useBodyScrollLock";
 export * from "./dom/useClickOutside";
 export * from "./dom/useContainerDimensions";
+export * from "./dom/useDragScroll";
 export * from "./dom/useEventListener";
 export * from "./dom/useFloatingHover";
 export * from "./dom/useFloatingMenuPosition";
 export * from "./dom/useKeyboardFocusRing";
 export * from "./dom/useMenuPosition";
 export * from "./dom/useScrollVisibility";
-export * from "./dom/useDragScroll";
 
 // Input
 export * from "./input/useKeyHandler";
