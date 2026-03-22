@@ -1,3 +1,6 @@
+import { useRef } from "react";
+import { useAutoScrollFocus } from "@hooks";
+
 export interface SegmentedToggleOption<T extends string> {
   value: T;
   label: string;
@@ -12,6 +15,7 @@ interface SegmentedToggleProps<T extends string> {
   className?: string;
   wrap?: boolean;
   disabled?: boolean;
+  autoFocusOnSelect?: boolean;
 }
 
 export function SegmentedToggle<T extends string>({
@@ -21,12 +25,26 @@ export function SegmentedToggle<T extends string>({
   className = "",
   wrap = false,
   disabled = false,
+  autoFocusOnSelect = true,
 }: SegmentedToggleProps<T>) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  // Auto-scroll and focus the selected option when it changes
+  useAutoScrollFocus(containerRef, `[data-seg-value="${value}"]`, {
+    enabled: autoFocusOnSelect,
+    centerInline: true,
+  });
+
   return (
-    <div className={`flex gap-2 ${wrap ? "flex-wrap" : ""} ${className}`}>
+    <div
+      ref={containerRef}
+      className={`flex gap-2 ${wrap ? "flex-wrap" : ""} ${className}`}
+    >
       {options.map((opt) => (
         <button
           key={opt.value}
+          data-seg-value={opt.value}
+          aria-pressed={value === opt.value}
           className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
             value === opt.value
               ? opt.colorClass || "bg-primary text-white"

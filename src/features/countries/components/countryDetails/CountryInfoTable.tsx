@@ -3,6 +3,9 @@ import {
   getAliasesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
+  isTranscontinental,
+  getAdditionalRegion,
+  getAdditionalSubregion,
 } from "../../utils/countryData";
 
 interface CountryInfoTableProps {
@@ -19,11 +22,22 @@ export function CountryInfoTable({
       <tbody>
         <tr>
           <td className="font-semibold">Region:</td>
-          <td>{country.region}</td>
+          <td>
+            {country.region}
+            {isTranscontinental(country.isoCode) && (
+              <span> / {getAdditionalRegion(country.isoCode)}</span>
+            )}
+          </td>
         </tr>
         <tr>
           <td className="font-semibold">Subregion:</td>
-          <td>{country.subregion}</td>
+          <td>
+            {country.subregion}
+            {isTranscontinental(country.isoCode) &&
+              getAdditionalSubregion(country.isoCode) && (
+                <span> / {getAdditionalSubregion(country.isoCode)}</span>
+              )}
+          </td>
         </tr>
         <tr>
           <td className="font-semibold">Population:</td>

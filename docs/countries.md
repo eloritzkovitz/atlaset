@@ -38,7 +38,7 @@ In addition to finding countries by name, you can search for countries by search
 property:query
 ```
 
-> Searchable propertires include `isocode`, `region`, `subregion`, `capital`, `currency`, `language` and `sovereignty`.
+> Searchable propertires include `isocode`, `region`, `subregion`, `region_tc`, `subregion_tc` (for transcontinental countries), `capital`, `currency`, `language` and `sovereignty`.
 
 ## **Country Lists**
 

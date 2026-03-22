@@ -1,11 +1,7 @@
 import { useMemo, useState } from "react";
 import { FaThLarge } from "react-icons/fa";
-import {
-  FaList,
-  FaGlobe,
-  FaCircleCheck,
-  FaArrowRotateLeft,
-} from "react-icons/fa6";
+import { FaCircleCheck } from "react-icons/fa6";
+import { PiGlobeStandFill } from "react-icons/pi";
 import { ActionButton, SearchInput, SelectInput } from "@components";
 import {
   CountryDisplayPanel,
@@ -16,6 +12,7 @@ import {
 } from "@features/countries";
 import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import { useSort } from "@hooks";
+import { ICONS } from "@constants/icons";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -60,6 +57,7 @@ export function CountrySection({
       : selectedSubregion;
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
+  const [showTranscontinental, setShowTranscontinental] = useState(false);
 
   // Generate options for region and subregion filters
   const regionSelectFilter = coreFiltersConfig.find((f) => f.key === "region")!;
@@ -120,6 +118,10 @@ export function CountrySection({
     setViewMode((prev) => (prev === "grid" ? "list" : "grid"));
   };
 
+  const handleTranscontinentalToggle = () => {
+    setShowTranscontinental((s) => !s);
+  };
+
   // Filter countries based on search and visited toggle
   const filtered = useMemo(
     () =>
@@ -127,8 +129,15 @@ export function CountrySection({
         search,
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
+        includeTranscontinental: showTranscontinental,
       }),
-    [countries, search, normalizedRegion, normalizedSubregion],
+    [
+      countries,
+      search,
+      normalizedRegion,
+      normalizedSubregion,
+      showTranscontinental,
+    ],
   );
 
   // Further filter by visited countries if toggled
@@ -210,7 +219,7 @@ export function CountrySection({
                 onClick={handleResetFilters}
                 ariaLabel="Reset Filters"
                 title="Reset Filters"
-                icon={<FaArrowRotateLeft />}
+                icon={<ICONS.reset />}
                 variant="toggle"
                 rounded
               />
@@ -225,13 +234,35 @@ export function CountrySection({
                 icon={
                   showVisitedOnly ? (
                     <span className="flex items-center gap-1 font-semibold text-sm">
-                      <FaGlobe />
+                      <ICONS.countries />
                     </span>
                   ) : (
                     <span className="flex items-center gap-1 font-semibold text-sm">
                       <FaCircleCheck />
                     </span>
                   )
+                }
+                variant="toggle"
+                rounded
+              />
+              <ActionButton
+                onClick={handleTranscontinentalToggle}
+                ariaLabel={
+                  showTranscontinental
+                    ? "Hide transcontinental countries"
+                    : "Show transcontinental countries"
+                }
+                title={
+                  showTranscontinental
+                    ? "Hide transcontinental countries"
+                    : "Show transcontinental countries"
+                }
+                icon={
+                  <span className="flex items-center gap-1 font-semibold text-sm">
+                    <PiGlobeStandFill
+                      className={`text-lg ${!showTranscontinental ? "text-muted" : ""}`}
+                    />
+                  </span>
                 }
                 variant="toggle"
                 rounded
@@ -248,7 +279,9 @@ export function CountrySection({
                     ? "Switch to List View"
                     : "Switch to Grid View"
                 }
-                icon={viewMode === "grid" ? <FaList /> : <FaThLarge />}
+                icon={
+                  viewMode === "grid" ? <ICONS.countryLists /> : <FaThLarge />
+                }
                 variant="toggle"
                 rounded
               />

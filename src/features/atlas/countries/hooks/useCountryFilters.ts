@@ -70,6 +70,9 @@ export function useCountryFilters() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
+  // Whether to include transcontinental additional region/subregion matches
+  const [includeTranscontinental, setIncludeTranscontinental] = useState(false);
+
   // Visit count filters
   const [minVisitCount, setMinVisitCount] = useState<number>(1);
   const [maxVisitCount, setMaxVisitCount] = useState<number | undefined>(
@@ -83,8 +86,15 @@ export function useCountryFilters() {
       selectedRegion,
       selectedSubregion,
       selectedSovereignty,
+      includeTranscontinental,
     }),
-    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty],
+    [
+      debouncedSearch,
+      selectedRegion,
+      selectedSubregion,
+      selectedSovereignty,
+      includeTranscontinental,
+    ],
   );
 
   // Counts and visit map
@@ -108,7 +118,6 @@ export function useCountryFilters() {
 
   // Main filtering logic
   const filteredCountries = useMemo(() => {
-    // Property search logic
     const propertySearchRegex = /^(\w+):\s*(.+)$/i;
     const match = debouncedSearch.match(propertySearchRegex);
     let base = match
@@ -139,6 +148,7 @@ export function useCountryFilters() {
         );
       }
     }
+    
     if (sovereignOnly) {
       base = base.filter(createSovereigntyFilter(true));
     }
@@ -233,5 +243,7 @@ export function useCountryFilters() {
     maxVisitCount,
     setMaxVisitCount,
     resetFilters,
+    includeTranscontinental,
+    setIncludeTranscontinental,
   };
 }

@@ -7,6 +7,18 @@ import {
   filterCountriesByProperty,
 } from "./countryFilters";
 
+vi.mock("../constants/transcontinental", () => ({
+  TRANSCONTINENTAL_MAP: new Map([
+    [
+      "CA",
+      {
+        additionalRegion: "Europe",
+        additionalSubregion: "Northern Europe",
+      },
+    ],
+  ]),
+}));
+
 describe("countryFilters utils", () => {
   const countries = mockCountries;
 
@@ -53,6 +65,23 @@ describe("countryFilters utils", () => {
       expect(
         filterCountries(countriesWithAlias, { search: "Testland" }),
       ).toEqual([countriesWithAlias[0]]);
+    });
+
+    it("includes transcontinental extras when includeTranscontinental is true", () => {
+      // Canada (iso CA) is transcontinental in our mock and has additionalRegion 'Europe'
+      const result = filterCountries(countries, {
+        selectedRegion: "Europe",
+        includeTranscontinental: true,
+      } as any);
+      expect(result).toEqual([countries[0], countries[2], countries[3]]);
+    });
+
+    it("does not include transcontinental extras when includeTranscontinental is false", () => {
+      const result = filterCountries(countries, {
+        selectedRegion: "Europe",
+        includeTranscontinental: false,
+      } as any);
+      expect(result).toEqual([countries[0], countries[2]]);
     });
   });
 
@@ -204,6 +233,18 @@ describe("countryFilters utils", () => {
         property: "unknown",
         value: "value",
         expected: [],
+      },
+      {
+        label: "region_tc includes transcontinental extras",
+        property: "region_tc",
+        value: "europe",
+        expected: [countries[0], countries[2], countries[3]],
+      },
+      {
+        label: "subregion_tc includes transcontinental extras",
+        property: "subregion_tc",
+        value: "northern europe",
+        expected: [countries[3]],
       },
     ];
 

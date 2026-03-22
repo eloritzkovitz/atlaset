@@ -11,6 +11,9 @@ import {
   getAllSovereigntyTypes,
   getCountriesWithOwnFlag,
   getRandomCountry,
+  getAdditionalRegion,
+  getAdditionalSubregion,
+  isTranscontinental,
   getLanguagesDisplay,
   getAliasesDisplay,
   getCountryRelations,
@@ -39,6 +42,25 @@ vi.mock("../constants/countryRelations", () => ({
   SPECIAL_COUNTRIES: {
     "GB-ENG": { name: "England" },
   },
+}));
+
+vi.mock("../constants/transcontinental", () => ({
+  TRANSCONTINENTAL_MAP: new Map([
+    [
+      "RU",
+      {
+        additionalRegion: "Europe",
+        additionalSubregion: "Northern Asia",
+      },
+    ],
+    [
+      "TR",
+      {
+        additionalRegion: "Asia",
+        additionalSubregion: "Western Asia",
+      },
+    ],
+  ]),
 }));
 
 describe("countryData utils", () => {
@@ -289,6 +311,23 @@ describe("countryData utils", () => {
     it("returns 'None' for empty or undefined", () => {
       expect(getLanguagesDisplay([])).toBe("None");
       expect(getLanguagesDisplay(undefined)).toBe("None");
+    });
+  });
+
+  describe("transcontinental helpers", () => {
+    it("returns additional region when transcontinental", () => {
+      expect(getAdditionalRegion("RU")).toBe("Europe");
+      expect(getAdditionalRegion("ru")).toBe("Europe");
+    });
+
+    it("returns additional subregion when transcontinental", () => {
+      expect(getAdditionalSubregion("RU")).toBe("Northern Asia");
+      expect(getAdditionalSubregion("tr")).toBe("Western Asia");
+    });
+
+    it("reports transcontinental status correctly", () => {
+      expect(isTranscontinental("RU")).toBe(true);
+      expect(isTranscontinental("ZZ")).toBe(false);
     });
   });
 

@@ -7,12 +7,14 @@ export function useRegionSubregionFilters() {
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedSubregion, setSelectedSubregion] = useState("");
   const [search, setSearch] = useState("");
+  const [includeTranscontinental, setIncludeTranscontinental] = useState(false);
 
   // Reset all filters
   function resetFilters() {
     setSelectedRegion("");
     setSelectedSubregion("");
     setSearch("");
+    setIncludeTranscontinental(false);
   }
 
   return {
@@ -22,6 +24,8 @@ export function useRegionSubregionFilters() {
     setSelectedSubregion,
     search,
     setSearch,
+    includeTranscontinental,
+    setIncludeTranscontinental,
     resetFilters,
   };
 }
