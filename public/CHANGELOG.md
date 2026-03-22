@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-03-22
+
+- **[feature]** **Countries:** Defined transcontinental countries and added toggles and search properties to filter them
+
 ## 2026-03-21
 
 - **[feature]** **Atlas | Countries:** Added country lists for quick filtering, interchangeable with layers
