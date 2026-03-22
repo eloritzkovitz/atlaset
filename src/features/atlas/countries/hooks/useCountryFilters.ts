@@ -70,6 +70,9 @@ export function useCountryFilters() {
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
+  // Whether to include transcontinental additional region/subregion matches
+  const [includeTranscontinental, setIncludeTranscontinental] = useState(false);
+
   // Visit count filters
   const [minVisitCount, setMinVisitCount] = useState<number>(1);
   const [maxVisitCount, setMaxVisitCount] = useState<number | undefined>(
@@ -83,8 +86,15 @@ export function useCountryFilters() {
       selectedRegion,
       selectedSubregion,
       selectedSovereignty,
+      includeTranscontinental,
     }),
-    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty],
+    [
+      debouncedSearch,
+      selectedRegion,
+      selectedSubregion,
+      selectedSovereignty,
+      includeTranscontinental,
+    ],
   );
 
   // Counts and visit map
@@ -159,6 +169,7 @@ export function useCountryFilters() {
     minVisitCount,
     maxVisitCount,
     sovereignOnly,
+    includeTranscontinental,
   ]);
 
   // Filtered countries without layer filtering for count calculations
@@ -233,5 +244,7 @@ export function useCountryFilters() {
     maxVisitCount,
     setMaxVisitCount,
     resetFilters,
+    includeTranscontinental,
+    setIncludeTranscontinental,
   };
 }
