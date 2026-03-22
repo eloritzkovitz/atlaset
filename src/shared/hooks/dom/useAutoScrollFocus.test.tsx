@@ -1,7 +1,9 @@
 import { render } from "@testing-library/react";
 import { useRef } from "react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
-import useAutoScrollFocus from "./useAutoScrollFocus";
+import useAutoScrollFocus, {
+  __setLastInputWasKeyboardForTests,
+} from "./useAutoScrollFocus";
 
 function TestHarness({
   selector,
@@ -26,6 +28,7 @@ describe("useAutoScrollFocus", () => {
   beforeEach(() => {
     scrollSpy = vi.fn();
     focusSpy = vi.fn();
+    __setLastInputWasKeyboardForTests(true);
     (HTMLElement.prototype as any).__orig_scrollIntoView = (
       HTMLElement.prototype as any
     ).scrollIntoView;
@@ -54,6 +57,7 @@ describe("useAutoScrollFocus", () => {
       delete (HTMLElement.prototype as any).focus;
     }
     vi.clearAllMocks();
+    __setLastInputWasKeyboardForTests(false);
   });
 
   it("scrolls and focuses the target when present", () => {
@@ -89,7 +93,6 @@ describe("useAutoScrollFocus", () => {
       fallbackSpy();
     };
 
-    // normal focus spy
     (HTMLElement.prototype as any).focus = focusSpy;
 
     render(<TestHarness selector='[data-seg-value="foo"]' />);
@@ -113,5 +116,42 @@ describe("useAutoScrollFocus", () => {
 
     expect(scrollSpy).toHaveBeenCalled();
     expect(fallbackFocus).toHaveBeenCalled();
+  });
+
+  it("silently ignores when both focus attempts throw", () => {
+    // Make focus always throw to hit the final empty-catch branch (void 0)
+    (HTMLElement.prototype as any).focus = function () {
+      throw new Error("both focus throw");
+    };
+
+    (HTMLElement.prototype as any).scrollIntoView = scrollSpy;
+
+    // This should not throw despite focus throwing internally
+    render(<TestHarness selector='[data-seg-value="foo"]' />);
+
+    expect(scrollSpy).toHaveBeenCalled();
+  });
+
+  it("does not focus when last input was pointer/mouse", () => {
+    __setLastInputWasKeyboardForTests(false);
+    render(<TestHarness selector='[data-seg-value="foo"]' />);
+    expect(scrollSpy).toHaveBeenCalled();
+    expect(focusSpy).not.toHaveBeenCalled();
+  });
+
+  it("respects keydown -> pointerdown transitions for focus behavior", () => {
+    __setLastInputWasKeyboardForTests(false);
+    render(<TestHarness selector='[data-seg-value="foo"]' />);
+    expect(focusSpy).not.toHaveBeenCalled();
+
+    vi.clearAllMocks();
+    window.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true }));
+    render(<TestHarness selector='[data-seg-value="foo"]' />);
+    expect(focusSpy).toHaveBeenCalled();
+
+    vi.clearAllMocks();
+    window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+    render(<TestHarness selector='[data-seg-value="foo"]' />);
+    expect(focusSpy).not.toHaveBeenCalled();
   });
 });

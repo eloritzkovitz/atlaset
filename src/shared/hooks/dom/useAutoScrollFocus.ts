@@ -7,11 +7,11 @@ interface UseAutoScrollFocusOptions {
   centerInline?: boolean;
 }
 
-// Track last input modality so we avoid showing a focus ring after a mouse/pointer
-// interaction. Listeners are attached once when running in a browser.
+// Tracks the last input modality (keyboard vs mouse/touch) to conditionally apply focus styles and behavior.
 let lastInputWasKeyboard = false;
 let lastInputListenersAttached = false;
 
+// Event handlers to track input modality
 function onKeydown() {
   lastInputWasKeyboard = true;
 }
@@ -30,6 +30,11 @@ function ensureLastInputListeners() {
   window.addEventListener("touchstart", onPointerDown, true);
 
   lastInputListenersAttached = true;
+}
+
+// Test helpers
+export function __setLastInputWasKeyboardForTests(val: boolean) {
+  lastInputWasKeyboard = val;
 }
 
 /**
