@@ -5,7 +5,7 @@
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country } from "../types";
 
-export type PropertyKey = keyof Country | "visited";
+export type PropertyKey = keyof Country | "sovereign" | "visited";
 export type PropertyConfig = { key: PropertyKey; includeTC?: boolean };
 
 const COUNTRY_PROPERTY_MAP: Record<string, PropertyConfig> = {
@@ -18,6 +18,7 @@ const COUNTRY_PROPERTY_MAP: Record<string, PropertyConfig> = {
   currency: { key: "currency" },
   language: { key: "languages" },
   sovereignty: { key: "sovereigntyType" },
+  sovereign: { key: "sovereign" },
   visited: { key: "visited" },
 };
 
@@ -76,10 +77,6 @@ export function getPropertyTokens(
   includeTC?: boolean,
   visitedIsoCodes?: string[],
 ) {
-  if (key === "visited") {
-    if (!visitedIsoCodes) return [];
-    return [visitedIsoCodes.includes(country.isoCode) ? "true" : "false"];
-  }
   if (key === "region" || key === "subregion") {
     const tokens: string[] = [];
     const val = country[key];
@@ -94,7 +91,13 @@ export function getPropertyTokens(
     }
     return tokens;
   }
-
+  if (key === "sovereign") {
+    return [country.sovereigntyType === "Sovereign" ? "true" : "false"];
+  }
+  if (key === "visited") {
+    if (!visitedIsoCodes) return [];
+    return [visitedIsoCodes.includes(country.isoCode) ? "true" : "false"];
+  }
   const prop = country[key];
   if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
   if (typeof prop === "string") return [prop];
