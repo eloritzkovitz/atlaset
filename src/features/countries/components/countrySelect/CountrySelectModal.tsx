@@ -11,6 +11,8 @@ import { ICONS } from "@constants/icons";
 import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
+import { filterCountriesByProperty } from "../../utils/countryFilters";
+import { parsePropertySearch, buildSearchString } from "../../utils/countrySearch";
 
 interface CountrySelectModalProps {
   isOpen: boolean;
@@ -40,16 +42,26 @@ export function CountrySelectModal({
     }
   }, [isOpen]);
 
-  // Filter options by search and sort alphabetically
-  const filteredOptions = [
-    ...filterBySearch(options, search, (country) => country.name),
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  // Filter options by search
+  const parsed = parsePropertySearch(search);
+  const filteredOptions = ((): typeof options => {
+    if (parsed) {
+      return filterCountriesByProperty(options, parsed.property, parsed.query).sort((a, b) =>
+        a.name.localeCompare(b.name),
+      );
+    }
+
+    return [
+      ...filterBySearch(options, search, (country) => buildSearchString(country)),
+    ].sort((a, b) => a.name.localeCompare(b.name));
+  })();
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       className="modal shadow-lg w-[500px] max-h-[80vh] flex flex-col"
+      draggable
     >
       <PanelHeader
         title={

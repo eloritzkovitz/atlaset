@@ -15,6 +15,7 @@ import {
   filterCountriesByProperty,
   getCountryCounts,
   getFilteredIsoCodes,
+  parsePropertySearch,
   useCountryData,
   type CountryFilterOptions,
   type SovereigntyType,
@@ -118,10 +119,9 @@ export function useCountryFilters() {
 
   // Main filtering logic
   const filteredCountries = useMemo(() => {
-    const propertySearchRegex = /^(\w+):\s*(.+)$/i;
-    const match = debouncedSearch.match(propertySearchRegex);
-    let base = match
-      ? filterCountriesByProperty(countries, match[1], match[2])
+    const parsed = parsePropertySearch(debouncedSearch);
+    let base = parsed
+      ? filterCountriesByProperty(countries, parsed.property, parsed.query)
       : filterCountries(countries, {
           ...filterParams,
           layerCountries: filteredIsoCodes,
@@ -148,7 +148,7 @@ export function useCountryFilters() {
         );
       }
     }
-    
+
     if (sovereignOnly) {
       base = base.filter(createSovereigntyFilter(true));
     }

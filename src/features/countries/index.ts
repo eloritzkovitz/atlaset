@@ -54,4 +54,5 @@ export {
   getCountryCounts,
   createSovereigntyFilter,
 } from "./utils/countryFilters";
+export { parsePropertySearch, buildSearchString } from "./utils/countrySearch";
 export { sortCountries } from "./utils/countrySort";

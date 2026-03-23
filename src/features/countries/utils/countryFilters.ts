@@ -4,8 +4,12 @@
 
 import type { Layer } from "@features/atlas/layers";
 import { filterBySearch } from "@utils/filter";
+import {
+  buildSearchString,
+  getPropertyTokens,
+  resolvePropertyConfig,
+} from "./countrySearch";
 import type { Country, CountryFilterOptions } from "../types";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 
 /**
  * Filters countries based on various criteria.
@@ -30,48 +34,74 @@ export function filterCountries(
   const includeTranscontinental = options.includeTranscontinental === true;
 
   // Apply filters
-  return filterBySearch(countries, search, (c) =>
-    [c.name, ...(c.aliases ?? [])].join(" "),
-  ).filter((country) => {
-    const iso = country.isoCode?.toUpperCase?.();
-    const extra =
-      includeTranscontinental && iso
-        ? TRANSCONTINENTAL_MAP.get(iso)
-        : undefined;
+  return filterBySearch(countries, search, (c) => buildSearchString(c)).filter(
+    (country) => {
+      if (
+        selectedRegion &&
+        country.region !== selectedRegion &&
+        !(
+          getPropertyTokens(country, "region", includeTranscontinental) || []
+        ).includes(selectedRegion)
+      )
+        return false;
 
-    if (
-      selectedRegion &&
-      country.region !== selectedRegion &&
-      extra?.additionalRegion !== selectedRegion
-    )
-      return false;
+      if (
+        selectedSubregion &&
+        country.subregion !== selectedSubregion &&
+        !(
+          getPropertyTokens(country, "subregion", includeTranscontinental) || []
+        ).includes(selectedSubregion)
+      )
+        return false;
 
-    if (
-      selectedSubregion &&
-      country.subregion !== selectedSubregion &&
-      extra?.additionalSubregion !== selectedSubregion
-    )
-      return false;
+      if (
+        selectedSovereignty &&
+        country.sovereigntyType !== selectedSovereignty
+      )
+        return false;
 
-    if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
-      return false;
+      if (
+        layerCountries &&
+        layerCountries.length &&
+        !layerCountries.includes(country.isoCode)
+      )
+        return false;
 
-    if (
-      layerCountries &&
-      layerCountries.length &&
-      !layerCountries.includes(country.isoCode)
-    )
-      return false;
+      return true;
+    },
+  );
+}
 
-    return true;
-  });
+/**
+ * Filters countries by a property and value, supporting arrays and strings.
+ * @param countries - Array of Country objects.
+ * @param property - Property name.
+ * @param value - Value to match (case-insensitive, partial match).
+ */
+export function filterCountriesByProperty(
+  countries: Country[],
+  property: string,
+  value: string,
+): Country[] {
+  const config = resolvePropertyConfig(property);
+  if (!config?.key) return [];
+
+  const key = config.key;
+  const includeTC = !!config.includeTC;
+  const searchValue = value.toLowerCase();
+
+  return countries.filter((country) =>
+    getPropertyTokens(country, key, includeTC).some(
+      (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
+    ),
+  );
 }
 
 /**
  * Filters ISO codes based on layer selections.
- * @param countries
- * @param layers
- * @param layerSelections
+ * @param countries - List of all countries.
+ * @param layers - List of all layers.
+ * @param layerSelections - Current layer selections.
  * @returns Filtered list of ISO codes.
  */
 export function getFilteredIsoCodes(
@@ -132,76 +162,4 @@ export function getCountryCounts({
 export function createSovereigntyFilter(sovereignOnly?: boolean) {
   return (c: Country) =>
     sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
-}
-
-export interface CountryPropertyMap {
-  [key: string]: keyof Country;
-}
-
-type PropertyConfig = { key: keyof Country; includeTC?: boolean };
-
-const COUNTRY_PROPERTY_MAP: Record<string, PropertyConfig> = {
-  isocode: { key: "isoCode" },
-  region: { key: "region" },
-  region_tc: { key: "region", includeTC: true },
-  subregion: { key: "subregion" },
-  subregion_tc: { key: "subregion", includeTC: true },
-  capital: { key: "capital" },
-  currency: { key: "currency" },
-  language: { key: "languages" },
-  sovereignty: { key: "sovereigntyType" },
-};
-
-/**
- * Filters countries by a property and value, supporting arrays and strings.
- * @param countries - Array of Country objects
- * @param property - Property name (e.g. "currency", "language")
- * @param value - Value to match (case-insensitive, partial match)
- */
-export function filterCountriesByProperty(
-  countries: Country[],
-  property: string,
-  value: string,
-): Country[] {
-  const propertyKey = property.toLowerCase();
-  const config: PropertyConfig | undefined = COUNTRY_PROPERTY_MAP[propertyKey];
-
-  // If the property is not recognized, return an empty array
-  if (!config?.key) return [];
-
-  // Determine if transcontinental overrides should be included
-  const key = config.key;
-  const includeTC = !!config.includeTC;
-
-  const searchValue = value.toLowerCase();
-
-  // Filter countries based on the specified property
-  const getTokens = (country: Country) => {
-    if (key === "region" || key === "subregion") {
-      const tokens: string[] = [];
-      const val = country[key];
-      if (typeof val === "string" && val) tokens.push(val);
-      if (includeTC) {
-        const extra = TRANSCONTINENTAL_MAP.get(
-          country.isoCode?.toUpperCase?.() ?? "",
-        );
-        const extraVal =
-          key === "region"
-            ? extra?.additionalRegion
-            : extra?.additionalSubregion;
-        if (typeof extraVal === "string") tokens.push(extraVal);
-      }
-      return tokens;
-    }
-    const prop = country[key];
-    if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
-    if (typeof prop === "string") return [prop];
-    return [];
-  };
-
-  return countries.filter((country) =>
-    getTokens(country).some(
-      (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
-    ),
-  );
 }
