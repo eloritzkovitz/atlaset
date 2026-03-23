@@ -8,6 +8,7 @@ import {
   buildSearchString,
   getPropertyTokens,
   resolvePropertyConfig,
+  parsePropertySearch,
 } from "./countrySearch";
 import type { Country, CountryFilterOptions } from "../types";
 
@@ -83,6 +84,7 @@ export function filterCountriesByProperty(
   property: string,
   value: string,
   visitedIsoCodes?: string[],
+  visitedMap?: Record<string, number>,
 ): Country[] {
   const config = resolvePropertyConfig(property);
   if (!config?.key) return [];
@@ -91,9 +93,45 @@ export function filterCountriesByProperty(
   const includeTC = !!config.includeTC;
   const searchValue = value.toLowerCase();
 
+  // special-case numeric visit count comparisons
+  if (key === "visits") {
+    const m = value.trim().match(/^(>=|<=|>|<|=)?\s*(\d+)$/);
+    if (!m) return [];
+    const op = m[1] || "=";
+    const num = Number(m[2]);
+    const vmap = visitedMap ?? {};
+    return countries.filter((country) => {
+      const isVisited = (visitedIsoCodes ?? []).includes(country.isoCode);
+      const queryIsZero =
+        (op === "=" && num === 0) || (op === "<" && num === 1);
+      if (!queryIsZero && num > 0 && !isVisited) return false;
+      const count = vmap[country.isoCode] || 0;
+      switch (op) {
+        case ">":
+          return count > num;
+        case "<":
+          return count < num;
+        case ">=":
+          return count >= num;
+        case "<=":
+          return count <= num;
+        case "=":
+        default:
+          return count === num;
+      }
+    });
+  }
+
   return countries.filter((country) =>
-    getPropertyTokens(country, key, includeTC, visitedIsoCodes).some(
-      (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
+    getPropertyTokens(
+      country,
+      key,
+      includeTC,
+      visitedIsoCodes,
+      visitedMap,
+    ).some(
+      (t: string) =>
+        typeof t === "string" && t.toLowerCase().includes(searchValue),
     ),
   );
 }
@@ -163,4 +201,31 @@ export function getCountryCounts({
 export function createSovereigntyFilter(sovereignOnly?: boolean) {
   return (c: Country) =>
     sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
+}
+
+/**
+ * Apply property-based search or normal search with layer filtering.
+ */
+export function applyPropertySearch(
+  countries: Country[],
+  search: string,
+  visitedIsoCodes: string[] | undefined,
+  filterParams: CountryFilterOptions,
+  filteredIsoCodes: string[] | undefined,
+  visitedMap?: Record<string, number>,
+) {
+  const parsed = parsePropertySearch(search);
+  if (parsed) {
+    return filterCountriesByProperty(
+      countries,
+      parsed.property,
+      parsed.query,
+      visitedIsoCodes,
+      visitedMap,
+    );
+  }
+  return filterCountries(countries, {
+    ...filterParams,
+    layerCountries: filteredIsoCodes,
+  });
 }
