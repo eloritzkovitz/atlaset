@@ -48,7 +48,7 @@ property:query
 | `subregion`    | text                | `subregion:Southeast Asia` | Use `subregion_tc` to include transcontinental overrides                                          |
 | `subregion_tc` | text                |   `subregion_tc:Caribbean` | Subregion including transcontinental matches                                                      |
 | `capital`      | text                |            `capital:Paris` | Matches capital name                                                                              |
-| `currency`     | text                |             `currency:EUR` | Matches currency code or name                                                                     |
+| `currency`     | text                |             `currency:EUR` | Matches currency code                                                                             |
 | `language`     | text                |         `language:Spanish` | Matches a language                                                                                |
 | `callingcode`  | text                |          `callingcode:+44` | Matches a calling code                                                                            |
 | `sovereignty`  | text                |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                  |

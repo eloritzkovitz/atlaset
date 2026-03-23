@@ -58,7 +58,7 @@ export function useAutocomplete({
       if (typeof res === "string") onChange(res);
       if (typeof postSelect === "function") postSelect();
     },
-    [onChange, onSelect, value, defaultOnSelect],
+    [onChange, onSelect, value, defaultOnSelect, postSelect],
   );
 
   const handleKeyDown = useCallback(
