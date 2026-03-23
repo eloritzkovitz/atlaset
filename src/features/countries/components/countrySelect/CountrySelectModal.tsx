@@ -1,18 +1,22 @@
 import { useEffect, useState } from "react";
 import {
   ActionButton,
+  Autocomplete,
   Checkbox,
   EmptyListMessage,
   Modal,
   PanelHeader,
-  SearchInput,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
 import { filterCountriesByProperty } from "../../utils/countryFilters";
-import { parsePropertySearch, buildSearchString } from "../../utils/countrySearch";
+import {
+  parsePropertySearch,
+  buildSearchString,
+  propertySuggestionProvider,
+} from "../../utils/countrySearch";
 
 interface CountrySelectModalProps {
   isOpen: boolean;
@@ -46,13 +50,17 @@ export function CountrySelectModal({
   const parsed = parsePropertySearch(search);
   const filteredOptions = ((): typeof options => {
     if (parsed) {
-      return filterCountriesByProperty(options, parsed.property, parsed.query).sort((a, b) =>
-        a.name.localeCompare(b.name),
-      );
+      return filterCountriesByProperty(
+        options,
+        parsed.property,
+        parsed.query,
+      ).sort((a, b) => a.name.localeCompare(b.name));
     }
 
     return [
-      ...filterBySearch(options, search, (country) => buildSearchString(country)),
+      ...filterBySearch(options, search, (country) =>
+        buildSearchString(country),
+      ),
     ].sort((a, b) => a.name.localeCompare(b.name));
   })();
 
@@ -80,10 +88,11 @@ export function CountrySelectModal({
         />
       </PanelHeader>
       <div className="flex flex-col h-full px-4 gap-4">
-        <SearchInput
+        <Autocomplete
           value={search}
           onChange={setSearch}
           placeholder="Search countries"
+          suggestionProvider={propertySuggestionProvider}
         />
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (

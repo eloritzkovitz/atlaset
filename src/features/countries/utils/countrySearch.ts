@@ -93,3 +93,16 @@ export function getPropertyTokens(
   if (typeof prop === "string") return [prop];
   return [] as string[];
 }
+
+/**
+ * Provides property name suggestions based on user input for property-based searching.
+ * @param input - The current input string from the user.
+ * @returns An array of suggested property names that match the input prefix.
+ */
+export function propertySuggestionProvider(input: string) {
+  const supported = getSupportedProperties();
+  const m = input.match(/^([a-zA-Z_]*)$/);
+  if (!m) return [];
+  const prefix = m[1].toLowerCase();
+  return supported.filter((p) => p.startsWith(prefix));
+}
