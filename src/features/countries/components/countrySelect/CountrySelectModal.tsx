@@ -8,6 +8,7 @@ import {
   PanelHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
+import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
@@ -48,12 +49,14 @@ export function CountrySelectModal({
 
   // Filter options by search
   const parsed = parsePropertySearch(search);
+  const { visitedCountryCodes } = useVisitedCountries();
   const filteredOptions = ((): typeof options => {
     if (parsed) {
       return filterCountriesByProperty(
         options,
         parsed.property,
         parsed.query,
+        visitedCountryCodes,
       ).sort((a, b) => a.name.localeCompare(b.name));
     }
 

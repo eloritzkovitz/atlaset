@@ -5,7 +5,8 @@
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country } from "../types";
 
-export type PropertyConfig = { key: keyof Country; includeTC?: boolean };
+export type PropertyKey = keyof Country | "visited";
+export type PropertyConfig = { key: PropertyKey; includeTC?: boolean };
 
 const COUNTRY_PROPERTY_MAP: Record<string, PropertyConfig> = {
   isocode: { key: "isoCode" },
@@ -17,6 +18,7 @@ const COUNTRY_PROPERTY_MAP: Record<string, PropertyConfig> = {
   currency: { key: "currency" },
   language: { key: "languages" },
   sovereignty: { key: "sovereigntyType" },
+  visited: { key: "visited" },
 };
 
 /**
@@ -70,9 +72,14 @@ export function buildSearchString(country: Country) {
  */
 export function getPropertyTokens(
   country: Country,
-  key: keyof Country,
+  key: PropertyKey,
   includeTC?: boolean,
+  visitedIsoCodes?: string[],
 ) {
+  if (key === "visited") {
+    if (!visitedIsoCodes) return [];
+    return [visitedIsoCodes.includes(country.isoCode) ? "true" : "false"];
+  }
   if (key === "region" || key === "subregion") {
     const tokens: string[] = [];
     const val = country[key];

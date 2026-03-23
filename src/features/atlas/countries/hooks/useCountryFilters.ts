@@ -121,7 +121,12 @@ export function useCountryFilters() {
   const filteredCountries = useMemo(() => {
     const parsed = parsePropertySearch(debouncedSearch);
     let base = parsed
-      ? filterCountriesByProperty(countries, parsed.property, parsed.query)
+      ? filterCountriesByProperty(
+          countries,
+          parsed.property,
+          parsed.query,
+          visitedIsoCodes,
+        )
       : filterCountries(countries, {
           ...filterParams,
           layerCountries: filteredIsoCodes,

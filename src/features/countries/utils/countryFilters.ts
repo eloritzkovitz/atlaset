@@ -82,6 +82,7 @@ export function filterCountriesByProperty(
   countries: Country[],
   property: string,
   value: string,
+  visitedIsoCodes?: string[],
 ): Country[] {
   const config = resolvePropertyConfig(property);
   if (!config?.key) return [];
@@ -91,7 +92,7 @@ export function filterCountriesByProperty(
   const searchValue = value.toLowerCase();
 
   return countries.filter((country) =>
-    getPropertyTokens(country, key, includeTC).some(
+    getPropertyTokens(country, key, includeTC, visitedIsoCodes).some(
       (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
     ),
   );
