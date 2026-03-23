@@ -105,6 +105,18 @@ export type CountryFilterOptions = {
   includeTranscontinental?: boolean;
 };
 
+/** Represents a key for a country property search. */
+export type CountryPropertyKey =
+  | keyof Country
+  | "sovereign"
+  | "visited"
+  | "visits"
+  | "visityear"
+  | "firstvisit";
+
+/** Configuration for a country property search. */
+export type CountryPropertyConfig = { key: CountryPropertyKey; includeTC?: boolean };
+
 /** Represents a currency. */
 export interface Currency {
   code: string;

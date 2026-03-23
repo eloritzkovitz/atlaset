@@ -7,3 +7,6 @@ export type Visit = {
 
 /** Represents the visited status filter for countries. */
 export type VisitedStatus = "visited" | "not_visited" | "any";
+
+/** Type alias for the visited-year presence map: country ISO -> set of years visited. */
+export type VisitedYearMap = Record<string, Set<number>>;

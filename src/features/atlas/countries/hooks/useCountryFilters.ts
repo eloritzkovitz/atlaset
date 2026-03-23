@@ -20,6 +20,7 @@ import {
   type SovereigntyType,
 } from "@features/countries";
 import {
+  buildVisitedYearMap,
   filterByVisitCount,
   filterByVisitStatus,
   getLatestYear,
@@ -110,6 +111,9 @@ export function useCountryFilters() {
       ? effectiveSharedVisitedIsoCodes
       : Object.keys(visitedMap);
 
+  // Build a per-country per-year presence map
+  const visitedYearMap = useMemo(() => buildVisitedYearMap(trips), [trips]);
+
   // With layers applied, including visited filter
   const filteredIsoCodes = useMemo(
     () => getFilteredIsoCodes(countries, layers, layerSelections),
@@ -125,6 +129,7 @@ export function useCountryFilters() {
       filterParams,
       filteredIsoCodes,
       visitedMap,
+      visitedYearMap,
     );
 
     if (selectedListId) {
@@ -166,6 +171,7 @@ export function useCountryFilters() {
     isReadonly,
     effectiveSharedVisitedIsoCodes,
     visitedMap,
+    visitedYearMap,
     minVisitCount,
     maxVisitCount,
     sovereignOnly,

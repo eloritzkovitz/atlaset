@@ -9,6 +9,10 @@ import {
   getNextUpcomingTripYearByCountry,
   getVisitCountStats,
   getVisitsForCountry,
+  getFirstVisitDateByCountry,
+  getLastVisitDateByCountry,
+  buildVisitedYearMap,
+  getFirstVisitYear,
 } from "./visits";
 
 describe("visits utils", () => {
@@ -17,7 +21,6 @@ describe("visits utils", () => {
   describe("getYearsFromTrips", () => {
     it("returns unique sorted years from trips", () => {
       const years = getYearsFromTrips(mockTrips);
-      // Update expected years to match endDate years in mockTrips
       expect(years).toEqual([2022, 2023, 2099]);
     });
 
@@ -37,10 +40,10 @@ describe("visits utils", () => {
   describe("getLatestYear", () => {
     it("returns the latest year from a non-empty array", () => {
       expect(
-        getLatestYear([2000, 1999, 2020, 2021].sort((a, b) => a - b))
+        getLatestYear([2000, 1999, 2020, 2021].sort((a, b) => a - b)),
       ).toBe(2021);
       expect(getLatestYear([2022, 2023, 2021].sort((a, b) => a - b))).toBe(
-        2023
+        2023,
       );
     });
   });
@@ -76,8 +79,7 @@ describe("visits utils", () => {
       expect(upcoming).not.toContain("CA");
       expect(upcoming).not.toContain("FR");
       expect(upcoming).not.toContain("DE");
-    }
-    );
+    });
   });
 
   describe("getVisitsForCountry", () => {
@@ -93,10 +95,34 @@ describe("visits utils", () => {
       expect(visits[2].startDate).toBeUndefined();
     });
 
+    it("handles pairs of trips with missing startDate (returns 0 branch)", () => {
+      const trips = [
+        {
+          countryCodes: ["US"],
+          startDate: undefined,
+          endDate: "2022-01-05",
+          name: "A",
+          id: "a",
+        },
+        {
+          countryCodes: ["US"],
+          startDate: undefined,
+          endDate: "2023-01-05",
+          name: "B",
+          id: "b",
+        },
+      ] as any[];
+      const visits = getVisitsForCountry(trips, "US");
+      expect(visits.length).toBe(2);
+      expect(visits[0].startDate).toBeUndefined();
+      expect(visits[1].startDate).toBeUndefined();
+      expect(visits.map((v) => v.tripName)).toEqual(["A", "B"]);
+    });
+
     it("returns empty array if no trips for the country", () => {
       const visits = getVisitsForCountry(mockTrips, "MX");
       expect(visits).toEqual([]);
-    });    
+    });
   });
 
   describe("getVisitedCountriesForYear", () => {
@@ -170,7 +196,7 @@ describe("visits utils", () => {
       const result = getVisitedCountriesUpToYear(
         mockTrips,
         thisYear,
-        homeCountry
+        homeCountry,
       );
       expect(result).toHaveProperty(homeCountry);
     });
@@ -190,7 +216,7 @@ describe("visits utils", () => {
       expect(getVisitedCountriesUpToYear(mockTrips, 1999, homeCountry)).toEqual(
         {
           [homeCountry]: 1,
-        }
+        },
       );
     });
 
@@ -322,6 +348,59 @@ describe("visits utils", () => {
       expect(map).toEqual({ US: 1, CA: 1 });
       expect(min).toBe(1);
       expect(max).toBe(1);
+    });
+  });
+
+  describe("first/last visit and year map utilities", () => {
+    it("computes first and last visit dates by country", () => {
+      const trips = [
+        { endDate: "2020-01-01", countryCodes: ["US", "CA"] },
+        { endDate: "2019-06-01", countryCodes: ["US"] },
+        { endDate: "2021-03-01", countryCodes: ["FR"] },
+      ] as any[];
+      const first = getFirstVisitDateByCountry(trips);
+      const last = getLastVisitDateByCountry(trips);
+      expect(first.US.getFullYear()).toBe(2019);
+      expect(last.US.getFullYear()).toBe(2020);
+      expect(first.FR.getFullYear()).toBe(2021);
+    });
+
+    it("builds visited year map and returns first visit year", () => {
+      const trips = [
+        {
+          startDate: "2018-12-31",
+          endDate: "2019-01-02",
+          countryCodes: ["US"],
+        },
+        {
+          startDate: "2019-05-01",
+          endDate: "2020-05-01",
+          countryCodes: ["US", "FR"],
+        },
+      ] as any[];
+      const ymap = buildVisitedYearMap(trips);
+      expect(ymap.US.has(2018)).toBe(true);
+      expect(ymap.US.has(2019)).toBe(true);
+      expect(ymap.US.has(2020)).toBe(true);
+      expect(ymap.FR.has(2019)).toBe(true);
+      const firstUS = getFirstVisitYear(ymap, "US");
+      expect(firstUS).toBe(2018);
+    });
+
+    it("formats yearRange when start and end span different years in getVisitsForCountry", () => {
+      const trips = [
+        {
+          countryCodes: ["US"],
+          startDate: "2019-12-31",
+          endDate: "2020-01-02",
+          name: "New Year",
+          id: "t1",
+        },
+      ] as any[];
+      const visits = getVisitsForCountry(trips, "US");
+      expect(visits[0].yearRange).toContain("2019");
+      expect(visits[0].yearRange).toContain("2020");
+      expect(visits[0].tripName).toBe("New Year");
     });
   });
 });

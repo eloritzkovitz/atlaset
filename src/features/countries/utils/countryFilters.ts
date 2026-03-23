@@ -5,12 +5,18 @@
 import type { Layer } from "@features/atlas/layers";
 import { filterBySearch } from "@utils/filter";
 import {
+  compareNumeric,
+  parseComparator,
+  parseYearComparator,
+} from "@utils/number";
+import {
   buildSearchString,
   getPropertyTokens,
   resolvePropertyConfig,
   parsePropertySearch,
 } from "./countrySearch";
 import type { Country, CountryFilterOptions } from "../types";
+import { getFirstVisitYear } from "../../../features/visits/utils/visits";
 
 /**
  * Filters countries based on various criteria.
@@ -85,6 +91,7 @@ export function filterCountriesByProperty(
   value: string,
   visitedIsoCodes?: string[],
   visitedMap?: Record<string, number>,
+  visitedYearMap?: Record<string, Set<number>>,
 ): Country[] {
   const config = resolvePropertyConfig(property);
   if (!config?.key) return [];
@@ -95,10 +102,9 @@ export function filterCountriesByProperty(
 
   // special-case numeric visit count comparisons
   if (key === "visits") {
-    const m = value.trim().match(/^(>=|<=|>|<|=)?\s*(\d+)$/);
-    if (!m) return [];
-    const op = m[1] || "=";
-    const num = Number(m[2]);
+    const parsed = parseComparator(value, "\\d+");
+    if (!parsed) return [];
+    const { op, value: num } = parsed;
     const vmap = visitedMap ?? {};
     return countries.filter((country) => {
       const isVisited = (visitedIsoCodes ?? []).includes(country.isoCode);
@@ -106,19 +112,40 @@ export function filterCountriesByProperty(
         (op === "=" && num === 0) || (op === "<" && num === 1);
       if (!queryIsZero && num > 0 && !isVisited) return false;
       const count = vmap[country.isoCode] || 0;
-      switch (op) {
-        case ">":
-          return count > num;
-        case "<":
-          return count < num;
-        case ">=":
-          return count >= num;
-        case "<=":
-          return count <= num;
-        case "=":
-        default:
-          return count === num;
-      }
+      return compareNumeric(op, count, num);
+    });
+  }
+
+  // special-case first-visit year queries
+  if (key === "firstvisit") {
+    const parsed = parseYearComparator(value);
+    if (!parsed) return [];
+    const { op, year } = parsed;
+    const ymap = visitedYearMap ?? {};
+
+    return countries.filter((country) => {
+      const firstYear = getFirstVisitYear(ymap, country.isoCode);
+      if (firstYear === null) return false;
+      return compareNumeric(op, firstYear, year);
+    });
+  }
+
+  // special-case year-based visit queries
+  if (key === "visityear") {
+    const parsed = parseYearComparator(value);
+    if (!parsed) return [];
+    const { op, year } = parsed;
+    const ymap = visitedYearMap ?? {};
+    if (op === "=") {
+      return countries.filter((country) =>
+        Boolean(ymap[country.isoCode]?.has(year)),
+      );
+    }
+
+    return countries.filter((country) => {
+      const firstYear = getFirstVisitYear(ymap, country.isoCode);
+      if (firstYear === null) return false;
+      return compareNumeric(op, firstYear, year);
     });
   }
 
@@ -129,6 +156,7 @@ export function filterCountriesByProperty(
       includeTC,
       visitedIsoCodes,
       visitedMap,
+      visitedYearMap,
     ).some(
       (t: string) =>
         typeof t === "string" && t.toLowerCase().includes(searchValue),
@@ -213,6 +241,7 @@ export function applyPropertySearch(
   filterParams: CountryFilterOptions,
   filteredIsoCodes: string[] | undefined,
   visitedMap?: Record<string, number>,
+  visitedYearMap?: Record<string, Set<number>>,
 ) {
   const parsed = parsePropertySearch(search);
   if (parsed) {
@@ -222,6 +251,7 @@ export function applyPropertySearch(
       parsed.query,
       visitedIsoCodes,
       visitedMap,
+      visitedYearMap,
     );
   }
   return filterCountries(countries, {

@@ -1,4 +1,10 @@
-import { clamp, percent } from "./number";
+import {
+  clamp,
+  percent,
+  parseComparator,
+  parseYearComparator,
+  compareNumeric,
+} from "./number";
 
 describe("percent", () => {
   it("returns correct percentage string", () => {
@@ -9,7 +15,7 @@ describe("percent", () => {
     expect(percent(33, 200)).toBe("17%");
     expect(percent(67, 200)).toBe("34%");
   });
-  
+
   it("returns '0%' when denominator is zero", () => {
     expect(percent(50, 0)).toBe("0%");
   });
@@ -40,5 +46,59 @@ describe("clamp", () => {
     expect(clamp(123)).toBe(123);
     expect(clamp(-1e20)).toBe(Number.MIN_SAFE_INTEGER);
     expect(clamp(1e20)).toBe(Number.MAX_SAFE_INTEGER);
+  });
+});
+
+describe("parseComparator", () => {
+  it("parses simple numeric string with implicit equals", () => {
+    expect(parseComparator("42")).toEqual({ op: "=", value: 42 });
+  });
+
+  it("parses string with explicit operator", () => {
+    expect(parseComparator("> 100")).toEqual({ op: ">", value: 100 });
+    expect(parseComparator("<=50")).toEqual({ op: "<=", value: 50 });
+  });
+
+  it("returns null for invalid input", () => {
+    expect(parseComparator("abc")).toBeNull();
+    expect(parseComparator(">")).toBeNull();
+    expect(parseComparator(">= ")).toBeNull();
+  });
+});
+
+describe("parseYearComparator", () => {
+  it("parses valid year comparator strings", () => {
+    expect(parseYearComparator("2020")).toEqual({ op: "=", year: 2020 });
+    expect(parseYearComparator("> 1990")).toEqual({ op: ">", year: 1990 });
+    expect(parseYearComparator("<= 2005")).toEqual({ op: "<=", year: 2005 });
+  });
+
+  it("returns null for invalid year strings", () => {
+    expect(parseYearComparator("abc")).toBeNull();
+    expect(parseYearComparator("> 20a0")).toBeNull();
+    expect(parseYearComparator(">= ")).toBeNull();
+  });
+
+  it("returns null for non-year numeric strings", () => {
+    expect(parseYearComparator("> 99")).toBeNull();
+    expect(parseYearComparator("<= 12345")).toBeNull();
+  });
+});
+
+describe("compareNumeric", () => {
+  it("returns true for valid comparisons", () => {
+    expect(compareNumeric(">", 5, 3)).toBe(true);
+    expect(compareNumeric("<", 2, 4)).toBe(true);
+    expect(compareNumeric(">=", 5, 5)).toBe(true);
+    expect(compareNumeric("<=", 3, 3)).toBe(true);
+    expect(compareNumeric("=", 7, 7)).toBe(true);
+  });
+
+  it("returns false for invalid comparisons", () => {
+    expect(compareNumeric(">", 2, 5)).toBe(false);
+    expect(compareNumeric("<", 4, 2)).toBe(false);
+    expect(compareNumeric(">=", 4, 5)).toBe(false);
+    expect(compareNumeric("<=", 6, 5)).toBe(false);
+    expect(compareNumeric("=", 8, 9)).toBe(false);
   });
 });
