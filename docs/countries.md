@@ -1,12 +1,12 @@
 # Countries
 
-Atlaset lets you explore, filter and track `countries` on the interactive world map. You can view details and use powerful `filters` to organize your travel data.
+Atlaset provides an interactive world map to discover `countries`, view detailed country information and track your `visits`. Use `search`, `filters`, `lists` and `layers` to find, organize and manage your countries and travel data.
 
 ## **Browsing Countries**
 
 - Use the `map` or `country list` to browse all available `countries`.
 - Click on a `country` on the `map` or the `country list` to open a detailed view with information.
-- Use the `search bar` to quickly find a `country` by name. For advanced searching, see Property Searching.
+- Use the `search bar` to quickly find a `country` by name. For advanced searching, see below.
 
 ## **Country Details**
 
@@ -32,13 +32,31 @@ Country details include the following sections:
 
 ### **Property Searching**
 
-In addition to finding countries by name, you can search for countries by searching their properties. To do so, use the following syntaxt in the country search bar:
+In addition to finding countries by name, you can search by properties using this syntax in the country search bar:
 
 ```bash
 property:query
 ```
 
-> Searchable propertires include `isocode`, `region`, `subregion`, `region_tc`, `subregion_tc` (for transcontinental countries), `capital`, `currency`, `language` and `sovereignty`.
+#### **Supported properties**
+
+| Property       | Type                |                    Example | Notes                                                                                             |
+| -------------- | ------------------- | -------------------------: | ------------------------------------------------------------------------------------------------- |
+| `isocode`      | text                |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                                |
+| `region`       | text                |              `region:Asia` | Use `region_tc` to include transcontinental overrides                                             |
+| `region_tc`    | text                |         `region_tc:Europe` | Region including transcontinental matches                                                         |
+| `subregion`    | text                | `subregion:Southeast Asia` | Use `subregion_tc` to include transcontinental overrides                                          |
+| `subregion_tc` | text                |   `subregion_tc:Caribbean` | Subregion including transcontinental matches                                                      |
+| `capital`      | text                |            `capital:Paris` | Matches capital name                                                                              |
+| `currency`     | text                |             `currency:EUR` | Matches currency code                                                                             |
+| `language`     | text                |         `language:Spanish` | Matches a language                                                                                |
+| `callingcode`  | text                |          `callingcode:+44` | Matches a calling code                                                                            |
+| `sovereignty`  | text                |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                  |
+| `sovereign`    | boolean             |           `sovereign:true` | `true` / `false`                                                                                  |
+| `visited`      | boolean             |             `visited:true` | `true` / `false` (based on your visited list)                                                     |
+| `visits`       | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
+| `visityear`    | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| `firstvisit`   | number (comparison) |        `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
 
 ## **Country Lists**
 

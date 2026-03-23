@@ -34,6 +34,7 @@ export { OptionItem } from "./form/inputs/DropdownSelectInput/OptionItem";
 export { InputBox } from "./form/inputs/InputBox/InputBox";
 export { NumberInput } from "./form/inputs/NumberInput/NumberInput";
 export { SearchInput } from "./form/inputs/SearchInput";
+export { Autocomplete } from "./form/inputs/Autocomplete";
 export { SelectInput } from "./form/inputs/SelectInput";
 
 // Icon components

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-03-23
+
+- **[chore]** **Countries:** Added new properties for filtering with property search
+- **[feature]** **countries:** Added autocomplete suggestions for property search
+
 ## 2026-03-22
 
 - **[feature]** **Countries:** Defined transcontinental countries and added toggles and search properties to filter them

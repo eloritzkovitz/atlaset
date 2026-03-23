@@ -4,8 +4,19 @@
 
 import type { Layer } from "@features/atlas/layers";
 import { filterBySearch } from "@utils/filter";
+import {
+  compareNumeric,
+  parseComparator,
+  parseYearComparator,
+} from "@utils/number";
+import {
+  buildSearchString,
+  getPropertyTokens,
+  resolvePropertyConfig,
+  parsePropertySearch,
+} from "./countrySearch";
 import type { Country, CountryFilterOptions } from "../types";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
+import { getFirstVisitYear } from "../../../features/visits/utils/visits";
 
 /**
  * Filters countries based on various criteria.
@@ -30,48 +41,134 @@ export function filterCountries(
   const includeTranscontinental = options.includeTranscontinental === true;
 
   // Apply filters
-  return filterBySearch(countries, search, (c) =>
-    [c.name, ...(c.aliases ?? [])].join(" "),
-  ).filter((country) => {
-    const iso = country.isoCode?.toUpperCase?.();
-    const extra =
-      includeTranscontinental && iso
-        ? TRANSCONTINENTAL_MAP.get(iso)
-        : undefined;
+  return filterBySearch(countries, search, (c) => buildSearchString(c)).filter(
+    (country) => {
+      if (
+        selectedRegion &&
+        country.region !== selectedRegion &&
+        !(
+          getPropertyTokens(country, "region", includeTranscontinental) || []
+        ).includes(selectedRegion)
+      )
+        return false;
 
-    if (
-      selectedRegion &&
-      country.region !== selectedRegion &&
-      extra?.additionalRegion !== selectedRegion
-    )
-      return false;
+      if (
+        selectedSubregion &&
+        country.subregion !== selectedSubregion &&
+        !(
+          getPropertyTokens(country, "subregion", includeTranscontinental) || []
+        ).includes(selectedSubregion)
+      )
+        return false;
 
-    if (
-      selectedSubregion &&
-      country.subregion !== selectedSubregion &&
-      extra?.additionalSubregion !== selectedSubregion
-    )
-      return false;
+      if (
+        selectedSovereignty &&
+        country.sovereigntyType !== selectedSovereignty
+      )
+        return false;
 
-    if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
-      return false;
+      if (
+        layerCountries &&
+        layerCountries.length &&
+        !layerCountries.includes(country.isoCode)
+      )
+        return false;
 
-    if (
-      layerCountries &&
-      layerCountries.length &&
-      !layerCountries.includes(country.isoCode)
-    )
-      return false;
+      return true;
+    },
+  );
+}
 
-    return true;
-  });
+/**
+ * Filters countries by a property and value, supporting arrays and strings.
+ * @param countries - Array of Country objects.
+ * @param property - Property name.
+ * @param value - Value to match (case-insensitive, partial match).
+ */
+export function filterCountriesByProperty(
+  countries: Country[],
+  property: string,
+  value: string,
+  visitedIsoCodes?: string[],
+  visitedMap?: Record<string, number>,
+  visitedYearMap?: Record<string, Set<number>>,
+): Country[] {
+  const config = resolvePropertyConfig(property);
+  if (!config?.key) return [];
+
+  const key = config.key;
+  const includeTC = !!config.includeTC;
+  const searchValue = value.toLowerCase();
+
+  // special-case numeric visit count comparisons
+  if (key === "visits") {
+    const parsed = parseComparator(value, "\\d+");
+    if (!parsed) return [];
+    const { op, value: num } = parsed;
+    const vmap = visitedMap ?? {};
+    return countries.filter((country) => {
+      const isVisited = (visitedIsoCodes ?? []).includes(country.isoCode);
+      const queryIsZero =
+        (op === "=" && num === 0) || (op === "<" && num === 1);
+      if (!queryIsZero && num > 0 && !isVisited) return false;
+      const count = vmap[country.isoCode] || 0;
+      return compareNumeric(op, count, num);
+    });
+  }
+
+  // special-case first-visit year queries
+  if (key === "firstvisit") {
+    const parsed = parseYearComparator(value);
+    if (!parsed) return [];
+    const { op, year } = parsed;
+    const ymap = visitedYearMap ?? {};
+
+    return countries.filter((country) => {
+      const firstYear = getFirstVisitYear(ymap, country.isoCode);
+      if (firstYear === null) return false;
+      return compareNumeric(op, firstYear, year);
+    });
+  }
+
+  // special-case year-based visit queries
+  if (key === "visityear") {
+    const parsed = parseYearComparator(value);
+    if (!parsed) return [];
+    const { op, year } = parsed;
+    const ymap = visitedYearMap ?? {};
+    if (op === "=") {
+      return countries.filter((country) =>
+        Boolean(ymap[country.isoCode]?.has(year)),
+      );
+    }
+
+    return countries.filter((country) => {
+      const firstYear = getFirstVisitYear(ymap, country.isoCode);
+      if (firstYear === null) return false;
+      return compareNumeric(op, firstYear, year);
+    });
+  }
+
+  return countries.filter((country) =>
+    getPropertyTokens(
+      country,
+      key,
+      includeTC,
+      visitedIsoCodes,
+      visitedMap,
+      visitedYearMap,
+    ).some(
+      (t: string) =>
+        typeof t === "string" && t.toLowerCase().includes(searchValue),
+    ),
+  );
 }
 
 /**
  * Filters ISO codes based on layer selections.
- * @param countries
- * @param layers
- * @param layerSelections
+ * @param countries - List of all countries.
+ * @param layers - List of all layers.
+ * @param layerSelections - Current layer selections.
  * @returns Filtered list of ISO codes.
  */
 export function getFilteredIsoCodes(
@@ -134,74 +231,31 @@ export function createSovereigntyFilter(sovereignOnly?: boolean) {
     sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
 }
 
-export interface CountryPropertyMap {
-  [key: string]: keyof Country;
-}
-
-type PropertyConfig = { key: keyof Country; includeTC?: boolean };
-
-const COUNTRY_PROPERTY_MAP: Record<string, PropertyConfig> = {
-  isocode: { key: "isoCode" },
-  region: { key: "region" },
-  region_tc: { key: "region", includeTC: true },
-  subregion: { key: "subregion" },
-  subregion_tc: { key: "subregion", includeTC: true },
-  capital: { key: "capital" },
-  currency: { key: "currency" },
-  language: { key: "languages" },
-  sovereignty: { key: "sovereigntyType" },
-};
-
 /**
- * Filters countries by a property and value, supporting arrays and strings.
- * @param countries - Array of Country objects
- * @param property - Property name (e.g. "currency", "language")
- * @param value - Value to match (case-insensitive, partial match)
+ * Apply property-based search or normal search with layer filtering.
  */
-export function filterCountriesByProperty(
+export function applyPropertySearch(
   countries: Country[],
-  property: string,
-  value: string,
-): Country[] {
-  const propertyKey = property.toLowerCase();
-  const config: PropertyConfig | undefined = COUNTRY_PROPERTY_MAP[propertyKey];
-
-  // If the property is not recognized, return an empty array
-  if (!config?.key) return [];
-
-  // Determine if transcontinental overrides should be included
-  const key = config.key;
-  const includeTC = !!config.includeTC;
-
-  const searchValue = value.toLowerCase();
-
-  // Filter countries based on the specified property
-  const getTokens = (country: Country) => {
-    if (key === "region" || key === "subregion") {
-      const tokens: string[] = [];
-      const val = country[key];
-      if (typeof val === "string" && val) tokens.push(val);
-      if (includeTC) {
-        const extra = TRANSCONTINENTAL_MAP.get(
-          country.isoCode?.toUpperCase?.() ?? "",
-        );
-        const extraVal =
-          key === "region"
-            ? extra?.additionalRegion
-            : extra?.additionalSubregion;
-        if (typeof extraVal === "string") tokens.push(extraVal);
-      }
-      return tokens;
-    }
-    const prop = country[key];
-    if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
-    if (typeof prop === "string") return [prop];
-    return [];
-  };
-
-  return countries.filter((country) =>
-    getTokens(country).some(
-      (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
-    ),
-  );
+  search: string,
+  visitedIsoCodes: string[] | undefined,
+  filterParams: CountryFilterOptions,
+  filteredIsoCodes: string[] | undefined,
+  visitedMap?: Record<string, number>,
+  visitedYearMap?: Record<string, Set<number>>,
+) {
+  const parsed = parsePropertySearch(search);
+  if (parsed) {
+    return filterCountriesByProperty(
+      countries,
+      parsed.property,
+      parsed.query,
+      visitedIsoCodes,
+      visitedMap,
+      visitedYearMap,
+    );
+  }
+  return filterCountries(countries, {
+    ...filterParams,
+    layerCountries: filteredIsoCodes,
+  });
 }

@@ -11,12 +11,13 @@ export default defineConfig({
       reporter: ["text", "html"],
       exclude: [
         "src/contexts/**",
+        "src/shared/components/icons",
         "src/shared/constants/**",
         "src/shared/test-utils/**",
         "src/shared/types/**",
         "**/index.ts",
-        '**/*.json',
-        '**/*.css',       
+        "**/*.json",
+        "**/*.css",
       ],
     },
   },
@@ -32,7 +33,10 @@ export default defineConfig({
       "@test-utils": path.resolve(__dirname, "src/shared/test-utils"),
       "@types": path.resolve(__dirname, "src/shared/types"),
       "@utils": path.resolve(__dirname, "src/shared/utils"),
-      "virtual:pwa-register/react": path.resolve(__dirname, "src/shared/test-utils/mockPwa.ts"),
+      "virtual:pwa-register/react": path.resolve(
+        __dirname,
+        "src/shared/test-utils/mockPwa.ts",
+      ),
     },
   },
 });

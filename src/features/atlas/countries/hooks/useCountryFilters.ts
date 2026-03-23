@@ -12,7 +12,7 @@ import {
 import {
   createSovereigntyFilter,
   filterCountries,
-  filterCountriesByProperty,
+  applyPropertySearch,
   getCountryCounts,
   getFilteredIsoCodes,
   useCountryData,
@@ -20,6 +20,7 @@ import {
   type SovereigntyType,
 } from "@features/countries";
 import {
+  buildVisitedYearMap,
   filterByVisitCount,
   filterByVisitStatus,
   getLatestYear,
@@ -110,6 +111,9 @@ export function useCountryFilters() {
       ? effectiveSharedVisitedIsoCodes
       : Object.keys(visitedMap);
 
+  // Build a per-country per-year presence map
+  const visitedYearMap = useMemo(() => buildVisitedYearMap(trips), [trips]);
+
   // With layers applied, including visited filter
   const filteredIsoCodes = useMemo(
     () => getFilteredIsoCodes(countries, layers, layerSelections),
@@ -118,14 +122,15 @@ export function useCountryFilters() {
 
   // Main filtering logic
   const filteredCountries = useMemo(() => {
-    const propertySearchRegex = /^(\w+):\s*(.+)$/i;
-    const match = debouncedSearch.match(propertySearchRegex);
-    let base = match
-      ? filterCountriesByProperty(countries, match[1], match[2])
-      : filterCountries(countries, {
-          ...filterParams,
-          layerCountries: filteredIsoCodes,
-        });
+    let base = applyPropertySearch(
+      countries,
+      debouncedSearch,
+      visitedIsoCodes,
+      filterParams,
+      filteredIsoCodes,
+      visitedMap,
+      visitedYearMap,
+    );
 
     if (selectedListId) {
       const selectedList = countryLists.find((l) => l.id === selectedListId);
@@ -148,7 +153,7 @@ export function useCountryFilters() {
         );
       }
     }
-    
+
     if (sovereignOnly) {
       base = base.filter(createSovereigntyFilter(true));
     }
@@ -166,6 +171,7 @@ export function useCountryFilters() {
     isReadonly,
     effectiveSharedVisitedIsoCodes,
     visitedMap,
+    visitedYearMap,
     minVisitCount,
     maxVisitCount,
     sovereignOnly,

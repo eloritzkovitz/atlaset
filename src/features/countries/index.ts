@@ -33,25 +33,7 @@ export { countryListService } from "./services/countryListService";
 export * from "./types";
 
 // Utils
-export {
-  getCountryIsoCode,
-  getCountryByIsoCode,
-  getCountryName,
-  createCountryMap,
-  getAllRegions,
-  getAllSubregions,
-  getSubregionsForRegion,
-  getAllSovereigntyTypes,
-  getCountriesWithOwnFlag,
-  getRandomCountry,
-  getLanguagesDisplay,
-  getCountryRelations,
-} from "./utils/countryData";
-export {
-  filterCountries,
-  filterCountriesByProperty,
-  getFilteredIsoCodes,
-  getCountryCounts,
-  createSovereigntyFilter,
-} from "./utils/countryFilters";
+export * from "./utils/countryData";
+export * from "./utils/countryFilters";
+export * from "./utils/countrySearch";
 export { sortCountries } from "./utils/countrySort";

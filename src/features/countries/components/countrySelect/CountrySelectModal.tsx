@@ -1,16 +1,23 @@
 import { useEffect, useState } from "react";
 import {
   ActionButton,
+  Autocomplete,
   Checkbox,
   EmptyListMessage,
   Modal,
   PanelHeader,
-  SearchInput,
 } from "@components";
 import { ICONS } from "@constants/icons";
+import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
+import { filterCountriesByProperty } from "../../utils/countryFilters";
+import {
+  parsePropertySearch,
+  buildSearchString,
+  propertySuggestionProvider,
+} from "../../utils/countrySearch";
 
 interface CountrySelectModalProps {
   isOpen: boolean;
@@ -40,16 +47,32 @@ export function CountrySelectModal({
     }
   }, [isOpen]);
 
-  // Filter options by search and sort alphabetically
-  const filteredOptions = [
-    ...filterBySearch(options, search, (country) => country.name),
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  // Filter options by search
+  const parsed = parsePropertySearch(search);
+  const { visitedCountryCodes } = useVisitedCountries();
+  const filteredOptions = ((): typeof options => {
+    if (parsed) {
+      return filterCountriesByProperty(
+        options,
+        parsed.property,
+        parsed.query,
+        visitedCountryCodes,
+      ).sort((a, b) => a.name.localeCompare(b.name));
+    }
+
+    return [
+      ...filterBySearch(options, search, (country) =>
+        buildSearchString(country),
+      ),
+    ].sort((a, b) => a.name.localeCompare(b.name));
+  })();
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       className="modal shadow-lg w-[500px] max-h-[80vh] flex flex-col"
+      draggable
     >
       <PanelHeader
         title={
@@ -68,10 +91,11 @@ export function CountrySelectModal({
         />
       </PanelHeader>
       <div className="flex flex-col h-full px-4 gap-4">
-        <SearchInput
+        <Autocomplete
           value={search}
           onChange={setSearch}
           placeholder="Search countries"
+          suggestionProvider={propertySuggestionProvider}
         />
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (

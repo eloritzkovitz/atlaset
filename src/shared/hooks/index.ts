@@ -18,8 +18,10 @@ export * from "./dom/useFloatingMenuPosition";
 export * from "./dom/useKeyboardFocusRing";
 export * from "./dom/useMenuPosition";
 export * from "./dom/useScrollVisibility";
+export * from "./dom/useTextWidth";
 
 // Input
+export * from "./input/useAutocomplete";
 export * from "./input/useKeyHandler";
 
 // Markdown

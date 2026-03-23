@@ -1,9 +1,12 @@
 import { useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { SearchInput, SegmentedToggle, ActionButton } from "@components";
+import { ActionButton, Autocomplete, SegmentedToggle } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
+import {
+  propertySuggestionProvider,
+  type CountryList,
+} from "@features/countries";
 import { CountrySortSelect } from "@features/countries/components/countrySort/CountrySortSelect";
-import type { CountryList } from "@features/countries/types";
 import { useDragScroll } from "@hooks";
 
 interface CountriesSearchSortBarProps {
@@ -41,7 +44,7 @@ export function CountriesSearchSortBar({
   selectedListId = null,
   setSelectedListId,
   onAddList,
-  onEditList,  
+  onEditList,
 }: CountriesSearchSortBarProps) {
   const { timelineMode } = useTimeline();
 
@@ -78,10 +81,11 @@ export function CountriesSearchSortBar({
   return (
     <div className="items-center">
       <div className="flex items-stretch pb-0 mt-1">
-        <SearchInput
+        <Autocomplete
           value={search}
           onChange={setSearch}
           placeholder="Search countries"
+          suggestionProvider={propertySuggestionProvider}
           className="flex-1 h-10"
         />
         <CountrySortSelect
