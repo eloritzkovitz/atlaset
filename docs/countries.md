@@ -55,6 +55,8 @@ property:query
 | `sovereign`    | boolean             |           `sovereign:true` | `true` / `false`                                                                                  |
 | `visited`      | boolean             |             `visited:true` | `true` / `false` (based on your visited list)                                                     |
 | `visits`       | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
+| `visityear`    | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| `firstvisit`   | number (comparison) |        `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
 
 ## **Country Lists**
 
