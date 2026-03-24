@@ -3,7 +3,7 @@ import {
   createAsyncThunk,
   type PayloadAction,
 } from "@reduxjs/toolkit";
-import type { RootState } from "@store";
+import type { RootState } from "@app/store";
 import { defaultSettings } from "../constants/defaultSettings";
 import { settingsService } from "../services/settingsService";
 import type { Settings } from "../types";
