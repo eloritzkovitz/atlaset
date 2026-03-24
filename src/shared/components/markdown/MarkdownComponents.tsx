@@ -1,5 +1,5 @@
 import React, { type AnchorHTMLAttributes, type ReactNode } from "react";
-import { KeyCombo } from "@layout/Shortcuts/KeyCombo";
+import { KeyCombo } from "../ui/KeyCombo";
 import { Separator } from "../../components";
 
 export interface MarkdownComponentOverrides {

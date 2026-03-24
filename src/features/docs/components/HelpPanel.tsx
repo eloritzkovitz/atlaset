@@ -1,6 +1,5 @@
-import { ActionButton, Panel, Separator } from "@components";
+import { ActionButton, AppLinks, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { AppLinks } from "@layout";
 import { DocSearchResults } from "./DocSearchResults";
 
 interface HelpPanelProps {

@@ -21,7 +21,7 @@ import {
   useUserFriends,
 } from "@features/user";
 import { usePageTitle } from "@hooks";
-import { AppPanels } from "@layout/Layout/AppPanels";
+import { AppPanels } from "@layouts/shells/AppPanels";
 import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {

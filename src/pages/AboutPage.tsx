@@ -1,5 +1,5 @@
+import { Branding } from "@components";
 import { usePageTitle } from "@hooks";
-import { Branding } from "@layout";
 
 export default function AboutPage() {
   usePageTitle("About Atlaset | Atlaset");

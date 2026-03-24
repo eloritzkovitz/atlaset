@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import {
+  Branding,
   DrawerPanel,
   mapMenuItems,
   MenuButton,
@@ -9,7 +10,6 @@ import {
   SubmenuSection,
 } from "@components";
 import { useScreenSize } from "@hooks";
-import { Branding } from "@layout";
 import { DOCS_GROUPS } from "../constants/docsMenu";
 
 interface DocsPanelMenuProps {

@@ -4,6 +4,11 @@ export { FloatingActionButton } from "./action/FloatingActionButton";
 export { FloatingChevronButton } from "./action/FloatingChevronButton";
 export { HamburgerButton } from "./action/HamburgerButton";
 
+// Branding components
+export { BrandCopyright } from "./branding/BrandCopyright";
+export { Branding } from "./branding/Branding";
+export { BrandingWithLabel } from "./branding/BrandingWithLabel";
+
 // Card components
 export { Card } from "./ui/Card/Card";
 export { DashboardCard } from "./ui/Card/DashboardCard";
@@ -44,40 +49,42 @@ export { DashboardIcon } from "./icons/DashboardIcon";
 export { CollapsibleHeader } from "./layout/CollapsibleHeader";
 export { SectionHeader } from "./layout/SectionHeader";
 export { Separator } from "./layout/Separator";
-export { Breadcrumbs, type Crumb } from "./layout/Breadcrumbs/Breadcrumbs";
 
 // Markdown components
 export { getBaseMarkdownComponents } from "./markdown/MarkdownComponents";
 export { MarkdownFileRenderer } from "./markdown/MarkdownFileRenderer";
 
 // Menu components
-export { Menu } from "./layout/Menu/Menu";
-export { MenuButton } from "./layout/Menu/MenuButton";
-export { SubmenuSection } from "./layout/Menu/SubmenuSection";
-export * from "./layout/Menu/menuUtils";
+export { Menu } from "./menu/Menu";
+export { MenuButton } from "./menu/MenuButton";
+export { SubmenuSection } from "./menu/SubmenuSection";
+export * from "./menu/menuUtils";
 
 // Modal components
-export { ConfirmModal } from "./layout/Modal/ConfirmModal";
-export { Modal } from "./layout/Modal/Modal";
-export { ModalActions } from "./layout/Modal/ModalActions";
+export { ConfirmModal } from "./modal/ConfirmModal";
+export { Modal } from "./modal/Modal";
+export { ModalActions } from "./modal/ModalActions";
 
 // Navigation components
-export { ProtectedRoute } from "./navigation/ProtectedRoute";
+export { AppLinks } from "./navigation/AppLinks";
+export { AuthButtons } from "./navigation/AuthButtons";
+export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs";
+export { GitHubButton } from "./navigation/GitHubButton";
 
 // Panel components
-export { DrawerPanel } from "./layout/Panel/DrawerPanel";
-export { EmptyListMessage } from "./layout/Panel/EmptyListMessage";
-export { Panel } from "./layout/Panel/Panel";
-export { PanelHeader } from "./layout/Panel/PanelHeader";
-export { PanelListItem } from "./layout/Panel/PanelListItem";
-export { SidePanelMenu } from "./layout/Panel/SidePanelMenu";
+export { DrawerPanel } from "./panel/DrawerPanel";
+export { EmptyListMessage } from "./panel/EmptyListMessage";
+export { Panel } from "./panel/Panel";
+export { PanelHeader } from "./panel/PanelHeader";
+export { PanelListItem } from "./panel/PanelListItem";
+export { SidePanelMenu } from "./panel/SidePanelMenu";
 
 // Toolbar components
-export { ActionsToolbar } from "./layout/Toolbar/ActionsToolbar";
-export { ToolbarIconWithCount } from "./layout/Toolbar/ToolbarIconWithCount";
-export { ToolbarSelectButton } from "./layout/Toolbar/ToolbarSelectButton";
-export { ToolbarSeparator } from "./layout/Toolbar/ToolbarSeparator";
-export { ToolbarToggleGroup } from "./layout/Toolbar/ToolbarToggleGroup";
+export { ActionsToolbar } from "./toolbar/ActionsToolbar";
+export { ToolbarIconWithCount } from "./toolbar/ToolbarIconWithCount";
+export { ToolbarSelectButton } from "./toolbar/ToolbarSelectButton";
+export { ToolbarSeparator } from "./toolbar/ToolbarSeparator";
+export { ToolbarToggleGroup } from "./toolbar/ToolbarToggleGroup";
 
 // Table components
 export { Pagination } from "./table/Pagination/Pagination";
@@ -100,6 +107,7 @@ export {
   type SegmentedToggleOption,
 } from "./ui/SegmentedToggle";
 export { TabButton } from "./ui/TabButton";
+export { KeyCombo } from "./ui/KeyCombo";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";

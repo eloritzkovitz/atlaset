@@ -1,9 +1,9 @@
 import { Navigate } from "react-router-dom";
 import { LoadingSpinner } from "@components";
 import { useAuth } from "@contexts/AuthContext";
-import { CallToActionSection } from "@layout/Home/CallToActionSection";
-import { FeaturesSection } from "@layout/Home/FeaturesSection";
-import { HeroSection } from "@layout/Home/HeroSection";
+import { CallToActionSection } from "@features/home/CallToActionSection";
+import { FeaturesSection } from "@features/home/FeaturesSection";
+import { HeroSection } from "@features/home/HeroSection";
 import { usePageTitle } from "@hooks";
 
 export default function HomePage() {

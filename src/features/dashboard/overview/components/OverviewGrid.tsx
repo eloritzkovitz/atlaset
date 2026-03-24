@@ -1,10 +1,10 @@
+import { AppLinks } from "@components";
 import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useAuth, useHomeCountry, useUserProfile } from "@features/user";
 import { RecentActivitySection } from "@features/user/activity/components/RecentActivitySection";
 import { useVisitedCountries } from "@features/visits";
-import { AppLinks } from "@layout";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
 import { getStatsConfig } from "../config/stats";

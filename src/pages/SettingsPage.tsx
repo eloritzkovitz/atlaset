@@ -16,7 +16,7 @@ import {
 } from "@features/settings";
 import { EditProfileModal, useUserProfile } from "@features/user";
 import { usePageTitle } from "@hooks";
-import { SidebarLayout } from "@layout";
+import { SidebarLayout } from "@layouts";
 
 export default function SettingsPage() {
   const { user, loading: userLoading } = useAuth();

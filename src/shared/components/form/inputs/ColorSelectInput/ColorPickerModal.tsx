@@ -3,10 +3,10 @@ import { HexColorPicker } from "react-colorful";
 import { FaPalette, FaXmark, FaCopy } from "react-icons/fa6";
 import { hexToRgba } from "@utils/color";
 import { ActionButton } from "../../../action/ActionButton";
-import { Tooltip } from "../../../ui/Tooltip/Tooltip";
-import { Modal } from "../../../layout/Modal/Modal";
-import { PanelHeader } from "../../../layout/Panel/PanelHeader";
+import { Modal } from "../../../modal/Modal";
+import { PanelHeader } from "../../../panel/PanelHeader";
 import { ColorDot } from "../../../ui/ColorDot";
+import { Tooltip } from "../../../ui/Tooltip/Tooltip";
 import "./ColorPickerModal.css";
 
 interface ColorPickerModalProps {

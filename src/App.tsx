@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import {
   LoadingSpinner,
-  ProtectedRoute,
   PwaUpdateUiHint,
   SplashScreen,
   UIHintContainer,
@@ -12,7 +11,7 @@ import { AchievementsProvider } from "@contexts/AchievementsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { AppLayout, EmbedLayout, PublicLayout } from "@layout";
+import { AppLayout, EmbedLayout, PublicLayout } from "@layouts";
 import { AtlasProviders } from "./pages/AtlasProvider";
 import AboutPage from "./pages/AboutPage";
 import ActivityPage from "./pages/ActivityPage";
@@ -27,6 +26,7 @@ import SearchPage from "./pages/SearchPage";
 import SettingsPage from "./pages/SettingsPage";
 import SignupPage from "./pages/SignupPage";
 import TripsPage from "./pages/TripsPage";
+import { ProtectedRoute } from "./shared/router/ProtectedRoute";
 
 // Lazy-loaded pages
 const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));

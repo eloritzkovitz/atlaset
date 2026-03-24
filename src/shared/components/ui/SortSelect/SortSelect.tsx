@@ -10,9 +10,9 @@ import type { Option, OptionGroup } from "@types";
 import { directionOptions } from "./directionOptions";
 import { ActionButton } from "../../action/ActionButton";
 import { OptionItem } from "../../form/inputs/DropdownSelectInput/OptionItem";
-import { Menu } from "../../layout/Menu/Menu";
 import { SectionHeader } from "../../layout/SectionHeader";
 import { Separator } from "../../layout/Separator";
+import { Menu } from "../../menu/Menu";
 
 export interface SortSelectProps<T extends string> {
   value: T;
