@@ -1,9 +1,15 @@
 import { useMemo } from "react";
 import { MAP_BG_COLOR } from "@constants/colors";
+import { useTrips } from "@contexts/TripsContext";
 import type { ColorMode } from "@features/atlas/map";
 import { useVisitColorRoles } from "@features/settings";
 import { useHomeCountry } from "@features/user";
-import { getVisitColor, useVisitedCountriesTimeline } from "@features/visits";
+import {
+  getVisitColor,
+  getVisitedCountriesForYear,
+  getVisitedCountriesUpToYear,
+  getNextUpcomingTripYearByCountry,
+} from "@features/visits";
 import type { TimelineLayer } from "../types";
 
 /**
@@ -18,16 +24,24 @@ export function useTimelineLayerItems(
   selectedYear: number,
   colorMode: ColorMode,
 ) {
-  const {
-    getVisitedCountriesUpToYear,
-    getVisitedCountriesForYear,
-    getUpcomingCountries,
-  } = useVisitedCountriesTimeline();
+  const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
-  const snapshotCountries = getVisitedCountriesUpToYear(selectedYear);
-  const snapshotCountriesPrev = getVisitedCountriesUpToYear(selectedYear - 1);
-  const newThisYear = getVisitedCountriesForYear(selectedYear);
-  const nextUpcomingYearByCountry = getUpcomingCountries();
+  const snapshotCountries = getVisitedCountriesUpToYear(
+    trips,
+    selectedYear,
+    homeCountry,
+  );
+  const snapshotCountriesPrev = getVisitedCountriesUpToYear(
+    trips,
+    selectedYear - 1,
+    homeCountry,
+  );
+  const newThisYear = getVisitedCountriesForYear(
+    trips,
+    selectedYear,
+    homeCountry,
+  );
+  const nextUpcomingYearByCountry = getNextUpcomingTripYearByCountry(trips);
 
   const palette = useVisitColorRoles(colorMode);
 

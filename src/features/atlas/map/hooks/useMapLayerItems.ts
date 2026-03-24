@@ -2,18 +2,17 @@ import { useMemo } from "react";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useCountryColors } from "@features/settings";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
+import { useSharedMapInfo } from "@features/atlas/export";
 import {
   isTimelineLayer,
-  useLayerItems,
   useTimelineLayerItems,
   getLayerItems,
   normalizeLayers,
   type TimelineLayer,
 } from "@features/atlas/layers";
-import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import { useCountryColors } from "@features/settings";
+import { useVisitedCountries } from "@features/visits";
 import type { MapMode } from "../types";
 
 /**
@@ -48,7 +47,10 @@ export function useMapLayerItems(mode: MapMode = "view") {
   ];
 
   // Get static and timeline layer items
-  const staticItems = useLayerItems(layers);
+  const staticItems = useMemo(
+    () => layers.filter((o) => o.visible).flatMap(getLayerItems),
+    [layers],
+  );
   const timelineItems = useTimelineLayerItems(
     timelineLayers,
     selectedYear,
