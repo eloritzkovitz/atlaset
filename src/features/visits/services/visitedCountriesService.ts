@@ -1,5 +1,5 @@
 import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "@firebase";
+import { db } from "@app/firebase";
 
 /**
  * Service for managing visited countries of users.

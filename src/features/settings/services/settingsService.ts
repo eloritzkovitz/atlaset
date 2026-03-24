@@ -1,6 +1,6 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { appDb } from "@db";
-import { db } from "@firebase";
+import { appDb } from "@app/db";
+import { db } from "@app/firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../types";

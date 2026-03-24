@@ -19,7 +19,7 @@ import {
   getDocs,
   setDoc,
 } from "firebase/firestore";
-import { auth, db } from "@firebase";
+import { auth, db } from "@app/firebase";
 import { logUserActivity } from "../../activity/utils/activity";
 import { friendService } from "../../friends/services/friendService";
 import { profileService } from "../../profile/services/profileService";

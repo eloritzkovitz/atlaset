@@ -29,7 +29,7 @@ vi.mock("firebase/firestore", () => ({
 
 vi.mock("./firebase", async () => {
   const actual =
-    await vi.importActual<typeof import("@firebase")>("./firebase");
+    await vi.importActual<typeof import("@app/firebase")>("./firebase");
   return {
     ...actual,
     getCurrentUser: vi.fn(() => mockUser),

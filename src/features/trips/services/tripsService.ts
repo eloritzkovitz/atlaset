@@ -6,7 +6,7 @@ import {
   collection,
   getDoc,
 } from "firebase/firestore";
-import { db } from "@firebase";
+import { db } from "@app/firebase";
 import {
   isAuthenticated,
   getUserCollection,

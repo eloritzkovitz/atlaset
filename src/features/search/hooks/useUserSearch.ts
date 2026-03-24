@@ -7,8 +7,8 @@ import {
   endAt,
   getDocs,
 } from "firebase/firestore";
+import { db } from "@app/firebase";
 import type { UserProfile } from "@features/user";
-import { db } from "@firebase";
 import type { UserSearchResult } from "../types";
 
 /**

@@ -2,7 +2,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock dependencies before importing the service
-vi.mock("@db", () => {
+vi.mock("@app/db", () => {
   const settingsMock = {
     get: vi.fn(),
     count: vi.fn(),
@@ -46,13 +46,13 @@ vi.mock("@features/user", () => {
     __esModule: true,
   };
 });
-vi.mock("@firebase", () => ({
+vi.mock("@app/firebase", () => ({
   db: {},
   __esModule: true,
 }));
 
 import { settingsService } from "./settingsService";
-import { appDb } from "@db";
+import { appDb } from "@app/db";
 import * as firebaseUtils from "@utils/firebase";
 import * as firestore from "firebase/firestore";
 import { defaultSettings } from "../constants/defaultSettings";

@@ -6,8 +6,8 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
-import { appDb } from "@db";
-import { db } from "@firebase";
+import { appDb } from "@app/db";
+import { db } from "@app/firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { AnyLayer } from "../types";
 import { logUserActivity } from "../../../user";

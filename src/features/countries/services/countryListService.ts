@@ -6,7 +6,7 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { db } from "@firebase";
+import { db } from "@app/firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { CountryList } from "../types";
 

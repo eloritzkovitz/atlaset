@@ -10,7 +10,7 @@ import {
   where,
   deleteDoc,
 } from "firebase/firestore";
-import { db } from "@firebase";
+import { db } from "@app/firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import { getArticle } from "@utils/string";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";

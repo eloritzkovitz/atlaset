@@ -8,6 +8,12 @@
     "types": ["vite/client", "vitest/globals"],
     "skipLibCheck": true,
     "paths": {
+      "@app/db": ["./src/db"],
+      "@app/db/*": ["./src/db/*"],
+      "@app/firebase": ["./src/firebase"],
+      "@app/firebase/*": ["./src/firebase/*"],
+      "@app/store": ["./src/store"],
+      "@app/store/*": ["./src/store/*"],
       "@components": ["./src/shared/components/index.ts"],
       "@components/*": ["./src/shared/components/*"],
       "@config": ["./src/shared/config/index.ts"],
@@ -29,13 +35,7 @@
       "@types": ["./src/shared/types/index.ts"],
       "@types/*": ["./src/shared/types/*"],
       "@utils": ["./src/shared/utils/index.ts"],
-      "@utils/*": ["./src/shared/utils/*"],
-      "@db": ["./src/db"],
-      "@db/*": ["./src/db/*"],
-      "@firebase": ["./src/firebase"],
-      "@firebase/*": ["./src/firebase/*"],
-      "@store": ["./src/store"],
-      "@store/*": ["./src/store/*"]
+      "@utils/*": ["./src/shared/utils/*"]
     },
 
     /* Bundler mode */

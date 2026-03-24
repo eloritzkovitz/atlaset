@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { doc, getDoc } from "firebase/firestore";
-import { db } from "@firebase";
+import { db } from "@app/firebase";
 
 /**
  * Fetches and manages a Firestore username.

@@ -23,6 +23,9 @@ export default defineConfig({
   },
   resolve: {
     alias: {
+      "@app/db": path.resolve(__dirname, "src/db"),
+      "@app/firebase": path.resolve(__dirname, "src/firebase"),
+      "@app/store": path.resolve(__dirname, "src/store"),
       "@components": path.resolve(__dirname, "src/shared/components"),
       "@config": path.resolve(__dirname, "src/shared/config"),
       "@constants": path.resolve(__dirname, "src/shared/constants"),
@@ -33,9 +36,6 @@ export default defineConfig({
       "@test-utils": path.resolve(__dirname, "src/shared/test-utils"),
       "@types": path.resolve(__dirname, "src/shared/types"),
       "@utils": path.resolve(__dirname, "src/shared/utils"),
-      "@db": path.resolve(__dirname, "src/db"),
-      "@firebase": path.resolve(__dirname, "src/firebase"),
-      "@store": path.resolve(__dirname, "src/store"),
       "virtual:pwa-register/react": path.resolve(
         __dirname,
         "src/shared/test-utils/mockPwa.ts",
