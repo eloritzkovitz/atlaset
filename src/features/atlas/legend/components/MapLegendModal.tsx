@@ -1,7 +1,7 @@
 import { ActionButton, Modal, PanelHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { LegendRow } from "./LegendRow";
-import type { LegendItem } from "../../types";
+import type { LegendItem } from "../types";
 
 interface MapLegendModalProps {
   open: boolean;

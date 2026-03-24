@@ -1,5 +1,5 @@
-import React from "react";
-import { FaVolumeUp } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaVolumeHigh } from "react-icons/fa6";
 import { Checkbox } from "@components";
 import { useDebounce } from "@hooks";
 import { SettingsCard } from "../SettingsCard";
@@ -7,18 +7,16 @@ import { useSoundSettings } from "../../hooks/useSoundSettings";
 
 export function SoundSettingsSection() {
   const [sound, setSound] = useSoundSettings();
-  const [localVolume, setLocalVolume] = React.useState(
-    sound.soundEffectsVolume
-  );
+  const [localVolume, setLocalVolume] = useState(sound.soundEffectsVolume);
   const debouncedVolume = useDebounce(localVolume, 150);
 
   // Update global settings when debounced volume changes
-  React.useEffect(() => {
+  useEffect(() => {
     setSound({ soundEffectsVolume: debouncedVolume });
   }, [debouncedVolume, setSound]);
 
   // Sync local state with global value
-  React.useEffect(() => {
+  useEffect(() => {
     setLocalVolume(sound.soundEffectsVolume);
   }, [sound.soundEffectsVolume]);
 
@@ -35,7 +33,7 @@ export function SoundSettingsSection() {
   return (
     <div className="mx-auto w-full flex flex-col items-center">
       <h2 className="text-2xl font-bold mb-6 self-start">Sound Settings</h2>
-      <SettingsCard title="Sound Effects" icon={<FaVolumeUp />}>
+      <SettingsCard title="Sound Effects" icon={<FaVolumeHigh />}>
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center gap-4 mb-2">
             <Checkbox

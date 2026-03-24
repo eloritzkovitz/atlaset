@@ -8,12 +8,12 @@ export { QuizSettings } from "./quiz/components/QuizSettings";
 export { useUserLeaderboardScores } from "./leaderboards/hooks/useUserLeaderboardScores";
 
 // Slices
-export { default as quizSettingsReducer } from "./quiz/quizSettingsSlice";
+export { default as quizSettingsReducer } from "./quiz/slices/quizSettingsSlice";
 export {
   setQuizType,
   setDifficulty,
   setGameMode,
-} from "./quiz/quizSettingsSlice";
+} from "./quiz/slices/quizSettingsSlice";
 
 // Types
 export type { Difficulty } from "./types";

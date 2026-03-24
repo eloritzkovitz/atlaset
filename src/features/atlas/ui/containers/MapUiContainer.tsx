@@ -6,13 +6,15 @@ import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
+import {
+  MapLegendModal,
+  useMapLegendItems,
+  type LegendItem,
+} from "@features/atlas/legend";
 import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
-import { MapToolbar } from "./controls/MapToolbar";
-import { MapFooter } from "./footer/MapFooter";
-import { MapLegendModal } from "./legend/MapLegendModal";
-import { useMapLegendItems } from "../hooks/useMapLegendItems";
-import type { LegendItem } from "../types";
+import { MapToolbar } from "../components/controls/MapToolbar";
+import { MapFooter } from "../components/footer/MapFooter";
 
 interface MapUiContainerProps {
   isAddingMarker?: boolean;
@@ -97,7 +99,6 @@ export function MapUiContainer({
 
   return (
     <>
-      {/* Map UI components */}
       {timelineMode && !isEmbed && !isEdit && (
         <>
           <TimelineBar />

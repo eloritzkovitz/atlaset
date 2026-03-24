@@ -75,7 +75,9 @@ export function SecurityInfoSection() {
           }
         />
       </ul>
-      <h2 className="text-2xl font-bold mb-6 mt-8 self-start">Logged-in Devices</h2>
+      <h2 className="text-2xl font-bold mb-6 mt-8 self-start">
+        Logged-in Devices
+      </h2>
       <ul className="space-y-4">
         {devices.length === 0 ? (
           <SecurityInfoRow label="Devices" value="No active devices" />
@@ -95,7 +97,7 @@ export function SecurityInfoSection() {
                 <div className="flex items-center min-w-[20rem] mx-4">
                   {device.lastActive
                     ? `Last active: ${new Date(
-                        device.lastActive
+                        device.lastActive,
                       ).toLocaleString()}`
                     : "Unknown"}
                   <ActionButton

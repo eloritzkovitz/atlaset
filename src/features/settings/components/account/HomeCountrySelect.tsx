@@ -34,7 +34,6 @@ export function HomeCountrySelect() {
         )}
         <FaChevronRight className="ml-auto text-muted" />
       </button>
-      {/* Country selection modal */}
       <CountrySelectModal
         isOpen={modalOpen}
         selected={[homeCountry]}

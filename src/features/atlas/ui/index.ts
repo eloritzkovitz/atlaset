@@ -1,3 +1,6 @@
 // Components
-export { AtlasUiContainer } from "./components/AtlasUiContainer";
-export { MapUiContainer } from "./components/MapUiContainer";
+export { AtlasShortcuts } from "./components/AtlasShortcuts";
+
+// Containers
+export { AtlasUiContainer } from "./containers/AtlasUiContainer";
+export { MapUiContainer } from "./containers/MapUiContainer";

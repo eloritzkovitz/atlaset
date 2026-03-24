@@ -40,8 +40,7 @@ export function AtlasUiContainer({
   const mainMarkers = useMarkers();
   const { startAddingMarker, cancelMarkerCreation } = useMarkerCreation();
   const savedMaps = useSavedMaps();
-
-  // UI toggle hint
+  
   useUiToggleHint();
 
   return (

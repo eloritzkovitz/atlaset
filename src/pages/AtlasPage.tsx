@@ -6,8 +6,11 @@ import { useMapView } from "@contexts/MapViewContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import { WorldMap, useGeoData, useMapMode } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
-import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
-import { AtlasShortcuts } from "@features/atlas/ui/components/AtlasShortcuts";
+import {
+  AtlasShortcuts,
+  AtlasUiContainer,
+  MapUiContainer,
+} from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
 import { usePageTitle } from "@hooks";
 
@@ -25,7 +28,6 @@ export default function AtlasPage() {
   // Set map mode based on URL params
   useMapMode();
 
-  // Country selection state
   const {
     selectedIsoCode,
     setSelectedIsoCode,
@@ -36,8 +38,6 @@ export default function AtlasPage() {
     handleCountryClick,
     handleCountryHover,
   } = useCountrySelection(countries);
-
-  // Marker creation state
   const { isAddingMarker } = useMarkerCreation();
 
   // Derived state
@@ -45,6 +45,7 @@ export default function AtlasPage() {
   const isEmbed = params.has("embed");
   const isLoading =
     countriesLoading || layersLoading || geoLoading || !mapReady;
+
   if (error || geoError) {
     return (
       <ErrorMessage fullScreen error={error || geoError || "Unknown error"} />
@@ -83,7 +84,6 @@ export default function AtlasPage() {
           />
         </div>
       </div>
-      {/* Splash screen */}
       {isLoading && <LoadingSpinner fullScreen message="Loading map..." />}
     </>
   );

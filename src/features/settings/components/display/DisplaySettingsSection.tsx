@@ -1,7 +1,7 @@
 import { FaBrush } from "react-icons/fa6";
-import { useTheme } from "@features/settings/hooks/useTheme";
 import { ThemeToggle } from "./ThemeToggle";
 import { SettingsCard } from "../SettingsCard";
+import { useTheme } from "../../hooks/useTheme";
 
 export function DisplaySettingsSection() {
   const { theme, toggleTheme } = useTheme();

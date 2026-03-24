@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import type { Difficulty, GameMode, QuizType } from "../types";
+import type { Difficulty, GameMode, QuizType } from "../../types";
 
 interface QuizSettingsState {
   quizType: QuizType;

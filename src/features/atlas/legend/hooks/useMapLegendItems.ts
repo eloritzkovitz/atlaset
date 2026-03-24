@@ -2,8 +2,7 @@ import { MAP_BG_COLOR, COLOR_PALETTES } from "@constants/colors";
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
 import type { ColorMode } from "@features/atlas/map";
-import { useVisitColorRoles } from "@features/settings/hooks/useVisitColorRoles";
-import { useLayerColors } from "@features/settings/hooks/useLayerColors";
+import { useLayerColors, useVisitColorRoles } from "@features/settings";
 import type { LegendItem } from "../types";
 
 /**
@@ -18,10 +17,11 @@ export function useMapLegendItems(
   timelineMode: boolean,
   colorMode: ColorMode,
 ): LegendItem[] {
+  const { isReadonly, isEdit } = useMapView();
+
   // Get dynamic color roles for the current mode
   const colorRoles = useVisitColorRoles(colorMode);
   const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
-  const { isReadonly, isEdit } = useMapView();
 
   // Legend items for static layers
   // Home country legend item (if shown, not readonly/edit)
