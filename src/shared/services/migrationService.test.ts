@@ -1,6 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 
-vi.mock("../../db", () => ({
+vi.mock("@db", () => ({
   appDb: {
     layers: {
       count: vi.fn(),
@@ -66,7 +66,7 @@ vi.mock("../../features/settings/services/settingsService", () => ({
   },
 }));
 
-import { appDb } from "../../db";
+import { appDb } from "@db";
 import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
 import { settingsService } from "../../features/settings/services/settingsService";

@@ -4,7 +4,7 @@
 
 import { getAuth } from "firebase/auth";
 import { collection } from "firebase/firestore";
-import { db } from "../../firebase";
+import { db } from "@firebase";
 
 /**
  * Checks if a user is authenticated.

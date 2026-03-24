@@ -4,7 +4,7 @@
 
 import type { User, UserInfo } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { db } from "../../../../firebase";
+import { db } from "@firebase";
 
 /**
  * Checks if the user signed up using email/password provider

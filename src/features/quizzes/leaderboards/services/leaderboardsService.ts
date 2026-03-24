@@ -10,11 +10,11 @@ import {
   where,
   deleteDoc,
 } from "firebase/firestore";
+import { db } from "@firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import { getArticle } from "@utils/string";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 import { logUserActivity } from "../../../user";
-import { db } from "../../../../firebase";
 
 const LEADERBOARD_COLLECTION = "leaderboards";
 const PLAYER_GAMES_COLLECTION = "playerGames";

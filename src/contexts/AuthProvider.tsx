@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { useDispatch } from "react-redux";
-import { auth } from "../firebase";
+import { auth } from "@firebase";
 import { AuthContext } from "./AuthContext";
 import {
   setUser,

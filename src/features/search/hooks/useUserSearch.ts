@@ -8,8 +8,8 @@ import {
   getDocs,
 } from "firebase/firestore";
 import type { UserProfile } from "@features/user";
+import { db } from "@firebase";
 import type { UserSearchResult } from "../types";
-import { db } from "../../../firebase";
 
 /**
  * Searches users by username or display name.

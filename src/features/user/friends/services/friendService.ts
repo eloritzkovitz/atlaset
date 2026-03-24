@@ -10,9 +10,9 @@ import {
   writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
+import { db } from "@firebase";
 import { logUserActivity } from "../../activity/utils/activity";
 import type { Friend, FriendRequest } from "../../types";
-import { db } from "../../../../firebase";
 
 /**
  * Service for managing user friends and friend requests.

@@ -6,6 +6,7 @@ import {
   collection,
   getDoc,
 } from "firebase/firestore";
+import { db } from "@firebase";
 import {
   isAuthenticated,
   getUserCollection,
@@ -13,7 +14,6 @@ import {
 } from "@utils/firebase";
 import type { Trip } from "../types";
 import { logUserActivity } from "../../../features/user";
-import { db } from "../../../firebase";
 import { profileService } from "../../user/profile/services/profileService";
 
 /**

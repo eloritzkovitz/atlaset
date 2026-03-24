@@ -6,9 +6,9 @@ import {
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
+import { db } from "@firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { CountryList } from "../types";
-import { db } from "../../../firebase";
 
 /**
  * Service for managing user country lists.

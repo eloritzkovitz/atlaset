@@ -6,11 +6,11 @@ import {
   deleteDoc,
   writeBatch,
 } from "firebase/firestore";
+import { appDb } from "@db";
+import { db } from "@firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { AnyLayer } from "../types";
 import { logUserActivity } from "../../../user";
-import { appDb } from "../../../../db";
-import { db } from "../../../../firebase";
 
 /**
  * Service for managing user layers.

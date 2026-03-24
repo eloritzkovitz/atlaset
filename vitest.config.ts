@@ -33,6 +33,9 @@ export default defineConfig({
       "@test-utils": path.resolve(__dirname, "src/shared/test-utils"),
       "@types": path.resolve(__dirname, "src/shared/types"),
       "@utils": path.resolve(__dirname, "src/shared/utils"),
+      "@db": path.resolve(__dirname, "src/db"),
+      "@firebase": path.resolve(__dirname, "src/firebase"),
+      "@store": path.resolve(__dirname, "src/store"),
       "virtual:pwa-register/react": path.resolve(
         __dirname,
         "src/shared/test-utils/mockPwa.ts",
