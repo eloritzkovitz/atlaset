@@ -1,4 +1,4 @@
-import type { RootState } from "store";
+import type { RootState } from "@app/store";
 import { selectAuthUser, selectAuthReady } from "@features/user";
 
 // Returns true if settings are ready for the current user context

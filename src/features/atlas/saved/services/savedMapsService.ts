@@ -7,9 +7,9 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { logUserActivity } from "@features/user";
+import { db } from "@app/firebase";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { SavedMap } from "../types";
-import { db } from "../../../../firebase";
 
 /**
  * Service for managing user saved exported maps.

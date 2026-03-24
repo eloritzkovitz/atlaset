@@ -7,9 +7,9 @@ import {
   Timestamp,
   updateDoc,
 } from "firebase/firestore";
+import { db } from "@app/firebase";
 import { logUserActivity } from "../../activity/utils/activity";
 import type { UserProfile } from "../../types";
-import { db } from "../../../../firebase";
 
 /**
  * Service for managing user profiles.

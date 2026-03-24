@@ -7,9 +7,9 @@ import {
   endAt,
   getDocs,
 } from "firebase/firestore";
+import { db } from "@app/firebase";
 import type { UserProfile } from "@features/user";
 import type { UserSearchResult } from "../types";
-import { db } from "../../../firebase";
 
 /**
  * Searches users by username or display name.

@@ -26,7 +26,7 @@ vi.mock("@features/user", () => {
     __esModule: true,
   };
 });
-vi.mock("../../../firebase", () => ({
+vi.mock("@app/firebase", () => ({
   db: {},
   __esModule: true,
 }));

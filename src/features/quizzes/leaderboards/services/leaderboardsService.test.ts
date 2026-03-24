@@ -23,7 +23,7 @@ vi.mock("../../../user", () => ({
   logUserActivity: vi.fn(),
   __esModule: true,
 }));
-vi.mock("../../../../firebase", () => ({
+vi.mock("@app/firebase", () => ({
   db: {},
   __esModule: true,
 }));
