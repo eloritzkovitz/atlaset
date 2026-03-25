@@ -1,5 +1,5 @@
-import { MAX_COUNTRIES_BEFORE_EXPAND } from "./constants";
 import { ExpandCollapseButton } from "./ExpandCollapseButton";
+import { MAX_COUNTRIES_BEFORE_EXPAND } from "../../constants/timeline";
 
 interface VisitedCountryNamesProps {
   names: string[];

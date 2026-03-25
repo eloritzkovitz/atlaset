@@ -3,13 +3,13 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
+import { TimelineDot } from "./TimelineDot";
+import { VisitedCountryNames } from "./VisitedCountryNames";
 import {
   CENTER_INDEX,
   YEAR_MARKER_MIN_WIDTH,
   MAX_COUNTRIES_BEFORE_EXPAND,
-} from "./constants";
-import { VisitedCountryNames } from "./VisitedCountryNames";
-import { TimelineDot } from "./TimelineDot";
+} from "../../constants/timeline";
 
 export function TimelineBar() {
   const { countries } = useCountryData();
