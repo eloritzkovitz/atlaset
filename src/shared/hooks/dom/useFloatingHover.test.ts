@@ -8,12 +8,18 @@ describe("useFloatingHover", () => {
   });
 
   afterEach(() => {
-    vi.runOnlyPendingTimers();
+    act(() => {
+      vi.runOnlyPendingTimers();
+    });
     vi.useRealTimers();
   });
 
   it("should always show floating when useFloatingHover is false", () => {
-    const { result } = renderHook(() => useFloatingHover(false));
+    let hook: any;
+    act(() => {
+      hook = renderHook(() => useFloatingHover(false));
+    });
+    const { result } = hook;
     expect(result.current.shouldShowFloating).toBe(true);
 
     // Handlers should be empty objects
@@ -22,7 +28,11 @@ describe("useFloatingHover", () => {
   });
 
   it('should show floating when hovering trigger or menu in "menu" mode', () => {
-    const { result } = renderHook(() => useFloatingHover(true, 150, "menu"));
+    let hook: any;
+    act(() => {
+      hook = renderHook(() => useFloatingHover(true, 150, "menu"));
+    });
+    const { result } = hook;
     expect(result.current.shouldShowFloating).toBe(false);
 
     // Simulate hover on trigger
@@ -35,7 +45,7 @@ describe("useFloatingHover", () => {
     act(() => {
       result.current.hoverHandlers.onMouseLeave?.();
     });
-    expect(result.current.shouldShowFloating).toBe(true); // still true until timer runs
+    expect(result.current.shouldShowFloating).toBe(true);
 
     act(() => {
       vi.runAllTimers();
@@ -52,7 +62,7 @@ describe("useFloatingHover", () => {
     act(() => {
       result.current.floatingHandlers.onMouseLeave?.();
     });
-    expect(result.current.shouldShowFloating).toBe(true); // still true until timer runs
+    expect(result.current.shouldShowFloating).toBe(true);
 
     act(() => {
       vi.runAllTimers();
@@ -61,7 +71,11 @@ describe("useFloatingHover", () => {
   });
 
   it('should show floating only when hovering trigger in "button" mode', () => {
-    const { result } = renderHook(() => useFloatingHover(true, 150, "button"));
+    let hook: any;
+    act(() => {
+      hook = renderHook(() => useFloatingHover(true, 150, "button"));
+    });
+    const { result } = hook;
     expect(result.current.shouldShowFloating).toBe(false);
 
     // Simulate hover on trigger
@@ -74,7 +88,7 @@ describe("useFloatingHover", () => {
     act(() => {
       result.current.hoverHandlers.onMouseLeave?.();
     });
-    expect(result.current.shouldShowFloating).toBe(true); // still true until timer runs
+    expect(result.current.shouldShowFloating).toBe(true);
 
     act(() => {
       vi.runAllTimers();

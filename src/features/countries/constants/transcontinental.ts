@@ -1,4 +1,12 @@
-import type { TranscontinentalEntry } from "../types";
+/** Represents an entry for a transcontinental country. */
+export type TranscontinentalEntry = {
+  /** The ISO 3166-1 alpha-2 code for the country */
+  isoCode: string;
+  /** Additional continent/region */
+  additionalRegion: string;
+  /** Additional subregion */
+  additionalSubregion?: string;
+};
 
 export const TRANSCONTINENTAL: TranscontinentalEntry[] = [
   {

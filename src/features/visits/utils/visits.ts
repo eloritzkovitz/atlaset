@@ -254,6 +254,27 @@ export function buildVisitedYearMap(trips: Trip[]) {
 }
 
 /**
+ * Compute visit counts per ISO from a VisitedYearMap up to (and including) a given year.
+ * Optionally restrict counting to a provided set of years.
+ */
+export function computeVisitCountsFromYearMap(
+  visitedYearMap: Record<string, Set<number>>,
+  selectedYear: number,
+  years?: number[],
+) {
+  const counts: Record<string, number> = {};
+  const yearSet = years && years.length > 0 ? new Set(years) : undefined;
+  for (const iso of Object.keys(visitedYearMap)) {
+    const yearsForIso = Array.from(visitedYearMap[iso] || []);
+    const count = yearsForIso.filter(
+      (y) => y <= selectedYear && (yearSet ? yearSet.has(y) : true),
+    ).length;
+    if (count > 0) counts[iso] = count;
+  }
+  return counts;
+}
+
+/**
  * Get the first (earliest) visit year for a country from a VisitedYearMap.
  * Returns null when no years are present for the country.
  */
@@ -297,7 +318,7 @@ export function getNextUpcomingTripYearByCountry(
  * @returns An object containing the visit count map, minimum, and maximum counts.
  */
 export function getVisitCountStats(trips: Trip[], year: number) {
-  const map = getVisitedCountriesUpToYear(trips, year, undefined);
+  const map = getVisitedCountriesUpToYear(trips, year);
   const counts = Object.values(map);
   return {
     map,

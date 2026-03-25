@@ -59,7 +59,9 @@ describe("useFlyTransition", () => {
       result.current.trigger();
     });
     expect(result.current.animationClass).toBe("animate-fly-out-right");
-    vi.advanceTimersByTime(500);
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
     act(() => {
       result.current.show();
     });
@@ -73,7 +75,9 @@ describe("useFlyTransition", () => {
     act(() => {
       result.current.trigger();
     });
-    vi.advanceTimersByTime(500);
+    act(() => {
+      vi.advanceTimersByTime(500);
+    });
     act(() => {
       result.current.show();
     });

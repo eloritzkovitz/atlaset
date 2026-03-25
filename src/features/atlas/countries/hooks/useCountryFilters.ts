@@ -20,11 +20,10 @@ import {
   type SovereigntyType,
 } from "@features/countries";
 import {
-  buildVisitedYearMap,
   filterByVisitCount,
   filterByVisitStatus,
   getLatestYear,
-  getVisitCountStats,
+  useVisitStats,
   type VisitedStatus,
 } from "@features/visits";
 import { useDebounce } from "@hooks";
@@ -98,21 +97,20 @@ export function useCountryFilters() {
     ],
   );
 
-  // Counts and visit map
+  // Get visit stats for visited filter and counts
   const {
-    map: visitedMap,
-    min: absoluteMin,
-    max: absoluteMax,
-  } = getVisitCountStats(trips, selectedYear);
-
-  // Determine visited iso codes based on mode
-  const visitedIsoCodes =
-    isReadonly && effectiveSharedVisitedIsoCodes
-      ? effectiveSharedVisitedIsoCodes
-      : Object.keys(visitedMap);
-
-  // Build a per-country per-year presence map
-  const visitedYearMap = useMemo(() => buildVisitedYearMap(trips), [trips]);
+    visitedMap,
+    absoluteMin,
+    absoluteMax,
+    visitedYearMap,
+    visitedIsoCodes,
+  } = useVisitStats(
+    trips,
+    selectedYear,
+    years,
+    isReadonly,
+    effectiveSharedVisitedIsoCodes,
+  );
 
   // With layers applied, including visited filter
   const filteredIsoCodes = useMemo(

@@ -12,6 +12,7 @@ import {
   getFirstVisitDateByCountry,
   getLastVisitDateByCountry,
   buildVisitedYearMap,
+  computeVisitCountsFromYearMap,
   getFirstVisitYear,
 } from "./visits";
 
@@ -348,6 +349,19 @@ describe("visits utils", () => {
       expect(map).toEqual({ US: 1, CA: 1 });
       expect(min).toBe(1);
       expect(max).toBe(1);
+    });
+  });
+
+  describe("computeVisitCountsFromYearMap", () => {
+    const ymap = buildVisitedYearMap(mockTrips);
+
+    test.each([
+      ["basic counts up to 2023", undefined, expect.objectContaining({ US: 1, FR: 1, DE: 1, CA: 1 })],
+      ["filter to 2022 only", [2022], { CA: 1 }],
+      ["out-of-range years", [2099], {}],
+    ])("%s", (_desc, years, expected) => {
+      const counts = computeVisitCountsFromYearMap(ymap, 2023, years as any);
+      expect(counts).toEqual(expected);
     });
   });
 

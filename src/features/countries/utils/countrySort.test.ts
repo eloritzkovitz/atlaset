@@ -35,12 +35,12 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by iso ascending", () => {
-    const sorted = sortCountries(countries, "iso-asc", mockTrips);
+    const sorted = sortCountries(countries, "isoCode-asc", mockTrips);
     expect(sorted.map((c) => c.isoCode)).toEqual(getSortedIsoCodes(true));
   });
 
   it("sorts by iso descending", () => {
-    const sorted = sortCountries(countries, "iso-desc", mockTrips);
+    const sorted = sortCountries(countries, "isoCode-desc", mockTrips);
     expect(sorted.map((c) => c.isoCode)).toEqual(getSortedIsoCodes(false));
   });
 
@@ -106,7 +106,7 @@ describe("countrySort utils", () => {
       const keyGroup = options.find((g) => g.label === "SORT BY");
       expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
         "name",
-        "iso",
+        "isoCode",
       ]);
     });
 
@@ -115,7 +115,7 @@ describe("countrySort utils", () => {
       const keyGroup = options.find((g) => g.label === "SORT BY");
       expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
         "name",
-        "iso",
+        "isoCode",
         "firstVisit",
         "lastVisit",
       ]);

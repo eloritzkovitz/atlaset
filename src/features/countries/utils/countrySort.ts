@@ -10,7 +10,22 @@ import {
 } from "@features/visits/utils/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
-import type { Country, CountrySortBy } from "../types";
+import type { Country } from "../types";
+
+/** Sort keys for countries. */
+export type CountrySortByKey = "name" | "isoCode" | "firstVisit" | "lastVisit";
+
+/** Sort options for countries. */
+export type CountrySortBy =
+  | `${CountrySortByKey}-asc`
+  | `${CountrySortByKey}-desc`;
+
+/** Dropdown option for sort, with optional icon */
+export type CountrySortOption = {
+  value: CountrySortBy;
+  label: string;
+  icon?: React.ComponentType<{ size?: number }>;
+};
 
 /** Builds lookup maps for first and last visit dates by country.
  * @param trips - Array of Trip objects.
@@ -46,7 +61,7 @@ export function sortCountries(
         (c) => normalizeString(c.name),
         asc ? "asc" : "desc",
       );
-    case "iso":
+    case "isoCode":
       return sortItems(countries, (c) => c.isoCode || "", asc ? "asc" : "desc");
     case "firstVisit":
       return sortItems(
@@ -81,7 +96,7 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
   // Declarative config for all possible sort keys
   const allKeyOptions = [
     { value: "name", label: "Name" },
-    { value: "iso", label: "ISO 3166-1 code" },
+    { value: "isoCode", label: "ISO 3166-1 code" },
     { value: "firstVisit", label: "First visit time" },
     { value: "lastVisit", label: "Last visit time" },
   ];
@@ -90,7 +105,7 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
   const keyOptions = visitedOnly
     ? allKeyOptions
     : allKeyOptions.filter(
-        (opt) => opt.value === "name" || opt.value === "iso",
+        (opt) => opt.value === "name" || opt.value === "isoCode",
       );
 
   return [{ label: "SORT BY", options: keyOptions }];
