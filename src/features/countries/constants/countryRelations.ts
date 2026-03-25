@@ -1,4 +1,10 @@
-import type { CountryRelations } from "../types";
+/** Represents a country's relations with other geopolitical entities. */
+export type CountryRelations = {
+  countries?: string[];
+  dependencies?: string[];
+  regions?: string[];
+  disputes?: string[];
+};
 
 type CountryRelationsKey = keyof CountryRelations;
 

@@ -1,5 +1,6 @@
 // Hooks
 export { useVisitedCountries } from "./hooks/useVisitedCountries";
+export { useVisitStats } from "./hooks/useVisitStats";
 
 // Types
 export * from "./types";

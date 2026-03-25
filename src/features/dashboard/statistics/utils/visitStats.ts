@@ -4,8 +4,11 @@
 
 import type { Country } from "@features/countries/types";
 import type { Trip } from "@features/trips";
-import { getAbroadTrips, getCompletedTrips } from "@features/trips/utils/trips";
-import { getVisitedCountriesUpToYear } from "@features/visits";
+import { getCompletedTrips } from "@features/trips/utils/trips";
+import {
+  buildVisitedYearMap,
+  computeVisitCountsFromYearMap,
+} from "@features/visits/utils/visits";
 
 /**
  * Counts how many countries in the given list have been visited based on the provided function.
@@ -27,15 +30,13 @@ export function countVisited(
  * @returns An object containing the most visited country codes and their visit count.
  */
 export function getMostVisitedCountries(trips: Trip[], homeCountry: string) {
-  const countryCounts: Record<string, number> = {};
-  trips.forEach((trip) => {
-    (trip.countryCodes ?? [])
-      .filter((code) => code !== homeCountry)
-      .forEach((code) => {
-        countryCounts[code] = (countryCounts[code] || 0) + 1;
-      });
-  });
-  const maxCount = Math.max(...Object.values(countryCounts), 0);
+  const visitedYearMap = buildVisitedYearMap(trips);
+  const countryCounts = computeVisitCountsFromYearMap(visitedYearMap, 9999);
+  // exclude homeCountry when determining most visited abroad
+  if (homeCountry) delete countryCounts[homeCountry];
+  const maxCount = Object.values(countryCounts).length
+    ? Math.max(...Object.values(countryCounts))
+    : 0;
   const codes = Object.entries(countryCounts)
     .filter(([, count]) => count === maxCount)
     .map(([code]) => code);
@@ -52,10 +53,9 @@ export function getUniqueAbroadCountries(
   trips: Trip[],
   homeCountry: string,
 ): Set<string> {
-  const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
-  return new Set(
-    abroadTrips.flatMap((t) => t.countryCodes.filter((c) => c !== homeCountry)),
-  );
+  const visitedYearMap = buildVisitedYearMap(trips);
+  const counts = computeVisitCountsFromYearMap(visitedYearMap, 9999);
+  return new Set(Object.keys(counts).filter((c) => c !== homeCountry));
 }
 
 /**
@@ -68,10 +68,9 @@ export function getRepeatVisitCount(
   trips: Trip[],
   minVisits: number = 2,
 ): number {
-  const visitCounts = getVisitedCountriesUpToYear(
-    getCompletedTrips(trips),
-    9999,
-  );
+  const completed = getCompletedTrips(trips);
+  const visitedYearMap = buildVisitedYearMap(completed);
+  const visitCounts = computeVisitCountsFromYearMap(visitedYearMap, 9999);
   return Object.values(visitCounts).filter((count) => count >= minVisits)
     .length;
 }

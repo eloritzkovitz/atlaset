@@ -1,5 +1,4 @@
 import type { VisitedStatus } from "@features/visits";
-import type { FilterConfig } from "@types";
 
 /** Represents a country with various attributes. */
 export type Country = {
@@ -29,6 +28,12 @@ export type Country = {
   aliases?: string[];
 };
 
+/** Represents a currency. */
+export type Currency = {
+  code: string;
+  name: string;
+};
+
 /** Sovereignty types for countries. */
 export type SovereigntyType =
   | "Sovereign"
@@ -38,24 +43,6 @@ export type SovereigntyType =
   | "Disputed"
   | "Unknown";
 
-/** Represents an entry for a transcontinental country. */
-export type TranscontinentalEntry = {
-  /** The ISO 3166-1 alpha-2 code for the country */
-  isoCode: string;
-  /** Additional continent/region */
-  additionalRegion: string;
-  /** Additional subregion */
-  additionalSubregion?: string;
-};
-
-/** Represents a country's relations with other geopolitical entities. */
-export type CountryRelations = {
-  countries?: string[];
-  dependencies?: string[];
-  regions?: string[];
-  disputes?: string[];
-};
-
 /** Represents a list of countries. */
 export type CountryList = {
   id: string;
@@ -63,36 +50,6 @@ export type CountryList = {
   countryCodes: string[];
   layerId?: string | null;
 };
-
-/** Sort keys for countries. */
-export type CountrySortByKey = "name" | "iso" | "firstVisit" | "lastVisit";
-
-/** Sort options for countries. */
-export type CountrySortBy =
-  | `${CountrySortByKey}-asc`
-  | `${CountrySortByKey}-desc`;
-
-/** Dropdown option for sort, with optional icon */
-export type CountrySortOption = {
-  value: CountrySortBy;
-  label: string;
-  icon?: React.ComponentType<{ size?: number }>;
-};
-
-/** Filter keys for countries */
-export type CountryFilterKey =
-  | "region"
-  | "subregion"
-  | "sovereignty"
-  | "visited"
-  | "layer";
-
-/** Configuration for country filters. */
-export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
-  T,
-  P,
-  CountryFilterKey
->;
 
 /** Options for filtering countries. */
 export type CountryFilterOptions = {
@@ -104,21 +61,3 @@ export type CountryFilterOptions = {
   layerCountries?: string[];
   includeTranscontinental?: boolean;
 };
-
-/** Represents a key for a country property search. */
-export type CountryPropertyKey =
-  | keyof Country
-  | "sovereign"
-  | "visited"
-  | "visits"
-  | "visityear"
-  | "firstvisit";
-
-/** Configuration for a country property search. */
-export type CountryPropertyConfig = { key: CountryPropertyKey; includeTC?: boolean };
-
-/** Represents a currency. */
-export interface Currency {
-  code: string;
-  name: string;
-}

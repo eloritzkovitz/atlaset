@@ -1,13 +1,24 @@
 import type { Layer } from "@features/atlas/layers";
-import {
-  SOVEREIGNTY_ORDER,
-  type CountryFilterConfig,
-  type SovereigntyType,
-} from "@features/countries";
+import { SOVEREIGNTY_ORDER, type SovereigntyType } from "@features/countries";
 import type { FilterConfig, FilterOption } from "@types";
 import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
 import { capitalize, capitalizeWords } from "@utils/string";
+
+/** Filter keys for countries */
+export type CountryFilterKey =
+  | "region"
+  | "subregion"
+  | "sovereignty"
+  | "visited"
+  | "layer";
+
+/** Configuration for country filters. */
+export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
+  T,
+  P,
+  CountryFilterKey
+>;
 
 // "All" option constant
 const allOption: FilterOption = { value: "all", label: "All" };

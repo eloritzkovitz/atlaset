@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { useUI } from "@contexts/UIContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { CountryDisplayPanel } from "@features/countries/components/countryDisplay/CountryDisplayPanel";
 import { type Country } from "@features/countries";
-import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
-import { CountryVisitBadge } from "./CountryVisitBadge";
+import { useVisitStats } from "@features/visits";
 import { useListNavigation } from "@hooks";
-import { useUI } from "@contexts/UIContext";
+import { CountryVisitBadge } from "./CountryVisitBadge";
 
 interface CountryListViewProps {
   countries: Country[];
@@ -47,21 +47,12 @@ export function CountryListView({
     enabled: uiVisible && showCountries && isFocused,
   });
 
-  // Precompute previous years' visits for efficiency
-  const previousYears = years.filter((y) => y < selectedYear);
-  const previouslyVisitedIsoCodes = new Set(
-    previousYears.flatMap((y) => getVisitedCountriesForYear(trips, y) || []),
+  // Precompute previous years' visits
+  const { visitCountByIsoCode, previouslyVisitedIsoCodes } = useVisitStats(
+    trips,
+    selectedYear,
+    years,
   );
-
-  // Precompute visit counts for badges
-  const visitCountByIsoCode: Record<string, number> = {};
-  years
-    .filter((y) => y <= selectedYear)
-    .forEach((y) => {
-      (getVisitedCountriesForYear(trips, y) || []).forEach((iso) => {
-        visitCountByIsoCode[iso] = (visitCountByIsoCode[iso] || 0) + 1;
-      });
-    });
 
   // Render country list with badges
   const renderBadge = (country: Country) => {

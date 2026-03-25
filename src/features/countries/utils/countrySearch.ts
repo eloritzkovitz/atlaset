@@ -3,11 +3,22 @@
  */
 
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
-import type {
-  Country,
-  CountryPropertyConfig,
-  CountryPropertyKey,
-} from "../types";
+import type { Country } from "../types";
+
+/** Represents a key for a country property search. */
+export type CountryPropertyKey =
+  | keyof Country
+  | "sovereign"
+  | "visited"
+  | "visits"
+  | "visityear"
+  | "firstvisit";
+
+/** Configuration for a country property search. */
+export type CountryPropertyConfig = {
+  key: CountryPropertyKey;
+  includeTC?: boolean;
+};
 
 const COUNTRY_PROPERTY_MAP: Record<string, CountryPropertyConfig> = {
   isocode: { key: "isoCode" },
