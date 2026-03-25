@@ -52,6 +52,15 @@ export function LayersContainer({
   } = useCountryColors();
   const { visitedCountryCodes, upcomingCountryCodes } = useVisitedCountries();
 
+  const visitedSet = useMemo(
+    () => new Set((visitedCountryCodes || []).map((s) => s.toUpperCase())),
+    [visitedCountryCodes],
+  );
+  const upcomingSet = useMemo(
+    () => new Set((upcomingCountryCodes || []).map((s) => s.toUpperCase())),
+    [upcomingCountryCodes],
+  );
+
   // Group layer items by isoCode for stacking/blending
   const layerGroups = useMemo(
     () => groupLayerItemsByIsoCode(layerItems),
@@ -66,38 +75,8 @@ export function LayersContainer({
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
 
-            // Home country coloring logic
-            const isHomeCountry =
-              !isReadonly &&
-              !isEdit &&
-              !timelineMode &&
-              colorHomeCountry &&
-              homeCountry &&
-              isoA2 === homeCountry.toUpperCase();
-
-            // Visited country coloring logic
-            const isVisitedCountry =
-              !isReadonly &&
-              !isEdit &&
-              !timelineMode &&
-              colorVisitedCountries &&
-              visitedCountryCodes &&
-              visitedCountryCodes.includes(isoA2);
-
-            // Upcoming visit coloring logic
-            const isUpcomingVisitCountry =
-              !isReadonly &&
-              !isEdit &&
-              !timelineMode &&
-              colorUpcomingVisits &&
-              upcomingCountryCodes.includes(isoA2);
-
-            // Coloring logic
-            const isHighlighted = highlightedIsoCodes.includes(isoA2);
-            const isSelected =
-              !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
-            const isHovered =
-              !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
+            const tooltip = geo.properties.name;
+            const interactiveMode = !isReadonly && !isEdit && !timelineMode;
 
             // Layer logic: blend all layers for this country
             const layers = layerGroups[isoA2] || [];
@@ -106,33 +85,42 @@ export function LayersContainer({
               geographyStyle.default.fill,
             );
 
-            // Style: highlight takes precedence, then blended layers, then base
-            let style = geographyStyle.default;
-            const tooltip = geo.properties.name;
+            // Determine if this country is highlighted, hovered, selected, home, visited, or upcoming
+            const isHighlighted = highlightedIsoCodes.includes(isoA2);
+            const isSelected =
+              !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
+            const isHovered =
+              !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
+            const isHomeCountry =
+              interactiveMode &&
+              colorHomeCountry &&
+              homeCountry &&
+              isoA2 === homeCountry.toUpperCase();
+            const isVisitedCountry =
+              interactiveMode && colorVisitedCountries && visitedSet.has(isoA2);
+            const isUpcomingVisitCountry =
+              interactiveMode && colorUpcomingVisits && upcomingSet.has(isoA2);
 
-            if (isHighlighted) {
-              style = geographyStyle.highlight;
-            } else if (isHovered) {
-              style = geographyStyle.hover;
-            } else if (isHomeCountry) {
+            // Determine final style based on priority: highlight > hover > home > visited > upcoming > blended > default
+            let style = geographyStyle.default;
+            if (isHighlighted) style = geographyStyle.highlight;
+            else if (isHovered) style = geographyStyle.hover;
+            else if (isHomeCountry)
               style = { ...geographyStyle.default, fill: HOME_COUNTRY_COLOR };
-            } else if (isUpcomingVisitCountry) {
+            else if (isUpcomingVisitCountry)
               style = {
                 ...geographyStyle.default,
                 fill: UPCOMING_VISIT_COUNTRY_COLOR,
               };
-            } else if (isVisitedCountry) {
+            else if (isVisitedCountry)
               style = {
                 ...geographyStyle.default,
                 fill: VISITED_COUNTRY_COLOR,
               };
-            } else if (blendedFill) {
+            else if (blendedFill)
               style = { ...geographyStyle.default, fill: blendedFill };
-            } else if (isSelected) {
-              style = geographyStyle.hover;
-            }
+            else if (isSelected) style = geographyStyle.hover;
 
-            // geo is guaranteed to have svgPath from useGeographies
             return (
               <Geography
                 key={geo.rsmKey}
