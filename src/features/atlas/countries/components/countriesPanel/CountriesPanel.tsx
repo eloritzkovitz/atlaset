@@ -1,8 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
-import { CountryListModal } from "./CountryListModal";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -10,13 +9,14 @@ import {
   sortCountries,
   useCountryData,
   type Country,
+  type CountryList,
 } from "@features/countries";
-import { useListNavigation, useSort } from "@hooks";
+import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
-import { CountryList } from "./CountryList";
+import { CountryListModal } from "./CountryListModal";
+import { CountryListView } from "./CountryListView";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../hooks/useCountryFilters";
-import { useCountryListModal } from "../../hooks/useCountryListModal";
 
 interface CountriesPanelProps {
   selectedIsoCode: string | null;
@@ -43,21 +43,6 @@ export function CountriesPanel({
     addList,
     deleteList,
   } = useCountryLists();
-  const {
-    modalOpen,
-    isEditing,
-    currentList,
-    openAddModal,
-    openEditModal,
-    handleSave,
-    handleDelete,
-    handleClose,
-    handleChange,
-  } = useCountryListModal({
-    addList,
-    deleteList,
-    countryLists,
-  });
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
@@ -67,6 +52,59 @@ export function CountriesPanel({
     showFilters,
     toggleFilters,
   } = useUI();
+
+  // Modal state
+  const [modalOpen, setModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentList, setCurrentList] = useState<CountryList | null>(null);
+
+  const openAddModal = useCallback(() => {
+    setCurrentList({ id: crypto.randomUUID(), name: "", countryCodes: [] });
+    setIsEditing(false);
+    setModalOpen(true);
+  }, []);
+
+  const openEditModal = useCallback(
+    (listId: string) => {
+      const list = countryLists.find((l) => l.id === listId);
+      if (list) {
+        setCurrentList({ ...list });
+        setIsEditing(true);
+        setModalOpen(true);
+      }
+    },
+    [countryLists],
+  );
+
+  const handleSave = useCallback(
+    async (list: CountryList) => {
+      await addList(list);
+      setModalOpen(false);
+      setCurrentList(null);
+      setIsEditing(false);
+    },
+    [addList],
+  );
+
+  const handleDelete = useCallback(
+    async (listId: string) => {
+      await deleteList(listId);
+      setModalOpen(false);
+      setCurrentList(null);
+      setIsEditing(false);
+    },
+    [deleteList],
+  );
+
+  const handleClose = useCallback(() => {
+    setModalOpen(false);
+    setCurrentList(null);
+    setIsEditing(false);
+  }, []);
+
+  const handleChange = useCallback((list: CountryList) => {
+    setCurrentList(list);
+  }, []);
 
   // Filter state
   const {
@@ -119,22 +157,6 @@ export function CountriesPanel({
     setSortBy("name-asc");
   }, [showVisitedOnly, sovereignOnly, setSortBy]);
 
-  // Keyboard navigation state
-  const listContainerRef = useRef<HTMLDivElement>(null);
-  const [isListFocused, setIsListFocused] = useState(false);
-
-  // Keyboard navigation within country list
-  useListNavigation({
-    items: sortedCountries,
-    getKey: (c) => c.isoCode,
-    selectedKey: selectedIsoCode,
-    hoveredKey: hoveredIsoCode,
-    onSelect,
-    onHover,
-    onItemInfo: onCountryInfo,
-    enabled: uiVisible && showCountries && isListFocused,
-  });
-
   // Handle country info action
   const handleCountryInfo = useCallback(
     (country: Country) => {
@@ -147,7 +169,7 @@ export function CountriesPanel({
   const handleResetFilters = () => {
     resetFilters();
     setSortBy("name-asc");
-  };  
+  };
 
   return (
     <div className="fixed top-0 left-0 h-screen z-40 group relative">
@@ -210,9 +232,7 @@ export function CountriesPanel({
             onEditList={openEditModal}
           />
           <Separator />
-          <CountryList
-            ref={listContainerRef}
-            setIsFocused={setIsListFocused}
+          <CountryListView
             countries={sortedCountries}
             selectedIsoCode={selectedIsoCode}
             hoveredIsoCode={hoveredIsoCode}
