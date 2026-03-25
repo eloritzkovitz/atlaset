@@ -29,13 +29,18 @@ export class MockSvgElement {
     }
   }
   querySelector(selector: string): MockSvgElement | null {
-    // Check self first
-    if (
-      selector === "rect.background" &&
-      this.tagName === "rect" &&
-      this.getAttribute("class") === "background"
-    ) {
-      return this;
+    // Support simple tag selectors and comma-separated lists
+    const parts = selector.split(",").map((s) => s.trim());
+    // Check self for tag match or special 'rect.background'
+    for (const part of parts) {
+      if (
+        part === "rect.background" &&
+        this.tagName === "rect" &&
+        this.getAttribute("class") === "background"
+      ) {
+        return this;
+      }
+      if (part === this.tagName) return this;
     }
     // Then check children recursively
     for (const child of this.children) {
@@ -46,13 +51,21 @@ export class MockSvgElement {
   }
   querySelectorAll(selector: string): MockSvgElement[] {
     let results: MockSvgElement[] = [];
-    // Check self
-    if (
-      selector === "rect.background" &&
-      this.tagName === "rect" &&
-      this.getAttribute("class") === "background"
-    ) {
-      results.push(this);
+    const parts = selector.split(",").map((s) => s.trim());
+    // Check self for any matching part
+    for (const part of parts) {
+      if (
+        part === "rect.background" &&
+        this.tagName === "rect" &&
+        this.getAttribute("class") === "background"
+      ) {
+        results.push(this);
+        break;
+      }
+      if (part === this.tagName) {
+        results.push(this);
+        break;
+      }
     }
     // Check children recursively
     for (const child of this.children) {
@@ -74,9 +87,11 @@ export class MockSvgElement {
   }
   ownerDocument = {
     defaultView: {
-      getComputedStyle: () => ({
-        getPropertyValue: () => "",
-      }),
+      getComputedStyle: (...args: any[]) => {
+        const gcs = (globalThis as any).getComputedStyle;
+        if (typeof gcs === "function") return gcs(...args);
+        return { getPropertyValue: () => "" } as any;
+      },
     },
   };
 }
