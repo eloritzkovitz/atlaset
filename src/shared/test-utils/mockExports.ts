@@ -75,9 +75,9 @@ export function stubImage(success = true) {
     set src(_v: string) {
       setTimeout(() => {
         if (success) {
-          this.onload && this.onload();
+          this.onload?.();
         } else {
-          this.onerror && this.onerror();
+          this.onerror?.();
         }
       }, 0);
     }
