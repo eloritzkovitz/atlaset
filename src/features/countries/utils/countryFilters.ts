@@ -256,6 +256,14 @@ export function createSovereigntyFilter(sovereignOnly?: boolean) {
 
 /**
  * Apply property-based search or normal search with layer filtering.
+ * @param countries - List of countries to filter.
+ * @param search - The search string, which may include property-based search (e.g. "region:Europe").
+ * @param visitedIsoCodes - List of visited country ISO codes for visit-based property searches.
+ * @param filterParams - The current filter parameters to apply for normal search.
+ * @param filteredIsoCodes - The list of ISO codes filtered by layers, to be applied for normal search.
+ * @param visitedMap - Optional map of visit counts for visit-based property searches.
+ * @param visitedYearMap - Optional map of visit years for visit-based property searches.
+ * @returns The list of countries filtered based on the search criteria.
  */
 export function applyPropertySearch(
   countries: Country[],
@@ -282,6 +290,18 @@ export function applyPropertySearch(
       parsed.query,
       visitContext,
     );
+  }
+  // If search contains a colon but didn't parse, treat it as normal search
+  if (typeof search === "string" && search.includes(":")) {
+    const parts = search.split(":");
+    const after = parts.slice(1).join(":").trim();
+    if (after === "") {
+      return filterCountries(countries, {
+        ...filterParams,
+        search: "",
+        layerCountries: filteredIsoCodes,
+      });
+    }
   }
   return filterCountries(countries, {
     ...filterParams,

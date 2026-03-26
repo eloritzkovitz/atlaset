@@ -91,22 +91,31 @@ export function Autocomplete({
         ref={inputRef}
         value={displayValue}
         onChange={(v) => {
-          // If input cleared, clear full value
+          // If user clears the input, clear everything but preserve the property token if it exists
           if (v === "") {
-            onChange("");
+            if (hasColon) {
+              const prefix = topSuggestion || propCandidate || "";
+              onChange(formatCommittedValue(prefix, ""));
+            } else {
+              onChange("");
+            }
             return;
           }
+
           // If user has typed a property token and is now changing the value, preserve the property token and just update the part after the colon
           if (hasColon) {
             const prefix = topSuggestion || propCandidate || "";
             onChange(formatCommittedValue(prefix, v));
             return;
           }
+
           onChange(v);
         }}
         onKeyDown={handleKeyDown}
-        placeholder={placeholder}
+        placeholder={hasColon ? undefined : placeholder}
         className={className}
+        showClear={hasColon || Boolean(displayValue)}
+        onClear={() => onChange("")}
         style={
           hasColon
             ? {

@@ -119,6 +119,24 @@ describe("countryFilters utils", () => {
       );
       expect(res).toEqual([countries[2]]);
     });
+
+    it("falls back to base filtered list when property: has empty query", () => {
+      const res = applyPropertySearch(
+        countries,
+        "isocode:",
+        undefined,
+        {
+          search: "isocode:",
+          selectedRegion: "",
+          selectedSubregion: "",
+          selectedSovereignty: "",
+          includeTranscontinental: false,
+        } as any,
+        ["FR", "DE"],
+      );
+      // should respect layerCountries (FR, DE)
+      expect(res).toEqual([countries[0], countries[2]]);
+    });
   });
 
   describe("getFilteredIsoCodes", () => {
