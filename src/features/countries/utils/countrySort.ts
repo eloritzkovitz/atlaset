@@ -61,33 +61,26 @@ export function sortCountries(
     buildVisitDateMaps(trips);
   const [key, direction] = sortBy.split("-");
   const asc = direction !== "desc";
+  const dir = asc ? "asc" : "desc";
 
   switch (key) {
     case "name":
-      return sortItems(
-        countries,
-        (c) => normalizeString(c.name),
-        asc ? "asc" : "desc",
-      );
+      return sortItems(countries, (c) => normalizeString(c.name), dir);
     case "isoCode":
-      return sortItems(countries, (c) => c.isoCode || "", asc ? "asc" : "desc");
+      return sortItems(countries, (c) => c.isoCode || "", dir);
     case "visitCount":
-      return sortItems(
-        countries,
-        (c) => visitCountMap[c.isoCode] ?? 0,
-        asc ? "asc" : "desc",
-      );
+      return sortItems(countries, (c) => visitCountMap[c.isoCode] ?? 0, dir);
     case "firstVisit":
       return sortItems(
         countries,
         (c) => firstVisitMap[c.isoCode]?.getTime() ?? 0,
-        asc ? "asc" : "desc",
+        dir,
       );
     case "lastVisit":
       return sortItems(
         countries,
         (c) => lastVisitMap[c.isoCode]?.getTime() ?? 0,
-        asc ? "asc" : "desc",
+        dir,
       );
     default:
       return countries;
