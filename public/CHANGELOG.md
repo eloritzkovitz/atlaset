@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-03-26
+
+- **[chore]** **Countries:** Improved filtering, sorting and property searching
+
 ## 2026-03-23
 
 - **[chore]** **Countries:** Added new properties for filtering with property search

@@ -60,6 +60,7 @@ property:query
 | `visits`       | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
 | `visityear`    | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
 | `firstvisit`   | number (comparison) |         `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| `lastvisit`    | number (comparison) |          `lastvisit:=2018` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
 
 ## **Country Lists**
 
