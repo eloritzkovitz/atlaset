@@ -11,6 +11,7 @@ import {
   type Country,
   type CountryList,
 } from "@features/countries";
+import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryListModal } from "./CountryListModal";
@@ -148,7 +149,7 @@ export function CountriesPanel({
     sortedItems: sortedCountries,
   } = useSort(
     filteredCountries,
-    (items, sortBy) => sortCountries(items, sortBy, trips),
+    (items, sortBy) => sortCountries(items, sortBy, buildVisitContext(trips)),
     "name-asc",
   );
 

@@ -10,6 +10,7 @@ import {
   sortCountries,
   type Country,
 } from "@features/countries";
+import { buildVisitContext } from "@features/visits/utils/visits";
 import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import { useSort } from "@hooks";
 import { ICONS } from "@constants/icons";
@@ -156,7 +157,7 @@ export function CountrySection({
     sortedItems: sortedCountries,
   } = useSort(
     filteredVisited,
-    (items, sortBy) => sortCountries(items, sortBy, []),
+    (items, sortBy) => sortCountries(items, sortBy, buildVisitContext([])),
     "name-asc",
   );
 

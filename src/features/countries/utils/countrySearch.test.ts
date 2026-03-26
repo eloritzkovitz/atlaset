@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
+import type { VisitContext } from "@features/visits";
 import { mockCountries } from "@test-utils/mockCountries";
 import {
   resolvePropertyConfig,
@@ -54,9 +55,9 @@ describe("countrySearch utils", () => {
 
   describe("getPropertyTokens", () => {
     it("returns region tokens and includes transcontinental when requested", () => {
-      const r = getPropertyTokens(countries[0], "region", false);
+      const r = getPropertyTokens(countries[0], "region");
       expect(r).toContain("Europe");
-      const caTokens = getPropertyTokens(countries[3], "region", true);
+      const caTokens = getPropertyTokens(countries[3], "region", { includeTC: true });
       expect(caTokens).toContain("Americas");
       expect(caTokens).toContain("Europe");
     });
@@ -67,15 +68,13 @@ describe("countrySearch utils", () => {
       const visitedTrue = getPropertyTokens(
         countries[0],
         "visited",
-        undefined,
-        [countries[0].isoCode],
+        { visitContext: { visitedIsoCodes: [countries[0].isoCode] } as VisitContext },
       );
       expect(visitedTrue).toEqual(["true"]);
       const visitedFalse = getPropertyTokens(
         countries[1],
         "visited",
-        undefined,
-        [countries[0].isoCode],
+        { visitContext: { visitedIsoCodes: [countries[0].isoCode] } as VisitContext },
       );
       expect(visitedFalse).toEqual(["false"]);
     });
@@ -83,10 +82,10 @@ describe("countrySearch utils", () => {
     it("returns visit counts from visitedMap", () => {
       const vmap = { FR: 2 } as Record<string, number>;
       expect(
-        getPropertyTokens(countries[0], "visits", undefined, undefined, vmap),
+        getPropertyTokens(countries[0], "visits", { visitContext: { visitedMap: vmap } as VisitContext }),
       ).toEqual(["2"]);
       expect(
-        getPropertyTokens(countries[1], "visits", undefined, undefined, vmap),
+        getPropertyTokens(countries[1], "visits", { visitContext: { visitedMap: vmap } as VisitContext }),
       ).toEqual(["0"]);
     });
 
@@ -98,47 +97,32 @@ describe("countrySearch utils", () => {
       const years = getPropertyTokens(
         countries[0],
         "visitYear",
-        undefined,
-        undefined,
-        undefined,
-        ymap,
+        { visitContext: { visitedYearMap: ymap } as VisitContext },
       );
       expect(years).toEqual(expect.arrayContaining(["2019", "2020"]));
       const first = getPropertyTokens(
         countries[0],
         "firstVisit",
-        undefined,
-        undefined,
-        undefined,
-        ymap,
+        { visitContext: { visitedYearMap: ymap } as VisitContext },
       );
       expect(first).toEqual(["2019"]);
       const last = getPropertyTokens(
         countries[0],
         "lastVisit",
-        undefined,
-        undefined,
-        undefined,
-        ymap,
+        { visitContext: { visitedYearMap: ymap } as VisitContext },
       );
       expect(last).toEqual(["2020"]);
 
       const noneFirst = getPropertyTokens(
         countries[1],
         "firstVisit",
-        undefined,
-        undefined,
-        undefined,
-        ymap,
+        { visitContext: { visitedYearMap: ymap } as VisitContext },
       );
       expect(noneFirst).toEqual([]);
       const noneLast = getPropertyTokens(
         countries[1],
         "lastVisit",
-        undefined,
-        undefined,
-        undefined,
-        ymap,
+        { visitContext: { visitedYearMap: ymap } as VisitContext },
       );
       expect(noneLast).toEqual([]);
     });
@@ -156,6 +140,39 @@ describe("countrySearch utils", () => {
       expect(langs).toEqual(["French"]);
       const capital = getPropertyTokens(countries[0], "capital");
       expect(capital).toEqual(["Paris"]);
+    });
+
+    it("supports options object with visitContext and includeTC in object form", () => {
+      const vc: VisitContext = {
+        visitedIsoCodes: [countries[0].isoCode],
+        visitedMap: { [countries[0].isoCode]: 2 },
+        visitedYearMap: { [countries[0].isoCode]: new Set([2019, 2020]) },
+        firstVisitMap: { [countries[0].isoCode]: new Date("2019-05-01") },
+        lastVisitMap: { [countries[0].isoCode]: new Date("2020-10-01") },
+      };
+
+      // includeTC as object form for region
+      const caRegion = getPropertyTokens(countries[3], "region", { includeTC: true });
+      expect(caRegion).toContain("Americas");
+      expect(caRegion).toContain("Europe");
+
+      // visited flag via visitContext object
+      const visited = getPropertyTokens(countries[0], "visited", { visitContext: vc });
+      expect(visited).toEqual(["true"]);
+
+      // visits count via visitContext
+      const visits = getPropertyTokens(countries[0], "visits", { visitContext: vc });
+      expect(visits).toEqual(["2"]);
+
+      // visitYear via visitContext
+      const years = getPropertyTokens(countries[0], "visitYear", { visitContext: vc });
+      expect(years).toEqual(expect.arrayContaining(["2019", "2020"]));
+
+      // firstVisit/lastVisit should prefer date maps when provided
+      const first = getPropertyTokens(countries[0], "firstVisit", { visitContext: vc });
+      expect(first).toEqual(["2019"]);
+      const last = getPropertyTokens(countries[0], "lastVisit", { visitContext: vc });
+      expect(last).toEqual(["2020"]);
     });
   });
 

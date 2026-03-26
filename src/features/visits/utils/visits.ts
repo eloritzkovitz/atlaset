@@ -5,7 +5,7 @@
 import type { Trip } from "@features/trips";
 import { extractUniqueValues } from "@utils/array";
 import { getYear, getYearNumber } from "@utils/date";
-import type { VisitedYearMap } from "../types";
+import type { VisitContext } from "../types";
 
 /**
  * Adds a given home country to a set of country codes.
@@ -275,32 +275,6 @@ export function computeVisitCountsFromYearMap(
 }
 
 /**
- * Get the first (earliest) visit year for a country from a VisitedYearMap.
- * Returns null when no years are present for the country.
- */
-export function getFirstVisitYear(
-  visitedYearMap: VisitedYearMap | undefined,
-  iso: string,
-): number | null {
-  const yearsFor = (visitedYearMap ?? {})[iso];
-  if (!yearsFor || yearsFor.size === 0) return null;
-  return Math.min(...Array.from(yearsFor));
-}
-
-/**
- * Get the last (most recent) visit year for a country from a VisitedYearMap.
- * Returns null when no years are present for the country.
- */
-export function getLastVisitYear(
-  visitedYearMap: VisitedYearMap | undefined,
-  iso: string,
-): number | null {
-  const yearsFor = (visitedYearMap ?? {})[iso];
-  if (!yearsFor || yearsFor.size === 0) return null;
-  return Math.max(...Array.from(yearsFor));
-}
-
-/**
  * Gets a mapping of country codes to their next upcoming trip year (after today).
  * @param trips - Array of trips to analyze.
  * @returns Record of country code -> next upcoming year
@@ -337,5 +311,40 @@ export function getVisitCountStats(trips: Trip[], year: number) {
     map,
     min: counts.length > 0 ? Math.min(...counts) : 1,
     max: counts.length > 0 ? Math.max(...counts) : 1,
+  };
+}
+
+/**
+ * Build a VisitContext from trips. `selectedYear` and `years` influence visit counts; when
+ * omitted, the latest detected year (or current year) is used.
+ */
+export function buildVisitContext(
+  trips: Trip[],
+  selectedYear?: number,
+  homeCountry?: string,
+): VisitContext {
+  const visitedYearMap = buildVisitedYearMap(trips);
+  const firstVisitMap = getFirstVisitDateByCountry(trips);
+  const lastVisitMap = getLastVisitDateByCountry(trips);
+  const years = getYearsFromTrips(trips);
+
+  // Default to provided selectedYear, otherwise use the latest year not greater than current year.
+  const currentYear = new Date().getFullYear();
+  const latestDetected = getLatestYear(years);
+  const yearToUse = selectedYear ?? Math.min(latestDetected, currentYear);
+  const visitedMap = computeVisitCountsFromYearMap(
+    visitedYearMap,
+    yearToUse,
+    years,
+  );
+
+  if (homeCountry) visitedMap[homeCountry] = (visitedMap[homeCountry] || 0) + 1;
+  const visitedIsoCodes = Object.keys(visitedMap);
+  return {
+    visitedIsoCodes,
+    visitedMap,
+    visitedYearMap,
+    firstVisitMap,
+    lastVisitMap,
   };
 }

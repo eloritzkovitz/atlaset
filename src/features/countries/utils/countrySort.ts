@@ -2,13 +2,7 @@
  * Utililty functions for sorting countries.
  */
 
-// Direction options moved to SortSelect.tsx
-import type { Trip } from "@features/trips";
-import {
-  getFirstVisitDateByCountry,
-  getLastVisitDateByCountry,
-  getVisitedCountriesUpToYear,
-} from "@features/visits/utils/visits";
+import type { VisitContext } from "@features/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
 import { ALL_SORT_KEY_OPTIONS } from "../constants/propertyConfig";
@@ -34,18 +28,6 @@ export type CountrySortOption = {
   icon?: React.ComponentType<{ size?: number }>;
 };
 
-/** Builds lookup maps for first and last visit dates by country.
- * @param trips - Array of Trip objects.
- * @returns An object containing firstVisitMap and lastVisitMap.
- */
-function buildVisitDateMaps(trips: Trip[]) {
-  return {
-    visitCountMap: getVisitedCountriesUpToYear(trips, new Date().getFullYear()),
-    firstVisitMap: getFirstVisitDateByCountry(trips),
-    lastVisitMap: getLastVisitDateByCountry(trips),
-  };
-}
-
 /**
  * Sorts countries based on the specified key and direction (e.g. "name-asc").
  * @param countries - The list of countries to sort.
@@ -56,10 +38,8 @@ function buildVisitDateMaps(trips: Trip[]) {
 export function sortCountries(
   countries: Country[],
   sortBy: CountrySortBy,
-  trips: Trip[],
+  visitContext: VisitContext,
 ) {
-  const { firstVisitMap, lastVisitMap, visitCountMap } =
-    buildVisitDateMaps(trips);
   const [key, direction] = sortBy.split("-");
   const asc = direction !== "desc";
   const dir = asc ? "asc" : "desc";
@@ -70,17 +50,21 @@ export function sortCountries(
     case "isoCode":
       return sortItems(countries, (c) => c.isoCode || "", dir);
     case "visitCount":
-      return sortItems(countries, (c) => visitCountMap[c.isoCode] ?? 0, dir);
+      return sortItems(
+        countries,
+        (c) => visitContext.visitedMap[c.isoCode] ?? 0,
+        dir,
+      );
     case "firstVisit":
       return sortItems(
         countries,
-        (c) => firstVisitMap[c.isoCode]?.getTime() ?? 0,
+        (c) => visitContext.firstVisitMap?.[c.isoCode]?.getTime() ?? 0,
         dir,
       );
     case "lastVisit":
       return sortItems(
         countries,
-        (c) => lastVisitMap[c.isoCode]?.getTime() ?? 0,
+        (c) => visitContext.lastVisitMap?.[c.isoCode]?.getTime() ?? 0,
         dir,
       );
     default:

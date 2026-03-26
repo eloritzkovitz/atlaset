@@ -1,7 +1,7 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import { mockTrips } from "@test-utils/mockTrips";
 import { getCountrySortOptions, sortCountries } from "./countrySort";
-import { getVisitedCountriesUpToYear } from "@features/visits/utils/visits";
+import { getVisitedCountriesUpToYear, buildVisitContext } from "@features/visits/utils/visits";
 import type { Country, SovereigntyType } from "../types";
 
 describe("countrySort utils", () => {
@@ -42,22 +42,22 @@ describe("countrySort utils", () => {
   }
 
   it("sorts by name ascending", () => {
-    const sorted = sortCountries(countries, "name-asc", mockTrips);
+    const sorted = sortCountries(countries, "name-asc", buildVisitContext(mockTrips));
     expect(sorted.map((c) => c.name)).toEqual(getSortedNames(true));
   });
 
   it("sorts by name descending", () => {
-    const sorted = sortCountries(countries, "name-desc", mockTrips);
+    const sorted = sortCountries(countries, "name-desc", buildVisitContext(mockTrips));
     expect(sorted.map((c) => c.name)).toEqual(getSortedNames(false));
   });
 
   it("sorts by iso ascending", () => {
-    const sorted = sortCountries(countries, "isoCode-asc", mockTrips);
+    const sorted = sortCountries(countries, "isoCode-asc", buildVisitContext(mockTrips));
     expect(sorted.map((c) => c.isoCode)).toEqual(getSortedIsoCodes(true));
   });
 
   it("sorts by iso descending", () => {
-    const sorted = sortCountries(countries, "isoCode-desc", mockTrips);
+    const sorted = sortCountries(countries, "isoCode-desc", buildVisitContext(mockTrips));
     expect(sorted.map((c) => c.isoCode)).toEqual(getSortedIsoCodes(false));
   });
 
@@ -82,13 +82,13 @@ describe("countrySort utils", () => {
       },
     ] as unknown as Country[];
 
-    const sorted = sortCountries(arr, "isoCode-asc", mockTrips);
+    const sorted = sortCountries(arr, "isoCode-asc", buildVisitContext(mockTrips));
     expect(sorted.length).toBe(2);
     expect(sorted[0].name).toBe("NoISO");
   });
 
   it("sorts by first visit ascending", () => {
-    const sorted = sortCountries(countries, "firstVisit-asc", mockTrips);
+    const sorted = sortCountries(countries, "firstVisit-asc", buildVisitContext(mockTrips));
     expect(sorted.map((c) => c.isoCode)).toEqual([
       "GP",
       "CA",
@@ -100,7 +100,7 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by visit count descending", () => {
-    const sorted = sortCountries(countries, "visitCount-desc", mockTrips);
+    const sorted = sortCountries(countries, "visitCount-desc", buildVisitContext(mockTrips));
     const counts = getCounts(mockTrips);
     const sortedCounts = sorted.map((c) => counts[c.isoCode] ?? 0);
     assertNonIncreasing(sortedCounts);
@@ -110,7 +110,7 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by visit count ascending", () => {
-    const sorted = sortCountries(countries, "visitCount-asc", mockTrips);
+    const sorted = sortCountries(countries, "visitCount-asc", buildVisitContext(mockTrips));
     const counts = getCounts(mockTrips);
     const sortedCounts = sorted.map((c) => counts[c.isoCode] ?? 0);
     assertNonDecreasing(sortedCounts);
@@ -160,24 +160,24 @@ describe("countrySort utils", () => {
       },
     ];
 
-    const sorted = sortCountries(arr, "visitCount-desc", trips as any);
+    const sorted = sortCountries(arr, "visitCount-desc", buildVisitContext(trips as any));
     expect(sorted[0].isoCode).toBe("AA");
   });
 
   it("sorts by first visit descending", () => {
-    const sorted = sortCountries(countries, "firstVisit-desc", mockTrips);
+    const sorted = sortCountries(countries, "firstVisit-desc", buildVisitContext(mockTrips));
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
 
   it("sorts by last visit ascending", () => {
-    const sorted = sortCountries(countries, "lastVisit-asc", mockTrips);
+    const sorted = sortCountries(countries, "lastVisit-asc", buildVisitContext(mockTrips));
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
 
   it("sorts by last visit descending", () => {
-    const sorted = sortCountries(countries, "lastVisit-desc", mockTrips);
+    const sorted = sortCountries(countries, "lastVisit-desc", buildVisitContext(mockTrips));
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
@@ -204,7 +204,7 @@ describe("countrySort utils", () => {
       },
     ];
     // @ts-expect-error purposely passing an invalid sortBy
-    const result = sortCountries(arr, "not-a-sort", mockTrips);
+    const result = sortCountries(arr, "not-a-sort", buildVisitContext(mockTrips));
     expect(result).toEqual(arr);
   });
 

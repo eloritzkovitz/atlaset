@@ -13,8 +13,6 @@ import {
   getLastVisitDateByCountry,
   buildVisitedYearMap,
   computeVisitCountsFromYearMap,
-  getFirstVisitYear,
-  getLastVisitYear,
 } from "./visits";
 
 describe("visits utils", () => {
@@ -402,9 +400,9 @@ describe("visits utils", () => {
       expect(ymap.US.has(2019)).toBe(true);
       expect(ymap.US.has(2020)).toBe(true);
       expect(ymap.FR.has(2019)).toBe(true);
-      const firstUS = getFirstVisitYear(ymap, "US");
+      const firstUS = Math.min(...Array.from(ymap["US"]));
       expect(firstUS).toBe(2018);
-      const lastUS = getLastVisitYear(ymap, "US");
+      const lastUS = Math.max(...Array.from(ymap["US"]));
       expect(lastUS).toBe(2020);
     });
 
