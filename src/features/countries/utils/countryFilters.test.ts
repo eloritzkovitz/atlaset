@@ -119,6 +119,24 @@ describe("countryFilters utils", () => {
       );
       expect(res).toEqual([countries[2]]);
     });
+
+    it("falls back to base filtered list when property: has empty query", () => {
+      const res = applyPropertySearch(
+        countries,
+        "isocode:",
+        undefined,
+        {
+          search: "isocode:",
+          selectedRegion: "",
+          selectedSubregion: "",
+          selectedSovereignty: "",
+          includeTranscontinental: false,
+        } as any,
+        ["FR", "DE"],
+      );
+      // should respect layerCountries (FR, DE)
+      expect(res).toEqual([countries[0], countries[2]]);
+    });
   });
 
   describe("getFilteredIsoCodes", () => {
@@ -299,26 +317,33 @@ describe("countryFilters utils", () => {
   });
 
   describe("property-specific numeric/year/callingcode filters", () => {
-    it("filters by visits > N and =0 correctly", () => {
-      const visitedMap = { FR: 2, DE: 1 } as Record<string, number>;
-      const visitedIsoCodes = Object.keys(visitedMap);
+    const visitedMap = { FR: 2, DE: 1 } as Record<string, number>;
+    const visitedIsoCodes = Object.keys(visitedMap);
 
-      const gtResult = filterCountriesByProperty(
-        countries,
-        "visits",
-        ">1",
+    const visitedYearMapFull: Record<string, Set<number>> = {
+      FR: new Set([2019, 2020]),
+      DE: new Set([2018]),
+      GP: new Set(),
+    };
+
+    const visitedYearMapSmall: Record<string, Set<number>> = {
+      FR: new Set([2019, 2020]),
+      DE: new Set([2018]),
+    };
+
+    it("filters by visits > N and =0 correctly", () => {
+      const gtResult = filterCountriesByProperty(countries, "visits", ">1", {
         visitedIsoCodes,
         visitedMap,
-      );
+        visitedYearMap: {},
+      });
       expect(gtResult).toEqual([countries[0]]);
 
-      const eqZero = filterCountriesByProperty(
-        countries,
-        "visits",
-        "=0",
+      const eqZero = filterCountriesByProperty(countries, "visits", "=0", {
         visitedIsoCodes,
         visitedMap,
-      );
+        visitedYearMap: {},
+      });
 
       expect(eqZero.map((c) => c.isoCode).sort()).toEqual([
         "CA",
@@ -329,19 +354,15 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by visityear equality and comparisons", () => {
-      const visitedYearMap: Record<string, Set<number>> = {
-        FR: new Set([2019, 2020]),
-        DE: new Set([2018]),
-        GP: new Set(),
-      };
-
       const eq2020 = filterCountriesByProperty(
         countries,
         "visityear",
         "=2020",
-        undefined,
-        undefined,
-        visitedYearMap,
+        {
+          visitedIsoCodes: [],
+          visitedMap: {},
+          visitedYearMap: visitedYearMapFull,
+        },
       );
       expect(eq2020).toEqual([countries[0]]);
 
@@ -349,26 +370,25 @@ describe("countryFilters utils", () => {
         countries,
         "visityear",
         ">2018",
-        undefined,
-        undefined,
-        visitedYearMap,
+        {
+          visitedIsoCodes: [],
+          visitedMap: {},
+          visitedYearMap: visitedYearMapFull,
+        },
       );
       expect(gt2018).toEqual([countries[0]]);
     });
 
     it("filters by firstvisit comparators", () => {
-      const visitedYearMap: Record<string, Set<number>> = {
-        FR: new Set([2019, 2020]),
-        DE: new Set([2018]),
-      };
-
       const eq2018 = filterCountriesByProperty(
         countries,
         "firstvisit",
         "=2018",
-        undefined,
-        undefined,
-        visitedYearMap,
+        {
+          visitedIsoCodes: [],
+          visitedMap: {},
+          visitedYearMap: visitedYearMapSmall,
+        },
       );
       expect(eq2018).toEqual([countries[2]]);
 
@@ -376,9 +396,42 @@ describe("countryFilters utils", () => {
         countries,
         "firstvisit",
         "<2019",
-        undefined,
-        undefined,
-        visitedYearMap,
+        {
+          visitedIsoCodes: [],
+          visitedMap: {},
+          visitedYearMap: visitedYearMapSmall,
+        },
+      );
+      expect(lt2019).toEqual([countries[2]]);
+    });
+
+    it("filters by lastvisit comparators", () => {
+      const visitedYearMap: Record<string, Set<number>> = {
+        FR: new Set([2019, 2020]),
+        DE: new Set([2018]),
+      };
+
+      const eq2020 = filterCountriesByProperty(
+        countries,
+        "lastvisit",
+        "=2020",
+        { visitedIsoCodes: [], visitedMap: {}, visitedYearMap: visitedYearMap },
+      );
+      expect(eq2020).toEqual([countries[0]]);
+
+      const gt2019 = filterCountriesByProperty(
+        countries,
+        "lastvisit",
+        ">2019",
+        { visitedIsoCodes: [], visitedMap: {}, visitedYearMap: visitedYearMap },
+      );
+      expect(gt2019).toEqual([countries[0]]);
+
+      const lt2019 = filterCountriesByProperty(
+        countries,
+        "lastvisit",
+        "<2019",
+        { visitedIsoCodes: [], visitedMap: {}, visitedYearMap: visitedYearMap },
       );
       expect(lt2019).toEqual([countries[2]]);
     });

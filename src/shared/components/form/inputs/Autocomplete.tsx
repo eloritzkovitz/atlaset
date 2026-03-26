@@ -1,6 +1,11 @@
-import { useRef } from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import { useAutocomplete, useTextWidth } from "@hooks";
+import { computeSuffix, formatCommittedValue } from "@utils/search";
 import { SearchInput } from "./SearchInput";
+
+const INPUT_ICON_OFFSET = 40;
+const MIN_PREFIX_PAD = 32;
+const PREFIX_GAP = 8;
 
 interface AutocompleteProps {
   value: string;
@@ -24,18 +29,34 @@ export function Autocomplete({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Manage autocomplete suggestions and selection logic
-  const { suggestions, handleKeyDown } = useAutocomplete({
-    value,
-    onChange,
-    suggestionProvider,
-    onSelect: onSelect,
-    postSelect: () => inputRef.current?.blur(),
-    maxSuggestions,
-    debounceMs: 60,
-  });
+  const { topSuggestion, propCandidate, afterColon, hasColon, handleKeyDown } =
+    useAutocomplete({
+      value,
+      onChange,
+      suggestionProvider,
+      onSelect: onSelect,
+      postSelect: () => inputRef.current?.blur(),
+      maxSuggestions,
+      debounceMs: 60,
+    });
 
-  // measure typed text width and compute suffix left offset
-  const { measurerRef, suffixLeft } = useTextWidth(value, inputRef);
+  // Determine whether to show the inline suggestion hint (only when typing a property token without a colon yet)
+  const displayValue = hasColon ? afterColon : value;
+
+  // Measure the width of the typed text to position the inline suggestion hint correctly
+  const { measurerRef, suffixLeft } = useTextWidth(displayValue, inputRef);
+  const prefixRef = useRef<HTMLDivElement | null>(null);
+  const [prefixWidth, setPrefixWidth] = useState(0);
+
+  // Update prefix width when top suggestion, colon presence, or input value changes
+  useLayoutEffect(() => {
+    const el = prefixRef.current;
+    if (el && hasColon) {
+      setPrefixWidth(Math.ceil(el.getBoundingClientRect().width));
+    } else {
+      setPrefixWidth(0);
+    }
+  }, [topSuggestion, hasColon, value]);
 
   return (
     <div className={`relative ${className}`}>
@@ -45,37 +66,85 @@ export function Autocomplete({
         className="absolute invisible whitespace-pre text-base"
         aria-hidden
       />
+
+      {hasColon && (topSuggestion || propCandidate) && (
+        <div
+          ref={prefixRef}
+          aria-hidden
+          style={{
+            position: "absolute",
+            left: INPUT_ICON_OFFSET,
+            top: "50%",
+            transform: "translateY(calc(-50% + 1px))",
+            zIndex: 10,
+            maxWidth: "160px",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+          }}
+          className="pointer-events-none flex items-center text-base text-muted"
+        >
+          {(topSuggestion || propCandidate) + ":"}
+        </div>
+      )}
       <SearchInput
         ref={inputRef}
-        value={value}
-        onChange={onChange}
-        onKeyDown={handleKeyDown}
-        placeholder={placeholder}
-      />
-      {/* inline muted suggestion suffix */}
-      {suggestions.length > 0 &&
-        (() => {
-          const first = suggestions[0];
-          const m = value.match(/^([a-zA-Z_]*)$/);
-          if (m && first && first.startsWith(m[1]) && m[1].length > 0) {
-            const suffix = first.slice(m[1].length) + ":";
-            return (
-              <div
-                style={{
-                  position: "absolute",
-                  top: 0,
-                  left: `${suffixLeft}px`,
-                  height: "100%",
-                  pointerEvents: "none",
-                }}
-              >
-                <div className="pl-0 pr-10 py-2 text-muted text-base">
-                  {suffix}
-                </div>
-              </div>
-            );
+        value={displayValue}
+        onChange={(v) => {
+          // If user clears the input, clear everything but preserve the property token if it exists
+          if (v === "") {
+            if (hasColon) {
+              const prefix = topSuggestion || propCandidate || "";
+              onChange(formatCommittedValue(prefix, ""));
+            } else {
+              onChange("");
+            }
+            return;
           }
-          return null;
+
+          // If user has typed a property token and is now changing the value, preserve the property token and just update the part after the colon
+          if (hasColon) {
+            const prefix = topSuggestion || propCandidate || "";
+            onChange(formatCommittedValue(prefix, v));
+            return;
+          }
+
+          onChange(v);
+        }}
+        onKeyDown={handleKeyDown}
+        placeholder={hasColon ? undefined : placeholder}
+        className={className}
+        showClear={hasColon || Boolean(displayValue)}
+        onClear={() => onChange("")}
+        style={
+          hasColon
+            ? {
+                paddingLeft: `${INPUT_ICON_OFFSET + Math.max(prefixWidth, MIN_PREFIX_PAD) + PREFIX_GAP}px`,
+              }
+            : undefined
+        }
+      />
+      {!hasColon &&
+        topSuggestion &&
+        propCandidate.length > 0 &&
+        (() => {
+          const suffix = computeSuffix(topSuggestion, propCandidate);
+          if (!suffix) return null;
+          return (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: `${suffixLeft}px`,
+                height: "100%",
+                pointerEvents: "none",
+              }}
+            >
+              <div className="pl-0 pr-10 py-2 text-muted text-base">
+                {suffix}
+              </div>
+            </div>
+          );
         })()}
     </div>
   );

@@ -13,7 +13,6 @@ import {
   getLastVisitDateByCountry,
   buildVisitedYearMap,
   computeVisitCountsFromYearMap,
-  getFirstVisitYear,
 } from "./visits";
 
 describe("visits utils", () => {
@@ -356,7 +355,11 @@ describe("visits utils", () => {
     const ymap = buildVisitedYearMap(mockTrips);
 
     test.each([
-      ["basic counts up to 2023", undefined, expect.objectContaining({ US: 1, FR: 1, DE: 1, CA: 1 })],
+      [
+        "basic counts up to 2023",
+        undefined,
+        expect.objectContaining({ US: 1, FR: 1, DE: 1, CA: 1 }),
+      ],
       ["filter to 2022 only", [2022], { CA: 1 }],
       ["out-of-range years", [2099], {}],
     ])("%s", (_desc, years, expected) => {
@@ -397,8 +400,10 @@ describe("visits utils", () => {
       expect(ymap.US.has(2019)).toBe(true);
       expect(ymap.US.has(2020)).toBe(true);
       expect(ymap.FR.has(2019)).toBe(true);
-      const firstUS = getFirstVisitYear(ymap, "US");
+      const firstUS = Math.min(...Array.from(ymap["US"]));
       expect(firstUS).toBe(2018);
+      const lastUS = Math.max(...Array.from(ymap["US"]));
+      expect(lastUS).toBe(2020);
     });
 
     it("formats yearRange when start and end span different years in getVisitsForCountry", () => {

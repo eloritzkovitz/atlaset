@@ -9,7 +9,9 @@ interface SearchInputProps {
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   showClear?: boolean;
+  onClear?: () => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
@@ -21,7 +23,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       onKeyDown,
       placeholder,
       showClear = true,
+      onClear,
       className = "",
+      style,
     },
     ref,
   ) => {
@@ -100,13 +104,20 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           placeholder={placeholder}
           aria-label={placeholder || "Search"}
           className={`w-full pl-10 pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
+          style={style}
         />
-        {value && showClear && (
+        {showClear && (
           <button
             type="button"
             aria-label="Clear search"
             title="Clear search"
-            onClick={() => onChange("")}
+            onClick={() => {
+              if (onClear) {
+                onClear();
+                return;
+              }
+              onChange("");
+            }}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none"
           >
             <FaXmark />

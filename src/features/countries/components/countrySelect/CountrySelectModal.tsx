@@ -52,11 +52,16 @@ export function CountrySelectModal({
   const { visitedCountryCodes } = useVisitedCountries();
   const filteredOptions = ((): typeof options => {
     if (parsed) {
+      const visitContext = {
+        visitedIsoCodes: visitedCountryCodes,
+        visitedMap: {},
+        visitedYearMap: {},
+      };
       return filterCountriesByProperty(
         options,
         parsed.property,
         parsed.query,
-        visitedCountryCodes,
+        visitContext,
       ).sort((a, b) => a.name.localeCompare(b.name));
     }
 
