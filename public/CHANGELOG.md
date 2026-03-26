@@ -3,6 +3,7 @@
 ## 2026-03-26
 
 - **[chore]** **Countries:** Improved filtering, sorting and property searching
+- **[chore]** **General:** Updated autocomplete behavior
 
 ## 2026-03-23
 
