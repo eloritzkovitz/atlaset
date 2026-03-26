@@ -59,6 +59,11 @@ export function buildSearchString(country: Country) {
 
 /**
  * Return searchable tokens for a specific country property. Includes transcontinental countries when requested.
+ * @param country - The country to extract tokens from.
+ * @param key - The property key to extract.
+ * @param options - Additional options for token extraction.
+ * @returns An array of strings representing the tokens for the specified property of the country.
+ * @see CountryPropertyKey for supported keys and special handling.
  */
 export function getPropertyTokens(
   country: Country,

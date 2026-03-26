@@ -10,6 +10,7 @@ interface SearchInputProps {
   placeholder?: string;
   showClear?: boolean;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
@@ -22,6 +23,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       placeholder,
       showClear = true,
       className = "",
+      style,
     },
     ref,
   ) => {
@@ -100,6 +102,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           placeholder={placeholder}
           aria-label={placeholder || "Search"}
           className={`w-full pl-10 pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
+          style={style}
         />
         {value && showClear && (
           <button

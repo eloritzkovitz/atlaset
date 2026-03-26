@@ -1,4 +1,5 @@
 import { useCallback, useMemo } from "react";
+import { parsePropertyParts, defaultOnSelect } from "@utils/search";
 import { useDebounce } from "../state/useDebounce";
 
 interface UseAutocompleteProps {
@@ -32,11 +33,18 @@ export function useAutocomplete({
   debounceMs = 60,
 }: UseAutocompleteProps) {
   const debouncedValue = useDebounce(value, debounceMs);
+  // Parse the live value into property parts for consumers
+  const parsedParts = parsePropertyParts(value);
 
   const suggestions = useMemo(() => {
     if (!debouncedValue || debouncedValue.trim() === "") return [];
-    const s = suggestionProvider(debouncedValue) || [];
-    const prefixMatch = (debouncedValue || "").match(/^([a-zA-Z_]*)$/);
+
+    // If the input is just a colon, treat it as empty to avoid showing all suggestions
+    const parts = parsePropertyParts(debouncedValue);
+    const suggestionSeed = parts.propCandidate || debouncedValue;
+    const s = suggestionProvider(suggestionSeed) || [];
+
+    const prefixMatch = (suggestionSeed || "").match(/^([a-zA-Z_]*)$/);
     if (prefixMatch && prefixMatch[1].length > 0) {
       const p = prefixMatch[1].toLowerCase();
       return s
@@ -46,27 +54,27 @@ export function useAutocomplete({
     return s.slice(0, maxSuggestions);
   }, [debouncedValue, suggestionProvider, maxSuggestions]);
 
-  const defaultOnSelect = useCallback((s: string, input: string) => {
-    const m = input.match(/^([a-zA-Z_]*):?(.*)$/);
-    const rest = m ? m[2] : "";
-    return `${s}:${rest.trimStart()}`;
-  }, []);
+  // Default onSelect behavior if not provided: replace the input with "suggestion: restOfInput"
+  const defaultOnSelectCb = useCallback(defaultOnSelect, []);
 
+  // Handles picking a suggestion, which calls the onSelect callback and then the postSelect callback if provided
   const pickSuggestion = useCallback(
     (s: string) => {
-      const res = onSelect ? onSelect(s, value) : defaultOnSelect(s, value);
+      const res = onSelect ? onSelect(s, value) : defaultOnSelectCb(s, value);
       if (typeof res === "string") onChange(res);
       if (typeof postSelect === "function") postSelect();
     },
     [onChange, onSelect, value, defaultOnSelect, postSelect],
   );
 
+  // Handles keydown events for the input, specifically looking for the Enter key to select the top suggestion
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (!suggestions || suggestions.length === 0) return;
       if (e.key === "Enter") {
         const m = value.match(/^([a-zA-Z_]*)$/);
-        if (m && m[1].length > 0 && suggestions.length > 0) {
+
+        if (m && m[1].length >= 2 && suggestions.length > 0) {
           const first = suggestions[0];
           if (first.toLowerCase().startsWith(m[1].toLowerCase())) {
             e.preventDefault();
@@ -80,6 +88,11 @@ export function useAutocomplete({
 
   return {
     suggestions,
+    topSuggestion:
+      suggestions && suggestions.length > 0 ? suggestions[0] : undefined,
+    propCandidate: parsedParts.propCandidate,
+    afterColon: parsedParts.afterColon,
+    hasColon: parsedParts.hasColon,
     handleKeyDown,
     pickSuggestion,
     debouncedValue,
