@@ -9,9 +9,9 @@ export function VisitedCountriesCard({
   visitedCountryCodes,
 }: VisitedCountriesCardProps) {
   const { countries } = useCountryData();
-  const visitedCountries = countries.filter((c) =>
-    visitedCountryCodes.includes(c.isoCode),
-  );
+  const visitedCountries = countries
+    .filter((c) => visitedCountryCodes.includes(c.isoCode))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Card className="mt-6">
