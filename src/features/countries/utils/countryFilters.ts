@@ -117,7 +117,7 @@ export function filterCountriesByProperty(
   }
 
   // special-case first-visit year queries
-  if (key === "firstvisit") {
+  if (key === "firstVisit") {
     const parsed = parseYearComparator(value);
     if (!parsed) return [];
     const { op, year } = parsed;
@@ -131,7 +131,7 @@ export function filterCountriesByProperty(
   }
 
   // special-case year-based visit queries
-  if (key === "visityear") {
+  if (key === "visitYear") {
     const parsed = parseYearComparator(value);
     if (!parsed) return [];
     const { op, year } = parsed;

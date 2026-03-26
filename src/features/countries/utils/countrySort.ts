@@ -1,5 +1,5 @@
 /**
- * @file Utils for sorting countries.
+ * Utililty functions for sorting countries.
  */
 
 // Direction options moved to SortSelect.tsx
@@ -11,6 +11,7 @@ import {
 } from "@features/visits/utils/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
+import { ALL_SORT_KEY_OPTIONS } from "../constants/propertyConfig";
 import type { Country } from "../types";
 
 /** Sort keys for countries. */
@@ -100,19 +101,9 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
     icon?: React.ComponentType<{ size?: number }>;
   }>;
 }> {
-  // Declarative config for all possible sort keys
-  const allKeyOptions = [
-    { value: "name", label: "Name" },
-    { value: "isoCode", label: "ISO 3166-1 code" },
-    { value: "visitCount", label: "Visit count" },
-    { value: "firstVisit", label: "First visit time" },
-    { value: "lastVisit", label: "Last visit time" },
-  ];
-
-  // Only include timeline options if visitedOnly
   const keyOptions = visitedOnly
-    ? allKeyOptions
-    : allKeyOptions.filter(
+    ? ALL_SORT_KEY_OPTIONS
+    : ALL_SORT_KEY_OPTIONS.filter(
         (opt) => opt.value === "name" || opt.value === "isoCode",
       );
 

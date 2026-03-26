@@ -288,6 +288,19 @@ export function getFirstVisitYear(
 }
 
 /**
+ * Get the last (most recent) visit year for a country from a VisitedYearMap.
+ * Returns null when no years are present for the country.
+ */
+export function getLastVisitYear(
+  visitedYearMap: VisitedYearMap | undefined,
+  iso: string,
+): number | null {
+  const yearsFor = (visitedYearMap ?? {})[iso];
+  if (!yearsFor || yearsFor.size === 0) return null;
+  return Math.max(...Array.from(yearsFor));
+}
+
+/**
  * Gets a mapping of country codes to their next upcoming trip year (after today).
  * @param trips - Array of trips to analyze.
  * @returns Record of country code -> next upcoming year

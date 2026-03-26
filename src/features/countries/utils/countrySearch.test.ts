@@ -97,7 +97,7 @@ describe("countrySearch utils", () => {
       };
       const years = getPropertyTokens(
         countries[0],
-        "visityear",
+        "visitYear",
         undefined,
         undefined,
         undefined,
@@ -106,29 +106,49 @@ describe("countrySearch utils", () => {
       expect(years).toEqual(expect.arrayContaining(["2019", "2020"]));
       const first = getPropertyTokens(
         countries[0],
-        "firstvisit",
+        "firstVisit",
         undefined,
         undefined,
         undefined,
         ymap,
       );
       expect(first).toEqual(["2019"]);
-      const none = getPropertyTokens(
-        countries[1],
-        "firstvisit",
+      const last = getPropertyTokens(
+        countries[0],
+        "lastVisit",
         undefined,
         undefined,
         undefined,
         ymap,
       );
-      expect(none).toEqual([]);
+      expect(last).toEqual(["2020"]);
+
+      const noneFirst = getPropertyTokens(
+        countries[1],
+        "firstVisit",
+        undefined,
+        undefined,
+        undefined,
+        ymap,
+      );
+      expect(noneFirst).toEqual([]);
+      const noneLast = getPropertyTokens(
+        countries[1],
+        "lastVisit",
+        undefined,
+        undefined,
+        undefined,
+        ymap,
+      );
+      expect(noneLast).toEqual([]);
     });
 
     it("returns empty arrays when visit-related auxiliary data is missing", () => {
       expect(getPropertyTokens(countries[0], "visited")).toEqual([]);
       expect(getPropertyTokens(countries[0], "visits")).toEqual([]);
-      expect(getPropertyTokens(countries[0], "visityear")).toEqual([]);
-      expect(getPropertyTokens(countries[0], "firstvisit")).toEqual([]);
+      expect(getPropertyTokens(countries[0], "visitYear")).toEqual([]);
+      expect(getPropertyTokens(countries[0], "firstVisit")).toEqual([]);
+      expect(getPropertyTokens(countries[0], "lastVisit")).toEqual([]);
     });
 
     it("returns array/string properties correctly", () => {

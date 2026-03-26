@@ -2,41 +2,17 @@
  * Utility functions for searching and filtering countries based on their properties.
  */
 
+import {
+  getFirstVisitYear,
+  getLastVisitYear,
+} from "@features/visits/utils/visits";
+import {
+  COUNTRY_PROPERTY_MAP,
+  type CountryPropertyKey,
+  type CountryPropertyConfig,
+} from "../constants/propertyConfig";
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country } from "../types";
-
-/** Represents a key for a country property search. */
-export type CountryPropertyKey =
-  | keyof Country
-  | "sovereign"
-  | "visited"
-  | "visits"
-  | "visityear"
-  | "firstvisit";
-
-/** Configuration for a country property search. */
-export type CountryPropertyConfig = {
-  key: CountryPropertyKey;
-  includeTC?: boolean;
-};
-
-const COUNTRY_PROPERTY_MAP: Record<string, CountryPropertyConfig> = {
-  isocode: { key: "isoCode" },
-  region: { key: "region" },
-  region_tc: { key: "region", includeTC: true },
-  subregion: { key: "subregion" },
-  subregion_tc: { key: "subregion", includeTC: true },
-  capital: { key: "capital" },
-  currency: { key: "currency" },
-  language: { key: "languages" },
-  callingcode: { key: "callingCode" },
-  sovereignty: { key: "sovereigntyType" },
-  sovereign: { key: "sovereign" },
-  visited: { key: "visited" },
-  visits: { key: "visits" },
-  visityear: { key: "visityear" },
-  firstvisit: { key: "firstvisit" },
-};
 
 /**
  * Resolves a property configuration based on a given property name.
@@ -123,7 +99,7 @@ export function getPropertyTokens(
     }
     return [];
   }
-  if (key === "visityear") {
+  if (key === "visitYear") {
     if (visitedYearMap) {
       const yearsSet = visitedYearMap[country.isoCode];
       const years = yearsSet ? Array.from(yearsSet).map(String) : [];
@@ -131,13 +107,17 @@ export function getPropertyTokens(
     }
     return [];
   }
-  if (key === "firstvisit") {
+  if (key === "firstVisit") {
     if (visitedYearMap) {
-      const yearsSet = visitedYearMap[country.isoCode];
-      const years = yearsSet ? Array.from(yearsSet).map((y) => Number(y)) : [];
-      if (years.length === 0) return [];
-      const first = Math.min(...years);
-      return [String(first)];
+      const first = getFirstVisitYear(visitedYearMap, country.isoCode);
+      return first === null ? [] : [String(first)];
+    }
+    return [];
+  }
+  if (key === "lastVisit") {
+    if (visitedYearMap) {
+      const last = getLastVisitYear(visitedYearMap, country.isoCode);
+      return last === null ? [] : [String(last)];
     }
     return [];
   }
