@@ -64,7 +64,7 @@ export function useAutocomplete({
       if (typeof res === "string") onChange(res);
       if (typeof postSelect === "function") postSelect();
     },
-    [onChange, onSelect, value, defaultOnSelect, postSelect],
+    [onChange, onSelect, value, defaultOnSelectCb, postSelect],
   );
 
   // Handles keydown events for the input, specifically looking for the Enter key to select the top suggestion
