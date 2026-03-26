@@ -7,13 +7,19 @@ import type { Trip } from "@features/trips";
 import {
   getFirstVisitDateByCountry,
   getLastVisitDateByCountry,
+  getVisitedCountriesUpToYear,
 } from "@features/visits/utils/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
 import type { Country } from "../types";
 
 /** Sort keys for countries. */
-export type CountrySortByKey = "name" | "isoCode" | "firstVisit" | "lastVisit";
+export type CountrySortByKey =
+  | "name"
+  | "isoCode"
+  | "visitCount"
+  | "firstVisit"
+  | "lastVisit";
 
 /** Sort options for countries. */
 export type CountrySortBy =
@@ -33,6 +39,7 @@ export type CountrySortOption = {
  */
 function buildVisitDateMaps(trips: Trip[]) {
   return {
+    visitCountMap: getVisitedCountriesUpToYear(trips, new Date().getFullYear()),
     firstVisitMap: getFirstVisitDateByCountry(trips),
     lastVisitMap: getLastVisitDateByCountry(trips),
   };
@@ -50,7 +57,8 @@ export function sortCountries(
   sortBy: CountrySortBy,
   trips: Trip[],
 ) {
-  const { firstVisitMap, lastVisitMap } = buildVisitDateMaps(trips);
+  const { firstVisitMap, lastVisitMap, visitCountMap } =
+    buildVisitDateMaps(trips);
   const [key, direction] = sortBy.split("-");
   const asc = direction !== "desc";
 
@@ -63,6 +71,12 @@ export function sortCountries(
       );
     case "isoCode":
       return sortItems(countries, (c) => c.isoCode || "", asc ? "asc" : "desc");
+    case "visitCount":
+      return sortItems(
+        countries,
+        (c) => visitCountMap[c.isoCode] ?? 0,
+        asc ? "asc" : "desc",
+      );
     case "firstVisit":
       return sortItems(
         countries,
@@ -97,6 +111,7 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
   const allKeyOptions = [
     { value: "name", label: "Name" },
     { value: "isoCode", label: "ISO 3166-1 code" },
+    { value: "visitCount", label: "Visit count" },
     { value: "firstVisit", label: "First visit time" },
     { value: "lastVisit", label: "Last visit time" },
   ];

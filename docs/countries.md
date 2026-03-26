@@ -27,8 +27,11 @@ Country details include the following sections:
 - Use the `Filters` panel to:
   - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
   - Apply `layer` or `timeline` filters (depending on active `map mode`)
-- Sort `countries` by `name`, `ISO 3166-1 code` or `first/last visit times` (in `timeline` mode).
-- Use the `segmented toggles` to quickly select between all countries, sovereign only and visited.
+- Use the `Sort` button to:
+  - Sort `countries` by `name` or `ISO 3166-1 code` and by sort direction (`ascending` or `descending`)
+  - In `timeline` mode, you can also sort by `visit count`, `first visit time` or `last visit time`
+- Use the `View toggle` to switch between `lists`:
+  - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
 
 ### **Property Searching**
 
@@ -56,11 +59,11 @@ property:query
 | `visited`      | boolean             |             `visited:true` | `true` / `false` (based on your visited list)                                                     |
 | `visits`       | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
 | `visityear`    | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
-| `firstvisit`   | number (comparison) |        `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| `firstvisit`   | number (comparison) |         `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
 
 ## **Country Lists**
 
-You can create and manage your own custom `country lists`, which allow quick, dynamic filtering and toggling. Use lists to group countries for travel plans, tracking or any custom criteria.
+You can create and manage your own custom `lists`, which allow quick, dynamic filtering and toggling. Use lists to group countries for travel plans, tracking or any custom criteria.
 
 - To add a new list, press the `+` button in the list toggles bar.
 - Lists can also be created from `layers`, as explained below.

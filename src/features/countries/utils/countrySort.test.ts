@@ -56,6 +56,30 @@ describe("countrySort utils", () => {
     ]);
   });
 
+  it("sorts by visit count descending", () => {
+    const sorted = sortCountries(countries, "visitCount-desc", mockTrips);
+    expect(sorted.map((c) => c.isoCode)).toEqual([
+      "US",
+      "CA",
+      "FR",
+      "DE",
+      "GP",
+      "JP",
+    ]);
+  });
+
+  it("sorts by visit count ascending", () => {
+    const sorted = sortCountries(countries, "visitCount-asc", mockTrips);
+    expect(sorted.map((c) => c.isoCode)).toEqual([
+      "GP",
+      "JP",
+      "DE",
+      "FR",
+      "CA",
+      "US",
+    ]);
+  });
+
   it("sorts by first visit descending", () => {
     const sorted = sortCountries(countries, "firstVisit-desc", mockTrips);
     expect(sorted.length).toBe(countries.length);
