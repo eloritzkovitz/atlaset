@@ -38,7 +38,20 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Toggle Timeline mode with "T"
-  useKeyHandler(() => handleSetTimelineMode((prev) => !prev), ["t", "T"], true);
+  useKeyHandler(
+    () => {
+      handleSetTimelineMode((prev) => !prev);
+      setTimeout(() => {
+        try {
+          window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+        } catch {
+          void 0;
+        }
+      }, 0);
+    },
+    ["t", "T"],
+    true,
+  );
 
   // When timeline mode changes, update showVisitedOnly and play sound
   useEffect(() => {
