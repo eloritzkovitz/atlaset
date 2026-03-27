@@ -28,7 +28,8 @@ export function useMarkdownRenderer() {
     };
     const importer: Importer =
       globalImporter.__import ??
-      ((mod: string) => import(mod) as Promise<MarkdownModule>);
+      ((mod: string) =>
+        import(/* @vite-ignore */ mod) as Promise<MarkdownModule>);
 
     // Catch import rejections to avoid unhandled promise rejections in tests/environments
     importer("react-markdown")
