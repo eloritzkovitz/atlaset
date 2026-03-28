@@ -10,11 +10,11 @@ import {
   parseComparator,
   parseYearComparator,
 } from "@utils/number";
+import { parseQualifierSearch } from "@utils/search";
 import {
   buildSearchString,
   getQualifierTokens,
   resolveQualifierConfig,
-  parseQualifierSearch,
 } from "./countrySearch";
 import type { Country, CountryFilterOptions } from "../types";
 
@@ -94,12 +94,13 @@ export function filterCountriesByQualifier(
   qualifier: string,
   value: string,
   visitContext?: VisitContext,
+  modifiers?: Record<string, boolean | string>,
 ): Country[] {
   const config = resolveQualifierConfig(qualifier);
   if (!config?.key) return [];
 
   const key = config.key;
-  const includeTC = !!config.includeTC;
+  const includeTC = !!modifiers?.tc;
   const searchValue = value.toLowerCase();
   const vmap = visitContext?.visitedMap ?? {};
   const ymap = visitContext?.visitedYearMap ?? {};
@@ -125,7 +126,6 @@ export function filterCountriesByQualifier(
       if (!parsed) return [];
       const { op, year } = parsed;
       return countries.filter((country) => {
-        // Prefer precise date map, otherwise derive from year map
         const firstDate = visitContext?.firstVisitMap?.[country.isoCode];
         const yearsForFirst = ymap[country.isoCode];
         const firstYear = firstDate
@@ -275,7 +275,7 @@ export function applyQualifierSearch(
   visitedYearMap?: Record<string, Set<number>>,
 ) {
   const parsed = parseQualifierSearch(search);
-  if (parsed) {
+  if (parsed && (parsed.query ?? "").trim() !== "") {
     const visitContext: VisitContext | undefined =
       visitedIsoCodes || visitedMap || visitedYearMap
         ? {
@@ -289,6 +289,7 @@ export function applyQualifierSearch(
       parsed.qualifier,
       parsed.query,
       visitContext,
+      parsed.modifiers ?? {},
     );
   }
   // If search contains a colon but didn't parse, treat it as normal search

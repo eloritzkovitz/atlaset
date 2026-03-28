@@ -295,22 +295,30 @@ describe("countryFilters utils", () => {
         expected: [],
       },
       {
-        label: "region_tc includes transcontinental extras",
-        qualifier: "region_tc",
+        label: "region includes transcontinental extras (tc:true)",
+        qualifier: "region",
         value: "europe",
+        options: { modifiers: { tc: true } },
         expected: [countries[0], countries[2], countries[3]],
       },
       {
-        label: "subregion_tc includes transcontinental extras",
-        qualifier: "subregion_tc",
+        label: "subregion includes transcontinental extras (tc:true)",
+        qualifier: "subregion",
         value: "northern europe",
+        options: { modifiers: { tc: true } },
         expected: [countries[3]],
       },
     ];
 
-    testCases.forEach(({ label, qualifier, value, expected }) => {
+    testCases.forEach(({ label, qualifier, value, expected, options }: any) => {
       it(`filters by ${label}`, () => {
-        const result = filterCountriesByQualifier(countries, qualifier, value);
+        const result = filterCountriesByQualifier(
+          countries,
+          qualifier,
+          value,
+          options?.visitContext,
+          options?.modifiers,
+        );
         expect(result).toEqual(expected);
       });
     });
@@ -354,11 +362,16 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by visityear equality and comparisons", () => {
-      const eq2020 = filterCountriesByQualifier(countries, "visityear", "=2020", {
-        visitedIsoCodes: [],
-        visitedMap: {},
-        visitedYearMap: visitedYearMapFull,
-      });
+      const eq2020 = filterCountriesByQualifier(
+        countries,
+        "visityear",
+        "=2020",
+        {
+          visitedIsoCodes: [],
+          visitedMap: {},
+          visitedYearMap: visitedYearMapFull,
+        },
+      );
       expect(eq2020).toEqual([countries[0]]);
 
       const gt2018 = filterCountriesByQualifier(

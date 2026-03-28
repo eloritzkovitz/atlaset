@@ -3,8 +3,10 @@
  */
 
 import type { VisitContext } from "@features/visits";
+import { suggestByPrefix } from "@utils/search";
 import {
   COUNTRY_QUALIFIER_MAP,
+  SUPPORTED_QUALIFIERS,
   type CountryQualifierKey,
   type CountryQualifierConfig,
 } from "../constants/qualifierConfig";
@@ -24,22 +26,11 @@ export function resolveQualifierConfig(
 }
 
 /**
- * Returns a list of supported qualifier names for searching.
- * @returns An array of supported qualifier names.
+ * Provides qualifier name suggestions based on user input for qualifier-based searching.
+ * @input The current user input for the qualifier, used to generate suggestions.
  */
-export function getSupportedQualifiers() {
-  return Object.keys(COUNTRY_QUALIFIER_MAP);
-}
-
-/**
- * Parses a search string for qualifier-based searching.
- * @param input - The search string input by the user.
- * @returns An object containing the qualifier and query if the input matches the expected format, otherwise null.
- */
-export function parseQualifierSearch(input: string) {
-  const m = input.trim().match(/^([a-zA-Z_]+):\s*(.+)$/i);
-  if (!m) return null;
-  return { qualifier: m[1].toLowerCase(), query: m[2] };
+export function qualifierSuggestionProvider(input: string) {
+  return suggestByPrefix(SUPPORTED_QUALIFIERS, input);
 }
 
 /**
@@ -125,17 +116,4 @@ export function getQualifierTokens(
   if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
   if (typeof prop === "string") return [prop];
   return [] as string[];
-}
-
-/**
- * Provides qualifier name suggestions based on user input for qualifier-based searching.
- * @param input - The current input string from the user.
- * @returns An array of suggested qualifier names that match the input prefix.
- */
-export function qualifierSuggestionProvider(input: string) {
-  const supported = getSupportedQualifiers();
-  const m = input.match(/^([a-zA-Z_]*)$/);
-  if (!m) return [];
-  const prefix = m[1].toLowerCase();
-  return supported.filter((p) => p.startsWith(prefix));
 }

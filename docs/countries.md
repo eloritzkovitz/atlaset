@@ -43,24 +43,30 @@ qualifier:query
 
 #### **Supported qualifiers**
 
-| Qualifier      | Type                |                    Example | Notes                                                                                             |
-| -------------- | ------------------- | -------------------------: | ------------------------------------------------------------------------------------------------- |
-| `isocode`      | text                |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                                |
-| `region`       | text                |              `region:Asia` | Use `region_tc` to include transcontinental countries                                             |
-| `region_tc`    | text                |         `region_tc:Europe` | Region including transcontinental matches                                                         |
-| `subregion`    | text                | `subregion:Southeast Asia` | Use `subregion_tc` to include transcontinental countries                                          |
-| `subregion_tc` | text                |   `subregion_tc:Caribbean` | Subregion including transcontinental matches                                                      |
-| `capital`      | text                |            `capital:Paris` | Matches capital name                                                                              |
-| `currency`     | text                |             `currency:EUR` | Matches currency code                                                                             |
-| `language`     | text                |         `language:Spanish` | Matches a language                                                                                |
-| `callingcode`  | text                |          `callingcode:+44` | Matches a calling code                                                                            |
-| `sovereignty`  | text                |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                  |
-| `sovereign`    | boolean             |           `sovereign:true` | `true` / `false`                                                                                  |
-| `visited`      | boolean             |             `visited:true` | `true` / `false` (based on your visited list)                                                     |
-| `visits`       | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
-| `visityear`    | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
-| `firstvisit`   | number (comparison) |         `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
-| `lastvisit`    | number (comparison) |          `lastvisit:=2018` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| Qualifier     | Type                |                    Example | Notes                                                                                             |
+| ------------- | ------------------- | -------------------------: | ------------------------------------------------------------------------------------------------- |
+| `isocode`     | text                |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                                |
+| `region`      | text                |              `region:Asia` | All countries in a given region (continent)                                                       |
+| `subregion`   | text                | `subregion:Southeast Asia` | All countries in a given subregion                                                                |
+| `capital`     | text                |            `capital:Paris` | Matches capital name                                                                              |
+| `currency`    | text                |             `currency:EUR` | Matches currency code                                                                             |
+| `language`    | text                |         `language:Spanish` | Matches a language                                                                                |
+| `callingcode` | text                |          `callingcode:+44` | Matches a calling code                                                                            |
+| `sovereignty` | text                |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                  |
+| `sovereign`   | boolean             |           `sovereign:true` | `true` / `false`                                                                                  |
+| `visited`     | boolean             |             `visited:true` | `true` / `false` (based on your visited list)                                                     |
+| `visits`      | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
+| `visityear`   | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| `firstvisit`  | number (comparison) |         `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| `lastvisit`   | number (comparison) |          `lastvisit:=2018` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+
+#### **Additional Modifiers**
+
+- `tc`: For `region` and `subregion`, you can add `tc:true` to include transcontinental countries. For example:
+
+```bash
+region:europe tc:true
+```
 
 ## **Country Lists**
 

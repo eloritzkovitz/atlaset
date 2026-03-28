@@ -10,11 +10,11 @@ import {
 import { ICONS } from "@constants/icons";
 import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
+import { parseQualifierSearch } from "@utils/search";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
 import { filterCountriesByQualifier } from "../../utils/countryFilters";
 import {
-  parseQualifierSearch,
   buildSearchString,
   qualifierSuggestionProvider,
 } from "../../utils/countrySearch";

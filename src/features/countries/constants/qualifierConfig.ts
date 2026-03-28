@@ -1,6 +1,7 @@
 /**
  * Shared qualifier and sort configuration for countries.
  */
+import { keysOf } from "@utils/object";
 import type { Country } from "../types";
 
 /** Represents a key for a country qualifier search. */
@@ -18,25 +19,12 @@ export type CountryQualifierConfig = {
   key: CountryQualifierKey;
   label?: string;
   type?: "string" | "number" | "date";
-  includeTC?: boolean;
 };
 
 export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   isocode: { key: "isoCode", label: "ISO code", type: "string" },
   region: { key: "region", label: "Region", type: "string" },
-  region_tc: {
-    key: "region",
-    label: "Region (including transcontinental countries)",
-    type: "string",
-    includeTC: true,
-  },
   subregion: { key: "subregion", label: "Subregion", type: "string" },
-  subregion_tc: {
-    key: "subregion",
-    label: "Subregion (including transcontinental countries)",
-    type: "string",
-    includeTC: true,
-  },
   capital: { key: "capital", label: "Capital", type: "string" },
   currency: { key: "currency", label: "Currency", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
@@ -49,6 +37,8 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   firstvisit: { key: "firstVisit", label: "First visit", type: "date" },
   lastvisit: { key: "lastVisit", label: "Last visit", type: "date" },
 };
+
+export const SUPPORTED_QUALIFIERS = keysOf(COUNTRY_QUALIFIER_MAP);
 
 export const ALL_SORT_KEY_OPTIONS = [
   { value: "name", label: "Name" },
