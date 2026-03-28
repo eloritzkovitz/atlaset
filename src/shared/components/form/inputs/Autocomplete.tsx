@@ -1,6 +1,7 @@
-import { useRef, useLayoutEffect, useState } from "react";
+import { useRef, useState, type KeyboardEvent } from "react";
 import { useAutocomplete, useTextWidth } from "@hooks";
-import { computeSuffix, formatCommittedValue } from "@utils/search";
+import { computeSuffix } from "@utils/search";
+import { PrefixHint } from "./PrefixHint";
 import { SearchInput } from "./SearchInput";
 
 const INPUT_ICON_OFFSET = 40;
@@ -29,34 +30,32 @@ export function Autocomplete({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Manage autocomplete suggestions and selection logic
-  const { topSuggestion, propCandidate, afterColon, hasColon, handleKeyDown } =
-    useAutocomplete({
-      value,
-      onChange,
-      suggestionProvider,
-      onSelect: onSelect,
-      postSelect: () => inputRef.current?.blur(),
-      maxSuggestions,
-      debounceMs: 60,
-    });
+  const {
+    topSuggestion,
+    propCandidate,
+    afterColon,
+    hasColon,
+    handleKeyDown,
+    isPrefixValid,
+    commitWithPrefix,
+    clearQualifier,
+  } = useAutocomplete({
+    value,
+    onChange,
+    suggestionProvider,
+    onSelect: onSelect,
+    postSelect: () => inputRef.current?.blur(),
+    maxSuggestions,
+    debounceMs: 60,
+  });
 
-  // Determine whether to show the inline suggestion hint (only when typing a property token without a colon yet)
-  const displayValue = hasColon ? afterColon : value;
+  // Determine if the current input has a valid prefix and compute the display value accordingly
+  const isValidPrefix = isPrefixValid ?? false;
+  const displayValue = hasColon ? (isValidPrefix ? afterColon : value) : value;
 
   // Measure the width of the typed text to position the inline suggestion hint correctly
   const { measurerRef, suffixLeft } = useTextWidth(displayValue, inputRef);
-  const prefixRef = useRef<HTMLDivElement | null>(null);
   const [prefixWidth, setPrefixWidth] = useState(0);
-
-  // Update prefix width when top suggestion, colon presence, or input value changes
-  useLayoutEffect(() => {
-    const el = prefixRef.current;
-    if (el && hasColon) {
-      setPrefixWidth(Math.ceil(el.getBoundingClientRect().width));
-    } else {
-      setPrefixWidth(0);
-    }
-  }, [topSuggestion, hasColon, value]);
 
   return (
     <div className={`relative ${className}`}>
@@ -66,58 +65,45 @@ export function Autocomplete({
         className="absolute invisible whitespace-pre text-base"
         aria-hidden
       />
-
-      {hasColon && (topSuggestion || propCandidate) && (
-        <div
-          ref={prefixRef}
-          aria-hidden
-          style={{
-            position: "absolute",
-            left: INPUT_ICON_OFFSET,
-            top: "50%",
-            transform: "translateY(calc(-50% + 1px))",
-            zIndex: 10,
-            maxWidth: "160px",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-          className="pointer-events-none flex items-center text-base text-muted"
-        >
-          {(topSuggestion || propCandidate) + ":"}
-        </div>
-      )}
+      <PrefixHint
+        topSuggestion={topSuggestion}
+        propCandidate={propCandidate}
+        isValid={isValidPrefix}
+        left={INPUT_ICON_OFFSET}
+        onWidthChange={setPrefixWidth}
+      />
       <SearchInput
         ref={inputRef}
         value={displayValue}
         onChange={(v) => {
-          // If user clears the input, clear everything but preserve the property token if it exists
+          // If user clears the input entirely, clear everything
           if (v === "") {
-            if (hasColon) {
-              const prefix = topSuggestion || propCandidate || "";
-              onChange(formatCommittedValue(prefix, ""));
+            if (hasColon && isValidPrefix) {
+              commitWithPrefix("");
             } else {
-              onChange("");
+              clearQualifier();
             }
             return;
           }
 
-          // If user has typed a property token and is now changing the value, preserve the property token and just update the part after the colon
-          if (hasColon) {
-            const prefix = topSuggestion || propCandidate || "";
-            onChange(formatCommittedValue(prefix, v));
+          // If user has typed a qualifier token and is now changing the value, only recombine when the prefix is valid
+          if (hasColon && isValidPrefix) {
+            commitWithPrefix(v);
             return;
           }
 
+          // Otherwise pass the raw input through
           onChange(v);
         }}
-        onKeyDown={handleKeyDown}
+        onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+          handleKeyDown(e);
+        }}
         placeholder={hasColon ? undefined : placeholder}
         className={className}
         showClear={hasColon || Boolean(displayValue)}
         onClear={() => onChange("")}
         style={
-          hasColon
+          hasColon && isValidPrefix
             ? {
                 paddingLeft: `${INPUT_ICON_OFFSET + Math.max(prefixWidth, MIN_PREFIX_PAD) + PREFIX_GAP}px`,
               }

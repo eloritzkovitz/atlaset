@@ -1,5 +1,10 @@
 import { useCallback, useMemo } from "react";
-import { parsePropertyParts, defaultOnSelect } from "@utils/search";
+import {
+  parsePropertyParts,
+  defaultOnSelect,
+  isValidQualifier,
+  formatCommittedValue,
+} from "@utils/search";
 import { useDebounce } from "../state/useDebounce";
 
 interface UseAutocompleteProps {
@@ -12,17 +17,6 @@ interface UseAutocompleteProps {
   debounceMs?: number;
 }
 
-/**
- * Manages autocomplete functionality.
- * @param value The current input value.
- * @param onChange Callback to update the input value.
- * @param suggestionProvider Function that returns suggestions based on the input.
- * @param onSelect Optional callback to customize what happens when a suggestion is selected.
- * @param postSelect Optional callback that runs after a suggestion is selected (e.g., to blur the input).
- * @param maxSuggestions Maximum number of suggestions to return (default: 6).
- * @param debounceMs Debounce delay in milliseconds for updating suggestions (default: 60).
- * @returns An object containing the current suggestions, a keydown handler for the input, and a function to pick a suggestion.
- */
 export function useAutocomplete({
   value,
   onChange,
@@ -33,13 +27,12 @@ export function useAutocomplete({
   debounceMs = 60,
 }: UseAutocompleteProps) {
   const debouncedValue = useDebounce(value, debounceMs);
-  // Parse the live value into property parts for consumers
   const parsedParts = parsePropertyParts(value);
 
+  // Compute suggestions based on the debounced input value and the provided suggestion provider
   const suggestions = useMemo(() => {
     if (!debouncedValue || debouncedValue.trim() === "") return [];
 
-    // If the input is just a colon, treat it as empty to avoid showing all suggestions
     const parts = parsePropertyParts(debouncedValue);
     const suggestionSeed = parts.propCandidate || debouncedValue;
     const s = suggestionProvider(suggestionSeed) || [];
@@ -54,10 +47,15 @@ export function useAutocomplete({
     return s.slice(0, maxSuggestions);
   }, [debouncedValue, suggestionProvider, maxSuggestions]);
 
-  // Default onSelect behavior if not provided: replace the input with "suggestion: restOfInput"
+  // Determine if the current input has a valid prefix for showing the inline suggestion hint
+  const isPrefixValid = useMemo(() => {
+    const candidate = parsedParts.propCandidate || "";
+    return isValidQualifier(candidate, suggestions);
+  }, [parsedParts.propCandidate, suggestions]);
+
   const defaultOnSelectCb = useCallback(defaultOnSelect, []);
 
-  // Handles picking a suggestion, which calls the onSelect callback and then the postSelect callback if provided
+  // Handle selection of a suggestion, either using the provided onSelect callback or the default behavior
   const pickSuggestion = useCallback(
     (s: string) => {
       const res = onSelect ? onSelect(s, value) : defaultOnSelectCb(s, value);
@@ -67,24 +65,53 @@ export function useAutocomplete({
     [onChange, onSelect, value, defaultOnSelectCb, postSelect],
   );
 
-  // Handles keydown events for the input, specifically looking for the Enter key to select the top suggestion
+  // Clear the qualifier prefix when backspacing on an empty after-colon input
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (!suggestions || suggestions.length === 0) return;
+      // Enter: pick suggestion when typing a prefix
       if (e.key === "Enter") {
-        const m = value.match(/^([a-zA-Z_]*)$/);
-
-        if (m && m[1].length >= 2 && suggestions.length > 0) {
-          const first = suggestions[0];
-          if (first.toLowerCase().startsWith(m[1].toLowerCase())) {
-            e.preventDefault();
-            pickSuggestion(first);
+        if (suggestions && suggestions.length > 0) {
+          const m = value.match(/^([a-zA-Z_]*)$/);
+          if (m && m[1].length >= 2) {
+            const first = suggestions[0];
+            if (first.toLowerCase().startsWith(m[1].toLowerCase())) {
+              e.preventDefault();
+              pickSuggestion(first);
+              return;
+            }
           }
         }
       }
+
+      // Backspace: if there's a colon and nothing after it, clear entire input
+      const parts = parsePropertyParts(value);
+      if (
+        e.key === "Backspace" &&
+        parts.hasColon &&
+        (parts.afterColon || "") === ""
+      ) {
+        e.preventDefault();
+        onChange("");
+        return;
+      }
     },
-    [suggestions, value, pickSuggestion],
+    [suggestions, value, pickSuggestion, onChange],
   );
+
+  // Commit the current input with the selected prefix, if valid, when picking a suggestion
+  const commitWithPrefix = useCallback(
+    (after: string) => {
+      const prefix = parsedParts.propCandidate || "";
+      if (isValidQualifier(prefix, suggestions)) {
+        onChange(formatCommittedValue(prefix, after));
+      } else {
+        onChange(after);
+      }
+    },
+    [parsedParts.propCandidate, suggestions, onChange],
+  );
+
+  const clearQualifier = useCallback(() => onChange(""), [onChange]);
 
   return {
     suggestions,
@@ -93,8 +120,11 @@ export function useAutocomplete({
     propCandidate: parsedParts.propCandidate,
     afterColon: parsedParts.afterColon,
     hasColon: parsedParts.hasColon,
+    isPrefixValid,
     handleKeyDown,
     pickSuggestion,
+    commitWithPrefix,
+    clearQualifier,
     debouncedValue,
   } as const;
 }

@@ -79,6 +79,44 @@ function TestHarnessWithPick({
   );
 }
 
+function TestHarnessWithCommit({
+  initial = "",
+  suggestionProvider,
+  onChangeSpy,
+  debounceMs = 10,
+}: {
+  initial?: string;
+  suggestionProvider: (input: string) => string[];
+  onChangeSpy: (v: string) => void;
+  debounceMs?: number;
+}) {
+  const [value, setValue] = useState(initial);
+  const { suggestions, handleKeyDown, commitWithPrefix } = useAutocomplete({
+    value,
+    onChange: (v: string) => {
+      setValue(v);
+      onChangeSpy(v);
+    },
+    suggestionProvider,
+    debounceMs,
+  });
+
+  return (
+    <div>
+      <input
+        data-testid="input"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onKeyDown={handleKeyDown}
+      />
+      <button data-testid="commit" onClick={() => commitWithPrefix("after")}>
+        Commit
+      </button>
+      <div data-testid="suggestions">{suggestions.join(",")}</div>
+    </div>
+  );
+}
+
 describe("useAutocomplete", () => {
   beforeEach(() => {
     vi.useFakeTimers();
@@ -121,9 +159,6 @@ describe("useAutocomplete", () => {
 
     render(
       <TestHarness
-        // Updated behavior: the hook now treats the part before the colon as
-        // a prefix seed and filters suggestions accordingly. Use a seed that
-        // matches one suggestion to validate filtering.
         initial="o:rest"
         suggestionProvider={provider}
         onChangeSpy={onChangeSpy}
@@ -137,7 +172,6 @@ describe("useAutocomplete", () => {
     await Promise.resolve();
 
     const sug = screen.getByTestId("suggestions");
-    // Now we expect only suggestions that start with 'o' (i.e. "one").
     expect(sug.textContent).toContain("one");
     expect(sug.textContent).not.toContain("two");
     expect(sug.textContent).not.toContain("three");
@@ -266,5 +300,79 @@ describe("useAutocomplete", () => {
     const calledWith =
       onChangeSpy.mock.calls[onChangeSpy.mock.calls.length - 1][0];
     expect(calledWith.startsWith("apple")).toBeTruthy();
+  });
+
+  it("commitWithPrefix formats value when prefix is valid", async () => {
+    const suggestions = ["region", "continent"];
+    const provider = () => suggestions;
+    const onChangeSpy = vi.fn();
+
+    render(
+      <TestHarnessWithCommit
+        initial="region:rest"
+        suggestionProvider={provider}
+        onChangeSpy={onChangeSpy}
+        debounceMs={10}
+      />,
+    );
+
+    const btn = screen.getByTestId("commit");
+    fireEvent.click(btn);
+
+    await Promise.resolve();
+    expect(onChangeSpy).toHaveBeenCalled();
+    const calledWith =
+      onChangeSpy.mock.calls[onChangeSpy.mock.calls.length - 1][0];
+    // When prefix is valid, commitWithPrefix should include the prefix
+    expect(calledWith).toBe("region:after");
+  });
+
+  it("commitWithPrefix falls back to after when prefix is invalid", async () => {
+    const suggestions = ["one", "two"];
+    const provider = () => suggestions;
+    const onChangeSpy = vi.fn();
+
+    render(
+      <TestHarnessWithCommit
+        initial="jdx:rest"
+        suggestionProvider={provider}
+        onChangeSpy={onChangeSpy}
+        debounceMs={10}
+      />,
+    );
+
+    const btn = screen.getByTestId("commit");
+    fireEvent.click(btn);
+
+    await Promise.resolve();
+    expect(onChangeSpy).toHaveBeenCalled();
+    const calledWith =
+      onChangeSpy.mock.calls[onChangeSpy.mock.calls.length - 1][0];
+    // Since prefix isn't valid, the hook should commit only the 'after' part
+    expect(calledWith).toBe("after");
+  });
+
+  it("Backspace clears qualifier when after-colon is empty", async () => {
+    const suggestions = ["one", "two"];
+    const provider = () => suggestions;
+    const onChangeSpy = vi.fn();
+
+    render(
+      <TestHarness
+        initial="region:"
+        suggestionProvider={provider}
+        onChangeSpy={onChangeSpy}
+        debounceMs={10}
+      />,
+    );
+
+    const input = screen.getByTestId("input") as HTMLInputElement;
+    fireEvent.keyDown(input, { key: "Backspace", code: "Backspace" });
+
+    await Promise.resolve();
+    expect(onChangeSpy).toHaveBeenCalled();
+    const calledWith =
+      onChangeSpy.mock.calls[onChangeSpy.mock.calls.length - 1][0];
+    expect(calledWith).toBe("");
   });
 });
