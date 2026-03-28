@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa6";
 import { ActionButton, Autocomplete, SegmentedToggle } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import {
-  propertySuggestionProvider,
+  qualifierSuggestionProvider,
   type CountryList,
 } from "@features/countries";
 import { CountrySortSelect } from "@features/countries/components/countrySort/CountrySortSelect";
@@ -85,7 +85,7 @@ export function CountriesSearchSortBar({
           value={search}
           onChange={setSearch}
           placeholder="Search countries"
-          suggestionProvider={propertySuggestionProvider}
+          suggestionProvider={qualifierSuggestionProvider}
           className="flex-1 h-10"
         />
         <CountrySortSelect

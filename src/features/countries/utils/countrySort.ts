@@ -5,7 +5,7 @@
 import type { VisitContext } from "@features/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
-import { ALL_SORT_KEY_OPTIONS } from "../constants/propertyConfig";
+import { ALL_SORT_KEY_OPTIONS } from "../constants/qualifierConfig";
 import type { Country } from "../types";
 
 /** Sort keys for countries. */

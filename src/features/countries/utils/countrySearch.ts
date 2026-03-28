@@ -4,42 +4,42 @@
 
 import type { VisitContext } from "@features/visits";
 import {
-  COUNTRY_PROPERTY_MAP,
-  type CountryPropertyKey,
-  type CountryPropertyConfig,
-} from "../constants/propertyConfig";
+  COUNTRY_QUALIFIER_MAP,
+  type CountryQualifierKey,
+  type CountryQualifierConfig,
+} from "../constants/qualifierConfig";
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country } from "../types";
 
 /**
- * Resolves a property configuration based on a given property name.
- * This is used to determine how to filter countries based on user input in the format "property:query".
- * @param property - The property name to resolve.
- * @returns The property configuration or undefined if not found.
+ * Resolves a qualifier configuration based on a given qualifier name.
+ * This is used to determine how to filter countries based on user input in the format "qualifier:query".
+ * @param qualifier - The qualifier name to resolve.
+ * @returns The qualifier configuration or undefined if not found.
  */
-export function resolvePropertyConfig(
-  property: string,
-): CountryPropertyConfig | undefined {
-  return COUNTRY_PROPERTY_MAP[property.toLowerCase()];
+export function resolveQualifierConfig(
+  qualifier: string,
+): CountryQualifierConfig | undefined {
+  return COUNTRY_QUALIFIER_MAP[qualifier.toLowerCase()];
 }
 
 /**
- * Returns a list of supported property names for searching.
- * @returns An array of supported property names.
+ * Returns a list of supported qualifier names for searching.
+ * @returns An array of supported qualifier names.
  */
-export function getSupportedProperties() {
-  return Object.keys(COUNTRY_PROPERTY_MAP);
+export function getSupportedQualifiers() {
+  return Object.keys(COUNTRY_QUALIFIER_MAP);
 }
 
 /**
- * Parses a search string for property-based searching.
+ * Parses a search string for qualifier-based searching.
  * @param input - The search string input by the user.
- * @returns An object containing the property and query if the input matches the expected format, otherwise null.
+ * @returns An object containing the qualifier and query if the input matches the expected format, otherwise null.
  */
-export function parsePropertySearch(input: string) {
+export function parseQualifierSearch(input: string) {
   const m = input.trim().match(/^([a-zA-Z_]+):\s*(.+)$/i);
   if (!m) return null;
-  return { property: m[1].toLowerCase(), query: m[2] };
+  return { qualifier: m[1].toLowerCase(), query: m[2] };
 }
 
 /**
@@ -58,16 +58,16 @@ export function buildSearchString(country: Country) {
 }
 
 /**
- * Return searchable tokens for a specific country property. Includes transcontinental countries when requested.
+ * Return searchable tokens for a specific country qualifier. Includes transcontinental countries when requested.
  * @param country - The country to extract tokens from.
- * @param key - The property key to extract.
+ * @param key - The qualifier key to extract.
  * @param options - Additional options for token extraction.
- * @returns An array of strings representing the tokens for the specified property of the country.
- * @see CountryPropertyKey for supported keys and special handling.
+ * @returns An array of strings representing the tokens for the specified qualifier of the country.
+ * @see CountryQualifierKey for supported keys and special handling.
  */
-export function getPropertyTokens(
+export function getQualifierTokens(
   country: Country,
-  key: CountryPropertyKey,
+  key: CountryQualifierKey,
   options?: { includeTC?: boolean; visitContext?: VisitContext },
 ) {
   const { includeTC = false, visitContext } = options ?? {};
@@ -128,12 +128,12 @@ export function getPropertyTokens(
 }
 
 /**
- * Provides property name suggestions based on user input for property-based searching.
+ * Provides qualifier name suggestions based on user input for qualifier-based searching.
  * @param input - The current input string from the user.
- * @returns An array of suggested property names that match the input prefix.
+ * @returns An array of suggested qualifier names that match the input prefix.
  */
-export function propertySuggestionProvider(input: string) {
-  const supported = getSupportedProperties();
+export function qualifierSuggestionProvider(input: string) {
+  const supported = getSupportedQualifiers();
   const m = input.match(/^([a-zA-Z_]*)$/);
   if (!m) return [];
   const prefix = m[1].toLowerCase();

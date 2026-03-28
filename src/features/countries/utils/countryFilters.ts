@@ -12,9 +12,9 @@ import {
 } from "@utils/number";
 import {
   buildSearchString,
-  getPropertyTokens,
-  resolvePropertyConfig,
-  parsePropertySearch,
+  getQualifierTokens,
+  resolveQualifierConfig,
+  parseQualifierSearch,
 } from "./countrySearch";
 import type { Country, CountryFilterOptions } from "../types";
 
@@ -47,7 +47,7 @@ export function filterCountries(
         selectedRegion &&
         country.region !== selectedRegion &&
         !(
-          getPropertyTokens(country, "region", {
+          getQualifierTokens(country, "region", {
             includeTC: includeTranscontinental,
           }) || []
         ).includes(selectedRegion)
@@ -58,7 +58,7 @@ export function filterCountries(
         selectedSubregion &&
         country.subregion !== selectedSubregion &&
         !(
-          getPropertyTokens(country, "subregion", {
+          getQualifierTokens(country, "subregion", {
             includeTC: includeTranscontinental,
           }) || []
         ).includes(selectedSubregion)
@@ -84,18 +84,18 @@ export function filterCountries(
 }
 
 /**
- * Filters countries by a property and value, supporting arrays and strings.
+ * Filters countries by a qualifier and value, supporting arrays and strings.
  * @param countries - Array of Country objects.
- * @param property - Property name.
+ * @param qualifier - Qualifier name.
  * @param value - Value to match (case-insensitive, partial match).
  */
-export function filterCountriesByProperty(
+export function filterCountriesByQualifier(
   countries: Country[],
-  property: string,
+  qualifier: string,
   value: string,
   visitContext?: VisitContext,
 ): Country[] {
-  const config = resolvePropertyConfig(property);
+  const config = resolveQualifierConfig(qualifier);
   if (!config?.key) return [];
 
   const key = config.key;
@@ -179,7 +179,7 @@ export function filterCountriesByProperty(
 
     default:
       return countries.filter((country) =>
-        getPropertyTokens(country, key, { includeTC, visitContext }).some(
+        getQualifierTokens(country, key, { includeTC, visitContext }).some(
           (t: string) =>
             typeof t === "string" && t.toLowerCase().includes(searchValue),
         ),
@@ -255,17 +255,17 @@ export function createSovereigntyFilter(sovereignOnly?: boolean) {
 }
 
 /**
- * Apply property-based search or normal search with layer filtering.
+ * Apply qualifier-based search or normal search with layer filtering.
  * @param countries - List of countries to filter.
- * @param search - The search string, which may include property-based search (e.g. "region:Europe").
- * @param visitedIsoCodes - List of visited country ISO codes for visit-based property searches.
+ * @param search - The search string, which may include qualifier-based search (e.g. "region:Europe").
+ * @param visitedIsoCodes - List of visited country ISO codes for visit-based qualifier searches.
  * @param filterParams - The current filter parameters to apply for normal search.
  * @param filteredIsoCodes - The list of ISO codes filtered by layers, to be applied for normal search.
- * @param visitedMap - Optional map of visit counts for visit-based property searches.
- * @param visitedYearMap - Optional map of visit years for visit-based property searches.
+ * @param visitedMap - Optional map of visit counts for visit-based qualifier searches.
+ * @param visitedYearMap - Optional map of visit years for visit-based qualifier searches.
  * @returns The list of countries filtered based on the search criteria.
  */
-export function applyPropertySearch(
+export function applyQualifierSearch(
   countries: Country[],
   search: string,
   visitedIsoCodes: string[] | undefined,
@@ -274,7 +274,7 @@ export function applyPropertySearch(
   visitedMap?: Record<string, number>,
   visitedYearMap?: Record<string, Set<number>>,
 ) {
-  const parsed = parsePropertySearch(search);
+  const parsed = parseQualifierSearch(search);
   if (parsed) {
     const visitContext: VisitContext | undefined =
       visitedIsoCodes || visitedMap || visitedYearMap
@@ -284,9 +284,9 @@ export function applyPropertySearch(
             visitedYearMap: visitedYearMap ?? {},
           }
         : undefined;
-    return filterCountriesByProperty(
+    return filterCountriesByQualifier(
       countries,
-      parsed.property,
+      parsed.qualifier,
       parsed.query,
       visitContext,
     );

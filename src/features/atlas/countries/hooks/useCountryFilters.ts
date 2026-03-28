@@ -12,7 +12,7 @@ import {
 import {
   createSovereigntyFilter,
   filterCountries,
-  applyPropertySearch,
+  applyQualifierSearch,
   getCountryCounts,
   getFilteredIsoCodes,
   useCountryData,
@@ -120,7 +120,7 @@ export function useCountryFilters() {
 
   // Main filtering logic
   const filteredCountries = useMemo(() => {
-    let base = applyPropertySearch(
+    let base = applyQualifierSearch(
       countries,
       debouncedSearch,
       visitedIsoCodes,

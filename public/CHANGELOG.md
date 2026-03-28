@@ -2,17 +2,17 @@
 
 ## 2026-03-26
 
-- **[chore]** **Countries:** Improved filtering, sorting and property searching
+- **[chore]** **Countries:** Improved filtering, sorting and search qualifiers
 - **[chore]** **General:** Updated autocomplete behavior
 
 ## 2026-03-23
 
-- **[chore]** **Countries:** Added new properties for filtering with property search
-- **[feature]** **countries:** Added autocomplete suggestions for property search
+- **[chore]** **Countries:** Added new qualifiers for filtering
+- **[feature]** **countries:** Added autocomplete suggestions for search qualifiers
 
 ## 2026-03-22
 
-- **[feature]** **Countries:** Defined transcontinental countries and added toggles and search properties to filter them
+- **[feature]** **Countries:** Defined transcontinental countries and added toggles and qualifiers to filter them
 
 ## 2026-03-21
 
@@ -30,7 +30,7 @@
 
 ## 2026-03-15
 
-- **[feature]** **Countries:** Added property search for countries
+- **[feature]** **Countries:** Added qualifier search for countries
 - **[feature]** **Dashboard | Currencies:** Added a new section for currencies and a currency exchange widget
 - **[feature]** **Search:** Currencies are now searchable
 

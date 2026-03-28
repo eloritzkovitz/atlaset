@@ -4,8 +4,8 @@ import {
   getFilteredIsoCodes,
   getCountryCounts,
   createSovereigntyFilter,
-  filterCountriesByProperty,
-  applyPropertySearch,
+  filterCountriesByQualifier,
+  applyQualifierSearch,
 } from "./countryFilters";
 
 vi.mock("../constants/transcontinental", () => ({
@@ -85,9 +85,9 @@ describe("countryFilters utils", () => {
     });
   });
 
-  describe("applyPropertySearch wrapper", () => {
-    it("delegates to property search when input is property:query", () => {
-      const res = applyPropertySearch(
+  describe("applyQualifierSearch wrapper", () => {
+    it("delegates to qualifier search when input is qualifier:query", () => {
+      const res = applyQualifierSearch(
         countries,
         "currency:EUR",
         undefined,
@@ -103,8 +103,8 @@ describe("countryFilters utils", () => {
       expect(res).toEqual([countries[0], countries[1], countries[2]]);
     });
 
-    it("falls back to normal search with layerCountries when not a property query", () => {
-      const res = applyPropertySearch(
+    it("falls back to normal search with layerCountries when not a qualifier query", () => {
+      const res = applyQualifierSearch(
         countries,
         "germany",
         undefined,
@@ -120,8 +120,8 @@ describe("countryFilters utils", () => {
       expect(res).toEqual([countries[2]]);
     });
 
-    it("falls back to base filtered list when property: has empty query", () => {
-      const res = applyPropertySearch(
+    it("falls back to base filtered list when qualifier: has empty query", () => {
+      const res = applyQualifierSearch(
         countries,
         "isocode:",
         undefined,
@@ -226,97 +226,97 @@ describe("countryFilters utils", () => {
     });
   });
 
-  describe("filterCountriesByProperty", () => {
+  describe("filterCountriesByQualifier", () => {
     const testCases = [
       {
         label: "currency",
-        property: "currency",
+        qualifier: "currency",
         value: "EUR",
         expected: [countries[0], countries[1], countries[2]],
       },
       {
         label: "currency (partial, insensitive)",
-        property: "currency",
+        qualifier: "currency",
         value: "eur",
         expected: [countries[0], countries[1], countries[2]],
       },
       {
-        label: "language (array property)",
-        property: "language",
+        label: "language (array qualifier)",
+        qualifier: "language",
         value: "french",
         expected: [countries[0], countries[1]],
       },
       {
         label: "language (partial, insensitive)",
-        property: "language",
+        qualifier: "language",
         value: "fren",
         expected: [countries[0], countries[1]],
       },
       {
         label: "callingcode (token match)",
-        property: "callingcode",
+        qualifier: "callingcode",
         value: "+1",
         expected: [countries[3], countries[4]],
       },
       {
         label: "region",
-        property: "region",
+        qualifier: "region",
         value: "europe",
         expected: [countries[0], countries[2]],
       },
       {
         label: "capital",
-        property: "capital",
+        qualifier: "capital",
         value: "paris",
         expected: [countries[0]],
       },
       {
         label: "subregion",
-        property: "subregion",
+        qualifier: "subregion",
         value: "caribbean",
         expected: [countries[1]],
       },
       {
         label: "sovereignty",
-        property: "sovereignty",
+        qualifier: "sovereignty",
         value: "dependency",
         expected: [countries[1]],
       },
       {
         label: "isoCode",
-        property: "isocode",
+        qualifier: "isocode",
         value: "FR",
         expected: [countries[0]],
       },
       {
-        label: "unknown property",
-        property: "unknown",
+        label: "unknown qualifier",
+        qualifier: "unknown",
         value: "value",
         expected: [],
       },
       {
         label: "region_tc includes transcontinental extras",
-        property: "region_tc",
+        qualifier: "region_tc",
         value: "europe",
         expected: [countries[0], countries[2], countries[3]],
       },
       {
         label: "subregion_tc includes transcontinental extras",
-        property: "subregion_tc",
+        qualifier: "subregion_tc",
         value: "northern europe",
         expected: [countries[3]],
       },
     ];
 
-    testCases.forEach(({ label, property, value, expected }) => {
+    testCases.forEach(({ label, qualifier, value, expected }) => {
       it(`filters by ${label}`, () => {
-        const result = filterCountriesByProperty(countries, property, value);
+        const result = filterCountriesByQualifier(countries, qualifier, value);
         expect(result).toEqual(expected);
       });
     });
   });
 
-  describe("property-specific numeric/year/callingcode filters", () => {
+  describe("qualifier-specific numeric/year/callingcode filters", () => {
     const visitedMap = { FR: 2, DE: 1 } as Record<string, number>;
     const visitedIsoCodes = Object.keys(visitedMap);
 
@@ -332,14 +332,14 @@ describe("countryFilters utils", () => {
     };
 
     it("filters by visits > N and =0 correctly", () => {
-      const gtResult = filterCountriesByProperty(countries, "visits", ">1", {
+      const gtResult = filterCountriesByQualifier(countries, "visits", ">1", {
         visitedIsoCodes,
         visitedMap,
         visitedYearMap: {},
       });
       expect(gtResult).toEqual([countries[0]]);
 
-      const eqZero = filterCountriesByProperty(countries, "visits", "=0", {
+      const eqZero = filterCountriesByQualifier(countries, "visits", "=0", {
         visitedIsoCodes,
         visitedMap,
         visitedYearMap: {},
@@ -354,19 +354,14 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by visityear equality and comparisons", () => {
-      const eq2020 = filterCountriesByProperty(
-        countries,
-        "visityear",
-        "=2020",
-        {
-          visitedIsoCodes: [],
-          visitedMap: {},
-          visitedYearMap: visitedYearMapFull,
-        },
-      );
+      const eq2020 = filterCountriesByQualifier(countries, "visityear", "=2020", {
+        visitedIsoCodes: [],
+        visitedMap: {},
+        visitedYearMap: visitedYearMapFull,
+      });
       expect(eq2020).toEqual([countries[0]]);
 
-      const gt2018 = filterCountriesByProperty(
+      const gt2018 = filterCountriesByQualifier(
         countries,
         "visityear",
         ">2018",
@@ -380,7 +375,7 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by firstvisit comparators", () => {
-      const eq2018 = filterCountriesByProperty(
+      const eq2018 = filterCountriesByQualifier(
         countries,
         "firstvisit",
         "=2018",
@@ -392,7 +387,7 @@ describe("countryFilters utils", () => {
       );
       expect(eq2018).toEqual([countries[2]]);
 
-      const lt2019 = filterCountriesByProperty(
+      const lt2019 = filterCountriesByQualifier(
         countries,
         "firstvisit",
         "<2019",
@@ -411,7 +406,7 @@ describe("countryFilters utils", () => {
         DE: new Set([2018]),
       };
 
-      const eq2020 = filterCountriesByProperty(
+      const eq2020 = filterCountriesByQualifier(
         countries,
         "lastvisit",
         "=2020",
@@ -419,7 +414,7 @@ describe("countryFilters utils", () => {
       );
       expect(eq2020).toEqual([countries[0]]);
 
-      const gt2019 = filterCountriesByProperty(
+      const gt2019 = filterCountriesByQualifier(
         countries,
         "lastvisit",
         ">2019",
@@ -427,7 +422,7 @@ describe("countryFilters utils", () => {
       );
       expect(gt2019).toEqual([countries[0]]);
 
-      const lt2019 = filterCountriesByProperty(
+      const lt2019 = filterCountriesByQualifier(
         countries,
         "lastvisit",
         "<2019",
@@ -437,7 +432,7 @@ describe("countryFilters utils", () => {
     });
 
     it("filters by callingcode tokens", () => {
-      const res = filterCountriesByProperty(countries, "callingcode", "+1");
+      const res = filterCountriesByQualifier(countries, "callingcode", "+1");
       expect(res.map((c) => c.isoCode).sort()).toEqual(["CA", "US"]);
     });
   });

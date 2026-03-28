@@ -33,17 +33,17 @@ Country details include the following sections:
 - Use the `View toggle` to switch between `lists`:
   - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
 
-### **Property Searching**
+### **Search Qualifiers**
 
-In addition to finding countries by name, you can search by properties using this syntax in the country search bar:
+In addition to finding countries by name, you can search by qualifiers using this syntax in the country search bar:
 
 ```bash
-property:query
+qualifier:query
 ```
 
-#### **Supported properties**
+#### **Supported qualifiers**
 
-| Property       | Type                |                    Example | Notes                                                                                             |
+| Qualifier      | Type                |                    Example | Notes                                                                                             |
 | -------------- | ------------------- | -------------------------: | ------------------------------------------------------------------------------------------------- |
 | `isocode`      | text                |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                                |
 | `region`       | text                |              `region:Asia` | Use `region_tc` to include transcontinental countries                                             |

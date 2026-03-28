@@ -12,11 +12,11 @@ import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
-import { filterCountriesByProperty } from "../../utils/countryFilters";
+import { filterCountriesByQualifier } from "../../utils/countryFilters";
 import {
-  parsePropertySearch,
+  parseQualifierSearch,
   buildSearchString,
-  propertySuggestionProvider,
+  qualifierSuggestionProvider,
 } from "../../utils/countrySearch";
 
 interface CountrySelectModalProps {
@@ -48,7 +48,7 @@ export function CountrySelectModal({
   }, [isOpen]);
 
   // Filter options by search
-  const parsed = parsePropertySearch(search);
+  const parsed = parseQualifierSearch(search);
   const { visitedCountryCodes } = useVisitedCountries();
   const filteredOptions = ((): typeof options => {
     if (parsed) {
@@ -57,9 +57,9 @@ export function CountrySelectModal({
         visitedMap: {},
         visitedYearMap: {},
       };
-      return filterCountriesByProperty(
+      return filterCountriesByQualifier(
         options,
-        parsed.property,
+        parsed.qualifier,
         parsed.query,
         visitContext,
       ).sort((a, b) => a.name.localeCompare(b.name));
@@ -100,7 +100,7 @@ export function CountrySelectModal({
           value={search}
           onChange={setSearch}
           placeholder="Search countries"
-          suggestionProvider={propertySuggestionProvider}
+          suggestionProvider={qualifierSuggestionProvider}
         />
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (

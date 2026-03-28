@@ -1,10 +1,10 @@
 /**
- * Shared property and sort configuration for countries.
+ * Shared qualifier and sort configuration for countries.
  */
 import type { Country } from "../types";
 
-/** Represents a key for a country property search. */
-export type CountryPropertyKey =
+/** Represents a key for a country qualifier search. */
+export type CountryQualifierKey =
   | keyof Country
   | "sovereign"
   | "visited"
@@ -13,15 +13,15 @@ export type CountryPropertyKey =
   | "firstVisit"
   | "lastVisit";
 
-/** Configuration for a country property search. */
-export type CountryPropertyConfig = {
-  key: CountryPropertyKey;
+/** Configuration for a country qualifier search. */
+export type CountryQualifierConfig = {
+  key: CountryQualifierKey;
   label?: string;
   type?: "string" | "number" | "date";
   includeTC?: boolean;
 };
 
-export const COUNTRY_PROPERTY_MAP: Record<string, CountryPropertyConfig> = {
+export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   isocode: { key: "isoCode", label: "ISO code", type: "string" },
   region: { key: "region", label: "Region", type: "string" },
   region_tc: {
