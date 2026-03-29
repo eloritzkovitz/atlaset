@@ -54,7 +54,7 @@ export type CountryList = {
 
 /** Modifier configuration for country filtering. */
 export type CountryModifiers = {
-  tc?: TranscontinentalScope;
+  tc?: string;
   of?: string;
   visited?: boolean;
   count?: { op: Operator; value: number } | undefined;

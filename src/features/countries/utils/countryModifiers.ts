@@ -126,15 +126,21 @@ export function parseTCOption(raw?: string): {
     for (const p of parts) {
       if (p === "only") {
         mode = "only";
-        if (typeof scope === "undefined") scope = "all";
       } else if (p === "include") {
         mode = "include";
-        if (typeof scope === "undefined") scope = "all";
       } else if (p === "all") {
         scope = "all";
       } else if (p === "contiguous" || p === "overseas" || p === "other") {
         scope = p as TranscontinentalScope;
       }
+    }
+
+    // If mode explicitly requests only/include but no scope was provided, default to 'all'
+    if (
+      (mode === "only" || mode === "include") &&
+      typeof scope === "undefined"
+    ) {
+      scope = "all";
     }
 
     return { scope, mode };
