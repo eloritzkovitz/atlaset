@@ -59,9 +59,19 @@ export function buildSearchString(country: Country) {
 export function getQualifierTokens(
   country: Country,
   key: CountryQualifierKey,
-  options?: { includeTC?: TranscontinentalScope; visitContext?: VisitContext },
+  options?: {
+    tcOption?: { scope?: TranscontinentalScope; mode?: string };
+    visitContext?: VisitContext;
+  },
 ) {
-  const { includeTC = false, visitContext } = options ?? {};
+  const { tcOption, visitContext } = options ?? {};
+
+  // Determine if transcontinental countries should be included based on the provided options
+  const includeTC: TranscontinentalScope | boolean = tcOption
+    ? tcOption.mode === "include" || tcOption.scope === "all"
+      ? true
+      : (tcOption.scope ?? false)
+    : false;
   const vIso = visitContext?.visitedIsoCodes;
 
   // Handle special cases for region/subregion with transcontinental inclusion, sovereign status, and visit-related properties

@@ -3,33 +3,22 @@
  */
 
 import type { Layer } from "@features/atlas/layers";
-import type { VisitContext } from "@features/visits";
-import {
-  getFirstYearFor,
-  getLastYearFor,
-  getVisitCountFor,
-  hasVisitInYearFor,
-  isVisitedFor,
-} from "@features/visits/utils/visitHelpers";
+import type { VisitContext } from "@features/visits/types";
 import { filterBySearch } from "@utils/filter";
-import { compareNumeric } from "@utils/number";
 import { parseQualifierSearch } from "@utils/search";
+import {
+  applyModifiersToCountry,
+  ensureModifiers,
+  matchesSovereigntyOf,
+  matchesTranscontinental,
+  parseTCOption,
+} from "./countryModifiers";
 import {
   buildSearchString,
   getQualifierTokens,
   resolveQualifierConfig,
 } from "./countrySearch";
-import { COUNTRY_RELATIONS } from "../constants/countryRelations";
-import {
-  ensureModifiers,
-  type CountryModifiers,
-} from "../constants/modifierConfig";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
-import type {
-  Country,
-  CountryFilterOptions,
-  TranscontinentalScope,
-} from "../types";
+import type { Country, CountryFilterOptions, CountryModifiers } from "../types";
 
 /**
  * Filters countries based on various criteria.
@@ -41,6 +30,7 @@ import type {
 export function filterCountries(
   countries: Country[],
   options: CountryFilterOptions,
+  visitContext?: VisitContext,
 ) {
   const {
     search = "",
@@ -50,21 +40,18 @@ export function filterCountries(
     layerCountries,
   } = options;
 
-  // Determine if transcontinental countries should be included
-  const includeTranscontinental = options.includeTranscontinental === true;
-  const tcOption = options.transcontinental;
+  const mods = (options.modifiers ?? {}) as CountryModifiers;
 
-  const baseCountries = tcOption
-    ? countries.filter((country) => {
-        const entry = TRANSCONTINENTAL_MAP.get(
-          country.isoCode?.toUpperCase?.() ?? "",
-        );
-        if (!entry) return false;
-        if (tcOption === true) return true;
-        const entryScope = entry.scope ?? "contiguous";
-        return entryScope === tcOption;
-      })
-    : countries;
+  // Parse transcontinental option (scope + mode). Modes: "normal" | "only" | "include".
+  const tcParsed = parseTCOption(mods.tc);
+  const tcScope = tcParsed.scope;
+  const tcMode = tcParsed.mode;
+
+  // If mode is "only" restrict the base set to transcontinental matches (optionally scoped)
+  const baseCountries =
+    tcMode === "only"
+      ? countries.filter((country) => matchesTranscontinental(country, tcScope))
+      : countries;
 
   // Apply filters
   return filterBySearch(baseCountries, search, (c) =>
@@ -75,7 +62,7 @@ export function filterCountries(
       country.region !== selectedRegion &&
       !(
         getQualifierTokens(country, "region", {
-          includeTC: includeTranscontinental,
+          tcOption: tcParsed,
         }) || []
       ).includes(selectedRegion)
     )
@@ -86,7 +73,7 @@ export function filterCountries(
       country.subregion !== selectedSubregion &&
       !(
         getQualifierTokens(country, "subregion", {
-          includeTC: includeTranscontinental,
+          tcOption: tcParsed,
         }) || []
       ).includes(selectedSubregion)
     )
@@ -102,21 +89,11 @@ export function filterCountries(
     )
       return false;
 
+    // Apply global modifiers if present
+    if (!applyModifiersToCountry(country, mods, visitContext)) return false;
+
     return true;
   });
-}
-
-// Parses a raw value for transcontinental scope, accepting booleans or specific strings
-function parseTCScope(raw?: boolean | string): TranscontinentalScope {
-  if (raw === true || raw === false) return raw;
-  if (typeof raw === "string") {
-    const v = raw.toLowerCase();
-    if (v === "true") return true;
-    if (v === "false") return false;
-    if (v === "contiguous" || v === "overseas" || v === "other")
-      return v as Exclude<TranscontinentalScope, boolean>;
-  }
-  return false;
 }
 
 /**
@@ -133,37 +110,23 @@ export function filterCountriesByQualifier(
   qualifier: string,
   value: string,
   visitContext?: VisitContext,
-  modifiers?: Record<string, boolean | string> | CountryModifiers,
+  modifiers?: CountryModifiers,
 ): Country[] {
   const config = resolveQualifierConfig(qualifier);
   if (!config?.key) return [];
 
   const key = config.key;
-  const mods = ensureModifiers(modifiers);
-  const includeTC: TranscontinentalScope = parseTCScope(mods.tc);
+  const mods = (modifiers ?? {}) as CountryModifiers;
+  const tcOption = parseTCOption(mods.tc);
   const searchValue = value.toLowerCase();
-  const vmap = visitContext?.visitedMap;
-  const ymap = visitContext?.visitedYearMap;
-  const visitedIso = visitContext?.visitedIsoCodes ?? [];
-  const firstVisitMap = visitContext?.firstVisitMap;
-  const lastVisitMap = visitContext?.lastVisitMap;
-  const parsedCount = mods.count;
-  const parsedYear = mods.year;
-  const parsedFirst = mods.first;
-  const parsedLast = mods.last;
 
   // Handle sovereigntyType with "of" modifier for related countries
   if (key === "sovereigntyType") {
     const ofIso = mods?.of ? String(mods.of).toUpperCase() : undefined;
     if (ofIso) {
-      const sovereignEntry = COUNTRY_RELATIONS[ofIso];
-      const deps = [
-        ...(sovereignEntry?.dependencies ?? []),
-        ...(sovereignEntry?.regions ?? []),
-      ];
       const search = searchValue;
       return countries.filter((c) => {
-        if (!deps.includes(c.isoCode)) return false;
+        if (!matchesSovereigntyOf(c, ofIso)) return false;
         if (!search) return true;
         return (c.sovereigntyType ?? "").toLowerCase().includes(search);
       });
@@ -176,51 +139,11 @@ export function filterCountriesByQualifier(
   }
 
   // Handle visit-related qualifiers with visit context and modifiers
-  const visitedMod = mods?.visited;
   return countries.filter((country) => {
-    if (typeof visitedMod !== "undefined") {
-      const visited = isVisitedFor(country.isoCode, vmap, visitedIso);
-      if (visitedMod === true && !visited) return false;
-      if (visitedMod === false && visited) return false;
-    }
-
-    // If `count:` modifier is present, check the visit count against the condition
-    if (parsedCount) {
-      const count = getVisitCountFor(country.isoCode, vmap, visitedIso);
-      if (!compareNumeric(parsedCount.op, count, parsedCount.value))
-        return false;
-    }
-
-    // If `year:` modifier is present, apply it as an additional filter
-    if (parsedYear) {
-      const { op, year } = parsedYear;
-      if (op === "=") {
-        if (!hasVisitInYearFor(country.isoCode, year, ymap)) return false;
-      } else {
-        const firstYear = getFirstYearFor(country.isoCode, firstVisitMap, ymap);
-        if (firstYear === null) return false;
-        if (!compareNumeric(op, firstYear, year)) return false;
-      }
-    }
-
-    // If `first:` modifier is present, apply it against the first visit year
-    if (parsedFirst) {
-      const { op, year } = parsedFirst;
-      const firstYear = getFirstYearFor(country.isoCode, firstVisitMap, ymap);
-      if (firstYear === null) return false;
-      if (!compareNumeric(op, firstYear, year)) return false;
-    }
-
-    // If `last:` modifier is present, apply it against the last visit year
-    if (parsedLast) {
-      const { op, year } = parsedLast;
-      const lastYear = getLastYearFor(country.isoCode, lastVisitMap, ymap);
-      if (lastYear === null) return false;
-      if (!compareNumeric(op, lastYear, year)) return false;
-    }
+    if (!applyModifiersToCountry(country, mods, visitContext)) return false;
 
     return getQualifierTokens(country, key, {
-      includeTC,
+      tcOption,
       visitContext,
     }).some(
       (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
@@ -325,13 +248,33 @@ export function applyQualifierSearch(
             visitedYearMap: visitedYearMap ?? {},
           }
         : undefined;
-    return filterCountriesByQualifier(
+
+    // Normalize parsed modifiers once and use typed CountryModifiers internally
+    const parsedMods = ensureModifiers(parsed.modifiers);
+
+    // First, filter by the qualifier (honoring qualifier-local modifiers)
+    const byQualifier = filterCountriesByQualifier(
       countries,
       parsed.qualifier,
       parsed.query,
       visitContext,
-      parsed.modifiers ?? {},
+      parsedMods,
     );
+
+    // Merge parsed modifiers into the existing filter params so they apply globally
+    const mergedModifiers = {
+      ...(filterParams.modifiers as CountryModifiers | undefined),
+      ...(parsedMods ?? {}),
+    } as CountryModifiers;
+
+    const mergedParams: CountryFilterOptions = {
+      ...filterParams,
+      modifiers: mergedModifiers as CountryModifiers,
+      search: "",
+      layerCountries: filteredIsoCodes,
+    };
+
+    return filterCountries(byQualifier, mergedParams, visitContext);
   }
   // If search contains a colon but didn't parse, treat it as normal search
   if (typeof search === "string" && search.includes(":")) {

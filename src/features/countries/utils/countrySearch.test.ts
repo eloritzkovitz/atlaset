@@ -44,7 +44,7 @@ describe("countrySearch utils", () => {
       const r = getQualifierTokens(countries[0], "region");
       expect(r).toContain("Europe");
       const caTokens = getQualifierTokens(countries[3], "region", {
-        includeTC: true,
+        tcOption: { scope: "all", mode: "include" },
       });
       expect(caTokens).toContain("Americas");
       expect(caTokens).toContain("Europe");
@@ -89,14 +89,14 @@ describe("countrySearch utils", () => {
 
       // includeTC as object form for region
       const caRegion = getQualifierTokens(countries[3], "region", {
-        includeTC: true,
+        tcOption: { scope: "all", mode: "include" },
       });
       expect(caRegion).toContain("Americas");
       expect(caRegion).toContain("Europe");
 
       // includeTC as object form for subregion
       const caSubregion = getQualifierTokens(countries[3], "subregion", {
-        includeTC: "contiguous",
+        tcOption: { scope: "contiguous", mode: "include" },
       });
       expect(caSubregion).toContain("Northern America");
       expect(caSubregion).toContain("Northern Europe");

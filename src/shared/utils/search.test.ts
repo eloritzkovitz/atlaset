@@ -19,32 +19,32 @@ describe("search utils", () => {
       });
     });
 
-    it("parses multi-word query and trailing boolean modifier", () => {
+    it("parses multi-word query and trailing tc modifier as string", () => {
       expect(parseQualifierSearch("currency:gold euro tc:true")).toEqual({
         qualifier: "currency",
         query: "gold euro",
-        modifiers: { tc: true },
+        modifiers: { tc: "true" },
       });
     });
 
-    it("parses explicit false modifier", () => {
+    it("parses explicit false modifier for tc as string", () => {
       expect(parseQualifierSearch("region:europe tc:false")).toEqual({
         qualifier: "region",
         query: "europe",
-        modifiers: { tc: false },
+        modifiers: { tc: "false" },
       });
     });
 
-    it("parses 'yes'/'no' boolean modifier variants", () => {
+    it("parses 'yes'/'no' modifier variants for tc as strings", () => {
       expect(parseQualifierSearch("region:europe tc:yes")).toEqual({
         qualifier: "region",
         query: "europe",
-        modifiers: { tc: true },
+        modifiers: { tc: "yes" },
       });
       expect(parseQualifierSearch("region:europe tc:no")).toEqual({
         qualifier: "region",
         query: "europe",
-        modifiers: { tc: false },
+        modifiers: { tc: "no" },
       });
     });
 

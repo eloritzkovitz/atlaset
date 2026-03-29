@@ -18,7 +18,7 @@ import {
   useCountryData,
   type CountryFilterOptions,
   type SovereigntyType,
-  type TranscontinentalScope,
+  type CountryModifiers,
 } from "@features/countries";
 import {
   filterByVisitCount,
@@ -70,14 +70,7 @@ export function useCountryFilters() {
   const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
-
-  // Filter only transcontinental countries (boolean or scoped)
-  const [transcontinental, setTranscontinental] =
-    useState<TranscontinentalScope>(false);
-
-  // Whether to include transcontinental additional region/subregion matches
-  const [includeTranscontinental, setIncludeTranscontinental] =
-    useState<TranscontinentalScope>(false);
+  const [modifiers, setModifiers] = useState<CountryModifiers>({});
 
   // Visit count filters
   const [minVisitCount, setMinVisitCount] = useState<number>(1);
@@ -92,16 +85,14 @@ export function useCountryFilters() {
       selectedRegion,
       selectedSubregion,
       selectedSovereignty,
-      transcontinental,
-      includeTranscontinental,
+      modifiers,
     }),
     [
       debouncedSearch,
       selectedRegion,
       selectedSubregion,
       selectedSovereignty,
-      transcontinental,
-      includeTranscontinental,
+      modifiers,
     ],
   );
 
@@ -255,9 +246,7 @@ export function useCountryFilters() {
     maxVisitCount,
     setMaxVisitCount,
     resetFilters,
-    includeTranscontinental,
-    setIncludeTranscontinental,
-    transcontinental,
-    setTranscontinental,
+    modifiers,
+    setModifiers,
   };
 }
