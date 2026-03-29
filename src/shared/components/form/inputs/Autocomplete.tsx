@@ -87,7 +87,9 @@ export function Autocomplete({
       {hasColon && isValidPrefix ? (
         <div className="flex items-center">
           <QualifierToken
-            label={(topSuggestion || propCandidate) + ":"}
+            // Prefer the committed propCandidate for the visible label so a
+            // stale debounced `topSuggestion` doesn't briefly override it.
+            label={(propCandidate || topSuggestion) + ":"}
             lockedSuffix={lockedSuffix}
             clearable={qualifierClearable}
             onClear={() => {
@@ -142,11 +144,7 @@ export function Autocomplete({
             showIcon={false}
             showClear={true}
             onClear={() => {
-              if (lockedSuffix) {
-                commitWithPrefix(lockedSuffix);
-                return;
-              }
-              onChange("");
+              clearQualifier();
             }}
             style={{
               borderTopLeftRadius: 0,
