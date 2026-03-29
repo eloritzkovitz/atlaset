@@ -270,7 +270,7 @@ export function CountriesPanel({
           maxVisitCount={maxVisitCount}
           setMaxVisitCount={setMaxVisitCount}
           resetFilters={handleResetFilters}
-          includeTranscontinental={includeTranscontinental}
+          includeTranscontinental={!!includeTranscontinental}
           setIncludeTranscontinental={setIncludeTranscontinental}
         />
       )}

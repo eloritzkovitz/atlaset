@@ -175,7 +175,7 @@ export function filterCountriesByQualifier(
     );
   }
 
-  // Handle visited and count modifiers (both act as additional AND filters)
+  // Handle visit-related qualifiers with visit context and modifiers
   const visitedMod = mods?.visited;
   return countries.filter((country) => {
     if (typeof visitedMod !== "undefined") {
@@ -184,14 +184,14 @@ export function filterCountriesByQualifier(
       if (visitedMod === false && visited) return false;
     }
 
-    // If count modifier is present, check the visit count against the condition
+    // If `count:` modifier is present, check the visit count against the condition
     if (parsedCount) {
       const count = getVisitCountFor(country.isoCode, vmap, visitedIso);
       if (!compareNumeric(parsedCount.op, count, parsedCount.value))
         return false;
     }
 
-    // If a `year:` modifier is present, apply it as an additional filter
+    // If `year:` modifier is present, apply it as an additional filter
     if (parsedYear) {
       const { op, year } = parsedYear;
       if (op === "=") {
@@ -203,7 +203,7 @@ export function filterCountriesByQualifier(
       }
     }
 
-    // If a `first:` modifier is present, apply it against the first visit year
+    // If `first:` modifier is present, apply it against the first visit year
     if (parsedFirst) {
       const { op, year } = parsedFirst;
       const firstYear = getFirstYearFor(country.isoCode, firstVisitMap, ymap);
@@ -211,7 +211,7 @@ export function filterCountriesByQualifier(
       if (!compareNumeric(op, firstYear, year)) return false;
     }
 
-    // If a `last:` modifier is present, apply it against the last visit year
+    // If `last:` modifier is present, apply it against the last visit year
     if (parsedLast) {
       const { op, year } = parsedLast;
       const lastYear = getLastYearFor(country.isoCode, lastVisitMap, ymap);
