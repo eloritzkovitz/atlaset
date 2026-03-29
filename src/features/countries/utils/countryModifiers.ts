@@ -135,15 +135,15 @@ export function parseTCOption(raw?: string): {
       }
     }
 
-    // If mode explicitly requests only/include but no scope was provided, default to 'all'
-    if (
-      (mode === "only" || mode === "include") &&
-      typeof scope === "undefined"
-    ) {
-      scope = "all";
-    }
+    // Determine final scope based on mode if not explicitly set
+    const finalScope: TranscontinentalScope | undefined =
+      typeof scope !== "undefined"
+        ? scope
+        : mode === "only" || mode === "include"
+          ? "all"
+          : undefined;
 
-    return { scope, mode };
+    return { scope: finalScope, mode };
   }
   return { mode: "default" };
 }
