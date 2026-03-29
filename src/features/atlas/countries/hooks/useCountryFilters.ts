@@ -220,6 +220,20 @@ export function useCountryFilters() {
     }
   }, [timelineMode, resetTimelineFilters]);
 
+  // Update modifiers based on visited and sovereign toggles
+  useEffect(() => {
+    setModifiers((prev) => {
+      const next = { ...(prev ?? {}) };
+      if (showVisitedOnly) next.visited = true;
+      else delete next.visited;
+
+      if (sovereignOnly) next.sovereign = true;
+      else delete next.sovereign;
+
+      return next as typeof prev;
+    });
+  }, [showVisitedOnly, sovereignOnly, setModifiers]);
+
   return {
     selectedRegion,
     setSelectedRegion,

@@ -1,12 +1,7 @@
-import { useRef, useState, type KeyboardEvent } from "react";
-import { useAutocomplete, useTextWidth } from "@hooks";
-import { computeSuffix } from "@utils/search";
-import { PrefixHint } from "./PrefixHint";
+import { useEffect, type KeyboardEvent } from "react";
+import { useAutocomplete, usePendingFocus } from "@hooks";
+import { QualifierToken } from "./QualifierToken";
 import { SearchInput } from "./SearchInput";
-
-const INPUT_ICON_OFFSET = 40;
-const MIN_PREFIX_PAD = 32;
-const PREFIX_GAP = 8;
 
 interface AutocompleteProps {
   value: string;
@@ -16,6 +11,7 @@ interface AutocompleteProps {
   placeholder?: string;
   maxSuggestions?: number;
   className?: string;
+  qualifierClearable?: boolean;
 }
 
 export function Autocomplete({
@@ -26,8 +22,9 @@ export function Autocomplete({
   placeholder,
   maxSuggestions = 6,
   className = "",
+  qualifierClearable = true,
 }: AutocompleteProps) {
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const { setRef: setInputRef, requestFocus, inputRef } = usePendingFocus();
 
   // Manage autocomplete suggestions and selection logic
   const {
@@ -44,94 +41,141 @@ export function Autocomplete({
     onChange,
     suggestionProvider,
     onSelect: onSelect,
-    postSelect: () => inputRef.current?.blur(),
+    postSelect: () => {
+      requestFocus();
+    },
     maxSuggestions,
     debounceMs: 60,
   });
-
-  // Determine if the current input has a valid prefix and compute the display value accordingly
   const isValidPrefix = isPrefixValid ?? false;
-  const displayValue = hasColon ? (isValidPrefix ? afterColon : value) : value;
 
-  // Measure the width of the typed text to position the inline suggestion hint correctly
-  const { measurerRef, suffixLeft } = useTextWidth(displayValue, inputRef);
-  const [prefixWidth, setPrefixWidth] = useState(0);
+  // If the qualifier becomes active, ensure the new input receives focus
+  useEffect(() => {
+    if (hasColon && isValidPrefix) {
+      requestFocus();
+    }
+  }, [hasColon, isValidPrefix, requestFocus]);
+
+  const rawAfter = afterColon ?? "";
+  const startsWithTrue = rawAfter.trimStart().toLowerCase().startsWith("true");
+  const lockedSuffix =
+    hasColon && isValidPrefix && startsWithTrue ? "true" : undefined;
+
+  // Editable portion of the input after the colon.
+  // If the suffix is locked, this will be the part after the locked suffix.
+  let editableAfter: string | undefined;
+  if (hasColon && isValidPrefix) {
+    if (lockedSuffix) {
+      const leading = rawAfter.match(/^\s*/)?.[0] ?? "";
+      editableAfter = rawAfter.slice(leading.length + lockedSuffix.length);
+    } else {
+      editableAfter = rawAfter;
+    }
+  }
+
+  // If the locked suffix is present, the user should not be able to edit it, and the input should always end with it
+  const displayValue = hasColon
+    ? isValidPrefix
+      ? (editableAfter ?? "")
+      : value
+    : value;
 
   return (
     <div className={`relative ${className}`}>
-      {/* invisible measurer for computing typed text width */}
-      <span
-        ref={measurerRef}
-        className="absolute invisible whitespace-pre text-base"
-        aria-hidden
-      />
-      <PrefixHint
-        topSuggestion={topSuggestion}
-        propCandidate={propCandidate}
-        isValid={isValidPrefix}
-        left={INPUT_ICON_OFFSET}
-        onWidthChange={setPrefixWidth}
-      />
-      <SearchInput
-        ref={inputRef}
-        value={displayValue}
-        onChange={(v) => {
-          // If user clears the input entirely, clear everything
-          if (v === "") {
-            if (hasColon && isValidPrefix) {
-              commitWithPrefix("");
-            } else {
+      {hasColon && isValidPrefix ? (
+        <div className="flex items-center">
+          <QualifierToken
+            label={(topSuggestion || propCandidate) + ":"}
+            lockedSuffix={lockedSuffix}
+            clearable={qualifierClearable}
+            onClear={() => {
               clearQualifier();
-            }
-            return;
-          }
-
-          // If user has typed a qualifier token and is now changing the value, only recombine when the prefix is valid
-          if (hasColon && isValidPrefix) {
-            commitWithPrefix(v);
-            return;
-          }
-
-          // Otherwise pass the raw input through
-          onChange(v);
-        }}
-        onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-          handleKeyDown(e);
-        }}
-        placeholder={hasColon ? undefined : placeholder}
-        className={className}
-        showClear={hasColon || Boolean(displayValue)}
-        onClear={() => onChange("")}
-        style={
-          hasColon && isValidPrefix
-            ? {
-                paddingLeft: `${INPUT_ICON_OFFSET + Math.max(prefixWidth, MIN_PREFIX_PAD) + PREFIX_GAP}px`,
+              setTimeout(() => inputRef.current?.focus(), 0);
+            }}
+          />
+          <SearchInput
+            ref={setInputRef}
+            value={displayValue}
+            onChange={(v) => {
+              if (v === "") {
+                if (lockedSuffix) {
+                  commitWithPrefix(lockedSuffix);
+                  return;
+                }
+                commitWithPrefix("");
+                return;
               }
-            : undefined
-        }
-      />
-      {!hasColon &&
-        topSuggestion &&
-        propCandidate.length > 0 &&
-        (() => {
-          const suffix = computeSuffix(topSuggestion, propCandidate);
-          if (!suffix) return null;
-          return (
-            <div
-              style={{
-                position: "absolute",
-                top: 0,
-                left: `${suffixLeft}px`,
-                height: "100%",
-                pointerEvents: "none",
-              }}
-            >
-              <div className="pl-0 pr-10 py-2 text-muted text-base">
-                {suffix}
-              </div>
-            </div>
-          );
-        })()}
+
+              if (lockedSuffix) {
+                const combined = `${lockedSuffix} ${v}`.trim();
+                commitWithPrefix(combined);
+                return;
+              }
+              commitWithPrefix(v);
+            }}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              // Only clear qualifier when Backspace pressed at the start of an already-empty editable input.
+              if (
+                e.key === "Backspace" &&
+                hasColon &&
+                isValidPrefix &&
+                qualifierClearable
+              ) {
+                const el = inputRef.current;
+                const val = el?.value ?? "";
+                const selStart = el?.selectionStart ?? null;
+                if (
+                  (val === "" && selStart === 0) ||
+                  (val === "" && selStart === null)
+                ) {
+                  e.preventDefault();
+                  requestFocus();
+                  clearQualifier();
+                  return;
+                }
+              }
+              handleKeyDown(e);
+            }}
+            placeholder={undefined}
+            className={className}
+            showClear={true}
+            onClear={() => {
+              if (lockedSuffix) {
+                commitWithPrefix(lockedSuffix);
+                return;
+              }
+              onChange("");
+            }}
+            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+          />
+        </div>
+      ) : (
+        <>
+          <SearchInput
+            ref={setInputRef}
+            value={displayValue}
+            onChange={(v) => {
+              if (v === "") {
+                if (hasColon && isValidPrefix) {
+                  onChange("");
+                } else {
+                  clearQualifier();
+                }
+                return;
+              }
+              onChange(v);
+            }}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              handleKeyDown(e);
+            }}
+            placeholder={hasColon ? undefined : placeholder}
+            className={className}
+            showClear={Boolean(displayValue)}
+            onClear={() => onChange("")}
+            style={undefined}
+          />
+        </>
+      )}
     </div>
   );
 }

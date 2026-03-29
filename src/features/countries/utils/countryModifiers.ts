@@ -39,6 +39,15 @@ export function normalizeModifiers(
   if (typeof mods.tc !== "undefined")
     out.tc = mods.tc as CountryModifiers["tc"];
   if (typeof mods.of !== "undefined") out.of = String(mods.of).toUpperCase();
+  if (typeof mods.sovereign !== "undefined") {
+    const s = mods.sovereign;
+    if (typeof s === "boolean") out.sovereign = s;
+    else if (typeof s === "string") {
+      const ls = s.toLowerCase();
+      if (ls === "true") out.sovereign = true;
+      if (ls === "false") out.sovereign = false;
+    }
+  }
   if (typeof mods.visited !== "undefined") {
     const v = mods.visited;
     if (typeof v === "boolean") out.visited = v;
@@ -195,6 +204,12 @@ export function applyModifiersToCountry(
     const visited = isVisitedFor(country.isoCode, vmap, visitedIso);
     if (mods.visited === true && !visited) return false;
     if (mods.visited === false && visited) return false;
+  }
+
+  if (typeof mods.sovereign !== "undefined") {
+    const isSov = country.sovereigntyType === "Sovereign";
+    if (mods.sovereign === true && !isSov) return false;
+    if (mods.sovereign === false && isSov) return false;
   }
 
   if (mods.count) {

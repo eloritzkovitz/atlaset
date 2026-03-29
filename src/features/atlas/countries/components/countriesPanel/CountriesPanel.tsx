@@ -253,7 +253,7 @@ export function CountriesPanel({
         onClose={handleClose}
       />
       {showCountries && (
-          <CountryFiltersPanel
+        <CountryFiltersPanel
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
           showVisitedOnly={showVisitedOnly}
@@ -271,13 +271,16 @@ export function CountriesPanel({
           setMaxVisitCount={setMaxVisitCount}
           resetFilters={handleResetFilters}
           includeTranscontinental={
-            !!(modifiers?.tc && String(modifiers.tc).toLowerCase().includes("include"))
+            !!(
+              modifiers?.tc &&
+              String(modifiers.tc).toLowerCase().includes("include")
+            )
           }
           setIncludeTranscontinental={(val: boolean) => {
             if (val) {
               setModifiers({ ...(modifiers ?? {}), tc: "include" });
             } else {
-              const next = { ...(modifiers ?? {}) } as any;
+              const next = { ...(modifiers ?? {}) };
               if (typeof next.tc !== "undefined") {
                 const tcStr = String(next.tc).toLowerCase();
                 if (tcStr === "include" || tcStr.includes("include")) {

@@ -239,15 +239,15 @@ export function applyQualifierSearch(
   visitedYearMap?: Record<string, Set<number>>,
 ) {
   const parsed = parseQualifierSearch(search);
+  const visitContext: VisitContext | undefined =
+    visitedIsoCodes || visitedMap || visitedYearMap
+      ? {
+          visitedIsoCodes: visitedIsoCodes ?? [],
+          visitedMap: visitedMap ?? {},
+          visitedYearMap: visitedYearMap ?? {},
+        }
+      : undefined;
   if (parsed && (parsed.query ?? "").trim() !== "") {
-    const visitContext: VisitContext | undefined =
-      visitedIsoCodes || visitedMap || visitedYearMap
-        ? {
-            visitedIsoCodes: visitedIsoCodes ?? [],
-            visitedMap: visitedMap ?? {},
-            visitedYearMap: visitedYearMap ?? {},
-          }
-        : undefined;
 
     // Normalize parsed modifiers once and use typed CountryModifiers internally
     const parsedMods = ensureModifiers(parsed.modifiers);
@@ -281,15 +281,23 @@ export function applyQualifierSearch(
     const parts = search.split(":");
     const after = parts.slice(1).join(":").trim();
     if (after === "") {
-      return filterCountries(countries, {
-        ...filterParams,
-        search: "",
-        layerCountries: filteredIsoCodes,
-      });
+      return filterCountries(
+        countries,
+        {
+          ...filterParams,
+          search: "",
+          layerCountries: filteredIsoCodes,
+        },
+        visitContext,
+      );
     }
   }
-  return filterCountries(countries, {
-    ...filterParams,
-    layerCountries: filteredIsoCodes,
-  });
+  return filterCountries(
+    countries,
+    {
+      ...filterParams,
+      layerCountries: filteredIsoCodes,
+    },
+    visitContext,
+  );
 }

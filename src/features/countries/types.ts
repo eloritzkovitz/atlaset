@@ -57,6 +57,7 @@ export type CountryModifiers = {
   tc?: string;
   of?: string;
   visited?: boolean;
+  sovereign?: boolean;
   count?: { op: Operator; value: number } | undefined;
   year?: { op: Operator; year: number } | undefined;
   first?: { op: Operator; year: number } | undefined;
