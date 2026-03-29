@@ -67,7 +67,9 @@ export function Autocomplete({
   if (hasColon && isValidPrefix) {
     if (lockedSuffix) {
       const leading = rawAfter.match(/^\s*/)?.[0] ?? "";
-      editableAfter = rawAfter.slice(leading.length + lockedSuffix.length);
+      let start = leading.length + lockedSuffix.length;
+      if (rawAfter[start] === " ") start += 1;
+      editableAfter = rawAfter.slice(start);
     } else {
       editableAfter = rawAfter;
     }
@@ -137,7 +139,7 @@ export function Autocomplete({
               handleKeyDown(e);
             }}
             placeholder={undefined}
-            className={className}
+            showIcon={false}
             showClear={true}
             onClear={() => {
               if (lockedSuffix) {
@@ -146,7 +148,10 @@ export function Autocomplete({
               }
               onChange("");
             }}
-            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+            style={{
+              borderTopLeftRadius: 0,
+              borderBottomLeftRadius: 0,
+            }}
           />
         </div>
       ) : (

@@ -10,6 +10,7 @@ interface SearchInputProps {
   placeholder?: string;
   showClear?: boolean;
   onClear?: () => void;
+  showIcon?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -24,6 +25,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       placeholder,
       showClear = true,
       onClear,
+      showIcon = true,
       className = "",
       style,
     },
@@ -75,7 +77,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           isFocused && showRing ? "ring-2 ring-ring-focus" : ""
         }`}
       >
-        <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
+        {showIcon !== false && (
+          <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
+        )}
         <input
           ref={ref || inputRef}
           type="text"
@@ -103,7 +107,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           }}
           placeholder={placeholder}
           aria-label={placeholder || "Search"}
-          className={`w-full pl-10 pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
+          className={`w-full ${showIcon === false ? "pl-3" : "pl-10"} pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
           style={style}
         />
         {showClear && (
