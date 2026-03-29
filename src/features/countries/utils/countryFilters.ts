@@ -4,19 +4,32 @@
 
 import type { Layer } from "@features/atlas/layers";
 import type { VisitContext } from "@features/visits";
-import { filterBySearch } from "@utils/filter";
 import {
-  compareNumeric,
-  parseComparator,
-  parseYearComparator,
-} from "@utils/number";
+  getFirstYearFor,
+  getLastYearFor,
+  getVisitCountFor,
+  hasVisitInYearFor,
+  isVisitedFor,
+} from "@features/visits/utils/visitHelpers";
+import { filterBySearch } from "@utils/filter";
+import { compareNumeric } from "@utils/number";
 import { parseQualifierSearch } from "@utils/search";
 import {
   buildSearchString,
   getQualifierTokens,
   resolveQualifierConfig,
 } from "./countrySearch";
-import type { Country, CountryFilterOptions } from "../types";
+import { COUNTRY_RELATIONS } from "../constants/countryRelations";
+import {
+  ensureModifiers,
+  type CountryModifiers,
+} from "../constants/modifierConfig";
+import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
+import type {
+  Country,
+  CountryFilterOptions,
+  TranscontinentalScope,
+} from "../types";
 
 /**
  * Filters countries based on various criteria.
@@ -39,152 +52,180 @@ export function filterCountries(
 
   // Determine if transcontinental countries should be included
   const includeTranscontinental = options.includeTranscontinental === true;
+  const tcOption = options.transcontinental;
+
+  const baseCountries = tcOption
+    ? countries.filter((country) => {
+        const entry = TRANSCONTINENTAL_MAP.get(
+          country.isoCode?.toUpperCase?.() ?? "",
+        );
+        if (!entry) return false;
+        if (tcOption === true) return true;
+        const entryScope = entry.scope ?? "contiguous";
+        return entryScope === tcOption;
+      })
+    : countries;
 
   // Apply filters
-  return filterBySearch(countries, search, (c) => buildSearchString(c)).filter(
-    (country) => {
-      if (
-        selectedRegion &&
-        country.region !== selectedRegion &&
-        !(
-          getQualifierTokens(country, "region", {
-            includeTC: includeTranscontinental,
-          }) || []
-        ).includes(selectedRegion)
-      )
-        return false;
+  return filterBySearch(baseCountries, search, (c) =>
+    buildSearchString(c),
+  ).filter((country) => {
+    if (
+      selectedRegion &&
+      country.region !== selectedRegion &&
+      !(
+        getQualifierTokens(country, "region", {
+          includeTC: includeTranscontinental,
+        }) || []
+      ).includes(selectedRegion)
+    )
+      return false;
 
-      if (
-        selectedSubregion &&
-        country.subregion !== selectedSubregion &&
-        !(
-          getQualifierTokens(country, "subregion", {
-            includeTC: includeTranscontinental,
-          }) || []
-        ).includes(selectedSubregion)
-      )
-        return false;
+    if (
+      selectedSubregion &&
+      country.subregion !== selectedSubregion &&
+      !(
+        getQualifierTokens(country, "subregion", {
+          includeTC: includeTranscontinental,
+        }) || []
+      ).includes(selectedSubregion)
+    )
+      return false;
 
-      if (
-        selectedSovereignty &&
-        country.sovereigntyType !== selectedSovereignty
-      )
-        return false;
+    if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
+      return false;
 
-      if (
-        layerCountries &&
-        layerCountries.length &&
-        !layerCountries.includes(country.isoCode)
-      )
-        return false;
+    if (
+      layerCountries &&
+      layerCountries.length &&
+      !layerCountries.includes(country.isoCode)
+    )
+      return false;
 
-      return true;
-    },
-  );
+    return true;
+  });
+}
+
+// Parses a raw value for transcontinental scope, accepting booleans or specific strings
+function parseTCScope(raw?: boolean | string): TranscontinentalScope {
+  if (raw === true || raw === false) return raw;
+  if (typeof raw === "string") {
+    const v = raw.toLowerCase();
+    if (v === "true") return true;
+    if (v === "false") return false;
+    if (v === "contiguous" || v === "overseas" || v === "other")
+      return v as Exclude<TranscontinentalScope, boolean>;
+  }
+  return false;
 }
 
 /**
- * Filters countries by a qualifier and value, supporting arrays and strings.
+ * Filters countries by a qualifier and value, supporting arrays, strings and numbers.
  * @param countries - Array of Country objects.
  * @param qualifier - Qualifier name.
  * @param value - Value to match (case-insensitive, partial match).
+ * @param visitContext - Optional context for visit-related qualifiers.
+ * @param modifiers - Optional modifiers for special handling (e.g. transcontinental scope).
+ * @returns Filtered array of Country objects matching the qualifier criteria.
  */
 export function filterCountriesByQualifier(
   countries: Country[],
   qualifier: string,
   value: string,
   visitContext?: VisitContext,
-  modifiers?: Record<string, boolean | string>,
+  modifiers?: Record<string, boolean | string> | CountryModifiers,
 ): Country[] {
   const config = resolveQualifierConfig(qualifier);
   if (!config?.key) return [];
 
   const key = config.key;
-  const includeTC = !!modifiers?.tc;
+  const mods = ensureModifiers(modifiers);
+  const includeTC: TranscontinentalScope = parseTCScope(mods.tc);
   const searchValue = value.toLowerCase();
-  const vmap = visitContext?.visitedMap ?? {};
-  const ymap = visitContext?.visitedYearMap ?? {};
+  const vmap = visitContext?.visitedMap;
+  const ymap = visitContext?.visitedYearMap;
   const visitedIso = visitContext?.visitedIsoCodes ?? [];
+  const firstVisitMap = visitContext?.firstVisitMap;
+  const lastVisitMap = visitContext?.lastVisitMap;
+  const parsedCount = mods.count;
+  const parsedYear = mods.year;
+  const parsedFirst = mods.first;
+  const parsedLast = mods.last;
 
-  switch (key) {
-    case "visits": {
-      const parsed = parseComparator(value, "\\d+");
-      if (!parsed) return [];
-      const { op, value: num } = parsed;
-      return countries.filter((country) => {
-        const isVisited = visitedIso.includes(country.isoCode);
-        const queryIsZero =
-          (op === "=" && num === 0) || (op === "<" && num === 1);
-        if (!queryIsZero && num > 0 && !isVisited) return false;
-        const count = vmap[country.isoCode] || 0;
-        return compareNumeric(op, count, num);
+  // Handle sovereigntyType with "of" modifier for related countries
+  if (key === "sovereigntyType") {
+    const ofIso = mods?.of ? String(mods.of).toUpperCase() : undefined;
+    if (ofIso) {
+      const sovereignEntry = COUNTRY_RELATIONS[ofIso];
+      const deps = [
+        ...(sovereignEntry?.dependencies ?? []),
+        ...(sovereignEntry?.regions ?? []),
+      ];
+      const search = searchValue;
+      return countries.filter((c) => {
+        if (!deps.includes(c.isoCode)) return false;
+        if (!search) return true;
+        return (c.sovereigntyType ?? "").toLowerCase().includes(search);
       });
     }
 
-    case "firstVisit": {
-      const parsed = parseYearComparator(value);
-      if (!parsed) return [];
-      const { op, year } = parsed;
-      return countries.filter((country) => {
-        const firstDate = visitContext?.firstVisitMap?.[country.isoCode];
-        const yearsForFirst = ymap[country.isoCode];
-        const firstYear = firstDate
-          ? firstDate.getFullYear()
-          : yearsForFirst && yearsForFirst.size > 0
-            ? Math.min(...Array.from(yearsForFirst))
-            : null;
-        if (firstYear === null) return false;
-        return compareNumeric(op, firstYear, year);
-      });
-    }
-
-    case "lastVisit": {
-      const parsed = parseYearComparator(value);
-      if (!parsed) return [];
-      const { op, year } = parsed;
-      return countries.filter((country) => {
-        const lastDate = visitContext?.lastVisitMap?.[country.isoCode];
-        const yearsForLast = ymap[country.isoCode];
-        const lastYear = lastDate
-          ? lastDate.getFullYear()
-          : yearsForLast && yearsForLast.size > 0
-            ? Math.max(...Array.from(yearsForLast))
-            : null;
-        if (lastYear === null) return false;
-        return compareNumeric(op, lastYear, year);
-      });
-    }
-
-    case "visitYear": {
-      const parsed = parseYearComparator(value);
-      if (!parsed) return [];
-      const { op, year } = parsed;
-      if (op === "=") {
-        return countries.filter((country) =>
-          Boolean(ymap[country.isoCode]?.has(year)),
-        );
-      }
-      return countries.filter((country) => {
-        const firstDate = visitContext?.firstVisitMap?.[country.isoCode];
-        const yearsForFirst2 = ymap[country.isoCode];
-        const firstYear = firstDate
-          ? firstDate.getFullYear()
-          : yearsForFirst2 && yearsForFirst2.size > 0
-            ? Math.min(...Array.from(yearsForFirst2))
-            : null;
-        if (firstYear === null) return false;
-        return compareNumeric(op, firstYear, year);
-      });
-    }
-
-    default:
-      return countries.filter((country) =>
-        getQualifierTokens(country, key, { includeTC, visitContext }).some(
-          (t: string) =>
-            typeof t === "string" && t.toLowerCase().includes(searchValue),
-        ),
-      );
+    // Fallback: match sovereignty type string
+    return countries.filter((country) =>
+      (country.sovereigntyType ?? "").toLowerCase().includes(searchValue),
+    );
   }
+
+  // Handle visited and count modifiers (both act as additional AND filters)
+  const visitedMod = mods?.visited;
+  return countries.filter((country) => {
+    if (typeof visitedMod !== "undefined") {
+      const visited = isVisitedFor(country.isoCode, vmap, visitedIso);
+      if (visitedMod === true && !visited) return false;
+      if (visitedMod === false && visited) return false;
+    }
+
+    // If count modifier is present, check the visit count against the condition
+    if (parsedCount) {
+      const count = getVisitCountFor(country.isoCode, vmap, visitedIso);
+      if (!compareNumeric(parsedCount.op, count, parsedCount.value))
+        return false;
+    }
+
+    // If a `year:` modifier is present, apply it as an additional filter
+    if (parsedYear) {
+      const { op, year } = parsedYear;
+      if (op === "=") {
+        if (!hasVisitInYearFor(country.isoCode, year, ymap)) return false;
+      } else {
+        const firstYear = getFirstYearFor(country.isoCode, firstVisitMap, ymap);
+        if (firstYear === null) return false;
+        if (!compareNumeric(op, firstYear, year)) return false;
+      }
+    }
+
+    // If a `first:` modifier is present, apply it against the first visit year
+    if (parsedFirst) {
+      const { op, year } = parsedFirst;
+      const firstYear = getFirstYearFor(country.isoCode, firstVisitMap, ymap);
+      if (firstYear === null) return false;
+      if (!compareNumeric(op, firstYear, year)) return false;
+    }
+
+    // If a `last:` modifier is present, apply it against the last visit year
+    if (parsedLast) {
+      const { op, year } = parsedLast;
+      const lastYear = getLastYearFor(country.isoCode, lastVisitMap, ymap);
+      if (lastYear === null) return false;
+      if (!compareNumeric(op, lastYear, year)) return false;
+    }
+
+    return getQualifierTokens(country, key, {
+      includeTC,
+      visitContext,
+    }).some(
+      (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
+    );
+  });
 }
 
 /**

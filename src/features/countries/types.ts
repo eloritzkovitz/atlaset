@@ -59,5 +59,13 @@ export type CountryFilterOptions = {
   selectedSovereignty?: SovereigntyType | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
-  includeTranscontinental?: boolean;
+  transcontinental?: TranscontinentalScope;
+  includeTranscontinental?: TranscontinentalScope;
 };
+
+/** Represents the allowed values for transcontinental scope flags. */
+export type TranscontinentalScope =
+  | boolean
+  | "contiguous"
+  | "overseas"
+  | "other";

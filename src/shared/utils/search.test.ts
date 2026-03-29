@@ -35,19 +35,32 @@ describe("search utils", () => {
       });
     });
 
+    it("parses 'yes'/'no' boolean modifier variants", () => {
+      expect(parseQualifierSearch("region:europe tc:yes")).toEqual({
+        qualifier: "region",
+        query: "europe",
+        modifiers: { tc: true },
+      });
+      expect(parseQualifierSearch("region:europe tc:no")).toEqual({
+        qualifier: "region",
+        query: "europe",
+        modifiers: { tc: false },
+      });
+    });
+
+    it("preserves non-boolean modifier values", () => {
+      expect(parseQualifierSearch("region:europe tc:maybe")).toEqual({
+        qualifier: "region",
+        query: "europe",
+        modifiers: { tc: "maybe" },
+      });
+    });
+
     it("treats bare token as part of query (no modifier)", () => {
       expect(parseQualifierSearch("region:europe tc")).toEqual({
         qualifier: "region",
         query: "europe tc",
         modifiers: {},
-      });
-    });
-
-    it("parses non-boolean modifier value as string", () => {
-      expect(parseQualifierSearch("prop:val x:123")).toEqual({
-        qualifier: "prop",
-        query: "val",
-        modifiers: { x: "123" },
       });
     });
   });

@@ -28,8 +28,8 @@ export function identifyModifierRange(
  */
 export function coerceModifierValue(rawVal: string): boolean | string {
   const low = rawVal.toLowerCase();
-  if (low === "true" || low === "1" || low === "yes") return true;
-  if (low === "false" || low === "0" || low === "no") return false;
+  if (low === "true" || low === "yes") return true;
+  if (low === "false" || low === "no") return false;
   return rawVal;
 }
 

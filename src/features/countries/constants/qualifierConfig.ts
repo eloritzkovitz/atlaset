@@ -9,10 +9,7 @@ export type CountryQualifierKey =
   | keyof Country
   | "sovereign"
   | "visited"
-  | "visits"
-  | "visitYear"
-  | "firstVisit"
-  | "lastVisit";
+  | "tc";
 
 /** Configuration for a country qualifier search. */
 export type CountryQualifierConfig = {
@@ -32,10 +29,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "string" },
   visited: { key: "visited", label: "Visited", type: "string" },
-  visits: { key: "visits", label: "Visit count", type: "number" },
-  visityear: { key: "visitYear", label: "Visit year", type: "number" },
-  firstvisit: { key: "firstVisit", label: "First visit", type: "date" },
-  lastvisit: { key: "lastVisit", label: "Last visit", type: "date" },
+  tc: { key: "tc", label: "Transcontinental", type: "string" },
 };
 
 export const SUPPORTED_QUALIFIERS = keysOf(COUNTRY_QUALIFIER_MAP);

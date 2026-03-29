@@ -38,35 +38,36 @@ Country details include the following sections:
 In addition to finding countries by name, you can search by qualifiers using this syntax in the country search bar:
 
 ```bash
-qualifier:query
+qualifier:query modifier:query
 ```
 
 #### **Supported qualifiers**
 
-| Qualifier     | Type                |                    Example | Notes                                                                                             |
-| ------------- | ------------------- | -------------------------: | ------------------------------------------------------------------------------------------------- |
-| `isocode`     | text                |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                                |
-| `region`      | text                |              `region:Asia` | All countries in a given region (continent)                                                       |
-| `subregion`   | text                | `subregion:Southeast Asia` | All countries in a given subregion                                                                |
-| `capital`     | text                |            `capital:Paris` | Matches capital name                                                                              |
-| `currency`    | text                |             `currency:EUR` | Matches currency code                                                                             |
-| `language`    | text                |         `language:Spanish` | Matches a language                                                                                |
-| `callingcode` | text                |          `callingcode:+44` | Matches a calling code                                                                            |
-| `sovereignty` | text                |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                  |
-| `sovereign`   | boolean             |           `sovereign:true` | `true` / `false`                                                                                  |
-| `visited`     | boolean             |             `visited:true` | `true` / `false` (based on your visited list)                                                     |
-| `visits`      | number (comparison) |                `visits:>1` | Supports `>`, `<`, `>=`, `<=`, `=`; `=0` / `<1` (show all countries), `>0` (matches visited only) |
-| `visityear`   | number (comparison) |         `visityear:<=2025` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
-| `firstvisit`  | number (comparison) |         `firstvisit:=2012` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
-| `lastvisit`   | number (comparison) |          `lastvisit:=2018` | Supports `>`, `<`, `>=`, `<=`, `=`                                                                |
+| Qualifier     | Type           |                    Example | Notes                                                                                           |
+| ------------- | -------------- | -------------------------: | ----------------------------------------------------------------------------------------------- |
+| `isocode`     | text           |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                              |
+| `region`      | text           |              `region:Asia` | All countries in a given region (continent)                                                     |
+| `subregion`   | text           | `subregion:Southeast Asia` | All countries in a given subregion                                                              |
+| `tc`          | boolean / text |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `other` |
+| `capital`     | text           |            `capital:Paris` | Matches capital name                                                                            |
+| `currency`    | text           |             `currency:EUR` | Matches currency code                                                                           |
+| `language`    | text           |         `language:Spanish` | Matches a language                                                                              |
+| `callingcode` | text           |          `callingcode:+44` | Matches a calling code                                                                          |
+| `sovereignty` | text           |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                |
+| `sovereign`   | boolean        |           `sovereign:true` | `true` / `false`                                                                                |
+| `visited`     | boolean        |             `visited:true` | `true` / `false` (based on your visits)                                                         |
 
 #### **Additional Modifiers**
 
-- `tc`: For `region` and `subregion`, you can add `tc:true` to include transcontinental countries. For example:
-
-```bash
-region:europe tc:true
-```
+| Modifier  | Type                |                        Example | Notes                                                                                                                |
+| --------- | ------------------- | -----------------------------: | -------------------------------------------------------------------------------------------------------------------- |
+| `tc`      | text                |        `region:europe tc:true` | For `region` and `subregion`, will include transcontinental countries. Supports the the same values as the qualifier |
+| `of`      | text                | `sovereignty:dependency of:gb` | For `sovereignty`, filters dependencies or overseas regions by sovereign                                             |
+| `visited` | boolean             |   `region:europe visited:true` | Same as the qualifier                                                                                                |
+| `count`   | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count. Supports `>`, `<`, `>=`, `<=`, `=`                                       |
+| `year`    | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year. Supports `>`, `<`, `>=`, `<=`, `=`                                        |
+| `first`   | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by first visit. Supports `>`, `<`, `>=`, `<=`, `=`                                       |
+| `last`    | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by last visit. Supports `>`, `<`, `>=`, `<=`, `=`                                        |
 
 ## **Country Lists**
 
