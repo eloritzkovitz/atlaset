@@ -130,8 +130,6 @@ export function CountriesPanel({
     maxVisitCount,
     setMaxVisitCount,
     resetFilters,
-    modifiers,
-    setModifiers,
   } = useCountryFilters();
 
   // Compute filtered iso codes for custom list counts
@@ -270,26 +268,6 @@ export function CountriesPanel({
           maxVisitCount={maxVisitCount}
           setMaxVisitCount={setMaxVisitCount}
           resetFilters={handleResetFilters}
-          includeTranscontinental={
-            !!(
-              modifiers?.tc &&
-              String(modifiers.tc).toLowerCase().includes("include")
-            )
-          }
-          setIncludeTranscontinental={(val: boolean) => {
-            if (val) {
-              setModifiers({ ...(modifiers ?? {}), tc: "include" });
-            } else {
-              const next = { ...(modifiers ?? {}) };
-              if (typeof next.tc !== "undefined") {
-                const tcStr = String(next.tc).toLowerCase();
-                if (tcStr === "include" || tcStr.includes("include")) {
-                  delete next.tc;
-                }
-              }
-              setModifiers(next);
-            }
-          }}
         />
       )}
     </div>

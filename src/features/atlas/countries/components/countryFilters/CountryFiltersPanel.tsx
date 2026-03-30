@@ -29,8 +29,6 @@ interface CountryFiltersPanelProps {
   maxVisitCount: number | undefined;
   setMaxVisitCount: React.Dispatch<React.SetStateAction<number | undefined>>;
   resetFilters: () => void;
-  includeTranscontinental: boolean;
-  setIncludeTranscontinental: (v: boolean) => void;
 }
 
 export function CountryFiltersPanel({
@@ -50,8 +48,6 @@ export function CountryFiltersPanel({
   maxVisitCount,
   setMaxVisitCount,
   resetFilters,
-  includeTranscontinental,
-  setIncludeTranscontinental,
 }: CountryFiltersPanelProps) {
   const { countries } = useCountryData();
   const { timelineMode } = useTimeline();
@@ -143,8 +139,6 @@ export function CountryFiltersPanel({
           setSelectedVisited={setSelectedVisited}
           subregionOptions={subregionOptions}
           sovereigntyOptions={sovereigntyOptions}
-          includeTranscontinental={includeTranscontinental}
-          setIncludeTranscontinental={setIncludeTranscontinental}
         />
         {!showVisitedOnly && (
           <>

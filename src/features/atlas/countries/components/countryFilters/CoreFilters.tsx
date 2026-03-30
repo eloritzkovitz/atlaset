@@ -1,5 +1,5 @@
 import { FaShapes } from "react-icons/fa6";
-import { Checkbox, CollapsibleHeader, SelectInput } from "@components";
+import { CollapsibleHeader, SelectInput } from "@components";
 import { useCountryData, type SovereigntyType } from "@features/countries";
 import type { VisitedStatus } from "@features/visits";
 import { coreFiltersConfig } from "../../config/filtersConfig";
@@ -17,8 +17,6 @@ interface CoreFiltersProps {
   setSelectedVisited: (visited: VisitedStatus) => void;
   subregionOptions: string[];
   sovereigntyOptions: string[];
-  includeTranscontinental: boolean;
-  setIncludeTranscontinental: (v: boolean) => void;
 }
 
 export function CoreFilters({
@@ -34,8 +32,6 @@ export function CoreFilters({
   setSelectedVisited,
   subregionOptions,
   sovereigntyOptions,
-  includeTranscontinental,
-  setIncludeTranscontinental,
 }: CoreFiltersProps) {
   const { allRegions } = useCountryData();
 
@@ -83,11 +79,6 @@ export function CoreFilters({
               />
             ) : null;
           })}
-          <Checkbox
-            label="Include transcontinental countries"
-            checked={includeTranscontinental}
-            onChange={setIncludeTranscontinental}
-          />
         </>
       )}
     </>
