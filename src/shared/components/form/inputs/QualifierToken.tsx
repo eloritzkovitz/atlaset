@@ -12,9 +12,9 @@ export function QualifierToken({
   clearable = true,
 }: QualifierTokenProps) {
   const baseClasses =
-    "inline-flex items-center px-3 py-2 rounded-l-full bg-surface/50 border-2 border-surface-hover text-sm ";
+    "inline-flex items-center px-3 py-2 rounded-l-full bg-input/50 border-2 border-surface-hover text-sm ";
   const interactiveClasses =
-    "text-muted cursor-pointer hover:bg-surface-hover/50 focus:outline-none focus:ring-2 focus:ring-ring-focus";
+    "text-muted cursor-pointer hover:bg-input-hover/50 focus:outline-none focus:ring-2 focus:ring-ring-focus";
   const nonInteractiveClasses = "text-muted cursor-default opacity-80";
   const className = `${baseClasses} ${clearable ? interactiveClasses : nonInteractiveClasses}`;
   const ariaRole = clearable ? "button" : "img";

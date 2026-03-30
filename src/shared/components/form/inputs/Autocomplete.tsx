@@ -144,7 +144,21 @@ export function Autocomplete({
             showIcon={false}
             showClear={true}
             onClear={() => {
-              clearQualifier();
+              if (qualifierClearable) {
+                clearQualifier();
+                return;
+              }
+
+              // If not clearable, just reset the after-colon part but keep the qualifier
+              if (hasColon && isValidPrefix) {
+                if (lockedSuffix) {
+                  commitWithPrefix(lockedSuffix);
+                } else {
+                  commitWithPrefix("");
+                }
+              } else {
+                onChange("");
+              }
             }}
             style={{
               borderTopLeftRadius: 0,

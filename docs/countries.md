@@ -43,31 +43,32 @@ qualifier:query modifier:query
 
 #### **Supported qualifiers**
 
-| Qualifier     | Type           |                    Example | Notes                                                                                           |
-| ------------- | -------------- | -------------------------: | ----------------------------------------------------------------------------------------------- |
-| `isocode`     | text           |               `isocode:GB` | ISO 3166-1 code (partial or exact)                                                              |
-| `region`      | text           |              `region:Asia` | All countries in a given region (continent)                                                     |
-| `subregion`   | text           | `subregion:Southeast Asia` | All countries in a given subregion                                                              |
-| `tc`          | boolean / text |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `other` |
-| `capital`     | text           |            `capital:Paris` | Matches capital name                                                                            |
-| `currency`    | text           |             `currency:EUR` | Matches currency code                                                                           |
-| `language`    | text           |         `language:Spanish` | Matches a language                                                                              |
-| `callingcode` | text           |          `callingcode:+44` | Matches a calling code                                                                          |
-| `sovereignty` | text           |    `sovereignty:Sovereign` | Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`                |
-| `sovereign`   | boolean        |           `sovereign:true` | `true` / `false`                                                                                |
-| `visited`     | boolean        |             `visited:true` | `true` / `false` (based on your visits)                                                         |
+| Qualifier     | Type             |                    Example | Notes                                                                                                      |
+| ------------- | ---------------- | -------------------------: | ---------------------------------------------------------------------------------------------------------- |
+| `isocode`     | string           |               `isocode:gb` | Matches ISO 3166-1 code (partial or exact)                                                                 |
+| `region`      | string           |              `region:asia` | Matches countries in a given region (continent)                                                            |
+| `subregion`   | string           | `subregion:southeast asia` | Matches countries in a given subregion                                                                     |
+| `tc`          | boolean / string |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `other`            |
+| `capital`     | string           |            `capital:paris` | Matches capital name                                                                                       |
+| `currency`    | string           |             `currency:eur` | Matches ISO 4217 code                                                                                      |
+| `language`    | string           |         `language:spanish` | Matches language                                                                                           |
+| `callingcode` | string           |          `callingcode:+44` | Matches calling code                                                                                       |
+| `sovereignty` | string           |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized` |
+| `sovereign`   | boolean          |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                      |
+| `visited`     | boolean          |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                        |
 
 #### **Additional Modifiers**
 
-| Modifier  | Type                |                        Example | Notes                                                                                                                |
-| --------- | ------------------- | -----------------------------: | -------------------------------------------------------------------------------------------------------------------- |
-| `tc`      | text                |        `region:europe tc:true` | For `region` and `subregion`, will include transcontinental countries. Supports the the same values as the qualifier |
-| `of`      | text                | `sovereignty:dependency of:gb` | For `sovereignty`, filters dependencies or overseas regions by sovereign                                             |
-| `visited` | boolean             |   `region:europe visited:true` | Same as the qualifier                                                                                                |
-| `count`   | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count. Supports `>`, `<`, `>=`, `<=`, `=`                                       |
-| `year`    | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year. Supports `>`, `<`, `>=`, `<=`, `=`                                        |
-| `first`   | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by first visit. Supports `>`, `<`, `>=`, `<=`, `=`                                       |
-| `last`    | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by last visit. Supports `>`, `<`, `>=`, `<=`, `=`                                        |
+| Modifier    | Type                |                        Example | Notes                                                                                           |
+| ----------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------- |
+| `tc`        | string              |  `region:europe tc:other:only` | For `region` and `subregion`, same as qualifier. Additional modes: `default`, `include`, `only` |
+| `sovereign` | boolean             | `region:europe sovereign:true` | Same as the qualifier                                                                           |
+| `of`        | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode`   |
+| `visited`   | boolean             |   `region:europe visited:true` | Same as the qualifier                                                                           |
+| `count`     | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count. Supports `>`, `<`, `>=`, `<=`, `=`                  |
+| `year`      | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year. Supports `>`, `<`, `>=`, `<=`, `=`                   |
+| `first`     | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by first visit. Supports `>`, `<`, `>=`, `<=`, `=`                  |
+| `last`      | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by last visit. Supports `>`, `<`, `>=`, `<=`, `=`                   |
 
 ## **Country Lists**
 

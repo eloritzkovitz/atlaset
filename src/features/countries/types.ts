@@ -79,4 +79,4 @@ export type CountryFilterOptions = {
 export type TranscontinentalScope = "all" | "contiguous" | "overseas" | "other";
 
 /** Represents the mode for transcontinental country inclusion in filters. */
-export type TranscontinentalMode = "default" | "only" | "include";
+export type TranscontinentalMode = "default" | "include" | "only";
