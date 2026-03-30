@@ -2,8 +2,6 @@
  * Modifier configuration and helpers for country filters.
  */
 
-import { keysOf } from "@utils/object";
-
 export const MODIFIER_MAP: Record<
   string,
   {
@@ -19,5 +17,3 @@ export const MODIFIER_MAP: Record<
   first: { key: "first", label: "First visit year", type: "number" },
   last: { key: "last", label: "Last visit year", type: "number" },
 };
-
-export const SUPPORTED_MODIFIERS = keysOf(MODIFIER_MAP);

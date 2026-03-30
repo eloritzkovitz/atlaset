@@ -51,7 +51,7 @@ describe("countryFilters utils", () => {
     ymap?: Record<string, Set<number>> | undefined;
     firstMap?: Record<string, number> | undefined;
     lastMap?: Record<string, number> | undefined;
-  } = {}) => ({
+  } = {}): any => ({
     visitedIsoCodes: iso,
     visitedMap: map,
     visitedYearMap: ymap,
@@ -368,6 +368,36 @@ describe("countryFilters utils", () => {
       );
       expect(res).toEqual([countries[0]]);
     });
+
+    it("applies modifier-only key 'of' from raw modifiers (parseQualifierSearch shim)", () => {
+      const spy = vi
+        .spyOn(searchUtils, "parseQualifierSearch")
+        .mockReturnValue({
+          qualifier: "sovereignty",
+          query: "Dependency",
+          modifiers: { of: "FR" },
+        } as any);
+
+      try {
+        const res = applyQualifierSearch(
+          countries,
+          "sovereignty:Dependency of:FR",
+          undefined,
+          {
+            search: "sovereignty:Dependency of:FR",
+            selectedRegion: "",
+            selectedSubregion: "",
+            selectedSovereignty: "",
+            modifiers: {},
+          } as any,
+          undefined,
+        );
+
+        expect(res.map((c) => c.isoCode)).toContain("GP");
+      } finally {
+        spy.mockRestore();
+      }
+    });
   });
 
   describe("getFilteredIsoCodes", () => {
@@ -652,6 +682,31 @@ describe("countryFilters utils", () => {
         { of: "FR" },
       );
       expect(res.map((c) => c.isoCode)).toContain("GP");
+    });
+
+    it("filters by population numeric comparators", () => {
+      const popCountries = [countries[1], countries[2], countries[5]];
+
+      const gt = filterCountriesByQualifier(
+        popCountries as any,
+        "population",
+        ">10000",
+      );
+      expect(gt).toEqual([popCountries[2]]);
+
+      const eq = filterCountriesByQualifier(
+        popCountries as any,
+        "population",
+        "=8300",
+      );
+      expect(eq).toEqual([popCountries[1]]);
+
+      const lt = filterCountriesByQualifier(
+        popCountries as any,
+        "population",
+        "<2000",
+      );
+      expect(lt).toEqual([popCountries[0]]);
     });
   });
 

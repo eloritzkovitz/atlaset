@@ -6,6 +6,7 @@ import type { Layer } from "@features/atlas/layers";
 import type { VisitContext } from "@features/visits/types";
 import { filterBySearch } from "@utils/filter";
 import { parseQualifierSearch } from "@utils/search";
+import { compareNumeric, parseComparator } from "@utils/number";
 import {
   applyModifiersToCountry,
   ensureModifiers,
@@ -64,12 +65,12 @@ export function filterCountries(
 
   const mods = (options.modifiers ?? {}) as CountryModifiers;
 
-  // Parse transcontinental option (scope + mode). Modes: "normal" | "only" | "include".
+  // Parse transcontinental option from modifiers
   const tcParsed = parseTCOption(mods.tc);
   const tcScope = tcParsed.scope;
   const tcMode = tcParsed.mode;
 
-  // If mode is "only" restrict the base set to transcontinental matches (optionally scoped)
+  // If mode is "only" restrict the base set to transcontinental matches
   const baseCountries =
     tcMode === "only"
       ? countries.filter((country) => matchesTranscontinental(country, tcScope))
@@ -141,6 +142,20 @@ export function filterCountriesByQualifier(
   const mods = (modifiers ?? {}) as CountryModifiers;
   const tcOption = parseTCOption(mods.tc);
   const searchValue = value.toLowerCase();
+
+  // Handle numeric comparison for population qualifier
+  if (key === "population") {
+    const comp = parseComparator(String(value).replace(/,/g, ""));
+    if (comp) {
+      return countries.filter((country) => {
+        const raw = (country as Record<string, unknown>)[key];
+        if (raw === undefined || raw === null) return false;
+        const n = Number(String(raw).replace(/,/g, ""));
+        if (Number.isNaN(n)) return false;
+        return compareNumeric(comp.op, n, comp.value);
+      });
+    }
+  }
 
   // Handle sovereigntyType with "of" modifier for related countries
   if (key === "sovereigntyType") {
@@ -284,11 +299,9 @@ export function applyQualifierSearch(
     for (const [rawKey, rawVal] of Object.entries(rawMods)) {
       const key = rawKey.toLowerCase();
       if (key === parsed.qualifier.toLowerCase()) continue;
-
       if (Object.prototype.hasOwnProperty.call(MODIFIER_MAP, key)) {
         if (key === "of")
           parsedMods.of = parsedMods.of ?? String(rawVal).toUpperCase();
-        else if (key === "tc") parsedMods.tc = parsedMods.tc ?? String(rawVal);
         continue;
       }
 
