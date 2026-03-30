@@ -62,6 +62,12 @@ export const TRANSCONTINENTAL: TranscontinentalCountry[] = [
     scope: "contiguous",
   },
   {
+    isoCode: "PT",
+    additionalRegion: "Africa",
+    additionalSubregion: "North Africa",
+    scope: "overseas",
+  },
+  {
     isoCode: "RU",
     additionalRegion: "Asia",
     additionalSubregion: "North Asia",
