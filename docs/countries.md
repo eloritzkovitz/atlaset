@@ -62,6 +62,7 @@ qualifier:query modifier:query
 
 | Modifier | Type                |                        Example | Notes                                                                                         |
 | -------- | ------------------- | -----------------------------: | --------------------------------------------------------------------------------------------- |
+| `match`  | string              | `language:english match:exact` | Supports `prefix` (default), `substring`, `exact`, `regex`                                    |
 | `tc`     | string              |  `region:europe tc:other:only` | Supports additional modes: `default`, `include`, `only`                                       |
 | `of`     | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode` |
 | `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count.                                                   |

@@ -54,10 +54,9 @@ export type CountryList = {
 
 /** Modifier configuration for country filtering. */
 export type CountryModifiers = {
+  match?: "prefix" | "substring" | "exact" | "regex";
   tc?: string;
   of?: string;
-  visited?: boolean;
-  sovereign?: boolean;
   count?: { op: Operator; value: number } | undefined;
   year?: { op: Operator; year: number } | undefined;
   first?: { op: Operator; year: number } | undefined;

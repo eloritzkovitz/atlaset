@@ -8,7 +8,6 @@ import {
   getLastYearFor,
   getVisitCountFor,
   hasVisitInYearFor,
-  isVisitedFor,
 } from "@features/visits/utils/visitHelpers";
 import {
   compareNumeric,
@@ -39,24 +38,6 @@ export function normalizeModifiers(
   if (typeof mods.tc !== "undefined")
     out.tc = mods.tc as CountryModifiers["tc"];
   if (typeof mods.of !== "undefined") out.of = String(mods.of).toUpperCase();
-  if (typeof mods.sovereign !== "undefined") {
-    const s = mods.sovereign;
-    if (typeof s === "boolean") out.sovereign = s;
-    else if (typeof s === "string") {
-      const ls = s.toLowerCase();
-      if (ls === "true") out.sovereign = true;
-      if (ls === "false") out.sovereign = false;
-    }
-  }
-  if (typeof mods.visited !== "undefined") {
-    const v = mods.visited;
-    if (typeof v === "boolean") out.visited = v;
-    else if (typeof v === "string") {
-      const lv = v.toLowerCase();
-      if (lv === "true") out.visited = true;
-      if (lv === "false") out.visited = false;
-    }
-  }
   out.count = mods.count
     ? (parseComparator(String(mods.count), "\\d+") ?? undefined)
     : undefined;
@@ -69,6 +50,12 @@ export function normalizeModifiers(
   out.last = mods.last
     ? (parseYearComparator(String(mods.last)) ?? undefined)
     : undefined;
+
+  // normalize match mode modifier
+  if (typeof mods.match === "string") {
+    const m = mods.match.trim();
+    if (m) out.match = m as CountryModifiers["match"];
+  }
   return out;
 }
 
@@ -199,18 +186,6 @@ export function applyModifiersToCountry(
   const visitedIso = visitContext?.visitedIsoCodes ?? [];
   const firstVisitMap = visitContext?.firstVisitMap;
   const lastVisitMap = visitContext?.lastVisitMap;
-
-  if (typeof mods.visited !== "undefined") {
-    const visited = isVisitedFor(country.isoCode, vmap, visitedIso);
-    if (mods.visited === true && !visited) return false;
-    if (mods.visited === false && visited) return false;
-  }
-
-  if (typeof mods.sovereign !== "undefined") {
-    const isSov = country.sovereigntyType === "Sovereign";
-    if (mods.sovereign === true && !isSov) return false;
-    if (mods.sovereign === false && isSov) return false;
-  }
 
   if (mods.count) {
     const parsedCount = mods.count;

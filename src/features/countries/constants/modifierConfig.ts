@@ -10,6 +10,7 @@ export const MODIFIER_MAP: Record<
     type?: "string" | "number" | "date" | "boolean";
   }
 > = {
+  match: { key: "match", label: "Match mode", type: "string" },
   tc: { key: "tc", label: "Transcontinental", type: "string" },
   of: { key: "of", label: "Sovereignty", type: "string" },
   count: { key: "count", label: "Visit count", type: "number" },

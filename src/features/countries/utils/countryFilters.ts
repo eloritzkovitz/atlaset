@@ -5,8 +5,8 @@
 import type { Layer } from "@features/atlas/layers";
 import type { VisitContext } from "@features/visits/types";
 import { filterBySearch } from "@utils/filter";
-import { parseQualifierSearch } from "@utils/search";
 import { compareNumeric, parseComparator } from "@utils/number";
+import { matchesToken, parseQualifierSearch } from "@utils/search";
 import {
   applyModifiersToCountry,
   ensureModifiers,
@@ -182,9 +182,10 @@ export function filterCountriesByQualifier(
     return getQualifierTokens(country, key, {
       tcOption,
       visitContext,
-    }).some(
-      (t) => typeof t === "string" && t.toLowerCase().includes(searchValue),
-    );
+    }).some((t) => {
+      if (typeof t !== "string") return false;
+      return matchesToken(t, searchValue, { match: mods.match });
+    });
   });
 }
 

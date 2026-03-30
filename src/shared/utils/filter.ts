@@ -17,13 +17,13 @@ import { normalizeString } from "./string";
 export function createSelectFilter<
   T = string,
   P = unknown,
-  K extends string = string
+  K extends string = string,
 >(
   key: K,
   label: string | ((option: T) => string),
   getOptions: (options?: T[]) => FilterOption[],
   getValue: (props: P, option?: T) => string,
-  setValue: (props: P, val: string, option?: T) => void
+  setValue: (props: P, val: string, option?: T) => void,
 ): FilterConfig<T, P, K> {
   return {
     key,
@@ -45,11 +45,13 @@ export function createSelectFilter<
 export function filterBySearch<T>(
   items: T[],
   search: string,
-  getField: (item: T) => string
+  getField: (item: T) => string,
 ) {
   if (!search) return items;
   const normalizedSearch = normalizeString(search);
-  return items.filter((item) =>
-    normalizeString(getField(item)).includes(normalizedSearch)
-  );
+  return items.filter((item) => {
+    const field = normalizeString(getField(item));
+    const tokens = field.split(/\W+/).filter(Boolean);
+    return tokens.some((t) => t.startsWith(normalizedSearch));
+  });
 }

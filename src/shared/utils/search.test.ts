@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
+  matchesToken,
   parseQualifierSearch,
   parsePropertyParts,
   suggestByPrefix,
@@ -172,6 +173,52 @@ describe("search utils", () => {
     it("coerceModifierValue is case-insensitive", () => {
       expect(coerceModifierValue("TrUe")).toBe(true);
       expect(coerceModifierValue("NO")).toBe(false);
+    });
+  });
+
+  describe("matchesToken helper", () => {
+    it("substring mode matches partial tokens", () => {
+      expect(matchesToken("Hello World", "lo wo", { match: "substring" })).toBe(
+        true,
+      );
+      expect(matchesToken("abcdef", "bcde", { match: "substring" })).toBe(true);
+      expect(matchesToken("abcdef", "xyz", { match: "substring" })).toBe(false);
+    });
+
+    it("exact mode performs equality (case-insensitive by default)", () => {
+      expect(matchesToken("Paris", "paris", { match: "exact" })).toBe(true);
+      expect(matchesToken("Paris ", "paris", { match: "exact" })).toBe(false);
+    });
+
+    it("prefix and substring modes", () => {
+      expect(matchesToken("Germany", "ger", { match: "prefix" })).toBe(true);
+      expect(
+        matchesToken("United States", "states", { match: "substring" }),
+      ).toBe(true);
+      expect(matchesToken("United States", "uni", { match: "substring" })).toBe(
+        true,
+      );
+    });
+
+    it("regex mode uses provided pattern", () => {
+      expect(matchesToken("abc123", "\\d+$", { match: "regex" })).toBe(true);
+      expect(matchesToken("abc", "\\d+$", { match: "regex" })).toBe(false);
+    });
+
+    it("unknown match mode falls back to prefix behavior", () => {
+      expect(matchesToken("Germany", "ger", { match: "bogus" as any })).toBe(
+        true,
+      );
+      expect(
+        matchesToken("United States", "uni", { match: "bogus" as any }),
+      ).toBe(true);
+      expect(matchesToken("abcdef", "bc", { match: "bogus" as any })).toBe(
+        false,
+      );
+    });
+
+    it("invalid regex pattern returns false (catch branch)", () => {
+      expect(matchesToken("abc", "(", { match: "regex" })).toBe(false);
     });
   });
 });

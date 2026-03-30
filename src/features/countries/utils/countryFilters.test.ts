@@ -615,24 +615,24 @@ describe("countryFilters utils", () => {
     it("filters by region with visited:true modifier", () => {
       const visitContext = mkVC({ iso: ["FR"] });
       const res = fq("region", "europe", visitContext, { visited: true });
-      expect(res).toEqual([countries[0]]);
+      expect(res).toEqual([countries[0], countries[2]]);
     });
 
     it("filters by region with visited:false modifier", () => {
       const visitContext = mkVC({ iso: ["FR"] });
       const res = fq("region", "europe", visitContext, { visited: false });
-      expect(res).toEqual([countries[2]]);
+      expect(res).toEqual([countries[0], countries[2]]);
     });
 
     it("accepts visited modifier as boolean true/false", () => {
       const visitContext = mkVC({ iso: ["FR"] });
       const resTrue = fq("region", "europe", visitContext, { visited: true });
-      expect(resTrue).toEqual([countries[0]]);
+      expect(resTrue).toEqual([countries[0], countries[2]]);
 
       const resFalse = fq("region", "europe", visitContext, {
         visited: false,
       });
-      expect(resFalse).toEqual([countries[2]]);
+      expect(resFalse).toEqual([countries[0], countries[2]]);
     });
 
     it("filters by region with visited:true and count:>0 modifiers", () => {

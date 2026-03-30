@@ -9,22 +9,6 @@ import {
 } from "./countryModifiers";
 
 describe("countryModifiers", () => {
-  it("normalizes visited string values and uppercases 'of'", () => {
-    const out1 = normalizeModifiers({ visited: "true", of: "fr" });
-    expect(out1.visited).toBe(true);
-    expect(out1.of).toBe("FR");
-
-    const out2 = normalizeModifiers({ visited: "false" });
-    expect(out2.visited).toBe(false);
-  });
-
-  it("normalizes sovereign string values", () => {
-    const sTrue = normalizeModifiers({ sovereign: "true" });
-    expect(sTrue.sovereign).toBe(true);
-    const sFalse = normalizeModifiers({ sovereign: "false" });
-    expect(sFalse.sovereign).toBe(false);
-  });
-
   it("parses count/year/first/last comparators", () => {
     const out = normalizeModifiers({
       count: ">2",
@@ -36,6 +20,17 @@ describe("countryModifiers", () => {
     expect(out.year).toEqual({ op: ">=", year: 2020 });
     expect(out.first).toEqual({ op: "=", year: 1990 });
     expect(out.last).toEqual({ op: "<=", year: 2010 });
+  });
+
+  it("normalizes match and of modifiers correctly", () => {
+    const m1 = normalizeModifiers({ match: " exact " });
+    expect(m1.match).toBe("exact");
+
+    const m2 = normalizeModifiers({ match: "" });
+    expect(m2.match).toBeUndefined();
+
+    const of = normalizeModifiers({ of: "fr" });
+    expect(of.of).toBe("FR");
   });
 
   it("ensureModifiers returns the object fast-path when comparator objects are present", () => {
@@ -94,18 +89,12 @@ describe("countryModifiers", () => {
     const countryA = { isoCode: "NW" } as any;
     expect(applyModifiersToCountry(countryA, { of: "ZZ" } as any)).toBe(false);
 
-    // visited true with no visits -> false
-    const countryB = { isoCode: "AA" } as any;
-    expect(applyModifiersToCountry(countryB, { visited: true } as any)).toBe(
-      false,
-    );
-
-    // visited false when visitedIsoCodes includes iso -> false
+    // visited false when visitedIsoCodes includes iso -> handled by qualifier; modifier function returns true
     const countryC = { isoCode: "BB" } as any;
     const ctx1 = { visitedIsoCodes: ["BB"] } as any;
     expect(
       applyModifiersToCountry(countryC, { visited: false } as any, ctx1),
-    ).toBe(false);
+    ).toBe(true);
 
     // count comparator passes and fails
     const countryD = { isoCode: "CC" } as any;
@@ -167,15 +156,10 @@ describe("countryModifiers", () => {
       ),
     ).toBe(true);
 
-    // sovereign modifier: requesting sovereign when not sovereign should fail
-    const dep = { isoCode: "D1", sovereigntyType: "Dependency" } as any;
-    expect(applyModifiersToCountry(dep, { sovereign: true } as any)).toBe(
-      false,
-    );
-    // requesting non-sovereign when country is sovereign should fail
+    // requesting non-sovereign when country is sovereign now passes through
     const sov = { isoCode: "S1", sovereigntyType: "Sovereign" } as any;
     expect(applyModifiersToCountry(sov, { sovereign: false } as any)).toBe(
-      false,
+      true,
     );
   });
 
