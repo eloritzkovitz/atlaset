@@ -14,7 +14,6 @@ export const MODIFIER_MAP: Record<
 > = {
   tc: { key: "tc", label: "Transcontinental", type: "string" },
   of: { key: "of", label: "Sovereignty", type: "string" },
-  visited: { key: "visited", label: "Visited", type: "boolean" },
   count: { key: "count", label: "Visit count", type: "number" },
   year: { key: "year", label: "Year", type: "number" },
   first: { key: "first", label: "First visit year", type: "number" },

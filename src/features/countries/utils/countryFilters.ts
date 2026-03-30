@@ -18,6 +18,7 @@ import {
   getQualifierTokens,
   resolveQualifierConfig,
 } from "./countrySearch";
+import { MODIFIER_MAP } from "../constants/modifierConfig";
 import type { Country, CountryFilterOptions, CountryModifiers } from "../types";
 
 /**
@@ -248,18 +249,50 @@ export function applyQualifierSearch(
         }
       : undefined;
   if (parsed && (parsed.query ?? "").trim() !== "") {
-
-    // Normalize parsed modifiers once and use typed CountryModifiers internally
+    // Normalize parsed modifiers into typed structure
+    const rawMods = parsed.modifiers ?? {};
     const parsedMods = ensureModifiers(parsed.modifiers);
 
-    // First, filter by the qualifier (honoring qualifier-local modifiers)
-    const byQualifier = filterCountriesByQualifier(
+    // Apply primary qualifier filter
+    let byQualifier = filterCountriesByQualifier(
       countries,
       parsed.qualifier,
       parsed.query,
       visitContext,
       parsedMods,
     );
+
+    // Apply any additional modifiers that weren't handled by ensureModifiers
+    for (const [rawKey, rawVal] of Object.entries(rawMods)) {
+      const key = rawKey.toLowerCase();
+      if (key === parsed.qualifier.toLowerCase()) continue;
+
+      if (Object.prototype.hasOwnProperty.call(MODIFIER_MAP, key)) {
+        if (key === "of")
+          parsedMods.of = parsedMods.of ?? String(rawVal).toUpperCase();
+        else if (key === "tc") parsedMods.tc = parsedMods.tc ?? String(rawVal);
+        else if (key === "visited") {
+          if (typeof parsedMods.visited === "undefined") {
+            const lv = String(rawVal).toLowerCase();
+            parsedMods.visited = lv === "true" || lv === "yes";
+          }
+        }
+        continue;
+      }
+
+      const qConf = resolveQualifierConfig(key);
+      if (!qConf) continue;
+      const valStr =
+        typeof rawVal === "boolean" ? String(rawVal) : String(rawVal ?? "");
+      if (valStr.trim() === "") continue;
+      byQualifier = filterCountriesByQualifier(
+        byQualifier,
+        key,
+        valStr,
+        visitContext,
+        parsedMods,
+      );
+    }
 
     // Merge parsed modifiers into the existing filter params so they apply globally
     const mergedModifiers = {
@@ -269,13 +302,14 @@ export function applyQualifierSearch(
 
     const mergedParams: CountryFilterOptions = {
       ...filterParams,
-      modifiers: mergedModifiers as CountryModifiers,
+      modifiers: mergedModifiers,
       search: "",
       layerCountries: filteredIsoCodes,
     };
 
     return filterCountries(byQualifier, mergedParams, visitContext);
   }
+
   // If search contains a colon but didn't parse, treat it as normal search
   if (typeof search === "string" && search.includes(":")) {
     const parts = search.split(":");
@@ -292,6 +326,7 @@ export function applyQualifierSearch(
       );
     }
   }
+
   return filterCountries(
     countries,
     {

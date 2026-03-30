@@ -41,6 +41,8 @@ In addition to finding countries by name, you can search by qualifiers using thi
 qualifier:query modifier:query
 ```
 
+All qualifiers are also eligible as modifiers, allowing for more complex filtering.
+
 #### **Supported qualifiers**
 
 | Qualifier     | Type             |                    Example | Notes                                                                                                      |
@@ -59,16 +61,14 @@ qualifier:query modifier:query
 
 #### **Additional Modifiers**
 
-| Modifier    | Type                |                        Example | Notes                                                                                           |
-| ----------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------- |
-| `tc`        | string              |  `region:europe tc:other:only` | For `region` and `subregion`, same as qualifier. Additional modes: `default`, `include`, `only` |
-| `sovereign` | boolean             | `region:europe sovereign:true` | Same as the qualifier                                                                           |
-| `of`        | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode`   |
-| `visited`   | boolean             |   `region:europe visited:true` | Same as the qualifier                                                                           |
-| `count`     | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count. Supports `>`, `<`, `>=`, `<=`, `=`                  |
-| `year`      | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year. Supports `>`, `<`, `>=`, `<=`, `=`                   |
-| `first`     | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by first visit. Supports `>`, `<`, `>=`, `<=`, `=`                  |
-| `last`      | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by last visit. Supports `>`, `<`, `>=`, `<=`, `=`                   |
+| Modifier | Type                |                        Example | Notes                                                                                           |
+| -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------- |
+| `tc`     | string              |  `region:europe tc:other:only` | For `region` and `subregion`, same as qualifier. Additional modes: `default`, `include`, `only` |
+| `of`     | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode`   |
+| `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count. Supports `>`, `<`, `>=`, `<=`, `=`                  |
+| `year`   | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year. Supports `>`, `<`, `>=`, `<=`, `=`                   |
+| `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by first visit. Supports `>`, `<`, `>=`, `<=`, `=`                  |
+| `last`   | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by last visit. Supports `>`, `<`, `>=`, `<=`, `=`                   |
 
 ## **Country Lists**
 
