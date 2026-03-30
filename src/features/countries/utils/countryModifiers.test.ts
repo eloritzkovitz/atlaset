@@ -18,6 +18,13 @@ describe("countryModifiers", () => {
     expect(out2.visited).toBe(false);
   });
 
+  it("normalizes sovereign string values", () => {
+    const sTrue = normalizeModifiers({ sovereign: "true" });
+    expect(sTrue.sovereign).toBe(true);
+    const sFalse = normalizeModifiers({ sovereign: "false" });
+    expect(sFalse.sovereign).toBe(false);
+  });
+
   it("parses count/year/first/last comparators", () => {
     const out = normalizeModifiers({
       count: ">2",
@@ -159,6 +166,17 @@ describe("countryModifiers", () => {
         ctx4,
       ),
     ).toBe(true);
+
+    // sovereign modifier: requesting sovereign when not sovereign should fail
+    const dep = { isoCode: "D1", sovereigntyType: "Dependency" } as any;
+    expect(applyModifiersToCountry(dep, { sovereign: true } as any)).toBe(
+      false,
+    );
+    // requesting non-sovereign when country is sovereign should fail
+    const sov = { isoCode: "S1", sovereigntyType: "Sovereign" } as any;
+    expect(applyModifiersToCountry(sov, { sovereign: false } as any)).toBe(
+      false,
+    );
   });
 
   it("additional parseTCOption and matchesTranscontinental cases", () => {
@@ -193,6 +211,8 @@ describe("countryModifiers", () => {
     // visited true when present
     const z = { isoCode: "Z1" } as any;
     const ctx = { visitedIsoCodes: ["Z1"] } as any;
-    expect(applyModifiersToCountry(z, { visited: true } as any, ctx)).toBe(true);
+    expect(applyModifiersToCountry(z, { visited: true } as any, ctx)).toBe(
+      true,
+    );
   });
 });

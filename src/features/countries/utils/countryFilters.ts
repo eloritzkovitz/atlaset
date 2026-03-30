@@ -21,6 +21,27 @@ import {
 import { MODIFIER_MAP } from "../constants/modifierConfig";
 import type { Country, CountryFilterOptions, CountryModifiers } from "../types";
 
+// Helper: build a VisitContext from various possible visit inputs.
+function buildVisitContextFromParams(
+  visitedIsoCodes?: string[] | undefined,
+  visitedMap?: Record<string, number> | undefined,
+  visitedYearMap?: Record<string, Set<number>> | undefined,
+) {
+  if (!visitedIsoCodes && !visitedMap && !visitedYearMap) return undefined;
+  const iso =
+    typeof visitedIsoCodes !== "undefined"
+      ? visitedIsoCodes
+      : visitedMap
+        ? Object.keys(visitedMap)
+        : [];
+  return {
+    visitedIsoCodes: iso,
+    visitedMap: typeof visitedMap !== "undefined" ? visitedMap : undefined,
+    visitedYearMap:
+      typeof visitedYearMap !== "undefined" ? visitedYearMap : undefined,
+  } as VisitContext;
+}
+
 /**
  * Filters countries based on various criteria.
  * @param countries - The list of countries to filter.
@@ -240,14 +261,11 @@ export function applyQualifierSearch(
   visitedYearMap?: Record<string, Set<number>>,
 ) {
   const parsed = parseQualifierSearch(search);
-  const visitContext: VisitContext | undefined =
-    visitedIsoCodes || visitedMap || visitedYearMap
-      ? {
-          visitedIsoCodes: visitedIsoCodes ?? [],
-          visitedMap: visitedMap ?? {},
-          visitedYearMap: visitedYearMap ?? {},
-        }
-      : undefined;
+  const visitContext = buildVisitContextFromParams(
+    visitedIsoCodes,
+    visitedMap,
+    visitedYearMap,
+  );
   if (parsed && (parsed.query ?? "").trim() !== "") {
     // Normalize parsed modifiers into typed structure
     const rawMods = parsed.modifiers ?? {};
@@ -271,12 +289,6 @@ export function applyQualifierSearch(
         if (key === "of")
           parsedMods.of = parsedMods.of ?? String(rawVal).toUpperCase();
         else if (key === "tc") parsedMods.tc = parsedMods.tc ?? String(rawVal);
-        else if (key === "visited") {
-          if (typeof parsedMods.visited === "undefined") {
-            const lv = String(rawVal).toLowerCase();
-            parsedMods.visited = lv === "true" || lv === "yes";
-          }
-        }
         continue;
       }
 

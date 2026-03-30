@@ -78,6 +78,12 @@ export function parseQualifierSearch(input: string) {
   const restTokens = restRaw.length > 0 ? restRaw.split(/\s+/) : [];
   if (tokens.length > 1) restTokens.push(...tokens.slice(1));
 
+  // Remove tokens that look like modifiers but have no value
+  const emptyModifierRegex = /^([a-zA-Z_]+):\s*$/;
+  for (let i = restTokens.length - 1; i >= 0; i--) {
+    if (emptyModifierRegex.test(restTokens[i])) restTokens.splice(i, 1);
+  }
+
   const modifierRegex = /^([a-zA-Z_]+):(.+)$/;
   const modifierStart = identifyModifierRange(restTokens, modifierRegex);
   const modifiers = parseModifiers(restTokens, modifierStart, modifierRegex);
