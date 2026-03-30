@@ -13,7 +13,7 @@ import { filterBySearch } from "@utils/filter";
 import { parseQualifierSearch } from "@utils/search";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
-import { filterCountriesByQualifier } from "../../utils/countryFilters";
+import { applyQualifierSearch } from "../../utils/countryFilters";
 import {
   buildSearchString,
   qualifierSuggestionProvider,
@@ -52,16 +52,14 @@ export function CountrySelectModal({
   const { visitedCountryCodes } = useVisitedCountries();
   const filteredOptions = ((): typeof options => {
     if (parsed) {
-      const visitContext = {
-        visitedIsoCodes: visitedCountryCodes,
-        visitedMap: {},
-        visitedYearMap: {},
-      };
-      return filterCountriesByQualifier(
+      return applyQualifierSearch(
         options,
-        parsed.qualifier,
-        parsed.query,
-        visitContext,
+        search,
+        visitedCountryCodes,
+        {},
+        undefined,
+        {},
+        {},
       ).sort((a, b) => a.name.localeCompare(b.name));
     }
 
