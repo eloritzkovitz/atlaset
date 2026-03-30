@@ -20,6 +20,8 @@ export const SOVEREIGN_FLAG_MAP: Record<string, string> = {
   SJ: "NO", // Svalbard and Jan Mayen → Norway
   UK: "GB", // Akrotiri and Dhekelia → United Kingdom
   UM: "US", // United States Minor Outlying Islands → United States,
+  "AU-ACI": "AU", // Ashmore and Cartier Islands → Australia
+  "AU-CSI": "AU", // Coral Sea Islands → Australia
   "GB-ENG": "GBENG", // England
   "GB-NIR": "GBNIR", // Scotland
   "GB-SCT": "GBSCT", // Northern Ireland

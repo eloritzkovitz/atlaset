@@ -26,7 +26,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     disputes: ["FK", "GS"],
   },
   AU: {
-    dependencies: ["CC", "CX", "HM", "NF"],
+    dependencies: ["AU-ACI", "AU-CSI", "CC", "CX", "HM", "NF"],
   },
   CN: {
     disputes: ["TW"],
@@ -109,6 +109,8 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
 };
 
 export const SPECIAL_COUNTRIES: Record<string, { name: string }> = {
+  "AU-ACI": { name: "Ashmore and Cartier Islands" },
+  "AU-CSI": { name: "Coral Sea Islands" },
   "GB-ENG": { name: "England" },
   "GB-NIR": { name: "Northern Ireland" },
   "GB-SCT": { name: "Scotland" },
