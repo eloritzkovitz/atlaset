@@ -18,7 +18,6 @@ import {
   useCountryData,
   type CountryFilterOptions,
   type SovereigntyType,
-  type CountryModifiers,
 } from "@features/countries";
 import {
   filterByVisitCount,
@@ -70,7 +69,6 @@ export function useCountryFilters() {
   const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
-  const [modifiers, setModifiers] = useState<CountryModifiers>({});
 
   // Visit count filters
   const [minVisitCount, setMinVisitCount] = useState<number>(1);
@@ -85,15 +83,8 @@ export function useCountryFilters() {
       selectedRegion,
       selectedSubregion,
       selectedSovereignty,
-      modifiers,
     }),
-    [
-      debouncedSearch,
-      selectedRegion,
-      selectedSubregion,
-      selectedSovereignty,
-      modifiers,
-    ],
+    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty],
   );
 
   // Get visit stats for visited filter and counts
@@ -220,20 +211,6 @@ export function useCountryFilters() {
     }
   }, [timelineMode, resetTimelineFilters]);
 
-  // Update modifiers based on visited and sovereign toggles
-  useEffect(() => {
-    setModifiers((prev) => {
-      const next = { ...(prev ?? {}) };
-      if (showVisitedOnly) next.visited = true;
-      else delete next.visited;
-
-      if (sovereignOnly) next.sovereign = true;
-      else delete next.sovereign;
-
-      return next as typeof prev;
-    });
-  }, [showVisitedOnly, sovereignOnly, setModifiers]);
-
   return {
     selectedRegion,
     setSelectedRegion,
@@ -260,7 +237,5 @@ export function useCountryFilters() {
     maxVisitCount,
     setMaxVisitCount,
     resetFilters,
-    modifiers,
-    setModifiers,
   };
 }
