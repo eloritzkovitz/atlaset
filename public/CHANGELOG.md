@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-03-31
+
+- **[chore]** **Countries:** Refined search syntax, allowing additional modifiers
+- **[chore]** **Countries:** Added more qualifiers and modifiers for better searching
+- **[chore]** **General:** Search will now use prefix search instead of substring
+
 ## 2026-03-26
 
 - **[chore]** **Countries:** Improved filtering, sorting and search qualifiers
