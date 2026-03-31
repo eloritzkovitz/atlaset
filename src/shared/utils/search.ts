@@ -3,6 +3,44 @@
  */
 
 /**
+ * Checks if a given token matches a query string based on specified options.
+ * @param token - The string token to check against the query.
+ * @param query - The search query string to match the token against.
+ * @param options - Optional settings for matching behavior, including:
+ *  - match: The mode of matching to use (default is "prefix").
+ *  - caseSensitive: Whether the match should be case-sensitive (default is false).
+ * @returns - True if the token matches the query based on the specified options, false otherwise.
+ */
+export function matchesToken(
+  token: string,
+  query: string,
+  options?: { match?: string; caseSensitive?: boolean },
+) {
+  const matchMode = options?.match ?? "prefix";
+  const caseSensitive = options?.caseSensitive ?? false;
+  const tk = caseSensitive ? token : token.toLowerCase();
+  const q = caseSensitive ? query : query.toLowerCase();
+
+  switch (matchMode) {
+    case "prefix":
+      return tk.startsWith(q);
+    case "substring":
+      return tk.includes(q);
+    case "exact":
+      return tk === q;
+    case "regex":
+      try {
+        const re = new RegExp(query);
+        return re.test(token);
+      } catch {
+        return false;
+      }
+    default:
+      return tk.startsWith(q);
+  }
+}
+
+/**
  * Finds the index where trailing explicit modifiers begin in a token list.
  * @param tokens - The list of tokens to analyze.
  * @param modifierRegex - A regex to identify modifier tokens, defaulting to "key:value" format.
@@ -28,8 +66,8 @@ export function identifyModifierRange(
  */
 export function coerceModifierValue(rawVal: string): boolean | string {
   const low = rawVal.toLowerCase();
-  if (low === "true" || low === "1" || low === "yes") return true;
-  if (low === "false" || low === "0" || low === "no") return false;
+  if (low === "true" || low === "yes") return true;
+  if (low === "false" || low === "no") return false;
   return rawVal;
 }
 
@@ -77,6 +115,12 @@ export function parseQualifierSearch(input: string) {
   const restRaw = m[2] ?? "";
   const restTokens = restRaw.length > 0 ? restRaw.split(/\s+/) : [];
   if (tokens.length > 1) restTokens.push(...tokens.slice(1));
+
+  // Remove tokens that look like modifiers but have no value
+  const emptyModifierRegex = /^([a-zA-Z_]+):\s*$/;
+  for (let i = restTokens.length - 1; i >= 0; i--) {
+    if (emptyModifierRegex.test(restTokens[i])) restTokens.splice(i, 1);
+  }
 
   const modifierRegex = /^([a-zA-Z_]+):(.+)$/;
   const modifierStart = identifyModifierRange(restTokens, modifierRegex);

@@ -130,7 +130,7 @@ export function CountrySection({
         search,
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
-        includeTranscontinental: showTranscontinental,
+        modifiers: showTranscontinental ? { tc: "include" } : undefined,
       }),
     [
       countries,

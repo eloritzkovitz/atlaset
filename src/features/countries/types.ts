@@ -1,4 +1,5 @@
 import type { VisitedStatus } from "@features/visits";
+import type { Operator } from "@types";
 
 /** Represents a country with various attributes. */
 export type Country = {
@@ -51,6 +52,17 @@ export type CountryList = {
   layerId?: string | null;
 };
 
+/** Modifier configuration for country filtering. */
+export type CountryModifiers = {
+  match?: "prefix" | "substring" | "exact" | "regex";
+  tc?: string;
+  of?: string;
+  count?: { op: Operator; value: number } | undefined;
+  year?: { op: Operator; year: number } | undefined;
+  first?: { op: Operator; year: number } | undefined;
+  last?: { op: Operator; year: number } | undefined;
+};
+
 /** Options for filtering countries. */
 export type CountryFilterOptions = {
   search?: string;
@@ -59,5 +71,11 @@ export type CountryFilterOptions = {
   selectedSovereignty?: SovereigntyType | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
-  includeTranscontinental?: boolean;
+  modifiers?: CountryModifiers;
 };
+
+/** Represents the allowed values for transcontinental scope flags. */
+export type TranscontinentalScope = "all" | "contiguous" | "overseas" | "other";
+
+/** Represents the mode for transcontinental country inclusion in filters. */
+export type TranscontinentalMode = "default" | "include" | "only";

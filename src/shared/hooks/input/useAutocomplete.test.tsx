@@ -15,7 +15,7 @@ function TestHarness({
   debounceMs?: number;
 }) {
   const [value, setValue] = useState(initial);
-  const { suggestions, handleKeyDown } = useAutocomplete({
+  const { suggestions, handleKeyDown, clearQualifier } = useAutocomplete({
     value,
     onChange: (v: string) => {
       setValue(v);
@@ -33,6 +33,9 @@ function TestHarness({
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
       />
+      <button data-testid="clear" onClick={() => clearQualifier()}>
+        Clear
+      </button>
       <div data-testid="suggestions">{suggestions.join(",")}</div>
     </div>
   );
@@ -366,8 +369,8 @@ describe("useAutocomplete", () => {
       />,
     );
 
-    const input = screen.getByTestId("input") as HTMLInputElement;
-    fireEvent.keyDown(input, { key: "Backspace", code: "Backspace" });
+    const clearBtn = screen.getByTestId("clear");
+    fireEvent.click(clearBtn);
 
     await Promise.resolve();
     expect(onChangeSpy).toHaveBeenCalled();

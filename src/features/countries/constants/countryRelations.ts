@@ -3,6 +3,7 @@ export type CountryRelations = {
   countries?: string[];
   dependencies?: string[];
   regions?: string[];
+  municipalities?: string[];
   disputes?: string[];
 };
 
@@ -19,6 +20,7 @@ export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
   { key: "dependencies", label: "Dependencies", prop: "dependencies" },
   { key: "regions", label: "Overseas Regions", prop: "regions" },
   { key: "disputes", label: "Disputes", prop: "disputes" },
+  { key: "municipalities", label: "Municipalities", prop: "municipalities" },
 ];
 
 export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
@@ -26,7 +28,10 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     disputes: ["FK", "GS"],
   },
   AU: {
-    dependencies: ["CC", "CX", "HM", "NF"],
+    dependencies: ["AU-ACI", "AU-CSI", "CC", "CX", "HM", "NF"],
+  },
+  BQ: {
+    municipalities: ["BQ-BO", "BQ-SA", "BQ-SE"],
   },
   CN: {
     disputes: ["TW"],
@@ -109,6 +114,11 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
 };
 
 export const SPECIAL_COUNTRIES: Record<string, { name: string }> = {
+  "AU-ACI": { name: "Ashmore and Cartier Islands" },
+  "AU-CSI": { name: "Coral Sea Islands" },
+  "BQ-BO": { name: "Bonaire" },
+  "BQ-SA": { name: "Saba" },
+  "BQ-SE": { name: "Sint Eustatius" },
   "GB-ENG": { name: "England" },
   "GB-NIR": { name: "Northern Ireland" },
   "GB-SCT": { name: "Scotland" },

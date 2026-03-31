@@ -31,7 +31,6 @@ describe("countrySearch utils", () => {
     const supported = SUPPORTED_QUALIFIERS;
     expect(Array.isArray(supported)).toBe(true);
     expect(supported).toContain("currency");
-    expect(supported).toContain("firstvisit");
   });
 
   it("builds a search string containing name and isoCode", () => {
@@ -45,7 +44,7 @@ describe("countrySearch utils", () => {
       const r = getQualifierTokens(countries[0], "region");
       expect(r).toContain("Europe");
       const caTokens = getQualifierTokens(countries[3], "region", {
-        includeTC: true,
+        tcOption: { scope: "all", mode: "include" },
       });
       expect(caTokens).toContain("Americas");
       expect(caTokens).toContain("Europe");
@@ -68,54 +67,8 @@ describe("countrySearch utils", () => {
       expect(visitedFalse).toEqual(["false"]);
     });
 
-    it("returns visit counts from visitedMap", () => {
-      const vmap = { FR: 2 } as Record<string, number>;
-      expect(
-        getQualifierTokens(countries[0], "visits", {
-          visitContext: { visitedMap: vmap } as VisitContext,
-        }),
-      ).toEqual(["2"]);
-      expect(
-        getQualifierTokens(countries[1], "visits", {
-          visitContext: { visitedMap: vmap } as VisitContext,
-        }),
-      ).toEqual(["0"]);
-    });
-
-    it("returns visityear and firstvisit tokens from visitedYearMap", () => {
-      const ymap: Record<string, Set<number>> = {
-        FR: new Set([2019, 2020]),
-        GP: new Set(),
-      };
-      const years = getQualifierTokens(countries[0], "visitYear", {
-        visitContext: { visitedYearMap: ymap } as VisitContext,
-      });
-      expect(years).toEqual(expect.arrayContaining(["2019", "2020"]));
-      const first = getQualifierTokens(countries[0], "firstVisit", {
-        visitContext: { visitedYearMap: ymap } as VisitContext,
-      });
-      expect(first).toEqual(["2019"]);
-      const last = getQualifierTokens(countries[0], "lastVisit", {
-        visitContext: { visitedYearMap: ymap } as VisitContext,
-      });
-      expect(last).toEqual(["2020"]);
-
-      const noneFirst = getQualifierTokens(countries[1], "firstVisit", {
-        visitContext: { visitedYearMap: ymap } as VisitContext,
-      });
-      expect(noneFirst).toEqual([]);
-      const noneLast = getQualifierTokens(countries[1], "lastVisit", {
-        visitContext: { visitedYearMap: ymap } as VisitContext,
-      });
-      expect(noneLast).toEqual([]);
-    });
-
     it("returns empty arrays when visit-related auxiliary data is missing", () => {
       expect(getQualifierTokens(countries[0], "visited")).toEqual([]);
-      expect(getQualifierTokens(countries[0], "visits")).toEqual([]);
-      expect(getQualifierTokens(countries[0], "visitYear")).toEqual([]);
-      expect(getQualifierTokens(countries[0], "firstVisit")).toEqual([]);
-      expect(getQualifierTokens(countries[0], "lastVisit")).toEqual([]);
     });
 
     it("returns array/string properties correctly", () => {
@@ -136,38 +89,29 @@ describe("countrySearch utils", () => {
 
       // includeTC as object form for region
       const caRegion = getQualifierTokens(countries[3], "region", {
-        includeTC: true,
+        tcOption: { scope: "all", mode: "include" },
       });
       expect(caRegion).toContain("Americas");
       expect(caRegion).toContain("Europe");
+
+      // includeTC as object form for subregion
+      const caSubregion = getQualifierTokens(countries[3], "subregion", {
+        tcOption: { scope: "contiguous", mode: "include" },
+      });
+      expect(caSubregion).toContain("Northern America");
+      expect(caSubregion).toContain("Northern Europe");
+
+      // tc as qualifier
+      const caTc = getQualifierTokens(countries[3], "tc");
+      expect(caTc).toEqual(["true", "contiguous"]);
+      const nonTc = getQualifierTokens(countries[0], "tc");
+      expect(nonTc).toEqual(["false"]);
 
       // visited flag via visitContext object
       const visited = getQualifierTokens(countries[0], "visited", {
         visitContext: vc,
       });
       expect(visited).toEqual(["true"]);
-
-      // visits count via visitContext
-      const visits = getQualifierTokens(countries[0], "visits", {
-        visitContext: vc,
-      });
-      expect(visits).toEqual(["2"]);
-
-      // visitYear via visitContext
-      const years = getQualifierTokens(countries[0], "visitYear", {
-        visitContext: vc,
-      });
-      expect(years).toEqual(expect.arrayContaining(["2019", "2020"]));
-
-      // firstVisit/lastVisit should prefer date maps when provided
-      const first = getQualifierTokens(countries[0], "firstVisit", {
-        visitContext: vc,
-      });
-      expect(first).toEqual(["2019"]);
-      const last = getQualifierTokens(countries[0], "lastVisit", {
-        visitContext: vc,
-      });
-      expect(last).toEqual(["2020"]);
     });
   });
 

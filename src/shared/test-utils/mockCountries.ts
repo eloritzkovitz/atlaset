@@ -12,6 +12,7 @@ export const mockCountries: Country[] = [
     currency: "EUR",
     languages: ["French"],
     capital: "Paris",
+    population: 50000000,
   },
   {
     name: "Guadeloupe",
@@ -23,6 +24,7 @@ export const mockCountries: Country[] = [
     iso3Code: "GLP",
     currency: "EUR",
     languages: ["French"],
+    population: 1800,
   },
   {
     name: "Germany",
@@ -34,6 +36,7 @@ export const mockCountries: Country[] = [
     iso3Code: "DEU",
     currency: "EUR",
     languages: ["German"],
+    population: 8300,
   },
   {
     name: "Canada",
@@ -43,6 +46,7 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Sovereign" as SovereigntyType,
     callingCode: "+1",
     iso3Code: "CAN",
+    population: 3800,
   },
   {
     name: "United States",
@@ -52,6 +56,7 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Sovereign" as SovereigntyType,
     callingCode: "+1",
     iso3Code: "USA",
+    population: 3300,
   },
   {
     name: "Japan",
@@ -61,5 +66,6 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Sovereign" as SovereigntyType,
     callingCode: "+81",
     iso3Code: "JPN",
+    population: 12600,
   },
 ];

@@ -134,6 +134,7 @@ export function getCountryRelations(isoCode: string): {
   dependencies?: string[];
   countries?: string[];
   regions?: string[];
+  municipalities?: string[];
   disputes?: string[];
   hasRelations?: boolean;
 } {
@@ -144,6 +145,7 @@ export function getCountryRelations(isoCode: string): {
   const countries = group?.countries || [];
   const dependencies = group?.dependencies || [];
   const regions = group?.regions || [];
+  const municipalities = group?.municipalities || [];
 
   // Dynamically compute all disputes involving this country
   const disputes = Object.entries(disputeMap)
@@ -155,6 +157,12 @@ export function getCountryRelations(isoCode: string): {
 
   // If this is a dependency, region, or dispute, return its sovereign info and mutual disputes
   if (dependency || region || dispute) {
+    const hasRelations =
+      disputes.length > 0 ||
+      countries.length > 0 ||
+      dependencies.length > 0 ||
+      regions.length > 0 ||
+      municipalities.length > 0;
     return {
       dependencyOf: dependency
         ? { isoCode: dependency.sovereign.isoCode }
@@ -163,8 +171,12 @@ export function getCountryRelations(isoCode: string): {
       disputeOf: dispute ? { isoCode: dispute.sovereign.isoCode } : undefined,
       sovereign:
         dependency?.sovereign || region?.sovereign || dispute?.sovereign,
+      countries,
+      dependencies,
+      regions,
+      municipalities,
       disputes,
-      hasRelations: disputes.length > 0,
+      hasRelations,
     };
   }
 

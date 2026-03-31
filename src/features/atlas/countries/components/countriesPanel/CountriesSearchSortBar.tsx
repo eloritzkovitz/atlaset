@@ -71,6 +71,9 @@ export function CountriesSearchSortBar({
       ? "sovereign"
       : selectedListId || "all";
 
+  // Qualifier should only be clearable when 'All' is selected; disable for sovereign, visited, and custom lists
+  const qualifierClearable = selectedToggle === "all";
+
   // Handler for double-click editing
   const handleToggleDoubleClick = (val: string) => {
     if (typeof onEditList === "function") {
@@ -84,6 +87,7 @@ export function CountriesSearchSortBar({
         <Autocomplete
           value={search}
           onChange={setSearch}
+          qualifierClearable={qualifierClearable}
           placeholder="Search countries"
           suggestionProvider={qualifierSuggestionProvider}
           className="flex-1 h-10"
@@ -109,22 +113,32 @@ export function CountriesSearchSortBar({
               value={selectedToggle}
               options={[opt]}
               onChange={(val) => {
+                const ensurePrefix = (prefix: string) => {
+                  const current = String(search ?? "").trim();
+                  const low = current.toLowerCase();
+                  if (low.startsWith(prefix + ":")) return;
+                  setSearch(`${prefix}: true`);
+                };
                 if (val === "visited") {
                   setVisitedOnly?.(true);
                   setSovereignOnly?.(false);
                   setSelectedListId?.(null);
+                  ensurePrefix("visited");
                 } else if (val === "sovereign") {
                   setVisitedOnly?.(false);
                   setSovereignOnly?.(true);
                   setSelectedListId?.(null);
+                  ensurePrefix("sovereign");
                 } else if (val === "all") {
                   setVisitedOnly?.(false);
                   setSovereignOnly?.(false);
                   setSelectedListId?.(null);
+                  setSearch("");
                 } else {
                   setVisitedOnly?.(false);
                   setSovereignOnly?.(false);
                   setSelectedListId?.(val);
+                  setSearch("");
                 }
               }}
               disabled={timelineMode}

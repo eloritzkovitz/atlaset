@@ -82,20 +82,8 @@ export function useAutocomplete({
           }
         }
       }
-
-      // Backspace: if there's a colon and nothing after it, clear entire input
-      const parts = parsePropertyParts(value);
-      if (
-        e.key === "Backspace" &&
-        parts.hasColon &&
-        (parts.afterColon || "") === ""
-      ) {
-        e.preventDefault();
-        onChange("");
-        return;
-      }
     },
-    [suggestions, value, pickSuggestion, onChange],
+    [suggestions, value, pickSuggestion],
   );
 
   // Commit the current input with the selected prefix, if valid, when picking a suggestion

@@ -130,8 +130,6 @@ export function CountriesPanel({
     maxVisitCount,
     setMaxVisitCount,
     resetFilters,
-    includeTranscontinental,
-    setIncludeTranscontinental,
   } = useCountryFilters();
 
   // Compute filtered iso codes for custom list counts
@@ -270,8 +268,6 @@ export function CountriesPanel({
           maxVisitCount={maxVisitCount}
           setMaxVisitCount={setMaxVisitCount}
           resetFilters={handleResetFilters}
-          includeTranscontinental={includeTranscontinental}
-          setIncludeTranscontinental={setIncludeTranscontinental}
         />
       )}
     </div>
