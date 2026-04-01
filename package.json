@@ -17,7 +17,7 @@
     "cypress": "cypress open"
   },
   "dependencies": {
-    "@eloritzkovitz/atlaset-flags": "1.0.15",
+    "@eloritzkovitz/atlaset-flags": "1.0.16",
     "@reduxjs/toolkit": "2.11.2",
     "@tailwindcss/vite": "4.2.2",
     "bad-words": "4.0.0",
@@ -25,7 +25,7 @@
     "d3-selection": "3.0.0",
     "d3-zoom": "3.0.0",
     "date-fns": "4.1.0",
-    "dexie": "4.4.1",
+    "dexie": "4.4.2",
     "firebase": "12.11.0",
     "papaparse": "5.5.3",
     "prismjs": "1.30.0",
