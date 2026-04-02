@@ -15,7 +15,7 @@ describe("createSelectFilter", () => {
       "Test Label",
       getOptions,
       getValue,
-      setValue
+      setValue,
     );
 
     expect(filter.key).toBe("testKey");
@@ -33,7 +33,7 @@ describe("createSelectFilter", () => {
       labelFn,
       () => [],
       () => "",
-      () => {}
+      () => {},
     );
     expect(typeof filter.label).toBe("function");
     // @ts-expect-no-error
@@ -47,7 +47,7 @@ describe("createSelectFilter", () => {
       "Label",
       () => [],
       () => "",
-      () => {}
+      () => {},
     );
     // Type assertions
     const key: MyKey = filter.key;
@@ -76,6 +76,11 @@ describe("filterBySearch", () => {
     ]);
   });
 
+  it("treats whitespace-only search as empty and returns all items", () => {
+    const items = [{ name: "A" }, { name: "B" }];
+    expect(filterBySearch(items, "   ", (i) => i.name)).toEqual(items);
+  });
+
   it("returns an empty array if no items match", () => {
     const items = [{ name: "Alpha" }, { name: "Beta" }];
     expect(filterBySearch(items, "Zeta", (i) => i.name)).toEqual([]);
@@ -84,5 +89,12 @@ describe("filterBySearch", () => {
   it("works with fields other than 'name'", () => {
     const items = [{ code: "US" }, { code: "CA" }, { code: "MX" }];
     expect(filterBySearch(items, "C", (i) => i.code)).toEqual([{ code: "CA" }]);
+  });
+
+  it("matches multi-word searches across tokens", () => {
+    const items = [{ name: "Hello" }, { name: "Hello World" }];
+    expect(filterBySearch(items, "hello world", (i) => i.name)).toEqual([
+      { name: "Hello World" },
+    ]);
   });
 });

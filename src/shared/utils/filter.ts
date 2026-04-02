@@ -49,9 +49,20 @@ export function filterBySearch<T>(
 ) {
   if (!search) return items;
   const normalizedSearch = normalizeString(search);
+  const searchKey = normalizedSearch.split(/\W+/).filter(Boolean).join(" ");
+  if (!searchKey) return items;
+
   return items.filter((item) => {
     const field = normalizeString(getField(item));
     const tokens = field.split(/\W+/).filter(Boolean);
-    return tokens.some((t) => t.startsWith(normalizedSearch));
+    const fieldJoined = tokens.join(" ");
+
+    // If the search contains multiple words, match the joined field string
+    if (searchKey.includes(" ")) {
+      return fieldJoined.includes(searchKey);
+    }
+
+    // Single-word search: allow prefix matching of individual tokens
+    return tokens.some((t) => t.startsWith(searchKey));
   });
 }
