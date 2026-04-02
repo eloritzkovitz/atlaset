@@ -17,7 +17,7 @@
     "cypress": "cypress open"
   },
   "dependencies": {
-    "@eloritzkovitz/atlaset-flags": "1.0.17",
+    "@eloritzkovitz/atlaset-flags": "1.0.18",
     "@reduxjs/toolkit": "2.11.2",
     "@tailwindcss/vite": "4.2.2",
     "bad-words": "4.0.0",

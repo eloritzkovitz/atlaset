@@ -23,6 +23,7 @@ export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
   { key: "municipalities", label: "Municipalities", prop: "municipalities" },
 ];
 
+/** Represents the relations of a country with other geopolitical entities. */
 export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   AR: {
     disputes: ["FK", "GS"],
@@ -54,9 +55,9 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     countries: ["GB-ENG", "GB-NIR", "GB-SCT", "GB-WLS"],
     dependencies: [
       "AI",
-      "UK",
       "BM",
       "FK",
+      "GB-AKR",
       "GG",
       "GI",
       "GS",
@@ -105,6 +106,9 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   RS: {
     disputes: ["XK"],
   },
+  SH: {
+    dependencies: ["SH-AC", "SH-HL", "SH-TA"],
+  },
   SO: {
     disputes: ["XS"],
   },
@@ -113,17 +117,21 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   },
 };
 
+/** Represents special countries that have no official ISO 3166 code, entries or universally recognized status. */
 export const SPECIAL_COUNTRIES: Record<string, { name: string }> = {
   "AU-ACI": { name: "Ashmore and Cartier Islands" },
   "AU-CSI": { name: "Coral Sea Islands" },
   "BQ-BO": { name: "Bonaire" },
   "BQ-SA": { name: "Saba" },
   "BQ-SE": { name: "Sint Eustatius" },
+  "GB-AKR": { name: "Akrotiri and Dhekelia" },
   "GB-ENG": { name: "England" },
   "GB-NIR": { name: "Northern Ireland" },
   "GB-SCT": { name: "Scotland" },
   "GB-WLS": { name: "Wales" },
-  CP: { name: "Clipperton Island" },
+  "SH-AC": { name: "Ascension Island" },
+  "SH-HL": { name: "Saint Helena" },
+  "SH-TA": { name: "Tristan da Cunha" },
   XA: { name: "Abkhazia" },
   XO: { name: "South Ossetia" },
   XC: { name: "Northern Cyprus" },
