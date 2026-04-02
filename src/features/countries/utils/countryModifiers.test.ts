@@ -52,21 +52,20 @@ describe("countryModifiers", () => {
   });
 
   it("parses transcontinental scope strings and matches transcontinental entries", () => {
-    expect(parseTCOption("true")).toEqual({ mode: "default" });
-    expect(parseTCOption("false")).toEqual({ mode: "default" });
-    expect(parseTCOption("contiguous")).toEqual({
-      scope: "contiguous",
-      mode: "default",
+    const tcCases: Array<[string | undefined, any]> = [
+      ["true", { mode: "default" }],
+      ["false", { mode: "default" }],
+      ["contiguous", { scope: "contiguous", mode: "default" }],
+      ["overseas", { scope: "overseas", mode: "default" }],
+      ["other", { scope: "other", mode: "default" }],
+      ["all", { scope: "all", mode: "default" }],
+      ["bogus", { mode: "default" }],
+      ["only", { scope: "all", mode: "only" }],
+      ["include", { scope: "all", mode: "include" }],
+    ];
+    tcCases.forEach(([input, expected]) => {
+      expect(parseTCOption(input as any)).toEqual(expected);
     });
-    expect(parseTCOption("overseas")).toEqual({
-      scope: "overseas",
-      mode: "default",
-    });
-    expect(parseTCOption("other")).toEqual({ scope: "other", mode: "default" });
-    expect(parseTCOption("all")).toEqual({ scope: "all", mode: "default" });
-    expect(parseTCOption("bogus")).toEqual({ mode: "default" });
-    expect(parseTCOption("only")).toEqual({ scope: "all", mode: "only" });
-    expect(parseTCOption("include")).toEqual({ scope: "all", mode: "include" });
 
     const countryUS = { isoCode: "US" } as any;
     const countryAZ = { isoCode: "AZ" } as any;
@@ -85,36 +84,52 @@ describe("countryModifiers", () => {
   });
 
   it("applyModifiersToCountry respects of, visited, count, year, first, and last", () => {
-    // of modifier fails when no relation
     const countryA = { isoCode: "NW" } as any;
     expect(applyModifiersToCountry(countryA, { of: "ZZ" } as any)).toBe(false);
 
-    // visited false when visitedIsoCodes includes iso -> handled by qualifier; modifier function returns true
     const countryC = { isoCode: "BB" } as any;
     const ctx1 = { visitedIsoCodes: ["BB"] } as any;
     expect(
       applyModifiersToCountry(countryC, { visited: false } as any, ctx1),
     ).toBe(true);
 
-    // count comparator passes and fails
-    const countryD = { isoCode: "CC" } as any;
-    const ctx2 = { visitedMap: { CC: 2 } } as any;
-    expect(
-      applyModifiersToCountry(
-        countryD,
-        { count: { op: ">", value: 1 } } as any,
-        ctx2,
-      ),
-    ).toBe(true);
-    expect(
-      applyModifiersToCountry(
-        countryD,
-        { count: { op: ">=", value: 3 } } as any,
-        ctx2,
-      ),
-    ).toBe(false);
+    const countCases: Array<{
+      country: any;
+      ctx: any;
+      mod: any;
+      expected: boolean;
+    }> = [
+      {
+        country: { isoCode: "CC" },
+        ctx: { visitedMap: { CC: 2 } },
+        mod: { count: { op: ">", value: 1 } },
+        expected: true,
+      },
+      {
+        country: { isoCode: "CC" },
+        ctx: { visitedMap: { CC: 2 } },
+        mod: { count: { op: ">=", value: 3 } },
+        expected: false,
+      },
+      {
+        country: { isoCode: "CD" },
+        ctx: { visitedIsoCodes: ["CD"] },
+        mod: { count: { op: ">=", value: 1 } },
+        expected: true,
+      },
+      {
+        country: { isoCode: "CD" },
+        ctx: { visitedIsoCodes: ["CD"] },
+        mod: { count: { op: ">", value: 1 } },
+        expected: false,
+      },
+    ];
+    countCases.forEach(({ country, ctx, mod, expected }) => {
+      expect(
+        applyModifiersToCountry(country as any, mod as any, ctx as any),
+      ).toBe(expected);
+    });
 
-    // year '=' uses hasVisitInYearFor
     const countryE = { isoCode: "YY" } as any;
     const ctx3 = { visitedYearMap: { YY: new Set([2020]) } } as any;
     expect(
@@ -125,7 +140,6 @@ describe("countryModifiers", () => {
       ),
     ).toBe(true);
 
-    // year non '=' uses firstVisitMap; missing first -> false
     const countryF = { isoCode: "ZZ" } as any;
     expect(
       applyModifiersToCountry(
@@ -135,7 +149,6 @@ describe("countryModifiers", () => {
       ),
     ).toBe(false);
 
-    // first and last comparators
     const countryG = { isoCode: "FG" } as any;
     const ctx4 = {
       firstVisitMap: { FG: new Date("1990-01-01") },
@@ -156,19 +169,28 @@ describe("countryModifiers", () => {
       ),
     ).toBe(true);
 
-    // requesting non-sovereign when country is sovereign now passes through
     const sov = { isoCode: "S1", sovereigntyType: "Sovereign" } as any;
     expect(applyModifiersToCountry(sov, { sovereign: false } as any)).toBe(
       true,
     );
+
+    const noIso = {} as any as any;
+    const noIsoMods = [
+      { count: { op: ">", value: 0 } },
+      { year: { op: ">", year: 2000 } },
+      { first: { op: "=", year: 1990 } },
+      { last: { op: "=", year: 2010 } },
+    ];
+    noIsoMods.forEach((m) => {
+      expect(applyModifiersToCountry(noIso as any, m as any, {} as any)).toBe(
+        false,
+      );
+    });
   });
 
   it("additional parseTCOption and matchesTranscontinental cases", () => {
-    // undefined or empty returns default mode
     expect(parseTCOption(undefined as any)).toEqual({ mode: "default" });
     expect(parseTCOption("")).toEqual({ mode: "default" });
-
-    // order-agnostic parsing where both scope and mode present
     expect(parseTCOption("include:contiguous")).toEqual({
       scope: "contiguous",
       mode: "include",
@@ -183,16 +205,13 @@ describe("countryModifiers", () => {
     });
 
     const countryUS = { isoCode: "US" } as any;
-    // matchesTranscontinental returns false when option missing
     expect(matchesTranscontinental(countryUS, undefined as any)).toBe(false);
   });
 
   it("applyModifiersToCountry positive of and visited cases", () => {
-    // 'GP' is a region of FR per COUNTRY_RELATIONS
     const gp = { isoCode: "GP" } as any;
     expect(applyModifiersToCountry(gp, { of: "FR" } as any)).toBe(true);
 
-    // visited true when present
     const z = { isoCode: "Z1" } as any;
     const ctx = { visitedIsoCodes: ["Z1"] } as any;
     expect(applyModifiersToCountry(z, { visited: true } as any, ctx)).toBe(

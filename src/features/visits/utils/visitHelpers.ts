@@ -49,12 +49,3 @@ export function getVisitCountFor(
   if (visitedMap) return visitedMap[iso] || 0;
   return (visitedIsoCodes ?? []).includes(iso) ? 1 : 0;
 }
-
-// Check if a country is visited given either a map or an ISO list
-export function isVisitedFor(
-  iso?: string,
-  visitedMap?: Record<string, number>,
-  visitedIsoCodes?: string[],
-) {
-  return getVisitCountFor(iso, visitedMap, visitedIsoCodes) > 0;
-}
