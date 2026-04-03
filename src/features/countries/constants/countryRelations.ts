@@ -3,25 +3,9 @@ export type CountryRelations = {
   countries?: string[];
   dependencies?: string[];
   regions?: string[];
-  municipalities?: string[];
+  subdivisions?: string[];
   disputes?: string[];
 };
-
-type CountryRelationsKey = keyof CountryRelations;
-
-interface CountryRelationsSection {
-  key: string;
-  label: string;
-  prop: CountryRelationsKey;
-}
-
-export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
-  { key: "countries", label: "Countries", prop: "countries" },
-  { key: "dependencies", label: "Dependencies", prop: "dependencies" },
-  { key: "regions", label: "Overseas Regions", prop: "regions" },
-  { key: "disputes", label: "Disputes", prop: "disputes" },
-  { key: "municipalities", label: "Municipalities", prop: "municipalities" },
-];
 
 /** Represents the relations of a country with other geopolitical entities. */
 export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
@@ -32,7 +16,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     dependencies: ["AU-ACI", "AU-CSI", "CC", "CX", "HM", "NF"],
   },
   BQ: {
-    municipalities: ["BQ-BO", "BQ-SA", "BQ-SE"],
+    subdivisions: ["BQ-BO", "BQ-SA", "BQ-SE"],
   },
   CN: {
     disputes: ["TW"],
@@ -107,7 +91,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     disputes: ["XK"],
   },
   SH: {
-    dependencies: ["SH-AC", "SH-HL", "SH-TA"],
+    subdivisions: ["SH-AC", "SH-HL", "SH-TA"],
   },
   SO: {
     disputes: ["XS"],
@@ -117,22 +101,38 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   },
 };
 
-/** Represents special countries that have no official ISO 3166 code, entries or universally recognized status. */
-export const SPECIAL_COUNTRIES: Record<string, { name: string }> = {
-  "AU-ACI": { name: "Ashmore and Cartier Islands" },
-  "AU-CSI": { name: "Coral Sea Islands" },
-  "BQ-BO": { name: "Bonaire" },
-  "BQ-SA": { name: "Saba" },
-  "BQ-SE": { name: "Sint Eustatius" },
-  "GB-AKR": { name: "Akrotiri and Dhekelia" },
-  "GB-ENG": { name: "England" },
-  "GB-NIR": { name: "Northern Ireland" },
-  "GB-SCT": { name: "Scotland" },
-  "GB-WLS": { name: "Wales" },
-  "SH-AC": { name: "Ascension Island" },
-  "SH-HL": { name: "Saint Helena" },
-  "SH-TA": { name: "Tristan da Cunha" },
-  XA: { name: "Abkhazia" },
-  XO: { name: "South Ossetia" },
-  XC: { name: "Northern Cyprus" },
+type CountryRelationsKey = keyof CountryRelations;
+
+/** Represents a section for displaying country relations. */
+interface CountryRelationsSection {
+  key: string;
+  label: string;
+  prop: CountryRelationsKey;
+}
+
+/** Represents the sections for displaying country relations. */
+export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
+  { key: "countries", label: "Countries", prop: "countries" },
+  { key: "dependencies", label: "Dependencies", prop: "dependencies" },
+  { key: "regions", label: "Overseas Regions", prop: "regions" },
+  { key: "subdivisions", label: "Subdivisions", prop: "subdivisions" },
+  { key: "disputes", label: "Disputes", prop: "disputes" },
+];
+
+/** Represents flag overrides for countries that do not have their own flags. */
+export const FLAG_OVERRIDES: Record<
+  string,
+  { sovereign?: string; flag?: string }
+> = {
+  BV: { sovereign: "NO" }, // Bouvet Island
+  CP: { sovereign: "FR" }, // Clipperton Island
+  "GB-AKR": { sovereign: "GB" }, // Akrotiri and Dhekelia
+  HM: { sovereign: "AU" }, // Heard Island and McDonald Islands
+  MF: { sovereign: "FR" }, // Saint Martin
+  SH: { sovereign: "GB" }, // Saint Helena, Ascension and Tristan da Cunha
+  SJ: { sovereign: "NO" }, // Svalbard and Jan Mayen
+  UM: { sovereign: "US" }, // United States Minor Outlying Islands
 };
+
+// List of country codes that do not have their own flags, derived from FLAG_OVERRIDES
+export const EXCLUDED_ISO_CODES: string[] = Object.keys(FLAG_OVERRIDES).sort();

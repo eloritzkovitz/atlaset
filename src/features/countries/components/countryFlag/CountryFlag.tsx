@@ -1,6 +1,7 @@
 import React from "react";
 import { _3x2 as Flags } from "@eloritzkovitz/atlaset-flags";
-import { SOVEREIGN_FLAG_MAP } from "../../constants/sovereignty";
+import { FLAG_OVERRIDES } from "../../constants/countryRelations";
+import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import type { Flag } from "../../types/flag";
 
 interface CountryFlagProps {
@@ -16,8 +17,15 @@ export function CountryFlag({ flag, style, className }: CountryFlagProps) {
   const width = validSize;
   const height = Math.round((width * 2) / 3);
 
-  // Map to sovereign flag if applicable
-  const mappedIso = SOVEREIGN_FLAG_MAP?.[flag.isoCode] || flag.isoCode;
+  // Check for special cases where the flag should be overridden by a sovereign or alternate flag
+  const special = SPECIAL_COUNTRIES[flag.isoCode];
+  const override = FLAG_OVERRIDES[flag.isoCode];
+  const mappedIso =
+    special?.flag ||
+    special?.sovereign ||
+    override?.flag ||
+    override?.sovereign ||
+    flag.isoCode;
 
   // Handle 3x2 flags
   if (flag.ratio === "3x2") {

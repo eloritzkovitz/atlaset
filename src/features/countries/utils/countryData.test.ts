@@ -20,10 +20,6 @@ import {
   getCurrencyDisplay,
 } from "./countryData";
 
-vi.mock("../constants/sovereignty", () => ({
-  EXCLUDED_ISO_CODES: ["XX"],
-  SOVEREIGN_FLAG_MAP: { YY: "US" },
-}));
 vi.mock("../constants/countryRelations", () => ({
   COUNTRY_RELATIONS: {
     US: {
@@ -38,12 +34,14 @@ vi.mock("../constants/countryRelations", () => ({
     AA: { disputes: ["BB"] },
     BB: { disputes: ["AA"] },
   },
-
+  FLAG_OVERRIDES: { YY: { sovereign: "US" } },
+  EXCLUDED_ISO_CODES: ["XX"],
+}));
+vi.mock("../constants/specialCountries", () => ({
   SPECIAL_COUNTRIES: {
     "GB-ENG": { name: "England" },
   },
 }));
-
 vi.mock("../constants/transcontinental", () => ({
   TRANSCONTINENTAL_MAP: new Map([
     [

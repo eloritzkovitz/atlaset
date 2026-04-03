@@ -11,7 +11,6 @@ export { CountrySortSelect } from "./components/countrySort/CountrySortSelect";
 export { VisitedStatusIndicator } from "./components/countryDetails/VisitedStatusIndicator";
 
 // Constants
-export { SOVEREIGNTY_ORDER } from "./constants/sovereignty";
 export {
   COUNTRY_RELATIONS,
   COUNTRY_RELATION_SECTIONS,

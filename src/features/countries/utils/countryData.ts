@@ -5,9 +5,9 @@
 import { extractUniqueSorted } from "@utils/array";
 import {
   COUNTRY_RELATIONS,
-  SPECIAL_COUNTRIES,
+  EXCLUDED_ISO_CODES,
 } from "../constants/countryRelations";
-import { EXCLUDED_ISO_CODES } from "../constants/sovereignty";
+import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country, Currency, SovereigntyType } from "../types";
 
@@ -134,7 +134,7 @@ export function getCountryRelations(isoCode: string): {
   dependencies?: string[];
   countries?: string[];
   regions?: string[];
-  municipalities?: string[];
+  subdivisions?: string[];
   disputes?: string[];
   hasRelations?: boolean;
 } {
@@ -145,7 +145,7 @@ export function getCountryRelations(isoCode: string): {
   const countries = group?.countries || [];
   const dependencies = group?.dependencies || [];
   const regions = group?.regions || [];
-  const municipalities = group?.municipalities || [];
+  const subdivisions = group?.subdivisions || [];
 
   // Dynamically compute all disputes involving this country
   const disputes = Object.entries(disputeMap)
@@ -162,7 +162,7 @@ export function getCountryRelations(isoCode: string): {
       countries.length > 0 ||
       dependencies.length > 0 ||
       regions.length > 0 ||
-      municipalities.length > 0;
+      subdivisions.length > 0;
     return {
       dependencyOf: dependency
         ? { isoCode: dependency.sovereign.isoCode }
@@ -174,7 +174,7 @@ export function getCountryRelations(isoCode: string): {
       countries,
       dependencies,
       regions,
-      municipalities,
+      subdivisions,
       disputes,
       hasRelations,
     };

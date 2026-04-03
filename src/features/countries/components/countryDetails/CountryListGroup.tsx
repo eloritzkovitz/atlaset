@@ -1,7 +1,7 @@
 import React from "react";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
-import { SPECIAL_COUNTRIES } from "../../constants/countryRelations";
+import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import { type Country } from "../../types";
 
 interface CountryListGroupProps {

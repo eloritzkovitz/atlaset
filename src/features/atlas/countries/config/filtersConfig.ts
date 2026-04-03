@@ -1,9 +1,18 @@
 import type { Layer } from "@features/atlas/layers";
-import { SOVEREIGNTY_ORDER, type SovereigntyType } from "@features/countries";
+import { type SovereigntyType } from "@features/countries";
 import type { FilterConfig, FilterOption } from "@types";
 import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
 import { capitalize, capitalizeWords } from "@utils/string";
+
+// Predefined sovereignty order for consistent dropdown ordering
+export const SOVEREIGNTY_ORDER: SovereigntyType[] = [
+  "Sovereign",
+  "Dependency",
+  "Overseas Region",
+  "Disputed",
+  "Unrecognized",
+];
 
 /** Filter keys for countries */
 export type CountryFilterKey =
