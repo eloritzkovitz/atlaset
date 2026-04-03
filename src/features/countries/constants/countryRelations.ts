@@ -59,6 +59,9 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   GE: {
     disputes: ["XA", "XO"],
   },
+  GG: {
+    subdivisions: ["CQ"],
+  },
   KM: {
     disputes: ["YT"],
   },
@@ -119,11 +122,12 @@ export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
   { key: "disputes", label: "Disputes", prop: "disputes" },
 ];
 
-/** Represents flag overrides for countries that do not have their own flags. */
+/** Represents flag overrides for countries and territories that do not have their own flags. */
 export const FLAG_OVERRIDES: Record<
   string,
   { sovereign?: string; flag?: string }
 > = {
+  BQ: { sovereign: "NL" }, // Caribbean Netherlands
   BV: { sovereign: "NO" }, // Bouvet Island
   CP: { sovereign: "FR" }, // Clipperton Island
   "GB-AKR": { sovereign: "GB" }, // Akrotiri and Dhekelia

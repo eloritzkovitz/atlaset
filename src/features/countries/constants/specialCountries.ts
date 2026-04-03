@@ -11,6 +11,7 @@ export const SPECIAL_COUNTRIES: Record<string, SpecialCountry> = {
   "BQ-BO": { name: "Bonaire", flag: "BQBO", sovereign: "BQ" },
   "BQ-SA": { name: "Saba", flag: "BQSA", sovereign: "BQ" },
   "BQ-SE": { name: "Sint Eustatius", flag: "BQSE", sovereign: "BQ" },
+  CQ: { name: "Sark" },
   "GB-AKR": { name: "Akrotiri and Dhekelia", sovereign: "GB" },
   "GB-ENG": { name: "England", flag: "GBENG", sovereign: "GB" },
   "GB-NIR": { name: "Northern Ireland", flag: "GBNIR", sovereign: "GB" },
