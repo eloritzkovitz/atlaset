@@ -99,6 +99,19 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   SO: {
     disputes: ["XS"],
   },
+  UM: {
+    subdivisions: [
+      "UM-81",
+      "UM-84",
+      "UM-86",
+      "UM-87",
+      "UM-89",
+      "UM-71",
+      "UM-76",
+      "UM-95",
+      "UM-79",
+    ],
+  },
   US: {
     dependencies: ["AS", "GU", "MP", "PR", "UM", "VI"],
   },
