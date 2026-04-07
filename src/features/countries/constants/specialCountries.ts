@@ -1,4 +1,4 @@
-/** Represents special countries that have no official ISO 3166 code, entries or universally recognized status. */
+/** Represents special countries or territories that have no entries. */
 export type SpecialCountry = {
   name: string;
   flag?: string;
@@ -6,12 +6,9 @@ export type SpecialCountry = {
 };
 
 export const SPECIAL_COUNTRIES: Record<string, SpecialCountry> = {
-  "AU-ACI": { name: "Ashmore and Cartier Islands", sovereign: "AU" },
-  "AU-CSI": { name: "Coral Sea Islands", sovereign: "AU" },
   "BQ-BO": { name: "Bonaire", flag: "BQBO", sovereign: "BQ" },
   "BQ-SA": { name: "Saba", flag: "BQSA", sovereign: "BQ" },
   "BQ-SE": { name: "Sint Eustatius", flag: "BQSE", sovereign: "BQ" },
-  CP: { name: "Clipperton Island", sovereign: "FR" },
   CQ: { name: "Sark" },
   "GB-ENG": { name: "England", flag: "GBENG", sovereign: "GB" },
   "GB-NIR": { name: "Northern Ireland", flag: "GBNIR", sovereign: "GB" },

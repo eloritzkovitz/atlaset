@@ -41,7 +41,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
       "AI",
       "BM",
       "FK",
-      "GB-AKR",
+      "GB-SBA",
       "GG",
       "GI",
       "GS",
@@ -135,15 +135,17 @@ export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
   { key: "disputes", label: "Disputes", prop: "disputes" },
 ];
 
-/** Represents flag overrides for countries and territories that do not have their own flags. */
+/** Represents flag overrides for territories that do not have their own flags. */
 export const FLAG_OVERRIDES: Record<
   string,
   { sovereign?: string; flag?: string }
 > = {
+  "AU-ACI": { sovereign: "AU" }, // Ashmore and Cartier Islands
+  "AU-CSI": { sovereign: "AU" }, // Coral Sea Islands
   BQ: { sovereign: "NL" }, // Caribbean Netherlands
   BV: { sovereign: "NO" }, // Bouvet Island
   CP: { sovereign: "FR" }, // Clipperton Island
-  "GB-AKR": { sovereign: "GB" }, // Akrotiri and Dhekelia
+  "GB-SBA": { sovereign: "GB" }, // Akrotiri and Dhekelia
   HM: { sovereign: "AU" }, // Heard Island and McDonald Islands
   MF: { sovereign: "FR" }, // Saint Martin
   SH: { sovereign: "GB" }, // Saint Helena, Ascension and Tristan da Cunha
