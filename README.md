@@ -49,7 +49,6 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Accessible design:** All major actions and navigation are keyboard-friendly
 - **Modern UI:** Responsive design with Tailwind CSS and icons
 - **PWA support:** Install Atlaset as an app on desktop or mobile and use it offline
-- **Desktop app:** Run Atlaset as a cross-platform desktop application with Electron
 
 ### **Social Features**
 
@@ -78,7 +77,6 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 ### Platform & Deployment
 
 - **PWA (Progressive Web App)** — Offline support and installability
-- **Electron** — Desktop wrapper for cross-platform app support
 - **Vercel & Render** — Frontend/backend API hosting
 
 ### Testing
