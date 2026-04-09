@@ -38,7 +38,9 @@ describe("usePwaUpdate", () => {
     try {
       delete (global as any).BroadcastChannel;
       MockBroadcastChannel.instances = [];
-    } catch {}
+    } catch {
+      // ignore cleanup errors
+    }
   });
 
   it("should set needRefresh and activate waiting worker on update", () => {

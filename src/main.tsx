@@ -12,24 +12,21 @@ import "./styles/markdown.css";
 
 // Register service worker for PWA update detection
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  // Dynamically import virtual:pwa-register for VitePWA
   import("virtual:pwa-register").then(({ registerSW }) => {
     registerSW({
       onNeedRefresh() {
-        // Notify the app that a new service worker is waiting to activate
+        // Notify the app only when a waiting service worker actually exists
         navigator.serviceWorker
           .getRegistration()
-          .then((reg) =>
-            window.dispatchEvent(
-              new CustomEvent("swUpdated", {
-                detail: { waiting: reg?.waiting || null },
-              }),
-            ),
-          )
-          .catch(() => {
-            // Fallback: still notify without detail
-            window.dispatchEvent(new CustomEvent("swUpdated"));
-          });
+          .then((reg) => {
+            const waiting = reg?.waiting || null;
+            if (waiting) {
+              window.dispatchEvent(
+                new CustomEvent("swUpdated", { detail: { waiting } }),
+              );
+            }
+          })
+          .catch(() => {});
       },
     });
   });

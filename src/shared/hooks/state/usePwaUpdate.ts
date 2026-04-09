@@ -16,13 +16,16 @@ export function usePwaUpdate() {
     if (!isWindowDefined()) return;
     try {
       bcRef.current = new BroadcastChannel("sw-update");
-    } catch (err) {
+    } catch {
+      // BroadcastChannel not available or blocked
       bcRef.current = null;
     }
     return () => {
       try {
         bcRef.current?.close();
-      } catch {}
+      } catch {
+        // ignore close errors
+      }
       bcRef.current = null;
     };
   }, []);
@@ -35,7 +38,9 @@ export function usePwaUpdate() {
     waitingRef.current = w;
     try {
       bcRef.current?.postMessage({ type: "update-available" });
-    } catch {}
+    } catch {
+      // ignore postMessage failures
+    }
   }, []);
 
   useEventListener(
@@ -52,8 +57,18 @@ export function usePwaUpdate() {
       if (ev.data?.type === "update-available") setNeedRefresh(true);
       if (ev.data?.type === "reload-now") window.location.reload();
     };
-    bc.addEventListener("message", handle);
-    return () => bc.removeEventListener("message", handle);
+    try {
+      bc.addEventListener("message", handle);
+    } catch {
+      // ignore
+    }
+    return () => {
+      try {
+        bc.removeEventListener("message", handle);
+      } catch {
+        // ignore
+      }
+    };
   }, []);
 
   // Function to trigger the service worker update process
@@ -66,14 +81,18 @@ export function usePwaUpdate() {
         try {
           // notify other tabs to reload now that the new SW controls clients
           bc?.postMessage({ type: "reload-now" });
-        } catch {}
+        } catch {
+          // ignore
+        }
         window.location.reload();
         try {
           navigator.serviceWorker.removeEventListener(
             "controllerchange",
             onControllerChange,
           );
-        } catch {}
+        } catch {
+          // ignore
+        }
       };
 
       try {
@@ -81,7 +100,9 @@ export function usePwaUpdate() {
           "controllerchange",
           onControllerChange,
         );
-      } catch {}
+      } catch {
+        // ignore
+      }
 
       try {
         w.postMessage({ type: "SKIP_WAITING" });
@@ -92,7 +113,9 @@ export function usePwaUpdate() {
     } else {
       try {
         bc?.postMessage({ type: "reload-now" });
-      } catch {}
+      } catch {
+        // ignore
+      }
       window.location.reload();
     }
   }, []);
