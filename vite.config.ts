@@ -11,7 +11,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
     }),
     ...(process.env.ANALYZE ? [visualizer({ open: true })] : []),
   ],

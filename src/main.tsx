@@ -16,8 +16,20 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
   import("virtual:pwa-register").then(({ registerSW }) => {
     registerSW({
       onNeedRefresh() {
-        // Dispatch swUpdated event for usePwaUpdate hook
-        window.dispatchEvent(new CustomEvent("swUpdated"));
+        // Notify the app that a new service worker is waiting to activate
+        navigator.serviceWorker
+          .getRegistration()
+          .then((reg) =>
+            window.dispatchEvent(
+              new CustomEvent("swUpdated", {
+                detail: { waiting: reg?.waiting || null },
+              }),
+            ),
+          )
+          .catch(() => {
+            // Fallback: still notify without detail
+            window.dispatchEvent(new CustomEvent("swUpdated"));
+          });
       },
     });
   });

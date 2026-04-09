@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-04-09
+
+- **[chore]** **PWA:** Switched SW update to prompt with a user-facing update banner, including an updated flow and cross-tab sync
+
 ## 2026-03-31
 
 - **[chore]** **Countries:** Refined search syntax, allowing additional modifiers
@@ -282,7 +286,6 @@
 
 - **[feature]** **Dashboard:** Added dashboard feature, showing statistics and information
 - **[chore]** **Dashboard:** Moved the old trips statistics from trips to the dashboard
-- **[feature]** **General:** Added Electron desktop wrapper for cross-platform support
 - **[feature]** **User | Auth:** Implemented UI for login and signup to allow authentication with email/password in addition to Google sign-in
 - **[feature]** **User | Auth:** Added password reset and session persistence support
 
@@ -326,7 +329,7 @@
 
 ## 2025-11-06
 
-- **[feature]** **General:** Implemented PWA support
+- **[chore]** \*PWA:\*\* Implemented PWA support
 
 ## 2025-11-05
 
