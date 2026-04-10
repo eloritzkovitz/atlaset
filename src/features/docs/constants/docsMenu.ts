@@ -125,6 +125,12 @@ export const DOCS_GROUPS = {
         url: "/docs/achievements",
       },
       {
+        label: "Statistics",
+        file: "statistics.md",
+        icon: ICONS.statistics,
+        url: "/docs/statistics",
+      },
+      {
         label: "Quizzes",
         file: "quizzes.md",
         icon: ICONS.quizzes,
