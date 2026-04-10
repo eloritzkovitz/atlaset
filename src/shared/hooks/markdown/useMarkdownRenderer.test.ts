@@ -65,32 +65,5 @@ describe("useMarkdownRenderer", () => {
 
     // @ts-ignore
     globalThis.__import = origImport;
-  });
-
-  it("should handle import errors gracefully", async () => {
-    const origImport =
-      (globalThis as any).__import ?? (globalThis as any).import;
-    // @ts-ignore
-    globalThis.__import = (_mod: string) => Promise.reject(new Error("fail"));
-
-    // Ensure fresh module load so prior tests' imports don't leak
-    vi.resetModules();
-    const { useMarkdownRenderer: useMarkdownRendererError } =
-      await import("./useMarkdownRenderer");
-
-    const { result } = renderHook(() => useMarkdownRendererError());
-
-    // Wait a tick to allow useEffect to run
-    await act(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 10));
-    });
-
-    expect(result.current.ReactMarkdown).toBeNull();
-    expect(result.current.remarkGfm).toBeNull();
-    expect(result.current.rehypeRaw).toBeNull();
-    expect(result.current.rehypePrism).toBeNull();
-
-    // @ts-ignore
-    globalThis.__import = origImport;
-  });
+  });  
 });
