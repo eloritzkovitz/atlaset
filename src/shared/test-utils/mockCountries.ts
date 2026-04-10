@@ -57,6 +57,7 @@ export const mockCountries: Country[] = [
     callingCode: "+1",
     iso3Code: "USA",
     population: 3300,
+    aliases: ["USA", "US", "United States of America"],
   },
   {
     name: "Japan",

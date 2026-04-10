@@ -33,10 +33,10 @@ describe("countrySearch utils", () => {
     expect(supported).toContain("currency");
   });
 
-  it("builds a search string containing name and isoCode", () => {
-    const s = buildSearchString(countries[0]);
-    expect(s).toContain(countries[0].name);
-    expect(s).toContain(countries[0].isoCode);
+  it("builds a search string containing name and aliases", () => {
+    const s = buildSearchString(countries[4]);
+    expect(s).toContain(countries[4].name);
+    expect(s).toContain(countries[4].aliases?.[0]);
   });
 
   describe("getQualifierTokens", () => {

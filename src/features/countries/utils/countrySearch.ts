@@ -36,16 +36,10 @@ export function qualifierSuggestionProvider(input: string) {
 /**
  * Builds a search string for a country by concatenating relevant properties.
  * @param country - The country object to build the search string from.
- * @returns A string that combines the country's name, iso code, region, subregion, and aliases for search purposes.
+ * @returns A string that combines the country's name and aliases for search purposes.
  */
 export function buildSearchString(country: Country) {
-  return [
-    country.name,
-    country.isoCode,
-    country.region ?? "",
-    country.subregion ?? "",
-    ...(country.aliases ?? []),
-  ].join(" ");
+  return [country.name, ...(country.aliases ?? [])].join(" ");
 }
 
 /**
