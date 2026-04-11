@@ -87,8 +87,21 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               className={`w-full text-base whitespace-pre flex items-center ${
                 showIcon === false ? "pl-3" : "pl-10"
               } pr-10 py-2`}
+              style={{
+                paddingRight: showClear ? 44 : undefined,
+                overflow: "hidden",
+              }}
             >
-              <div className="w-full">{overlayContent}</div>
+              <div
+                className="w-full"
+                style={{
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "clip",
+                }}
+              >
+                <div style={{ display: "inline-block" }}>{overlayContent}</div>
+              </div>
             </div>
           </div>
         )}
@@ -134,6 +147,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             ...(overlayContent
               ? { color: "transparent", caretColor: "var(--color-text)" }
               : {}),
+            paddingRight: showClear ? 44 : undefined,
+            zIndex: 20,
           }}
         />
         {showClear && (
@@ -148,7 +163,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               }
               onChange("");
             }}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none z-30"
           >
             <FaXmark />
           </button>

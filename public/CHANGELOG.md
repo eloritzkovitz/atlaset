@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-11
+
+- **[chore]** **Countries:** Added time zones to country data, display and qualifier search
+- **[chore]** **Countries:** Removed isocode, region and subregion from free-text search as they are qualifiers 
+- **[chore]** **General:** Redesigned qualifier search
+
 ## 2026-04-09
 
 - **[chore]** **PWA:** Switched SW update to prompt with a user-facing update banner, including an updated flow and cross-tab sync
