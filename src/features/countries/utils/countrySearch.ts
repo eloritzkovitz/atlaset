@@ -10,6 +10,7 @@ import {
   type CountryQualifierKey,
   type CountryQualifierConfig,
 } from "../constants/qualifierConfig";
+import { timezoneOffsets } from "@utils/timezone";
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country, TranscontinentalScope } from "../types";
 
@@ -55,10 +56,12 @@ export function getQualifierTokens(
   key: CountryQualifierKey,
   options?: {
     tcOption?: { scope?: TranscontinentalScope; mode?: string };
+    dst?: boolean | string;
     visitContext?: VisitContext;
   },
 ) {
   const { tcOption, visitContext } = options ?? {};
+  const dstOption = options?.dst;
 
   // Determine if transcontinental countries should be included based on the provided options
   const includeTC: TranscontinentalScope | boolean = tcOption
@@ -93,6 +96,33 @@ export function getQualifierTokens(
     );
     if (entry) return ["true", entry.scope ?? "contiguous"];
     return ["false"];
+  }
+  if (key === "timezones") {
+    const tzs = country.timezones;
+    if (!Array.isArray(tzs)) return [] as string[];
+    const toks: string[] = [];
+    for (const tz of tzs) {
+      if (!tz) continue;
+      try {
+        const offs = timezoneOffsets(tz as string);
+        const winter = offs[0];
+        const summer = offs.length > 1 ? offs[1] : undefined;
+        const candidates = dstOption
+          ? summer
+            ? [summer]
+            : [winter]
+          : [winter];
+        for (const o of candidates) {
+          const clean = String(o).replace(/\s*\(summer\)$/i, "");
+          toks.push(clean);
+          toks.push(clean.replace(/^UTC/, ""));
+          toks.push(clean.replace(/^UTC/, "").replace(/:/g, ""));
+        }
+      } catch {
+        // ignore timezone formatting errors
+      }
+    }
+    return Array.from(new Set(toks)).filter(Boolean).map(String);
   }
   if (key === "sovereign") {
     return [country.sovereigntyType === "Sovereign" ? "true" : "false"];

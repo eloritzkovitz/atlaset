@@ -19,13 +19,16 @@ export type CountryQualifierConfig = {
 };
 
 export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
-  isocode: { key: "isoCode", label: "ISO code", type: "string" },
+  isocode: { key: "isoCode", label: "ISO 3166-1 code", type: "string" },
+  iso3code: { key: "iso3Code", label: "ISO 3166-1 alpha-3 code", type: "string" },
   region: { key: "region", label: "Region", type: "string" },
   subregion: { key: "subregion", label: "Subregion", type: "string" },
-  population: { key: "population", label: "Population", type: "number" },
   capital: { key: "capital", label: "Capital", type: "string" },
-  currency: { key: "currency", label: "Currency", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
+  population: { key: "population", label: "Population", type: "number" },
+  currency: { key: "currency", label: "Currency", type: "string" },
+  timezone: { key: "timezones", label: "Time zone", type: "string" },
+  tz: { key: "timezones", label: "Time zone", type: "string" },
   callingcode: { key: "callingCode", label: "Calling code", type: "string" },
   sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "string" },

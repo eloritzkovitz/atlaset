@@ -51,6 +51,24 @@ describe("countryModifiers", () => {
     expect(b.tc).toBe(true);
   });
 
+  it("normalizes dst modifier into booleans when possible", () => {
+    expect(normalizeModifiers({ dst: true }).dst).toBe(true);
+    expect(normalizeModifiers({ dst: false }).dst).toBe(false);
+
+    expect(normalizeModifiers({ dst: "true" }).dst).toBe(true);
+    expect(normalizeModifiers({ dst: "yes" }).dst).toBe(true);
+    expect(normalizeModifiers({ dst: "1" }).dst).toBe(true);
+
+    expect(normalizeModifiers({ dst: "false" }).dst).toBe(false);
+    expect(normalizeModifiers({ dst: "no" }).dst).toBe(false);
+    expect(normalizeModifiers({ dst: "0" }).dst).toBe(false);
+  });
+
+  it("preserves non-boolean dst values when they cannot be coerced", () => {
+    const out = normalizeModifiers({ dst: "maybe" } as any);
+    expect(out.dst).toBe("maybe");
+  });
+
   it("parses transcontinental scope strings and matches transcontinental entries", () => {
     const tcCases: Array<[string | undefined, any]> = [
       ["true", { mode: "default" }],

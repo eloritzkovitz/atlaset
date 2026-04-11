@@ -9,7 +9,7 @@ import { format } from "date-fns-tz";
  * @param offset - The timezone offset string to normalize.
  * @returns The normalized timezone offset string.
  */
-function normalizeOffset(offset: string) {
+function normalizeOffset(offset: string): string {
   return offset === "Z" ? "+00:00" : offset;
 }
 
@@ -18,7 +18,7 @@ function normalizeOffset(offset: string) {
  * @param offset - The timezone offset string to convert.
  * @returns The total offset in minutes.
  */
-function offsetToMinutes(offset: string) {
+function offsetToMinutes(offset: string): number {
   const sign = offset.startsWith("-") ? -1 : 1;
   const parts = offset.slice(1).split(":");
   const hours = parseInt(parts[0] || "0", 10);
@@ -29,9 +29,9 @@ function offsetToMinutes(offset: string) {
 /**
  * Converts a total offset in minutes to a string in the format of "+HH:MM" or "-HH:MM".
  * @param m - The total offset in minutes to convert.
- * @returns = A string representing the timezone offset in "+HH:MM" or "-HH:MM" format.
+ * @returns A string representing the timezone offset in "+HH:MM" or "-HH:MM" format.
  */
-function minutesToOffset(m: number) {
+function minutesToOffset(m: number): string {
   const sign = m < 0 ? "-" : "+";
   const abs = Math.abs(m);
   const h = Math.floor(abs / 60)
@@ -46,7 +46,12 @@ function minutesToOffset(m: number) {
  * @param tz - The timezone identifier to get offsets for.
  * @returns An object containing the January and July offsets as strings, as well as their corresponding minute values for easier comparison.
  */
-function getYearOffsets(tz: string) {
+function getYearOffsets(tz: string): {
+  offJan: string;
+  offJul: string;
+  janMin: number;
+  julMin: number;
+} {
   const year = new Date().getUTCFullYear();
   const jan = new Date(Date.UTC(year, 0, 1));
   const jul = new Date(Date.UTC(year, 6, 1));
@@ -85,8 +90,8 @@ export function timezoneRangeForZones(tzList: string[]): string {
   }
   const uniqueMins = Array.from(new Set(mins)).sort((a, b) => a - b);
   if (uniqueMins.length === 0) return "—";
-  const min = uniqueMins[0];
-  const max = uniqueMins[uniqueMins.length - 1];
+  const min = uniqueMins[0]!;
+  const max = uniqueMins[uniqueMins.length - 1]!;
   if (min === max) return `UTC${minutesToOffset(min)}`;
   return `UTC${minutesToOffset(min)} to UTC${minutesToOffset(max)}`;
 }
@@ -105,14 +110,14 @@ export function timezoneRangeLines(tzList: string[]): string[] {
     summers.push(isJanWinter ? julMin : janMin);
   }
   if (winters.length === 0) return ["—"];
-  const unique = (arr: number[]) =>
+  const unique = (arr: number[]): number[] =>
     Array.from(new Set(arr)).sort((a, b) => a - b);
   const w = unique(winters);
   const s = unique(summers);
-  const minW = w[0];
-  const maxW = w[w.length - 1];
-  const minS = s[0];
-  const maxS = s[s.length - 1];
+  const minW = w[0]!;
+  const maxW = w[w.length - 1]!;
+  const minS = s[0]!;
+  const maxS = s[s.length - 1]!;
   const winterLine =
     minW === maxW
       ? `UTC${minutesToOffset(minW)}`

@@ -58,6 +58,7 @@ export type CountryList = {
 export type CountryModifiers = {
   match?: "prefix" | "substring" | "exact" | "regex";
   tc?: string;
+  dst?: boolean | string;
   of?: string;
   count?: { op: Operator; value: number } | undefined;
   year?: { op: Operator; year: number } | undefined;

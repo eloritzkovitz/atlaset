@@ -178,10 +178,10 @@ export function filterCountriesByQualifier(
   // Handle visit-related qualifiers with visit context and modifiers
   return countries.filter((country) => {
     if (!applyModifiersToCountry(country, mods, visitContext)) return false;
-
     return getQualifierTokens(country, key, {
       tcOption,
-      visitContext,
+      dst: mods.dst,
+      visitContext,      
     }).some((t) => {
       if (typeof t !== "string") return false;
       return matchesToken(t, searchValue, { match: mods.match });
