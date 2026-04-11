@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
 import {
   ActionButton,
-  Autocomplete,
   Checkbox,
   EmptyListMessage,
   Modal,
   PanelHeader,
+  QualifierSearch,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
 import { parseQualifierSearch } from "@utils/search";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { SUPPORTED_QUALIFIERS } from "../../constants/qualifierConfig";
 import type { Country } from "../../types";
 import { applyQualifierSearch } from "../../utils/countryFilters";
-import {
-  buildSearchString,
-  qualifierSuggestionProvider,
-} from "../../utils/countrySearch";
+import { buildSearchString } from "../../utils/countrySearch";
 
 interface CountrySelectModalProps {
   isOpen: boolean;
@@ -94,11 +92,11 @@ export function CountrySelectModal({
         />
       </PanelHeader>
       <div className="flex flex-col h-full px-4 gap-4">
-        <Autocomplete
+        <QualifierSearch
           value={search}
           onChange={setSearch}
+          qualifiers={SUPPORTED_QUALIFIERS}
           placeholder="Search countries"
-          suggestionProvider={qualifierSuggestionProvider}
         />
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (
