@@ -105,6 +105,7 @@ export function QualifierSearch({
     return () => window.removeEventListener("resize", onResize);
   }, [prefix, lockedSuffix]);
 
+  // When the locked prefix changes from unset to set, or changes to a different value, focus the input and move caret to start of editable area
   useEffect(() => {
     const becameLocked =
       (prevLockedRef.current === undefined && prefix) ||
@@ -115,7 +116,9 @@ export function QualifierSearch({
         el.focus();
         try {
           el.setSelectionRange(0, 0);
-        } catch {}
+        } catch {
+          // ignore if the input is not focused or selection range cannot be set
+        }
       }
     }
     prevLockedRef.current = prefix;
