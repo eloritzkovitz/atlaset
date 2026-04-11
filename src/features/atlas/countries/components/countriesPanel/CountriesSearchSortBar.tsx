@@ -1,11 +1,10 @@
 import { useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
-import { ActionButton, Autocomplete, SegmentedToggle } from "@components";
+import { ActionButton, SegmentedToggle } from "@components";
+import { QualifierSearch } from "@components/form/inputs/QualifierSearch";
+import { SUPPORTED_QUALIFIERS } from "@features/countries/constants/qualifierConfig";
 import { useTimeline } from "@contexts/TimelineContext";
-import {
-  qualifierSuggestionProvider,
-  type CountryList,
-} from "@features/countries";
+import { type CountryList } from "@features/countries";
 import { CountrySortSelect } from "@features/countries/components/countrySort/CountrySortSelect";
 import { useDragScroll } from "@hooks";
 
@@ -84,12 +83,19 @@ export function CountriesSearchSortBar({
   return (
     <div className="items-center">
       <div className="flex items-stretch pb-0 mt-1">
-        <Autocomplete
+        <QualifierSearch
           value={search}
           onChange={setSearch}
-          qualifierClearable={qualifierClearable}
+          qualifiers={SUPPORTED_QUALIFIERS}
+          clearable={qualifierClearable}
+          lockedPrefix={
+            selectedToggle === "visited"
+              ? "visited"
+              : selectedToggle === "sovereign"
+                ? "sovereign"
+                : undefined
+          }
           placeholder="Search countries"
-          suggestionProvider={qualifierSuggestionProvider}
           className="flex-1 h-10"
         />
         <CountrySortSelect

@@ -48,7 +48,7 @@ export function matchesToken(
  */
 export function identifyModifierRange(
   tokens: string[],
-  modifierRegex: RegExp = /^([a-zA-Z_]+):(.+)$/,
+  modifierRegex: RegExp = /^([a-zA-Z0-9_]+):(.+)$/,
 ) {
   let modifierStart = tokens.length;
   for (let i = tokens.length - 1; i >= 0; i--) {
@@ -81,7 +81,7 @@ export function coerceModifierValue(rawVal: string): boolean | string {
 export function parseModifiers(
   tokens: string[],
   startIndex: number,
-  modifierRegex: RegExp = /^([a-zA-Z_]+):(.+)$/,
+  modifierRegex: RegExp = /^([a-zA-Z0-9_]+):(.+)$/,
 ): Record<string, boolean | string> {
   const modifiers: Record<string, boolean | string> = {};
   for (let i = startIndex; i < tokens.length; i++) {
@@ -107,7 +107,7 @@ export function parseQualifierSearch(input: string) {
   if (tokens.length === 0) return null;
 
   const first = tokens[0];
-  const m = first.match(/^([a-zA-Z_]+):\s*(.*)$/);
+  const m = first.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);
   if (!m) return null;
 
   // Extract the qualifier and the query, and handle any modifiers in the query
@@ -117,12 +117,12 @@ export function parseQualifierSearch(input: string) {
   if (tokens.length > 1) restTokens.push(...tokens.slice(1));
 
   // Remove tokens that look like modifiers but have no value
-  const emptyModifierRegex = /^([a-zA-Z_]+):\s*$/;
+  const emptyModifierRegex = /^([a-zA-Z0-9_]+):\s*$/;
   for (let i = restTokens.length - 1; i >= 0; i--) {
     if (emptyModifierRegex.test(restTokens[i])) restTokens.splice(i, 1);
   }
 
-  const modifierRegex = /^([a-zA-Z_]+):(.+)$/;
+  const modifierRegex = /^([a-zA-Z0-9_]+):(.+)$/;
   const modifierStart = identifyModifierRange(restTokens, modifierRegex);
   const modifiers = parseModifiers(restTokens, modifierStart, modifierRegex);
 
@@ -152,7 +152,7 @@ export function parsePropertyParts(value: string) {
  * @returns An array of suggested qualifier names that match the input prefix.
  */
 export function suggestByPrefix(list: string[], input: string) {
-  const m = input.match(/^([a-zA-Z_]*)$/);
+  const m = input.match(/^([a-zA-Z0-9_]*)$/);
   if (!m) return [];
   const prefix = m[1].toLowerCase();
   return list.filter((p) => p.toLowerCase().startsWith(prefix));
@@ -191,7 +191,7 @@ export function formatCommittedValue(prefix: string, after: string) {
  * @returns A new string combining the suggestion and the rest of the input after the colon.
  */
 export function defaultOnSelect(suggestion: string, input: string) {
-  const m = input.match(/^([a-zA-Z_]*):?(.*)$/);
+  const m = input.match(/^([a-zA-Z0-9_]*):?(.*)$/);
   const rest = m ? m[2] : "";
   return `${suggestion}:${rest}`;
 }

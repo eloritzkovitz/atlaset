@@ -3,29 +3,31 @@ import type { Operator } from "@types";
 
 /** Represents a country with various attributes. */
 export type Country = {
-  /** The official name of the country */
+  /** The official name of the country. */
   name: string;
-  /** The international calling code for the country */
-  callingCode: string;
-  /** The ISO 3166-1 alpha-2 code for the country */
+  /** The ISO 3166-1 alpha-2 code for the country. */
   isoCode: string;
-  /** The ISO 3166-1 alpha-3 code for the country */
+  /** The ISO 3166-1 alpha-3 code for the country. */
   iso3Code: string;
-  /** The region where the country is located */
+  /** The region where the country is located. */
   region: string;
-  /** The subregion where the country is located */
+  /** The subregion where the country is located. */
   subregion?: string;
-  /** The capital city of the country */
+  /** The capital city of the country. */
   capital?: string;
-  /** The population of the country */
-  population?: number;
-  /** The currency used in the country */
-  currency?: string;
-  /** The languages spoken in the country */
+  /** The languages spoken in the country. */
   languages?: string[];
-  /** The sovereignty type of the country */
+  /** The population of the country. */
+  population?: number;
+  /** The currency used in the country. */
+  currency?: string;
+  /** The timezone for the country. */
+  timezones?: string[];
+  /** The international calling code for the country. */
+  callingCode: string;
+  /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
-  /** Alternative names or abbreviations for the country */
+  /** Alternative names or abbreviations for the country. */
   aliases?: string[];
 };
 
@@ -56,6 +58,7 @@ export type CountryList = {
 export type CountryModifiers = {
   match?: "prefix" | "substring" | "exact" | "regex";
   tc?: string;
+  dst?: boolean | string;
   of?: string;
   count?: { op: Operator; value: number } | undefined;
   year?: { op: Operator; year: number } | undefined;

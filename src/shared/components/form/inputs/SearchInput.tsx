@@ -13,6 +13,7 @@ interface SearchInputProps {
   showIcon?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  overlayContent?: React.ReactNode;
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
@@ -28,10 +29,12 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       showIcon = true,
       className = "",
       style,
+      overlayContent,
     },
     ref,
   ) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
+    const overlayRef = useRef<HTMLDivElement | null>(null);
 
     // Focus state and keyboard focus ring
     const [isFocused, setIsFocused] = useState(false);
@@ -77,14 +80,45 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           isFocused && showRing ? "ring-2 ring-ring-focus" : ""
         }`}
       >
+        {overlayContent && (
+          <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+            <div
+              ref={overlayRef}
+              className={`w-full text-base whitespace-pre flex items-center ${
+                showIcon === false ? "pl-3" : "pl-10"
+              } pr-10 py-2`}
+              style={{
+                paddingRight: showClear ? 44 : undefined,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                className="w-full"
+                style={{
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                  textOverflow: "clip",
+                }}
+              >
+                <div style={{ display: "inline-block" }}>{overlayContent}</div>
+              </div>
+            </div>
+          </div>
+        )}
         {showIcon !== false && (
-          <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted" />
+          <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted z-20" />
         )}
         <input
           ref={ref || inputRef}
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onScroll={(e) => {
+            if (overlayRef.current)
+              overlayRef.current.scrollLeft = (
+                e.target as HTMLInputElement
+              ).scrollLeft;
+          }}
           onFocus={() => {
             setIsFocused(true);
             if (onFocus) onFocus();
@@ -108,7 +142,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           placeholder={placeholder}
           aria-label={placeholder || "Search"}
           className={`w-full ${showIcon === false ? "pl-3" : "pl-10"} pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
-          style={style}
+          style={{
+            ...(style || {}),
+            ...(overlayContent
+              ? { color: "transparent", caretColor: "var(--color-text)" }
+              : {}),
+            paddingRight: showClear ? 44 : undefined,
+            zIndex: 20,
+          }}
         />
         {showClear && (
           <button
@@ -122,7 +163,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               }
               onChange("");
             }}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none z-30"
           >
             <FaXmark />
           </button>

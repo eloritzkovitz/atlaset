@@ -51,7 +51,20 @@ export function normalizeModifiers(
     ? (parseYearComparator(String(mods.last)) ?? undefined)
     : undefined;
 
-  // normalize match mode modifier
+  // Normalize DST modifier to boolean if possible, otherwise keep as string for potential special handling
+  if (typeof mods.dst !== "undefined") {
+    const d = mods.dst;
+    if (typeof d === "boolean") {
+      out.dst = d;
+    } else {
+      const s = String(d).toLowerCase().trim();
+      if (s === "true" || s === "yes" || s === "1") out.dst = true;
+      else if (s === "false" || s === "no" || s === "0") out.dst = false;
+      else out.dst = d as CountryModifiers["dst"];
+    }
+  }
+
+  // Normalize match modifier if it's a non-empty string
   if (typeof mods.match === "string") {
     const m = mods.match.trim();
     if (m) out.match = m as CountryModifiers["match"];

@@ -43,32 +43,35 @@ qualifier:query modifier:query
 
 #### **Supported qualifiers**
 
-| Qualifier     | Type                |                    Example | Notes                                                                                                      |
-| ------------- | ------------------- | -------------------------: | ---------------------------------------------------------------------------------------------------------- |
-| `isocode`     | string              |               `isocode:gb` | Matches ISO 3166-1 code (partial or exact)                                                                 |
-| `region`      | string              |              `region:asia` | Matches countries in a given region (continent)                                                            |
-| `subregion`   | string              | `subregion:southeast asia` | Matches countries in a given subregion                                                                     |
-| `tc`          | boolean / string    |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `other`            |
-| `population`  | number (comparison) |   `population:>=1,000,000` | Matches population numbers. Supports plain or comma-separated numbers                                      |
-| `capital`     | string              |            `capital:paris` | Matches capital name                                                                                       |
-| `currency`    | string              |             `currency:eur` | Matches ISO 4217 code                                                                                      |
-| `language`    | string              |         `language:spanish` | Matches language                                                                                           |
-| `callingcode` | string              |          `callingcode:+44` | Matches calling code                                                                                       |
-| `sovereignty` | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized` |
-| `sovereign`   | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                      |
-| `visited`     | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                        |
+| Qualifier         | Type                |                    Example | Notes                                                                                                      |
+| ----------------- | ------------------- | -------------------------: | ---------------------------------------------------------------------------------------------------------- |
+| `isocode`         | string              |               `isocode:gb` | Matches ISO 3166-1 alpha-2 code                                                                            |
+| `iso3code`        | string              |             `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                                                            |
+| `region`          | string              |              `region:asia` | Matches countries in a given region (continent)                                                            |
+| `subregion`       | string              | `subregion:southeast asia` | Matches countries in a given subregion                                                                     |
+| `tc`              | boolean / string    |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `other`            |
+| `capital`         | string              |            `capital:paris` | Matches capital name                                                                                       |
+| `language`        | string              |         `language:spanish` | Matches language                                                                                           |
+| `population`      | number (comparison) |   `population:>=1,000,000` | Matches population numbers. Supports plain or comma-separated numbers                                      |
+| `currency`        | string              |             `currency:eur` | Matches ISO 4217 code                                                                                      |
+| `timezone` / `tz` | string              |          `timezone:utc+03` | Matches countries by UTC offset. Accepts `UTC±HH`, `UTC±HH:MM`, `±HH:MM` or `±HHMM`                        |
+| `callingcode`     | string              |          `callingcode:+44` | Matches calling code                                                                                       |
+| `sovereignty`     | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized` |
+| `sovereign`       | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                      |
+| `visited`         | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                        |
 
 #### **Additional Modifiers**
 
-| Modifier | Type                |                        Example | Notes                                                                                         |
-| -------- | ------------------- | -----------------------------: | --------------------------------------------------------------------------------------------- |
-| `match`  | string              | `language:english match:exact` | Supports `prefix` (default), `substring`, `exact`, `regex`                                    |
-| `tc`     | string              |  `region:europe tc:other:only` | Supports additional modes: `default`, `include`, `only`                                       |
-| `of`     | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode` |
-| `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count.                                                   |
-| `year`   | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year.                                                    |
-| `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit.                                           |
-| `last`   | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by year of last visit.                                            |
+| Modifier | Type                |                        Example | Notes                                                                                                                                           |
+| -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `match`  | string              | `language:english match:exact` | Supports `prefix` (default), `substring`, `exact`, `regex`                                                                                      |
+| `tc`     | string              |  `region:europe tc:other:only` | Supports additional modes: `default`, `include`, `only`                                                                                         |
+| `dst`    | boolean             |      `timezone:+0200 dst:true` | For `timezone`, matches countries based on daylight saving time offsets. Zones without DST will filter by winter time. Values: `true` / `false` |
+| `of`     | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode`                                                   |
+| `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count                                                                                                      |
+| `year`   | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year                                                                                                       |
+| `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit                                                                                              |
+| `last`   | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by year of last visit                                                                                               |
 
 > #### **Notes:**
 >

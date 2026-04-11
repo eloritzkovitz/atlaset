@@ -1,3 +1,4 @@
+import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
 import type { Country, Currency } from "../../types";
 import {
   getAliasesDisplay,
@@ -11,6 +12,30 @@ import {
 interface CountryInfoTableProps {
   country: Country;
   currencies: Currency[];
+}
+
+// Renders the timezones for a country, handling multiple timezones and DST if applicable.
+function renderTimezones(tzs?: string[]) {
+  if (!tzs || tzs.length === 0) return "—";
+  if (tzs.length === 1) {
+    const offs = timezoneOffsets(tzs[0]);
+    if (offs.length === 1) return offs[0];
+    return (
+      <div className="flex flex-col">
+        <div>{offs[0]}</div>
+        <div>{offs[1]}</div>
+      </div>
+    );
+  }
+
+  const lines = timezoneRangeLines(tzs);
+  if (lines.length === 1) return lines[0];
+  return (
+    <div className="flex flex-col">
+      <div>{lines[0]}</div>
+      <div>{lines[1]}</div>
+    </div>
+  );
 }
 
 export function CountryInfoTable({
@@ -48,12 +73,16 @@ export function CountryInfoTable({
           <td>{country.capital}</td>
         </tr>
         <tr>
+          <td className="font-semibold">Languages:</td>
+          <td>{getLanguagesDisplay(country.languages)}</td>
+        </tr>
+        <tr>
           <td className="font-semibold">Currency:</td>
           <td>{getCurrencyDisplay(country.currency, currencies)}</td>
         </tr>
         <tr>
-          <td className="font-semibold">Languages:</td>
-          <td>{getLanguagesDisplay(country.languages)}</td>
+          <td className="font-semibold">Time zone:</td>
+          <td>{renderTimezones(country.timezones)}</td>
         </tr>
         <tr>
           <td className="font-semibold">Calling code:</td>
