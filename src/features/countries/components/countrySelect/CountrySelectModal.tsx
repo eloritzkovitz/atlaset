@@ -12,6 +12,7 @@ import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
 import { parseQualifierSearch } from "@utils/search";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { SUPPORTED_MODIFIERS } from "../../constants/modifierConfig";
 import { SUPPORTED_QUALIFIERS } from "../../constants/qualifierConfig";
 import type { Country } from "../../types";
 import { applyQualifierSearch } from "../../utils/countryFilters";
@@ -96,6 +97,7 @@ export function CountrySelectModal({
           value={search}
           onChange={setSearch}
           qualifiers={SUPPORTED_QUALIFIERS}
+          modifiers={SUPPORTED_MODIFIERS}
           placeholder="Search countries"
         />
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">

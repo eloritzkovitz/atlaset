@@ -5,6 +5,7 @@ interface QualifierSearchProps {
   value: string;
   onChange: (v: string) => void;
   qualifiers?: string[];
+  modifiers?: string[];
   clearable?: boolean;
   placeholder?: string;
   className?: string;
@@ -20,14 +21,35 @@ export function QualifierSearch({
   value,
   onChange,
   qualifiers,
+  modifiers,
   clearable = true,
   placeholder,
   className,
   lockedPrefix,
 }: QualifierSearchProps) {
   const provided = qualifiers ?? [];
-  const alt = provided.map(escapeRegex).join("|") || "[A-Za-z0-9_-]+";
-  const regex = new RegExp(`\\b(?:${alt}):`, "ig");
+  const providedModifiers = modifiers ?? [];
+
+  const qAlt = provided.length ? provided.map(escapeRegex).join("|") : null;
+  const mAlt = providedModifiers.length
+    ? providedModifiers.map(escapeRegex).join("|")
+    : null;
+
+  const hasQ = Boolean(qAlt);
+  const hasM = Boolean(mAlt);
+
+  let pattern: string;
+  if (hasQ && hasM) {
+    pattern = `\\b(?:(${qAlt})|(${mAlt})):`;
+  } else if (hasQ) {
+    pattern = `\\b(${qAlt}):`;
+  } else if (hasM) {
+    pattern = `\\b(${mAlt}):`;
+  } else {
+    pattern = `\\b([A-Za-z0-9_-]+):`;
+  }
+
+  const regex = new RegExp(pattern, "ig");
 
   // Build the overlay content by finding qualifiers in the input and highlighting them
   const buildOverlay = (text: string | undefined) => {
@@ -41,8 +63,22 @@ export function QualifierSearch({
           <span key={`t-${lastIndex}`}>{text.slice(lastIndex, m.index)}</span>,
         );
       }
+      // Determine whether the match is a qualifier or a modifier-only
+      let isQualifier = true;
+      if (hasQ && hasM) {
+        isQualifier = !!m[1];
+      } else if (hasQ) {
+        isQualifier = true;
+      } else if (hasM) {
+        isQualifier = false;
+      }
+
+      const highlightClass = isQualifier
+        ? "bg-primary/50 rounded z-10"
+        : "bg-primary-active/50 rounded z-10";
+
       nodes.push(
-        <span key={`h-${m.index}`} className="bg-primary/50 rounded z-10">
+        <span key={`h-${m.index}`} className={highlightClass}>
           {m[0]}
         </span>,
       );

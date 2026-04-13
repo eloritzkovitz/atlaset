@@ -3,6 +3,7 @@
 ## 2026-04-13
 
 - **[chore]** **Countries:** Added driving side to country data, display and qualifier search
+- **[chore]** **General:** Modifiers will now be highlighted in addition to qualifiers
 
 ## 2026-04-11
 

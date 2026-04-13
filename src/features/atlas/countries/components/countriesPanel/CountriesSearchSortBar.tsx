@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { ActionButton, SegmentedToggle } from "@components";
 import { QualifierSearch } from "@components/form/inputs/QualifierSearch";
+import { SUPPORTED_MODIFIERS } from "@features/countries/constants/modifierConfig";
 import { SUPPORTED_QUALIFIERS } from "@features/countries/constants/qualifierConfig";
 import { useTimeline } from "@contexts/TimelineContext";
 import { type CountryList } from "@features/countries";
@@ -87,6 +88,7 @@ export function CountriesSearchSortBar({
           value={search}
           onChange={setSearch}
           qualifiers={SUPPORTED_QUALIFIERS}
+          modifiers={SUPPORTED_MODIFIERS}
           clearable={qualifierClearable}
           lockedPrefix={
             selectedToggle === "visited"

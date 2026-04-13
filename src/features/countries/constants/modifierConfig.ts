@@ -19,3 +19,5 @@ export const MODIFIER_MAP: Record<
   first: { key: "first", label: "First visit year", type: "number" },
   last: { key: "last", label: "Last visit year", type: "number" },
 };
+
+export const SUPPORTED_MODIFIERS = Object.keys(MODIFIER_MAP);
