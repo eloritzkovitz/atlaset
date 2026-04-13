@@ -25,6 +25,8 @@ export type Country = {
   timezones?: string[];
   /** The international calling code for the country. */
   callingCode: string;
+  /** The road traffic direction for the country. */
+  drivingSide?: "Left" | "Right" | undefined;
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
   /** Alternative names or abbreviations for the country. */

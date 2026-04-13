@@ -70,7 +70,7 @@ export function CountryInfoTable({
         </tr>
         <tr>
           <td className="font-semibold">Capital:</td>
-          <td>{country.capital}</td>
+          <td>{country.capital || "None"}</td>
         </tr>
         <tr>
           <td className="font-semibold">Languages:</td>
@@ -86,10 +86,16 @@ export function CountryInfoTable({
         </tr>
         <tr>
           <td className="font-semibold">Calling code:</td>
-          <td>{country.callingCode}</td>
+          <td>{country.callingCode || "—"}</td>
         </tr>
+        {country.drivingSide && (
+          <tr>
+            <td className="font-semibold">Driving side:</td>
+            <td>{country.drivingSide || "—"}</td>
+          </tr>
+        )}
         <tr>
-          <td className="font-semibold">ISO 3166-1 Code:</td>
+          <td className="font-semibold">ISO 3166-1 code:</td>
           <td>{country.isoCode}</td>
         </tr>
         {country.aliases && country.aliases.length > 0 && (

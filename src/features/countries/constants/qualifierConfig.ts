@@ -20,7 +20,11 @@ export type CountryQualifierConfig = {
 
 export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   isocode: { key: "isoCode", label: "ISO 3166-1 code", type: "string" },
-  iso3code: { key: "iso3Code", label: "ISO 3166-1 alpha-3 code", type: "string" },
+  iso3code: {
+    key: "iso3Code",
+    label: "ISO 3166-1 alpha-3 code",
+    type: "string",
+  },
   region: { key: "region", label: "Region", type: "string" },
   subregion: { key: "subregion", label: "Subregion", type: "string" },
   capital: { key: "capital", label: "Capital", type: "string" },
@@ -30,6 +34,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   timezone: { key: "timezones", label: "Time zone", type: "string" },
   tz: { key: "timezones", label: "Time zone", type: "string" },
   callingcode: { key: "callingCode", label: "Calling code", type: "string" },
+  drivingside: { key: "drivingSide", label: "Drives on the", type: "string" },
   sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "string" },
   visited: { key: "visited", label: "Visited", type: "string" },

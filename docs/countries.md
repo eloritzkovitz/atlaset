@@ -56,6 +56,7 @@ qualifier:query modifier:query
 | `currency`        | string              |             `currency:eur` | Matches ISO 4217 code                                                                                      |
 | `timezone` / `tz` | string              |          `timezone:utc+03` | Matches countries by UTC offset. Accepts `UTC±HH`, `UTC±HH:MM`, `±HH:MM` or `±HHMM`                        |
 | `callingcode`     | string              |          `callingcode:+44` | Matches calling code                                                                                       |
+| `drivingside`     | string              |         `drivingside:left` | Matches driving side. Values: `left`, `right`                                                              |
 | `sovereignty`     | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized` |
 | `sovereign`       | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                      |
 | `visited`         | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                        |

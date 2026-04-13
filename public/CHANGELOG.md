@@ -1,9 +1,13 @@
 # Changelog
 
+## 2026-04-13
+
+- **[chore]** **Countries:** Added driving side to country data, display and qualifier search
+
 ## 2026-04-11
 
 - **[chore]** **Countries:** Added time zones to country data, display and qualifier search
-- **[chore]** **Countries:** Removed isocode, region and subregion from free-text search as they are qualifiers 
+- **[chore]** **Countries:** Removed isocode, region and subregion from free-text search as they are qualifiers
 - **[chore]** **General:** Redesigned qualifier search
 
 ## 2026-04-09
