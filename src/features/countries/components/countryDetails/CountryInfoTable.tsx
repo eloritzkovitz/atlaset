@@ -1,13 +1,15 @@
-import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
 import type { Country, Currency } from "../../types";
 import {
-  getAliasesDisplay,
-  getCurrencyDisplay,
-  getLanguagesDisplay,
   isTranscontinental,
   getAdditionalRegion,
   getAdditionalSubregion,
 } from "../../utils/countryData";
+import {
+  formatTimezones,
+  getAliasesDisplay,
+  getCurrencyDisplay,
+  getLanguagesDisplay,
+} from "../../utils/countryInfo";
 
 interface CountryInfoTableProps {
   country: Country;
@@ -16,26 +18,16 @@ interface CountryInfoTableProps {
 
 // Renders the timezones for a country, handling multiple timezones and DST if applicable.
 function renderTimezones(tzs?: string[]) {
-  if (!tzs || tzs.length === 0) return "—";
-  if (tzs.length === 1) {
-    const offs = timezoneOffsets(tzs[0]);
-    if (offs.length === 1) return offs[0];
+  const formatted = formatTimezones(tzs);
+  if (Array.isArray(formatted)) {
     return (
       <div className="flex flex-col">
-        <div>{offs[0]}</div>
-        <div>{offs[1]}</div>
+        <div>{formatted[0]}</div>
+        <div>{formatted[1]}</div>
       </div>
     );
   }
-
-  const lines = timezoneRangeLines(tzs);
-  if (lines.length === 1) return lines[0];
-  return (
-    <div className="flex flex-col">
-      <div>{lines[0]}</div>
-      <div>{lines[1]}</div>
-    </div>
-  );
+  return formatted;
 }
 
 export function CountryInfoTable({
@@ -57,7 +49,7 @@ export function CountryInfoTable({
         <tr>
           <td className="font-semibold">Subregion:</td>
           <td>
-            {country.subregion}
+            {country.subregion || "—"}
             {isTranscontinental(country.isoCode) &&
               getAdditionalSubregion(country.isoCode) && (
                 <span> / {getAdditionalSubregion(country.isoCode)}</span>

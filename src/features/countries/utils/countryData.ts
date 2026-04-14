@@ -9,7 +9,7 @@ import {
 } from "../constants/countryRelations";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
 import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
-import type { Country, Currency, SovereigntyType } from "../types";
+import type { Country, SovereigntyType } from "../types";
 
 /**
  * Extracts the ISO country code from various possible property names.
@@ -246,40 +246,6 @@ export function getAdditionalSubregion(isoCode: string): string | null {
  */
 export function isTranscontinental(isoCode: string): boolean {
   return TRANSCONTINENTAL_MAP.has(isoCode?.toUpperCase() ?? "");
-}
-
-/** Gets a formatted string for a currency based on its code.
- * @param code - The ISO code of the currency.
- * @param currencies - An array of currency objects with code and name.
- * @returns A string in the format "Currency Name (CODE)" or just the code if not found.
- */
-export function getCurrencyDisplay(
-  code: string | undefined,
-  currencies: Currency[],
-): string {
-  if (!code) return "N/A";
-  const currencyObj = currencies.find((c) => c.code === code);
-  return currencyObj ? `${currencyObj.name} (${currencyObj.code})` : code;
-}
-
-/**
- * Gets a formatted string of languages.
- * @param languages - An array of language names.
- * @returns A comma-separated string of languages or "None" if empty.
- */
-export function getLanguagesDisplay(languages?: string[]) {
-  if (!languages || languages.length === 0) return "None";
-  return languages.join(", ");
-}
-
-/**
- * Gets a formatted string of aliases.
- * @param aliases - An array of aliases.
- * @returns A comma-separated string of aliases or "None" if empty.
- */
-export function getAliasesDisplay(aliases?: string[]) {
-  if (!aliases || aliases.length === 0) return "None";
-  return aliases.join(", ");
 }
 
 // Precompute maps for quick lookups of country relations
