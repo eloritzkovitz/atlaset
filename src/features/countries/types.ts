@@ -53,6 +53,9 @@ export type TranscontinentalScope =
   | "cultural"
   | "other";
 
+/** Represents the mode for transcontinental country inclusion in filters. */
+export type TranscontinentalMode = "default" | "include" | "only";
+
 /** Represents a currency. */
 export type Currency = {
   code: string;
@@ -80,6 +83,7 @@ export type CountryList = {
 export type CountryModifiers = {
   match?: "prefix" | "substring" | "exact" | "regex";
   tc?: string;
+  tcOption?: { scope?: TranscontinentalScope; mode?: TranscontinentalMode };
   dst?: boolean | string;
   of?: string;
   count?: { op: Operator; value: number } | undefined;
@@ -98,6 +102,3 @@ export type CountryFilterOptions = {
   layerCountries?: string[];
   modifiers?: CountryModifiers;
 };
-
-/** Represents the mode for transcontinental country inclusion in filters. */
-export type TranscontinentalMode = "default" | "include" | "only";

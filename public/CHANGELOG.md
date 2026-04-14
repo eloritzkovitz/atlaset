@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-04-14
+
+- **[chore]** **Countries:** Updated country information display
+
 ## 2026-04-13
 
 - **[chore]** **Countries:** Added driving side to country data, display and qualifier search

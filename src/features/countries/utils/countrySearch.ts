@@ -81,7 +81,7 @@ export function getQualifierTokens(
       const extraVal =
         key === "region" ? extra?.additionalRegion : extra?.additionalSubregion;
       if (extraVal) {
-        const entryScope = extra?.scope ?? "contiguous";
+        const entryScope = (extra?.scope ?? "contiguous").toLowerCase();
         if (includeTC === true || includeTC === entryScope)
           tokens.push(extraVal);
       }
@@ -90,7 +90,7 @@ export function getQualifierTokens(
   }
   if (key === "tc") {
     const entry = getTranscontinentalInfo(country);
-    if (entry) return ["true", entry.scope ?? "contiguous"];
+    if (entry) return ["true", (entry.scope ?? "contiguous").toLowerCase()];
     return ["false"];
   }
   if (key === "timezones") {
