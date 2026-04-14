@@ -11,9 +11,7 @@ import {
   getAllSovereigntyTypes,
   getCountriesWithOwnFlag,
   getRandomCountry,
-  getAdditionalRegion,
-  getAdditionalSubregion,
-  isTranscontinental,
+  getTranscontinentalInfo,
   getCountryRelations,
 } from "./countryData";
 
@@ -25,9 +23,9 @@ vi.mock("../constants/countryRelations", () => ({
       regions: ["PR"],
       disputes: ["VI"],
     },
-    GU: {}, // Dependency of US
-    PR: {}, // Region of US
-    VI: {}, // Dispute of US
+    GU: {},
+    PR: {},
+    VI: {},
     AA: { disputes: ["BB"] },
     BB: { disputes: ["AA"] },
   },
@@ -38,24 +36,6 @@ vi.mock("../constants/specialCountries", () => ({
   SPECIAL_COUNTRIES: {
     "GB-ENG": { name: "England" },
   },
-}));
-vi.mock("../constants/transcontinental", () => ({
-  TRANSCONTINENTAL_MAP: new Map([
-    [
-      "RU",
-      {
-        additionalRegion: "Europe",
-        additionalSubregion: "Northern Asia",
-      },
-    ],
-    [
-      "TR",
-      {
-        additionalRegion: "Asia",
-        additionalSubregion: "Western Asia",
-      },
-    ],
-  ]),
 }));
 
 describe("countryData utils", () => {
@@ -267,19 +247,45 @@ describe("countryData utils", () => {
   });
 
   describe("transcontinental helpers", () => {
-    it("returns additional region when transcontinental", () => {
-      expect(getAdditionalRegion("RU")).toBe("Europe");
-      expect(getAdditionalRegion("ru")).toBe("Europe");
+    it("returns additional region when transcontinental (country object)", () => {
+      const ru = {
+        isoCode: "RU",
+        transcontinental: { additionalRegion: "Europe" },
+      } as Country;
+      expect(getTranscontinentalInfo(ru)?.additionalRegion).toBe("Europe");
     });
 
-    it("returns additional subregion when transcontinental", () => {
-      expect(getAdditionalSubregion("RU")).toBe("Northern Asia");
-      expect(getAdditionalSubregion("tr")).toBe("Western Asia");
+    it("returns additional subregion when transcontinental (country object)", () => {
+      const ru = {
+        isoCode: "RU",
+        transcontinental: {
+          additionalRegion: "Europe",
+          additionalSubregion: "Northern Asia",
+        },
+      } as Country;
+      const tr = {
+        isoCode: "TR",
+        transcontinental: {
+          additionalRegion: "Asia",
+          additionalSubregion: "Western Asia",
+        },
+      } as Country;
+      expect(getTranscontinentalInfo(ru)?.additionalSubregion).toBe(
+        "Northern Asia",
+      );
+      expect(getTranscontinentalInfo(tr)?.additionalSubregion).toBe(
+        "Western Asia",
+      );
     });
 
-    it("reports transcontinental status correctly", () => {
-      expect(isTranscontinental("RU")).toBe(true);
-      expect(isTranscontinental("ZZ")).toBe(false);
+    it("reports transcontinental status correctly (country object)", () => {
+      const ru = {
+        isoCode: "RU",
+        transcontinental: { additionalRegion: "Europe" },
+      } as Country;
+      const zz = { isoCode: "ZZ" } as Country;
+      expect(!!getTranscontinentalInfo(ru)).toBe(true);
+      expect(!!getTranscontinentalInfo(zz)).toBe(false);
     });
   });
 });

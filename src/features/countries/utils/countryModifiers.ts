@@ -14,8 +14,8 @@ import {
   parseComparator,
   parseYearComparator,
 } from "@utils/number";
+import { getTranscontinentalInfo } from "./countryData";
 import { COUNTRY_RELATIONS } from "../constants/countryRelations";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type {
   Country,
   CountryModifiers,
@@ -165,9 +165,7 @@ export function matchesTranscontinental(
   tcOption?: TranscontinentalScope,
 ) {
   if (!tcOption) return false;
-  const entry = TRANSCONTINENTAL_MAP.get(
-    country.isoCode?.toUpperCase?.() ?? "",
-  );
+  const entry = getTranscontinentalInfo(country);
   if (!entry) return false;
   if (tcOption === "all") return true;
   const entryScope = entry.scope ?? "contiguous";

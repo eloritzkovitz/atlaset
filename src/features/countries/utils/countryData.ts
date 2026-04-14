@@ -8,7 +8,6 @@ import {
   EXCLUDED_ISO_CODES,
 } from "../constants/countryRelations";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type { Country, SovereigntyType } from "../types";
 
 /**
@@ -216,36 +215,12 @@ export function getRandomCountry(countries: Country[]) {
 }
 
 /**
- * Gets additional region for transcontinental countries based on their ISO code.
- * @param isoCode - The ISO code of the country to check for transcontinental status.
- * @returns The additional region if the country is transcontinental, otherwise null.
+ * Returns the transcontinental metadata object for a country, or null if not present.
+ * @param country - The country object to check for transcontinental information.
+ * @returns The TranscontinentalInfo object if present, otherwise null.
  */
-export function getAdditionalRegion(isoCode: string): string | null {
-  return (
-    TRANSCONTINENTAL_MAP.get(isoCode?.toUpperCase() ?? "")?.additionalRegion ??
-    null
-  );
-}
-
-/**
- * Gets additional subregion for transcontinental countries based on their ISO code.
- * @param isoCode - The ISO code of the country to check for transcontinental status.
- * @returns The additional subregion if the country is transcontinental, otherwise null.
- */
-export function getAdditionalSubregion(isoCode: string): string | null {
-  return (
-    TRANSCONTINENTAL_MAP.get(isoCode?.toUpperCase() ?? "")
-      ?.additionalSubregion ?? null
-  );
-}
-
-/**
- * Checks if a country is transcontinental based on its ISO code.
- * @param isoCode - The ISO code of the country to check.
- * @returns True if the country is transcontinental, otherwise false.
- */
-export function isTranscontinental(isoCode: string): boolean {
-  return TRANSCONTINENTAL_MAP.has(isoCode?.toUpperCase() ?? "");
+export function getTranscontinentalInfo(country: Country) {
+  return country?.transcontinental ?? null;
 }
 
 // Precompute maps for quick lookups of country relations

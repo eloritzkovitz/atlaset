@@ -1,9 +1,5 @@
 import type { Country, Currency } from "../../types";
-import {
-  isTranscontinental,
-  getAdditionalRegion,
-  getAdditionalSubregion,
-} from "../../utils/countryData";
+import { getTranscontinentalInfo } from "../../utils/countryData";
 import {
   formatTimezones,
   getAliasesDisplay,
@@ -41,8 +37,11 @@ export function CountryInfoTable({
           <td className="font-semibold">Region:</td>
           <td>
             {country.region}
-            {isTranscontinental(country.isoCode) && (
-              <span> / {getAdditionalRegion(country.isoCode)}</span>
+            {getTranscontinentalInfo(country)?.additionalRegion && (
+              <span>
+                {" "}
+                / {getTranscontinentalInfo(country)?.additionalRegion}
+              </span>
             )}
           </td>
         </tr>
@@ -50,10 +49,12 @@ export function CountryInfoTable({
           <td className="font-semibold">Subregion:</td>
           <td>
             {country.subregion || "—"}
-            {isTranscontinental(country.isoCode) &&
-              getAdditionalSubregion(country.isoCode) && (
-                <span> / {getAdditionalSubregion(country.isoCode)}</span>
-              )}
+            {getTranscontinentalInfo(country)?.additionalSubregion && (
+              <span>
+                {" "}
+                / {getTranscontinentalInfo(country)?.additionalSubregion}
+              </span>
+            )}
           </td>
         </tr>
         <tr>

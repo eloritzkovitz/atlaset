@@ -9,18 +9,6 @@ import {
 } from "./countryFilters";
 import * as searchUtils from "@utils/search";
 
-vi.mock("../constants/transcontinental", () => ({
-  TRANSCONTINENTAL_MAP: new Map([
-    [
-      "CA",
-      {
-        additionalRegion: "Europe",
-        additionalSubregion: "Northern Europe",
-      },
-    ],
-  ]),
-}));
-
 describe("countryFilters utils", () => {
   const countries = mockCountries;
 
@@ -106,7 +94,7 @@ describe("countryFilters utils", () => {
       {
         name: "includes transcontinental extras (include)",
         opts: { selectedRegion: "Europe", modifiers: { tc: "include" } },
-        expected: [countries[0], countries[2], countries[3]],
+        expected: [countries[0], countries[2]],
       },
       {
         name: "excludes transcontinental extras (default)",
@@ -116,17 +104,17 @@ describe("countryFilters utils", () => {
       {
         name: "only transcontinental (only)",
         opts: { modifiers: { tc: "only" } },
-        expected: [countries[3]],
+        expected: [countries[4]],
       },
       {
         name: "only contiguous scope (only:contiguous)",
         opts: { modifiers: { tc: "only:contiguous" } },
-        expected: [countries[3]],
+        expected: [],
       },
       {
-        name: "only overseas scope (none)",
+        name: "only overseas scope (only:overseas)",
         opts: { modifiers: { tc: "only:overseas" } },
-        expected: [],
+        expected: [countries[4]],
       },
     ];
 
@@ -252,7 +240,6 @@ describe("countryFilters utils", () => {
       expect(res.map((c) => c.isoCode)).toEqual([
         countries[0].isoCode,
         countries[2].isoCode,
-        countries[3].isoCode,
       ]);
     });
 
@@ -554,21 +541,21 @@ describe("countryFilters utils", () => {
         qualifier: "region",
         value: "europe",
         options: { modifiers: { tc: "include" } },
-        expected: [countries[0], countries[2], countries[3]],
+        expected: [countries[0], countries[2]],
       },
       {
         label: "subregion includes transcontinental extras (tc:true)",
         qualifier: "subregion",
         value: "northern europe",
         options: { modifiers: { tc: "include" } },
-        expected: [countries[3]],
+        expected: [],
       },
       {
         label: "region includes transcontinental extras (tc:include)",
         qualifier: "region",
         value: "europe",
         options: { modifiers: { tc: "include" } },
-        expected: [countries[0], countries[2], countries[3]],
+        expected: [countries[0], countries[2]],
       },
       {
         label: "region excludes transcontinental extras (tc:false)",
@@ -578,11 +565,11 @@ describe("countryFilters utils", () => {
         expected: [countries[0], countries[2]],
       },
       {
-        label: "subregion includes contiguous (tc:'contiguous')",
+        label: "subregion includes overseas (tc:'overseas')",
         qualifier: "subregion",
         value: "northern europe",
-        options: { modifiers: { tc: "contiguous" } },
-        expected: [countries[3]],
+        options: { modifiers: { tc: "overseas" } },
+        expected: [],
       },
       {
         label: "subregion overseas scope (tc:'overseas')",

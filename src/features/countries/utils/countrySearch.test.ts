@@ -26,17 +26,6 @@ vi.mock("@utils/timezone", () => ({
     }
   },
 }));
-vi.mock("../constants/transcontinental", () => ({
-  TRANSCONTINENTAL_MAP: new Map([
-    [
-      "CA",
-      {
-        additionalRegion: "Europe",
-        additionalSubregion: "Northern Europe",
-      },
-    ],
-  ]),
-}));
 
 describe("countrySearch utils", () => {
   const countries = mockCountries;
@@ -67,7 +56,15 @@ describe("countrySearch utils", () => {
     it("returns region tokens and includes transcontinental when requested", () => {
       const r = getQualifierTokens(countries[0], "region");
       expect(r).toContain("Europe");
-      const caTokens = getQualifierTokens(countries[3], "region", {
+      const ca = {
+        ...countries[3],
+        transcontinental: {
+          scope: "contiguous",
+          additionalRegion: "Europe",
+          additionalSubregion: "Northern Europe",
+        },
+      } as any;
+      const caTokens = getQualifierTokens(ca, "region", {
         tcOption: { scope: "all", mode: "include" },
       });
       expect(caTokens).toContain("Americas");
@@ -112,21 +109,29 @@ describe("countrySearch utils", () => {
       };
 
       // includeTC as object form for region
-      const caRegion = getQualifierTokens(countries[3], "region", {
+      const ca = {
+        ...countries[3],
+        transcontinental: {
+          scope: "contiguous",
+          additionalRegion: "Europe",
+          additionalSubregion: "Northern Europe",
+        },
+      } as any;
+      const caRegion = getQualifierTokens(ca, "region", {
         tcOption: { scope: "all", mode: "include" },
       });
       expect(caRegion).toContain("Americas");
       expect(caRegion).toContain("Europe");
 
       // includeTC as object form for subregion
-      const caSubregion = getQualifierTokens(countries[3], "subregion", {
+      const caSubregion = getQualifierTokens(ca, "subregion", {
         tcOption: { scope: "contiguous", mode: "include" },
       });
       expect(caSubregion).toContain("Northern America");
       expect(caSubregion).toContain("Northern Europe");
 
       // tc as qualifier
-      const caTc = getQualifierTokens(countries[3], "tc");
+      const caTc = getQualifierTokens(ca, "tc");
       expect(caTc).toEqual(["true", "contiguous"]);
       const nonTc = getQualifierTokens(countries[0], "tc");
       expect(nonTc).toEqual(["false"]);
