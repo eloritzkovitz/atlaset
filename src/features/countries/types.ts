@@ -13,6 +13,8 @@ export type Country = {
   region: string;
   /** The subregion where the country is located. */
   subregion?: string;
+  /** Transcontinental information for the country. */
+  transcontinental?: TranscontinentalInfo;
   /** The capital city of the country. */
   capital?: string;
   /** The languages spoken in the country. */
@@ -32,6 +34,27 @@ export type Country = {
   /** Alternative names or abbreviations for the country. */
   aliases?: string[];
 };
+
+/** Represents an entry for a transcontinental country. */
+export type TranscontinentalInfo = {
+  /** Additional continent/region */
+  additionalRegion?: string;
+  /** Additional subregion */
+  additionalSubregion?: string;
+  /** The scope of the transcontinental nature, if specified. */
+  scope?: TranscontinentalScope;
+};
+
+/** Represents the allowed values for transcontinental scope flags. */
+export type TranscontinentalScope =
+  | "all"
+  | "contiguous"
+  | "overseas"
+  | "cultural"
+  | "other";
+
+/** Represents the mode for transcontinental country inclusion in filters. */
+export type TranscontinentalMode = "default" | "include" | "only";
 
 /** Represents a currency. */
 export type Currency = {
@@ -60,6 +83,7 @@ export type CountryList = {
 export type CountryModifiers = {
   match?: "prefix" | "substring" | "exact" | "regex";
   tc?: string;
+  tcOption?: { scope?: TranscontinentalScope; mode?: TranscontinentalMode };
   dst?: boolean | string;
   of?: string;
   count?: { op: Operator; value: number } | undefined;
@@ -78,9 +102,3 @@ export type CountryFilterOptions = {
   layerCountries?: string[];
   modifiers?: CountryModifiers;
 };
-
-/** Represents the allowed values for transcontinental scope flags. */
-export type TranscontinentalScope = "all" | "contiguous" | "overseas" | "other";
-
-/** Represents the mode for transcontinental country inclusion in filters. */
-export type TranscontinentalMode = "default" | "include" | "only";

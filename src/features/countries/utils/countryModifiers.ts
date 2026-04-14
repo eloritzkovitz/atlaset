@@ -14,8 +14,8 @@ import {
   parseComparator,
   parseYearComparator,
 } from "@utils/number";
+import { getTranscontinentalInfo } from "./countryData";
 import { COUNTRY_RELATIONS } from "../constants/countryRelations";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
 import type {
   Country,
   CountryModifiers,
@@ -36,7 +36,7 @@ export function normalizeModifiers(
   const out: CountryModifiers = {};
   if (!mods) return out;
   if (typeof mods.tc !== "undefined")
-    out.tc = mods.tc as CountryModifiers["tc"];
+    out.tc = mods.tc as CountryModifiers["tc"];  
   if (typeof mods.of !== "undefined") out.of = String(mods.of).toUpperCase();
   out.count = mods.count
     ? (parseComparator(String(mods.count), "\\d+") ?? undefined)
@@ -139,7 +139,12 @@ export function parseTCOption(raw?: string): {
         mode = "include";
       } else if (p === "all") {
         scope = "all";
-      } else if (p === "contiguous" || p === "overseas" || p === "other") {
+      } else if (
+        p === "contiguous" ||
+        p === "overseas" ||
+        p === "cultural" ||
+        p === "other"
+      ) {
         scope = p as TranscontinentalScope;
       }
     }
@@ -165,13 +170,11 @@ export function matchesTranscontinental(
   tcOption?: TranscontinentalScope,
 ) {
   if (!tcOption) return false;
-  const entry = TRANSCONTINENTAL_MAP.get(
-    country.isoCode?.toUpperCase?.() ?? "",
-  );
+  const entry = getTranscontinentalInfo(country);
   if (!entry) return false;
   if (tcOption === "all") return true;
-  const entryScope = entry.scope ?? "contiguous";
-  return entryScope === tcOption;
+  const entryScope = (entry.scope ?? "contiguous").toLowerCase();
+  return entryScope === String(tcOption).toLowerCase();
 }
 
 /**

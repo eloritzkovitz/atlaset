@@ -85,8 +85,14 @@ describe("countryModifiers", () => {
       expect(parseTCOption(input as any)).toEqual(expected);
     });
 
-    const countryUS = { isoCode: "US" } as any;
-    const countryAZ = { isoCode: "AZ" } as any;
+    const countryUS = {
+      isoCode: "US",
+      transcontinental: { scope: "overseas", additionalRegion: "Americas" },
+    } as any;
+    const countryAZ = {
+      isoCode: "AZ",
+      transcontinental: { scope: "contiguous", additionalRegion: "Asia" },
+    } as any;
     const countryXX = { isoCode: "XX" } as any;
 
     expect(matchesTranscontinental(countryUS, "overseas")).toBe(true);

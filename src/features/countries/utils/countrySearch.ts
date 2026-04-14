@@ -11,7 +11,7 @@ import {
   type CountryQualifierConfig,
 } from "../constants/qualifierConfig";
 import { timezoneOffsets } from "@utils/timezone";
-import { TRANSCONTINENTAL_MAP } from "../constants/transcontinental";
+import { getTranscontinentalInfo } from "./countryData";
 import type { Country, TranscontinentalScope } from "../types";
 
 /**
@@ -77,13 +77,11 @@ export function getQualifierTokens(
     const val = country[key];
     if (val) tokens.push(val);
     if (includeTC) {
-      const extra = TRANSCONTINENTAL_MAP.get(
-        country.isoCode?.toUpperCase?.() ?? "",
-      );
+      const extra = getTranscontinentalInfo(country);
       const extraVal =
         key === "region" ? extra?.additionalRegion : extra?.additionalSubregion;
       if (extraVal) {
-        const entryScope = extra?.scope ?? "contiguous";
+        const entryScope = (extra?.scope ?? "contiguous").toLowerCase();
         if (includeTC === true || includeTC === entryScope)
           tokens.push(extraVal);
       }
@@ -91,10 +89,8 @@ export function getQualifierTokens(
     return tokens;
   }
   if (key === "tc") {
-    const entry = TRANSCONTINENTAL_MAP.get(
-      country.isoCode?.toUpperCase?.() ?? "",
-    );
-    if (entry) return ["true", entry.scope ?? "contiguous"];
+    const entry = getTranscontinentalInfo(country);
+    if (entry) return ["true", (entry.scope ?? "contiguous").toLowerCase()];
     return ["false"];
   }
   if (key === "timezones") {
