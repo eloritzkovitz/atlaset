@@ -16,7 +16,6 @@ import {
 } from "@utils/number";
 import { getTranscontinentalInfo } from "./countryData";
 import { COUNTRY_RELATIONS } from "../constants/countryRelations";
-import type { CountryRelationsGroup } from "../constants/countryRelations";
 import type {
   Country,
   CountryModifiers,
