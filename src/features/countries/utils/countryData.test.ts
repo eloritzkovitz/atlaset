@@ -19,15 +19,15 @@ vi.mock("../constants/countryRelations", () => ({
   COUNTRY_RELATIONS: {
     US: {
       name: "United States",
-      dependencies: ["GU"],
-      regions: ["PR"],
-      disputes: ["VI"],
+      dependencies: { codes: ["GU"], type: "Dependency" },
+      regions: { codes: ["PR"] },
+      disputes: { codes: ["VI"] },
     },
     GU: {},
     PR: {},
     VI: {},
-    AA: { disputes: ["BB"] },
-    BB: { disputes: ["AA"] },
+    AA: { disputes: { codes: ["BB"] } },
+    BB: { disputes: { codes: ["AA"] } },
   },
   FLAG_OVERRIDES: { YY: { sovereign: "US" } },
   EXCLUDED_ISO_CODES: ["XX"],
@@ -185,27 +185,35 @@ describe("countryData utils", () => {
   });
 
   describe("getCountryRelations", () => {
-    it("returns dependencyOf and sovereign for a dependency", () => {
-      const result = getCountryRelations("GU");
-      expect(result.dependencyOf).toEqual({ isoCode: "US" });
-      expect(result.sovereign).toEqual({ isoCode: "US" });
-    });
+    const memberCases = [
+      ["GU", "dependencies"],
+      ["PR", "regions"],
+      ["VI", "disputes"],
+    ] as const;
 
-    it("returns regionOf and sovereign for a region", () => {
-      const result = getCountryRelations("PR");
-      expect(result.regionOf).toEqual({ isoCode: "US" });
-      expect(result.sovereign).toEqual({ isoCode: "US" });
-    });
-
-    it("returns disputeOf and sovereign for a dispute", () => {
-      const result = getCountryRelations("VI");
-      expect(result.disputeOf).toEqual({ isoCode: "US" });
-      expect(result.sovereign).toEqual({ isoCode: "US" });
-    });
+    it.each(memberCases)(
+      "returns sovereign and membership for %s",
+      (iso, prop) => {
+        const result = getCountryRelations(iso);
+        expect(result.sovereign).toEqual({ isoCode: "US" });
+        expect(
+          result.memberOf?.some(
+            (m) => m.prop === prop && m.sovereignIso === "US",
+          ),
+        ).toBe(true);
+      },
+    );
 
     it("returns mutual disputes for both sides", () => {
-      expect(getCountryRelations("AA").disputes).toContain("BB");
-      expect(getCountryRelations("BB").disputes).toContain("AA");
+      const a = getCountryRelations("AA");
+      const b = getCountryRelations("BB");
+      expect(a.groups?.disputes?.codes).toContain("BB");
+      expect(b.sovereign).toEqual({ isoCode: "AA" });
+      expect(
+        b.memberOf?.some(
+          (m) => m.prop === "disputes" && m.sovereignIso === "AA",
+        ),
+      ).toBe(true);
     });
 
     it.each([
@@ -219,10 +227,9 @@ describe("countryData utils", () => {
     it("returns full relations for a sovereign with relations", () => {
       const result = getCountryRelations("US");
       expect(result.hasRelations).toBe(true);
-      expect(Array.isArray(result.countries)).toBe(true);
-      expect(Array.isArray(result.dependencies)).toBe(true);
-      expect(Array.isArray(result.regions)).toBe(true);
-      expect(Array.isArray(result.disputes)).toBe(true);
+      expect(Array.isArray(result.groups?.dependencies?.codes)).toBe(true);
+      expect(Array.isArray(result.groups?.regions?.codes)).toBe(true);
+      expect(Array.isArray(result.groups?.disputes?.codes)).toBe(true);
     });
   });
 

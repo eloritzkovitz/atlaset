@@ -16,6 +16,7 @@ import {
 } from "@utils/number";
 import { getTranscontinentalInfo } from "./countryData";
 import { COUNTRY_RELATIONS } from "../constants/countryRelations";
+import type { CountryRelationsGroup } from "../constants/countryRelations";
 import type {
   Country,
   CountryModifiers,
@@ -36,7 +37,7 @@ export function normalizeModifiers(
   const out: CountryModifiers = {};
   if (!mods) return out;
   if (typeof mods.tc !== "undefined")
-    out.tc = mods.tc as CountryModifiers["tc"];  
+    out.tc = mods.tc as CountryModifiers["tc"];
   if (typeof mods.of !== "undefined") out.of = String(mods.of).toUpperCase();
   out.count = mods.count
     ? (parseComparator(String(mods.count), "\\d+") ?? undefined)
@@ -103,10 +104,8 @@ export function matchesSovereigntyOf(
 ) {
   if (!ofIso) return false;
   const sovereignEntry = COUNTRY_RELATIONS[ofIso];
-  const deps = [
-    ...(sovereignEntry?.dependencies ?? []),
-    ...(sovereignEntry?.regions ?? []),
-  ];
+  const groups = sovereignEntry ? Object.values(sovereignEntry) : [];
+  const deps = groups.flatMap((g) => g?.codes ?? []);
   return deps.includes(country.isoCode);
 }
 

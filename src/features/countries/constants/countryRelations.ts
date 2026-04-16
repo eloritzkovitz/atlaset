@@ -1,139 +1,148 @@
-/** Represents a country's relations with other geopolitical entities. */
-export type CountryRelations = {
-  countries?: string[];
-  dependencies?: string[];
-  regions?: string[];
-  subdivisions?: string[];
-  disputes?: string[];
+export type CountryRelationsGroup = {
+  codes: string[];
+  label?: string;
 };
+
+export type CountryRelations = Record<string, CountryRelationsGroup>;
 
 /** Represents the relations of a country with other geopolitical entities. */
 export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   AR: {
-    disputes: ["FK", "GS"],
+    disputes: { codes: ["FK", "GS"] },
   },
   AU: {
-    dependencies: ["CC", "CX", "HM", "NF", "XL", "XM"],
+    dependencies: {
+      codes: ["CC", "CX", "HM", "NF", "XL", "XM"],
+      label: "External Territories",
+    },
   },
   BQ: {
-    subdivisions: ["BQ-BO", "BQ-SA", "BQ-SE"],
+    subdivisions: {
+      codes: ["BQ-BO", "BQ-SA", "BQ-SE"],
+      label: "Special Municipalities",
+    },
   },
   CN: {
-    disputes: ["TW"],
-    dependencies: ["HK", "MO"],
+    disputes: { codes: ["TW"] },
+    dependencies: {
+      codes: ["HK", "MO"],
+      label: "Special Administrative Regions",
+    },
   },
   CY: {
-    disputes: ["XC", "XQ"],
+    disputes: { codes: ["XC", "XQ"] },
   },
   DK: {
-    dependencies: ["FO", "GL"],
+    dependencies: { codes: ["FO", "GL"], label: "Autonomous Territories" },
   },
   FI: {
-    dependencies: ["AX"],
+    dependencies: { codes: ["AX"], label: "Autonomous Regions" },
   },
   FR: {
-    dependencies: ["BL", "CP", "MF", "NC", "PF", "PM", "TF", "WF"],
-    regions: ["GF", "GP", "MQ", "RE", "YT"],
+    overseas_regions: {
+      codes: ["GF", "GP", "MQ", "RE", "YT"],
+    },
+    dependencies: {
+      codes: ["BL", "CP", "MF", "NC", "PF", "PM", "TF", "WF"],
+      label: "Overseas Territories",
+    },
   },
   GB: {
-    countries: ["GB-ENG", "GB-NIR", "GB-SCT", "GB-WLS"],
-    dependencies: [
-      "AI",
-      "BM",
-      "FK",
-      "GG",
-      "GI",
-      "GS",
-      "IM",
-      "IO",
-      "JE",
-      "KY",
-      "MS",
-      "PN",
-      "SH",
-      "TC",
-      "VG",
-      "XQ",
-    ],
+    subdivisions: {
+      codes: ["GB-ENG", "GB-NIR", "GB-SCT", "GB-WLS"],
+      label: "Constituent Countries",
+    },
+    crown_dependencies: {
+      codes: ["GG", "IM", "JE"],
+    },
+    dependencies: {
+      codes: [
+        "AI",
+        "BM",
+        "FK",
+        "GI",
+        "GS",
+        "IO",
+        "KY",
+        "MS",
+        "PN",
+        "SH",
+        "TC",
+        "VG",
+        "XQ",
+      ],
+      label: "Overseas Territories",
+    },
   },
   GE: {
-    disputes: ["XA", "XO"],
+    disputes: { codes: ["XA", "XO"] },
   },
   GG: {
-    subdivisions: ["CQ"],
+    subdivisions: { codes: ["CQ"] },
   },
   KM: {
-    disputes: ["YT"],
+    disputes: { codes: ["YT"] },
   },
   KP: {
-    disputes: ["KR"],
+    disputes: { codes: ["KR"] },
   },
   KR: {
-    disputes: ["KP"],
+    disputes: { codes: ["KP"] },
   },
   MA: {
-    disputes: ["EH"],
+    disputes: { codes: ["EH"] },
   },
   MU: {
-    disputes: ["IO"],
+    disputes: { codes: ["IO"] },
   },
   MV: {
-    disputes: ["IO"],
+    disputes: { codes: ["IO"] },
   },
   NL: {
-    dependencies: ["AW", "CW", "SX"],
-    regions: ["BQ"],
+    dependencies: { codes: ["AW", "CW", "SX"] },
+    regions: { codes: ["BQ"], label: "Overseas Regions" },
   },
   NO: {
-    dependencies: ["BV", "SJ"],
+    dependencies: { codes: ["BV", "SJ"] },
   },
   NZ: {
-    dependencies: ["CK", "NU", "TK"],
+    associated_states: { codes: ["CK", "NU"] },
+    dependencies: { codes: ["TK"] },
   },
   RS: {
-    disputes: ["XK"],
+    disputes: { codes: ["XK"] },
   },
   SH: {
-    subdivisions: ["SH-AC", "SH-HL", "SH-TA"],
+    subdivisions: {
+      codes: ["SH-AC", "SH-HL", "SH-TA"],
+      label: "Constituent Parts",
+    },
   },
   SO: {
-    disputes: ["XS"],
+    disputes: { codes: ["XS"] },
   },
   UM: {
-    subdivisions: [
-      "UM-81",
-      "UM-84",
-      "UM-86",
-      "UM-87",
-      "UM-89",
-      "UM-71",
-      "UM-76",
-      "UM-95",
-      "UM-79",
-    ],
+    subdivisions: {
+      codes: [
+        "UM-81",
+        "UM-84",
+        "UM-86",
+        "UM-87",
+        "UM-89",
+        "UM-71",
+        "UM-76",
+        "UM-95",
+        "UM-79",
+      ],
+    },
   },
   US: {
-    dependencies: ["AS", "GU", "MP", "PR", "UM", "VI"],
+    dependencies: {
+      codes: ["AS", "GU", "MP", "PR", "UM", "VI"],
+      label: "Territories",
+    },
   },
 };
-
-type CountryRelationsKey = keyof CountryRelations;
-
-/** Represents a section for displaying country relations. */
-interface CountryRelationsSection {
-  key: string;
-  label: string;
-  prop: CountryRelationsKey;
-}
-
-/** Represents the sections for displaying country relations. */
-export const COUNTRY_RELATION_SECTIONS: CountryRelationsSection[] = [
-  { key: "countries", label: "Countries", prop: "countries" },
-  { key: "dependencies", label: "Dependencies", prop: "dependencies" },
-  { key: "regions", label: "Overseas Regions", prop: "regions" },
-  { key: "subdivisions", label: "Subdivisions", prop: "subdivisions" },
-  { key: "disputes", label: "Disputes", prop: "disputes" },
-];
 
 /** Represents flag overrides for territories that do not have their own flags. */
 export const FLAG_OVERRIDES: Record<
@@ -147,7 +156,7 @@ export const FLAG_OVERRIDES: Record<
   MF: { sovereign: "FR" }, // Saint Martin
   SH: { sovereign: "GB" }, // Saint Helena, Ascension and Tristan da Cunha
   SJ: { sovereign: "NO" }, // Svalbard and Jan Mayen
-  UM: { sovereign: "US" }, // United States Minor Outlying Islands  
+  UM: { sovereign: "US" }, // United States Minor Outlying Islands
   XL: { sovereign: "AU" }, // Coral Sea Islands
   XM: { sovereign: "AU" }, // Ashmore and Cartier Islands
   XQ: { sovereign: "GB" }, // Akrotiri and Dhekelia

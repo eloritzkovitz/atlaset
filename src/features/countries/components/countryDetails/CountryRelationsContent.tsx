@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
-import { EmptyListMessage } from "@components";
+import { capitalizeWords } from "@utils/string";
 import { CountryListGroup } from "./CountryListGroup";
-import { COUNTRY_RELATION_SECTIONS } from "../../constants/countryRelations";
 import { useCountryData } from "../../hooks/useCountryData";
 import { getCountryName, getCountryRelations } from "../../utils/countryData";
 
@@ -20,7 +19,7 @@ export function CountryRelationsContent({
       ? getCountryRelations(country.isoCode)
       : undefined;
 
-  // Prepare sections with sorted isoCodes
+  // Prepare sections from relations data
   const sections = useMemo(() => {
     const sortByName = (arr: string[]) =>
       arr.slice().sort((a, b) => {
@@ -28,11 +27,20 @@ export function CountryRelationsContent({
         const nameB = getCountryName(b, countries) || "";
         return nameA.localeCompare(nameB);
       });
-    return COUNTRY_RELATION_SECTIONS.map((def) => ({
-      key: def.key,
-      label: def.label,
-      data: sortByName((group?.[def.prop] ?? []) as string[]),
-    }));
+
+    // If no group or empty relations, return empty sections
+    if (!group) return [];
+
+    // If this ISO is a sovereign with named groups
+    if (group.groups && Object.keys(group.groups).length > 0) {
+      return Object.entries(group.groups).map(([prop, info]) => ({
+        key: prop,
+        label: info.label ?? capitalizeWords(prop.replace(/[_-]/g, " ")),
+        data: sortByName(info.codes || []),
+      }));
+    }
+
+    return [];
   }, [group, countries]);
 
   // Expanded state for each section
@@ -50,13 +58,6 @@ export function CountryRelationsContent({
   const handleToggle = (key: string) => {
     setExpanded((prev) => ({ ...prev, [key]: !prev[key] }));
   };
-
-  // If no relations, show empty message
-  if (!group) {
-    return (
-      <EmptyListMessage message="No dependencies or disputes for this country." />
-    );
-  }
 
   return (
     <div className="flex-1 overflow-y-auto">
