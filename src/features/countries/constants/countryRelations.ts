@@ -13,7 +13,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     disputes: ["FK", "GS"],
   },
   AU: {
-    dependencies: ["AU-ACI", "AU-CSI", "CC", "CX", "HM", "NF"],
+    dependencies: ["CC", "CX", "HM", "NF", "XL", "XM"],
   },
   BQ: {
     subdivisions: ["BQ-BO", "BQ-SA", "BQ-SE"],
@@ -23,7 +23,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
     dependencies: ["HK", "MO"],
   },
   CY: {
-    disputes: ["UK", "XC"],
+    disputes: ["XC", "XQ"],
   },
   DK: {
     dependencies: ["FO", "GL"],
@@ -41,7 +41,6 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
       "AI",
       "BM",
       "FK",
-      "GB-SBA",
       "GG",
       "GI",
       "GS",
@@ -54,6 +53,7 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
       "SH",
       "TC",
       "VG",
+      "XQ",
     ],
   },
   GE: {
@@ -140,17 +140,17 @@ export const FLAG_OVERRIDES: Record<
   string,
   { sovereign?: string; flag?: string }
 > = {
-  "AU-ACI": { sovereign: "AU" }, // Ashmore and Cartier Islands
-  "AU-CSI": { sovereign: "AU" }, // Coral Sea Islands
   BQ: { sovereign: "NL" }, // Caribbean Netherlands
   BV: { sovereign: "NO" }, // Bouvet Island
   CP: { sovereign: "FR" }, // Clipperton Island
-  "GB-SBA": { sovereign: "GB" }, // Akrotiri and Dhekelia
   HM: { sovereign: "AU" }, // Heard Island and McDonald Islands
   MF: { sovereign: "FR" }, // Saint Martin
   SH: { sovereign: "GB" }, // Saint Helena, Ascension and Tristan da Cunha
   SJ: { sovereign: "NO" }, // Svalbard and Jan Mayen
-  UM: { sovereign: "US" }, // United States Minor Outlying Islands
+  UM: { sovereign: "US" }, // United States Minor Outlying Islands  
+  XL: { sovereign: "AU" }, // Coral Sea Islands
+  XM: { sovereign: "AU" }, // Ashmore and Cartier Islands
+  XQ: { sovereign: "GB" }, // Akrotiri and Dhekelia
 };
 
 // List of country codes that do not have their own flags, derived from FLAG_OVERRIDES
