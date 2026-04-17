@@ -28,10 +28,7 @@ function buildFilterParamsFromCriteria(
   type CriteriaView = { modifiers?: CountryModifiers; sovereign?: boolean };
   const { modifiers: critModifiers, sovereign } =
     criteria as unknown as CriteriaView;
-
   const modifiers: CountryModifiers = { ...(critModifiers ?? {}) };
-
-  // If the achievement explicitly sets `sovereign: false`, include territories.
   const selectedSovereignty = sovereign === false ? "" : "Sovereign";
 
   return { selectedSovereignty, modifiers, search: "" };
@@ -66,11 +63,15 @@ export function getAchievementCountries(
   if (achievement.countries && Array.isArray(achievement.countries)) {
     const set = new Set((achievement.countries as string[]).map(String));
     const explicit = countries.filter((c) => set.has(c.isoCode));
+    const explicitFilterParams = {
+      ...filterParams,
+      selectedSovereignty: "",
+    } as CountryFilterOptions;
     return applyQualifierSearch(
       explicit,
       "",
       undefined,
-      filterParams,
+      explicitFilterParams,
       explicit.map((c) => c.isoCode),
     );
   }
@@ -85,11 +86,15 @@ export function getAchievementCountries(
     if (k === "countries" && Array.isArray(v)) {
       const set = new Set((v as unknown[]).map(String));
       const explicit = countries.filter((c) => set.has(c.isoCode));
+      const explicitFilterParams = {
+        ...filterParams,
+        selectedSovereignty: "",
+      } as CountryFilterOptions;
       return applyQualifierSearch(
         explicit,
         "",
         undefined,
-        filterParams,
+        explicitFilterParams,
         explicit.map((c) => c.isoCode),
       );
     }
