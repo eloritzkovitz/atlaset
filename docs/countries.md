@@ -59,6 +59,7 @@ qualifier:query modifier:query
 | `drivingside`     | string              |         `drivingside:left` | Matches driving side. Values: `left`, `right`                                                               |
 | `sovereignty`     | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`  |
 | `sovereign`       | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                       |
+| `geotype`         | string              |           `geotype:island` | Matches geographic types. Values: `coastal`, `landlocked`, `island`                                         |
 | `visited`         | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                         |
 
 #### **Additional Modifiers**

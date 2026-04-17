@@ -36,6 +36,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   callingcode: { key: "callingCode", label: "Calling code", type: "string" },
   drivingside: { key: "drivingSide", label: "Driving side", type: "string" },
   sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
+  geotype: { key: "geoType", label: "Geographic type", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "string" },
   visited: { key: "visited", label: "Visited", type: "string" },
   tc: { key: "tc", label: "Transcontinental", type: "string" },

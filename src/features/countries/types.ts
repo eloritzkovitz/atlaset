@@ -31,6 +31,8 @@ export type Country = {
   drivingSide?: "Left" | "Right" | undefined;
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
+  /** The geographic type of the country. */
+  geoType?: GeoType;
   /** Alternative names or abbreviations for the country. */
   aliases?: string[];
 };
@@ -70,6 +72,9 @@ export type SovereigntyType =
   | "Unrecognized"
   | "Disputed"
   | "Unknown";
+
+/** Geographic types for countries. */
+export type GeoType = "Coastal" | "Landlocked" | "Island";
 
 /** Represents a list of countries. */
 export type CountryList = {
