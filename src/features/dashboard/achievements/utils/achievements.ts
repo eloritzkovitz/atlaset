@@ -1,12 +1,11 @@
 /**
- * Utility functions for handling achievements in the dashboard.
+ * Utility functions for handling achievements.
  */
 
 import {
   applyQualifierSearch,
   type Country,
   type CountryFilterOptions,
-  type CountryModifiers,
 } from "@features/countries";
 import {
   getLocalTrips,
@@ -25,13 +24,9 @@ import {
 function buildFilterParamsFromCriteria(
   criteria: Criteria,
 ): CountryFilterOptions {
-  type CriteriaView = { modifiers?: CountryModifiers; sovereign?: boolean };
-  const { modifiers: critModifiers, sovereign } =
-    criteria as unknown as CriteriaView;
-  const modifiers: CountryModifiers = { ...(critModifiers ?? {}) };
+  const { sovereign } = criteria as unknown as { sovereign?: boolean };
   const selectedSovereignty = sovereign === false ? "" : "Sovereign";
-
-  return { selectedSovereignty, modifiers, search: "" };
+  return { selectedSovereignty, modifiers: {}, search: "" };
 }
 
 // Helper to extract entries from criteria, excluding null/undefined values
@@ -39,7 +34,7 @@ function entriesFromCriteria(criteria: Criteria) {
   return Object.entries(criteria || {}).filter(([, v]) => v != null);
 }
 
-// Helper to check if criteria has any selectors (non-modifier keys)
+// Helper to check if criteria has any selectors
 function hasSelectors(criteria: Criteria) {
   return entriesFromCriteria(criteria).some(
     ([k]) => k !== "count" && k !== "tier" && k !== "sovereign",
@@ -76,7 +71,7 @@ export function getAchievementCountries(
     );
   }
 
-  // Find first selector (non-modifier) and delegate to existing qualifier filter
+  // Find first selector and delegate to existing qualifier filter
   const entries = entriesFromCriteria(criteria);
   const selector = entries.find(
     ([k]) => !["count", "tier", "sovereign"].includes(k),
@@ -120,7 +115,7 @@ export function getAchievementCountries(
     if (isoSet.size > 0) return countries.filter((c) => isoSet.has(c.isoCode));
   }
 
-  // If no selectors and count-based, return empty country list for display (progress uses counts)
+  // If no selectors and count-based, return empty country list for display
   if (criteria.count && !hasSelectors(criteria)) return [];
   return [];
 }
@@ -206,7 +201,7 @@ function regionProgressCounts(
 }
 
 /**
- * Gets progress string for the achievement
+ * Gets the progress string for an achievement.
  * @param achievement - The achievement object
  * @param countries - List of all countries
  * @param visited - Visited countries utility
@@ -218,10 +213,8 @@ export function getProgress(
   visited: { isCountryVisited: (iso: string) => boolean },
 ) {
   const criteria = achievement.criteria || {};
-  // Region-based
   const regionCounts = regionProgressCounts(criteria, countries, visited);
   if (regionCounts) return `${regionCounts.completed}/${regionCounts.required}`;
-  // Custom count-based criteria or default logic — compute visited once
   const visitedCount = getVisitedCount(achievement, countries, visited);
   if (
     (criteria.countries || criteria.region || criteria.subregion) &&
@@ -235,7 +228,7 @@ export function getProgress(
 }
 
 /**
- * Gets progress fraction for the achievement
+ * Gets the progress fraction for an achievement.
  * @param achievement - The achievement object
  * @param countries - List of all countries
  * @param visited - Visited countries utility
@@ -247,7 +240,6 @@ export function progressFraction(
   visited: { isCountryVisited: (iso: string) => boolean },
 ) {
   const criteria = achievement.criteria || {};
-  // Region-based: regions array
   const regionCounts = regionProgressCounts(criteria, countries, visited);
   if (regionCounts)
     return regionCounts.required > 0
@@ -259,7 +251,7 @@ export function progressFraction(
 }
 
 /**
- * Checks if all required achievements are completed
+ * Checks if all required achievements are completed.
  * @param achievement - The achievement object
  * @param achievementStatusMap - Map of achievementId to completion status
  * @returns True if all requirements are completed or none required
@@ -273,7 +265,7 @@ export function areRequirementsCompleted(
 }
 
 /**
- * Determines if the achievement is completed, including dependency requirements
+ * Determines if the achievement is completed, including dependency requirements.
  * @param achievement - The achievement object
  * @param countries - List of all countries
  * @param visited - Visited countries utility
