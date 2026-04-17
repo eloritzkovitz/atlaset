@@ -1,8 +1,5 @@
-import { createSovereigntyFilter, type Country } from "@features/countries";
-import {
-  getAchievementCountries,
-  getCountryCriteriaFilters,
-} from "./achievements";
+import type { Country } from "@features/countries";
+import { getAchievementCountries } from "./achievements";
 import type { Achievement, Criteria } from "../types";
 
 /**
@@ -60,12 +57,10 @@ export function getDisplayFlagCountries(
   }
 
   // If no explicit countries, use criteria-based filters
-  const filterMap = getCountryCriteriaFilters(displayCriteria);
-  const sovereigntyFilter = createSovereigntyFilter(true);
-  for (const key of Object.keys(filterMap)) {
-    if (displayCriteria[key as keyof Criteria]) {
-      return countries.filter((c) => filterMap[key](c) && sovereigntyFilter(c));
-    }
+  const tempAch: Achievement = { ...achievement, criteria: displayCriteria };
+  let achCountries = getAchievementCountries(tempAch, countries);
+  if (typeof tierCount === "number" && achievement.countries) {
+    achCountries = achCountries.slice(0, tierCount);
   }
-  return [];
+  return achCountries;
 }
