@@ -103,7 +103,7 @@ export function AchievementCard({
               achievement.tiers
                 ? achievement.tiers.map((t, idx) => ({
                     tier: t.tier ?? idx + 1,
-                    count: t.criteria?.count ?? t.count,
+                    count: t.criteria?.required_count ?? t.count,
                     description: t.description,
                   }))
                 : undefined
