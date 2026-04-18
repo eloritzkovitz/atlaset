@@ -28,13 +28,6 @@ const NON_SELECTOR_KEYS = new Set([
   "only_abroad",
 ]);
 
-// Helper to extract selector entries from criteria
-function selectorsOf(criteria: Criteria) {
-  return Object.entries(criteria || {}).filter(
-    ([k, v]) => v != null && !NON_SELECTOR_KEYS.has(k),
-  );
-}
-
 // Helper to build filter params from criteria for qualifier search
 function buildFilterParamsFromCriteria(
   criteria: Criteria,
@@ -88,7 +81,9 @@ export function getAchievementCountries(
   }
 
   // Find selectors and combine them with AND semantics
-  const selectors = selectorsOf(criteria);
+  const selectors = Object.entries(criteria || {}).filter(
+    ([k, v]) => v != null && !NON_SELECTOR_KEYS.has(k),
+  );
   if (selectors.length > 0) {
     let byQualifier = countries.slice();
 
@@ -198,11 +193,10 @@ export function getTotalCount(
   if (criteria.countries) {
     return criteria.countries.length as number;
   }
-  const achCountries = getAchievementCountries(achievement, countries);
   if (criteria.required_count) {
     return criteria.required_count as number;
   }
-  return achCountries.length;
+  return getAchievementCountries(achievement, countries).length;
 }
 
 /**
@@ -348,11 +342,13 @@ export function isCompleted(
       const regionCodes = countries
         .filter((c) => c.region === criteria.regions![0])
         .map((c) => c.isoCode);
-      return hasTripAchievement(
-        trips,
-        regionCodes,
-        criteria.trip_countries_count ?? 0,
-      );
+      const minCountries = criteria.trip_countries_count ?? 0;
+      return trips.some((trip) => {
+        const visited = trip.countryCodes.filter((code) =>
+          regionCodes.includes(code),
+        );
+        return new Set(visited).size >= minCountries;
+      });
     } else {
       // Any trip with N+ countries
       return trips.some(
@@ -509,24 +505,4 @@ export function getMergedAchievements(
   if (worldToShow) merged.push(worldToShow);
   merged.push(...others);
   return merged;
-}
-
-/**
- * Checks if any trip meets the criteria for a trip-based achievement.
- * @param trips - Array of user trips
- * @param regionCountryCodes - Array of country codes in the region
- * @param minCountries - Minimum number of countries in the region required in a single trip
- * @returns True if any trip meets the criteria
- */
-export function hasTripAchievement(
-  trips: Trip[],
-  regionCountryCodes: string[],
-  minCountries: number,
-): boolean {
-  return trips.some((trip) => {
-    const visited = trip.countryCodes.filter((code) =>
-      regionCountryCodes.includes(code),
-    );
-    return new Set(visited).size >= minCountries;
-  });
 }
