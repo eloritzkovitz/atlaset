@@ -27,16 +27,13 @@ export interface TripCriteria {
   trip_duration_days?: number;
   local_trips_count?: number;
   abroad_trips_count?: number;
-  abroad_countries_count?: number;
-  repeat_visits_count?: number;
-  repeat_min_visits?: number;
   only_abroad?: boolean;
 }
 
 /** Represents modifier criteria that can be applied to achievements. */
 export interface ModifierCriteria {
   tier?: number;
-  count?: number;
+  required_count?: number;
 }
 
 /** Represents the criteria for an achievement. */

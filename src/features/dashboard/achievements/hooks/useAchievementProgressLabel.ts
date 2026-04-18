@@ -56,8 +56,7 @@ export function useAchievementProgressLabel(
     if (
       criteria.trip_countries_count ||
       criteria.trip_duration_days ||
-      criteria.abroad_trips_count ||
-      criteria.repeat_visits_count
+      criteria.abroad_trips_count
     ) {
       return "";
     }

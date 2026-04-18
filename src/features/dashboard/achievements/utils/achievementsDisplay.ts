@@ -31,12 +31,21 @@ export function getDisplayFlagCountries(
   const isTripBased = [
     "trip_countries_count",
     "local_trips_count",
-    "abroad_countries_count",
     "abroad_trips_count",
-    "repeat_visits_count",
     "trip_duration_days",
   ].some((key) => (displayCriteria as Record<string, unknown>)[key]);
   if (isTripBased) return [];
+
+  // Do not show country flags for visit-based achievements
+  if ((displayCriteria as Record<string, unknown>).visited) return [];
+
+  // If achievement has a count but no country/region criteria, do not show flags
+  if (
+    (displayCriteria as Record<string, unknown>).count &&
+    !displayCriteria.countries &&
+    !displayCriteria.regions
+  )
+    return [];
 
   // If achievement has explicit countries or display criteria includes countries, use those
   const displayCountries = displayCriteria.countries;
