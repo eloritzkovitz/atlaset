@@ -71,48 +71,48 @@ export function getAchievementCountries(
     );
   }
 
-  // Find first selector and delegate to existing qualifier filter
+  // Find selectors and combine them with AND semantics
   const entries = entriesFromCriteria(criteria);
-  const selector = entries.find(
+  const selectors = entries.filter(
     ([k]) => !["count", "tier", "sovereign"].includes(k),
   );
-  if (selector) {
-    const [k, v] = selector;
-    if (k === "countries" && Array.isArray(v)) {
-      const set = new Set((v as unknown[]).map(String));
-      const explicit = countries.filter((c) => set.has(c.isoCode));
-      const explicitFilterParams = {
-        ...filterParams,
-        selectedSovereignty: "",
-      } as CountryFilterOptions;
-      return applyQualifierSearch(
-        explicit,
-        "",
-        undefined,
-        explicitFilterParams,
-        explicit.map((c) => c.isoCode),
-      );
+  if (selectors.length > 0) {
+    let byQualifier = countries.slice();
+
+    for (const [k, v] of selectors) {
+      // explicit countries list selector: intersect with current set
+      if (k === "countries" && Array.isArray(v)) {
+        const set = new Set((v as unknown[]).map(String));
+        byQualifier = byQualifier.filter((c) => set.has(c.isoCode));
+        continue;
+      }
+
+      const vals = (
+        Array.isArray(v) && (v as unknown[]).length
+          ? (v as unknown[])
+          : [v as unknown]
+      ).map(String);
+
+      // For other selectors, apply qualifier search and intersect results
+      const thisQualIso = new Set<string>();
+      for (const val of vals) {
+        const search = `${k}:${val}`;
+        const matched = applyQualifierSearch(
+          byQualifier,
+          search,
+          undefined,
+          filterParams,
+          byQualifier.map((c) => c.isoCode),
+        );
+        for (const c of matched) thisQualIso.add(c.isoCode);
+      }
+
+      // Intersect with current set
+      byQualifier = byQualifier.filter((c) => thisQualIso.has(c.isoCode));
+      if (byQualifier.length === 0) break;
     }
 
-    const vals = (
-      Array.isArray(v) && (v as unknown[]).length
-        ? (v as unknown[])
-        : [v as unknown]
-    ).map(String);
-
-    const isoSet = new Set<string>();
-    for (const val of vals) {
-      const search = `${k}:${val}`;
-      const matched = applyQualifierSearch(
-        countries,
-        search,
-        undefined,
-        filterParams,
-        countries.map((c) => c.isoCode),
-      );
-      for (const c of matched) isoSet.add(c.isoCode);
-    }
-    if (isoSet.size > 0) return countries.filter((c) => isoSet.has(c.isoCode));
+    if (byQualifier.length > 0) return byQualifier;
   }
 
   // If no selectors and count-based, return empty country list for display
@@ -216,10 +216,7 @@ export function getProgress(
   const regionCounts = regionProgressCounts(criteria, countries, visited);
   if (regionCounts) return `${regionCounts.completed}/${regionCounts.required}`;
   const visitedCount = getVisitedCount(achievement, countries, visited);
-  if (
-    (criteria.countries || criteria.region || criteria.subregion) &&
-    criteria.count
-  ) {
+  if ((criteria.countries || criteria.regions) && criteria.count) {
     const count = criteria.count as number;
     return `${Math.min(visitedCount, count)}/${count}`;
   }
@@ -297,9 +294,13 @@ export function isCompleted(
     );
   // Trip-based: trip_countries_count (optionally with region)
   if (criteria.trip_countries_count && trips) {
-    if (criteria.region) {
+    if (
+      criteria.regions &&
+      Array.isArray(criteria.regions) &&
+      criteria.regions.length === 1
+    ) {
       const regionCodes = countries
-        .filter((c) => c.region === criteria.region)
+        .filter((c) => c.region === criteria.regions![0])
         .map((c) => c.isoCode);
       return hasTripAchievement(
         trips,
@@ -401,18 +402,16 @@ export function getMergedAchievements(
   const others: Achievement[] = [];
   for (const ach of achievements) {
     const criteria: Criteria = ach.criteria || {};
-    const { tier, count, region, subregion, countries } =
-      criteria as Partial<Criteria>;
+    const { tier, count, countries, regions } = criteria as Partial<Criteria>;
 
-    // World achievement: has tier and count, but no region/subregion/countries criteria
-    if (tier && count && !region && !subregion && !countries) {
+    // World achievement: has tier and count, but no regions/countries criteria
+    if (tier && count && (!regions || regions.length === 0) && !countries) {
       worldTiers.push(ach);
       continue;
     }
-
-    // Region achievement: has tier and region, but no subregion/countries criteria
-    if (tier && typeof region === "string" && region !== "") {
-      const key = region;
+    // Region achievement: has tier and a single region entry, but no countries criteria
+    if (tier && Array.isArray(regions) && regions.length === 1) {
+      const key = regions[0];
       regionTiers[key] ??= [];
       regionTiers[key].push(ach);
       continue;

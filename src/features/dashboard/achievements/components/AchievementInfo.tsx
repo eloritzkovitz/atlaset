@@ -7,6 +7,7 @@ import { useVisitedCountries } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
 import type { Achievement } from "../types";
 import { getAchievementCountries } from "../utils/achievements";
+import { getCurrentTier } from "../utils/achievementsTiers";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 
@@ -26,19 +27,34 @@ export function AchievementInfo() {
 
   const [expandedCountries, setExpandedCountries] = useState(true);
   let achCountries: typeof countries = [];
+  let region: string | undefined;
 
-  // First try to get region from achievement criteria or tiers, then fallback to achievement countries
+  // Determine display criteria (merge base + active tier) and derive countries
   if (achievement) {
-    // Find region from any tier
-    let region = achievement.criteria?.region;
-    if (!region && achievement.tiers && achievement.tiers.length) {
-      region = achievement.tiers.find((t) => t.criteria?.region)?.criteria
-        ?.region;
-    }
+    const { tierObj } = getCurrentTier(
+      achievement,
+      countries,
+      { isCountryVisited },
+      undefined,
+      undefined,
+    );
+    const displayCriteria =
+      (tierObj && tierObj.criteria) || achievement.criteria || {};
+
+    // Prefer `regions` array; take the first entry if present
+    region =
+      Array.isArray(displayCriteria?.regions) && displayCriteria.regions!.length
+        ? displayCriteria.regions![0]
+        : undefined;
+
     if (region) {
       achCountries = countries.filter((c) => c.region === region);
     } else {
-      achCountries = getAchievementCountries(achievement, countries);
+      const achForDisplay: Achievement = {
+        ...achievement,
+        criteria: displayCriteria,
+      };
+      achCountries = getAchievementCountries(achForDisplay, countries);
     }
   }
 
@@ -96,11 +112,7 @@ export function AchievementInfo() {
         )}
       {isoCodes.length > 0 && (
         <CountryListGroup
-          label={
-            achievement.criteria?.region
-              ? `Countries in ${achievement.criteria.region}`
-              : "Countries"
-          }
+          label={region ? `Countries in ${region}` : "Countries"}
           isoCodes={isoCodes}
           countries={countries}
           visited={isCountryVisited}

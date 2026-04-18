@@ -1,4 +1,4 @@
-import type { Country } from "@features/countries";
+import type { CountryQualifierKey } from "@features/countries/constants/qualifierConfig";
 
 /** Primitive criterion value types used for country matching. */
 export type CountryCriterionValue =
@@ -11,16 +11,13 @@ export type CountryCriterionValue =
 
 /** Represents country-related criteria for achievements. */
 export type CountryCriteria = Partial<
-  Record<keyof Country, CountryCriterionValue>
-> & {
-  /** Represents a pre-defined list of countries for the achievement. */
-  countries?: string[];
-};
+  Record<CountryQualifierKey, CountryCriterionValue>
+>;
 
-/** Represents region-related criteria for achievements. */
-export interface RegionCriteria {
+/** Represents geographic-related criteria for achievements. */
+export interface GeoCriteria {
+  countries?: string[];
   regions?: string[];
-  subregion?: string;
   min_regions?: number;
 }
 
@@ -44,7 +41,7 @@ export interface ModifierCriteria {
 
 /** Represents the criteria for an achievement. */
 export type Criteria = CountryCriteria &
-  RegionCriteria &
+  GeoCriteria &
   TripCriteria &
   ModifierCriteria &
   Record<string, unknown>;
