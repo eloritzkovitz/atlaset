@@ -45,16 +45,10 @@ export function useAchievementProgressLabel(
       }).length;
       const minRequired = criteria.min_regions || criteria.regions.length;
       return `${completedCount}/${minRequired}`;
-    }    
+    }
 
     // Criterias that do not have a progress label
-    if (
-      criteria.visited ||
-      criteria.trip_countries_count ||
-      criteria.trip_duration_days ||
-      criteria.local_trips_count ||
-      criteria.abroad_trips_count
-    ) {
+    if (achievement.type === "trips") {
       return "";
     }
 
