@@ -29,15 +29,10 @@ function buildFilterParamsFromCriteria(
   return { selectedSovereignty, modifiers: {}, search: "" };
 }
 
-// Helper to extract entries from criteria, excluding null/undefined values
-function entriesFromCriteria(criteria: Criteria) {
-  return Object.entries(criteria || {}).filter(([, v]) => v != null);
-}
-
-// Helper to check if criteria has any selectors
+// Helper to check if criteria has any selectors (excluding count/tier/sovereign)
 function hasSelectors(criteria: Criteria) {
-  return entriesFromCriteria(criteria).some(
-    ([k]) => k !== "count" && k !== "tier" && k !== "sovereign",
+  return Object.entries(criteria || {}).some(
+    ([k, v]) => v != null && k !== "count" && k !== "tier" && k !== "sovereign",
   );
 }
 
@@ -72,9 +67,8 @@ export function getAchievementCountries(
   }
 
   // Find selectors and combine them with AND semantics
-  const entries = entriesFromCriteria(criteria);
-  const selectors = entries.filter(
-    ([k]) => !["count", "tier", "sovereign"].includes(k),
+  const selectors = Object.entries(criteria || {}).filter(
+    ([k, v]) => v != null && !["count", "tier", "sovereign"].includes(k),
   );
   if (selectors.length > 0) {
     let byQualifier = countries.slice();
@@ -183,7 +177,13 @@ export function getTotalCount(
   return achCountries.length;
 }
 
-// Compute region-based progress counts. Returns null if not region-based.
+/**
+ * Gets the progress counts for region-based achievements.
+ * @param criteria - The achievement criteria
+ * @param countries - List of all countries
+ * @param visited - Optional utility to check if a country has been visited
+ * @returns - Object containing completed and required counts, or null if not region-based
+ */
 function regionProgressCounts(
   criteria: Criteria,
   countries: Country[],
