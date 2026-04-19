@@ -20,7 +20,7 @@ import type { Achievement, AchievementStatus, Criteria } from "../types";
 
 // Set of non-selector keys that should be ignored when extracting selectors from criteria
 const NON_SELECTOR_KEYS = new Set([
-  "required_count",
+  "required",
   "count",
   "tier",
   "sovereign",
@@ -125,9 +125,8 @@ export function getAchievementCountries(
     if (byQualifier.length > 0) return byQualifier;
   }
 
-  // If no selectors and count-based, return the sovereign/qualifier-filtered list
-  if (criteria.required_count && selectors.length === 0) {
-    // applyQualifierSearch across all countries using the built filterParams
+  // If no selectors and count-based, return the qualifier-filtered list
+  if (criteria.required && selectors.length === 0) {
     return applyQualifierSearch(
       countries,
       "",
@@ -193,8 +192,8 @@ export function getTotalCount(
   if (criteria.countries) {
     return criteria.countries.length as number;
   }
-  if (criteria.required_count) {
-    return criteria.required_count as number;
+  if (criteria.required) {
+    return criteria.required as number;
   }
   return getAchievementCountries(achievement, countries).length;
 }
@@ -206,19 +205,37 @@ export function getTotalCount(
  * @param visited - Optional utility to check if a country has been visited
  * @returns - Object containing completed and required counts, or null if not region-based
  */
-function regionProgressCounts(
+export function getRegionProgressCounts(
   criteria: Criteria,
   countries: Country[],
   visited?: { isCountryVisited: (iso: string) => boolean },
 ) {
-  if (!criteria.regions || !Array.isArray(criteria.regions)) return null;
-  const completed = criteria.regions.filter((region: string) => {
-    const countriesInRegion = countries.filter((c) => c.region === region);
-    return visited
-      ? countriesInRegion.some((c) => visited.isCountryVisited(c.isoCode))
-      : countriesInRegion.length > 0;
-  }).length;
-  const required = criteria.min_regions || criteria.regions.length;
+  const rawRegions = (criteria as Record<string, unknown>).regions;
+  const regionsArr: string[] =
+    typeof rawRegions === "string"
+      ? [rawRegions]
+      : Array.isArray(rawRegions)
+        ? (rawRegions as string[])
+        : [];
+  if (regionsArr.length === 0) return null;
+
+  const completed = regionsArr.reduce((acc, region) => {
+    const hasVisitedCountry = countries.some((c) =>
+      c.region === region
+        ? visited
+          ? visited.isCountryVisited(c.isoCode)
+          : true
+        : false,
+    );
+    return acc + (hasVisitedCountry ? 1 : 0);
+  }, 0);
+
+  const cfg = criteria as Record<string, unknown>;
+  const maybeRequired = Number(cfg.required);
+  const required = Number.isFinite(maybeRequired)
+    ? maybeRequired
+    : regionsArr.length;
+
   return { completed, required };
 }
 
@@ -237,7 +254,7 @@ export function getProgress(
   homeCountry?: string,
 ) {
   const criteria = achievement.criteria || {};
-  const regionCounts = regionProgressCounts(criteria, countries, visited);
+  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
   if (regionCounts) return `${regionCounts.completed}/${regionCounts.required}`;
   const visitedCount = getVisitedCount(
     achievement,
@@ -247,8 +264,8 @@ export function getProgress(
     trips,
     homeCountry,
   );
-  if ((criteria.countries || criteria.regions) && criteria.required_count) {
-    const count = criteria.required_count as number;
+  if ((criteria.countries || criteria.regions) && criteria.required) {
+    const count = criteria.required as number;
     return `${Math.min(visitedCount, count)}/${count}`;
   }
   const total = getTotalCount(achievement, countries);
@@ -262,7 +279,7 @@ export function getProgress(
  * @param visited - Visited countries utility
  * @returns Progress fraction between 0 and 1
  */
-export function progressFraction(
+export function getProgressFraction(
   achievement: Achievement,
   countries: Country[],
   visited: { isCountryVisited: (iso: string) => boolean },
@@ -270,7 +287,7 @@ export function progressFraction(
   homeCountry?: string,
 ) {
   const criteria = achievement.criteria || {};
-  const regionCounts = regionProgressCounts(criteria, countries, visited);
+  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
   if (regionCounts)
     return regionCounts.required > 0
       ? Math.min(regionCounts.completed / regionCounts.required, 1)
@@ -326,7 +343,7 @@ export function isCompleted(
       return false;
   }
   // Region-based: regions array
-  const regionCounts = regionProgressCounts(criteria, countries, visited);
+  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
   if (regionCounts)
     return (
       regionCounts.completed >= regionCounts.required &&
@@ -389,8 +406,8 @@ export function isCompleted(
     homeCountry,
   );
   const total = getTotalCount(achievement, countries);
-  if (criteria.required_count) {
-    return visitedCount >= (criteria.required_count as number);
+  if (criteria.required) {
+    return visitedCount >= (criteria.required as number);
   }
   return visitedCount === total && total > 0;
 }
@@ -411,7 +428,9 @@ export function getAchievementStatus(
 ): AchievementStatus {
   if (isCompleted(achievement, countries, visited, trips, homeCountry))
     return "completed";
-  if (progressFraction(achievement, countries, visited, trips, homeCountry) > 0)
+  if (
+    getProgressFraction(achievement, countries, visited, trips, homeCountry) > 0
+  )
     return "progress";
   return "locked";
 }

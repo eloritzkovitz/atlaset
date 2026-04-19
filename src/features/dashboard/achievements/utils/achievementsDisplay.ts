@@ -36,10 +36,9 @@ export function getDisplayFlagCountries(
   ].some((key) => (displayCriteria as Record<string, unknown>)[key]);
   if (isTripBased) return [];
 
-  // Do not show country flags for visit-based achievements
+  // For non-country criteria, do not show countries
   if ((displayCriteria as Record<string, unknown>).visited) return [];
-
-  // If achievement has a count but no country/region criteria, do not show flags
+  if ((displayCriteria as Record<string, unknown>).regions) return [];
   if (
     (displayCriteria as Record<string, unknown>).count &&
     !displayCriteria.countries &&

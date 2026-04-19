@@ -18,7 +18,6 @@ export type CountryCriteria = Partial<
 export interface GeoCriteria {
   countries?: string[];
   regions?: string[];
-  min_regions?: number;
 }
 
 /** Represents trip-related criteria for achievements. */
@@ -33,7 +32,7 @@ export interface TripCriteria {
 /** Represents modifier criteria that can be applied to achievements. */
 export interface ModifierCriteria {
   tier?: number;
-  required_count?: number;
+  required?: number;
 }
 
 /** Represents the criteria for an achievement. */

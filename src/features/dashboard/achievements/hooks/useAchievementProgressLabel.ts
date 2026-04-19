@@ -35,18 +35,6 @@ export function useAchievementProgressLabel(
       return `${completedCount}/${achievement.requires.length}`;
     }
 
-    // Country-based achievements
-    if (criteria.regions && Array.isArray(criteria.regions)) {
-      const completedCount = criteria.regions.filter((region: string) => {
-        const countriesInRegion = countries.filter((c) => c.region === region);
-        return countriesInRegion.some((c) =>
-          visited.isCountryVisited(c.isoCode),
-        );
-      }).length;
-      const minRequired = criteria.min_regions || criteria.regions.length;
-      return `${completedCount}/${minRequired}`;
-    }
-
     // Criterias that do not have a progress label
     if (achievement.type === "trips") {
       return "";
