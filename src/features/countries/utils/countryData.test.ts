@@ -267,21 +267,21 @@ describe("countryData utils", () => {
         isoCode: "RU",
         transcontinental: {
           additionalRegion: "Europe",
-          additionalSubregion: "Northern Asia",
+          additionalSubregion: "North Asia",
         },
       } as Country;
       const tr = {
         isoCode: "TR",
         transcontinental: {
           additionalRegion: "Asia",
-          additionalSubregion: "Western Asia",
+          additionalSubregion: "West Asia",
         },
       } as Country;
       expect(getTranscontinentalInfo(ru)?.additionalSubregion).toBe(
-        "Northern Asia",
+        "North Asia",
       );
       expect(getTranscontinentalInfo(tr)?.additionalSubregion).toBe(
-        "Western Asia",
+        "West Asia",
       );
     });
 
