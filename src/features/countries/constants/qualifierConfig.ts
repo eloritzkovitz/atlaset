@@ -29,6 +29,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   subregion: { key: "subregion", label: "Subregion", type: "string" },
   capital: { key: "capital", label: "Capital", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
+  area: { key: "area", label: "Area (km²)", type: "number" },
   population: { key: "population", label: "Population", type: "number" },
   currency: { key: "currency", label: "Currency", type: "string" },
   timezone: { key: "timezones", label: "Time zone", type: "string" },

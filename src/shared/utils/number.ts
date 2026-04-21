@@ -38,7 +38,7 @@ export function parseComparator(
   input: string,
   pattern = "\\d+",
 ): { op: Operator; value: number } | null {
-  const re = new RegExp(`^(>=|<=|>|<|=)?\\s*(${pattern})$`);
+  const re = new RegExp(`^(>=|<=|>|<|=|~)?\\s*(${pattern})$`);
   const m = input.trim().match(re);
   if (!m) return null;
   const op = (m[1] || "=") as Operator;
@@ -56,12 +56,19 @@ export function parseYearComparator(
 
 /**
  * Compares two numeric values based on a comparator operator.
+ * Supports `~` for approximate comparisons.
  * @param op - The comparator operator
  * @param a - The first number
  * @param b - The second number
+ * @param tolerance - Optional tolerance for `~`. Defaults to 0.05.
  * @returns The result of the comparison
  */
-export function compareNumeric(op: Operator, a: number, b: number) {
+export function compareNumeric(
+  op: Operator,
+  a: number,
+  b: number,
+  tolerance?: number,
+) {
   switch (op) {
     case ">":
       return a > b;
@@ -71,6 +78,12 @@ export function compareNumeric(op: Operator, a: number, b: number) {
       return a >= b;
     case "<=":
       return a <= b;
+    case "~": {      
+      const frac = typeof tolerance === "number" ? tolerance : 0.05;
+      const scale = Math.max(Math.abs(a), Math.abs(b));
+      const allowed = scale < 1 ? frac : frac * scale;
+      return Math.abs(a - b) <= allowed;
+    }
     case "=":
     default:
       return a === b;

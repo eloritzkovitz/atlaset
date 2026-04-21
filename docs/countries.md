@@ -52,7 +52,8 @@ qualifier:query modifier:query
 | `tc`              | boolean / string    |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `cultural`, `other` |
 | `capital`         | string              |            `capital:paris` | Matches capital name                                                                                        |
 | `language`        | string              |         `language:spanish` | Matches language                                                                                            |
-| `population`      | number (comparison) |   `population:>=1,000,000` | Matches population numbers. Supports plain or comma-separated numbers                                       |
+| `area`            | number (comparison) |               `area:~2000` | Matches area (in km²). Supports plain or comma-separated numbers                                            |
+| `population`      | number (comparison) |   `population:>=1,000,000` | Matches population. Supports plain or comma-separated numbers                                               |
 | `currency`        | string              |             `currency:eur` | Matches ISO 4217 code                                                                                       |
 | `timezone` / `tz` | string              |          `timezone:utc+03` | Matches countries by UTC offset. Accepts `UTC±HH`, `UTC±HH:MM`, `±HH:MM` or `±HHMM`                         |
 | `callingcode`     | string              |          `callingcode:+44` | Matches calling code                                                                                        |
@@ -78,7 +79,7 @@ qualifier:query modifier:query
 > #### **Notes:**
 >
 > - All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
-> - For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `=`
+> - For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`
 
 ## **Country Lists**
 
