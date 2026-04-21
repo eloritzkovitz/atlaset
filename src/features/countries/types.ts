@@ -86,6 +86,20 @@ export type CountryList = {
   layerId?: string | null;
 };
 
+/** Represents a key for a country qualifier search. */
+export type CountryQualifierKey =
+  | keyof Country
+  | "sovereign"
+  | "visited"
+  | "tc";
+
+/** Configuration for a country qualifier search. */
+export type CountryQualifierConfig = {
+  key: CountryQualifierKey;
+  label?: string;
+  type?: "string" | "number" | "date";
+};
+
 /** Modifier configuration for country filtering. */
 export type CountryModifiers = {
   match?: "prefix" | "substring" | "exact" | "regex";

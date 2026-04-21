@@ -1,4 +1,4 @@
-import type { CountryQualifierKey } from "@features/countries/constants/qualifierConfig";
+import type { CountryQualifierKey } from "@features/countries";
 
 /** Primitive criterion value types used for country matching. */
 export type CountryCriterionValue =

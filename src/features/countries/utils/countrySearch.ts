@@ -4,15 +4,18 @@
 
 import type { VisitContext } from "@features/visits";
 import { suggestByPrefix } from "@utils/search";
+import { timezoneOffsets } from "@utils/timezone";
+import { getTranscontinentalInfo } from "./countryData";
 import {
   COUNTRY_QUALIFIER_MAP,
   SUPPORTED_QUALIFIERS,
-  type CountryQualifierKey,
-  type CountryQualifierConfig,
 } from "../constants/qualifierConfig";
-import { timezoneOffsets } from "@utils/timezone";
-import { getTranscontinentalInfo } from "./countryData";
-import type { Country, TranscontinentalScope } from "../types";
+import type {
+  Country,
+  CountryQualifierConfig,
+  CountryQualifierKey,
+  TranscontinentalScope,
+} from "../types";
 
 /**
  * Resolves a qualifier configuration based on a given qualifier name.

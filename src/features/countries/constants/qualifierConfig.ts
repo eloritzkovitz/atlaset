@@ -2,21 +2,7 @@
  * Shared qualifier and sort configuration for countries.
  */
 import { keysOf } from "@utils/object";
-import type { Country } from "../types";
-
-/** Represents a key for a country qualifier search. */
-export type CountryQualifierKey =
-  | keyof Country
-  | "sovereign"
-  | "visited"
-  | "tc";
-
-/** Configuration for a country qualifier search. */
-export type CountryQualifierConfig = {
-  key: CountryQualifierKey;
-  label?: string;
-  type?: "string" | "number" | "date";
-};
+import type { CountryQualifierConfig } from "../types";
 
 export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   isocode: { key: "isoCode", label: "ISO 3166-1 code", type: "string" },
