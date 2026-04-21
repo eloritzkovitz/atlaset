@@ -4,15 +4,18 @@
 
 import type { VisitContext } from "@features/visits";
 import { suggestByPrefix } from "@utils/search";
+import { timezoneOffsets } from "@utils/timezone";
+import { getTranscontinentalInfo } from "./countryData";
 import {
   COUNTRY_QUALIFIER_MAP,
   SUPPORTED_QUALIFIERS,
-  type CountryQualifierKey,
-  type CountryQualifierConfig,
 } from "../constants/qualifierConfig";
-import { timezoneOffsets } from "@utils/timezone";
-import { getTranscontinentalInfo } from "./countryData";
-import type { Country, TranscontinentalScope } from "../types";
+import type {
+  Country,
+  CountryQualifierConfig,
+  CountryQualifierKey,
+  TranscontinentalScope,
+} from "../types";
 
 /**
  * Resolves a qualifier configuration based on a given qualifier name.
@@ -44,7 +47,7 @@ export function buildSearchString(country: Country) {
 }
 
 /**
- * Return searchable tokens for a specific country qualifier. Includes transcontinental countries when requested.
+ * Return searchable tokens for a specific country qualifier.
  * @param country - The country to extract tokens from.
  * @param key - The qualifier key to extract.
  * @param options - Additional options for token extraction.
@@ -71,7 +74,7 @@ export function getQualifierTokens(
     : false;
   const vIso = visitContext?.visitedIsoCodes;
 
-  // Handle special cases for region/subregion with transcontinental inclusion, sovereign status, and visit-related properties
+  // Handle special cases for certain qualifiers that require custom token extraction logic
   if (key === "region" || key === "subregion") {
     const tokens: string[] = [];
     const val = country[key];

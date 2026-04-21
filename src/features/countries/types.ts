@@ -19,6 +19,8 @@ export type Country = {
   capital?: string;
   /** The languages spoken in the country. */
   languages?: string[];
+  /** The area of the country in square kilometers. */
+  area?: number;
   /** The population of the country. */
   population?: number;
   /** The currency used in the country. */
@@ -31,6 +33,8 @@ export type Country = {
   drivingSide?: "Left" | "Right" | undefined;
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
+  /** The geographic type of the country. */
+  geoType?: GeoType;
   /** Alternative names or abbreviations for the country. */
   aliases?: string[];
 };
@@ -71,12 +75,29 @@ export type SovereigntyType =
   | "Disputed"
   | "Unknown";
 
+/** Geographic types for countries. */
+export type GeoType = "Coastal" | "Landlocked" | "Island";
+
 /** Represents a list of countries. */
 export type CountryList = {
   id: string;
   name: string;
   countryCodes: string[];
   layerId?: string | null;
+};
+
+/** Represents a key for a country qualifier search. */
+export type CountryQualifierKey =
+  | keyof Country
+  | "sovereign"
+  | "visited"
+  | "tc";
+
+/** Configuration for a country qualifier search. */
+export type CountryQualifierConfig = {
+  key: CountryQualifierKey;
+  label?: string;
+  type?: "string" | "number" | "date";
 };
 
 /** Modifier configuration for country filtering. */

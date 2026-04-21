@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-21
+
+- **[chore]** **Countries:** Added area and geotype data
+- **[chore]** **Dashboard:** Updated criteria logic and matched it with qualifier logic
+- **[chore]** **General:** Added ~ operator for qualifier search
+
 ## 2026-04-14
 
 - **[chore]** **Countries:** Updated country information display

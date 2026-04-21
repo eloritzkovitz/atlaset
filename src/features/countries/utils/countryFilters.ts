@@ -143,8 +143,8 @@ export function filterCountriesByQualifier(
   const tcOption = parseTCOption(mods.tc);
   const searchValue = value.toLowerCase();
 
-  // Handle numeric comparison for population qualifier
-  if (key === "population") {
+  // Handle numeric comparison for number type qualifiers
+  if (key === "area" || key === "population") {
     const comp = parseComparator(String(value).replace(/,/g, ""));
     if (comp) {
       return countries.filter((country) => {
@@ -181,7 +181,7 @@ export function filterCountriesByQualifier(
     return getQualifierTokens(country, key, {
       tcOption,
       dst: mods.dst,
-      visitContext,      
+      visitContext,
     }).some((t) => {
       if (typeof t !== "string") return false;
       return matchesToken(t, searchValue, { match: mods.match });

@@ -671,7 +671,7 @@ describe("countryFilters utils", () => {
       expect(res.map((c) => c.isoCode)).toContain("GP");
     });
 
-    it("filters by population numeric comparators", () => {
+    it("filters by number type numeric comparators", () => {
       const popCountries = [countries[1], countries[2], countries[5]];
 
       const gt = filterCountriesByQualifier(
@@ -694,6 +694,23 @@ describe("countryFilters utils", () => {
         "<2000",
       );
       expect(lt).toEqual([popCountries[0]]);
+
+      const res = filterCountriesByQualifier(
+        popCountries as any,
+        "population",
+        "~12600",
+      );
+      expect(res).toEqual([popCountries[2]]);
+    });
+
+    it("filters by area approx (~)", () => {
+      const areaCountries = [countries[0], countries[2], countries[4]];
+      const res = filterCountriesByQualifier(
+        areaCountries as any,
+        "area",
+        "~357000",
+      );
+      expect(res).toEqual([areaCountries[1]]);
     });
   });
 

@@ -1,8 +1,5 @@
-import { createSovereigntyFilter, type Country } from "@features/countries";
-import {
-  getAchievementCountries,
-  getCountryCriteriaFilters,
-} from "./achievements";
+import type { Country } from "@features/countries";
+import { getAchievementCountries } from "./achievements";
 import type { Achievement, Criteria } from "../types";
 
 /**
@@ -34,12 +31,20 @@ export function getDisplayFlagCountries(
   const isTripBased = [
     "trip_countries_count",
     "local_trips_count",
-    "abroad_countries_count",
     "abroad_trips_count",
-    "repeat_visits_count",
     "trip_duration_days",
   ].some((key) => (displayCriteria as Record<string, unknown>)[key]);
   if (isTripBased) return [];
+
+  // For non-country criteria, do not show countries
+  if ((displayCriteria as Record<string, unknown>).visited) return [];
+  if ((displayCriteria as Record<string, unknown>).regions) return [];
+  if (
+    (displayCriteria as Record<string, unknown>).count &&
+    !displayCriteria.countries &&
+    !displayCriteria.regions
+  )
+    return [];
 
   // If achievement has explicit countries or display criteria includes countries, use those
   const displayCountries = displayCriteria.countries;
@@ -60,12 +65,10 @@ export function getDisplayFlagCountries(
   }
 
   // If no explicit countries, use criteria-based filters
-  const filterMap = getCountryCriteriaFilters(displayCriteria);
-  const sovereigntyFilter = createSovereigntyFilter(true);
-  for (const key of Object.keys(filterMap)) {
-    if (displayCriteria[key as keyof Criteria]) {
-      return countries.filter((c) => filterMap[key](c) && sovereigntyFilter(c));
-    }
+  const tempAch: Achievement = { ...achievement, criteria: displayCriteria };
+  let achCountries = getAchievementCountries(tempAch, countries);
+  if (typeof tierCount === "number" && achievement.countries) {
+    achCountries = achCountries.slice(0, tierCount);
   }
-  return [];
+  return achCountries;
 }

@@ -101,4 +101,21 @@ describe("compareNumeric", () => {
     expect(compareNumeric("<=", 6, 5)).toBe(false);
     expect(compareNumeric("=", 8, 9)).toBe(false);
   });
+
+  it("handles approximate comparisons with `~`", () => {
+    expect(compareNumeric("~", 103, 100)).toBe(true);
+    expect(compareNumeric("~", 100, 95)).toBe(true);
+    expect(compareNumeric("~", 95, 100)).toBe(true);
+    expect(compareNumeric("~", 106, 100)).toBe(false);
+  });
+
+  it("respects a custom tolerance parameter for `~`", () => {
+    expect(compareNumeric("~", 106, 100, 0.06)).toBe(true);
+    expect(compareNumeric("~", 104, 100, 0.03)).toBe(false);
+  });
+
+  it("handles `b === 0` for approximate comparisons", () => {
+    expect(compareNumeric("~", 0.03, 0)).toBe(true);
+    expect(compareNumeric("~", 0.1, 0)).toBe(false);
+  });
 });

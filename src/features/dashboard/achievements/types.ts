@@ -1,27 +1,46 @@
-import type { Country } from "@features/countries";
+import type { CountryQualifierKey } from "@features/countries";
 
-/** Represents the criteria for an achievement. */
-export interface Criteria {
-  [key: string]: unknown;
+/** Primitive criterion value types used for country matching. */
+export type CountryCriterionValue =
+  | string
+  | number
+  | boolean
+  | string[]
+  | number[]
+  | Record<string, unknown>;
+
+/** Represents country-related criteria for achievements. */
+export type CountryCriteria = Partial<
+  Record<CountryQualifierKey, CountryCriterionValue>
+>;
+
+/** Represents geographic-related criteria for achievements. */
+export interface GeoCriteria {
   countries?: string[];
   regions?: string[];
-  region?: string;
-  subregion?: string;
-  sovereign_only?: boolean;
-  currency?: string;
-  languages?: string[];
-  count?: number;
-  min_regions?: number;
-  tier?: number;
+}
+
+/** Represents trip-related criteria for achievements. */
+export interface TripCriteria {
   trip_countries_count?: number;
   trip_duration_days?: number;
   local_trips_count?: number;
   abroad_trips_count?: number;
-  abroad_countries_count?: number;
-  repeat_visits_count?: number;
-  repeat_min_visits?: number;
   only_abroad?: boolean;
 }
+
+/** Represents modifier criteria that can be applied to achievements. */
+export interface ModifierCriteria {
+  tier?: number;
+  required?: number;
+}
+
+/** Represents the criteria for an achievement. */
+export type Criteria = CountryCriteria &
+  GeoCriteria &
+  TripCriteria &
+  ModifierCriteria &
+  Record<string, unknown>;
 
 /** Represents a tier within an achievement. */
 export interface Tier {
@@ -48,18 +67,3 @@ export interface Achievement {
 
 /** Represents the status of an achievement. */
 export type AchievementStatus = "locked" | "progress" | "completed";
-
-/** Represents the keys for country criteria filters. */
-export type CountryCriteriaKey =
-  | "countries"
-  | "region"
-  | "subregion"
-  | "currency"
-  | "languages";
-
-/** Represents a map of country criteria filters. */
-export type CountryCriteriaFilterMap = {
-  [K in CountryCriteriaKey]: (c: Country) => boolean;
-} & {
-  [key: string]: (c: Country) => boolean;
-};

@@ -58,6 +58,10 @@ export function CountryInfoTable({
           </td>
         </tr>
         <tr>
+          <td className="font-semibold">Area:</td>
+          <td>{country.area?.toLocaleString()} km²</td>
+        </tr>
+        <tr>
           <td className="font-semibold">Population:</td>
           <td>{country.population?.toLocaleString()}</td>
         </tr>

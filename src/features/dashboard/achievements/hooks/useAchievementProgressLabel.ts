@@ -16,7 +16,7 @@ import type { Achievement } from "../types";
 export function useAchievementProgressLabel(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean }, 
+  visited: { isCountryVisited: (iso: string) => boolean },
   achievementStatusMap?: Record<string, boolean>,
 ) {
   return useMemo(() => {
@@ -35,30 +35,8 @@ export function useAchievementProgressLabel(
       return `${completedCount}/${achievement.requires.length}`;
     }
 
-    // Country-based achievements
-    if (criteria.regions && Array.isArray(criteria.regions)) {
-      const completedCount = criteria.regions.filter((region: string) => {
-        const countriesInRegion = countries.filter((c) => c.region === region);
-        return countriesInRegion.some((c) =>
-          visited.isCountryVisited(c.isoCode),
-        );
-      }).length;
-      const minRequired = criteria.min_regions || criteria.regions.length;
-      return `${completedCount}/${minRequired}`;
-    }
-
-    // Trip-based achievements - local or abroad countries count
-    if (criteria.local_trips_count || criteria.abroad_countries_count) {
-      return String(getProgress(achievement, countries, visited));
-    }
-
     // Criterias that do not have a progress label
-    if (
-      criteria.trip_countries_count ||
-      criteria.trip_duration_days ||
-      criteria.abroad_trips_count ||
-      criteria.repeat_visits_count
-    ) {
+    if (achievement.type === "trips") {
       return "";
     }
 
