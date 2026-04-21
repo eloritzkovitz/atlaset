@@ -47,7 +47,7 @@ export function buildSearchString(country: Country) {
 }
 
 /**
- * Return searchable tokens for a specific country qualifier. Includes transcontinental countries when requested.
+ * Return searchable tokens for a specific country qualifier.
  * @param country - The country to extract tokens from.
  * @param key - The qualifier key to extract.
  * @param options - Additional options for token extraction.
@@ -74,7 +74,7 @@ export function getQualifierTokens(
     : false;
   const vIso = visitContext?.visitedIsoCodes;
 
-  // Handle special cases for region/subregion with transcontinental inclusion, sovereign status, and visit-related properties
+  // Handle special cases for certain qualifiers that require custom token extraction logic
   if (key === "region" || key === "subregion") {
     const tokens: string[] = [];
     const val = country[key];
