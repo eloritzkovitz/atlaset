@@ -134,6 +134,25 @@ export function CountriesPanel({
     resetFilters,
   } = useCountryFilters();
 
+  // Keep selectedVisited/selectedSovereignty consistent when toggles change
+  useEffect(() => {
+    if (showVisitedOnly && selectedVisited !== "visited") {
+      setSelectedVisited("visited");
+    }
+    if (!showVisitedOnly && selectedVisited === "visited") {
+      setSelectedVisited("any");
+    }
+  }, [showVisitedOnly, selectedVisited, setSelectedVisited]);
+
+  useEffect(() => {
+    if (sovereignOnly && selectedSovereignty !== "Sovereign") {
+      setSelectedSovereignty("Sovereign");
+    }
+    if (!sovereignOnly && selectedSovereignty === "Sovereign") {
+      setSelectedSovereignty("");
+    }
+  }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
+
   // Compute filtered iso codes for custom list counts
   const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
   const customListOptions = countryLists.map((list) => ({
@@ -265,8 +284,10 @@ export function CountriesPanel({
           setSelectedGeoType={setSelectedGeoType}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
+          sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
           setSelectedVisited={setSelectedVisited}
+          visitedOnly={showVisitedOnly}
           minVisitCount={minVisitCount}
           setMinVisitCount={setMinVisitCount}
           maxVisitCount={maxVisitCount}

@@ -24,8 +24,10 @@ interface CountryFiltersPanelProps {
   setSelectedGeoType: (geoType: GeoType | "") => void;
   selectedSovereignty: SovereigntyType | "";
   setSelectedSovereignty: (type: SovereigntyType | "") => void;
+  sovereignOnly: boolean;
   selectedVisited: VisitedStatus;
   setSelectedVisited: (visited: VisitedStatus) => void;
+  visitedOnly: boolean;
   minVisitCount: number;
   setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
   maxVisitCount: number | undefined;
@@ -45,8 +47,10 @@ export function CountryFiltersPanel({
   setSelectedGeoType,
   selectedSovereignty,
   setSelectedSovereignty,
+  sovereignOnly,
   selectedVisited,
   setSelectedVisited,
+  visitedOnly,
   minVisitCount,
   setMinVisitCount,
   maxVisitCount,
@@ -142,8 +146,10 @@ export function CountryFiltersPanel({
           setSelectedSubregion={setSelectedSubregion}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
+          sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
-          setSelectedVisited={setSelectedVisited}
+          setSelectedVisited={setSelectedVisited}          
+          visitedOnly={visitedOnly}
           subregionOptions={subregionOptions}
           geoTypeOptions={geoTypeOptions}
           sovereigntyOptions={sovereigntyOptions}
