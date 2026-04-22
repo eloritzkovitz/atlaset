@@ -118,7 +118,8 @@ export type CountryFilterOptions = {
   search?: string;
   selectedRegion?: string;
   selectedSubregion?: string;
-  selectedSovereignty?: SovereigntyType | "";
+  selectedGeoType?: GeoType | "";
+  selectedSovereignty?: SovereigntyType | "";  
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
   modifiers?: CountryModifiers;

@@ -15,6 +15,7 @@ export const mockCountries: Country[] = [
     timezones: ["Europe/Paris"],
     callingCode: "+33",
     sovereigntyType: "Sovereign" as SovereigntyType,
+    geoType: "Coastal",
   },
   {
     name: "Guadeloupe",
@@ -29,6 +30,7 @@ export const mockCountries: Country[] = [
     timezones: ["America/Guadeloupe"],
     callingCode: "+590",
     sovereigntyType: "Dependency" as SovereigntyType,
+    geoType: "Island",
   },
   {
     name: "Germany",
@@ -43,6 +45,7 @@ export const mockCountries: Country[] = [
     timezones: ["Europe/Berlin"],
     callingCode: "+49",
     sovereigntyType: "Sovereign" as SovereigntyType,
+    geoType: "Landlocked",
   },
   {
     name: "Canada",
@@ -55,6 +58,7 @@ export const mockCountries: Country[] = [
     timezones: ["America/Toronto"],
     callingCode: "+1",
     sovereigntyType: "Sovereign" as SovereigntyType,
+    geoType: "Coastal",
   },
   {
     name: "United States",
@@ -72,6 +76,7 @@ export const mockCountries: Country[] = [
     timezones: ["America/New_York"],
     callingCode: "+1",
     sovereigntyType: "Sovereign" as SovereigntyType,
+    geoType: "Coastal",
     aliases: ["USA", "US", "United States of America"],
   },
   {
@@ -85,5 +90,6 @@ export const mockCountries: Country[] = [
     timezones: ["Asia/Tokyo"],
     callingCode: "+81",
     sovereigntyType: "Sovereign" as SovereigntyType,
+    geoType: "Island",
   },
 ];

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-22
+
+- **[chore]** **Countries:** Added sort options for area and population
+- **[chore]** **Countries:** Added geographic type to core filters
+- **[bugfix]** **Countries:** Updated filtering logic and control when moving between lists
+
 ## 2026-04-21
 
 - **[chore]** **Countries:** Added area and geotype data

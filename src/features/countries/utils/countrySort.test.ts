@@ -1,27 +1,27 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import { mockTrips } from "@test-utils/mockTrips";
 import { getCountrySortOptions, sortCountries } from "./countrySort";
-import { getVisitedCountriesUpToYear, buildVisitContext } from "@features/visits/utils/visits";
+import {
+  getVisitedCountriesUpToYear,
+  buildVisitContext,
+} from "@features/visits/utils/visits";
 import type { Country, SovereigntyType } from "../types";
 
 describe("countrySort utils", () => {
   const countries = mockCountries;
 
-  function getSortedNames(asc = true) {
+  function getSortedByField(field: keyof Country, asc = true) {
     return [...countries]
-      .sort((a, b) =>
-        asc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name),
-      )
-      .map((c) => c.name);
-  }
-
-  function getSortedIsoCodes(asc = true) {
-    return [...countries]
-      .sort((a, b) =>
-        asc
-          ? (a.isoCode || "").localeCompare(b.isoCode || "")
-          : (b.isoCode || "").localeCompare(a.isoCode || ""),
-      )
+      .sort((a, b) => {
+        const av = (a as any)[field];
+        const bv = (b as any)[field];
+        if (typeof av === "string" || typeof bv === "string") {
+          return asc
+            ? String(av || "").localeCompare(String(bv || ""))
+            : String(bv || "").localeCompare(String(av || ""));
+        }
+        return asc ? (av ?? 0) - (bv ?? 0) : (bv ?? 0) - (av ?? 0);
+      })
       .map((c) => c.isoCode);
   }
 
@@ -41,24 +41,42 @@ describe("countrySort utils", () => {
     }
   }
 
-  it("sorts by name ascending", () => {
-    const sorted = sortCountries(countries, "name-asc", buildVisitContext(mockTrips));
-    expect(sorted.map((c) => c.name)).toEqual(getSortedNames(true));
-  });
+  const simpleCases: Array<{
+    key: keyof Country;
+    valuesAreNames?: boolean;
+  }> = [
+    { key: "name", valuesAreNames: true },
+    { key: "isoCode", valuesAreNames: true },
+    { key: "area" },
+    { key: "population" },
+  ];
 
-  it("sorts by name descending", () => {
-    const sorted = sortCountries(countries, "name-desc", buildVisitContext(mockTrips));
-    expect(sorted.map((c) => c.name)).toEqual(getSortedNames(false));
-  });
+  simpleCases.forEach(({ key, valuesAreNames }) => {
+    ["asc", "desc"].forEach((dir) => {
+      const asc = dir === "asc";
+      it(`sorts by ${String(key)} ${asc ? "ascending" : "descending"}`, () => {
+        const sorted = sortCountries(
+          countries,
+          `${String(key)}-${dir}` as any,
+          buildVisitContext(mockTrips),
+        );
+        if (valuesAreNames) {
+          const expected = [...countries]
+            .sort((a, b) => {
+              const av = String((a as any)[key] || "");
+              const bv = String((b as any)[key] || "");
+              return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+            })
+            .map((c) => (c as any)[key]);
 
-  it("sorts by iso ascending", () => {
-    const sorted = sortCountries(countries, "isoCode-asc", buildVisitContext(mockTrips));
-    expect(sorted.map((c) => c.isoCode)).toEqual(getSortedIsoCodes(true));
-  });
-
-  it("sorts by iso descending", () => {
-    const sorted = sortCountries(countries, "isoCode-desc", buildVisitContext(mockTrips));
-    expect(sorted.map((c) => c.isoCode)).toEqual(getSortedIsoCodes(false));
+          expect(sorted.map((c) => (c as any)[key])).toEqual(expected);
+        } else {
+          expect(sorted.map((c) => c.isoCode)).toEqual(
+            getSortedByField(key, asc),
+          );
+        }
+      });
+    });
   });
 
   it("handles missing isoCode when sorting", () => {
@@ -82,13 +100,89 @@ describe("countrySort utils", () => {
       },
     ] as unknown as Country[];
 
-    const sorted = sortCountries(arr, "isoCode-asc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      arr,
+      "isoCode-asc",
+      buildVisitContext(mockTrips),
+    );
     expect(sorted.length).toBe(2);
     expect(sorted[0].name).toBe("NoISO");
   });
 
+  it("treats missing area as 0 when sorting", () => {
+    const arr: Country[] = [
+      {
+        name: "NoArea",
+        isoCode: "AA",
+        region: "X",
+        subregion: "Y",
+        sovereigntyType: "Sovereign" as SovereigntyType,
+        callingCode: "+0",
+        iso3Code: "NOA",
+      },
+      {
+        name: "HasArea",
+        isoCode: "BB",
+        area: 10,
+        region: "X",
+        subregion: "Y",
+        sovereigntyType: "Sovereign" as SovereigntyType,
+        callingCode: "+0",
+        iso3Code: "HAF",
+      },
+    ];
+
+    const asc = sortCountries(arr, "area-asc", buildVisitContext(mockTrips));
+    expect(asc.map((c) => c.isoCode)).toEqual(["AA", "BB"]);
+
+    const desc = sortCountries(arr, "area-desc", buildVisitContext(mockTrips));
+    expect(desc.map((c) => c.isoCode)).toEqual(["BB", "AA"]);
+  });
+
+  it("treats missing population as 0 when sorting", () => {
+    const arr: Country[] = [
+      {
+        name: "NoPop",
+        isoCode: "CC",
+        region: "X",
+        subregion: "Y",
+        sovereigntyType: "Sovereign" as SovereigntyType,
+        callingCode: "+0",
+        iso3Code: "NOP",
+      },
+      {
+        name: "HasPop",
+        isoCode: "DD",
+        population: 100,
+        region: "X",
+        subregion: "Y",
+        sovereigntyType: "Sovereign" as SovereigntyType,
+        callingCode: "+0",
+        iso3Code: "HAP",
+      },
+    ];
+
+    const asc = sortCountries(
+      arr,
+      "population-asc",
+      buildVisitContext(mockTrips),
+    );
+    expect(asc.map((c) => c.isoCode)).toEqual(["CC", "DD"]);
+
+    const desc = sortCountries(
+      arr,
+      "population-desc",
+      buildVisitContext(mockTrips),
+    );
+    expect(desc.map((c) => c.isoCode)).toEqual(["DD", "CC"]);
+  });
+
   it("sorts by first visit ascending", () => {
-    const sorted = sortCountries(countries, "firstVisit-asc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      countries,
+      "firstVisit-asc",
+      buildVisitContext(mockTrips),
+    );
     expect(sorted.map((c) => c.isoCode)).toEqual([
       "GP",
       "CA",
@@ -100,7 +194,11 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by visit count descending", () => {
-    const sorted = sortCountries(countries, "visitCount-desc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      countries,
+      "visitCount-desc",
+      buildVisitContext(mockTrips),
+    );
     const counts = getCounts(mockTrips);
     const sortedCounts = sorted.map((c) => counts[c.isoCode] ?? 0);
     assertNonIncreasing(sortedCounts);
@@ -110,7 +208,11 @@ describe("countrySort utils", () => {
   });
 
   it("sorts by visit count ascending", () => {
-    const sorted = sortCountries(countries, "visitCount-asc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      countries,
+      "visitCount-asc",
+      buildVisitContext(mockTrips),
+    );
     const counts = getCounts(mockTrips);
     const sortedCounts = sorted.map((c) => counts[c.isoCode] ?? 0);
     assertNonDecreasing(sortedCounts);
@@ -160,24 +262,40 @@ describe("countrySort utils", () => {
       },
     ];
 
-    const sorted = sortCountries(arr, "visitCount-desc", buildVisitContext(trips as any));
+    const sorted = sortCountries(
+      arr,
+      "visitCount-desc",
+      buildVisitContext(trips as any),
+    );
     expect(sorted[0].isoCode).toBe("AA");
   });
 
   it("sorts by first visit descending", () => {
-    const sorted = sortCountries(countries, "firstVisit-desc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      countries,
+      "firstVisit-desc",
+      buildVisitContext(mockTrips),
+    );
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
 
   it("sorts by last visit ascending", () => {
-    const sorted = sortCountries(countries, "lastVisit-asc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      countries,
+      "lastVisit-asc",
+      buildVisitContext(mockTrips),
+    );
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
 
   it("sorts by last visit descending", () => {
-    const sorted = sortCountries(countries, "lastVisit-desc", buildVisitContext(mockTrips));
+    const sorted = sortCountries(
+      countries,
+      "lastVisit-desc",
+      buildVisitContext(mockTrips),
+    );
     expect(sorted.length).toBe(countries.length);
     expect(sorted[0].isoCode).toBeDefined();
   });
@@ -203,7 +321,7 @@ describe("countrySort utils", () => {
         iso3Code: "BBB",
       },
     ];
-    // @ts-expect-error purposely passing an invalid sortBy
+    // @ts-expect-error
     const result = sortCountries(arr, "not-a-sort", buildVisitContext(mockTrips));
     expect(result).toEqual(arr);
   });
@@ -215,6 +333,8 @@ describe("countrySort utils", () => {
       expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
         "name",
         "isoCode",
+        "area",
+        "population",
       ]);
     });
 
@@ -224,6 +344,8 @@ describe("countrySort utils", () => {
       expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
         "name",
         "isoCode",
+        "area",
+        "population",
         "visitCount",
         "firstVisit",
         "lastVisit",

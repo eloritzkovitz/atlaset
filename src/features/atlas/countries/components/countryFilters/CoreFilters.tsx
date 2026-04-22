@@ -1,6 +1,10 @@
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { useCountryData, type SovereigntyType } from "@features/countries";
+import {
+  useCountryData,
+  type GeoType,
+  type SovereigntyType,
+} from "@features/countries";
 import type { VisitedStatus } from "@features/visits";
 import { coreFiltersConfig } from "../../config/filtersConfig";
 
@@ -11,11 +15,16 @@ interface CoreFiltersProps {
   handleRegionChange: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
+  selectedGeoType: GeoType | "";
+  setSelectedGeoType: (type: GeoType | "") => void;
   selectedSovereignty: SovereigntyType | "";
   setSelectedSovereignty: (type: SovereigntyType | "") => void;
+  sovereignOnly: boolean;
   selectedVisited: VisitedStatus;
   setSelectedVisited: (visited: VisitedStatus) => void;
+  visitedOnly: boolean;
   subregionOptions: string[];
+  geoTypeOptions: GeoType[];
   sovereigntyOptions: string[];
 }
 
@@ -26,11 +35,16 @@ export function CoreFilters({
   handleRegionChange,
   selectedSubregion,
   setSelectedSubregion,
+  selectedGeoType,
+  setSelectedGeoType,
   selectedSovereignty,
   setSelectedSovereignty,
+  sovereignOnly,
   selectedVisited,
   setSelectedVisited,
+  visitedOnly,
   subregionOptions,
+  geoTypeOptions,
   sovereigntyOptions,
 }: CoreFiltersProps) {
   const { allRegions } = useCountryData();
@@ -55,6 +69,10 @@ export function CoreFilters({
               value = selectedSubregion;
               setValue = setSelectedSubregion;
               options = filter.getOptions(subregionOptions);
+            } else if (filter.key === "geoType") {
+              value = selectedGeoType;
+              setValue = setSelectedGeoType;
+              options = filter.getOptions(geoTypeOptions);
             } else if (filter.key === "sovereignty") {
               value = selectedSovereignty;
               setValue = setSelectedSovereignty;
@@ -64,7 +82,14 @@ export function CoreFilters({
               setValue = setSelectedVisited;
               options = filter.getOptions();
             }
-            const selectValue = value === "" ? "all" : value;
+
+            const disabled =
+              (filter.key === "sovereignty" && sovereignOnly) ||
+              (filter.key === "visited" && visitedOnly);
+
+            const selectValue =
+              value === "" || value === undefined ? "all" : String(value);
+
             return setValue ? (
               <SelectInput
                 key={filter.key}
@@ -74,8 +99,12 @@ export function CoreFilters({
                     : filter.label
                 }
                 value={selectValue ?? "all"}
-                onChange={(val) => setValue(val === "all" ? "" : String(val))}
+                onChange={(val) => {
+                  if (disabled) return;
+                  setValue(val === "all" ? "" : String(val));
+                }}
                 options={options ?? []}
+                disabled={disabled}
               />
             ) : null;
           })}

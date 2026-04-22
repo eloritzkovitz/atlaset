@@ -1,5 +1,5 @@
 import type { Layer } from "@features/atlas/layers";
-import { type SovereigntyType } from "@features/countries";
+import { type GeoType, type SovereigntyType } from "@features/countries";
 import type { FilterConfig, FilterOption } from "@types";
 import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
@@ -18,6 +18,7 @@ export const SOVEREIGNTY_ORDER: SovereigntyType[] = [
 export type CountryFilterKey =
   | "region"
   | "subregion"
+  | "geoType"
   | "sovereignty"
   | "visited"
   | "layer";
@@ -37,6 +38,8 @@ interface CountryFilterProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
+  selectedGeoType: GeoType | "";
+  setSelectedGeoType: (geoType: GeoType | "") => void;
   selectedSovereignty: string;
   setSelectedSovereignty: (sovereignty: string) => void;
   selectedVisited: string;
@@ -70,8 +73,23 @@ export const coreFiltersConfig: CountryFilterConfig<
     (props, val) => props.setSelectedSubregion(val === "all" ? "" : val),
   ),
   createSelectFilter(
+    "geoType",
+    "Geographic Type",
+    (options) => [
+      allOption,
+      ...mapOptions(
+        (["Coastal", "Landlocked", "Island"] as GeoType[]).filter((type) =>
+          (options as GeoType[] | undefined)?.includes(type),
+        ),
+        capitalize,
+      ),
+    ],
+    (props) => (props.selectedGeoType === "" ? "all" : props.selectedGeoType),
+      (props, val) => props.setSelectedGeoType(val === "all" ? "" : (val as GeoType)),
+  ),
+  createSelectFilter(
     "sovereignty",
-    "Sovereignty",
+    "Sovereignty Type",
     (options) => [
       allOption,
       ...mapOptions(
@@ -87,7 +105,7 @@ export const coreFiltersConfig: CountryFilterConfig<
   ),
   {
     key: "visited",
-    label: "Visited Status",
+    label: "Visit Status",
     type: "select",
     getOptions: () => [
       { value: "any", label: "All" },

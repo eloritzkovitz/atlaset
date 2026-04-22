@@ -1,5 +1,5 @@
 import { mockCountries } from "@test-utils/mockCountries";
-import type { Country, SovereigntyType } from "../types";
+import type { Country, GeoType, SovereigntyType } from "../types";
 import {
   getCountryIsoCode,
   getCountryByIsoCode,
@@ -13,6 +13,7 @@ import {
   getRandomCountry,
   getTranscontinentalInfo,
   getCountryRelations,
+  getAllGeoTypes,
 } from "./countryData";
 
 vi.mock("../constants/countryRelations", () => ({
@@ -161,6 +162,24 @@ describe("countryData utils", () => {
       expect(
         getSubregionsForRegion(testCountries as Country[], "Europe"),
       ).toEqual(["Western Europe"]);
+    });
+  });
+
+  describe("getAllGeoTypes", () => {
+    it("returns unique, sorted geo types", () => {
+      const expected = Array.from(
+        new Set(countries.map((c) => c.geoType).filter(Boolean) as GeoType[]),
+      ).sort();
+      expect(getAllGeoTypes(countries)).toEqual(expected);
+    });
+    
+    it("skips undefined geo types", () => {
+      const testCountries = [
+        { geoType: "Country" as GeoType },
+        { geoType: undefined },
+        {},
+      ] as Partial<Country>[];
+      expect(getAllGeoTypes(testCountries as Country[])).toEqual(["Country"]);
     });
   });
 

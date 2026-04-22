@@ -70,6 +70,16 @@ describe("countryFilters utils", () => {
         expected: [countries[0], countries[2]],
       },
       {
+        name: "filters by geoType (island)",
+        opts: { selectedGeoType: "Island" },
+        expected: [countries[1], countries[5]],
+      },
+      {
+        name: "filters by geoType (landlocked)",
+        opts: { selectedGeoType: "Landlocked" },
+        expected: [countries[2]],
+      },
+      {
         name: "filters by search and region together",
         opts: { search: "germany", selectedRegion: "Europe" },
         expected: [countries[2]],

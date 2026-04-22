@@ -113,6 +113,8 @@ export function CountriesPanel({
     setSelectedRegion,
     selectedSubregion,
     setSelectedSubregion,
+    selectedGeoType,
+    setSelectedGeoType,
     selectedSovereignty,
     setSelectedSovereignty,
     selectedVisited,
@@ -131,6 +133,25 @@ export function CountriesPanel({
     setMaxVisitCount,
     resetFilters,
   } = useCountryFilters();
+
+  // Keep selectedVisited/selectedSovereignty consistent when toggles change
+  useEffect(() => {
+    if (showVisitedOnly && selectedVisited !== "visited") {
+      setSelectedVisited("visited");
+    }
+    if (!showVisitedOnly && selectedVisited === "visited") {
+      setSelectedVisited("any");
+    }
+  }, [showVisitedOnly, selectedVisited, setSelectedVisited]);
+
+  useEffect(() => {
+    if (sovereignOnly && selectedSovereignty !== "Sovereign") {
+      setSelectedSovereignty("Sovereign");
+    }
+    if (!sovereignOnly && selectedSovereignty === "Sovereign") {
+      setSelectedSovereignty("");
+    }
+  }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
 
   // Compute filtered iso codes for custom list counts
   const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
@@ -259,10 +280,14 @@ export function CountriesPanel({
           setSelectedRegion={setSelectedRegion}
           selectedSubregion={selectedSubregion}
           setSelectedSubregion={setSelectedSubregion}
+          selectedGeoType={selectedGeoType}
+          setSelectedGeoType={setSelectedGeoType}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
+          sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
           setSelectedVisited={setSelectedVisited}
+          visitedOnly={showVisitedOnly}
           minVisitCount={minVisitCount}
           setMinVisitCount={setMinVisitCount}
           maxVisitCount={maxVisitCount}

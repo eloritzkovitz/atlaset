@@ -9,6 +9,7 @@ import {
   filterCountries,
   sortCountries,
   type Country,
+  type GeoType,
 } from "@features/countries";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
@@ -98,6 +99,8 @@ export function CountrySection({
     setSelectedSubregion,
     selectedSovereignty: "",
     setSelectedSovereignty: () => {},
+    selectedGeoType: "" as GeoType | "",
+    setSelectedGeoType: (() => {}) as (v: GeoType | "") => void,
     selectedVisited: "any",
     setSelectedVisited: () => {},
   };
