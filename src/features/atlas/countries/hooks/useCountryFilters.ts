@@ -18,6 +18,7 @@ import {
   useCountryData,
   type CountryFilterOptions,
   type SovereigntyType,
+  type GeoType,
 } from "@features/countries";
 import {
   filterByVisitCount,
@@ -62,6 +63,7 @@ export function useCountryFilters() {
   // Filter states
   const [selectedRegion, setSelectedRegion] = useState<string>("");
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
+  const [selectedGeoType, setSelectedGeoType] = useState<GeoType | "">("");
   const [selectedSovereignty, setSelectedSovereignty] = useState<
     SovereigntyType | ""
   >("");
@@ -82,9 +84,16 @@ export function useCountryFilters() {
       search: debouncedSearch,
       selectedRegion,
       selectedSubregion,
+      selectedGeoType,
       selectedSovereignty,
     }),
-    [debouncedSearch, selectedRegion, selectedSubregion, selectedSovereignty],
+    [
+      debouncedSearch,
+      selectedRegion,
+      selectedSubregion,
+      selectedGeoType,
+      selectedSovereignty,
+    ],
   );
 
   // Get visit stats for visited filter and counts
@@ -186,6 +195,7 @@ export function useCountryFilters() {
   function resetCoreFilters() {
     setSelectedRegion("");
     setSelectedSubregion("");
+    setSelectedGeoType("");
     setSelectedSovereignty("");
     setSelectedVisited("any");
   }
@@ -216,6 +226,8 @@ export function useCountryFilters() {
     setSelectedRegion,
     selectedSubregion,
     setSelectedSubregion,
+    selectedGeoType,
+    setSelectedGeoType,
     selectedSovereignty,
     setSelectedSovereignty,
     selectedVisited,

@@ -59,6 +59,7 @@ export function filterCountries(
     search = "",
     selectedRegion,
     selectedSubregion,
+    selectedGeoType,
     selectedSovereignty,
     layerCountries,
   } = options;
@@ -104,6 +105,8 @@ export function filterCountries(
 
     if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
       return false;
+
+    if (selectedGeoType && country.geoType !== selectedGeoType) return false;
 
     if (
       layerCountries &&

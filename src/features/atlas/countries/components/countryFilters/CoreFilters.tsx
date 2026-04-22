@@ -1,6 +1,10 @@
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { useCountryData, type SovereigntyType } from "@features/countries";
+import {
+  useCountryData,
+  type GeoType,
+  type SovereigntyType,
+} from "@features/countries";
 import type { VisitedStatus } from "@features/visits";
 import { coreFiltersConfig } from "../../config/filtersConfig";
 
@@ -11,11 +15,14 @@ interface CoreFiltersProps {
   handleRegionChange: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
+  selectedGeoType: GeoType | "";
+  setSelectedGeoType: (type: GeoType | "") => void;
   selectedSovereignty: SovereigntyType | "";
   setSelectedSovereignty: (type: SovereigntyType | "") => void;
   selectedVisited: VisitedStatus;
   setSelectedVisited: (visited: VisitedStatus) => void;
   subregionOptions: string[];
+  geoTypeOptions: GeoType[];
   sovereigntyOptions: string[];
 }
 
@@ -26,11 +33,14 @@ export function CoreFilters({
   handleRegionChange,
   selectedSubregion,
   setSelectedSubregion,
+  selectedGeoType,
+  setSelectedGeoType,
   selectedSovereignty,
   setSelectedSovereignty,
   selectedVisited,
   setSelectedVisited,
   subregionOptions,
+  geoTypeOptions,
   sovereigntyOptions,
 }: CoreFiltersProps) {
   const { allRegions } = useCountryData();
@@ -53,8 +63,12 @@ export function CoreFilters({
               options = filter.getOptions(allRegions);
             } else if (filter.key === "subregion") {
               value = selectedSubregion;
-              setValue = setSelectedSubregion;
+              setValue = setSelectedSubregion;              
               options = filter.getOptions(subregionOptions);
+            } else if (filter.key === "geoType") {
+              value = selectedGeoType;
+              setValue = setSelectedGeoType;
+              options = filter.getOptions(geoTypeOptions);              
             } else if (filter.key === "sovereignty") {
               value = selectedSovereignty;
               setValue = setSelectedSovereignty;

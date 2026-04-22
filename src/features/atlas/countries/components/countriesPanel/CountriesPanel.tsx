@@ -113,6 +113,8 @@ export function CountriesPanel({
     setSelectedRegion,
     selectedSubregion,
     setSelectedSubregion,
+    selectedGeoType,
+    setSelectedGeoType,
     selectedSovereignty,
     setSelectedSovereignty,
     selectedVisited,
@@ -259,6 +261,8 @@ export function CountriesPanel({
           setSelectedRegion={setSelectedRegion}
           selectedSubregion={selectedSubregion}
           setSelectedSubregion={setSelectedSubregion}
+          selectedGeoType={selectedGeoType}
+          setSelectedGeoType={setSelectedGeoType}
           selectedSovereignty={selectedSovereignty}
           setSelectedSovereignty={setSelectedSovereignty}
           selectedVisited={selectedVisited}
