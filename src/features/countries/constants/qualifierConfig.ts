@@ -30,11 +30,3 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
 };
 
 export const SUPPORTED_QUALIFIERS = keysOf(COUNTRY_QUALIFIER_MAP);
-
-export const ALL_SORT_KEY_OPTIONS = [
-  { value: "name", label: "Name" },
-  { value: "isoCode", label: "ISO 3166-1 code" },
-  { value: "visitCount", label: "Visit count" },
-  { value: "firstVisit", label: "First visit time" },
-  { value: "lastVisit", label: "Last visit time" },
-];

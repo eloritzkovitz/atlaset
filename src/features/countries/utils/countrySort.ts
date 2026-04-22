@@ -5,13 +5,14 @@
 import type { VisitContext } from "@features/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
-import { ALL_SORT_KEY_OPTIONS } from "../constants/qualifierConfig";
 import type { Country } from "../types";
 
 /** Sort keys for countries. */
 export type CountrySortByKey =
   | "name"
   | "isoCode"
+  | "area"
+  | "population"
   | "visitCount"
   | "firstVisit"
   | "lastVisit";
@@ -23,10 +24,21 @@ export type CountrySortBy =
 
 /** Dropdown option for sort, with optional icon */
 export type CountrySortOption = {
-  value: CountrySortBy;
+  value: CountrySortByKey;
   label: string;
   icon?: React.ComponentType<{ size?: number }>;
+  mode: "default" | "visited";
 };
+
+export const ALL_SORT_KEY_OPTIONS: CountrySortOption[] = [
+  { value: "name", label: "Name", mode: "default" },
+  { value: "isoCode", label: "ISO 3166-1 code", mode: "default" },
+  { value: "area", label: "Area", mode: "default" },
+  { value: "population", label: "Population", mode: "default" },
+  { value: "visitCount", label: "Visit count", mode: "visited" },
+  { value: "firstVisit", label: "First visit time", mode: "visited" },
+  { value: "lastVisit", label: "Last visit time", mode: "visited" },
+];
 
 /**
  * Sorts countries based on the specified key and direction (e.g. "name-asc").
@@ -44,32 +56,19 @@ export function sortCountries(
   const asc = direction !== "desc";
   const dir = asc ? "asc" : "desc";
 
-  switch (key) {
-    case "name":
-      return sortItems(countries, (c) => normalizeString(c.name), dir);
-    case "isoCode":
-      return sortItems(countries, (c) => c.isoCode || "", dir);
-    case "visitCount":
-      return sortItems(
-        countries,
-        (c) => visitContext.visitedMap[c.isoCode] ?? 0,
-        dir,
-      );
-    case "firstVisit":
-      return sortItems(
-        countries,
-        (c) => visitContext.firstVisitMap?.[c.isoCode]?.getTime() ?? 0,
-        dir,
-      );
-    case "lastVisit":
-      return sortItems(
-        countries,
-        (c) => visitContext.lastVisitMap?.[c.isoCode]?.getTime() ?? 0,
-        dir,
-      );
-    default:
-      return countries;
-  }
+  // Define accessors for each sort key, including visit-based keys that use the visitContext
+  const accessors: Record<CountrySortByKey, (c: Country) => string | number> = {
+    name: (c) => normalizeString(c.name),
+    isoCode: (c) => c.isoCode || "",
+    area: (c) => c.area ?? 0,
+    population: (c) => c.population ?? 0,
+    visitCount: (c) => visitContext.visitedMap[c.isoCode] ?? 0,
+    firstVisit: (c) => visitContext.firstVisitMap?.[c.isoCode]?.getTime() ?? 0,
+    lastVisit: (c) => visitContext.lastVisitMap?.[c.isoCode]?.getTime() ?? 0,
+  };
+
+  const accessor = accessors[key as CountrySortByKey];
+  return accessor ? sortItems(countries, accessor, dir) : countries;
 }
 
 /**
@@ -87,9 +86,16 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
 }> {
   const keyOptions = visitedOnly
     ? ALL_SORT_KEY_OPTIONS
-    : ALL_SORT_KEY_OPTIONS.filter(
-        (opt) => opt.value === "name" || opt.value === "isoCode",
-      );
+    : ALL_SORT_KEY_OPTIONS.filter((opt) => opt.mode === "default");
 
-  return [{ label: "SORT BY", options: keyOptions }];
+  return [
+    {
+      label: "SORT BY",
+      options: keyOptions.map((o) => ({
+        value: o.value,
+        label: o.label,
+        icon: o.icon,
+      })),
+    },
+  ];
 }

@@ -28,7 +28,7 @@ Country details include the following sections:
   - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
   - Apply `layer` or `timeline` filters (depending on active `map mode`)
 - Use the `Sort` button to:
-  - Sort `countries` by `name` or `ISO 3166-1 code` and by sort direction (`ascending` or `descending`)
+  - Sort `countries` by `name`, `ISO 3166-1 code`, `area` or `population` and by sort direction (`ascending` or `descending`)
   - In `timeline` mode, you can also sort by `visit count`, `first visit time` or `last visit time`
 - Use the `View toggle` to switch between `lists`:
   - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
