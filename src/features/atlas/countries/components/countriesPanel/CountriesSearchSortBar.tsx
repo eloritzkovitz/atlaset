@@ -91,11 +91,13 @@ export function CountriesSearchSortBar({
           modifiers={SUPPORTED_MODIFIERS}
           clearable={qualifierClearable}
           lockedPrefix={
-            selectedToggle === "visited"
-              ? "visited"
-              : selectedToggle === "sovereign"
-                ? "sovereign"
-                : undefined
+            !timelineMode
+              ? selectedToggle === "visited"
+                ? "visited"
+                : selectedToggle === "sovereign"
+                  ? "sovereign"
+                  : undefined
+              : undefined
           }
           placeholder="Search countries"
           className="flex-1 h-10"
