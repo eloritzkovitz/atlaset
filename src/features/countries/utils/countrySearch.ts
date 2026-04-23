@@ -131,5 +131,6 @@ export function getQualifierTokens(
   const prop = country[key];
   if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
   if (typeof prop === "string") return [prop];
+  if (typeof prop === "boolean") return [prop ? "true" : "false"];
   return [] as string[];
 }

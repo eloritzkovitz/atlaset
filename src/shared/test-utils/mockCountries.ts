@@ -16,6 +16,7 @@ export const mockCountries: Country[] = [
     callingCode: "+33",
     sovereigntyType: "Sovereign" as SovereigntyType,
     geoType: "Coastal",
+    unMember: true,
   },
   {
     name: "Guadeloupe",
@@ -31,6 +32,7 @@ export const mockCountries: Country[] = [
     callingCode: "+590",
     sovereigntyType: "Dependency" as SovereigntyType,
     geoType: "Island",
+    unMember: false,
   },
   {
     name: "Germany",
@@ -46,6 +48,7 @@ export const mockCountries: Country[] = [
     callingCode: "+49",
     sovereigntyType: "Sovereign" as SovereigntyType,
     geoType: "Landlocked",
+    unMember: true,
   },
   {
     name: "Canada",
@@ -59,6 +62,7 @@ export const mockCountries: Country[] = [
     callingCode: "+1",
     sovereigntyType: "Sovereign" as SovereigntyType,
     geoType: "Coastal",
+    unMember: true,
   },
   {
     name: "United States",
@@ -78,6 +82,7 @@ export const mockCountries: Country[] = [
     sovereigntyType: "Sovereign" as SovereigntyType,
     geoType: "Coastal",
     aliases: ["USA", "US", "United States of America"],
+    unMember: true,
   },
   {
     name: "Japan",
@@ -91,5 +96,6 @@ export const mockCountries: Country[] = [
     callingCode: "+81",
     sovereigntyType: "Sovereign" as SovereigntyType,
     geoType: "Island",
+    unMember: true,
   },
 ];

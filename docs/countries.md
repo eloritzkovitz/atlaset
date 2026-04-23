@@ -50,6 +50,7 @@ qualifier:query modifier:query
 | `region`          | string              |              `region:asia` | Matches countries in a given region (continent)                                                             |
 | `subregion`       | string              | `subregion:southeast asia` | Matches countries in a given subregion                                                                      |
 | `tc`              | boolean / string    |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `cultural`, `other` |
+| `geotype`         | string              |           `geotype:island` | Matches geographic types. Values: `coastal`, `landlocked`, `island`                                         |
 | `capital`         | string              |            `capital:paris` | Matches capital name                                                                                        |
 | `language`        | string              |         `language:spanish` | Matches language                                                                                            |
 | `area`            | number (comparison) |               `area:~2000` | Matches area (in km²). Supports plain or comma-separated numbers                                            |
@@ -60,7 +61,7 @@ qualifier:query modifier:query
 | `drivingside`     | string              |         `drivingside:left` | Matches driving side. Values: `left`, `right`                                                               |
 | `sovereignty`     | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`  |
 | `sovereign`       | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                       |
-| `geotype`         | string              |           `geotype:island` | Matches geographic types. Values: `coastal`, `landlocked`, `island`                                         |
+| `unmember`        | boolean             |            `unmember:true` | Matches UN membership. Values: `true` / `false`                                                             |
 | `visited`         | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                         |
 
 #### **Additional Modifiers**

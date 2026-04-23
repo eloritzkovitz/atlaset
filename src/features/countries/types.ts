@@ -15,6 +15,8 @@ export type Country = {
   subregion?: string;
   /** Transcontinental information for the country. */
   transcontinental?: TranscontinentalInfo;
+  /** The geographic type of the country. */
+  geoType?: GeoType;
   /** The capital city of the country. */
   capital?: string;
   /** The languages spoken in the country. */
@@ -33,8 +35,8 @@ export type Country = {
   drivingSide?: "Left" | "Right" | undefined;
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
-  /** The geographic type of the country. */
-  geoType?: GeoType;
+  /** Whether the country is a UN member. */
+  unMember?: boolean;
   /** Alternative names or abbreviations for the country. */
   aliases?: string[];
 };
@@ -97,7 +99,7 @@ export type CountryQualifierKey =
 export type CountryQualifierConfig = {
   key: CountryQualifierKey;
   label?: string;
-  type?: "string" | "number" | "date";
+  type?: "string" | "boolean" | "number" | "date";
 };
 
 /** Modifier configuration for country filtering. */
@@ -119,7 +121,7 @@ export type CountryFilterOptions = {
   selectedRegion?: string;
   selectedSubregion?: string;
   selectedGeoType?: GeoType | "";
-  selectedSovereignty?: SovereigntyType | "";  
+  selectedSovereignty?: SovereigntyType | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
   modifiers?: CountryModifiers;
