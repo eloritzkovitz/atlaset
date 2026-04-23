@@ -61,7 +61,7 @@ export function getFlagQuizProps(difficulty?: Difficulty) {
     filterFn: getCountriesWithOwnFlag,
     checkAnswer: (guess: string, country: Country) => {
       const normalizedGuess = normalizeString(guess);
-      const validAnswers = [country.name, ...(country.aliases ?? [])].map(
+      const validAnswers = [country.name, ...(country.altNames ?? [])].map(
         normalizeString,
       );
       return validAnswers.includes(normalizedGuess);

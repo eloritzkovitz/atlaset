@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import {
-  getAliasesDisplay,
+  formatTimezones,
+  getAltNamesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
-  formatTimezones,
 } from "./countryInfo";
 
 vi.mock("@utils/timezone", () => ({
@@ -58,14 +58,14 @@ describe("getCurrencyDisplay", () => {
   });
 });
 
-describe("getAliasesDisplay", () => {
+describe("getAltNamesDisplay", () => {
   it("returns comma-separated string", () => {
-    expect(getAliasesDisplay(["USA", "America"])).toBe("USA, America");
+    expect(getAltNamesDisplay(["USA", "America"])).toBe("USA, America");
   });
 
   it("returns 'None' for empty or undefined", () => {
-    expect(getAliasesDisplay([])).toBe("None");
-    expect(getAliasesDisplay(undefined)).toBe("None");
+    expect(getAltNamesDisplay([])).toBe("None");
+    expect(getAltNamesDisplay(undefined)).toBe("None");
   });
 });
 

@@ -90,14 +90,14 @@ describe("countryFilters utils", () => {
       expect(filterCountries(countries, opts as any)).toEqual(expected);
     });
 
-    it("filters by alias in search", () => {
-      const countriesWithAlias = [
-        { ...countries[0], aliases: ["Testland"] },
+    it("filters by altNames in search", () => {
+      const countriesWithAltNames = [
+        { ...countries[0], altNames: ["Testland"] },
         ...countries.slice(1),
       ];
       expect(
-        filterCountries(countriesWithAlias, { search: "Testland" }),
-      ).toEqual([countriesWithAlias[0]]);
+        filterCountries(countriesWithAltNames, { search: "Testland" }),
+      ).toEqual([countriesWithAltNames[0]]);
     });
 
     const tcCases = [

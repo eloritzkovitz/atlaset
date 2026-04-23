@@ -48,11 +48,11 @@ export function formatTimezones(tzs?: string[]): string | string[] {
 }
 
 /**
- * Gets a formatted string of aliases.
- * @param aliases - An array of aliases.
- * @returns A comma-separated string of aliases or "None" if empty.
+ * Gets a formatted string of alternative names.
+ * @param altNames - An array of alternative names.
+ * @returns A comma-separated string of alternative names or "None" if empty.
  */
-export function getAliasesDisplay(aliases?: string[]) {
-  if (!aliases || aliases.length === 0) return "None";
-  return aliases.join(", ");
+export function getAltNamesDisplay(altNames?: string[]) {
+  if (!altNames || altNames.length === 0) return "None";
+  return altNames.join(", ");
 }

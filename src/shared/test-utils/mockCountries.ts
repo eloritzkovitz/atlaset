@@ -81,7 +81,7 @@ export const mockCountries: Country[] = [
     callingCode: "+1",
     sovereigntyType: "Sovereign" as SovereigntyType,
     geoType: "Coastal",
-    aliases: ["USA", "US", "United States of America"],
+    altNames: ["USA", "US", "United States of America"],
     unMember: true,
   },
   {

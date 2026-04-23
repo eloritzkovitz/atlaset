@@ -5,6 +5,8 @@ import type { Operator } from "@types";
 export type Country = {
   /** The official name of the country. */
   name: string;
+  /** Alternative names or abbreviations for the country. */
+  altNames?: string[];
   /** The ISO 3166-1 alpha-2 code for the country. */
   isoCode: string;
   /** The ISO 3166-1 alpha-3 code for the country. */
@@ -36,9 +38,7 @@ export type Country = {
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
   /** Whether the country is a UN member. */
-  unMember?: boolean;
-  /** Alternative names or abbreviations for the country. */
-  aliases?: string[];
+  unMember?: boolean;  
 };
 
 /** Represents an entry for a transcontinental country. */

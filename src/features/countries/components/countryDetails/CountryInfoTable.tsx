@@ -2,7 +2,7 @@ import type { Country, Currency } from "../../types";
 import { getTranscontinentalInfo } from "../../utils/countryData";
 import {
   formatTimezones,
-  getAliasesDisplay,
+  getAltNamesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
 } from "../../utils/countryInfo";
@@ -95,10 +95,10 @@ export function CountryInfoTable({
           <td className="font-semibold">ISO 3166-1 code:</td>
           <td>{country.isoCode}</td>
         </tr>
-        {country.aliases && country.aliases.length > 0 && (
+        {country.altNames && country.altNames.length > 0 && (
           <tr>
             <td className="font-semibold">Also known as:</td>
-            <td>{getAliasesDisplay(country.aliases)}</td>
+            <td>{getAltNamesDisplay(country.altNames)}</td>
           </tr>
         )}
       </tbody>
