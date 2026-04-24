@@ -17,6 +17,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   geotype: { key: "geoType", label: "Geographic type", type: "string" },
   capital: { key: "capital", label: "Capital", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
+  government: { key: "government", label: "Government type", type: "string" },
   area: { key: "area", label: "Area (km²)", type: "number" },
   population: { key: "population", label: "Population", type: "number" },
   currency: { key: "currency", label: "Currency", type: "string" },

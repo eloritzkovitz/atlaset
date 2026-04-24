@@ -58,20 +58,24 @@ export function CountryInfoTable({
           </td>
         </tr>
         <tr>
-          <td className="font-semibold">Area:</td>
-          <td>{country.area?.toLocaleString()} km²</td>
-        </tr>
-        <tr>
-          <td className="font-semibold">Population:</td>
-          <td>{country.population?.toLocaleString()}</td>
-        </tr>
-        <tr>
           <td className="font-semibold">Capital:</td>
           <td>{country.capital || "None"}</td>
         </tr>
         <tr>
           <td className="font-semibold">Languages:</td>
           <td>{getLanguagesDisplay(country.languages)}</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Government:</td>
+          <td>{country.government || "—"}</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Area:</td>
+          <td>{country.area?.toLocaleString()} km²</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Population:</td>
+          <td>{country.population?.toLocaleString()}</td>
         </tr>
         <tr>
           <td className="font-semibold">Currency:</td>

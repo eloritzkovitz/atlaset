@@ -23,6 +23,8 @@ export type Country = {
   capital?: string;
   /** The languages spoken in the country. */
   languages?: string[];
+  /** The government type of the country. */
+  government?: string;
   /** The area of the country in square kilometers. */
   area?: number;
   /** The population of the country. */
