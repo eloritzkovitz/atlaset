@@ -40,27 +40,40 @@ export function SegmentedToggle<T extends string>({
       ref={containerRef}
       className={`flex gap-2 ${wrap ? "flex-wrap" : ""} ${className}`}
     >
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          data-seg-value={opt.value}
-          aria-pressed={value === opt.value}
-          className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
-            value === opt.value
-              ? opt.colorClass || "bg-primary text-white"
-              : "bg-surface hover:bg-surface-hover"
-          }`}
-          onClick={() => onChange(opt.value)}
-          disabled={disabled}
-        >
-          {opt.label}
-          {typeof opt.count === "number" && (
-            <span className="ml-1 text-xs text-muted align-middle">
-              {opt.count}
-            </span>
-          )}
-        </button>
-      ))}
+      {options.map((opt) => {
+        const isSelected = value === opt.value;
+
+        const baseBg = opt.colorClass
+          ? opt.colorClass.split(" ").find((c) => c.startsWith("bg-"))
+          : null;
+        const hoverClass = !isSelected
+          ? baseBg
+            ? `hover:${baseBg}/50`
+            : "hover:bg-surface-hover"
+          : "";
+
+        return (
+          <button
+            key={opt.value}
+            data-seg-value={opt.value}
+            aria-pressed={isSelected}
+            className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
+              isSelected
+                ? `${opt.colorClass || "bg-primary"} text-white`
+                : `bg-surface ${hoverClass}`
+            }`}
+            onClick={() => onChange(opt.value)}
+            disabled={disabled}
+          >
+            {opt.label}
+            {typeof opt.count === "number" && (
+              <span className="ml-1 text-xs text-muted align-middle">
+                {opt.count}
+              </span>
+            )}
+          </button>
+        );
+      })}
     </div>
   );
 }
