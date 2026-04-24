@@ -77,10 +77,7 @@ export function CountryDetailsModal({
       >
         <div className="relative overflow-visible flex flex-col h-full">
           <CountryDetailsHeader
-            country={{
-              isoCode: currentCountry.isoCode,
-              name: currentCountry.name,
-            }}
+            country={currentCountry}              
             isVisited={isVisited}
             isHome={homeCountry === currentCountry.isoCode}
             centerOnCountry={centerOnCountry}

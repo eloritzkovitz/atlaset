@@ -1,14 +1,12 @@
 import { FaWikipediaW } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { PanelHeader, ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { CountryWithFlag } from "@features/countries";
+import { CountryWithFlag, type Country } from "@features/countries";
 import { VisitedStatusIndicator } from "@features/countries/components/countryDetails/VisitedStatusIndicator";
 
 interface CountryDetailsHeaderProps {
-  country: {
-    isoCode: string;
-    name: string;
-  };
+  country: Country;
   isVisited: boolean;
   isHome: boolean;
   centerOnCountry?: (isoCode: string) => void;
@@ -22,6 +20,7 @@ export function CountryDetailsHeader({
   centerOnCountry,
   onClose,
 }: CountryDetailsHeaderProps) {
+  const navigate = useNavigate();
   return (
     <PanelHeader
       title={
@@ -47,6 +46,18 @@ export function CountryDetailsHeader({
             rounded
           />
         )}
+        <ActionButton
+          onClick={() => {
+            onClose();
+            navigate(
+              `/dashboard/countries/${country.region}/${country.subregion}/${country.isoCode}`,
+            );
+          }}
+          ariaLabel="View full details"
+          title="View full details"
+          icon={<ICONS.exploration />}
+          rounded
+        />
         <ActionButton
           onClick={() =>
             window.open(
