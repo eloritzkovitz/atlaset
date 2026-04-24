@@ -62,6 +62,7 @@ qualifier:query modifier:query
 | `sovereignty`     | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`  |
 | `sovereign`       | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                       |
 | `unmember`        | boolean             |            `unmember:true` | Matches UN membership. Values: `true` / `false`                                                             |
+| `memberof`        | string              |              `memberof:eu` | Matches membership in international organizations                                                           |
 | `visited`         | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                         |
 
 #### **Additional Modifiers**

@@ -38,7 +38,9 @@ export type Country = {
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
   /** Whether the country is a UN member. */
-  unMember?: boolean;  
+  unMember?: boolean;
+  /** The organizations the country is a member of. */
+  memberOf?: string[];
 };
 
 /** Represents an entry for a transcontinental country. */

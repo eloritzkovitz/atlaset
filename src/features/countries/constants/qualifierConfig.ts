@@ -27,6 +27,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "boolean" },
   unmember: { key: "unMember", label: "UN member", type: "boolean" },
+  memberof: { key: "memberOf", label: "Member of", type: "string" },
   visited: { key: "visited", label: "Visited", type: "boolean" },
 };
 
