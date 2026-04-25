@@ -22,15 +22,12 @@ describe("countryModifiers", () => {
     expect(out.last).toEqual({ op: "<=", year: 2010 });
   });
 
-  it("normalizes match and of modifiers correctly", () => {
+  it("normalizes match modifiers correctly", () => {
     const m1 = normalizeModifiers({ match: " exact " });
     expect(m1.match).toBe("exact");
 
     const m2 = normalizeModifiers({ match: "" });
     expect(m2.match).toBeUndefined();
-
-    const of = normalizeModifiers({ of: "fr" });
-    expect(of.of).toBe("FR");
   });
 
   it("ensureModifiers returns the object fast-path when comparator objects are present", () => {
@@ -107,14 +104,11 @@ describe("countryModifiers", () => {
     expect(matchesSovereigntyOf(nw, "ZZ")).toBe(false);
   });
 
-  it("applyModifiersToCountry respects of, visited, count, year, first, and last", () => {
-    const countryA = { isoCode: "NW" } as any;
-    expect(applyModifiersToCountry(countryA, { of: "ZZ" } as any)).toBe(false);
-
-    const countryC = { isoCode: "BB" } as any;
+  it("applyModifiersToCountry respects visited, count, year, first, and last", () => {
+    const country = { isoCode: "BB" } as any;
     const ctx1 = { visitedIsoCodes: ["BB"] } as any;
     expect(
-      applyModifiersToCountry(countryC, { visited: false } as any, ctx1),
+      applyModifiersToCountry(country, { visited: false } as any, ctx1),
     ).toBe(true);
 
     const countCases: Array<{
@@ -234,7 +228,8 @@ describe("countryModifiers", () => {
 
   it("applyModifiersToCountry positive of and visited cases", () => {
     const gp = { isoCode: "GP" } as any;
-    expect(applyModifiersToCountry(gp, { of: "FR" } as any)).toBe(true);
+    // Dependency relationships are tested via matchesSovereigntyOf
+    expect(matchesSovereigntyOf(gp, "FR")).toBe(true);
 
     const z = { isoCode: "Z1" } as any;
     const ctx = { visitedIsoCodes: ["Z1"] } as any;

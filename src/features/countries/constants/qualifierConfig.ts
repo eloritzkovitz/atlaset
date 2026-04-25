@@ -26,7 +26,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   callingcode: { key: "callingCode", label: "Calling code", type: "string" },
   drivingside: { key: "drivingSide", label: "Driving side", type: "string" },
   sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
-  sovereign: { key: "sovereign", label: "Sovereign", type: "boolean" },
+  sovereign: { key: "sovereign", label: "Sovereign", type: "string" },
   unmember: { key: "unMember", label: "UN member", type: "boolean" },
   memberof: { key: "memberOf", label: "Member of", type: "string" },
   visited: { key: "visited", label: "Visited", type: "boolean" },

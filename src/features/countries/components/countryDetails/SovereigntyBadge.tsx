@@ -1,11 +1,11 @@
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
 import { useCountryData } from "../../hooks/useCountryData";
-import { getCountryName } from "../../utils/countryData";
 import type { SovereigntyType } from "../../types";
+import { getCountryName } from "../../utils/countryData";
 
 interface SovereigntyBadgeProps {
   type?: SovereigntyType;
-  sovereignIsoCode?: string;
+  sovereignState?: string;
   onSelectCountry?: (isoCode: string) => void;
 }
 
@@ -28,7 +28,7 @@ const labelPrefixes: Partial<Record<SovereigntyType, string>> = {
 
 export function SovereigntyBadge({
   type,
-  sovereignIsoCode,
+  sovereignState,
   onSelectCountry,
 }: SovereigntyBadgeProps) {
   const { countries } = useCountryData();
@@ -41,8 +41,8 @@ export function SovereigntyBadge({
   let label: React.ReactNode = type;
 
   // Add sovereign name with flag for certain types
-  if (sovereignIsoCode && labelPrefixes[type as keyof typeof labelPrefixes]) {
-    const name = getCountryName(sovereignIsoCode, countries);
+  if (sovereignState && labelPrefixes[type as keyof typeof labelPrefixes]) {
+    const name = getCountryName(sovereignState, countries);
     label = (
       <>
         {labelPrefixes[type as keyof typeof labelPrefixes]}
@@ -50,14 +50,14 @@ export function SovereigntyBadge({
           <button
             type="button"
             className="mx-[3px] inline-block align-middle hover:text-info focus:outline-none"
-            onClick={() => onSelectCountry(sovereignIsoCode)}
+            onClick={() => onSelectCountry(sovereignState)}
             tabIndex={0}
           >
-            <CountryWithFlag isoCode={sovereignIsoCode} name={name} />
+            <CountryWithFlag isoCode={sovereignState} name={name} />
           </button>
         ) : (
           <CountryWithFlag
-            isoCode={sovereignIsoCode}
+            isoCode={sovereignState}
             name={name}
             className="mx-[3px] inline-block align-middle"
           />

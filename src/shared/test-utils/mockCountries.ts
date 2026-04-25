@@ -31,6 +31,7 @@ export const mockCountries: Country[] = [
     timezones: ["America/Guadeloupe"],
     callingCode: "+590",
     sovereigntyType: "Dependency" as SovereigntyType,
+    sovereignState: "FR",
     geoType: "Island",
     unMember: false,
   },

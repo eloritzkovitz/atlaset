@@ -39,6 +39,8 @@ export type Country = {
   drivingSide?: "Left" | "Right" | undefined;
   /** The sovereignty type of the country. */
   sovereigntyType?: SovereigntyType;
+  /** The sovereign state of the country. */
+  sovereignState?: string;
   /** Whether the country is a UN member. */
   unMember?: boolean;
   /** The organizations the country is a member of. */
@@ -112,7 +114,6 @@ export type CountryModifiers = {
   tc?: string;
   tcOption?: { scope?: TranscontinentalScope; mode?: TranscontinentalMode };
   dst?: boolean | string;
-  of?: string;
   count?: { op: Operator; value: number } | undefined;
   year?: { op: Operator; year: number } | undefined;
   first?: { op: Operator; year: number } | undefined;

@@ -124,7 +124,11 @@ export function getQualifierTokens(
     return Array.from(new Set(toks)).filter(Boolean).map(String);
   }
   if (key === "sovereign") {
-    return [country.sovereigntyType === "Sovereign" ? "true" : "false"];
+    const toks: string[] = [];
+    toks.push(country.sovereigntyType === "Sovereign" ? "true" : "false");
+    const sstate = country.sovereignState || undefined;
+    if (sstate) toks.push(String(sstate).toUpperCase());
+    return toks;
   }
   if (key === "visited")
     return vIso ? [vIso.includes(country.isoCode) ? "true" : "false"] : [];

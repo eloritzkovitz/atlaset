@@ -10,7 +10,6 @@ import { matchesToken, parseQualifierSearch } from "@utils/search";
 import {
   applyModifiersToCountry,
   ensureModifiers,
-  matchesSovereigntyOf,
   matchesTranscontinental,
   parseTCOption,
 } from "./countryModifiers";
@@ -160,19 +159,8 @@ export function filterCountriesByQualifier(
     }
   }
 
-  // Handle sovereigntyType with "of" modifier for related countries
+  // Handle sovereignty type
   if (key === "sovereigntyType") {
-    const ofIso = mods?.of ? String(mods.of).toUpperCase() : undefined;
-    if (ofIso) {
-      const search = searchValue;
-      return countries.filter((c) => {
-        if (!matchesSovereigntyOf(c, ofIso)) return false;
-        if (!search) return true;
-        return (c.sovereigntyType ?? "").toLowerCase().includes(search);
-      });
-    }
-
-    // Fallback: match sovereignty type string
     return countries.filter((country) =>
       (country.sovereigntyType ?? "").toLowerCase().includes(searchValue),
     );
@@ -303,11 +291,8 @@ export function applyQualifierSearch(
     for (const [rawKey, rawVal] of Object.entries(rawMods)) {
       const key = rawKey.toLowerCase();
       if (key === parsed.qualifier.toLowerCase()) continue;
-      if (Object.prototype.hasOwnProperty.call(MODIFIER_MAP, key)) {
-        if (key === "of")
-          parsedMods.of = parsedMods.of ?? String(rawVal).toUpperCase();
-        continue;
-      }
+      // Skip known modifiers handled elsewhere
+      if (Object.prototype.hasOwnProperty.call(MODIFIER_MAP, key)) continue;
 
       const qConf = resolveQualifierConfig(key);
       if (!qConf) continue;

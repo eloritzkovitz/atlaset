@@ -131,20 +131,30 @@ describe("countryFilters utils", () => {
     test.each(tcCases)("$name", ({ opts, expected }) => {
       expect(filterCountries(countries, opts as any)).toEqual(expected);
     });
+  });
 
-    it("filters to dependencies when using modifiers.of (global)", () => {
-      const res = filterCountries(countries, {
-        modifiers: { of: "FR" },
-      } as any);
-      expect(res.map((c) => c.isoCode)).toContain("GP");
-    });
+  it("filters to dependencies when using sovereign qualifier", () => {
+    const res = filterCountries(countries, {
+      qualifiers: { sovereign: "FR" },
+    } as any);
+    expect(res.map((c) => c.isoCode)).toContain("GP");
+  });
 
-    it("returns empty array for unknown 'of' modifier (global)", () => {
-      const res = filterCountries(countries, {
-        modifiers: { of: "ZZ" },
-      } as any);
-      expect(res).toEqual([]);
-    });
+  it("returns empty array for unknown sovereign modifier", () => {
+    const res = applyQualifierSearch(
+      countries,
+      "sovereign:ZZ",
+      undefined,
+      {
+        search: "sovereign:ZZ",
+        selectedRegion: "",
+        selectedSubregion: "",
+        selectedSovereignty: "",
+        modifiers: {},
+      } as any,
+      undefined,
+    );
+    expect(res).toEqual([]);
   });
 
   describe("applyQualifierSearch wrapper", () => {
@@ -233,6 +243,45 @@ describe("countryFilters utils", () => {
       expect(res.map((c) => c.isoCode)).toContain("GP");
     });
 
+    it("sovereign qualifier supports boolean and ISO tokens", () => {
+      const baseParams = {
+        search: "",
+        selectedRegion: "",
+        selectedSubregion: "",
+        selectedSovereignty: "",
+        modifiers: {},
+      } as any;
+
+      const resTrue = applyQualifierSearch(
+        countries,
+        "sovereign:true",
+        undefined,
+        { ...baseParams, search: "sovereign:true" },
+        undefined,
+      );
+      expect(resTrue.some((c) => c.sovereigntyType === "Sovereign")).toBe(true);
+
+      const resFalse = applyQualifierSearch(
+        countries,
+        "sovereign:false",
+        undefined,
+        { ...baseParams, search: "sovereign:false" },
+        undefined,
+      );
+      expect(resFalse.some((c) => c.sovereigntyType !== "Sovereign")).toBe(
+        true,
+      );
+
+      const resIso = applyQualifierSearch(
+        countries,
+        "sovereign:FR",
+        undefined,
+        { ...baseParams, search: "sovereign:FR" },
+        undefined,
+      );
+      expect(resIso.map((c) => c.isoCode)).toContain("GP");
+    });
+
     it("applies tc modifier merged into global modifiers", () => {
       const res = applyQualifierSearch(
         countries,
@@ -261,17 +310,6 @@ describe("countryFilters utils", () => {
     it("returns empty array when selected subregion has no matches", () => {
       const res = filterCountries(countries, { selectedSubregion: "Unknown" });
       expect(res).toEqual([]);
-    });
-
-    it("sovereignty 'of' modifier with empty query returns dependencies", () => {
-      const res = filterCountriesByQualifier(
-        countries,
-        "sovereignty",
-        "",
-        undefined,
-        { of: "FR" },
-      );
-      expect(res.map((c) => c.isoCode)).toContain("GP");
     });
 
     it("ignores unknown raw modifiers when applying qualifier search", () => {
@@ -364,36 +402,6 @@ describe("countryFilters utils", () => {
         { FR: 1 },
       );
       expect(res).toEqual([countries[0]]);
-    });
-
-    it("applies modifier-only key 'of' from raw modifiers (parseQualifierSearch shim)", () => {
-      const spy = vi
-        .spyOn(searchUtils, "parseQualifierSearch")
-        .mockReturnValue({
-          qualifier: "sovereignty",
-          query: "Dependency",
-          modifiers: { of: "FR" },
-        } as any);
-
-      try {
-        const res = applyQualifierSearch(
-          countries,
-          "sovereignty:Dependency of:FR",
-          undefined,
-          {
-            search: "sovereignty:Dependency of:FR",
-            selectedRegion: "",
-            selectedSubregion: "",
-            selectedSovereignty: "",
-            modifiers: {},
-          } as any,
-          undefined,
-        );
-
-        expect(res.map((c) => c.isoCode)).toContain("GP");
-      } finally {
-        spy.mockRestore();
-      }
     });
   });
 
@@ -639,46 +647,6 @@ describe("countryFilters utils", () => {
         count: { op: ">", value: 0 },
       });
       expect(res).toEqual([countries[0]]);
-    });
-
-    it("filters dependencies of a sovereign when using of: modifier", () => {
-      const local = [
-        { name: "Anguilla", isoCode: "AI", sovereigntyType: "Dependency" },
-        { name: "United Kingdom", isoCode: "GB", sovereigntyType: "Sovereign" },
-      ];
-      const res = filterCountriesByQualifier(
-        local as any,
-        "sovereignty",
-        "Dependency",
-        undefined,
-        { of: "GB" },
-      );
-      expect(res).toEqual([local[0]]);
-    });
-
-    it("returns empty array when sovereign has no dependencies or unknown 'of'", () => {
-      const local = [
-        { name: "Nowhere", isoCode: "NW", sovereigntyType: "Dependency" },
-      ];
-      const res = filterCountriesByQualifier(
-        local as any,
-        "sovereignty",
-        "Dependency",
-        undefined,
-        { of: "ZZ" },
-      );
-      expect(res).toEqual([]);
-    });
-
-    it("includes overseas regions when using of: modifier (FR -> GP)", () => {
-      const res = filterCountriesByQualifier(
-        countries,
-        "sovereignty",
-        "Dependency",
-        undefined,
-        { of: "FR" },
-      );
-      expect(res.map((c) => c.isoCode)).toContain("GP");
     });
 
     it("filters by number type numeric comparators", () => {

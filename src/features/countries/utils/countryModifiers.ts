@@ -37,7 +37,6 @@ export function normalizeModifiers(
   if (!mods) return out;
   if (typeof mods.tc !== "undefined")
     out.tc = mods.tc as CountryModifiers["tc"];
-  if (typeof mods.of !== "undefined") out.of = String(mods.of).toUpperCase();
   out.count = mods.count
     ? (parseComparator(String(mods.count), "\\d+") ?? undefined)
     : undefined;
@@ -188,12 +187,7 @@ export function applyModifiersToCountry(
   mods: CountryModifiers,
   visitContext?: VisitContext,
 ) {
-  if (!mods) return true;
-
-  if (mods.of) {
-    const ofIso = String(mods.of).toUpperCase();
-    if (!matchesSovereigntyOf(country, ofIso)) return false;
-  }
+  if (!mods) return true; 
 
   const vmap = visitContext?.visitedMap;
   const ymap = visitContext?.visitedYearMap;

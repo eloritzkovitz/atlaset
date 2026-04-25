@@ -61,7 +61,7 @@ qualifier:query modifier:query
 | `callingcode`     | string              |                  `callingcode:+44` | Matches calling code                                                                                        |
 | `drivingside`     | string              |                 `drivingside:left` | Matches driving side. Values: `left`, `right`                                                               |
 | `sovereignty`     | string              |            `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`  |
-| `sovereign`       | boolean             |                   `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                       |
+| `sovereign`       | string              |                   `sovereign:true` | Matches sovereign status or governing sovereign state. Values: `true` / `false`, `<isocode>`                |
 | `unmember`        | boolean             |                    `unmember:true` | Matches UN membership. Values: `true` / `false`                                                             |
 | `memberof`        | string              |                      `memberof:eu` | Matches membership in international organizations                                                           |
 | `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                         |
@@ -73,7 +73,6 @@ qualifier:query modifier:query
 | `match`  | string              | `language:english match:exact` | Supports `prefix` (default), `substring`, `exact`, `regex`                                                                                      |
 | `tc`     | string              |  `region:europe tc:other:only` | Supports additional modes: `default`, `include`, `only`                                                                                         |
 | `dst`    | boolean             |      `timezone:+0200 dst:true` | For `timezone`, matches countries based on daylight saving time offsets. Zones without DST will filter by winter time. Values: `true` / `false` |
-| `of`     | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode`                                                   |
 | `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count                                                                                                      |
 | `year`   | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year                                                                                                       |
 | `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit                                                                                              |

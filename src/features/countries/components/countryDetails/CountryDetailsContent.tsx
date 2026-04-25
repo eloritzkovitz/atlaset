@@ -2,7 +2,6 @@ import { SovereigntyBadge } from "./SovereigntyBadge";
 import { CountryInfoTable } from "./CountryInfoTable";
 import { CountryFlag } from "../countryFlag/CountryFlag";
 import type { Country, Currency } from "../../types";
-import { getCountryRelations } from "../../utils/countryData";
 
 interface CountryDetailsContentProps {
   country: Country;
@@ -15,14 +14,12 @@ export function CountryDetailsContent({
   currencies,
   onSelectCountry,
 }: CountryDetailsContentProps) {
-  const sovereigntyInfo = getCountryRelations(country.isoCode);
-
   return (
     <div>
-      {country.sovereigntyType && sovereigntyInfo && (
+      {country.sovereigntyType && (
         <SovereigntyBadge
           type={country.sovereigntyType}
-          sovereignIsoCode={sovereigntyInfo.sovereign?.isoCode}
+          sovereignState={country.sovereignState}
           onSelectCountry={onSelectCountry}
         />
       )}
