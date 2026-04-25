@@ -90,7 +90,7 @@ export function CountryDetailsModal({
             resetTabOnClose={true}
             isOpen={!!isOpen}
             onSelectCountry={handleSelectCountry}
-            className="max-h-[640px]"
+            className="max-h-[660px]"
           />
         </div>
       </Modal>
