@@ -15,7 +15,7 @@ describe("useCountryData", () => {
     store = mockStore({
       countryData: {
         countries: [],
-        currencies: {},
+        currencies: [],
         allRegions: [],
         allSubregions: [],
         allSovereigntyTypes: [],
@@ -38,12 +38,12 @@ describe("useCountryData", () => {
     expect(result.current.countries).toEqual([]);
     expect(result.current.loading).toBe(false);
     expect(result.current.error).toBeNull();
+    expect(Array.isArray(result.current.currencies)).toBe(true);
     fetchCountryDataSpy.mockRestore();
   });
 
   it("dispatches fetchCountryData on mount if not loaded", () => {
     const fetchCountryDataSpy = vi.spyOn(countrySlice, "fetchCountryData");
-    // Mock as a plain object action for redux-mock-store compatibility
     fetchCountryDataSpy.mockReturnValue({
       type: "countryData/fetchCountryData",
     } as unknown as any);
@@ -51,16 +51,38 @@ describe("useCountryData", () => {
       <Provider store={store}>{children}</Provider>
     );
     renderHook(() => useCountryData(), { wrapper });
-    // Just check that dispatch was called
     expect(dispatchSpy).toHaveBeenCalled();
+    expect(fetchCountryDataSpy).toHaveBeenCalled();
     fetchCountryDataSpy.mockRestore();
+  });
+
+  it("returns only currencies that have users", () => {
+    store = mockStore({
+      countryData: {
+        countries: [{ isoCode: "US", name: "United States", currency: "USD" }],
+        currencies: [
+          { code: "USD", name: "US Dollar" },
+          { code: "EUR", name: "Euro" },
+        ],
+        allRegions: [],
+        allSubregions: [],
+        allSovereigntyTypes: [],
+        loading: false,
+        error: null,
+      },
+    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <Provider store={store}>{children}</Provider>
+    );
+    const { result } = renderHook(() => useCountryData(), { wrapper });
+    expect(result.current.currencies.map((c: any) => c.code)).toEqual(["USD"]);
   });
 
   it("does not dispatch fetchCountryData if already loading or loaded", () => {
     store = mockStore({
       countryData: {
         countries: [{ isoCode: "US", name: "United States" }],
-        currencies: { USD: "US Dollar" },
+        currencies: [{ code: "USD", name: "US Dollar" }],
         allRegions: ["Americas"],
         allSubregions: ["Northern America"],
         allSovereigntyTypes: [],
@@ -73,6 +95,25 @@ describe("useCountryData", () => {
     );
     renderHook(() => useCountryData(), { wrapper });
     expect((store as any).getActions()).toEqual([]);
+  });
+
+  it("handles missing currencies field gracefully", () => {
+    store = mockStore({
+      countryData: {
+        countries: [],
+        allRegions: [],
+        allSubregions: [],
+        allSovereigntyTypes: [],
+        loading: true,
+        error: null,
+      } as any,
+    });
+    const wrapper = ({ children }: { children: React.ReactNode }) => (
+      <Provider store={store}>{children}</Provider>
+    );
+    const { result } = renderHook(() => useCountryData(), { wrapper });
+    expect(Array.isArray(result.current.currencies)).toBe(true);
+    expect(result.current.currencies.length).toBe(0);
   });
 
   it("refreshData dispatches fetchCountryData", () => {
