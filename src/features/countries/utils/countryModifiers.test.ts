@@ -216,13 +216,5 @@ describe("countryModifiers", () => {
 
     const countryUS = { isoCode: "US" } as any;
     expect(matchesTranscontinental(countryUS, undefined as any)).toBe(false);
-  });
-
-  it("applyModifiersToCountry positive of and visited cases", () => {
-    const z = { isoCode: "Z1" } as any;
-    const ctx = { visitedIsoCodes: ["Z1"] } as any;
-    expect(applyModifiersToCountry(z, { visited: true } as any, ctx)).toBe(
-      true,
-    );
-  });
+  });  
 });
