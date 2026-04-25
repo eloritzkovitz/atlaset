@@ -4,7 +4,6 @@ import {
   ensureModifiers,
   parseTCOption,
   matchesTranscontinental,
-  matchesSovereigntyOf,
   applyModifiersToCountry,
 } from "./countryModifiers";
 
@@ -95,13 +94,6 @@ describe("countryModifiers", () => {
     expect(matchesTranscontinental(countryUS, "overseas")).toBe(true);
     expect(matchesTranscontinental(countryAZ, "contiguous")).toBe(true);
     expect(matchesTranscontinental(countryXX, "all")).toBe(false);
-  });
-
-  it("matches sovereignty dependencies/regions correctly", () => {
-    const gp = { isoCode: "GP" } as any;
-    expect(matchesSovereigntyOf(gp, "FR")).toBe(true);
-    const nw = { isoCode: "NW" } as any;
-    expect(matchesSovereigntyOf(nw, "ZZ")).toBe(false);
   });
 
   it("applyModifiersToCountry respects visited, count, year, first, and last", () => {
@@ -227,10 +219,6 @@ describe("countryModifiers", () => {
   });
 
   it("applyModifiersToCountry positive of and visited cases", () => {
-    const gp = { isoCode: "GP" } as any;
-    // Dependency relationships are tested via matchesSovereigntyOf
-    expect(matchesSovereigntyOf(gp, "FR")).toBe(true);
-
     const z = { isoCode: "Z1" } as any;
     const ctx = { visitedIsoCodes: ["Z1"] } as any;
     expect(applyModifiersToCountry(z, { visited: true } as any, ctx)).toBe(
