@@ -8,15 +8,17 @@ import {
 } from "@features/countries";
 import type { Visit } from "@features/visits";
 import { CountryRelationsContent } from "./CountryRelationsContent";
+import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
 
 const tabLabels: Record<CountryDetailsTab, string> = {
   overview: "Overview",
-  relations: "Relations",
+  relations: "Related countries",
+  affiliations: "Affiliations",
   visits: "Visits",
 };
 
-type CountryDetailsTab = "overview" | "relations" | "visits";
+type CountryDetailsTab = "overview" | "relations" | "affiliations" | "visits";
 
 interface CountryDetailsPanelProps {
   country: Country;
@@ -77,9 +79,14 @@ export function CountryDetailsPanel({
   };
 
   const currentHasRelationsTab = getRelationsTab(country);
-  const tabs: CountryDetailsTab[] = currentHasRelationsTab
-    ? ["overview", "relations", "visits"]
-    : ["overview", "visits"];
+  const currentHasAffiliationsTab = !!(
+    country?.memberOf && country.memberOf.length > 0
+  );
+
+  const tabs: CountryDetailsTab[] = ["overview"];
+  if (currentHasRelationsTab) tabs.push("relations");
+  if (currentHasAffiliationsTab) tabs.push("affiliations");
+  tabs.push("visits");
 
   return (
     <>
@@ -110,6 +117,9 @@ export function CountryDetailsPanel({
               country={country}
               onSelectCountry={onSelectCountry}
             />
+          )}
+          {activeTab === "affiliations" && currentHasAffiliationsTab && (
+            <CountryAffiliationsContent country={country} />
           )}
           {activeTab === "visits" && (
             <CountryVisitsContent visits={categorizedVisits} />
