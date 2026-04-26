@@ -3,7 +3,7 @@ import { CollapsibleHeader, SelectInput } from "@components";
 import {
   useCountryData,
   type GeoType,
-  type SovereigntyType,
+  type SovereigntyStatus,
 } from "@features/countries";
 import type { VisitedStatus } from "@features/visits";
 import { coreFiltersConfig } from "../../config/filtersConfig";
@@ -17,8 +17,8 @@ interface CoreFiltersProps {
   setSelectedSubregion: (subregion: string) => void;
   selectedGeoType: GeoType | "";
   setSelectedGeoType: (type: GeoType | "") => void;
-  selectedSovereignty: SovereigntyType | "";
-  setSelectedSovereignty: (type: SovereigntyType | "") => void;
+  selectedSovereignty: SovereigntyStatus | "";
+  setSelectedSovereignty: (status: SovereigntyStatus | "") => void;
   sovereignOnly: boolean;
   selectedVisited: VisitedStatus;
   setSelectedVisited: (visited: VisitedStatus) => void;

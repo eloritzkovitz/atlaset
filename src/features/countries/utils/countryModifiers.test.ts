@@ -179,7 +179,7 @@ describe("countryModifiers", () => {
       ),
     ).toBe(true);
 
-    const sov = { isoCode: "S1", sovereigntyType: "Sovereign" } as any;
+    const sov = { isoCode: "S1", sovereigntyStatus: "Sovereign" } as any;
     expect(applyModifiersToCountry(sov, { sovereign: false } as any)).toBe(
       true,
     );

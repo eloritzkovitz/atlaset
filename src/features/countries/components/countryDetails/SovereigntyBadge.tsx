@@ -1,16 +1,16 @@
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
 import { useCountryData } from "../../hooks/useCountryData";
-import type { SovereigntyType } from "../../types";
+import type { SovereigntyStatus } from "../../types";
 import { getCountryName } from "../../utils/countryData";
 
 interface SovereigntyBadgeProps {
-  type?: SovereigntyType;
+  type?: SovereigntyStatus;
   sovereignState?: string;
   onSelectCountry?: (isoCode: string) => void;
 }
 
 // Map sovereignty types to badge colors
-const badgeColors: Record<SovereigntyType, string> = {
+const badgeColors: Record<SovereigntyStatus, string> = {
   Sovereign: "bg-info-hover/70",
   Dependency: "bg-muted/70",
   "Overseas Region": "bg-success-hover/50",
@@ -20,7 +20,7 @@ const badgeColors: Record<SovereigntyType, string> = {
 };
 
 // Optional label prefixes for sovereignty types
-const labelPrefixes: Partial<Record<SovereigntyType, string>> = {
+const labelPrefixes: Partial<Record<SovereigntyStatus, string>> = {
   "Overseas Region": "Overseas Region of ",
   Disputed: "Disputed by ",
   Dependency: "Dependency of ",

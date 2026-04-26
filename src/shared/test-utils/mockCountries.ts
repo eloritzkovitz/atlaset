@@ -1,4 +1,4 @@
-import type { Country, SovereigntyType } from "../../features/countries";
+import type { Country, SovereigntyStatus } from "../../features/countries";
 
 export const mockCountries: Country[] = [
   {
@@ -14,7 +14,7 @@ export const mockCountries: Country[] = [
     currency: "EUR",
     timezones: ["Europe/Paris"],
     callingCode: "+33",
-    sovereigntyType: "Sovereign" as SovereigntyType,
+    sovereigntyStatus: "Sovereign" as SovereigntyStatus,
     geoType: "Coastal",
     unMember: true,
   },
@@ -30,7 +30,7 @@ export const mockCountries: Country[] = [
     currency: "EUR",
     timezones: ["America/Guadeloupe"],
     callingCode: "+590",
-    sovereigntyType: "Dependency" as SovereigntyType,
+    sovereigntyStatus: "Dependency" as SovereigntyStatus,
     sovereignState: "FR",
     geoType: "Island",
     unMember: false,
@@ -47,7 +47,7 @@ export const mockCountries: Country[] = [
     currency: "EUR",
     timezones: ["Europe/Berlin"],
     callingCode: "+49",
-    sovereigntyType: "Sovereign" as SovereigntyType,
+    sovereigntyStatus: "Sovereign" as SovereigntyStatus,
     geoType: "Landlocked",
     unMember: true,
   },
@@ -61,7 +61,7 @@ export const mockCountries: Country[] = [
     population: 3800,
     timezones: ["America/Toronto"],
     callingCode: "+1",
-    sovereigntyType: "Sovereign" as SovereigntyType,
+    sovereigntyStatus: "Sovereign" as SovereigntyStatus,
     geoType: "Coastal",
     unMember: true,
   },
@@ -80,7 +80,7 @@ export const mockCountries: Country[] = [
     population: 3300,
     timezones: ["America/New_York"],
     callingCode: "+1",
-    sovereigntyType: "Sovereign" as SovereigntyType,
+    sovereigntyStatus: "Sovereign" as SovereigntyStatus,
     geoType: "Coastal",
     altNames: ["USA", "US", "United States of America"],
     unMember: true,
@@ -95,7 +95,7 @@ export const mockCountries: Country[] = [
     population: 12600,
     timezones: ["Asia/Tokyo"],
     callingCode: "+81",
-    sovereigntyType: "Sovereign" as SovereigntyType,
+    sovereigntyStatus: "Sovereign" as SovereigntyStatus,
     geoType: "Island",
     unMember: true,
   },

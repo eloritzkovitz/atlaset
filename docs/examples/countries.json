@@ -10,7 +10,7 @@
     "population": 329484123,
     "currency": "USD",
     "languages": ["English"],
-    "sovereigntyType": "Sovereign"
+    "sovereigntyStatus": "Sovereign"
   },
   {
     "name": "United States Minor Outlying Islands",
@@ -22,6 +22,6 @@
     "population": 300,
     "currency": "USD",
     "languages": ["English"],
-    "sovereigntyType": "Dependency"
+    "sovereigntyStatus": "Dependency"
   }
 ]

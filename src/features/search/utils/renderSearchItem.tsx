@@ -32,7 +32,7 @@ function getCountryLabel(item: Country, countries: Country[]) {
     getCountryRelations(item.isoCode).sovereign?.isoCode || "Unknown",
     countries,
   );
-  switch (item.sovereigntyType) {
+  switch (item.sovereigntyStatus) {
     case "Dependency":
       return sovereignName ? `Dependency of ${sovereignName}` : "Country";
     case "Overseas Region":

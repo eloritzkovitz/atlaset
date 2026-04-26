@@ -16,9 +16,9 @@ export function CountryDetailsContent({
 }: CountryDetailsContentProps) {
   return (
     <div>
-      {country.sovereigntyType && (
+      {country.sovereigntyStatus && (
         <SovereigntyBadge
-          type={country.sovereigntyType}
+          type={country.sovereigntyStatus}
           sovereignState={country.sovereignState}
           onSelectCountry={onSelectCountry}
         />

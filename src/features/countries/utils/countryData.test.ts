@@ -1,5 +1,5 @@
 import { mockCountries } from "@test-utils/mockCountries";
-import type { Country, GeoType, SovereigntyType } from "../types";
+import type { Country, GeoType, SovereigntyStatus } from "../types";
 import {
   getCountryIsoCode,
   getCountryByIsoCode,
@@ -8,7 +8,7 @@ import {
   getAllRegions,
   getAllSubregions,
   getSubregionsForRegion,
-  getAllSovereigntyTypes,
+  getAllSovereigntyStatuses,
   getCountriesWithOwnFlag,
   getRandomCountry,
   getTranscontinentalInfo,
@@ -171,7 +171,7 @@ describe("countryData utils", () => {
       ).sort();
       expect(getAllGeoTypes(countries)).toEqual(expected);
     });
-    
+
     it("skips undefined geo types", () => {
       const testCountries = [
         { geoType: "Country" as GeoType },
@@ -182,21 +182,21 @@ describe("countryData utils", () => {
     });
   });
 
-  describe("getAllSovereigntyTypes", () => {
-    it("returns unique, sorted sovereignty types", () => {
-      expect(getAllSovereigntyTypes(countries)).toEqual([
+  describe("getAllSovereigntyStatuses", () => {
+    it("returns unique, sorted sovereignty statuses", () => {
+      expect(getAllSovereigntyStatuses(countries)).toEqual([
         "Dependency",
         "Sovereign",
       ]);
     });
 
-    it("skips undefined sovereigntyType", () => {
+    it("skips undefined sovereigntyStatus", () => {
       const testCountries = [
-        { sovereigntyType: "Sovereign" as SovereigntyType },
-        { sovereigntyType: undefined },
+        { sovereigntyStatus: "Sovereign" as SovereigntyStatus },
+        { sovereigntyStatus: undefined },
         {},
       ] as Partial<Country>[];
-      expect(getAllSovereigntyTypes(testCountries as Country[])).toEqual([
+      expect(getAllSovereigntyStatuses(testCountries as Country[])).toEqual([
         "Sovereign",
       ]);
     });

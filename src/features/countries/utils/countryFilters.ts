@@ -102,7 +102,7 @@ export function filterCountries(
     )
       return false;
 
-    if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
+    if (selectedSovereignty && country.sovereigntyStatus !== selectedSovereignty)
       return false;
 
     if (selectedGeoType && country.geoType !== selectedGeoType) return false;
@@ -159,10 +159,10 @@ export function filterCountriesByQualifier(
     }
   }
 
-  // Handle sovereignty type
-  if (key === "sovereigntyType") {
+  // Handle sovereignty status
+  if (key === "sovereigntyStatus") {
     return countries.filter((country) =>
-      (country.sovereigntyType ?? "").toLowerCase().includes(searchValue),
+      (country.sovereigntyStatus ?? "").toLowerCase().includes(searchValue),
     );
   }
 
@@ -225,7 +225,7 @@ export function getCountryCounts({
   const allCount = filteredCountries.length;
   const allCountWithoutLayers = filteredCountriesNoLayer.length;
   const sovereignCount = filteredCountries.filter(
-    (c) => c.sovereigntyType === "Sovereign",
+    (c) => c.sovereigntyStatus === "Sovereign",
   ).length;
   const visitedCount = filteredCountries.filter((c) =>
     visitedIsoCodes.includes(c.isoCode),
@@ -240,11 +240,11 @@ export function getCountryCounts({
 
 /**
  * Returns a filter function for sovereignty based on the criteria.
- * @param sovereignOnly - If true, only matches countries with sovereigntyType "Sovereign".
+ * @param sovereignOnly - If true, only matches countries with sovereigntyStatus "Sovereign".
  */
 export function createSovereigntyFilter(sovereignOnly?: boolean) {
   return (c: Country) =>
-    sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
+    sovereignOnly ? c.sovereigntyStatus === "Sovereign" : true;
 }
 
 /**

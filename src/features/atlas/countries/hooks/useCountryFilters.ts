@@ -17,7 +17,7 @@ import {
   getFilteredIsoCodes,
   useCountryData,
   type CountryFilterOptions,
-  type SovereigntyType,
+  type SovereigntyStatus,
   type GeoType,
 } from "@features/countries";
 import {
@@ -65,7 +65,7 @@ export function useCountryFilters() {
   const [selectedSubregion, setSelectedSubregion] = useState<string>("");
   const [selectedGeoType, setSelectedGeoType] = useState<GeoType | "">("");
   const [selectedSovereignty, setSelectedSovereignty] = useState<
-    SovereigntyType | ""
+    SovereigntyStatus | ""
   >("");
   const [sovereignOnly, setSovereignOnly] = useState(false);
   const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");

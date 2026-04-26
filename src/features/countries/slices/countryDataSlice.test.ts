@@ -1,6 +1,6 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import countryDataReducer, { fetchCountryData } from "./countryDataSlice";
-import type { SovereigntyType } from "../types";
+import type { SovereigntyStatus } from "../types";
 
 describe("countryDataSlice reducer", () => {
   it("should return the same state for unknown action", () => {
@@ -14,13 +14,13 @@ describe("countryDataSlice reducer", () => {
           iso3Code: "FRA",
           region: "Europe",
           subregion: "Western Europe",
-          sovereigntyType: "independent" as SovereigntyType,
+          sovereigntyStatus: "independent" as SovereigntyStatus,
         },
       ],
       currencies: [{ code: "EUR", name: "Euro" }],
       allRegions: ["Europe"],
       allSubregions: ["Western Europe"],
-      allSovereigntyTypes: [],
+      allSovereigntyStatuses: [],
       loading: false,
       error: null,
     };
@@ -35,7 +35,7 @@ describe("countryDataSlice reducer", () => {
       currencies: [],
       allRegions: [],
       allSubregions: [],
-      allSovereigntyTypes: [],
+      allSovereigntyStatuses: [],
       loading: false,
       error: null,
     });
@@ -49,7 +49,7 @@ describe("countryDataSlice reducer", () => {
       currencies: [],
       allRegions: [],
       allSubregions: [],
-      allSovereigntyTypes: [],
+      allSovereigntyStatuses: [],
       loading: true,
       error: null,
     });
@@ -66,7 +66,7 @@ describe("countryDataSlice reducer", () => {
         ],
         allRegions: ["Americas"],
         allSubregions: ["Northern America"],
-        allSovereigntyTypes: [],
+        allSovereigntyStatuses: [],
       },
     };
     const state = countryDataReducer(undefined, action);
@@ -78,7 +78,7 @@ describe("countryDataSlice reducer", () => {
       ],
       allRegions: ["Americas"],
       allSubregions: ["Northern America"],
-      allSovereigntyTypes: [],
+      allSovereigntyStatuses: [],
       loading: false,
       error: null,
     });
@@ -95,7 +95,7 @@ describe("countryDataSlice reducer", () => {
       currencies: [],
       allRegions: [],
       allSubregions: [],
-      allSovereigntyTypes: [],
+      allSovereigntyStatuses: [],
       loading: false,
       error: "Failed to fetch",
     });
@@ -112,7 +112,7 @@ describe("countryDataSlice reducer", () => {
       currencies: [],
       allRegions: [],
       allSubregions: [],
-      allSovereigntyTypes: [],
+      allSovereigntyStatuses: [],
       loading: false,
       error: "Failed to load country data",
     });

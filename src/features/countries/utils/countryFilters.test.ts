@@ -259,7 +259,7 @@ describe("countryFilters utils", () => {
         { ...baseParams, search: "sovereign:true" },
         undefined,
       );
-      expect(resTrue.some((c) => c.sovereigntyType === "Sovereign")).toBe(true);
+      expect(resTrue.some((c) => c.sovereigntyStatus === "Sovereign")).toBe(true);
 
       const resFalse = applyQualifierSearch(
         countries,
@@ -268,7 +268,7 @@ describe("countryFilters utils", () => {
         { ...baseParams, search: "sovereign:false" },
         undefined,
       );
-      expect(resFalse.some((c) => c.sovereigntyType !== "Sovereign")).toBe(
+      expect(resFalse.some((c) => c.sovereigntyStatus !== "Sovereign")).toBe(
         true,
       );
 
@@ -452,7 +452,7 @@ describe("countryFilters utils", () => {
         filteredCountriesNoLayer.length,
       );
       expect(counts.sovereignCount).toBe(
-        filteredCountries.filter((c) => c.sovereigntyType === "Sovereign")
+        filteredCountries.filter((c) => c.sovereigntyStatus === "Sovereign")
           .length,
       );
       expect(counts.visitedCount).toBe(
@@ -486,7 +486,7 @@ describe("countryFilters utils", () => {
     it("returns only sovereign countries when sovereignOnly is true", () => {
       const filter = createSovereigntyFilter(true);
       const expected = mockCountries.filter(
-        (c) => c.sovereigntyType === "Sovereign",
+        (c) => c.sovereigntyStatus === "Sovereign",
       );
       expect(mockCountries.filter(filter)).toEqual(expected);
     });

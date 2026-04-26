@@ -11,7 +11,7 @@ import {
   type CountryRelationsGroup,
 } from "../constants/countryRelations";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
-import type { Country, GeoType, SovereigntyType } from "../types";
+import type { Country, GeoType, SovereigntyStatus } from "../types";
 
 /**
  * Extracts the ISO country code from various possible property names.
@@ -122,16 +122,16 @@ export function getAllGeoTypes(countries: { geoType?: GeoType }[]): GeoType[] {
 }
 
 /**
- * Returns all unique sovereignty types from the countries list.
- * @param countries - Array of country objects with sovereigntyType property.
- * @returns Sorted array of unique sovereignty type strings.
+ * Returns all unique sovereignty statuses from the countries list.
+ * @param countries - Array of country objects with sovereigntyStatus property.
+ * @returns Sorted array of unique sovereignty status strings.
  */
-export function getAllSovereigntyTypes(
-  countries: { sovereigntyType?: SovereigntyType }[],
-): SovereigntyType[] {
+export function getAllSovereigntyStatuses(
+  countries: { sovereigntyStatus?: SovereigntyStatus }[],
+): SovereigntyStatus[] {
   return extractUniqueSorted(
     countries,
-    (c) => c.sovereigntyType as SovereigntyType | undefined,
+    (c) => c.sovereigntyStatus as SovereigntyStatus | undefined,
   );
 }
 

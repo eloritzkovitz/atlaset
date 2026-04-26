@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import type { Country, Currency, SovereigntyType } from "../types";
+import type { Country, Currency, SovereigntyStatus } from "../types";
 
 import {
   getAllRegions,
   getAllSubregions,
-  getAllSovereigntyTypes,
+  getAllSovereigntyStatuses,
 } from "../utils/countryData";
 
 interface CountryDataState {
@@ -12,7 +12,7 @@ interface CountryDataState {
   currencies: Currency[];
   allRegions: string[];
   allSubregions: string[];
-  allSovereigntyTypes: SovereigntyType[];
+  allSovereigntyStatuses: SovereigntyStatus[];
   loading: boolean;
   error: string | null;
 }
@@ -22,7 +22,7 @@ const initialState: CountryDataState = {
   currencies: [],
   allRegions: [],
   allSubregions: [],
-  allSovereigntyTypes: [],
+  allSovereigntyStatuses: [],
   loading: false,
   error: null,
 };
@@ -83,7 +83,9 @@ export const fetchCountryData = createAsyncThunk(
       currencies: currenciesArr,
       allRegions: getAllRegions(countryData as Country[]),
       allSubregions: getAllSubregions(countryData as Country[]),
-      allSovereigntyTypes: getAllSovereigntyTypes(countryData as Country[]),
+      allSovereigntyStatuses: getAllSovereigntyStatuses(
+        countryData as Country[],
+      ),
     };
   },
 );
@@ -103,7 +105,7 @@ const countryDataSlice = createSlice({
         state.currencies = action.payload.currencies;
         state.allRegions = action.payload.allRegions;
         state.allSubregions = action.payload.allSubregions;
-        state.allSovereigntyTypes = action.payload.allSovereigntyTypes;
+        state.allSovereigntyStatuses = action.payload.allSovereigntyStatuses;
         state.loading = false;
       })
       .addCase(fetchCountryData.rejected, (state, action) => {

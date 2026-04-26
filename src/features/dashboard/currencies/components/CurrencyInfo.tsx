@@ -34,8 +34,8 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
     for (const c of countries) {
       if (c.currency !== currency.code) continue;
       if (
-        c.sovereigntyType === "Sovereign" ||
-        c.sovereigntyType === "Disputed"
+        c.sovereigntyStatus === "Sovereign" ||
+        c.sovereigntyStatus === "Disputed"
       ) {
         sov.push(c.isoCode);
       } else {

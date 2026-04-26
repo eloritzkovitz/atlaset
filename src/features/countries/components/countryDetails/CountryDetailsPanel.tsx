@@ -13,12 +13,12 @@ import { CountryVisitsContent } from "./CountryVisitsContent";
 
 const tabLabels: Record<CountryDetailsTab, string> = {
   overview: "Overview",
-  relations: "Related countries",
+  territories: "Territories & Claims",
   affiliations: "Affiliations",
   visits: "Visits",
 };
 
-type CountryDetailsTab = "overview" | "relations" | "affiliations" | "visits";
+type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 
 interface CountryDetailsPanelProps {
   country: Country;
@@ -65,8 +65,8 @@ export function CountryDetailsPanel({
     onTabChange?.(tab);
   };
 
-  // Recalculate hasRelationsTab for the current country
-  const getRelationsTab = (country: Country) => {
+  // Determine if the country has territories to show in the Territories tab
+  const getTerritoriesTab = (country: Country) => {
     try {
       const rel =
         country && country.isoCode
@@ -79,14 +79,14 @@ export function CountryDetailsPanel({
   };
 
   // Determine which tabs to show based on country data
-  const currentHasRelationsTab = getRelationsTab(country);
+  const currentHasTerritoriesTab = getTerritoriesTab(country);
   const currentHasAffiliationsTab = !!(
     (country?.memberOf && country.memberOf.length > 0) ||
     country?.unMember
   );
 
   const tabs: CountryDetailsTab[] = ["overview"];
-  if (currentHasRelationsTab) tabs.push("relations");
+  if (currentHasTerritoriesTab) tabs.push("territories");
   if (currentHasAffiliationsTab) tabs.push("affiliations");
   tabs.push("visits");
 
@@ -114,7 +114,7 @@ export function CountryDetailsPanel({
               onSelectCountry={onSelectCountry}
             />
           )}
-          {activeTab === "relations" && currentHasRelationsTab && (
+          {activeTab === "territories" && currentHasTerritoriesTab && (
             <CountryRelationsContent
               country={country}
               onSelectCountry={onSelectCountry}

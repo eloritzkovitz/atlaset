@@ -37,8 +37,8 @@ export type Country = {
   callingCode: string;
   /** The road traffic direction for the country. */
   drivingSide?: "Left" | "Right" | undefined;
-  /** The sovereignty type of the country. */
-  sovereigntyType?: SovereigntyType;
+  /** The sovereignty status of the country. */
+  sovereigntyStatus?: SovereigntyStatus;
   /** The sovereign state of the country. */
   sovereignState?: string;
   /** Whether the country is a UN member. */
@@ -74,8 +74,8 @@ export type Currency = {
   name: string;
 };
 
-/** Sovereignty types for countries. */
-export type SovereigntyType =
+/** Sovereignty statuses for countries. */
+export type SovereigntyStatus =
   | "Sovereign"
   | "Dependency"
   | "Overseas Region"
@@ -126,7 +126,7 @@ export type CountryFilterOptions = {
   selectedRegion?: string;
   selectedSubregion?: string;
   selectedGeoType?: GeoType | "";
-  selectedSovereignty?: SovereigntyType | "";
+  selectedSovereignty?: SovereigntyStatus | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
   modifiers?: CountryModifiers;

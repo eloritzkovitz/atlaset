@@ -3,8 +3,8 @@ import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useCountryData, type GeoType, type SovereigntyType } from "@features/countries";
-import { getAllGeoTypes, getAllSovereigntyTypes } from "@features/countries/utils/countryData";
+import { useCountryData, type GeoType, type SovereigntyStatus } from "@features/countries";
+import { getAllGeoTypes, getAllSovereigntyStatuses } from "@features/countries/utils/countryData";
 import type { VisitedStatus } from "@features/visits";
 import { useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
@@ -22,8 +22,8 @@ interface CountryFiltersPanelProps {
   setSelectedSubregion: (subregion: string) => void;
   selectedGeoType: GeoType | "";
   setSelectedGeoType: (geoType: GeoType | "") => void;
-  selectedSovereignty: SovereigntyType | "";
-  setSelectedSovereignty: (type: SovereigntyType | "") => void;
+  selectedSovereignty: SovereigntyStatus | "";
+  setSelectedSovereignty: (status: SovereigntyStatus | "") => void;
   sovereignOnly: boolean;
   selectedVisited: VisitedStatus;
   setSelectedVisited: (visited: VisitedStatus) => void;
@@ -72,9 +72,9 @@ export function CountryFiltersPanel({
     setSelectedRegion,
   );
 
-  // All sovereignty types from country data
+  // All sovereignty statuses from country data
   const geoTypeOptions = getAllGeoTypes(countries);
-  const sovereigntyOptions = getAllSovereigntyTypes(countries);
+  const sovereigntyOptions = getAllSovereigntyStatuses(countries);
 
   // Reset subregion when region changes
   const handleRegionChange = (region: string) => {

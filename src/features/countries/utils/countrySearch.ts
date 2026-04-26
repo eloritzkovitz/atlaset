@@ -125,7 +125,7 @@ export function getQualifierTokens(
   }
   if (key === "sovereign") {
     const toks: string[] = [];
-    toks.push(country.sovereigntyType === "Sovereign" ? "true" : "false");
+    toks.push(country.sovereigntyStatus === "Sovereign" ? "true" : "false");
     const sstate = country.sovereignState || undefined;
     if (sstate) toks.push(String(sstate).toUpperCase());
     return toks;

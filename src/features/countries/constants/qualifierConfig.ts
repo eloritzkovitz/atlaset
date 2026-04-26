@@ -25,7 +25,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   tz: { key: "timezones", label: "Time zone", type: "string" },
   callingcode: { key: "callingCode", label: "Calling code", type: "string" },
   drivingside: { key: "drivingSide", label: "Driving side", type: "string" },
-  sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
+  sovereignty: { key: "sovereigntyStatus", label: "Sovereignty", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "string" },
   unmember: { key: "unMember", label: "UN member", type: "boolean" },
   memberof: { key: "memberOf", label: "Member of", type: "string" },
