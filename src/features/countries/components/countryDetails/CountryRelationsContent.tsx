@@ -1,22 +1,23 @@
 import { useMemo, useState } from "react";
 import { capitalizeWords } from "@utils/string";
 import { CountryListGroup } from "./CountryListGroup";
-import { useCountryData } from "../../hooks/useCountryData";
-import { getCountryName, getCountryRelations } from "../../utils/countryData";
+import { getCountryName, getCountryTerritories } from "../../utils/countryData";
+import type { Country } from "../../types";
 
 interface CountryRelationsContentProps {
-  country: { isoCode: string };
+  country: Country;
+  countries: Country[];
   onSelectCountry?: (isoCode: string) => void;
 }
 
 export function CountryRelationsContent({
   country,
+  countries,
   onSelectCountry,
 }: CountryRelationsContentProps) {
-  const { countries } = useCountryData();
   const group =
     country && country.isoCode
-      ? getCountryRelations(country.isoCode)
+      ? getCountryTerritories(country)
       : undefined;
 
   // Prepare sections from relations data

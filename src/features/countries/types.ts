@@ -41,6 +41,8 @@ export type Country = {
   sovereigntyStatus?: SovereigntyStatus;
   /** The sovereign state of the country. */
   sovereignState?: string;
+  /** List of territories & claims for the country. */
+  territories?: CountryTerritories;
   /** Whether the country is a UN member. */
   unMember?: boolean;
   /** The organizations the country is a member of. */
@@ -85,6 +87,13 @@ export type SovereigntyStatus =
 
 /** Geographic types for countries. */
 export type GeoType = "Coastal" | "Landlocked" | "Island";
+
+export type CountryTerritoriesGroup = {
+  codes: string[];
+  label?: string;
+};
+
+export type CountryTerritories = Record<string, CountryTerritoriesGroup>;
 
 /** Represents a list of countries. */
 export type CountryList = {

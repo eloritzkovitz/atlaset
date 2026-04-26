@@ -2,10 +2,9 @@ import type { User } from "firebase/auth";
 import { ICONS } from "@constants/icons";
 import {
   CountryFlag,
-  getCountryName,
-  getCountryRelations,
-  regionIcons,
   defaultRegionIcon,
+  getCountryName,
+  regionIcons,
   type Country,
 } from "@features/countries";
 import { UserAvatar, type Friend } from "@features/user";
@@ -29,7 +28,7 @@ interface RenderSearchItemOptions {
  */
 function getCountryLabel(item: Country, countries: Country[]) {
   const sovereignName = getCountryName(
-    getCountryRelations(item.isoCode).sovereign?.isoCode || "Unknown",
+    item.sovereignState || "Unknown",
     countries,
   );
   switch (item.sovereigntyStatus) {

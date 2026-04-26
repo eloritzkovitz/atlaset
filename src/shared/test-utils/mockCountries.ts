@@ -17,6 +17,11 @@ export const mockCountries: Country[] = [
     sovereigntyStatus: "Sovereign" as SovereigntyStatus,
     geoType: "Coastal",
     unMember: true,
+    territories: {
+      dependencies: { codes: ["CP"] },
+      overseas_regions: { codes: ["GP"] },
+      disputes: { codes: ["US"] },
+    },
   },
   {
     name: "Guadeloupe",
@@ -84,6 +89,10 @@ export const mockCountries: Country[] = [
     geoType: "Coastal",
     altNames: ["USA", "US", "United States of America"],
     unMember: true,
+    territories: {
+      dependencies: { codes: ["GU"], label: "Dependency" },
+      disputes: { codes: ["FR"] },
+    },
   },
   {
     name: "Japan",

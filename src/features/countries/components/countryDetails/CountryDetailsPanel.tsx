@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { TabButton } from "@components";
 import {
   CountryDetailsContent,
-  getCountryRelations,
+  getCountryTerritories,
   type Country,
   type Currency,
 } from "@features/countries";
+import { useCountryData } from "../../hooks/useCountryData";
 import type { Visit } from "@features/visits";
 import { CountryRelationsContent } from "./CountryRelationsContent";
 import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
@@ -47,6 +48,7 @@ export function CountryDetailsPanel({
   onSelectCountry,
   className,
 }: CountryDetailsPanelProps) {
+  const { countries } = useCountryData();
   const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
 
   // Reset to overview tab when modal is closed, if resetTabOnClose is true
@@ -70,7 +72,7 @@ export function CountryDetailsPanel({
     try {
       const rel =
         country && country.isoCode
-          ? getCountryRelations(country.isoCode)
+          ? getCountryTerritories(country)
           : undefined;
       return rel && rel.hasRelations;
     } catch {
@@ -117,6 +119,7 @@ export function CountryDetailsPanel({
           {activeTab === "territories" && currentHasTerritoriesTab && (
             <CountryRelationsContent
               country={country}
+              countries={countries}
               onSelectCountry={onSelectCountry}
             />
           )}

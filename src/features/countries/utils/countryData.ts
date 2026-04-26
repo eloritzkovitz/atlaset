@@ -3,15 +3,15 @@
  */
 
 import { extractUniqueSorted } from "@utils/array";
-import { capitalizeWords } from "@utils/string";
-import type { CountryRelations } from "../constants/countryRelations";
-import {
-  COUNTRY_RELATIONS,
-  FLAG_OVERRIDES,
-  type CountryRelationsGroup,
-} from "../constants/countryRelations";
+import { FLAG_OVERRIDES } from "../constants/countryRelations";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
-import type { Country, GeoType, SovereigntyStatus } from "../types";
+import type {
+  Country,
+  CountryTerritories,
+  CountryTerritoriesGroup,
+  GeoType,
+  SovereigntyStatus,
+} from "../types";
 
 /**
  * Extracts the ISO country code from various possible property names.
@@ -136,88 +136,38 @@ export function getAllSovereigntyStatuses(
 }
 
 /**
- * Finds the sovereign country or relations for a country's ISO code.
- * @param isoCode - The ISO code of the country or territory.
- * @returns Relation info: dependencyOf, disputeOf, sovereign, or all relations if sovereign.
+ * Finds the territories and claims for a country's ISO code.
+ * @param country - The country object for which to find territories.
+ * @returns Relation info: memberOf, groups, relatedIsoCodes and hasRelations.
  */
-export function getCountryRelations(isoCode: string): {
+export function getCountryTerritories(country: Country): {
   memberOf?: Array<{
     prop: string;
     label?: string;
     sovereignIso: string;
   }>;
-  groups?: Record<string, CountryRelationsGroup>;
+  groups?: Record<string, CountryTerritoriesGroup>;
   relatedIsoCodes?: string[];
   hasRelations?: boolean;
-  sovereign?: { isoCode: string };
 } {
-  const relEntries = relationIndex[isoCode] || [];
-  const memberOf = relEntries.map((e) => ({
-    prop: e.prop,
-    label: e.label,
-    sovereignIso: e.sovereign.isoCode,
-  }));
+  let sovereignGroups: Record<string, CountryTerritoriesGroup> = {};
+  const groups: CountryTerritories | undefined = country?.territories;
+  if (groups) {
+    sovereignGroups = Object.fromEntries(
+      Object.keys(groups).map((prop) => {
+        const raw = groups[prop] as CountryTerritoriesGroup | undefined;
+        return [prop, { codes: raw?.codes ?? [], label: raw?.label }];
+      }),
+    ) as Record<string, CountryTerritoriesGroup>;
+  }
 
-  // If this ISO is defined as a sovereign in COUNTRY_RELATIONS, build its groups
-  const rawGroups = COUNTRY_RELATIONS[isoCode] as CountryRelations | undefined;
-  const sovereignGroups: Record<string, CountryRelationsGroup> = rawGroups
-    ? (Object.fromEntries(
-        Object.entries(rawGroups).map(([prop, group]) => {
-          const raw = group as CountryRelationsGroup | undefined;
-          return [
-            prop,
-            {
-              codes: raw?.codes ?? [],
-              label: raw?.label as string | undefined,
-            } as CountryRelationsGroup,
-          ];
-        }),
-      ) as Record<string, CountryRelationsGroup>)
-    : {};
-
-  // All ISO codes that reference this ISO as their sovereign
-  const referencedBy = Object.keys(relationIndex).filter((otherIso) =>
-    (relationIndex[otherIso] || []).some(
-      (e) => e.sovereign.isoCode === isoCode,
-    ),
-  );
-
-  // Combine all related ISO codes from groups and references, ensuring uniqueness
+  // Related ISO codes are those listed in this country's own groups
   const relatedIsoCodes = Array.from(
-    new Set([
-      ...Object.values(sovereignGroups).flatMap((g) => g.codes),
-      ...referencedBy,
-    ]),
+    new Set(Object.values(sovereignGroups).flatMap((g) => g.codes ?? [])),
   );
 
   const hasRelations =
-    Object.keys(sovereignGroups).length > 0 || relatedIsoCodes.length > 0;
-
-  // If this ISO is a member of any sovereign's groups, return that sovereign and membership info
-  if (memberOf.length > 0) {
-    const primary =
-      memberOf.find((m) => m.prop.toLowerCase().includes("depend")) ||
-      memberOf[0];
-    const result: {
-      memberOf: typeof memberOf;
-      sovereign: { isoCode: string };
-      relatedIsoCodes: string[];
-      hasRelations: boolean;
-      groups?: Record<string, CountryRelationsGroup>;
-    } = {
-      memberOf,
-      sovereign: { isoCode: primary.sovereignIso },
-      relatedIsoCodes,
-      hasRelations,
-    };
-
-    // If this ISO also defines its own groups, include them
-    if (Object.keys(sovereignGroups).length > 0) {
-      result.groups = sovereignGroups;
-    }
-
-    return result;
-  }
+    Object.keys(sovereignGroups).length > 0 && relatedIsoCodes.length > 0;
 
   return { groups: sovereignGroups, relatedIsoCodes, hasRelations };
 }
@@ -249,43 +199,4 @@ export function getRandomCountry(countries: Country[]) {
  */
 export function getTranscontinentalInfo(country: Country) {
   return country?.transcontinental ?? null;
-}
-
-// Precompute a generic relation index for quick and flexible lookups.
-type RelationEntry = {
-  sovereign: { isoCode: string };
-  prop: string;
-  label?: string;
-};
-
-const relationIndex: Record<string, RelationEntry[]> = {};
-
-// Helper function to add entries to the relation index for a given list of ISO codes and relation details.
-function addRelationEntry(
-  isoList: string[] | undefined,
-  sovereignIso: string,
-  prop: string,
-  label?: string,
-) {
-  if (!isoList) return;
-  isoList.forEach((iso) => {
-    (relationIndex[iso] ??= []).push({
-      sovereign: { isoCode: sovereignIso },
-      prop,
-      label,
-    });
-  });
-}
-
-// Build the relation index from COUNTRY_RELATIONS
-for (const [sovereignIso, sovereignObj] of Object.entries(
-  COUNTRY_RELATIONS as Record<string, CountryRelations>,
-)) {
-  for (const [prop, group] of Object.entries(
-    sovereignObj as Record<string, CountryRelationsGroup | undefined>,
-  )) {
-    const { codes: isoList = [], label: overrideLabel } = group || {};
-    const label = overrideLabel ?? capitalizeWords(prop.replace(/[_-]/g, " "));
-    addRelationEntry(isoList, sovereignIso, prop, label);
-  }
 }
