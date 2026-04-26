@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
+import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
+import type { Country } from "@features/countries/types";
 
 interface CountryAffiliationsContentProps {
-  country: { isoCode: string; memberOf?: string[] };
+  country: Country;
 }
 
 export function CountryAffiliationsContent({
@@ -13,11 +16,30 @@ export function CountryAffiliationsContent({
 
     const sections: { key: string; label: string; data: string[] }[] = [];
 
+    // Add memberships section if there are any memberships or UN membership
+    const memberships: string[] = [];
     if (country.memberOf && country.memberOf.length > 0) {
+      memberships.push(...country.memberOf.slice());
+    }
+    if (country.unMember) {
+      if (!memberships.map((m) => String(m).toUpperCase()).includes("UN")) {
+        memberships.push("UN");
+      }
+    }
+
+    if (memberships.length > 0) {
+      const sorted = memberships.slice().sort((a, b) => {
+        const A = String(a).toUpperCase();
+        const B = String(b).toUpperCase();
+        if (A === "UN" && B !== "UN") return -1;
+        if (B === "UN" && A !== "UN") return 1;
+        return String(a).localeCompare(String(b));
+      });
+
       sections.push({
         key: "memberships",
         label: "Affiliations",
-        data: country.memberOf.slice().sort((a, b) => a.localeCompare(b)),
+        data: sorted,
       });
     }
 
@@ -54,16 +76,33 @@ export function CountryAffiliationsContent({
                 <EmptyListMessage message="No items." />
               ) : (
                 <div className="flex flex-col text-lg">
-                  {section.data.map((item, idx) => (
-                    <MenuButton
-                      key={`${section.key}-${item}-${idx}`}
-                      icon={undefined}
-                      onClick={() => {}}
-                      className="py-2 px-2"
-                    >
-                      <span>{item.replace(/[_-]/g, " ")}</span>
-                    </MenuButton>
-                  ))}
+                  {section.data.map((item, idx) => {
+                    const iso = String(item || "").toUpperCase();
+                    const special = SPECIAL_COUNTRIES[iso];
+                    const displayName =
+                      (special && special.name) || item.replace(/[_-]/g, " ");
+
+                    return (
+                      <MenuButton
+                        key={`${section.key}-${item}-${idx}`}
+                        icon={undefined}
+                        onClick={() => {}}
+                        className="py-2 px-2"
+                      >
+                        {special ? (
+                          <div className="flex items-center">
+                            <CountryWithFlag
+                              isoCode={iso}
+                              name={displayName}
+                              visited={true}
+                            />
+                          </div>
+                        ) : (
+                          <span>{displayName}</span>
+                        )}
+                      </MenuButton>
+                    );
+                  })}
                 </div>
               )}
             </CollapsibleHeader>
