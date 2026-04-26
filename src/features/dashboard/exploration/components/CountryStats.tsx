@@ -93,6 +93,7 @@ export function CountryStats({
               <CountryFlag
                 flag={{
                   isoCode: selectedCountry.isoCode,
+                  sovereignState: selectedCountry.sovereignState,
                   ratio: "3x2",
                   size: `${isMobile ? "32" : "64"}`,
                 }}

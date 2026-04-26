@@ -1,5 +1,10 @@
 import { mockCountries } from "@test-utils/mockCountries";
-import type { Country, GeoType, SovereigntyType } from "../types";
+import type {
+  Country,
+  CountryTerritories,
+  GeoType,
+  SovereigntyStatus,
+} from "../types";
 import {
   getCountryIsoCode,
   getCountryByIsoCode,
@@ -8,30 +13,16 @@ import {
   getAllRegions,
   getAllSubregions,
   getSubregionsForRegion,
-  getAllSovereigntyTypes,
+  getAllSovereigntyStatuses,
   getCountriesWithOwnFlag,
   getRandomCountry,
   getTranscontinentalInfo,
-  getCountryRelations,
+  getCountryTerritories,
   getAllGeoTypes,
 } from "./countryData";
 
-vi.mock("../constants/countryRelations", () => ({
-  COUNTRY_RELATIONS: {
-    US: {
-      name: "United States",
-      dependencies: { codes: ["GU"], type: "Dependency" },
-      regions: { codes: ["PR"] },
-      disputes: { codes: ["VI"] },
-    },
-    GU: {},
-    PR: {},
-    VI: {},
-    AA: { disputes: { codes: ["BB"] } },
-    BB: { disputes: { codes: ["AA"] } },
-  },
-  FLAG_OVERRIDES: { YY: { sovereign: "US" } },
-  EXCLUDED_ISO_CODES: ["XX"],
+vi.mock("../constants/flagOverrides", () => ({
+  FLAG_OVERRIDES: ["YY"],
 }));
 vi.mock("../constants/specialCountries", () => ({
   SPECIAL_COUNTRIES: {
@@ -41,6 +32,8 @@ vi.mock("../constants/specialCountries", () => ({
 
 describe("countryData utils", () => {
   const countries = mockCountries;
+  const findCountry = (iso: string) => countries.find((c) => c.isoCode === iso);
+  const stubCountry = (iso: string) => ({ isoCode: iso }) as Country;
 
   describe("getCountryIsoCode", () => {
     it("extracts ISO code from ISO_A2", () => {
@@ -172,7 +165,7 @@ describe("countryData utils", () => {
       ).sort();
       expect(getAllGeoTypes(countries)).toEqual(expected);
     });
-    
+
     it("skips undefined geo types", () => {
       const testCountries = [
         { geoType: "Country" as GeoType },
@@ -183,72 +176,128 @@ describe("countryData utils", () => {
     });
   });
 
-  describe("getAllSovereigntyTypes", () => {
-    it("returns unique, sorted sovereignty types", () => {
-      expect(getAllSovereigntyTypes(countries)).toEqual([
+  describe("getAllSovereigntyStatuses", () => {
+    it("returns unique, sorted sovereignty statuses", () => {
+      expect(getAllSovereigntyStatuses(countries)).toEqual([
         "Dependency",
         "Sovereign",
       ]);
     });
 
-    it("skips undefined sovereigntyType", () => {
+    it("skips undefined sovereigntyStatus", () => {
       const testCountries = [
-        { sovereigntyType: "Sovereign" as SovereigntyType },
-        { sovereigntyType: undefined },
+        { sovereigntyStatus: "Sovereign" as SovereigntyStatus },
+        { sovereigntyStatus: undefined },
         {},
       ] as Partial<Country>[];
-      expect(getAllSovereigntyTypes(testCountries as Country[])).toEqual([
+      expect(getAllSovereigntyStatuses(testCountries as Country[])).toEqual([
         "Sovereign",
       ]);
     });
   });
 
-  describe("getCountryRelations", () => {
-    const memberCases = [
-      ["GU", "dependencies"],
-      ["PR", "regions"],
-      ["VI", "disputes"],
-    ] as const;
-
-    it.each(memberCases)(
-      "returns sovereign and membership for %s",
-      (iso, prop) => {
-        const result = getCountryRelations(iso);
-        expect(result.sovereign).toEqual({ isoCode: "US" });
-        expect(
-          result.memberOf?.some(
-            (m) => m.prop === prop && m.sovereignIso === "US",
-          ),
-        ).toBe(true);
-      },
-    );
-
+  describe("getCountryTerritories", () => {
     it("returns mutual disputes for both sides", () => {
-      const a = getCountryRelations("AA");
-      const b = getCountryRelations("BB");
-      expect(a.groups?.disputes?.codes).toContain("BB");
-      expect(b.sovereign).toEqual({ isoCode: "AA" });
-      expect(
-        b.memberOf?.some(
-          (m) => m.prop === "disputes" && m.sovereignIso === "AA",
-        ),
-      ).toBe(true);
+      const a = getCountryTerritories(countries[0]);
+      const b = getCountryTerritories(countries[4]);
+      expect(a.groups?.disputes?.codes).toContain("US");
+      expect(b.groups?.disputes?.codes).toContain("FR");
     });
 
     it.each([
-      ["country with no relations", "FR"],
-      ["empty input", ""],
-      ["special country", "GB-ENG"],
-    ])("returns hasRelations: false for %s", (_, iso) => {
-      expect(getCountryRelations(iso)).toMatchObject({ hasRelations: false });
+      ["country with no relations", findCountry("DE") || stubCountry("DE")],
+      ["empty input", {} as Country],
+      ["special country", findCountry("GB-ENG") || stubCountry("GB-ENG")],
+    ])("returns hasRelations: false for %s", (_, country) => {
+      expect(getCountryTerritories(country as Country)).toMatchObject({
+        hasRelations: false,
+      });
     });
 
     it("returns full relations for a sovereign with relations", () => {
-      const result = getCountryRelations("US");
+      const result = getCountryTerritories(countries[0]);
       expect(result.hasRelations).toBe(true);
       expect(Array.isArray(result.groups?.dependencies?.codes)).toBe(true);
-      expect(Array.isArray(result.groups?.regions?.codes)).toBe(true);
+      expect(Array.isArray(result.groups?.overseas_regions?.codes)).toBe(true);
       expect(Array.isArray(result.groups?.disputes?.codes)).toBe(true);
+    });
+
+    it("returns empty results when countries not provided", () => {
+      const res = getCountryTerritories(stubCountry("FR"));
+      expect(res).toMatchObject({ hasRelations: false });
+      expect(res.relatedIsoCodes).toEqual([]);
+      expect(res.groups).toEqual({});
+    });
+
+    it("preserves group labels and deduplicates relatedIsoCodes", () => {
+      const local: Country[] = [
+        {
+          name: "Example",
+          isoCode: "ZZ",
+          territories: {
+            deps: { codes: ["A", "A"], label: "Dep" },
+            regions: { codes: ["B"] },
+          },
+        } as unknown as Country,
+      ];
+
+      const out = getCountryTerritories(local[0]);
+      expect(out.groups?.deps?.label).toBe("Dep");
+      expect(out.relatedIsoCodes).toBeDefined();
+      expect(new Set(out.relatedIsoCodes).size).toBe(2);
+      expect(out.relatedIsoCodes).toEqual(expect.arrayContaining(["A", "B"]));
+    });
+
+    it("reports hasRelations false when groups exist but have no codes", () => {
+      const local: Country[] = [
+        {
+          name: "EmptyGroups",
+          isoCode: "EM",
+          territories: {
+            deps: { codes: [] },
+          },
+        } as unknown as Country,
+      ];
+
+      const out = getCountryTerritories(local[0]);
+      expect(out.groups).toBeDefined();
+      expect(out.relatedIsoCodes).toEqual([]);
+      expect(out.hasRelations).toBe(false);
+    });
+
+    it("handles undefined group entries and missing codes", () => {
+      const local: Country = {
+        name: "Edge",
+        isoCode: "EG",
+        // simulate odd data shapes coming from JSON
+        territories: {
+          missingValue: undefined as unknown as any,
+          noCodes: { label: "NoCodes" } as unknown as any,
+        } as unknown as CountryTerritories,
+      } as Country;
+
+      const out = getCountryTerritories(local);
+      expect(out.groups).toBeDefined();
+      expect(out.groups?.missingValue?.codes).toEqual([]);
+      expect(out.groups?.noCodes?.codes).toEqual([]);
+      expect(out.groups?.noCodes?.label).toBe("NoCodes");
+      expect(out.relatedIsoCodes).toEqual([]);
+      expect(out.hasRelations).toBe(false);
+    });
+
+    it("handles null codes alongside populated codes", () => {
+      const local: Country = {
+        name: "NullCodes",
+        isoCode: "NC",
+        territories: {
+          someGroup: { codes: null as unknown as string[] },
+          otherGroup: { codes: ["X"] },
+        } as unknown as CountryTerritories,
+      } as Country;
+
+      const out = getCountryTerritories(local);
+      expect(out.relatedIsoCodes).toEqual(["X"]);
+      expect(out.hasRelations).toBe(true);
     });
   });
 
@@ -260,7 +309,11 @@ describe("countryData utils", () => {
         { isoCode: "FR" },
       ];
       const result = getCountriesWithOwnFlag(countries as any);
-      expect(result).toEqual([{ isoCode: "US" }, { isoCode: "FR" }]);
+      expect(result).toEqual([
+        { isoCode: "US" },
+        { isoCode: "XX" },
+        { isoCode: "FR" },
+      ]);
     });
   });
 

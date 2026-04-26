@@ -2,7 +2,7 @@ import type { Country, Currency } from "../../types";
 import { getTranscontinentalInfo } from "../../utils/countryData";
 import {
   formatTimezones,
-  getAliasesDisplay,
+  getAltNamesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
 } from "../../utils/countryInfo";
@@ -58,20 +58,24 @@ export function CountryInfoTable({
           </td>
         </tr>
         <tr>
-          <td className="font-semibold">Area:</td>
-          <td>{country.area?.toLocaleString()} km²</td>
-        </tr>
-        <tr>
-          <td className="font-semibold">Population:</td>
-          <td>{country.population?.toLocaleString()}</td>
-        </tr>
-        <tr>
           <td className="font-semibold">Capital:</td>
           <td>{country.capital || "None"}</td>
         </tr>
         <tr>
           <td className="font-semibold">Languages:</td>
           <td>{getLanguagesDisplay(country.languages)}</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Government:</td>
+          <td>{country.government || "—"}</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Area:</td>
+          <td>{country.area?.toLocaleString()} km²</td>
+        </tr>
+        <tr>
+          <td className="font-semibold">Population:</td>
+          <td>{country.population?.toLocaleString()}</td>
         </tr>
         <tr>
           <td className="font-semibold">Currency:</td>
@@ -95,10 +99,10 @@ export function CountryInfoTable({
           <td className="font-semibold">ISO 3166-1 code:</td>
           <td>{country.isoCode}</td>
         </tr>
-        {country.aliases && country.aliases.length > 0 && (
+        {country.altNames && country.altNames.length > 0 && (
           <tr>
             <td className="font-semibold">Also known as:</td>
-            <td>{getAliasesDisplay(country.aliases)}</td>
+            <td>{getAltNamesDisplay(country.altNames)}</td>
           </tr>
         )}
       </tbody>

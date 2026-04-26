@@ -40,10 +40,10 @@ export function qualifierSuggestionProvider(input: string) {
 /**
  * Builds a search string for a country by concatenating relevant properties.
  * @param country - The country object to build the search string from.
- * @returns A string that combines the country's name and aliases for search purposes.
+ * @returns A string that combines the country's name and alternative names for search purposes.
  */
 export function buildSearchString(country: Country) {
-  return [country.name, ...(country.aliases ?? [])].join(" ");
+  return [country.name, ...(country.altNames ?? [])].join(" ");
 }
 
 /**
@@ -124,12 +124,17 @@ export function getQualifierTokens(
     return Array.from(new Set(toks)).filter(Boolean).map(String);
   }
   if (key === "sovereign") {
-    return [country.sovereigntyType === "Sovereign" ? "true" : "false"];
+    const toks: string[] = [];
+    toks.push(country.sovereigntyStatus === "Sovereign" ? "true" : "false");
+    const sstate = country.sovereignState || undefined;
+    if (sstate) toks.push(String(sstate).toUpperCase());
+    return toks;
   }
   if (key === "visited")
     return vIso ? [vIso.includes(country.isoCode) ? "true" : "false"] : [];
   const prop = country[key];
   if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
   if (typeof prop === "string") return [prop];
+  if (typeof prop === "boolean") return [prop ? "true" : "false"];
   return [] as string[];
 }

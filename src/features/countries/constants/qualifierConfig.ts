@@ -13,8 +13,11 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   },
   region: { key: "region", label: "Region", type: "string" },
   subregion: { key: "subregion", label: "Subregion", type: "string" },
+  tc: { key: "tc", label: "Transcontinental", type: "string" },
+  geotype: { key: "geoType", label: "Geographic type", type: "string" },
   capital: { key: "capital", label: "Capital", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
+  government: { key: "government", label: "Government type", type: "string" },
   area: { key: "area", label: "Area (km²)", type: "number" },
   population: { key: "population", label: "Population", type: "number" },
   currency: { key: "currency", label: "Currency", type: "string" },
@@ -22,11 +25,11 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   tz: { key: "timezones", label: "Time zone", type: "string" },
   callingcode: { key: "callingCode", label: "Calling code", type: "string" },
   drivingside: { key: "drivingSide", label: "Driving side", type: "string" },
-  sovereignty: { key: "sovereigntyType", label: "Sovereignty", type: "string" },
-  geotype: { key: "geoType", label: "Geographic type", type: "string" },
+  sovereignty: { key: "sovereigntyStatus", label: "Sovereignty", type: "string" },
   sovereign: { key: "sovereign", label: "Sovereign", type: "string" },
-  visited: { key: "visited", label: "Visited", type: "string" },
-  tc: { key: "tc", label: "Transcontinental", type: "string" },
+  unmember: { key: "unMember", label: "UN member", type: "boolean" },
+  memberof: { key: "memberOf", label: "Member of", type: "string" },
+  visited: { key: "visited", label: "Visited", type: "boolean" },
 };
 
 export const SUPPORTED_QUALIFIERS = keysOf(COUNTRY_QUALIFIER_MAP);

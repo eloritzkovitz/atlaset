@@ -5,6 +5,8 @@ import type { Operator } from "@types";
 export type Country = {
   /** The official name of the country. */
   name: string;
+  /** Alternative names or abbreviations for the country. */
+  altNames?: string[];
   /** The ISO 3166-1 alpha-2 code for the country. */
   isoCode: string;
   /** The ISO 3166-1 alpha-3 code for the country. */
@@ -15,10 +17,14 @@ export type Country = {
   subregion?: string;
   /** Transcontinental information for the country. */
   transcontinental?: TranscontinentalInfo;
+  /** The geographic type of the country. */
+  geoType?: GeoType;
   /** The capital city of the country. */
   capital?: string;
   /** The languages spoken in the country. */
   languages?: string[];
+  /** The government type of the country. */
+  government?: string;
   /** The area of the country in square kilometers. */
   area?: number;
   /** The population of the country. */
@@ -31,12 +37,16 @@ export type Country = {
   callingCode: string;
   /** The road traffic direction for the country. */
   drivingSide?: "Left" | "Right" | undefined;
-  /** The sovereignty type of the country. */
-  sovereigntyType?: SovereigntyType;
-  /** The geographic type of the country. */
-  geoType?: GeoType;
-  /** Alternative names or abbreviations for the country. */
-  aliases?: string[];
+  /** The sovereignty status of the country. */
+  sovereigntyStatus?: SovereigntyStatus;
+  /** The sovereign state of the country. */
+  sovereignState?: string;
+  /** List of territories & claims for the country. */
+  territories?: CountryTerritories;
+  /** Whether the country is a UN member. */
+  unMember?: boolean;
+  /** The organizations the country is a member of. */
+  memberOf?: string[];
 };
 
 /** Represents an entry for a transcontinental country. */
@@ -66,8 +76,8 @@ export type Currency = {
   name: string;
 };
 
-/** Sovereignty types for countries. */
-export type SovereigntyType =
+/** Sovereignty statuses for countries. */
+export type SovereigntyStatus =
   | "Sovereign"
   | "Dependency"
   | "Overseas Region"
@@ -77,6 +87,13 @@ export type SovereigntyType =
 
 /** Geographic types for countries. */
 export type GeoType = "Coastal" | "Landlocked" | "Island";
+
+export type CountryTerritoriesGroup = {
+  codes: string[];
+  label?: string;
+};
+
+export type CountryTerritories = Record<string, CountryTerritoriesGroup>;
 
 /** Represents a list of countries. */
 export type CountryList = {
@@ -97,7 +114,7 @@ export type CountryQualifierKey =
 export type CountryQualifierConfig = {
   key: CountryQualifierKey;
   label?: string;
-  type?: "string" | "number" | "date";
+  type?: "string" | "boolean" | "number" | "date";
 };
 
 /** Modifier configuration for country filtering. */
@@ -106,7 +123,6 @@ export type CountryModifiers = {
   tc?: string;
   tcOption?: { scope?: TranscontinentalScope; mode?: TranscontinentalMode };
   dst?: boolean | string;
-  of?: string;
   count?: { op: Operator; value: number } | undefined;
   year?: { op: Operator; year: number } | undefined;
   first?: { op: Operator; year: number } | undefined;
@@ -119,7 +135,7 @@ export type CountryFilterOptions = {
   selectedRegion?: string;
   selectedSubregion?: string;
   selectedGeoType?: GeoType | "";
-  selectedSovereignty?: SovereigntyType | "";  
+  selectedSovereignty?: SovereigntyStatus | "";
   selectedVisited?: VisitedStatus;
   layerCountries?: string[];
   modifiers?: CountryModifiers;

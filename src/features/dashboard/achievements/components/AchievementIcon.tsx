@@ -1,11 +1,12 @@
 import {
-  FaMedal,
-  FaTrophy,
-  FaGlobe,
+  FaBoxesStacked,  
+  FaBuildingColumns,  
   FaCrown,
-  FaLandmark,
-  FaBoxesStacked,
+  FaGlobe,
+  FaMasksTheater,
+  FaMedal,
   FaSuitcaseRolling,
+  FaTrophy,
 } from "react-icons/fa6";
 import type { Achievement } from "../types";
 
@@ -47,9 +48,14 @@ export function AchievementIcon({ type, locked }: AchievementIconProps) {
         "bg-gradient-to-br from-red-300 via-red-500 to-rose-400 ring-2 ring-red-300";
       break;
     case "cultural":
-      icon = <FaLandmark {...iconProps} />;
+      icon = <FaMasksTheater {...iconProps} />;
       bgClass =
         "bg-gradient-to-br from-purple-300 via-purple-500 to-fuchsia-400 ring-2 ring-purple-300";
+      break;
+    case "affiliation":
+      icon = <FaBuildingColumns {...iconProps} />;
+      bgClass =
+        "bg-gradient-to-br from-teal-300 via-teal-500 to-emerald-400 ring-2 ring-teal-300";
       break;
     case "trips":
       icon = <FaSuitcaseRolling {...iconProps} />;

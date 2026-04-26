@@ -1,25 +1,26 @@
 import { useMemo, useState } from "react";
 import { capitalizeWords } from "@utils/string";
 import { CountryListGroup } from "./CountryListGroup";
-import { useCountryData } from "../../hooks/useCountryData";
-import { getCountryName, getCountryRelations } from "../../utils/countryData";
+import { getCountryName, getCountryTerritories } from "../../utils/countryData";
+import type { Country } from "../../types";
 
-interface CountryRelationsContentProps {
-  country: { isoCode: string };
+interface CountryTerritoriesContentProps {
+  country: Country;
+  countries: Country[];
   onSelectCountry?: (isoCode: string) => void;
 }
 
-export function CountryRelationsContent({
+export function CountryTerritoriesContent({
   country,
+  countries,
   onSelectCountry,
-}: CountryRelationsContentProps) {
-  const { countries } = useCountryData();
+}: CountryTerritoriesContentProps) {
   const group =
     country && country.isoCode
-      ? getCountryRelations(country.isoCode)
+      ? getCountryTerritories(country)
       : undefined;
 
-  // Prepare sections from relations data
+  // Prepare sections from territories data
   const sections = useMemo(() => {
     const sortByName = (arr: string[]) =>
       arr.slice().sort((a, b) => {
@@ -28,7 +29,7 @@ export function CountryRelationsContent({
         return nameA.localeCompare(nameB);
       });
 
-    // If no group or empty relations, return empty sections
+    // If no group or empty territories, return empty sections
     if (!group) return [];
 
     // If this ISO is a sovereign with named groups

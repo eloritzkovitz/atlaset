@@ -2,10 +2,9 @@ import type { User } from "firebase/auth";
 import { ICONS } from "@constants/icons";
 import {
   CountryFlag,
-  getCountryName,
-  getCountryRelations,
-  regionIcons,
   defaultRegionIcon,
+  getCountryName,
+  regionIcons,
   type Country,
 } from "@features/countries";
 import { UserAvatar, type Friend } from "@features/user";
@@ -29,10 +28,10 @@ interface RenderSearchItemOptions {
  */
 function getCountryLabel(item: Country, countries: Country[]) {
   const sovereignName = getCountryName(
-    getCountryRelations(item.isoCode).sovereign?.isoCode || "Unknown",
+    item.sovereignState || "Unknown",
     countries,
   );
-  switch (item.sovereigntyType) {
+  switch (item.sovereigntyStatus) {
     case "Dependency":
       return sovereignName ? `Dependency of ${sovereignName}` : "Country";
     case "Overseas Region":
@@ -113,7 +112,12 @@ export function renderSearchItem(
           label={getCountryLabel(item, countries)}
           icon={
             <CountryFlag
-              flag={{ isoCode: item.isoCode, ratio: "3x2", size: "32" }}
+              flag={{
+                isoCode: item.isoCode,
+                sovereignState: item.sovereignState,
+                ratio: "3x2",
+                size: "32",
+              }}
             />
           }
           onClick={() => {

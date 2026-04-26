@@ -13,7 +13,6 @@ export const MODIFIER_MAP: Record<
   match: { key: "match", label: "Match mode", type: "string" },
   tc: { key: "tc", label: "Transcontinental", type: "string" },
   dst: { key: "dst", label: "Include DST timezones", type: "boolean" },
-  of: { key: "of", label: "Sovereignty", type: "string" },
   count: { key: "count", label: "Visit count", type: "number" },
   year: { key: "year", label: "Year", type: "number" },
   first: { key: "first", label: "First visit year", type: "number" },

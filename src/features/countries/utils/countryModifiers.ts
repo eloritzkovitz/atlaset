@@ -15,7 +15,6 @@ import {
   parseYearComparator,
 } from "@utils/number";
 import { getTranscontinentalInfo } from "./countryData";
-import { COUNTRY_RELATIONS } from "../constants/countryRelations";
 import type {
   Country,
   CountryModifiers,
@@ -37,7 +36,6 @@ export function normalizeModifiers(
   if (!mods) return out;
   if (typeof mods.tc !== "undefined")
     out.tc = mods.tc as CountryModifiers["tc"];
-  if (typeof mods.of !== "undefined") out.of = String(mods.of).toUpperCase();
   out.count = mods.count
     ? (parseComparator(String(mods.count), "\\d+") ?? undefined)
     : undefined;
@@ -92,20 +90,6 @@ export function ensureModifiers(mods?: unknown): CountryModifiers {
   return normalizeModifiers(
     mods as Record<string, boolean | string> | undefined,
   );
-}
-
-/**
- * Returns true if the given country is related to the provided sovereignty ISO (dependencies or regions).
- */
-export function matchesSovereigntyOf(
-  country: Country,
-  ofIso?: string | undefined,
-) {
-  if (!ofIso) return false;
-  const sovereignEntry = COUNTRY_RELATIONS[ofIso];
-  const groups = sovereignEntry ? Object.values(sovereignEntry) : [];
-  const deps = groups.flatMap((g) => g?.codes ?? []);
-  return deps.includes(country.isoCode);
 }
 
 /**
@@ -188,12 +172,7 @@ export function applyModifiersToCountry(
   mods: CountryModifiers,
   visitContext?: VisitContext,
 ) {
-  if (!mods) return true;
-
-  if (mods.of) {
-    const ofIso = String(mods.of).toUpperCase();
-    if (!matchesSovereigntyOf(country, ofIso)) return false;
-  }
+  if (!mods) return true; 
 
   const vmap = visitContext?.visitedMap;
   const ymap = visitContext?.visitedYearMap;

@@ -39,10 +39,10 @@ describe("countrySearch utils", () => {
     expect(supported).toContain("currency");
   });
 
-  it("builds a search string containing name and aliases", () => {
+  it("builds a search string containing name and alternative names", () => {
     const s = buildSearchString(countries[4]);
     expect(s).toContain(countries[4].name);
-    expect(s).toContain(countries[4].aliases?.[0]);
+    expect(s).toContain(countries[4].altNames?.[0]);
   });
 
   describe("getQualifierTokens", () => {
@@ -71,7 +71,7 @@ describe("countrySearch utils", () => {
       expect(caTokens).toContain("Europe");
     });
 
-    it("handles sovereign and visited flags", () => {
+    it("handles boolean flags", () => {
       const sov = getQualifierTokens(countries[0], "sovereign");
       expect(sov).toEqual(["true"]);
       const visitedTrue = getQualifierTokens(countries[0], "visited", {
@@ -86,6 +86,10 @@ describe("countrySearch utils", () => {
         } as VisitContext,
       });
       expect(visitedFalse).toEqual(["false"]);
+      const unMemberTrue = getQualifierTokens(countries[0], "unMember");
+      expect(unMemberTrue).toEqual(["true"]);
+      const unMemberFalse = getQualifierTokens(countries[1], "unMember");
+      expect(unMemberFalse).toEqual(["false"]);
     });
 
     it("returns empty arrays when visit-related auxiliary data is missing", () => {

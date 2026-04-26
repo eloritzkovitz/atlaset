@@ -43,25 +43,28 @@ qualifier:query modifier:query
 
 #### **Supported qualifiers**
 
-| Qualifier         | Type                |                    Example | Notes                                                                                                       |
-| ----------------- | ------------------- | -------------------------: | ----------------------------------------------------------------------------------------------------------- |
-| `isocode`         | string              |               `isocode:gb` | Matches ISO 3166-1 alpha-2 code                                                                             |
-| `iso3code`        | string              |             `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                                                             |
-| `region`          | string              |              `region:asia` | Matches countries in a given region (continent)                                                             |
-| `subregion`       | string              | `subregion:southeast asia` | Matches countries in a given subregion                                                                      |
-| `tc`              | boolean / string    |                  `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `cultural`, `other` |
-| `capital`         | string              |            `capital:paris` | Matches capital name                                                                                        |
-| `language`        | string              |         `language:spanish` | Matches language                                                                                            |
-| `area`            | number (comparison) |               `area:~2000` | Matches area (in km²). Supports plain or comma-separated numbers                                            |
-| `population`      | number (comparison) |   `population:>=1,000,000` | Matches population. Supports plain or comma-separated numbers                                               |
-| `currency`        | string              |             `currency:eur` | Matches ISO 4217 code                                                                                       |
-| `timezone` / `tz` | string              |          `timezone:utc+03` | Matches countries by UTC offset. Accepts `UTC±HH`, `UTC±HH:MM`, `±HH:MM` or `±HHMM`                         |
-| `callingcode`     | string              |          `callingcode:+44` | Matches calling code                                                                                        |
-| `drivingside`     | string              |         `drivingside:left` | Matches driving side. Values: `left`, `right`                                                               |
-| `sovereignty`     | string              |    `sovereignty:sovereign` | Matches sovereignty type. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized`  |
-| `sovereign`       | boolean             |           `sovereign:true` | Matches sovereign countries. Values: `true` / `false`                                                       |
-| `geotype`         | string              |           `geotype:island` | Matches geographic types. Values: `coastal`, `landlocked`, `island`                                         |
-| `visited`         | boolean             |             `visited:true` | Matches visited countries. Values: `true` / `false`                                                         |
+| Qualifier         | Type                |                            Example | Notes                                                                                                        |
+| ----------------- | ------------------- | ---------------------------------: | ------------------------------------------------------------------------------------------------------------ |
+| `isocode`         | string              |                       `isocode:gb` | Matches ISO 3166-1 alpha-2 code                                                                              |
+| `iso3code`        | string              |                     `iso3code:gbr` | Matches ISO 3166-1 alpha-3 code                                                                              |
+| `region`          | string              |                      `region:asia` | Matches countries in a given region (continent)                                                              |
+| `subregion`       | string              |         `subregion:southeast asia` | Matches countries in a given subregion                                                                       |
+| `tc`              | boolean / string    |                          `tc:true` | Matches transcontinental countries. Values: `true` / `false`, `contiguous`, `overseas`, `cultural`, `other`  |
+| `geotype`         | string              |                   `geotype:island` | Matches geographic types. Values: `coastal`, `landlocked`, `island`                                          |
+| `capital`         | string              |                    `capital:paris` | Matches capital name                                                                                         |
+| `language`        | string              |                 `language:spanish` | Matches language                                                                                             |
+| `government`      | string              | `government:presidential republic` | Matches government type                                                                                      |
+| `area`            | number (comparison) |                       `area:~2000` | Matches area (in km²). Supports plain or comma-separated numbers                                             |
+| `population`      | number (comparison) |           `population:>=1,000,000` | Matches population. Supports plain or comma-separated numbers                                                |
+| `currency`        | string              |                     `currency:eur` | Matches ISO 4217 code                                                                                        |
+| `timezone` / `tz` | string              |                  `timezone:utc+03` | Matches countries by UTC offset. Accepts `UTC±HH`, `UTC±HH:MM`, `±HH:MM` or `±HHMM`                          |
+| `callingcode`     | string              |                  `callingcode:+44` | Matches calling code                                                                                         |
+| `drivingside`     | string              |                 `drivingside:left` | Matches driving side. Values: `left`, `right`                                                                |
+| `sovereignty`     | string              |            `sovereignty:sovereign` | Matches sovereignty status. Values: `sovereign`, `dependency`, `overseas region`, `disputed`, `unrecognized` |
+| `sovereign`       | string              |                   `sovereign:true` | Matches sovereign status or governing sovereign state. Values: `true` / `false`, `<isocode>`                 |
+| `unmember`        | boolean             |                    `unmember:true` | Matches UN membership. Values: `true` / `false`                                                              |
+| `memberof`        | string              |                      `memberof:eu` | Matches membership in international organizations                                                            |
+| `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                          |
 
 #### **Additional Modifiers**
 
@@ -70,7 +73,6 @@ qualifier:query modifier:query
 | `match`  | string              | `language:english match:exact` | Supports `prefix` (default), `substring`, `exact`, `regex`                                                                                      |
 | `tc`     | string              |  `region:europe tc:other:only` | Supports additional modes: `default`, `include`, `only`                                                                                         |
 | `dst`    | boolean             |      `timezone:+0200 dst:true` | For `timezone`, matches countries based on daylight saving time offsets. Zones without DST will filter by winter time. Values: `true` / `false` |
-| `of`     | string              | `sovereignty:dependency of:gb` | For `sovereignty:dependency` or `sovereignty:overseas region`, filters by sovereign `isocode`                                                   |
 | `count`  | number (comparison) |        `visited:true count:>1` | For `visited:true`, filters by visit count                                                                                                      |
 | `year`   | number (comparison) |       `visited:true year:2020` | For `visited:true`, filters by visit year                                                                                                       |
 | `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit                                                                                              |

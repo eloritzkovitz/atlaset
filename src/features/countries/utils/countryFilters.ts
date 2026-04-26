@@ -10,7 +10,6 @@ import { matchesToken, parseQualifierSearch } from "@utils/search";
 import {
   applyModifiersToCountry,
   ensureModifiers,
-  matchesSovereigntyOf,
   matchesTranscontinental,
   parseTCOption,
 } from "./countryModifiers";
@@ -103,7 +102,7 @@ export function filterCountries(
     )
       return false;
 
-    if (selectedSovereignty && country.sovereigntyType !== selectedSovereignty)
+    if (selectedSovereignty && country.sovereigntyStatus !== selectedSovereignty)
       return false;
 
     if (selectedGeoType && country.geoType !== selectedGeoType) return false;
@@ -160,21 +159,10 @@ export function filterCountriesByQualifier(
     }
   }
 
-  // Handle sovereigntyType with "of" modifier for related countries
-  if (key === "sovereigntyType") {
-    const ofIso = mods?.of ? String(mods.of).toUpperCase() : undefined;
-    if (ofIso) {
-      const search = searchValue;
-      return countries.filter((c) => {
-        if (!matchesSovereigntyOf(c, ofIso)) return false;
-        if (!search) return true;
-        return (c.sovereigntyType ?? "").toLowerCase().includes(search);
-      });
-    }
-
-    // Fallback: match sovereignty type string
+  // Handle sovereignty status
+  if (key === "sovereigntyStatus") {
     return countries.filter((country) =>
-      (country.sovereigntyType ?? "").toLowerCase().includes(searchValue),
+      (country.sovereigntyStatus ?? "").toLowerCase().includes(searchValue),
     );
   }
 
@@ -237,7 +225,7 @@ export function getCountryCounts({
   const allCount = filteredCountries.length;
   const allCountWithoutLayers = filteredCountriesNoLayer.length;
   const sovereignCount = filteredCountries.filter(
-    (c) => c.sovereigntyType === "Sovereign",
+    (c) => c.sovereigntyStatus === "Sovereign",
   ).length;
   const visitedCount = filteredCountries.filter((c) =>
     visitedIsoCodes.includes(c.isoCode),
@@ -252,11 +240,11 @@ export function getCountryCounts({
 
 /**
  * Returns a filter function for sovereignty based on the criteria.
- * @param sovereignOnly - If true, only matches countries with sovereigntyType "Sovereign".
+ * @param sovereignOnly - If true, only matches countries with sovereigntyStatus "Sovereign".
  */
 export function createSovereigntyFilter(sovereignOnly?: boolean) {
   return (c: Country) =>
-    sovereignOnly ? c.sovereigntyType === "Sovereign" : true;
+    sovereignOnly ? c.sovereigntyStatus === "Sovereign" : true;
 }
 
 /**
@@ -303,11 +291,8 @@ export function applyQualifierSearch(
     for (const [rawKey, rawVal] of Object.entries(rawMods)) {
       const key = rawKey.toLowerCase();
       if (key === parsed.qualifier.toLowerCase()) continue;
-      if (Object.prototype.hasOwnProperty.call(MODIFIER_MAP, key)) {
-        if (key === "of")
-          parsedMods.of = parsedMods.of ?? String(rawVal).toUpperCase();
-        continue;
-      }
+      // Skip known modifiers handled elsewhere
+      if (Object.prototype.hasOwnProperty.call(MODIFIER_MAP, key)) continue;
 
       const qConf = resolveQualifierConfig(key);
       if (!qConf) continue;

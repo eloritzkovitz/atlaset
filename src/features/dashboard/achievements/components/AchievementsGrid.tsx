@@ -48,6 +48,11 @@ const typeOptions = [
     colorClass: "bg-purple-600",
   },
   {
+    value: "affiliation",
+    label: "Affiliation",
+    colorClass: "bg-teal-600",
+  },
+  {
     value: "trips",
     label: "Trips",
     colorClass: "bg-orange-600",

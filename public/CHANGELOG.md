@@ -1,16 +1,23 @@
 # Changelog
 
+## 2026-04-26
+
+- **[feature]** **Countries:** Added government type, territories, UN membership, sovereign state and affiliations data
+- **[feature]** **Countries:** Added affiliations tab and renamed relations to territories
+- **[feature]** **Countries:** Added action button to open country details in the dashboard
+- **[chore]** **Dashboard | Achievements:** Updated achievements to support the new changes
+
 ## 2026-04-22
 
-- **[chore]** **Countries:** Added sort options for area and population
-- **[chore]** **Countries:** Added geographic type to core filters
+- **[feature]** **Countries:** Added sort options for area and population
+- **[feature]** **Countries:** Added geographic type to core filters
 - **[bugfix]** **Countries:** Updated filtering logic and control when moving between lists
 
 ## 2026-04-21
 
-- **[chore]** **Countries:** Added area and geotype data
+- **[feature]** **Countries:** Added area and geotype data
 - **[chore]** **Dashboard:** Updated criteria logic and matched it with qualifier logic
-- **[chore]** **General:** Added ~ operator for qualifier search
+- **[feature]** **General:** Added ~ operator for qualifier search
 
 ## 2026-04-14
 
@@ -18,12 +25,12 @@
 
 ## 2026-04-13
 
-- **[chore]** **Countries:** Added driving side to country data, display and qualifier search
+- **[feature]** **Countries:** Added driving side to country data, display and qualifier search
 - **[chore]** **General:** Modifiers will now be highlighted in addition to qualifiers
 
 ## 2026-04-11
 
-- **[chore]** **Countries:** Added time zones to country data, display and qualifier search
+- **[feature]** **Countries:** Added time zones to country data, display and qualifier search
 - **[chore]** **Countries:** Removed isocode, region and subregion from free-text search as they are qualifiers
 - **[chore]** **General:** Redesigned qualifier search
 
@@ -44,8 +51,7 @@
 
 ## 2026-03-23
 
-- **[chore]** **Countries:** Added new qualifiers for filtering
-- **[feature]** **countries:** Added autocomplete suggestions for search qualifiers
+- **[feature]** **Countries:** Added new qualifiers for filtering
 
 ## 2026-03-22
 

@@ -70,17 +70,14 @@ export function CountryDetailsModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] min-h-[650px] sm:p-8 shadow-lg relative"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] min-h-[680px] sm:p-8 shadow-lg relative"
         containerRef={modalRef}
         disableClose={showCalendar}
         draggable
       >
         <div className="relative overflow-visible flex flex-col h-full">
           <CountryDetailsHeader
-            country={{
-              isoCode: currentCountry.isoCode,
-              name: currentCountry.name,
-            }}
+            country={currentCountry}              
             isVisited={isVisited}
             isHome={homeCountry === currentCountry.isoCode}
             centerOnCountry={centerOnCountry}
@@ -93,7 +90,7 @@ export function CountryDetailsModal({
             resetTabOnClose={true}
             isOpen={!!isOpen}
             onSelectCountry={handleSelectCountry}
-            className="max-h-[615px]"
+            className="max-h-[660px]"
           />
         </div>
       </Modal>

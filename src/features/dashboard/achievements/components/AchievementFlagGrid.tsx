@@ -26,9 +26,9 @@ export function AchievementFlagGrid({
       style={{ gridTemplateColumns: `repeat(auto-fit, minmax(36px, 1fr))` }}
     >
       {sortedCountries.map((country) => {
-        // Prepare flag props
         const flag: Flag = {
           isoCode: country.isoCode,
+          sovereignState: country.sovereignState,
           ratio: "3x2",
           size: "32",
         };

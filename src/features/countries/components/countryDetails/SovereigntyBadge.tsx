@@ -1,16 +1,16 @@
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
 import { useCountryData } from "../../hooks/useCountryData";
+import type { SovereigntyStatus } from "../../types";
 import { getCountryName } from "../../utils/countryData";
-import type { SovereigntyType } from "../../types";
 
 interface SovereigntyBadgeProps {
-  type?: SovereigntyType;
-  sovereignIsoCode?: string;
+  type?: SovereigntyStatus;
+  sovereignState?: string;
   onSelectCountry?: (isoCode: string) => void;
 }
 
 // Map sovereignty types to badge colors
-const badgeColors: Record<SovereigntyType, string> = {
+const badgeColors: Record<SovereigntyStatus, string> = {
   Sovereign: "bg-info-hover/70",
   Dependency: "bg-muted/70",
   "Overseas Region": "bg-success-hover/50",
@@ -20,7 +20,7 @@ const badgeColors: Record<SovereigntyType, string> = {
 };
 
 // Optional label prefixes for sovereignty types
-const labelPrefixes: Partial<Record<SovereigntyType, string>> = {
+const labelPrefixes: Partial<Record<SovereigntyStatus, string>> = {
   "Overseas Region": "Overseas Region of ",
   Disputed: "Disputed by ",
   Dependency: "Dependency of ",
@@ -28,7 +28,7 @@ const labelPrefixes: Partial<Record<SovereigntyType, string>> = {
 
 export function SovereigntyBadge({
   type,
-  sovereignIsoCode,
+  sovereignState,
   onSelectCountry,
 }: SovereigntyBadgeProps) {
   const { countries } = useCountryData();
@@ -41,8 +41,8 @@ export function SovereigntyBadge({
   let label: React.ReactNode = type;
 
   // Add sovereign name with flag for certain types
-  if (sovereignIsoCode && labelPrefixes[type as keyof typeof labelPrefixes]) {
-    const name = getCountryName(sovereignIsoCode, countries);
+  if (sovereignState && labelPrefixes[type as keyof typeof labelPrefixes]) {
+    const name = getCountryName(sovereignState, countries);
     label = (
       <>
         {labelPrefixes[type as keyof typeof labelPrefixes]}
@@ -50,14 +50,14 @@ export function SovereigntyBadge({
           <button
             type="button"
             className="mx-[3px] inline-block align-middle hover:text-info focus:outline-none"
-            onClick={() => onSelectCountry(sovereignIsoCode)}
+            onClick={() => onSelectCountry(sovereignState)}
             tabIndex={0}
           >
-            <CountryWithFlag isoCode={sovereignIsoCode} name={name} />
+            <CountryWithFlag isoCode={sovereignState} name={name} />
           </button>
         ) : (
           <CountryWithFlag
-            isoCode={sovereignIsoCode}
+            isoCode={sovereignState}
             name={name}
             className="mx-[3px] inline-block align-middle"
           />

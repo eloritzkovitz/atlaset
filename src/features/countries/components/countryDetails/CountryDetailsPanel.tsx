@@ -2,21 +2,24 @@ import { useState, useEffect } from "react";
 import { TabButton } from "@components";
 import {
   CountryDetailsContent,
-  getCountryRelations,
+  getCountryTerritories,
   type Country,
   type Currency,
 } from "@features/countries";
+import { useCountryData } from "../../hooks/useCountryData";
 import type { Visit } from "@features/visits";
-import { CountryRelationsContent } from "./CountryRelationsContent";
+import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
+import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
 
 const tabLabels: Record<CountryDetailsTab, string> = {
   overview: "Overview",
-  relations: "Relations",
+  territories: "Territories & Claims",
+  affiliations: "Affiliations",
   visits: "Visits",
 };
 
-type CountryDetailsTab = "overview" | "relations" | "visits";
+type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 
 interface CountryDetailsPanelProps {
   country: Country;
@@ -45,6 +48,7 @@ export function CountryDetailsPanel({
   onSelectCountry,
   className,
 }: CountryDetailsPanelProps) {
+  const { countries } = useCountryData();
   const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
 
   // Reset to overview tab when modal is closed, if resetTabOnClose is true
@@ -63,12 +67,12 @@ export function CountryDetailsPanel({
     onTabChange?.(tab);
   };
 
-  // Recalculate hasRelationsTab for the current country
-  const getRelationsTab = (country: Country) => {
+  // Determine if the country has territories to show in the Territories tab
+  const getTerritoriesTab = (country: Country) => {
     try {
       const rel =
         country && country.isoCode
-          ? getCountryRelations(country.isoCode)
+          ? getCountryTerritories(country)
           : undefined;
       return rel && rel.hasRelations;
     } catch {
@@ -76,10 +80,17 @@ export function CountryDetailsPanel({
     }
   };
 
-  const currentHasRelationsTab = getRelationsTab(country);
-  const tabs: CountryDetailsTab[] = currentHasRelationsTab
-    ? ["overview", "relations", "visits"]
-    : ["overview", "visits"];
+  // Determine which tabs to show based on country data
+  const currentHasTerritoriesTab = getTerritoriesTab(country);
+  const currentHasAffiliationsTab = !!(
+    (country?.memberOf && country.memberOf.length > 0) ||
+    country?.unMember
+  );
+
+  const tabs: CountryDetailsTab[] = ["overview"];
+  if (currentHasTerritoriesTab) tabs.push("territories");
+  if (currentHasAffiliationsTab) tabs.push("affiliations");
+  tabs.push("visits");
 
   return (
     <>
@@ -105,11 +116,15 @@ export function CountryDetailsPanel({
               onSelectCountry={onSelectCountry}
             />
           )}
-          {activeTab === "relations" && currentHasRelationsTab && (
-            <CountryRelationsContent
+          {activeTab === "territories" && currentHasTerritoriesTab && (
+            <CountryTerritoriesContent
               country={country}
+              countries={countries}
               onSelectCountry={onSelectCountry}
             />
+          )}
+          {activeTab === "affiliations" && currentHasAffiliationsTab && (
+            <CountryAffiliationsContent country={country} />
           )}
           {activeTab === "visits" && (
             <CountryVisitsContent visits={categorizedVisits} />
