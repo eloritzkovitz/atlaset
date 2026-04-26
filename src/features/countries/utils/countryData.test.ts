@@ -30,8 +30,7 @@ vi.mock("../constants/countryRelations", () => ({
     AA: { disputes: { codes: ["BB"] } },
     BB: { disputes: { codes: ["AA"] } },
   },
-  FLAG_OVERRIDES: { YY: { sovereign: "US" } },
-  EXCLUDED_ISO_CODES: ["XX"],
+  FLAG_OVERRIDES: ["YY"],
 }));
 vi.mock("../constants/specialCountries", () => ({
   SPECIAL_COUNTRIES: {

@@ -26,6 +26,7 @@ export function CountryDetailsContent({
       <CountryFlag
         flag={{
           isoCode: country.isoCode,
+          sovereignState: country.sovereignState,
           ratio: "original",
           size: "256",
         }}

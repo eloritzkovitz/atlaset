@@ -40,6 +40,7 @@ export function TripList({
                   key={code}
                   flag={{
                     isoCode: country.isoCode,
+                    sovereignState: country.sovereignState,
                     ratio: "3x2",
                     size: "32",
                   }}

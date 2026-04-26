@@ -113,7 +113,12 @@ export function renderSearchItem(
           label={getCountryLabel(item, countries)}
           icon={
             <CountryFlag
-              flag={{ isoCode: item.isoCode, ratio: "3x2", size: "32" }}
+              flag={{
+                isoCode: item.isoCode,
+                sovereignState: item.sovereignState,
+                ratio: "3x2",
+                size: "32",
+              }}
             />
           }
           onClick={() => {

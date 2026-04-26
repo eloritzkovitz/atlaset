@@ -144,23 +144,17 @@ export const COUNTRY_RELATIONS: Record<string, CountryRelations> = {
   },
 };
 
-/** Represents flag overrides for territories that do not have their own flags. */
-export const FLAG_OVERRIDES: Record<
-  string,
-  { sovereign?: string; flag?: string }
-> = {
-  BQ: { sovereign: "NL" }, // Caribbean Netherlands
-  BV: { sovereign: "NO" }, // Bouvet Island
-  CP: { sovereign: "FR" }, // Clipperton Island
-  HM: { sovereign: "AU" }, // Heard Island and McDonald Islands
-  MF: { sovereign: "FR" }, // Saint Martin
-  SH: { sovereign: "GB" }, // Saint Helena, Ascension and Tristan da Cunha
-  SJ: { sovereign: "NO" }, // Svalbard and Jan Mayen
-  UM: { sovereign: "US" }, // United States Minor Outlying Islands
-  XL: { sovereign: "AU" }, // Coral Sea Islands
-  XM: { sovereign: "AU" }, // Ashmore and Cartier Islands
-  XQ: { sovereign: "GB" }, // Akrotiri and Dhekelia
-};
-
-// List of country codes that do not have their own flags, derived from FLAG_OVERRIDES
-export const EXCLUDED_ISO_CODES: string[] = Object.keys(FLAG_OVERRIDES).sort();
+/** Represents flag overrides for territories that use their sovereign state's flag. */
+export const FLAG_OVERRIDES: string[] = [
+  "BQ", // Caribbean Netherlands
+  "BV", // Bouvet Island
+  "CP", // Clipperton Island
+  "HM", // Heard Island and McDonald Islands
+  "MF", // Saint Martin
+  "SH", // Saint Helena, Ascension and Tristan da Cunha
+  "SJ", // Svalbard and Jan Mayen
+  "UM", // United States Minor Outlying Islands
+  "XL", // Coral Sea Islands
+  "XM", // Ashmore and Cartier Islands
+  "XQ", // Akrotiri and Dhekelia
+].sort();

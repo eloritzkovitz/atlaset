@@ -75,6 +75,7 @@ export function CountryItem({
               <CountryFlag
                 flag={{
                   isoCode: country.isoCode,
+                  sovereignState: country.sovereignState,
                   ratio: flagRatio || "original",
                   size: flagSize || (isMobile ? "32" : "64"),
                 }}

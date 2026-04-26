@@ -1,6 +1,7 @@
 /** Represents a flag. */
 export type Flag = {
   isoCode: string;
+  sovereignState?: string;
   ratio: FlagRatio;
   size?: FlagSize;
 };

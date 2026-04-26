@@ -12,6 +12,7 @@ interface CountryFlagProps {
 
 export function CountryFlag({ flag, style, className }: CountryFlagProps) {
   const size = Number(flag.size);
+  
   // For 3x2 flags, use a 3:2 aspect ratio
   const validSize = Number.isFinite(size) && size > 0 ? size : 32;
   const width = validSize;
@@ -19,13 +20,12 @@ export function CountryFlag({ flag, style, className }: CountryFlagProps) {
 
   // Check for special cases where the flag should be overridden by a sovereign or alternate flag
   const special = SPECIAL_COUNTRIES[flag.isoCode];
-  const override = FLAG_OVERRIDES[flag.isoCode];
+  const isOverridden = FLAG_OVERRIDES.includes(flag.isoCode);
+  
   const mappedIso =
     special?.flag ||
     special?.sovereign ||
-    override?.flag ||
-    override?.sovereign ||
-    flag.isoCode;
+    (isOverridden ? flag.sovereignState?.toUpperCase() || flag.isoCode : flag.isoCode);
 
   // Handle 3x2 flags
   if (flag.ratio === "3x2") {

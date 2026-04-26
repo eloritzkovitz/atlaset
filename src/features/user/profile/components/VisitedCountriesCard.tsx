@@ -28,6 +28,7 @@ export function VisitedCountriesCard({
                 <CountryFlag
                   flag={{
                     isoCode: c.isoCode,
+                    sovereignState: c.sovereignState,
                     ratio: "3x2",
                     size: "64",
                   }}

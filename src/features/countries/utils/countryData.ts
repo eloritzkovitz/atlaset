@@ -7,7 +7,7 @@ import { capitalizeWords } from "@utils/string";
 import type { CountryRelations } from "../constants/countryRelations";
 import {
   COUNTRY_RELATIONS,
-  EXCLUDED_ISO_CODES,
+  FLAG_OVERRIDES,
   type CountryRelationsGroup,
 } from "../constants/countryRelations";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
@@ -224,11 +224,12 @@ export function getCountryRelations(isoCode: string): {
 
 /**
  * Returns countries whose flag matches their own ISO code and is not empty.
- * If you add a flagIsoCode property for borrowed flags, this will skip those.
+ * @param countries - Array of country objects to filter.
+ * @returns Array of countries that have their own flag.
  */
 export function getCountriesWithOwnFlag(countries: Country[]): Country[] {
   return countries.filter(
-    (country) => !EXCLUDED_ISO_CODES.includes(country.isoCode),
+    (country) => !FLAG_OVERRIDES.includes(country.isoCode),
   );
 }
 
