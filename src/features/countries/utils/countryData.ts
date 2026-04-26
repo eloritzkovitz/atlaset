@@ -3,7 +3,7 @@
  */
 
 import { extractUniqueSorted } from "@utils/array";
-import { FLAG_OVERRIDES } from "../constants/countryRelations";
+import { FLAG_OVERRIDES } from "../constants/flagOverrides";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
 import type {
   Country,

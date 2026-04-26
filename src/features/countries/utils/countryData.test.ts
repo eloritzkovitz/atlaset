@@ -21,7 +21,7 @@ import {
   getAllGeoTypes,
 } from "./countryData";
 
-vi.mock("../constants/countryRelations", () => ({
+vi.mock("../constants/flagOverrides", () => ({
   FLAG_OVERRIDES: ["YY"],
 }));
 vi.mock("../constants/specialCountries", () => ({

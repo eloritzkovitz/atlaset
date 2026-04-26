@@ -8,7 +8,7 @@ import {
 } from "@features/countries";
 import { useCountryData } from "../../hooks/useCountryData";
 import type { Visit } from "@features/visits";
-import { CountryRelationsContent } from "./CountryRelationsContent";
+import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
 
@@ -117,7 +117,7 @@ export function CountryDetailsPanel({
             />
           )}
           {activeTab === "territories" && currentHasTerritoriesTab && (
-            <CountryRelationsContent
+            <CountryTerritoriesContent
               country={country}
               countries={countries}
               onSelectCountry={onSelectCountry}

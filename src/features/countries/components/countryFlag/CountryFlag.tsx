@@ -1,6 +1,6 @@
 import React from "react";
 import { _3x2 as Flags } from "@eloritzkovitz/atlaset-flags";
-import { FLAG_OVERRIDES } from "../../constants/countryRelations";
+import { FLAG_OVERRIDES } from "../../constants/flagOverrides";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import type { Flag } from "../../types/flag";
 
