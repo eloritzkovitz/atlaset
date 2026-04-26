@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
-import { useCountryData } from "../../hooks/useCountryData";
 
 interface CountryAffiliationsContentProps {
   country: { isoCode: string; memberOf?: string[] };
@@ -9,8 +8,6 @@ interface CountryAffiliationsContentProps {
 export function CountryAffiliationsContent({
   country,
 }: CountryAffiliationsContentProps) {
-  const { countries } = useCountryData();
-
   const sections = useMemo(() => {
     if (!country) return [];
 
@@ -25,7 +22,7 @@ export function CountryAffiliationsContent({
     }
 
     return sections;
-  }, [country, countries]);
+  }, [country]);
 
   const [expanded, setExpanded] = useState(() =>
     sections.reduce(
