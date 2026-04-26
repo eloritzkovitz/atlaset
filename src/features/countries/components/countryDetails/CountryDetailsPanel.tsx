@@ -78,9 +78,11 @@ export function CountryDetailsPanel({
     }
   };
 
+  // Determine which tabs to show based on country data
   const currentHasRelationsTab = getRelationsTab(country);
   const currentHasAffiliationsTab = !!(
-    country?.memberOf && country.memberOf.length > 0
+    (country?.memberOf && country.memberOf.length > 0) ||
+    country?.unMember
   );
 
   const tabs: CountryDetailsTab[] = ["overview"];
