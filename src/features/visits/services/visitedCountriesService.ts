@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@app/firebase";
 
 /**
@@ -17,6 +17,28 @@ export const visitedCountriesService = {
       Array.isArray(userSnap.data().visitedCountryCodes)
       ? userSnap.data().visitedCountryCodes
       : [];
+  },
+
+  /**
+   * Subscribe to visited country codes changes for a user.
+   * @param uid - The user ID.
+   * @param cb - Callback receiving the array of codes whenever it changes.
+   * @returns An unsubscribe function to stop listening.
+   */
+  onVisitedCountryCodesChange(uid: string, cb: (codes: string[]) => void) {
+    const userRef = doc(db, "users", uid);
+    const unsub = onSnapshot(userRef, (snap) => {
+      if (!snap.exists()) {
+        cb([]);
+        return;
+      }
+      const data = snap.data();
+      const codes = Array.isArray(data.visitedCountryCodes)
+        ? data.visitedCountryCodes
+        : [];
+      cb(codes);
+    });
+    return unsub;
   },
 
   /**
