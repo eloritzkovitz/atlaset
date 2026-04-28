@@ -21,7 +21,6 @@ export * from "./dom/useScrollVisibility";
 
 // Input
 export * from "./input/useKeyHandler";
-export * from "./input/usePendingFocus";
 
 // Markdown
 export * from "./markdown/useMarkdownFile";

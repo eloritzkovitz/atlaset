@@ -1,71 +1,13 @@
 import { renderHook, act } from "@testing-library/react";
 import { vi } from "vitest";
-import { useSearch } from "./useSearch";
+import {
+  staticUserResults,
+  staticCountries,
+  staticCurrencies,
+  staticRegions,
+  staticFriends,
+} from "@test-utils/mockSearchResults";
 
-const staticUserResults = [
-  {
-    uid: "1",
-    displayName: "Carol",
-    type: "user",
-    isCurrentUser: true,
-    isFriend: false,
-  },
-  {
-    uid: "2",
-    displayName: "Barbara",
-    type: "user",
-    isCurrentUser: false,
-    isFriend: true,
-  },
-  {
-    uid: "3",
-    displayName: "Alice",
-    type: "user",
-    isCurrentUser: false,
-    isFriend: false,
-  },
-];
-const staticCountries = [
-  {
-    name: "France",
-    type: "country",
-    region: "Europe",
-    subregion: "Western Europe",
-  },
-  {
-    name: "Germany",
-    type: "country",
-    region: "Europe",
-    subregion: "Western Europe",
-  },
-];
-const staticCurrencies = [
-  {
-    code: "EUR",
-    name: "Euro",
-  },
-];
-const staticRegions = ["Europe"];
-
-vi.mock("@features/countries", () => ({
-  useCountryData: () => ({
-    countries: staticCountries,
-    currencies: staticCurrencies,
-    allRegions: staticRegions,
-  }),
-  getSubregionsForRegion: (_: any[], region: string) =>
-    region === "Europe" ? ["Western Europe"] : [],
-}));
-vi.mock("../hooks/useUserSearch", () => ({
-  useUserSearch: () => ({ results: staticUserResults, loading: false }),
-}));
-vi.mock("@contexts/AuthContext", () => ({
-  useAuth: () => ({ user: { uid: "1" } }),
-}));
-const staticFriends = [{ uid: "2" }];
-vi.mock("@features/user", () => ({
-  useUserFriends: () => ({ friends: staticFriends }),
-}));
 const mockSearchFilter = (
   items: any[],
   getName: (item: any) => string,
@@ -79,6 +21,12 @@ const mockSearchFilter = (
     )
     .map(mapFn || ((x) => x));
 };
+
+const wrapper = ({ children }: { children: React.ReactNode }) => children;
+const getResultsByType = (results: any[], type: string) =>
+  results.filter((r) => r.type === type);
+const getNames = (results: any[], key: string) => results.map((r) => r[key]);
+
 vi.mock("../utils/search", () => ({
   rankByStartsWithAndContains: (
     items: any[],
@@ -93,23 +41,92 @@ vi.mock("../utils/search", () => ({
   ) => mockSearchFilter(items, getName, searchTerm, mapFn),
 }));
 
-const wrapper = ({ children }: { children: React.ReactNode }) => children;
-const getResultsByType = (results: any[], type: string) =>
-  results.filter((r) => r.type === type);
-const getNames = (results: any[], key: string) => results.map((r) => r[key]);
+async function renderUseSearchWithMocks(
+  term: string,
+  {
+    countriesMock,
+    userSearchMock,
+    authMock,
+    userFriendsMock,
+    utilsSearchMock,
+    useProps,
+  }: {
+    countriesMock?: any;
+    userSearchMock?: any;
+    authMock?: any;
+    userFriendsMock?: any;
+    utilsSearchMock?: any;
+    useProps?: boolean;
+  } = {},
+) {
+  vi.resetModules();
+  vi.doMock(
+    "@features/countries",
+    () =>
+      countriesMock ?? {
+        useCountryData: () => ({
+          countries: staticCountries,
+          currencies: staticCurrencies,
+          allRegions: staticRegions,
+        }),
+        getSubregionsForRegion: (_: any[], region: string) =>
+          region === "Europe" ? ["Western Europe"] : [],
+      },
+  );
+  vi.doMock(
+    "../hooks/useUserSearch",
+    () =>
+      userSearchMock ?? {
+        useUserSearch: () => ({ results: staticUserResults, loading: false }),
+      },
+  );
+  vi.doMock(
+    "@contexts/AuthContext",
+    () => authMock ?? { useAuth: () => ({ user: { uid: "1" } }) },
+  );
+  vi.doMock(
+    "@features/user",
+    () =>
+      userFriendsMock ?? { useUserFriends: () => ({ friends: staticFriends }) },
+  );
+  vi.doMock(
+    "../utils/search",
+    () =>
+      utilsSearchMock ?? {
+        rankByStartsWithAndContains: (
+          items: any[],
+          getName: (item: any) => string,
+          searchTerm: string,
+        ) => mockSearchFilter(items, getName, searchTerm),
+        rankAndMap: (
+          items: any[],
+          getName: (item: any) => string,
+          searchTerm: string,
+          mapFn: ((item: any) => any) | undefined,
+        ) => mockSearchFilter(items, getName, searchTerm, mapFn),
+      },
+  );
+
+  const { useSearch } = await import("./useSearch");
+  if (useProps) {
+    return renderHook(({ term: t }: { term: string }) => useSearch(t), {
+      initialProps: { term },
+      wrapper,
+    });
+  }
+  return renderHook(() => useSearch(term), { wrapper });
+}
 
 describe("useSearch", () => {
-  it("returns empty results and loading=false when searchTerm is empty", () => {
-    const { result } = renderHook(() => useSearch(""), { wrapper });
+  it("returns empty results and loading=false when searchTerm is empty", async () => {
+    const { result } = await renderUseSearchWithMocks("");
     expect(result.current.results).toEqual([]);
     expect(result.current.loading).toBe(false);
   });
 
-  it("returns ranked and combined results for a search term", () => {
-    const { result } = renderHook(({ term }) => useSearch(term), {
-      initialProps: { term: "a" },
-      wrapper,
-    });
+  it("returns ranked and combined results for a search term", async () => {
+    const { result } = await renderUseSearchWithMocks("a", { useProps: true });
+
     expect(result.current.loading).toBe(false);
     expect(
       getNames(getResultsByType(result.current.results, "user"), "displayName"),
@@ -128,10 +145,9 @@ describe("useSearch", () => {
     ).toEqual([]);
   });
 
-  it("updates results when searchTerm changes", () => {
-    const { result, rerender } = renderHook(({ term }) => useSearch(term), {
-      initialProps: { term: "fr" },
-      wrapper,
+  it("updates results when searchTerm changes", async () => {
+    const { result, rerender } = await renderUseSearchWithMocks("fr", {
+      useProps: true,
     });
     expect(
       getNames(getResultsByType(result.current.results, "country"), "name"),
@@ -148,10 +164,9 @@ describe("useSearch", () => {
     ).toContain("Barbara");
   });
 
-  it("sets loading true then false when searchTerm changes", () => {
-    const { result, rerender } = renderHook(({ term }) => useSearch(term), {
-      initialProps: { term: "" },
-      wrapper,
+  it("sets loading true then false when searchTerm changes", async () => {
+    const { result, rerender } = await renderUseSearchWithMocks("", {
+      useProps: true,
     });
     expect(result.current.loading).toBe(false);
     act(() => {
@@ -160,8 +175,8 @@ describe("useSearch", () => {
     expect(result.current.loading).toBe(false);
   });
 
-  it("ranks users correctly (current user, friend, other)", () => {
-    const { result } = renderHook(() => useSearch("a"), { wrapper });
+  it("ranks users correctly (current user, friend, other)", async () => {
+    const { result } = await renderUseSearchWithMocks("a");
     const userResults = getResultsByType(result.current.results, "user");
     expect(userResults.length).toBe(3);
     expect(userResults[0].displayName).toBe("Carol");
@@ -169,13 +184,47 @@ describe("useSearch", () => {
     expect(userResults[2].displayName).toBe("Alice");
   });
 
+  it("returns currency results when searching by currency name", async () => {
+    const { result } = await renderUseSearchWithMocks("Euro");
+    const currencyResults = getResultsByType(
+      result.current.results,
+      "currency",
+    );
+    expect(currencyResults.length).toBe(1);
+    expect(currencyResults[0].name).toBe("Euro");
+    expect(currencyResults[0].code).toBe("EUR");
+  });
+
+  it("returns currency results when searching by currency code", async () => {
+    const { result } = await renderUseSearchWithMocks("EUR");
+    const currencyResults = getResultsByType(
+      result.current.results,
+      "currency",
+    );
+    expect(currencyResults.length).toBe(1);
+    expect(currencyResults[0].name).toBe("Euro");
+    expect(currencyResults[0].code).toBe("EUR");
+  });
+
+  it("includes currency results in combined results", async () => {
+    const { result } = await renderUseSearchWithMocks("Euro");
+    const allResults = result.current.results;
+    const currencyResults = getResultsByType(allResults, "currency");
+    expect(allResults.some((r) => r.type === "currency")).toBe(true);
+    expect(currencyResults[0]).toMatchObject({
+      code: "EUR",
+      name: "Euro",
+      type: "currency",
+    });
+  });
+
   it.each([
     ["Europe", 0, 1, 1],
     ["Western Europe", 0, 0, 1],
   ])(
     "ranks and maps countries, regions, and subregions correctly for '%s'",
-    (searchTerm, expectedCountry, expectedRegion, expectedSubregion) => {
-      const { result } = renderHook(() => useSearch(searchTerm), { wrapper });
+    async (searchTerm, expectedCountry, expectedRegion, expectedSubregion) => {
+      const { result } = await renderUseSearchWithMocks(searchTerm);
       const countryResults = getResultsByType(
         result.current.results,
         "country",
@@ -198,32 +247,34 @@ describe("useSearch", () => {
       }
     },
   );
-});
 
-it("returns currency results when searching by currency name", () => {
-  const { result } = renderHook(() => useSearch("Euro"), { wrapper });
-  const currencyResults = getResultsByType(result.current.results, "currency");
-  expect(currencyResults.length).toBe(1);
-  expect(currencyResults[0].name).toBe("Euro");
-  expect(currencyResults[0].code).toBe("EUR");
-});
+  it("handles missing friend list without throwing (friendIds empty)", async () => {
+    const { result } = await renderUseSearchWithMocks("Euro", {
+      userFriendsMock: { useUserFriends: () => ({ friends: undefined }) },
+    });
+    expect(result.current.loading).toBe(false);
+  });
 
-it("returns currency results when searching by currency code", () => {
-  const { result } = renderHook(() => useSearch("EUR"), { wrapper });
-  const currencyResults = getResultsByType(result.current.results, "currency");
-  expect(currencyResults.length).toBe(1);
-  expect(currencyResults[0].name).toBe("Euro");
-  expect(currencyResults[0].code).toBe("EUR");
-});
-
-it("includes currency results in combined results", () => {
-  const { result } = renderHook(() => useSearch("Euro"), { wrapper });
-  const allResults = result.current.results;
-  const currencyResults = getResultsByType(allResults, "currency");
-  expect(allResults.some((r) => r.type === "currency")).toBe(true);
-  expect(currencyResults[0]).toMatchObject({
-    code: "EUR",
-    name: "Euro",
-    type: "currency",
+  it("handles missing countries/currencies/regions (no mapped results)", async () => {
+    const { result } = await renderUseSearchWithMocks("Euro", {
+      countriesMock: {
+        useCountryData: () => ({
+          countries: undefined,
+          currencies: undefined,
+          allRegions: undefined,
+        }),
+        getSubregionsForRegion: () => [],
+      },
+    });
+    expect(result.current.results.some((r) => r.type === "currency")).toBe(
+      false,
+    );
+    expect(result.current.results.some((r) => r.type === "country")).toBe(
+      false,
+    );
+    expect(result.current.results.some((r) => r.type === "region")).toBe(false);
+    expect(result.current.results.some((r) => r.type === "subregion")).toBe(
+      false,
+    );
   });
 });

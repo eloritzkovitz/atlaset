@@ -8,14 +8,15 @@ import { useEffect, useState } from "react";
  */
 export function useAnimatedNumber(target: number, duration = 640) {
   const [value, setValue] = useState(0);
+
+  // Reset and animate whenever target changes
   useEffect(() => {
-    setValue(0); // Immediately reset value on target/duration change
+    setValue(0);
     let start = 0;
-    // Calculate total frames based on duration and frame rate (16ms)
+
     const frameRate = 16;
     const totalFrames = Math.max(1, Math.floor(duration / frameRate));
-    const step =
-      totalFrames > 0 ? Math.max(1, Math.floor(target / totalFrames)) : target;
+    const step = Math.max(1, Math.floor(target / totalFrames));
     const interval = setInterval(() => {
       start += step;
       if (start >= target) {
