@@ -26,28 +26,42 @@ export function useVisitedCountries() {
     [trips],
   );
 
-  // Fetch visited countries from Firestore on user or trips change
+  // Subscribe to Firestore visitedCountryCodes changes
   useEffect(() => {
     if (!user) {
       setVisitedCountryCodes([]);
       setUpcomingCountryCodes([]);
       return;
     }
-    const fetchVisited = async () => {
-      const firestoreCodes =
-        await visitedCountriesService.getVisitedCountryCodes(user.uid);
-      // Use Firestore codes if available, else computed
-      const visited =
-        firestoreCodes.length > 0 ? firestoreCodes : computedVisited;
-      setVisitedCountryCodes(visited);
-      // Compute upcoming countries: those with future trips, not already visited
-      const upcoming = getUpcomingVisitCountries(trips).filter(
-        (code) => !visited.includes(code),
-      );
-      setUpcomingCountryCodes(upcoming);
-    };
-    fetchVisited();
-  }, [user, trips, computedVisited]);
+
+    const unsubscribe = visitedCountriesService.onVisitedCountryCodesChange(
+      user.uid,
+      (firestoreCodes) => {
+        const visited =
+          firestoreCodes && firestoreCodes.length > 0
+            ? firestoreCodes
+            : computedVisited;
+        setVisitedCountryCodes(visited);
+      },
+    );
+
+    return () => unsubscribe();
+  }, [user, computedVisited]);
+
+  // Recompute upcoming when trips or visited codes change
+  useEffect(() => {
+    if (!user) {
+      setUpcomingCountryCodes([]);
+      return;
+    }
+
+    const visited =
+      visitedCountryCodes.length > 0 ? visitedCountryCodes : computedVisited;
+    const upcoming = getUpcomingVisitCountries(trips).filter(
+      (code) => !visited.includes(code),
+    );
+    setUpcomingCountryCodes(upcoming);
+  }, [user, trips, visitedCountryCodes, computedVisited]);
 
   // Check if a country is visited
   function isCountryVisited(isoCode: string) {

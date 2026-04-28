@@ -20,9 +20,7 @@ export * from "./dom/useMenuPosition";
 export * from "./dom/useScrollVisibility";
 
 // Input
-export * from "./input/useAutocomplete";
 export * from "./input/useKeyHandler";
-export * from "./input/usePendingFocus";
 
 // Markdown
 export * from "./markdown/useMarkdownFile";

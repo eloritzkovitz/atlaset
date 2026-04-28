@@ -22,15 +22,11 @@ export function useEventListener<T extends Event = Event>(
 
   // Add event listener on mount and clean up on unmount
   useEffect(() => {
-    const tgt = target ?? window;
+    const tgt = (target ?? window) as EventTarget;
     const eventListener = (event: Event) => savedHandler.current(event as T);
-    if (tgt) {
-      tgt.addEventListener(event, eventListener, options);
-    }
+    tgt.addEventListener(event, eventListener, options);
     return () => {
-      if (tgt) {
-        tgt.removeEventListener(event, eventListener, options);
-      }
+      tgt.removeEventListener(event, eventListener, options);
     };
   }, [event, target, options]);
 }

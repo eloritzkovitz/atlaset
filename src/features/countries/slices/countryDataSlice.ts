@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchWithFallback } from "@utils/fetch";
 import type { Country, Currency, SovereigntyStatus } from "../types";
-
 import {
   getAllRegions,
   getAllSubregions,
@@ -33,40 +33,17 @@ export const fetchCountryData = createAsyncThunk(
     // Try static files first
     const staticCountryUrl = "/data/countries.json";
     const staticCurrencyUrl = "/data/currencies.json";
-    const backendCountryUrl = import.meta.env.VITE_COUNTRY_DATA_URL;
-    const backendCurrencyUrl = import.meta.env.VITE_CURRENCY_DATA_URL;
-
-    // Fetch options to avoid caching in development
-    const fetchOpts: RequestInit | undefined =
-      process.env.NODE_ENV === "development"
-        ? { cache: "no-store" as RequestCache }
-        : undefined;
-
-    async function fetchWithFallback(
-      staticUrl: string,
-      backendUrl?: string,
-      label?: string,
-    ) {
-      // Try static first
-      try {
-        const res = await fetch(staticUrl, fetchOpts);
-        if (res && res.ok) return await res.json();
-        // If 404 or error, fall through
-      } catch {
-        // If fetch throws, ignore and try backend
-      }
-      // Try backend if provided
-      if (backendUrl) {
-        const res = await fetch(backendUrl, fetchOpts);
-        if (res && res.ok) return await res.json();
-        throw new Error(`Failed to load ${label || "data"} from backend`);
-      }
-      throw new Error(`Failed to load ${label || "data"}`);
-    }
-
     const [countryData, currencyData] = await Promise.all([
-      fetchWithFallback(staticCountryUrl, backendCountryUrl, "country data"),
-      fetchWithFallback(staticCurrencyUrl, backendCurrencyUrl, "currency data"),
+      fetchWithFallback(
+        staticCountryUrl,
+        { envVar: "VITE_COUNTRY_DATA_URL" },
+        "country data",
+      ),
+      fetchWithFallback(
+        staticCurrencyUrl,
+        { envVar: "VITE_CURRENCY_DATA_URL" },
+        "currency data",
+      ),
     ]);
 
     // Map currency object to array

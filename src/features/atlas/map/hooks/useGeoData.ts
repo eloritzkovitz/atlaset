@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { fetchWithFallback } from "@utils/fetch";
 import type { GeoData } from "../types";
 
 /**
@@ -16,29 +17,12 @@ export function useGeoData() {
     setGeoError(null);
 
     const staticGeoUrl = "/data/countries.geojson";
-    const backendGeoUrl = import.meta.env.VITE_MAP_GEO_URL;
-    const fetchOpts: RequestInit | undefined =
-      process.env.NODE_ENV === "development"
-        ? { cache: "no-store" as RequestCache }
-        : undefined;
-
-    async function fetchWithFallback(staticUrl: string, backendUrl?: string) {
-      try {
-        const res = await fetch(staticUrl, fetchOpts);
-        if (res.ok) return await res.json();
-      } catch {
-        // ignore static fetch error, try backend
-      }
-      if (backendUrl) {
-        const res = await fetch(backendUrl, fetchOpts);
-        if (res.ok) return await res.json();
-        throw new Error("Failed to load map data from backend");
-      }
-      throw new Error("Failed to load map data");
-    }
-
     try {
-      const data = await fetchWithFallback(staticGeoUrl, backendGeoUrl);
+      const data = await fetchWithFallback(
+        staticGeoUrl,
+        { envVar: "VITE_MAP_GEO_URL" },
+        "map data",
+      );
       setGeoData(data);
       setLoading(false);
     } catch (err) {

@@ -24,18 +24,14 @@ export function useScrollVisibility<T = unknown>(
   // Check scrollability
   useEffect(() => {
     const el = elementRef.current;
-    if (!el) return;
-    setIsScrollable(el.scrollHeight > el.clientHeight);
+    setIsScrollable(isElementScrollable(el));
   }, [elementRef, deps]);
 
-  // Observe mutations to re-check scrollability
+  // Observe mutations to update scrollability
   useMutationObserver(elementRef, () => {
-    const el = elementRef.current;
-    if (!el) return;
-    setIsScrollable(el.scrollHeight > el.clientHeight);
+    setIsScrollable(isElementScrollable(elementRef.current));
   });
 
-  // Use useEventListener for scroll
   useEventListener(
     "scroll",
     () => {
@@ -49,16 +45,19 @@ export function useScrollVisibility<T = unknown>(
     elementRef.current,
   );
 
-  // Use useEventListener for resize
   useEventListener(
     "resize",
     () => {
-      const el = elementRef.current;
-      if (!el) return;
-      setIsScrollable(el.scrollHeight > el.clientHeight);
+      setIsScrollable(isElementScrollable(elementRef.current));
     },
     window,
   );
 
   return [scrollState, isScrollable] as const;
+}
+
+// exported for testing
+export function isElementScrollable(el: HTMLElement | null | undefined) {
+  if (!el) return false;
+  return el.scrollHeight > el.clientHeight;
 }

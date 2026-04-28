@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-04-28
+
+- **[bugfix]** **Visits:** Improved visited countries synchronization
+
 ## 2026-04-26
 
 - **[feature]** **Countries:** Added government type, territories, UN membership, sovereign state and affiliations data

@@ -15,6 +15,7 @@ export default defineConfig({
         "src/shared/constants/**",
         "src/shared/test-utils/**",
         "src/shared/types/**",
+        "**/types.ts",
         "**/index.ts",
         "**/*.json",
         "**/*.css",

@@ -56,7 +56,6 @@ export function useClickOutside<T extends HTMLElement>(
     if (e.key === "Escape") onOutside();
   };
 
-  // Always call hooks, handlers check options/enabled
   useEventListener("mousedown", handleClickOutside, window);
   useEventListener("pointerdown", handleClickOutside, window);
   useEventListener("scroll", handleScrollOrResize, window, { capture: true });

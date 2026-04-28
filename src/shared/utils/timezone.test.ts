@@ -9,6 +9,10 @@ vi.mock("date-fns-tz", () => ({
       "Europe/Paris": { jan: "+01:00", jul: "+02:00" },
       "Europe/Berlin": { jan: "+01:00", jul: "+02:00" },
       "Europe/Helsinki": { jan: "+02:00", jul: "+03:00" },
+      South: { jan: "+11:00", jul: "+10:00" },
+      HalfHour: { jan: "+05:30", jul: "+05:30" },
+      SmallMin: { jan: "+05:03", jul: "+05:03" },
+      NegMin: { jan: "-00:05", jul: "-00:05" },
       GMTZ: { jan: "Z", jul: "Z" },
       West: { jan: "-05:00", jul: "-04:00" },
       Default: { jan: "+00:00", jul: "+00:00" },
@@ -65,10 +69,35 @@ describe("timezone utils", () => {
     expect(r).toBe("UTC+01:00 to UTC+03:00");
   });
 
+  it("handles southern-hemisphere DST where winter/summer reverse", () => {
+    const offs = timezoneOffsets("South");
+    expect(offs).toEqual(["UTC+10:00", "UTC+11:00 (summer)"]);
+  });
+
+  it("handles half-hour offsets correctly", () => {
+    const offs = timezoneOffsets("HalfHour");
+    expect(offs).toEqual(["UTC+05:30"]);
+  });
+
   it("returns single-line when winter and summer ranges are identical", () => {
     const lines = timezoneRangeLines(["NoDst", "Default"]);
     expect(Array.isArray(lines)).toBe(true);
     expect(lines.length).toBe(1);
+  });
+
+  it("returns dash for empty zone list in timezoneRangeLines", () => {
+    const lines = timezoneRangeLines([]);
+    expect(lines).toEqual(["—"]);
+  });
+
+  it("formats minute-padding correctly", () => {
+    const r = timezoneRangeForZones(["SmallMin"]);
+    expect(r).toBe("UTC+05:03");
+  });
+
+  it("formats small negative minute offsets correctly", () => {
+    const r = timezoneRangeForZones(["NegMin"]);
+    expect(r).toBe("UTC-00:05");
   });
 
   it("returns two lines when winter and summer differ", () => {

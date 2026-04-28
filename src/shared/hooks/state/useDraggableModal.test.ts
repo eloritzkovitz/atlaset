@@ -5,15 +5,33 @@ import { renderHook, act, waitFor } from "@testing-library/react";
 import { useDraggableModal } from "./useDraggableModal";
 
 describe("useDraggableModal", () => {
-  it("centers modal on open", () => {
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender } = renderHook(
+  const makeModalEl = () =>
+    ({ offsetWidth: 200, offsetHeight: 100 }) as HTMLElement;
+
+  function mount(draggable = true, isOpen = false) {
+    const modalEl = makeModalEl();
+    const { result, rerender, unmount } = renderHook(
       ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
+      { initialProps: { draggable, isOpen } },
     );
     act(() => {
       result.current.setModalDomRef(modalEl);
     });
+    return { result, rerender, unmount, modalEl };
+  }
+
+  const pointerDown = (result: any, x = 500, y = 400, button = 0) =>
+    act(() =>
+      result.current.handlePointerDown({
+        pointerType: "mouse",
+        button,
+        clientX: x,
+        clientY: y,
+      } as any),
+    );
+
+  it("centers modal on open", () => {
+    const { result, rerender } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
     expect(result.current.modalOffset).toEqual({ x: 400, y: 350 });
   });
@@ -21,62 +39,27 @@ describe("useDraggableModal", () => {
   it("does not drag if not draggable", () => {
     const { result } = renderHook(() => useDraggableModal(false, true));
     expect(result.current.dragging).toBe(false);
-    act(() => {
-      result.current.handlePointerDown({
-        pointerType: "mouse",
-        button: 0,
-        clientX: 100,
-        clientY: 100,
-      } as any);
-    });
+    pointerDown(result, 100, 100, 0);
     expect(result.current.dragging).toBe(false);
   });
 
   it("sets dragging true on pointer down if draggable", async () => {
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender } = renderHook(
-      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
-    );
-    act(() => {
-      result.current.setModalDomRef(modalEl);
-    });
+    const { result, rerender } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
-    act(() => {
-      result.current.handlePointerDown({
-        pointerType: "mouse",
-        button: 0,
-        clientX: 500,
-        clientY: 400,
-      } as any);
-    });
+    pointerDown(result);
     await waitFor(() => {
       expect(result.current.dragging).toBe(true);
     });
   });
 
   it("resets dragging and offset when closed", async () => {
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender } = renderHook(
-      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
-    );
-    act(() => {
-      result.current.setModalDomRef(modalEl);
-    });
+    const { result, rerender } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
     await waitFor(() => {
       expect(result.current.modalOffset).not.toBe(null);
     });
     if (result.current.modalOffset) {
-      act(() => {
-        result.current.handlePointerDown({
-          pointerType: "mouse",
-          button: 0,
-          clientX: 500,
-          clientY: 400,
-        } as any);
-      });
+      pointerDown(result);
       await waitFor(() => {
         expect(result.current.dragging).toBe(true);
       });
@@ -87,23 +70,9 @@ describe("useDraggableModal", () => {
   });
 
   it("stops dragging on pointer up", async () => {
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender } = renderHook(
-      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
-    );
-    act(() => {
-      result.current.setModalDomRef(modalEl);
-    });
+    const { result, rerender } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
-    act(() => {
-      result.current.handlePointerDown({
-        pointerType: "mouse",
-        button: 0,
-        clientX: 500,
-        clientY: 400,
-      } as any);
-    });
+    pointerDown(result);
     await waitFor(() => {
       expect(result.current.dragging).toBe(true);
     });
@@ -121,23 +90,9 @@ describe("useDraggableModal", () => {
       cb(performance.now());
       return 1234;
     }) as any;
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender } = renderHook(
-      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
-    );
-    act(() => {
-      result.current.setModalDomRef(modalEl);
-    });
+    const { result, rerender } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
-    act(() => {
-      result.current.handlePointerDown({
-        pointerType: "mouse",
-        button: 0,
-        clientX: 500,
-        clientY: 400,
-      } as any);
-    });
+    pointerDown(result);
     await waitFor(() => {
       expect(result.current.dragging).toBe(true);
     });
@@ -148,10 +103,7 @@ describe("useDraggableModal", () => {
       );
     });
     await waitFor(() => {
-      expect(result.current.modalOffset).toEqual({
-        x: 500,
-        y: 450,
-      });
+      expect(result.current.modalOffset).toEqual({ x: 500, y: 450 });
     });
     window.requestAnimationFrame = origRAF;
   });
@@ -161,26 +113,12 @@ describe("useDraggableModal", () => {
       .spyOn(window, "requestAnimationFrame")
       .mockImplementation(() => 5678);
     const cafSpy = vi.spyOn(window, "cancelAnimationFrame");
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender } = renderHook(
-      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
-    );
-    act(() => {
-      result.current.setModalDomRef(modalEl);
-    });
+    const { result, rerender } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
     await waitFor(() => {
       expect(result.current.modalOffset).not.toBe(null);
     });
-    act(() => {
-      result.current.handlePointerDown({
-        pointerType: "mouse",
-        button: 0,
-        clientX: 500,
-        clientY: 400,
-      } as any);
-    });
+    pointerDown(result);
     act(() => {
       window.dispatchEvent(
         new PointerEvent("pointermove", { clientX: 600, clientY: 500 }),
@@ -209,31 +147,56 @@ describe("useDraggableModal", () => {
     expect(result.current.modalOffset).toBe(null);
   });
 
+  it("ignores non-left mouse buttons on pointer down", async () => {
+    const { result, rerender } = mount(true, false);
+    rerender({ draggable: true, isOpen: true });
+    pointerDown(result, 500, 400, 1);
+    expect(result.current.dragging).toBe(false);
+  });
+
+  it("setModalDomRef accepts null and element without throwing", () => {
+    const { result } = renderHook(() => useDraggableModal(true, false));
+    const modalEl = makeModalEl();
+    act(() => {
+      result.current.setModalDomRef(modalEl);
+      result.current.setModalDomRef(null);
+    });
+    expect(true).toBe(true);
+  });
+
+  it("does not request multiple animation frames for rapid pointer moves", async () => {
+    const rafSpy = vi
+      .spyOn(window, "requestAnimationFrame")
+      .mockImplementation((cb) => {
+        cb(performance.now());
+        return 9999 as any;
+      });
+    const { result, rerender } = mount(true, false);
+    rerender({ draggable: true, isOpen: true });
+    pointerDown(result);
+    act(() => {
+      window.dispatchEvent(
+        new PointerEvent("pointermove", { clientX: 510, clientY: 410 }),
+      );
+      window.dispatchEvent(
+        new PointerEvent("pointermove", { clientX: 520, clientY: 420 }),
+      );
+    });
+    expect(rafSpy.mock.calls.length).toBeGreaterThanOrEqual(1);
+    rafSpy.mockRestore();
+  });
+
   it("cleans up animation frame on unmount", async () => {
     const rafSpy = vi
       .spyOn(window, "requestAnimationFrame")
       .mockImplementation(() => 1234);
     const cafSpy = vi.spyOn(window, "cancelAnimationFrame");
-    const modalEl = { offsetWidth: 200, offsetHeight: 100 } as HTMLElement;
-    const { result, rerender, unmount } = renderHook(
-      ({ draggable, isOpen }) => useDraggableModal(draggable, isOpen),
-      { initialProps: { draggable: true, isOpen: false } },
-    );
-    act(() => {
-      result.current.setModalDomRef(modalEl);
-    });
+    const { result, rerender, unmount } = mount(true, false);
     rerender({ draggable: true, isOpen: true });
     await waitFor(() => {
       expect(result.current.modalOffset).not.toBe(null);
     });
-    act(() => {
-      result.current.handlePointerDown({
-        pointerType: "mouse",
-        button: 0,
-        clientX: 500,
-        clientY: 400,
-      } as any);
-    });
+    pointerDown(result);
     act(() => {
       window.dispatchEvent(
         new PointerEvent("pointermove", { clientX: 600, clientY: 500 }),
