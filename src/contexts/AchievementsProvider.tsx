@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { AchievementsContext } from "./AchievementsContext";
+import { fetchWithFallback } from "../shared/utils/fetch";
 import type { Achievement } from "@features/dashboard/achievements/types";
 
 export function AchievementsProvider({
@@ -16,29 +17,11 @@ export function AchievementsProvider({
     setLoading(true);
     setError(null);
     const staticAchievementsUrl = "/data/achievements.json";
-    const backendAchievementsUrl = import.meta.env.VITE_ACHIEVEMENTS_DATA_URL;
-    const fetchOpts: RequestInit | undefined =
-      process.env.NODE_ENV === "development"
-        ? { cache: "no-store" as RequestCache }
-        : undefined;
-    async function fetchWithFallback(staticUrl: string, backendUrl?: string) {
-      try {
-        const res = await fetch(staticUrl, fetchOpts);
-        if (res.ok) return await res.json();
-      } catch {
-        // ignore static fetch error, try backend
-      }
-      if (backendUrl) {
-        const res = await fetch(backendUrl, fetchOpts);
-        if (res.ok) return await res.json();
-        throw new Error("Failed to load achievements data from backend");
-      }
-      throw new Error("Failed to load achievements data");
-    }
     try {
       const data = await fetchWithFallback(
         staticAchievementsUrl,
-        backendAchievementsUrl,
+        { envVar: "VITE_ACHIEVEMENTS_DATA_URL" },
+        "achievements data",
       );
       setAchievements(data);
       setLoading(false);

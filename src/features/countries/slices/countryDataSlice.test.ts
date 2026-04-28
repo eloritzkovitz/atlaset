@@ -120,7 +120,6 @@ describe("countryDataSlice reducer", () => {
 });
 
 describe("currency mapping logic", () => {
-  // Helper to simulate the mapping logic
   function mapCurrencyData(currencyData: any) {
     return currencyData && typeof currencyData === "object"
       ? Object.entries(currencyData).map(([code, name]) => ({

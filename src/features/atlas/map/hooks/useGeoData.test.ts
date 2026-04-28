@@ -1,7 +1,8 @@
 import { renderHook, waitFor } from "@testing-library/react";
+import * as fetchModule from "@utils/fetch";
 import { useGeoData } from "./useGeoData";
 
-describe("useGeoData", () => {
+describe("useGeoData (integration)", () => {
   const fakeData = {
     type: "FeatureCollection",
     features: [
@@ -13,31 +14,22 @@ describe("useGeoData", () => {
     ],
   };
 
-  beforeEach(() => {
-    (import.meta.env as any).VITE_MAP_GEO_URL = "https://dummy-backend-url";
-  });
-
   afterEach(() => {
     vi.restoreAllMocks();
-    vi.unstubAllGlobals();
   });
 
-  it("returns loading initially", () => {
-    vi.stubGlobal("fetch", vi.fn().mockReturnValue(new Promise(() => {})));
+  it("returns loading initially while fetchWithFallback is pending", () => {
+    vi.spyOn(fetchModule, "fetchWithFallback").mockImplementation(
+      () => new Promise(() => {}),
+    );
     const { result } = renderHook(() => useGeoData());
     expect(result.current.loading).toBe(true);
     expect(result.current.geoData).toBeNull();
     expect(result.current.geoError).toBeNull();
   });
 
-  it("returns geoData on successful static fetch", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValueOnce({
-        ok: true,
-        json: () => Promise.resolve(fakeData),
-      }),
-    );
+  it("sets geoData and clears loading on successful fetchWithFallback", async () => {
+    vi.spyOn(fetchModule, "fetchWithFallback").mockResolvedValue(fakeData);
     const { result } = renderHook(() => useGeoData());
     await waitFor(() => expect(result.current.geoData).not.toBeNull());
     expect(result.current.geoData).toEqual(fakeData);
@@ -45,76 +37,9 @@ describe("useGeoData", () => {
     expect(result.current.geoError).toBeNull();
   });
 
-  it("returns geoData on backend fetch if static fails", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: false,
-          status: 404,
-          json: () => Promise.resolve({}),
-        })
-        .mockResolvedValueOnce({
-          ok: true,
-          json: () => Promise.resolve(fakeData),
-        }),
-    );
-    const { result } = renderHook(() => useGeoData());
-    await waitFor(() => expect(result.current.geoData).not.toBeNull());
-    expect(result.current.geoData).toEqual(fakeData);
-    expect(result.current.loading).toBe(false);
-    expect(result.current.geoError).toBeNull();
-  });
-
-  it("returns geoError if both static and backend fail", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi
-        .fn()
-        .mockResolvedValueOnce({
-          ok: false,
-          status: 404,
-          json: () => Promise.resolve({}),
-        })
-        .mockResolvedValueOnce({
-          ok: false,
-          status: 404,
-          json: () => Promise.resolve({}),
-        }),
-    );
-    const { result } = renderHook(() => useGeoData());
-    await waitFor(() => expect(result.current.geoError).not.toBeNull());
-    expect(result.current.geoData).toBeNull();
-    expect(result.current.loading).toBe(false);
-    expect(result.current.geoError).toBe(
-      "Failed to load map data from backend",
-    );
-  });
-
-  it("returns geoError if both static and backend URLs are missing", async () => {
-    (import.meta.env as any).VITE_MAP_GEO_URL = undefined;
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValueOnce({
-        ok: false,
-        status: 404,
-        json: () => Promise.resolve({}),
-      }),
-    );
-    const { result } = renderHook(() => useGeoData());
-    await waitFor(() => expect(result.current.geoError).not.toBeNull());
-    expect(result.current.geoData).toBeNull();
-    expect(result.current.loading).toBe(false);
-    expect(result.current.geoError).toMatch(
-      /Cannot read properties of undefined|Failed to load map data/,
-    );
-  });
-
-  it("returns geoError on fetch exception", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockRejectedValue(new Error("Network error")),
+  it("sets geoError to error.message when fetchWithFallback throws an Error", async () => {
+    vi.spyOn(fetchModule, "fetchWithFallback").mockRejectedValue(
+      new Error("Network error"),
     );
     const { result } = renderHook(() => useGeoData());
     await waitFor(() => expect(result.current.geoError).not.toBeNull());
@@ -123,8 +48,10 @@ describe("useGeoData", () => {
     expect(result.current.geoError).toBe("Network error");
   });
 
-  it("returns geoError 'Failed to load map data' if fetch throws a non-Error value (covers catch fallback)", async () => {
-    vi.stubGlobal("fetch", vi.fn().mockRejectedValue("some string error"));
+  it("sets geoError to generic message when fetchWithFallback throws non-Error", async () => {
+    vi.spyOn(fetchModule, "fetchWithFallback").mockRejectedValue(
+      "some string error",
+    );
     const { result } = renderHook(() => useGeoData());
     await waitFor(() => expect(result.current.geoError).not.toBeNull());
     expect(result.current.geoData).toBeNull();
