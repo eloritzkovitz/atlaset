@@ -34,11 +34,9 @@ describe("useMarkdownRenderer", () => {
     globalThis.__import = importMock;
     const { result, unmount } = renderHook(() => useMarkdownRenderer());
     unmount();
-    // Wait a tick to allow any pending promises to resolve
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 10));
     });
-    // State should remain null after unmount
     expect(result.current.ReactMarkdown).toBeNull();
     expect(result.current.remarkGfm).toBeNull();
     expect(result.current.rehypeRaw).toBeNull();
@@ -65,5 +63,22 @@ describe("useMarkdownRenderer", () => {
 
     // @ts-ignore
     globalThis.__import = origImport;
-  });  
+  });
+
+  it("loads modules when mocked via vi.mock", async () => {
+    vi.resetModules();
+    vi.mock("react-markdown", () => ({ default: () => null }));
+    vi.mock("remark-gfm", () => ({ default: () => null }));
+    vi.mock("rehype-raw", () => ({ default: () => null }));
+    vi.mock("rehype-prism-plus", () => ({ default: () => null }));
+
+    const { result } = renderHook(() => useMarkdownRenderer());
+
+    await waitFor(() => {
+      expect(result.current.ReactMarkdown).toBeDefined();
+      expect(result.current.remarkGfm).toBeDefined();
+      expect(result.current.rehypeRaw).toBeDefined();
+      expect(result.current.rehypePrism).toBeDefined();
+    });
+  });
 });

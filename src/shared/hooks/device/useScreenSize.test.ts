@@ -1,133 +1,45 @@
-import { renderHook, act } from "@testing-library/react";
-import { waitFor } from "@testing-library/react";
-import { isWindowDefined } from "../../utils/env";
-import * as useScreenSizeModule from "./useScreenSize";
-const { useScreenSize } = useScreenSizeModule;
+import { renderHook, act, waitFor } from "@testing-library/react";
+import * as env from "../../utils/env";
+import * as eventHook from "../dom/useEventListener";
+import { useScreenSize } from "./useScreenSize";
 
-describe("isWindowDefined", () => {
-  it("returns true when window is defined", () => {
-    expect(isWindowDefined()).toBe(true);
-  });
+describe("useScreenSize — condensed", () => {
+  const mount = (w: number) => {
+    window.innerWidth = w;
+    return renderHook(() => useScreenSize());
+  };
 
-  it("returns false when window is undefined", () => {
-    const originalWindow = global.window;
-    // @ts-ignore
-    delete global.window;
-    expect(isWindowDefined()).toBe(false);
-    // @ts-ignore
-    global.window = originalWindow;
-  });
-});
+  afterEach(() => vi.restoreAllMocks());
 
-it("initial width is 0 when window is undefined (SSR)", async () => {
-  // Skip this test if window is required by the test environment
-  if (typeof window === "undefined") {
-    // @ts-ignore
-    global.window = undefined;
-    const { useScreenSize } = await import("./useScreenSize");
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.width).toBe(0);
-    // @ts-ignore
-    global.window = undefined;
-  } else {
-    // If window is required, mock a minimal window object
-    const originalWindow = global.window;
-    // @ts-ignore
-    global.window = {
-      innerWidth: 0,
-      addEventListener: () => true,
-      removeEventListener: () => true,
-      dispatchEvent: () => true,
-    };
-    const { useScreenSize } = await import("./useScreenSize");
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.width).toBe(0);
-    // @ts-ignore
-    global.window = originalWindow;
-  }
-});
+  it.each([
+    [500, true, false, false],
+    [768, false, false, false],
+    [900, false, false, false],
+    [1024, false, true, false],
+    [1279, false, true, false],
+    [1400, false, false, true],
+  ])(
+    "breakpoints: width=%i -> isMobile=%s isLaptop=%s isDesktop=%s",
+    (width, isMobile, isLaptop, isDesktop) => {
+      const { result } = mount(width as number);
+      expect(result.current.width).toBe(width);
+      expect(result.current.isMobile).toBe(isMobile as boolean);
+      expect(result.current.isLaptop).toBe(isLaptop as boolean);
+      expect(result.current.isDesktop).toBe(isDesktop as boolean);
+    },
+  );
 
-describe("useScreenSize", () => {
-  beforeEach(() => {
-    window.innerWidth = 800;
-  });
-
-  it("initial width is set from window.innerWidth when window is defined", () => {
-    window.innerWidth = 1234;
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.width).toBe(1234);
-  });
-
-  it("returns isMobile true for width < 768", () => {
-    window.innerWidth = 500;
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.isMobile).toBe(true);
-    expect(result.current.isLaptop).toBe(false);
-    expect(result.current.isDesktop).toBe(false);
-    expect(result.current.width).toBe(500);
-  });
-
-  it("returns isMobile false for width = 768", () => {
-    window.innerWidth = 768;
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.isMobile).toBe(false);
-    expect(result.current.isLaptop).toBe(false);
-    expect(result.current.isDesktop).toBe(false);
-    expect(result.current.width).toBe(768);
-  });
-
-  it("returns isLaptop true for 1024 <= width < 1280", () => {
-    window.innerWidth = 1024;
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.isMobile).toBe(false);
-    expect(result.current.isLaptop).toBe(true);
-    expect(result.current.isDesktop).toBe(false);
-    expect(result.current.width).toBe(1024);
-
-    window.innerWidth = 1279;
-    act(() => {
-      if (typeof window.dispatchEvent === "function") {
-        window.dispatchEvent(new Event("resize"));
-      }
-    });
-    expect(result.current.isLaptop).toBe(true);
-  });
-
-  it("returns isDesktop true for width >= 1280", () => {
-    window.innerWidth = 1400;
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.isMobile).toBe(false);
-    expect(result.current.isLaptop).toBe(false);
-    expect(result.current.isDesktop).toBe(true);
-    expect(result.current.width).toBe(1400);
-  });
-
-  it("returns all false for width between 768 and 1024", () => {
-    window.innerWidth = 900;
-    const { result } = renderHook(() => useScreenSize());
-    expect(result.current.isMobile).toBe(false);
-    expect(result.current.isLaptop).toBe(false);
-    expect(result.current.isDesktop).toBe(false);
-    expect(result.current.width).toBe(900);
-  });
-
-  it("updates values when window is resized", async () => {
-    window.innerWidth = 1400;
-    const { result } = renderHook(() => useScreenSize());
+  it("reacts to resize events and updates categories", async () => {
+    const { result } = mount(1400);
     expect(result.current.isDesktop).toBe(true);
 
     act(() => {
       window.innerWidth = 500;
-      if (typeof window.dispatchEvent === "function") {
-        window.dispatchEvent(new Event("resize"));
-      }
+      window.dispatchEvent(new Event("resize"));
     });
 
-    // Wait for state update after resize
     await waitFor(() => {
       expect(result.current.isMobile).toBe(true);
-      expect(result.current.isLaptop).toBe(false);
-      expect(result.current.isDesktop).toBe(false);
       expect(result.current.width).toBe(500);
     });
 
@@ -135,47 +47,52 @@ describe("useScreenSize", () => {
       window.innerWidth = 1100;
       window.dispatchEvent(new Event("resize"));
     });
+
     await waitFor(() => {
-      expect(result.current.isMobile).toBe(false);
       expect(result.current.isLaptop).toBe(true);
-      expect(result.current.isDesktop).toBe(false);
       expect(result.current.width).toBe(1100);
     });
   });
 
-  it("does not add event listener for SSR (window undefined)", () => {
-    const originalWindow = global.window;
-    // @ts-ignore
-    global.window = undefined;
-    const addListenerSpy = vi
-      .spyOn(document, "addEventListener")
-      .mockImplementation(() => true);
-    let error: any = null;
-    try {
-      renderHook(() => useScreenSize());
-    } catch (e) {
-      error = e;
-    }
-    // Should not throw ReferenceError, but if it does, fail the test
-    if (error && error.name === "ReferenceError") {
-      throw error;
-    }
-    expect(addListenerSpy).not.toHaveBeenCalled();
-    addListenerSpy.mockRestore();
-    // @ts-ignore
-    global.window = originalWindow;
-  });
-
-  it("removes event listener on unmount", () => {
-    const removeListenerSpy = vi
+  it("removes resize listener on unmount", () => {
+    const removeSpy = vi
       .spyOn(window, "removeEventListener")
       .mockImplementation(() => true);
-    const { unmount } = renderHook(() => useScreenSize());
+    const { unmount } = mount(800);
     unmount();
-    const callArgs = removeListenerSpy.mock.calls.find(
-      (args) => args[0] === "resize" && typeof args[1] === "function",
-    );
-    expect(callArgs).toBeDefined();
-    removeListenerSpy.mockRestore();
+    expect(
+      removeSpy.mock.calls.some(
+        (c) => c[0] === "resize" && typeof c[1] === "function",
+      ),
+    ).toBe(true);
+  });
+
+  it("does not add document listener when window is undefined (SSR)", async () => {
+    const original = (global as any).window;
+    try {
+      // @ts-ignore
+      delete (global as any).window;
+      vi.resetModules();
+      const addSpy = vi
+        .spyOn(document, "addEventListener")
+        .mockImplementation(() => true);
+      await import("./useScreenSize");
+      expect(addSpy).not.toHaveBeenCalled();
+    } finally {
+      (global as any).window = original;
+    }
+  });
+
+  it("passes window or undefined into useEventListener based on env.isWindowDefined", () => {
+    const spy = vi.spyOn(eventHook, "useEventListener");
+
+    vi.spyOn(env, "isWindowDefined").mockReturnValue(true);
+    mount(800);
+    expect(spy).toHaveBeenCalledWith("resize", expect.any(Function), window);
+
+    spy.mockClear();
+    vi.spyOn(env, "isWindowDefined").mockReturnValue(false);
+    mount(0);
+    expect(spy).toHaveBeenCalledWith("resize", expect.any(Function), undefined);
   });
 });

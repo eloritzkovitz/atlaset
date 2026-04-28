@@ -35,14 +35,14 @@ describe("useMenuPosition", () => {
 
   it("returns correct style when open and enough space below", () => {
     vi.spyOn(btn, "getBoundingClientRect").mockReturnValue(
-      mockRect({ top: 100, bottom: 140, right: 200 })
+      mockRect({ top: 100, bottom: 140, right: 200 }),
     );
     vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(
-      mockRect({ height: 40, width: 100 })
+      mockRect({ height: 40, width: 100 }),
     );
 
     const { result } = renderHook(() =>
-      useMenuPosition(true, { current: btn }, { current: menu })
+      useMenuPosition(true, { current: btn }, { current: menu }),
     );
 
     expect(result.current.position).toBe("absolute");
@@ -52,15 +52,13 @@ describe("useMenuPosition", () => {
   });
 
   it("flips above if not enough space below", () => {
-    // Not enough space below, but enough above
     vi.spyOn(btn, "getBoundingClientRect").mockReturnValue(
-      mockRect({ top: 500, bottom: 540, right: 200 })
+      mockRect({ top: 500, bottom: 540, right: 200 }),
     );
     vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(
-      mockRect({ height: 100, width: 100 })
+      mockRect({ height: 100, width: 100 }),
     );
 
-    // Simulate small viewport
     vi.stubGlobal("window", {
       ...window,
       innerHeight: 550,
@@ -69,20 +67,36 @@ describe("useMenuPosition", () => {
     });
 
     const { result } = renderHook(() =>
-      useMenuPosition(true, { current: btn }, { current: menu })
+      useMenuPosition(true, { current: btn }, { current: menu }),
+    );
+    expect(result.current.top).toBe(500 - 100 + window.scrollY);
+  });
+
+  it("positions correctly when align='top' with offset", () => {
+    vi.spyOn(btn, "getBoundingClientRect").mockReturnValue(
+      mockRect({ top: 200, bottom: 240, right: 200 }),
+    );
+    vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(
+      mockRect({ height: 50, width: 100 }),
     );
 
-    // Should flip above
-    expect(result.current.top).toBe(500 - 100 + window.scrollY);
+    const { result } = renderHook(() =>
+      useMenuPosition(true, { current: btn }, { current: menu }, 10, "top"),
+    );
+
+    expect(result.current.position).toBe("absolute");
+    expect(result.current.zIndex).toBe(1000);
+    expect(result.current.top).toBe(200 + window.scrollY - 50 - 10);
+    expect(result.current.left).toBe(100 + window.scrollX);
   });
 
   it("returns empty style when not open or refs missing", () => {
     const { result } = renderHook(() =>
-      useMenuPosition(false, { current: btn }, { current: menu })
+      useMenuPosition(false, { current: btn }, { current: menu }),
     );
     expect(result.current).toEqual({});
     const { result: result2 } = renderHook(() =>
-      useMenuPosition(true, { current: null }, { current: menu })
+      useMenuPosition(true, { current: null }, { current: menu }),
     );
     expect(result2.current).toEqual({});
   });
