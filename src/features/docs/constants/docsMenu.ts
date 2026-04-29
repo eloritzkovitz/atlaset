@@ -172,8 +172,14 @@ export const DOCS_GROUPS = {
         icon: ICONS.quizzes,
         url: "/docs/quizzes/quizzes",
       },
+      {
+        label: "Leaderboards",
+        file: "quizzes/leaderboards.md",
+        icon: ICONS.leaderboards,
+        url: "/docs/quizzes/leaderboards",
+      },
     ],
-  },  
+  },
   account: {
     header: {
       label: "Managing Your Account",

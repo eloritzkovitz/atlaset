@@ -15,6 +15,6 @@ You can edit your personal information by clicking the `Edit Profile` button. `V
 
 ## **Learn more**
 
-- [Account Settings](/docs/account/account-settings.md)  
-- [Trips](/docs/trips/trips.md)  
-- [Quizzes](/docs/quizzes/quizzes.md)
+[Account Settings](/docs/account/account-settings.md)  
+[Trips](/docs/trips/trips.md)  
+[Leaderboards](/docs/quizzes/leaderboards.md)

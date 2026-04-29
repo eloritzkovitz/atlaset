@@ -41,10 +41,8 @@ Atlaset features interactive geography `quizzes` to help you learn and test your
 
 ## **Leaderboards**
 
-- Compete with other users for the top `scores`.
-- View `leaderboards` based on `quiz type` and `difficulty`.
+When playing in `timed mode`, your scores might enter the `leaderboards`! Only the top 25 highest entries are saved, so make sure you do your best!
 
-> **Tips:**
->
-> - Use `keyboard shortcuts` for faster answers.
-> - Review your `mistakes` after each `quiz` to learn more.
+## **Read more**
+
+[Leaderboards](/docs/quizzes/leaderboards.md)
