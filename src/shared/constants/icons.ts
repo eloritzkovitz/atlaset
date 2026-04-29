@@ -1,3 +1,4 @@
+import { FaPlusSquare } from "react-icons/fa";
 import {
   FaArrowLeft,
   FaArrowRight,
@@ -11,6 +12,7 @@ import {
   FaCalendarDay,
   FaChartSimple,
   FaCheck,
+  FaChessKnight,
   FaCircleInfo,
   FaCircleQuestion,
   FaCircleUser,
@@ -78,7 +80,6 @@ import {
 } from "react-icons/fa6";
 import { DashboardIcon } from "../components/icons/DashboardIcon";
 import { VisitIcon } from "../components/icons/VisitIcon";
-import { FaPlusSquare } from "react-icons/fa";
 
 // Centralized icon mapping for shared concepts
 export const ICONS = {
@@ -125,6 +126,7 @@ export const ICONS = {
   statistics: FaChartSimple,
   // Quizzes
   quizzes: FaQuestion,
+  gameplay: FaChessKnight,
   quizFlag: FaFlag,
   quizCapital: FaLandmark,
   quizEasy: FaLeaf,

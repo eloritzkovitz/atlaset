@@ -167,10 +167,16 @@ export const DOCS_GROUPS = {
     },
     items: [
       {
-        label: "Quizzes",
-        file: "quizzes/quizzes.md",
-        icon: ICONS.quizzes,
-        url: "/docs/quizzes/quizzes",
+        label: "Overview",
+        file: "quizzes/quizzes-overview.md",
+        icon: ICONS.quizFlag,
+        url: "/docs/quizzes/quizzes-overview",
+      },
+      {
+        label: "How to Play",
+        file: "quizzes/gameplay.md",
+        icon: ICONS.gameplay,
+        url: "/docs/quizzes/gameplay",
       },
       {
         label: "Leaderboards",
