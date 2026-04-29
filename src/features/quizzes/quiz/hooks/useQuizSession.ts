@@ -5,6 +5,12 @@ import { leaderboardsService } from "../../leaderboards/services/leaderboardsSer
 import { getCurrentUser } from "@utils/firebase";
 import type { QuizType, Difficulty, SessionProps } from "../../types";
 
+type LocalSession = {
+  questionNumber: number;
+  sessionActive: boolean;
+  maxStreak: number;
+};
+
 /**
  * Manages the state and logic of a quiz session.
  * @param maxQuestions Maximum number of questions in the session
@@ -25,20 +31,24 @@ export function useQuizSession({
   quizType: QuizType;
   difficulty: Difficulty;
   score: number;
-}): Omit<SessionProps, "handleSessionEnd"> & {
+}): {
+  sessionActive: boolean;
+  questionNumber: number;
+  maxQuestions: number;
+  incrementQuestions: () => void;
+  maxStreak: number;
+  setMaxStreak: (newMaxStreak: number) => void;
   timeLeft: number | undefined;
   endSession: () => void;
 } {
-  const [session, setSession] = useState<
-    Pick<SessionProps, "questionNumber" | "sessionActive" | "maxStreak">
-  >({
+  const [session, setSession] = useState<LocalSession>({
     questionNumber: 0,
     sessionActive: true,
     maxStreak: 0,
   });
   const { timeLeft } = useAtomicTimer(
     typeof duration === "number" ? duration : 0,
-    session.sessionActive
+    session.sessionActive,
   );
 
   // End session when timer runs out
@@ -61,7 +71,7 @@ export function useQuizSession({
   };
 
   // Increment questions answered
-  const incrementQuestions: SessionProps["incrementQuestions"] = () => {
+  const incrementQuestions = (): void => {
     setSession((s) => {
       if (!s.sessionActive || s.questionNumber >= maxQuestions) {
         return s;
@@ -78,7 +88,7 @@ export function useQuizSession({
   // Ticking sound hook
   useTickingSound(
     typeof timeLeft === "number" ? timeLeft : 0,
-    session.sessionActive
+    session.sessionActive,
   );
 
   // Save to leaderboard on session end
