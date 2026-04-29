@@ -1,28 +1,28 @@
 import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { MarkdownFileRenderer } from "@components";
-import { SidebarLayout } from "@layouts";
 import {
   DOCS_PATH,
+  DocsNotFound,
   DocsPanelMenu,
   getDocBySlug,
   getDocsMarkdownComponents,
+  getSlugFromPath,
   navigateToDoc,
   WelcomeDocsSection,
 } from "@features/docs";
 import { useMarkdownFile, usePageTitle } from "@hooks";
+import { SidebarLayout } from "@layouts";
 
 export default function DocsPage() {
   const navigate = useNavigate();
   const location = useLocation();
 
   // Extract slug from URL
-  const slug = useMemo(() => {
-    const parts = location.pathname.split("/").filter(Boolean);
-    if (parts.length === 0) return undefined;
-    if (parts[0] !== "docs") return undefined;
-    return parts.length > 1 ? parts[parts.length - 1] : undefined;
-  }, [location.pathname]);
+  const slug = useMemo(
+    () => getSlugFromPath(location.pathname),
+    [location.pathname],
+  );
 
   // Only get doc if slug is present
   const doc = useMemo(() => (slug ? getDocBySlug(slug) : null), [slug]);
@@ -44,10 +44,12 @@ export default function DocsPage() {
   return (
     <SidebarLayout
       menu={
-        <DocsPanelMenu
-          selectedPanel={slug ? (doc ? doc.file : undefined) : undefined}
-          setSelectedPanel={(file: string) => navigateToDoc(navigate, file)}
-        />
+        !(slug && !doc) ? (
+          <DocsPanelMenu
+            selectedPanel={slug ? (doc ? doc.file : undefined) : undefined}
+            setSelectedPanel={(file: string) => navigateToDoc(navigate, file)}
+          />
+        ) : undefined
       }
     >
       <div className="w-full max-w-2xl">
@@ -59,6 +61,8 @@ export default function DocsPage() {
               navigateToDoc(navigate, file),
             )}
           />
+        ) : slug ? (
+          <DocsNotFound />
         ) : (
           <WelcomeDocsSection />
         )}
