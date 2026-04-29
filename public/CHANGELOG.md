@@ -6,6 +6,7 @@
 - **[feature]** **Scripts:** Added scripts used by flags package for reference
 - **[docs]** **Docs:** Updated developer documentation with information and instructions for using the new scripts
 - **[docs]** **Docs:** Reorganized docs into subsections and updated some entries
+- **[bugfix]** **Quizzes:** Sandbox mode will no longer show question count in the scoreboard
 
 ## 2026-04-28
 

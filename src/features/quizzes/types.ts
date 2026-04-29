@@ -27,9 +27,9 @@ export type PlayerGames = {
 export interface SessionProps {
   sessionActive: boolean;
   handleSessionEnd: () => void;
-  maxQuestions: number;
-  questionNumber: number;
-  incrementQuestions: () => void;
+  maxQuestions?: number;
+  questionNumber?: number;
+  incrementQuestions?: () => void;
   timeLeft?: number;
   maxStreak: number;
   setMaxStreak: (newMaxStreak: number) => void;

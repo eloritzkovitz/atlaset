@@ -26,11 +26,11 @@ export interface CountryQuizProps {
   noCountriesMessage: string;
   guessPlaceholder: string;
   timeLeft?: number;
-  maxQuestions: number;
+  maxQuestions?: number;
   sessionActive: boolean;
   handleSessionEnd: () => void;
-  questionNumber: number;
-  incrementQuestions: () => void;
+  questionNumber?: number;
+  incrementQuestions?: () => void;
   score: number;
   setScore: Dispatch<SetStateAction<number>>;
   maxStreak: number;

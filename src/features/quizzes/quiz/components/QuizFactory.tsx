@@ -39,7 +39,6 @@ export function QuizFactory({
         {...quizProps}
         timeLeft={undefined}
         questionNumber={1}
-        maxQuestions={0}
         sessionActive={true}
         handleSessionEnd={() => {}}
         incrementQuestions={() => {}}
