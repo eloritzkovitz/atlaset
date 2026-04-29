@@ -1,4 +1,4 @@
-# Map Settings
+# Map settings
 
 In the `map settings`, you can configure the apearance of your map. You can control various settings, such as map projection, map borders and colors.
 
@@ -12,7 +12,7 @@ You can open the map settings panel from the `map toolbar` or by pressing the <k
 
 With the `colors` section, you can control how countries are visually distinguished on the map:
 
-### **Display Options**
+### **Display options**
 
 **`Show home country`** will visually color the user's `home country`. You can set it in the `user settings`.
 
@@ -22,7 +22,7 @@ With the `colors` section, you can control how countries are visually distinguis
 
 By default, `Show visited countries` is enabled, while the other two are disabled. You can enable or disable them by checking or unchecking their respective boxes.
 
-### **Color Palettes**
+### **Color palettes**
 
 **`Color palettes`** are themed color sets that affect how countries are colored on the map. Each palette is comprised of five different shades, with each value assigned to a specific criteria value when computing the colors.
 

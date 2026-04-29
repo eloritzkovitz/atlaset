@@ -89,8 +89,7 @@ function App() {
                   </Suspense>
                 }
               />
-              <Route path="/docs" element={<DocsPage />} />
-              <Route path="/docs/:slug" element={<DocsPage />} />
+              <Route path="/docs/*" element={<DocsPage />} />
               <Route
                 path="/atlas"
                 element={

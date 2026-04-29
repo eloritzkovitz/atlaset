@@ -15,7 +15,7 @@ import type { Difficulty, GameMode } from "../../types";
 export function filterByDifficulty(
   countries: Country[],
   difficulty?: Difficulty,
-  countryDifficulty?: Record<string, string>
+  countryDifficulty?: Record<string, string>,
 ) {
   // If no difficulty or countryDifficulty provided, return all countries
   if (!difficulty || !countryDifficulty) return countries;
@@ -30,10 +30,10 @@ export function filterByDifficulty(
  */
 export function filterByProperty<T extends keyof Country>(
   countries: Country[],
-  property: T
+  property: T,
 ) {
   return countries.filter(
-    (c) => Boolean(c[property]) && String(c[property]).trim() !== ""
+    (c) => Boolean(c[property]) && String(c[property]).trim() !== "",
   );
 }
 
@@ -43,7 +43,7 @@ export function filterByProperty<T extends keyof Country>(
  * @returns Function that takes the previous country and returns the next country
  */
 export function getNextRandomCountry<T extends { isoCode: string }>(
-  countries: T[]
+  countries: T[],
 ) {
   return (prevCountry: T | null) => {
     if (countries.length <= 1 || !prevCountry) {
@@ -63,7 +63,7 @@ export function getNextRandomCountry<T extends { isoCode: string }>(
  */
 export function makeGetNext<T>(
   getNextCountry: (countries: T[]) => (prev: T | null) => T | null,
-  countries: T[]
+  countries: T[],
 ): (prev: T | null) => T | null {
   const getNext = getNextCountry(countries);
   return (prev: T | null) => {
@@ -82,7 +82,7 @@ export function makeGetNext<T>(
 export function getSessionProps(
   gameMode?: GameMode,
   maxQuestions = 25,
-  duration = 300
+  duration = 300,
 ) {
-  return gameMode === "timed" ? { maxQuestions, duration } : { maxQuestions };
+  return gameMode === "timed" ? { maxQuestions, duration } : {};
 }

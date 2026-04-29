@@ -2,13 +2,13 @@
 
 Atlaset provides an interactive world map to discover `countries`, view detailed country information and track your `visits`. Use `search`, `filters`, `lists` and `layers` to find, organize and manage your countries and travel data.
 
-## **Browsing Countries**
+## **Browsing countries**
 
 - Use the `map` or `country list` to browse all available `countries`.
 - Click on a `country` on the `map` or the `country list` to open a detailed view with information.
 - Use the `search bar` to quickly find a `country` by name. For advanced searching, see below.
 
-## **Country Details**
+## **Country details**
 
 Country details include the following sections:
 
@@ -16,13 +16,13 @@ Country details include the following sections:
 - **`Relations`**: If any, including `dependencies`, `internal regions` and `disputes`.
 - **`Visits`**: See below.
 
-## **Your Visits**
+## **Your visits**
 
 - The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
 - By clicking the `Visits` tab, you can open a detailed view of your `visit history` to the specific country.
 - Data is based on your `trip data`.
 
-## **Filtering & Sorting**
+## **Filtering & sorting**
 
 - Use the `Filters` panel to:
   - Filter by `region`, `subregion`, `sovereignty`, `visit status` or custom criteria
@@ -33,7 +33,7 @@ Country details include the following sections:
 - Use the `View toggle` to switch between `lists`:
   - Default lists include `all` (showing all countries and territories), `sovereign` (showing sovereign countries only) and `visited`
 
-### **Search Qualifiers**
+### **Search qualifiers**
 
 In addition to finding countries by name, you can search by qualifiers using this syntax in the country search bar:
 
@@ -66,7 +66,7 @@ qualifier:query modifier:query
 | `memberof`        | string              |                      `memberof:eu` | Matches membership in international organizations                                                            |
 | `visited`         | boolean             |                     `visited:true` | Matches visited countries. Values: `true` / `false`                                                          |
 
-#### **Additional Modifiers**
+#### **Additional modifiers**
 
 | Modifier | Type                |                        Example | Notes                                                                                                                                           |
 | -------- | ------------------- | -----------------------------: | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -83,7 +83,7 @@ qualifier:query modifier:query
 > - All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
 > - For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`
 
-## **Country Lists**
+## **Country lists**
 
 You can create and manage your own custom `lists`, which allow quick, dynamic filtering and toggling. Use lists to group countries for travel plans, tracking or any custom criteria.
 
@@ -91,10 +91,10 @@ You can create and manage your own custom `lists`, which allow quick, dynamic fi
 - Lists can also be created from `layers`, as explained below.
 - To edit an existing list, double-click on its toggle.
 
-### **Creating Lists from Layers**
+### **Creating lists from layers**
 
 `Layers` are advanced, visual representations of country lists on the map. When creating lists from layers, the `name` and `countries` fields will be shared between both objects. Updating a linked list will also update the relevant content in the layer, allowing for easier management.
 
-## **Learn More**
+## **Learn more**
 
 [Layers](/docs/layers-markers.md)

@@ -1,4 +1,4 @@
-# Developer Guide
+# Developer guide
 
 Welcome to **Atlaset!**  
 This guide will help you set up the project locally, configure your `data sources` and run the app for `development` or `production`.
@@ -12,14 +12,14 @@ This guide will help you set up the project locally, configure your `data source
 ## **Installation**
 
 
-1. **Clone the `Repository`**
+1. **Clone the `repository`**
 
    ```bash
    git clone https://github.com/eloritzkovitz/atlaset.git
    cd `atlaset`
    ```
 
-2. **Install `Dependencies`**
+2. **Install `dependencies`**
    ```bash
    npm install
    ```
@@ -27,7 +27,7 @@ This guide will help you set up the project locally, configure your `data source
 ## **Configuration**
 
 
-1. **Environmental Variables**
+1. **Environmental variables**
 
 Copy the example environment file and adjust the `data sources` as needed:
 
@@ -35,14 +35,14 @@ Copy the example environment file and adjust the `data sources` as needed:
 cp .env.example .env
 ```
 
-2. **Data Sources**
+2. **Data sources**
 
 Atlaset loads `map`, `country` and `currency` data from `JSON` files in [`public/data`](../public/data/).
 You can customize these sources or swap datasets by editing the `.env` file.
 
-See [Data Sources](/docs/data-sources.md) for details on file formats and environment variables.
+See [Data Sources](/docs/developers/data-sources.md) for details on file formats and environment variables.
 
-## **Running the App**
+## **Running the app**
 
 
 **Start the `development server`**
@@ -69,6 +69,6 @@ npm run build
 npm run preview
 ```
 
-## **Next Steps**
+## **Next steps**
 
 **Atlaset** is now ready! You can now begin exploring and customizing the application to your interest and liking!

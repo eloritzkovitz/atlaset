@@ -16,7 +16,7 @@ interface QuizFactoryProps {
     | "setMaxStreak"
   >;
   sessionProps: {
-    maxQuestions: number;
+    maxQuestions?: number;
     duration?: number;
     quizType: QuizType;
     difficulty: Difficulty;
@@ -39,7 +39,6 @@ export function QuizFactory({
         {...quizProps}
         timeLeft={undefined}
         questionNumber={1}
-        maxQuestions={0}
         sessionActive={true}
         handleSessionEnd={() => {}}
         incrementQuestions={() => {}}
@@ -51,10 +50,14 @@ export function QuizFactory({
     );
   }
 
-  const { quizType, difficulty, ...restSessionProps } = sessionProps;
+  const { quizType, difficulty } = sessionProps;
+  const explicitMax = (sessionProps as any).maxQuestions ?? 25;
+  const explicitDuration = (sessionProps as any).duration as number | undefined;
+
   return (
     <QuizSession
-      {...restSessionProps}
+      maxQuestions={explicitMax}
+      duration={explicitDuration}
       quizType={quizType}
       difficulty={difficulty}
       score={score}
@@ -62,7 +65,9 @@ export function QuizFactory({
       {(session: SessionProps) => (
         <CountryQuiz
           {...quizProps}
-          {...(scoreIsQuestions ? { scoreOverride: session.questionNumber } : {})}
+          {...(scoreIsQuestions && typeof session.questionNumber === "number"
+            ? { scoreOverride: session.questionNumber }
+            : {})}
           {...session}
           score={score}
           setScore={setScore}
