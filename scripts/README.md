@@ -4,11 +4,12 @@ This folder contains utility scripts for data processing, build tasks, and proje
 
 ## Categories
 
-| Category | Description                        | Example Scripts                                     |
-| -------- | ---------------------------------- | --------------------------------------------------- |
-| assets   | Asset management                   | `add-country-field.js`, `remove-flags.js`           |
-| build    | Build, compile, and prepare assets | `prebuild.js`, `compress-json.cjs`                  |
-| data     | Data fetching and import           | `data/fetch-country-data.js`, `data/fetch-flags.js` |
+| Category | Description                        | Example Scripts                           |
+| -------- | ---------------------------------- | ----------------------------------------- |
+| assets   | Asset management                   | `add-country-field.js`, `remove-flags.js` |
+| build    | Build, compile, and prepare assets | `prebuild.js`, `compress-json.cjs`        |
+| data     | Data fetching and import           | `fetch-country-data.js`, `fetch-flags.js` |
+| lib      | Utility functions and helpers      | `utils.js`                                |
 
 ## Usage
 

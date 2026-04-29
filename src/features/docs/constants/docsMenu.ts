@@ -183,6 +183,18 @@ export const DOCS_GROUPS = {
         icon: ICONS.data,
         url: "/docs/data-sources",
       },
+      {
+        label: "Adding Country Fields",
+        file: "adding-country-fields.md",
+        icon: ICONS.addCountryField,
+        url: "/docs/adding-country-fields",
+      },
+      {
+        label: "Data Sync & Updates",
+        file: "data-syncing.md",
+        icon: ICONS.refresh,
+        url: "/docs/data-syncing",
+      },
     ],
   },
 };

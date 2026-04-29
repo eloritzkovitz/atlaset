@@ -26,6 +26,7 @@ import {
   FaEarthAmericas,
   FaFileExport,
   FaFileImport,
+  FaFilePen,
   FaFilter,
   FaFlag,
   FaFloppyDisk,
@@ -173,4 +174,5 @@ export const ICONS = {
   developers: FaCode,
   laptopCode: FaLaptopCode,
   data: FaDatabase,
+  addCountryField: FaFilePen,
 };

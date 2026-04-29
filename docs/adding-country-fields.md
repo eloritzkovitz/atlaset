@@ -1,6 +1,6 @@
 # Adding country fields
 
-For automated addition of new fields and values to the country data, you can use the built-in `add-country-field.js` script. The script reads a JSON map and appends the supplied values based on matching ISO 3166 Alpha-2 codes.
+For automated addition of new fields and values to the country data, you can use the built-in [add-country-field.js script](/scripts/assets/add-country-field.js). The script reads a JSON map and appends the supplied values based on matching ISO 3166 Alpha-2 codes.
 
 > - The script requires a mapping file (`--map`) that supplies values per-country.
 > - Lookup uses a property on each country (default: `isoCode`) — override with `--mapKeyField`.
@@ -11,7 +11,7 @@ For automated addition of new fields and values to the country data, you can use
 - Add the same derived property across all countries (e.g. region groups, classification tags).
 - Merge an external dataset (CSV/JSON) into your countries file via a JSON map.
 
-## **Flags**
+## **Flags overview**
 
 - `--file, -f` — Path to the JSON file to modify (default: `public/data/countries.json`).
 - `--path, -k` — Dot-separated path for the field to add (required).
@@ -78,6 +78,30 @@ To see which properties are available on a country object (so you can choose `--
 ```sh
 node -e "const fs=require('fs');const d=JSON.parse(fs.readFileSync('public/data/countries.json','utf8'));console.log(Object.keys(Array.isArray(d)?d[0]:d));"
 ```
+
+## **Generating a starter map**
+
+If you don't have a mapping file yet, use the [generate-empty-map.js script](/scripts/assets/generate-empty-map.js) to create an empty object or array map derived from your countries.json file.
+
+- Object-style (simple lookup, default):
+
+```sh
+node scripts/assets/generate-empty-map.js --file=scripts/assets/countries.json --out=scripts/data/test-empty-map.json --format=object --default=null --overwrite
+```
+
+- Array-style (list of entries):
+
+```sh
+node scripts/assets/generate-empty-map.js --file=scripts/assets/countries.json --out=scripts/data/test-empty-map.json --format=array --default=null --overwrite
+```
+
+- Useful flags:
+  - `--default=VALUE` — JSON literal to use for each key (e.g. `--default=null`, `--default=true`, `--default='""'`).
+  - `--key=FIELD` — use a different key field than `isoCode` (default: `isoCode`).
+  - `--dry-run` — show what would be written without changing files.
+  - `--overwrite` — replace an existing output file.
+
+After generating, pass the produced map to `add-country-field.js` via `--map`.
 
 > **Notes**
 >
