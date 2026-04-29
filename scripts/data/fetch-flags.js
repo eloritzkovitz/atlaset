@@ -13,7 +13,7 @@ import {
   ensureDirExists,
   readLocalFile,
   writeLocalFile,
-} from "./fetchUtils.js";
+} from "../lib/fetchUtils.js";
 
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
