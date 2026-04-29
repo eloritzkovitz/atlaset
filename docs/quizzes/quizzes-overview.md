@@ -12,5 +12,5 @@ Atlaset features interactive geography `quizzes` to help you learn and test your
 
 ## **Read more**
 
-[Gameplay](/docs/quizzes/gameplay.md)
+[Gameplay](/docs/quizzes/gameplay.md)  
 [Leaderboards](/docs/quizzes/leaderboards.md)

@@ -29,11 +29,11 @@ Once a `game type` is chosen, you will need to choose your `difficulty` and `gam
 
 ## **Gameplay and scoring**
 
-Each quiz consists of `25 questions`, whether in `sandbox` or `timed mode`. Timed quizzes will run for `5 minutes`, and must be completed before the timer runs out.
+In `sandbox mode`, quizzes have no restrictions.
 
-To correctly answer a question, you will need to type the result in the submit form.
+In `timed mode`, quizzes consist of `25 questions`, and will run for `5 minutes`. The quiz must be completed before the timer runs out, meaning you must pass through all of the questions, whether by answering them or by skipping.
 
-A correct answer gives the player one point, promoting the winning streak by one; skipping or providing a wrong answer will give no points, and will reset the streak.
+To correctly answer a question, you will need to type the result in the submit form. A correct answer gives the player one point, promoting the winning streak by one; skipping or providing a wrong answer will give no points, and will reset the streak.
 
 ## **Finishing a game**
 
