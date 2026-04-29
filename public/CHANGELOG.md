@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-04-29
+
+- **[feature]** **Scripts:** Added new CLI for adding country fields
+- **[feature]** **Scripts:** Added scripts used by flags package for reference
+- **[docs]** **Docs:** Updated developer documentation with information and instructions for using the new scripts
+
 ## 2026-04-28
 
 - **[bugfix]** **Visits:** Improved visited countries synchronization
