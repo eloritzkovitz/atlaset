@@ -1,8 +1,8 @@
-# Creating an Account
+# Creating an account
 
 There are two methods for creating your account:
 
-### **Email and Password**
+### **Email and password**
 
 - Sign up with your `email` and `password`.
 - You will need to provide your profile details (such as your name) to complete your profile.

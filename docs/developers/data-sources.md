@@ -49,10 +49,10 @@ Another alternative is using the package mentioned above, which will require a m
 
 ## **Adding Country Fields**
 
-Atlaset uses a few additional fields in addition to the ones provided in the basic dataset. The `scripts` folder provides various built-in scripts for automated addition of new fields to your countries.json file. You can find more detailed information in [this section](/docs/adding-country-fields.md).
+Atlaset uses a few additional fields in addition to the ones provided in the basic dataset. The `scripts` folder provides various built-in scripts for automated addition of new fields to your countries.json file. You can find more detailed information in [this section](/docs/developers/adding-country-fields.md).
 
 ## **Learn More**
 
-- [Countries](/docs/countries.md)
-- [Adding country fields](/docs/adding-country-fields.md)
-- [Data sync & updates](/docs/data-syncing.md)
+[Countries](/docs/countries.md)
+[Adding country fields](/docs/developers/adding-country-fields.md)
+[Data sync & updates](/docs/developers/data-syncing.md)

@@ -3,141 +3,177 @@ import { ICONS } from "@constants/icons";
 export const DOCS_PATH = "/docs/";
 
 export const DOCS_GROUPS = {
-  usingAtlaset: {
+  getStarted: {
     header: {
-      label: "Using Atlaset",
+      label: "Get Started",
       file: null,
-      icon: ICONS.usingAtlaset,
+      icon: ICONS.getStarted,
     },
     items: [
       {
-        label: "Getting Started",
-        file: "getting-started.md",
-        icon: ICONS.gettingStarted,
-        url: "/docs/getting-started",
+        label: "Get Started",
+        file: "getstarted/get-started.md",
+        icon: ICONS.getStarted,
+        url: "/docs/getstarted/get-started",
       },
       {
         label: "Creating an Account",
-        file: "account.md",
+        file: "getstarted/creating-an-account.md",
         icon: ICONS.account,
-        url: "/docs/account",
+        url: "/docs/getstarted/creating-an-account",
       },
       {
         label: "Your Profile",
-        file: "profile.md",
+        file: "getstarted/profile.md",
         icon: ICONS.profile,
-        url: "/docs/profile",
+        url: "/docs/getstarted/profile",
       },
       {
         label: "Friends",
-        file: "friends.md",
+        file: "getstarted/friends.md",
         icon: ICONS.friends,
-        url: "/docs/friends",
-      },
-      {
-        label: "Atlas",
-        file: "atlas.md",
-        icon: ICONS.atlas,
-        url: "/docs/atlas",
-      },
-      {
-        label: "The Map",
-        file: "map.md",
-        icon: ICONS.map,
-        url: "/docs/map",
-      },
-      {
-        label: "Map Settings",
-        file: "map-settings.md",
-        icon: ICONS.mapConfig,
-        url: "/docs/map-settings",
-      },
-      {
-        label: "Countries",
-        file: "countries.md",
-        icon: ICONS.countries,
-        url: "/docs/countries",
-      },
-      {
-        label: "Layers & Markers",
-        file: "layers-markers.md",
-        icon: ICONS.mapData,
-        url: "/docs/layers-markers",
-      },
-      {
-        label: "Legend",
-        file: "legend.md",
-        icon: ICONS.legend,
-        url: "/docs/legend",
-      },
-      {
-        label: "Saved Maps",
-        file: "saved-maps.md",
-        icon: ICONS.saved,
-        url: "/docs/saved-maps",
-      },
-      {
-        label: "Timeline",
-        file: "timeline.md",
-        icon: ICONS.timeline,
-        url: "/docs/timeline",
-      },
-      {
-        label: "Exporting & Sharing Maps",
-        file: "export.md",
-        icon: ICONS.export,
-        url: "/docs/export",
-      },
-      {
-        label: "Trips",
-        file: "trips.md",
-        icon: ICONS.trips,
-        url: "/docs/trips",
-      },
-      {
-        label: "Calendar",
-        file: "calendar.md",
-        icon: ICONS.calendar,
-        url: "/docs/calendar",
-      },
-      {
-        label: "Dashboard",
-        file: "dashboard.md",
-        icon: ICONS.dashboard,
-        url: "/docs/dashboard",
-      },
-      {
-        label: "Exploration",
-        file: "exploration.md",
-        icon: ICONS.exploration,
-        url: "/docs/exploration",
-      },
-      {
-        label: "Currencies",
-        file: "currencies.md",
-        icon: ICONS.currencies,
-        url: "/docs/currencies",
-      },
-      {
-        label: "Achievements",
-        file: "achievements.md",
-        icon: ICONS.achievements,
-        url: "/docs/achievements",
-      },
-      {
-        label: "Statistics",
-        file: "statistics.md",
-        icon: ICONS.statistics,
-        url: "/docs/statistics",
-      },
-      {
-        label: "Quizzes",
-        file: "quizzes.md",
-        icon: ICONS.quizzes,
-        url: "/docs/quizzes",
+        url: "/docs/getstarted/friends",
       },
     ],
   },
+  atlas: {
+    header: {
+      label: "Atlas",
+      file: null,
+      icon: ICONS.atlas,
+    },
+    items: [
+      {
+        label: "Overview",
+        file: "atlas/atlas-overview.md",
+        icon: ICONS.atlas,
+        url: "/docs/atlas/atlas-overview",
+      },
+      {
+        label: "The Map",
+        file: "atlas/map.md",
+        icon: ICONS.map,
+        url: "/docs/atlas/map",
+      },
+      {
+        label: "Map Settings",
+        file: "atlas/map-settings.md",
+        icon: ICONS.mapConfig,
+        url: "/docs/atlas/map-settings",
+      },
+      {
+        label: "Countries",
+        file: "atlas/countries.md",
+        icon: ICONS.countries,
+        url: "/docs/atlas/countries",
+      },
+      {
+        label: "Layers & Markers",
+        file: "atlas/layers-markers.md",
+        icon: ICONS.mapData,
+        url: "/docs/atlas/layers-markers",
+      },
+      {
+        label: "Legend",
+        file: "atlas/legend.md",
+        icon: ICONS.legend,
+        url: "/docs/atlas/legend",
+      },
+      {
+        label: "Saved Maps",
+        file: "atlas/saved-maps.md",
+        icon: ICONS.saved,
+        url: "/docs/atlas/saved-maps",
+      },
+      {
+        label: "Timeline",
+        file: "atlas/timeline.md",
+        icon: ICONS.timeline,
+        url: "/docs/atlas/timeline",
+      },
+      {
+        label: "Exporting & Sharing Maps",
+        file: "atlas/export.md",
+        icon: ICONS.export,
+        url: "/docs/atlas/export",
+      },
+    ],
+  },
+  trips: {
+    header: {
+      label: "Trips",
+      file: null,
+      icon: ICONS.trips,
+    },
+    items: [
+      {
+        label: "Trips",
+        file: "trips/trips.md",
+        icon: ICONS.trips,
+        url: "/docs/trips/trips",
+      },
+      {
+        label: "Calendar",
+        file: "trips/calendar.md",
+        icon: ICONS.calendar,
+        url: "/docs/trips/calendar",
+      },
+    ],
+  },
+  dashboard: {
+    header: {
+      label: "Dashboard",
+      file: null,
+      icon: ICONS.dashboard,
+    },
+    items: [
+      {
+        label: "Overview",
+        file: "dashboard/dashboard-overview.md",
+        icon: ICONS.dashboard,
+        url: "/docs/dashboard/dashboard-overview",
+      },
+      {
+        label: "Exploration",
+        file: "dashboard/exploration.md",
+        icon: ICONS.exploration,
+        url: "/docs/dashboard/exploration",
+      },
+      {
+        label: "Currencies",
+        file: "dashboard/currencies.md",
+        icon: ICONS.currencies,
+        url: "/docs/dashboard/currencies",
+      },
+      {
+        label: "Achievements",
+        file: "dashboard/achievements.md",
+        icon: ICONS.achievements,
+        url: "/docs/dashboard/achievements",
+      },
+      {
+        label: "Statistics",
+        file: "dashboard/statistics.md",
+        icon: ICONS.statistics,
+        url: "/docs/dashboard/statistics",
+      },
+    ],
+  },
+  quizzes: {
+    header: {
+      label: "Quizzes",
+      file: null,
+      icon: ICONS.quizzes,
+    },
+    items: [
+      {
+        label: "Quizzes",
+        file: "quizzes/quizzes.md",
+        icon: ICONS.quizzes,
+        url: "/docs/quizzes/quizzes",
+      },
+    ],
+  },  
   account: {
     header: {
       label: "Managing Your Account",
@@ -147,9 +183,9 @@ export const DOCS_GROUPS = {
     items: [
       {
         label: "Account Settings",
-        file: "account-settings.md",
+        file: "account/account-settings.md",
         icon: ICONS.settings,
-        url: "/docs/account-settings",
+        url: "/docs/account/account-settings",
       },
     ],
   },
@@ -162,9 +198,9 @@ export const DOCS_GROUPS = {
     items: [
       {
         label: "Keyboard Shortcuts",
-        file: "keyboard-shortcuts.md",
+        file: "accessibility/keyboard-shortcuts.md",
         icon: ICONS.shortcuts,
-        url: "/docs/keyboard-shortcuts",
+        url: "/docs/accessibility/keyboard-shortcuts",
       },
     ],
   },
@@ -173,34 +209,38 @@ export const DOCS_GROUPS = {
     items: [
       {
         label: "Developer Guide",
-        file: "developers.md",
+        file: "developers/developer-guide.md",
         icon: ICONS.laptopCode,
-        url: "/docs/developers",
+        url: "/docs/developers/developer-guide",
       },
       {
         label: "Data Sources",
-        file: "data-sources.md",
+        file: "developers/data-sources.md",
         icon: ICONS.data,
-        url: "/docs/data-sources",
+        url: "/docs/developers/data-sources",
       },
       {
         label: "Adding Country Fields",
-        file: "adding-country-fields.md",
-        icon: ICONS.addCountryField,
-        url: "/docs/adding-country-fields",
+        file: "developers/adding-country-fields.md",
+        icon: ICONS.scripts,
+        url: "/docs/developers/adding-country-fields",
       },
       {
         label: "Data Sync & Updates",
-        file: "data-syncing.md",
+        file: "developers/data-syncing.md",
         icon: ICONS.refresh,
-        url: "/docs/data-syncing",
+        url: "/docs/developers/data-syncing",
       },
     ],
   },
 };
 
 export const DOCS = [
-  ...DOCS_GROUPS.usingAtlaset.items,
+  ...DOCS_GROUPS.getStarted.items,
+  ...DOCS_GROUPS.atlas.items,
+  ...DOCS_GROUPS.trips.items,
+  ...DOCS_GROUPS.dashboard.items,
+  ...DOCS_GROUPS.quizzes.items,
   ...DOCS_GROUPS.account.items,
   ...DOCS_GROUPS.accessibility.items,
   ...DOCS_GROUPS.forDevelopers.items,

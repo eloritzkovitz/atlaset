@@ -167,12 +167,12 @@ export const ICONS = {
   back: FaArrowLeft,
   close: FaXmark,
   // Docs
-  gettingStarted: FaRocket,
+  getStarted: FaRocket,
   usingAtlaset: FaCompass,
   accountManagement: FaUserGear,
   accessibility: FaUniversalAccess,
   developers: FaCode,
   laptopCode: FaLaptopCode,
   data: FaDatabase,
-  addCountryField: FaFilePen,
+  scripts: FaFilePen,
 };

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { MarkdownFileRenderer } from "@components";
 import { SidebarLayout } from "@layouts";
 import {
@@ -13,8 +13,16 @@ import {
 import { useMarkdownFile, usePageTitle } from "@hooks";
 
 export default function DocsPage() {
-  const { slug } = useParams<{ slug?: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Extract slug from URL
+  const slug = useMemo(() => {
+    const parts = location.pathname.split("/").filter(Boolean);
+    if (parts.length === 0) return undefined;
+    if (parts[0] !== "docs") return undefined;
+    return parts.length > 1 ? parts[parts.length - 1] : undefined;
+  }, [location.pathname]);
 
   // Only get doc if slug is present
   const doc = useMemo(() => (slug ? getDocBySlug(slug) : null), [slug]);

@@ -57,7 +57,7 @@ export function DocsPanelMenu({
           <span className="font-bold text-2xl">Atlaset Docs</span>
         </div>
       }
-      width={320}
+      width={340}
       className="!left-0"
       onHide={onClose}
     >

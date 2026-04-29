@@ -1,4 +1,4 @@
-# Account Settings
+# Account settings
 
 Through your `account settings`, you can control the behavior of the application and personalize your Atlaset experience.
 

@@ -1,4 +1,4 @@
-# Layers & Markers
+# Layers & markers
 
 Atlaset lets you customize your map with `layers` (highlighting groups of `countries`) and `markers` (custom points with details). Both can be managed, exported, imported and shared easily either through the app or from `JSON` files.
 
@@ -10,7 +10,7 @@ You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L
 
 **Layer colors** use `RGBA` or `8-digit hex` color formats to support optional alpha transparency. You can find the correct value by using [this tool](https://rgbacolorpicker.com/).
 
-#### Layer JSON Fields
+#### Layer JSON fields
 
 | Field          | Type       | Description                                                                                |
 | -------------- | ---------- | ------------------------------------------------------------------------------------------ |
@@ -22,9 +22,9 @@ You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L
 | `countries`    | `string[]` | Array of ISO 3166-1 country codes                                                          |
 | `listId`       | `string`   | Optional id of a linked list (sharing `name` and `countries`)                              |
 
-### **Adding Layers**
+### **Adding layers**
 
-#### 1. From JSON Files
+#### 1. From JSON files
 
 - You can import `layers` from `JSON` files. You can see a minimal example (the `id` field is optional and will be generated if omitted) here:
 
@@ -68,11 +68,11 @@ You can open the `markers panel` from the `map toolbar` or by pressing the <kbd>
 | `color`       | `string`          | Marker color in hex or RGBA format (_optional_)                     |
 | `description` | `string`          | Additional information about the marker (_optional_)                |
 
-### **Adding Markers**
+### **Adding markers**
 
 Markers can be added and managed the same way as layers, but with their own respective fields (if importing from JSON).
 
-## **Importing/Exporting Map Data**
+## **Importing/exporting map data**
 
 - `Layers` and `markers` can be easily imported from and exported to `JSON` files.
 - Use this to back up your data or share it with others.

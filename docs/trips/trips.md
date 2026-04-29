@@ -2,7 +2,7 @@
 
 In Atlaset, `trips` let you record, organize and analyze your travels. Each `trip` can include multiple `countries`, `dates`, `categories` and `notes`. `Trips` data powers many features - including `visited countries`, `timeline navigation`, `statistics` and `calendar events`.
 
-#### Trip JSON Fields
+#### Trip JSON fields
 
 | Field          | Type       | Description                                                                               |
 | -------------- | ---------- | ----------------------------------------------------------------------------------------- |
@@ -18,11 +18,11 @@ In Atlaset, `trips` let you record, organize and analyze your travels. Each `tri
 | `tags`         | `string[]` | _(optional)_ Tags for the `trip`. Each must be one of the supported tags. See below.      |
 | `notes`        | `string`   | _(optional)_ Notes                                                                        |
 
-### **Tentative Trips**
+### **Tentative trips**
 
 If a `trip` has no `startDate` or `endDate`, it is considered _tentative_. In the UI, tentative trips will display `TBD` for dates and duration.
 
-### **Trip Status**
+### **Trip status**
 
 A `trip`'s `status` is based on `startDate` and is calculated according to the following guidelines:
 - **Planned**: A future `tentative trip`, which has no `startDate` or `endDate`.
@@ -42,11 +42,11 @@ Each `trip` can include a list of `participants`. This allows you to include fam
 > **Note:**
 >
 > When importing `trips` with `categories`, the `category` and each `tag` must match one of the supported values listed above. Invalid values will be ignored or may cause an error.  
-> See the full list of [supported categories and tags](/docs/categories-and-tags.html).
+> See the full list of [supported categories and tags](/docs/trips/categories-and-tags.html).
 
-## **Adding Trips**
+## **Adding trips**
 
-### **1. From JSON/CSV Files**
+### **1. From JSON/CSV files**
 
 - You can import `trips` from `JSON` files or from `CSV` files:
 
@@ -78,18 +78,18 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 - Use the `Trips` panel to create, edit, or delete `trips`.
 - Fill in the `trip name`, select `countries` (by `ISO code`), set `dates`, choose a `category` and add `notes` if desired.
 
-## **Importing/Exporting Trips**
+## **Importing/exporting trips**
 
 - `Trips` can be easily imported from and exported to `JSON` or `CSV` files.
 - Use this to back up your `trips` or share them with others.
 
-## **Timeline & Layers Integration**
+## **Timeline & layers integration**
 
 - Your `trips` power the `Visited Countries` layer and `timeline` features.
 - Changes to your `trips` are reflected in `layers` and `timeline` coloring automatically.
 
 **Learn More:**
 
-[Calendar](/docs/calendar.md)
-[Statistics](/docs/statistics.md)
-[Timeline](/docs/timeline.md)
+[Calendar](/docs/trips/calendar.md)
+[Statistics](/docs/dashboard/statistics.md)
+[Timeline](/docs/atlas/timeline.md)

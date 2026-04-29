@@ -7,7 +7,14 @@ import { DOCS } from "../constants/docsMenu";
  */
 export function getDocBySlug(slug: string | undefined) {
   if (!slug) return DOCS[0];
-  return DOCS.find((doc) => doc.file.replace(/\.md$/, "") === slug) || DOCS[0];
+  return (
+    DOCS.find((doc) => {
+      const fileNoExt = doc.file.replace(/\.md$/, "");
+      if (fileNoExt === slug) return true;
+      const parts = fileNoExt.split("/");
+      return parts[parts.length - 1] === slug;
+    }) || DOCS[0]
+  );
 }
 
 /**

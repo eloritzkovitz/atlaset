@@ -1,4 +1,4 @@
-# **World Exploration**
+# **World exploration**
 
 The **`World Exploration`** section gives you a detailed view of your exploraion progress, organized by `regions` and `subregions`. Each section highlights your visited countries by their flag, serving as an expanded version of the `Countries` panel in the `atlas` page.
 
@@ -6,4 +6,4 @@ Countries can be searched, filtered by region/subregion/sovereignty/visit status
 
 ## **Learn More**
 
-[Countries](/docs/countries.md)  
+[Countries](/docs/atlas/countries.md)  

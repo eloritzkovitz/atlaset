@@ -1,25 +1,25 @@
-# Exporting & Sharing Maps
+# Exporting & sharing maps
 
 Atlaset makes it easy to export your `map data`, share your travels with others and embed interactive `maps` on your website or blog.
 
-## **Exporting Map Data**
+## **Exporting map data**
 
 - Choose which `layers`, `markers` or `map settings` to include in your export.
 - Additionally, you can include a `name` for the map.
 
-## **Downloading Maps**
+## **Downloading maps**
 
-### **As an Image**
+### **As an image**
 
 You can download your `map` as an image to share or use in presentations, reports, or social media. To do that, choose your desired format, adjust the settings and select **`Download Image`**.
 
 Supported formats are `PNG`, `SVG`, `JPEG`, `WebP`.
 
-### **As a JSON File**
+### **As a JSON file**
 
 Download your `layers` and/or `markers` as a `JSON` file for backup or sharing. To do that, select the relevant data to download and select **`Download as JSON`**.
 
-## **Sharing Maps**
+## **Sharing maps**
 
 Atlaset supports sharing your `maps` (`layers` and `markers`) via a special `URL`:
 
@@ -27,7 +27,7 @@ Atlaset supports sharing your `maps` (`layers` and `markers`) via a special `URL
 - Share the link with `friends`—anyone with the link can view your `map` in read-only mode.
 - You can choose to include `layers`, `markers`, `map name` and `sharer info`.
 
-## **Embedding Maps**
+## **Embedding maps**
 
 Atlaset supports embedding `maps` directly into your website or blog using an HTML `<iframe>`. This allows you to display interactive `maps` anywhere online.
 

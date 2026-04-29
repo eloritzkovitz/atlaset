@@ -12,6 +12,6 @@ By Default, the selected values will be your `home country`'s currency to USD.
 
 Currency exchange data is provided by using the [Open Exchange Rates API](https://openexchangerates.org).
 
-## **Learn More**
+## **Learn more**
 
-[Countries](/docs/countries.md)
+[Countries](/docs/atlas/countries.md)
