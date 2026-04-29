@@ -40,7 +40,7 @@ cp .env.example .env
 Atlaset loads `map`, `country` and `currency` data from `JSON` files in [`public/data`](../public/data/).
 You can customize these sources or swap datasets by editing the `.env` file.
 
-See [Data Sources](/docs/data-sources.md) for details on file formats and environment variables.
+See [Data Sources](/docs/developers/data-sources.md) for details on file formats and environment variables.
 
 ## **Running the app**
 

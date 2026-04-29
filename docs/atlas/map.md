@@ -43,6 +43,6 @@ You can customize the map's appearance with the `map settings`. For more informa
 
 ## **Learn more**
 
-[Map Settings](/docs/map-settings.md)  
-[Saved Maps](/docs/saved-maps.md)  
-[Exporting & Sharing Maps](/docs/export.md)
+[Map Settings](/docs/atlas/map-settings.md)  
+[Saved Maps](/docs/atlas/saved-maps.md)  
+[Exporting & Sharing Maps](/docs/atlas/export.md)

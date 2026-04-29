@@ -38,4 +38,4 @@ Colors `countries` based on `visit status` for the year:
 
 ## **Learn more**
 
-[Map Settings](/docs/map-settings.md)
+[Map Settings](/docs/atlas/map-settings.md)

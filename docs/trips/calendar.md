@@ -21,4 +21,4 @@ The **`Calendar`** allows you to view and manage your events easily. `Trips` and
 
 ## **Learn more**
 
-[Managing Trips](/docs/trips.md)
+[Managing Trips](/docs/trips/trips.md)

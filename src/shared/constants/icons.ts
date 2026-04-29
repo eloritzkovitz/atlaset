@@ -168,7 +168,6 @@ export const ICONS = {
   close: FaXmark,
   // Docs
   getStarted: FaRocket,
-  usingAtlaset: FaCompass,
   accountManagement: FaUserGear,
   accessibility: FaUniversalAccess,
   developers: FaCode,

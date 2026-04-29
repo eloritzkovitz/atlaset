@@ -17,7 +17,7 @@ export const DOCS_CARDS = [
     icon: <ICONS.atlas className="text-5xl mb-4 text-info" />,
     title: "Atlas",
     description: "Explore the interactive world map and its features.",
-    file: "atlas/overview.md",
+    file: "atlas/atlas-overview.md",
   },
   {
     icon: <ICONS.trips className="text-5xl mb-4 text-primary" />,
@@ -29,7 +29,7 @@ export const DOCS_CARDS = [
     icon: <ICONS.dashboard className="text-5xl mb-4 text-warning" />,
     title: "Dashboard",
     description: "View your stats and achievements.",
-    file: "dashboard/overview.md",
+    file: "dashboard/dashboard-overview.md",
   },
   {
     icon: <ICONS.quizzes className="text-5xl mb-4 text-muted" />,
