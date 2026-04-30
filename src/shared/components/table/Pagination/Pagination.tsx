@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import { FaChevronLeft, FaChevronRight, FaEllipsis } from "react-icons/fa6";
+import { FaEllipsis } from "react-icons/fa6";
 import { PAGE_SIZE_OPTIONS } from "@constants/ui";
 import { getPageButtons } from "@utils/pagination";
 import { pluralize } from "@utils/string";
 import { PaginationButton } from "./PaginationButton";
 import { ActionButton } from "../../action/ActionButton";
 import { SelectInput } from "../../form/inputs/SelectInput";
+import { DirectionalIcon } from "../../ui/DirectionalIcon";
 
 export interface PaginationProps {
   currentPage: number;
@@ -28,7 +29,7 @@ export function Pagination({
 }: PaginationProps) {
   const pages = useMemo(
     () => getPageButtons(currentPage, totalPages),
-    [currentPage, totalPages]
+    [currentPage, totalPages],
   );
 
   // Calculate the number of items shown on this page
@@ -81,7 +82,11 @@ export function Pagination({
               }`}
               style={{ lineHeight: 1 }}
             >
-              <FaChevronLeft className="text-xs align-middle mt-0.5 me-1" />
+              <DirectionalIcon
+                variant="chevron"
+                direction="prev"
+                className="text-xs align-middle mt-0.5 me-1"
+              />
               <span className="align-middle">Back</span>
             </span>
           </ActionButton>
@@ -103,7 +108,7 @@ export function Pagination({
               >
                 <FaEllipsis />
               </span>
-            )
+            ),
           )}
           <ActionButton
             variant="secondary"
@@ -119,12 +124,15 @@ export function Pagination({
               style={{ lineHeight: 1 }}
             >
               <span className="align-middle">Next</span>
-              <FaChevronRight className="text-xs align-middle mt-0.5 ms-1" />
+              <DirectionalIcon
+                variant="chevron"
+                direction="next"
+                className="text-xs align-middle mt-0.5 ms-1"
+              />
             </span>
           </ActionButton>
         </div>
       </div>
-      {/* Right: Spacer to balance left absolute block */}
       <div className="absolute end-0 w-[220px] h-full" />
     </div>
   );

@@ -1,4 +1,5 @@
 import { ICONS } from "@constants/icons";
+import { DirectionalIcon } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useTimeline } from "@contexts/TimelineContext";
@@ -26,7 +27,7 @@ export function useToolbarActions({
     toggleLegend,
     toggleSavedMaps,
     toggleExport,
-    toggleSettings,    
+    toggleSettings,
   } = useUI();
   const { timelineMode, setTimelineMode } = useTimeline();
   const { isReadonly, isEdit } = useMapView();
@@ -68,7 +69,7 @@ export function useToolbarActions({
       label: "Legend",
       onClick: withMenuClose(toggleLegend),
       show: true,
-      separatorAfter: true,      
+      separatorAfter: true,
     },
     {
       key: "savedmaps",
@@ -84,7 +85,7 @@ export function useToolbarActions({
       onClick: withMenuClose(() => setTimelineMode(!timelineMode)),
       show: !isReadonly && !isEdit && isAuthenticated(),
       separatorAfter: true,
-    },   
+    },
     {
       key: "export",
       icon: !isReadonly ? (
@@ -105,7 +106,7 @@ export function useToolbarActions({
     },
     {
       key: "exit",
-      icon: <ICONS.back className="text-lg" />,
+      icon: <DirectionalIcon variant="arrow" className="text-lg" />,
       label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
       onClick: withMenuClose(() => {
         if (typeof exitEditMode === "function") {

@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
-import { ActionButton, ActionsToolbar } from "@components";
+import { FaChevronUp } from "react-icons/fa6";
+import { ActionButton, ActionsToolbar, DirectionalIcon } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useScreenSize } from "@hooks";
+import { useIsRtl, useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
 import { useToolbarActions } from "./useToolbarActions";
@@ -27,6 +27,7 @@ export function MapToolbar({
 
   // Detect mobile
   const { isMobile } = useScreenSize();
+  const isRtl = useIsRtl();
 
   // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);
@@ -95,7 +96,13 @@ export function MapToolbar({
             titlePosition="left"
             variant="action"
             className={`${!visible ? "opacity-70" : ""}`}
-            icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
+            icon={
+              visible ? (
+                <DirectionalIcon direction="next" />
+              ) : (
+                <DirectionalIcon direction="prev" />
+              )
+            }
             rounded
           />
           {/* Actions: horizontal slide */}
@@ -103,7 +110,7 @@ export function MapToolbar({
             className={`end-10 md:end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
               visible
                 ? "opacity-100 pointer-events-auto translate-x-0"
-                : "opacity-0 pointer-events-none translate-x-10"
+                : `opacity-0 pointer-events-none ${isRtl ? "-translate-x-10" : "translate-x-10"}`
             }`}
           >
             <MapToolbarActions actions={actions} isDesktop={true}>

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaArrowLeft } from "react-icons/fa6";
+import { DirectionalIcon } from "@components";
 import { useScreenSize } from "@hooks";
 
 interface DashboardHeaderProps {
@@ -25,7 +25,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           onClick={onBack}
           className="flex items-center gap-2 hover:text-muted"
         >
-          <FaArrowLeft className="text-xl" />
+          <DirectionalIcon
+            direction="prev"
+            variant="arrow"
+            className="text-xl"
+          />
         </button>
       )}
       {leading && <span className="flex items-center">{leading}</span>}

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { FaHouse, FaChevronRight } from "react-icons/fa6";
+import { FaHouse } from "react-icons/fa6";
+import { DirectionalIcon } from "@components";
 import {
   CountrySelectModal,
   CountryWithFlag,
@@ -32,7 +33,7 @@ export function HomeCountrySelect() {
         ) : (
           <span className="opacity-50">No country selected</span>
         )}
-        <FaChevronRight className="ms-auto text-muted" />
+        <DirectionalIcon direction="next" className="ms-auto text-muted" />
       </button>
       <CountrySelectModal
         isOpen={modalOpen}

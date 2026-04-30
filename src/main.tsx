@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
@@ -5,12 +6,12 @@ import { BrowserRouter } from "react-router-dom";
 import { AudioProvider } from "@contexts/AudioProvider";
 import { AuthProvider } from "@contexts/AuthProvider";
 import { SettingsProvider } from "@contexts/SettingsProvider";
+import { isRtl } from "@hooks";
 import App from "./App";
+import "./i18n";
 import { store } from "./store";
 import "./styles/index.css";
 import "./styles/markdown.css";
-import "./i18n";
-import i18n from "i18next";
 
 // Register service worker for PWA update detection
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
@@ -53,12 +54,12 @@ createRoot(document.getElementById("root")!).render(
   </StrictMode>,
 );
 
-// Keep document `dir` and `lang` in sync with i18n
+// Set initial document direction based on current language
 const setDocDirection = (lang: string) => {
   try {
     document.documentElement.lang = lang;
-    const isRtl = ["ar", "he", "fa", "ur"].includes(lang.split("-")[0]);
-    document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    const rtl = isRtl(lang);
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
   } catch (e) {
     // server-side or non-browser environments
   }

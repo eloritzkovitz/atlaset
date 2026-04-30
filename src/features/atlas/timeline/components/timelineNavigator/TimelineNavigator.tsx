@@ -1,19 +1,18 @@
+import { FaPause, FaPlay } from "react-icons/fa6";
 import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaAnglesLeft,
-  FaAnglesRight,
-  FaPause,
-  FaPlay,
-} from "react-icons/fa6";
-import { ActionButton, ToolbarSelectButton } from "@components";
+  ActionButton,
+  ToolbarSelectButton,
+  DirectionalIcon,
+} from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import type { ColorMode } from "@features/atlas/map";
+import { useIsRtl } from "@hooks";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {
   const { years, selectedYear, setSelectedYear, colorMode, setColorMode } =
     useTimeline();
+  const isRtl = useIsRtl();
 
   // Timeline navigation handlers
   const {
@@ -32,7 +31,9 @@ export function TimelineNavigator() {
 
   return (
     <div className="absolute bottom-7 start-0 w-full z-50 flex items-center justify-center">
-      <div className="absolute start-1/2 transform -translate-x-1/2 flex items-center gap-2">
+      <div
+        className={`absolute ${isRtl ? "end-1/2" : "start-1/2"} transform -translate-x-1/2 flex items-center gap-2`}
+      >
         <ActionButton
           onClick={() => setPlaying((p) => !p)}
           ariaLabel={playing ? "Pause" : "Play"}
@@ -53,7 +54,11 @@ export function TimelineNavigator() {
           ariaLabel="First year"
           title="First year"
           icon={
-            <FaAnglesLeft className={currentIndex === 0 ? "opacity-50" : ""} />
+            <DirectionalIcon
+              variant="angle"
+              direction="prev"
+              className={currentIndex === 0 ? "opacity-50" : ""}
+            />
           }
           disabled={currentIndex === 0}
           variant="action"
@@ -63,7 +68,12 @@ export function TimelineNavigator() {
           onClick={handleBack}
           ariaLabel="Previous year"
           title="Previous year"
-          icon={<FaChevronLeft className={!canGoBack ? "opacity-50" : ""} />}
+          icon={
+            <DirectionalIcon
+              direction="prev"
+              className={!canGoBack ? "opacity-50" : ""}
+            />
+          }
           disabled={!canGoBack}
           variant="action"
           rounded
@@ -80,7 +90,10 @@ export function TimelineNavigator() {
           ariaLabel="Next year"
           title="Next year"
           icon={
-            <FaChevronRight className={!canGoForward ? "opacity-50" : ""} />
+            <DirectionalIcon
+              direction="next"
+              className={!canGoForward ? "opacity-50" : ""}
+            />
           }
           disabled={!canGoForward}
           variant="action"
@@ -91,7 +104,9 @@ export function TimelineNavigator() {
           ariaLabel="Last year"
           title="Last year"
           icon={
-            <FaAnglesRight
+            <DirectionalIcon
+              variant="angle"
+              direction="next"
               className={currentIndex === years.length - 1 ? "opacity-50" : ""}
             />
           }

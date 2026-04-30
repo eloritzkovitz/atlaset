@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
+import { DirectionalIcon } from "@components";
 import { useInfiniteScroll } from "@hooks";
 import { UserActivityItem } from "./UserActivityItem";
 import { useUserActivity } from "../hooks/useUserActivity";
@@ -36,8 +36,10 @@ export function UserActivitySection() {
           className="flex items-center focus:outline-none"
           aria-label="Go back"
         >
-          <FaChevronLeft className="text-lg me-1" />
-          <h2 className="text-xl font-bold self-start">Activity Log</h2>
+          <span className="inline-flex items-center gap-1">
+            <DirectionalIcon direction="prev" className="text-lg" />
+            <h2 className="text-xl font-bold self-start">Activity Log</h2>
+          </span>
         </button>
       </div>
       {loading && activity.length === 0 ? (

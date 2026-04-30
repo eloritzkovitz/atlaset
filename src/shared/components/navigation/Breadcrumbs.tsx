@@ -1,4 +1,4 @@
-import { FaChevronRight } from "react-icons/fa6";
+import { DirectionalIcon } from "../ui/DirectionalIcon";
 
 export interface Crumb {
   label: string;
@@ -37,7 +37,10 @@ export function Breadcrumbs({ crumbs, onCrumbClick }: BreadcrumbsProps) {
                 </span>
               )}
               {idx < arr.length - 1 && (
-                <FaChevronRight className="text-sm text-gray-400 ms-2" />
+                <DirectionalIcon
+                  direction="next"
+                  className="text-sm text-gray-400 ms-2"
+                />
               )}
             </span>
           );

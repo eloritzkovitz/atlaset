@@ -1,4 +1,5 @@
 import { ICONS } from "@constants/icons";
+import { DirectionalIcon } from "@components";
 
 export interface StatsConfigArgs {
   countriesLoading: boolean;
@@ -37,7 +38,12 @@ export function getStatsConfig({
       label: "Statistics",
       value: (
         <span className="flex items-center gap-2">
-          View <ICONS.forward />
+          View{" "}
+          <DirectionalIcon
+            variant="chevron"
+            direction="next"
+            className="inline-block"
+          />
         </span>
       ),
       icon: <ICONS.statistics className="text-5xl text-success" />,

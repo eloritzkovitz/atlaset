@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { FaChevronLeft } from "react-icons/fa6";
-import { Card } from "@components";
+import { Card, DirectionalIcon } from "@components";
 import { LeaderboardTable } from "./LeaderboardTable";
 import { LeaderboardFilterBar } from "./LeaderboardFilterBar";
 import { useLeaderboardData } from "../hooks/useLeaderboardData";
@@ -23,7 +22,11 @@ export function Leaderboards() {
           href="/quizzes"
           className="text-text transition-colors flex items-center"
         >
-          <FaChevronLeft className="inline-block me-2 text-xl" />
+          <DirectionalIcon
+            variant="chevron"
+            direction="prev"
+            className="inline-block me-2 text-xl"
+          />
         </a>
         <h1 className="text-3xl font-bold text-text m-0">Leaderboards</h1>
       </div>

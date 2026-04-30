@@ -1,6 +1,5 @@
 import React from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
-import { ActionButton, SegmentedToggle } from "@components";
+import { ActionButton, DirectionalIcon, SegmentedToggle } from "@components";
 import { viewOptions } from "../constants/calendarToolbarOptions";
 import { type CalendarView } from "../types";
 
@@ -31,7 +30,7 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
       </ActionButton>
     )}
     <ActionButton
-      icon={<FaChevronLeft />}
+      icon={<DirectionalIcon direction="prev" />}
       ariaLabel="Previous"
       title="Previous"
       rounded
@@ -39,7 +38,7 @@ export const CalendarToolbar: React.FC<CalendarToolbarProps> = ({
     />
     {label && <span className="font-bold text-lg">{label}</span>}
     <ActionButton
-      icon={<FaChevronRight />}
+      icon={<DirectionalIcon direction="next" />}
       ariaLabel="Next"
       title="Next"
       rounded

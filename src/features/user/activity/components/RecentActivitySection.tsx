@@ -1,5 +1,5 @@
-import { FaChevronRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
+import { DirectionalIcon } from "@components";
 import { UserActivityItem } from "./UserActivityItem";
 import { useUserActivity } from "../hooks/useUserActivity";
 
@@ -15,7 +15,7 @@ export function RecentActivitySection({ limit = 5 }: { limit?: number }) {
         aria-label="View full activity log"
       >
         <span>Activity</span>
-        <FaChevronRight className="text-base" />
+        <DirectionalIcon direction="next" className="text-base" />
       </Link>
       {activityLoading && recentActivity.length === 0 ? (
         <div className="text-muted">Loading...</div>

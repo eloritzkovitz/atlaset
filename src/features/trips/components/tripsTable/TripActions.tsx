@@ -6,11 +6,11 @@ import {
   FaHeart,
   FaRegHeart,
   FaStar,
-  FaChevronRight,
   FaCalendar,
 } from "react-icons/fa6";
 import {
   ActionButton,
+  DirectionalIcon,
   MenuButton,
   Menu,
   Separator,
@@ -191,7 +191,7 @@ export function TripActions({
             className="w-full flex items-center justify-between"
           >
             Rate
-            <FaChevronRight className="ms-auto" />
+            <DirectionalIcon direction="next" className="ms-auto" />
           </MenuButton>
           {rateMenuOpen && (
             <RateMenu

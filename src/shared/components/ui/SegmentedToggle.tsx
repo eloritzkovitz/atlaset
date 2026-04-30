@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useAutoScrollFocus } from "@hooks";
+import { useAutoScrollFocus, useIsRtl } from "@hooks";
 
 export interface SegmentedToggleOption<T extends string> {
   value: T;
@@ -35,6 +35,8 @@ export function SegmentedToggle<T extends string>({
     centerInline: true,
   });
 
+  const isRtl = useIsRtl();
+
   return (
     <div
       ref={containerRef}
@@ -52,6 +54,14 @@ export function SegmentedToggle<T extends string>({
             : "hover:bg-surface-hover"
           : "";
 
+        // Show count if provided, styled as a small badge next to the label
+        const countSpan =
+          typeof opt.count === "number" ? (
+            <span className="ms-1 text-xs text-muted align-middle">
+              {opt.count}
+            </span>
+          ) : null;
+
         return (
           <button
             key={opt.value}
@@ -65,11 +75,16 @@ export function SegmentedToggle<T extends string>({
             onClick={() => onChange(opt.value)}
             disabled={disabled}
           >
-            {opt.label}
-            {typeof opt.count === "number" && (
-              <span className="ml-1 text-xs text-muted align-middle">
-                {opt.count}
-              </span>
+            {isRtl ? (
+              <>
+                {countSpan}
+                {opt.label}
+              </>
+            ) : (
+              <>
+                {opt.label}
+                {countSpan}
+              </>
             )}
           </button>
         );

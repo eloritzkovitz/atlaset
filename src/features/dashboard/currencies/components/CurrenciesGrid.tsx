@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { EmptyListMessage, SearchInput } from "@components";
+import { DirectionalIcon, EmptyListMessage, SearchInput } from "@components";
 import { type Currency } from "@features/countries";
-import { FaChevronRight } from "react-icons/fa6";
 
 interface CurrenciesGridProps {
   currencies: Currency[];
@@ -26,7 +25,7 @@ export const CurrenciesGrid: React.FC<CurrenciesGridProps> = ({
         aria-label="View full activity log"
       >
         <span>Currency Exchange</span>
-        <FaChevronRight className="text-base" />
+        <DirectionalIcon direction="next" className="text-base" />
       </Link>
       <div className="flex justify-between items-center mb-4">
         <SearchInput

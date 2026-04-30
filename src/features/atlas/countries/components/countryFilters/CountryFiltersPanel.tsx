@@ -3,10 +3,17 @@ import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useCountryData, type GeoType, type SovereigntyStatus } from "@features/countries";
-import { getAllGeoTypes, getAllSovereigntyStatuses } from "@features/countries/utils/countryData";
+import {
+  useCountryData,
+  type GeoType,
+  type SovereigntyStatus,
+} from "@features/countries";
+import {
+  getAllGeoTypes,
+  getAllSovereigntyStatuses,
+} from "@features/countries/utils/countryData";
 import type { VisitedStatus } from "@features/visits";
-import { useKeyHandler, useScreenSize } from "@hooks";
+import { useIsRtl, useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
@@ -94,6 +101,7 @@ export function CountryFiltersPanel({
 
   // Responsive check
   const { isMobile } = useScreenSize();
+  const isRtl = useIsRtl();
 
   return (
     <Panel
@@ -127,10 +135,9 @@ export function CountryFiltersPanel({
       className={isMobile ? "panel-mobile-fullscreen" : ""}
       style={
         !isMobile
-          ? {
-              left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH,
-              zIndex: 39,
-            }
+          ? isRtl
+            ? { right: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
+            : { left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
           : undefined
       }
     >
@@ -148,7 +155,7 @@ export function CountryFiltersPanel({
           setSelectedSovereignty={setSelectedSovereignty}
           sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
-          setSelectedVisited={setSelectedVisited}          
+          setSelectedVisited={setSelectedVisited}
           visitedOnly={visitedOnly}
           subregionOptions={subregionOptions}
           geoTypeOptions={geoTypeOptions}
