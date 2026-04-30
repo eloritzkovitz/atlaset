@@ -48,10 +48,10 @@ export function ShortcutsModal() {
             {categories.map((category) =>
               groupedCommands[category] ? (
                 <div key={category} className="mb-6">
-                  <div className="text-lg font-bold mb-2 text-left">
+                  <div className="text-lg font-bold mb-2 text-start">
                     {category}
                   </div>
-                  <table className="w-full mx-auto text-left">
+                  <table className="w-full mx-auto text-start">
                     <tbody>
                       {groupedCommands[category].map((cmd) => (
                         <ShortcutRow
