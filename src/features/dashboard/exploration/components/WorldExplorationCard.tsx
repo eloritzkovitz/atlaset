@@ -30,7 +30,9 @@ export function WorldExplorationCard({
         <>
           <div className="text-2xl font-semibold mb-2">World Exploration</div>
           <div className="text-5xl font-bold text-primary mb-2">
-            {animatedVisited} / {total}
+            <span dir="ltr">
+              {animatedVisited} / {total}
+            </span>
           </div>
           <div className="text-lg text-muted">
             {percent(animatedVisited, total)} of countries visited

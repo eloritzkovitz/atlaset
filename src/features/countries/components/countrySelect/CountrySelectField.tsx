@@ -58,8 +58,9 @@ export function CountrySelectField({
               variant="secondary"
               onClick={onOpen}
               disabled={disabled}
+              icon={<ICONS.edit className="inline" />}
             >
-              <ICONS.edit className="inline" /> Edit
+              Edit
             </ActionButton>
           )}
         </div>

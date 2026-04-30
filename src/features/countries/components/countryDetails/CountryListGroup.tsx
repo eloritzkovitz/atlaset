@@ -5,7 +5,7 @@ import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import { type Country } from "../../types";
 
 interface CountryListGroupProps {
-  label: string;
+  label: React.ReactNode;
   isoCodes: string[];
   countries: Country[];
   visited?: (iso: string) => boolean;
@@ -44,7 +44,8 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
 
   return (
     <CollapsibleHeader
-      label={`${label} (${sortedCountries.length})`}
+      label={label}
+      count={sortedCountries.length}
       expanded={expanded}
       icon={undefined}
       onToggle={onToggle}

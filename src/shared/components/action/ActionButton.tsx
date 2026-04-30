@@ -1,5 +1,6 @@
 import React from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useIsRtl } from "@hooks";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface ActionButtonProps {
@@ -51,7 +52,7 @@ export const ActionButton = React.forwardRef<
       onTouchStart,
       onTouchEnd,
     },
-    ref
+    ref,
   ) => {
     const base =
       "flex flex-row items-center justify-center gap-2 font-semibold border-none transition-colors ";
@@ -75,9 +76,14 @@ export const ActionButton = React.forwardRef<
     if (variant === "toggle") {
       stateClass = active ? "" : "text-muted bg-transparent";
     }
-    const disabledStyles = disabled && variant === "toggle"
-      ? "opacity-50 cursor-not-allowed pointer-events-none"
-      : "";
+    const disabledStyles =
+      disabled && variant === "toggle"
+        ? "opacity-50 cursor-not-allowed pointer-events-none"
+        : "";
+
+    const isRtl = useIsRtl();
+
+    const iconNode = icon ? <span className="inline-flex">{icon}</span> : null;
 
     const button = (
       <button
@@ -97,14 +103,32 @@ export const ActionButton = React.forwardRef<
         disabled={disabled}
         style={style}
       >
-        {icon && <span className="inline-flex">{icon}</span>}
-        {children}
+        {icon && children ? (
+          isRtl ? (
+            <>
+              {children}
+              {iconNode}
+            </>
+          ) : (
+            <>
+              {iconNode}
+              {children}
+            </>
+          )
+        ) : (
+          <>
+            {iconNode}
+            {children}
+          </>
+        )}
       </button>
     );
     return title ? (
-      <Tooltip content={title} position={titlePosition}>{button}</Tooltip>
+      <Tooltip content={title} position={titlePosition}>
+        {button}
+      </Tooltip>
     ) : (
       button
     );
-  }
+  },
 );

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
+import type { Country } from "@features/countries/types";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
-import type { Country } from "@features/countries/types";
 
 interface CountryAffiliationsContentProps {
   country: Country;
@@ -67,7 +67,8 @@ export function CountryAffiliationsContent({
           section.data.length > 0 && (
             <CollapsibleHeader
               key={section.key}
-              label={`${section.label} (${section.data.length})`}
+              label={section.label}
+              count={section.data.length}
               expanded={expanded[section.key]}
               icon={undefined}
               onToggle={() => handleToggle(section.key)}

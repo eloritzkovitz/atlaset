@@ -87,7 +87,9 @@ export function CountryInfoTable({
         </tr>
         <tr>
           <td className="font-semibold">Calling code:</td>
-          <td>{country.callingCode || "—"}</td>
+          <td>
+            <span dir="ltr">{country.callingCode || "—"}</span>
+          </td>
         </tr>
         {country.drivingSide && (
           <tr>

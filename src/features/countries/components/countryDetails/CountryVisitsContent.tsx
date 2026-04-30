@@ -27,18 +27,21 @@ export function CountryVisitsContent({ visits }: CountryVisitsContentProps) {
     <div>
       <VisitSection
         icon={<ICONS.tripPlanned />}
-        title={`Planned (${visits.tentative.length})`}
+        title={"Planned"}
+        count={visits.tentative.length}
         visits={visits.tentative}
       />
       <VisitSection
         icon={<ICONS.tripUpcoming />}
-        title={`Upcoming (${visits.upcoming.length})`}
+        title={"Upcoming"}
+        count={visits.upcoming.length}
         visits={visits.upcoming}
         onVisitClick={handleVisitChipClick}
       />
       <VisitSection
         icon={<ICONS.tripCompleted />}
-        title={`Completed (${visits.past.length})`}
+        title={"Completed"}
+        count={visits.past.length}
         visits={visits.past}
         onVisitClick={handleVisitChipClick}
       />
