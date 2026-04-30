@@ -53,7 +53,7 @@ export function UserListItem({
 
   // Accept/reject actions
   const actions = (onAccept || onReject) && (
-    <div className="flex gap-1 ml-2">
+    <div className="flex gap-1 ms-2">
       {onAccept && (
         <ActionButton
           onClick={onAccept}

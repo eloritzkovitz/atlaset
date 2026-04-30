@@ -48,10 +48,10 @@ export function ToolbarSelectButton<T extends string | number>({
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <span className="truncate flex-1 text-left pl-3">
+        <span className="truncate flex-1 text-left ps-3">
           {options.find((o) => o.value === value)?.label}
         </span>
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+        <span className="absolute end-2 top-1/2 -translate-y-1/2 pointer-events-none">
           <FaChevronDown />
         </span>
       </ActionButton>

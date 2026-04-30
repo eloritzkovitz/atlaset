@@ -218,7 +218,7 @@ export function CountrySection({
               onChange={(v: string) => setSortBy(v as typeof sortBy)}
               visitedOnly={undefined}
             />
-            <div className="flex flex-row gap-2 ml-auto justify-end">
+            <div className="flex flex-row gap-2 ms-auto justify-end">
               <ActionButton
                 onClick={handleResetFilters}
                 ariaLabel="Reset Filters"

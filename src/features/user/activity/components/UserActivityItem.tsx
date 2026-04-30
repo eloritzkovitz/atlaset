@@ -27,7 +27,7 @@ export const UserActivityItem = React.memo(function UserActivityItem({
   return (
     <li className="p-4 rounded-xl bg-surface-alt hover:bg-primary/30 flex flex-col gap-2">
       <div className="flex items-center gap-4">
-        <span className="inline-block mr-1">
+        <span className="inline-block me-1">
           <span className="flex items-center justify-center w-10 h-10 rounded-full bg-surface">
             <span className="text-lg">{getActivityIcon(activity.action)}</span>
           </span>

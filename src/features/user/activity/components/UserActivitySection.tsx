@@ -36,7 +36,7 @@ export function UserActivitySection() {
           className="flex items-center focus:outline-none"
           aria-label="Go back"
         >
-          <FaChevronLeft className="text-lg mr-1" />
+          <FaChevronLeft className="text-lg me-1" />
           <h2 className="text-xl font-bold self-start">Activity Log</h2>
         </button>
       </div>

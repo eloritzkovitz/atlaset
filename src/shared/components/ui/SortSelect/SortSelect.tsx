@@ -100,7 +100,7 @@ export function SortSelect<T extends string>({
     ) : null;
 
   return (
-    <div className="relative ml-2 flex items-center">
+    <div className="relative ms-2 flex items-center">
       <div ref={btnRef}>
         <ActionButton
           icon={

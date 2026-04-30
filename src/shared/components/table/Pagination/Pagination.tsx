@@ -39,7 +39,7 @@ export function Pagination({
   return (
     <div className="relative flex items-center my-4 w-full min-h-[40px]">
       {/* Left: Showing X */}
-      <div className="absolute left-0 flex items-center gap-4 pl-4 h-full">
+      <div className="absolute start-0 flex items-center gap-4 ps-4 h-full">
         <span className="text-muted whitespace-nowrap flex items-center gap-1">
           Showing
           {onPageSizeChange ? (
@@ -81,7 +81,7 @@ export function Pagination({
               }`}
               style={{ lineHeight: 1 }}
             >
-              <FaChevronLeft className="text-xs align-middle mt-0.5 mr-1" />
+              <FaChevronLeft className="text-xs align-middle mt-0.5 me-1" />
               <span className="align-middle">Back</span>
             </span>
           </ActionButton>
@@ -119,13 +119,13 @@ export function Pagination({
               style={{ lineHeight: 1 }}
             >
               <span className="align-middle">Next</span>
-              <FaChevronRight className="text-xs align-middle mt-0.5 ml-1" />
+              <FaChevronRight className="text-xs align-middle mt-0.5 ms-1" />
             </span>
           </ActionButton>
         </div>
       </div>
       {/* Right: Spacer to balance left absolute block */}
-      <div className="absolute right-0 w-[220px] h-full" />
+      <div className="absolute end-0 w-[220px] h-full" />
     </div>
   );
 }

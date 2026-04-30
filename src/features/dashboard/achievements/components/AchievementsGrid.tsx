@@ -156,7 +156,7 @@ export function AchievementsGrid() {
             onChange={setSortBy}
             keyGroup={sortKeyGroup}
           />
-          <div className="flex flex-row gap-2 ml-auto justify-end">
+          <div className="flex flex-row gap-2 ms-auto justify-end">
             <ActionButton
               onClick={handleResetFilters}
               ariaLabel="Reset Filters"

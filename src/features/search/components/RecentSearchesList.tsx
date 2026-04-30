@@ -22,7 +22,7 @@ export function RecentSearchesList({
           variant="secondary"
           ariaLabel="Clear all recent searches"
           onClick={onClear}
-          className="text-muted !text-sm !p-1 mt-2 mr-1"
+          className="text-muted !text-sm !p-1 mt-2 me-1"
           rounded
         >
           Clear

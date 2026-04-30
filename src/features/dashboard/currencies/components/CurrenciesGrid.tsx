@@ -47,7 +47,7 @@ export const CurrenciesGrid: React.FC<CurrenciesGridProps> = ({
                 to={`/dashboard/currencies/${currency.code}`}
                 className="grid grid-cols-[100px_1fr] items-center p-4 hover:bg-surface-hover transition rounded focus:outline-none focus:ring-2 focus:ring-primary"
               >
-                <span className="font-semibold text-lg pr-4">
+                <span className="font-semibold text-lg pe-4">
                   {currency.code}
                 </span>
                 <span className="text-left">{currency.name}</span>

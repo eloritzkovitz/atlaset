@@ -46,13 +46,13 @@ export function Panel({
       inert={!show}
       className={
         isMobile
-          ? `fixed bottom-0 left-0 right-0 z-50 bg-surface flex flex-col rounded-t-2xl shadow-lg transition-all duration-300 ease-in-out
+          ? `fixed bottom-0 start-0 end-0 z-50 bg-surface flex flex-col rounded-t-2xl shadow-lg transition-all duration-300 ease-in-out
             ${
               show
                 ? "translate-y-0 opacity-100"
                 : "translate-y-full opacity-0 pointer-events-none"
             } ${className}`
-          : `fixed bg-surface flex flex-col h-screen top-0 ${position === "right" ? "right-0" : "left-16"} z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
+          : `fixed bg-surface flex flex-col h-screen top-0 ${position === "right" ? "end-0" : "start-16"} z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
             ${
               show
                 ? "translate-x-0 opacity-100"

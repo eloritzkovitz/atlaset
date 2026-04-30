@@ -15,7 +15,7 @@ export function EmbedLayout({ children, mapCode }: EmbedLayoutProps) {
   return (
     <div className="w-screen h-screen bg-white flex flex-col items-center justify-center relative">
       {/* Branding bar */}
-      <div className="absolute top-0 left-2 w-full flex items-center justify-between z-10">
+      <div className="absolute top-0 start-2 w-full flex items-center justify-between z-10">
         <div className="bg-bg/40 px-2 flex items-center gap-2 rounded">
           <Branding size={36} forceExternal={true} />
           <span className="font-bold text-2xl select-none">Atlaset</span>

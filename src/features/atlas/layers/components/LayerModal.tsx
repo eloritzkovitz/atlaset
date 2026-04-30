@@ -186,7 +186,7 @@ export function LayerModal({
               ))}
               {isListManaged && (
                 <div className="flex px-3 py-2 mb-2 items-center text-danger ">
-                  <ICONS.info className="inline mr-2" />
+                  <ICONS.info className="inline me-2" />
                   This layer is linked with a list. To edit its name or
                   countries, update the list itself.
                 </div>

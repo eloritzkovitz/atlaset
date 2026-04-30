@@ -24,7 +24,7 @@ export function VisitSection({
       expanded={expanded}
       onToggle={() => setExpanded((e) => !e)}
     >
-      <ul className="pl-0">
+      <ul className="ps-0">
         {[...visits].reverse().map((visit, i) => (
           <li key={`${title}-${i}`} className="my-2">
             <Chip
@@ -33,7 +33,7 @@ export function VisitSection({
             >
               <span className="font-semibold">{visit.yearRange || "TBD"}</span>
               {visit.tripName && (
-                <span className="text-muted tracking-wide select-none ml-2">
+                <span className="text-muted tracking-wide select-none ms-2">
                   {visit.tripName}
                 </span>
               )}

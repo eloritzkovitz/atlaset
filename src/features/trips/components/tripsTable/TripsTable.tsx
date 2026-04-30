@@ -85,7 +85,7 @@ export function TripsTable({
     const colKey = key as keyof typeof colWidths;
     return (
       <div
-        className="absolute right-0 top-0 w-[6px] h-full cursor-col-resize z-[100] select-none bg-transparent opacity-0"
+        className="absolute end-0 top-0 w-[6px] h-full cursor-col-resize z-[100] select-none bg-transparent opacity-0"
         onMouseDown={(e) => handleResizeStart(e, colKey)}
       />
     );

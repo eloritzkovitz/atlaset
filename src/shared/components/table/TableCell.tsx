@@ -13,7 +13,7 @@ export function TableCell({
     <td className={className} rowSpan={rowSpan}>
       {children}
 
-      <div className="absolute right-0 top-0 w-[6px] h-full cursor-col-resize z-[100] select-none bg-transparent" />
+      <div className="absolute end-0 top-0 w-[6px] h-full cursor-col-resize z-[100] select-none bg-transparent" />
     </td>
   );
 }

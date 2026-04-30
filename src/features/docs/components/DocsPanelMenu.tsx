@@ -58,7 +58,7 @@ export function DocsPanelMenu({
         </div>
       }
       width={340}
-      className="!left-0"
+      className="!start-0"
       onHide={onClose}
     >
       {selectedPanel && (

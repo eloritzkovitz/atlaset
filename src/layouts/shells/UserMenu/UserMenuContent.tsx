@@ -1,4 +1,5 @@
 import type { User } from "firebase/auth";
+import i18n from "i18next";
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
@@ -24,7 +25,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
   const menuItems = [
     {
       label: "Profile",
-      icon: <ICONS.profile className="text-lg mr-2" />,
+      icon: <ICONS.profile className="text-lg me-2" />,
       onClick: () => {
         navigate(`/users/${username}`);
         onClose?.();
@@ -33,7 +34,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     {
       label: "Friends",
-      icon: <ICONS.friends className="text-lg mr-2" />,
+      icon: <ICONS.friends className="text-lg me-2" />,
       onClick: () => {
         toggleFriends();
         onClose?.();
@@ -42,7 +43,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     { separator: true },
     {
       label: "Report a Bug",
-      icon: <ICONS.reportBug className="text-lg mr-2" />,
+      icon: <ICONS.reportBug className="text-lg me-2" />,
       onClick: () => {
         window.open(
           "https://github.com/eloritzkovitz/atlaset/issues",
@@ -56,7 +57,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       ? [
           {
             label: "Keyboard Shortcuts",
-            icon: <ICONS.shortcuts className="text-lg mr-2" />,
+            icon: <ICONS.shortcuts className="text-lg me-2" />,
             onClick: () => {
               toggleShortcuts();
               onClose?.();
@@ -67,17 +68,27 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     { separator: true },
     {
       label: "Settings",
-      icon: <ICONS.settings className="text-lg mr-2" />,
+      icon: <ICONS.settings className="text-lg me-2" />,
       onClick: () => {
         navigate("/settings");
         onClose?.();
       },
       url: "/settings",
     },
+    {
+      label: "Language",
+      icon: <ICONS.language className="text-lg me-2" />,
+      onClick: () => {
+        const current = i18n.language || "en";
+        const next = current.startsWith("he") ? "en" : "he";
+        i18n.changeLanguage(next);
+        onClose?.();
+      },
+    },
     { separator: true },
     {
       label: "Sign out",
-      icon: <ICONS.signOut className="text-lg mr-2" />,
+      icon: <ICONS.signOut className="text-lg me-2" />,
       onClick: () => {
         onLogout();
         onClose?.();

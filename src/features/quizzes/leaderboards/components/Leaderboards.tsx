@@ -23,7 +23,7 @@ export function Leaderboards() {
           href="/quizzes"
           className="text-text transition-colors flex items-center"
         >
-          <FaChevronLeft className="inline-block mr-2 text-xl" />
+          <FaChevronLeft className="inline-block me-2 text-xl" />
         </a>
         <h1 className="text-3xl font-bold text-text m-0">Leaderboards</h1>
       </div>

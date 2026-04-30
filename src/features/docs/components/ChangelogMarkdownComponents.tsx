@@ -46,12 +46,12 @@ export const changelogMarkdownComponents = getBaseMarkdownComponents({
     }
     return (
       <li
-        className="flex items-start list-none pl-0 py-2 text-sm sm:text-base"
+        className="flex items-start list-none ps-0 py-2 text-sm sm:text-base"
         style={{ minHeight: "2.25rem" }}
         {...rest}
       >
         {tag && (
-          <span className="flex-shrink-0 self-center inline-flex justify-center text-center min-w-[5.5em] mr-2">
+          <span className="flex-shrink-0 self-center inline-flex justify-center text-center min-w-[5.5em] me-2">
             {tag}
           </span>
         )}

@@ -104,7 +104,7 @@ export function CountryListModal({
             />
             {isEditing && isLinked && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">
-                <ICONS.info className="inline mr-2" />
+                <ICONS.info className="inline me-2" />
                 Changes to this list will update all layers linked to it.
               </div>
             )}

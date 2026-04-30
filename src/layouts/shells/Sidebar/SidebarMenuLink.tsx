@@ -25,7 +25,7 @@ export function SidebarMenuLink({
             active={isActive}
             ariaLabel={label}
             className={`text-2xl gap-3 ${
-              !expanded ? "ml-1 mr-1 pr-2" : "w-full"
+              !expanded ? "ms-1 me-1 pe-2" : "w-full"
             }`}
           >
             {expanded && label}

@@ -160,7 +160,7 @@ export function PanelListItem({
         }
       >
         {!icon ? <ColorDot color={color} size={22} /> : icon}
-        <div className="flex-1 ml-2 flex items-center">
+        <div className="flex-1 ms-2 flex items-center">
           {isEditing ? (
             <RenameControls
               value={editName}

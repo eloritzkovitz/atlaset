@@ -32,12 +32,12 @@ export function PasswordField({
     <div className={`relative${hideLabel ? " w-full" : ""}`}>
       <input
         type={show ? "text" : "password"}
-        className={`w-full pr-10 ${className}`}
+        className={`w-full pe-10 ${className}`}
         {...inputProps}
       />
       <button
         type="button"
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
+        className="absolute end-3 top-1/2 -translate-y-1/2 text-muted hover:text-muted-hover"
         onClick={() => setShow((v) => !v)}
         tabIndex={-1}
         aria-label={show ? "Hide password" : "Show password"}

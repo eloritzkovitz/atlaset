@@ -36,7 +36,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   // Show login/signup buttons if not logged in
   if (!user) {
     return (
-      <div className="fixed top-0 right-2 z-20">
+      <div className="fixed top-0 end-2 z-20">
         <AuthButtons />
       </div>
     );
@@ -45,7 +45,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   return (
     <div
       className={`${
-        fixed ? "fixed top-4 right-4" : ""
+        fixed ? "fixed top-4 end-4" : ""
       } z-20 flex items-center gap-4`}
       ref={menuRef}
     >
@@ -85,7 +85,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
           className={
             isMobile
               ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-              : "absolute right-4 mt-3 w-60 z-50 p-2"
+              : "absolute end-4 mt-3 w-60 z-50 p-2"
           }
           style={
             isMobile

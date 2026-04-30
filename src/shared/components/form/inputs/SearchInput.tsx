@@ -85,8 +85,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             <div
               ref={overlayRef}
               className={`w-full text-base whitespace-pre flex items-center ${
-                showIcon === false ? "pl-3" : "pl-10"
-              } pr-10 py-2`}
+                showIcon === false ? "ps-3" : "ps-10"
+              } pe-10 py-2`}
               style={{
                 paddingRight: showClear ? 44 : undefined,
                 overflow: "hidden",
@@ -106,7 +106,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           </div>
         )}
         {showIcon !== false && (
-          <FaMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted z-20" />
+          <FaMagnifyingGlass className="absolute start-3 top-1/2 transform -translate-y-1/2 text-muted z-20" />
         )}
         <input
           ref={ref || inputRef}
@@ -141,7 +141,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           }}
           placeholder={placeholder}
           aria-label={placeholder || "Search"}
-          className={`w-full ${showIcon === false ? "pl-3" : "pl-10"} pr-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
+          className={`w-full ${showIcon === false ? "ps-3" : "ps-10"} pe-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
           style={{
             ...(style || {}),
             ...(overlayContent
@@ -163,7 +163,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               }
               onChange("");
             }}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none z-30"
+            className="absolute end-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none z-30"
           >
             <FaXmark />
           </button>

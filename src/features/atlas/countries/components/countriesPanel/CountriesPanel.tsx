@@ -192,7 +192,7 @@ export function CountriesPanel({
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen z-40 group relative">
+    <div className="fixed top-0 start-0 h-screen z-40 group relative">
       <Panel
         title={
           <>

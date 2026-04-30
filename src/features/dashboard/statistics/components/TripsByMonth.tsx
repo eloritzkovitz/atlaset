@@ -87,7 +87,7 @@ export function TripsByMonth() {
                 <FaCrown className="text-yellow-500 text-lg" />
                 {mostPopularMonth?.name ?? "—"}
                 {mostPopularMonth && (
-                  <span className="text-muted font-normal text-sm ml-2">
+                  <span className="text-muted font-normal text-sm ms-2">
                     ({mostPopularMonth.total} trips,{" "}
                     {totalTripsForMonth > 0
                       ? `${Math.round((mostPopularMonth.total / totalTripsForMonth) * 100)}%`
@@ -103,7 +103,7 @@ export function TripsByMonth() {
               <Chip className="bg-surface font-semibold px-3 py-2 text-base gap-2">
                 {leastPopularMonth?.name ?? "—"}
                 {leastPopularMonth && (
-                  <span className="text-muted font-normal text-sm ml-2">
+                  <span className="text-muted font-normal text-sm ms-2">
                     ({leastPopularMonth.total} trips,{" "}
                     {totalTripsForMonth > 0
                       ? `${Math.round((leastPopularMonth.total / totalTripsForMonth) * 100)}%`

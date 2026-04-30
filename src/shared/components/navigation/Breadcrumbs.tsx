@@ -37,7 +37,7 @@ export function Breadcrumbs({ crumbs, onCrumbClick }: BreadcrumbsProps) {
                 </span>
               )}
               {idx < arr.length - 1 && (
-                <FaChevronRight className="text-sm text-gray-400 ml-2" />
+                <FaChevronRight className="text-sm text-gray-400 ms-2" />
               )}
             </span>
           );

@@ -12,7 +12,7 @@ export function UIHintContainer() {
     if (hintList.length === 0) return null;
     return (
       <div
-        className={`fixed ${positionClass} left-1/2 -translate-x-1/2 z-[1000] flex flex-col gap-2 pointer-events-none`}
+        className={`fixed ${positionClass} start-1/2 -translate-x-1/2 z-[1000] flex flex-col gap-2 pointer-events-none`}
       >
         {hintList.map((hint) => (
           <div

@@ -31,8 +31,8 @@ export function TimelineNavigator() {
   } = useTimelineNavigation();
 
   return (
-    <div className="absolute bottom-7 left-0 w-full z-50 flex items-center justify-center">
-      <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+    <div className="absolute bottom-7 start-0 w-full z-50 flex items-center justify-center">
+      <div className="absolute start-1/2 transform -translate-x-1/2 flex items-center gap-2">
         <ActionButton
           onClick={() => setPlaying((p) => !p)}
           ariaLabel={playing ? "Pause" : "Play"}
@@ -109,7 +109,7 @@ export function TimelineNavigator() {
           <span>{speed}x</span>
         </ActionButton>
       </div>
-      <div className="relative left-80 flex items-center">
+      <div className="relative start-80 flex items-center">
         <ToolbarSelectButton
           value={colorMode}
           onChange={(mode) => setColorMode(mode as ColorMode)}

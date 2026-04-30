@@ -41,7 +41,7 @@ export function Sidebar() {
         />
       )}
       <aside
-        className={`hidden md:block fixed top-0 left-0 h-screen z-[10000] bg-sidebar transition-all duration-200 px-1`}
+        className={`hidden md:block fixed top-0 start-0 justify-center h-screen z-[10000] bg-sidebar transition-all duration-200 px-1`}
         style={{
           width: sidebarWidth,
           minWidth: sidebarWidth,
@@ -53,7 +53,7 @@ export function Sidebar() {
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
             aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
             title={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
-            className="flex h-10 w-10 ml-1 hover:bg-sidebar-btn-hover transition"
+            className="flex h-10 w-10 ms-1 hover:bg-sidebar-btn-hover transition"
             icon={<FaBars className="text-2xl" />}
             rounded
           />
@@ -79,7 +79,7 @@ export function Sidebar() {
           ))}
         </nav>
         {/* Settings */}
-        <div className="absolute bottom-2 left-0 w-full px-1">
+        <div className="absolute bottom-2 start-0 w-full px-1">
           <SidebarMenuLink
             to={SETTINGS_LINK.to}
             icon={SETTINGS_LINK.icon}
@@ -90,7 +90,7 @@ export function Sidebar() {
       </aside>
 
       {/* Mobile bottom navigation bar: only visible on mobile */}
-      <nav className="fixed bottom-0 left-0 right-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
+      <nav className="fixed bottom-0 start-0 end-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
         {[...NAV_LINKS].map((link) => (
           <SidebarMenuLink
             key={link.to}
