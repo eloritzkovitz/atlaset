@@ -55,7 +55,7 @@ export function Chip({
         ) : (
           <button
             type="button"
-            className={`ml-auto text-muted ${
+            className={`ms-auto text-muted ${
               disabled
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-muted-hover"

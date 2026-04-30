@@ -64,7 +64,7 @@ export function SortSelect<T extends string>({
   ) =>
     group ? (
       <>
-        <SectionHeader title={group.label} className="ml-1 -my-4" />
+        <SectionHeader title={group.label} className="ms-1 -my-4" />
         {group.options.map((opt: Option<T>) => (
           <div key={opt.value}>
             <OptionItem
@@ -132,7 +132,7 @@ export function SortSelect<T extends string>({
         />
       </div>
       {showLabel && (
-        <span className="ml-2 text-sm text-muted">
+        <span className="ms-2 text-sm text-muted">
           {selectedKeyOption?.label}
         </span>
       )}

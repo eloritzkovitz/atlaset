@@ -24,7 +24,7 @@ export function CountriesSection({
             selectedCountries.length > 0 ? "Edit Countries" : "Select Countries"
           }
         >
-          <FaPenToSquare className="mr-1" />
+          <FaPenToSquare className="me-1" />
           {selectedCountries.length > 0 ? "Edit" : "Add"}
         </button>
       </div>

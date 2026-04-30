@@ -20,7 +20,7 @@ export function DashboardPanelMenu({
     <SidePanelMenu
       title={
         <>
-          <DashboardIcon className="mr-1" />
+          <DashboardIcon className="me-1" />
           Dashboard
         </>
       }

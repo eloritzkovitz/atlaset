@@ -44,7 +44,7 @@ export function RegionCard({
             labelClassName="text-2xl"
             statsClassName="text-xl"
           />
-          <div className="ml-2">
+          <div className="ms-2">
             {subregions.map((subregion) => (
               <SubregionStatsRow
                 key={subregion.subregion}

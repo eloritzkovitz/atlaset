@@ -21,7 +21,7 @@ export const GitHubButton: React.FC<GitHubButtonProps> = ({
     className={`inline-flex items-center hover:text-muted/70 ${className}`}
     aria-label="Atlaset GitHub repository"
   >
-    <FaGithub className="mr-1" size={iconSize} />
+    <FaGithub className="me-1" size={iconSize} />
     <span className="hidden sm:inline">{label}</span>
   </a>
 );

@@ -27,7 +27,7 @@ export function FriendListItemMenuActions({
             navigate(`/users/${uid}`);
           }
         }}
-        icon={<FaUser className="mr-2" />}
+        icon={<FaUser className="me-2" />}
         className="w-full"
       >
         View Profile
@@ -39,7 +39,7 @@ export function FriendListItemMenuActions({
               friendService.removeFriend(user.uid, uid);
             }
           }}
-          icon={<FaUserMinus className="mr-2" />}
+          icon={<FaUserMinus className="me-2" />}
           className="w-full text-danger"
         >
           Unfriend

@@ -49,7 +49,7 @@ export function ToolbarActions({
           variant="primary"
           onClick={onAddTrip}
           icon={<ICONS.add className="text-xl me-2" />}
-          className="ml-4"
+          className="ms-4"
         >
           Add Trip
         </ActionButton>

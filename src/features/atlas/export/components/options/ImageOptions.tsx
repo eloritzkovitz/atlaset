@@ -66,7 +66,7 @@ export function ImageOptions({
             onChange={(e) => setQuality(Number(e.target.value))}
             className="align-middle"
           />
-          <span className="ml-2 text-xs">
+          <span className="ms-2 text-xs">
             {quality} <span className="text-muted"></span>
           </span>
         </div>

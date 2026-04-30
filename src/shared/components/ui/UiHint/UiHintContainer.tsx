@@ -30,7 +30,7 @@ export function UIHintContainer() {
             </span>
             {hint.dismissable && (
               <button
-                className="ml-3 text-muted hover:text-muted-hover pointer-events-auto"
+                className="ms-3 text-muted hover:text-muted-hover pointer-events-auto"
                 style={{
                   background: "none",
                   border: "none",

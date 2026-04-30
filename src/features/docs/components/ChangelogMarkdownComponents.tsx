@@ -16,7 +16,7 @@ export const changelogMarkdownComponents = getBaseMarkdownComponents({
     />
   ),
   ul: (props: React.HTMLProps<HTMLUListElement>) => (
-    <ul className="ml-0 mb-4" {...props} />
+    <ul className="ms-0 mb-4" {...props} />
   ),
   li: (props: React.LiHTMLAttributes<HTMLLIElement>) => {
     const { children, ...rest } = props;

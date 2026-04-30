@@ -26,7 +26,7 @@ export function SettingsPanelMenu({
     <SidePanelMenu
       title={
         <>
-          <FaGear className="mr-1" />
+          <FaGear className="me-1" />
           Settings
         </>
       }

@@ -45,7 +45,7 @@ export const UserActivityItem = React.memo(function UserActivityItem({
         </div>
         {onDelete && (
           <ActionButton
-            className="ml-2 text-danger hover:text-hover"
+            className="ms-2 text-danger hover:text-hover"
             icon={<FaTrash />}
             ariaLabel="Delete activity"
             title="Delete activity"

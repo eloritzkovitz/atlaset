@@ -32,7 +32,7 @@ export function HomeCountrySelect() {
         ) : (
           <span className="opacity-50">No country selected</span>
         )}
-        <FaChevronRight className="ml-auto text-muted" />
+        <FaChevronRight className="ms-auto text-muted" />
       </button>
       <CountrySelectModal
         isOpen={modalOpen}

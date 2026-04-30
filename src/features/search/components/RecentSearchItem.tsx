@@ -20,7 +20,7 @@ export function RecentSearchItem({
       className="w-full text-left flex justify-between items-center"
     >
       <span className="flex items-center">
-        <FaRegClock className="mr-3 text-muted" />
+        <FaRegClock className="me-3 text-muted" />
         {term}
       </span>
       {onRemove && (
@@ -28,7 +28,7 @@ export function RecentSearchItem({
           role="button"
           tabIndex={0}
           aria-label={`Delete ${term} from history`}
-          className="ml-2 text-muted p-1 rounded hover:bg-hover focus:bg-hover cursor-pointer outline-none"
+          className="ms-2 text-muted p-1 rounded hover:bg-hover focus:bg-hover cursor-pointer outline-none"
           onClick={(e) => {
             e.stopPropagation();
             onRemove(term);

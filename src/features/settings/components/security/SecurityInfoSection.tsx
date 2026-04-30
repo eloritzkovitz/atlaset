@@ -26,9 +26,9 @@ export function SecurityInfoSection() {
   // Get device icon based on user agent
   function getDeviceIcon(device: Device) {
     const ua = device.userAgent || "";
-    if (/mobile/i.test(ua)) return <FaMobile className="mr-4" size={64} />;
-    if (/tablet|ipad/i.test(ua)) return <FaTablet className="mr-4" size={64} />;
-    return <FaDesktop className="mr-4" size={64} />;
+    if (/mobile/i.test(ua)) return <FaMobile className="me-4" size={64} />;
+    if (/tablet|ipad/i.test(ua)) return <FaTablet className="me-4" size={64} />;
+    return <FaDesktop className="me-4" size={64} />;
   }
 
   // Handle device removal

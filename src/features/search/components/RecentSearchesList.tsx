@@ -17,7 +17,7 @@ export function RecentSearchesList({
   return (
     <div>
       <div className="flex items-center">
-        <SectionHeader title="Recent" className="ml-2 flex-1" />
+        <SectionHeader title="Recent" className="ms-2 flex-1" />
         <ActionButton
           variant="secondary"
           ariaLabel="Clear all recent searches"

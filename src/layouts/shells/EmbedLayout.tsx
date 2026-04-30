@@ -20,7 +20,7 @@ export function EmbedLayout({ children, mapCode }: EmbedLayoutProps) {
           <Branding size={36} forceExternal={true} />
           <span className="font-bold text-2xl select-none">Atlaset</span>
         </div>
-        <div className="mr-6 mt-4">
+        <div className="me-6 mt-4">
           {mapCode && (
             <a
               href={fullMapUrl}

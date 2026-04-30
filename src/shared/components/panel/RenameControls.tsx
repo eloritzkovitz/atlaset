@@ -34,7 +34,7 @@ export function RenameControls({
         onClick={onSave}
         ariaLabel="Save"
         title="Save"
-        className="ml-2 text-success hover:text-success-hover"
+        className="ms-2 text-success hover:text-success-hover"
         icon={<FaCheck className="text-xl" />}
       />
       <ActionButton
@@ -42,7 +42,7 @@ export function RenameControls({
         onClick={onCancel}
         ariaLabel="Cancel"
         title="Cancel"
-        className="ml-2 text-danger hover:text-danger-hover"
+        className="ms-2 text-danger hover:text-danger-hover"
         icon={<FaXmark className="text-xl" />}
       />
     </>

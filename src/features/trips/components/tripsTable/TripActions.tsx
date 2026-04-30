@@ -153,7 +153,7 @@ export function TripActions({
               setTimeout(() => setOpen(false), 300);
               onViewInCalendar?.(trip);
             }}
-            icon={<FaCalendar className="mr-2" />}
+            icon={<FaCalendar className="me-2" />}
             className="w-full"
           >
             View in Calendar
@@ -161,7 +161,7 @@ export function TripActions({
         )}
         <MenuButton
           onClick={menuActions.onEdit}
-          icon={<FaPenToSquare className="mr-2" />}
+          icon={<FaPenToSquare className="me-2" />}
           className="w-full"
         >
           Edit Trip
@@ -171,9 +171,9 @@ export function TripActions({
           onClick={menuActions.onFavorite}
           icon={
             trip.favorite ? (
-              <FaRegHeart className="mr-2 text-muted" />
+              <FaRegHeart className="me-2 text-muted" />
             ) : (
-              <FaHeart className="mr-2 text-danger" />
+              <FaHeart className="me-2 text-danger" />
             )
           }
           className="w-full"
@@ -187,11 +187,11 @@ export function TripActions({
         >
           <MenuButton
             {...rateButtonHoverHandlers}
-            icon={<FaStar className="mr-2 text-yellow-400" />}
+            icon={<FaStar className="me-2 text-yellow-400" />}
             className="w-full flex items-center justify-between"
           >
             Rate
-            <FaChevronRight className="ml-auto" />
+            <FaChevronRight className="ms-auto" />
           </MenuButton>
           {rateMenuOpen && (
             <RateMenu
@@ -215,7 +215,7 @@ export function TripActions({
           <Separator className="my-2" />
           <MenuButton
             onClick={menuActions.onDelete}
-            icon={<FaTrash className="mr-2" />}
+            icon={<FaTrash className="me-2" />}
             className="!text-danger w-full"
           >
             Delete Trip

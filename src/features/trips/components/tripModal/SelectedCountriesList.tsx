@@ -28,7 +28,7 @@ export function SelectedCountriesList({
             <CountryWithFlag isoCode={country.isoCode} name={country.name} />
             <button
               type="button"
-              className="ml-auto text-muted hover:text-muted-hover"
+              className="ms-auto text-muted hover:text-muted-hover"
               title="Remove"
               onClick={() => onRemove(country.isoCode)}
             >

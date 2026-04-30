@@ -58,7 +58,7 @@ export function ProfileHeader({
     <Card>
       <div className="flex flex-col sm:flex-row items-center mb-6 gap-4 sm:gap-0">
         <UserAvatar user={profile} size={100} className="sm:size-[150px]" />
-        <div className="flex-1 sm:ml-6 w-full">
+        <div className="flex-1 sm:ms-6 w-full">
           <div className="flex flex-row items-center w-full gap-3">
             <div className="flex-1 min-w-0">
               <h1 className="text-2xl sm:text-3xl font-bold text-left w-full truncate">

@@ -59,7 +59,7 @@ export function FeaturesSection() {
               {feature.description}
             </p>
           </div>
-          <div className="flex items-center justify-center md:ml-10 mt-8 md:mt-0">
+          <div className="flex items-center justify-center md:ms-10 mt-8 md:mt-0">
             <div className="w-64 h-64 rounded-full bg-blue-100 dark:bg-gray-800 flex items-center justify-center shadow-lg overflow-hidden">
               <img
                 src={feature.svgPath}

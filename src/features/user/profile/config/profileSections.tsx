@@ -59,7 +59,7 @@ export function getProfileSections({
         <CountryWithFlag
           isoCode={selectedCountry.isoCode}
           name={selectedCountry.name}
-          className="mr-2"
+          className="me-2"
         />
       ) : (
         "Not specified"

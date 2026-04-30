@@ -22,11 +22,11 @@ export const MapFooter: React.FC<MapFooterProps> = ({
     >
       <div className="flex items-center gap-2">
         <BrandCopyright className="text-xs" logoSize={16} />
-        <GitHubButton className="ml-3 !text-muted" />
+        <GitHubButton className="ms-3 !text-muted" />
       </div>
       <span>
         <Tooltip content={`Zoom: x${zoom.toFixed(1)}`} position="top">
-          <span className="mr-2">{`x${zoom.toFixed(1)}`}</span>
+          <span className="me-2">{`x${zoom.toFixed(1)}`}</span>
         </Tooltip>
         {coords ? (
           <Tooltip content={`Latitude, Longitude`} position="top">

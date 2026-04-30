@@ -129,7 +129,7 @@ export function CountrySelectModal({
                   <CountryWithFlag
                     isoCode={country.isoCode}
                     name={country.name}
-                    className="mr-2"
+                    className="me-2"
                   />
                 </label>
               );

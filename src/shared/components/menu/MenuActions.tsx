@@ -37,7 +37,7 @@ export function MenuActions({
         <>
           <MenuButton
             onClick={onView}
-            icon={<ICONS.view className="mr-2" />}
+            icon={<ICONS.view className="me-2" />}
             className="w-full"
           >
             View
@@ -48,7 +48,7 @@ export function MenuActions({
       {onDownload && (
         <MenuButton
           onClick={onDownload}
-          icon={<ICONS.download className="mr-2" />}
+          icon={<ICONS.download className="me-2" />}
           className="w-full"
         >
           Download
@@ -57,7 +57,7 @@ export function MenuActions({
       {onEdit && (
         <MenuButton
           onClick={onEdit}
-          icon={<ICONS.edit className="mr-2" />}
+          icon={<ICONS.edit className="me-2" />}
           className="w-full"
         >
           Edit
@@ -66,7 +66,7 @@ export function MenuActions({
       {onNameChange && (
         <MenuButton
           onClick={handleEdit}
-          icon={<ICONS.rename className="mr-2" />}
+          icon={<ICONS.rename className="me-2" />}
           className="w-full"
         >
           Rename
@@ -75,7 +75,7 @@ export function MenuActions({
       {onCenter && (
         <MenuButton
           onClick={onCenter}
-          icon={<ICONS.center className="mr-2" />}
+          icon={<ICONS.center className="me-2" />}
           className="w-full"
         >
           Center
@@ -84,7 +84,7 @@ export function MenuActions({
       {onDuplicate && (
         <MenuButton
           onClick={onDuplicate}
-          icon={<ICONS.duplicate className="mr-2" />}
+          icon={<ICONS.duplicate className="me-2" />}
           className="w-full"
         >
           Duplicate
@@ -93,7 +93,7 @@ export function MenuActions({
       {onCreateList && (
         <MenuButton
           onClick={onCreateList}
-          icon={<ICONS.createList className="mr-2" />}
+          icon={<ICONS.createList className="me-2" />}
           className="w-full"
         >
           Create List
@@ -103,7 +103,7 @@ export function MenuActions({
       {onShare && (
         <MenuButton
           onClick={onShare}
-          icon={<ICONS.share className="mr-2" />}
+          icon={<ICONS.share className="me-2" />}
           className="w-full"
         >
           Share
@@ -112,7 +112,7 @@ export function MenuActions({
       {onCopytoClipboard && (
         <MenuButton
           onClick={onCopytoClipboard}
-          icon={<ICONS.copyLink className="mr-2" />}
+          icon={<ICONS.copyLink className="me-2" />}
           className="w-full"
         >
           Copy Link
@@ -125,9 +125,9 @@ export function MenuActions({
             onClick={onRemove}
             icon={
               removeDisabled ? (
-                <ICONS.info className="mr-2" />
+                <ICONS.info className="me-2" />
               ) : (
-                <ICONS.remove className="mr-2" />
+                <ICONS.remove className="me-2" />
               )
             }
             className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}

@@ -15,7 +15,7 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
       position="right"
       title={
         <>
-          <ICONS.help className="mr-2" /> Help
+          <ICONS.help className="me-2" /> Help
         </>
       }
       headerActions={
@@ -37,7 +37,7 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
         </div>
         <div className="text-sm text-muted">
           Need help? Access guides, tips and developer docs in the full
-          <a href="/docs" className="ml-1 hover:!text-info">
+          <a href="/docs" className="ms-1 hover:!text-info">
             documentation
           </a>
           .

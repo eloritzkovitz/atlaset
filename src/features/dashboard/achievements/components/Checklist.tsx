@@ -20,7 +20,7 @@ export const Checklist: React.FC<ChecklistProps> = ({
   if (!items.length) return null;
   return (
     <div className="flex flex-col items-start w-full mt-4 mb-2">
-      <div className={className || "ml-12 flex flex-col gap-2 items-start"}>
+      <div className={className || "ms-12 flex flex-col gap-2 items-start"}>
         {items.map((item, idx) => (
           <div
             key={item.label + idx}

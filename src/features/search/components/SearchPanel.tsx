@@ -18,7 +18,7 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
       position="right"
       title={
         <>
-          <ICONS.search className="mr-2" /> Search
+          <ICONS.search className="me-2" /> Search
         </>
       }
       headerActions={
