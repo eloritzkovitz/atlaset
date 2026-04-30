@@ -9,6 +9,8 @@ import App from "./App";
 import { store } from "./store";
 import "./styles/index.css";
 import "./styles/markdown.css";
+import "./i18n";
+import i18n from "i18next";
 
 // Register service worker for PWA update detection
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
@@ -50,3 +52,17 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </StrictMode>,
 );
+
+// Keep document `dir` and `lang` in sync with i18n
+const setDocDirection = (lang: string) => {
+  try {
+    document.documentElement.lang = lang;
+    const isRtl = ["ar", "he", "fa", "ur"].includes(lang.split("-")[0]);
+    document.documentElement.dir = isRtl ? "rtl" : "ltr";
+  } catch (e) {
+    // server-side or non-browser environments
+  }
+};
+
+setDocDirection(i18n.language || "en");
+i18n.on("languageChanged", setDocDirection);
