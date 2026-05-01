@@ -1,4 +1,5 @@
 import { FaDownload } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   CollapsibleHeader,
@@ -41,6 +42,7 @@ export function DownloadMapSection({
 }: DownloadMapSectionProps) {
   const { layers } = useLayers();
   const { markers } = useMarkers();
+  const { t } = useTranslation("atlas");
 
   // Export map as SVG or image
   const handleExport = () => {
@@ -60,12 +62,12 @@ export function DownloadMapSection({
   return (
     <CollapsibleHeader
       icon={<FaDownload />}
-      label="Download"
+      label={t("mapExport.download")}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
       {/* Format selector */}
-      <SectionHeader title="Format" className="!-mb-2" />
+      <SectionHeader title={t("mapExport.format")} className="!-mb-2" />
       <SelectInput
         label=""
         value={format}
@@ -73,7 +75,7 @@ export function DownloadMapSection({
         options={EXPORT_FORMAT_OPTIONS}
       />
       {/* Options section header */}
-      <SectionHeader title="Options" />
+      <SectionHeader title={t("mapExport.options")} />
       {/* SVG options */}
       {format === "svg" && (
         <SvgOptions
@@ -98,23 +100,23 @@ export function DownloadMapSection({
           variant="primary"
           onClick={handleExport}
           className="w-full"
-          aria-label={"Export"}
+          aria-label={t("mapExport.download")}
           disabled={!svgRef?.current}
         >
           <FaDownload className="inline" />
-          Download Image
+          {t("mapExport.downloadImage")}
         </ActionButton>
       </div>
       {/* Download Data section */}
-      <SectionHeader title="Download Data" />
+      <SectionHeader title={t("mapExport.downloadData")} />
       <ActionButton
         variant="primary"
         onClick={handleDownloadJson}
         className="w-full !bg-info/50 hover:!bg-info-hover/50"
-        aria-label={"Download as JSON"}
+        aria-label={t("mapExport.downloadJson")}
       >
         <FaDownload className="inline" />
-        Download as JSON
+        {t("mapExport.downloadJson")}
       </ActionButton>
     </CollapsibleHeader>
   );

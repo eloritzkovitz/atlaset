@@ -103,7 +103,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       title={
         <>
           {!isReadonly ? <ICONS.share /> : <ICONS.download />}
-          {!isReadonly ? t("mapExport.export") : t("mapExport.download")}
+          {!isReadonly ? t("mapExport.title") : t("mapExport.download")}
         </>
       }
       show={showExport}
@@ -111,8 +111,8 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       headerActions={
         <ActionButton
           onClick={closePanel}
-          ariaLabel="Close export menu"
-          title="Close"
+          ariaLabel={t("common:actions.close")}
+          title={t("common:actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />
