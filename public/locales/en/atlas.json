@@ -126,6 +126,20 @@
     "timelineYearly": "Timeline (Yearly)"
   },
   "country": {
+    "header": {
+      "centerMap": "Center map",
+      "centerMapAria": "Center map on country",
+      "viewFull": "View full details",
+      "viewFullAria": "View full details",
+      "wikipedia": "Wikipedia",
+      "wikipediaAria": "Open Wikipedia article"
+    },
+    "status": {
+      "home": "Home country",
+      "homeAria": "Home country",
+      "visited": "Visited",
+      "notVisited": "Not visited"
+    },
     "tabs": {
       "overview": "Overview",
       "territories": "Territories & Claims",
@@ -140,8 +154,10 @@
       "government": "Government",
       "area": "Area",
       "population": "Population",
+      "areaUnit": "km²",
       "currency": "Currencies",
       "timezone": "Timezones",
+      "summer": "summer",
       "callingCode": "Calling Code",
       "drivingSide": "Driving Side",
       "isoCode": "ISO 3166 Code",

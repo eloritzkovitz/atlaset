@@ -1,4 +1,5 @@
 import { FaCircleCheck, FaCircleXmark, FaHouse } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { Tooltip } from "@components";
 
 interface VisitedStatusIndicatorProps {
@@ -12,31 +13,33 @@ export function VisitedStatusIndicator({
   isHome = false,
   className = "",
 }: VisitedStatusIndicatorProps) {
+  const { t } = useTranslation("atlas");
+
   if (isHome) {
     return (
-      <Tooltip content="Home country" position="bottom">
+      <Tooltip content={t("country.status.home")} position="bottom">
         <FaHouse
           className={`w-5 h-5 ${className}`}
           color="#22c55e"
-          aria-label="Home country"
+          aria-label={t("country.status.homeAria")}
         />
       </Tooltip>
     );
   }
   return visited ? (
-    <Tooltip content="Visited" position="bottom">
+    <Tooltip content={t("country.status.visited")} position="bottom">
       <FaCircleCheck
         className={`w-5 h-5 ${className}`}
         color="#22c55e"
-        aria-label="Visited"
+        aria-label={t("country.status.visitedAria")}
       />
     </Tooltip>
   ) : (
-    <Tooltip content="Not visited" position="bottom">
+    <Tooltip content={t("country.status.notVisited")} position="bottom">
       <FaCircleXmark
         className={`w-5 h-5 ${className}`}
         color="#d1d5db"
-        aria-label="Not visited"
+        aria-label={t("country.status.notVisitedAria")}
       />
     </Tooltip>
   );

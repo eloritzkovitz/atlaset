@@ -1,4 +1,5 @@
 import { FaWikipediaW } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { PanelHeader, ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
@@ -21,6 +22,7 @@ export function CountryDetailsHeader({
   onClose,
 }: CountryDetailsHeaderProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation("atlas");
   return (
     <PanelHeader
       title={
@@ -40,8 +42,8 @@ export function CountryDetailsHeader({
         {centerOnCountry && (
           <ActionButton
             onClick={() => centerOnCountry(country.isoCode)}
-            ariaLabel="Center map on country"
-            title="Center map"
+            ariaLabel={t("country.header.centerMapAria")}
+            title={t("country.header.centerMap")}
             icon={<ICONS.center />}
             rounded
           />
@@ -53,8 +55,8 @@ export function CountryDetailsHeader({
               `/dashboard/countries/${country.region}/${country.subregion}/${country.isoCode}`,
             );
           }}
-          ariaLabel="View full details"
-          title="View full details"
+          ariaLabel={t("country.header.viewFullAria")}
+          title={t("country.header.viewFull")}
           icon={<ICONS.exploration />}
           rounded
         />
@@ -66,15 +68,15 @@ export function CountryDetailsHeader({
               "noopener,noreferrer",
             )
           }
-          ariaLabel="Open Wikipedia article"
-          title="Wikipedia"
+          ariaLabel={t("country.header.wikipediaAria")}
+          title={t("country.header.wikipedia")}
           icon={<FaWikipediaW />}
           rounded
         />
         <ActionButton
           onClick={onClose}
-          ariaLabel="Close country details"
-          title="Close"
+          ariaLabel={t("common:actions.close")}
+          title={t("common:actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />

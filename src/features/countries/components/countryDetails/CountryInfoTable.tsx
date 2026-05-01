@@ -14,8 +14,8 @@ interface CountryInfoTableProps {
 }
 
 // Renders the timezones for a country, handling multiple timezones and DST if applicable.
-function renderTimezones(tzs?: string[]) {
-  const formatted = formatTimezones(tzs);
+function renderTimezones(tzs?: string[], t?: (k: string) => string) {
+  const formatted = formatTimezones(tzs, t);
   if (Array.isArray(formatted)) {
     return (
       <div className="flex flex-col">
@@ -74,7 +74,9 @@ export function CountryInfoTable({
         </tr>
         <tr>
           <td className="font-semibold">{t("country.overview.area")}</td>
-          <td>{country.area?.toLocaleString()} km²</td>
+          <td>
+            {country.area?.toLocaleString()} {t("country.overview.areaUnit")}
+          </td>
         </tr>
         <tr>
           <td className="font-semibold">{t("country.overview.population")}</td>
@@ -86,7 +88,7 @@ export function CountryInfoTable({
         </tr>
         <tr>
           <td className="font-semibold">{t("country.overview.timezone")}</td>
-          <td>{renderTimezones(country.timezones)}</td>
+          <td>{renderTimezones(country.timezones, t)}</td>
         </tr>
         <tr>
           <td className="font-semibold">{t("country.overview.callingCode")}</td>

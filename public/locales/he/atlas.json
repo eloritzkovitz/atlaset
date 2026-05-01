@@ -126,6 +126,20 @@
     "timelineYearly": "ציר זמן (שנתי)"
   },
   "country": {
+    "header": {
+      "centerMap": "מרכז מפה",
+      "centerMapAria": "מרכז את המפה אל המדינה",
+      "viewFull": "צפייה בפרטים מלאים",
+      "viewFullAria": "צפייה בפרטים מלאים",
+      "wikipedia": "ויקיפדיה",
+      "wikipediaAria": "פתח מאמר ויקיפדיה"
+    },
+    "status": {
+      "home": "מדינת בית",
+      "homeAria": "מדינת בית",
+      "visited": "ביקרתי",
+      "notVisited": "לא ביקרתי"
+    },
     "tabs": {
       "overview": "סקירה כללית",
       "territories": "טריטוריות ותביעות",
@@ -140,8 +154,10 @@
       "government": "שיטת ממשל",
       "area": "שטח",
       "population": "אוכלוסיה",
+      "areaUnit": "קמ\u0022ר",
       "currency": "מטבע",
       "timezone": "אזור זמן",
+      "summer": "קיץ",
       "callingCode": "קידומת בין-לאומית",
       "drivingSide": "צד נהיגה",
       "isoCode": "קוד ISO 3166",
