@@ -48,7 +48,7 @@ export function MapUiContainer({
             icon: <ICONS.markers className="text-lg" />,
           }
         : null,
-    [isAddingMarker, isEmbed],
+    [isAddingMarker, isEmbed, t],
   );
 
   // UI hint for timeline mode
@@ -60,7 +60,7 @@ export function MapUiContainer({
             icon: <ICONS.timeline className="text-lg" />,
           }
         : null,
-    [timelineMode, uiVisible, isEmbed],
+    [timelineMode, uiVisible, isEmbed, t],
   );
 
   // UI hint for shared/saved maps

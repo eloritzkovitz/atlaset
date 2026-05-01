@@ -104,7 +104,7 @@ export function Sidebar() {
             key={link.to}
             to={link.to}
             icon={link.icon}
-            labelKey={(link as any).labelKey}
+            labelKey={link.labelKey}
             label={link.label}
             expanded={sidebarExpanded}
             end={link.end}

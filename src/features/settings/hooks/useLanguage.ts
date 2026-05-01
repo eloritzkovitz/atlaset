@@ -1,6 +1,6 @@
 import i18n from "i18next";
-import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useCallback, useMemo } from "react";
 
 const RTL_LANGS = ["ar", "fa", "he", "ur"];
 
@@ -21,17 +21,13 @@ export function isRtl(lang?: string | null) {
 export function useLanguage() {
   const { t } = useTranslation("common");
 
-  // Extract the base language code and memoize it to avoid unnecessary recalculations
-  const current = useMemo(
-    () => (i18n.language || "en").split("-")[0],
-    [
-      // re-evaluate when language changes
-      i18n.language,
-    ],
-  );
+  // Extract the base language code
+  const current = (i18n.language || "en").split("-")[0];
 
+  // Get the display name of the current language
   const name = useMemo(() => t(`languages.${current}`), [t, current]);
 
+  // Change language
   const change = useCallback((lng: string) => i18n.changeLanguage(lng), []);
 
   // Toggle between languages
