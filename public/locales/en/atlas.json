@@ -124,5 +124,38 @@
     "standard": "Standard",
     "timelineCumulative": "Timeline (Cumulative)",
     "timelineYearly": "Timeline (Yearly)"
+  },
+  "country": {
+    "tabs": {
+      "overview": "Overview",
+      "territories": "Territories & Claims",
+      "affiliations": "Affiliations",
+      "visits": "Visits"
+    },
+    "overview": {
+      "region": "Region",
+      "subregion": "Subregion",
+      "capital": "Capital",
+      "languages": "Languages",
+      "government": "Government",
+      "area": "Area",
+      "population": "Population",
+      "currency": "Currencies",
+      "timezone": "Timezones",
+      "callingCode": "Calling Code",
+      "drivingSide": "Driving Side",
+      "isoCode": "ISO 3166 Code",
+      "altNames": "Alternative Names"
+    },
+    "affiliations": {
+      "memberships": "Memberships",
+      "un": "United Nations",
+      "eu": "European Union"
+    },
+    "visits": {
+      "planned": "Planned",
+      "upcoming": "Upcoming",
+      "completed": "Completed"
+    }
   }
 }

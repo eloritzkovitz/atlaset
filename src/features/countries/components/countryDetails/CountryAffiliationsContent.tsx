@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
 import type { Country } from "@features/countries/types";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
@@ -11,6 +12,8 @@ interface CountryAffiliationsContentProps {
 export function CountryAffiliationsContent({
   country,
 }: CountryAffiliationsContentProps) {
+  const { t } = useTranslation("atlas");
+
   const sections = useMemo(() => {
     if (!country) return [];
 
@@ -38,7 +41,7 @@ export function CountryAffiliationsContent({
 
       sections.push({
         key: "memberships",
-        label: "Affiliations",
+        label: t("country.affiliations.memberships"),
         data: sorted,
       });
     }

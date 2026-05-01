@@ -6,18 +6,12 @@ import {
   type Country,
   type Currency,
 } from "@features/countries";
+import { useTranslation } from "react-i18next";
 import { useCountryData } from "../../hooks/useCountryData";
 import type { Visit } from "@features/visits";
 import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
-
-const tabLabels: Record<CountryDetailsTab, string> = {
-  overview: "Overview",
-  territories: "Territories & Claims",
-  affiliations: "Affiliations",
-  visits: "Visits",
-};
 
 type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 
@@ -48,6 +42,15 @@ export function CountryDetailsPanel({
   onSelectCountry,
   className,
 }: CountryDetailsPanelProps) {
+  const { t } = useTranslation("atlas");
+
+  const tabLabels: Record<CountryDetailsTab, string> = {
+    overview: t("country.tabs.overview"),
+    territories: t("country.tabs.territories"),
+    affiliations: t("country.tabs.affiliations"),
+    visits: t("country.tabs.visits"),
+  };
+
   const { countries } = useCountryData();
   const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
 
@@ -71,9 +74,7 @@ export function CountryDetailsPanel({
   const getTerritoriesTab = (country: Country) => {
     try {
       const rel =
-        country && country.isoCode
-          ? getCountryTerritories(country)
-          : undefined;
+        country && country.isoCode ? getCountryTerritories(country) : undefined;
       return rel && rel.hasRelations;
     } catch {
       return false;

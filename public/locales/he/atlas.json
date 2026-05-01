@@ -124,5 +124,38 @@
     "standard": "סטנדרטי",
     "timelineCumulative": "ציר זמן (מצטבר)",
     "timelineYearly": "ציר זמן (שנתי)"
+  },
+  "country": {
+    "tabs": {
+      "overview": "סקירה כללית",
+      "territories": "טריטוריות ותביעות",
+      "affiliations": "שייכות",
+      "visits": "ביקורים"
+    },
+    "overview": {
+      "region": "יבשת",
+      "subregion": "אזור גיאוגרפי",
+      "capital": "עיר בירה",
+      "languages": "שפות",
+      "government": "שיטת ממשל",
+      "area": "שטח",
+      "population": "אוכלוסיה",
+      "currency": "מטבע",
+      "timezone": "אזור זמן",
+      "callingCode": "קידומת בין-לאומית",
+      "drivingSide": "צד נהיגה",
+      "isoCode": "קוד ISO 3166",
+      "altNames": "שמות חלופיים"
+    },
+    "affiliations": {
+      "memberships": "חברויות",
+      "un": "האומות המאוחדות",
+      "eu": "האיחוד האירופי"
+    },
+    "visits": {
+      "planned": "מתוכננים",
+      "upcoming": "עתידיים",
+      "completed": "הושלמו"
+    }
   }
 }
