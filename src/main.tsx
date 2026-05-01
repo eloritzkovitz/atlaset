@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AudioProvider } from "@contexts/AudioProvider";
 import { AuthProvider } from "@contexts/AuthProvider";
 import { SettingsProvider } from "@contexts/SettingsProvider";
-import { isRtl } from "@hooks";
+import { isRtl } from "@features/settings";
 import App from "./App";
 import "./i18n";
 import { store } from "./store";
@@ -38,6 +38,19 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
 // eslint-disable-next-line react-refresh/only-export-components
 const Router = BrowserRouter;
 
+// Set initial document direction based on current language
+const setDocDirection = (lang: string) => {
+  try {
+    document.documentElement.lang = lang;
+    const rtl = isRtl(lang);
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+  } catch {
+    // server-side or non-browser environments
+  }
+};
+
+setDocDirection(i18n.language || "en");
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
@@ -53,17 +66,3 @@ createRoot(document.getElementById("root")!).render(
     </Provider>
   </StrictMode>,
 );
-
-// Set initial document direction based on current language
-const setDocDirection = (lang: string) => {
-  try {
-    document.documentElement.lang = lang;
-    const rtl = isRtl(lang);
-    document.documentElement.dir = rtl ? "rtl" : "ltr";
-  } catch {
-    // server-side or non-browser environments
-  }
-};
-
-setDocDirection(i18n.language || "en");
-i18n.on("languageChanged", setDocDirection);

@@ -1,4 +1,4 @@
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 import { ExpandCollapseButton } from "./ExpandCollapseButton";
 import { MAX_COUNTRIES_BEFORE_EXPAND } from "../../constants/timeline";
 
@@ -17,7 +17,7 @@ export function VisitedCountryNames({
   onExpand,
   onCollapse,
 }: VisitedCountryNamesProps) {
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   return (
     <div

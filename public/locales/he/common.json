@@ -8,6 +8,18 @@
     "quizzes": "חידונים",
     "settings": "הגדרות"
   },
+  "menu": {
+    "notifications": "התראות",
+    "help": "עזרה",
+    "account": "חשבון",
+    "profile": "פרופיל",
+    "friends": "חברים",
+    "reportBug": "דווח על באג",
+    "keyboardShortcuts": "קיצורי מקלדת",
+    "settings": "הגדרות",
+    "language": "שפה",
+    "signOut": "התנתק"
+  },
   "actions": {
     "add": "הוסף",
     "edit": "ערוך",
@@ -28,6 +40,17 @@
     "createList": "צור רשימה",
     "share": "שתף",
     "copyLink": "העתק קישור",
-    "cannotDelete": "לא ניתן למחוק"
+    "cannotDelete": "לא ניתן למחוק",
+    "search": "חפש"
+  },
+  "search": {
+    "placeholder": "חיפוש",
+    "recent": "חיפושים אחרונים",
+    "clear": "נקה",
+    "clearAll": "נקה הכל"
+  },
+  "languages": {
+    "en": "אנגלית",
+    "he": "עברית"
   }
 }

@@ -1,5 +1,6 @@
 import { useRef } from "react";
-import { useAutoScrollFocus, useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
+import { useAutoScrollFocus } from "@hooks";
 
 export interface SegmentedToggleOption<T extends string> {
   value: T;
@@ -27,20 +28,14 @@ export function SegmentedToggle<T extends string>({
   disabled = false,
   autoFocusOnSelect = true,
 }: SegmentedToggleProps<T>) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { isRtl } = useLanguage();
+  const containerRef = useRef<HTMLDivElement | null>(null);  
 
   // Auto-scroll and focus the selected option when it changes
   useAutoScrollFocus(containerRef, `[data-seg-value="${value}"]`, {
     enabled: autoFocusOnSelect,
     centerInline: true,
   });
-
-  const isRtlHook = useIsRtl();
-  const docDir =
-    typeof document !== "undefined" && document.documentElement
-      ? document.documentElement.dir
-      : undefined;
-  const isRtl = docDir === "rtl" || isRtlHook;
 
   return (
     <div

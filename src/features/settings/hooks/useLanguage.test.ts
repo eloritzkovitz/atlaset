@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { isRtl, useIsRtl } from "./useIsRtl";
+import { isRtl, useLanguage } from "./useLanguage";
 
 vi.mock("i18next", () => {
   const _mock: any = { language: "en", _handler: null };
@@ -36,7 +36,7 @@ describe("isRtl", () => {
   });
 });
 
-describe("useIsRtl", () => {
+describe("useLanguage", () => {
   beforeEach(() => {
     (i18n as any).language = "en";
     (i18n as any)._handler = null;
@@ -45,7 +45,7 @@ describe("useIsRtl", () => {
   });
 
   it("returns initial RTL state and updates on languageChanged, and cleans up listener", () => {
-    const { result, unmount } = renderHook(() => useIsRtl());
+    const { result, unmount } = renderHook(() => useLanguage());
     expect(result.current).toBe(false);
     const handler = (i18n as any)._handler;
     expect(typeof handler).toBe("function");

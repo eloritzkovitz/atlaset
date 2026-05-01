@@ -5,7 +5,7 @@ import {
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa6";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 
 // Helper to render keys and modifiers
 function displayKey(key: string, isRtl: boolean) {
@@ -30,7 +30,7 @@ function displayKey(key: string, isRtl: boolean) {
 }
 
 export function KeyCombo({ keys }: { keys: string[] }) {
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   return (
     <span className="inline-flex gap-2 justify-center" dir="ltr">

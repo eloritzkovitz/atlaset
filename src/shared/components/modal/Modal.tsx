@@ -7,11 +7,11 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import {
   useBodyScrollLock,
   useClickOutside,
   useDraggableModal,
-  useIsRtl,
   usePanelHide,
 } from "@hooks";
 import "./Modal.css";
@@ -57,9 +57,9 @@ export function Modal({
   draggable = false,
 }: ModalProps) {
   const { setModalOpen } = useUI();
+  const { isRtl } = useLanguage();
   const internalRef = useRef<HTMLDivElement>(null);
-  const modalRef = containerRef ?? internalRef;
-  const isRtl = useIsRtl();
+  const modalRef = containerRef ?? internalRef;  
 
   // Set modal open state for UI context
   useEffect(() => {

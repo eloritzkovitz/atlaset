@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 
 /**
  * Calculates and returns the style for a dropdown/menu anchored to a button.
@@ -21,7 +21,7 @@ export function useMenuPosition(
   withWidth: boolean = true,
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   // Calculate menu position when open or dependencies change
   useLayoutEffect(() => {

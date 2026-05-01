@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
+import { useLanguage } from "@features/settings";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
-import { useIsRtl } from "@hooks";
 import { TimelineDot } from "./TimelineDot";
 import { VisitedCountryNames } from "./VisitedCountryNames";
 import {
@@ -17,7 +17,7 @@ export function TimelineBar() {
   const { trips } = useTrips();
   const { years, selectedYear, setSelectedYear } = useTimeline();
   const [expandedYear, setExpandedYear] = useState<number | null>(null);
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   const selectedIdx = years.indexOf(selectedYear);
   const total = years.length;
@@ -59,7 +59,9 @@ export function TimelineBar() {
 
       {/* Year markers */}
       <div
-        className={"absolute flex bottom-3 justify-center gap-4 relative select-none"}
+        className={
+          "absolute flex bottom-3 justify-center gap-4 relative select-none"
+        }
       >
         {paddedYears.map((year, idx) => {
           if (year === null)

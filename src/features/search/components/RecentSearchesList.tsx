@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { SectionHeader, ActionButton } from "@components";
 import { RecentSearchItem } from "./RecentSearchItem";
 
@@ -14,18 +15,20 @@ export function RecentSearchesList({
   onRemove,
   onClear,
 }: RecentSearchesListProps) {
+  const { t } = useTranslation();
+  
   return (
     <div>
       <div className="flex items-center">
-        <SectionHeader title="Recent" className="ms-2 flex-1" />
+        <SectionHeader title={t("search.recent")} className="ms-2 flex-1" />
         <ActionButton
           variant="secondary"
-          ariaLabel="Clear all recent searches"
+          ariaLabel={t("search.clearAll")}
           onClick={onClear}
           className="text-muted !text-sm !p-1 mt-2 me-1"
           rounded
         >
-          Clear
+          {t("search.clear")}
         </ActionButton>
       </div>
       <ul className="text-left">

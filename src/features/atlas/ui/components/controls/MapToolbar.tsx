@@ -3,7 +3,8 @@ import { FaChevronUp } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ActionsToolbar, DirectionalIcon } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useIsRtl, useScreenSize } from "@hooks";
+import { useLanguage } from "@features/settings";
+import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
 import { useToolbarActions } from "./useToolbarActions";
@@ -30,7 +31,7 @@ export function MapToolbar({
 
   // Detect mobile
   const { isMobile } = useScreenSize();
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);

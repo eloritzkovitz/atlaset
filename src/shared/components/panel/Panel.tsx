@@ -1,7 +1,8 @@
 import React from "react";
 import type { ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { useIsRtl, usePanelHide, useScreenSize } from "@hooks";
+import { useLanguage } from "@features/settings";
+import { usePanelHide, useScreenSize } from "@hooks";
 import { PanelHeader } from "./PanelHeader";
 import "./Panel.css";
 
@@ -38,7 +39,7 @@ export function Panel({
   usePanelHide({ show, onHide, escEnabled });
 
   const { isMobile } = useScreenSize();
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   return (
     <div

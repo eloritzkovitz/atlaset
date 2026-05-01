@@ -12,8 +12,9 @@ import {
   getAllGeoTypes,
   getAllSovereigntyStatuses,
 } from "@features/countries/utils/countryData";
+import { useLanguage } from "@features/settings";
 import type { VisitedStatus } from "@features/visits";
-import { useIsRtl, useKeyHandler, useScreenSize } from "@hooks";
+import { useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
@@ -101,7 +102,7 @@ export function CountryFiltersPanel({
 
   // Responsive check
   const { isMobile } = useScreenSize();
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   return (
     <Panel

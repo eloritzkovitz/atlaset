@@ -46,6 +46,5 @@ export * from "./state/usePwaUpdate";
 export * from "./state/useUiHint";
 
 // UI
-export * from "./ui/useIsRtl";
 export * from "./ui/useMenuActions";
 export * from "./ui/useRenameControls";

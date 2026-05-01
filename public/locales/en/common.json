@@ -8,6 +8,18 @@
     "quizzes": "Quizzes",
     "settings": "Settings"
   },
+  "menu": {
+    "notifications": "Notifications",
+    "help": "Help",
+    "account": "Account",
+    "profile": "Profile",
+    "friends": "Friends",
+    "reportBug": "Report a bug",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "settings": "Settings",
+    "language": "Language",
+    "signOut": "Sign out"    
+  },
   "actions": {
     "add": "Add",
     "edit": "Edit",
@@ -28,6 +40,19 @@
     "createList": "Create List",
     "share": "Share",
     "copyLink": "Copy Link",
-    "cannotDelete": "Cannot delete"
+    "cannotDelete": "Cannot delete",
+    "search": "Search",
+    "notifications": "Notifications",
+    "help": "Help"
+  },
+  "search": {
+    "placeholder": "Search",
+    "recent": "Recent Searches",
+    "clear": "Clear",
+    "clearAll": "Clear All"
+  }
+  ,"languages": {
+    "en": "English",
+    "he": "עברית"
   }
 }

@@ -1,8 +1,8 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
 import { useAudio } from "@contexts/AudioContext";
 import { useTimeline } from "@contexts/TimelineContext";
+import { useLanguage } from "@features/settings";
 import { useKeyHandler } from "@hooks";
-import { useIsRtl } from "@hooks";
 
 const BASE_PLAY_INTERVAL = 4000;
 
@@ -13,7 +13,7 @@ const BASE_PLAY_INTERVAL = 4000;
 export function useTimelineNavigation() {
   const { years, selectedYear, setSelectedYear } = useTimeline();
   const { play } = useAudio();
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   // Current index in years array
   const currentIndex = useMemo(

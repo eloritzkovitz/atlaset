@@ -1,6 +1,6 @@
-vi.mock("@hooks", () => ({ useIsRtl: vi.fn() }));
+vi.mock("@hooks", () => ({ useLanguage: vi.fn() }));
 
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useMenuPosition } from "./useMenuPosition";
@@ -34,7 +34,7 @@ describe("useMenuPosition", () => {
     menu = document.createElement("div");
     document.body.appendChild(btn);
     document.body.appendChild(menu);
-    (useIsRtl as unknown as any).mockReturnValue(false);
+    (useLanguage as unknown as any).mockReturnValue({ isRtl: false });
   });
 
   const run = (opts: {
@@ -51,7 +51,9 @@ describe("useMenuPosition", () => {
     vi.spyOn(menu, "getBoundingClientRect").mockReturnValue(
       mockRect(opts.menuRect),
     );
-    (useIsRtl as unknown as any).mockReturnValue(opts.rtl ?? false);
+    (useLanguage as unknown as any).mockReturnValue({
+      isRtl: opts.rtl ?? false,
+    });
     if (opts.setupWindow) opts.setupWindow();
     const { result } = renderHook(() =>
       useMenuPosition(

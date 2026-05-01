@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Menu, SearchInput } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useClickOutside, useMenuPosition } from "@hooks";
@@ -9,6 +10,7 @@ import { useSearchController } from "../hooks/useSearchController";
 export function SearchDropdown() {
   const { user } = useAuth();
   const search = useSearchController();
+  const { t } = useTranslation();
 
   // Dropdown state and refs
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -62,7 +64,7 @@ export function SearchDropdown() {
         value={search.searchTerm}
         onChange={search.setSearchTerm}
         onFocus={handleFocus}
-        placeholder="Search"
+        placeholder={t("search.placeholder")}
         showClear={false}
         onKeyDown={(e) => {
           if (e.key === "Enter" && search.searchTerm) {

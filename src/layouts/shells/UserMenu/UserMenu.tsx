@@ -1,26 +1,30 @@
 import { useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { ActionButton, AuthButtons, Menu } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import { useAuthHandlers } from "@features/user";
 import { useModalAnimation, useScreenSize } from "@hooks";
-import { useIsRtl } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
-  const { user } = useAuth();
+  const { user } = useAuth();  
   const { toggleSearch, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Language and translation
+  const { t } = useTranslation("common");
+  const { isRtl } = useLanguage();
+  
   // Router states and navigation
   const location = useLocation();
-  const { isMobile } = useScreenSize();
-  const isRtl = useIsRtl();
+  const { isMobile } = useScreenSize();  
   const isTripsPage = location.pathname.startsWith("/trips");
 
   // Get the logout handler from useAuthHandlers
@@ -54,7 +58,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
       {isMobile && (
         <>
           <ActionButton
-            title="Search"
+            title={t("menu.search")}
             onClick={() => {
               toggleSearch();
             }}
@@ -64,14 +68,14 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
         </>
       )}
       <ActionButton
-        title="Notifications"
+        title={t("menu.notifications")}
         onClick={() => {}}
         icon={<ICONS.notifications className="text-xl" />}
         aria-pressed={false}
         rounded
       />
       <ActionButton
-        title="Help"
+        title={t("menu.help")}
         onClick={() => {
           toggleHelp();
         }}

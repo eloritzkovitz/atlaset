@@ -6,7 +6,7 @@ import {
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa6";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 
 interface DirectionalIconProps {
   direction?: "prev" | "next";
@@ -21,7 +21,7 @@ export function DirectionalIcon({
   className = "",
   size = "1em",
 }: DirectionalIconProps) {
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   // Map variant to corresponding icons
   const iconsMap = {

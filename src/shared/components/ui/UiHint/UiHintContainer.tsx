@@ -1,10 +1,10 @@
 import { FaXmark } from "react-icons/fa6";
 import { useUIHintContext } from "@contexts/UIHintContext";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 
 export function UIHintContainer() {
   const { hints, removeHint } = useUIHintContext();
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
 
   const topHints = hints.filter((hint) => hint.position !== "bottom");
   const bottomHints = hints.filter((hint) => hint.position === "bottom");

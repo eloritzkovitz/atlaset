@@ -1,9 +1,10 @@
 import type { User } from "firebase/auth";
-import i18n from "i18next";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
 
@@ -19,12 +20,16 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
   const { isMobile } = useScreenSize();
   const { username } = useFirestoreUsername(user?.uid);
 
+  // Translation
+  const { t } = useTranslation("common");
+  const { name, toggle } = useLanguage();
+
   // Don't render if no user
   if (!user) return null;
 
   const menuItems = [
     {
-      label: "Profile",
+      label: t("menu.profile"),
       icon: <ICONS.profile className="text-lg me-2" />,
       onClick: () => {
         navigate(`/users/${username}`);
@@ -33,7 +38,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       url: `/users/${username}`,
     },
     {
-      label: "Friends",
+      label: t("menu.friends"),
       icon: <ICONS.friends className="text-lg me-2" />,
       onClick: () => {
         toggleFriends();
@@ -42,7 +47,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     { separator: true },
     {
-      label: "Report a Bug",
+      label: t("menu.reportBug"),
       icon: <ICONS.reportBug className="text-lg me-2" />,
       onClick: () => {
         window.open(
@@ -56,7 +61,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     ...(!isMobile
       ? [
           {
-            label: "Keyboard Shortcuts",
+            label: t("menu.keyboardShortcuts"),
             icon: <ICONS.shortcuts className="text-lg me-2" />,
             onClick: () => {
               toggleShortcuts();
@@ -67,7 +72,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       : []),
     { separator: true },
     {
-      label: "Settings",
+      label: t("menu.settings"),
       icon: <ICONS.settings className="text-lg me-2" />,
       onClick: () => {
         navigate("/settings");
@@ -76,18 +81,16 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       url: "/settings",
     },
     {
-      label: "Language",
+      label: `${t("menu.language")} (${name})`,
       icon: <ICONS.language className="text-lg me-2" />,
       onClick: () => {
-        const current = i18n.language || "en";
-        const next = current.startsWith("he") ? "en" : "he";
-        i18n.changeLanguage(next);
+        toggle();
         onClose?.();
       },
     },
     { separator: true },
     {
-      label: "Sign out",
+      label: t("menu.signOut"),
       icon: <ICONS.signOut className="text-lg me-2" />,
       onClick: () => {
         onLogout();

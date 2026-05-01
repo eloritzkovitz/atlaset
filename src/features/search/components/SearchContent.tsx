@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { SearchInput, EmptyListMessage } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
@@ -33,6 +34,7 @@ export function SearchContent({
 }: SearchContentProps) {
   const debouncedSearchTerm = useDebounce(searchTerm, 100);
   const { results, loading } = useSearch(debouncedSearchTerm);  
+  const { t } = useTranslation();
 
   // Get current user and friends for result ranking and display
   const { user: currentUser } = useAuth();
@@ -53,7 +55,7 @@ export function SearchContent({
             ref={inputRef}
             value={searchTerm}
             onChange={handleChange}
-            placeholder="Search"
+            placeholder={t("actions.search")}
             showClear={false}
             className={inputClassName}
             onKeyDown={(e) => {
@@ -66,7 +68,7 @@ export function SearchContent({
       )}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <EmptyListMessage message="Searching..." />
+          <EmptyListMessage message={t("search.loading")} />
         ) : searchTerm ? (
           results.length === 0 ? (
             <EmptyListMessage message="No results found." />

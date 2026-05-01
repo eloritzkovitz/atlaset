@@ -7,13 +7,13 @@ import {
 } from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import type { ColorMode } from "@features/atlas/map";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {
   const { years, selectedYear, setSelectedYear, colorMode, setColorMode } =
     useTimeline();
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
   const { t } = useTranslation("atlas");
 
   // Timeline navigation handlers

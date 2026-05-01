@@ -1,6 +1,6 @@
 import React from "react";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
 
 interface ActionButtonProps {
@@ -81,7 +81,7 @@ export const ActionButton = React.forwardRef<
         ? "opacity-50 cursor-not-allowed pointer-events-none"
         : "";
 
-    const isRtl = useIsRtl();
+    const { isRtl } = useLanguage();
 
     const iconNode = icon ? <span className="inline-flex">{icon}</span> : null;
 

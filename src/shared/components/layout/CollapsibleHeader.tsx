@@ -1,5 +1,5 @@
 import React, { type ReactNode } from "react";
-import { useIsRtl } from "@hooks";
+import { useLanguage } from "@features/settings";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
 import { ActionButton } from "../action/ActionButton";
 
@@ -22,7 +22,7 @@ export function CollapsibleHeader({
   children,
   className = "",
 }: CollapsibleHeaderProps) {
-  const isRtl = useIsRtl();
+  const { isRtl } = useLanguage();
   const labelText = typeof label === "string" ? label : "section";
 
   // If count is provided, display it next to the label in a muted style
