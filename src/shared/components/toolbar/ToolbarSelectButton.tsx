@@ -26,7 +26,15 @@ export function ToolbarSelectButton<T extends string | number>({
   const menuRef = useRef<HTMLDivElement>(null);
 
   // Get the button's position for menu placement
-  const menuStyle = useMenuPosition(open, btnRef, menuRef, 4, "top", false);
+  const menuStyle = useMenuPosition(
+    open,
+    btnRef,
+    menuRef,
+    4,
+    "top",
+    "overlay",
+    false,
+  );
 
   // Toggle menu open state
   const handleButtonClick = (e: React.MouseEvent) => {
@@ -48,15 +56,24 @@ export function ToolbarSelectButton<T extends string | number>({
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <span className="truncate flex-1 text-left ps-3">
+        <span className="truncate flex-1 text-start ps-3 pe-8">
           {options.find((o) => o.value === value)?.label}
         </span>
-        <span className="absolute end-2 top-1/2 -translate-y-1/2 pointer-events-none">
+        <span
+          className={
+            "absolute top-1/2 end-2 -translate-y-1/2 pointer-events-none"
+          }
+        >
           <FaChevronDown />
         </span>
       </ActionButton>
       {showTooltip && btnRef.current && (
-        <FloatingPortal anchorEl={btnRef.current} position="bottom" gap={0} centerX>
+        <FloatingPortal
+          anchorEl={btnRef.current}
+          position="bottom"
+          gap={0}
+          centerX
+        >
           <span
             className="whitespace-nowrap px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90"
             role="tooltip"

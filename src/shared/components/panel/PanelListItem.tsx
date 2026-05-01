@@ -85,6 +85,7 @@ export function PanelListItem({
     menuRef,
     30,
     menuPosition,
+    "adjacent",
     false,
   );
 

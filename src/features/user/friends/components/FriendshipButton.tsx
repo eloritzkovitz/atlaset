@@ -1,5 +1,4 @@
 import { useState, useRef } from "react";
-import { ConfirmModal } from "@components";
 import {
   FaUserPlus,
   FaHourglassHalf,
@@ -7,7 +6,7 @@ import {
   FaUserMinus,
   FaXmark,
 } from "react-icons/fa6";
-import { Menu, MenuButton } from "@components";
+import { ConfirmModal, Menu, MenuButton } from "@components";
 import { useMenuPosition } from "@hooks";
 
 interface FriendshipButtonProps {
@@ -25,7 +24,6 @@ export function FriendshipButton({
   onUnfriend,
   onWithdrawRequest,
 }: FriendshipButtonProps) {
-  // All hooks must be called unconditionally and in the same order
   const [showMenu, setShowMenu] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -36,11 +34,11 @@ export function FriendshipButton({
     menuRef,
     45,
     "right",
+    "adjacent",
     false,
   );
 
-  // Handlers for menu actions
-  // Confirmation modal states
+  // Confirmation states
   const [confirmUnfriend, setConfirmUnfriend] = useState(false);
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 

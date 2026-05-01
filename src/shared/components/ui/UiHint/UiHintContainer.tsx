@@ -1,8 +1,10 @@
 import { FaXmark } from "react-icons/fa6";
 import { useUIHintContext } from "@contexts/UIHintContext";
+import { useIsRtl } from "@hooks";
 
 export function UIHintContainer() {
   const { hints, removeHint } = useUIHintContext();
+  const isRtl = useIsRtl();
 
   const topHints = hints.filter((hint) => hint.position !== "bottom");
   const bottomHints = hints.filter((hint) => hint.position === "bottom");
@@ -12,7 +14,7 @@ export function UIHintContainer() {
     if (hintList.length === 0) return null;
     return (
       <div
-        className={`fixed ${positionClass} start-1/2 -translate-x-1/2 z-[1000] flex flex-col gap-2 pointer-events-none`}
+        className={`fixed ${positionClass} start-1/2 ${isRtl ? "translate-x-1/2" : "-translate-x-1/2"} z-[1000] flex flex-col gap-2 pointer-events-none`}
       >
         {hintList.map((hint) => (
           <div

@@ -52,6 +52,7 @@ export function SortSelect<T extends string>({
     menuRef,
     35,
     "right",
+    "adjacent",
     false,
   );
 

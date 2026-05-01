@@ -60,7 +60,7 @@ const setDocDirection = (lang: string) => {
     document.documentElement.lang = lang;
     const rtl = isRtl(lang);
     document.documentElement.dir = rtl ? "rtl" : "ltr";
-  } catch (e) {
+  } catch {
     // server-side or non-browser environments
   }
 };

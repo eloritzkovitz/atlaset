@@ -37,6 +37,7 @@ export function SearchDropdown() {
     dropdownRef as React.RefObject<HTMLElement>,
     42,
     "right",
+    "overlay",
     true,
   );
 

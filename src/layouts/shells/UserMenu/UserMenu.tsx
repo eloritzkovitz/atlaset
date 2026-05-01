@@ -6,6 +6,7 @@ import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useAuthHandlers } from "@features/user";
 import { useModalAnimation, useScreenSize } from "@hooks";
+import { useIsRtl } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
 
@@ -19,6 +20,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   // Router states and navigation
   const location = useLocation();
   const { isMobile } = useScreenSize();
+  const isRtl = useIsRtl();
   const isTripsPage = location.pathname.startsWith("/trips");
 
   // Get the logout handler from useAuthHandlers
@@ -85,12 +87,14 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
           className={
             isMobile
               ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-              : "absolute end-4 mt-3 w-60 z-50 p-2"
+              : "absolute mt-3 w-60 z-50 p-2"
           }
           style={
             isMobile
               ? { top: "unset", right: "unset", left: 0, bottom: 16 }
-              : { top: "48px", right: 16 }
+              : isRtl
+                ? { top: "48px", left: 16 }
+                : { top: "48px", right: 16 }
           }
         >
           <UserMenuContent

@@ -39,6 +39,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
     menuRef,
     16,
     "right",
+    "adjacent",
     false,
   );
 

@@ -3,6 +3,7 @@ import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
+import { useIsRtl } from "@hooks";
 import { TimelineDot } from "./TimelineDot";
 import { VisitedCountryNames } from "./VisitedCountryNames";
 import {
@@ -16,6 +17,7 @@ export function TimelineBar() {
   const { trips } = useTrips();
   const { years, selectedYear, setSelectedYear } = useTimeline();
   const [expandedYear, setExpandedYear] = useState<number | null>(null);
+  const isRtl = useIsRtl();
 
   const selectedIdx = years.indexOf(selectedYear);
   const total = years.length;
@@ -46,7 +48,9 @@ export function TimelineBar() {
   ];
 
   return (
-    <div className="absolute bottom-16 start-1/2 transform -translate-x-1/2 z-20 px-4 py-2 flex items-center gap-2">
+    <div
+      className={`absolute bottom-16 start-1/2 transform ${isRtl ? "translate-x-1/2" : "-translate-x-1/2"} z-20 px-4 py-2 flex items-center gap-2`}
+    >
       {/* Timeline line */}
       <div
         className="absolute start-0 end-0 top-1/2 h-1 bg-muted/20 rounded pointer-events-none"
@@ -54,7 +58,9 @@ export function TimelineBar() {
       />
 
       {/* Year markers */}
-      <div className="absolute flex bottom-3 justify-center gap-4 relative select-none">
+      <div
+        className={"absolute flex bottom-3 justify-center gap-4 relative select-none"}
+      >
         {paddedYears.map((year, idx) => {
           if (year === null)
             return (
@@ -91,6 +97,7 @@ export function TimelineBar() {
                   year === selectedYear ? "font-bold" : "font-normal"
                 }`}
                 style={{ zIndex: 1 }}
+                dir="ltr"
               >
                 {year}
               </span>

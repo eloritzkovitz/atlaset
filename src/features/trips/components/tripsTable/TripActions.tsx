@@ -78,13 +78,22 @@ export function TripActions({
   );
 
   // Position the menu when open
-  const menuStyle = useMenuPosition(open, btnRef, menuRef, 3, "left", false);
+  const menuStyle = useMenuPosition(
+    open,
+    btnRef,
+    menuRef,
+    3,
+    "left",
+    "adjacent",
+    false,
+  );
   const rateMenuStyle = useMenuPosition(
     rateMenuOpen,
     menuRef,
     rateMenuRef,
     0,
     "right",
+    "adjacent",
     false,
   );
 

@@ -1,3 +1,4 @@
+import { useIsRtl } from "@hooks";
 import { ExpandCollapseButton } from "./ExpandCollapseButton";
 import { MAX_COUNTRIES_BEFORE_EXPAND } from "../../constants/timeline";
 
@@ -16,8 +17,14 @@ export function VisitedCountryNames({
   onExpand,
   onCollapse,
 }: VisitedCountryNamesProps) {
+  const isRtl = useIsRtl();
+
   return (
-    <div className="bg-bg/50 absolute bottom-12 start-1/2 -translate-x-1/2 flex flex-col-reverse items-start rounded-lg">
+    <div
+      className={`bg-bg/50 absolute bottom-12 start-1/2 ${
+        isRtl ? "translate-x-1/2" : "-translate-x-1/2"
+      } flex flex-col-reverse ${isRtl ? "items-end" : "items-start"} rounded-lg`}
+    >
       {showExpand && (
         <ExpandCollapseButton
           expanded={isExpanded}
@@ -25,7 +32,7 @@ export function VisitedCountryNames({
           onClick={isExpanded ? onCollapse : onExpand}
         />
       )}
-      <ul className="list-disc list-inside ps-4 space-y-0.5 text-left text-muted mb-1 select-none">
+      <ul className="list-disc list-inside ps-4 space-y-0.5 text-start text-muted mb-1 select-none">
         {names
           .slice(0, isExpanded ? names.length : MAX_COUNTRIES_BEFORE_EXPAND)
           .map((name) => (
