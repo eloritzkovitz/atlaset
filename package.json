@@ -28,6 +28,8 @@
     "dexie": "4.4.2",
     "firebase": "12.12.1",
     "i18next": "26.0.8",
+    "i18next-browser-languagedetector": "8.2.1",
+    "i18next-http-backend": "3.0.6",
     "papaparse": "5.5.3",
     "prismjs": "1.30.0",
     "react": "19.2.5",

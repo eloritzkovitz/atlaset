@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { FaPlus } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { ActionButton, SegmentedToggle } from "@components";
 import { QualifierSearch } from "@components/form/inputs/QualifierSearch";
 import { SUPPORTED_MODIFIERS } from "@features/countries/constants/modifierConfig";
@@ -47,16 +48,25 @@ export function CountriesSearchSortBar({
   onEditList,
 }: CountriesSearchSortBarProps) {
   const { timelineMode } = useTimeline();
+  const { t } = useTranslation("atlas");
 
   // Enable drag-to-scroll for the toggles container
   const togglesRef = useRef<HTMLDivElement>(null);
   useDragScroll(togglesRef);
 
-  // Build toggle options
+  // Build toggle options (labels are plain; counts are provided separately)
   const options = [
-    { value: "all", label: "All", count: allCount },
-    { value: "sovereign", label: "Sovereign", count: sovereignCount },
-    { value: "visited", label: "Visited", count: visitedCount },
+    { value: "all", label: t("countries.countryLists.all"), count: allCount },
+    {
+      value: "sovereign",
+      label: t("countries.countryLists.sovereign"),
+      count: sovereignCount,
+    },
+    {
+      value: "visited",
+      label: t("countries.countryLists.visited"),
+      count: visitedCount,
+    },
     ...countryLists.map((list) => ({
       value: list.id,
       label: list.name,
@@ -99,7 +109,7 @@ export function CountriesSearchSortBar({
                   : undefined
               : undefined
           }
-          placeholder="Search countries"
+          placeholder={t("countries.searchPlaceholder")}
           className="flex-1 h-10"
         />
         <CountrySortSelect
@@ -157,8 +167,8 @@ export function CountriesSearchSortBar({
         ))}
         <ActionButton
           icon={<FaPlus />}
-          ariaLabel="New list"
-          title="New list"
+          ariaLabel={t("countries.newList")}
+          title={t("countries.newList")}
           variant="secondary"
           onClick={onAddList}
           className="!rounded-full !px-2"

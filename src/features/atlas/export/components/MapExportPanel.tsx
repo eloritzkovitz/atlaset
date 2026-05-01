@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
@@ -35,6 +36,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { visitedCountryCodes } = useVisitedCountries();
   const allLayers = useEffectiveLayers();
   const markers = useEffectiveMarkers();
+  const { t } = useTranslation("atlas");
 
   // Export options state
   const [includeVisitedCountries, setIncludeVisitedCountries] = useState(true);
@@ -101,7 +103,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       title={
         <>
           {!isReadonly ? <ICONS.share /> : <ICONS.download />}
-          {!isReadonly ? "Export" : "Download"}
+          {!isReadonly ? t("mapExport.export") : t("mapExport.download")}
         </>
       }
       show={showExport}

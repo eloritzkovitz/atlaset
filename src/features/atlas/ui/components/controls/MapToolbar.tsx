@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { ActionButton, ActionsToolbar, DirectionalIcon } from "@components";
 import { useUI } from "@contexts/UIContext";
 import { useIsRtl, useScreenSize } from "@hooks";
@@ -21,6 +22,8 @@ export function MapToolbar({
   isEmbed,
   children,
 }: MapToolbarProps) {
+  const { t } = useTranslation("atlas");
+
   // UI state
   const { uiVisible } = useUI();
   const [visible, setVisible] = useState(true);
@@ -46,7 +49,11 @@ export function MapToolbar({
         <button
           className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4 shadow"
           onClick={() => setMenuOpen((open) => !open)}
-          aria-label={menuOpen ? "Close map actions" : "Open map actions"}
+          aria-label={
+            menuOpen
+              ? t("toolbar.closeMapActions")
+              : t("toolbar.openMapActions")
+          }
         >
           <FaChevronUp
             className={`text-2xl transition-transform ${
@@ -91,8 +98,12 @@ export function MapToolbar({
           {/* Toggle button */}
           <ActionButton
             onClick={() => setVisible((v) => !v)}
-            ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
-            title={visible ? "Hide toolbar" : "Show toolbar"}
+            ariaLabel={
+              visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
+            }
+            title={
+              visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
+            }
             titlePosition="left"
             variant="action"
             className={`${!visible ? "opacity-70" : ""}`}

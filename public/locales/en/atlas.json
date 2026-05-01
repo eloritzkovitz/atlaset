@@ -1,0 +1,125 @@
+{
+  "toolbar": {
+    "openMapActions": "Open map actions",
+    "closeMapActions": "Close map actions",
+    "showToolbar": "Show toolbar",
+    "hideToolbar": "Hide toolbar",
+    "countries": "Countries",
+    "layers": "Layers",
+    "markers": "Markers",
+    "legend": "Legend",
+    "myMaps": "My Maps",
+    "timeline": "Timeline",
+    "export": "Export",
+    "download": "Download",
+    "mapSettings": "Map Settings",
+    "exitEditMode": "Exit Edit Mode",
+    "exitSharedView": "Exit Shared View"
+  },
+  "controls": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetView": "Reset view"
+  },
+  "shared": {
+    "viewingPrefix": "Viewing",
+    "byPrefix": "by",
+    "inEditMode": "in Edit Mode.",
+    "editingDisabled": "Editing is disabled.",
+    "defaultMap": "a shared map",
+    "defaultSharer": "an anonymous user"
+  },
+  "countries": {
+    "title": "Countries",
+    "refreshData": "Refresh country data",
+    "filters": "Filters",
+    "showFilters": "Show Filters",
+    "hideFilters": "Hide Filters",
+    "searchPlaceholder": "Search countries",
+    "countryLists": {
+      "all": "All",
+      "sovereign": "Sovereign",
+      "visited": "Visited"
+    },
+    "newList": "New list"
+  },
+  "layers": {
+    "title": "Layers",
+    "add": "Add Layer",
+    "import": "Import Layers",
+    "export": "Export Layers",
+    "empty": "No layers yet."
+  },
+  "markers": {
+    "hint": "Click on the map to add a marker.",
+    "title": "Markers",
+    "add": "Add Marker",
+    "import": "Import Markers",
+    "export": "Export Markers",
+    "close": "Close markers panel",
+    "empty": "No markers yet."
+  },
+  "legend": {
+    "title": "Legend"
+  },
+  "savedMaps": {
+    "title": "My Maps",
+    "save": "Save current map",
+    "create": "Create new map",
+    "close": "Close",
+    "empty": "No saved maps yet."
+  },
+  "timeline": {
+    "hint": "Timeline mode enabled. Press T to toggle off.",
+    "play": "Play",
+    "pause": "Pause",
+    "firstYear": "First year",
+    "previousYear": "Previous year",
+    "nextYear": "Next year",
+    "lastYear": "Last year",
+    "speed": "Speed: {{speed}}x",
+    "cumulativeVisits": "Cumulative visits",
+    "yearlyVisits": "Yearly visits",
+    "colorMode": "Color mode"
+  },
+  "mapExport": {
+    "title": "Export",
+    "options": "Options",
+    "visitedCountries": "Visited countries",
+    "visibleLayers": "All visible layers",
+    "visibleMarkers": "All visible markers",
+    "mapDetails": "Map details (optional)",
+    "mapName": "Map name",
+    "yourName": "Your name",
+    "download": "Download",
+    "format": "Format",
+    "inlineStyles": "inline styles",
+    "downloadImage": "Download image",
+    "downloadJson": "Download as JSON",
+    "share": "Share",
+    "shareableLink": "Shareable link",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied to clipboard!",
+    "embed": "Embed",
+    "embedCode": "Embed code",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code copied to clipboard!",
+    "description": "Embed this map in your website using the code above."
+  },
+  "mapSettings": {
+    "title": "Map Settings",
+    "configuration": "Configuration",
+    "mapProjection": "Map Projection",
+    "borderColor": "Border Color",
+    "borderWidth": "Border Width",
+    "colors": "Colors",
+    "displayOptions": "Display Options",
+    "showHomeCountry": "Show home country",
+    "showVisitedCountries": "Show visited countries",
+    "showUpcomingVisits": "Show upcoming new visits",
+    "colorPalette": "Color palette",
+    "standard": "Standard",
+    "timelineCumulative": "Timeline (Cumulative)",
+    "timelineYearly": "Timeline (Yearly)"
+  }
+}

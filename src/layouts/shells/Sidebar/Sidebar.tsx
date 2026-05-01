@@ -1,4 +1,5 @@
 import { FaBars } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Branding } from "@components";
 import {
   DEFAULT_SIDEBAR_WIDTH,
@@ -11,6 +12,7 @@ import { SidebarMenuLink } from "./SidebarMenuLink";
 
 export function Sidebar() {
   const { uiVisible, sidebarExpanded, setSidebarExpanded } = useUI();
+  const { t } = useTranslation("common");
 
   // Hide sidebar on Escape key or when UI is hidden
   usePanelHide({
@@ -51,8 +53,12 @@ export function Sidebar() {
         <div className="flex items-center h-14 mt-1">
           <ActionButton
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
-            aria-label={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
-            title={sidebarExpanded ? "Collapse sidebar" : "Expand sidebar"}
+            aria-label={
+              sidebarExpanded ? t("sidebar.collapse") : t("sidebar.expand")
+            }
+            title={
+              sidebarExpanded ? t("sidebar.collapse") : t("sidebar.expand")
+            }
             className="flex h-10 w-10 ms-1 hover:bg-sidebar-btn-hover transition"
             icon={<FaBars className="text-2xl" />}
             rounded
@@ -72,6 +78,7 @@ export function Sidebar() {
               key={link.to}
               to={link.to}
               icon={link.icon}
+              labelKey={link.labelKey}
               label={link.label}
               expanded={sidebarExpanded}
               end={link.end}
@@ -83,6 +90,7 @@ export function Sidebar() {
           <SidebarMenuLink
             to={SETTINGS_LINK.to}
             icon={SETTINGS_LINK.icon}
+            labelKey={SETTINGS_LINK.labelKey}
             label={SETTINGS_LINK.label}
             expanded={sidebarExpanded}
           />
@@ -96,6 +104,7 @@ export function Sidebar() {
             key={link.to}
             to={link.to}
             icon={link.icon}
+            labelKey={(link as any).labelKey}
             label={link.label}
             expanded={sidebarExpanded}
             end={link.end}

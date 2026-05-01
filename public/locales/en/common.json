@@ -1,0 +1,33 @@
+{
+  "sidebar": {
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar",
+    "atlas": "Atlas",
+    "trips": "My Trips",
+    "dashboard": "Dashboard",
+    "quizzes": "Quizzes",
+    "settings": "Settings"
+  },
+  "actions": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "show": "Show",
+    "showMore": "Show more",
+    "hide": "Hide",
+    "moreActions": "More actions",
+    "view": "View",
+    "download": "Download",
+    "rename": "Rename",
+    "center": "Center",
+    "duplicate": "Duplicate",
+    "createList": "Create List",
+    "share": "Share",
+    "copyLink": "Copy Link",
+    "cannotDelete": "Cannot delete"
+  }
+}

@@ -38,7 +38,14 @@ export function DropdownSelectInput<T = string>({
 
   // Dynamically calculate offset based on button height
   const btnHeight = btnRef.current?.offsetHeight ?? 0;
-  const menuStyle = useMenuPosition(open, btnRef, menuRef, btnHeight);
+  const menuStyle = useMenuPosition(
+    open,
+    btnRef,
+    menuRef,
+    btnHeight,
+    "right",
+    "overlay",
+  );
 
   // Close dropdown on outside click
   useClickOutside(

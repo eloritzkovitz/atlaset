@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { MenuButton } from "./MenuButton";
 import { Separator } from "../layout/Separator";
 import { ICONS } from "../../constants/icons";
@@ -31,6 +32,8 @@ export function MenuActions({
   removeDisabled = false,
   handleEdit,
 }: MenuActionsProps) {
+  const { t } = useTranslation("common");
+
   return (
     <>
       {onView && (
@@ -40,7 +43,7 @@ export function MenuActions({
             icon={<ICONS.view className="me-2" />}
             className="w-full"
           >
-            View
+            {t("actions.view", "View")}
           </MenuButton>
           <Separator className="my-1" />
         </>
@@ -51,7 +54,7 @@ export function MenuActions({
           icon={<ICONS.download className="me-2" />}
           className="w-full"
         >
-          Download
+          {t("actions.download", "Download")}
         </MenuButton>
       )}
       {onEdit && (
@@ -60,7 +63,7 @@ export function MenuActions({
           icon={<ICONS.edit className="me-2" />}
           className="w-full"
         >
-          Edit
+          {t("actions.edit", "Edit")}
         </MenuButton>
       )}
       {onNameChange && (
@@ -69,7 +72,7 @@ export function MenuActions({
           icon={<ICONS.rename className="me-2" />}
           className="w-full"
         >
-          Rename
+          {t("actions.rename", "Rename")}
         </MenuButton>
       )}
       {onCenter && (
@@ -78,7 +81,7 @@ export function MenuActions({
           icon={<ICONS.center className="me-2" />}
           className="w-full"
         >
-          Center
+          {t("actions.center", "Center")}
         </MenuButton>
       )}
       {onDuplicate && (
@@ -87,7 +90,7 @@ export function MenuActions({
           icon={<ICONS.duplicate className="me-2" />}
           className="w-full"
         >
-          Duplicate
+          {t("actions.duplicate", "Duplicate")}
         </MenuButton>
       )}
       {onCreateList && (
@@ -96,7 +99,7 @@ export function MenuActions({
           icon={<ICONS.createList className="me-2" />}
           className="w-full"
         >
-          Create List
+          {t("actions.createList", "Create List")}
         </MenuButton>
       )}
       {(onShare || onCopytoClipboard) && <Separator className="my-1" />}
@@ -106,7 +109,7 @@ export function MenuActions({
           icon={<ICONS.share className="me-2" />}
           className="w-full"
         >
-          Share
+          {t("actions.share", "Share")}
         </MenuButton>
       )}
       {onCopytoClipboard && (
@@ -115,7 +118,7 @@ export function MenuActions({
           icon={<ICONS.copyLink className="me-2" />}
           className="w-full"
         >
-          Copy Link
+          {t("actions.copyLink", "Copy Link")}
         </MenuButton>
       )}
       {onRemove && (
@@ -133,7 +136,9 @@ export function MenuActions({
             className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={removeDisabled}
           >
-            {removeDisabled ? "Cannot delete" : "Delete"}
+            {removeDisabled
+              ? t("actions.cannotDelete", "Cannot delete")
+              : t("actions.delete", "Delete")}
           </MenuButton>
         </>
       )}

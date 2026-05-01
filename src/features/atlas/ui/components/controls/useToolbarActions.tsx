@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { DirectionalIcon } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
@@ -20,6 +21,7 @@ export function useToolbarActions({
   isMobile,
   setMenuOpen,
 }: ToolbarActionsParams) {
+  const { t } = useTranslation("atlas");
   const {
     toggleCountries,
     toggleLayers,
@@ -45,28 +47,28 @@ export function useToolbarActions({
     {
       key: "countries",
       icon: <ICONS.countries className="text-lg" />,
-      label: "Countries",
+      label: t("toolbar.countries"),
       onClick: withMenuClose(toggleCountries),
       show: true,
     },
     {
       key: "layers",
       icon: <ICONS.layers className="text-lg" />,
-      label: "Layers",
+      label: t("toolbar.layers"),
       onClick: withMenuClose(toggleLayers),
       show: true,
     },
     {
       key: "markers",
       icon: <ICONS.markers className="text-lg" />,
-      label: "Markers",
+      label: t("toolbar.markers"),
       onClick: withMenuClose(toggleMarkers),
       show: true,
     },
     {
       key: "legend",
       icon: <ICONS.legend className="text-lg" />,
-      label: "Legend",
+      label: t("toolbar.legend"),
       onClick: withMenuClose(toggleLegend),
       show: true,
       separatorAfter: true,
@@ -74,14 +76,14 @@ export function useToolbarActions({
     {
       key: "savedmaps",
       icon: <ICONS.saved className="text-lg" />,
-      label: "My Maps",
+      label: t("toolbar.myMaps"),
       onClick: withMenuClose(toggleSavedMaps),
       show: isAuthenticated(),
     },
     {
       key: "timeline",
       icon: <ICONS.timeline className="text-xl" />,
-      label: "Timeline",
+      label: t("toolbar.timeline"),
       onClick: withMenuClose(() => setTimelineMode(!timelineMode)),
       show: !isReadonly && !isEdit && isAuthenticated(),
       separatorAfter: true,
@@ -93,21 +95,21 @@ export function useToolbarActions({
       ) : (
         <ICONS.download className="text-lg" />
       ),
-      label: !isReadonly ? "Export" : "Download",
+      label: !isReadonly ? t("toolbar.export") : t("toolbar.download"),
       onClick: withMenuClose(toggleExport),
       show: true,
     },
     {
       key: "settings",
       icon: <ICONS.settings className="text-lg" />,
-      label: "Map Settings",
+      label: t("toolbar.mapSettings"),
       onClick: withMenuClose(toggleSettings),
       show: !isReadonly && !isEdit,
     },
     {
       key: "exit",
       icon: <DirectionalIcon variant="arrow" className="text-lg" />,
-      label: `${isEdit ? "Exit Edit Mode" : "Exit Shared View"}`,
+      label: isEdit ? t("toolbar.exitEditMode") : t("toolbar.exitSharedView"),
       onClick: withMenuClose(() => {
         if (typeof exitEditMode === "function") {
           exitEditMode();

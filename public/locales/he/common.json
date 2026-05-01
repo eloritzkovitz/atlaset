@@ -1,0 +1,33 @@
+{
+  "sidebar": {
+    "expand": "הרחב סרגל צד",
+    "collapse": "כווץ סרגל צד",
+    "atlas": "אטלס",
+    "trips": "הטיולים שלי",
+    "dashboard": "לוח בקרה",
+    "quizzes": "חידונים",
+    "settings": "הגדרות"
+  },
+  "actions": {
+    "add": "הוסף",
+    "edit": "ערוך",
+    "delete": "מחק",
+    "save": "שמור",
+    "cancel": "בטל",
+    "confirm": "אשר",
+    "close": "סגור",
+    "show": "הצג",
+    "showMore": "הצג עוד",
+    "hide": "הסתר",
+    "moreActions": "פעולות נוספות",
+    "view": "צפה",
+    "download": "הורד",
+    "rename": "שנה שם",
+    "center": "מרכז",
+    "duplicate": "שכפל",
+    "createList": "צור רשימה",
+    "share": "שתף",
+    "copyLink": "העתק קישור",
+    "cannotDelete": "לא ניתן למחוק"
+  }
+}

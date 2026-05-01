@@ -35,7 +35,12 @@ export function SegmentedToggle<T extends string>({
     centerInline: true,
   });
 
-  const isRtl = useIsRtl();
+  const isRtlHook = useIsRtl();
+  const docDir =
+    typeof document !== "undefined" && document.documentElement
+      ? document.documentElement.dir
+      : undefined;
+  const isRtl = docDir === "rtl" || isRtlHook;
 
   return (
     <div
@@ -54,10 +59,18 @@ export function SegmentedToggle<T extends string>({
             : "hover:bg-surface-hover"
           : "";
 
-        // Show count if provided, styled as a small badge next to the label
+        const labelSpan = (
+          <span className="align-middle" dir="auto">
+            {opt.label}
+          </span>
+        );
         const countSpan =
           typeof opt.count === "number" ? (
-            <span className="ms-1 text-xs text-muted align-middle">
+            <span
+              dir="ltr"
+              style={{ unicodeBidi: "isolate" }}
+              className="text-xs text-muted align-middle"
+            >
               {opt.count}
             </span>
           ) : null;
@@ -66,6 +79,7 @@ export function SegmentedToggle<T extends string>({
           <button
             key={opt.value}
             data-seg-value={opt.value}
+            data-rtl={isRtl}
             aria-pressed={isSelected}
             className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
               isSelected
@@ -75,17 +89,22 @@ export function SegmentedToggle<T extends string>({
             onClick={() => onChange(opt.value)}
             disabled={disabled}
           >
-            {isRtl ? (
-              <>
-                {countSpan}
-                {opt.label}
-              </>
-            ) : (
-              <>
-                {opt.label}
-                {countSpan}
-              </>
-            )}
+            <span
+              className="inline-flex items-center gap-1"
+              dir={isRtl ? "ltr" : undefined}
+            >
+              {isRtl ? (
+                <>
+                  {countSpan}
+                  {labelSpan}
+                </>
+              ) : (
+                <>
+                  {labelSpan}
+                  {countSpan}
+                </>
+              )}
+            </span>
           </button>
         );
       })}

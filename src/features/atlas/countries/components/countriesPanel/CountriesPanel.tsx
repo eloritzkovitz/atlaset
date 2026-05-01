@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
@@ -36,6 +37,7 @@ export function CountriesPanel({
   onHover,
   onCountryInfo,
 }: CountriesPanelProps) {
+  const { t } = useTranslation("atlas");
   const { refreshData } = useCountryData();
   const {
     countryLists,
@@ -197,7 +199,7 @@ export function CountriesPanel({
         title={
           <>
             <ICONS.countries />
-            Countries
+            {t("countries.title")}
           </>
         }
         show={uiVisible && showCountries}
@@ -209,23 +211,27 @@ export function CountriesPanel({
             {process.env.NODE_ENV === "development" && (
               <ActionButton
                 onClick={refreshData}
-                ariaLabel={"Refresh country data"}
-                title="Refresh country data"
+                ariaLabel={t("countries.refreshData")}
+                title={t("countries.refreshData")}
                 icon={<ICONS.refresh />}
                 rounded
               />
             )}
             <ActionButton
               onClick={toggleFilters}
-              ariaLabel={showFilters ? "Hide Filters" : "Show Filters"}
-              title="Filters"
+              ariaLabel={
+                showFilters
+                  ? t("countries.hideFilters")
+                  : t("countries.showFilters")
+              }
+              title={t("countries.filters")}
               icon={<ICONS.filters />}
               rounded
             />
             <ActionButton
               onClick={toggleCountries}
-              ariaLabel="Close countries panel"
-              title="Close"
+              ariaLabel={t("common:actions.close")}
+              title={t("common:actions.close")}
               icon={<ICONS.close className="text-2xl" />}
               rounded
             />
