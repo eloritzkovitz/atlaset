@@ -47,7 +47,7 @@ export function CountryAffiliationsContent({
     }
 
     return sections;
-  }, [country]);
+  }, [country, t]);
 
   const [expanded, setExpanded] = useState(() =>
     sections.reduce(
