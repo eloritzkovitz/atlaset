@@ -129,7 +129,7 @@ export function LayersPanel({
     >
       <div className="mt-4">
         {!effectiveLayers || effectiveLayers.length === 0 ? (
-          <EmptyListMessage message="No layers yet." />
+          <EmptyListMessage message={t("layers.empty")} />
         ) : (
           <ul className="list-none p-0">
             {effectiveLayers.map((layer, index) => (

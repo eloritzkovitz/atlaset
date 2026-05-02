@@ -56,6 +56,51 @@
     "title": "מיין",
     "tooltip": "מיין לפי: {{key}} ({{dir}})"
   },
+  "shortcuts": {
+    "title": "קיצורי מקלדת",
+    "categories": {
+      "general": "כללי",
+      "user": "משתמש",
+      "atlas": "אטלס",
+      "countries": "מדינות",
+      "map": "מפה",
+      "timeline": "ציר זמן"
+    },
+    "actions": {
+      "show_shortcuts": "הצג קיצורים",
+      "focus_search": "התמקד בחיפוש",
+      "unfocus_close": "ביטול בחירה / סגירה",
+      "toggle_help": "הצג/הסתר עזרה",
+      "reset_filters": "אפס מסננים",
+      "toggle_saved_maps": "הצג/הסתר מפות שמורות",
+      "toggle_friends": "הצג/הסתר חברים",
+      "toggle_countries": "הצג/הסתר מדינות",
+      "toggle_export": "הצג/הסתר ייצוא",
+      "toggle_filters": "הצג/הסתר מסננים",
+      "toggle_legend": "הצג/הסתר מקרא",
+      "toggle_markers": "הצג/הסתר סימונים",
+      "toggle_layers": "הצג/הסתר שכבות",
+      "toggle_settings": "הצג/הסתר הגדרות",
+      "toggle_timeline": "הצג/הסתר ציר זמן",
+      "toggle_ui": "הצג/הסתר ממשק",
+      "scroll_up": "גלול למעלה",
+      "scroll_down": "גלול למטה",
+      "go_to_first_country": "עבור למדינה הראשונה",
+      "go_to_last_country": "עבור למדינה האחרונה",
+      "scroll_up_one_page": "גלול דף למעלה",
+      "scroll_down_one_page": "גלול דף למטה",
+      "select_country": "בחר מדינה",
+      "zoom_in": "הגדל",
+      "zoom_out": "הקטן",
+      "reset_zoom": "אתחל זום",
+      "center_map_on_country": "מרכז מפה על המדינה",
+      "next_year": "שנה הבאה",
+      "previous_year": "שנה קודמת",
+      "go_to_first_year": "עבור לשנה הראשונה",
+      "go_to_last_year": "עבור לשנה האחרונה",
+      "play_pause": "הפעל/השהה"
+    }
+  },
   "languages": {
     "en": "אנגלית",
     "he": "עברית"

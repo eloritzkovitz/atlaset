@@ -41,7 +41,7 @@ export function CountryAffiliationsContent({
 
       sections.push({
         key: "memberships",
-        label: t("country.affiliations.memberships"),
+        label: t("countries.details.affiliations.memberships"),
         data: sorted,
       });
     }

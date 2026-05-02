@@ -65,6 +65,55 @@
       "label": "מדינות:",
       "noneSelected": "לא נבחרו מדינות.",
       "title": "בחר מדינות"
+    },
+    "details": {
+      "header": {
+        "centerMap": "מרכז מפה",
+        "centerMapAria": "מרכז את המפה אל המדינה",
+        "viewFull": "צפייה בפרטים מלאים",
+        "viewFullAria": "צפייה בפרטים מלאים",
+        "wikipedia": "ויקיפדיה",
+        "wikipediaAria": "פתח מאמר ויקיפדיה"
+      },
+      "status": {
+        "home": "מדינת בית",
+        "homeAria": "מדינת בית",
+        "visited": "ביקרתי",
+        "notVisited": "לא ביקרתי"
+      },
+      "tabs": {
+        "overview": "סקירה כללית",
+        "territories": "טריטוריות ותביעות",
+        "affiliations": "שייכות",
+        "visits": "ביקורים"
+      },
+      "overview": {
+        "region": "יבשת",
+        "subregion": "אזור גיאוגרפי",
+        "capital": "עיר בירה",
+        "languages": "שפות",
+        "government": "שיטת ממשל",
+        "area": "שטח",
+        "population": "אוכלוסיה",
+        "areaUnit": "קמ\u0022ר",
+        "currency": "מטבע",
+        "timezone": "אזור זמן",
+        "summer": "קיץ",
+        "callingCode": "קידומת בין-לאומית",
+        "drivingSide": "צד נהיגה",
+        "isoCode": "קוד ISO 3166",
+        "altNames": "שמות חלופיים"
+      },
+      "affiliations": {
+        "memberships": "חברויות",
+        "un": "האומות המאוחדות",
+        "eu": "האיחוד האירופי"
+      },
+      "visits": {
+        "planned": "מתוכננים",
+        "upcoming": "עתידיים",
+        "completed": "הושלמו"
+      }
     }
   },
   "layers": {
@@ -72,7 +121,18 @@
     "add": "הוסף שכבה",
     "import": "ייבא שכבות",
     "export": "ייצא שכבות",
-    "empty": "עדיין אין שכבות."
+    "empty": "עדיין אין שכבות.",
+    "addTitle": "הוסף שכבה",
+    "editTitle": "ערוך שכבה",
+    "form": {
+      "name": "שם:",
+      "color": "צבע:",
+      "fromList": "מרשימה:",
+      "selectList": "בחר רשימה...",
+      "filterLabels": "תגיות סינון:"
+    },
+    "linkedListWarning": "שכבה זו מקושרת לרשימה. כדי לערוך את שמה או את המדינות שבה, עדכן את הרשימה עצמה.",
+    "saveChanges": "שמירת שינויים"
   },
   "markers": {
     "title": "סימונים",
@@ -81,7 +141,19 @@
     "export": "ייצא סימונים",
     "close": "סגור לוח סימונים",
     "empty": "עדיין אין סימונים.",
-    "hint": "לחץ על המפה כדי להוסיף סימון."
+    "hint": "לחץ על המפה כדי להוסיף סימון.",
+    "editTitle": "ערוך סימון",
+    "addTitle": "הוסף סימון",
+    "form": {
+      "name": "שם",
+      "namePlaceholder": "שם הסימון",
+      "color": "צבע",
+      "description": "תיאור",
+      "descriptionPlaceholder": "תיאור (אופציונלי)"
+    },
+    "noDescription": "לא סופק תיאור.",
+    "locationLabel": "מיקום:",
+    "saveChanges": "שמירת שינויים"
   },
   "legend": {
     "title": "מקרא"
@@ -91,7 +163,14 @@
     "save": "שמור מפה נוכחית",
     "create": "צור מפה חדשה",
     "close": "סגור",
-    "empty": "עדיין אין מפות שמורות."
+    "empty": "עדיין אין מפות שמורות.",
+    "addTitle": "הוסף מפה",
+    "saveTitle": "שמור מפה",
+    "renameTitle": "שנה שם מפה",
+    "nameLabel": "שם מפה:",
+    "namePlaceholder": "שם מפה",
+    "saveChanges": "שמירת שינויים",
+    "add": "הוסף מפה"
   },
   "timeline": {
     "play": "הפעל",
@@ -148,54 +227,5 @@
     "standard": "סטנדרטי",
     "timelineCumulative": "ציר זמן (מצטבר)",
     "timelineYearly": "ציר זמן (שנתי)"
-  },
-  "country": {
-    "header": {
-      "centerMap": "מרכז מפה",
-      "centerMapAria": "מרכז את המפה אל המדינה",
-      "viewFull": "צפייה בפרטים מלאים",
-      "viewFullAria": "צפייה בפרטים מלאים",
-      "wikipedia": "ויקיפדיה",
-      "wikipediaAria": "פתח מאמר ויקיפדיה"
-    },
-    "status": {
-      "home": "מדינת בית",
-      "homeAria": "מדינת בית",
-      "visited": "ביקרתי",
-      "notVisited": "לא ביקרתי"
-    },
-    "tabs": {
-      "overview": "סקירה כללית",
-      "territories": "טריטוריות ותביעות",
-      "affiliations": "שייכות",
-      "visits": "ביקורים"
-    },
-    "overview": {
-      "region": "יבשת",
-      "subregion": "אזור גיאוגרפי",
-      "capital": "עיר בירה",
-      "languages": "שפות",
-      "government": "שיטת ממשל",
-      "area": "שטח",
-      "population": "אוכלוסיה",
-      "areaUnit": "קמ\u0022ר",
-      "currency": "מטבע",
-      "timezone": "אזור זמן",
-      "summer": "קיץ",
-      "callingCode": "קידומת בין-לאומית",
-      "drivingSide": "צד נהיגה",
-      "isoCode": "קוד ISO 3166",
-      "altNames": "שמות חלופיים"
-    },
-    "affiliations": {
-      "memberships": "חברויות",
-      "un": "האומות המאוחדות",
-      "eu": "האיחוד האירופי"
-    },
-    "visits": {
-      "planned": "מתוכננים",
-      "upcoming": "עתידיים",
-      "completed": "הושלמו"
-    }
   }
 }

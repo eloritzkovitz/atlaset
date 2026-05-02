@@ -45,10 +45,10 @@ export function CountryDetailsPanel({
   const { t } = useTranslation("atlas");
 
   const tabLabels: Record<CountryDetailsTab, string> = {
-    overview: t("country.tabs.overview"),
-    territories: t("country.tabs.territories"),
-    affiliations: t("country.tabs.affiliations"),
-    visits: t("country.tabs.visits"),
+    overview: t("countries.details.tabs.overview"),
+    territories: t("countries.details.tabs.territories"),
+    affiliations: t("countries.details.tabs.affiliations"),
+    visits: t("countries.details.tabs.visits"),
   };
 
   const { countries } = useCountryData();

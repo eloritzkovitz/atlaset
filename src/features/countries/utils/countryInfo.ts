@@ -38,7 +38,9 @@ export function formatTimezones(
   tzs?: string[],
   t?: (key: string) => string,
 ): string | string[] {
-  const summerLabel = t ? ` (${t("country.overview.summer")})` : " (summer)";
+  const summerLabel = t
+    ? ` (${t("countries.details.overview.summer")})`
+    : " (summer)";
   if (!tzs || tzs.length === 0) return "—";
   if (tzs.length === 1) {
     const offs = timezoneOffsets(tzs[0], summerLabel);

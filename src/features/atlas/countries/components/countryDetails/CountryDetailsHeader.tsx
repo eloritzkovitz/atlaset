@@ -42,8 +42,8 @@ export function CountryDetailsHeader({
         {centerOnCountry && (
           <ActionButton
             onClick={() => centerOnCountry(country.isoCode)}
-            ariaLabel={t("country.header.centerMapAria")}
-            title={t("country.header.centerMap")}
+            ariaLabel={t("countries.details.header.centerMapAria")}
+            title={t("countries.details.header.centerMap")}
             icon={<ICONS.center />}
             rounded
           />
@@ -55,8 +55,8 @@ export function CountryDetailsHeader({
               `/dashboard/countries/${country.region}/${country.subregion}/${country.isoCode}`,
             );
           }}
-          ariaLabel={t("country.header.viewFullAria")}
-          title={t("country.header.viewFull")}
+          ariaLabel={t("countries.details.header.viewFullAria")}
+          title={t("countries.details.header.viewFull")}
           icon={<ICONS.exploration />}
           rounded
         />
@@ -68,8 +68,8 @@ export function CountryDetailsHeader({
               "noopener,noreferrer",
             )
           }
-          ariaLabel={t("country.header.wikipediaAria")}
-          title={t("country.header.wikipedia")}
+          ariaLabel={t("countries.details.header.wikipediaAria")}
+          title={t("countries.details.header.wikipedia")}
           icon={<FaWikipediaW />}
           rounded
         />

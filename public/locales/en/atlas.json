@@ -65,6 +65,55 @@
       "label": "Countries:",
       "noneSelected": "No countries selected.",
       "title": "Select Countries"
+    },
+    "details": {
+      "header": {
+        "centerMap": "Center map",
+        "centerMapAria": "Center map on country",
+        "viewFull": "View full details",
+        "viewFullAria": "View full details",
+        "wikipedia": "Wikipedia",
+        "wikipediaAria": "Open Wikipedia article"
+      },
+      "status": {
+        "home": "Home country",
+        "homeAria": "Home country",
+        "visited": "Visited",
+        "notVisited": "Not visited"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "territories": "Territories & Claims",
+        "affiliations": "Affiliations",
+        "visits": "Visits"
+      },
+      "overview": {
+        "region": "Region",
+        "subregion": "Subregion",
+        "capital": "Capital",
+        "languages": "Languages",
+        "government": "Government",
+        "area": "Area",
+        "population": "Population",
+        "areaUnit": "km²",
+        "currency": "Currencies",
+        "timezone": "Timezones",
+        "summer": "summer",
+        "callingCode": "Calling Code",
+        "drivingSide": "Driving Side",
+        "isoCode": "ISO 3166 Code",
+        "altNames": "Alternative Names"
+      },
+      "affiliations": {
+        "memberships": "Memberships",
+        "un": "United Nations",
+        "eu": "European Union"
+      },
+      "visits": {
+        "planned": "Planned",
+        "upcoming": "Upcoming",
+        "completed": "Completed"
+      }
     }
   },
   "layers": {
@@ -72,7 +121,18 @@
     "add": "Add Layer",
     "import": "Import Layers",
     "export": "Export Layers",
-    "empty": "No layers yet."
+    "empty": "No layers yet.",
+    "addTitle": "Add Layer",
+    "editTitle": "Edit Layer",
+    "form": {
+      "name": "Name:",
+      "color": "Color:",
+      "fromList": "From List:",
+      "selectList": "Select a list...",
+      "filterLabels": "Filter Labels:"
+    },
+    "linkedListWarning": "This layer is linked with a list. To edit its name or countries, update the list itself.",
+    "saveChanges": "Save Changes"
   },
   "markers": {
     "hint": "Click on the map to add a marker.",
@@ -81,7 +141,19 @@
     "import": "Import Markers",
     "export": "Export Markers",
     "close": "Close markers panel",
-    "empty": "No markers yet."
+    "empty": "No markers yet.",
+    "editTitle": "Edit Marker",
+    "addTitle": "Add Marker",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Marker name",
+      "color": "Color",
+      "description": "Description",
+      "descriptionPlaceholder": "Description (optional)"
+    },
+    "noDescription": "No description provided.",
+    "locationLabel": "Location:",
+    "saveChanges": "Save Changes"
   },
   "legend": {
     "title": "Legend"
@@ -91,7 +163,14 @@
     "save": "Save current map",
     "create": "Create new map",
     "close": "Close",
-    "empty": "No saved maps yet."
+    "empty": "No saved maps yet.",
+    "addTitle": "Add Map",
+    "saveTitle": "Save Map",
+    "renameTitle": "Rename Map",
+    "nameLabel": "Map Name:",
+    "namePlaceholder": "Map name",
+    "saveChanges": "Save Changes",
+    "add": "Add Map"
   },
   "timeline": {
     "hint": "Timeline mode enabled. Press T to toggle off.",
@@ -148,54 +227,5 @@
     "standard": "Standard",
     "timelineCumulative": "Timeline (Cumulative)",
     "timelineYearly": "Timeline (Yearly)"
-  },
-  "country": {
-    "header": {
-      "centerMap": "Center map",
-      "centerMapAria": "Center map on country",
-      "viewFull": "View full details",
-      "viewFullAria": "View full details",
-      "wikipedia": "Wikipedia",
-      "wikipediaAria": "Open Wikipedia article"
-    },
-    "status": {
-      "home": "Home country",
-      "homeAria": "Home country",
-      "visited": "Visited",
-      "notVisited": "Not visited"
-    },
-    "tabs": {
-      "overview": "Overview",
-      "territories": "Territories & Claims",
-      "affiliations": "Affiliations",
-      "visits": "Visits"
-    },
-    "overview": {
-      "region": "Region",
-      "subregion": "Subregion",
-      "capital": "Capital",
-      "languages": "Languages",
-      "government": "Government",
-      "area": "Area",
-      "population": "Population",
-      "areaUnit": "km²",
-      "currency": "Currencies",
-      "timezone": "Timezones",
-      "summer": "summer",
-      "callingCode": "Calling Code",
-      "drivingSide": "Driving Side",
-      "isoCode": "ISO 3166 Code",
-      "altNames": "Alternative Names"
-    },
-    "affiliations": {
-      "memberships": "Memberships",
-      "un": "United Nations",
-      "eu": "European Union"
-    },
-    "visits": {
-      "planned": "Planned",
-      "upcoming": "Upcoming",
-      "completed": "Completed"
-    }
   }
 }

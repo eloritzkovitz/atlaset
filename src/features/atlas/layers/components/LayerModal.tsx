@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   Checkbox,
@@ -36,6 +37,7 @@ export function LayerModal({
 }: LayerModalProps) {
   const { countryLists } = useCountryLists();
   const { countries } = useCountryData();
+  const { t } = useTranslation(["atlas", "common"]);
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [colorModalOpen, setColorModalOpen] = useState(false);
   const [useList, setUseList] = useState(false);
@@ -94,15 +96,18 @@ export function LayerModal({
             title={
               <>
                 <ICONS.layers />
-                {isEditing ? "Edit Layer" : "Add Layer"}
+                {isEditing
+                  ? t("layers.editTitle", "Edit Layer")
+                  : t("layers.addTitle", "Add Layer")}
               </>
             }
             showSeparator
           >
             <ActionButton
               onClick={onClose}
-              ariaLabel="Close Layer Modal"
+              ariaLabel={t("common:actions.close")}
               icon={<ICONS.close className="text-2xl" />}
+              title={t("common:actions.close")}
               rounded
             />
           </PanelHeader>
@@ -117,7 +122,7 @@ export function LayerModal({
             }}
           >
             <div className="flex flex-col p-4">
-              <FormField label="Name:">
+              <FormField label={t("layers.form.name", "Name:")}>
                 <input
                   type="text"
                   name="name"
@@ -126,7 +131,7 @@ export function LayerModal({
                   disabled={isListManaged}
                 />
               </FormField>
-              <FormField label="Color:">
+              <FormField label={t("layers.form.color", "Color:")}>
                 <ColorSelectInput
                   value={layer.color}
                   onChange={(color: string) => onChange({ ...layer, color })}
@@ -157,7 +162,7 @@ export function LayerModal({
                           setSelectedListId(null);
                         }
                       }}
-                      label="From List:"
+                      label={t("layers.form.fromList", "From List:")}
                     />
                     <SelectInput
                       value={selectedListId || ""}
@@ -166,7 +171,10 @@ export function LayerModal({
                         value: list.id,
                         label: list.name,
                       }))}
-                      placeholder="Select a list..."
+                      placeholder={t(
+                        "layers.form.selectList",
+                        "Select a list...",
+                      )}
                       disabled={!useList}
                       className="min-w-[220px]"
                     />
@@ -174,7 +182,14 @@ export function LayerModal({
                 </FormField>
               )}
               {filterLabelKeys.map((key, idx) => (
-                <FormField label={idx === 0 ? "Filter Labels:" : ""} key={key}>
+                <FormField
+                  label={
+                    idx === 0
+                      ? t("layers.form.filterLabels", "Filter Labels:")
+                      : ""
+                  }
+                  key={key}
+                >
                   <input
                     type="text"
                     value={layer.filterLabels?.[key as FilterLabelKey] || ""}
@@ -187,8 +202,10 @@ export function LayerModal({
               {isListManaged && (
                 <div className="flex px-3 py-2 mb-2 items-center text-danger ">
                   <ICONS.info className="inline me-2" />
-                  This layer is linked with a list. To edit its name or
-                  countries, update the list itself.
+                  {t(
+                    "layers.linkedListWarning",
+                    "This layer is linked with a list. To edit its name or countries, update the list itself.",
+                  )}
                 </div>
               )}
               <div className="flex items-center justify-between mt-6">
@@ -203,7 +220,11 @@ export function LayerModal({
                       <ICONS.add className="inline" />
                     )
                   }
-                  submitLabel={isEditing ? "Save Changes" : "Add Layer"}
+                  submitLabel={
+                    isEditing
+                      ? t("layers.saveChanges", "Save Changes")
+                      : t("layers.add", "Add Layer")
+                  }
                   disabled={!isValid}
                 />
               </div>

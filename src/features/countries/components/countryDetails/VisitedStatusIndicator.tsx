@@ -17,29 +17,29 @@ export function VisitedStatusIndicator({
 
   if (isHome) {
     return (
-      <Tooltip content={t("country.status.home")} position="bottom">
+      <Tooltip content={t("countries.details.status.home")} position="bottom">
         <FaHouse
           className={`w-5 h-5 ${className}`}
           color="#22c55e"
-          aria-label={t("country.status.homeAria")}
+          aria-label={t("countries.details.status.homeAria")}
         />
       </Tooltip>
     );
   }
   return visited ? (
-    <Tooltip content={t("country.status.visited")} position="bottom">
+    <Tooltip content={t("countries.details.status.visited")} position="bottom">
       <FaCircleCheck
         className={`w-5 h-5 ${className}`}
         color="#22c55e"
-        aria-label={t("country.status.visitedAria")}
+        aria-label={t("countries.details.status.visitedAria")}
       />
     </Tooltip>
   ) : (
-    <Tooltip content={t("country.status.notVisited")} position="bottom">
+    <Tooltip content={t("countries.details.status.notVisited")} position="bottom">
       <FaCircleXmark
         className={`w-5 h-5 ${className}`}
         color="#d1d5db"
-        aria-label={t("country.status.notVisitedAria")}
+        aria-label={t("countries.details.status.notVisitedAria")}
       />
     </Tooltip>
   );
