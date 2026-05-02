@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Chip, FormField } from "@components";
 import { ICONS } from "@constants/icons";
 import { CountrySelectModal } from "./CountrySelectModal";
@@ -16,7 +17,7 @@ interface CountrySelectFieldProps {
 }
 
 export function CountrySelectField({
-  label = "Countries:",
+  label,
   countryCodes,
   countries,
   onChange,
@@ -25,6 +26,9 @@ export function CountrySelectField({
   onClose,
   disabled,
 }: CountrySelectFieldProps) {
+  const { t } = useTranslation("atlas");
+  const labelText = label ?? t("countries.select.label");
+
   // Map codes to countries and sort alphabetically
   const selectedCountries = countries
     .filter((country) => countryCodes.includes(country.isoCode))
@@ -32,10 +36,12 @@ export function CountrySelectField({
 
   return (
     <>
-      <FormField label={label}>
+      <FormField label={labelText}>
         <div className="flex items-center gap-2 flex-wrap">
           {countryCodes.length === 0 ? (
-            <span className="text-muted">No countries selected.</span>
+            <span className="text-muted">
+              {t("countries.select.noneSelected")}
+            </span>
           ) : (
             selectedCountries.map((country) => (
               <Chip
@@ -58,9 +64,8 @@ export function CountrySelectField({
               variant="secondary"
               onClick={onOpen}
               disabled={disabled}
-              icon={<ICONS.edit className="inline" />}
             >
-              Edit
+              {<ICONS.edit className="inline" />} {t("common:actions.edit")}
             </ActionButton>
           )}
         </div>

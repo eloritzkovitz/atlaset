@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { ActionButton } from "../action/ActionButton";
 
@@ -8,8 +9,8 @@ interface ModalActionsProps {
   onDelete?: () => void;
   submitType?: "submit" | "button";
   submitVariant?: "primary" | "secondary";
-  submitIcon: ReactNode;
-  submitLabel: string;
+  submitIcon?: ReactNode;
+  submitLabel?: string;
   cancelLabel?: string;
   deleteLabel?: string;
   disabled?: boolean;
@@ -23,10 +24,16 @@ export function ModalActions({
   submitVariant = "primary",
   submitIcon,
   submitLabel,
-  cancelLabel = "Cancel",
-  deleteLabel = "Delete",
+  cancelLabel,
+  deleteLabel,
   disabled = false,
 }: ModalActionsProps) {
+  const { t } = useTranslation("common");
+
+  const submitText = submitLabel ?? t("actions.save");
+  const cancelText = cancelLabel ?? t("actions.cancel");
+  const deleteText = deleteLabel ?? t("actions.delete");  
+
   return (
     <>
       {onDelete && (
@@ -38,13 +45,13 @@ export function ModalActions({
             onClick={onDelete}
             className="!bg-danger/70 hover:!bg-danger-hover/70"
           >
-            {deleteLabel}
+            {deleteText}
           </ActionButton>
         </div>
       )}
       <div className="flex flex-1 justify-end gap-2 mt-4">
         <ActionButton type="button" variant="secondary" onClick={onCancel}>
-          {cancelLabel}
+          {cancelText}
         </ActionButton>
         <ActionButton
           type={submitType}
@@ -52,7 +59,7 @@ export function ModalActions({
           onClick={onSubmit}
           disabled={disabled}
         >
-          {submitIcon} {submitLabel}
+          {submitIcon} {submitText}
         </ActionButton>
       </div>
     </>

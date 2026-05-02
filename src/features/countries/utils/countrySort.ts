@@ -6,6 +6,7 @@ import type { VisitContext } from "@features/visits";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
 import type { Country } from "../types";
+import type { TFunction } from "i18next";
 
 /** Sort keys for countries. */
 export type CountrySortByKey =
@@ -76,8 +77,12 @@ export function sortCountries(
  * @param visitedOnly - Whether to include visit-based sort options.
  * @returns An array of sort option objects.
  */
-export function getCountrySortOptions(visitedOnly: boolean): Array<{
+export function getCountrySortOptions(
+  visitedOnly: boolean,
+  t?: TFunction,
+): Array<{
   label: string;
+  displayLabel?: string;
   options: Array<{
     value: string;
     label: string;
@@ -88,12 +93,15 @@ export function getCountrySortOptions(visitedOnly: boolean): Array<{
     ? ALL_SORT_KEY_OPTIONS
     : ALL_SORT_KEY_OPTIONS.filter((opt) => opt.mode === "default");
 
+  const groupLabel = "SORT BY";
+
   return [
     {
-      label: "SORT BY",
+      label: groupLabel,
+      displayLabel: t ? t("atlas:countries.sort.by", groupLabel) : groupLabel,
       options: keyOptions.map((o) => ({
         value: o.value,
-        label: o.label,
+        label: t ? t(`atlas:countries.sort.${o.value}`, o.label) : o.label,
         icon: o.icon,
       })),
     },

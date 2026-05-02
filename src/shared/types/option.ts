@@ -6,6 +6,7 @@ export type Option<T = string, L = React.ReactNode> = {
 
 export type OptionGroup<T> = {
   label: string;
+  displayLabel?: string;
   options: Option<T>[];
 };
 

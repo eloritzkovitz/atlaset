@@ -39,9 +39,33 @@
     "countryLists": {
       "all": "All",
       "sovereign": "Sovereign",
-      "visited": "Visited"
+      "visited": "Visited",
+      "newList": "New list"
     },
-    "newList": "New list"
+    "lists": {
+      "editTitle": "Edit List",
+      "addTitle": "Add List",
+      "nameLabel": "Name:",
+      "linkedWarning": "Changes to this list will update all layers linked to it.",
+      "save": "Save Changes",
+      "add": "Add List",
+      "delete": "Delete List"
+    },
+    "sort": {
+      "by": "SORT BY",
+      "name": "Name",
+      "isoCode": "ISO 3166-1 code",
+      "area": "Area",
+      "population": "Population",
+      "visitCount": "Visit count",
+      "firstVisit": "First visit time",
+      "lastVisit": "Last visit time"
+    },
+    "select": {
+      "label": "Countries:",
+      "noneSelected": "No countries selected.",
+      "title": "Select Countries"
+    }
   },
   "layers": {
     "title": "Layers",

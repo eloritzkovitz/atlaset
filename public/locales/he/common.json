@@ -49,6 +49,13 @@
     "clear": "נקה",
     "clearAll": "נקה הכל"
   },
+  "sort": {
+    "direction": "כיוון",
+    "ascending": "עולה",
+    "descending": "יורד",
+    "title": "מיין",
+    "tooltip": "מיין לפי: {{key}} ({{dir}})"
+  },
   "languages": {
     "en": "אנגלית",
     "he": "עברית"

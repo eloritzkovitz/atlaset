@@ -1,13 +1,14 @@
 import { useRef } from "react";
 import { FaCheck } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
+import { useTranslation } from "react-i18next";
 import {
   useKeyboardFocusRing,
   useMenuPosition,
   useModalAnimation,
 } from "@hooks";
 import type { Option, OptionGroup } from "@types";
-import { directionOptions } from "./directionOptions";
+import { getDirectionOptions } from "./directionOptions";
 import { ActionButton } from "../../action/ActionButton";
 import { OptionItem } from "../../form/inputs/DropdownSelectInput/OptionItem";
 import { SectionHeader } from "../../layout/SectionHeader";
@@ -32,10 +33,12 @@ export function SortSelect<T extends string>({
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  const { t } = useTranslation("common");
+
   // Direction group
   const dirGroup = {
-    label: "Direction",
-    options: directionOptions as Option<T>[],
+    label: t("common:sort.direction", "Direction"),
+    options: getDirectionOptions(t) as Option<T>[],
   };
 
   // Parse value into key and direction
@@ -65,7 +68,10 @@ export function SortSelect<T extends string>({
   ) =>
     group ? (
       <>
-        <SectionHeader title={group.label} className="ms-1 -my-4" />
+        <SectionHeader
+          title={group.displayLabel ?? group.label}
+          className="ms-1 -my-4"
+        />
         {group.options.map((opt: Option<T>) => (
           <div key={opt.value}>
             <OptionItem
@@ -104,18 +110,21 @@ export function SortSelect<T extends string>({
     <div className="relative ms-2 flex items-center">
       <div ref={btnRef}>
         <ActionButton
+          ariaLabel={t("common:sort.title", "Sort")}
+          title={
+            selectedKeyOption && selectedDirOption
+              ? t("common:sort.tooltip", "Sort by: {{key}} ({{dir}})", {
+                  key: selectedKeyOption.label,
+                  dir: selectedDirOption.label,
+                })
+              : t("common:sort.title", "Sort")
+          }
           icon={
             selectedDirOption && selectedDirOption.icon ? (
               <selectedDirOption.icon size={18} />
             ) : (
               <PiArrowsDownUpBold size={18} />
             )
-          }
-          ariaLabel="Sort"
-          title={
-            selectedKeyOption && selectedDirOption
-              ? `Sort by: ${selectedKeyOption.label} (${selectedDirOption.label})`
-              : "Sort"
           }
           variant="sort"
           onClick={() => {

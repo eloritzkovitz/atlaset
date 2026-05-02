@@ -39,9 +39,33 @@
     "countryLists": {
       "all": "הכל",
       "sovereign": "ריבוני",
-      "visited": "ביקרתי"
+      "visited": "ביקרתי",
+      "newList": "רשימה חדשה"
     },
-    "newList": "רשימה חדשה"
+    "lists": {
+      "editTitle": "ערוך רשימה",
+      "addTitle": "הוסף רשימה",
+      "nameLabel": "שם:",
+      "linkedWarning": "שינויים ברשימה זו יעדכנו את כל השכבות המקושרות אליה.",
+      "save": "שמירת שינויים",
+      "add": "הוסף רשימה",
+      "delete": "מחק רשימה"
+    },
+    "sort": {
+      "by": "מיין לפי",
+      "name": "שם",
+      "isoCode": "קוד ISO 3166-1",
+      "area": "שטח",
+      "population": "אוכלוסיה",
+      "visitCount": "מספר ביקורים",
+      "firstVisit": "ביקור ראשון",
+      "lastVisit": "ביקור אחרון"
+    },
+    "select": {
+      "label": "מדינות:",
+      "noneSelected": "לא נבחרו מדינות.",
+      "title": "בחר מדינות"
+    }
   },
   "layers": {
     "title": "שכבות",

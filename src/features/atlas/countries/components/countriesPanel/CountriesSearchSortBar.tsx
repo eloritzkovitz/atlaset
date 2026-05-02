@@ -167,8 +167,8 @@ export function CountriesSearchSortBar({
         ))}
         <ActionButton
           icon={<FaPlus />}
-          ariaLabel={t("countries.newList")}
-          title={t("countries.newList")}
+          ariaLabel={t("countries.lists.newList")}
+          title={t("countries.lists.newList")}
           variant="secondary"
           onClick={onAddList}
           className="!rounded-full !px-2"

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   FormField,
@@ -34,6 +35,7 @@ export function CountryListModal({
 }: CountryListModalProps) {
   const { countries } = useCountryData();
   const [countrySelectOpen, setCountrySelectOpen] = useState(false);
+  const { t } = useTranslation("atlas");
 
   // Handle modal close
   const handleClose = () => {
@@ -62,15 +64,17 @@ export function CountryListModal({
           title={
             <>
               <ICONS.countryLists />
-              {isEditing ? "Edit List" : "Add List"}
+              {isEditing
+                ? t("countries.lists.editTitle")
+                : t("countries.lists.addTitle")}
             </>
           }
           showSeparator
         >
           <ActionButton
             onClick={onClose}
-            ariaLabel="Close List Modal"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -84,7 +88,7 @@ export function CountryListModal({
           }}
         >
           <div className="p-4">
-            <FormField label="Name:">
+            <FormField label={t("countries.lists.nameLabel")}>
               <input
                 type="text"
                 name="name"
@@ -105,7 +109,7 @@ export function CountryListModal({
             {isEditing && isLinked && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">
                 <ICONS.info className="inline me-2" />
-                Changes to this list will update all layers linked to it.
+                {t("countries.lists.linkedWarning")}
               </div>
             )}
             <div className="flex items-center justify-end mt-6">
@@ -123,8 +127,12 @@ export function CountryListModal({
                     <ICONS.add className="inline" />
                   )
                 }
-                submitLabel={isEditing ? "Save Changes" : "Add List"}
-                deleteLabel="Delete List"
+                submitLabel={
+                  isEditing
+                    ? t("countries.lists.save")
+                    : t("countries.lists.add")
+                }
+                deleteLabel={t("countries.lists.delete")}
                 disabled={!isValid}
               />
             </div>
