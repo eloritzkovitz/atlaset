@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { ActionButton } from "@components";
 import type { Country } from "@features/countries";
+import { useTranslation } from "react-i18next";
 import { useKeyHandler } from "@hooks";
 import "./ResultMessage.css";
 
@@ -19,6 +20,7 @@ export function ResultMessage({
   answerLabel,
 }: ResultMessageProps) {
   const [animate, setAnimate] = useState(false);
+  const { t } = useTranslation("quizzes");
 
   // Trigger animation on result change
   useEffect(() => {
@@ -52,13 +54,13 @@ export function ResultMessage({
         ) : result ? (
           <>
             <FaCheckCircle className="text-success text-2xl animate-bounce" />
-            <span className="text-success font-bold">Correct!</span>
+            <span className="text-success font-bold">{t("play.result.correct")}</span>
           </>
         ) : (
           <>
             <FaTimesCircle className="text-danger text-2xl animate-shake" />
             <span className="text-danger font-bold">
-              Wrong! It was <b>{answerLabel ?? currentCountry.name}</b>
+              {t("play.result.wrongPrefix")} <b>{answerLabel ?? currentCountry.name}</b>
             </span>
           </>
         )}
@@ -71,10 +73,9 @@ export function ResultMessage({
           <ActionButton
             onClick={nextFlag}
             variant="primary"
-            aria-label="Next"
             rounded
           >
-            Next Flag
+            {t("play.nextFlag")}
           </ActionButton>
         )}
       </div>

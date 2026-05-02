@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Card } from "@components";
 import { useScoreFlashAnimation } from "../../hooks/useScoreFlashAnimation";
 import { useTimerFlashAnimation } from "../../hooks/useTimerFlashAnimation";
@@ -18,6 +19,7 @@ export function Scoreboard({
   streak,
   timeLeft,
 }: ScoreboardProps) {
+  const { t } = useTranslation("quizzes");
   const scoreClass = useScoreFlashAnimation(score);
   const streakClass = useScoreFlashAnimation(streak);
   const timeDanger = useTimerFlashAnimation(timeLeft);
@@ -27,21 +29,23 @@ export function Scoreboard({
       {typeof questionNumber === "number" &&
         typeof maxQuestions === "number" && (
           <span>
-            Question:{" "}
+            {t("play.scoreboard.question", "Question")}: {" "}
             <b>
               {questionNumber + 1}/{maxQuestions}
             </b>
           </span>
         )}
       <span className={scoreClass}>
-        Score: <b>{score}</b>
+        {t("play.scoreboard.score", "Score")}:{" "}
+        <b>{score}</b>
       </span>
       <span className={streakClass}>
-        Streak: <b>{streak}</b>
+        {t("play.scoreboard.streak", "Streak")}:{" "}
+        <b>{streak}</b>
       </span>
       {typeof timeLeft === "number" && (
         <span className={timeDanger ? "text-danger fast-pulse" : undefined}>
-          Time Left:{" "}
+          {t("play.scoreboard.timeLeft", "Time Left")}: {" "}
           <b>
             {Math.floor(timeLeft / 60)}:
             {(timeLeft % 60).toString().padStart(2, "0")}

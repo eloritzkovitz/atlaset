@@ -1,6 +1,7 @@
 import { ActionButton, InputBox } from "@components";
 import { useRef, useEffect } from "react";
 import { useKeyHandler } from "@hooks";
+import { useTranslation } from "react-i18next";
 
 interface GuessFormProps {
   guess: string;
@@ -23,6 +24,7 @@ export function GuessForm({
   placeholder = "Enter country name",
 }: GuessFormProps) {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation("quizzes");
 
   // Autofocus on mount and when enabled changes
   useEffect(() => {
@@ -45,8 +47,8 @@ export function GuessForm({
       <InputBox
         ref={inputRef}
         type="text"
-        placeholder={placeholder}
-        aria-label={placeholder}
+        placeholder={t("play.placeholder", placeholder)}
+        aria-label={t("play.placeholder", placeholder)}
         value={guess}
         onChange={(e: { target: { value: string } }) =>
           setGuess(e.target.value)
@@ -58,33 +60,33 @@ export function GuessForm({
         <ActionButton
           type="submit"
           variant="primary"
-          aria-label="Submit guess"
+          aria-label={t("play.form.submit", "Submit guess")}
           disabled={disabled}
           className="!text-2xl"
           rounded
         >
-          Guess
+          {t("play.form.guess", "Guess")}
         </ActionButton>
         <ActionButton
           type="button"
           variant="secondary"
-          aria-label="Skip flag"
+          aria-label={t("play.form.skip", "Skip flag")}
           onClick={skipFlag}
           disabled={disabled}
           className="!text-2xl"
           rounded
         >
-          Skip
+          {t("play.form.skip", "Skip")}
         </ActionButton>
         <ActionButton
           type="button"
           variant="secondary"
-          aria-label="Forfeit"
+          aria-label={t("play.form.forfeit", "Forfeit")}
           onClick={handleForfeit}
           className="px-4 py-2  !bg-danger/70 !text-2xl hover:!bg-danger-hover transition"
           rounded
         >
-          Forfeit
+          {t("play.form.forfeit", "Forfeit")}
         </ActionButton>
       </div>
     </form>

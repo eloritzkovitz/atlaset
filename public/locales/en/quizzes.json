@@ -1,0 +1,104 @@
+{
+  "pageTitle": "Quizzes",
+  "lobby": {
+    "cards": {
+      "flag": {
+        "title": "Guess the Flag",
+        "description": "Can you identify the country by its flag?"
+      },
+      "capital": {
+        "title": "Guess the Capital",
+        "description": "Test your knowledge of world capitals!"
+      },
+      "leaderboards": {
+        "title": "Leaderboards",
+        "description": "See top scores and streaks!"
+      }
+    },
+    "settings": {
+      "selectDifficulty": "Select Difficulty",
+      "selectDifficultyPlaceholder": "Select a difficulty to see details.",
+      "selectGameMode": "Select Game Mode",
+      "startQuiz": "Start Quiz",
+      "cancel": "Cancel",
+      "levels": {
+        "easy": {
+          "label": "Easy",
+          "description": "Familiar countries you likely know."
+        },
+        "medium": {
+          "label": "Medium",
+          "description": "A mix of common and less-known countries."
+        },
+        "hard": {
+          "label": "Hard",
+          "description": "Challenging countries that will test your knowledge!"
+        },
+        "expert": {
+          "label": "Expert",
+          "description": "Obscure countries and dependencies, only for true experts!"
+        }
+      },
+      "modes": {
+        "sandbox": {
+          "label": "Sandbox",
+          "description": "No timer, practice freely."
+        },
+        "timed": {
+          "label": "Timed",
+          "description": "Race against the clock!"
+        }
+      }
+    }
+  },
+  "play": {
+    "titles": {
+      "flag": "Guess the Flag!",
+      "capital": "Guess the Capital!"
+    },
+    "scoreboard": {
+      "question": "Question",
+      "score": "Score",
+      "streak": "Streak",
+      "timeLeft": "Time Left"
+    },
+    "form": {
+      "placeholder": "Enter country name",
+      "capitalPlaceholder": "Enter the capital city",
+      "submit": "Submit guess",
+      "guess": "Guess",
+      "skip": "Skip",
+      "forfeit": "Forfeit",
+      "confirm": {
+        "forfeit": {
+          "title": "Are you sure?",
+          "message": "Do you really want to forfeit this quiz? Your progress will be lost.",
+          "submit": "Forfeit",
+          "cancel": "Cancel"
+        }
+      }
+    },
+    "result": {
+      "correct": "Correct!",
+      "wrongPrefix": "Wrong! It was"
+    },
+    "nextFlag": "Next Flag"
+  },
+  "noCountries": {
+    "capital": "No countries with a capital found.",
+    "flag": "No countries with their own flag found."
+  },
+  "leaderboards": {
+    "table": {
+      "headers": {
+        "rank": "#",
+        "player": "Player",
+        "score": "Score",
+        "maxStreak": "Max Streak",
+        "time": "Time",
+        "date": "Date"
+      },
+      "noScores": "No scores found."
+    }
+  }
+}

@@ -1,3 +1,4 @@
+import i18n, { type TOptions } from "i18next";
 import countryDifficultyRaw from "../constants/countryDifficulty.json";
 import {
   CountryFlag,
@@ -21,6 +22,16 @@ export function getCapitalQuizProps(
   difficulty?: Difficulty,
   gameMode?: string,
 ) {
+  const t = (k: string, opts?: TOptions): string => {
+    const res = i18n.t(k, { ns: "quizzes", ...opts }) as unknown;
+    if (typeof res === "string") return res;
+    try {
+      return JSON.stringify(res);
+    } catch {
+      return String(res);
+    }
+  };
+
   return createQuizProps({
     filterFn: (countries: Country[]) => filterByProperty(countries, "capital"),
     checkAnswer: (guess: string, country: Country) => {
@@ -42,8 +53,8 @@ export function getCapitalQuizProps(
         </>
       ),
       resultLabel: (country: Country) => country.capital,
-      noCountriesMessage: "No countries with a capital found.",
-      guessPlaceholder: "Enter the capital city",
+      noCountriesMessage: t("play.noCountries.capital", { ns: "quizzes" }),
+      guessPlaceholder: t("play.form.capitalPlaceholder", { ns: "quizzes" }),
     },
     difficulty,
     gameMode,
@@ -57,6 +68,16 @@ export function getCapitalQuizProps(
  * @returns Quiz props for Flag Quiz
  */
 export function getFlagQuizProps(difficulty?: Difficulty) {
+  const t = (k: string, opts?: TOptions): string => {
+    const res = i18n.t(k, { ns: "quizzes", ...opts }) as unknown;
+    if (typeof res === "string") return res;
+    try {
+      return JSON.stringify(res);
+    } catch {
+      return String(res);
+    }
+  };
+
   return createQuizProps({
     filterFn: getCountriesWithOwnFlag,
     checkAnswer: (guess: string, country: Country) => {
@@ -77,8 +98,8 @@ export function getFlagQuizProps(difficulty?: Difficulty) {
           className="block mx-auto mb-8 h-40 w-auto"
         />
       ),
-      noCountriesMessage: "No countries with their own flag found.",
-      guessPlaceholder: "Enter the country name",
+      noCountriesMessage: t("play.noCountries.flag", { ns: "quizzes" }),
+      guessPlaceholder: t("play.form.placeholder", { ns: "quizzes" }),
     },
     difficulty,
     countryDifficultyMap: countryDifficulty,

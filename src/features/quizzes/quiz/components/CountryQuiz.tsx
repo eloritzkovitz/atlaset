@@ -5,6 +5,7 @@ import {
   type SetStateAction,
 } from "react";
 import { ConfirmModal } from "@components";
+import { useTranslation } from "react-i18next";
 import { useCountryData, type Country } from "@features/countries";
 import { useQuiz } from "../hooks/useQuiz";
 import { GuessForm } from "../layout/GuessForm";
@@ -16,7 +17,7 @@ import type { Difficulty, QuizType } from "../../types";
 export interface CountryQuizProps {
   filterCountries: (countries: Country[], difficulty?: Difficulty) => Country[];
   getNextCountry: (
-    countries: Country[]
+    countries: Country[],
   ) => (prevCountry: Country | null) => Country | null;
   checkAnswer: (guess: string, country: Country) => boolean;
   prompt: (country: Country) => ReactNode;
@@ -62,6 +63,8 @@ export function CountryQuiz({
 }: CountryQuizProps) {
   const { countries } = useCountryData();
   const quizCountries = filterCountries(countries, difficulty);
+
+  const { t } = useTranslation("quizzes");
 
   // Get next country for quiz using utility
   const getNext = makeGetNext(getNextCountry, quizCountries);
@@ -114,7 +117,9 @@ export function CountryQuiz({
 
   // Determine title based on type
   const quizTitle =
-    type === "capital" ? "Guess the Capital!" : "Guess the Flag!";
+    type === "capital"
+      ? t("play.titles.capital", "Guess the Capital!")
+      : t("play.titles.flag", "Guess the Flag!");
 
   return (
     <>
@@ -165,12 +170,15 @@ export function CountryQuiz({
         <ConfirmModal
           isOpen={showConfirm}
           showWarningIcon={true}
-          messageTitle="Are you sure?"
-          message="Do you really want to forfeit this quiz? Your progress will be lost."
+          messageTitle={t("play.form.confirm.forfeit.title", "Are you sure?")}
+          message={t(
+            "play.form.confirm.forfeit.message",
+            "Do you really want to forfeit this quiz? Your progress will be lost.",
+          )}
           onConfirm={handleConfirmForfeit}
           onCancel={handleCancelForfeit}
-          submitLabel="Forfeit"
-          cancelLabel="Cancel"
+          submitLabel={t("play.form.confirm.forfeit.submit", "Forfeit")}
+          cancelLabel={t("play.form.confirm.forfeit.cancel", "Cancel")}
         />
       )}
     </>
