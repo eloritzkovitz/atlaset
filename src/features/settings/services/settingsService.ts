@@ -46,6 +46,19 @@ export const settingsService = {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
+
+      // Check if settings have actually changed to avoid unnecessary writes and activity logs
+      const snapshot = await getDoc(settingsDoc);
+      const newData = { ...settingsWithId } as Record<string, unknown>;
+      delete newData.id;
+      const existingData = snapshot.exists()
+        ? (snapshot.data() as Record<string, unknown>)
+        : null;
+      const same =
+        existingData &&
+        JSON.stringify(existingData) === JSON.stringify(newData);
+      if (same) return;
+
       await setDoc(settingsDoc, settingsWithId);
       await logUserActivity(
         130,
@@ -53,9 +66,15 @@ export const settingsService = {
           settings: settingsWithId,
           userName: user!.displayName,
         },
-        user!.uid
+        user!.uid,
       );
     } else {
+      const existing = await appDb.settings.get("main");
+      if (
+        existing &&
+        JSON.stringify(existing) === JSON.stringify(settingsWithId)
+      )
+        return;
       await appDb.settings.put(settingsWithId);
     }
   },

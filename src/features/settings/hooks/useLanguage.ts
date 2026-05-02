@@ -1,6 +1,13 @@
 import i18n from "i18next";
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState, useEffect, useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import type { AppDispatch } from "@app/store";
+import { useDebounce } from "@hooks";
+import { selectSettings, saveSettings } from "@features/settings";
+import { selectSettingsReady } from "@features/settings/selectors";
+import type { Settings } from "@features/settings/types";
+import { useAuth } from "@features/user";
 
 const RTL_LANGS = ["ar", "fa", "he", "ur"];
 
@@ -16,28 +23,83 @@ export function isRtl(lang?: string | null) {
 
 /**
  * Manages the current language state and provides functions to change or toggle the language.
- * @returns An object containing the current language code, its display name, and functions to change or toggle the language.
  */
 export function useLanguage() {
   const { t } = useTranslation("common");
+  const { user } = useAuth();
 
-  // Extract the base language code
-  const current = (i18n.language || "en").split("-")[0];
+  const initial = (i18n.language || "en").split("-")[0];
+  const [current, setCurrent] = useState<string>(initial);
 
-  // Get the display name of the current language
-  const name = useMemo(() => t(`languages.${current}`), [t, current]);
+  // Debounce writes to Firestore to avoid rapid updates
+  const debouncedLang = useDebounce(current, 500);
+  const settings = useSelector(selectSettings) as Settings;
+  const dispatch = useDispatch<AppDispatch>();
 
-  // Change language
-  const change = useCallback((lng: string) => i18n.changeLanguage(lng), []);
+  const settingsReady = useSelector(selectSettingsReady);
 
-  // Toggle between languages
+  const appliedInitialRef = useRef(false);
+
+  // Reset applied flag when user changes
+  useEffect(() => {
+    if (!user) appliedInitialRef.current = false;
+  }, [user]);
+
+  // Load persisted language from settings on mount or when user changes
+  useEffect(() => {
+    if (!user || !settingsReady) return;
+    const stored = settings?.account?.language;
+    if (appliedInitialRef.current) return;
+    (async () => {
+      if (stored && typeof stored === "string") {
+        setCurrent(stored.split("-")[0]);
+        await i18n.changeLanguage(stored);
+        appliedInitialRef.current = true;
+      }
+    })().catch(() => {});
+  }, [user, settingsReady, settings?.account?.language]);
+
+  // Persist debounced language via Redux saveSettings
+  useEffect(() => {
+    if (!user) return;
+    if (!debouncedLang) return;
+    (async () => {
+      try {
+        await dispatch(
+          saveSettings({
+            account: { language: debouncedLang },
+          } as Partial<Settings>),
+        );
+      } catch {
+        // ignore
+      }
+    })();
+  }, [debouncedLang, user, dispatch]);
+
+  // change language (immediate)
+  const change = useCallback(async (lng: string) => {
+    const base = (lng || "en").split("-")[0];
+    setCurrent(base);
+    await i18n.changeLanguage(lng);
+  }, []);
+
   const toggle = useCallback(() => {
     const next = current === "he" ? "en" : "he";
     return change(next);
   }, [current, change]);
 
-  // Determine if the current language is RTL
+  const name = useMemo(() => t(`languages.${current}`), [t, current]);
   const isRtl = useMemo(() => RTL_LANGS.includes(current), [current]);
+
+  // Update document language and direction when current language changes
+  useEffect(() => {
+    try {
+      document.documentElement.lang = current;
+      document.documentElement.dir = isRtl ? "rtl" : "ltr";
+    } catch {
+      // ignore (non-browser environments)
+    }
+  }, [current, isRtl]);
 
   return { current, name, change, toggle, isRtl } as const;
 }

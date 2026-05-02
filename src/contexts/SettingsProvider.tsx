@@ -1,13 +1,11 @@
 import { useEffect, useRef, type PropsWithChildren } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  isRtl,
   loadSettings,
   saveSettings,
   resetSettingsThunk,
   selectSettings,
   selectSettingsLoading,
-  useLanguage,
 } from "@features/settings";
 import { selectSettingsReady } from "@features/settings/selectors";
 import { selectAuthReady, selectAuthUser } from "@features/user";
@@ -41,17 +39,6 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
     const theme = settings.display?.theme ?? "dark";
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [settings.display?.theme]);
-
-  // Set document language and direction based on current language
-  const { current } = useLanguage();
-  useEffect(() => {
-    try {
-      document.documentElement.lang = current;
-      document.documentElement.dir = isRtl(current) ? "rtl" : "ltr";
-    } catch {
-      // ignore (non-browser)
-    }
-  }, [current]);
 
   // Update settings via Redux
   const updateSettings = async (
