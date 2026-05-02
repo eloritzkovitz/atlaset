@@ -1,0 +1,87 @@
+{
+  "title": "הגדרות",
+  "menu": {
+    "account": "חשבון",
+    "sound": "צליל",
+    "display": "תצוגה",
+    "privacy": "פרטיות",
+    "security": "אבטחה"
+  },
+  "account": {
+    "title": "הגדרות חשבון",
+    "profile": {
+      "title": "פרופיל",
+      "info": "מידע על הפרופיל",
+      "edit": "ערוך",
+      "editAria": "ערוך פרופיל"
+    },
+    "homeCountry": {
+      "title": "מדינת מגורים",
+      "selectAria": "בחר מדינת מגורים",
+      "none": "לא נבחרה מדינה"
+    },
+    "language": {
+      "title": "שפה",
+      "selectAria": "בחר שפה",
+      "label": {
+        "en": "English",
+        "he": "עברית"
+      }
+    },
+    "management": {
+      "title": "ניהול חשבון",
+      "dangerZone": "אזור מסוכן",
+      "hibernate": "השבתת חשבון",
+      "hibernating": "מושבת...",
+      "hibernateAria": "השבת חשבון",
+      "delete": "מחק חשבון",
+      "deleting": "מוחק...",
+      "deleteAria": "מחק חשבון",
+      "deleteWarning": "פעולה זו תמחק לצמיתות את החשבון וכל הנתונים המשויכים.",
+      "hibernateConfirm": {
+        "title": "להשבית את החשבון?",
+        "message": "האם אתה בטוח שברצונך להשבית את החשבון? ניתן להפעיל מחדש בהתחברות שוב."
+      },
+      "deleteConfirm": {
+        "title": "למחוק את החשבון?",
+        "message": "האם אתה בטוח שברצונך למחוק את החשבון? פעולה זו אינה ניתנת לשחזור."
+      }
+    }
+  },
+  "sound": {
+    "title": "הגדרות צליל",
+    "effects": {
+      "title": "אפקטי קול",
+      "enable": "אפשר אפקטי קול",
+      "volume": "עוצמה"
+    }
+  },
+  "display": {
+    "title": "הגדרות תצוגה",
+    "theme": {
+      "title": "ערכת נושא",
+      "dark": "כהה",
+      "light": "בהיר"
+    },
+    "current": "ערכת נושא נוכחית:"
+  },
+  "security": {
+    "title": "אבטחה",
+    "email": "דוא\u0022ל",
+    "noEmail": "אין דוא\u0022ל",
+    "accountCreated": "חשבון נוצר ב",
+    "lastLogin": "כניסה אחרונה",
+    "noLoginRecorded": "לא נרשמה כניסה",
+    "lastLoginMethod": "שיטת כניסה אחרונה",
+    "unknown": "לא ידוע",
+    "loggedInDevices": "מכשירים מחוברים",
+    "devicesLabel": "מכשירים",
+    "devicesNone": "אין מכשירים פעילים",
+    "device": "מכשיר",
+    "lastActive": "פעיל לאחרונה: {{date}}",
+    "actions": {
+      "endSession": "סיים את הההפעלה",
+      "endSessionTitle": "סיים הפעלה זו"
+    }
+  }
+}

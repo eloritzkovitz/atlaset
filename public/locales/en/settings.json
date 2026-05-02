@@ -1,0 +1,87 @@
+{
+  "title": "Settings",
+  "menu": {
+    "account": "Account",
+    "sound": "Sound",
+    "display": "Display",
+    "privacy": "Privacy",
+    "security": "Security"
+  },
+  "account": {
+    "title": "Account Settings",
+    "profile": {
+      "title": "Profile",
+      "info": "Profile information",
+      "edit": "Edit",
+      "editAria": "Edit profile"
+    },
+    "homeCountry": {
+      "title": "Home Country",
+      "selectAria": "Select home country",
+      "none": "No country selected"
+    },
+    "language": {
+      "title": "Language",
+      "selectAria": "Select language",
+      "label": {
+        "en": "English",
+        "he": "עברית"
+      }
+    },
+    "management": {
+      "title": "Account Management",
+      "dangerZone": "Danger Zone",
+      "hibernate": "Hibernate Account",
+      "hibernating": "Hibernating...",
+      "hibernateAria": "Hibernate account",
+      "delete": "Delete Account",
+      "deleting": "Deleting...",
+      "deleteAria": "Delete account",
+      "deleteWarning": "This will permanently delete your account and all associated data.",
+      "hibernateConfirm": {
+        "title": "Hibernate account?",
+        "message": "Are you sure you want to deactivate your account? You can reactivate by logging in again."
+      },
+      "deleteConfirm": {
+        "title": "Delete account?",
+        "message": "Are you sure you want to delete your account? This action cannot be undone."
+      }
+    }
+  },
+  "sound": {
+    "title": "Sound Settings",
+    "effects": {
+      "title": "Sound Effects",
+      "enable": "Enable Sound Effects",
+      "volume": "Volume"
+    }
+  },
+  "display": {
+    "title": "Display Settings",
+    "theme": {
+      "title": "Theme",
+      "dark": "Dark",
+      "light": "Light"
+    },
+    "current": "Current theme:"
+  },
+  "security": {
+    "title": "Security",
+    "email": "Email",
+    "noEmail": "No email",
+    "accountCreated": "Account Created",
+    "lastLogin": "Last Login",
+    "noLoginRecorded": "No login recorded",
+    "lastLoginMethod": "Last Login Method",
+    "unknown": "Unknown",
+    "loggedInDevices": "Logged-in Devices",
+    "devicesLabel": "Devices",
+    "devicesNone": "No active devices",
+    "device": "Device",
+    "lastActive": "Last active: {{date}}",
+    "actions": {
+      "endSession": "End Session",
+      "endSessionTitle": "End this session"
+    }
+  }
+}

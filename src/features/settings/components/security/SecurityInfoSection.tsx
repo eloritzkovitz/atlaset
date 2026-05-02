@@ -13,8 +13,10 @@ import { getUserCollection } from "@utils/firebase";
 import { getTimestamp } from "@utils/date";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
+import { useTranslation } from "react-i18next";
 
 export function SecurityInfoSection() {
+  const { t } = useTranslation("settings");
   const { user } = useAuth();
   const { activity } = useUserActivity();
   const devices = useUserDevices(user?.uid);
@@ -43,27 +45,32 @@ export function SecurityInfoSection() {
 
   return (
     <section className="mb-8">
-      <h2 className="text-2xl font-bold mb-6 self-start">Security</h2>
+      <h2 className="text-2xl font-bold mb-6 self-start">
+        {t("security.title")}
+      </h2>
       <ul className="space-y-4">
-        <SecurityInfoRow label="Email" value={user?.email || "No email"} />
         <SecurityInfoRow
-          label="Account Created"
+          label={t("security.email")}
+          value={user?.email || t("security.noEmail")}
+        />
+        <SecurityInfoRow
+          label={t("security.accountCreated")}
           value={
             user?.metadata?.creationTime
               ? new Date(user.metadata.creationTime).toLocaleString()
-              : "Unknown"
+              : t("security.unknown")
           }
         />
         <SecurityInfoRow
-          label="Last Login"
+          label={t("security.lastLogin")}
           value={
             lastLogin
               ? new Date(lastLogin.timestamp).toLocaleString()
-              : "No login recorded"
+              : t("security.noLoginRecorded")
           }
         />
         <SecurityInfoRow
-          label="Last Login Method"
+          label={t("security.lastLoginMethod")}
           value={
             lastLogin &&
             lastLogin.details &&
@@ -71,16 +78,19 @@ export function SecurityInfoSection() {
             "method" in lastLogin.details &&
             typeof lastLogin.details.method === "string"
               ? capitalize(lastLogin.details.method)
-              : "Unknown"
+              : t("security.unknown")
           }
         />
       </ul>
       <h2 className="text-2xl font-bold mb-6 mt-8 self-start">
-        Logged-in Devices
+        {t("security.loggedInDevices")}
       </h2>
       <ul className="space-y-4">
         {devices.length === 0 ? (
-          <SecurityInfoRow label="Devices" value="No active devices" />
+          <SecurityInfoRow
+            label={t("security.devicesLabel")}
+            value={t("security.devicesNone")}
+          />
         ) : (
           devices.map((device) => (
             <SecurityInfoRow
@@ -89,26 +99,28 @@ export function SecurityInfoSection() {
                 <span className="flex items-center">
                   {getDeviceIcon(device)}
                   <span className="text">
-                    {device.deviceName || device.userAgent || "Device"}
+                    {device.deviceName ||
+                      device.userAgent ||
+                      t("security.device")}
                   </span>
                 </span>
               }
               value={
                 <div className="flex items-center min-w-[20rem] mx-4">
                   {device.lastActive
-                    ? `Last active: ${new Date(
-                        device.lastActive,
-                      ).toLocaleString()}`
-                    : "Unknown"}
+                    ? t("security.lastActive", {
+                        date: new Date(device.lastActive).toLocaleString(),
+                      })
+                    : t("security.unknown")}
                   <ActionButton
                     variant="primary"
                     className="text-white !rounded-xl"
                     icon={<FaPowerOff size={18} />}
-                    title="End this session"
-                    ariaLabel="End session"
+                    title={t("security.actions.endSessionTitle")}
+                    ariaLabel={t("security.actions.endSession")}
                     onClick={() => handleRemoveDevice(device.id)}
                   >
-                    End Session
+                    {t("security.actions.endSession")}
                   </ActionButton>
                 </div>
               }

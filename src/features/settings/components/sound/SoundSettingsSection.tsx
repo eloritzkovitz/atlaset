@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FaVolumeHigh } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { Checkbox } from "@components";
 import { useDebounce } from "@hooks";
 import { SettingsCard } from "../SettingsCard";
 import { useSoundSettings } from "../../hooks/useSoundSettings";
 
 export function SoundSettingsSection() {
+  const { t } = useTranslation("settings");
   const [sound, setSound] = useSoundSettings();
   const [localVolume, setLocalVolume] = useState(sound.soundEffectsVolume);
   const debouncedVolume = useDebounce(localVolume, 150);
@@ -32,8 +34,8 @@ export function SoundSettingsSection() {
 
   return (
     <div className="mx-auto w-full flex flex-col items-center">
-      <h2 className="text-2xl font-bold mb-6 self-start">Sound Settings</h2>
-      <SettingsCard title="Sound Effects" icon={<FaVolumeHigh />}>
+      <h2 className="text-2xl font-bold mb-6 self-start">{t("sound.title")}</h2>
+      <SettingsCard title={t("sound.effects.title")} icon={<FaVolumeHigh />}>
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-center gap-4 mb-2">
             <Checkbox
@@ -41,12 +43,12 @@ export function SoundSettingsSection() {
               onChange={handleEnabledChange}
             />
             <label htmlFor="sound-enabled" className="settings-label">
-              Enable Sound Effects
+              {t("sound.effects.enable")}
             </label>
           </div>
           <div className="flex items-center gap-4 mt-2">
             <label htmlFor="sound-volume" className="settings-label">
-              Volume
+              {t("sound.effects.volume")}
             </label>
             <input
               id="sound-volume"

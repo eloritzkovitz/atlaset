@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaPowerOff, FaTrash, FaUserGear } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { SettingsCard } from "../SettingsCard";
@@ -8,6 +9,7 @@ import { useAccountManagement } from "../../hooks/useAccountManagement";
 export function AccountManagementSection() {
   const { user } = useAuth();
   const [modal, setModal] = useState<"hibernate" | "delete" | null>(null);
+  const { t } = useTranslation("settings");
 
   const {
     hibernating,
@@ -19,59 +21,65 @@ export function AccountManagementSection() {
   } = useAccountManagement(user);
 
   return (
-    <SettingsCard title="Account Management" icon={<FaUserGear />}>
+    <SettingsCard title={t("account.management.title")} icon={<FaUserGear />}>
       <div className="flex flex-col gap-2">
-        <span className="text-danger font-medium">Danger Zone</span>
+        <span className="text-danger font-medium">
+          {t("account.management.dangerZone")}
+        </span>
         <ActionButton
           variant="secondary"
           className="!bg-warning !hover:bg-warning-hover text-white w-fit"
-          icon={<FaPowerOff />}
           disabled={hibernating || deleting}
           onClick={() => setModal("hibernate")}
-          ariaLabel="Hibernate Account"
-          title="Hibernate Account"
+          ariaLabel={t("account.management.hibernateAria")}
+          title={t("account.management.hibernate")}
         >
-          {hibernating ? "Hibernating..." : "Hibernate Account"}
+          {<FaPowerOff />}
+          {hibernating
+            ? t("account.management.hibernating")
+            : t("account.management.hibernate")}
         </ActionButton>
         <ActionButton
           variant="primary"
           className="!bg-danger !hover:bg-danger-hover text-white w-fit"
-          icon={<FaTrash />}
           disabled={deleting}
           onClick={() => setModal("delete")}
-          ariaLabel="Delete Account"
-          title="Delete Account"
+          ariaLabel={t("account.management.deleteAria")}
+          title={t("account.management.delete")}
         >
-          {deleting ? "Deleting..." : "Delete Account"}
+          {<FaTrash />}
+          {deleting
+            ? t("account.management.deleting")
+            : t("account.management.delete")}
         </ActionButton>
         {error && <span className="text-danger text-sm">{error}</span>}
         {success && <span className="text-success text-sm">{success}</span>}
         <span className="text-xs text-danger">
-          This will permanently delete your account and all associated data.
+          {t("account.management.deleteWarning")}
         </span>
       </div>
 
       {/* Hibernate Modal */}
       <ConfirmModal
         isOpen={modal === "hibernate"}
-        title="Hibernate account?"
-        message="Are you sure you want to deactivate your account? You can reactivate by logging in again."
+        title={t("account.management.hibernateConfirm.title")}
+        message={t("account.management.hibernateConfirm.message")}
         onConfirm={handleHibernate}
         onCancel={() => setModal(null)}
-        submitLabel="Hibernate"
-        cancelLabel="Cancel"
+        submitLabel={t("account.management.hibernate")}
+        cancelLabel={t("actions.cancel")}
         submitIcon={<FaPowerOff />}
       />
 
       {/* Delete Modal */}
       <ConfirmModal
         isOpen={modal === "delete"}
-        title="Delete account?"
-        message="Are you sure you want to delete your account? This action cannot be undone."
+        title={t("account.management.deleteConfirm.title")}
+        message={t("account.management.deleteConfirm.message")}
         onConfirm={handleDelete}
         onCancel={() => setModal(null)}
-        submitLabel="Delete"
-        cancelLabel="Cancel"
+        submitLabel={t("account.management.delete")}
+        cancelLabel={t("actions.cancel")}
         submitIcon={<FaTrash />}
       />
     </SettingsCard>
