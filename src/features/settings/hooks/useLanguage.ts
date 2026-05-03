@@ -1,13 +1,13 @@
 import i18n from "i18next";
-import { useTranslation } from "react-i18next";
 import { useCallback, useMemo, useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch } from "@app/store";
-import { useDebounce } from "@hooks";
-import { selectSettings, saveSettings } from "@features/settings";
-import { selectSettingsReady } from "@features/settings/selectors";
-import type { Settings } from "@features/settings/types";
 import { useAuth } from "@features/user";
+import { useDebounce } from "@hooks";
+import { selectSettings, saveSettings } from "../slices/settingsSlice";
+import { selectSettingsReady } from "../selectors";
+import type { Settings } from "../types";
 
 const RTL_LANGS = ["ar", "fa", "he", "ur"];
 

@@ -1,6 +1,5 @@
+import { useEffect, type ReactNode } from "react";
 import { useUIHintContext } from "@contexts/UIHintContext";
-import { useEffect } from "react";
-import type { ReactNode } from "react";
 
 interface UiHintOptions {
   style?: React.CSSProperties;
@@ -23,7 +22,7 @@ interface UiHintContent {
 export function useUiHint(
   content: UiHintContent | null,
   duration = 4000,
-  options: UiHintOptions
+  options: UiHintOptions,
 ) {
   const { addHint, removeHint } = useUIHintContext();
   const { key, style, position, dismissable } = options;
