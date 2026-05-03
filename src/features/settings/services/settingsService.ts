@@ -6,6 +6,9 @@ import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../types";
 import { logUserActivity } from "../../../features/user";
 
+// In-memory dedupe cache to avoid rapid duplicate saves/logs across callers
+let _lastSaved: { key?: string; ts?: number } = {};
+
 /**
  * Service for managing user settings.
  */
@@ -47,19 +50,35 @@ export const settingsService = {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
 
-      // Check if settings have actually changed to avoid unnecessary writes and activity logs
-      const snapshot = await getDoc(settingsDoc);
+      // Prepare payload shape for comparison (exclude id)
       const newData = { ...settingsWithId } as Record<string, unknown>;
       delete newData.id;
+
+      // Check persisted snapshot first to avoid unnecessary writes and activity logs
+      const snapshot = await getDoc(settingsDoc);
       const existingData = snapshot.exists()
         ? (snapshot.data() as Record<string, unknown>)
         : null;
-      const same =
+      const samePersisted =
         existingData &&
         JSON.stringify(existingData) === JSON.stringify(newData);
-      if (same) return;
+      if (samePersisted) return;
+
+      // Dedupe recent identical save attempts that may race before backend reflects the write
+      const dedupeKey = JSON.stringify(newData);
+      if (
+        _lastSaved.key === dedupeKey &&
+        _lastSaved.ts &&
+        Date.now() - _lastSaved.ts < 5000
+      ) {
+        return;
+      }
 
       await setDoc(settingsDoc, settingsWithId);
+
+      // update cache to avoid immediate duplicate writes from other callers
+      _lastSaved = { key: dedupeKey, ts: Date.now() };
+
       await logUserActivity(
         130,
         {
