@@ -11,7 +11,7 @@ import type { Settings } from "../types";
 
 export const loadSettings = createAsyncThunk(
   "settings/load",
-  async () => await settingsService.load()
+  async () => await settingsService.load(),
 );
 
 export const saveSettings = createAsyncThunk(
@@ -19,9 +19,21 @@ export const saveSettings = createAsyncThunk(
   async (updates: Partial<Settings>, { getState }) => {
     const state = (getState() as RootState).settings.settings;
     const newSettings = { ...state, ...updates, id: "main" };
+
+    // Avoid unnecessary saves: if merged settings are identical to current state, skip persistence
+    try {
+      const currentJson = JSON.stringify(state || {});
+      const newJson = JSON.stringify(newSettings || {});
+      if (currentJson === newJson) {
+        return state;
+      }
+    } catch (e) {
+      // If serialization fails, fall back to attempting save
+    }
+
     await settingsService.save(newSettings);
     return newSettings;
-  }
+  },
 );
 
 export const resetSettingsThunk = createAsyncThunk(
@@ -29,7 +41,7 @@ export const resetSettingsThunk = createAsyncThunk(
   async () => {
     await settingsService.save(defaultSettings);
     return defaultSettings;
-  }
+  },
 );
 
 const initialState = {
@@ -54,7 +66,7 @@ const settingsSlice = createSlice({
           state.settings = action.payload;
           state.loading = false;
           state.ready = true;
-        }
+        },
       )
       .addCase(loadSettings.rejected, (state) => {
         state.loading = false;
@@ -64,18 +76,19 @@ const settingsSlice = createSlice({
         saveSettings.fulfilled,
         (state, action: PayloadAction<Settings>) => {
           state.settings = action.payload;
-        }
+        },
       )
       .addCase(
         resetSettingsThunk.fulfilled,
         (state, action: PayloadAction<Settings>) => {
           state.settings = action.payload;
-        }
+        },
       );
   },
 });
 
 export const selectSettings = (state: RootState) => state.settings.settings;
-export const selectSettingsLoading = (state: RootState) => state.settings.loading;
+export const selectSettingsLoading = (state: RootState) =>
+  state.settings.loading;
 // selectSettingsReady is now in ../selectors
 export default settingsSlice.reducer;
