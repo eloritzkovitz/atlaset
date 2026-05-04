@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   Checkbox,
@@ -43,6 +44,7 @@ export function TripModal({
   isEditing,
 }: TripModalProps) {
   const { countries } = useCountryData();
+  const { t } = useTranslation("trips");
   const [countryModalOpen, setCountryModalOpen] = useState(false);
 
   // Dropdown options
@@ -92,15 +94,15 @@ export function TripModal({
           title={
             <>
               <ICONS.trips />
-              {isEditing ? "Edit Trip" : "Add Trip"}
+              {isEditing ? t("modal.titleEdit") : t("modal.titleAdd")}
             </>
           }
           showSeparator={true}
         >
           <ActionButton
             onClick={onClose}
-            ariaLabel="Close"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -116,7 +118,7 @@ export function TripModal({
           <div className="flex flex-row w-full flex-1">
             {/* Left: Form fields */}
             <div className="p-4 min-w-0 flex flex-col gap-2 basis-[60%]">
-              <FormField label="Name">
+              <FormField label={t("modal.form.name")}>
                 <InputBox
                   value={trip.name}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
@@ -125,7 +127,10 @@ export function TripModal({
                   required
                 />
               </FormField>
-              <FormField label="Start Date" disabled={isTentative}>
+              <FormField
+                label={t("modal.form.startDate")}
+                disabled={isTentative}
+              >
                 <DateSelect
                   value={trip.startDate ?? ""}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,7 +145,7 @@ export function TripModal({
                   required={!isTentative}
                 />
               </FormField>
-              <FormField label="End Date" disabled={isTentative}>
+              <FormField label={t("modal.form.endDate")} disabled={isTentative}>
                 <DateSelect
                   value={trip.endDate ?? ""}
                   min={trip.startDate || undefined}
@@ -153,7 +158,7 @@ export function TripModal({
               </FormField>
               <FormField label="">
                 <Checkbox
-                  label="Tentative Dates"
+                  label={t("modal.form.tentativeDates")}
                   checked={isTentative}
                   onChange={(tentative) => {
                     setIsTentative(tentative);
@@ -167,7 +172,10 @@ export function TripModal({
                   }}
                 />
               </FormField>
-              <FormField label="Full Days" disabled={isTentative}>
+              <FormField
+                label={t("modal.form.fullDays")}
+                disabled={isTentative}
+              >
                 <NumberInput
                   label=""
                   value={trip.fullDays ?? 1}
@@ -178,7 +186,7 @@ export function TripModal({
                   disabled={isTentative}
                 />
               </FormField>
-              <FormField label="Participants">
+              <FormField label={t("modal.form.participants")}>
                 <DropdownSelectInput
                   value={trip.participants || []}
                   onChange={(v) =>
@@ -192,11 +200,11 @@ export function TripModal({
                     })
                   }
                   options={participantOptions}
-                  placeholder="Select participants"
+                  placeholder={t("modal.form.selectParticipants")}
                   isMulti
                 />
               </FormField>
-              <FormField label="Categories">
+              <FormField label={t("modal.form.categories")}>
                 <DropdownSelectInput
                   value={trip.categories || []}
                   onChange={(v) =>
@@ -210,11 +218,11 @@ export function TripModal({
                     })
                   }
                   options={categoryOptions}
-                  placeholder="Select categories"
+                  placeholder={t("modal.form.selectCategories")}
                   isMulti
                 />
               </FormField>
-              <FormField label="Tags">
+              <FormField label={t("modal.form.tags")}>
                 <DropdownSelectInput
                   value={trip.tags || []}
                   onChange={(v) =>
@@ -224,7 +232,7 @@ export function TripModal({
                     })
                   }
                   options={tagOptions}
-                  placeholder="Add tags"
+                  placeholder={t("modal.form.addTags")}
                   isMulti
                 />
               </FormField>
@@ -246,7 +254,9 @@ export function TripModal({
                 }
               />
               <div className="flex-1 min-h-0 flex flex-col">
-                <div className="font-semibold mb-2">Notes</div>
+                <div className="font-semibold mb-2">
+                  {t("modal.form.notesTitle")}
+                </div>
                 <InputBox
                   as="textarea"
                   className="w-full flex-1 min-h-0 resize-none"
@@ -254,7 +264,7 @@ export function TripModal({
                   onChange={(e: { target: { value: string } }) =>
                     onChange({ ...trip, notes: e.target.value })
                   }
-                  placeholder="Add notes about this trip..."
+                  placeholder={t("modal.form.notesPlaceholder")}
                 />
               </div>
             </div>
@@ -270,7 +280,11 @@ export function TripModal({
                   <ICONS.add className="inline" />
                 )
               }
-              submitLabel={isEditing ? "Save Changes" : "Add Trip"}
+              submitLabel={
+                isEditing
+                  ? t("modal.actions.saveChanges")
+                  : t("modal.actions.addTrip")
+              }
               disabled={!isValid}
             />
           </div>

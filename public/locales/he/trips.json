@@ -77,6 +77,36 @@
       "deleteTrip": "מחק טיול"
     }
   },
+  "modal": {
+    "titleAdd": "הוסף טיול",
+    "titleEdit": "ערוך טיול",
+    "form": {
+      "name": "שם",
+      "startDate": "תאריך התחלה",
+      "endDate": "תאריך סיום",
+      "tentativeDates": "תאריכים משוערים",
+      "fullDays": "ימים מלאים",
+      "participants": "משתתפים",
+      "selectParticipants": "בחר משתתפים",
+      "categories": "קטגוריות",
+      "selectCategories": "בחר קטגוריות",
+      "tags": "תגיות",
+      "addTags": "הוסף תגיות",
+      "countriesTitle": "מדינות",
+      "noCountriesSelected": "לא נבחרו מדינות.",
+      "notesTitle": "הערות",
+      "notesPlaceholder": "הוסף הערות לגבי הטיול הזה..."
+    },
+    "actions": {
+      "saveChanges": "שמור שינויים",
+      "addTrip": "הוסף טיול",
+      "removeCountry": "הסר",
+      "editCountries": "ערוך מדינות",
+      "selectCountries": "בחר מדינות",
+      "edit": "ערוך",
+      "add": "הוסף"
+    }
+  },
   "categories": {
     "solo": "בודד",
     "couple": "זוגי",

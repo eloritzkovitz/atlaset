@@ -116,5 +116,10 @@
     "next": "Next",
     "prevAria": "Previous page",
     "nextAria": "Next page"
+  },
+  "empty": "—",
+  "chip": {
+    "more": "+{{count}} more",
+    "moreTooltipPrefix": "More items:\n"
   }
 }

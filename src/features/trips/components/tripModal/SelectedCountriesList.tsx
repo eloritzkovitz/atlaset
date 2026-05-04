@@ -1,4 +1,5 @@
 import { FaXmark } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { EmptyListMessage } from "@components";
 import { CountryWithFlag } from "@features/countries";
 
@@ -14,11 +15,13 @@ export function SelectedCountriesList({
   selectedCountries,
   onRemove,
 }: SelectedCountriesListProps) {
+  const { t } = useTranslation("trips");
+  
   return (
     <div>
       <div className="flex flex-col gap-2">
         {selectedCountries.length === 0 && (
-          <EmptyListMessage message="No countries selected" />
+          <EmptyListMessage message={t("modal.form.noCountriesSelected")} />
         )}
         {selectedCountries.map((country) => (
           <span
@@ -29,7 +32,8 @@ export function SelectedCountriesList({
             <button
               type="button"
               className="ms-auto text-muted hover:text-muted-hover"
-              title="Remove"
+              title={t("modal.actions.removeCountry")}
+              aria-label={t("modal.actions.removeCountry")}
               onClick={() => onRemove(country.isoCode)}
             >
               <FaXmark />

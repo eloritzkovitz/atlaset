@@ -1,5 +1,6 @@
 import { Chip } from "./Chip";
 import { Tooltip } from "../Tooltip/Tooltip";
+import { useTranslation } from "react-i18next";
 
 interface ChipListProps<T = string> {
   items?: T[];
@@ -21,6 +22,8 @@ export function ChipList<T>({
   removable = false,
   onRemove,
 }: ChipListProps<T>) {
+  const { t } = useTranslation("common");
+
   if (!items || items.length === 0)
     return <span className="text-muted text-xs">—</span>;
 
@@ -61,7 +64,7 @@ export function ChipList<T>({
           position="bottom"
         >
           <Chip className={`text-xs font-medium ${moreColorClass}`}>
-            +{items.length - limit} more
+            {t("chip.more", { count: items.length - limit })}
           </Chip>
         </Tooltip>
       )}

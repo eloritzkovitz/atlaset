@@ -114,5 +114,10 @@
     "next": "הבא",
     "prevAria": "העמוד הקודם",
     "nextAria": "העמוד הבא"
+  },
+  "empty": "—",
+  "chip": {
+    "more": "עוד {{count}}",
+    "moreTooltipPrefix": "פריטים נוספים:\n"
   }
 }

@@ -77,6 +77,36 @@
       "deleteTrip": "Delete Trip"
     }
   },
+  "modal": {
+    "titleAdd": "Add Trip",
+    "titleEdit": "Edit Trip",
+    "form": {
+      "name": "Name",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "tentativeDates": "Tentative Dates",
+      "fullDays": "Full Days",
+      "participants": "Participants",
+      "selectParticipants": "Select participants",
+      "categories": "Categories",
+      "selectCategories": "Select categories",
+      "tags": "Tags",
+      "addTags": "Add tags",
+      "countriesTitle": "Countries",
+      "noCountriesSelected": "No countries selected",
+      "notesTitle": "Notes",
+      "notesPlaceholder": "Add notes about this trip..."      
+    },
+    "actions": {
+      "saveChanges": "Save Changes",
+      "addTrip": "Add Trip",
+      "removeCountry": "Remove",
+      "editCountries": "Edit Countries",
+      "selectCountries": "Select Countries",
+      "edit": "Edit",
+      "add": "Add"
+    }
+  },
   "categories": {
     "solo": "Solo",
     "couple": "Couple",
