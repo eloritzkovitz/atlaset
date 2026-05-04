@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FaEllipsisVertical,
   FaPenToSquare,
@@ -41,6 +42,7 @@ export function TripActions({
   onEdit,
   onDelete,
 }: TripActionsProps) {
+  const { t } = useTranslation("trips");
   const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
@@ -125,8 +127,8 @@ export function TripActions({
   if (isShared) {
     return (
       <ActionButton
-        ariaLabel="Shared trip actions disabled"
-        title="Shared trips cannot be edited"
+        ariaLabel={t("table.actions.sharedDisabledTitle")}
+        title={t("table.actions.sharedDisabledTitle")}
         icon={<FaEllipsisVertical />}
         rounded
         disabled
@@ -142,8 +144,8 @@ export function TripActions({
             e.stopPropagation();
             setOpen((v) => !v);
           }}
-          ariaLabel="More actions"
-          title="More actions"
+          ariaLabel={t("table.actions.moreActions")}
+          title={t("table.actions.moreActions")}
           icon={<FaEllipsisVertical />}
           rounded
         />
@@ -165,7 +167,7 @@ export function TripActions({
             icon={<FaCalendar className="me-2" />}
             className="w-full"
           >
-            View in Calendar
+            {t("table.actions.viewInCalendar")}
           </MenuButton>
         )}
         <MenuButton
@@ -173,7 +175,7 @@ export function TripActions({
           icon={<FaPenToSquare className="me-2" />}
           className="w-full"
         >
-          Edit Trip
+          {t("table.actions.editTrip")}
         </MenuButton>
         <Separator className="my-2" />
         <MenuButton
@@ -187,7 +189,9 @@ export function TripActions({
           }
           className="w-full"
         >
-          {trip.favorite ? "Unfavorite" : "Favorite"}
+          {trip.favorite
+            ? t("table.actions.unfavorite")
+            : t("table.actions.favorite")}
         </MenuButton>
         <div
           style={{ display: "inline-block", width: "100%" }}
@@ -199,7 +203,7 @@ export function TripActions({
             icon={<FaStar className="me-2 text-yellow-400" />}
             className="w-full flex items-center justify-between"
           >
-            Rate
+            {t("table.actions.rate")}
             <DirectionalIcon direction="next" className="ms-auto" />
           </MenuButton>
           {rateMenuOpen && (
@@ -227,7 +231,7 @@ export function TripActions({
             icon={<FaTrash className="me-2" />}
             className="!text-danger w-full"
           >
-            Delete Trip
+            {t("table.actions.deleteTrip")}
           </MenuButton>
         </div>
       </Menu>

@@ -106,5 +106,15 @@
   "languages": {
     "en": "English",
     "he": "עברית"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "pageSize": "Page size",
+    "selectPageSize": "Select page size",
+    "of": "of",
+    "back": "Back",
+    "next": "Next",
+    "prevAria": "Previous page",
+    "nextAria": "Next page"
   }
 }

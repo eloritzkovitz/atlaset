@@ -1,10 +1,11 @@
-import type { UserProfile } from "@features/user";
-
 /**
- * @file Utility functions for generating dropdown options for trips filtering.
+ * Utility functions for generating dropdown options for trips filtering.
  */
 
+import i18next from "i18next";
+import type { TFunction } from "i18next";
 import type { Country } from "@features/countries";
+import type { UserProfile } from "@features/user";
 import { extractUniqueValues } from "@utils/array";
 import { toDropdownOptions } from "@utils/dropdown";
 import { capitalizeWords } from "@utils/string";
@@ -23,7 +24,7 @@ import type { Trip, TripCategory, TripTag } from "../types";
  */
 export function getCountryDropdownOptions(
   countries: Country[],
-  usedCountryCodes: Set<string>
+  usedCountryCodes: Set<string>,
 ) {
   const filtered = countries
     .filter((c) => usedCountryCodes.has(c.isoCode))
@@ -31,7 +32,7 @@ export function getCountryDropdownOptions(
   return toDropdownOptions(
     filtered,
     (c) => c.isoCode,
-    (c) => c.name
+    (c) => c.name,
   );
 }
 
@@ -53,7 +54,7 @@ export function getYearDropdownOptions(usedYears: number[]) {
  */
 export function getParticipantsDropdownOptions(
   participantUids: string[],
-  participantProfiles: UserProfile[]
+  participantProfiles: UserProfile[],
 ) {
   return participantUids.map((uid) => {
     const profile = participantProfiles.find((p) => p.uid === uid);
@@ -69,16 +70,17 @@ export function getParticipantsDropdownOptions(
  * @param trips - Array of trips to extract categories from.
  * @returns An array of dropdown options.
  */
-export function getCategoryDropdownOptions(trips: Trip[] = []) {
+export function getCategoryDropdownOptions(trips: Trip[] = [], t?: TFunction) {
+  const tr = t ?? i18next.t.bind(i18next);
   const categories: TripCategory[] = extractUniqueValues(
     trips,
-    (t) => t.categories,
-    ALL_TRIP_CATEGORIES
+    (ttrip) => ttrip.categories,
+    ALL_TRIP_CATEGORIES,
   );
   return toDropdownOptions(
     categories,
     (c) => c,
-    (c) => capitalizeWords(c.replace(/-/g, " "))
+    (c) => tr(`categories.${c}`, capitalizeWords(c.replace(/-/g, " "))),
   );
 }
 
@@ -86,12 +88,13 @@ export function getCategoryDropdownOptions(trips: Trip[] = []) {
  * Gets status dropdown options for filtering.
  * @returns An array of dropdown options.
  */
-export function getStatusDropdownOptions() {
+export function getStatusDropdownOptions(t?: TFunction) {
+  const tr = t ?? i18next.t.bind(i18next);
   return [
-    { value: "", label: "All Statuses" },
+    { value: "", label: tr("table.placeholders.allStatuses", "All Statuses") },
     ...ALL_TRIP_STATUSES.map((s) => ({
       value: s,
-      label: capitalizeWords(s.replace(/-/g, " ")),
+      label: tr(`statuses.${s}`, capitalizeWords(s.replace(/-/g, " "))),
     })),
   ];
 }
@@ -101,15 +104,16 @@ export function getStatusDropdownOptions() {
  * @param trips - Array of trips to extract tags from.
  * @returns An array of dropdown options.
  */
-export function getTagDropdownOptions(trips: Trip[] = []) {
+export function getTagDropdownOptions(trips: Trip[] = [], t?: TFunction) {
+  const tr = t ?? i18next.t.bind(i18next);
   const tags: TripTag[] = extractUniqueValues(
     trips,
-    (t) => t.tags,
-    ALL_TRIP_TAGS
+    (trip) => trip.tags,
+    ALL_TRIP_TAGS,
   );
   return toDropdownOptions(
     tags,
-    (t) => t,
-    (t) => capitalizeWords(t.replace(/-/g, " "))
+    (tag) => tag,
+    (tag) => tr(`tags.${tag}`, capitalizeWords(tag.replace(/-/g, " "))),
   );
 }

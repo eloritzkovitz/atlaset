@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Checkbox,
   SortableFilterHeader,
@@ -10,10 +11,7 @@ import { CountryWithFlag } from "@features/countries";
 import type { FilterOption, Option } from "@types";
 import { isAllowedOption, isStringOption } from "@utils/dropdown";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
-import {
-  ALL_TRIP_CATEGORIES,
-  RATING_OPTIONS,
-} from "../../constants/trips";
+import { ALL_TRIP_CATEGORIES, RATING_OPTIONS } from "../../constants/trips";
 import type {
   TripCategory,
   TripFilters,
@@ -29,7 +27,7 @@ interface TripsTableHeadersProps {
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
-  yearOptions: FilterOption[]; 
+  yearOptions: FilterOption[];
   participantsOptions: Option<string, string>[];
   categoryOptions: FilterOption[];
   statusOptions: FilterOption[];
@@ -46,7 +44,7 @@ export function TripsTableHeaders({
   filters,
   updateFilter,
   countryOptions,
-  yearOptions,  
+  yearOptions,
   participantsOptions,
   categoryOptions,
   statusOptions,
@@ -54,6 +52,7 @@ export function TripsTableHeaders({
   renderResizeHandle,
   showRowNumbers,
 }: TripsTableHeadersProps) {
+  const { t } = useTranslation("trips");
   return (
     <thead>
       <tr>
@@ -63,26 +62,22 @@ export function TripsTableHeaders({
           <TableHeader unsortable />
         )}
         <TableHeader unsortable>
-          <Checkbox
-            checked={allSelected}
-            onChange={handleSelectAll}
-            aria-label="Select all trips"
-          />
+          <Checkbox checked={allSelected} onChange={handleSelectAll} />
         </TableHeader>
         <TableHeader colKey="name" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Name"
+            label={t("table.headers.name")}
             sortKey="name"
             sortBy={sortBy}
             onSort={handleSort}
             filterable
             filterValue={filters.name}
-            placeholder="Search by name"
+            placeholder={t("table.placeholders.searchByName")}
           />
         </TableHeader>
         <TableHeader colKey="rating" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Rating"
+            label={t("table.headers.rating")}
             sortKey="rating"
             sortBy={sortBy}
             onSort={handleSort}
@@ -92,7 +87,7 @@ export function TripsTableHeaders({
                 value={typeof filters.rating === "number" ? filters.rating : []}
                 onChange={(v) => updateFilter("rating", v)}
                 options={RATING_OPTIONS}
-                placeholder="All Ratings"
+                placeholder={t("table.placeholders.allRatings")}
                 renderOption={(opt) =>
                   "value" in opt ? (
                     <span className="flex items-center gap-2">
@@ -111,7 +106,7 @@ export function TripsTableHeaders({
         </TableHeader>
         <TableHeader colKey="countries" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Countries"
+            label={t("table.headers.countries")}
             sortKey="countries"
             sortBy={sortBy}
             onSort={handleSort}
@@ -123,7 +118,7 @@ export function TripsTableHeaders({
                   updateFilter("country", Array.isArray(v) ? v : v ? [v] : [])
                 }
                 options={countryOptions.filter(isStringOption)}
-                placeholder="All Countries"
+                placeholder={t("table.placeholders.allCountries")}
                 isMulti
                 renderOption={(opt) =>
                   "country" in opt &&
@@ -146,7 +141,7 @@ export function TripsTableHeaders({
         </TableHeader>
         <TableHeader colKey="year" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Year"
+            label={t("table.headers.year")}
             sortKey="year"
             sortBy={sortBy}
             onSort={handleSort}
@@ -158,7 +153,7 @@ export function TripsTableHeaders({
                   updateFilter("year", Array.isArray(v) ? v : v ? [v] : [])
                 }
                 options={yearOptions.filter(isStringOption)}
-                placeholder="All Years"
+                placeholder={t("table.placeholders.allYears")}
                 isMulti
               />
             }
@@ -166,7 +161,7 @@ export function TripsTableHeaders({
         </TableHeader>
         <TableHeader colKey="startDate" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Start Date"
+            label={t("table.headers.startDate")}
             sortKey="startDate"
             sortBy={sortBy}
             onSort={handleSort}
@@ -175,7 +170,7 @@ export function TripsTableHeaders({
         </TableHeader>
         <TableHeader colKey="endDate" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="End Date"
+            label={t("table.headers.endDate")}
             sortKey="endDate"
             sortBy={sortBy}
             onSort={handleSort}
@@ -184,16 +179,19 @@ export function TripsTableHeaders({
         </TableHeader>
         <TableHeader colKey="fullDays" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Full Days"
+            label={t("table.headers.fullDays")}
             sortKey="fullDays"
             sortBy={sortBy}
             onSort={handleSort}
             filterable
           />
         </TableHeader>
-        <TableHeader colKey="participants" renderResizeHandle={renderResizeHandle}>
+        <TableHeader
+          colKey="participants"
+          renderResizeHandle={renderResizeHandle}
+        >
           <SortableFilterHeader
-            label="Participants"
+            label={t("table.headers.participants")}
             sortKey="participants"
             sortBy={sortBy}
             onSort={handleSort}
@@ -202,15 +200,16 @@ export function TripsTableHeaders({
               <TableDropdownFilter<string>
                 value={filters.participants}
                 onChange={(v) =>
-                  updateFilter("participants", Array.isArray(v) ? v : v ? [v] : [])
+                  updateFilter(
+                    "participants",
+                    Array.isArray(v) ? v : v ? [v] : [],
+                  )
                 }
                 options={participantsOptions}
-                placeholder="All Participants"
+                placeholder={t("table.placeholders.allParticipants")}
                 isMulti
                 renderOption={(opt) =>
-                  "label" in opt ? (
-                    <span>{opt.label}</span>
-                  ) : null
+                  "label" in opt ? <span>{opt.label}</span> : null
                 }
               />
             }
@@ -221,7 +220,7 @@ export function TripsTableHeaders({
           renderResizeHandle={renderResizeHandle}
         >
           <SortableFilterHeader
-            label="Categories"
+            label={t("table.headers.categories")}
             sortKey="categories"
             sortBy={sortBy}
             onSort={handleSort}
@@ -232,13 +231,13 @@ export function TripsTableHeaders({
                 onChange={(v) =>
                   updateFilter(
                     "categories",
-                    Array.isArray(v) ? v : v ? [v] : []
+                    Array.isArray(v) ? v : v ? [v] : [],
                   )
                 }
                 options={categoryOptions.filter((opt) =>
-                  isAllowedOption(opt, ALL_TRIP_CATEGORIES)
+                  isAllowedOption(opt, ALL_TRIP_CATEGORIES),
                 )}
-                placeholder="All Categories"
+                placeholder={t("table.placeholders.allCategories")}
                 isMulti
                 renderOption={(opt) =>
                   "value" in opt ? (
@@ -254,7 +253,7 @@ export function TripsTableHeaders({
         </TableHeader>
         <TableHeader colKey="status" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Status"
+            label={t("table.headers.status")}
             sortKey="status"
             sortBy={sortBy}
             onSort={handleSort}
@@ -266,14 +265,14 @@ export function TripsTableHeaders({
                   updateFilter("status", Array.isArray(v) ? v[0] : v)
                 }
                 options={statusOptions}
-                placeholder="All Statuses"
+                placeholder={t("table.placeholders.allStatuses")}
               />
             }
           />
         </TableHeader>
         <TableHeader colKey="tags" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader
-            label="Tags"
+            label={t("table.headers.tags")}
             sortKey="tags"
             sortBy={sortBy}
             onSort={handleSort}
@@ -285,7 +284,7 @@ export function TripsTableHeaders({
                   updateFilter("tags", Array.isArray(v) ? v : v ? [v] : [])
                 }
                 options={tagOptions}
-                placeholder="All Tags"
+                placeholder={t("table.placeholders.allTags")}
                 isMulti
               />
             }

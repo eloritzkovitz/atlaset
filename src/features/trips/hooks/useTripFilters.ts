@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { createCountryMap, type Country } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import type { Trip, TripFilterState } from "../types";
@@ -21,7 +22,6 @@ import {
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { filterTrips } from "../utils/tripFilters";
 
-// Default trip filters
 const defaultTripFilterState: TripFilterState = {
   name: "",
   rating: null,
@@ -54,6 +54,7 @@ export function useTripFilters(
   globalSearch?: string,
 ) {
   const { homeCountry } = useHomeCountry();
+  const { t } = useTranslation("trips");
 
   // Ensure trips and countries are defined
   const tripList = useMemo(() => trips ?? [], [trips]);
@@ -180,7 +181,10 @@ export function useTripFilters(
   );
 
   // Category options
-  const allCategoryOptions = useMemo(() => getCategoryDropdownOptions(), []);
+  const allCategoryOptions = useMemo(
+    () => getCategoryDropdownOptions([], t),
+    [t],
+  );
   const usedCategories = useMemo(
     () => new Set(tripList.flatMap((trip) => trip.categories ?? [])),
     [tripList],
@@ -195,8 +199,8 @@ export function useTripFilters(
   );
 
   // Status and Tag options
-  const statusOptions = getStatusDropdownOptions();
-  const tagOptions = getTagDropdownOptions(tripList);
+  const statusOptions = getStatusDropdownOptions(t);
+  const tagOptions = getTagDropdownOptions(tripList, t);
 
   return {
     filters,

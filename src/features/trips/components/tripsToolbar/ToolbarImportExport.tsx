@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { useTranslation, Trans } from "react-i18next";
 import { FaFileImport, FaFileExport, FaCheck } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
 import { useTrips } from "@contexts/TripsContext";
@@ -12,6 +13,7 @@ interface ToolbarImportExportProps {
 }
 
 export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
+  const { t } = useTranslation("trips");
   const { addTrip } = useTrips();
   const exportBtnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -52,27 +54,27 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
     <>
       <ActionButton
         onClick={() => setShowImportNotice(true)}
-        ariaLabel="Import"
-        title="Import Trips"
+        ariaLabel={t("table.toolbar.importExport.importTitle")}
+        title={t("table.toolbar.importExport.importTitle")}
         icon={<FaFileImport />}
         variant="toggle"
       />
       {showImportNotice && (
         <ConfirmModal
-          title="Import trips?"
+          title={t("table.toolbar.importExport.importConfirmTitle")}
           message={
-            <>
+            <Trans i18nKey="table.toolbar.importExport.importConfirmMessage" ns="trips">
               Importing will <b>add</b> trips to your current list. Existing
               trips will not be overwritten.
-            </>
+            </Trans>
           }
           onConfirm={() => {
             setShowImportNotice(false);
             setTimeout(triggerFileInput, 0);
           }}
           onCancel={() => setShowImportNotice(false)}
-          submitLabel="Continue"
-          cancelLabel="Cancel"
+          submitLabel={t("table.toolbar.importExport.continue")}
+          cancelLabel={t("table.toolbar.importExport.cancel")}
           submitIcon={<FaCheck className="inline" />}
         />
       )}
@@ -86,8 +88,8 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
       <div ref={exportBtnRef}>
         <ActionButton
           onClick={() => setShowExportMenu((v) => !v)}
-          ariaLabel="Export"
-          title="Export Trips"
+          ariaLabel={t("table.toolbar.importExport.exportTitle")}
+          title={t("table.toolbar.importExport.exportTitle")}
           icon={<FaFileExport />}
           variant="toggle"
         />

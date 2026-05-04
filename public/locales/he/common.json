@@ -104,5 +104,15 @@
   "languages": {
     "en": "אנגלית",
     "he": "עברית"
+  },
+  "pagination": {
+    "showing": "מציג",
+    "pageSize": "גודל עמוד",
+    "selectPageSize": "בחר גודל עמוד",
+    "of": "מתוך",
+    "back": "הקודם",
+    "next": "הבא",
+    "prevAria": "העמוד הקודם",
+    "nextAria": "העמוד הבא"
   }
 }

@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { FaEllipsis } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { PAGE_SIZE_OPTIONS } from "@constants/ui";
 import { getPageButtons } from "@utils/pagination";
 import { pluralize } from "@utils/string";
@@ -15,7 +16,7 @@ export interface PaginationProps {
   pageSize: number;
   totalCount: number;
   onPageSizeChange?: (size: number) => void;
-  itemLabel?: string;
+  itemLabel?: string | { singular: string; plural: string };
 }
 
 export function Pagination({
@@ -27,6 +28,7 @@ export function Pagination({
   onPageSizeChange,
   itemLabel = "item",
 }: PaginationProps) {
+  const { t } = useTranslation("common");
   const pages = useMemo(
     () => getPageButtons(currentPage, totalPages),
     [currentPage, totalPages],
@@ -37,12 +39,19 @@ export function Pagination({
   const endIdx = Math.min(currentPage * pageSize, totalCount);
   const showingCount = endIdx - startIdx + 1;
 
+  const renderedItemLabel =
+    typeof itemLabel === "string"
+      ? pluralize(itemLabel, totalCount)
+      : totalCount === 1
+        ? itemLabel.singular
+        : itemLabel.plural;
+
   return (
     <div className="relative flex items-center my-4 w-full min-h-[40px]">
       {/* Left: Showing X */}
       <div className="absolute start-0 flex items-center gap-4 ps-4 h-full">
         <span className="text-muted whitespace-nowrap flex items-center gap-1">
-          Showing
+          {t("pagination.showing")}
           {onPageSizeChange ? (
             <>
               <div className="w-[65px] mx-2">
@@ -53,15 +62,16 @@ export function Pagination({
                     value: opt,
                     label: opt.toString(),
                   }))}
-                  placeholder="Page size"
-                  aria-label="Select page size"
+                  placeholder={t("pagination.pageSize")}
+                  aria-label={t("pagination.selectPageSize")}
                 />
               </div>
-              of {totalCount} {pluralize(itemLabel, totalCount)}
+              {t("pagination.of")} {totalCount} {renderedItemLabel}
             </>
           ) : (
             <>
-              {showingCount} of {totalCount} {pluralize(itemLabel, totalCount)}
+              {showingCount} {t("pagination.of")} {totalCount}{" "}
+              {renderedItemLabel}
             </>
           )}
         </span>
@@ -73,7 +83,7 @@ export function Pagination({
             variant="secondary"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            ariaLabel="Previous page"
+            ariaLabel={t("pagination.prevAria")}
             className="min-h-[2.5rem] text-base"
           >
             <span
@@ -87,7 +97,7 @@ export function Pagination({
                 direction="prev"
                 className="text-xs align-middle mt-0.5 me-1"
               />
-              <span className="align-middle">Back</span>
+              <span className="align-middle">{t("pagination.back")}</span>
             </span>
           </ActionButton>
           {pages.map((page, idx) =>
@@ -114,7 +124,7 @@ export function Pagination({
             variant="secondary"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            ariaLabel="Next page"
+            ariaLabel={t("pagination.nextAria")}
             className="min-h-[2.5rem] text-base"
           >
             <span
@@ -123,7 +133,7 @@ export function Pagination({
               }`}
               style={{ lineHeight: 1 }}
             >
-              <span className="align-middle">Next</span>
+              <span className="align-middle">{t("pagination.next")}</span>
               <DirectionalIcon
                 variant="chevron"
                 direction="next"

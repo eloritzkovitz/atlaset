@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FaHashtag, FaHeart } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
 import { ICONS } from "@constants/icons";
@@ -22,6 +23,8 @@ export function ToolbarFilters({
   showRowNumbers,
   setShowRowNumbers,
 }: ToolbarFiltersProps) {
+  const { t } = useTranslation("trips");
+
   // Clear filters handler
   const handleClearFilters = () => {
     resetFilters();
@@ -46,63 +49,91 @@ export function ToolbarFilters({
     {
       value: "local",
       icon: <ICONS.tripLocal />,
-      label: "Local",
-      ariaLabel: "Show/Hide Local Trips",
-      title: "Toggle Local Trips",
+      label: t("table.toolbar.filters.local"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.local"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.local"),
+      }),
       checked: filters.local,
       onClick: toggleLocal,
     },
     {
       value: "abroad",
       icon: <ICONS.tripAbroad />,
-      label: "Abroad",
-      ariaLabel: "Show/Hide Abroad Trips",
-      title: "Toggle Abroad Trips",
+      label: t("table.toolbar.filters.abroad"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.abroad"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.abroad"),
+      }),
       checked: filters.abroad,
       onClick: toggleAbroad,
     },
     {
       value: "planned",
       icon: <ICONS.tripPlanned />,
-      label: "Planned",
-      ariaLabel: "Show/Hide Planned Trips",
-      title: "Toggle Planned Trips",
+      label: t("table.toolbar.filters.planned"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.planned"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.planned"),
+      }),
       checked: filters.planned,
       onClick: togglePlanned,
     },
     {
       value: "upcoming",
       icon: <ICONS.tripUpcoming />,
-      label: "Upcoming",
-      ariaLabel: "Show/Hide Upcoming Trips",
-      title: "Toggle Upcoming Trips",
+      label: t("table.toolbar.filters.upcoming"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.upcoming"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.upcoming"),
+      }),
       checked: filters.upcoming,
       onClick: toggleUpcoming,
     },
     {
       value: "completed",
       icon: <ICONS.tripCompleted />,
-      label: "Completed",
-      ariaLabel: "Show/Hide Completed Trips",
-      title: "Toggle Completed Trips",
+      label: t("table.toolbar.filters.completed"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.completed"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.completed"),
+      }),
       checked: filters.completed,
       onClick: toggleCompleted,
     },
     {
       value: "favorite",
       icon: <FaHeart />,
-      label: "Favorites",
-      ariaLabel: "Show/Hide Favorite Trips",
-      title: "Toggle Favorite Trips",
+      label: t("table.toolbar.filters.favorites"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.favorites"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.favorites"),
+      }),
       checked: filters.favorite,
       onClick: toggleFavorite,
     },
     {
       value: "rowNumbers",
       icon: <FaHashtag />,
-      label: "Row Numbers",
-      ariaLabel: showRowNumbers ? "Hide row numbers" : "Show row numbers",
-      title: showRowNumbers ? "Hide Numbers" : "Show Numbers",
+      label: t("table.toolbar.filters.rowNumbers"),
+      ariaLabel: showRowNumbers
+        ? t("table.toolbar.filters.hideRowNumbers")
+        : t("table.toolbar.filters.showRowNumbers"),
+      title: showRowNumbers
+        ? t("table.toolbar.filters.hideRowNumbers")
+        : t("table.toolbar.filters.showRowNumbers"),
       checked: showRowNumbers,
       onClick: toggleRowNumbers,
     },
@@ -112,8 +143,8 @@ export function ToolbarFilters({
     <>
       <ActionButton
         onClick={handleClearFilters}
-        ariaLabel="Clear Filters"
-        title="Clear Filters"
+        ariaLabel={t("table.toolbar.filters.clearFilters")}
+        title={t("table.toolbar.filters.clearFilters")}
         icon={<ICONS.reset />}
         variant="toggle"
       />

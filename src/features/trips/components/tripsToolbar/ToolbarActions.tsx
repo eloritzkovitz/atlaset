@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
 
@@ -18,6 +19,7 @@ export function ToolbarActions({
   onBulkDelete,
 }: ToolbarActionsProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
+  const { t } = useTranslation("trips");
 
   // Check if there are selected trips
   const hasSelection = selectedTripIds.length > 0;
@@ -28,8 +30,8 @@ export function ToolbarActions({
         <div className="flex items-center gap-2">
           <ActionButton
             onClick={onBulkDuplicate}
-            ariaLabel="Duplicate selected"
-            title="Duplicate selected"
+            ariaLabel={t("table.toolbar.bulkActions.duplicateSelected")}
+            title={t("table.toolbar.bulkActions.duplicateSelected")}
             icon={<ICONS.duplicate />}
             active={hasSelection}
             disabled={!hasSelection}
@@ -37,36 +39,34 @@ export function ToolbarActions({
           />
           <ActionButton
             onClick={() => setShowDeleteConfirm(true)}
-            ariaLabel="Delete selected"
-            title="Delete selected"
+            ariaLabel={t("table.toolbar.bulkActions.deleteSelected")}
+            title={t("table.toolbar.bulkActions.deleteSelected")}
             icon={<ICONS.remove />}
             active={hasSelection}
             disabled={!hasSelection}
             variant="toggle"
           />
         </div>
-        <ActionButton
-          variant="primary"
-          onClick={onAddTrip}
-          icon={<ICONS.add className="text-xl me-2" />}
-          className="ms-4"
-        >
-          Add Trip
+        <ActionButton variant="primary" onClick={onAddTrip} className="ms-4">
+          {<ICONS.add className="text-xl" />}
+          {t("table.toolbar.bulkActions.addTrip")}
         </ActionButton>
       </div>
 
       {/* Confirm Modals */}
       {showDeleteConfirm && (
         <ConfirmModal
-          title="Delete trips?"
-          message={`Delete ${selectedTripIds.length} selected trips?`}
+          title={t("table.toolbar.bulkActions.deleteConfirmTitle")}
+          message={t("table.toolbar.bulkActions.deleteConfirmMessage", {
+            count: selectedTripIds.length,
+          })}
           onConfirm={() => {
             setShowDeleteConfirm(false);
             onBulkDelete();
           }}
           onCancel={() => setShowDeleteConfirm(false)}
-          submitLabel="Delete"
-          cancelLabel="Cancel"
+          submitLabel={t("table.toolbar.bulkActions.delete")}
+          cancelLabel={t("table.toolbar.bulkActions.cancel")}
           submitIcon={<ICONS.remove className="inline" />}
         />
       )}

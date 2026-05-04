@@ -1,6 +1,7 @@
 import { Pagination } from "@components";
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryData } from "@features/countries";
+import { useTranslation } from "react-i18next";
 import { useScreenSize, useResizableColumns } from "@hooks";
 import type { FilterOption, Option } from "@types";
 import type { TripSortBy, TripSortByKey } from "../../types";
@@ -17,7 +18,7 @@ import "./TripsTable.css";
 interface TripsTableProps {
   trips: Trip[];
   onViewInCalendar?: (trip: Trip) => void;
-  onEdit: (trip: Trip) => void;  
+  onEdit: (trip: Trip) => void;
   onRatingChange: (tripId: string, rating: number | undefined) => void;
   onDelete: (trip: Trip) => void;
   filters: TripFilters;
@@ -73,11 +74,12 @@ export function TripsTable({
 }: TripsTableProps) {
   const countryData = useCountryData();
   const { isMobile } = useScreenSize();
+  const { t } = useTranslation("trips");
 
   // Resizable columns
   const { colWidths, handleResizeStart } = useResizableColumns<ColumnKey>(
     DEFAULT_WIDTHS,
-    MIN_WIDTHS
+    MIN_WIDTHS,
   );
 
   // Helper to render resize handle
@@ -107,7 +109,7 @@ export function TripsTable({
       style={{
         maxHeight: "93vh",
         overflowY: "auto",
-        paddingLeft: !isMobile ? `${DEFAULT_SIDEBAR_WIDTH}px` : 0,
+        paddingInlineStart: !isMobile ? DEFAULT_SIDEBAR_WIDTH : 0,
       }}
     >
       <table className="min-w-full w-full bg-surface">
@@ -168,7 +170,10 @@ export function TripsTable({
         pageSize={pageSize}
         totalCount={totalCount}
         onPageSizeChange={onPageSizeChange}
-        itemLabel="trip"
+        itemLabel={{
+          singular: t("table.itemLabels.singular"),
+          plural: t("table.itemLabels.plural"),
+        }}
       />
     </div>
   );
