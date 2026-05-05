@@ -16,7 +16,7 @@ import {
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DEFAULT_LOCALES = ["en", "he"];
+const DEFAULT_LOCALES = ["he"]; // English is not needed since it's the app default
 const DEFAULT_BASE_URL =
   process.env.VITE_LOCALES_URL ||
   "https://atlaset-data-server.onrender.com/locales";
