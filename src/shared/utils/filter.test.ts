@@ -97,4 +97,20 @@ describe("filterBySearch", () => {
       { name: "Hello World" },
     ]);
   });
+
+  it("supports non-Latin scripts (Hebrew) and Unicode tokenization", () => {
+    const items = [
+      { name: "תל אביב" },
+      { name: "תל-אביב" },
+      { name: "ירושלים" },
+    ];
+    expect(filterBySearch(items, "תל", (i) => i.name)).toEqual([
+      { name: "תל אביב" },
+      { name: "תל-אביב" },
+    ]);
+    expect(filterBySearch(items, "תל אביב", (i) => i.name)).toEqual([
+      { name: "תל אביב" },
+      { name: "תל-אביב" },
+    ]);
+  });
 });

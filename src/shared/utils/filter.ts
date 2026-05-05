@@ -48,13 +48,16 @@ export function filterBySearch<T>(
   getField: (item: T) => string,
 ) {
   if (!search) return items;
+
+  // Normalize and extract Unicode-aware tokens so scripts like Hebrew are matched.
   const normalizedSearch = normalizeString(search);
-  const searchKey = normalizedSearch.split(/\W+/).filter(Boolean).join(" ");
+  const searchTokens = normalizedSearch.match(/[\p{L}\p{N}]+/gu) || [];
+  const searchKey = searchTokens.join(" ");
   if (!searchKey) return items;
 
   return items.filter((item) => {
     const field = normalizeString(getField(item));
-    const tokens = field.split(/\W+/).filter(Boolean);
+    const tokens = field.match(/[\p{L}\p{N}]+/gu) || [];
     const fieldJoined = tokens.join(" ");
 
     // If the search contains multiple words, match the joined field string
