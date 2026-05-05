@@ -49,7 +49,6 @@ describe("createSelectFilter", () => {
       () => "",
       () => {},
     );
-    // Type assertions
     const key: MyKey = filter.key;
     expect(key).toBe("foo");
   });
@@ -86,9 +85,11 @@ describe("filterBySearch", () => {
     expect(filterBySearch(items, "Zeta", (i) => i.name)).toEqual([]);
   });
 
-  it("works with fields other than 'name'", () => {
-    const items = [{ code: "US" }, { code: "CA" }, { code: "MX" }];
-    expect(filterBySearch(items, "C", (i) => i.code)).toEqual([{ code: "CA" }]);
+  it("handles fields that contain no letters or numbers (punctuation-only)", () => {
+    const items = [{ name: "!!!" }, { name: "Alpha" }];
+    expect(filterBySearch(items, "Al", (i) => i.name)).toEqual([
+      { name: "Alpha" },
+    ]);
   });
 
   it("matches multi-word searches across tokens", () => {
