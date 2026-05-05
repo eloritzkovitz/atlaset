@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { DirectionalIcon } from "@components";
 import { useInfiniteScroll } from "@hooks";
@@ -9,6 +10,8 @@ import { useAuth } from "../../auth/hooks/useAuth";
 export function UserActivitySection() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  const { t } = useTranslation("activity");
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -34,18 +37,20 @@ export function UserActivitySection() {
           type="button"
           onClick={() => navigate(-1) || navigate("/dashboard")}
           className="flex items-center focus:outline-none"
-          aria-label="Go back"
+          aria-label={t("ui.goBack")}
         >
           <span className="inline-flex items-center gap-1">
             <DirectionalIcon direction="prev" className="text-lg" />
-            <h2 className="text-xl font-bold self-start">Activity Log</h2>
+            <h2 className="text-xl font-bold self-start">
+              {t("ui.activityLog")}
+            </h2>
           </span>
         </button>
       </div>
       {loading && activity.length === 0 ? (
-        <div className="text-muted">Loading...</div>
+        <div className="text-muted">{t("ui.loading")}</div>
       ) : activity.length === 0 ? (
-        <div className="text-muted">No activity yet.</div>
+        <div className="text-muted">{t("ui.noActivity")}</div>
       ) : (
         <>
           <ul className="space-y-4">
@@ -62,7 +67,7 @@ export function UserActivitySection() {
           )}
           {loading && (
             <div className="flex justify-center mt-4">
-              <span className="text-muted">Loading...</span>
+              <span className="text-muted">{t("ui.loading")}</span>
             </div>
           )}
         </>

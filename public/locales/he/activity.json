@@ -1,0 +1,61 @@
+{
+  "ui": {
+    "title": "פעילות",
+    "viewFull": "הצג יומן פעילות מלא",
+    "activityLog": "יומן פעילות",
+    "loading": "טוען...",
+    "noActivity": "אין פעילות עדיין.",
+    "deleteActivityTitle": "מחק פעילות",
+    "goBack": "חזרה"
+  },
+  "101": "{userName} יצר חשבון{date}",
+  "102": "{userName} נכנס{date}",
+  "103": "{userName} התנתק{date}",
+  "104": "{userName} ביקש איפוס סיסמה{date}",
+
+  "110": "{userName} השבית את חשבונו{date}",
+  "111": "{userName} הפעיל מחדש את חשבונו{date}",
+
+  "120": "{userName} עדכן את הפרופיל{date}",
+
+  "130": "{userName} עדכן את ההגדרות{date}",
+
+  "140": "{userName} התיידד עם {friendName}{date}",
+
+  "200": "{userName} ביצע פעולה באטלס{date}",
+
+  "210": "{userName} שמר שכבות{date}",
+  "211": "{userName} הוסיף '{itemName}'{date}",
+  "212": "{userName} ערך '{itemName}'{date}",
+  "213": "{userName} הסיר '{itemName}'{date}",
+  "214": "{userName} שינה את סדר השכבות{date}",
+
+  "220": "{userName} שמר סימונים{date}",
+  "221": "{userName} הוסיף '{itemName}'{location}{date}",
+  "222": "{userName} ערך '{itemName}'{location}{date}",
+  "223": "{userName} הסיר '{itemName}'{location}{date}",
+
+  "230": "{userName} ייצא מפה{date}",
+  "231": "{userName} שמר '{itemName}'{date}",
+  "232": "{userName} ערך '{itemName}'{date}",
+  "233": "{userName} הסיר '{itemName}'{date}",
+  "234": "{userName} הוסיף '{itemName}' למפה '{mapName}'{date}",
+  "235": "{userName} ערך '{itemName}' ב'{mapName}'{date}",
+  "236": "{userName} הסיר '{itemName}' מהמפה '{mapName}'{date}",
+  "237": "{userName} הוסיף '{itemName}' ב'{mapName}'{date}",
+  "238": "{userName} ערך '{itemName}' ב'{mapName}'{date}",
+  "239": "{userName} הסיר '{itemName}' מהמפה '{mapName}'{date}",
+
+  "300": "{userName} שיחק חידון{date}",
+  "301": "{userName} השלים {difficultyWithArticle} חידון {quizType} עם ציון של {score} ב{time}{date}",
+  "302": "{userName} נכנס לטבלת המובילים{date}",
+
+  "400": "{userName} ביצע פעולה בטיולים{date}",
+
+  "410": "{userName} שמר טיולים{date}",
+  "411": "{userName} הוסיף '{itemName}'{date}",
+  "412": "{userName} ערך '{itemName}'{date}",
+  "413": "{userName} {action} '{itemName}'{date}",
+  "414": "{userName} דירג את '{itemName}' ב{rating} כוכבים{date}",
+  "415": "{userName} הסיר '{itemName}'{date}"
+}

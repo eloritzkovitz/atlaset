@@ -10,7 +10,15 @@ i18n
   .init({
     fallbackLng: "en",
     supportedLngs: ["en", "he"],
-    ns: ["atlas", "common", "quizzes", "settings", "trips"],
+    ns: [
+      "activity",
+      "atlas",
+      "common",
+      "countries",
+      "quizzes",
+      "settings",
+      "trips",
+    ],
     defaultNS: "common",
     backend: {
       loadPath: "/locales/{{lng}}/{{ns}}.json",

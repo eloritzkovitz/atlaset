@@ -2,15 +2,12 @@
  * Utility functions for logging and describing user activity events.
  */
 
+import i18n from "i18next";
 import type { JSX } from "react";
 import { addDoc } from "firebase/firestore";
 import { ICONS } from "@constants/icons";
 import { getUserCollection } from "@utils/firebase";
-import activityTemplatesJson from "./activityTemplates.json";
 import type { ActivityDetails } from "../../types";
-
-// Load activity templates from JSON
-export const activityTemplates: Record<string, string> = activityTemplatesJson;
 
 /**
  * Logs a user activity event to Firestore.
@@ -42,8 +39,12 @@ export function getActivityDescription(
   action: number | string,
   details?: ActivityDetails,
 ) {
-  const template =
-    activityTemplates[String(action)] || "{userName} did something.";
+  const lng = i18n.language || "en";
+  const nsKey = String(action);
+  const template = i18n.t(`activity:${nsKey}`, {
+    lng,
+    defaultValue: "{userName} did something.",
+  });
   const safeDetails: Record<string, string> = {
     userName: details?.userName || "You",
     itemName: details?.itemName || "",

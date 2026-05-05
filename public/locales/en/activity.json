@@ -1,4 +1,13 @@
 {
+  "ui": {
+    "title": "Activity",
+    "viewFull": "View full activity log",
+    "activityLog": "Activity Log",
+    "loading": "Loading...",
+    "noActivity": "No activity yet.",
+    "deleteActivityTitle": "Delete activity",
+    "goBack": "Go back"
+  },
   "101": "{userName} created an account{date}",
   "102": "{userName} signed in{date}",
   "103": "{userName} signed out{date}",
