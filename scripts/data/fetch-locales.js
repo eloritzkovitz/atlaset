@@ -57,13 +57,21 @@ const remoteUrlFor = (base, lng, filename) => {
         "countries.json",
       );
       console.log(`Fetching: ${lng}/countries.json -> ${countriesUrl}`);
-      const countriesRaw = await fetchWithRetries(countriesUrl);
-      const localCountriesRaw = readLocalFile(localeDir, "countries.json");
-      if (!localCountriesRaw || localCountriesRaw !== countriesRaw) {
-        writeLocalFile(localeDir, "countries.json", countriesRaw);
-        console.log(`${lng}/countries.json downloaded and updated!`);
-      } else {
-        console.log(`${lng}/countries.json is up to date.`);
+
+      try {
+        const countriesRaw = await fetchWithRetries(countriesUrl);
+        const localCountriesRaw = readLocalFile(localeDir, "countries.json");
+        if (!localCountriesRaw || localCountriesRaw !== countriesRaw) {
+          writeLocalFile(localeDir, "countries.json", countriesRaw);
+          console.log(`${lng}/countries.json downloaded and updated!`);
+        } else {
+          console.log(`${lng}/countries.json is up to date.`);
+        }
+      } catch (err) {
+        console.warn(
+          `Warning: failed to fetch ${lng}/countries.json:`,
+          err.message || err,
+        );
       }
 
       // currencies.json
