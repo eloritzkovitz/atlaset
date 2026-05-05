@@ -15,6 +15,7 @@ i18n
       "atlas",
       "common",
       "countries",
+      "currencies",
       "quizzes",
       "settings",
       "trips",

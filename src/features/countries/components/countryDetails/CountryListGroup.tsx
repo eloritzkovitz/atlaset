@@ -3,6 +3,8 @@ import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import { type Country } from "../../types";
+import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 
 interface CountryListGroupProps {
   label: React.ReactNode;
@@ -23,18 +25,31 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
   onToggle,
   onSelectCountry,
 }) => {
+  const { i18n } = useTranslation();
+
   // Map isoCodes to country objects and sort by name
   const sortedCountries = isoCodes
     .map((iso) => {
       const found = countries.find((c) => c.isoCode === iso);
       if (found) return found;
 
-      // Check SPECIAL_COUNTRIES for any missing entries
+      // Check SPECIAL_COUNTRIES for any missing entries and try to translate
       const special = SPECIAL_COUNTRIES[iso];
       if (special) {
+        let bundle: Record<string, Partial<Country>> = {};
+        try {
+          const lng = i18n.language || i18next.language || "en";
+          bundle =
+            i18n.getResourceBundle?.(lng, "countries") ||
+            i18next.getResourceBundle(lng, "countries") ||
+            {};
+        } catch {
+          bundle = {};
+        }
+        const trans = bundle[iso] ?? {};
         return {
           isoCode: iso,
-          name: special.name,
+          name: trans.name ?? special.name,
         } as Country;
       }
       return undefined;

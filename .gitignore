@@ -36,6 +36,8 @@ stats.html
 public/data
 public/docs
 public/flags
+public/locales/*/countries.json
+public/locales/*/currencies.json
 
 # Environment variables
 .env

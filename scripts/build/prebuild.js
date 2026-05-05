@@ -24,6 +24,7 @@ runScript("scripts/data/fetch-country-data.js");
 runScript("scripts/data/fetch-flags.js");
 runScript("scripts/data/fetch-geodata.js");
 runScript("scripts/data/fetch-achievements.js");
+runScript("scripts/data/fetch-locales.js");
 runScript("scripts/build/copy-docs-to-public.js");
 
 console.log("All fetch scripts completed.");
