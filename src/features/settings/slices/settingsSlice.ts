@@ -27,7 +27,7 @@ export const saveSettings = createAsyncThunk(
       if (currentJson === newJson) {
         return state;
       }
-    } catch (e) {
+    } catch {
       // If serialization fails, fall back to attempting save
     }
 

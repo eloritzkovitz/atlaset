@@ -1,21 +1,30 @@
 import i18n from "i18next";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { isRtl, useLanguage } from "./useLanguage";
+import { mockUser } from "@test-utils/mockUser";
+import { isRtl } from "./useLanguage";
 
 vi.mock("react-redux", () => ({
   useSelector: vi.fn(),
   useDispatch: vi.fn(),
 }));
 vi.mock("i18next", () => {
-  const _mock: any = { language: "en", changeLanguage: vi.fn() };
+  const _mock = {
+    language: "en",
+    changeLanguage: vi.fn(async () => {}),
+  };
   return { default: _mock };
 });
 vi.mock("@hooks", () => ({ useDebounce: (v: any) => v }));
-vi.mock("@features/user", () => ({ useAuth: () => ({ user: { uid: "u1" } }) }));
+vi.mock("@features/user", () => ({
+  useAuth: vi.fn(() => ({ user: mockUser, loading: false, ready: true })),
+}));
 
 vi.mock("../slices/settingsSlice", () => {
-  const saveSettings = vi.fn((payload: any) => ({ type: "SAVE_SETTINGS", payload }));
+  const saveSettings = vi.fn((payload: any) => ({
+    type: "SAVE_SETTINGS",
+    payload,
+  }));
   const selectSettings = () => ({ account: { language: "en" } });
   return {
     saveSettings,
@@ -44,6 +53,7 @@ describe("isRtl", () => {
 
 describe("useLanguage", () => {
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
   });
 
@@ -53,10 +63,14 @@ describe("useLanguage", () => {
       if (selector === selectSettingsReady) return true;
       return undefined;
     });
-    const dispatchMock = vi.fn();
+    const dispatchMock = vi.fn(() => Promise.resolve());
     (useDispatch as unknown as Mock).mockReturnValue(dispatchMock);
 
+    const { useLanguage } = await import("./useLanguage");
     const { result } = renderHook(() => useLanguage());
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     expect(result.current.current).toBe("he");
     expect(result.current.isRtl).toBe(true);
@@ -74,16 +88,56 @@ describe("useLanguage", () => {
     });
   });
 
+  it("resets appliedInitial when user logs out and reapplies on new user", async () => {
+    (useSelector as unknown as Mock).mockImplementation((selector) => {
+      if (selector === selectSettings) return { account: { language: "he" } };
+      if (selector === selectSettingsReady) return true;
+      return undefined;
+    });
+    const dispatchMock = vi.fn(() => Promise.resolve());
+    (useDispatch as unknown as Mock).mockReturnValue(dispatchMock);
+
+    const { useLanguage } = await import("./useLanguage");
+    const { result, rerender } = renderHook(() => useLanguage());
+    await act(async () => {
+      await Promise.resolve();
+    });
+    expect(result.current.current).toBe("he");
+
+    vi.mocked((await import("@features/user")).useAuth).mockReturnValue({
+      user: null,
+      loading: false,
+      ready: true,
+    });
+    rerender();
+    vi.mocked((await import("@features/user")).useAuth).mockReturnValue({
+      user: mockUser,
+      loading: false,
+      ready: true,
+    });
+    (useSelector as unknown as Mock).mockImplementation((selector) => {
+      if (selector === selectSettings) return { account: { language: "en" } };
+      if (selector === selectSettingsReady) return true;
+      return undefined;
+    });
+    rerender();
+    expect(result.current.current).toBe("en");
+  });
+
   it("toggle switches between he and en", async () => {
     (useSelector as unknown as Mock).mockImplementation((selector) => {
       if (selector === selectSettings) return { account: { language: "he" } };
       if (selector === selectSettingsReady) return true;
       return undefined;
     });
-    const dispatchMock = vi.fn();
+    const dispatchMock = vi.fn(() => Promise.resolve());
     (useDispatch as unknown as Mock).mockReturnValue(dispatchMock);
 
+    const { useLanguage } = await import("./useLanguage");
     const { result } = renderHook(() => useLanguage());
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     await act(async () => {
       await result.current.toggle();
