@@ -1,4 +1,5 @@
 import { useRef, useState, forwardRef } from "react";
+import { useTranslation } from "react-i18next";
 import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
 import { useKeyboardFocusRing, useKeyHandler } from "@hooks";
 
@@ -74,6 +75,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
       true,
     );
 
+    const { t } = useTranslation("common");
+
     return (
       <div
         className={`relative w-full rounded-full transition-shadow ${
@@ -140,7 +143,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             }
           }}
           placeholder={placeholder}
-          aria-label={placeholder || "Search"}
+          aria-label={placeholder || t("search.placeholder", "Search")}
           className={`w-full ${showIcon === false ? "ps-3" : "ps-10"} pe-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
           style={{
             ...(style || {}),
@@ -151,11 +154,11 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             zIndex: 20,
           }}
         />
-        {showClear && (
+        {showClear && value.length > 0 && (
           <button
             type="button"
-            aria-label="Clear search"
-            title="Clear search"
+            aria-label={`${t("search.clear", "Clear")} ${t("search.placeholder", "Search")}`}
+            title={`${t("search.clear", "Clear")} ${t("search.placeholder", "Search")}`}
             onClick={() => {
               if (onClear) {
                 onClear();

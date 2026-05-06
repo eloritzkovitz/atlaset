@@ -80,6 +80,7 @@ export function CountrySection({
       ? (subregionsByRegion[selectedRegion] ?? [])
       : [];
 
+  const { t: tAtlas } = useTranslation("atlas");
   const { t: tCountries } = useTranslation("countries");
   const { t: tCommon } = useTranslation("common");
 
@@ -106,12 +107,12 @@ export function CountrySection({
       ...o,
       label:
         o.value === "all"
-          ? tCommon("all")
+          ? tCommon("filter.all")
           : regionKey
-          ? tCountries(`subregions.${regionKey}.${normalized}`, {
-              defaultValue: String(o.label),
-            })
-          : String(o.label),
+            ? tCountries(`subregions.${regionKey}.${normalized}`, {
+                defaultValue: String(o.label),
+              })
+            : String(o.label),
     };
   });
 
@@ -196,7 +197,10 @@ export function CountrySection({
             <SearchInput
               value={search}
               onChange={setSearch}
-              placeholder="Search countries"
+              placeholder={tAtlas(
+                "countries.searchPlaceholder",
+                "Search countries",
+              )}
               className="mt-1 rounded-md"
             />
             <div className="flex flex-row gap-2 w-full">
