@@ -8,6 +8,8 @@ import {
   ResponsiveContainer,
   type TooltipContentProps,
 } from "recharts";
+import { useTranslation } from "react-i18next";
+import { TRIP_TYPE_LABELS } from "@features/trips/constants/trips";
 
 function CustomTooltip(
   props: TooltipContentProps<number, string>,
@@ -61,6 +63,8 @@ export default function TripsBarChart({
   filter,
   tripTypeColors,
 }: TripsBarChartProps) {
+  const { t } = useTranslation("dashboard");
+
   return (
     <ResponsiveContainer width="100%" height="100%">
       <BarChart data={data}>
@@ -80,7 +84,7 @@ export default function TripsBarChart({
             dataKey="local"
             stackId="a"
             fill={tripTypeColors[0]}
-            name="Local"
+            name={t("trips:types.local", { defaultValue: TRIP_TYPE_LABELS[0] })}
             activeBar={{ fill: "#22c55e" }}
           />
         )}
@@ -89,7 +93,9 @@ export default function TripsBarChart({
             dataKey="abroad"
             stackId="a"
             fill={tripTypeColors[1]}
-            name="Abroad"
+            name={t("trips:types.abroad", {
+              defaultValue: TRIP_TYPE_LABELS[1],
+            })}
             activeBar={{ fill: "#7c3aed" }}
           />
         )}

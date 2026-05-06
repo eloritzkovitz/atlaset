@@ -140,6 +140,7 @@
     "cultural": "תרבותי",
     "other": "אחר"
   },
+  "types": { "local": "מקומי", "abroad": "בחו\"ל" },
   "statuses": {
     "planned": "מתוכנן",
     "upcoming": "בקרוב",

@@ -51,5 +51,88 @@
       "converting": "ממיר...",
       "errorPrefix": "שגיאה:"
     }
+  },
+  "statistics": {
+    "views": {
+      "overview": "סקירה",
+      "history": "היסטוריה",
+      "monthly": "חודשי",
+      "yearly": "שנתי"
+    },
+    "overview": {
+      "title": "סקירת טיולים",
+      "subtitle": "סיכום כל הטיולים שהוקלטו",
+      "totalTrips": "סה\"כ טיולים",
+      "pieToggle": {
+        "type": "סוג",
+        "status": "סטטוס"
+      },
+      "breakdown": {
+        "title": "חלוקת טיולים",
+        "subtitle": {
+          "type": "חלוקה לפי סוגי טיולים (מקומיים ובחו\u0022ל)",
+          "status": "חלוקה לפי סטטוס הטיולים"
+        }
+      },
+      "loadingChart": "טוען תרשים...",
+      "longest": {
+        "title": "הטיול הארוך ביותר",
+        "subtitle": "הטיול עם מספר הימים הגדול ביותר בחו\"ל"
+      },
+      "shortest": {
+        "title": "הטיול הקצר ביותר",
+        "subtitle": "הטיול הקצר ביותר בחו\"ל"
+      },
+      "average": {
+        "title": "משך טיול ממוצע",
+        "subtitle": "מספר ימים ממוצע לכל טיול"
+      },
+      "totalDays": {
+        "title": "סך כל הימים בטיולים",
+        "subtitle": "סכום כל משכי הטיולים"
+      },
+      "days": "ימים"
+    },
+    "history": {
+      "mostVisited": {
+        "title": "המדינות שביקרתי בהן הכי הרבה",
+        "subtitle": "מבוסס על טיולים בחו\u0022ל שהושלמו"
+      },
+      "recent": {
+        "title": "טיולים אחרונים",
+        "subtitle": "שלושת הטיולים האחרונים שלך"
+      },
+      "first": {
+        "title": "הטיול הראשון",
+        "subtitle": "הטיול המוקדם ביותר שמתועד"
+      },
+      "last": {
+        "title": "הטיול האחרון",
+        "subtitle": "הטיול האחרון שלך"
+      }
+    },
+    "months": {
+      "title": "טיולים לפי חודש",
+      "noData": "אין נתוני טיולים זמינים.",
+      "columns": {
+        "name": "חודש",
+        "total": "סה\"כ",
+        "percentage": "אחוז"
+      },
+      "mostPopular": {
+        "title": "החודש הפופולרי ביותר"
+      },
+      "leastPopular": {
+        "title": "החודש הכי פחות פופולרי"
+      },
+      "breakdownTitle": "חלוקת טיולים חודשית",
+      "trips": "טיולים"
+    },
+    "year": {
+      "title": "טיולים לפי שנה",
+      "breakdownTitle": "חלוקת טיולים שנתית",
+      "toggle": { "both": "שניהם" },
+      "columns": { "year": "שנה", "total": "סה\"כ" }
+    }
   }
 }

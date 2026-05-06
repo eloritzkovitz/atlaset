@@ -95,7 +95,7 @@
       "countriesTitle": "Countries",
       "noCountriesSelected": "No countries selected",
       "notesTitle": "Notes",
-      "notesPlaceholder": "Add notes about this trip..."      
+      "notesPlaceholder": "Add notes about this trip..."
     },
     "actions": {
       "saveChanges": "Save Changes",
@@ -140,6 +140,7 @@
     "cultural": "Cultural",
     "other": "Other"
   },
+  "types": { "local": "Local", "abroad": "Abroad" },
   "statuses": {
     "planned": "Planned",
     "upcoming": "Upcoming",

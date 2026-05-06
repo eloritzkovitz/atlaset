@@ -1,13 +1,16 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaCrown } from "react-icons/fa6";
 import { DashboardCard, PieLegendCard, Table, Chip } from "@components";
 import { MONTH_NAMES_SHORT, MONTH_COLORS } from "@constants/date";
 import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
+import { translateColumns } from "../utils/columns";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));
 
 export function TripsByMonth() {
+  const { t } = useTranslation("dashboard");
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const {
     tripsByMonthData,
@@ -43,12 +46,25 @@ export function TripsByMonth() {
     <>
       <div className="flex flex-row gap-8 justify-center items-stretch">
         {/* Pie and legend */}
-        <DashboardCard title="Trips by Month" className="flex-1 min-w-[400px]">
+        <DashboardCard
+          title={t("statistics.months.title", {
+            defaultValue: "Trips by Month",
+          })}
+          className="flex-1 min-w-[400px]"
+        >
           {monthLabels.length > 0 ? (
             <div className="flex flex-row justify-center gap-50 min-h-[220px] mt-2">
               {/* Pie Chart */}
               <div className="flex flex-col items-center justify-center">
-                <Suspense fallback={<div>Loading chart...</div>}>
+                <Suspense
+                  fallback={
+                    <div>
+                      {t("statistics.loadingChart", {
+                        defaultValue: "Loading chart...",
+                      })}
+                    </div>
+                  }
+                >
                   <PieChart
                     labels={monthLabels}
                     data={monthCounts}
@@ -76,19 +92,28 @@ export function TripsByMonth() {
               </div>
             </div>
           ) : (
-            <p className="text-muted">No trip data available.</p>
+            <p className="text-muted">
+              {t("statistics.months.noData", {
+                defaultValue: "No trip data available.",
+              })}
+            </p>
           )}
         </DashboardCard>
         {/* Popularity cards */}
         <div className="flex flex-col gap-4 min-w-[320px] max-w-[380px]">
-          <DashboardCard title="Most Popular Month">
+          <DashboardCard
+            title={t("statistics.months.mostPopular.title", {
+              defaultValue: "Most Popular Month",
+            })}
+          >
             <div className="flex items-center gap-2">
               <Chip className="bg-surface font-semibold px-3 py-2 text-base gap-2">
                 <FaCrown className="text-yellow-500 text-lg" />
                 {mostPopularMonth?.name ?? "—"}
                 {mostPopularMonth && (
                   <span className="text-muted font-normal text-sm ms-2">
-                    ({mostPopularMonth.total} trips,{" "}
+                    ({mostPopularMonth.total}{" "}
+                    {t("statistics.months.trips", { defaultValue: "trips" })},{" "}
                     {totalTripsForMonth > 0
                       ? `${Math.round((mostPopularMonth.total / totalTripsForMonth) * 100)}%`
                       : "0%"}
@@ -98,13 +123,18 @@ export function TripsByMonth() {
               </Chip>
             </div>
           </DashboardCard>
-          <DashboardCard title="Least Popular Month">
+          <DashboardCard
+            title={t("statistics.months.leastPopular.title", {
+              defaultValue: "Least Popular Month",
+            })}
+          >
             <div className="flex items-center gap-2">
               <Chip className="bg-surface font-semibold px-3 py-2 text-base gap-2">
                 {leastPopularMonth?.name ?? "—"}
                 {leastPopularMonth && (
                   <span className="text-muted font-normal text-sm ms-2">
-                    ({leastPopularMonth.total} trips,{" "}
+                    ({leastPopularMonth.total}{" "}
+                    {t("statistics.months.trips", { defaultValue: "trips" })},{" "}
                     {totalTripsForMonth > 0
                       ? `${Math.round((leastPopularMonth.total / totalTripsForMonth) * 100)}%`
                       : "0%"}
@@ -116,9 +146,20 @@ export function TripsByMonth() {
           </DashboardCard>
         </div>
       </div>
-      <DashboardCard title="Monthly Trip Breakdown" className="mt-6">
+      <DashboardCard
+        title={t("statistics.months.breakdownTitle", {
+          defaultValue: "Monthly Trip Breakdown",
+        })}
+        className="mt-6"
+      >
         <div className="overflow-x-auto">
-          <Table columns={MONTH_TABLE_COLUMNS} data={allMonthsData} />
+          <Table
+            columns={useMemo(
+              () => translateColumns(MONTH_TABLE_COLUMNS, t),
+              [t],
+            )}
+            data={allMonthsData}
+          />
         </div>
       </DashboardCard>
     </>

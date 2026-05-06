@@ -7,6 +7,7 @@ import { SortableFilterHeader } from "./SortableFilterHeader";
 export interface TableColumn<T> {
   key: SortKey<T>;
   label: string;
+  labelKey?: string;
   icon?: React.ElementType;
   iconClass?: string;
   render?: (row: T) => React.ReactNode;
