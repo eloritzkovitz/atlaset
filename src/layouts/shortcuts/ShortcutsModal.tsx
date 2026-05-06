@@ -5,7 +5,7 @@ import { ICONS } from "@constants/icons";
 import { categoryColumns, keyCommands } from "@constants/keyCommands";
 import { useUI } from "@contexts/UIContext";
 import type { KeyCommand } from "@types";
-import { slugify } from "@utils/string";
+import { canonicalKey } from "@utils/string";
 import { ShortcutRow } from "./ShortcutRow";
 
 export function ShortcutsModal() {
@@ -55,10 +55,7 @@ export function ShortcutsModal() {
               groupedCommands[category] ? (
                 <div key={category} className="mb-6">
                   <div className="text-lg font-bold mb-2 text-start">
-                    {t(
-                      `shortcuts.categories.${slugify(category).replace(/-/g, "_")}`,
-                      category,
-                    )}
+                    {t(`shortcuts.categories.${canonicalKey(category)}`, category)}
                   </div>
                   <table className="w-full mx-auto text-start">
                     <tbody>

@@ -49,6 +49,9 @@
     "clear": "נקה",
     "clearAll": "נקה הכל"
   },
+  "filter": {
+    "all": "הכל"
+  },
   "sort": {
     "direction": "כיוון",
     "ascending": "עולה",
@@ -115,7 +118,7 @@
     "prevAria": "העמוד הקודם",
     "nextAria": "העמוד הבא"
   },
-  "empty": "—",
+  "empty": "—",  
   "chip": {
     "more": "עוד {{count}}",
     "moreTooltipPrefix": "פריטים נוספים:\n"

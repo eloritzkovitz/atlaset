@@ -1,6 +1,8 @@
 import { useTranslation } from "react-i18next";
+import { canonicalKey } from "@utils/string";
 import type { Country, Currency } from "../../types";
 import { getTranscontinentalInfo } from "../../utils/countryData";
+import { useCountryData } from "../../hooks/useCountryData";
 import {
   formatTimezones,
   getAltNamesDisplay,
@@ -32,6 +34,20 @@ export function CountryInfoTable({
   currencies,
 }: CountryInfoTableProps) {
   const { t } = useTranslation("atlas");
+  const { t: tCountries } = useTranslation("countries");
+  const { subregionsByRegion } = useCountryData();
+  const normalizeKey = (raw?: string) => canonicalKey(String(raw ?? ""));
+
+  // Handle transcontinental countries info
+  const trans = getTranscontinentalInfo(
+    country,
+    subregionsByRegion as Record<string, string[]> | undefined,
+  );
+  const additionalRegion = trans?.additionalRegion;
+  const additionalRegionKey = trans?.additionalRegionKey;
+  const additionalSubregion = trans?.additionalSubregion;
+  const additionalSubregionKey = trans?.additionalSubregionKey;
+  const additionalSubregionRegion = trans?.additionalSubregionRegion;
 
   return (
     <table className="w-full border-separate [border-spacing:0.5rem]">
@@ -41,11 +57,16 @@ export function CountryInfoTable({
             {t("countries.details.overview.region")}
           </td>
           <td>
-            {country.region}
-            {getTranscontinentalInfo(country)?.additionalRegion && (
+            {tCountries(`regions.${country.region}`, {
+              defaultValue: country.region,
+            })}
+            {additionalRegion && (
               <span>
                 {" "}
-                / {getTranscontinentalInfo(country)?.additionalRegion}
+                /{" "}
+                {tCountries(`regions.${additionalRegionKey}`, {
+                  defaultValue: additionalRegion,
+                })}
               </span>
             )}
           </td>
@@ -55,11 +76,20 @@ export function CountryInfoTable({
             {t("countries.details.overview.subregion")}
           </td>
           <td>
-            {country.subregion || "—"}
-            {getTranscontinentalInfo(country)?.additionalSubregion && (
+            {country.subregion
+              ? tCountries(
+                  `subregions.${country.region}.${normalizeKey(country.subregion)}`,
+                  { defaultValue: country.subregion },
+                )
+              : "—"}
+            {additionalSubregion && (
               <span>
                 {" "}
-                / {getTranscontinentalInfo(country)?.additionalSubregion}
+                /{" "}
+                {tCountries(
+                  `subregions.${additionalSubregionRegion ?? country.region}.${additionalSubregionKey}`,
+                  { defaultValue: additionalSubregion },
+                )}
               </span>
             )}
           </td>
@@ -124,7 +154,13 @@ export function CountryInfoTable({
             <td className="font-semibold">
               {t("countries.details.overview.drivingSide")}
             </td>
-            <td>{country.drivingSide || "—"}</td>
+            <td>
+              {country.drivingSide
+                ? tCountries(`drivingSide.${country.drivingSide}`, {
+                    defaultValue: country.drivingSide,
+                  })
+                : "—"}
+            </td>
           </tr>
         )}
         <tr>

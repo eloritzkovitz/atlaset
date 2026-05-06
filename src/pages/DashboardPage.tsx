@@ -12,9 +12,11 @@ import {
   DASHBOARD_MENU,
   DashboardPanelMenu,
   DashboardRoutes,
+  getDashboardMeta,
+  translateRegionLabel,
+  translateSubregionLabel,
   useDashboardRouteState,
   useDashboardNavigation,
-  getDashboardMeta,
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
@@ -22,7 +24,14 @@ import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
-  const { countries, currencies, loading, error } = useCountryData();
+  const {
+    countries,
+    currencies,
+    loading,
+    error,
+    subregionsByRegion,
+    subregionToRegion,
+  } = useCountryData();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
@@ -74,12 +83,32 @@ export default function DashboardPage() {
   });
 
   // Translate breadcrumbs
-  const { t } = useTranslation("dashboard");
+  const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tCountries } = useTranslation("countries");
+
+  const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
+    const raw = crumb.label ?? crumb.key ?? "";
+    if (crumb.labelKey) return tDashboard(crumb.labelKey);
+    if (crumb.key === "region")
+      return translateRegionLabel(
+        raw,
+        tCountries,
+        tDashboard,
+        subregionsByRegion,
+      );
+    if (crumb.key === "subregion")
+      return translateSubregionLabel(
+        raw,
+        subregionToRegion,
+        selectedRegion ?? undefined,
+        tCountries,
+      );
+    return raw;
+  };
+
   const translatedBreadcrumbs = breadcrumbs.map((crumb) => ({
     ...crumb,
-    label: crumb.labelKey
-      ? t(crumb.labelKey, { defaultValue: crumb.label ?? crumb.key ?? "" })
-      : (crumb.label ?? crumb.key ?? ""),
+    label: resolveCrumbLabel(crumb),
   }));
 
   usePageTitle(pageTitle, {

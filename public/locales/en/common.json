@@ -51,6 +51,9 @@
     "clear": "Clear",
     "clearAll": "Clear All"
   },
+  "filter": {
+    "all": "All"
+  },
   "sort": {
     "direction": "Direction",
     "ascending": "Ascending",

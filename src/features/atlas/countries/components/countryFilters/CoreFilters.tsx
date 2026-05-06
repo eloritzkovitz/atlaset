@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import { canonicalKey } from "@utils/string";
+import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
 import {
@@ -47,7 +50,12 @@ export function CoreFilters({
   geoTypeOptions,
   sovereigntyOptions,
 }: CoreFiltersProps) {
-  const { allRegions } = useCountryData();
+  const { allRegions, subregionToRegion } = useCountryData();
+  const { t } = useTranslation("countries");
+  const { t: tCommon } = useTranslation("common");
+
+  // Normalizes a string key for translation lookup
+  const normalizeKey = (raw?: string) => canonicalKey(String(raw ?? ""));
 
   return (
     <>
@@ -60,39 +68,77 @@ export function CoreFilters({
       {expanded && (
         <>
           {coreFiltersConfig.map((filter) => {
-            let value, setValue, options;
-            if (filter.key === "region") {
-              value = selectedRegion;
-              setValue = handleRegionChange;
-              options = filter.getOptions(allRegions);
-            } else if (filter.key === "subregion") {
-              value = selectedSubregion;
-              setValue = setSelectedSubregion;
-              options = filter.getOptions(subregionOptions);
-            } else if (filter.key === "geoType") {
-              value = selectedGeoType;
-              setValue = setSelectedGeoType;
-              options = filter.getOptions(geoTypeOptions);
-            } else if (filter.key === "sovereignty") {
-              value = selectedSovereignty;
-              setValue = setSelectedSovereignty;
-              options = filter.getOptions(sovereigntyOptions);
-            } else if (filter.key === "visited") {
-              value = selectedVisited;
-              setValue = setSelectedVisited;
-              options = filter.getOptions();
-            }
+            const key = filter.key as string;
+
+            const valueMap: Record<string, unknown> = {
+              region: selectedRegion,
+              subregion: selectedSubregion,
+              geoType: selectedGeoType,
+              sovereignty: selectedSovereignty,
+              visited: selectedVisited,
+            };
+
+            const setterMap: Record<string, (v: string) => void> = {
+              region: (v: string) => handleRegionChange(String(v)),
+              subregion: (v: string) => setSelectedSubregion(String(v)),
+              geoType: (v: string) =>
+                setSelectedGeoType(
+                  (v as unknown) === "all" ? "" : (v as GeoType),
+                ),
+              sovereignty: (v: string) =>
+                setSelectedSovereignty(
+                  (v as unknown) === "all" ? "" : (v as SovereigntyStatus),
+                ),
+              visited: (v: string) => setSelectedVisited(v as VisitedStatus),
+            };
+
+            const optionsSource: Record<string, unknown[]> = {
+              region: allRegions,
+              subregion: subregionOptions,
+              geoType: geoTypeOptions,
+              sovereignty: sovereigntyOptions,
+            };
+
+            const baseOptions = filter.getOptions(
+              optionsSource[key] as string[],
+            );
+
+            const translateLabel = (opt: FilterOption) => {
+              if (key === "region") {
+                return t(`regions.${String(opt.value)}`, {
+                  defaultValue: String(opt.label),
+                });
+              }
+              if (key === "subregion") {
+                const sk = String(opt.value);
+                const regionKey =
+                  selectedRegion || subregionToRegion.get(sk) || "";
+                const normalized = normalizeKey(sk);
+                return regionKey
+                  ? t(`subregions.${regionKey}.${normalized}`, {
+                      defaultValue: String(opt.label),
+                    })
+                  : String(opt.label);
+              }
+              return String(opt.label);
+            };
+            const options = (baseOptions ?? []).map((o: FilterOption) => ({
+              ...o,
+              label:
+                o.value === "all" ? tCommon("filter.all") : translateLabel(o),
+            }));
 
             const disabled =
-              (filter.key === "sovereignty" && sovereignOnly) ||
-              (filter.key === "visited" && visitedOnly);
-
+              (key === "sovereignty" && sovereignOnly) ||
+              (key === "visited" && visitedOnly);
+            const setValue = setterMap[key];
+            const value = valueMap[key];
             const selectValue =
               value === "" || value === undefined ? "all" : String(value);
 
             return setValue ? (
               <SelectInput
-                key={filter.key}
+                key={key}
                 label={
                   typeof filter.label === "function"
                     ? filter.label(selectValue ?? "")

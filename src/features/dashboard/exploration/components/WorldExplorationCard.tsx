@@ -1,6 +1,7 @@
 import { Card } from "@components";
 import { useAnimatedNumber } from "@hooks";
 import { percent } from "@utils/number";
+import { useTranslation } from "react-i18next";
 
 interface WorldExplorationCardProps {
   visited: number;
@@ -17,6 +18,7 @@ export function WorldExplorationCard({
   onShowAllCountries,
 }: WorldExplorationCardProps) {
   const animatedVisited = useAnimatedNumber(visited, 640);
+  const { t: tDashboard } = useTranslation("dashboard");
 
   return (
     <Card
@@ -24,18 +26,18 @@ export function WorldExplorationCard({
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
-      aria-label="Show all countries"
+      aria-label={tDashboard("exploration.showAllCountries", "Show all countries")}
     >
       {!loading && (
         <>
-          <div className="text-2xl font-semibold mb-2">World Exploration</div>
+          <div className="text-2xl font-semibold mb-2">{tDashboard("exploration.worldTitle", "World Exploration")}</div>
           <div className="text-5xl font-bold text-primary mb-2">
             <span dir="ltr">
               {animatedVisited} / {total}
             </span>
           </div>
           <div className="text-lg text-muted">
-            {percent(animatedVisited, total)} of countries visited
+            {percent(animatedVisited, total)} {tDashboard("exploration.ofCountriesVisited", "of countries visited")}
           </div>
           <div className="w-full mt-4">
             <div className="h-3 bg-surface rounded-full overflow-hidden">

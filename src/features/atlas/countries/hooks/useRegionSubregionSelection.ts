@@ -1,9 +1,5 @@
 import { useEffect, useMemo } from "react";
-import {
-  getSubregionsForRegion,
-  useCountryData,
-  type Country,
-} from "@features/countries";
+import { useCountryData } from "@features/countries";
 
 /**
  * Manages logic for region and subregion selection.
@@ -15,30 +11,36 @@ import {
 export function useRegionSubregionSelection(
   selectedRegion: string,
   selectedSubregion: string,
-  setSelectedRegion: (region: string) => void
+  setSelectedRegion: (region: string) => void,
 ) {
-  const { countries, allSubregions } = useCountryData();
+  const { allSubregions, subregionsByRegion } = useCountryData();
 
   // Dynamic subregion options based on selected region
-  const subregionOptions = useMemo(
-    () =>
-      selectedRegion && selectedRegion !== ""
-        ? getSubregionsForRegion(countries, selectedRegion)
-        : allSubregions,
-    [selectedRegion, countries, allSubregions]
-  );
+  const subregionOptions = useMemo(() => {
+    if (selectedRegion && selectedRegion !== "") {
+      return subregionsByRegion?.[selectedRegion] ?? [];
+    }
+    return allSubregions;
+  }, [selectedRegion, subregionsByRegion, allSubregions]);
 
   // Auto-select region if subregion is set but region is not
   useEffect(() => {
-    if (selectedSubregion && !selectedRegion && countries.length > 0) {
-      const match = countries.find(
-        (c: Country) => c.subregion === selectedSubregion
-      );
-      if (match && match.region) {
-        setSelectedRegion(match.region);
+    if (selectedSubregion && !selectedRegion) {
+      if (subregionsByRegion) {
+        for (const [rk, subs] of Object.entries(subregionsByRegion)) {
+          if (subs.includes(selectedSubregion)) {
+            setSelectedRegion(rk);
+            return;
+          }
+        }
       }
     }
-  }, [selectedSubregion, selectedRegion, countries, setSelectedRegion]);
+  }, [
+    selectedSubregion,
+    selectedRegion,
+    subregionsByRegion,
+    setSelectedRegion,
+  ]);
 
   return { subregionOptions };
 }

@@ -2,7 +2,7 @@
   "menu": {
     "title": "לוח בקרה",
     "countries": "מדינות",
-    "allCountries": "כל המדינות",
+    "allCountries": "הכל",
     "currencyExchange": "המרת מטבע",
     "overview": "סקירה",
     "exploration": "מדינות",
@@ -21,6 +21,17 @@
       "statistics": "סטטיסטיקה",
       "view": "צפייה"
     }
+  },
+  "exploration": {
+    "worldTitle": "חקירת העולם",
+    "showAllCountries": "הצג את כל המדינות",
+    "ofCountriesVisited": "מהמדינות שביקרתי בהן",
+    "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
+    "showTranscontinental": "הצג מדינות חוצות יבשות",
+    "hideTranscontinental": "הסתר מדינות חוצות יבשות",
+    "switchToList": "החלף לתצוגת רשימה",
+    "switchToGrid": "החלף לתצוגת רשת",
+    "resetFilters": "איפוס מסננים"
   },
   "currencies": {
     "searchPlaceholder": "חפש לפי שם או קוד",

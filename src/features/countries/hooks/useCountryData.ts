@@ -15,7 +15,7 @@ type CountryTranslation = Partial<Country>;
 export function useCountryData() {
   const dispatch: AppDispatch = useDispatch();
   const data = useSelector((state: RootState) => state.countryData);
-  const { i18n } = useTranslation();
+  const { i18n } = useTranslation("countries");
 
   // Fetch data on first use if not already loading or loaded
   useEffect(() => {
@@ -59,17 +59,46 @@ export function useCountryData() {
     return countries.map((c) => {
       const iso = (c.isoCode || "").toUpperCase();
       const trans = bundle[iso] ?? {};
+
+      // Keep canonical region/subregion/drivingSide keys in `country` data.
       return {
         ...c,
         name: trans.name ?? c.name,
         capital: trans.capital ?? c.capital ?? "",
         altNames: trans.altNames ?? c.altNames ?? [],
+        region: (trans.region as string) ?? c.region,
+        subregion: (trans.subregion as string) ?? c.subregion,
+        drivingSide: (trans.drivingSide as string) ?? c.drivingSide,
         territories: (trans.territories ??
           c.territories ??
           ({} as CountryTerritories)) as CountryTerritories,
       } as Country;
     });
   }, [countries, i18n]);
+
+  // Build a map of region -> subregions for translation and other lookups
+  const subregionsByRegion = useMemo(() => {
+    const tmp: Record<string, Set<string>> = {};
+    for (const c of localizedCountries) {
+      const rk = c.region as string;
+      const sk = c.subregion as string;
+      if (!rk || !sk) continue;
+      if (!tmp[rk]) tmp[rk] = new Set<string>();
+      tmp[rk].add(sk);
+    }
+    const out: Record<string, string[]> = {};
+    for (const [k, set] of Object.entries(tmp)) out[k] = Array.from(set).sort();
+    return out;
+  }, [localizedCountries]);
+
+  // Map subregionKey -> regionKey for quick reverse lookups
+  const subregionToRegion = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const [rk, subs] of Object.entries(subregionsByRegion)) {
+      for (const s of subs) m.set(s, rk);
+    }
+    return m;
+  }, [subregionsByRegion]);
 
   // Return only currencies that have at least one country using them
   const { currencies } = data;
@@ -92,6 +121,8 @@ export function useCountryData() {
   return {
     ...data,
     countries: localizedCountries,
+    subregionsByRegion,
+    subregionToRegion,
     refreshData,
     currencies: currenciesWithUsers,
   };

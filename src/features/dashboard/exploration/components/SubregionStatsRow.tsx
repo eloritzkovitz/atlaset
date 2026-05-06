@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
+import { useCountryData } from "@features/countries";
 import { useAnimatedNumber } from "@hooks";
 import { percent } from "@utils/number";
 import { RegionButton } from "./RegionButton";
 import type { SubregionStat } from "../types";
+import { translateSubregionLabel } from "../utils/translation";
 
 interface SubregionStatsRowProps {
   subregion: SubregionStat;
@@ -14,10 +17,14 @@ export function SubregionStatsRow({
   onClick,
 }: SubregionStatsRowProps) {
   const animatedVisited = useAnimatedNumber(subregion.subregionVisited, 640);
+  const { t } = useTranslation("countries");
+  const { subregionToRegion } = useCountryData();
+  const label = translateSubregionLabel(subregion.subregion, subregionToRegion, undefined, t);
+
   return (
     <RegionButton
       key={subregion.subregion}
-      label={subregion.subregion}
+      label={label}
       stats={`${animatedVisited}/${subregion.subregionCountries.length} (${percent(
         animatedVisited,
         subregion.subregionCountries.length,

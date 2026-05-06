@@ -1,9 +1,15 @@
+import { useTranslation } from "react-i18next";
 import { Card } from "@components";
-import { regionIcons, defaultRegionIcon } from "@features/countries";
+import {
+  regionIcons,
+  defaultRegionIcon,
+  useCountryData,
+} from "@features/countries";
 import { useAnimatedNumber } from "@hooks";
 import { percent } from "@utils/number";
 import { RegionButton } from "./RegionButton";
 import { SubregionStatsRow } from "./SubregionStatsRow";
+import { translateRegionLabel } from "../utils/translation";
 import type { SubregionStat } from "../types";
 
 interface RegionCardProps {
@@ -27,6 +33,9 @@ export function RegionCard({
   onSubregionClick,
 }: RegionCardProps) {
   const animatedVisited = useAnimatedNumber(visited, 640);
+  const { t: tCountries } = useTranslation("countries");
+  const { t: tDashboard } = useTranslation("dashboard");
+  const { subregionsByRegion } = useCountryData();
 
   return (
     <Card loading={loading} skeletonLines={6}>
@@ -34,7 +43,12 @@ export function RegionCard({
         <>
           <RegionButton
             icon={regionIcons[region] || defaultRegionIcon}
-            label={region}
+            label={translateRegionLabel(
+              region,
+              tCountries,
+              tDashboard,
+              subregionsByRegion,
+            )}
             stats={`${animatedVisited}/${total} (${percent(
               animatedVisited,
               total,

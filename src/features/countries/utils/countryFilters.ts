@@ -82,7 +82,8 @@ export function filterCountries(
   ).filter((country) => {
     if (
       selectedRegion &&
-      country.region !== selectedRegion &&
+      (country as unknown as Record<string, unknown>).regionKey !==
+        selectedRegion &&
       !(
         getQualifierTokens(country, "region", {
           tcOption: tcParsed,
@@ -93,7 +94,8 @@ export function filterCountries(
 
     if (
       selectedSubregion &&
-      country.subregion !== selectedSubregion &&
+      (country as unknown as Record<string, unknown>).subregionKey !==
+        selectedSubregion &&
       !(
         getQualifierTokens(country, "subregion", {
           tcOption: tcParsed,
@@ -102,7 +104,10 @@ export function filterCountries(
     )
       return false;
 
-    if (selectedSovereignty && country.sovereigntyStatus !== selectedSovereignty)
+    if (
+      selectedSovereignty &&
+      country.sovereigntyStatus !== selectedSovereignty
+    )
       return false;
 
     if (selectedGeoType && country.geoType !== selectedGeoType) return false;

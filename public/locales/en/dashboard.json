@@ -22,6 +22,17 @@
       "view": "View"
     }
   },
+  "exploration": {
+    "worldTitle": "World Exploration",
+    "showAllCountries": "Show all countries",
+    "ofCountriesVisited": "of countries visited",
+    "showVisitedOnly": "Show Visited Only",
+    "showTranscontinental": "Show transcontinental countries",
+    "hideTranscontinental": "Hide transcontinental countries",
+    "switchToList": "Switch to List View",
+    "switchToGrid": "Switch to Grid View",
+    "resetFilters": "Reset Filters"
+  },
   "currencies": {
     "searchPlaceholder": "Search by name or code",
     "empty": "Currency not found.",
@@ -131,8 +142,8 @@
     "year": {
       "title": "Trips by Year",
       "breakdownTitle": "Yearly Trip Breakdown",
-      "toggle": { "both": "Both" }
-      ,"columns": { "year": "Year", "total": "Total" }
+      "toggle": { "both": "Both" },
+      "columns": { "year": "Year", "total": "Total" }
     }
   }
 }
