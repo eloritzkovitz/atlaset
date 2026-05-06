@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import {
   Breadcrumbs,
@@ -71,6 +72,16 @@ export default function DashboardPage() {
     selectedCurrency,
     selectedAchievement,
   });
+
+  // Translate breadcrumbs
+  const { t } = useTranslation("dashboard");
+  const translatedBreadcrumbs = breadcrumbs.map((crumb) => ({
+    ...crumb,
+    label: crumb.labelKey
+      ? t(crumb.labelKey, { defaultValue: crumb.label ?? crumb.key ?? "" })
+      : (crumb.label ?? crumb.key ?? ""),
+  }));
+
   usePageTitle(pageTitle, {
     fallback: "Dashboard | Atlaset",
   });
@@ -141,7 +152,10 @@ export default function DashboardPage() {
           />
         )}
         <div className="flex-1 mt-12 min-w-0">
-          <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
+          <Breadcrumbs
+            crumbs={translatedBreadcrumbs}
+            onCrumbClick={handleCrumbClick}
+          />
           <DashboardRoutes
             countries={countries}
             currencies={currencies}

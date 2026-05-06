@@ -1,4 +1,6 @@
-import { AppLinks } from "@components";
+import { useTranslation } from "react-i18next";
+import { AppLinks, DirectionalIcon } from "@components";
+import { ICONS } from "@constants/icons";
 import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
@@ -7,7 +9,6 @@ import { RecentActivitySection } from "@features/user/activity/components/Recent
 import { useVisitedCountries } from "@features/visits";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
-import { getStatsConfig } from "../config/stats";
 import { isCompleted } from "../../achievements/utils/achievements";
 import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 
@@ -19,6 +20,7 @@ export function OverviewGrid() {
   const { countries, loading: countriesLoading } = useCountryData();
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
+  const { t } = useTranslation("dashboard");
 
   // Get visited countries and exploration stats
   const visited = useVisitedCountries();
@@ -32,19 +34,43 @@ export function OverviewGrid() {
       isCompleted(a, countries, visited, trips, homeCountry),
     ).length ?? 0;
 
-  // Use extracted stats config
-  const stats = getStatsConfig({
-    countriesLoading,
-    visitedCountries,
-    totalCountries,
-    achievementsLoading,
-    completedCount,
-    achievementsCount,
-  });
-
-  // Extract first name for personalized heading
+  const stats = [
+    {
+      label: t("overview.stats.countriesExplored", {
+        defaultValue: "Countries Explored",
+      }),
+      value: countriesLoading ? "..." : `${visitedCountries}/${totalCountries}`,
+      icon: <ICONS.exploration className="text-5xl text-info" />,
+      link: "/dashboard/exploration",
+    },
+    {
+      label: t("overview.stats.achievements", { defaultValue: "Achievements" }),
+      value: achievementsLoading
+        ? "..."
+        : `${completedCount}/${achievementsCount}`,
+      icon: <ICONS.achievements className="text-5xl text-warning" />,
+      link: "/dashboard/achievements",
+    },
+    {
+      label: t("overview.stats.statistics", { defaultValue: "Statistics" }),
+      value: (
+        <span className="flex items-center gap-2">
+          {t("overview.stats.view", { defaultValue: "View" })}
+          <DirectionalIcon
+            variant="chevron"
+            direction="next"
+            className="inline-block"
+          />
+        </span>
+      ),
+      icon: <ICONS.statistics className="text-5xl text-success" />,
+      link: "/dashboard/statistics",
+    },
+  ];
   const firstName =
-    userProfile?.displayName?.split(" ")[0] ?? userProfile?.username ?? "User";
+    userProfile?.displayName?.split(" ")[0] ??
+    userProfile?.username ??
+    t("overview.user", { defaultValue: "User" });
 
   return (
     <div className="mt-8">
@@ -55,7 +81,12 @@ export function OverviewGrid() {
           loading={userProfileLoading}
         />
       )}
-      <h2 className="text-3xl font-bold mb-6">{firstName}&apos;s Overview</h2>
+      <h2 className="text-3xl font-bold mb-6">
+        {t("overview.stats.heading", {
+          name: firstName,
+          defaultValue: `${firstName}'s Overview`,
+        })}
+      </h2>
       <StatsGrid stats={stats} />
       <RecentActivitySection />
       <AppLinks className="mb-10 mt-6 text-sm font-semibold" />

@@ -2,6 +2,7 @@ import { DirectionalIcon } from "../ui/DirectionalIcon";
 
 export interface Crumb {
   label: string;
+  labelKey?: string;
   key?: string | null;
 }
 

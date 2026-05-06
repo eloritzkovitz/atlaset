@@ -1,0 +1,55 @@
+{
+  "menu": {
+    "title": "Dashboard",
+    "countries": "Countries",
+    "allCountries": "All Countries",
+    "currencyExchange": "Currency Exchange",
+    "overview": "Overview",
+    "exploration": "Exploration",
+    "currencies": "Currencies",
+    "achievements": "Achievements",
+    "statistics": "Statistics"
+  },
+  "overview": {
+    "goToProfile": "Go to your profile",
+    "user": "User",
+    "welcomeBack": "Welcome back!",
+    "stats": {
+      "heading": "{{name}}'s Overview",
+      "countriesExplored": "Countries Explored",
+      "achievements": "Achievements",
+      "statistics": "Statistics",
+      "view": "View"
+    }
+  },
+  "currencies": {
+    "searchPlaceholder": "Search by name or code",
+    "empty": "Currency not found.",
+    "viewExchange": "View currency exchange",
+    "exchangeHeader": "1 {{currency}} equals",
+    "currencyInfo": {
+      "usingCurrency": "Countries using {{code}}",
+      "dependenciesUsingCurrency": "Dependencies and territories using {{code}}"
+    },
+    "currencyExchange": {
+      "rateValue": "{{rate}} {{currency}}",
+      "from": "From",
+      "to": "To",
+      "input": {
+        "amountToConvert": "Amount to convert",
+        "convertedAmount": "Converted amount"
+      },
+      "select": {
+        "from": "From currency",
+        "to": "To currency"
+      },
+      "swap": {
+        "ariaLabel": "Swap currencies",
+        "title": "Swap"
+      },
+      "convert": "Convert",
+      "converting": "Converting...",
+      "errorPrefix": "Error:"
+    }
+  }
+}

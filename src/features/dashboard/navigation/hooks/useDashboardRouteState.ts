@@ -26,12 +26,15 @@ export function useDashboardRouteState() {
     selectedPanel = "currencies/exchange";
   }
 
-  // Determine menu selected panel (for highlighting in menu)
-  const isCountriesPanel = selectedPanel.startsWith("countries");
-  const menuSelectedPanel =
-    isCountriesPanel && selectedPanel !== "exploration"
-      ? "exploration"
-      : selectedPanel;
+  // Determine menu selected panel (for highlighting in menu)  
+  let menuSelectedPanel: string;
+  if (selectedPanel.startsWith("countries")) {
+    menuSelectedPanel = "countries";
+  } else if (selectedPanel.startsWith("currencies")) {
+    menuSelectedPanel = "currencies";
+  } else {
+    menuSelectedPanel = selectedPanel;
+  }
 
   // Inline extraction for region, subregion, isoCode
   const [region, subregion, isoCode] = pathParts

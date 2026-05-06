@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import {
   CountryListGroup,
@@ -17,6 +18,7 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
   currency,
   countries,
 }) => {
+  const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
@@ -60,7 +62,10 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       />
       {sovereignIsoCodes.length > 0 && (
         <CountryListGroup
-          label={`Countries using ${currency.code}`}
+          label={t("currencies.currencyInfo.usingCurrency", {
+            code: currency.code,
+            defaultValue: `Countries using ${currency.code}`,
+          })}
           isoCodes={sovereignIsoCodes}
           countries={countries}
           expanded={expandedSovereign}
@@ -70,7 +75,10 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       )}
       {dependencyIsoCodes.length > 0 && (
         <CountryListGroup
-          label={`Dependencies and territories using ${currency.code}`}
+          label={t("currencies.currencyInfo.dependenciesUsingCurrency", {
+            code: currency.code,
+            defaultValue: `Dependencies and territories using ${currency.code}`,
+          })}
           isoCodes={dependencyIsoCodes}
           countries={countries}
           expanded={expandedDependencies}

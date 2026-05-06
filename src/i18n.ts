@@ -16,6 +16,7 @@ i18n
       "common",
       "countries",
       "currencies",
+      "dashboard",
       "quizzes",
       "settings",
       "trips",

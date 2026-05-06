@@ -1,0 +1,55 @@
+{
+  "menu": {
+    "title": "לוח בקרה",
+    "countries": "מדינות",
+    "allCountries": "כל המדינות",
+    "currencyExchange": "המרת מטבע",
+    "overview": "סקירה",
+    "exploration": "מדינות",
+    "currencies": "מטבעות",
+    "achievements": "הישגים",
+    "statistics": "סטטיסטיקה"
+  },
+  "overview": {
+    "goToProfile": "עבור לפרופיל שלך",
+    "user": "משתמש",
+    "welcomeBack": "ברוך שובך!",
+    "stats": {
+      "heading": "סקירה של {{name}}",
+      "countriesExplored": "מדינות שביקרתי בהן",
+      "achievements": "הישגים",
+      "statistics": "סטטיסטיקה",
+      "view": "צפייה"
+    }
+  },
+  "currencies": {
+    "searchPlaceholder": "חפש לפי שם או קוד",
+    "empty": "מטבע לא נמצא.",
+    "viewExchange": "הצג המרת מטבע",
+    "currencyInfo": {
+      "usingCurrency": "מדינות שמשתמשות ב- {{code}}",
+      "dependenciesUsingCurrency": "תלויות וטריטוריות שמשתמשות ב- {{code}}"
+    },
+    "currencyExchange": {
+      "exchangeHeader": "1 {{currency}} שווה",
+      "rateValue": "{{rate}} {{currency}}",
+      "from": "מ",
+      "to": "אל",
+      "input": {
+        "amountToConvert": "סכום להמרה",
+        "convertedAmount": "סכום מומר"
+      },
+      "select": {
+        "from": "מטבע מוצא",
+        "to": "מטבע יעד"
+      },
+      "swap": {
+        "ariaLabel": "החלף מטבעות",
+        "title": "החלפה"
+      },
+      "convert": "המרה",
+      "converting": "ממיר...",
+      "errorPrefix": "שגיאה:"
+    }
+  }
+}
