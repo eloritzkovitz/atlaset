@@ -42,7 +42,7 @@
     "react-icons": "5.6.0",
     "react-markdown": "10.1.0",
     "react-redux": "9.2.0",
-    "react-router-dom": "7.14.2",
+    "react-router-dom": "7.15.0",
     "react-select": "5.10.2",
     "recharts": "3.8.1",
     "rehype-prism-plus": "2.0.2",
@@ -77,20 +77,14 @@
     "fake-indexeddb": "6.2.5",
     "globals": "17.6.0",
     "jsdom": "29.1.1",
-    "postcss": "8.5.13",
+    "postcss": "8.5.14",
     "redux-mock-store": "1.5.5",
     "rollup-plugin-visualizer": "7.0.1",
     "tailwindcss": "4.2.4",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.59.1",
+    "typescript-eslint": "8.59.2",
     "vite": "8.0.10",
-    "vite-plugin-pwa": "1.2.0",
+    "vite-plugin-pwa": "1.3.0",
     "vitest": "4.1.5"
-  },
-  "overrides": {
-    "vite-plugin-pwa": {
-      "vite": "^8.0.0",
-      "serialize-javascript": "7.0.5"
-    }
   }
 }
