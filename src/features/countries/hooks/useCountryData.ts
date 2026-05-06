@@ -100,23 +100,18 @@ export function useCountryData() {
     return m;
   }, [subregionsByRegion]);
 
-  // Return only currencies that have at least one country using them
-  const { currencies } = data;
+  // Build localized currencies list from country currency codes + translations
   const currenciesWithUsers = useMemo(() => {
-    if (!currencies) return [] as Currency[];
-    return currencies
-      .filter((cur: Currency) => (currencyCounts.get(cur.code) ?? 0) > 0)
-      .map((cur: Currency) => {
-        const translated = i18n.t(`currencies:${cur.code}`, {
-          defaultValue: cur.name,
-        });
-        return {
-          ...cur,
-          name:
-            typeof translated === "string" ? translated : String(translated),
-        } as Currency;
-      });
-  }, [currencies, currencyCounts, i18n]);
+    const codes = Array.from(currencyCounts.keys());
+    if (codes.length === 0) return [] as Currency[];
+    return codes.map((code) => {
+      const translated = i18n.t(`currencies:${code}`, { defaultValue: code });
+      return {
+        code,
+        name: typeof translated === "string" ? translated : String(translated),
+      } as Currency;
+    });
+  }, [currencyCounts, i18n]);
 
   return {
     ...data,

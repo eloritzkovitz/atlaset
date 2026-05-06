@@ -80,29 +80,21 @@ const remoteUrlFor = (base, lng, filename) => {
         lng,
         "currencies.json",
       );
-      // For English, we skip fetching currencies.json since it's not needed
-      if (lng === "en") {
-        console.log(`Skipping: ${lng}/currencies.json (not needed)`);
-      } else {
-        console.log(`Fetching: ${lng}/currencies.json -> ${currenciesUrl}`);
-        try {
-          const currenciesRaw = await fetchWithRetries(currenciesUrl);
-          const localCurrenciesRaw = readLocalFile(
-            localeDir,
-            "currencies.json",
-          );
-          if (!localCurrenciesRaw || localCurrenciesRaw !== currenciesRaw) {
-            writeLocalFile(localeDir, "currencies.json", currenciesRaw);
-            console.log(`${lng}/currencies.json downloaded and updated!`);
-          } else {
-            console.log(`${lng}/currencies.json is up to date.`);
-          }
-        } catch (err) {
-          console.warn(
-            `Warning: failed to fetch ${lng}/currencies.json:`,
-            err.message || err,
-          );
+      console.log(`Fetching: ${lng}/currencies.json -> ${currenciesUrl}`);
+      try {
+        const currenciesRaw = await fetchWithRetries(currenciesUrl);
+        const localCurrenciesRaw = readLocalFile(localeDir, "currencies.json");
+        if (!localCurrenciesRaw || localCurrenciesRaw !== currenciesRaw) {
+          writeLocalFile(localeDir, "currencies.json", currenciesRaw);
+          console.log(`${lng}/currencies.json downloaded and updated!`);
+        } else {
+          console.log(`${lng}/currencies.json is up to date.`);
         }
+      } catch (err) {
+        console.warn(
+          `Warning: failed to fetch ${lng}/currencies.json:`,
+          err.message || err,
+        );
       }
     } catch (err) {
       anyFailure = true;
