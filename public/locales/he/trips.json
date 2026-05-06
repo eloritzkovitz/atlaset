@@ -1,4 +1,6 @@
 {
+  "loading": "טוען טיולים...",
+  "noTrips": "אין עדיין טיולים.",
   "table": {
     "toolbar": {
       "search": {

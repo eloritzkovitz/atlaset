@@ -24,6 +24,7 @@
   },
   "exploration": {
     "worldTitle": "World Exploration",
+    "allTitle": "All Countries",
     "showAllCountries": "Show all countries",
     "ofCountriesVisited": "of countries visited",
     "showVisitedOnly": "Show Visited Only",

@@ -98,7 +98,8 @@
         "time": "Time",
         "date": "Date"
       },
-      "noScores": "No scores found."
+      "noScores": "No scores found.",
+      "authRequired": "You must be signed in to view leaderboards."
     }
   }
 }

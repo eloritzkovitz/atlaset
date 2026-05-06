@@ -1,4 +1,6 @@
 {
+  "loading": "Loading trips...",
+  "noTrips": "No trips yet.",
   "table": {
     "toolbar": {
       "search": {

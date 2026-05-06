@@ -24,6 +24,7 @@ export default function QuizzesPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation("quizzes");
+  const { t: tCommon } = useTranslation("common");
 
   // Cards config
   const cards = [
@@ -64,9 +65,10 @@ export default function QuizzesPage() {
 
   // Set page titles dynamically
   const match = cards.find((card) => location.pathname.endsWith(card.route));
+  const appName = tCommon("appName", "Atlaset");
   usePageTitle(match ? match.title : t("pageTitle", "Quizzes"), {
-    suffix: " | Atlaset",
-    fallback: "Quizzes | Atlaset",
+    suffix: ` | ${appName}`,
+    fallback: `${t("pageTitle", "Quizzes")} | ${appName}`,
   });
 
   // UI state
@@ -164,8 +166,10 @@ export default function QuizzesPage() {
                         } else if (!leaderboardHint) {
                           setHintKey((k) => k + 1);
                           setLeaderboardHint({
-                            message:
+                            message: t(
+                              "leaderboards.authRequired",
                               "You must be signed in to view leaderboards.",
+                            ),
                             icon: (
                               <FaCircleXmark className="text-danger text-xl" />
                             ),

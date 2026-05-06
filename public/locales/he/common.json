@@ -1,4 +1,5 @@
 {
+  "appName": "אטלסט",
   "sidebar": {
     "expand": "הרחב סרגל צד",
     "collapse": "כווץ סרגל צד",
@@ -118,7 +119,7 @@
     "prevAria": "העמוד הקודם",
     "nextAria": "העמוד הבא"
   },
-  "empty": "—",  
+  "empty": "—",
   "chip": {
     "more": "עוד {{count}}",
     "moreTooltipPrefix": "פריטים נוספים:\n"

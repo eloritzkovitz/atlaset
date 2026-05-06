@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -17,6 +18,8 @@ import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
 
 export default function TripsPage() {
+  const { t } = useTranslation("trips");
+  const { t: tCommon } = useTranslation("common");
   const countryData = useCountryData();
   const {
     trips,
@@ -37,7 +40,9 @@ export default function TripsPage() {
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
 
   // Set page title
-  usePageTitle("Trips | Atlaset");
+  const appName = tCommon("appName", "Atlaset");
+  const pageTitle = t("table.itemLabels.plural", "Trips");
+  usePageTitle(`${pageTitle} | ${appName}`);
 
   // Trip filtering hook
   const {
@@ -181,10 +186,10 @@ export default function TripsPage() {
           isEditing={!!trip && !!trip.id}
         />
         {loading ? (
-          <LoadingSpinner fullScreen message="Loading trips..." />
+          <LoadingSpinner fullScreen message={t("loading", "Loading trips...")} />
         ) : trips.length === 0 ? (
           <div className="flex flex-1 items-center justify-center min-h-[300px] text-muted text-lg">
-            No trips yet.
+            {t("noTrips", "No trips yet.")}
           </div>
         ) : (
           <>

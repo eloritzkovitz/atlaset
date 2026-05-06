@@ -70,11 +70,9 @@ export default function DashboardPage() {
   } = useRegionSubregionFilters();
 
   // Build dashboard meta (title and breadcrumbs)
-  const { pageTitle, breadcrumbs } = getDashboardMeta({
+  const { breadcrumbs } = getDashboardMeta({
     selectedPanel,
-    selectedCountry,
-    routeSelectedRegion,
-    routeSelectedSubregion,
+    selectedCountry,    
     currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
@@ -84,6 +82,7 @@ export default function DashboardPage() {
 
   // Translate breadcrumbs
   const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
   const { t: tCountries } = useTranslation("countries");
 
   const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
@@ -111,9 +110,60 @@ export default function DashboardPage() {
     label: resolveCrumbLabel(crumb),
   }));
 
-  usePageTitle(pageTitle, {
-    fallback: "Dashboard | Atlaset",
-  });
+  // Handlers for navigation and syncing URL state to filter state
+  const getTranslatedLeft = () => {
+    const safePanel = selectedPanel ?? "";
+    const isCountryPanel =
+      safePanel.startsWith("countries") ||
+      ["countries", "countries/all", "exploration"].includes(safePanel);
+    const isCurrencyPanel = safePanel.startsWith("currencies");
+    const isAchievementPanel = safePanel.startsWith("achievements");
+
+    if (safePanel === "exploration")
+      return tDashboard("exploration.worldTitle");
+
+    if (isCountryPanel) {
+      // If route explicitly shows "all" or panel is countries/all, show translated "All Countries"
+      if (routeSelectedRegion === "all" || safePanel === "countries/all")
+        return tDashboard("exploration.allTitle");
+
+      if (selectedCountry && selectedCountry.name) return selectedCountry.name;
+      if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
+        return translateSubregionLabel(
+          routeSelectedSubregion,
+          subregionToRegion,
+          selectedRegion ?? undefined,
+          tCountries,
+        );
+      }
+      if (routeSelectedRegion && routeSelectedRegion !== "all") {
+        return translateRegionLabel(
+          routeSelectedRegion,
+          tCountries,
+          tDashboard,
+          subregionsByRegion,
+        );
+      }
+      // fallback to panel label
+      return currentPanel
+        ? tDashboard(`menu.${currentPanel.key}`)
+        : tDashboard("menu.title");
+    }
+
+    if (isCurrencyPanel && selectedCurrency && selectedCurrency.name)
+      return selectedCurrency.name;
+
+    if (isAchievementPanel && selectedAchievement && selectedAchievement.name)
+      return selectedAchievement.name;
+
+    return currentPanel
+      ? tDashboard(`menu.${currentPanel.key}`)
+      : tDashboard("menu.title");
+  };
+
+  const left = getTranslatedLeft();
+  const appName = tCommon("appName", "Atlaset");
+  usePageTitle(`${left} | ${appName}`);
 
   // Sync route state to filter state
   useEffect(() => {
