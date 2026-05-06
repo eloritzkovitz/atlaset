@@ -2,30 +2,47 @@ import { lazy, Suspense, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCrown } from "react-icons/fa6";
 import { DashboardCard, PieLegendCard, Table, Chip } from "@components";
-import { MONTH_NAMES_SHORT, MONTH_COLORS } from "@constants/date";
+import { getMonthsShort, getMonthsLong } from "@utils/date";
 import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 import { translateColumns } from "../utils/columns";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));
 
+const MONTH_COLORS = [
+  "#22d3ee",
+  "#6366f1",
+  "#818cf8",
+  "#a78bfa",
+  "#f472b6",
+  "#f43f5e",
+  "#f87171",
+  "#f59e42",
+  "#fbbf24",
+  "#4ade80",
+  "#34d399",
+  "#10b981",
+];
+
 export function TripsByMonth() {
   const { t } = useTranslation("dashboard");
+  const tDate = useTranslation("date").t;
+  const monthShortNames = getMonthsShort(tDate);
+  const monthLongNames = getMonthsLong(tDate);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const {
     tripsByMonthData,
     mostPopularMonth,
     leastPopularMonth,
     totalTripsForMonth,
-  } = useTripsByMonthStats();
+  } = useTripsByMonthStats(monthLongNames);
 
   // Ensure all months are represented, even with zero trips
-  const allMonthsData = MONTH_NAMES_SHORT.map((name, idx) => {
-    const found = tripsByMonthData.find(
-      (m: { name: string }) => m.name === name,
-    );
-    const local = found ? found.local : 0;
-    const abroad = found ? found.abroad : 0;
+  const monthDataMap = new Map(tripsByMonthData.map((d) => [d.name, d]));
+  const allMonthsData = monthLongNames.map((name, idx) => {
+    const found = monthDataMap.get(name);
+    const local = found?.local ?? 0;
+    const abroad = found?.abroad ?? 0;
     const total = local + abroad;
     return {
       name,
@@ -38,7 +55,7 @@ export function TripsByMonth() {
     };
   });
 
-  const monthLabels = allMonthsData.map((d) => d.name);
+  const monthLabels = monthShortNames;
   const monthCounts = allMonthsData.map((d) => d.total);
   const monthColors = allMonthsData.map((d) => d.color);
 
@@ -80,7 +97,7 @@ export function TripsByMonth() {
                 {allMonthsData.map((d, idx) => (
                   <PieLegendCard
                     key={d.name}
-                    label={d.name}
+                    label={monthShortNames[idx] ?? d.name}
                     color={d.color}
                     percentage={d.percentage}
                     isActive={hoveredIdx === idx}

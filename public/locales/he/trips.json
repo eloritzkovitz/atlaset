@@ -143,7 +143,7 @@
   "types": { "local": "מקומי", "abroad": "בחו\"ל" },
   "statuses": {
     "planned": "מתוכנן",
-    "upcoming": "בקרוב",
+    "upcoming": "עתידי",
     "in-progress": "בתהליך",
     "completed": "הושלם",
     "cancelled": "בוטל"
