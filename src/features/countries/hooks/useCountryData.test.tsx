@@ -1,6 +1,17 @@
+import { vi } from "vitest";
+
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (k: any, opts?: any) => (opts && opts.defaultValue) || k,
+    i18n: {
+      t: (k: any, opts?: any) => (opts && opts.defaultValue) || k,
+      language: "en",
+    },
+  }),
+}));
+
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
-import { vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useCountryData } from "./useCountryData";
 import * as countrySlice from "../slices/countryDataSlice";
