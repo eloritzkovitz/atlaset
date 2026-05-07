@@ -230,7 +230,7 @@ export function getCountryCounts({
   const allCount = filteredCountries.length;
   const allCountWithoutLayers = filteredCountriesNoLayer.length;
   const sovereignCount = filteredCountries.filter(
-    (c) => c.sovereigntyStatus === "Sovereign",
+    (c) => c.sovereigntyStatus === "sovereign",
   ).length;
   const visitedCount = filteredCountries.filter((c) =>
     visitedIsoCodes.includes(c.isoCode),
@@ -249,7 +249,7 @@ export function getCountryCounts({
  */
 export function createSovereigntyFilter(sovereignOnly?: boolean) {
   return (c: Country) =>
-    sovereignOnly ? c.sovereigntyStatus === "Sovereign" : true;
+    sovereignOnly ? c.sovereigntyStatus === "sovereign" : true;
 }
 
 /**

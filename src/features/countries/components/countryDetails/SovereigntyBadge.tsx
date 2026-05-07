@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
-import { SOVEREIGNTY_KEYS } from "../../constants/localeKeys";
 import { useCountryData } from "../../hooks/useCountryData";
 import type { SovereigntyStatus } from "../../types";
 import { getCountryName } from "../../utils/countryData";
@@ -13,18 +12,20 @@ interface SovereigntyBadgeProps {
 
 // Map sovereignty types to badge colors
 const badgeColors: Record<SovereigntyStatus, string> = {
-  Sovereign: "bg-info-hover/70",
-  Dependency: "bg-muted/70",
-  "Overseas Region": "bg-success-hover/50",
-  Unrecognized: "bg-danger-hover/70",
-  Disputed: "bg-warning-hover/70",
-  Unknown: "bg-muted-hover",
+  sovereign: "bg-info/50",
+  dependency: "bg-info/30",
+  overseas_region: "bg-code/50",
+  partially_recognized: "bg-warning/50",
+  unrecognized: "bg-danger/50",
+  disputed: "bg-warning/50",
+  unknown: "bg-muted/50",
 };
 
 const PREFIX_TYPES = new Set<SovereigntyStatus>([
-  "Overseas Region",
-  "Disputed",
-  "Dependency",
+  "dependency",
+  "overseas_region",  
+  "partially_recognized",
+  "disputed",
 ]);
 
 export function SovereigntyBadge({
@@ -38,11 +39,12 @@ export function SovereigntyBadge({
   // If no type is provided, don't render anything
   if (!type) return null;
 
-  const color = badgeColors[type] || badgeColors.Dependency;
-  const key = type ? SOVEREIGNTY_KEYS[type] : undefined;
-  const translated = key
-    ? t(`sovereignty.${key}`, { defaultValue: type })
-    : type;
+  const color = badgeColors[type] || badgeColors.dependency;
+  const translated = t(`sovereignty.${type}`, { defaultValue: type });
+
+  const prefix = t(`sovereigntyPrefixes.${type}`, {
+    defaultValue: translated,
+  });
 
   if (sovereignState) {
     const name = getCountryName(sovereignState, countries);
@@ -69,7 +71,7 @@ export function SovereigntyBadge({
       >
         {PREFIX_TYPES.has(type as SovereigntyStatus) ? (
           <>
-            {translated}
+            {prefix}
             {flag}
           </>
         ) : (

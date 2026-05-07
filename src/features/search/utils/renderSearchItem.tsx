@@ -32,9 +32,9 @@ function getCountryLabel(item: Country, countries: Country[]) {
     countries,
   );
   switch (item.sovereigntyStatus) {
-    case "Dependency":
+    case "dependency":
       return sovereignName ? `Dependency of ${sovereignName}` : "Country";
-    case "Overseas Region":
+    case "overseas_region":
       return sovereignName ? `Overseas region of ${sovereignName}` : "Country";
     default:
       return "Country";

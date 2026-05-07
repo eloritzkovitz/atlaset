@@ -147,10 +147,10 @@ export function CountriesPanel({
   }, [showVisitedOnly, selectedVisited, setSelectedVisited]);
 
   useEffect(() => {
-    if (sovereignOnly && selectedSovereignty !== "Sovereign") {
-      setSelectedSovereignty("Sovereign");
+    if (sovereignOnly && selectedSovereignty !== "sovereign") {
+      setSelectedSovereignty("sovereign");
     }
-    if (!sovereignOnly && selectedSovereignty === "Sovereign") {
+    if (!sovereignOnly && selectedSovereignty === "sovereign") {
       setSelectedSovereignty("");
     }
   }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);

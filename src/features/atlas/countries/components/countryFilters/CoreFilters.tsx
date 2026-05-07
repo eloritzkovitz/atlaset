@@ -121,6 +121,11 @@ export function CoreFilters({
                     })
                   : String(opt.label);
               }
+              if (key === "sovereignty") {
+                return t(`sovereignty.${String(opt.value)}`, {
+                  defaultValue: String(opt.label),
+                });
+              }
               return i18next.t(String(opt.label), {
                 defaultValue: String(opt.label),
               });

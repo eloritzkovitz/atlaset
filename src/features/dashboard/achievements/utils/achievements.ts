@@ -33,7 +33,7 @@ function buildFilterParamsFromCriteria(
   criteria: Criteria,
 ): CountryFilterOptions {
   const { sovereign } = criteria as unknown as { sovereign?: boolean };
-  const selectedSovereignty = sovereign === false ? "" : ("Sovereign" as const);
+  const selectedSovereignty = sovereign === false ? "" : ("sovereign" as const);
   const mods: Record<string, unknown> = {};
   const rawCount = (criteria as unknown as Record<string, unknown>)?.count;
   if (typeof rawCount !== "undefined" && rawCount !== null) {

@@ -112,7 +112,13 @@ export function CountryInfoTable({
           <td className="font-semibold">
             {t("countries.details.overview.government")}
           </td>
-          <td>{country.government || "—"}</td>
+          <td>
+            {country.government
+              ? tCountries(`governmentType.${country.government}`, {
+                  defaultValue: String(country.government),
+                })
+              : "—"}
+          </td>
         </tr>
         <tr>
           <td className="font-semibold">

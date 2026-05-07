@@ -7,11 +7,12 @@ import { capitalize, capitalizeWords } from "@utils/string";
 
 // Predefined sovereignty order for consistent dropdown ordering
 export const SOVEREIGNTY_ORDER: SovereigntyStatus[] = [
-  "Sovereign",
-  "Dependency",
-  "Overseas Region",
-  "Disputed",
-  "Unrecognized",
+  "sovereign",
+  "dependency",
+  "overseas_region",
+  "partially_recognized",
+  "disputed",
+  "unrecognized",
 ];
 
 /** Filter keys for countries */
