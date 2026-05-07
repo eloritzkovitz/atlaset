@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { capitalizeWords } from "@utils/string";
 import { CountryListGroup } from "./CountryListGroup";
 import { getCountryName, getCountryTerritories } from "../../utils/countryData";
@@ -15,10 +16,10 @@ export function CountryTerritoriesContent({
   countries,
   onSelectCountry,
 }: CountryTerritoriesContentProps) {
+  const { i18n, t: tCountries } = useTranslation("countries");
+
   const group =
-    country && country.isoCode
-      ? getCountryTerritories(country)
-      : undefined;
+    country && country.isoCode ? getCountryTerritories(country) : undefined;
 
   // Prepare sections from territories data
   const sections = useMemo(() => {
@@ -34,11 +35,24 @@ export function CountryTerritoriesContent({
 
     // If this ISO is a sovereign with named groups
     if (group.groups && Object.keys(group.groups).length > 0) {
-      return Object.entries(group.groups).map(([prop, info]) => ({
-        key: prop,
-        label: info.label ?? capitalizeWords(prop.replace(/[_-]/g, " ")),
-        data: sortByName(info.codes || []),
-      }));
+      const lng = (i18n.language || "en").split("-")[0];
+      const bundle = i18n.getResourceBundle?.(lng, "countries") ?? {};
+
+      return Object.entries(group.groups).map(([prop, info]) => {
+        const raw =
+          bundle?.[country.isoCode as string]?.territories?.[prop] ??
+          tCountries(`territories.${prop}`, {
+            defaultValue:
+              info.label ?? capitalizeWords(prop.replace(/[_-]/g, " ")),
+          });
+
+        const label =
+          typeof raw === "string"
+            ? raw
+            : (raw?.label ?? raw?.name ?? String(raw));
+
+        return { key: prop, label, data: sortByName(info.codes || []) };
+      });
     }
 
     return [];
