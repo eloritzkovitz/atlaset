@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
 import { canonicalKey } from "@utils/string";
 import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
@@ -61,7 +62,7 @@ export function CoreFilters({
     <>
       <CollapsibleHeader
         icon={<FaShapes />}
-        label="Core Filters"
+        label={t("atlas:countries.filters.core.title")}
         expanded={expanded}
         onToggle={onToggle}
       />
@@ -120,7 +121,9 @@ export function CoreFilters({
                     })
                   : String(opt.label);
               }
-              return String(opt.label);
+              return i18next.t(String(opt.label), {
+                defaultValue: String(opt.label),
+              });
             };
             const options = (baseOptions ?? []).map((o: FilterOption) => ({
               ...o,
@@ -142,7 +145,9 @@ export function CoreFilters({
                 label={
                   typeof filter.label === "function"
                     ? filter.label(selectValue ?? "")
-                    : filter.label
+                    : i18next.t(String(filter.label), {
+                        defaultValue: String(filter.label),
+                      })
                 }
                 value={selectValue ?? "all"}
                 onChange={(val) => {

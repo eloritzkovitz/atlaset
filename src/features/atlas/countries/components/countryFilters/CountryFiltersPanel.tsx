@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
@@ -67,6 +68,7 @@ export function CountryFiltersPanel({
 }: CountryFiltersPanelProps) {
   const { countries } = useCountryData();
   const { timelineMode } = useTimeline();
+  const { t } = useTranslation("atlas");
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
@@ -109,7 +111,7 @@ export function CountryFiltersPanel({
       title={
         <>
           <ICONS.filters />
-          Filters
+          {t("countries.filters.title")}
         </>
       }
       width={DEFAULT_PANEL_WIDTH}
@@ -119,15 +121,15 @@ export function CountryFiltersPanel({
         <>
           <ActionButton
             onClick={resetFilters}
-            ariaLabel="Reset all filters"
-            title="Reset filters"
+            ariaLabel={t("common:actions.resetFilters")}
+            title={t("common:actions.resetFilters")}
             icon={<ICONS.reset />}
             rounded
           />
           <ActionButton
             onClick={onHide}
-            ariaLabel="Close filters panel"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />

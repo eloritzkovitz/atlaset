@@ -31,10 +31,11 @@
   },
   "countries": {
     "title": "מדינות",
-    "refreshData": "רענן נתוני מדינות",
-    "filters": "מסננים",
-    "showFilters": "הצג מסננים",
-    "hideFilters": "הסתר מסננים",
+    "actions": {
+      "refreshData": "רענן נתוני מדינות",
+      "showFilters": "הצג מסננים",
+      "hideFilters": "הסתר מסננים"
+    },
     "searchPlaceholder": "חפש מדינות",
     "countryLists": {
       "all": "הכל",
@@ -65,6 +66,29 @@
       "label": "מדינות:",
       "noneSelected": "לא נבחרו מדינות.",
       "title": "בחר מדינות"
+    },
+    "filters": {
+      "title": "מסננים",
+      "core": {
+        "title": "מסננים בסיסיים",
+        "region": "יבשת",
+        "subregion": "אזור גיאוגרפי",
+        "geoType": "סוג גאוגרפי",
+        "sovereignty": "ריבונות",
+        "visitStatus": "מצב ביקור",
+        "visited": "ביקרתי",
+        "notVisited": "לא ביקרתי"
+      },
+      "layer": {
+        "title": "מסנני שכבה"
+      },
+      "timeline": {
+        "title": "מסנני ציר זמן",
+        "year": "שנה",
+        "visitCount": "כמות ביקורים",
+        "from": "מ",
+        "to": "עד"
+      }
     },
     "details": {
       "header": {

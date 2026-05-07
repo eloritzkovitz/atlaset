@@ -31,10 +31,11 @@
   },
   "countries": {
     "title": "Countries",
-    "refreshData": "Refresh country data",
-    "filters": "Filters",
-    "showFilters": "Show Filters",
-    "hideFilters": "Hide Filters",
+    "actions": {
+      "refreshData": "Refresh country data",
+      "showFilters": "Show Filters",
+      "hideFilters": "Hide Filters"
+    },
     "searchPlaceholder": "Search countries",
     "countryLists": {
       "all": "All",
@@ -65,6 +66,29 @@
       "label": "Countries:",
       "noneSelected": "No countries selected.",
       "title": "Select Countries"
+    },
+    "filters": {
+      "title": "Filters",
+      "core": {
+        "title": "Core Filters",
+        "region": "Region",
+        "subregion": "Subregion",
+        "geoType": "Geographic Type",
+        "sovereignty": "Sovereignty",
+        "visitStatus": "Visit Status",
+        "visited": "Visited",
+        "notVisited": "Not Visited"
+      },
+      "layer": {
+        "title": "Layer Filters"
+      },
+      "timeline": {
+        "title": "Timeline Filters",
+        "year": "Year",
+        "visitCount": "Visit Count",
+        "from": "From",
+        "to": "to"
+      }
     },
     "details": {
       "header": {

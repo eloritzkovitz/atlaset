@@ -30,8 +30,11 @@ export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
   CountryFilterKey
 >;
 
-// "All" option constant
-const allOption: FilterOption = { value: "all", label: "All" };
+// "All" option constant (translation key)
+const allOption: FilterOption = {
+  value: "all",
+  label: "common:filter.all",
+};
 
 interface CountryFilterProps {
   selectedRegion: string;
@@ -53,7 +56,7 @@ export const coreFiltersConfig: CountryFilterConfig<
 >[] = [
   createSelectFilter(
     "region",
-    "Region",
+    "atlas:countries.filters.core.region",
     (allRegions) => [
       allOption,
       ...mapOptions(allRegions ?? [], capitalizeWords),
@@ -63,7 +66,7 @@ export const coreFiltersConfig: CountryFilterConfig<
   ),
   createSelectFilter(
     "subregion",
-    "Subregion",
+    "atlas:countries.filters.core.subregion",
     (subregionOptions) => [
       allOption,
       ...mapOptions(subregionOptions ?? [], capitalizeWords),
@@ -74,7 +77,7 @@ export const coreFiltersConfig: CountryFilterConfig<
   ),
   createSelectFilter(
     "geoType",
-    "Geographic Type",
+    "atlas:countries.filters.core.geoType",
     (options) => [
       allOption,
       ...mapOptions(
@@ -85,11 +88,12 @@ export const coreFiltersConfig: CountryFilterConfig<
       ),
     ],
     (props) => (props.selectedGeoType === "" ? "all" : props.selectedGeoType),
-      (props, val) => props.setSelectedGeoType(val === "all" ? "" : (val as GeoType)),
+    (props, val) =>
+      props.setSelectedGeoType(val === "all" ? "" : (val as GeoType)),
   ),
   createSelectFilter(
     "sovereignty",
-    "Sovereignty",
+    "atlas:countries.filters.core.sovereignty",
     (options) => [
       allOption,
       ...mapOptions(
@@ -105,12 +109,18 @@ export const coreFiltersConfig: CountryFilterConfig<
   ),
   {
     key: "visited",
-    label: "Visit Status",
+    label: "atlas:countries.filters.core.visitStatus",
     type: "select",
     getOptions: () => [
-      { value: "any", label: "All" },
-      { value: "visited", label: "Visited" },
-      { value: "not_visited", label: "Not Visited" },
+      { value: "any", label: "common:filter.all" },
+      {
+        value: "visited",
+        label: "atlas:countries.filters.core.visited",
+      },
+      {
+        value: "not_visited",
+        label: "atlas:countries.filters.core.notVisited",
+      },
     ],
     getValue: (props) => props.selectedVisited || "any",
     setValue: (props, val) => {
@@ -135,9 +145,18 @@ export const layerFilterConfig: FilterConfig<Layer, LayerFilterProps, string> =
     getOptions: (layers?: Layer[]) => {
       const layer = layers?.[0];
       return [
-        { value: "all", label: layer?.filterLabels?.all ?? "All" },
-        { value: "only", label: layer?.filterLabels?.only ?? "Include only" },
-        { value: "exclude", label: layer?.filterLabels?.exclude ?? "Exclude" },
+        {
+          value: "all",
+          label: layer?.filterLabels?.all ?? "common:filter.all",
+        },
+        {
+          value: "only",
+          label: layer?.filterLabels?.only ?? "common:filter.includeOnly",
+        },
+        {
+          value: "exclude",
+          label: layer?.filterLabels?.exclude ?? "common:filter.exclude",
+        },
       ];
     },
     getValue: (props, layer?: Layer) =>
@@ -154,7 +173,7 @@ export const layerFilterConfig: FilterConfig<Layer, LayerFilterProps, string> =
 // Timeline filter configuration object
 export const timelineFiltersConfig = {
   year: {
-    label: "Year",
+    label: "atlas:countries.filters.timeline.year",
     getValue: ({ selectedYear }: { selectedYear: number }) => selectedYear,
     setValue: (
       { setSelectedYear }: { setSelectedYear: (year: number) => void },
@@ -163,26 +182,13 @@ export const timelineFiltersConfig = {
     getOptions: (years: number[]) =>
       years.map((year) => ({ value: year, label: String(year) })),
   },
-  minVisitCount: {
-    label: "Min Visit Count",
+  visitCount: {
+    label: "atlas:countries.filters.timeline.visitCount",
     getValue: ({ minVisitCount }: { minVisitCount: number }) => minVisitCount,
     setValue: (
       { setMinVisitCount }: { setMinVisitCount: (count: number) => void },
       value: string | number,
     ) => setMinVisitCount(Number(value)),
-    getOptions: (max: number) =>
-      Array.from({ length: max }, (_, i) => ({
-        value: i + 1,
-        label: String(i + 1),
-      })),
-  },
-  maxVisitCount: {
-    label: "Max Visit Count",
-    getValue: ({ maxVisitCount }: { maxVisitCount: number }) => maxVisitCount,
-    setValue: (
-      { setMaxVisitCount }: { setMaxVisitCount: (count: number) => void },
-      value: string | number,
-    ) => setMaxVisitCount(Number(value)),
     getOptions: (max: number) =>
       Array.from({ length: max }, (_, i) => ({
         value: i + 1,

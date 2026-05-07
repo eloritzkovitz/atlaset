@@ -211,8 +211,8 @@ export function CountriesPanel({
             {process.env.NODE_ENV === "development" && (
               <ActionButton
                 onClick={refreshData}
-                ariaLabel={t("countries.refreshData")}
-                title={t("countries.refreshData")}
+                ariaLabel={t("countries.actions.refreshData")}
+                title={t("countries.actions.refreshData")}
                 icon={<ICONS.refresh />}
                 rounded
               />
@@ -221,10 +221,14 @@ export function CountriesPanel({
               onClick={toggleFilters}
               ariaLabel={
                 showFilters
-                  ? t("countries.hideFilters")
-                  : t("countries.showFilters")
+                  ? t("countries.actions.hideFilters")
+                  : t("countries.actions.showFilters")
               }
-              title={t("countries.filters")}
+              title={
+                showFilters
+                  ? t("countries.actions.hideFilters")
+                  : t("countries.actions.showFilters")
+              }
               icon={<ICONS.filters />}
               rounded
             />
