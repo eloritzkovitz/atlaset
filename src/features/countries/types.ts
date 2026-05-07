@@ -76,6 +76,12 @@ export type Currency = {
   name: string;
 };
 
+// Represents a language */
+export type Language = {
+  code: string;
+  name: string;
+};
+
 /** Sovereignty statuses for countries. */
 export type SovereigntyStatus =
   | "Sovereign"

@@ -3,7 +3,7 @@
  */
 
 import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
-import type { Currency } from "../types";
+import type { Currency, Language } from "../types";
 
 /** Gets a formatted string for a currency based on its code.
  * @param code - The ISO code of the currency.
@@ -24,9 +24,24 @@ export function getCurrencyDisplay(
  * @param languages - An array of language names.
  * @returns A comma-separated string of languages or "None" if empty.
  */
-export function getLanguagesDisplay(languages?: string[]) {
+export function getLanguagesDisplay(
+  languages?: string[],
+  languagesMap?: Record<string, Language>,
+) {
   if (!languages || languages.length === 0) return "None";
-  return languages.join(", ");
+  const collator = new Intl.Collator(undefined, {
+    sensitivity: "base",
+    numeric: true,
+  });
+
+  const items = languages.map((l) => ({
+    original: l,
+    display: languagesMap?.[l]?.name ?? l,
+  }));
+
+  items.sort((a, b) => collator.compare(a.display, b.display));
+
+  return items.map((it) => it.display).join(", ");
 }
 
 /**

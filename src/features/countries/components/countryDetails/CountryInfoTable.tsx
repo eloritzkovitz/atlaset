@@ -35,7 +35,7 @@ export function CountryInfoTable({
 }: CountryInfoTableProps) {
   const { t } = useTranslation("atlas");
   const { t: tCountries } = useTranslation("countries");
-  const { subregionsByRegion } = useCountryData();
+  const { languages, subregionsByRegion } = useCountryData();
   const normalizeKey = (raw?: string) => canonicalKey(String(raw ?? ""));
 
   // Handle transcontinental countries info
@@ -106,7 +106,7 @@ export function CountryInfoTable({
           <td className="font-semibold">
             {t("countries.details.overview.languages")}
           </td>
-          <td>{getLanguagesDisplay(country.languages)}</td>
+          <td>{getLanguagesDisplay(country.languages, languages)}</td>
         </tr>
         <tr>
           <td className="font-semibold">

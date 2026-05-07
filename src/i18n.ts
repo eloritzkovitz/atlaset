@@ -15,6 +15,7 @@ i18n
       "atlas",
       "common",
       "countries",
+      "languages",
       "currencies",
       "dashboard",
       "quizzes",

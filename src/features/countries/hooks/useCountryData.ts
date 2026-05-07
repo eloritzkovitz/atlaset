@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@app/store";
 import { fetchCountryData } from "../slices/countryDataSlice";
-import type { Country, CountryTerritories, Currency } from "../types";
+import type { Country, CountryTerritories, Currency, Language } from "../types";
 
 type CountryTranslation = Partial<Country>;
 
@@ -60,7 +60,6 @@ export function useCountryData() {
       const iso = (c.isoCode || "").toUpperCase();
       const trans = bundle[iso] ?? {};
 
-      // Keep canonical region/subregion/drivingSide keys in `country` data.
       return {
         ...c,
         name: trans.name ?? c.name,
@@ -68,7 +67,6 @@ export function useCountryData() {
         altNames: trans.altNames ?? c.altNames ?? [],
         region: (trans.region as string) ?? c.region,
         subregion: (trans.subregion as string) ?? c.subregion,
-        drivingSide: (trans.drivingSide as string) ?? c.drivingSide,
         territories: (trans.territories ??
           c.territories ??
           ({} as CountryTerritories)) as CountryTerritories,
@@ -113,12 +111,35 @@ export function useCountryData() {
     });
   }, [currencyCounts, i18n]);
 
+  // Build a set of language codes/names used across countries
+  const languageCodes = useMemo(() => {
+    const set = new Set<string>();
+    for (const c of localizedCountries) {
+      if (!c || !Array.isArray(c.languages)) continue;
+      for (const l of c.languages) set.add(String(l));
+    }
+    return Array.from(set).sort();
+  }, [localizedCountries]);
+
+  // Map language code -> Language object (use i18n translations only)
+  const languagesMap = useMemo(() => {
+    const out: Record<string, Language> = {};
+    for (const code of languageCodes) {
+      const name = i18n.exists(`languages:${code}`)
+        ? String(i18n.t(`languages:${code}`, { defaultValue: code }))
+        : code;
+      out[code] = { code, name } as Language;
+    }
+    return out;
+  }, [languageCodes, i18n]);
+
   return {
     ...data,
     countries: localizedCountries,
     subregionsByRegion,
     subregionToRegion,
-    refreshData,
     currencies: currenciesWithUsers,
+    languages: languagesMap,
+    refreshData,
   };
 }

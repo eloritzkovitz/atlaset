@@ -96,6 +96,29 @@ const remoteUrlFor = (base, lng, filename) => {
           err.message || err,
         );
       }
+
+      // languages.json
+      const languagesUrl = remoteUrlFor(
+        DEFAULT_BASE_URL,
+        lng,
+        "languages.json",
+      );
+      console.log(`Fetching: ${lng}/languages.json -> ${languagesUrl}`);
+      try {
+        const languagesRaw = await fetchWithRetries(languagesUrl);
+        const localLanguagesRaw = readLocalFile(localeDir, "languages.json");
+        if (!localLanguagesRaw || localLanguagesRaw !== languagesRaw) {
+          writeLocalFile(localeDir, "languages.json", languagesRaw);
+          console.log(`${lng}/languages.json downloaded and updated!`);
+        } else {
+          console.log(`${lng}/languages.json is up to date.`);
+        }
+      } catch (err) {
+        console.warn(
+          `Warning: failed to fetch ${lng}/languages.json:`,
+          err.message || err,
+        );
+      }
     } catch (err) {
       anyFailure = true;
       console.error(`Error processing locale ${lng}:`, err);
