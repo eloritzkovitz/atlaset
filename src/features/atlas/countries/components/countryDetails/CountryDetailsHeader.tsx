@@ -5,6 +5,7 @@ import { PanelHeader, ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
 import { CountryWithFlag, type Country } from "@features/countries";
 import { VisitedStatusIndicator } from "@features/countries/components/countryDetails/VisitedStatusIndicator";
+import { useLanguage } from "@features/settings";
 
 interface CountryDetailsHeaderProps {
   country: Country;
@@ -23,6 +24,8 @@ export function CountryDetailsHeader({
 }: CountryDetailsHeaderProps) {
   const navigate = useNavigate();
   const { t } = useTranslation("atlas");
+  const { current: lang } = useLanguage();
+
   return (
     <PanelHeader
       title={
@@ -61,13 +64,14 @@ export function CountryDetailsHeader({
           rounded
         />
         <ActionButton
-          onClick={() =>
-            window.open(
-              `https://en.wikipedia.org/wiki/${country.name.replace(/ /g, "_")}`,
-              "_blank",
-              "noopener,noreferrer",
-            )
-          }
+          onClick={() => {
+            const langSubtag = (lang || "en").split("-")[0];
+            const page = country.name.replace(/ /g, "_");
+            const url = `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(
+              page,
+            )}`;
+            window.open(url, "_blank", "noopener,noreferrer");
+          }}
           ariaLabel={t("countries.details.header.wikipediaAria")}
           title={t("countries.details.header.wikipedia")}
           icon={<FaWikipediaW />}
