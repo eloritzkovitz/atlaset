@@ -8,6 +8,7 @@ import { logUserActivity } from "../../../features/user";
 
 // In-memory dedupe cache to avoid rapid duplicate saves/logs across callers
 let _lastSaved: { key?: string; ts?: number } = {};
+const _inFlightSaves: Record<string, Promise<void> | undefined> = {};
 
 /**
  * Service for managing user settings.
@@ -66,6 +67,7 @@ export const settingsService = {
 
       // Dedupe recent identical save attempts that may race before backend reflects the write
       const dedupeKey = JSON.stringify(newData);
+
       if (
         _lastSaved.key === dedupeKey &&
         _lastSaved.ts &&
@@ -74,19 +76,36 @@ export const settingsService = {
         return;
       }
 
-      await setDoc(settingsDoc, settingsWithId);
+      // If an identical save is already in-flight, wait for it to complete instead
+      if (_inFlightSaves[dedupeKey]) {
+        await _inFlightSaves[dedupeKey];
+        return;
+      }
 
-      // update cache to avoid immediate duplicate writes from other callers
-      _lastSaved = { key: dedupeKey, ts: Date.now() };
+      // Create and store the in-flight promise so concurrent callers coalesce
+      const op = (async () => {
+        try {
+          // Mark as recently-saved to short-circuit very near-future attempts
+          _lastSaved = { key: dedupeKey, ts: Date.now() };
 
-      await logUserActivity(
-        130,
-        {
-          settings: settingsWithId,
-          userName: user!.displayName,
-        },
-        user!.uid,
-      );
+          await setDoc(settingsDoc, settingsWithId);
+
+          await logUserActivity(
+            130,
+            {
+              settings: settingsWithId,
+              userName: user!.displayName,
+            },
+            user!.uid,
+          );
+        } finally {
+          // Clean up in-flight map
+          delete _inFlightSaves[dedupeKey];
+        }
+      })();
+
+      _inFlightSaves[dedupeKey] = op;
+      await op;
     } else {
       const existing = await appDb.settings.get("main");
       if (
