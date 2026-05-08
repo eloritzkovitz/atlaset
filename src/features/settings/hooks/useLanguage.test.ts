@@ -4,7 +4,7 @@ import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { mockUser } from "@test-utils/mockUser";
 
 vi.mock("@constants/languages", () => ({
-  getByCode: (code: string) => ({ isRtl: ["ar", "he", "fa"].includes(code) }),
+  getLanguageByCode: (code: string) => ({ isRtl: ["ar", "he", "fa"].includes(code) }),
   LANGUAGES: [{ code: "he" }, { code: "en" }],
 }));
 

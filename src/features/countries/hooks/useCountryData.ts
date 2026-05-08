@@ -3,8 +3,9 @@ import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState, AppDispatch } from "@app/store";
+import type { Language } from "@types";
 import { fetchCountryData } from "../slices/countryDataSlice";
-import type { Country, CountryTerritories, Currency, Language } from "../types";
+import type { Country, CountryTerritories, Currency } from "../types";
 
 type CountryTranslation = Partial<Country>;
 

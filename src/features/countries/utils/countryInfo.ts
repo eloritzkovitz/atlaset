@@ -2,8 +2,9 @@
  * Utility functions for handling country information display and formatting.
  */
 
+import type { Language } from "@types";
 import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
-import type { Currency, Language } from "../types";
+import type { Currency } from "../types";
 
 /** Gets a formatted string for a currency based on its code.
  * @param code - The ISO code of the currency.

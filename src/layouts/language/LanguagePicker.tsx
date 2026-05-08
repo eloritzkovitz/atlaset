@@ -1,5 +1,4 @@
 import { useCallback, useMemo, useState } from "react";
-// selected icon centralized in ICONS
 import { useTranslation } from "react-i18next";
 import {
   Modal,
@@ -9,8 +8,8 @@ import {
   PanelHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { useLanguage } from "@features/settings";
 import { LANGUAGES } from "@constants/languages";
+import { useLanguage } from "@features/settings";
 
 interface LanguagePickerProps {
   isOpen: boolean;
@@ -22,7 +21,6 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
   const { current, change } = useLanguage();
   const [query, setQuery] = useState("");
 
-  // Use centralized LANGUAGES list and enrich with localized strings
   const languages = useMemo(() => {
     return LANGUAGES.slice()
       .sort((a, b) => (a.priority || 999) - (b.priority || 999))

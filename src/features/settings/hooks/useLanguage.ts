@@ -3,7 +3,7 @@ import { useCallback, useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@app/store";
-import { getByCode, LANGUAGES } from "@constants/languages";
+import { getLanguageByCode, LANGUAGES } from "@constants/languages";
 import { useAuth } from "@features/user";
 import { saveSettings } from "../slices/settingsSlice";
 import type { Settings } from "../types";
@@ -15,7 +15,7 @@ import type { Settings } from "../types";
  */
 export function isRtl(lang?: string | null) {
   const base = (lang || "en").split("-")[0];
-  const def = getByCode(base);
+  const def = getLanguageByCode(base);
   return !!def?.isRtl;
 }
 
