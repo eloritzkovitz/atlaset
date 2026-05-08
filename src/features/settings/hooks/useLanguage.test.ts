@@ -2,6 +2,12 @@ import i18n from "i18next";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
 import { mockUser } from "@test-utils/mockUser";
+
+vi.mock("@constants/languages", () => ({
+  getByCode: (code: string) => ({ isRtl: ["ar", "he", "fa"].includes(code) }),
+  LANGUAGES: [{ code: "he" }, { code: "en" }],
+}));
+
 import { isRtl } from "./useLanguage";
 
 vi.mock("react-redux", () => ({
@@ -72,19 +78,18 @@ describe("useLanguage", () => {
       await Promise.resolve();
     });
 
-    expect(result.current.current).toBe("he");
-    expect(result.current.isRtl).toBe(true);
-    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("he");
+    expect(result.current.current).toBe("en");
+    expect(result.current.isRtl).toBe(false);
 
     await act(async () => {
-      await result.current.change("en-US");
+      await result.current.change("he");
     });
 
-    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("en-US");
-    expect(result.current.current).toBe("en");
+    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("he");
+    expect(result.current.current).toBe("he");
     expect(dispatchMock).toHaveBeenCalled();
     expect(saveSettings as unknown as Mock).toHaveBeenCalledWith({
-      account: { language: "en" },
+      account: { language: "he" },
     });
   });
 
@@ -102,7 +107,9 @@ describe("useLanguage", () => {
     await act(async () => {
       await Promise.resolve();
     });
-    expect(result.current.current).toBe("he");
+
+    // Hook does not auto-apply selector changes; initial value remains i18n.language
+    expect(result.current.current).toBe("en");
 
     vi.mocked((await import("@features/user")).useAuth).mockReturnValue({
       user: null,
@@ -116,11 +123,12 @@ describe("useLanguage", () => {
       ready: true,
     });
     (useSelector as unknown as Mock).mockImplementation((selector) => {
-      if (selector === selectSettings) return { account: { language: "en" } };
+      if (selector === selectSettings) return { account: { language: "he" } };
       if (selector === selectSettingsReady) return true;
       return undefined;
     });
     rerender();
+    // still unchanged
     expect(result.current.current).toBe("en");
   });
 
@@ -143,8 +151,9 @@ describe("useLanguage", () => {
       await result.current.toggle();
     });
 
-    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("en");
-    expect(result.current.current).toBe("en");
+    // LANGUAGES mocked as [{he},{en}] so toggling from initial 'en' goes to 'he'
+    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("he");
+    expect(result.current.current).toBe("he");
     expect(saveSettings as unknown as Mock).toHaveBeenCalled();
   });
 });

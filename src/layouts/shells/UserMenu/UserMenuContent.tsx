@@ -1,7 +1,7 @@
 import type { User } from "firebase/auth";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { MenuButton, Separator } from "@components";
+import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage } from "@features/settings";
@@ -22,7 +22,8 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
 
   // Translation
   const { t } = useTranslation("common");
-  const { name, toggle } = useLanguage();
+  const { name } = useLanguage();
+  const { openLanguagePicker } = useUI();
 
   // Don't render if no user
   if (!user) return null;
@@ -84,9 +85,16 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       label: `${t("menu.language")} (${name})`,
       icon: <ICONS.language className="text-lg me-2" />,
       onClick: () => {
-        toggle();
+        openLanguagePicker();
         onClose?.();
       },
+      trailing: (
+        <DirectionalIcon
+          direction="next"
+          variant="chevron"
+          className="ms-auto text-lg opacity-60"
+        />
+      ),
     },
     { separator: true },
     {
@@ -116,6 +124,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
             url={item.url}
           >
             <span className="font-semibold">{item.label}</span>
+            {item.trailing ?? null}
           </MenuButton>
         ),
       )}

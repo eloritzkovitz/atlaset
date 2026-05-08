@@ -102,6 +102,10 @@ export function UIProvider({ children }: { children: ReactNode }) {
   const toggleCalendar = () => setShowCalendar((prev) => !prev);
   const closeCalendar = () => setShowCalendar(false);
 
+  const [showLanguagePicker, setShowLanguagePicker] = useState(false);
+  const openLanguagePicker = () => setShowLanguagePicker(true);
+  const closeLanguagePicker = () => setShowLanguagePicker(false);
+
   // Calendar state
   const [calendarDate, setCalendarDate] = useState<Date | undefined>();
 
@@ -167,18 +171,21 @@ export function UIProvider({ children }: { children: ReactNode }) {
         toggleHelp,
         closePanel,
         modalOpen,
-        setModalOpen,
+        setModalOpen,        
         showLegend,
         toggleLegend,
         closeLegend,
         showShortcuts,
         toggleShortcuts,
-        closeShortcuts,
+        closeShortcuts,        
         showCalendar,
         calendarDate,
         handleViewInCalendar,
         toggleCalendar,
         closeCalendar,
+        showLanguagePicker,
+        openLanguagePicker,
+        closeLanguagePicker,
       }}
     >
       {children}
