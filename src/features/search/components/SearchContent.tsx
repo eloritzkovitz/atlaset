@@ -71,7 +71,7 @@ export function SearchContent({
           <EmptyListMessage message={t("search.loading")} />
         ) : searchTerm ? (
           results.length === 0 ? (
-            <EmptyListMessage message="No results found." />
+            <EmptyListMessage message={t("search.noResults")} />
           ) : (
             <SearchResultsList
               results={results}

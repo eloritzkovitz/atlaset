@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@contexts/AuthContext";
 import { getSubregionsForRegion, useCountryData } from "@features/countries";
 import { useUserFriends } from "@features/user";
@@ -31,6 +32,7 @@ export function useSearch(searchTerm: string) {
     friendIds,
   );
   const { countries, currencies, allRegions } = useCountryData();
+  const { i18n } = useTranslation("countries");
 
   // Combine and rank results whenever search term or source data changes
   useEffect(() => {
@@ -71,7 +73,7 @@ export function useSearch(searchTerm: string) {
     // Regions
     const mappedRegions = rankAndMap(
       allRegions || [],
-      (r) => r,
+      (r) => String(i18n.t(`countries:regions.${r}`, { defaultValue: r })),
       searchTerm,
       (region) => ({ type: "region" as const, region }),
     );
@@ -82,7 +84,12 @@ export function useSearch(searchTerm: string) {
         const subregions = getSubregionsForRegion(countries || [], region);
         return rankAndMap(
           subregions.map((subregion) => ({ region, subregion })),
-          (s) => s.subregion,
+          (s) =>
+            String(
+              i18n.t(`countries:subregions.${region}.${s.subregion}`, {
+                defaultValue: s.subregion,
+              }),
+            ),
           searchTerm,
           (s) => ({
             type: "subregion" as const,

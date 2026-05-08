@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { EmptyListMessage, SegmentedToggle } from "@components";
 import { useAuth } from "@contexts/AuthContext";
@@ -8,6 +9,7 @@ import { useUserFriends } from "@features/user";
 import { usePageTitle } from "@hooks";
 
 export default function SearchPage() {
+  const { t } = useTranslation("common");
   const { user: currentUser } = useAuth();
   const { friends: friendList } = useUserFriends(currentUser?.uid);
   const { countries } = useCountryData();
@@ -20,27 +22,27 @@ export default function SearchPage() {
   const sections = [
     {
       key: "people" as const,
-      title: "People",
+      title: t("search.sections.people"),
       items: results.filter((item) => item.type === "user"),
     },
     {
       key: "countries" as const,
-      title: "Countries",
+      title: t("search.sections.countries"),
       items: results.filter((item) => item.type === "country"),
     },
     {
       key: "currencies" as const,
-      title: "Currencies",
+      title: t("search.sections.currencies"),
       items: results.filter((item) => item.type === "currency"),
     },
     {
       key: "regions" as const,
-      title: "Regions",
+      title: t("search.sections.regions"),
       items: results.filter((item) => item.type === "region"),
     },
     {
       key: "subregions" as const,
-      title: "Subregions",
+      title: t("search.sections.subregions"),
       items: results.filter((item) => item.type === "subregion"),
     },
   ];
@@ -52,17 +54,17 @@ export default function SearchPage() {
   return (
     <main className="p-4 max-w-6xl mx-auto mt-12">
       {loading ? (
-        <EmptyListMessage message="Searching..." />
+        <EmptyListMessage message={t("search.searching")} />
       ) : queryParam ? (
         results.length === 0 ? (
-          <EmptyListMessage message="No results found." />
+          <EmptyListMessage message={t("search.noResults")} />
         ) : (
           <>
             <SegmentedToggle
               value={activeSection}
               onChange={setActiveSection}
               options={[
-                { value: "all", label: "All" },
+                { value: "all", label: t("search.sections.all") },
                 ...sections.map((section) => ({
                   value: section.key,
                   label: section.title,

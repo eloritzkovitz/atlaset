@@ -51,7 +51,18 @@
     "placeholder": "חיפוש",
     "recent": "חיפושים אחרונים",
     "clear": "נקה",
-    "clearAll": "נקה הכל"
+    "clearAll": "נקה הכל",
+    "searching": "מחפש...",
+    "seeAll": "צפייה בכל התוצאות",
+    "noResults": "לא נמצאו תוצאות.",
+    "sections": {
+      "all": "הכל",
+      "people": "אנשים",
+      "countries": "מדינות",
+      "currencies": "מטבעות",
+      "regions": "יבשות",
+      "subregions": "אזורים גיאוגרפיים"
+    }
   },
   "filter": {
     "all": "הכל",

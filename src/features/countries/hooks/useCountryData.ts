@@ -75,6 +75,15 @@ export function useCountryData() {
     });
   }, [countries, i18n]);
 
+  // Build localized allRegions from localizedCountries
+  const allRegionsLocalized = useMemo(() => {
+    const set = new Set<string>();
+    for (const c of localizedCountries) {
+      if (c?.region) set.add(String(c.region));
+    }
+    return Array.from(set).sort();
+  }, [localizedCountries]);
+
   // Build a map of region -> subregions for translation and other lookups
   const subregionsByRegion = useMemo(() => {
     const tmp: Record<string, Set<string>> = {};
@@ -137,6 +146,7 @@ export function useCountryData() {
   return {
     ...data,
     countries: localizedCountries,
+    allRegions: allRegionsLocalized,
     subregionsByRegion,
     subregionToRegion,
     currencies: currenciesWithUsers,

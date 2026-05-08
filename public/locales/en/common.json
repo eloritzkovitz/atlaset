@@ -8,7 +8,7 @@
     "dashboard": "Dashboard",
     "quizzes": "Quizzes",
     "settings": "Settings"
-  },  
+  },
   "menu": {
     "notifications": "Notifications",
     "help": "Help",
@@ -51,7 +51,18 @@
     "placeholder": "Search",
     "recent": "Recent Searches",
     "clear": "Clear",
-    "clearAll": "Clear All"
+    "clearAll": "Clear All",
+    "searching": "Searching...",
+    "seeAll": "See all results",
+    "noResults": "No results found.",
+    "sections": {
+      "all": "All",
+      "people": "People",
+      "countries": "Countries",
+      "currencies": "Currencies",
+      "regions": "Regions",
+      "subregions": "Subregions"
+    }
   },
   "filter": {
     "all": "All",

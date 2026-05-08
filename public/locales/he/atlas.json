@@ -72,7 +72,7 @@
       "core": {
         "title": "מסננים בסיסיים",
         "region": "יבשת",
-        "subregion": "אזור גיאוגרפי",
+        "subregion": "אזור",
         "geoType": "סוג גאוגרפי",
         "sovereignty": "ריבונות",
         "visitStatus": "מצב ביקור",
@@ -113,7 +113,7 @@
       },
       "overview": {
         "region": "יבשת",
-        "subregion": "אזור גיאוגרפי",
+        "subregion": "אזור",
         "capital": "עיר בירה",
         "languages": "שפות",
         "government": "שיטת ממשל",
