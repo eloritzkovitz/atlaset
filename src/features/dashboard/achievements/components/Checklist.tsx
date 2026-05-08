@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheck } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 
 export interface ChecklistItem {
   label: string;
@@ -30,7 +30,7 @@ export const Checklist: React.FC<ChecklistProps> = ({
               renderIcon(item.completed)
             ) : item.completed ? (
               <span className="text-success" title="Completed">
-                <FaCheck style={{ verticalAlign: "middle" }} />
+                <ICONS.selected style={{ verticalAlign: "middle" }} />
               </span>
             ) : (
               <span style={{ width: "1em", display: "inline-block" }}></span>

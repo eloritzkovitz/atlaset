@@ -1,6 +1,6 @@
-import { FaCheck, FaXmark } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { ActionButton, PanelListItem } from "@components";
+import { ICONS } from "@constants/icons";
 import { FriendListItemMenuActions } from "./FriendListItemMenuActions";
 import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { UserInfo } from "../../profile/components/UserInfo";
@@ -59,7 +59,7 @@ export function UserListItem({
           onClick={onAccept}
           title="Accept"
           ariaLabel="Accept friend request"
-          icon={<FaCheck />}
+          icon={<ICONS.selected />}
           className="text-success"
           rounded
         />
@@ -69,7 +69,7 @@ export function UserListItem({
           onClick={onReject}
           title="Reject"
           ariaLabel="Reject friend request"
-          icon={<FaXmark />}
+          icon={<ICONS.close />}
           className="text-danger"
           rounded
         />

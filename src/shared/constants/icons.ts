@@ -166,6 +166,7 @@ export const ICONS = {
   reset: FaRotateLeft,
   refresh: FaArrowsRotate,
   close: FaXmark,
+  selected: FaCheck,
   // Docs
   getStarted: FaRocket,
   accountManagement: FaUserGear,

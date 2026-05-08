@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useTranslation, Trans } from "react-i18next";
-import { FaFileImport, FaFileExport, FaCheck } from "react-icons/fa6";
 import { ActionButton, ConfirmModal } from "@components";
+import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import { TripsExportMenu } from "./TripsExportMenu";
@@ -56,7 +56,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
         onClick={() => setShowImportNotice(true)}
         ariaLabel={t("table.toolbar.importExport.importTitle")}
         title={t("table.toolbar.importExport.importTitle")}
-        icon={<FaFileImport />}
+        icon={<ICONS.importFile />}
         variant="toggle"
       />
       {showImportNotice && (
@@ -75,7 +75,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
           onCancel={() => setShowImportNotice(false)}
           submitLabel={t("table.toolbar.importExport.continue")}
           cancelLabel={t("table.toolbar.importExport.cancel")}
-          submitIcon={<FaCheck className="inline" />}
+          submitIcon={<ICONS.selected className="inline" />}
         />
       )}
       <input
@@ -90,7 +90,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
           onClick={() => setShowExportMenu((v) => !v)}
           ariaLabel={t("table.toolbar.importExport.exportTitle")}
           title={t("table.toolbar.importExport.exportTitle")}
-          icon={<FaFileExport />}
+          icon={<ICONS.exportFile />}
           variant="toggle"
         />
       </div>

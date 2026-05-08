@@ -1,7 +1,7 @@
 import { useRef } from "react";
-import { FaCheck } from "react-icons/fa6";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
+import { ICONS } from "@constants/icons";
 import {
   useKeyboardFocusRing,
   useMenuPosition,
@@ -93,7 +93,7 @@ export function SortSelect<T extends string>({
                       <o.icon />
                     ) : null
                   ) : o.value === selected ? (
-                    <FaCheck />
+                    <ICONS.selected className="text-green-500" />
                   ) : (
                     <span className="w-4 inline-block" />
                   )}

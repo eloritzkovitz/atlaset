@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
+// selected icon centralized in ICONS
 import { useTranslation } from "react-i18next";
 import {
   Modal,
@@ -99,7 +100,9 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
                 <div>{l.native}</div>
                 <div className="text-sm text-slate-500">{l.localized}</div>
               </div>
-              {l.code === current && <div className="text-green-500">✓</div>}
+              {l.code === current && (
+                <ICONS.selected className="text-green-500" />
+              )}
             </button>
           ))}
         </div>

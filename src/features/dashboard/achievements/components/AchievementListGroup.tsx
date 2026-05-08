@@ -1,7 +1,7 @@
-import { MenuButton } from "@components";
-import { FaCheck } from "react-icons/fa6";
-import type { Achievement } from "../types";
 import { useNavigate } from "react-router-dom";
+import { MenuButton } from "@components";
+import { ICONS } from "@constants/icons";
+import type { Achievement } from "../types";
 
 interface AchievementListGroupProps {
   achievements: Achievement[];
@@ -30,7 +30,7 @@ export function AchievementListGroup({
               key={achievement.id}
               icon={
                 completed ? (
-                  <FaCheck className="text-success" />
+                  <ICONS.selected className="text-success" />
                 ) : (
                   <span
                     style={{ width: "1em", display: "inline-block" }}
