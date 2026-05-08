@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { FaUserMinus, FaUser } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import { MenuButton } from "@components";
@@ -16,6 +17,7 @@ export function FriendListItemMenuActions({
 }: FriendListItemMenuActionsProps): ReactNode {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useTranslation("user");
   
   return (
     <>
@@ -30,7 +32,7 @@ export function FriendListItemMenuActions({
         icon={<FaUser className="me-2" />}
         className="w-full"
       >
-        View Profile
+        {t("friends.viewProfile")}
       </MenuButton>
       {user && user.uid !== uid && (
         <MenuButton
@@ -42,7 +44,7 @@ export function FriendListItemMenuActions({
           icon={<FaUserMinus className="me-2" />}
           className="w-full text-danger"
         >
-          Unfriend
+          {t("friends.unfriend")}
         </MenuButton>
       )}
     </>

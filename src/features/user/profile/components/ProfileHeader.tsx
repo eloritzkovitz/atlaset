@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { FaPen, FaListUl } from "react-icons/fa6";
-import { ActionButton, Card } from "@components";
 import { Link } from "react-router-dom";
+import { ActionButton, Card } from "@components";
+import { useLanguage } from "@features/settings";
 import { UserAvatar } from "./UserAvatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";
@@ -24,6 +26,8 @@ export function ProfileHeader({
   onFriendCountClick,
 }: ProfileHeaderProps) {
   const { user: currentUser } = useAuth();
+  const { t } = useTranslation("user");
+  const { isRtl } = useLanguage();
 
   // Friendship status logic
   const {
@@ -61,7 +65,12 @@ export function ProfileHeader({
         <div className="flex-1 sm:ms-6 w-full">
           <div className="flex flex-row items-center w-full gap-3">
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-bold text-left w-full truncate">
+              <h1
+                className={`text-2xl sm:text-3xl font-bold w-full truncate ${
+                  isRtl ? "text-right" : "text-left"
+                }`}
+                dir={isRtl ? "rtl" : undefined}
+              >
                 {profile.displayName}
               </h1>
             </div>
@@ -73,7 +82,7 @@ export function ProfileHeader({
                 onClick={onEdit}
                 icon={<FaPen className="text-lg" />}
               >
-                Edit Profile
+                {t("profile.header.editProfile")}
               </ActionButton>
             )}
             {/* Friend Button: only show if not me */}
@@ -86,24 +95,32 @@ export function ProfileHeader({
               />
             )}
           </div>
-          <div className="text-left text-gray-500 text-base mt-1">
+          <div
+            className={`${isRtl ? "text-right" : "text-left"} text-gray-500 text-base mt-1`}
+            dir={isRtl ? "rtl" : undefined}
+          >
             @{profile.username}
           </div>
-          <div className="flex flex-row items-center gap-2 text-left font-semibold text-muted text-base mt-1">
-            <div className="text-center font-semibold sm:text-left text-muted text-base">
+          <div
+            className={`flex w-full items-center gap-2 font-semibold text-muted text-base mt-1`}
+          >
+            <div className={`font-semibold text-muted text-base`}>
               {typeof friendCount === "number" ? (
                 <button
                   type="button"
                   className="hover:underline focus:outline-none"
                   onClick={onFriendCountClick}
                   tabIndex={0}
-                  aria-label="Show friends list"
+                  aria-label={t("profile.header.showFriendsList")}
                   disabled={!onFriendCountClick}
                 >
-                  {friendCount} friend{friendCount === 1 ? "" : "s"}
+                  {friendCount}{" "}
+                  {friendCount === 1
+                    ? t("friends.friend")
+                    : t("friends.friends")}
                 </button>
               ) : (
-                "Loading friends..."
+                t("friends.loading")
               )}
             </div>
           </div>
@@ -116,7 +133,7 @@ export function ProfileHeader({
                   className="!rounded-full"
                   icon={<FaListUl className="text-lg" />}
                 >
-                  Activity Log
+                  {t("profile.header.activityLog")}
                 </ActionButton>
               </Link>
             </div>

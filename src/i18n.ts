@@ -22,6 +22,7 @@ i18n
       "quizzes",
       "settings",
       "trips",
+      "user",
     ],
     defaultNS: "common",
     backend: {

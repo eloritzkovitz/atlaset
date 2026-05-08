@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { FriendList } from "./FriendList";
@@ -14,6 +15,7 @@ interface FriendsPanelProps {
 }
 
 export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
+  const { t } = useTranslation("user");
   const { user } = useAuth();
   const { friends } = useUserFriends();
   const [search, setSearch] = useState("");
@@ -34,22 +36,22 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
       title={
         <span className="flex items-center gap-2">
           {showRequests ? <ICONS.friendRequests /> : <ICONS.friends />}
-          {showRequests ? "Friend Requests" : "Friends"}
+          {showRequests ? t("friends.friendRequests") : t("friends.friends")}
         </span>
       }
       headerActions={
         <div className="flex items-center gap-2">
           <ActionButton
             onClick={() => setShowRequests((prev) => !prev)}
-            ariaLabel={showRequests ? "Show Friends" : "Show Requests"}
-            title={showRequests ? "Friends" : "Requests"}
+            ariaLabel={showRequests ? t("friends.showFriends") : t("friends.showRequests")}
+            title={showRequests ? t("friends.friends") : t("friends.friendRequests")}
             icon={showRequests ? <ICONS.friends /> : <ICONS.friendRequests />}
             rounded
           />
           <ActionButton
             onClick={onClose}
-            ariaLabel="Close friends panel"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -69,7 +71,7 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             <SearchInput
               value={search}
               onChange={setSearch}
-              placeholder="Search friends"
+              placeholder={t("friends.searchPlaceholder")}
               className="flex-1 h-10"
             />
             <Separator className="my-4" />

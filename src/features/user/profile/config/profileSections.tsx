@@ -53,7 +53,7 @@ export function getProfileSections({
   return [
     {
       key: "location",
-      label: "Location",
+      label: "profile.about.personalDetails.location",
       icon: <FaLocationDot />,
       content: selectedCountry ? (
         <CountryWithFlag
@@ -61,27 +61,25 @@ export function getProfileSections({
           name={selectedCountry.name}
           className="me-2"
         />
-      ) : (
-        "Not specified"
-      ),
+      ) : null,
     },
     {
       key: "birthday",
-      label: "Birthday",
+      label: "profile.about.personalDetails.birthday",
       icon: <FaCakeCandles />,
-      content: displayBirthday,
+      content: displayBirthday || null,
     },
     {
       key: "joined",
-      label: "Joined",
+      label: "profile.about.personalDetails.joined",
       icon: <FaRegCalendarDays />,
-      content: displayJoinDate,
+      content: displayJoinDate || null,
     },
     {
       key: "biography",
-      label: "Biography",
+      label: "profile.about.personalDetails.biography",
       icon: <FaHand />,
-      content: displayBiography,
+      content: displayBiography || null,
     },
   ];
 }

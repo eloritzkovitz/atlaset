@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaEnvelope } from "react-icons/fa6";
 import { Card, TabButton } from "@components";
 import { type Country } from "@features/countries";
@@ -30,6 +31,8 @@ export function ProfileAboutCard({
     "personal-details",
   );
 
+  const { t } = useTranslation("user");
+
   // Generate profile sections based on provided data
   const sections = getProfileSections({
     selectedCountry,
@@ -38,30 +41,37 @@ export function ProfileAboutCard({
     displayBiography,
   });
 
+  const localizedSections = sections.map((s) => ({
+    ...s,
+    label: t(s.label),
+    content: s.content ?? t("profile.notSpecified"),
+  }));
+
   return (
     <Card className="mt-6">
-      <h2 className="text-xl font-bold">About</h2>
+      <h2 className="text-xl font-bold">{t("profile.about.title")}</h2>
       <div className="flex gap-2">
         <TabButton
           active={activeTab === "personal-details"}
           onClick={() => setActiveTab("personal-details")}
         >
-          Personal Details
+          {t("profile.about.personalDetails.title")}
         </TabButton>
         {displaySocialLinks && (
           <TabButton
             active={activeTab === "contact"}
             onClick={() => setActiveTab("contact")}
           >
-            Contact Info
+            {t("profile.about.contactInfo.title")}
           </TabButton>
         )}
       </div>
-      {activeTab === "personal-details" && renderProfileFields(sections)}
+      {activeTab === "personal-details" &&
+        renderProfileFields(localizedSections)}
       {activeTab === "contact" && displaySocialLinks && (
         <div className="flex flex-col">
           {displayEmail && (
-            <ProfileField label="Email">
+            <ProfileField label={t("profile.about.contactInfo.email")}>
               <div className="flex items-center gap-3">
                 <FaEnvelope />
                 <a href={`mailto:${displayEmail}`}>{displayEmail}</a>

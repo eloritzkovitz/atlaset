@@ -9,6 +9,7 @@ import {
   PasswordField,
   SectionHeader,
 } from "@components";
+import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { SocialLinksField } from "./SocialLinksField";
@@ -32,6 +33,7 @@ export function EditProfileModal({
   onClose,
   onSave,
 }: EditProfileModalProps) {
+  const { t } = useTranslation("user");
   const [biography, setBiography] = useState(profile?.biography ?? "");
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [username, setUsername] = useState(profile?.username || "");
@@ -76,11 +78,11 @@ export function EditProfileModal({
       username !== initialUsername &&
       (status === "invalid" || status === "taken" || status === "checking")
     ) {
-      setError("Please choose a valid, available username.");
+      setError(t("profile.editModal.usernameInvalid"));
       return;
     }
     if (password && password !== confirmPassword) {
-      setError("Passwords do not match.");
+      setError(t("profile.editModal.passwordMismatch"));
       return;
     }
     try {
@@ -121,14 +123,14 @@ export function EditProfileModal({
         await updatePassword(user, password);
       }
 
-      setSuccess("Profile updated successfully.");
+      setSuccess(t("profile.editModal.success"));
       setTimeout(() => {
         onClose();
         if (onSave) onSave();
       }, 500);
     } catch (err: unknown) {
       console.error(err);
-      setError((err as Error)?.message || "Failed to update profile.");
+      setError((err as Error)?.message || t("profile.editModal.failed"));
     }
   };
 
@@ -142,21 +144,21 @@ export function EditProfileModal({
           title={
             <>
               <ICONS.profile />
-              {"Edit Profile"}
+              {t("profile.editModal.title")}
             </>
           }
         >
           <ActionButton
             onClick={onClose}
-            ariaLabel="Close Edit Profile Modal"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </PanelHeader>
         <form onSubmit={handleSave} className="space-y-6 px-4">
-          <SectionHeader title="Personal Information" />
-          <FormField label="Username">
+          <SectionHeader title={t("profile.editModal.personalInfo")} />
+          <FormField label={t("profile.editModal.username")}>
             <input
               type="text"
               value={username}
@@ -181,7 +183,7 @@ export function EditProfileModal({
               {label}
             </div>
           )}
-          <FormField label="Name">
+          <FormField label={t("profile.editModal.name")}>
             <input
               type="text"
               value={displayName}
@@ -192,21 +194,21 @@ export function EditProfileModal({
           {isPasswordUser && (
             <>
               <PasswordField
-                label="New Password"
+                label={t("profile.editModal.newPassword")}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Leave blank to keep current password"
+                placeholder={t("profile.editModal.passwordPlaceholder")}
                 autoComplete="new-password"
               />
               <PasswordField
-                label="Confirm New Password"
+                label={t("profile.editModal.confirmNewPassword")}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 autoComplete="new-password"
               />
             </>
           )}
-          <FormField label="Birthday">
+          <FormField label={t("profile.editModal.birthday")}>
             <input
               type="date"
               value={birthday}
@@ -214,16 +216,16 @@ export function EditProfileModal({
               required={false}
             />
           </FormField>
-          <FormField label="Biography">
+          <FormField label={t("profile.editModal.biography")}>
             <textarea
               value={biography}
               onChange={(e) => setBiography(e.target.value)}
-              placeholder="Write something about yourself..."
+              placeholder={t("profile.editModal.bioPlaceholder")}
               rows={4}
               maxLength={500}
             />
           </FormField>
-          <SectionHeader title="Contact Information" />
+          <SectionHeader title={t("profile.editModal.contactInfo")} />
           <SocialLinksField
             socialLinks={socialLinks}
             onChange={(platform, value) =>
@@ -234,7 +236,7 @@ export function EditProfileModal({
           {success && <div className="text-success">{success}</div>}
           <div className="flex gap-4 justify-end mt-6">
             <ActionButton type="button" variant="secondary" onClick={onClose}>
-              Cancel
+              {t("common:actions.cancel")}
             </ActionButton>
             <ActionButton
               type="submit"
@@ -246,7 +248,7 @@ export function EditProfileModal({
                   status === "checking")
               }
             >
-              Save Changes
+              {t("common:actions.save")}
             </ActionButton>
           </div>
         </form>

@@ -1,6 +1,7 @@
 import { UserListItem } from "./UserListItem";
 import { friendService } from "../../friends/services/friendService";
 import { EmptyListMessage } from "@components";
+import { useTranslation } from "react-i18next";
 
 interface FriendRequestListProps {
   requests: Array<{ uid: string; from: string }>;
@@ -13,12 +14,16 @@ export function FriendRequestList({
   loading,
   userUid,
 }: FriendRequestListProps) {
+  const { t } = useTranslation("user");
+  
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>{t("friends.loading")}</div>;
   }
+  
   if (requests.length === 0) {
-    return <EmptyListMessage message="No friend requests." />;
+    return <EmptyListMessage message={t("friends.noFriendRequests")} />;
   }
+
   return (
     <ul>
       {requests.map((req) => (
