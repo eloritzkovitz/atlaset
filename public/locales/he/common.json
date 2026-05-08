@@ -121,6 +121,12 @@
       "playPause": "הפעל/השהה"
     }
   },
+  "help": {
+    "title": "עזרה",
+    "searchPlaceholder": "חיפוש עזרה",
+    "needHelp": "צריך עזרה? גש למדריכים, טיפים ומידע למפתחים ב",
+    "documentation": "דוקומנטציה"
+  },
   "languages": {
     "en": "אנגלית",
     "he": "עברית"

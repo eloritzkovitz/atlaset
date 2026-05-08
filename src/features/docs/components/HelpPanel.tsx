@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ActionButton, AppLinks, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DocSearchResults } from "./DocSearchResults";
@@ -8,6 +9,8 @@ interface HelpPanelProps {
 }
 
 export function HelpPanel({ open, onClose }: HelpPanelProps) {
+  const { t } = useTranslation("common");
+  
   return (
     <Panel
       show={open}
@@ -15,14 +18,14 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
       position="right"
       title={
         <>
-          <ICONS.help className="me-2" /> Help
+          <ICONS.help className="me-2" /> {t("help.title")}
         </>
       }
       headerActions={
         <ActionButton
           onClick={onClose}
-          ariaLabel="Close help panel"
-          title="Close"
+          ariaLabel={t("actions.close")}
+          title={t("actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />
@@ -32,13 +35,13 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
     >
       <div className="flex flex-col h-full">
         <div className="mb-3">
-          <DocSearchResults placeholder="Search help" />
+          <DocSearchResults placeholder={t("help.searchPlaceholder")} />
           <Separator className="my-4" />
         </div>
         <div className="text-sm text-muted">
-          Need help? Access guides, tips and developer docs in the full
+          {t("help.needHelp")}
           <a href="/docs" className="ms-1 hover:!text-info">
-            documentation
+            {t("help.documentation")}
           </a>
           .
         </div>

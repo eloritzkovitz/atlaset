@@ -121,6 +121,12 @@
       "playPause": "Play/Pause"
     }
   },
+  "help": {
+    "title": "Help",
+    "searchPlaceholder": "Search help",
+    "needHelp": "Need help? Access guides, tips and developer info in the full",
+    "documentation": "documentation"
+  },
   "languages": {
     "en": "English",
     "he": "עברית"

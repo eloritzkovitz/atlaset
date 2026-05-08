@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { SearchInput, MenuButton, EmptyListMessage } from "@components";
+import { useTranslation } from "react-i18next";
 import { useDocSearch } from "../hooks/useDocSearch";
 
 interface DocSearchResultsProps {
@@ -12,6 +13,7 @@ export function DocSearchResults({
   placeholder,
   emptyContent,
 }: DocSearchResultsProps) {
+  const { t } = useTranslation("common");
   const [search, setSearch] = useState("");
   const { searchResults } = useDocSearch(search);
 
@@ -41,7 +43,7 @@ export function DocSearchResults({
               ))}
             </ul>
           ) : (
-            <EmptyListMessage message="No results found." />
+            <EmptyListMessage message={t("search.noResults")} />
           )}
         </div>
       ) : (
