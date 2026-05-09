@@ -6,6 +6,7 @@
 - **[feature]** **General:** Added Hebrew translations
 - **[feature]** **Countries:** Added state structure qualifier
 - **[chore]** **Countries:** Updated data to use keys instead of actual values (now localized)
+- **[breaking]** **Countries:** Currency data is now localized and was moved to locales
 - **[bugfix]** **Settings:** Fixed some bugs related to updating settings
 
 ## 2026-04-29
