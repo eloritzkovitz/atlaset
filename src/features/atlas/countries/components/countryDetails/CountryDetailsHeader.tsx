@@ -1,9 +1,11 @@
 import { FaWikipediaW } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { PanelHeader, ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
 import { CountryWithFlag, type Country } from "@features/countries";
 import { VisitedStatusIndicator } from "@features/countries/components/countryDetails/VisitedStatusIndicator";
+import { useLanguage } from "@features/settings";
 
 interface CountryDetailsHeaderProps {
   country: Country;
@@ -21,6 +23,9 @@ export function CountryDetailsHeader({
   onClose,
 }: CountryDetailsHeaderProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation("atlas");
+  const { current: lang } = useLanguage();
+
   return (
     <PanelHeader
       title={
@@ -40,8 +45,8 @@ export function CountryDetailsHeader({
         {centerOnCountry && (
           <ActionButton
             onClick={() => centerOnCountry(country.isoCode)}
-            ariaLabel="Center map on country"
-            title="Center map"
+            ariaLabel={t("countries.details.header.centerMapAria")}
+            title={t("countries.details.header.centerMap")}
             icon={<ICONS.center />}
             rounded
           />
@@ -53,28 +58,29 @@ export function CountryDetailsHeader({
               `/dashboard/countries/${country.region}/${country.subregion}/${country.isoCode}`,
             );
           }}
-          ariaLabel="View full details"
-          title="View full details"
+          ariaLabel={t("countries.details.header.viewFullAria")}
+          title={t("countries.details.header.viewFull")}
           icon={<ICONS.exploration />}
           rounded
         />
         <ActionButton
-          onClick={() =>
-            window.open(
-              `https://en.wikipedia.org/wiki/${country.name.replace(/ /g, "_")}`,
-              "_blank",
-              "noopener,noreferrer",
-            )
-          }
-          ariaLabel="Open Wikipedia article"
-          title="Wikipedia"
+          onClick={() => {
+            const langSubtag = (lang || "en").split("-")[0];
+            const page = country.name.replace(/ /g, "_");
+            const url = `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(
+              page,
+            )}`;
+            window.open(url, "_blank", "noopener,noreferrer");
+          }}
+          ariaLabel={t("countries.details.header.wikipediaAria")}
+          title={t("countries.details.header.wikipedia")}
           icon={<FaWikipediaW />}
           rounded
         />
         <ActionButton
           onClick={onClose}
-          ariaLabel="Close country details"
-          title="Close"
+          ariaLabel={t("common:actions.close")}
+          title={t("common:actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />

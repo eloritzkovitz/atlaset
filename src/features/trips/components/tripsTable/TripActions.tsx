@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FaEllipsisVertical,
   FaPenToSquare,
@@ -6,11 +7,11 @@ import {
   FaHeart,
   FaRegHeart,
   FaStar,
-  FaChevronRight,
   FaCalendar,
 } from "react-icons/fa6";
 import {
   ActionButton,
+  DirectionalIcon,
   MenuButton,
   Menu,
   Separator,
@@ -41,6 +42,7 @@ export function TripActions({
   onEdit,
   onDelete,
 }: TripActionsProps) {
+  const { t } = useTranslation("trips");
   const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
@@ -78,13 +80,22 @@ export function TripActions({
   );
 
   // Position the menu when open
-  const menuStyle = useMenuPosition(open, btnRef, menuRef, 3, "left", false);
+  const menuStyle = useMenuPosition(
+    open,
+    btnRef,
+    menuRef,
+    3,
+    "left",
+    "adjacent",
+    false,
+  );
   const rateMenuStyle = useMenuPosition(
     rateMenuOpen,
     menuRef,
     rateMenuRef,
     0,
     "right",
+    "adjacent",
     false,
   );
 
@@ -116,8 +127,8 @@ export function TripActions({
   if (isShared) {
     return (
       <ActionButton
-        ariaLabel="Shared trip actions disabled"
-        title="Shared trips cannot be edited"
+        ariaLabel={t("table.actions.sharedDisabledTitle")}
+        title={t("table.actions.sharedDisabledTitle")}
         icon={<FaEllipsisVertical />}
         rounded
         disabled
@@ -133,8 +144,8 @@ export function TripActions({
             e.stopPropagation();
             setOpen((v) => !v);
           }}
-          ariaLabel="More actions"
-          title="More actions"
+          ariaLabel={t("table.actions.moreActions")}
+          title={t("table.actions.moreActions")}
           icon={<FaEllipsisVertical />}
           rounded
         />
@@ -153,32 +164,34 @@ export function TripActions({
               setTimeout(() => setOpen(false), 300);
               onViewInCalendar?.(trip);
             }}
-            icon={<FaCalendar className="mr-2" />}
+            icon={<FaCalendar className="me-2" />}
             className="w-full"
           >
-            View in Calendar
+            {t("table.actions.viewInCalendar")}
           </MenuButton>
         )}
         <MenuButton
           onClick={menuActions.onEdit}
-          icon={<FaPenToSquare className="mr-2" />}
+          icon={<FaPenToSquare className="me-2" />}
           className="w-full"
         >
-          Edit Trip
+          {t("table.actions.editTrip")}
         </MenuButton>
         <Separator className="my-2" />
         <MenuButton
           onClick={menuActions.onFavorite}
           icon={
             trip.favorite ? (
-              <FaRegHeart className="mr-2 text-muted" />
+              <FaRegHeart className="me-2 text-muted" />
             ) : (
-              <FaHeart className="mr-2 text-danger" />
+              <FaHeart className="me-2 text-danger" />
             )
           }
           className="w-full"
         >
-          {trip.favorite ? "Unfavorite" : "Favorite"}
+          {trip.favorite
+            ? t("table.actions.unfavorite")
+            : t("table.actions.favorite")}
         </MenuButton>
         <div
           style={{ display: "inline-block", width: "100%" }}
@@ -187,11 +200,11 @@ export function TripActions({
         >
           <MenuButton
             {...rateButtonHoverHandlers}
-            icon={<FaStar className="mr-2 text-yellow-400" />}
+            icon={<FaStar className="me-2 text-yellow-400" />}
             className="w-full flex items-center justify-between"
           >
-            Rate
-            <FaChevronRight className="ml-auto" />
+            {t("table.actions.rate")}
+            <DirectionalIcon direction="next" className="ms-auto" />
           </MenuButton>
           {rateMenuOpen && (
             <RateMenu
@@ -215,10 +228,10 @@ export function TripActions({
           <Separator className="my-2" />
           <MenuButton
             onClick={menuActions.onDelete}
-            icon={<FaTrash className="mr-2" />}
+            icon={<FaTrash className="me-2" />}
             className="!text-danger w-full"
           >
-            Delete Trip
+            {t("table.actions.deleteTrip")}
           </MenuButton>
         </div>
       </Menu>

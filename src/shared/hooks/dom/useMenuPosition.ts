@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from "react";
+import { useLanguage } from "../../../features/settings/hooks/useLanguage";
 
 /**
  * Calculates and returns the style for a dropdown/menu anchored to a button.
@@ -7,6 +8,7 @@ import { useLayoutEffect, useState } from "react";
  * @param menuRef Ref to the menu element
  * @param offset Optional offset in px
  * @param align "left" or "right" alignment (default: "right")
+ * @param placement "overlay" (align under control) or "adjacent" (place beside control)
  * @param withWidth If true, menu matches button width (default: true)
  */
 export function useMenuPosition(
@@ -15,9 +17,11 @@ export function useMenuPosition(
   menuRef: React.RefObject<HTMLElement | null>,
   offset?: number,
   align?: "left" | "right" | "top",
-  withWidth: boolean = true
+  placement?: "overlay" | "adjacent",
+  withWidth: boolean = true,
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
+  const { isRtl } = useLanguage();
 
   // Calculate menu position when open or dependencies change
   useLayoutEffect(() => {
@@ -35,10 +39,25 @@ export function useMenuPosition(
         left = btnRect.left + window.scrollX;
       } else {
         top = btnRect.top + window.scrollY + (offset ?? 0);
-        left =
-          align === "left"
-            ? btnRect.left - menuRect.width + window.scrollX
-            : btnRect.left + window.scrollX;
+
+        // Calculate horizontal position based on alignment and placement
+        if (placement === "overlay") {
+          if (align === "left") {
+            left = btnRect.left - menuRect.width + window.scrollX;
+          } else {
+            left = btnRect.left + window.scrollX;
+          }
+        } else {
+          if (align === "left") {
+            left = isRtl
+              ? btnRect.right + window.scrollX
+              : btnRect.left - menuRect.width + window.scrollX;
+          } else {
+            left = isRtl
+              ? btnRect.left - menuRect.width + window.scrollX
+              : btnRect.right + window.scrollX;
+          }
+        }
 
         // Flip above if not enough space below
         if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
@@ -61,8 +80,9 @@ export function useMenuPosition(
     } else {
       setMenuStyle({});
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, offset, align, withWidth]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, offset, align, withWidth, isRtl]);
 
   return menuStyle;
 }

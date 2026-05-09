@@ -12,7 +12,7 @@ interface BrandCopyrightProps {
 export const BrandCopyright: React.FC<BrandCopyrightProps> = ({
   year = new Date().getFullYear(),
   className = "inline-flex items-center",
-  textClassName = "ml-1 align-middle",
+  textClassName = "ms-1 align-middle",
   logoSize = 32,
   showLogo = false,
 }) => (

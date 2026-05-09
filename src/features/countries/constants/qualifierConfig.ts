@@ -18,6 +18,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   capital: { key: "capital", label: "Capital", type: "string" },
   language: { key: "languages", label: "Language", type: "string" },
   government: { key: "government", label: "Government type", type: "string" },
+  structure: { key: "structure", label: "State structure", type: "string" },
   area: { key: "area", label: "Area (km²)", type: "number" },
   population: { key: "population", label: "Population", type: "number" },
   currency: { key: "currency", label: "Currency", type: "string" },

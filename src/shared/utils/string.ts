@@ -61,6 +61,14 @@ export function slugify(str: string) {
 }
 
 /**
+ * Converts a string into a canonical key used for locale lookups.
+ * Uses `slugify` then replaces hyphens with underscores to match locale keys.
+ */
+export function canonicalKey(str: string) {
+  return slugify(str).replace(/-/g, "_");
+}
+
+/**
  * Pluralizes a label based on the count.
  * @param label - The label to pluralize
  * @param count - The count determining singular/plural

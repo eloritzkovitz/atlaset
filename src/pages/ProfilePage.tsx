@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   useParams,
   useNavigate,
@@ -25,6 +26,7 @@ import { AppPanels } from "@layouts/shells/AppPanels";
 import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
+  const { t } = useTranslation("user");
   const navigate = useNavigate();
   const location = useLocation();
   const { username } = useParams();
@@ -35,7 +37,6 @@ export default function ProfilePage() {
     refreshKey: profileRefreshKey,
   });
   const [editOpen, setEditOpen] = useState(false);
-  // Modal open state is now based on route
   const friendsOpen = location.pathname.endsWith("/friends");
   const bestScores = useUserLeaderboardScores(profileUser?.uid);
 
@@ -112,18 +113,21 @@ export default function ProfilePage() {
                 ) : (
                   <>
                     <ProfileAboutCard
-                      displayEmail={profileUser.email ?? "No email provided"}
+                      displayEmail={
+                        profileUser.email ?? t("profile.noEmailProvided")
+                      }
                       selectedCountry={selectedCountry}
                       displayBirthday={
                         formatFirestoreDate(profileUser.birthday) ??
-                        "Not specified"
+                        t("profile.notSpecified")
                       }
                       displayJoinDate={
                         formatFirestoreDate(profileUser.joinDate) ??
-                        "No date provided"
+                        t("profile.noDateProvided")
                       }
                       displayBiography={
-                        profileUser.biography ?? "No biography provided."
+                        profileUser.biography ??
+                        t("profile.noBiographyProvided")
                       }
                       displaySocialLinks={
                         profileUser.socialLinks &&

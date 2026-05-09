@@ -1,6 +1,7 @@
-import { FaCheck, FaXmark } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ActionButton, PanelListItem } from "@components";
+import { ICONS } from "@constants/icons";
 import { FriendListItemMenuActions } from "./FriendListItemMenuActions";
 import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { UserInfo } from "../../profile/components/UserInfo";
@@ -20,6 +21,7 @@ export function UserListItem({
   onReject,
   loading: externalLoading,
 }: UserListItemProps) {
+  const { t } = useTranslation("user");
   const { profile: userProfile, loading: profileLoading } = useUserProfile({
     uid,
   });
@@ -53,13 +55,13 @@ export function UserListItem({
 
   // Accept/reject actions
   const actions = (onAccept || onReject) && (
-    <div className="flex gap-1 ml-2">
+    <div className="flex gap-1 ms-2">
       {onAccept && (
         <ActionButton
           onClick={onAccept}
-          title="Accept"
-          ariaLabel="Accept friend request"
-          icon={<FaCheck />}
+          title={t("friends.accept")}
+          ariaLabel={t("friends.accept")}
+          icon={<ICONS.selected />}
           className="text-success"
           rounded
         />
@@ -67,9 +69,9 @@ export function UserListItem({
       {onReject && (
         <ActionButton
           onClick={onReject}
-          title="Reject"
-          ariaLabel="Reject friend request"
-          icon={<FaXmark />}
+          title={t("friends.reject")}
+          ariaLabel={t("friends.reject")}
+          icon={<ICONS.close />}
           className="text-danger"
           rounded
         />

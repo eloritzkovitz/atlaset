@@ -26,7 +26,6 @@ describe("countryDataSlice async thunk - integration (minimal)", () => {
       }
     } else {
       (import.meta.env as any).VITE_COUNTRY_DATA_URL = "http://dummy";
-      (import.meta.env as any).VITE_CURRENCY_DATA_URL = "http://dummy";
     }
     const { fetchCountryData } = await import("./countryDataSlice");
     const store = mockStore({ countryData: undefined });
@@ -56,7 +55,7 @@ describe("countryDataSlice async thunk - integration (minimal)", () => {
 
   it("rejected - static missing and no backend -> reports failure", async () => {
     const actions = await runIsolated(
-      { VITE_COUNTRY_DATA_URL: undefined, VITE_CURRENCY_DATA_URL: undefined },
+      { VITE_COUNTRY_DATA_URL: undefined },
       (f) =>
         f
           .mockResolvedValueOnce({ ok: false })

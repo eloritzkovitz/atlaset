@@ -1,3 +1,7 @@
+vi.mock("@features/settings/hooks/useLanguage", () => ({
+  useLanguage: () => ({ isRtl: false }),
+}));
+
 import { act } from "@testing-library/react";
 import React, { useState } from "react";
 import { UIContext } from "@contexts/UIContext";
@@ -16,7 +20,6 @@ describe("useUiToggleHint", () => {
       const [uiVisible, _setUiVisible] = useState(initialVisible);
       visibleState = uiVisible;
       setUiVisible = _setUiVisible;
-      // Provide all other mock context values, but override uiVisible/setUiVisible
       return (
         <UIContext.Provider
           value={{ ...mockUIContext, uiVisible, setUiVisible: _setUiVisible }}
@@ -34,7 +37,7 @@ describe("useUiToggleHint", () => {
     renderWithUiHintProviders(
       <UiProvider>
         <Wrapper />
-      </UiProvider>
+      </UiProvider>,
     );
   }
 
@@ -77,7 +80,7 @@ describe("useUiToggleHint", () => {
 
     act(() => {
       input.dispatchEvent(
-        new window.KeyboardEvent("keydown", { key: "u", bubbles: true })
+        new window.KeyboardEvent("keydown", { key: "u", bubbles: true }),
       );
     });
 

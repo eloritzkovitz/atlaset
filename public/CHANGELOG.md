@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-09
+
+- **[feature]** **General:** Added RTL and i18n support across the main app pages
+- **[feature]** **General:** Added Hebrew translations
+- **[feature]** **Countries:** Added state structure qualifier
+- **[chore]** **Countries:** Updated data to use keys instead of actual values (now localized)
+- **[bugfix]** **Settings:** Fixed some bugs related to updating settings
+
 ## 2026-04-29
 
 - **[feature]** **Scripts:** Added new CLI for adding country fields

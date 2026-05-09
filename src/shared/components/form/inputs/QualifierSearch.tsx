@@ -120,7 +120,7 @@ export function QualifierSearch({
         {prefix}
         {lockedSuffix ? lockedSuffix : ""}
       </span>
-      <span className="ml-1">{buildOverlay(editableAfter)}</span>
+      <span className="ms-1">{buildOverlay(editableAfter)}</span>
     </div>
   );
 
@@ -199,7 +199,7 @@ export function QualifierSearch({
         >
           <div className="inline-flex items-center px-3 py-2 rounded-l-full bg-input/50 border-2 border-surface-hover text-sm">
             {prefix}
-            {lockedSuffix ? <span className="ml-1">{lockedSuffix}</span> : null}
+            {lockedSuffix ? <span className="ms-1">{lockedSuffix}</span> : null}
           </div>
         </div>
       ) : null}

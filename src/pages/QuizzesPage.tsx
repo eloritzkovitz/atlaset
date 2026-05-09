@@ -1,5 +1,6 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { FaCircleXmark } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { Card } from "@components";
@@ -22,6 +23,8 @@ export default function QuizzesPage() {
   const location = useLocation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation("quizzes");
+  const { t: tCommon } = useTranslation("common");
 
   // Cards config
   const cards = [
@@ -29,33 +32,43 @@ export default function QuizzesPage() {
       key: "flag",
       route: "guess-the-flag",
       icon: <ICONS.quizFlag className="text-5xl mb-4" />,
-      title: "Guess the Flag",
-      description: "Can you identify the country by its flag?",
+      title: t("lobby.cards.flag.title", "Guess the Flag"),
+      description: t(
+        "lobby.cards.flag.description",
+        "Can you identify the country by its flag?",
+      ),
       muted: false,
     },
     {
       key: "capital",
       route: "guess-the-capital",
       icon: <ICONS.quizCapital className="text-5xl mb-4" />,
-      title: "Guess the Capital",
-      description: "Test your knowledge of world capitals!",
+      title: t("lobby.cards.capital.title", "Guess the Capital"),
+      description: t(
+        "lobby.cards.capital.description",
+        "Test your knowledge of world capitals!",
+      ),
       muted: true,
     },
     {
       key: "leaderboards",
       route: "leaderboards",
       icon: <ICONS.leaderboards className="text-5xl mb-4 text-yellow-500" />,
-      title: "Leaderboards",
-      description: "See top scores and streaks!",
+      title: t("lobby.cards.leaderboards.title", "Leaderboards"),
+      description: t(
+        "lobby.cards.leaderboards.description",
+        "See top scores and streaks!",
+      ),
       muted: true,
     },
   ];
 
   // Set page titles dynamically
   const match = cards.find((card) => location.pathname.endsWith(card.route));
-  usePageTitle(match ? match.title : "Quizzes", {
-    suffix: " | Atlaset",
-    fallback: "Quizzes | Atlaset",
+  const appName = tCommon("appName", "Atlaset");
+  usePageTitle(match ? match.title : t("pageTitle", "Quizzes"), {
+    suffix: ` | ${appName}`,
+    fallback: `${t("pageTitle", "Quizzes")} | ${appName}`,
   });
 
   // UI state
@@ -96,10 +109,9 @@ export default function QuizzesPage() {
       setTimeout(() => setShowSettings(true), 500);
     } else {
       setShowSettings(false);
-      // Fly cards back in
       setTimeout(() => {
         triggerFlyIn();
-      }, 10); // allow settings to close first
+      }, 10);
     }
   }, [settingsOpen, triggerFlyOut, triggerFlyIn]);
 
@@ -154,8 +166,10 @@ export default function QuizzesPage() {
                         } else if (!leaderboardHint) {
                           setHintKey((k) => k + 1);
                           setLeaderboardHint({
-                            message:
+                            message: t(
+                              "leaderboards.authRequired",
                               "You must be signed in to view leaderboards.",
+                            ),
                             icon: (
                               <FaCircleXmark className="text-danger text-xl" />
                             ),

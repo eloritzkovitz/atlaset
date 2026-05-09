@@ -17,3 +17,7 @@ export { useDashboardRouteState } from "./navigation/hooks/useDashboardRouteStat
 
 // Utils
 export { getDashboardMeta } from "./navigation/utils/dashboardNavigation";
+export {
+  translateRegionLabel,
+  translateSubregionLabel,
+} from "./exploration/utils/translation";

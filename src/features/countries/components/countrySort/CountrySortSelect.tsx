@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { SortSelect } from "@components";
 import { getCountrySortOptions } from "../../utils/countrySort";
 
@@ -15,13 +16,15 @@ export function CountrySortSelect({
   visitedOnly,
   showLabel = false,
 }: CountrySortSelectProps) {
+  const { t } = useTranslation("atlas");
+  
   const options = useMemo(
-    () => getCountrySortOptions(!!visitedOnly),
-    [visitedOnly],
+    () => getCountrySortOptions(!!visitedOnly, t),
+    [visitedOnly, t],
   );
 
   // Extract key and direction groups
-  const keyGroup = options.find((g) => g.label === "SORT BY");
+  const keyGroup = options[0] ?? { label: "", options: [] };
   const emptyGroup = { label: "", options: [] };
 
   return (

@@ -14,7 +14,7 @@ export function ExpandCollapseButton({
   return (
     <button
       type="button"
-      className="flex items-center text-xs text-muted underline cursor-pointer pointer-events-auto ml-4"
+      className="flex items-center text-xs text-muted underline cursor-pointer pointer-events-auto ms-4"
       onClick={(e) => {
         e.stopPropagation();
         onClick();
@@ -22,11 +22,11 @@ export function ExpandCollapseButton({
     >
       {!expanded ? (
         <>
-          <span className="mr-1 text-xs">+{count}</span>
+          <span className="me-1 text-xs">+{count}</span>
           <FaChevronDown className="inline-block" />
         </>
       ) : (
-        <FaChevronUp className="inline-block mr-1" />
+        <FaChevronUp className="inline-block me-1" />
       )}
     </button>
   );

@@ -29,7 +29,7 @@ export function NumberInput({
       <div className="relative w-full">
         <InputBox
           type="number"
-          className="pr-8 w-full h-10 appearance-none focus:ring-2 focus:ring-ring-focus rounded transition"
+          className="pe-8 w-full h-10 appearance-none focus:ring-2 focus:ring-ring-focus rounded transition"
           value={value}
           min={min}
           max={max}
@@ -39,7 +39,7 @@ export function NumberInput({
           style={{ MozAppearance: "textfield" }}
           disabled={disabled}
         />
-        <div className="absolute right-1 top-1 h-10 flex flex-col justify-center">
+        <div className="absolute end-1 top-1 h-10 flex flex-col justify-center">
           <ArrowButton
             onClick={() => onChange(clamp(value + 1))}
             direction="up"

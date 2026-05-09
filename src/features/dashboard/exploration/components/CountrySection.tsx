@@ -1,8 +1,11 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { canonicalKey } from "@utils/string";
 import { FaThLarge } from "react-icons/fa";
 import { FaCircleCheck } from "react-icons/fa6";
 import { PiGlobeStandFill } from "react-icons/pi";
 import { ActionButton, SearchInput, SelectInput } from "@components";
+import { useCountryData } from "@features/countries";
 import {
   CountryDisplayPanel,
   CountrySortSelect,
@@ -51,6 +54,8 @@ export function CountrySection({
   onAllCountries,
   resetFilters,
 }: CountrySectionProps) {
+  const { t: tDashboard } = useTranslation("dashboard");
+
   const normalizedRegion =
     !selectedRegion || selectedRegion === "all" ? undefined : selectedRegion;
   const normalizedSubregion =
@@ -67,29 +72,49 @@ export function CountrySection({
     (f) => f.key === "subregion",
   )!;
 
-  // Compute unique region and subregion arrays for options
-  const uniqueRegions = Array.from(
-    new Set(
-      countries
-        .map((c) => c.region)
-        .filter((r): r is string => typeof r === "string" && !!r),
-    ),
-  );
+  // Get subregions for the currently selected region
+  const { subregionsByRegion, subregionToRegion } = useCountryData();
+  const uniqueRegions = Object.keys(subregionsByRegion).sort();
   const uniqueSubregions =
     selectedRegion && selectedRegion !== "all"
-      ? Array.from(
-          new Set(
-            countries
-              .filter((c) => c.region === selectedRegion)
-              .map((c) => c.subregion)
-              .filter((s): s is string => typeof s === "string" && !!s),
-          ),
-        )
+      ? (subregionsByRegion[selectedRegion] ?? [])
       : [];
 
-  // Generate options using filter config functions
-  const regionOptions = regionSelectFilter.getOptions(uniqueRegions);
-  const subregionOptions = subregionSelectFilter.getOptions(uniqueSubregions);
+  const { t: tAtlas } = useTranslation("atlas");
+  const { t: tCountries } = useTranslation("countries");
+  const { t: tCommon } = useTranslation("common");
+
+  // Generate options using filter config functions and translate labels
+  const regionBaseOptions = regionSelectFilter.getOptions(uniqueRegions) ?? [];
+  const subregionBaseOptions =
+    subregionSelectFilter.getOptions(uniqueSubregions) ?? [];
+
+  const regionOptions = regionBaseOptions.map((o) => ({
+    ...o,
+    label:
+      o.value === "all"
+        ? tCommon("filter.all")
+        : tCountries(`regions.${String(o.value)}`, {
+            defaultValue: String(o.label),
+          }),
+  }));
+
+  const subregionOptions = subregionBaseOptions.map((o) => {
+    const sk = String(o.value);
+    const regionKey = selectedRegion || subregionToRegion.get(sk) || "";
+    const normalized = canonicalKey(sk);
+    return {
+      ...o,
+      label:
+        o.value === "all"
+          ? tCommon("filter.all")
+          : regionKey
+            ? tCountries(`subregions.${regionKey}.${normalized}`, {
+                defaultValue: String(o.label),
+              })
+            : String(o.label),
+    };
+  });
 
   // Shared filter props for select filters
   const filterProps = {
@@ -172,7 +197,10 @@ export function CountrySection({
             <SearchInput
               value={search}
               onChange={setSearch}
-              placeholder="Search countries"
+              placeholder={tAtlas(
+                "countries.searchPlaceholder",
+                "Search countries",
+              )}
               className="mt-1 rounded-md"
             />
             <div className="flex flex-row gap-2 w-full">
@@ -218,11 +246,14 @@ export function CountrySection({
               onChange={(v: string) => setSortBy(v as typeof sortBy)}
               visitedOnly={undefined}
             />
-            <div className="flex flex-row gap-2 ml-auto justify-end">
+            <div className="flex flex-row gap-2 ms-auto justify-end">
               <ActionButton
                 onClick={handleResetFilters}
-                ariaLabel="Reset Filters"
-                title="Reset Filters"
+                ariaLabel={tDashboard(
+                  "exploration.resetFilters",
+                  "Reset Filters",
+                )}
+                title={tDashboard("exploration.resetFilters", "Reset Filters")}
                 icon={<ICONS.reset />}
                 variant="toggle"
                 rounded
@@ -230,10 +261,26 @@ export function CountrySection({
               <ActionButton
                 onClick={handleVisitedToggle}
                 ariaLabel={
-                  showVisitedOnly ? "Show All Countries" : "Show Visited Only"
+                  showVisitedOnly
+                    ? tDashboard(
+                        "exploration.showAllCountries",
+                        "Show All Countries",
+                      )
+                    : tDashboard(
+                        "exploration.showVisitedOnly",
+                        "Show Visited Only",
+                      )
                 }
                 title={
-                  showVisitedOnly ? "Show All Countries" : "Show Visited Only"
+                  showVisitedOnly
+                    ? tDashboard(
+                        "exploration.showAllCountries",
+                        "Show All Countries",
+                      )
+                    : tDashboard(
+                        "exploration.showVisitedOnly",
+                        "Show Visited Only",
+                      )
                 }
                 icon={
                   showVisitedOnly ? (
@@ -253,13 +300,25 @@ export function CountrySection({
                 onClick={handleTranscontinentalToggle}
                 ariaLabel={
                   showTranscontinental
-                    ? "Hide transcontinental countries"
-                    : "Show transcontinental countries"
+                    ? tDashboard(
+                        "exploration.hideTranscontinental",
+                        "Hide transcontinental countries",
+                      )
+                    : tDashboard(
+                        "exploration.showTranscontinental",
+                        "Show transcontinental countries",
+                      )
                 }
                 title={
                   showTranscontinental
-                    ? "Hide transcontinental countries"
-                    : "Show transcontinental countries"
+                    ? tDashboard(
+                        "exploration.hideTranscontinental",
+                        "Hide transcontinental countries",
+                      )
+                    : tDashboard(
+                        "exploration.showTranscontinental",
+                        "Show transcontinental countries",
+                      )
                 }
                 icon={
                   <span className="flex items-center gap-1 font-semibold text-sm">
@@ -275,13 +334,25 @@ export function CountrySection({
                 onClick={handleToggle}
                 ariaLabel={
                   viewMode === "grid"
-                    ? "Switch to List View"
-                    : "Switch to Grid View"
+                    ? tDashboard(
+                        "exploration.switchToList",
+                        "Switch to List View",
+                      )
+                    : tDashboard(
+                        "exploration.switchToGrid",
+                        "Switch to Grid View",
+                      )
                 }
                 title={
                   viewMode === "grid"
-                    ? "Switch to List View"
-                    : "Switch to Grid View"
+                    ? tDashboard(
+                        "exploration.switchToList",
+                        "Switch to List View",
+                      )
+                    : tDashboard(
+                        "exploration.switchToGrid",
+                        "Switch to Grid View",
+                      )
                 }
                 icon={
                   viewMode === "grid" ? <ICONS.countryLists /> : <FaThLarge />

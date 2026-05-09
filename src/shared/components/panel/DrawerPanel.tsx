@@ -27,7 +27,7 @@ export function DrawerPanel({
       )}
       <div
         className={`
-          fixed top-0 left-0 h-full z-50 shadow-lg bg-surface
+          fixed top-0 start-0 h-full z-50 shadow-lg bg-surface
           transition-transform duration-300
           overflow-hidden
           ${open ? "translate-x-0" : "-translate-x-full"}

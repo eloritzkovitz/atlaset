@@ -1,7 +1,11 @@
 import { useMemo } from "react";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
-import { getCountryIsoCode } from "@features/countries";
+import {
+  getCountryIsoCode,
+  getCountryName,
+  useCountryData,
+} from "@features/countries";
 import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
@@ -38,6 +42,7 @@ export function LayersContainer({
   isAddingMarker,
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
+  const countryData = useCountryData();
   const { isEdit, isReadonly } = useMapView();
   const { timelineMode } = useTimeline();
 
@@ -75,7 +80,11 @@ export function LayersContainer({
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
 
-            const tooltip = geo.properties.name;
+            // Get tooltip name: use country name from data if available, otherwise fallback to geo properties
+            const tooltip =
+              isoA2 && countryData?.countries
+                ? getCountryName(isoA2, countryData.countries)
+                : geo.properties.name;
             const interactiveMode = !isReadonly && !isEdit && !timelineMode;
 
             // Layer logic: blend all layers for this country

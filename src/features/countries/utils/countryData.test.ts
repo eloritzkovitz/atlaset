@@ -179,19 +179,19 @@ describe("countryData utils", () => {
   describe("getAllSovereigntyStatuses", () => {
     it("returns unique, sorted sovereignty statuses", () => {
       expect(getAllSovereigntyStatuses(countries)).toEqual([
-        "Dependency",
-        "Sovereign",
+        "dependency",
+        "sovereign",
       ]);
     });
 
     it("skips undefined sovereigntyStatus", () => {
       const testCountries = [
-        { sovereigntyStatus: "Sovereign" as SovereigntyStatus },
+        { sovereigntyStatus: "sovereign" as SovereigntyStatus },
         { sovereigntyStatus: undefined },
         {},
       ] as Partial<Country>[];
       expect(getAllSovereigntyStatuses(testCountries as Country[])).toEqual([
-        "Sovereign",
+        "sovereign",
       ]);
     });
   });

@@ -1,0 +1,149 @@
+{
+  "appName": "Atlaset",
+  "sidebar": {
+    "expand": "Expand sidebar",
+    "collapse": "Collapse sidebar",
+    "atlas": "Atlas",
+    "trips": "My Trips",
+    "dashboard": "Dashboard",
+    "quizzes": "Quizzes",
+    "settings": "Settings"
+  },
+  "menu": {
+    "notifications": "Notifications",
+    "help": "Help",
+    "account": "Account",
+    "profile": "Profile",
+    "friends": "Friends",
+    "reportBug": "Report a bug",
+    "keyboardShortcuts": "Keyboard Shortcuts",
+    "settings": "Settings",
+    "language": "Language",
+    "signOut": "Sign out"
+  },
+  "actions": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close",
+    "show": "Show",
+    "showMore": "Show more",
+    "hide": "Hide",
+    "moreActions": "More actions",
+    "view": "View",
+    "download": "Download",
+    "rename": "Rename",
+    "center": "Center",
+    "duplicate": "Duplicate",
+    "createList": "Create List",
+    "share": "Share",
+    "copyLink": "Copy Link",
+    "cannotDelete": "Cannot delete",
+    "search": "Search",
+    "resetFilters": "Reset filters",
+    "notifications": "Notifications",
+    "help": "Help"
+  },
+  "search": {
+    "placeholder": "Search",
+    "recent": "Recent Searches",
+    "clear": "Clear",
+    "clearAll": "Clear All",
+    "searching": "Searching...",
+    "seeAll": "See all results",
+    "noResults": "No results found.",
+    "sections": {
+      "all": "All",
+      "people": "People",
+      "countries": "Countries",
+      "currencies": "Currencies",
+      "regions": "Regions",
+      "subregions": "Subregions"
+    }
+  },
+  "filter": {
+    "all": "All",
+    "includeOnly": "Include Only",
+    "exclude": "Exclude"
+  },
+  "sort": {
+    "direction": "Direction",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "title": "Sort",
+    "tooltip": "Sort by: {{key}} ({{dir}})"
+  },
+  "shortcuts": {
+    "title": "Keyboard Shortcuts",
+    "categories": {
+      "general": "General",
+      "user": "User",
+      "atlas": "Atlas",
+      "countries": "Countries",
+      "map": "Map",
+      "timeline": "Timeline"
+    },
+    "actions": {
+      "showShortcuts": "Show shortcuts",
+      "focusSearch": "Focus search",
+      "unfocusClose": "Unfocus / Close",
+      "toggleHelp": "Toggle help",
+      "resetFilters": "Reset filters",
+      "toggleSavedMaps": "Toggle saved maps",
+      "toggleFriends": "Toggle friends",
+      "toggleCountries": "Toggle countries",
+      "toggleExport": "Toggle export",
+      "toggleFilters": "Toggle filters",
+      "toggleLegend": "Toggle legend",
+      "toggleMarkers": "Toggle markers",
+      "toggleLayers": "Toggle layers",
+      "toggleSettings": "Toggle settings",
+      "toggleTimeline": "Toggle timeline",
+      "toggleUi": "Toggle UI",
+      "scrollUp": "Scroll up",
+      "scrollDown": "Scroll down",
+      "goToFirstCountry": "Go to first country",
+      "goToLastCountry": "Go to last country",
+      "scrollUpOnePage": "Scroll up one page",
+      "scrollDownOnePage": "Scroll down one page",
+      "selectCountry": "Select country",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "resetZoom": "Reset zoom",
+      "centerMapOnCountry": "Center map on country",
+      "nextYear": "Next year",
+      "previousYear": "Previous year",
+      "goToFirstYear": "Go to first year",
+      "goToLastYear": "Go to last year",
+      "playPause": "Play/Pause"
+    }
+  },
+  "help": {
+    "title": "Help",
+    "searchPlaceholder": "Search help",
+    "needHelp": "Need help? Access guides, tips and developer info in the full",
+    "documentation": "documentation"
+  },
+  "languages": {
+    "en": "English",
+    "he": "עברית"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "pageSize": "Page size",
+    "selectPageSize": "Select page size",
+    "of": "of",
+    "back": "Back",
+    "next": "Next",
+    "prevAria": "Previous page",
+    "nextAria": "Next page"
+  },
+  "empty": "—",
+  "chip": {
+    "more": "+{{count}} more",
+    "moreTooltipPrefix": "More items:\n"
+  }
+}

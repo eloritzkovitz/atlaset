@@ -1,0 +1,150 @@
+{
+  "menu": {
+    "title": "לוח בקרה",
+    "countries": "מדינות",
+    "allCountries": "הכל",
+    "currencyExchange": "המרת מטבע",
+    "overview": "סקירה",
+    "exploration": "מדינות",
+    "currencies": "מטבעות",
+    "achievements": "הישגים",
+    "statistics": "סטטיסטיקה"
+  },
+  "overview": {
+    "goToProfile": "עבור לפרופיל שלך",
+    "user": "משתמש",
+    "welcomeBack": "ברוך שובך!",
+    "stats": {
+      "heading": "סקירה של {{name}}",
+      "countriesExplored": "מדינות שביקרתי בהן",
+      "achievements": "הישגים",
+      "statistics": "סטטיסטיקה",
+      "view": "צפייה"
+    }
+  },
+  "exploration": {
+    "worldTitle": "חקירת העולם",
+    "allTitle": "כל המדינות",
+    "showAllCountries": "הצג את כל המדינות",
+    "ofCountriesVisited": "מהמדינות שביקרתי בהן",
+    "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
+    "showTranscontinental": "הצג מדינות חוצות יבשות",
+    "hideTranscontinental": "הסתר מדינות חוצות יבשות",
+    "switchToList": "החלף לתצוגת רשימה",
+    "switchToGrid": "החלף לתצוגת רשת",
+    "resetFilters": "איפוס מסננים"
+  },
+  "currencies": {
+    "searchPlaceholder": "חפש לפי שם או קוד",
+    "empty": "מטבע לא נמצא.",
+    "viewExchange": "הצג המרת מטבע",
+    "currencyInfo": {
+      "usingCurrency": "מדינות שמשתמשות ב- {{code}}",
+      "dependenciesUsingCurrency": "תלויות וטריטוריות שמשתמשות ב- {{code}}"
+    },
+    "currencyExchange": {
+      "exchangeHeader": "1 {{currency}} שווה",
+      "rateValue": "{{rate}} {{currency}}",
+      "from": "מ",
+      "to": "אל",
+      "input": {
+        "amountToConvert": "סכום להמרה",
+        "convertedAmount": "סכום מומר"
+      },
+      "select": {
+        "from": "מטבע מוצא",
+        "to": "מטבע יעד"
+      },
+      "swap": {
+        "ariaLabel": "החלף מטבעות",
+        "title": "החלפה"
+      },
+      "convert": "המרה",
+      "converting": "ממיר...",
+      "errorPrefix": "שגיאה:"
+    }
+  },
+  "statistics": {
+    "views": {
+      "overview": "סקירה",
+      "history": "היסטוריה",
+      "monthly": "חודשי",
+      "yearly": "שנתי"
+    },
+    "overview": {
+      "title": "סקירת טיולים",
+      "subtitle": "סיכום כל הטיולים שהוקלטו",
+      "totalTrips": "סה\"כ טיולים",
+      "pieToggle": {
+        "type": "סוג",
+        "status": "סטטוס"
+      },
+      "breakdown": {
+        "title": "חלוקת טיולים",
+        "subtitle": {
+          "type": "חלוקה לפי סוגי טיולים (מקומיים ובחו\u0022ל)",
+          "status": "חלוקה לפי סטטוס הטיולים"
+        }
+      },
+      "loadingChart": "טוען תרשים...",
+      "longest": {
+        "title": "הטיול הארוך ביותר",
+        "subtitle": "הטיול עם מספר הימים הגדול ביותר בחו\"ל"
+      },
+      "shortest": {
+        "title": "הטיול הקצר ביותר",
+        "subtitle": "הטיול הקצר ביותר בחו\"ל"
+      },
+      "average": {
+        "title": "משך טיול ממוצע",
+        "subtitle": "מספר ימים ממוצע לכל טיול"
+      },
+      "totalDays": {
+        "title": "סך כל הימים בטיולים",
+        "subtitle": "סכום כל משכי הטיולים"
+      },
+      "days": "ימים"
+    },
+    "history": {
+      "mostVisited": {
+        "title": "המדינות שביקרתי בהן הכי הרבה",
+        "subtitle": "מבוסס על טיולים בחו\u0022ל שהושלמו"
+      },
+      "recent": {
+        "title": "טיולים אחרונים",
+        "subtitle": "שלושת הטיולים האחרונים שלך"
+      },
+      "first": {
+        "title": "הטיול הראשון",
+        "subtitle": "הטיול המוקדם ביותר שמתועד"
+      },
+      "last": {
+        "title": "הטיול האחרון",
+        "subtitle": "הטיול האחרון שלך"
+      }
+    },
+    "months": {
+      "title": "טיולים לפי חודש",
+      "noData": "אין נתוני טיולים זמינים.",
+      "columns": {
+        "name": "חודש",
+        "total": "סה\"כ",
+        "percentage": "אחוז"
+      },
+      "mostPopular": {
+        "title": "החודש הפופולרי ביותר"
+      },
+      "leastPopular": {
+        "title": "החודש הכי פחות פופולרי"
+      },
+      "breakdownTitle": "חלוקת טיולים חודשית",
+      "trips": "טיולים"
+    },
+    "year": {
+      "title": "טיולים לפי שנה",
+      "breakdownTitle": "חלוקת טיולים שנתית",
+      "toggle": { "both": "שניהם" },
+      "columns": { "year": "שנה", "total": "סה\"כ" }
+    }
+  }
+}

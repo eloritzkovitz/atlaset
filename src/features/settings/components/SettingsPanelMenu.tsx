@@ -1,4 +1,5 @@
 import { FaGear } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { mapMenuItems, SidePanelMenu } from "@components";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
 
@@ -17,17 +18,22 @@ export function SettingsPanelMenu({
   open,
   onClose,
 }: SettingsPanelMenuProps) {
-  const menuConfig = canEdit
-    ? SETTINGS_MENU
-    : SETTINGS_MENU.filter((item) => item.key !== "edit");
+  const { t } = useTranslation("settings");
+
+  const menuConfig = (
+    canEdit
+      ? SETTINGS_MENU
+      : SETTINGS_MENU.filter((item) => item.key !== "edit")
+  ).map((item) => ({ ...item, label: t(`menu.${item.key}`) }));
+
   const menuItems = mapMenuItems(menuConfig);
 
   return (
     <SidePanelMenu
       title={
         <>
-          <FaGear className="mr-1" />
-          Settings
+          <FaGear className="me-1" />
+          {t("title")}
         </>
       }
       menuItems={menuItems}

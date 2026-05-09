@@ -50,7 +50,7 @@ export function SidePanelMenu({
     <Panel
       title={title}
       width={width}
-      className={isMobile ? "!left-0" : undefined}
+      className={isMobile ? "!start-0" : undefined}
       onHide={onClose}
     >
       <ul className="flex flex-col gap-2">
@@ -81,7 +81,7 @@ export function SidePanelMenu({
         {showHamburger && openProp === undefined && (
           <HamburgerButton
             onClick={() => setLocalOpen(true)}
-            className="left-18 !top-2.5"
+            className="start-18 !top-2.5"
           />
         )}
         <DrawerPanel open={!!open} onClose={onClose} width={width + 30}>

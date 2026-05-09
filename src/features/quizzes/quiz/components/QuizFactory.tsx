@@ -51,8 +51,8 @@ export function QuizFactory({
   }
 
   const { quizType, difficulty } = sessionProps;
-  const explicitMax = (sessionProps as any).maxQuestions ?? 25;
-  const explicitDuration = (sessionProps as any).duration as number | undefined;
+  const explicitMax = sessionProps.maxQuestions ?? 25;
+  const explicitDuration = sessionProps.duration;
 
   return (
     <QuizSession

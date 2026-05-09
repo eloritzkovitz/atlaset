@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ActionButton, Modal, PanelHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import type { Marker } from "../../types";
@@ -5,14 +6,14 @@ import type { Marker } from "../../types";
 interface MarkerDetailsModalProps {
   isOpen: boolean;
   marker: Marker | null;
-  position: { top: number; left: number } | null;  
+  position: { top: number; left: number } | null;
   onClose: () => void;
 }
 
 export function MarkerDetailsModal({
   isOpen,
   marker,
-  position,  
+  position,
   onClose,
 }: MarkerDetailsModalProps) {
   // Don't render the modal if no marker is selected
@@ -36,27 +37,47 @@ export function MarkerDetailsModal({
           : undefined
       }
     >
-      <div className="relative overflow-visible">
-        <PanelHeader
-          title={
-            <span className="flex items-center gap-2">
-              <ICONS.markers />
-              {marker.name}
-            </span>
-          }
-        >
-          <ActionButton
-            onClick={onClose}
-            ariaLabel="Close country details"
-            title="Close"
-            rounded
-            icon={<ICONS.close />}
-          />
-        </PanelHeader>
-      </div>
-      <div className="mb-4 text-muted">
-        {marker.description || "No description provided."}
-      </div>
+      <MarkerDetailsContent
+        marker={marker}
+        onClose={onClose}
+        position={position}
+      />
     </Modal>
+  );
+}
+
+function MarkerDetailsContent({
+  marker,
+  onClose,
+}: {
+  marker: Marker;
+  onClose: () => void;
+  position?: { top: number; left: number } | null;
+}) {
+  const { t } = useTranslation("atlas");
+
+  return (
+    <div className="relative overflow-visible">
+      <PanelHeader
+        title={
+          <span className="flex items-center gap-2">
+            <ICONS.markers />
+            {marker.name}
+          </span>
+        }
+      >
+        <ActionButton
+          onClick={onClose}
+          ariaLabel={t("markers.close", "Close")}
+          title={t("markers.close", "Close")}
+          rounded
+          icon={<ICONS.close />}
+        />
+      </PanelHeader>
+      <div className="mb-4 text-muted">
+        {marker.description ||
+          t("markers.noDescription", "No description provided.")}
+      </div>
+    </div>
   );
 }

@@ -1,7 +1,5 @@
 import { FaPlusSquare } from "react-icons/fa";
 import {
-  FaArrowLeft,
-  FaArrowRight,
   FaArrowsRotate,
   FaBell,
   FaBinoculars,
@@ -78,10 +76,11 @@ import {
   FaVolumeHigh,
   FaXmark,
 } from "react-icons/fa6";
+import { IoLanguage } from "react-icons/io5";
 import { DashboardIcon } from "../components/icons/DashboardIcon";
 import { VisitIcon } from "../components/icons/VisitIcon";
 
-// Centralized icon mapping for shared concepts
+/** Centralized icon mapping for shared concepts */
 export const ICONS = {
   // User
   account: FaCircleUser,
@@ -148,6 +147,7 @@ export const ICONS = {
   help: FaCircleQuestion,
   info: FaCircleInfo,
   reportBug: FaBug,
+  language: IoLanguage,
   // Actions
   add: FaPlus,
   importFile: FaFileImport,
@@ -165,9 +165,8 @@ export const ICONS = {
   remove: FaTrash,
   reset: FaRotateLeft,
   refresh: FaArrowsRotate,
-  forward: FaArrowRight,
-  back: FaArrowLeft,
   close: FaXmark,
+  selected: FaCheck,
   // Docs
   getStarted: FaRocket,
   accountManagement: FaUserGear,

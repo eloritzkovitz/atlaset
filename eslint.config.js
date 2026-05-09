@@ -13,7 +13,7 @@ export default defineConfig([
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      "import": pluginImport,
+      import: pluginImport,
     },
     extends: [js.configs.recommended, tseslint.configs.recommended],
     languageOptions: {
@@ -32,6 +32,15 @@ export default defineConfig([
       ],
       // Import cycle detection
       "import/no-cycle": "error",
+    },
+  },
+  {
+    // Disable strict rules in non-React scripts
+    files: ["scripts/**/*.{ts,tsx,js,jsx}"],
+    languageOptions: { globals: globals.node },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
   // Disable strict rules in test files

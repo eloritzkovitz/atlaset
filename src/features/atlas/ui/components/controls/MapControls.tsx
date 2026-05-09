@@ -4,6 +4,7 @@ import {
   FaMinus,
   FaUpRightAndDownLeftFromCenter,
 } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { useKeyHandler } from "@hooks";
 import { DEFAULT_MAP_SETTINGS } from "../../../map/constants/map";
@@ -19,6 +20,7 @@ export function MapControls({
   setZoom,
   visible = true,
 }: MapControlsProps) {
+  const { t } = useTranslation("atlas");
   const zoomInInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomOutInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -84,8 +86,8 @@ export function MapControls({
           onMouseLeave={() => stopContinuousZoom("in")}
           onTouchStart={() => startContinuousZoom("in")}
           onTouchEnd={() => stopContinuousZoom("in")}
-          ariaLabel="Zoom in"
-          title="Zoom in"
+          ariaLabel={t("controls.zoomIn")}
+          title={t("controls.zoomIn")}
           titlePosition="left"
           icon={<FaPlus />}
           variant="action"
@@ -100,8 +102,8 @@ export function MapControls({
           onMouseLeave={() => stopContinuousZoom("out")}
           onTouchStart={() => startContinuousZoom("out")}
           onTouchEnd={() => stopContinuousZoom("out")}
-          ariaLabel="Zoom out"
-          title="Zoom out"
+          ariaLabel={t("controls.zoomOut")}
+          title={t("controls.zoomOut")}
           titlePosition="left"
           icon={<FaMinus />}
           variant="action"
@@ -109,8 +111,8 @@ export function MapControls({
         />
         <ActionButton
           onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
-          ariaLabel="Reset view"
-          title="Reset view"
+          ariaLabel={t("controls.resetView")}
+          title={t("controls.resetView")}
           titlePosition="left"
           icon={<FaUpRightAndDownLeftFromCenter />}
           variant="action"

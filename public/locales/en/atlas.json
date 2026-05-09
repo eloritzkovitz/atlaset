@@ -1,0 +1,255 @@
+{
+  "toolbar": {
+    "openMapActions": "Open map actions",
+    "closeMapActions": "Close map actions",
+    "showToolbar": "Show toolbar",
+    "hideToolbar": "Hide toolbar",
+    "countries": "Countries",
+    "layers": "Layers",
+    "markers": "Markers",
+    "legend": "Legend",
+    "myMaps": "My Maps",
+    "timeline": "Timeline",
+    "export": "Export",
+    "download": "Download",
+    "mapSettings": "Map Settings",
+    "exitEditMode": "Exit Edit Mode",
+    "exitSharedView": "Exit Shared View"
+  },
+  "controls": {
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetView": "Reset view"
+  },
+  "shared": {
+    "viewingPrefix": "Viewing",
+    "byPrefix": "by",
+    "inEditMode": "in Edit Mode.",
+    "editingDisabled": "Editing is disabled.",
+    "defaultMap": "a shared map",
+    "defaultSharer": "an anonymous user"
+  },
+  "countries": {
+    "title": "Countries",
+    "actions": {
+      "refreshData": "Refresh country data",
+      "showFilters": "Show Filters",
+      "hideFilters": "Hide Filters"
+    },
+    "searchPlaceholder": "Search countries",
+    "countryLists": {
+      "all": "All",
+      "sovereign": "Sovereign",
+      "visited": "Visited",
+      "newList": "New list"
+    },
+    "lists": {
+      "editTitle": "Edit List",
+      "addTitle": "Add List",
+      "nameLabel": "Name:",
+      "linkedWarning": "Changes to this list will update all layers linked to it.",
+      "save": "Save Changes",
+      "add": "Add List",
+      "delete": "Delete List"
+    },
+    "sort": {
+      "by": "SORT BY",
+      "name": "Name",
+      "isoCode": "ISO 3166-1 code",
+      "area": "Area",
+      "population": "Population",
+      "visitCount": "Visit count",
+      "firstVisit": "First visit time",
+      "lastVisit": "Last visit time"
+    },
+    "select": {
+      "label": "Countries:",
+      "noneSelected": "No countries selected.",
+      "title": "Select Countries"
+    },
+    "filters": {
+      "title": "Filters",
+      "core": {
+        "title": "Core Filters",
+        "region": "Region",
+        "subregion": "Subregion",
+        "geoType": "Geographic Type",
+        "sovereignty": "Sovereignty",
+        "visitStatus": "Visit Status",
+        "visited": "Visited",
+        "notVisited": "Not Visited"
+      },
+      "layer": {
+        "title": "Layer Filters"
+      },
+      "timeline": {
+        "title": "Timeline Filters",
+        "year": "Year",
+        "visitCount": "Visit Count",
+        "from": "From",
+        "to": "to"
+      }
+    },
+    "details": {
+      "header": {
+        "centerMap": "Center map",
+        "centerMapAria": "Center map on country",
+        "viewFull": "View full details",
+        "viewFullAria": "View full details",
+        "wikipedia": "Wikipedia",
+        "wikipediaAria": "Open Wikipedia article"
+      },
+      "status": {
+        "home": "Home country",
+        "homeAria": "Home country",
+        "visited": "Visited",
+        "notVisited": "Not visited"
+      },
+      "tabs": {
+        "overview": "Overview",
+        "territories": "Territories & Claims",
+        "affiliations": "Affiliations",
+        "visits": "Visits"
+      },
+      "overview": {
+        "region": "Region",
+        "subregion": "Subregion",
+        "capital": "Capital",
+        "languages": "Languages",
+        "government": "Government",
+        "area": "Area",
+        "population": "Population",
+        "areaUnit": "km²",
+        "currency": "Currencies",
+        "timezone": "Timezones",
+        "summer": "summer",
+        "callingCode": "Calling Code",
+        "drivingSide": "Driving Side",
+        "isoCode": "ISO 3166 Code",
+        "altNames": "Alternative Names"
+      },
+      "affiliations": {
+        "memberships": "Memberships",
+        "un": "United Nations",
+        "eu": "European Union"
+      },
+      "visits": {
+        "planned": "Planned",
+        "upcoming": "Upcoming",
+        "completed": "Completed"
+      }
+    }
+  },
+  "layers": {
+    "title": "Layers",
+    "add": "Add Layer",
+    "import": "Import Layers",
+    "export": "Export Layers",
+    "empty": "No layers yet.",
+    "addTitle": "Add Layer",
+    "editTitle": "Edit Layer",
+    "form": {
+      "name": "Name:",
+      "color": "Color:",
+      "fromList": "From List:",
+      "selectList": "Select a list...",
+      "filterLabels": "Filter Labels:"
+    },
+    "linkedListWarning": "This layer is linked with a list. To edit its name or countries, update the list itself.",
+    "saveChanges": "Save Changes"
+  },
+  "markers": {
+    "hint": "Click on the map to add a marker.",
+    "title": "Markers",
+    "add": "Add Marker",
+    "import": "Import Markers",
+    "export": "Export Markers",
+    "close": "Close markers panel",
+    "empty": "No markers yet.",
+    "editTitle": "Edit Marker",
+    "addTitle": "Add Marker",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Marker name",
+      "color": "Color",
+      "description": "Description",
+      "descriptionPlaceholder": "Description (optional)"
+    },
+    "noDescription": "No description provided.",
+    "locationLabel": "Location:",
+    "saveChanges": "Save Changes"
+  },
+  "legend": {
+    "title": "Legend"
+  },
+  "savedMaps": {
+    "title": "My Maps",
+    "save": "Save current map",
+    "create": "Create new map",
+    "close": "Close",
+    "empty": "No saved maps yet.",
+    "addTitle": "Add Map",
+    "saveTitle": "Save Map",
+    "renameTitle": "Rename Map",
+    "nameLabel": "Map Name:",
+    "namePlaceholder": "Map name",
+    "saveChanges": "Save Changes",
+    "add": "Add Map"
+  },
+  "timeline": {
+    "hint": "Timeline mode enabled. Press T to toggle off.",
+    "play": "Play",
+    "pause": "Pause",
+    "firstYear": "First year",
+    "previousYear": "Previous year",
+    "nextYear": "Next year",
+    "lastYear": "Last year",
+    "speed": "Speed: {{speed}}x",
+    "cumulativeVisits": "Cumulative visits",
+    "yearlyVisits": "Yearly visits",
+    "colorMode": "Color mode"
+  },
+  "mapExport": {
+    "title": "Export",
+    "options": "Options",
+    "visitedCountries": "Visited countries",
+    "visibleLayers": "All visible layers",
+    "visibleMarkers": "All visible markers",
+    "mapDetails": "Map details (optional)",
+    "mapName": "Map name",
+    "mapNamePlaceholder": "My Shared Map",
+    "yourName": "Your Name",
+    "yourNamePlaceholder": "Your Name",
+    "download": "Download",
+    "format": "Format",
+    "inlineStyles": "inline styles",
+    "downloadImage": "Download Image",
+    "downloadData": "Download Data",
+    "downloadJson": "Download as JSON",
+    "share": "Share",
+    "shareableLink": "Shareable link",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied to clipboard!",
+    "embed": "Embed",
+    "embedCode": "Embed code",
+    "copyEmbedCode": "Copy embed code",
+    "embedCodeCopied": "Embed code copied to clipboard!",
+    "description": "Embed this map in your website using the code above."
+  },
+  "mapSettings": {
+    "title": "Map Settings",
+    "configuration": "Configuration",
+    "mapProjection": "Map Projection",
+    "borderColor": "Border Color",
+    "borderWidth": "Border Width",
+    "colors": "Colors",
+    "displayOptions": "Display Options",
+    "showHomeCountry": "Show home country",
+    "showVisitedCountries": "Show visited countries",
+    "showUpcomingVisits": "Show upcoming new visits",
+    "colorPalette": "Color palette",
+    "standard": "Standard",
+    "timelineCumulative": "Timeline (Cumulative)",
+    "timelineYearly": "Timeline (Yearly)"
+  }
+}

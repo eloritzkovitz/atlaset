@@ -4,10 +4,15 @@ import { firestoreMocks } from "@test-utils/mockDbAndFirestore";
 import * as firebaseUtils from "@utils/firebase";
 import * as activityUtils from "./activity";
 import type { CollectionReference, DocumentData } from "firebase/firestore";
+import i18n from "i18next";
 
-import activityTemplatesJson from "./activityTemplates.json";
-export const activityTemplates: Record<string, string> = activityTemplatesJson;
-
+beforeEach(() => {
+  vi.restoreAllMocks();
+  vi.spyOn(i18n, "t").mockImplementation((...args: any[]) => {
+    const opts = args[1];
+    return opts?.defaultValue ?? "{userName} did something.";
+  });
+});
 vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(() => ({
     currentUser: authState.currentUser,
@@ -21,12 +26,10 @@ vi.mock("firebase/auth", () => ({
   })),
   onAuthStateChanged: vi.fn(),
 }));
-
 vi.mock("firebase/firestore", () => ({
   ...firestoreMocks,
   getFirestore: vi.fn(() => ({})),
 }));
-
 vi.mock("./firebase", async () => {
   const actual =
     await vi.importActual<typeof import("@app/firebase")>("./firebase");
@@ -59,13 +62,18 @@ describe("logUserActivity", () => {
 
 describe("getActivityDescription", () => {
   it("renders a template with details and quoted formatting", () => {
-    activityUtils.activityTemplates[211] = "{userName} added '{itemName}'.";
+    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
+      const k = args[0];
+      const opts = args[1];
+      const key = String(k).split(":").pop();
+      if (key === "211") return "{userName} added '{itemName}'.";
+      return opts?.defaultValue ?? "{userName} did something.";
+    });
     const desc = activityUtils.getActivityDescription(211, {
       userName: "Alice",
       itemName: "TestItem",
     });
     const children = desc.props.children;
-    // Username should be in a bold span
     expect(
       children.some((part: any) => part?.props?.children === "Alice"),
     ).toBeTruthy();
@@ -75,8 +83,14 @@ describe("getActivityDescription", () => {
   });
 
   it("renders quoted text with correct formatting", () => {
-    activityUtils.activityTemplates[212] =
-      "{userName} edited '{itemName}' at '{location}'.";
+    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
+      const k = args[0];
+      const opts = args[1];
+      const key = String(k).split(":").pop();
+      if (key === "212")
+        return "{userName} edited '{itemName}' at '{location}'.";
+      return opts?.defaultValue ?? "{userName} did something.";
+    });
     const desc = activityUtils.getActivityDescription(212, {
       userName: "Bob",
       itemName: "ItemX",
@@ -93,7 +107,6 @@ describe("getActivityDescription", () => {
 
   it("uses default for missing userName", () => {
     const desc = activityUtils.getActivityDescription(101, {});
-    // Username should be in a bold span with "You"
     expect(
       desc.props.children.some((part: any) => part?.props?.children === "You"),
     ).toBeTruthy();
@@ -104,11 +117,9 @@ describe("getActivityDescription", () => {
       userName: "Bob",
     });
     const children = desc.props.children;
-    // Username should be in a bold span with "Bob"
     expect(
       children.some((part: any) => part?.props?.children === "Bob"),
     ).toBeTruthy();
-    // Should contain "did something" as a string
     expect(
       children.some(
         (part: any) =>
@@ -118,37 +129,39 @@ describe("getActivityDescription", () => {
   });
 
   it("returns empty string for unknown placeholder", () => {
-    const testKey = "0";
-    const originalValue = activityUtils.activityTemplates[testKey];
-    activityUtils.activityTemplates[testKey] = "{userName} did {unknownKey}.";
+    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
+      const k = args[0];
+      const opts = args[1];
+      const key = String(k).split(":").pop();
+      if (key === "0") return "{userName} did {unknownKey}.";
+      return opts?.defaultValue ?? "{userName} did something.";
+    });
     const desc = activityUtils.getActivityDescription(0, { userName: "Eve" });
     const children = desc.props.children;
-    // Username should be in a bold span with "Eve"
     expect(
       children.some((part: any) => part?.props?.children === "Eve"),
     ).toBeTruthy();
-    // Should contain "did " as a string
     expect(
       children.some(
         (part: any) => typeof part === "string" && part.includes("did "),
       ),
     ).toBeTruthy();
-    if (originalValue === undefined) {
-      delete activityUtils.activityTemplates[testKey];
-    } else {
-      activityUtils.activityTemplates[testKey] = originalValue;
-    }
+    // no cleanup needed; we mocked i18n.t for this test
   });
 
   it("renders correctly when there is no quoted text", () => {
-    activityUtils.activityTemplates[120] = "{userName} updated their profile.";
+    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
+      const k = args[0];
+      const opts = args[1];
+      const key = String(k).split(":").pop();
+      if (key === "120") return "{userName} updated their profile.";
+      return opts?.defaultValue ?? "{userName} did something.";
+    });
     const desc = activityUtils.getActivityDescription(120, { userName: "Sam" });
     const children = desc.props.children;
-    // Username should be in a bold span with "Sam"
     expect(
       children.some((part: any) => part?.props?.children === "Sam"),
     ).toBeTruthy();
-    // Should contain "updated their profile" as a string
     expect(
       children.some(
         (part: any) =>

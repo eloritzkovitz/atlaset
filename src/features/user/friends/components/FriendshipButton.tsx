@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { ConfirmModal } from "@components";
+import { useTranslation } from "react-i18next";
 import {
   FaUserPlus,
   FaHourglassHalf,
@@ -7,7 +7,7 @@ import {
   FaUserMinus,
   FaXmark,
 } from "react-icons/fa6";
-import { Menu, MenuButton } from "@components";
+import { ConfirmModal, Menu, MenuButton } from "@components";
 import { useMenuPosition } from "@hooks";
 
 interface FriendshipButtonProps {
@@ -25,7 +25,7 @@ export function FriendshipButton({
   onUnfriend,
   onWithdrawRequest,
 }: FriendshipButtonProps) {
-  // All hooks must be called unconditionally and in the same order
+  const { t } = useTranslation("user");
   const [showMenu, setShowMenu] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
@@ -36,11 +36,11 @@ export function FriendshipButton({
     menuRef,
     45,
     "right",
+    "adjacent",
     false,
   );
 
-  // Handlers for menu actions
-  // Confirmation modal states
+  // Confirmation states
   const [confirmUnfriend, setConfirmUnfriend] = useState(false);
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
 
@@ -66,7 +66,7 @@ export function FriendshipButton({
         disabled={loading}
       >
         <FaUserPlus className="text-lg" />
-        {loading ? "Adding..." : "Add Friend"}
+        {loading ? t("friends.adding") : t("friends.addFriend")}
       </button>
     );
   }
@@ -83,7 +83,7 @@ export function FriendshipButton({
             disabled={loading}
           >
             <FaHourglassHalf className="text-lg" />
-            Pending
+            {t("friends.pending")}
           </button>
           <Menu
             open={showMenu}
@@ -95,10 +95,10 @@ export function FriendshipButton({
               <MenuButton
                 icon={<FaXmark className="text-danger" />}
                 onClick={handleWithdraw}
-                ariaLabel="Withdraw Request"
+                ariaLabel={t("friends.withdrawRequest")}
                 className="text-danger"
               >
-                Withdraw Request
+                {t("friends.withdrawRequest")}
               </MenuButton>
             </div>
           </Menu>
@@ -106,15 +106,15 @@ export function FriendshipButton({
         {confirmWithdraw && (
           <ConfirmModal
             isOpen={confirmWithdraw}
-            title={"Withdraw friend request"}
-            message={"Are you sure you want to withdraw your friend request?"}
+            title={t("friends.withdrawConfirmTitle")}
+            message={t("friends.withdrawConfirmMessage")}
             onConfirm={() => {
               setConfirmWithdraw(false);
               if (onWithdrawRequest) onWithdrawRequest();
             }}
             onCancel={() => setConfirmWithdraw(false)}
-            submitLabel="Withdraw"
-            cancelLabel="Cancel"
+            submitLabel={t("friends.withdraw")}
+            cancelLabel={t("common:actions.close")}
           />
         )}
       </>
@@ -132,7 +132,7 @@ export function FriendshipButton({
             type="button"
           >
             <FaUserCheck className="text-lg" />
-            Friend
+            {t("friends.friend")}
           </button>
           <Menu
             open={showMenu}
@@ -144,10 +144,10 @@ export function FriendshipButton({
               <MenuButton
                 icon={<FaUserMinus className="text-danger" />}
                 onClick={handleUnfriend}
-                ariaLabel="Unfriend"
+                ariaLabel={t("friends.unfriend")}
                 className="text-danger"
               >
-                Unfriend
+                {t("friends.unfriend")}
               </MenuButton>
             </div>
           </Menu>
@@ -155,15 +155,15 @@ export function FriendshipButton({
         {confirmUnfriend && (
           <ConfirmModal
             isOpen={confirmUnfriend}
-            title={"Remove friend"}
-            message={"Are you sure you want to remove this friend?"}
+            title={t("friends.unfriendConfirmTitle")}
+            message={t("friends.unfriendConfirmMessage")}
             onConfirm={() => {
               setConfirmUnfriend(false);
               if (onUnfriend) onUnfriend();
             }}
             onCancel={() => setConfirmUnfriend(false)}
-            submitLabel="Remove"
-            cancelLabel="Cancel"
+            submitLabel={t("friends.unfriend")}
+            cancelLabel={t("common:actions.close")}
           />
         )}
       </>

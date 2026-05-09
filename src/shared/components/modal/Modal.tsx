@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import {
   useBodyScrollLock,
   useClickOutside,
@@ -56,8 +57,9 @@ export function Modal({
   draggable = false,
 }: ModalProps) {
   const { setModalOpen } = useUI();
+  const { isRtl } = useLanguage();
   const internalRef = useRef<HTMLDivElement>(null);
-  const modalRef = containerRef ?? internalRef;
+  const modalRef = containerRef ?? internalRef;  
 
   // Set modal open state for UI context
   useEffect(() => {
@@ -125,7 +127,7 @@ export function Modal({
           className={
             "group fixed " +
             (!draggable && position === "center"
-              ? "left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
+              ? `start-1/2 top-1/2 ${isRtl ? "translate-x-1/2" : "-translate-x-1/2"} -translate-y-1/2 `
               : "") +
             "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
             (isOpen ? "modal-show " : "modal-hide ") +

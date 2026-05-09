@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheck, FaXmark } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { ActionButton } from "../action/ActionButton";
 
 interface RenameControlsProps {
@@ -34,16 +34,16 @@ export function RenameControls({
         onClick={onSave}
         ariaLabel="Save"
         title="Save"
-        className="ml-2 text-success hover:text-success-hover"
-        icon={<FaCheck className="text-xl" />}
+        className="ms-2 text-success hover:text-success-hover"
+        icon={<ICONS.selected className="text-xl" />}
       />
       <ActionButton
         variant="toggle"
         onClick={onCancel}
         ariaLabel="Cancel"
         title="Cancel"
-        className="ml-2 text-danger hover:text-danger-hover"
-        icon={<FaXmark className="text-xl" />}
+        className="ms-2 text-danger hover:text-danger-hover"
+        icon={<ICONS.close className="text-xl" />}
       />
     </>
   );

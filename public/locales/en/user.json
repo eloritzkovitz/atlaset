@@ -1,0 +1,75 @@
+{
+  "friends": {
+    "you": "You",
+    "friend": "Friend",
+    "noFriendsYet": "No friends yet.",
+    "noFriendsFound": "No friends found.",
+    "noFriendRequests": "No friend requests.",
+    "loading": "Loading...",
+    "addFriend": "Add Friend",
+    "adding": "Adding...",
+    "pending": "Pending",
+    "withdrawRequest": "Withdraw Request",
+    "withdraw": "Withdraw",
+    "withdrawConfirmTitle": "Withdraw friend request",
+    "withdrawConfirmMessage": "Are you sure you want to withdraw your friend request?",
+    "unfriend": "Unfriend",
+    "unfriendConfirmTitle": "Unfriend",
+    "unfriendConfirmMessage": "Are you sure you want to unfriend this person?",
+    "friendRequests": "Friend Requests",
+    "friends": "Friends",
+    "searchPlaceholder": "Search friends",
+    "viewProfile": "View Profile",
+    "accept": "Accept",
+    "reject": "Reject",
+    "showFriends": "Show Friends",
+    "showRequests": "Show Requests"
+  },
+  "profile": {
+    "header": {
+      "editProfile": "Edit Profile",
+      "activityLog": "Activity Log",
+      "showFriendsList": "Show friends list",
+      "backToProfile": "Back to Profile"
+    },
+    "editModal": {
+      "title": "Edit Profile",
+      "personalInfo": "Personal Information",
+      "username": "Username",
+      "name": "Name",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "passwordPlaceholder": "Leave blank to keep current password",
+      "birthday": "Birthday",
+      "biography": "Biography",
+      "bioPlaceholder": "Write something about yourself...",
+      "contactInfo": "Contact Information",
+      "socialLinks": "Social Links",
+      "usernameInvalid": "Please choose a valid, available username.",
+      "passwordMismatch": "Passwords do not match.",
+      "success": "Profile updated successfully.",
+      "failed": "Failed to update profile."
+    },
+    "about": {
+      "title": "About",
+      "personalDetails": {
+        "title": "Personal Details",
+        "location": "Location",
+        "birthday": "Birthday",
+        "noDateProvided": "No date provided",
+        "joined": "Joined",
+        "biography": "Biography",
+        "noBiographyProvided": "No biography provided"
+      },
+      "contactInfo": {
+        "title": "Contact Info",
+        "email": "Email",
+        "noEmailProvided": "No email provided"
+      }
+    },
+    "notSpecified": "Not specified",
+    "visitedCountries": "Visited Countries ({{count}})",
+    "noVisitedCountries": "No countries visited yet.",
+    "bestScores": "Best Quiz Scores"
+  }
+}

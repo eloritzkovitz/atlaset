@@ -48,6 +48,8 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 
 - **Accessible design:** All major actions and navigation are keyboard-friendly
 - **Modern UI:** Responsive design with Tailwind CSS and icons
+- **RTL support:** Supports right-to-left languages
+- **Multilanguage support:** Supports both English and Hebrew
 - **PWA support:** Install Atlaset as an app on desktop or mobile and use it offline
 
 ### **Social Features**
@@ -63,6 +65,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Redux Toolkit** — Predictable state management
 - **Vite** — Fast build tool and development server
 - **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
+- **i18next & react-i18next** — Internationalization support
 
 ### Backend
 

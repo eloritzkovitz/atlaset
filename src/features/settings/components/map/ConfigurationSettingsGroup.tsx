@@ -1,10 +1,12 @@
 import React from "react";
 import { FaDraftingCompass } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import { MAP_OPTIONS } from "@features/atlas/map/constants/map";
 
 export function ConfigurationSettingsGroup() {
+  const { t } = useTranslation("atlas");
   const [showMapSettings, setShowMapSettings] = React.useState(true);
   const {
     projection,
@@ -19,26 +21,26 @@ export function ConfigurationSettingsGroup() {
     <>
       <CollapsibleHeader
         icon={<FaDraftingCompass />}
-        label="Configuration"
+        label={t("mapSettings.configuration")}
         expanded={showMapSettings}
         onToggle={() => setShowMapSettings((v) => !v)}
       />
       {showMapSettings && (
         <div>
           <SelectInput
-            label="Map Projection"
+            label={t("mapSettings.mapProjection")}
             value={projection}
             onChange={(v) => setProjection(String(v))}
             options={MAP_OPTIONS.projection}
           />
           <SelectInput
-            label="Border Color"
+            label={t("mapSettings.borderColor")}
             value={borderColor}
             onChange={(v) => setBorderColor(String(v))}
             options={MAP_OPTIONS.strokeColor}
           />
           <SelectInput
-            label="Border Width"
+            label={t("mapSettings.borderWidth")}
             value={borderWidth}
             onChange={(v) => setBorderWidth(Number(v))}
             options={MAP_OPTIONS.strokeWidth}

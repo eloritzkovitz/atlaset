@@ -42,7 +42,7 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
 
   // Update settings via Redux
   const updateSettings = async (
-    updates: Partial<typeof settings>
+    updates: Partial<typeof settings>,
   ): Promise<void> => {
     await dispatch(saveSettings(updates));
   };

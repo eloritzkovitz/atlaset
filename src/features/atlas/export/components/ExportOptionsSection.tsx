@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Checkbox, FormField, SectionHeader } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 
@@ -27,10 +28,11 @@ export function ExportOptionsSection({
   setSharer,
 }: ExportOptionsSectionProps) {
   const { isEdit } = useMapView();
+  const { t } = useTranslation("atlas");
 
   return (
     <>
-      <SectionHeader title="Options" />
+      <SectionHeader title={t("mapExport.options")} />
       <div className="flex flex-col gap-2 mb-4">
         {!isEdit && (
           <Checkbox
@@ -38,42 +40,42 @@ export function ExportOptionsSection({
             onChange={() =>
               setIncludeVisitedCountries(!includeVisitedCountries)
             }
-            label="Visited countries"
+            label={t("mapExport.visitedCountries")}
             aria-checked={includeVisitedCountries}
-            aria-label="Visited countries"
+            aria-label={t("mapExport.visitedCountries")}
           />
         )}
         <Checkbox
           checked={includeLayers}
           onChange={() => setIncludeLayers(!includeLayers)}
-          label="All visible layers"
+          label={t("mapExport.visibleLayers")}
           aria-checked={includeLayers}
-          aria-label="All visible layers"
+          aria-label={t("mapExport.visibleLayers")}
         />
         <Checkbox
           checked={includeMarkers}
           onChange={() => setIncludeMarkers(!includeMarkers)}
-          label="All visible markers"
+          label={t("mapExport.visibleMarkers")}
           aria-checked={includeMarkers}
-          aria-label="All visible markers"
+          aria-label={t("mapExport.visibleMarkers")}
         />
       </div>
-      <SectionHeader title="Map Details (Optional)" />
-      <FormField label="Map Name">
+      <SectionHeader title={t("mapExport.mapDetails")} />
+      <FormField label={t("mapExport.mapName")}>
         <input
           type="text"
           value={mapName}
           onChange={(e) => setMapName(e.target.value)}
-          placeholder="My Shared Map"
+          placeholder={t("mapExport.mapNamePlaceholder")}
           maxLength={64}
         />
       </FormField>
-      <FormField label="Your Name">
+      <FormField label={t("mapExport.yourName")}>
         <input
           type="text"
           value={sharer}
           onChange={(e) => setSharer(e.target.value)}
-          placeholder="Your Name"
+          placeholder={t("mapExport.yourNamePlaceholder")}
           maxLength={32}
         />
       </FormField>

@@ -12,6 +12,8 @@ import { TripActions } from "./TripActions";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import type { Trip } from "../../types";
 import { isPlannedTrip, isUpcomingTrip } from "../../utils/trips";
+import { useTranslation } from "react-i18next";
+import { capitalizeWords } from "@utils/string";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -38,6 +40,7 @@ export function TripsTableRows({
   onDelete,
   showRowNumbers,
 }: TripsTableRowsProps) {
+  const { t } = useTranslation("trips");
   const rowSpan = trip.countryCodes?.length || 1;
 
   // Country lookup for fast access
@@ -83,7 +86,7 @@ export function TripsTableRows({
             {/* Name column */}
             <TableCell rowSpan={rowSpan}>
               {trip.favorite && (
-                <FaHeart className="h-5 w-5 inline text-danger mr-2" />
+                <FaHeart className="h-5 w-5 inline text-danger me-2" />
               )}
               {trip.name}
             </TableCell>
@@ -140,10 +143,13 @@ export function TripsTableRows({
             {/* Categories */}
             <TableCell rowSpan={rowSpan}>
               <ChipList<{ value: string; label: string }>
-                items={(trip.categories ?? []).map((cat) => ({
-                  value: cat,
-                  label: cat.charAt(0).toUpperCase() + cat.slice(1),
-                }))}
+                items={(trip.categories ?? []).map((cat) => {
+                  const fallback = capitalizeWords(cat.replace(/-/g, " "));
+                  return {
+                    value: cat,
+                    label: t(`categories.${cat}`, fallback),
+                  };
+                })}
                 renderItem={(opt) => (
                   <span className="flex items-center gap-1" key={opt.value}>
                     {TRIP_CATEGORY_ICONS[opt.value] ?? null}
@@ -161,7 +167,10 @@ export function TripsTableRows({
             {/* Tags */}
             <TableCell rowSpan={rowSpan}>
               <ChipList
-                items={trip.tags}
+                items={(trip.tags ?? []).map((tag) => {
+                  const fallback = capitalizeWords(tag.replace(/-/g, " "));
+                  return { value: tag, label: t(`tags.${tag}`, fallback) };
+                })}
                 colorClass="bg-purple-100 text-purple-800"
                 moreColorClass="bg-purple-200 text-purple-900"
               />

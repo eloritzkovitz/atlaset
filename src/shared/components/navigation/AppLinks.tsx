@@ -12,7 +12,7 @@ interface AppLinksProps {
 /** Centralized application links. */
 export function AppLinks({
   className = "",
-  linkClassName = "ml-3 hover:!text-info",
+  linkClassName = "ms-3 hover:!text-info",
   showDocs = true,
   showGitHub = true,
   direction = "row",

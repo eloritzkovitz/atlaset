@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { FaCalendar } from "react-icons/fa6";
 import {
   ActionsToolbar,
@@ -42,17 +43,19 @@ export function TripsToolbar({
   onBulkDuplicate,
   onBulkDelete,
 }: ToolbarProps) {
+  const { t } = useTranslation("trips");
+  
   return (
     <div className="trips-toolbar-container px-3 flex items-center justify-between min-h-16 h-[7vh] bg-surface-alt">
       <ActionsToolbar>
         <div className="flex items-center z-90">
-          <div className="ml-16 " />
+          <div className="ms-16 " />
 
           {/* Search */}
           <SearchInput
             value={globalSearch}
             onChange={setGlobalSearch}
-            placeholder="Search trips"
+            placeholder={t("table.toolbar.search.placeholder")}
             className="w-64 h-8 rounded-full"
           />
           <ToolbarSeparator />
@@ -71,11 +74,11 @@ export function TripsToolbar({
           {/* Calendar Button */}
           <ActionButton
             onClick={() => setCalendarOpen(true)}
-            ariaLabel="View Calendar"
-            title="View Calendar"
+            ariaLabel={t("table.toolbar.calendar.viewCalendar")}
+            title={t("table.toolbar.calendar.viewCalendar")}
             icon={<FaCalendar />}
             variant="toggle"
-            className="ml-2"
+            className="ms-2"
           />
           <ToolbarSeparator />
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Modal,
   PanelHeader,
@@ -30,6 +31,7 @@ export function SavedMapsModal({
   const nameRef = useRef<HTMLInputElement>(null);
   const [name, setName] = useState("");
   const { isReadonly } = useMapView();
+  const { t } = useTranslation(["atlas", "common"]);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -62,13 +64,17 @@ export function SavedMapsModal({
         title={
           <>
             <ICONS.saved />
-            {isEditing ? "Rename Map" : isReadonly ? "Save Map" : "Add Map"}
+            {isEditing
+              ? t("savedMaps.renameTitle")
+              : isReadonly
+                ? t("savedMaps.saveTitle")
+                : t("savedMaps.addTitle")}
           </>
         }
       >
         <ActionButton
           onClick={onClose}
-          ariaLabel="Close Saved Map Modal"
+          ariaLabel={t("common:actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />
@@ -80,14 +86,14 @@ export function SavedMapsModal({
         }}
       >
         <div className="p-6 flex flex-col gap-4">
-          <FormField label="Map Name:">
+          <FormField label={t("savedMaps.nameLabel", "Map Name:")}>
             <input
               ref={nameRef}
               type="text"
               value={name}
               onChange={handleNameChange}
               className="input input-bordered"
-              placeholder="Map name"
+              placeholder={t("savedMaps.namePlaceholder", "Map name")}
             />
           </FormField>
         </div>
@@ -103,7 +109,11 @@ export function SavedMapsModal({
                 <ICONS.add className="inline" />
               )
             }
-            submitLabel={isEditing ? "Save Changes" : "Add Map"}
+            submitLabel={
+              isEditing
+                ? t("savedMaps.saveChanges", "Save Changes")
+                : t("savedMaps.add", "Add Map")
+            }
             disabled={!isValid}
           />
         </div>

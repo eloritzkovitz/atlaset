@@ -1,0 +1,75 @@
+{
+  "friends": {
+    "you": "אתה",
+    "friend": "חבר",
+    "noFriendsYet": "עדיין אין חברים.",
+    "noFriendsFound": "לא נמצאו חברים.",
+    "noFriendRequests": "אין בקשות חברות.",
+    "loading": "טוען...",
+    "addFriend": "הוספת חבר",
+    "adding": "מוסיף...",
+    "pending": "ממתין",
+    "withdrawRequest": "משוך בקשה",
+    "withdraw": "משוך",
+    "withdrawConfirmTitle": "משיכת בקשת חברות",
+    "withdrawConfirmMessage": "האם אתה בטוח שברצונך למשוך את בקשת החברות?",
+    "unfriend": "הסרת חבר",
+    "unfriendConfirmTitle": "הסר חבר",
+    "unfriendConfirmMessage": "האם אתה בטוח שברצונך להסיר חבר זה?",
+    "friendRequests": "בקשות חברות",
+    "friends": "חברים",
+    "searchPlaceholder": "חיפוש חברים",
+    "viewProfile": "צפייה בפרופיל",
+    "accept": "קבל",
+    "reject": "דחה",
+    "showFriends": "הצג חברים",
+    "showRequests": "הצג בקשות"
+  },
+  "profile": {
+    "header": {
+      "editProfile": "עריכת פרופיל",
+      "activityLog": "יומן פעילות",
+      "showFriendsList": "הצגת רשימת חברים",
+      "backToProfile": "חזרה לפרופיל"
+    },
+    "editModal": {
+      "title": "ערוך פרופיל",
+      "personalInfo": "פרטים אישיים",
+      "username": "שם משתמש",
+      "name": "שם",
+      "newPassword": "סיסמה חדשה",
+      "confirmNewPassword": "אשר סיסמה חדשה",
+      "passwordPlaceholder": "השאר ריק כדי לשמור את הסיסמה הנוכחית",
+      "birthday": "תאריך לידה",
+      "biography": "ביוגרפיה",
+      "bioPlaceholder": "כתוב משהו על עצמך...",
+      "contactInfo": "פרטי קשר",
+      "socialLinks": "רשתות חברתיות",
+      "usernameInvalid": "אנא בחר שם משתמש תקף וזמין.",
+      "passwordMismatch": "הסיסמאות אינן תואמות.",
+      "success": "הפרופיל עודכן בהצלחה.",
+      "failed": "נכשל בעדכון הפרופיל."
+    },
+    "about": {
+      "title": "אודות",
+      "personalDetails": {
+        "title": "פרטים אישיים",
+        "location": "מיקום",
+        "birthday": "יום הולדת",
+        "noDateProvided": "אין תאריך",
+        "joined": "הצטרף",
+        "biography": "ביוגרפיה",
+        "noBiographyProvided": "אין ביוגרפיה"
+      },
+      "contactInfo": {
+        "title": "פרטי קשר",
+        "email": "דוא\"ל",
+        "noEmailProvided": "אין דוא\"ל"
+      }
+    },
+    "notSpecified": "לא צויין",
+    "visitedCountries": "מדינות שביקרתי ({{count}})",
+    "noVisitedCountries": "עדיין לא ביקרת במדינות.",
+    "bestScores": "התוצאות הטובות ביותר"
+  }
+}

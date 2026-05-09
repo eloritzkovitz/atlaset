@@ -1,3 +1,14 @@
+vi.mock("../../../features/settings/hooks/useLanguage", () => ({
+  useLanguage: () => ({
+    current: "en",
+    name: "English",
+    isRtl: false,
+    change: vi.fn(),
+    toggle: vi.fn(),
+  }),
+  isRtl: (_lng?: string) => false,
+}));
+
 import React from "react";
 import "@testing-library/jest-dom";
 import { act, fireEvent } from "@testing-library/react";

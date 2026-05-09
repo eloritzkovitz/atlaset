@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
 import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { useMenuActions, useMenuPosition, useRenameControls } from "@hooks";
 import { RenameControls } from "./RenameControls";
 import { ActionButton } from "../action/ActionButton";
@@ -61,6 +62,7 @@ export function PanelListItem({
   const [menuOpen, setMenuOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation("common");
 
   // Rename controls state and handlers
   const nameString = typeof name === "string" ? name : "";
@@ -85,6 +87,7 @@ export function PanelListItem({
     menuRef,
     30,
     menuPosition,
+    "adjacent",
     false,
   );
 
@@ -96,8 +99,8 @@ export function PanelListItem({
     onToggleVisibility && {
       variant: "toggle" as const,
       onClick: onToggleVisibility,
-      ariaLabel: visible ? "Hide" : "Show",
-      title: visible ? "Hide" : "Show",
+      ariaLabel: visible ? t("actions.hide") : t("actions.show"),
+      title: visible ? t("actions.hide") : t("actions.show"),
       className: `${visible ? "text-muted" : "text-muted/50"} hover:text-muted-hover`,
       icon: visible ? <FaEye /> : <FaEyeSlash />,
     },
@@ -160,7 +163,7 @@ export function PanelListItem({
         }
       >
         {!icon ? <ColorDot color={color} size={22} /> : icon}
-        <div className="flex-1 ml-2 flex items-center">
+        <div className="flex-1 ms-2 flex items-center">
           {isEditing ? (
             <RenameControls
               value={editName}
@@ -189,8 +192,8 @@ export function PanelListItem({
                 e.stopPropagation();
                 setMenuOpen((v) => !v);
               }}
-              ariaLabel="More actions"
-              title="More actions"
+              ariaLabel={t("actions.moreActions")}
+              title={t("actions.moreActions")}
               icon={<FaEllipsisVertical />}
               rounded
             />

@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
@@ -36,6 +37,7 @@ export function LayersPanel({
   handleSavedMapChange,
 }: LayersPanelProps) {
   const { createListFromLayer } = useCountryLists();
+  const { t } = useTranslation("atlas");
   const { showLayers, closePanel } = useUI();
   const {
     layers,
@@ -69,7 +71,7 @@ export function LayersPanel({
       title={
         <>
           <ICONS.layers />
-          Layers
+          {t("layers.title")}
         </>
       }
       show={showLayers}
@@ -81,15 +83,15 @@ export function LayersPanel({
             <>
               <ActionButton
                 onClick={onAddLayer}
-                ariaLabel="Add Layer"
-                title="Add Layer"
+                ariaLabel={t("layers.add")}
+                title={t("layers.add")}
                 icon={<ICONS.add />}
                 rounded
               />
               <ActionButton
                 onClick={() => fileInputRef.current?.click()}
-                ariaLabel="Import Layers"
-                title="Import Layers"
+                ariaLabel={t("layers.import")}
+                title={t("layers.import")}
                 icon={<ICONS.importFile />}
                 rounded
               />
@@ -110,15 +112,15 @@ export function LayersPanel({
           )}
           <ActionButton
             onClick={() => exportLayersToFile(effectiveLayers)}
-            ariaLabel="Export Layers"
-            title="Export Layers"
+            ariaLabel={t("layers.export")}
+            title={t("layers.export")}
             icon={<ICONS.exportFile />}
             rounded
           />
           <ActionButton
             onClick={closePanel}
-            ariaLabel="Close Layers Panel"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -127,7 +129,7 @@ export function LayersPanel({
     >
       <div className="mt-4">
         {!effectiveLayers || effectiveLayers.length === 0 ? (
-          <EmptyListMessage message="No layers yet." />
+          <EmptyListMessage message={t("layers.empty")} />
         ) : (
           <ul className="list-none p-0">
             {effectiveLayers.map((layer, index) => (

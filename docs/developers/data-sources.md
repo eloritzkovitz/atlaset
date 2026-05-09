@@ -2,7 +2,7 @@
 
 ## **Static Data (JSON)**
 
-All main `data sources` are loaded from static `JSON` files, either directly from the [`public/data`](../public/data/) folder (in development) or from a remote `URL` (in production, if configured).
+All main `data sources` are loaded from static `JSON` files, either directly from the [`public/data`](../public/data/) folder (in development) or from a remote `URL` (in production, if configured). Localized data is loaded from the `public/locales/{lang}` folder, and includes the translated countries.json, along with currency and language data.
 
 You can change their location or swap datasets by editing the `.env` file.
 
@@ -12,14 +12,24 @@ You can change their location or swap datasets by editing the `.env` file.
 | -------------- | ------------------------- | ---------------------------- |
 | `Map GeoJSON`  | `/data/countries.geojson` | `VITE_MAP_GEO_URL`           |
 | `Countries`    | `/data/countries.json`    | `VITE_COUNTRY_DATA_URL`      |
-| `Currencies`   | `/data/currencies.json`   | `VITE_CURRENCY_DATA_URL`     |
 | `Achievements` | `/data/achievements.json` | `VITE_ACHIEVEMENTS_DATA_URL` |
+
+### **Localized Data Types and Variables**
+
+| Data Type                      | Default Path                      | Environment Variable |
+| ------------------------------ | --------------------------------- | -------------------- |
+| `Countries` _(translations\*)_ | `/locales/{lang}/countries.json`  | `VITE_LOCALES_URL`   |
+| `Currencies`                   | `/locales/{lang}/currencies.json` | `VITE_LOCALES_URL`   |
+| `Languages`                    | `/locales/{lang}/languages.json`  | `VITE_LOCALES_URL`   |
+
+> \* Translations include unique data like country names and capitals, as well as field and enum localization.
 
 ### **Sources**
 
 - `Country boundaries`: [datasets/geo-countries](https://github.com/datasets/geo-countries)
 - `Country data`: [REST Countries](https://restcountries.com/)
 - `Currency data`: [Open Exchange Rates](https://openexchangerates.org/api/currencies.json)
+- `Language data`: [ISO-639-1-language.json](https://gist.github.com/jrnk/8eb57b065ea0b098d571)
 
 ## **Flag Data**
 

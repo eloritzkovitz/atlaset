@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
 import { useLayers } from "@contexts/LayersContext";
@@ -12,12 +13,13 @@ interface LayerFiltersProps {
 export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
   const { layerSelections, setLayerSelections } = useLayers();
   const effectiveLayers = useEffectiveLayers();
+  const { t } = useTranslation("atlas");
 
   return (
     <>
       <CollapsibleHeader
         icon={<ICONS.layers />}
-        label="Layer Filters"
+        label={t("countries.filters.layer.title")}
         expanded={expanded}
         onToggle={onToggle}
       />
@@ -27,8 +29,8 @@ export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
             key={layer.id}
             label={
               typeof layerFilterConfig.label === "function"
-                ? layerFilterConfig.label(layer)
-                : layerFilterConfig.label
+                ? t(layerFilterConfig.label(layer))
+                : t(layerFilterConfig.label)
             }
             value={layerFilterConfig.getValue(
               { layerSelections, setLayerSelections },

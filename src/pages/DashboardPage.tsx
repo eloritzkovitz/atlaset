@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import {
   Breadcrumbs,
@@ -11,9 +12,11 @@ import {
   DASHBOARD_MENU,
   DashboardPanelMenu,
   DashboardRoutes,
+  getDashboardMeta,
+  translateRegionLabel,
+  translateSubregionLabel,
   useDashboardRouteState,
   useDashboardNavigation,
-  getDashboardMeta,
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
@@ -21,7 +24,14 @@ import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
-  const { countries, currencies, loading, error } = useCountryData();
+  const {
+    countries,
+    currencies,
+    loading,
+    error,
+    subregionsByRegion,
+    subregionToRegion,
+  } = useCountryData();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
@@ -60,20 +70,100 @@ export default function DashboardPage() {
   } = useRegionSubregionFilters();
 
   // Build dashboard meta (title and breadcrumbs)
-  const { pageTitle, breadcrumbs } = getDashboardMeta({
+  const { breadcrumbs } = getDashboardMeta({
     selectedPanel,
-    selectedCountry,
-    routeSelectedRegion,
-    routeSelectedSubregion,
+    selectedCountry,    
     currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
     selectedCurrency,
     selectedAchievement,
   });
-  usePageTitle(pageTitle, {
-    fallback: "Dashboard | Atlaset",
-  });
+
+  // Translate breadcrumbs
+  const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tCommon } = useTranslation("common");
+  const { t: tCountries } = useTranslation("countries");
+
+  const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
+    const raw = crumb.label ?? crumb.key ?? "";
+    if (crumb.labelKey) return tDashboard(crumb.labelKey);
+    if (crumb.key === "region")
+      return translateRegionLabel(
+        raw,
+        tCountries,
+        tDashboard,
+        subregionsByRegion,
+      );
+    if (crumb.key === "subregion")
+      return translateSubregionLabel(
+        raw,
+        subregionToRegion,
+        selectedRegion ?? undefined,
+        tCountries,
+      );
+    return raw;
+  };
+
+  const translatedBreadcrumbs = breadcrumbs.map((crumb) => ({
+    ...crumb,
+    label: resolveCrumbLabel(crumb),
+  }));
+
+  // Handlers for navigation and syncing URL state to filter state
+  const getTranslatedLeft = () => {
+    const safePanel = selectedPanel ?? "";
+    const isCountryPanel =
+      safePanel.startsWith("countries") ||
+      ["countries", "countries/all", "exploration"].includes(safePanel);
+    const isCurrencyPanel = safePanel.startsWith("currencies");
+    const isAchievementPanel = safePanel.startsWith("achievements");
+
+    if (safePanel === "exploration")
+      return tDashboard("exploration.worldTitle");
+
+    if (isCountryPanel) {
+      // If route explicitly shows "all" or panel is countries/all, show translated "All Countries"
+      if (routeSelectedRegion === "all" || safePanel === "countries/all")
+        return tDashboard("exploration.allTitle");
+
+      if (selectedCountry && selectedCountry.name) return selectedCountry.name;
+      if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
+        return translateSubregionLabel(
+          routeSelectedSubregion,
+          subregionToRegion,
+          selectedRegion ?? undefined,
+          tCountries,
+        );
+      }
+      if (routeSelectedRegion && routeSelectedRegion !== "all") {
+        return translateRegionLabel(
+          routeSelectedRegion,
+          tCountries,
+          tDashboard,
+          subregionsByRegion,
+        );
+      }
+      // fallback to panel label
+      return currentPanel
+        ? tDashboard(`menu.${currentPanel.key}`)
+        : tDashboard("menu.title");
+    }
+
+    if (isCurrencyPanel && selectedCurrency && selectedCurrency.name)
+      return selectedCurrency.name;
+
+    if (isAchievementPanel && selectedAchievement && selectedAchievement.name)
+      return selectedAchievement.name;
+
+    return currentPanel
+      ? tDashboard(`menu.${currentPanel.key}`)
+      : tDashboard("menu.title");
+  };
+
+  const left = getTranslatedLeft();
+  const appName = tCommon("appName", "Atlaset");
+  usePageTitle(`${left} | ${appName}`);
 
   // Sync route state to filter state
   useEffect(() => {
@@ -141,7 +231,10 @@ export default function DashboardPage() {
           />
         )}
         <div className="flex-1 mt-12 min-w-0">
-          <Breadcrumbs crumbs={breadcrumbs} onCrumbClick={handleCrumbClick} />
+          <Breadcrumbs
+            crumbs={translatedBreadcrumbs}
+            onCrumbClick={handleCrumbClick}
+          />
           <DashboardRoutes
             countries={countries}
             currencies={currencies}

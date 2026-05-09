@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaCode, FaCopy } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, InputBox, ActionButton, SectionHeader } from "@components";
 
 interface EmbedMapSectionProps {
@@ -19,6 +20,7 @@ export function EmbedMapSection({
   code,
 }: EmbedMapSectionProps) {
   const [embedCopied, setEmbedCopied] = useState(false);
+  const { t } = useTranslation("atlas");
 
   // Generate embed URL and code snippet
   const embedUrl = getEmbedUrl(code);
@@ -34,30 +36,30 @@ export function EmbedMapSection({
   return (
     <CollapsibleHeader
       icon={<FaCode />}
-      label="Embed"
+      label={t("mapExport.embed")}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
-      <SectionHeader title="Embed Code" />
+      <SectionHeader title={t("mapExport.embedCode")} />
       <div className="flex items-center gap-1 mb-2">
         <InputBox
           value={embedCode}
           readOnly
           className="flex-1 font-mono"
           onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-          aria-label="Embed code"
+          aria-label={t("mapExport.embedCode")}
         />
         <ActionButton
           variant="action"
           onClick={handleCopyEmbed}
-          ariaLabel="Copy embed code"
-          title={embedCopied ? "Copied!" : "Copy code"}
+          ariaLabel={t("mapExport.copyEmbedCode")}
+          title={embedCopied ? t("mapExport.embedCodeCopied") : t("mapExport.copyEmbedCode")}
           icon={<FaCopy className="text-xl" />}
           className="bg-transparent !h-10 !w-10 mt-1 rounded-lg"
         />
       </div>
       <span className="text-xs text-muted">
-        Embed this map in your website using the code above.
+        {t("mapExport.description")}
       </span>
     </CollapsibleHeader>
   );

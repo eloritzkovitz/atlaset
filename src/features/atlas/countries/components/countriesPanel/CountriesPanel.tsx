@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
@@ -36,6 +37,7 @@ export function CountriesPanel({
   onHover,
   onCountryInfo,
 }: CountriesPanelProps) {
+  const { t } = useTranslation("atlas");
   const { refreshData } = useCountryData();
   const {
     countryLists,
@@ -145,10 +147,10 @@ export function CountriesPanel({
   }, [showVisitedOnly, selectedVisited, setSelectedVisited]);
 
   useEffect(() => {
-    if (sovereignOnly && selectedSovereignty !== "Sovereign") {
-      setSelectedSovereignty("Sovereign");
+    if (sovereignOnly && selectedSovereignty !== "sovereign") {
+      setSelectedSovereignty("sovereign");
     }
-    if (!sovereignOnly && selectedSovereignty === "Sovereign") {
+    if (!sovereignOnly && selectedSovereignty === "sovereign") {
       setSelectedSovereignty("");
     }
   }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
@@ -192,12 +194,12 @@ export function CountriesPanel({
   };
 
   return (
-    <div className="fixed top-0 left-0 h-screen z-40 group relative">
+    <div className="fixed top-0 start-0 h-screen z-40 group relative">
       <Panel
         title={
           <>
             <ICONS.countries />
-            Countries
+            {t("countries.title")}
           </>
         }
         show={uiVisible && showCountries}
@@ -209,23 +211,31 @@ export function CountriesPanel({
             {process.env.NODE_ENV === "development" && (
               <ActionButton
                 onClick={refreshData}
-                ariaLabel={"Refresh country data"}
-                title="Refresh country data"
+                ariaLabel={t("countries.actions.refreshData")}
+                title={t("countries.actions.refreshData")}
                 icon={<ICONS.refresh />}
                 rounded
               />
             )}
             <ActionButton
               onClick={toggleFilters}
-              ariaLabel={showFilters ? "Hide Filters" : "Show Filters"}
-              title="Filters"
+              ariaLabel={
+                showFilters
+                  ? t("countries.actions.hideFilters")
+                  : t("countries.actions.showFilters")
+              }
+              title={
+                showFilters
+                  ? t("countries.actions.hideFilters")
+                  : t("countries.actions.showFilters")
+              }
               icon={<ICONS.filters />}
               rounded
             />
             <ActionButton
               onClick={toggleCountries}
-              ariaLabel="Close countries panel"
-              title="Close"
+              ariaLabel={t("common:actions.close")}
+              title={t("common:actions.close")}
               icon={<ICONS.close className="text-2xl" />}
               rounded
             />

@@ -28,7 +28,7 @@ export function getBaseMarkdownComponents(
     hr: () => <Separator className="my-6 opacity-60" />,
     blockquote: (props: React.HTMLProps<HTMLElement>) => {
       return (
-        <blockquote className="relative my-6 p-4 pl-6 border-l-4 border-surface bg-surface-alt/40 dark:bg-surface/30 text-base rounded-md shadow-sm">
+        <blockquote className="relative my-6 p-4 ps-6 border-l-4 border-surface bg-surface-alt/40 dark:bg-surface/30 text-base rounded-md shadow-sm">
           <span className="block">{props.children}</span>
         </blockquote>
       );
@@ -97,7 +97,7 @@ export function getBaseMarkdownComponents(
     ul:
       overrides.ul ||
       ((props: React.HTMLProps<HTMLUListElement>) => (
-        <ul className="list-disc pl-6 mb-4" {...props} />
+        <ul className="list-disc ps-6 mb-4" {...props} />
       )),
     li:
       overrides.li ||

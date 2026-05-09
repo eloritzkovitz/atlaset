@@ -23,8 +23,10 @@ export type Country = {
   capital?: string;
   /** The languages spoken in the country. */
   languages?: string[];
-  /** The government type of the country. */
+  /** The government system of the country. */
   government?: string;
+  /** The state structure of the country. */
+  structure?: string;
   /** The area of the country in square kilometers. */
   area?: number;
   /** The population of the country. */
@@ -78,12 +80,13 @@ export type Currency = {
 
 /** Sovereignty statuses for countries. */
 export type SovereigntyStatus =
-  | "Sovereign"
-  | "Dependency"
-  | "Overseas Region"
-  | "Unrecognized"
-  | "Disputed"
-  | "Unknown";
+  | "sovereign"
+  | "dependency"
+  | "overseas_region"
+  | "partially_recognized"
+  | "unrecognized"
+  | "disputed"
+  | "unknown";
 
 /** Geographic types for countries. */
 export type GeoType = "Coastal" | "Landlocked" | "Island";

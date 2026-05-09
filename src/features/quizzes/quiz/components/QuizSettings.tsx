@@ -3,6 +3,7 @@ import { FaUmbrellaBeach, FaStopwatch } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
 import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
+import { useTranslation } from "react-i18next";
 import type { Difficulty, GameMode } from "../../types";
 
 interface QuizSettingsProps {
@@ -16,45 +17,51 @@ interface QuizSettingsProps {
 
 const LEVELS: {
   key: Exclude<Difficulty, null>;
-  label: string;
+  labelKey: string;
   icon: JSX.Element;
-  description: string;
+  descriptionKey: string;
   color: string;
 }[] = [
   {
     key: "easy",
-    label: "Easy",
-    icon: <ICONS.quizEasy className="mr-2" />,
-    description: "Familiar countries you likely know.",
+    labelKey: "lobby.settings.levels.easy.label",
+    icon: <ICONS.quizEasy className="me-2" />,
+    descriptionKey: "lobby.settings.levels.easy.description",
     color: "bg-success/50 hover:bg-success-hover/50",
   },
   {
     key: "medium",
-    label: "Medium",
-    icon: <ICONS.quizMedium className="mr-2" />,
-    description: "A mix of common and less-known countries.",
+    labelKey: "lobby.settings.levels.medium.label",
+    icon: <ICONS.quizMedium className="me-2" />,
+    descriptionKey: "lobby.settings.levels.medium.description",
     color: "bg-warning/40 hover:bg-warning-hover/40",
   },
   {
     key: "hard",
-    label: "Hard",
-    icon: <ICONS.quizHard className="mr-2" />,
-    description: "Challenging countries that will test your knowledge!",
+    labelKey: "lobby.settings.levels.hard.label",
+    icon: <ICONS.quizHard className="me-2" />,
+    descriptionKey: "lobby.settings.levels.hard.description",
     color: "bg-warning/70 hover:bg-warning-hover/70",
   },
   {
     key: "expert",
-    label: "Expert",
-    icon: <ICONS.quizExpert className="mr-2" />,
-    description: "Obscure countries and dependencies, only for true experts!",
+    labelKey: "lobby.settings.levels.expert.label",
+    icon: <ICONS.quizExpert className="me-2" />,
+    descriptionKey: "lobby.settings.levels.expert.description",
     color: "!bg-danger/50 hover:!bg-danger-hover/50",
   },
 ];
 
-const modeDescriptions = {
-  sandbox: "No timer, practice freely.",
-  timed: "Race against the clock!",
-};
+const modeKeys = {
+  sandbox: {
+    label: "lobby.settings.modes.sandbox.label",
+    description: "lobby.settings.modes.sandbox.description",
+  },
+  timed: {
+    label: "lobby.settings.modes.timed.label",
+    description: "lobby.settings.modes.timed.description",
+  },
+} as const;
 
 export function QuizSettings({
   difficulty,
@@ -64,6 +71,7 @@ export function QuizSettings({
   onStart,
   onCancel,
 }: QuizSettingsProps) {
+  const { t } = useTranslation("quizzes");
   // Arrow key navigation
   useKeyHandler(
     (e) => {
@@ -88,7 +96,7 @@ export function QuizSettings({
 
   return (
     <Card className="max-w-xl w-full p-8 rounded-xl shadow-lg text-center font-sans">
-      <h2 className="text-xl font-bold mb-6">Select Difficulty</h2>
+      <h2 className="text-xl font-bold mb-6">{t("lobby.settings.selectDifficulty", "Select Difficulty")}</h2>
       <div className="flex justify-center gap-4 mb-4">
         {LEVELS.map((level) => (
           <ActionButton
@@ -100,16 +108,14 @@ export function QuizSettings({
             onClick={() => setDifficulty(level.key)}
           >
             {level.icon}
-            {level.label}
+            {t(level.labelKey, level.key)}
           </ActionButton>
         ))}
       </div>
       <div className="mb-6 text-muted text-base min-h-[1.5em]">
-        {selected
-          ? selected.description
-          : "Select a difficulty to see details."}
+        {selected ? t(selected.descriptionKey) : t("lobby.settings.selectDifficultyPlaceholder", "Select a difficulty to see details.")}
       </div>
-      <h2 className="text-xl font-bold mb-6">Select Game Mode</h2>
+      <h2 className="text-xl font-bold mb-6">{t("lobby.settings.selectGameMode", "Select Game Mode")}</h2>
       <div className="flex flex-col items-center mb-6">
         <div className="flex justify-center gap-4 mb-2">
           <ActionButton
@@ -119,7 +125,7 @@ export function QuizSettings({
             onClick={() => setGameMode("sandbox")}
           >
             <FaUmbrellaBeach className="text-xl mb-1" />
-            Sandbox
+            {t(modeKeys.sandbox.label, "Sandbox")}
           </ActionButton>
           <ActionButton
             type="button"
@@ -128,11 +134,11 @@ export function QuizSettings({
             onClick={() => setGameMode("timed")}
           >
             <FaStopwatch className="text-xl mb-1" />
-            Timed
+            {t(modeKeys.timed.label, "Timed")}
           </ActionButton>
         </div>
         <div className="mb-4 text-muted text-base min-h-[1.5em]">
-          {modeDescriptions[gameMode]}
+          {t(modeKeys[gameMode].description)}
         </div>
       </div>
       <div className="mt-4">
@@ -142,7 +148,7 @@ export function QuizSettings({
           onClick={onStart}
           disabled={!difficulty}
         >
-          Start Quiz
+          {t("lobby.settings.startQuiz", "Start Quiz")}
         </ActionButton>
       </div>
       {onCancel && (
@@ -151,7 +157,7 @@ export function QuizSettings({
           className="w-full px-4 py-2 font-bold bg-input rounded-lg hover:bg-input-hover"
           onClick={onCancel}
         >
-          Cancel
+          {t("lobby.settings.cancel", "Cancel")}
         </ActionButton>
       )}
     </Card>

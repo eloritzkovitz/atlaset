@@ -69,12 +69,12 @@ function getYearOffsets(tz: string): {
  * Return an array of offsets for a timezone. If the zone has no DST, returns a single entry like `UTC+01:00`.
  * If it has two offsets, returns both of them with winter first.
  */
-export function timezoneOffsets(tz: string): string[] {
+export function timezoneOffsets(tz: string, summerLabel = " (summer)"): string[] {
   const { offJan, offJul, janMin, julMin } = getYearOffsets(tz);
   if (offJan === offJul) return [`UTC${offJan}`];
   const winter = janMin <= julMin ? offJan : offJul;
   const summer = janMin <= julMin ? offJul : offJan;
-  return [`UTC${winter}`, `UTC${summer} (summer)`];
+  return [`UTC${winter}`, `UTC${summer}${summerLabel}`];
 }
 
 /**
@@ -100,7 +100,7 @@ export function timezoneRangeForZones(tzList: string[]): string {
  * Return one or two lines for a timezone range. First line is the winter range,
  * second line (optional) is the summer range with a `(summer)` suffix if it differs.
  */
-export function timezoneRangeLines(tzList: string[]): string[] {
+export function timezoneRangeLines(tzList: string[], summerLabel = " (summer)"): string[] {
   const winters: number[] = [];
   const summers: number[] = [];
   for (const tz of tzList) {
@@ -127,5 +127,5 @@ export function timezoneRangeLines(tzList: string[]): string[] {
       ? `UTC${minutesToOffset(minS)}`
       : `UTC${minutesToOffset(minS)} to UTC${minutesToOffset(maxS)}`;
   if (winterLine === summerLine) return [winterLine];
-  return [winterLine, `${summerLine} (summer)`];
+  return [winterLine, `${summerLine}${summerLabel}`];
 }

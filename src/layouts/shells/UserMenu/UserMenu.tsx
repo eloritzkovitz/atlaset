@@ -1,9 +1,11 @@
 import { useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { ActionButton, AuthButtons, Menu } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import { useAuthHandlers } from "@features/user";
 import { useModalAnimation, useScreenSize } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
@@ -11,14 +13,18 @@ import { UserMenuContent } from "./UserMenuContent";
 
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
-  const { user } = useAuth();
+  const { user } = useAuth();  
   const { toggleSearch, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // Language and translation
+  const { t } = useTranslation("common");
+  const { isRtl } = useLanguage();
+  
   // Router states and navigation
   const location = useLocation();
-  const { isMobile } = useScreenSize();
+  const { isMobile } = useScreenSize();  
   const isTripsPage = location.pathname.startsWith("/trips");
 
   // Get the logout handler from useAuthHandlers
@@ -36,7 +42,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   // Show login/signup buttons if not logged in
   if (!user) {
     return (
-      <div className="fixed top-0 right-2 z-20">
+      <div className="fixed top-0 end-2 z-20">
         <AuthButtons />
       </div>
     );
@@ -45,14 +51,14 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   return (
     <div
       className={`${
-        fixed ? "fixed top-4 right-4" : ""
+        fixed ? "fixed top-4 end-4" : ""
       } z-20 flex items-center gap-4`}
       ref={menuRef}
     >
       {isMobile && (
         <>
           <ActionButton
-            title="Search"
+            title={t("menu.search")}
             onClick={() => {
               toggleSearch();
             }}
@@ -62,14 +68,14 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
         </>
       )}
       <ActionButton
-        title="Notifications"
+        title={t("menu.notifications")}
         onClick={() => {}}
         icon={<ICONS.notifications className="text-xl" />}
         aria-pressed={false}
         rounded
       />
       <ActionButton
-        title="Help"
+        title={t("menu.help")}
         onClick={() => {
           toggleHelp();
         }}
@@ -85,12 +91,14 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
           className={
             isMobile
               ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-              : "absolute right-4 mt-3 w-60 z-50 p-2"
+              : "absolute mt-3 w-60 z-50 p-2"
           }
           style={
             isMobile
               ? { top: "unset", right: "unset", left: 0, bottom: 16 }
-              : { top: "48px", right: 16 }
+              : isRtl
+                ? { top: "48px", left: 16 }
+                : { top: "48px", right: 16 }
           }
         >
           <UserMenuContent

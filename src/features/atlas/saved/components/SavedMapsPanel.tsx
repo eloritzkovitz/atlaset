@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
@@ -18,12 +19,13 @@ export function SavedMapsPanel() {
   } = useSavedMaps();
   const { isReadonly } = useMapView();
   const { showSavedMaps, toggleSavedMaps } = useUI();
+  const { t } = useTranslation("atlas");
 
   return (
     <Panel
       title={
         <>
-          <ICONS.saved /> My Maps
+          <ICONS.saved /> {t("savedMaps.title")}
         </>
       }
       show={showSavedMaps}
@@ -35,24 +37,24 @@ export function SavedMapsPanel() {
           {isReadonly ? (
             <ActionButton
               onClick={saveCurrentMap}
-              ariaLabel="Save current map"
-              title="Save current map"
+              ariaLabel={t("savedMaps.save")}
+              title={t("savedMaps.save")}
               icon={<ICONS.save />}
               rounded
             />
           ) : (
             <ActionButton
               onClick={createNewMap}
-              ariaLabel="Create new map"
-              title="Create new map"
+              ariaLabel={t("savedMaps.create")}
+              title={t("savedMaps.create")}
               icon={<ICONS.add className="text-xl" />}
               rounded
             />
           )}
           <ActionButton
             onClick={toggleSavedMaps}
-            ariaLabel="Close Saved Panel"
-            title="Close"
+            ariaLabel={t("savedMaps.close")}
+            title={t("savedMaps.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -61,7 +63,7 @@ export function SavedMapsPanel() {
     >
       <div className="mt-4">
         {savedMaps.length === 0 ? (
-          <EmptyListMessage message="No saved maps yet." />
+          <EmptyListMessage message={t("savedMaps.empty")} />
         ) : (
           <ul className="list-none p-0">
             {savedMaps.map((map) => (

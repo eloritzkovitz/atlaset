@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
 import { useCountryData } from "../../hooks/useCountryData";
 import type { SovereigntyStatus } from "../../types";
@@ -11,20 +12,21 @@ interface SovereigntyBadgeProps {
 
 // Map sovereignty types to badge colors
 const badgeColors: Record<SovereigntyStatus, string> = {
-  Sovereign: "bg-info-hover/70",
-  Dependency: "bg-muted/70",
-  "Overseas Region": "bg-success-hover/50",
-  Unrecognized: "bg-danger-hover/70",
-  Disputed: "bg-warning-hover/70",
-  Unknown: "bg-muted-hover",
+  sovereign: "bg-info/50",
+  dependency: "bg-info/30",
+  overseas_region: "bg-code/50",
+  partially_recognized: "bg-warning/50",
+  unrecognized: "bg-danger/50",
+  disputed: "bg-warning/50",
+  unknown: "bg-muted/50",
 };
 
-// Optional label prefixes for sovereignty types
-const labelPrefixes: Partial<Record<SovereigntyStatus, string>> = {
-  "Overseas Region": "Overseas Region of ",
-  Disputed: "Disputed by ",
-  Dependency: "Dependency of ",
-};
+const PREFIX_TYPES = new Set<SovereigntyStatus>([
+  "dependency",
+  "overseas_region",  
+  "partially_recognized",
+  "disputed",
+]);
 
 export function SovereigntyBadge({
   type,
@@ -32,37 +34,50 @@ export function SovereigntyBadge({
   onSelectCountry,
 }: SovereigntyBadgeProps) {
   const { countries } = useCountryData();
+  const { t } = useTranslation("countries");
 
   // If no type is provided, don't render anything
   if (!type) return null;
 
-  // Determine badge color based on type, defaulting to Dependency style
-  const color = badgeColors[type] || badgeColors.Dependency;
-  let label: React.ReactNode = type;
+  const color = badgeColors[type] || badgeColors.dependency;
+  const translated = t(`sovereignty.${type}`, { defaultValue: type });
 
-  // Add sovereign name with flag for certain types
-  if (sovereignState && labelPrefixes[type as keyof typeof labelPrefixes]) {
+  const prefix = t(`sovereigntyPrefixes.${type}`, {
+    defaultValue: translated,
+  });
+
+  if (sovereignState) {
     const name = getCountryName(sovereignState, countries);
-    label = (
-      <>
-        {labelPrefixes[type as keyof typeof labelPrefixes]}
-        {onSelectCountry ? (
-          <button
-            type="button"
-            className="mx-[3px] inline-block align-middle hover:text-info focus:outline-none"
-            onClick={() => onSelectCountry(sovereignState)}
-            tabIndex={0}
-          >
-            <CountryWithFlag isoCode={sovereignState} name={name} />
-          </button>
+    const flag = onSelectCountry ? (
+      <button
+        type="button"
+        className="mx-[3px] inline-block align-middle hover:text-info focus:outline-none"
+        onClick={() => onSelectCountry(sovereignState)}
+        tabIndex={0}
+      >
+        <CountryWithFlag isoCode={sovereignState} name={name} />
+      </button>
+    ) : (
+      <CountryWithFlag
+        isoCode={sovereignState}
+        name={name}
+        className="mx-[3px] inline-block align-middle"
+      />
+    );
+
+    return (
+      <div
+        className={`mb-4 sm:mb-6 text-sm sm:text-base text-center font-semibold rounded-full p-2 sm:px-4 sm:py-2 break-words select-none ${color}`}
+      >
+        {PREFIX_TYPES.has(type as SovereigntyStatus) ? (
+          <>
+            {prefix}
+            {flag}
+          </>
         ) : (
-          <CountryWithFlag
-            isoCode={sovereignState}
-            name={name}
-            className="mx-[3px] inline-block align-middle"
-          />
+          flag
         )}
-      </>
+      </div>
     );
   }
 
@@ -78,7 +93,7 @@ export function SovereigntyBadge({
         ${color}
       `}
     >
-      {label}
+      {translated}
     </div>
   );
 }

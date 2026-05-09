@@ -32,7 +32,7 @@ export function CountryWithFlag({
         }}
         className={flagClass}
       />
-      <span className="ml-2">{name}</span>
+      <span className="ms-2">{name}</span>
     </span>
   );
 }

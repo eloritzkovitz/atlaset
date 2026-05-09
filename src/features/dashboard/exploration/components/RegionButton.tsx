@@ -29,7 +29,7 @@ export function RegionButton({
       {icon}
       <span className={`font-semibold ${labelClassName}`}>{label}</span>
       {stats && (
-        <span className={`ml-auto font-bold ${statsClassName}`}>{stats}</span>
+        <span className={`ms-auto font-bold ${statsClassName}`}>{stats}</span>
       )}
     </button>
   );

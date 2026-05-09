@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   Checkbox,
@@ -38,6 +39,7 @@ export function CountrySelectModal({
   disabled = false,
 }: CountrySelectModalProps) {
   const [search, setSearch] = useState("");
+  const { t } = useTranslation(["atlas", "common"]);
 
   // Reset search when modal opens
   useEffect(() => {
@@ -80,14 +82,14 @@ export function CountrySelectModal({
         title={
           <>
             <ICONS.countries />
-            Select Countries
+            {t("atlas:countries.select.title")}
           </>
         }
       >
         <ActionButton
           onClick={onClose}
-          ariaLabel="Close List Modal"
-          title="Close"
+          ariaLabel={t("common:actions.close")}
+          title={t("common:actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />
@@ -98,11 +100,16 @@ export function CountrySelectModal({
           onChange={setSearch}
           qualifiers={SUPPORTED_QUALIFIERS}
           modifiers={SUPPORTED_MODIFIERS}
-          placeholder="Search countries"
+          placeholder={t("common:search.placeholder")}
         />
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {filteredOptions.length === 0 ? (
-            <EmptyListMessage message="No countries found." />
+            <EmptyListMessage
+              message={t(
+                "atlas:countries.select.noResults",
+                "No countries found.",
+              )}
+            />
           ) : (
             filteredOptions.map((country) => {
               const checked = selected.includes(country.isoCode);
@@ -129,7 +136,7 @@ export function CountrySelectModal({
                   <CountryWithFlag
                     isoCode={country.isoCode}
                     name={country.name}
-                    className="mr-2"
+                    className="me-2"
                   />
                 </label>
               );
@@ -138,10 +145,10 @@ export function CountrySelectModal({
         </div>
         <div className="flex justify-end gap-2">
           <ActionButton type="button" variant="secondary" onClick={onClose}>
-            Cancel
+            {t("common:actions.cancel")}
           </ActionButton>
           <ActionButton type="button" variant="primary" onClick={onClose}>
-            Confirm
+            {t("common:actions.confirm")}
           </ActionButton>
         </div>
       </div>

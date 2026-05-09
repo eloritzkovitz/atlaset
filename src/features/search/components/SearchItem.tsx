@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { MenuButton } from "@components";
+import { useLanguage } from "@features/settings";
 
 interface SearchItemProps<T> {
   item: T;
@@ -19,6 +20,11 @@ export function SearchItem<T>({
   onClick,
   children,
 }: SearchItemProps<T>) {
+  const { isRtl } = useLanguage();
+  const contentAlignClass = isRtl
+    ? "items-end text-right"
+    : "items-start text-left";
+
   return (
     <li>
       <MenuButton
@@ -32,7 +38,10 @@ export function SearchItem<T>({
         ariaLabel={`Go to ${displayName}`}
         className="w-full flex items-center gap-3 px-2 py-2"
       >
-        <div className="flex flex-col items-start text-left">
+        <div
+          className={`flex flex-col ${contentAlignClass}`}
+          dir={isRtl ? "rtl" : undefined}
+        >
           <span className="font-medium">{displayName}</span>
           <span className="text-sm text-muted">
             {label ? label : <>&nbsp;</>}

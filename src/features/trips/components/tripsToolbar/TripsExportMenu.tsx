@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Menu, MenuButton } from "@components";
 import { FaFileCsv, FaFileLines } from "react-icons/fa6";
 
@@ -19,6 +20,7 @@ export function TripsExportMenu({
   style,
   containerRef,
 }: TripsExportMenuProps) {
+  const { t } = useTranslation("trips");
   return (
     <Menu
       open={open}
@@ -36,7 +38,7 @@ export function TripsExportMenu({
         icon={<FaFileCsv />}
         className="w-full justify-start"
       >
-        Export as CSV
+        {t("toolbar.exportCSV")}
       </MenuButton>
       <MenuButton
         onClick={() => {
@@ -46,7 +48,7 @@ export function TripsExportMenu({
         icon={<FaFileLines />}
         className="w-full justify-start"
       >
-        Export as JSON
+        {t("toolbar.exportJSON")}
       </MenuButton>
     </Menu>
   );

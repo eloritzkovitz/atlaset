@@ -1,19 +1,20 @@
+import { FaPause, FaPlay } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaAnglesLeft,
-  FaAnglesRight,
-  FaPause,
-  FaPlay,
-} from "react-icons/fa6";
-import { ActionButton, ToolbarSelectButton } from "@components";
+  ActionButton,
+  ToolbarSelectButton,
+  DirectionalIcon,
+} from "@components";
 import { useTimeline } from "@contexts/TimelineContext";
 import type { ColorMode } from "@features/atlas/map";
+import { useLanguage } from "@features/settings";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {
   const { years, selectedYear, setSelectedYear, colorMode, setColorMode } =
     useTimeline();
+  const { isRtl } = useLanguage();
+  const { t } = useTranslation("atlas");
 
   // Timeline navigation handlers
   const {
@@ -31,12 +32,14 @@ export function TimelineNavigator() {
   } = useTimelineNavigation();
 
   return (
-    <div className="absolute bottom-7 left-0 w-full z-50 flex items-center justify-center">
-      <div className="absolute left-1/2 transform -translate-x-1/2 flex items-center gap-2">
+    <div className="absolute bottom-7 start-0 w-full z-50 flex items-center justify-center">
+      <div
+        className={`absolute ${isRtl ? "end-1/2" : "start-1/2"} transform -translate-x-1/2 flex items-center gap-2`}
+      >
         <ActionButton
           onClick={() => setPlaying((p) => !p)}
-          ariaLabel={playing ? "Pause" : "Play"}
-          title={playing ? "Pause" : "Play"}
+          ariaLabel={playing ? t("timeline.pause") : t("timeline.play")}
+          title={playing ? t("timeline.pause") : t("timeline.play")}
           icon={
             playing ? (
               <FaPause />
@@ -50,10 +53,14 @@ export function TimelineNavigator() {
         />
         <ActionButton
           onClick={handleFirst}
-          ariaLabel="First year"
-          title="First year"
+          ariaLabel={t("timeline.firstYear")}
+          title={t("timeline.firstYear")}
           icon={
-            <FaAnglesLeft className={currentIndex === 0 ? "opacity-50" : ""} />
+            <DirectionalIcon
+              variant="angle"
+              direction="prev"
+              className={currentIndex === 0 ? "opacity-50" : ""}
+            />
           }
           disabled={currentIndex === 0}
           variant="action"
@@ -61,9 +68,14 @@ export function TimelineNavigator() {
         />
         <ActionButton
           onClick={handleBack}
-          ariaLabel="Previous year"
-          title="Previous year"
-          icon={<FaChevronLeft className={!canGoBack ? "opacity-50" : ""} />}
+          ariaLabel={t("timeline.previousYear")}
+          title={t("timeline.previousYear")}
+          icon={
+            <DirectionalIcon
+              direction="prev"
+              className={!canGoBack ? "opacity-50" : ""}
+            />
+          }
           disabled={!canGoBack}
           variant="action"
           rounded
@@ -77,10 +89,13 @@ export function TimelineNavigator() {
         />
         <ActionButton
           onClick={handleForward}
-          ariaLabel="Next year"
-          title="Next year"
+          ariaLabel={t("timeline.nextYear")}
+          title={t("timeline.nextYear")}
           icon={
-            <FaChevronRight className={!canGoForward ? "opacity-50" : ""} />
+            <DirectionalIcon
+              direction="next"
+              className={!canGoForward ? "opacity-50" : ""}
+            />
           }
           disabled={!canGoForward}
           variant="action"
@@ -88,10 +103,12 @@ export function TimelineNavigator() {
         />
         <ActionButton
           onClick={handleLast}
-          ariaLabel="Last year"
-          title="Last year"
+          ariaLabel={t("timeline.lastYear")}
+          title={t("timeline.lastYear")}
           icon={
-            <FaAnglesRight
+            <DirectionalIcon
+              variant="angle"
+              direction="next"
               className={currentIndex === years.length - 1 ? "opacity-50" : ""}
             />
           }
@@ -101,23 +118,23 @@ export function TimelineNavigator() {
         />
         <ActionButton
           onClick={handleSpeedChange}
-          ariaLabel={`Speed: ${speed}x`}
-          title={`Speed: ${speed}x`}
+          ariaLabel={t("timeline.speed", { speed })}
+          title={t("timeline.speed", { speed })}
           variant="action"
           rounded
         >
           <span>{speed}x</span>
         </ActionButton>
       </div>
-      <div className="relative left-80 flex items-center">
+      <div className="relative start-80 flex items-center">
         <ToolbarSelectButton
           value={colorMode}
           onChange={(mode) => setColorMode(mode as ColorMode)}
           options={[
-            { value: "cumulative", label: "Cumulative visits" },
-            { value: "yearly", label: "Yearly visits" },
+            { value: "cumulative", label: t("timeline.cumulativeVisits") },
+            { value: "yearly", label: t("timeline.yearlyVisits") },
           ]}
-          ariaLabel="Color mode"
+          ariaLabel={t("timeline.colorMode")}
           width="180px"
         />
       </div>

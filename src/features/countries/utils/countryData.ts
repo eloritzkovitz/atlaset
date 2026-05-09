@@ -3,6 +3,7 @@
  */
 
 import { extractUniqueSorted } from "@utils/array";
+import { canonicalKey } from "@utils/string";
 import { FLAG_OVERRIDES } from "../constants/flagOverrides";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
 import type {
@@ -197,6 +198,40 @@ export function getRandomCountry(countries: Country[]) {
  * @param country - The country object to check for transcontinental information.
  * @returns The TranscontinentalInfo object if present, otherwise null.
  */
-export function getTranscontinentalInfo(country: Country) {
-  return country?.transcontinental ?? null;
+export function getTranscontinentalInfo(
+  country: Country,
+  subregionsByRegion?: Record<string, string[]>,
+) {
+  const raw = country?.transcontinental;
+  if (!raw) return null;
+
+  const additionalRegion = raw.additionalRegion ?? undefined;
+  const additionalSubregion = raw.additionalSubregion ?? undefined;
+
+  const additionalRegionKey = additionalRegion
+    ? canonicalKey(String(additionalRegion))
+    : undefined;
+
+  const additionalSubregionKey = additionalSubregion
+    ? canonicalKey(String(additionalSubregion))
+    : undefined;
+
+  let additionalSubregionRegion: string | undefined;
+  if (additionalSubregionKey && subregionsByRegion) {
+    for (const [regionKey, subArr] of Object.entries(subregionsByRegion)) {
+      if (subArr.includes(additionalSubregionKey)) {
+        additionalSubregionRegion = regionKey;
+        break;
+      }
+    }
+  }
+
+  return {
+    ...raw,
+    additionalRegion,
+    additionalSubregion,
+    additionalRegionKey,
+    additionalSubregionKey,
+    additionalSubregionRegion,
+  };
 }

@@ -25,7 +25,7 @@ function extractSvgAspectRatio(svgContent: string): number | null {
       return width / height;
     }
   }
-  const viewBoxMatch = svgContent.match(/viewBox=["']([\d\.\s]+)["']/);
+  const viewBoxMatch = svgContent.match(/viewBox=["']([\d.\s]+)["']/);
   if (viewBoxMatch) {
     const parts = viewBoxMatch[1].split(/\s+/);
     if (parts.length === 4) {

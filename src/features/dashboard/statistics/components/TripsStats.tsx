@@ -21,10 +21,13 @@ import {
 import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
 import { useTripsStats } from "../hooks/useTripsStats";
+import { useTranslation } from "react-i18next";
+import type { IconType } from "react-icons/lib";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));
 
 export function TripsStats() {
+  const { t } = useTranslation("dashboard");
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const [pieMode, setPieMode] = useState<"type" | "status">("type");
 
@@ -41,28 +44,50 @@ export function TripsStats() {
     totalDaysTraveling,
   } = useTripsStats();
 
-  // Pie chart data for trip types and statuses
-  const tripTypeCounts = [localTrips.length, abroadTrips.length];
-  const tripTypeData = TRIP_TYPE_LABELS.map((label, i) => ({
-    name: label,
-    value: tripTypeCounts[i],
-    color: TRIP_TYPE_COLORS[i],
-    icon: TRIP_TYPE_ICONS[i],
-    colorClass: TRIP_TYPE_COLOR_CLASSES[i],
-  }));
+  const buildPieData = (
+    keys: string[],
+    defaultLabels: string[],
+    colors: string[],
+    icons: IconType[],
+    colorClasses: string[],
+    counts: number[],
+  ) =>
+    keys.map((key, i) => {
+      const nameKey = key.includes(":")
+        ? key
+        : key.startsWith("statistics.")
+          ? key
+          : `statistics.${key}`;
+      return {
+        name: t(nameKey, { defaultValue: defaultLabels[i] }),
+        value: counts[i],
+        color: colors[i],
+        icon: icons[i],
+        colorClass: colorClasses[i],
+      };
+    });
 
-  const tripStatusCounts = [
-    plannedTrips.length,
-    upcomingTrips.length,
-    completedTrips.length,
-  ];
-  const tripStatusData = TRIP_STATUS_LABELS.map((label, i) => ({
-    name: label,
-    value: tripStatusCounts[i],
-    color: TRIP_STATUS_COLORS[i],
-    icon: TRIP_STATUS_ICONS[i],
-    colorClass: TRIP_STATUS_COLOR_CLASSES[i],
-  }));
+  const tripTypeData = buildPieData(
+    ["trips:types.local", "trips:types.abroad"],
+    TRIP_TYPE_LABELS,
+    TRIP_TYPE_COLORS,
+    TRIP_TYPE_ICONS,
+    TRIP_TYPE_COLOR_CLASSES,
+    [localTrips.length, abroadTrips.length],
+  );
+
+  const tripStatusData = buildPieData(
+    [
+      "trips:statuses.planned",
+      "trips:statuses.upcoming",
+      "trips:statuses.completed",
+    ],
+    TRIP_STATUS_LABELS,
+    TRIP_STATUS_COLORS,
+    TRIP_STATUS_ICONS,
+    TRIP_STATUS_COLOR_CLASSES,
+    [plannedTrips.length, upcomingTrips.length, completedTrips.length],
+  );
 
   const pieData = pieMode === "type" ? tripTypeData : tripStatusData;
   const total = pieData.reduce((sum, d) => sum + d.value, 0);
@@ -73,14 +98,22 @@ export function TripsStats() {
       <DashboardCard
         icon={FaSuitcaseRolling}
         iconClass="text-blue-500"
-        title="Trip Overview"
-        subtitle="Summary of all your recorded trips"
+        title={t("statistics.overview.title", {
+          defaultValue: "Trip Overview",
+        })}
+        subtitle={t("statistics.overview.subtitle", {
+          defaultValue: "Summary of all your recorded trips",
+        })}
       >
         <div className="flex flex-col items-center">
           <div className="text-5xl font-extrabold text-blue-500 mb-2 mt-6">
             {totalTrips}
           </div>
-          <div className="text-muted text-sm mb-4">Total Trips</div>
+          <div className="text-muted text-sm mb-4">
+            {t("statistics.overview.totalTrips", {
+              defaultValue: "Total Trips",
+            })}
+          </div>
           <div className="flex gap-6 mb-6">
             {tripStatusData.map((d) => (
               <TripTypeChip
@@ -110,11 +143,17 @@ export function TripsStats() {
       <DashboardCard
         icon={FaChartPie}
         iconClass={"text-purple-400"}
-        title={"Trip Breakdown"}
+        title={t("statistics.overview.breakdown.title", {
+          defaultValue: "Trip Breakdown",
+        })}
         subtitle={
           pieMode === "type"
-            ? "Distribution of trips (local and abroad)"
-            : "Distribution of trip statuses"
+            ? t("statistics.overview.breakdown.subtitle.type", {
+                defaultValue: "Distribution of trips (local and abroad)",
+              })
+            : t("statistics.overview.breakdown.subtitle.status", {
+                defaultValue: "Distribution of trip statuses",
+              })
         }
       >
         <div className="flex flex-col items-center">
@@ -122,15 +161,33 @@ export function TripsStats() {
             value={pieMode}
             onChange={setPieMode}
             options={[
-              { value: "type", label: "Type" },
-              { value: "status", label: "Status" },
+              {
+                value: "type",
+                label: t("statistics.overview.pieToggle.type", {
+                  defaultValue: "Type",
+                }),
+              },
+              {
+                value: "status",
+                label: t("statistics.overview.pieToggle.status", {
+                  defaultValue: "Status",
+                }),
+              },
             ]}
             className="mt-4 mb-4"
           />
           <div className="flex flex-row justify-center gap-25 min-h-[220px] mt-2">
             {/* Pie Chart */}
             <div className="flex items-center justify-center w-48 h-48 mt-10 mb-10">
-              <Suspense fallback={<div>Loading chart...</div>}>
+              <Suspense
+                fallback={
+                  <div>
+                    {t("statistics.overview.loadingChart", {
+                      defaultValue: "Loading chart...",
+                    })}
+                  </div>
+                }
+              >
                 <PieChart
                   labels={pieData.map((d) => d.name)}
                   data={pieData.map((d) => d.value)}
@@ -163,8 +220,10 @@ export function TripsStats() {
       <DashboardCard
         icon={FaClock}
         iconClass="text-indigo-600"
-        title="Longest trip"
-        subtitle="Your trip with the most days abroad"
+        title={t("statistics.longest.title", { defaultValue: "Longest trip" })}
+        subtitle={t("statistics.longest.subtitle", {
+          defaultValue: "Your trip with the most days abroad",
+        })}
       >
         {longestTrip ? (
           <TripList trips={[longestTrip]} className="mt-2" showDuration />
@@ -177,8 +236,12 @@ export function TripsStats() {
       <DashboardCard
         icon={FaRegClock}
         iconClass="text-pink-600"
-        title="Shortest trip"
-        subtitle="Your shortest abroad trip"
+        title={t("statistics.overview.shortest.title", {
+          defaultValue: "Shortest trip",
+        })}
+        subtitle={t("statistics.overview.shortest.subtitle", {
+          defaultValue: "Your shortest abroad trip",
+        })}
       >
         {shortestTrip ? (
           <TripList trips={[shortestTrip]} className="mt-2" showDuration />
@@ -191,11 +254,17 @@ export function TripsStats() {
       <DashboardCard
         icon={FaStar}
         iconClass="text-yellow-400"
-        title="Average trip duration"
-        subtitle="Average days per trip"
+        title={t("statistics.overview.average.title", {
+          defaultValue: "Average trip duration",
+        })}
+        subtitle={t("statistics.overview.average.subtitle", {
+          defaultValue: "Average days per trip",
+        })}
       >
         <div className="text-4xl font-extrabold text-yellow-400 mb-1">
-          {averageTripDuration ? `${averageTripDuration.toFixed(1)} days` : "—"}
+          {averageTripDuration
+            ? `${averageTripDuration.toFixed(1)} ${t("statistics.days", { defaultValue: "days" })}`
+            : "—"}
         </div>
       </DashboardCard>
 
@@ -203,11 +272,17 @@ export function TripsStats() {
       <DashboardCard
         icon={FaClockRotateLeft}
         iconClass="text-sky-400"
-        title="Total days traveling"
-        subtitle="Sum of all trip durations"
+        title={t("statistics.overview.totalDays.title", {
+          defaultValue: "Total days traveling",
+        })}
+        subtitle={t("statistics.overview.totalDays.subtitle", {
+          defaultValue: "Sum of all trip durations",
+        })}
       >
         <div className="text-4xl font-extrabold text-sky-400 mb-1">
-          {totalDaysTraveling ? `${totalDaysTraveling} days` : "—"}
+          {totalDaysTraveling
+            ? `${totalDaysTraveling} ${t("statistics.overview.days", { defaultValue: "days" })}`
+            : "—"}
         </div>
       </DashboardCard>
     </div>

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   ColorSelectInput,
@@ -29,6 +30,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
 }) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const [colorModalOpen, setColorModalOpen] = useState(false);
+  const { t } = useTranslation(["atlas", "common"]);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -53,7 +55,9 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         title={
           <>
             <ICONS.markers />
-            {isEditing ? "Edit Marker" : "Add Marker"}
+            {isEditing
+              ? t("markers.editTitle", "Edit Marker")
+              : t("markers.addTitle", "Add Marker")}
           </>
         }
       >
@@ -62,6 +66,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           ariaLabel="Close"
           icon={<ICONS.close className="text-2xl" />}
           rounded
+          title={t("common:actions.close")}
         />
       </PanelHeader>
       <form
@@ -72,11 +77,11 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
         }}
       >
         <div className="p-2">
-          <FormField label="Name">
+          <FormField label={t("markers.form.name", "Name")}>
             <input
               ref={nameRef}
               name="name"
-              placeholder="Marker name"
+              placeholder={t("markers.form.namePlaceholder", "Marker name")}
               required
               value={marker?.name || ""}
               onChange={(e) =>
@@ -106,7 +111,10 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           <FormField label="Description">
             <input
               name="description"
-              placeholder="Description (optional)"
+              placeholder={t(
+                "markers.form.descriptionPlaceholder",
+                "Description (optional)",
+              )}
               value={marker?.description || ""}
               onChange={(e) =>
                 onChange({
@@ -119,7 +127,8 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           </FormField>
           {marker && !isEditing && (
             <div className="text-xs text-muted">
-              Location: {marker.coordinates[0].toFixed(4)},{" "}
+              {t("markers.locationLabel", "Location:")}{" "}
+              {marker.coordinates[0].toFixed(4)},{" "}
               {marker.coordinates[1].toFixed(4)}
             </div>
           )}
@@ -135,7 +144,11 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
                   <ICONS.add className="inline" />
                 )
               }
-              submitLabel={isEditing ? "Save Changes" : "Add Marker"}
+              submitLabel={
+                isEditing
+                  ? t("markers.saveChanges", "Save Changes")
+                  : t("markers.add", "Add Marker")
+              }
             />
           </div>
         </div>

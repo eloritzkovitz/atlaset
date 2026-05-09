@@ -1,0 +1,255 @@
+{
+  "toolbar": {
+    "openMapActions": "פתח פעולות מפה",
+    "closeMapActions": "סגור פעולות מפה",
+    "showToolbar": "הצג סרגל כלים",
+    "hideToolbar": "הסתר סרגל כלים",
+    "countries": "מדינות",
+    "layers": "שכבות",
+    "markers": "סימונים",
+    "legend": "מקרא",
+    "myMaps": "המפות שלי",
+    "timeline": "ציר זמן",
+    "export": "ייצוא",
+    "download": "הורד",
+    "mapSettings": "הגדרות מפה",
+    "exitEditMode": "צא ממצב עריכה",
+    "exitSharedView": "צא מצפייה משותפת"
+  },
+  "controls": {
+    "zoomIn": "הגדל",
+    "zoomOut": "הקטן",
+    "resetView": "אתחול תצוגה"
+  },
+  "shared": {
+    "viewingPrefix": "צופה ב־",
+    "byPrefix": "על־ידי",
+    "inEditMode": "במצב עריכה.",
+    "editingDisabled": "עריכה מבוטלת.",
+    "defaultMap": "מפה משותפת",
+    "defaultSharer": "משתמש אנונימי"
+  },
+  "countries": {
+    "title": "מדינות",
+    "actions": {
+      "refreshData": "רענן נתוני מדינות",
+      "showFilters": "הצג מסננים",
+      "hideFilters": "הסתר מסננים"
+    },
+    "searchPlaceholder": "חפש מדינות",
+    "countryLists": {
+      "all": "הכל",
+      "sovereign": "ריבוני",
+      "visited": "ביקרתי",
+      "newList": "רשימה חדשה"
+    },
+    "lists": {
+      "editTitle": "ערוך רשימה",
+      "addTitle": "הוסף רשימה",
+      "nameLabel": "שם:",
+      "linkedWarning": "שינויים ברשימה זו יעדכנו את כל השכבות המקושרות אליה.",
+      "save": "שמירת שינויים",
+      "add": "הוסף רשימה",
+      "delete": "מחק רשימה"
+    },
+    "sort": {
+      "by": "מיין לפי",
+      "name": "שם",
+      "isoCode": "קוד ISO 3166-1",
+      "area": "שטח",
+      "population": "אוכלוסיה",
+      "visitCount": "מספר ביקורים",
+      "firstVisit": "ביקור ראשון",
+      "lastVisit": "ביקור אחרון"
+    },
+    "select": {
+      "label": "מדינות:",
+      "noneSelected": "לא נבחרו מדינות.",
+      "title": "בחר מדינות"
+    },
+    "filters": {
+      "title": "מסננים",
+      "core": {
+        "title": "מסננים בסיסיים",
+        "region": "יבשת",
+        "subregion": "אזור",
+        "geoType": "סוג גאוגרפי",
+        "sovereignty": "ריבונות",
+        "visitStatus": "מצב ביקור",
+        "visited": "ביקרתי",
+        "notVisited": "לא ביקרתי"
+      },
+      "layer": {
+        "title": "מסנני שכבה"
+      },
+      "timeline": {
+        "title": "מסנני ציר זמן",
+        "year": "שנה",
+        "visitCount": "כמות ביקורים",
+        "from": "מ",
+        "to": "עד"
+      }
+    },
+    "details": {
+      "header": {
+        "centerMap": "מרכז מפה",
+        "centerMapAria": "מרכז את המפה אל המדינה",
+        "viewFull": "צפייה בפרטים מלאים",
+        "viewFullAria": "צפייה בפרטים מלאים",
+        "wikipedia": "ויקיפדיה",
+        "wikipediaAria": "פתח מאמר ויקיפדיה"
+      },
+      "status": {
+        "home": "מדינת בית",
+        "homeAria": "מדינת בית",
+        "visited": "ביקרתי",
+        "notVisited": "לא ביקרתי"
+      },
+      "tabs": {
+        "overview": "סקירה כללית",
+        "territories": "טריטוריות ותביעות",
+        "affiliations": "שייכות",
+        "visits": "ביקורים"
+      },
+      "overview": {
+        "region": "יבשת",
+        "subregion": "אזור",
+        "capital": "עיר בירה",
+        "languages": "שפות",
+        "government": "שיטת ממשל",
+        "area": "שטח",
+        "population": "אוכלוסיה",
+        "areaUnit": "קמ\u0022ר",
+        "currency": "מטבע",
+        "timezone": "אזור זמן",
+        "summer": "קיץ",
+        "callingCode": "קידומת בין-לאומית",
+        "drivingSide": "צד נהיגה",
+        "isoCode": "קוד ISO 3166",
+        "altNames": "שמות חלופיים"
+      },
+      "affiliations": {
+        "memberships": "חברויות",
+        "un": "האומות המאוחדות",
+        "eu": "האיחוד האירופי"
+      },
+      "visits": {
+        "planned": "מתוכננים",
+        "upcoming": "עתידיים",
+        "completed": "הושלמו"
+      }
+    }
+  },
+  "layers": {
+    "title": "שכבות",
+    "add": "הוסף שכבה",
+    "import": "ייבא שכבות",
+    "export": "ייצא שכבות",
+    "empty": "עדיין אין שכבות.",
+    "addTitle": "הוסף שכבה",
+    "editTitle": "ערוך שכבה",
+    "form": {
+      "name": "שם:",
+      "color": "צבע:",
+      "fromList": "מרשימה:",
+      "selectList": "בחר רשימה...",
+      "filterLabels": "תגיות סינון:"
+    },
+    "linkedListWarning": "שכבה זו מקושרת לרשימה. כדי לערוך את שמה או את המדינות שבה, עדכן את הרשימה עצמה.",
+    "saveChanges": "שמירת שינויים"
+  },
+  "markers": {
+    "title": "סימונים",
+    "add": "הוסף סימון",
+    "import": "ייבא סימונים",
+    "export": "ייצא סימונים",
+    "close": "סגור לוח סימונים",
+    "empty": "עדיין אין סימונים.",
+    "hint": "לחץ על המפה כדי להוסיף סימון.",
+    "editTitle": "ערוך סימון",
+    "addTitle": "הוסף סימון",
+    "form": {
+      "name": "שם",
+      "namePlaceholder": "שם הסימון",
+      "color": "צבע",
+      "description": "תיאור",
+      "descriptionPlaceholder": "תיאור (אופציונלי)"
+    },
+    "noDescription": "לא סופק תיאור.",
+    "locationLabel": "מיקום:",
+    "saveChanges": "שמירת שינויים"
+  },
+  "legend": {
+    "title": "מקרא"
+  },
+  "savedMaps": {
+    "title": "המפות שלי",
+    "save": "שמור מפה נוכחית",
+    "create": "צור מפה חדשה",
+    "close": "סגור",
+    "empty": "עדיין אין מפות שמורות.",
+    "addTitle": "הוסף מפה",
+    "saveTitle": "שמור מפה",
+    "renameTitle": "שנה שם מפה",
+    "nameLabel": "שם מפה:",
+    "namePlaceholder": "שם מפה",
+    "saveChanges": "שמירת שינויים",
+    "add": "הוסף מפה"
+  },
+  "timeline": {
+    "play": "הפעל",
+    "pause": "השהה",
+    "firstYear": "שנה ראשונה",
+    "previousYear": "שנה קודמת",
+    "nextYear": "שנה הבאה",
+    "lastYear": "שנה אחרונה",
+    "speed": "מהירות: {{speed}}x",
+    "cumulativeVisits": "ביקורים מצטברים",
+    "yearlyVisits": "ביקורים שנתיים",
+    "colorMode": "מצב צבע",
+    "hint": "מצב ציר זמן פעיל. לחץ T כדי לבטל."
+  },
+  "mapExport": {
+    "title": "ייצוא",
+    "options": "אפשרויות",
+    "visitedCountries": "מדינות שביקרתי",
+    "visibleLayers": "כל השכבות הגלויות",
+    "visibleMarkers": "כל הסימונים הגלויים",
+    "mapDetails": "פרטי מפה (אופציונלי)",
+    "mapName": "שם מפה",
+    "mapNamePlaceholder": "המפה המשותפת שלי",
+    "yourName": "שמך",
+    "yourNamePlaceholder": "שמך",
+    "download": "הורדה",
+    "format": "פורמט",
+    "inlineStyles": "סגנונות פנימיים",
+    "downloadImage": "הורדה כתמונה",
+    "downloadData": "הורדת נתונים",
+    "downloadJson": "הורדה כ-JSON",
+    "share": "שיתוף",
+    "shareableLink": "קישור ניתן לשיתוף",
+    "copyLink": "העתק קישור",
+    "linkCopied": "קישור הועתק ללוח!",
+    "embed": "הטמעה",
+    "embedCode": "קוד הטמעה",
+    "copyEmbedCode": "העתק קוד הטמעה",
+    "embedCodeCopied": "קוד הטמעה הועתק ללוח!",
+    "description": "הטמע את המפה באתרי האינטרנט שלך ved the code above."
+  },
+  "mapSettings": {
+    "title": "הגדרות מפה",
+    "configuration": "תצורה",
+    "mapProjection": "היטל מפה",
+    "borderColor": "צבע גבול",
+    "borderWidth": "עובי גבול",
+    "colors": "צבעים",
+    "displayOptions": "אפשרויות תצוגה",
+    "showHomeCountry": "הצג מדינה בית",
+    "showVisitedCountries": "הצג מדינות שביקרתי",
+    "showUpcomingVisits": "הצג ביקורים קרובים",
+    "colorPalette": "פלטת צבעים",
+    "standard": "סטנדרטי",
+    "timelineCumulative": "ציר זמן (מצטבר)",
+    "timelineYearly": "ציר זמן (שנתי)"
+  }
+}

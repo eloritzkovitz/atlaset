@@ -64,7 +64,7 @@ export function Checkbox({
           <path d="M5 13l4 4L19 7" />
         </svg>
       </span>
-      {label && <span className="ml-2">{label}</span>}
+      {label && <span className="ms-2">{label}</span>}
     </label>
   );
 }

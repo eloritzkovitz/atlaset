@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { MenuButton } from "./MenuButton";
 import { Separator } from "../layout/Separator";
 import { ICONS } from "../../constants/icons";
@@ -31,16 +32,18 @@ export function MenuActions({
   removeDisabled = false,
   handleEdit,
 }: MenuActionsProps) {
+  const { t } = useTranslation("common");
+
   return (
     <>
       {onView && (
         <>
           <MenuButton
             onClick={onView}
-            icon={<ICONS.view className="mr-2" />}
+            icon={<ICONS.view className="me-2" />}
             className="w-full"
           >
-            View
+            {t("actions.view", "View")}
           </MenuButton>
           <Separator className="my-1" />
         </>
@@ -48,74 +51,74 @@ export function MenuActions({
       {onDownload && (
         <MenuButton
           onClick={onDownload}
-          icon={<ICONS.download className="mr-2" />}
+          icon={<ICONS.download className="me-2" />}
           className="w-full"
         >
-          Download
+          {t("actions.download", "Download")}
         </MenuButton>
       )}
       {onEdit && (
         <MenuButton
           onClick={onEdit}
-          icon={<ICONS.edit className="mr-2" />}
+          icon={<ICONS.edit className="me-2" />}
           className="w-full"
         >
-          Edit
+          {t("actions.edit", "Edit")}
         </MenuButton>
       )}
       {onNameChange && (
         <MenuButton
           onClick={handleEdit}
-          icon={<ICONS.rename className="mr-2" />}
+          icon={<ICONS.rename className="me-2" />}
           className="w-full"
         >
-          Rename
+          {t("actions.rename", "Rename")}
         </MenuButton>
       )}
       {onCenter && (
         <MenuButton
           onClick={onCenter}
-          icon={<ICONS.center className="mr-2" />}
+          icon={<ICONS.center className="me-2" />}
           className="w-full"
         >
-          Center
+          {t("actions.center", "Center")}
         </MenuButton>
       )}
       {onDuplicate && (
         <MenuButton
           onClick={onDuplicate}
-          icon={<ICONS.duplicate className="mr-2" />}
+          icon={<ICONS.duplicate className="me-2" />}
           className="w-full"
         >
-          Duplicate
+          {t("actions.duplicate", "Duplicate")}
         </MenuButton>
       )}
       {onCreateList && (
         <MenuButton
           onClick={onCreateList}
-          icon={<ICONS.createList className="mr-2" />}
+          icon={<ICONS.createList className="me-2" />}
           className="w-full"
         >
-          Create List
+          {t("actions.createList", "Create List")}
         </MenuButton>
       )}
       {(onShare || onCopytoClipboard) && <Separator className="my-1" />}
       {onShare && (
         <MenuButton
           onClick={onShare}
-          icon={<ICONS.share className="mr-2" />}
+          icon={<ICONS.share className="me-2" />}
           className="w-full"
         >
-          Share
+          {t("actions.share", "Share")}
         </MenuButton>
       )}
       {onCopytoClipboard && (
         <MenuButton
           onClick={onCopytoClipboard}
-          icon={<ICONS.copyLink className="mr-2" />}
+          icon={<ICONS.copyLink className="me-2" />}
           className="w-full"
         >
-          Copy Link
+          {t("actions.copyLink", "Copy Link")}
         </MenuButton>
       )}
       {onRemove && (
@@ -125,15 +128,17 @@ export function MenuActions({
             onClick={onRemove}
             icon={
               removeDisabled ? (
-                <ICONS.info className="mr-2" />
+                <ICONS.info className="me-2" />
               ) : (
-                <ICONS.remove className="mr-2" />
+                <ICONS.remove className="me-2" />
               )
             }
             className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={removeDisabled}
           >
-            {removeDisabled ? "Cannot delete" : "Delete"}
+            {removeDisabled
+              ? t("actions.cannotDelete", "Cannot delete")
+              : t("actions.delete", "Delete")}
           </MenuButton>
         </>
       )}

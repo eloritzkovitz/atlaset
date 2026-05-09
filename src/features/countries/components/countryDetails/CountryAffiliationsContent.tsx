@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
+import type { Country } from "@features/countries/types";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
-import type { Country } from "@features/countries/types";
 
 interface CountryAffiliationsContentProps {
   country: Country;
@@ -11,6 +12,8 @@ interface CountryAffiliationsContentProps {
 export function CountryAffiliationsContent({
   country,
 }: CountryAffiliationsContentProps) {
+  const { t } = useTranslation("atlas");
+
   const sections = useMemo(() => {
     if (!country) return [];
 
@@ -38,13 +41,13 @@ export function CountryAffiliationsContent({
 
       sections.push({
         key: "memberships",
-        label: "Affiliations",
+        label: t("countries.details.affiliations.memberships"),
         data: sorted,
       });
     }
 
     return sections;
-  }, [country]);
+  }, [country, t]);
 
   const [expanded, setExpanded] = useState(() =>
     sections.reduce(
@@ -67,7 +70,8 @@ export function CountryAffiliationsContent({
           section.data.length > 0 && (
             <CollapsibleHeader
               key={section.key}
-              label={`${section.label} (${section.data.length})`}
+              label={section.label}
+              count={section.data.length}
               expanded={expanded[section.key]}
               icon={undefined}
               onToggle={() => handleToggle(section.key)}

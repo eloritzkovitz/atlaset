@@ -30,30 +30,18 @@ const initialState: CountryDataState = {
 export const fetchCountryData = createAsyncThunk(
   "countryData/fetchCountryData",
   async () => {
-    // Try static files first
     const staticCountryUrl = "/data/countries.json";
-    const staticCurrencyUrl = "/data/currencies.json";
-    const [countryData, currencyData] = await Promise.all([
-      fetchWithFallback(
-        staticCountryUrl,
-        { envVar: "VITE_COUNTRY_DATA_URL" },
-        "country data",
-      ),
-      fetchWithFallback(
-        staticCurrencyUrl,
-        { envVar: "VITE_CURRENCY_DATA_URL" },
-        "currency data",
-      ),
-    ]);
+    const countryData = await fetchWithFallback(
+      staticCountryUrl,
+      { envVar: "VITE_COUNTRY_DATA_URL" },
+      "country data",
+    );
 
-    // Map currency object to array
-    const currenciesArr =
-      currencyData && typeof currencyData === "object"
-        ? Object.entries(currencyData).map(([code, name]) => ({
-            code,
-            name: String(name),
-          }))
-        : [];
+    // Validate shape: expect an array of countries
+    if (!Array.isArray(countryData)) {
+      throw new Error("Failed to load country data");
+    }
+    const currenciesArr: Currency[] = [];
 
     return {
       countries: countryData as Country[],

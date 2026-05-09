@@ -1,8 +1,10 @@
 import type { User } from "firebase/auth";
+import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { MenuButton, Separator } from "@components";
+import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
 
@@ -18,13 +20,18 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
   const { isMobile } = useScreenSize();
   const { username } = useFirestoreUsername(user?.uid);
 
+  // Translation
+  const { t } = useTranslation("common");
+  const { name } = useLanguage();
+  const { openLanguagePicker } = useUI();
+
   // Don't render if no user
   if (!user) return null;
 
   const menuItems = [
     {
-      label: "Profile",
-      icon: <ICONS.profile className="text-lg mr-2" />,
+      label: t("menu.profile"),
+      icon: <ICONS.profile className="text-lg me-2" />,
       onClick: () => {
         navigate(`/users/${username}`);
         onClose?.();
@@ -32,8 +39,8 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       url: `/users/${username}`,
     },
     {
-      label: "Friends",
-      icon: <ICONS.friends className="text-lg mr-2" />,
+      label: t("menu.friends"),
+      icon: <ICONS.friends className="text-lg me-2" />,
       onClick: () => {
         toggleFriends();
         onClose?.();
@@ -41,8 +48,8 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     { separator: true },
     {
-      label: "Report a Bug",
-      icon: <ICONS.reportBug className="text-lg mr-2" />,
+      label: t("menu.reportBug"),
+      icon: <ICONS.reportBug className="text-lg me-2" />,
       onClick: () => {
         window.open(
           "https://github.com/eloritzkovitz/atlaset/issues",
@@ -55,8 +62,8 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     ...(!isMobile
       ? [
           {
-            label: "Keyboard Shortcuts",
-            icon: <ICONS.shortcuts className="text-lg mr-2" />,
+            label: t("menu.keyboardShortcuts"),
+            icon: <ICONS.shortcuts className="text-lg me-2" />,
             onClick: () => {
               toggleShortcuts();
               onClose?.();
@@ -66,18 +73,33 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       : []),
     { separator: true },
     {
-      label: "Settings",
-      icon: <ICONS.settings className="text-lg mr-2" />,
+      label: t("menu.settings"),
+      icon: <ICONS.settings className="text-lg me-2" />,
       onClick: () => {
         navigate("/settings");
         onClose?.();
       },
       url: "/settings",
     },
+    {
+      label: `${t("menu.language")} (${name})`,
+      icon: <ICONS.language className="text-lg me-2" />,
+      onClick: () => {
+        openLanguagePicker();
+        onClose?.();
+      },
+      trailing: (
+        <DirectionalIcon
+          direction="next"
+          variant="chevron"
+          className="ms-auto text-lg opacity-60"
+        />
+      ),
+    },
     { separator: true },
     {
-      label: "Sign out",
-      icon: <ICONS.signOut className="text-lg mr-2" />,
+      label: t("menu.signOut"),
+      icon: <ICONS.signOut className="text-lg me-2" />,
       onClick: () => {
         onLogout();
         onClose?.();
@@ -102,6 +124,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
             url={item.url}
           >
             <span className="font-semibold">{item.label}</span>
+            {item.trailing ?? null}
           </MenuButton>
         ),
       )}

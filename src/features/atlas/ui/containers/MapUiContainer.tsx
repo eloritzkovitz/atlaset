@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
@@ -36,16 +37,18 @@ export function MapUiContainer({
     colorMode,
   );
 
+  const { t } = useTranslation("atlas");
+
   // UI hint for adding marker
   const addMarkerHint = useMemo(
     () =>
       isAddingMarker && !isEmbed
         ? {
-            message: <>Click on the map to place a marker.</>,
+            message: <>{t("markers.hint")}</>,
             icon: <ICONS.markers className="text-lg" />,
           }
         : null,
-    [isAddingMarker, isEmbed],
+    [isAddingMarker, isEmbed, t],
   );
 
   // UI hint for timeline mode
@@ -53,11 +56,11 @@ export function MapUiContainer({
     () =>
       timelineMode && uiVisible && !isEmbed
         ? {
-            message: <>Timeline mode enabled. Press T to toggle off.</>,
+            message: <>{t("timeline.hint")}</>,
             icon: <ICONS.timeline className="text-lg" />,
           }
         : null,
-    [timelineMode, uiVisible, isEmbed],
+    [timelineMode, uiVisible, isEmbed, t],
   );
 
   // UI hint for shared/saved maps
@@ -67,19 +70,30 @@ export function MapUiContainer({
   const sharer = sharedMapInfo.sharer;
   const sharedHint = useMemo(() => {
     if ((!isReadonly && !isEdit) || isEmbed) return null;
-    const displayMapName = mapName ? mapName : "a shared map";
-    const displaySharer = sharer ? sharer : "an anonymous user";
+    const displayMapName = mapName ? mapName : t("shared.defaultMap");
+    const displaySharer = sharer ? sharer : t("shared.defaultSharer");
     const msg = (
       <>
-        Viewing <b>{displayMapName}</b>
+        <>
+          {t("shared.viewingPrefix")}{" "}
+          <strong className="font-bold">{displayMapName}</strong>
+        </>
+
         {isReadonly && !isEdit && (
           <span>
-            by <b>{displaySharer}</b>.
+            {" "}
+            {t("shared.byPrefix")}{" "}
+            <strong className="font-bold">{displaySharer}</strong>.
           </span>
         )}
-        {isEdit ? <>in Edit Mode.</> : <>Editing is disabled.</>}
+
+        <span>
+          {" "}
+          {isEdit ? t("shared.inEditMode") : t("shared.editingDisabled")}
+        </span>
       </>
     );
+
     return {
       message: msg,
       icon: isEdit ? (
@@ -88,7 +102,7 @@ export function MapUiContainer({
         <ICONS.share className="text-lg" />
       ),
     };
-  }, [isReadonly, isEdit, isEmbed, mapName, sharer]);
+  }, [isReadonly, isEdit, isEmbed, mapName, sharer, t]);
 
   useUiHint(addMarkerHint, 0, { key: "add-marker", dismissable: false });
   useUiHint(timelineHint, 0, { key: "timeline", dismissable: true });

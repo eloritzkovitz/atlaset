@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { FaHouse, FaChevronRight } from "react-icons/fa6";
+import { FaHouse } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
+import { DirectionalIcon } from "@components";
 import {
   CountrySelectModal,
   CountryWithFlag,
@@ -12,17 +14,18 @@ export function HomeCountrySelect() {
   const { countries } = useCountryData();
   const { homeCountry, setHomeCountry } = useHomeCountry();
   const [modalOpen, setModalOpen] = useState(false);
+  const { t } = useTranslation("settings");
 
   // Find the currently selected country object
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
 
   return (
-    <SettingsCard title="Home Country" icon={<FaHouse />}>
+    <SettingsCard title={t("account.homeCountry.title")} icon={<FaHouse />}>
       <button
         type="button"
         className="settings-select-btn bg-input hover:bg-input-hover flex items-center gap-3 px-3 py-2 my-2 rounded-lg transition w-full"
         onClick={() => setModalOpen(true)}
-        aria-label="Select home country"
+        aria-label={t("account.homeCountry.selectAria")}
       >
         {selectedCountry ? (
           <CountryWithFlag
@@ -30,9 +33,9 @@ export function HomeCountrySelect() {
             name={selectedCountry.name}
           />
         ) : (
-          <span className="opacity-50">No country selected</span>
+          <span className="opacity-50">{t("account.homeCountry.none")}</span>
         )}
-        <FaChevronRight className="ml-auto text-muted" />
+        <DirectionalIcon direction="next" className="ms-auto text-muted" />
       </button>
       <CountrySelectModal
         isOpen={modalOpen}

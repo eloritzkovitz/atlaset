@@ -1,6 +1,7 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
 import { useAudio } from "@contexts/AudioContext";
 import { useTimeline } from "@contexts/TimelineContext";
+import { useLanguage } from "@features/settings";
 import { useKeyHandler } from "@hooks";
 
 const BASE_PLAY_INTERVAL = 4000;
@@ -12,11 +13,12 @@ const BASE_PLAY_INTERVAL = 4000;
 export function useTimelineNavigation() {
   const { years, selectedYear, setSelectedYear } = useTimeline();
   const { play } = useAudio();
+  const { isRtl } = useLanguage();
 
   // Current index in years array
   const currentIndex = useMemo(
     () => years.indexOf(selectedYear),
-    [years, selectedYear]
+    [years, selectedYear],
   );
 
   // Navigation availability
@@ -60,12 +62,16 @@ export function useTimelineNavigation() {
   useKeyHandler(
     (e) => {
       const idx = years.indexOf(selectedYear);
-      if (e.key === "ArrowLeft" && idx > 0) {
-        setSelectedYear(years[idx - 1]);
-        play("click");
-      } else if (e.key === "ArrowRight" && idx < years.length - 1) {
-        setSelectedYear(years[idx + 1]);
-        play("click");
+
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+        const keyDir = e.key === "ArrowRight" ? 1 : -1;
+        const visualDir = isRtl ? -1 : 1;
+        const delta = keyDir * visualDir;
+        const nextIdx = idx + delta;
+        if (nextIdx >= 0 && nextIdx < years.length) {
+          setSelectedYear(years[nextIdx]);
+          play("click");
+        }
       } else if (e.key === "Home") {
         setSelectedYear(years[0]);
         play("click");
@@ -75,7 +81,7 @@ export function useTimelineNavigation() {
       }
     },
     ["ArrowLeft", "ArrowRight", "Home", "End"],
-    true
+    true,
   );
 
   // Spacebar play/pause toggle
@@ -85,7 +91,7 @@ export function useTimelineNavigation() {
       setPlaying((p) => !p);
     },
     [" "],
-    true
+    true,
   );
 
   // Auto-advance when playing

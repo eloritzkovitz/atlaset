@@ -17,7 +17,7 @@ export const CalendarSidePanel: React.FC<CalendarSidePanelProps> = ({
   filters,
   onToggleType,
 }) => (
-  <div className="flex flex-col items-center mt-13 mr-2">
+  <div className="flex flex-col items-center mt-13 me-2">
     <DatePicker
       selected={date}
       onChange={(d: Date | null) => {

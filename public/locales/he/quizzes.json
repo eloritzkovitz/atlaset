@@ -1,0 +1,105 @@
+{
+  "pageTitle": "חידונים",
+  "lobby": {
+    "cards": {
+      "flag": {
+        "title": "נחש את הדגל",
+        "description": "האם אתה יכול לזהות את המדינה לפי הדגל שלה?"
+      },
+      "capital": {
+        "title": "נחש את הבירה",
+        "description": "בדוק את הידע שלך בבירות העולם!"
+      },
+      "leaderboards": {
+        "title": "לוח תוצאות",
+        "description": "צפה בהישגים הכי טובים וברצפים!"
+      }
+    },
+    "settings": {
+      "selectDifficulty": "בחר רמת קושי",
+      "selectDifficultyPlaceholder": "בחר רמת קושי כדי לראות פרטים.",
+      "selectGameMode": "בחר מצב משחק",
+      "startQuiz": "התחל חידון",
+      "cancel": "ביטול",
+      "levels": {
+        "easy": {
+          "label": "קל",
+          "description": "מדינות מוכרות שאתה כנראה יודע."
+        },
+        "medium": {
+          "label": "בינוני",
+          "description": "תערובת של מדינות נפוצות ופחות מוכרות."
+        },
+        "hard": {
+          "label": "קשה",
+          "description": "מדינות מאתגרות שיבחנו את הידע שלך!"
+        },
+        "expert": {
+          "label": "מומחה",
+          "description": "מדינות וטריטוריות תלויות נדירות—למומחים בלבד!"
+        }
+      },
+      "modes": {
+        "sandbox": {
+          "label": "חופשי",
+          "description": "ללא טיימר, תתאמן בחופשיות."
+        },
+        "timed": {
+          "label": "מוגבל בזמן",
+          "description": "מירוץ נגד השעון!"
+        }
+      }
+    }
+  },
+  "play": {
+    "titles": {
+      "flag": "נחש את הדגל!",
+      "capital": "נחש את הבירה!"
+    },
+    "scoreboard": {
+      "question": "שאלה",
+      "score": "ניקוד",
+      "streak": "רצף",
+      "timeLeft": "זמן נותר"
+    },
+    "form": {
+      "placeholder": "הזן שם מדינה",
+      "capitalPlaceholder": "הזן את שם הבירה",
+      "submit": "שלח ניחוש",
+      "guess": "נחש",
+      "skip": "דלג",
+      "forfeit": "ויתור",
+      "confirm": {
+        "forfeit": {
+          "title": "אתה בטוח?",
+          "message": "האם אתה בטוח שברצונך לוותר על החידון? ההתקדמות שלך תאבד.",
+          "submit": "ויתור",
+          "cancel": "ביטול"
+        }
+      }
+    },
+    "result": {
+      "correct": "נכון!",
+      "wrongPrefix": "לא נכון! התשובה הנכונה היא"
+    },
+    "nextFlag": "הדגל הבא"
+  },
+  "noCountries": {
+    "capital": "לא נמצאו מדינות עם בירה.",
+    "flag": "לא נמצאו מדינות עם דגל משלהן."
+  },
+  "leaderboards": {
+    "table": {
+      "headers": {
+        "rank": "#",
+        "player": "שחקן",
+        "score": "ניקוד",
+        "maxStreak": "רצף מקסימלי",
+        "time": "זמן",
+        "date": "תאריך"
+      },
+      "noScores": "לא נמצאו תוצאות.",
+      "authRequired": "עליך להיות מחובר כדי לצפות בלוח התוצאות."
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Card } from "@components";
 import { LeaderboardTable } from "@features/quizzes";
 import type {
@@ -13,6 +14,7 @@ interface BestScoresCardProps {
 }
 
 export function BestScoresCard({ scores }: BestScoresCardProps) {
+  const { t } = useTranslation("user");
   const [mode, setMode] = useState<QuizType>("flag");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
 
@@ -30,7 +32,7 @@ export function BestScoresCard({ scores }: BestScoresCardProps) {
 
   return (
     <Card className="mt-6 w-full p-6 rounded-xl shadow-lg font-sans">
-      <h2 className="text-xl font-bold mb-2">Best Quiz Scores</h2>
+      <h2 className="text-xl font-bold mb-2">{t("profile.bestScores")}</h2>
       <LeaderboardFilterBar
         mode={mode}
         setMode={setMode}

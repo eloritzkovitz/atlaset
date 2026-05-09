@@ -21,7 +21,7 @@ export function Chip({
   noButton,
 }: ChipProps) {
   const defaultStyle =
-    "bg-chip-bg hover:bg-info-hover text-chip-text rounded-xl flex items-center gap-1 px-2 py-1 text-sm mr-1 mb-1";
+    "bg-chip-bg hover:bg-info-hover text-chip-text rounded-xl flex items-center gap-1 px-2 py-1 text-sm me-1 mb-1";
 
   return (
     <span
@@ -34,7 +34,7 @@ export function Chip({
           <span
             role="button"
             tabIndex={0}
-            className={`ml-auto text-muted ${
+            className={`ms-auto text-muted ${
               disabled
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-muted-hover"
@@ -55,7 +55,7 @@ export function Chip({
         ) : (
           <button
             type="button"
-            className={`ml-auto text-muted ${
+            className={`ms-auto text-muted ${
               disabled
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-muted-hover"

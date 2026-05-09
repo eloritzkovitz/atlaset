@@ -1,5 +1,5 @@
 import React from "react";
-import { FaCheck } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 
 export interface ChecklistItem {
   label: string;
@@ -20,7 +20,7 @@ export const Checklist: React.FC<ChecklistProps> = ({
   if (!items.length) return null;
   return (
     <div className="flex flex-col items-start w-full mt-4 mb-2">
-      <div className={className || "ml-12 flex flex-col gap-2 items-start"}>
+      <div className={className || "ms-12 flex flex-col gap-2 items-start"}>
         {items.map((item, idx) => (
           <div
             key={item.label + idx}
@@ -30,7 +30,7 @@ export const Checklist: React.FC<ChecklistProps> = ({
               renderIcon(item.completed)
             ) : item.completed ? (
               <span className="text-success" title="Completed">
-                <FaCheck style={{ verticalAlign: "middle" }} />
+                <ICONS.selected style={{ verticalAlign: "middle" }} />
               </span>
             ) : (
               <span style={{ width: "1em", display: "inline-block" }}></span>

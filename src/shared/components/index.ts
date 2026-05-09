@@ -1,7 +1,6 @@
 // Action components
 export { ActionButton } from "./action/ActionButton";
 export { FloatingActionButton } from "./action/FloatingActionButton";
-export { FloatingChevronButton } from "./action/FloatingChevronButton";
 export { HamburgerButton } from "./action/HamburgerButton";
 
 // Branding components
@@ -102,6 +101,7 @@ export { Tooltip } from "./ui/Tooltip/Tooltip";
 export { FloatingPortal } from "./ui/Tooltip/FloatingPortal";
 export { StarRatingInput } from "./ui/StarRating/StarRatingInput";
 export { ColorDot } from "./ui/ColorDot";
+export { DirectionalIcon } from "./ui/DirectionalIcon";
 export {
   SegmentedToggle,
   type SegmentedToggleOption,

@@ -1,5 +1,6 @@
 import React from "react";
 import { FaPalette } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import {
   Checkbox,
   CollapsibleHeader,
@@ -11,11 +12,10 @@ import type { ColorMode } from "@features/atlas/map";
 import { PaletteDots } from "./PaletteDots";
 import { useLayerColors } from "../../hooks/useLayerColors";
 
-// Color modes
 const COLOR_MODES: { key: ColorMode; label: string }[] = [
-  { key: "standard", label: "Standard" },
-  { key: "cumulative", label: "Timeline (Cumulative)" },
-  { key: "yearly", label: "Timeline (Yearly)" },
+  { key: "standard", label: "mapSettings.standard" },
+  { key: "cumulative", label: "mapSettings.timelineCumulative" },
+  { key: "yearly", label: "mapSettings.timelineYearly" },
 ];
 
 export function ColorsSettingsGroup() {
@@ -30,8 +30,8 @@ export function ColorsSettingsGroup() {
     colorPalettes,
     setPalette,
   } = useLayerColors();
+  const { t } = useTranslation("atlas");
 
-  // Prepare options for DropdownSelectInput
   const groupedPaletteOptions = COLOR_PALETTE_GROUPS.map((group) => ({
     label: group.label,
     options: group.palettes.map((palette) => ({
@@ -49,7 +49,7 @@ export function ColorsSettingsGroup() {
     <>
       <CollapsibleHeader
         icon={<FaPalette />}
-        label="Colors"
+        label={t("mapSettings.colors")}
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />
@@ -57,33 +57,35 @@ export function ColorsSettingsGroup() {
         <div className="space-y-6">
           {/* Display Options Section */}
           <section>
-            <SectionHeader title="Display Options" />
+            <SectionHeader title={t("mapSettings.displayOptions")} />
             <div className="flex flex-col gap-3 mb-2">
               <Checkbox
                 checked={!!colorHomeCountry}
                 onChange={setColorHomeCountry}
-                label="Show home country"
+                label={t("mapSettings.showHomeCountry")}
               />
               <Checkbox
                 checked={!!colorVisitedCountries}
                 onChange={setColorVisitedCountries}
-                label="Show visited countries"
+                label={t("mapSettings.showVisitedCountries")}
               />
               <Checkbox
                 checked={!!colorUpcomingVisits}
                 onChange={setColorUpcomingVisits}
-                label="Show upcoming new visits"
+                label={t("mapSettings.showUpcomingVisits")}
               />
             </div>
           </section>
 
           {/* Color Palettes Section */}
           <section>
-            <SectionHeader title="Color Palettes" />
+            <SectionHeader title={t("mapSettings.colorPalette")} />
             <div className="mb-2">
               {COLOR_MODES.map((mode) => (
                 <div key={mode.key} className="mb-4">
-                  <label className="font-medium block mb-1">{mode.label}</label>
+                  <label className="font-medium block mb-1">
+                    {t(mode.label)}
+                  </label>
                   <DropdownSelectInput
                     options={groupedPaletteOptions}
                     value={colorPalettes[mode.key]}

@@ -47,16 +47,16 @@ export function SortableFilterHeader<T>({
         tabIndex={-1}
       >
         <span className="flex items-center gap-1">
-          {Icon && <Icon className={`inline-block mr-2 ${iconClass}`} />}
+          {Icon && <Icon className={`inline-block me-2 ${iconClass}`} />}
           {label}
         </span>
         <span>
           {!isActive ? (
-            <FaSort className="inline ml-1" />
+            <FaSort className="inline ms-1" />
           ) : isAsc ? (
-            <FaSortUp className="inline ml-1" />
+            <FaSortUp className="inline ms-1" />
           ) : (
-            <FaSortDown className="inline ml-1" />
+            <FaSortDown className="inline ms-1" />
           )}
         </span>
       </button>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
@@ -7,13 +8,14 @@ import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";
 
 export function MapSettingsPanel() {
   const { showSettings, closePanel } = useUI();
+  const { t } = useTranslation("atlas");
 
   return (
     <Panel
       title={
         <>
           <ICONS.settings />
-          Map Settings
+          {t("mapSettings.title")}
         </>
       }
       show={showSettings}
@@ -22,8 +24,8 @@ export function MapSettingsPanel() {
       headerActions={
         <ActionButton
           onClick={closePanel}
-          ariaLabel="Close settings panel"
-          title="Close"
+          ariaLabel={t("common:actions.close")}
+          title={t("common:actions.close")}
           icon={<ICONS.close className="text-2xl" />}
           rounded
         />

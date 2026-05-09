@@ -62,47 +62,6 @@ export function getDashboardBreadcrumbs(
   return crumbs;
 }
 
-interface DashboardPageTitleArgs {
-  selectedPanel?: string;
-  selectedCountry?: { name?: string } | null;
-  selectedCurrency?: { name: string } | null;
-  selectedAchievement?: { name: string } | null;
-  filterName?: string;
-  baseTitle?: string;
-}
-
-export function getDashboardPageTitle({
-  selectedPanel,
-  selectedCountry,
-  selectedCurrency,
-  selectedAchievement,
-  filterName = "",
-  baseTitle = "",
-}: DashboardPageTitleArgs) {
-  const safePanel = selectedPanel ?? "";
-  const isCountryPanel =
-    safePanel.startsWith("countries") ||
-    ["countries", "countries/all", "exploration"].includes(safePanel);
-  const isCurrencyPanel = safePanel.startsWith("currencies");
-  const isAchievementPanel = safePanel.startsWith("achievements");
-
-  const isExploration = safePanel === "exploration";
-  if (isExploration) return "World Exploration | Atlaset";
-  if (isCountryPanel) {
-    if (selectedCountry && selectedCountry.name) {
-      return `${selectedCountry.name} | Atlaset`;
-    }
-    return `${filterName} | Atlaset`;
-  }
-  if (isCurrencyPanel && selectedCurrency && selectedCurrency.name) {
-    return `${selectedCurrency.name} | Atlaset`;
-  }
-  if (isAchievementPanel && selectedAchievement && selectedAchievement.name) {
-    return `${selectedAchievement.name} | Atlaset`;
-  }
-  return `${baseTitle} | Atlaset`;
-}
-
 // Helper to safely extract name from objects that may be null or have missing name
 function safeName(
   obj: { name?: string } | null | undefined,
@@ -118,65 +77,25 @@ function safeName(
 export function getDashboardMeta({
   selectedPanel,
   selectedCountry,
-  routeSelectedRegion,
-  routeSelectedSubregion,
-  currentPanel,
   selectedRegion,
   selectedSubregion,
   selectedCurrency,
   selectedAchievement,
 }: {
   selectedPanel: string | undefined;
-  selectedCountry: { name?: string } | null | undefined;
-  routeSelectedRegion: string | null | undefined;
-  routeSelectedSubregion: string | null | undefined;
+  selectedCountry: { name?: string } | null | undefined;  
   currentPanel: { title: string } | undefined;
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
   selectedCurrency: { name: string } | null | undefined;
   selectedAchievement: { name: string } | null | undefined;
 }) {
-  let filterName = "All Countries";
-  if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
-    filterName = routeSelectedSubregion;
-  } else if (routeSelectedRegion && routeSelectedRegion !== "all") {
-    filterName = routeSelectedRegion;
-  }
-  const baseTitle = currentPanel ? currentPanel.title : "Dashboard";
   const safePanel = selectedPanel ?? "";
   const safeRegion = selectedRegion ?? null;
   const safeSubregion = selectedSubregion ?? null;
   const safeCountry = safeName(selectedCountry);
   const safeCurrency = safeName(selectedCurrency);
   const safeAchievement = safeName(selectedAchievement);
-
-  // Determine page title based on panel and selection
-  let pageTitle = baseTitle + " | Atlaset";
-  const isCountryPanel =
-    safePanel.startsWith("countries") ||
-    ["countries", "countries/all", "exploration"].includes(safePanel);
-  const isCurrencyPanel = safePanel.startsWith("currencies");
-  const isAchievementPanel = safePanel.startsWith("achievements");
-
-  switch (true) {
-    case safePanel === "exploration":
-      pageTitle = "World Exploration | Atlaset";
-      break;
-    case isCountryPanel && !!safeCountry:
-      pageTitle = `${safeCountry.name} | Atlaset`;
-      break;
-    case isCurrencyPanel && !!safeCurrency:
-      pageTitle = `${safeCurrency.name} | Atlaset`;
-      break;
-    case isAchievementPanel && !!safeAchievement:
-      pageTitle = `${safeAchievement.name} | Atlaset`;
-      break;
-    case isCountryPanel:
-      pageTitle = `${filterName} | Atlaset`;
-      break;
-    default:
-      pageTitle = `${baseTitle} | Atlaset`;
-  }
 
   const breadcrumbs = getDashboardBreadcrumbs(
     safePanel,
@@ -186,5 +105,5 @@ export function getDashboardMeta({
     safeCurrency,
     safeAchievement,
   );
-  return { pageTitle, breadcrumbs };
+  return { breadcrumbs };
 }

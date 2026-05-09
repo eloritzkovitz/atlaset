@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SegmentedToggle } from "@components";
 import { TripsStats } from "./TripsStats";
 import { TripHistory } from "./TripHistory";
@@ -15,6 +16,7 @@ const VIEWS = [
 type ViewType = (typeof VIEWS)[number]["value"];
 
 export function StatisticsGrid() {
+  const { t } = useTranslation("dashboard");
   const [view, setView] = useState<ViewType>("overview");
 
   return (
@@ -22,7 +24,10 @@ export function StatisticsGrid() {
       <SegmentedToggle
         value={view}
         onChange={setView}
-        options={VIEWS.map((v) => ({ value: v.value, label: v.label }))}
+        options={VIEWS.map((v) => ({
+          value: v.value,
+          label: t(`statistics.views.${v.value}`, { defaultValue: v.label }),
+        }))}
         className="mb-4 mt-2"
       />
       <div>

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { FaChevronLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import {
   Branding,
@@ -8,6 +7,7 @@ import {
   MenuButton,
   Panel,
   SubmenuSection,
+  DirectionalIcon,
 } from "@components";
 import { useScreenSize } from "@hooks";
 import { DOCS_GROUPS } from "../constants/docsMenu";
@@ -58,13 +58,13 @@ export function DocsPanelMenu({
         </div>
       }
       width={340}
-      className="!left-0"
+      className="!start-0"
       onHide={onClose}
     >
       {selectedPanel && (
         <div className="flex justify-center mb-2 mt-2">
           <MenuButton
-            icon={<FaChevronLeft />}
+            icon={<DirectionalIcon variant="chevron" direction="prev" />}
             className="w-full"
             onClick={() => navigate("/docs")}
             ariaLabel="Return to docs home"

@@ -8,6 +8,7 @@ export { SoundSettingsSection } from "./components/sound/SoundSettingsSection";
 
 // Hooks
 export { useCountryColors } from "./hooks/useCountryColors";
+export { useLanguage, isRtl } from "./hooks/useLanguage";
 export { useLayerColors } from "./hooks/useLayerColors";
 export { useTheme } from "./hooks/useTheme";
 export { useVisitColorRoles } from "./hooks/useVisitColorRoles";

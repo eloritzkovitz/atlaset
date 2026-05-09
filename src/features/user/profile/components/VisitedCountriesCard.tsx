@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Card, Tooltip } from "@components";
 import { CountryFlag, useCountryData } from "@features/countries";
 
@@ -9,6 +10,8 @@ export function VisitedCountriesCard({
   visitedCountryCodes,
 }: VisitedCountriesCardProps) {
   const { countries } = useCountryData();
+  const { t } = useTranslation("user");
+  
   const visitedCountries = countries
     .filter((c) => visitedCountryCodes.includes(c.isoCode))
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -16,10 +19,10 @@ export function VisitedCountriesCard({
   return (
     <Card className="mt-6">
       <h2 className="text-xl font-bold mb-8">
-        Visited Countries ({visitedCountries.length})
+        {t("profile.visitedCountries", { count: visitedCountries.length })}
       </h2>
       {visitedCountries.length === 0 ? (
-        <div className="text-muted">No countries visited yet.</div>
+        <div className="text-muted">{t("profile.noVisitedCountries")}</div>
       ) : (
         <ul className="grid grid-cols-2 md:grid-cols-10 gap-6">
           {visitedCountries.map((c) => (

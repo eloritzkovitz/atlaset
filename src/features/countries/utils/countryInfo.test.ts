@@ -81,7 +81,7 @@ describe("formatTimezones", () => {
     ]);
     const result = formatTimezones(["Europe/Berlin"]);
     expect(result).toBe("UTC+02:00");
-    expect(timezoneOffsets).toHaveBeenCalledWith("Europe/Berlin");
+    expect(timezoneOffsets).toHaveBeenCalledWith("Europe/Berlin", " (summer)");
   });
 
   it("returns two-line array when timezoneOffsets returns two offsets (DST)", () => {
@@ -100,7 +100,7 @@ describe("formatTimezones", () => {
     );
     const result = formatTimezones(["Europe/London", "UTC"]);
     expect(result).toBe("UTC+00:00");
-    expect(timezoneRangeLines).toHaveBeenCalledWith(["Europe/London", "UTC"]);
+    expect(timezoneRangeLines).toHaveBeenCalledWith(["Europe/London", "UTC"], " (summer)");
   });
 
   it("returns two-line array from timezoneRangeLines for multiple timezones", () => {

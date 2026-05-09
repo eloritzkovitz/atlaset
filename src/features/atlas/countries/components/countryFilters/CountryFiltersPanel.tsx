@@ -1,10 +1,19 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useCountryData, type GeoType, type SovereigntyStatus } from "@features/countries";
-import { getAllGeoTypes, getAllSovereigntyStatuses } from "@features/countries/utils/countryData";
+import {
+  useCountryData,
+  type GeoType,
+  type SovereigntyStatus,
+} from "@features/countries";
+import {
+  getAllGeoTypes,
+  getAllSovereigntyStatuses,
+} from "@features/countries/utils/countryData";
+import { useLanguage } from "@features/settings";
 import type { VisitedStatus } from "@features/visits";
 import { useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
@@ -59,6 +68,7 @@ export function CountryFiltersPanel({
 }: CountryFiltersPanelProps) {
   const { countries } = useCountryData();
   const { timelineMode } = useTimeline();
+  const { t } = useTranslation("atlas");
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
@@ -94,13 +104,14 @@ export function CountryFiltersPanel({
 
   // Responsive check
   const { isMobile } = useScreenSize();
+  const { isRtl } = useLanguage();
 
   return (
     <Panel
       title={
         <>
           <ICONS.filters />
-          Filters
+          {t("countries.filters.title")}
         </>
       }
       width={DEFAULT_PANEL_WIDTH}
@@ -110,15 +121,15 @@ export function CountryFiltersPanel({
         <>
           <ActionButton
             onClick={resetFilters}
-            ariaLabel="Reset all filters"
-            title="Reset filters"
+            ariaLabel={t("common:actions.resetFilters")}
+            title={t("common:actions.resetFilters")}
             icon={<ICONS.reset />}
             rounded
           />
           <ActionButton
             onClick={onHide}
-            ariaLabel="Close filters panel"
-            title="Close"
+            ariaLabel={t("common:actions.close")}
+            title={t("common:actions.close")}
             icon={<ICONS.close className="text-2xl" />}
             rounded
           />
@@ -127,10 +138,9 @@ export function CountryFiltersPanel({
       className={isMobile ? "panel-mobile-fullscreen" : ""}
       style={
         !isMobile
-          ? {
-              left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH,
-              zIndex: 39,
-            }
+          ? isRtl
+            ? { right: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
+            : { left: DEFAULT_PANEL_WIDTH + DEFAULT_SIDEBAR_WIDTH, zIndex: 39 }
           : undefined
       }
     >
@@ -148,7 +158,7 @@ export function CountryFiltersPanel({
           setSelectedSovereignty={setSelectedSovereignty}
           sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
-          setSelectedVisited={setSelectedVisited}          
+          setSelectedVisited={setSelectedVisited}
           visitedOnly={visitedOnly}
           subregionOptions={subregionOptions}
           geoTypeOptions={geoTypeOptions}

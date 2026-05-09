@@ -2,6 +2,7 @@
  * Utility functions for handling country information display and formatting.
  */
 
+import type { Language } from "@types";
 import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
 import type { Currency } from "../types";
 
@@ -24,9 +25,24 @@ export function getCurrencyDisplay(
  * @param languages - An array of language names.
  * @returns A comma-separated string of languages or "None" if empty.
  */
-export function getLanguagesDisplay(languages?: string[]) {
+export function getLanguagesDisplay(
+  languages?: string[],
+  languagesMap?: Record<string, Language>,
+) {
   if (!languages || languages.length === 0) return "None";
-  return languages.join(", ");
+  const collator = new Intl.Collator(undefined, {
+    sensitivity: "base",
+    numeric: true,
+  });
+
+  const items = languages.map((l) => ({
+    original: l,
+    display: languagesMap?.[l]?.name ?? l,
+  }));
+
+  items.sort((a, b) => collator.compare(a.display, b.display));
+
+  return items.map((it) => it.display).join(", ");
 }
 
 /**
@@ -34,15 +50,21 @@ export function getLanguagesDisplay(languages?: string[]) {
  * @param tzs - An array of timezone identifiers.
  * @returns A formatted string for a single timezone, or an array of two strings if showing a range, or "—" if no timezones.
  */
-export function formatTimezones(tzs?: string[]): string | string[] {
+export function formatTimezones(
+  tzs?: string[],
+  t?: (key: string) => string,
+): string | string[] {
+  const summerLabel = t
+    ? ` (${t("countries.details.overview.summer")})`
+    : " (summer)";
   if (!tzs || tzs.length === 0) return "—";
   if (tzs.length === 1) {
-    const offs = timezoneOffsets(tzs[0]);
+    const offs = timezoneOffsets(tzs[0], summerLabel);
     if (offs.length === 1) return offs[0];
     return [offs[0], offs[1]];
   }
 
-  const lines = timezoneRangeLines(tzs);
+  const lines = timezoneRangeLines(tzs, summerLabel);
   if (lines.length === 1) return lines[0];
   return [lines[0], lines[1]];
 }

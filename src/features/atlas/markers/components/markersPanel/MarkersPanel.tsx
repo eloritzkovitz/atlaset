@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
@@ -77,6 +78,7 @@ export function MarkersPanel({
   };
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useTranslation("atlas");
 
   return (
     <>
@@ -84,7 +86,7 @@ export function MarkersPanel({
         title={
           <>
             <ICONS.markers />
-            Markers
+            {t("markers.title")}
           </>
         }
         show={showMarkers}
@@ -96,15 +98,15 @@ export function MarkersPanel({
               <>
                 <ActionButton
                   onClick={onAddMarker}
-                  ariaLabel="Add Marker"
-                  title="Add Marker"
+                  ariaLabel={t("markers.add")}
+                  title={t("markers.add")}
                   icon={<ICONS.add />}
                   rounded
                 />
                 <ActionButton
                   onClick={() => fileInputRef.current?.click()}
-                  ariaLabel="Import Markers"
-                  title="Import Markers"
+                  ariaLabel={t("markers.import")}
+                  title={t("markers.import")}
                   icon={<ICONS.importFile />}
                   rounded
                 />
@@ -124,8 +126,8 @@ export function MarkersPanel({
                 />
                 <ActionButton
                   onClick={() => exportMarkersToFile(effectiveMarkers)}
-                  ariaLabel="Export Markers"
-                  title="Export Markers"
+                  ariaLabel={t("markers.export")}
+                  title={t("markers.export")}
                   icon={<ICONS.exportFile />}
                   rounded
                 />
@@ -133,8 +135,8 @@ export function MarkersPanel({
             )}
             <ActionButton
               onClick={closePanel}
-              ariaLabel="Close markers panel"
-              title="Close"
+              ariaLabel={t("markers.close")}
+              title={t("common:actions.close")}
               icon={<ICONS.close className="text-2xl" />}
               rounded
             />
@@ -142,7 +144,7 @@ export function MarkersPanel({
         }
       >
         {effectiveMarkers.length === 0 ? (
-          <EmptyListMessage message="No markers yet." />
+          <EmptyListMessage message={t("markers.empty")} />
         ) : (
           <div className="mt-4">
             <ul className="space-y-2">

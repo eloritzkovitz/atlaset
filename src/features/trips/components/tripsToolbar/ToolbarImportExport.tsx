@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
-import { FaFileImport, FaFileExport, FaCheck } from "react-icons/fa6";
+import { useTranslation, Trans } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
+import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import { TripsExportMenu } from "./TripsExportMenu";
@@ -12,6 +13,7 @@ interface ToolbarImportExportProps {
 }
 
 export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
+  const { t } = useTranslation("trips");
   const { addTrip } = useTrips();
   const exportBtnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -39,6 +41,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
     menuRef,
     16,
     "right",
+    "adjacent",
     false,
   );
 
@@ -51,28 +54,28 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
     <>
       <ActionButton
         onClick={() => setShowImportNotice(true)}
-        ariaLabel="Import"
-        title="Import Trips"
-        icon={<FaFileImport />}
+        ariaLabel={t("table.toolbar.importExport.importTitle")}
+        title={t("table.toolbar.importExport.importTitle")}
+        icon={<ICONS.importFile />}
         variant="toggle"
       />
       {showImportNotice && (
         <ConfirmModal
-          title="Import trips?"
+          title={t("table.toolbar.importExport.importConfirmTitle")}
           message={
-            <>
+            <Trans i18nKey="table.toolbar.importExport.importConfirmMessage" ns="trips">
               Importing will <b>add</b> trips to your current list. Existing
               trips will not be overwritten.
-            </>
+            </Trans>
           }
           onConfirm={() => {
             setShowImportNotice(false);
             setTimeout(triggerFileInput, 0);
           }}
           onCancel={() => setShowImportNotice(false)}
-          submitLabel="Continue"
-          cancelLabel="Cancel"
-          submitIcon={<FaCheck className="inline" />}
+          submitLabel={t("table.toolbar.importExport.continue")}
+          cancelLabel={t("table.toolbar.importExport.cancel")}
+          submitIcon={<ICONS.selected className="inline" />}
         />
       )}
       <input
@@ -85,9 +88,9 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
       <div ref={exportBtnRef}>
         <ActionButton
           onClick={() => setShowExportMenu((v) => !v)}
-          ariaLabel="Export"
-          title="Export Trips"
-          icon={<FaFileExport />}
+          ariaLabel={t("table.toolbar.importExport.exportTitle")}
+          title={t("table.toolbar.importExport.exportTitle")}
+          icon={<ICONS.exportFile />}
           variant="toggle"
         />
       </div>

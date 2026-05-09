@@ -3,6 +3,7 @@ import type { ColorMode } from "@features/atlas/map";
 /** Account-related settings. */
 export type AccountSettings = {
   homeCountry: string;
+  language: string;
 };
 
 /** Sound-related settings. */

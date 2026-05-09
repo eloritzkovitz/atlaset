@@ -1,0 +1,150 @@
+{
+  "menu": {
+    "title": "Dashboard",
+    "countries": "Countries",
+    "allCountries": "All Countries",
+    "currencyExchange": "Currency Exchange",
+    "overview": "Overview",
+    "exploration": "Exploration",
+    "currencies": "Currencies",
+    "achievements": "Achievements",
+    "statistics": "Statistics"
+  },
+  "overview": {
+    "goToProfile": "Go to your profile",
+    "user": "User",
+    "welcomeBack": "Welcome back!",
+    "stats": {
+      "heading": "{{name}}'s Overview",
+      "countriesExplored": "Countries Explored",
+      "achievements": "Achievements",
+      "statistics": "Statistics",
+      "view": "View"
+    }
+  },
+  "exploration": {
+    "worldTitle": "World Exploration",
+    "allTitle": "All Countries",
+    "showAllCountries": "Show all countries",
+    "ofCountriesVisited": "of countries visited",
+    "showVisitedOnly": "Show Visited Only",
+    "showTranscontinental": "Show transcontinental countries",
+    "hideTranscontinental": "Hide transcontinental countries",
+    "switchToList": "Switch to List View",
+    "switchToGrid": "Switch to Grid View",
+    "resetFilters": "Reset Filters"
+  },
+  "currencies": {
+    "searchPlaceholder": "Search by name or code",
+    "empty": "Currency not found.",
+    "viewExchange": "View currency exchange",
+    "exchangeHeader": "1 {{currency}} equals",
+    "currencyInfo": {
+      "usingCurrency": "Countries using {{code}}",
+      "dependenciesUsingCurrency": "Dependencies and territories using {{code}}"
+    },
+    "currencyExchange": {
+      "rateValue": "{{rate}} {{currency}}",
+      "from": "From",
+      "to": "To",
+      "input": {
+        "amountToConvert": "Amount to convert",
+        "convertedAmount": "Converted amount"
+      },
+      "select": {
+        "from": "From currency",
+        "to": "To currency"
+      },
+      "swap": {
+        "ariaLabel": "Swap currencies",
+        "title": "Swap"
+      },
+      "convert": "Convert",
+      "converting": "Converting...",
+      "errorPrefix": "Error:"
+    }
+  },
+  "statistics": {
+    "views": {
+      "overview": "Overview",
+      "history": "History",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "overview": {
+      "title": "Trip Overview",
+      "subtitle": "Summary of all your recorded trips",
+      "totalTrips": "Total Trips",
+      "pieToggle": {
+        "type": "Type",
+        "status": "Status"
+      },
+      "breakdown": {
+        "title": "Trip Breakdown",
+        "subtitle": {
+          "type": "Distribution of trips (local and abroad)",
+          "status": "Distribution of trip statuses"
+        }
+      },
+      "loadingChart": "Loading chart...",
+      "longest": {
+        "title": "Longest trip",
+        "subtitle": "Your trip with the most days abroad"
+      },
+      "shortest": {
+        "title": "Shortest trip",
+        "subtitle": "Your shortest abroad trip"
+      },
+      "average": {
+        "title": "Average trip duration",
+        "subtitle": "Average days per trip"
+      },
+      "totalDays": {
+        "title": "Total days traveling",
+        "subtitle": "Sum of all trip durations"
+      },
+      "days": "days"
+    },
+    "history": {
+      "mostVisited": {
+        "title": "Most visited countries",
+        "subtitle": "Based on completed abroad trips"
+      },
+      "recent": {
+        "title": "Recent trips",
+        "subtitle": "Your last 3 recorded trips"
+      },
+      "first": {
+        "title": "First trip",
+        "subtitle": "Your earliest recorded trip"
+      },
+      "last": {
+        "title": "Last trip",
+        "subtitle": "Your most recent trip"
+      }
+    },
+    "months": {
+      "title": "Trips by Month",
+      "noData": "No trip data available.",
+      "columns": {
+        "name": "Month",
+        "total": "Total",
+        "percentage": "Percentage"
+      },
+      "mostPopular": {
+        "title": "Most Popular Month"
+      },
+      "leastPopular": {
+        "title": "Least Popular Month"
+      },
+      "breakdownTitle": "Monthly Trip Breakdown",
+      "trips": "trips"
+    },
+    "year": {
+      "title": "Trips by Year",
+      "breakdownTitle": "Yearly Trip Breakdown",
+      "toggle": { "both": "Both" },
+      "columns": { "year": "Year", "total": "Total" }
+    }
+  }
+}

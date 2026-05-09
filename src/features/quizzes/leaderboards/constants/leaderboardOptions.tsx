@@ -34,11 +34,11 @@ export function renderOption(opt: {
   return (
     <span className="flex items-center">
       {Icon ? (
-        <span className="mr-2">
+        <span className="me-2">
           <Icon size={18} />
         </span>
       ) : (
-        <span className="mr-2">
+        <span className="me-2">
           <ICONS.quizzes size={18} />
         </span>
       )}

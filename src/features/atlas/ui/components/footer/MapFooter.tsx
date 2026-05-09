@@ -17,16 +17,16 @@ export const MapFooter: React.FC<MapFooterProps> = ({
 }) => {
   return (
     <footer
-      className="bg-gray-950/50 rounded-t-lg fixed right-6 bottom-0 z-50 text-muted px-4 py-0.5 text-xs min-w-[220px] select-none flex items-center justify-between gap-4"
+      className="bg-gray-950/50 rounded-t-lg fixed end-6 bottom-0 z-50 text-muted px-4 py-0.5 text-xs min-w-[220px] select-none flex items-center justify-between gap-4"
       aria-label="Map footer"
     >
       <div className="flex items-center gap-2">
         <BrandCopyright className="text-xs" logoSize={16} />
-        <GitHubButton className="ml-3 !text-muted" />
+        <GitHubButton className="ms-3 !text-muted" />
       </div>
       <span>
         <Tooltip content={`Zoom: x${zoom.toFixed(1)}`} position="top">
-          <span className="mr-2">{`x${zoom.toFixed(1)}`}</span>
+          <span className="me-2">{`x${zoom.toFixed(1)}`}</span>
         </Tooltip>
         {coords ? (
           <Tooltip content={`Latitude, Longitude`} position="top">

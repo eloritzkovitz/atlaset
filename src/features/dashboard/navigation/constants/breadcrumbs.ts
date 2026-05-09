@@ -3,37 +3,49 @@ import type { Crumb } from "@components";
 // Predefined breadcrumbs for dashboard panels
 export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
   overview: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Overview", key: "overview" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.overview", label: "Overview", key: "overview" },
   ],
   exploration: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Exploration", key: "exploration" },
-  ],  
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.exploration", label: "Exploration", key: "exploration" },
+  ],
   countries: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Countries", key: "countries" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.countries", label: "Countries", key: "countries" },
   ],
   "countries/all": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Countries", key: "countries/all" },
-    { label: "All Countries" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.countries", label: "Countries", key: "countries/all" },
+    {
+      labelKey: "menu.allCountries",
+      label: "All Countries",
+      key: "countries/all",
+    },
   ],
   currencies: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Currencies", key: "currencies" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.currencies", label: "Currencies", key: "currencies" },
   ],
   "currencies/exchange": [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Currencies", key: "currencies" },
-    { label: "Currency Exchange", key: "currencies/exchange" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.currencies", label: "Currencies", key: "currencies" },
+    {
+      labelKey: "menu.currencyExchange",
+      label: "Currency Exchange",
+      key: "currencies/exchange",
+    },
   ],
   achievements: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Achievements", key: "achievements" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    {
+      labelKey: "menu.achievements",
+      label: "Achievements",
+      key: "achievements",
+    },
   ],
   statistics: [
-    { label: "Dashboard", key: "dashboard" },
-    { label: "Statistics", key: "statistics" },
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.statistics", label: "Statistics", key: "statistics" },
   ],
 };

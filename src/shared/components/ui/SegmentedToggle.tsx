@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useLanguage } from "@features/settings";
 import { useAutoScrollFocus } from "@hooks";
 
 export interface SegmentedToggleOption<T extends string> {
@@ -27,7 +28,8 @@ export function SegmentedToggle<T extends string>({
   disabled = false,
   autoFocusOnSelect = true,
 }: SegmentedToggleProps<T>) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { isRtl } = useLanguage();
+  const containerRef = useRef<HTMLDivElement | null>(null);  
 
   // Auto-scroll and focus the selected option when it changes
   useAutoScrollFocus(containerRef, `[data-seg-value="${value}"]`, {
@@ -52,10 +54,27 @@ export function SegmentedToggle<T extends string>({
             : "hover:bg-surface-hover"
           : "";
 
+        const labelSpan = (
+          <span className="align-middle" dir="auto">
+            {opt.label}
+          </span>
+        );
+        const countSpan =
+          typeof opt.count === "number" ? (
+            <span
+              dir="ltr"
+              style={{ unicodeBidi: "isolate" }}
+              className="text-xs text-muted align-middle"
+            >
+              {opt.count}
+            </span>
+          ) : null;
+
         return (
           <button
             key={opt.value}
             data-seg-value={opt.value}
+            data-rtl={isRtl}
             aria-pressed={isSelected}
             className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
               isSelected
@@ -65,12 +84,22 @@ export function SegmentedToggle<T extends string>({
             onClick={() => onChange(opt.value)}
             disabled={disabled}
           >
-            {opt.label}
-            {typeof opt.count === "number" && (
-              <span className="ml-1 text-xs text-muted align-middle">
-                {opt.count}
-              </span>
-            )}
+            <span
+              className="inline-flex items-center gap-1"
+              dir={isRtl ? "ltr" : undefined}
+            >
+              {isRtl ? (
+                <>
+                  {countSpan}
+                  {labelSpan}
+                </>
+              ) : (
+                <>
+                  {labelSpan}
+                  {countSpan}
+                </>
+              )}
+            </span>
           </button>
         );
       })}

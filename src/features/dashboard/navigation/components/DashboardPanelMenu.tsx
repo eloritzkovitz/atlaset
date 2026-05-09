@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { DashboardIcon, mapMenuItems, SidePanelMenu } from "@components";
 import { DASHBOARD_MENU } from "../constants/dashboardMenu";
 
@@ -14,14 +15,21 @@ export function DashboardPanelMenu({
   open,
   onClose,
 }: DashboardPanelMenuProps) {
-  const menuItems = mapMenuItems(DASHBOARD_MENU);
+  const { t } = useTranslation("dashboard");
+
+  const menuItems = mapMenuItems(
+    DASHBOARD_MENU.map((it) => ({
+      ...it,
+      label: t(`menu.${it.key}`, { defaultValue: it.label }),
+    })),
+  );
 
   return (
     <SidePanelMenu
       title={
         <>
-          <DashboardIcon className="mr-1" />
-          Dashboard
+          <DashboardIcon className="me-1" />
+          {t("menu.title", { defaultValue: "Dashboard" })}
         </>
       }
       menuItems={menuItems}

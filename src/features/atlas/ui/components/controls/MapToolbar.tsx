@@ -1,7 +1,9 @@
 import { useState } from "react";
-import { FaChevronLeft, FaChevronRight, FaChevronUp } from "react-icons/fa6";
-import { ActionButton, ActionsToolbar } from "@components";
+import { FaChevronUp } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
+import { ActionButton, ActionsToolbar, DirectionalIcon } from "@components";
 import { useUI } from "@contexts/UIContext";
+import { useLanguage } from "@features/settings";
 import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
@@ -21,12 +23,15 @@ export function MapToolbar({
   isEmbed,
   children,
 }: MapToolbarProps) {
+  const { t } = useTranslation("atlas");
+
   // UI state
   const { uiVisible } = useUI();
   const [visible, setVisible] = useState(true);
 
   // Detect mobile
   const { isMobile } = useScreenSize();
+  const { isRtl } = useLanguage();
 
   // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,9 +48,13 @@ export function MapToolbar({
       <>
         {/* Floating FAB */}
         <button
-          className="fixed bottom-20 right-4 z-50 bg-action rounded-full p-4 shadow"
+          className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4 shadow"
           onClick={() => setMenuOpen((open) => !open)}
-          aria-label={menuOpen ? "Close map actions" : "Open map actions"}
+          aria-label={
+            menuOpen
+              ? t("toolbar.closeMapActions")
+              : t("toolbar.openMapActions")
+          }
         >
           <FaChevronUp
             className={`text-2xl transition-transform ${
@@ -56,7 +65,7 @@ export function MapToolbar({
         {/* Popover/modal menu */}
         {menuOpen && (
           <div
-            className="fixed right-4 z-[10020] mb-2"
+            className="fixed end-4 z-[10020] mb-2"
             style={{ bottom: "135px" }}
           >
             <div
@@ -75,7 +84,7 @@ export function MapToolbar({
   return (
     <div
       className={`toolbar-container ${
-        isEmbed ? "!right-2 !bottom-0" : "right-0 md:right-4 bottom-8"
+        isEmbed ? "!end-2 !bottom-0" : "end-0 md:end-4 bottom-8"
       } ${
         uiVisible ? "toolbar-container-visible" : "toolbar-container-hidden"
       }`}
@@ -90,20 +99,30 @@ export function MapToolbar({
           {/* Toggle button */}
           <ActionButton
             onClick={() => setVisible((v) => !v)}
-            ariaLabel={visible ? "Hide toolbar" : "Show toolbar"}
-            title={visible ? "Hide toolbar" : "Show toolbar"}
+            ariaLabel={
+              visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
+            }
+            title={
+              visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
+            }
             titlePosition="left"
             variant="action"
             className={`${!visible ? "opacity-70" : ""}`}
-            icon={visible ? <FaChevronRight /> : <FaChevronLeft />}
+            icon={
+              visible ? (
+                <DirectionalIcon direction="next" />
+              ) : (
+                <DirectionalIcon direction="prev" />
+              )
+            }
             rounded
           />
           {/* Actions: horizontal slide */}
           <ActionsToolbar
-            className={`right-10 md:right-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
+            className={`end-10 md:end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
               visible
                 ? "opacity-100 pointer-events-auto translate-x-0"
-                : "opacity-0 pointer-events-none translate-x-10"
+                : `opacity-0 pointer-events-none ${isRtl ? "-translate-x-10" : "translate-x-10"}`
             }`}
           >
             <MapToolbarActions actions={actions} isDesktop={true}>

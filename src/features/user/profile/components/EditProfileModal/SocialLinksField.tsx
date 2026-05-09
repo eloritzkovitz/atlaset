@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { FormField, InputBox } from "@components";
 import { getPlatformIcon, platformOrder } from "../../config/socialLinks";
 import type { SocialPlatform } from "../../../types";
@@ -7,9 +8,14 @@ interface SocialLinksFieldProps {
   onChange: (platform: SocialPlatform, value: string) => void;
 }
 
-export function SocialLinksField({ socialLinks, onChange }: SocialLinksFieldProps) {
+export function SocialLinksField({
+  socialLinks,
+  onChange,
+}: SocialLinksFieldProps) {
+  const { t } = useTranslation("user");
+
   return (
-    <FormField label="Social Links">
+    <FormField label={t("profile.editModal.socialLinks")}>
       <div className="flex flex-col gap-2">
         {platformOrder.map((platform) => (
           <div key={platform} className="flex items-center gap-2">

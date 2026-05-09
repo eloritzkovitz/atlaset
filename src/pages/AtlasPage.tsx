@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
@@ -23,7 +24,8 @@ export default function AtlasPage() {
   const svgRef = useRef<SVGSVGElement>(null);
 
   // Set page title
-  usePageTitle("Atlaset");
+  const { t } = useTranslation("common");
+  usePageTitle(t("appName", "Atlaset"));
 
   // Set map mode based on URL params
   useMapMode();

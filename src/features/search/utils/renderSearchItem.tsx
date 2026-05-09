@@ -1,5 +1,6 @@
 import type { User } from "firebase/auth";
 import { ICONS } from "@constants/icons";
+import i18n from "i18next";
 import {
   CountryFlag,
   defaultRegionIcon,
@@ -31,13 +32,18 @@ function getCountryLabel(item: Country, countries: Country[]) {
     item.sovereignState || "Unknown",
     countries,
   );
+  const t = (k: string, vars?: Record<string, any>) => i18n.t(k, vars);
   switch (item.sovereigntyStatus) {
-    case "Dependency":
-      return sovereignName ? `Dependency of ${sovereignName}` : "Country";
-    case "Overseas Region":
-      return sovereignName ? `Overseas region of ${sovereignName}` : "Country";
+    case "dependency":
+      return sovereignName
+        ? t("countries:labels.dependency_of", { sovereign: sovereignName })
+        : i18n.t("countries:labels.country", { defaultValue: "Country" });
+    case "overseas_region":
+      return sovereignName
+        ? t("countries:labels.overseas_region_of", { sovereign: sovereignName })
+        : i18n.t("countries:labels.country", { defaultValue: "Country" });
     default:
-      return "Country";
+      return i18n.t("countries:labels.country", { defaultValue: "Country" });
   }
 }
 
@@ -55,18 +61,37 @@ function renderAreaItem(
 ) {
   const icon = regionIcons[item.region] || defaultRegionIcon;
   const isSubregion = item.type === "subregion";
+
+  // Get localized region name for display and label construction
+  const regionKey = item.region;
+  const localizedRegion = i18n.t(`countries:regions.${regionKey}`, {
+    defaultValue: regionKey,
+  }) as string;
+
+  const localizedSubregion = isSubregion
+    ? (i18n.t(`countries:subregions.${regionKey}.${item.subregion}`, {
+        defaultValue: item.subregion,
+      }) as string)
+    : undefined;
+
   return (
     <SearchItem
-      key={isSubregion ? `${item.region}-${item.subregion}` : item.region}
+      key={isSubregion ? `${regionKey}-${item.subregion}` : regionKey}
       item={item}
-      displayName={isSubregion ? item.subregion : item.region}
-      label={isSubregion ? `Subregion in ${item.region}` : "Region"}
+      displayName={
+        isSubregion ? (localizedSubregion ?? item.subregion) : localizedRegion
+      }
+      label={
+        isSubregion
+          ? i18n.t("countries:labels.subregion_in", { region: localizedRegion })
+          : i18n.t("countries:labels.region", { defaultValue: "Region" })
+      }
       icon={icon}
       onClick={() => {
         navigate(
           isSubregion
-            ? `/dashboard/countries/${item.region}/${item.subregion}`
-            : `/dashboard/countries/${item.region}`,
+            ? `/dashboard/countries/${regionKey}/${item.subregion}`
+            : `/dashboard/countries/${regionKey}`,
         );
         setDropdownOpen(false);
       }}
@@ -134,7 +159,7 @@ export function renderSearchItem(
           key={item.code}
           item={item}
           displayName={`${item.name} (${item.code})`}
-          label="Currency"
+          label={i18n.t("countries:labels.currency")}
           icon={<ICONS.currencies className="2xl" />}
           onClick={() => {
             navigate(`/dashboard/currencies/${item.code}`);

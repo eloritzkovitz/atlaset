@@ -8,7 +8,7 @@ export function PublicFooter({ children }: { children?: React.ReactNode }) {
         <BrandCopyright showLogo={true} />
         <AppLinks
           className="!text-muted"
-          linkClassName="ml-3 !text-muted hover:text-muted/70"
+          linkClassName="ms-3 !text-muted hover:text-muted/70"
         />
       </div>
     </footer>

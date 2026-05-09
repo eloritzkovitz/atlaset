@@ -25,7 +25,7 @@ export function HeroSection() {
         </div>
         {/* Right: Hero image */}
         <div className="flex-1 flex items-center justify-center">
-          <div className="flex-grow flex-shrink-0 basis-[900px] w-full max-w-none md:w-[600px] lg:w-[800px] xl:w-[1000px] rounded-2xl flex items-center justify-center overflow-visible mr-8 lg:mr-16 xl:mr-24">
+          <div className="flex-grow flex-shrink-0 basis-[900px] w-full max-w-none md:w-[600px] lg:w-[800px] xl:w-[1000px] rounded-2xl flex items-center justify-center overflow-visible me-8 lg:me-16 xl:me-24">
             <img
               src="/assets/hero.svg"
               alt="Atlaset banner"
