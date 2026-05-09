@@ -32,7 +32,7 @@ export function useSearch(searchTerm: string) {
     friendIds,
   );
   const { countries, currencies, allRegions } = useCountryData();
-  const { i18n } = useTranslation("countries");
+  const { t } = useTranslation("countries");
 
   // Combine and rank results whenever search term or source data changes
   useEffect(() => {
@@ -73,7 +73,7 @@ export function useSearch(searchTerm: string) {
     // Regions
     const mappedRegions = rankAndMap(
       allRegions || [],
-      (r) => String(i18n.t(`countries:regions.${r}`, { defaultValue: r })),
+      (r) => String(t(`countries:regions.${r}`, { defaultValue: r })),
       searchTerm,
       (region) => ({ type: "region" as const, region }),
     );
@@ -86,7 +86,7 @@ export function useSearch(searchTerm: string) {
           subregions.map((subregion) => ({ region, subregion })),
           (s) =>
             String(
-              i18n.t(`countries:subregions.${region}.${s.subregion}`, {
+              t(`countries:subregions.${region}.${s.subregion}`, {
                 defaultValue: s.subregion,
               }),
             ),
@@ -108,7 +108,7 @@ export function useSearch(searchTerm: string) {
       ...mappedSubregions,
     ]);
     setLoading(false);
-  }, [searchTerm, userResults, countries, currencies, allRegions]);
+  }, [searchTerm, userResults, countries, currencies, allRegions, t]);
 
   return { results, loading };
 }
