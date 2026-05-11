@@ -20,6 +20,7 @@ import DocsPage from "./pages/DocsPage";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import PrivacyPolicyPage from "./pages/PrivacyPolicyPage";
 import ProfilePage from "./pages/ProfilePage";
 import QuizzesPage from "./pages/QuizzesPage";
 import SearchPage from "./pages/SearchPage";
@@ -76,6 +77,14 @@ function App() {
                 element={
                   <PublicLayout>
                     <AboutPage />
+                  </PublicLayout>
+                }
+              />
+              <Route
+                path="/privacy"
+                element={
+                  <PublicLayout>
+                    <PrivacyPolicyPage />
                   </PublicLayout>
                 }
               />

@@ -20,6 +20,7 @@ export function AppLinks({
   const links = [
     { href: "/about", label: "About" },
     { href: "/changelog", label: "Changelog" },
+    { href: "/privacy", label: "Privacy Policy" },
     showDocs ? { href: "/docs", label: "Docs" } : undefined,
     showGitHub ? (
       <GitHubButton key="github" className={linkClassName} />
