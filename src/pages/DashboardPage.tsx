@@ -24,14 +24,8 @@ import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
-  const {
-    countries,
-    currencies,
-    loading,
-    error,
-    subregionsByRegion,
-    subregionToRegion,
-  } = useCountryData();
+  const { countries, currencies, loading, error, subregionToRegion } =
+    useCountryData();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
@@ -72,7 +66,7 @@ export default function DashboardPage() {
   // Build dashboard meta (title and breadcrumbs)
   const { breadcrumbs } = getDashboardMeta({
     selectedPanel,
-    selectedCountry,    
+    selectedCountry,
     currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
@@ -89,12 +83,7 @@ export default function DashboardPage() {
     const raw = crumb.label ?? crumb.key ?? "";
     if (crumb.labelKey) return tDashboard(crumb.labelKey);
     if (crumb.key === "region")
-      return translateRegionLabel(
-        raw,
-        tCountries,
-        tDashboard,
-        subregionsByRegion,
-      );
+      return translateRegionLabel(raw, tCountries, tDashboard);
     if (crumb.key === "subregion")
       return translateSubregionLabel(
         raw,
@@ -141,7 +130,6 @@ export default function DashboardPage() {
           routeSelectedRegion,
           tCountries,
           tDashboard,
-          subregionsByRegion,
         );
       }
       // fallback to panel label

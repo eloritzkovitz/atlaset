@@ -6,6 +6,7 @@ import {
   Separator,
   ActionButton,
   PanelHeader,
+  MenuButton,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { LANGUAGES } from "@constants/languages";
@@ -21,13 +22,14 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
   const { current, change } = useLanguage();
   const [query, setQuery] = useState("");
 
+  // Prepare the list of languages with localized names
   const languages = useMemo(() => {
     return LANGUAGES.slice()
       .sort((a, b) => (a.priority || 999) - (b.priority || 999))
       .map((l) => ({
         code: l.code,
         native: l.nativeName,
-        localized: t(`languages.${l.code}`),
+        localized: t(`languages:${l.code}`),
       }));
   }, [t]);
 
@@ -85,23 +87,25 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
           onChange={setQuery}
         />
         <Separator />
-        <div className="max-h-64 overflow-auto">
+        <div className="max-h-64 overflow-auto mt-2">
           {filtered.map((l) => (
-            <button
+            <MenuButton
               key={l.code}
-              className={`w-full text-left py-2 px-3 hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-between ${
+              icon={null}
+              onClick={() => handleSelect(l.code)}
+              ariaLabel={t("menu.language.selectAria")}
+              className={`w-full text-left py-2 px-3 flex items-center justify-between ${
                 l.code === current ? "font-semibold" : ""
               }`}
-              onClick={() => handleSelect(l.code)}
             >
-              <div>
+              <div className="flex-1">
                 <div>{l.native}</div>
-                <div className="text-sm text-slate-500">{l.localized}</div>
+                <div className="text-sm text-muted/60">{l.localized}</div>
               </div>
               {l.code === current && (
-                <ICONS.selected className="text-green-500" />
+                <ICONS.selected className="text-success" />
               )}
-            </button>
+            </MenuButton>
           ))}
         </div>
       </div>
