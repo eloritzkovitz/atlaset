@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-05-11
+- **[docs]** **General:** Added privacy policy
+
 ## 2026-05-09
 
 - **[feature]** **General:** Added RTL and i18n support across the main app pages

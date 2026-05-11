@@ -1,12 +1,11 @@
+import { MarkdownFileRenderer } from "@components";
+import { changelogMarkdownComponents } from "@features/docs";
 import { useMarkdownFile, usePageTitle } from "@hooks";
-import { MarkdownFileRenderer } from "../shared/components/markdown/MarkdownFileRenderer";
-import { changelogMarkdownComponents } from "../features/docs/components/ChangelogMarkdownComponents";
 
 export default function ChangelogPage() {
   const { content, error } = useMarkdownFile("/CHANGELOG.md");
   const components = changelogMarkdownComponents;
 
-  // Set the page title
   usePageTitle("Changelog | Atlaset");
 
   return (
