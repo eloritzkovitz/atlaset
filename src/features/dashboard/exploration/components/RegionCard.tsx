@@ -1,10 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card } from "@components";
-import {
-  regionIcons,
-  defaultRegionIcon,
-  useCountryData,
-} from "@features/countries";
+import { regionIcons, defaultRegionIcon } from "@features/countries";
 import { useAnimatedNumber } from "@hooks";
 import { percent } from "@utils/number";
 import { RegionButton } from "./RegionButton";
@@ -35,7 +31,6 @@ export function RegionCard({
   const animatedVisited = useAnimatedNumber(visited, 640);
   const { t: tCountries } = useTranslation("countries");
   const { t: tDashboard } = useTranslation("dashboard");
-  const { subregionsByRegion } = useCountryData();
 
   return (
     <Card loading={loading} skeletonLines={6}>
@@ -43,12 +38,7 @@ export function RegionCard({
         <>
           <RegionButton
             icon={regionIcons[region] || defaultRegionIcon}
-            label={translateRegionLabel(
-              region,
-              tCountries,
-              tDashboard,
-              subregionsByRegion,
-            )}
+            label={translateRegionLabel(region, tCountries, tDashboard)}
             stats={`${animatedVisited}/${total} (${percent(
               animatedVisited,
               total,

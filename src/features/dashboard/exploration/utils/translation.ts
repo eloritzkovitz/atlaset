@@ -6,13 +6,12 @@ export function translateRegionLabel(
   region: string,
   tCountries: TFunction,
   tDashboard: TFunction,
-  subregionsByRegion: Record<string, string[]>,
 ) {
   if (!region) return region;
   if (region === "All Countries") return tDashboard("menu.allCountries");
-  return subregionsByRegion[region]
-    ? tCountries(`regions.${canonicalKey(region)}`)
-    : region;
+  return tCountries(`regions.${canonicalKey(region)}`, {
+    defaultValue: region,
+  });
 }
 
 /** Translate a subregion label using the reverse map or a selectedRegion fallback. */
@@ -27,5 +26,6 @@ export function translateSubregionLabel(
   if (!regionKey) return subregion;
   return tCountries(
     `subregions.${canonicalKey(regionKey)}.${canonicalKey(subregion)}`,
+    { defaultValue: subregion },
   );
 }

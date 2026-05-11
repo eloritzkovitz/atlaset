@@ -74,7 +74,12 @@ export function CountrySection({
 
   // Get subregions for the currently selected region
   const { subregionsByRegion, subregionToRegion } = useCountryData();
-  const uniqueRegions = Object.keys(subregionsByRegion).sort();
+  const uniqueRegions = Array.from(
+    new Set([
+      ...Object.keys(subregionsByRegion),
+      ...countries.map((c) => c.region).filter(Boolean),
+    ]),
+  ).sort();
   const uniqueSubregions =
     selectedRegion && selectedRegion !== "all"
       ? (subregionsByRegion[selectedRegion] ?? [])
