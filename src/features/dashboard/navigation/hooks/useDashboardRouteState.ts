@@ -8,7 +8,7 @@ import { useAchievements } from "@contexts/AchievementsContext";
  * @returns Object containing selected panel, region, subregion, country, currency, and achievement.
  */
 export function useDashboardRouteState() {
-  const { countries, currencies } = useCountryData();
+  const { countries, currencies, languages } = useCountryData();
   const { achievements } = useAchievements();
   const location = useLocation();
 
@@ -26,7 +26,7 @@ export function useDashboardRouteState() {
     selectedPanel = "currencies/exchange";
   }
 
-  // Determine menu selected panel (for highlighting in menu)  
+  // Determine menu selected panel (for highlighting in menu)
   let menuSelectedPanel: string;
   if (selectedPanel.startsWith("countries")) {
     menuSelectedPanel = "countries";
@@ -56,6 +56,21 @@ export function useDashboardRouteState() {
   const selectedIsoCode = isoCode;
   const selectedCountry = countries?.find((c) => c.isoCode === selectedIsoCode);
 
+  // Inline extraction for language
+  const languageParam =
+    (selectedPanel === "languages" && pathParts[1]) ||
+    (selectedPanel.startsWith("languages/") && pathParts[1]) ||
+    null;
+  let selectedLanguage = null;
+  if (languageParam) {
+    if (Array.isArray(languages)) {
+      selectedLanguage =
+        languages.find((l) => l.code === languageParam) || null;
+    } else if (languages && typeof languages === "object") {
+      selectedLanguage = languages[languageParam] || null;
+    }
+  }
+
   // Inline extraction for currency
   const currencyParam =
     (selectedPanel === "currencies" && pathParts[1]) ||
@@ -79,6 +94,7 @@ export function useDashboardRouteState() {
     selectedSubregion,
     selectedIsoCode,
     selectedCountry,
+    selectedLanguage,
     selectedCurrency,
     achievementIdParam,
     selectedAchievement,

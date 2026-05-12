@@ -24,8 +24,23 @@ import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
-  const { countries, currencies, loading, error, subregionToRegion } =
-    useCountryData();
+  const {
+    countries,
+    currencies,
+    languages: languagesMap,
+    loading,
+    error,
+    subregionToRegion,
+  } = useCountryData();
+
+  // Convert languages map to array for components expecting Language[]
+  const languages = (() => {
+    if (!languagesMap) return [];
+    return Object.values(languagesMap).map((l) => ({
+      ...l,
+      nativeName: l.nativeName ?? l.name ?? l.code,
+    }));
+  })();
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
@@ -48,6 +63,7 @@ export default function DashboardPage() {
     selectedSubregion: routeSelectedSubregion,
     selectedIsoCode,
     selectedCountry,
+    selectedLanguage,
     selectedCurrency,
     selectedAchievement,
   } = useDashboardRouteState();
@@ -70,6 +86,7 @@ export default function DashboardPage() {
     currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
+    selectedLanguage,
     selectedCurrency,
     selectedAchievement,
   });
@@ -226,6 +243,7 @@ export default function DashboardPage() {
           <DashboardRoutes
             countries={countries}
             currencies={currencies}
+            languages={languages}
             selectedRegion={selectedRegion || ""}
             setSelectedRegion={handleRegionSelect}
             selectedSubregion={selectedSubregion || ""}

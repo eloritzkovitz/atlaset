@@ -6,6 +6,7 @@
     "currencyExchange": "המרת מטבע",
     "overview": "סקירה",
     "exploration": "מדינות",
+    "languages": "שפות",
     "currencies": "מטבעות",
     "achievements": "הישגים",
     "statistics": "סטטיסטיקה"
@@ -34,10 +35,19 @@
     "switchToGrid": "החלף לתצוגת רשת",
     "resetFilters": "איפוס מסננים"
   },
+  "languages": {
+    "searchPlaceholder": "חיפוש לפי שם או קוד",
+    "empty": "שפה לא נמצאה.",
+    "viewLanguage": "הצגת פרטי שפה",
+    "languageInfo": {
+      "usingLanguage": "מדינות שבהן מדוברת {{name}}",
+      "dependenciesUsingLanguage": "תלויות וטריטוריות שבהן מדוברת {{name}}"
+    }
+  },
   "currencies": {
-    "searchPlaceholder": "חפש לפי שם או קוד",
+    "searchPlaceholder": "חיפוש לפי שם או קוד",
     "empty": "מטבע לא נמצא.",
-    "viewExchange": "הצג המרת מטבע",
+    "viewExchange": "הצגת המרת מטבע",
     "currencyInfo": {
       "usingCurrency": "מדינות שמשתמשות ב- {{code}}",
       "dependenciesUsingCurrency": "תלויות וטריטוריות שמשתמשות ב- {{code}}"

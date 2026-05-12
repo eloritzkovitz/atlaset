@@ -6,6 +6,7 @@
     "currencyExchange": "Currency Exchange",
     "overview": "Overview",
     "exploration": "Exploration",
+    "languages": "Languages",
     "currencies": "Currencies",
     "achievements": "Achievements",
     "statistics": "Statistics"
@@ -33,6 +34,15 @@
     "switchToList": "Switch to List View",
     "switchToGrid": "Switch to Grid View",
     "resetFilters": "Reset Filters"
+  },
+  "languages": {
+    "searchPlaceholder": "Search by name or code",
+    "empty": "Language not found.",
+    "viewLanguage": "View language details",
+    "languageInfo": {
+      "usingLanguage": "Countries where {{name}} is spoken",
+      "dependenciesUsingLanguage": "Dependencies and territories where {{name}} is spoken"
+    }
   },
   "currencies": {
     "searchPlaceholder": "Search by name or code",
