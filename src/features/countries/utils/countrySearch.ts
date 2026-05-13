@@ -2,6 +2,7 @@
  * Utility functions for searching and filtering countries based on their properties.
  */
 
+import i18n from "i18next";
 import type { VisitContext } from "@features/visits";
 import { suggestByPrefix } from "@utils/search";
 import { timezoneOffsets } from "@utils/timezone";
@@ -91,11 +92,28 @@ export function getQualifierTokens(
     }
     return tokens;
   }
+
   if (key === "tc") {
     const entry = getTranscontinentalInfo(country);
     if (entry) return ["true", (entry.scope ?? "contiguous").toLowerCase()];
     return ["false"];
   }
+
+  if (key === "languages") {
+    const langs = Array.isArray(country.languages) ? country.languages : [];
+    const codeRe = /^[a-z]{2,3}(-[A-Za-z0-9-]+)?$/i;
+    const en = (c: string) =>
+      String(i18n.t(`languages:${c}`, { lng: "en", defaultValue: c }));
+    const out = new Set<string>();
+    for (const l of langs) {
+      if (!l) continue;
+      const s = String(l).trim();
+      if (!s) continue;
+      out.add(codeRe.test(s) ? en(s.split("-")[0].toLowerCase()) : s);
+    }
+    return Array.from(out).filter(Boolean).map(String);
+  }
+
   if (key === "timezones") {
     const tzs = country.timezones;
     if (!Array.isArray(tzs)) return [] as string[];
@@ -123,6 +141,7 @@ export function getQualifierTokens(
     }
     return Array.from(new Set(toks)).filter(Boolean).map(String);
   }
+
   if (key === "sovereign") {
     const toks: string[] = [];
     toks.push(country.sovereigntyStatus === "sovereign" ? "true" : "false");
@@ -130,9 +149,11 @@ export function getQualifierTokens(
     if (sstate) toks.push(String(sstate).toUpperCase());
     return toks;
   }
+
   if (key === "visited")
     return vIso ? [vIso.includes(country.isoCode) ? "true" : "false"] : [];
   const prop = country[key];
+
   if (Array.isArray(prop)) return prop.filter(Boolean).map(String);
   if (typeof prop === "string") return [prop];
   if (typeof prop === "boolean") return [prop ? "true" : "false"];
