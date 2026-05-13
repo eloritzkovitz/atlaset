@@ -2,7 +2,6 @@
  * Utility functions for searching and filtering countries based on their properties.
  */
 
-import i18n from "i18next";
 import type { VisitContext } from "@features/visits";
 import { suggestByPrefix } from "@utils/search";
 import { timezoneOffsets } from "@utils/timezone";
@@ -102,14 +101,17 @@ export function getQualifierTokens(
   if (key === "languages") {
     const langs = Array.isArray(country.languages) ? country.languages : [];
     const codeRe = /^[a-z]{2,3}(-[A-Za-z0-9-]+)?$/i;
-    const en = (c: string) =>
-      String(i18n.t(`languages:${c}`, { lng: "en", defaultValue: c }));
+    const dn = new Intl.DisplayNames(["en"], { type: "language" });
     const out = new Set<string>();
     for (const l of langs) {
       if (!l) continue;
       const s = String(l).trim();
       if (!s) continue;
-      out.add(codeRe.test(s) ? en(s.split("-")[0].toLowerCase()) : s);
+      if (codeRe.test(s)) {
+        const base = s.split("-")[0].toLowerCase();
+        const name = dn.of(base) || base;
+        out.add(String(name));
+      } else out.add(s);
     }
     return Array.from(out).filter(Boolean).map(String);
   }
