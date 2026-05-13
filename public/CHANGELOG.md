@@ -1,6 +1,12 @@
 # Changelog
 
+## 2026-05-13
+
+- **[feature]** **Countries:** Updated language qualifier search logic to support filtering by name (data was changed to use ISO 639 codes as keys)
+- **[feature]** **Dashboard | Languages:** Added languages section
+
 ## 2026-05-11
+
 - **[docs]** **General:** Added privacy policy
 
 ## 2026-05-09

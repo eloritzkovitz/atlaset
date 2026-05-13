@@ -56,7 +56,7 @@ export function CountryTerritoriesContent({
     }
 
     return [];
-  }, [group, countries]);
+  }, [group, countries, country.isoCode, i18n, tCountries]);
 
   // Expanded state for each section
   const [expanded, setExpanded] = useState(() =>

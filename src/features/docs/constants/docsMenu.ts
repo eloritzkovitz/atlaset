@@ -140,6 +140,12 @@ export const DOCS_GROUPS = {
         url: "/docs/dashboard/exploration",
       },
       {
+        label: "Languages",
+        file: "dashboard/languages.md",
+        icon: ICONS.language,
+        url: "/docs/dashboard/languages",
+      },
+      {
         label: "Currencies",
         file: "dashboard/currencies.md",
         icon: ICONS.currencies,

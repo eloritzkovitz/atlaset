@@ -103,6 +103,14 @@ describe("countrySearch utils", () => {
       expect(capital).toEqual(["Paris"]);
     });
 
+    it("maps language codes to English display names", () => {
+      const frCode = { ...countries[0], languages: ["fr"] } as any;
+      expect(getQualifierTokens(frCode, "languages")).toEqual(["French"]);
+
+      const deCode = { ...countries[2], languages: ["de"] } as any;
+      expect(getQualifierTokens(deCode, "languages")).toEqual(["German"]);
+    });
+
     it("supports options object with visitContext and includeTC in object form", () => {
       const vc: VisitContext = {
         visitedIsoCodes: [countries[0].isoCode],

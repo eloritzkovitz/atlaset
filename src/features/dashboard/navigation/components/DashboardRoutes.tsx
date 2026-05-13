@@ -1,17 +1,21 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { Country, Currency } from "@features/countries";
+import type { Language } from "@types";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
 import { AchievementInfo } from "../../achievements/components/AchievementInfo";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
 import { CountryStats } from "../../exploration/components/CountryStats";
+import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
+import { LanguageInfo } from "../../languages/components/LanguageInfo";
 import { OverviewGrid } from "../../overview/components/OverviewGrid";
 import { StatisticsGrid } from "../../statistics/components/StatisticsGrid";
 
 interface DashboardRoutesProps {
   countries: Country[];
   currencies: Currency[];
+  languages: Language[];
   selectedRegion: string;
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
@@ -29,6 +33,7 @@ interface DashboardRoutesProps {
 export function DashboardRoutes({
   countries,
   currencies,
+  languages,
   selectedRegion,
   setSelectedRegion,
   selectedSubregion,
@@ -123,6 +128,22 @@ export function DashboardRoutes({
             currency={currencies.find(
               (c) =>
                 c.code === (window.location.pathname.split("/").pop() || ""),
+            )}
+            countries={countries}
+          />
+        }
+      />
+      <Route
+        path="languages/"
+        element={<LanguagesGrid languages={languages} />}
+      />
+      <Route
+        path="languages/:code"
+        element={
+          <LanguageInfo
+            language={languages.find(
+              (l) =>
+                l.code === (window.location.pathname.split("/").pop() || ""),
             )}
             countries={countries}
           />

@@ -19,6 +19,7 @@ export function getDashboardBreadcrumbs(
   selectedRegion: string | null,
   selectedSubregion: string | null,
   selectedCountry: { name: string } | null,
+  selectedLanguage: { name: string } | null,
   selectedCurrency: { name: string } | null,
   selectedAchievement: { name: string } | null,
 ): Crumb[] {
@@ -37,6 +38,17 @@ export function getDashboardBreadcrumbs(
     if (selectedCountry) {
       crumbs.push({ label: selectedCountry.name, key: "country" });
     }
+  }
+  if (
+    (selectedPanel === "languages" ||
+      selectedPanel.startsWith("languages/")) &&
+    selectedLanguage &&
+    selectedLanguage.name
+  ) {
+    crumbs.push({
+      label: selectedLanguage.name,
+      key: `language:${selectedLanguage.name}`,
+    });
   }
   if (
     (selectedPanel === "currencies" ||
@@ -79,6 +91,7 @@ export function getDashboardMeta({
   selectedCountry,
   selectedRegion,
   selectedSubregion,
+  selectedLanguage,
   selectedCurrency,
   selectedAchievement,
 }: {
@@ -87,6 +100,7 @@ export function getDashboardMeta({
   currentPanel: { title: string } | undefined;
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
+  selectedLanguage: { name: string } | null | undefined;
   selectedCurrency: { name: string } | null | undefined;
   selectedAchievement: { name: string } | null | undefined;
 }) {
@@ -94,14 +108,16 @@ export function getDashboardMeta({
   const safeRegion = selectedRegion ?? null;
   const safeSubregion = selectedSubregion ?? null;
   const safeCountry = safeName(selectedCountry);
+  const safeLanguage = safeName(selectedLanguage);
   const safeCurrency = safeName(selectedCurrency);
   const safeAchievement = safeName(selectedAchievement);
 
   const breadcrumbs = getDashboardBreadcrumbs(
     safePanel,
     safeRegion,
-    safeSubregion,
+    safeSubregion,    
     safeCountry,
+    safeLanguage,
     safeCurrency,
     safeAchievement,
   );

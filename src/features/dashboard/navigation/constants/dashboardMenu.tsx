@@ -14,6 +14,12 @@ export const DASHBOARD_MENU = [
     url: "/dashboard/exploration",
   },
   {
+    key: "languages",
+    label: "Languages",
+    icon: ICONS.language,
+    url: "/dashboard/languages",
+  },
+  {
     key: "currencies",
     label: "Currencies",
     icon: ICONS.currencies,
