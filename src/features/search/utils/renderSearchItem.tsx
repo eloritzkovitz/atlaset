@@ -32,7 +32,7 @@ function getCountryLabel(item: Country, countries: Country[]) {
     item.sovereignState || "Unknown",
     countries,
   );
-  const t = (k: string, vars?: Record<string, any>) => i18n.t(k, vars);
+  const t = (k: string, vars?: Record<string, unknown>) => i18n.t(k, vars);
   switch (item.sovereigntyStatus) {
     case "dependency":
       return sovereignName
