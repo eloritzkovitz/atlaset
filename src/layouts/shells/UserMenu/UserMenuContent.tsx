@@ -90,6 +90,11 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
           : tSettings("display.theme.light")
       }`,
       icon: <ICONS.appearance className="text-lg me-2" />,
+      onClick: () => {
+        navigate("/settings/display");
+        onClose?.();
+      },
+      url: "/settings/display",
       trailing: (
         <div onClick={(e) => e.stopPropagation()}>
           <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
