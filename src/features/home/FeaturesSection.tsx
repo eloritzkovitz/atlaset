@@ -8,7 +8,7 @@ const features: Feature[] = [
   {
     title: "Interactive World Map",
     description:
-      "Explore a customizable world map with country details, overlays, and filters.",
+      "Explore a customizable world map with country details, custom lists and filters.",
     svgPath: "/assets/world-map.svg",
   },
   {
@@ -18,21 +18,21 @@ const features: Feature[] = [
     svgPath: "/assets/trips-timeline.svg",
   },
   {
-    title: "Custom Layers & Markers",
+    title: "Custom Maps",
     description:
-      "Create, import, and export your own map layers and markers for any location.",
+      "Create, import and export your own maps, with layers and markers.",
     svgPath: "/assets/layers-markers.svg",
   },
   {
     title: "Competitive Quizzes",
     description:
-      "Test your knowledge of the world with fun, timed challenges and leaderboards.",
+      "Test your knowledge of the world with fun, timed challenges. Reach the leaderbooards!",
     svgPath: "/assets/quizzes.svg",
   },
   {
     title: "Dashboard & Analytics",
     description:
-      "Analyze your visits and travels with interactive statistics and charts.",
+      "Analyze your visits and travels with interactive charts, statistics and achievements.",
     svgPath: "/assets/dashboard.svg",
   },
   {
