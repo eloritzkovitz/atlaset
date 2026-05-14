@@ -17,7 +17,7 @@ export const MapFooter: React.FC<MapFooterProps> = ({
 }) => {
   return (
     <footer
-      className="bg-gray-950/50 rounded-t-lg fixed end-6 bottom-0 z-50 text-muted px-4 py-0.5 text-xs min-w-[220px] select-none flex items-center justify-between gap-4"
+      className="bg-surface-alt/50 rounded-t-lg fixed end-6 bottom-0 z-50 text-muted px-4 py-0.5 text-xs min-w-[220px] select-none flex items-center justify-between gap-4"
       aria-label="Map footer"
     >
       <div className="flex items-center gap-2">

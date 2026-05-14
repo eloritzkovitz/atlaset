@@ -5,6 +5,8 @@ import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage } from "@features/settings";
+import { ThemeToggle } from "@features/settings/components/display/ThemeToggle";
+import { useTheme } from "@features/settings/hooks/useTheme";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
 
@@ -22,8 +24,10 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
 
   // Translation
   const { t } = useTranslation("common");
+  const { t: tSettings } = useTranslation("settings");
   const { name } = useLanguage();
   const { openLanguagePicker } = useUI();
+  const { theme, toggleTheme } = useTheme();
 
   // Don't render if no user
   if (!user) return null;
@@ -82,6 +86,19 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       url: "/settings",
     },
     {
+      label: `${t("menu.appearance")}: ${
+        theme === "dark"
+          ? tSettings("display.theme.dark")
+          : tSettings("display.theme.light")
+      }`,
+      icon: <ICONS.appearance className="text-lg me-2" />,
+      trailing: (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+        </div>
+      ),
+    },
+    {
       label: `${t("menu.language")} (${name})`,
       icon: <ICONS.language className="text-lg me-2" />,
       onClick: () => {
@@ -124,7 +141,9 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
             url={item.url}
           >
             <span className="font-semibold">{item.label}</span>
-            {item.trailing ?? null}
+            {item.trailing ? (
+              <div className="ms-auto">{item.trailing}</div>
+            ) : null}
           </MenuButton>
         ),
       )}

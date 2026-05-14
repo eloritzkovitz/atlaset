@@ -1,4 +1,5 @@
 import { useSettings } from "@contexts/SettingsContext";
+import type { ThemeKey } from "../types";
 
 /**
  * Manages theme settings.
@@ -11,8 +12,7 @@ export function useTheme() {
   const theme = settings.display?.theme ?? "dark";
 
   // Set the theme to either "light" or "dark"
-  const setTheme = (theme: "light" | "dark") =>
-    updateSettings({ display: { theme } });
+  const setTheme = (theme: ThemeKey) => updateSettings({ display: { theme } });
 
   // Toggle between "light" and "dark" themes
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");

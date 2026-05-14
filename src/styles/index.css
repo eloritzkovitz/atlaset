@@ -3,7 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-bg: theme("colors.white");
+  --color-bg: theme("colors.gray.50");
   /* Sidebar colors */
   --color-sidebar: theme("colors.gray.100");
   --color-sidebar-btn-hover: theme("colors.gray.200");
@@ -29,7 +29,7 @@
   --color-surface-alt: theme("colors.gray.50");
   --color-surface-hover: theme("colors.gray.100");
   /* Input colors */
-  --color-input: theme("colors.gray.100");
+  --color-input: theme("colors.gray.200");
   --color-input-hover: theme("colors.gray.200");
   /* Dropdown colors */
   --color-dropdown-hover: theme("colors.blue.100");
@@ -52,8 +52,8 @@
   --color-info-hover: theme("colors.blue.700");
   --color-code: theme("colors.amber.600");
   --color-code-hover: theme("colors.amber.700");
-  --color-muted: theme("colors.gray.500");
-  --color-muted-hover: theme("colors.gray.600");
+  --color-muted: theme("colors.gray.400");
+  --color-muted-hover: theme("colors.gray.500");
   /* Border colors */
   --color-border: theme("colors.gray.300");
   --color-dashed: theme("colors.gray.500");

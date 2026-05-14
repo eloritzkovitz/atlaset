@@ -49,6 +49,7 @@ import {
   FaMapLocationDot,
   FaMapPin,
   FaMedal,
+  FaMoon,
   FaPaintbrush,
   FaPencil,
   FaPenToSquare,
@@ -147,6 +148,7 @@ export const ICONS = {
   help: FaCircleQuestion,
   info: FaCircleInfo,
   reportBug: FaBug,
+  appearance: FaMoon,
   language: IoLanguage,
   // Actions
   add: FaPlus,

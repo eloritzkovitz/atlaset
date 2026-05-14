@@ -1,8 +1,9 @@
 import { FaSun, FaMoon } from "react-icons/fa6";
 import { useLanguage } from "../../hooks/useLanguage";
+import type { ThemeKey } from "../../types";
 
 interface ThemeToggleProps {
-  theme: "light" | "dark";
+  theme: ThemeKey;
   toggleTheme: () => void;
 }
 
@@ -10,7 +11,7 @@ export function ThemeToggle({ theme, toggleTheme }: ThemeToggleProps) {
   const { isRtl } = useLanguage();
 
   const knobClasses =
-    "absolute w-6 h-6 bg-surface-alt rounded-full transition-transform duration-300 flex items-center justify-center ";
+    "absolute w-6 h-6 bg-bg rounded-full transition-transform duration-300 flex items-center justify-center ";
 
   const positionClass = isRtl
     ? theme === "dark"
@@ -24,7 +25,7 @@ export function ThemeToggle({ theme, toggleTheme }: ThemeToggleProps) {
     <button
       id="theme-toggle"
       onClick={toggleTheme}
-      className="relative w-12 h-4 flex items-center bg-input rounded-full transition-colors focus:outline-none"
+      className="relative w-12 h-4 flex items-center bg-surface rounded-full transition-colors focus:outline-none"
     >
       <span className={knobClasses + positionClass}>
         {theme === "dark" ? (
