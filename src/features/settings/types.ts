@@ -12,15 +12,15 @@ export type SoundSettings = {
   soundEffectsVolume: number;
 };
 
-/** Theme key */
-export type ThemeKey = "light" | "dark";
+/** Represents a theme key. */
+export type ThemeKey = "light" | "dark" | "system";
 
 /** Display-related settings. */
 export type DisplaySettings = {
   theme: ThemeKey;
 };
 
-/** Map-related settings */
+/** Map-related settings. */
 export type MapSettings = {
   projection?: string;
   borderColor?: string;

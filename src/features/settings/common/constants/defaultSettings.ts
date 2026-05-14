@@ -11,7 +11,7 @@ export const defaultSettings: Settings = {
     soundEffectsEnabled: true,
     soundEffectsVolume: 0.5,
   },
-  display: { theme: "dark" },
+  display: { theme: "system" },
   map: {
     projection: DEFAULT_MAP_SETTINGS.projection,
     borderColor: MAP_OPTIONS.strokeColor[0].value,

@@ -2,51 +2,54 @@ import type { CSSProperties, JSX } from "react";
 import { FaSun, FaMoon } from "react-icons/fa6";
 import type { ThemeKey } from "../../types";
 
+interface ThemeConfig {
+  isDark: boolean;
+  headerStyle: CSSProperties;
+  boxClass: string;
+  surfaceClass: string;
+  textClass: string;
+  barClass: string;
+  pillClass: string;
+}
+
+const THEME_CONFIG: Record<Exclude<ThemeKey, "system">, ThemeConfig> = {
+  light: {
+    isDark: false,
+    headerStyle: {
+      background: "var(--preview-light-header, #f1f9ff)",
+      borderColor: "#dbe7f7",
+    },
+    boxClass:
+      "h-44 rounded-b-md rounded-t-none bg-white text-gray-700 p-3 shadow-sm",
+    surfaceClass: "bg-gray-50",
+    textClass: "text-gray-800",
+    barClass: "bg-gray-200",
+    pillClass: "text-xs text-gray-500 bg-transparent px-2 py-0.5 rounded-full",
+  },
+  dark: {
+    isDark: true,
+    headerStyle: { background: "#2b3342", borderColor: "#39424d" },
+    boxClass:
+      "h-44 rounded-b-md rounded-t-none bg-gray-900 text-gray-200 p-3 shadow-sm",
+    surfaceClass: "bg-gray-800",
+    textClass: "text-gray-200",
+    barClass: "bg-gray-700",
+    pillClass: "text-xs text-gray-300 bg-gray-800 px-2 py-0.5 rounded-full",
+  },
+};
+
+interface ThemePreviewProps {
+  labels: { light: string; dark: string };
+  activeTheme?: ThemeKey;
+  onSelect?: (theme: ThemeKey) => void;
+}
+
 export function ThemePreview({
   labels,
   activeTheme,
-}: {
-  labels: { light: string; dark: string };
-  activeTheme?: ThemeKey;
-}) {
+  onSelect,
+}: ThemePreviewProps) {
   const bars = ["w-1/4", "w-1/4", "w-1/4"];
-
-  interface ThemeConfig {
-    isDark: boolean;
-    headerStyle: CSSProperties;
-    boxClass: string;
-    surfaceClass: string;
-    textClass: string;
-    barClass: string;
-    pillClass: string;
-  }
-
-  const THEME_CONFIG: Record<ThemeKey, ThemeConfig> = {
-    light: {
-      isDark: false,
-      headerStyle: {
-        background: "var(--preview-light-header, #f1f9ff)",
-        borderColor: "#dbe7f7",
-      },
-      boxClass:
-        "h-44 rounded-b-md rounded-t-none bg-white text-gray-700 p-3 shadow-sm",
-      surfaceClass: "bg-gray-50",
-      textClass: "text-gray-800",
-      barClass: "bg-gray-200",
-      pillClass:
-        "text-xs text-gray-500 bg-transparent px-2 py-0.5 rounded-full",
-    },
-    dark: {
-      isDark: true,
-      headerStyle: { background: "#2b3342", borderColor: "#39424d" },
-      boxClass:
-        "h-44 rounded-b-md rounded-t-none bg-gray-900 text-gray-200 p-3 shadow-sm",
-      surfaceClass: "bg-gray-800",
-      textClass: "text-gray-200",
-      barClass: "bg-gray-700",
-      pillClass: "text-xs text-gray-300 bg-gray-800 px-2 py-0.5 rounded-full",
-    },
-  };
 
   const Sample = (cfg: ThemeConfig) => (
     <>
@@ -96,7 +99,23 @@ export function ThemePreview({
         const boxClass = cfg.boxClass;
 
         return (
-          <div className="flex-1" key={p.key}>
+          <div
+            key={p.key}
+            role="button"
+            tabIndex={0}
+            aria-pressed={active}
+            className={`flex-1 cursor-pointer !focus:outline-none rounded-md transition-transform transform ${!active ? "hover:-translate-y-0.5 hover:shadow-lg hover:ring-2 hover:ring-ring-focus" : ""}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onSelect?.(p.key);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect?.(p.key);
+              }
+            }}
+          >
             <div className="mb-2">
               <div
                 className="flex items-center justify-between rounded-t-md border border-b-0 px-3 py-2"
