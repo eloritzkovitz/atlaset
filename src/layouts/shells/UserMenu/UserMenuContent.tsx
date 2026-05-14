@@ -4,9 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
-import { useLanguage } from "@features/settings";
-import { ThemeToggle } from "@features/settings/components/display/ThemeToggle";
-import { useTheme } from "@features/settings/hooks/useTheme";
+import { ThemeToggle, useLanguage, useTheme } from "@features/settings";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
 

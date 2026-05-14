@@ -4,6 +4,7 @@ vi.mock("@utils/firebase", () => {
   return {
     isAuthenticated: vi.fn(),
     getCurrentUser: vi.fn(),
+    getUserCollection: vi.fn(),
     __esModule: true,
   };
 });
@@ -11,6 +12,7 @@ vi.mock("firebase/firestore", () => {
   return {
     collection: vi.fn(() => ({ __collection: true })),
     doc: vi.fn(() => ({ __doc: true })),
+    addDoc: vi.fn(),
     getDocs: vi.fn(),
     setDoc: vi.fn(),
     deleteDoc: vi.fn(),
