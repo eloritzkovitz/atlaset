@@ -6,6 +6,7 @@ export { settingsService } from "./common/services/settingsService";
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
 export { useLanguage, isRtl } from "./account/hooks/useLanguage";
+export { mapLanguages } from "./account/utils/languages";
 
 // Display
 export { DisplaySettingsSection } from "./display/components/DisplaySettingsSection";

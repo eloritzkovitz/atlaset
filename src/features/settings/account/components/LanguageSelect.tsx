@@ -1,19 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
-import { LANGUAGES } from "@constants/languages";
+import { languageOptions } from "../utils/languages";
 import { useLanguage } from "../hooks/useLanguage";
 import { SettingsCard } from "../../common/components/SettingsCard";
 
 export function LanguageSelect() {
   const { t: tSettings } = useTranslation("settings");
+  const { t } = useTranslation("common");
   const { current, change } = useLanguage();
 
   // Generate options for the select input based on available languages
-  const options = (Array.isArray(LANGUAGES) ? LANGUAGES : []).map((l) => ({
-    value: l.code,
-    label: l.nativeName,
-  }));
+  const options = languageOptions(t);
 
   // Handle language change from select input
   const handleChange = async (val: string | number) => {

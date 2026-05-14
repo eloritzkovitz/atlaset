@@ -9,8 +9,7 @@ import {
   MenuButton,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { LANGUAGES } from "@constants/languages";
-import { useLanguage } from "@features/settings";
+import { mapLanguages, useLanguage } from "@features/settings";
 
 interface LanguagePickerProps {
   isOpen: boolean;
@@ -23,15 +22,7 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
   const [query, setQuery] = useState("");
 
   // Prepare the list of languages with localized names
-  const languages = useMemo(() => {
-    return LANGUAGES.slice()
-      .sort((a, b) => (a.priority || 999) - (b.priority || 999))
-      .map((l) => ({
-        code: l.code,
-        native: l.nativeName,
-        localized: t(`languages:${l.code}`),
-      }));
-  }, [t]);
+  const languages = useMemo(() => mapLanguages(t), [t]);
 
   // Filter languages based on search query
   const filtered = useMemo(() => {
