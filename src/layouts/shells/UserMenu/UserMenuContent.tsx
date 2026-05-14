@@ -97,7 +97,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       ),
     },
     {
-      label: `${t("menu.language")} (${name})`,
+      label: `${t("menu.language")}: ${name}`,
       icon: <ICONS.language className="text-lg me-2" />,
       onClick: () => {
         openLanguagePicker();
