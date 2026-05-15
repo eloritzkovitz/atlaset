@@ -50,31 +50,6 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     { separator: true },
     {
-      label: t("menu.reportBug"),
-      icon: <ICONS.reportBug className="text-lg me-2" />,
-      onClick: () => {
-        window.open(
-          "https://github.com/eloritzkovitz/atlaset/issues",
-          "_blank",
-        );
-        onClose?.();
-      },
-      url: "https://github.com/eloritzkovitz/atlaset/issues",
-    },
-    ...(!isMobile
-      ? [
-          {
-            label: t("menu.keyboardShortcuts"),
-            icon: <ICONS.shortcuts className="text-lg me-2" />,
-            onClick: () => {
-              toggleShortcuts();
-              onClose?.();
-            },
-          },
-        ]
-      : []),
-    { separator: true },
-    {
       label: t("menu.settings"),
       icon: <ICONS.settings className="text-lg me-2" />,
       onClick: () => {
@@ -115,6 +90,31 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
           className="ms-auto text-lg opacity-60"
         />
       ),
+    },
+    { separator: true },
+    ...(!isMobile
+      ? [
+          {
+            label: t("menu.keyboardShortcuts"),
+            icon: <ICONS.shortcuts className="text-lg me-2" />,
+            onClick: () => {
+              toggleShortcuts();
+              onClose?.();
+            },
+          },
+        ]
+      : []),
+    {
+      label: t("menu.reportBug"),
+      icon: <ICONS.reportBug className="text-lg me-2" />,
+      onClick: () => {
+        window.open(
+          "https://github.com/eloritzkovitz/atlaset/issues",
+          "_blank",
+        );
+        onClose?.();
+      },
+      url: "https://github.com/eloritzkovitz/atlaset/issues",
     },
     { separator: true },
     {
