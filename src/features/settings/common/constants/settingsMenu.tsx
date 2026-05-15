@@ -10,25 +10,25 @@ export const SETTINGS_MENU = [
   {
     key: "sound",
     label: "Sound",
-    icon: ICONS.SoundSettingsSection,
+    icon: ICONS.sound,
     url: "/settings/sound",
   },
   {
     key: "display",
     label: "Display",
-    icon: ICONS.displaySettings,
+    icon: ICONS.display,
     url: "/settings/display",
   },
   {
     key: "privacy",
     label: "Privacy",
-    icon: ICONS.privacySettings,
+    icon: ICONS.privacy,
     url: "/settings/privacy",
   },
   {
     key: "security",
     label: "Security",
-    icon: ICONS.securitySettings,
+    icon: ICONS.security,
     url: "/settings/security",
   },
 ];
