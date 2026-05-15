@@ -8,9 +8,35 @@
   --color-sidebar: theme("colors.gray.100");
   --color-sidebar-btn-hover: theme("colors.gray.200");
   /* Primary colors */
-  --color-primary: theme("colors.blue.800");
-  --color-primary-hover: theme("colors.blue.700");
-  --color-primary-active: theme("colors.blue.600");
+  --color-accent-blue: theme("colors.blue.800");
+  --color-accent-blue-hover: theme("colors.blue.700");
+  --color-accent-blue-active: theme("colors.blue.600");
+
+  --color-accent-rose: theme("colors.rose.600");
+  --color-accent-rose-hover: theme("colors.rose.500");
+  --color-accent-rose-active: theme("colors.rose.400");
+
+  --color-accent-teal: theme("colors.teal.600");
+  --color-accent-teal-hover: theme("colors.teal.500");
+  --color-accent-teal-active: theme("colors.teal.400");
+
+  --color-accent-indigo: theme("colors.indigo.600");
+  --color-accent-indigo-hover: theme("colors.indigo.500");
+  --color-accent-indigo-active: theme("colors.indigo.400");
+
+  --color-accent-amber: theme("colors.amber.500");
+  --color-accent-amber-hover: theme("colors.amber.400");
+  --color-accent-amber-active: theme("colors.amber.300");
+
+  --color-accent-green: theme("colors.green.600");
+  --color-accent-green-hover: theme("colors.green.500");
+  --color-accent-green-active: theme("colors.green.400");
+
+  /* Primary colors default to the blue accent (can be overridden at runtime) */
+  --color-primary-default: var(--color-accent-blue);
+  --color-primary: var(--color-primary-default);
+  --color-primary-hover: var(--color-accent-blue-hover);
+  --color-primary-active: var(--color-accent-blue-active);
   /* Secondary colors */
   --color-secondary: theme("colors.gray.100");
   --color-secondary-hover: theme("colors.gray.200");
@@ -91,9 +117,34 @@
   --color-sidebar: theme("colors.gray.800");
   --color-sidebar-btn-hover: theme("colors.gray.600");
   /* Primary colors */
-  --color-primary: theme("colors.blue.800");
-  --color-primary-hover: theme("colors.blue.700");
-  --color-primary-active: theme("colors.blue.600");
+  --color-accent-blue: theme("colors.blue.800");
+  --color-accent-blue-hover: theme("colors.blue.700");
+  --color-accent-blue-active: theme("colors.blue.600");
+
+  --color-accent-rose: theme("colors.rose.600");
+  --color-accent-rose-hover: theme("colors.rose.500");
+  --color-accent-rose-active: theme("colors.rose.400");
+
+  --color-accent-teal: theme("colors.teal.600");
+  --color-accent-teal-hover: theme("colors.teal.500");
+  --color-accent-teal-active: theme("colors.teal.400");
+
+  --color-accent-indigo: theme("colors.indigo.600");
+  --color-accent-indigo-hover: theme("colors.indigo.500");
+  --color-accent-indigo-active: theme("colors.indigo.400");
+
+  --color-accent-amber: theme("colors.amber.500");
+  --color-accent-amber-hover: theme("colors.amber.400");
+  --color-accent-amber-active: theme("colors.amber.300");
+
+  --color-accent-green: theme("colors.green.600");
+  --color-accent-green-hover: theme("colors.green.500");
+  --color-accent-green-active: theme("colors.green.400");
+
+  --color-primary-default: var(--color-accent-blue);
+  --color-primary: var(--color-primary-default);
+  --color-primary-hover: var(--color-accent-blue-hover);
+  --color-primary-active: var(--color-accent-blue-active);
   /* Secondary colors */
   --color-secondary: theme("colors.gray.200");
   --color-secondary-hover: theme("colors.gray.600");
@@ -276,4 +327,16 @@ body::-webkit-scrollbar-thumb {
 button:focus-visible,
 .list:focus-visible {
   box-shadow: 0 0 0 2px var(--color-blue-500);
+}
+
+/* Accent dot focus/selected ring */
+.color-dot {
+  transition:
+    box-shadow 0.12s ease,
+    transform 0.12s ease;
+}
+
+button:focus-visible .color-dot,
+button[aria-pressed="true"] .color-dot {
+  box-shadow: 0 0 0 3px var(--color-ring-focus);
 }

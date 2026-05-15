@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { FaBrush } from "react-icons/fa6";
-import { Checkbox } from "@components";
+import { Checkbox, ColorDot, SectionHeader, Tooltip } from "@components";
 import { ThemePreview } from "./ThemePreview";
 import { useTheme } from "../hooks/useTheme";
 import { SettingsCard } from "../../common/components/SettingsCard";
 
 export function DisplaySettingsSection() {
-  const { theme, preference, setPreference } = useTheme();
+  const { theme, preference, setPreference, accent, setAccent } = useTheme();
   const { t } = useTranslation("settings");
 
   return (
@@ -41,6 +41,29 @@ export function DisplaySettingsSection() {
                 )}
               </span>
             ) : null}
+          </div>
+          <SectionHeader title={t("display.accents.label", "Accents")} />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
+              {(
+                ["blue", "indigo", "teal", "green", "amber", "rose"] as const
+              ).map((a) => (
+                <Tooltip
+                  key={a}
+                  content={<span className="capitalize text-sm">{a}</span>}
+                  position="top"
+                >
+                  <button
+                    aria-pressed={accent === a}
+                    aria-label={a}
+                    onClick={() => setAccent(a)}
+                    className={`w-10 h-10 rounded-full focus:outline-none`}
+                  >
+                    <ColorDot color={`var(--color-accent-${a})`} size={40} />
+                  </button>
+                </Tooltip>
+              ))}
+            </div>
           </div>
         </div>
       </SettingsCard>

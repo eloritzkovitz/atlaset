@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSettings } from "@contexts/SettingsContext";
-import type { ThemeKey } from "../../types";
+import type { ThemeKey, AccentKey } from "../../types";
 
 /**
  * Manages theme settings, including system preference.
@@ -10,6 +10,7 @@ export function useTheme() {
   const { settings, updateSettings } = useSettings();
 
   const initial: ThemeKey = (settings.display?.theme ?? "dark") as ThemeKey;
+  const initialAccent = (settings.display?.accent ?? "blue") as AccentKey;
   const [preference, setPreference] = useState<ThemeKey>(initial);
   const [theme, setThemeState] = useState<ThemeKey>(() =>
     initial === "system" && typeof window !== "undefined" && window.matchMedia
@@ -44,6 +45,40 @@ export function useTheme() {
     updateSettings({ display: { ...(settings.display ?? {}), theme: p } });
   };
 
+  // Accent selection
+  const [accent, setAccentState] =
+    useState<typeof initialAccent>(initialAccent);
+
+  useEffect(() => {
+    setAccentState((settings.display?.accent ?? "blue") as AccentKey);
+  }, [settings.display?.accent]);
+
+  const setAccent = (a: typeof initialAccent) => {
+    setAccentState(a);
+    updateSettings({ display: { ...(settings.display ?? {}), accent: a } });
+  };
+
+  // Apply accent to CSS variables so the UI updates immediately.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const root = document.documentElement;
+
+    const srcVarBase = `--color-accent-${accent}`;
+
+    if (accent === "blue") {
+      root.style.setProperty("--color-primary", "var(--color-primary-default)");
+    } else {
+      root.style.setProperty("--color-primary", `var(${srcVarBase})`);
+    }
+
+    // Update hover/active to follow the accent tokens
+    root.style.setProperty("--color-primary-hover", `var(${srcVarBase}-hover)`);
+    root.style.setProperty(
+      "--color-primary-active",
+      `var(${srcVarBase}-active)`,
+    );
+  }, [accent]);
+
   // Toggle between "light" and "dark" themes, respecting system preference if set
   const toggleTheme = () => setTheme(preference === "dark" ? "light" : "dark");
 
@@ -53,5 +88,7 @@ export function useTheme() {
     setPreference: setTheme,
     setTheme: setTheme as (t: ThemeKey) => void,
     toggleTheme,
+    accent,
+    setAccent,
   };
 }

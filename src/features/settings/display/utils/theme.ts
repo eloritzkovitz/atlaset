@@ -30,6 +30,24 @@ export function applyTheme(display?: DisplaySettings) {
   const apply = (t: string) => doc.classList.toggle("dark", t === "dark");
   apply(resolve());
 
+  // Apply accent tokens synchronously so accents are available before paint.
+  const accent = (display?.accent ?? "blue") as string;
+  try {
+    const srcVarBase = `--color-accent-${accent}`;
+    if (accent === "blue") {
+      doc.style.setProperty("--color-primary", "var(--color-primary-default)");
+    } else {
+      doc.style.setProperty("--color-primary", `var(${srcVarBase})`);
+    }
+    doc.style.setProperty("--color-primary-hover", `var(${srcVarBase}-hover)`);
+    doc.style.setProperty(
+      "--color-primary-active",
+      `var(${srcVarBase}-active)`,
+    );
+  } catch {
+    // ignore if CSS variables cannot be set in this environment
+  }
+
   // Listen to system preference changes if 'system' is selected
   if (pref === "system" && typeof window !== "undefined" && window.matchMedia) {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
