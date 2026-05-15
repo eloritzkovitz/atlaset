@@ -1,16 +1,29 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
-import { FaCircleXmark } from "react-icons/fa6";
+import React, {
+  lazy,
+  Suspense,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { useTranslation } from "react-i18next";
+import { FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
-import { Card } from "@components";
-import { ICONS } from "@constants/icons";
-import { QuizEntry, QuizSettings } from "@features/quizzes";
-import { setQuizType, setDifficulty, setGameMode } from "@features/quizzes";
+import type { RootState } from "@app/store";
+import {
+  getLobbyCards,
+  setDifficulty,
+  setGameMode,
+  setQuizType,
+  LobbyCard,
+  QuizEntry,
+  QuizSettings,
+  type LobbyCardItem,
+} from "@features/quizzes";
 import { useUiHint } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
 import { useFlyTransition, usePageTitle } from "@hooks";
-import type { RootState } from "../store";
 
 // Lazy load leaderboards component
 const Leaderboards = lazy(() =>
@@ -26,41 +39,10 @@ export default function QuizzesPage() {
   const { t } = useTranslation("quizzes");
   const { t: tCommon } = useTranslation("common");
 
-  // Cards config
-  const cards = [
-    {
-      key: "flag",
-      route: "guess-the-flag",
-      icon: <ICONS.quizFlag className="text-5xl mb-4" />,
-      title: t("lobby.cards.flag.title", "Guess the Flag"),
-      description: t(
-        "lobby.cards.flag.description",
-        "Can you identify the country by its flag?",
-      ),
-      muted: false,
-    },
-    {
-      key: "capital",
-      route: "guess-the-capital",
-      icon: <ICONS.quizCapital className="text-5xl mb-4" />,
-      title: t("lobby.cards.capital.title", "Guess the Capital"),
-      description: t(
-        "lobby.cards.capital.description",
-        "Test your knowledge of world capitals!",
-      ),
-      muted: true,
-    },
-    {
-      key: "leaderboards",
-      route: "leaderboards",
-      icon: <ICONS.leaderboards className="text-5xl mb-4 text-yellow-500" />,
-      title: t("lobby.cards.leaderboards.title", "Leaderboards"),
-      description: t(
-        "lobby.cards.leaderboards.description",
-        "See top scores and streaks!",
-      ),
-      muted: true,
-    },
+  const cards = useMemo(() => getLobbyCards(t), [t]) as LobbyCardItem[];
+  const rows = [
+    { group: "primary", padding: "lg" as const },
+    { group: "secondary", padding: "sm" as const },
   ];
 
   // Set page titles dynamically
@@ -136,6 +118,53 @@ export default function QuizzesPage() {
     }
   }, [leaderboardHint]);
 
+  // Show auth required hint
+  const showAuthHint = useCallback(
+    (message?: string) => {
+      if (leaderboardHint) return;
+      setHintKey((k) => k + 1);
+      setLeaderboardHint({
+        message:
+          message ||
+          t(
+            "leaderboards.authRequired",
+            "You must be signed in to view leaderboards.",
+          ),
+        icon: <FaCircleXmark className="text-danger text-xl" />,
+      });
+    },
+    [leaderboardHint, t],
+  );
+
+  // Handle card click behavior centrally
+  const handleCardClick = useCallback(
+    (card: LobbyCardItem) => {
+      // Leaderboards has special auth handling
+      if (card.key === "leaderboards") {
+        if (isAuthenticated()) {
+          navigate(card.route);
+        } else {
+          showAuthHint();
+        }
+        return;
+      }
+
+      // External/documentation links
+      if (typeof card.route === "string" && card.route.startsWith("/")) {
+        navigate(card.route);
+        return;
+      }
+
+      // Quiz routes require auth
+      if (isAuthenticated()) {
+        setSettingsOpen({ route: card.route, key: card.key });
+      } else {
+        showAuthHint();
+      }
+    },
+    [navigate, showAuthHint],
+  );
+
   return (
     <Routes>
       <Route
@@ -143,49 +172,26 @@ export default function QuizzesPage() {
         element={
           <div className="min-h-screen flex flex-col items-center justify-center relative">
             {showCards && (
-              <div
-                className={
-                  "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-all" +
-                  (animating ? " pointer-events-none" : "")
-                }
-              >
-                {cards.map((card) => (
-                  <Card
-                    key={card.key}
-                    className="cursor-pointer max-w-xs w-full p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 animation transition"
-                    animationClass={animationClass}
-                    onClick={() => {
-                      if (card.key !== "leaderboards") {
-                        setSettingsOpen({
-                          route: card.route,
-                          key: card.key,
-                        });
-                      } else {
-                        if (isAuthenticated()) {
-                          navigate(card.route);
-                        } else if (!leaderboardHint) {
-                          setHintKey((k) => k + 1);
-                          setLeaderboardHint({
-                            message: t(
-                              "leaderboards.authRequired",
-                              "You must be signed in to view leaderboards.",
-                            ),
-                            icon: (
-                              <FaCircleXmark className="text-danger text-xl" />
-                            ),
-                          });
-                        }
-                      }
-                    }}
+              <div className={animating ? "pointer-events-none" : ""}>
+                {rows.map(({ group, padding }) => (
+                  <div
+                    key={group}
+                    className={`grid grid-cols-1 md:grid-cols-2 gap-8 transition-all ${
+                      group === "secondary" ? "mt-6" : ""
+                    }`}
                   >
-                    <div className="flex flex-col items-center">
-                      {card.icon}
-                      <h2 className="text-xl font-semibold mb-2">
-                        {card.title}
-                      </h2>
-                      <p className="text-muted">{card.description}</p>
-                    </div>
-                  </Card>
+                    {cards
+                      .filter((c) => (c.group ?? "secondary") === group)
+                      .map((card) => (
+                        <LobbyCard
+                          key={card.key}
+                          card={card}
+                          padding={padding}
+                          animationClass={animationClass}
+                          onClick={handleCardClick}
+                        />
+                      ))}
+                  </div>
                 ))}
               </div>
             )}
