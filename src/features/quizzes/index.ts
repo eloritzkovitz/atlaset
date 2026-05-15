@@ -18,7 +18,7 @@ export {
 
 // Types
 export type { Difficulty } from "./types";
-export type { LobbyCardItem } from "./lobby/components/LobbyCard";
+export type { LobbyCardItem } from "./lobby/types";
 
 // Utils
 export { getLobbyCards } from "./lobby/utils/getLobbyCards";
