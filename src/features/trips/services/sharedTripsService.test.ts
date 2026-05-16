@@ -5,7 +5,8 @@ import * as getDocsModule from "firebase/firestore";
 vi.mock("firebase/firestore", () => ({
   getFirestore: () => ({}),
   collection: (...args: string[]) => ({ path: args.join("/") }),
-  getDocs: vi.fn(async (_q) => ({
+    addDoc: vi.fn(),
+    getDocs: vi.fn(async (_q) => ({
     docs: [{ id: "trip1" }, { id: "trip2" }, { id: "trip3" }],
   })),
 }));

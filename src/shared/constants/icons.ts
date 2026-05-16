@@ -49,6 +49,7 @@ import {
   FaMapLocationDot,
   FaMapPin,
   FaMedal,
+  FaMoon,
   FaPaintbrush,
   FaPencil,
   FaPenToSquare,
@@ -135,10 +136,10 @@ export const ICONS = {
   leaderboards: FaTrophy,
   //Settings
   accountSettings: FaUserGear,
-  SoundSettingsSection: FaVolumeHigh,
-  displaySettings: FaPaintbrush,
-  privacySettings: FaShieldHalved,
-  securitySettings: FaLock,
+  sound: FaVolumeHigh,
+  display: FaPaintbrush,
+  privacy: FaShieldHalved,
+  security: FaLock,
   // Misc
   shortcuts: FaKeyboard,
   search: FaMagnifyingGlass,
@@ -147,6 +148,7 @@ export const ICONS = {
   help: FaCircleQuestion,
   info: FaCircleInfo,
   reportBug: FaBug,
+  appearance: FaMoon,
   language: IoLanguage,
   // Actions
   add: FaPlus,

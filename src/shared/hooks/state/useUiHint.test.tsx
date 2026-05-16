@@ -1,4 +1,4 @@
-vi.mock("../../../features/settings/hooks/useLanguage", () => ({
+vi.mock("../../../features/settings/account/hooks/useLanguage", () => ({
   useLanguage: () => ({
     current: "en",
     name: "English",

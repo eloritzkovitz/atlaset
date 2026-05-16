@@ -1,5 +1,5 @@
 import { useMapView } from "@contexts/MapViewContext";
-import { useCountryColors } from "@features/settings/hooks/useCountryColors";
+import { useCountryColors } from "@features/settings";
 import { MAP_STYLE_CONFIG } from "../constants/map";
 
 /**

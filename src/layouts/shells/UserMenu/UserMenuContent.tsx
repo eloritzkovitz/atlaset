@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
-import { useLanguage } from "@features/settings";
+import { ThemeToggle, useLanguage, useTheme } from "@features/settings";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
 
@@ -22,8 +22,10 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
 
   // Translation
   const { t } = useTranslation("common");
+  const { t: tSettings } = useTranslation("settings");
   const { name } = useLanguage();
   const { openLanguagePicker } = useUI();
+  const { theme, toggleTheme } = useTheme();
 
   // Don't render if no user
   if (!user) return null;
@@ -48,31 +50,6 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     { separator: true },
     {
-      label: t("menu.reportBug"),
-      icon: <ICONS.reportBug className="text-lg me-2" />,
-      onClick: () => {
-        window.open(
-          "https://github.com/eloritzkovitz/atlaset/issues",
-          "_blank",
-        );
-        onClose?.();
-      },
-      url: "https://github.com/eloritzkovitz/atlaset/issues",
-    },
-    ...(!isMobile
-      ? [
-          {
-            label: t("menu.keyboardShortcuts"),
-            icon: <ICONS.shortcuts className="text-lg me-2" />,
-            onClick: () => {
-              toggleShortcuts();
-              onClose?.();
-            },
-          },
-        ]
-      : []),
-    { separator: true },
-    {
       label: t("menu.settings"),
       icon: <ICONS.settings className="text-lg me-2" />,
       onClick: () => {
@@ -82,7 +59,25 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       url: "/settings",
     },
     {
-      label: `${t("menu.language")} (${name})`,
+      label: `${t("menu.appearance")}: ${
+        theme === "dark"
+          ? tSettings("display.theme.dark")
+          : tSettings("display.theme.light")
+      }`,
+      icon: <ICONS.appearance className="text-lg me-2" />,
+      onClick: () => {
+        navigate("/settings/display");
+        onClose?.();
+      },
+      url: "/settings/display",
+      trailing: (
+        <div onClick={(e) => e.stopPropagation()}>
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+        </div>
+      ),
+    },
+    {
+      label: `${t("menu.language")}: ${name}`,
       icon: <ICONS.language className="text-lg me-2" />,
       onClick: () => {
         openLanguagePicker();
@@ -95,6 +90,31 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
           className="ms-auto text-lg opacity-60"
         />
       ),
+    },
+    { separator: true },
+    ...(!isMobile
+      ? [
+          {
+            label: t("menu.keyboardShortcuts"),
+            icon: <ICONS.shortcuts className="text-lg me-2" />,
+            onClick: () => {
+              toggleShortcuts();
+              onClose?.();
+            },
+          },
+        ]
+      : []),
+    {
+      label: t("menu.reportBug"),
+      icon: <ICONS.reportBug className="text-lg me-2" />,
+      onClick: () => {
+        window.open(
+          "https://github.com/eloritzkovitz/atlaset/issues",
+          "_blank",
+        );
+        onClose?.();
+      },
+      url: "https://github.com/eloritzkovitz/atlaset/issues",
     },
     { separator: true },
     {
@@ -124,7 +144,9 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
             url={item.url}
           >
             <span className="font-semibold">{item.label}</span>
-            {item.trailing ?? null}
+            {item.trailing ? (
+              <div className="ms-auto">{item.trailing}</div>
+            ) : null}
           </MenuButton>
         ),
       )}

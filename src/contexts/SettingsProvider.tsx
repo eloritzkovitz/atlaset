@@ -1,6 +1,12 @@
-import { useEffect, useRef, type PropsWithChildren } from "react";
+import {
+  useEffect,
+  useRef,
+  useLayoutEffect,
+  type PropsWithChildren,
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  applyTheme,
   loadSettings,
   saveSettings,
   resetSettingsThunk,
@@ -34,11 +40,8 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
     }
   }, [authReady, authUser, dispatch]);
 
-  // Apply theme class to document
-  useEffect(() => {
-    const theme = settings.display?.theme ?? "dark";
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [settings.display?.theme]);
+  // Apply theme class to document before paint
+  useLayoutEffect(() => applyTheme(settings.display), [settings.display]);
 
   // Update settings via Redux
   const updateSettings = async (

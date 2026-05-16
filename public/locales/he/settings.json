@@ -61,7 +61,20 @@
     "theme": {
       "title": "ערכת נושא",
       "dark": "כהה",
-      "light": "בהיר"
+      "light": "בהיר",
+      "syncWithSystem": "סנכרן עם נושא המכשיר",
+      "followingSystem": "עוקב אחרי העדפת המערכת"
+    },
+    "accents": {
+      "label": "גוונים",
+      "names": {
+        "blue": "כחול",
+        "indigo": "אינדיגו",
+        "teal": "טורקיז",
+        "green": "ירוק",
+        "amber": "ענבר",
+        "rose": "ורוד"
+      }
     },
     "current": "ערכת נושא נוכחית:"
   },

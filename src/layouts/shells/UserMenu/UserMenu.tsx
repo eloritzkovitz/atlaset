@@ -91,7 +91,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
           className={
             isMobile
               ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-              : "absolute mt-3 w-60 z-50 p-2"
+              : "absolute mt-3 w-70 z-50 p-2"
           }
           style={
             isMobile

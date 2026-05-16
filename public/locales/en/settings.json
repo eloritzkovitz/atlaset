@@ -61,7 +61,20 @@
     "theme": {
       "title": "Theme",
       "dark": "Dark",
-      "light": "Light"
+      "light": "Light",
+      "syncWithSystem": "Sync with device theme",
+      "followingSystem": "Follows system preference"
+    },
+    "accents": {
+      "label": "Accents",
+      "names": {
+        "blue": "Blue",
+        "indigo": "Indigo",
+        "teal": "Teal",
+        "green": "Green",
+        "amber": "Amber",
+        "rose": "Rose"
+      }
     },
     "current": "Current theme:"
   },

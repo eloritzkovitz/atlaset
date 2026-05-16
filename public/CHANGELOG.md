@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-05-16
+
+- **[feature]** **Settings | Display:** Redesigned display selection settings and added a quick toggle to the main menu
+- **[feature]** **Settings | Display:** Added an option to sync theme with system settings (will now be the default)
+- **[feature]** **Settings | Display:** Added theme accents
+- **[bugfix]** **Settings | Display:** User settings will now preload before default fallback
+- **[feature]** **Quizzes:** Updated lobby with how to play card
+
 ## 2026-05-13
 
 - **[feature]** **Countries:** Updated language qualifier search logic to support filtering by name (data was changed to use ISO 639 codes as keys)

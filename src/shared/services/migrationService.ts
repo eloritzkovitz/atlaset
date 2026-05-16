@@ -1,7 +1,7 @@
 import { appDb } from "@app/db";
 import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
-import { settingsService } from "../../features/settings/services/settingsService";
+import { settingsService } from "../../features/settings/common/services/settingsService";
 import type { Settings } from "../../features/settings/types";
 
 /**

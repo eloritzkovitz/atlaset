@@ -12,12 +12,19 @@ export type SoundSettings = {
   soundEffectsVolume: number;
 };
 
+/** Represents a theme key. */
+export type ThemeKey = "light" | "dark" | "system";
+
+/** Represents an accent key. */
+export type AccentKey = "blue" | "indigo" | "teal" | "green" | "amber" | "rose";
+
 /** Display-related settings. */
 export type DisplaySettings = {
-  theme: "light" | "dark";
+  theme: ThemeKey;
+  accent?: AccentKey;
 };
 
-/** Map-related settings */
+/** Map-related settings. */
 export type MapSettings = {
   projection?: string;
   borderColor?: string;
