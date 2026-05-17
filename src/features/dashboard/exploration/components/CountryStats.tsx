@@ -138,10 +138,11 @@ export function CountryStats({
   if (selectedRegion) {
     return (
       <CountrySection
-        countries={filteredCountries}
+        countries={countries}
         visitedCountryCodes={visited.visitedCountryCodes}
         onSubregionChange={onSubregionChange}
         onAllCountries={onShowAllCountries}
+        initialSovereignOnly={countryType === "sovereign"}
         resetFilters={onResetFilters}
         {...regionProps}
       />

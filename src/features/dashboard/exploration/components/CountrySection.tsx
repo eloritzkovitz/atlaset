@@ -1,23 +1,24 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { canonicalKey } from "@utils/string";
 import { FaThLarge } from "react-icons/fa";
-import { FaCircleCheck } from "react-icons/fa6";
+import { FaCircleCheck, FaFlag } from "react-icons/fa6";
 import { PiGlobeStandFill } from "react-icons/pi";
 import { ActionButton, SearchInput, SelectInput } from "@components";
-import { useCountryData } from "@features/countries";
+import { ICONS } from "@constants/icons";
+import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import {
   CountryDisplayPanel,
   CountrySortSelect,
   filterCountries,
   sortCountries,
+  useCountryData,
   type Country,
   type GeoType,
 } from "@features/countries";
 import { buildVisitContext } from "@features/visits/utils/visits";
-import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import { useSort } from "@hooks";
-import { ICONS } from "@constants/icons";
+import { canonicalKey } from "@utils/string";
+import { ToggleButton } from "./ToggleButton";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -31,6 +32,7 @@ interface CountrySectionProps {
   search: string;
   setSearch: (search: string) => void;
   initialView?: "grid" | "list";
+  initialSovereignOnly?: boolean;
   className?: string;
   onSubregionChange?: (region: string, subregion: string) => void;
   onAllCountries?: () => void;
@@ -49,6 +51,7 @@ export function CountrySection({
   search,
   setSearch,
   initialView = "grid",
+  initialSovereignOnly = false,
   className = "",
   onSubregionChange,
   onAllCountries,
@@ -63,6 +66,8 @@ export function CountrySection({
       ? undefined
       : selectedSubregion;
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
+  const [showSovereignOnly, setShowSovereignOnly] =
+    useState(initialSovereignOnly);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
   const [showTranscontinental, setShowTranscontinental] = useState(false);
 
@@ -142,6 +147,11 @@ export function CountrySection({
     if (onAllCountries) onAllCountries();
   }
 
+  // Handler to toggle sovereign only filter
+  const handleSovereignToggle = () => {
+    setShowSovereignOnly((s) => !s);
+  };
+
   // Handler to toggle visited/all
   const handleVisitedToggle = () => {
     setShowVisitedOnly((prev) => !prev);
@@ -163,6 +173,7 @@ export function CountrySection({
         search,
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
+        selectedSovereignty: showSovereignOnly ? "sovereign" : "",
         modifiers: showTranscontinental ? { tc: "include" } : undefined,
       }),
     [
@@ -171,6 +182,7 @@ export function CountrySection({
       normalizedRegion,
       normalizedSubregion,
       showTranscontinental,
+      showSovereignOnly,
     ],
   );
 
@@ -263,77 +275,71 @@ export function CountrySection({
                 variant="toggle"
                 rounded
               />
-              <ActionButton
-                onClick={handleVisitedToggle}
-                ariaLabel={
-                  showVisitedOnly
-                    ? tDashboard(
-                        "exploration.showAllCountries",
-                        "Show All Countries",
-                      )
-                    : tDashboard(
-                        "exploration.showVisitedOnly",
-                        "Show Visited Only",
-                      )
-                }
-                title={
-                  showVisitedOnly
-                    ? tDashboard(
-                        "exploration.showAllCountries",
-                        "Show All Countries",
-                      )
-                    : tDashboard(
-                        "exploration.showVisitedOnly",
-                        "Show Visited Only",
-                      )
-                }
-                icon={
-                  showVisitedOnly ? (
-                    <span className="flex items-center gap-1 font-semibold text-sm">
-                      <ICONS.countries />
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1 font-semibold text-sm">
-                      <FaCircleCheck />
-                    </span>
-                  )
-                }
-                variant="toggle"
-                rounded
+              <ToggleButton
+                on={showSovereignOnly}
+                onClick={handleSovereignToggle}
+                ariaLabelOn={tDashboard(
+                  "exploration.showAllCountries",
+                  "Show all countries",
+                )}
+                ariaLabelOff={tDashboard(
+                  "exploration.showSovereignOnly",
+                  "Show sovereign only",
+                )}
+                titleOn={tDashboard(
+                  "exploration.showAllCountries",
+                  "Show all countries",
+                )}
+                titleOff={tDashboard(
+                  "exploration.showSovereignOnly",
+                  "Show Sovereign Only",
+                )}
+                iconOn={<FaFlag />}
+                iconOff={<FaFlag className="text-muted" />}
               />
-              <ActionButton
+              <ToggleButton
+                on={showVisitedOnly}
+                onClick={handleVisitedToggle}
+                ariaLabelOn={tDashboard(
+                  "exploration.showAllCountries",
+                  "Show All Countries",
+                )}
+                ariaLabelOff={tDashboard(
+                  "exploration.showVisitedOnly",
+                  "Show Visited Only",
+                )}
+                titleOn={tDashboard(
+                  "exploration.showAllCountries",
+                  "Show All Countries",
+                )}
+                titleOff={tDashboard(
+                  "exploration.showVisitedOnly",
+                  "Show Visited Only",
+                )}
+                iconOn={<FaCircleCheck />}
+                iconOff={<FaCircleCheck className="text-muted" />}
+              />
+              <ToggleButton
+                on={showTranscontinental}
                 onClick={handleTranscontinentalToggle}
-                ariaLabel={
-                  showTranscontinental
-                    ? tDashboard(
-                        "exploration.hideTranscontinental",
-                        "Hide transcontinental countries",
-                      )
-                    : tDashboard(
-                        "exploration.showTranscontinental",
-                        "Show transcontinental countries",
-                      )
-                }
-                title={
-                  showTranscontinental
-                    ? tDashboard(
-                        "exploration.hideTranscontinental",
-                        "Hide transcontinental countries",
-                      )
-                    : tDashboard(
-                        "exploration.showTranscontinental",
-                        "Show transcontinental countries",
-                      )
-                }
-                icon={
-                  <span className="flex items-center gap-1 font-semibold text-sm">
-                    <PiGlobeStandFill
-                      className={`text-lg ${!showTranscontinental ? "text-muted" : ""}`}
-                    />
-                  </span>
-                }
-                variant="toggle"
-                rounded
+                ariaLabelOn={tDashboard(
+                  "exploration.hideTranscontinental",
+                  "Hide transcontinental countries",
+                )}
+                ariaLabelOff={tDashboard(
+                  "exploration.showTranscontinental",
+                  "Show transcontinental countries",
+                )}
+                titleOn={tDashboard(
+                  "exploration.hideTranscontinental",
+                  "Hide transcontinental countries",
+                )}
+                titleOff={tDashboard(
+                  "exploration.showTranscontinental",
+                  "Show transcontinental countries",
+                )}
+                iconOn={<PiGlobeStandFill className="text-lg" />}
+                iconOff={<PiGlobeStandFill className="text-lg text-muted" />}
               />
               <ActionButton
                 onClick={handleToggle}

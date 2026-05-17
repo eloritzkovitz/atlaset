@@ -2,6 +2,7 @@
 
 ## 2026-05-17
 
+- **[feature]** **Dashboard | Countries:** Added separate menu item for countries and sovereignty toggle in toolbar
 - **[bugfix]** **User | Activity:** Fixed time formatting for quiz activity log items
 
 ## 2026-05-16
