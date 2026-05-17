@@ -6,6 +6,35 @@ import * as activityUtils from "./activity";
 import type { CollectionReference, DocumentData } from "firebase/firestore";
 import i18n from "i18next";
 
+function mockI18nTemplate(key: number | string, template: string) {
+  vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
+    const k = args[0];
+    const opts = args[1];
+    const kk = String(k).split(":").pop();
+    if (kk === String(key)) return template;
+    return opts?.defaultValue ?? "{userName} did something.";
+  });
+}
+
+function getChildren(action: number, details: Record<string, unknown>) {
+  const desc = activityUtils.getActivityDescription(action, details as any);
+  return desc.props.children as any[];
+}
+
+function findQuotedSpans(children: any[]) {
+  return children.filter(
+    (part: any) => part?.props?.className === "text-info font-bold",
+  );
+}
+
+function hasText(children: any[], text: string) {
+  return (
+    children.some(
+      (part: any) => typeof part === "string" && part.includes(text),
+    ) || children.some((part: any) => part?.props?.children === text)
+  );
+}
+
 beforeEach(() => {
   vi.restoreAllMocks();
   vi.spyOn(i18n, "t").mockImplementation((...args: any[]) => {
@@ -62,175 +91,81 @@ describe("logUserActivity", () => {
 
 describe("getActivityDescription", () => {
   it("renders a template with details and quoted formatting", () => {
-    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
-      const k = args[0];
-      const opts = args[1];
-      const key = String(k).split(":").pop();
-      if (key === "211") return "{userName} added '{itemName}'.";
-      return opts?.defaultValue ?? "{userName} did something.";
-    });
-    const desc = activityUtils.getActivityDescription(211, {
+    mockI18nTemplate(211, "{userName} added '{itemName}'.");
+    const children = getChildren(211, {
       userName: "Alice",
       itemName: "TestItem",
     });
-    const children = desc.props.children;
-    expect(
-      children.some((part: any) => part?.props?.children === "Alice"),
-    ).toBeTruthy();
-    expect(
-      children.some((part: any) => part?.props?.children === "TestItem"),
-    ).toBeTruthy();
+    expect(hasText(children, "Alice")).toBeTruthy();
+    expect(findQuotedSpans(children)[0].props.children).toBe("TestItem");
   });
 
   it("renders quoted text with correct formatting", () => {
-    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
-      const k = args[0];
-      const opts = args[1];
-      const key = String(k).split(":").pop();
-      if (key === "212")
-        return "{userName} edited '{itemName}' at '{location}'.";
-      return opts?.defaultValue ?? "{userName} did something.";
-    });
-    const desc = activityUtils.getActivityDescription(212, {
+    mockI18nTemplate(212, "{userName} edited '{itemName}' at '{location}'.");
+    const children = getChildren(212, {
       userName: "Bob",
       itemName: "ItemX",
       location: "PlaceY",
     });
-    const children = desc.props.children;
-    const coloredSpans = children.filter(
-      (part: any) => part?.props?.className === "text-info font-bold",
-    );
+    const coloredSpans = findQuotedSpans(children);
     expect(coloredSpans.length).toBe(2);
     expect(coloredSpans[0].props.children).toBe("ItemX");
     expect(coloredSpans[1].props.children).toBe("PlaceY");
   });
 
   it("uses default for missing userName", () => {
-    const desc = activityUtils.getActivityDescription(101, {});
-    expect(
-      desc.props.children.some((part: any) => part?.props?.children === "You"),
-    ).toBeTruthy();
+    const children = getChildren(101, {});
+    expect(hasText(children, "You")).toBeTruthy();
   });
 
   it("returns fallback for unknown event", () => {
-    const desc = activityUtils.getActivityDescription(8888, {
-      userName: "Bob",
-    });
-    const children = desc.props.children;
-    expect(
-      children.some((part: any) => part?.props?.children === "Bob"),
-    ).toBeTruthy();
-    expect(
-      children.some(
-        (part: any) =>
-          typeof part === "string" && part.includes("did something"),
-      ),
-    ).toBeTruthy();
+    const children = getChildren(8888, { userName: "Bob" });
+    expect(hasText(children, "Bob")).toBeTruthy();
+    expect(hasText(children, "did something")).toBeTruthy();
   });
 
   it("returns empty string for unknown placeholder", () => {
-    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
-      const k = args[0];
-      const opts = args[1];
-      const key = String(k).split(":").pop();
-      if (key === "0") return "{userName} did {unknownKey}.";
-      return opts?.defaultValue ?? "{userName} did something.";
-    });
-    const desc = activityUtils.getActivityDescription(0, { userName: "Eve" });
-    const children = desc.props.children;
-    expect(
-      children.some((part: any) => part?.props?.children === "Eve"),
-    ).toBeTruthy();
-    expect(
-      children.some(
-        (part: any) => typeof part === "string" && part.includes("did "),
-      ),
-    ).toBeTruthy();
-    // no cleanup needed; we mocked i18n.t for this test
+    mockI18nTemplate(0, "{userName} did {unknownKey}.");
+    const children = getChildren(0, { userName: "Eve" });
+    expect(hasText(children, "Eve")).toBeTruthy();
+    expect(hasText(children, "did ")).toBeTruthy();
   });
 
   it("renders correctly when there is no quoted text", () => {
-    vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
-      const k = args[0];
-      const opts = args[1];
-      const key = String(k).split(":").pop();
-      if (key === "120") return "{userName} updated their profile.";
-      return opts?.defaultValue ?? "{userName} did something.";
-    });
-    const desc = activityUtils.getActivityDescription(120, { userName: "Sam" });
-    const children = desc.props.children;
-    expect(
-      children.some((part: any) => part?.props?.children === "Sam"),
-    ).toBeTruthy();
-    expect(
-      children.some(
-        (part: any) =>
-          typeof part === "string" && part.includes("updated their profile"),
-      ),
-    ).toBeTruthy();
+    mockI18nTemplate(120, "{userName} updated their profile.");
+    const children = getChildren(120, { userName: "Sam" });
+    expect(hasText(children, "Sam")).toBeTruthy();
+    expect(hasText(children, "updated their profile")).toBeTruthy();
+  });
+
+  it("formats numeric time using formatTimeSeconds", () => {
+    mockI18nTemplate(301, "{userName} finished in {time}.");
+    const children = getChildren(301, { userName: "Alex", time: 75 });
+    expect(hasText(children, "1:15")).toBeTruthy();
   });
 });
 
 describe("getActivityIcon", () => {
-  it("returns FaCircleUser for user-related codes", () => {
-    [101, 102, 103, 104, 110, 111].forEach((code) => {
-      const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaCircleUser");
-    });
-  });
+  const cases: Array<[number[], string]> = [
+    [[101, 102, 103, 104, 110, 111], "FaCircleUser"],
+    [[120], "FaUser"],
+    [[130], "FaGear"],
+    [[140], "FaUserGroup"],
+    [[200], "FaEarthAmericas"],
+    [[210, 219], "FaLayerGroup"],
+    [[220, 223], "FaMapPin"],
+    [[230, 239], "FaMap"],
+    [[300, 309], "FaQuestion"],
+    [[400, 415], "FaSuitcaseRolling"],
+    [[8888, 9999], "FaRegClock"],
+  ];
 
-  it("returns FaUser for code 120", () => {
-    const icon = activityUtils.getActivityIcon(120);
-    expect(icon.type.name).toBe("FaUser");
-  });
-
-  it("returns FaGear for code 130", () => {
-    const icon = activityUtils.getActivityIcon(130);
-    expect(icon.type.name).toBe("FaGear");
-  });
-
-  it("returns FaUserGroup for code 140", () => {
-    const icon = activityUtils.getActivityIcon(140);
-    expect(icon.type.name).toBe("FaUserGroup");
-  });
-
-  it("returns FaEarthAmericas for code 200", () => {
-    const icon = activityUtils.getActivityIcon(200);
-    expect(icon.type.name).toBe("FaEarthAmericas");
-  });
-
-  it("returns FaLayerGroup for layer codes", () => {
-    [210, 219].forEach((code) => {
-      const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaLayerGroup");
-    });
-  });
-
-  it("returns FaMapPin for marker codes", () => {
-    [220, 223].forEach((code) => {
-      const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaMapPin");
-    });
-  });
-
-  it("returns FaMap for map codes", () => {
-    [230, 239].forEach((code) => {
-      const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaMap");
-    });
-  });
-
-  it("returns FaQuestion for question codes", () => {
-    [8888, 9999].forEach((code) => {
-      const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaRegClock");
-    });
-  });
-
-  it("returns FaSuitcaseRolling for trip codes", () => {
-    [400, 415].forEach((code) => {
-      const icon = activityUtils.getActivityIcon(code);
-      expect(icon.type.name).toBe("FaSuitcaseRolling");
+  cases.forEach(([codes, expected]) => {
+    it(`returns ${expected} for codes ${codes.join(",")}`, () => {
+      codes.forEach((code) => {
+        const icon = activityUtils.getActivityIcon(code);
+        expect(icon.type.name).toBe(expected);
+      });
     });
   });
 });

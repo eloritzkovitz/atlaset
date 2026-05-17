@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-05-17
+
+- **[bugfix]** **User | Activity:** Fixed time formatting for quiz activity log items
+
 ## 2026-05-16
 
 - **[feature]** **Settings | Display:** Redesigned display selection settings and added a quick toggle to the main menu

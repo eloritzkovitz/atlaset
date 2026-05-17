@@ -47,7 +47,7 @@
   "239": "{userName} removed '{itemName}' from '{mapName}'{date}",
 
   "300": "{userName} has played a quiz{date}",
-  "301": "{userName} completed {difficultyWithArticle} {quizType} quiz with a score of {score} in {time}{date}",
+  "301": "{userName} completed {difficultyWithArticle} {quizType} quiz with a score of {score} in {time}",
   "302": "{userName} has entered the leaderboards{date}",
 
   "400": "{userName} performed a trips action{date}",

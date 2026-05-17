@@ -95,7 +95,6 @@ export const leaderboardsService = {
         quizType: type,
         score: entry.score,
         time: entry.time,
-        date: new Date().toISOString(),
         playerId: entry.playerId,
         userName: user.displayName,
       },

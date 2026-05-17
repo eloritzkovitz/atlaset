@@ -47,7 +47,7 @@
   "239": "{userName} הסיר '{itemName}' מהמפה '{mapName}'{date}",
 
   "300": "{userName} שיחק חידון{date}",
-  "301": "{userName} השלים {difficultyWithArticle} חידון {quizType} עם ציון של {score} ב{time}{date}",
+  "301": "{userName} השלים {difficultyWithArticle} חידון {quizType} עם ציון של {score} ב{time}",
   "302": "{userName} נכנס לטבלת המובילים{date}",
 
   "400": "{userName} ביצע פעולה בטיולים{date}",

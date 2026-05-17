@@ -6,6 +6,7 @@ import i18n from "i18next";
 import type { JSX } from "react";
 import { addDoc } from "firebase/firestore";
 import { ICONS } from "@constants/icons";
+import { formatTimeSeconds } from "@utils/date";
 import { getUserCollection } from "@utils/firebase";
 import type { ActivityDetails } from "../../types";
 
@@ -51,7 +52,12 @@ export function getActivityDescription(
     location: details?.location || "",
     date: details?.date || "",
     ...Object.fromEntries(
-      Object.entries(details ?? {}).map(([k, v]) => [k, String(v)]),
+      Object.entries(details ?? {}).map(([k, v]) => {
+        if (k === "time") {
+          return [k, typeof v === "number" ? formatTimeSeconds(v) : String(v)];
+        }
+        return [k, String(v)];
+      }),
     ),
   };
 
