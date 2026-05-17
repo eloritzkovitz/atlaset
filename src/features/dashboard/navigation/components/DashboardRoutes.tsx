@@ -69,7 +69,7 @@ export function DashboardRoutes({
       <Route path="" element={<Navigate to="overview" replace />} />
       <Route
         path="countries"
-        element={<Navigate to="/dashboard/exploration" replace />}
+        element={<Navigate to="/dashboard/countries/all" replace />}
       />
       <Route
         path="exploration"
