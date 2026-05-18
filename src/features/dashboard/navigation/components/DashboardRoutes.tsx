@@ -76,10 +76,6 @@ export function DashboardRoutes({
       <Route path="overview" element={<OverviewGrid />} />
       <Route path="" element={<Navigate to="overview" replace />} />
       <Route
-        path="countries"
-        element={<Navigate to="/dashboard/countries/all" replace />}
-      />
-      <Route
         path="exploration"
         element={
           <ExplorationOverviewGrid
@@ -94,6 +90,10 @@ export function DashboardRoutes({
             onShowAllCountries={onShowAllCountries}
           />
         }
+      />
+      <Route
+        path="countries"
+        element={<Navigate to="/dashboard/countries/all" replace />}
       />
       <Route
         path="countries/all"
