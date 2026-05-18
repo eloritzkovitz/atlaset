@@ -1,8 +1,5 @@
 import type { Country } from "@features/countries";
 
-/** Represents the type of countries to display. */
-export type CountryType = "all" | "sovereign";
-
 /** Represents a region's statistics.*/
 export interface RegionStat {
   region: string;

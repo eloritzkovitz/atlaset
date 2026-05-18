@@ -7,13 +7,12 @@ import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
+import { ExplorationOverviewGrid } from "../../exploration/components/ExplorationOverviewGrid";
+import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
 import { OverviewGrid } from "../../overview/components/OverviewGrid";
 import { StatisticsGrid } from "../../statistics/components/StatisticsGrid";
-import { ExplorationOverviewGrid } from "../../exploration/components/ExplorationOverviewGrid";
-import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
-import type { CountryType } from "../../exploration/types";
 
 interface DashboardRoutesProps {
   countries: Country[];
@@ -56,10 +55,6 @@ export function DashboardRoutes({
 }: DashboardRoutesProps) {
   const { totalCountries, visitedCountries, regionStats } =
     useExplorationStats(countries);
-
-  const countryType: CountryType = selectedSovereignOnly ? "sovereign" : "all";
-  const setCountryType = (t: CountryType) =>
-    setSelectedSovereignOnly(t === "sovereign");
   const countryStatsBaseProps = {
     setSelectedRegion,
     setSelectedSubregion,
@@ -88,15 +83,15 @@ export function DashboardRoutes({
         path="exploration"
         element={
           <ExplorationOverviewGrid
-            countryType={countryType}
-            setCountryType={setCountryType}
             visitedCountries={visitedCountries}
             totalCountries={totalCountries}
-            onShowAllCountries={onShowAllCountries}
             regionStats={regionStats}
-            onSubregionChange={handleSubregionChange}
+            selectedShowSovereignOnly={selectedSovereignOnly}
+            setSelectedShowSovereignOnly={setSelectedSovereignOnly}
             setSelectedRegion={setSelectedRegion}
             setSelectedSubregion={setSelectedSubregion}
+            onSubregionChange={handleSubregionChange}
+            onShowAllCountries={onShowAllCountries}
           />
         }
       />

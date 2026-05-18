@@ -3,30 +3,30 @@ import { useCountryData } from "@features/countries";
 import { useDelayedLoading } from "@hooks";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
-import type { CountryType, RegionStat } from "../types";
+import type { RegionStat } from "../types";
 
 interface ExplorationOverviewGridProps {
-  countryType: CountryType;
-  setCountryType: (type: CountryType) => void;
   visitedCountries: number;
   totalCountries: number;
-  onShowAllCountries: () => void;
   regionStats: RegionStat[];
+  selectedShowSovereignOnly: boolean;
+  setSelectedShowSovereignOnly: (v: boolean) => void;
   setSelectedRegion: (region: string) => void;
   setSelectedSubregion: (subregion: string) => void;
   onSubregionChange?: (region: string, subregion: string) => void;
+  onShowAllCountries: () => void;
 }
 
 export function ExplorationOverviewGrid({
-  countryType,
-  setCountryType,
   visitedCountries,
   totalCountries,
-  onShowAllCountries,
   regionStats,
+  selectedShowSovereignOnly,
+  setSelectedShowSovereignOnly,
   setSelectedRegion,
   setSelectedSubregion,
   onSubregionChange,
+  onShowAllCountries,
 }: ExplorationOverviewGridProps) {
   const { countries, loading: countriesLoading } = useCountryData();
 
@@ -40,12 +40,12 @@ export function ExplorationOverviewGrid({
   return (
     <>
       <SegmentedToggle
-        value={countryType}
+        value={selectedShowSovereignOnly ? "sovereign" : "all"}
         options={[
           { value: "all", label: "All Countries" },
           { value: "sovereign", label: "Sovereign Only" },
         ]}
-        onChange={setCountryType}
+        onChange={(v) => setSelectedShowSovereignOnly(v === "sovereign")}
         className="mb-4"
       />
       <div className="w-full grid gap-6 md:grid-cols-2">
