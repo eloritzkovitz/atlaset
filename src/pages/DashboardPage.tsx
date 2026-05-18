@@ -7,7 +7,7 @@ import {
   LoadingSpinner,
   HamburgerButton,
 } from "@components";
-import { useCountryData, useRegionSubregionFilters } from "@features/countries";
+import { useCountryData } from "@features/countries";
 import {
   DASHBOARD_MENU,
   DashboardPanelMenu,
@@ -17,6 +17,7 @@ import {
   translateSubregionLabel,
   useDashboardRouteState,
   useDashboardNavigation,
+  useDashboardCountriesFilters,
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
@@ -68,7 +69,7 @@ export default function DashboardPage() {
     selectedAchievement,
   } = useDashboardRouteState();
 
-  // Region and subregion filter state
+  // Countries filter state
   const {
     selectedRegion,
     setSelectedRegion,
@@ -76,8 +77,10 @@ export default function DashboardPage() {
     setSelectedSubregion,
     search,
     setSearch,
+    selectedSovereignOnly,
+    setSelectedSovereignOnly,
     resetFilters,
-  } = useRegionSubregionFilters();
+  } = useDashboardCountriesFilters();
 
   // Build dashboard meta (title and breadcrumbs)
   const { breadcrumbs } = getDashboardMeta({
@@ -250,6 +253,8 @@ export default function DashboardPage() {
             setSelectedSubregion={setSelectedSubregion}
             search={search}
             setSearch={setSearch}
+            selectedSovereignOnly={selectedSovereignOnly}
+            setSelectedSovereignOnly={setSelectedSovereignOnly}
             selectedIsoCode={selectedIsoCode || ""}
             setSelectedIsoCode={handleCountrySelect}
             onShowAllCountries={handleShowAllCountries}

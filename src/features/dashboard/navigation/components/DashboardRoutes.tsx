@@ -3,14 +3,17 @@ import type { Country, Currency } from "@features/countries";
 import type { Language } from "@types";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
 import { AchievementInfo } from "../../achievements/components/AchievementInfo";
+import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
-import { CountryStats } from "../../exploration/components/CountryStats";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
 import { OverviewGrid } from "../../overview/components/OverviewGrid";
 import { StatisticsGrid } from "../../statistics/components/StatisticsGrid";
+import { ExplorationOverviewGrid } from "../../exploration/components/ExplorationOverviewGrid";
+import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
+import type { CountryType } from "../../exploration/types";
 
 interface DashboardRoutesProps {
   countries: Country[];
@@ -20,6 +23,8 @@ interface DashboardRoutesProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
+  selectedSovereignOnly: boolean;
+  setSelectedSovereignOnly: (v: boolean) => void;
   search: string;
   setSearch: (search: string) => void;
   selectedIsoCode: string;
@@ -38,6 +43,8 @@ export function DashboardRoutes({
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
+  selectedSovereignOnly,
+  setSelectedSovereignOnly,
   search,
   setSearch,
   selectedIsoCode,
@@ -47,6 +54,12 @@ export function DashboardRoutes({
   onResetFilters,
   onBack,
 }: DashboardRoutesProps) {
+  const { totalCountries, visitedCountries, regionStats } =
+    useExplorationStats(countries);
+
+  const countryType: CountryType = selectedSovereignOnly ? "sovereign" : "all";
+  const setCountryType = (t: CountryType) =>
+    setSelectedSovereignOnly(t === "sovereign");
   const countryStatsBaseProps = {
     setSelectedRegion,
     setSelectedSubregion,
@@ -74,14 +87,16 @@ export function DashboardRoutes({
       <Route
         path="exploration"
         element={
-          <CountryStats
-            {...countryStatsBaseProps}
-            selectedRegion={selectedRegion}
-            selectedSubregion={selectedSubregion}
-            search={search}
-            selectedIsoCode={selectedIsoCode}
+          <ExplorationOverviewGrid
+            countryType={countryType}
+            setCountryType={setCountryType}
+            visitedCountries={visitedCountries}
+            totalCountries={totalCountries}
+            onShowAllCountries={onShowAllCountries}
+            regionStats={regionStats}
             onSubregionChange={handleSubregionChange}
-            onBack={undefined}
+            setSelectedRegion={setSelectedRegion}
+            setSelectedSubregion={setSelectedSubregion}
           />
         }
       />
@@ -94,6 +109,8 @@ export function DashboardRoutes({
             selectedSubregion={""}
             search={search}
             selectedIsoCode={""}
+            selectedShowSovereignOnly={selectedSovereignOnly}
+            onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
             onBack={undefined}
           />
@@ -106,8 +123,10 @@ export function DashboardRoutes({
             {...countryStatsBaseProps}
             selectedRegion={selectedRegion}
             selectedSubregion={selectedSubregion}
+            selectedShowSovereignOnly={selectedSovereignOnly}
             search={search}
             selectedIsoCode={selectedIsoCode}
+            onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
             onBack={onBack}
           />
