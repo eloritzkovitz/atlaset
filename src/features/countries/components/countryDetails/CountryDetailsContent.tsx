@@ -1,5 +1,5 @@
-import { SovereigntyBadge } from "./SovereigntyBadge";
 import { CountryInfoTable } from "./CountryInfoTable";
+import { SovereigntyBadge } from "./SovereigntyBadge";
 import { CountryFlag } from "../countryFlag/CountryFlag";
 import type { Country, Currency } from "../../types";
 

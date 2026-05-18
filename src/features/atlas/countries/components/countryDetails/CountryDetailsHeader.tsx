@@ -3,8 +3,11 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { PanelHeader, ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { CountryWithFlag, type Country } from "@features/countries";
-import { VisitedStatusIndicator } from "@features/countries/components/countryDetails/VisitedStatusIndicator";
+import {
+  CountryWithFlag,
+  VisitedStatusIndicator,
+  type Country,
+} from "@features/countries";
 import { useLanguage } from "@features/settings";
 
 interface CountryDetailsHeaderProps {

@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
-import type { Country } from "@features/countries/types";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
+import type { Country } from "../../types";
 
 interface CountryAffiliationsContentProps {
   country: Country;
