@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
-import { TabButton } from "@components";
-import {
-  CountryDetailsContent,
-  getCountryTerritories,
-  type Country,
-  type Currency,
-} from "@features/countries";
 import { useTranslation } from "react-i18next";
-import { useCountryData } from "../../hooks/useCountryData";
+import { TabButton } from "@components";
 import type { Visit } from "@features/visits";
-import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
+import { CountryDetailsContent } from "./CountryDetailsContent";
+import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
+import { useCountryData } from "../../hooks/useCountryData";
+import type { Country, Currency } from "../../types";
+import { getCountryTerritories } from "../../utils/countryData";
 
 type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 

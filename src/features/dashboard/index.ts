@@ -14,6 +14,7 @@ export { DASHBOARD_MENU } from "./navigation/constants/dashboardMenu";
 // Hooks
 export { useDashboardNavigation } from "./navigation/hooks/useDashboardNavigation";
 export { useDashboardRouteState } from "./navigation/hooks/useDashboardRouteState";
+export { useDashboardCountriesFilters } from "./countries/hooks/useDashboardCountriesFilters";
 
 // Utils
 export { getDashboardMeta } from "./navigation/utils/dashboardNavigation";

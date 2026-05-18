@@ -1,12 +1,13 @@
 import { useState } from "react";
 
 /**
- * Minimal filter state for region, subregion, and search.
+ * Manages filter state for the dashboard countries pages.
  */
-export function useRegionSubregionFilters() {
+export function useDashboardCountriesFilters() {
+  const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedSubregion, setSelectedSubregion] = useState("");
-  const [search, setSearch] = useState("");
+  const [selectedSovereignOnly, setSelectedSovereignOnly] = useState(false);
   const [includeTranscontinental, setIncludeTranscontinental] = useState(false);
 
   // Reset all filters
@@ -15,6 +16,7 @@ export function useRegionSubregionFilters() {
     setSelectedSubregion("");
     setSearch("");
     setIncludeTranscontinental(false);
+    setSelectedSovereignOnly(false);
   }
 
   return {
@@ -24,6 +26,8 @@ export function useRegionSubregionFilters() {
     setSelectedSubregion,
     search,
     setSearch,
+    selectedSovereignOnly,
+    setSelectedSovereignOnly,
     includeTranscontinental,
     setIncludeTranscontinental,
     resetFilters,

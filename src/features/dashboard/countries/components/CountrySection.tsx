@@ -29,13 +29,14 @@ interface CountrySectionProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
+  selectedShowSovereignOnly?: boolean;
   search: string;
   setSearch: (search: string) => void;
   initialView?: "grid" | "list";
-  initialSovereignOnly?: boolean;
   className?: string;
-  onSubregionChange?: (region: string, subregion: string) => void;
   onAllCountries?: () => void;
+  onShowSovereignOnly?: (v: boolean) => void;
+  onSubregionChange?: (region: string, subregion: string) => void;
   resetFilters?: () => void;
 }
 
@@ -48,13 +49,14 @@ export function CountrySection({
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
+  selectedShowSovereignOnly,
   search,
   setSearch,
   initialView = "grid",
-  initialSovereignOnly = false,
   className = "",
-  onSubregionChange,
   onAllCountries,
+  onShowSovereignOnly,
+  onSubregionChange,
   resetFilters,
 }: CountrySectionProps) {
   const { t: tDashboard } = useTranslation("dashboard");
@@ -66,8 +68,6 @@ export function CountrySection({
       ? undefined
       : selectedSubregion;
   const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
-  const [showSovereignOnly, setShowSovereignOnly] =
-    useState(initialSovereignOnly);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
   const [showTranscontinental, setShowTranscontinental] = useState(false);
 
@@ -149,7 +149,7 @@ export function CountrySection({
 
   // Handler to toggle sovereign only filter
   const handleSovereignToggle = () => {
-    setShowSovereignOnly((s) => !s);
+    if (onShowSovereignOnly) onShowSovereignOnly(!selectedShowSovereignOnly);
   };
 
   // Handler to toggle visited/all
@@ -173,7 +173,7 @@ export function CountrySection({
         search,
         selectedRegion: normalizedRegion,
         selectedSubregion: normalizedSubregion,
-        selectedSovereignty: showSovereignOnly ? "sovereign" : "",
+        selectedSovereignty: selectedShowSovereignOnly ? "sovereign" : "",
         modifiers: showTranscontinental ? { tc: "include" } : undefined,
       }),
     [
@@ -182,7 +182,7 @@ export function CountrySection({
       normalizedRegion,
       normalizedSubregion,
       showTranscontinental,
-      showSovereignOnly,
+      selectedShowSovereignOnly,
     ],
   );
 
@@ -276,7 +276,7 @@ export function CountrySection({
                 rounded
               />
               <ToggleButton
-                on={showSovereignOnly}
+                on={!!selectedShowSovereignOnly}
                 onClick={handleSovereignToggle}
                 ariaLabelOn={tDashboard(
                   "exploration.showAllCountries",

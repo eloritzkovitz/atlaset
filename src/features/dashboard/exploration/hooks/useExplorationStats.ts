@@ -10,20 +10,32 @@ import { countVisited } from "../../statistics/utils/visitStats";
 /**
  * Calculates exploration statistics for the countries panel.
  * @param countries - List of all countries
- * @returns Exploration statistics including total countries, visited countries, and stats by region and subregion.
+ * @returns Exploration statistics including total countries, visited countries and stats by region and subregion.
  */
-export function useExplorationStats(countries: Country[]) {
+export function useExplorationStats(
+  countries: Country[],
+  sovereignOnly = false,
+) {
   const { isCountryVisited, visitedCountryCodes } = useVisitedCountries();
-  const totalCountries = countries.length;
-  const visitedCountries = visitedCountryCodes.length;
-  const regions = getAllRegions(countries);
+  const effectiveCountries = sovereignOnly
+    ? countries.filter((c) => c.sovereigntyStatus === "sovereign")
+    : countries;
+  const effectiveIso = new Set(effectiveCountries.map((c) => c.isoCode));
+  const totalCountries = effectiveCountries.length;
+  const visitedCountries = visitedCountryCodes.reduce(
+    (n, iso) => n + (effectiveIso.has(iso) ? 1 : 0),
+    0,
+  );
+  const regions = getAllRegions(effectiveCountries);
 
   // Compute stats for each region and its subregions
   const regionStats: RegionStat[] = regions.map((region) => {
-    const regionCountries = countries.filter((c) => c.region === region);
+    const regionCountries = effectiveCountries.filter(
+      (c) => c.region === region,
+    );
     const regionVisited = countVisited(regionCountries, isCountryVisited);
     const subregions: SubregionStat[] = getSubregionsForRegion(
-      countries,
+      effectiveCountries,
       region,
     ).map((sub) => {
       const subCountries = regionCountries.filter((c) => c.subregion === sub);

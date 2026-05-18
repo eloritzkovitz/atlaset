@@ -3,10 +3,12 @@ import type { Country, Currency } from "@features/countries";
 import type { Language } from "@types";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
 import { AchievementInfo } from "../../achievements/components/AchievementInfo";
+import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
-import { CountryStats } from "../../exploration/components/CountryStats";
+import { ExplorationOverviewGrid } from "../../exploration/components/ExplorationOverviewGrid";
+import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
 import { OverviewGrid } from "../../overview/components/OverviewGrid";
@@ -20,6 +22,8 @@ interface DashboardRoutesProps {
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
   setSelectedSubregion: (subregion: string) => void;
+  selectedSovereignOnly: boolean;
+  setSelectedSovereignOnly: (v: boolean) => void;
   search: string;
   setSearch: (search: string) => void;
   selectedIsoCode: string;
@@ -38,6 +42,8 @@ export function DashboardRoutes({
   setSelectedRegion,
   selectedSubregion,
   setSelectedSubregion,
+  selectedSovereignOnly,
+  setSelectedSovereignOnly,
   search,
   setSearch,
   selectedIsoCode,
@@ -47,6 +53,8 @@ export function DashboardRoutes({
   onResetFilters,
   onBack,
 }: DashboardRoutesProps) {
+  const { totalCountries, visitedCountries, regionStats } =
+    useExplorationStats(countries);
   const countryStatsBaseProps = {
     setSelectedRegion,
     setSelectedSubregion,
@@ -68,22 +76,24 @@ export function DashboardRoutes({
       <Route path="overview" element={<OverviewGrid />} />
       <Route path="" element={<Navigate to="overview" replace />} />
       <Route
-        path="countries"
-        element={<Navigate to="/dashboard/countries/all" replace />}
-      />
-      <Route
         path="exploration"
         element={
-          <CountryStats
-            {...countryStatsBaseProps}
-            selectedRegion={selectedRegion}
-            selectedSubregion={selectedSubregion}
-            search={search}
-            selectedIsoCode={selectedIsoCode}
+          <ExplorationOverviewGrid
+            visitedCountries={visitedCountries}
+            totalCountries={totalCountries}
+            regionStats={regionStats}
+            selectedShowSovereignOnly={selectedSovereignOnly}
+            setSelectedShowSovereignOnly={setSelectedSovereignOnly}
+            setSelectedRegion={setSelectedRegion}
+            setSelectedSubregion={setSelectedSubregion}
             onSubregionChange={handleSubregionChange}
-            onBack={undefined}
+            onShowAllCountries={onShowAllCountries}
           />
         }
+      />
+      <Route
+        path="countries"
+        element={<Navigate to="/dashboard/countries/all" replace />}
       />
       <Route
         path="countries/all"
@@ -94,6 +104,8 @@ export function DashboardRoutes({
             selectedSubregion={""}
             search={search}
             selectedIsoCode={""}
+            selectedShowSovereignOnly={selectedSovereignOnly}
+            onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
             onBack={undefined}
           />
@@ -106,8 +118,10 @@ export function DashboardRoutes({
             {...countryStatsBaseProps}
             selectedRegion={selectedRegion}
             selectedSubregion={selectedSubregion}
+            selectedShowSovereignOnly={selectedSovereignOnly}
             search={search}
             selectedIsoCode={selectedIsoCode}
+            onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
             onBack={onBack}
           />
