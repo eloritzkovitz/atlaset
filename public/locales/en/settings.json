@@ -8,7 +8,7 @@
     "security": "Security"
   },
   "account": {
-    "title": "Account Settings",
+    "title": "Account preferences",
     "profile": {
       "title": "Profile",
       "info": "Profile information",
@@ -30,7 +30,6 @@
     },
     "management": {
       "title": "Account Management",
-      "dangerZone": "Danger Zone",
       "hibernate": "Hibernate Account",
       "hibernating": "Hibernating...",
       "hibernateAria": "Hibernate account",

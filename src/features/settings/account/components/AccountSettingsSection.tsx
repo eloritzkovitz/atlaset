@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { HomeCountrySelect } from "./HomeCountrySelect";
-import { ProfileSection } from "./ProfileSection";
 import { AccountManagementSection } from "./AccountManagementSection";
+import { HomeCountrySelect } from "./HomeCountrySelect";
 import { LanguageSelect } from "./LanguageSelect";
+import { ProfileSection } from "./ProfileSection";
+import { SoundSettingsSection } from "./SoundSettingsSection";
 
 export function AccountSettingsSection() {
   const { t } = useTranslation("settings");
@@ -14,6 +15,7 @@ export function AccountSettingsSection() {
       <ProfileSection />
       <HomeCountrySelect />
       <LanguageSelect />
+      <SoundSettingsSection />
       <AccountManagementSection />
     </div>
   );

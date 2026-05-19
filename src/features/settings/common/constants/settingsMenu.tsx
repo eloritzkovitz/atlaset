@@ -4,14 +4,8 @@ export const SETTINGS_MENU = [
   {
     key: "account",
     label: "Account",
-    icon: ICONS.accountSettings,
+    icon: ICONS.account,
     url: "/settings/account",
-  },
-  {
-    key: "sound",
-    label: "Sound",
-    icon: ICONS.sound,
-    url: "/settings/sound",
   },
   {
     key: "display",

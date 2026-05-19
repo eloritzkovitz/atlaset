@@ -30,7 +30,6 @@
     },
     "management": {
       "title": "ניהול חשבון",
-      "dangerZone": "אזור מסוכן",
       "hibernate": "השבתת חשבון",
       "hibernating": "מושבת...",
       "hibernateAria": "השבת חשבון",

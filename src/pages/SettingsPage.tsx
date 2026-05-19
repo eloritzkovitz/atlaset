@@ -12,7 +12,6 @@ import {
   DisplaySettingsSection,
   SecurityInfoSection,
   SettingsPanelMenu,
-  SoundSettingsSection,
 } from "@features/settings";
 import { EditProfileModal, useUserProfile } from "@features/user";
 import { usePageTitle } from "@hooks";
@@ -34,15 +33,12 @@ export default function SettingsPage() {
       ? "security"
       : location.pathname.endsWith("/display")
         ? "display"
-        : location.pathname.endsWith("/sound")
-          ? "sound"
-          : "account";
+        : "account";
 
   // Page title based on selected panel
   const panelTitles: Record<string, string> = {
     account: "Account",
     display: "Display",
-    sound: "Sound",
     privacy: "Privacy",
     security: "Security",
   };
@@ -62,8 +58,6 @@ export default function SettingsPage() {
       navigate("/settings/security");
     } else if (panel === "display") {
       navigate("/settings/display");
-    } else if (panel === "sound") {
-      navigate("/settings/sound");
     } else {
       navigate("/settings/account");
     }
@@ -91,7 +85,6 @@ export default function SettingsPage() {
           <Routes>
             <Route path="account" element={<AccountSettingsSection />} />
             <Route path="display" element={<DisplaySettingsSection />} />
-            <Route path="sound" element={<SoundSettingsSection />} />
             <Route path="privacy" element={undefined} />
             <Route path="security" element={<SecurityInfoSection />} />
             {/* Redirect unknown profile routes to /settings */}
