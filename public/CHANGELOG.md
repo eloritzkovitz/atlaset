@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-05-19
+
+- **[chore]** **Settings | Account:** Consolidated language and region settings into single category
+- **[feature]** **Settings | Account:** Added date formatting setting and consolidated various date displays
+- **[bugfix]** **Settings | Security:** Fixed last login and last login method display
+
 ## 2026-05-17
 
 - **[feature]** **Dashboard | Countries:** Added separate menu item for countries and sovereignty toggle in toolbar

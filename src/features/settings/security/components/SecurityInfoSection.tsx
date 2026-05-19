@@ -12,7 +12,6 @@ import {
 } from "@features/user";
 import { formatDate } from "@utils/date";
 import { getUserCollection } from "@utils/firebase";
-import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 
 export function SecurityInfoSection() {
@@ -69,9 +68,7 @@ export function SecurityInfoSection() {
         <SecurityInfoRow
           label={t("security.lastLoginMethod")}
           value={
-            lastLoginMethod
-              ? capitalize(String(lastLoginMethod))
-              : t("security.unknown")
+            lastLoginMethod ? String(lastLoginMethod) : t("security.unknown")
           }
         />
       </ul>
