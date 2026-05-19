@@ -1,4 +1,5 @@
 import { Chip } from "@components";
+import { formatDate } from "@utils/date";
 import { CountryFlag, useCountryData } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { getTripDays } from "@features/trips/utils/trips";
@@ -54,7 +55,8 @@ export function TripList({
             )}
             <span className="flex-1" />
             <span className="text-muted text-right min-w-[6.5rem]">
-              {trip.startDate ?? ""} {trip.endDate ? `- ${trip.endDate}` : ""}
+              {trip.startDate ? formatDate(trip.startDate) : ""}
+              {trip.endDate ? ` - ${formatDate(trip.endDate)}` : ""}
             </span>
           </Chip>
         </li>

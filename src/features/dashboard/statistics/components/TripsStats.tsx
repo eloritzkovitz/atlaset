@@ -1,4 +1,5 @@
 import { lazy, Suspense, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FaChartPie,
   FaClock,
@@ -7,6 +8,7 @@ import {
   FaStar,
   FaSuitcaseRolling,
 } from "react-icons/fa6";
+import type { IconType } from "react-icons/lib";
 import { DashboardCard, PieLegendCard, SegmentedToggle } from "@components";
 import {
   TRIP_TYPE_COLORS,
@@ -21,8 +23,6 @@ import {
 import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
 import { useTripsStats } from "../hooks/useTripsStats";
-import { useTranslation } from "react-i18next";
-import type { IconType } from "react-icons/lib";
 
 const PieChart = lazy(() => import("@components/chart/PieChart"));
 

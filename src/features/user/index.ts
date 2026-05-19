@@ -25,6 +25,7 @@ export { useAuth } from "./auth/hooks/useAuth";
 export { useAuthHandlers } from "./auth/hooks/useAuthHandlers";
 export { useFirestoreUsername } from "./profile/hooks/useFirestoreUsername";
 export { useHomeCountry } from "./profile/hooks/useHomeCountry";
+export { useLastLogin } from "./activity/hooks/useLastLogin";
 export { useUserProfile } from "./profile/hooks/useUserProfile";
 export { useUserActivity } from "./activity/hooks/useUserActivity";
 export { useUserDevices } from "./auth/hooks/useUserDevices";

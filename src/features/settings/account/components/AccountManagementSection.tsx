@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FaPowerOff, FaTrash, FaUserGear } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
+import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useAccountManagement } from "../hooks/useAccountManagement";
 import { SettingsCard } from "../../common/components/SettingsCard";
@@ -21,11 +21,8 @@ export function AccountManagementSection() {
   } = useAccountManagement(user);
 
   return (
-    <SettingsCard title={t("account.management.title")} icon={<FaUserGear />}>
-      <div className="flex flex-col gap-2">
-        <span className="text-danger font-medium">
-          {t("account.management.dangerZone")}
-        </span>
+    <SettingsCard title={t("account.management.title")} icon={<ICONS.accountManagement />}>
+      <div className="flex flex-col gap-2">        
         <ActionButton
           variant="secondary"
           className="!bg-warning !hover:bg-warning-hover text-white w-fit"
@@ -34,11 +31,11 @@ export function AccountManagementSection() {
           ariaLabel={t("account.management.hibernateAria")}
           title={t("account.management.hibernate")}
         >
-          {<FaPowerOff />}
+          {<ICONS.hibernate />}
           {hibernating
             ? t("account.management.hibernating")
             : t("account.management.hibernate")}
-        </ActionButton>
+        </ActionButton>        
         <ActionButton
           variant="primary"
           className="!bg-danger !hover:bg-danger-hover text-white w-fit"
@@ -47,14 +44,14 @@ export function AccountManagementSection() {
           ariaLabel={t("account.management.deleteAria")}
           title={t("account.management.delete")}
         >
-          {<FaTrash />}
+          {<ICONS.remove />}
           {deleting
             ? t("account.management.deleting")
             : t("account.management.delete")}
         </ActionButton>
         {error && <span className="text-danger text-sm">{error}</span>}
         {success && <span className="text-success text-sm">{success}</span>}
-        <span className="text-xs text-danger">
+        <span className="text-danger">
           {t("account.management.deleteWarning")}
         </span>
       </div>
@@ -68,7 +65,7 @@ export function AccountManagementSection() {
         onCancel={() => setModal(null)}
         submitLabel={t("account.management.hibernate")}
         cancelLabel={t("actions.cancel")}
-        submitIcon={<FaPowerOff />}
+        submitIcon={<ICONS.hibernate />}
       />
 
       {/* Delete Modal */}
@@ -80,7 +77,7 @@ export function AccountManagementSection() {
         onCancel={() => setModal(null)}
         submitLabel={t("account.management.delete")}
         cancelLabel={t("actions.cancel")}
-        submitIcon={<FaTrash />}
+        submitIcon={<ICONS.remove />}
       />
     </SettingsCard>
   );

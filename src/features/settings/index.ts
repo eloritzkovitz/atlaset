@@ -5,7 +5,9 @@ export { settingsService } from "./common/services/settingsService";
 
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
+export { SoundSettingsSection } from "./account/components/SoundSettingsSection";
 export { useLanguage, isRtl } from "./account/hooks/useLanguage";
+export { useSoundSettings } from "./account/hooks/useSoundSettings";
 export { mapLanguages } from "./account/utils/languages";
 
 // Display
@@ -19,10 +21,6 @@ export { MapSettingsPanel } from "./map/components/MapSettingsPanel";
 export { useCountryColors } from "./map/hooks/useCountryColors";
 export { useLayerColors } from "./map/hooks/useLayerColors";
 export { useVisitColorRoles } from "./map/hooks/useVisitColorRoles";
-
-// Sound
-export { SoundSettingsSection } from "./sound/components/SoundSettingsSection";
-export { useSoundSettings } from "./sound/hooks/useSoundSettings";
 
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";

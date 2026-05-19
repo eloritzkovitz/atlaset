@@ -1,6 +1,6 @@
 import React, { useRef, useCallback } from "react";
+import { useSoundSettings } from "@features/settings";
 import { AudioContext } from "./AudioContext";
-import { useSoundSettings } from "@features/settings/sound/hooks/useSoundSettings";
 
 const soundMap: Record<string, string> = {
   // Atlas sounds

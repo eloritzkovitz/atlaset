@@ -4,6 +4,7 @@ import {
   useLayoutEffect,
   type PropsWithChildren,
 } from "react";
+import { setAppDateLocale } from "@utils/date";
 import { useSelector, useDispatch } from "react-redux";
 import {
   applyTheme,
@@ -42,6 +43,15 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
 
   // Apply theme class to document before paint
   useLayoutEffect(() => applyTheme(settings.display), [settings.display]);
+
+  // Update app date locale when settings change
+  useEffect(() => {
+    try {
+      setAppDateLocale(settings?.account?.dateLocale ?? null);
+    } catch {
+      // ignore in non-browser/test env
+    }
+  }, [settings?.account?.dateLocale]);
 
   // Update settings via Redux
   const updateSettings = async (

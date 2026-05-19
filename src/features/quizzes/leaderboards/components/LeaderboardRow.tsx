@@ -1,7 +1,7 @@
 import { FaMedal } from "react-icons/fa6";
 import { useAuth } from "@contexts/AuthContext";
 import { UserInfo } from "@features/user";
-import { formatTimeSeconds } from "@utils/date";
+import { formatTimeSeconds, formatDate } from "@utils/date";
 import type { LeaderboardRow } from "../../types";
 
 interface LeaderboardRowComponentProps {
@@ -14,7 +14,7 @@ export function LeaderboardRowComponent({
   index,
 }: LeaderboardRowComponentProps) {
   const { user } = useAuth();
-  
+
   return (
     <tr
       key={row.playerName + row.rank}
@@ -49,9 +49,7 @@ export function LeaderboardRowComponent({
       <td className="px-4 py-2 text-right">{row.score}</td>
       <td className="px-4 py-2 text-right">{row.maxStreak ?? "-"}</td>
       <td className="px-4 py-2 text-right">{formatTimeSeconds(row.time)}</td>
-      <td className="px-4 py-2 text-right">
-        {new Date(row.date).toLocaleString()}
-      </td>
+      <td className="px-4 py-2 text-right">{formatDate(row.date, "long")}</td>
     </tr>
   );
 }

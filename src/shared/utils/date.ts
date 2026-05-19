@@ -2,17 +2,53 @@
  * Utility functions for date and time manipulation and formatting.
  */
 
+import i18n from "i18next";
 import type { TFunction } from "i18next";
 
+let appDateLocale: string | undefined = undefined;
+
+/** Sets the app-wide date locale for formatting dates. */
+export function setAppDateLocale(locale?: string | null) {
+  appDateLocale = locale || undefined;
+}
+
 /**
- * Formats a date string into a locale-specific date representation.
- * @param dateStr - The date string to format.
- * @param locale - The locale code to format the date for. Defaults to "en-GB".
- * @returns The formatted date string.
+ * Formats a date into a localized string based on provided options and locale.
+ * @param date - The date to format, which can be a string, number, or Date object.
+ * @param options - Optional Intl.DateTimeFormatOptions to customize the output format.
+ * @param locale - Optional locale string to specify the language/region for formatting.
+ * @returns A formatted date string based on the input and options.
  */
-export function formatDate(dateStr?: string, locale: string = "en-GB"): string {
-  if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString(locale);
+export function formatDate(
+  date?: string | number | Date,
+  options?: Intl.DateTimeFormatOptions | "long",
+  locale?: string,
+): string {
+  if (!date) return "";
+  const d = date instanceof Date ? date : new Date(date as string);
+
+  // Determine the locale to use for formatting
+  const lang =
+    locale ||
+    appDateLocale ||
+    i18n?.language ||
+    (typeof navigator !== "undefined" && navigator.language) ||
+    "en-GB";
+
+  // Default formatting options for day, month, and year
+  const defaults: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  };
+
+  // if options is "long", include time with hours and minutes; otherwise merge with defaults
+  const finalOptions: Intl.DateTimeFormatOptions =
+    options === "long"
+      ? { ...defaults, hour: "2-digit", minute: "2-digit" }
+      : { ...defaults, ...(options as Intl.DateTimeFormatOptions | undefined) };
+
+  return new Intl.DateTimeFormat(lang, finalOptions).format(d);
 }
 
 /**
@@ -22,7 +58,7 @@ export function formatDate(dateStr?: string, locale: string = "en-GB"): string {
  */
 export function formatFirestoreDate(
   date: unknown,
-  locale: string = "en-GB",
+  options?: Intl.DateTimeFormatOptions,
 ): string {
   if (
     date &&
@@ -30,12 +66,9 @@ export function formatFirestoreDate(
     date !== null &&
     typeof (date as { toDate?: unknown }).toDate === "function"
   ) {
-    return formatDate(
-      (date as { toDate: () => Date }).toDate().toISOString(),
-      locale,
-    );
+    return formatDate((date as { toDate: () => Date }).toDate(), options);
   } else if (typeof date === "string" && date) {
-    return formatDate(date, locale);
+    return formatDate(date, options);
   }
   return "Unknown";
 }
