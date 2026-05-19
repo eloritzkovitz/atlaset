@@ -6,24 +6,20 @@ import { useAuth } from "@contexts/AuthContext";
 import {
   authService,
   isCurrentSession,
-  useUserActivity,
+  useLastLogin,
   useUserDevices,
   type Device,
 } from "@features/user";
 import { getUserCollection } from "@utils/firebase";
-import { getTimestamp } from "@utils/date";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 
 export function SecurityInfoSection() {
   const { t } = useTranslation("settings");
   const { user } = useAuth();
-  const { activity } = useUserActivity();
   const devices = useUserDevices(user?.uid);
-
-  const lastLogin = activity
-    .filter((a) => a.action === 102)
-    .sort((a, b) => getTimestamp(b.timestamp) - getTimestamp(a.timestamp))[0];
+  const { timestamp: lastLoginTimestamp, method: lastLoginMethod } =
+    useLastLogin();
 
   // Get device icon based on user agent
   function getDeviceIcon(device: Device) {
@@ -64,20 +60,16 @@ export function SecurityInfoSection() {
         <SecurityInfoRow
           label={t("security.lastLogin")}
           value={
-            lastLogin
-              ? new Date(lastLogin.timestamp).toLocaleString()
+            lastLoginTimestamp
+              ? new Date(lastLoginTimestamp).toLocaleString()
               : t("security.noLoginRecorded")
           }
         />
         <SecurityInfoRow
           label={t("security.lastLoginMethod")}
           value={
-            lastLogin &&
-            lastLogin.details &&
-            typeof lastLogin.details === "object" &&
-            "method" in lastLogin.details &&
-            typeof lastLogin.details.method === "string"
-              ? capitalize(lastLogin.details.method)
+            lastLoginMethod
+              ? capitalize(String(lastLoginMethod))
               : t("security.unknown")
           }
         />
