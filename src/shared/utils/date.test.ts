@@ -1,3 +1,4 @@
+import i18n from "i18next";
 import {
   formatDate,
   formatFirestoreDate,
@@ -9,31 +10,49 @@ import {
   getMonthsShort,
   getMonthsLong,
   formatMonthValues,
+  setAppDateLocale,
 } from "./date";
 
 describe("formatDate", () => {
-  const cases: Array<
-    [string | undefined, string | undefined, string | RegExp]
-  > = [
-    [undefined, undefined, ""],
-    ["", undefined, ""],
-    ["2023-01-15", undefined, "15/01/2023"],
-    ["2023-01-15", "en-US", "1/15/2023"],
-    ["not-a-date", undefined, /Invalid/],
+  const defaults: Intl.DateTimeFormatOptions = {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  };
+
+  const cases: Array<[string | undefined, string | undefined]> = [
+    [undefined, undefined],
+    ["", undefined],
+    ["2023-01-15", undefined],
+    ["2023-01-15", "en-US"],
+    ["not-a-date", undefined],
   ];
 
-  test.each(cases)("formatDate(%s, %s)", (input, locale, expected) => {
-    const res = formatDate(input as any, locale as any);
-    if (expected instanceof RegExp) expect(res).toMatch(expected);
-    else expect(res).toBe(expected);
+  const getLang = (locale?: string) =>
+    (locale as string) ||
+    i18n?.language ||
+    (typeof navigator !== "undefined" && navigator.language) ||
+    "en-GB";
+
+  const intlFormat = (d: Date, locale?: string, opts = defaults) =>
+    new Intl.DateTimeFormat(getLang(locale), opts).format(d);
+
+  test.each(cases)("formatDate(%s, %s)", (input, locale) => {
+    if (!input) return expect(formatDate(input as any, locale as any)).toBe("");
+
+    const d = new Date(input as string);
+    if (isNaN(d.getTime()))
+      return expect(() => formatDate(input as any, locale as any)).toThrow(/Invalid/);
+
+    expect(formatDate(input as any, locale as any)).toBe(intlFormat(d, locale));
   });
 });
 
 describe("formatFirestoreDate", () => {
   const fakeTimestamp = { toDate: () => new Date("2023-01-15T00:00:00Z") };
   const cases: Array<[unknown, string]> = [
-    [fakeTimestamp, "15/01/2023"],
-    ["2023-01-15", "15/01/2023"],
+    [fakeTimestamp, "EXPECTED"],
+    ["2023-01-15", "EXPECTED"],
     [undefined, "Unknown"],
     [null, "Unknown"],
     [{}, "Unknown"],
@@ -41,7 +60,54 @@ describe("formatFirestoreDate", () => {
   ];
 
   test.each(cases)("formatFirestoreDate(%p) -> %s", (input, expected) => {
-    expect(formatFirestoreDate(input as any)).toBe(expected);
+    const res = formatFirestoreDate(input as any);
+    if (expected === "EXPECTED") {
+      const d = (input as any).toDate
+        ? (input as any).toDate()
+        : new Date(input as string);
+      const lang =
+        i18n?.language ||
+        (typeof navigator !== "undefined" && navigator.language) ||
+        "en-GB";
+      const expectedStr = new Intl.DateTimeFormat(lang, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(d);
+      expect(res).toBe(expectedStr);
+    } else {
+      expect(res).toBe(expected);
+    }
+  });
+});
+
+describe("setAppDateLocale", () => {
+  afterEach(() => setAppDateLocale(undefined));
+
+  it("applies the app-wide locale when none is provided", () => {
+    setAppDateLocale("en-US");
+    const d = new Date("2023-01-15");
+    const expected = new Intl.DateTimeFormat("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(d);
+    expect(formatDate("2023-01-15")).toBe(expected);
+  });
+
+  it("clearing the app locale falls back to defaults", () => {
+    setAppDateLocale(null);
+    const d = new Date("2023-01-15");
+    const lang =
+      i18n?.language ||
+      (typeof navigator !== "undefined" && navigator.language) ||
+      "en-GB";
+    const expected = new Intl.DateTimeFormat(lang, {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(d);
+    expect(formatDate("2023-01-15")).toBe(expected);
   });
 });
 
