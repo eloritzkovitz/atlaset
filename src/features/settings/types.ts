@@ -1,9 +1,10 @@
 import type { ColorMode } from "@features/atlas/map";
 
-/** Account-related settings. */
-export type AccountSettings = {
+/** Language and region-related settings. */
+export type LanguageRegionSettings = {
   homeCountry: string;
   language: string;
+  dateLocale?: string | null;
 };
 
 /** Sound-related settings. */
@@ -42,7 +43,7 @@ export type ColorsSettings = {
 /** User settings. */
 export type Settings = {
   id: string;
-  account: AccountSettings;
+  account: LanguageRegionSettings;
   sound: SoundSettings;
   display: DisplaySettings;
   map: MapSettings;

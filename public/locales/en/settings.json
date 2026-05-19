@@ -15,17 +15,25 @@
       "edit": "Edit",
       "editAria": "Edit profile"
     },
-    "homeCountry": {
-      "title": "Home Country",
-      "selectAria": "Select home country",
-      "none": "No country selected"
-    },
-    "language": {
-      "title": "Language",
-      "selectAria": "Select language",
-      "label": {
-        "en": "English",
-        "he": "עברית"
+    "languageRegion": {
+      "title": "Language and region",
+      "language": {
+        "title": "Language",
+        "selectAria": "Select language",
+        "label": {
+          "en": "English",
+          "he": "עברית"
+        }
+      },
+      "homeCountry": {
+        "title": "Home Country",
+        "selectAria": "Select home country",
+        "none": "No country selected"
+      },
+      "dateFormat": {
+        "title": "Date format",
+        "selectAria": "Select date format",
+        "auto": "Matches language format"
       }
     },
     "management": {

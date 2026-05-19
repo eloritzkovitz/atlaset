@@ -10,6 +10,7 @@ import {
   useUserDevices,
   type Device,
 } from "@features/user";
+import { formatDate } from "@utils/date";
 import { getUserCollection } from "@utils/firebase";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
@@ -53,7 +54,7 @@ export function SecurityInfoSection() {
           label={t("security.accountCreated")}
           value={
             user?.metadata?.creationTime
-              ? new Date(user.metadata.creationTime).toLocaleString()
+              ? formatDate(user.metadata.creationTime, "long")
               : t("security.unknown")
           }
         />
@@ -61,7 +62,7 @@ export function SecurityInfoSection() {
           label={t("security.lastLogin")}
           value={
             lastLoginTimestamp
-              ? new Date(lastLoginTimestamp).toLocaleString()
+              ? formatDate(lastLoginTimestamp, "long")
               : t("security.noLoginRecorded")
           }
         />
@@ -101,7 +102,7 @@ export function SecurityInfoSection() {
                 <div className="flex items-center min-w-[20rem] mx-4">
                   {device.lastActive
                     ? t("security.lastActive", {
-                        date: new Date(device.lastActive).toLocaleString(),
+                        date: formatDate(device.lastActive, "long"),
                       })
                     : t("security.unknown")}
                   <ActionButton

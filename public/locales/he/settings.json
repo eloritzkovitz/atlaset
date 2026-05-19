@@ -15,17 +15,25 @@
       "edit": "ערוך",
       "editAria": "ערוך פרופיל"
     },
-    "homeCountry": {
-      "title": "מדינת מגורים",
-      "selectAria": "בחר מדינת מגורים",
-      "none": "לא נבחרה מדינה"
-    },
-    "language": {
-      "title": "שפה",
-      "selectAria": "בחר שפה",
-      "label": {
-        "en": "English",
-        "he": "עברית"
+    "languageRegion": {
+      "title": "שפה ואזור",
+      "language": {
+        "title": "שפה",
+        "selectAria": "בחר שפה",
+        "label": {
+          "en": "English",
+          "he": "עברית"
+        }
+      },
+      "homeCountry": {
+        "title": "מדינת מגורים",
+        "selectAria": "בחר מדינת מגורים",
+        "none": "לא נבחרה מדינה"
+      },
+      "dateFormat": {
+        "title": "פורמט תאריך",
+        "selectAria": "בחר פורמט תאריך",
+        "auto": "לפי פורמט השפה"
       }
     },
     "management": {

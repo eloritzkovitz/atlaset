@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { FaTrash } from "react-icons/fa6";
 import { ActionButton } from "@components";
+import { formatDate } from "@utils/date";
 import { getActivityDescription, getActivityIcon } from "../utils/activity";
 import type { UserActivity, ActivityDetails } from "../../types";
 
@@ -42,7 +43,7 @@ export const UserActivityItem = React.memo(function UserActivityItem({
             )}
           </span>
           <span className="flex items-center text-xs text-muted mt-1">
-            {new Date(activity.timestamp).toLocaleString()}
+            {formatDate(activity.timestamp, "long")}
           </span>
         </div>
         {onDelete && (
