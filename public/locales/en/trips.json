@@ -65,8 +65,8 @@
       "allTags": "All Tags"
     },
     "itemLabels": {
-      "singular": "Trip",
-      "plural": "Trips"
+      "singular": "trip",
+      "plural": "trips"
     },
     "actions": {
       "sharedDisabledTitle": "Shared trips cannot be edited",
