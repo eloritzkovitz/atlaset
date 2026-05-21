@@ -72,6 +72,7 @@ export function SovereigntyBadge({
         {PREFIX_TYPES.has(type as SovereigntyStatus) ? (
           <>
             {prefix}
+            {" "}
             {flag}
           </>
         ) : (
