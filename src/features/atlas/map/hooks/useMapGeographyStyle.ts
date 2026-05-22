@@ -14,34 +14,17 @@ export function useMapGeographyStyle(isAddingMarker?: boolean) {
     SELECTED_COUNTRY_COLOR,
   } = useCountryColors();
   const cursor = isAddingMarker ? "crosshair" : "pointer";
+  const base = {
+    ...MAP_GEOGRAPHY_STYLE.default,
+    stroke: borderColor,
+    strokeWidth: borderWidth,
+    cursor,
+  };
 
   return {
-    default: {
-      ...MAP_GEOGRAPHY_STYLE.default,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
-    highlight: {
-      ...MAP_GEOGRAPHY_STYLE.default,
-      fill: HIGHLIGHTED_COUNTRY_COLOR,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
-    hover: {
-      ...MAP_GEOGRAPHY_STYLE.default,
-      fill: HOVERED_COUNTRY_COLOR,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
-    pressed: {
-      ...MAP_GEOGRAPHY_STYLE.default,
-      fill: SELECTED_COUNTRY_COLOR,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
+    default: base,
+    highlight: { ...base, fill: HIGHLIGHTED_COUNTRY_COLOR },
+    hover: { ...base, fill: HOVERED_COUNTRY_COLOR },
+    pressed: { ...base, fill: SELECTED_COUNTRY_COLOR },
   };
 }

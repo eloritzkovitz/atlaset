@@ -111,24 +111,16 @@ export function LayersContainer({
               interactiveMode && colorUpcomingVisits && upcomingSet.has(isoA2);
 
             // Determine final style based on priority: highlight > hover > home > visited > upcoming > blended > default
-            let style = geographyStyle.default;
-            if (isHighlighted) style = geographyStyle.highlight;
-            else if (isHovered) style = geographyStyle.hover;
-            else if (isHomeCountry)
-              style = { ...geographyStyle.default, fill: HOME_COUNTRY_COLOR };
+            let fill = geographyStyle.default.fill;
+            if (isHighlighted) fill = geographyStyle.highlight.fill;
+            else if (isHovered || isSelected) fill = geographyStyle.hover.fill;
+            else if (isHomeCountry) fill = HOME_COUNTRY_COLOR;
             else if (isUpcomingVisitCountry)
-              style = {
-                ...geographyStyle.default,
-                fill: UPCOMING_VISIT_COUNTRY_COLOR,
-              };
-            else if (isVisitedCountry)
-              style = {
-                ...geographyStyle.default,
-                fill: VISITED_COUNTRY_COLOR,
-              };
-            else if (blendedFill)
-              style = { ...geographyStyle.default, fill: blendedFill };
-            else if (isSelected) style = geographyStyle.hover;
+              fill = UPCOMING_VISIT_COUNTRY_COLOR;
+            else if (isVisitedCountry) fill = VISITED_COUNTRY_COLOR;
+            else if (blendedFill) fill = blendedFill;
+
+            const finalStyle = { ...geographyStyle.default, fill };
 
             return (
               <Geography
@@ -140,9 +132,9 @@ export function LayersContainer({
                 onMouseLeave={() => onCountryHover && onCountryHover(null)}
                 onClick={() => onCountryClick && isoA2 && onCountryClick(isoA2)}
                 style={{
-                  default: style,
-                  hover: style,
-                  pressed: style,
+                  default: finalStyle,
+                  hover: finalStyle,
+                  pressed: finalStyle,
                 }}
               >
                 <title>{String(tooltip)}</title>
