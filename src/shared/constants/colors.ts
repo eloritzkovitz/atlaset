@@ -1,7 +1,7 @@
 // Base colors
 export const MAP_BASE_COLOR_LIGHT = "#b5bfca";
-export const MAP_BASE_COLOR_GRAY = "#a2a9b1";
-export const MAP_BASE_COLOR_DARK = "#5e6368";
+export const MAP_BASE_COLOR_GRAY = "#9199a2";
+export const MAP_BASE_COLOR_DARK = "#6d7379";
 
 // Stroke colors
 export const MAP_STROKE_COLOR_LIGHT = "#ccc";
