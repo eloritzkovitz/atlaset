@@ -7,7 +7,7 @@ import {
   DropdownSelectInput,
   SectionHeader,
 } from "@components";
-import { COLOR_PALETTE_GROUPS } from "@constants/colors";
+import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
 import type { ColorMode } from "@features/atlas/map";
 import { PaletteDots } from "./PaletteDots";
 import { useLayerColors } from "../hooks/useLayerColors";

@@ -1,6 +1,5 @@
 import { useMapView } from "@contexts/MapViewContext";
-import { useCountryColors } from "@features/settings";
-import { MAP_STYLE_CONFIG } from "../constants/map";
+import { MAP_GEOGRAPHY_STYLE, useCountryColors } from "@features/settings";
 
 /**
  * Returns map geography styles based on UI settings and marker mode.
@@ -18,27 +17,27 @@ export function useMapGeographyStyle(isAddingMarker?: boolean) {
 
   return {
     default: {
-      ...MAP_STYLE_CONFIG.default,
+      ...MAP_GEOGRAPHY_STYLE.default,
       stroke: borderColor,
       strokeWidth: borderWidth,
       cursor,
     },
     highlight: {
-      ...MAP_STYLE_CONFIG.default,
+      ...MAP_GEOGRAPHY_STYLE.default,
       fill: HIGHLIGHTED_COUNTRY_COLOR,
       stroke: borderColor,
       strokeWidth: borderWidth,
       cursor,
     },
     hover: {
-      ...MAP_STYLE_CONFIG.default,
+      ...MAP_GEOGRAPHY_STYLE.default,
       fill: HOVERED_COUNTRY_COLOR,
       stroke: borderColor,
       strokeWidth: borderWidth,
       cursor,
     },
     pressed: {
-      ...MAP_STYLE_CONFIG.default,
+      ...MAP_GEOGRAPHY_STYLE.default,
       fill: SELECTED_COUNTRY_COLOR,
       stroke: borderColor,
       strokeWidth: borderWidth,

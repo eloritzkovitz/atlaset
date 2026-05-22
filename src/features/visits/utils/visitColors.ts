@@ -1,19 +1,18 @@
-import { HOME_COUNTRY_COLOR } from "@constants/colors";
 import type { ColorMode } from "@features/atlas/map";
-import type { ColorPalette, VisitColorRoles } from "@types";
+import type { VisitColorRoles } from "@types";
 
 /**
- * Get the color for a country based on visit count and mode
- * @param count The number of visits to the country
- * @param isHome Whether the country is the home country
- * @param defaultFill The default fill color for unvisited countries
- * @param mode The visit color mode ("cumulative" or "yearly")
- * @param palette The VisitColorRoles palette to use
- * @param isNewThisYear Whether the visit is new this year (yearly mode)
- * @param isRevisitThisYear Whether the visit is a revisit this year (yearly mode)
- * @param isUpcomingVisit Whether the visit is an upcoming visit (yearly mode)
- * @param isUpcomingRevisit Whether the visit is an upcoming revisit (yearly mode)
- * @returns The color string for the country
+ * Gets the color for a country based on visit count and mode.
+ * @param count - The number of visits to the country.
+ * @param isHome - Whether the country is the home country.
+ * @param defaultFill - The default fill color for unvisited countries.
+ * @param mode - The visit color mode ("cumulative" or "yearly").
+ * @param palette - The VisitColorRoles palette to use.
+ * @param isNewThisYear - Whether the visit is new this year (yearly mode).
+ * @param isRevisitThisYear - Whether the visit is a revisit this year (yearly mode).
+ * @param isUpcomingVisit - Whether the visit is an upcoming visit (yearly mode).
+ * @param isUpcomingRevisit - Whether the visit is an upcoming revisit (yearly mode).
+ * @returns The color string for the country based on the provided parameters.
  */
 export function getVisitColor(
   count: number,
@@ -24,7 +23,7 @@ export function getVisitColor(
   isNewThisYear?: boolean,
   isRevisitThisYear?: boolean,
   isUpcomingVisit?: boolean,
-  isUpcomingRevisit?: boolean
+  isUpcomingRevisit?: boolean,
 ) {
   if (isHome) return palette.home;
 
@@ -45,25 +44,4 @@ export function getVisitColor(
     if (count === 0) return defaultFill;
     return palette.yearly.previous;
   }
-}
-
-/**
- * Get VisitColorRoles from a given ColorPalette
- * @param palette The color palette to extract roles from
- * @returns VisitColorRoles object
- */
-export function getVisitColorRolesFromPalette(
-  palette: ColorPalette
-): VisitColorRoles {
-  return {
-    home: HOME_COUNTRY_COLOR,
-    visitCounts: [...palette.colors].reverse(),
-    yearly: {
-      new: palette.colors[0],
-      revisit: palette.colors[1],
-      previous: palette.colors[2],
-      upcoming: palette.colors[3],
-      upcomingRevisit: palette.colors[4],
-    },
-  };
 }

@@ -1,15 +1,15 @@
 import { useEffect, useRef } from "react";
 import { useMapView } from "@contexts/MapViewContext";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
+import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { useContainerDimensions } from "@hooks";
-import { MapProvider } from "../providers/MapProvider";
-import { MapSvgContainer } from "./MapSvgContainer";
 import { LayersContainer } from "./LayersContainer";
+import { MapSvgContainer } from "./MapSvgContainer";
 import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
-import { DEFAULT_MAP_SETTINGS } from "../constants/map";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
+import { MapProvider } from "../providers/MapProvider";
 
 export interface WorldMapProps {
   onCountryClick: (countryIsoCode: string | null) => void;

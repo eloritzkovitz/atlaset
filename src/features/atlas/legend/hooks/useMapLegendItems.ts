@@ -1,4 +1,5 @@
-import { MAP_BG_COLOR, COLOR_PALETTES } from "@constants/colors";
+import { MAP_BG_COLOR } from "@constants/colors";
+import { COLOR_PALETTES } from "@constants/colorPalettes";
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
 import type { ColorMode } from "@features/atlas/map";

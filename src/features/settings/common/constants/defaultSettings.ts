@@ -1,7 +1,7 @@
 import {
-  DEFAULT_MAP_SETTINGS,
-  MAP_OPTIONS,
-} from "@features/atlas/map/constants/map";
+  DEFAULT_COLOR_PALETTES,
+  MAP_CONFIG_OPTIONS,
+} from "../../map/constants/mapSettings";
 import type { Settings } from "../../types";
 
 export const defaultSettings: Settings = {
@@ -13,18 +13,18 @@ export const defaultSettings: Settings = {
   },
   display: { theme: "system", accent: "blue" },
   map: {
-    projection: DEFAULT_MAP_SETTINGS.projection,
-    borderColor: MAP_OPTIONS.strokeColor[0].value,
-    borderWidth: MAP_OPTIONS.strokeWidth[0].value,
+    projection: MAP_CONFIG_OPTIONS.projection[0].value,
+    borderColor: MAP_CONFIG_OPTIONS.strokeColor[0].value,
+    borderWidth: MAP_CONFIG_OPTIONS.strokeWidth[0].value,
   },
   colors: {
     colorHomeCountry: false,
     colorVisitedCountries: true,
     colorUpcomingVisits: false,
     palettes: {
-      standard: "Default",
-      yearly: "Default",
-      cumulative: "Default",
+      standard: DEFAULT_COLOR_PALETTES.standard,
+      yearly: DEFAULT_COLOR_PALETTES.yearly,
+      cumulative: DEFAULT_COLOR_PALETTES.cumulative,
     },
   },
 };

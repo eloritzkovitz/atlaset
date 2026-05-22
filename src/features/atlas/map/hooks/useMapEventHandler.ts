@@ -1,7 +1,7 @@
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { DEFAULT_MAP_SETTINGS } from "../constants/map";
+import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { getGeoCoordsFromMouseEvent } from "../utils/projection";
 
 /**

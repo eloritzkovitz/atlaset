@@ -1,15 +1,15 @@
-// ColorPalette type definition
+/** Represents a color palette. */
 export type ColorPalette = {
   name: string;
   colors: string[];
 };
 
-// Generic ColorRoles type definition
+/** Represents a set of color roles. */
 export type ColorRoles<T> = {
   [K in keyof T]: T[K];
 };
 
-// VisitColorRoles interface definition
+/** Represents the structure for visit roles. */
 export interface VisitRoleStructure {
   home: string;
   visitCounts: string[];
@@ -22,5 +22,5 @@ export interface VisitRoleStructure {
   };
 }
 
-// VisitColorRoles type definition
+/** Represents the structure for visit roles. */
 export type VisitColorRoles = ColorRoles<VisitRoleStructure>;
