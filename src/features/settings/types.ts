@@ -28,6 +28,7 @@ export type DisplaySettings = {
 /** Map-related settings. */
 export type MapSettings = {
   projection?: string;
+  baseColor?: string;
   borderColor?: string;
   borderWidth?: number;
 };

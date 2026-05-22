@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { MAP_BG_COLOR } from "@constants/colors";
 import { useTrips } from "@contexts/TripsContext";
 import type { ColorMode } from "@features/atlas/map";
 import { useVisitColorRoles } from "@features/settings";
@@ -79,7 +78,7 @@ export function useTimelineLayerItems(
             color: getVisitColor(
               count,
               isHome,
-              MAP_BG_COLOR,
+              "",
               colorMode,
               palette,
               isNewThisYear,

@@ -7,7 +7,7 @@ import { MAP_GEOGRAPHY_STYLE, useCountryColors } from "@features/settings";
  * @returns Object containing styles for default, hover, and pressed states.
  */
 export function useMapGeographyStyle(isAddingMarker?: boolean) {
-  const { borderColor, borderWidth } = useMapView();
+  const { baseColor, borderColor, borderWidth } = useMapView();
   const {
     HIGHLIGHTED_COUNTRY_COLOR,
     HOVERED_COUNTRY_COLOR,
@@ -16,6 +16,7 @@ export function useMapGeographyStyle(isAddingMarker?: boolean) {
   const cursor = isAddingMarker ? "crosshair" : "pointer";
   const base = {
     ...MAP_GEOGRAPHY_STYLE.default,
+    fill: baseColor,
     stroke: borderColor,
     strokeWidth: borderWidth,
     cursor,

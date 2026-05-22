@@ -13,10 +13,11 @@ import {
  */
 export function useVisitColorRoles(mode: ColorMode): VisitColorRoles {
   const { settings } = useSettings();
+  const baseColor = settings.map.baseColor ?? "#fff";
   const colors = settings.colors ?? {};
   const palettes = colors.palettes ?? {};
 
   const { palette } = getPaletteForMode(palettes, mode);
 
-  return getVisitColorRolesFromPalette(palette);
+  return getVisitColorRolesFromPalette(palette, baseColor);
 }

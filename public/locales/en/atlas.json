@@ -239,9 +239,10 @@
   "mapSettings": {
     "title": "Map Settings",
     "configuration": "Configuration",
-    "mapProjection": "Map Projection",
-    "borderColor": "Border Color",
-    "borderWidth": "Border Width",
+    "mapProjection": "Map projection",
+    "baseColor": "Base color",
+    "borderColor": "Stroke color",
+    "borderWidth": "Stroke width",
     "colors": "Colors",
     "displayOptions": "Display Options",
     "showHomeCountry": "Show home country",

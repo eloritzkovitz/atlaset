@@ -1,8 +1,10 @@
 import {
-  MAP_BG_COLOR,
-  MAP_BORDER_COLOR_DARK,
-  MAP_BORDER_COLOR_GRAY,
-  MAP_BORDER_COLOR_LIGHT,
+  MAP_BASE_COLOR_LIGHT,
+  MAP_BASE_COLOR_GRAY,
+  MAP_BASE_COLOR_DARK,
+  MAP_STROKE_COLOR_DARK,
+  MAP_STROKE_COLOR_GRAY,
+  MAP_STROKE_COLOR_LIGHT,
 } from "@constants/colors";
 import { COLOR_PALETTES } from "@constants/colorPalettes";
 import type { ColorMode } from "@features/atlas/map/types";
@@ -14,10 +16,15 @@ export const MAP_CONFIG_OPTIONS = {
     { value: "geoEqualEarth", label: "Equal Earth" },
     { value: "geoMercator", label: "Mercator" },
   ],
+  baseColor: [
+    { value: MAP_BASE_COLOR_LIGHT, label: "Light" },
+    { value: MAP_BASE_COLOR_GRAY, label: "Gray" },
+    { value: MAP_BASE_COLOR_DARK, label: "Dark" },    
+  ],
   strokeColor: [
-    { value: MAP_BORDER_COLOR_DARK, label: "Dark" },
-    { value: MAP_BORDER_COLOR_LIGHT, label: "Light" },
-    { value: MAP_BORDER_COLOR_GRAY, label: "Gray" },
+    { value: MAP_STROKE_COLOR_DARK, label: "Dark" },
+    { value: MAP_STROKE_COLOR_GRAY, label: "Gray" },
+    { value: MAP_STROKE_COLOR_LIGHT, label: "Light" },    
   ],
   strokeWidth: [
     { value: 0.1, label: "Thin" },
@@ -33,13 +40,13 @@ export const DEFAULT_MAP_SETTINGS = {
   scaleDivisor: 2.8,
   minZoom: 1,
   maxZoom: 20,
-  bgColor: MAP_BG_COLOR,
+  bgColor: MAP_CONFIG_OPTIONS.baseColor[0].value,
 };
 
 /** Map geography style options. */
 export const MAP_GEOGRAPHY_STYLE = {
   default: {
-    fill: MAP_BG_COLOR,
+    fill: MAP_CONFIG_OPTIONS.baseColor[0].value,
     stroke: MAP_CONFIG_OPTIONS.strokeColor[0].value,
     strokeWidth: MAP_CONFIG_OPTIONS.strokeWidth[0].value,
     outline: "none",

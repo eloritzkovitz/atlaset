@@ -27,12 +27,15 @@ export function getPaletteForMode(
 /**
  * Generates visit color roles based on a given color palette.
  * @param palette - The color palette to extract roles from.
+ * @param baseColor - The base color for the map.
  * @returns VisitColorRoles object containing colors for home country, visit counts, and yearly roles.
  */
 export function getVisitColorRolesFromPalette(
   palette: ColorPalette,
+  baseColor: string,
 ): VisitColorRoles {
   return {
+    base: baseColor,
     home: HOME_COUNTRY_COLOR,
     visitCounts: [...palette.colors].reverse(),
     yearly: {

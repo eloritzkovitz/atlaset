@@ -11,6 +11,8 @@ export function ConfigurationSettingsGroup() {
   const {
     projection,
     setProjection,
+    baseColor,
+    setBaseColor,
     borderColor,
     setBorderColor,
     borderWidth,
@@ -32,6 +34,12 @@ export function ConfigurationSettingsGroup() {
             value={projection}
             onChange={(v) => setProjection(String(v))}
             options={MAP_CONFIG_OPTIONS.projection}
+          />
+          <SelectInput
+            label={t("mapSettings.baseColor")}
+            value={baseColor}
+            onChange={(v) => setBaseColor(String(v))}
+            options={MAP_CONFIG_OPTIONS.baseColor}
           />
           <SelectInput
             label={t("mapSettings.borderColor")}

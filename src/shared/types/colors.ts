@@ -11,6 +11,7 @@ export type ColorRoles<T> = {
 
 /** Represents the structure for visit roles. */
 export interface VisitRoleStructure {
+  base: string;
   home: string;
   visitCounts: string[];
   yearly: {

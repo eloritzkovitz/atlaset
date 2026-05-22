@@ -32,20 +32,25 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   // Map UI config
   const map = settings.map ?? {
     projection: undefined,
+    baseColor: undefined,
     borderColor: undefined,
     borderWidth: undefined,
   };
 
   // Use defaults if not set
   const projection = map.projection ?? MAP_CONFIG_OPTIONS.projection[0].value;
+  const baseColor =
+    map.baseColor ?? MAP_CONFIG_OPTIONS.baseColor[0].value;
   const borderColor =
     map.borderColor ?? MAP_CONFIG_OPTIONS.strokeColor[0].value;
   const borderWidth =
-    map.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;
+    map.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;  
 
   // Update functions
   const setProjection = (v: string) =>
     updateSettings({ map: { ...map, projection: v } });
+  const setBaseColor = (v: string) =>
+    updateSettings({ map: { ...map, baseColor: v } });
   const setBorderColor = (v: string) =>
     updateSettings({ map: { ...map, borderColor: v } });
   const setBorderWidth = (v: number) =>
@@ -109,6 +114,8 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         setProjection,
         dimensions,
         setDimensions,
+        baseColor,
+        setBaseColor,
         borderColor,
         setBorderColor,
         borderWidth,
