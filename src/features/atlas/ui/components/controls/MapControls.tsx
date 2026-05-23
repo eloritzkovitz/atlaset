@@ -7,7 +7,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { useKeyHandler } from "@hooks";
-import { DEFAULT_MAP_SETTINGS } from "../../../map/constants/map";
+import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 
 interface MapControlsProps {
   zoom: number;

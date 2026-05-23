@@ -11,6 +11,8 @@ export interface MapViewContextType {
   setProjection: (v: string) => void;
   dimensions: { width: number; height: number };
   setDimensions: (dims: { width: number; height: number }) => void;
+  baseColor: string;
+  setBaseColor: (v: string) => void;
   borderColor: string;
   setBorderColor: (v: string) => void;
   borderWidth: number;

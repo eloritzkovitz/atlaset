@@ -1,6 +1,5 @@
 import { useMapView } from "@contexts/MapViewContext";
-import { useCountryColors } from "@features/settings";
-import { MAP_STYLE_CONFIG } from "../constants/map";
+import { MAP_GEOGRAPHY_STYLE, useCountryColors } from "@features/settings";
 
 /**
  * Returns map geography styles based on UI settings and marker mode.
@@ -8,41 +7,25 @@ import { MAP_STYLE_CONFIG } from "../constants/map";
  * @returns Object containing styles for default, hover, and pressed states.
  */
 export function useMapGeographyStyle(isAddingMarker?: boolean) {
-  const { borderColor, borderWidth } = useMapView();
+  const { baseColor, borderColor, borderWidth } = useMapView();
   const {
     HIGHLIGHTED_COUNTRY_COLOR,
     HOVERED_COUNTRY_COLOR,
     SELECTED_COUNTRY_COLOR,
   } = useCountryColors();
   const cursor = isAddingMarker ? "crosshair" : "pointer";
+  const base = {
+    ...MAP_GEOGRAPHY_STYLE.default,
+    fill: baseColor,
+    stroke: borderColor,
+    strokeWidth: borderWidth,
+    cursor,
+  };
 
   return {
-    default: {
-      ...MAP_STYLE_CONFIG.default,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
-    highlight: {
-      ...MAP_STYLE_CONFIG.default,
-      fill: HIGHLIGHTED_COUNTRY_COLOR,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
-    hover: {
-      ...MAP_STYLE_CONFIG.default,
-      fill: HOVERED_COUNTRY_COLOR,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
-    pressed: {
-      ...MAP_STYLE_CONFIG.default,
-      fill: SELECTED_COUNTRY_COLOR,
-      stroke: borderColor,
-      strokeWidth: borderWidth,
-      cursor,
-    },
+    default: base,
+    highlight: { ...base, fill: HIGHLIGHTED_COUNTRY_COLOR },
+    hover: { ...base, fill: HOVERED_COUNTRY_COLOR },
+    pressed: { ...base, fill: SELECTED_COUNTRY_COLOR },
   };
 }

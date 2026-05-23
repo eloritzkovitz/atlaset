@@ -1,8 +1,10 @@
 import { useSettings } from "@contexts/SettingsContext";
-import { COLOR_PALETTES } from "@constants/colors";
 import type { ColorMode } from "@features/atlas/map";
-import { getVisitColorRolesFromPalette } from "@features/visits";
 import type { VisitColorRoles } from "@types";
+import {
+  getPaletteForMode,
+  getVisitColorRolesFromPalette,
+} from "../utils/mapColors";
 
 /**
  * Gets visit color roles based on the selected color palette for a given mode.
@@ -11,14 +13,11 @@ import type { VisitColorRoles } from "@types";
  */
 export function useVisitColorRoles(mode: ColorMode): VisitColorRoles {
   const { settings } = useSettings();
-
-  // Fallbacks to prevent undefined errors
+  const baseColor = settings.map.baseColor ?? "#fff";
   const colors = settings.colors ?? {};
   const palettes = colors.palettes ?? {};
 
-  const paletteName = palettes[mode] || COLOR_PALETTES[0].name;
-  const palette =
-    COLOR_PALETTES.find((p) => p.name === paletteName) || COLOR_PALETTES[0];
+  const { palette } = getPaletteForMode(palettes, mode);
 
-  return getVisitColorRolesFromPalette(palette);
+  return getVisitColorRolesFromPalette(palette, baseColor);
 }

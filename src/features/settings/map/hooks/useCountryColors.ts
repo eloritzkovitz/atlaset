@@ -1,5 +1,8 @@
 import { useSettings } from "@contexts/SettingsContext";
-import { COLOR_PALETTES, HOME_COUNTRY_COLOR } from "@constants/colors";
+import {
+  getPaletteForMode,
+  mapPaletteToCountryColors,
+} from "../utils/mapColors";
 
 /**
  * Returns country colors based on user-selected palette.
@@ -8,17 +11,7 @@ import { COLOR_PALETTES, HOME_COUNTRY_COLOR } from "@constants/colors";
 export function useCountryColors() {
   const { settings } = useSettings();
   const palettes = settings.colors?.palettes;
-  const selectedPaletteName = palettes?.standard || COLOR_PALETTES[0].name;
-  const selectedPalette =
-    COLOR_PALETTES.find((p) => p.name === selectedPaletteName) ||
-    COLOR_PALETTES[0];
+  const { palette } = getPaletteForMode(palettes, "standard");
 
-  return {
-    HOME_COUNTRY_COLOR: HOME_COUNTRY_COLOR,
-    HOVERED_COUNTRY_COLOR: selectedPalette.colors[0],
-    VISITED_COUNTRY_COLOR: selectedPalette.colors[1],
-    SELECTED_COUNTRY_COLOR: selectedPalette.colors[2],
-    UPCOMING_VISIT_COUNTRY_COLOR: selectedPalette.colors[3],
-    HIGHLIGHTED_COUNTRY_COLOR: selectedPalette.colors[4],
-  };
+  return mapPaletteToCountryColors(palette);
 }

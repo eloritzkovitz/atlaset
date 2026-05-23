@@ -21,6 +21,11 @@ export { MapSettingsPanel } from "./map/components/MapSettingsPanel";
 export { useCountryColors } from "./map/hooks/useCountryColors";
 export { useLayerColors } from "./map/hooks/useLayerColors";
 export { useVisitColorRoles } from "./map/hooks/useVisitColorRoles";
+export {
+  DEFAULT_MAP_SETTINGS,
+  MAP_CONFIG_OPTIONS,
+  MAP_GEOGRAPHY_STYLE,
+} from "./map/constants/mapSettings";
 
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";

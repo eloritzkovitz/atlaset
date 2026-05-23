@@ -239,9 +239,10 @@
   "mapSettings": {
     "title": "הגדרות מפה",
     "configuration": "תצורה",
-    "mapProjection": "היטל מפה",
-    "borderColor": "צבע גבול",
-    "borderWidth": "עובי גבול",
+    "projection": "היטל מפה",
+    "baseColor": "צבע בסיס",
+    "borderColor": "צבע קו",
+    "borderWidth": "עובי קו",
     "colors": "צבעים",
     "displayOptions": "אפשרויות תצוגה",
     "showHomeCountry": "הצג מדינה בית",

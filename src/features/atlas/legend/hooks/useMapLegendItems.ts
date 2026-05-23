@@ -1,4 +1,4 @@
-import { MAP_BG_COLOR, COLOR_PALETTES } from "@constants/colors";
+import { COLOR_PALETTES } from "@constants/colorPalettes";
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
 import type { ColorMode } from "@features/atlas/map";
@@ -66,7 +66,7 @@ export function useMapLegendItems(
     { color: colorRoles.visitCounts[2], label: "3 visits" },
     { color: colorRoles.visitCounts[1], label: "2 visits" },
     { color: colorRoles.visitCounts[0], label: "1 visit" },
-    { color: MAP_BG_COLOR, label: "Not visited" },
+    { color: colorRoles.base, label: "Not visited" },
   ];
 
   // Yearly mode legend items (dynamic)
@@ -77,7 +77,7 @@ export function useMapLegendItems(
     { color: colorRoles.yearly.new, label: "First visit this year" },
     { color: colorRoles.yearly.revisit, label: "Revisit this year" },
     { color: colorRoles.yearly.previous, label: "Visited in previous years" },
-    { color: MAP_BG_COLOR, label: "Not visited" },
+    { color: colorRoles.base, label: "Not visited" },
   ];
 
   // Return appropriate legend items based on mode

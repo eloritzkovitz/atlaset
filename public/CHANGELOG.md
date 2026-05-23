@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-05-23
+- **[feature]** **Settings | Map:** Added new setting for base color
+- **[chore]** **Settings | Map:** Updated some labels
+
 ## 2026-05-19
 
 - **[chore]** **Settings | Account:** Consolidated language and region settings into single category

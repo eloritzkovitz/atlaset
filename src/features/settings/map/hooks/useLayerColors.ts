@@ -1,6 +1,6 @@
 import { useSettings } from "@contexts/SettingsContext";
-import { COLOR_PALETTES } from "@constants/colors";
 import type { ColorMode } from "@features/atlas/map";
+import { DEFAULT_COLOR_PALETTES } from "../constants/mapSettings";
 
 /**
  * Manages layer palette settings.
@@ -30,14 +30,9 @@ export function useLayerColors() {
       colors: { ...(settings.colors ?? {}), colorUpcomingVisits: value },
     });
 
-  // Fallback to an empty object if layers is undefined
+  // Palette settings
   const colors = settings.colors ?? {};
-
-  const colorPalettes = colors.palettes ?? {
-    standard: COLOR_PALETTES[0].name,
-    cumulative: COLOR_PALETTES[0].name,
-    yearly: COLOR_PALETTES[0].name,
-  };
+  const colorPalettes = colors.palettes ?? DEFAULT_COLOR_PALETTES;
 
   const setPalette = (mode: ColorMode, paletteName: string) => {
     updateSettings({
