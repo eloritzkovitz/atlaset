@@ -239,7 +239,7 @@
   "mapSettings": {
     "title": "Map Settings",
     "configuration": "Configuration",
-    "mapProjection": "Map projection",
+    "projection": "Projection",
     "baseColor": "Base color",
     "borderColor": "Stroke color",
     "borderWidth": "Stroke width",

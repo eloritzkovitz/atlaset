@@ -239,7 +239,7 @@
   "mapSettings": {
     "title": "הגדרות מפה",
     "configuration": "תצורה",
-    "mapProjection": "היטל מפה",
+    "projection": "היטל מפה",
     "baseColor": "צבע בסיס",
     "borderColor": "צבע קו",
     "borderWidth": "עובי קו",

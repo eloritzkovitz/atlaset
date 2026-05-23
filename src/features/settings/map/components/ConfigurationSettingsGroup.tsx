@@ -30,7 +30,7 @@ export function ConfigurationSettingsGroup() {
       {showMapSettings && (
         <div>
           <SelectInput
-            label={t("mapSettings.mapProjection")}
+            label={t("mapSettings.projection")}
             value={projection}
             onChange={(v) => setProjection(String(v))}
             options={MAP_CONFIG_OPTIONS.projection}
