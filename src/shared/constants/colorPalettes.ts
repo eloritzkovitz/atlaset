@@ -4,7 +4,7 @@ import type { ColorPalette } from "@types";
 
 export const DEFAULT_PALETTE: ColorPalette = {
   name: "Default",
-  colors: ["#0078d4", "#4a90e2", "#979ba3", "#e4a664", "#fcd9b4"],
+  colors: ["#0078d4", "#4a90e2", "#748ab6", "#979ba3", "#c9d2e9"],
 };
 
 export const LIGHT_PALETTE: ColorPalette = {
@@ -15,6 +15,11 @@ export const LIGHT_PALETTE: ColorPalette = {
 export const DARK_PALETTE: ColorPalette = {
   name: "Dark",
   colors: ["#1b1b1b", "#2e2e2e", "#4a4a4a", "#6e6e6e", "#9b9b9b"],
+};
+
+export const GOLD_PALETTE: ColorPalette = {
+  name: "Gold",
+  colors: ["#8a4b1a", "#c08a2e", "#d4af37", "#efd9a0", "#fff7e6"],
 };
 
 export const REGAL_PALETTE: ColorPalette = {
@@ -212,6 +217,7 @@ export const COLOR_PALETTE_GROUPS = [
       DEFAULT_PALETTE,
       LIGHT_PALETTE,
       DARK_PALETTE,
+      GOLD_PALETTE,
       REGAL_PALETTE,
       VIBRANT_PALETTE,
     ],
