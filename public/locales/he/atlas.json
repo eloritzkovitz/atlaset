@@ -37,20 +37,20 @@
       "hideFilters": "הסתר מסננים"
     },
     "searchPlaceholder": "חפש מדינות",
-    "countryLists": {
+    "lists": {
       "all": "הכל",
       "sovereign": "ריבוני",
       "visited": "ביקרתי",
-      "newList": "רשימה חדשה"
-    },
-    "lists": {
-      "editTitle": "ערוך רשימה",
-      "addTitle": "הוסף רשימה",
-      "nameLabel": "שם:",
-      "linkedWarning": "שינויים ברשימה זו יעדכנו את כל השכבות המקושרות אליה.",
-      "save": "שמירת שינויים",
-      "add": "הוסף רשימה",
-      "delete": "מחק רשימה"
+      "newList": "רשימה חדשה",
+      "form": {
+        "editTitle": "ערוך רשימה",
+        "addTitle": "הוסף רשימה",
+        "nameLabel": "שם:",
+        "linkedWarning": "שינויים ברשימה זו יעדכנו את כל השכבות המקושרות אליה.",
+        "save": "שמירת שינויים",
+        "add": "הוסף רשימה",
+        "delete": "מחק רשימה"
+      }
     },
     "sort": {
       "by": "מיין לפי",

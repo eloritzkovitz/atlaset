@@ -56,15 +56,15 @@ export function CountriesSearchSortBar({
 
   // Build toggle options (labels are plain; counts are provided separately)
   const options = [
-    { value: "all", label: t("countries.countryLists.all"), count: allCount },
+    { value: "all", label: t("countries.lists.all"), count: allCount },
     {
       value: "sovereign",
-      label: t("countries.countryLists.sovereign"),
+      label: t("countries.lists.sovereign"),
       count: sovereignCount,
     },
     {
       value: "visited",
-      label: t("countries.countryLists.visited"),
+      label: t("countries.lists.visited"),
       count: visitedCount,
     },
     ...countryLists.map((list) => ({

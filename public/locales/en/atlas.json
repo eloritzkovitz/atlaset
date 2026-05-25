@@ -37,20 +37,20 @@
       "hideFilters": "Hide Filters"
     },
     "searchPlaceholder": "Search countries",
-    "countryLists": {
+    "lists": {
       "all": "All",
       "sovereign": "Sovereign",
       "visited": "Visited",
-      "newList": "New list"
-    },
-    "lists": {
-      "editTitle": "Edit List",
-      "addTitle": "Add List",
-      "nameLabel": "Name:",
-      "linkedWarning": "Changes to this list will update all layers linked to it.",
-      "save": "Save Changes",
-      "add": "Add List",
-      "delete": "Delete List"
+      "newList": "New list",
+      "form": {
+        "editTitle": "Edit List",
+        "addTitle": "Add List",
+        "nameLabel": "Name:",
+        "linkedWarning": "Changes to this list will update all layers linked to it.",
+        "save": "Save Changes",
+        "add": "Add List",
+        "delete": "Delete List"
+      }
     },
     "sort": {
       "by": "SORT BY",

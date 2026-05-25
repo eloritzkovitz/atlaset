@@ -65,8 +65,8 @@ export function CountryListModal({
             <>
               <ICONS.countryLists />
               {isEditing
-                ? t("countries.lists.editTitle")
-                : t("countries.lists.addTitle")}
+                ? t("countries.lists.form.editTitle")
+                : t("countries.lists.form.addTitle")}
             </>
           }
           showSeparator
@@ -88,7 +88,7 @@ export function CountryListModal({
           }}
         >
           <div className="p-4">
-            <FormField label={t("countries.lists.nameLabel")}>
+            <FormField label={t("countries.lists.form.nameLabel")}>
               <input
                 type="text"
                 name="name"
@@ -109,7 +109,7 @@ export function CountryListModal({
             {isEditing && isLinked && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">
                 <ICONS.info className="inline me-2" />
-                {t("countries.lists.linkedWarning")}
+                {t("countries.lists.form.linkedWarning")}
               </div>
             )}
             <div className="flex items-center justify-end mt-6">
@@ -129,10 +129,10 @@ export function CountryListModal({
                 }
                 submitLabel={
                   isEditing
-                    ? t("countries.lists.save")
-                    : t("countries.lists.add")
+                    ? t("countries.lists.form.save")
+                    : t("countries.lists.form.add")
                 }
-                deleteLabel={t("countries.lists.delete")}
+                deleteLabel={t("countries.lists.form.delete")}
                 disabled={!isValid}
               />
             </div>
