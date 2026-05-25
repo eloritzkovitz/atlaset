@@ -14,6 +14,7 @@ interface CountryDetailsHeaderProps {
   country: Country;
   isVisited: boolean;
   isHome: boolean;
+  isUpcoming?: boolean;
   centerOnCountry?: (isoCode: string) => void;
   onClose: () => void;
 }
@@ -22,6 +23,7 @@ export function CountryDetailsHeader({
   country,
   isVisited,
   isHome,
+  isUpcoming = false,
   centerOnCountry,
   onClose,
 }: CountryDetailsHeaderProps) {
@@ -39,7 +41,7 @@ export function CountryDetailsHeader({
             className="font-bold text-lg"
           />
           <span className="text-muted text-sm">({country.isoCode})</span>
-          <VisitedStatusIndicator visited={isVisited} isHome={isHome} />
+          <VisitedStatusIndicator visited={isVisited} isHome={isHome} isUpcoming={isUpcoming} />
         </span>
       }
       showSeparator

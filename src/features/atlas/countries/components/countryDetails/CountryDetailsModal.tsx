@@ -38,6 +38,7 @@ export function CountryDetailsModal({
         : { past: [], upcoming: [], tentative: [] },
     [country, getCountryVisitsCategorized],
   );
+  const isUpcoming = (categorizedVisits?.upcoming || []).length > 0;
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -77,9 +78,10 @@ export function CountryDetailsModal({
       >
         <div className="relative overflow-visible flex flex-col h-full">
           <CountryDetailsHeader
-            country={currentCountry}              
+            country={currentCountry}
             isVisited={isVisited}
             isHome={homeCountry === currentCountry.isoCode}
+            isUpcoming={isUpcoming}
             centerOnCountry={centerOnCountry}
             onClose={onClose}
           />

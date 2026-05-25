@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-05-25
+- **[feature]** **Countries:** Added new visit status indicator to upcoming visits
+
 ## 2026-05-23
 - **[feature]** **Settings | Map:** Added new setting for base color
 - **[chore]** **Settings | Map:** Updated some labels

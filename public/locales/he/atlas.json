@@ -101,8 +101,8 @@
       },
       "status": {
         "home": "מדינת בית",
-        "homeAria": "מדינת בית",
         "visited": "ביקרתי",
+        "upcoming": "ביקור עתידי",
         "notVisited": "לא ביקרתי"
       },
       "tabs": {

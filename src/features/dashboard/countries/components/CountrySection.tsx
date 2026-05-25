@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaThLarge } from "react-icons/fa";
-import { FaCircleCheck, FaFlag } from "react-icons/fa6";
+import { FaFlag } from "react-icons/fa6";
 import { PiGlobeStandFill } from "react-icons/pi";
 import { ActionButton, SearchInput, SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
@@ -316,8 +316,8 @@ export function CountrySection({
                   "exploration.showVisitedOnly",
                   "Show Visited Only",
                 )}
-                iconOn={<FaCircleCheck />}
-                iconOff={<FaCircleCheck className="text-muted" />}
+                iconOn={<ICONS.visitStatus.visited />}
+                iconOff={<ICONS.visitStatus.visited className="text-muted" />}
               />
               <ToggleButton
                 on={showTranscontinental}

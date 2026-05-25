@@ -92,6 +92,10 @@ export function CountryStats({
             <VisitedStatusIndicator
               visited={visited.isCountryVisited(selectedCountry.isoCode)}
               isHome={selectedCountry.isoCode === homeCountry}
+              isUpcoming={
+                !!visited.upcomingCountryCodes &&
+                visited.upcomingCountryCodes.includes(selectedCountry.isoCode)
+              }
             />
           }
         />

@@ -101,9 +101,9 @@
       },
       "status": {
         "home": "Home country",
-        "homeAria": "Home country",
         "visited": "Visited",
-        "notVisited": "Not visited"
+        "upcoming": "Upcoming visit",
+        "notVisited": "Not visited"        
       },
       "tabs": {
         "overview": "Overview",
