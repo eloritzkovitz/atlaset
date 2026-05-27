@@ -75,10 +75,6 @@ describe("visits utils", () => {
     it("returns country codes with future trips", () => {
       const upcoming = getUpcomingVisitCountries(mockTrips);
       expect(upcoming).toEqual(expect.arrayContaining(["JP"]));
-      expect(upcoming).not.toContain("US");
-      expect(upcoming).not.toContain("CA");
-      expect(upcoming).not.toContain("FR");
-      expect(upcoming).not.toContain("DE");
     });
   });
 

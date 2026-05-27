@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-05-27
+- **[feature]** **Visits:** Planned trips to new countries will now also color them as "upcoming"
+
 ## 2026-05-25
 - **[feature]** **Countries:** Added new visit status indicator to upcoming visits
 

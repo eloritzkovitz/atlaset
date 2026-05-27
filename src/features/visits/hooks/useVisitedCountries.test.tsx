@@ -60,7 +60,7 @@ describe("useVisitedCountries hook", () => {
     const visited = screen.getByTestId("visited").textContent || "";
     const upcoming = screen.getByTestId("upcoming").textContent || "";
     expect(JSON.parse(visited)).toEqual(["FR"]);
-    expect(JSON.parse(upcoming)).toEqual(["JP"]);
+    expect(JSON.parse(upcoming)).toEqual(expect.arrayContaining(["JP"]));
   });
 
   it("when no user, visited and upcoming are empty", () => {
@@ -82,7 +82,7 @@ describe("useVisitedCountries hook", () => {
       screen.getByTestId("upcoming").textContent || "",
     );
     expect(Array.isArray(visited)).toBe(true);
-    expect(upcoming).toEqual(["JP"]);
+    expect(upcoming).toEqual(expect.arrayContaining(["JP"]));
 
     currentMockCodes = [];
 

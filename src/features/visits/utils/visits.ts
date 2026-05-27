@@ -84,11 +84,9 @@ export function computeVisitedCountriesFromTrips(
  * @returns Array of country codes with future trips.
  */
 export function getUpcomingVisitCountries(trips: Trip[]): string[] {
-  const now = new Date();
   const codes = new Set<string>();
   trips.forEach((trip) => {
-    const end = trip.endDate ? new Date(trip.endDate) : undefined;
-    if (end && end > now) {
+    if (trip.status === "upcoming" || trip.status === "planned") {
       trip.countryCodes?.forEach((code) => codes.add(code));
     }
   });
