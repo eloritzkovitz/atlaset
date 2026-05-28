@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { Tooltip } from "@components";
-import { HOME_COUNTRY_COLOR } from "@constants/colors";
+import {
+  HOME_COUNTRY_COLOR,
+  NOT_VISITED_COLOR,
+  PLANNED_VISIT_COLOR,
+  VISITED_COLOR,
+} from "@constants/colors";
 import { ICONS } from "@constants/icons";
 
 interface VisitedStatusIndicatorProps {
@@ -18,49 +23,50 @@ export function VisitedStatusIndicator({
 }: VisitedStatusIndicatorProps) {
   const { t } = useTranslation("atlas");
 
-  if (isHome) {
-    return (
-      <Tooltip content={t("countries.details.status.home")} position="bottom">
-        <ICONS.visitStatus.home
-          className={`w-5 h-5 ${className}`}
-          color={HOME_COUNTRY_COLOR}
-          aria-label={t("countries.details.status.home")}
-        />
-      </Tooltip>
-    );
-  }
-  if (isUpcoming) {
-    return (
-      <Tooltip
-        content={t("countries.details.status.upcoming")}
-        position="bottom"
-      >
-        <ICONS.visitStatus.upcoming
-          className={`w-5 h-5 ${className}`}
-          color="#f59e0b"
-          aria-label={t("countries.details.status.upcomingAria")}
-        />
-      </Tooltip>
-    );
-  }
+  const STATUS_CONFIG = {
+    home: {
+      tooltipKey: "countries.details.status.home",
+      ariaKey: "countries.details.status.home",
+      icon: "home",
+      color: HOME_COUNTRY_COLOR,
+    },
+    upcoming: {
+      tooltipKey: "countries.details.status.upcoming",
+      ariaKey: "countries.details.status.upcomingAria",
+      icon: "upcoming",
+      color: PLANNED_VISIT_COLOR,
+    },
+    visited: {
+      tooltipKey: "countries.details.status.visited",
+      ariaKey: "countries.details.status.visitedAria",
+      icon: "visited",
+      color: VISITED_COLOR,
+    },
+    notVisited: {
+      tooltipKey: "countries.details.status.notVisited",
+      ariaKey: "countries.details.status.notVisitedAria",
+      icon: "notVisited",
+      color: NOT_VISITED_COLOR,
+    },
+  } as const;
 
-  return visited ? (
-    <Tooltip content={t("countries.details.status.visited")} position="bottom">
-      <ICONS.visitStatus.visited
+  const key: keyof typeof STATUS_CONFIG = isHome
+    ? "home"
+    : isUpcoming
+      ? "upcoming"
+      : visited
+        ? "visited"
+        : "notVisited";
+
+  const cfg = STATUS_CONFIG[key];
+  const Icon = ICONS.visitStatus[cfg.icon];
+
+  return (
+    <Tooltip content={t(cfg.tooltipKey)} position="bottom">
+      <Icon
         className={`w-5 h-5 ${className}`}
-        color="#22c55e"
-        aria-label={t("countries.details.status.visitedAria")}
-      />
-    </Tooltip>
-  ) : (
-    <Tooltip
-      content={t("countries.details.status.notVisited")}
-      position="bottom"
-    >
-      <ICONS.visitStatus.notVisited
-        className={`w-5 h-5 ${className}`}
-        color="#d1d5db"
-        aria-label={t("countries.details.status.notVisitedAria")}
+        color={cfg.color}
+        aria-label={t(cfg.ariaKey)}
       />
     </Tooltip>
   );
