@@ -114,20 +114,20 @@ export default function ProfilePage() {
                   <>
                     <ProfileAboutCard
                       displayEmail={
-                        profileUser.email ?? t("profile.noEmailProvided")
+                        profileUser.email ?? t("profile.about.personalDetails.noEmailProvided")
                       }
                       selectedCountry={selectedCountry}
                       displayBirthday={
                         formatFirestoreDate(profileUser.birthday) ??
-                        t("profile.notSpecified")
+                        t("profile.about.personalDetails.notSpecified")
                       }
                       displayJoinDate={
                         formatFirestoreDate(profileUser.joinDate) ??
-                        t("profile.noDateProvided")
+                        t("profile.about.personalDetails.notSpecified")
                       }
                       displayBiography={
                         profileUser.biography ??
-                        t("profile.noBiographyProvided")
+                        t("profile.about.personalDetails.noBiographyProvided")
                       }
                       displaySocialLinks={
                         profileUser.socialLinks &&
