@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-05-30
+- **[chore]** **Atlas | Legend:** Updated map legend generation for default map
+
 ## 2026-05-27
 - **[feature]** **Visits:** Planned trips to new countries will now also color them as "upcoming"
 

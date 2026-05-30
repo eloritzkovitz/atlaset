@@ -1,8 +1,11 @@
-import { COLOR_PALETTES } from "@constants/colorPalettes";
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
 import type { ColorMode } from "@features/atlas/map";
-import { useLayerColors, useVisitColorRoles } from "@features/settings";
+import {
+  useCountryColors,
+  useLayerColors,
+  useVisitColorRoles,
+} from "@features/settings";
 import type { LegendItem } from "../types";
 
 /**
@@ -21,44 +24,31 @@ export function useMapLegendItems(
 
   // Get dynamic color roles for the current mode
   const colorRoles = useVisitColorRoles(colorMode);
-  const { colorHomeCountry, colorUpcomingVisits } = useLayerColors();
+  const { colorHomeCountry, colorUpcomingVisits, colorVisitedCountries } =
+    useLayerColors();
+  const { VISITED_COUNTRY_COLOR, UPCOMING_VISIT_COUNTRY_COLOR } =
+    useCountryColors();
 
-  // Legend items for static layers
-  // Home country legend item (if shown, not readonly/edit)
-  const homeCountryLegend: LegendItem[] =
-    colorHomeCountry && !isReadonly && !isEdit
-      ? [{ color: colorRoles.home, label: "Home country" }]
-      : [];
+  const canShow = !isReadonly && !isEdit;
+  const make = (color: string, label: string) => ({ color, label });
 
-  // Visited countries layer (if present)
-  const visitedLayer = layers.find(
-    (o) => o.visible && o.name.toLowerCase().includes("visited"),
-  );
-  const visitedLegend: LegendItem[] = visitedLayer
-    ? [{ color: visitedLayer.color, label: visitedLayer.name }]
-    : [];
-
-  // Upcoming visit legend item (if shown, not readonly/edit)
-  const standardPalette =
-    COLOR_PALETTES.find((p) => p.name === "Standard") || COLOR_PALETTES[0];
-  const upcomingLegend: LegendItem[] =
-    colorUpcomingVisits && !isReadonly && !isEdit
-      ? [{ color: standardPalette.colors[3], label: "Upcoming Visit" }]
-      : [];
-
-  // Rest of layers (excluding visited)
-  const restLayers: LegendItem[] = layers
-    .filter((o) => o.visible && (!visitedLayer || o.name !== visitedLayer.name))
-    .map((o) => ({ color: o.color, label: o.name }));
-
+  // Static layer-based legend items (only in non-timeline mode)
   const layerLegendItems: LegendItem[] = [
-    ...homeCountryLegend,
-    ...visitedLegend,
-    ...upcomingLegend,
-    ...restLayers,
+    ...(colorHomeCountry && canShow
+      ? [make(colorRoles.home, "Home country")]
+      : []),
+    ...(colorVisitedCountries && canShow
+      ? [make(VISITED_COUNTRY_COLOR, "Visited Countries")]
+      : []),
+    ...(colorUpcomingVisits && canShow
+      ? [make(UPCOMING_VISIT_COUNTRY_COLOR, "Upcoming Visits")]
+      : []),
+    ...layers
+      .filter((o) => o.visible && !o.name.toLowerCase().includes("visited"))
+      .map((o) => make(o.color, o.name)),
   ];
 
-  // Cumulative mode legend items (dynamic)
+  // Cumulative mode legend items
   const cumulativeLegendItems: LegendItem[] = [
     { color: colorRoles.home, label: "Home country" },
     { color: colorRoles.visitCounts[4], label: "5+ visits" },
@@ -69,7 +59,7 @@ export function useMapLegendItems(
     { color: colorRoles.base, label: "Not visited" },
   ];
 
-  // Yearly mode legend items (dynamic)
+  // Yearly mode legend items
   const yearlyLegendItems: LegendItem[] = [
     { color: colorRoles.home, label: "Home country" },
     { color: colorRoles.yearly.upcoming, label: "Upcoming first visit" },
