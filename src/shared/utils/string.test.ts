@@ -2,10 +2,11 @@ import {
   capitalize,
   capitalizeWords,
   getArticle,
+  pluralize,
   truncate,
   normalizeString,
   slugify,
-  pluralize,
+  isNumericString,
   hasStringChildren,
 } from "./string";
 
@@ -29,6 +30,12 @@ describe("string utils", () => {
     expect(getArticle("")).toBe("a");
   });
 
+  it("pluralize adds 's' for counts not equal to 1", () => {
+    expect(pluralize("item", 1)).toBe("item");
+    expect(pluralize("item", 0)).toBe("items");
+    expect(pluralize("item", 2)).toBe("items");
+  });
+
   it("truncate adds ellipsis if needed", () => {
     expect(truncate("hello world", 5)).toBe("hello…");
     expect(truncate("short", 10)).toBe("short");
@@ -49,10 +56,13 @@ describe("string utils", () => {
     expect(slugify("")).toBe("");
   });
 
-  it("pluralize adds 's' for counts not equal to 1", () => {
-    expect(pluralize("item", 1)).toBe("item");
-    expect(pluralize("item", 0)).toBe("items");
-    expect(pluralize("item", 2)).toBe("items");
+  it("isNumericString detects numeric strings", () => {
+    expect(isNumericString("123")).toBe(true);
+    expect(isNumericString("-99")).toBe(true);
+    expect(isNumericString("GB-ENG")).toBe(false);
+    expect(isNumericString("ABC")).toBe(false);
+    expect(isNumericString("")).toBe(false);
+    expect(isNumericString(null)).toBe(false);
   });
 
   it("hasStringChildren detects string children", () => {

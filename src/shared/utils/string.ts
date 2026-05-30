@@ -4,8 +4,8 @@
 
 /**
  * Capitalizes the first letter of a string.
- * @param str
- * @returns
+ * @param str - The input string.
+ * @returns The string with the first letter capitalized.
  */
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -25,6 +25,16 @@ export function capitalizeWords(str: string) {
  */
 export function getArticle(word: string) {
   return /^[aeiou]/i.test(word) ? "an" : "a";
+}
+
+/**
+ * Pluralizes a label based on the count.
+ * @param label - The label to pluralize
+ * @param count - The count determining singular/plural
+ * @returns - The pluralized label
+ */
+export function pluralize(label: string, count: number) {
+  return count === 1 ? label : label + "s";
 }
 
 /**
@@ -69,13 +79,12 @@ export function canonicalKey(str: string) {
 }
 
 /**
- * Pluralizes a label based on the count.
- * @param label - The label to pluralize
- * @param count - The count determining singular/plural
- * @returns - The pluralized label
+ * Returns true when the provided value is a numeric string (integer),
+ * optionally signed. Examples: "123", "-99".
+ * @param s - value to test
  */
-export function pluralize(label: string, count: number) {
-  return count === 1 ? label : label + "s";
+export function isNumericString(s?: string | null) {
+  return typeof s === "string" && /^-?\d+$/.test(s);
 }
 
 /**

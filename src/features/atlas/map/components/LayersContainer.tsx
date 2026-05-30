@@ -14,6 +14,7 @@ import {
 import { useCountryColors, useLayerColors } from "@features/settings";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { useHomeCountry } from "@features/user";
+import { isNumericString } from "@utils/string";
 import { Geography } from "./Geography";
 import { Geographies } from "./Geographies";
 import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
@@ -46,7 +47,7 @@ export function LayersContainer({
   const { isEdit, isReadonly } = useMapView();
   const { timelineMode } = useTimeline();
 
-  // Home country for coloring
+  // Determine home, visited, and upcoming countries for styling
   const { homeCountry } = useHomeCountry();
   const { colorHomeCountry, colorVisitedCountries, colorUpcomingVisits } =
     useLayerColors();
@@ -56,7 +57,6 @@ export function LayersContainer({
     UPCOMING_VISIT_COUNTRY_COLOR,
   } = useCountryColors();
   const { visitedCountryCodes, upcomingCountryCodes } = useVisitedCountries();
-
   const visitedSet = useMemo(
     () => new Set((visitedCountryCodes || []).map((s) => s.toUpperCase())),
     [visitedCountryCodes],
@@ -80,11 +80,20 @@ export function LayersContainer({
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return null;
 
-            // Get tooltip name: use country name from data if available, otherwise fallback to geo properties
-            const tooltip =
+            // Get tooltip name: prefer country name from data; fall back to geo properties or iso code
+            const countryName =
               isoA2 && countryData?.countries
                 ? getCountryName(isoA2, countryData.countries)
-                : geo.properties.name;
+                : undefined;
+            const isIsoNumeric = isNumericString(isoA2);
+            const countryNameIsIso =
+              !!(countryName && isoA2) &&
+              countryName.toUpperCase() === isoA2.toUpperCase();
+
+            const tooltip =
+              !countryName || isIsoNumeric || countryNameIsIso
+                ? geo.properties?.name || isoA2 || ""
+                : countryName;
             const interactiveMode = !isReadonly && !isEdit && !timelineMode;
 
             // Layer logic: blend all layers for this country
