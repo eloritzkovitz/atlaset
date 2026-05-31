@@ -1,4 +1,11 @@
-import { useEffect, useRef, useState, useContext, useCallback, useMemo } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import {
   zoom as d3Zoom,
   zoomIdentity as d3ZoomIdentity,
@@ -15,15 +22,15 @@ export interface UseZoomPanOptions {
   filterZoomEvent?: (event: ZoomEvent) => boolean;
   onMoveStart?: (
     params: { coordinates: Coordinates; zoom: number },
-    event: ZoomEvent
+    event: ZoomEvent,
   ) => void;
   onMoveEnd?: (
     params: { coordinates: Coordinates; zoom: number },
-    event: ZoomEvent
+    event: ZoomEvent,
   ) => void;
   onMove?: (
     params: { x: number; y: number; zoom: number },
-    event: ZoomEvent
+    event: ZoomEvent,
   ) => void;
   translateExtent?: [Coordinates, Coordinates];
   scaleExtent?: [number, number];
@@ -67,7 +74,7 @@ export function useZoomPan({
 
   const [lon, lat] = center;
   const [position, setPosition] = useState<{ x: number; y: number; k: number }>(
-    { x: 0, y: 0, k: 1 }
+    { x: 0, y: 0, k: 1 },
   );
   const lastPosition = useRef<{ x: number; y: number; k: number }>({
     x: 0,
@@ -92,7 +99,7 @@ export function useZoomPan({
         return !sourceEvent.ctrlKey && sourceEvent.button === 0;
       return true;
     },
-    [filterZoomEvent]
+    [filterZoomEvent],
   );
 
   // Event handlers
@@ -102,12 +109,12 @@ export function useZoomPan({
       let coords: Coordinates = [0, 0];
       if (typeof projection.invert === "function") {
         coords = projection.invert(
-          getSvgCoordsFromTransform(width, height, event.transform)
+          getSvgCoordsFromTransform(width, height, event.transform),
         ) as Coordinates;
       }
       onMoveStart({ coordinates: coords, zoom: event.transform.k }, event);
     },
-    [onMoveStart, projection, width, height]
+    [onMoveStart, projection, width, height],
   );
 
   const handleZoom = useCallback(
@@ -117,7 +124,7 @@ export function useZoomPan({
       setPosition({ x, y, k });
       if (onMove) onMove({ x, y, zoom: k }, event);
     },
-    [onMove]
+    [onMove],
   );
 
   const handleZoomEnd = useCallback(
@@ -129,7 +136,7 @@ export function useZoomPan({
       let coords: Coordinates = [0, 0];
       if (typeof projection.invert === "function") {
         coords = projection.invert(
-          getSvgCoordsFromTransform(width, height, event.transform)
+          getSvgCoordsFromTransform(width, height, event.transform),
         ) as Coordinates;
       }
       const [x, y] = coords;
@@ -137,14 +144,14 @@ export function useZoomPan({
       if (onMoveEnd)
         onMoveEnd({ coordinates: coords, zoom: event.transform.k }, event);
     },
-    [onMoveEnd, projection, width, height]
+    [onMoveEnd, projection, width, height],
   );
 
   // Initialize zoom behavior
   useEffect(() => {
     if (!mapRef.current) return;
     const svg: Selection<Element, unknown, null, undefined> = d3Select(
-      mapRef.current as Element
+      mapRef.current as Element,
     );
     const zoom: ZoomBehavior<Element, unknown> = d3Zoom<Element, unknown>()
       .filter(filterFunc)
@@ -155,18 +162,29 @@ export function useZoomPan({
       ])
       .on(
         "start",
-        handleZoomStart as unknown as (this: Element, event: unknown) => void
+        handleZoomStart as unknown as (this: Element, event: unknown) => void,
       )
       .on(
         "zoom",
-        handleZoom as unknown as (this: Element, event: unknown) => void
+        handleZoom as unknown as (this: Element, event: unknown) => void,
       )
       .on(
         "end",
-        handleZoomEnd as unknown as (this: Element, event: unknown) => void
+        handleZoomEnd as unknown as (this: Element, event: unknown) => void,
       );
     zoomRef.current = zoom;
     svg.call(zoom);
+
+    // Cleanup on unmount
+    return () => {
+      try {
+        // remove all listeners in the zoom namespace
+        svg.on(".zoom", null);
+      } catch {
+        /* ignore cleanup errors */
+      }
+      zoomRef.current = null;
+    };
   }, [
     width,
     height,
@@ -201,9 +219,9 @@ export function useZoomPan({
     svg.call(
       zoomRef.current!.transform as (
         selection: Selection<Element, unknown, null, undefined>,
-        transform: ZoomTransform
+        transform: ZoomTransform,
       ) => void,
-      d3ZoomIdentity.translate(width / 2 - x, height / 2 - y).scale(zoom)
+      d3ZoomIdentity.translate(width / 2 - x, height / 2 - y).scale(zoom),
     );
     setPosition({ x: width / 2 - x, y: height / 2 - y, k: zoom });
     lastPosition.current = { x: lon, y: lat, k: zoom };

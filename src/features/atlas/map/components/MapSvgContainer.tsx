@@ -21,11 +21,9 @@ export const MapSvgContainer = forwardRef<SVGSVGElement, MapSvgContainerProps>(
     );
     const localRef = useRef<SVGSVGElement | null>(null);
 
-    // Set the modal DOM ref for dragging when the component mounts
+    // Set the ref for the draggable hook and expose the local ref to parent
     useEffect(() => setModalDomRef(localRef.current), [setModalDomRef]);
-
-    // Expose the SVG DOM element to parent components via ref
-    useImperativeHandle(ref, () => localRef.current!, [localRef.current]);
+    useImperativeHandle(ref, () => localRef.current!, []);
 
     return (
       <svg
