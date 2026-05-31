@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
@@ -156,12 +156,21 @@ export function CountriesPanel({
   }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
 
   // Compute filtered iso codes for custom list counts
-  const filteredIsoCodes = filteredCountries.map((c) => c.isoCode);
-  const customListOptions = countryLists.map((list) => ({
-    ...list,
-    count: filteredIsoCodes.filter((code) => list.countryCodes.includes(code))
-      .length,
-  }));
+  const filteredIsoCodes = useMemo(
+    () => filteredCountries.map((c) => c.isoCode),
+    [filteredCountries],
+  );
+
+  const customListOptions = useMemo(
+    () =>
+      countryLists.map((list) => ({
+        ...list,
+        count: filteredIsoCodes.filter((code) =>
+          list.countryCodes.includes(code),
+        ).length,
+      })),
+    [countryLists, filteredIsoCodes],
+  );
 
   // Sort state
   const {
