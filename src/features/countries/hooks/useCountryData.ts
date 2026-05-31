@@ -31,20 +31,19 @@ export function useCountryData() {
   };
 
   const countries = data.countries;
-
-  // Compute currency counts
-  const currencyCounts = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const c of countries) {
-      if (!c?.currency) continue;
-      map.set(c.currency, (map.get(c.currency) ?? 0) + 1);
-    }
-    return map;
-  }, [countries]);
-
-  // Provide localized countries with fallbacks to special countries and original names
-  const localizedCountries = useMemo(() => {
-    if (!countries || countries.length === 0) return [] as typeof countries;
+  const {
+    localizedCountries,
+    currencyCounts,
+    allRegionsLocalized,
+    subregionsByRegion,
+    subregionToRegion,
+    languageCodes,
+  } = useMemo(() => {
+    const loc: Country[] = [];
+    const currencyMap = new Map<string, number>();
+    const regionSet = new Set<string>();
+    const tmpSub: Record<string, Set<string>> = {};
+    const langSet = new Set<string>();
 
     const lng = i18n.language || i18next.language || "en";
     let bundle: Record<string, CountryTranslation> = {};
@@ -57,11 +56,12 @@ export function useCountryData() {
       bundle = {};
     }
 
-    return countries.map((c) => {
+    // Map country data with translations and build auxiliary data structures for filters
+    for (const c of countries) {
       const iso = (c.isoCode || "").toUpperCase();
       const trans = bundle[iso] ?? {};
 
-      return {
+      const localized = {
         ...c,
         name: trans.name ?? c.name,
         capital: trans.capital ?? c.capital ?? "",
@@ -72,43 +72,45 @@ export function useCountryData() {
           c.territories ??
           ({} as CountryTerritories)) as CountryTerritories,
       } as Country;
-    });
+
+      loc.push(localized);
+
+      if (localized?.region) regionSet.add(String(localized.region));
+      const sk = localized.subregion as string;
+      if (localized.region && sk) {
+        if (!tmpSub[localized.region])
+          tmpSub[localized.region] = new Set<string>();
+        tmpSub[localized.region].add(sk);
+      }
+      if (localized?.currency)
+        currencyMap.set(
+          localized.currency,
+          (currencyMap.get(localized.currency) ?? 0) + 1,
+        );
+      if (Array.isArray(localized.languages))
+        for (const l of localized.languages) langSet.add(String(l));
+    }
+
+    const allRegions = Array.from(regionSet).sort();
+    const subregionsOut: Record<string, string[]> = {};
+    for (const [k, set] of Object.entries(tmpSub))
+      subregionsOut[k] = Array.from(set).sort();
+    const subToRegion = new Map<string, string>();
+    for (const [rk, subs] of Object.entries(subregionsOut))
+      for (const s of subs) subToRegion.set(s, rk);
+    const languageCodesArr = Array.from(langSet).sort();
+
+    return {
+      localizedCountries: loc,
+      currencyCounts: currencyMap,
+      allRegionsLocalized: allRegions,
+      subregionsByRegion: subregionsOut,
+      subregionToRegion: subToRegion,
+      languageCodes: languageCodesArr,
+    } as const;
   }, [countries, i18n]);
 
-  // Build localized allRegions from localizedCountries
-  const allRegionsLocalized = useMemo(() => {
-    const set = new Set<string>();
-    for (const c of localizedCountries) {
-      if (c?.region) set.add(String(c.region));
-    }
-    return Array.from(set).sort();
-  }, [localizedCountries]);
-
-  // Build a map of region -> subregions for translation and other lookups
-  const subregionsByRegion = useMemo(() => {
-    const tmp: Record<string, Set<string>> = {};
-    for (const c of localizedCountries) {
-      const rk = c.region as string;
-      const sk = c.subregion as string;
-      if (!rk || !sk) continue;
-      if (!tmp[rk]) tmp[rk] = new Set<string>();
-      tmp[rk].add(sk);
-    }
-    const out: Record<string, string[]> = {};
-    for (const [k, set] of Object.entries(tmp)) out[k] = Array.from(set).sort();
-    return out;
-  }, [localizedCountries]);
-
-  // Map subregionKey -> regionKey for quick reverse lookups
-  const subregionToRegion = useMemo(() => {
-    const m = new Map<string, string>();
-    for (const [rk, subs] of Object.entries(subregionsByRegion)) {
-      for (const s of subs) m.set(s, rk);
-    }
-    return m;
-  }, [subregionsByRegion]);
-
-  // Build localized currencies list from country currency codes + translations
+  // Map currency codes to localized names and user counts
   const currenciesWithUsers = useMemo(() => {
     const codes = Array.from(currencyCounts.keys());
     if (codes.length === 0) return [] as Currency[];
@@ -121,17 +123,7 @@ export function useCountryData() {
     });
   }, [currencyCounts, i18n]);
 
-  // Build a set of language codes/names used across countries
-  const languageCodes = useMemo(() => {
-    const set = new Set<string>();
-    for (const c of localizedCountries) {
-      if (!c || !Array.isArray(c.languages)) continue;
-      for (const l of c.languages) set.add(String(l));
-    }
-    return Array.from(set).sort();
-  }, [localizedCountries]);
-
-  // Map language code -> Language object (use i18n translations only)
+  // Map language codes to localized names
   const languagesMap = useMemo(() => {
     const out: Record<string, Language> = {};
     for (const code of languageCodes) {

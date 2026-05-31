@@ -1,15 +1,25 @@
 # Changelog
 
+## 2026-05-31
+
+- **[chore]** **Atlas | Map:** Updated some map features to include prominent lakes
+- **[chore]** **Atlas | Map:** Improved map drag and zoom behavior
+- **[chore]** **Countries:** Improved performance for static data
+
 ## 2026-05-30
+
 - **[chore]** **Atlas | Legend:** Updated map legend generation for default map
 
 ## 2026-05-27
+
 - **[feature]** **Visits:** Planned trips to new countries will now also color them as "upcoming"
 
 ## 2026-05-25
+
 - **[feature]** **Countries:** Added new visit status indicator to upcoming visits
 
 ## 2026-05-23
+
 - **[feature]** **Settings | Map:** Added new setting for base color
 - **[chore]** **Settings | Map:** Updated some labels
 

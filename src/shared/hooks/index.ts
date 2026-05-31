@@ -39,9 +39,9 @@ export * from "./navigation/useTablePagination";
 // State
 export * from "./state/useDebounce";
 export * from "./state/useDelayedLoading";
-export * from "./state/useDraggableModal";
 export * from "./state/usePageTitle";
 export * from "./state/usePanelHide";
+export * from "./state/usePointerDrag";
 export * from "./state/usePwaUpdate";
 export * from "./state/useUiHint";
 
