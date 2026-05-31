@@ -11,8 +11,8 @@ import { useLanguage } from "@features/settings";
 import {
   useBodyScrollLock,
   useClickOutside,
-  useDraggableModal,
   usePanelHide,
+  usePointerDrag,
 } from "@hooks";
 import "./Modal.css";
 
@@ -59,7 +59,7 @@ export function Modal({
   const { setModalOpen } = useUI();
   const { isRtl } = useLanguage();
   const internalRef = useRef<HTMLDivElement>(null);
-  const modalRef = containerRef ?? internalRef;  
+  const modalRef = containerRef ?? internalRef;
 
   // Set modal open state for UI context
   useEffect(() => {
@@ -77,7 +77,7 @@ export function Modal({
 
   // Draggable modal logic
   const { dragging, handlePointerDown, setModalDomRef, modalStyle } =
-    useDraggableModal?.(draggable, isOpen) || {
+    usePointerDrag?.(draggable, isOpen) || {
       dragging: false,
       handlePointerDown: undefined,
       setModalDomRef: undefined,

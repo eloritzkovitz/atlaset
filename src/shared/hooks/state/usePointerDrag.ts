@@ -12,25 +12,34 @@ import { useEventListener } from "../dom/useEventListener";
 type ModalPosition = { x: number; y: number };
 
 /**
- * Manages the state and behavior for a draggable modal. Provides handlers and styles to enable dragging functionality.
- * @param draggable - Whether the modal should be draggable.
- * @param isOpen - Whether the modal is currently open. Used to reset dragging state when modal is closed.
- * @returns An object containing dragging state, pointer down handler, ref setter for the modal element, computed modal style, and current modal offset.
+ * Manages the state and behavior for a draggable element. Provides handlers and styles to enable dragging functionality.
+ * @param draggable - Whether the element should be draggable.
+ * @param isOpen - Whether the element is currently open. Used to reset dragging state when element is closed.
+ * @returns An object containing dragging state, pointer down handler, ref setter for the element, computed element style, and current element offset.
  */
-export function useDraggableModal(draggable: boolean, isOpen: boolean) {
+export function usePointerDrag(draggable: boolean, isOpen: boolean) {
   const dragState = useRef<null | {
     x: number;
     y: number;
   }>(null);
   const [dragging, setDragging] = useState(false);
-  const modalDomRef = useRef<HTMLElement | null>(null);
+  const modalDomRef = useRef<Element | null>(null);
   const [modalOffset, setModalOffset] = useState<ModalPosition | null>(null);
 
   // Center modal on first open if no position is set, otherwise keep last position
   useLayoutEffect(() => {
     if (isOpen && modalOffset == null && modalDomRef.current) {
-      const width = modalDomRef.current.offsetWidth;
-      const height = modalDomRef.current.offsetHeight;
+      const el = modalDomRef.current;
+      let width: number;
+      let height: number;
+      if (el instanceof HTMLElement) {
+        width = el.offsetWidth;
+        height = el.offsetHeight;
+      } else {
+        const rect = el.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+      }
       const x = window.innerWidth / 2 - width / 2;
       const y = window.innerHeight / 2 - height / 2;
       setModalOffset({ x, y });
@@ -67,7 +76,7 @@ export function useDraggableModal(draggable: boolean, isOpen: boolean) {
 
   // Pointer down on modal
   const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLElement>) => {
+    (e: React.PointerEvent<Element>) => {
       if (!draggable || !modalOffset) return;
       if (e.pointerType === "mouse" && e.button !== 0) return;
       dragState.current = {
@@ -128,7 +137,7 @@ export function useDraggableModal(draggable: boolean, isOpen: boolean) {
   useEventListener("pointerup", handlePointerUp, window);
 
   // Expose a ref setter for the modal element
-  const setModalDomRef = useCallback((el: HTMLElement | null) => {
+  const setModalDomRef = useCallback((el: Element | null) => {
     modalDomRef.current = el;
   }, []);
 
