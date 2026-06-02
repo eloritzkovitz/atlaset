@@ -56,4 +56,4 @@ export type ZoomEvent = {
 export type MapMode = "view" | "readonly" | "edit" | "timeline";
 
 /** Modes for coloring countries on the map. */
-export type ColorMode = "standard" | "cumulative" | "yearly";
+export type ColorMode = "standard" | "atlas" | "cumulative" | "yearly";
