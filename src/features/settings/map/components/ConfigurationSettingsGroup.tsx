@@ -23,32 +23,32 @@ export function ConfigurationSettingsGroup() {
     <>
       <CollapsibleHeader
         icon={<FaDraftingCompass />}
-        label={t("mapSettings.configuration")}
+        label={t("mapSettings.configuration.title")}
         expanded={showMapSettings}
         onToggle={() => setShowMapSettings((v) => !v)}
       />
       {showMapSettings && (
         <div>
           <SelectInput
-            label={t("mapSettings.projection")}
+            label={t("mapSettings.configuration.projection")}
             value={projection}
             onChange={(v) => setProjection(String(v))}
             options={MAP_CONFIG_OPTIONS.projection}
           />
           <SelectInput
-            label={t("mapSettings.baseColor")}
+            label={t("mapSettings.configuration.baseColor")}
             value={baseColor}
             onChange={(v) => setBaseColor(String(v))}
             options={MAP_CONFIG_OPTIONS.baseColor}
           />
           <SelectInput
-            label={t("mapSettings.borderColor")}
+            label={t("mapSettings.configuration.borderColor")}
             value={borderColor}
             onChange={(v) => setBorderColor(String(v))}
             options={MAP_CONFIG_OPTIONS.strokeColor}
           />
           <SelectInput
-            label={t("mapSettings.borderWidth")}
+            label={t("mapSettings.configuration.borderWidth")}
             value={borderWidth}
             onChange={(v) => setBorderWidth(Number(v))}
             options={MAP_CONFIG_OPTIONS.strokeWidth}

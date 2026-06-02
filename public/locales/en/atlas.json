@@ -103,7 +103,7 @@
         "home": "Home country",
         "visited": "Visited",
         "upcoming": "Upcoming visit",
-        "notVisited": "Not visited"        
+        "notVisited": "Not visited"
       },
       "tabs": {
         "overview": "Overview",
@@ -238,19 +238,24 @@
   },
   "mapSettings": {
     "title": "Map Settings",
-    "configuration": "Configuration",
-    "projection": "Projection",
-    "baseColor": "Base color",
-    "borderColor": "Stroke color",
-    "borderWidth": "Stroke width",
-    "colors": "Colors",
-    "displayOptions": "Display Options",
-    "showHomeCountry": "Show home country",
-    "showVisitedCountries": "Show visited countries",
-    "showUpcomingVisits": "Show upcoming new visits",
-    "colorPalette": "Color palettes",
-    "standard": "Standard",
-    "timelineCumulative": "Timeline (Cumulative)",
-    "timelineYearly": "Timeline (Yearly)"
+    "configuration": {
+      "title": "Configuration",
+      "projection": "Projection",
+      "baseColor": "Base color",
+      "borderColor": "Stroke color",
+      "borderWidth": "Stroke width"
+    },
+    "colors": {
+      "title": "Colors",
+      "displayOptions": "Display Options",
+      "showHomeCountry": "Show home country",
+      "showVisitedCountries": "Show visited countries",
+      "showUpcomingVisits": "Show upcoming new visits",
+      "colorPalette": "Color palettes",
+      "standard": "Standard",
+      "atlas": "Atlas",
+      "timelineCumulative": "Timeline (Cumulative)",
+      "timelineYearly": "Timeline (Yearly)"
+    }
   }
 }
