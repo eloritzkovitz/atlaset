@@ -1,7 +1,8 @@
 import { useMemo } from "react";
-import type { GeoData } from "../types";
 import type { Feature, Geometry } from "geojson";
+import { ATLAS_PALETTE } from "@constants/colorPalettes";
 import { getCountryIsoCode } from "@features/countries";
+import type { GeoData } from "../types";
 import { getFeatures } from "../utils/geography";
 
 interface UseAtlasColoringOptions {
@@ -22,8 +23,6 @@ interface BoundingBox {
   maxY: number;
 }
 
-const DEFAULT_PALETTE = ["#b94f6a", "#f5b731", "#7ecc5a", "#61a4e2", "#b446d6"];
-
 export function useAtlasColoring(
   geography: GeoData,
   options?: UseAtlasColoringOptions,
@@ -32,7 +31,7 @@ export function useAtlasColoring(
 
   return useMemo(() => {
     const K = Math.max(options?.colors ?? 4, 1);
-    const finalPalette = (options?.palette ?? DEFAULT_PALETTE).slice(0, K);
+    const finalPalette = (options?.palette ?? ATLAS_PALETTE.colors).slice(0, K);
 
     // If not enabled or no valid geography data, return empty map and palette
     if (

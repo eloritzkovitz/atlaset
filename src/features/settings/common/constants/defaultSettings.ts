@@ -24,6 +24,7 @@ export const defaultSettings: Settings = {
     colorUpcomingVisits: false,
     palettes: {
       standard: DEFAULT_COLOR_PALETTES.standard,
+      atlas: DEFAULT_COLOR_PALETTES.atlas,
       yearly: DEFAULT_COLOR_PALETTES.yearly,
       cumulative: DEFAULT_COLOR_PALETTES.cumulative,
     },
