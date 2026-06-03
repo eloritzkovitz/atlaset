@@ -21,6 +21,13 @@
     "zoomOut": "הקטן",
     "resetView": "אתחול תצוגה"
   },
+  "overlays": {
+    "toggle": "החלף שכבות על",
+    "colorMode": {
+      "standard": "רגיל",
+      "atlas": "אטלס"
+    }
+  },
   "shared": {
     "viewingPrefix": "צופה ב־",
     "byPrefix": "על־ידי",

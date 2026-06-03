@@ -21,6 +21,13 @@
     "zoomOut": "Zoom out",
     "resetView": "Reset view"
   },
+  "overlays": {
+    "toggle": "Toggle overlays",
+    "colorMode": {
+      "standard": "Standard",
+      "atlas": "Atlas"
+    }
+  },
   "shared": {
     "viewingPrefix": "Viewing",
     "byPrefix": "by",
