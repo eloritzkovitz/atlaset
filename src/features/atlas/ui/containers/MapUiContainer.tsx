@@ -27,9 +27,16 @@ export function MapUiContainer({
   isEmbed,
 }: MapUiContainerProps) {
   const effectiveLayers = useEffectiveLayers();
-  const { isReadonly, isEdit, zoom, setZoom, center, selectedCoords } =
-    useMapView();
-  const { timelineMode, colorMode } = useTimeline();
+  const {
+    isReadonly,
+    isEdit,
+    colorMode,
+    zoom,
+    setZoom,
+    center,
+    selectedCoords,
+  } = useMapView();
+  const { timelineMode } = useTimeline();
   const { uiVisible, openUserPanel, showLegend, closeLegend } = useUI();
   const legendItems: LegendItem[] = useMapLegendItems(
     effectiveLayers,
