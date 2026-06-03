@@ -48,7 +48,7 @@ export function MapToolbar({
       <>
         {/* Floating FAB */}
         <button
-          className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4 shadow"
+          className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4"
           onClick={() => setMenuOpen((open) => !open)}
           aria-label={
             menuOpen
@@ -107,7 +107,7 @@ export function MapToolbar({
             }
             titlePosition="left"
             variant="action"
-            className={`${!visible ? "opacity-70" : ""}`}
+            className={`shadow ${!visible ? "opacity-70" : ""}`}
             icon={
               visible ? (
                 <DirectionalIcon direction="next" />
@@ -119,7 +119,7 @@ export function MapToolbar({
           />
           {/* Actions: horizontal slide */}
           <ActionsToolbar
-            className={`end-10 md:end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 ${
+            className={`end-10 md:end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 shadow ${
               visible
                 ? "opacity-100 pointer-events-auto translate-x-0"
                 : `opacity-0 pointer-events-none ${isRtl ? "-translate-x-10" : "translate-x-10"}`

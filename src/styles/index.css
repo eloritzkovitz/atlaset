@@ -48,8 +48,8 @@
   --color-action-text: theme("colors.gray.600");
   --color-action-text-hover: theme("colors.gray.700");
   /* Header action colors */
-  --color-action-header: theme("colors.gray.200");
-  --color-action-header-hover: theme("colors.gray.600");
+  --color-action-header: theme("colors.gray.600");
+  --color-action-header-hover: theme("colors.gray.200");
   --color-action-header-hover-text: theme("colors.gray.300");
   /* Surface colors */
   --color-surface: theme("colors.white");

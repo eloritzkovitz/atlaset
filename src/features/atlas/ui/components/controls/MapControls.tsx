@@ -92,6 +92,7 @@ export function MapControls({
           icon={<FaPlus />}
           variant="action"
           rounded
+          className="shadow"
         />
         <ActionButton
           onClick={() =>
@@ -106,8 +107,9 @@ export function MapControls({
           title={t("controls.zoomOut")}
           titlePosition="left"
           icon={<FaMinus />}
-          variant="action"
-          rounded
+          variant="action"         
+          rounded 
+          className="shadow"
         />
         <ActionButton
           onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
@@ -117,6 +119,7 @@ export function MapControls({
           icon={<FaUpRightAndDownLeftFromCenter />}
           variant="action"
           rounded
+          className="shadow"
         />
       </div>
     </div>
