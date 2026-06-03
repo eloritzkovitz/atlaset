@@ -4,6 +4,7 @@
 
 @theme {
   --color-bg: theme("colors.gray.50");
+  --color-bg-atlas: theme("colors.blue.100");
   /* Sidebar colors */
   --color-sidebar: theme("colors.gray.100");
   --color-sidebar-btn-hover: theme("colors.gray.200");
@@ -113,6 +114,7 @@
 
 .dark {
   --color-bg: theme("colors.gray.900");
+  --color-bg-atlas: theme("colors.blue.950");
   /* Sidebar colors */
   --color-sidebar: theme("colors.gray.800");
   --color-sidebar-btn-hover: theme("colors.gray.600");
