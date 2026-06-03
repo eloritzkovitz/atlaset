@@ -45,8 +45,8 @@ export function LayersContainer({
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const countryData = useCountryData();
-  const { isEdit, isReadonly } = useMapView();
-  const { timelineMode, colorMode } = useTimeline();
+  const { isEdit, isReadonly, colorMode } = useMapView();
+  const { timelineMode } = useTimeline();
 
   const { homeCountry } = useHomeCountry();
   const { colorHomeCountry, colorVisitedCountries, colorUpcomingVisits } =

@@ -1,5 +1,4 @@
 import { createContext, useContext } from "react";
-import type { ColorMode } from "@features/atlas/map";
 
 export interface TimelineContextValue {
   timelineMode: boolean;
@@ -8,9 +7,7 @@ export interface TimelineContextValue {
   setShowVisitedOnly: (v: boolean | ((prev: boolean) => boolean)) => void;
   years: number[];
   selectedYear: number;
-  setSelectedYear: (year: number) => void;
-  colorMode: ColorMode;
-  setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
+  setSelectedYear: (year: number) => void;  
 }
 
 export const TimelineContext = createContext<TimelineContextValue | undefined>(undefined);

@@ -5,14 +5,15 @@ import {
   ToolbarSelectButton,
   DirectionalIcon,
 } from "@components";
+import { useMapView } from "@contexts/MapViewContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import type { ColorMode } from "@features/atlas/map";
 import { useLanguage } from "@features/settings";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {
-  const { years, selectedYear, setSelectedYear, colorMode, setColorMode } =
-    useTimeline();
+  const { colorMode, setColorMode } = useMapView();
+  const { years, selectedYear, setSelectedYear } = useTimeline();
   const { isRtl } = useLanguage();
   const { t } = useTranslation("atlas");
 
