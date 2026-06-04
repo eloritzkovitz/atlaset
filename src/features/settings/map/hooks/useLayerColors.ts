@@ -30,6 +30,13 @@ export function useLayerColors() {
       colors: { ...(settings.colors ?? {}), colorUpcomingVisits: value },
     });
 
+  // Atlas colors setting
+  const numAtlasColors = settings.colors?.numAtlasColors ?? 4;
+  const setNumAtlasColors = (value: number) =>
+    updateSettings({
+      colors: { ...(settings.colors ?? {}), numAtlasColors: value },
+    });
+
   // Palette settings
   const colors = settings.colors ?? {};
   const colorPalettes = colors.palettes ?? DEFAULT_COLOR_PALETTES;
@@ -53,6 +60,8 @@ export function useLayerColors() {
     setColorHomeCountry,
     colorUpcomingVisits,
     setColorUpcomingVisits,
+    numAtlasColors,
+    setNumAtlasColors,
     colorPalettes,
     setPalette,
   };

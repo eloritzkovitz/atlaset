@@ -49,8 +49,12 @@ export function LayersContainer({
   const { timelineMode } = useTimeline();
 
   const { homeCountry } = useHomeCountry();
-  const { colorHomeCountry, colorVisitedCountries, colorUpcomingVisits } =
-    useLayerColors();
+  const {
+    colorHomeCountry,
+    colorVisitedCountries,
+    colorUpcomingVisits,
+    numAtlasColors,
+  } = useLayerColors();
   const {
     HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,
@@ -76,6 +80,7 @@ export function LayersContainer({
   // Atlas coloring
   const isAtlasActive = colorMode === "atlas";
   const { map: atlasColorMap } = useAtlasColoring(geographyData, {
+    colors: numAtlasColors,
     enabled: isAtlasActive,
   });
 

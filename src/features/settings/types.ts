@@ -38,6 +38,7 @@ export type ColorsSettings = {
   colorHomeCountry: boolean;
   colorVisitedCountries: boolean;
   colorUpcomingVisits: boolean;
+  numAtlasColors: number;
   palettes: Record<ColorMode, string>;
 };
 

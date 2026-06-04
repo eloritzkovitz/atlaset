@@ -5,6 +5,7 @@ import {
   Checkbox,
   CollapsibleHeader,
   DropdownSelectInput,
+  NumberInput,
   SectionHeader,
 } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
@@ -28,6 +29,8 @@ export function ColorsSettingsGroup() {
     setColorVisitedCountries,
     colorUpcomingVisits,
     setColorUpcomingVisits,
+    numAtlasColors,
+    setNumAtlasColors,
     colorPalettes,
     setPalette,
   } = useLayerColors();
@@ -74,6 +77,19 @@ export function ColorsSettingsGroup() {
                 checked={!!colorUpcomingVisits}
                 onChange={setColorUpcomingVisits}
                 label={t("mapSettings.colors.showUpcomingVisits")}
+              />
+            </div>
+            <div className="flex items-center gap-2 w-full">
+              <span className="opacity-70">
+                {t("mapSettings.colors.numAtlasColors")}
+              </span>
+              <NumberInput
+                label=""
+                value={numAtlasColors}
+                min={4}
+                max={5}
+                onChange={(v) => setNumAtlasColors(v)}
+                className="!my-0 flex-1"
               />
             </div>
           </section>
