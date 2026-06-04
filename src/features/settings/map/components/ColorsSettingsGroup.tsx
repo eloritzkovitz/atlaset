@@ -79,17 +79,14 @@ export function ColorsSettingsGroup() {
                 label={t("mapSettings.colors.showUpcomingVisits")}
               />
             </div>
-            <div className="flex items-center gap-2 w-full">
-              <span className="opacity-70">
-                {t("mapSettings.colors.numAtlasColors")}
-              </span>
+            <div className="flex items-center gap-2">
+              <span>{t("mapSettings.colors.numAtlasColors")}</span>
               <NumberInput
                 label=""
                 value={numAtlasColors}
                 min={4}
                 max={5}
                 onChange={(v) => setNumAtlasColors(v)}
-                className="!my-0 flex-1"
               />
             </div>
           </section>
