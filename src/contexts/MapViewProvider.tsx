@@ -25,7 +25,8 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const isEdit = mapMode === "edit";
 
   // Color mode state
-  const [colorMode, setColorMode] = useState<ColorMode>("standard");  
+  const [colorMode, setColorMode] = useState<ColorMode>("standard"); 
+  const isAtlasActive = colorMode === "atlas"; 
 
   // Map ready state
   const [mapReady, setMapReady] = useState(false);
@@ -114,6 +115,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         isEdit,
         colorMode,
         setColorMode,
+        isAtlasActive,
         geoData,
         projection,
         setProjection,

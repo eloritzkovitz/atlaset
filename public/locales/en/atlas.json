@@ -9,6 +9,7 @@
     "markers": "Markers",
     "legend": "Legend",
     "myMaps": "My Maps",
+    "colorModes": "Color Modes",
     "timeline": "Timeline",
     "export": "Export",
     "download": "Download",
@@ -20,14 +21,7 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "resetView": "Reset view"
-  },
-  "overlays": {
-    "toggle": "Toggle overlays",
-    "colorMode": {
-      "standard": "Standard",
-      "atlas": "Atlas"
-    }
-  },
+  },  
   "shared": {
     "viewingPrefix": "Viewing",
     "byPrefix": "by",
@@ -202,6 +196,10 @@
     "namePlaceholder": "Map name",
     "saveChanges": "Save Changes",
     "add": "Add Map"
+  },
+  "colorModes": {
+    "standard": "Standard",
+    "atlas": "Atlas"
   },
   "timeline": {
     "hint": "Timeline mode enabled. Press T to toggle off.",

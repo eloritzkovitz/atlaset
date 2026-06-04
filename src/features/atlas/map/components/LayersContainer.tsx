@@ -45,9 +45,10 @@ export function LayersContainer({
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const countryData = useCountryData();
-  const { isEdit, isReadonly, colorMode } = useMapView();
+  const { isAtlasActive, isEdit, isReadonly } = useMapView();
   const { timelineMode } = useTimeline();
-
+  
+  // Colors and visited countries
   const { homeCountry } = useHomeCountry();
   const {
     colorHomeCountry,
@@ -78,7 +79,6 @@ export function LayersContainer({
   );
 
   // Atlas coloring
-  const isAtlasActive = colorMode === "atlas";
   const { map: atlasColorMap } = useAtlasColoring(geographyData, {
     colors: numAtlasColors,
     enabled: isAtlasActive,

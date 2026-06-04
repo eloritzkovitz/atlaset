@@ -43,7 +43,7 @@ export function AtlasShortcuts() {
   // Toggle Markers panel with "M"
   useKeyHandler(toggleMarkers, ["m", "M"], true);
 
-  // Toggle overlays with "O"
+  // Toggle color modes with "O"
   useKeyHandler(
     () => {
       if (isReadonly || isEdit || timelineMode) return;

@@ -13,6 +13,7 @@ export interface MapViewContextType {
   isEdit: boolean;
   colorMode: ColorMode;
   setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
+  isAtlasActive: boolean;
   geoData: GeoData | null;
   projection: string;
   setProjection: (v: string) => void;

@@ -36,7 +36,7 @@ export const keyCommands: KeyCommand[] = [
   { key: "g", modifiers: [], action: "Toggle legend", category: "Atlas" },
   { key: "l", modifiers: [], action: "Toggle layers", category: "Atlas" },
   { key: "m", modifiers: [], action: "Toggle markers", category: "Atlas" },
-  { key: "o", modifiers: [], action: "Toggle overlays", category: "Atlas" },
+  { key: "o", modifiers: [], action: "Toggle color modes", category: "Atlas" },
   { key: "s", modifiers: [], action: "Toggle settings", category: "Atlas" },
   { key: "t", modifiers: [], action: "Toggle timeline", category: "Atlas" },
   { key: "u", modifiers: [], action: "Toggle UI", category: "Atlas" },

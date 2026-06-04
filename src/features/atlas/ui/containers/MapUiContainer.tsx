@@ -16,7 +16,6 @@ import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
 import { useUiHint } from "@hooks";
 import { MapToolbar } from "../components/controls/MapToolbar";
 import { MapFooter } from "../components/footer/MapFooter";
-import { MapOverlayToggle } from "../components/controls/MapOverlayToggle";
 
 interface MapUiContainerProps {
   isAddingMarker?: boolean;
@@ -130,9 +129,8 @@ export function MapUiContainer({
       {!openUserPanel && (
         <>
           <MapToolbar zoom={zoom} setZoom={setZoom} isEmbed={isEmbed} />
-          <MapOverlayToggle />
           {!isEmbed && (
-            <>            
+            <>
               <MapFooter
                 zoom={zoom}
                 coords={selectedCoords}

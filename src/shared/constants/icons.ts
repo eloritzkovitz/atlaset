@@ -100,10 +100,7 @@ export const ICONS = {
   // Atlas
   atlas: FaEarthAmericas,
   map: FaMap,
-  overlays: {
-    standard: FaRegMap,
-    atlas: FaBookAtlas,
-  },
+  colorModes:  FaRegMap,
   mapData: FaMapLocationDot,
   countries: FaGlobe,
   countryLists: FaList,

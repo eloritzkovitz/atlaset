@@ -9,6 +9,7 @@
     "markers": "סימונים",
     "legend": "מקרא",
     "myMaps": "המפות שלי",
+    "colorModes": "מצבי צבע",
     "timeline": "ציר זמן",
     "export": "ייצוא",
     "download": "הורד",
@@ -20,13 +21,6 @@
     "zoomIn": "הגדל",
     "zoomOut": "הקטן",
     "resetView": "אתחול תצוגה"
-  },
-  "overlays": {
-    "toggle": "החלף שכבות על",
-    "colorMode": {
-      "standard": "רגיל",
-      "atlas": "אטלס"
-    }
   },
   "shared": {
     "viewingPrefix": "צופה ב־",
@@ -202,6 +196,10 @@
     "namePlaceholder": "שם מפה",
     "saveChanges": "שמירת שינויים",
     "add": "הוסף מפה"
+  },
+  "colorModes": {
+    "standard": "רגיל",
+    "atlas": "אטלס"
   },
   "timeline": {
     "play": "הפעל",
