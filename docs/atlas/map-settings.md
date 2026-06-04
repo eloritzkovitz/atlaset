@@ -22,6 +22,8 @@ With the `colors` section, you can control how countries are visually distinguis
 
 By default, `Show visited countries` is enabled, while the other two are disabled. You can enable or disable them by checking or unchecking their respective boxes.
 
+**`Number of atlas colors`:** In `Atlas mode`, determines whether countries will be colored based on the four color theorem (default) or five color theorem.
+
 ### **Color palettes**
 
 **`Color palettes`** are themed color sets that affect how countries are colored on the map. Each palette is comprised of five different shades, with each value assigned to a specific criteria value when computing the colors.
@@ -29,6 +31,7 @@ By default, `Show visited countries` is enabled, while the other two are disable
 For reference, the values go from 0 to 4, from left to right.
 
 Color palettes are grouped into various categories:
+
 - **Classic:** Representing popular color palettes
 - **Pastel:** Representing soft, bright colors
 - **Times of Day:** Representing the different times of the day
@@ -47,6 +50,10 @@ The `standard` palette affects the appearance of the main map:
 | Selected country    | 2             | Shown when selecting a country                      |
 | Upcoming new visit  | 3             | Controls the color of `upcoming new visits`         |
 | Highlighted country | 4             | Shown when highlighting a country                   |
+
+#### **Atlas**
+
+The `atlas` palette affects the appearance of the atlas map when in `Atlas Mode`. Coloring is based on the **four color theorem**, where no more than four colors are required to color all countries on the map while no country will have an adjacent country of the same color. The coloring logic also takes proximity into account (for cases such as island neighbors).
 
 #### **Timeline Mode**
 

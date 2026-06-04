@@ -24,6 +24,7 @@ The main control housing the map actions, the `toolbar` is on the bottom right c
 - **`Countries (C)`:** Browse, filter and view countries
 - **`Layers (L)`:** Manage layers
 - **`Markers (M)`:** Manage markers
+- **`Color Modes (O)`:** Manage color modes for the map
 - **`Legend (G)`:** Toggle the map legend on/off
 - **`Timeline (T)`:** Toggle timeline mode on/off
 - **`Export (E)`:** Download, share or embed maps
