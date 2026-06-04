@@ -32,10 +32,10 @@ export function useToolbarActions({
     toggleSettings,
   } = useUI();
   const { timelineMode, setTimelineMode } = useTimeline();
-  const { isReadonly, isEdit } = useMapView();
+  const { setColorMode, isReadonly, isEdit, isAtlasActive } = useMapView();
   const { exitEditMode } = useSavedMaps();
 
-  // Centralized menu close helper
+  // Wrap actions to also close menu on mobile
   function withMenuClose(action: () => void) {
     return () => {
       if (isMobile) setMenuOpen(false);
@@ -66,11 +66,21 @@ export function useToolbarActions({
       show: true,
     },
     {
+      key: "colorModes",
+      icon: <ICONS.colorModes className="text-lg" />,
+      label: t("toolbar.colorModes"),
+      onClick: withMenuClose(() => {
+        setColorMode((prev) => (prev === "atlas" ? "standard" : "atlas"));
+      }),
+      show: !isReadonly && !isEdit && !timelineMode,
+      separatorAfter: isAtlasActive,
+    },
+    {
       key: "legend",
       icon: <ICONS.legend className="text-lg" />,
       label: t("toolbar.legend"),
       onClick: withMenuClose(toggleLegend),
-      show: true,
+      show: !isAtlasActive,
       separatorAfter: true,
     },
     {
@@ -79,7 +89,8 @@ export function useToolbarActions({
       label: t("toolbar.myMaps"),
       onClick: withMenuClose(toggleSavedMaps),
       show: isAuthenticated(),
-    },
+      separatorAfter: isEdit,
+    },    
     {
       key: "timeline",
       icon: <ICONS.timeline className="text-xl" />,

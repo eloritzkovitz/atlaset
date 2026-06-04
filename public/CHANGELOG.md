@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-06-04
+
+- **[feature]** **Atlas | Map:** Added new color mode for atlas maps
+- **[feature]** **Settings:** Added new settings for atlas palette and number of atlas colors
+
 ## 2026-05-31
 
 - **[chore]** **Atlas | Map:** Updated some map features to include prominent lakes

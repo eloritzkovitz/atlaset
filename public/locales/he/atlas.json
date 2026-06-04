@@ -9,6 +9,7 @@
     "markers": "סימונים",
     "legend": "מקרא",
     "myMaps": "המפות שלי",
+    "colorModes": "מצבי צבע",
     "timeline": "ציר זמן",
     "export": "ייצוא",
     "download": "הורד",
@@ -196,6 +197,10 @@
     "saveChanges": "שמירת שינויים",
     "add": "הוסף מפה"
   },
+  "colorModes": {
+    "standard": "רגיל",
+    "atlas": "אטלס"
+  },
   "timeline": {
     "play": "הפעל",
     "pause": "השהה",
@@ -238,19 +243,25 @@
   },
   "mapSettings": {
     "title": "הגדרות מפה",
-    "configuration": "תצורה",
-    "projection": "היטל מפה",
-    "baseColor": "צבע בסיס",
-    "borderColor": "צבע קו",
-    "borderWidth": "עובי קו",
-    "colors": "צבעים",
-    "displayOptions": "אפשרויות תצוגה",
-    "showHomeCountry": "הצג מדינה בית",
-    "showVisitedCountries": "הצג מדינות שביקרתי",
-    "showUpcomingVisits": "הצג ביקורים קרובים",
-    "colorPalette": "פלטות צבעים",
-    "standard": "סטנדרטי",
-    "timelineCumulative": "ציר זמן (מצטבר)",
-    "timelineYearly": "ציר זמן (שנתי)"
+    "configuration": {
+      "title": "תצורה",
+      "projection": "היטל מפה",
+      "baseColor": "צבע בסיס",
+      "borderColor": "צבע קו",
+      "borderWidth": "עובי קו"
+    },
+    "colors": {
+      "title": "צבעים",
+      "displayOptions": "אפשרויות תצוגה",
+      "showHomeCountry": "הצג מדינה בית",
+      "showVisitedCountries": "הצג מדינות שביקרתי",
+      "showUpcomingVisits": "הצג ביקורים קרובים",
+      "numAtlasColors": "מספר צבעים באטלס",
+      "colorPalette": "פלטות צבעים",
+      "standard": "סטנדרטי",
+      "atlas": "אטלס",
+      "timelineCumulative": "ציר זמן (מצטבר)",
+      "timelineYearly": "ציר זמן (שנתי)"
+    }
   }
 }

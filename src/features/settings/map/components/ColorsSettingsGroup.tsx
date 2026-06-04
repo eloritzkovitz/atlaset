@@ -5,6 +5,7 @@ import {
   Checkbox,
   CollapsibleHeader,
   DropdownSelectInput,
+  NumberInput,
   SectionHeader,
 } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
@@ -13,9 +14,10 @@ import { PaletteDots } from "./PaletteDots";
 import { useLayerColors } from "../hooks/useLayerColors";
 
 const COLOR_MODES: { key: ColorMode; label: string }[] = [
-  { key: "standard", label: "mapSettings.standard" },
-  { key: "cumulative", label: "mapSettings.timelineCumulative" },
-  { key: "yearly", label: "mapSettings.timelineYearly" },
+  { key: "standard", label: "mapSettings.colors.standard" },
+  { key: "atlas", label: "mapSettings.colors.atlas" },
+  { key: "cumulative", label: "mapSettings.colors.timelineCumulative" },
+  { key: "yearly", label: "mapSettings.colors.timelineYearly" },
 ];
 
 export function ColorsSettingsGroup() {
@@ -27,6 +29,8 @@ export function ColorsSettingsGroup() {
     setColorVisitedCountries,
     colorUpcomingVisits,
     setColorUpcomingVisits,
+    numAtlasColors,
+    setNumAtlasColors,
     colorPalettes,
     setPalette,
   } = useLayerColors();
@@ -49,7 +53,7 @@ export function ColorsSettingsGroup() {
     <>
       <CollapsibleHeader
         icon={<FaPalette />}
-        label={t("mapSettings.colors")}
+        label={t("mapSettings.colors.title")}
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />
@@ -57,29 +61,39 @@ export function ColorsSettingsGroup() {
         <div className="space-y-6">
           {/* Display Options Section */}
           <section>
-            <SectionHeader title={t("mapSettings.displayOptions")} />
+            <SectionHeader title={t("mapSettings.colors.displayOptions")} />
             <div className="flex flex-col gap-3 mb-2">
               <Checkbox
                 checked={!!colorHomeCountry}
                 onChange={setColorHomeCountry}
-                label={t("mapSettings.showHomeCountry")}
+                label={t("mapSettings.colors.showHomeCountry")}
               />
               <Checkbox
                 checked={!!colorVisitedCountries}
                 onChange={setColorVisitedCountries}
-                label={t("mapSettings.showVisitedCountries")}
+                label={t("mapSettings.colors.showVisitedCountries")}
               />
               <Checkbox
                 checked={!!colorUpcomingVisits}
                 onChange={setColorUpcomingVisits}
-                label={t("mapSettings.showUpcomingVisits")}
+                label={t("mapSettings.colors.showUpcomingVisits")}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span>{t("mapSettings.colors.numAtlasColors")}</span>
+              <NumberInput
+                label=""
+                value={numAtlasColors}
+                min={4}
+                max={5}
+                onChange={(v) => setNumAtlasColors(v)}
               />
             </div>
           </section>
 
           {/* Color Palettes Section */}
           <section>
-            <SectionHeader title={t("mapSettings.colorPalette")} />
+            <SectionHeader title={t("mapSettings.colors.colorPalette")} />
             <div className="mb-2">
               {COLOR_MODES.map((mode) => (
                 <div key={mode.key} className="mb-4">

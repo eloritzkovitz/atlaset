@@ -57,6 +57,7 @@ export const MAP_GEOGRAPHY_STYLE = {
 /* Default color palettes. */
 export const DEFAULT_COLOR_PALETTES: Record<ColorMode, string> = {
   standard: COLOR_PALETTES[0].name,
+  atlas: COLOR_PALETTES[1].name,
   cumulative: COLOR_PALETTES[0].name,
   yearly: COLOR_PALETTES[0].name,
 };

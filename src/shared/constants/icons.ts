@@ -63,6 +63,7 @@ import {
   FaQuestion,
   FaRegClock,
   FaRegEye,
+  FaRegMap,
   FaRightFromBracket,
   FaRocket,
   FaRotateLeft,
@@ -99,6 +100,7 @@ export const ICONS = {
   // Atlas
   atlas: FaEarthAmericas,
   map: FaMap,
+  colorModes:  FaRegMap,
   mapData: FaMapLocationDot,
   countries: FaGlobe,
   countryLists: FaList,

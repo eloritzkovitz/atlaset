@@ -4,6 +4,14 @@ import type { Feature, FeatureCollection, Geometry } from "geojson";
 /** Represents a pair of longitude and latitude coordinates. */
 export type Coordinates = [number, number];
 
+/** Represents a bounding box defined by minimum and maximum longitude and latitude values. */
+export type BoundingBox = {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+};
+
 /** Properties associated with GeoJSON features. */
 export type GeoJsonProperties = Record<string, unknown>;
 
@@ -56,4 +64,4 @@ export type ZoomEvent = {
 export type MapMode = "view" | "readonly" | "edit" | "timeline";
 
 /** Modes for coloring countries on the map. */
-export type ColorMode = "standard" | "cumulative" | "yearly";
+export type ColorMode = "standard" | "atlas" | "cumulative" | "yearly";

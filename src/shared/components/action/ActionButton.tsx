@@ -60,7 +60,7 @@ export const ActionButton = React.forwardRef<
       "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg ";
     const variants = {
       primary:
-        "px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-action-header focus:outline-none ",
+        "px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white focus:outline-none ",
       secondary:
         "px-4 py-2 rounded-lg bg-transparent hover:bg-secondary-hover focus:outline-none",
       action:

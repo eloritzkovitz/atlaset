@@ -36,6 +36,7 @@ export function WorldMap({
   // Map projection and data
   const {
     mapMode,
+    colorMode,
     geoData,
     projection,
     dimensions,
@@ -78,14 +79,13 @@ export function WorldMap({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-full bg-bg overflow-hidden"
+      className={`relative w-full h-full ${colorMode === "atlas" ? "bg-bg-atlas" : "bg-bg"} overflow-hidden`}
       style={{
         aspectRatio: "16/9",
         maxHeight: "100dvh",
         cursor: isAddingMarker ? "crosshair" : "default",
       }}
     >
-      {/* SVG map container */}
       <MapSvgContainer
         ref={svgRef}
         width={dimensions.width}

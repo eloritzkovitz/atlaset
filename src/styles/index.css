@@ -4,6 +4,7 @@
 
 @theme {
   --color-bg: theme("colors.gray.50");
+  --color-bg-atlas: theme("colors.blue.100");
   /* Sidebar colors */
   --color-sidebar: theme("colors.gray.100");
   --color-sidebar-btn-hover: theme("colors.gray.200");
@@ -47,8 +48,8 @@
   --color-action-text: theme("colors.gray.600");
   --color-action-text-hover: theme("colors.gray.700");
   /* Header action colors */
-  --color-action-header: theme("colors.gray.200");
-  --color-action-header-hover: theme("colors.gray.600");
+  --color-action-header: theme("colors.gray.600");
+  --color-action-header-hover: theme("colors.gray.200");
   --color-action-header-hover-text: theme("colors.gray.300");
   /* Surface colors */
   --color-surface: theme("colors.white");
@@ -113,6 +114,7 @@
 
 .dark {
   --color-bg: theme("colors.gray.900");
+  --color-bg-atlas: theme("colors.blue.950");
   /* Sidebar colors */
   --color-sidebar: theme("colors.gray.800");
   --color-sidebar-btn-hover: theme("colors.gray.600");

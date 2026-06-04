@@ -22,10 +22,10 @@ import type { MapMode } from "../types";
  */
 export function useMapLayerItems(mode: MapMode = "view") {
   const { layers } = useLayers();
-  const { isEdit } = useMapView();
+  const { colorMode, isEdit } = useMapView();
   const { activeSavedMap } = useSavedMaps();
   const { layers: sharedLayers } = useSharedMapInfo();
-  const { timelineMode, selectedYear, colorMode } = useTimeline();
+  const { timelineMode, selectedYear } = useTimeline();
 
   // Timeline mode: add virtual visited countries layer
   const { visitedCountryCodes } = useVisitedCountries();

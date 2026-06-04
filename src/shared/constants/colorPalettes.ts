@@ -7,6 +7,11 @@ export const DEFAULT_PALETTE: ColorPalette = {
   colors: ["#0078d4", "#4a90e2", "#748ab6", "#979ba3", "#c9d2e9"],
 };
 
+export const ATLAS_PALETTE: ColorPalette = {
+  name: "Atlas",
+  colors: ["#b94f6a", "#f5b731", "#7ecc5a", "#61a4e2", "#b446d6"],
+};
+
 export const LIGHT_PALETTE: ColorPalette = {
   name: "Light",
   colors: ["#f9e2ae", "#e0f2fe", "#cbd5e1", "#e2e8f0", "#f8fafc"],
@@ -215,6 +220,7 @@ export const COLOR_PALETTE_GROUPS = [
     label: "Classic",
     palettes: [
       DEFAULT_PALETTE,
+      ATLAS_PALETTE,
       LIGHT_PALETTE,
       DARK_PALETTE,
       GOLD_PALETTE,

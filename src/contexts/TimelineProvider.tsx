@@ -1,16 +1,18 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useAudio } from "@contexts/AudioContext";
 import { useTrips } from "@contexts/TripsContext";
-import { useMapMode, type ColorMode } from "@features/atlas/map";
+import { useMapMode } from "@features/atlas/map";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
+import { useMapView } from "./MapViewContext";
 import { TimelineContext } from "./TimelineContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { mapMode } = useMapMode();
+  const { setColorMode } = useMapView();
   const [timelineMode, setTimelineMode] = useState(false);
   const prevTimelineMode = useRef(false);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
@@ -21,9 +23,6 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   const years = useMemo(() => getYearsFromTrips(trips), [trips]);
   const [selectedYear, setSelectedYear] = useState(getLatestYear(years));
 
-  // Color mode state
-  const [colorMode, setColorMode] = useState<ColorMode>("cumulative");
-
   // Only allow timeline mode if authenticated and not readonly/edit
   const handleSetTimelineMode = (v: boolean | ((prev: boolean) => boolean)) => {
     const next = typeof v === "function" ? v(timelineMode) : v;
@@ -32,8 +31,10 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
       setTimelineMode(true);
+      setColorMode("cumulative");
     } else {
       setTimelineMode(false);
+      setColorMode("standard");
     }
   };
 
@@ -74,8 +75,6 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
         years,
         selectedYear,
         setSelectedYear,
-        colorMode,
-        setColorMode,
       }}
     >
       {children}

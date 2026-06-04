@@ -1,5 +1,6 @@
 import { useUI } from "@contexts/UIContext";
 import { useMapView } from "@contexts/MapViewContext";
+import { useTimeline } from "@contexts/TimelineContext";
 import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
 
@@ -18,7 +19,8 @@ export function AtlasShortcuts() {
     toggleSavedMaps,
     toggleSettings,
   } = useUI();
-  const { isReadonly, isEdit } = useMapView();
+  const { isReadonly, isEdit, setColorMode } = useMapView();
+  const { timelineMode } = useTimeline();
 
   // Toggle Saved Maps panel with "B"
   useKeyHandler(toggleSavedMaps, ["b", "B"], isAuthenticated());
@@ -40,6 +42,16 @@ export function AtlasShortcuts() {
 
   // Toggle Markers panel with "M"
   useKeyHandler(toggleMarkers, ["m", "M"], true);
+
+  // Toggle color modes with "O"
+  useKeyHandler(
+    () => {
+      if (isReadonly || isEdit || timelineMode) return;
+      setColorMode((prev) => (prev === "atlas" ? "standard" : "atlas"));
+    },
+    ["o", "O"],
+    true,
+  );
 
   // Toggle Settings panel with "S"
   useKeyHandler(toggleSettings, ["s", "S"], !isReadonly && !isEdit);

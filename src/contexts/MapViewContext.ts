@@ -1,11 +1,19 @@
 import { createContext, useContext } from "react";
-import type { Coordinates, GeoData, MapMode } from "@features/atlas/map";
+import type {
+  ColorMode,
+  Coordinates,
+  GeoData,
+  MapMode,
+} from "@features/atlas/map";
 
 export interface MapViewContextType {
   mapMode: MapMode;
   setMapMode: (v: MapMode) => void;
   isReadonly: boolean;
   isEdit: boolean;
+  colorMode: ColorMode;
+  setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
+  isAtlasActive: boolean;
   geoData: GeoData | null;
   projection: string;
   setProjection: (v: string) => void;
@@ -33,7 +41,7 @@ export interface MapViewContextType {
 }
 
 export const MapViewContext = createContext<MapViewContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function useMapView() {

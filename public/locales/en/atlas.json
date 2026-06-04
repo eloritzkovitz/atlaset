@@ -9,6 +9,7 @@
     "markers": "Markers",
     "legend": "Legend",
     "myMaps": "My Maps",
+    "colorModes": "Color Modes",
     "timeline": "Timeline",
     "export": "Export",
     "download": "Download",
@@ -20,7 +21,7 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "resetView": "Reset view"
-  },
+  },  
   "shared": {
     "viewingPrefix": "Viewing",
     "byPrefix": "by",
@@ -103,7 +104,7 @@
         "home": "Home country",
         "visited": "Visited",
         "upcoming": "Upcoming visit",
-        "notVisited": "Not visited"        
+        "notVisited": "Not visited"
       },
       "tabs": {
         "overview": "Overview",
@@ -196,6 +197,10 @@
     "saveChanges": "Save Changes",
     "add": "Add Map"
   },
+  "colorModes": {
+    "standard": "Standard",
+    "atlas": "Atlas"
+  },
   "timeline": {
     "hint": "Timeline mode enabled. Press T to toggle off.",
     "play": "Play",
@@ -238,19 +243,25 @@
   },
   "mapSettings": {
     "title": "Map Settings",
-    "configuration": "Configuration",
-    "projection": "Projection",
-    "baseColor": "Base color",
-    "borderColor": "Stroke color",
-    "borderWidth": "Stroke width",
-    "colors": "Colors",
-    "displayOptions": "Display Options",
-    "showHomeCountry": "Show home country",
-    "showVisitedCountries": "Show visited countries",
-    "showUpcomingVisits": "Show upcoming new visits",
-    "colorPalette": "Color palettes",
-    "standard": "Standard",
-    "timelineCumulative": "Timeline (Cumulative)",
-    "timelineYearly": "Timeline (Yearly)"
+    "configuration": {
+      "title": "Configuration",
+      "projection": "Projection",
+      "baseColor": "Base color",
+      "borderColor": "Stroke color",
+      "borderWidth": "Stroke width"
+    },
+    "colors": {
+      "title": "Colors",
+      "displayOptions": "Display Options",
+      "showHomeCountry": "Show home country",
+      "showVisitedCountries": "Show visited countries",
+      "showUpcomingVisits": "Show upcoming new visits",
+      "numAtlasColors": "Number of atlas colors",
+      "colorPalette": "Color palettes",
+      "standard": "Standard",
+      "atlas": "Atlas",
+      "timelineCumulative": "Timeline (Cumulative)",
+      "timelineYearly": "Timeline (Yearly)"
+    }
   }
 }
