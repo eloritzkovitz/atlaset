@@ -31,6 +31,7 @@ export function MapUiContainer({
     isReadonly,
     isEdit,
     colorMode,
+    isAtlasActive,
     zoom,
     setZoom,
     center,
@@ -136,11 +137,13 @@ export function MapUiContainer({
                 coords={selectedCoords}
                 latitude={center[1]}
               />
-              <MapLegendModal
-                open={showLegend}
-                onClose={closeLegend}
-                items={legendItems}
-              />
+              {!isAtlasActive && (
+                <MapLegendModal
+                  open={showLegend}
+                  onClose={closeLegend}
+                  items={legendItems}
+                />
+              )}
             </>
           )}
         </>

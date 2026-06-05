@@ -1,6 +1,7 @@
 {
+  "pageTitle": "My Trips",
   "loading": "Loading trips...",
-  "noTrips": "No trips yet.",
+  "noTrips": "No trips yet.",  
   "table": {
     "toolbar": {
       "search": {

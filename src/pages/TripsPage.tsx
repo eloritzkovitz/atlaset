@@ -41,7 +41,7 @@ export default function TripsPage() {
 
   // Set page title
   const appName = tCommon("appName", "Atlaset");
-  const pageTitle = t("table.itemLabels.plural", "Trips");
+  const pageTitle = t("pageTitle", "Trips");
   usePageTitle(`${pageTitle} | ${appName}`);
 
   // Trip filtering hook
