@@ -34,12 +34,13 @@
         "exportJSON": "ייצא כ-JSON"
       },
       "bulkActions": {
-        "duplicateSelected": "שכפל נבחר",
-        "deleteSelected": "מחק נבחר",
+        "duplicateSelected": "שכפל נבחרים",
+        "deleteSelected": "מחק נבחרים",
         "deleteConfirmTitle": "למחוק טיולים?",
         "deleteConfirmMessage": "מחק {{count}} טיולים נבחרים?",
         "delete": "מחק",
-        "addTrip": "הוסף טיול"
+        "addTrip": "הוסף טיול",
+        "cancel": "ביטול"
       }
     },
     "headers": {
@@ -74,6 +75,7 @@
       "moreActions": "עוד פעולות",
       "viewInCalendar": "הצג בלוח שנה",
       "editTrip": "ערוך טיול",
+      "duplicate": "שכפול",
       "favorite": "הוסף למועדפים",
       "unfavorite": "הסר ממועדפים",
       "rate": "דרג",

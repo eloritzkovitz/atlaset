@@ -1,7 +1,7 @@
 {
   "pageTitle": "My Trips",
   "loading": "Loading trips...",
-  "noTrips": "No trips yet.",  
+  "noTrips": "No trips yet.",
   "table": {
     "toolbar": {
       "search": {
@@ -39,7 +39,8 @@
         "deleteConfirmTitle": "Delete trips?",
         "deleteConfirmMessage": "Delete {{count}} selected trips?",
         "delete": "Delete",
-        "addTrip": "Add Trip"
+        "addTrip": "Add Trip",
+        "cancel": "Cancel"
       }
     },
     "headers": {
@@ -74,6 +75,7 @@
       "moreActions": "More actions",
       "viewInCalendar": "View in Calendar",
       "editTrip": "Edit Trip",
+      "duplicate": "Duplicate",
       "favorite": "Favorite",
       "unfavorite": "Unfavorite",
       "rate": "Rate",

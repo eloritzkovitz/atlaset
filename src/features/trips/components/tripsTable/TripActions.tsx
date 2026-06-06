@@ -1,15 +1,6 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  FaEllipsisVertical,
-  FaPenToSquare,
-  FaTrash,
-  FaHeart,
-  FaRegHeart,
-  FaStar,
-  FaCalendar,
-} from "react-icons/fa6";
-import {
   ActionButton,
   DirectionalIcon,
   MenuButton,
@@ -17,6 +8,7 @@ import {
   Separator,
   RateMenu,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import {
   useClickOutside,
@@ -33,6 +25,7 @@ interface TripActionsProps {
   trip: Trip;
   onViewInCalendar?: (t: Trip) => void;
   onEdit: (t: Trip) => void;
+  onDuplicate: (t: Trip) => void;
   onDelete: (t: Trip) => void;
 }
 
@@ -40,6 +33,7 @@ export function TripActions({
   trip,
   onViewInCalendar,
   onEdit,
+  onDuplicate,
   onDelete,
 }: TripActionsProps) {
   const { t } = useTranslation("trips");
@@ -120,6 +114,7 @@ export function TripActions({
       onEdit: () => onEdit(trip),
       onDelete: () => onDelete(trip),
       onFavorite: () => updateTripFavorite(trip.id, !trip.favorite),
+      onDuplicate: () => onDuplicate(trip),
     },
     setOpen,
   );
@@ -129,7 +124,7 @@ export function TripActions({
       <ActionButton
         ariaLabel={t("table.actions.sharedDisabledTitle")}
         title={t("table.actions.sharedDisabledTitle")}
-        icon={<FaEllipsisVertical />}
+        icon={<ICONS.more />}
         rounded
         disabled
       />
@@ -146,7 +141,7 @@ export function TripActions({
           }}
           ariaLabel={t("table.actions.moreActions")}
           title={t("table.actions.moreActions")}
-          icon={<FaEllipsisVertical />}
+          icon={<ICONS.more />}
           rounded
         />
       </div>
@@ -164,7 +159,7 @@ export function TripActions({
               setTimeout(() => setOpen(false), 300);
               onViewInCalendar?.(trip);
             }}
-            icon={<FaCalendar className="me-2" />}
+            icon={<ICONS.calendar className="me-2" />}
             className="w-full"
           >
             {t("table.actions.viewInCalendar")}
@@ -172,19 +167,26 @@ export function TripActions({
         )}
         <MenuButton
           onClick={menuActions.onEdit}
-          icon={<FaPenToSquare className="me-2" />}
+          icon={<ICONS.edit className="me-2" />}
           className="w-full"
         >
           {t("table.actions.editTrip")}
         </MenuButton>
         <Separator className="my-2" />
         <MenuButton
+          onClick={menuActions.onDuplicate}
+          icon={<ICONS.duplicate className="me-2" />}
+          className="w-full"
+        >
+          {t("table.actions.duplicate")}
+        </MenuButton>        
+        <MenuButton
           onClick={menuActions.onFavorite}
           icon={
             trip.favorite ? (
-              <FaRegHeart className="me-2 text-muted" />
+              <ICONS.unfavorite className="me-2 text-muted" />
             ) : (
-              <FaHeart className="me-2 text-danger" />
+              <ICONS.favorite className="me-2 text-danger" />
             )
           }
           className="w-full"
@@ -200,7 +202,7 @@ export function TripActions({
         >
           <MenuButton
             {...rateButtonHoverHandlers}
-            icon={<FaStar className="me-2 text-yellow-400" />}
+            icon={<ICONS.rate className="me-2 text-yellow-400" />}
             className="w-full flex items-center justify-between"
           >
             {t("table.actions.rate")}
@@ -225,15 +227,15 @@ export function TripActions({
               onClose={() => setOpen(false)}
             />
           )}
-          <Separator className="my-2" />
-          <MenuButton
-            onClick={menuActions.onDelete}
-            icon={<FaTrash className="me-2" />}
-            className="!text-danger w-full"
-          >
-            {t("table.actions.deleteTrip")}
-          </MenuButton>
         </div>
+        <Separator className="my-2" />
+        <MenuButton
+          onClick={menuActions.onDelete}
+          icon={<ICONS.remove className="me-2" />}
+          className="!text-danger w-full"
+        >
+          {t("table.actions.deleteTrip")}
+        </MenuButton>
       </Menu>
     </>
   );

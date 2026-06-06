@@ -19,6 +19,7 @@ interface TripsTableProps {
   trips: Trip[];
   onViewInCalendar?: (trip: Trip) => void;
   onEdit: (trip: Trip) => void;
+  onDuplicate: (trip: Trip) => void;
   onRatingChange: (tripId: string, rating: number | undefined) => void;
   onDelete: (trip: Trip) => void;
   filters: TripFilters;
@@ -48,6 +49,7 @@ export function TripsTable({
   trips,
   onViewInCalendar,
   onEdit,
+  onDuplicate,
   onRatingChange,
   onDelete,
   filters,
@@ -157,6 +159,7 @@ export function TripsTable({
               onRatingChange={onRatingChange}
               onViewInCalendar={onViewInCalendar}
               onEdit={onEdit}
+              onDuplicate={onDuplicate}
               onDelete={onDelete}
               showRowNumbers={showRowNumbers}
             />

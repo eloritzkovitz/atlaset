@@ -38,7 +38,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     });
 
     // Fetch shared trip IDs for the user
-    getSharedTripIds(user?.uid).then((ids) => {      
+    getSharedTripIds(user?.uid).then((ids) => {
       if (mounted) setSharedTripIds(new Set(ids));
     });
 
@@ -53,15 +53,18 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       rawTrips.map((trip) => ({
         ...trip,
         status: getAutoTripStatus(trip),
-      }))
+      })),
     );
   }
 
   // Add a trip
   async function addTrip(trip: Trip) {
-    const updatedTrip = { ...trip, status: getAutoTripStatus(trip) };
-    await tripsService.add(updatedTrip);
-    setTrips((prev) => [...prev, updatedTrip]);
+    const tripWithStatus = { ...trip, status: getAutoTripStatus(trip) };
+    const savedTrip = await tripsService.add(tripWithStatus);
+    setTrips((prev) => [
+      ...prev,
+      { ...savedTrip, status: getAutoTripStatus(savedTrip) },
+    ]);
   }
 
   // Update a trip
@@ -75,7 +78,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function updateTripFavorite(tripId: string, favorite: boolean) {
     await tripsService.updateFavorite(tripId, favorite);
     setTrips((prev) =>
-      prev.map((trip) => (trip.id === tripId ? { ...trip, favorite } : trip))
+      prev.map((trip) => (trip.id === tripId ? { ...trip, favorite } : trip)),
     );
   }
 
@@ -83,7 +86,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function updateTripRating(tripId: string, rating: number | undefined) {
     await tripsService.updateRating(tripId, rating);
     setTrips((prev) =>
-      prev.map((trip) => (trip.id === tripId ? { ...trip, rating } : trip))
+      prev.map((trip) => (trip.id === tripId ? { ...trip, rating } : trip)),
     );
   }
 
@@ -101,8 +104,14 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
       name: trip.name + " (Copy)",
       status: getAutoTripStatus(trip),
     };
-    await tripsService.add(newTrip);
-    setTrips((prev) => [...prev, newTrip]);
+    const savedTrip = await tripsService.add(newTrip);
+    setTrips((prev) => [
+      ...prev,
+      {
+        ...savedTrip,
+        status: getAutoTripStatus(savedTrip),
+      },
+    ]);
   }
 
   return (

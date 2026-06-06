@@ -147,6 +147,16 @@ export default function TripsPage() {
     handleSave,
   } = useTripModal({ addTrip, editTrip, trips });
 
+  // Update filter handler
+  const handleUpdateFilter = (key: string, value: unknown) => {
+    if (key in filters) {
+      updateFilter(
+        key as keyof TripFilterState,
+        value as TripFilterState[keyof TripFilterState],
+      );
+    }
+  };
+
   // Delete trip
   async function handleDelete(trip: Trip) {
     if (confirm(`Are you sure you want to delete the trip "${trip.name}"?`)) {
@@ -186,7 +196,10 @@ export default function TripsPage() {
           isEditing={!!trip && !!trip.id}
         />
         {loading ? (
-          <LoadingSpinner fullScreen message={t("loading", "Loading trips...")} />
+          <LoadingSpinner
+            fullScreen
+            message={t("loading", "Loading trips...")}
+          />
         ) : trips.length === 0 ? (
           <div className="flex flex-1 items-center justify-center min-h-[300px] text-muted text-lg">
             {t("noTrips", "No trips yet.")}
@@ -197,17 +210,11 @@ export default function TripsPage() {
               trips={paginatedTrips}
               onViewInCalendar={handleViewInCalendar}
               onEdit={handleEdit}
+              onDuplicate={duplicateTrip}
               onRatingChange={updateTripRating}
               onDelete={handleDelete}
               filters={filters}
-              updateFilter={(key, value) => {
-                if (key in filters) {
-                  updateFilter(
-                    key as keyof TripFilterState,
-                    value as TripFilterState[keyof TripFilterState],
-                  );
-                }
-              }}
+              updateFilter={handleUpdateFilter}
               countryOptions={countryOptions}
               yearOptions={yearOptions}
               participantsOptions={participantsOptions}

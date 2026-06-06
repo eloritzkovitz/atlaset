@@ -24,6 +24,7 @@ interface TripsTableRowsProps {
   onRatingChange: (tripId: string, rating: number | undefined) => void;
   onViewInCalendar?: (t: Trip) => void;
   onEdit: (trip: Trip) => void;
+  onDuplicate: (trip: Trip) => void;
   onDelete: (trip: Trip) => void;
   showRowNumbers: boolean;
 }
@@ -37,6 +38,7 @@ export function TripsTableRows({
   onRatingChange,
   onViewInCalendar,
   onEdit,
+  onDuplicate,
   onDelete,
   showRowNumbers,
 }: TripsTableRowsProps) {
@@ -182,6 +184,7 @@ export function TripsTableRows({
                 trip={trip}
                 onViewInCalendar={onViewInCalendar}
                 onEdit={onEdit}
+                onDuplicate={onDuplicate}
                 onDelete={onDelete}
               />
             </TableCell>

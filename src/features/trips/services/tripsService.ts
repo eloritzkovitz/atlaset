@@ -83,7 +83,7 @@ export const tripsService = {
    * Add a new trip.
    * @param trip - The trip object to add.
    */
-  async add(trip: Trip) {
+  async add(trip: Trip): Promise<Trip> {
     if (!isAuthenticated())
       throw new Error("Authentication required to add a trip.");
     const user = getCurrentUser();
@@ -125,6 +125,8 @@ export const tripsService = {
       user!.uid,
     );
     await profileService.updateVisitedCountryCodes(user!.uid);
+
+    return tripForFirestore as Trip;
   },
 
   /**
