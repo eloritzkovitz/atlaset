@@ -5,6 +5,7 @@
 - **[bugfix]** **Trips:** Fixed sync issues with adding trip owner as participant on trip creation/duplication
 - **[bugfix]** **Trips:** Fixed some bugs regarding the actions menu
 - **[chore]** **Trips:** Added duplicate trip as a menu action
+- **[chore]** **Trips:** Countries and participants will now be sorted by name alphabetically
 
 ## 2026-06-04
 

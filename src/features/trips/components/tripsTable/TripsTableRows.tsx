@@ -1,19 +1,19 @@
-import { FaHeart } from "react-icons/fa6";
+import { useTranslation } from "react-i18next";
 import { Checkbox, ChipList, StarRatingInput, TableCell } from "@components";
+import { ICONS } from "@constants/icons";
 import {
   CountryWithFlag,
   createCountryMap,
   type Country,
 } from "@features/countries";
 import { formatDate } from "@utils/date";
-import { ParticipantAvatar } from "./ParticipantAvatar";
+import { capitalizeWords } from "@utils/string";
+import { ParticipantsList } from "./ParticipantsList";
 import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import type { Trip } from "../../types";
 import { isPlannedTrip, isUpcomingTrip } from "../../utils/trips";
-import { useTranslation } from "react-i18next";
-import { capitalizeWords } from "@utils/string";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -48,17 +48,24 @@ export function TripsTableRows({
   // Country lookup for fast access
   const countryLookup = createCountryMap(countryData.countries, (c) => c);
 
-  return (
-    trip.countryCodes && trip.countryCodes.length > 0
-      ? trip.countryCodes
-      : [undefined]
-  ).map((code, idx) => {
+  // Map and sort countries for consistent display order
+  const mappedCountries = (trip.countryCodes ?? []).map((code) => {
     const country =
       code && countryLookup ? countryLookup[code.toLowerCase()] : null;
+    return { code, country };
+  });
 
+  // Sort countries alphabetically by name (or code if name is missing)
+  const sortedCountries = mappedCountries.sort((a, b) => {
+    const nameA = a.country?.name ?? a.code;
+    const nameB = b.country?.name ?? b.code;
+    return nameA.localeCompare(nameB);
+  });
+
+  return sortedCountries.map(({ code, country }, idx) => {
     return (
       <tr
-        key={trip.id + "-" + (code || idx)}
+        key={trip.id + "-" + code}
         className={[
           tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
           isUpcomingTrip(trip)
@@ -88,7 +95,7 @@ export function TripsTableRows({
             {/* Name column */}
             <TableCell rowSpan={rowSpan}>
               {trip.favorite && (
-                <FaHeart className="h-5 w-5 inline text-danger me-2" />
+                <ICONS.favorite className="h-5 w-5 inline text-danger me-2" />
               )}
               {trip.name}
             </TableCell>
@@ -117,6 +124,7 @@ export function TripsTableRows({
             <span className="text-muted italic">No country</span>
           )}
         </TableCell>
+
         {idx === 0 && (
           <>
             {/* Dates */}
@@ -135,11 +143,7 @@ export function TripsTableRows({
 
             {/* Participants */}
             <TableCell rowSpan={rowSpan}>
-              <div className="flex -space-x-2">
-                {(trip.participants ?? []).map((uid) => (
-                  <ParticipantAvatar key={uid} uid={uid} />
-                ))}
-              </div>
+              <ParticipantsList uids={trip.participants ?? []} />
             </TableCell>
 
             {/* Categories */}
