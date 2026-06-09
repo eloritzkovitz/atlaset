@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { ActionButton } from "@components";
-import { UserAvatar, useUserProfile, type UserProfile } from "@features/user";
+import { ParticipantAvatar } from "./ParticipantAvatar";
 
 interface ParticipantsListProps {
   uids: string[];
+  onRemove?: (uid: string) => void;
 }
 
-export function ParticipantsList({ uids }: ParticipantsListProps) {
+export function ParticipantsList({ uids, onRemove }: ParticipantsListProps) {
   const [names, setNames] = useState<Record<string, string>>({});
 
   // Compute visual order based on loaded names
@@ -20,7 +20,7 @@ export function ParticipantsList({ uids }: ParticipantsListProps) {
   return (
     <div className="flex">
       {uids.map((uid) => (
-        <ParticipantAvatarItem
+        <ParticipantAvatar
           key={uid}
           uid={uid}
           flexOrder={visualOrderMap[uid] ?? 0}
@@ -29,55 +29,10 @@ export function ParticipantsList({ uids }: ParticipantsListProps) {
               setNames((prev) => ({ ...prev, [uid]: name }));
             }
           }}
+          removable={!!onRemove}
+          onRemove={onRemove ? () => onRemove(uid) : undefined}
         />
       ))}
-    </div>
-  );
-}
-
-function ParticipantAvatarItem({
-  uid,
-  flexOrder,
-  onNameResolved,
-}: {
-  uid: string;
-  flexOrder: number;
-  onNameResolved: (name: string) => void;
-}) {
-  const { profile } = useUserProfile({ uid });
-
-  if (!profile) {
-    return (
-      <span
-        style={{ order: flexOrder }}
-        className="inline-block w-7 h-7 rounded-full bg-gray-200 border-2 border-white animate-pulse"
-      />
-    );
-  }
-
-  // Pass name back up to the parent so it can re-index the visual orders
-  onNameResolved(profile.displayName);
-
-  return (
-    <div style={{ order: flexOrder }} className="inline-flex">
-      <ActionButton
-        icon={<UserAvatar user={profile as UserProfile} size={28} />}
-        title={profile.displayName}
-        titlePosition="bottom"
-        ariaLabel={profile.displayName}
-        variant="custom"
-        rounded
-        className="p-0 m-0 border-none focus:outline-none"
-        style={{ width: 28, height: 28 }}
-        onClick={(e) => {
-          e.preventDefault();
-          window.open(
-            `/users/${profile.username}`,
-            "_blank",
-            "noopener,noreferrer",
-          );
-        }}
-      />
     </div>
   );
 }

@@ -7,11 +7,13 @@ import { ParticipantsList } from "../common/ParticipantsList";
 interface ParticipantsSectionProps {
   selectedParticipants: UserProfile[];
   onEdit: () => void;
+  onRemove: (uid: string) => void;
 }
 
 export function ParticipantsSection({
   selectedParticipants,
   onEdit,
+  onRemove,
 }: ParticipantsSectionProps) {
   const { t } = useTranslation("trips");
 
@@ -39,7 +41,10 @@ export function ParticipantsSection({
         />
       ) : (
         <div className="p-1">
-          <ParticipantsList uids={selectedParticipants.map((p) => p.uid)} />
+          <ParticipantsList
+            uids={selectedParticipants.map((p) => p.uid)}
+            onRemove={onRemove}
+          />
         </div>
       )}
     </div>

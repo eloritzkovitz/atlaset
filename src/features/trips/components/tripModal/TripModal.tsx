@@ -256,6 +256,14 @@ export function TripModal({
               <ParticipantsSection
                 selectedParticipants={selectedParticipantProfiles}
                 onEdit={() => setParticipantModalOpen(true)}
+                onRemove={(uid) =>
+                  onChange({
+                    ...trip,
+                    participants: (trip.participants || []).filter(
+                      (p) => p !== uid,
+                    ),
+                  })
+                }
               />
               <CategoriesSection
                 selectedCategories={trip.categories || []}
@@ -271,7 +279,9 @@ export function TripModal({
               />
               <TagsSection
                 selectedTags={trip.tags || []}
-                onEdit={() => {setTagModalOpen(true)}}
+                onEdit={() => {
+                  setTagModalOpen(true);
+                }}
                 onRemove={(tag) =>
                   onChange({
                     ...trip,
