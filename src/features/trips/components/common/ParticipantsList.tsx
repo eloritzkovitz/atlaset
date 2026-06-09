@@ -9,7 +9,7 @@ interface ParticipantsListProps {
 export function ParticipantsList({ uids }: ParticipantsListProps) {
   const [names, setNames] = useState<Record<string, string>>({});
 
-  // Compute visual order based on loaded names. Unloaded names will default to order 0, but will be re-computed as names load in
+  // Compute visual order based on loaded names
   const visualOrderMap = [...uids]
     .sort((a, b) => (names[a] || "").localeCompare(names[b] || ""))
     .reduce<Record<string, number>>((acc, uid, index) => {

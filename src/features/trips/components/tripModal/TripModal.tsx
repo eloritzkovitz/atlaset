@@ -4,7 +4,6 @@ import {
   ActionButton,
   Checkbox,
   DateSelect,
-  DropdownSelectInput,
   FormField,
   InputBox,
   Modal,
@@ -13,17 +12,22 @@ import {
   PanelHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { CountriesSection } from "./CountriesSection";
-import { useUserFriends } from "@features/user";
-import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import {
   CountrySelectModal,
   getCountryByIsoCode,
   useCountryData,
   type Country,
 } from "@features/countries";
+import { useFriendProfiles, useUserFriends } from "@features/user";
+import { CategoriesSection } from "./CategoriesSection";
+import { CategorySelectModal } from "./CategorySelectModal";
+import { CountriesSection } from "./CountriesSection";
+import { ParticipantSelectModal } from "./ParticipantSelectModal";
+import { ParticipantsSection } from "./ParticipantsSection";
+import { TagsSection } from "./TagsSection";
+import { TagSelectModal } from "./TagSelectModal";
 import { useTripFilters } from "../../hooks/useTripFilters";
-import type { Trip, TripCategory } from "../../types";
+import type { Trip, TripCategory, TripTag } from "../../types";
 import "./TripModal.css";
 
 interface TripModalProps {
@@ -46,6 +50,9 @@ export function TripModal({
   const { countries } = useCountryData();
   const { t } = useTranslation("trips");
   const [countryModalOpen, setCountryModalOpen] = useState(false);
+  const [participantModalOpen, setParticipantModalOpen] = useState(false);
+  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
+  const [tagModalOpen, setTagModalOpen] = useState(false);
 
   // Dropdown options
   const { categoryOptions, tagOptions } = useTripFilters();
@@ -67,6 +74,30 @@ export function TripModal({
     [friendProfiles],
   );
 
+  // Derive profiles for participants already linked to the current active trip
+  const selectedParticipantProfiles = useMemo(() => {
+    if (!trip || !trip.participants) return [];
+    return friendProfiles.filter((profile) =>
+      trip.participants?.includes(profile.uid),
+    );
+  }, [friendProfiles, trip]);
+
+  // Transform category filter config array structure explicitly into modal compatible pairs
+  const formattedCategoryOptions = useMemo(() => {
+    return categoryOptions.map((opt) => ({
+      value: opt.value as TripCategory,
+      label: opt.label,
+    }));
+  }, [categoryOptions]);
+
+  // Transform tag filter config array structure explicitly into modal compatible pairs
+  const formattedTagOptions = useMemo(() => {
+    return tagOptions.map((opt) => ({
+      value: opt.value as TripTag,
+      label: opt.label,
+    }));
+  }, [tagOptions]);
+
   // If no trip is provided, don't render anything
   if (!trip) return null;
 
@@ -86,8 +117,13 @@ export function TripModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-[900px] max-h-[92vh] flex flex-col shadow"
-        disableClose={countryModalOpen}
+        className="w-[900px] h-[92vh] flex flex-col shadow"
+        disableClose={
+          countryModalOpen ||
+          participantModalOpen ||
+          categoryModalOpen ||
+          tagModalOpen
+        }
         draggable
       >
         <PanelHeader
@@ -186,58 +222,22 @@ export function TripModal({
                   disabled={isTentative}
                 />
               </FormField>
-              <FormField label={t("modal.form.participants")}>
-                <DropdownSelectInput
-                  value={trip.participants || []}
-                  onChange={(v) =>
-                    onChange({
-                      ...trip,
-                      participants: Array.isArray(v)
-                        ? (v as string[])
-                        : v
-                          ? [v as string]
-                          : [],
-                    })
+              <div className="flex-1 min-h-0 flex flex-col">
+                <div className="font-semibold mb-2">
+                  {t("modal.form.notesTitle")}
+                </div>
+                <InputBox
+                  as="textarea"
+                  className="w-full flex-1 min-h-0 resize-none"
+                  value={trip.notes}
+                  onChange={(e: { target: { value: string } }) =>
+                    onChange({ ...trip, notes: e.target.value })
                   }
-                  options={participantOptions}
-                  placeholder={t("modal.form.selectParticipants")}
-                  isMulti
+                  placeholder={t("modal.form.notesPlaceholder")}
                 />
-              </FormField>
-              <FormField label={t("modal.form.categories")}>
-                <DropdownSelectInput
-                  value={trip.categories || []}
-                  onChange={(v) =>
-                    onChange({
-                      ...trip,
-                      categories: Array.isArray(v)
-                        ? (v as TripCategory[])
-                        : v
-                          ? [v as TripCategory]
-                          : [],
-                    })
-                  }
-                  options={categoryOptions}
-                  placeholder={t("modal.form.selectCategories")}
-                  isMulti
-                />
-              </FormField>
-              <FormField label={t("modal.form.tags")}>
-                <DropdownSelectInput
-                  value={trip.tags || []}
-                  onChange={(v) =>
-                    onChange({
-                      ...trip,
-                      tags: Array.isArray(v) ? v : v ? [v] : [],
-                    })
-                  }
-                  options={tagOptions}
-                  placeholder={t("modal.form.addTags")}
-                  isMulti
-                />
-              </FormField>
+              </div>
             </div>
-            {/* Right: Selected Countries & Notes */}
+            {/* Right: Selectable sections */}
             <div className="flex flex-col min-w-0 p-4 gap-2 basis-[40%]">
               <CountriesSection
                 selectedCountries={selectedCountries
@@ -253,20 +253,32 @@ export function TripModal({
                   })
                 }
               />
-              <div className="flex-1 min-h-0 flex flex-col">
-                <div className="font-semibold mb-2">
-                  {t("modal.form.notesTitle")}
-                </div>
-                <InputBox
-                  as="textarea"
-                  className="w-full flex-1 min-h-0 resize-none"
-                  value={trip.notes}
-                  onChange={(e: { target: { value: string } }) =>
-                    onChange({ ...trip, notes: e.target.value })
-                  }
-                  placeholder={t("modal.form.notesPlaceholder")}
-                />
-              </div>
+              <ParticipantsSection
+                selectedParticipants={selectedParticipantProfiles}
+                onEdit={() => setParticipantModalOpen(true)}
+              />
+              <CategoriesSection
+                selectedCategories={trip.categories || []}
+                onEdit={() => setCategoryModalOpen(true)}
+                onRemove={(category) =>
+                  onChange({
+                    ...trip,
+                    categories: (trip.categories || []).filter(
+                      (c) => c !== category,
+                    ),
+                  })
+                }
+              />
+              <TagsSection
+                selectedTags={trip.tags || []}
+                onEdit={() => {setTagModalOpen(true)}}
+                onRemove={(tag) =>
+                  onChange({
+                    ...trip,
+                    tags: (trip.tags || []).filter((t) => t !== tag),
+                  })
+                }
+              />
             </div>
           </div>
           {/* Actions */}
@@ -297,6 +309,33 @@ export function TripModal({
         onClose={() => setCountryModalOpen(false)}
         onChange={(newCodes) => {
           onChange({ ...trip, countryCodes: newCodes });
+        }}
+      />
+      <ParticipantSelectModal
+        isOpen={participantModalOpen}
+        selected={trip.participants || []}
+        options={participantOptions}
+        onClose={() => setParticipantModalOpen(false)}
+        onChange={(newParticipants) => {
+          onChange({ ...trip, participants: newParticipants });
+        }}
+      />
+      <CategorySelectModal
+        isOpen={categoryModalOpen}
+        selected={trip.categories || []}
+        options={formattedCategoryOptions}
+        onClose={() => setCategoryModalOpen(false)}
+        onChange={(newCategories) => {
+          onChange({ ...trip, categories: newCategories as TripCategory[] });
+        }}
+      />
+      <TagSelectModal
+        isOpen={tagModalOpen}
+        selected={trip.tags || []}
+        options={formattedTagOptions}
+        onClose={() => setTagModalOpen(false)}
+        onChange={(newTags) => {
+          onChange({ ...trip, tags: newTags as TripTag[] });
         }}
       />
     </>

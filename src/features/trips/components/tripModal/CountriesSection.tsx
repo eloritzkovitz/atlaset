@@ -1,6 +1,6 @@
-import { FaPenToSquare } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { SelectedCountriesList } from "./SelectedCountriesList";
+import { ICONS } from "@constants/icons";
+import { TripCountriesList } from "../common/TripCountriesList";
 
 interface CountriesSectionProps {
   selectedCountries: { isoCode: string; name: string }[];
@@ -14,7 +14,7 @@ export function CountriesSection({
   onRemove,
 }: CountriesSectionProps) {
   const { t } = useTranslation("trips");
-  
+
   return (
     <div className="flex-1 min-h-0 overflow-auto">
       <div className="flex items-center justify-between mb-1">
@@ -29,14 +29,15 @@ export function CountriesSection({
               : t("modal.selectCountries")
           }
         >
-          <FaPenToSquare className="me-1" />
+          <ICONS.edit className="me-1" />
           {selectedCountries.length > 0
             ? t("modal.actions.edit")
             : t("modal.actions.add")}
         </button>
       </div>
-      <SelectedCountriesList
-        selectedCountries={selectedCountries}
+      <TripCountriesList
+        countries={selectedCountries}
+        removable
         onRemove={onRemove}
       />
     </div>

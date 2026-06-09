@@ -63,6 +63,7 @@ export * from "./menu/menuUtils";
 export { ConfirmModal } from "./modal/ConfirmModal";
 export { Modal } from "./modal/Modal";
 export { ModalActions } from "./modal/ModalActions";
+export { SelectionListModal } from "./modal/SelectionListModal";
 
 // Navigation components
 export { AppLinks } from "./navigation/AppLinks";

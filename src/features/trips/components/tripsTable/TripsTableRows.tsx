@@ -1,17 +1,13 @@
-import { useTranslation } from "react-i18next";
-import { Checkbox, ChipList, StarRatingInput, TableCell } from "@components";
+import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
-import {
-  CountryWithFlag,
-  createCountryMap,
-  type Country,
-} from "@features/countries";
+import { createCountryMap, type Country } from "@features/countries";
 import { formatDate } from "@utils/date";
-import { capitalizeWords } from "@utils/string";
-import { ParticipantsList } from "./ParticipantsList";
-import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
-import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
+import { CategoriesList } from "../common/CategoriesList";
+import { TripCountriesList } from "../common/TripCountriesList";
+import { ParticipantsList } from "../common/ParticipantsList";
+import { TagsList } from "../common/TagsList";
+import { TripStatusChip } from "../common/TripStatusChip";
 import type { Trip } from "../../types";
 import { isPlannedTrip, isUpcomingTrip } from "../../utils/trips";
 
@@ -42,7 +38,6 @@ export function TripsTableRows({
   onDelete,
   showRowNumbers,
 }: TripsTableRowsProps) {
-  const { t } = useTranslation("trips");
   const rowSpan = trip.countryCodes?.length || 1;
 
   // Country lookup for fast access
@@ -116,12 +111,10 @@ export function TripsTableRows({
             idx === (trip.countryCodes?.length ?? 1) - 1
           }`}
         >
-          {country ? (
-            <CountryWithFlag isoCode={country.isoCode} name={country.name} />
-          ) : code ? (
-            <span>{code}</span>
-          ) : (
-            <span className="text-muted italic">No country</span>
+          {country && (
+            <TripCountriesList
+              countries={[{ isoCode: country.isoCode, name: country.name }]}
+            />
           )}
         </TableCell>
 
@@ -148,38 +141,17 @@ export function TripsTableRows({
 
             {/* Categories */}
             <TableCell rowSpan={rowSpan}>
-              <ChipList<{ value: string; label: string }>
-                items={(trip.categories ?? []).map((cat) => {
-                  const fallback = capitalizeWords(cat.replace(/-/g, " "));
-                  return {
-                    value: cat,
-                    label: t(`categories.${cat}`, fallback),
-                  };
-                })}
-                renderItem={(opt) => (
-                  <span className="flex items-center gap-1" key={opt.value}>
-                    {TRIP_CATEGORY_ICONS[opt.value] ?? null}
-                    <span>{opt.label}</span>
-                  </span>
-                )}
-              />
+              <CategoriesList categories={trip.categories ?? []} />
             </TableCell>
 
             {/* Status */}
             <TableCell rowSpan={rowSpan}>
-              <StatusCell status={trip.status} />
+              <TripStatusChip status={trip.status} />
             </TableCell>
 
             {/* Tags */}
             <TableCell rowSpan={rowSpan}>
-              <ChipList
-                items={(trip.tags ?? []).map((tag) => {
-                  const fallback = capitalizeWords(tag.replace(/-/g, " "));
-                  return { value: tag, label: t(`tags.${tag}`, fallback) };
-                })}
-                colorClass="bg-purple-100 text-purple-800"
-                moreColorClass="bg-purple-200 text-purple-900"
-              />
+              <TagsList tags={trip.tags ?? []} />
             </TableCell>
 
             {/* Actions */}
