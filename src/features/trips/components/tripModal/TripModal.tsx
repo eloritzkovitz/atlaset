@@ -48,10 +48,6 @@ export function TripModal({
   onClose,
   isEditing,
 }: TripModalProps) {
-  // If no trip is provided, don't render anything
-  if (!trip) return null;
-
-  // Translations and data contexts
   const { t } = useTranslation("trips");
   const { countries } = useCountryData();
   const { friends } = useUserFriends();
@@ -63,9 +59,9 @@ export function TripModal({
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [tagModalOpen, setTagModalOpen] = useState(false);
 
-  // Tentative state (no dates)
+  // Tentative state
   const [isTentative, setIsTentative] = useState(
-    isEditing && getAutoTripStatus(trip) === "planned",
+    !!(isEditing && trip && getAutoTripStatus(trip) === "planned"),
   );
 
   // Friends/participants logic
@@ -104,6 +100,9 @@ export function TripModal({
       label: opt.label,
     }));
   }, [tagOptions]);
+
+  // If no trip is provided, don't render anything
+  if (!trip) return null;
 
   // Get the selected country objects
   const selectedCountries = trip.countryCodes
