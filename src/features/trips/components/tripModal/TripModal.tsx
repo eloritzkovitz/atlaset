@@ -27,6 +27,7 @@ import { ParticipantsSection } from "./ParticipantsSection";
 import { TagsSection } from "./TagsSection";
 import { TagSelectModal } from "./TagSelectModal";
 import { useTripFilters } from "../../hooks/useTripFilters";
+import { getAutoTripStatus } from "../../utils/trips";
 import type { Trip, TripCategory, TripTag } from "../../types";
 import "./TripModal.css";
 
@@ -47,21 +48,27 @@ export function TripModal({
   onClose,
   isEditing,
 }: TripModalProps) {
-  const { countries } = useCountryData();
+  // If no trip is provided, don't render anything
+  if (!trip) return null;
+
+  // Translations and data contexts
   const { t } = useTranslation("trips");
+  const { countries } = useCountryData();
+  const { friends } = useUserFriends();
+  const { categoryOptions, tagOptions } = useTripFilters();
+
+  // Modal open states for sub-modals
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [participantModalOpen, setParticipantModalOpen] = useState(false);
   const [categoryModalOpen, setCategoryModalOpen] = useState(false);
   const [tagModalOpen, setTagModalOpen] = useState(false);
 
-  // Dropdown options
-  const { categoryOptions, tagOptions } = useTripFilters();
-
   // Tentative state (no dates)
-  const [isTentative, setIsTentative] = useState(false);
+  const [isTentative, setIsTentative] = useState(
+    isEditing && getAutoTripStatus(trip) === "planned",
+  );
 
   // Friends/participants logic
-  const { friends } = useUserFriends();
   const friendUids = useMemo(() => friends.map((f) => f.uid), [friends]);
   const { profiles: friendProfiles } = useFriendProfiles(friendUids);
   const participantOptions = useMemo(
@@ -97,9 +104,6 @@ export function TripModal({
       label: opt.label,
     }));
   }, [tagOptions]);
-
-  // If no trip is provided, don't render anything
-  if (!trip) return null;
 
   // Get the selected country objects
   const selectedCountries = trip.countryCodes

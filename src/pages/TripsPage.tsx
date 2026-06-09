@@ -188,6 +188,7 @@ export default function TripsPage() {
       {/* Table area */}
       <div className="flex-1 w-full mx-auto flex flex-col">
         <TripModal
+          key={trip?.id ?? "new-trip"}
           isOpen={modalOpen}
           trip={trip}
           onChange={setTrip}
