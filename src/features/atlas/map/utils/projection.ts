@@ -5,6 +5,7 @@
 import * as d3Geo from "d3-geo";
 import type { GeoProjection } from "d3-geo";
 import type { Feature, Geometry } from "geojson";
+import type { TransformState } from "@types";
 import type { Coordinates, GeoData, ProjectionConfig } from "../types";
 
 interface ProjectionConfigurable {
@@ -108,7 +109,7 @@ export function getProjection(
     geoNaturalEarth1?: typeof d3Geo.geoNaturalEarth1;
     geoEquirectangular?: typeof d3Geo.geoEquirectangular;
     geoMercator?: typeof d3Geo.geoMercator;
-  } = {}
+  } = {},
 ): GeoProjection {
   const {
     geoNaturalEarth1 = d3Geo.geoNaturalEarth1,
@@ -148,7 +149,7 @@ export function getProjection(
 export function getSvgCoordsFromTransform(
   w: number,
   h: number,
-  t: { x: number; y: number; k: number }
+  t: TransformState,
 ): Coordinates {
   const xOffset = (w * t.k - w) / 2;
   const yOffset = (h * t.k - h) / 2;
@@ -174,7 +175,7 @@ export function getGeoCoordsFromMouseEvent(
   scaleDivisor: number,
   zoom: number,
   center: Coordinates,
-  getProjectionFn: typeof getProjection = getProjection
+  getProjectionFn: typeof getProjection = getProjection,
 ): Coordinates | null {
   const svg = event.currentTarget;
   const rect = svg.getBoundingClientRect();
@@ -187,7 +188,7 @@ export function getGeoCoordsFromMouseEvent(
     height,
     scaleDivisor,
     zoom,
-    center
+    center,
   );
   const result = proj?.invert?.([x, y]) ?? null;
   // Swap to [latitude, longitude]
@@ -201,7 +202,7 @@ export function getGeoCoordsFromMouseEvent(
  */
 export function getFeatureCentroid(
   feature: Feature<Geometry, { [key: string]: unknown }>,
-  geoCentroidFn: typeof d3Geo.geoCentroid = d3Geo.geoCentroid
+  geoCentroidFn: typeof d3Geo.geoCentroid = d3Geo.geoCentroid,
 ) {
   return geoCentroidFn(feature);
 }
@@ -215,7 +216,7 @@ export function getCountryCenterAndZoom(
   geoData: GeoData,
   isoCode: string,
   geoCentroidFn: typeof d3Geo.geoCentroid = d3Geo.geoCentroid,
-  geoBoundsFn: typeof d3Geo.geoBounds = d3Geo.geoBounds
+  geoBoundsFn: typeof d3Geo.geoBounds = d3Geo.geoBounds,
 ): { center: Coordinates; zoom: number } | null {
   const country = geoData?.features.find((feature) => {
     const props = feature.properties ?? {};
@@ -252,7 +253,7 @@ export function getCountryCenterAndZoom(
 export function getScaleBarLabel(
   zoom: number,
   latitude: number,
-  barPx: number = 100
+  barPx: number = 100,
 ): string {
   if (
     typeof latitude !== "number" ||

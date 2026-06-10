@@ -13,6 +13,7 @@ import {
   type ZoomBehavior,
 } from "d3-zoom";
 import { select as d3Select, type Selection } from "d3-selection";
+import type { TransformState } from "@types";
 import { MapContext } from "../providers/MapContext";
 import { getSvgCoordsFromTransform } from "../utils/projection";
 import type { Coordinates, ZoomEvent } from "../types";
@@ -73,10 +74,12 @@ export function useZoomPan({
   const projection = useMemo(() => projectionRaw, [projectionRaw]);
 
   const [lon, lat] = center;
-  const [position, setPosition] = useState<{ x: number; y: number; k: number }>(
-    { x: 0, y: 0, k: 1 },
-  );
-  const lastPosition = useRef<{ x: number; y: number; k: number }>({
+  const [position, setPosition] = useState<TransformState>({
+    x: 0,
+    y: 0,
+    k: 1,
+  });
+  const lastPosition = useRef<TransformState>({
     x: 0,
     y: 0,
     k: 1,

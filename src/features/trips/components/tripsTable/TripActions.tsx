@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { forwardRef, useImperativeHandle, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActionButton,
@@ -18,6 +18,7 @@ import {
   useMenuActions,
   useMenuPosition,
 } from "@hooks";
+import type { Point } from "@types";
 import type { Trip } from "../../types";
 import { hasValidStartDate } from "../../utils/trips";
 
@@ -29,17 +30,16 @@ interface TripActionsProps {
   onDelete: (t: Trip) => void;
 }
 
-export function TripActions({
-  trip,
-  onViewInCalendar,
-  onEdit,
-  onDuplicate,
-  onDelete,
-}: TripActionsProps) {
+export const TripActions = forwardRef(function TripActions(
+  { trip, onViewInCalendar, onEdit, onDuplicate, onDelete }: TripActionsProps,
+  ref,
+) {
   const { t } = useTranslation("trips");
   const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
   const [open, setOpen] = useState(false);
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
+  const [contextCoords, setContextCoords] = useState<Point | null>(null);
+
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
@@ -48,6 +48,21 @@ export function TripActions({
     hoverHandlers: rateMenuHoverHandlers,
     floatingHandlers: rateButtonHoverHandlers,
   } = useFloatingHover(true, 150);
+
+  // Expose method to open menu at specific coordinates for context menu support
+  useImperativeHandle(ref, () => ({
+    openAtCoordinates: (x: number, y: number) => {
+      setContextCoords({ x, y });
+      setOpen(true);
+    },
+  }));
+
+  // Clean interceptor to wipe coordinates when resetting menus
+  const handleClose = () => {
+    setOpen(false);
+    setRateMenuOpen(false);
+    setContextCoords(null);
+  };
 
   // Close both menus when clicking outside
   useClickOutside(
@@ -93,6 +108,15 @@ export function TripActions({
     false,
   );
 
+  const dynamicMenuStyle: React.CSSProperties = contextCoords
+    ? {
+        position: "fixed",
+        left: contextCoords.x,
+        top: contextCoords.y,
+        transform: "none",
+      }
+    : menuStyle;
+
   // Calculate rate menu left position to prevent overflow
   const rateMenuLeft =
     (typeof rateMenuStyle.left === "number" ? rateMenuStyle.left : 0) +
@@ -101,8 +125,10 @@ export function TripActions({
     useFloatingMenuPosition(
       menuRef,
       rateMenuRef,
-      rateMenuLeft,
-      rateMenuStyle.top as number,
+      contextCoords
+        ? contextCoords.x + (menuRef.current?.offsetWidth ?? 180)
+        : rateMenuLeft,
+      contextCoords ? contextCoords.y : (rateMenuStyle.top as number),
     );
 
   // Check if trip is shared
@@ -137,6 +163,7 @@ export function TripActions({
         <ActionButton
           onClick={(e) => {
             e.stopPropagation();
+            setContextCoords(null);
             setOpen((v) => !v);
           }}
           ariaLabel={t("table.actions.moreActions")}
@@ -147,16 +174,16 @@ export function TripActions({
       </div>
       <Menu
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleClose}
         className="trips-actions-menu !p-2"
-        style={menuStyle}
+        style={dynamicMenuStyle}
         containerRef={menuRef}
         disableScroll={true}
       >
         {hasValidStartDate(trip) && (
           <MenuButton
             onClick={() => {
-              setTimeout(() => setOpen(false), 300);
+              setTimeout(handleClose, 300);
               onViewInCalendar?.(trip);
             }}
             icon={<ICONS.calendar className="me-2" />}
@@ -166,7 +193,10 @@ export function TripActions({
           </MenuButton>
         )}
         <MenuButton
-          onClick={menuActions.onEdit}
+          onClick={() => {
+            menuActions.onEdit?.();
+            handleClose();
+          }}
           icon={<ICONS.edit className="me-2" />}
           className="w-full"
         >
@@ -174,14 +204,20 @@ export function TripActions({
         </MenuButton>
         <Separator className="my-2" />
         <MenuButton
-          onClick={menuActions.onDuplicate}
+          onClick={() => {
+            menuActions.onDuplicate?.();
+            handleClose();
+          }}
           icon={<ICONS.duplicate className="me-2" />}
           className="w-full"
         >
           {t("table.actions.duplicate")}
-        </MenuButton>        
+        </MenuButton>
         <MenuButton
-          onClick={menuActions.onFavorite}
+          onClick={() => {
+            menuActions.onFavorite?.();
+            handleClose();
+          }}
           icon={
             trip.favorite ? (
               <ICONS.unfavorite className="me-2 text-muted" />
@@ -221,16 +257,19 @@ export function TripActions({
               menuRef={rateMenuRef}
               hoverHandlers={rateMenuHoverHandlers}
               onRate={(value) => {
-                setTimeout(() => setOpen(false), 300);
+                setTimeout(handleClose, 300);
                 if (updateTripRating) updateTripRating(trip.id, value);
               }}
-              onClose={() => setOpen(false)}
+              onClose={handleClose}
             />
           )}
         </div>
         <Separator className="my-2" />
         <MenuButton
-          onClick={menuActions.onDelete}
+          onClick={() => {
+            menuActions.onDelete?.();
+            handleClose();
+          }}
           icon={<ICONS.remove className="me-2" />}
           className="!text-danger w-full"
         >
@@ -239,4 +278,4 @@ export function TripActions({
       </Menu>
     </>
   );
-}
+});

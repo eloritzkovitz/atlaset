@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
 import { createCountryMap, type Country } from "@features/countries";
@@ -52,12 +53,26 @@ export function TripsTableRows({
     a.name.localeCompare(b.name),
   );
 
+  // Ref for TripActions to support context menu opening
+  const actionsRef = useRef<{
+    openAtCoordinates: (x: number, y: number) => void;
+  }>(null);
+
+  // Handle right-click to open context menu on TripActions
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (actionsRef.current) {
+      actionsRef.current.openAtCoordinates(e.clientX, e.clientY);
+    }
+  };
+
   return (
     <tr
       className={[
         tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
         "group",
       ].join(" ")}
+      onContextMenu={handleContextMenu}
     >
       <>
         {/* Select */}
@@ -137,6 +152,7 @@ export function TripsTableRows({
         {/* Actions */}
         <TableCell rowSpan={rowSpan}>
           <TripActions
+            ref={actionsRef}
             trip={trip}
             onViewInCalendar={onViewInCalendar}
             onEdit={onEdit}
