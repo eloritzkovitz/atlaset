@@ -111,7 +111,7 @@ export function TripsTable({
         paddingInlineStart: !isMobile ? DEFAULT_SIDEBAR_WIDTH : 0,
       }}
     >
-      <table className="min-w-full w-full bg-surface">
+      <table className="min-w-full w-full">
         <colgroup>
           <col style={{ width: `${colWidths.select}px` }} />
           <col style={{ width: `${colWidths.name}px` }} />

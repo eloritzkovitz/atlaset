@@ -167,8 +167,8 @@
   --color-dropdown-hover: theme("colors.blue.500");
   --color-dropdown-selected: theme("colors.blue.600");
   /* Table colors */
-  --color-table-row: theme("colors.gray.800");
-  --color-table-row-alt: theme("colors.gray.900");
+  --color-table-row: theme("colors.gray.900");
+  --color-table-row-alt: theme("colors.gray.950");
   --color-table-row-hover: theme("colors.gray.600");
   /* Text color */
   --color-text: theme("colors.gray.300");

@@ -21,7 +21,7 @@ export function TripCountriesList({
 
   return (
     <div>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         {countries.length === 0 && (
           <EmptyListMessage message={t("modal.form.noCountriesSelected")} />
         )}
