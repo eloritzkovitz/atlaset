@@ -8,7 +8,7 @@ import { TripCountriesList } from "../common/TripCountriesList";
 import { ParticipantsList } from "../common/ParticipantsList";
 import { TagsList } from "../common/TagsList";
 import { TripStatusChip } from "../common/TripStatusChip";
-import type { Trip, TripStatus } from "../../types";
+import type { Trip } from "../../types";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -23,14 +23,6 @@ interface TripsTableRowsProps {
   onDelete: (trip: Trip) => void;
   showRowNumbers: boolean;
 }
-
-const TRIP_STATUS_BORDER_CLASSES: Record<TripStatus, string> = {
-  planned: "border-l-4 border-l-status-planned",
-  upcoming: "border-l-4 border-l-status-upcoming",
-  "in-progress": "border-l-4 border-l-status-inprogress",
-  completed: "border-l-4 border-l-input",
-  cancelled: "border-l-4 border-l-status-cancelled",
-};
 
 export function TripsTableRows({
   trip,
@@ -70,14 +62,21 @@ export function TripsTableRows({
         key={trip.id + "-" + code}
         className={[
           tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
-          TRIP_STATUS_BORDER_CLASSES[trip.status ?? "planned"],
           "group",
         ].join(" ")}
       >
         {idx === 0 && (
           <>
             {/* Number */}
-            <TableCell rowSpan={rowSpan}>
+            <TableCell rowSpan={rowSpan} className="relative">
+              <div
+                className={`
+                absolute left-0 top-0 bottom-0 w-1
+                ${trip.status === "upcoming" ? "bg-status-upcoming" : ""}
+                ${trip.status === "planned" ? "bg-status-planned" : ""}
+                /* Add your other statuses here if needed */
+              `}
+              />
               {showRowNumbers ? tripIdx + 1 : null}
             </TableCell>
 
