@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa6";
+import { HalfStar } from "./HalfStar";
 import {
   STAR_SELECTED_COLOR,
   STAR_HOVER_COLOR,
   STAR_UNSELECTED_COLOR,
   STAR_SIZE,
 } from "./star";
-import { HalfStar } from "./HalfStar";
 
 interface StarRatingInputProps {
   value: number | null | undefined;
@@ -22,20 +22,13 @@ export function StarRatingInput({
   const [hoverValue, setHoverValue] = useState<number | undefined>(undefined);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const stars = [1, 2, 3, 4, 5];
   const displayValue = hoverValue !== undefined ? hoverValue : value;
-  const isHovering = hoverValue !== undefined;
-  const selectedColor = STAR_SELECTED_COLOR;
-  const hoverColor = STAR_HOVER_COLOR;
-
-  // If value is undefined or -1, show all empty stars
   const showEmpty =
     displayValue === undefined || displayValue === null || displayValue === -1;
 
   // Handle global mouse move to detect when user moves outside the component
   useEffect(() => {
     if (readOnly || hoverValue === undefined) return;
-
     const handleGlobalMouseMove = (e: MouseEvent) => {
       if (
         containerRef.current &&
@@ -44,12 +37,18 @@ export function StarRatingInput({
         setHoverValue(undefined);
       }
     };
-
     window.addEventListener("mousemove", handleGlobalMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleGlobalMouseMove);
-    };
+    return () => window.removeEventListener("mousemove", handleGlobalMouseMove);
   }, [hoverValue, readOnly]);
+
+  // Helper to calculate if the pointer is on the left half of the star container
+  const getRatingValue = (
+    e: React.MouseEvent<HTMLSpanElement>,
+    star: number,
+  ) => {
+    const bounds = e.currentTarget.getBoundingClientRect();
+    return e.clientX - bounds.left < 12 ? star - 0.5 : star;
+  };
 
   return (
     <div
@@ -57,58 +56,31 @@ export function StarRatingInput({
       className="flex items-center"
       onMouseLeave={() => setHoverValue(undefined)}
     >
-      {stars.map((star) => {
-        if (showEmpty) {
-          return (
-            <span
-              key={star}
-              className={`relative inline-block align-middle w-6 h-6 ${
-                readOnly ? "" : "cursor-pointer"
-              }`}
-              onMouseEnter={
-                readOnly ? undefined : () => setHoverValue(undefined)
-              }
-            >
-              <FaStar size={STAR_SIZE} color={STAR_UNSELECTED_COLOR} />
-            </span>
-          );
-        }
-
-        const full = displayValue >= star;
-        const half = displayValue >= star - 0.5 && displayValue < star;
-        const color = isHovering ? hoverColor : selectedColor;
+      {[1, 2, 3, 4, 5].map((star) => {
+        const full = !showEmpty && displayValue >= star;
+        const half =
+          !showEmpty && displayValue >= star - 0.5 && displayValue < star;
+        const color =
+          hoverValue !== undefined ? STAR_HOVER_COLOR : STAR_SELECTED_COLOR;
 
         return (
           <span
             key={star}
-            className={`relative inline-block align-middle w-6 h-6 ${
-              readOnly ? "" : "cursor-pointer"
-            }`}
-            onMouseMove={
-              readOnly
+            className={`relative inline-block align-middle w-6 h-6 ${readOnly ? "" : "cursor-pointer"}`}
+            onMouseEnter={
+              readOnly || !showEmpty
                 ? undefined
-                : (e) => {
-                    const bounds = e.currentTarget.getBoundingClientRect();
-                    const x = e.clientX - bounds.left;
-                    if (x < 12) {
-                      setHoverValue(star - 0.5);
-                    } else {
-                      setHoverValue(star);
-                    }
-                  }
+                : () => setHoverValue(undefined)
+            }
+            onMouseMove={
+              readOnly || showEmpty
+                ? undefined
+                : (e) => setHoverValue(getRatingValue(e, star))
             }
             onMouseDown={
-              readOnly || !onChange
+              readOnly || showEmpty || !onChange
                 ? undefined
-                : (e) => {
-                    const bounds = e.currentTarget.getBoundingClientRect();
-                    const x = e.clientX - bounds.left;
-                    if (x < 12) {
-                      onChange(star - 0.5);
-                    } else {
-                      onChange(star);
-                    }
-                  }
+                : (e) => onChange(getRatingValue(e, star))
             }
           >
             {full ? (
