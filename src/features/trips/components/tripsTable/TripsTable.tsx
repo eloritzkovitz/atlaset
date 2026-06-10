@@ -33,7 +33,6 @@ interface TripsTableProps {
   onSelectTrip: (id: string) => void;
   allSelected: boolean;
   handleSelectAll: () => void;
-  showRowNumbers: boolean;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -63,7 +62,6 @@ export function TripsTable({
   onSelectTrip,
   allSelected,
   handleSelectAll,
-  showRowNumbers,
   currentPage,
   totalPages,
   onPageChange,
@@ -115,7 +113,6 @@ export function TripsTable({
     >
       <table className="min-w-full w-full bg-surface">
         <colgroup>
-          <col style={{ width: `${colWidths.idx}px` }} />
           <col style={{ width: `${colWidths.select}px` }} />
           <col style={{ width: `${colWidths.name}px` }} />
           <col style={{ width: `${colWidths.rating}px` }} />
@@ -144,7 +141,6 @@ export function TripsTable({
           tagOptions={tagOptions}
           participantsOptions={participantsOptions}
           renderResizeHandle={renderResizeHandle}
-          showRowNumbers={showRowNumbers}
         />
         {trips.map((trip, tripIdx) => (
           <tbody key={trip.id} className="trips-group">
@@ -160,7 +156,6 @@ export function TripsTable({
               onEdit={onEdit}
               onDuplicate={onDuplicate}
               onDelete={onDelete}
-              showRowNumbers={showRowNumbers}
             />
           </tbody>
         ))}

@@ -15,9 +15,6 @@
         "upcoming": "קרבות",
         "completed": "הושלם",
         "favorites": "מועדפים",
-        "rowNumbers": "מספרי שורות",
-        "showRowNumbers": "הצג מספרי שורות",
-        "hideRowNumbers": "הסתר מספרי שורות",
         "filtersToggle": "הצג/הסתר {{label}}"
       },
       "calendar": {

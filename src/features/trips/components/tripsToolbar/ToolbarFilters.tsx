@@ -1,6 +1,5 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FaHashtag, FaHeart } from "react-icons/fa6";
 import { ActionButton, ToolbarToggleGroup } from "@components";
 import { ICONS } from "@constants/icons";
 import type { ToolbarToggleOption } from "@types";
@@ -11,8 +10,6 @@ interface ToolbarFiltersProps {
   setFilters: React.Dispatch<React.SetStateAction<TripFilterState>>;
   setGlobalSearch: (search: string) => void;
   resetFilters: () => void;
-  showRowNumbers: boolean;
-  setShowRowNumbers: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ToolbarFilters({
@@ -20,8 +17,6 @@ export function ToolbarFilters({
   setFilters,
   setGlobalSearch,
   resetFilters,
-  showRowNumbers,
-  setShowRowNumbers,
 }: ToolbarFiltersProps) {
   const { t } = useTranslation("trips");
 
@@ -43,7 +38,6 @@ export function ToolbarFilters({
     setFilters({ ...filters, favorite: !filters.favorite });
   const togglePlanned = () =>
     setFilters({ ...filters, planned: !filters.planned });
-  const toggleRowNumbers = () => setShowRowNumbers((v) => !v);
 
   const filterToggles: ToolbarToggleOption[] = [
     {
@@ -113,7 +107,7 @@ export function ToolbarFilters({
     },
     {
       value: "favorite",
-      icon: <FaHeart />,
+      icon: <ICONS.favorite />,
       label: t("table.toolbar.filters.favorites"),
       ariaLabel: t("table.toolbar.filters.filtersToggle", {
         label: t("table.toolbar.filters.favorites"),
@@ -123,20 +117,7 @@ export function ToolbarFilters({
       }),
       checked: filters.favorite,
       onClick: toggleFavorite,
-    },
-    {
-      value: "rowNumbers",
-      icon: <FaHashtag />,
-      label: t("table.toolbar.filters.rowNumbers"),
-      ariaLabel: showRowNumbers
-        ? t("table.toolbar.filters.hideRowNumbers")
-        : t("table.toolbar.filters.showRowNumbers"),
-      title: showRowNumbers
-        ? t("table.toolbar.filters.hideRowNumbers")
-        : t("table.toolbar.filters.showRowNumbers"),
-      checked: showRowNumbers,
-      onClick: toggleRowNumbers,
-    },
+    },    
   ];
 
   return (

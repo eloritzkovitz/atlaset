@@ -33,7 +33,6 @@ interface TripsTableHeadersProps {
   statusOptions: FilterOption[];
   tagOptions: FilterOption[];
   renderResizeHandle: (key: string) => JSX.Element;
-  showRowNumbers: boolean;
 }
 
 export function TripsTableHeaders({
@@ -50,19 +49,13 @@ export function TripsTableHeaders({
   statusOptions,
   tagOptions,
   renderResizeHandle,
-  showRowNumbers,
 }: TripsTableHeadersProps) {
   const { t } = useTranslation("trips");
 
   return (
     <thead>
       <tr>
-        {showRowNumbers ? (
-          <TableHeader unsortable>#{renderResizeHandle("idx")}</TableHeader>
-        ) : (
-          <TableHeader unsortable />
-        )}
-        <TableHeader unsortable>
+        <TableHeader colKey="select" unsortable className="relative pl-5">
           <Checkbox checked={allSelected} onChange={handleSelectAll} />
         </TableHeader>
         <TableHeader colKey="name" renderResizeHandle={renderResizeHandle}>

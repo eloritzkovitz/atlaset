@@ -21,7 +21,6 @@ interface TripsTableRowsProps {
   onEdit: (trip: Trip) => void;
   onDuplicate: (trip: Trip) => void;
   onDelete: (trip: Trip) => void;
-  showRowNumbers: boolean;
 }
 
 export function TripsTableRows({
@@ -35,7 +34,6 @@ export function TripsTableRows({
   onEdit,
   onDuplicate,
   onDelete,
-  showRowNumbers,
 }: TripsTableRowsProps) {
   const rowSpan = trip.countryCodes?.length || 1;
 
@@ -67,21 +65,16 @@ export function TripsTableRows({
       >
         {idx === 0 && (
           <>
-            {/* Number */}
-            <TableCell rowSpan={rowSpan} className="relative">
+            {/* Select */}
+            <TableCell rowSpan={rowSpan} className="relative pl-5">
               <div
                 className={`
-                absolute left-0 top-0 bottom-0 w-1
-                ${trip.status === "upcoming" ? "bg-status-upcoming" : ""}
-                ${trip.status === "planned" ? "bg-status-planned" : ""}
-                /* Add your other statuses here if needed */
-              `}
+                  absolute left-0 top-0 bottom-0 w-1
+                  ${trip.status === "planned" ? "bg-status-planned" : ""}
+                  ${trip.status === "upcoming" ? "bg-status-upcoming" : ""}
+                  ${trip.status === "in-progress" ? "bg-status-in-progress" : ""}
+                `}
               />
-              {showRowNumbers ? tripIdx + 1 : null}
-            </TableCell>
-
-            {/* Checkbox */}
-            <TableCell rowSpan={rowSpan}>
               <Checkbox
                 checked={selected}
                 onChange={() => onSelect(trip.id)}
