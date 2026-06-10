@@ -53,13 +53,14 @@ export function TripsTableHeaders({
   showRowNumbers,
 }: TripsTableHeadersProps) {
   const { t } = useTranslation("trips");
+  
   return (
     <thead>
       <tr>
         {showRowNumbers ? (
-          <TableHeader unsortable>#{renderResizeHandle("idx")}</TableHeader>
+          <TableHeader unsortable className="border-l-4 border-l-bg">#{renderResizeHandle("idx")}</TableHeader>
         ) : (
-          <TableHeader unsortable />
+          <TableHeader unsortable className="border-l-4 border-l-bg" />
         )}
         <TableHeader unsortable>
           <Checkbox checked={allSelected} onChange={handleSelectAll} />

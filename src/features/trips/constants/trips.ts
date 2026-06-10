@@ -6,6 +6,7 @@ import {
   UPCOMING_VISIT_COLOR,
   VISITED_COLOR,
 } from "@constants/colors";
+import type { TripStatus } from "../types";
 
 export const ALL_TRIP_CATEGORIES = [
   "solo",
@@ -103,8 +104,8 @@ export const TRIP_TYPE_COLORS = [LOCAL_TRIP_COLOR, ABROAD_TRIP_COLOR];
 export const TRIP_TYPE_LABELS = ["Local", "Abroad"];
 export const TRIP_TYPE_ICONS = [ICONS.tripLocal, ICONS.tripAbroad];
 export const TRIP_TYPE_COLOR_CLASSES = [
-  "bg-cyan-400/60 text-cyan-100 hover:bg-cyan-400/80",
-  "bg-purple-400/60 text-purple-100 hover:bg-purple-400/80",
+  "bg-type-local/90 hover:bg-type-local",
+  "bg-type-abroad/90 hover:bg-type-abroad",
 ];
 
 export const TRIP_STATUS_COLORS = [
@@ -118,11 +119,13 @@ export const TRIP_STATUS_ICONS = [
   ICONS.tripUpcoming,
   ICONS.tripCompleted,
 ];
-export const TRIP_STATUS_COLOR_CLASSES = [
-  "bg-orange-400/60 text-orange-100 hover:bg-orange-400/80",
-  "bg-yellow-400/60 text-yellow-100 hover:bg-yellow-400/80",
-  "bg-green-400/60 text-green-100 hover:bg-green-400/80",
-];
+export const TRIP_STATUS_COLOR_CLASSES: Record<TripStatus, string> = {
+  planned: "bg-status-planned/90 hover:bg-status-planned",
+  upcoming: "bg-status-upcoming/90 hover:bg-status-upcoming",
+  "in-progress": "bg-status-inprogress/90 hover:bg-status-inprogress",
+  completed: "bg-status-completed/90 hover:bg-status-completed",
+  cancelled: "bg-status-cancelled/90 hover:bg-status-cancelled",
+};
 
 export const RATING_OPTIONS = [
   { value: -1, label: "All ratings" },

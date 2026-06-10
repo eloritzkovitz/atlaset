@@ -1,10 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Pagination } from "@components";
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryData } from "@features/countries";
-import { useTranslation } from "react-i18next";
 import { useScreenSize, useResizableColumns } from "@hooks";
 import type { FilterOption, Option } from "@types";
-import type { TripSortBy, TripSortByKey } from "../../types";
 import { TripsTableHeaders } from "./TripsTableHeaders";
 import { TripsTableRows } from "./TripsTableRows";
 import {
@@ -12,7 +11,7 @@ import {
   MIN_WIDTHS,
   type ColumnKey,
 } from "../../constants/columns";
-import type { Trip, TripFilters } from "../../types";
+import type { Trip, TripFilters, TripSortBy, TripSortByKey } from "../../types";
 import "./TripsTable.css";
 
 interface TripsTableProps {

@@ -85,7 +85,11 @@ export function TripsStats() {
     TRIP_STATUS_LABELS,
     TRIP_STATUS_COLORS,
     TRIP_STATUS_ICONS,
-    TRIP_STATUS_COLOR_CLASSES,
+    [
+      TRIP_STATUS_COLOR_CLASSES["planned"],
+      TRIP_STATUS_COLOR_CLASSES["upcoming"],
+      TRIP_STATUS_COLOR_CLASSES["completed"],
+    ],
     [plannedTrips.length, upcomingTrips.length, completedTrips.length],
   );
 

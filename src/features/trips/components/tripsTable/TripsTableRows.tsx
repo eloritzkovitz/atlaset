@@ -8,8 +8,7 @@ import { TripCountriesList } from "../common/TripCountriesList";
 import { ParticipantsList } from "../common/ParticipantsList";
 import { TagsList } from "../common/TagsList";
 import { TripStatusChip } from "../common/TripStatusChip";
-import type { Trip } from "../../types";
-import { isPlannedTrip, isUpcomingTrip } from "../../utils/trips";
+import type { Trip, TripStatus } from "../../types";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -24,6 +23,14 @@ interface TripsTableRowsProps {
   onDelete: (trip: Trip) => void;
   showRowNumbers: boolean;
 }
+
+const TRIP_STATUS_BORDER_CLASSES: Record<TripStatus, string> = {
+  planned: "border-l-4 border-l-status-planned",
+  upcoming: "border-l-4 border-l-status-upcoming",
+  "in-progress": "border-l-4 border-l-status-inprogress",
+  completed: "border-l-4 border-l-input",
+  cancelled: "border-l-4 border-l-status-cancelled",
+};
 
 export function TripsTableRows({
   trip,
@@ -63,22 +70,18 @@ export function TripsTableRows({
         key={trip.id + "-" + code}
         className={[
           tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
-          isUpcomingTrip(trip)
-            ? "bg-table-row-upcoming/80"
-            : isPlannedTrip(trip)
-              ? "bg-table-row-planned/80"
-              : "",
+          TRIP_STATUS_BORDER_CLASSES[trip.status ?? "planned"],
           "group",
         ].join(" ")}
       >
         {idx === 0 && (
           <>
-            {/* Number column */}
+            {/* Number */}
             <TableCell rowSpan={rowSpan}>
               {showRowNumbers ? tripIdx + 1 : null}
             </TableCell>
 
-            {/* Checkbox column */}
+            {/* Checkbox */}
             <TableCell rowSpan={rowSpan}>
               <Checkbox
                 checked={selected}
@@ -87,7 +90,7 @@ export function TripsTableRows({
               />
             </TableCell>
 
-            {/* Name column */}
+            {/* Name */}
             <TableCell rowSpan={rowSpan}>
               {trip.favorite && (
                 <ICONS.favorite className="h-5 w-5 inline text-danger me-2" />
@@ -95,7 +98,7 @@ export function TripsTableRows({
               {trip.name}
             </TableCell>
 
-            {/* Rating column */}
+            {/* Rating */}
             <TableCell rowSpan={rowSpan}>
               <StarRatingInput
                 value={typeof trip.rating === "number" ? trip.rating : 0}
@@ -105,7 +108,7 @@ export function TripsTableRows({
           </>
         )}
 
-        {/* Countries column */}
+        {/* Countries */}
         <TableCell
           className={`py-2 ${idx === 0} ${
             idx === (trip.countryCodes?.length ?? 1) - 1
