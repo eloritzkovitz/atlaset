@@ -33,7 +33,7 @@
   --color-accent-green-hover: theme("colors.green.500");
   --color-accent-green-active: theme("colors.green.400");
 
-  /* Primary colors default to the blue accent (can be overridden at runtime) */
+  /* Primary colors (default) */
   --color-primary-default: var(--color-accent-blue);
   --color-primary: var(--color-primary-default);
   --color-primary-hover: var(--color-accent-blue-hover);
@@ -65,8 +65,6 @@
   --color-table-row: theme("colors.white");
   --color-table-row-alt: theme("colors.gray.50");
   --color-table-row-hover: theme("colors.gray.100");
-  --color-table-row-upcoming: theme("colors.yellow.100");
-  --color-table-row-planned: theme("colors.amber.100");
   /* Text color */
   --color-text: theme("colors.gray.700");
   --color-success: theme("colors.green.600");
@@ -89,16 +87,14 @@
   /* Chip colors */
   --color-chip-bg: theme("colors.gray.200");
   --color-chip-text: theme("colors.gray.700");
-  --color-chip-planned-bg: theme("colors.yellow.100");
-  --color-chip-planned-text: theme("colors.yellow.900");
-  --color-chip-upcoming-bg: theme("colors.yellow.300");
-  --color-chip-upcoming-text: theme("colors.yellow.900");
-  --color-chip-inprogress-bg: theme("colors.orange.100");
-  --color-chip-inprogress-text: theme("colors.orange.900");
-  --color-chip-completed-bg: theme("colors.green.100");
-  --color-chip-completed-text: theme("colors.green.900");
-  --color-chip-cancelled-bg: theme("colors.red.100");
-  --color-chip-cancelled-text: theme("colors.red.900");
+  /* Trip colors */
+  --color-type-local: #1ba9be;
+  --color-type-abroad: #866fc8;
+  --color-status-planned: #c47e35;
+  --color-status-upcoming: #b19d32;
+  --color-status-inprogress: #80b132;
+  --color-status-completed: #3bb266;
+  --color-status-cancelled: #b23b3b;
 }
 
 :root {
@@ -171,11 +167,9 @@
   --color-dropdown-hover: theme("colors.blue.500");
   --color-dropdown-selected: theme("colors.blue.600");
   /* Table colors */
-  --color-table-row: theme("colors.gray.800");
-  --color-table-row-alt: theme("colors.gray.900");
+  --color-table-row: theme("colors.gray.900");
+  --color-table-row-alt: theme("colors.gray.950");
   --color-table-row-hover: theme("colors.gray.600");
-  --color-table-row-upcoming: theme("colors.yellow.800");
-  --color-table-row-planned: theme("colors.amber.800");
   /* Text color */
   --color-text: theme("colors.gray.300");
   --color-success: theme("colors.green.400");
@@ -198,16 +192,6 @@
   /* Chip colors */
   --color-chip-bg: theme("colors.gray.500");
   --color-chip-text: theme("colors.gray.200");
-  --color-chip-planned-bg: theme("colors.amber.700");
-  --color-chip-planned-text: theme("colors.yellow.100");
-  --color-chip-upcoming-bg: theme("colors.yellow.700");
-  --color-chip-upcoming-text: theme("colors.yellow.100");
-  --color-chip-inprogress-bg: theme("colors.orange.700");
-  --color-chip-inprogress-text: theme("colors.orange.100");
-  --color-chip-completed-bg: theme("colors.green.700");
-  --color-chip-completed-text: theme("colors.green.100");
-  --color-chip-cancelled-bg: theme("colors.red.700");
-  --color-chip-cancelled-text: theme("colors.red.100");
 }
 
 a {

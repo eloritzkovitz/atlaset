@@ -7,9 +7,7 @@ import {
   useRef,
 } from "react";
 import { useEventListener } from "../dom/useEventListener";
-
-/** Represents the position of a modal. */
-type ModalPosition = { x: number; y: number };
+import type { Point } from "@types";
 
 /**
  * Manages the state and behavior for a draggable element. Provides handlers and styles to enable dragging functionality.
@@ -18,13 +16,10 @@ type ModalPosition = { x: number; y: number };
  * @returns An object containing dragging state, pointer down handler, ref setter for the element, computed element style, and current element offset.
  */
 export function usePointerDrag(draggable: boolean, isOpen: boolean) {
-  const dragState = useRef<null | {
-    x: number;
-    y: number;
-  }>(null);
+  const dragState = useRef<Point | null>(null);
   const [dragging, setDragging] = useState(false);
   const modalDomRef = useRef<Element | null>(null);
-  const [modalOffset, setModalOffset] = useState<ModalPosition | null>(null);
+  const [modalOffset, setModalOffset] = useState<Point | null>(null);
 
   // Center modal on first open if no position is set, otherwise keep last position
   useLayoutEffect(() => {

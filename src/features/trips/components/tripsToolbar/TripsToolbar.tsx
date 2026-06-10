@@ -19,9 +19,7 @@ interface ToolbarProps {
   globalSearch: string;
   setGlobalSearch: (search: string) => void;
   resetFilters: () => void;
-  selectedTripIds: string[];
-  showRowNumbers: boolean;
-  setShowRowNumbers: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedTripIds: string[];  
   setCalendarOpen: React.Dispatch<React.SetStateAction<boolean>>;
   onAddTrip?: () => void;
   onBulkDuplicate: () => void;
@@ -35,9 +33,7 @@ export function TripsToolbar({
   globalSearch,
   setGlobalSearch,
   resetFilters,
-  selectedTripIds,
-  showRowNumbers,
-  setShowRowNumbers,
+  selectedTripIds,  
   setCalendarOpen,
   onAddTrip,
   onBulkDuplicate,
@@ -66,8 +62,6 @@ export function TripsToolbar({
             setFilters={setFilters}
             setGlobalSearch={setGlobalSearch}
             resetFilters={resetFilters}
-            showRowNumbers={showRowNumbers}
-            setShowRowNumbers={setShowRowNumbers}
           />
           <ToolbarSeparator />
 

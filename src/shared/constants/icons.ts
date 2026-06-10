@@ -75,6 +75,7 @@ import {
   FaShieldHalved,
   FaStar,
   FaSuitcaseRolling,
+  FaTag,
   FaTimeline,
   FaTrash,
   FaTrophy,
@@ -87,6 +88,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { IoLanguage } from "react-icons/io5";
+import { PiCirclesFourFill } from "react-icons/pi";
 import { DashboardIcon } from "../components/icons/DashboardIcon";
 import { VisitIcon } from "../components/icons/VisitIcon";
 
@@ -127,6 +129,8 @@ export const ICONS = {
   mapConfig: FaCompassDrafting,
   // Trips
   trips: FaSuitcaseRolling,
+  tripCategory: PiCirclesFourFill,
+  tripTag: FaTag,
   tripLocal: FaLocationDot,
   tripAbroad: FaPlane,
   tripPlanned: FaClipboardList,
@@ -166,7 +170,7 @@ export const ICONS = {
   help: FaCircleQuestion,
   info: FaCircleInfo,
   reportBug: FaBug,
-  appearance: FaMoon,
+  appearance: FaMoon,  
   // Actions
   add: FaPlus,
   importFile: FaFileImport,

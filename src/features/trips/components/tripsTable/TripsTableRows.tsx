@@ -1,19 +1,15 @@
-import { useTranslation } from "react-i18next";
-import { Checkbox, ChipList, StarRatingInput, TableCell } from "@components";
+import { useRef } from "react";
+import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
-import {
-  CountryWithFlag,
-  createCountryMap,
-  type Country,
-} from "@features/countries";
+import { createCountryMap, type Country } from "@features/countries";
 import { formatDate } from "@utils/date";
-import { capitalizeWords } from "@utils/string";
-import { ParticipantsList } from "./ParticipantsList";
-import { StatusCell } from "./StatusCell";
 import { TripActions } from "./TripActions";
-import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
+import { CategoriesList } from "../common/CategoriesList";
+import { TripCountriesList } from "../common/TripCountriesList";
+import { ParticipantsList } from "../common/ParticipantsList";
+import { TagsList } from "../common/TagsList";
+import { TripStatusChip } from "../common/TripStatusChip";
 import type { Trip } from "../../types";
-import { isPlannedTrip, isUpcomingTrip } from "../../utils/trips";
 
 interface TripsTableRowsProps {
   trip: Trip;
@@ -26,7 +22,6 @@ interface TripsTableRowsProps {
   onEdit: (trip: Trip) => void;
   onDuplicate: (trip: Trip) => void;
   onDelete: (trip: Trip) => void;
-  showRowNumbers: boolean;
 }
 
 export function TripsTableRows({
@@ -40,9 +35,7 @@ export function TripsTableRows({
   onEdit,
   onDuplicate,
   onDelete,
-  showRowNumbers,
 }: TripsTableRowsProps) {
-  const { t } = useTranslation("trips");
   const rowSpan = trip.countryCodes?.length || 1;
 
   // Country lookup for fast access
@@ -52,149 +45,122 @@ export function TripsTableRows({
   const mappedCountries = (trip.countryCodes ?? []).map((code) => {
     const country =
       code && countryLookup ? countryLookup[code.toLowerCase()] : null;
-    return { code, country };
+    return { isoCode: code, name: country?.name ?? code };
   });
 
-  // Sort countries alphabetically by name (or code if name is missing)
-  const sortedCountries = mappedCountries.sort((a, b) => {
-    const nameA = a.country?.name ?? a.code;
-    const nameB = b.country?.name ?? b.code;
-    return nameA.localeCompare(nameB);
-  });
+  // Sort countries alphabetically by name
+  const sortedCountries = mappedCountries.sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
-  return sortedCountries.map(({ code, country }, idx) => {
-    return (
-      <tr
-        key={trip.id + "-" + code}
-        className={[
-          tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
-          isUpcomingTrip(trip)
-            ? "bg-table-row-upcoming/80"
-            : isPlannedTrip(trip)
-              ? "bg-table-row-planned/80"
-              : "",
-          "group",
-        ].join(" ")}
-      >
-        {idx === 0 && (
-          <>
-            {/* Number column */}
-            <TableCell rowSpan={rowSpan}>
-              {showRowNumbers ? tripIdx + 1 : null}
-            </TableCell>
+  // Ref for TripActions to support context menu opening
+  const actionsRef = useRef<{
+    openAtCoordinates: (x: number, y: number) => void;
+  }>(null);
 
-            {/* Checkbox column */}
-            <TableCell rowSpan={rowSpan}>
-              <Checkbox
-                checked={selected}
-                onChange={() => onSelect(trip.id)}
-                aria-label={`Select trip ${trip.name}`}
-              />
-            </TableCell>
+  // Handle right-click to open context menu on TripActions
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (actionsRef.current) {
+      actionsRef.current.openAtCoordinates(e.clientX, e.clientY);
+    }
+  };
 
-            {/* Name column */}
-            <TableCell rowSpan={rowSpan}>
-              {trip.favorite && (
-                <ICONS.favorite className="h-5 w-5 inline text-danger me-2" />
-              )}
-              {trip.name}
-            </TableCell>
+  return (
+    <tr
+      className={[
+        tripIdx % 2 === 0 ? "bg-table-row" : "bg-table-row-alt",
+        "group",
+      ].join(" ")}
+      onContextMenu={handleContextMenu}
+    >
+      <>
+        {/* Select */}
+        <TableCell rowSpan={rowSpan} className="relative pl-5">
+          <div
+            className={`
+              absolute left-0 top-0 bottom-0 w-1
+              ${trip.status === "planned" ? "bg-status-planned" : ""}
+              ${trip.status === "upcoming" ? "bg-status-upcoming" : ""}
+              ${trip.status === "in-progress" ? "bg-status-in-progress" : ""}
+            `}
+          />
+          <Checkbox
+            checked={selected}
+            onChange={() => onSelect(trip.id)}
+            aria-label={`Select trip ${trip.name}`}
+          />
+        </TableCell>
 
-            {/* Rating column */}
-            <TableCell rowSpan={rowSpan}>
-              <StarRatingInput
-                value={typeof trip.rating === "number" ? trip.rating : 0}
-                onChange={(rating) => onRatingChange(trip.id, rating)}
-              />
-            </TableCell>
-          </>
-        )}
+        {/* Name */}
+        <TableCell rowSpan={rowSpan}>
+          {trip.favorite && (
+            <ICONS.favorite className="h-5 w-5 inline text-danger me-2" />
+          )}
+          {trip.name}
+        </TableCell>
 
-        {/* Countries column */}
-        <TableCell
-          className={`py-2 ${idx === 0} ${
-            idx === (trip.countryCodes?.length ?? 1) - 1
-          }`}
-        >
-          {country ? (
-            <CountryWithFlag isoCode={country.isoCode} name={country.name} />
-          ) : code ? (
-            <span>{code}</span>
-          ) : (
-            <span className="text-muted italic">No country</span>
+        {/* Rating */}
+        <TableCell rowSpan={rowSpan}>
+          <StarRatingInput
+            value={typeof trip.rating === "number" ? trip.rating : 0}
+            onChange={(rating) => onRatingChange(trip.id, rating)}
+          />
+        </TableCell>
+
+        {/* Countries */}
+        <TableCell className="py-2">
+          {sortedCountries.length > 0 && (
+            <TripCountriesList countries={sortedCountries} />
           )}
         </TableCell>
 
-        {idx === 0 && (
-          <>
-            {/* Dates */}
-            <TableCell rowSpan={rowSpan}>
-              {trip.startDate ? new Date(trip.startDate).getFullYear() : "TBD"}
-            </TableCell>
-            <TableCell rowSpan={rowSpan}>
-              {trip.startDate ? formatDate(trip.startDate) : "TBD"}
-            </TableCell>
-            <TableCell rowSpan={rowSpan}>
-              {trip.endDate ? formatDate(trip.endDate) : "TBD"}
-            </TableCell>
-            <TableCell rowSpan={rowSpan}>
-              {trip.startDate && trip.endDate ? trip.fullDays : "TBD"}
-            </TableCell>
+        {/* Dates */}
+        <TableCell rowSpan={rowSpan}>
+          {trip.startDate ? new Date(trip.startDate).getFullYear() : "TBD"}
+        </TableCell>
+        <TableCell rowSpan={rowSpan}>
+          {trip.startDate ? formatDate(trip.startDate) : "TBD"}
+        </TableCell>
+        <TableCell rowSpan={rowSpan}>
+          {trip.endDate ? formatDate(trip.endDate) : "TBD"}
+        </TableCell>
+        <TableCell rowSpan={rowSpan}>
+          {trip.startDate && trip.endDate ? trip.fullDays : "TBD"}
+        </TableCell>
 
-            {/* Participants */}
-            <TableCell rowSpan={rowSpan}>
-              <ParticipantsList uids={trip.participants ?? []} />
-            </TableCell>
+        {/* Participants */}
+        <TableCell rowSpan={rowSpan}>
+          <ParticipantsList uids={trip.participants ?? []} />
+        </TableCell>
 
-            {/* Categories */}
-            <TableCell rowSpan={rowSpan}>
-              <ChipList<{ value: string; label: string }>
-                items={(trip.categories ?? []).map((cat) => {
-                  const fallback = capitalizeWords(cat.replace(/-/g, " "));
-                  return {
-                    value: cat,
-                    label: t(`categories.${cat}`, fallback),
-                  };
-                })}
-                renderItem={(opt) => (
-                  <span className="flex items-center gap-1" key={opt.value}>
-                    {TRIP_CATEGORY_ICONS[opt.value] ?? null}
-                    <span>{opt.label}</span>
-                  </span>
-                )}
-              />
-            </TableCell>
+        {/* Categories */}
+        <TableCell rowSpan={rowSpan}>
+          <CategoriesList categories={trip.categories ?? []} />
+        </TableCell>
 
-            {/* Status */}
-            <TableCell rowSpan={rowSpan}>
-              <StatusCell status={trip.status} />
-            </TableCell>
+        {/* Status */}
+        <TableCell rowSpan={rowSpan}>
+          <TripStatusChip status={trip.status} />
+        </TableCell>
 
-            {/* Tags */}
-            <TableCell rowSpan={rowSpan}>
-              <ChipList
-                items={(trip.tags ?? []).map((tag) => {
-                  const fallback = capitalizeWords(tag.replace(/-/g, " "));
-                  return { value: tag, label: t(`tags.${tag}`, fallback) };
-                })}
-                colorClass="bg-purple-100 text-purple-800"
-                moreColorClass="bg-purple-200 text-purple-900"
-              />
-            </TableCell>
+        {/* Tags */}
+        <TableCell rowSpan={rowSpan}>
+          <TagsList tags={trip.tags ?? []} />
+        </TableCell>
 
-            {/* Actions */}
-            <TableCell rowSpan={rowSpan}>
-              <TripActions
-                trip={trip}
-                onViewInCalendar={onViewInCalendar}
-                onEdit={onEdit}
-                onDuplicate={onDuplicate}
-                onDelete={onDelete}
-              />
-            </TableCell>
-          </>
-        )}
-      </tr>
-    );
-  });
+        {/* Actions */}
+        <TableCell rowSpan={rowSpan}>
+          <TripActions
+            ref={actionsRef}
+            trip={trip}
+            onViewInCalendar={onViewInCalendar}
+            onEdit={onEdit}
+            onDuplicate={onDuplicate}
+            onDelete={onDelete}
+          />
+        </TableCell>
+      </>
+    </tr>
+  );
 }

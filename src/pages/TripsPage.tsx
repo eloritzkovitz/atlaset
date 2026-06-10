@@ -36,7 +36,6 @@ export default function TripsPage() {
 
   const [globalSearch, setGlobalSearch] = useState("");
   const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
-  const [showRowNumbers, setShowRowNumbers] = useState(false);
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
 
   // Set page title
@@ -176,8 +175,6 @@ export default function TripsPage() {
           setGlobalSearch={setGlobalSearch}
           resetFilters={resetFilters}
           selectedTripIds={selectedTripIds}
-          showRowNumbers={showRowNumbers}
-          setShowRowNumbers={setShowRowNumbers}
           setCalendarOpen={toggleCalendar}
           onAddTrip={handleAdd}
           onBulkDuplicate={handleBulkDuplicate}
@@ -188,6 +185,7 @@ export default function TripsPage() {
       {/* Table area */}
       <div className="flex-1 w-full mx-auto flex flex-col">
         <TripModal
+          key={trip?.id ?? "new-trip"}
           isOpen={modalOpen}
           trip={trip}
           onChange={setTrip}
@@ -225,7 +223,6 @@ export default function TripsPage() {
               onSelectTrip={handleSelectTrip}
               allSelected={allSelected}
               handleSelectAll={handleSelectAll}
-              showRowNumbers={showRowNumbers}
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}

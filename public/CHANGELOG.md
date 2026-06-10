@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-06-10
+
+- **[feature]** **Trips:** Added right-click behavior to open the menu
+- **[chore]** **Trips:** Redesigned various elements in the table and the modal
+- **[bugfix]** **Trips:** Fixed syncing the tentative dates state on editing a trip
+- **[bugfix]** **Trips:** Fixed various visual bugs
+
 ## 2026-06-06
 
 - **[bugfix]** **Trips:** Fixed sync issues with adding trip owner as participant on trip creation/duplication

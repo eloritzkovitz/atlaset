@@ -10,6 +10,7 @@ interface ChipListProps<T = string> {
   renderItem?: (item: T) => React.ReactNode;
   removable?: boolean;
   onRemove?: (item: T) => void;
+  getTooltipLabel?: (item: T) => string;
 }
 
 /** Renders a list of chips. */
@@ -21,6 +22,7 @@ export function ChipList<T>({
   renderItem,
   removable = false,
   onRemove,
+  getTooltipLabel,
 }: ChipListProps<T>) {
   const { t } = useTranslation("common");
 
@@ -39,11 +41,18 @@ export function ChipList<T>({
           {renderItem ? renderItem(item) : String(item)}
         </Chip>
       ))}
+
       {items.length > limit && (
         <Tooltip
           content={items
             .slice(limit)
             .map((item) => {
+              // Use the getTooltipLabel function if provided
+              if (getTooltipLabel) {
+                return getTooltipLabel(item);
+              }
+
+              // Otherwise, try to extract a label from the item or fallback to string representation
               if (typeof item === "object" && item !== null) {
                 if (
                   "label" in item &&

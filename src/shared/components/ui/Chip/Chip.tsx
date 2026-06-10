@@ -39,7 +39,6 @@ export function Chip({
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-muted-hover"
             }`}
-            title="Remove"
             onClick={disabled ? undefined : onRemove}
             onKeyDown={
               disabled
@@ -60,7 +59,6 @@ export function Chip({
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:text-muted-hover"
             }`}
-            title="Remove"
             onClick={onRemove}
             disabled={disabled}
           >

@@ -14,10 +14,7 @@
         "planned": "Planned",
         "upcoming": "Upcoming",
         "completed": "Completed",
-        "favorites": "Favorites",
-        "rowNumbers": "Row Numbers",
-        "showRowNumbers": "Show row numbers",
-        "hideRowNumbers": "Hide row numbers",
+        "favorites": "Favorites",       
         "filtersToggle": "Toggle {{label}}"
       },
       "calendar": {
