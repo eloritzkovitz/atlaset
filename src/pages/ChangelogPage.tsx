@@ -9,7 +9,10 @@ export default function ChangelogPage() {
   usePageTitle("Changelog | Atlaset");
 
   return (
-    <div className="prose prose-slate dark:prose-invert mx-auto p-4 max-w-3xl text-sm sm:text-base">
+    <div
+      dir="ltr"
+      className="prose prose-slate dark:prose-invert mx-auto p-4 max-w-3xl text-sm sm:text-base"
+    >
       <MarkdownFileRenderer
         content={content}
         error={error}
