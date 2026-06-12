@@ -42,31 +42,33 @@ export default function DocsPage() {
   );
 
   return (
-    <SidebarLayout
-      menu={
-        !(slug && !doc) ? (
-          <DocsPanelMenu
-            selectedPanel={slug ? (doc ? doc.file : undefined) : undefined}
-            setSelectedPanel={(file: string) => navigateToDoc(navigate, file)}
-          />
-        ) : undefined
-      }
-    >
-      <div className="w-full max-w-2xl">
-        {doc ? (
-          <MarkdownFileRenderer
-            content={content}
-            error={error}
-            components={getDocsMarkdownComponents((file) =>
-              navigateToDoc(navigate, file),
-            )}
-          />
-        ) : slug ? (
-          <DocsNotFound />
-        ) : (
-          <WelcomeDocsSection />
-        )}
-      </div>
-    </SidebarLayout>
+    <div dir="ltr">
+      <SidebarLayout
+        menu={
+          !(slug && !doc) ? (
+            <DocsPanelMenu
+              selectedPanel={slug ? (doc ? doc.file : undefined) : undefined}
+              setSelectedPanel={(file: string) => navigateToDoc(navigate, file)}
+            />
+          ) : undefined
+        }
+      >
+        <div className="w-full max-w-2xl">
+          {doc ? (
+            <MarkdownFileRenderer
+              content={content}
+              error={error}
+              components={getDocsMarkdownComponents((file) =>
+                navigateToDoc(navigate, file),
+              )}
+            />
+          ) : slug ? (
+            <DocsNotFound />
+          ) : (
+            <WelcomeDocsSection />
+          )}
+        </div>
+      </SidebarLayout>
+    </div>
   );
 }

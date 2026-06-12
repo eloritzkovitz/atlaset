@@ -1,4 +1,5 @@
 import { type JSX } from "react";
+import { useTranslation } from "react-i18next";
 import { GitHubButton } from "./GitHubButton";
 
 interface AppLinksProps {
@@ -17,11 +18,13 @@ export function AppLinks({
   showGitHub = true,
   direction = "row",
 }: AppLinksProps) {
+  const { t } = useTranslation("common");
+
   const links = [
-    { href: "/about", label: "About" },
-    { href: "/changelog", label: "Changelog" },
-    { href: "/privacy", label: "Privacy Policy" },
-    showDocs ? { href: "/docs", label: "Docs" } : undefined,
+    { href: "/about", label: t("links.about", "About") },
+    { href: "/changelog", label: t("links.changelog", "Changelog") },
+    { href: "/privacy", label: t("links.privacy", "Privacy Policy") },
+    showDocs ? { href: "/docs", label: t("links.docs", "Docs") } : undefined,
     showGitHub ? (
       <GitHubButton key="github" className={linkClassName} />
     ) : undefined,

@@ -1,5 +1,5 @@
 {
-  "appName": "אטלסט",
+  "appName": "Atlaset",
   "sidebar": {
     "expand": "הרחב סרגל צד",
     "collapse": "כווץ סרגל צד",
@@ -21,6 +21,12 @@
     "appearance": "מראה",
     "language": "שפה",
     "signOut": "התנתק"
+  },
+  "links": {
+    "about": "אודות",
+    "changelog": "יומן שינויים",
+    "privacy": "מדיניות פרטיות",
+    "docs": "מסמכים"
   },
   "actions": {
     "add": "הוספה",

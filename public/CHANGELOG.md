@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-06-12
+
+- **[feature]** **General:** Added language selection in the public footer
+- **[chore]** **General:** Added translations to home and auth pages and fixed layouts in LTR-exclusive pages and elements
+
 ## 2026-06-10
 
 - **[feature]** **Trips:** Added right-click behavior to open the menu

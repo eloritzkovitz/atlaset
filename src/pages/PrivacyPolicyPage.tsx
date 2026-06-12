@@ -9,8 +9,11 @@ export default function PrivacyPolicyPage() {
   usePageTitle("Privacy Policy | Atlaset");
 
   return (
-    <div className="prose dark:prose-invert mx-auto p-4 max-w-3xl text-sm sm:text-base">
-      <h1 className="text-5xl sm:text-6xl md:text-7xl text-center font-bold leading-tight drop-shadow-sm mb-8">
+    <div
+      dir="ltr"
+      className="prose dark:prose-invert mx-auto p-4 max-w-3xl text-sm sm:text-base"
+    >
+      <h1 className="text-5xl sm:text-6xl md:text-7xl text-center font-bold leading-tight mb-8">
         Privacy Policy
       </h1>
       <MarkdownFileRenderer
