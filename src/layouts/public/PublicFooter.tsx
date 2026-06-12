@@ -3,13 +3,13 @@ import { LanguageSelect } from "../language/LangtuageSelect";
 
 export function PublicFooter({ children }: { children?: React.ReactNode }) {
   return (
-    <footer className="bg-surface-alt py-4 text-center">
+    <footer className="bg-surface py-4 text-center">
       {children}
       <div className="flex items-center justify-center font-semibold mt-2 mb-1 gap-8">
-        <BrandCopyright showLogo={true} />
+        <BrandCopyright />
         <AppLinks
           className="!text-muted gap-8"
-          linkClassName="ms-3 !text-muted hover:text-muted/70"
+          linkClassName="!text-muted hover:text-muted/70"
         />
         <LanguageSelect />
       </div>
