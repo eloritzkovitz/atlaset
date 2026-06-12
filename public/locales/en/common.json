@@ -22,6 +22,12 @@
     "language": "Language",
     "signOut": "Sign out"
   },
+  "links": {
+    "about": "About",
+    "changelog": "Changelog",
+    "privacy": "Privacy Policy",
+    "docs": "Docs"
+  },
   "actions": {
     "add": "Add",
     "edit": "Edit",

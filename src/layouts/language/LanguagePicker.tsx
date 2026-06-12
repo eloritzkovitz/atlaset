@@ -1,15 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
+  ActionButton,
   Modal,
+  PanelHeader,
   SearchInput,
   Separator,
-  ActionButton,
-  PanelHeader,
-  MenuButton,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { mapLanguages, useLanguage } from "@features/settings";
+import { LanguageMenuList } from "./LanguageMenuList";
 
 interface LanguagePickerProps {
   isOpen: boolean;
@@ -79,25 +79,7 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
         />
         <Separator />
         <div className="max-h-64 overflow-auto mt-2">
-          {filtered.map((l) => (
-            <MenuButton
-              key={l.code}
-              icon={null}
-              onClick={() => handleSelect(l.code)}
-              ariaLabel={t("menu.language.selectAria")}
-              className={`w-full text-left py-2 px-3 flex items-center justify-between ${
-                l.code === current ? "font-semibold" : ""
-              }`}
-            >
-              <div className="flex-1">
-                <div>{l.native}</div>
-                <div className="text-sm text-muted/60">{l.localized}</div>
-              </div>
-              {l.code === current && (
-                <ICONS.selected className="text-success" />
-              )}
-            </MenuButton>
-          ))}
+          <LanguageMenuList languages={filtered} onSelect={handleSelect} />
         </div>
       </div>
     </Modal>

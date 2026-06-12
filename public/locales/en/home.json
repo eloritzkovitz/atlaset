@@ -1,0 +1,39 @@
+{
+  "pageTitle": "Atlaset: Your travel companion",
+  "hero": {
+    "title1": "Discover the World",
+    "title2": "with Atlaset",
+    "subtitle": "Track and visualize your journeys around the world with powerful features and an interactive map experience.",
+    "button": "Get Started"
+  },
+  "features": {
+    "worldMap": {
+      "title": "Interactive World Map",
+      "description": "Explore a customizable world map with country details, custom lists and filters."
+    },
+    "timeline": {
+      "title": "Trips & Timeline",
+      "description": "Plan, track, and reminisce your travels. See your visits and exploration progress across the years."
+    },
+    "customMaps": {
+      "title": "Custom Maps",
+      "description": "Create, import and export your own maps, with layers and markers."
+    },
+    "quizzes": {
+      "title": "Competitive Quizzes",
+      "description": "Test your knowledge of the world with fun, timed challenges. Reach the leaderboards!"
+    },
+    "analytics": {
+      "title": "Dashboard & Analytics",
+      "description": "Analyze your visits and travels with interactive charts, statistics and achievements."
+    },
+    "cloudSync": {
+      "title": "Cloud Sync & Offline",
+      "description": "Your data is always available—sync across devices or use it offline."
+    }
+  },
+  "callToAction": {
+    "title": "Ready to explore? Join Atlaset and start your journey today",
+    "button": "Get Started"
+  }
+}

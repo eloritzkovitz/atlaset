@@ -1,4 +1,5 @@
 import { AppLinks, BrandCopyright } from "@components";
+import { LanguageSelect } from "../language/LangtuageSelect";
 
 export function PublicFooter({ children }: { children?: React.ReactNode }) {
   return (
@@ -10,6 +11,7 @@ export function PublicFooter({ children }: { children?: React.ReactNode }) {
           className="!text-muted gap-8"
           linkClassName="ms-3 !text-muted hover:text-muted/70"
         />
+        <LanguageSelect />
       </div>
     </footer>
   );

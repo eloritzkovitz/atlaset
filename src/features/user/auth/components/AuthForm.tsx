@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ActionButton, Checkbox, PasswordField } from "@components";
 import { GoogleSignInButton } from "./GoogleSignInButton";
 
@@ -31,6 +32,7 @@ export function AuthForm({
   const [password, setPassword] = useState("");
   const [keepLoggedIn, setKeepLoggedIn] = useState(true);
   const [localError, setLocalError] = useState("");
+  const { t } = useTranslation("auth");
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +53,7 @@ export function AuthForm({
     <form onSubmit={handleSubmit} className="space-y-3">
       <input
         type="email"
-        placeholder="Email"
+        placeholder={t("login.emailLabel", "Email")}
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
@@ -61,7 +63,7 @@ export function AuthForm({
       <PasswordField
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
+        placeholder={t("login.passwordLabel", "Password")}
         required
         className="bg-input w-full px-3 py-2 border-none rounded-full"
         hideLabel
@@ -76,7 +78,7 @@ export function AuthForm({
             className="text-sm text-primary dark:text-gray-100 hover:underline"
             disabled={!email}
           >
-            Forgot your password?
+            {t("login.forgotPassword", "Forgot your password?")}
           </button>
         </div>
       )}
@@ -85,7 +87,7 @@ export function AuthForm({
           <Checkbox
             checked={keepLoggedIn}
             onChange={setKeepLoggedIn}
-            label="Keep me logged in"
+            label={t("login.keepLoggedIn", "Keep me logged in")}
           />
         </div>
       )}
@@ -97,16 +99,22 @@ export function AuthForm({
         variant="primary"
         className="w-full py-2 mt-4 !rounded-full"
       >
-        {buttonText || (mode === "signup" ? "Register" : "Sign In")}
+        {buttonText ||
+          (mode === "signup"
+            ? t("login.signupButton", "Register")
+            : t("login.signinButton", "Sign in"))}
       </ActionButton>
       {showGoogleSignInButton && onGoogleSignIn && (
         <>
           <div className="flex items-center my-4">
             <div className="flex-grow border-t border-border" />
-            <span className="mx-4 text-muted">or</span>
+            <span className="mx-4 text-muted">{t("login.or", "or")}</span>
             <div className="flex-grow border-t border-border" />
           </div>
-          <GoogleSignInButton onClick={onGoogleSignIn} />
+          <GoogleSignInButton
+            onClick={onGoogleSignIn}
+            text={t("login.googleSignIn", "Sign in with Google")}
+          />
         </>
       )}
       {children}
