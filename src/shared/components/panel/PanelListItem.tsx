@@ -1,8 +1,13 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
-import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { useMenuActions, useMenuPosition, useRenameControls } from "@hooks";
+import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
+import {
+  useContextMenu,
+  useMenuActions,
+  useMenuPosition,
+  useRenameControls,
+} from "@hooks";
 import { RenameControls } from "./RenameControls";
 import { ActionButton } from "../action/ActionButton";
 import { Menu } from "../menu/Menu";
@@ -59,7 +64,6 @@ export function PanelListItem({
   menuPosition = "right",
   children,
 }: PanelListItemProps) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation("common");
@@ -80,8 +84,19 @@ export function PanelListItem({
   // Confirmation modal state
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  // Position menu
-  const menuStyle = useMenuPosition(
+  // Context menu state and handlers
+  const {
+    open: menuOpen,
+    setOpen: setMenuOpen,
+    menuStyle: contextMenuStyle,
+    handleContextMenu,
+    handleCloseContext,
+  } = useContextMenu({
+    zIndex: 10100,
+    disabled: isEditing,
+    ignoreRefs: [menuRef, btnRef],
+  });
+  const baseMenuStyle = useMenuPosition(
     menuOpen,
     btnRef,
     menuRef,
@@ -90,6 +105,10 @@ export function PanelListItem({
     "adjacent",
     false,
   );
+  const dynamicMenuStyle: React.CSSProperties =
+    contextMenuStyle.position === "fixed"
+      ? contextMenuStyle
+      : { ...baseMenuStyle, zIndex: 10100 };
 
   // Close menu when renaming
   if (isEditing && menuOpen) setMenuOpen(false);
@@ -123,7 +142,7 @@ export function PanelListItem({
           }
         : undefined,
     },
-    setMenuOpen,
+    handleCloseContext,
   );
 
   return (
@@ -137,6 +156,7 @@ export function PanelListItem({
         onDragStart={onDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
+        onContextMenu={handleContextMenu}
         style={{
           cursor: onDragStart
             ? dragged
@@ -199,9 +219,9 @@ export function PanelListItem({
             />
             <Menu
               open={menuOpen}
-              onClose={() => setMenuOpen(false)}
+              onClose={handleCloseContext}
               className="panel-listitem-menu !p-2 !z-[10100]"
-              style={menuStyle}
+              style={dynamicMenuStyle}
               containerRef={menuRef}
               disableScroll={true}
             >

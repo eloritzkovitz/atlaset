@@ -1,21 +1,19 @@
-import { forwardRef, useImperativeHandle, useState, useRef } from "react";
+import { forwardRef, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
+import { useMapView } from "@contexts/MapViewContext";
 import type { Country } from "@features/countries";
 import {
-  useClickOutside,
+  useContextMenu,
   useFloatingHover,
   useFloatingMenuPosition,
-  useKeyHandler,
   useMenuActions,
   useMenuPosition,
 } from "@hooks";
-import type { Point } from "@types";
 import { CountryListsMenu } from "./CountryListsMenu";
 import { useCountryActions } from "../../hooks/useCountryActions";
-import { useMapView } from "@contexts/MapViewContext";
 
 interface CountryActionsProps {
   country: Country | null;
@@ -31,48 +29,32 @@ export const CountryActions = forwardRef(function CountryActions(
   const { countryLists, openAddModal, handleUpdate } = useCountryLists();
   const { centerOnCountry } = useMapView();
   const { t } = useTranslation("atlas");
-  const [open, setOpen] = useState(false);
   const [listMenuOpen, setListMenuOpen] = useState(false);
-  const [contextCoords, setContextCoords] = useState<Point | null>(null);
 
   const menuRef = useRef<HTMLDivElement>(null);
   const listMenuRef = useRef<HTMLDivElement>(null);
   const addToListRowRef = useRef<HTMLDivElement>(null);
 
-  // Expose method to trigger menu position dynamically from right-click events
+  // Hover handlers for the lists submenu
   const {
     hoverHandlers: listMenuHoverHandlers,
     floatingHandlers: listButtonHoverHandlers,
   } = useFloatingHover(true, 150);
 
-  // Expose method to trigger menu position dynamically from right-click events
-  useImperativeHandle(ref, () => ({
-    openAtCoordinates: (x: number, y: number) => {
-      setContextCoords({ x, y });
-      setOpen(true);
-    },
-  }));
-
-  // Close menu and reset context coordinates
-  const handleClose = () => {
-    setOpen(false);
-    setListMenuOpen(false);
-    setContextCoords(null);
-  };
-
-  // Close menu on outside click or Escape key press
-  useClickOutside(
-    [
-      menuRef as React.RefObject<HTMLElement>,
-      listMenuRef as React.RefObject<HTMLElement>,
-    ],
-    handleClose,
-    open || listMenuOpen,
-  );
-  useKeyHandler(handleClose, ["Escape"], open);
-
-  // Position menu dynamically based on context coordinates or trigger element
-  const menuStyle = useMenuPosition(
+  // Context menu management
+  const {
+    open,
+    setOpen,
+    menuStyle: contextMenuStyle,
+    contextCoords,
+    handleCloseContext,
+  } = useContextMenu({
+    zIndex: 1000,
+    forwardedRef: ref,
+    ignoreRefs: [menuRef, listMenuRef, addToListRowRef],
+    onClose: () => setListMenuOpen(false),
+  });
+  const baseMenuStyle = useMenuPosition(
     open,
     triggerRef,
     menuRef,
@@ -90,16 +72,10 @@ export const CountryActions = forwardRef(function CountryActions(
     "adjacent",
     false,
   );
-
-  const dynamicMenuStyle: React.CSSProperties = contextCoords
-    ? {
-        position: "fixed",
-        left: contextCoords.x,
-        top: contextCoords.y,
-        transform: "none",
-        zIndex: 1000,
-      }
-    : menuStyle;
+  const dynamicMenuStyle: React.CSSProperties =
+    contextMenuStyle.position === "fixed"
+      ? contextMenuStyle
+      : { ...baseMenuStyle, zIndex: 1000 };
 
   // Calculate list menu position with fallback to dynamic coordinates if available
   const parentMenuWidth = menuRef.current?.offsetWidth ?? 180;
@@ -124,10 +100,16 @@ export const CountryActions = forwardRef(function CountryActions(
       finalCalculatedTop,
     );
 
+  // Unified global close handler for all menus
+  const handleCloseAll = () => {
+    handleCloseContext();
+    setListMenuOpen(false);
+  };
+
   // Get action configurations based on country and context
   const actions = useCountryActions({
     country: country!,
-    onCloseMenu: handleClose,
+    onCloseMenu: handleCloseAll,
     onClosePanel: onCloseListPanel,
   });
 
@@ -147,21 +129,17 @@ export const CountryActions = forwardRef(function CountryActions(
     const targetList = countryLists.find((l) => l.id === listId);
     if (!targetList) return;
 
-    setListMenuOpen(false);
-    setOpen(false);
+    handleCloseAll();
 
     await handleUpdate({
       ...targetList,
       countryCodes: [...targetList.countryCodes, country.isoCode],
     });
-    setContextCoords(null);
   };
 
   // Handler to create a new list with the country from the menu option
   const handleCreateNewListFromMenu = () => {
-    setListMenuOpen(false);
-    setOpen(false);
-    setContextCoords(null);
+    handleCloseAll();
 
     setTimeout(() => {
       openAddModal([country.isoCode]);
@@ -172,7 +150,7 @@ export const CountryActions = forwardRef(function CountryActions(
     <>
       <Menu
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseAll}
         className="country-actions-menu !p-2"
         style={dynamicMenuStyle}
         containerRef={menuRef}
@@ -180,7 +158,7 @@ export const CountryActions = forwardRef(function CountryActions(
       >
         <MenuButton
           onClick={() => {
-            handleClose();
+            handleCloseAll();
             if (onCountryInfo) onCountryInfo(country);
           }}
           icon={<ICONS.view className="me-2" />}
@@ -231,7 +209,7 @@ export const CountryActions = forwardRef(function CountryActions(
               hoverHandlers={listMenuHoverHandlers}
               onAddCountryToList={handleAddCountryToList}
               onCreateNewList={handleCreateNewListFromMenu}
-              onClose={handleClose}
+              onClose={handleCloseAll}
             />
           )}
         </div>
@@ -244,7 +222,7 @@ export const CountryActions = forwardRef(function CountryActions(
               key={action.id}
               onClick={() => {
                 action.onClick();
-                handleClose();
+                handleCloseAll();
               }}
               onMouseEnter={() => setListMenuOpen(false)}
               icon={

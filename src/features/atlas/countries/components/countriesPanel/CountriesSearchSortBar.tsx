@@ -170,7 +170,7 @@ export function CountriesSearchSortBar({
           ariaLabel={t("countries.actions.newList")}
           title={t("countries.actions.newList")}
           variant="secondary"
-          onClick={onAddList}
+          onClick={() => onAddList?.()}
           className="!rounded-full !px-2"
         />
       </div>
