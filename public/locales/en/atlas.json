@@ -21,7 +21,7 @@
     "zoomIn": "Zoom in",
     "zoomOut": "Zoom out",
     "resetView": "Reset view"
-  },  
+  },
   "shared": {
     "viewingPrefix": "Viewing",
     "byPrefix": "by",
@@ -35,7 +35,11 @@
     "actions": {
       "refreshData": "Refresh country data",
       "showFilters": "Show Filters",
-      "hideFilters": "Hide Filters"
+      "hideFilters": "Hide Filters",
+      "viewDetails": "View Details",
+      "centerMap": "Center on Map",
+      "viewDashboard": "View in Dashboard",
+      "wikipedia": "View on Wikipedia"
     },
     "searchPlaceholder": "Search countries",
     "lists": {
@@ -92,14 +96,6 @@
       }
     },
     "details": {
-      "header": {
-        "centerMap": "Center map",
-        "centerMapAria": "Center map on country",
-        "viewFull": "View full details",
-        "viewFullAria": "View full details",
-        "wikipedia": "Wikipedia",
-        "wikipediaAria": "Open Wikipedia article"
-      },
       "status": {
         "home": "Home country",
         "visited": "Visited",

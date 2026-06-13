@@ -1,6 +1,4 @@
-import { FaWikipediaW } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { PanelHeader, ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
 import {
@@ -8,14 +6,13 @@ import {
   VisitedStatusIndicator,
   type Country,
 } from "@features/countries";
-import { useLanguage } from "@features/settings";
+import { useCountryActions } from "../../hooks/useCountryActions";
 
 interface CountryDetailsHeaderProps {
   country: Country;
   isVisited: boolean;
   isHome: boolean;
   isUpcoming?: boolean;
-  centerOnCountry?: (isoCode: string) => void;
   onClose: () => void;
 }
 
@@ -24,12 +21,15 @@ export function CountryDetailsHeader({
   isVisited,
   isHome,
   isUpcoming = false,
-  centerOnCountry,
   onClose,
 }: CountryDetailsHeaderProps) {
-  const navigate = useNavigate();
   const { t } = useTranslation("atlas");
-  const { current: lang } = useLanguage();
+
+  // Get action configurations based on country and context
+  const actions = useCountryActions({
+    country,
+    onClosePanel: onClose,
+  });
 
   return (
     <PanelHeader
@@ -41,47 +41,26 @@ export function CountryDetailsHeader({
             className="font-bold text-lg"
           />
           <span className="text-muted text-sm">({country.isoCode})</span>
-          <VisitedStatusIndicator visited={isVisited} isHome={isHome} isUpcoming={isUpcoming} />
+          <VisitedStatusIndicator
+            visited={isVisited}
+            isHome={isHome}
+            isUpcoming={isUpcoming}
+          />
         </span>
       }
       showSeparator
     >
       <div className="flex gap-2">
-        {centerOnCountry && (
+        {actions.map((action) => (
           <ActionButton
-            onClick={() => centerOnCountry(country.isoCode)}
-            ariaLabel={t("countries.details.header.centerMapAria")}
-            title={t("countries.details.header.centerMap")}
-            icon={<ICONS.center />}
+            key={action.id}
+            onClick={action.onClick}
+            ariaLabel={action.ariaLabel}
+            title={action.label}
+            icon={action.icon}
             rounded
           />
-        )}
-        <ActionButton
-          onClick={() => {
-            onClose();
-            navigate(
-              `/dashboard/countries/${country.region}/${country.subregion}/${country.isoCode}`,
-            );
-          }}
-          ariaLabel={t("countries.details.header.viewFullAria")}
-          title={t("countries.details.header.viewFull")}
-          icon={<ICONS.exploration />}
-          rounded
-        />
-        <ActionButton
-          onClick={() => {
-            const langSubtag = (lang || "en").split("-")[0];
-            const page = country.name.replace(/ /g, "_");
-            const url = `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(
-              page,
-            )}`;
-            window.open(url, "_blank", "noopener,noreferrer");
-          }}
-          ariaLabel={t("countries.details.header.wikipediaAria")}
-          title={t("countries.details.header.wikipedia")}
-          icon={<FaWikipediaW />}
-          rounded
-        />
+        ))}
         <ActionButton
           onClick={onClose}
           ariaLabel={t("common:actions.close")}

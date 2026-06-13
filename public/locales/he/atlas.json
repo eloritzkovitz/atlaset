@@ -33,9 +33,13 @@
   "countries": {
     "title": "מדינות",
     "actions": {
-      "refreshData": "רענן נתוני מדינות",
-      "showFilters": "הצג מסננים",
-      "hideFilters": "הסתר מסננים"
+      "refreshData": "רענון נתוני מדינות",
+      "showFilters": "הצגת מסננים",
+      "hideFilters": "הסתרת מסננים",
+      "viewDetails": "צפייה בפרטים",
+      "centerMap": "מרכוז על המפה",
+      "viewDashboard": "צפייה בלוח הבקרה",
+      "wikipedia": "צפייה בוויקיפדיה"
     },
     "searchPlaceholder": "חפש מדינות",
     "lists": {

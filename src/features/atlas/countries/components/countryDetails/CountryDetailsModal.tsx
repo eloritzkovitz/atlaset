@@ -82,7 +82,6 @@ export function CountryDetailsModal({
             isVisited={isVisited}
             isHome={homeCountry === currentCountry.isoCode}
             isUpcoming={isUpcoming}
-            centerOnCountry={centerOnCountry}
             onClose={onClose}
           />
           <CountryDetailsPanel
