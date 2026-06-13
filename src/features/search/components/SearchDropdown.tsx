@@ -17,9 +17,11 @@ export function SearchDropdown() {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  // Open dropdown when input is focused
-  const handleFocus = () => {
-    setDropdownOpen(true);
+  // Open dropdown when input is clicked
+  const handleInputClick = (e: React.MouseEvent) => {
+    if (e.button === 0) {
+      setDropdownOpen(true);
+    }
   };
 
   // Close dropdown when clicking outside
@@ -63,14 +65,14 @@ export function SearchDropdown() {
         ref={inputRef}
         value={search.searchTerm}
         onChange={search.setSearchTerm}
-        onFocus={handleFocus}
-        placeholder={t("search.placeholder")}
-        showClear={false}
+        onClick={handleInputClick}
         onKeyDown={(e) => {
           if (e.key === "Enter" && search.searchTerm) {
             handleSearchSubmit(search.searchTerm);
           }
         }}
+        placeholder={t("search.placeholder")}
+        showClear={false}
       />
       {dropdownOpen && hasContent && (
         <Menu

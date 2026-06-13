@@ -85,6 +85,7 @@ export function WorldMap({
         maxHeight: "100dvh",
         cursor: isAddingMarker ? "crosshair" : "default",
       }}
+      onContextMenu={(e) => e.preventDefault()}
     >
       <MapSvgContainer
         ref={svgRef}

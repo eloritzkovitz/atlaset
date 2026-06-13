@@ -1,12 +1,12 @@
 import { useRef, useState, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
-import { FaMagnifyingGlass, FaXmark } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { useKeyboardFocusRing, useKeyHandler } from "@hooks";
 
 interface SearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  onFocus?: () => void;
+  onClick?: (e: React.MouseEvent) => void;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   showClear?: boolean;
@@ -22,7 +22,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     {
       value,
       onChange,
-      onFocus,
+      onClick,
       onKeyDown,
       placeholder,
       showClear = true,
@@ -109,7 +109,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           </div>
         )}
         {showIcon !== false && (
-          <FaMagnifyingGlass className="absolute start-3 top-1/2 transform -translate-y-1/2 text-muted z-20" />
+          <ICONS.search className="absolute start-3 top-1/2 transform -translate-y-1/2 text-muted z-20" />
         )}
         <input
           ref={ref || inputRef}
@@ -122,9 +122,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 e.target as HTMLInputElement
               ).scrollLeft;
           }}
-          onFocus={() => {
-            setIsFocused(true);
-            if (onFocus) onFocus();
+          onClick={(e) => {
+            if (onClick) onClick(e);
           }}
           onBlur={() => setIsFocused(false)}
           onKeyDown={(e) => {
@@ -168,7 +167,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             }}
             className="absolute end-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none z-30"
           >
-            <FaXmark />
+            <ICONS.close />
           </button>
         )}
       </div>
