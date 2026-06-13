@@ -18,7 +18,8 @@ interface CountryItemProps {
   onClick?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
-  view: "grid" | "list";
+  onContextMenu?: (event: React.MouseEvent, country: Country) => void;
+  view: "grid" | "list";  
 }
 
 export function CountryItem({
@@ -35,6 +36,7 @@ export function CountryItem({
   onClick,
   onMouseEnter,
   onMouseLeave,
+  onContextMenu,
   view,
 }: CountryItemProps) {
   const { isMobile } = useScreenSize();
@@ -57,6 +59,7 @@ export function CountryItem({
       onClick={onClick}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
+      onContextMenu={(event) => onContextMenu?.(event, country)}
       className={`group ${baseClass}
         ${isHighlighted ? "bg-blue-50 dark:bg-gray-500 font-bold" : ""}
         ${!isVisited ? "opacity-50" : ""}

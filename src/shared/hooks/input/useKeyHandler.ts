@@ -1,6 +1,5 @@
-import { useRef } from "react";
+import {  useEffect, useRef } from "react";
 import type { Key, KeyHandler, Modifier } from "@types";
-import { useEventListener } from "../dom/useEventListener";
 
 /**
  * Handles keyboard events with optional modifier keys.
@@ -8,33 +7,33 @@ import { useEventListener } from "../dom/useEventListener";
  * @param keys - Array of key names to listen for (e.g., ["Escape", "ArrowLeft"]). Empty array means all keys.
  * @param enabled - If false, disables the handler.
  * @param modifiers - Array of required modifier keys (e.g., ["Ctrl", "Shift"]).
+ * @param target - Optional specific element or ref to listen to instead of the global window.
  */
 export function useKeyHandler(
   handler: KeyHandler,
   keys: Key[] = [],
   enabled: boolean = true,
   modifiers: Modifier[] = [],
+  target: EventTarget | React.RefObject<EventTarget | null> = window,
 ) {
   const handlerRef = useRef(handler);
 
   // Update ref if handler changes
   handlerRef.current = handler;
 
-  useEventListener(
-    "keydown",
-    (e: Event) => {
-      if (!enabled) return;
+  useEffect(() => {
+    if (!enabled) return;
+
+    const handleKeyDown = (e: Event) => {
       const event = e as KeyboardEvent;
+
       // Ignore if focus is on input, textarea, or contenteditable
       const tag = (document.activeElement?.tagName || "").toLowerCase();
-
-      // Check if active element is an input, textarea, or contenteditable
       const isInput =
         tag === "input" ||
         tag === "textarea" ||
         (document.activeElement as HTMLElement)?.isContentEditable;
 
-      // If focus is on an input, ignore the key event to avoid interfering with typing
       if (isInput) return;
 
       // Check if the pressed key and modifiers match
@@ -46,10 +45,23 @@ export function useKeyHandler(
         (!modifiers.includes("Alt") || event.altKey) &&
         (!modifiers.includes("Shift") || event.shiftKey) &&
         (!modifiers.includes("Meta") || event.metaKey);
+
       if (keyMatch && modifiersMatch) {
+        event.stopPropagation();
         handlerRef.current(event);
       }
-    },
-    window,
-  );
+    };
+
+    // Resolve the target element to attach the event listener
+    const activeTarget =
+      target && "current" in target ? target.current : target;
+    if (!activeTarget) return;
+
+    // Add the event listener to the resolved target
+    activeTarget.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      activeTarget.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [enabled, keys, modifiers, target]);
 }

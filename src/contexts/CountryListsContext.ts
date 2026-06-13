@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import type { Layer } from "@features/atlas/layers";
-import type { CountryList } from "@features/countries/types";
+import type { CountryList } from "@features/countries";
 
 export interface CountryListsContextValue {
   countryLists: CountryList[];
@@ -8,13 +8,17 @@ export interface CountryListsContextValue {
   selectedListId: string | null;
   setSelectedListId: (id: string | null) => void;
   reloadCountryLists: () => Promise<void>;
+  openAddModal: (initialCountryCodes?: string[]) => void;
+  openEditModal: (listId: string) => void;
   addList: (list: CountryList) => Promise<void>;
   createListFromLayer: (
     layer: Layer,
     onLinked?: (listId: string) => void,
   ) => Promise<string>;
-  updateList: (list: CountryList) => Promise<void>;
-  deleteList: (id: string) => Promise<void>;
+  handleModalChange: (updatedList: CountryList) => void;
+  handleSave: (list: CountryList) => Promise<void>;
+  handleUpdate: (list: CountryList) => Promise<void>;
+  handleDelete: (id: string) => Promise<void>;
 }
 
 export const CountryListsContext = createContext<

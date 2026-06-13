@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -6,6 +6,7 @@ import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { CountryDisplayPanel, type Country } from "@features/countries";
 import { useVisitStats } from "@features/visits";
 import { useListNavigation } from "@hooks";
+import { CountryActions } from "./CountryActions";
 import { CountryVisitBadge } from "./CountryVisitBadge";
 
 interface CountryListViewProps {
@@ -45,6 +46,24 @@ export function CountryListView({
     onItemInfo: onCountryInfo,
     enabled: uiVisible && showCountries && isFocused,
   });
+
+  // Context menu state for right-click actions
+  const [selectedContextCountry, setSelectedContextCountry] =
+    useState<Country | null>(null);
+  const countryActionsRef = useRef<{
+    openAtCoordinates: (x: number, y: number) => void;
+  } | null>(null);
+  const activeRowRef = useRef<HTMLElement | null>(null);
+
+  // Handle right-click context menu on country rows
+  const handleContextMenu = (e: React.MouseEvent, country: Country) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    activeRowRef.current = e.currentTarget as HTMLElement;
+    setSelectedContextCountry(country);
+    countryActionsRef.current?.openAtCoordinates(e.clientX, e.clientY);
+  };
 
   // Precompute previous years' visits
   const { visitCountByIsoCode, previouslyVisitedIsoCodes } = useVisitStats(
@@ -89,11 +108,18 @@ export function CountryListView({
           onSelect={onSelect}
           onHover={onHover}
           onCountryInfo={onCountryInfo}
+          onContextMenu={handleContextMenu}
           renderBadge={renderBadge}
           showBadges={true}
           showFlags={true}
         />
       </div>
+      <CountryActions
+        ref={countryActionsRef}
+        triggerRef={activeRowRef}
+        country={selectedContextCountry}
+        onCountryInfo={onCountryInfo}
+      />
     </div>
   );
 }

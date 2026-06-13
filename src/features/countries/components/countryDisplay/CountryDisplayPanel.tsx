@@ -13,10 +13,11 @@ interface CountryDisplayPanelProps {
   onSelect?: (isoCode: string | null) => void;
   onHover?: (isoCode: string | null) => void;
   onCountryInfo?: (country: Country) => void;
+  onContextMenu?: (event: React.MouseEvent, country: Country) => void;
   renderBadge?: (country: Country) => React.ReactNode;
   showFlags?: boolean;
   showBadges?: boolean;
-  className?: string;
+  className?: string;  
 }
 
 export const CountryDisplayPanel = React.forwardRef<
@@ -34,10 +35,11 @@ export const CountryDisplayPanel = React.forwardRef<
       onSelect,
       onHover,
       onCountryInfo,
+      onContextMenu,
       renderBadge,
       showFlags = true,
       showBadges = false,
-      className = "",
+      className = "",      
     },
     ref,
   ) => {
@@ -68,6 +70,7 @@ export const CountryDisplayPanel = React.forwardRef<
                     onMouseEnter={() => onHover?.(country.isoCode)}
                     onMouseLeave={() => onHover?.(null)}
                     view="list"
+                    onContextMenu={onContextMenu}
                   />
                 </li>
               ))

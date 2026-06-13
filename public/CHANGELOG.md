@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-06-13
+
+- **[feature]** **Countries:** Added right-click actions to the list view
+- **[feature]** **Countries:** Added new action for quick addition of countries to lists or creating new lists
+- **[chore]** **General:** Improved right-click behavior across menus
+
 ## 2026-06-12
 
 - **[feature]** **General:** Added language selection in the public footer

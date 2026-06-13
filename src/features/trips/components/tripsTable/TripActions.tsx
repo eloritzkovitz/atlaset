@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState, useRef } from "react";
+import { forwardRef, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ActionButton,
@@ -11,14 +11,12 @@ import {
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import {
-  useClickOutside,
+  useContextMenu,
   useFloatingHover,
   useFloatingMenuPosition,
-  useKeyHandler,
   useMenuActions,
   useMenuPosition,
 } from "@hooks";
-import type { Point } from "@types";
 import type { Trip } from "../../types";
 import { hasValidStartDate } from "../../utils/trips";
 
@@ -36,60 +34,32 @@ export const TripActions = forwardRef(function TripActions(
 ) {
   const { t } = useTranslation("trips");
   const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
-  const [open, setOpen] = useState(false);
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
-  const [contextCoords, setContextCoords] = useState<Point | null>(null);
 
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
 
+  // Hover handlers for the rate submenu
   const {
     hoverHandlers: rateMenuHoverHandlers,
     floatingHandlers: rateButtonHoverHandlers,
   } = useFloatingHover(true, 150);
 
-  // Expose method to open menu at specific coordinates for context menu support
-  useImperativeHandle(ref, () => ({
-    openAtCoordinates: (x: number, y: number) => {
-      setContextCoords({ x, y });
-      setOpen(true);
-    },
-  }));
-
-  // Clean interceptor to wipe coordinates when resetting menus
-  const handleClose = () => {
-    setOpen(false);
-    setRateMenuOpen(false);
-    setContextCoords(null);
-  };
-
-  // Close both menus when clicking outside
-  useClickOutside(
-    [
-      menuRef as React.RefObject<HTMLElement>,
-      btnRef as React.RefObject<HTMLElement>,
-      rateMenuRef as React.RefObject<HTMLElement>,
-    ],
-    () => {
-      setOpen(false);
-      setRateMenuOpen(false);
-    },
-    open || rateMenuOpen,
-  );
-
-  // Close both menus on ESC key
-  useKeyHandler(
-    () => {
-      setOpen(false);
-      setRateMenuOpen(false);
-    },
-    ["Escape"],
-    open || rateMenuOpen,
-  );
-
-  // Position the menu when open
-  const menuStyle = useMenuPosition(
+  // Context menu management
+  const {
+    open,
+    setOpen,
+    menuStyle: contextMenuStyle,
+    contextCoords,
+    handleCloseContext,
+  } = useContextMenu({
+    zIndex: 1000,
+    forwardedRef: ref,
+    ignoreRefs: [menuRef, btnRef, rateMenuRef],
+    onClose: () => setRateMenuOpen(false),
+  });
+  const baseMenuStyle = useMenuPosition(
     open,
     btnRef,
     menuRef,
@@ -107,15 +77,10 @@ export const TripActions = forwardRef(function TripActions(
     "adjacent",
     false,
   );
-
-  const dynamicMenuStyle: React.CSSProperties = contextCoords
-    ? {
-        position: "fixed",
-        left: contextCoords.x,
-        top: contextCoords.y,
-        transform: "none",
-      }
-    : menuStyle;
+  const dynamicMenuStyle: React.CSSProperties =
+    contextMenuStyle.position === "fixed"
+      ? contextMenuStyle
+      : { ...baseMenuStyle, zIndex: 1000 };
 
   // Calculate rate menu left position to prevent overflow
   const rateMenuLeft =
@@ -145,6 +110,12 @@ export const TripActions = forwardRef(function TripActions(
     setOpen,
   );
 
+  // Unified global close handler for all menus
+  const handleCloseAll = () => {
+    handleCloseContext();
+    setRateMenuOpen(false);
+  };
+
   if (isShared) {
     return (
       <ActionButton
@@ -163,7 +134,7 @@ export const TripActions = forwardRef(function TripActions(
         <ActionButton
           onClick={(e) => {
             e.stopPropagation();
-            setContextCoords(null);
+            handleCloseAll();
             setOpen((v) => !v);
           }}
           ariaLabel={t("table.actions.moreActions")}
@@ -174,7 +145,7 @@ export const TripActions = forwardRef(function TripActions(
       </div>
       <Menu
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseAll}
         className="trips-actions-menu !p-2"
         style={dynamicMenuStyle}
         containerRef={menuRef}
@@ -183,7 +154,7 @@ export const TripActions = forwardRef(function TripActions(
         {hasValidStartDate(trip) && (
           <MenuButton
             onClick={() => {
-              setTimeout(handleClose, 300);
+              handleCloseAll();
               onViewInCalendar?.(trip);
             }}
             icon={<ICONS.calendar className="me-2" />}
@@ -195,7 +166,7 @@ export const TripActions = forwardRef(function TripActions(
         <MenuButton
           onClick={() => {
             menuActions.onEdit?.();
-            handleClose();
+            handleCloseAll();
           }}
           icon={<ICONS.edit className="me-2" />}
           className="w-full"
@@ -206,7 +177,7 @@ export const TripActions = forwardRef(function TripActions(
         <MenuButton
           onClick={() => {
             menuActions.onDuplicate?.();
-            handleClose();
+            handleCloseAll();
           }}
           icon={<ICONS.duplicate className="me-2" />}
           className="w-full"
@@ -216,7 +187,7 @@ export const TripActions = forwardRef(function TripActions(
         <MenuButton
           onClick={() => {
             menuActions.onFavorite?.();
-            handleClose();
+            handleCloseAll();
           }}
           icon={
             trip.favorite ? (
@@ -257,10 +228,10 @@ export const TripActions = forwardRef(function TripActions(
               menuRef={rateMenuRef}
               hoverHandlers={rateMenuHoverHandlers}
               onRate={(value) => {
-                setTimeout(handleClose, 300);
+                handleCloseAll();
                 if (updateTripRating) updateTripRating(trip.id, value);
               }}
-              onClose={handleClose}
+              onClose={handleCloseAll}
             />
           )}
         </div>
@@ -268,7 +239,7 @@ export const TripActions = forwardRef(function TripActions(
         <MenuButton
           onClick={() => {
             menuActions.onDelete?.();
-            handleClose();
+            handleCloseAll();
           }}
           icon={<ICONS.remove className="me-2" />}
           className="!text-danger w-full"
