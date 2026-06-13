@@ -37,6 +37,8 @@
       "showFilters": "Show Filters",
       "hideFilters": "Hide Filters",
       "viewDetails": "View Details",
+      "addToList": "Add to List",
+      "newList": "New list",
       "centerMap": "Center on Map",
       "viewDashboard": "View in Dashboard",
       "wikipedia": "View on Wikipedia"
@@ -46,7 +48,6 @@
       "all": "All",
       "sovereign": "Sovereign",
       "visited": "Visited",
-      "newList": "New list",
       "form": {
         "editTitle": "Edit List",
         "addTitle": "Add List",

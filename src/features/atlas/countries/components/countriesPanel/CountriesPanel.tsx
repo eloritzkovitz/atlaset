@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
@@ -10,12 +10,10 @@ import {
   sortCountries,
   useCountryData,
   type Country,
-  type CountryList,
 } from "@features/countries";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
-import { CountryListModal } from "./CountryListModal";
 import { CountryListView } from "./CountryListView";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
 import { useCountryFilters } from "../../hooks/useCountryFilters";
@@ -43,8 +41,8 @@ export function CountriesPanel({
     countryLists,
     selectedListId,
     setSelectedListId,
-    addList,
-    deleteList,
+    openAddModal,
+    openEditModal,
   } = useCountryLists();
   const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
@@ -55,59 +53,6 @@ export function CountriesPanel({
     showFilters,
     toggleFilters,
   } = useUI();
-
-  // Modal state
-  const [modalOpen, setModalOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentList, setCurrentList] = useState<CountryList | null>(null);
-
-  const openAddModal = useCallback(() => {
-    setCurrentList({ id: crypto.randomUUID(), name: "", countryCodes: [] });
-    setIsEditing(false);
-    setModalOpen(true);
-  }, []);
-
-  const openEditModal = useCallback(
-    (listId: string) => {
-      const list = countryLists.find((l) => l.id === listId);
-      if (list) {
-        setCurrentList({ ...list });
-        setIsEditing(true);
-        setModalOpen(true);
-      }
-    },
-    [countryLists],
-  );
-
-  const handleSave = useCallback(
-    async (list: CountryList) => {
-      await addList(list);
-      setModalOpen(false);
-      setCurrentList(null);
-      setIsEditing(false);
-    },
-    [addList],
-  );
-
-  const handleDelete = useCallback(
-    async (listId: string) => {
-      await deleteList(listId);
-      setModalOpen(false);
-      setCurrentList(null);
-      setIsEditing(false);
-    },
-    [deleteList],
-  );
-
-  const handleClose = useCallback(() => {
-    setModalOpen(false);
-    setCurrentList(null);
-    setIsEditing(false);
-  }, []);
-
-  const handleChange = useCallback((list: CountryList) => {
-    setCurrentList(list);
-  }, []);
 
   // Filter state
   const {
@@ -281,15 +226,6 @@ export function CountriesPanel({
           />
         </div>
       </Panel>
-      <CountryListModal
-        isOpen={modalOpen}
-        isEditing={isEditing}
-        list={currentList}
-        onChange={handleChange}
-        onDelete={handleDelete}
-        onSave={handleSave}
-        onClose={handleClose}
-      />
       {showCountries && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}

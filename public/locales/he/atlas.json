@@ -37,6 +37,8 @@
       "showFilters": "הצגת מסננים",
       "hideFilters": "הסתרת מסננים",
       "viewDetails": "צפייה בפרטים",
+      "addToList": "הוספה לרשימה",
+      "newList": "רשימה חדשה",
       "centerMap": "מרכוז על המפה",
       "viewDashboard": "צפייה בלוח הבקרה",
       "wikipedia": "צפייה בוויקיפדיה"
@@ -46,7 +48,6 @@
       "all": "הכל",
       "sovereign": "ריבוני",
       "visited": "ביקרתי",
-      "newList": "רשימה חדשה",
       "form": {
         "editTitle": "ערוך רשימה",
         "addTitle": "הוסף רשימה",

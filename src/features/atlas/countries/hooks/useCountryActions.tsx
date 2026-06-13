@@ -17,7 +17,7 @@ export interface CountryActionConfig {
 
 interface UseCountryActionsProps {
   country: Country;
-  onCloseMenu: () => void;
+  onCloseMenu?: () => void;
   onClosePanel?: () => void;
 }
 
@@ -40,10 +40,10 @@ export function useCountryActions({
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
-    if (!openState) onCloseMenu();
+    if (!openState && onCloseMenu) onCloseMenu();
   });
 
-  return [
+  return [    
     {
       id: "center-map",
       label: t("countries.actions.centerMap"),
