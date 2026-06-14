@@ -21,9 +21,8 @@ import {
   QuizSettings,
   type LobbyCardItem,
 } from "@features/quizzes";
-import { useUiHint } from "@hooks";
+import { useFlyTransition, usePageTitle, useUiHint } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
-import { useFlyTransition, usePageTitle } from "@hooks";
 
 // Lazy load leaderboards component
 const Leaderboards = lazy(() =>
@@ -155,12 +154,8 @@ export default function QuizzesPage() {
         return;
       }
 
-      // Quiz routes require auth
-      if (isAuthenticated()) {
-        setSettingsOpen({ route: card.route, key: card.key });
-      } else {
-        showAuthHint();
-      }
+      // Quiz routes
+      setSettingsOpen({ route: card.route, key: card.key });
     },
     [navigate, showAuthHint],
   );

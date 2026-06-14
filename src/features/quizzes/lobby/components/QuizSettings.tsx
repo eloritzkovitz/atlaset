@@ -4,6 +4,7 @@ import { FaUmbrellaBeach, FaStopwatch } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
 import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
+import { isAuthenticated } from "@utils/firebase";
 import type { Difficulty, GameMode } from "../../types";
 
 interface QuizSettingsProps {
@@ -96,7 +97,9 @@ export function QuizSettings({
 
   return (
     <Card className="max-w-xl w-full p-8 rounded-xl shadow-lg text-center font-sans">
-      <h2 className="text-xl font-bold mb-6">{t("lobby.settings.selectDifficulty", "Select Difficulty")}</h2>
+      <h2 className="text-xl font-bold mb-6">
+        {t("lobby.settings.selectDifficulty", "Select Difficulty")}
+      </h2>
       <div className="flex justify-center gap-4 mb-4">
         {LEVELS.map((level) => (
           <ActionButton
@@ -113,9 +116,16 @@ export function QuizSettings({
         ))}
       </div>
       <div className="mb-6 text-muted text-base min-h-[1.5em]">
-        {selected ? t(selected.descriptionKey) : t("lobby.settings.selectDifficultyPlaceholder", "Select a difficulty to see details.")}
+        {selected
+          ? t(selected.descriptionKey)
+          : t(
+              "lobby.settings.selectDifficultyPlaceholder",
+              "Select a difficulty to see details.",
+            )}
       </div>
-      <h2 className="text-xl font-bold mb-6">{t("lobby.settings.selectGameMode", "Select Game Mode")}</h2>
+      <h2 className="text-xl font-bold mb-6">
+        {t("lobby.settings.selectGameMode", "Select Game Mode")}
+      </h2>
       <div className="flex flex-col items-center mb-6">
         <div className="flex justify-center gap-4 mb-2">
           <ActionButton
@@ -127,15 +137,17 @@ export function QuizSettings({
             <FaUmbrellaBeach className="text-xl mb-1" />
             {t(modeKeys.sandbox.label, "Sandbox")}
           </ActionButton>
-          <ActionButton
-            type="button"
-            variant={gameMode === "timed" ? "primary" : "secondary"}
-            className="flex flex-col items-center px-4 py-2 font-semibold border"
-            onClick={() => setGameMode("timed")}
-          >
-            <FaStopwatch className="text-xl mb-1" />
-            {t(modeKeys.timed.label, "Timed")}
-          </ActionButton>
+          {isAuthenticated() && (
+            <ActionButton
+              type="button"
+              variant={gameMode === "timed" ? "primary" : "secondary"}
+              className="flex flex-col items-center px-4 py-2 font-semibold border"
+              onClick={() => setGameMode("timed")}
+            >
+              <FaStopwatch className="text-xl mb-1" />
+              {t(modeKeys.timed.label, "Timed")}
+            </ActionButton>
+          )}
         </div>
         <div className="mb-4 text-muted text-base min-h-[1.5em]">
           {t(modeKeys[gameMode].description)}

@@ -50,9 +50,7 @@ export default {
         danger: "var(--color-danger)",
         "danger-hover": "var(--color-danger-hover)",
         info: "var(--color-info)",
-        "info-hover": "var(--color-info-hover)",
-        code: "var(--color-code)",
-        "code-hover": "var(--color-code-hover)",
+        "info-hover": "var(--color-info-hover)",        
         muted: "var(--color-muted)",
         "muted-hover": "var(--color-muted-hover)",
         // Border colors
@@ -69,6 +67,9 @@ export default {
         "chip-completed-text": "var(--color-chip-completed-text)",
         "chip-cancelled-bg": "var(--color-chip-cancelled-bg)",
         "chip-cancelled-text": "var(--color-chip-cancelled-text)",
+        // Code colors
+        "code-bg": "var(--color-code-bg)",
+        "code-text": "var(--color-code-text)",
       },
       ringColor: { focus: "var(--color-ring-focus)" },
     },

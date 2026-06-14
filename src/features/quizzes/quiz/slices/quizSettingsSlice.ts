@@ -10,7 +10,7 @@ interface QuizSettingsState {
 const initialState: QuizSettingsState = {
   quizType: "flag",
   difficulty: "easy",
-  gameMode: "timed",
+  gameMode: "sandbox",
 };
 
 const quizSettingsSlice = createSlice({

@@ -112,7 +112,7 @@ export function getBaseMarkdownComponents(
       if (!isBlock) {
         return (
           <code
-            className="bg-surface text-code rounded px-1 py-0.5 text-sm align-baseline font-mono"
+            className="bg-code-bg text-code-text rounded px-1 py-0.5 text-sm align-baseline font-mono"
             {...props}
           >
             {children}

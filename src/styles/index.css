@@ -75,8 +75,6 @@
   --color-danger-hover: theme("colors.red.700");
   --color-info: theme("colors.blue.600");
   --color-info-hover: theme("colors.blue.700");
-  --color-code: theme("colors.amber.600");
-  --color-code-hover: theme("colors.amber.700");
   --color-muted: theme("colors.gray.400");
   --color-muted-hover: theme("colors.gray.500");
   /* Border colors */
@@ -87,6 +85,9 @@
   /* Chip colors */
   --color-chip-bg: theme("colors.gray.200");
   --color-chip-text: theme("colors.gray.700");
+  /* Code colors */
+  --color-code-bg: theme("colors.gray.300");
+  --color-code-text: theme("colors.gray.900");
   /* Trip colors */
   --color-type-local: #1ba9be;
   --color-type-abroad: #866fc8;
@@ -180,8 +181,6 @@
   --color-danger-hover: theme("colors.red.500");
   --color-info: theme("colors.blue.400");
   --color-info-hover: theme("colors.blue.500");
-  --color-code: theme("colors.indigo.100");
-  --color-code-hover: theme("colors.amber.300");
   --color-muted: theme("colors.gray.400");
   --color-muted-hover: theme("colors.gray.500");
   /* Border colors */
@@ -192,6 +191,9 @@
   /* Chip colors */
   --color-chip-bg: theme("colors.gray.500");
   --color-chip-text: theme("colors.gray.200");
+  /* Code colors */
+  --color-code-bg: theme("colors.gray.700");
+  --color-code-text: theme("colors.white");
 }
 
 a {

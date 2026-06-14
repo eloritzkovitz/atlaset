@@ -37,7 +37,7 @@ export function MenuButton({
   const baseClass =
     `rounded-lg text-left px-2 py-2 text-text flex items-center gap-2 ` +
     (active
-      ? "bg-primary dark:bg-primary/70 text-white font-semibold "
+      ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
       : "hover:bg-sidebar-btn-hover ") +
     className;
 
