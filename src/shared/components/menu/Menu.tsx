@@ -35,7 +35,7 @@ export function Menu({
       disableClose={false}
       disableScroll={disableScroll}
       position="custom"
-      className={`menu !bg-surface-alt rounded shadow-lg z-50 !p-2 ${className}`}
+      className={`menu !bg-surface-alt rounded z-50 !p-2 ${className}`}
       style={style}
       containerRef={containerRef}
       extraRefs={extraRefs}

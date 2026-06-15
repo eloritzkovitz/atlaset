@@ -4,6 +4,7 @@ import { Tooltip } from "../ui/Tooltip/Tooltip";
 interface MenuButtonProps {
   url?: string;
   type?: "button" | "submit" | "reset";
+  variant?: "default" | "sidebar";
   icon: React.ReactNode;
   children: React.ReactNode;
   active?: boolean;
@@ -21,6 +22,7 @@ interface MenuButtonProps {
 export function MenuButton({
   url,
   type = "button",
+  variant = "default",
   icon,
   children,
   active = false,
@@ -38,7 +40,9 @@ export function MenuButton({
     `rounded-lg text-left px-2 py-2 text-text flex items-center gap-2 ` +
     (active
       ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
-      : "hover:bg-sidebar-btn-hover ") +
+      : variant === "sidebar"
+        ? "hover:bg-sidebar-btn-hover "
+        : "hover:bg-surface-hover ") +
     className;
 
   const sharedProps = {

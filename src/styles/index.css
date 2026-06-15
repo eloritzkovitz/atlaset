@@ -78,8 +78,8 @@
   --color-muted: theme("colors.gray.400");
   --color-muted-hover: theme("colors.gray.500");
   /* Border colors */
-  --color-border: theme("colors.gray.300");
-  --color-dashed: theme("colors.gray.500");
+  --color-border: theme("colors.gray.200");
+  --color-dashed: theme("colors.gray.200");
   /* Ring colors */
   --color-ring-focus: theme("colors.blue.500");
   /* Chip colors */
@@ -184,8 +184,8 @@
   --color-muted: theme("colors.gray.400");
   --color-muted-hover: theme("colors.gray.500");
   /* Border colors */
-  --color-border: theme("colors.gray.500");
-  --color-dashed: theme("colors.gray.500");
+  --color-border: theme("colors.gray.600");
+  --color-dashed: theme("colors.gray.600");
   /* Ring colors */
   --color-ring-focus: theme("colors.blue.500");
   /* Chip colors */

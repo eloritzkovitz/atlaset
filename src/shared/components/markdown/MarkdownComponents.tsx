@@ -25,7 +25,7 @@ export function getBaseMarkdownComponents(
   overrides: MarkdownComponentOverrides = {},
 ) {
   return {
-    hr: () => <Separator className="my-6 opacity-60" />,
+    hr: () => <Separator className="my-6" />,
     blockquote: (props: React.HTMLProps<HTMLElement>) => {
       return (
         <blockquote className="relative my-6 p-4 ps-6 border-l-4 border-surface bg-surface-alt/40 dark:bg-surface/30 text-base rounded-md shadow-sm">
@@ -41,7 +41,7 @@ export function getBaseMarkdownComponents(
             className="mt-0 mb-6 text-xl text-action-text-hover font-bold"
             {...props}
           />
-          <Separator className="mb-4 opacity-50" />
+          <Separator className="mb-4" />
         </>
       )),
     h2:
@@ -55,7 +55,7 @@ export function getBaseMarkdownComponents(
         const { ...rest } = props;
         return (
           <>
-            {!isFirst && <Separator className="my-6 opacity-60" />}
+            {!isFirst && <Separator className="my-6" />}
             <h2
               className="mt-8 mb-2 text-3xl text-action-text-hover"
               {...rest}

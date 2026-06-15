@@ -27,6 +27,7 @@ export function SidebarMenuLink({
       {({ isActive }) => {
         const button = (
           <MenuButton
+            variant="sidebar"
             icon={icon}
             active={isActive}
             ariaLabel={resolvedLabel}
