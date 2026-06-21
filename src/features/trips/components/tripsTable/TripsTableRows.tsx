@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
+import { useTrips } from "@contexts/TripsContext";
 import { createCountryMap, type Country } from "@features/countries";
 import { formatDate } from "@utils/date";
 import { TripActions } from "./TripActions";
@@ -15,30 +16,21 @@ interface TripsTableRowsProps {
   trip: Trip;
   tripIdx: number;
   countryData: { countries: Country[] };
-  selected: boolean;
-  onSelect: (id: string) => void;
-  onRatingChange: (tripId: string, rating: number | undefined) => void;
   onViewInCalendar?: (t: Trip) => void;
   onEdit: (trip: Trip) => void;
-  onDuplicate: (trip: Trip) => void;
-  onDelete: (trip: Trip) => void;
 }
 
 export function TripsTableRows({
   trip,
   tripIdx,
   countryData,
-  selected,
-  onSelect,
-  onRatingChange,
   onViewInCalendar,
   onEdit,
-  onDuplicate,
-  onDelete,
 }: TripsTableRowsProps) {
-  const rowSpan = trip.countryCodes?.length || 1;
+  const { updateTripRating, selectedTripIds, selectTrip } =
+    useTrips();
 
-  // Country lookup for fast access
+  const rowSpan = trip.countryCodes?.length || 1;
   const countryLookup = createCountryMap(countryData.countries, (c) => c);
 
   // Map and sort countries for consistent display order
@@ -86,8 +78,8 @@ export function TripsTableRows({
             `}
           />
           <Checkbox
-            checked={selected}
-            onChange={() => onSelect(trip.id)}
+            checked={selectedTripIds.includes(trip.id)}
+            onChange={() => selectTrip(trip.id)}
             aria-label={`Select trip ${trip.name}`}
           />
         </TableCell>
@@ -104,7 +96,7 @@ export function TripsTableRows({
         <TableCell rowSpan={rowSpan}>
           <StarRatingInput
             value={typeof trip.rating === "number" ? trip.rating : 0}
-            onChange={(rating) => onRatingChange(trip.id, rating)}
+            onChange={(rating) => updateTripRating(trip.id, rating)}
           />
         </TableCell>
 
@@ -156,8 +148,6 @@ export function TripsTableRows({
             trip={trip}
             onViewInCalendar={onViewInCalendar}
             onEdit={onEdit}
-            onDuplicate={onDuplicate}
-            onDelete={onDelete}
           />
         </TableCell>
       </>

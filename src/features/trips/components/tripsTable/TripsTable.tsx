@@ -18,9 +18,6 @@ interface TripsTableProps {
   trips: Trip[];
   onViewInCalendar?: (trip: Trip) => void;
   onEdit: (trip: Trip) => void;
-  onDuplicate: (trip: Trip) => void;
-  onRatingChange: (tripId: string, rating: number | undefined) => void;
-  onDelete: (trip: Trip) => void;
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
@@ -29,10 +26,6 @@ interface TripsTableProps {
   categoryOptions: FilterOption[];
   statusOptions: FilterOption[];
   tagOptions: FilterOption[];
-  selectedTripIds: string[];
-  onSelectTrip: (id: string) => void;
-  allSelected: boolean;
-  handleSelectAll: () => void;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -46,10 +39,7 @@ interface TripsTableProps {
 export function TripsTable({
   trips,
   onViewInCalendar,
-  onEdit,
-  onDuplicate,
-  onRatingChange,
-  onDelete,
+  onEdit,  
   filters,
   updateFilter,
   countryOptions,
@@ -57,11 +47,7 @@ export function TripsTable({
   participantsOptions,
   categoryOptions,
   statusOptions,
-  tagOptions,
-  selectedTripIds,
-  onSelectTrip,
-  allSelected,
-  handleSelectAll,
+  tagOptions,  
   currentPage,
   totalPages,
   onPageChange,
@@ -128,8 +114,7 @@ export function TripsTable({
           <col style={{ width: `${colWidths.actions}px` }} />
         </colgroup>
         <TripsTableHeaders
-          allSelected={allSelected}
-          handleSelectAll={handleSelectAll}
+          trips={trips}
           sortBy={sortBy}
           handleSort={handleSort}
           filters={filters}
@@ -149,13 +134,8 @@ export function TripsTable({
               trip={trip}
               tripIdx={tripIdx}
               countryData={countryData}
-              selected={selectedTripIds.includes(trip.id)}
-              onSelect={onSelectTrip}
-              onRatingChange={onRatingChange}
               onViewInCalendar={onViewInCalendar}
               onEdit={onEdit}
-              onDuplicate={onDuplicate}
-              onDelete={onDelete}
             />
           </tbody>
         ))}

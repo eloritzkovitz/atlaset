@@ -1,7 +1,7 @@
 import { useState } from "react";
+import { useTrips } from "@contexts/TripsContext";
 import type { Trip } from "../types";
 
-// Empty trip template
 const emptyTrip: Trip = {
   id: "",
   name: "",
@@ -14,20 +14,11 @@ const emptyTrip: Trip = {
 
 /**
  * Manages the state and handlers for the Trip modal.
- * @param addTrip Function to add a new trip
- * @param editTrip Function to update an existing trip
- * @param trips Current list of trips
  * @returns State and handlers for the Trip modal
  */
-export function useTripModal({
-  addTrip,
-  editTrip,
-  trips,
-}: {
-  addTrip: (trip: Trip) => void;
-  editTrip: (trip: Trip) => void;
-  trips: Trip[];
-}) {
+export function useTripModal() {
+  const { addTrip, editTrip, trips } = useTrips();
+
   const [trip, setTrip] = useState<Trip | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
