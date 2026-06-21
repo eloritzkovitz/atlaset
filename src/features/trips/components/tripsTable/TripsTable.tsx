@@ -16,7 +16,6 @@ import "./TripsTable.css";
 
 interface TripsTableProps {
   trips: Trip[];
-  onViewInCalendar?: (trip: Trip) => void;
   onEdit: (trip: Trip) => void;
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
@@ -38,7 +37,6 @@ interface TripsTableProps {
 
 export function TripsTable({
   trips,
-  onViewInCalendar,
   onEdit,  
   filters,
   updateFilter,
@@ -134,7 +132,6 @@ export function TripsTable({
               trip={trip}
               tripIdx={tripIdx}
               countryData={countryData}
-              onViewInCalendar={onViewInCalendar}
               onEdit={onEdit}
             />
           </tbody>

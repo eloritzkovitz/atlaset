@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
-import { useUI } from "@contexts/UIContext";
 import { useCountryData } from "@features/countries";
 import {
   sortTrips,
@@ -20,8 +19,6 @@ export default function TripsPage() {
   const countryData = useCountryData();
   const { isMobile } = useScreenSize();
   const { trips, loading } = useTrips();
-  const { toggleCalendar, handleViewInCalendar } = useUI();
-
   const { t } = useTranslation("trips");
   const { t: tCommon } = useTranslation("common");
 
@@ -98,7 +95,6 @@ export default function TripsPage() {
           globalSearch={globalSearch}
           setGlobalSearch={setGlobalSearch}
           resetFilters={resetFilters}
-          setCalendarOpen={toggleCalendar}
           onAddTrip={handleAdd}
         />
       )}
@@ -127,7 +123,6 @@ export default function TripsPage() {
           <>
             <TripsTable
               trips={paginatedTrips}
-              onViewInCalendar={handleViewInCalendar}
               onEdit={handleEdit}
               filters={filters}
               updateFilter={handleUpdateFilter}

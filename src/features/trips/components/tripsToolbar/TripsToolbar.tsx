@@ -11,6 +11,7 @@ import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
 import { ToolbarActions } from "./ToolbarActions";
 import type { Trip, TripFilterState } from "../../types";
+import { useUI } from "@contexts/UIContext";
 
 interface ToolbarProps {
   trips: Trip[];
@@ -19,8 +20,7 @@ interface ToolbarProps {
   globalSearch: string;
   setGlobalSearch: (search: string) => void;
   resetFilters: () => void;
-  setCalendarOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onAddTrip?: () => void;  
+  onAddTrip?: () => void;
 }
 
 export function TripsToolbar({
@@ -30,11 +30,12 @@ export function TripsToolbar({
   globalSearch,
   setGlobalSearch,
   resetFilters,
-  setCalendarOpen,
-  onAddTrip,  
+  onAddTrip,
 }: ToolbarProps) {
+  const { toggleCalendar } = useUI();
+
   const { t } = useTranslation("trips");
-  
+
   return (
     <div className="trips-toolbar-container px-3 flex items-center justify-between min-h-16 h-[7vh] bg-surface-alt">
       <ActionsToolbar>
@@ -61,7 +62,7 @@ export function TripsToolbar({
 
           {/* Calendar Button */}
           <ActionButton
-            onClick={() => setCalendarOpen(true)}
+            onClick={toggleCalendar}
             ariaLabel={t("table.toolbar.calendar.viewCalendar")}
             title={t("table.toolbar.calendar.viewCalendar")}
             icon={<FaCalendar />}
@@ -75,9 +76,7 @@ export function TripsToolbar({
           <ToolbarSeparator />
 
           {/* Action Buttons */}
-          <ToolbarActions
-            onAddTrip={onAddTrip}            
-          />
+          <ToolbarActions onAddTrip={onAddTrip} />
         </div>
       </ActionsToolbar>
     </div>

@@ -20,15 +20,15 @@ import {
 } from "@hooks";
 import type { Trip } from "../../types";
 import { hasValidStartDate, isInProgressTrip } from "../../utils/trips";
+import { useUI } from "@contexts/UIContext";
 
 interface TripActionsProps {
   trip: Trip;
-  onViewInCalendar?: (t: Trip) => void;
   onEdit: (t: Trip) => void;
 }
 
 export const TripActions = forwardRef(function TripActions(
-  { trip, onViewInCalendar, onEdit }: TripActionsProps,
+  { trip, onEdit }: TripActionsProps,
   ref,
 ) {
   const { t } = useTranslation("trips");
@@ -40,6 +40,8 @@ export const TripActions = forwardRef(function TripActions(
     updateTripRating,
     removeTrip,
   } = useTrips();
+  const { handleViewInCalendar } = useUI();
+
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -163,7 +165,7 @@ export const TripActions = forwardRef(function TripActions(
           <MenuButton
             onClick={() => {
               handleCloseAll();
-              onViewInCalendar?.(trip);
+              handleViewInCalendar?.(trip);
             }}
             icon={<ICONS.calendar className="me-2" />}
             className="w-full"

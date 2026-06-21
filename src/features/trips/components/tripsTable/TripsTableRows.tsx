@@ -16,7 +16,6 @@ interface TripsTableRowsProps {
   trip: Trip;
   tripIdx: number;
   countryData: { countries: Country[] };
-  onViewInCalendar?: (t: Trip) => void;
   onEdit: (trip: Trip) => void;
 }
 
@@ -24,7 +23,6 @@ export function TripsTableRows({
   trip,
   tripIdx,
   countryData,
-  onViewInCalendar,
   onEdit,
 }: TripsTableRowsProps) {
   const { updateTripRating, selectedTripIds, selectTrip } =
@@ -146,7 +144,6 @@ export function TripsTableRows({
           <TripActions
             ref={actionsRef}
             trip={trip}
-            onViewInCalendar={onViewInCalendar}
             onEdit={onEdit}
           />
         </TableCell>

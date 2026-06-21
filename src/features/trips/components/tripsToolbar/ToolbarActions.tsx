@@ -11,9 +11,10 @@ interface ToolbarActionsProps {
 export function ToolbarActions({
   onAddTrip,
 }: ToolbarActionsProps) {
-  const { selectedTripIds, handleBulkDuplicate, handleBulkDelete } = useTrips();
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const { selectedTripIds, handleBulkDuplicate, handleBulkDelete } = useTrips();  
   const { t } = useTranslation("trips");
+  
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Check if there are selected trips
   const hasSelection = selectedTripIds.length > 0;
