@@ -8,7 +8,7 @@ export const mockTrips: Trip[] = [
     countryCodes: ["US"],
     startDate: "2023-01-01",
     endDate: "2023-01-05",
-    status: "completed",
+    status: undefined,
     fullDays: 0,
   },
   {
@@ -18,7 +18,7 @@ export const mockTrips: Trip[] = [
     countryCodes: ["FR", "DE"],
     startDate: "2023-06-10",
     endDate: "2023-06-20",
-    status: "planned",
+    status: undefined,
     fullDays: 0,
   },
   {
@@ -28,7 +28,7 @@ export const mockTrips: Trip[] = [
     countryCodes: ["JP"],
     startDate: "2099-12-01",
     endDate: "2099-12-10",
-    status: "planned",
+    status: undefined,
     fullDays: 0,
   },
   {
@@ -38,7 +38,7 @@ export const mockTrips: Trip[] = [
     countryCodes: ["CA"],
     startDate: "2022-03-15",
     endDate: "2022-03-20",
-    status: "completed",
+    status: undefined,
     fullDays: 0,
   },
   {
@@ -48,6 +48,7 @@ export const mockTrips: Trip[] = [
     countryCodes: ["IT"],
     startDate: undefined,
     endDate: undefined,
+    status: undefined,
     fullDays: 0,
   },
 ];

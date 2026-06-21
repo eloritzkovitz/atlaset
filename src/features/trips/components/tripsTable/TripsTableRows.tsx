@@ -82,7 +82,7 @@ export function TripsTableRows({
               absolute left-0 top-0 bottom-0 w-1
               ${trip.status === "planned" ? "bg-status-planned" : ""}
               ${trip.status === "upcoming" ? "bg-status-upcoming" : ""}
-              ${trip.status === "in-progress" ? "bg-status-in-progress" : ""}
+              ${trip.status === "in-progress" ? "bg-status-inprogress" : ""}
             `}
           />
           <Checkbox

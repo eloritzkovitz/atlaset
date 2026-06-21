@@ -6,6 +6,7 @@ import type { Trip, TripFilterState } from "../types";
 import {
   isAbroadTrip,
   isCompletedTrip,
+  isInProgressTrip,
   isLocalTrip,
   isPlannedTrip,
   isUpcomingTrip,
@@ -102,7 +103,8 @@ export function useTripFilters(
       // Status toggles
       const statusMatch =
         (filters.completed && isCompletedTrip(trip)) ||
-        (filters.upcoming && isUpcomingTrip(trip)) ||
+        (filters.upcoming &&
+          (isUpcomingTrip(trip) || isInProgressTrip(trip))) ||
         (filters.planned && isPlannedTrip(trip));
 
       // Favorite toggle
