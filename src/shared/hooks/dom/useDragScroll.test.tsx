@@ -1,82 +1,107 @@
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { useRef } from "react";
-import { it, describe, expect } from "vitest";
+import { it, describe, expect, beforeEach } from "vitest";
 import { useDragScroll } from "./useDragScroll";
 
-function TestHarness() {
+function TestHarness({ dependencies = [] }: { dependencies?: unknown[] }) {
   const ref = useRef<HTMLDivElement | null>(null);
-  useDragScroll(ref);
+  const { dragClassName, isDragging, isOverflowing } = useDragScroll(
+    ref,
+    dependencies,
+  );
+
   return (
-    <div>
-      <div
-        data-testid="scroll"
-        ref={ref}
-        style={{ overflowX: "auto", width: 200 }}
-      >
-        <div style={{ width: 1000 }} />
-      </div>
-    </div>
+    <div
+      data-testid="scroll"
+      ref={ref}
+      className={dragClassName}
+      data-dragging={isDragging}
+      data-overflowing={isOverflowing}
+    />
   );
 }
 
+// Mock the dimensions of the scrollable container
+const setMockDimensions = (scrollWidth: number, clientWidth = 200) => {
+  Object.defineProperty(HTMLElement.prototype, "clientWidth", {
+    configurable: true,
+    value: clientWidth,
+  });
+  Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
+    configurable: true,
+    value: scrollWidth,
+  });
+};
+
+// Helper function to dispatch touch events
+const dispatchTouch = (type: string, target: EventTarget, clientX: number) => {
+  const event = new Event(type, { bubbles: true }) as any;
+  Object.defineProperty(event, "touches", { value: [{ clientX }] });
+  target.dispatchEvent(event);
+};
+
 describe("useDragScroll", () => {
-  it("updates scrollLeft on mouse drag", () => {
-    const { getByTestId } = render(<TestHarness />);
-    const el = getByTestId("scroll") as HTMLDivElement;
+  beforeEach(() => setMockDimensions(1000));
 
-    el.scrollLeft = 0;
-    window.dispatchEvent(new MouseEvent("mousedown", { clientX: 100 }));
-    window.dispatchEvent(new MouseEvent("mousemove", { clientX: 80 }));
-    expect(el.scrollLeft).toBeGreaterThanOrEqual(20);
-    window.dispatchEvent(new MouseEvent("mouseup"));
-  });
+  it("calculates overflow states and applies corresponding cursors", () => {
+    const { getByTestId, rerender } = render(
+      <TestHarness dependencies={[1000]} />,
+    );
+    expect(getByTestId("scroll").className).toContain("cursor-grab");
 
-  it("updates scrollLeft on touch drag", () => {
-    const { getByTestId } = render(<TestHarness />);
-    const el = getByTestId("scroll") as HTMLDivElement;
-    el.scrollLeft = 0;
+    setMockDimensions(150);
 
-    const touchStart = new Event("touchstart") as any;
-    Object.defineProperty(touchStart, "touches", {
-      value: [{ clientX: 120 }],
+    act(() => {
+      rerender(<TestHarness dependencies={[150]} />);
     });
-    window.dispatchEvent(touchStart);
-
-    const touchMove = new Event("touchmove") as any;
-    Object.defineProperty(touchMove, "touches", { value: [{ clientX: 100 }] });
-    window.dispatchEvent(touchMove);
-    expect(el.scrollLeft).toBeGreaterThanOrEqual(20);
-
-    const touchEnd = new TouchEvent("touchend");
-    window.dispatchEvent(touchEnd);
+    expect(getByTestId("scroll").className).toContain("cursor-default");
   });
 
-  it("handles mouse move when ref becomes null (no crash)", () => {
-    const { getByTestId, unmount } = render(<TestHarness />);
-    const el = getByTestId("scroll") as HTMLDivElement;
+  it("updates scrollLeft and style classes on mouse drag workflows", () => {
+    const el = render(<TestHarness />).getByTestId("scroll") as HTMLDivElement;
 
-    el.scrollLeft = 0;
-    window.dispatchEvent(new MouseEvent("mousedown", { clientX: 100 }));
-    unmount();
+    act(() => {
+      el.dispatchEvent(
+        new MouseEvent("mousedown", { clientX: 100, bubbles: true }),
+      );
+    });
+    expect(el.className).toContain("cursor-grabbing");
+    expect(el.getAttribute("data-dragging")).toBe("true");
+
+    act(() => {
+      window.dispatchEvent(new MouseEvent("mousemove", { clientX: 80 }));
+    });
+    expect(el.scrollLeft).toBe(20);
+
+    act(() => {
+      window.dispatchEvent(new MouseEvent("mouseup"));
+    });
+    expect(el.className).toContain("cursor-grab");
+  });
+
+  it("updates scrollLeft on mobile touch workflows", () => {
+    const el = render(<TestHarness />).getByTestId("scroll") as HTMLDivElement;
+    dispatchTouch("touchstart", el, 120);
+    dispatchTouch("touchmove", window, 100);
+    expect(el.scrollLeft).toBe(20);
+    dispatchTouch("touchend", window, 100);
+  });
+
+  it("handles event streams safely when container unmounts mid-action", () => {
+    const mouseHarness = render(<TestHarness />);
+    mouseHarness
+      .getByTestId("scroll")
+      .dispatchEvent(
+        new MouseEvent("mousedown", { clientX: 100, bubbles: true }),
+      );
+    mouseHarness.unmount();
     expect(() =>
       window.dispatchEvent(new MouseEvent("mousemove", { clientX: 80 })),
     ).not.toThrow();
-    window.dispatchEvent(new MouseEvent("mouseup"));
-  });
 
-  it("handles touch move when ref becomes null (no crash)", () => {
-    const { getByTestId, unmount } = render(<TestHarness />);
-    const el = getByTestId("scroll") as HTMLDivElement;
-    el.scrollLeft = 0;
-    
-    const touchStart = new Event("touchstart") as any;
-    Object.defineProperty(touchStart, "touches", { value: [{ clientX: 120 }] });
-    window.dispatchEvent(touchStart);
-    unmount();
-
-    const touchMove = new Event("touchmove") as any;
-    Object.defineProperty(touchMove, "touches", { value: [{ clientX: 100 }] });
-    expect(() => window.dispatchEvent(touchMove)).not.toThrow();
-    window.dispatchEvent(new Event("touchend"));
+    const touchHarness = render(<TestHarness />);
+    dispatchTouch("touchstart", touchHarness.getByTestId("scroll"), 120);
+    touchHarness.unmount();
+    expect(() => dispatchTouch("touchmove", window, 100)).not.toThrow();
   });
 });
