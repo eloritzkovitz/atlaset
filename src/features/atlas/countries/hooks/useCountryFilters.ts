@@ -11,7 +11,6 @@ import {
 } from "@features/atlas/layers";
 import {
   createSovereigntyFilter,
-  filterCountries,
   applyQualifierSearch,
   getCountryCounts,
   getFilteredIsoCodes,
@@ -117,6 +116,60 @@ export function useCountryFilters() {
     [countries, layers, layerSelections],
   );
 
+  // Compute counts for country lists based on filtered countries
+  const countPipelineConfig = useMemo(() => {
+    let cleanSearch = search;
+
+    // Explicitly check the string presence to decouple from state-batching race conditions
+    const hasVisitedQualifier = /visited:\s*\S+/i.test(cleanSearch);
+    const hasSovereignQualifier =
+      /sovereigntyStatus:\s*\S+|sovereign:\s*\S+/i.test(cleanSearch);
+
+    if (hasVisitedQualifier) {
+      cleanSearch = cleanSearch.replace(/visited:\s*\S+/i, "");
+    }
+    
+    if (hasSovereignQualifier) {
+      cleanSearch = cleanSearch.replace(
+        /sovereigntyStatus:\s*\S+|sovereign:\s*\S+/gi,
+        "",
+      );
+    }
+    cleanSearch = cleanSearch.trim();
+
+    return {
+      search: cleanSearch,
+      params: {
+        ...filterParams,
+        search: cleanSearch,
+        selectedSovereignty: hasSovereignQualifier
+          ? ("" as const)
+          : filterParams.selectedSovereignty,
+      },
+      isTransitioning: hasVisitedQualifier || hasSovereignQualifier,
+    };
+  }, [search, filterParams]);
+
+  // Calculate global search results without any active tab reductions
+  const searchedCountries = useMemo(() => {
+    return applyQualifierSearch(
+      countries,
+      countPipelineConfig.search,
+      visitedIsoCodes,
+      countPipelineConfig.params,
+      filteredIsoCodes,
+      visitedMap,
+      visitedYearMap,
+    );
+  }, [
+    countries,
+    countPipelineConfig,
+    visitedIsoCodes,
+    filteredIsoCodes,
+    visitedMap,
+    visitedYearMap,
+  ]);
+
   // Main filtering logic
   const filteredCountries = useMemo(() => {
     let base = applyQualifierSearch(
@@ -154,6 +207,7 @@ export function useCountryFilters() {
     if (sovereignOnly) {
       base = base.filter(createSovereigntyFilter(true));
     }
+
     return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
   }, [
     countries,
@@ -174,22 +228,11 @@ export function useCountryFilters() {
     sovereignOnly,
   ]);
 
-  // Filtered countries without layer filtering for count calculations
-  const filteredCountriesNoLayer = useMemo(() => {
-    const base = filterCountries(countries, {
-      ...filterParams,
-      layerCountries: undefined,
-    });
-    return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
-  }, [countries, filterParams, selectedVisited, visitedIsoCodes]);
-
   // Country counts
-  const { allCount, allCountWithoutLayers, sovereignCount, visitedCount } =
-    getCountryCounts({
-      filteredCountries,
-      filteredCountriesNoLayer,
-      visitedIsoCodes,
-    });
+  const { allCount, sovereignCount, visitedCount } = getCountryCounts({
+    filteredCountries: searchedCountries,
+    visitedIsoCodes,
+  });
 
   // Reset core filters
   function resetCoreFilters() {
@@ -237,8 +280,8 @@ export function useCountryFilters() {
     debouncedSearch,
     filteredIsoCodes,
     filteredCountries,
+    searchedCountries,
     allCount,
-    allCountWithoutLayers,
     sovereignCount,
     sovereignOnly,
     setSovereignOnly,
