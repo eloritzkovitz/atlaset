@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { getAutoTripStatus, tripsService, type Trip } from "@features/trips";
 import { getSharedTripIds } from "@features/trips/services/sharedTripsService";
 import { useAuth } from "@features/user";
@@ -9,6 +9,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [sharedTripIds, setSharedTripIds] = useState<Set<string>>(new Set());
+  const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Fetch trips on mount
@@ -74,6 +75,11 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     setTrips((prev) => prev.map((t) => (t.id === trip.id ? updatedTrip : t)));
   }
 
+  // Mark trip as completed
+  function markCompleted(trip: Trip) {
+    editTrip({ ...trip, status: "completed" });
+  }
+
   // Update trip favorite
   async function updateTripFavorite(tripId: string, favorite: boolean) {
     await tripsService.updateFavorite(tripId, favorite);
@@ -114,18 +120,91 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     ]);
   }
 
+  // Check if all non-shared trips are selected
+  const isAllSelected = (filteredTrips: Trip[]) => {
+    const nonSharedFiltered = filteredTrips.filter(
+      (t) => !sharedTripIds.has(t.id),
+    );
+    return (
+      nonSharedFiltered.length > 0 &&
+      nonSharedFiltered.every((t) => selectedTripIds.includes(t.id))
+    );
+  };
+
+  // Derived selection properties
+  const selectedTrips = useMemo(
+    () => trips.filter((trip) => selectedTripIds.includes(trip.id)),
+    [trips, selectedTripIds],
+  );
+  const nonSharedSelectedTrips = useMemo(
+    () => selectedTrips.filter((trip) => !sharedTripIds.has(trip.id)),
+    [selectedTrips, sharedTripIds],
+  );
+
+  // Select trip handler
+  function selectTrip(id: string) {
+    if (sharedTripIds.has(id)) return;
+    setSelectedTripIds((prev) =>
+      prev.includes(id)
+        ? prev.filter((tripId) => tripId !== id)
+        : [...prev, id],
+    );
+  }
+
+  // Select all handler
+  function selectAllTrips(filteredIds: string[]) {
+    const nonSharedFilteredIds = filteredIds.filter(
+      (id) => !sharedTripIds.has(id),
+    );
+
+    const isAllCurrentlySelected =
+      nonSharedFilteredIds.length > 0 &&
+      nonSharedFilteredIds.every((id) => selectedTripIds.includes(id));
+
+    if (isAllCurrentlySelected) {
+      setSelectedTripIds((prev) =>
+        prev.filter((id) => !nonSharedFilteredIds.includes(id)),
+      );
+    } else {
+      setSelectedTripIds((prev) =>
+        Array.from(new Set([...prev, ...nonSharedFilteredIds])),
+      );
+    }
+  }
+
+  // Bulk duplicate handler
+  function handleBulkDuplicate() {
+    nonSharedSelectedTrips.forEach((trip) => duplicateTrip(trip));
+  }
+
+  // Bulk delete handler
+  async function handleBulkDelete() {
+    for (const trip of nonSharedSelectedTrips) {
+      await removeTrip(trip.id);
+    }
+    setSelectedTripIds([]);
+  }
+
   return (
     <TripsContext.Provider
       value={{
         trips,
         sharedTripIds,
+        selectedTripIds,
+        setSelectedTripIds,
+        selectTrip,
+        selectAllTrips,
+        isAllSelected,
+        handleBulkDuplicate,
+        handleBulkDelete,
         loading,
         addTrip,
         editTrip,
+        markCompleted,
+        duplicateTrip,
         updateTripFavorite,
         updateTripRating,
         removeTrip,
-        duplicateTrip,
       }}
     >
       {children}

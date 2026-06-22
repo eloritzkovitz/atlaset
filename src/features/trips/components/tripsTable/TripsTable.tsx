@@ -16,11 +16,7 @@ import "./TripsTable.css";
 
 interface TripsTableProps {
   trips: Trip[];
-  onViewInCalendar?: (trip: Trip) => void;
   onEdit: (trip: Trip) => void;
-  onDuplicate: (trip: Trip) => void;
-  onRatingChange: (tripId: string, rating: number | undefined) => void;
-  onDelete: (trip: Trip) => void;
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
@@ -29,10 +25,6 @@ interface TripsTableProps {
   categoryOptions: FilterOption[];
   statusOptions: FilterOption[];
   tagOptions: FilterOption[];
-  selectedTripIds: string[];
-  onSelectTrip: (id: string) => void;
-  allSelected: boolean;
-  handleSelectAll: () => void;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
@@ -45,11 +37,7 @@ interface TripsTableProps {
 
 export function TripsTable({
   trips,
-  onViewInCalendar,
   onEdit,
-  onDuplicate,
-  onRatingChange,
-  onDelete,
   filters,
   updateFilter,
   countryOptions,
@@ -58,10 +46,6 @@ export function TripsTable({
   categoryOptions,
   statusOptions,
   tagOptions,
-  selectedTripIds,
-  onSelectTrip,
-  allSelected,
-  handleSelectAll,
   currentPage,
   totalPages,
   onPageChange,
@@ -81,7 +65,7 @@ export function TripsTable({
     MIN_WIDTHS,
   );
 
-  // Helper to render resize handle
+  // Render resize handle for each column
   const renderResizeHandle = (key: string) => {
     const colKey = key as keyof typeof colWidths;
     return (
@@ -92,7 +76,7 @@ export function TripsTable({
     );
   };
 
-  // Sorting handler
+  // Handle sorting when a column header is clicked
   const handleSort = (key: TripSortByKey) => {
     const [currentKey, currentDir] = sortBy.split("-");
     let nextDir: "asc" | "desc" = "asc";
@@ -128,8 +112,7 @@ export function TripsTable({
           <col style={{ width: `${colWidths.actions}px` }} />
         </colgroup>
         <TripsTableHeaders
-          allSelected={allSelected}
-          handleSelectAll={handleSelectAll}
+          trips={trips}
           sortBy={sortBy}
           handleSort={handleSort}
           filters={filters}
@@ -149,13 +132,7 @@ export function TripsTable({
               trip={trip}
               tripIdx={tripIdx}
               countryData={countryData}
-              selected={selectedTripIds.includes(trip.id)}
-              onSelect={onSelectTrip}
-              onRatingChange={onRatingChange}
-              onViewInCalendar={onViewInCalendar}
               onEdit={onEdit}
-              onDuplicate={onDuplicate}
-              onDelete={onDelete}
             />
           </tbody>
         ))}

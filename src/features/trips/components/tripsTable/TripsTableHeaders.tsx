@@ -13,15 +13,16 @@ import { isAllowedOption, isStringOption } from "@utils/dropdown";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import { ALL_TRIP_CATEGORIES, RATING_OPTIONS } from "../../constants/trips";
 import type {
+  Trip,
   TripCategory,
   TripFilters,
   TripSortBy,
   TripSortByKey,
 } from "../../types";
+import { useTrips } from "@contexts/TripsContext";
 
 interface TripsTableHeadersProps {
-  allSelected: boolean;
-  handleSelectAll: () => void;
+  trips: Trip[];
   sortBy: TripSortBy;
   handleSort: (key: TripSortByKey) => void;
   filters: TripFilters;
@@ -36,8 +37,7 @@ interface TripsTableHeadersProps {
 }
 
 export function TripsTableHeaders({
-  allSelected,
-  handleSelectAll,
+  trips,
   sortBy,
   handleSort,
   filters,
@@ -50,13 +50,17 @@ export function TripsTableHeaders({
   tagOptions,
   renderResizeHandle,
 }: TripsTableHeadersProps) {
+  const { isAllSelected, selectAllTrips } = useTrips();
   const { t } = useTranslation("trips");
 
   return (
     <thead>
       <tr>
         <TableHeader colKey="select" unsortable className="relative pl-5">
-          <Checkbox checked={allSelected} onChange={handleSelectAll} />
+          <Checkbox
+            checked={isAllSelected(trips)}
+            onChange={() => selectAllTrips(trips.map((t) => t.id))}
+          />
         </TableHeader>
         <TableHeader colKey="name" renderResizeHandle={renderResizeHandle}>
           <SortableFilterHeader

@@ -37,6 +37,36 @@ export function getTripDays(trip: Trip): number {
 }
 
 /**
+ * Gets the automatic status of a trip based on current date and trip dates.
+ * @param trip - The trip object.
+ * @returns The automatic status of the trip.
+ */
+export function getAutoTripStatus(trip: Trip): TripStatus {
+  // If the user manually saved a status, respect it as the absolute source of truth
+  if (trip.status === "completed" || trip.status === "planned") {
+    return trip.status;
+  }
+
+  // If the trip has no valid start date, consider it planned
+  if (!hasValidStartDate(trip)) return "planned";
+
+  // If the trip has a valid start date, determine its status based on current date
+  const now = new Date();
+  const start = new Date(trip.startDate!);
+  let end: Date | null = null;
+  if (trip.endDate) {
+    end = new Date(trip.endDate);
+    end.setHours(23, 59, 59, 999);
+  }
+
+  if (now < start) return "upcoming";
+  if (end && now >= start && now <= end) return "in-progress";
+  if (end && now > end) return "completed";
+
+  return "planned";
+}
+
+/**
  * Determines if a trip is local (within the home country).
  * @param trip - The trip object to evaluate.
  * @param homeCountry - The home country code to compare against.
@@ -68,7 +98,7 @@ export function isAbroadTrip(trip: Trip, homeCountry: string) {
  * @returns True if the trip is completed, false otherwise.
  */
 export function isCompletedTrip(trip: Trip) {
-  return trip.status === "completed";
+  return trip.status === "completed" || getAutoTripStatus(trip) === "completed";
 }
 
 /**
@@ -77,8 +107,7 @@ export function isCompletedTrip(trip: Trip) {
  * @returns True if the trip is planned, false otherwise.
  */
 export function isPlannedTrip(trip: Trip): boolean {
-  if (!hasValidStartDate(trip)) return true;
-  return false;
+  return getAutoTripStatus(trip) === "planned";
 }
 
 /**
@@ -87,9 +116,16 @@ export function isPlannedTrip(trip: Trip): boolean {
  * @returns True if the trip is upcoming, false otherwise.
  */
 export function isUpcomingTrip(trip: Trip): boolean {
-  if (!hasValidStartDate(trip)) return false;
-  const start = new Date(trip.startDate!);
-  return start > new Date();
+  return getAutoTripStatus(trip) === "upcoming";
+}
+
+/**
+ * Determines if a trip is in progress (occurring now).
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip is in progress, false otherwise.
+ */
+export function isInProgressTrip(trip: Trip): boolean {
+  return getAutoTripStatus(trip) === "in-progress";
 }
 
 /**
@@ -118,7 +154,7 @@ export function getAbroadTrips(trips: Trip[], homeCountry: string): Trip[] {
  * @returns An array of upcoming trips.
  */
 export function getUpcomingTrips(trips: Trip[]): Trip[] {
-  return trips.filter(isUpcomingTrip);
+  return trips.filter((trip) => isUpcomingTrip(trip) || isInProgressTrip(trip));
 }
 
 /**
@@ -140,23 +176,18 @@ export function getCompletedTrips(trips: Trip[]): Trip[] {
 }
 
 /**
- * Gets the automatic status of a trip based on current date and trip dates.
- * @param trip - The trip object.
- * @returns The automatic status of the trip.
+ * Determines if a trip can be marked as completed based on its start date and current status.
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip can be marked as completed, false otherwise.
  */
-export function getAutoTripStatus(trip: Trip): TripStatus {
-  const now = new Date();
-  // Planned: missing, empty, or invalid startDate
-  if (!hasValidStartDate(trip)) return "planned";
+export function canMarkCompleted(trip: Trip): boolean {
+  // If there's no valid start date or the trip is already completed, return false
+  if (!hasValidStartDate(trip) || trip.status === "completed") return false;
+
+  // Check if the start date is in the past or today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
   const start = new Date(trip.startDate!);
-  const end = trip.endDate ? new Date(trip.endDate) : null;
 
-  // Upcoming: start date is in the future
-  if (now < start) return "upcoming";
-  if (end && now >= start && now <= end) return "in-progress";
-  if (end && now > end) return "completed";
-
-  // If no end date, but start is in the past, consider completed if not in-progress
-  if (!end && now > start) return "completed";
-  return trip.status || "planned";
+  return start <= today;
 }

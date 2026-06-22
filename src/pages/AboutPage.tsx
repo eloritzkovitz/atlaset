@@ -1,10 +1,13 @@
 import { usePageTitle } from "@hooks";
 
 export default function AboutPage() {
-  usePageTitle("About Atlaset | Atlaset");
+  usePageTitle("About Atlaset");
 
   return (
-    <main dir="ltr" className="w-full max-w-6xl mx-auto py-16 px-4 flex flex-col text-start">
+    <main
+      dir="ltr"
+      className="w-full max-w-6xl mx-auto py-16 px-4 flex flex-col text-start"
+    >
       <div className="flex flex-col gap-3 mb-8">
         <h1
           className="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight drop-shadow-sm"

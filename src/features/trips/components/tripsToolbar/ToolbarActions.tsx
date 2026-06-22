@@ -1,25 +1,18 @@
-import React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
+import { useTrips } from "@contexts/TripsContext";
 
 interface ToolbarActionsProps {
-  selectedTripIds: string[];
   onAddTrip?: () => void;
-  onBulkDuplicate: () => void;
-  onBulkDelete: () => void;
-  onBulkArchive?: () => void;
-  onBulkFavorite?: () => void;
 }
 
-export function ToolbarActions({
-  selectedTripIds,
-  onAddTrip,
-  onBulkDuplicate,
-  onBulkDelete,
-}: ToolbarActionsProps) {
-  const [showDeleteConfirm, setShowDeleteConfirm] = React.useState(false);
+export function ToolbarActions({ onAddTrip }: ToolbarActionsProps) {
+  const { selectedTripIds, handleBulkDuplicate, handleBulkDelete } = useTrips();
   const { t } = useTranslation("trips");
+
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Check if there are selected trips
   const hasSelection = selectedTripIds.length > 0;
@@ -29,7 +22,7 @@ export function ToolbarActions({
       <div className="flex flex-wrap items-center gap-2 w-full justify-between">
         <div className="flex items-center gap-2">
           <ActionButton
-            onClick={onBulkDuplicate}
+            onClick={() => handleBulkDuplicate(selectedTripIds)}
             ariaLabel={t("table.toolbar.bulkActions.duplicateSelected")}
             title={t("table.toolbar.bulkActions.duplicateSelected")}
             icon={<ICONS.duplicate />}
@@ -53,7 +46,6 @@ export function ToolbarActions({
         </ActionButton>
       </div>
 
-      {/* Confirm Modals */}
       {showDeleteConfirm && (
         <ConfirmModal
           title={t("table.toolbar.bulkActions.deleteConfirmTitle")}
@@ -62,7 +54,7 @@ export function ToolbarActions({
           })}
           onConfirm={() => {
             setShowDeleteConfirm(false);
-            onBulkDelete();
+            handleBulkDelete(selectedTripIds);
           }}
           onCancel={() => setShowDeleteConfirm(false)}
           submitLabel={t("table.toolbar.bulkActions.delete")}

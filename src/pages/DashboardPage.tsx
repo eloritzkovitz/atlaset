@@ -96,7 +96,6 @@ export default function DashboardPage() {
 
   // Translate breadcrumbs
   const { t: tDashboard } = useTranslation("dashboard");
-  const { t: tCommon } = useTranslation("common");
   const { t: tCountries } = useTranslation("countries");
 
   const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
@@ -119,49 +118,51 @@ export default function DashboardPage() {
     label: resolveCrumbLabel(crumb),
   }));
 
-  // Handlers for navigation and syncing URL state to filter state
-  const getTranslatedLeft = () => {
-    const safePanel = selectedPanel ?? "";
-    const isCountryPanel =
-      safePanel.startsWith("countries") ||
-      ["countries", "countries/all", "exploration"].includes(safePanel);
-    const isCurrencyPanel = safePanel.startsWith("currencies");
-    const isAchievementPanel = safePanel.startsWith("achievements");
+  // Determine panel type for conditional rendering
+  const safePanel = selectedPanel ?? "";
+  const isCountryPanel =
+    safePanel.startsWith("countries") ||
+    ["countries", "countries/all", "exploration"].includes(safePanel);
+  const isCurrencyPanel = safePanel.startsWith("currencies");
+  const isAchievementPanel = safePanel.startsWith("achievements");
 
-    if (safePanel === "exploration")
+  // Determine the left part of the page title based on the current panel and filters
+  const getCountryPanelTitle = (): string => {
+    if (safePanel === "exploration") {
       return tDashboard("exploration.worldTitle");
-
-    if (isCountryPanel) {
-      // If route explicitly shows "all" or panel is countries/all, show translated "All Countries"
-      if (routeSelectedRegion === "all" || safePanel === "countries/all")
-        return tDashboard("exploration.allTitle");
-
-      if (selectedCountry && selectedCountry.name) return selectedCountry.name;
-      if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
-        return translateSubregionLabel(
-          routeSelectedSubregion,
-          subregionToRegion,
-          selectedRegion ?? undefined,
-          tCountries,
-        );
-      }
-      if (routeSelectedRegion && routeSelectedRegion !== "all") {
-        return translateRegionLabel(
-          routeSelectedRegion,
-          tCountries,
-          tDashboard,
-        );
-      }
-      // fallback to panel label
-      return currentPanel
-        ? tDashboard(`menu.${currentPanel.key}`)
-        : tDashboard("menu.title");
     }
 
-    if (isCurrencyPanel && selectedCurrency && selectedCurrency.name)
-      return selectedCurrency.name;
+    if (routeSelectedRegion === "all" || safePanel === "countries/all") {
+      return tDashboard("exploration.allTitle");
+    }
 
-    if (isAchievementPanel && selectedAchievement && selectedAchievement.name)
+    if (selectedCountry?.name) {
+      return selectedCountry.name;
+    }
+
+    if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
+      return translateSubregionLabel(
+        routeSelectedSubregion,
+        subregionToRegion,
+        selectedRegion ?? undefined,
+        tCountries,
+      );
+    }
+
+    if (routeSelectedRegion && routeSelectedRegion !== "all") {
+      return translateRegionLabel(routeSelectedRegion, tCountries, tDashboard);
+    }
+
+    return currentPanel
+      ? tDashboard(`menu.${currentPanel.key}`)
+      : tDashboard("menu.title");
+  };
+
+  // Determine the page title based on the current panel and filters
+  const getPageTitleLabel = (): string => {
+    if (isCountryPanel) return getCountryPanelTitle();
+    if (isCurrencyPanel && selectedCurrency?.name) return selectedCurrency.name;
+    if (isAchievementPanel && selectedAchievement?.name)
       return selectedAchievement.name;
 
     return currentPanel
@@ -169,9 +170,7 @@ export default function DashboardPage() {
       : tDashboard("menu.title");
   };
 
-  const left = getTranslatedLeft();
-  const appName = tCommon("appName", "Atlaset");
-  usePageTitle(`${left} | ${appName}`);
+  usePageTitle(getPageTitleLabel());
 
   // Sync route state to filter state
   useEffect(() => {

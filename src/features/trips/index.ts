@@ -6,6 +6,10 @@ export { TripsToolbar } from "./components/tripsToolbar/TripsToolbar";
 // Constants
 export * from "./constants/trips";
 
+// Hooks
+export * from "./hooks/useTripFilters";
+export * from "./hooks/useTripModal";
+
 // Services
 export { tripsService } from "./services/tripsService";
 
@@ -14,3 +18,4 @@ export * from "./types";
 
 // Utils
 export * from "./utils/trips";
+export * from "./utils/tripSort";

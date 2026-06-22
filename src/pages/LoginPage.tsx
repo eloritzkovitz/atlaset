@@ -16,7 +16,7 @@ export default function LoginPage() {
   const { t } = useTranslation("auth");
 
   // Set the page title
-  usePageTitle(`${t("login.pageTitle", "Login")} | Atlaset`);
+  usePageTitle(t("login.pageTitle", "Login"));
 
   // Show reactivation hint if needed
   useEffect(() => {

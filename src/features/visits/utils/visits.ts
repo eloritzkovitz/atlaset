@@ -2,7 +2,12 @@
  * @file Utility functions for processing visit and trip data.
  */
 
-import type { Trip } from "@features/trips";
+import {
+  getAutoTripStatus,
+  isCompletedTrip,
+  type Trip,
+  type TripStatus,
+} from "@features/trips";
 import { extractUniqueValues } from "@utils/array";
 import { getYear, getYearNumber } from "@utils/date";
 import type { VisitContext } from "../types";
@@ -67,12 +72,10 @@ export function computeVisitedCountriesFromTrips(
   trips: Trip[],
   homeCountry?: string,
 ) {
-  const now = new Date();
   return collectCountryCodes(
     trips,
     (trip) => {
-      const end = trip.endDate ? new Date(trip.endDate) : undefined;
-      return !!(end && !isNaN(end.getTime()) && end <= now);
+      return isCompletedTrip(trip);
     },
     homeCountry,
   );
@@ -84,13 +87,13 @@ export function computeVisitedCountriesFromTrips(
  * @returns Array of country codes with future trips.
  */
 export function getUpcomingVisitCountries(trips: Trip[]): string[] {
-  const codes = new Set<string>();
-  trips.forEach((trip) => {
-    if (trip.status === "upcoming" || trip.status === "planned") {
-      trip.countryCodes?.forEach((code) => codes.add(code));
-    }
-  });
-  return Array.from(codes);
+  const upcomingStatuses: TripStatus[] = ["in-progress", "upcoming", "planned"];
+
+  const codes = trips
+    .filter((trip) => upcomingStatuses.includes(getAutoTripStatus(trip)))
+    .flatMap((trip) => trip.countryCodes ?? []);
+
+  return Array.from(new Set(codes));
 }
 
 /**
@@ -156,9 +159,12 @@ export function getFirstVisitDateByCountry(
  */
 export function getLastVisitDateByCountry(trips: Trip[]): Record<string, Date> {
   const map: Record<string, Date> = {};
+
   for (const trip of trips) {
-    if (!trip.endDate || !trip.countryCodes) continue;
+    if (!trip.endDate || !trip.countryCodes || !isCompletedTrip(trip)) continue;
+
     const end = new Date(trip.endDate);
+
     for (const code of trip.countryCodes) {
       if (!map[code] || end > map[code]) {
         map[code] = end;
@@ -208,12 +214,14 @@ export function getVisitedCountriesUpToYear(
 ) {
   const now = new Date();
   const counts: Record<string, number> = {};
+
   trips.forEach((trip) => {
     const end = getYearNumber(trip.endDate);
     if (
       end !== undefined &&
       end <= year &&
       trip.endDate &&
+      isCompletedTrip(trip) &&
       new Date(trip.endDate) <= now
     ) {
       trip.countryCodes?.forEach((code) => {
@@ -221,9 +229,11 @@ export function getVisitedCountriesUpToYear(
       });
     }
   });
+
   if (homeCountry) {
     counts[homeCountry] = (counts[homeCountry] || 0) + 1;
   }
+
   return counts;
 }
 
@@ -232,15 +242,22 @@ export function getVisitedCountriesUpToYear(
  */
 export function buildVisitedYearMap(trips: Trip[]) {
   const map: Record<string, Set<number>> = {};
+
   trips.forEach((trip) => {
-    if (!trip.countryCodes) return;
+    // Only consider completed trips for the visited year map
+    if (!isCompletedTrip(trip)) return;
+
+    // Determine the start and end years for the trip
     const startYear = trip.startDate
       ? new Date(trip.startDate).getFullYear()
       : undefined;
     const endYear = trip.endDate
       ? new Date(trip.endDate).getFullYear()
       : startYear;
+
     if (startYear === undefined || endYear === undefined) return;
+
+    // Add each year in the range to the map for each country code
     for (let y = startYear; y <= endYear; y++) {
       trip.countryCodes.forEach((code) => {
         map[code] = map[code] || new Set<number>();
@@ -248,12 +265,17 @@ export function buildVisitedYearMap(trips: Trip[]) {
       });
     }
   });
+
   return map;
 }
 
 /**
  * Compute visit counts per ISO from a VisitedYearMap up to (and including) a given year.
  * Optionally restrict counting to a provided set of years.
+ * @param visitedYearMap - The mapping of country codes to sets of years.
+ * @param selectedYear - The year up to which to count visits.
+ * @param years - Optional array of years to restrict counting.
+ * @returns An object mapping country codes to visit counts.
  */
 export function computeVisitCountsFromYearMap(
   visitedYearMap: Record<string, Set<number>>,

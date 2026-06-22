@@ -7,6 +7,7 @@ import {
   Menu,
   Separator,
   RateMenu,
+  ConfirmModal,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
@@ -18,23 +19,31 @@ import {
   useMenuPosition,
 } from "@hooks";
 import type { Trip } from "../../types";
-import { hasValidStartDate } from "../../utils/trips";
+import { canMarkCompleted, hasValidStartDate } from "../../utils/trips";
+import { useUI } from "@contexts/UIContext";
 
 interface TripActionsProps {
   trip: Trip;
-  onViewInCalendar?: (t: Trip) => void;
   onEdit: (t: Trip) => void;
-  onDuplicate: (t: Trip) => void;
-  onDelete: (t: Trip) => void;
 }
 
 export const TripActions = forwardRef(function TripActions(
-  { trip, onViewInCalendar, onEdit, onDuplicate, onDelete }: TripActionsProps,
+  { trip, onEdit }: TripActionsProps,
   ref,
 ) {
   const { t } = useTranslation("trips");
-  const { sharedTripIds, updateTripFavorite, updateTripRating } = useTrips();
+  const {
+    sharedTripIds,
+    markCompleted,
+    duplicateTrip,
+    updateTripFavorite,
+    updateTripRating,
+    removeTrip,
+  } = useTrips();
+  const { handleViewInCalendar } = useUI();
+
   const [rateMenuOpen, setRateMenuOpen] = useState(false);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -103,9 +112,10 @@ export const TripActions = forwardRef(function TripActions(
   const menuActions = useMenuActions(
     {
       onEdit: () => onEdit(trip),
-      onDelete: () => onDelete(trip),
+      onMarkCompleted: () => markCompleted(trip),
+      onDuplicate: () => duplicateTrip(trip),
       onFavorite: () => updateTripFavorite(trip.id, !trip.favorite),
-      onDuplicate: () => onDuplicate(trip),
+      onDelete: () => setConfirmOpen(true),
     },
     setOpen,
   );
@@ -155,7 +165,7 @@ export const TripActions = forwardRef(function TripActions(
           <MenuButton
             onClick={() => {
               handleCloseAll();
-              onViewInCalendar?.(trip);
+              handleViewInCalendar?.(trip);
             }}
             icon={<ICONS.calendar className="me-2" />}
             className="w-full"
@@ -173,6 +183,18 @@ export const TripActions = forwardRef(function TripActions(
         >
           {t("table.actions.editTrip")}
         </MenuButton>
+        {canMarkCompleted(trip) && (
+          <MenuButton
+            onClick={() => {
+              menuActions.onMarkCompleted?.();
+              handleCloseAll();
+            }}
+            icon={<ICONS.tripCompleted className="me-2" />}
+            className="w-full"
+          >
+            {t("table.actions.markCompleted", "Mark Completed")}
+          </MenuButton>
+        )}
         <Separator className="my-2" />
         <MenuButton
           onClick={() => {
@@ -247,6 +269,26 @@ export const TripActions = forwardRef(function TripActions(
           {t("table.actions.deleteTrip")}
         </MenuButton>
       </Menu>
+      {confirmOpen && !!removeTrip && (
+        <ConfirmModal
+          isOpen={confirmOpen}
+          title={"Delete item?"}
+          message={
+            <span>
+              Are you sure you want to delete <strong>{trip?.name}</strong>?
+            </span>
+          }
+          onConfirm={() => {
+            setConfirmOpen(false);
+            removeTrip(trip?.id ?? "").catch((error) => {
+              console.error("Error deleting trip:", error);
+            });
+          }}
+          onCancel={() => setConfirmOpen(false)}
+          submitLabel="Delete"
+          cancelLabel="Cancel"
+        />
+      )}
     </>
   );
 });

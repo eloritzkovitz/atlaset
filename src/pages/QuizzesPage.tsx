@@ -36,7 +36,6 @@ export default function QuizzesPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useTranslation("quizzes");
-  const { t: tCommon } = useTranslation("common");
 
   const cards = useMemo(() => getLobbyCards(t), [t]) as LobbyCardItem[];
   const rows = [
@@ -46,11 +45,7 @@ export default function QuizzesPage() {
 
   // Set page titles dynamically
   const match = cards.find((card) => location.pathname.endsWith(card.route));
-  const appName = tCommon("appName", "Atlaset");
-  usePageTitle(match ? match.title : t("pageTitle", "Quizzes"), {
-    suffix: ` | ${appName}`,
-    fallback: `${t("pageTitle", "Quizzes")} | ${appName}`,
-  });
+  usePageTitle(match ? match.title : t("pageTitle", "Quizzes"));
 
   // UI state
   const [settingsOpen, setSettingsOpen] = useState<null | {

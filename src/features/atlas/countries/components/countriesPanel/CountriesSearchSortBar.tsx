@@ -1,13 +1,11 @@
 import { useRef } from "react";
-import { FaPlus } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { ActionButton, SegmentedToggle } from "@components";
-import { QualifierSearch } from "@components/form/inputs/QualifierSearch";
+import { ActionButton, SegmentedToggle, QualifierSearch } from "@components";
+import { ICONS } from "@constants/icons";
+import { useTimeline } from "@contexts/TimelineContext";
+import { CountrySortSelect, type CountryList } from "@features/countries";
 import { SUPPORTED_MODIFIERS } from "@features/countries/constants/modifierConfig";
 import { SUPPORTED_QUALIFIERS } from "@features/countries/constants/qualifierConfig";
-import { useTimeline } from "@contexts/TimelineContext";
-import { type CountryList } from "@features/countries";
-import { CountrySortSelect } from "@features/countries/components/countrySort/CountrySortSelect";
 import { useDragScroll } from "@hooks";
 
 interface CountriesSearchSortBarProps {
@@ -50,11 +48,15 @@ export function CountriesSearchSortBar({
   const { timelineMode } = useTimeline();
   const { t } = useTranslation("atlas");
 
-  // Enable drag-to-scroll for the toggles container
+  // Drag scroll state
   const togglesRef = useRef<HTMLDivElement>(null);
-  useDragScroll(togglesRef);
+  const { isOverflowing, dragClassName } = useDragScroll(togglesRef, [
+    countryLists,
+    allCount,
+    sovereignCount,
+    visitedCount,
+  ]);
 
-  // Build toggle options (labels are plain; counts are provided separately)
   const options = [
     { value: "all", label: t("countries.lists.all"), count: allCount },
     {
@@ -120,13 +122,13 @@ export function CountriesSearchSortBar({
       </div>
       <div
         ref={togglesRef}
-        className="mt-2 mb-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap toggles-scroll"
+        className={`mt-2 mb-2 flex items-center gap-2 overflow-x-auto whitespace-nowrap toggles-scroll ${dragClassName}`}
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {options.map((opt) => (
           <div
             key={opt.value}
-            className="inline-block cursor-pointer"
+            className={`inline-block ${isOverflowing ? "cursor-inherit" : "cursor-pointer"}`}
             onDoubleClick={() => handleToggleDoubleClick(opt.value)}
           >
             <SegmentedToggle
@@ -166,12 +168,12 @@ export function CountriesSearchSortBar({
           </div>
         ))}
         <ActionButton
-          icon={<FaPlus />}
+          icon={<ICONS.add />}
           ariaLabel={t("countries.actions.newList")}
           title={t("countries.actions.newList")}
           variant="secondary"
           onClick={() => onAddList?.()}
-          className="!rounded-full !px-2"
+          className="!rounded-full !px-2 cursor-pointer"
         />
       </div>
     </div>

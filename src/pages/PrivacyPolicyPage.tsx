@@ -6,7 +6,7 @@ export default function PrivacyPolicyPage() {
   const { content, error } = useMarkdownFile("/privacy.md");
   const components = getDocsMarkdownComponents();
 
-  usePageTitle("Privacy Policy | Atlaset");
+  usePageTitle("Privacy Policy");
 
   return (
     <div

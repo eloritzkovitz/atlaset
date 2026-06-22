@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-06-22
+
+- **[feature]** **Trips:** Added option to manually set active trips as completed
+- **[chore]** **Trips:** Refined trip status computation logic and menu actions
+- **[chore]** **General:** Updated page titles
+
 ## 2026-06-13
 
 - **[feature]** **Countries:** Added right-click actions to the list view

@@ -12,7 +12,7 @@ export default function SignupPage() {
   const { t } = useTranslation("auth");
 
   // Set the page title
-  usePageTitle(`${t("signup.pageTitle", "Sign Up")} | Atlaset`);
+  usePageTitle(t("signup.pageTitle", "Sign Up"));
 
   return (
     <div className="flex flex-col flex-1 min-h-[70vh] w-full">

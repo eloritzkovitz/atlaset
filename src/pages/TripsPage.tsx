@@ -2,48 +2,30 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoadingSpinner } from "@components";
 import { useTrips } from "@contexts/TripsContext";
-import { useUI } from "@contexts/UIContext";
 import { useCountryData } from "@features/countries";
 import {
+  sortTrips,
   TripModal,
   TripsTable,
   TripsToolbar,
-  type Trip,
+  useTripFilters,
+  useTripModal,
   type TripFilterState,
   type TripSortBy,
 } from "@features/trips";
-import { sortTrips } from "@features/trips/utils/tripSort";
-import { useTripFilters } from "@features/trips/hooks/useTripFilters";
-import { useTripModal } from "@features/trips/hooks/useTripModal";
 import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
 
 export default function TripsPage() {
-  const { t } = useTranslation("trips");
-  const { t: tCommon } = useTranslation("common");
   const countryData = useCountryData();
-  const {
-    trips,
-    sharedTripIds,
-    loading,
-    addTrip,
-    editTrip,
-    updateTripRating,
-    removeTrip,
-    duplicateTrip,
-  } = useTrips();
   const { isMobile } = useScreenSize();
-  const { toggleCalendar, handleViewInCalendar } = useUI();
+  const { trips, loading } = useTrips();
+  const { t } = useTranslation("trips");
 
   const [globalSearch, setGlobalSearch] = useState("");
-  const [selectedTripIds, setSelectedTripIds] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
 
-  // Set page title
-  const appName = tCommon("appName", "Atlaset");
-  const pageTitle = t("pageTitle", "Trips");
-  usePageTitle(`${pageTitle} | ${appName}`);
+  usePageTitle(t("pageTitle", "Trips"));
 
-  // Trip filtering hook
   const {
     filteredTrips,
     filters,
@@ -58,14 +40,12 @@ export default function TripsPage() {
     tagOptions,
   } = useTripFilters(trips, countryData, undefined, globalSearch);
 
-  // Sort trips
   const sortedTrips = sortTrips(
     filteredTrips,
     countryData?.countries ?? [],
     sortBy,
   );
 
-  // Table pagination hook
   const {
     currentPage,
     setCurrentPage,
@@ -80,62 +60,6 @@ export default function TripsPage() {
     initialPageSize: 20,
   });
 
-  // Determine if all trips are selected
-  const allSelected =
-    selectedTripIds.length === filteredTrips.length && filteredTrips.length > 0;
-
-  // Get selected trips for bulk actions
-  const selectedTrips = filteredTrips.filter((trip) =>
-    selectedTripIds.includes(trip.id),
-  );
-
-  // Only allow non-shared trips for bulk actions
-  const nonSharedSelectedTrips = selectedTrips.filter(
-    (trip) => !sharedTripIds.has(trip.id),
-  );
-
-  // Selection handlers
-  function handleSelectTrip(id: string) {
-    // Prevent selecting shared trips
-    if (sharedTripIds.has(id)) return;
-
-    setSelectedTripIds((prev) =>
-      prev.includes(id)
-        ? prev.filter((tripId) => tripId !== id)
-        : [...prev, id],
-    );
-  }
-
-  // Select all handler
-  function handleSelectAll() {
-    const nonSharedTripIds = filteredTrips
-      .filter((trip) => !sharedTripIds.has(trip.id))
-      .map((trip) => trip.id);
-    if (
-      selectedTripIds.length === nonSharedTripIds.length &&
-      nonSharedTripIds.length > 0 &&
-      selectedTripIds.every((id) => nonSharedTripIds.includes(id))
-    ) {
-      setSelectedTripIds([]);
-    } else {
-      setSelectedTripIds(nonSharedTripIds);
-    }
-  }
-
-  // Bulk duplicate handler
-  function handleBulkDuplicate() {
-    nonSharedSelectedTrips.forEach((trip) => duplicateTrip(trip));
-  }
-
-  // Bulk delete handler
-  async function handleBulkDelete() {
-    for (const trip of nonSharedSelectedTrips) {
-      await removeTrip(trip.id);
-    }
-    setSelectedTripIds([]);
-  }
-
-  // Trip modal hook
   const {
     trip,
     setTrip,
@@ -144,7 +68,7 @@ export default function TripsPage() {
     handleAdd,
     handleEdit,
     handleSave,
-  } = useTripModal({ addTrip, editTrip, trips });
+  } = useTripModal();
 
   // Update filter handler
   const handleUpdateFilter = (key: string, value: unknown) => {
@@ -155,13 +79,6 @@ export default function TripsPage() {
       );
     }
   };
-
-  // Delete trip
-  async function handleDelete(trip: Trip) {
-    if (confirm(`Are you sure you want to delete the trip "${trip.name}"?`)) {
-      await removeTrip(trip.id);
-    }
-  }
 
   return (
     <div className="min-h-screen w-full flex flex-col">
@@ -174,11 +91,7 @@ export default function TripsPage() {
           globalSearch={globalSearch}
           setGlobalSearch={setGlobalSearch}
           resetFilters={resetFilters}
-          selectedTripIds={selectedTripIds}
-          setCalendarOpen={toggleCalendar}
           onAddTrip={handleAdd}
-          onBulkDuplicate={handleBulkDuplicate}
-          onBulkDelete={handleBulkDelete}
         />
       )}
 
@@ -206,11 +119,7 @@ export default function TripsPage() {
           <>
             <TripsTable
               trips={paginatedTrips}
-              onViewInCalendar={handleViewInCalendar}
               onEdit={handleEdit}
-              onDuplicate={duplicateTrip}
-              onRatingChange={updateTripRating}
-              onDelete={handleDelete}
               filters={filters}
               updateFilter={handleUpdateFilter}
               countryOptions={countryOptions}
@@ -219,10 +128,6 @@ export default function TripsPage() {
               categoryOptions={categoryOptions}
               statusOptions={statusOptions}
               tagOptions={tagOptions}
-              selectedTripIds={selectedTripIds}
-              onSelectTrip={handleSelectTrip}
-              allSelected={allSelected}
-              handleSelectAll={handleSelectAll}
               currentPage={currentPage}
               totalPages={totalPages}
               onPageChange={setCurrentPage}

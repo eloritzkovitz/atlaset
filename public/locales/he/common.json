@@ -55,6 +55,7 @@
     "help": "עזרה"
   },
   "search": {
+    "pageTitle": "תוצאות חיפוש עבור \"{{query}}\"",
     "placeholder": "חיפוש",
     "recent": "חיפושים אחרונים",
     "clear": "נקה",

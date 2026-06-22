@@ -306,9 +306,13 @@ describe("visits utils", () => {
   describe("getVisitCountStats", () => {
     it("returns correct map, min, and max for normal trips", () => {
       const trips = [
-        { endDate: "2022-01-01", countryCodes: ["US", "CA"] },
-        { endDate: "2022-06-01", countryCodes: ["US"] },
-        { endDate: "2023-01-01", countryCodes: ["FR"] },
+        {
+          endDate: "2022-01-01",
+          countryCodes: ["US", "CA"],
+          status: "completed",
+        },
+        { endDate: "2022-06-01", countryCodes: ["US"], status: "completed" },
+        { endDate: "2023-01-01", countryCodes: ["FR"], status: "completed" },
       ] as any[];
       const { map, min, max } = getVisitCountStats(trips, 2022);
       expect(map).toEqual({ US: 2, CA: 1 });
@@ -326,8 +330,8 @@ describe("visits utils", () => {
 
     it("ignores trips after the given year", () => {
       const trips = [
-        { endDate: "2024-01-01", countryCodes: ["JP"] },
-        { endDate: "2022-01-01", countryCodes: ["US"] },
+        { endDate: "2024-01-01", countryCodes: ["JP"], status: "completed" },
+        { endDate: "2022-01-01", countryCodes: ["US"], status: "completed" },
       ] as any[];
       const { map, min, max } = getVisitCountStats(trips, 2022);
       expect(map).toEqual({ US: 1 });
@@ -337,8 +341,8 @@ describe("visits utils", () => {
 
     it("handles multiple countries with same visit count", () => {
       const trips = [
-        { endDate: "2022-01-01", countryCodes: ["US"] },
-        { endDate: "2022-01-01", countryCodes: ["CA"] },
+        { endDate: "2022-01-01", countryCodes: ["US"], status: "completed" },
+        { endDate: "2022-01-01", countryCodes: ["CA"], status: "completed" },
       ] as any[];
       const { map, min, max } = getVisitCountStats(trips, 2022);
       expect(map).toEqual({ US: 1, CA: 1 });
@@ -367,12 +371,17 @@ describe("visits utils", () => {
   describe("first/last visit and year map utilities", () => {
     it("computes first and last visit dates by country", () => {
       const trips = [
-        { endDate: "2020-01-01", countryCodes: ["US", "CA"] },
-        { endDate: "2019-06-01", countryCodes: ["US"] },
-        { endDate: "2021-03-01", countryCodes: ["FR"] },
+        {
+          endDate: "2020-01-01",
+          countryCodes: ["US", "CA"],
+          status: "completed",
+        },
+        { endDate: "2019-06-01", countryCodes: ["US"], status: "completed" },
+        { endDate: "2021-03-01", countryCodes: ["FR"], status: "completed" },
       ] as any[];
       const first = getFirstVisitDateByCountry(trips);
       const last = getLastVisitDateByCountry(trips);
+
       expect(first.US.getFullYear()).toBe(2019);
       expect(last.US.getFullYear()).toBe(2020);
       expect(first.FR.getFullYear()).toBe(2021);
@@ -384,11 +393,13 @@ describe("visits utils", () => {
           startDate: "2018-12-31",
           endDate: "2019-01-02",
           countryCodes: ["US"],
+          status: "completed",
         },
         {
           startDate: "2019-05-01",
           endDate: "2020-05-01",
           countryCodes: ["US", "FR"],
+          status: "completed",
         },
       ] as any[];
       const ymap = buildVisitedYearMap(trips);
@@ -410,6 +421,7 @@ describe("visits utils", () => {
           endDate: "2020-01-02",
           name: "New Year",
           id: "t1",
+          status: "completed",
         },
       ] as any[];
       const visits = getVisitsForCountry(trips, "US");

@@ -31,15 +31,10 @@ export default function DocsPage() {
   );
 
   // Set page titles dynamically
-  usePageTitle(
-    doc ? doc.label : "Atlaset Docs",
-    doc
-      ? {
-          suffix: " | Atlaset Docs",
-          fallback: "Atlaset Docs",
-        }
-      : { suffix: "", fallback: "Atlaset Docs" },
-  );
+  usePageTitle(doc ? `${doc.label} | Atlaset Docs` : "Atlaset Docs", {
+    disableSuffix: true,
+    fallback: "Atlaset Docs",
+  });
 
   return (
     <div dir="ltr">
