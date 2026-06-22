@@ -174,3 +174,20 @@ export function getPlannedTrips(trips: Trip[]): Trip[] {
 export function getCompletedTrips(trips: Trip[]): Trip[] {
   return trips.filter((trip) => isCompletedTrip(trip));
 }
+
+/**
+ * Determines if a trip can be marked as completed based on its start date and current status.
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip can be marked as completed, false otherwise.
+ */
+export function canMarkCompleted(trip: Trip): boolean {
+  // If there's no valid start date or the trip is already completed, return false
+  if (!hasValidStartDate(trip) || trip.status === "completed") return false;
+
+  // Check if the start date is in the past or today
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const start = new Date(trip.startDate!);
+
+  return start <= today;
+}

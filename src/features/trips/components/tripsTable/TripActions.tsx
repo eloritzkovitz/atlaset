@@ -19,7 +19,7 @@ import {
   useMenuPosition,
 } from "@hooks";
 import type { Trip } from "../../types";
-import { hasValidStartDate, isInProgressTrip } from "../../utils/trips";
+import { canMarkCompleted, hasValidStartDate } from "../../utils/trips";
 import { useUI } from "@contexts/UIContext";
 
 interface TripActionsProps {
@@ -183,7 +183,7 @@ export const TripActions = forwardRef(function TripActions(
         >
           {t("table.actions.editTrip")}
         </MenuButton>
-        {isInProgressTrip(trip) && (
+        {canMarkCompleted(trip) && (
           <MenuButton
             onClick={() => {
               menuActions.onMarkCompleted?.();
