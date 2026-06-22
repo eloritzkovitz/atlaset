@@ -9,15 +9,18 @@ import { useUserFriends } from "@features/user";
 import { usePageTitle } from "@hooks";
 
 export default function SearchPage() {
-  const { t } = useTranslation("common");
   const { user: currentUser } = useAuth();
-  const { friends: friendList } = useUserFriends(currentUser?.uid);
   const { countries } = useCountryData();
   const location = useLocation();
+  const { t } = useTranslation("common");
+  const { friends: friendList } = useUserFriends(currentUser?.uid);
+
   const queryParam = new URLSearchParams(location.search).get("query") || "";
   const { results, loading } = useSearch(queryParam);
 
-  usePageTitle(`${queryParam ? `${queryParam}` : ""} - Atlaset`);
+  usePageTitle(
+    queryParam ? t("search.pageTitle", { query: queryParam }) : undefined,
+  );
 
   const sections = [
     {

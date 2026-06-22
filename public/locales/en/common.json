@@ -55,6 +55,7 @@
     "help": "Help"
   },
   "search": {
+    "pageTitle": "Search results for \"{{query}}\"",
     "placeholder": "Search",
     "recent": "Recent Searches",
     "clear": "Clear",

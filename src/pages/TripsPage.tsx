@@ -20,15 +20,11 @@ export default function TripsPage() {
   const { isMobile } = useScreenSize();
   const { trips, loading } = useTrips();
   const { t } = useTranslation("trips");
-  const { t: tCommon } = useTranslation("common");
 
   const [globalSearch, setGlobalSearch] = useState("");
   const [sortBy, setSortBy] = useState<TripSortBy>("startDate-desc");
 
-  // Set page title
-  const appName = tCommon("appName", "Atlaset");
-  const pageTitle = t("pageTitle", "Trips");
-  usePageTitle(`${pageTitle} | ${appName}`);
+  usePageTitle(t("pageTitle", "Trips"));
 
   const {
     filteredTrips,

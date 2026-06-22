@@ -26,11 +26,11 @@ import { AppPanels } from "@layouts/shells/AppPanels";
 import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
-  const { t } = useTranslation("user");
-  const navigate = useNavigate();
-  const location = useLocation();
-  const { username } = useParams();
   const { user: currentUser, loading: authLoading } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();  
+  const { username } = useParams();  
+  const { t } = useTranslation("user");  
   const [profileRefreshKey, setProfileRefreshKey] = useState(0);
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
     username,
@@ -43,8 +43,8 @@ export default function ProfilePage() {
   // Set the page title to the profile user's displayName if available
   usePageTitle(
     profileUser && profileUser.displayName
-      ? `${profileUser.displayName} | Atlaset`
-      : "Profile | Atlaset",
+      ? `${profileUser.displayName}`
+      : "Profile",
   );
 
   // Determine if this is the current user's own profile
@@ -114,7 +114,8 @@ export default function ProfilePage() {
                   <>
                     <ProfileAboutCard
                       displayEmail={
-                        profileUser.email ?? t("profile.about.personalDetails.noEmailProvided")
+                        profileUser.email ??
+                        t("profile.about.personalDetails.noEmailProvided")
                       }
                       selectedCountry={selectedCountry}
                       displayBirthday={

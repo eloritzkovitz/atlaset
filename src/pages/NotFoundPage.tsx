@@ -1,7 +1,7 @@
 import { usePageTitle } from "@hooks";
 
 export default function NotFoundPage() {
-  usePageTitle("Page not found | Atlaset");
+  usePageTitle("Page not found");
 
   return (
     <>

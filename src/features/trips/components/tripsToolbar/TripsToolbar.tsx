@@ -1,17 +1,17 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FaCalendar } from "react-icons/fa6";
 import {
+  ActionButton,
   ActionsToolbar,
   SearchInput,
   ToolbarSeparator,
-  ActionButton,
 } from "@components";
+import { ICONS } from "@constants/icons";
+import { useUI } from "@contexts/UIContext";
+import { ToolbarActions } from "./ToolbarActions";
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";
-import { ToolbarActions } from "./ToolbarActions";
 import type { Trip, TripFilterState } from "../../types";
-import { useUI } from "@contexts/UIContext";
 
 interface ToolbarProps {
   trips: Trip[];
@@ -65,7 +65,7 @@ export function TripsToolbar({
             onClick={toggleCalendar}
             ariaLabel={t("table.toolbar.calendar.viewCalendar")}
             title={t("table.toolbar.calendar.viewCalendar")}
-            icon={<FaCalendar />}
+            icon={<ICONS.calendar />}
             variant="toggle"
             className="ms-2"
           />

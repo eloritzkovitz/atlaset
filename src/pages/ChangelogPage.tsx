@@ -6,7 +6,7 @@ export default function ChangelogPage() {
   const { content, error } = useMarkdownFile("/CHANGELOG.md");
   const components = changelogMarkdownComponents;
 
-  usePageTitle("Changelog | Atlaset");
+  usePageTitle("Changelog");
 
   return (
     <div

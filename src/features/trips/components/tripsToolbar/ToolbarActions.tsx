@@ -8,12 +8,10 @@ interface ToolbarActionsProps {
   onAddTrip?: () => void;
 }
 
-export function ToolbarActions({
-  onAddTrip,
-}: ToolbarActionsProps) {
-  const { selectedTripIds, handleBulkDuplicate, handleBulkDelete } = useTrips();  
+export function ToolbarActions({ onAddTrip }: ToolbarActionsProps) {
+  const { selectedTripIds, handleBulkDuplicate, handleBulkDelete } = useTrips();
   const { t } = useTranslation("trips");
-  
+
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   // Check if there are selected trips
@@ -48,7 +46,6 @@ export function ToolbarActions({
         </ActionButton>
       </div>
 
-      {/* Confirm Modals */}
       {showDeleteConfirm && (
         <ConfirmModal
           title={t("table.toolbar.bulkActions.deleteConfirmTitle")}

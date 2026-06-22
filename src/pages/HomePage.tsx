@@ -8,11 +8,12 @@ import { HeroSection } from "@features/home/HeroSection";
 import { usePageTitle } from "@hooks";
 
 export default function HomePage() {
-  const { t } = useTranslation("home");
   const { user, loading } = useAuth();
+  const { t } = useTranslation("home");
 
-  // Set page title
-  usePageTitle(t("pageTitle", "Atlaset: Your travel companion"));
+  usePageTitle(t("pageTitle", "Atlaset: Your travel companion"), {
+    disableSuffix: true,
+  });
 
   // Show loading spinner while auth state is loading
   if (loading) {

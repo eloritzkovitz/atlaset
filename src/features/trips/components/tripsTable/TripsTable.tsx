@@ -37,7 +37,7 @@ interface TripsTableProps {
 
 export function TripsTable({
   trips,
-  onEdit,  
+  onEdit,
   filters,
   updateFilter,
   countryOptions,
@@ -45,7 +45,7 @@ export function TripsTable({
   participantsOptions,
   categoryOptions,
   statusOptions,
-  tagOptions,  
+  tagOptions,
   currentPage,
   totalPages,
   onPageChange,
@@ -65,7 +65,7 @@ export function TripsTable({
     MIN_WIDTHS,
   );
 
-  // Helper to render resize handle
+  // Render resize handle for each column
   const renderResizeHandle = (key: string) => {
     const colKey = key as keyof typeof colWidths;
     return (
@@ -76,7 +76,7 @@ export function TripsTable({
     );
   };
 
-  // Sorting handler
+  // Handle sorting when a column header is clicked
   const handleSort = (key: TripSortByKey) => {
     const [currentKey, currentDir] = sortBy.split("-");
     let nextDir: "asc" | "desc" = "asc";

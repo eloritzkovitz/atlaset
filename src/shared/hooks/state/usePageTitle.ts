@@ -1,24 +1,39 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 /**
- * Sets the document title and restores the previous title on unmount.
- * @param title The page-specific title (without the app suffix)
- * @param options Optional: { suffix: string, fallback: string }
+ * Sets the document title and dynamically appends the localized application suffix.
+ * @param title The page-specific title.
+ * @param options Optional overrides for the fallback or separator format.
  */
 export function usePageTitle(
   title: string | undefined,
-  options?: { suffix?: string; fallback?: string },
+  options?: { fallback?: string; separator?: string; disableSuffix?: boolean },
 ) {
+  const { t: tCommon } = useTranslation("common");
+  const appName = tCommon("appName", "Atlaset");
+
+  // Set the document title when the component mounts or when the title changes
   useEffect(() => {
-    const suffix = options?.suffix ?? "";
-    const fallback = options?.fallback ?? "Atlaset";
+    const fallback = options?.fallback ?? appName;
+    const separator = options?.separator ?? " | ";
+    const disableSuffix = options?.disableSuffix ?? false;
+
+    // If title is provided, set the document title with the suffix; otherwise, use the fallback
     if (title) {
-      document.title = title + suffix;
+      document.title = disableSuffix ? title : `${title}${separator}${appName}`;
     } else {
-      document.title = fallback + suffix;
+      document.title = fallback;
     }
+
     return () => {
       document.title = fallback;
     };
-  }, [title, options?.suffix, options?.fallback]);
+  }, [
+    title,
+    appName,
+    options?.fallback,
+    options?.separator,
+    options?.disableSuffix,
+  ]);
 }

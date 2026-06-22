@@ -21,11 +21,11 @@ export default function AtlasPage() {
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { loading: layersLoading } = useLayers();
   const { mapReady, handleMapReady } = useMapView();
+  const { t } = useTranslation("atlas");
+
   const svgRef = useRef<SVGSVGElement>(null);
 
-  // Set page title
-  const { t } = useTranslation("common");
-  usePageTitle(t("appName", "Atlaset"));
+  usePageTitle(t("pageTitle", "Atlas"));
 
   // Set map mode based on URL params
   useMapMode();
@@ -48,6 +48,7 @@ export default function AtlasPage() {
   const isLoading =
     countriesLoading || layersLoading || geoLoading || !mapReady;
 
+  // If there is an error loading the map or country data, display an error message
   if (error || geoError) {
     return (
       <ErrorMessage fullScreen error={error || geoError || "Unknown error"} />
