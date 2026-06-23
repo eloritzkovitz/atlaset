@@ -55,9 +55,9 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   // Opens the modal for editing an existing list
   const openEditModal = (listId: string) => {
     // Special handling for the "visited" system list
-    if (listId === "__system_visited__") {
+    if (listId === "VISITED_COUNTRIES") {
       setCurrentList({
-        id: "__system_visited__",
+        id: "VISITED_COUNTRIES",
         name: "Visited Countries",
         countryCodes: visitedCountryCodes,
       });

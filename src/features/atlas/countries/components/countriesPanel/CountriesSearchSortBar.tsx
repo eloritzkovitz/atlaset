@@ -93,7 +93,7 @@ export function CountriesSearchSortBar({
     // If the toggle corresponds to "visited" or a custom list, trigger the edit callback
     if (typeof onEditList === "function") {
       if (val === "visited") {
-        onEditList("__system_visited__");
+        onEditList("VISITED_COUNTRIES");
       } else {
         onEditList(val);
       }
