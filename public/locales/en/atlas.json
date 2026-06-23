@@ -40,6 +40,9 @@
       "viewDetails": "View Details",
       "addToList": "Add to List",
       "newList": "New list",
+      "markVisited": "Mark Visited",
+      "unmarkVisited": "Unmark Visited",
+      "visited": "Visited",
       "centerMap": "Center on Map",
       "viewDashboard": "View in Dashboard",
       "wikipedia": "View on Wikipedia"

@@ -5,18 +5,19 @@ import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import type { Country } from "@features/countries";
 import { useLanguage } from "@features/settings";
+import { useVisitedCountries } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
 
 export interface CountryActionConfig {
-  id: string;
   label: string;
   ariaLabel: string;
   icon: React.ReactNode;
   onClick: () => void;
+  disabled?: boolean;
 }
 
 interface UseCountryActionsProps {
-  country: Country;
+  country: Country | null;
   onCloseMenu?: () => void;
   onClosePanel?: () => void;
 }
@@ -32,20 +33,31 @@ export function useCountryActions({
   country,
   onCloseMenu,
   onClosePanel,
-}: UseCountryActionsProps): CountryActionConfig[] {
+}: UseCountryActionsProps): Record<string, CountryActionConfig> {
   const { centerOnCountry } = useMapView();
   const navigate = useNavigate();
   const { t } = useTranslation("atlas");
   const { current: lang } = useLanguage();
+  const {
+    isCountryVisited,
+    isTripBased,
+    addManualCountry,
+    removeManualCountry,
+  } = useVisitedCountries();
+
+  // If no country is provided, return an empty array of actions
+  if (!country) return {};
+
+  const visited = isCountryVisited(country.isoCode);
+  const tripBased = isTripBased(country.isoCode);
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
     if (!openState && onCloseMenu) onCloseMenu();
   });
 
-  return [    
-    {
-      id: "center-map",
+  return {
+    centerMap: {
       label: t("countries.actions.centerMap"),
       ariaLabel: t("countries.actions.centerMap"),
       icon: <ICONS.center />,
@@ -55,8 +67,34 @@ export function useCountryActions({
         });
       },
     },
-    {
-      id: "view-dashboard",
+    toggleVisited: {
+      label: tripBased
+        ? t("countries.actions.visited", "Visited")
+        : visited
+          ? t("countries.actions.unmarkVisited", "Unmark Visited")
+          : t("countries.actions.markVisited", "Mark Visited"),
+      ariaLabel: visited ? "Unmark Visited" : "Mark Visited",
+      icon: visited ? (
+        tripBased ? (
+          <ICONS.selected />
+        ) : (
+          <ICONS.close />
+        )
+      ) : (
+        <ICONS.selected />
+      ),
+      disabled: tripBased,
+      onClick: () => {
+        closeMenuAndCall(async () => {
+          if (visited) {
+            await removeManualCountry(country.isoCode);
+          } else {
+            await addManualCountry(country.isoCode);
+          }
+        });
+      },
+    },
+    viewDashboard: {
       label: t("countries.actions.viewDashboard"),
       ariaLabel: t("countries.actions.viewDashboard"),
       icon: <ICONS.exploration />,
@@ -69,8 +107,7 @@ export function useCountryActions({
         });
       },
     },
-    {
-      id: "wikipedia",
+    wikipedia: {
       label: t("countries.actions.wikipedia"),
       ariaLabel: t("countries.actions.wikipedia"),
       icon: <FaWikipediaW />,
@@ -83,5 +120,5 @@ export function useCountryActions({
         });
       },
     },
-  ];
+  };
 }

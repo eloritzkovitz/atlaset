@@ -3,13 +3,11 @@ import { useTranslation } from "react-i18next";
 import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
-import { useMapView } from "@contexts/MapViewContext";
 import type { Country } from "@features/countries";
 import {
   useContextMenu,
   useFloatingHover,
   useFloatingMenuPosition,
-  useMenuActions,
   useMenuPosition,
 } from "@hooks";
 import { CountryListsMenu } from "./CountryListsMenu";
@@ -27,7 +25,6 @@ export const CountryActions = forwardRef(function CountryActions(
   ref,
 ) {
   const { countryLists, openAddModal, handleUpdate } = useCountryLists();
-  const { centerOnCountry } = useMapView();
   const { t } = useTranslation("atlas");
   const [listMenuOpen, setListMenuOpen] = useState(false);
 
@@ -44,7 +41,6 @@ export const CountryActions = forwardRef(function CountryActions(
   // Context menu management
   const {
     open,
-    setOpen,
     menuStyle: contextMenuStyle,
     contextCoords,
     handleCloseContext,
@@ -107,22 +103,20 @@ export const CountryActions = forwardRef(function CountryActions(
   };
 
   // Get action configurations based on country and context
-  const actions = useCountryActions({
-    country: country!,
+  const actionsObj = useCountryActions({
+    country,
     onCloseMenu: handleCloseAll,
     onClosePanel: onCloseListPanel,
   });
 
-  // Menu actions
-  const menuActions = useMenuActions(
-    {
-      onCenter: () => centerOnCountry?.(country!.isoCode),
-    },
-    setOpen,
-  );
-
   // Do not render menu if no country is selected
   if (!country) return null;
+
+  const trackingSection = [actionsObj.toggleVisited].filter(Boolean);
+  const resourceSection = [
+    actionsObj.viewDashboard,
+    actionsObj.wikipedia,
+  ].filter(Boolean);
 
   // Handler to add country to a selected list
   const handleAddCountryToList = async (listId: string) => {
@@ -159,7 +153,7 @@ export const CountryActions = forwardRef(function CountryActions(
         <MenuButton
           onClick={() => {
             handleCloseAll();
-            if (onCountryInfo) onCountryInfo(country);
+            onCountryInfo?.(country);
           }}
           icon={<ICONS.view className="me-2" />}
           className="w-full"
@@ -167,21 +161,24 @@ export const CountryActions = forwardRef(function CountryActions(
         >
           {t("countries.actions.viewDetails", "View Details")}
         </MenuButton>
-        <MenuButton
-          onClick={menuActions.onCenter}
-          icon={<ICONS.center className="me-2" />}
-          className="w-full"
-        >
-          {t("countries.actions.centerMap", "Center Map")}
-        </MenuButton>
+
+        {actionsObj.centerMap && (
+          <MenuButton
+            onClick={actionsObj.centerMap.onClick}
+            icon={actionsObj.centerMap.icon}
+            className="w-full"
+            onMouseEnter={() => setListMenuOpen(false)}
+          >
+            {actionsObj.centerMap.label}
+          </MenuButton>
+        )}
+
         <Separator className="my-2" />
 
         <div
           ref={addToListRowRef}
           style={{ display: "inline-block", width: "100%" }}
-          onMouseEnter={() => {
-            setListMenuOpen(true);
-          }}
+          onMouseEnter={() => setListMenuOpen(true)}
           onMouseLeave={() => setListMenuOpen(false)}
         >
           <MenuButton
@@ -213,28 +210,43 @@ export const CountryActions = forwardRef(function CountryActions(
             />
           )}
         </div>
+
+        {trackingSection.map((act, i) => (
+          <MenuButton
+            key={i}
+            onClick={act.onClick}
+            onMouseEnter={() => setListMenuOpen(false)}
+            icon={
+              <span
+                className={`me-2 inline-flex items-center ${act.disabled ? "text-muted" : ""}`}
+              >
+                {act.icon}
+              </span>
+            }
+            className="w-full"
+            disabled={act.disabled}
+          >
+            <span className={act.disabled ? "text-muted" : ""}>
+              {act.label}
+            </span>
+          </MenuButton>
+        ))}
+
         <Separator className="my-2" />
 
-        {actions
-          .filter((action) => action.id !== "center-map")
-          .map((action) => (
-            <MenuButton
-              key={action.id}
-              onClick={() => {
-                action.onClick();
-                handleCloseAll();
-              }}
-              onMouseEnter={() => setListMenuOpen(false)}
-              icon={
-                <span className="me-2 inline-flex items-center">
-                  {action.icon}
-                </span>
-              }
-              className="w-full"
-            >
-              {action.label}
-            </MenuButton>
-          ))}
+        {resourceSection.map((act, i) => (
+          <MenuButton
+            key={i}
+            onClick={act.onClick}
+            onMouseEnter={() => setListMenuOpen(false)}
+            icon={
+              <span className="me-2 inline-flex items-center">{act.icon}</span>
+            }
+            className="w-full"
+          >
+            {act.label}
+          </MenuButton>
+        ))}
       </Menu>
     </>
   );
