@@ -23,6 +23,7 @@ import {
   filterByVisitCount,
   filterByVisitStatus,
   getLatestYear,
+  useVisitedCountries,
   useVisitStats,
   type VisitedStatus,
 } from "@features/visits";
@@ -47,6 +48,7 @@ export function useCountryFilters() {
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
+  const { visitedCountryCodes } = useVisitedCountries();
 
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
@@ -108,6 +110,7 @@ export function useCountryFilters() {
     years,
     isReadonly,
     effectiveSharedVisitedIsoCodes,
+    timelineMode ? [] : visitedCountryCodes,
   );
 
   // With layers applied, including visited filter
@@ -128,7 +131,7 @@ export function useCountryFilters() {
     if (hasVisitedQualifier) {
       cleanSearch = cleanSearch.replace(/visited:\s*\S+/i, "");
     }
-    
+
     if (hasSovereignQualifier) {
       cleanSearch = cleanSearch.replace(
         /sovereigntyStatus:\s*\S+|sovereign:\s*\S+/gi,
@@ -195,12 +198,23 @@ export function useCountryFilters() {
           effectiveSharedVisitedIsoCodes.includes(c.isoCode),
         );
       } else {
-        base = filterByVisitCount(
-          base,
-          visitedMap,
-          minVisitCount,
-          maxVisitCount,
-        );
+        // If timeline mode is active, filter purely by trip footprint metrics
+        if (timelineMode) {
+          base = filterByVisitCount(
+            base,
+            visitedMap,
+            minVisitCount,
+            maxVisitCount,
+          );
+        } else {
+          // Otherwise, show countries that are either manual entries OR have trip records
+          const manualSet = new Set(visitedCountryCodes);
+          base = base.filter(
+            (c) =>
+              manualSet.has(c.isoCode) ||
+              Object.prototype.hasOwnProperty.call(visitedMap, c.isoCode),
+          );
+        }
       }
     }
 
@@ -226,6 +240,8 @@ export function useCountryFilters() {
     minVisitCount,
     maxVisitCount,
     sovereignOnly,
+    visitedCountryCodes,
+    timelineMode,
   ]);
 
   // Country counts

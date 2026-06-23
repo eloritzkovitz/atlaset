@@ -13,6 +13,7 @@ import {
  * @param years - The list of all years in the timeline (optional, used for optimization).
  * @param isReadonly - Whether the map is in readonly mode (optional).
  * @param sharedVisitedIsoCodes - The list of visited ISO codes from shared map info (optional, used in readonly mode).
+ * @param manualVisitedCountryCodes - The list of manually marked visited country codes (optional).
  * @returns An object containing the visited map, absolute min/max visit counts, and a visited year map.
  */
 export function useVisitStats(
@@ -21,6 +22,7 @@ export function useVisitStats(
   years?: number[],
   isReadonly?: boolean,
   sharedVisitedIsoCodes?: string[] | undefined,
+  manualVisitedCountryCodes: string[] = [],
 ) {
   const {
     map: visitedMap,
@@ -49,7 +51,7 @@ export function useVisitStats(
         ? new Set(years.filter((y) => y < selectedYear))
         : undefined;
 
-    // Helper to check if two sets intersect, optimized for the smaller set
+    // Check if two sets intersect, optimized for the smaller set
     const intersectSets = (a: Set<number>, b: Set<number>) => {
       const [small, large] = a.size <= b.size ? [a, b] : [b, a];
       for (const v of small) if (large.has(v)) return true;
@@ -72,8 +74,20 @@ export function useVisitStats(
   // Determine effective visited iso codes based on mode
   const visitedIsoCodes = useMemo(() => {
     if (isReadonly && sharedVisitedIsoCodes) return sharedVisitedIsoCodes;
-    return Object.keys(visitedMap);
-  }, [isReadonly, sharedVisitedIsoCodes, visitedMap]);
+
+    // Combine visited from trips and manually marked visited codes, ensuring uniqueness
+    const combinedCodes = new Set([
+      ...Object.keys(visitedMap),
+      ...manualVisitedCountryCodes,
+    ]);
+
+    return Array.from(combinedCodes);
+  }, [
+    isReadonly,
+    sharedVisitedIsoCodes,
+    visitedMap,
+    manualVisitedCountryCodes,
+  ]);
 
   return {
     visitedMap,

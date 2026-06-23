@@ -2,18 +2,23 @@ import { useEffect, useState, type ReactNode } from "react";
 import { CountryListModal } from "@features/atlas/countries";
 import type { Layer } from "@features/atlas/layers";
 import { countryListService, type CountryList } from "@features/countries";
+import { useVisitedCountries } from "@features/visits";
 import {
   CountryListsContext,
   type CountryListsContextValue,
 } from "./CountryListsContext";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
+  const { visitedCountryCodes, addManualCountry, removeManualCountry } =
+    useVisitedCountries();
+
   const [countryLists, setCountryLists] = useState<CountryList[]>([]);
-  const [currentList, setCurrentList] = useState<CountryList | null>(null);  
+  const [currentList, setCurrentList] = useState<CountryList | null>(null);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
+  const [isSystemList, setIsSystemList] = useState(false);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);  
+  const [isEditing, setIsEditing] = useState(false);
 
   // Reloads the country lists from the service
   const reloadCountryLists = async () => {
@@ -33,6 +38,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     setModalOpen(false);
     setCurrentList(null);
     setIsEditing(false);
+    setIsSystemList(false);
   };
 
   // Opens the modal for adding a new list, optionally pre-filling with country codes
@@ -48,10 +54,25 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Opens the modal for editing an existing list
   const openEditModal = (listId: string) => {
+    // Special handling for the "visited" system list
+    if (listId === "__system_visited__") {
+      setCurrentList({
+        id: "__system_visited__",
+        name: "Visited Countries",
+        countryCodes: visitedCountryCodes,
+      });
+      setIsEditing(true);
+      setIsSystemList(true);
+      setModalOpen(true);
+      return;
+    }
+
+    // Standard handling for user-defined lists
     const list = countryLists.find((l) => l.id === listId);
     if (list) {
       setCurrentList({ ...list });
       setIsEditing(true);
+      setIsSystemList(false);
       setModalOpen(true);
     }
   };
@@ -80,7 +101,32 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   };
 
   // Shared form modification pipeline
-  const handleModalChange = (updatedList: CountryList) => {
+  const handleModalChange = async (updatedList: CountryList) => {
+    // Special handling for the "visited" system list
+    if (isSystemList) {
+      // Determine what country code was checked or unchecked
+      const currentCodes = currentList?.countryCodes || [];
+      const newCodes = updatedList.countryCodes;
+
+      const added = newCodes.find((code) => !currentCodes.includes(code));
+      const removed = currentCodes.find((code) => !newCodes.includes(code));
+
+      // Update the visited countries service based on the change
+      if (added) {
+        await addManualCountry(added);
+      } else if (removed) {
+        await removeManualCountry(removed);
+      }
+
+      // Update local state display layout inside the open modal
+      setCurrentList({
+        ...updatedList,
+        countryCodes: newCodes,
+      });
+      return;
+    }
+
+    // Standard list processing path
     setCurrentList(updatedList);
   };
 
@@ -94,6 +140,11 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Updates a list by saving it and reloading all lists
   const handleUpdate = async (list: CountryList) => {
+    // Special handling for the "visited" system list
+    if (isSystemList) {
+      return;
+    }
+
     await countryListService.save(list);
     await reloadCountryLists();
     closeModal();
@@ -129,10 +180,11 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       <CountryListModal
         isOpen={modalOpen}
         isEditing={isEditing}
+        isSystemList={isSystemList}
         list={currentList}
         onChange={handleModalChange}
-        onSave={handleSave}
-        onDelete={handleDelete}
+        onSave={isEditing ? handleUpdate : handleSave}
+        onDelete={isSystemList ? undefined : handleDelete}
         onClose={closeModal}
       />
     </CountryListsContext.Provider>

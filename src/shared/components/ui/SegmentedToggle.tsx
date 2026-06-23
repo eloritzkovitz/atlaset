@@ -13,6 +13,7 @@ interface SegmentedToggleProps<T extends string> {
   value: T;
   options: SegmentedToggleOption<T>[];
   onChange: (val: T) => void;
+  onDoubleClick?: (val: T) => void;
   className?: string;
   wrap?: boolean;
   disabled?: boolean;
@@ -23,6 +24,7 @@ export function SegmentedToggle<T extends string>({
   value,
   options,
   onChange,
+  onDoubleClick,
   className = "",
   wrap = false,
   disabled = false,
@@ -82,6 +84,7 @@ export function SegmentedToggle<T extends string>({
                 : `bg-surface ${hoverClass}`
             }`}
             onClick={() => onChange(opt.value)}
+            onDoubleClick={() => onDoubleClick?.(opt.value)}
             disabled={disabled}
           >
             <span

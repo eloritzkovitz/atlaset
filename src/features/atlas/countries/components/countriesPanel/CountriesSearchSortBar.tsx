@@ -88,8 +88,15 @@ export function CountriesSearchSortBar({
 
   // Handler for double-click editing
   const handleToggleDoubleClick = (val: string) => {
+    if (val === "all" || val === "sovereign") return;
+
+    // If the toggle corresponds to "visited" or a custom list, trigger the edit callback
     if (typeof onEditList === "function") {
-      onEditList(val);
+      if (val === "visited") {
+        onEditList("__system_visited__");
+      } else {
+        onEditList(val);
+      }
     }
   };
 
@@ -126,46 +133,43 @@ export function CountriesSearchSortBar({
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {options.map((opt) => (
-          <div
+          <SegmentedToggle
             key={opt.value}
-            className={`inline-block ${isOverflowing ? "cursor-inherit" : "cursor-pointer"}`}
-            onDoubleClick={() => handleToggleDoubleClick(opt.value)}
-          >
-            <SegmentedToggle
-              value={selectedToggle}
-              options={[opt]}
-              onChange={(val) => {
-                const ensurePrefix = (prefix: string) => {
-                  const current = String(search ?? "").trim();
-                  const low = current.toLowerCase();
-                  if (low.startsWith(prefix + ":")) return;
-                  setSearch(`${prefix}: true`);
-                };
-                if (val === "visited") {
-                  setVisitedOnly?.(true);
-                  setSovereignOnly?.(false);
-                  setSelectedListId?.(null);
-                  ensurePrefix("visited");
-                } else if (val === "sovereign") {
-                  setVisitedOnly?.(false);
-                  setSovereignOnly?.(true);
-                  setSelectedListId?.(null);
-                  ensurePrefix("sovereign");
-                } else if (val === "all") {
-                  setVisitedOnly?.(false);
-                  setSovereignOnly?.(false);
-                  setSelectedListId?.(null);
-                  setSearch("");
-                } else {
-                  setVisitedOnly?.(false);
-                  setSovereignOnly?.(false);
-                  setSelectedListId?.(val);
-                  setSearch("");
-                }
-              }}
-              disabled={timelineMode}
-            />
-          </div>
+            value={selectedToggle}
+            options={[opt]}
+            onDoubleClick={(val) => handleToggleDoubleClick(val)}
+            className={isOverflowing ? "!cursor-inherit" : "!cursor-pointer"}
+            onChange={(val) => {
+              const ensurePrefix = (prefix: string) => {
+                const current = String(search ?? "").trim();
+                const low = current.toLowerCase();
+                if (low.startsWith(prefix + ":")) return;
+                setSearch(`${prefix}: true`);
+              };
+              if (val === "visited") {
+                setVisitedOnly?.(true);
+                setSovereignOnly?.(false);
+                setSelectedListId?.(null);
+                ensurePrefix("visited");
+              } else if (val === "sovereign") {
+                setVisitedOnly?.(false);
+                setSovereignOnly?.(true);
+                setSelectedListId?.(null);
+                ensurePrefix("sovereign");
+              } else if (val === "all") {
+                setVisitedOnly?.(false);
+                setSovereignOnly?.(false);
+                setSelectedListId?.(null);
+                setSearch("");
+              } else {
+                setVisitedOnly?.(false);
+                setSovereignOnly?.(false);
+                setSelectedListId?.(val);
+                setSearch("");
+              }
+            }}
+            disabled={timelineMode}
+          />
         ))}
         <ActionButton
           icon={<ICONS.add />}

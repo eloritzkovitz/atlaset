@@ -20,7 +20,8 @@ Country details include the following sections:
 
 - The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
 - By clicking the `Visits` tab, you can open a detailed view of your `visit history` to the specific country.
-- Data is based on your `trip data`.
+- Data is based on your `trip data`, or by manually adding countries through the list.
+- Manually added visited countries do not count towards visit statistics, but will show elsewhere.
 
 ## **Filtering & sorting**
 
@@ -95,6 +96,10 @@ You can create and manage your own custom `lists`, which allow quick, dynamic fi
 ### **Creating lists from layers**
 
 `Layers` are advanced, visual representations of country lists on the map. When creating lists from layers, the `name` and `countries` fields will be shared between both objects. Updating a linked list will also update the relevant content in the layer, allowing for easier management.
+
+### **Visited countries**
+
+`Visited countries` can manually be added by double-clicking the `Visited` list. As this is a system list and not a user-made one, it behaves differently: the list name or trip-based countries are not editable. The list's content is directly associated with the user's `visited countries` and affects all visit related content, with the exception of statistics.
 
 ## **Learn more**
 

@@ -13,10 +13,12 @@ import {
   useCountryData,
   type CountryList,
 } from "@features/countries";
+import { useVisitedCountries } from "@features/visits";
 
 interface CountryListModalProps {
   isOpen: boolean;
   isEditing: boolean;
+  isSystemList?: boolean;
   list: CountryList | null;
   onChange: (list: CountryList) => void;
   onSave: (list: CountryList) => void;
@@ -27,6 +29,7 @@ interface CountryListModalProps {
 export function CountryListModal({
   isOpen,
   isEditing,
+  isSystemList = false,
   list,
   onChange,
   onSave,
@@ -34,6 +37,8 @@ export function CountryListModal({
   onClose,
 }: CountryListModalProps) {
   const { countries } = useCountryData();
+  const { isTripBased } = useVisitedCountries();
+
   const [countrySelectOpen, setCountrySelectOpen] = useState(false);
   const { t } = useTranslation("atlas");
 
@@ -49,14 +54,18 @@ export function CountryListModal({
 
   // Validate list
   const isLinked = !!list.layerId && isEditing;
-  const isValid = list.name.trim() !== "" && list.countryCodes.length > 0;
+
+  // Determine if the list is valid for saving
+  const isValid = isSystemList
+    ? list.countryCodes.length >= 0
+    : list.name.trim() !== "" && list.countryCodes.length > 0;
 
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={handleClose}
-        className="rounded-xl shadow-2xl !min-w-[600px] max-h-[90vh] overflow-y-auto"
+        className="rounded-xl shadow-2xl !min-w-[900px] max-h-[95vh] overflow-y-auto"
         disableClose={countrySelectOpen}
         draggable
       >
@@ -88,7 +97,10 @@ export function CountryListModal({
           }}
         >
           <div className="p-4">
-            <FormField label={t("countries.lists.form.nameLabel")}>
+            <FormField
+              label={t("countries.lists.form.nameLabel")}
+              disabled={isSystemList}
+            >
               <input
                 type="text"
                 name="name"
@@ -97,14 +109,24 @@ export function CountryListModal({
               />
             </FormField>
             <CountrySelectField
+              key={list.id}
               countryCodes={list.countryCodes}
               countries={countries}
-              onChange={(newCodes) =>
-                onChange({ ...list, countryCodes: newCodes })
-              }
+              onChange={(newCodes) => {
+                const updatedList = { ...list, countryCodes: newCodes };
+
+                // Update the list in the parent component
+                onChange(updatedList);
+
+                // If it's a system list, save the changes immediately
+                if (isSystemList) {
+                  onSave(updatedList);
+                }
+              }}
               isOpen={countrySelectOpen}
               onOpen={() => setCountrySelectOpen(true)}
               onClose={() => setCountrySelectOpen(false)}
+              isTripBasedCountry={isSystemList ? isTripBased : undefined}
             />
             {isEditing && isLinked && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">
@@ -112,29 +134,37 @@ export function CountryListModal({
                 {t("countries.lists.form.linkedWarning")}
               </div>
             )}
+            {isSystemList && (
+              <div className="flex px-3 py-2 mb-2 items-center text-danger ">
+                <ICONS.info className="inline me-2" />
+                {t("countries.lists.form.systemListWarning")}
+              </div>
+            )}
             <div className="flex items-center justify-end mt-6">
-              <ModalActions
-                onCancel={onClose}
-                onSubmit={() => isValid && onSave(list)}
-                onDelete={
-                  isEditing && onDelete ? () => onDelete(list.id) : undefined
-                }
-                submitType="submit"
-                submitIcon={
-                  isEditing ? (
-                    <ICONS.save className="inline" />
-                  ) : (
-                    <ICONS.add className="inline" />
-                  )
-                }
-                submitLabel={
-                  isEditing
-                    ? t("countries.lists.form.save")
-                    : t("countries.lists.form.add")
-                }
-                deleteLabel={t("countries.lists.form.delete")}
-                disabled={!isValid}
-              />
+              {!isSystemList && (
+                <ModalActions
+                  onCancel={onClose}
+                  onSubmit={() => isValid && onSave(list)}
+                  onDelete={
+                    isEditing && onDelete ? () => onDelete(list.id) : undefined
+                  }
+                  submitType="submit"
+                  submitIcon={
+                    isEditing ? (
+                      <ICONS.save className="inline" />
+                    ) : (
+                      <ICONS.add className="inline" />
+                    )
+                  }
+                  submitLabel={
+                    isEditing
+                      ? t("countries.lists.form.save")
+                      : t("countries.lists.form.add")
+                  }
+                  deleteLabel={t("countries.lists.form.delete")}
+                  disabled={!isValid}
+                />
+              )}
             </div>
           </div>
         </form>
