@@ -46,7 +46,6 @@ export const TripActions = forwardRef(function TripActions(
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const btnRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
 
   // Hover handlers for the rate submenu
@@ -60,12 +59,13 @@ export const TripActions = forwardRef(function TripActions(
     open,
     setOpen,
     menuStyle: contextMenuStyle,
+    menuRef,
     contextCoords,
     handleCloseContext,
   } = useContextMenu({
     zIndex: 1000,
     forwardedRef: ref,
-    ignoreRefs: [menuRef, btnRef, rateMenuRef],
+    ignoreRefs: [btnRef, rateMenuRef],
     onClose: () => setRateMenuOpen(false),
   });
   const baseMenuStyle = useMenuPosition(
@@ -158,7 +158,7 @@ export const TripActions = forwardRef(function TripActions(
         onClose={handleCloseAll}
         className="trips-actions-menu !p-2"
         style={dynamicMenuStyle}
-        containerRef={menuRef}
+        containerRef={menuRef as React.RefObject<HTMLDivElement>}
         disableScroll={true}
       >
         {hasValidStartDate(trip) && (

@@ -17,6 +17,8 @@ export function useDragScroll(
   const [isDragging, setIsDragging] = useState(false);
   const [isOverflowing, setIsOverflowing] = useState(false);
 
+  const depsString = JSON.stringify(dependencies);
+
   // Check if the container is overflowing
   useEffect(() => {
     const checkOverflow = () => {
@@ -30,7 +32,7 @@ export function useDragScroll(
 
     window.addEventListener("resize", checkOverflow);
     return () => window.removeEventListener("resize", checkOverflow);
-  }, [ref, ...dependencies]);
+  }, [ref, depsString]);
 
   // Mouse events
   useEventListener(

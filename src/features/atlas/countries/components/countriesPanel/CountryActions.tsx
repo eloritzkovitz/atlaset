@@ -28,7 +28,6 @@ export const CountryActions = forwardRef(function CountryActions(
   const { t } = useTranslation("atlas");
   const [listMenuOpen, setListMenuOpen] = useState(false);
 
-  const menuRef = useRef<HTMLDivElement>(null);
   const listMenuRef = useRef<HTMLDivElement>(null);
   const addToListRowRef = useRef<HTMLDivElement>(null);
 
@@ -42,12 +41,13 @@ export const CountryActions = forwardRef(function CountryActions(
   const {
     open,
     menuStyle: contextMenuStyle,
+    menuRef,
     contextCoords,
     handleCloseContext,
   } = useContextMenu({
     zIndex: 1000,
     forwardedRef: ref,
-    ignoreRefs: [menuRef, listMenuRef, addToListRowRef],
+    ignoreRefs: [listMenuRef, addToListRowRef],
     onClose: () => setListMenuOpen(false),
   });
   const baseMenuStyle = useMenuPosition(
@@ -147,7 +147,7 @@ export const CountryActions = forwardRef(function CountryActions(
         onClose={handleCloseAll}
         className="country-actions-menu !p-2"
         style={dynamicMenuStyle}
-        containerRef={menuRef}
+        containerRef={menuRef as React.RefObject<HTMLDivElement>}
         disableScroll={true}
       >
         <MenuButton
