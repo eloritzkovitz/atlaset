@@ -88,8 +88,8 @@ Summer in Europe,"FR;DE;IT",2023-07-01,2023-07-15,Vacation,"Visited Paris, Berli
 - Your `trips` power the `Visited Countries` layer and `timeline` features.
 - Changes to your `trips` are reflected in `layers` and `timeline` coloring automatically.
 
-**Learn More:**
+## **Learn More:**
 
-[Calendar](/docs/trips/calendar.md)
-[Statistics](/docs/dashboard/statistics.md)
+[Calendar](/docs/trips/calendar.md)  
+[Statistics](/docs/dashboard/statistics.md)  
 [Timeline](/docs/atlas/timeline.md)
