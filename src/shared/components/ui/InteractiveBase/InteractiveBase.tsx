@@ -92,3 +92,5 @@ export const InteractiveBase = React.forwardRef<
     );
   },
 );
+
+InteractiveBase.displayName = "InteractiveBase";

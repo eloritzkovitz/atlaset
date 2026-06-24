@@ -118,3 +118,5 @@ export const CountryDisplayPanel = React.forwardRef<
     );
   },
 );
+
+CountryDisplayPanel.displayName = "CountryDisplayPanel";

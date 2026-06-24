@@ -40,3 +40,5 @@ export const MapSvgContainer = forwardRef<SVGSVGElement, MapSvgContainerProps>(
     );
   },
 );
+
+MapSvgContainer.displayName = "MapSvgContainer";

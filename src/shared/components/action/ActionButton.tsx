@@ -123,3 +123,5 @@ export const ActionButton = React.forwardRef<
     );
   },
 );
+
+ActionButton.displayName = "ActionButton";
