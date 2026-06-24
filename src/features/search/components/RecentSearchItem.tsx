@@ -1,5 +1,5 @@
-import { FaRegClock, FaXmark } from "react-icons/fa6";
 import { MenuButton } from "@components";
+import { ICONS } from "@constants/icons";
 
 interface RecentSearchItemProps {
   term: string;
@@ -12,37 +12,35 @@ export function RecentSearchItem({
   onSelect,
   onRemove,
 }: RecentSearchItemProps) {
+  const searchUrl = `/search?query=${encodeURIComponent(term)}`;
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onRemove?.(term);
+  };
+
   return (
     <MenuButton
+      url={searchUrl}
       onClick={() => onSelect(term)}
       icon={null}
       ariaLabel={`Search for ${term}`}
       className="w-full text-left flex justify-between items-center"
     >
       <span className="flex items-center">
-        <FaRegClock className="me-3 text-muted" />
+        <ICONS.activity className="me-3 text-muted" />
         {term}
       </span>
+
       {onRemove && (
-        <span
-          role="button"
-          tabIndex={0}
+        <button
+          type="button"
           aria-label={`Delete ${term} from history`}
-          className="ms-2 text-muted p-1 rounded hover:bg-hover focus:bg-hover cursor-pointer outline-none"
-          onClick={(e) => {
-            e.stopPropagation();
-            onRemove(term);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              e.stopPropagation();
-              onRemove(term);
-            }
-          }}
+          className="ms-2 text-muted p-1 rounded hover:bg-hover focus:bg-hover cursor-pointer outline-none border-none bg-transparent"
+          onClick={handleRemove}
         >
-          <FaXmark />
-        </span>
+          <ICONS.close />
+        </button>
       )}
     </MenuButton>
   );

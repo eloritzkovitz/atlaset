@@ -5,6 +5,7 @@ import { useLanguage } from "@features/settings";
 interface SearchItemProps<T> {
   item: T;
   displayName: string;
+  url?: string;
   label?: string;
   icon?: ReactNode;
   onClick: (item: T) => void;
@@ -15,6 +16,7 @@ interface SearchItemProps<T> {
 export function SearchItem<T>({
   item,
   displayName,
+  url,
   label,
   icon,
   onClick,
@@ -29,6 +31,7 @@ export function SearchItem<T>({
     <li>
       <MenuButton
         type="button"
+        url={url}
         icon={
           <div className="w-8 h-8 flex items-center justify-center flex-shrink-0">
             {icon}

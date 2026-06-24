@@ -26,11 +26,13 @@ export function SearchResultsList({
   onSearchSubmit,
 }: SearchResultsListProps) {
   const { t } = useTranslation("common");
+
+  const seeAllUrl = `/search?query=${encodeURIComponent(searchTerm)}`;
+
   return (
     <ul className="text-left">
       {results.slice(0, 8).map((item) =>
         renderSearchItem(item, {
-          navigate: (url: string) => window.location.assign(url),
           setDropdownOpen,
           currentUser,
           friendList,
@@ -42,6 +44,7 @@ export function SearchResultsList({
           <Separator className="my-1" />
           <li>
             <MenuButton
+              url={seeAllUrl}
               icon={null}
               ariaLabel={t("search.seeAll")}
               onClick={() => onSearchSubmit(searchTerm)}
