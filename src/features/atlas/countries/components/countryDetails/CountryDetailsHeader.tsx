@@ -26,10 +26,15 @@ export function CountryDetailsHeader({
   const { t } = useTranslation("atlas");
 
   // Get action configurations based on country and context
-  const actions = useCountryActions({
+  const actionsObj = useCountryActions({
     country,
-    onClosePanel: onClose,
   });
+
+  const displayedActions = [
+    actionsObj.centerMap,
+    actionsObj.viewDashboard,
+    actionsObj.wikipedia,
+  ].filter(Boolean);
 
   return (
     <PanelHeader
@@ -51,9 +56,10 @@ export function CountryDetailsHeader({
       showSeparator
     >
       <div className="flex gap-2">
-        {actions.map((action) => (
+        {displayedActions.map((action, idx) => (
           <ActionButton
-            key={action.id}
+            key={idx}
+            url={action.url}
             onClick={action.onClick}
             ariaLabel={action.ariaLabel}
             title={action.label}
@@ -61,6 +67,7 @@ export function CountryDetailsHeader({
             rounded
           />
         ))}
+
         <ActionButton
           onClick={onClose}
           ariaLabel={t("common:actions.close")}

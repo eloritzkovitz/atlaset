@@ -214,21 +214,17 @@ export function getFilteredIsoCodes(
 /**
  * Calculates country counts based on filtered countries and visited ISO codes.
  * @param filteredCountries - Countries after applying all filters including layers.
- * @param filteredCountriesNoLayer - Countries after applying all filters except layers.
  * @param visitedIsoCodes - List of visited country ISO codes.
  * @returns An object containing counts of various country categories.
  */
 export function getCountryCounts({
   filteredCountries,
-  filteredCountriesNoLayer,
   visitedIsoCodes,
 }: {
   filteredCountries: Country[];
-  filteredCountriesNoLayer: Country[];
   visitedIsoCodes: string[];
 }) {
   const allCount = filteredCountries.length;
-  const allCountWithoutLayers = filteredCountriesNoLayer.length;
   const sovereignCount = filteredCountries.filter(
     (c) => c.sovereigntyStatus === "sovereign",
   ).length;
@@ -237,7 +233,6 @@ export function getCountryCounts({
   ).length;
   return {
     allCount,
-    allCountWithoutLayers,
     sovereignCount,
     visitedCount,
   };

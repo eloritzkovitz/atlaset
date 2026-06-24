@@ -1,4 +1,11 @@
-import { doc, getDoc, updateDoc, onSnapshot } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  onSnapshot,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import { db } from "@app/firebase";
 
 /**
@@ -42,12 +49,26 @@ export const visitedCountriesService = {
   },
 
   /**
-   * Sets visited country codes for a user.
+   * Adds a country code to the visited list for a user.
    * @param uid - The user ID.
-   * @param codes - An array of country ISO codes to set as visited.
+   * @param code - The country ISO code to add.
    */
-  async setVisitedCountryCodes(uid: string, codes: string[]) {
+  async addVisitedCountryCode(uid: string, code: string) {
     const userRef = doc(db, "users", uid);
-    await updateDoc(userRef, { visitedCountryCodes: codes });
+    await updateDoc(userRef, {
+      visitedCountryCodes: arrayUnion(code),
+    });
+  },
+
+  /**
+   * Removes a country code from the visited list for a user.
+   * @param uid - The user ID.
+   * @param code - The country ISO code to remove.
+   */
+  async removeVisitedCountryCode(uid: string, code: string) {
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, {
+      visitedCountryCodes: arrayRemove(code),
+    });
   },
 };

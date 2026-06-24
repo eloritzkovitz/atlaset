@@ -1,16 +1,29 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
-const mockDoc = vi.fn();
-const mockGetDoc = vi.fn();
-const mockUpdateDoc = vi.fn();
-const mockOnSnapshot = vi.fn();
+const {
+  mockDoc,
+  mockGetDoc,
+  mockUpdateDoc,
+  mockOnSnapshot,
+  mockArrayUnion,
+  mockArrayRemove,
+} = vi.hoisted(() => ({
+  mockDoc: vi.fn(),
+  mockGetDoc: vi.fn(),
+  mockUpdateDoc: vi.fn(),
+  mockOnSnapshot: vi.fn(),
+  mockArrayUnion: vi.fn((val) => ({ type: "arrayUnion", val })),
+  mockArrayRemove: vi.fn((val) => ({ type: "arrayRemove", val })),
+}));
 
 vi.mock("firebase/firestore", async () => {
   return {
-    doc: (...args: any[]) => mockDoc(...args),
-    getDoc: (...args: any[]) => mockGetDoc(...args),
-    updateDoc: (...args: any[]) => mockUpdateDoc(...args),
-    onSnapshot: (...args: any[]) => mockOnSnapshot(...args),
+    doc: mockDoc,
+    getDoc: mockGetDoc,
+    updateDoc: mockUpdateDoc,
+    onSnapshot: mockOnSnapshot,
+    arrayUnion: mockArrayUnion,
+    arrayRemove: mockArrayRemove,
   };
 });
 
@@ -92,15 +105,37 @@ describe("visitedCountriesService", () => {
     expect(typeof unsub).toBe("function");
   });
 
-  it("setVisitedCountryCodes calls updateDoc with doc ref and payload", async () => {
-    const fakeRef = { ref: "users/u4" };
-    mockDoc.mockReturnValue(fakeRef);
-    mockUpdateDoc.mockResolvedValue(undefined);
+  describe("addVisitedCountryCode", () => {
+    it("should update firestore user document by appending the ISO code into the visited array", async () => {
+      const mockUserRef = { id: "u6", path: "users/u6" };
+      mockDoc.mockReturnValue(mockUserRef);
+      mockUpdateDoc.mockResolvedValue(undefined);
 
-    await visitedCountriesService.setVisitedCountryCodes("u4", ["DE"]);
-    expect(mockDoc).toHaveBeenCalledWith({}, "users", "u4");
-    expect(mockUpdateDoc).toHaveBeenCalledWith(fakeRef, {
-      visitedCountryCodes: ["DE"],
+      await visitedCountriesService.addVisitedCountryCode("u6", "MX");
+
+      expect(mockDoc).toHaveBeenCalledWith(expect.any(Object), "users", "u6");
+      expect(mockArrayUnion).toHaveBeenCalledWith("MX");
+
+      expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
+        visitedCountryCodes: { type: "arrayUnion", val: "MX" },
+      });
+    });
+  });
+
+  describe("removeVisitedCountryCode", () => {
+    it("should update firestore user document by slicing out the targeted ISO code from the visited array", async () => {
+      const mockUserRef = { id: "u7", path: "users/u7" };
+      mockDoc.mockReturnValue(mockUserRef);
+      mockUpdateDoc.mockResolvedValue(undefined);
+
+      await visitedCountriesService.removeVisitedCountryCode("u7", "MX");
+
+      expect(mockDoc).toHaveBeenCalledWith(expect.any(Object), "users", "u7");
+      expect(mockArrayRemove).toHaveBeenCalledWith("MX");
+
+      expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
+        visitedCountryCodes: { type: "arrayRemove", val: "MX" },
+      });
     });
   });
 });

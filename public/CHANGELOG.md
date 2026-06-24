@@ -1,5 +1,13 @@
 # Changelog
 
+## 2026-06-24
+
+- **[feature]** **Countries:** Added option to manually set countries as visited
+- **[feature]** **Countries:** Visited countries list can now be viewed and edited (directly added only)
+- **[chore]** **General:** Refactored interactive elements to allow middle clicks for URLs
+- **[bugfix]** **General:** Fixed context menu overflow
+- **[docs]** **Docs:** Added new documentation for visits and country lists
+
 ## 2026-06-22
 
 - **[feature]** **Trips:** Added option to manually set active trips as completed

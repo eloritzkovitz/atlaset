@@ -68,6 +68,12 @@ export const DOCS_GROUPS = {
         url: "/docs/atlas/countries",
       },
       {
+        label: "Country Lists",
+        file: "atlas/country-lists.md",
+        icon: ICONS.countryLists,
+        url: "/docs/atlas/country-lists",
+      },
+      {
         label: "Layers & Markers",
         file: "atlas/layers-markers.md",
         icon: ICONS.mapData,
@@ -111,6 +117,12 @@ export const DOCS_GROUPS = {
         file: "trips/trips.md",
         icon: ICONS.trips,
         url: "/docs/trips/trips",
+      },
+      {
+        label: "Your Visits",
+        file: "trips/visits.md",
+        icon: ICONS.visits,
+        url: "/docs/trips/visits",
       },
       {
         label: "Calendar",

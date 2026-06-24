@@ -259,7 +259,9 @@ describe("countryFilters utils", () => {
         { ...baseParams, search: "sovereign:true" },
         undefined,
       );
-      expect(resTrue.some((c) => c.sovereigntyStatus === "sovereign")).toBe(true);
+      expect(resTrue.some((c) => c.sovereigntyStatus === "sovereign")).toBe(
+        true,
+      );
 
       const resFalse = applyQualifierSearch(
         countries,
@@ -439,37 +441,29 @@ describe("countryFilters utils", () => {
     const countries = mockCountries;
     const visitedIsoCodes = ["FR", "GP"];
     const filteredCountries = countries;
-    const filteredCountriesNoLayer = countries;
 
     it("returns correct counts for all, sovereign, and visited", () => {
       const counts = getCountryCounts({
         filteredCountries,
-        filteredCountriesNoLayer,
         visitedIsoCodes,
       });
       expect(counts.allCount).toBe(filteredCountries.length);
-      expect(counts.allCountWithoutLayers).toBe(
-        filteredCountriesNoLayer.length,
-      );
       expect(counts.sovereignCount).toBe(
         filteredCountries.filter((c) => c.sovereigntyStatus === "sovereign")
           .length,
       );
       expect(counts.visitedCount).toBe(
-        filteredCountriesNoLayer.filter((c) =>
-          visitedIsoCodes.includes(c.isoCode),
-        ).length,
+        filteredCountries.filter((c) => visitedIsoCodes.includes(c.isoCode))
+          .length,
       );
     });
 
     it("returns zero counts for empty arrays", () => {
       const counts = getCountryCounts({
         filteredCountries: [],
-        filteredCountriesNoLayer: [],
         visitedIsoCodes: [],
       });
       expect(counts.allCount).toBe(0);
-      expect(counts.allCountWithoutLayers).toBe(0);
       expect(counts.sovereignCount).toBe(0);
       expect(counts.visitedCount).toBe(0);
     });

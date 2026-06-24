@@ -1,22 +1,19 @@
-import { Link } from "react-router-dom";
+import {
+  InteractiveBase,
+  type InteractiveBaseProps,
+} from "../ui/InteractiveBase/InteractiveBase";
 import { Tooltip } from "../ui/Tooltip/Tooltip";
 
-interface MenuButtonProps {
-  url?: string;
-  type?: "button" | "submit" | "reset";
+interface MenuButtonProps extends Omit<
+  InteractiveBaseProps,
+  "children" | "onClick"
+> {
   variant?: "default" | "sidebar";
   icon: React.ReactNode;
   children: React.ReactNode;
   active?: boolean;
-  className?: string;
-  disabled?: boolean;
-  ariaLabel?: string;
   title?: string;
   onClick?: () => void;
-  onMouseDown?: () => void;
-  onPointerDown?: () => void;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
 }
 
 export function MenuButton({
@@ -30,14 +27,10 @@ export function MenuButton({
   disabled,
   ariaLabel,
   title,
-  onClick,
-  onMouseDown,
-  onPointerDown,
-  onMouseEnter,
-  onMouseLeave,
+  ...props
 }: MenuButtonProps) {
   const baseClass =
-    `rounded-lg text-left px-2 py-2 text-text flex items-center gap-2 ` +
+    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-2 ` +
     (active
       ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
       : variant === "sidebar"
@@ -45,35 +38,18 @@ export function MenuButton({
         : "hover:bg-surface-hover ") +
     className;
 
-  const sharedProps = {
-    className: baseClass,
-    "aria-label": ariaLabel,
-    onMouseEnter,
-    onMouseLeave,
-    children: (
-      <>
-        {icon}
-        {children}
-      </>
-    ),
-  };
-
-  const content = url ? (
-    <Link
-      to={url}
-      tabIndex={disabled ? -1 : 0}
-      style={disabled ? { pointerEvents: "none", opacity: 0.5 } : undefined}
-      {...sharedProps}
-    />
-  ) : (
-    <button
+  const content = (
+    <InteractiveBase
+      url={url}
       type={type}
-      onClick={onClick}
-      onMouseDown={onMouseDown}
-      onPointerDown={onPointerDown}
       disabled={disabled}
-      {...sharedProps}
-    />
+      className={baseClass}
+      ariaLabel={ariaLabel}
+      {...props}
+    >
+      {icon}
+      {children}
+    </InteractiveBase>
   );
 
   return title ? (

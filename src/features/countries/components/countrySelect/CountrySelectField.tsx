@@ -2,6 +2,7 @@ import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Chip, FormField } from "@components";
 import { ICONS } from "@constants/icons";
+import { useHomeCountry } from "@features/user";
 import { CountrySelectModal } from "./CountrySelectModal";
 import type { Country } from "../../types";
 
@@ -14,6 +15,7 @@ interface CountrySelectFieldProps {
   onOpen: () => void;
   onClose: () => void;
   disabled?: boolean;
+  isTripBasedCountry?: (code: string) => boolean;
 }
 
 export function CountrySelectField({
@@ -25,7 +27,9 @@ export function CountrySelectField({
   onOpen,
   onClose,
   disabled,
+  isTripBasedCountry,
 }: CountrySelectFieldProps) {
+  const { homeCountry } = useHomeCountry();
   const { t } = useTranslation("atlas");
   const labelText = label ?? t("countries.select.label");
 
@@ -33,6 +37,22 @@ export function CountrySelectField({
   const selectedCountries = countries
     .filter((country) => countryCodes.includes(country.isoCode))
     .sort((a, b) => a.name.localeCompare(b.name));
+
+  // Handle changes from the modal, ensuring trip-based countries remain selected
+  const handleModalChange = (incomingCodes: string[]) => {
+    if (!isTripBasedCountry) {
+      onChange(incomingCodes);
+      return;
+    }
+
+    // Identify all currently selected codes that are system-locked by trip parameters
+    const lockedCodes = countryCodes.filter((code) => isTripBasedCountry(code));
+
+    // Combine the user selection with locked codes, ensuring no duplicates exist
+    const mergedCodes = Array.from(new Set([...incomingCodes, ...lockedCodes]));
+
+    onChange(mergedCodes);
+  };
 
   return (
     <>
@@ -43,20 +63,33 @@ export function CountrySelectField({
               {t("countries.select.noneSelected")}
             </span>
           ) : (
-            selectedCountries.map((country) => (
-              <Chip
-                key={country.isoCode}
-                removable={!disabled}
-                onRemove={() =>
-                  !disabled &&
-                  onChange(
-                    countryCodes.filter((code) => code !== country.isoCode),
-                  )
-                }
-              >
-                {country.name}
-              </Chip>
-            ))
+            selectedCountries.map((country) => {
+              // Determine if the country is a trip-based visit and if it can be removed
+              const isLockedVisit = !!isTripBasedCountry?.(country.isoCode);
+              const canRemove = !disabled && !isLockedVisit;
+
+              return (
+                <Chip
+                  key={country.isoCode}
+                  removable={canRemove}
+                  onRemove={() =>
+                    canRemove &&
+                    onChange(
+                      countryCodes.filter((code) => code !== country.isoCode),
+                    )
+                  }
+                >
+                  {country.name}
+                  {isLockedVisit ? (
+                    homeCountry === country.isoCode ? (
+                      <ICONS.home className="inline ms-1" />
+                    ) : (
+                      <ICONS.tripAbroad className="inline ms-1" />
+                    )
+                  ) : null}
+                </Chip>
+              );
+            })
           )}
           {!disabled && (
             <ActionButton
@@ -77,7 +110,7 @@ export function CountrySelectField({
             selected={countryCodes}
             options={countries}
             onClose={onClose}
-            onChange={onChange}
+            onChange={handleModalChange}
           />,
           document.body,
         )}

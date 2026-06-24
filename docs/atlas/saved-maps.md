@@ -22,5 +22,5 @@ By clicking `View`, a saved map will be loaded into your map component in `Edit 
 
 ## **Learn more**
 
-[Layers & Markers](/docs/layers-markers.md)  
-[Exporting & Sharing Maps](/docs/export.md)
+[Layers & Markers](/docs/atlas/layers-markers.md)  
+[Exporting & Sharing Maps](/docs/atlas/export.md)

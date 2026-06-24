@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useSyncedSearchTerm } from "./useSyncedSearchTerm";
 import { useRecentSearches } from "./useRecentSearches";
 
@@ -7,6 +8,7 @@ import { useRecentSearches } from "./useRecentSearches";
  * @returns An object containing search state and handlers.
  */
 export function useSearchController() {
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useSyncedSearchTerm();
   const {
     recentSearches,
@@ -18,7 +20,7 @@ export function useSearchController() {
   // Handle search submission
   const handleSearchSubmit = (term: string) => {
     if (term) {
-      window.location.assign(`/search?query=${encodeURIComponent(term)}`);
+      navigate(`/search?query=${encodeURIComponent(term)}`);
       saveRecentSearch(term);
     }
   };
@@ -27,6 +29,7 @@ export function useSearchController() {
     searchTerm,
     setSearchTerm,
     handleSearchSubmit,
+    saveRecentSearch,
     recentSearches,
     removeRecentSearch,
     clearAllRecentSearches,

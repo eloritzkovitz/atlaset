@@ -69,6 +69,7 @@ export function CountriesPanel({
     search,
     setSearch,
     filteredCountries,
+    searchedCountries,
     allCount,
     sovereignCount,
     sovereignOnly,
@@ -80,6 +81,20 @@ export function CountriesPanel({
     setMaxVisitCount,
     resetFilters,
   } = useCountryFilters();
+
+  // Compute counts for country lists based on filtered countries
+  const dynamicCountryLists = useMemo(() => {
+    return countryLists.map((list) => {
+      const matchingCount = list.countryCodes.filter((code) =>
+        searchedCountries.some((c) => c.isoCode === code),
+      ).length;
+
+      return {
+        ...list,
+        count: matchingCount,
+      };
+    });
+  }, [countryLists, searchedCountries]);
 
   // Keep selectedVisited/selectedSovereignty consistent when toggles change
   useEffect(() => {
@@ -99,23 +114,6 @@ export function CountriesPanel({
       setSelectedSovereignty("");
     }
   }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
-
-  // Compute filtered iso codes for custom list counts
-  const filteredIsoCodes = useMemo(
-    () => filteredCountries.map((c) => c.isoCode),
-    [filteredCountries],
-  );
-
-  const customListOptions = useMemo(
-    () =>
-      countryLists.map((list) => ({
-        ...list,
-        count: filteredIsoCodes.filter((code) =>
-          list.countryCodes.includes(code),
-        ).length,
-      })),
-    [countryLists, filteredIsoCodes],
-  );
 
   // Sort state
   const {
@@ -209,7 +207,7 @@ export function CountriesPanel({
             allCount={allCount}
             sovereignCount={sovereignCount}
             visitedCount={visitedCount}
-            countryLists={customListOptions}
+            countryLists={dynamicCountryLists}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}
             onAddList={openAddModal}

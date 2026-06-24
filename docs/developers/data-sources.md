@@ -63,6 +63,6 @@ Atlaset uses a few additional fields in addition to the ones provided in the bas
 
 ## **Learn More**
 
-[Countries](/docs/countries.md)  
+[Countries](/docs/atlas/countries.md)  
 [Adding country fields](/docs/developers/adding-country-fields.md)  
 [Data sync & updates](/docs/developers/data-syncing.md)

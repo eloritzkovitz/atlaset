@@ -22,8 +22,8 @@ The **`Atlas`** is the heart of Atlaset, providing an interactive world map wher
    - Use `filters` to find countries by region, sovereignty or custom criteria.
 
 3. **Manage layers & markers:**
-   - Create, edit or import `layers` to group countries. 
-   - Add personalized `markers` to the map.  
+   - Create, edit or import `layers` to group countries.
+   - Add personalized `markers` to the map.
    - Change layer/marker colors and visibility.
 
 4. **Use the timeline:**
@@ -40,8 +40,9 @@ The **`Atlas`** is the heart of Atlaset, providing an interactive world map wher
 
 ## **Learn more**
 
-[Countries](/docs/countries.md)  
-[Layers & Markers](/docs/layers-markers.md)  
-[Saved Maps](/docs/saved-maps.md)  
-[Timeline](/docs/timeline.md)  
-[Exporting & Sharing Maps](/docs/export.md)
+[Countries](/docs/atlas/countries.md)  
+[Country Lists](/docs/atlas/country-lists.md)  
+[Layers & Markers](/docs/atlas/layers-markers.md)  
+[Saved Maps](/docs/atlas/saved-maps.md)  
+[Timeline](/docs/atlas/timeline.md)  
+[Exporting & Sharing Maps](/docs/atlas/export.md)

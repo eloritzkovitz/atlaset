@@ -4,17 +4,18 @@ import { useAuth } from "@features/user";
 import { visitedCountriesService } from "../services/visitedCountriesService";
 import {
   computeVisitedCountriesFromTrips,
+  getUpcomingVisitCountries,
   getVisitsForCountry,
 } from "../utils/visits";
-import { getUpcomingVisitCountries } from "../utils/visits";
 
 /**
  * Manages visited countries for the current user.
- * @returns - Visited country codes and related utility functions.
+ * @returns Visited country codes and related utility functions.
  */
 export function useVisitedCountries() {
   const { user } = useAuth();
   const { trips } = useTrips();
+
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
   const [upcomingCountryCodes, setUpcomingCountryCodes] = useState<string[]>(
     [],
@@ -37,11 +38,15 @@ export function useVisitedCountries() {
     const unsubscribe = visitedCountriesService.onVisitedCountryCodesChange(
       user.uid,
       (firestoreCodes) => {
-        const visited =
-          firestoreCodes && firestoreCodes.length > 0
-            ? firestoreCodes
-            : computedVisited;
-        setVisitedCountryCodes(visited);
+        // If Firestore has no data, fallback to computed visited from trips
+        const manualCodes = firestoreCodes || [];
+
+        // Merge manual and computed visited codes, ensuring uniqueness
+        const unifiedVisited = Array.from(
+          new Set([...manualCodes, ...computedVisited]),
+        );
+
+        setVisitedCountryCodes(unifiedVisited);
       },
     );
 
@@ -66,6 +71,27 @@ export function useVisitedCountries() {
   // Check if a country is visited
   function isCountryVisited(isoCode: string) {
     return visitedCountryCodes.includes(isoCode);
+  }
+
+  // Check if a country has any trip associated with it, regardless of whether it's marked visited in Firestore
+  function isTripBased(isoCode: string) {
+    return computedVisited.includes(isoCode);
+  }
+
+  // Manually add a country code to the visited list
+  async function addManualCountry(isoCode: string) {
+    if (!user) return;
+    if (visitedCountryCodes.includes(isoCode)) return;
+
+    await visitedCountriesService.addVisitedCountryCode(user.uid, isoCode);
+  }
+
+  // Manually remove a country code from the visited list
+  async function removeManualCountry(isoCode: string) {
+    if (!user) return;
+    if (isTripBased(isoCode)) return;
+
+    await visitedCountriesService.removeVisitedCountryCode(user.uid, isoCode);
   }
 
   // Get visits for a country
@@ -96,6 +122,9 @@ export function useVisitedCountries() {
     visitedCountryCodes,
     upcomingCountryCodes,
     isCountryVisited,
+    isTripBased,
+    addManualCountry,
+    removeManualCountry,
     getCountryVisits,
     getCountryVisitsCategorized,
   };

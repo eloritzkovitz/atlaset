@@ -1,4 +1,10 @@
-import { useState, useCallback, useImperativeHandle } from "react";
+import {
+  useState,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useLayoutEffect,
+} from "react";
 import type React from "react";
 import type { Point } from "@types";
 import { useClickOutside } from "../dom/useClickOutside";
@@ -13,6 +19,8 @@ interface UseContextMenuProps {
   onClose?: () => void;
 }
 
+const DEFAULT_STYLE: React.CSSProperties = {};
+
 /**
  * Manages context menu state and positioning for components that require right-click functionality.
  * @param standardMenuStyle - Optional styles for standard (non-context) menu positioning.
@@ -24,7 +32,7 @@ interface UseContextMenuProps {
  * @returns An object containing context menu state, styles, and handlers for opening/closing the menu.
  */
 export function useContextMenu({
-  standardMenuStyle = {},
+  standardMenuStyle = DEFAULT_STYLE,
   zIndex = 1000,
   disabled = false,
   forwardedRef,
@@ -33,6 +41,9 @@ export function useContextMenu({
 }: UseContextMenuProps = {}) {
   const [contextCoords, setContextCoords] = useState<Point | null>(null);
   const [open, setOpen] = useState(false);
+  const [computedStyle, setComputedStyle] = useState<React.CSSProperties>({});
+
+  const menuRef = useRef<HTMLElement | null>(null);
 
   // Handler to open context menu at cursor position
   const handleContextMenu = useCallback(
@@ -70,29 +81,60 @@ export function useContextMenu({
     [openAtCoordinates],
   );
 
+  // Combine ignoreRefs with the menuRef to prevent closing when clicking inside the menu
+  const combinedIgnoreRefs = [menuRef, ...ignoreRefs];
+
   // Close menu on outside click or Escape key press
   useClickOutside(
-    ignoreRefs as React.RefObject<HTMLElement>[],
+    combinedIgnoreRefs as React.RefObject<HTMLElement>[],
     handleCloseContext,
     open,
   );
-  useKeyHandler(handleCloseContext, ["Escape"], open, [], ignoreRefs[0]);
+  useKeyHandler(
+    handleCloseContext,
+    ["Escape"],
+    open,
+    [],
+    combinedIgnoreRefs[0],
+  );
 
-  // Compute polymorphic positioning styles dynamically
-  const menuStyle: React.CSSProperties = contextCoords
-    ? {
+  // Calculate menu position when open or dependencies change
+  useLayoutEffect(() => {
+    if (open && contextCoords) {
+      let left = contextCoords.x;
+      let top = contextCoords.y;
+
+      if (menuRef.current) {
+        const menuRect = menuRef.current.getBoundingClientRect();
+
+        if (left + menuRect.width > window.innerWidth) {
+          left = left - menuRect.width;
+          if (left < 0) left = 4;
+        }
+
+        if (top + menuRect.height > window.innerHeight) {
+          top = top - menuRect.height;
+          if (top < 0) top = 4;
+        }
+      }
+
+      setComputedStyle({
         position: "fixed",
-        left: contextCoords.x,
-        top: contextCoords.y,
+        left,
+        top,
         transform: "none",
         zIndex,
-      }
-    : standardMenuStyle;
+      });
+    } else {
+      setComputedStyle(standardMenuStyle);
+    }
+  }, [open, contextCoords, zIndex, standardMenuStyle]);
 
   return {
     open,
     setOpen,
-    menuStyle,
+    menuStyle: computedStyle,
+    menuRef,
     contextCoords,
     handleContextMenu,
     openAtCoordinates,

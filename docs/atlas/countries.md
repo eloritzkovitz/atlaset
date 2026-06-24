@@ -20,7 +20,9 @@ Country details include the following sections:
 
 - The badge to the right of the country's name indicates whether the country is visited or not (with a special case being the `home country`).
 - By clicking the `Visits` tab, you can open a detailed view of your `visit history` to the specific country.
-- Data is based on your `trip data`.
+- Data is based on your `trip data`, or by manually adding countries through the list.
+
+> For a full breakdown of how tracking methods affect your analytics, timeline and dashboard stats, see [here](/docs/trips/visits.md).
 
 ## **Filtering & sorting**
 
@@ -79,23 +81,11 @@ qualifier:query modifier:query
 | `first`  | number (comparison) |     `visited:true first:=2012` | For `visited:true`, filters by year of first visit                                                                                              |
 | `last`   | number (comparison) |      `visited:true last:=2018` | For `visited:true`, filters by year of last visit                                                                                               |
 
-> #### **Notes:**
->
 > - All qualifiers are also eligible as modifiers, allowing for more complex and precise filtering.
-> - For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`
-
-## **Country lists**
-
-You can create and manage your own custom `lists`, which allow quick, dynamic filtering and toggling. Use lists to group countries for travel plans, tracking or any custom criteria.
-
-- To add a new list, press the `+` button in the list toggles bar.
-- Lists can also be created from `layers`, as explained below.
-- To edit an existing list, double-click on its toggle.
-
-### **Creating lists from layers**
-
-`Layers` are advanced, visual representations of country lists on the map. When creating lists from layers, the `name` and `countries` fields will be shared between both objects. Updating a linked list will also update the relevant content in the layer, allowing for easier management.
+> - For number comparisons, the following operators are supported: `>`, `<`, `>=`, `<=`, `~`, `=`.
 
 ## **Learn more**
 
-[Layers](/docs/layers-markers.md)
+[Country Lists](/docs/atlas/country-lists.md)  
+[Layers](/docs/atlas/layers-markers.md)  
+[Your Vists](/docs/trips/visits.md)

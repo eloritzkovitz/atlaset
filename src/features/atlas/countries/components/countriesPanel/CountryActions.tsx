@@ -3,13 +3,11 @@ import { useTranslation } from "react-i18next";
 import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
-import { useMapView } from "@contexts/MapViewContext";
 import type { Country } from "@features/countries";
 import {
   useContextMenu,
   useFloatingHover,
   useFloatingMenuPosition,
-  useMenuActions,
   useMenuPosition,
 } from "@hooks";
 import { CountryListsMenu } from "./CountryListsMenu";
@@ -19,19 +17,16 @@ interface CountryActionsProps {
   country: Country | null;
   triggerRef: React.RefObject<HTMLElement | null>;
   onCountryInfo?: (country: Country) => void;
-  onCloseListPanel?: () => void;
 }
 
 export const CountryActions = forwardRef(function CountryActions(
-  { country, triggerRef, onCountryInfo, onCloseListPanel }: CountryActionsProps,
+  { country, triggerRef, onCountryInfo }: CountryActionsProps,
   ref,
 ) {
   const { countryLists, openAddModal, handleUpdate } = useCountryLists();
-  const { centerOnCountry } = useMapView();
   const { t } = useTranslation("atlas");
   const [listMenuOpen, setListMenuOpen] = useState(false);
 
-  const menuRef = useRef<HTMLDivElement>(null);
   const listMenuRef = useRef<HTMLDivElement>(null);
   const addToListRowRef = useRef<HTMLDivElement>(null);
 
@@ -44,14 +39,14 @@ export const CountryActions = forwardRef(function CountryActions(
   // Context menu management
   const {
     open,
-    setOpen,
     menuStyle: contextMenuStyle,
+    menuRef,
     contextCoords,
     handleCloseContext,
   } = useContextMenu({
     zIndex: 1000,
     forwardedRef: ref,
-    ignoreRefs: [menuRef, listMenuRef, addToListRowRef],
+    ignoreRefs: [listMenuRef, addToListRowRef],
     onClose: () => setListMenuOpen(false),
   });
   const baseMenuStyle = useMenuPosition(
@@ -107,22 +102,23 @@ export const CountryActions = forwardRef(function CountryActions(
   };
 
   // Get action configurations based on country and context
-  const actions = useCountryActions({
-    country: country!,
+  const actionsObj = useCountryActions({
+    country,
+    onCountryInfo,
     onCloseMenu: handleCloseAll,
-    onClosePanel: onCloseListPanel,
   });
-
-  // Menu actions
-  const menuActions = useMenuActions(
-    {
-      onCenter: () => centerOnCountry?.(country!.isoCode),
-    },
-    setOpen,
-  );
 
   // Do not render menu if no country is selected
   if (!country) return null;
+
+  const viewSection = [actionsObj.viewDetails, actionsObj.centerMap].filter(
+    Boolean,
+  );
+  const trackingSection = [actionsObj.toggleVisited].filter(Boolean);
+  const resourceSection = [
+    actionsObj.viewDashboard,
+    actionsObj.wikipedia,
+  ].filter(Boolean);
 
   // Handler to add country to a selected list
   const handleAddCountryToList = async (listId: string) => {
@@ -153,35 +149,27 @@ export const CountryActions = forwardRef(function CountryActions(
         onClose={handleCloseAll}
         className="country-actions-menu !p-2"
         style={dynamicMenuStyle}
-        containerRef={menuRef}
+        containerRef={menuRef as React.RefObject<HTMLDivElement>}
         disableScroll={true}
       >
-        <MenuButton
-          onClick={() => {
-            handleCloseAll();
-            if (onCountryInfo) onCountryInfo(country);
-          }}
-          icon={<ICONS.view className="me-2" />}
-          className="w-full"
-          onMouseEnter={() => setListMenuOpen(false)}
-        >
-          {t("countries.actions.viewDetails", "View Details")}
-        </MenuButton>
-        <MenuButton
-          onClick={menuActions.onCenter}
-          icon={<ICONS.center className="me-2" />}
-          className="w-full"
-        >
-          {t("countries.actions.centerMap", "Center Map")}
-        </MenuButton>
+        {viewSection.map((act, i) => (
+          <MenuButton
+            key={i}
+            onClick={act.onClick}
+            onMouseEnter={() => setListMenuOpen(false)}
+            icon={<span className="me-2">{act.icon}</span>}
+            className="w-full"
+          >
+            {act.label}
+          </MenuButton>
+        ))}
+
         <Separator className="my-2" />
 
         <div
           ref={addToListRowRef}
           style={{ display: "inline-block", width: "100%" }}
-          onMouseEnter={() => {
-            setListMenuOpen(true);
-          }}
+          onMouseEnter={() => setListMenuOpen(true)}
           onMouseLeave={() => setListMenuOpen(false)}
         >
           <MenuButton
@@ -213,28 +201,40 @@ export const CountryActions = forwardRef(function CountryActions(
             />
           )}
         </div>
+
+        {trackingSection.map((act, i) => (
+          <MenuButton
+            key={i}
+            onClick={act.onClick}
+            onMouseEnter={() => setListMenuOpen(false)}
+            icon={
+              <span className={`me-2 ${act.disabled ? "text-muted" : ""}`}>
+                {act.icon}
+              </span>
+            }
+            className="w-full"
+            disabled={act.disabled}
+          >
+            <span className={act.disabled ? "text-muted" : ""}>
+              {act.label}
+            </span>
+          </MenuButton>
+        ))}
+
         <Separator className="my-2" />
 
-        {actions
-          .filter((action) => action.id !== "center-map")
-          .map((action) => (
-            <MenuButton
-              key={action.id}
-              onClick={() => {
-                action.onClick();
-                handleCloseAll();
-              }}
-              onMouseEnter={() => setListMenuOpen(false)}
-              icon={
-                <span className="me-2 inline-flex items-center">
-                  {action.icon}
-                </span>
-              }
-              className="w-full"
-            >
-              {action.label}
-            </MenuButton>
-          ))}
+        {resourceSection.map((act, i) => (
+          <MenuButton
+            key={i}
+            onClick={act.onClick}
+            onMouseEnter={() => setListMenuOpen(false)}
+            url={act.url}
+            icon={<span className="me-2">{act.icon}</span>}
+            className="w-full"
+          >
+            {act.label}
+          </MenuButton>
+        ))}
       </Menu>
     </>
   );

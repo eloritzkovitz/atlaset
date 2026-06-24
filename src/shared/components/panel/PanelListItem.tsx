@@ -65,7 +65,6 @@ export function PanelListItem({
   children,
 }: PanelListItemProps) {
   const btnRef = useRef<HTMLDivElement>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation("common");
 
   // Rename controls state and handlers
@@ -89,12 +88,13 @@ export function PanelListItem({
     open: menuOpen,
     setOpen: setMenuOpen,
     menuStyle: contextMenuStyle,
+    menuRef,
     handleContextMenu,
     handleCloseContext,
   } = useContextMenu({
     zIndex: 10100,
     disabled: isEditing,
-    ignoreRefs: [menuRef, btnRef],
+    ignoreRefs: [btnRef],
   });
   const baseMenuStyle = useMenuPosition(
     menuOpen,
@@ -222,7 +222,7 @@ export function PanelListItem({
               onClose={handleCloseContext}
               className="panel-listitem-menu !p-2 !z-[10100]"
               style={dynamicMenuStyle}
-              containerRef={menuRef}
+              containerRef={menuRef as React.RefObject<HTMLDivElement>}
               disableScroll={true}
             >
               {menuContent ? (
