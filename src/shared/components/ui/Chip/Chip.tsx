@@ -8,7 +8,6 @@ interface ChipProps {
   onRemove?: () => void;
   className?: string;
   disabled?: boolean;
-  noButton?: boolean;
 }
 
 export function Chip({
@@ -18,7 +17,6 @@ export function Chip({
   onRemove,
   className = "",
   disabled,
-  noButton,
 }: ChipProps) {
   const defaultStyle =
     "bg-chip-bg hover:bg-info-hover text-chip-text rounded-xl flex items-center gap-1 px-2 py-1 text-sm me-1 mb-1";
@@ -29,42 +27,20 @@ export function Chip({
       onClick={disabled ? undefined : onClick}
     >
       {children}
-      {removable &&
-        (noButton ? (
-          <span
-            role="button"
-            tabIndex={0}
-            className={`ms-auto text-muted ${
-              disabled
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-muted-hover"
-            }`}
-            onClick={disabled ? undefined : onRemove}
-            onKeyDown={
-              disabled
-                ? undefined
-                : (e) => {
-                    if (e.key === "Enter" || e.key === " ") onRemove?.();
-                  }
-            }
-            aria-disabled={disabled}
-          >
-            <FaXmark />
-          </span>
-        ) : (
-          <button
-            type="button"
-            className={`ms-auto text-muted ${
-              disabled
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:text-muted-hover"
-            }`}
-            onClick={onRemove}
-            disabled={disabled}
-          >
-            <FaXmark />
-          </button>
-        ))}
+      {removable && (
+        <button
+          type="button"
+          className={`ms-auto text-muted ${
+            disabled
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:text-muted-hover"
+          }`}
+          onClick={onRemove}
+          disabled={disabled}
+        >
+          <FaXmark />
+        </button>
+      )}
     </span>
   );
 }

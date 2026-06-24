@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import ReactDOM from "react-dom";
 import { useUI } from "@contexts/UIContext";
-import { useLanguage } from "@features/settings";
 import {
   useBodyScrollLock,
   useClickOutside,
@@ -57,7 +56,6 @@ export function Modal({
   draggable = false,
 }: ModalProps) {
   const { setModalOpen } = useUI();
-  const { isRtl } = useLanguage();
   const internalRef = useRef<HTMLDivElement>(null);
   const modalRef = containerRef ?? internalRef;
 
@@ -84,15 +82,20 @@ export function Modal({
       modalStyle: {},
     };
 
+  // Handle outside click to close modal
+  const handleOutsideClose = () => {
+    if (!disableClose && !dragging) {
+      onClose();
+    }
+  };
+
   // Close modal on outside click
   useClickOutside(
     [
       modalRef as React.RefObject<HTMLElement>,
       ...(extraRefs?.map((ref) => ref as React.RefObject<HTMLElement>) ?? []),
     ],
-    () => {
-      if (!disableClose && !dragging) onClose();
-    },
+    handleOutsideClose,
   );
 
   // Disable background scroll when modal is open
@@ -121,13 +124,19 @@ export function Modal({
       >
         <div
           ref={(el) => {
-            modalRef.current = el;
-            if (draggable && setModalDomRef) setModalDomRef(el);
+            if (modalRef) {
+              (
+                modalRef as React.MutableRefObject<HTMLDivElement | null>
+              ).current = el;
+            }
+            if (draggable && setModalDomRef) {
+              setModalDomRef(el);
+            }
           }}
           className={
             "group fixed " +
             (!draggable && position === "center"
-              ? `start-1/2 top-1/2 ${isRtl ? "translate-x-1/2" : "-translate-x-1/2"} -translate-y-1/2 `
+              ? "start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
               : "") +
             "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
             (isOpen ? "modal-show " : "modal-hide ") +

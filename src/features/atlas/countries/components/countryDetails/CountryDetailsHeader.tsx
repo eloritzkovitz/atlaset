@@ -28,7 +28,6 @@ export function CountryDetailsHeader({
   // Get action configurations based on country and context
   const actionsObj = useCountryActions({
     country,
-    onClosePanel: onClose,
   });
 
   const displayedActions = [
@@ -60,6 +59,7 @@ export function CountryDetailsHeader({
         {displayedActions.map((action, idx) => (
           <ActionButton
             key={idx}
+            url={action.url}
             onClick={action.onClick}
             ariaLabel={action.ariaLabel}
             title={action.label}
