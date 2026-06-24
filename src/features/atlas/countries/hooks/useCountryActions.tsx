@@ -18,6 +18,7 @@ export interface CountryActionConfig {
 
 interface UseCountryActionsProps {
   country: Country | null;
+  onCountryInfo?: (country: Country) => void;
   onCloseMenu?: () => void;
   onClosePanel?: () => void;
 }
@@ -31,6 +32,7 @@ interface UseCountryActionsProps {
  */
 export function useCountryActions({
   country,
+  onCountryInfo,
   onCloseMenu,
   onClosePanel,
 }: UseCountryActionsProps): Record<string, CountryActionConfig> {
@@ -57,13 +59,23 @@ export function useCountryActions({
   });
 
   return {
+    viewDetails: {
+      label: t("countries.actions.viewDetails"),
+      ariaLabel: t("countries.actions.viewDetails"),
+      icon: <ICONS.view />,
+      onClick: () => {
+        closeMenuAndCall(() => {
+          onCountryInfo?.(country);
+        });
+      },
+    },
     centerMap: {
       label: t("countries.actions.centerMap"),
       ariaLabel: t("countries.actions.centerMap"),
       icon: <ICONS.center />,
       onClick: () => {
         closeMenuAndCall(() => {
-          if (centerOnCountry) centerOnCountry(country.isoCode);
+          centerOnCountry(country.isoCode);
         });
       },
     },
@@ -78,7 +90,7 @@ export function useCountryActions({
         tripBased ? (
           <ICONS.selected />
         ) : (
-          <ICONS.close />
+          <ICONS.close className="!-mx-1 text-2xl" />
         )
       ) : (
         <ICONS.selected />

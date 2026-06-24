@@ -105,6 +105,7 @@ export const CountryActions = forwardRef(function CountryActions(
   // Get action configurations based on country and context
   const actionsObj = useCountryActions({
     country,
+    onCountryInfo,
     onCloseMenu: handleCloseAll,
     onClosePanel: onCloseListPanel,
   });
@@ -112,6 +113,9 @@ export const CountryActions = forwardRef(function CountryActions(
   // Do not render menu if no country is selected
   if (!country) return null;
 
+  const viewSection = [actionsObj.viewDetails, actionsObj.centerMap].filter(
+    Boolean,
+  );
   const trackingSection = [actionsObj.toggleVisited].filter(Boolean);
   const resourceSection = [
     actionsObj.viewDashboard,
@@ -150,28 +154,18 @@ export const CountryActions = forwardRef(function CountryActions(
         containerRef={menuRef as React.RefObject<HTMLDivElement>}
         disableScroll={true}
       >
-        <MenuButton
-          onClick={() => {
-            handleCloseAll();
-            onCountryInfo?.(country);
-          }}
-          icon={<ICONS.view className="me-2" />}
-          className="w-full"
-          onMouseEnter={() => setListMenuOpen(false)}
-        >
-          {t("countries.actions.viewDetails", "View Details")}
-        </MenuButton>
-
-        {actionsObj.centerMap && (
+        {viewSection.map((act, i) => (
           <MenuButton
-            onClick={actionsObj.centerMap.onClick}
-            icon={actionsObj.centerMap.icon}
-            className="w-full"
+            key={i}
+            onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
+            icon={
+              <span className="me-2">{act.icon}</span>
+            }
           >
-            {actionsObj.centerMap.label}
+            {act.label}
           </MenuButton>
-        )}
+        ))}
 
         <Separator className="my-2" />
 
@@ -218,7 +212,7 @@ export const CountryActions = forwardRef(function CountryActions(
             onMouseEnter={() => setListMenuOpen(false)}
             icon={
               <span
-                className={`me-2 inline-flex items-center ${act.disabled ? "text-muted" : ""}`}
+                className={`me-2 ${act.disabled ? "text-muted" : ""}`}
               >
                 {act.icon}
               </span>
@@ -240,7 +234,7 @@ export const CountryActions = forwardRef(function CountryActions(
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
             icon={
-              <span className="me-2 inline-flex items-center">{act.icon}</span>
+              <span className="me-2">{act.icon}</span>
             }
             className="w-full"
           >
