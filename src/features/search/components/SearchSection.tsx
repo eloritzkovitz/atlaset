@@ -26,7 +26,6 @@ export function SearchSection({
       <ul>
         {items.map((item) =>
           renderSearchItem(item, {
-            navigate: (url) => window.location.assign(url),
             setDropdownOpen: () => {},
             currentUser,
             friendList: friendList || [],
