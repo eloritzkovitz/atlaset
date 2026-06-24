@@ -37,7 +37,7 @@ export function MenuButton({
   onMouseLeave,
 }: MenuButtonProps) {
   const baseClass =
-    `rounded-lg text-left px-2 py-2 text-text flex items-center gap-2 ` +
+    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-2 ` +
     (active
       ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
       : variant === "sidebar"
@@ -48,6 +48,7 @@ export function MenuButton({
   const sharedProps = {
     className: baseClass,
     "aria-label": ariaLabel,
+    onClick,
     onMouseEnter,
     onMouseLeave,
     children: (
@@ -58,17 +59,30 @@ export function MenuButton({
     ),
   };
 
+  // Determine if the URL is external (starts with http:// or https://)
+  const isExternal = url?.startsWith("http://") || url?.startsWith("https://");
+
   const content = url ? (
-    <Link
-      to={url}
-      tabIndex={disabled ? -1 : 0}
-      style={disabled ? { pointerEvents: "none", opacity: 0.5 } : undefined}
-      {...sharedProps}
-    />
+    isExternal ? (
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        tabIndex={disabled ? -1 : 0}
+        style={disabled ? { pointerEvents: "none", opacity: 0.5 } : undefined}
+        {...sharedProps}
+      />
+    ) : (
+      <Link
+        to={url}
+        tabIndex={disabled ? -1 : 0}
+        style={disabled ? { pointerEvents: "none", opacity: 0.5 } : undefined}
+        {...sharedProps}
+      />
+    )
   ) : (
     <button
       type={type}
-      onClick={onClick}
       onMouseDown={onMouseDown}
       onPointerDown={onPointerDown}
       disabled={disabled}

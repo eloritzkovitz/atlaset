@@ -17,11 +17,10 @@ interface CountryActionsProps {
   country: Country | null;
   triggerRef: React.RefObject<HTMLElement | null>;
   onCountryInfo?: (country: Country) => void;
-  onCloseListPanel?: () => void;
 }
 
 export const CountryActions = forwardRef(function CountryActions(
-  { country, triggerRef, onCountryInfo, onCloseListPanel }: CountryActionsProps,
+  { country, triggerRef, onCountryInfo }: CountryActionsProps,
   ref,
 ) {
   const { countryLists, openAddModal, handleUpdate } = useCountryLists();
@@ -107,7 +106,6 @@ export const CountryActions = forwardRef(function CountryActions(
     country,
     onCountryInfo,
     onCloseMenu: handleCloseAll,
-    onClosePanel: onCloseListPanel,
   });
 
   // Do not render menu if no country is selected
@@ -159,9 +157,8 @@ export const CountryActions = forwardRef(function CountryActions(
             key={i}
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
-            icon={
-              <span className="me-2">{act.icon}</span>
-            }
+            icon={<span className="me-2">{act.icon}</span>}
+            className="w-full"
           >
             {act.label}
           </MenuButton>
@@ -211,9 +208,7 @@ export const CountryActions = forwardRef(function CountryActions(
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
             icon={
-              <span
-                className={`me-2 ${act.disabled ? "text-muted" : ""}`}
-              >
+              <span className={`me-2 ${act.disabled ? "text-muted" : ""}`}>
                 {act.icon}
               </span>
             }
@@ -233,9 +228,8 @@ export const CountryActions = forwardRef(function CountryActions(
             key={i}
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
-            icon={
-              <span className="me-2">{act.icon}</span>
-            }
+            url={act.url}
+            icon={<span className="me-2">{act.icon}</span>}
             className="w-full"
           >
             {act.label}
