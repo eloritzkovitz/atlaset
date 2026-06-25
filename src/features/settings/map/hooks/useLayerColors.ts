@@ -30,6 +30,13 @@ export function useLayerColors() {
       colors: { ...(settings.colors ?? {}), colorUpcomingVisits: value },
     });
 
+  // Want-to-visit countries color setting
+  const colorWantToVisitCountries = !!settings?.colors?.colorWantToVisitCountries;
+  const setColorWantToVisitCountries = (value: boolean) =>
+    updateSettings({
+      colors: { ...(settings.colors ?? {}), colorWantToVisitCountries: value },
+    });
+
   // Atlas colors setting
   const numAtlasColors = settings.colors?.numAtlasColors ?? 4;
   const setNumAtlasColors = (value: number) =>
@@ -60,6 +67,8 @@ export function useLayerColors() {
     setColorHomeCountry,
     colorUpcomingVisits,
     setColorUpcomingVisits,
+    colorWantToVisitCountries,
+    setColorWantToVisitCountries,
     numAtlasColors,
     setNumAtlasColors,
     colorPalettes,

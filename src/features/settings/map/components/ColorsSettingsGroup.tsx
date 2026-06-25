@@ -29,6 +29,8 @@ export function ColorsSettingsGroup() {
     setColorVisitedCountries,
     colorUpcomingVisits,
     setColorUpcomingVisits,
+    colorWantToVisitCountries,
+    setColorWantToVisitCountries,
     numAtlasColors,
     setNumAtlasColors,
     colorPalettes,
@@ -77,6 +79,11 @@ export function ColorsSettingsGroup() {
                 checked={!!colorUpcomingVisits}
                 onChange={setColorUpcomingVisits}
                 label={t("mapSettings.colors.showUpcomingVisits")}
+              />
+              <Checkbox
+                checked={!!colorWantToVisitCountries}
+                onChange={setColorWantToVisitCountries}
+                label={t("mapSettings.colors.showWantToVisit")}
               />
             </div>
             <div className="flex items-center gap-2">

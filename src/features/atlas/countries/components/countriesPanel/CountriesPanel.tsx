@@ -75,9 +75,9 @@ export function CountriesPanel({
     sovereignOnly,
     setSovereignOnly,
     visitedCount,
-    bucketCount,
-    bucketListOnly,
-    setBucketListOnly,
+    wantToVisitCount,
+    wantToVisitOnly,
+    setWantToVisitOnly,
     minVisitCount,
     setMinVisitCount,
     maxVisitCount,
@@ -119,16 +119,16 @@ export function CountriesPanel({
   }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
 
   useEffect(() => {
-    if (showVisitedOnly && bucketListOnly) {
-      setBucketListOnly(false);
+    if (showVisitedOnly && wantToVisitOnly) {
+      setWantToVisitOnly(false);
     }
-  }, [showVisitedOnly, bucketListOnly, setBucketListOnly]);
+  }, [showVisitedOnly, wantToVisitOnly, setWantToVisitOnly]);
 
   useEffect(() => {
-    if (bucketListOnly && showVisitedOnly) {
+    if (wantToVisitOnly && showVisitedOnly) {
       setShowVisitedOnly(false);
     }
-  }, [bucketListOnly, showVisitedOnly, setShowVisitedOnly]);
+  }, [wantToVisitOnly, showVisitedOnly, setShowVisitedOnly]);
 
   // Sort state
   const {
@@ -144,7 +144,7 @@ export function CountriesPanel({
   // Reset sort when toggles change
   useEffect(() => {
     setSortBy("name-asc");
-  }, [showVisitedOnly, sovereignOnly, bucketListOnly, setSortBy]);
+  }, [showVisitedOnly, sovereignOnly, wantToVisitOnly, setSortBy]);
 
   // Handle country info action
   const handleCountryInfo = useCallback(
@@ -219,12 +219,12 @@ export function CountriesPanel({
             setSovereignOnly={setSovereignOnly}
             visitedOnly={showVisitedOnly}
             setVisitedOnly={setShowVisitedOnly}            
-            bucketOnly={bucketListOnly}
-            setBucketOnly={setBucketListOnly}
+            wantToVisitOnly={wantToVisitOnly}
+            setWantToVisitOnly={setWantToVisitOnly}
             allCount={allCount}
             sovereignCount={sovereignCount}
             visitedCount={visitedCount}
-            bucketCount={bucketCount}
+            wantToVisitCount={wantToVisitCount}
             countryLists={dynamicCountryLists}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}

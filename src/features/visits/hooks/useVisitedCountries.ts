@@ -20,7 +20,7 @@ export function useVisitedCountries() {
   const [upcomingCountryCodes, setUpcomingCountryCodes] = useState<string[]>(
     [],
   );
-  const [bucketListCodes, setBucketListCodes] = useState<string[]>([]);
+  const [wantToVisitCountryCodes, setWantToVisitCountryCodes] = useState<string[]>([]);
 
   // Compute as fallback
   const computedVisited = useMemo(
@@ -33,7 +33,7 @@ export function useVisitedCountries() {
     if (!user) {
       setVisitedCountryCodes([]);
       setUpcomingCountryCodes([]);
-      setBucketListCodes([]);
+      setWantToVisitCountryCodes([]);
       return;
     }
 
@@ -49,7 +49,7 @@ export function useVisitedCountries() {
         );
 
         setVisitedCountryCodes(unifiedVisited);
-        setBucketListCodes(trackingData.bucketListCountryCodes || []);
+        setWantToVisitCountryCodes(trackingData.wantToVisitCountryCodes || []);
       },
     );
 
@@ -83,9 +83,9 @@ export function useVisitedCountries() {
     return computedVisited.includes(isoCode);
   }
 
-  // Check if a country is in the user's bucket list
-  function isBucketListed(isoCode: string) {
-    return bucketListCodes.includes(isoCode);
+  // Check if a country is in the user's want-to-visit list
+  function isWantToVisitListed(isoCode: string) {
+    return wantToVisitCountryCodes.includes(isoCode);
   }
 
   // Manually add a country code to the visited list
@@ -112,27 +112,27 @@ export function useVisitedCountries() {
     );
   }
 
-  // Add a country code to the bucket list
-  async function addBucketCountry(isoCode: string) {
+  // Add a country code to the want-to-visit list
+  async function addWantToVisitCountry(isoCode: string) {
     if (!user) return;
-    if (bucketListCodes.includes(isoCode)) return;
+    if (wantToVisitCountryCodes.includes(isoCode)) return;
     if (isCountryVisited(isoCode)) return;
 
     await countryTrackingService.addCountryCode(
       user.uid,
       isoCode,
-      "bucketListCountryCodes",
+      "wantToVisitCountryCodes",
     );
   }
 
-  // Remove a country code from the bucket list
-  async function removeBucketCountry(isoCode: string) {
+  // Remove a country code from the want-to-visit list
+  async function removeWantToVisitCountry(isoCode: string) {
     if (!user) return;
 
     await countryTrackingService.removeCountryCode(
       user.uid,
       isoCode,
-      "bucketListCountryCodes",
+      "wantToVisitCountryCodes",
     );
   }
 
@@ -163,14 +163,14 @@ export function useVisitedCountries() {
   return {
     visitedCountryCodes,
     upcomingCountryCodes,
-    bucketListCodes,
+    wantToVisitCountryCodes,
     isCountryVisited,
     isTripBased,
-    isBucketListed,
+    isWantToVisitListed,
     addManualCountry,
     removeManualCountry,
-    addBucketCountry,
-    removeBucketCountry,
+    addWantToVisitCountry,
+    removeWantToVisitCountry,
     getCountryVisits,
     getCountryVisitsCategorized,
   };

@@ -24,10 +24,17 @@ export function useMapLegendItems(
 
   // Get dynamic color roles for the current mode
   const colorRoles = useVisitColorRoles(colorMode);
-  const { colorHomeCountry, colorUpcomingVisits, colorVisitedCountries } =
-    useLayerColors();
-  const { VISITED_COUNTRY_COLOR, UPCOMING_VISIT_COUNTRY_COLOR } =
-    useCountryColors();
+  const {
+    colorWantToVisitCountries,
+    colorHomeCountry,
+    colorUpcomingVisits,
+    colorVisitedCountries,
+  } = useLayerColors();
+  const {
+    VISITED_COUNTRY_COLOR,
+    UPCOMING_VISIT_COUNTRY_COLOR,
+    SELECTED_COUNTRY_COLOR,
+  } = useCountryColors();
 
   const canShow = !isReadonly && !isEdit;
   const make = (color: string, label: string) => ({ color, label });
@@ -42,6 +49,9 @@ export function useMapLegendItems(
       : []),
     ...(colorUpcomingVisits && canShow
       ? [make(UPCOMING_VISIT_COUNTRY_COLOR, "Upcoming Visits")]
+      : []),
+    ...(colorWantToVisitCountries && canShow
+      ? [make(SELECTED_COUNTRY_COLOR, "Want to Visit")]
       : []),
     ...layers
       .filter((o) => o.visible && !o.name.toLowerCase().includes("visited"))

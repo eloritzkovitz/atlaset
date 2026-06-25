@@ -11,11 +11,11 @@ import {
 export function CountryListsProvider({ children }: { children: ReactNode }) {
   const {
     visitedCountryCodes,
-    bucketListCodes,
+    wantToVisitCountryCodes,
     addManualCountry,
     removeManualCountry,
-    addBucketCountry,
-    removeBucketCountry,
+    addWantToVisitCountry,
+    removeWantToVisitCountry,
   } = useVisitedCountries();
 
   const [countryLists, setCountryLists] = useState<CountryList[]>([]);
@@ -73,11 +73,11 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    if (listId === "BUCKET_LIST") {
+    if (listId === "WANT_TO_VISIT") {
       setCurrentList({
-        id: "BUCKET_LIST",
-        name: "Bucket List",
-        countryCodes: bucketListCodes,
+        id: "WANT_TO_VISIT",
+        name: "Want to Visit",
+        countryCodes: wantToVisitCountryCodes,
       });
       setIsEditing(true);
       setIsSystemList(true);
@@ -127,15 +127,15 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       const added = newCodes.find((code) => !currentCodes.includes(code));
       const removed = currentCodes.find((code) => !newCodes.includes(code));
 
-      // Determine if this modal instance belongs to the Bucket List
-      const isBucketList = updatedList.id === "BUCKET_LIST";
+      // Determine if this modal instance belongs to the Want to Visit List
+      const isWantToVisitList = updatedList.id === "WANT_TO_VISIT";
 
-      if (isBucketList) {
-        // Process Bucket List modifications
+      if (isWantToVisitList) {
+        // Process Want to Visit List modifications
         if (added) {
-          await addBucketCountry(added);
+          await addWantToVisitCountry(added);
         } else if (removed) {
-          await removeBucketCountry(removed);
+          await removeWantToVisitCountry(removed);
         }
       } else {
         // Process Visited Countries modifications

@@ -86,7 +86,7 @@ describe("countryTrackingService", () => {
             exists: () => true,
             data: () => ({
               visitedCountryCodes: ["FR"],
-              bucketListCountryCodes: ["JP", "IT"],
+              wantToVisitCountryCodes: ["JP", "IT"],
             }),
           });
           return () => {};
@@ -98,7 +98,7 @@ describe("countryTrackingService", () => {
 
       expect(spy).toHaveBeenCalledWith({
         visitedCountryCodes: ["FR"],
-        bucketListCountryCodes: ["JP", "IT"],
+        wantToVisitCountryCodes: ["JP", "IT"],
       });
       expect(typeof unsub).toBe("function");
       expect(mockOnSnapshot).toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe("countryTrackingService", () => {
 
       expect(spy).toHaveBeenCalledWith({
         visitedCountryCodes: [],
-        bucketListCountryCodes: [],
+        wantToVisitCountryCodes: [],
       });
     });
 
@@ -130,7 +130,7 @@ describe("countryTrackingService", () => {
             exists: () => true,
             data: () => ({
               visitedCountryCodes: null,
-              bucketListCountryCodes: ["BR"],
+              wantToVisitCountryCodes: ["BR"],
             }),
           });
           return () => {};
@@ -142,7 +142,7 @@ describe("countryTrackingService", () => {
 
       expect(spy).toHaveBeenCalledWith({
         visitedCountryCodes: [],
-        bucketListCountryCodes: ["BR"],
+        wantToVisitCountryCodes: ["BR"],
       });
     });
   });
@@ -165,7 +165,7 @@ describe("countryTrackingService", () => {
 
       expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
         visitedCountryCodes: { type: "arrayUnion", val: "MX" },
-        bucketListCountryCodes: { type: "arrayRemove", val: "MX" },
+        wantToVisitCountryCodes: { type: "arrayRemove", val: "MX" },
       });
     });
 
@@ -177,11 +177,11 @@ describe("countryTrackingService", () => {
       await countryTrackingService.addCountryCode(
         "u6_bucket",
         "ZAF",
-        "bucketListCountryCodes",
+        "wantToVisitCountryCodes",
       );
 
       expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
-        bucketListCountryCodes: { type: "arrayUnion", val: "ZAF" },
+        wantToVisitCountryCodes: { type: "arrayUnion", val: "ZAF" },
         visitedCountryCodes: { type: "arrayRemove", val: "ZAF" },
       });
     });

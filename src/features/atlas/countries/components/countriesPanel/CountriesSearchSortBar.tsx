@@ -20,9 +20,9 @@ interface CountriesSearchSortBarProps {
   visitedCount?: number;
   visitedOnly?: boolean;
   setVisitedOnly?: (value: boolean) => void;
-  bucketCount?: number;
-  bucketOnly?: boolean;
-  setBucketOnly?: (value: boolean) => void;
+  wantToVisitCount?: number;
+  wantToVisitOnly?: boolean;
+  setWantToVisitOnly?: (value: boolean) => void;
   countryLists?: (CountryList & { count?: number })[];
   selectedListId?: string | null;
   setSelectedListId?: (id: string | null) => void;
@@ -42,9 +42,9 @@ export function CountriesSearchSortBar({
   visitedCount = 0,
   visitedOnly,
   setVisitedOnly,
-  bucketCount = 0,
-  bucketOnly,
-  setBucketOnly,
+  wantToVisitCount = 0,
+  wantToVisitOnly,
+  setWantToVisitOnly,
   countryLists = [],
   selectedListId = null,
   setSelectedListId,
@@ -61,7 +61,7 @@ export function CountriesSearchSortBar({
     allCount,
     sovereignCount,
     visitedCount,
-    bucketCount,
+    wantToVisitCount,
   ]);
 
   const options = [
@@ -77,9 +77,9 @@ export function CountriesSearchSortBar({
       count: visitedCount,
     },
     {
-      value: "bucket",
-      label: t("countries.lists.bucket"),
-      count: bucketCount,
+      value: "wantToVisit",
+      label: t("countries.lists.wantToVisit"),
+      count: wantToVisitCount,
     },
     ...countryLists.map((list) => ({
       value: list.id,
@@ -89,8 +89,8 @@ export function CountriesSearchSortBar({
   ];
 
   // Determine selected toggle
-  const selectedToggle = bucketOnly
-    ? "bucket"
+  const selectedToggle = wantToVisitOnly
+    ? "wantToVisit"
     : visitedOnly
       ? "visited"
       : sovereignOnly
@@ -108,8 +108,8 @@ export function CountriesSearchSortBar({
     if (typeof onEditList === "function") {
       if (val === "visited") {
         onEditList("VISITED_COUNTRIES");
-      } else if (val === "bucket") {
-        onEditList("BUCKET_LIST");
+      } else if (val === "wantToVisit") {
+        onEditList("WANT_TO_VISIT");
       } else {
         onEditList(val);
       }
@@ -162,33 +162,33 @@ export function CountriesSearchSortBar({
                 if (low.startsWith(prefix + ":")) return;
                 setSearch(`${prefix}: true`);
               };
-              if (val === "bucket") {
-                setBucketOnly?.(true);
+              if (val === "wantToVisit") {
+                setWantToVisitOnly?.(true);
                 setVisitedOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(null);
                 setSearch("");
               } else if (val === "visited") {
                 setVisitedOnly?.(true);
-                setBucketOnly?.(false);
+                setWantToVisitOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(null);
                 ensurePrefix("visited");
               } else if (val === "sovereign") {
                 setVisitedOnly?.(false);
-                setBucketOnly?.(false);
+                setWantToVisitOnly?.(false);
                 setSovereignOnly?.(true);
                 setSelectedListId?.(null);
                 ensurePrefix("sovereign");
               } else if (val === "all") {
                 setVisitedOnly?.(false);
-                setBucketOnly?.(false);
+                setWantToVisitOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(null);
                 setSearch("");
               } else {
                 setVisitedOnly?.(false);
-                setBucketOnly?.(false);
+                setWantToVisitOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(val);
                 setSearch("");

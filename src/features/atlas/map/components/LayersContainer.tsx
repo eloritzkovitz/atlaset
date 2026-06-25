@@ -47,21 +47,24 @@ export function LayersContainer({
   const countryData = useCountryData();
   const { isAtlasActive, isEdit, isReadonly } = useMapView();
   const { timelineMode } = useTimeline();
-  
+
   // Colors and visited countries
   const { homeCountry } = useHomeCountry();
   const {
     colorHomeCountry,
     colorVisitedCountries,
     colorUpcomingVisits,
+    colorWantToVisitCountries,
     numAtlasColors,
   } = useLayerColors();
   const {
     HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,
     UPCOMING_VISIT_COUNTRY_COLOR,
+    SELECTED_COUNTRY_COLOR,
   } = useCountryColors();
-  const { visitedCountryCodes, upcomingCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes, upcomingCountryCodes, wantToVisitCountryCodes } =
+    useVisitedCountries();
 
   const visitedSet = useMemo(
     () => new Set((visitedCountryCodes || []).map((s) => s.toUpperCase())),
@@ -70,6 +73,10 @@ export function LayersContainer({
   const upcomingSet = useMemo(
     () => new Set((upcomingCountryCodes || []).map((s) => s.toUpperCase())),
     [upcomingCountryCodes],
+  );
+  const wantToVisitSet = useMemo(
+    () => new Set((wantToVisitCountryCodes || []).map((s) => s.toUpperCase())),
+    [wantToVisitCountryCodes],
   );
 
   // Group layer items by isoCode for stacking/blending
@@ -129,6 +136,10 @@ export function LayersContainer({
               interactiveMode && colorVisitedCountries && visitedSet.has(isoA2);
             const isUpcomingVisitCountry =
               interactiveMode && colorUpcomingVisits && upcomingSet.has(isoA2);
+            const isWantToVisitCountry =
+              interactiveMode &&
+              colorWantToVisitCountries &&
+              wantToVisitSet.has(isoA2);
 
             // Determine final style based on priority
             let fill = geographyStyle.default.fill;
@@ -144,6 +155,7 @@ export function LayersContainer({
               else if (isUpcomingVisitCountry)
                 fill = UPCOMING_VISIT_COUNTRY_COLOR;
               else if (isVisitedCountry) fill = VISITED_COUNTRY_COLOR;
+              else if (isWantToVisitCountry) fill = SELECTED_COUNTRY_COLOR;
               else if (blendedFill) fill = blendedFill;
             }
 

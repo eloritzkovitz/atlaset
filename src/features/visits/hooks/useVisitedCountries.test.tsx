@@ -68,16 +68,16 @@ describe("useVisitedCountries", () => {
     act(() => {
       trackingCallback({
         visitedCountryCodes: ["MX"],
-        bucketListCountryCodes: ["JP"],
+        wantToVisitCountryCodes: ["JP"],
       });
     });
 
     expect(result.current.visitedCountryCodes).toEqual(["MX", "FR"]);
-    expect(result.current.bucketListCodes).toEqual(["JP"]);
+    expect(result.current.wantToVisitCountryCodes).toEqual(["JP"]);
     expect(result.current.upcomingCountryCodes).toEqual(["IT"]);
     expect(result.current.isCountryVisited("MX")).toBe(true);
     expect(result.current.isTripBased("FR")).toBe(true);
-    expect(result.current.isBucketListed("JP")).toBe(true);
+    expect(result.current.isWantToVisitListed("JP")).toBe(true);
   });
 
   it("should handle unauthenticated state cleanly", () => {
@@ -85,7 +85,7 @@ describe("useVisitedCountries", () => {
     const { result } = renderHook(() => useVisitedCountries());
 
     expect(result.current.visitedCountryCodes).toEqual([]);
-    expect(result.current.bucketListCodes).toEqual([]);
+    expect(result.current.wantToVisitCountryCodes).toEqual([]);
     expect(result.current.upcomingCountryCodes).toEqual([]);
   });
 
@@ -94,7 +94,7 @@ describe("useVisitedCountries", () => {
     act(() => {
       trackingCallback({
         visitedCountryCodes: ["MX"],
-        bucketListCountryCodes: ["JP"],
+        wantToVisitCountryCodes: ["JP"],
       });
     });
 
@@ -117,21 +117,21 @@ describe("useVisitedCountries", () => {
     );
 
     await act(async () => {
-      await result.current.addBucketCountry("BR");
+      await result.current.addWantToVisitCountry("BR");
     });
     expect(mockAddCountryCode).toHaveBeenCalledWith(
       "u1",
       "BR",
-      "bucketListCountryCodes",
+      "wantToVisitCountryCodes",
     );
 
     await act(async () => {
-      await result.current.removeBucketCountry("JP");
+      await result.current.removeWantToVisitCountry("JP");
     });
     expect(mockRemoveCountryCode).toHaveBeenCalledWith(
       "u1",
       "JP",
-      "bucketListCountryCodes",
+      "wantToVisitCountryCodes",
     );
   });
 
@@ -140,7 +140,7 @@ describe("useVisitedCountries", () => {
     act(() => {
       trackingCallback({
         visitedCountryCodes: ["MX"],
-        bucketListCountryCodes: ["JP"],
+        wantToVisitCountryCodes: ["JP"],
       });
     });
 
@@ -148,11 +148,11 @@ describe("useVisitedCountries", () => {
       await result.current.addManualCountry("MX");
     });
     await act(async () => {
-      await result.current.addBucketCountry("JP");
+      await result.current.addWantToVisitCountry("JP");
     });
 
     await act(async () => {
-      await result.current.addBucketCountry("MX");
+      await result.current.addWantToVisitCountry("MX");
     });
 
     await act(async () => {
@@ -167,8 +167,8 @@ describe("useVisitedCountries", () => {
     await act(async () => {
       await unauthResult.current.addManualCountry("US");
       await unauthResult.current.removeManualCountry("US");
-      await unauthResult.current.addBucketCountry("US");
-      await unauthResult.current.removeBucketCountry("US");
+      await unauthResult.current.addWantToVisitCountry("US");
+      await unauthResult.current.removeWantToVisitCountry("US");
     });
     expect(mockAddCountryCode).not.toHaveBeenCalled();
     expect(mockRemoveCountryCode).not.toHaveBeenCalled();

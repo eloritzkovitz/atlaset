@@ -8,11 +8,11 @@ import {
 } from "firebase/firestore";
 import { db } from "@app/firebase";
 
-export type TrackingField = "visitedCountryCodes" | "bucketListCountryCodes";
+export type TrackingField = "visitedCountryCodes" | "wantToVisitCountryCodes";
 
 interface TrackingData {
   visitedCountryCodes: string[];
-  bucketListCountryCodes: string[];
+  wantToVisitCountryCodes: string[];
 }
 
 /**
@@ -22,7 +22,7 @@ export const countryTrackingService = {
   /**
    * Gets tracking country codes for a user.
    * @param uid - The user ID.
-   * @param field - The tracking field to retrieve (visited or bucket list).
+   * @param field - The tracking field to retrieve (visited or want-to-visit list).
    * @returns A promise resolving to an array of tracking country ISO codes.
    */
   async getCountryCodes(uid: string, field: TrackingField): Promise<string[]> {
@@ -45,7 +45,7 @@ export const countryTrackingService = {
 
     return onSnapshot(userRef, (snap) => {
       if (!snap.exists()) {
-        cb({ visitedCountryCodes: [], bucketListCountryCodes: [] });
+        cb({ visitedCountryCodes: [], wantToVisitCountryCodes: [] });
         return;
       }
 
@@ -54,8 +54,8 @@ export const countryTrackingService = {
         visitedCountryCodes: Array.isArray(data.visitedCountryCodes)
           ? data.visitedCountryCodes
           : [],
-        bucketListCountryCodes: Array.isArray(data.bucketListCountryCodes)
-          ? data.bucketListCountryCodes
+        wantToVisitCountryCodes: Array.isArray(data.wantToVisitCountryCodes)
+          ? data.wantToVisitCountryCodes
           : [],
       });
     });
@@ -65,13 +65,13 @@ export const countryTrackingService = {
    * Adds a country code to the tracking list for a user.
    * @param uid - The user ID.
    * @param code - The country ISO code to add.
-   * @param targetField - The tracking field to modify (visited or bucket list).
+   * @param targetField - The tracking field to modify (visited or want-to-visit list).
    */
   async addCountryCode(uid: string, code: string, targetField: TrackingField) {
     const userRef = doc(db, "users", uid);
     const opposingField: TrackingField =
       targetField === "visitedCountryCodes"
-        ? "bucketListCountryCodes"
+        ? "wantToVisitCountryCodes"
         : "visitedCountryCodes";
 
     await updateDoc(userRef, {

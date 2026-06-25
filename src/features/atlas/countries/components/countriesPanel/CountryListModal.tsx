@@ -62,7 +62,7 @@ export function CountryListModal({
 
   // Determine if the list is a system-managed list
   const isVisitedList = list.id === "VISITED_COUNTRIES";
-  const isBucketList = list.id === "BUCKET_LIST";
+  const isWantToVisitList = list.id === "WANT_TO_VISIT";
 
   return (
     <>
@@ -76,7 +76,7 @@ export function CountryListModal({
         <PanelHeader
           title={
             <>
-              {isBucketList ? (
+              {isWantToVisitList ? (
                 <ICONS.favorite />
               ) : isVisitedList ? (
                 <ICONS.visits />

@@ -41,11 +41,11 @@ export function useCountryActions({
   const {
     isCountryVisited,
     isTripBased,
-    isBucketListed,
+    isWantToVisitListed,
     addManualCountry,
     removeManualCountry,
-    addBucketCountry,
-    removeBucketCountry,
+    addWantToVisitCountry,
+    removeWantToVisitCountry,
   } = useVisitedCountries();
 
   // If no country is provided, return an empty array of actions
@@ -53,7 +53,7 @@ export function useCountryActions({
 
   const visited = isCountryVisited(country.isoCode);
   const tripBased = isTripBased(country.isoCode);
-  const bucketListed = isBucketListed(country.isoCode);
+  const wantToVisitListed = isWantToVisitListed(country.isoCode);
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
@@ -114,22 +114,22 @@ export function useCountryActions({
         });
       },
     },
-    toggleBucket: {
-      label: bucketListed
-        ? t("countries.actions.removeFromBucket", "Remove from Bucket List")
-        : t("countries.actions.addToBucket", "Add to Bucket List"),
-      ariaLabel: bucketListed
-        ? "Remove from Bucket List"
-        : "Add to Bucket List",
-      icon: bucketListed ? <ICONS.remove /> : <ICONS.favorite />,
+    toggleWantToVisit: {
+      label: wantToVisitListed
+        ? t("countries.actions.unmarkWantToVisit", "Unmark 'Want to Visit'")
+        : t("countries.actions.markWantToVisit", "Mark 'Want to Visit'"),
+      ariaLabel: wantToVisitListed
+        ? "Unmark as Want to Visit"
+        : "Mark as Want to Visit",
+      icon: wantToVisitListed ? <ICONS.remove /> : <ICONS.favorite />,
       disabled: visited,
       isVisited: visited,
       onClick: () => {
         closeMenuAndCall(async () => {
-          if (bucketListed) {
-            await removeBucketCountry(country.isoCode);
+          if (wantToVisitListed) {
+            await removeWantToVisitCountry(country.isoCode);
           } else {
-            await addBucketCountry(country.isoCode);
+            await addWantToVisitCountry(country.isoCode);
           }
         });
       },

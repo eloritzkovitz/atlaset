@@ -48,7 +48,7 @@ export function useCountryFilters() {
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
-  const { visitedCountryCodes, bucketListCodes } = useVisitedCountries();
+  const { visitedCountryCodes, wantToVisitCountryCodes } = useVisitedCountries();
 
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
@@ -70,7 +70,7 @@ export function useCountryFilters() {
   >("");
   const [sovereignOnly, setSovereignOnly] = useState(false);
   const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");
-  const [bucketListOnly, setBucketListOnly] = useState(false);
+  const [wantToVisitOnly, setWantToVisitOnly] = useState(false);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
@@ -193,9 +193,9 @@ export function useCountryFilters() {
       );
     }
 
-    if (bucketListOnly) {
-      const bucketSet = new Set(bucketListCodes);
-      base = base.filter((c) => bucketSet.has(c.isoCode));
+    if (wantToVisitOnly) {
+      const wantToVisitSet = new Set(wantToVisitCountryCodes);
+      base = base.filter((c) => wantToVisitSet.has(c.isoCode));
     } else if (showVisitedOnly) {
       if (isReadonly && effectiveSharedVisitedIsoCodes) {
         base = base.filter((c) =>
@@ -236,8 +236,8 @@ export function useCountryFilters() {
     debouncedSearch,
     countryLists,
     selectedListId,
-    bucketListOnly,
-    bucketListCodes,
+    wantToVisitOnly,
+    wantToVisitCountryCodes,
     showVisitedOnly,
     isReadonly,
     effectiveSharedVisitedIsoCodes,
@@ -256,11 +256,11 @@ export function useCountryFilters() {
     visitedIsoCodes,
   });
 
-  // Compute bucket list count based on searched countries and bucket list codes
-  const bucketCount = useMemo(() => {
-    const bucketSet = new Set(bucketListCodes);
-    return searchedCountries.filter((c) => bucketSet.has(c.isoCode)).length;
-  }, [searchedCountries, bucketListCodes]);
+  // Compute want-to-visit list count based on searched countries and want-to-visit codes
+  const wantToVisitCount = useMemo(() => {
+    const wantToVisitSet = new Set(wantToVisitCountryCodes);
+    return searchedCountries.filter((c) => wantToVisitSet.has(c.isoCode)).length;
+  }, [searchedCountries, wantToVisitCountryCodes]);
 
   // Reset core filters
   function resetCoreFilters() {
@@ -269,7 +269,7 @@ export function useCountryFilters() {
     setSelectedGeoType("");
     setSelectedSovereignty("");
     setSelectedVisited("any");
-    setBucketListOnly(false);
+    setWantToVisitOnly(false);
   }
 
   // Reset timeline-related filters
@@ -316,10 +316,10 @@ export function useCountryFilters() {
     setSovereignOnly,
     visitedCount,
     visitedIsoCodes,
-    bucketListCodes,
-    bucketCount,
-    bucketListOnly,
-    setBucketListOnly,
+    wantToVisitCountryCodes,
+    wantToVisitCount,
+    wantToVisitOnly,
+    setWantToVisitOnly,
     minVisitCount,
     setMinVisitCount,
     maxVisitCount,

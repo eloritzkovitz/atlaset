@@ -116,9 +116,9 @@ export const CountryActions = forwardRef(function CountryActions(
   );
   const trackingSection = [
     { id: "visited", ...actionsObj.toggleVisited },
-    ...(actionsObj.toggleBucket?.disabled
+    ...(actionsObj.toggleWantToVisit?.disabled
       ? []
-      : [{ id: "bucket", ...actionsObj.toggleBucket }]),
+      : [{ id: "wantToVisit", ...actionsObj.toggleWantToVisit }]),
   ];
   const resourceSection = [
     actionsObj.viewDashboard,
