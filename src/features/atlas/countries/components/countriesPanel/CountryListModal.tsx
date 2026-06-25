@@ -60,6 +60,10 @@ export function CountryListModal({
     ? list.countryCodes.length >= 0
     : list.name.trim() !== "" && list.countryCodes.length > 0;
 
+  // Determine if the list is a system-managed list
+  const isVisitedList = list.id === "VISITED_COUNTRIES";
+  const isWantToVisitList = list.id === "WANT_TO_VISIT";
+
   return (
     <>
       <Modal
@@ -72,7 +76,13 @@ export function CountryListModal({
         <PanelHeader
           title={
             <>
-              <ICONS.countryLists />
+              {isWantToVisitList ? (
+                <ICONS.favorite />
+              ) : isVisitedList ? (
+                <ICONS.visits />
+              ) : (
+                <ICONS.countryLists />
+              )}
               {isEditing
                 ? t("countries.lists.form.editTitle")
                 : t("countries.lists.form.addTitle")}

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-06-25
+
+- **[feature]** **Countries:** Added "want to visit" list and map coloring setting
+
 ## 2026-06-24
 
 - **[feature]** **Countries:** Added option to manually set countries as visited

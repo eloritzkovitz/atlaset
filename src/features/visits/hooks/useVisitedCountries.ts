@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { useAuth } from "@features/user";
-import { visitedCountriesService } from "../services/visitedCountriesService";
+import { countryTrackingService } from "../services/countryTrackingService";
 import {
   computeVisitedCountriesFromTrips,
   getUpcomingVisitCountries,
@@ -20,6 +20,7 @@ export function useVisitedCountries() {
   const [upcomingCountryCodes, setUpcomingCountryCodes] = useState<string[]>(
     [],
   );
+  const [wantToVisitCountryCodes, setWantToVisitCountryCodes] = useState<string[]>([]);
 
   // Compute as fallback
   const computedVisited = useMemo(
@@ -32,14 +33,15 @@ export function useVisitedCountries() {
     if (!user) {
       setVisitedCountryCodes([]);
       setUpcomingCountryCodes([]);
+      setWantToVisitCountryCodes([]);
       return;
     }
 
-    const unsubscribe = visitedCountriesService.onVisitedCountryCodesChange(
+    const unsubscribe = countryTrackingService.onTrackingDataChange(
       user.uid,
-      (firestoreCodes) => {
+      (trackingData) => {
         // If Firestore has no data, fallback to computed visited from trips
-        const manualCodes = firestoreCodes || [];
+        const manualCodes = trackingData.visitedCountryCodes || [];
 
         // Merge manual and computed visited codes, ensuring uniqueness
         const unifiedVisited = Array.from(
@@ -47,10 +49,13 @@ export function useVisitedCountries() {
         );
 
         setVisitedCountryCodes(unifiedVisited);
+        setWantToVisitCountryCodes(trackingData.wantToVisitCountryCodes || []);
       },
     );
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+    };
   }, [user, computedVisited]);
 
   // Recompute upcoming when trips or visited codes change
@@ -78,12 +83,21 @@ export function useVisitedCountries() {
     return computedVisited.includes(isoCode);
   }
 
+  // Check if a country is in the user's want-to-visit list
+  function isWantToVisitListed(isoCode: string) {
+    return wantToVisitCountryCodes.includes(isoCode);
+  }
+
   // Manually add a country code to the visited list
   async function addManualCountry(isoCode: string) {
     if (!user) return;
     if (visitedCountryCodes.includes(isoCode)) return;
 
-    await visitedCountriesService.addVisitedCountryCode(user.uid, isoCode);
+    await countryTrackingService.addCountryCode(
+      user.uid,
+      isoCode,
+      "visitedCountryCodes",
+    );
   }
 
   // Manually remove a country code from the visited list
@@ -91,7 +105,35 @@ export function useVisitedCountries() {
     if (!user) return;
     if (isTripBased(isoCode)) return;
 
-    await visitedCountriesService.removeVisitedCountryCode(user.uid, isoCode);
+    await countryTrackingService.removeCountryCode(
+      user.uid,
+      isoCode,
+      "visitedCountryCodes",
+    );
+  }
+
+  // Add a country code to the want-to-visit list
+  async function addWantToVisitCountry(isoCode: string) {
+    if (!user) return;
+    if (wantToVisitCountryCodes.includes(isoCode)) return;
+    if (isCountryVisited(isoCode)) return;
+
+    await countryTrackingService.addCountryCode(
+      user.uid,
+      isoCode,
+      "wantToVisitCountryCodes",
+    );
+  }
+
+  // Remove a country code from the want-to-visit list
+  async function removeWantToVisitCountry(isoCode: string) {
+    if (!user) return;
+
+    await countryTrackingService.removeCountryCode(
+      user.uid,
+      isoCode,
+      "wantToVisitCountryCodes",
+    );
   }
 
   // Get visits for a country
@@ -121,10 +163,14 @@ export function useVisitedCountries() {
   return {
     visitedCountryCodes,
     upcomingCountryCodes,
+    wantToVisitCountryCodes,
     isCountryVisited,
     isTripBased,
+    isWantToVisitListed,
     addManualCountry,
     removeManualCountry,
+    addWantToVisitCountry,
+    removeWantToVisitCountry,
     getCountryVisits,
     getCountryVisitsCategorized,
   };

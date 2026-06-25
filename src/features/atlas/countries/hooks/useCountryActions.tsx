@@ -14,6 +14,7 @@ export interface CountryActionConfig {
   onClick: () => void;
   url?: string;
   disabled?: boolean;
+  isVisited?: boolean;
 }
 
 interface UseCountryActionsProps {
@@ -40,8 +41,11 @@ export function useCountryActions({
   const {
     isCountryVisited,
     isTripBased,
+    isWantToVisitListed,
     addManualCountry,
     removeManualCountry,
+    addWantToVisitCountry,
+    removeWantToVisitCountry,
   } = useVisitedCountries();
 
   // If no country is provided, return an empty array of actions
@@ -49,6 +53,7 @@ export function useCountryActions({
 
   const visited = isCountryVisited(country.isoCode);
   const tripBased = isTripBased(country.isoCode);
+  const wantToVisitListed = isWantToVisitListed(country.isoCode);
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
@@ -105,6 +110,26 @@ export function useCountryActions({
             await removeManualCountry(country.isoCode);
           } else {
             await addManualCountry(country.isoCode);
+          }
+        });
+      },
+    },
+    toggleWantToVisit: {
+      label: wantToVisitListed
+        ? t("countries.actions.unmarkWantToVisit", "Unmark 'Want to Visit'")
+        : t("countries.actions.markWantToVisit", "Mark 'Want to Visit'"),
+      ariaLabel: wantToVisitListed
+        ? "Unmark as Want to Visit"
+        : "Mark as Want to Visit",
+      icon: wantToVisitListed ? <ICONS.remove /> : <ICONS.favorite />,
+      disabled: visited,
+      isVisited: visited,
+      onClick: () => {
+        closeMenuAndCall(async () => {
+          if (wantToVisitListed) {
+            await removeWantToVisitCountry(country.isoCode);
+          } else {
+            await addWantToVisitCountry(country.isoCode);
           }
         });
       },

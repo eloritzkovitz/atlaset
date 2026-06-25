@@ -75,6 +75,9 @@ export function CountriesPanel({
     sovereignOnly,
     setSovereignOnly,
     visitedCount,
+    wantToVisitCount,
+    wantToVisitOnly,
+    setWantToVisitOnly,
     minVisitCount,
     setMinVisitCount,
     maxVisitCount,
@@ -115,6 +118,18 @@ export function CountriesPanel({
     }
   }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
 
+  useEffect(() => {
+    if (showVisitedOnly && wantToVisitOnly) {
+      setWantToVisitOnly(false);
+    }
+  }, [showVisitedOnly, wantToVisitOnly, setWantToVisitOnly]);
+
+  useEffect(() => {
+    if (wantToVisitOnly && showVisitedOnly) {
+      setShowVisitedOnly(false);
+    }
+  }, [wantToVisitOnly, showVisitedOnly, setShowVisitedOnly]);
+
   // Sort state
   const {
     sortBy,
@@ -129,7 +144,7 @@ export function CountriesPanel({
   // Reset sort when toggles change
   useEffect(() => {
     setSortBy("name-asc");
-  }, [showVisitedOnly, sovereignOnly, setSortBy]);
+  }, [showVisitedOnly, sovereignOnly, wantToVisitOnly, setSortBy]);
 
   // Handle country info action
   const handleCountryInfo = useCallback(
@@ -200,13 +215,16 @@ export function CountriesPanel({
             setSearch={setSearch}
             sortBy={sortBy}
             setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
-            visitedOnly={showVisitedOnly}
-            setVisitedOnly={setShowVisitedOnly}
             sovereignOnly={sovereignOnly}
             setSovereignOnly={setSovereignOnly}
+            visitedOnly={showVisitedOnly}
+            setVisitedOnly={setShowVisitedOnly}            
+            wantToVisitOnly={wantToVisitOnly}
+            setWantToVisitOnly={setWantToVisitOnly}
             allCount={allCount}
             sovereignCount={sovereignCount}
             visitedCount={visitedCount}
+            wantToVisitCount={wantToVisitCount}
             countryLists={dynamicCountryLists}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}
@@ -240,7 +258,7 @@ export function CountriesPanel({
           sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
           setSelectedVisited={setSelectedVisited}
-          visitedOnly={showVisitedOnly}
+          visitedOnly={showVisitedOnly}          
           minVisitCount={minVisitCount}
           setMinVisitCount={setMinVisitCount}
           maxVisitCount={maxVisitCount}

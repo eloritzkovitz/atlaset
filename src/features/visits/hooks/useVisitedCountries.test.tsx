@@ -1,185 +1,191 @@
-import { render, screen, cleanup, act } from "@testing-library/react";
-import { vi, describe, it, expect } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import { useVisitedCountries } from "./useVisitedCountries";
 
-const mockOnChange = vi.fn();
-const mockAddVisited = vi.fn().mockResolvedValue(undefined);
-const mockRemoveVisited = vi.fn().mockResolvedValue(undefined);
+const mockAddCountryCode = vi.fn().mockResolvedValue(undefined);
+const mockRemoveCountryCode = vi.fn().mockResolvedValue(undefined);
+let trackingCallback: (data: any) => void = () => {};
 
-let currentMockCodes: string[] = ["FR"];
-let unsubCalled = false;
-
-vi.mock("../services/visitedCountriesService", () => ({
-  visitedCountriesService: {
-    onVisitedCountryCodesChange: (
-      _uid: string,
-      cb: (codes: string[]) => void,
-    ) => {
-      cb(currentMockCodes);
-      return () => {
-        unsubCalled = true;
-        mockOnChange();
-      };
+vi.mock("../services/countryTrackingService", () => ({
+  countryTrackingService: {
+    onTrackingDataChange: (_uid: string, cb: (data: any) => void) => {
+      trackingCallback = cb;
+      return () => {};
     },
-    addVisitedCountryCode: (...args: any[]) => mockAddVisited(...args),
-    removeVisitedCountryCode: (...args: any[]) => mockRemoveVisited(...args),
+    addCountryCode: (...args: any[]) => mockAddCountryCode(...args),
+    removeCountryCode: (...args: any[]) => mockRemoveCountryCode(...args),
   },
 }));
 
-import { mockTrips } from "@test-utils/mockTrips";
-import { mockUser } from "@test-utils/mockUser";
-
-const authReturn: { user: any } = { user: mockUser };
+let mockUser: { uid: string } | null = { uid: "u1" };
 vi.mock("@features/user", () => ({
-  useAuth: () => authReturn,
+  useAuth: () => ({ user: mockUser }),
 }));
 
+let mockTrips = [{ id: "t1", destination: "FR", startDate: "2026-01-01" }];
 vi.mock("@contexts/TripsContext", () => ({
   useTrips: () => ({ trips: mockTrips }),
 }));
 
-import { useVisitedCountries } from "./useVisitedCountries";
+vi.mock("../utils/visits", () => ({
+  computeVisitedCountriesFromTrips: () => ["FR"],
+  getUpcomingVisitCountries: () => ["IT", "FR"],
+  getVisitsForCountry: () => [
+    {
+      tripId: "t1",
+      tripName: "Trip",
+      yearRange: "2026",
+      startDate: "2026-01-01",
+      endDate: "2026-01-10",
+    },
+    {
+      tripId: "t2",
+      tripName: "Future",
+      yearRange: "2027",
+      startDate: "2027-01-01",
+      endDate: "2027-01-10",
+    },
+    {
+      tripId: "t3",
+      tripName: "Draft",
+      yearRange: "None",
+      startDate: null,
+      endDate: null,
+    },
+  ],
+}));
 
-describe("useVisitedCountries hook", () => {
-  let result: ReturnType<typeof useVisitedCountries>;
-
-  function setupHook() {
-    function HookExtractor() {
-      result = useVisitedCountries();
-      return (
-        <div>
-          <div data-testid="visited">
-            {JSON.stringify(result.visitedCountryCodes)}
-          </div>
-          <div data-testid="upcoming">
-            {JSON.stringify(result.upcomingCountryCodes)}
-          </div>
-        </div>
-      );
-    }
-    const utils = render(<HookExtractor />);
-    return {
-      ...utils,
-      getVisitedText: () =>
-        JSON.parse(screen.getByTestId("visited").textContent || "[]"),
-      getUpcomingText: () =>
-        JSON.parse(screen.getByTestId("upcoming").textContent || "[]"),
-    };
-  }
-
+describe("useVisitedCountries", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUser = { uid: "u1" };
+    mockTrips = [{ id: "t1", destination: "FR", startDate: "2026-01-01" }];
   });
 
-  afterEach(() => {
-    cleanup();
-    unsubCalled = false;
-  });
+  it("should initialize with values and handle real-time sync fallbacks", () => {
+    const { result } = renderHook(() => useVisitedCountries());
 
-  afterAll(() => {
-    currentMockCodes = ["FR"];
-    authReturn.user = mockUser;
-  });
-
-  it("reads visited codes from firestore and computes upcoming", () => {
-    const { getVisitedText, getUpcomingText } = setupHook();
-    expect(getVisitedText()).toEqual(["FR", "US", "DE", "CA"]);
-    expect(getUpcomingText()).toEqual(expect.arrayContaining(["JP"]));
-  });
-
-  it("when no user, visited and upcoming are empty", () => {
-    authReturn.user = null as any;
-    const { getVisitedText, getUpcomingText } = setupHook();
-    expect(getVisitedText()).toEqual([]);
-    expect(getUpcomingText()).toEqual([]);
-    authReturn.user = mockUser;
-  });
-
-  it("falls back to computedVisited when firestore returns empty and exposes helpers", () => {
-    currentMockCodes = [];
-    setupHook();
-
-    expect(Array.isArray(result.visitedCountryCodes)).toBe(true);
-    if (result.visitedCountryCodes.length > 0) {
-      expect(result.isCountryVisited(result.visitedCountryCodes[0])).toBe(true);
-    }
-    expect(Array.isArray(result.getCountryVisits("US"))).toBe(true);
-    expect(
-      Array.isArray(result.getCountryVisitsCategorized("JP").upcoming),
-    ).toBe(true);
-  });
-
-  it("unsubscribes on unmount", () => {
-    const { unmount } = setupHook();
-    unmount();
-    expect(unsubCalled).toBe(true);
-  });
-
-  describe("addManualCountry", () => {
-    beforeEach(() => {
-      currentMockCodes = ["FR"];
-    });
-
-    it("should allow adding a country if it is not logged yet", async () => {
-      setupHook();
-      await act(async () => {
-        await result.addManualCountry("MX");
+    act(() => {
+      trackingCallback({
+        visitedCountryCodes: ["MX"],
+        wantToVisitCountryCodes: ["JP"],
       });
-      expect(mockAddVisited).toHaveBeenCalledWith("abc", "MX");
     });
 
-    it("should guard and abort if the target country is already marked as visited", async () => {
-      setupHook();
-      await act(async () => {
-        await result.addManualCountry("FR");
-      });
-      expect(mockAddVisited).not.toHaveBeenCalled();
-    });
-
-    it("should early return and abort if user is logged out", async () => {
-      authReturn.user = null as any;
-      setupHook();
-      await act(async () => {
-        await result.addManualCountry("MX");
-      });
-      expect(mockAddVisited).not.toHaveBeenCalled();
-      authReturn.user = mockUser;
-    });
+    expect(result.current.visitedCountryCodes).toEqual(["MX", "FR"]);
+    expect(result.current.wantToVisitCountryCodes).toEqual(["JP"]);
+    expect(result.current.upcomingCountryCodes).toEqual(["IT"]);
+    expect(result.current.isCountryVisited("MX")).toBe(true);
+    expect(result.current.isTripBased("FR")).toBe(true);
+    expect(result.current.isWantToVisitListed("JP")).toBe(true);
   });
 
-  describe("removeManualCountry", () => {
-    beforeEach(() => {
-      currentMockCodes = ["FR"];
-    });
+  it("should handle unauthenticated state cleanly", () => {
+    mockUser = null;
+    const { result } = renderHook(() => useVisitedCountries());
 
-    it("should allow removing a manually added country if it is not trip-based", async () => {
-      const originalTrips = [...mockTrips];
-      mockTrips.length = 0;
+    expect(result.current.visitedCountryCodes).toEqual([]);
+    expect(result.current.wantToVisitCountryCodes).toEqual([]);
+    expect(result.current.upcomingCountryCodes).toEqual([]);
+  });
 
-      setupHook();
-      await act(async () => {
-        await result.removeManualCountry("FR");
+  it("should successfully trigger mutations if rules pass", async () => {
+    const { result } = renderHook(() => useVisitedCountries());
+    act(() => {
+      trackingCallback({
+        visitedCountryCodes: ["MX"],
+        wantToVisitCountryCodes: ["JP"],
       });
-      expect(mockRemoveVisited).toHaveBeenCalledWith("abc", "FR");
-
-      mockTrips.push(...originalTrips);
     });
 
-    it("should guard and refuse removal if the country is trip-based", async () => {
-      setupHook();
-      await act(async () => {
-        await result.removeManualCountry("FR");
+    await act(async () => {
+      await result.current.addManualCountry("CA");
+    });
+    expect(mockAddCountryCode).toHaveBeenCalledWith(
+      "u1",
+      "CA",
+      "visitedCountryCodes",
+    );
+
+    await act(async () => {
+      await result.current.removeManualCountry("MX");
+    });
+    expect(mockRemoveCountryCode).toHaveBeenCalledWith(
+      "u1",
+      "MX",
+      "visitedCountryCodes",
+    );
+
+    await act(async () => {
+      await result.current.addWantToVisitCountry("BR");
+    });
+    expect(mockAddCountryCode).toHaveBeenCalledWith(
+      "u1",
+      "BR",
+      "wantToVisitCountryCodes",
+    );
+
+    await act(async () => {
+      await result.current.removeWantToVisitCountry("JP");
+    });
+    expect(mockRemoveCountryCode).toHaveBeenCalledWith(
+      "u1",
+      "JP",
+      "wantToVisitCountryCodes",
+    );
+  });
+
+  it("should block mutations based on user presence and domain safety guard rails", async () => {
+    const { result } = renderHook(() => useVisitedCountries());
+    act(() => {
+      trackingCallback({
+        visitedCountryCodes: ["MX"],
+        wantToVisitCountryCodes: ["JP"],
       });
-      expect(mockRemoveVisited).not.toHaveBeenCalled();
     });
 
-    it("should early return and abort removal operations if there is no user session", async () => {
-      authReturn.user = null as any;
-      setupHook();
-      await act(async () => {
-        await result.removeManualCountry("FR");
-      });
-      expect(mockRemoveVisited).not.toHaveBeenCalled();
-      authReturn.user = mockUser;
+    await act(async () => {
+      await result.current.addManualCountry("MX");
     });
+    await act(async () => {
+      await result.current.addWantToVisitCountry("JP");
+    });
+
+    await act(async () => {
+      await result.current.addWantToVisitCountry("MX");
+    });
+
+    await act(async () => {
+      await result.current.removeManualCountry("FR");
+    });
+
+    expect(mockAddCountryCode).not.toHaveBeenCalled();
+    expect(mockRemoveCountryCode).not.toHaveBeenCalled();
+
+    mockUser = null;
+    const { result: unauthResult } = renderHook(() => useVisitedCountries());
+    await act(async () => {
+      await unauthResult.current.addManualCountry("US");
+      await unauthResult.current.removeManualCountry("US");
+      await unauthResult.current.addWantToVisitCountry("US");
+      await unauthResult.current.removeWantToVisitCountry("US");
+    });
+    expect(mockAddCountryCode).not.toHaveBeenCalled();
+    expect(mockRemoveCountryCode).not.toHaveBeenCalled();
+  });
+
+  it("should extract and correctly categorize structured visit metrics", () => {
+    vi.useFakeTimers().setSystemTime(new Date("2026-06-01"));
+
+    const { result } = renderHook(() => useVisitedCountries());
+
+    expect(result.current.getCountryVisits("FR")).toHaveLength(3);
+
+    const categorized = result.current.getCountryVisitsCategorized("FR");
+    expect(categorized.past).toHaveLength(1);
+    expect(categorized.upcoming).toHaveLength(1);
+    expect(categorized.tentative).toHaveLength(1);
+
+    vi.useRealTimers();
   });
 });

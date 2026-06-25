@@ -21,6 +21,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 ### **Atlas**
 
 - **Interactive map:** Explore a customizable world map with detailed country information and dynamic filters
+- **Country lists:** Create and manage your own country lists, including your visits and dream destinations
 - **Timeline mode:** Track your travel history on the map
 - **Custom maps:** Create, import, export and manage your own maps, layers and markers
 - **Export maps:** Export your maps as images or backup your entire data as JSON

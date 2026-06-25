@@ -57,8 +57,8 @@ export function mapPaletteToCountryColors(palette: { colors: string[] }) {
     HOME_COUNTRY_COLOR: HOME_COUNTRY_COLOR,
     HOVERED_COUNTRY_COLOR: palette.colors[0],
     VISITED_COUNTRY_COLOR: palette.colors[1],
-    SELECTED_COUNTRY_COLOR: palette.colors[2],
-    UPCOMING_VISIT_COUNTRY_COLOR: palette.colors[3],
+    UPCOMING_VISIT_COUNTRY_COLOR: palette.colors[2],
+    SELECTED_COUNTRY_COLOR: palette.colors[3],
     HIGHLIGHTED_COUNTRY_COLOR: palette.colors[4],
   };
 }
