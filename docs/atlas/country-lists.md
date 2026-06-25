@@ -12,16 +12,32 @@ You can create and manage your own custom `lists`, which allow quick, dynamic fi
 
 Updating a linked list will also update the relevant content in the layer, allowing for easier management.
 
-## **The "Visited" list**
+## **System Lists**
 
-In addition to the user's custom lists, `visited countries` also act as a list. In this list, countries are automatically added from the user's completed `trips`, or added manually by double-clicking the `Visited` toggle and editing the list.
+In addition to the custom `user-made lists`, there are additional `system lists`, tracking your past and future visits.
 
-As this is an automated list and not a user-made one, it behaves differently:
+There are currently two system lists: `Visited` and `Want to Visit`.
 
-- The list name or any trip-based countries are not editable.
-- Manually adding and/or removing countries will have an immediate effect.
+As they are automated, these lists behave differently than user-made lists:
 
-The `Visited` list's content is directly associated with the user's `visited countries` and affects all visit related content, with the exception of statistics.
+- To add or remove countries from the list, you can double-click the list toggle to edit its content, or right-click on a country and add or remove it.
+- Updating countries in the lists will have an immediate effect.
+- The lists' names are not editable.
+
+### **The `Visited` List**
+
+This list represents countries you've visited, affecting many aspects of the application's features.
+
+- Countries are automatically aggregated from your completed `trips`, or can be added manually.
+- Trip-based `countries` are **not removable**, as they are related to your `trips`.
+- While manually added countries count as visited, unlike trip-based countries they **will not affect your timeline or statistics**.
+
+### **The `Want to Visit` List**
+
+This list represents a "bucket list", where you can manage your dream destinations.
+
+- Countries can be added or removed by editing the list or by right-clicking them.
+- Marking a `Want to Visit` destination as `Visited` will automatically strip it from your wishlist and promote it to the `Visited` list.
 
 ## **Learn more**
 

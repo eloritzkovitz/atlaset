@@ -23,6 +23,10 @@ Whilst a much quicker and simpler method to use, manually added `countries` do n
 
 In order to manually add or remove countries, simply double-click the `Visited` toggle in the `Countries panel` and edit the list.
 
+## **Want to Visit**
+
+You can also track and manage your dream destinations through the `Want to Visit` list. When such a country is marked as `Visited`, it will move from there to your visit list automatically!
+
 ## **Learn more**
 
 [Countries](/docs/atlas/countrues.md)  
