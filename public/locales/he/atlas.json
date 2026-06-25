@@ -42,6 +42,8 @@
       "newList": "רשימה חדשה",
       "markVisited": "סימון כביקרתי",
       "unmarkVisited": "הסרה מרשימת הביקורים",
+      "addToBucket": "הוסף לרשימת המשאלות",
+      "removeFromBucket": "הסר מרשימת המשאלות",
       "visited": "ביקרתי",
       "centerMap": "מרכוז על המפה",
       "viewDashboard": "צפייה בלוח הבקרה",
@@ -52,6 +54,7 @@
       "all": "הכל",
       "sovereign": "ריבוני",
       "visited": "ביקרתי",
+      "bucket": "רוצה",
       "form": {
         "editTitle": "ערוך רשימה",
         "addTitle": "הוסף רשימה",

@@ -48,7 +48,7 @@ export function useCountryFilters() {
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
-  const { visitedCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes, bucketListCodes } = useVisitedCountries();
 
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
@@ -70,6 +70,7 @@ export function useCountryFilters() {
   >("");
   const [sovereignOnly, setSovereignOnly] = useState(false);
   const [selectedVisited, setSelectedVisited] = useState<VisitedStatus>("any");
+  const [bucketListOnly, setBucketListOnly] = useState(false);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
 
@@ -192,7 +193,10 @@ export function useCountryFilters() {
       );
     }
 
-    if (showVisitedOnly) {
+    if (bucketListOnly) {
+      const bucketSet = new Set(bucketListCodes);
+      base = base.filter((c) => bucketSet.has(c.isoCode));
+    } else if (showVisitedOnly) {
       if (isReadonly && effectiveSharedVisitedIsoCodes) {
         base = base.filter((c) =>
           effectiveSharedVisitedIsoCodes.includes(c.isoCode),
@@ -232,6 +236,8 @@ export function useCountryFilters() {
     debouncedSearch,
     countryLists,
     selectedListId,
+    bucketListOnly,
+    bucketListCodes,
     showVisitedOnly,
     isReadonly,
     effectiveSharedVisitedIsoCodes,
@@ -250,6 +256,12 @@ export function useCountryFilters() {
     visitedIsoCodes,
   });
 
+  // Compute bucket list count based on searched countries and bucket list codes
+  const bucketCount = useMemo(() => {
+    const bucketSet = new Set(bucketListCodes);
+    return searchedCountries.filter((c) => bucketSet.has(c.isoCode)).length;
+  }, [searchedCountries, bucketListCodes]);
+
   // Reset core filters
   function resetCoreFilters() {
     setSelectedRegion("");
@@ -257,6 +269,7 @@ export function useCountryFilters() {
     setSelectedGeoType("");
     setSelectedSovereignty("");
     setSelectedVisited("any");
+    setBucketListOnly(false);
   }
 
   // Reset timeline-related filters
@@ -303,6 +316,10 @@ export function useCountryFilters() {
     setSovereignOnly,
     visitedCount,
     visitedIsoCodes,
+    bucketListCodes,
+    bucketCount,
+    bucketListOnly,
+    setBucketListOnly,
     minVisitCount,
     setMinVisitCount,
     maxVisitCount,

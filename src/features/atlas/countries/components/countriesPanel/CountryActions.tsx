@@ -114,7 +114,12 @@ export const CountryActions = forwardRef(function CountryActions(
   const viewSection = [actionsObj.viewDetails, actionsObj.centerMap].filter(
     Boolean,
   );
-  const trackingSection = [actionsObj.toggleVisited].filter(Boolean);
+  const trackingSection = [
+    { id: "visited", ...actionsObj.toggleVisited },
+    ...(actionsObj.toggleBucket?.disabled
+      ? []
+      : [{ id: "bucket", ...actionsObj.toggleBucket }]),
+  ];
   const resourceSection = [
     actionsObj.viewDashboard,
     actionsObj.wikipedia,
@@ -202,11 +207,13 @@ export const CountryActions = forwardRef(function CountryActions(
           )}
         </div>
 
-        {trackingSection.map((act, i) => (
+        {trackingSection.map((act) => (
           <MenuButton
-            key={i}
+            key={act.id}
+            url={act.url}
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
+            ariaLabel={act.ariaLabel}
             icon={
               <span className={`me-2 ${act.disabled ? "text-muted" : ""}`}>
                 {act.icon}
@@ -229,6 +236,7 @@ export const CountryActions = forwardRef(function CountryActions(
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
             url={act.url}
+            ariaLabel={act.ariaLabel}
             icon={<span className="me-2">{act.icon}</span>}
             className="w-full"
           >

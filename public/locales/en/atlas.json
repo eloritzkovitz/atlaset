@@ -42,6 +42,8 @@
       "newList": "New list",
       "markVisited": "Mark Visited",
       "unmarkVisited": "Unmark Visited",
+      "addToBucket": "Add to Bucket List",
+      "removeFromBucket": "Remove from Bucket List",
       "visited": "Visited",
       "centerMap": "Center on Map",
       "viewDashboard": "View in Dashboard",
@@ -52,6 +54,7 @@
       "all": "All",
       "sovereign": "Sovereign",
       "visited": "Visited",
+      "bucket": "Want",
       "form": {
         "editTitle": "Edit List",
         "addTitle": "Add List",

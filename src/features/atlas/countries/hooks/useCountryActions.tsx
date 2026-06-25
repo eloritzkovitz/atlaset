@@ -14,6 +14,7 @@ export interface CountryActionConfig {
   onClick: () => void;
   url?: string;
   disabled?: boolean;
+  isVisited?: boolean;
 }
 
 interface UseCountryActionsProps {
@@ -40,8 +41,11 @@ export function useCountryActions({
   const {
     isCountryVisited,
     isTripBased,
+    isBucketListed,
     addManualCountry,
     removeManualCountry,
+    addBucketCountry,
+    removeBucketCountry,
   } = useVisitedCountries();
 
   // If no country is provided, return an empty array of actions
@@ -49,6 +53,7 @@ export function useCountryActions({
 
   const visited = isCountryVisited(country.isoCode);
   const tripBased = isTripBased(country.isoCode);
+  const bucketListed = isBucketListed(country.isoCode);
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
@@ -105,6 +110,26 @@ export function useCountryActions({
             await removeManualCountry(country.isoCode);
           } else {
             await addManualCountry(country.isoCode);
+          }
+        });
+      },
+    },
+    toggleBucket: {
+      label: bucketListed
+        ? t("countries.actions.removeFromBucket", "Remove from Bucket List")
+        : t("countries.actions.addToBucket", "Add to Bucket List"),
+      ariaLabel: bucketListed
+        ? "Remove from Bucket List"
+        : "Add to Bucket List",
+      icon: bucketListed ? <ICONS.remove /> : <ICONS.favorite />,
+      disabled: visited,
+      isVisited: visited,
+      onClick: () => {
+        closeMenuAndCall(async () => {
+          if (bucketListed) {
+            await removeBucketCountry(country.isoCode);
+          } else {
+            await addBucketCountry(country.isoCode);
           }
         });
       },

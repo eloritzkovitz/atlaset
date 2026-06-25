@@ -9,8 +9,14 @@ import {
 } from "./CountryListsContext";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
-  const { visitedCountryCodes, addManualCountry, removeManualCountry } =
-    useVisitedCountries();
+  const {
+    visitedCountryCodes,
+    bucketListCodes,
+    addManualCountry,
+    removeManualCountry,
+    addBucketCountry,
+    removeBucketCountry,
+  } = useVisitedCountries();
 
   const [countryLists, setCountryLists] = useState<CountryList[]>([]);
   const [currentList, setCurrentList] = useState<CountryList | null>(null);
@@ -54,12 +60,24 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Opens the modal for editing an existing list
   const openEditModal = (listId: string) => {
-    // Special handling for the "visited" system list
+    // Special handling for system lists
     if (listId === "VISITED_COUNTRIES") {
       setCurrentList({
         id: "VISITED_COUNTRIES",
         name: "Visited Countries",
         countryCodes: visitedCountryCodes,
+      });
+      setIsEditing(true);
+      setIsSystemList(true);
+      setModalOpen(true);
+      return;
+    }
+
+    if (listId === "BUCKET_LIST") {
+      setCurrentList({
+        id: "BUCKET_LIST",
+        name: "Bucket List",
+        countryCodes: bucketListCodes,
       });
       setIsEditing(true);
       setIsSystemList(true);
@@ -102,20 +120,30 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Shared form modification pipeline
   const handleModalChange = async (updatedList: CountryList) => {
-    // Special handling for the "visited" system list
-    if (isSystemList) {
-      // Determine what country code was checked or unchecked
+    if (isSystemList && updatedList) {
       const currentCodes = currentList?.countryCodes || [];
       const newCodes = updatedList.countryCodes;
 
       const added = newCodes.find((code) => !currentCodes.includes(code));
       const removed = currentCodes.find((code) => !newCodes.includes(code));
 
-      // Update the visited countries service based on the change
-      if (added) {
-        await addManualCountry(added);
-      } else if (removed) {
-        await removeManualCountry(removed);
+      // Determine if this modal instance belongs to the Bucket List
+      const isBucketList = updatedList.id === "BUCKET_LIST";
+
+      if (isBucketList) {
+        // Process Bucket List modifications
+        if (added) {
+          await addBucketCountry(added);
+        } else if (removed) {
+          await removeBucketCountry(removed);
+        }
+      } else {
+        // Process Visited Countries modifications
+        if (added) {
+          await addManualCountry(added);
+        } else if (removed) {
+          await removeManualCountry(removed);
+        }
       }
 
       // Update local state display layout inside the open modal
@@ -126,7 +154,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       return;
     }
 
-    // Standard list processing path
+    // Standard custom list processing path
     setCurrentList(updatedList);
   };
 

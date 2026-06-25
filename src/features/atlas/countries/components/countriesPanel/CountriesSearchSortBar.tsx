@@ -20,6 +20,9 @@ interface CountriesSearchSortBarProps {
   visitedCount?: number;
   visitedOnly?: boolean;
   setVisitedOnly?: (value: boolean) => void;
+  bucketCount?: number;
+  bucketOnly?: boolean;
+  setBucketOnly?: (value: boolean) => void;
   countryLists?: (CountryList & { count?: number })[];
   selectedListId?: string | null;
   setSelectedListId?: (id: string | null) => void;
@@ -39,6 +42,9 @@ export function CountriesSearchSortBar({
   visitedCount = 0,
   visitedOnly,
   setVisitedOnly,
+  bucketCount = 0,
+  bucketOnly,
+  setBucketOnly,
   countryLists = [],
   selectedListId = null,
   setSelectedListId,
@@ -55,6 +61,7 @@ export function CountriesSearchSortBar({
     allCount,
     sovereignCount,
     visitedCount,
+    bucketCount,
   ]);
 
   const options = [
@@ -69,6 +76,11 @@ export function CountriesSearchSortBar({
       label: t("countries.lists.visited"),
       count: visitedCount,
     },
+    {
+      value: "bucket",
+      label: t("countries.lists.bucket"),
+      count: bucketCount,
+    },
     ...countryLists.map((list) => ({
       value: list.id,
       label: list.name,
@@ -77,11 +89,13 @@ export function CountriesSearchSortBar({
   ];
 
   // Determine selected toggle
-  const selectedToggle = visitedOnly
-    ? "visited"
-    : sovereignOnly
-      ? "sovereign"
-      : selectedListId || "all";
+  const selectedToggle = bucketOnly
+    ? "bucket"
+    : visitedOnly
+      ? "visited"
+      : sovereignOnly
+        ? "sovereign"
+        : selectedListId || "all";
 
   // Qualifier should only be clearable when 'All' is selected; disable for sovereign, visited, and custom lists
   const qualifierClearable = selectedToggle === "all";
@@ -94,6 +108,8 @@ export function CountriesSearchSortBar({
     if (typeof onEditList === "function") {
       if (val === "visited") {
         onEditList("VISITED_COUNTRIES");
+      } else if (val === "bucket") {
+        onEditList("BUCKET_LIST");
       } else {
         onEditList(val);
       }
@@ -146,23 +162,33 @@ export function CountriesSearchSortBar({
                 if (low.startsWith(prefix + ":")) return;
                 setSearch(`${prefix}: true`);
               };
-              if (val === "visited") {
+              if (val === "bucket") {
+                setBucketOnly?.(true);
+                setVisitedOnly?.(false);
+                setSovereignOnly?.(false);
+                setSelectedListId?.(null);
+                setSearch("");
+              } else if (val === "visited") {
                 setVisitedOnly?.(true);
+                setBucketOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(null);
                 ensurePrefix("visited");
               } else if (val === "sovereign") {
                 setVisitedOnly?.(false);
+                setBucketOnly?.(false);
                 setSovereignOnly?.(true);
                 setSelectedListId?.(null);
                 ensurePrefix("sovereign");
               } else if (val === "all") {
                 setVisitedOnly?.(false);
+                setBucketOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(null);
                 setSearch("");
               } else {
                 setVisitedOnly?.(false);
+                setBucketOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(val);
                 setSearch("");
