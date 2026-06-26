@@ -18,12 +18,13 @@ const makeProfile = (uid: string) => ({
   username: `user${uid}`,
   displayName: `User ${uid}`,
   isPublic: true,
-  visitedCountryCodes: [],
   email: `user${uid}@example.com`,
   photoURL: "http://example.com/photo.jpg",
   emailVerified: true,
   phoneNumber: "1234567890",
   providerId: "provider1",
+  visitedCountryCodes: [],
+  wantToVisitCountryCodes: [],
 });
 const makeFriend = (uid: string) => ({ uid, createdAt: mockTimestamp });
 const currentUser = makeProfile("1");
