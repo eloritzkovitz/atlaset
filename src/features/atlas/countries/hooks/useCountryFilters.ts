@@ -48,7 +48,8 @@ export function useCountryFilters() {
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
-  const { visitedCountryCodes, wantToVisitCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes, wantToVisitCountryCodes } =
+    useVisitedCountries();
 
   // Determine effective shared visited iso codes in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(() => {
@@ -125,13 +126,10 @@ export function useCountryFilters() {
     let cleanSearch = search;
 
     // Explicitly check the string presence to decouple from state-batching race conditions
-    const hasVisitedQualifier = /visited:\s*\S+/i.test(cleanSearch);
     const hasSovereignQualifier =
       /sovereigntyStatus:\s*\S+|sovereign:\s*\S+/i.test(cleanSearch);
-
-    if (hasVisitedQualifier) {
-      cleanSearch = cleanSearch.replace(/visited:\s*\S+/i, "");
-    }
+    const hasVisitedQualifier = /visited:\s*\S+/i.test(cleanSearch);
+    const hasWantToVisitQualifier = /wantToVisit:\s*\S+/i.test(cleanSearch);
 
     if (hasSovereignQualifier) {
       cleanSearch = cleanSearch.replace(
@@ -139,6 +137,15 @@ export function useCountryFilters() {
         "",
       );
     }
+
+    if (hasVisitedQualifier) {
+      cleanSearch = cleanSearch.replace(/visited:\s*\S+/i, "");
+    }
+
+    if (hasWantToVisitQualifier) {
+      cleanSearch = cleanSearch.replace(/wantToVisit:\s*\S+/i, "");
+    }
+
     cleanSearch = cleanSearch.trim();
 
     return {
@@ -150,7 +157,8 @@ export function useCountryFilters() {
           ? ("" as const)
           : filterParams.selectedSovereignty,
       },
-      isTransitioning: hasVisitedQualifier || hasSovereignQualifier,
+      isTransitioning:
+        hasVisitedQualifier || hasSovereignQualifier || hasWantToVisitQualifier,
     };
   }, [search, filterParams]);
 
@@ -184,6 +192,7 @@ export function useCountryFilters() {
       filteredIsoCodes,
       visitedMap,
       visitedYearMap,
+      wantToVisitCountryCodes,
     );
 
     if (selectedListId) {
@@ -226,7 +235,12 @@ export function useCountryFilters() {
       base = base.filter(createSovereigntyFilter(true));
     }
 
-    return filterByVisitStatus(base, visitedIsoCodes, selectedVisited);
+    return filterByVisitStatus(
+      base,
+      visitedIsoCodes,
+      wantToVisitCountryCodes,
+      selectedVisited,
+    );
   }, [
     countries,
     filterParams,
@@ -247,20 +261,17 @@ export function useCountryFilters() {
     maxVisitCount,
     sovereignOnly,
     visitedCountryCodes,
+    wantToVisitCountryCodes,
     timelineMode,
   ]);
 
   // Country counts
-  const { allCount, sovereignCount, visitedCount } = getCountryCounts({
-    filteredCountries: searchedCountries,
-    visitedIsoCodes,
-  });
-
-  // Compute want-to-visit list count based on searched countries and want-to-visit codes
-  const wantToVisitCount = useMemo(() => {
-    const wantToVisitSet = new Set(wantToVisitCountryCodes);
-    return searchedCountries.filter((c) => wantToVisitSet.has(c.isoCode)).length;
-  }, [searchedCountries, wantToVisitCountryCodes]);
+  const { allCount, sovereignCount, visitedCount, wantToVisitCount } =
+    getCountryCounts({
+      filteredCountries: searchedCountries,
+      visitedIsoCodes,
+      wantToVisitIsoCodes: wantToVisitCountryCodes,
+    });
 
   // Reset core filters
   function resetCoreFilters() {

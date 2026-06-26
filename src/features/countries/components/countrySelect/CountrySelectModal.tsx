@@ -33,7 +33,8 @@ export function CountrySelectModal({
 }: CountrySelectModalProps) {
   const [search, setSearch] = useState("");
   const { t } = useTranslation(["atlas", "common"]);
-  const { visitedCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes, wantToVisitCountryCodes } =
+    useVisitedCountries();
 
   // Reset search when modal opens
   useEffect(() => {
@@ -54,6 +55,7 @@ export function CountrySelectModal({
         undefined,
         {},
         {},
+        wantToVisitCountryCodes,
       );
     }
 

@@ -32,19 +32,26 @@ function buildVisitContextFromParams(
   visitedIsoCodes?: string[] | undefined,
   visitedMap?: Record<string, number> | undefined,
   visitedYearMap?: Record<string, Set<number>> | undefined,
+  wantToVisitCodes?: string[] | undefined,
 ) {
-  if (!visitedIsoCodes && !visitedMap && !visitedYearMap) return undefined;
+  if (!visitedIsoCodes && !visitedMap && !visitedYearMap && !wantToVisitCodes) {
+    return undefined;
+  }
+
   const iso =
     typeof visitedIsoCodes !== "undefined"
       ? visitedIsoCodes
       : visitedMap
         ? Object.keys(visitedMap)
         : [];
+
   return {
     visitedIsoCodes: iso,
     visitedMap: typeof visitedMap !== "undefined" ? visitedMap : undefined,
     visitedYearMap:
       typeof visitedYearMap !== "undefined" ? visitedYearMap : undefined,
+    wantToVisitIsoCodes:
+      typeof wantToVisitCodes !== "undefined" ? wantToVisitCodes : undefined,
   } as VisitContext;
 }
 
@@ -221,14 +228,17 @@ export function getFilteredIsoCodes(
  * Calculates country counts based on filtered countries and visited ISO codes.
  * @param filteredCountries - Countries after applying all filters including layers.
  * @param visitedIsoCodes - List of visited country ISO codes.
+ * @param wantToVisitIsoCodes - List of want-to-visit country ISO codes.
  * @returns An object containing counts of various country categories.
  */
 export function getCountryCounts({
   filteredCountries,
   visitedIsoCodes,
+  wantToVisitIsoCodes,
 }: {
   filteredCountries: Country[];
   visitedIsoCodes: string[];
+  wantToVisitIsoCodes: string[];
 }) {
   const allCount = filteredCountries.length;
   const sovereignCount = filteredCountries.filter(
@@ -237,10 +247,14 @@ export function getCountryCounts({
   const visitedCount = filteredCountries.filter((c) =>
     visitedIsoCodes.includes(c.isoCode),
   ).length;
+  const wantToVisitCount = filteredCountries.filter((c) =>
+    wantToVisitIsoCodes.includes(c.isoCode),
+  ).length;
   return {
     allCount,
     sovereignCount,
     visitedCount,
+    wantToVisitCount,
   };
 }
 
@@ -262,6 +276,7 @@ export function createSovereigntyFilter(sovereignOnly?: boolean) {
  * @param filteredIsoCodes - The list of ISO codes filtered by layers, to be applied for normal search.
  * @param visitedMap - Optional map of visit counts for visit-based qualifier searches.
  * @param visitedYearMap - Optional map of visit years for visit-based qualifier searches.
+ * @param wantToVisitCodes - Optional list of want-to-visit country ISO codes for visit-based qualifier searches.
  * @returns The list of countries filtered based on the search criteria.
  */
 export function applyQualifierSearch(
@@ -272,12 +287,14 @@ export function applyQualifierSearch(
   filteredIsoCodes: string[] | undefined,
   visitedMap?: Record<string, number>,
   visitedYearMap?: Record<string, Set<number>>,
+  wantToVisitCodes?: string[] | undefined,
 ) {
   const parsed = parseQualifierSearch(search);
   const visitContext = buildVisitContextFromParams(
     visitedIsoCodes,
     visitedMap,
     visitedYearMap,
+    wantToVisitCodes,
   );
   if (parsed && (parsed.query ?? "").trim() !== "") {
     // Normalize parsed modifiers into typed structure

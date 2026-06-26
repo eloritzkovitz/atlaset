@@ -111,6 +111,7 @@ export type CountryQualifierKey =
   | keyof Country
   | "sovereign"
   | "visited"
+  | "wantToVisit"
   | "tc";
 
 /** Configuration for a country qualifier search. */

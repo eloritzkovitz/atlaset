@@ -11,12 +11,17 @@ import type { VisitedStatus } from "../types";
 export function filterByVisitStatus(
   countries: Country[],
   visitedIsoCodes: string[],
+  wantToVisitIsoCodes: string[] | undefined,
   status: VisitedStatus,
 ) {
   if (status === "visited") {
     return countries.filter((c) => visitedIsoCodes.includes(c.isoCode));
   } else if (status === "not_visited") {
     return countries.filter((c) => !visitedIsoCodes.includes(c.isoCode));
+  } else if (status === "want_to_visit") {
+    return countries.filter(
+      (c) => wantToVisitIsoCodes?.includes(c.isoCode) ?? false,
+    );
   }
   return countries;
 }

@@ -31,6 +31,7 @@ export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {
   unmember: { key: "unMember", label: "UN member", type: "boolean" },
   memberof: { key: "memberOf", label: "Member of", type: "string" },
   visited: { key: "visited", label: "Visited", type: "boolean" },
+  wanttovisit: { key: "wantToVisit", label: "Want to visit", type: "boolean" },
 };
 
 export const SUPPORTED_QUALIFIERS = keysOf(COUNTRY_QUALIFIER_MAP);
