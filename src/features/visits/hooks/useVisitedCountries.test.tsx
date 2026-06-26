@@ -29,7 +29,7 @@ vi.mock("@contexts/TripsContext", () => ({
 
 vi.mock("../utils/visits", () => ({
   computeVisitedCountriesFromTrips: () => ["FR"],
-  getUpcomingVisitCountries: () => ["IT", "FR"],
+  getFutureVisitCountries: () => ["IT", "FR"],
   getVisitsForCountry: () => [
     {
       tripId: "t1",
@@ -74,10 +74,10 @@ describe("useVisitedCountries", () => {
 
     expect(result.current.visitedCountryCodes).toEqual(["MX", "FR"]);
     expect(result.current.wantToVisitCountryCodes).toEqual(["JP"]);
-    expect(result.current.upcomingCountryCodes).toEqual(["IT"]);
-    expect(result.current.isCountryVisited("MX")).toBe(true);
+    expect(result.current.futureCountryCodes).toEqual(["IT"]);
+    expect(result.current.isVisitedCountry("MX")).toBe(true);
     expect(result.current.isTripBased("FR")).toBe(true);
-    expect(result.current.isWantToVisitListed("JP")).toBe(true);
+    expect(result.current.isWantToVisitCountry("JP")).toBe(true);
   });
 
   it("should handle unauthenticated state cleanly", () => {
@@ -86,7 +86,7 @@ describe("useVisitedCountries", () => {
 
     expect(result.current.visitedCountryCodes).toEqual([]);
     expect(result.current.wantToVisitCountryCodes).toEqual([]);
-    expect(result.current.upcomingCountryCodes).toEqual([]);
+    expect(result.current.futureCountryCodes).toEqual([]);
   });
 
   it("should successfully trigger mutations if rules pass", async () => {

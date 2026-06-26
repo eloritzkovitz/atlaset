@@ -7,21 +7,28 @@ import {
   VISITED_COLOR,
 } from "@constants/colors";
 import { ICONS } from "@constants/icons";
+import { useHomeCountry } from "@features/user";
+import { useVisitedCountries } from "@features/visits";
+import type { Country } from "../../types";
 
 interface VisitedStatusIndicatorProps {
-  visited: boolean;
-  isHome?: boolean;
-  isUpcoming?: boolean;
+  country: Country;
   className?: string;
 }
 
 export function VisitedStatusIndicator({
-  visited,
-  isHome = false,
-  isUpcoming = false,
+  country,
   className = "",
 }: VisitedStatusIndicatorProps) {
+  const { homeCountry } = useHomeCountry();
+  const { isVisitedCountry, isFutureVisitCountry, isWantToVisitCountry } =
+    useVisitedCountries();
   const { t } = useTranslation("atlas");
+
+  const isHome = homeCountry === country.isoCode;
+  const isVisited = isVisitedCountry(country.isoCode);
+  const isFuture = isFutureVisitCountry(country.isoCode);
+  const isWantToVisit = isWantToVisitCountry(country.isoCode);
 
   const STATUS_CONFIG = {
     home: {
@@ -30,21 +37,27 @@ export function VisitedStatusIndicator({
       icon: "home",
       color: HOME_COUNTRY_COLOR,
     },
-    upcoming: {
-      tooltipKey: "countries.details.status.upcoming",
-      ariaKey: "countries.details.status.upcomingAria",
-      icon: "upcoming",
+    future: {
+      tooltipKey: "countries.details.status.future",
+      ariaKey: "countries.details.status.future",
+      icon: "future",
       color: PLANNED_VISIT_COLOR,
     },
     visited: {
       tooltipKey: "countries.details.status.visited",
-      ariaKey: "countries.details.status.visitedAria",
+      ariaKey: "countries.details.status.visited",
       icon: "visited",
       color: VISITED_COLOR,
     },
+    wantToVisit: {
+      tooltipKey: "countries.details.status.wantToVisit",
+      ariaKey: "countries.details.status.wantToVisit",
+      icon: "wantToVisit",
+      color: NOT_VISITED_COLOR,
+    },
     notVisited: {
       tooltipKey: "countries.details.status.notVisited",
-      ariaKey: "countries.details.status.notVisitedAria",
+      ariaKey: "countries.details.status.notVisited",
       icon: "notVisited",
       color: NOT_VISITED_COLOR,
     },
@@ -52,11 +65,13 @@ export function VisitedStatusIndicator({
 
   const key: keyof typeof STATUS_CONFIG = isHome
     ? "home"
-    : isUpcoming
-      ? "upcoming"
-      : visited
+    : isFuture
+      ? "future"
+      : isVisited
         ? "visited"
-        : "notVisited";
+        : isWantToVisit
+          ? "wantToVisit"
+          : "notVisited";
 
   const cfg = STATUS_CONFIG[key];
   const Icon = ICONS.visitStatus[cfg.icon];

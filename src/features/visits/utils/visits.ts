@@ -82,15 +82,15 @@ export function computeVisitedCountriesFromTrips(
 }
 
 /**
- * Gets all country codes with upcoming trips (after today).
+ * Gets all country codes with future trips (after today).
  * @param trips - Array of trips to analyze.
  * @returns Array of country codes with future trips.
  */
-export function getUpcomingVisitCountries(trips: Trip[]): string[] {
-  const upcomingStatuses: TripStatus[] = ["in-progress", "upcoming", "planned"];
+export function getFutureVisitCountries(trips: Trip[]): string[] {
+  const futureStatuses: TripStatus[] = ["in-progress", "upcoming", "planned"];
 
   const codes = trips
-    .filter((trip) => upcomingStatuses.includes(getAutoTripStatus(trip)))
+    .filter((trip) => futureStatuses.includes(getAutoTripStatus(trip)))
     .flatMap((trip) => trip.countryCodes ?? []);
 
   return Array.from(new Set(codes));

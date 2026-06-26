@@ -16,7 +16,7 @@ export function useExplorationStats(
   countries: Country[],
   sovereignOnly = false,
 ) {
-  const { isCountryVisited, visitedCountryCodes } = useVisitedCountries();
+  const { isVisitedCountry, visitedCountryCodes } = useVisitedCountries();
   const effectiveCountries = sovereignOnly
     ? countries.filter((c) => c.sovereigntyStatus === "sovereign")
     : countries;
@@ -33,13 +33,13 @@ export function useExplorationStats(
     const regionCountries = effectiveCountries.filter(
       (c) => c.region === region,
     );
-    const regionVisited = countVisited(regionCountries, isCountryVisited);
+    const regionVisited = countVisited(regionCountries, isVisitedCountry);
     const subregions: SubregionStat[] = getSubregionsForRegion(
       effectiveCountries,
       region,
     ).map((sub) => {
       const subCountries = regionCountries.filter((c) => c.subregion === sub);
-      const subVisited = countVisited(subCountries, isCountryVisited);
+      const subVisited = countVisited(subCountries, isVisitedCountry);
       return {
         subregion: sub,
         subregionVisited: subVisited,

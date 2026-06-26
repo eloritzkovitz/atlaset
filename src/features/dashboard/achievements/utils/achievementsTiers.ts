@@ -29,7 +29,7 @@ export function getTier(achievement: Achievement): number | undefined {
 export function getCurrentTier(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
 ): {

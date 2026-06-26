@@ -150,7 +150,7 @@ export function getAchievementCountries(
 export function getVisitedCount(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   tierCount?: number,
   trips?: Trip[],
   homeCountry?: string,
@@ -170,7 +170,7 @@ export function getVisitedCount(
     typeof tierCount === "number"
       ? filteredAchCountries.slice(0, tierCount)
       : filteredAchCountries;
-  return list.filter((c) => visited.isCountryVisited(c.isoCode)).length;
+  return list.filter((c) => visited.isVisitedCountry(c.isoCode)).length;
 }
 
 /**
@@ -208,7 +208,7 @@ export function getTotalCount(
 export function getRegionProgressCounts(
   criteria: Criteria,
   countries: Country[],
-  visited?: { isCountryVisited: (iso: string) => boolean },
+  visited?: { isVisitedCountry: (iso: string) => boolean },
 ) {
   const rawRegions = (criteria as Record<string, unknown>).regions;
   const regionsArr: string[] =
@@ -223,7 +223,7 @@ export function getRegionProgressCounts(
     const hasVisitedCountry = countries.some((c) =>
       c.region === region
         ? visited
-          ? visited.isCountryVisited(c.isoCode)
+          ? visited.isVisitedCountry(c.isoCode)
           : true
         : false,
     );
@@ -249,7 +249,7 @@ export function getRegionProgressCounts(
 export function getProgress(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
 ) {
@@ -282,7 +282,7 @@ export function getProgress(
 export function getProgressFraction(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
 ) {
@@ -331,7 +331,7 @@ export function areRequirementsCompleted(
 export function isCompleted(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
   achievementStatusMap?: Record<string, boolean>,
@@ -422,7 +422,7 @@ export function isCompleted(
 export function getAchievementStatus(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
 ): AchievementStatus {
@@ -447,7 +447,7 @@ export function getAchievementStatus(
 export function getMergedAchievements(
   achievements: Achievement[],
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
 ) {

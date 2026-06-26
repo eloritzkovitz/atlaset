@@ -37,7 +37,7 @@ export type MapSettings = {
 export type ColorsSettings = {
   colorHomeCountry: boolean;
   colorVisitedCountries: boolean;
-  colorUpcomingVisits: boolean;
+  colorFutureVisits: boolean;
   colorWantToVisitCountries: boolean;
   numAtlasColors: number;
   palettes: Record<ColorMode, string>;

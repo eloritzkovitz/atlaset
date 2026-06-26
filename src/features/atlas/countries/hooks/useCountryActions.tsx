@@ -39,9 +39,9 @@ export function useCountryActions({
   const { t } = useTranslation("atlas");
   const { current: lang } = useLanguage();
   const {
-    isCountryVisited,
+    isVisitedCountry,
     isTripBased,
-    isWantToVisitListed,
+    isWantToVisitCountry,
     addManualCountry,
     removeManualCountry,
     addWantToVisitCountry,
@@ -51,9 +51,9 @@ export function useCountryActions({
   // If no country is provided, return an empty array of actions
   if (!country) return {};
 
-  const visited = isCountryVisited(country.isoCode);
+  const visited = isVisitedCountry(country.isoCode);
   const tripBased = isTripBased(country.isoCode);
-  const wantToVisitListed = isWantToVisitListed(country.isoCode);
+  const wantToVisitListed = isWantToVisitCountry(country.isoCode);
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {

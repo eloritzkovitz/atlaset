@@ -113,8 +113,9 @@ export const ICONS = {
   visits: VisitIcon,
   visitStatus: {
     home: FaHouse,
-    upcoming: FaClock,
     visited: FaCircleCheck,
+    future: FaClock,
+    wantToVisit: FaHeart,
     notVisited: FaCircleXmark,
   },
   filters: FaFilter,
@@ -170,7 +171,7 @@ export const ICONS = {
   help: FaCircleQuestion,
   info: FaCircleInfo,
   reportBug: FaBug,
-  appearance: FaMoon,  
+  appearance: FaMoon,
   // Actions
   add: FaPlus,
   importFile: FaFileImport,

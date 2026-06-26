@@ -21,7 +21,7 @@ export const defaultSettings: Settings = {
   colors: {
     colorHomeCountry: false,
     colorVisitedCountries: true,
-    colorUpcomingVisits: false,
+    colorFutureVisits: false,
     colorWantToVisitCountries: false,
     numAtlasColors: 4,
     palettes: {

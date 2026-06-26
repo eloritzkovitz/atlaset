@@ -4,7 +4,6 @@ import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useCountryData, type Country } from "@features/countries";
 import { CountryDetailsPanel } from "@features/countries/components/countryDetails/CountryDetailsPanel";
-import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
@@ -21,16 +20,13 @@ export function CountryDetailsModal({
   onClose,
 }: CountryDetailsModalProps) {
   const { countries, currencies } = useCountryData();
-  const { homeCountry } = useHomeCountry();
   const { centerOnCountry } = useMapView();
   const { showCalendar } = useUI();
 
   const [currentCountry, setCurrentCountry] = useState<Country | null>(country);
 
-  // Visited status and categorized visits
-  const { isCountryVisited, getCountryVisitsCategorized } =
-    useVisitedCountries();
-  const isVisited = country ? isCountryVisited(country.isoCode) : false;
+  // Get visit context functions from the visited countries hook
+  const { getCountryVisitsCategorized } = useVisitedCountries();
   const categorizedVisits = useMemo(
     () =>
       country
@@ -38,7 +34,6 @@ export function CountryDetailsModal({
         : { past: [], upcoming: [], tentative: [] },
     [country, getCountryVisitsCategorized],
   );
-  const isUpcoming = (categorizedVisits?.upcoming || []).length > 0;
 
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -77,13 +72,7 @@ export function CountryDetailsModal({
         draggable
       >
         <div className="relative overflow-visible flex flex-col h-full">
-          <CountryDetailsHeader
-            country={currentCountry}
-            isVisited={isVisited}
-            isHome={homeCountry === currentCountry.isoCode}
-            isUpcoming={isUpcoming}
-            onClose={onClose}
-          />
+          <CountryDetailsHeader country={currentCountry} onClose={onClose} />
           <CountryDetailsPanel
             country={currentCountry}
             currencies={currencies}

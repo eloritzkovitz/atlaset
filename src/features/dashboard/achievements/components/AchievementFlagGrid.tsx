@@ -6,7 +6,7 @@ import "./AchievementFlagGrid.css";
 interface AchievementFlagGridProps {
   countries: Country[];
   countryCodes: string[];
-  visited: { isCountryVisited: (iso: string) => boolean };
+  visited: { isVisitedCountry: (iso: string) => boolean };
 }
 
 export function AchievementFlagGrid({
@@ -32,7 +32,7 @@ export function AchievementFlagGrid({
           ratio: "3x2",
           size: "32",
         };
-        const visitedFlag = visited.isCountryVisited(country.isoCode);
+        const visitedFlag = visited.isVisitedCountry(country.isoCode);
 
         return (
           <Tooltip

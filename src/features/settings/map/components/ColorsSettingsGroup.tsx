@@ -27,8 +27,8 @@ export function ColorsSettingsGroup() {
     setColorHomeCountry,
     colorVisitedCountries,
     setColorVisitedCountries,
-    colorUpcomingVisits,
-    setColorUpcomingVisits,
+    colorFutureVisits,
+    setColorFutureVisits,
     colorWantToVisitCountries,
     setColorWantToVisitCountries,
     numAtlasColors,
@@ -76,9 +76,9 @@ export function ColorsSettingsGroup() {
                 label={t("mapSettings.colors.showVisitedCountries")}
               />
               <Checkbox
-                checked={!!colorUpcomingVisits}
-                onChange={setColorUpcomingVisits}
-                label={t("mapSettings.colors.showUpcomingVisits")}
+                checked={!!colorFutureVisits}
+                onChange={setColorFutureVisits}
+                label={t("mapSettings.colors.showFutureVisits")}
               />
               <Checkbox
                 checked={!!colorWantToVisitCountries}

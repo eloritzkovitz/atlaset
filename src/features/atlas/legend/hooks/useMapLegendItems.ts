@@ -27,12 +27,12 @@ export function useMapLegendItems(
   const {
     colorWantToVisitCountries,
     colorHomeCountry,
-    colorUpcomingVisits,
+    colorFutureVisits,
     colorVisitedCountries,
   } = useLayerColors();
   const {
     VISITED_COUNTRY_COLOR,
-    UPCOMING_VISIT_COUNTRY_COLOR,
+    FUTURE_VISIT_COUNTRY_COLOR,
     SELECTED_COUNTRY_COLOR,
   } = useCountryColors();
 
@@ -47,8 +47,8 @@ export function useMapLegendItems(
     ...(colorVisitedCountries && canShow
       ? [make(VISITED_COUNTRY_COLOR, "Visited Countries")]
       : []),
-    ...(colorUpcomingVisits && canShow
-      ? [make(UPCOMING_VISIT_COUNTRY_COLOR, "Upcoming Visits")]
+    ...(colorFutureVisits && canShow
+      ? [make(FUTURE_VISIT_COUNTRY_COLOR, "Future Visits")]
       : []),
     ...(colorWantToVisitCountries && canShow
       ? [make(SELECTED_COUNTRY_COLOR, "Want to Visit")]
