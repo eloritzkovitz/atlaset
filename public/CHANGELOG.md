@@ -3,6 +3,7 @@
 ## 2026-06-26
 
 - **[feature]** **Atlas | Countries:** Added qualifier search for want to visit countries
+- **[chore]** **Countries:** Updated visited status indicator to show 'want to visit'
 - **[feature]** **User | Profile:** Added want to visit list to user profile
 - **[bugfix]** **Visits:** Disabled selection for visited countries in tracking lists
 
