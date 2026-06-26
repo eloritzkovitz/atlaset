@@ -15,10 +15,10 @@ export { BestScoresCard } from "./profile/components/BestScoresCard";
 export { EditProfileModal } from "./profile/components/EditProfileModal/EditProfileModal";
 export { FriendsListSection } from "./profile/components/FriendsListSection";
 export { ProfileAboutCard } from "./profile/components/ProfileAboutCard";
+export { ProfileCountriesCard } from "./profile/components/ProfileCountriesCard";
 export { ProfileHeader } from "./profile/components/ProfileHeader";
 export { UserAvatar } from "./profile/components/UserAvatar";
 export { UserInfo } from "./profile/components/UserInfo";
-export { VisitedCountriesCard } from "./profile/components/VisitedCountriesCard";
 
 // Hooks
 export { useAuth } from "./auth/hooks/useAuth";

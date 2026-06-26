@@ -21,7 +21,13 @@ import {
 import { MODIFIER_MAP } from "../constants/modifierConfig";
 import type { Country, CountryFilterOptions, CountryModifiers } from "../types";
 
-// Helper: build a VisitContext from various possible visit inputs.
+/**
+ * Builds a VisitContext object from the provided parameters.
+ * @param visitedIsoCodes - Optional array of visited country ISO codes.
+ * @param visitedMap - Optional map of visited country ISO codes to visit counts.
+ * @param visitedYearMap - Optional map of visited country ISO codes to sets of visit years.
+ * @returns A VisitContext object or undefined if no parameters are provided.
+ */
 function buildVisitContextFromParams(
   visitedIsoCodes?: string[] | undefined,
   visitedMap?: Record<string, number> | undefined,
