@@ -42,13 +42,6 @@ export function CountryListModal({
   const [countrySelectOpen, setCountrySelectOpen] = useState(false);
   const { t } = useTranslation("atlas");
 
-  // Handle modal close
-  const handleClose = () => {
-    if (!countrySelectOpen) {
-      onClose();
-    }
-  };
-
   // Don't render the modal if no list is being edited
   if (!list) return null;
 
@@ -68,8 +61,17 @@ export function CountryListModal({
   const handleIsCountryDisabled = (code: string): boolean => {
     if (isWantToVisitList) {
       return isVisitedCountry(code);
+    } else if (isVisitedList) {
+      return isTripBased(code);
     }
     return false;
+  };
+
+  // Handle modal close
+  const handleClose = () => {
+    if (!countrySelectOpen) {
+      onClose();
+    }
   };
 
   return (
