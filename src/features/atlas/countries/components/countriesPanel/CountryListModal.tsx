@@ -37,7 +37,7 @@ export function CountryListModal({
   onClose,
 }: CountryListModalProps) {
   const { countries } = useCountryData();
-  const { isTripBased } = useVisitedCountries();
+  const { isTripBased, isVisitedCountry } = useVisitedCountries();
 
   const [countrySelectOpen, setCountrySelectOpen] = useState(false);
   const { t } = useTranslation("atlas");
@@ -63,6 +63,14 @@ export function CountryListModal({
   // Determine if the list is a system-managed list
   const isVisitedList = list.id === "VISITED_COUNTRIES";
   const isWantToVisitList = list.id === "WANT_TO_VISIT";
+
+  // Determine if a country should be disabled based on the list type
+  const handleIsCountryDisabled = (code: string): boolean => {
+    if (isWantToVisitList) {
+      return isVisitedCountry(code);
+    }
+    return false;
+  };
 
   return (
     <>
@@ -137,6 +145,7 @@ export function CountryListModal({
               onOpen={() => setCountrySelectOpen(true)}
               onClose={() => setCountrySelectOpen(false)}
               isTripBasedCountry={isSystemList ? isTripBased : undefined}
+              isCountryDisabled={handleIsCountryDisabled}
             />
             {isEditing && isLinked && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">
