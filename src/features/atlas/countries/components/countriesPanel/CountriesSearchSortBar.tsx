@@ -127,11 +127,13 @@ export function CountriesSearchSortBar({
           clearable={qualifierClearable}
           lockedPrefix={
             !timelineMode
-              ? selectedToggle === "visited"
-                ? "visited"
-                : selectedToggle === "sovereign"
-                  ? "sovereign"
-                  : undefined
+              ? selectedToggle === "wantToVisit"
+                ? "wanttovisit"
+                : selectedToggle === "visited"
+                  ? "visited"
+                  : selectedToggle === "sovereign"
+                    ? "sovereign"
+                    : undefined
               : undefined
           }
           placeholder={t("countries.searchPlaceholder")}
@@ -167,7 +169,7 @@ export function CountriesSearchSortBar({
                 setVisitedOnly?.(false);
                 setSovereignOnly?.(false);
                 setSelectedListId?.(null);
-                setSearch("");
+                ensurePrefix("wanttovisit");
               } else if (val === "visited") {
                 setVisitedOnly?.(true);
                 setWantToVisitOnly?.(false);

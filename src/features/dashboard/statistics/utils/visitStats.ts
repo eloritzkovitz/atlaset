@@ -13,14 +13,14 @@ import {
 /**
  * Counts how many countries in the given list have been visited based on the provided function.
  * @param countries - List of countries to check.
- * @param isCountryVisited - Function that takes a country ISO code and returns whether it has been visited.
+ * @param isVisitedCountry - Function that takes a country ISO code and returns whether it has been visited.
  * @returns The count of visited countries in the list.
  */
 export function countVisited(
   countries: Country[],
-  isCountryVisited: (iso: string) => boolean,
+  isVisitedCountry: (iso: string) => boolean,
 ): number {
-  return countries.filter((c) => isCountryVisited(c.isoCode)).length;
+  return countries.filter((c) => isVisitedCountry(c.isoCode)).length;
 }
 
 /**

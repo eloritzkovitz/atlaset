@@ -14,8 +14,8 @@ import {
   EditProfileModal,
   FriendsListSection,
   ProfileAboutCard,
+  ProfileCountriesCard,
   ProfileHeader,
-  VisitedCountriesCard,
   useUserProfile,
   useUserFriendCount,
   useFriendProfiles,
@@ -28,9 +28,9 @@ import { formatFirestoreDate } from "@utils/date";
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();  
-  const { username } = useParams();  
-  const { t } = useTranslation("user");  
+  const navigate = useNavigate();
+  const { username } = useParams();
+  const { t } = useTranslation("user");
   const [profileRefreshKey, setProfileRefreshKey] = useState(0);
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
     username,
@@ -137,10 +137,13 @@ export default function ProfilePage() {
                           : null
                       }
                     />
-                    <VisitedCountriesCard
-                      visitedCountryCodes={
-                        profileUser.visitedCountryCodes || []
-                      }
+                    <ProfileCountriesCard
+                      countryCodes={profileUser.visitedCountryCodes || []}
+                      type="visited"
+                    />
+                    <ProfileCountriesCard
+                      countryCodes={profileUser.wantToVisitCountryCodes || []}
+                      type="wantToVisit"
                     />
                     {bestScores.length > 0 && (
                       <BestScoresCard scores={bestScores} />

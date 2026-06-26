@@ -70,6 +70,8 @@
     "notSpecified": "לא צויין",
     "visitedCountries": "מדינות שביקרתי ({{count}})",
     "noVisitedCountries": "עדיין לא ביקרת במדינות.",
+    "wantToVisitCountries": "מדינות שאני רוצה לבקר ({{count}})",
+    "noWantToVisitCountries": "עדיין אין מדינות ברשימת המדינות שאני רוצה לבקר.",
     "bestScores": "התוצאות הטובות ביותר"
   }
 }

@@ -18,7 +18,7 @@ export function AchievementInfo() {
   const achievement = mergedAchievements.find(
     (a) => String(a.id) === achievementId,
   );
-  const { isCountryVisited } = useVisitedCountries();
+  const { isVisitedCountry } = useVisitedCountries();
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
     "",
@@ -34,7 +34,7 @@ export function AchievementInfo() {
     const { tierObj } = getCurrentTier(
       achievement,
       countries,
-      { isCountryVisited },
+      { isVisitedCountry },
       undefined,
       undefined,
     );
@@ -101,7 +101,7 @@ export function AchievementInfo() {
               achievement.criteria.regions.map((region) => [
                 region,
                 countries.some(
-                  (c) => c.region === region && isCountryVisited(c.isoCode),
+                  (c) => c.region === region && isVisitedCountry(c.isoCode),
                 ),
               ]),
             )}
@@ -115,7 +115,7 @@ export function AchievementInfo() {
           label={region ? `Countries in ${region}` : "Countries"}
           isoCodes={isoCodes}
           countries={countries}
-          visited={isCountryVisited}
+          visited={isVisitedCountry}
           expanded={expandedCountries}
           onToggle={() => setExpandedCountries((prev) => !prev)}
           onSelectCountry={handleCountrySelect}

@@ -108,7 +108,8 @@
       "status": {
         "home": "Home country",
         "visited": "Visited",
-        "upcoming": "Upcoming visit",
+        "future": "Future visit",
+        "wantToVisit": "Want to visit",
         "notVisited": "Not visited"
       },
       "tabs": {
@@ -260,7 +261,7 @@
       "displayOptions": "Display Options",
       "showHomeCountry": "Show home country",
       "showVisitedCountries": "Show visited countries",
-      "showUpcomingVisits": "Show upcoming new visits",
+      "showFutureVisits": "Show future first visits",
       "showWantToVisit": "Show 'want to visit' countries",
       "numAtlasColors": "Number of atlas colors",
       "colorPalette": "Color palettes",

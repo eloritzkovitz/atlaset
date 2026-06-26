@@ -14,7 +14,7 @@ import type { Achievement, AchievementStatus } from "../types";
 interface AchievementCardProps {
   achievement: Achievement;
   countries: Country[];
-  visited: { isCountryVisited: (iso: string) => boolean };
+  visited: { isVisitedCountry: (iso: string) => boolean };
   trips?: Trip[];
   homeCountry?: string;
   achievementStatusMap?: Record<string, boolean>;
@@ -140,7 +140,7 @@ export function AchievementCard({
               (c) => c.region === region,
             );
             const visitedAny = countriesInRegion.some((c) =>
-              visited.isCountryVisited(c.isoCode),
+              visited.isVisitedCountry(c.isoCode),
             );
             return { label: region, completed: visitedAny };
           })}

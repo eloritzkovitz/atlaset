@@ -116,7 +116,8 @@
       "status": {
         "home": "מדינת בית",
         "visited": "ביקרתי",
-        "upcoming": "ביקור עתידי",
+        "future": "ביקור עתידי",
+        "wantToVisit": "רוצה לבקר",
         "notVisited": "לא ביקרתי"
       },
       "tabs": {
@@ -268,7 +269,7 @@
       "displayOptions": "אפשרויות תצוגה",
       "showHomeCountry": "הצג מדינה בית",
       "showVisitedCountries": "הצג מדינות שביקרתי",
-      "showUpcomingVisits": "הצג ביקורים קרובים",
+      "showFutureVisits": "הצג ביקורים עתידיים",
       "showWantToVisit": "הצג מדינות שרוצה לבקר בהן",
       "numAtlasColors": "מספר צבעים באטלס",
       "colorPalette": "פלטות צבעים",

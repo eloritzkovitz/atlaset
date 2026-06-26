@@ -10,17 +10,11 @@ import { useCountryActions } from "../../hooks/useCountryActions";
 
 interface CountryDetailsHeaderProps {
   country: Country;
-  isVisited: boolean;
-  isHome: boolean;
-  isUpcoming?: boolean;
   onClose: () => void;
 }
 
 export function CountryDetailsHeader({
   country,
-  isVisited,
-  isHome,
-  isUpcoming = false,
   onClose,
 }: CountryDetailsHeaderProps) {
   const { t } = useTranslation("atlas");
@@ -46,11 +40,7 @@ export function CountryDetailsHeader({
             className="font-bold text-lg"
           />
           <span className="text-muted text-sm">({country.isoCode})</span>
-          <VisitedStatusIndicator
-            visited={isVisited}
-            isHome={isHome}
-            isUpcoming={isUpcoming}
-          />
+          <VisitedStatusIndicator country={country} />
         </span>
       }
       showSeparator

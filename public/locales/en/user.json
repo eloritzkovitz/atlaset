@@ -70,6 +70,8 @@
     "notSpecified": "Not specified",
     "visitedCountries": "Visited Countries ({{count}})",
     "noVisitedCountries": "No countries visited yet.",
+    "wantToVisitCountries": "Want to Visit ({{count}})",
+    "noWantToVisitCountries": "No countries in your want-to-visit list yet.",
     "bestScores": "Best Quiz Scores"
   }
 }

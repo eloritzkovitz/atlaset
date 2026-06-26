@@ -20,6 +20,7 @@ interface CountrySelectModalProps {
   onClose: () => void;
   multiple?: boolean;
   disabled?: boolean;
+  isCountryDisabled?: (code: string) => boolean;
 }
 
 export function CountrySelectModal({
@@ -30,10 +31,12 @@ export function CountrySelectModal({
   onClose,
   multiple = true,
   disabled = false,
+  isCountryDisabled,
 }: CountrySelectModalProps) {
   const [search, setSearch] = useState("");
   const { t } = useTranslation(["atlas", "common"]);
-  const { visitedCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes, wantToVisitCountryCodes } =
+    useVisitedCountries();
 
   // Reset search when modal opens
   useEffect(() => {
@@ -54,6 +57,7 @@ export function CountrySelectModal({
         undefined,
         {},
         {},
+        wantToVisitCountryCodes,
       );
     }
 
@@ -83,6 +87,9 @@ export function CountrySelectModal({
       )}
       multiple={multiple}
       disabled={disabled}
+      isItemDisabled={(country) =>
+        isCountryDisabled ? isCountryDisabled(country.isoCode) : false
+      }
       onChange={onChange}
       onClose={onClose}
       renderSearch={(searchProps) => (

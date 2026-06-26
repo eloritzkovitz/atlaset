@@ -19,7 +19,7 @@ export interface UserProfile {
   displayName: string;
   /** Profile photo URL */
   photoURL?: string;
-  /** email */
+  /** Email */
   email?: string;
   /** Home country code (ISO 3166-1 alpha-2) */
   homeCountry?: string;
@@ -35,6 +35,8 @@ export interface UserProfile {
   joinDate?: Timestamp;
   /** List of visited country codes (ISO 3166-1 alpha-2) */
   visitedCountryCodes: string[];
+  /** List of country codes (ISO 3166-1 alpha-2) the user wants to visit */
+  wantToVisitCountryCodes: string[];
 }
 
 /** Activity details associated with a user activity. */

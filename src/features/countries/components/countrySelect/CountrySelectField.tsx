@@ -16,6 +16,7 @@ interface CountrySelectFieldProps {
   onClose: () => void;
   disabled?: boolean;
   isTripBasedCountry?: (code: string) => boolean;
+  isCountryDisabled?: (code: string) => boolean;
 }
 
 export function CountrySelectField({
@@ -28,6 +29,7 @@ export function CountrySelectField({
   onClose,
   disabled,
   isTripBasedCountry,
+  isCountryDisabled,
 }: CountrySelectFieldProps) {
   const { homeCountry } = useHomeCountry();
   const { t } = useTranslation("atlas");
@@ -111,6 +113,7 @@ export function CountrySelectField({
             options={countries}
             onClose={onClose}
             onChange={handleModalChange}
+            isCountryDisabled={isCountryDisabled}
           />,
           document.body,
         )}

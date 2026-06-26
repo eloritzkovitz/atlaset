@@ -16,7 +16,7 @@ import type { Achievement } from "../types";
 export function useAchievementProgressLabel(
   achievement: Achievement,
   countries: Country[],
-  visited: { isCountryVisited: (iso: string) => boolean },
+  visited: { isVisitedCountry: (iso: string) => boolean },
   achievementStatusMap?: Record<string, boolean>,
 ) {
   return useMemo(() => {

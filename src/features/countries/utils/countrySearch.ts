@@ -73,6 +73,7 @@ export function getQualifierTokens(
       : (tcOption.scope ?? false)
     : false;
   const vIso = visitContext?.visitedIsoCodes;
+  const wIso = visitContext?.wantToVisitIsoCodes;
 
   // Handle special cases for certain qualifiers that require custom token extraction logic
   if (key === "region" || key === "subregion") {
@@ -154,6 +155,10 @@ export function getQualifierTokens(
 
   if (key === "visited")
     return vIso ? [vIso.includes(country.isoCode) ? "true" : "false"] : [];
+
+  if (key === "wantToVisit")
+    return wIso ? [wIso.includes(country.isoCode) ? "true" : "false"] : [];
+  
   const prop = country[key];
 
   if (Array.isArray(prop)) return prop.filter(Boolean).map(String);

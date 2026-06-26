@@ -4,7 +4,6 @@ import {
   VisitedStatusIndicator,
   useCountryData,
 } from "@features/countries";
-import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
@@ -44,8 +43,8 @@ export function CountryStats({
   onBack,
 }: CountryStatsProps) {
   const { countries, currencies } = useCountryData();
-  const { homeCountry } = useHomeCountry();
-  const visited = useVisitedCountries();
+  const { visitedCountryCodes, getCountryVisitsCategorized } =
+    useVisitedCountries();
   const { isMobile } = useScreenSize();
 
   // Region props shared between overview and section views
@@ -65,7 +64,7 @@ export function CountryStats({
 
   // Get categorized visits for selected country
   const categorizedVisits = selectedCountry
-    ? visited.getCountryVisitsCategorized(selectedCountry.isoCode)
+    ? getCountryVisitsCategorized(selectedCountry.isoCode)
     : { past: [], upcoming: [], tentative: [] };
 
   // If a country is selected, show its details
@@ -88,16 +87,7 @@ export function CountryStats({
               />
             </span>
           }
-          actions={
-            <VisitedStatusIndicator
-              visited={visited.isCountryVisited(selectedCountry.isoCode)}
-              isHome={selectedCountry.isoCode === homeCountry}
-              isUpcoming={
-                !!visited.upcomingCountryCodes &&
-                visited.upcomingCountryCodes.includes(selectedCountry.isoCode)
-              }
-            />
-          }
+          actions={<VisitedStatusIndicator country={selectedCountry} />}
         />
         <CountryDetailsPanel
           country={selectedCountry}
@@ -115,7 +105,7 @@ export function CountryStats({
     return (
       <CountrySection
         countries={countries}
-        visitedCountryCodes={visited.visitedCountryCodes}
+        visitedCountryCodes={visitedCountryCodes}
         onSubregionChange={onSubregionChange}
         onAllCountries={onShowAllCountries}
         selectedShowSovereignOnly={selectedShowSovereignOnly}

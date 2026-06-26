@@ -31,6 +31,7 @@ interface SelectionListModalProps<T> {
   emptyMessage?: string;
   multiple?: boolean;
   disabled?: boolean;
+  isItemDisabled?: (item: T) => boolean;
 }
 
 export function SelectionListModal<T>({
@@ -50,6 +51,7 @@ export function SelectionListModal<T>({
   emptyMessage,
   multiple = true,
   disabled = false,
+  isItemDisabled,
 }: SelectionListModalProps<T>) {
   const { t } = useTranslation("common");
   const [internalSearch, setInternalSearch] = useState(""); // Only used if parent doesn't control search state
@@ -118,15 +120,20 @@ export function SelectionListModal<T>({
             sortedItems.map((item) => {
               const value = getItemValue(item);
               const checked = selectedValues.includes(value);
+              const isThisItemDisabled = disabled || !!isItemDisabled?.(item);
 
               return (
                 <label
                   key={value}
-                  className="flex items-center mb-2 cursor-pointer hover:text-dropdown-hover select-none"
+                  className={`flex items-center mb-2 select-none ${
+                    isThisItemDisabled
+                      ? "opacity-50 cursor-not-allowed pointer-events-none"
+                      : "cursor-pointer hover:text-dropdown-hover"
+                  }`}
                 >
                   <Checkbox
                     checked={checked}
-                    disabled={disabled}
+                    disabled={isThisItemDisabled}
                     onChange={(isChecked) => {
                       if (multiple) {
                         const newSelected = isChecked

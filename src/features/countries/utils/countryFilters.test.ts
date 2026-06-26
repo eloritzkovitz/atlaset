@@ -446,6 +446,7 @@ describe("countryFilters utils", () => {
       const counts = getCountryCounts({
         filteredCountries,
         visitedIsoCodes,
+        wantToVisitIsoCodes: ["DE", "GP"],
       });
       expect(counts.allCount).toBe(filteredCountries.length);
       expect(counts.sovereignCount).toBe(
@@ -456,12 +457,17 @@ describe("countryFilters utils", () => {
         filteredCountries.filter((c) => visitedIsoCodes.includes(c.isoCode))
           .length,
       );
+      expect(counts.wantToVisitCount).toBe(
+        filteredCountries.filter((c) => ["DE", "GP"].includes(c.isoCode))
+          .length,
+      );
     });
 
     it("returns zero counts for empty arrays", () => {
       const counts = getCountryCounts({
         filteredCountries: [],
         visitedIsoCodes: [],
+        wantToVisitIsoCodes: [],
       });
       expect(counts.allCount).toBe(0);
       expect(counts.sovereignCount).toBe(0);

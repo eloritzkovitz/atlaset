@@ -15,7 +15,7 @@ export interface AchievementFilters {
   sortBy: string;
   achievements: Achievement[] | null;
   countries: Country[];
-  visited: { isCountryVisited: (iso: string) => boolean };
+  visited: { isVisitedCountry: (iso: string) => boolean };
   trips: Trip[];
   homeCountry: string;
 }
