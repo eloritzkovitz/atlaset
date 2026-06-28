@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useSyncedSearchTerm } from "./useSyncedSearchTerm";
 import { useRecentSearches } from "./useRecentSearches";
+import { getSearchRoute } from "../utils/search";
 
 /**
  * Manages search state.
@@ -19,8 +20,8 @@ export function useSearchController() {
 
   // Handle search submission
   const handleSearchSubmit = (term: string) => {
-    if (term) {
-      navigate(`/search?query=${encodeURIComponent(term)}`);
+    if (term.trim()) {
+      navigate(getSearchRoute(term));
       saveRecentSearch(term);
     }
   };

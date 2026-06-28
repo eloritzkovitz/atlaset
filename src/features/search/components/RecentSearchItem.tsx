@@ -1,5 +1,6 @@
 import { MenuButton } from "@components";
 import { ICONS } from "@constants/icons";
+import { getSearchRoute } from "../utils/search";
 
 interface RecentSearchItemProps {
   term: string;
@@ -12,8 +13,6 @@ export function RecentSearchItem({
   onSelect,
   onRemove,
 }: RecentSearchItemProps) {
-  const searchUrl = `/search?query=${encodeURIComponent(term)}`;
-
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
     onRemove?.(term);
@@ -21,7 +20,7 @@ export function RecentSearchItem({
 
   return (
     <MenuButton
-      url={searchUrl}
+      url={getSearchRoute(term)}
       onClick={() => onSelect(term)}
       icon={null}
       ariaLabel={`Search for ${term}`}

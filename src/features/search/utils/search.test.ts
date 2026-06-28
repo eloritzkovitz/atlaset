@@ -1,4 +1,5 @@
 import {
+  getSearchRoute,
   getUserLabel,
   rankByStartsWithAndContains,
   rankAndMap,
@@ -30,18 +31,35 @@ const makeFriend = (uid: string) => ({ uid, createdAt: mockTimestamp });
 const currentUser = makeProfile("1");
 const friendList = [makeFriend("2"), makeFriend("3")];
 
+describe("getSearchRoute", () => {
+  it("returns correct search route for a given term", () => {
+    const term = "test search";
+    const expectedRoute = `/search?query=${encodeURIComponent(term)}`;
+    expect(getSearchRoute(term)).toBe(expectedRoute);
+  });
+
+  it("trims whitespace from the search term", () => {
+    const term = "   spaced out   ";
+    const expectedRoute = `/search?query=${encodeURIComponent(term.trim())}`;
+    expect(getSearchRoute(term)).toBe(expectedRoute);
+  });
+});
+
 describe("getUserLabel", () => {
   it("returns 'You' for current user", () => {
     expect(getUserLabel(makeProfile("1"), currentUser, friendList)).toBe("You");
   });
+
   it("returns 'Friend' for friend", () => {
     expect(getUserLabel(makeProfile("2"), currentUser, friendList)).toBe(
       "Friend",
     );
   });
+
   it("returns '' for non-friend, non-user", () => {
     expect(getUserLabel(makeProfile("4"), currentUser, friendList)).toBe("");
   });
+
   it("returns '' if currentUser is null", () => {
     expect(getUserLabel(makeProfile("2"), null, friendList)).toBe("");
   });

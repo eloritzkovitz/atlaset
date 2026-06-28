@@ -1,10 +1,11 @@
 import type { User } from "firebase/auth";
-import { MenuButton, Separator } from "@components";
 import { useTranslation } from "react-i18next";
+import { MenuButton, Separator } from "@components";
 import type { Country } from "@features/countries";
 import type { Friend } from "@features/user";
 import type { SearchResult } from "../types";
 import { renderSearchItem } from "../utils/renderSearchItem";
+import { getSearchRoute } from "../utils/search";
 
 interface SearchResultsListProps {
   results: SearchResult[];
@@ -27,8 +28,6 @@ export function SearchResultsList({
 }: SearchResultsListProps) {
   const { t } = useTranslation("common");
 
-  const seeAllUrl = `/search?query=${encodeURIComponent(searchTerm)}`;
-
   return (
     <ul className="text-left">
       {results.slice(0, 8).map((item) =>
@@ -44,7 +43,7 @@ export function SearchResultsList({
           <Separator className="my-1" />
           <li>
             <MenuButton
-              url={seeAllUrl}
+              url={getSearchRoute(searchTerm)}
               icon={null}
               ariaLabel={t("search.seeAll")}
               onClick={() => onSearchSubmit(searchTerm)}

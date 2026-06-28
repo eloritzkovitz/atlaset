@@ -1,6 +1,15 @@
 import type { Friend, SerializableUser, UserProfile } from "@features/user";
 
 /**
+ * Generates a consistent search results path.
+ * @param term - The search term to include in the path.
+ * @returns A string representing the search results path.
+ */
+export function getSearchRoute(term: string): string {
+  return `/search?query=${encodeURIComponent(term.trim())}`;
+}
+
+/**
  * Determines the label for a user based on their relationship to the current user.
  * @param profile - The user profile to label.
  * @param currentUser - The current logged-in user.
