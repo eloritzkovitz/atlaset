@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import {
@@ -9,7 +9,6 @@ import {
 } from "@components";
 import { useCountryData } from "@features/countries";
 import {
-  DASHBOARD_MENU,
   DashboardPanelMenu,
   DashboardRoutes,
   getDashboardMeta,
@@ -21,7 +20,6 @@ import {
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
-import { isWindowDefined } from "@utils/env";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
@@ -33,28 +31,19 @@ export default function DashboardPage() {
     error,
     subregionToRegion,
   } = useCountryData();
+  const { isMobile } = useScreenSize();
+  const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tCountries } = useTranslation("countries");
 
-  // Convert languages map to array for components expecting Language[]
-  const languages = (() => {
+  const [panelOpen, setPanelOpen] = useState(false);
+
+  const languages = useMemo(() => {
     if (!languagesMap) return [];
     return Object.values(languagesMap).map((l) => ({
       ...l,
       nativeName: l.nativeName ?? l.name ?? l.code,
     }));
-  })();
-  const { isMobile } = useScreenSize();
-  const [panelOpen, setPanelOpen] = useState(false);
-
-  // Full dashboard menu config
-  const dashboardMenuConfig = DASHBOARD_MENU;
-
-  // Determine current panel from URL
-  const dashboardPath = isWindowDefined()
-    ? window.location.pathname.replace(/^\/dashboard\//, "")
-    : undefined;
-  const currentPanel = dashboardMenuConfig.find(
-    (item) => item.key === dashboardPath,
-  );
+  }, [languagesMap]);
 
   // Dashboard route state
   const {
@@ -92,10 +81,6 @@ export default function DashboardPage() {
     selectedCurrency,
     selectedAchievement,
   });
-
-  // Translate breadcrumbs
-  const { t: tDashboard } = useTranslation("dashboard");
-  const { t: tCountries } = useTranslation("countries");
 
   const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
     const raw = crumb.label ?? crumb.key ?? "";
@@ -152,8 +137,8 @@ export default function DashboardPage() {
       return translateRegionLabel(routeSelectedRegion, tCountries, tDashboard);
     }
 
-    return currentPanel
-      ? tDashboard(`menu.${currentPanel.key}`)
+    return safePanel
+      ? tDashboard(`menu.${safePanel}`)
       : tDashboard("menu.title");
   };
 
@@ -164,8 +149,8 @@ export default function DashboardPage() {
     if (isAchievementPanel && selectedAchievement?.name)
       return selectedAchievement.name;
 
-    return currentPanel
-      ? tDashboard(`menu.${currentPanel.key}`)
+    return safePanel
+      ? tDashboard(`menu.${safePanel}`)
       : tDashboard("menu.title");
   };
 
@@ -173,7 +158,6 @@ export default function DashboardPage() {
 
   // Sync route state to filter state
   useEffect(() => {
-    // Only update if different, and always preserve 'all' as a valid value
     if (routeSelectedRegion !== selectedRegion) {
       setSelectedRegion(routeSelectedRegion ?? "");
     }
@@ -216,7 +200,6 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen relative">
-      {/* Mobile: hamburger + drawer */}
       {isMobile && (
         <>
           <HamburgerButton onClick={() => setPanelOpen(true)} />
@@ -229,7 +212,6 @@ export default function DashboardPage() {
         </>
       )}
       <div className="p-4 max-w-6xl mx-auto flex gap-6">
-        {/* Desktop: panel */}
         {!isMobile && (
           <DashboardPanelMenu
             selectedPanel={menuSelectedPanel}

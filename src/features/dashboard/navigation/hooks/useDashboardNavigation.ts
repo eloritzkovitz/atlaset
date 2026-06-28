@@ -4,10 +4,10 @@ import { getCountryRoute } from "../utils/dashboardNavigation";
 
 /**
  * Manages dashboard navigation state and handlers.
- * @param countries - List of all countries
- * @param selectedRegion - Currently selected region
- * @param selectedSubregion - Currently selected subregion *
- * @returns Navigation state and handlers
+ * @param countries - List of countries.
+ * @param selectedRegion - Currently selected region.
+ * @param selectedSubregion - Currently selected subregion.
+ * @returns Navigation state and handlers.
  */
 export function useDashboardNavigation(
   countries: Country[],
@@ -18,53 +18,39 @@ export function useDashboardNavigation(
 
   // Navigation handlers
   const handlePanelChange = (panel: string) => navigate(`/dashboard/${panel}`);
-
-  // Region and subregion select handlers
   const handleRegionSelect = (region: string) =>
     navigate(getCountryRoute(region));
   const handleSubregionSelect = (region: string, subregion: string) =>
     navigate(getCountryRoute(region, subregion));
-
-  // Country select handler
   const handleCountrySelect = (isoCode: string | null) => {
-    if (!isoCode) {
-      navigate(`/dashboard/countries`);
-      return;
-    }
+    if (!isoCode) return navigate(`/dashboard/countries`);
+
     const country = countries?.find((c) => c.isoCode === isoCode);
-    if (country) {
+
+    if (country)
       navigate(
         getCountryRoute(country.region, country.subregion, country.isoCode),
       );
-    }
   };
-
-  // Show all countries handler
   const handleShowAllCountries = () => navigate(`/dashboard/countries/all`);
+  const handleBack = () => navigate(-1);
 
-  // Breadcrumb mapping
-  const crumbRoutes: Record<string, () => void> = {
+  // Breadcrumb actions mapping
+  const crumbActions: Record<string, () => void> = {
     dashboard: () => navigate(`/dashboard/overview`),
     countries: () => navigate(`/dashboard/countries/all`),
     region: () => navigate(getCountryRoute(selectedRegion)),
     subregion: () =>
       navigate(getCountryRoute(selectedRegion, selectedSubregion)),
+    country: () => {},
     "currencies/exchange": () => navigate(`/dashboard/currencies/exchange`),
   };
 
   // Crumb click handler
   const handleCrumbClick = (key: string) => {
-    if (crumbRoutes[key]) {
-      crumbRoutes[key]();
-    } else if (key === "country") {
-      // No-op
-    } else {
-      handlePanelChange(key);
-    }
+    const action = crumbActions[key] ?? (() => handlePanelChange(key));
+    action();
   };
-
-  // Back handler
-  const handleBack = () => navigate(-1);
 
   return {
     handlePanelChange,
