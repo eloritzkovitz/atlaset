@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
 
-// Toolbar toggle option type definition
+/** Represents the view mode for displaying content. */
+export type ViewMode = "grid" | "list";
+
+/** Represents an option in the toolbar toggle. */
 export type ToolbarToggleOption = {
   value: string;
   icon: ReactNode;
@@ -11,4 +14,4 @@ export type ToolbarToggleOption = {
   checked: boolean;
   disabled?: boolean;
   onClick: () => void;
-}
+};

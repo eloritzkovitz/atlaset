@@ -6,4 +6,4 @@ export * from "./number";
 export * from "./option";
 export * from "./position";
 export * from "./sort";
-export * from "./toolbar";
+export * from "./ui";

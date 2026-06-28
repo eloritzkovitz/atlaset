@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { useAchievementStatus } from "../hooks/useAchievementStatus";
+import { ViewModeSegmentedControl } from "@components";
 import { CountryFlagGrid, CountryListGroup } from "@features/countries";
+import { useViewMode } from "@hooks";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
+import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import type { Achievement } from "../types";
 import { getAchievementCountries } from "../utils/achievements";
 import { getCurrentTier } from "../utils/achievementsTiers";
@@ -25,7 +27,7 @@ export function AchievementInfo() {
     "",
   );
 
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
+  const { viewMode, setViewMode } = useViewMode("list");
   const [expandedCountries, setExpandedCountries] = useState(true);
 
   let achCountries: typeof countries = [];
@@ -117,34 +119,12 @@ export function AchievementInfo() {
         )}
 
       {isoCodes.length > 0 && (
-        <div className="mt-8pt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-main">{groupLabel}</h3>
-
-            <div className="flex bg-muted/10 p-1 rounded-lg text-sm">
-              <button
-                type="button"
-                onClick={() => setViewMode("list")}
-                className={`px-3 py-1.5 rounded-md transition-all ${
-                  viewMode === "list"
-                    ? "bg-white shadow-sm font-medium text-main"
-                    : "text-muted hover:text-main"
-                }`}
-              >
-                List
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode("grid")}
-                className={`px-3 py-1.5 rounded-md transition-all ${
-                  viewMode === "grid"
-                    ? "bg-white shadow-sm font-medium text-main"
-                    : "text-muted hover:text-main"
-                }`}
-              >
-                Grid
-              </button>
-            </div>
+        <div className="mt-2 pt-6 items-end">
+          <div className="flex justify-end mb-4">
+            <ViewModeSegmentedControl
+              viewMode={viewMode}
+              onChange={setViewMode}
+            />
           </div>
 
           {viewMode === "list" ? (

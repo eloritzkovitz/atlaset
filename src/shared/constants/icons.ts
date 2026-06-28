@@ -1,4 +1,4 @@
-import { FaPlusSquare } from "react-icons/fa";
+import { FaPlusSquare, FaThLarge } from "react-icons/fa";
 import {
   FaArrowsRotate,
   FaBell,
@@ -172,6 +172,11 @@ export const ICONS = {
   info: FaCircleInfo,
   reportBug: FaBug,
   appearance: FaMoon,
+  //UI
+  viewMode: {
+    grid: FaThLarge,
+    list: FaList,
+  },
   // Actions
   add: FaPlus,
   importFile: FaFileImport,

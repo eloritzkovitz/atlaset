@@ -1,4 +1,5 @@
 import { useScreenSize } from "@hooks";
+import type { ViewMode } from "@types";
 import { CountryFlag } from "../countryFlag/CountryFlag";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import type { Country } from "../../types";
@@ -19,7 +20,7 @@ interface CountryItemProps {
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   onContextMenu?: (event: React.MouseEvent, country: Country) => void;
-  view: "grid" | "list";  
+  view: ViewMode;
 }
 
 export function CountryItem({

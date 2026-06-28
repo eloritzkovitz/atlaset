@@ -1,5 +1,6 @@
 import React from "react";
 import { EmptyListMessage } from "@components";
+import type { ViewMode } from "@types";
 import { CountryItem } from "./CountryItem";
 import type { Country } from "../../types";
 
@@ -7,7 +8,7 @@ interface CountryDisplayPanelProps {
   countries: Country[];
   visitedCountryCodes?: string[];
   showAllAsVisited?: boolean;
-  view?: "grid" | "list";
+  view?: ViewMode;
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
   onSelect?: (isoCode: string | null) => void;
@@ -17,7 +18,7 @@ interface CountryDisplayPanelProps {
   renderBadge?: (country: Country) => React.ReactNode;
   showFlags?: boolean;
   showBadges?: boolean;
-  className?: string;  
+  className?: string;
 }
 
 export const CountryDisplayPanel = React.forwardRef<
@@ -39,7 +40,7 @@ export const CountryDisplayPanel = React.forwardRef<
       renderBadge,
       showFlags = true,
       showBadges = false,
-      className = "",      
+      className = "",
     },
     ref,
   ) => {

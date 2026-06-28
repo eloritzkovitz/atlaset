@@ -106,9 +106,10 @@ export { DirectionalIcon } from "./ui/DirectionalIcon";
 export {
   SegmentedToggle,
   type SegmentedToggleOption,
-} from "./ui/SegmentedToggle";
+} from "./ui/SegmentedToggle/SegmentedToggle";
 export { TabButton } from "./ui/TabButton";
 export { KeyCombo } from "./ui/KeyCombo";
+export { ViewModeSegmentedControl } from "./ui/SegmentedToggle/ViewModeSegmentedControl";
 
 // UI Hint components
 export { PwaUpdateUiHint } from "./ui/UiHint/PwaUpdateUiHint";

@@ -1,9 +1,13 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FaThLarge } from "react-icons/fa";
 import { FaFlag } from "react-icons/fa6";
 import { PiGlobeStandFill } from "react-icons/pi";
-import { ActionButton, SearchInput, SelectInput } from "@components";
+import {
+  ActionButton,
+  SearchInput,
+  SelectInput,
+  ViewModeSegmentedControl,
+} from "@components";
 import { ICONS } from "@constants/icons";
 import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import {
@@ -155,11 +159,6 @@ export function CountrySection({
   // Handler to toggle visited/all
   const handleVisitedToggle = () => {
     setShowVisitedOnly((prev) => !prev);
-  };
-
-  // Handler to toggle between grid and list views
-  const handleToggle = () => {
-    setViewMode((prev) => (prev === "grid" ? "list" : "grid"));
   };
 
   const handleTranscontinentalToggle = () => {
@@ -341,37 +340,11 @@ export function CountrySection({
                 iconOn={<PiGlobeStandFill className="text-lg" />}
                 iconOff={<PiGlobeStandFill className="text-lg text-muted" />}
               />
-              <ActionButton
-                onClick={handleToggle}
-                ariaLabel={
-                  viewMode === "grid"
-                    ? tDashboard(
-                        "exploration.switchToList",
-                        "Switch to List View",
-                      )
-                    : tDashboard(
-                        "exploration.switchToGrid",
-                        "Switch to Grid View",
-                      )
-                }
-                title={
-                  viewMode === "grid"
-                    ? tDashboard(
-                        "exploration.switchToList",
-                        "Switch to List View",
-                      )
-                    : tDashboard(
-                        "exploration.switchToGrid",
-                        "Switch to Grid View",
-                      )
-                }
-                icon={
-                  viewMode === "grid" ? <ICONS.countryLists /> : <FaThLarge />
-                }
-                variant="toggle"
-                rounded
-              />
             </div>
+            <ViewModeSegmentedControl
+              viewMode={viewMode}
+              onChange={setViewMode}
+            />
           </div>
         </div>
       </div>
