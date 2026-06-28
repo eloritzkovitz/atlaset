@@ -86,7 +86,6 @@ export default function DashboardPage() {
   const { breadcrumbs } = getDashboardMeta({
     selectedPanel,
     selectedCountry,
-    currentPanel: currentPanel ? { title: currentPanel.label } : undefined,
     selectedRegion,
     selectedSubregion,
     selectedLanguage,

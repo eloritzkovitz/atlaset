@@ -251,7 +251,6 @@ export function useCountryFilters() {
     countryLists,
     selectedListId,
     wantToVisitOnly,
-    wantToVisitCountryCodes,
     showVisitedOnly,
     isReadonly,
     effectiveSharedVisitedIsoCodes,
