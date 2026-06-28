@@ -27,13 +27,11 @@
     "worldTitle": "חקירת העולם",
     "allTitle": "כל המדינות",
     "showAllCountries": "הצג את כל המדינות",
-    "showSovereignOnly": "הצג רק מדינות ריבוניות",    
+    "showSovereignOnly": "הצג רק מדינות ריבוניות",
     "ofCountriesVisited": "מהמדינות שביקרתי בהן",
     "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
     "showTranscontinental": "הצג מדינות חוצות יבשות",
     "hideTranscontinental": "הסתר מדינות חוצות יבשות",
-    "switchToList": "החלף לתצוגת רשימה",
-    "switchToGrid": "החלף לתצוגת רשת",
     "resetFilters": "איפוס מסננים"
   },
   "languages": {

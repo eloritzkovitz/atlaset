@@ -149,6 +149,10 @@
     "prevAria": "Previous page",
     "nextAria": "Next page"
   },
+  "viewMode": {
+    "grid": "Grid View",
+    "list": "List View"
+  },
   "empty": "—",
   "chip": {
     "more": "+{{count}} more",

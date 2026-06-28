@@ -14,18 +14,18 @@ export function ViewModeSegmentedControl({
   onChange,
   className = "",
 }: ViewModeSegmentedControlProps) {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("common");
 
   const modesConfig = [
     {
       id: "grid" as ViewMode,
-      label: t("exploration.switchToGrid", "Switch to Grid View"),
+      label: t("viewMode.grid", "Grid View"),
       Icon: ICONS.viewMode.grid,
       roundingClass: "rounded-l-full",
     },
     {
       id: "list" as ViewMode,
-      label: t("exploration.switchToList", "Switch to List View"),
+      label: t("viewMode.list", "List View"),
       Icon: ICONS.viewMode.list,
       roundingClass: "rounded-r-full",
     },
