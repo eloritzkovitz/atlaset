@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
-import { CountryListGroup } from "@features/countries";
+import { CountryFlagGrid, CountryListGroup } from "@features/countries";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
@@ -25,11 +25,13 @@ export function AchievementInfo() {
     "",
   );
 
+  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
   const [expandedCountries, setExpandedCountries] = useState(true);
+
   let achCountries: typeof countries = [];
   let region: string | undefined;
 
-  // Determine display criteria (merge base + active tier) and derive countries
+  // Determine display criteria and derive countries
   if (achievement) {
     const { tierObj } = getCurrentTier(
       achievement,
@@ -63,15 +65,17 @@ export function AchievementInfo() {
 
   // Defensive check for criteria countries
   const isoCodes = achCountries.map((c) => c.isoCode);
+  const groupLabel = region ? `Countries in ${region}` : "Countries";
 
   return (
-    <section className="max-w-6xl mx-auto">
+    <section className="max-w-6xl mx-auto px-4">
       <DashboardHeader
         title={achievement.name}
         leading={<AchievementIcon type={achievement.type} locked={false} />}
         onBack={handleBack}
       />
       <div className="mb-4 text-muted text-base">{achievement.description}</div>
+
       {achievement.requires && achievement.requires.length > 0 && (
         <AchievementListGroup
           achievements={
@@ -85,6 +89,7 @@ export function AchievementInfo() {
           achievementStatusMap={achievementStatusMap}
         />
       )}
+
       {achievement.criteria?.regions &&
         Array.isArray(achievement.criteria.regions) && (
           <AchievementListGroup
@@ -110,16 +115,57 @@ export function AchievementInfo() {
             }}
           />
         )}
+
       {isoCodes.length > 0 && (
-        <CountryListGroup
-          label={region ? `Countries in ${region}` : "Countries"}
-          isoCodes={isoCodes}
-          countries={countries}
-          visited={isVisitedCountry}
-          expanded={expandedCountries}
-          onToggle={() => setExpandedCountries((prev) => !prev)}
-          onSelectCountry={handleCountrySelect}
-        />
+        <div className="mt-8pt-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold text-main">{groupLabel}</h3>
+
+            <div className="flex bg-muted/10 p-1 rounded-lg text-sm">
+              <button
+                type="button"
+                onClick={() => setViewMode("list")}
+                className={`px-3 py-1.5 rounded-md transition-all ${
+                  viewMode === "list"
+                    ? "bg-white shadow-sm font-medium text-main"
+                    : "text-muted hover:text-main"
+                }`}
+              >
+                List
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode("grid")}
+                className={`px-3 py-1.5 rounded-md transition-all ${
+                  viewMode === "grid"
+                    ? "bg-white shadow-sm font-medium text-main"
+                    : "text-muted hover:text-main"
+                }`}
+              >
+                Grid
+              </button>
+            </div>
+          </div>
+
+          {viewMode === "list" ? (
+            <CountryListGroup
+              label={groupLabel}
+              isoCodes={isoCodes}
+              countries={countries}
+              visited={isVisitedCountry}
+              expanded={expandedCountries}
+              onToggle={() => setExpandedCountries((prev) => !prev)}
+              onSelectCountry={handleCountrySelect}
+            />
+          ) : (
+            <CountryFlagGrid
+              countryCodes={isoCodes}
+              size="64"
+              isHighlighted={(code) => isVisitedCountry(code)}
+              onCountryClick={handleCountrySelect}
+            />
+          )}
+        </div>
       )}
     </section>
   );

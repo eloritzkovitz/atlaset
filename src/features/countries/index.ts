@@ -3,6 +3,7 @@ export { CountryDetailsContent } from "./components/countryDetails/CountryDetail
 export { CountryDetailsPanel } from "./components/countryDetails/CountryDetailsPanel";
 export { CountryDisplayPanel } from "./components/countryDisplay/CountryDisplayPanel";
 export { CountryFlag } from "./components/countryFlag/CountryFlag";
+export { CountryFlagGrid } from "./components/countryFlag/CountryFlagGrid";
 export { CountryWithFlag } from "./components/countryFlag/CountryWithFlag";
 export { CountryListGroup } from "./components/countryDetails/CountryListGroup";
 export { CountrySelectField } from "./components/countrySelect/CountrySelectField";
