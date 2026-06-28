@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import type { ViewMode } from "@types";
+import { Tooltip } from "../Tooltip/Tooltip";
 
 interface ViewModeSegmentedControlProps {
   viewMode: ViewMode;
@@ -15,6 +16,21 @@ export function ViewModeSegmentedControl({
 }: ViewModeSegmentedControlProps) {
   const { t } = useTranslation("dashboard");
 
+  const modesConfig = [
+    {
+      id: "grid" as ViewMode,
+      label: t("exploration.switchToGrid", "Switch to Grid View"),
+      Icon: ICONS.viewMode.grid,
+      roundingClass: "rounded-l-full",
+    },
+    {
+      id: "list" as ViewMode,
+      label: t("exploration.switchToList", "Switch to List View"),
+      Icon: ICONS.viewMode.list,
+      roundingClass: "rounded-r-full",
+    },
+  ];
+
   const baseButtonClass =
     "flex h-8 w-10 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:z-10";
   const activeClass =
@@ -28,29 +44,27 @@ export function ViewModeSegmentedControl({
       aria-label={t("exploration.viewOptions", "View options")}
       className={`inline-flex items-center overflow-hidden rounded-full bg-muted/40 ${className}`}
     >
-      <button
-        type="button"
-        onClick={() => onChange("grid")}
-        aria-label={t("exploration.switchToGrid", "Switch to Grid View")}
-        title={t("exploration.switchToGrid", "Grid View")}
-        aria-pressed={viewMode === "grid"}
-        className={`${baseButtonClass} rounded-l-full ${viewMode === "grid" ? activeClass : inactiveClass}`}
-      >
-        <ICONS.viewMode.grid className="h-4 w-4" />
-      </button>
+      {modesConfig.map(({ id, label, Icon, roundingClass }, index) => {
+        const isActive = viewMode === id;
 
-      <div className="h-6 bg-muted" />
+        return (
+          <div key={id} className="flex items-center">
+            {index > 0 && <div className="h-6 w-[1px] bg-muted/40" />}
 
-      <button
-        type="button"
-        onClick={() => onChange("list")}
-        aria-label={t("exploration.switchToList", "Switch to List View")}
-        title={t("exploration.switchToList", "List View")}
-        aria-pressed={viewMode === "list"}
-        className={`${baseButtonClass} rounded-r-full ${viewMode === "list" ? activeClass : inactiveClass}`}
-      >
-        <ICONS.viewMode.list className="h-4 w-4" />
-      </button>
+            <Tooltip content={label} position="bottom">
+              <button
+                type="button"
+                onClick={() => onChange(id)}
+                aria-label={label}
+                aria-pressed={isActive}
+                className={`${baseButtonClass} ${roundingClass} ${isActive ? activeClass : inactiveClass}`}
+              >
+                <Icon className="h-4 w-4" />
+              </button>
+            </Tooltip>
+          </div>
+        );
+      })}
     </div>
   );
 }
