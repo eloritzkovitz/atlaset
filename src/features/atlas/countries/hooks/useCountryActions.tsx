@@ -3,6 +3,7 @@ import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import type { Country } from "@features/countries";
+import { getCountryRoute } from "@features/dashboard";
 import { useLanguage } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
@@ -61,7 +62,11 @@ export function useCountryActions({
   });
 
   // Construct URLs
-  const dashboardUrl = `/dashboard/countries/${country.region}/${country.subregion}/${country.isoCode}`;
+  const dashboardUrl = getCountryRoute(
+    country.region,
+    country.subregion,
+    country.isoCode,
+  );
   const langSubtag = (lang || "en").split("-")[0];
   const page = country.name.replace(/ /g, "_");
   const wikipediaUrl = `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(page)}`;

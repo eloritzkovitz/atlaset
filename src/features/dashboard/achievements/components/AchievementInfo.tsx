@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ViewModeSegmentedControl } from "@components";
 import { CountryFlagGrid, CountryListGroup } from "@features/countries";
 import { useViewMode } from "@hooks";
@@ -12,6 +12,7 @@ import { getAchievementCountries } from "../utils/achievements";
 import { getCurrentTier } from "../utils/achievementsTiers";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
+import { getCountryRoute } from "../../navigation/utils/dashboardNavigation";
 
 export function AchievementInfo() {
   const { achievementId } = useParams();
@@ -26,6 +27,7 @@ export function AchievementInfo() {
     "",
     "",
   );
+  const navigate = useNavigate();
 
   const { viewMode, setViewMode } = useViewMode("list");
   const [expandedCountries, setExpandedCountries] = useState(true);
@@ -113,7 +115,7 @@ export function AchievementInfo() {
               ]),
             )}
             onAchievementClick={(region) => {
-              window.location.href = `/dashboard/countries/${encodeURIComponent(region)}`;
+              navigate(getCountryRoute(region));
             }}
           />
         )}

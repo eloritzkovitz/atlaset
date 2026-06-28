@@ -1,5 +1,6 @@
 import React from "react";
 import { ICONS } from "@constants/icons";
+import { capitalize } from "@utils/string";
 
 export interface ChecklistItem {
   label: string;
@@ -36,7 +37,7 @@ export const Checklist: React.FC<ChecklistProps> = ({
               <span style={{ width: "1em", display: "inline-block" }}></span>
             )}
             <span className={item.completed ? "" : "text-muted"}>
-              {item.label}
+              {capitalize(item.label)}
             </span>
           </div>
         ))}

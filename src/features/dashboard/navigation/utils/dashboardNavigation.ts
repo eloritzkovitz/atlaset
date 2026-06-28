@@ -5,6 +5,28 @@ import type { Crumb } from "@components";
 import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
 
 /**
+ * Generates a dashboard URL path for countries, regions, or subregions.
+ * @param region - The region of the country.
+ * @param subregion - The subregion of the country.
+ * @param isoCode - The ISO code of the country.
+ * @returns A string representing the route to the country details page.
+ */
+export function getCountryRoute(
+  region?: string,
+  subregion?: string,
+  isoCode?: string,
+): string {
+  const r = region ? encodeURIComponent(region.toLowerCase()) : "all";
+  const s = subregion ? encodeURIComponent(subregion.toLowerCase()) : "all";
+
+  if (isoCode) return `/dashboard/countries/${r}/${s}/${isoCode}`;
+  if (subregion) return `/dashboard/countries/${r}/${s}`;
+  if (region) return `/dashboard/countries/${r}`;
+
+  return `/dashboard/countries/all`;
+}
+
+/**
  * Generate breadcrumbs for the dashboard based on navigation state
  * @param selectedPanel - Currently selected dashboard panel
  * @param selectedRegion - Currently selected region
@@ -40,8 +62,7 @@ export function getDashboardBreadcrumbs(
     }
   }
   if (
-    (selectedPanel === "languages" ||
-      selectedPanel.startsWith("languages/")) &&
+    (selectedPanel === "languages" || selectedPanel.startsWith("languages/")) &&
     selectedLanguage &&
     selectedLanguage.name
   ) {
@@ -96,7 +117,7 @@ export function getDashboardMeta({
   selectedAchievement,
 }: {
   selectedPanel: string | undefined;
-  selectedCountry: { name?: string } | null | undefined;  
+  selectedCountry: { name?: string } | null | undefined;
   currentPanel: { title: string } | undefined;
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
@@ -115,7 +136,7 @@ export function getDashboardMeta({
   const breadcrumbs = getDashboardBreadcrumbs(
     safePanel,
     safeRegion,
-    safeSubregion,    
+    safeSubregion,
     safeCountry,
     safeLanguage,
     safeCurrency,

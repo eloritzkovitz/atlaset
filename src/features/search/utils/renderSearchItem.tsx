@@ -8,6 +8,7 @@ import {
   regionIcons,
   type Country,
 } from "@features/countries";
+import { getCountryRoute } from "@features/dashboard";
 import { UserAvatar, type Friend } from "@features/user";
 import { getUserLabel } from "./search";
 import { SearchItem } from "../components/SearchItem";
@@ -74,7 +75,7 @@ export function renderSearchItem(
 
     case "country":
       key = item.isoCode || item.name;
-      url = `/dashboard/countries/${item.region}/${item.subregion}/${item.isoCode}`;
+      url = getCountryRoute(item.region, item.subregion, item.isoCode);
       displayName = item.name;
       label = getCountryLabel(item, countries);
       icon = (
@@ -103,7 +104,7 @@ export function renderSearchItem(
       const regKey = item.region;
 
       key = isSub ? `${regKey}-${item.subregion}` : regKey;
-      url = `/dashboard/countries/${regKey}${isSub ? `/${item.subregion}` : ""}`;
+      url = getCountryRoute(regKey, isSub ? item.subregion : undefined);
       displayName = i18n.t(
         `countries:${isSub ? "subregions" : "regions"}.${regKey}${isSub ? `.${item.subregion}` : ""}`,
         {

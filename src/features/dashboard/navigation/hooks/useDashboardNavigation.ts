@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Country } from "@features/countries";
+import { getCountryRoute } from "../utils/dashboardNavigation";
 
 /**
  * Manages dashboard navigation state and handlers.
@@ -15,31 +16,14 @@ export function useDashboardNavigation(
 ) {
   const navigate = useNavigate();
 
-  // Build route for country details based on region, subregion, and isoCode
-  const buildCountryRoute = (
-    region?: string,
-    subregion?: string,
-    isoCode?: string,
-  ) => {
-    const r = region ? encodeURIComponent(region.toLowerCase()) : "all";
-    const s = subregion ? encodeURIComponent(subregion.toLowerCase()) : "all";
-    return isoCode
-      ? `/dashboard/countries/${r}/${s}/${isoCode}`
-      : subregion
-        ? `/dashboard/countries/${r}/${s}`
-        : region
-          ? `/dashboard/countries/${r}`
-          : `/dashboard/countries/all`;
-  };
-
   // Navigation handlers
   const handlePanelChange = (panel: string) => navigate(`/dashboard/${panel}`);
 
   // Region and subregion select handlers
   const handleRegionSelect = (region: string) =>
-    navigate(buildCountryRoute(region));
+    navigate(getCountryRoute(region));
   const handleSubregionSelect = (region: string, subregion: string) =>
-    navigate(buildCountryRoute(region, subregion));
+    navigate(getCountryRoute(region, subregion));
 
   // Country select handler
   const handleCountrySelect = (isoCode: string | null) => {
@@ -50,7 +34,7 @@ export function useDashboardNavigation(
     const country = countries?.find((c) => c.isoCode === isoCode);
     if (country) {
       navigate(
-        buildCountryRoute(country.region, country.subregion, country.isoCode),
+        getCountryRoute(country.region, country.subregion, country.isoCode),
       );
     }
   };
@@ -62,9 +46,9 @@ export function useDashboardNavigation(
   const crumbRoutes: Record<string, () => void> = {
     dashboard: () => navigate(`/dashboard/overview`),
     countries: () => navigate(`/dashboard/countries/all`),
-    region: () => navigate(buildCountryRoute(selectedRegion)),
+    region: () => navigate(getCountryRoute(selectedRegion)),
     subregion: () =>
-      navigate(buildCountryRoute(selectedRegion, selectedSubregion)),
+      navigate(getCountryRoute(selectedRegion, selectedSubregion)),
     "currencies/exchange": () => navigate(`/dashboard/currencies/exchange`),
   };
 
