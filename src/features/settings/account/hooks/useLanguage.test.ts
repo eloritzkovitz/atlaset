@@ -25,7 +25,7 @@ vi.mock("i18next", () => ({
 vi.mock("@hooks", () => ({ useDebounce: (v: any) => v }));
 
 let freshUser: any;
-let useAuthMock = vi.fn();
+const useAuthMock = vi.fn();
 
 vi.mock("@features/user", () => ({
   useAuth: () => useAuthMock(),

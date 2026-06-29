@@ -8,7 +8,7 @@ export function setupDefaultReduxMocks() {
   const dispatchMock = vi.fn(() => Promise.resolve());
 
   vi.mocked(useDispatch).mockReturnValue(dispatchMock as any);
-  vi.mocked(useSelector).mockImplementation((_selectorFn) => {
+  vi.mocked(useSelector).mockImplementation(() => {
     return undefined;
   });
 

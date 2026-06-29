@@ -54,7 +54,7 @@ export function exportTripsToCSV(trips: Trip[]) {
   const rows = trips.map((trip) =>
     Object.entries(trip)
       .filter(([key]) => key !== "id")
-      .map(([_, val]) => `"${String(val).replace(/"/g, '""')}"`)
+      .map(([val]) => `"${String(val).replace(/"/g, '""')}"`)
       .join(","),
   );
 
