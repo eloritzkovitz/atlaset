@@ -74,7 +74,7 @@ export function getCategoryDropdownOptions(trips: Trip[] = [], t?: TFunction) {
   const tr = t ?? i18next.t.bind(i18next);
   const categories: TripCategory[] = extractUniqueValues(
     trips,
-    (ttrip) => ttrip.categories,
+    (trip) => trip.categories,
     ALL_TRIP_CATEGORIES,
   );
   return toDropdownOptions(

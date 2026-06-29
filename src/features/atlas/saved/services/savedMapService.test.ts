@@ -1,54 +1,15 @@
 import { describe, it, beforeEach, expect, vi } from "vitest";
-
-vi.mock("@utils/firebase", () => {
-  return {
-    isAuthenticated: vi.fn(),
-    getCurrentUser: vi.fn(),
-    getUserCollection: vi.fn(),
-    __esModule: true,
-  };
-});
-vi.mock("firebase/firestore", () => {
-  return {
-    collection: vi.fn(() => ({ __collection: true })),
-    doc: vi.fn(() => ({ __doc: true })),
-    addDoc: vi.fn(),
-    getDocs: vi.fn(),
-    setDoc: vi.fn(),
-    deleteDoc: vi.fn(),
-    getDoc: vi.fn(),
-    __esModule: true,
-  };
-});
-vi.mock("@app/firebase", () => ({
-  db: {},
-  __esModule: true,
-}));
-vi.mock("@features/user", () => ({
-  logUserActivity: vi.fn(),
-  __esModule: true,
-}));
-
-import * as firebaseUtils from "@utils/firebase";
-import * as firestore from "firebase/firestore";
-import { logUserActivity } from "@features/user";
+import {
+  mockAuthControls as auth,
+  mockFirestoreControls as fs,
+} from "@test-utils/firebaseMockRegistry";
+import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { savedMapsService } from "./savedMapsService";
 import type { SavedMap } from "../types";
+import { logUserActivity } from "../../../../features/user";
 
-const isAuthenticatedMock =
-  firebaseUtils.isAuthenticated as unknown as ReturnType<typeof vi.fn>;
-const getCurrentUserMock =
-  firebaseUtils.getCurrentUser as unknown as ReturnType<typeof vi.fn>;
-const collectionMock = firestore.collection as unknown as ReturnType<
-  typeof vi.fn
->;
-const docMock = firestore.doc as unknown as ReturnType<typeof vi.fn>;
-const getDocsMock = firestore.getDocs as unknown as ReturnType<typeof vi.fn>;
-const setDocMock = firestore.setDoc as unknown as ReturnType<typeof vi.fn>;
-const deleteDocMock = firestore.deleteDoc as unknown as ReturnType<
-  typeof vi.fn
->;
-const getDocMock = vi.mocked(firestore.getDoc);
+vi.mock("../../../../features/user", () => ({ logUserActivity: vi.fn() }));
+vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("savedMapsService", () => {
   const mockUser = { uid: "user123", displayName: "Test User" };
@@ -78,103 +39,95 @@ describe("savedMapsService", () => {
   };
 
   beforeEach(() => {
-    isAuthenticatedMock.mockReset();
-    getCurrentUserMock.mockReset();
-    collectionMock.mockReset();
-    docMock.mockReset();
-    getDocsMock.mockReset();
-    setDocMock.mockReset();
-    deleteDocMock.mockReset();
-    vi.mocked(logUserActivity).mockReset();
-    isAuthenticatedMock.mockReturnValue(true);
-    getCurrentUserMock.mockReturnValue(mockUser);
-  });
-
-  it("should add a saved map for authenticated user", async () => {
-    await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
-    expect(setDocMock).toHaveBeenCalledWith(expect.anything(), mockMap);
-    expect(logUserActivity).toHaveBeenCalledWith(
-      231,
-      expect.objectContaining({ mapId: mockMap.id }),
-      mockUser.uid,
-    );
-  });
-
-  it("should set (create/update) a saved map for authenticated user", async () => {
-    await expect(savedMapsService.set(mockMap)).resolves.not.toThrow();
-    expect(setDocMock).toHaveBeenCalledWith(expect.anything(), mockMap, {
-      merge: true,
+    vi.clearAllMocks();
+    auth.isAuthenticated.mockReturnValue(true);
+    auth.getCurrentUser.mockReturnValue(mockUser as unknown as any);
+    fs.collection.mockReturnValue({
+      id: "mock-collection",
+      path: "mock-collection",
     });
-    expect(logUserActivity).toHaveBeenCalledWith(
-      232,
-      expect.objectContaining({ mapId: mockMap.id }),
-      mockUser.uid,
-    );
+    fs.query.mockImplementation((ref) => ref);
+    fs.doc.mockImplementation((...args: any[]) => {
+      const docId =
+        typeof args[args.length - 1] === "string"
+          ? args[args.length - 1]
+          : "mock-doc-id";
+      return { id: docId, path: `mock-path/${docId}` };
+    });
   });
 
-  it("should throw if not authenticated on set", async () => {
-    isAuthenticatedMock.mockReturnValue(false);
-    await expect(savedMapsService.set(mockMap)).rejects.toThrow();
+  describe("authenticated paths", () => {
+    it("manages map additions, sets, and deletions cleanly alongside activity logging", async () => {
+      await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
+      expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), mockMap);
+      expect(logUserActivity).toHaveBeenCalledWith(
+        231,
+        expect.objectContaining({ mapId: mockMap.id }),
+        mockUser.uid,
+      );
+
+      await expect(savedMapsService.set(mockMap)).resolves.not.toThrow();
+      expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), mockMap, {
+        merge: true,
+      });
+      expect(logUserActivity).toHaveBeenCalledWith(
+        232,
+        expect.objectContaining({ mapId: mockMap.id }),
+        mockUser.uid,
+      );
+
+      await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
+      expect(fs.deleteDoc).toHaveBeenCalled();
+      expect(logUserActivity).toHaveBeenCalledWith(
+        233,
+        expect.objectContaining({ mapId: mockMap.id }),
+        mockUser.uid,
+      );
+    });
+
+    it("fetches single saved map records correctly if they exist", async () => {
+      fs.getDoc.mockResolvedValue({
+        exists: () => true,
+        id: mockMap.id,
+        data: () => ({ ...mockMap }),
+      } as any);
+
+      const result = await savedMapsService.get(mockMap.id);
+      expect(result).toEqual(
+        expect.objectContaining({ id: mockMap.id, name: mockMap.name }),
+      );
+    });
+
+    it("returns null gracefully if a map fetch target does not exist", async () => {
+      fs.getDoc.mockResolvedValue({
+        exists: () => false,
+      } as any);
+      const result = await savedMapsService.get("nonexistent");
+      expect(result).toBeNull();
+    });
+
+    it("loads collective map lists matching user visibility scope", async () => {
+      fs.getDocs.mockResolvedValue(
+        createMockSnapshot([{ id: mockMap.id, data: { ...mockMap } }]) as any,
+      );
+      const result = await savedMapsService.load();
+      expect(result).toEqual([
+        expect.objectContaining({ id: mockMap.id, name: mockMap.name }),
+      ]);
+    });
   });
 
-  it("should get a saved map for authenticated user", async () => {
-    const mockSnapshot = {
-      exists: () => true,
-      id: mockMap.id,
-      data: () => ({ ...mockMap }),
-    };
-    getDocMock.mockResolvedValue(mockSnapshot as any);
-    const result = await savedMapsService.get(mockMap.id);
-    expect(result).toEqual(
-      expect.objectContaining({ id: mockMap.id, name: mockMap.name }),
-    );
-  });
+  describe("unauthenticated error handling constraints", () => {
+    beforeEach(() => {
+      auth.isAuthenticated.mockReturnValue(false);
+    });
 
-  it("should return null if map does not exist on get", async () => {
-    const mockSnapshot = {
-      exists: () => false,
-    };
-    getDocMock.mockResolvedValue(mockSnapshot as any);
-    const result = await savedMapsService.get("nonexistent");
-    expect(result).toBeNull();
-  });
-
-  it("should throw if not authenticated on get", async () => {
-    isAuthenticatedMock.mockReturnValue(false);
-    await expect(savedMapsService.get(mockMap.id)).rejects.toThrow();
-  });
-
-  it("should throw if not authenticated on add", async () => {
-    isAuthenticatedMock.mockReturnValue(false);
-    await expect(savedMapsService.add(mockMap)).rejects.toThrow();
-  });
-
-  it("should delete a saved map for authenticated user", async () => {
-    await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
-    expect(deleteDocMock).toHaveBeenCalled();
-    expect(logUserActivity).toHaveBeenCalledWith(
-      233,
-      expect.objectContaining({ mapId: mockMap.id }),
-      mockUser.uid,
-    );
-  });
-
-  it("should throw if not authenticated on delete", async () => {
-    isAuthenticatedMock.mockReturnValue(false);
-    await expect(savedMapsService.delete(mockMap.id)).rejects.toThrow();
-  });
-
-  it("should load saved maps for authenticated user", async () => {
-    const mockDocs = [{ id: mockMap.id, data: () => ({ ...mockMap }) }];
-    getDocsMock.mockResolvedValue({ docs: mockDocs });
-    const result = await savedMapsService.load();
-    expect(result).toEqual([
-      expect.objectContaining({ id: mockMap.id, name: mockMap.name }),
-    ]);
-  });
-
-  it("should throw if not authenticated on load", async () => {
-    isAuthenticatedMock.mockReturnValue(false);
-    await expect(savedMapsService.load()).rejects.toThrow();
+    it("blocks service requests securely across CRUD layers if credentials fail", async () => {
+      await expect(savedMapsService.set(mockMap)).rejects.toThrow();
+      await expect(savedMapsService.add(mockMap)).rejects.toThrow();
+      await expect(savedMapsService.get(mockMap.id)).rejects.toThrow();
+      await expect(savedMapsService.delete(mockMap.id)).rejects.toThrow();
+      await expect(savedMapsService.load()).rejects.toThrow();
+    });
   });
 });

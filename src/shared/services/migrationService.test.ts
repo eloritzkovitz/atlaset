@@ -71,7 +71,7 @@ import { layersService } from "../../features/atlas/layers/services/layersServic
 import { markersService } from "../../features/atlas/markers/services/markersService";
 import { settingsService } from "../../features/settings/common/services/settingsService";
 import { migrationService } from "./migrationService";
-import { resetAllMocks } from "../test-utils/mockDbAndFirestore";
+import { resetAllMocks } from "../test-utils/firestoreMocks";
 
 describe("migrationService", () => {
   beforeEach(() => {
@@ -81,7 +81,7 @@ describe("migrationService", () => {
       appDb.settings,
       markersService,
       layersService,
-      settingsService
+      settingsService,
     );
   });
 
@@ -90,7 +90,6 @@ describe("migrationService", () => {
       (appDb.markers.count as any).mockResolvedValueOnce(0);
       (appDb.layers.count as any).mockResolvedValueOnce(2);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
-      // (appDb.trips.count as any).mockResolvedValueOnce(0);
       expect(await migrationService.hasGuestData()).toBe(true);
     });
 
@@ -98,14 +97,12 @@ describe("migrationService", () => {
       (appDb.markers.count as any).mockResolvedValueOnce(0);
       (appDb.layers.count as any).mockResolvedValueOnce(0);
       (appDb.settings.count as any).mockResolvedValueOnce(0);
-      // (appDb.trips.count as any).mockResolvedValueOnce(0);
       expect(await migrationService.hasGuestData()).toBe(false);
     });
   });
 
   describe("migrateGuestDataToFirestore", () => {
     it("merges and migrates all guest data, then clears guest DB", async () => {
-      // Markers
       (appDb.markers.toArray as any).mockResolvedValueOnce([{ id: "a" }]);
       vi.spyOn(markersService, "load").mockResolvedValueOnce([
         {
@@ -117,14 +114,12 @@ describe("migrationService", () => {
       ]);
       vi.spyOn(markersService, "save").mockResolvedValueOnce(undefined);
 
-      // Layers
       (appDb.layers.toArray as any).mockResolvedValueOnce([{ id: "x" }]);
       vi.spyOn(layersService, "load").mockResolvedValueOnce([
         { id: "y", name: "", color: "", countries: [], visible: false },
       ]);
       vi.spyOn(layersService, "save").mockResolvedValueOnce(undefined);
 
-      // Settings
       (appDb.settings.get as any).mockResolvedValueOnce({
         id: "main",
         theme: "dark",
@@ -134,24 +129,21 @@ describe("migrationService", () => {
         layers: {},
       });
       vi.spyOn(settingsService, "save").mockResolvedValueOnce(undefined);
-      
+
       await migrationService.migrateGuestDataToFirestore();
 
-      // Markers merged and saved
       expect(markersService.save).toHaveBeenCalledWith([
         { id: "a" },
         { id: "b", name: "", coordinates: [0, 0], visible: false },
       ]);
       expect(appDb.markers.clear).toHaveBeenCalled();
 
-      // Layers merged and saved
       expect(layersService.save).toHaveBeenCalledWith([
         { id: "x" },
         { id: "y", name: "", color: "", countries: [], visible: false },
       ]);
       expect(appDb.layers.clear).toHaveBeenCalled();
 
-      // Settings saved and cleared
       expect(settingsService.save).toHaveBeenCalledWith({
         id: "main",
         theme: "dark",
@@ -172,7 +164,7 @@ describe("migrationService", () => {
       vi.spyOn(layersService, "load").mockResolvedValueOnce([]);
       vi.spyOn(layersService, "save").mockResolvedValueOnce(undefined);
 
-      (appDb.settings.get as any).mockResolvedValueOnce(undefined);     
+      (appDb.settings.get as any).mockResolvedValueOnce(undefined);
 
       await migrationService.migrateGuestDataToFirestore();
 
