@@ -3,6 +3,7 @@ import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
 } from "@test-utils/firebaseMockRegistry";
+import { createMockUser } from "@test-utils/authMocks";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { savedMapsService } from "./savedMapsService";
 import type { SavedMap } from "../types";
@@ -12,7 +13,8 @@ vi.mock("../../../../features/user", () => ({ logUserActivity: vi.fn() }));
 vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("savedMapsService", () => {
-  const mockUser = { uid: "user123", displayName: "Test User" };
+  let freshUser: any;
+
   const mockMap: SavedMap = {
     id: "map1",
     name: "Test Map",
@@ -40,19 +42,24 @@ describe("savedMapsService", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    freshUser = createMockUser();
+
     auth.isAuthenticated.mockReturnValue(true);
-    auth.getCurrentUser.mockReturnValue(mockUser as unknown as any);
+    auth.getCurrentUser.mockReturnValue(freshUser);
+
     fs.collection.mockReturnValue({
       id: "mock-collection",
       path: "mock-collection",
-    });
+    } as any);
+
     fs.query.mockImplementation((ref) => ref);
     fs.doc.mockImplementation((...args: any[]) => {
       const docId =
         typeof args[args.length - 1] === "string"
           ? args[args.length - 1]
           : "mock-doc-id";
-      return { id: docId, path: `mock-path/${docId}` };
+      return { id: docId, path: `mock-path/${docId}` } as any;
     });
   });
 
@@ -63,7 +70,7 @@ describe("savedMapsService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         231,
         expect.objectContaining({ mapId: mockMap.id }),
-        mockUser.uid,
+        freshUser.uid,
       );
 
       await expect(savedMapsService.set(mockMap)).resolves.not.toThrow();
@@ -73,7 +80,7 @@ describe("savedMapsService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         232,
         expect.objectContaining({ mapId: mockMap.id }),
-        mockUser.uid,
+        freshUser.uid,
       );
 
       await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
@@ -81,7 +88,7 @@ describe("savedMapsService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         233,
         expect.objectContaining({ mapId: mockMap.id }),
-        mockUser.uid,
+        freshUser.uid,
       );
     });
 
@@ -99,9 +106,7 @@ describe("savedMapsService", () => {
     });
 
     it("returns null gracefully if a map fetch target does not exist", async () => {
-      fs.getDoc.mockResolvedValue({
-        exists: () => false,
-      } as any);
+      fs.getDoc.mockResolvedValue({ exists: () => false } as any);
       const result = await savedMapsService.get("nonexistent");
       expect(result).toBeNull();
     });

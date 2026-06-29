@@ -101,7 +101,7 @@ describe("markersService", () => {
     beforeEach(() => {
       auth.isAuthenticated.mockReturnValue(true);
       auth.getCurrentUser.mockReturnValue({
-        uid: "abc",
+        uid: "test-user",
         displayName: "TestUser",
       } as any);
     });
@@ -131,7 +131,12 @@ describe("markersService", () => {
         ]) as any,
       );
       const markers = await markersService.load();
-      expect(fs.collection).toHaveBeenCalledWith({}, "users", "abc", "markers");
+      expect(fs.collection).toHaveBeenCalledWith(
+        {},
+        "users",
+        "test-user",
+        "markers",
+      );
       expect(markers).toEqual([
         { id: "x", name: "Marker X" },
         { id: "y", name: "Marker Y" },
@@ -158,7 +163,7 @@ describe("markersService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         220,
         { count: 2, userName: "TestUser" },
-        "abc",
+        "test-user",
       );
     });
 
@@ -174,7 +179,7 @@ describe("markersService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         221,
         { markerId: "bar", itemName: "Bar Marker", userName: "TestUser" },
-        "abc",
+        "test-user",
       );
 
       await markersService.edit({ id: "baz", name: "Baz Marker" } as any);
@@ -188,7 +193,7 @@ describe("markersService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         222,
         { markerId: "baz", itemName: "Baz Marker", userName: "TestUser" },
-        "abc",
+        "test-user",
       );
 
       fs.getDocs.mockResolvedValue(
@@ -203,7 +208,7 @@ describe("markersService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         223,
         { markerId: "baz", itemName: "Baz Marker", userName: "TestUser" },
-        "abc",
+        "test-user",
       );
     });
   });

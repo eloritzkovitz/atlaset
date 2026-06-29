@@ -83,7 +83,7 @@ describe("settingsService", () => {
     beforeEach(() => {
       auth.isAuthenticated.mockReturnValue(true);
       auth.getCurrentUser.mockReturnValue({
-        uid: "abc",
+        uid: "test-user",
         displayName: "Alex",
       } as any);
     });
@@ -100,7 +100,7 @@ describe("settingsService", () => {
       expect(fs.doc).toHaveBeenCalledWith(
         {},
         "users",
-        "abc",
+        "test-user",
         "settings",
         "main",
       );
@@ -135,7 +135,7 @@ describe("settingsService", () => {
       vi.useFakeTimers();
       auth.isAuthenticated.mockReturnValue(true);
       auth.getCurrentUser.mockReturnValue({
-        uid: "abc",
+        uid: "test-user",
         displayName: "Alex",
       } as any);
     });

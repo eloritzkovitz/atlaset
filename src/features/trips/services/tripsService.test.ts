@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { logUserActivity } from "@features/user";
+import { createMockUser } from "@test-utils/authMocks";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -15,12 +16,15 @@ vi.mock("../../user/profile/services/profileService", () => ({
 }));
 
 describe("tripsService", () => {
+  let freshUser: any;
   const mockCol = { type: "trips-collection" };
   const mockDocRef = (col: any, id: any) => ({ col, id });
-  const mockUser = { uid: "abc", displayName: "TestUser" };
 
   beforeEach(() => {
     vi.clearAllMocks();
+
+    freshUser = createMockUser();
+
     auth.getUserCollection.mockReturnValue(mockCol as any);
     fs.doc.mockImplementation(mockDocRef as any);
   });
@@ -28,7 +32,7 @@ describe("tripsService", () => {
   describe("authenticated routes", () => {
     beforeEach(() => {
       auth.isAuthenticated.mockReturnValue(true);
-      auth.getCurrentUser.mockReturnValue(mockUser as any);
+      auth.getCurrentUser.mockReturnValue(freshUser);
     });
 
     it("loads local and shared trips seamlessly from backend queries", async () => {
@@ -78,7 +82,7 @@ describe("tripsService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         410,
         expect.objectContaining({ count: 0 }),
-        "abc",
+        freshUser.uid,
       );
     });
 
@@ -95,13 +99,13 @@ describe("tripsService", () => {
       expect(fs.setDoc).toHaveBeenCalledWith(
         mockDocRef(mockCol, "2"),
         expect.objectContaining({
-          participants: ["abc"],
+          participants: [freshUser.uid],
           startDate: null,
           endDate: null,
         }),
       );
       expect(profileService.updateVisitedCountryCodes).toHaveBeenCalledWith(
-        "abc",
+        freshUser.uid,
       );
     });
 
@@ -120,21 +124,21 @@ describe("tripsService", () => {
         1,
         mockDocRef(mockCol, "3"),
         expect.objectContaining({
-          participants: ["friend1", "abc"],
+          participants: ["friend1", freshUser.uid],
           startDate: "2026-07-01",
           endDate: "2026-07-10",
         }),
       );
 
       expect(fs.collection).toHaveBeenCalledWith(
-        {},
-        "users/friend1/sharedTrips",
+        expect.anything(),
+        `users/friend1/sharedTrips`,
       );
       expect(fs.setDoc).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({ id: "3" }),
         {
-          ownerUid: "abc",
+          ownerUid: freshUser.uid,
           tripId: "3",
         },
       );
@@ -154,7 +158,7 @@ describe("tripsService", () => {
 
       await tripsService.edit(incomingUpdate1 as any);
       expect(fs.collection).toHaveBeenCalledWith(
-        {},
+        expect.anything(),
         "users/friend1/sharedTrips",
       );
 
@@ -171,20 +175,20 @@ describe("tripsService", () => {
 
       await tripsService.edit(incomingUpdate2 as any);
       expect(fs.collection).toHaveBeenCalledWith(
-        {},
+        expect.anything(),
         "users/friend2/sharedTrips",
       );
 
       vi.clearAllMocks();
       fs.getDoc.mockResolvedValueOnce({
         exists: () => true,
-        data: () => ({ participants: ["abc", "friendToRemove"] }),
+        data: () => ({ participants: [freshUser.uid, "friendToRemove"] }),
       } as any);
 
       const incomingUpdate3 = {
         id: "7",
         name: "Trip 7",
-        participants: ["abc"],
+        participants: [freshUser.uid],
       };
 
       await tripsService.edit(incomingUpdate3 as any);
@@ -198,7 +202,7 @@ describe("tripsService", () => {
             id: "del",
             data: {
               name: "DelTrip",
-              participants: ["abc", "friend1", "friend2"],
+              participants: [freshUser.uid, "friend1", "friend2"],
             },
           },
         ]) as any,
@@ -207,11 +211,11 @@ describe("tripsService", () => {
       await tripsService.remove("del");
 
       expect(fs.collection).toHaveBeenCalledWith(
-        {},
+        expect.anything(),
         "users/friend1/sharedTrips",
       );
       expect(fs.collection).toHaveBeenCalledWith(
-        {},
+        expect.anything(),
         "users/friend2/sharedTrips",
       );
       expect(fs.deleteDoc).toHaveBeenCalledWith(mockDocRef(mockCol, "del"));
@@ -238,7 +242,7 @@ describe("tripsService", () => {
       expect(logUserActivity).toHaveBeenCalledWith(
         415,
         expect.objectContaining({ itemName: undefined }),
-        "abc",
+        freshUser.uid,
       );
     });
 

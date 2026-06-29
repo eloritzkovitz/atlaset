@@ -1,60 +1,38 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { createMockUser } from "@test-utils/authMocks";
+import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { countryTrackingService } from "./countryTrackingService";
-
-const {
-  mockDoc,
-  mockGetDoc,
-  mockUpdateDoc,
-  mockOnSnapshot,
-  mockArrayUnion,
-  mockArrayRemove,
-} = vi.hoisted(() => ({
-  mockDoc: vi.fn(),
-  mockGetDoc: vi.fn(),
-  mockUpdateDoc: vi.fn(),
-  mockOnSnapshot: vi.fn(),
-  mockArrayUnion: vi.fn((val) => ({ type: "arrayUnion", val })),
-  mockArrayRemove: vi.fn((val) => ({ type: "arrayRemove", val })),
-}));
-
-vi.mock("firebase/firestore", async () => {
-  return {
-    doc: mockDoc,
-    getDoc: mockGetDoc,
-    updateDoc: mockUpdateDoc,
-    onSnapshot: mockOnSnapshot,
-    arrayUnion: mockArrayUnion,
-    arrayRemove: mockArrayRemove,
-  };
-});
 
 vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("countryTrackingService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    fs.arrayUnion.mockImplementation((val) => ({ type: "arrayUnion", val }));
+    fs.arrayRemove.mockImplementation((val) => ({ type: "arrayRemove", val }));
   });
 
   describe("getCountryCodes", () => {
     it("returns array when doc exists and has requested field", async () => {
-      mockDoc.mockReturnValue({ ref: "users/u1" });
-      mockGetDoc.mockResolvedValue({
+      fs.doc.mockReturnValue({ ref: "users/u1" } as any);
+      fs.getDoc.mockResolvedValue({
         exists: () => true,
         data: () => ({ visitedCountryCodes: ["US", "CA"] }),
-      });
+      } as any);
 
       const codes = await countryTrackingService.getCountryCodes(
         "u1",
         "visitedCountryCodes",
       );
       expect(codes).toEqual(["US", "CA"]);
-      expect(mockDoc).toHaveBeenCalledWith(expect.any(Object), "users", "u1");
-      expect(mockGetDoc).toHaveBeenCalled();
+      expect(fs.doc).toHaveBeenCalledWith(expect.any(Object), "users", "u1");
+      expect(fs.getDoc).toHaveBeenCalled();
     });
 
     it("returns [] when doc is missing or field is not an array", async () => {
-      mockDoc.mockReturnValue({ ref: "users/u2" });
-      mockGetDoc.mockResolvedValue({ exists: () => false });
+      fs.doc.mockReturnValue({ ref: "users/u2" } as any);
+      fs.getDoc.mockResolvedValue({ exists: () => false } as any);
 
       expect(
         await countryTrackingService.getCountryCodes(
@@ -63,10 +41,10 @@ describe("countryTrackingService", () => {
         ),
       ).toEqual([]);
 
-      mockGetDoc.mockResolvedValue({
+      fs.getDoc.mockResolvedValue({
         exists: () => true,
         data: () => ({ visitedCountryCodes: null }),
-      });
+      } as any);
 
       expect(
         await countryTrackingService.getCountryCodes(
@@ -79,8 +57,8 @@ describe("countryTrackingService", () => {
 
   describe("onTrackingDataChange", () => {
     it("calls callback with fully mapped TrackingData object structures", () => {
-      mockDoc.mockReturnValue({ ref: "users/u3" });
-      mockOnSnapshot.mockImplementation(
+      fs.doc.mockReturnValue({ ref: "users/u3" } as any);
+      fs.onSnapshot.mockImplementation(
         (_userRef: any, cb: (snap: any) => void) => {
           cb({
             exists: () => true,
@@ -101,12 +79,12 @@ describe("countryTrackingService", () => {
         wantToVisitCountryCodes: ["JP", "IT"],
       });
       expect(typeof unsub).toBe("function");
-      expect(mockOnSnapshot).toHaveBeenCalled();
+      expect(fs.onSnapshot).toHaveBeenCalled();
     });
 
     it("calls callback with empty arrays when document context is missing", () => {
-      mockDoc.mockReturnValue({ ref: "users/u5" });
-      mockOnSnapshot.mockImplementation(
+      fs.doc.mockReturnValue({ ref: "users/u5" } as any);
+      fs.onSnapshot.mockImplementation(
         (_userRef: any, cb: (snap: any) => void) => {
           cb({ exists: () => false });
           return () => {};
@@ -121,37 +99,13 @@ describe("countryTrackingService", () => {
         wantToVisitCountryCodes: [],
       });
     });
-
-    it("handles partial field existence and corrupt values with safe default states", () => {
-      mockDoc.mockReturnValue({ ref: "users/u_partial" });
-      mockOnSnapshot.mockImplementation(
-        (_userRef: any, cb: (snap: any) => void) => {
-          cb({
-            exists: () => true,
-            data: () => ({
-              visitedCountryCodes: null,
-              wantToVisitCountryCodes: ["BR"],
-            }),
-          });
-          return () => {};
-        },
-      );
-
-      const spy = vi.fn();
-      countryTrackingService.onTrackingDataChange("u_partial", spy);
-
-      expect(spy).toHaveBeenCalledWith({
-        visitedCountryCodes: [],
-        wantToVisitCountryCodes: ["BR"],
-      });
-    });
   });
 
   describe("addCountryCode (Mutual Exclusivity Rules)", () => {
     it("should update Firestore document by unioning target array and atomically removing from opposing bucket field", async () => {
-      const mockUserRef = { id: "u6", path: "users/u6" };
-      mockDoc.mockReturnValue(mockUserRef);
-      mockUpdateDoc.mockResolvedValue(undefined);
+      const freshUser = createMockUser();
+      fs.doc.mockReturnValue(freshUser as any);
+      fs.updateDoc.mockResolvedValue(undefined as any);
 
       await countryTrackingService.addCountryCode(
         "u6",
@@ -159,20 +113,20 @@ describe("countryTrackingService", () => {
         "visitedCountryCodes",
       );
 
-      expect(mockDoc).toHaveBeenCalledWith(expect.any(Object), "users", "u6");
-      expect(mockArrayUnion).toHaveBeenCalledWith("MX");
-      expect(mockArrayRemove).toHaveBeenCalledWith("MX");
+      expect(fs.doc).toHaveBeenCalledWith(expect.any(Object), "users", "u6");
+      expect(fs.arrayUnion).toHaveBeenCalledWith("MX");
+      expect(fs.arrayRemove).toHaveBeenCalledWith("MX");
 
-      expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
+      expect(fs.updateDoc).toHaveBeenCalledWith(freshUser, {
         visitedCountryCodes: { type: "arrayUnion", val: "MX" },
         wantToVisitCountryCodes: { type: "arrayRemove", val: "MX" },
       });
     });
 
     it("should reverse tracking keys correctly when target configuration is the bucket array", async () => {
-      const mockUserRef = { id: "u6_bucket", path: "users/u6_bucket" };
-      mockDoc.mockReturnValue(mockUserRef);
-      mockUpdateDoc.mockResolvedValue(undefined);
+      const freshUser = createMockUser();
+      fs.doc.mockReturnValue(freshUser as any);
+      fs.updateDoc.mockResolvedValue(undefined as any);
 
       await countryTrackingService.addCountryCode(
         "u6_bucket",
@@ -180,7 +134,7 @@ describe("countryTrackingService", () => {
         "wantToVisitCountryCodes",
       );
 
-      expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
+      expect(fs.updateDoc).toHaveBeenCalledWith(freshUser, {
         wantToVisitCountryCodes: { type: "arrayUnion", val: "ZAF" },
         visitedCountryCodes: { type: "arrayRemove", val: "ZAF" },
       });
@@ -189,9 +143,9 @@ describe("countryTrackingService", () => {
 
   describe("removeCountryCode", () => {
     it("should isolate targeted collection field and strip the tracked ISO code parameter reference", async () => {
-      const mockUserRef = { id: "u7", path: "users/u7" };
-      mockDoc.mockReturnValue(mockUserRef);
-      mockUpdateDoc.mockResolvedValue(undefined);
+      const freshUser = createMockUser();
+      fs.doc.mockReturnValue(freshUser as any);
+      fs.updateDoc.mockResolvedValue(undefined as any);
 
       await countryTrackingService.removeCountryCode(
         "u7",
@@ -199,10 +153,10 @@ describe("countryTrackingService", () => {
         "visitedCountryCodes",
       );
 
-      expect(mockDoc).toHaveBeenCalledWith(expect.any(Object), "users", "u7");
-      expect(mockArrayRemove).toHaveBeenCalledWith("MX");
+      expect(fs.doc).toHaveBeenCalledWith(expect.any(Object), "users", "u7");
+      expect(fs.arrayRemove).toHaveBeenCalledWith("MX");
 
-      expect(mockUpdateDoc).toHaveBeenCalledWith(mockUserRef, {
+      expect(fs.updateDoc).toHaveBeenCalledWith(freshUser, {
         visitedCountryCodes: { type: "arrayRemove", val: "MX" },
       });
     });

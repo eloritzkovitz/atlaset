@@ -96,7 +96,7 @@ describe("layersService", () => {
     beforeEach(() => {
       mockAuthControls.isAuthenticated.mockReturnValue(true);
       mockAuthControls.getCurrentUser.mockReturnValue({
-        uid: "abc",
+        uid: "test-user",
         displayName: "TestUser",
       } as any);
     });
@@ -125,7 +125,7 @@ describe("layersService", () => {
         createMockSnapshot([{ id: "x", data: { name: "Layer X" } }]) as any,
       );
       const layers = await layersService.load();
-      expect(fs.collection).toHaveBeenCalledWith({}, "users", "abc", "layers");
+      expect(fs.collection).toHaveBeenCalledWith({}, "users", "test-user", "layers");
       expect(layers).toContainEqual(
         expect.objectContaining({ id: "x", name: "Layer X" }),
       );

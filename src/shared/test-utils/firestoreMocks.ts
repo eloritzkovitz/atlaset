@@ -3,19 +3,49 @@
  */
 
 import { vi } from "vitest";
+import { authState } from "./authMocks";
+
+export const dbBridge = {
+  collection: vi.fn(),
+};
 
 // Mock authentication utilities
 export const createAuthMocks = () => ({
-  isAuthenticated: vi.fn().mockReturnValue(true),
-  getCurrentUser: vi
-    .fn()
-    .mockReturnValue({ uid: "test-user", displayName: "Test User" }),
-  getUserCollection: vi.fn(),
+  isAuthenticated: vi.fn(() => authState.currentUser !== null),
+  getCurrentUser: vi.fn(() => authState.currentUser),
+  getUserCollection: vi.fn((subcollection: string) => {
+    if (!authState.currentUser) {
+      throw new Error("User is not authenticated");
+    }
+    return dbBridge.collection(subcollection);
+  }),
+});
+
+// Mock native Firebase Auth methods
+export const createNativeAuthMocks = () => ({
+  signInWithEmailAndPassword: vi.fn(),
+  signOut: vi.fn(() => {
+    authState.currentUser = null;
+    return Promise.resolve();
+  }),
+  setPersistence: vi.fn(),
+  createUserWithEmailAndPassword: vi.fn(),
+  sendPasswordResetEmail: vi.fn(),
+  updateProfile: vi.fn(),
+  signInWithPopup: vi.fn(),
+  deleteUser: vi.fn(),
+  GoogleAuthProvider: vi.fn(),
+  getAuth: vi.fn(() => authState),
+  auth: authState,
+  browserLocalPersistence: "local",
+  browserSessionPersistence: "session",
 });
 
 // Mock Firestore utilities
 export const createFirestoreMocks = () => ({
-  addDoc: vi.fn(),
+  addDoc: vi.fn(),  
+  arrayRemove: vi.fn(),
+  arrayUnion: vi.fn(),
   collection: vi.fn(),
   deleteDoc: vi.fn(),
   doc: vi.fn(),
@@ -23,6 +53,7 @@ export const createFirestoreMocks = () => ({
   getDocs: vi.fn(),
   getFirestore: vi.fn(),
   limit: vi.fn(),
+  onSnapshot: vi.fn(),
   orderBy: vi.fn(),
   query: vi.fn(),
   setDoc: vi.fn(),

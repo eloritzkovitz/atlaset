@@ -19,7 +19,6 @@ export const saveSettings = createAsyncThunk(
     const state = (getState() as RootState).settings.settings;
     const newSettings = { ...state, ...updates, id: "main" };
 
-    // Avoid unnecessary saves: if merged settings are identical to current state, skip persistence
     try {
       const currentJson = JSON.stringify(state || {});
       const newJson = JSON.stringify(newSettings || {});
@@ -89,5 +88,5 @@ const settingsSlice = createSlice({
 export const selectSettings = (state: RootState) => state.settings.settings;
 export const selectSettingsLoading = (state: RootState) =>
   state.settings.loading;
-// selectSettingsReady is now in ../selectors
+
 export default settingsSlice.reducer;

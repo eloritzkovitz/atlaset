@@ -1,9 +1,11 @@
+import i18n from "i18next";
 import { describe, it, expect, vi } from "vitest";
+import { authState, createMockUser } from "@test-utils/authMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
-import { authState, mockUser } from "@test-utils/mockUser";
 import * as firebaseUtils from "@utils/firebase";
 import * as activityUtils from "./activity";
-import i18n from "i18next";
+
+const mockUser = createMockUser();
 
 function mockI18nTemplate(key: number | string, template: string) {
   vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
