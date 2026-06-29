@@ -10,7 +10,6 @@ export { BrandingWithLabel } from "./branding/BrandingWithLabel";
 
 // Card components
 export { Card } from "./ui/Card/Card";
-export { DashboardCard } from "./ui/Card/DashboardCard";
 
 // Chip components
 export { Chip } from "./ui/Chip/Chip";

@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FaFlag, FaClockRotateLeft, FaCalendarDay } from "react-icons/fa6";
-import { DashboardCard } from "@components";
+import { Card, Chip } from "@components";
 import { CountryWithFlag } from "@features/countries";
-import { Chip } from "@components";
 import { useTripHistoryStats } from "../hooks/useTripHistoryStats";
 import { TripList } from "./TripList";
 
@@ -14,7 +13,7 @@ export function TripHistory() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {/* Most visited country card */}
-      <DashboardCard
+      <Card
         icon={FaFlag}
         iconClass="text-yellow-600"
         title={t("statistics.history.mostVisited.title", {
@@ -42,10 +41,10 @@ export function TripHistory() {
             <span className="text-muted">—</span>
           )}
         </div>
-      </DashboardCard>
+      </Card>
 
       {/* Recent trips */}
-      <DashboardCard
+      <Card
         icon={FaClockRotateLeft}
         iconClass="text-pink-400"
         title={t("statistics.history.recent.title", {
@@ -56,10 +55,10 @@ export function TripHistory() {
         })}
       >
         <TripList trips={recentTrips} className="mt-4" />
-      </DashboardCard>
+      </Card>
 
       {/* First trip */}
-      <DashboardCard
+      <Card
         icon={FaCalendarDay}
         iconClass="text-green-400"
         title={t("statistics.history.first.title", {
@@ -70,10 +69,10 @@ export function TripHistory() {
         })}
       >
         <TripList trips={firstTrip ? [firstTrip] : []} className="mt-2" />
-      </DashboardCard>
+      </Card>
 
       {/* Last trip */}
-      <DashboardCard
+      <Card
         icon={FaCalendarDay}
         iconClass="text-indigo-400"
         title={t("statistics.history.last.title", {
@@ -84,7 +83,7 @@ export function TripHistory() {
         })}
       >
         <TripList trips={lastTrip ? [lastTrip] : []} className="mt-2" />
-      </DashboardCard>
+      </Card>
     </div>
   );
 }

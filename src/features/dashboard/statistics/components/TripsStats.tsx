@@ -9,7 +9,7 @@ import {
   FaSuitcaseRolling,
 } from "react-icons/fa6";
 import type { IconType } from "react-icons/lib";
-import { DashboardCard, PieLegendCard, SegmentedToggle } from "@components";
+import { Card, PieLegendCard, SegmentedToggle } from "@components";
 import {
   TRIP_TYPE_COLORS,
   TRIP_TYPE_LABELS,
@@ -99,7 +99,7 @@ export function TripsStats() {
   return (
     <div className="grid gap-6 md:grid-cols-2">
       {/* Trips Overview */}
-      <DashboardCard
+      <Card
         icon={FaSuitcaseRolling}
         iconClass="text-blue-500"
         title={t("statistics.overview.title", {
@@ -141,10 +141,10 @@ export function TripsStats() {
             ))}
           </div>
         </div>
-      </DashboardCard>
+      </Card>
 
       {/* Trip Breakdown Pie Chart */}
-      <DashboardCard
+      <Card
         icon={FaChartPie}
         iconClass={"text-purple-400"}
         title={t("statistics.overview.breakdown.title", {
@@ -218,10 +218,10 @@ export function TripsStats() {
             </div>
           </div>
         </div>
-      </DashboardCard>
+      </Card>
 
       {/* Longest trip card */}
-      <DashboardCard
+      <Card
         icon={FaClock}
         iconClass="text-indigo-600"
         title={t("statistics.longest.title", { defaultValue: "Longest trip" })}
@@ -234,10 +234,10 @@ export function TripsStats() {
         ) : (
           <div className="text-4xl font-extrabold text-indigo-400 mb-1">—</div>
         )}
-      </DashboardCard>
+      </Card>
 
       {/* Shortest trip card */}
-      <DashboardCard
+      <Card
         icon={FaRegClock}
         iconClass="text-pink-600"
         title={t("statistics.overview.shortest.title", {
@@ -252,10 +252,10 @@ export function TripsStats() {
         ) : (
           <div className="text-4xl font-extrabold text-pink-400 mb-1">—</div>
         )}
-      </DashboardCard>
+      </Card>
 
       {/* Average trip duration */}
-      <DashboardCard
+      <Card
         icon={FaStar}
         iconClass="text-yellow-400"
         title={t("statistics.overview.average.title", {
@@ -270,10 +270,10 @@ export function TripsStats() {
             ? `${averageTripDuration.toFixed(1)} ${t("statistics.days", { defaultValue: "days" })}`
             : "—"}
         </div>
-      </DashboardCard>
+      </Card>
 
       {/* Total days spent traveling */}
-      <DashboardCard
+      <Card
         icon={FaClockRotateLeft}
         iconClass="text-sky-400"
         title={t("statistics.overview.totalDays.title", {
@@ -288,7 +288,7 @@ export function TripsStats() {
             ? `${totalDaysTraveling} ${t("statistics.overview.days", { defaultValue: "days" })}`
             : "—"}
         </div>
-      </DashboardCard>
+      </Card>
     </div>
   );
 }
