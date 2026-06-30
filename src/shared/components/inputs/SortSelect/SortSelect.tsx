@@ -11,7 +11,7 @@ import type { Option, OptionGroup } from "@types";
 import { getDirectionOptions } from "./directionOptions";
 import { ActionButton } from "../Button/ActionButton";
 import { OptionItem } from "../DropdownSelectInput/OptionItem";
-import { SectionHeader } from "../../layout/SectionHeader";
+import { SectionHeader } from "../../display/SectionHeader";
 import { Separator } from "../../layout/Separator";
 import { Menu } from "../../navigation/Menu/Menu";
 

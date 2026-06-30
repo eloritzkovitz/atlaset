@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { SelectionListModal } from "@components";
+import { ModalSelect } from "@components";
 import { ICONS } from "@constants/icons";
 import { UserAvatar, type UserProfile } from "@features/user";
 
@@ -27,7 +27,7 @@ export function ParticipantSelectModal({
   const { t } = useTranslation(["trips", "common"]);
 
   return (
-    <SelectionListModal<ParticipantOption>
+    <ModalSelect<ParticipantOption>
       isOpen={isOpen}
       title={
         <>

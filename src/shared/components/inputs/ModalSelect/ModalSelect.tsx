@@ -11,7 +11,7 @@ import {
 import { ICONS } from "@constants/icons";
 import { filterBySearch } from "@utils/filter";
 
-interface SelectionListModalProps<T> {
+interface ModalSelectProps<T> {
   isOpen: boolean;
   title: React.ReactNode;
   items: T[];
@@ -34,7 +34,7 @@ interface SelectionListModalProps<T> {
   isItemDisabled?: (item: T) => boolean;
 }
 
-export function SelectionListModal<T>({
+export function ModalSelect<T>({
   isOpen,
   title,
   items,
@@ -52,9 +52,9 @@ export function SelectionListModal<T>({
   multiple = true,
   disabled = false,
   isItemDisabled,
-}: SelectionListModalProps<T>) {
+}: ModalSelectProps<T>) {
   const { t } = useTranslation("common");
-  const [internalSearch, setInternalSearch] = useState(""); // Only used if parent doesn't control search state
+  const [internalSearch, setInternalSearch] = useState("");
 
   // Determine whether to use controlled (parent) or uncontrolled (internal) search values
   const currentSearchValue =

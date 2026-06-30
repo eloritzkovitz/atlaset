@@ -1,5 +1,5 @@
 import { MenuButton } from "./MenuButton";
-import { CollapsibleHeader } from "../../layout/CollapsibleHeader";
+import { CollapsibleHeader } from "../../display/Collapsible/CollapsibleHeader";
 
 interface SubmenuSectionProps {
   icon: React.ReactNode;

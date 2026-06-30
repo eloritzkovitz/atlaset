@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { QualifierSearch, SelectionListModal } from "@components";
+import { ModalSelect, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
 import { useVisitedCountries } from "@features/visits";
 import { filterBySearch } from "@utils/filter";
@@ -67,7 +67,7 @@ export function CountrySelectModal({
   })();
 
   return (
-    <SelectionListModal<Country>
+    <ModalSelect<Country>
       isOpen={isOpen}
       title={
         <>

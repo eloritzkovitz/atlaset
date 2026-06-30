@@ -3,12 +3,14 @@ export { Card } from "./display/Card/Card";
 export { Checklist } from "./display/Checklist/Checklist";
 export { Chip } from "./display/Chip/Chip";
 export { ChipList } from "./display/Chip/ChipList";
+export { CollapsibleHeader } from "./display/Collapsible/CollapsibleHeader";
 export { ColorDot } from "./display/ColorDot";
 export { KeyCombo } from "./display/KeyCombo";
 export { getBaseMarkdownComponents } from "./display/MarkdownRenderer/MarkdownComponents";
 export { MarkdownFileRenderer } from "./display/MarkdownRenderer/MarkdownFileRenderer";
 export { PanelListItem } from "./display/PanelListItem/PanelListItem";
 export { PieLegendCard } from "./display/PieChart/PieLegendCard";
+export { SectionHeader } from "./display/SectionHeader";
 export { SortableFilterHeader } from "./display/Table/SortableFilterHeader";
 export { Table, type TableColumn } from "./display/Table/Table";
 export { TableCell } from "./display/Table/TableCell";
@@ -31,6 +33,7 @@ export { FloatingActionButton } from "./inputs/Button/FloatingActionButton";
 export { FormField } from "./inputs/FormField/FormField";
 export { HamburgerButton } from "./inputs/Button/HamburgerButton";
 export { InputBox } from "./inputs/InputBox/InputBox";
+export { ModalSelect } from "./inputs/ModalSelect/ModalSelect";
 export { NumberInput } from "./inputs/NumberInput/NumberInput";
 export { PasswordField } from "./inputs/FormField/PasswordField";
 export { QualifierSearch } from "./inputs/SearchInput/QualifierSearch";
@@ -54,17 +57,15 @@ export { DashboardIcon } from "./media/icons/DashboardIcon";
 export { DirectionalIcon } from "./media/icons/DirectionalIcon";
 
 // Layout components
-export { CollapsibleHeader } from "./layout/CollapsibleHeader";
 export { Panel } from "./layout/Panel/Panel";
 export { PanelHeader } from "./layout/Panel/PanelHeader";
-export { SectionHeader } from "./layout/SectionHeader";
 export { Separator } from "./layout/Separator";
 
 // Navigation components
 export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
 export { AppLinks } from "./navigation/AppLinks";
 export { AuthButtons } from "./navigation/AuthButtons";
-export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs";
+export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
 export { GitHubButton } from "./navigation/GitHubButton";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
@@ -82,6 +83,5 @@ export { FloatingPortal } from "./overlay/Tooltip/FloatingPortal";
 export { Modal } from "./overlay/Modal/Modal";
 export { ModalActions } from "./overlay/Modal/ModalActions";
 export { PwaUpdateUiHint } from "./overlay/UiHint/PwaUpdateUiHint";
-export { SelectionListModal } from "./overlay/Modal/SelectionListModal";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";
 export { UIHintContainer } from "./overlay/UiHint/UiHintContainer";
