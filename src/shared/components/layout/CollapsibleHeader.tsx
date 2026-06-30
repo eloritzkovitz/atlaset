@@ -1,7 +1,7 @@
 import React, { type ReactNode } from "react";
-import { useLanguage } from "@features/settings";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa6";
-import { ActionButton } from "../action/ActionButton";
+import { useLanguage } from "@features/settings";
+import { ActionButton } from "../inputs/Button/ActionButton";
 
 interface CollapsibleHeaderProps {
   icon: React.ReactNode;

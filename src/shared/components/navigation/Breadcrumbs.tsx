@@ -1,5 +1,5 @@
-import { DirectionalIcon } from "../ui/DirectionalIcon";
 import { useTranslation } from "react-i18next";
+import { DirectionalIcon } from "../media/icons/DirectionalIcon";
 
 export interface Crumb {
   label: string;

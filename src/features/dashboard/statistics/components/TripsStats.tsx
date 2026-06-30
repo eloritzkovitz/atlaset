@@ -24,7 +24,7 @@ import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
 import { useTripsStats } from "../hooks/useTripsStats";
 
-const PieChart = lazy(() => import("@components/chart/PieChart"));
+const PieChart = lazy(() => import("@components/display/PieChart/PieChart"));
 
 export function TripsStats() {
   const { t } = useTranslation("dashboard");

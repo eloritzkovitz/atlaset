@@ -7,7 +7,7 @@ import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 import { translateColumns } from "../utils/columns";
 
-const PieChart = lazy(() => import("@components/chart/PieChart"));
+const PieChart = lazy(() => import("@components/display/PieChart/PieChart"));
 
 const MONTH_COLORS = [
   "#22d3ee",

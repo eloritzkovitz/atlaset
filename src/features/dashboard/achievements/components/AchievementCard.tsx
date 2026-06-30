@@ -1,14 +1,14 @@
-import { AchievementProgressChip } from "./AchievementProgressChip";
-import { Checklist } from "./Checklist";
-import { AchievementStatusChip } from "./AchievementStatusChip";
-import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
+import { Checklist } from "@components";
 import { CountryFlagGrid, type Country } from "@features/countries";
 import type { Trip } from "@features/trips";
 import { AchievementIcon } from "./AchievementIcon";
+import { AchievementProgressChip } from "./AchievementProgressChip";
+import { AchievementStatusChip } from "./AchievementStatusChip";
 import { AchievementTierChip } from "./AchievementTierChip";
+import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
+import type { Achievement, AchievementStatus } from "../types";
 import { getDisplayFlagCountries } from "../utils/achievementsDisplay";
 import { getTier, getCurrentTier } from "../utils/achievementsTiers";
-import type { Achievement, AchievementStatus } from "../types";
 
 interface AchievementCardProps {
   achievement: Achievement;

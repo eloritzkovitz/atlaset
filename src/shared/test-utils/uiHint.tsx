@@ -1,6 +1,6 @@
 import React from "react";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { UIHintContainer } from "@components/ui/UiHint/UiHintContainer";
+import { UIHintContainer } from "@components/overlay/UiHint/UiHintContainer";
 import { render } from "@testing-library/react";
 
 export const AllProviders = ({ children }: { children: React.ReactNode }) => (
