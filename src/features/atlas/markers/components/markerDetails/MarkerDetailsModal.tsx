@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton, Modal, PanelHeader } from "@components";
+import { Modal, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import type { Marker } from "../../types";
 
@@ -58,22 +58,15 @@ function MarkerDetailsContent({
 
   return (
     <div className="relative overflow-visible">
-      <PanelHeader
+      <ModalHeader
+        onClose={onClose}
         title={
           <span className="flex items-center gap-2">
             <ICONS.markers />
             {marker.name}
           </span>
         }
-      >
-        <ActionButton
-          onClick={onClose}
-          ariaLabel={t("markers.close", "Close")}
-          title={t("markers.close", "Close")}
-          rounded
-          icon={<ICONS.close />}
-        />
-      </PanelHeader>
+      />
       <div className="mb-4 text-muted">
         {marker.description ||
           t("markers.noDescription", "No description provided.")}

@@ -43,16 +43,15 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
         <div className="flex items-center gap-2">
           <ActionButton
             onClick={() => setShowRequests((prev) => !prev)}
-            ariaLabel={showRequests ? t("friends.showFriends") : t("friends.showRequests")}
-            title={showRequests ? t("friends.friends") : t("friends.friendRequests")}
+            ariaLabel={
+              showRequests
+                ? t("friends.showFriends")
+                : t("friends.showRequests")
+            }
+            title={
+              showRequests ? t("friends.friends") : t("friends.friendRequests")
+            }
             icon={showRequests ? <ICONS.friends /> : <ICONS.friendRequests />}
-            rounded
-          />
-          <ActionButton
-            onClick={onClose}
-            ariaLabel={t("common:actions.close")}
-            title={t("common:actions.close")}
-            icon={<ICONS.close className="text-2xl" />}
             rounded
           />
         </div>

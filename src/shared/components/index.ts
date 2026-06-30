@@ -57,8 +57,6 @@ export { DashboardIcon } from "./media/icons/DashboardIcon";
 export { DirectionalIcon } from "./media/icons/DirectionalIcon";
 
 // Layout components
-export { Panel } from "./layout/Panel/Panel";
-export { PanelHeader } from "./layout/Panel/PanelHeader";
 export { Separator } from "./layout/Separator";
 
 // Navigation components
@@ -78,10 +76,13 @@ export * from "./navigation/Menu/menuUtils";
 
 // Overlay components
 export { ConfirmModal } from "./overlay/Modal/ConfirmModal";
+export { DialogHeader } from "./overlay/DialogHeader/DialogHeader";
 export { DrawerPanel } from "./overlay/Drawer/DrawerPanel";
 export { FloatingPortal } from "./overlay/Tooltip/FloatingPortal";
 export { Modal } from "./overlay/Modal/Modal";
 export { ModalActions } from "./overlay/Modal/ModalActions";
+export { ModalHeader } from "./overlay/Modal/ModalHeader";
+export { Panel } from "./overlay/Panel/Panel";
 export { PwaUpdateUiHint } from "./overlay/UiHint/PwaUpdateUiHint";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";
 export { UIHintContainer } from "./overlay/UiHint/UiHintContainer";

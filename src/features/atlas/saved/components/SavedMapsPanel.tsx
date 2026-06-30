@@ -51,13 +51,6 @@ export function SavedMapsPanel() {
               rounded
             />
           )}
-          <ActionButton
-            onClick={toggleSavedMaps}
-            ariaLabel={t("savedMaps.close")}
-            title={t("savedMaps.close")}
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
         </>
       }
     >

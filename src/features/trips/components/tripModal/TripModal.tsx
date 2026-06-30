@@ -1,15 +1,14 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActionButton,
   Checkbox,
   DateSelect,
   FormField,
   InputBox,
   Modal,
   ModalActions,
+  ModalHeader,
   NumberInput,
-  PanelHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import {
@@ -27,8 +26,8 @@ import { ParticipantsSection } from "./ParticipantsSection";
 import { TagsSection } from "./TagsSection";
 import { TagSelectModal } from "./TagSelectModal";
 import { useTripFilters } from "../../hooks/useTripFilters";
-import { getAutoTripStatus } from "../../utils/trips";
 import type { Trip, TripCategory, TripTag } from "../../types";
+import { getAutoTripStatus } from "../../utils/trips";
 import "./TripModal.css";
 
 interface TripModalProps {
@@ -129,23 +128,14 @@ export function TripModal({
         }
         draggable
       >
-        <PanelHeader
+        <ModalHeader
           title={
             <>
               <ICONS.trips />
               {isEditing ? t("modal.titleEdit") : t("modal.titleAdd")}
             </>
           }
-          showSeparator={true}
-        >
-          <ActionButton
-            onClick={onClose}
-            ariaLabel={t("common:actions.close")}
-            title={t("common:actions.close")}
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
-        </PanelHeader>
+        />
         <form
           className="flex flex-col w-full h-full"
           onSubmit={(e) => {

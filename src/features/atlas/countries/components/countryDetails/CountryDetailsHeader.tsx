@@ -1,6 +1,4 @@
-import { useTranslation } from "react-i18next";
-import { PanelHeader, ActionButton } from "@components";
-import { ICONS } from "@constants/icons";
+import { ActionButton, ModalHeader } from "@components";
 import {
   CountryWithFlag,
   VisitedStatusIndicator,
@@ -17,8 +15,6 @@ export function CountryDetailsHeader({
   country,
   onClose,
 }: CountryDetailsHeaderProps) {
-  const { t } = useTranslation("atlas");
-
   // Get action configurations based on country and context
   const actionsObj = useCountryActions({
     country,
@@ -31,7 +27,7 @@ export function CountryDetailsHeader({
   ].filter(Boolean);
 
   return (
-    <PanelHeader
+    <ModalHeader
       title={
         <span className="flex items-center gap-2 break-words max-w-[16vw]">
           <CountryWithFlag
@@ -43,7 +39,7 @@ export function CountryDetailsHeader({
           <VisitedStatusIndicator country={country} />
         </span>
       }
-      showSeparator
+      onClose={onClose}
     >
       <div className="flex gap-2">
         {displayedActions.map((action, idx) => (
@@ -57,15 +53,7 @@ export function CountryDetailsHeader({
             rounded
           />
         ))}
-
-        <ActionButton
-          onClick={onClose}
-          ariaLabel={t("common:actions.close")}
-          title={t("common:actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
       </div>
-    </PanelHeader>
+    </ModalHeader>
   );
 }

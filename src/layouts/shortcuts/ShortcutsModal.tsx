@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionButton, Modal, PanelHeader } from "@components";
+import { Modal, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { categoryColumns, keyCommands } from "@constants/keyCommands";
 import { useUI } from "@contexts/UIContext";
@@ -31,23 +31,15 @@ export function ShortcutsModal() {
       position="center"
       className="min-w-[1000px] max-w-[1200px] max-h-[90vh]"
     >
-      <PanelHeader
+      <ModalHeader
         title={
           <>
             <ICONS.shortcuts />
             {t("shortcuts.title", "Keyboard Shortcuts")}
           </>
         }
-        showSeparator={true}
-      >
-        <ActionButton
-          onClick={closeShortcuts}
-          ariaLabel={t("actions.close")}
-          title={t("actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full">
         {categoryColumns.map((categories, colIdx) => (
           <div key={colIdx} className="w-full">
@@ -55,7 +47,10 @@ export function ShortcutsModal() {
               groupedCommands[category] ? (
                 <div key={category} className="mb-6">
                   <div className="text-lg font-bold mb-2 text-start">
-                    {t(`shortcuts.categories.${canonicalKey(category)}`, category)}
+                    {t(
+                      `shortcuts.categories.${canonicalKey(category)}`,
+                      category,
+                    )}
                   </div>
                   <table className="w-full mx-auto text-start">
                     <tbody>

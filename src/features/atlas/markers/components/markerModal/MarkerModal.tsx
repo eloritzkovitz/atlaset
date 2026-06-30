@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActionButton,
   ColorSelectInput,
   FormField,
   Modal,
   ModalActions,
-  PanelHeader,
+  ModalHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import type { Marker } from "../../types";
@@ -51,7 +50,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       disableClose={colorModalOpen}
       draggable
     >
-      <PanelHeader
+      <ModalHeader
         title={
           <>
             <ICONS.markers />
@@ -60,15 +59,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
               : t("markers.addTitle", "Add Marker")}
           </>
         }
-      >
-        <ActionButton
-          onClick={onClose}
-          ariaLabel="Close"
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-          title={t("common:actions.close")}
-        />
-      </PanelHeader>
+      />
       <form
         className="space-y-4"
         onSubmit={(e) => {

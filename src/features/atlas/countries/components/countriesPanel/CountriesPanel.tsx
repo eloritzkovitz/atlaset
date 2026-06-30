@@ -199,13 +199,6 @@ export function CountriesPanel({
               icon={<ICONS.filters />}
               rounded
             />
-            <ActionButton
-              onClick={toggleCountries}
-              ariaLabel={t("common:actions.close")}
-              title={t("common:actions.close")}
-              icon={<ICONS.close className="text-2xl" />}
-              rounded
-            />
           </>
         }
       >
@@ -218,7 +211,7 @@ export function CountriesPanel({
             sovereignOnly={sovereignOnly}
             setSovereignOnly={setSovereignOnly}
             visitedOnly={showVisitedOnly}
-            setVisitedOnly={setShowVisitedOnly}            
+            setVisitedOnly={setShowVisitedOnly}
             wantToVisitOnly={wantToVisitOnly}
             setWantToVisitOnly={setWantToVisitOnly}
             allCount={allCount}
@@ -258,7 +251,7 @@ export function CountriesPanel({
           sovereignOnly={sovereignOnly}
           selectedVisited={selectedVisited}
           setSelectedVisited={setSelectedVisited}
-          visitedOnly={showVisitedOnly}          
+          visitedOnly={showVisitedOnly}
           minVisitCount={minVisitCount}
           setMinVisitCount={setMinVisitCount}
           maxVisitCount={maxVisitCount}

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ActionButton, Panel, Separator } from "@components";
+import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useMapView } from "@contexts/MapViewContext";
@@ -108,15 +108,6 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       }
       show={showExport}
       onHide={closePanel}
-      headerActions={
-        <ActionButton
-          onClick={closePanel}
-          ariaLabel={t("common:actions.close")}
-          title={t("common:actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      }
     >
       <div>
         <ExportOptionsSection

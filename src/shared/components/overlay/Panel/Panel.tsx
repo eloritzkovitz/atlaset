@@ -1,9 +1,8 @@
-import React from "react";
-import type { ReactNode } from "react";
+import React, { type ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useLanguage } from "@features/settings";
 import { usePanelHide, useScreenSize } from "@hooks";
-import { PanelHeader } from "./PanelHeader";
+import { DialogHeader } from "../DialogHeader/DialogHeader";
 import "./Panel.css";
 
 interface PanelProps {
@@ -19,6 +18,7 @@ interface PanelProps {
   showSeparator?: boolean;
   scrollable?: boolean;
   position?: "left" | "right";
+  showCloseButton?: boolean;
 }
 
 /** Renders a panel component. */
@@ -35,6 +35,7 @@ export function Panel({
   showSeparator = true,
   scrollable = true,
   position = "left",
+  showCloseButton = true,
 }: PanelProps) {
   usePanelHide({ show, onHide, escEnabled });
 
@@ -75,9 +76,14 @@ export function Panel({
           : { width, minWidth: width, ...style }
       }
     >
-      <PanelHeader title={title} showSeparator={showSeparator}>
+      <DialogHeader
+        title={title}
+        showSeparator={showSeparator}
+        onClose={onHide}
+        showCloseButton={showCloseButton}
+      >
         {headerActions}
-      </PanelHeader>
+      </DialogHeader>
       <div
         className={`flex-1 min-h-0 px-4 pb-8${isMobile ? " pb-20" : ""}${
           scrollable ? " overflow-y-auto" : ""

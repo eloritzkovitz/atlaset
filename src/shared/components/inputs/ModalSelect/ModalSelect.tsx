@@ -5,10 +5,9 @@ import {
   Checkbox,
   EmptyListMessage,
   Modal,
-  PanelHeader,
+  ModalHeader,
   SearchInput,
 } from "@components";
-import { ICONS } from "@constants/icons";
 import { filterBySearch } from "@utils/filter";
 
 interface ModalSelectProps<T> {
@@ -91,13 +90,7 @@ export function ModalSelect<T>({
       className="modal shadow-lg w-[500px] max-h-[80vh] flex flex-col"
       draggable
     >
-      <PanelHeader title={title}>
-        <ActionButton
-          onClick={onClose}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      <ModalHeader title={title} />
 
       <div className="flex flex-col h-full px-4 gap-4 pb-4">
         {renderSearch ? (

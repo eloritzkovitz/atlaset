@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ActionButton,
   Checkbox,
   ColorSelectInput,
   FormField,
   Modal,
   ModalActions,
-  PanelHeader,
+  ModalHeader,
   SelectInput,
 } from "@components";
 import { ICONS } from "@constants/icons";
@@ -92,7 +91,7 @@ export function LayerModal({
         draggable
       >
         <div className="flex-shrink-0">
-          <PanelHeader
+          <ModalHeader
             title={
               <>
                 <ICONS.layers />
@@ -101,16 +100,7 @@ export function LayerModal({
                   : t("layers.addTitle", "Add Layer")}
               </>
             }
-            showSeparator
-          >
-            <ActionButton
-              onClick={onClose}
-              ariaLabel={t("common:actions.close")}
-              icon={<ICONS.close className="text-2xl" />}
-              title={t("common:actions.close")}
-              rounded
-            />
-          </PanelHeader>
+          />
         </div>
         <div className="flex-1 overflow-y-auto">
           <form

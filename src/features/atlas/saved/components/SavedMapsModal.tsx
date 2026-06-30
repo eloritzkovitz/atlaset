@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Modal,
-  PanelHeader,
-  ModalActions,
-  ActionButton,
-  FormField,
-} from "@components";
+import { FormField, Modal, ModalActions, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import type { SavedMap } from "../types";
@@ -60,7 +54,7 @@ export function SavedMapsModal({
       position="center"
       draggable
     >
-      <PanelHeader
+      <ModalHeader
         title={
           <>
             <ICONS.saved />
@@ -71,14 +65,7 @@ export function SavedMapsModal({
                 : t("savedMaps.addTitle")}
           </>
         }
-      >
-        <ActionButton
-          onClick={onClose}
-          ariaLabel={t("common:actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault();

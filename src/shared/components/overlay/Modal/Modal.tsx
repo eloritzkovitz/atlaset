@@ -13,6 +13,7 @@ import {
   usePanelHide,
   usePointerDrag,
 } from "@hooks";
+import { ModalHeader } from "./ModalHeader";
 import "./Modal.css";
 
 interface ModalProps {
@@ -104,6 +105,24 @@ export function Modal({
   // Don't render anything if the modal is not open
   if (!isOpen && !closing) return null;
 
+  // Process children to inject onClose into ModalHeader if not already provided
+  const processedChildren = React.Children.map(children, (child) => {
+    if (
+      React.isValidElement(child) &&
+      (child.type === ModalHeader ||
+        (child.type as any).displayName === "ModalHeader")
+    ) {
+      const headerElement = child as React.ReactElement<{
+        onClose?: () => void;
+      }>;
+
+      return React.cloneElement<{ onClose?: () => void }>(headerElement, {
+        onClose: headerElement.props.onClose ?? onClose,
+      });
+    }
+    return child;
+  });
+
   return ReactDOM.createPortal(
     <>
       <div
@@ -156,7 +175,7 @@ export function Modal({
           onMouseLeave={onMouseLeave}
           onPointerDown={draggable ? handlePointerDown : undefined}
         >
-          {children}
+          {processedChildren}
         </div>
       </div>
       {isOpen &&

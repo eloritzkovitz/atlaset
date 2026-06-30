@@ -133,13 +133,6 @@ export function MarkersPanel({
                 />
               </>
             )}
-            <ActionButton
-              onClick={closePanel}
-              ariaLabel={t("markers.close")}
-              title={t("common:actions.close")}
-              icon={<ICONS.close className="text-2xl" />}
-              rounded
-            />
           </>
         }
       >

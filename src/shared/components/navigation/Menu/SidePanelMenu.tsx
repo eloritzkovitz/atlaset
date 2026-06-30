@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useScreenSize } from "@hooks";
 import { MenuButton } from "./MenuButton";
 import { HamburgerButton } from "../../inputs/Button/HamburgerButton";
-import { Panel } from "../../layout/Panel/Panel";
+import { Panel } from "../../overlay/Panel/Panel";
 import { DrawerPanel } from "../../overlay/Drawer/DrawerPanel";
 
 export interface SidePanelMenuItem {

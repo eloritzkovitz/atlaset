@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { ActionButton, Modal, PanelHeader } from "@components";
+import { Modal, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -58,23 +58,14 @@ export default function CalendarModal() {
       containerZIndex={10060}
       backdropZIndex={10059}
     >
-      <PanelHeader
+      <ModalHeader
         title={
           <>
             <ICONS.calendar />
             Calendar
           </>
         }
-        showSeparator={true}
-      >
-        <ActionButton
-          onClick={closeCalendar}
-          ariaLabel="Close"
-          title="Close"
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      />
       <div className="flex flex-row w-full h-full">
         <CalendarSidePanel
           date={date}

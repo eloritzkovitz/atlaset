@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton, Panel, Separator } from "@components";
+import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
@@ -21,15 +21,6 @@ export function MapSettingsPanel() {
       show={showSettings}
       width={DEFAULT_PANEL_WIDTH}
       onHide={closePanel}
-      headerActions={
-        <ActionButton
-          onClick={closePanel}
-          ariaLabel={t("common:actions.close")}
-          title={t("common:actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      }
     >
       <div className="mt-4">
         <ConfigurationSettingsGroup />

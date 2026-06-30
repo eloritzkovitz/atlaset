@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { HexColorPicker } from "react-colorful";
-import { FaPalette, FaXmark, FaCopy } from "react-icons/fa6";
+import { FaPalette, FaCopy } from "react-icons/fa6";
+import { ModalHeader } from "@components";
 import { hexToRgba } from "@utils/color";
 import { ActionButton } from "../Button/ActionButton";
 import { ColorDot } from "../../display/ColorDot";
-import { PanelHeader } from "../../layout/Panel/PanelHeader";
 import { Modal } from "../../overlay/Modal/Modal";
 import { Tooltip } from "../../overlay/Tooltip/Tooltip";
 import "./ColorPickerModal.css";
@@ -56,21 +56,14 @@ export function ColorPickerModal({
       onClose={onClose}
       className="rounded-xl !shadow-lg p-6 min-w-[320px] max-w-[400px]"
     >
-      <PanelHeader
+      <ModalHeader
         title={
           <>
             <FaPalette />
             Select Color
           </>
         }
-      >
-        <ActionButton
-          onClick={onClose}
-          ariaLabel="Close Color Picker"
-          icon={<FaXmark className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      />
       <div className="flex flex-col items-center gap-4">
         <HexColorPicker
           color={internalColor}

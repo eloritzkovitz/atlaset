@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import { FaXmark, FaCircleExclamation } from "react-icons/fa6";
+import { FaCircleExclamation } from "react-icons/fa6";
 import { Modal } from "./Modal";
 import { ModalActions } from "./ModalActions";
-import { ActionButton } from "../../inputs/Button/ActionButton";
-import { PanelHeader } from "../../layout/Panel/PanelHeader";
+import { ModalHeader } from "./ModalHeader";
 
 interface ConfirmModalProps {
   isOpen?: boolean;
@@ -32,15 +31,7 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
   return (
     <Modal isOpen={isOpen} onClose={onCancel}>
-      <PanelHeader title={title} showSeparator={!!title}>
-        <ActionButton
-          onClick={onCancel}
-          ariaLabel="Close modal"
-          title="Close"
-          icon={<FaXmark className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      <ModalHeader title={title} />
       <div className="p-4">
         <div className="flex flex-col items-center mb-2">
           {showWarningIcon && (
