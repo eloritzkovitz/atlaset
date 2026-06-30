@@ -110,7 +110,8 @@ export function Modal({
     if (
       React.isValidElement(child) &&
       (child.type === ModalHeader ||
-        (child.type as any).displayName === "ModalHeader")
+        (child.type as unknown as { displayName: string }).displayName ===
+          "ModalHeader")
     ) {
       const headerElement = child as React.ReactElement<{
         onClose?: () => void;

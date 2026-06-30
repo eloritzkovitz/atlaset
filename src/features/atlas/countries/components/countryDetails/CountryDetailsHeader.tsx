@@ -15,7 +15,6 @@ export function CountryDetailsHeader({
   country,
   onClose,
 }: CountryDetailsHeaderProps) {
-  // Get action configurations based on country and context
   const actionsObj = useCountryActions({
     country,
   });
