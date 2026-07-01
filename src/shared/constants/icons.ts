@@ -1,4 +1,5 @@
-import { FaPlusSquare, FaThLarge } from "react-icons/fa";
+import { BsGridFill } from "react-icons/bs";
+import { FaPlusSquare } from "react-icons/fa";
 import {
   FaArrowsRotate,
   FaBell,
@@ -174,7 +175,7 @@ export const ICONS = {
   appearance: FaMoon,
   //UI
   viewMode: {
-    grid: FaThLarge,
+    grid: BsGridFill,
     list: FaList,
   },
   // Actions

@@ -1,7 +1,7 @@
 import { useScreenSize } from "@hooks";
 import type { ViewMode } from "@types";
 import { CountryFlag } from "../countryFlag/CountryFlag";
-import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { CountryListRow } from "./CountryListRow";
 import type { Country } from "../../types";
 import type { FlagRatio, FlagSize } from "../../types/flag";
 
@@ -29,7 +29,7 @@ export function CountryItem({
   showAllAsVisited = false,
   selectedIsoCode,
   hoveredIsoCode,
-  showFlags,
+  showFlags = true,
   flagRatio,
   flagSize,
   showBadges,
@@ -42,16 +42,25 @@ export function CountryItem({
 }: CountryItemProps) {
   const { isMobile } = useScreenSize();
 
-  // Determine visited and highlighted status
+  // Determine if the country is visited or highlighted based on the provided props
   const isVisited =
     showAllAsVisited || visitedCountryCodes.includes(country.isoCode);
   const isHighlighted =
     country.isoCode === hoveredIsoCode || country.isoCode === selectedIsoCode;
 
-  const baseClass =
-    view === "list"
-      ? `px-2 sm:px-4 py-2 my-1 rounded cursor-pointer flex items-center gap-2 sm:gap-3 transition`
-      : `flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg cursor-pointer transition`;
+  if (view === "list") {
+    return (
+      <CountryListRow
+        country={country}
+        tone={isVisited ? "visited" : "dimmed-colored"}
+        className={`px-2 sm:px-4 rounded cursor-pointer flex items-center sm:gap-3 transition`}
+        onClick={onClick}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onContextMenu={onContextMenu}
+      />
+    );
+  }
 
   return (
     <div
@@ -61,45 +70,32 @@ export function CountryItem({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       onContextMenu={(event) => onContextMenu?.(event, country)}
-      className={`group ${baseClass}
+      className={`group flex flex-col items-center justify-center p-2 sm:p-4 rounded-lg cursor-pointer transition
         ${isHighlighted ? "bg-blue-50 dark:bg-gray-500 font-bold" : ""}
         ${!isVisited ? "opacity-50" : ""}
       `}
     >
       {showFlags ? (
-        view === "list" ? (
-          <CountryWithFlag
-            isoCode={country.isoCode}
-            name={country.name}
-            className="text-sm sm:text-base"
-          />
-        ) : (
-          <div className="flex flex-col items-center w-[128px] h-[140px]">
-            <div className="flex items-center justify-center w-full h-20">
-              <CountryFlag
-                flag={{
-                  isoCode: country.isoCode,
-                  sovereignState: country.sovereignState,
-                  ratio: flagRatio || "original",
-                  size: flagSize || (isMobile ? "32" : "64"),
-                }}
-                className="max-w-full max-h-[96px] object-contain transition-transform duration-200 group-hover:scale-110"
-              />
-            </div>
-            <div className="w-full flex items-end justify-center mt-4">
-              <span className="w-full block text-center break-words min-h-[20px]">
-                {country.name}
-              </span>
-            </div>
+        <div className="flex flex-col items-center w-[128px] h-[140px]">
+          <div className="flex items-center justify-center w-full h-20">
+            <CountryFlag
+              flag={{
+                isoCode: country.isoCode,
+                sovereignState: country.sovereignState,
+                ratio: flagRatio || "original",
+                size: flagSize || (isMobile ? "32" : "64"),
+              }}
+              className="max-w-full max-h-[96px] object-contain transition-transform duration-200 group-hover:scale-110"
+            />
           </div>
-        )
+          <div className="w-full flex items-end justify-center mt-4">
+            <span className="w-full block text-center break-words min-h-[20px]">
+              {country.name}
+            </span>
+          </div>
+        </div>
       ) : (
         <span className="text-xs sm:text-sm">{country.name}</span>
-      )}
-      {view === "list" && !showFlags && (
-        <span className="text-xs sm:text-base text-center break-words">
-          {country.name}
-        </span>
       )}
       {showBadges && renderBadge && renderBadge(country)}
     </div>

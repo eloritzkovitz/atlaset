@@ -1,10 +1,10 @@
+import i18next from "i18next";
 import React from "react";
-import { CollapsibleHeader, EmptyListMessage, MenuButton } from "@components";
-import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
+import { useTranslation } from "react-i18next";
+import { CollapsibleHeader, EmptyListMessage } from "@components";
+import { CountryListRow } from "../countryDisplay/CountryListRow";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import { type Country } from "../../types";
-import { useTranslation } from "react-i18next";
-import i18next from "i18next";
 
 interface CountryListGroupProps {
   label: React.ReactNode;
@@ -33,7 +33,6 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
       const found = countries.find((c) => c.isoCode === iso);
       if (found) return found;
 
-      // Check SPECIAL_COUNTRIES for any missing entries and try to translate
       const special = SPECIAL_COUNTRIES[iso];
       if (special) {
         let bundle: Record<string, Partial<Country>> = {};
@@ -70,34 +69,17 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
       ) : (
         <div className="flex flex-col text-lg">
           {sortedCountries.map((country) => {
-            // Determine visited status if visited function is provided
-            let isVisited: boolean | undefined = undefined;
-            if (visited) {
-              isVisited = visited(country!.isoCode);
-            }
+            const isVisited = visited ? visited(country!.isoCode) : true;
 
             return (
-              <MenuButton
+              <CountryListRow
                 key={country!.isoCode}
-                icon={undefined}
+                country={country!}
+                tone={isVisited ? "visited" : "dimmed-gray"}
                 onClick={() =>
                   onSelectCountry && onSelectCountry(country!.isoCode)
                 }
-                className="py-2 px-2"
-              >
-                <span
-                  style={{ opacity: visited ? (isVisited ? 1 : 0.4) : 1 }}
-                  className={
-                    visited && !isVisited ? "flag-grayscale-hover" : ""
-                  }
-                >
-                  <CountryWithFlag
-                    isoCode={country!.isoCode}
-                    name={country!.name}
-                    visited={isVisited}
-                  />
-                </span>
-              </MenuButton>
+              />
             );
           })}
         </div>

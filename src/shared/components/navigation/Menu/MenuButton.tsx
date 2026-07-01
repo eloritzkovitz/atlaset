@@ -14,6 +14,7 @@ interface MenuButtonProps extends Omit<
   active?: boolean;
   title?: string;
   onClick?: () => void;
+  onContextMenu?: React.MouseEventHandler<HTMLElement>;
 }
 
 export function MenuButton({
@@ -27,6 +28,7 @@ export function MenuButton({
   disabled,
   ariaLabel,
   title,
+  onContextMenu,
   ...props
 }: MenuButtonProps) {
   const baseClass =
@@ -45,6 +47,7 @@ export function MenuButton({
       disabled={disabled}
       className={baseClass}
       ariaLabel={ariaLabel}
+      onContextMenu={onContextMenu}
       {...props}
     >
       {icon}

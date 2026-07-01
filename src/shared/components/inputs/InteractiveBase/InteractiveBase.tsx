@@ -20,6 +20,7 @@ export interface InteractiveBaseProps {
   onTouchStart?: React.TouchEventHandler<HTMLElement>;
   onTouchEnd?: React.TouchEventHandler<HTMLElement>;
   onPointerDown?: React.PointerEventHandler<HTMLElement>;
+  onContextMenu?: React.MouseEventHandler<HTMLElement>;
 }
 
 /** A reusable base component for interactive elements. */

@@ -36,7 +36,7 @@ export function ViewModeSegmentedControl({
   const activeClass =
     "bg-primary text-primary-foreground shadow-sm font-medium";
   const inactiveClass =
-    "bg-transparent text-muted-foreground hover:text-foreground";
+    "bg-transparent text-muted-foreground hover:text-foreground hover:bg-input-hover";
 
   return (
     <div

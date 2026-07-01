@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ViewModeSegmentedControl } from "@components";
-import { CountryFlagGrid, CountryListGroup } from "@features/countries";
-import { useViewMode } from "@hooks";
-import { AchievementListGroup } from "./AchievementListGroup";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
+import { AchievementListGroup } from "./AchievementListGroup";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import type { Achievement } from "../types";
 import { getAchievementCountries } from "../utils/achievements";
 import { getCurrentTier } from "../utils/achievementsTiers";
+import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
+import { useIsoGroups } from "../../common/hooks/useIsoGroups";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 import { getCountryRoute } from "../../navigation/utils/dashboardNavigation";
@@ -28,9 +26,6 @@ export function AchievementInfo() {
     "",
   );
   const navigate = useNavigate();
-
-  const { viewMode, setViewMode } = useViewMode("list");
-  const [expandedCountries, setExpandedCountries] = useState(true);
 
   let achCountries: typeof countries = [];
   let region: string | undefined;
@@ -64,12 +59,20 @@ export function AchievementInfo() {
     }
   }
 
+  const isoGroups = useIsoGroups(achCountries, () => true);
+  const hasCountries =
+    isoGroups.sovereignIsoCodes.length > 0 ||
+    isoGroups.dependencyIsoCodes.length > 0;
+
   // Defensive check for achievement existence
   if (!achievement) return <div className="p-4">Achievement not found.</div>;
 
-  // Defensive check for criteria countries
-  const isoCodes = achCountries.map((c) => c.isoCode);
-  const groupLabel = region ? `Countries in ${region}` : "Countries";
+  const primaryGroupLabel = region
+    ? `Sovereign countries in ${region}`
+    : "Sovereign countries";
+  const dependencyGroupLabel = region
+    ? `Dependencies and territories in ${region}`
+    : "Dependencies and territories";
 
   return (
     <section className="max-w-6xl mx-auto px-4">
@@ -120,33 +123,18 @@ export function AchievementInfo() {
           />
         )}
 
-      {isoCodes.length > 0 && (
+      {hasCountries && (
         <div className="mt-2 pt-6 items-end">
-          <div className="flex justify-end mb-4">
-            <ViewModeSegmentedControl
-              viewMode={viewMode}
-              onChange={setViewMode}
-            />
-          </div>
-
-          {viewMode === "list" ? (
-            <CountryListGroup
-              label={groupLabel}
-              isoCodes={isoCodes}
-              countries={countries}
-              visited={isVisitedCountry}
-              expanded={expandedCountries}
-              onToggle={() => setExpandedCountries((prev) => !prev)}
-              onSelectCountry={handleCountrySelect}
-            />
-          ) : (
-            <CountryFlagGrid
-              countryCodes={isoCodes}
-              size="64"
-              isHighlighted={(code) => isVisitedCountry(code)}
-              onCountryClick={handleCountrySelect}
-            />
-          )}
+          <InfoWithCountryGroups
+            title={achievement.name}
+            showHeader={false}
+            isoGroups={isoGroups}
+            countries={countries}
+            primaryLabel={primaryGroupLabel}
+            dependencyLabel={dependencyGroupLabel}
+            onSelectCountry={handleCountrySelect}
+            visited={isVisitedCountry}
+          />
         </div>
       )}
     </section>
