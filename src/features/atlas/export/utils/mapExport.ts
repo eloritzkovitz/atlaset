@@ -291,7 +291,7 @@ export function exportMap({
  * @param filename - The filename for the download.
  */
 export function exportMapDataAsJson(
-  data: Record<string, unknown> | Record<string, unknown>[],
+  data: object | object[],
   filename = "atlas-export.json",
 ) {
   exportToFile(data, filename);

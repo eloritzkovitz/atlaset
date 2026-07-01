@@ -37,6 +37,11 @@ vi.mock("firebase/auth", () => ({
   __esModule: true,
 }));
 
+export const mockTimestamp = {
+  now: vi.fn(() => ({ toMillis: () => 1000 })),
+  fromDate: vi.fn((d) => ({ toMillis: () => d.getTime() })),
+};
+
 vi.mock("firebase/firestore", () => ({
   addDoc: mockFirestoreControls.addDoc,
   arrayRemove: mockFirestoreControls.arrayRemove,
@@ -51,10 +56,13 @@ vi.mock("firebase/firestore", () => ({
   onSnapshot: mockFirestoreControls.onSnapshot,
   orderBy: mockFirestoreControls.orderBy,
   query: mockFirestoreControls.query,
+  runTransaction: vi.fn((_db, cb) => cb(mockFirestoreControls.transaction())),
   setDoc: mockFirestoreControls.setDoc,
   startAfter: mockFirestoreControls.startAfter,
+  transaction: mockFirestoreControls.transaction,
   updateDoc: mockFirestoreControls.updateDoc,
   where: mockFirestoreControls.where,
   writeBatch: () => mockFirestoreControls.writeBatch(),
+  Timestamp: mockTimestamp,
   __esModule: true,
 }));

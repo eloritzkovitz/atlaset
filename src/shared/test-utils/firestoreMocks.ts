@@ -43,7 +43,7 @@ export const createNativeAuthMocks = () => ({
 
 // Mock Firestore utilities
 export const createFirestoreMocks = () => ({
-  addDoc: vi.fn(),  
+  addDoc: vi.fn(),
   arrayRemove: vi.fn(),
   arrayUnion: vi.fn(),
   collection: vi.fn(),
@@ -58,6 +58,12 @@ export const createFirestoreMocks = () => ({
   query: vi.fn(),
   setDoc: vi.fn(),
   startAfter: vi.fn(),
+  transaction: vi.fn(() => ({
+    get: vi.fn(),
+    set: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+  })),
   updateDoc: vi.fn(),
   where: vi.fn(),
   writeBatch: vi.fn(() => ({
@@ -98,6 +104,20 @@ export function createMockSnapshot(
     })),
     empty: docs.length === 0,
     size: docs.length,
+  };
+}
+
+/**
+ * Creates a mock Firestore document snapshot for testing purposes.
+ * @param exists - A boolean indicating whether the document exists.
+ * @param dataObj - An optional object representing the data of the document.
+ * @returns A mock document snapshot with the specified existence and data.
+ */
+export function createMockDocSnap(exists: boolean, dataObj: object = {}) {
+  return {
+    exists: () => exists,
+    id: "mock-doc-id",
+    data: () => dataObj,
   };
 }
 
