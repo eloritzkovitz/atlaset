@@ -1,65 +1,44 @@
 import { setupDomMocks } from "@test-utils/mockDomGlobals";
 import {
-  exportSvg,
-  exportSvgAsImage,
-  prepareSvgClone,
-  getCorrespondingOriginal,
-  downloadBlob,
-  exportMapDataAsJson,
-} from "./mapExport";
-import {
   makeSvgMockFactory,
   installCanvasMock,
   stubImage,
 } from "@test-utils/mockExports";
 
+vi.mock("@utils/file", () => ({
+  downloadBlob: vi.fn(),
+  downloadCanvas: vi.fn(() => Promise.resolve()),
+}));
+vi.mock("@utils/json", () => ({
+  exportToFile: vi.fn(),
+}));
+
+import { exportToFile } from "@utils/json";
+import {
+  exportSvg,
+  exportSvgAsImage,
+  prepareSvgClone,
+  getCorrespondingOriginal,
+  exportMapDataAsJson,
+} from "./mapExport";
+
 setupDomMocks();
 
-// Centralize body append/remove stubbing for most tests
-let _origBodyAppend: any;
-let _origBodyRemove: any;
-beforeEach(() => {
-  _origBodyAppend = document.body?.appendChild;
-  _origBodyRemove = document.body?.removeChild;
-  if (document.body) {
-    document.body.appendChild = vi.fn();
-    document.body.removeChild = vi.fn();
-  }
-});
-afterEach(() => {
-  if (document.body) {
-    document.body.appendChild = _origBodyAppend;
-    document.body.removeChild = _origBodyRemove;
-  }
-});
-
-it("exportSvg does nothing if svgElement is falsy", () => {
-  expect(exportSvg(null as any)).toBeUndefined();
-});
-
-it("exportSvg calls XMLSerializer and triggers download", () => {
-  const svg = {
-    cloneNode: vi.fn(() => ({
-      getAttribute: vi.fn(() => "0 0 100 100"),
-      querySelectorAll: vi.fn(() => []),
-    })),
-    ownerDocument: {
-      defaultView: {
-        getComputedStyle: vi.fn(() => ({
-          getPropertyValue: vi.fn(() => ""),
-        })),
-      },
-    },
-  } as any;
-  expect(() => exportSvg(svg, "test.svg")).not.toThrow();
-});
-
-it("exportSvg handles missing width/height", () => {
-  const svg = {
-    cloneNode: vi.fn(() => ({
-      getAttribute: vi.fn(() => null),
-      setAttribute: vi.fn(),
-      querySelectorAll: vi.fn(() => []),
+describe("exportSvg", () => {
+  const createMockSvg = (viewBox: string | null = "0 0 100 100") =>
+    ({
+      cloneNode: vi.fn(() => ({
+        getAttribute: vi.fn((attr) => (attr === "viewBox" ? viewBox : null)),
+        setAttribute: vi.fn(),
+        querySelectorAll: vi.fn(() => []),
+        ownerDocument: {
+          defaultView: {
+            getComputedStyle: vi.fn(() => ({
+              getPropertyValue: vi.fn(() => ""),
+            })),
+          },
+        },
+      })),
       ownerDocument: {
         defaultView: {
           getComputedStyle: vi.fn(() => ({
@@ -67,63 +46,59 @@ it("exportSvg handles missing width/height", () => {
           })),
         },
       },
-    })),
-    ownerDocument: {
-      defaultView: {
-        getComputedStyle: vi.fn(() => ({
-          getPropertyValue: vi.fn(() => ""),
-        })),
-      },
-    },
-  } as any;
-  expect(() => exportSvg(svg, "test.svg")).not.toThrow();
+    }) as any;
+
+  it("handles empty values, normal flows, missing dimensions, and options", () => {
+    expect(exportSvg(null as any)).toBeUndefined();
+    expect(() => exportSvg(createMockSvg(), "test.svg")).not.toThrow();
+    expect(() => exportSvg(createMockSvg(null), "test.svg")).not.toThrow();
+    expect(() =>
+      exportSvg(
+        document.createElementNS("http://www.w3.org/2000/svg", "svg"),
+        "custom.svg",
+        false,
+      ),
+    ).not.toThrow();
+    expect(() =>
+      exportSvg(
+        document.createElementNS("http://www.w3.org/2000/svg", "svg"),
+        "inline.svg",
+        true,
+      ),
+    ).not.toThrow();
+  });
 });
 
 describe("exportSvgAsImage", () => {
   let restoreCanvasMock: (() => void) | null = null;
-
   beforeEach(() => {
     restoreCanvasMock = installCanvasMock();
   });
-
   afterEach(() => {
-    if (restoreCanvasMock) restoreCanvasMock();
-    restoreCanvasMock = null;
+    restoreCanvasMock?.();
   });
 
   const makeSvgMock = makeSvgMockFactory();
+
   it("does nothing if svgElement is falsy", async () => {
     await expect(exportSvgAsImage(null as any)).resolves.toBeUndefined();
   });
 
-  // Parametrized image export cases to reduce duplication
-  const formatCases = [
-    { name: "PNG default", args: ["test.png", "png", 2, true, 2048, 1] },
-    {
-      name: "JPEG quality+bg",
-      args: ["test.jpg", "jpeg", 2, true, 2048, 0.5, "#ff0000"],
-    },
-    { name: "WebP quality", args: ["test.webp", "webp", 2, true, 2048, 0.8] },
-    {
-      name: "JPEG fill background default",
-      args: ["test.jpg", "jpeg", 2, true, 2048, 1],
-    },
-    {
-      name: "PNG/WebP with bg",
-      args: ["test.png", "png", 2, true, 2048, 1, "#00ff00"],
-    },
-  ];
+  it.each([
+    ["PNG default", ["test.png", "png", 2, true, 2048, 1]],
+    ["JPEG quality+bg", ["test.jpg", "jpeg", 2, true, 2048, 0.5, "#ff0000"]],
+    ["WebP quality", ["test.webp", "webp", 2, true, 2048, 0.8]],
+    ["JPEG fill background default", ["test.jpg", "jpeg", 2, true, 2048, 1]],
+    ["PNG/WebP with bg", ["test.png", "png", 2, true, 2048, 1, "#00ff00"]],
+    ["WebP with bg", ["test.webp", "webp", 2, true, 2048, 1, "#00ff00"]],
+  ])("exports image - %s", async (_, args) => {
+    await expect(
+      exportSvgAsImage(makeSvgMock(), ...(args as any)),
+    ).resolves.toBeUndefined();
+  });
 
-  for (const c of formatCases) {
-    it(`exports image - ${c.name}` as any, async () => {
-      const svg = makeSvgMock();
-      // @ts-expect-error - spread typed tuples in test signature
-      await expect(exportSvgAsImage(svg, ...c.args)).resolves.toBeUndefined();
-    });
-  }
-
-  it("handles missing viewBox and width/height", async () => {
-    const svg = {
+  it("handles missing dimensions and structural context edge cases", async () => {
+    const svgMissing = {
       cloneNode: vi.fn(() => ({
         getAttribute: vi.fn(() => null),
         setAttribute: vi.fn(),
@@ -149,81 +124,47 @@ describe("exportSvgAsImage", () => {
       },
     } as any;
     await expect(
-      exportSvgAsImage(svg, "test.png", "png", 2, true, 2048, 1),
+      exportSvgAsImage(svgMissing, "test.png", "png", 2, true, 2048, 1),
     ).resolves.toBeUndefined();
+
+    const resNull = installCanvasMock({ getContextNull: true });
+    await expect(
+      exportSvgAsImage(makeSvgMock(), "test.png", "png", 2, true, 2048, 1),
+    ).resolves.toBeUndefined();
+    resNull();
   });
 
-  it("handles missing canvas context", async () => {
-    const svg = makeSvgMock();
-    const restore = installCanvasMock({ getContextNull: true });
-    await expect(
-      exportSvgAsImage(svg, "test.png", "png", 2, true, 2048, 1),
-    ).resolves.toBeUndefined();
-    restore();
-  });
+  it.each([
+    ["image load error", () => stubImage(false), () => {}],
+    [
+      "synchronous drawImage errors",
+      () => stubImage(true),
+      () => installCanvasMock({ throwOnDrawImage: true }),
+    ],
+  ])(
+    "handles execution errors: %s",
+    async (_, imgStub: Function, canvasStub: Function) => {
+      const resImg = imgStub();
+      const resCanv = canvasStub();
+      const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 
-  it("handles image load error", async () => {
-    const restoreImage = stubImage(false);
-    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    const svg = makeSvgMock();
-    await expect(
-      exportSvgAsImage(svg, "test.png", "png", 2, true, 2048, 1),
-    ).resolves.toBeUndefined();
-    expect(errSpy).toHaveBeenCalled();
-    errSpy.mockRestore();
-    restoreImage();
-  });
+      await expect(
+        exportSvgAsImage(makeSvgMock(), "test.png", "png", 2, true, 2048, 1),
+      ).resolves.toBeUndefined();
 
-  it("handles blob creation failure", async () => {
-    const svg = makeSvgMock();
-    const restore = installCanvasMock({ toBlobNull: true });
-    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    await expect(
-      exportSvgAsImage(svg, "test.png", "png", 2, true, 2048, 1),
-    ).resolves.toBeUndefined();
-    expect(errSpy).toHaveBeenCalled();
-    errSpy.mockRestore();
-    restore();
-  });
+      expect(errSpy).toHaveBeenCalled();
+      errSpy.mockRestore();
 
-  it("handles synchronous drawImage errors (triggers inner reject)", async () => {
-    const svg = makeSvgMock();
-    const restore = installCanvasMock({ throwOnDrawImage: true });
-    const restoreImage = stubImage(true);
-    const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-    await expect(
-      exportSvgAsImage(svg, "test.png", "png", 2, true, 2048, 1),
-    ).resolves.toBeUndefined();
-    expect(errSpy).toHaveBeenCalled();
-    errSpy.mockRestore();
-    restoreImage();
-    restore();
-  });
-
-  it("fills background for JPEG if backgroundColor is not provided", async () => {
-    const svg = makeSvgMock();
-    await expect(
-      exportSvgAsImage(svg, "test.jpg", "jpeg", 2, true, 2048, 1),
-    ).resolves.toBeUndefined();
-  });
-
-  it("fills background for PNG/WebP if backgroundColor is provided", async () => {
-    const svg = makeSvgMock();
-    await expect(
-      exportSvgAsImage(svg, "test.png", "png", 2, true, 2048, 1, "#00ff00"),
-    ).resolves.toBeUndefined();
-    await expect(
-      exportSvgAsImage(svg, "test.webp", "webp", 2, true, 2048, 1, "#00ff00"),
-    ).resolves.toBeUndefined();
-  });
+      if (typeof resImg === "function") resImg();
+      if (typeof resCanv === "function") resCanv();
+    },
+  );  
 
   it("caps very large exports and logs a warning", async () => {
-    const restore = installCanvasMock();
-
     const svg: any = {
       cloneNode: vi.fn(() => ({
-        getAttribute: vi.fn((attr: string) =>
-          attr === "viewBox" ? "0 0 20000 20000" : null,
+        getAttribute: vi.fn((a) =>
+          a === "viewBox" ? "0 0 20000 20000" : null,
         ),
         setAttribute: vi.fn(),
         querySelectorAll: vi.fn(() => []),
@@ -238,118 +179,90 @@ describe("exportSvgAsImage", () => {
         },
       },
     };
-
     const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
     await expect(
       exportSvgAsImage(svg, "big.png", "png", 1, true, 1024, 1),
     ).resolves.toBeUndefined();
     expect(warnSpy).toHaveBeenCalled();
     warnSpy.mockRestore();
-    restore();
   });
 });
 
 describe("prepareSvgClone", () => {
-  it("adds xmlns if missing", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "100");
-    svg.setAttribute("height", "100");
-    const result = prepareSvgClone(svg, false);
-    expect(result.getAttribute("xmlns")).toBe("http://www.w3.org/2000/svg");
-  });
+  const createBaseSvg = () =>
+    document.createElementNS("http://www.w3.org/2000/svg", "svg");
 
-  it("adds viewBox if missing", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    (svg as any).width = { baseVal: { value: 123 } };
-    (svg as any).height = { baseVal: { value: 456 } };
-    const result = prepareSvgClone(svg, false);
-    expect(result.getAttribute("viewBox")).toBe("0 0 123 456");
-  });
+  it("correctly sanitizes attributes, elements, and fallback setups", () => {
+    const svg1 = createBaseSvg();
+    svg1.setAttribute("width", "100");
+    svg1.setAttribute("height", "100");
+    expect(prepareSvgClone(svg1, false).getAttribute("xmlns")).toBe(
+      "http://www.w3.org/2000/svg",
+    );
 
-  it("removes background rects (class background)", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    const svg2 = createBaseSvg();
+    (svg2 as any).width = { baseVal: { value: 123 } };
+    (svg2 as any).height = { baseVal: { value: 456 } };
+    expect(prepareSvgClone(svg2, false).getAttribute("viewBox")).toBe(
+      "0 0 123 456",
+    );
+
+    const svg3a = createBaseSvg();
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("class", "background");
-    g.appendChild(rect);
-    svg.appendChild(g);
-    const result = prepareSvgClone(svg, false);
+    const r1 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r1.setAttribute("class", "background");
+    g.appendChild(r1);
+    svg3a.appendChild(g);
     expect(
-      result.querySelectorAll(
-        "rect[data-export-ignore], rect.background, rect[data-background]",
+      prepareSvgClone(svg3a, false).querySelectorAll("rect.background").length,
+    ).toBe(0);
+
+    const svg3b = createBaseSvg();
+    const r2 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r2.setAttribute("data-export-ignore", "true");
+    const r3 = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    r3.setAttribute("data-background", "true");
+    svg3b.appendChild(r2);
+    svg3b.appendChild(r3);
+    expect(
+      prepareSvgClone(svg3b, false).querySelectorAll(
+        "rect[data-export-ignore], rect[data-background]",
       ).length,
     ).toBe(0);
+
+    const svg4 = createBaseSvg() as any;
+    svg4.clientWidth = 321;
+    svg4.clientHeight = 654;
+    expect(prepareSvgClone(svg4, false).getAttribute("viewBox")).toBe(
+      "0 0 321 654",
+    );
   });
 
-  it("removes background rects (data-export-ignore, data-background)", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const rect1 = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect",
-    );
-    rect1.setAttribute("data-export-ignore", "true");
-    const rect2 = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect",
-    );
-    rect2.setAttribute("data-background", "true");
-    svg.appendChild(rect1);
-    svg.appendChild(rect2);
-    const result = prepareSvgClone(svg, false);
-    expect(result.querySelectorAll("rect[data-export-ignore]").length).toBe(0);
-    expect(result.querySelectorAll("rect[data-background]").length).toBe(0);
-  });
-
-  it("inlines computed styles with and without existing style", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  it("handles complex style inlining variants and defaultView errors", () => {
+    const svg = createBaseSvg();
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    svg.appendChild(path);
     path.setAttribute("style", "stroke:red");
-    const origGetComputedStyle = window.getComputedStyle;
+    svg.appendChild(path);
+
+    const origStyle = window.getComputedStyle;
     window.getComputedStyle = () =>
       ({
-        getPropertyValue: (prop: string) => (prop === "fill" ? "blue" : ""),
+        getPropertyValue: (p: string) => (p === "fill" ? "blue" : ""),
       }) as any;
-    const result = prepareSvgClone(svg, true);
-    const clonedPath = result.querySelector("path");
-    const style1 = clonedPath?.getAttribute("style");
-    if (style1 !== undefined && style1 !== null) {
-      expect(style1).toContain("stroke:red");
-      expect(style1).toContain("fill:blue");
-    }
+
+    const style1 = prepareSvgClone(svg, true)
+      .querySelector("path")
+      ?.getAttribute("style");
+    expect(style1).toContain("stroke:red");
+    expect(style1).toContain("fill:blue");
+
     path.removeAttribute("style");
-    const result2 = prepareSvgClone(svg, true);
-    const clonedPath2 = result2.querySelector("path");
-    const style2 = clonedPath2?.getAttribute("style");
-    if (style2 !== undefined && style2 !== null) {
-      expect(style2).toContain("fill:blue");
-    }
-    window.getComputedStyle = origGetComputedStyle;
-  });
+    expect(
+      prepareSvgClone(svg, true).querySelector("path")?.getAttribute("style"),
+    ).toContain("fill:blue");
+    window.getComputedStyle = origStyle;
 
-  it("falls back to clientWidth/clientHeight if width/height missing", () => {
-    const svg = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg",
-    ) as any;
-    svg.width = undefined;
-    svg.height = undefined;
-    svg.clientWidth = 321;
-    svg.clientHeight = 654;
-    const result = prepareSvgClone(svg, false);
-    expect(result.getAttribute("viewBox")).toBe("0 0 321 654");
-  });
-
-  it("inlines computed styles and handles errors", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    svg.appendChild(path);
-    const result = prepareSvgClone(svg, false);
-    expect(result).toBeTruthy();
-  });
-
-  it("handles missing ownerDocument.defaultView when inlining styles", () => {
-    const original: any = {
+    const brokenView: any = {
       cloneNode: vi.fn(() => ({
         getAttribute: vi.fn(() => null),
         setAttribute: vi.fn(),
@@ -365,155 +278,78 @@ describe("prepareSvgClone", () => {
       })),
       ownerDocument: {},
     };
-
-    expect(() => prepareSvgClone(original as any, true)).not.toThrow();
+    expect(() => prepareSvgClone(brokenView, true)).not.toThrow();
   });
 });
 
 describe("getCorrespondingOriginal", () => {
-  it("returns the correct original element for a nested clone", () => {
+  it("resolves tree references correctly across clone nodes", () => {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
     const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
     g.appendChild(path);
     svg.appendChild(g);
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    const clonedG = clone.children[0];
-    const clonedPath = clonedG.children[0];
-    expect(getCorrespondingOriginal(clonedPath, svg, clone)).toBe(path);
-  });
 
-  it("returns null if the path is broken (index out of bounds)", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const clone = svg.cloneNode(true) as SVGSVGElement;
+    const cloneSvg = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg",
+    );
+    const cloneG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const clonePath = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path",
+    );
+
+    cloneG.appendChild(clonePath);
+    cloneSvg.appendChild(cloneG);
+
+    expect(getCorrespondingOriginal(clonePath, svg, cloneSvg)).toBe(path);
+
+    expect(
+      getCorrespondingOriginal(
+        document.createElementNS("http://www.w3.org/2000/svg", "g"),
+        svg,
+        cloneSvg,
+      ),
+    ).toBeNull();
+
+    expect(getCorrespondingOriginal(g, svg, cloneSvg)).toBeNull();
+
     const orphan = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    expect(getCorrespondingOriginal(orphan, svg, clone)).toBeNull();
-  });
-
-  it("returns null if not in the clone tree", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    svg.appendChild(g);
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    expect(getCorrespondingOriginal(g, svg, clone)).toBeNull();
-  });
-
-  it("returns null if parentNode is missing", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    const clone = svg.cloneNode(true) as SVGSVGElement;
-    const orphan = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    Object.defineProperty(orphan, "parentNode", { value: null });
-    expect(getCorrespondingOriginal(orphan, svg, clone)).toBeNull();
-  });
-});
-
-describe("downloadBlob", () => {
-  it("triggers download and revokes URL", () => {
-    const blob = new Blob(["test"], { type: "text/plain" });
-    expect(() => downloadBlob(blob, "test.txt")).not.toThrow();
-  });
-});
-
-describe("exportSvg", () => {
-  it("exports SVG with custom filename and without inlining styles", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "100");
-    svg.setAttribute("height", "100");
-    expect(() => exportSvg(svg, "custom.svg", false)).not.toThrow();
-  });
-  it("exports SVG with inlineStyles true", () => {
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", "100");
-    svg.setAttribute("height", "100");
-    expect(() => exportSvg(svg, "inline.svg", true)).not.toThrow();
+    Object.defineProperty(orphan, "parentNode", {
+      value: null,
+      configurable: true,
+    });
+    expect(getCorrespondingOriginal(orphan, svg, cloneSvg)).toBeNull();
   });
 });
 
 describe("exportMapDataAsJson", () => {
-  let origCreateElement: typeof document.createElement;
-  let origAppendChild: typeof document.body.appendChild;
-  let origRemoveChild: typeof document.body.removeChild;
-  let origCreateObjectURL: typeof URL.createObjectURL;
-  let origRevokeObjectURL: typeof URL.revokeObjectURL;
-
   beforeEach(() => {
-    origCreateElement = document.createElement;
-    origCreateObjectURL = URL.createObjectURL;
-    origRevokeObjectURL = URL.revokeObjectURL;
-    document.createElement = vi.fn((tag) => {
-      if (tag === "a") {
-        return {
-          set href(v) {
-            this._href = v;
-          },
-          get href() {
-            return this._href;
-          },
-          set download(v) {
-            this._download = v;
-          },
-          get download() {
-            return this._download;
-          },
-          click: vi.fn(),
-        } as any;
-      }
-      return origCreateElement.call(document, tag);
-    }) as any;
-    if (document.body) {
-      origAppendChild = document.body.appendChild;
-      origRemoveChild = document.body.removeChild;
-      document.body.appendChild = vi.fn();
-      document.body.removeChild = vi.fn();
-    }
-    URL.createObjectURL = vi.fn(() => "blob:url");
-    URL.revokeObjectURL = vi.fn();
+    vi.mocked(exportToFile).mockClear();
   });
 
-  afterEach(() => {
-    document.createElement = origCreateElement;
-    if (document.body) {
-      document.body.appendChild = origAppendChild;
-      document.body.removeChild = origRemoveChild;
-    }
-    URL.createObjectURL = origCreateObjectURL;
-    URL.revokeObjectURL = origRevokeObjectURL;
+  it("extracts datasets and correctly hands off blobs to downloadBlob", () => {
+    const payload = { foo: "bar" };
+    exportMapDataAsJson(payload);
+
+    expect(exportToFile).toHaveBeenCalledTimes(1);
+    expect(exportToFile).toHaveBeenCalledWith(payload, "atlas-export.json");
   });
 
-  it("exports data as JSON with default filename", () => {
-    vi.useFakeTimers();
-    const data = { foo: "bar", arr: [1, 2, 3] };
-    exportMapDataAsJson(data);
-    expect(document.body.appendChild).toHaveBeenCalled();
-    vi.runAllTimers();
-    expect(document.body.removeChild).toHaveBeenCalled();
-    expect(URL.createObjectURL).toHaveBeenCalled();
-    expect(URL.revokeObjectURL).toHaveBeenCalled();
-    vi.useRealTimers();
-  });
+  it("respects custom filenames and handles complex or empty datasets", () => {
+    const payload = { test: 123 };
+    exportMapDataAsJson(payload, "custom.json");
 
-  it("exports data as JSON with custom filename", () => {
-    const data = { test: 123 };
-    exportMapDataAsJson(data, "custom.json");
-    const a = (document.createElement as any).mock.results[0].value;
-    expect(a.download).toBe("custom.json");
-  });
+    expect(exportToFile).toHaveBeenCalledWith(payload, "custom.json");
 
-  it("handles empty data", () => {
-    exportMapDataAsJson({}, "empty.json");
-    expect(document.body.appendChild).toHaveBeenCalled();
-  });
+    exportMapDataAsJson({});
+    exportMapDataAsJson(
+      { arr: Array(1000).fill({ x: 1, y: 2 }) },
+      "large.json",
+    );
 
-  it("handles large data", () => {
-    const data = { arr: Array(1000).fill({ x: 1, y: 2 }) };
-    exportMapDataAsJson(data, "large.json");
-    expect(document.body.appendChild).toHaveBeenCalled();
-  });
-
-  it("does not throw if document.body is missing (SSR edge case)", () => {
-    const origBody = document.body;
-    (globalThis as any).document.body = null;
-    expect(() => exportMapDataAsJson({ foo: 1 }, "fail.json")).not.toThrow();
-    (globalThis as any).document.body = origBody;
+    expect(exportToFile).toHaveBeenCalledTimes(3);
   });
 });
