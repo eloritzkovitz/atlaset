@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
@@ -37,14 +37,6 @@ export function CountriesPanel({
 }: CountriesPanelProps) {
   const { t } = useTranslation("atlas");
   const { refreshData } = useCountryData();
-  const {
-    countryLists,
-    selectedListId,
-    setSelectedListId,
-    openAddModal,
-    openEditModal,
-  } = useCountryLists();
-  const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
   const { trips } = useTrips();
   const {
     uiVisible,
@@ -53,82 +45,18 @@ export function CountriesPanel({
     showFilters,
     toggleFilters,
   } = useUI();
+  const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
 
   // Filter state
   const {
-    selectedRegion,
-    setSelectedRegion,
-    selectedSubregion,
-    setSelectedSubregion,
-    selectedGeoType,
-    setSelectedGeoType,
-    selectedSovereignty,
-    setSelectedSovereignty,
-    selectedVisited,
-    setSelectedVisited,
-    search,
-    setSearch,
-    filteredCountries,
-    searchedCountries,
-    allCount,
-    sovereignCount,
-    sovereignOnly,
-    setSovereignOnly,
-    visitedCount,
-    wantToVisitCount,
-    wantToVisitOnly,
-    setWantToVisitOnly,
-    minVisitCount,
-    setMinVisitCount,
-    maxVisitCount,
-    setMaxVisitCount,
-    resetFilters,
-  } = useCountryFilters();
+    countryLists,
+    selectedListId,
+    setSelectedListId,
+    openAddModal,
+    openEditModal,
+  } = useCountryLists();
 
-  // Compute counts for country lists based on filtered countries
-  const dynamicCountryLists = useMemo(() => {
-    return countryLists.map((list) => {
-      const matchingCount = list.countryCodes.filter((code) =>
-        searchedCountries.some((c) => c.isoCode === code),
-      ).length;
-
-      return {
-        ...list,
-        count: matchingCount,
-      };
-    });
-  }, [countryLists, searchedCountries]);
-
-  // Keep selectedVisited/selectedSovereignty consistent when toggles change
-  useEffect(() => {
-    if (showVisitedOnly && selectedVisited !== "visited") {
-      setSelectedVisited("visited");
-    }
-    if (!showVisitedOnly && selectedVisited === "visited") {
-      setSelectedVisited("any");
-    }
-  }, [showVisitedOnly, selectedVisited, setSelectedVisited]);
-
-  useEffect(() => {
-    if (sovereignOnly && selectedSovereignty !== "sovereign") {
-      setSelectedSovereignty("sovereign");
-    }
-    if (!sovereignOnly && selectedSovereignty === "sovereign") {
-      setSelectedSovereignty("");
-    }
-  }, [sovereignOnly, selectedSovereignty, setSelectedSovereignty]);
-
-  useEffect(() => {
-    if (showVisitedOnly && wantToVisitOnly) {
-      setWantToVisitOnly(false);
-    }
-  }, [showVisitedOnly, wantToVisitOnly, setWantToVisitOnly]);
-
-  useEffect(() => {
-    if (wantToVisitOnly && showVisitedOnly) {
-      setShowVisitedOnly(false);
-    }
-  }, [wantToVisitOnly, showVisitedOnly, setShowVisitedOnly]);
+  const { resetFilters, ...filterProps } = useCountryFilters();
 
   // Sort state
   const {
@@ -136,23 +64,22 @@ export function CountriesPanel({
     setSortBy,
     sortedItems: sortedCountries,
   } = useSort(
-    filteredCountries,
-    (items, sortBy) => sortCountries(items, sortBy, buildVisitContext(trips)),
+    filterProps.filteredCountries,
+    (items, currentSort) =>
+      sortCountries(items, currentSort, buildVisitContext(trips)),
     "name-asc",
   );
 
-  // Reset sort when toggles change
-  useEffect(() => {
-    setSortBy("name-asc");
-  }, [showVisitedOnly, sovereignOnly, wantToVisitOnly, setSortBy]);
-
-  // Handle country info action
-  const handleCountryInfo = useCallback(
-    (country: Country) => {
-      if (onCountryInfo) onCountryInfo(country);
-    },
-    [onCountryInfo],
-  );
+  // Compute counts for country lists based on filtered countries
+  const dynamicCountryLists = useMemo(() => {
+    const searchedCodes = new Set(
+      filterProps.searchedCountries.map((c) => c.isoCode),
+    );
+    return countryLists.map((list) => ({
+      ...list,
+      count: list.countryCodes.filter((code) => searchedCodes.has(code)).length,
+    }));
+  }, [countryLists, filterProps.searchedCountries]);
 
   // Reset filters and sort
   const handleResetFilters = () => {
@@ -199,32 +126,25 @@ export function CountriesPanel({
               icon={<ICONS.filters />}
               rounded
             />
-            <ActionButton
-              onClick={toggleCountries}
-              ariaLabel={t("common:actions.close")}
-              title={t("common:actions.close")}
-              icon={<ICONS.close className="text-2xl" />}
-              rounded
-            />
           </>
         }
       >
         <div className="flex flex-col h-full">
           <CountriesSearchSortBar
-            search={search}
-            setSearch={setSearch}
+            search={filterProps.search}
+            setSearch={filterProps.setSearch}
             sortBy={sortBy}
-            setSortBy={(v: string) => setSortBy(v as typeof sortBy)}
-            sovereignOnly={sovereignOnly}
-            setSovereignOnly={setSovereignOnly}
+            setSortBy={(v) => setSortBy(v as typeof sortBy)}
+            sovereignOnly={filterProps.sovereignOnly}
+            setSovereignOnly={filterProps.setSovereignOnly}
             visitedOnly={showVisitedOnly}
-            setVisitedOnly={setShowVisitedOnly}            
-            wantToVisitOnly={wantToVisitOnly}
-            setWantToVisitOnly={setWantToVisitOnly}
-            allCount={allCount}
-            sovereignCount={sovereignCount}
-            visitedCount={visitedCount}
-            wantToVisitCount={wantToVisitCount}
+            setVisitedOnly={setShowVisitedOnly}
+            wantToVisitOnly={filterProps.wantToVisitOnly}
+            setWantToVisitOnly={filterProps.setWantToVisitOnly}
+            allCount={filterProps.allCount}
+            sovereignCount={filterProps.sovereignCount}
+            visitedCount={filterProps.visitedCount}
+            wantToVisitCount={filterProps.wantToVisitCount}
             countryLists={dynamicCountryLists}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}
@@ -238,32 +158,19 @@ export function CountriesPanel({
             hoveredIsoCode={hoveredIsoCode}
             onSelect={onSelect}
             onHover={onHover}
-            onCountryInfo={handleCountryInfo}
+            onCountryInfo={onCountryInfo}
           />
         </div>
       </Panel>
+
       {showCountries && (
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
+          visitedOnly={showVisitedOnly}
           showVisitedOnly={showVisitedOnly}
-          selectedRegion={selectedRegion}
-          setSelectedRegion={setSelectedRegion}
-          selectedSubregion={selectedSubregion}
-          setSelectedSubregion={setSelectedSubregion}
-          selectedGeoType={selectedGeoType}
-          setSelectedGeoType={setSelectedGeoType}
-          selectedSovereignty={selectedSovereignty}
-          setSelectedSovereignty={setSelectedSovereignty}
-          sovereignOnly={sovereignOnly}
-          selectedVisited={selectedVisited}
-          setSelectedVisited={setSelectedVisited}
-          visitedOnly={showVisitedOnly}          
-          minVisitCount={minVisitCount}
-          setMinVisitCount={setMinVisitCount}
-          maxVisitCount={maxVisitCount}
-          setMaxVisitCount={setMaxVisitCount}
           resetFilters={handleResetFilters}
+          {...filterProps}
         />
       )}
     </div>

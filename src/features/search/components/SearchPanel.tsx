@@ -1,4 +1,4 @@
-import { ActionButton, Panel } from "@components";
+import { Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
@@ -20,15 +20,6 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
         <>
           <ICONS.search className="me-2" /> Search
         </>
-      }
-      headerActions={
-        <ActionButton
-          onClick={onClose}
-          ariaLabel="Close search panel"
-          title="Close"
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
       }
       className="!z-[10050]"
       showSeparator={false}

@@ -1,5 +1,6 @@
 import React from "react";
 import { EmptyListMessage } from "@components";
+import type { ViewMode } from "@types";
 import { CountryItem } from "./CountryItem";
 import type { Country } from "../../types";
 
@@ -7,7 +8,7 @@ interface CountryDisplayPanelProps {
   countries: Country[];
   visitedCountryCodes?: string[];
   showAllAsVisited?: boolean;
-  view?: "grid" | "list";
+  view?: ViewMode;
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
   onSelect?: (isoCode: string | null) => void;
@@ -17,7 +18,7 @@ interface CountryDisplayPanelProps {
   renderBadge?: (country: Country) => React.ReactNode;
   showFlags?: boolean;
   showBadges?: boolean;
-  className?: string;  
+  className?: string;
 }
 
 export const CountryDisplayPanel = React.forwardRef<
@@ -39,11 +40,50 @@ export const CountryDisplayPanel = React.forwardRef<
       renderBadge,
       showFlags = true,
       showBadges = false,
-      className = "",      
+      className = "",
     },
     ref,
   ) => {
-    // List view
+    // Handle country info click, either calling the provided callback or selecting the country
+    const handleCountryInfo = (country: Country) => {
+      if (onCountryInfo) {
+        onCountryInfo(country);
+      } else {
+        onSelect?.(country.isoCode);
+      }
+    };
+
+    // Render a single country item based on the view mode
+    const renderCountryItem = (country: Country, itemView: ViewMode) => (
+      <CountryItem
+        key={country.isoCode}
+        country={country}
+        visitedCountryCodes={visitedCountryCodes}
+        showAllAsVisited={showAllAsVisited}
+        selectedIsoCode={selectedIsoCode}
+        hoveredIsoCode={hoveredIsoCode}
+        showFlags={showFlags}
+        showBadges={showBadges}
+        renderBadge={renderBadge}
+        onClick={() => handleCountryInfo(country)}
+        onMouseEnter={() => onHover?.(country.isoCode)}
+        onMouseLeave={() => onHover?.(null)}
+        view={itemView}
+        onContextMenu={onContextMenu}
+        flagSize={itemView === "grid" ? "128" : undefined}
+      />
+    );
+
+    // Render country items based on the current view mode (list or grid)
+    const renderCountryItems = (itemView: ViewMode) =>
+      countries.map((country) =>
+        itemView === "list" ? (
+          <li key={country.isoCode}>{renderCountryItem(country, itemView)}</li>
+        ) : (
+          renderCountryItem(country, itemView)
+        ),
+      );
+
     if (view === "list") {
       return (
         <div ref={ref} className={`w-full ${className}`}>
@@ -51,68 +91,24 @@ export const CountryDisplayPanel = React.forwardRef<
             {countries.length === 0 ? (
               <EmptyListMessage message="No countries found." />
             ) : (
-              countries.map((country) => (
-                <li key={country.isoCode}>
-                  <CountryItem
-                    country={country}
-                    visitedCountryCodes={visitedCountryCodes}
-                    showAllAsVisited={showAllAsVisited}
-                    selectedIsoCode={selectedIsoCode}
-                    hoveredIsoCode={hoveredIsoCode}
-                    showFlags={showFlags}
-                    showBadges={showBadges}
-                    renderBadge={renderBadge}
-                    onClick={() =>
-                      onCountryInfo
-                        ? onCountryInfo(country)
-                        : onSelect?.(country.isoCode)
-                    }
-                    onMouseEnter={() => onHover?.(country.isoCode)}
-                    onMouseLeave={() => onHover?.(null)}
-                    view="list"
-                    onContextMenu={onContextMenu}
-                  />
-                </li>
-              ))
+              renderCountryItems("list")
             )}
           </ul>
         </div>
       );
     }
 
-    // Grid view
     return (
       <div
         ref={ref}
         className={`grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-2 ${className}`}
       >
         {countries.length === 0 ? (
-          <div className="col-span-full text-center text-muted py-8">
-            No countries found
+          <div className="col-span-full py-8">
+            <EmptyListMessage message="No countries found." />
           </div>
         ) : (
-          countries.map((country) => (
-            <CountryItem
-              key={country.isoCode}
-              country={country}
-              visitedCountryCodes={visitedCountryCodes}
-              showAllAsVisited={showAllAsVisited}
-              selectedIsoCode={selectedIsoCode}
-              hoveredIsoCode={hoveredIsoCode}
-              showFlags={showFlags}
-              flagSize="128"
-              showBadges={showBadges}
-              renderBadge={renderBadge}
-              onClick={() =>
-                onCountryInfo
-                  ? onCountryInfo(country)
-                  : onSelect?.(country.isoCode)
-              }
-              onMouseEnter={() => onHover?.(country.isoCode)}
-              onMouseLeave={() => onHover?.(null)}
-              view="grid"
-            />
-          ))
+          renderCountryItems("grid")
         )}
       </div>
     );

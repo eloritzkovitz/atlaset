@@ -51,11 +51,27 @@ export const settingsService = {
       const user = getCurrentUser();
       const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
 
-      // Prepare payload shape for comparison (exclude id)
+      // Create a dedupe key based on the settings data (excluding the id) to avoid duplicate saves
       const newData = { ...settingsWithId } as Record<string, unknown>;
       delete newData.id;
+      const dedupeKey = JSON.stringify(newData);
 
-      // Check persisted snapshot first to avoid unnecessary writes and activity logs
+      // If an identical save is already in-flight, wait for it to complete instead
+      if (_inFlightSaves[dedupeKey]) {
+        await _inFlightSaves[dedupeKey];
+        return;
+      }
+
+      // If the last save was identical and recent, skip this save to avoid rapid duplicates
+      if (
+        _lastSaved.key === dedupeKey &&
+        _lastSaved.ts &&
+        Date.now() - _lastSaved.ts < 5000
+      ) {
+        return;
+      }
+
+      // Check persisted snapshot second to prevent redundant writes
       const snapshot = await getDoc(settingsDoc);
       const existingData = snapshot.exists()
         ? (snapshot.data() as Record<string, unknown>)
@@ -65,27 +81,9 @@ export const settingsService = {
         JSON.stringify(existingData) === JSON.stringify(newData);
       if (samePersisted) return;
 
-      // Dedupe recent identical save attempts that may race before backend reflects the write
-      const dedupeKey = JSON.stringify(newData);
-
-      if (
-        _lastSaved.key === dedupeKey &&
-        _lastSaved.ts &&
-        Date.now() - _lastSaved.ts < 5000
-      ) {
-        return;
-      }
-
-      // If an identical save is already in-flight, wait for it to complete instead
-      if (_inFlightSaves[dedupeKey]) {
-        await _inFlightSaves[dedupeKey];
-        return;
-      }
-
       // Create and store the in-flight promise so concurrent callers coalesce
       const op = (async () => {
         try {
-          // Mark as recently-saved to short-circuit very near-future attempts
           _lastSaved = { key: dedupeKey, ts: Date.now() };
 
           await setDoc(settingsDoc, settingsWithId);
@@ -99,7 +97,6 @@ export const settingsService = {
             user!.uid,
           );
         } finally {
-          // Clean up in-flight map
           delete _inFlightSaves[dedupeKey];
         }
       })();

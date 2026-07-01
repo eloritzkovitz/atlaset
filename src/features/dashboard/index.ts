@@ -17,6 +17,7 @@ export { useDashboardRouteState } from "./navigation/hooks/useDashboardRouteStat
 export { useDashboardCountriesFilters } from "./countries/hooks/useDashboardCountriesFilters";
 
 // Utils
+export { getCountryRoute } from "./navigation/utils/dashboardNavigation";
 export { getDashboardMeta } from "./navigation/utils/dashboardNavigation";
 export {
   translateRegionLabel,

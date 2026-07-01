@@ -1,3 +1,4 @@
+import { BsGridFill } from "react-icons/bs";
 import { FaPlusSquare } from "react-icons/fa";
 import {
   FaArrowsRotate,
@@ -89,8 +90,8 @@ import {
 } from "react-icons/fa6";
 import { IoLanguage } from "react-icons/io5";
 import { PiCirclesFourFill } from "react-icons/pi";
-import { DashboardIcon } from "../components/icons/DashboardIcon";
-import { VisitIcon } from "../components/icons/VisitIcon";
+import { DashboardIcon } from "../components/media/icons/DashboardIcon";
+import { VisitIcon } from "../components/media/icons/VisitIcon";
 
 /** Centralized icon mapping for shared concepts */
 export const ICONS = {
@@ -172,6 +173,11 @@ export const ICONS = {
   info: FaCircleInfo,
   reportBug: FaBug,
   appearance: FaMoon,
+  //UI
+  viewMode: {
+    grid: BsGridFill,
+    list: FaList,
+  },
   // Actions
   add: FaPlus,
   importFile: FaFileImport,

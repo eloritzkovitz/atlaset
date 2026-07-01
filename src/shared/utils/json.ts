@@ -73,24 +73,26 @@ export function importFromFile<T extends Record<string, unknown>>(
  * @param omitFields - Fields to omit from each item.
  * @param defaultName - Default name if filename not provided.
  */
-export function exportToFile<T extends Record<string, unknown>>(
+export function exportToFile<T extends object & { name?: unknown }>(
   items: T | T[],
   filename?: string,
-  omitFields: string[] = [],
+  omitFields: (keyof T | string)[] = [],
   defaultName = "items",
 ) {
   if (!items) return;
   const arr = Array.isArray(items) ? items : [items];
-  const pretty = serializeItems(items, omitFields);
+  const pretty = serializeItems(items, omitFields as string[]);
   const blob = new Blob([pretty], { type: "application/json" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
+
   a.download =
     filename ||
     (arr.length === 1
-      ? `${(arr[0] as Record<string, unknown>)?.name || defaultName}.json`
+      ? `${String(arr[0]?.name || defaultName)}.json`
       : `${defaultName}s.json`);
+
   a.click();
   URL.revokeObjectURL(url);
 }

@@ -7,18 +7,20 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@app/firebase";
 
 /**
- * Checks if the user signed up using email/password provider
- * @param user - The user object
- * @returns True if the user is a password provider, false otherwise
+ * Checks if the user signed up using email/password provider.
+ * @param user - The user object.
+ * @returns True if the user is a password provider, false otherwise.
  */
 export function isPasswordProvider(user: User | null | undefined) {
-  return user?.providerData?.some((p: UserInfo) => p.providerId === "password");
+  return !!user?.providerData?.some(
+    (p: UserInfo) => p.providerId === "password",
+  );
 }
 
 /**
- * Checks if a user is deactivated and reactivates them if so
- * @param user - The user object
- * @returns A promise that resolves to true if the user was reactivated, false otherwise
+ * Checks if a user is deactivated and reactivates them if so.
+ * @param user - The user object.
+ * @returns A promise that resolves to true if the user was reactivated, false otherwise.
  */
 export async function checkAndReactivateUser(user: User): Promise<boolean> {
   const userDocRef = doc(db, "users", user.uid);
@@ -27,7 +29,7 @@ export async function checkAndReactivateUser(user: User): Promise<boolean> {
     await setDoc(
       userDocRef,
       { status: "active", reactivatedAt: new Date().toISOString() },
-      { merge: true }
+      { merge: true },
     );
     return true;
   }

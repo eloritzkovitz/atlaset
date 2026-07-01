@@ -117,13 +117,6 @@ export function LayersPanel({
             icon={<ICONS.exportFile />}
             rounded
           />
-          <ActionButton
-            onClick={closePanel}
-            ariaLabel={t("common:actions.close")}
-            title={t("common:actions.close")}
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
         </>
       }
     >

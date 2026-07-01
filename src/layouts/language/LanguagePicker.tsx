@@ -1,12 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ActionButton,
-  Modal,
-  PanelHeader,
-  SearchInput,
-  Separator,
-} from "@components";
+import { Modal, ModalHeader, SearchInput, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { mapLanguages, useLanguage } from "@features/settings";
 import { LanguageMenuList } from "./LanguageMenuList";
@@ -53,23 +47,14 @@ export function LanguagePicker({ isOpen, onClose }: LanguagePickerProps) {
       position="center"
       className="min-w-[360px] max-w-lg"
     >
-      <PanelHeader
+      <ModalHeader
         title={
           <>
             <ICONS.language />
             {t("menu.language")}
           </>
         }
-        showSeparator
-      >
-        <ActionButton
-          onClick={onClose}
-          ariaLabel={t("actions.close")}
-          title={t("actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
-      </PanelHeader>
+      />
       <div className="p-4">
         <SearchInput
           className="w-full"

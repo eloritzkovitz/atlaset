@@ -1,9 +1,9 @@
 import { Suspense, lazy, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  Table,
-  DashboardCard,
+  Card,
   SegmentedToggle,
+  Table,
   type SegmentedToggleOption,
 } from "@components";
 import {
@@ -55,7 +55,7 @@ export function TripsByYear() {
 
   return (
     <>
-      <DashboardCard
+      <Card
         title={t("statistics.year.title", { defaultValue: "Trips by Year" })}
       >
         <SegmentedToggle
@@ -81,8 +81,8 @@ export function TripsByYear() {
             />
           </Suspense>
         </div>
-      </DashboardCard>
-      <DashboardCard
+      </Card>
+      <Card
         title={t("statistics.year.breakdownTitle", {
           defaultValue: "Yearly Trip Breakdown",
         })}
@@ -91,7 +91,7 @@ export function TripsByYear() {
         <div className="overflow-x-auto">
           <Table columns={filteredColumns} data={tripsByYearData} />
         </div>
-      </DashboardCard>
+      </Card>
     </>
   );
 }

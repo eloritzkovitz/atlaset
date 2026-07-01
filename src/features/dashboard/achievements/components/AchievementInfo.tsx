@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { useAchievementStatus } from "../hooks/useAchievementStatus";
-import { CountryListGroup } from "@features/countries";
-import { AchievementListGroup } from "./AchievementListGroup";
+import { useNavigate, useParams } from "react-router-dom";
 import { useVisitedCountries } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
+import { AchievementListGroup } from "./AchievementListGroup";
+import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import type { Achievement } from "../types";
 import { getAchievementCountries } from "../utils/achievements";
 import { getCurrentTier } from "../utils/achievementsTiers";
+import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
+import { useIsoGroups } from "../../common/hooks/useIsoGroups";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
+import { getCountryRoute } from "../../navigation/utils/dashboardNavigation";
 
 export function AchievementInfo() {
   const { achievementId } = useParams();
@@ -24,12 +25,12 @@ export function AchievementInfo() {
     "",
     "",
   );
+  const navigate = useNavigate();
 
-  const [expandedCountries, setExpandedCountries] = useState(true);
   let achCountries: typeof countries = [];
   let region: string | undefined;
 
-  // Determine display criteria (merge base + active tier) and derive countries
+  // Determine display criteria and derive countries
   if (achievement) {
     const { tierObj } = getCurrentTier(
       achievement,
@@ -58,20 +59,30 @@ export function AchievementInfo() {
     }
   }
 
+  const isoGroups = useIsoGroups(achCountries, () => true);
+  const hasCountries =
+    isoGroups.sovereignIsoCodes.length > 0 ||
+    isoGroups.dependencyIsoCodes.length > 0;
+
   // Defensive check for achievement existence
   if (!achievement) return <div className="p-4">Achievement not found.</div>;
 
-  // Defensive check for criteria countries
-  const isoCodes = achCountries.map((c) => c.isoCode);
+  const primaryGroupLabel = region
+    ? `Sovereign countries in ${region}`
+    : "Sovereign countries";
+  const dependencyGroupLabel = region
+    ? `Dependencies and territories in ${region}`
+    : "Dependencies and territories";
 
   return (
-    <section className="max-w-6xl mx-auto">
+    <section className="max-w-6xl mx-auto px-4">
       <DashboardHeader
         title={achievement.name}
         leading={<AchievementIcon type={achievement.type} locked={false} />}
         onBack={handleBack}
       />
       <div className="mb-4 text-muted text-base">{achievement.description}</div>
+
       {achievement.requires && achievement.requires.length > 0 && (
         <AchievementListGroup
           achievements={
@@ -85,6 +96,7 @@ export function AchievementInfo() {
           achievementStatusMap={achievementStatusMap}
         />
       )}
+
       {achievement.criteria?.regions &&
         Array.isArray(achievement.criteria.regions) && (
           <AchievementListGroup
@@ -106,20 +118,24 @@ export function AchievementInfo() {
               ]),
             )}
             onAchievementClick={(region) => {
-              window.location.href = `/dashboard/countries/${encodeURIComponent(region)}`;
+              navigate(getCountryRoute(region));
             }}
           />
         )}
-      {isoCodes.length > 0 && (
-        <CountryListGroup
-          label={region ? `Countries in ${region}` : "Countries"}
-          isoCodes={isoCodes}
-          countries={countries}
-          visited={isVisitedCountry}
-          expanded={expandedCountries}
-          onToggle={() => setExpandedCountries((prev) => !prev)}
-          onSelectCountry={handleCountrySelect}
-        />
+
+      {hasCountries && (
+        <div className="mt-2 pt-6 items-end">
+          <InfoWithCountryGroups
+            title={achievement.name}
+            showHeader={false}
+            isoGroups={isoGroups}
+            countries={countries}
+            primaryLabel={primaryGroupLabel}
+            dependencyLabel={dependencyGroupLabel}
+            onSelectCountry={handleCountrySelect}
+            visited={isVisitedCountry}
+          />
+        </div>
       )}
     </section>
   );

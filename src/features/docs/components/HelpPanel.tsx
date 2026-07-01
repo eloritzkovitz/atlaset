@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton, AppLinks, Panel, Separator } from "@components";
+import { AppLinks, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DocSearchResults } from "./DocSearchResults";
 
@@ -10,7 +10,7 @@ interface HelpPanelProps {
 
 export function HelpPanel({ open, onClose }: HelpPanelProps) {
   const { t } = useTranslation("common");
-  
+
   return (
     <Panel
       show={open}
@@ -20,15 +20,6 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
         <>
           <ICONS.help className="me-2" /> {t("help.title")}
         </>
-      }
-      headerActions={
-        <ActionButton
-          onClick={onClose}
-          ariaLabel={t("actions.close")}
-          title={t("actions.close")}
-          icon={<ICONS.close className="text-2xl" />}
-          rounded
-        />
       }
       className="!z-[10050]"
       showSeparator={false}

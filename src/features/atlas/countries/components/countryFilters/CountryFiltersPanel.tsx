@@ -126,13 +126,6 @@ export function CountryFiltersPanel({
             icon={<ICONS.reset />}
             rounded
           />
-          <ActionButton
-            onClick={onHide}
-            ariaLabel={t("common:actions.close")}
-            title={t("common:actions.close")}
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
         </>
       }
       className={isMobile ? "panel-mobile-fullscreen" : ""}

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { ActionButton } from "../action/ActionButton";
+import { ActionButton } from "../inputs/Button/ActionButton";
 
 export function AuthButtons() {
   const navigate = useNavigate();

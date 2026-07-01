@@ -1,13 +1,13 @@
 import { lazy, Suspense, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCrown } from "react-icons/fa6";
-import { DashboardCard, PieLegendCard, Table, Chip } from "@components";
+import { PieLegendCard, Table, Chip, Card } from "@components";
 import { getMonthsShort, getMonthsLong } from "@utils/date";
 import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 import { translateColumns } from "../utils/columns";
 
-const PieChart = lazy(() => import("@components/chart/PieChart"));
+const PieChart = lazy(() => import("@components/display/PieChart/PieChart"));
 
 const MONTH_COLORS = [
   "#22d3ee",
@@ -63,7 +63,7 @@ export function TripsByMonth() {
     <>
       <div className="flex flex-row gap-8 justify-center items-stretch">
         {/* Pie and legend */}
-        <DashboardCard
+        <Card
           title={t("statistics.months.title", {
             defaultValue: "Trips by Month",
           })}
@@ -115,10 +115,10 @@ export function TripsByMonth() {
               })}
             </p>
           )}
-        </DashboardCard>
+        </Card>
         {/* Popularity cards */}
         <div className="flex flex-col gap-4 min-w-[320px] max-w-[380px]">
-          <DashboardCard
+          <Card
             title={t("statistics.months.mostPopular.title", {
               defaultValue: "Most Popular Month",
             })}
@@ -139,8 +139,8 @@ export function TripsByMonth() {
                 )}
               </Chip>
             </div>
-          </DashboardCard>
-          <DashboardCard
+          </Card>
+          <Card
             title={t("statistics.months.leastPopular.title", {
               defaultValue: "Least Popular Month",
             })}
@@ -160,10 +160,10 @@ export function TripsByMonth() {
                 )}
               </Chip>
             </div>
-          </DashboardCard>
+          </Card>
         </div>
       </div>
-      <DashboardCard
+      <Card
         title={t("statistics.months.breakdownTitle", {
           defaultValue: "Monthly Trip Breakdown",
         })}
@@ -178,7 +178,7 @@ export function TripsByMonth() {
             data={allMonthsData}
           />
         </div>
-      </DashboardCard>
+      </Card>
     </>
   );
 }

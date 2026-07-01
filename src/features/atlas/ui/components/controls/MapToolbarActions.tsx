@@ -1,4 +1,4 @@
-import { ActionButton, ToolbarSeparator, MenuButton } from "@components";
+import { ActionButton, MenuButton, Separator } from "@components";
 
 interface MapToolbarActionsProps {
   actions: {
@@ -35,7 +35,11 @@ export function MapToolbarActions({
               rounded
             />,
             action.separatorAfter ? (
-              <ToolbarSeparator key={action.key + "-sep"} />
+              <Separator
+                key={action.key + "-sep"}
+                orientation="vertical"
+                className="mx-2 h-6"
+              />
             ) : null,
           ])}
         {children}

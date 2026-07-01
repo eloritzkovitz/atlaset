@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  ActionButton,
-  FormField,
-  Modal,
-  ModalActions,
-  PanelHeader,
-} from "@components";
+import { FormField, Modal, ModalActions, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import {
   CountrySelectField,
@@ -83,7 +77,7 @@ export function CountryListModal({
         disableClose={countrySelectOpen}
         draggable
       >
-        <PanelHeader
+        <ModalHeader
           title={
             <>
               {isWantToVisitList ? (
@@ -98,16 +92,7 @@ export function CountryListModal({
                 : t("countries.lists.form.addTitle")}
             </>
           }
-          showSeparator
-        >
-          <ActionButton
-            onClick={onClose}
-            ariaLabel={t("common:actions.close")}
-            title={t("common:actions.close")}
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
-        </PanelHeader>
+        />
         <form
           onSubmit={(e) => {
             e.preventDefault();

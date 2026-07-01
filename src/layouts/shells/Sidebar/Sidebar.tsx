@@ -14,7 +14,7 @@ export function Sidebar() {
   const { uiVisible, sidebarExpanded, setSidebarExpanded } = useUI();
   const { t } = useTranslation("common");
 
-  // Hide sidebar on Escape key or when UI is hidden
+  // Handle sidebar hide on outside click or escape key
   usePanelHide({
     show: sidebarExpanded,
     onHide: () => setSidebarExpanded(false),
@@ -23,92 +23,69 @@ export function Sidebar() {
   });
 
   // Hide sidebar if UI is not visible
-  if (!uiVisible) {
-    return null;
-  }
+  if (!uiVisible) return null;
 
-  // Determine sidebar width
+  // Calculate sidebar width based on expanded state
   const sidebarWidth = sidebarExpanded
     ? DEFAULT_SIDEBAR_EXPANDED_WIDTH
     : DEFAULT_SIDEBAR_WIDTH;
+  const toggleLabel = t(
+    sidebarExpanded ? "sidebar.collapse" : "sidebar.expand",
+  );
 
   return (
     <>
-      {/* Desktop sidebar: hidden on mobile, block on md+ */}
-      {/* Backdrop when expanded */}
+      {/* Desktop sidebar */}
       {sidebarExpanded && (
         <div
           className="fixed inset-0 bg-black opacity-20 z-[9999]"
           onClick={() => setSidebarExpanded(false)}
         />
       )}
+
       <aside
-        className={`hidden md:block fixed top-0 start-0 justify-center h-screen z-[10000] bg-sidebar transition-all duration-200 px-1`}
-        style={{
-          width: sidebarWidth,
-          minWidth: sidebarWidth,
-        }}
+        className="hidden md:block fixed top-0 start-0 justify-center h-screen z-[10000] bg-sidebar transition-all duration-200 px-1"
+        style={{ width: sidebarWidth, minWidth: sidebarWidth }}
       >
-        {/* Expand/Collapse Button */}
+        {/* Header */}
         <div className="flex items-center h-14 mt-1">
           <ActionButton
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
-            aria-label={
-              sidebarExpanded ? t("sidebar.collapse") : t("sidebar.expand")
-            }
-            title={
-              sidebarExpanded ? t("sidebar.collapse") : t("sidebar.expand")
-            }
+            aria-label={toggleLabel}
+            title={toggleLabel}
             className="flex h-10 w-10 ms-1 hover:bg-sidebar-btn-hover transition"
             icon={<FaBars className="text-text text-2xl" />}
             rounded
           />
           {sidebarExpanded && (
-            <div className="flex items-center gap-2 px-2">
+            <div className="flex items-center gap-2 px-2 animate-fade-in">
               <Branding size={36} />
               <span className="font-bold text-2xl">Atlaset</span>
             </div>
           )}
         </div>
 
-        {/* Navigation */}
+        {/* Desktop Navigation Links */}
         <nav className="flex flex-col gap-2 mt-2">
           {NAV_LINKS.map((link) => (
             <SidebarMenuLink
               key={link.to}
-              to={link.to}
-              icon={link.icon}
-              labelKey={link.labelKey}
-              label={link.label}
+              {...link}
               expanded={sidebarExpanded}
-              end={link.end}
             />
           ))}
         </nav>
-        {/* Settings */}
+
+        {/* Settings Footer */}
         <div className="absolute bottom-2 start-0 w-full px-1">
-          <SidebarMenuLink
-            to={SETTINGS_LINK.to}
-            icon={SETTINGS_LINK.icon}
-            labelKey={SETTINGS_LINK.labelKey}
-            label={SETTINGS_LINK.label}
-            expanded={sidebarExpanded}
-          />
+          <SidebarMenuLink {...SETTINGS_LINK} expanded={sidebarExpanded} />
         </div>
       </aside>
 
-      {/* Mobile bottom navigation bar: only visible on mobile */}
+      {/* Mobile bottom navigation bar */}
       <nav className="fixed bottom-0 start-0 end-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
-        {[...NAV_LINKS].map((link) => (
-          <SidebarMenuLink
-            key={link.to}
-            to={link.to}
-            icon={link.icon}
-            labelKey={link.labelKey}
-            label={link.label}
-            expanded={sidebarExpanded}
-            end={link.end}
-          />
+        {NAV_LINKS.map((link) => (
+          <SidebarMenuLink key={link.to} {...link} expanded={false} />
         ))}
       </nav>
     </>

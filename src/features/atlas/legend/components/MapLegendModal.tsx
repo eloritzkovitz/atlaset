@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ActionButton, Modal, PanelHeader } from "@components";
-import { ICONS } from "@constants/icons";
+import { Modal, ModalHeader } from "@components";
 import { LegendRow } from "./LegendRow";
 import type { LegendItem } from "../types";
 
@@ -12,7 +11,7 @@ interface MapLegendModalProps {
 
 export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
   const { t } = useTranslation("atlas");
-  
+
   return (
     <Modal
       isOpen={open}
@@ -21,18 +20,7 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
       className="!bg-bg/50 !shadow-none fixed top-16 end-6 z-50 select-none"
       disableClose
     >
-      <PanelHeader title={t("legend.title")} className="!px-0 group">
-        <div className="flex items-center justify-between w-full">
-          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-150">
-            <ActionButton
-              onClick={onClose}
-              ariaLabel={t("common:actions.close")}
-              icon={<ICONS.close className="text-2xl" />}
-              rounded
-            />
-          </span>
-        </div>
-      </PanelHeader>
+      <ModalHeader title={t("legend.title")} className="!px-0 group" />
       <div className="flex flex-col gap-4">
         {items.map((item, idx) => (
           <LegendRow

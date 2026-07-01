@@ -1,50 +1,32 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { authState, mockUser } from "@test-utils/mockUser";
-import {
-  firestoreMocks,
-  authMocks,
-  resetAllMocks,
-} from "@test-utils/mockDbAndFirestore";
+import { authState, createMockUser } from "@test-utils/authMocks";
+import * as firebaseUtils from "./firebase";
 
-// Mock Firebase Auth module
+const mockUser = createMockUser();
+
 vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(() => ({
-    currentUser: authState.currentUser,
-    app: {} as any,
-    name: "",
-    config: {},
-    setPersistence: vi.fn(),
-    signInWithEmailAndPassword: vi.fn(),
-    signOut: vi.fn(),
-    onAuthStateChanged: vi.fn(),
+    get currentUser() {
+      return authState.currentUser;
+    },
   })),
-  onAuthStateChanged: vi.fn(),
 }));
 
+const mockCollection = vi.fn();
 vi.mock("firebase/firestore", () => ({
-  ...firestoreMocks,
   getFirestore: vi.fn(() => ({})),
+  collection: (...args: any[]) => mockCollection(...args),
 }));
 
-// Mock the firebase utility module itself
-vi.mock("./firebase", async () => {
-  // Import the actual module so you can override its exports
-  const actual = await vi.importActual<typeof import("./firebase")>(
-    "./firebase"
-  );
-  return {
-    ...actual,
-    getCurrentUser: vi.fn(() => mockUser),
-  };
-});
-
-// Import the firebase utils after mocking
-import * as firebaseUtils from "./firebase";
+vi.mock("@app/firebase", () => ({
+  auth: {},
+  db: {},
+}));
 
 describe("firebase utils", () => {
   beforeEach(() => {
-    resetAllMocks(firestoreMocks, authMocks);
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
+    mockCollection.mockReset();
   });
 
   describe("isAuthenticated", () => {
@@ -61,34 +43,32 @@ describe("firebase utils", () => {
 
   describe("getCurrentUser", () => {
     it("returns the current user object", () => {
-      (firebaseUtils.getCurrentUser as any).mockReturnValue(mockUser);
-      const user = firebaseUtils.getCurrentUser();
-      expect(user).toEqual(mockUser);
+      authState.currentUser = mockUser;
+      expect(firebaseUtils.getCurrentUser()).toEqual(mockUser);
     });
   });
 
   describe("getUserCollection", () => {
     it("throws if not authenticated", () => {
       authState.currentUser = null;
-      expect(() => firebaseUtils.getUserCollection("markers")).toThrow();
+      expect(() => firebaseUtils.getUserCollection("markers")).toThrow(
+        "Not authenticated",
+      );
     });
 
     it("returns a collection if authenticated", () => {
       authState.currentUser = mockUser;
-      firestoreMocks.collection.mockReturnValue({ id: "mockCollection" });
+      mockCollection.mockReturnValue({ id: "mockCollection" });
 
       const result = firebaseUtils.getUserCollection("markers");
-      expect(result).toEqual({ id: "mockCollection" });
-      expect(firestoreMocks.collection).toHaveBeenCalled();
-    });
 
-    it("returns a collection if authenticated", () => {
-      (firebaseUtils.getCurrentUser as any).mockReturnValue(mockUser);
-      firestoreMocks.collection.mockReturnValue({ id: "mockCollection" });
-
-      const result = firebaseUtils.getUserCollection("markers");
       expect(result).toEqual({ id: "mockCollection" });
-      expect(firestoreMocks.collection).toHaveBeenCalled();
+      expect(mockCollection).toHaveBeenCalledWith(
+        expect.any(Object),
+        "users",
+        "test-user",
+        "markers",
+      );
     });
-  });  
+  });
 });

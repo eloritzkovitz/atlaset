@@ -1,10 +1,11 @@
+import i18n from "i18next";
 import { describe, it, expect, vi } from "vitest";
-import { authState, mockUser } from "@test-utils/mockUser";
-import { firestoreMocks } from "@test-utils/mockDbAndFirestore";
+import { authState, createMockUser } from "@test-utils/authMocks";
+import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import * as firebaseUtils from "@utils/firebase";
 import * as activityUtils from "./activity";
-import type { CollectionReference, DocumentData } from "firebase/firestore";
-import i18n from "i18next";
+
+const mockUser = createMockUser();
 
 function mockI18nTemplate(key: number | string, template: string) {
   vi.spyOn(i18n, "t").mockImplementationOnce((...args: any[]) => {
@@ -35,6 +36,8 @@ function hasText(children: any[], text: string) {
   );
 }
 
+import type { CollectionReference, DocumentData } from "firebase/firestore";
+
 beforeEach(() => {
   vi.restoreAllMocks();
   vi.spyOn(i18n, "t").mockImplementation((...args: any[]) => {
@@ -55,10 +58,6 @@ vi.mock("firebase/auth", () => ({
   })),
   onAuthStateChanged: vi.fn(),
 }));
-vi.mock("firebase/firestore", () => ({
-  ...firestoreMocks,
-  getFirestore: vi.fn(() => ({})),
-}));
 vi.mock("./firebase", async () => {
   const actual =
     await vi.importActual<typeof import("@app/firebase")>("./firebase");
@@ -70,13 +69,13 @@ vi.mock("./firebase", async () => {
 
 describe("logUserActivity", () => {
   it("calls addDoc with correct params", async () => {
-    const mockAddDoc = firestoreMocks.addDoc as unknown as jest.Mock;
+    const mockAddDoc = fs.addDoc as unknown as jest.Mock;
     if (mockAddDoc.mockClear) mockAddDoc.mockClear();
     const mockCollection = {} as unknown as CollectionReference<DocumentData>;
     const getUserCollection = vi.spyOn(firebaseUtils, "getUserCollection");
     getUserCollection.mockReturnValue(mockCollection);
     await activityUtils.logUserActivity(101, { foo: "bar" }, "uid123");
-    expect(firestoreMocks.addDoc).toHaveBeenCalledWith(
+    expect(fs.addDoc).toHaveBeenCalledWith(
       expect.anything(),
       expect.objectContaining({
         action: 101,

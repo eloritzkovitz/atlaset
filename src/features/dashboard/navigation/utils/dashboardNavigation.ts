@@ -1,8 +1,31 @@
 /**
- * @file Utilities for dashboard navigation
+ * Utilities for dashboard navigation.
  */
+
 import type { Crumb } from "@components";
 import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
+
+/**
+ * Generates a dashboard URL path for countries, regions, or subregions.
+ * @param region - The region of the country.
+ * @param subregion - The subregion of the country.
+ * @param isoCode - The ISO code of the country.
+ * @returns A string representing the route to the country details page.
+ */
+export function getCountryRoute(
+  region?: string,
+  subregion?: string,
+  isoCode?: string,
+): string {
+  const r = region ? encodeURIComponent(region.toLowerCase()) : "all";
+  const s = subregion ? encodeURIComponent(subregion.toLowerCase()) : "all";
+
+  if (isoCode) return `/dashboard/countries/${r}/${s}/${isoCode}`;
+  if (subregion) return `/dashboard/countries/${r}/${s}`;
+  if (region) return `/dashboard/countries/${r}`;
+
+  return `/dashboard/countries/all`;
+}
 
 /**
  * Generate breadcrumbs for the dashboard based on navigation state
@@ -18,10 +41,10 @@ export function getDashboardBreadcrumbs(
   selectedPanel: string,
   selectedRegion: string | null,
   selectedSubregion: string | null,
-  selectedCountry: { name: string } | null,
-  selectedLanguage: { name: string } | null,
-  selectedCurrency: { name: string } | null,
-  selectedAchievement: { name: string } | null,
+  selectedCountry: string | null,
+  selectedLanguage: string | null,
+  selectedCurrency: string | null,
+  selectedAchievement: string | null,
 ): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
 
@@ -36,51 +59,49 @@ export function getDashboardBreadcrumbs(
       crumbs.push({ label: selectedSubregion, key: "subregion" });
     }
     if (selectedCountry) {
-      crumbs.push({ label: selectedCountry.name, key: "country" });
+      crumbs.push({ label: selectedCountry, key: "country" });
     }
   }
   if (
-    (selectedPanel === "languages" ||
-      selectedPanel.startsWith("languages/")) &&
+    (selectedPanel === "languages" || selectedPanel.startsWith("languages/")) &&
     selectedLanguage &&
-    selectedLanguage.name
+    selectedLanguage
   ) {
     crumbs.push({
-      label: selectedLanguage.name,
-      key: `language:${selectedLanguage.name}`,
+      label: selectedLanguage,
+      key: `language:${selectedLanguage}`,
     });
   }
   if (
     (selectedPanel === "currencies" ||
       selectedPanel.startsWith("currencies/")) &&
     selectedCurrency &&
-    selectedCurrency.name
+    selectedCurrency
   ) {
     crumbs.push({
-      label: selectedCurrency.name,
-      key: `currency:${selectedCurrency.name}`,
+      label: selectedCurrency,
+      key: `currency:${selectedCurrency}`,
     });
   }
   if (
     selectedPanel === "achievements" &&
     selectedAchievement &&
-    selectedAchievement.name
+    selectedAchievement
   ) {
     crumbs.push({
-      label: selectedAchievement.name,
-      key: `achievement:${selectedAchievement.name}`,
+      label: selectedAchievement,
+      key: `achievement:${selectedAchievement}`,
     });
   }
   return crumbs;
 }
 
-// Helper to safely extract name from objects that may be null or have missing name
-function safeName(
-  obj: { name?: string } | null | undefined,
-): { name: string } | null {
-  return obj && typeof obj.name === "string" && obj.name
-    ? { name: obj.name }
-    : null;
+/** Safely extracts a string name from an object, returning null if the object is null or has no valid name.
+ * @param obj - The object from which to extract the name.
+ * @returns The name string if present, otherwise null.
+ */
+function extractName(obj: { name?: string } | null | undefined): string | null {
+  return obj && typeof obj.name === "string" && obj.name ? obj.name : null;
 }
 
 /**
@@ -96,10 +117,9 @@ export function getDashboardMeta({
   selectedAchievement,
 }: {
   selectedPanel: string | undefined;
-  selectedCountry: { name?: string } | null | undefined;  
-  currentPanel: { title: string } | undefined;
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
+  selectedCountry: { name?: string } | null | undefined;
   selectedLanguage: { name: string } | null | undefined;
   selectedCurrency: { name: string } | null | undefined;
   selectedAchievement: { name: string } | null | undefined;
@@ -107,19 +127,20 @@ export function getDashboardMeta({
   const safePanel = selectedPanel ?? "";
   const safeRegion = selectedRegion ?? null;
   const safeSubregion = selectedSubregion ?? null;
-  const safeCountry = safeName(selectedCountry);
-  const safeLanguage = safeName(selectedLanguage);
-  const safeCurrency = safeName(selectedCurrency);
-  const safeAchievement = safeName(selectedAchievement);
+  const countryName = extractName(selectedCountry);
+  const languageName = extractName(selectedLanguage);
+  const currencyName = extractName(selectedCurrency);
+  const achievementName = extractName(selectedAchievement);
 
   const breadcrumbs = getDashboardBreadcrumbs(
     safePanel,
     safeRegion,
-    safeSubregion,    
-    safeCountry,
-    safeLanguage,
-    safeCurrency,
-    safeAchievement,
+    safeSubregion,
+    countryName,
+    languageName,
+    currencyName,
+    achievementName,
   );
+
   return { breadcrumbs };
 }

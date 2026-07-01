@@ -20,6 +20,7 @@ import {
   getCountryTerritories,
   getAllGeoTypes,
 } from "./countryData";
+import { canonicalKey } from "@utils/string";
 
 vi.mock("../constants/flagOverrides", () => ({
   FLAG_OVERRIDES: ["YY"],
@@ -269,7 +270,6 @@ describe("countryData utils", () => {
       const local: Country = {
         name: "Edge",
         isoCode: "EG",
-        // simulate odd data shapes coming from JSON
         territories: {
           missingValue: undefined as unknown as any,
           noCodes: { label: "NoCodes" } as unknown as any,
@@ -365,6 +365,27 @@ describe("countryData utils", () => {
       const zz = { isoCode: "ZZ" } as Country;
       expect(!!getTranscontinentalInfo(ru)).toBe(true);
       expect(!!getTranscontinentalInfo(zz)).toBe(false);
+    });
+
+    it("resolves additionalSubregionRegion when matches are found in subregionsByRegion mapping", () => {
+      const subregionName = "West Asia";
+      const computedKey = canonicalKey(subregionName);
+
+      const country = {
+        isoCode: "TR",
+        transcontinental: {
+          additionalRegion: "Asia",
+          additionalSubregion: subregionName,
+        },
+      } as Country;
+
+      const subregionsByRegion = {
+        "Middle East": [computedKey],
+        "Other Region": ["unrelated-subregion"],
+      };
+
+      const result = getTranscontinentalInfo(country, subregionsByRegion);
+      expect(result?.additionalSubregionRegion).toBe("Middle East");
     });
   });
 });

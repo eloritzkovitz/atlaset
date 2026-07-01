@@ -1,15 +1,14 @@
-import { AchievementProgressChip } from "./AchievementProgressChip";
-import { Checklist } from "./Checklist";
-import { AchievementStatusChip } from "./AchievementStatusChip";
-import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
-import type { Country } from "@features/countries";
+import { Checklist } from "@components";
+import { CountryFlagGrid, type Country } from "@features/countries";
 import type { Trip } from "@features/trips";
-import { AchievementFlagGrid } from "./AchievementFlagGrid";
 import { AchievementIcon } from "./AchievementIcon";
+import { AchievementProgressChip } from "./AchievementProgressChip";
+import { AchievementStatusChip } from "./AchievementStatusChip";
 import { AchievementTierChip } from "./AchievementTierChip";
+import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
+import type { Achievement, AchievementStatus } from "../types";
 import { getDisplayFlagCountries } from "../utils/achievementsDisplay";
 import { getTier, getCurrentTier } from "../utils/achievementsTiers";
-import type { Achievement, AchievementStatus } from "../types";
 
 interface AchievementCardProps {
   achievement: Achievement;
@@ -157,10 +156,10 @@ export function AchievementCard({
           return (
             <>
               <div className="mt-4" />
-              <AchievementFlagGrid
-                countries={countries}
+              <CountryFlagGrid
                 countryCodes={achCountries.map((c) => c.isoCode)}
-                visited={visited}
+                size="32"
+                isHighlighted={(isoCode) => visited.isVisitedCountry(isoCode)}
               />
             </>
           );

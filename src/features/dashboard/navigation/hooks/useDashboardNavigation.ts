@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import type { Country } from "@features/countries";
+import { getCountryRoute } from "../utils/dashboardNavigation";
 
 /**
  * Manages dashboard navigation state and handlers.
- * @param countries - List of all countries
- * @param selectedRegion - Currently selected region
- * @param selectedSubregion - Currently selected subregion *
- * @returns Navigation state and handlers
+ * @param countries - List of countries.
+ * @param selectedRegion - Currently selected region.
+ * @param selectedSubregion - Currently selected subregion.
+ * @returns Navigation state and handlers.
  */
 export function useDashboardNavigation(
   countries: Country[],
@@ -15,72 +16,41 @@ export function useDashboardNavigation(
 ) {
   const navigate = useNavigate();
 
-  // Build route for country details based on region, subregion, and isoCode
-  const buildCountryRoute = (
-    region?: string,
-    subregion?: string,
-    isoCode?: string,
-  ) => {
-    const r = region ? encodeURIComponent(region.toLowerCase()) : "all";
-    const s = subregion ? encodeURIComponent(subregion.toLowerCase()) : "all";
-    return isoCode
-      ? `/dashboard/countries/${r}/${s}/${isoCode}`
-      : subregion
-        ? `/dashboard/countries/${r}/${s}`
-        : region
-          ? `/dashboard/countries/${r}`
-          : `/dashboard/countries/all`;
-  };
-
   // Navigation handlers
   const handlePanelChange = (panel: string) => navigate(`/dashboard/${panel}`);
-
-  // Region and subregion select handlers
   const handleRegionSelect = (region: string) =>
-    navigate(buildCountryRoute(region));
+    navigate(getCountryRoute(region));
   const handleSubregionSelect = (region: string, subregion: string) =>
-    navigate(buildCountryRoute(region, subregion));
-
-  // Country select handler
+    navigate(getCountryRoute(region, subregion));
   const handleCountrySelect = (isoCode: string | null) => {
-    if (!isoCode) {
-      navigate(`/dashboard/countries`);
-      return;
-    }
+    if (!isoCode) return navigate(`/dashboard/countries`);
+
     const country = countries?.find((c) => c.isoCode === isoCode);
-    if (country) {
+
+    if (country)
       navigate(
-        buildCountryRoute(country.region, country.subregion, country.isoCode),
+        getCountryRoute(country.region, country.subregion, country.isoCode),
       );
-    }
   };
-
-  // Show all countries handler
   const handleShowAllCountries = () => navigate(`/dashboard/countries/all`);
+  const handleBack = () => navigate(-1);
 
-  // Breadcrumb mapping
-  const crumbRoutes: Record<string, () => void> = {
+  // Breadcrumb actions mapping
+  const crumbActions: Record<string, () => void> = {
     dashboard: () => navigate(`/dashboard/overview`),
     countries: () => navigate(`/dashboard/countries/all`),
-    region: () => navigate(buildCountryRoute(selectedRegion)),
+    region: () => navigate(getCountryRoute(selectedRegion)),
     subregion: () =>
-      navigate(buildCountryRoute(selectedRegion, selectedSubregion)),
+      navigate(getCountryRoute(selectedRegion, selectedSubregion)),
+    country: () => {},
     "currencies/exchange": () => navigate(`/dashboard/currencies/exchange`),
   };
 
   // Crumb click handler
   const handleCrumbClick = (key: string) => {
-    if (crumbRoutes[key]) {
-      crumbRoutes[key]();
-    } else if (key === "country") {
-      // No-op
-    } else {
-      handlePanelChange(key);
-    }
+    const action = crumbActions[key] ?? (() => handlePanelChange(key));
+    action();
   };
-
-  // Back handler
-  const handleBack = () => navigate(-1);
 
   return {
     handlePanelChange,

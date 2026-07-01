@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { SelectionListModal } from "@components";
+import { ModalSelect } from "@components";
 import { ICONS } from "@constants/icons";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import type { TripCategory } from "../../types";
@@ -27,7 +27,7 @@ export function CategorySelectModal({
   const { t } = useTranslation(["trips", "common"]);
 
   return (
-    <SelectionListModal<CategoryOption>
+    <ModalSelect<CategoryOption>
       isOpen={isOpen}
       title={
         <>

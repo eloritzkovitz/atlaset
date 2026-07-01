@@ -1,145 +1,159 @@
-import { vi } from "vitest";
-
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (k: any, opts?: any) => (opts && opts.defaultValue) || k,
-    i18n: {
-      t: (k: any, opts?: any) => (opts && opts.defaultValue) || k,
-      language: "en",
-    },
-  }),
-}));
-
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import React from "react";
 import { Provider } from "react-redux";
 import configureStore from "redux-mock-store";
+import { thunk } from "redux-thunk";
 import { renderHook, act } from "@testing-library/react";
 import { useCountryData } from "./useCountryData";
 import * as countrySlice from "../slices/countryDataSlice";
 
-const mockStore = configureStore([]);
+const mockStore = configureStore([thunk as any]);
+let shouldCrashBundle = false;
+
+vi.mock("react-i18next", () => {
+  const mockI18n = {
+    t: (k: string, opts?: any) => (opts && opts.defaultValue) || k,
+    language: "en",
+    getResourceBundle: () => {
+      if (shouldCrashBundle) throw new Error();
+      return { US: { name: "United States Localized" } };
+    },
+    exists: (k: string) => k === "languages:eng",
+  };
+  return {
+    useTranslation: () => ({ t: mockI18n.t, i18n: mockI18n }),
+  };
+});
+
+vi.mock("i18next", () => ({
+  default: {
+    language: "en",
+    getResourceBundle: () => {
+      if (shouldCrashBundle) throw new Error();
+      return {};
+    },
+  },
+  language: "en",
+  getResourceBundle: () => {
+    if (shouldCrashBundle) throw new Error();
+    return {};
+  },
+}));
 
 describe("useCountryData", () => {
   let store: ReturnType<typeof mockStore>;
   let dispatchSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
+    vi.restoreAllMocks();
+    shouldCrashBundle = false;
     store = mockStore({
-      countryData: {
-        countries: [],
-        currencies: [],
-        allRegions: [],
-        allSubregions: [],
-        allSovereigntyStatuses: [],
-        loading: false,
-        error: null,
-      },
+      countryData: { countries: [], loading: false, error: null },
     });
     dispatchSpy = vi.spyOn(store, "dispatch");
   });
 
-  it("returns country data from the store", () => {
-    const fetchCountryDataSpy = vi.spyOn(countrySlice, "fetchCountryData");
-    fetchCountryDataSpy.mockReturnValue({
-      type: "countryData/fetchCountryData",
-    } as unknown as any);
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider store={store}>{children}</Provider>
+  const getWrapper =
+    (mockedStore = store) =>
+    ({ children }: { children: React.ReactNode }) => (
+      <Provider store={mockedStore}>{children}</Provider>
     );
-    const { result } = renderHook(() => useCountryData(), { wrapper });
-    expect(result.current.countries).toEqual([]);
-    expect(result.current.loading).toBe(false);
-    expect(result.current.error).toBeNull();
-    expect(Array.isArray(result.current.currencies)).toBe(true);
-    fetchCountryDataSpy.mockRestore();
-  });
 
-  it("dispatches fetchCountryData on mount if not loaded", () => {
-    const fetchCountryDataSpy = vi.spyOn(countrySlice, "fetchCountryData");
-    fetchCountryDataSpy.mockReturnValue({
-      type: "countryData/fetchCountryData",
-    } as unknown as any);
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider store={store}>{children}</Provider>
-    );
-    renderHook(() => useCountryData(), { wrapper });
+  it("handles mounting states and data dispatching queries", () => {
+    const spy = vi
+      .spyOn(countrySlice, "fetchCountryData")
+      .mockReturnValue({ type: "fetch" } as any);
+
+    renderHook(() => useCountryData(), { wrapper: getWrapper() });
     expect(dispatchSpy).toHaveBeenCalled();
-    expect(fetchCountryDataSpy).toHaveBeenCalled();
-    fetchCountryDataSpy.mockRestore();
-  });
+    expect(spy).toHaveBeenCalled();
 
-  it("returns only currencies that have users", () => {
-    store = mockStore({
+    const loadedStore = mockStore({
       countryData: {
-        countries: [{ isoCode: "US", name: "United States", currency: "USD" }],
-        currencies: [
-          { code: "USD", name: "US Dollar" },
-          { code: "EUR", name: "Euro" },
-        ],
-        allRegions: [],
-        allSubregions: [],
-        allSovereigntyStatuses: [],
+        countries: [{ isoCode: "US" }],
         loading: false,
         error: null,
       },
     });
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider store={store}>{children}</Provider>
-    );
-    const { result } = renderHook(() => useCountryData(), { wrapper });
+    renderHook(() => useCountryData(), { wrapper: getWrapper(loadedStore) });
+    expect(loadedStore.getActions()).toEqual([]);
+  });
+
+  it("filters out unused currencies cleanly", () => {
+    const customStore = mockStore({
+      countryData: {
+        countries: [{ isoCode: "US", name: "USA", currency: "USD" }],
+        loading: false,
+        error: null,
+      },
+    });
+    const { result } = renderHook(() => useCountryData(), {
+      wrapper: getWrapper(customStore),
+    });
     expect(result.current.currencies.map((c: any) => c.code)).toEqual(["USD"]);
   });
 
-  it("does not dispatch fetchCountryData if already loading or loaded", () => {
-    store = mockStore({
-      countryData: {
-        countries: [{ isoCode: "US", name: "United States" }],
-        currencies: [{ code: "USD", name: "US Dollar" }],
-        allRegions: ["Americas"],
-        allSubregions: ["Northern America"],
-        allSovereigntyStatuses: [],
-        loading: false,
-        error: null,
-      },
+  it("manages dynamic translation actions and manual reloads", () => {
+    vi.spyOn(countrySlice, "fetchCountryData").mockReturnValue({
+      type: "fetch",
+    } as any);
+    const { result } = renderHook(() => useCountryData(), {
+      wrapper: getWrapper(),
     });
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider store={store}>{children}</Provider>
-    );
-    renderHook(() => useCountryData(), { wrapper });
-    expect((store as any).getActions()).toEqual([]);
-  });
 
-  it("handles missing currencies field gracefully", () => {
-    store = mockStore({
-      countryData: {
-        countries: [],
-        allRegions: [],
-        allSubregions: [],
-        allSovereigntyStatuses: [],
-        loading: true,
-        error: null,
-      } as any,
-    });
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider store={store}>{children}</Provider>
-    );
-    const { result } = renderHook(() => useCountryData(), { wrapper });
-    expect(Array.isArray(result.current.currencies)).toBe(true);
-    expect(result.current.currencies.length).toBe(0);
-  });
-
-  it("refreshData dispatches fetchCountryData", () => {
-    const fetchCountryDataSpy = vi.spyOn(countrySlice, "fetchCountryData");
-    fetchCountryDataSpy.mockReturnValue({
-      type: "countryData/fetchCountryData",
-    } as unknown as any);
-    const wrapper = ({ children }: { children: React.ReactNode }) => (
-      <Provider store={store}>{children}</Provider>
-    );
-    const { result } = renderHook(() => useCountryData(), { wrapper });
     act(() => {
       result.current.refreshData();
     });
-    expect((store as any).getActions().length).toBeGreaterThan(0);
-    fetchCountryDataSpy.mockRestore();
+    expect(store.getActions().length).toBeGreaterThan(0);
+  });
+
+  it("handles translation bundle crashes gracefully", () => {
+    shouldCrashBundle = true;
+
+    const targetedStore = mockStore({
+      countryData: {
+        loading: true,
+        error: null,
+        countries: [
+          { isoCode: "FR", name: "France", region: "Europe" },
+          {
+            isoCode: "AX",
+            name: "No Subregion",
+            region: "Europe",
+            subregion: "",
+          },
+        ],
+      },
+    });
+
+    const { result } = renderHook(() => useCountryData(), {
+      wrapper: getWrapper(targetedStore),
+    });
+
+    expect(result.current.countries[0].capital).toBe("");
+    expect(result.current.countries[0].territories).toEqual({});
+    expect(result.current.subregionsByRegion["Europe"]).toBeUndefined();
+  });
+
+  it("handles translations for application language profiles", () => {
+    const languageStore = mockStore({
+      countryData: {
+        loading: true,
+        error: null,
+        countries: [{ isoCode: "US", name: "US", languages: ["eng", "fra"] }],
+      },
+    });
+
+    const { result } = renderHook(() => useCountryData(), {
+      wrapper: getWrapper(languageStore),
+    });
+    expect(result.current.languages["eng"]).toEqual({
+      code: "eng",
+      name: "eng",
+    });
+    expect(result.current.languages["fra"]).toEqual({
+      code: "fra",
+      name: "fra",
+    });
   });
 });

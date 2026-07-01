@@ -1,4 +1,4 @@
-import { Branding } from "../branding/Branding";
+import { Branding } from "../media/branding/Branding";
 import "./SplashScreen.css";
 
 export function SplashScreen() {

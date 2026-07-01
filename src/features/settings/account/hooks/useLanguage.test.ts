@@ -1,47 +1,59 @@
-import i18n from "i18next";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect, vi, beforeEach, type Mock } from "vitest";
-import { mockUser } from "@test-utils/mockUser";
+import { createMockUser } from "@test-utils/authMocks";
+import i18n from "i18next";
 
 vi.mock("@constants/languages", () => ({
-  getLanguageByCode: (code: string) => ({ isRtl: ["ar", "he", "fa"].includes(code) }),
+  getLanguageByCode: (code: string) => ({
+    isRtl: ["ar", "he", "fa"].includes(code),
+  }),
   LANGUAGES: [{ code: "he" }, { code: "en" }],
 }));
-
-import { isRtl } from "./useLanguage";
 
 vi.mock("react-redux", () => ({
   useSelector: vi.fn(),
   useDispatch: vi.fn(),
 }));
-vi.mock("i18next", () => {
-  const _mock = {
+
+vi.mock("i18next", () => ({
+  default: {
     language: "en",
     changeLanguage: vi.fn(async () => {}),
-  };
-  return { default: _mock };
-});
-vi.mock("@hooks", () => ({ useDebounce: (v: any) => v }));
-vi.mock("@features/user", () => ({
-  useAuth: vi.fn(() => ({ user: mockUser, loading: false, ready: true })),
+  },
 }));
 
-vi.mock("../../common/slices/settingsSlice", () => {
-  const saveSettings = vi.fn((payload: any) => ({
-    type: "SAVE_SETTINGS",
-    payload,
-  }));
-  const selectSettings = () => ({ account: { language: "en" } });
-  return {
-    saveSettings,
-    selectSettings,
-  };
-});
+vi.mock("@hooks", () => ({ useDebounce: (v: any) => v }));
+
+let freshUser: any;
+const useAuthMock = vi.fn();
+
+vi.mock("@features/user", () => ({
+  useAuth: () => useAuthMock(),
+}));
+
+vi.mock("../../common/slices/settingsSlice", () => ({
+  saveSettings: vi.fn((payload: any) => ({ type: "SAVE_SETTINGS", payload })),
+  selectSettings: () => ({ account: { language: "en" } }),
+}));
+
 vi.mock("../selectors", () => ({ selectSettingsReady: () => false }));
 
-import { useSelector, useDispatch } from "react-redux";
-import { selectSettings, saveSettings } from "../../common/slices/settingsSlice";
+import { useSelector } from "react-redux";
+import {
+  saveSettings,
+  selectSettings,
+} from "../../common/slices/settingsSlice";
 import { selectSettingsReady } from "../../selectors";
+import { isRtl } from "./useLanguage";
+import { setupDefaultReduxMocks } from "@test-utils/reduxMocks";
+
+const mockReduxSettings = (language = "he", ready = true) => {
+  vi.mocked(useSelector).mockImplementation((selector) => {
+    if (selector === selectSettings) return { account: { language } };
+    if (selector === selectSettingsReady) return ready;
+    return undefined;
+  });
+};
 
 describe("isRtl", () => {
   it("detects RTL languages by base code", () => {
@@ -58,22 +70,31 @@ describe("isRtl", () => {
 });
 
 describe("useLanguage", () => {
+  let dispatchMock: any;
+
   beforeEach(() => {
     vi.resetModules();
     vi.clearAllMocks();
+
+    freshUser = createMockUser();
+    useAuthMock.mockReturnValue({
+      user: freshUser,
+      loading: false,
+      ready: true,
+    });
+
+    const reduxMocks = setupDefaultReduxMocks();
+    dispatchMock = reduxMocks.dispatchMock;
+
+    vi.mocked(i18n.changeLanguage).mockResolvedValue(undefined as any);
   });
 
   it("applies stored language when settings are ready and dispatches on change", async () => {
-    (useSelector as unknown as Mock).mockImplementation((selector) => {
-      if (selector === selectSettings) return { account: { language: "he" } };
-      if (selector === selectSettingsReady) return true;
-      return undefined;
-    });
-    const dispatchMock = vi.fn(() => Promise.resolve());
-    (useDispatch as unknown as Mock).mockReturnValue(dispatchMock);
+    mockReduxSettings("he", true);
 
     const { useLanguage } = await import("./useLanguage");
     const { result } = renderHook(() => useLanguage());
+
     await act(async () => {
       await Promise.resolve();
     });
@@ -85,75 +106,97 @@ describe("useLanguage", () => {
       await result.current.change("he");
     });
 
-    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("he");
+    expect(vi.mocked(i18n.changeLanguage)).toHaveBeenCalledWith("he");
     expect(result.current.current).toBe("he");
     expect(dispatchMock).toHaveBeenCalled();
-    expect(saveSettings as unknown as Mock).toHaveBeenCalledWith({
-      account: { language: "he" },
-    });
+    expect(saveSettings).toHaveBeenCalledWith({ account: { language: "he" } });
   });
 
   it("resets appliedInitial when user logs out and reapplies on new user", async () => {
-    (useSelector as unknown as Mock).mockImplementation((selector) => {
-      if (selector === selectSettings) return { account: { language: "he" } };
-      if (selector === selectSettingsReady) return true;
-      return undefined;
-    });
-    const dispatchMock = vi.fn(() => Promise.resolve());
-    (useDispatch as unknown as Mock).mockReturnValue(dispatchMock);
+    mockReduxSettings("he", true);
 
     const { useLanguage } = await import("./useLanguage");
     const { result, rerender } = renderHook(() => useLanguage());
+
     await act(async () => {
       await Promise.resolve();
     });
 
-    // Hook does not auto-apply selector changes; initial value remains i18n.language
     expect(result.current.current).toBe("en");
 
-    vi.mocked((await import("@features/user")).useAuth).mockReturnValue({
-      user: null,
+    useAuthMock.mockReturnValue({ user: null, loading: false, ready: true });
+    rerender();
+
+    useAuthMock.mockReturnValue({
+      user: createMockUser(),
       loading: false,
       ready: true,
     });
+    mockReduxSettings("he", true);
     rerender();
-    vi.mocked((await import("@features/user")).useAuth).mockReturnValue({
-      user: mockUser,
-      loading: false,
-      ready: true,
-    });
-    (useSelector as unknown as Mock).mockImplementation((selector) => {
-      if (selector === selectSettings) return { account: { language: "he" } };
-      if (selector === selectSettingsReady) return true;
-      return undefined;
-    });
-    rerender();
-    // still unchanged
+
     expect(result.current.current).toBe("en");
   });
 
   it("toggle switches between he and en", async () => {
-    (useSelector as unknown as Mock).mockImplementation((selector) => {
-      if (selector === selectSettings) return { account: { language: "he" } };
-      if (selector === selectSettingsReady) return true;
-      return undefined;
-    });
-    const dispatchMock = vi.fn(() => Promise.resolve());
-    (useDispatch as unknown as Mock).mockReturnValue(dispatchMock);
+    mockReduxSettings("he", true);
 
     const { useLanguage } = await import("./useLanguage");
     const { result } = renderHook(() => useLanguage());
+
     await act(async () => {
       await Promise.resolve();
     });
 
     await act(async () => {
-      await result.current.toggle();
+      result.current.toggle();
     });
 
-    // LANGUAGES mocked as [{he},{en}] so toggling from initial 'en' goes to 'he'
-    expect((i18n as any).changeLanguage).toHaveBeenCalledWith("he");
+    expect(vi.mocked(i18n.changeLanguage)).toHaveBeenCalledWith("he");
     expect(result.current.current).toBe("he");
-    expect(saveSettings as unknown as Mock).toHaveBeenCalled();
+    expect(saveSettings).toHaveBeenCalled();
+  });
+
+  it("bails out early without updates if requested language matches active context", async () => {
+    const { useLanguage } = await import("./useLanguage");
+    const { result } = renderHook(() => useLanguage());
+
+    await act(async () => {
+      result.current.change("en");
+    });
+
+    expect(vi.mocked(i18n.changeLanguage).mock.calls.length).toBe(0);
+    expect(dispatchMock).not.toHaveBeenCalled();
+  });
+
+  it("swallows rejections gracefully if underlying localization engine fails", async () => {
+    vi.mocked(i18n.changeLanguage).mockRejectedValueOnce(
+      new Error("Network failure"),
+    );
+
+    const { useLanguage } = await import("./useLanguage");
+    const { result } = renderHook(() => useLanguage());
+
+    await act(async () => {
+      result.current.change("he");
+    });
+
+    expect(result.current.current).toBe("he");
+  });
+
+  it("modifies runtime interface state locally but drops persistence requests if unauthenticated", async () => {
+    useAuthMock.mockReturnValue({ user: null, loading: false, ready: true });
+
+    const { useLanguage } = await import("./useLanguage");
+    const { result } = renderHook(() => useLanguage());
+
+    await act(async () => {
+      await result.current.change("he");
+    });
+
+    expect(result.current.current).toBe("he");
+    expect(vi.mocked(i18n.changeLanguage)).toHaveBeenCalledWith("he");
+    expect(dispatchMock).not.toHaveBeenCalled();
+    expect(saveSettings).not.toHaveBeenCalled();
   });
 });

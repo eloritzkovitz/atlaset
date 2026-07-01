@@ -5,7 +5,7 @@ import {
   ActionButton,
   FormField,
   Modal,
-  PanelHeader,
+  ModalHeader,
   PasswordField,
   SectionHeader,
 } from "@components";
@@ -140,22 +140,15 @@ export function EditProfileModal({
   return (
     <Modal isOpen={open} onClose={onClose}>
       <div className="w-full min-w-2xl max-w-4xl mx-auto bg-surface rounded-full flex flex-col gap-2">
-        <PanelHeader
+        <ModalHeader
           title={
             <>
               <ICONS.profile />
               {t("profile.editModal.title")}
             </>
           }
-        >
-          <ActionButton
-            onClick={onClose}
-            ariaLabel={t("common:actions.close")}
-            title={t("common:actions.close")}
-            icon={<ICONS.close className="text-2xl" />}
-            rounded
-          />
-        </PanelHeader>
+        />
+
         <form onSubmit={handleSave} className="space-y-6 px-4">
           <SectionHeader title={t("profile.editModal.personalInfo")} />
           <FormField label={t("profile.editModal.username")}>

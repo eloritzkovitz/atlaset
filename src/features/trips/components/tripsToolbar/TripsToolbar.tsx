@@ -4,7 +4,7 @@ import {
   ActionButton,
   ActionsToolbar,
   SearchInput,
-  ToolbarSeparator,
+  Separator,
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
@@ -49,7 +49,7 @@ export function TripsToolbar({
             placeholder={t("table.toolbar.search.placeholder")}
             className="w-64 h-8 rounded-full"
           />
-          <ToolbarSeparator />
+          <Separator orientation="vertical" className="mx-2 h-6" />
 
           {/* Filters & Toggles */}
           <ToolbarFilters
@@ -58,7 +58,7 @@ export function TripsToolbar({
             setGlobalSearch={setGlobalSearch}
             resetFilters={resetFilters}
           />
-          <ToolbarSeparator />
+          <Separator orientation="vertical" className="mx-2 h-6" />
 
           {/* Calendar Button */}
           <ActionButton
@@ -69,11 +69,11 @@ export function TripsToolbar({
             variant="toggle"
             className="ms-2"
           />
-          <ToolbarSeparator />
+          <Separator orientation="vertical" className="mx-2 h-6" />
 
           {/* Import/Export */}
           <ToolbarImportExport trips={trips} />
-          <ToolbarSeparator />
+          <Separator orientation="vertical" className="mx-2 h-6" />
 
           {/* Action Buttons */}
           <ToolbarActions onAddTrip={onAddTrip} />

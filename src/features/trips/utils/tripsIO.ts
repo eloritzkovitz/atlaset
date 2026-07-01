@@ -3,17 +3,17 @@
  */
 
 import Papa from "papaparse";
+import { exportToFile } from "@utils/json";
 import type { Trip } from "../types";
 
 /**
  * Imports trips from a given file (JSON or CSV) and adds them using the provided addTrip function.
  * @param file - The file to import trips from.
  * @param addTrip - The function to call to add each trip.
- * @returns void
  */
 export async function importTripsFromFile(
   file: File,
-  addTrip: (trip: Trip) => Promise<void>
+  addTrip: (trip: Trip) => Promise<void>,
 ) {
   const ext = file.name.split(".").pop()?.toLowerCase();
   const text = await file.text();
@@ -44,16 +44,20 @@ export async function importTripsFromFile(
 /**
  * Exports an array of trips to a CSV file and triggers a download.
  * @param trips - The array of trips to export.
- * @returns void
  */
 export function exportTripsToCSV(trips: Trip[]) {
-  const tripsNoId = trips.map(({ ...rest }) => rest);
-  const headers = Object.keys(tripsNoId[0] || {}).join(",");
-  const rows = tripsNoId.map((trip) =>
-    Object.values(trip)
-      .map((val) => `"${String(val).replace(/"/g, '""')}"`)
-      .join(",")
+  if (!trips.length) return;
+
+  const headers = Object.keys(trips[0])
+    .filter((key) => key !== "id")
+    .join(",");
+  const rows = trips.map((trip) =>
+    Object.entries(trip)
+      .filter(([key]) => key !== "id")
+      .map(([val]) => `"${String(val).replace(/"/g, '""')}"`)
+      .join(","),
   );
+
   const csv = [headers, ...rows].join("\n");
   const blob = new Blob([csv], { type: "text/csv" });
   const url = URL.createObjectURL(blob);
@@ -67,16 +71,7 @@ export function exportTripsToCSV(trips: Trip[]) {
 /**
  * Exports an array of trips to a JSON file and triggers a download.
  * @param trips - The array of trips to export.
- * @returns void
  */
 export function exportTripsToJSON(trips: Trip[]) {
-  const tripsNoId = trips.map(({ ...rest }) => rest);
-  const json = JSON.stringify(tripsNoId, null, 2);
-  const blob = new Blob([json], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "trips.json";
-  a.click();
-  URL.revokeObjectURL(url);
+  exportToFile(trips, "trips.json", ["id"]);
 }

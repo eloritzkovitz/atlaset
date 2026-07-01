@@ -149,6 +149,10 @@
     "prevAria": "העמוד הקודם",
     "nextAria": "העמוד הבא"
   },
+  "viewMode": {
+    "grid": "תצוגת רשת",
+    "list": "תצוגת רשימה"
+  },
   "empty": "—",
   "chip": {
     "more": "עוד {{count}}",

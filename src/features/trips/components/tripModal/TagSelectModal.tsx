@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { SelectionListModal } from "@components";
+import { ModalSelect } from "@components";
 import { ICONS } from "@constants/icons";
 import type { TripTag } from "../../types";
 
@@ -26,7 +26,7 @@ export function TagSelectModal({
   const { t } = useTranslation(["trips", "common"]);
 
   return (
-    <SelectionListModal<TagOption>
+    <ModalSelect<TagOption>
       isOpen={isOpen}
       title={
         <>
