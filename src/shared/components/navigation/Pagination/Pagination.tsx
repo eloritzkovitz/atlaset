@@ -3,7 +3,7 @@ import { FaEllipsis } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { PAGE_SIZE_OPTIONS } from "@constants/ui";
 import { pluralize } from "@utils/string";
-import { getPageButtons } from "./pagination";
+import { getPageButtons } from "./paginationUtils";
 import { PaginationButton } from "./PaginationButton";
 import { ActionButton } from "../../inputs/Button/ActionButton";
 import { SelectInput } from "../../inputs/SelectInput/SelectInput";

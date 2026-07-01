@@ -1,4 +1,4 @@
-import { getPageButtons } from "./pagination";
+import { getPageButtons } from "./paginationUtils";
 
 describe("getPageButtons", () => {
   it("returns all pages when totalPages <= 7", () => {

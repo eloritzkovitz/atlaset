@@ -51,7 +51,7 @@ export function SidePanelMenu({
       title={title}
       width={width}
       className={isMobile ? "!start-0" : undefined}
-      onHide={onClose}
+      onHide={isMobile || isLaptop ? onClose : undefined}
     >
       <ul className="flex flex-col gap-2">
         {menuItems.map((item) => (
