@@ -57,6 +57,7 @@ vi.mock("firebase/firestore", () => ({
   orderBy: mockFirestoreControls.orderBy,
   query: mockFirestoreControls.query,
   runTransaction: vi.fn((_db, cb) => cb(mockFirestoreControls.transaction())),
+  serverTimestamp: mockFirestoreControls.serverTimestamp,
   setDoc: mockFirestoreControls.setDoc,
   startAfter: mockFirestoreControls.startAfter,
   transaction: mockFirestoreControls.transaction,

@@ -56,6 +56,7 @@ export const createFirestoreMocks = () => ({
   onSnapshot: vi.fn(),
   orderBy: vi.fn(),
   query: vi.fn(),
+  serverTimestamp: vi.fn(() => ({ toMillis: () => Date.now() })),
   setDoc: vi.fn(),
   startAfter: vi.fn(),
   transaction: vi.fn(() => ({
