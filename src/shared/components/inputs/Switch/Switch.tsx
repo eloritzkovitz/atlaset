@@ -11,13 +11,13 @@ export function Switch({ checked, onChange, disabled = false }: SwitchProps) {
   const { isRtl } = useLanguage();
 
   const knobClasses =
-    "absolute w-5 h-5 bg-bg rounded-full transition-transform duration-300 flex items-center justify-center ";
+    "absolute w-5 h-5 bg-text rounded-full transition-transform duration-300 flex items-center justify-center ";
   const positionClass = isRtl
     ? checked
-      ? "-translate-x-6 shadow"
+      ? "-translate-x-6"
       : "translate-x-0"
     : checked
-      ? "translate-x-6 shadow"
+      ? "translate-x-6"
       : "translate-x-0";
 
   return (
