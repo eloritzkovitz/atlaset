@@ -24,11 +24,10 @@ export function UserOverviewCard({
   return (
     <Link
       to={`/users/${userProfile.username}`}
-      className="block mb-8"
-      tabIndex={0}
       aria-label={t("overview.goToProfile", {
         defaultValue: "Go to your profile",
       })}
+      className="block mb-8 rounded-2xl outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus"
     >
       <Card className="flex items-center gap-4 p-4 sm:p-6 hover:bg-primary/20 transition cursor-pointer">
         <UserAvatar user={userProfile} size={56} />

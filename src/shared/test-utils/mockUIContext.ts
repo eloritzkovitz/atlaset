@@ -41,8 +41,5 @@ export const mockUIContext: UIContextType = {
   calendarDate: undefined,
   handleViewInCalendar: vi.fn(),
   toggleCalendar: vi.fn(),
-  closeCalendar: vi.fn(),
-  showLanguagePicker: false,  
-  openLanguagePicker: vi.fn(),
-  closeLanguagePicker: vi.fn(),
+  closeCalendar: vi.fn(),  
 };

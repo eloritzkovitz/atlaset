@@ -94,7 +94,6 @@ export function ToolbarSelectButton<T extends string | number>({
           {options.map((opt) => (
             <li key={opt.value}>
               <MenuButton
-                icon={null}
                 active={opt.value === value}
                 onClick={() => {
                   onChange(opt.value as T);

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-02
+
+- **[chore]** **General:** Redesigned several UI elements
+
 ## 2026-06-26
 
 - **[feature]** **Atlas | Countries:** Added qualifier search for want to visit countries

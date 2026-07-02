@@ -1,4 +1,4 @@
-import { BsGridFill } from "react-icons/bs";
+import { BsGrid } from "react-icons/bs";
 import { FaPlusSquare } from "react-icons/fa";
 import {
   FaArrowsRotate,
@@ -13,6 +13,7 @@ import {
   FaCheck,
   FaChessKnight,
   FaCircleCheck,
+  FaCircleHalfStroke,
   FaCircleInfo,
   FaCircleQuestion,
   FaCircleUser,
@@ -76,6 +77,7 @@ import {
   FaShieldHalved,
   FaStar,
   FaSuitcaseRolling,
+  FaSun,
   FaTag,
   FaTimeline,
   FaTrash,
@@ -162,6 +164,11 @@ export const ICONS = {
   sound: FaVolumeHigh,
   accountManagement: FaUserGear,
   display: FaPaintbrush,
+  theme: {
+    device: FaCircleHalfStroke,
+    light: FaSun,
+    dark: FaMoon,
+  },
   privacy: FaShieldHalved,
   security: FaLock,
   // Misc
@@ -175,7 +182,7 @@ export const ICONS = {
   appearance: FaMoon,
   //UI
   viewMode: {
-    grid: BsGridFill,
+    grid: BsGrid,
     list: FaList,
   },
   // Actions

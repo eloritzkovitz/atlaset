@@ -13,7 +13,7 @@ import { UserMenuContent } from "./UserMenuContent";
 
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
-  const { user } = useAuth();  
+  const { user } = useAuth();
   const { toggleSearch, toggleHelp } = useUI();
   const { isOpen, closing, closeModal, setIsOpen } = useModalAnimation();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -21,10 +21,10 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
   // Language and translation
   const { t } = useTranslation("common");
   const { isRtl } = useLanguage();
-  
+
   // Router states and navigation
   const location = useLocation();
-  const { isMobile } = useScreenSize();  
+  const { isMobile } = useScreenSize();
   const isTripsPage = location.pathname.startsWith("/trips");
 
   // Get the logout handler from useAuthHandlers
@@ -97,9 +97,10 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
             isMobile
               ? { top: "unset", right: "unset", left: 0, bottom: 16 }
               : isRtl
-                ? { top: "48px", left: 16 }
-                : { top: "48px", right: 16 }
+                ? { top: "48px", left: 24 }
+                : { top: "48px", right: 24 }
           }
+          disableScroll
         >
           <UserMenuContent
             user={user}

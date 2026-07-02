@@ -53,8 +53,10 @@ export function DashboardRoutes({
   onResetFilters,
   onBack,
 }: DashboardRoutesProps) {
-  const { totalCountries, visitedCountries, regionStats } =
-    useExplorationStats(countries);
+  const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
+    countries,
+    selectedSovereignOnly,
+  );
   const countryStatsBaseProps = {
     setSelectedRegion,
     setSelectedSubregion,

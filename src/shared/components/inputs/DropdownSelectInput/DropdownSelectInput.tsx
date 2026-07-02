@@ -96,7 +96,7 @@ export function DropdownSelectInput<T = string>({
             ref={menuRef}
             className={`${
               isFilter ? "mt-3 bg-surface" : "bg-input"
-            } border-none rounded max-h-60 w-full overflow-y-auto overflow-x-hidden`}
+            } mt-1 border-none rounded-xl max-h-60 w-full overflow-y-auto overflow-x-hidden`}
             style={{
               ...menuStyle,
               zIndex: 11000,

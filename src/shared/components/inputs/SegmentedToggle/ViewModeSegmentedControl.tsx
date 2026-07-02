@@ -32,36 +32,44 @@ export function ViewModeSegmentedControl({
   ];
 
   const baseButtonClass =
-    "flex h-8 w-10 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:z-10";
-  const activeClass =
-    "bg-primary text-primary-foreground shadow-sm font-medium";
+    "flex h-10 w-12 items-center justify-center transition-all duration-200";
+  const activeClass = "bg-primary shadow-sm font-medium z-20";
   const inactiveClass =
-    "bg-transparent text-muted-foreground hover:text-foreground hover:bg-input-hover";
+    "bg-transparent hover:text-foreground hover:bg-input-hover";
 
   return (
     <div
       role="group"
-      aria-label={t("exploration.viewOptions", "View options")}
-      className={`inline-flex items-center overflow-hidden rounded-full bg-muted/40 ${className}`}
+      className={`inline-flex items-center isolate rounded-full bg-muted/40 ${className}`}
     >
       {modesConfig.map(({ id, label, Icon, roundingClass }, index) => {
         const isActive = viewMode === id;
 
         return (
           <div key={id} className="flex items-center">
-            {index > 0 && <div className="h-6 w-[1px] bg-muted/40" />}
+            {index > 0 && <div className="h-8 w-[1px] bg-muted/40" />}
 
-            <Tooltip content={label} position="bottom">
-              <button
-                type="button"
-                onClick={() => onChange(id)}
-                aria-label={label}
-                aria-pressed={isActive}
-                className={`${baseButtonClass} ${roundingClass} ${isActive ? activeClass : inactiveClass}`}
-              >
-                <Icon className="h-4 w-4" />
-              </button>
-            </Tooltip>
+            <div
+              className={`relative inline-flex items-center ${roundingClass} focus-within:z-30`}
+            >
+              <Tooltip content={label} position="bottom">
+                <button
+                  type="button"
+                  onClick={() => onChange(id)}
+                  aria-label={label}
+                  aria-pressed={isActive}
+                  className={`${baseButtonClass} ${isActive ? activeClass : inactiveClass} ${roundingClass} 
+                    focus:outline-none 
+                    focus-visible:z-30 
+                    focus-visible:ring-2 
+                    focus-visible:ring-inset 
+                    focus-visible:ring-ring
+                  `}
+                >
+                  <Icon className="h-4 w-4" />
+                </button>
+              </Tooltip>
+            </div>
           </div>
         );
       })}

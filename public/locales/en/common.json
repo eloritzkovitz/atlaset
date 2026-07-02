@@ -18,7 +18,12 @@
     "reportBug": "Report a bug",
     "keyboardShortcuts": "Keyboard Shortcuts",
     "settings": "Settings",
-    "appearance": "Appearance",
+    "appearance": {
+      "title": "Appearance",
+      "device": "Device",
+      "dark": "Dark",
+      "light": "Light"
+    },
     "language": "Language",
     "signOut": "Sign out"
   },

@@ -96,7 +96,6 @@ export function CountrySection({
 
   const { t: tAtlas } = useTranslation("atlas");
   const { t: tCountries } = useTranslation("countries");
-  const { t: tCommon } = useTranslation("common");
 
   // Generate options using filter config functions and translate labels
   const regionBaseOptions = regionSelectFilter.getOptions(uniqueRegions) ?? [];
@@ -107,7 +106,7 @@ export function CountrySection({
     ...o,
     label:
       o.value === "all"
-        ? tCommon("filter.all")
+        ? tCountries("labels.region", "Region")
         : tCountries(`regions.${String(o.value)}`, {
             defaultValue: String(o.label),
           }),
@@ -121,7 +120,7 @@ export function CountrySection({
       ...o,
       label:
         o.value === "all"
-          ? tCommon("filter.all")
+          ? tCountries("labels.subregion", "Subregion")
           : regionKey
             ? tCountries(`subregions.${regionKey}.${normalized}`, {
                 defaultValue: String(o.label),
@@ -217,7 +216,7 @@ export function CountrySection({
                 "countries.searchPlaceholder",
                 "Search countries",
               )}
-              className="mt-1 rounded-md"
+              className="mt-1 rounded-xl"
             />
             <div className="flex flex-row gap-2 w-full">
               <SelectInput
@@ -256,13 +255,13 @@ export function CountrySection({
               />
             </div>
           </div>
-          <div className="flex flex-row gap-2 mt-2 sm:mt-0">
+          <div className="flex flex-row mt-1 gap-2">
             <CountrySortSelect
               value={sortBy}
               onChange={(v: string) => setSortBy(v as typeof sortBy)}
               visitedOnly={undefined}
             />
-            <div className="flex flex-row gap-2 ms-auto justify-end">
+            <div className="flex flex-row gap-2 ms-auto items-center justify-end">
               <ActionButton
                 onClick={handleResetFilters}
                 ariaLabel={tDashboard(
@@ -340,11 +339,11 @@ export function CountrySection({
                 iconOn={<PiGlobeStandFill className="text-lg" />}
                 iconOff={<PiGlobeStandFill className="text-lg text-muted" />}
               />
+              <ViewModeSegmentedControl
+                viewMode={viewMode}
+                onChange={setViewMode}
+              />
             </div>
-            <ViewModeSegmentedControl
-              viewMode={viewMode}
-              onChange={setViewMode}
-            />
           </div>
         </div>
       </div>

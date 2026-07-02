@@ -1,12 +1,15 @@
 import type { User } from "firebase/auth";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
-import { ThemeToggle, useLanguage, useTheme } from "@features/settings";
+import { useLanguage, useTheme } from "@features/settings";
 import { useFirestoreUsername, UserInfo } from "@features/user";
 import { useScreenSize } from "@hooks";
+import { LanguageSubmenu } from "./LanguageSubmenu";
+import { ThemeSubmenu } from "./ThemeSubmenu";
 
 interface UserMenuProps {
   user: User | null;
@@ -15,21 +18,38 @@ interface UserMenuProps {
 }
 
 export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
-  const { toggleFriends, toggleShortcuts } = useUI();
   const navigate = useNavigate();
+  const { name } = useLanguage();
   const { isMobile } = useScreenSize();
   const { username } = useFirestoreUsername(user?.uid);
+  const { theme, setTheme } = useTheme();
+  const { toggleFriends, toggleShortcuts } = useUI();
 
-  // Translation
   const { t } = useTranslation("common");
-  const { t: tSettings } = useTranslation("settings");
-  const { name } = useLanguage();
-  const { openLanguagePicker } = useUI();
-  const { theme, toggleTheme } = useTheme();
+
+  const [activeSubmenu, setActiveSubmenu] = useState<
+    "main" | "theme" | "language"
+  >("main");
 
   // Don't render if no user
   if (!user) return null;
 
+  // Render Submenu for Theme Selection
+  if (activeSubmenu === "theme") {
+    return (
+      <ThemeSubmenu
+        currentTheme={theme}
+        onThemeSelect={(nextTheme) => setTheme(nextTheme)}
+        onBack={() => setActiveSubmenu("main")}
+      />
+    );
+  }
+
+  if (activeSubmenu === "language") {
+    return <LanguageSubmenu onBack={() => setActiveSubmenu("main")} />;
+  }
+
+  // Primary Main Menu Layout
   const menuItems = [
     {
       label: t("menu.profile"),
@@ -59,29 +79,24 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       url: "/settings",
     },
     {
-      label: `${t("menu.appearance")}: ${
-        theme === "dark"
-          ? tSettings("display.theme.dark")
-          : tSettings("display.theme.light")
-      }`,
+      label: `${t("menu.appearance.title")}: ${t(`menu.appearance.${theme}`)}`,
       icon: <ICONS.appearance className="text-lg me-2" />,
       onClick: () => {
-        navigate("/settings/display");
-        onClose?.();
+        setActiveSubmenu("theme");
       },
-      url: "/settings/display",
       trailing: (
-        <div onClick={(e) => e.stopPropagation()}>
-          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
-        </div>
+        <DirectionalIcon
+          direction="next"
+          variant="chevron"
+          className="ms-auto text-lg opacity-60"
+        />
       ),
     },
     {
       label: `${t("menu.language")}: ${name}`,
       icon: <ICONS.language className="text-lg me-2" />,
       onClick: () => {
-        openLanguagePicker();
-        onClose?.();
+        setActiveSubmenu("language");
       },
       trailing: (
         <DirectionalIcon

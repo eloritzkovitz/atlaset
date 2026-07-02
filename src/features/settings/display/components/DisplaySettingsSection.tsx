@@ -29,8 +29,8 @@ export function DisplaySettingsSection() {
               checked={preference === "system"}
               onChange={(checked) => setPreference(checked ? "system" : theme)}
               label={t(
-                "display.theme.syncWithSystem",
-                "Sync with device theme",
+                "display.theme.device",
+                "Use device theme",
               )}
             />
             {preference === "system" ? (

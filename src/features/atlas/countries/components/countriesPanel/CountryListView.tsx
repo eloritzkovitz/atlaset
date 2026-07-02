@@ -93,7 +93,7 @@ export function CountryListView({
       className="list flex-1 min-h-0 overflow-y-auto -mx-4 focus:outline-none focus:ring-2 focus:ring-ring-focus"
     >
       <div
-        className="w-full select-none"
+        className="w-full select-none p-1"
         onMouseLeave={() => {
           onHover(null);
           onSelect(null);

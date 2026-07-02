@@ -9,7 +9,7 @@ interface MenuButtonProps extends Omit<
   "children" | "onClick"
 > {
   variant?: "default" | "sidebar";
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   children: React.ReactNode;
   active?: boolean;
   title?: string;
@@ -32,7 +32,7 @@ export function MenuButton({
   ...props
 }: MenuButtonProps) {
   const baseClass =
-    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-2 ` +
+    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ` +
     (active
       ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
       : variant === "sidebar"
@@ -50,7 +50,7 @@ export function MenuButton({
       onContextMenu={onContextMenu}
       {...props}
     >
-      {icon}
+      {icon && <span className="flex-shrink-0">{icon}</span>}
       {children}
     </InteractiveBase>
   );
