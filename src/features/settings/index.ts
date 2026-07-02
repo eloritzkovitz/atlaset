@@ -12,7 +12,6 @@ export { mapLanguages } from "./account/utils/languages";
 
 // Display
 export { DisplaySettingsSection } from "./display/components/DisplaySettingsSection";
-export { ThemeToggle } from "./display/components/ThemeToggle";
 export { useTheme } from "./display/hooks/useTheme";
 export * from "./display/utils/theme";
 

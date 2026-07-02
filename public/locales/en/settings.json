@@ -67,9 +67,9 @@
     "title": "Display Settings",
     "theme": {
       "title": "Theme",
-      "dark": "Dark",
-      "light": "Light",
-      "syncWithSystem": "Sync with device theme",
+      "device": "Use device theme",
+      "dark": "Dark theme",
+      "light": "Light theme",
       "followingSystem": "Follows system preference"
     },
     "accents": {

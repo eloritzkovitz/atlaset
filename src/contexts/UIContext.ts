@@ -45,10 +45,7 @@ export interface UIContextType {
   calendarDate?: Date;
   handleViewInCalendar: (trip: Trip) => void;
   toggleCalendar: () => void;
-  closeCalendar: () => void;
-  showLanguagePicker: boolean;
-  openLanguagePicker: () => void;
-  closeLanguagePicker: () => void;
+  closeCalendar: () => void;  
 }
 
 export const UIContext = createContext<UIContextType | undefined>(undefined);

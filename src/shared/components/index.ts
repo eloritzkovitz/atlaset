@@ -37,6 +37,7 @@ export { ModalSelect } from "./inputs/ModalSelect/ModalSelect";
 export { NumberInput } from "./inputs/NumberInput/NumberInput";
 export { PasswordField } from "./inputs/FormField/PasswordField";
 export { QualifierSearch } from "./inputs/SearchInput/QualifierSearch";
+export { RadioButton } from "./inputs/RadioButton/RadioButton";
 export { RateMenu } from "./inputs/StarRating/RateMenu";
 export { SearchInput } from "./inputs/SearchInput/SearchInput";
 export {
@@ -46,6 +47,7 @@ export {
 export { SelectInput } from "./inputs/SelectInput/SelectInput";
 export { SortSelect } from "./inputs/SortSelect/SortSelect";
 export { StarRatingInput } from "./inputs/StarRating/StarRatingInput";
+export { Switch } from "./inputs/Switch/Switch";
 export { TabButton } from "./inputs/Button/TabButton";
 export { ViewModeSegmentedControl } from "./inputs/SegmentedToggle/ViewModeSegmentedControl";
 

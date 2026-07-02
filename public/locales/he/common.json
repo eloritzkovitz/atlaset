@@ -18,7 +18,12 @@
     "reportBug": "דווח על באג",
     "keyboardShortcuts": "קיצורי מקלדת",
     "settings": "הגדרות",
-    "appearance": "מראה",
+    "appearance": {
+      "title": "מראה",
+      "device": "של המכשיר",
+      "dark": "כהה",
+      "light": "בהירה"
+    },
     "language": "שפה",
     "signOut": "התנתק"
   },
