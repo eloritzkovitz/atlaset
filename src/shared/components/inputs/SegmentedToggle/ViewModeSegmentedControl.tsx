@@ -32,16 +32,15 @@ export function ViewModeSegmentedControl({
   ];
 
   const baseButtonClass =
-    "flex h-8 w-10 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:z-10";
+    "flex h-10 w-12 items-center justify-center transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:z-10";
   const activeClass =
-    "bg-primary text-primary-foreground shadow-sm font-medium";
+    "bg-primary shadow-sm font-medium";
   const inactiveClass =
-    "bg-transparent text-muted-foreground hover:text-foreground hover:bg-input-hover";
+    "bg-transparent hover:text-foreground hover:bg-input-hover";
 
   return (
     <div
       role="group"
-      aria-label={t("exploration.viewOptions", "View options")}
       className={`inline-flex items-center overflow-hidden rounded-full bg-muted/40 ${className}`}
     >
       {modesConfig.map(({ id, label, Icon, roundingClass }, index) => {
@@ -49,7 +48,7 @@ export function ViewModeSegmentedControl({
 
         return (
           <div key={id} className="flex items-center">
-            {index > 0 && <div className="h-6 w-[1px] bg-muted/40" />}
+            {index > 0 && <div className="h-8 w-[1px] bg-muted/40" />}
 
             <Tooltip content={label} position="bottom">
               <button
