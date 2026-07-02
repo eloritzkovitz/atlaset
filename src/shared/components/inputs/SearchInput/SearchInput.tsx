@@ -1,7 +1,7 @@
 import { useRef, useState, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useKeyboardFocusRing, useKeyHandler } from "@hooks";
+import { useKeyHandler } from "@hooks";
 
 interface SearchInputProps {
   value: string;
@@ -37,14 +37,14 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     const inputRef = useRef<HTMLInputElement | null>(null);
     const overlayRef = useRef<HTMLDivElement | null>(null);
 
-    // Focus state and keyboard focus ring
-    const [isFocused, setIsFocused] = useState(false);
-    const showRing = useKeyboardFocusRing();
+    const [isKeyboardFocused, setIsKeyboardFocused] = useState(false);
+    const isMousedown = useRef(false);
 
     // Focus search input when / is pressed
     useKeyHandler(
       (e) => {
         e.preventDefault();
+        setIsKeyboardFocused(true);
         if (typeof ref === "function") {
           inputRef.current?.focus();
         } else if (ref && "current" in ref && ref.current) {
@@ -80,7 +80,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     return (
       <div
         className={`relative w-full rounded-full transition-shadow ${
-          isFocused && showRing ? "ring-2 ring-ring-focus" : ""
+          isKeyboardFocused ? "ring-2 ring-ring-focus" : ""
         }`}
       >
         {overlayContent && (
@@ -122,10 +122,22 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                 e.target as HTMLInputElement
               ).scrollLeft;
           }}
+          onMouseDown={() => {
+            isMousedown.current = true;
+          }}
+          onFocus={() => {
+            if (!isMousedown.current) {
+              setIsKeyboardFocused(true);
+            }
+          }}
+          onBlur={() => {
+            setIsKeyboardFocused(false);
+            isMousedown.current = false;
+          }}
           onClick={(e) => {
             if (onClick) onClick(e);
+            isMousedown.current = false;
           }}
-          onBlur={() => setIsFocused(false)}
           onKeyDown={(e) => {
             if (onKeyDown) {
               onKeyDown(e);
@@ -143,7 +155,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           }}
           placeholder={placeholder}
           aria-label={placeholder || t("search.placeholder", "Search")}
-          className={`w-full ${showIcon === false ? "ps-3" : "ps-10"} pe-10 py-2 bg-input rounded-full border border-none text-base focus:outline-none ${className}`}
+          className={`w-full ${showIcon === false ? "ps-3" : "ps-10"} pe-10 py-2 bg-input rounded-full border border-none text-base outline-none focus:outline-none focus:ring-0 ${className}`}
           style={{
             ...(style || {}),
             ...(overlayContent
@@ -165,7 +177,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
               }
               onChange("");
             }}
-            className="absolute end-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none z-30"
+            className="absolute end-3 top-1/2 transform -translate-y-1/2 text-muted hover:text-muted-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus rounded-full z-30"
           >
             <ICONS.close />
           </button>

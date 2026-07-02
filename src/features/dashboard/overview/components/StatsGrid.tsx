@@ -20,8 +20,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
         <Link
           to={stat.link}
           key={stat.label}
-          className="group"
-          tabIndex={0}
+          className="group rounded-xl outline:none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus"
           aria-label={`Go to ${stat.label}`}
         >
           <Card
