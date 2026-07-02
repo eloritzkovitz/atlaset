@@ -9,7 +9,7 @@ interface MenuButtonProps extends Omit<
   "children" | "onClick"
 > {
   variant?: "default" | "sidebar";
-  icon: React.ReactNode;
+  icon?: React.ReactNode;
   children: React.ReactNode;
   active?: boolean;
   title?: string;
@@ -50,7 +50,7 @@ export function MenuButton({
       onContextMenu={onContextMenu}
       {...props}
     >
-      {icon}
+      {icon && <span className="flex-shrink-0">{icon}</span>}
       {children}
     </InteractiveBase>
   );

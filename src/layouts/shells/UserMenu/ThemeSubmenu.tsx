@@ -51,7 +51,6 @@ export function ThemeSubmenu({
           return (
             <MenuButton
               key={opt.id}
-              icon={null}
               onClick={() => onThemeSelect(opt.id)}
               className="w-full flex items-center justify-start gap-3"
             >

@@ -22,7 +22,6 @@ export function RecentSearchItem({
     <MenuButton
       url={getSearchRoute(term)}
       onClick={() => onSelect(term)}
-      icon={null}
       ariaLabel={`Search for ${term}`}
       className="w-full text-left flex justify-between items-center"
     >

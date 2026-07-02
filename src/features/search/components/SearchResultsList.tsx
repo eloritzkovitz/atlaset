@@ -44,7 +44,6 @@ export function SearchResultsList({
           <li>
             <MenuButton
               url={getSearchRoute(searchTerm)}
-              icon={null}
               ariaLabel={t("search.seeAll")}
               onClick={() => onSearchSubmit(searchTerm)}
               className="w-full justify-center"

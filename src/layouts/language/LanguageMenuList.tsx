@@ -20,7 +20,6 @@ export function LanguageMenuList({
       {languages.map((l) => (
         <MenuButton
           key={l.code}
-          icon={null}
           onClick={() => onSelect(l.code)}
           ariaLabel={t("menu.language.selectAria")}
           className={`w-full text-start py-2 px-3 flex items-center justify-between ${
