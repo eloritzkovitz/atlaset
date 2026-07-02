@@ -17,7 +17,7 @@ export function Breadcrumbs({ crumbs, onCrumbClick }: BreadcrumbsProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-full overflow-x-auto px-1 sm:px-0 mb-6 scrollbar-hide select-none">
+    <div className="max-w-full overflow-x-auto p-1 mb-6 scrollbar-hide select-none">
       <div className="inline-flex items-center gap-2 whitespace-nowrap font-bold">
         {crumbs.map((crumb, idx, arr) => {
           const isLast = idx === arr.length - 1;
@@ -29,14 +29,17 @@ export function Breadcrumbs({ crumbs, onCrumbClick }: BreadcrumbsProps) {
             <span key={idx} className="flex items-center">
               {hasAction ? (
                 <button
-                  className="text-gray-300 hover:text-info-hover !font-bold"
+                  className="text-gray-300 hover:text-info-hover !font-bold px-1.5 py-0.5 rounded transition-colors duration-150
+                    focus:outline-none 
+                    focus-visible:ring-2 
+                    focus-visible:ring-ring-focus"
                   onClick={() => onCrumbClick(crumb.key!)}
                 >
                   {content}
                 </button>
               ) : (
                 <span
-                  className={isLast ? "text-gray-500" : "text-gray-400"}
+                  className={`py-0.5 ${isLast ? "text-gray-500" : "text-gray-400"}`}
                   aria-current={isLast ? "page" : undefined}
                 >
                   {content}

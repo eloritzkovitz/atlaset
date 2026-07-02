@@ -19,7 +19,7 @@ export function Separator({
       role="separator"
       aria-orientation={orientation}
       className={`
-        bg-border shrink-0
+        bg-border shrink-0 focus:outline-none
         ${isHorizontal ? "h-px w-full" : "w-px"}
         ${className}
       `}

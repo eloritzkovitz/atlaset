@@ -21,7 +21,7 @@ export function LanguageSubmenu({ onBack }: LanguageSubmenuProps) {
     <>
       <UserSubmenuHeader title={t("menu.language")} onBack={onBack} />
 
-      <div className="max-h-64 overflow-auto">
+      <div className="max-h-64 overflow-auto p-1">
         <LanguageMenuList languages={languages} onSelect={handleSelect} />
       </div>
     </>
