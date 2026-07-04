@@ -1,6 +1,6 @@
 import React from "react";
-import { FaPalette } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
+import { FaPalette } from "react-icons/fa6";
 import {
   Checkbox,
   CollapsibleHeader,

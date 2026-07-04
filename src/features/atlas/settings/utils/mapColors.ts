@@ -6,7 +6,7 @@ import { HOME_COUNTRY_COLOR } from "@constants/colors";
 import { COLOR_PALETTES } from "@constants/colorPalettes";
 import type { ColorMode } from "@features/atlas/map";
 import type { ColorPalette, VisitColorRoles } from "@types";
-import { DEFAULT_COLOR_PALETTES } from "../constants/mapSettings";
+import { DEFAULT_COLOR_PALETTES } from "@features/settings";
 
 /**
  * Selects a palette object and its name given a palettes mapping and mode.

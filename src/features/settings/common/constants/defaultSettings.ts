@@ -1,7 +1,7 @@
 import {
   DEFAULT_COLOR_PALETTES,
   MAP_CONFIG_OPTIONS,
-} from "../../map/constants/mapSettings";
+} from "./mapSettings";
 import type { Settings } from "../../types";
 
 export const defaultSettings: Settings = {

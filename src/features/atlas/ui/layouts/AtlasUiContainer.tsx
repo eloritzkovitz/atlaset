@@ -12,8 +12,8 @@ import {
   useMarkerCreation,
 } from "@features/atlas/markers";
 import { SavedMapsModal, SavedMapsPanel } from "@features/atlas/saved";
+import { MapSettingsPanel } from "@features/atlas/settings";
 import type { Country } from "@features/countries";
-import { MapSettingsPanel } from "@features/settings";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
 
 interface AtlasUiContainerProps {
@@ -40,7 +40,7 @@ export function AtlasUiContainer({
   const mainMarkers = useMarkers();
   const { startAddingMarker, cancelMarkerCreation } = useMarkerCreation();
   const savedMaps = useSavedMaps();
-  
+
   useUiToggleHint();
 
   return (

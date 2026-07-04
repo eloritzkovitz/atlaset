@@ -6,7 +6,10 @@ import {
   type Coordinates,
   type MapMode,
 } from "@features/atlas/map";
-import { DEFAULT_MAP_SETTINGS, MAP_CONFIG_OPTIONS } from "@features/settings";
+import {
+  DEFAULT_MAP_SETTINGS,
+  MAP_CONFIG_OPTIONS,
+} from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
 import { useSettings } from "./SettingsContext";
 
@@ -25,8 +28,8 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const isEdit = mapMode === "edit";
 
   // Color mode state
-  const [colorMode, setColorMode] = useState<ColorMode>("standard"); 
-  const isAtlasActive = colorMode === "atlas"; 
+  const [colorMode, setColorMode] = useState<ColorMode>("standard");
+  const isAtlasActive = colorMode === "atlas";
 
   // Map ready state
   const [mapReady, setMapReady] = useState(false);

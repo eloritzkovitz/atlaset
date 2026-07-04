@@ -11,7 +11,7 @@ import {
   normalizeLayers,
   type TimelineLayer,
 } from "@features/atlas/layers";
-import { useCountryColors } from "@features/settings";
+import { useCountryColors } from "@features/atlas/settings";
 import { useVisitedCountries } from "@features/visits";
 import type { MapMode } from "../types";
 

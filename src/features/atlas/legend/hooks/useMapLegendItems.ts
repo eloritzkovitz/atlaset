@@ -5,7 +5,7 @@ import {
   useCountryColors,
   useLayerColors,
   useVisitColorRoles,
-} from "@features/settings";
+} from "@features/atlas/settings";
 import type { LegendItem } from "../types";
 
 /**

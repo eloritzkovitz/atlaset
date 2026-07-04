@@ -1,6 +1,6 @@
 import { useSettings } from "@contexts/SettingsContext";
 import type { ColorMode } from "@features/atlas/map";
-import { DEFAULT_COLOR_PALETTES } from "../constants/mapSettings";
+import { DEFAULT_COLOR_PALETTES } from "@features/settings";
 
 /**
  * Manages layer palette settings.
@@ -31,7 +31,8 @@ export function useLayerColors() {
     });
 
   // Want-to-visit countries color setting
-  const colorWantToVisitCountries = !!settings?.colors?.colorWantToVisitCountries;
+  const colorWantToVisitCountries =
+    !!settings?.colors?.colorWantToVisitCountries;
   const setColorWantToVisitCountries = (value: boolean) =>
     updateSettings({
       colors: { ...(settings.colors ?? {}), colorWantToVisitCountries: value },

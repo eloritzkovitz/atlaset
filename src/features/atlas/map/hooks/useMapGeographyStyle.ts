@@ -1,5 +1,6 @@
 import { useMapView } from "@contexts/MapViewContext";
-import { MAP_GEOGRAPHY_STYLE, useCountryColors } from "@features/settings";
+import { useCountryColors } from "@features/atlas/settings";
+import { MAP_GEOGRAPHY_STYLE } from "@features/settings";
 
 /**
  * Returns map geography styles based on UI settings and marker mode.

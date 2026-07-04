@@ -11,14 +11,14 @@ import {
   groupLayerItemsByIsoCode,
   type LayerItem,
 } from "@features/atlas/layers";
-import { useCountryColors, useLayerColors } from "@features/settings";
-import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import { useCountryColors, useLayerColors } from "@features/atlas/settings";
 import { useHomeCountry } from "@features/user";
+import { useVisitedCountries } from "@features/visits";
 import { isNumericString } from "@utils/string";
 import { Geography } from "./Geography";
 import { Geographies } from "./Geographies";
-import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
 import { useAtlasColoring } from "../hooks/useAtlasColoring";
+import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
 import type { GeoData, GeographyFeature } from "../types";
 
 interface LayersContainerProps {
@@ -152,8 +152,7 @@ export function LayersContainer({
               fill = atlasColorMap[isoA2] || geographyStyle.default.fill;
             } else {
               if (isHomeCountry) fill = HOME_COUNTRY_COLOR;
-              else if (isFutureVisitCountry)
-                fill = FUTURE_VISIT_COUNTRY_COLOR;
+              else if (isFutureVisitCountry) fill = FUTURE_VISIT_COUNTRY_COLOR;
               else if (isVisitedCountry) fill = VISITED_COUNTRY_COLOR;
               else if (isWantToVisitCountry) fill = SELECTED_COUNTRY_COLOR;
               else if (blendedFill) fill = blendedFill;

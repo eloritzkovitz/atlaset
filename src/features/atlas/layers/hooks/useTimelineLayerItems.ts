@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import type { ColorMode } from "@features/atlas/map";
-import { useVisitColorRoles } from "@features/settings";
+import { useVisitColorRoles } from "@features/atlas/settings";
 import { useHomeCountry } from "@features/user";
 import {
   getVisitColor,
