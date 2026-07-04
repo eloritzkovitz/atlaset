@@ -1,5 +1,5 @@
 import { useMapView } from "@contexts/MapViewContext";
-import { useCountryColors } from "@features/atlas/settings";
+import { useCountryColors } from "@features/atlas/shared";
 import { MAP_GEOGRAPHY_STYLE } from "@features/settings";
 
 /**

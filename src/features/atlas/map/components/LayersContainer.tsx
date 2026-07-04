@@ -11,7 +11,8 @@ import {
   groupLayerItemsByIsoCode,
   type LayerItem,
 } from "@features/atlas/layers";
-import { useCountryColors, useLayerColors } from "@features/atlas/settings";
+import { useLayerColors } from "@features/atlas/settings";
+import { useCountryColors } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import { isNumericString } from "@utils/string";

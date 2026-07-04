@@ -1,10 +1,9 @@
 import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import type { ColorMode } from "@features/atlas/map";
-import { useVisitColorRoles } from "@features/atlas/settings";
+import { getVisitColor, useVisitColors } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
 import {
-  getVisitColor,
   getVisitedCountriesForYear,
   getVisitedCountriesUpToYear,
   getNextUpcomingTripYearByCountry,
@@ -42,7 +41,7 @@ export function useTimelineLayerItems(
   );
   const nextUpcomingYearByCountry = getNextUpcomingTripYearByCountry(trips);
 
-  const palette = useVisitColorRoles(colorMode);
+  const palette = useVisitColors(colorMode);
 
   // Collect all country codes from layers
   const allCountryCodes = Array.from(

@@ -1,11 +1,8 @@
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
 import type { ColorMode } from "@features/atlas/map";
-import {
-  useCountryColors,
-  useLayerColors,
-  useVisitColorRoles,
-} from "@features/atlas/settings";
+import { useLayerColors } from "@features/atlas/settings";
+import { useCountryColors, useVisitColors } from "@features/atlas/shared";
 import type { LegendItem } from "../types";
 
 /**
@@ -23,7 +20,7 @@ export function useMapLegendItems(
   const { isReadonly, isEdit } = useMapView();
 
   // Get dynamic color roles for the current mode
-  const colorRoles = useVisitColorRoles(colorMode);
+  const colorRoles = useVisitColors(colorMode);
   const {
     colorWantToVisitCountries,
     colorHomeCountry,
