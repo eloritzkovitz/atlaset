@@ -11,6 +11,7 @@ interface DialogHeaderProps {
   showSeparator?: boolean;
   onClose?: () => void;
   showCloseButton?: boolean;
+  closeButtonClassName?: string;
 }
 
 export function DialogHeader({
@@ -20,6 +21,7 @@ export function DialogHeader({
   showSeparator,
   onClose,
   showCloseButton = true,
+  closeButtonClassName,
 }: DialogHeaderProps) {
   const { t } = useTranslation("common");
 
@@ -40,6 +42,7 @@ export function DialogHeader({
               ariaLabel={t("actions.close")}
               title={t("actions.close")}
               icon={<ICONS.close className="text-2xl" />}
+              className={closeButtonClassName}
               rounded
             />
           )}

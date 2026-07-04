@@ -8,14 +8,16 @@ interface ModalHeaderProps {
   children?: ReactNode;
   className?: string;
   showSeparator?: boolean;
+  closeButtonClassName?: string;
 }
 
 export function ModalHeader(props: ModalHeaderProps) {
   return (
     <DialogHeader
-      showCloseButton={true}
-      showSeparator={true}
+      showCloseButton={props.showCloseButton ?? true}
+      showSeparator={props.showSeparator ?? true}
       className=""
+      closeButtonClassName={props.closeButtonClassName}
       {...props}
     >
       {props.children}
