@@ -41,7 +41,7 @@ export function computeAtlasColoring(
     geography as unknown as Feature<Geometry, Record<string, unknown>>[],
   );
 
-  // First pass: Extract ISO codes, compute centroids and bounding boxes, and build edge tokens for shared borders
+  // Iterate through each feature to extract ISO codes, compute centroids, and bounding boxes
   for (const f of features) {
     const props = (f.properties || {}) as Record<string, unknown>;
     const isoRaw =
@@ -125,11 +125,12 @@ export function computeAtlasColoring(
     );
   }
 
+  // Build adjacency sets for each country based on shared borders and maritime proximity
   const adjSet: Record<string, Set<string>> = Object.fromEntries(
     isos.map((iso) => [iso, new Set<string>()]),
   );
 
-  // Rule Pass 1: Shared Border Topology
+  // Rule Pass 1: Shared Borders
   for (const countryList of edgeTokenMap.values()) {
     if (countryList.length < 2) continue;
     for (let i = 0; i < countryList.length; i++) {
@@ -345,16 +346,21 @@ export function useAtlasColoring(
   options?: UseAtlasColoringOptions,
 ) {
   const isEnabled = options?.enabled ?? true;
+  const numColors = options?.colors ?? 4;
+
+  const paletteSignature = useMemo(() => {
+    return options?.palette ? JSON.stringify(options.palette) : "";
+  }, [options?.palette]);
 
   return useMemo(() => {
-    const K = Math.max(options?.colors ?? 4, 1);
-    const finalPalette = (options?.palette ?? ATLAS_PALETTE.colors).slice(0, K);
+    const K = Math.max(numColors, 1);
+    const resolvedPalette = options?.palette ?? ATLAS_PALETTE.colors;
+    const finalPalette = resolvedPalette.slice(0, K);
 
-    // Completely skip calling the utility engine if disabled
     if (!isEnabled) {
       return { map: {} as Record<string, string>, palette: finalPalette };
     }
 
-    return computeAtlasColoring(geography, options?.colors, options?.palette);
-  }, [geography, options?.colors, options?.palette, isEnabled]);
+    return computeAtlasColoring(geography, numColors, options?.palette);
+  }, [geography, numColors, paletteSignature, isEnabled]);
 }
