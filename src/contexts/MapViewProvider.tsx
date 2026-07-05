@@ -4,7 +4,7 @@ import {
   useGeoData,
   type Coordinates,
 } from "@features/atlas/map";
-import type { ColorMode, MapMode } from "@features/atlas/shared";
+import { useMapMode, type ColorMode } from "@features/atlas/shared";
 import { DEFAULT_MAP_SETTINGS, MAP_CONFIG_OPTIONS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
 import { useSettings } from "./SettingsContext";
@@ -19,9 +19,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   // Map mode state
-  const [mapMode, setMapMode] = useState<MapMode>("view");
-  const isReadonly = mapMode === "readonly";
-  const isEdit = mapMode === "edit";
+  const { mapMode, setMapMode, isReadonly, isEdit, isEmbed } = useMapMode();
 
   // Color mode state
   const [colorMode, setColorMode] = useState<ColorMode>("standard");
@@ -112,6 +110,7 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         setMapMode,
         isReadonly,
         isEdit,
+        isEmbed,
         colorMode,
         setColorMode,
         isAtlasActive,

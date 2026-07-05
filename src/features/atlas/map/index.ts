@@ -3,7 +3,6 @@ export { WorldMap } from "./components/WorldMap";
 
 // Hooks
 export { useGeoData } from "./hooks/useGeoData";
-export { useMapMode } from "./hooks/useMapMode";
 
 // Types
 export type { Coordinates, GeoData } from "./types";

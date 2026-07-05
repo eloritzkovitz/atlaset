@@ -7,6 +7,7 @@ export interface MapViewContextType {
   setMapMode: (v: MapMode) => void;
   isReadonly: boolean;
   isEdit: boolean;
+  isEmbed: boolean;
   colorMode: ColorMode;
   setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
   isAtlasActive: boolean;

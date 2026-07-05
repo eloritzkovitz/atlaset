@@ -26,7 +26,6 @@ export function getQueryParam(
   customSearchString?: string,
 ): string {
   try {
-    // Evaluating window.location inside the try block catches test sandbox restrictions safely
     const search =
       customSearchString ??
       (typeof window !== "undefined" ? window.location?.search : undefined);

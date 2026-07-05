@@ -6,10 +6,10 @@ import {
   useLayerManager,
   type Layer,
 } from "@features/atlas/layers";
-import { useMapMode } from "@features/atlas/map";
 import { normalizeMarkers } from "@features/atlas/markers";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { type SavedMap, savedMapsService } from "@features/atlas/saved";
+import { useMapMode } from "@features/atlas/shared";
 import { logUserActivity, useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
@@ -312,7 +312,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         updateLayerName,
         // Layers
         saveSavedMapLayer,
-        addLayer,        
+        addLayer,
         importLayers,
         editLayer,
         duplicateLayer,
