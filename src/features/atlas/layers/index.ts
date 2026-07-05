@@ -9,6 +9,7 @@ export { VISITED_LAYER_ID, DEFAULT_NEW_LAYER } from "./constants/layers";
 export { useEffectiveLayers } from "./hooks/useEffectiveLayers";
 export { useLayerManager } from "./hooks/useLayerManager";
 export { useTimelineLayerItems } from "./hooks/useTimelineLayerItems";
+export { useTrackingLayerItems } from "./hooks/useTrackingLayerItems";
 
 // Services
 export { layersService } from "./services/layersService";

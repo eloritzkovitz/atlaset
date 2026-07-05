@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useMapView } from "@contexts/MapViewContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import {
   getCountryIsoCode,
   getCountryName,
@@ -9,22 +8,18 @@ import {
 import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
-  type LayerItem,
 } from "@features/atlas/layers";
 import { useLayerColors } from "@features/atlas/settings";
-import { useCountryColors } from "@features/atlas/shared";
-import { useHomeCountry } from "@features/user";
-import { useVisitedCountries } from "@features/visits";
 import { isNumericString } from "@utils/string";
 import { Geography } from "./Geography";
 import { Geographies } from "./Geographies";
 import { useAtlasColoring } from "../hooks/useAtlasColoring";
 import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
+import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData, GeographyFeature } from "../types";
 
 interface LayersContainerProps {
   geographyData: GeoData;
-  layerItems?: LayerItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
   highlightedIsoCodes?: string[];
@@ -36,7 +31,6 @@ interface LayersContainerProps {
 
 export function LayersContainer({
   geographyData,
-  layerItems = [],
   selectedIsoCode,
   hoveredIsoCode,
   highlightedIsoCodes = [],
@@ -46,39 +40,10 @@ export function LayersContainer({
 }: LayersContainerProps) {
   const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const countryData = useCountryData();
-  const { isAtlasActive, isEdit, isReadonly } = useMapView();
-  const { timelineMode } = useTimeline();
+  const { numAtlasColors } = useLayerColors();
+  const { mapMode, isAtlasActive } = useMapView();
 
-  // Colors and visited countries
-  const { homeCountry } = useHomeCountry();
-  const {
-    colorHomeCountry,
-    colorVisitedCountries,
-    colorFutureVisits,
-    colorWantToVisitCountries,
-    numAtlasColors,
-  } = useLayerColors();
-  const {
-    HOME_COUNTRY_COLOR,
-    VISITED_COUNTRY_COLOR,
-    FUTURE_VISIT_COUNTRY_COLOR,
-    SELECTED_COUNTRY_COLOR,
-  } = useCountryColors();
-  const { visitedCountryCodes, futureCountryCodes, wantToVisitCountryCodes } =
-    useVisitedCountries();
-
-  const visitedSet = useMemo(
-    () => new Set((visitedCountryCodes || []).map((s) => s.toUpperCase())),
-    [visitedCountryCodes],
-  );
-  const futureSet = useMemo(
-    () => new Set((futureCountryCodes || []).map((s) => s.toUpperCase())),
-    [futureCountryCodes],
-  );
-  const wantToVisitSet = useMemo(
-    () => new Set((wantToVisitCountryCodes || []).map((s) => s.toUpperCase())),
-    [wantToVisitCountryCodes],
-  );
+  const layerItems = useMapLayerItems(mapMode);
 
   // Group layer items by isoCode for stacking/blending
   const layerGroups = useMemo(
@@ -114,8 +79,6 @@ export function LayersContainer({
                 ? geo.properties?.name || isoA2 || ""
                 : countryName;
 
-            const interactiveMode = !isReadonly && !isEdit && !timelineMode;
-
             const layers = layerGroups[isoA2] || [];
             const blendedFill = getBlendedLayerColor(
               layers,
@@ -128,19 +91,6 @@ export function LayersContainer({
               !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
             const isHovered =
               !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
-            const isHomeCountry =
-              interactiveMode &&
-              colorHomeCountry &&
-              homeCountry &&
-              isoA2 === homeCountry.toUpperCase();
-            const isVisitedCountry =
-              interactiveMode && colorVisitedCountries && visitedSet.has(isoA2);
-            const isFutureVisitCountry =
-              interactiveMode && colorFutureVisits && futureSet.has(isoA2);
-            const isWantToVisitCountry =
-              interactiveMode &&
-              colorWantToVisitCountries &&
-              wantToVisitSet.has(isoA2);
 
             // Determine final style based on priority
             let fill = geographyStyle.default.fill;
@@ -151,12 +101,8 @@ export function LayersContainer({
               fill = geographyStyle.hover.fill;
             } else if (isAtlasActive) {
               fill = atlasColorMap[isoA2] || geographyStyle.default.fill;
-            } else {
-              if (isHomeCountry) fill = HOME_COUNTRY_COLOR;
-              else if (isFutureVisitCountry) fill = FUTURE_VISIT_COUNTRY_COLOR;
-              else if (isVisitedCountry) fill = VISITED_COUNTRY_COLOR;
-              else if (isWantToVisitCountry) fill = SELECTED_COUNTRY_COLOR;
-              else if (blendedFill) fill = blendedFill;
+            } else if (blendedFill) {
+              fill = blendedFill;
             }
 
             const finalStyle = { ...geographyStyle.default, fill };

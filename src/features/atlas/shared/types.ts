@@ -1,5 +1,11 @@
 import type { ColorRoles } from "@types";
 
+/** Represents the current mode of the map. */
+export type MapMode = "view" | "readonly" | "edit" | "timeline";
+
+/** Modes for coloring countries on the map. */
+export type ColorMode = "standard" | "atlas" | "cumulative" | "yearly";
+
 /** Represents the structure for visit roles. */
 export interface VisitRoleStructure {
   base: string;

@@ -1,10 +1,6 @@
 import { createContext, useContext } from "react";
-import type {
-  ColorMode,
-  Coordinates,
-  GeoData,
-  MapMode,
-} from "@features/atlas/map";
+import type { Coordinates, GeoData } from "@features/atlas/map";
+import type { ColorMode, MapMode } from "@features/atlas/shared";
 
 export interface MapViewContextType {
   mapMode: MapMode;

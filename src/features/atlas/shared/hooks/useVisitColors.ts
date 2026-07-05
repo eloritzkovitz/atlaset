@@ -1,6 +1,5 @@
 import { useSettings } from "@contexts/SettingsContext";
-import type { ColorMode } from "@features/atlas/map";
-import type { VisitColorRoles } from "../types";
+import type { ColorMode, VisitColorRoles } from "../types";
 import {
   getPaletteForMode,
   getVisitColorRolesFromPalette,

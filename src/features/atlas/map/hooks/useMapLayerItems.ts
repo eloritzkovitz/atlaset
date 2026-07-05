@@ -7,13 +7,13 @@ import { useSharedMapInfo } from "@features/atlas/export";
 import {
   isTimelineLayer,
   useTimelineLayerItems,
+  useTrackingLayerItems,
   getLayerItems,
   normalizeLayers,
   type TimelineLayer,
 } from "@features/atlas/layers";
-import { useCountryColors } from "@features/atlas/shared";
+import { type MapMode } from "@features/atlas/shared";
 import { useVisitedCountries } from "@features/visits";
-import type { MapMode } from "../types";
 
 /**
  * Returns map layer items based on map mode.
@@ -26,31 +26,39 @@ export function useMapLayerItems(mode: MapMode = "view") {
   const { activeSavedMap } = useSavedMaps();
   const { layers: sharedLayers } = useSharedMapInfo();
   const { timelineMode, selectedYear } = useTimeline();
-
-  // Timeline mode: add virtual visited countries layer
   const { visitedCountryCodes } = useVisitedCountries();
-  const { VISITED_COUNTRY_COLOR } = useCountryColors();
 
+  // Generate tracking layer items for the tracking layer
+  const trackingLayerItems = useTrackingLayerItems();
+
+  // Generate timeline layer items if in timeline mode
   const virtualVisitedLayer: TimelineLayer = {
     id: "timeline-visited",
     name: "Visited",
-    color: VISITED_COUNTRY_COLOR,
+    color: "",
     countries: visitedCountryCodes,
     visible: true,
     timelineEnabled: true,
   };
 
   // Combine virtual visited layer with actual timeline layers
-  const timelineLayers: TimelineLayer[] = [
-    virtualVisitedLayer,
-    ...layers.filter(isTimelineLayer),
-  ];
+  const timelineLayers: TimelineLayer[] = useMemo(
+    () => [virtualVisitedLayer, ...layers.filter(isTimelineLayer)],
+    [virtualVisitedLayer, layers],
+  );
 
-  // Get static and timeline layer items
-  const staticItems = useMemo(
+  // Generate user-defined layer items for visible layers
+  const userCustomItems = useMemo(
     () => layers.filter((o) => o.visible).flatMap(getLayerItems),
     [layers],
   );
+
+  // Generate standard view items by combining tracking and user-defined items
+  const standardViewItems = useMemo(() => {
+    return [...trackingLayerItems, ...userCustomItems];
+  }, [trackingLayerItems, userCustomItems]);
+
+  // Generate timeline layer items if in timeline mode
   const timelineItems = useTimelineLayerItems(
     timelineLayers,
     selectedYear,
@@ -82,5 +90,5 @@ export function useMapLayerItems(mode: MapMode = "view") {
     return sharedLayerItems;
   }
 
-  return timelineMode ? timelineItems : staticItems;
+  return timelineMode ? timelineItems : standardViewItems;
 }

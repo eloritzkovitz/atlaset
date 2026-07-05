@@ -2,14 +2,10 @@ import { type ReactNode, useState, useEffect, useCallback } from "react";
 import {
   getCountryCenterAndZoom,
   useGeoData,
-  type ColorMode,
   type Coordinates,
-  type MapMode,
 } from "@features/atlas/map";
-import {
-  DEFAULT_MAP_SETTINGS,
-  MAP_CONFIG_OPTIONS,
-} from "@features/settings";
+import type { ColorMode, MapMode } from "@features/atlas/shared";
+import { DEFAULT_MAP_SETTINGS, MAP_CONFIG_OPTIONS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
 import { useSettings } from "./SettingsContext";
 

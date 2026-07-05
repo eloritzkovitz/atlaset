@@ -9,7 +9,7 @@ import {
   SectionHeader,
 } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
-import type { ColorMode } from "@features/atlas/map";
+import type { ColorMode } from "@features/atlas/shared";
 import { PaletteDots } from "./PaletteDots";
 import { useLayerColors } from "../hooks/useLayerColors";
 

@@ -1,8 +1,11 @@
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
-import type { ColorMode } from "@features/atlas/map";
 import { useLayerColors } from "@features/atlas/settings";
-import { useCountryColors, useVisitColors } from "@features/atlas/shared";
+import {
+  useCountryColors,
+  useVisitColors,
+  type ColorMode,
+} from "@features/atlas/shared";
 import type { LegendItem } from "../types";
 
 /**

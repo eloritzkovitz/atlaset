@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
-import type { ColorMode } from "@features/atlas/map";
-import { getVisitColor, useVisitColors } from "@features/atlas/shared";
+import {
+  getVisitColor,
+  useVisitColors,
+  type ColorMode,
+} from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
 import {
   getVisitedCountriesForYear,
@@ -74,17 +77,12 @@ export function useTimelineLayerItems(
 
           return {
             isoCode: String(isoCode),
-            color: getVisitColor(
-              count,
-              isHome,
-              "",
-              colorMode,
-              palette,
+            color: getVisitColor(count, isHome, "", colorMode, palette, {
               isNewThisYear,
               isRevisitThisYear,
               isUpcomingVisit,
               isUpcomingRevisit,
-            ),
+            }),
             layerId: layer.id,
             count,
           };

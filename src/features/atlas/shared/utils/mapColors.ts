@@ -4,10 +4,9 @@
 
 import { HOME_COUNTRY_COLOR } from "@constants/colors";
 import { COLOR_PALETTES } from "@constants/colorPalettes";
-import type { ColorMode } from "@features/atlas/map";
 import { DEFAULT_COLOR_PALETTES } from "@features/settings";
 import type { ColorPalette } from "@types";
-import type { VisitColorRoles } from "../types";
+import type { ColorMode, VisitColorRoles } from "../types";
 
 /**
  * Selects a palette object and its name given a palettes mapping and mode.
@@ -83,28 +82,29 @@ export function getVisitColor(
   defaultFill: string,
   mode: ColorMode = "cumulative",
   palette: VisitColorRoles,
-  isNewThisYear?: boolean,
-  isRevisitThisYear?: boolean,
-  isUpcomingVisit?: boolean,
-  isUpcomingRevisit?: boolean,
-) {
+  timelineFlags?: {
+    isNewThisYear?: boolean;
+    isRevisitThisYear?: boolean;
+    isUpcomingVisit?: boolean;
+    isUpcomingRevisit?: boolean;
+  },
+): string {
   if (isHome) return palette.home;
 
   if (mode === "cumulative") {
-    if (count === 1) return palette.visitCounts[0];
-    if (count === 2) return palette.visitCounts[1];
-    if (count === 3) return palette.visitCounts[2];
-    if (count === 4) return palette.visitCounts[3];
-    if (count >= 5) return palette.visitCounts[4];
-    return defaultFill;
+    if (count <= 0) return defaultFill;
+    const colorIndex = Math.min(count - 1, palette.visitCounts.length - 1);
+    return palette.visitCounts[colorIndex] || defaultFill;
   }
 
   if (mode === "yearly") {
-    if (isUpcomingRevisit) return palette.yearly.upcomingRevisit;
-    if (isUpcomingVisit) return palette.yearly.upcoming;
-    if (isRevisitThisYear) return palette.yearly.revisit;
-    if (isNewThisYear) return palette.yearly.new;
+    if (timelineFlags?.isUpcomingRevisit) return palette.yearly.upcomingRevisit;
+    if (timelineFlags?.isUpcomingVisit) return palette.yearly.upcoming;
+    if (timelineFlags?.isRevisitThisYear) return palette.yearly.revisit;
+    if (timelineFlags?.isNewThisYear) return palette.yearly.new;
     if (count === 0) return defaultFill;
     return palette.yearly.previous;
   }
+
+  return defaultFill;
 }

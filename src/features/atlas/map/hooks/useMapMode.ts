@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useMapView } from "@contexts/MapViewContext";
-import type { MapMode } from "@features/atlas/map/types";
+import type { MapMode } from "@features/atlas/shared";
 
 /**
  * Manages map mode based on URL parameters and provides a setter for map mode.

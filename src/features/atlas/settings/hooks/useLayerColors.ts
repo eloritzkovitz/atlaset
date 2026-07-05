@@ -1,5 +1,5 @@
 import { useSettings } from "@contexts/SettingsContext";
-import type { ColorMode } from "@features/atlas/map";
+import type { ColorMode } from "@features/atlas/shared";
 import { DEFAULT_COLOR_PALETTES } from "@features/settings";
 
 /**
