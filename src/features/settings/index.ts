@@ -22,3 +22,6 @@ export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
 // Redux
 export { default as settingsReducer } from "./common/slices/settingsSlice";
 export * from "./common/slices/settingsSlice";
+
+// Types
+export * from "./types";

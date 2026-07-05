@@ -1,5 +1,2 @@
-// Components
 export { MapSettingsPanel } from "./components/MapSettingsPanel";
-
-// Hooks
-export { useLayerColors } from "./hooks/useLayerColors";
+export { useLayerSettings } from "./hooks/useLayerSettings";

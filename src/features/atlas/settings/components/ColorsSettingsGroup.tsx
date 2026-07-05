@@ -11,7 +11,7 @@ import {
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
 import type { ColorMode } from "@features/atlas/shared";
 import { PaletteDots } from "./PaletteDots";
-import { useLayerColors } from "../hooks/useLayerColors";
+import { useLayerSettings } from "../hooks/useLayerSettings";
 
 const COLOR_MODES: { key: ColorMode; label: string }[] = [
   { key: "standard", label: "mapSettings.colors.standard" },
@@ -35,7 +35,7 @@ export function ColorsSettingsGroup() {
     setNumAtlasColors,
     colorPalettes,
     setPalette,
-  } = useLayerColors();
+  } = useLayerSettings();
   const { t } = useTranslation("atlas");
 
   const groupedPaletteOptions = COLOR_PALETTE_GROUPS.map((group) => ({
@@ -66,22 +66,22 @@ export function ColorsSettingsGroup() {
             <SectionHeader title={t("mapSettings.colors.displayOptions")} />
             <div className="flex flex-col gap-3 mb-2">
               <Checkbox
-                checked={!!colorHomeCountry}
+                checked={colorHomeCountry}
                 onChange={setColorHomeCountry}
                 label={t("mapSettings.colors.showHomeCountry")}
               />
               <Checkbox
-                checked={!!colorVisitedCountries}
+                checked={colorVisitedCountries}
                 onChange={setColorVisitedCountries}
                 label={t("mapSettings.colors.showVisitedCountries")}
               />
               <Checkbox
-                checked={!!colorFutureVisits}
+                checked={colorFutureVisits}
                 onChange={setColorFutureVisits}
                 label={t("mapSettings.colors.showFutureVisits")}
               />
               <Checkbox
-                checked={!!colorWantToVisitCountries}
+                checked={colorWantToVisitCountries}
                 onChange={setColorWantToVisitCountries}
                 label={t("mapSettings.colors.showWantToVisit")}
               />
