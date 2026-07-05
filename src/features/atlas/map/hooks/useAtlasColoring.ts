@@ -354,13 +354,18 @@ export function useAtlasColoring(
 
   return useMemo(() => {
     const K = Math.max(numColors, 1);
-    const resolvedPalette = options?.palette ?? ATLAS_PALETTE.colors;
+
+    const resolvedPalette: string[] = paletteSignature
+      ? JSON.parse(paletteSignature)
+      : ATLAS_PALETTE.colors;
+
     const finalPalette = resolvedPalette.slice(0, K);
 
     if (!isEnabled) {
       return { map: {} as Record<string, string>, palette: finalPalette };
     }
 
-    return computeAtlasColoring(geography, numColors, options?.palette);
+    // Pass the safely unpacked array down
+    return computeAtlasColoring(geography, numColors, resolvedPalette);
   }, [geography, numColors, paletteSignature, isEnabled]);
 }

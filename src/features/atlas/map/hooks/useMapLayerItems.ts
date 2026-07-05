@@ -31,21 +31,19 @@ export function useMapLayerItems(mode: MapMode = "view") {
   // Generate tracking layer items for the tracking layer
   const trackingLayerItems = useTrackingLayerItems();
 
-  // Generate timeline layer items if in timeline mode
-  const virtualVisitedLayer: TimelineLayer = {
-    id: "timeline-visited",
-    name: "Visited",
-    color: "",
-    countries: visitedCountryCodes,
-    visible: true,
-    timelineEnabled: true,
-  };
-
   // Combine virtual visited layer with actual timeline layers
-  const timelineLayers: TimelineLayer[] = useMemo(
-    () => [virtualVisitedLayer, ...layers.filter(isTimelineLayer)],
-    [virtualVisitedLayer, layers],
-  );
+  const timelineLayers: TimelineLayer[] = useMemo(() => {
+    const virtualVisitedLayer: TimelineLayer = {
+      id: "timeline-visited",
+      name: "Visited",
+      color: "",
+      countries: visitedCountryCodes,
+      visible: true,
+      timelineEnabled: true,
+    };
+
+    return [virtualVisitedLayer, ...layers.filter(isTimelineLayer)];
+  }, [visitedCountryCodes, layers]);
 
   // Generate user-defined layer items for visible layers
   const userCustomItems = useMemo(
