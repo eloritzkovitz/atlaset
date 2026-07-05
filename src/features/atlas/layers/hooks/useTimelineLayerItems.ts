@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import {
   getVisitColor,
-  useVisitColors,
+  useMapColors,
   type ColorMode,
 } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
@@ -25,79 +25,66 @@ export function useTimelineLayerItems(
   selectedYear: number,
   colorMode: ColorMode,
 ) {
-  const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
-  const snapshotCountries = getVisitedCountriesUpToYear(
-    trips,
-    selectedYear,
-    homeCountry,
-  );
-  const snapshotCountriesPrev = getVisitedCountriesUpToYear(
-    trips,
-    selectedYear - 1,
-    homeCountry,
-  );
-  const newThisYear = getVisitedCountriesForYear(
-    trips,
-    selectedYear,
-    homeCountry,
-  );
-  const nextUpcomingYearByCountry = getNextUpcomingTripYearByCountry(trips);
+  const { visitColors } = useMapColors(colorMode);
+  const { trips } = useTrips();
 
-  const palette = useVisitColors(colorMode);
-
-  // Collect all country codes from layers
-  const allCountryCodes = Array.from(
-    new Set([
-      ...layers
-        .filter((l) => l.visible && l.timelineEnabled)
-        .flatMap((l) => l.countries || []),
-      ...Object.keys(nextUpcomingYearByCountry),
-    ]),
-  );
-
+  // Compute timeline layer items based on visit data and selected year
   return useMemo(() => {
-    return layers
-      .filter((l) => l.visible && l.timelineEnabled)
-      .flatMap((layer) =>
-        allCountryCodes.map((isoCode) => {
-          const count = snapshotCountries[isoCode] || 0;
-          const countPrev = snapshotCountriesPrev[isoCode] || 0;
-          const isHome = homeCountry === isoCode;
+    const snapshotCountries = getVisitedCountriesUpToYear(
+      trips,
+      selectedYear,
+      homeCountry,
+    );
+    const snapshotCountriesPrev = getVisitedCountriesUpToYear(
+      trips,
+      selectedYear - 1,
+      homeCountry,
+    );
+    const newThisYear = getVisitedCountriesForYear(
+      trips,
+      selectedYear,
+      homeCountry,
+    );
+    const nextUpcomingYearByCountry = getNextUpcomingTripYearByCountry(trips);
 
-          // Determine if the country is new or a revisit this year
-          const isNewThisYear = newThisYear.includes(isoCode);
-          const isRevisitThisYear = isNewThisYear && countPrev > 0;
+    // Filter active timeline layers and gather all relevant country codes
+    const activeLayers = layers.filter((l) => l.visible && l.timelineEnabled);
+    const allCountryCodes = Array.from(
+      new Set([
+        ...activeLayers.flatMap((l) => l.countries || []),
+        ...Object.keys(nextUpcomingYearByCountry),
+      ]),
+    );
 
-          // Determine if the country is upcoming
-          const isUpcoming =
-            nextUpcomingYearByCountry[isoCode] === selectedYear;
-          const isUpcomingVisit = isUpcoming && count === 0;
-          const isUpcomingRevisit = isUpcoming && count > 0;
+    // Generate timeline layer items for each active layer and country code
+    return activeLayers.flatMap((layer) =>
+      allCountryCodes.map((isoCode) => {
+        const count = snapshotCountries[isoCode] || 0;
+        const countPrev = snapshotCountriesPrev[isoCode] || 0;
+        const isHome = homeCountry === isoCode;
 
-          return {
-            isoCode: String(isoCode),
-            color: getVisitColor(count, isHome, "", colorMode, palette, {
-              isNewThisYear,
-              isRevisitThisYear,
-              isUpcomingVisit,
-              isUpcomingRevisit,
-            }),
-            layerId: layer.id,
-            count,
-          };
-        }),
-      );
-  }, [
-    layers,
-    allCountryCodes,
-    palette,
-    snapshotCountries,
-    snapshotCountriesPrev,
-    newThisYear,
-    selectedYear,
-    colorMode,
-    homeCountry,
-    nextUpcomingYearByCountry,
-  ]);
+        // Determine if the country is new or a revisit this year
+        const isNewThisYear = newThisYear.includes(isoCode);
+        const isRevisitThisYear = isNewThisYear && countPrev > 0;
+
+        // Determine if the country is upcoming
+        const isUpcoming = nextUpcomingYearByCountry[isoCode] === selectedYear;
+        const isUpcomingVisit = isUpcoming && count === 0;
+        const isUpcomingRevisit = isUpcoming && count > 0;
+
+        return {
+          isoCode: String(isoCode),
+          color: getVisitColor(count, isHome, "", colorMode, visitColors, {
+            isNewThisYear,
+            isRevisitThisYear,
+            isUpcomingVisit,
+            isUpcomingRevisit,
+          }),
+          layerId: layer.id,
+          count,
+        };
+      }),
+    );
+  }, [layers, trips, selectedYear, colorMode, homeCountry, visitColors]);
 }

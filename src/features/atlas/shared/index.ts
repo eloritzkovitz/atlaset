@@ -1,5 +1,6 @@
-export { useCountryColors } from "./hooks/useCountryColors";
+export { useMapColors } from "./hooks/useMapColors";
 export { useMapMode } from "./hooks/useMapMode";
-export { useVisitColors } from "./hooks/useVisitColors";
-export * from "./utils/mapColors";
+
 export * from "./types";
+
+export * from "./utils/mapColors";

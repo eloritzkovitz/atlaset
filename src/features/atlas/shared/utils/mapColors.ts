@@ -2,11 +2,11 @@
  * Utility functions for managing map colors and palettes.
  */
 
-import { HOME_COUNTRY_COLOR } from "@constants/colors";
+import { DEFAULT_FILL_COLOR, HOME_COUNTRY_COLOR } from "@constants/colors";
 import { COLOR_PALETTES } from "@constants/colorPalettes";
 import { DEFAULT_COLOR_PALETTES } from "@features/settings";
 import type { ColorPalette } from "@types";
-import type { ColorMode, VisitColorRoles } from "../types";
+import type { ColorMode, VisitColors } from "../types";
 
 /**
  * Selects a palette object and its name given a palettes mapping and mode.
@@ -25,25 +25,28 @@ export function getPaletteForMode(
 }
 
 /**
- * Generates visit color roles based on a given color palette.
+ * Generates visit colors based on a given color palette.
  * @param palette - The color palette to extract roles from.
  * @param baseColor - The base color for the map.
- * @returns VisitColorRoles object containing colors for home country, visit counts, and yearly roles.
+ * @returns VisitColors object containing colors for home country, visit counts, and yearly roles.
  */
-export function getVisitColorRolesFromPalette(
+export function getVisitColorsFromPalette(
   palette: ColorPalette,
   baseColor: string,
-): VisitColorRoles {
+): VisitColors {
+  const colors = palette.colors;
+  const reversedVisitCounts = [...colors].reverse();
+
   return {
     base: baseColor,
     home: HOME_COUNTRY_COLOR,
-    visitCounts: [...palette.colors].reverse(),
+    visitCounts: reversedVisitCounts,
     yearly: {
-      new: palette.colors[0],
-      revisit: palette.colors[1],
-      previous: palette.colors[2],
-      upcoming: palette.colors[3],
-      upcomingRevisit: palette.colors[4],
+      new: colors[0] || baseColor,
+      revisit: colors[1] || colors[0] || baseColor,
+      previous: colors[2] || colors[1] || baseColor,
+      upcoming: colors[3] || colors[2] || baseColor,
+      upcomingRevisit: colors[4] || colors[3] || baseColor,
     },
   };
 }
@@ -53,13 +56,15 @@ export function getVisitColorRolesFromPalette(
  * @returns An object containing the country colors based on the palette.
  */
 export function mapPaletteToCountryColors(palette: { colors: string[] }) {
+  const colors = palette.colors;
+
   return {
     HOME_COUNTRY_COLOR: HOME_COUNTRY_COLOR,
-    HOVERED_COUNTRY_COLOR: palette.colors[0],
-    VISITED_COUNTRY_COLOR: palette.colors[1],
-    FUTURE_VISIT_COUNTRY_COLOR: palette.colors[2],
-    SELECTED_COUNTRY_COLOR: palette.colors[3],
-    HIGHLIGHTED_COUNTRY_COLOR: palette.colors[4],
+    HOVERED_COUNTRY_COLOR: colors[0] || DEFAULT_FILL_COLOR,
+    VISITED_COUNTRY_COLOR: colors[1] || colors[0] || DEFAULT_FILL_COLOR,
+    FUTURE_VISIT_COUNTRY_COLOR: colors[2] || colors[1] || DEFAULT_FILL_COLOR,
+    SELECTED_COUNTRY_COLOR: colors[3] || colors[2] || DEFAULT_FILL_COLOR,
+    HIGHLIGHTED_COUNTRY_COLOR: colors[4] || colors[3] || DEFAULT_FILL_COLOR,
   };
 }
 
@@ -69,11 +74,8 @@ export function mapPaletteToCountryColors(palette: { colors: string[] }) {
  * @param isHome - Whether the country is the home country.
  * @param defaultFill - The default fill color for unvisited countries.
  * @param mode - The visit color mode ("cumulative" or "yearly").
- * @param palette - The VisitColorRoles palette to use.
- * @param isNewThisYear - Whether the visit is new this year (yearly mode).
- * @param isRevisitThisYear - Whether the visit is a revisit this year (yearly mode).
- * @param isUpcomingVisit - Whether the visit is an upcoming visit (yearly mode).
- * @param isUpcomingRevisit - Whether the visit is an upcoming revisit (yearly mode).
+ * @param palette - The VisitColors palette to use.
+ * @param timelineFlags - Optional flags indicating the timeline status of the country.
  * @returns The color string for the country based on the provided parameters.
  */
 export function getVisitColor(
@@ -81,7 +83,7 @@ export function getVisitColor(
   isHome: boolean,
   defaultFill: string,
   mode: ColorMode = "cumulative",
-  palette: VisitColorRoles,
+  palette: VisitColors,
   timelineFlags?: {
     isNewThisYear?: boolean;
     isRevisitThisYear?: boolean;
@@ -90,12 +92,6 @@ export function getVisitColor(
   },
 ): string {
   if (isHome) return palette.home;
-
-  if (mode === "cumulative") {
-    if (count <= 0) return defaultFill;
-    const colorIndex = Math.min(count - 1, palette.visitCounts.length - 1);
-    return palette.visitCounts[colorIndex] || defaultFill;
-  }
 
   if (mode === "yearly") {
     if (timelineFlags?.isUpcomingRevisit) return palette.yearly.upcomingRevisit;
@@ -106,5 +102,9 @@ export function getVisitColor(
     return palette.yearly.previous;
   }
 
-  return defaultFill;
+  // For cumulative mode, use the visitCounts array to determine the color based on count
+  if (count <= 0) return defaultFill;
+
+  const colorIndex = Math.min(count - 1, palette.visitCounts.length - 1);
+  return palette.visitCounts[colorIndex] || defaultFill;
 }

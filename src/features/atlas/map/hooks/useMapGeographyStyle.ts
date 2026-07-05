@@ -1,5 +1,5 @@
 import { useMapView } from "@contexts/MapViewContext";
-import { useCountryColors } from "@features/atlas/shared";
+import { useMapColors } from "@features/atlas/shared";
 import { MAP_GEOGRAPHY_STYLE } from "@features/settings";
 
 /**
@@ -13,8 +13,10 @@ export function useMapGeographyStyle(isAddingMarker?: boolean) {
     HIGHLIGHTED_COUNTRY_COLOR,
     HOVERED_COUNTRY_COLOR,
     SELECTED_COUNTRY_COLOR,
-  } = useCountryColors();
+  } = useMapColors();
+  
   const cursor = isAddingMarker ? "crosshair" : "pointer";
+  
   const base = {
     ...MAP_GEOGRAPHY_STYLE.default,
     fill: baseColor,
