@@ -2,6 +2,8 @@
  * Utility functions for string manipulation.
  */
 
+import type { KeyCommand } from "@types";
+
 /**
  * Capitalizes the first letter of a string.
  * @param str - The input string.
@@ -72,7 +74,8 @@ export function slugify(str: string) {
 
 /**
  * Converts a string into a canonical key used for locale lookups.
- * Uses `slugify` then replaces hyphens with underscores to match locale keys.
+ * @param str - The input string to convert.
+ * @returns The canonical key string.
  */
 export function canonicalKey(str: string) {
   return slugify(str).replace(/-/g, "_");
@@ -101,4 +104,36 @@ export function hasStringChildren(
     "children" in props &&
     typeof (props as { children: unknown }).children === "string"
   );
+}
+
+/**
+ * Formats a keyboard shortcut into a human-readable string.
+ * @param cmd - The KeyCommand object representing the shortcut.
+ * @returns A formatted string representing the shortcut.
+ */
+export function formatShortcut(cmd: KeyCommand): string {
+  const modifierMap: Record<string, string> = {
+    Meta: "⌘",
+    Shift: "⇧",
+    Alt: "Alt",
+    Ctrl: "Ctrl",
+  };
+
+  const parts = cmd.modifiers.map((m) => modifierMap[m] || m);
+
+  let keyDisplay: string = cmd.key;
+
+  if (keyDisplay === " ") keyDisplay = "Space";
+  else if (keyDisplay === "ArrowUp") keyDisplay = "↑";
+  else if (keyDisplay === "ArrowDown") keyDisplay = "↓";
+  else if (keyDisplay === "ArrowLeft") keyDisplay = "←";
+  else if (keyDisplay === "ArrowRight") keyDisplay = "→";
+  else if (keyDisplay.length === 1) keyDisplay = keyDisplay.toUpperCase();
+
+  parts.push(keyDisplay);
+
+  const hasWordModifier = cmd.modifiers.some(
+    (m) => m === "Ctrl" || m === "Alt",
+  );
+  return hasWordModifier ? parts.join("+") : parts.join("");
 }

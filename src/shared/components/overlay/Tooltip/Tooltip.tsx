@@ -7,184 +7,194 @@ import {
   isValidElement,
 } from "react";
 import { createPortal } from "react-dom";
+import type { KeyCommand, Point } from "@types";
+import { formatShortcut } from "@utils/string";
 
 export interface TooltipProps {
   content: ReactNode;
-  children: ReactNode;
-  position?: "top" | "bottom" | "left" | "right";
+  children?: ReactNode;
+  position?: "cursor" | "top" | "bottom" | "left" | "right";
   className?: string;
+  overrideCoords?: Point | null;
+  shortcut?: KeyCommand | null;
 }
 
-/** Renders a tooltip.
- * @param content - The content to show inside the tooltip.
- * @param children - The element that triggers the tooltip on hover/focus.
- * @param position - The position of the tooltip relative to the trigger (default: top).
- * @param className - Additional classes for the tooltip container.
- */
+type ReactEventHandler<E> = (e: E) => void;
+
 export function Tooltip({
   content,
   children,
   position = "top",
-  className,
+  className = "",
+  overrideCoords = null,
+  shortcut = null,
 }: TooltipProps) {
   const [visible, setVisible] = useState(false);
-  const [tooltipStyle, setTooltipStyle] = useState<React.CSSProperties>({});
+  const [style, setStyle] = useState<React.CSSProperties>({});
+  const [coords, setCoords] = useState<Point>({ x: 0, y: 0 });
+
   const timeoutRef = useRef<number | null>(null);
   const anchorRef = useRef<HTMLElement>(null);
   const tooltipRef = useRef<HTMLSpanElement>(null);
 
-  const show = () => {
+  const show = (e?: React.MouseEvent) => {
+    if (e && position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
     timeoutRef.current = window.setTimeout(() => setVisible(true), 100);
   };
+
   const hide = () => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setVisible(false);
-    setTooltipStyle({});
+    setStyle({});
   };
 
-  // Calculate tooltip position for portal
+  // Update tooltip position when overrideCoords changes
   useLayoutEffect(() => {
-    if (!visible || !anchorRef.current || !tooltipRef.current) return;
-    const anchorRect = anchorRef.current.getBoundingClientRect();
-    const tooltipRect = tooltipRef.current.getBoundingClientRect();
+    if (overrideCoords) setCoords(overrideCoords);
+  }, [overrideCoords]);
+
+  // Update tooltip position when visible, position, coords, or overrideCoords change
+  useLayoutEffect(() => {
+    const isCurrentlyVisible = !!overrideCoords || visible;
+    if (!isCurrentlyVisible || !tooltipRef.current) return;
+
+    const tooltip = tooltipRef.current.getBoundingClientRect();
+    const gap = 6;
     let top = 0,
       left = 0;
-    const gap = 6;
-    if (position === "top") {
-      top = anchorRect.top - tooltipRect.height - gap;
-      left = anchorRect.left + anchorRect.width / 2 - tooltipRect.width / 2;
-    } else if (position === "bottom") {
-      top = anchorRect.bottom + gap;
-      left = anchorRect.left + anchorRect.width / 2 - tooltipRect.width / 2;
-    } else if (position === "left") {
-      top = anchorRect.top + anchorRect.height / 2 - tooltipRect.height / 2;
-      left = anchorRect.left - tooltipRect.width - gap;
-    } else {
-      // right
-      top = anchorRect.top + anchorRect.height / 2 - tooltipRect.height / 2;
-      left = anchorRect.right + gap;
+
+    const activeCoords =
+      overrideCoords || (position === "cursor" ? coords : null);
+
+    if (activeCoords) {
+      top = activeCoords.y + 12;
+      left = activeCoords.x + 12;
+    } else if (anchorRef.current) {
+      const anchor = anchorRef.current.getBoundingClientRect();
+      top =
+        position === "top"
+          ? anchor.top - tooltip.height - gap
+          : position === "bottom"
+            ? anchor.bottom + gap
+            : anchor.top + anchor.height / 2 - tooltip.height / 2;
+      left =
+        position === "left"
+          ? anchor.left - tooltip.width - gap
+          : position === "right"
+            ? anchor.right + gap
+            : anchor.left + anchor.width / 2 - tooltip.width / 2;
     }
-    // Prevent horizontal clipping always
-    const maxLeft = window.innerWidth - tooltipRect.width - 4;
-    left = Math.max(4, Math.min(left, maxLeft));
-    // Only prevent vertical clipping for non-top positions
-    if (position !== "top") {
-      const maxTop = window.innerHeight - tooltipRect.height - 4;
-      top = Math.max(4, Math.min(top, maxTop));
-    }
-    setTooltipStyle({
+
+    setStyle({
       position: "fixed",
-      top,
-      left,
+      top: Math.max(4, Math.min(top, window.innerHeight - tooltip.height - 4)),
+      left: Math.max(4, Math.min(left, window.innerWidth - tooltip.width - 4)),
       zIndex: 10050,
       pointerEvents: "none",
     });
-  }, [visible, position]);
+  }, [visible, position, coords, overrideCoords]);
 
-  // If child is a valid element, clone and attach ref and handlers
-  let trigger: React.ReactNode;
-  if (isValidElement(children)) {
-    const childProps = (children as React.ReactElement).props as Record<
-      string,
-      unknown
-    >;
-    const isDOM = typeof (children as React.ReactElement).type === "string";
-    // Try to detect if custom component supports ref (forwardRef)
-    const type = (children as React.ReactElement).type as unknown;
-    const supportsRef =
-      isDOM ||
-      (typeof type === "object" &&
-        type !== null &&
-        "$$typeof" in type &&
-        String((type as { $$typeof?: unknown }).$$typeof).includes(
-          "Symbol(react.forward_ref)",
-        ));
-    if (supportsRef) {
-      const props: Record<string, unknown> = {
-        onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-          show();
-          if (childProps.onMouseEnter)
-            (
-              childProps.onMouseEnter as (
-                e: React.MouseEvent<HTMLElement>,
-              ) => void
-            )(e);
-        },
-        onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-          hide();
-          if (childProps.onMouseLeave)
-            (
-              childProps.onMouseLeave as (
-                e: React.MouseEvent<HTMLElement>,
-              ) => void
-            )(e);
-        },
-        onFocus: (e: React.FocusEvent<HTMLElement>) => {
-          show();
-          if (childProps.onFocus)
-            (childProps.onFocus as (e: React.FocusEvent<HTMLElement>) => void)(
-              e,
-            );
-        },
-        onBlur: (e: React.FocusEvent<HTMLElement>) => {
-          hide();
-          if (childProps.onBlur)
-            (childProps.onBlur as (e: React.FocusEvent<HTMLElement>) => void)(
-              e,
-            );
-        },
-        tabIndex: childProps.tabIndex ?? 0,
-        ref: anchorRef,
-      };
-      trigger = cloneElement(children as React.ReactElement, props);
-    } else {
-      trigger = (
-        <span
-          className="relative inline-block"
-          ref={anchorRef}
-          onMouseEnter={show}
-          onMouseLeave={hide}
-          onFocus={show}
-          onBlur={hide}
-        >
-          {children}
-        </span>
-      );
-    }
-  } else {
-    // fallback to span wrapper
-    trigger = (
+  const getHandlers = (childProps: Record<string, unknown> = {}) => {
+    const asReactHandler = <E,>(handler: unknown) =>
+      handler as ReactEventHandler<E> | undefined;
+
+    return {
+      onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+        show(e);
+        asReactHandler<React.MouseEvent<HTMLElement>>(
+          childProps.onMouseEnter,
+        )?.(e);
+      },
+      onMouseMove: (e: React.MouseEvent<HTMLElement>) => {
+        if (position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
+        asReactHandler<React.MouseEvent<HTMLElement>>(childProps.onMouseMove)?.(
+          e,
+        );
+      },
+      onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+        hide();
+        asReactHandler<React.MouseEvent<HTMLElement>>(
+          childProps.onMouseLeave,
+        )?.(e);
+      },
+      onFocus: (e: React.FocusEvent<HTMLElement>) => {
+        if (position === "cursor" && anchorRef.current) {
+          const r = anchorRef.current.getBoundingClientRect();
+          setCoords({ x: r.left + r.width / 2, y: r.bottom });
+        }
+        show();
+        asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onFocus)?.(e);
+      },
+      onBlur: (e: React.FocusEvent<HTMLElement>) => {
+        hide();
+        asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onBlur)?.(e);
+      },
+      tabIndex:
+        typeof childProps.tabIndex === "number" ? childProps.tabIndex : 0,
+    };
+  };
+
+  // Render the tooltip content in a portal to avoid clipping issues and ensure it appears above other elements
+  const renderPortalContent = () =>
+    createPortal(
       <span
-        className="relative inline-block"
-        ref={anchorRef}
-        onMouseEnter={show}
-        onMouseLeave={hide}
-        onFocus={show}
-        onBlur={hide}
+        ref={tooltipRef}
+        style={{ ...style, whiteSpace: "pre-line" }}
+        className={`inline-flex items-center min-w-max px-2 py-1 rounded-lg bg-black border border-muted/15 text-white text-sm group dynamic-tooltip ${className}`}
+        role="tooltip"
       >
-        {children}
-      </span>
+        <span>{content}</span>
+
+        {shortcut && (
+          <span className="text-muted select-none tracking-wide ms-2">
+            {formatShortcut(shortcut)}
+          </span>
+        )}
+
+        {!overrideCoords && position !== "cursor" && (
+          <div
+            className={`absolute border-[4px] border-transparent pointer-events-none
+            ${position === "top" ? "top-full left-1/2 -translate-x-1/2 border-t-black" : ""}
+            ${position === "bottom" ? "bottom-full left-1/2 -translate-x-1/2 border-b-black" : ""}
+            ${position === "left" ? "left-full top-1/2 -translate-y-1/2 border-l-black" : ""}
+            ${position === "right" ? "right-full top-1/2 -translate-y-1/2 border-r-black" : ""}
+          `}
+          />
+        )}
+      </span>,
+      document.body,
     );
-  }
+
+  // If there are no children, only render the tooltip if overrideCoords is provided
+  if (!children) return overrideCoords ? renderPortalContent() : null;
+
+  const c = children as React.ReactElement;
+  const isCloneable =
+    isValidElement(c) &&
+    (typeof c.type === "string" ||
+      (typeof c.type === "object" && c.type !== null && "$$typeof" in c.type));
+  const rawProps =
+    isCloneable && c.props && typeof c.props === "object"
+      ? (c.props as Record<string, unknown>)
+      : {};
+
+  const trigger = isCloneable ? (
+    cloneElement(c, {
+      ...getHandlers(rawProps),
+      ref: anchorRef,
+    } as React.HTMLAttributes<HTMLElement> & {
+      ref: React.RefObject<HTMLElement | null>;
+    })
+  ) : (
+    <span className="relative inline-block" ref={anchorRef} {...getHandlers()}>
+      {children}
+    </span>
+  );
 
   return (
     <>
       {trigger}
-      {visible &&
-        createPortal(
-          <span
-            ref={tooltipRef}
-            style={{
-              ...tooltipStyle,
-              whiteSpace: "pre-line",
-            }}
-            className={`px-2 py-1 rounded-lg bg-black text-white text-sm shadow-lg transition-opacity duration-150 opacity-90 ${className}`}
-            role="tooltip"
-          >
-            {content}
-          </span>,
-          document.body,
-        )}
+      {visible && renderPortalContent()}
     </>
   );
 }

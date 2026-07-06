@@ -1,13 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { KeyCombo } from "@components";
 import type { KeyCommand } from "@types";
-import { canonicalKey } from "@utils/string";
 
 export function ShortcutRow({ cmd }: { cmd: KeyCommand }) {
   const { t } = useTranslation("common");
   const keys = [...cmd.modifiers, cmd.key];
-  const actionKey = canonicalKey(cmd.action || "");
-  const actionLabel = t(`shortcuts.actions.${actionKey}`, cmd.action);
+  const actionLabel = t(cmd.labelKey, "Unknown Action");
 
   return (
     <tr key={cmd.key + cmd.modifiers.join("+")}>

@@ -1,14 +1,8 @@
 import { ActionButton, MenuButton, Separator } from "@components";
+import type { ToolbarActionItem } from "../../hooks/useToolbarActions";
 
 interface MapToolbarActionsProps {
-  actions: {
-    key: string;
-    icon: React.ReactNode;
-    label: string;
-    onClick: () => void;
-    show?: boolean;
-    separatorAfter?: boolean;
-  }[];
+  actions: ToolbarActionItem[];
   isDesktop: boolean;
   children?: React.ReactNode;
 }
@@ -32,6 +26,7 @@ export function MapToolbarActions({
               titlePosition="top"
               icon={action.icon}
               variant="action"
+              shortcut={action.shortcut}
               rounded
             />,
             action.separatorAfter ? (

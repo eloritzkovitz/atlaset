@@ -5,6 +5,7 @@ import {
   type InteractiveBaseProps,
 } from "../InteractiveBase/InteractiveBase";
 import { Tooltip } from "../../overlay/Tooltip/Tooltip";
+import type { KeyCommand } from "@types";
 
 interface ActionButtonProps extends Omit<
   InteractiveBaseProps,
@@ -17,6 +18,7 @@ interface ActionButtonProps extends Omit<
   title?: string;
   titlePosition?: "top" | "bottom" | "left" | "right";
   active?: boolean;
+  shortcut?: KeyCommand | null;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
@@ -39,6 +41,7 @@ export const ActionButton = React.forwardRef<
       titlePosition = "bottom",
       active = true,
       disabled = false,
+      shortcut = null,
       ...props
     },
     ref,
@@ -115,7 +118,7 @@ export const ActionButton = React.forwardRef<
     );
 
     return title ? (
-      <Tooltip content={title} position={titlePosition}>
+      <Tooltip content={title} position={titlePosition} shortcut={shortcut}>
         {buttonElement}
       </Tooltip>
     ) : (

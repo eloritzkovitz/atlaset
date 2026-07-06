@@ -1,3 +1,4 @@
+import type { KeyCommand } from "@types";
 import {
   capitalize,
   capitalizeWords,
@@ -8,6 +9,7 @@ import {
   slugify,
   isNumericString,
   hasStringChildren,
+  formatShortcut,
 } from "./string";
 
 describe("string utils", () => {
@@ -70,5 +72,93 @@ describe("string utils", () => {
     expect(hasStringChildren({ children: 123 })).toBe(false);
     expect(hasStringChildren({})).toBe(false);
     expect(hasStringChildren({ children: null })).toBe(false);
+  });
+
+  describe("formatShortcut", () => {
+    it("formats standard symbol modifiers and capitalizes single letters without separators", () => {
+      const cmd: KeyCommand = {
+        id: "test.show" as any,
+        key: "a",
+        modifiers: ["Meta", "Shift"],
+        category: "General",
+        labelKey: "test",
+      };
+      expect(formatShortcut(cmd)).toBe("⌘⇧A");
+    });
+
+    it("uses '+' separators if a word modifier like Ctrl or Alt is present", () => {
+      const cmd: KeyCommand = {
+        id: "test.ctrl" as any,
+        key: "z",
+        modifiers: ["Ctrl", "Shift"],
+        category: "General",
+        labelKey: "test",
+      };
+      expect(formatShortcut(cmd)).toBe("Ctrl+⇧+Z");
+    });
+
+    it("handles Alt modifier correctly with '+' separators", () => {
+      const cmd: KeyCommand = {
+        id: "test.alt" as any,
+        key: "f",
+        modifiers: ["Alt"],
+        category: "General",
+        labelKey: "test",
+      };
+      expect(formatShortcut(cmd)).toBe("Alt+F");
+    });
+
+    it("falls back to the modifier name itself if it is not in the map", () => {
+      const cmd: KeyCommand = {
+        id: "test.unknown" as any,
+        key: "k",
+        modifiers: ["Option" as any],
+        category: "General",
+        labelKey: "test",
+      };
+      expect(formatShortcut(cmd)).toBe("OptionK");
+    });
+
+    it("converts a space character key to the string 'Space'", () => {
+      const cmd: KeyCommand = {
+        id: "timeline.playPause" as any,
+        key: " ",
+        modifiers: [],
+        category: "Timeline",
+        labelKey: "test",
+      };
+      expect(formatShortcut(cmd)).toBe("Space");
+    });
+
+    it("maps arrow keys to their respective directional glyphs", () => {
+      const arrows: Array<[string, string]> = [
+        ["ArrowUp", "↑"],
+        ["ArrowDown", "↓"],
+        ["ArrowLeft", "←"],
+        ["ArrowRight", "→"],
+      ];
+
+      arrows.forEach(([arrowKey, expectedGlyph]) => {
+        const cmd: KeyCommand = {
+          id: `test.${arrowKey}` as any,
+          key: arrowKey as any,
+          modifiers: [],
+          category: "General",
+          labelKey: "test",
+        };
+        expect(formatShortcut(cmd)).toBe(expectedGlyph);
+      });
+    });
+
+    it("does not change capitalization for multi-character keys like 'Esc' or 'Enter'", () => {
+      const cmd: KeyCommand = {
+        id: "ui.unfocus" as any,
+        key: "Esc",
+        modifiers: [],
+        category: "General",
+        labelKey: "test",
+      };
+      expect(formatShortcut(cmd)).toBe("Esc");
+    });
   });
 });

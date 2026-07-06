@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { Tooltip } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import {
   getCountryIsoCode,
@@ -45,89 +46,104 @@ export function LayersContainer({
 
   const layerItems = useMapLayerItems(mapMode);
 
-  // Group layer items by isoCode for stacking/blending
+  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
+  const [mouseCoords, setMouseCoords] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+
   const layerGroups = useMemo(
     () => groupLayerItemsByIsoCode(layerItems),
     [layerItems],
   );
 
-  // Atlas coloring
   const { map: atlasColorMap } = useAtlasColoring(geographyData, {
     colors: numAtlasColors,
     enabled: isAtlasActive,
   });
 
   return (
-    <g style={isAddingMarker ? { pointerEvents: "none" } : undefined}>
-      <Geographies geography={geographyData}>
-        {({ geographies }: { geographies: GeographyFeature[] }) =>
-          geographies.map((geo) => {
-            const isoA2 = getCountryIsoCode(geo.properties);
-            if (!isoA2) return null;
+    <>
+      <g style={isAddingMarker ? { pointerEvents: "none" } : undefined}>
+        <Geographies geography={geographyData}>
+          {({ geographies }: { geographies: GeographyFeature[] }) =>
+            geographies.map((geo) => {
+              const isoA2 = getCountryIsoCode(geo.properties);
+              if (!isoA2) return null;
 
-            const countryName =
-              isoA2 && countryData?.countries
-                ? getCountryName(isoA2, countryData.countries)
-                : undefined;
-            const isIsoNumeric = isNumericString(isoA2);
-            const countryNameIsIso =
-              !!(countryName && isoA2) &&
-              countryName.toUpperCase() === isoA2.toUpperCase();
+              const countryName =
+                isoA2 && countryData?.countries
+                  ? getCountryName(isoA2, countryData.countries)
+                  : undefined;
+              const isIsoNumeric = isNumericString(isoA2);
+              const countryNameIsIso =
+                !!(countryName && isoA2) &&
+                countryName.toUpperCase() === isoA2.toUpperCase();
 
-            const tooltip =
-              !countryName || isIsoNumeric || countryNameIsIso
-                ? geo.properties?.name || isoA2 || ""
-                : countryName;
+              const tooltip =
+                !countryName || isIsoNumeric || countryNameIsIso
+                  ? geo.properties?.name || isoA2 || ""
+                  : countryName;
 
-            const layers = layerGroups[isoA2] || [];
-            const blendedFill = getBlendedLayerColor(
-              layers,
-              geographyStyle.default.fill,
-            );
+              const layers = layerGroups[isoA2] || [];
+              const blendedFill = getBlendedLayerColor(
+                layers,
+                geographyStyle.default.fill,
+              );
 
-            // Determine country state for styling
-            const isHighlighted = highlightedIsoCodes.includes(isoA2);
-            const isSelected =
-              !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
-            const isHovered =
-              !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
+              const isHighlighted = highlightedIsoCodes.includes(isoA2);
+              const isSelected =
+                !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
+              const isHovered =
+                !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
 
-            // Determine final style based on priority
-            let fill = geographyStyle.default.fill;
+              let fill = geographyStyle.default.fill;
 
-            if (isHighlighted) {
-              fill = geographyStyle.highlight.fill;
-            } else if (isHovered || isSelected) {
-              fill = geographyStyle.hover.fill;
-            } else if (isAtlasActive) {
-              fill = atlasColorMap[isoA2] || geographyStyle.default.fill;
-            } else if (blendedFill) {
-              fill = blendedFill;
-            }
+              if (isHighlighted) {
+                fill = geographyStyle.highlight.fill;
+              } else if (isHovered || isSelected) {
+                fill = geographyStyle.hover.fill;
+              } else if (isAtlasActive) {
+                fill = atlasColorMap[isoA2] || geographyStyle.default.fill;
+              } else if (blendedFill) {
+                fill = blendedFill;
+              }
 
-            const finalStyle = { ...geographyStyle.default, fill };
+              const finalStyle = { ...geographyStyle.default, fill };
 
-            return (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                onMouseEnter={() =>
-                  onCountryHover && onCountryHover(isoA2 ?? null)
-                }
-                onMouseLeave={() => onCountryHover && onCountryHover(null)}
-                onClick={() => onCountryClick && isoA2 && onCountryClick(isoA2)}
-                style={{
-                  default: finalStyle,
-                  hover: finalStyle,
-                  pressed: finalStyle,
-                }}
-              >
-                <title>{String(tooltip)}</title>
-              </Geography>
-            );
-          })
-        }
-      </Geographies>
-    </g>
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  onMouseEnter={(e) => {
+                    setMouseCoords({ x: e.clientX, y: e.clientY });
+                    setActiveTooltip(String(tooltip));
+                    onCountryHover?.(isoA2 ?? null);
+                  }}
+                  onMouseMove={(e) => {
+                    setMouseCoords({ x: e.clientX, y: e.clientY });
+                  }}
+                  onMouseLeave={() => {
+                    setActiveTooltip(null);
+                    setMouseCoords(null);
+                    onCountryHover?.(null);
+                  }}
+                  onClick={() => isoA2 && onCountryClick?.(isoA2)}
+                  style={{
+                    default: finalStyle,
+                    hover: finalStyle,
+                    pressed: finalStyle,
+                  }}
+                />
+              );
+            })
+          }
+        </Geographies>
+      </g>
+
+      {activeTooltip && mouseCoords && (
+        <Tooltip overrideCoords={mouseCoords} content={activeTooltip} />
+      )}
+    </>
   );
 }
