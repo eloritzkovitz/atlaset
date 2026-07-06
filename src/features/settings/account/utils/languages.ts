@@ -21,8 +21,13 @@ export function mapLanguages(t: (key: string) => string | undefined) {
  * @return An array of options with value and label for each language.
  */
 export function languageOptions(t: (key: string) => string | undefined) {
-  return mapLanguages(t).map((l) => ({
-    value: l.code,
-    label: l.localized ? `${l.native} (${l.localized})` : l.native,
-  }));
+  return mapLanguages(t).map((l) => {
+    const nativeName = l.native ?? l.code ?? "";
+    const localizedName = l.localized;
+
+    return {
+      value: l.code,
+      label: localizedName ? `${nativeName} (${localizedName})` : nativeName,
+    };
+  });
 }

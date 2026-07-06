@@ -38,7 +38,7 @@ export function useCountryData() {
 
   const countries = data.countries;
 
-  return useMemo(() => {
+  const processedData = useMemo(() => {
     const loc: Country[] = [];
     const currencyMap = new Map<string, number>();
     const regionSet = new Set<string>();
@@ -136,14 +136,18 @@ export function useCountryData() {
     }
 
     return {
-      ...data,
       countries: loc,
       allRegions,
       subregionsByRegion,
       subregionToRegion,
       currencies,
       languages,
-      refreshData,
     };
-  }, [countries, currentLanguage, data, i18n]);
+  }, [countries, currentLanguage, i18n]);
+
+  return {
+    ...data,
+    ...processedData,
+    refreshData,
+  };
 }

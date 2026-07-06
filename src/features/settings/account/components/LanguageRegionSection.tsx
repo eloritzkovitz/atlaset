@@ -9,9 +9,9 @@ import {
 } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useDateLocale } from "../hooks/useDateLocale";
-import { SettingsCard } from "../../common/components/SettingsCard";
 import { useLanguage } from "../hooks/useLanguage";
 import { languageOptions } from "../utils/languages";
+import { SettingsCard } from "../../common/components/SettingsCard";
 
 export function LanguageRegionSection() {
   const { t: tSettings } = useTranslation("settings");
