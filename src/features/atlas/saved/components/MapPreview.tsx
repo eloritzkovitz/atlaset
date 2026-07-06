@@ -5,17 +5,17 @@ import {
   groupLayerItemsByIsoCode,
   getBlendedLayerColor,
 } from "@features/atlas/layers";
+import { useMapColors } from "@features/atlas/shared";
 import { getCountryIsoCode } from "@features/countries";
 import type { SavedMap } from "../types";
-
-interface MapPreviewProps {
-  map: SavedMap;
-}
 
 /** Renders a preview of a saved map.
  * @param map The saved map data to render.
  */
-export function MapPreview({ map }: MapPreviewProps) {
+export function MapPreview({ map }: { map: SavedMap }) {
+  const { baseColor } = useMapColors();
+  const { geoData } = useMapView();
+
   const layerItems = useMemo(() => {
     if (!map?.layers) return [];
     return map.layers.flatMap((layer) =>
@@ -32,8 +32,6 @@ export function MapPreview({ map }: MapPreviewProps) {
     [layerItems],
   );
 
-  const { geoData } = useMapView();
-
   const previewWidth = 440;
   const previewHeight = 225;
 
@@ -48,6 +46,7 @@ export function MapPreview({ map }: MapPreviewProps) {
     return d3.geoPath().projection(projection);
   }, [projection]);
 
+  // If any of the required data is missing, return null to avoid rendering
   if (!geoData || !projection || !pathGen) return null;
 
   return (
@@ -64,11 +63,14 @@ export function MapPreview({ map }: MapPreviewProps) {
           geoData.features.map((feature, i) => {
             const d = pathGen(feature as GeoJSON.Feature);
             if (!d) return null;
+
             const isoA2 = getCountryIsoCode(feature.properties ?? {});
             const layers = isoA2 ? layerGroups[isoA2.toUpperCase()] : undefined;
+
             const fill = layers
-              ? getBlendedLayerColor(layers, "#2563eb")
-              : "#cbd5e1";
+              ? getBlendedLayerColor(layers, baseColor)
+              : baseColor;
+
             return (
               <path
                 key={i}

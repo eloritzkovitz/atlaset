@@ -39,6 +39,7 @@ export function useMapColors(mode?: ColorMode) {
     );
 
     return {
+      baseColor,
       ...countryColors,
       visitColors,
     };
