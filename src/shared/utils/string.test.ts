@@ -10,6 +10,7 @@ import {
   isNumericString,
   hasStringChildren,
   formatShortcut,
+  formatKeyCommand,
 } from "./string";
 
 describe("string utils", () => {
@@ -75,7 +76,22 @@ describe("string utils", () => {
   });
 
   describe("formatShortcut", () => {
-    it("formats standard symbol modifiers and capitalizes single letters without separators", () => {
+    it("returns an empty string if commandId is null or undefined", () => {
+      expect(formatShortcut(null)).toBe("");
+      expect(formatShortcut(undefined)).toBe("");
+    });
+
+    it("returns an empty string if the commandId does not exist in keyCommands", () => {
+      expect(formatShortcut("nonexistent.id" as any)).toBe("");
+    });
+
+    it("successfully passes a matched commandId configuration to the formatter", () => {
+      expect(formatShortcut("shortcuts.show")).toBe("Shift+?");
+    });
+  });
+
+  describe("formatKeyCommand", () => {
+    it("formats standard string modifiers and capitalizes single letters with + separators", () => {
       const cmd: KeyCommand = {
         id: "test.show" as any,
         key: "a",
@@ -83,32 +99,10 @@ describe("string utils", () => {
         category: "General",
         labelKey: "test",
       };
-      expect(formatShortcut(cmd)).toBe("⌘⇧A");
+      expect(formatKeyCommand(cmd)).toBe("Cmd+Shift+A");
     });
 
-    it("uses '+' separators if a word modifier like Ctrl or Alt is present", () => {
-      const cmd: KeyCommand = {
-        id: "test.ctrl" as any,
-        key: "z",
-        modifiers: ["Ctrl", "Shift"],
-        category: "General",
-        labelKey: "test",
-      };
-      expect(formatShortcut(cmd)).toBe("Ctrl+⇧+Z");
-    });
-
-    it("handles Alt modifier correctly with '+' separators", () => {
-      const cmd: KeyCommand = {
-        id: "test.alt" as any,
-        key: "f",
-        modifiers: ["Alt"],
-        category: "General",
-        labelKey: "test",
-      };
-      expect(formatShortcut(cmd)).toBe("Alt+F");
-    });
-
-    it("falls back to the modifier name itself if it is not in the map", () => {
+    it("falls back to the modifier string itself if it is missing from modifierMap", () => {
       const cmd: KeyCommand = {
         id: "test.unknown" as any,
         key: "k",
@@ -116,49 +110,60 @@ describe("string utils", () => {
         category: "General",
         labelKey: "test",
       };
-      expect(formatShortcut(cmd)).toBe("OptionK");
+      expect(formatKeyCommand(cmd)).toBe("Option+K");
     });
 
-    it("converts a space character key to the string 'Space'", () => {
+    it("converts a literal single space character to the string 'Space'", () => {
       const cmd: KeyCommand = {
-        id: "timeline.playPause" as any,
+        id: "test.space" as any,
         key: " ",
         modifiers: [],
-        category: "Timeline",
+        category: "General",
         labelKey: "test",
       };
-      expect(formatShortcut(cmd)).toBe("Space");
+      expect(formatKeyCommand(cmd)).toBe("Space");
     });
 
-    it("maps arrow keys to their respective directional glyphs", () => {
-      const arrows: Array<[string, string]> = [
-        ["ArrowUp", "↑"],
-        ["ArrowDown", "↓"],
-        ["ArrowLeft", "←"],
-        ["ArrowRight", "→"],
+    it("maps arrow keys to their respective directional text descriptors", () => {
+      const arrows: Array<[KeyCommand["key"], string]> = [
+        ["ArrowUp", "Up"],
+        ["ArrowDown", "Down"],
+        ["ArrowLeft", "Left"],
+        ["ArrowRight", "Right"],
       ];
 
-      arrows.forEach(([arrowKey, expectedGlyph]) => {
+      arrows.forEach(([arrowKey, expectedText]) => {
         const cmd: KeyCommand = {
-          id: `test.${arrowKey}` as any,
-          key: arrowKey as any,
+          id: "test.arrow" as any,
+          key: arrowKey,
           modifiers: [],
           category: "General",
           labelKey: "test",
         };
-        expect(formatShortcut(cmd)).toBe(expectedGlyph);
+        expect(formatKeyCommand(cmd)).toBe(expectedText);
       });
     });
 
     it("does not change capitalization for multi-character keys like 'Esc' or 'Enter'", () => {
       const cmd: KeyCommand = {
-        id: "ui.unfocus" as any,
+        id: "test.multi" as any,
         key: "Esc",
         modifiers: [],
         category: "General",
         labelKey: "test",
       };
-      expect(formatShortcut(cmd)).toBe("Esc");
+      expect(formatKeyCommand(cmd)).toBe("Esc");
+    });
+
+    it("handles standard combinations accurately with cross-platform conventions", () => {
+      const cmd: KeyCommand = {
+        id: "test.ctrl" as any,
+        key: "z",
+        modifiers: ["Ctrl", "Shift"],
+        category: "General",
+        labelKey: "test",
+      };
+      expect(formatKeyCommand(cmd)).toBe("Ctrl+Shift+Z");
     });
   });
 });

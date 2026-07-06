@@ -2,7 +2,8 @@
  * Utility functions for string manipulation.
  */
 
-import type { KeyCommand } from "@types";
+import { keyCommands } from "@constants/keyCommands";
+import type { CommandId, KeyCommand } from "@types";
 
 /**
  * Capitalizes the first letter of a string.
@@ -107,33 +108,44 @@ export function hasStringChildren(
 }
 
 /**
- * Formats a keyboard shortcut into a human-readable string.
- * @param cmd - The KeyCommand object representing the shortcut.
- * @returns A formatted string representing the shortcut.
+ * Formats a KeyCommand into a human-readable string.
+ * @param cmd - The KeyCommand to format.
+ * @returns A formatted string representing the key command.
  */
-export function formatShortcut(cmd: KeyCommand): string {
+export function formatKeyCommand(cmd: KeyCommand): string {
   const modifierMap: Record<string, string> = {
-    Meta: "⌘",
-    Shift: "⇧",
+    Meta: "Cmd",
+    Shift: "Shift",
     Alt: "Alt",
     Ctrl: "Ctrl",
   };
 
   const parts = cmd.modifiers.map((m) => modifierMap[m] || m);
-
   let keyDisplay: string = cmd.key;
 
   if (keyDisplay === " ") keyDisplay = "Space";
-  else if (keyDisplay === "ArrowUp") keyDisplay = "↑";
-  else if (keyDisplay === "ArrowDown") keyDisplay = "↓";
-  else if (keyDisplay === "ArrowLeft") keyDisplay = "←";
-  else if (keyDisplay === "ArrowRight") keyDisplay = "→";
+  else if (keyDisplay === "ArrowUp") keyDisplay = "Up";
+  else if (keyDisplay === "ArrowDown") keyDisplay = "Down";
+  else if (keyDisplay === "ArrowLeft") keyDisplay = "Left";
+  else if (keyDisplay === "ArrowRight") keyDisplay = "Right";
   else if (keyDisplay.length === 1) keyDisplay = keyDisplay.toUpperCase();
 
   parts.push(keyDisplay);
 
-  const hasWordModifier = cmd.modifiers.some(
-    (m) => m === "Ctrl" || m === "Alt",
-  );
-  return hasWordModifier ? parts.join("+") : parts.join("");
+  return parts.join("+");
+}
+
+/**
+ * Formats a keyboard shortcut into a human-readable string.
+ * @param commandId - The command ID for which to format the shortcut.
+ * @returns A formatted string representing the shortcut.
+ */
+export function formatShortcut(
+  commandId: CommandId | null | undefined,
+): string {
+  if (!commandId) return "";
+  const cmd = keyCommands.find((c) => c.id === commandId);
+  if (!cmd) return "";
+
+  return formatKeyCommand(cmd);
 }

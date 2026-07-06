@@ -5,7 +5,7 @@ import {
   type InteractiveBaseProps,
 } from "../InteractiveBase/InteractiveBase";
 import { Tooltip } from "../../overlay/Tooltip/Tooltip";
-import type { KeyCommand } from "@types";
+import type { CommandId } from "@types";
 
 interface ActionButtonProps extends Omit<
   InteractiveBaseProps,
@@ -18,7 +18,7 @@ interface ActionButtonProps extends Omit<
   title?: string;
   titlePosition?: "top" | "bottom" | "left" | "right";
   active?: boolean;
-  shortcut?: KeyCommand | null;
+  shortcut?: CommandId | null;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 

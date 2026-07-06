@@ -7,7 +7,7 @@ import {
   isValidElement,
 } from "react";
 import { createPortal } from "react-dom";
-import type { KeyCommand, Point } from "@types";
+import type { CommandId, Point } from "@types";
 import { formatShortcut } from "@utils/string";
 
 export interface TooltipProps {
@@ -16,7 +16,7 @@ export interface TooltipProps {
   position?: "cursor" | "top" | "bottom" | "left" | "right";
   className?: string;
   overrideCoords?: Point | null;
-  shortcut?: KeyCommand | null;
+  shortcut?: CommandId | null;
 }
 
 type ReactEventHandler<E> = (e: E) => void;

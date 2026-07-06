@@ -26,7 +26,7 @@ export function MapToolbarActions({
               titlePosition="top"
               icon={action.icon}
               variant="action"
-              shortcut={action.shortcut}
+              shortcut={action.commandId}
               rounded
             />,
             action.separatorAfter ? (
