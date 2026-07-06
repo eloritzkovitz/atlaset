@@ -57,10 +57,7 @@
   --color-surface-hover: theme("colors.gray.100");
   /* Input colors */
   --color-input: theme("colors.gray.200");
-  --color-input-hover: theme("colors.gray.200");
-  /* Dropdown colors */
-  --color-dropdown-hover: theme("colors.blue.100");
-  --color-dropdown-selected: theme("colors.blue.200");
+  --color-input-hover: theme("colors.gray.200");  
   /* Table colors */
   --color-table-row: theme("colors.white");
   --color-table-row-alt: theme("colors.gray.50");
@@ -110,10 +107,10 @@
 }
 
 .dark {
-  --color-bg: theme("colors.gray.900");
+  --color-bg: theme("colors.gray.950");
   --color-bg-atlas: theme("colors.blue.950");
   /* Sidebar colors */
-  --color-sidebar: theme("colors.gray.800");
+  --color-sidebar: theme("colors.gray.900");
   --color-sidebar-btn-hover: theme("colors.gray.600");
   /* Primary colors */
   --color-accent-blue: theme("colors.blue.800");
@@ -149,8 +146,8 @@
   --color-secondary-hover: theme("colors.gray.600");
   --color-secondary-active: theme("colors.gray.300");
   /* Action colors */
-  --color-action: theme("colors.gray.800");
-  --color-action-hover: theme("colors.gray.600");
+  --color-action: theme("colors.gray.900");
+  --color-action-hover: theme("colors.gray.700");
   --color-action-text: theme("colors.gray.300");
   --color-action-text-hover: theme("colors.white");
   /* Header action colors */
@@ -158,15 +155,12 @@
   --color-action-header-hover: theme("colors.gray.600");
   --color-action-header-hover-text: theme("colors.gray.300");
   /* Surface colors */
-  --color-surface: theme("colors.gray.700");
-  --color-surface-alt: theme("colors.gray.800");
-  --color-surface-hover: theme("colors.gray.600");
+  --color-surface: theme("colors.gray.800");
+  --color-surface-alt: theme("colors.gray.900");
+  --color-surface-hover: theme("colors.gray.700");
   /* Input colors */
-  --color-input: theme("colors.gray.600");
-  --color-input-hover: theme("colors.gray.500");
-  /* Dropdown colors */
-  --color-dropdown-hover: theme("colors.blue.500");
-  --color-dropdown-selected: theme("colors.blue.600");
+  --color-input: theme("colors.gray.700");
+  --color-input-hover: theme("colors.gray.600");  
   /* Table colors */
   --color-table-row: theme("colors.gray.900");
   --color-table-row-alt: theme("colors.gray.950");
@@ -184,8 +178,8 @@
   --color-muted: theme("colors.gray.400");
   --color-muted-hover: theme("colors.gray.500");
   /* Border colors */
-  --color-border: theme("colors.gray.600");
-  --color-dashed: theme("colors.gray.600");
+  --color-border: theme("colors.gray.700");
+  --color-dashed: theme("colors.gray.700");
   /* Ring colors */
   --color-ring-focus: theme("colors.blue.500");
   /* Chip colors */

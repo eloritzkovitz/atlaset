@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import { useAudio } from "@contexts/AudioContext";
 import { useTrips } from "@contexts/TripsContext";
-import { useMapMode } from "@features/atlas/map";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
@@ -11,8 +10,7 @@ import { TimelineContext } from "./TimelineContext";
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const { mapMode } = useMapMode();
-  const { setColorMode } = useMapView();
+  const { mapMode, setColorMode } = useMapView();
   const [timelineMode, setTimelineMode] = useState(false);
   const prevTimelineMode = useRef(false);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);

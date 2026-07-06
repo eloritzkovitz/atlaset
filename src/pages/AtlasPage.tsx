@@ -1,11 +1,10 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useCountrySelection } from "@features/atlas/countries";
-import { WorldMap, useGeoData, useMapMode } from "@features/atlas/map";
+import { WorldMap, useGeoData } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import {
   AtlasShortcuts,
@@ -16,19 +15,15 @@ import { useCountryData } from "@features/countries";
 import { usePageTitle } from "@hooks";
 
 export default function AtlasPage() {
-  const location = useLocation();
   const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { loading: layersLoading } = useLayers();
-  const { mapReady, handleMapReady } = useMapView();
+  const { mapReady, handleMapReady, isEmbed } = useMapView();
   const { t } = useTranslation("atlas");
 
   const svgRef = useRef<SVGSVGElement>(null);
 
   usePageTitle(t("pageTitle", "Atlas"));
-
-  // Set map mode based on URL params
-  useMapMode();
 
   const {
     selectedIsoCode,
@@ -43,8 +38,6 @@ export default function AtlasPage() {
   const { isAddingMarker } = useMarkerCreation();
 
   // Derived state
-  const params = new URLSearchParams(location.search);
-  const isEmbed = params.has("embed");
   const isLoading =
     countriesLoading || layersLoading || geoLoading || !mapReady;
 

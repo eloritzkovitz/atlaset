@@ -1,16 +1,13 @@
 import { createContext, useContext } from "react";
-import type {
-  ColorMode,
-  Coordinates,
-  GeoData,
-  MapMode,
-} from "@features/atlas/map";
+import type { Coordinates, GeoData } from "@features/atlas/map";
+import type { ColorMode, MapMode } from "@features/atlas/shared";
 
 export interface MapViewContextType {
   mapMode: MapMode;
   setMapMode: (v: MapMode) => void;
   isReadonly: boolean;
   isEdit: boolean;
+  isEmbed: boolean;
   colorMode: ColorMode;
   setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
   isAtlasActive: boolean;

@@ -2,7 +2,7 @@
  * Utilities for theme management based on display settings, including applying themes and handling system preferences.
  */
 
-import type { DisplaySettings } from "@features/settings/types";
+import type { DisplaySettings } from "@features/settings";
 
 /**
  * Applies the theme to the document based on display settings.

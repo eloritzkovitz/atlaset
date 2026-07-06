@@ -9,6 +9,10 @@ import type { Country, CountryTerritories, Currency } from "../types";
 
 type CountryTranslation = Partial<Country>;
 
+// Constants for empty arrays and objects to avoid unnecessary allocations
+const EMPTY_ARRAY: string[] = [];
+const EMPTY_TERRITORIES: CountryTerritories = {} as CountryTerritories;
+
 /**
  * Accesses country data from the Redux store and auto-fetches if needed.
  * Provides a refreshData function to manually reload.
@@ -17,6 +21,8 @@ export function useCountryData() {
   const dispatch: AppDispatch = useDispatch();
   const data = useSelector((state: RootState) => state.countryData);
   const { i18n } = useTranslation("countries");
+
+  const currentLanguage = i18n.language || i18next.language || "en";
 
   // Fetch data on first use if not already loading or loaded
   useEffect(() => {
@@ -31,118 +37,117 @@ export function useCountryData() {
   };
 
   const countries = data.countries;
-  const {
-    localizedCountries,
-    currencyCounts,
-    allRegionsLocalized,
-    subregionsByRegion,
-    subregionToRegion,
-    languageCodes,
-  } = useMemo(() => {
+
+  const processedData = useMemo(() => {
     const loc: Country[] = [];
     const currencyMap = new Map<string, number>();
     const regionSet = new Set<string>();
     const tmpSub: Record<string, Set<string>> = {};
     const langSet = new Set<string>();
 
-    const lng = i18n.language || i18next.language || "en";
     let bundle: Record<string, CountryTranslation> = {};
     try {
       bundle =
-        i18n.getResourceBundle?.(lng, "countries") ||
-        i18next.getResourceBundle(lng, "countries") ||
+        i18n.getResourceBundle?.(currentLanguage, "countries") ||
+        i18next.getResourceBundle(currentLanguage, "countries") ||
         {};
     } catch {
       bundle = {};
     }
 
-    // Map country data with translations and build auxiliary data structures for filters
-    for (const c of countries) {
+    // Process each country, applying translations and collecting metadata
+    for (let i = 0; i < countries.length; i++) {
+      const c = countries[i];
       const iso = (c.isoCode || "").toUpperCase();
       const trans = bundle[iso] ?? {};
 
-      const localized = {
+      const localized: Country = {
         ...c,
         name: trans.name ?? c.name,
         capital: trans.capital ?? c.capital ?? "",
-        altNames: trans.altNames ?? c.altNames ?? [],
+        altNames: trans.altNames ?? c.altNames ?? EMPTY_ARRAY,
         region: (trans.region as string) ?? c.region,
         subregion: (trans.subregion as string) ?? c.subregion,
         territories: (trans.territories ??
           c.territories ??
-          ({} as CountryTerritories)) as CountryTerritories,
-      } as Country;
+          EMPTY_TERRITORIES) as CountryTerritories,
+      };
 
       loc.push(localized);
 
-      if (localized?.region) regionSet.add(String(localized.region));
-      const sk = localized.subregion as string;
-      if (localized.region && sk) {
-        if (!tmpSub[localized.region])
-          tmpSub[localized.region] = new Set<string>();
-        tmpSub[localized.region].add(sk);
+      if (localized.region) {
+        regionSet.add(localized.region);
+        if (localized.subregion) {
+          if (!tmpSub[localized.region]) {
+            tmpSub[localized.region] = new Set<string>();
+          }
+          tmpSub[localized.region].add(localized.subregion);
+        }
       }
-      if (localized?.currency)
+
+      if (localized.currency) {
         currencyMap.set(
           localized.currency,
           (currencyMap.get(localized.currency) ?? 0) + 1,
         );
-      if (Array.isArray(localized.languages))
-        for (const l of localized.languages) langSet.add(String(l));
+      }
+
+      if (Array.isArray(localized.languages)) {
+        for (let j = 0; j < localized.languages.length; j++) {
+          langSet.add(String(localized.languages[j]));
+        }
+      }
     }
 
+    // Sort regions and subregions for consistent ordering
     const allRegions = Array.from(regionSet).sort();
-    const subregionsOut: Record<string, string[]> = {};
-    for (const [k, set] of Object.entries(tmpSub))
-      subregionsOut[k] = Array.from(set).sort();
-    const subToRegion = new Map<string, string>();
-    for (const [rk, subs] of Object.entries(subregionsOut))
-      for (const s of subs) subToRegion.set(s, rk);
-    const languageCodesArr = Array.from(langSet).sort();
+    const subregionsByRegion: Record<string, string[]> = {};
+    const subregionToRegion = new Map<string, string>();
 
-    return {
-      localizedCountries: loc,
-      currencyCounts: currencyMap,
-      allRegionsLocalized: allRegions,
-      subregionsByRegion: subregionsOut,
-      subregionToRegion: subToRegion,
-      languageCodes: languageCodesArr,
-    } as const;
-  }, [countries, i18n]);
+    for (const [region, subSet] of Object.entries(tmpSub)) {
+      const sortedSubs = Array.from(subSet).sort();
+      subregionsByRegion[region] = sortedSubs;
+      for (let s = 0; s < sortedSubs.length; s++) {
+        subregionToRegion.set(sortedSubs[s], region);
+      }
+    }
 
-  // Map currency codes to localized names and user counts
-  const currenciesWithUsers = useMemo(() => {
-    const codes = Array.from(currencyCounts.keys());
-    if (codes.length === 0) return [] as Currency[];
-    return codes.map((code) => {
-      const translated = i18n.t(`currencies:${code}`, { defaultValue: code });
-      return {
-        code,
-        name: typeof translated === "string" ? translated : String(translated),
-      } as Currency;
-    });
-  }, [currencyCounts, i18n]);
+    // Map currency codes to localized names and user counts
+    const currencies: Currency[] = Array.from(currencyMap.keys()).map(
+      (code) => {
+        const translated = i18n.t(`currencies:${code}`, { defaultValue: code });
+        return {
+          code,
+          name:
+            typeof translated === "string" ? translated : String(translated),
+        };
+      },
+    );
 
-  // Map language codes to localized names
-  const languagesMap = useMemo(() => {
-    const out: Record<string, Language> = {};
-    for (const code of languageCodes) {
+    // Map language codes to localized names
+    const languages: Record<string, Language> = {};
+    const sortedLangs = Array.from(langSet).sort();
+    for (let i = 0; i < sortedLangs.length; i++) {
+      const code = sortedLangs[i];
       const name = i18n.exists(`languages:${code}`)
         ? String(i18n.t(`languages:${code}`, { defaultValue: code }))
         : code;
-      out[code] = { code, name } as Language;
+      languages[code] = { code, name };
     }
-    return out;
-  }, [languageCodes, i18n]);
+
+    return {
+      countries: loc,
+      allRegions,
+      subregionsByRegion,
+      subregionToRegion,
+      currencies,
+      languages,
+    };
+  }, [countries, currentLanguage, i18n]);
 
   return {
     ...data,
-    countries: localizedCountries,
-    allRegions: allRegionsLocalized,
-    subregionsByRegion,
-    subregionToRegion,
-    currencies: currenciesWithUsers,
-    languages: languagesMap,
+    ...processedData,
     refreshData,
   };
 }

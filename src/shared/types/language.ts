@@ -5,7 +5,7 @@ export type Language = {
   /** The localized name of the language, in the user's current language. */
   name?: string;
   /** The native name of the language, in its own script. */
-  nativeName: string;
+  nativeName?: string;
   /** Indicates if the language is read from right to left. */
   isRtl?: boolean;
   /** The priority of the language. */

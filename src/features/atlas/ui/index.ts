@@ -1,6 +1,3 @@
-// Components
-export { AtlasShortcuts } from "./components/AtlasShortcuts";
-
-// Containers
-export { AtlasUiContainer } from "./containers/AtlasUiContainer";
-export { MapUiContainer } from "./containers/MapUiContainer";
+export { AtlasShortcuts } from "./controllers/AtlasShortcuts";
+export { AtlasUiContainer } from "./layouts/AtlasUiContainer";
+export { MapUiContainer } from "./layouts/MapUiContainer";

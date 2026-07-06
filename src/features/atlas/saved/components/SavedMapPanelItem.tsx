@@ -3,6 +3,7 @@ import { FaMap } from "react-icons/fa6";
 import { PanelListItem, Tooltip } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useMapShare } from "@features/atlas/export/hooks/useMapShare";
+import { useTooltipTarget } from "@hooks";
 import { MapPreview } from "./MapPreview";
 import type { SavedMap } from "../types";
 import { encodeMapData } from "@features/atlas/export/utils/mapShare";
@@ -30,6 +31,8 @@ export function SavedMapPanelItem({
   const ref = useRef<HTMLDivElement>(null);
   const { user } = useAuth();
 
+  const { activeTarget, registerTarget } = useTooltipTarget();
+
   // Encode map data for sharing
   const code = encodeMapData({
     layers: (map.layers || [])
@@ -54,7 +57,6 @@ export function SavedMapPanelItem({
   });
   const { copyShareUrl } = useMapShare(code);
 
-  // Quick download handler
   const handleDownload = () => {
     exportMapDataAsJson(map);
   };
@@ -65,17 +67,10 @@ export function SavedMapPanelItem({
         name={map.name || "Untitled Map"}
         color="#ffffff"
         icon={
-          <Tooltip
-            content={
-              <div className="flex items-center justify-center border-none rounded p-2">
-                <MapPreview map={map} />
-              </div>
-            }
-            position="bottom"
-            className="!bg-bg !opacity-100"
-          >
-            <FaMap className="text-xl" />
-          </Tooltip>
+          <FaMap
+            className="text-xl cursor-pointer"
+            {...registerTarget("Map Preview")}
+          />
         }
         onView={onView}
         onNameChange={
@@ -89,7 +84,20 @@ export function SavedMapPanelItem({
         onRemove={showRemove && onRemove ? () => onRemove(map.id) : undefined}
         removeDisabled={false}
         visible={true}
-      ></PanelListItem>
+      />
+
+      {activeTarget && (
+        <Tooltip
+          target={activeTarget.element}
+          position="bottom"
+          className="!bg-bg !opacity-100"
+          content={
+            <div className="flex items-center justify-center border-none rounded p-2">
+              <MapPreview map={map} />
+            </div>
+          }
+        />
+      )}
     </div>
   );
 }

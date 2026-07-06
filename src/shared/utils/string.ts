@@ -2,6 +2,9 @@
  * Utility functions for string manipulation.
  */
 
+import { keyCommands } from "@constants/keyCommands";
+import type { CommandId, KeyCommand } from "@types";
+
 /**
  * Capitalizes the first letter of a string.
  * @param str - The input string.
@@ -72,7 +75,8 @@ export function slugify(str: string) {
 
 /**
  * Converts a string into a canonical key used for locale lookups.
- * Uses `slugify` then replaces hyphens with underscores to match locale keys.
+ * @param str - The input string to convert.
+ * @returns The canonical key string.
  */
 export function canonicalKey(str: string) {
   return slugify(str).replace(/-/g, "_");
@@ -101,4 +105,47 @@ export function hasStringChildren(
     "children" in props &&
     typeof (props as { children: unknown }).children === "string"
   );
+}
+
+/**
+ * Formats a KeyCommand into a human-readable string.
+ * @param cmd - The KeyCommand to format.
+ * @returns A formatted string representing the key command.
+ */
+export function formatKeyCommand(cmd: KeyCommand): string {
+  const modifierMap: Record<string, string> = {
+    Meta: "Cmd",
+    Shift: "Shift",
+    Alt: "Alt",
+    Ctrl: "Ctrl",
+  };
+
+  const parts = cmd.modifiers.map((m) => modifierMap[m] || m);
+  let keyDisplay: string = cmd.key;
+
+  if (keyDisplay === " ") keyDisplay = "Space";
+  else if (keyDisplay === "ArrowUp") keyDisplay = "Up";
+  else if (keyDisplay === "ArrowDown") keyDisplay = "Down";
+  else if (keyDisplay === "ArrowLeft") keyDisplay = "Left";
+  else if (keyDisplay === "ArrowRight") keyDisplay = "Right";
+  else if (keyDisplay.length === 1) keyDisplay = keyDisplay.toUpperCase();
+
+  parts.push(keyDisplay);
+
+  return parts.join("+");
+}
+
+/**
+ * Formats a keyboard shortcut into a human-readable string.
+ * @param commandId - The command ID for which to format the shortcut.
+ * @returns A formatted string representing the shortcut.
+ */
+export function formatShortcut(
+  commandId: CommandId | null | undefined,
+): string {
+  if (!commandId) return "";
+  const cmd = keyCommands.find((c) => c.id === commandId);
+  if (!cmd) return "";
+
+  return formatKeyCommand(cmd);
 }

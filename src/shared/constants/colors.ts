@@ -1,4 +1,7 @@
 // Base colors
+export const DEFAULT_FILL_COLOR = "#fff";
+
+// Map base colors
 export const MAP_BASE_COLOR_LIGHT = "#b5bfca";
 export const MAP_BASE_COLOR_GRAY = "#9199a2";
 export const MAP_BASE_COLOR_DARK = "#6d7379";

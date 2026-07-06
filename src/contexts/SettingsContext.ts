@@ -1,6 +1,5 @@
 import { createContext, useContext } from "react";
-import { defaultSettings } from "@features/settings";
-import type { Settings } from "@features/settings/types";
+import { defaultSettings, type Settings } from "@features/settings";
 
 interface SettingsContextType {
   settings: Settings;

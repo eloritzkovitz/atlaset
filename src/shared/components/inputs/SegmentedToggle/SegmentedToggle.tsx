@@ -53,7 +53,7 @@ export function SegmentedToggle<T extends string>({
         const hoverClass = !isSelected
           ? baseBg
             ? `hover:${baseBg}/50`
-            : "hover:bg-surface-hover"
+            : "hover:bg-input-hover"
           : "";
 
         const labelSpan = (

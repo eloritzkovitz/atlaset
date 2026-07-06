@@ -7,7 +7,7 @@ import { useLanguage } from "@features/settings";
 import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
-import { useToolbarActions } from "./useToolbarActions";
+import { useToolbarActions } from "../../hooks/useToolbarActions";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {
@@ -23,20 +23,14 @@ export function MapToolbar({
   isEmbed,
   children,
 }: MapToolbarProps) {
+  const { isRtl } = useLanguage();
+  const { isMobile } = useScreenSize();
+  const { uiVisible } = useUI();
   const { t } = useTranslation("atlas");
 
-  // UI state
-  const { uiVisible } = useUI();
   const [visible, setVisible] = useState(true);
-
-  // Detect mobile
-  const { isMobile } = useScreenSize();
-  const { isRtl } = useLanguage();
-
-  // Auto-hide toolbar on mobile after a delay
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Use config for actions
   const actions = useToolbarActions({
     isMobile,
     setMenuOpen,

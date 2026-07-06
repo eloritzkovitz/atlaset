@@ -100,38 +100,50 @@
       "timeline": "Timeline"
     },
     "actions": {
-      "showShortcuts": "Show shortcuts",
-      "focusSearch": "Focus search",
-      "unfocusClose": "Unfocus / Close",
-      "toggleHelp": "Toggle help",
-      "resetFilters": "Reset filters",
-      "toggleSavedMaps": "Toggle saved maps",
-      "toggleFriends": "Toggle friends",
-      "toggleCountries": "Toggle countries",
-      "toggleExport": "Toggle export",
-      "toggleFilters": "Toggle filters",
-      "toggleLegend": "Toggle legend",
-      "toggleMarkers": "Toggle markers",
-      "toggleLayers": "Toggle layers",
-      "toggleSettings": "Toggle settings",
-      "toggleTimeline": "Toggle timeline",
-      "toggleUi": "Toggle UI",
-      "scrollUp": "Scroll up",
-      "scrollDown": "Scroll down",
-      "goToFirstCountry": "Go to first country",
-      "goToLastCountry": "Go to last country",
-      "scrollUpOnePage": "Scroll up one page",
-      "scrollDownOnePage": "Scroll down one page",
-      "selectCountry": "Select country",
-      "zoomIn": "Zoom in",
-      "zoomOut": "Zoom out",
-      "resetZoom": "Reset zoom",
-      "centerMapOnCountry": "Center map on country",
-      "nextYear": "Next year",
-      "previousYear": "Previous year",
-      "goToFirstYear": "Go to first year",
-      "goToLastYear": "Go to last year",
-      "playPause": "Play/Pause"
+      "general": {
+        "show": "Show shortcuts",
+        "search": "Focus search",
+        "unfocus": "Unfocus / Close",
+        "help": "Toggle help",
+        "resetFilters": "Reset filters"
+      },
+      "user": {
+        "friends": "Toggle friends"
+      },
+      "atlas": {
+        "savedMaps": "Toggle saved maps",
+        "countries": "Toggle countries",
+        "export": "Toggle export",
+        "filters": "Toggle filters",
+        "legend": "Toggle legend",
+        "markers": "Toggle markers",
+        "layers": "Toggle layers",
+        "settings": "Toggle settings",
+        "timeline": "Toggle timeline",
+        "ui": "Toggle UI"
+      },
+      "countries": {
+        "scrollUp": "Scroll up",
+        "scrollDown": "Scroll down",
+        "first": "Go to first country",
+        "last": "Go to last country",
+        "pageUp": "Scroll up one page",
+        "pageDown": "Scroll down one page",
+        "select": "Select country"
+      },
+      "map": {
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "zoomReset": "Reset zoom",
+        "center": "Center map on country"
+      },
+      "timeline": {
+        "next": "Next year",
+        "prev": "Previous year",
+        "first": "Go to first year",
+        "last": "Go to last year",
+        "playPause": "Play/Pause"
+      }
     }
   },
   "help": {

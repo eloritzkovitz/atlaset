@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { MenuButton, Tooltip } from "@components";
+import { MenuButton } from "@components";
 import { useTranslation } from "react-i18next";
 
 interface SidebarMenuLinkProps {
@@ -24,28 +24,19 @@ export function SidebarMenuLink({
 
   return (
     <NavLink to={to} end={end} tabIndex={-1}>
-      {({ isActive }) => {
-        const button = (
-          <MenuButton
-            variant="sidebar"
-            icon={icon}
-            active={isActive}
-            ariaLabel={resolvedLabel}
-            className={`text-2xl gap-3 ${
-              !expanded ? "ms-1 me-1 pe-2" : "w-full"
-            }`}
-          >
-            {expanded && resolvedLabel}
-          </MenuButton>
-        );
-        return !expanded ? (
-          <Tooltip content={resolvedLabel} position="right">
-            {button}
-          </Tooltip>
-        ) : (
-          button
-        );
-      }}
+      {({ isActive }) => (
+        <MenuButton
+          variant="sidebar"
+          icon={icon}
+          active={isActive}
+          ariaLabel={resolvedLabel}
+          className={`text-2xl gap-3 ${!expanded ? "ms-1 me-1 pe-2" : "w-full"}`}
+          title={!expanded ? resolvedLabel : undefined}
+          titlePosition="right"
+        >
+          {expanded && resolvedLabel}
+        </MenuButton>
+      )}
     </NavLink>
   );
 }

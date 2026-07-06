@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FaBrush } from "react-icons/fa6";
 import { Checkbox, ColorDot, SectionHeader, Tooltip } from "@components";
+import { useTooltipTarget } from "@hooks";
 import { ThemePreview } from "./ThemePreview";
 import { useTheme } from "../hooks/useTheme";
 import { SettingsCard } from "../../common/components/SettingsCard";
@@ -8,6 +9,17 @@ import { SettingsCard } from "../../common/components/SettingsCard";
 export function DisplaySettingsSection() {
   const { theme, preference, setPreference, accent, setAccent } = useTheme();
   const { t } = useTranslation("settings");
+
+  const { activeTarget, registerTarget } = useTooltipTarget();
+
+  const accentColors = [
+    "blue",
+    "indigo",
+    "teal",
+    "green",
+    "amber",
+    "rose",
+  ] as const;
 
   return (
     <div className="mx-auto w-full flex flex-col items-center">
@@ -28,10 +40,7 @@ export function DisplaySettingsSection() {
             <Checkbox
               checked={preference === "system"}
               onChange={(checked) => setPreference(checked ? "system" : theme)}
-              label={t(
-                "display.theme.device",
-                "Use device theme",
-              )}
+              label={t("display.theme.device", "Use device theme")}
             />
             {preference === "system" ? (
               <span className="text-xs opacity-70 ms-auto">
@@ -45,28 +54,32 @@ export function DisplaySettingsSection() {
           <SectionHeader title={t("display.accents.label", "Accents")} />
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">
-              {(
-                ["blue", "indigo", "teal", "green", "amber", "rose"] as const
-              ).map((a) => (
-                <Tooltip
+              {accentColors.map((a) => (
+                <button
                   key={a}
-                  content={<span className="capitalize text-sm">{a}</span>}
-                  position="top"
+                  aria-pressed={accent === a}
+                  aria-label={a}
+                  onClick={() => setAccent(a)}
+                  {...registerTarget(a)}
+                  className="w-10 h-10 rounded-full focus:outline-none"
                 >
-                  <button
-                    aria-pressed={accent === a}
-                    aria-label={a}
-                    onClick={() => setAccent(a)}
-                    className={`w-10 h-10 rounded-full focus:outline-none`}
-                  >
-                    <ColorDot color={`var(--color-accent-${a})`} size={40} />
-                  </button>
-                </Tooltip>
+                  <ColorDot color={`var(--color-accent-${a})`} size={40} />
+                </button>
               ))}
             </div>
           </div>
         </div>
       </SettingsCard>
+
+      {activeTarget && (
+        <Tooltip
+          target={activeTarget.element}
+          position="top"
+          content={
+            <span className="capitalize text-sm">{activeTarget.id}</span>
+          }
+        />
+      )}
     </div>
   );
 }

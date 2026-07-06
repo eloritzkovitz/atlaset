@@ -100,38 +100,50 @@
       "timeline": "ציר זמן"
     },
     "actions": {
-      "showShortcuts": "הצג קיצורים",
-      "focusSearch": "התמקד בחיפוש",
-      "unfocusClose": "ביטול בחירה / סגירה",
-      "toggleHelp": "הצג/הסתר עזרה",
-      "resetFilters": "אפס מסננים",
-      "toggleSavedMaps": "הצג/הסתר מפות שמורות",
-      "toggleFriends": "הצג/הסתר חברים",
-      "toggleCountries": "הצג/הסתר מדינות",
-      "toggleExport": "הצג/הסתר ייצוא",
-      "toggleFilters": "הצג/הסתר מסננים",
-      "toggleLegend": "הצג/הסתר מקרא",
-      "toggleMarkers": "הצג/הסתר סימונים",
-      "toggleLayers": "הצג/הסתר שכבות",
-      "toggleSettings": "הצג/הסתר הגדרות",
-      "toggleTimeline": "הצג/הסתר ציר זמן",
-      "toggleUi": "הצג/הסתר ממשק",
-      "scrollUp": "גלול למעלה",
-      "scrollDown": "גלול למטה",
-      "goToFirstCountry": "עבור למדינה הראשונה",
-      "goToLastCountry": "עבור למדינה האחרונה",
-      "scrollUpOnePage": "גלול דף למעלה",
-      "scrollDownOnePage": "גלול דף למטה",
-      "selectCountry": "בחר מדינה",
-      "zoomIn": "הגדל",
-      "zoomOut": "הקטן",
-      "resetZoom": "אתחל זום",
-      "centerMapOnCountry": "מרכז מפה על המדינה",
-      "nextYear": "שנה הבאה",
-      "previousYear": "שנה קודמת",
-      "goToFirstYear": "עבור לשנה הראשונה",
-      "goToLastYear": "עבור לשנה האחרונה",
-      "playPause": "הפעל/השהה"
+      "general": {
+        "show": "הצגת קיצורים",
+        "search": "התמקדות בחיפוש",
+        "unfocus": "ביטול בחירה / סגירה",
+        "help": "הצגת/הסתרת עזרה",
+        "resetFilters": "איפוס מסננים"
+      },
+      "user": {
+        "friends": "הצגת/הסתרת חברים"
+      },
+      "atlas": {
+        "savedMaps": "הצגת/הסתרת מפות שמורות",
+        "countries": "הצגת/הסתרת מדינות",
+        "export": "הצגת/הסתרת ייצוא",
+        "filters": "הצגת/הסתרת מסננים",
+        "legend": "הצגת/הסתרת מקרא",
+        "markers": "הצגת/הסתרת סימונים",
+        "layers": "הצגת/הסתרת שכבות",
+        "settings": "הצגת/הסתרת הגדרות",
+        "timeline": "הצגת/הסתרת ציר זמן",
+        "ui": "הצגת/הסתרת ממשק"
+      },
+      "countries": {
+        "scrollUp": "גלילה למעלה",
+        "scrollDown": "גלילה למטה",
+        "first": "מעבר למדינה הראשונה",
+        "last": "מעבר למדינה האחרונה",
+        "pageUp": "גלילה דף למעלה",
+        "pageDown": "גלילה דף למטה",
+        "select": "בחירת מדינה"
+      },
+      "map": {
+        "zoomIn": "הגדל",
+        "zoomOut": "הקטן",
+        "zoomReset": "אתחול זום",
+        "center": "מרכוז מפה על המדינה"
+      },
+      "timeline": {
+        "next": "שנה הבאה",
+        "prev": "שנה קודמת",
+        "first": "מעבר לשנה הראשונה",
+        "last": "מעבר לשנה האחרונה",
+        "playPause": "הפעלה/השהיה"
+      }
     }
   },
   "help": {

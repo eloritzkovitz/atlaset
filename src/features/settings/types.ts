@@ -1,4 +1,4 @@
-import type { ColorMode } from "@features/atlas/map";
+import type { ColorMode } from "@features/atlas/shared";
 
 /** Language and region-related settings. */
 export type LanguageRegionSettings = {

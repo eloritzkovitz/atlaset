@@ -121,7 +121,7 @@ export function ModalSelect<T>({
                   className={`flex items-center mb-2 select-none ${
                     isThisItemDisabled
                       ? "opacity-50 cursor-not-allowed pointer-events-none"
-                      : "cursor-pointer hover:text-dropdown-hover"
+                      : "cursor-pointer hover:text-primary-hover"
                   }`}
                 >
                   <Checkbox

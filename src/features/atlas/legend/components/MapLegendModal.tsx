@@ -17,10 +17,16 @@ export function MapLegendModal({ open, onClose, items }: MapLegendModalProps) {
       isOpen={open}
       onClose={onClose}
       position="custom"
-      className="!bg-bg/50 !shadow-none fixed top-16 end-6 z-50 select-none"
+      className="!bg-bg/50 !shadow-none fixed top-16 end-4 min-w-[200px] z-50 select-none group"
       disableClose
     >
-      <ModalHeader title={t("legend.title")} className="!px-0 group" />
+      <ModalHeader
+        title={t("legend.title")}
+        className="!px-0"
+        showSeparator={false}
+        showCloseButton={true}
+        closeButtonClassName="opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+      />
       <div className="flex flex-col gap-4">
         {items.map((item, idx) => (
           <LegendRow

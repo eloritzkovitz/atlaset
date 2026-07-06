@@ -7,7 +7,7 @@ import {
   MAP_STROKE_COLOR_LIGHT,
 } from "@constants/colors";
 import { COLOR_PALETTES } from "@constants/colorPalettes";
-import type { ColorMode } from "@features/atlas/map/types";
+import type { ColorMode } from "@features/atlas/shared";
 
 /** Map configuration options. */
 export const MAP_CONFIG_OPTIONS = {

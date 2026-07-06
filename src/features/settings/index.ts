@@ -1,6 +1,7 @@
 // Common
-export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
 export { defaultSettings } from "./common/constants/defaultSettings";
+export * from "./common/constants/mapSettings";
+export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
 export { settingsService } from "./common/services/settingsService";
 
 // Account
@@ -15,20 +16,12 @@ export { DisplaySettingsSection } from "./display/components/DisplaySettingsSect
 export { useTheme } from "./display/hooks/useTheme";
 export * from "./display/utils/theme";
 
-// Map
-export { MapSettingsPanel } from "./map/components/MapSettingsPanel";
-export { useCountryColors } from "./map/hooks/useCountryColors";
-export { useLayerColors } from "./map/hooks/useLayerColors";
-export { useVisitColorRoles } from "./map/hooks/useVisitColorRoles";
-export {
-  DEFAULT_MAP_SETTINGS,
-  MAP_CONFIG_OPTIONS,
-  MAP_GEOGRAPHY_STYLE,
-} from "./map/constants/mapSettings";
-
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
 
 // Redux
 export { default as settingsReducer } from "./common/slices/settingsSlice";
 export * from "./common/slices/settingsSlice";
+
+// Types
+export * from "./types";

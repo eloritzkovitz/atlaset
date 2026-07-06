@@ -1,6 +1,6 @@
 import { useMemo } from "react";
+import { Tooltip } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import {
   getCountryIsoCode,
   getCountryName,
@@ -9,21 +9,19 @@ import {
 import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
-  type LayerItem,
 } from "@features/atlas/layers";
-import { useCountryColors, useLayerColors } from "@features/settings";
-import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
-import { useHomeCountry } from "@features/user";
+import { useLayerSettings } from "@features/atlas/settings";
+import { useTooltipTarget } from "@hooks";
 import { isNumericString } from "@utils/string";
 import { Geography } from "./Geography";
 import { Geographies } from "./Geographies";
-import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
 import { useAtlasColoring } from "../hooks/useAtlasColoring";
+import { useMapTheme } from "@features/atlas/shared";
+import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData, GeographyFeature } from "../types";
 
 interface LayersContainerProps {
   geographyData: GeoData;
-  layerItems?: LayerItem[];
   selectedIsoCode?: string | null;
   hoveredIsoCode?: string | null;
   highlightedIsoCodes?: string[];
@@ -35,7 +33,6 @@ interface LayersContainerProps {
 
 export function LayersContainer({
   geographyData,
-  layerItems = [],
   selectedIsoCode,
   hoveredIsoCode,
   highlightedIsoCodes = [],
@@ -43,145 +40,111 @@ export function LayersContainer({
   onCountryHover,
   isAddingMarker,
 }: LayersContainerProps) {
-  const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const countryData = useCountryData();
-  const { isAtlasActive, isEdit, isReadonly } = useMapView();
-  const { timelineMode } = useTimeline();
+  const { numAtlasColors } = useLayerSettings();
+  const { geographyStyle } = useMapTheme({ isAddingMarker });
+  const { mapMode, isAtlasActive } = useMapView();
+  const { activeTarget, registerVirtualTarget, clearTarget } =
+    useTooltipTarget();
 
-  // Colors and visited countries
-  const { homeCountry } = useHomeCountry();
-  const {
-    colorHomeCountry,
-    colorVisitedCountries,
-    colorFutureVisits,
-    colorWantToVisitCountries,
-    numAtlasColors,
-  } = useLayerColors();
-  const {
-    HOME_COUNTRY_COLOR,
-    VISITED_COUNTRY_COLOR,
-    FUTURE_VISIT_COUNTRY_COLOR,
-    SELECTED_COUNTRY_COLOR,
-  } = useCountryColors();
-  const { visitedCountryCodes, futureCountryCodes, wantToVisitCountryCodes } =
-    useVisitedCountries();
-
-  const visitedSet = useMemo(
-    () => new Set((visitedCountryCodes || []).map((s) => s.toUpperCase())),
-    [visitedCountryCodes],
-  );
-  const futureSet = useMemo(
-    () => new Set((futureCountryCodes || []).map((s) => s.toUpperCase())),
-    [futureCountryCodes],
-  );
-  const wantToVisitSet = useMemo(
-    () => new Set((wantToVisitCountryCodes || []).map((s) => s.toUpperCase())),
-    [wantToVisitCountryCodes],
-  );
-
-  // Group layer items by isoCode for stacking/blending
+  const layerItems = useMapLayerItems(mapMode);
   const layerGroups = useMemo(
     () => groupLayerItemsByIsoCode(layerItems),
     [layerItems],
   );
 
-  // Atlas coloring
   const { map: atlasColorMap } = useAtlasColoring(geographyData, {
     colors: numAtlasColors,
     enabled: isAtlasActive,
   });
 
   return (
-    <g style={isAddingMarker ? { pointerEvents: "none" } : undefined}>
-      <Geographies geography={geographyData}>
-        {({ geographies }: { geographies: GeographyFeature[] }) =>
-          geographies.map((geo) => {
-            const isoA2 = getCountryIsoCode(geo.properties);
-            if (!isoA2) return null;
+    <>
+      <g style={isAddingMarker ? { pointerEvents: "none" } : undefined}>
+        <Geographies geography={geographyData}>
+          {({ geographies }: { geographies: GeographyFeature[] }) =>
+            geographies.map((geo) => {
+              const isoA2 = getCountryIsoCode(geo.properties);
+              if (!isoA2) return null;
 
-            const countryName =
-              isoA2 && countryData?.countries
-                ? getCountryName(isoA2, countryData.countries)
-                : undefined;
-            const isIsoNumeric = isNumericString(isoA2);
-            const countryNameIsIso =
-              !!(countryName && isoA2) &&
-              countryName.toUpperCase() === isoA2.toUpperCase();
+              const countryName =
+                isoA2 && countryData?.countries
+                  ? getCountryName(isoA2, countryData.countries)
+                  : undefined;
+              const isIsoNumeric = isNumericString(isoA2);
+              const countryNameIsIso =
+                !!(countryName && isoA2) &&
+                countryName.toUpperCase() === isoA2.toUpperCase();
 
-            const tooltip =
-              !countryName || isIsoNumeric || countryNameIsIso
-                ? geo.properties?.name || isoA2 || ""
-                : countryName;
+              const tooltipValue =
+                !countryName || isIsoNumeric || countryNameIsIso
+                  ? geo.properties?.name || isoA2 || ""
+                  : countryName;
 
-            const interactiveMode = !isReadonly && !isEdit && !timelineMode;
+              const layers = layerGroups[isoA2] || [];
+              const blendedFill = getBlendedLayerColor(
+                layers,
+                geographyStyle.default.fill,
+              );
 
-            const layers = layerGroups[isoA2] || [];
-            const blendedFill = getBlendedLayerColor(
-              layers,
-              geographyStyle.default.fill,
-            );
+              const isHighlighted = highlightedIsoCodes.includes(isoA2);
+              const isSelected =
+                !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
+              const isHovered =
+                !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
 
-            // Determine country state for styling
-            const isHighlighted = highlightedIsoCodes.includes(isoA2);
-            const isSelected =
-              !!selectedIsoCode && isoA2 === selectedIsoCode.toUpperCase();
-            const isHovered =
-              !!hoveredIsoCode && isoA2 === hoveredIsoCode.toUpperCase();
-            const isHomeCountry =
-              interactiveMode &&
-              colorHomeCountry &&
-              homeCountry &&
-              isoA2 === homeCountry.toUpperCase();
-            const isVisitedCountry =
-              interactiveMode && colorVisitedCountries && visitedSet.has(isoA2);
-            const isFutureVisitCountry =
-              interactiveMode && colorFutureVisits && futureSet.has(isoA2);
-            const isWantToVisitCountry =
-              interactiveMode &&
-              colorWantToVisitCountries &&
-              wantToVisitSet.has(isoA2);
+              let fill = geographyStyle.default.fill;
 
-            // Determine final style based on priority
-            let fill = geographyStyle.default.fill;
+              if (isHighlighted) {
+                fill = geographyStyle.highlight.fill;
+              } else if (isHovered || isSelected) {
+                fill = geographyStyle.hover.fill;
+              } else if (isAtlasActive) {
+                fill = atlasColorMap[isoA2] || geographyStyle.default.fill;
+              } else if (blendedFill) {
+                fill = blendedFill;
+              }
 
-            if (isHighlighted) {
-              fill = geographyStyle.highlight.fill;
-            } else if (isHovered || isSelected) {
-              fill = geographyStyle.hover.fill;
-            } else if (isAtlasActive) {
-              fill = atlasColorMap[isoA2] || geographyStyle.default.fill;
-            } else {
-              if (isHomeCountry) fill = HOME_COUNTRY_COLOR;
-              else if (isFutureVisitCountry)
-                fill = FUTURE_VISIT_COUNTRY_COLOR;
-              else if (isVisitedCountry) fill = VISITED_COUNTRY_COLOR;
-              else if (isWantToVisitCountry) fill = SELECTED_COUNTRY_COLOR;
-              else if (blendedFill) fill = blendedFill;
-            }
+              const finalStyle = { ...geographyStyle.default, fill };
 
-            const finalStyle = { ...geographyStyle.default, fill };
+              const tooltipHandlers = registerVirtualTarget(
+                String(tooltipValue),
+              );
 
-            return (
-              <Geography
-                key={geo.rsmKey}
-                geography={geo}
-                onMouseEnter={() =>
-                  onCountryHover && onCountryHover(isoA2 ?? null)
-                }
-                onMouseLeave={() => onCountryHover && onCountryHover(null)}
-                onClick={() => onCountryClick && isoA2 && onCountryClick(isoA2)}
-                style={{
-                  default: finalStyle,
-                  hover: finalStyle,
-                  pressed: finalStyle,
-                }}
-              >
-                <title>{String(tooltip)}</title>
-              </Geography>
-            );
-          })
-        }
-      </Geographies>
-    </g>
+              return (
+                <Geography
+                  key={geo.rsmKey}
+                  geography={geo}
+                  onMouseEnter={(e) => {
+                    tooltipHandlers.onMouseEnter(e);
+                    onCountryHover?.(isoA2 ?? null);
+                  }}
+                  onMouseMove={(e) => {
+                    tooltipHandlers.onMouseMove(e);
+                  }}
+                  onMouseLeave={() => {
+                    clearTarget();
+                    onCountryHover?.(null);
+                  }}
+                  onClick={() => isoA2 && onCountryClick?.(isoA2)}
+                  style={{
+                    default: finalStyle,
+                    hover: finalStyle,
+                    pressed: finalStyle,
+                  }}
+                />
+              );
+            })
+          }
+        </Geographies>
+      </g>
+
+      {activeTarget && activeTarget.virtualCoords && (
+        <Tooltip
+          overrideCoords={activeTarget.virtualCoords}
+          content={activeTarget.id}
+        />
+      )}
+    </>
   );
 }

@@ -1,11 +1,7 @@
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
-import type { ColorMode } from "@features/atlas/map";
-import {
-  useCountryColors,
-  useLayerColors,
-  useVisitColorRoles,
-} from "@features/settings";
+import { useLayerSettings } from "@features/atlas/settings";
+import { useMapTheme, type ColorMode } from "@features/atlas/shared";
 import type { LegendItem } from "../types";
 
 /**
@@ -21,28 +17,28 @@ export function useMapLegendItems(
   colorMode: ColorMode,
 ): LegendItem[] {
   const { isReadonly, isEdit } = useMapView();
-
-  // Get dynamic color roles for the current mode
-  const colorRoles = useVisitColorRoles(colorMode);
   const {
     colorWantToVisitCountries,
     colorHomeCountry,
     colorFutureVisits,
     colorVisitedCountries,
-  } = useLayerColors();
+  } = useLayerSettings();
   const {
+    HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,
     FUTURE_VISIT_COUNTRY_COLOR,
     SELECTED_COUNTRY_COLOR,
-  } = useCountryColors();
+    visitColors,
+  } = useMapTheme({ mode: colorMode });
 
+  // Determine if legend items can be shown based on map view state
   const canShow = !isReadonly && !isEdit;
   const make = (color: string, label: string) => ({ color, label });
 
-  // Static layer-based legend items (only in non-timeline mode)
+  // Calculate legend items for the tracking layer based on user settings and visibility
   const layerLegendItems: LegendItem[] = [
     ...(colorHomeCountry && canShow
-      ? [make(colorRoles.home, "Home country")]
+      ? [make(HOME_COUNTRY_COLOR, "Home country")]
       : []),
     ...(colorVisitedCountries && canShow
       ? [make(VISITED_COUNTRY_COLOR, "Visited Countries")]
@@ -60,27 +56,28 @@ export function useMapLegendItems(
 
   // Cumulative mode legend items
   const cumulativeLegendItems: LegendItem[] = [
-    { color: colorRoles.home, label: "Home country" },
-    { color: colorRoles.visitCounts[4], label: "5+ visits" },
-    { color: colorRoles.visitCounts[3], label: "4 visits" },
-    { color: colorRoles.visitCounts[2], label: "3 visits" },
-    { color: colorRoles.visitCounts[1], label: "2 visits" },
-    { color: colorRoles.visitCounts[0], label: "1 visit" },
-    { color: colorRoles.base, label: "Not visited" },
+    { color: visitColors.home, label: "Home country" },
+    { color: visitColors.visitCounts[4], label: "5+ visits" },
+    { color: visitColors.visitCounts[3], label: "4 visits" },
+    { color: visitColors.visitCounts[2], label: "3 visits" },
+    { color: visitColors.visitCounts[1], label: "2 visits" },
+    { color: visitColors.visitCounts[0], label: "1 visit" },
+    { color: visitColors.base, label: "Not visited" },
   ];
 
   // Yearly mode legend items
   const yearlyLegendItems: LegendItem[] = [
-    { color: colorRoles.home, label: "Home country" },
-    { color: colorRoles.yearly.upcoming, label: "Upcoming first visit" },
-    { color: colorRoles.yearly.upcomingRevisit, label: "Upcoming revisit" },
-    { color: colorRoles.yearly.new, label: "First visit this year" },
-    { color: colorRoles.yearly.revisit, label: "Revisit this year" },
-    { color: colorRoles.yearly.previous, label: "Visited in previous years" },
-    { color: colorRoles.base, label: "Not visited" },
+    { color: visitColors.home, label: "Home country" },
+    { color: visitColors.yearly.upcoming, label: "Upcoming first visit" },
+    { color: visitColors.yearly.upcomingRevisit, label: "Upcoming revisit" },
+    { color: visitColors.yearly.new, label: "First visit this year" },
+    { color: visitColors.yearly.revisit, label: "Revisit this year" },
+    { color: visitColors.yearly.previous, label: "Visited in previous years" },
+    { color: visitColors.base, label: "Not visited" },
   ];
 
   // Return appropriate legend items based on mode
   if (!timelineMode) return layerLegendItems;
+
   return colorMode === "cumulative" ? cumulativeLegendItems : yearlyLegendItems;
 }

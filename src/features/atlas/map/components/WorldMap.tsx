@@ -8,7 +8,6 @@ import { MapSvgContainer } from "./MapSvgContainer";
 import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapEventHandler } from "../hooks/useMapEventHandler";
-import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import { MapProvider } from "../providers/MapProvider";
 
 export interface WorldMapProps {
@@ -35,7 +34,6 @@ export function WorldMap({
 
   // Map projection and data
   const {
-    mapMode,
     colorMode,
     geoData,
     projection,
@@ -52,9 +50,6 @@ export function WorldMap({
       setDimensions(measuredDimensions);
     }
   }, [measuredDimensions, setDimensions]);
-
-  // Get layer items based on mode
-  const layerItems = useMapLayerItems(mapMode);
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
@@ -122,7 +117,6 @@ export function WorldMap({
             >
               <LayersContainer
                 geographyData={geoData}
-                layerItems={layerItems}
                 selectedIsoCode={selectedIsoCode}
                 hoveredIsoCode={hoveredIsoCode}
                 highlightedIsoCodes={

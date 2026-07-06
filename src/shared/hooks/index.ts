@@ -49,4 +49,5 @@ export * from "./state/useUiHint";
 export * from "./ui/useContextMenu";
 export * from "./ui/useMenuActions";
 export * from "./ui/useRenameControls";
+export * from "./ui/useTooltipTarget";
 export * from "./ui/useViewMode";
