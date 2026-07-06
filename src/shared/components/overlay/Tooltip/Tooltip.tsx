@@ -42,16 +42,19 @@ export function Tooltip({
 
   const activeAnchor = target || anchorRef.current;
 
-  const show = (e?: React.MouseEvent) => {
-    if (e && position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
-    timeoutRef.current = window.setTimeout(() => setVisible(true), 100);
-  };
+  const show = useCallback(
+    (e?: React.MouseEvent) => {
+      if (e && position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
+      timeoutRef.current = window.setTimeout(() => setVisible(true), 100);
+    },
+    [position],
+  );
 
-  const hide = () => {
+  const hide = useCallback(() => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     setVisible(false);
     setStyle({});
-  };
+  }, []);
 
   // Update tooltip position when overrideCoords changes
   useLayoutEffect(() => {
@@ -141,7 +144,7 @@ export function Tooltip({
           typeof childProps.tabIndex === "number" ? childProps.tabIndex : 0,
       };
     },
-    [position],
+    [position, show, hide],
   );
 
   // Render the tooltip content in a portal to avoid clipping issues and ensure it appears above other elements
