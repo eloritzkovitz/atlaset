@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import {
   getVisitColor,
-  useMapColors,
+  useMapTheme,
   type ColorMode,
 } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
@@ -26,7 +26,7 @@ export function useTimelineLayerItems(
   colorMode: ColorMode,
 ) {
   const { homeCountry } = useHomeCountry();
-  const { visitColors } = useMapColors(colorMode);
+  const { visitColors } = useMapTheme({ mode: colorMode });
   const { trips } = useTrips();
 
   // Compute timeline layer items based on visit data and selected year

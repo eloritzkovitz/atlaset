@@ -16,7 +16,7 @@ import { isNumericString } from "@utils/string";
 import { Geography } from "./Geography";
 import { Geographies } from "./Geographies";
 import { useAtlasColoring } from "../hooks/useAtlasColoring";
-import { useMapGeographyStyle } from "../hooks/useMapGeographyStyle";
+import { useMapTheme } from "@features/atlas/shared";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData, GeographyFeature } from "../types";
 
@@ -42,7 +42,7 @@ export function LayersContainer({
 }: LayersContainerProps) {
   const countryData = useCountryData();
   const { numAtlasColors } = useLayerSettings();
-  const geographyStyle = useMapGeographyStyle(isAddingMarker);
+  const { geographyStyle } = useMapTheme({ isAddingMarker });
   const { mapMode, isAtlasActive } = useMapView();
   const { activeTarget, registerVirtualTarget, clearTarget } =
     useTooltipTarget();

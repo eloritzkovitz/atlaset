@@ -5,7 +5,6 @@ import {
   groupLayerItemsByIsoCode,
   getBlendedLayerColor,
 } from "@features/atlas/layers";
-import { useMapColors } from "@features/atlas/shared";
 import { getCountryIsoCode } from "@features/countries";
 import type { SavedMap } from "../types";
 
@@ -13,8 +12,7 @@ import type { SavedMap } from "../types";
  * @param map The saved map data to render.
  */
 export function MapPreview({ map }: { map: SavedMap }) {
-  const { baseColor } = useMapColors();
-  const { geoData } = useMapView();
+  const { baseColor, geoData } = useMapView();
 
   const layerItems = useMemo(() => {
     if (!map?.layers) return [];

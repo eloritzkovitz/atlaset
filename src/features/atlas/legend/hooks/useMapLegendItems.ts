@@ -1,7 +1,7 @@
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
 import { useLayerSettings } from "@features/atlas/settings";
-import { useMapColors, type ColorMode } from "@features/atlas/shared";
+import { useMapTheme, type ColorMode } from "@features/atlas/shared";
 import type { LegendItem } from "../types";
 
 /**
@@ -29,7 +29,7 @@ export function useMapLegendItems(
     FUTURE_VISIT_COUNTRY_COLOR,
     SELECTED_COUNTRY_COLOR,
     visitColors,
-  } = useMapColors(colorMode);
+  } = useMapTheme({ mode: colorMode });
 
   // Determine if legend items can be shown based on map view state
   const canShow = !isReadonly && !isEdit;
