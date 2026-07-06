@@ -5,6 +5,7 @@ import {
   useLayoutEffect,
   cloneElement,
   isValidElement,
+  useCallback,
 } from "react";
 import { createPortal } from "react-dom";
 import type { CommandId, Point } from "@types";
@@ -98,45 +99,50 @@ export function Tooltip({
     });
   }, [visible, position, coords, overrideCoords, target, activeAnchor]);
 
-  const getHandlers = (childProps: Record<string, unknown> = {}) => {
-    const asReactHandler = <E,>(handler: unknown) =>
-      handler as ReactEventHandler<E> | undefined;
+  const getHandlers = useCallback(
+    (childProps: Record<string, unknown> = {}) => {
+      const asReactHandler = <E,>(handler: unknown) =>
+        handler as ReactEventHandler<E> | undefined;
 
-    return {
-      onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
-        show(e);
-        asReactHandler<React.MouseEvent<HTMLElement>>(
-          childProps.onMouseEnter,
-        )?.(e);
-      },
-      onMouseMove: (e: React.MouseEvent<HTMLElement>) => {
-        if (position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
-        asReactHandler<React.MouseEvent<HTMLElement>>(childProps.onMouseMove)?.(
-          e,
-        );
-      },
-      onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
-        hide();
-        asReactHandler<React.MouseEvent<HTMLElement>>(
-          childProps.onMouseLeave,
-        )?.(e);
-      },
-      onFocus: (e: React.FocusEvent<HTMLElement>) => {
-        if (position === "cursor" && anchorRef.current) {
-          const r = anchorRef.current.getBoundingClientRect();
-          setCoords({ x: r.left + r.width / 2, y: r.bottom });
-        }
-        show();
-        asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onFocus)?.(e);
-      },
-      onBlur: (e: React.FocusEvent<HTMLElement>) => {
-        hide();
-        asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onBlur)?.(e);
-      },
-      tabIndex:
-        typeof childProps.tabIndex === "number" ? childProps.tabIndex : 0,
-    };
-  };
+      return {
+        onMouseEnter: (e: React.MouseEvent<HTMLElement>) => {
+          show(e);
+          asReactHandler<React.MouseEvent<HTMLElement>>(
+            childProps.onMouseEnter,
+          )?.(e);
+        },
+        onMouseMove: (e: React.MouseEvent<HTMLElement>) => {
+          if (position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
+          asReactHandler<React.MouseEvent<HTMLElement>>(
+            childProps.onMouseMove,
+          )?.(e);
+        },
+        onMouseLeave: (e: React.MouseEvent<HTMLElement>) => {
+          hide();
+          asReactHandler<React.MouseEvent<HTMLElement>>(
+            childProps.onMouseLeave,
+          )?.(e);
+        },
+        onFocus: (e: React.FocusEvent<HTMLElement>) => {
+          if (position === "cursor" && anchorRef.current) {
+            const r = anchorRef.current.getBoundingClientRect();
+            setCoords({ x: r.left + r.width / 2, y: r.bottom });
+          }
+          show();
+          asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onFocus)?.(
+            e,
+          );
+        },
+        onBlur: (e: React.FocusEvent<HTMLElement>) => {
+          hide();
+          asReactHandler<React.FocusEvent<HTMLElement>>(childProps.onBlur)?.(e);
+        },
+        tabIndex:
+          typeof childProps.tabIndex === "number" ? childProps.tabIndex : 0,
+      };
+    },
+    [position],
+  );
 
   // Render the tooltip content in a portal to avoid clipping issues and ensure it appears above other elements
   const renderPortalContent = () =>
