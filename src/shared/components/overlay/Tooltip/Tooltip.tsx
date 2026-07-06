@@ -17,6 +17,7 @@ export interface TooltipProps {
   className?: string;
   overrideCoords?: Point | null;
   shortcut?: CommandId | null;
+  target?: HTMLElement | SVGElement | null;
 }
 
 type ReactEventHandler<E> = (e: E) => void;
@@ -28,6 +29,7 @@ export function Tooltip({
   className = "",
   overrideCoords = null,
   shortcut = null,
+  target = null,
 }: TooltipProps) {
   const [visible, setVisible] = useState(false);
   const [style, setStyle] = useState<React.CSSProperties>({});
@@ -36,6 +38,8 @@ export function Tooltip({
   const timeoutRef = useRef<number | null>(null);
   const anchorRef = useRef<HTMLElement>(null);
   const tooltipRef = useRef<HTMLSpanElement>(null);
+
+  const activeAnchor = target || anchorRef.current;
 
   const show = (e?: React.MouseEvent) => {
     if (e && position === "cursor") setCoords({ x: e.clientX, y: e.clientY });
@@ -55,7 +59,7 @@ export function Tooltip({
 
   // Update tooltip position when visible, position, coords, or overrideCoords change
   useLayoutEffect(() => {
-    const isCurrentlyVisible = !!overrideCoords || visible;
+    const isCurrentlyVisible = !!overrideCoords || !!target || visible;
     if (!isCurrentlyVisible || !tooltipRef.current) return;
 
     const tooltip = tooltipRef.current.getBoundingClientRect();
@@ -69,8 +73,8 @@ export function Tooltip({
     if (activeCoords) {
       top = activeCoords.y + 12;
       left = activeCoords.x + 12;
-    } else if (anchorRef.current) {
-      const anchor = anchorRef.current.getBoundingClientRect();
+    } else if (activeAnchor) {
+      const anchor = activeAnchor.getBoundingClientRect();
       top =
         position === "top"
           ? anchor.top - tooltip.height - gap
@@ -92,7 +96,7 @@ export function Tooltip({
       zIndex: 10050,
       pointerEvents: "none",
     });
-  }, [visible, position, coords, overrideCoords]);
+  }, [visible, position, coords, overrideCoords, target, activeAnchor]);
 
   const getHandlers = (childProps: Record<string, unknown> = {}) => {
     const asReactHandler = <E,>(handler: unknown) =>
@@ -151,7 +155,7 @@ export function Tooltip({
           </span>
         )}
 
-        {!overrideCoords && position !== "cursor" && (
+        {(!overrideCoords || target) && position !== "cursor" && (
           <div
             className={`absolute border-[4px] border-transparent pointer-events-none
             ${position === "top" ? "top-full left-1/2 -translate-x-1/2 border-t-black" : ""}
@@ -166,7 +170,7 @@ export function Tooltip({
     );
 
   // If there are no children, only render the tooltip if overrideCoords is provided
-  if (!children) return overrideCoords ? renderPortalContent() : null;
+  if (!children) return overrideCoords || target ? renderPortalContent() : null;
 
   const c = children as React.ReactElement;
   const isCloneable =

@@ -44,7 +44,6 @@ export function ColorPickerModal({
     onClose();
   };
 
-  // Determine display value
   const displayValue = showRgba
     ? hexToRgba(internalColor)
     : internalColor.toUpperCase();
@@ -93,20 +92,17 @@ export function ColorPickerModal({
                   {displayValue}
                 </button>
               </Tooltip>
-              <Tooltip
-                content={copied ? "Copied!" : "Copy color value"}
-                position="top"
-              >
-                <button
-                  type="button"
-                  className="p-1 rounded hover:bg-input/70 transition"
-                  style={{ lineHeight: 0 }}
-                  aria-label="Copy color value"
-                  onClick={handleCopy}
-                >
-                  <FaCopy size={14} />
-                </button>
-              </Tooltip>
+
+              <ActionButton
+                variant="custom"
+                className="p-1 rounded hover:bg-input/70 transition text-inherit text-sm"
+                style={{ lineHeight: 0 }}
+                ariaLabel="Copy color value"
+                title={copied ? "Copied!" : "Copy color value"}
+                titlePosition="top"
+                onClick={handleCopy}
+                icon={<FaCopy size={14} />}
+              />
             </div>
           </div>
         </div>

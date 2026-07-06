@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import type { ViewMode } from "@types";
-import { Tooltip } from "../../overlay/Tooltip/Tooltip";
+import { ActionButton } from "../Button/ActionButton";
 
 interface ViewModeSegmentedControlProps {
   viewMode: ViewMode;
@@ -45,31 +45,28 @@ export function ViewModeSegmentedControl({
       {modesConfig.map(({ id, label, Icon, roundingClass }, index) => {
         const isActive = viewMode === id;
 
+        const combinedButtonClass = `${baseButtonClass} ${isActive ? activeClass : inactiveClass} ${roundingClass} 
+          focus:outline-none 
+          focus-visible:z-30 
+          focus-visible:ring-2 
+          focus-visible:ring-inset 
+          focus-visible:ring-ring
+        `;
+
         return (
           <div key={id} className="flex items-center">
             {index > 0 && <div className="h-8 w-[1px] bg-muted/40" />}
 
-            <div
-              className={`relative inline-flex items-center ${roundingClass} focus-within:z-30`}
-            >
-              <Tooltip content={label} position="bottom">
-                <button
-                  type="button"
-                  onClick={() => onChange(id)}
-                  aria-label={label}
-                  aria-pressed={isActive}
-                  className={`${baseButtonClass} ${isActive ? activeClass : inactiveClass} ${roundingClass} 
-                    focus:outline-none 
-                    focus-visible:z-30 
-                    focus-visible:ring-2 
-                    focus-visible:ring-inset 
-                    focus-visible:ring-ring
-                  `}
-                >
-                  <Icon className="h-4 w-4" />
-                </button>
-              </Tooltip>
-            </div>
+            <ActionButton
+              variant="custom"
+              className={combinedButtonClass}
+              ariaLabel={label}
+              title={label}
+              titlePosition="bottom"
+              onClick={() => onChange(id)}
+              icon={<Icon className="h-4 w-4" />}
+              aria-pressed={isActive}
+            />
           </div>
         );
       })}

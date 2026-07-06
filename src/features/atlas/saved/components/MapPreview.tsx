@@ -4,7 +4,7 @@ import { useMapView } from "@contexts/MapViewContext";
 import {
   groupLayerItemsByIsoCode,
   getBlendedLayerColor,
-} from "@features/atlas/layers/utils/layerRender";
+} from "@features/atlas/layers";
 import { getCountryIsoCode } from "@features/countries";
 import type { SavedMap } from "../types";
 
@@ -12,9 +12,10 @@ interface MapPreviewProps {
   map: SavedMap;
 }
 
+/** Renders a preview of a saved map.
+ * @param map The saved map data to render.
+ */
 export function MapPreview({ map }: MapPreviewProps) {
-  // Prepare layer coloring from the map's layers
-
   const layerItems = useMemo(() => {
     if (!map?.layers) return [];
     return map.layers.flatMap((layer) =>

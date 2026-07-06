@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Tooltip } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
 import {
@@ -11,6 +11,7 @@ import {
   groupLayerItemsByIsoCode,
 } from "@features/atlas/layers";
 import { useLayerSettings } from "@features/atlas/settings";
+import { useTooltipTarget } from "@hooks";
 import { isNumericString } from "@utils/string";
 import { Geography } from "./Geography";
 import { Geographies } from "./Geographies";
@@ -39,19 +40,14 @@ export function LayersContainer({
   onCountryHover,
   isAddingMarker,
 }: LayersContainerProps) {
-  const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const countryData = useCountryData();
   const { numAtlasColors } = useLayerSettings();
+  const geographyStyle = useMapGeographyStyle(isAddingMarker);
   const { mapMode, isAtlasActive } = useMapView();
+  const { activeTarget, registerVirtualTarget, clearTarget } =
+    useTooltipTarget();
 
   const layerItems = useMapLayerItems(mapMode);
-
-  const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
-  const [mouseCoords, setMouseCoords] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
-
   const layerGroups = useMemo(
     () => groupLayerItemsByIsoCode(layerItems),
     [layerItems],
@@ -80,7 +76,7 @@ export function LayersContainer({
                 !!(countryName && isoA2) &&
                 countryName.toUpperCase() === isoA2.toUpperCase();
 
-              const tooltip =
+              const tooltipValue =
                 !countryName || isIsoNumeric || countryNameIsIso
                   ? geo.properties?.name || isoA2 || ""
                   : countryName;
@@ -111,21 +107,23 @@ export function LayersContainer({
 
               const finalStyle = { ...geographyStyle.default, fill };
 
+              const tooltipHandlers = registerVirtualTarget(
+                String(tooltipValue),
+              );
+
               return (
                 <Geography
                   key={geo.rsmKey}
                   geography={geo}
                   onMouseEnter={(e) => {
-                    setMouseCoords({ x: e.clientX, y: e.clientY });
-                    setActiveTooltip(String(tooltip));
+                    tooltipHandlers.onMouseEnter(e);
                     onCountryHover?.(isoA2 ?? null);
                   }}
                   onMouseMove={(e) => {
-                    setMouseCoords({ x: e.clientX, y: e.clientY });
+                    tooltipHandlers.onMouseMove(e);
                   }}
                   onMouseLeave={() => {
-                    setActiveTooltip(null);
-                    setMouseCoords(null);
+                    clearTarget();
                     onCountryHover?.(null);
                   }}
                   onClick={() => isoA2 && onCountryClick?.(isoA2)}
@@ -141,8 +139,11 @@ export function LayersContainer({
         </Geographies>
       </g>
 
-      {activeTooltip && mouseCoords && (
-        <Tooltip overrideCoords={mouseCoords} content={activeTooltip} />
+      {activeTarget && activeTarget.virtualCoords && (
+        <Tooltip
+          overrideCoords={activeTarget.virtualCoords}
+          content={activeTarget.id}
+        />
       )}
     </>
   );

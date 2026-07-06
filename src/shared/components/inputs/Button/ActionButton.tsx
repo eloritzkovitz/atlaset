@@ -1,4 +1,4 @@
-import React, { type ReactNode } from "react";
+import React, { type ReactNode, useState } from "react";
 import { useLanguage } from "@features/settings";
 import {
   InteractiveBase,
@@ -42,15 +42,19 @@ export const ActionButton = React.forwardRef<
       active = true,
       disabled = false,
       shortcut = null,
+      onMouseEnter,
+      onMouseLeave,
       ...props
     },
-    ref,
+    forwardedRef,
   ) => {
+    const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+    const { isRtl } = useLanguage();
+
     const base =
       "flex flex-row items-center justify-center gap-2 font-semibold border-none transition-colors ";
     const defaultStyle =
       "h-8 w-8 bg-transparent text-action-header hover:bg-action-header-hover text-lg ";
-
     const variants = {
       primary:
         "px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white focus:outline-none ",
@@ -58,71 +62,59 @@ export const ActionButton = React.forwardRef<
         "px-4 py-2 rounded-lg bg-transparent hover:bg-secondary-hover focus:outline-none",
       action:
         "w-12 h-12 p-0 bg-action text-action-text text-lg hover:text-action-text-hover relative",
-      toggle: "h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200",
+      toggle: `h-8 min-w-8 max-w-12 px-2 bg-transparent duration-200 ${active ? "" : "text-muted bg-transparent"}`,
       sort: "h-8 w-8 bg-input hover:bg-input-hover gap-2",
       custom: "",
     };
 
-    const buttonClass = variant ? variants[variant] : defaultStyle;
-
-    let stateClass = "";
-    if (variant === "toggle") {
-      stateClass = active ? "" : "text-muted bg-transparent";
-    }
-
-    const disabledStyles =
+    const combinedClass = `${base} ${variant ? variants[variant] : defaultStyle} ${
       disabled && variant === "toggle"
         ? "opacity-50 cursor-not-allowed pointer-events-none"
-        : "";
+        : ""
+    } ${rounded ? "rounded-full" : ""} ${className || ""}`;
 
-    const { isRtl } = useLanguage();
-    const iconNode = icon ? <span className="inline-flex">{icon}</span> : null;
+    return (
+      <>
+        <InteractiveBase
+          ref={forwardedRef}
+          url={url}
+          type={type}
+          disabled={disabled}
+          className={combinedClass}
+          ariaLabel={ariaLabel}
+          style={style}
+          onMouseEnter={(e) => {
+            if (title && !disabled) setAnchorEl(e.currentTarget);
+            onMouseEnter?.(e);
+          }}
+          onMouseLeave={(e) => {
+            setAnchorEl(null);
+            onMouseLeave?.(e);
+          }}
+          {...props}
+        >
+          {icon && isRtl ? (
+            <>
+              {children}
+              {icon}
+            </>
+          ) : (
+            <>
+              {icon}
+              {children}
+            </>
+          )}
+        </InteractiveBase>
 
-    const innerContent =
-      icon && children ? (
-        isRtl ? (
-          <>
-            {children}
-            {iconNode}
-          </>
-        ) : (
-          <>
-            {iconNode}
-            {children}
-          </>
-        )
-      ) : (
-        <>
-          {iconNode}
-          {children}
-        </>
-      );
-
-    const combinedClass = `${base} ${buttonClass} ${stateClass} ${disabledStyles} ${
-      rounded ? "rounded-full" : ""
-    } ${className || ""}`;
-
-    const buttonElement = (
-      <InteractiveBase
-        ref={ref}
-        url={url}
-        type={type}
-        disabled={disabled}
-        className={combinedClass}
-        ariaLabel={ariaLabel}
-        style={style}
-        {...props}
-      >
-        {innerContent}
-      </InteractiveBase>
-    );
-
-    return title ? (
-      <Tooltip content={title} position={titlePosition} shortcut={shortcut}>
-        {buttonElement}
-      </Tooltip>
-    ) : (
-      buttonElement
+        {title && anchorEl && (
+          <Tooltip
+            content={title}
+            position={titlePosition}
+            shortcut={shortcut}
+            target={anchorEl}
+          />
+        )}
+      </>
     );
   },
 );
