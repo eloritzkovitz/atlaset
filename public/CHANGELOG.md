@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-07-06
+
+- **[chore]** **Atlas | Map:** Some minor updates and improvements
+- **[feature]** **General:** Updated tooltips to show optional shortcuts
+- **[chore]** **General:** Updated dark theme
+
 ## 2026-07-02
 
 - **[chore]** **General:** Redesigned several UI elements
