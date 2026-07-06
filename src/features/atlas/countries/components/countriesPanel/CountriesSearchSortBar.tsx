@@ -147,7 +147,7 @@ export function CountriesSearchSortBar({
       </div>
       <div
         ref={togglesRef}
-        className={`flex mt-1 mb-1 p-1 items-center gap-2 overflow-x-auto whitespace-nowrap toggles-scroll ${dragClassName}`}
+        className={`flex mt-2 py-2 items-center gap-2 overflow-x-auto whitespace-nowrap toggles-scroll ${dragClassName}`}
         style={{ WebkitOverflowScrolling: "touch" }}
       >
         {options.map((opt) => (
