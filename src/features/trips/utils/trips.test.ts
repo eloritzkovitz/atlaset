@@ -172,12 +172,7 @@ describe("trips utils", () => {
     it("returns false if trip matches alternative temporal statuses (upcoming or past)", () => {
       expect(isPlannedTrip(mockTrips[0])).toBe(false);
       expect(isPlannedTrip(mockTrips[2])).toBe(false);
-    });
-
-    it("returns true if status is explicitly set to planned regardless of dates", () => {
-      const trip = { ...mockTrips[0], status: "planned" as const };
-      expect(isPlannedTrip(trip)).toBe(true);
-    });
+    });    
   });
 
   describe("getLocalTrips", () => {

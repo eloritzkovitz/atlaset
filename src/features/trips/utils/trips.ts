@@ -42,11 +42,6 @@ export function getTripDays(trip: Trip): number {
  * @returns The automatic status of the trip.
  */
 export function getAutoTripStatus(trip: Trip): TripStatus {
-  // If the user manually saved a status, respect it as the absolute source of truth
-  if (trip.status === "completed" || trip.status === "planned") {
-    return trip.status;
-  }
-
   // If the trip has no valid start date, consider it planned
   if (!hasValidStartDate(trip)) return "planned";
 

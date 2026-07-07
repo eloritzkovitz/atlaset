@@ -62,6 +62,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   async function addTrip(trip: Trip) {
     const tripWithStatus = { ...trip, status: getAutoTripStatus(trip) };
     const savedTrip = await tripsService.add(tripWithStatus);
+    
     setTrips((prev) => [
       ...prev,
       { ...savedTrip, status: getAutoTripStatus(savedTrip) },
@@ -69,15 +70,19 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   // Update a trip
-  async function editTrip(trip: Trip) {
-    const updatedTrip = { ...trip, status: getAutoTripStatus(trip) };
+  async function editTrip(trip: Trip, forceStatus = false) {
+    const updatedTrip = {
+      ...trip,
+      status: forceStatus ? trip.status : getAutoTripStatus(trip),
+    };
+
     await tripsService.edit(updatedTrip);
     setTrips((prev) => prev.map((t) => (t.id === trip.id ? updatedTrip : t)));
   }
 
   // Mark trip as completed
   function markCompleted(trip: Trip) {
-    editTrip({ ...trip, status: "completed" });
+    editTrip({ ...trip, status: "completed" }, true);
   }
 
   // Update trip favorite
