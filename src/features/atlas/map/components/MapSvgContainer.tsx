@@ -11,10 +11,14 @@ interface MapSvgContainerProps {
   height: number;
   children: React.ReactNode;
   className?: string;
+  isAddingMarker?: boolean;
 }
 
 export const MapSvgContainer = forwardRef<SVGSVGElement, MapSvgContainerProps>(
-  function MapSvgContainer({ width, height, children, className }, ref) {
+  function MapSvgContainer(
+    { width, height, children, className, isAddingMarker },
+    ref,
+  ) {
     const { dragging, handlePointerDown, setModalDomRef } = usePointerDrag(
       true,
       true,
@@ -31,9 +35,17 @@ export const MapSvgContainer = forwardRef<SVGSVGElement, MapSvgContainerProps>(
         width={width}
         height={height}
         onPointerDown={
-          handlePointerDown as React.PointerEventHandler<SVGSVGElement>
+          isAddingMarker
+            ? undefined
+            : (handlePointerDown as React.PointerEventHandler<SVGSVGElement>)
         }
-        className={`absolute inset-0 w-full h-full ${dragging ? "cursor-grabbing" : "cursor-grab"} ${className ?? ""}`}
+        className={`absolute inset-0 w-full h-full ${
+          isAddingMarker
+            ? "cursor-crosshair"
+            : dragging
+              ? "cursor-grabbing"
+              : "cursor-grab"
+        } ${className ?? ""}`}
       >
         {children}
       </svg>

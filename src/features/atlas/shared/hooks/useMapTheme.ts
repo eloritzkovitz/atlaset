@@ -10,19 +10,14 @@ import {
 
 interface UseMapColorsOptions {
   mode?: ColorMode;
-  isAddingMarker?: boolean;
 }
 
 /**
  * Returns map styles and colors based on the current color mode and user settings.
  * @param mode - The current operational color mode.
- * @param isAddingMarker - Optional boolean indicating if a marker is being added.
  * @returns An object containing country colors and visit color roles.
  */
-export function useMapTheme({
-  mode,
-  isAddingMarker,
-}: UseMapColorsOptions = {}) {
+export function useMapTheme({ mode }: UseMapColorsOptions = {}) {
   const { colorPalettes } = useMapColors();
   const { baseColor, borderColor, borderWidth } = useMapSettings();
 
@@ -44,15 +39,12 @@ export function useMapTheme({
       baseColor,
     );
 
-    const cursor = isAddingMarker ? "crosshair" : "pointer";
-
     // Define geography styles for different interaction states
     const baseStyle = {
       ...MAP_GEOGRAPHY_STYLE.default,
       fill: baseColor,
       stroke: borderColor,
       strokeWidth: borderWidth,
-      cursor,
     };
 
     const geographyStyle = {
@@ -70,12 +62,5 @@ export function useMapTheme({
       ...countryColors,
       visitColors,
     };
-  }, [
-    baseColor,
-    borderColor,
-    borderWidth,
-    colorPalettes,
-    mode,
-    isAddingMarker,
-  ]);
+  }, [baseColor, borderColor, borderWidth, colorPalettes, mode]);
 }

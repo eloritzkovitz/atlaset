@@ -78,7 +78,6 @@ export function WorldMap({
       style={{
         aspectRatio: "16/9",
         maxHeight: "100dvh",
-        cursor: isAddingMarker ? "crosshair" : "default",
       }}
       onContextMenu={(e) => e.preventDefault()}
     >
@@ -87,6 +86,7 @@ export function WorldMap({
         width={dimensions.width}
         height={dimensions.height}
         className="map-container"
+        isAddingMarker={isAddingMarker}
       >
         <MapProvider
           width={dimensions.width}

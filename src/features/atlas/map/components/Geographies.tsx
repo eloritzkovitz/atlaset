@@ -15,6 +15,7 @@ export interface GeographiesProps {
   }) => React.ReactNode;
   parseGeographies?: (geography: unknown) => GeographyFeature[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export const Geographies = forwardRef<SVGGElement, GeographiesProps>(
@@ -39,7 +40,7 @@ export const Geographies = forwardRef<SVGGElement, GeographiesProps>(
           children({ geographies, outline, borders, path, projection })}
       </g>
     );
-  }
+  },
 );
 
 Geographies.displayName = "Geographies";
