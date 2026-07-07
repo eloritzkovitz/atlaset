@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { useMapView } from "@contexts/MapViewContext";
-import { useSettings } from "@contexts/SettingsContext";
+import { useMapColors, useMapSettings } from "@features/atlas/settings";
 import { MAP_GEOGRAPHY_STYLE } from "@features/settings";
 import type { ColorMode, VisitColors } from "../types";
 import {
@@ -24,19 +23,17 @@ export function useMapTheme({
   mode,
   isAddingMarker,
 }: UseMapColorsOptions = {}) {
-  const { baseColor, borderColor, borderWidth } = useMapView();
-  const { settings } = useSettings();
+  const { colorPalettes } = useMapColors();
+  const { baseColor, borderColor, borderWidth } = useMapSettings();
 
+  // Get the appropriate color palette for the current mode and map settings
   return useMemo(() => {
-    const palettes = settings?.colors?.palettes ?? {};
-
-    // Get palettes for standard mode and the current mode
     const { palette: standardPalette } = getPaletteForMode(
-      palettes,
+      colorPalettes,
       "standard",
     );
     const { palette: currentModePalette } = getPaletteForMode(
-      palettes,
+      colorPalettes,
       mode ?? "standard",
     );
 
@@ -77,7 +74,7 @@ export function useMapTheme({
     baseColor,
     borderColor,
     borderWidth,
-    settings?.colors?.palettes,
+    colorPalettes,
     mode,
     isAddingMarker,
   ]);

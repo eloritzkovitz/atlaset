@@ -11,7 +11,7 @@ import {
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
 import type { ColorMode } from "@features/atlas/shared";
 import { PaletteDots } from "./PaletteDots";
-import { useLayerSettings } from "../hooks/useLayerSettings";
+import { useMapColors } from "../hooks/useMapColors";
 
 const COLOR_MODES: { key: ColorMode; label: string }[] = [
   { key: "standard", label: "mapSettings.colors.standard" },
@@ -35,7 +35,7 @@ export function ColorsSettingsGroup() {
     setNumAtlasColors,
     colorPalettes,
     setPalette,
-  } = useLayerSettings();
+  } = useMapColors();
   const { t } = useTranslation("atlas");
 
   const groupedPaletteOptions = COLOR_PALETTE_GROUPS.map((group) => ({

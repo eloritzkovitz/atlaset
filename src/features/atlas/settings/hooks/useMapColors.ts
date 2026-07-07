@@ -7,13 +7,12 @@ import {
 } from "@features/settings";
 
 /**
- * Manages configuration settings for map layers, visibility toggles, and color palettes.
- * @returns Current layer configuration states and unified update actions.
+ * Manages color and palette configuration settings for the map.
+ * @returns Current color settings and functions to update them.
  */
-export function useLayerSettings() {
+export function useMapColors() {
   const { settings, updateSettings } = useSettings();
 
-  // Extract color-related settings and palettes from the global settings
   const layerColors = useMemo(() => settings?.colors ?? {}, [settings?.colors]);
   const colorPalettes = useMemo(
     () => layerColors.palettes ?? DEFAULT_COLOR_PALETTES,

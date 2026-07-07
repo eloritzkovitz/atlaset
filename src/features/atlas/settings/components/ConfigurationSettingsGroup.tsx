@@ -1,9 +1,9 @@
 import React from "react";
-import { FaDraftingCompass } from "react-icons/fa";
 import { useTranslation } from "react-i18next";
+import { FaDraftingCompass } from "react-icons/fa";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { useMapView } from "@contexts/MapViewContext";
 import { MAP_CONFIG_OPTIONS } from "@features/settings";
+import { useMapSettings } from "../hooks/useMapSettings";
 
 export function ConfigurationSettingsGroup() {
   const { t } = useTranslation("atlas");
@@ -17,7 +17,7 @@ export function ConfigurationSettingsGroup() {
     setBorderColor,
     borderWidth,
     setBorderWidth,
-  } = useMapView();
+  } = useMapSettings();
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
-import { useLayerSettings } from "@features/atlas/settings";
+import { useMapColors } from "@features/atlas/settings";
 import { useMapTheme, type ColorMode } from "@features/atlas/shared";
 import type { LegendItem } from "../types";
 
@@ -22,7 +22,7 @@ export function useMapLegendItems(
     colorHomeCountry,
     colorFutureVisits,
     colorVisitedCountries,
-  } = useLayerSettings();
+  } = useMapColors();
   const {
     HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,

@@ -12,16 +12,8 @@ export interface MapViewContextType {
   setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
   isAtlasActive: boolean;
   geoData: GeoData | null;
-  projection: string;
-  setProjection: (v: string) => void;
   dimensions: { width: number; height: number };
-  setDimensions: (dims: { width: number; height: number }) => void;
-  baseColor: string;
-  setBaseColor: (v: string) => void;
-  borderColor: string;
-  setBorderColor: (v: string) => void;
-  borderWidth: number;
-  setBorderWidth: (v: number) => void;
+  setDimensions: (dims: { width: number; height: number }) => void;  
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   center: [number, number];

@@ -5,9 +5,8 @@ import {
   type Coordinates,
 } from "@features/atlas/map";
 import { useMapMode, type ColorMode } from "@features/atlas/shared";
-import { DEFAULT_MAP_SETTINGS, MAP_CONFIG_OPTIONS } from "@features/settings";
+import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
-import { useSettings } from "./SettingsContext";
 
 export interface MapViewProviderProps {
   children: ReactNode;
@@ -15,11 +14,9 @@ export interface MapViewProviderProps {
 
 export function MapViewProvider({ children }: MapViewProviderProps) {
   const { geoData } = useGeoData();
-  const { settings, updateSettings } = useSettings();
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  // Map mode state
   const { mapMode, setMapMode, isReadonly, isEdit, isEmbed } = useMapMode();
+
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   // Color mode state
   const [colorMode, setColorMode] = useState<ColorMode>("standard");
@@ -30,32 +27,6 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
   const handleMapReady = useCallback((delay = 50) => {
     setTimeout(() => setMapReady(true), delay);
   }, []);
-
-  // Map UI config
-  const map = settings.map ?? {
-    projection: undefined,
-    baseColor: undefined,
-    borderColor: undefined,
-    borderWidth: undefined,
-  };
-
-  // Use defaults if not set
-  const projection = map.projection ?? MAP_CONFIG_OPTIONS.projection[0].value;
-  const baseColor = map.baseColor ?? MAP_CONFIG_OPTIONS.baseColor[0].value;
-  const borderColor =
-    map.borderColor ?? MAP_CONFIG_OPTIONS.strokeColor[0].value;
-  const borderWidth =
-    map.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;
-
-  // Update functions
-  const setProjection = (v: string) =>
-    updateSettings({ map: { ...map, projection: v } });
-  const setBaseColor = (v: string) =>
-    updateSettings({ map: { ...map, baseColor: v } });
-  const setBorderColor = (v: string) =>
-    updateSettings({ map: { ...map, borderColor: v } });
-  const setBorderWidth = (v: number) =>
-    updateSettings({ map: { ...map, borderWidth: v } });
 
   // Map view state
   const [zoom, setZoom] = useState(DEFAULT_MAP_SETTINGS.minZoom);
@@ -115,16 +86,8 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         setColorMode,
         isAtlasActive,
         geoData,
-        projection,
-        setProjection,
         dimensions,
         setDimensions,
-        baseColor,
-        setBaseColor,
-        borderColor,
-        setBorderColor,
-        borderWidth,
-        setBorderWidth,
         zoom,
         setZoom,
         center,

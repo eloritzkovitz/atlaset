@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useLayerSettings } from "@features/atlas/settings";
+import { useMapColors } from "@features/atlas/settings";
 import { useMapTheme } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
@@ -20,7 +20,7 @@ export function useTrackingLayerItems() {
     colorVisitedCountries,
     colorFutureVisits,
     colorWantToVisitCountries,
-  } = useLayerSettings();
+  } = useMapColors();
   const {
     HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,
