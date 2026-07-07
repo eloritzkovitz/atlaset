@@ -100,7 +100,8 @@ export function parseModifiers(
  * @returns An object containing the qualifier and query if the input matches the expected format, otherwise null.
  */
 export function parseQualifierSearch(input: string) {
-  const raw = input?.trim() ?? "";
+  if (!input) return null;
+  const raw = input.trim();
   if (!raw) return null;
 
   const tokens = raw.split(/\s+/).filter(Boolean);
@@ -110,11 +111,17 @@ export function parseQualifierSearch(input: string) {
   const m = first.match(/^([a-zA-Z0-9_]+):\s*(.*)$/);
   if (!m) return null;
 
-  // Extract the qualifier and the query, and handle any modifiers in the query
   const qualifier = m[1].toLowerCase();
   const restRaw = m[2] ?? "";
-  const restTokens = restRaw.length > 0 ? restRaw.split(/\s+/) : [];
-  if (tokens.length > 1) restTokens.push(...tokens.slice(1));
+
+  let restTokens: string[] = [];
+  if (restRaw !== "") {
+    restTokens = restRaw.split(/\s+/);
+  }
+
+  if (tokens.length > 1) {
+    restTokens.push(...tokens.slice(1));
+  }
 
   // Remove tokens that look like modifiers but have no value
   const emptyModifierRegex = /^([a-zA-Z0-9_]+):\s*$/;
@@ -166,7 +173,9 @@ export function computeSuffix(
   topSuggestion?: string | undefined,
   propCandidate?: string,
 ) {
-  if (!topSuggestion || !propCandidate) return null;
+  if (!topSuggestion) return null;
+  if (!propCandidate) return null;
+
   const rem = topSuggestion.slice(propCandidate.length);
   if (!rem) return null;
   return rem + ":";

@@ -11,214 +11,180 @@ import {
   coerceModifierValue,
   identifyModifierRange,
   parseModifiers,
-} from "@utils/search";
+} from "./search";
 
 describe("search utils", () => {
-  describe("parseQualifierSearch modifiers and queries", () => {
-    it("parses simple qualifier:query", () => {
-      expect(parseQualifierSearch("prop:VALUE")).toEqual({
-        qualifier: "prop",
-        query: "VALUE",
-        modifiers: {},
-      });
+  describe("matchesToken", () => {
+    it.each([
+      ["Hello World", "lo wo", { match: "substring" }, true],
+      ["abcdef", "bcde", { match: "substring" }, true],
+      ["abcdef", "xyz", { match: "substring" }, false],
+      ["Paris", "paris", { match: "exact" }, true],
+      ["Paris ", "paris", { match: "exact" }, false],
+      ["Germany", "ger", { match: "prefix" }, true],
+      ["United States", "states", { match: "substring" }, true],
+      ["United States", "uni", { match: "substring" }, true],
+      ["abc123", "\\d+$", { match: "regex" }, true],
+      ["abc", "\\d+$", { match: "regex" }, false],
+      ["abc", "(", { match: "regex" }, false],
+      ["Germany", "ger", { match: "bogus" as any }, true],
+      ["United States", "uni", { match: "bogus" as any }, true],
+      ["abcdef", "bc", { match: "bogus" as any }, false],
+      ["Germany", "ger", { caseSensitive: true }, false],
+      ["Germany", "Ger", { caseSensitive: true }, true],
+    ])(
+      "evaluates matchesToken('%s', '%s', %j) -> %p",
+      (token, query, options, expected) => {
+        expect(matchesToken(token, query, options)).toBe(expected);
+      },
+    );
+  });
+
+  describe("parseQualifierSearch and modifiers pipeline", () => {
+    it.each([
+      ["prop:VALUE", { qualifier: "prop", query: "VALUE", modifiers: {} }],
+      [
+        "prop:alpha beta opt:true",
+        { qualifier: "prop", query: "alpha beta", modifiers: { opt: true } },
+      ],
+      [
+        "prop:alpha opt:false",
+        { qualifier: "prop", query: "alpha", modifiers: { opt: false } },
+      ],
+      [
+        "prop:alpha opt:yes",
+        { qualifier: "prop", query: "alpha", modifiers: { opt: true } },
+      ],
+      [
+        "prop:alpha opt:no",
+        { qualifier: "prop", query: "alpha", modifiers: { opt: false } },
+      ],
+      [
+        "prop:alpha opt:maybe",
+        { qualifier: "prop", query: "alpha", modifiers: { opt: "maybe" } },
+      ],
+      [
+        "prop:alpha opt",
+        { qualifier: "prop", query: "alpha opt", modifiers: {} },
+      ],
+      ["", null],
+      ["justtext", null],
+      [
+        "prop: alpha beta",
+        { qualifier: "prop", query: "alpha beta", modifiers: {} },
+      ],
+      ["prop:", { qualifier: "prop", query: "", modifiers: {} }],
+      [
+        "prop: token key:",
+        { qualifier: "prop", query: "token", modifiers: {} },
+      ],
+      [
+        "prop: opt:true",
+        { qualifier: "prop", query: "", modifiers: { opt: true } },
+      ],
+    ])("parses raw search pattern '%s'", (input, expected) => {
+      expect(parseQualifierSearch(input)).toEqual(expected);
     });
 
-    it("parses multi-word query and trailing modifier", () => {
-      expect(parseQualifierSearch("prop:alpha beta opt:true")).toEqual({
-        qualifier: "prop",
-        query: "alpha beta",
-        modifiers: { opt: true },
-      });
+    it.each([
+      ["true", true],
+      ["yes", true],
+      ["false", false],
+      ["no", false],
+      ["maybe", "maybe"],
+      ["TrUe", true],
+      ["NO", false],
+    ])("coerces modifier string token '%s' -> %p", (input, expected) => {
+      expect(coerceModifierValue(input)).toBe(expected);
     });
 
-    it("parses explicit false modifier", () => {
-      expect(parseQualifierSearch("prop:alpha opt:false")).toEqual({
-        qualifier: "prop",
-        query: "alpha",
-        modifiers: { opt: false },
-      });
+    it("handles nullish input edge cases on line 90", () => {
+      expect(parseQualifierSearch(null as any)).toBeNull();
+      expect(parseQualifierSearch(undefined as any)).toBeNull();
+      expect(parseQualifierSearch("   ")).toBeNull();
     });
 
-    it("parses 'yes'/'no' boolean modifier variants for keys", () => {
-      expect(parseQualifierSearch("prop:alpha opt:yes")).toEqual({
-        qualifier: "prop",
-        query: "alpha",
-        modifiers: { opt: true },
-      });
-      expect(parseQualifierSearch("prop:alpha opt:no")).toEqual({
-        qualifier: "prop",
-        query: "alpha",
-        modifiers: { opt: false },
-      });
-    });
-
-    it("preserves non-boolean modifier values", () => {
-      expect(parseQualifierSearch("prop:alpha opt:maybe")).toEqual({
-        qualifier: "prop",
-        query: "alpha",
-        modifiers: { opt: "maybe" },
-      });
-    });
-
-    it("treats bare token as part of query (no modifier)", () => {
-      expect(parseQualifierSearch("prop:alpha opt")).toEqual({
-        qualifier: "prop",
-        query: "alpha opt",
-        modifiers: {},
-      });
-    });
-
-    it("coerceModifierValue recognizes booleans and preserves other strings", () => {
-      expect(coerceModifierValue("true")).toBe(true);
-      expect(coerceModifierValue("yes")).toBe(true);
-      expect(coerceModifierValue("false")).toBe(false);
-      expect(coerceModifierValue("no")).toBe(false);
-      expect(coerceModifierValue("maybe")).toBe("maybe");
-    });
-
-    it("identifyModifierRange and parseModifiers work with trailing modifiers", () => {
-      const tokens1 = ["one", "two", "opt:true"];
-      expect(identifyModifierRange(tokens1)).toBe(2);
-      const tokens2 = ["one", "two"];
-      expect(identifyModifierRange(tokens2)).toBe(2);
-      const tokens3 = ["opt:true", "one"];
-      expect(identifyModifierRange(tokens3)).toBe(2);
-      const tokens4 = ["one", "two", "opt:true", "flag:maybe"];
-      const parsed = parseModifiers(tokens4, 2);
-      expect(parsed).toEqual({ opt: true, flag: "maybe" });
-    });
-
-    it("identifyModifierRange handles empty arrays and multiple trailing modifiers", () => {
+    it("evaluates custom inner modifier token range splits", () => {
+      expect(identifyModifierRange(["one", "two", "opt:true"])).toBe(2);
+      expect(identifyModifierRange(["one", "two"])).toBe(2);
+      expect(identifyModifierRange(["opt:true", "one"])).toBe(2);
       expect(identifyModifierRange([])).toBe(0);
-      const tokens = ["a:1", "b:2"];
-      expect(identifyModifierRange(tokens)).toBe(0);
+      expect(identifyModifierRange(["a:1", "b:2"])).toBe(0);
+      expect(
+        parseModifiers(["one", "two", "opt:true", "flag:maybe"], 2),
+      ).toEqual({ opt: true, flag: "maybe" });
       expect(parseModifiers(["a:1"], 1)).toEqual({});
     });
-
-    it("returns null for empty or non-qualifier inputs", () => {
-      expect(parseQualifierSearch("")).toBeNull();
-      expect(parseQualifierSearch("justtext")).toBeNull();
-    });
-
-    it("handles qualifier token followed by separate query tokens", () => {
-      expect(parseQualifierSearch("prop: alpha beta")).toEqual({
-        qualifier: "prop",
-        query: "alpha beta",
-        modifiers: {},
-      });
-    });
-
-    it("handles qualifier with empty inline query (no trailing tokens)", () => {
-      expect(parseQualifierSearch("prop:")).toEqual({
-        qualifier: "prop",
-        query: "",
-        modifiers: {},
-      });
-    });
   });
 
-  describe("parsePropertyParts", () => {
-    it("splits prop and afterColon correctly", () => {
-      expect(parsePropertyParts("prop:es")).toEqual({
-        propCandidate: "prop",
-        afterColon: "es",
-        hasColon: true,
-      });
-      expect(parsePropertyParts("no-colon")).toEqual({
-        propCandidate: "no-colon",
-        afterColon: "",
-        hasColon: false,
-      });
+  describe("parsePropertyParts & validation helpers", () => {
+    it.each([
+      ["prop:es", { propCandidate: "prop", afterColon: "es", hasColon: true }],
+      [
+        "no-colon",
+        { propCandidate: "no-colon", afterColon: "", hasColon: false },
+      ],
+      ["", { propCandidate: "", afterColon: "", hasColon: false }],
+      [":", { propCandidate: "", afterColon: "", hasColon: true }],
+    ])("parses property layout parts for '%s'", (input, expected) => {
+      expect(parsePropertyParts(input)).toEqual(expected);
     });
-  });
 
-  describe("suggestByPrefix and validation", () => {
-    it("suggestByPrefix filters case-insensitively and validates input", () => {
+    it("filters suggestions using input prefix definitions", () => {
       const list = ["prop", "field", "flag"];
       expect(suggestByPrefix(list, "pr")).toEqual(["prop"]);
       expect(suggestByPrefix(list, "F")).toEqual(["field", "flag"]);
       expect(suggestByPrefix(list, "$invalid")).toEqual([]);
     });
 
-    it("isValidQualifier does exact case-insensitive match", () => {
-      const list = ["prop", "field"];
-      expect(isValidQualifier("prop", list)).toBe(true);
-      expect(isValidQualifier("Prop", list)).toBe(true);
-      expect(isValidQualifier("pr", list)).toBe(false);
-    });
+    it.each([
+      ["prop", ["prop", "field"], true],
+      ["Prop", ["prop", "field"], true],
+      ["pr", ["prop", "field"], false],
+      ["", ["a"], false],
+    ])(
+      "validates qualifier candidate entry eligibility on isValidQualifier('%s')",
+      (prefix, list, expected) => {
+        expect(isValidQualifier(prefix, list)).toBe(expected);
+      },
+    );
   });
 
-  describe("formatting helpers", () => {
-    it("computeSuffix behavior", () => {
-      expect(computeSuffix(undefined, "prop")).toBeNull();
-      expect(computeSuffix("propcode", "")).toBeNull();
-      expect(computeSuffix("prop", "prop")).toBeNull();
-      expect(computeSuffix("propcode", "prop")).toBe("code:");
-      expect(computeSuffix("ab", "abc")).toBeNull();
-    });
+  describe("formatting and selection autocomplete helpers", () => {
+    it.each([
+      [undefined, "prop", null],
+      ["propcode", "", null],
+      ["prop", "prop", null],
+      ["propcode", "prop", "code:"],
+      ["ab", "abc", null],
+      ["propcode", undefined, null],
+      ["propcode", "", null],
+    ])(
+      "computes inline suffix composition rules computeSuffix('%s', '%s')",
+      (topSuggestion, propCandidate, expected) => {
+        expect(computeSuffix(topSuggestion, propCandidate)).toBe(expected);
+      },
+    );
 
-    it("formatCommittedValue and defaultOnSelect", () => {
+    it.each([
+      ["prop:es", "prop:es"],
+      ["ke:  123", "key:  123"],
+      ["no-colon", "k:-colon"],
+      ["prop:", "prop:"],
+    ])(
+      "updates raw input string dynamically during defaultOnSelect",
+      (input, expected) => {
+        const suggestion = input.startsWith("ke")
+          ? "key"
+          : input.startsWith("no")
+            ? "k"
+            : "prop";
+        expect(defaultOnSelect(suggestion, input)).toBe(expected);
+      },
+    );
+
+    it("combines property structures using formatCommittedValue", () => {
       expect(formatCommittedValue("prop", "es")).toBe("prop:es");
-      expect(defaultOnSelect("prop", "prop:es")).toBe("prop:es");
-      expect(defaultOnSelect("key", "ke:  123")).toBe("key:  123");
-      expect(defaultOnSelect("k", "no-colon")).toBe("k:-colon");
-    });
-  });
-
-  describe("edge cases", () => {
-    it("isValidQualifier returns false for empty prefix", () => {
-      expect(isValidQualifier("", ["a"])).toBe(false);
-    });
-
-    it("coerceModifierValue is case-insensitive", () => {
-      expect(coerceModifierValue("TrUe")).toBe(true);
-      expect(coerceModifierValue("NO")).toBe(false);
-    });
-  });
-
-  describe("matchesToken helper", () => {
-    it("substring mode matches partial tokens", () => {
-      expect(matchesToken("Hello World", "lo wo", { match: "substring" })).toBe(
-        true,
-      );
-      expect(matchesToken("abcdef", "bcde", { match: "substring" })).toBe(true);
-      expect(matchesToken("abcdef", "xyz", { match: "substring" })).toBe(false);
-    });
-
-    it("exact mode performs equality (case-insensitive by default)", () => {
-      expect(matchesToken("Paris", "paris", { match: "exact" })).toBe(true);
-      expect(matchesToken("Paris ", "paris", { match: "exact" })).toBe(false);
-    });
-
-    it("prefix and substring modes", () => {
-      expect(matchesToken("Germany", "ger", { match: "prefix" })).toBe(true);
-      expect(
-        matchesToken("United States", "states", { match: "substring" }),
-      ).toBe(true);
-      expect(matchesToken("United States", "uni", { match: "substring" })).toBe(
-        true,
-      );
-    });
-
-    it("regex mode uses provided pattern", () => {
-      expect(matchesToken("abc123", "\\d+$", { match: "regex" })).toBe(true);
-      expect(matchesToken("abc", "\\d+$", { match: "regex" })).toBe(false);
-    });
-
-    it("unknown match mode falls back to prefix behavior", () => {
-      expect(matchesToken("Germany", "ger", { match: "bogus" as any })).toBe(
-        true,
-      );
-      expect(
-        matchesToken("United States", "uni", { match: "bogus" as any }),
-      ).toBe(true);
-      expect(matchesToken("abcdef", "bc", { match: "bogus" as any })).toBe(
-        false,
-      );
-    });
-
-    it("invalid regex pattern returns false (catch branch)", () => {
-      expect(matchesToken("abc", "(", { match: "regex" })).toBe(false);
     });
   });
 });

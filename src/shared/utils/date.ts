@@ -28,12 +28,13 @@ export function formatDate(
   const d = date instanceof Date ? date : new Date(date as string);
 
   // Determine the locale to use for formatting
-  const lang =
-    locale ||
-    appDateLocale ||
-    i18n?.language ||
-    (typeof navigator !== "undefined" && navigator.language) ||
-    "en-GB";
+  const lang = [
+    locale,
+    appDateLocale,
+    i18n?.language,
+    typeof navigator !== "undefined" && navigator.language,
+    "en-GB",
+  ].find(Boolean) as string;
 
   // Default formatting options for day, month, and year
   const defaults: Intl.DateTimeFormatOptions = {

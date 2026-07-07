@@ -16,6 +16,8 @@ vi.mock("date-fns-tz", () => ({
       GMTZ: { jan: "Z", jul: "Z" },
       West: { jan: "-05:00", jul: "-04:00" },
       Default: { jan: "+00:00", jul: "+00:00" },
+      MissingHr: { jan: "+", jul: "+" },
+      MissingMin: { jan: "+12", jul: "+12" },
     };
     const entry = map[tz] ?? map["Default"];
     return month === 0 ? entry.jan : entry.jul;
@@ -29,81 +31,53 @@ import {
 } from "./timezone";
 
 describe("timezone utils", () => {
-  it("returns single offset for zones without DST", () => {
-    const offs = timezoneOffsets("NoDst");
-    expect(offs).toEqual(["UTC+09:00"]);
+  describe("timezoneOffsets", () => {
+    it.each([
+      ["NoDst", ["UTC+09:00"]],
+      ["Europe/Paris", ["UTC+01:00", "UTC+02:00 (summer)"]],
+      ["GMTZ", ["UTC+00:00"]],
+      ["West", ["UTC-05:00", "UTC-04:00 (summer)"]],
+      ["South", ["UTC+10:00", "UTC+11:00 (summer)"]],
+      ["HalfHour", ["UTC+05:30"]],
+    ])("calculates offsets for %s -> %p", (tz, expected) => {
+      expect(timezoneOffsets(tz)).toEqual(expected);
+    });
   });
 
-  it("returns winter and summer offsets for DST zones", () => {
-    const offs = timezoneOffsets("Europe/Paris");
-    expect(offs).toEqual(["UTC+01:00", "UTC+02:00 (summer)"]);
+  describe("timezoneRangeForZones", () => {
+    it.each([
+      [["NoDst", "Default"], "UTC+00:00 to UTC+09:00"],
+      [[], "—"],
+      [["NoDst"], "UTC+09:00"],
+      [["Europe/Paris", "Europe/Helsinki"], "UTC+01:00 to UTC+03:00"],
+      [["SmallMin"], "UTC+05:03"],
+      [["NegMin"], "UTC-00:05"],
+      [["MissingHr"], "UTC+00:00"],
+      [["MissingMin"], "UTC+12:00"],
+    ])(
+      "determines flat string layout range for %p -> %s",
+      (tzList, expected) => {
+        expect(timezoneRangeForZones(tzList)).toBe(expected);
+      },
+    );
   });
 
-  it("normalizes Z to +00:00 and returns UTC+00:00", () => {
-    const offs = timezoneOffsets("GMTZ");
-    expect(offs).toEqual(["UTC+00:00"]);
-  });
-
-  it("computes a single-line range when all mins equal", () => {
-    const r = timezoneRangeForZones(["NoDst", "Default"]);
-    expect(r).toBe("UTC+00:00 to UTC+09:00");
-  });
-
-  it("returns dash for empty zone list", () => {
-    const r = timezoneRangeForZones([]);
-    expect(r).toBe("—");
-  });
-
-  it("returns single offset for a single-zone range", () => {
-    const r = timezoneRangeForZones(["NoDst"]);
-    expect(r).toBe("UTC+09:00");
-  });
-
-  it("handles negative offsets and DST correctly", () => {
-    const offs = timezoneOffsets("West");
-    expect(offs).toEqual(["UTC-05:00", "UTC-04:00 (summer)"]);
-  });
-
-  it("computes min-to-max range across zones", () => {
-    const r = timezoneRangeForZones(["Europe/Paris", "Europe/Helsinki"]);
-    expect(r).toBe("UTC+01:00 to UTC+03:00");
-  });
-
-  it("handles southern-hemisphere DST where winter/summer reverse", () => {
-    const offs = timezoneOffsets("South");
-    expect(offs).toEqual(["UTC+10:00", "UTC+11:00 (summer)"]);
-  });
-
-  it("handles half-hour offsets correctly", () => {
-    const offs = timezoneOffsets("HalfHour");
-    expect(offs).toEqual(["UTC+05:30"]);
-  });
-
-  it("returns single-line when winter and summer ranges are identical", () => {
-    const lines = timezoneRangeLines(["NoDst", "Default"]);
-    expect(Array.isArray(lines)).toBe(true);
-    expect(lines.length).toBe(1);
-  });
-
-  it("returns dash for empty zone list in timezoneRangeLines", () => {
-    const lines = timezoneRangeLines([]);
-    expect(lines).toEqual(["—"]);
-  });
-
-  it("formats minute-padding correctly", () => {
-    const r = timezoneRangeForZones(["SmallMin"]);
-    expect(r).toBe("UTC+05:03");
-  });
-
-  it("formats small negative minute offsets correctly", () => {
-    const r = timezoneRangeForZones(["NegMin"]);
-    expect(r).toBe("UTC-00:05");
-  });
-
-  it("returns two lines when winter and summer differ", () => {
-    const lines = timezoneRangeLines(["Europe/Paris", "Europe/Helsinki"]);
-    expect(lines.length).toBe(2);
-    expect(lines[0]).toBe("UTC+01:00 to UTC+02:00");
-    expect(lines[1]).toBe("UTC+02:00 to UTC+03:00 (summer)");
+  describe("timezoneRangeLines", () => {
+    it.each([
+      [[], ["—"]],
+      [["NoDst", "Default"], ["UTC+00:00 to UTC+09:00"]],
+      [
+        ["Europe/Paris", "Europe/Helsinki"],
+        ["UTC+01:00 to UTC+02:00", "UTC+02:00 to UTC+03:00 (summer)"],
+      ],
+      [["Europe/Paris"], ["UTC+01:00", "UTC+02:00 (summer)"]],
+      [
+        ["Europe/Paris", "Europe/Berlin"],
+        ["UTC+01:00", "UTC+02:00 (summer)"],
+      ],
+      [["South"], ["UTC+10:00", "UTC+11:00 (summer)"]],
+    ])("splits structural line data for %p -> %p", (tzList, expected) => {
+      expect(timezoneRangeLines(tzList)).toEqual(expected);
+    });
   });
 });
