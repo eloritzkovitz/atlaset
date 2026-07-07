@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useMapView } from "@contexts/MapViewContext";
+import { useMapSettings } from "@features/atlas/settings";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { useContainerDimensions } from "@hooks";
@@ -29,14 +30,10 @@ export function WorldMap({
   svgRef,
   isAddingMarker,
 }: WorldMapProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const measuredDimensions = useContainerDimensions(containerRef);
-
-  // Map projection and data
+  const { projection } = useMapSettings();
   const {
     colorMode,
     geoData,
-    projection,
     dimensions,
     setDimensions,
     zoom,
@@ -44,7 +41,10 @@ export function WorldMap({
     handleMoveEnd,
   } = useMapView();
 
-  // Push measured dimensions into context
+  const containerRef = useRef<HTMLDivElement>(null);
+  const measuredDimensions = useContainerDimensions(containerRef);
+
+  // Update map dimensions when the measured dimensions change
   useEffect(() => {
     if (measuredDimensions.width > 0 && measuredDimensions.height > 0) {
       setDimensions(measuredDimensions);

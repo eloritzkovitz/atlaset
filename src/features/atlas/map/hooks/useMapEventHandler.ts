@@ -1,6 +1,7 @@
 import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { useMapSettings } from "@features/atlas/settings";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { getGeoCoordsFromMouseEvent } from "../utils/projection";
 
@@ -9,13 +10,13 @@ import { getGeoCoordsFromMouseEvent } from "../utils/projection";
  * @returns A function that processes mouse events on the map SVG element.
  */
 export function useMapEventHandler() {
-  const { projection, zoom, center, setSelectedCoords, dimensions, isEdit } =
-    useMapView();
-  const main = useMarkers();
-  const saved = useSavedMaps();
-  const ctx = isEdit ? saved : main;
-  const isAddingMarker = ctx.isAddingMarker;
-  const handleMapClickForMarker = ctx.handleMapClickForMarker;
+  const { projection } = useMapSettings();
+  const { zoom, center, setSelectedCoords, dimensions, isEdit } = useMapView();
+  const markerContext = useMarkers();
+  const savedMapsContext = useSavedMaps();
+
+  const activeMarkerManager = isEdit ? savedMapsContext : markerContext;
+  const { isAddingMarker, handleMapClickForMarker } = activeMarkerManager;
 
   return (event: React.MouseEvent<SVGSVGElement>) => {
     const coords = getGeoCoordsFromMouseEvent(
