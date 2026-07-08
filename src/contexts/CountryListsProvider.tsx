@@ -1,12 +1,8 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { CountryListModal } from "@features/atlas/countries";
 import type { Layer } from "@features/atlas/layers";
-import {
-  countryListService,
-  type CountryList,
-  type SovereigntyStatus,
-} from "@features/countries";
-import { useVisitedCountries, type VisitedStatus } from "@features/visits";
+import { countryListService, type CountryList } from "@features/countries";
+import { useVisitedCountries } from "@features/visits";
 import {
   CountryListsContext,
   type CountryListsContextValue,
@@ -29,43 +25,6 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-
-  const [sovereignOnly, setSovereignOnly] = useState(false);
-  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-  const [wantToVisitOnly, setWantToVisitOnly] = useState(false);
-
-  const [sovereignState, setSovereignState] = useState({
-    value: "" as SovereigntyStatus | "",
-    only: false,
-  });
-  const [visitedState, setVisitedState] = useState({
-    value: "any" as VisitedStatus,
-    wantToVisitOnly: false,
-  });
-
-  // Synchronize sovereign state with the sovereignOnly toggle
-  useEffect(() => {
-    setSovereignState({
-      value: sovereignOnly ? "sovereign" : "",
-      only: sovereignOnly,
-    });
-  }, [sovereignOnly]);
-
-  // Synchronize visited state with the showVisitedOnly and wantToVisitOnly toggles
-  useEffect(() => {
-    setVisitedState((prev) => {
-      if (wantToVisitOnly) {
-        return { value: "any", wantToVisitOnly: true };
-      }
-      if (showVisitedOnly) {
-        return { value: "visited", wantToVisitOnly: false };
-      }
-      return {
-        value: prev.value === "visited" ? "any" : prev.value,
-        wantToVisitOnly: false,
-      };
-    });
-  }, [wantToVisitOnly, showVisitedOnly]);
 
   // Reloads the country lists from the service
   const reloadCountryLists = async () => {
@@ -232,16 +191,6 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     loading,
     selectedListId,
     setSelectedListId,
-    sovereignOnly,
-    setSovereignOnly,
-    showVisitedOnly,
-    setShowVisitedOnly,
-    wantToVisitOnly,
-    setWantToVisitOnly,
-    sovereignState,
-    setSovereignState,
-    visitedState,
-    setVisitedState,
     reloadCountryLists,
     openAddModal,
     openEditModal,

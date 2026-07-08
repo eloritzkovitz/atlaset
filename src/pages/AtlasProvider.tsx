@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { SplashScreen } from "@components";
+import { CountryFiltersProvider } from "@contexts/CountryFiltersProvider";
 import { CountryListsProvider } from "@contexts/CountryListsProvider";
 import { LayersProvider } from "@contexts/LayersProvider";
 import { MapViewProvider } from "@contexts/MapViewProvider";
@@ -18,7 +19,9 @@ export function AtlasProviders() {
             <LayersProvider>
               <MarkersProvider>
                 <TimelineProvider>
-                  <AtlasPage />
+                  <CountryFiltersProvider>
+                    <AtlasPage />
+                  </CountryFiltersProvider>
                 </TimelineProvider>
               </MarkersProvider>
             </LayersProvider>

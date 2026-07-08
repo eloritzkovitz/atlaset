@@ -1,9 +1,10 @@
 import { useMemo } from "react";
+import { useCountryFilters } from "@contexts/CountryFiltersContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useCountryLists } from "@contexts/CountryListsContext"; // Added Context
+import { useCountryLists } from "@contexts/CountryListsContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
   isTimelineLayer,
@@ -22,8 +23,9 @@ import { useVisitedCountries } from "@features/visits";
  * @returns Array of layer items based on the current active toggles.
  */
 export function useMapLayerItems(mode: MapMode = "view") {
-  const { selectedListId, countryLists, showVisitedOnly, wantToVisitOnly } =
-    useCountryLists();
+  const { filteredCountries, showVisitedOnly, wantToVisitOnly } =
+    useCountryFilters();
+  const { selectedListId, countryLists } = useCountryLists();
   const { layers } = useLayers();
   const { colorMode, isEdit } = useMapView();
   const { activeSavedMap } = useSavedMaps();
@@ -31,13 +33,24 @@ export function useMapLayerItems(mode: MapMode = "view") {
   const { timelineMode, selectedYear } = useTimeline();
   const { visitedCountryCodes } = useVisitedCountries();
 
-  // Generate tracking layer items for the tracking layer
-  const trackingLayerItems = useTrackingLayerItems({
-    visitedOnly: showVisitedOnly,
-    wantToVisitOnly,
-    selectedListId,
-    countryLists,
-  });
+  // Generate tracking layer items based on active toggles and selected list
+  const trackingLayerFilters = useMemo(
+    () => ({
+      visitedOnly: showVisitedOnly,
+      wantToVisitOnly,
+      selectedListId,
+      countryLists,
+      filteredCountries,
+    }),
+    [
+      showVisitedOnly,
+      wantToVisitOnly,
+      selectedListId,
+      countryLists,
+      filteredCountries,
+    ],
+  );  
+  const trackingLayerItems = useTrackingLayerItems(trackingLayerFilters);
 
   // Combine virtual visited layer with actual timeline layers
   const timelineLayers: TimelineLayer[] = useMemo(() => {

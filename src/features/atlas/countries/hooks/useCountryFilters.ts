@@ -35,21 +35,7 @@ import { useDebounce } from "@hooks";
  */
 export function useCountryFilters() {
   const { countries } = useCountryData();
-  const {
-    countryLists,
-    selectedListId,
-    sovereignOnly,
-    setSovereignOnly,
-    showVisitedOnly,
-    setShowVisitedOnly,
-    wantToVisitOnly,
-    setWantToVisitOnly,
-    sovereignState,
-    setSovereignState,
-    visitedState,
-    setVisitedState,
-  } = useCountryLists();
-
+  const { countryLists, selectedListId } = useCountryLists();
   const { layerSelections, setLayerSelections } = useLayers();
   const layers = useEffectiveLayers();
   const { trips } = useTrips();
@@ -68,6 +54,18 @@ export function useCountryFilters() {
     geoType: "" as GeoType | "",
   });
 
+  const [sovereignOnly, setSovereignOnlyState] = useState(false);
+  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
+  const [wantToVisitOnly, setWantToVisitOnlyState] = useState(false);
+
+  const [sovereignState, setSovereignState] = useState({
+    value: "" as SovereigntyStatus | "",
+    only: false,
+  });
+  const [visitedState, setVisitedState] = useState({
+    value: "any" as VisitedStatus,
+    wantToVisitOnly: false,
+  });
   const [visitRange, setVisitRange] = useState<{
     min: number;
     max: number | undefined;
@@ -93,12 +91,12 @@ export function useCountryFilters() {
 
   const setSelectedSovereignty = (val: SovereigntyStatus | "") => {
     setSovereignState({ value: val, only: val === "sovereign" });
-    setSovereignOnly(val === "sovereign");
+    setSovereignOnlyState(val === "sovereign");
   };
 
-  const customSetSovereignOnly = (only: boolean) => {
+  const setSovereignOnly = (only: boolean) => {
     setSovereignState({ value: only ? "sovereign" : "", only });
-    setSovereignOnly(only);
+    setSovereignOnlyState(only);
   };
 
   const setSelectedVisited = (val: VisitedStatus) => {
@@ -108,16 +106,16 @@ export function useCountryFilters() {
     }));
     setShowVisitedOnly(val === "visited");
     if (val === "visited") {
-      setWantToVisitOnly(false);
+      setWantToVisitOnlyState(false);
     }
   };
 
-  const customSetWantToVisitOnly = (only: boolean) => {
+  const setWantToVisitOnly = (only: boolean) => {
     setVisitedState((prev) => ({
       value: only ? "any" : prev.value,
       wantToVisitOnly: only,
     }));
-    setWantToVisitOnly(only);
+    setWantToVisitOnlyState(only);
     if (only) {
       setShowVisitedOnly(false);
     }
@@ -132,7 +130,17 @@ export function useCountryFilters() {
           ? { ...prev, value: "any" }
           : prev,
     );
-  }, [showVisitedOnly, setVisitedState]);
+  }, [showVisitedOnly]);
+
+  // Sync showVisitedOnly with timelineMode
+  useEffect(() => {
+    if (timelineMode) {
+      setShowVisitedOnly(true);
+      setWantToVisitOnlyState(false);
+    } else {
+      setShowVisitedOnly(false);
+    }
+  }, [timelineMode]);
 
   const filterParams = useMemo<CountryFilterOptions>(
     () => ({
@@ -319,9 +327,9 @@ export function useCountryFilters() {
   const resetFilters = () => {
     setGeoFilters({ region: "", subregion: "", geoType: "" });
     setSovereignState({ value: "", only: false });
-    setSovereignOnly(false);
+    setSovereignOnlyState(false);
     setVisitedState({ value: "any", wantToVisitOnly: false });
-    setWantToVisitOnly(false);
+    setWantToVisitOnlyState(false);
     setShowVisitedOnly(false);
     setLayerSelections(getDefaultLayerSelections(layers));
     resetTimelineFilters();
@@ -346,13 +354,15 @@ export function useCountryFilters() {
     selectedSovereignty: sovereignState.value,
     sovereignOnly,
     setSelectedSovereignty,
-    setSovereignOnly: customSetSovereignOnly,
+    setSovereignOnly,
     selectedVisited: visitedState.value,
+    setSelectedVisited,
+    showVisitedOnly,
+    setShowVisitedOnly,
     wantToVisitOnly,
+    setWantToVisitOnly,
     minVisitCount: visitRange.min,
     maxVisitCount: visitRange.max,
-    setSelectedVisited,
-    setWantToVisitOnly: customSetWantToVisitOnly,
     setMinVisitCount,
     setMaxVisitCount,
     resetFilters,

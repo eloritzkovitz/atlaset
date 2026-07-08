@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
+import { useCountryFilters } from "@contexts/CountryFiltersContext";
 import { useCountryLists } from "@contexts/CountryListsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
@@ -15,7 +16,6 @@ import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryListView } from "./CountryListView";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
-import { useCountryFilters } from "../../hooks/useCountryFilters";
 
 interface CountriesPanelProps {
   selectedIsoCode: string | null;
@@ -46,17 +46,14 @@ export function CountriesPanel({
   } = useUI();
 
   // Filter state
+  const { resetFilters, ...filterProps } = useCountryFilters();
   const {
-    showVisitedOnly,
-    setShowVisitedOnly,
     countryLists,
     selectedListId,
     setSelectedListId,
     openAddModal,
     openEditModal,
   } = useCountryLists();
-
-  const { resetFilters, ...filterProps } = useCountryFilters();
 
   // Sort state
   const {
@@ -137,8 +134,8 @@ export function CountriesPanel({
             setSortBy={(v) => setSortBy(v as typeof sortBy)}
             sovereignOnly={filterProps.sovereignOnly}
             setSovereignOnly={filterProps.setSovereignOnly}
-            visitedOnly={showVisitedOnly}
-            setVisitedOnly={setShowVisitedOnly}
+            visitedOnly={filterProps.showVisitedOnly}
+            setVisitedOnly={filterProps.setShowVisitedOnly}
             wantToVisitOnly={filterProps.wantToVisitOnly}
             setWantToVisitOnly={filterProps.setWantToVisitOnly}
             allCount={filterProps.allCount}
@@ -167,8 +164,7 @@ export function CountriesPanel({
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
-          visitedOnly={showVisitedOnly}
-          showVisitedOnly={showVisitedOnly}
+          visitedOnly={filterProps.showVisitedOnly}
           resetFilters={handleResetFilters}
           {...filterProps}
         />

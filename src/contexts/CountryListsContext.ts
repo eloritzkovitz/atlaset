@@ -1,27 +1,12 @@
 import { createContext, useContext } from "react";
 import type { Layer } from "@features/atlas/layers";
-import type { CountryList, SovereigntyStatus } from "@features/countries";
-import type { VisitedStatus } from "@features/visits";
+import type { CountryList } from "@features/countries";
 
 export interface CountryListsContextValue {
   countryLists: CountryList[];
   loading: boolean;
   selectedListId: string | null;
   setSelectedListId: (id: string | null) => void;
-  sovereignOnly: boolean;
-  setSovereignOnly: React.Dispatch<React.SetStateAction<boolean>>;
-  showVisitedOnly: boolean;
-  setShowVisitedOnly: React.Dispatch<React.SetStateAction<boolean>>;
-  wantToVisitOnly: boolean;
-  setWantToVisitOnly: React.Dispatch<React.SetStateAction<boolean>>;
-  sovereignState: { value: SovereigntyStatus | ""; only: boolean };
-  setSovereignState: React.Dispatch<
-    React.SetStateAction<{ value: SovereigntyStatus | ""; only: boolean }>
-  >;
-  visitedState: { value: VisitedStatus; wantToVisitOnly: boolean };
-  setVisitedState: React.Dispatch<
-    React.SetStateAction<{ value: VisitedStatus; wantToVisitOnly: boolean }>
-  >;
   reloadCountryLists: () => Promise<void>;
   openAddModal: (initialCountryCodes?: string[]) => void;
   openEditModal: (listId: string) => void;
