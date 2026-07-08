@@ -1,7 +1,42 @@
 import { createContext, useContext } from "react";
-import { useCountryFilters as useCountryFiltersLogic } from "@features/atlas/countries/hooks/useCountryFilters";
+import type { Country, GeoType, SovereigntyStatus } from "@features/countries";
+import type { VisitedStatus } from "@features/visits";
 
-type CountryFiltersContextType = ReturnType<typeof useCountryFiltersLogic>;
+export interface CountryFiltersContextType {
+  search: string;
+  setSearch: (value: string) => void;
+  debouncedSearch: string;
+  filteredIsoCodes: string[];
+  filteredCountries: Country[];
+  searchedCountries: Country[];
+  visitedIsoCodes: string[];
+  wantToVisitCountryCodes: string[];
+  allCount: number;
+  sovereignCount: number;
+  visitedCount: number;
+  wantToVisitCount: number;
+  selectedRegion: string;
+  selectedSubregion: string;
+  selectedGeoType: GeoType | "";
+  setSelectedRegion: (region: string) => void;
+  setSelectedSubregion: (subregion: string) => void;
+  setSelectedGeoType: (type: GeoType | "") => void;
+  selectedSovereignty: string;
+  sovereignOnly: boolean;
+  setSelectedSovereignty: (status: SovereigntyStatus) => void;
+  setSovereignOnly: (only: boolean) => void;
+  selectedVisited: VisitedStatus;
+  setSelectedVisited: (status: VisitedStatus) => void;
+  visitedOnly: boolean;
+  setVisitedOnly: (only: boolean) => void;
+  wantToVisitOnly: boolean;
+  setWantToVisitOnly: (only: boolean) => void;
+  minVisitCount: number;
+  maxVisitCount: number | undefined;
+  setMinVisitCount: React.Dispatch<React.SetStateAction<number>>;
+  setMaxVisitCount: React.Dispatch<React.SetStateAction<number | undefined>>;
+  resetFilters: () => void;
+}
 
 export const CountryFiltersContext = createContext<
   CountryFiltersContextType | undefined
