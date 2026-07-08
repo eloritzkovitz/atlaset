@@ -7,22 +7,11 @@ import { CountrySortSelect, type CountryList } from "@features/countries";
 import { SUPPORTED_MODIFIERS } from "@features/countries/constants/modifierConfig";
 import { SUPPORTED_QUALIFIERS } from "@features/countries/constants/qualifierConfig";
 import { useDragScroll } from "@hooks";
+import { useCountryFilters } from "@contexts/CountryFiltersContext";
 
 interface CountriesSearchSortBarProps {
-  search: string;
-  setSearch: (value: string) => void;
   sortBy: string;
   setSortBy: (value: string) => void;
-  allCount?: number;
-  sovereignCount?: number;
-  sovereignOnly?: boolean;
-  setSovereignOnly?: (value: boolean) => void;
-  visitedCount?: number;
-  visitedOnly?: boolean;
-  setVisitedOnly?: (value: boolean) => void;
-  wantToVisitCount?: number;
-  wantToVisitOnly?: boolean;
-  setWantToVisitOnly?: (value: boolean) => void;
   countryLists?: (CountryList & { count?: number })[];
   selectedListId?: string | null;
   setSelectedListId?: (id: string | null) => void;
@@ -31,26 +20,28 @@ interface CountriesSearchSortBarProps {
 }
 
 export function CountriesSearchSortBar({
-  search,
-  setSearch,
   sortBy,
   setSortBy,
-  allCount = 0,
-  sovereignCount = 0,
-  sovereignOnly,
-  setSovereignOnly,
-  visitedCount = 0,
-  visitedOnly,
-  setVisitedOnly,
-  wantToVisitCount = 0,
-  wantToVisitOnly,
-  setWantToVisitOnly,
   countryLists = [],
   selectedListId = null,
   setSelectedListId,
   onAddList,
   onEditList,
 }: CountriesSearchSortBarProps) {
+  const {
+    allCount,
+    sovereignCount,
+    visitedCount,
+    wantToVisitCount,
+    visitedOnly,
+    setVisitedOnly,
+    wantToVisitOnly,
+    setWantToVisitOnly,
+    sovereignOnly,
+    setSovereignOnly,
+    search,
+    setSearch,
+  } = useCountryFilters();
   const { timelineMode } = useTimeline();
   const { t } = useTranslation("atlas");
 
@@ -65,7 +56,11 @@ export function CountriesSearchSortBar({
   ]);
 
   const options = [
-    { value: "all", label: t("countries.lists.all"), count: allCount },
+    {
+      value: "all",
+      label: t("countries.lists.all"),
+      count: allCount,
+    },
     {
       value: "sovereign",
       label: t("countries.lists.sovereign"),

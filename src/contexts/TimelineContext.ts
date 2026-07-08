@@ -3,14 +3,14 @@ import { createContext, useContext } from "react";
 export interface TimelineContextValue {
   timelineMode: boolean;
   setTimelineMode: (v: boolean | ((prev: boolean) => boolean)) => void;
-  showVisitedOnly: boolean;
-  setShowVisitedOnly: (v: boolean | ((prev: boolean) => boolean)) => void;
   years: number[];
   selectedYear: number;
-  setSelectedYear: (year: number) => void;  
+  setSelectedYear: (year: number) => void;
 }
 
-export const TimelineContext = createContext<TimelineContextValue | undefined>(undefined);
+export const TimelineContext = createContext<TimelineContextValue | undefined>(
+  undefined,
+);
 
 export function useTimeline() {
   const context = useContext(TimelineContext);

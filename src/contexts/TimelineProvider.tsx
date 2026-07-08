@@ -10,11 +10,11 @@ import { TimelineContext } from "./TimelineContext";
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { play } = useAudio();
   const { mapMode, setColorMode } = useMapView();
+
   const [timelineMode, setTimelineMode] = useState(false);
   const prevTimelineMode = useRef(false);
-  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-  const { play } = useAudio();
 
   // Compute years from trips
   const { trips } = useTrips();
@@ -52,9 +52,8 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     true,
   );
 
-  // When timeline mode changes, update showVisitedOnly and play sound
+  // When timeline mode changes, play a sound effect
   useEffect(() => {
-    setShowVisitedOnly(timelineMode);
     if (!timelineMode && prevTimelineMode.current) {
       play("woosh");
     } else if (timelineMode && !prevTimelineMode.current) {
@@ -68,8 +67,6 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         timelineMode,
         setTimelineMode: handleSetTimelineMode,
-        showVisitedOnly,
-        setShowVisitedOnly,
         years,
         selectedYear,
         setSelectedYear,

@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useCountryLists } from "@contexts/CountryListsContext";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
@@ -28,12 +34,15 @@ import {
   type VisitedStatus,
 } from "@features/visits";
 import { useDebounce } from "@hooks";
+import { CountryFiltersContext } from "./CountryFiltersContext";
 
-/**
- * Manages and applies country filters.
- * @returns Various filter states and the filtered list of countries.
- */
-export function useCountryFilters() {
+interface CountryFiltersProviderProps {
+  children: ReactNode;
+}
+
+export function CountryFiltersProvider({
+  children,
+}: CountryFiltersProviderProps) {
   const { countries } = useCountryData();
   const { countryLists, selectedListId } = useCountryLists();
   const { layerSelections, setLayerSelections } = useLayers();
@@ -43,14 +52,7 @@ export function useCountryFilters() {
   const sharedMapInfo = useSharedMapInfo();
   const { visitedCountryCodes, wantToVisitCountryCodes } =
     useVisitedCountries();
-  const {
-    timelineMode,
-    years,
-    selectedYear,
-    setSelectedYear,
-    showVisitedOnly,
-    setShowVisitedOnly,
-  } = useTimeline();
+  const { timelineMode, years, selectedYear, setSelectedYear } = useTimeline();
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 250);
@@ -73,6 +75,10 @@ export function useCountryFilters() {
     max: number | undefined;
   }>({ min: 1, max: undefined });
 
+  const sovereignOnly = sovereignState.only;
+  const visitedOnly = visitedState.value === "visited";
+  const wantToVisitOnly = visitedState.wantToVisitOnly;
+
   const setSelectedRegion = (region: string) =>
     setGeoFilters((p) => ({ ...p, region }));
   const setSelectedSubregion = (subregion: string) =>
@@ -91,37 +97,56 @@ export function useCountryFilters() {
       max: typeof value === "function" ? value(p.max) : value,
     }));
 
-  const setSelectedSovereignty = (val: SovereigntyStatus | "") =>
+  const setSelectedSovereignty = (val: SovereigntyStatus | "") => {
     setSovereignState({ value: val, only: val === "sovereign" });
-  const setSovereignOnly = (only: boolean) =>
+  };
+
+  const setSovereignOnly = (only: boolean) => {
     setSovereignState({ value: only ? "sovereign" : "", only });
+  };
 
   const setSelectedVisited = (val: VisitedStatus) => {
     setVisitedState({
       value: val,
-      wantToVisitOnly: val === "visited" ? false : visitedState.wantToVisitOnly,
+      wantToVisitOnly: false,
     });
-    setShowVisitedOnly(val === "visited");
   };
 
   const setWantToVisitOnly = (only: boolean) => {
-    setVisitedState({
-      value: only ? "any" : visitedState.value,
+    setVisitedState((prev) => ({
+      value: only ? "any" : prev.value,
       wantToVisitOnly: only,
-    });
-    if (only) setShowVisitedOnly(false);
+    }));
   };
 
+  const setVisitedOnly = (only: boolean) => {
+    setVisitedState((prev) => ({
+      value: only ? "visited" : prev.value === "visited" ? "any" : prev.value,
+      wantToVisitOnly: only ? false : prev.wantToVisitOnly,
+    }));
+  };
+
+  // Sync visitedOnly with visitedState when visitedOnly changes
   useEffect(() => {
     setVisitedState((prev) =>
-      showVisitedOnly
+      visitedOnly
         ? { value: "visited", wantToVisitOnly: false }
         : prev.value === "visited"
           ? { ...prev, value: "any" }
           : prev,
     );
-  }, [showVisitedOnly]);
+  }, [visitedOnly]);
 
+  // Sync visitedOnly with timelineMode
+  useEffect(() => {
+    if (timelineMode) {
+      setVisitedState({ value: "visited", wantToVisitOnly: false });
+    } else {
+      setVisitedState((prev) => ({ ...prev, value: "any" }));
+    }
+  }, [timelineMode]);
+
+  // Determine if any filters are active
   const filterParams = useMemo<CountryFilterOptions>(
     () => ({
       search: debouncedSearch,
@@ -133,6 +158,7 @@ export function useCountryFilters() {
     [debouncedSearch, geoFilters, sovereignState.value],
   );
 
+  // Determine effective shared visited ISO codes if in readonly mode
   const effectiveSharedVisitedIsoCodes = useMemo(
     () =>
       isReadonly
@@ -164,44 +190,34 @@ export function useCountryFilters() {
     [countries, layers, layerSelections],
   );
 
-  // Compute counts for country lists based on filtered countries
-  const countPipelineConfig = useMemo(() => {
-    const cleanSearch = search
-      .replace(/(sovereigntyStatus|sovereign|visited|wantToVisit):\s*\S+/gi, "")
-      .trim();
-    return {
-      search: cleanSearch,
-      params: {
-        ...filterParams,
-        search: cleanSearch,
-        selectedSovereignty: /(sovereigntyStatus|sovereign):\s*\S+/i.test(
-          search,
-        )
-          ? ("" as const)
-          : filterParams.selectedSovereignty,
-      },
-    };
-  }, [search, filterParams]);
+  const bypassLayers = visitedOnly || wantToVisitOnly || selectedListId;
+  const effectiveIsoCodes = useMemo(
+    () => (bypassLayers ? countries.map((c) => c.isoCode) : filteredIsoCodes),
+    [bypassLayers, countries, filteredIsoCodes],
+  );
 
   // Calculate global search results without any active tab reductions
   const searchedCountries = useMemo(
     () =>
       applyQualifierSearch(
         countries,
-        countPipelineConfig.search,
+        search,
         visitedIsoCodes,
-        countPipelineConfig.params,
-        filteredIsoCodes,
+        filterParams,
+        effectiveIsoCodes,
         visitedMap,
         visitedYearMap,
+        wantToVisitCountryCodes,
       ),
     [
       countries,
-      countPipelineConfig,
+      search,
       visitedIsoCodes,
-      filteredIsoCodes,
+      filterParams,
+      effectiveIsoCodes,
       visitedMap,
       visitedYearMap,
+      wantToVisitCountryCodes,
     ],
   );
 
@@ -212,23 +228,27 @@ export function useCountryFilters() {
       debouncedSearch,
       visitedIsoCodes,
       filterParams,
-      filteredIsoCodes,
+      effectiveIsoCodes,
       visitedMap,
       visitedYearMap,
       wantToVisitCountryCodes,
     );
 
-    if (selectedListId) {
+    if (
+      selectedListId &&
+      selectedListId !== "VISITED_COUNTRIES" &&
+      selectedListId !== "WANT_TO_VISIT"
+    ) {
       const listCodes = new Set(
         countryLists.find((l) => l.id === selectedListId)?.countryCodes || [],
       );
       base = base.filter((c) => listCodes.has(c.isoCode));
     }
 
-    if (visitedState.wantToVisitOnly) {
+    if (wantToVisitOnly || selectedListId === "WANT_TO_VISIT") {
       const wantToVisitSet = new Set(wantToVisitCountryCodes);
       base = base.filter((c) => wantToVisitSet.has(c.isoCode));
-    } else if (showVisitedOnly) {
+    } else if (visitedOnly || selectedListId === "VISITED_COUNTRIES") {
       if (isReadonly && effectiveSharedVisitedIsoCodes) {
         const sharedSet = new Set(effectiveSharedVisitedIsoCodes);
         base = base.filter((c) => sharedSet.has(c.isoCode));
@@ -249,7 +269,9 @@ export function useCountryFilters() {
       }
     }
 
-    if (sovereignState.only) base = base.filter(createSovereigntyFilter(true));
+    if (sovereignOnly) {
+      base = base.filter(createSovereigntyFilter(true));
+    }
 
     return filterByVisitStatus(
       base,
@@ -260,19 +282,20 @@ export function useCountryFilters() {
   }, [
     countries,
     filterParams,
-    filteredIsoCodes,
-    visitedState,
+    effectiveIsoCodes,
+    visitedState.value,
     visitedIsoCodes,
     debouncedSearch,
     countryLists,
     selectedListId,
-    showVisitedOnly,
+    visitedOnly,
+    wantToVisitOnly,
     isReadonly,
     effectiveSharedVisitedIsoCodes,
     visitedMap,
     visitedYearMap,
     visitRange,
-    sovereignState.only,
+    sovereignOnly,
     visitedCountryCodes,
     wantToVisitCountryCodes,
     timelineMode,
@@ -305,39 +328,66 @@ export function useCountryFilters() {
     setGeoFilters({ region: "", subregion: "", geoType: "" });
     setSovereignState({ value: "", only: false });
     setVisitedState({ value: "any", wantToVisitOnly: false });
-    setShowVisitedOnly(false);
     setLayerSelections(getDefaultLayerSelections(layers));
     resetTimelineFilters();
   };
 
-  return {
-    search,
-    setSearch,
-    debouncedSearch,
-    filteredIsoCodes,
-    filteredCountries,
-    searchedCountries,
-    visitedIsoCodes,
-    wantToVisitCountryCodes,
-    ...counts,
-    selectedRegion: geoFilters.region,
-    selectedSubregion: geoFilters.subregion,
-    selectedGeoType: geoFilters.geoType,
-    setSelectedRegion,
-    setSelectedSubregion,
-    setSelectedGeoType,
-    selectedSovereignty: sovereignState.value,
-    sovereignOnly: sovereignState.only,
-    setSelectedSovereignty,
-    setSovereignOnly,
-    selectedVisited: visitedState.value,
-    wantToVisitOnly: visitedState.wantToVisitOnly,
-    minVisitCount: visitRange.min,
-    maxVisitCount: visitRange.max,
-    setSelectedVisited,
-    setWantToVisitOnly,
-    setMinVisitCount,
-    setMaxVisitCount,
-    resetFilters,
-  };
+  const contextValue = useMemo(
+    () => ({
+      search,
+      setSearch,
+      debouncedSearch,
+      filteredIsoCodes,
+      filteredCountries,
+      searchedCountries,
+      visitedIsoCodes,
+      wantToVisitCountryCodes,
+      ...counts,
+      selectedRegion: geoFilters.region,
+      selectedSubregion: geoFilters.subregion,
+      selectedGeoType: geoFilters.geoType,
+      setSelectedRegion,
+      setSelectedSubregion,
+      setSelectedGeoType,
+      selectedSovereignty: sovereignState.value,
+      sovereignOnly,
+      setSelectedSovereignty,
+      setSovereignOnly,
+      selectedVisited: visitedState.value,
+      setSelectedVisited,
+      visitedOnly,
+      setVisitedOnly,
+      wantToVisitOnly,
+      setWantToVisitOnly,
+      minVisitCount: visitRange.min,
+      maxVisitCount: visitRange.max,
+      setMinVisitCount,
+      setMaxVisitCount,
+      resetFilters,
+    }),
+    [
+      search,
+      debouncedSearch,
+      filteredIsoCodes,
+      filteredCountries,
+      searchedCountries,
+      visitedIsoCodes,
+      wantToVisitCountryCodes,
+      counts,
+      geoFilters,
+      sovereignState.value,
+      sovereignOnly,
+      visitedState.value,
+      visitedOnly,
+      wantToVisitOnly,
+      visitRange,
+      layers,
+    ],
+  );
+
+  return (
+    <CountryFiltersContext.Provider value={contextValue}>
+      {children}
+    </CountryFiltersContext.Provider>
+  );
 }

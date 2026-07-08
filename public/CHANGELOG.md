@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-08
+
+- **[feature]** **Atlas | Countries:** Synced country lists and filtered countries with colored countries
+
 ## 2026-07-06
 
 - **[chore]** **Atlas | Map:** Some minor updates and improvements
