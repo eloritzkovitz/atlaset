@@ -21,9 +21,9 @@ export interface CountryFiltersContextType {
   setSelectedRegion: (region: string) => void;
   setSelectedSubregion: (subregion: string) => void;
   setSelectedGeoType: (type: GeoType | "") => void;
-  selectedSovereignty: string;
+  selectedSovereignty: SovereigntyStatus | "";
   sovereignOnly: boolean;
-  setSelectedSovereignty: (status: SovereigntyStatus) => void;
+  setSelectedSovereignty: (status: SovereigntyStatus | "") => void;
   setSovereignOnly: (only: boolean) => void;
   selectedVisited: VisitedStatus;
   setSelectedVisited: (status: VisitedStatus) => void;
