@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
 import {
@@ -45,10 +44,11 @@ export function CountriesPanel({
     showFilters,
     toggleFilters,
   } = useUI();
-  const { showVisitedOnly, setShowVisitedOnly } = useTimeline();
 
   // Filter state
   const {
+    showVisitedOnly,
+    setShowVisitedOnly,
     countryLists,
     selectedListId,
     setSelectedListId,

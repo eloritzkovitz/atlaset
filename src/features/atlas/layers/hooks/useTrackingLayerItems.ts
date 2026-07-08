@@ -3,50 +3,84 @@ import { useMapColors } from "@features/atlas/settings";
 import { useMapTheme } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
+import { type CountryList } from "@features/countries";
 import type { LayerItem } from "../types";
 
 const TRACKING_LAYER_ID = "tracking";
+const CUSTOM_LIST_LAYER_ID = "custom-list";
 
-/**
- * Generates tracking layer items based on the user's visit data.
- * @returns Array of tracking layer items with isoCode, color, and layerId.
- */
-export function useTrackingLayerItems() {
+interface UseTrackingLayerItemsFilters {
+  visitedOnly?: boolean;
+  wantToVisitOnly?: boolean;
+  selectedListId?: string | null;
+  countryLists?: CountryList[];
+}
+
+export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
   const { homeCountry } = useHomeCountry();
   const { visitedCountryCodes, futureCountryCodes, wantToVisitCountryCodes } =
     useVisitedCountries();
-  const {
-    colorHomeCountry,
-    colorVisitedCountries,
-    colorFutureVisits,
-    colorWantToVisitCountries,
-  } = useMapColors();
-  const {
-    HOME_COUNTRY_COLOR,
-    VISITED_COUNTRY_COLOR,
-    FUTURE_VISIT_COUNTRY_COLOR,
-    SELECTED_COUNTRY_COLOR,
-  } = useMapTheme();
-
-  const visitedSet = useMemo(
-    () =>
-      new Set((visitedCountryCodes || []).map((code) => code.toUpperCase())),
-    [visitedCountryCodes],
-  );
-  const futureSet = useMemo(
-    () => new Set((futureCountryCodes || []).map((code) => code.toUpperCase())),
-    [futureCountryCodes],
-  );
-  const wantToVisitSet = useMemo(
-    () =>
-      new Set(
-        (wantToVisitCountryCodes || []).map((code) => code.toUpperCase()),
-      ),
-    [wantToVisitCountryCodes],
-  );
+  const colors = useMapColors();
+  const theme = useMapTheme();
 
   return useMemo(() => {
+    const selectedId = filters?.selectedListId;
+
+    // Helper function to bulk map an array of codes to LayerItems
+    const mapCodesToLayer = (
+      codes: string[],
+      color: string,
+      layerId: string,
+    ): LayerItem[] =>
+      codes.map((code) => ({ isoCode: code.toUpperCase(), color, layerId }));
+
+    // Handle special cases for visited, want-to-visit, and custom list selections
+    if (filters?.visitedOnly || selectedId === "VISITED_COUNTRIES") {
+      return colors.colorVisitedCountries
+        ? mapCodesToLayer(
+            visitedCountryCodes || [],
+            theme.VISITED_COUNTRY_COLOR,
+            `${TRACKING_LAYER_ID}-visited`,
+          )
+        : [];
+    }
+
+    if (filters?.wantToVisitOnly || selectedId === "WANT_TO_VISIT") {
+      return colors.colorWantToVisitCountries
+        ? mapCodesToLayer(
+            wantToVisitCountryCodes || [],
+            theme.SELECTED_COUNTRY_COLOR,
+            `${TRACKING_LAYER_ID}-want-to-visit`,
+          )
+        : [];
+    }
+
+    // Handle custom list selection
+    if (selectedId) {
+      const activeList = filters?.countryLists?.find(
+        (l) => l.id === selectedId,
+      );
+      return activeList?.countryCodes
+        ? mapCodesToLayer(
+            activeList.countryCodes,
+            theme.SELECTED_COUNTRY_COLOR,
+            `${CUSTOM_LIST_LAYER_ID}-${selectedId}`,
+          )
+        : [];
+    }
+
+    // Default case: combine all tracking layers
     const items: LayerItem[] = [];
+    const visitedSet = new Set(
+      (visitedCountryCodes || []).map((c) => c.toUpperCase()),
+    );
+    const futureSet = new Set(
+      (futureCountryCodes || []).map((c) => c.toUpperCase()),
+    );
+    const wantToVisitSet = new Set(
+      (wantToVisitCountryCodes || []).map((c) => c.toUpperCase()),
+    );
+
     const allCountryCodes = new Set<string>([
       ...visitedSet,
       ...futureSet,
@@ -55,49 +89,48 @@ export function useTrackingLayerItems() {
     ]);
 
     for (const isoCode of allCountryCodes) {
-      let color: string | undefined;
-      let layerId = TRACKING_LAYER_ID;
-
       if (
-        colorHomeCountry &&
+        colors.colorHomeCountry &&
         homeCountry &&
         isoCode === homeCountry.toUpperCase()
       ) {
-        color = HOME_COUNTRY_COLOR;
-        layerId = `${TRACKING_LAYER_ID}-home`;
-      } else if (colorFutureVisits && futureSet.has(isoCode)) {
-        color = FUTURE_VISIT_COUNTRY_COLOR;
-        layerId = `${TRACKING_LAYER_ID}-future`;
-      } else if (colorVisitedCountries && visitedSet.has(isoCode)) {
-        color = VISITED_COUNTRY_COLOR;
-        layerId = `${TRACKING_LAYER_ID}-visited`;
-      } else if (colorWantToVisitCountries && wantToVisitSet.has(isoCode)) {
-        color = SELECTED_COUNTRY_COLOR;
-        layerId = `${TRACKING_LAYER_ID}-want-to-visit`;
+        items.push({
+          isoCode,
+          color: theme.HOME_COUNTRY_COLOR,
+          layerId: `${TRACKING_LAYER_ID}-home`,
+        });
+      } else if (colors.colorFutureVisits && futureSet.has(isoCode)) {
+        items.push({
+          isoCode,
+          color: theme.FUTURE_VISIT_COUNTRY_COLOR,
+          layerId: `${TRACKING_LAYER_ID}-future`,
+        });
+      } else if (colors.colorVisitedCountries && visitedSet.has(isoCode)) {
+        items.push({
+          isoCode,
+          color: theme.VISITED_COUNTRY_COLOR,
+          layerId: `${TRACKING_LAYER_ID}-visited`,
+        });
+      } else if (
+        colors.colorWantToVisitCountries &&
+        wantToVisitSet.has(isoCode)
+      ) {
+        items.push({
+          isoCode,
+          color: theme.SELECTED_COUNTRY_COLOR,
+          layerId: `${TRACKING_LAYER_ID}-want-to-visit`,
+        });
       }
-
-      if (!color) continue;
-
-      items.push({
-        isoCode,
-        color,
-        layerId,
-      });
     }
 
     return items;
   }, [
-    HOME_COUNTRY_COLOR,
-    FUTURE_VISIT_COUNTRY_COLOR,
-    SELECTED_COUNTRY_COLOR,
-    VISITED_COUNTRY_COLOR,
-    colorFutureVisits,
-    colorHomeCountry,
-    colorVisitedCountries,
-    colorWantToVisitCountries,
-    futureSet,
+    filters,
+    visitedCountryCodes,
+    futureCountryCodes,
+    wantToVisitCountryCodes,
     homeCountry,
-    visitedSet,
-    wantToVisitSet,
+    colors,
+    theme,
   ]);
 }

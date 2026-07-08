@@ -4,17 +4,19 @@ import { useTrips } from "@contexts/TripsContext";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@utils/firebase";
+import { useCountryLists } from "./CountryListsContext";
 import { useMapView } from "./MapViewContext";
 import { TimelineContext } from "./TimelineContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const { play } = useAudio();
+  const { setShowVisitedOnly } = useCountryLists();
   const { mapMode, setColorMode } = useMapView();
+
   const [timelineMode, setTimelineMode] = useState(false);
   const prevTimelineMode = useRef(false);
-  const [showVisitedOnly, setShowVisitedOnly] = useState(false);
-  const { play } = useAudio();
 
   // Compute years from trips
   const { trips } = useTrips();
@@ -61,15 +63,13 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
       play("swoosh");
     }
     prevTimelineMode.current = timelineMode;
-  }, [timelineMode, play]);
+  }, [setShowVisitedOnly, timelineMode, play]);
 
   return (
     <TimelineContext.Provider
       value={{
         timelineMode,
         setTimelineMode: handleSetTimelineMode,
-        showVisitedOnly,
-        setShowVisitedOnly,
         years,
         selectedYear,
         setSelectedYear,
