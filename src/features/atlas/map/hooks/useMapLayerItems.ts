@@ -23,7 +23,7 @@ import { useVisitedCountries } from "@features/visits";
  * @returns Array of layer items based on the current active toggles.
  */
 export function useMapLayerItems(mode: MapMode = "view") {
-  const { filteredCountries, showVisitedOnly, wantToVisitOnly } =
+  const { filteredCountries, visitedOnly, wantToVisitOnly } =
     useCountryFilters();
   const { selectedListId, countryLists } = useCountryLists();
   const { layers } = useLayers();
@@ -36,20 +36,20 @@ export function useMapLayerItems(mode: MapMode = "view") {
   // Generate tracking layer items based on active toggles and selected list
   const trackingLayerFilters = useMemo(
     () => ({
-      visitedOnly: showVisitedOnly,
+      visitedOnly: visitedOnly,
       wantToVisitOnly,
       selectedListId,
       countryLists,
       filteredCountries,
     }),
     [
-      showVisitedOnly,
+      visitedOnly,
       wantToVisitOnly,
       selectedListId,
       countryLists,
       filteredCountries,
     ],
-  );  
+  );
   const trackingLayerItems = useTrackingLayerItems(trackingLayerFilters);
 
   // Combine virtual visited layer with actual timeline layers
@@ -68,11 +68,11 @@ export function useMapLayerItems(mode: MapMode = "view") {
 
   // Generate user-defined layer items for visible layers, excluding tracking and timeline layers
   const userCustomItems = useMemo(() => {
-    if (showVisitedOnly || selectedListId) {
+    if (visitedOnly || selectedListId) {
       return [];
     }
     return layers.filter((o) => o.visible).flatMap(getLayerItems);
-  }, [layers, showVisitedOnly, selectedListId]);
+  }, [layers, visitedOnly, selectedListId]);
 
   // Generate standard view items by combining tracking and user-defined items
   const standardViewItems = useMemo(() => {

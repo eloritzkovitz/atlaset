@@ -52,7 +52,7 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     true,
   );
 
-  // When timeline mode changes, update showVisitedOnly and play sound
+  // When timeline mode changes, play a sound effect
   useEffect(() => {
     if (!timelineMode && prevTimelineMode.current) {
       play("woosh");

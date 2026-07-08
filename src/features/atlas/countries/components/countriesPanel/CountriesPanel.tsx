@@ -128,20 +128,8 @@ export function CountriesPanel({
       >
         <div className="flex flex-col h-full">
           <CountriesSearchSortBar
-            search={filterProps.search}
-            setSearch={filterProps.setSearch}
             sortBy={sortBy}
             setSortBy={(v) => setSortBy(v as typeof sortBy)}
-            sovereignOnly={filterProps.sovereignOnly}
-            setSovereignOnly={filterProps.setSovereignOnly}
-            visitedOnly={filterProps.showVisitedOnly}
-            setVisitedOnly={filterProps.setShowVisitedOnly}
-            wantToVisitOnly={filterProps.wantToVisitOnly}
-            setWantToVisitOnly={filterProps.setWantToVisitOnly}
-            allCount={filterProps.allCount}
-            sovereignCount={filterProps.sovereignCount}
-            visitedCount={filterProps.visitedCount}
-            wantToVisitCount={filterProps.wantToVisitCount}
             countryLists={dynamicCountryLists}
             selectedListId={selectedListId}
             setSelectedListId={setSelectedListId}
@@ -164,9 +152,7 @@ export function CountriesPanel({
         <CountryFiltersPanel
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
-          visitedOnly={filterProps.showVisitedOnly}
           resetFilters={handleResetFilters}
-          {...filterProps}
         />
       )}
     </div>

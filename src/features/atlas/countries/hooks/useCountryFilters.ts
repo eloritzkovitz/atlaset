@@ -68,7 +68,7 @@ export function useCountryFilters() {
   }>({ min: 1, max: undefined });
 
   const sovereignOnly = sovereignState.only;
-  const showVisitedOnly = visitedState.value === "visited";
+  const visitedOnly = visitedState.value === "visited";
   const wantToVisitOnly = visitedState.wantToVisitOnly;
 
   const setSelectedRegion = (region: string) =>
@@ -111,25 +111,25 @@ export function useCountryFilters() {
     }));
   };
 
-  const setShowVisitedOnly = (show: boolean) => {
+  const setVisitedOnly = (only: boolean) => {
     setVisitedState((prev) => ({
-      value: show ? "visited" : prev.value === "visited" ? "any" : prev.value,
-      wantToVisitOnly: show ? false : prev.wantToVisitOnly,
+      value: only ? "visited" : prev.value === "visited" ? "any" : prev.value,
+      wantToVisitOnly: only ? false : prev.wantToVisitOnly,
     }));
   };
 
-  // Sync showVisitedOnly with visitedState when showVisitedOnly changes
+  // Sync visitedOnly with visitedState when visitedOnly changes
   useEffect(() => {
     setVisitedState((prev) =>
-      showVisitedOnly
+      visitedOnly
         ? { value: "visited", wantToVisitOnly: false }
         : prev.value === "visited"
           ? { ...prev, value: "any" }
           : prev,
     );
-  }, [showVisitedOnly]);
+  }, [visitedOnly]);
 
-  // Sync showVisitedOnly with timelineMode
+  // Sync visitedOnly with timelineMode
   useEffect(() => {
     if (timelineMode) {
       setVisitedState({ value: "visited", wantToVisitOnly: false });
@@ -182,7 +182,7 @@ export function useCountryFilters() {
     [countries, layers, layerSelections],
   );
 
-  const bypassLayers = showVisitedOnly || wantToVisitOnly || selectedListId;
+  const bypassLayers = visitedOnly || wantToVisitOnly || selectedListId;
   const effectiveIsoCodes = useMemo(
     () => (bypassLayers ? countries.map((c) => c.isoCode) : filteredIsoCodes),
     [bypassLayers, countries, filteredIsoCodes],
@@ -240,7 +240,7 @@ export function useCountryFilters() {
     if (wantToVisitOnly || selectedListId === "WANT_TO_VISIT") {
       const wantToVisitSet = new Set(wantToVisitCountryCodes);
       base = base.filter((c) => wantToVisitSet.has(c.isoCode));
-    } else if (showVisitedOnly || selectedListId === "VISITED_COUNTRIES") {
+    } else if (visitedOnly || selectedListId === "VISITED_COUNTRIES") {
       if (isReadonly && effectiveSharedVisitedIsoCodes) {
         const sharedSet = new Set(effectiveSharedVisitedIsoCodes);
         base = base.filter((c) => sharedSet.has(c.isoCode));
@@ -280,7 +280,7 @@ export function useCountryFilters() {
     debouncedSearch,
     countryLists,
     selectedListId,
-    showVisitedOnly,
+    visitedOnly,
     wantToVisitOnly,
     isReadonly,
     effectiveSharedVisitedIsoCodes,
@@ -346,8 +346,8 @@ export function useCountryFilters() {
     setSovereignOnly,
     selectedVisited: visitedState.value,
     setSelectedVisited,
-    showVisitedOnly,
-    setShowVisitedOnly,
+    visitedOnly,
+    setVisitedOnly,
     wantToVisitOnly,
     setWantToVisitOnly,
     minVisitCount: visitRange.min,

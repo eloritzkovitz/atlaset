@@ -4,6 +4,7 @@ import { canonicalKey } from "@utils/string";
 import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
+import { useCountryFilters } from "@contexts/CountryFiltersContext";
 import {
   useCountryData,
   type GeoType,
@@ -15,18 +16,7 @@ import { coreFiltersConfig } from "../../config/filtersConfig";
 interface CoreFiltersProps {
   expanded: boolean;
   onToggle: () => void;
-  selectedRegion: string;
-  handleRegionChange: (region: string) => void;
-  selectedSubregion: string;
-  setSelectedSubregion: (subregion: string) => void;
-  selectedGeoType: GeoType | "";
-  setSelectedGeoType: (type: GeoType | "") => void;
-  selectedSovereignty: SovereigntyStatus | "";
-  setSelectedSovereignty: (status: SovereigntyStatus | "") => void;
-  sovereignOnly: boolean;
-  selectedVisited: VisitedStatus;
-  setSelectedVisited: (visited: VisitedStatus) => void;
-  visitedOnly: boolean;
+  handleRegionChange?: (region: string) => void;
   subregionOptions: string[];
   geoTypeOptions: GeoType[];
   sovereigntyOptions: string[];
@@ -35,23 +25,25 @@ interface CoreFiltersProps {
 export function CoreFilters({
   expanded,
   onToggle,
-  selectedRegion,
-  handleRegionChange,
-  selectedSubregion,
-  setSelectedSubregion,
-  selectedGeoType,
-  setSelectedGeoType,
-  selectedSovereignty,
-  setSelectedSovereignty,
-  sovereignOnly,
-  selectedVisited,
-  setSelectedVisited,
-  visitedOnly,
   subregionOptions,
   geoTypeOptions,
   sovereigntyOptions,
 }: CoreFiltersProps) {
   const { allRegions, subregionToRegion } = useCountryData();
+  const {
+    selectedRegion,
+    setSelectedRegion,
+    selectedSubregion,
+    setSelectedSubregion,
+    selectedGeoType,
+    setSelectedGeoType,
+    selectedSovereignty,
+    setSelectedSovereignty,
+    selectedVisited,
+    setSelectedVisited,
+    sovereignOnly,
+    visitedOnly,
+  } = useCountryFilters();
   const { t } = useTranslation("countries");
   const { t: tCommon } = useTranslation("common");
 
@@ -80,7 +72,10 @@ export function CoreFilters({
             };
 
             const setterMap: Record<string, (v: string) => void> = {
-              region: (v: string) => handleRegionChange(String(v)),
+              region: (v: string) => {
+                setSelectedRegion(String(v));
+                setSelectedSubregion("");
+              },
               subregion: (v: string) => setSelectedSubregion(String(v)),
               geoType: (v: string) =>
                 setSelectedGeoType(
