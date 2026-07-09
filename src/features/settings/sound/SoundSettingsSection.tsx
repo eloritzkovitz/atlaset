@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Switch } from "@components";
 import { ICONS } from "@constants/icons";
 import { useDebounce } from "@hooks";
-import { useSoundSettings } from "../hooks/useSoundSettings";
-import { SettingsCard } from "../../common/components/SettingsCard";
+import { useSoundSettings } from "./useSoundSettings";
+import { SettingsCard } from "../common/components/SettingsCard";
 
 export function SoundSettingsSection() {
   const { t } = useTranslation("settings");

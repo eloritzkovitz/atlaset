@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { SettingsContext } from "@contexts/SettingsContext";
-import { defaultSettings } from "../../common/constants/defaultSettings";
-import type { SoundSettings } from "../../types";
+import { defaultSettings } from "../common/constants/defaultSettings";
+import type { SoundSettings } from "../types";
 
 /**
  * Manages sound settings.

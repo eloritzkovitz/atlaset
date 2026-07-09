@@ -3,7 +3,7 @@ import type { Settings } from "../../types";
 
 export const defaultSettings: Settings = {
   id: "main",
-  account: { homeCountry: "", language: "en" },
+  localization: { dateLocale: "", language: "en" },
   sound: {
     soundEffectsEnabled: true,
     soundEffectsVolume: 0.5,

@@ -324,13 +324,13 @@ export function CountryFiltersProvider({
   }, [timelineMode, resetTimelineFilters]);
 
   // Reset filters
-  const resetFilters = () => {
+  const resetFilters = useCallback(() => {
     setGeoFilters({ region: "", subregion: "", geoType: "" });
     setSovereignState({ value: "", only: false });
     setVisitedState({ value: "any", wantToVisitOnly: false });
     setLayerSelections(getDefaultLayerSelections(layers));
     resetTimelineFilters();
-  };
+  }, [layers, setLayerSelections, resetTimelineFilters]);
 
   const contextValue = useMemo(
     () => ({
@@ -381,7 +381,6 @@ export function CountryFiltersProvider({
       visitedOnly,
       wantToVisitOnly,
       visitRange,
-      layers,
       resetFilters,
     ],
   );

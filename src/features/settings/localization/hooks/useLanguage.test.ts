@@ -33,7 +33,7 @@ vi.mock("@features/user", () => ({
 
 vi.mock("../../common/slices/settingsSlice", () => ({
   saveSettings: vi.fn((payload: any) => ({ type: "SAVE_SETTINGS", payload })),
-  selectSettings: () => ({ account: { language: "en" } }),
+  selectSettings: () => ({ localization: { language: "en" } }),
 }));
 
 vi.mock("../selectors", () => ({ selectSettingsReady: () => false }));
@@ -49,7 +49,7 @@ import { setupDefaultReduxMocks } from "@test-utils/reduxMocks";
 
 const mockReduxSettings = (language = "he", ready = true) => {
   vi.mocked(useSelector).mockImplementation((selector) => {
-    if (selector === selectSettings) return { account: { language } };
+    if (selector === selectSettings) return { localization: { language } };
     if (selector === selectSettingsReady) return ready;
     return undefined;
   });
@@ -109,7 +109,9 @@ describe("useLanguage", () => {
     expect(vi.mocked(i18n.changeLanguage)).toHaveBeenCalledWith("he");
     expect(result.current.current).toBe("he");
     expect(dispatchMock).toHaveBeenCalled();
-    expect(saveSettings).toHaveBeenCalledWith({ account: { language: "he" } });
+    expect(saveSettings).toHaveBeenCalledWith({
+      localization: { language: "he" },
+    });
   });
 
   it("resets appliedInitial when user logs out and reapplies on new user", async () => {

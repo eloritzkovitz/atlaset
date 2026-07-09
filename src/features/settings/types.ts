@@ -4,7 +4,6 @@ import type { ColorMode } from "@features/atlas/shared";
 export type LanguageRegionSettings = {
   language: string;
   dateLocale?: string | null;
-  homeCountry: string;
 };
 
 /** Sound-related settings. */
@@ -51,7 +50,7 @@ export type ColorsSettings = {
 /** User settings. */
 export type Settings = {
   id: string;
-  account: LanguageRegionSettings;
+  localization: LanguageRegionSettings;
   sound: SoundSettings;
   display: DisplaySettings;
   accessibility: AccessibilitySettings;

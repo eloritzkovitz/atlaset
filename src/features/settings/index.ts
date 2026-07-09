@@ -11,8 +11,6 @@ export { ShortcutsModal } from "./accessibility/components/ShortcutsModal";
 
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
-export { SoundSettingsSection } from "./account/components/SoundSettingsSection";
-export { useSoundSettings } from "./account/hooks/useSoundSettings";
 
 // Display
 export { DisplaySettingsSection } from "./display/components/DisplaySettingsSection";
@@ -27,6 +25,10 @@ export { useLanguage, isRtl } from "./localization/hooks/useLanguage";
 
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
+
+// Sound
+export { SoundSettingsSection } from "./sound/SoundSettingsSection";
+export { useSoundSettings } from "./sound/useSoundSettings";
 
 // Redux
 export { default as settingsReducer } from "./common/slices/settingsSlice";
