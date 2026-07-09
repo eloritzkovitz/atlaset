@@ -27,7 +27,7 @@
         }
       },
       "homeCountry": {
-        "title": "Home Country",
+        "title": "Home country",
         "selectAria": "Select home country",
         "none": "No country selected"
       },
@@ -38,19 +38,19 @@
       }
     },
     "sound": {
-      "title": "Sound Settings",
+      "title": "Sound settings",
       "effects": {
-        "title": "Sound Effects",
-        "enable": "Enable Sound Effects",
+        "title": "Sound effects",
+        "enable": "Enable sound effects",
         "volume": "Volume"
       }
     },
     "management": {
-      "title": "Account Management",
-      "hibernate": "Hibernate Account",
+      "title": "Account management",
+      "hibernate": "Hibernate account",
       "hibernating": "Hibernating...",
       "hibernateAria": "Hibernate account",
-      "delete": "Delete Account",
+      "delete": "Delete account",
       "deleting": "Deleting...",
       "deleteAria": "Delete account",
       "deleteWarning": "This will permanently delete your account and all associated data.",
@@ -65,7 +65,7 @@
     }
   },
   "display": {
-    "title": "Display Settings",
+    "title": "Display settings",
     "theme": {
       "title": "Theme",
       "device": "Use device theme",
@@ -87,7 +87,7 @@
     "current": "Current theme:"
   },
   "accessibility": {
-    "title": "Accessibility Settings",
+    "title": "Accessibility settings",
     "shortcuts": {
       "title": "Keyboard shortcuts",
       "enable": "Enable single-character shortcuts",
@@ -95,7 +95,7 @@
     }
   },
   "security": {
-    "title": "Security",
+    "title": "Security information",
     "email": "Email",
     "noEmail": "No email",
     "accountCreated": "Account Created",

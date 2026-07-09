@@ -1,6 +1,7 @@
 // Common
 export { defaultSettings } from "./common/constants/defaultSettings";
 export * from "./common/constants/mapSettings";
+export { SETTINGS_MENU } from "./common/constants/settingsMenu";
 export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
 export { settingsService } from "./common/services/settingsService";
 
