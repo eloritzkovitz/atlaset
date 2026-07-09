@@ -12,7 +12,7 @@ const { languageMockTracker } = vi.hoisted(() => ({
 
 vi.mock("@features/settings/localization/hooks/useLanguage", () => ({
   useLanguage: languageMockTracker,
-  isRtl: (_lng?: string) => false,
+  isRtl: () => false,
 }));
 
 /**
