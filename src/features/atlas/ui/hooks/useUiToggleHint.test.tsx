@@ -1,13 +1,10 @@
-vi.mock("@features/settings/account/hooks/useLanguage", () => ({
-  useLanguage: () => ({ isRtl: false }),
-}));
-
 import { act } from "@testing-library/react";
 import React, { useState } from "react";
 import { UIContext } from "@contexts/UIContext";
-import { useUiToggleHint } from "./useUiToggleHint";
-import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
+import "@test-utils/settingsMocks";
 import { mockUIContext } from "@test-utils/mockUIContext";
+import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";
+import { useUiToggleHint } from "./useUiToggleHint";
 
 describe("useUiToggleHint", () => {
   let visibleState: boolean;
