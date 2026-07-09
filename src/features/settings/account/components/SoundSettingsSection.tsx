@@ -33,11 +33,14 @@ export function SoundSettingsSection() {
   };
 
   return (
-    <SettingsCard title={t("sound.effects.title")} icon={<ICONS.sound />}>
+    <SettingsCard
+      title={t("account.sound.effects.title")}
+      icon={<ICONS.sound />}
+    >
       <div className="flex flex-col gap-2 w-full">
         <div className="flex w-full items-center justify-between gap-4 mb-2">
           <label htmlFor="sound-enabled" className="settings-label">
-            {t("sound.effects.enable")}
+            {t("account.sound.effects.enable")}
           </label>
           <Switch
             checked={sound.soundEffectsEnabled}
@@ -46,7 +49,7 @@ export function SoundSettingsSection() {
         </div>
         <div className="flex items-center gap-4 mt-2">
           <label htmlFor="sound-volume" className="settings-label">
-            {t("sound.effects.volume")}
+            {t("account.sound.effects.volume")}
           </label>
           <input
             id="sound-volume"

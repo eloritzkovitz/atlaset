@@ -4,6 +4,7 @@
     "account": "Account",
     "sound": "Sound",
     "display": "Display",
+    "accessibility": "Accessibility",
     "privacy": "Privacy",
     "security": "Security"
   },
@@ -36,6 +37,14 @@
         "auto": "Matches language format"
       }
     },
+    "sound": {
+      "title": "Sound Settings",
+      "effects": {
+        "title": "Sound Effects",
+        "enable": "Enable Sound Effects",
+        "volume": "Volume"
+      }
+    },
     "management": {
       "title": "Account Management",
       "hibernate": "Hibernate Account",
@@ -53,14 +62,6 @@
         "title": "Delete account?",
         "message": "Are you sure you want to delete your account? This action cannot be undone."
       }
-    }
-  },
-  "sound": {
-    "title": "Sound Settings",
-    "effects": {
-      "title": "Sound Effects",
-      "enable": "Enable Sound Effects",
-      "volume": "Volume"
     }
   },
   "display": {
@@ -84,6 +85,14 @@
       }
     },
     "current": "Current theme:"
+  },
+  "accessibility": {
+    "title": "Accessibility Settings",
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "enable": "Enable single-character shortcuts",
+      "description": "Allows using single-character keys to perform quick actions."
+    }
   },
   "security": {
     "title": "Security",

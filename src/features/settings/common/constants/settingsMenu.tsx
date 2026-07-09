@@ -14,6 +14,12 @@ export const SETTINGS_MENU = [
     url: "/settings/display",
   },
   {
+    key: "accessibility",
+    label: "Accessibility",
+    icon: ICONS.accessibility,
+    url: "/settings/accessibility",
+  },
+  {
     key: "privacy",
     label: "Privacy",
     icon: ICONS.privacy,

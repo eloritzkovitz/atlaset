@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
 import {
+  AccessibilitySettingsSection,
   AccountSettingsSection,
   DisplaySettingsSection,
   SecurityInfoSection,
@@ -33,12 +34,15 @@ export default function SettingsPage() {
       ? "security"
       : location.pathname.endsWith("/display")
         ? "display"
-        : "account";
+        : location.pathname.endsWith("/accessibility")
+          ? "accessibility"
+          : "account";
 
   // Page title based on selected panel
   const panelTitles: Record<string, string> = {
     account: "Account",
     display: "Display",
+    accessibility: "Accessibility",
     privacy: "Privacy",
     security: "Security",
   };
@@ -58,6 +62,8 @@ export default function SettingsPage() {
       navigate("/settings/security");
     } else if (panel === "display") {
       navigate("/settings/display");
+    } else if (panel === "accessibility") {
+      navigate("/settings/accessibility");
     } else {
       navigate("/settings/account");
     }
@@ -85,6 +91,10 @@ export default function SettingsPage() {
           <Routes>
             <Route path="account" element={<AccountSettingsSection />} />
             <Route path="display" element={<DisplaySettingsSection />} />
+            <Route
+              path="accessibility"
+              element={<AccessibilitySettingsSection />}
+            />
             <Route path="privacy" element={undefined} />
             <Route path="security" element={<SecurityInfoSection />} />
             {/* Redirect unknown profile routes to /settings */}

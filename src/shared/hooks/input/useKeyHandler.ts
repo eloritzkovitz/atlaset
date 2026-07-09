@@ -1,5 +1,6 @@
-import {  useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { Key, KeyHandler, Modifier } from "@types";
+import { useAccessibility } from "@features/settings/accessibility/hooks/useAccessibility";
 
 /**
  * Handles keyboard events with optional modifier keys.
@@ -16,16 +17,26 @@ export function useKeyHandler(
   modifiers: Modifier[] = [],
   target: EventTarget | React.RefObject<EventTarget | null> = window,
 ) {
-  const handlerRef = useRef(handler);
+  const { singleKeyShortcutsEnabled } = useAccessibility();
 
-  // Update ref if handler changes
+  const handlerRef = useRef(handler);
   handlerRef.current = handler;
 
+  // Update the handler ref whenever it changes
   useEffect(() => {
     if (!enabled) return;
 
     const handleKeyDown = (e: Event) => {
       const event = e as KeyboardEvent;
+
+      // If single-key shortcuts are disabled, ignore single-character keys unless Ctrl or Meta is pressed
+      if (!singleKeyShortcutsEnabled) {
+        const isSingleCharacterKey = /^[a-zA-Z]$/.test(event.key);
+
+        if (isSingleCharacterKey && !event.ctrlKey && !event.metaKey) {
+          return;
+        }
+      }
 
       // Ignore if focus is on input, textarea, or contenteditable
       const tag = (document.activeElement?.tagName || "").toLowerCase();
@@ -57,11 +68,10 @@ export function useKeyHandler(
       target && "current" in target ? target.current : target;
     if (!activeTarget) return;
 
-    // Add the event listener to the resolved target
     activeTarget.addEventListener("keydown", handleKeyDown);
 
     return () => {
       activeTarget.removeEventListener("keydown", handleKeyDown);
     };
-  }, [enabled, keys, modifiers, target]);
+  }, [enabled, keys, modifiers, target, singleKeyShortcutsEnabled]);
 }

@@ -4,6 +4,9 @@ export * from "./common/constants/mapSettings";
 export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
 export { settingsService } from "./common/services/settingsService";
 
+// Accessibility
+export { AccessibilitySettingsSection } from "./accessibility/components/AccessibilitySettingsSection";
+
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
 export { SoundSettingsSection } from "./account/components/SoundSettingsSection";
