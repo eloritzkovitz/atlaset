@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { MenuButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { mapLanguages, useLanguage } from "@features/settings";
+import { useLanguage } from "../hooks/useLanguage";
+import { mapLanguages } from "../utils/languages";
 
 interface LanguageMenuListProps {
   languages: ReturnType<typeof mapLanguages>;

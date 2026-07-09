@@ -1,5 +1,5 @@
 import { AppLinks, BrandCopyright } from "@components";
-import { LanguageSelect } from "../language/LanguageSelect";
+import { LanguageSelect } from "@features/settings";
 
 export function PublicFooter({ children }: { children?: React.ReactNode }) {
   return (

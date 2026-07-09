@@ -1,10 +1,10 @@
 import React, { Suspense } from "react";
 import { useUI } from "@contexts/UIContext";
 import { HelpPanel } from "@features/docs";
+import { SearchPanel } from "@features/search";
+import { ShortcutsModal } from "@features/settings";
 import { FriendsPanel } from "@features/user";
 import { isAuthenticated } from "@utils/firebase";
-import { SearchPanel } from "@features/search/components/SearchPanel";
-import { ShortcutsModal } from "../shortcuts/ShortcutsModal";
 
 const CalendarModal = React.lazy(
   () => import("@features/calendar/components/CalendarModal"),

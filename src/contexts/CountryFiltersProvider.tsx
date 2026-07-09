@@ -382,6 +382,7 @@ export function CountryFiltersProvider({
       wantToVisitOnly,
       visitRange,
       layers,
+      resetFilters,
     ],
   );
 
