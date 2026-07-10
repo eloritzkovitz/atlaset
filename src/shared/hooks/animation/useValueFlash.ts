@@ -1,22 +1,28 @@
 import { useEffect, useRef, useState } from "react";
+import { useAccessibility } from "@features/settings";
 
 /**
- * Custom hook to animate a class when a numeric value changes.
- * @param value The value to watch for changes (e.g., score, streak)
- * @param successClass Class to apply on increment (default: 'text-success')
- * @param dangerClass Class to apply on decrement (default: 'text-danger')
- * @returns The current className string
+ * Animates a flash effect on a value when it changes, indicating an increase or decrease.
+ * @param value - The value to watch for changes.
+ * @param successClass - Class to apply on increment (default: 'text-success').
+ * @param dangerClass - Class to apply on decrement (default: 'text-danger').
+ * @returns The current className string.
  */
-export function useScoreFlashAnimation(
+export function useValueFlash(
   value: number,
   successClass = "text-success",
-  dangerClass = "text-danger"
+  dangerClass = "text-danger",
 ): string {
+  const { animationsEnabled } = useAccessibility();
   const [flashAnimation, setFlashAnimation] = useState("");
   const prevValue = useRef(value);
 
-  // Effect to detect changes in value
+  // Update flash animation when value changes
   useEffect(() => {
+    if (!animationsEnabled) {
+      return;
+    }
+
     if (value > prevValue.current) {
       setFlashAnimation(successClass);
       setTimeout(() => setFlashAnimation(""), 500);
