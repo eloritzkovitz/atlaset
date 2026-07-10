@@ -91,6 +91,11 @@
       "title": "Keyboard shortcuts",
       "label": "Single-character shortcuts",
       "description": "Allows using single-character keys to perform quick actions."
+    },
+    "motion": {
+      "title": "Motion",
+      "label": "Animations",
+      "description": "Toggles fluid transitions, gliding layouts, and sliding menus across the platform. Turn off to reduce motion or improve system speed."
     }
   },
   "security": {

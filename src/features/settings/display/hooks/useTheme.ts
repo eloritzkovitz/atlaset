@@ -79,15 +79,11 @@ export function useTheme() {
     );
   }, [accent]);
 
-  // Toggle between "light" and "dark" themes, respecting system preference if set
-  const toggleTheme = () => setTheme(preference === "dark" ? "light" : "dark");
-
   return {
     theme,
     preference,
     setPreference: setTheme,
     setTheme: setTheme as (t: ThemeKey) => void,
-    toggleTheme,
     accent,
     setAccent,
   };

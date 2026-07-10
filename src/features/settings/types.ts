@@ -27,6 +27,7 @@ export type DisplaySettings = {
 /** Accessibility-related settings. */
 export type AccessibilitySettings = {
   singleKeyShortcutsEnabled: boolean;
+  animationsEnabled: boolean;
 };
 
 /** Map-related settings. */

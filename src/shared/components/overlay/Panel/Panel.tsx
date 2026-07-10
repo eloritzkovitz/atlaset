@@ -1,7 +1,7 @@
 import React, { type ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { useLanguage } from "@features/settings";
-import { usePanelHide, useScreenSize } from "@hooks";
+import { useAccessibility, useLanguage } from "@features/settings";
+import { usePanelAnimation, usePanelHide, useScreenSize } from "@hooks";
 import { DialogHeader } from "../DialogHeader/DialogHeader";
 import "./Panel.css";
 
@@ -37,39 +37,26 @@ export function Panel({
   position = "left",
   showCloseButton = true,
 }: PanelProps) {
+  const { animationsEnabled } = useAccessibility();
+  const { isRtl } = useLanguage();
+  const { isMobile } = useScreenSize();
+
   usePanelHide({ show, onHide, escEnabled });
 
-  const { isMobile } = useScreenSize();
-  const { isRtl } = useLanguage();
+  const panelAnimationClass = usePanelAnimation({
+    show,
+    isMobile,
+    isRtl,
+    animationsEnabled,
+    position,
+  });
 
   return (
     <div
       role="complementary"
       tabIndex={-1}
       inert={!show}
-      className={
-        isMobile
-          ? `fixed bottom-0 start-0 end-0 z-50 bg-surface flex flex-col rounded-t-2xl shadow-lg transition-all duration-300 ease-in-out
-            ${
-              show
-                ? "translate-y-0 opacity-100"
-                : "translate-y-full opacity-0 pointer-events-none"
-            } ${className}`
-          : `fixed bg-surface flex flex-col h-screen top-0 ${
-              position === "right" ? "end-0" : "start-16"
-            } z-40 will-change-transform transition-all duration-300 ease-in-out focus:outline-none shadow
-            ${
-              show
-                ? "translate-x-0 opacity-100"
-                : (position !== "right"
-                    ? isRtl
-                      ? "translate-x-full"
-                      : "-translate-x-full"
-                    : isRtl
-                      ? "-translate-x-full"
-                      : "translate-x-full") + " opacity-0 pointer-events-none"
-            } ${className}`
-      }
+      className={`${panelAnimationClass} ${className}`}
       style={
         isMobile
           ? { width: "100vw", height: "100vh", minHeight: 0, ...style }

@@ -9,7 +9,7 @@ export const defaultSettings: Settings = {
     soundEffectsVolume: 0.5,
   },
   display: { theme: "system", accent: "blue" },
-  accessibility: { singleKeyShortcutsEnabled: true },
+  accessibility: { singleKeyShortcutsEnabled: true, animationsEnabled: true },
   map: {
     projection: MAP_CONFIG_OPTIONS.projection[0].value,
     baseColor: MAP_CONFIG_OPTIONS.baseColor[0].value,

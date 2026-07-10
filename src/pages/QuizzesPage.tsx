@@ -58,8 +58,8 @@ export default function QuizzesPage() {
     visible: showCards,
     animating,
     animationClass,
-    trigger: triggerFlyOut,
     show: triggerFlyIn,
+    hide: triggerFlyOut,
   } = useFlyTransition({
     duration: 500,
     direction: "left",
