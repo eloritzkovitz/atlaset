@@ -14,13 +14,20 @@ export function ShortcutRow({ cmd, disabled = false }: ShortcutRowProps) {
 
   return (
     <tr
-      className={`transition-opacity duration-200 ${disabled ? "opacity-40 select-none pointer-events-none" : ""}`}
-      key={cmd.key + cmd.modifiers.join("+")}
+      className={`transition-opacity duration-200 ${
+        disabled ? "opacity-40 select-none pointer-events-none" : ""
+      }`}
     >
-      <td className="py-2 pe-6 min-w-[90px]">
-        <KeyCombo keys={keys} />
+      <td className="py-2 w-full">
+        <div className="flex items-center justify-between gap-6 w-full">
+          <span className="text-sm text-start font-medium order-1">
+            {actionLabel}
+          </span>
+          <div className="flex-shrink-0 order-2">
+            <KeyCombo keys={keys} />
+          </div>
+        </div>
       </td>
-      <td className="py-1 text-sm text-start">{actionLabel}</td>
     </tr>
   );
 }

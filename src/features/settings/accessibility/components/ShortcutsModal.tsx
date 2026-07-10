@@ -45,7 +45,7 @@ export function ShortcutsModal() {
       />
 
       {/* Main Grid content area */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full overflow-y-auto p-1 flex-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full overflow-y-auto p-4 flex-1">
         {categoryColumns.map((categories, colIdx) => (
           <div key={colIdx} className="w-full">
             {categories.map((category) =>
