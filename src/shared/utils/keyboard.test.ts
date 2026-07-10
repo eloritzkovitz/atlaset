@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, afterEach, vi } from "vitest";
 import {
   isRestrictedSingleKey,
   isTextInputFocused,
@@ -113,12 +113,6 @@ describe("keyboard utils", () => {
   });
 
   describe("isTextInputFocused", () => {
-    let originalActiveElement: Element | null;
-
-    beforeEach(() => {
-      originalActiveElement = document.activeElement;
-    });
-
     afterEach(() => {
       vi.restoreAllMocks();
     });
