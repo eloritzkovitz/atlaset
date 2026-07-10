@@ -31,7 +31,7 @@ export function useValueFlash(
       setTimeout(() => setFlashAnimation(""), 500);
     }
     prevValue.current = value;
-  }, [value, successClass, dangerClass]);
+  }, [value, successClass, dangerClass, animationsEnabled]);
 
   return flashAnimation;
 }

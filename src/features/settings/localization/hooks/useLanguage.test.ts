@@ -171,7 +171,7 @@ describe("useLanguage", () => {
     expect(dispatchMock).not.toHaveBeenCalled();
   });
 
-  it("swallows rejections gracefully if underlying localization engine fails", async () => {
+  it("swallows rejections gracefully if underlying localization fails", async () => {
     vi.mocked(i18n.changeLanguage).mockRejectedValueOnce(
       new Error("Network failure"),
     );
