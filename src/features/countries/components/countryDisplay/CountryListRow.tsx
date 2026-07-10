@@ -12,6 +12,8 @@ interface CountryListRowProps {
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
   onContextMenu?: (event: React.MouseEvent, country: Country) => void;
+  showBadges?: boolean;
+  renderBadge?: (country: Country) => React.ReactNode;
 }
 
 export function CountryListRow({
@@ -22,6 +24,8 @@ export function CountryListRow({
   onMouseEnter,
   onMouseLeave,
   onContextMenu,
+  showBadges,
+  renderBadge,
 }: CountryListRowProps) {
   const isDimmed = tone !== "visited";
   const isFlagVisited = tone !== "dimmed-gray";
@@ -48,6 +52,7 @@ export function CountryListRow({
             visited={isFlagVisited}
           />
         </span>
+        {showBadges && renderBadge && renderBadge(country)}
       </MenuButton>
     </div>
   );
