@@ -48,20 +48,19 @@
     "management": {
       "title": "Account management",
       "hibernate": "Hibernate account",
-      "hibernating": "Hibernating...",
-      "hibernateAria": "Hibernate account",
-      "delete": "Delete account",
-      "deleting": "Deleting...",
-      "deleteAria": "Delete account",
-      "deleteWarning": "This will permanently delete your account and all associated data.",
+      "hibernateWarning": "This will temporarily deactivate your account. You can reactivate by logging in again.",
       "hibernateConfirm": {
         "title": "Hibernate account?",
         "message": "Are you sure you want to deactivate your account? You can reactivate by logging in again."
       },
+      "hibernating": "Hibernating...",
+      "delete": "Delete account",
+      "deleteWarning": "This will permanently delete your account and all associated data.",
       "deleteConfirm": {
         "title": "Delete account?",
         "message": "Are you sure you want to delete your account? This action cannot be undone."
-      }
+      },
+      "deleting": "Deleting..."
     }
   },
   "display": {
@@ -90,7 +89,7 @@
     "title": "Accessibility settings",
     "shortcuts": {
       "title": "Keyboard shortcuts",
-      "enable": "Enable single-character shortcuts",
+      "label": "Single-character shortcuts",
       "description": "Allows using single-character keys to perform quick actions."
     }
   },

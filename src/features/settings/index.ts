@@ -8,6 +8,7 @@ export { settingsService } from "./common/services/settingsService";
 // Accessibility
 export { AccessibilitySettingsSection } from "./accessibility/components/AccessibilitySettingsSection";
 export { ShortcutsModal } from "./accessibility/components/ShortcutsModal";
+export { useAccessibility } from "./accessibility/hooks/useAccessibility";
 
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
