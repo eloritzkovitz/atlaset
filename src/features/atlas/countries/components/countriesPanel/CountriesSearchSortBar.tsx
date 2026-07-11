@@ -8,9 +8,10 @@ import { SUPPORTED_MODIFIERS } from "@features/countries/constants/modifierConfi
 import { SUPPORTED_QUALIFIERS } from "@features/countries/constants/qualifierConfig";
 import { useDragScroll } from "@hooks";
 import { useCountryFilters } from "@contexts/CountryFiltersContext";
+import type { SortValue } from "@types";
 
 interface CountriesSearchSortBarProps {
-  sortBy: string;
+  sortBy: SortValue<string>;
   setSortBy: (value: string) => void;
   countryLists?: (CountryList & { count?: number })[];
   selectedListId?: string | null;

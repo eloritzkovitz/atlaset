@@ -1,7 +1,7 @@
 import React from "react";
 import { ICONS } from "@constants/icons";
 import type { QuizType, Difficulty } from "@features/quizzes/types";
-import type { DropdownOption } from "@types";
+import type { DropdownOption, Option } from "@types";
 
 // Type options with icons
 export const TYPE_OPTIONS: Array<
@@ -26,11 +26,16 @@ export const DIFFICULTY_OPTIONS: Array<
 ];
 
 /** Renders a dropdown option with an optional icon */
-export function renderOption(opt: {
-  label: React.ReactNode;
-  icon?: React.ComponentType<{ size?: number }>;
-}) {
-  const Icon = opt.icon;
+export function renderOption<T>(opt: DropdownOption<T>) {
+  if ("options" in opt) {
+    return <span className="font-bold text-muted px-1">{opt.label ?? ""}</span>;
+  }
+
+  const flatOpt = opt as Option<T> & {
+    icon?: React.ComponentType<{ size?: number }>;
+  };
+  const Icon = flatOpt.icon;
+
   return (
     <span className="flex items-center">
       {Icon ? (
@@ -42,7 +47,7 @@ export function renderOption(opt: {
           <ICONS.quizzes size={18} />
         </span>
       )}
-      <span>{opt.label}</span>
+      <span>{flatOpt.label}</span>
     </span>
   );
 }
