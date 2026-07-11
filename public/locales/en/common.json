@@ -33,6 +33,10 @@
     "privacy": "Privacy Policy",
     "docs": "Docs"
   },
+  "pwa": {
+    "updateAvailable": "A new version is available.",
+    "updateNow": "Update now"
+  },
   "actions": {
     "add": "Add",
     "edit": "Edit",
