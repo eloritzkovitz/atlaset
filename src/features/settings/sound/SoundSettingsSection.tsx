@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Switch } from "@components";
 import { ICONS } from "@constants/icons";
 import { useDebounce } from "@hooks";
 import { useSoundSettings } from "./useSoundSettings";
 import { SettingsCard } from "../common/components/SettingsCard";
+import { SettingsToggle } from "../common/components/SettingsToggle";
 
 export function SoundSettingsSection() {
   const { t } = useTranslation("settings");
@@ -38,15 +38,11 @@ export function SoundSettingsSection() {
       icon={<ICONS.sound />}
     >
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex w-full items-center justify-between gap-4 mb-2">
-          <label htmlFor="sound-enabled" className="settings-label">
-            {t("account.sound.effects.enable")}
-          </label>
-          <Switch
-            checked={sound.soundEffectsEnabled}
-            onChange={handleEnabledChange}
-          />
-        </div>
+        <SettingsToggle
+          label={t("account.sound.effects.enable")}
+          checked={sound.soundEffectsEnabled}
+          onChange={handleEnabledChange}
+        />
         <div className="flex items-center gap-4 mt-2">
           <label htmlFor="sound-volume" className="settings-label">
             {t("account.sound.effects.volume")}
