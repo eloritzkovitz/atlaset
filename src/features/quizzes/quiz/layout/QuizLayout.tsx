@@ -34,9 +34,7 @@ export function QuizLayout({
 }: QuizLayoutProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center">
-      <h1 className="mb-20 text-2xl font-bold text-blue-800 text-center dark:text-text">
-        {title}
-      </h1>      
+      <h1 className="mb-20 text-2xl font-bold text-center">{title}</h1>
       <Scoreboard
         questionNumber={questionNumber}
         maxQuestions={maxQuestions}
@@ -50,7 +48,7 @@ export function QuizLayout({
         {feedback}
         {resultMessage}
         {children}
-      </Card>      
+      </Card>
     </div>
   );
 }

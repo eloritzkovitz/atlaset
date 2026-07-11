@@ -49,7 +49,9 @@ export function getCapitalQuizProps(
             }}
             className="block mx-auto mb-8 h-40 w-auto"
           />
-          <div className="text-lg font-semibold">{country.name}</div>
+          <div className="text-2xl font-semibold text-center w-full block mx-auto">
+            {country.name}
+          </div>
         </>
       ),
       resultLabel: (country: Country) => country.capital,

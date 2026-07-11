@@ -123,7 +123,7 @@ export function getVisitsForCountry(trips: Trip[], isoCode: string) {
           (trip.endDate && getYear(trip.endDate) !== getYear(trip.startDate)
             ? ` - ${getYear(trip.endDate)}`
             : "")
-        : "TBD",
+        : null,
       tripName: trip.name,
       tripId: trip.id,
       startDate: trip.startDate,

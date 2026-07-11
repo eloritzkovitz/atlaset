@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
@@ -25,8 +26,8 @@ export function TripsTableRows({
   countryData,
   onEdit,
 }: TripsTableRowsProps) {
-  const { updateTripRating, selectedTripIds, selectTrip } =
-    useTrips();
+  const { updateTripRating, selectedTripIds, selectTrip } = useTrips();
+  const { t } = useTranslation("common");
 
   const rowSpan = trip.countryCodes?.length || 1;
   const countryLookup = createCountryMap(countryData.countries, (c) => c);
@@ -107,16 +108,18 @@ export function TripsTableRows({
 
         {/* Dates */}
         <TableCell rowSpan={rowSpan}>
-          {trip.startDate ? new Date(trip.startDate).getFullYear() : "TBD"}
+          {trip.startDate
+            ? new Date(trip.startDate).getFullYear()
+            : t("date.tbd")}
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          {trip.startDate ? formatDate(trip.startDate) : "TBD"}
+          {trip.startDate ? formatDate(trip.startDate) : t("date.tbd")}
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          {trip.endDate ? formatDate(trip.endDate) : "TBD"}
+          {trip.endDate ? formatDate(trip.endDate) : t("date.tbd")}
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          {trip.startDate && trip.endDate ? trip.fullDays : "TBD"}
+          {trip.startDate && trip.endDate ? trip.fullDays : t("date.tbd")}
         </TableCell>
 
         {/* Participants */}
@@ -141,11 +144,7 @@ export function TripsTableRows({
 
         {/* Actions */}
         <TableCell rowSpan={rowSpan}>
-          <TripActions
-            ref={actionsRef}
-            trip={trip}
-            onEdit={onEdit}
-          />
+          <TripActions ref={actionsRef} trip={trip} onEdit={onEdit} />
         </TableCell>
       </>
     </tr>

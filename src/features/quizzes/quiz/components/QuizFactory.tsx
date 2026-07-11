@@ -33,10 +33,13 @@ export function QuizFactory({
   const [score, setScore] = useState(0);
   const [maxStreak, setMaxStreak] = useState(0);
 
+  const { difficulty, quizType } = sessionProps;
+
   if (sessionProps.gameMode === "sandbox") {
     return (
       <CountryQuiz
         {...quizProps}
+        type={quizType}
         timeLeft={undefined}
         questionNumber={1}
         sessionActive={true}
@@ -50,7 +53,6 @@ export function QuizFactory({
     );
   }
 
-  const { quizType, difficulty } = sessionProps;
   const explicitMax = sessionProps.maxQuestions ?? 25;
   const explicitDuration = sessionProps.duration;
 

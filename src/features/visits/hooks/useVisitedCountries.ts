@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useTrips } from "@contexts/TripsContext";
 import { useAuth } from "@features/user";
 import { countryTrackingService } from "../services/countryTrackingService";
@@ -15,11 +16,10 @@ import {
 export function useVisitedCountries() {
   const { user } = useAuth();
   const { trips } = useTrips();
+  const { t } = useTranslation("common");
 
   const [visitedCountryCodes, setVisitedCountryCodes] = useState<string[]>([]);
-  const [futureCountryCodes, setFutureCountryCodes] = useState<string[]>(
-    [],
-  );
+  const [futureCountryCodes, setFutureCountryCodes] = useState<string[]>([]);
   const [wantToVisitCountryCodes, setWantToVisitCountryCodes] = useState<
     string[]
   >([]);
@@ -146,7 +146,7 @@ export function useVisitedCountries() {
   function getCountryVisits(isoCode: string) {
     return getVisitsForCountry(trips, isoCode).map(
       ({ yearRange, tripName, tripId }) => ({
-        yearRange,
+        yearRange: yearRange ?? t("date.tbd"),
         tripName,
         tripId,
       }),
@@ -157,12 +157,22 @@ export function useVisitedCountries() {
   function getCountryVisitsCategorized(isoCode: string) {
     const now = new Date();
     const visits = getVisitsForCountry(trips, isoCode);
+
+    const localizeVisit = (
+      v: ReturnType<typeof getVisitsForCountry>[number],
+    ) => ({
+      ...v,
+      yearRange: v.yearRange ?? t("date.tbd"),
+    });
+
     return {
-      past: visits.filter((v) => v.endDate && new Date(v.endDate) < now),
-      upcoming: visits.filter(
-        (v) => v.startDate && new Date(v.startDate) >= now,
-      ),
-      tentative: visits.filter((v) => !v.startDate),
+      past: visits
+        .filter((v) => v.endDate && new Date(v.endDate) < now)
+        .map(localizeVisit),
+      upcoming: visits
+        .filter((v) => v.startDate && new Date(v.startDate) >= now)
+        .map(localizeVisit),
+      tentative: visits.filter((v) => !v.startDate).map(localizeVisit),
     };
   }
 
