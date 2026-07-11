@@ -33,6 +33,10 @@
     "privacy": "מדיניות פרטיות",
     "docs": "מסמכים"
   },
+  "pwa": {
+    "updateAvailable": "קיימת גרסה חדשה.",
+    "updateNow": "עדכן עכשיו"
+  },
   "actions": {
     "add": "הוספה",
     "edit": "עריכה",
