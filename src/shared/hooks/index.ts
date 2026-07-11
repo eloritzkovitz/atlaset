@@ -17,7 +17,6 @@ export * from "./dom/useDragScroll";
 export * from "./dom/useEventListener";
 export * from "./dom/useFloatingHover";
 export * from "./dom/useFloatingMenuPosition";
-export * from "./dom/useKeyboardFocusRing";
 export * from "./dom/useMenuPosition";
 export * from "./dom/useScrollVisibility";
 

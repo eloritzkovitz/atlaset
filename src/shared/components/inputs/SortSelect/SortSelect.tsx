@@ -2,11 +2,7 @@ import { useRef } from "react";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import {
-  useKeyboardFocusRing,
-  useMenuPosition,
-  useModalAnimation,
-} from "@hooks";
+import { useMenuPosition, useModalAnimation } from "@hooks";
 import type { Option, OptionGroup } from "@types";
 import { getDirectionOptions } from "./directionOptions";
 import { ActionButton } from "../Button/ActionButton";
@@ -29,26 +25,22 @@ export function SortSelect<T extends string>({
   showLabel = false,
 }: SortSelectProps<T>) {
   const { isOpen, closing, setIsOpen, closeModal } = useModalAnimation();
-  const showRing = useKeyboardFocusRing();
+  const { t } = useTranslation("common");
+
   const btnRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  const { t } = useTranslation("common");
-
-  // Direction group
   const dirGroup = {
     label: t("common:sort.direction", "Direction"),
     options: getDirectionOptions(t) as Option<T>[],
   };
 
-  // Parse value into key and direction
   const [sortKey, sortDirection] = value.split("-") as [T, T];
   const selectedKeyOption = keyGroup.options.find((o) => o.value === sortKey);
   const selectedDirOption = dirGroup.options.find(
     (o) => o.value === sortDirection,
   );
 
-  // Menu positioning
   const menuStyle = useMenuPosition(
     isOpen,
     btnRef,
@@ -59,7 +51,7 @@ export function SortSelect<T extends string>({
     false,
   );
 
-  // Centralized group renderer
+  // Render the options for a given group (key or direction)
   const renderOptionGroup = (
     group: OptionGroup<T> | undefined,
     selected: T,
@@ -137,7 +129,7 @@ export function SortSelect<T extends string>({
               }
             });
           }}
-          className={isOpen && showRing ? "ring-2 ring-ring-focus" : ""}
+          className="focus-visible:ring-2 focus-visible:ring-ring-focus"
           rounded
         />
       </div>
