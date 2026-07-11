@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-11
+
+- **[feature]** **User | Settings:** Added accessibility settings, including enabling/disabling single-character keys and animations
+- **[chore]** **General:** Redesigned several UI elements and updated some behavior to depend on the new settings
+
 ## 2026-07-08
 
 - **[feature]** **Atlas | Countries:** Synced country lists and filtered countries with colored countries

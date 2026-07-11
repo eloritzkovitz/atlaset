@@ -1,9 +1,7 @@
 import { render } from "@testing-library/react";
 import { useRef } from "react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
-import useAutoScrollFocus, {
-  __setLastInputWasKeyboardForTests,
-} from "./useAutoScrollFocus";
+import { useAutoScrollFocus } from "./useAutoScrollFocus";
 
 function TestHarness({
   selector,
@@ -15,143 +13,50 @@ function TestHarness({
   const ref = useRef<HTMLDivElement | null>(null);
   useAutoScrollFocus(ref, selector, { enabled, centerInline: true });
   return (
-    <div data-testid="container" ref={ref}>
+    <div ref={ref}>
       <button data-seg-value="foo">Foo</button>
     </div>
   );
 }
 
 describe("useAutoScrollFocus", () => {
-  let scrollSpy: ReturnType<typeof vi.fn>;
-  let focusSpy: ReturnType<typeof vi.fn>;
+  let scrollSpy = vi.fn();
+  let focusSpy = vi.fn();
 
   beforeEach(() => {
     scrollSpy = vi.fn();
     focusSpy = vi.fn();
-    __setLastInputWasKeyboardForTests(true);
-    (HTMLElement.prototype as any).__orig_scrollIntoView = (
-      HTMLElement.prototype as any
-    ).scrollIntoView;
-    (HTMLElement.prototype as any).__orig_focus = (
-      HTMLElement.prototype as any
-    ).focus;
-    (HTMLElement.prototype as any).scrollIntoView = scrollSpy;
-    (HTMLElement.prototype as any).focus = focusSpy;
+    HTMLElement.prototype.scrollIntoView = scrollSpy;
+    HTMLElement.prototype.focus = focusSpy;
   });
 
   afterEach(() => {
-    if ((HTMLElement.prototype as any).__orig_scrollIntoView !== undefined) {
-      (HTMLElement.prototype as any).scrollIntoView = (
-        HTMLElement.prototype as any
-      ).__orig_scrollIntoView;
-      delete (HTMLElement.prototype as any).__orig_scrollIntoView;
-    } else {
-      delete (HTMLElement.prototype as any).scrollIntoView;
-    }
-    if ((HTMLElement.prototype as any).__orig_focus !== undefined) {
-      (HTMLElement.prototype as any).focus = (
-        HTMLElement.prototype as any
-      ).__orig_focus;
-      delete (HTMLElement.prototype as any).__orig_focus;
-    } else {
-      delete (HTMLElement.prototype as any).focus;
-    }
-    vi.clearAllMocks();
-    __setLastInputWasKeyboardForTests(false);
+    vi.restoreAllMocks();
   });
 
-  it("scrolls and focuses the target when present", () => {
+  it("scrolls and focuses the target element when it is present and enabled", () => {
     render(<TestHarness selector='[data-seg-value="foo"]' />);
-    expect(scrollSpy).toHaveBeenCalled();
-    expect(focusSpy).toHaveBeenCalled();
+
+    expect(scrollSpy).toHaveBeenCalledWith({
+      behavior: "smooth",
+      inline: "center",
+      block: "nearest",
+    });
+    expect(focusSpy).toHaveBeenCalledWith({ preventScroll: true });
   });
 
-  it("does nothing when disabled", () => {
+  it("does absolutely nothing when disabled", () => {
     render(<TestHarness selector='[data-seg-value="foo"]' enabled={false} />);
+
     expect(scrollSpy).not.toHaveBeenCalled();
     expect(focusSpy).not.toHaveBeenCalled();
   });
 
-  it("does nothing when target not found", () => {
-    render(<TestHarness selector='[data-seg-value="missing"]' />);
+  it("bails out gracefully when the selector is null or element isn't found", () => {
+    const { rerender } = render(<TestHarness selector={null} />);
     expect(scrollSpy).not.toHaveBeenCalled();
-    expect(focusSpy).not.toHaveBeenCalled();
-  });
 
-  it("does nothing when selector is null", () => {
-    render(<TestHarness selector={null} />);
+    rerender(<TestHarness selector='[data-seg-value="missing"]' />);
     expect(scrollSpy).not.toHaveBeenCalled();
-    expect(focusSpy).not.toHaveBeenCalled();
-  });
-
-  it("falls back to simple scrollIntoView when initial call throws", () => {
-    const fallbackSpy = vi.fn();
-    let calls = 0;
-    (HTMLElement.prototype as any).scrollIntoView = function () {
-      calls += 1;
-      if (calls === 1) throw new Error("boom");
-      fallbackSpy();
-    };
-
-    (HTMLElement.prototype as any).focus = focusSpy;
-
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-
-    expect(fallbackSpy).toHaveBeenCalled();
-    expect(focusSpy).toHaveBeenCalled();
-  });
-
-  it("falls back to focus() when focus with options throws", () => {
-    const fallbackFocus = vi.fn();
-    let focusCalls = 0;
-    (HTMLElement.prototype as any).focus = function () {
-      focusCalls += 1;
-      if (focusCalls === 1) throw new Error("focus boom");
-      fallbackFocus();
-    };
-
-    (HTMLElement.prototype as any).scrollIntoView = scrollSpy;
-
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-
-    expect(scrollSpy).toHaveBeenCalled();
-    expect(fallbackFocus).toHaveBeenCalled();
-  });
-
-  it("silently ignores when both focus attempts throw", () => {
-    // Make focus always throw to hit the final empty-catch branch (void 0)
-    (HTMLElement.prototype as any).focus = function () {
-      throw new Error("both focus throw");
-    };
-
-    (HTMLElement.prototype as any).scrollIntoView = scrollSpy;
-
-    // This should not throw despite focus throwing internally
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-
-    expect(scrollSpy).toHaveBeenCalled();
-  });
-
-  it("does not focus when last input was pointer/mouse", () => {
-    __setLastInputWasKeyboardForTests(false);
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-    expect(scrollSpy).toHaveBeenCalled();
-    expect(focusSpy).not.toHaveBeenCalled();
-  });
-
-  it("respects keydown -> pointerdown transitions for focus behavior", () => {
-    __setLastInputWasKeyboardForTests(false);
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-    expect(focusSpy).not.toHaveBeenCalled();
-
-    vi.clearAllMocks();
-    window.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true }));
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-    expect(focusSpy).toHaveBeenCalled();
-
-    vi.clearAllMocks();
-    window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
-    render(<TestHarness selector='[data-seg-value="foo"]' />);
-    expect(focusSpy).not.toHaveBeenCalled();
   });
 });

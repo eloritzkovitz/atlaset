@@ -1,23 +1,35 @@
 // Common
 export { defaultSettings } from "./common/constants/defaultSettings";
 export * from "./common/constants/mapSettings";
+export { SETTINGS_MENU } from "./common/constants/settingsMenu";
 export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
 export { settingsService } from "./common/services/settingsService";
 
+// Accessibility
+export { AccessibilitySettingsSection } from "./accessibility/components/AccessibilitySettingsSection";
+export { ShortcutsModal } from "./accessibility/components/ShortcutsModal";
+export { useAccessibility } from "./accessibility/hooks/useAccessibility";
+
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
-export { SoundSettingsSection } from "./account/components/SoundSettingsSection";
-export { useLanguage, isRtl } from "./account/hooks/useLanguage";
-export { useSoundSettings } from "./account/hooks/useSoundSettings";
-export { mapLanguages } from "./account/utils/languages";
 
 // Display
 export { DisplaySettingsSection } from "./display/components/DisplaySettingsSection";
 export { useTheme } from "./display/hooks/useTheme";
 export * from "./display/utils/theme";
 
+// Localization
+export { LanguageMenuList } from "./localization/components/LanguageMenuList";
+export { LanguageSelect } from "./localization/components/LanguageSelect";
+export { mapLanguages } from "./localization/utils/languages";
+export { useLanguage, isRtl } from "./localization/hooks/useLanguage";
+
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
+
+// Sound
+export { SoundSettingsSection } from "./sound/SoundSettingsSection";
+export { useSoundSettings } from "./sound/useSoundSettings";
 
 // Redux
 export { default as settingsReducer } from "./common/slices/settingsSlice";

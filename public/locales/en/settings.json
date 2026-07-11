@@ -4,6 +4,7 @@
     "account": "Account",
     "sound": "Sound",
     "display": "Display",
+    "accessibility": "Accessibility",
     "privacy": "Privacy",
     "security": "Security"
   },
@@ -26,7 +27,7 @@
         }
       },
       "homeCountry": {
-        "title": "Home Country",
+        "title": "Home country",
         "selectAria": "Select home country",
         "none": "No country selected"
       },
@@ -36,35 +37,34 @@
         "auto": "Matches language format"
       }
     },
+    "sound": {
+      "title": "Sound settings",
+      "effects": {
+        "title": "Sound effects",
+        "enable": "Enable sound effects",
+        "volume": "Volume"
+      }
+    },
     "management": {
-      "title": "Account Management",
-      "hibernate": "Hibernate Account",
-      "hibernating": "Hibernating...",
-      "hibernateAria": "Hibernate account",
-      "delete": "Delete Account",
-      "deleting": "Deleting...",
-      "deleteAria": "Delete account",
-      "deleteWarning": "This will permanently delete your account and all associated data.",
+      "title": "Account management",
+      "hibernate": "Hibernate account",
+      "hibernateWarning": "This will temporarily deactivate your account. You can reactivate by logging in again.",
       "hibernateConfirm": {
         "title": "Hibernate account?",
         "message": "Are you sure you want to deactivate your account? You can reactivate by logging in again."
       },
+      "hibernating": "Hibernating...",
+      "delete": "Delete account",
+      "deleteWarning": "This will permanently delete your account and all associated data.",
       "deleteConfirm": {
         "title": "Delete account?",
         "message": "Are you sure you want to delete your account? This action cannot be undone."
-      }
-    }
-  },
-  "sound": {
-    "title": "Sound Settings",
-    "effects": {
-      "title": "Sound Effects",
-      "enable": "Enable Sound Effects",
-      "volume": "Volume"
+      },
+      "deleting": "Deleting..."
     }
   },
   "display": {
-    "title": "Display Settings",
+    "title": "Display settings",
     "theme": {
       "title": "Theme",
       "device": "Use device theme",
@@ -85,8 +85,21 @@
     },
     "current": "Current theme:"
   },
+  "accessibility": {
+    "title": "Accessibility settings",
+    "shortcuts": {
+      "title": "Keyboard shortcuts",
+      "label": "Single-character shortcuts",
+      "description": "Allows using single-character keys to perform quick actions."
+    },
+    "motion": {
+      "title": "Motion",
+      "label": "Animations",
+      "description": "Toggles fluid transitions, gliding layouts, and sliding menus across the platform. Turn off to reduce motion or improve system speed."
+    }
+  },
   "security": {
-    "title": "Security",
+    "title": "Security information",
     "email": "Email",
     "noEmail": "No email",
     "accountCreated": "Account Created",

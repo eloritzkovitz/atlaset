@@ -2,7 +2,6 @@ import type { ColorMode } from "@features/atlas/shared";
 
 /** Language and region-related settings. */
 export type LanguageRegionSettings = {
-  homeCountry: string;
   language: string;
   dateLocale?: string | null;
 };
@@ -23,6 +22,12 @@ export type AccentKey = "blue" | "indigo" | "teal" | "green" | "amber" | "rose";
 export type DisplaySettings = {
   theme: ThemeKey;
   accent?: AccentKey;
+};
+
+/** Accessibility-related settings. */
+export type AccessibilitySettings = {
+  singleKeyShortcutsEnabled: boolean;
+  animationsEnabled: boolean;
 };
 
 /** Map-related settings. */
@@ -46,9 +51,10 @@ export type ColorsSettings = {
 /** User settings. */
 export type Settings = {
   id: string;
-  account: LanguageRegionSettings;
+  localization: LanguageRegionSettings;
   sound: SoundSettings;
   display: DisplaySettings;
+  accessibility: AccessibilitySettings;
   map: MapSettings;
   colors: ColorsSettings;
 };

@@ -18,6 +18,7 @@ import {
   FaCircleQuestion,
   FaCircleUser,
   FaCircleXmark,
+  FaClapperboard,
   FaClipboardList,
   FaClock,
   FaCode,
@@ -82,7 +83,6 @@ import {
   FaTimeline,
   FaTrash,
   FaTrophy,
-  FaUniversalAccess,
   FaUser,
   FaUserGear,
   FaUserGroup,
@@ -90,7 +90,7 @@ import {
   FaVolumeHigh,
   FaXmark,
 } from "react-icons/fa6";
-import { IoLanguage } from "react-icons/io5";
+import { IoAccessibility, IoLanguage } from "react-icons/io5";
 import { PiCirclesFourFill } from "react-icons/pi";
 import { DashboardIcon } from "../components/media/icons/DashboardIcon";
 import { VisitIcon } from "../components/media/icons/VisitIcon";
@@ -169,10 +169,12 @@ export const ICONS = {
     light: FaSun,
     dark: FaMoon,
   },
+  accessibility: IoAccessibility,
+  shortcuts: FaKeyboard,
+  motion: FaClapperboard,
   privacy: FaShieldHalved,
   security: FaLock,
   // Misc
-  shortcuts: FaKeyboard,
   search: FaMagnifyingGlass,
   calendar: FaCalendar,
   notifications: FaBell,
@@ -211,7 +213,6 @@ export const ICONS = {
   more: FaEllipsisVertical,
   // Docs
   getStarted: FaRocket,
-  accessibility: FaUniversalAccess,
   developers: FaCode,
   laptopCode: FaLaptopCode,
   data: FaDatabase,

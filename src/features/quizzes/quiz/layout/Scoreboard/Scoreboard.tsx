@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { Card } from "@components";
-import { useScoreFlashAnimation } from "../../hooks/useScoreFlashAnimation";
-import { useTimerFlashAnimation } from "../../hooks/useTimerFlashAnimation";
+import { useAccessibility } from "@features/settings";
+import { useValueFlash } from "@hooks";
+import { shouldTriggerTimerFlash } from "../../utils/quizTimer";
 import "./Scoreboard.css";
 
 interface ScoreboardProps {
@@ -19,33 +20,33 @@ export function Scoreboard({
   streak,
   timeLeft,
 }: ScoreboardProps) {
+  const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("quizzes");
-  const scoreClass = useScoreFlashAnimation(score);
-  const streakClass = useScoreFlashAnimation(streak);
-  const timeDanger = useTimerFlashAnimation(timeLeft);
+
+  const scoreClass = useValueFlash(score);
+  const streakClass = useValueFlash(streak);
+  const timeDanger = animationsEnabled && shouldTriggerTimerFlash(timeLeft);
 
   return (
     <Card className="w-full max-w-4xl mb-6 px-2 py-4 flex justify-center items-center gap-25 text-2xl font-semibold text-text shadow">
       {typeof questionNumber === "number" &&
         typeof maxQuestions === "number" && (
           <span>
-            {t("play.scoreboard.question", "Question")}: {" "}
+            {t("play.scoreboard.question", "Question")}:{" "}
             <b>
               {questionNumber + 1}/{maxQuestions}
             </b>
           </span>
         )}
       <span className={scoreClass}>
-        {t("play.scoreboard.score", "Score")}:{" "}
-        <b>{score}</b>
+        {t("play.scoreboard.score", "Score")}: <b>{score}</b>
       </span>
       <span className={streakClass}>
-        {t("play.scoreboard.streak", "Streak")}:{" "}
-        <b>{streak}</b>
+        {t("play.scoreboard.streak", "Streak")}: <b>{streak}</b>
       </span>
       {typeof timeLeft === "number" && (
         <span className={timeDanger ? "text-danger fast-pulse" : undefined}>
-          {t("play.scoreboard.timeLeft", "Time Left")}: {" "}
+          {t("play.scoreboard.timeLeft", "Time Left")}:{" "}
           <b>
             {Math.floor(timeLeft / 60)}:
             {(timeLeft % 60).toString().padStart(2, "0")}

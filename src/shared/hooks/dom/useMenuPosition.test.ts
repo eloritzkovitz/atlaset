@@ -1,8 +1,8 @@
-vi.mock("../../../features/settings/account/hooks/useLanguage", () => ({
+vi.mock("@features/settings", () => ({
   useLanguage: vi.fn(),
 }));
 
-import { useLanguage } from "../../../features/settings/account/hooks/useLanguage";
+import { useLanguage } from "@features/settings";
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { useMenuPosition } from "./useMenuPosition";

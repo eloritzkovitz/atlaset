@@ -1,16 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { FaBrush } from "react-icons/fa6";
-import { Checkbox, ColorDot, SectionHeader, Tooltip } from "@components";
+import { ColorDot, SectionHeader, Tooltip } from "@components";
 import { useTooltipTarget } from "@hooks";
 import { ThemePreview } from "./ThemePreview";
 import { useTheme } from "../hooks/useTheme";
 import { SettingsCard } from "../../common/components/SettingsCard";
+import { SettingsToggle } from "@features/settings/common/components/SettingsToggle";
 
 export function DisplaySettingsSection() {
   const { theme, preference, setPreference, accent, setAccent } = useTheme();
-  const { t } = useTranslation("settings");
-
   const { activeTarget, registerTarget } = useTooltipTarget();
+  const { t } = useTranslation("settings");  
+
+  const isSystemActive = preference === "system";
 
   const accentColors = [
     "blue",
@@ -27,30 +29,34 @@ export function DisplaySettingsSection() {
         {t("display.title")}
       </h2>
       <SettingsCard title={t("display.theme.title")} icon={<FaBrush />}>
-        <div className="flex flex-col gap-2 w-full">
-          <ThemePreview
-            labels={{
-              light: t("display.theme.light"),
-              dark: t("display.theme.dark"),
-            }}
-            activeTheme={theme}
-            onSelect={(k) => setPreference(k)}
-          />
-          <div className="flex items-center gap-2 mt-2">
-            <Checkbox
-              checked={preference === "system"}
-              onChange={(checked) => setPreference(checked ? "system" : theme)}
-              label={t("display.theme.device", "Use device theme")}
+        <div className="flex flex-col gap-4 w-full">
+          <div
+            className={`transition-opacity duration-200 ${isSystemActive ? "opacity-60" : "opacity-100"}`}
+          >
+            <ThemePreview
+              labels={{
+                light: t("display.theme.light"),
+                dark: t("display.theme.dark"),
+              }}
+              activeTheme={theme}
+              onSelect={(k) => setPreference(k)}
             />
-            {preference === "system" ? (
-              <span className="text-xs opacity-70 ms-auto">
-                {t(
-                  "display.theme.followingSystem",
-                  "Follows system preference",
-                )}
-              </span>
-            ) : null}
           </div>
+
+          <SettingsToggle
+            label={t("display.theme.device", "Use device theme")}
+            description={
+              isSystemActive
+                ? t(
+                    "display.theme.followingSystem",
+                    "Following system preference",
+                  )
+                : undefined
+            }
+            checked={isSystemActive}
+            onChange={(checked) => setPreference(checked ? "system" : theme)}
+          />
+
           <SectionHeader title={t("display.accents.label", "Accents")} />
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2">

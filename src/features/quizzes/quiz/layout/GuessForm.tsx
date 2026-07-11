@@ -39,23 +39,25 @@ export function GuessForm({
       if (inputRef.current) inputRef.current.focus();
     },
     ["/"],
-    !disabled
+    !disabled,
   );
 
   return (
     <form onSubmit={handleGuess}>
-      <InputBox
-        ref={inputRef}
-        type="text"
-        placeholder={t("play.placeholder", placeholder)}
-        aria-label={t("play.placeholder", placeholder)}
-        value={guess}
-        onChange={(e: { target: { value: string } }) =>
-          setGuess(e.target.value)
-        }
-        className="max-w-lg mb-4 text-lg rounded-full"
-        disabled={disabled}
-      />
+      <div className="flex justify-center gap-4 mb-2 items-center">
+        <InputBox
+          ref={inputRef}
+          type="text"
+          placeholder={t("play.placeholder", placeholder)}
+          aria-label={t("play.placeholder", placeholder)}
+          value={guess}
+          onChange={(e: { target: { value: string } }) =>
+            setGuess(e.target.value)
+          }
+          className="w-xl mb-4 text-lg rounded-full"
+          disabled={disabled}
+        />
+      </div>
       <div className="flex justify-center gap-4 mb-2 items-center">
         <ActionButton
           type="submit"

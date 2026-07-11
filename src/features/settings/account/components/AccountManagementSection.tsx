@@ -5,12 +5,10 @@ import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useAccountManagement } from "../hooks/useAccountManagement";
 import { SettingsCard } from "../../common/components/SettingsCard";
+import { SettingsRow } from "../../common/components/SettingsRow";
 
 export function AccountManagementSection() {
   const { user } = useAuth();
-  const [modal, setModal] = useState<"hibernate" | "delete" | null>(null);
-  const { t } = useTranslation("settings");
-
   const {
     hibernating,
     deleting,
@@ -19,65 +17,96 @@ export function AccountManagementSection() {
     handleHibernate,
     handleDelete,
   } = useAccountManagement(user);
+  const { t } = useTranslation("settings");
+
+  const [modal, setModal] = useState<"hibernate" | "delete" | null>(null);
+
+  const modalConfig = {
+    hibernate: {
+      title: t("account.management.hibernateConfirm.title"),
+      message: t("account.management.hibernateConfirm.message"),
+      submitLabel: t("account.management.hibernate"),
+      submitIcon: <ICONS.hibernate />,
+      onConfirm: () => {
+        setModal(null);
+        handleHibernate();
+      },
+    },
+    delete: {
+      title: t("account.management.deleteConfirm.title"),
+      message: t("account.management.deleteConfirm.message"),
+      submitLabel: t("account.management.delete"),
+      submitIcon: <ICONS.remove />,
+      onConfirm: () => {
+        setModal(null);
+        handleDelete();
+      },
+    },
+  }[modal ?? "hibernate"];
 
   return (
-    <SettingsCard title={t("account.management.title")} icon={<ICONS.accountManagement />}>
-      <div className="flex flex-col gap-2">        
-        <ActionButton
-          variant="secondary"
-          className="!bg-warning !hover:bg-warning-hover text-white w-fit"
-          disabled={hibernating || deleting}
-          onClick={() => setModal("hibernate")}
-          ariaLabel={t("account.management.hibernateAria")}
-          title={t("account.management.hibernate")}
-        >
-          {<ICONS.hibernate />}
-          {hibernating
-            ? t("account.management.hibernating")
-            : t("account.management.hibernate")}
-        </ActionButton>        
-        <ActionButton
-          variant="primary"
-          className="!bg-danger !hover:bg-danger-hover text-white w-fit"
-          disabled={deleting}
-          onClick={() => setModal("delete")}
-          ariaLabel={t("account.management.deleteAria")}
-          title={t("account.management.delete")}
-        >
-          {<ICONS.remove />}
-          {deleting
-            ? t("account.management.deleting")
-            : t("account.management.delete")}
-        </ActionButton>
-        {error && <span className="text-danger text-sm">{error}</span>}
-        {success && <span className="text-success text-sm">{success}</span>}
-        <span className="text-danger">
-          {t("account.management.deleteWarning")}
-        </span>
+    <SettingsCard
+      title={t("account.management.title")}
+      icon={<ICONS.accountManagement />}
+    >
+      <div className="flex flex-col gap-6">
+        <SettingsRow
+          label={t("account.management.hibernate")}
+          description={t("account.management.hibernateWarning")}
+          control={
+            <ActionButton
+              variant="primary"
+              className="w-full sm:w-fit !rounded-full"
+              disabled={hibernating || deleting}
+              onClick={() => setModal("hibernate")}
+              ariaLabel={t("account.management.hibernate")}
+            >
+              <ICONS.hibernate />
+              {hibernating
+                ? t("account.management.hibernating")
+                : t("account.management.hibernate")}
+            </ActionButton>
+          }
+        />
+
+        <SettingsRow
+          label={t("account.management.delete")}
+          description={t("account.management.deleteWarning")}
+          labelClassName="font-semibold text-danger"
+          descriptionClassName="text-xs text-danger/80 font-medium"
+          control={
+            <ActionButton
+              variant="primary"
+              className="!bg-danger !hover:bg-danger-hover w-full sm:w-fit !rounded-full"
+              disabled={hibernating || deleting}
+              onClick={() => setModal("delete")}
+              ariaLabel={t("account.management.delete")}
+            >
+              <ICONS.remove />
+              {deleting
+                ? t("account.management.deleting")
+                : t("account.management.delete")}
+            </ActionButton>
+          }
+        />
+
+        {(error || success) && (
+          <div className="text-sm font-medium pt-2">
+            {error && <span className="text-danger">{error}</span>}
+            {success && <span className="text-success">{success}</span>}
+          </div>
+        )}
       </div>
 
-      {/* Hibernate Modal */}
       <ConfirmModal
-        isOpen={modal === "hibernate"}
-        title={t("account.management.hibernateConfirm.title")}
-        message={t("account.management.hibernateConfirm.message")}
-        onConfirm={handleHibernate}
+        isOpen={modal !== null}
+        title={modalConfig.title}
+        message={modalConfig.message}
+        onConfirm={modalConfig.onConfirm}
         onCancel={() => setModal(null)}
-        submitLabel={t("account.management.hibernate")}
+        submitLabel={modalConfig.submitLabel}
         cancelLabel={t("actions.cancel")}
-        submitIcon={<ICONS.hibernate />}
-      />
-
-      {/* Delete Modal */}
-      <ConfirmModal
-        isOpen={modal === "delete"}
-        title={t("account.management.deleteConfirm.title")}
-        message={t("account.management.deleteConfirm.message")}
-        onConfirm={handleDelete}
-        onCancel={() => setModal(null)}
-        submitLabel={t("account.management.delete")}
-        cancelLabel={t("actions.cancel")}
-        submitIcon={<ICONS.remove />}
+        submitIcon={modalConfig.submitIcon}
       />
     </SettingsCard>
   );

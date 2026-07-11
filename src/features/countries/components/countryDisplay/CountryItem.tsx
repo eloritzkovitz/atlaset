@@ -58,6 +58,8 @@ export function CountryItem({
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
         onContextMenu={onContextMenu}
+        showBadges={showBadges}
+        renderBadge={renderBadge}
       />
     );
   }
@@ -97,7 +99,6 @@ export function CountryItem({
       ) : (
         <span className="text-xs sm:text-sm">{country.name}</span>
       )}
-      {showBadges && renderBadge && renderBadge(country)}
     </div>
   );
 }

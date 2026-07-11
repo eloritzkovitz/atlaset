@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Navigate,
   Route,
@@ -8,14 +9,24 @@ import {
 } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
 import {
+  AccessibilitySettingsSection,
   AccountSettingsSection,
   DisplaySettingsSection,
   SecurityInfoSection,
   SettingsPanelMenu,
 } from "@features/settings";
+import { SETTINGS_MENU } from "@features/settings/common/constants/settingsMenu";
 import { EditProfileModal, useUserProfile } from "@features/user";
 import { usePageTitle } from "@hooks";
 import { SidebarLayout } from "@layouts";
+
+const PANEL_COMPONENTS: Record<string, React.ReactNode> = {
+  account: <AccountSettingsSection />,
+  display: <DisplaySettingsSection />,
+  accessibility: <AccessibilitySettingsSection />,
+  privacy: null,
+  security: <SecurityInfoSection />,
+};
 
 export default function SettingsPage() {
   const { user, loading: userLoading } = useAuth();
@@ -23,43 +34,28 @@ export default function SettingsPage() {
     uid: user?.uid,
   });
   const [editOpen, setEditOpen] = useState(false);
+
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation("settings");
 
-  // Determine selected panel from route
-  const selectedPanel = location.pathname.endsWith("/privacy")
-    ? "privacy"
-    : location.pathname.endsWith("/security")
-      ? "security"
-      : location.pathname.endsWith("/display")
-        ? "display"
-        : "account";
+  // Determine selected panel and title from route
+  const activePanel =
+    SETTINGS_MENU.find((item) => location.pathname.endsWith(item.url)) ||
+    SETTINGS_MENU[0];
+  const selectedPanel = activePanel.key;
 
-  // Page title based on selected panel
-  const panelTitles: Record<string, string> = {
-    account: "Account",
-    display: "Display",
-    privacy: "Privacy",
-    security: "Security",
-  };
-  const pageTitle = `${panelTitles[selectedPanel] || "Settings"}`;
-
-  // Set page title dynamically
+  const pageTitle = t(`settings.panels.${activePanel.key}`, activePanel.label);
   usePageTitle(pageTitle);
 
   // Only allow editing for email/password users
   const canEdit = user?.providerData?.[0]?.providerId === "password";
 
   // Handle menu navigation
-  function handlePanelChange(panel: string) {
-    if (panel === "privacy") {
-      navigate("/settings/privacy");
-    } else if (panel === "security") {
-      navigate("/settings/security");
-    } else if (panel === "display") {
-      navigate("/settings/display");
-    } else {
-      navigate("/settings/account");
+  function handlePanelChange(panelKey: string) {
+    const targetItem = SETTINGS_MENU.find((item) => item.key === panelKey);
+    if (targetItem) {
+      navigate(targetItem.url);
     }
   }
 
@@ -83,11 +79,19 @@ export default function SettingsPage() {
           </div>
         ) : (
           <Routes>
-            <Route path="account" element={<AccountSettingsSection />} />
-            <Route path="display" element={<DisplaySettingsSection />} />
-            <Route path="privacy" element={undefined} />
-            <Route path="security" element={<SecurityInfoSection />} />
-            {/* Redirect unknown profile routes to /settings */}
+            {SETTINGS_MENU.map((item) => {
+              const relativePath = item.url.split("/").pop() || "";
+
+              return (
+                <Route
+                  key={item.key}
+                  path={relativePath}
+                  element={PANEL_COMPONENTS[item.key] ?? undefined}
+                />
+              );
+            })}
+
+            {/* Catch-all fallback redirect */}
             <Route
               path="*"
               element={<Navigate to="/settings/account" replace />}

@@ -1,8 +1,12 @@
 import { useMemo } from "react";
-import type { Feature, Geometry } from "geojson";
 import { ATLAS_PALETTE } from "@constants/colorPalettes";
 import { getCountryIsoCode } from "@features/countries";
-import type { BoundingBox, Coordinates, GeoData } from "../types";
+import type {
+  BoundingBox,
+  Coordinates,
+  GeoData,
+  GeoJsonFeature,
+} from "../types";
 import { getFeatures } from "../utils/geography";
 
 interface UseAtlasColoringOptions {
@@ -37,9 +41,7 @@ export function computeAtlasColoring(
   const countryBounds = new Map<string, BoundingBox>();
   const edgeTokenMap = new Map<string, string[]>();
 
-  const features = getFeatures(
-    geography as unknown as Feature<Geometry, Record<string, unknown>>[],
-  );
+  const features = getFeatures(geography as unknown as GeoJsonFeature[]);
 
   // Iterate through each feature to extract ISO codes, compute centroids, and bounding boxes
   for (const f of features) {

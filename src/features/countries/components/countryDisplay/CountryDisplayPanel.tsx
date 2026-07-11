@@ -67,7 +67,6 @@ export const CountryDisplayPanel = React.forwardRef<
         renderBadge={renderBadge}
         onClick={() => handleCountryInfo(country)}
         onMouseEnter={() => onHover?.(country.isoCode)}
-        onMouseLeave={() => onHover?.(null)}
         view={itemView}
         onContextMenu={onContextMenu}
         flagSize={itemView === "grid" ? "128" : undefined}

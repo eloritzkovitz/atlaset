@@ -47,11 +47,11 @@ export function SettingsProvider({ children }: PropsWithChildren<object>) {
   // Update app date locale when settings change
   useEffect(() => {
     try {
-      setAppDateLocale(settings?.account?.dateLocale ?? null);
+      setAppDateLocale(settings?.localization?.dateLocale ?? null);
     } catch {
       // ignore in non-browser/test env
     }
-  }, [settings?.account?.dateLocale]);
+  }, [settings?.localization?.dateLocale]);
 
   // Update settings via Redux
   const updateSettings = async (

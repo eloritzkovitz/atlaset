@@ -2,6 +2,8 @@
 export * from "./animation/useAnimatedNumber";
 export * from "./animation/useFlyTransition";
 export * from "./animation/useModalAnimation";
+export * from "./animation/usePanelAnimation";
+export * from "./animation/useValueFlash";
 
 // Device
 export * from "./device/useScreenSize";
@@ -15,7 +17,6 @@ export * from "./dom/useDragScroll";
 export * from "./dom/useEventListener";
 export * from "./dom/useFloatingHover";
 export * from "./dom/useFloatingMenuPosition";
-export * from "./dom/useKeyboardFocusRing";
 export * from "./dom/useMenuPosition";
 export * from "./dom/useScrollVisibility";
 

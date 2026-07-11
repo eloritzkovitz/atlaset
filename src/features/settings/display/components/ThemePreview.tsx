@@ -1,5 +1,5 @@
 import type { CSSProperties, JSX } from "react";
-import { FaSun, FaMoon } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import type { ThemeKey } from "../../types";
 
 interface ThemeConfig {
@@ -79,13 +79,13 @@ export function ThemePreview({
     {
       key: "light",
       label: labels.light,
-      icon: <FaSun />,
+      icon: <ICONS.theme.light />,
       cfg: THEME_CONFIG.light,
     },
     {
       key: "dark",
       label: labels.dark,
-      icon: <FaMoon />,
+      icon: <ICONS.theme.dark />,
       cfg: THEME_CONFIG.dark,
     },
   ];
@@ -104,7 +104,14 @@ export function ThemePreview({
             role="button"
             tabIndex={0}
             aria-pressed={active}
-            className={`flex-1 cursor-pointer !focus:outline-none rounded-md transition-transform transform ${!active ? "hover:-translate-y-0.5 hover:shadow-lg hover:ring-2 hover:ring-ring-focus" : ""}`}
+            className={`
+      flex-1 rounded-md transition-all duration-200 outline-none
+      ${
+        active
+          ? "ring-2 ring-ring-focus"
+          : "cursor-pointer hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-2 focus-visible:ring-ring-focus"
+      }
+    `}
             onClick={(e) => {
               e.stopPropagation();
               onSelect?.(p.key);

@@ -48,10 +48,12 @@ export function useLanguage() {
         void e;
       });
 
-      // Persist new language preference; settingsService will coalesce duplicates
+      // If the user is logged in, save the new language setting to their account
       if (user) {
         void dispatch(
-          saveSettings({ account: { language: lng } } as Partial<Settings>),
+          saveSettings({
+            localization: { language: lng },
+          } as Partial<Settings>),
         ).catch(() => {});
       }
     },

@@ -1,5 +1,5 @@
 import { useLayoutEffect, useState } from "react";
-import { useLanguage } from "../../../features/settings/account/hooks/useLanguage";
+import { useLanguage } from "@features/settings";
 
 /**
  * Calculates and returns the style for a dropdown/menu anchored to a button.

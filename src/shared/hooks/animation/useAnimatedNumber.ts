@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useAccessibility } from "@features/settings";
 
 /**
  * Animates a number from 0 to target over the specified duration.
@@ -7,10 +8,17 @@ import { useEffect, useState } from "react";
  * @returns The animated number value.
  */
 export function useAnimatedNumber(target: number, duration = 640) {
+  const { animationsEnabled } = useAccessibility();
+
   const [value, setValue] = useState(0);
 
   // Reset and animate whenever target changes
   useEffect(() => {
+    if (!animationsEnabled) {
+      setValue(target);
+      return;
+    }
+
     setValue(0);
     let start = 0;
 
@@ -27,6 +35,6 @@ export function useAnimatedNumber(target: number, duration = 640) {
       }
     }, frameRate);
     return () => clearInterval(interval);
-  }, [target, duration]);
+  }, [target, duration, animationsEnabled]);
   return value;
 }

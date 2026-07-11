@@ -1,5 +1,4 @@
 import { useRef } from "react";
-import { useLanguage } from "@features/settings";
 import { useAutoScrollFocus } from "@hooks";
 
 export interface SegmentedToggleOption<T extends string> {
@@ -30,10 +29,8 @@ export function SegmentedToggle<T extends string>({
   disabled = false,
   autoFocusOnSelect = true,
 }: SegmentedToggleProps<T>) {
-  const { isRtl } = useLanguage();
-  const containerRef = useRef<HTMLDivElement | null>(null);  
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Auto-scroll and focus the selected option when it changes
   useAutoScrollFocus(containerRef, `[data-seg-value="${value}"]`, {
     enabled: autoFocusOnSelect,
     centerInline: true,
@@ -47,38 +44,18 @@ export function SegmentedToggle<T extends string>({
       {options.map((opt) => {
         const isSelected = value === opt.value;
 
-        const baseBg = opt.colorClass
-          ? opt.colorClass.split(" ").find((c) => c.startsWith("bg-"))
-          : null;
         const hoverClass = !isSelected
-          ? baseBg
-            ? `hover:${baseBg}/50`
+          ? opt.colorClass
+            ? `hover:${opt.colorClass}/50`
             : "hover:bg-input-hover"
           : "";
-
-        const labelSpan = (
-          <span className="align-middle" dir="auto">
-            {opt.label}
-          </span>
-        );
-        const countSpan =
-          typeof opt.count === "number" ? (
-            <span
-              dir="ltr"
-              style={{ unicodeBidi: "isolate" }}
-              className="text-xs text-muted align-middle"
-            >
-              {opt.count}
-            </span>
-          ) : null;
 
         return (
           <button
             key={opt.value}
             data-seg-value={opt.value}
-            data-rtl={isRtl}
             aria-pressed={isSelected}
-            className={`px-3 py-1 rounded-full text-sm font-semibold transition ${
+            className={`px-3 py-1 rounded-full text-sm font-semibold transition focus-visible:ring-2 focus-visible:ring-ring-focus ${
               isSelected
                 ? `${opt.colorClass || "bg-primary"} text-white`
                 : `bg-surface ${hoverClass}`
@@ -87,20 +64,18 @@ export function SegmentedToggle<T extends string>({
             onDoubleClick={() => onDoubleClick?.(opt.value)}
             disabled={disabled}
           >
-            <span
-              className="inline-flex items-center gap-1"
-              dir={isRtl ? "ltr" : undefined}
-            >
-              {isRtl ? (
-                <>
-                  {countSpan}
-                  {labelSpan}
-                </>
-              ) : (
-                <>
-                  {labelSpan}
-                  {countSpan}
-                </>
+            <span className="inline-flex items-center gap-1.5">
+              <span className="align-middle" dir="auto">
+                {opt.label}
+              </span>
+
+              {typeof opt.count === "number" && (
+                <span
+                  dir="ltr"
+                  className="text-xs text-muted align-middle font-normal tracking-wide [unicode-bidi:isolate]"
+                >
+                  {opt.count}
+                </span>
               )}
             </span>
           </button>

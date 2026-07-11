@@ -15,18 +15,13 @@ export type BoundingBox = {
 /** Properties associated with GeoJSON features. */
 export type GeoJsonProperties = Record<string, unknown>;
 
-/** Represents a GeoJSON Geometry object, which can be of various types. */
-export interface GeometryObject {
-  type: string;
-  properties?: GeoJsonProperties;
-  geometry?: Geometry;
-  geometries?: GeometryObject[];
-}
-
 /** Represents a TopoJSON Topology object. */
 export interface Topology {
   type: "Topology";
-  objects: { [key: string]: GeometryObject };
+  objects: Record<
+    string,
+    { type: string; geometries?: unknown[] & { type: string }[] }
+  >;
   arcs?: unknown;
   transform?: unknown;
 }
@@ -39,11 +34,11 @@ export interface ProjectionConfig {
   scale?: number;
 }
 
+/** Represents a GeoJSON feature. */
+export type GeoJsonFeature = Feature<Geometry, Record<string, unknown>>;
+
 /** Represents a geographical feature with additional SVG path and key properties. */
-export interface GeographyFeature extends Feature<
-  Geometry,
-  Record<string, unknown>
-> {
+export interface GeographyFeature extends GeoJsonFeature {
   svgPath: string;
   rsmKey: string;
 }
@@ -51,7 +46,7 @@ export interface GeographyFeature extends Feature<
 /** Represents a collection of geographical features. */
 export type GeoData = FeatureCollection<
   Geometry,
-  { [key: string]: unknown } | null
+  GeoJsonProperties | null
 > | null;
 
 /** Represents a zoom event with transformation details. */

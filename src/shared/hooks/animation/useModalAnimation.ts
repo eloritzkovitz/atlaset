@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useAccessibility } from "@features/settings";
 
 /**
  * Manages modal open/close state with animation support.
@@ -6,23 +7,31 @@ import { useState } from "react";
  * @returns An object containing modal state and control functions.
  */
 export function useModalAnimation(duration = 200) {
+  const { animationsEnabled } = useAccessibility();
+
   const [isOpen, setIsOpen] = useState(false);
   const [closing, setClosing] = useState(false);
 
   // Handles opening the modal
-  function openModal() {
+  const openModal = useCallback(() => {
     setIsOpen(true);
     setClosing(false);
-  }
+  }, []);
 
   // Handles closing the modal with animation
-  function closeModal() {
+  const closeModal = useCallback(() => {
+    if (!animationsEnabled) {
+      setIsOpen(false);
+      setClosing(false);
+      return;
+    }
+
     setClosing(true);
     setTimeout(() => {
       setIsOpen(false);
       setClosing(false);
     }, duration);
-  }
+  }, [duration, animationsEnabled]);
 
   return { isOpen, closing, openModal, closeModal, setIsOpen };
 }
