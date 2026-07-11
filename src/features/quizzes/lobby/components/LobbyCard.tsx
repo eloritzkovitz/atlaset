@@ -20,7 +20,7 @@ export const LobbyCard: React.FC<{
       onClick={() => onClick(card)}
     >
       <div
-        className="flex flex-col items-center h-full justify-center"
+        className="flex flex-col items-center h-full justify-start pt-4"
         role="button"
         tabIndex={0}
         onKeyDown={(e) => {
@@ -37,7 +37,7 @@ export const LobbyCard: React.FC<{
         >
           {card.title}
         </h2>
-        <p className="text-muted">{card.description}</p>
+        <p className="text-muted text-center">{card.description}</p>
       </div>
     </Card>
   );

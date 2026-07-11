@@ -62,7 +62,6 @@ export default function QuizzesPage() {
     hide: triggerFlyOut,
   } = useFlyTransition({
     duration: 500,
-    direction: "left",
     initialVisible: true,
   });
 

@@ -32,9 +32,9 @@ export function getLobbyCards(t: TFunction): LobbyCardItem[] {
       key: "howto",
       route: "/docs/quizzes/gameplay",
       icon: <ICONS.gameplay className="text-5xl mb-4 text-stone-500" />,
-      title: t("lobby.cards.howto.title", "How to play"),
+      title: t("lobby.cards.howToPlay.title", "How to play"),
       description: t(
-        "lobby.cards.howto.description",
+        "lobby.cards.howToPlay.description",
         "Learn game rules, scoring and tips",
       ),
       muted: false,

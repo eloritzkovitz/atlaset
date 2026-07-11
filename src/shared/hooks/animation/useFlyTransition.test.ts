@@ -19,7 +19,7 @@ describe("useFlyTransition", () => {
       const { result } = renderHook(() => useFlyTransition());
       expect(result.current.visible).toBe(true);
       expect(result.current.animating).toBe(false);
-      expect(result.current.animationClass).toBe("animate-fly-in");
+      expect(result.current.animationClass).toBe("animate-fly-in-start");
     });
 
     it("should start hidden if initialVisible is false", () => {
@@ -31,14 +31,14 @@ describe("useFlyTransition", () => {
 
     it("should animate fly-out and then hide after duration", () => {
       const { result } = renderHook(() =>
-        useFlyTransition({ duration: 500, direction: "left" }),
+        useFlyTransition({ duration: 500, direction: "start" }),
       );
 
       act(() => {
         result.current.hide();
       });
       expect(result.current.animating).toBe(true);
-      expect(result.current.animationClass).toBe("animate-fly-out-left");
+      expect(result.current.animationClass).toBe("animate-fly-out-start");
 
       act(() => {
         vi.advanceTimersByTime(500);
@@ -49,24 +49,24 @@ describe("useFlyTransition", () => {
 
     it("should animate fly-in when show() is called", () => {
       const { result } = renderHook(() =>
-        useFlyTransition({ initialVisible: false, direction: "left" }),
+        useFlyTransition({ initialVisible: false, direction: "start" }),
       );
       act(() => {
         result.current.show();
       });
       expect(result.current.visible).toBe(true);
-      expect(result.current.animationClass).toBe("animate-fly-in-left");
+      expect(result.current.animationClass).toBe("animate-fly-in-start");
     });
 
     it("should use correct animation class for direction", () => {
       const { result } = renderHook(() =>
-        useFlyTransition({ direction: "right" }),
+        useFlyTransition({ direction: "end" }),
       );
 
       act(() => {
         result.current.hide();
       });
-      expect(result.current.animationClass).toBe("animate-fly-out-right");
+      expect(result.current.animationClass).toBe("animate-fly-out-end");
 
       act(() => {
         vi.advanceTimersByTime(500);
@@ -75,12 +75,12 @@ describe("useFlyTransition", () => {
       act(() => {
         result.current.show();
       });
-      expect(result.current.animationClass).toBe("animate-fly-in-right");
+      expect(result.current.animationClass).toBe("animate-fly-in-end");
     });
 
     it("should reset to fly-in after fly-out and show", () => {
       const { result } = renderHook(() =>
-        useFlyTransition({ direction: "left" }),
+        useFlyTransition({ direction: "start" }),
       );
 
       act(() => {
@@ -94,7 +94,7 @@ describe("useFlyTransition", () => {
       act(() => {
         result.current.show();
       });
-      expect(result.current.animationClass).toBe("animate-fly-in-left");
+      expect(result.current.animationClass).toBe("animate-fly-in-start");
     });
   });
 

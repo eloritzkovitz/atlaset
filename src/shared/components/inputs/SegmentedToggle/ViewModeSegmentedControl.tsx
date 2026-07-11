@@ -21,13 +21,13 @@ export function ViewModeSegmentedControl({
       id: "grid" as ViewMode,
       label: t("viewMode.grid", "Grid View"),
       Icon: ICONS.viewMode.grid,
-      roundingClass: "rounded-l-full",
+      roundingClass: "rounded-s-full",
     },
     {
       id: "list" as ViewMode,
       label: t("viewMode.list", "List View"),
       Icon: ICONS.viewMode.list,
-      roundingClass: "rounded-r-full",
+      roundingClass: "rounded-e-full",
     },
   ];
 

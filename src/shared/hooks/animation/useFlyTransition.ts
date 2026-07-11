@@ -4,20 +4,20 @@ import "../../../styles/animations.css";
 
 export interface FlyTransitionOptions {
   duration?: number;
-  direction?: "left" | "right" | "up" | "down";
+  direction?: "start" | "end" | "up" | "down";
   initialVisible?: boolean;
 }
 
 /**
  * Handles fly-in and fly-out transitions for components.
  * @param duration - Duration of the transition in milliseconds (default: 500ms).
- * @param direction - Direction of the fly transition (default: "left").
+ * @param direction - Direction of the fly transition (default: "start").
  * @param initialVisible - Initial visibility state of the component (default: true).
  * @returns Show/hide state and a trigger function.
  */
 export function useFlyTransition({
   duration = 500,
-  direction = "left",
+  direction = "start",
   initialVisible = true,
 }: FlyTransitionOptions = {}) {
   const { animationsEnabled } = useAccessibility();
@@ -53,16 +53,15 @@ export function useFlyTransition({
 
   let animationClass = "";
 
-  // Determine the appropriate animation class based on the current state and settings
   if (!shouldAnimate) {
     animationClass = visible ? "animate-fade-in" : "animate-fade-out";
-  } else {
-    if (animating && visible) {
+  } else if (visible) {
+    if (animating) {
       animationClass = `animate-fly-out-${direction}`;
-    } else if (visible && flyIn) {
+    } else if (flyIn) {
       animationClass = `animate-fly-in-${direction}`;
-    } else if (visible && !animating) {
-      animationClass = "animate-fly-in";
+    } else {
+      animationClass = `animate-fly-in-${direction}`;
     }
   }
 

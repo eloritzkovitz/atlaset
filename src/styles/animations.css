@@ -17,13 +17,14 @@
   animation: fly-in 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@keyframes fly-in-left {
+@keyframes fly-in-start {
   0% {
-    transform: translateX(-120px) scale(0.95);
+    transform: translateX(calc(-120px * var(--transform-direction, 1)))
+      scale(0.95);
     opacity: 0;
   }
   80% {
-    transform: translateX(8px) scale(1.03);
+    transform: translateX(calc(8px * var(--transform-direction, 1))) scale(1.03);
     opacity: 1;
   }
   100% {
@@ -32,25 +33,39 @@
   }
 }
 
-.animate-fly-in-left {
-  animation: fly-in-left 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-@keyframes fly-out-left {
+@keyframes fly-out-start {
   0% {
     transform: translateX(0) scale(1);
     opacity: 1;
   }
   80% {
-    transform: translateX(-40px) scale(0.97);
+    transform: translateX(calc(-40px * var(--transform-direction, 1)))
+      scale(0.97);
     opacity: 0.7;
   }
   100% {
-    transform: translateX(-120px) scale(0.95);
+    transform: translateX(calc(-120px * var(--transform-direction, 1)))
+      scale(0.95);
     opacity: 0;
   }
 }
 
-.animate-fly-out-left {
-  animation: fly-out-left 0.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+.animate-fly-in-start,
+.animate-fly-out-start {
+  --transform-direction: 1;
+}
+
+:dir(rtl) .animate-fly-in-start,
+:dir(rtl) .animate-fly-out-start,
+.dark:dir(rtl) .animate-fly-in-start,
+.dark:dir(rtl) .animate-fly-out-start {
+  --transform-direction: -1;
+}
+
+.animate-fly-in-start {
+  animation: fly-in-start 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-fly-out-start {
+  animation: fly-out-start 0.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
