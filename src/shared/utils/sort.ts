@@ -2,6 +2,8 @@
  * Utility functions for sorting items.
  */
 
+import type { SortDirection } from "@types";
+
 /**
  * Generic function to sort items based on a provided value extractor and direction.
  * @param items - The array of items to sort.
@@ -12,7 +14,7 @@
 export function sortItems<T, V = unknown>(
   items: T[],
   getSortValue: (item: T) => V,
-  direction: "asc" | "desc" = "asc"
+  direction: SortDirection = "asc",
 ): T[] {
   return [...items].sort((a, b) => {
     const aValue = getSortValue(a);

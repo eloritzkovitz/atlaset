@@ -301,47 +301,47 @@ describe("countrySort utils", () => {
   });
 
   it("calls the default case in sortCountries (return 0)", () => {
-    const arr: Country[] = [
-      {
-        name: "A",
-        isoCode: "A",
-        region: "X",
-        subregion: "Y",
-        sovereigntyStatus: "sovereign" as SovereigntyStatus,
-        callingCode: "+1",
-        iso3Code: "AAA",
-      },
-      {
-        name: "B",
-        isoCode: "B",
-        region: "X",
-        subregion: "Y",
-        sovereigntyStatus: "sovereign" as SovereigntyStatus,
-        callingCode: "+2",
-        iso3Code: "BBB",
-      },
-    ];
-    // @ts-expect-error
-    const result = sortCountries(arr, "not-a-sort", buildVisitContext(mockTrips));
-    expect(result).toEqual(arr);
+    const countryA: Country = {
+      name: "Same",
+      isoCode: "AAA",
+      region: "X",
+      subregion: "Y",
+      sovereigntyStatus: "sovereign" as SovereigntyStatus,
+      callingCode: "+1",
+      iso3Code: "AAA",
+    };
+    const countryB: Country = {
+      name: "Same",
+      isoCode: "AAA",
+      region: "X",
+      subregion: "Y",
+      sovereigntyStatus: "sovereign" as SovereigntyStatus,
+      callingCode: "+1",
+      iso3Code: "AAA",
+    };
+
+    const arr: Country[] = [countryA, countryB];
+    const expectedOrder = [...arr];
+    const result = sortCountries(
+      arr,
+      "not-a-sort" as any,
+      buildVisitContext(mockTrips),
+    );
+
+    expect(result).toEqual(expectedOrder);
   });
 
   describe("getCountrySortOptions", () => {
     it("returns basic sort options when visitedOnly is false or undefined", () => {
-      const options = getCountrySortOptions(false);
-      const keyGroup = options.find((g) => g.label === "SORT BY");
-      expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
-        "name",
-        "isoCode",
-        "area",
-        "population",
-      ]);
+      const results = getCountrySortOptions(false);
+      const optionValues = results[0].options.map((opt) => opt.value);
+      expect(optionValues).toEqual(["name", "isoCode", "area", "population"]);
     });
 
     it("returns all sort options when visitedOnly is true", () => {
-      const options = getCountrySortOptions(true);
-      const keyGroup = options.find((g) => g.label === "SORT BY");
-      expect(keyGroup?.options.map((opt) => opt.value)).toEqual([
+      const results = getCountrySortOptions(true);
+      const optionValues = results[0].options.map((opt) => opt.value);
+      expect(optionValues).toEqual([
         "name",
         "isoCode",
         "area",

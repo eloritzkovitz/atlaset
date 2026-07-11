@@ -46,6 +46,9 @@ export * from "./state/usePointerDrag";
 export * from "./state/usePwaUpdate";
 export * from "./state/useUiHint";
 
+// Storage
+export * from "./storage/useLocalStorageState";
+
 // UI
 export * from "./ui/useContextMenu";
 export * from "./ui/useMenuActions";

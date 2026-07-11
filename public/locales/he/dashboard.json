@@ -24,15 +24,22 @@
     }
   },
   "exploration": {
-    "worldTitle": "חקירת העולם",
+    "toggles": {
+      "all": "כל המדינות",
+      "sovereign": "ריבוניות בלבד"
+    },
+    "sortBy": {
+      "alphabetical": "אלפביתי",
+      "progress": "התקדמות"
+    },
+    "worldTitle": "חקר העולם",
     "allTitle": "כל המדינות",
     "showAllCountries": "הצג את כל המדינות",
     "showSovereignOnly": "הצג רק מדינות ריבוניות",
     "ofCountriesVisited": "מהמדינות שביקרתי בהן",
     "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
     "showTranscontinental": "הצג מדינות חוצות יבשות",
-    "hideTranscontinental": "הסתר מדינות חוצות יבשות",
-    "resetFilters": "איפוס מסננים"
+    "hideTranscontinental": "הסתר מדינות חוצות יבשות"
   },
   "languages": {
     "searchPlaceholder": "חיפוש לפי שם או קוד",

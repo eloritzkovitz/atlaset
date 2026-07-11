@@ -1,39 +1,30 @@
-import { useState, useEffect } from "react";
+import { useLocalStorageState } from "@hooks";
 
 /** Manages recent searches using localStorage.
  * @param maxCount - The maximum number of recent searches to keep.
  * @returns An object with recent searches and functions to manage them.
  */
 export function useRecentSearches(maxCount = 5) {
-  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [recentSearches, setRecentSearches] = useLocalStorageState<string[]>(
+    "atlaset:recent_searches",
+    [],
+  );
 
-  // Load recent searches from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem("recentSearches");
-    setRecentSearches(stored ? JSON.parse(stored) : []);
-  }, []);
-
-  // Save a term to recent searches only on submit/select
+  /** Saves a recent search term. */
   const saveRecentSearch = (term: string) => {
-    const updated = [term, ...recentSearches.filter((s) => s !== term)].slice(
-      0,
-      maxCount,
+    setRecentSearches(
+      [term, ...recentSearches.filter((s) => s !== term)].slice(0, maxCount),
     );
-    setRecentSearches(updated);
-    localStorage.setItem("recentSearches", JSON.stringify(updated));
   };
 
-  // Remove a term from recent searches
+  /** Removes a recent search term. */
   const removeRecentSearch = (term: string) => {
-    const updated = recentSearches.filter((s) => s !== term);
-    setRecentSearches(updated);
-    localStorage.setItem("recentSearches", JSON.stringify(updated));
+    setRecentSearches(recentSearches.filter((s) => s !== term));
   };
 
-  // Clear all recent searches
+  /** Clears all recent searches. */
   const clearAllRecentSearches = () => {
     setRecentSearches([]);
-    localStorage.removeItem("recentSearches");
   };
 
   return {

@@ -3,7 +3,16 @@ import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
+import type { SortValue } from "@types";
 import { useAchievementFilters } from "./useAchievementFilters";
+import type { AchievementSortKey } from "../types";
+
+interface UseAchievementStatusProps {
+  typeFilter?: string;
+  statusFilter?: string;
+  search?: string;
+  sortBy?: SortValue<AchievementSortKey>;
+}
 
 /**
  * Gets the achievement status map for all achievements based on the user's data.
@@ -18,7 +27,7 @@ export function useAchievementStatus({
   statusFilter = "all",
   search = "",
   sortBy = "id-asc",
-} = {}) {
+}: UseAchievementStatusProps = {}) {
   const { achievements } = useAchievements();
   const { countries } = useCountryData();
   const visited = useVisitedCountries();

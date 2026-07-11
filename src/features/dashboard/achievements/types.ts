@@ -67,3 +67,6 @@ export interface Achievement {
 
 /** Represents the status of an achievement. */
 export type AchievementStatus = "locked" | "progress" | "completed";
+
+/** Represents the sort key for achievements. */
+export type AchievementSortKey = "id" | "name";

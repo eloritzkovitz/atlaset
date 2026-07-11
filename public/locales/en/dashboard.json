@@ -24,6 +24,14 @@
     }
   },
   "exploration": {
+    "toggles": {
+      "all": "All Countries",
+      "sovereign": "Sovereign Only"
+    },
+    "sortBy": {
+      "alphabetical": "Alphabetical",
+      "progress": "Progress"
+    },
     "worldTitle": "World Exploration",
     "allTitle": "All Countries",
     "showAllCountries": "Show all countries",
@@ -31,8 +39,7 @@
     "ofCountriesVisited": "of countries visited",
     "showVisitedOnly": "Show Visited Only",
     "showTranscontinental": "Show transcontinental countries",
-    "hideTranscontinental": "Hide transcontinental countries",
-    "resetFilters": "Reset Filters"
+    "hideTranscontinental": "Hide transcontinental countries"
   },
   "languages": {
     "searchPlaceholder": "Search by name or code",

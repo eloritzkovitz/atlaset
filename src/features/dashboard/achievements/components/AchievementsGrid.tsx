@@ -12,8 +12,11 @@ import {
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAchievements } from "@contexts/AchievementsContext";
+import { useLocalStorageState } from "@hooks";
+import type { SortValue } from "@types";
 import { AchievementCard } from "./AchievementCard";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
+import type { AchievementSortKey } from "../types";
 
 const typeOptions = [
   { value: "all", label: "All" },
@@ -64,21 +67,17 @@ const statusOptions = [
   { value: "progress", label: "In Progress" },
   { value: "completed", label: "Completed" },
 ];
-const sortKeyGroup = {
-  label: "Sort By",
-  options: [
-    { value: "id", label: "ID" },
-    { value: "name", label: "Name" },
-  ],
-};
 
 export function AchievementsGrid() {
   const { achievements, loading, error } = useAchievements();
   const navigate = useNavigate();
+
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("id-asc");
+  const [sortBy, setSortBy] = useLocalStorageState<
+    SortValue<AchievementSortKey>
+  >("atlaset:dashboard_achievements_sort", "id-asc");
 
   // Get achievement status and merged achievements based on user data and filters
   const {
@@ -154,7 +153,10 @@ export function AchievementsGrid() {
           <SortSelect
             value={sortBy}
             onChange={setSortBy}
-            keyGroup={sortKeyGroup}
+            keyGroup={[
+              { value: "id", label: "ID" },
+              { value: "name", label: "Name" },
+            ]}
           />
           <div className="flex flex-row gap-2 ms-auto justify-end">
             <ActionButton

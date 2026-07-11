@@ -1,9 +1,14 @@
-import { SegmentedToggle } from "@components";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { SegmentedToggle, SortSelect } from "@components";
 import { useCountryData } from "@features/countries";
-import { useDelayedLoading } from "@hooks";
+import { useDelayedLoading, useLocalStorageState } from "@hooks";
+import type { SortValue } from "@types";
 import { RegionCard } from "./RegionCard";
 import { WorldExplorationCard } from "./WorldExplorationCard";
 import type { RegionStat } from "../types";
+
+type ExplorationSortKey = "name" | "progress";
 
 interface ExplorationOverviewGridProps {
   visitedCountries: number;
@@ -29,6 +34,11 @@ export function ExplorationOverviewGrid({
   onShowAllCountries,
 }: ExplorationOverviewGridProps) {
   const { countries, loading: countriesLoading } = useCountryData();
+  const { t } = useTranslation("dashboard");
+
+  const [sortValue, setSortValue] = useLocalStorageState<
+    SortValue<ExplorationSortKey>
+  >("atlaset:dashboard_exploration_sort", "name-asc");
 
   // Compute loading state with a slight delay to prevent flickering
   const loading = useDelayedLoading(
@@ -37,17 +47,63 @@ export function ExplorationOverviewGrid({
     50,
   );
 
+  // Handle sorting of region stats directly off the composite sortValue string
+  const sortedRegionStats = useMemo(() => {
+    return [...regionStats].sort((a, b) => {
+      if (sortValue.startsWith("progress")) {
+        const percentA = a.regionCountries.length
+          ? a.regionVisited / a.regionCountries.length
+          : 0;
+        const percentB = b.regionCountries.length
+          ? b.regionVisited / b.regionCountries.length
+          : 0;
+        return sortValue.endsWith("asc")
+          ? percentA - percentB
+          : percentB - percentA;
+      }
+
+      return sortValue.endsWith("asc")
+        ? a.region.localeCompare(b.region)
+        : b.region.localeCompare(a.region);
+    });
+  }, [regionStats, sortValue]);
+
   return (
     <>
-      <SegmentedToggle
-        value={selectedShowSovereignOnly ? "sovereign" : "all"}
-        options={[
-          { value: "all", label: "All Countries" },
-          { value: "sovereign", label: "Sovereign Only" },
-        ]}
-        onChange={(v) => setSelectedShowSovereignOnly(v === "sovereign")}
-        className="mb-4"
-      />
+      <div className="mb-4 flex items-center justify-between flex-wrap gap-4">
+        <SegmentedToggle
+          value={selectedShowSovereignOnly ? "sovereign" : "all"}
+          options={[
+            {
+              value: "all",
+              label: t("exploration.toggles.all", "All Countries"),
+            },
+            {
+              value: "sovereign",
+              label: t("exploration.toggles.sovereign", "Sovereign Only"),
+            },
+          ]}
+          onChange={(v) => setSelectedShowSovereignOnly(v === "sovereign")}
+          className="mb-0"
+        />
+
+        <SortSelect
+          value={sortValue}
+          onChange={setSortValue}
+          keyGroup={[
+            {
+              value: "name",
+              label: t("exploration.sortBy.alphabetical", "Alphabetical"),
+            },
+            {
+              value: "progress",
+              label: t("exploration.sortBy.progress", "Progress"),
+            },
+          ]}
+          showLabel
+        />
+      </div>
+
       <div className="w-full grid gap-6 md:grid-cols-2">
         <WorldExplorationCard
           visited={visitedCountries}
@@ -55,7 +111,7 @@ export function ExplorationOverviewGrid({
           loading={loading}
           onShowAllCountries={onShowAllCountries}
         />
-        {regionStats.map((region) => (
+        {sortedRegionStats.map((region) => (
           <RegionCard
             key={region.region}
             region={region.region}

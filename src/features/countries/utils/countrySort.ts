@@ -2,11 +2,12 @@
  * Utililty functions for sorting countries.
  */
 
+import type { TFunction } from "i18next";
 import type { VisitContext } from "@features/visits";
+import type { SortDirection, SortValue } from "@types";
 import { sortItems } from "@utils/sort";
 import { normalizeString } from "@utils/string";
 import type { Country } from "../types";
-import type { TFunction } from "i18next";
 
 /** Sort keys for countries. */
 export type CountrySortByKey =
@@ -19,9 +20,7 @@ export type CountrySortByKey =
   | "lastVisit";
 
 /** Sort options for countries. */
-export type CountrySortBy =
-  | `${CountrySortByKey}-asc`
-  | `${CountrySortByKey}-desc`;
+export type CountrySortBy = SortValue<CountrySortByKey>;
 
 /** Dropdown option for sort, with optional icon */
 export type CountrySortOption = {
@@ -53,9 +52,10 @@ export function sortCountries(
   sortBy: CountrySortBy,
   visitContext: VisitContext,
 ) {
-  const [key, direction] = sortBy.split("-");
-  const asc = direction !== "desc";
-  const dir = asc ? "asc" : "desc";
+  const [key, direction] = sortBy.split("-") as [
+    CountrySortByKey,
+    SortDirection,
+  ];
 
   // Define accessors for each sort key, including visit-based keys that use the visitContext
   const accessors: Record<CountrySortByKey, (c: Country) => string | number> = {
@@ -68,21 +68,20 @@ export function sortCountries(
     lastVisit: (c) => visitContext.lastVisitMap?.[c.isoCode]?.getTime() ?? 0,
   };
 
-  const accessor = accessors[key as CountrySortByKey];
-  return accessor ? sortItems(countries, accessor, dir) : countries;
+  const accessor = accessors[key];
+  return accessor ? sortItems(countries, accessor, direction) : countries;
 }
 
 /**
  * Generates sort options for countries.
  * @param visitedOnly - Whether to include visit-based sort options.
+ * @param t - Optional translation function for labels.
  * @returns An array of sort option objects.
  */
 export function getCountrySortOptions(
   visitedOnly: boolean,
   t?: TFunction,
 ): Array<{
-  label: string;
-  displayLabel?: string;
   options: Array<{
     value: string;
     label: string;
@@ -93,12 +92,8 @@ export function getCountrySortOptions(
     ? ALL_SORT_KEY_OPTIONS
     : ALL_SORT_KEY_OPTIONS.filter((opt) => opt.mode === "default");
 
-  const groupLabel = "SORT BY";
-
   return [
     {
-      label: groupLabel,
-      displayLabel: t ? t("atlas:countries.sort.by", groupLabel) : groupLabel,
       options: keyOptions.map((o) => ({
         value: o.value,
         label: t ? t(`atlas:countries.sort.${o.value}`, o.label) : o.label,

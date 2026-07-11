@@ -3,6 +3,8 @@
 ## 2026-07-11
 
 - **[feature]** **User | Settings:** Added accessibility settings, including enabling/disabling single-character keys and animations
+- **[feature]** **Dashboard | Exploration:** Added sort options for alphabetical and progress
+- **[feature]** **General:** Added persistence to sorting options through localStorage
 - **[chore]** **General:** Redesigned several UI elements and updated some behavior to depend on the new settings
 
 ## 2026-07-08

@@ -63,6 +63,9 @@ export function CountrySection({
   onSubregionChange,
   resetFilters,
 }: CountrySectionProps) {
+  const { t: tAtlas } = useTranslation("atlas");
+  const { t: tCommon } = useTranslation("common");
+  const { t: tCountries } = useTranslation("countries");
   const { t: tDashboard } = useTranslation("dashboard");
 
   const normalizedRegion =
@@ -93,9 +96,6 @@ export function CountrySection({
     selectedRegion && selectedRegion !== "all"
       ? (subregionsByRegion[selectedRegion] ?? [])
       : [];
-
-  const { t: tAtlas } = useTranslation("atlas");
-  const { t: tCountries } = useTranslation("countries");
 
   // Generate options using filter config functions and translate labels
   const regionBaseOptions = regionSelectFilter.getOptions(uniqueRegions) ?? [];
@@ -268,7 +268,7 @@ export function CountrySection({
                   "exploration.resetFilters",
                   "Reset Filters",
                 )}
-                title={tDashboard("exploration.resetFilters", "Reset Filters")}
+                title={tCommon("actions.resetFilters", "Reset Filters")}
                 icon={<ICONS.reset />}
                 variant="toggle"
                 rounded
