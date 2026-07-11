@@ -4,7 +4,12 @@
 
 import { feature, mesh } from "topojson-client";
 import type { Feature, Geometry } from "geojson";
-import type { GeographyFeature, Topology, GeoJsonProperties } from "../types";
+import type {
+  GeographyFeature,
+  Topology,
+  GeoJsonProperties,
+  GeoJsonFeature,
+} from "../types";
 
 /**
  * Extracts GeoJSON features from various geography data formats (GeoJSON or TopoJSON).
@@ -14,41 +19,34 @@ import type { GeographyFeature, Topology, GeoJsonProperties } from "../types";
  */
 export function getFeatures(
   geographies:
-    | Feature<Geometry, Record<string, unknown>>
-    | { type: string; features?: Feature<Geometry, Record<string, unknown>>[] }
+    | GeoJsonFeature
+    | { type: string; features?: GeoJsonFeature[] }
     | unknown,
-  parseGeographies?: (
-    features: Feature<Geometry, Record<string, unknown>>[],
-  ) => Feature<Geometry, Record<string, unknown>>[],
-): Feature<Geometry, Record<string, unknown>>[] {
+  parseGeographies?: (features: GeoJsonFeature[]) => GeoJsonFeature[],
+): GeoJsonFeature[] {
   const isTopojson = (geographies as { type?: string }).type === "Topology";
   if (!isTopojson) {
     const maybe = geographies as
       | {
           type?: string;
-          features?: Feature<Geometry, Record<string, unknown>>[];
+          features?: GeoJsonFeature[];
         }
-      | Feature<Geometry, Record<string, unknown>>[];
+      | GeoJsonFeature[];
 
     if (
       maybe &&
       (maybe as { type?: string }).type === "FeatureCollection" &&
-      Array.isArray(
-        (maybe as { features?: Feature<Geometry, Record<string, unknown>>[] })
-          .features,
-      )
+      Array.isArray((maybe as { features?: GeoJsonFeature[] }).features)
     ) {
-      const feats = (
-        maybe as { features: Feature<Geometry, Record<string, unknown>>[] }
-      ).features;
+      const feats = (maybe as { features: GeoJsonFeature[] }).features;
       return parseGeographies ? parseGeographies(feats) : feats;
     }
 
     if ((maybe as { type?: string }).type === "Feature") {
-      const feats = [geographies as Feature<Geometry, Record<string, unknown>>];
+      const feats = [geographies as GeoJsonFeature];
       return parseGeographies ? parseGeographies(feats) : feats;
     }
-    const arr = geographies as Feature<Geometry, Record<string, unknown>>[];
+    const arr = geographies as GeoJsonFeature[];
     return parseGeographies ? parseGeographies(arr) : arr;
   }
   const topo = geographies as Topology;
@@ -62,7 +60,7 @@ export function getFeatures(
   };
   const feats =
     fc && fc.type === "FeatureCollection" && Array.isArray(fc.features)
-      ? (fc.features as Feature<Geometry, Record<string, unknown>>[])
+      ? (fc.features as GeoJsonFeature[])
       : [];
   return parseGeographies ? parseGeographies(feats) : feats;
 }
@@ -74,7 +72,7 @@ export function getFeatures(
  */
 function geometryToFeature(
   geometry: Geometry | undefined,
-): Feature<Geometry, Record<string, unknown>> | undefined {
+): GeoJsonFeature | undefined {
   return geometry ? { type: "Feature", geometry, properties: {} } : undefined;
 }
 
@@ -85,12 +83,12 @@ function geometryToFeature(
  */
 export function getMesh(
   geographies:
-    | Feature<Geometry, Record<string, unknown>>
-    | { type: string; features?: Feature<Geometry, Record<string, unknown>>[] }
+    | GeoJsonFeature
+    | { type: string; features?: GeoJsonFeature[] }
     | unknown,
 ): {
-  outline?: Feature<Geometry, Record<string, unknown>>;
-  borders?: Feature<Geometry, Record<string, unknown>>;
+  outline?: GeoJsonFeature;
+  borders?: GeoJsonFeature;
 } | null {
   const isTopojson = (geographies as { type?: string }).type === "Topology";
   if (!isTopojson) return null;
@@ -122,7 +120,7 @@ export function getMesh(
 export function prepareMesh(
   outline: GeographyFeature | undefined,
   borders: GeographyFeature | undefined,
-  path: (object: Feature<Geometry, Record<string, unknown>>) => string | null,
+  path: (object: GeoJsonFeature) => string | null,
 ): { outline?: GeographyFeature; borders?: GeographyFeature } {
   return outline && borders
     ? {
@@ -147,8 +145,8 @@ export function prepareMesh(
  * @returns - Array of GeographyFeature with svgPath and rsmKey properties.
  */
 export function prepareFeatures(
-  geographies: Feature<Geometry, Record<string, unknown>>[],
-  path: (object: Feature<Geometry, Record<string, unknown>>) => string | null,
+  geographies: GeoJsonFeature[],
+  path: (object: GeoJsonFeature) => string | null,
 ): GeographyFeature[] {
   return geographies.map((d, i) => ({
     ...d,

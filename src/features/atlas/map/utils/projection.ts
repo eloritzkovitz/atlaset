@@ -1,5 +1,5 @@
 /**
- * Map utility functions using D3.js for projections and geographical calculations.
+ * Utility functions using D3.js for projections and geographical calculations.
  */
 
 import * as d3Geo from "d3-geo";
@@ -50,7 +50,6 @@ export function makeProjection({
   width?: number;
   height?: number;
 }): d3Geo.GeoProjection {
-  // Handle custom projection function
   if (typeof projection === "function") {
     return projection();
   }
@@ -71,7 +70,6 @@ export function makeProjection({
   supported.forEach((d) => {
     if (!d) return;
     const value = projectionConfig[d];
-    // Only pass arrays or numbers, otherwise use the default
     if (
       (d === "center" && Array.isArray(value) && value.length === 2) ||
       (d === "rotate" && Array.isArray(value) && value.length === 3) ||
@@ -94,9 +92,6 @@ export function makeProjection({
  * @param zoom - Zoom level (default is 1).
  * @param center - Center coordinates [longitude, latitude] (default is [0, 0]).
  * @returns A configured D3 GeoProjection instance.
- */
-/**
- * Returns a D3 projection instance based on type and map dimensions.
  */
 export function getProjection(
   projectionType: string,
@@ -191,7 +186,6 @@ export function getGeoCoordsFromMouseEvent(
     center,
   );
   const result = proj?.invert?.([x, y]) ?? null;
-  // Swap to [latitude, longitude]
   return result ? [result[1], result[0]] : null;
 }
 
