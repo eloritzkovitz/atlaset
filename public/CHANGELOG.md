@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-12
+
+- **[chore]** **Dashboard | Achievements:** Added sort option for progress
+
 ## 2026-07-11
 
 - **[feature]** **User | Settings:** Added accessibility settings, including enabling/disabling single-character keys and animations

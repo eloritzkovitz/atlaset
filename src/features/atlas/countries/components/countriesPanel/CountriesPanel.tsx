@@ -12,7 +12,7 @@ import {
   type Country,
 } from "@features/countries";
 import { buildVisitContext } from "@features/visits/utils/visits";
-import { useSort } from "@hooks";
+import { useIncrementalList, useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryListView } from "./CountryListView";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
@@ -84,6 +84,12 @@ export function CountriesPanel({
     setSortBy("name-asc");
   };
 
+  // Maintain a visible count for incremental loading of countries
+  const visibleCountries = useIncrementalList(sortedCountries, {
+    initialBatchSize: 15,
+    loadBatchSize: 20,
+  });
+
   return (
     <div className="fixed top-0 start-0 h-screen z-40 group relative">
       <Panel
@@ -138,7 +144,8 @@ export function CountriesPanel({
           />
           <Separator />
           <CountryListView
-            countries={sortedCountries}
+            key={`${selectedListId}-${sortBy}`}
+            countries={visibleCountries}
             selectedIsoCode={selectedIsoCode}
             hoveredIsoCode={hoveredIsoCode}
             onSelect={onSelect}

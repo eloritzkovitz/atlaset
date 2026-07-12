@@ -63,10 +63,11 @@ export interface Achievement {
   icon?: string;
   requires?: string[];
   tiers?: Tier[];
+  progress?: number;
 }
 
 /** Represents the status of an achievement. */
 export type AchievementStatus = "locked" | "progress" | "completed";
 
 /** Represents the sort key for achievements. */
-export type AchievementSortKey = "id" | "name";
+export type AchievementSortKey = "id" | "name" | "progress";

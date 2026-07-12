@@ -1,5 +1,5 @@
 import type { Country } from "@features/countries";
-import { getAchievementCountries } from "./achievements";
+import { getAchievementCountries } from "./achievementFilters";
 import type { Achievement, Criteria } from "../types";
 
 /**

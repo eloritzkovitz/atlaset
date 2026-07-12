@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
@@ -16,11 +17,11 @@ interface UseAchievementStatusProps {
 
 /**
  * Gets the achievement status map for all achievements based on the user's data.
- * @param typeFilters - Optional filter for achievement types
- * @param statusFilter - Optional filter for achievement status
- * @param search - Optional search query to filter achievements by name or description
- * @param sortBy - Optional sorting criteria
- * @returns Object containing the achievement status map and the merged achievements with user data
+ * @param typeFilters - Optional filter for achievement types.
+ * @param statusFilter - Optional filter for achievement status.
+ * @param search - Optional search query to filter achievements by name or description.
+ * @param sortBy - Optional sorting criteria.
+ * @returns Object containing the achievement status map and the merged achievements with user data.
  */
 export function useAchievementStatus({
   typeFilter = "all",
@@ -46,11 +47,13 @@ export function useAchievementStatus({
     homeCountry,
   });
 
-  return {
-    ...filterResult,
-    countries,
-    visited,
-    trips,
-    homeCountry,
-  };
+  return useMemo(() => {
+    return {
+      ...filterResult,
+      countries,
+      visited,
+      trips,
+      homeCountry,
+    };
+  }, [filterResult, countries, visited, trips, homeCountry]);
 }
