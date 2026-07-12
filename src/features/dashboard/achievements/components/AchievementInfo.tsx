@@ -4,7 +4,7 @@ import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import type { Achievement } from "../types";
-import { getAchievementCountries } from "../utils/achievements";
+import { getAchievementCountries } from "../utils/achievementFilters";
 import { getCurrentTier } from "../utils/achievementsTiers";
 import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
 import { useIsoGroups } from "../../common/hooks/useIsoGroups";

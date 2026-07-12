@@ -3,6 +3,7 @@ import {
   getAchievementStatus,
   isCompleted,
   getMergedAchievements,
+  getGlobalAchievementProgress,
 } from "../utils/achievements";
 import type { Country } from "@features/countries";
 import type { Trip } from "@features/trips";
@@ -77,18 +78,28 @@ export function useAchievementFilters({
       } else if (key === "id") {
         cmp = String(a.id).localeCompare(String(b.id));
       } else if (key === "progress") {
-        const progressA = a.progress ?? 0;
-        const progressB = b.progress ?? 0;
+        const progressA = getGlobalAchievementProgress(
+          a,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+        );
+        const progressB = getGlobalAchievementProgress(
+          b,
+          countries,
+          visited,
+          trips,
+          homeCountry,
+        );
 
         const isDoneA = progressA === 1;
         const isDoneB = progressB === 1;
 
-        // Push completed achievements to the very end of the list
         if (isDoneA !== isDoneB) {
           return isDoneA ? 1 : -1;
         }
 
-        // If both are completed or both are in-progress, sort by their progress percentage
         cmp = progressA - progressB;
       }
 
