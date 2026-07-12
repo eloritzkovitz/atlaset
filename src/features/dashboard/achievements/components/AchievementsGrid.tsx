@@ -156,7 +156,9 @@ export function AchievementsGrid() {
             keyGroup={[
               { value: "id", label: "ID" },
               { value: "name", label: "Name" },
+              { value: "progress", label: "Progress" },
             ]}
+            showLabel
           />
           <div className="flex flex-row gap-2 ms-auto justify-end">
             <ActionButton

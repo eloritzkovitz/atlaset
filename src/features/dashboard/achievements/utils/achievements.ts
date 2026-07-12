@@ -28,7 +28,7 @@ const NON_SELECTOR_KEYS = new Set([
   "only_abroad",
 ]);
 
-// Helper to build filter params from criteria for qualifier search
+/** Builds filter parameters from achievement criteria. */
 function buildFilterParamsFromCriteria(
   criteria: Criteria,
 ): CountryFilterOptions {
@@ -240,6 +240,102 @@ export function getRegionProgressCounts(
 }
 
 /**
+ * Calculates the progress metrics for an achievement, including current and total counts.
+ * @param achievement - The achievement object.
+ * @param countries - List of all countries.
+ * @param visited - Visited countries utility.
+ * @param trips - Optional array of user trips.
+ * @param homeCountry - Optional home country ISO code.
+ * @returns Object containing current and total counts for the achievement progress.
+ */
+function getProgressMetrics(
+  achievement: Achievement,
+  countries: Country[],
+  visited: { isVisitedCountry: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
+) {
+  const criteria = achievement.criteria || {};
+
+  // Calculate progress for region-based achievements
+  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
+  if (regionCounts) {
+    return { current: regionCounts.completed, total: regionCounts.required };
+  }
+
+  // Calculate progress for trip-based achievements
+  if (trips) {
+    if (criteria.trip_countries_count) {
+      const minCountries = criteria.trip_countries_count;
+      if (criteria.regions?.length === 1) {
+        const regionCodes = new Set(
+          countries
+            .filter((c) => c.region === criteria.regions![0])
+            .map((c) => c.isoCode),
+        );
+        const maxRegionCount = Math.max(
+          0,
+          ...trips.map(
+            (t) =>
+              t.countryCodes.filter((code) => regionCodes.has(code)).length,
+          ),
+        );
+        return { current: maxRegionCount, total: minCountries };
+      }
+      const maxAnyTripCount = Math.max(
+        0,
+        ...trips.map((t) => new Set(t.countryCodes).size),
+      );
+      return { current: maxAnyTripCount, total: minCountries };
+    }
+
+    if (criteria.local_trips_count && homeCountry) {
+      return {
+        current: getCompletedTrips(getLocalTrips(trips, homeCountry)).length,
+        total: criteria.local_trips_count,
+      };
+    }
+
+    if (criteria.abroad_trips_count && homeCountry) {
+      return {
+        current: getCompletedTrips(getAbroadTrips(trips, homeCountry)).length,
+        total: criteria.abroad_trips_count,
+      };
+    }
+
+    if (criteria.trip_duration_days) {
+      const completed = getCompletedTrips(trips);
+      const maxDays =
+        completed.length > 0
+          ? Math.max(...completed.map((t) => getTripDays(t)))
+          : 0;
+      return { current: maxDays, total: criteria.trip_duration_days };
+    }
+  }
+
+  // Default progress calculation based on visited countries
+  const visitedCount = getVisitedCount(
+    achievement,
+    countries,
+    visited,
+    undefined,
+    trips,
+    homeCountry,
+  );
+  if (criteria.required) {
+    return {
+      current: Math.min(visitedCount, criteria.required),
+      total: criteria.required,
+    };
+  }
+
+  return {
+    current: visitedCount,
+    total: getTotalCount(achievement, countries),
+  };
+}
+
+/**
  * Gets the progress string for an achievement.
  * @param achievement - The achievement object
  * @param countries - List of all countries
@@ -253,23 +349,14 @@ export function getProgress(
   trips?: Trip[],
   homeCountry?: string,
 ) {
-  const criteria = achievement.criteria || {};
-  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
-  if (regionCounts) return `${regionCounts.completed}/${regionCounts.required}`;
-  const visitedCount = getVisitedCount(
+  const { current, total } = getProgressMetrics(
     achievement,
     countries,
     visited,
-    undefined,
     trips,
     homeCountry,
   );
-  if ((criteria.countries || criteria.regions) && criteria.required) {
-    const count = criteria.required as number;
-    return `${Math.min(visitedCount, count)}/${count}`;
-  }
-  const total = getTotalCount(achievement, countries);
-  return total ? `${visitedCount}/${total}` : "";
+  return total ? `${current}/${total}` : "";
 }
 
 /**
@@ -286,22 +373,14 @@ export function getProgressFraction(
   trips?: Trip[],
   homeCountry?: string,
 ) {
-  const criteria = achievement.criteria || {};
-  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
-  if (regionCounts)
-    return regionCounts.required > 0
-      ? Math.min(regionCounts.completed / regionCounts.required, 1)
-      : 0;
-  const visitedCount = getVisitedCount(
+  const { current, total } = getProgressMetrics(
     achievement,
     countries,
     visited,
-    undefined,
     trips,
     homeCountry,
   );
-  const total = getTotalCount(achievement, countries);
-  return total > 0 ? Math.min(visitedCount / total, 1) : 0;
+  return total > 0 ? Math.min(current / total, 1) : 0;
 }
 
 /**
@@ -326,7 +405,7 @@ export function areRequirementsCompleted(
  * @param trips - Array of user trips
  * @param homeCountry - The user's home country
  * @param achievementStatusMap - Map of achievementId to completion status (for dependency achievements)
- * @returns True if completed, false otherwise
+ * @returns True if the achievement is completed, false otherwise
  */
 export function isCompleted(
   achievement: Achievement,
@@ -336,80 +415,21 @@ export function isCompleted(
   homeCountry?: string,
   achievementStatusMap?: Record<string, boolean>,
 ) {
-  const criteria = achievement.criteria || {};
-  // Check achievement dependencies first
-  if (achievement.requires && achievementStatusMap) {
-    if (!areRequirementsCompleted(achievement, achievementStatusMap))
-      return false;
+  if (
+    achievementStatusMap &&
+    !areRequirementsCompleted(achievement, achievementStatusMap)
+  ) {
+    return false;
   }
-  // Region-based: regions array
-  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
-  if (regionCounts)
-    return (
-      regionCounts.completed >= regionCounts.required &&
-      regionCounts.required > 0
-    );
-  // Trip-based: trip_countries_count (optionally with region)
-  if (criteria.trip_countries_count && trips) {
-    if (
-      criteria.regions &&
-      Array.isArray(criteria.regions) &&
-      criteria.regions.length === 1
-    ) {
-      const regionCodes = countries
-        .filter((c) => c.region === criteria.regions![0])
-        .map((c) => c.isoCode);
-      const minCountries = criteria.trip_countries_count ?? 0;
-      return trips.some((trip) => {
-        const visited = trip.countryCodes.filter((code) =>
-          regionCodes.includes(code),
-        );
-        return new Set(visited).size >= minCountries;
-      });
-    } else {
-      // Any trip with N+ countries
-      return trips.some(
-        (trip) =>
-          new Set(trip.countryCodes).size >=
-          (criteria.trip_countries_count ?? 0),
-      );
-    }
-  }
-  // Local trips
-  if (criteria.local_trips_count && trips && homeCountry) {
-    const completedLocalTrips = getCompletedTrips(
-      getLocalTrips(trips, homeCountry),
-    );
-    return completedLocalTrips.length >= criteria.local_trips_count;
-  }
-  // Abroad trips (number of trips)
-  if (criteria.abroad_trips_count && trips && homeCountry) {
-    const abroadTrips = getCompletedTrips(getAbroadTrips(trips, homeCountry));
-    return abroadTrips.length >= criteria.abroad_trips_count;
-  }
-  // Trip duration (longest trip in days)
-  if (criteria.trip_duration_days && trips) {
-    const completedTrips = getCompletedTrips(trips);
-    const maxDuration =
-      completedTrips.length > 0
-        ? Math.max(...completedTrips.map((t) => getTripDays(t)))
-        : 0;
-    return maxDuration >= criteria.trip_duration_days;
-  }
-  // Default logic
-  const visitedCount = getVisitedCount(
+
+  const { current, total } = getProgressMetrics(
     achievement,
     countries,
     visited,
-    undefined,
     trips,
     homeCountry,
   );
-  const total = getTotalCount(achievement, countries);
-  if (criteria.required) {
-    return visitedCount >= (criteria.required as number);
-  }
-  return visitedCount === total && total > 0;
+  return total > 0 && current >= total;
 }
 
 /**
@@ -436,13 +456,50 @@ export function getAchievementStatus(
 }
 
 /**
- * Merges achievements to show only relevant tiered achievements
+ * Finds the active tier for a set of tiered achievements based on completion status.
+ * @param tiers - The array of tiered achievements.
+ * @param countries - List of all countries.
+ * @param visited - Visited countries utility.
+ * @param trips - Optional array of user trips.
+ * @param homeCountry - Optional home country ISO code.
+ * @returns The active tier achievement, or null if no tiers are provided.
+ */
+function findActiveTier(
+  tiers: Achievement[],
+  countries: Country[],
+  visited: { isVisitedCountry: (iso: string) => boolean },
+  trips?: Trip[],
+  homeCountry?: string,
+): Achievement | null {
+  if (tiers.length === 0) return null;
+
+  const sorted = [...tiers].sort(
+    (a, b) => (a.criteria?.tier ?? 0) - (b.criteria?.tier ?? 0),
+  );
+
+  // Find highest completed tier index position
+  let highestCompletedIdx = -1;
+  for (let i = 0; i < sorted.length; i++) {
+    if (isCompleted(sorted[i], countries, visited, trips, homeCountry)) {
+      highestCompletedIdx = i;
+    }
+  }
+
+  // If none are completed, show the first entry. If all completed, keep the final one visible.
+  if (highestCompletedIdx === -1) return sorted[0];
+  if (highestCompletedIdx < sorted.length - 1)
+    return sorted[highestCompletedIdx + 1];
+  return sorted[highestCompletedIdx];
+}
+
+/**
+ * Merges achievements to show only relevant tiered achievements and calculates progress
  * @param achievements - List of all achievements
  * @param countries - List of all countries
  * @param visited - Visited countries utility
  * @param trips - Array of user trips
  * @param homeCountry - The user's home country
- * @returns Array of merged achievements
+ * @returns Array of merged achievements with their progress metrics
  */
 export function getMergedAchievements(
   achievements: Achievement[],
@@ -450,78 +507,53 @@ export function getMergedAchievements(
   visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
-) {
+): Achievement[] {
   const worldTiers: Achievement[] = [];
   const regionTiers: Record<string, Achievement[]> = {};
   const others: Achievement[] = [];
+
+  // Categorize achievements into world tiers, region tiers, and others
   for (const ach of achievements) {
     const criteria: Criteria = ach.criteria || {};
-    const { tier, count, countries, regions } = criteria as Partial<Criteria>;
+    const { tier, count, countries: critCountries, regions } = criteria;
 
-    // World achievement: has tier and count, but no regions/countries criteria
-    if (tier && count && (!regions || regions.length === 0) && !countries) {
+    if (tier && count && (!regions || regions.length === 0) && !critCountries) {
       worldTiers.push(ach);
-      continue;
-    }
-    // Region achievement: has tier and a single region entry, but no countries criteria
-    if (tier && Array.isArray(regions) && regions.length === 1) {
+    } else if (tier && Array.isArray(regions) && regions.length === 1) {
       const key = regions[0];
       regionTiers[key] ??= [];
       regionTiers[key].push(ach);
-      continue;
-    }
-
-    others.push(ach);
-  }
-
-  let worldToShow: Achievement | null = null;
-  if (worldTiers.length > 0) {
-    const sorted = [...worldTiers].sort(
-      (a, b) => (a.criteria?.tier ?? 0) - (b.criteria?.tier ?? 0),
-    );
-    worldToShow = sorted[0];
-    for (let i = sorted.length - 1; i >= 0; i--) {
-      if (isCompleted(sorted[i], countries, visited, trips, homeCountry)) {
-        worldToShow = sorted[i];
-        if (i === sorted.length - 1) {
-          break;
-        }
-        if (i + 1 < sorted.length) {
-          worldToShow = sorted[i + 1];
-          break;
-        } else {
-          break;
-        }
-      }
+    } else {
+      others.push(ach);
     }
   }
 
-  const merged: Achievement[] = [];
+  const merged: Achievement[] = [...others];
+
+  // Find the active world tier and add it to the merged list
+  const activeWorld = findActiveTier(
+    worldTiers,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  );
+  if (activeWorld) merged.push(activeWorld);
+
+  // Find the active tier for each region and add it to the merged list
   Object.values(regionTiers).forEach((tiers) => {
-    const sorted = [...tiers].sort(
-      (a, b) => (a.criteria?.tier ?? 0) - (b.criteria?.tier ?? 0),
+    const activeRegion = findActiveTier(
+      tiers,
+      countries,
+      visited,
+      trips,
+      homeCountry,
     );
-    let toShow = sorted[0];
-    for (let i = sorted.length - 1; i >= 0; i--) {
-      if (isCompleted(sorted[i], countries, visited, trips, homeCountry)) {
-        toShow = sorted[i];
-        if (i === sorted.length - 1) {
-          merged.push(toShow);
-          return;
-        }
-        if (i + 1 < sorted.length) {
-          merged.push(sorted[i + 1]);
-          return;
-        } else {
-          merged.push(toShow);
-          return;
-        }
-      }
-    }
-    merged.push(toShow);
+    if (activeRegion) merged.push(activeRegion);
   });
 
-  if (worldToShow) merged.push(worldToShow);
-  merged.push(...others);
-  return merged;
+  return merged.map((ach) => ({
+    ...ach,
+    progress: getProgressFraction(ach, countries, visited, trips, homeCountry),
+  }));
 }
