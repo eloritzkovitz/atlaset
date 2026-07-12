@@ -12,7 +12,7 @@ import {
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAchievements } from "@contexts/AchievementsContext";
-import { useLocalStorageState } from "@hooks";
+import { useIncrementalList, useLocalStorageState } from "@hooks";
 import type { SortValue } from "@types";
 import { AchievementCard } from "./AchievementCard";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
@@ -20,47 +20,16 @@ import type { AchievementSortKey } from "../types";
 
 const typeOptions = [
   { value: "all", label: "All" },
-  {
-    value: "milestone",
-    label: "Milestone",
-    colorClass: "bg-zinc-600",
-  },
-  {
-    value: "general",
-    label: "General",
-    colorClass: "bg-yellow-600",
-  },
-  {
-    value: "collection",
-    label: "Collection",
-    colorClass: "bg-green-600",
-  },
-  {
-    value: "geographic",
-    label: "Geographic",
-    colorClass: "bg-blue-600",
-  },
-  {
-    value: "historic",
-    label: "Historic",
-    colorClass: "bg-red-600",
-  },
-  {
-    value: "cultural",
-    label: "Cultural",
-    colorClass: "bg-purple-600",
-  },
-  {
-    value: "affiliation",
-    label: "Affiliation",
-    colorClass: "bg-teal-600",
-  },
-  {
-    value: "trips",
-    label: "Trips",
-    colorClass: "bg-orange-600",
-  },
+  { value: "milestone", label: "Milestone", colorClass: "bg-zinc-600" },
+  { value: "general", label: "General", colorClass: "bg-yellow-600" },
+  { value: "collection", label: "Collection", colorClass: "bg-green-600" },
+  { value: "geographic", label: "Geographic", colorClass: "bg-blue-600" },
+  { value: "historic", label: "Historic", colorClass: "bg-red-600" },
+  { value: "cultural", label: "Cultural", colorClass: "bg-purple-600" },
+  { value: "affiliation", label: "Affiliation", colorClass: "bg-teal-600" },
+  { value: "trips", label: "Trips", colorClass: "bg-orange-600" },
 ];
+
 const statusOptions = [
   { value: "all", label: "All Statuses" },
   { value: "locked", label: "Locked" },
@@ -93,6 +62,12 @@ export function AchievementsGrid() {
     statusFilter,
     search,
     sortBy,
+  });
+
+  // Maintain a visible count for incremental loading of achievements
+  const visibleAchievements = useIncrementalList(sortedAchievements, {
+    initialBatchSize: 6,
+    loadBatchSize: 12,
   });
 
   // Reset filters to default
@@ -172,11 +147,16 @@ export function AchievementsGrid() {
           </div>
         </div>
       </div>
+
       <div className="text-sm text-muted md:text-sm md:whitespace-nowrap select-none mb-4">
         Showing {sortedAchievements.length} achievements
       </div>
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {sortedAchievements.map((achievement) => {
+
+      <div
+        key={`${typeFilter}-${statusFilter}-${sortBy}`}
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
+      >
+        {visibleAchievements.map((achievement) => {
           return (
             <AchievementCard
               key={achievement.id}

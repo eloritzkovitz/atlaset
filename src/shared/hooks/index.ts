@@ -5,6 +5,9 @@ export * from "./animation/useModalAnimation";
 export * from "./animation/usePanelAnimation";
 export * from "./animation/useValueFlash";
 
+// Data
+export * from "./data/useIncrementalList";
+
 // Device
 export * from "./device/useScreenSize";
 
