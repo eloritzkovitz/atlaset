@@ -12,13 +12,13 @@ const items: Item[] = [
 
 const sorter = (items: Item[], sortBy: SortKey) =>
   [...items].sort((a, b) =>
-    sortBy === "name" ? a.name.localeCompare(b.name) : a.age - b.age
+    sortBy === "name" ? a.name.localeCompare(b.name) : a.age - b.age,
   );
 
 describe("useSort", () => {
   it("returns items sorted by initialSort", () => {
     const { result } = renderHook(() =>
-      useSort(items, sorter, "name" as SortKey)
+      useSort(items, sorter, "name" as SortKey),
     );
     expect(result.current.sortedItems.map((i) => i.name)).toEqual([
       "Alice",
@@ -29,7 +29,7 @@ describe("useSort", () => {
 
   it("changes sort key and resorts items", () => {
     const { result } = renderHook(() =>
-      useSort(items, sorter, "name" as SortKey)
+      useSort(items, sorter, "name" as SortKey),
     );
     act(() => {
       return result.current.setSortBy("age" as SortKey);
@@ -41,15 +41,13 @@ describe("useSort", () => {
     const sorterSpy = vi.fn(sorter);
     const { result, rerender } = renderHook(
       ({ items, sortBy }) => useSort(items, sorterSpy, sortBy),
-      { initialProps: { items, sortBy: "name" as SortKey } }
+      { initialProps: { items, sortBy: "name" as SortKey } },
     );
     expect(sorterSpy).toHaveBeenCalledTimes(1);
 
-    // Rerender with same items and sortBy
     rerender({ items, sortBy: "name" });
     expect(sorterSpy).toHaveBeenCalledTimes(1);
 
-    // Change sortBy
     act(() => {
       result.current.setSortBy("age");
     });

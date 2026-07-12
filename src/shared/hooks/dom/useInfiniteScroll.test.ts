@@ -87,7 +87,6 @@ describe("useInfiniteScroll", () => {
       result.current(node);
     });
 
-    // Simulate intersection
     act(() => {
       observerCallback([{ isIntersecting: true }]);
     });

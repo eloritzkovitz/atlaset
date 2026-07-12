@@ -1,5 +1,5 @@
 import { useState, useLayoutEffect } from "react";
-import { useEventListener } from "./useEventListener";
+import { useEventListener } from "../dom/useEventListener";
 
 /**
  * Calculates floating menu position (left/top) relative to a main menu.
