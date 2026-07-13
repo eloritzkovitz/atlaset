@@ -254,7 +254,9 @@
       "projection": "Projection",
       "baseColor": "Base color",
       "borderColor": "Stroke color",
-      "borderWidth": "Stroke width"
+      "borderWidth": "Stroke width",
+      "showSmallCountryOverlays": "Show small country overlays",
+      "showSmallCountryOverlaysTooltip": "This will display countries with an area smaller than 10,000 km² as circles on the map."
     },
     "colors": {
       "title": "Colors",

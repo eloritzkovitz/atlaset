@@ -15,6 +15,7 @@ export const defaultSettings: Settings = {
     baseColor: MAP_CONFIG_OPTIONS.baseColor[0].value,
     borderColor: MAP_CONFIG_OPTIONS.strokeColor[0].value,
     borderWidth: MAP_CONFIG_OPTIONS.strokeWidth[0].value,
+    showSmallCountryOverlays: false,
   },
   colors: {
     colorHomeCountry: false,

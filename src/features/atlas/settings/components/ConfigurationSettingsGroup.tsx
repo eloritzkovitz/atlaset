@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { FaDraftingCompass } from "react-icons/fa";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { MAP_CONFIG_OPTIONS } from "@features/settings";
+import { MAP_CONFIG_OPTIONS, SettingsToggle } from "@features/settings";
 import { useMapSettings } from "../hooks/useMapSettings";
 
 export function ConfigurationSettingsGroup() {
@@ -17,6 +17,8 @@ export function ConfigurationSettingsGroup() {
     setBorderColor,
     borderWidth,
     setBorderWidth,
+    showSmallCountryOverlays,
+    setShowSmallCountryOverlays,
   } = useMapSettings();
 
   return (
@@ -52,6 +54,15 @@ export function ConfigurationSettingsGroup() {
             value={borderWidth}
             onChange={(v) => setBorderWidth(Number(v))}
             options={MAP_CONFIG_OPTIONS.strokeWidth}
+          />
+          <SettingsToggle
+            label={t("mapSettings.configuration.showSmallCountryOverlays")}
+            tooltip={t(
+              "mapSettings.configuration.showSmallCountryOverlaysTooltip",
+            )}
+            checked={showSmallCountryOverlays}
+            onChange={(checked) => setShowSmallCountryOverlays(checked)}
+            variant="input"
           />
         </div>
       )}

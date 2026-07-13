@@ -36,6 +36,7 @@ export type MapSettings = {
   baseColor?: string;
   borderColor?: string;
   borderWidth?: number;
+  showSmallCountryOverlays?: boolean;
 };
 
 /** Colors-related settings. */

@@ -172,12 +172,3 @@ export function createConnectorPath(
   const curveY = (dy / 2) * curvature[1];
   return `M${0},${0} Q${-dx / 2 - curveX},${-dy / 2 + curveY} ${-dx},${-dy}`;
 }
-
-/**
- * Checks if the provided geo parameter is a string.
- * @param geo - The geography parameter to check.
- * @returns True if geo is a string, false otherwise.
- */
-export function isString(geo: unknown): geo is string {
-  return typeof geo === "string";
-}

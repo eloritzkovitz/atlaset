@@ -17,6 +17,7 @@ export function useMapSettings() {
     map.borderColor ?? MAP_CONFIG_OPTIONS.strokeColor[0].value;
   const borderWidth =
     map.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;
+  const showSmallCountryOverlays = map.showSmallCountryOverlays ?? false;
 
   // Update functions for map settings
   const updateMapSetting = (partialNextState: Partial<MapSettings>) => {
@@ -37,5 +38,8 @@ export function useMapSettings() {
     setBorderColor: (v: string) => updateMapSetting({ borderColor: v }),
     borderWidth,
     setBorderWidth: (v: number) => updateMapSetting({ borderWidth: v }),
+    showSmallCountryOverlays,
+    setShowSmallCountryOverlays: (v: boolean) =>
+      updateMapSetting({ showSmallCountryOverlays: v }),
   };
 }
