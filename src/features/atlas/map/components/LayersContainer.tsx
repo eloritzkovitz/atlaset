@@ -11,7 +11,7 @@ import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
 } from "@features/atlas/layers";
-import { useMapColors, useMapSettings } from "@features/atlas/settings";
+import { useMapColors, useMapOverlays } from "@features/atlas/settings";
 import { useMapTheme } from "@features/atlas/shared";
 import { useTooltipTarget } from "@hooks";
 import { isNumericString } from "@utils/string";
@@ -48,7 +48,7 @@ export function LayersContainer({
 }: LayersContainerProps) {
   const countryData = useCountryData();
   const { numAtlasColors } = useMapColors();
-  const { showSmallCountryOverlays } = useMapSettings();
+  const { showSmallCountryOverlays } = useMapOverlays();
   const { geographyStyle } = useMapTheme();
   const { mapMode, isAtlasActive } = useMapView();
   const { activeTarget, registerVirtualTarget, clearTarget } =

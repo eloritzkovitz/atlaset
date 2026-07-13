@@ -59,6 +59,7 @@ import {
   FaMedal,
   FaMoon,
   FaPaintbrush,
+  FaPalette,
   FaPencil,
   FaPenToSquare,
   FaPercent,
@@ -92,6 +93,7 @@ import {
 } from "react-icons/fa6";
 import { IoAccessibility, IoLanguage } from "react-icons/io5";
 import { PiCirclesFourFill } from "react-icons/pi";
+import { TbSquaresSelected } from "react-icons/tb";
 import { DashboardIcon } from "../components/media/icons/DashboardIcon";
 import { VisitIcon } from "../components/media/icons/VisitIcon";
 
@@ -129,8 +131,12 @@ export const ICONS = {
   timeline: FaTimeline,
   export: FaShareFromSquare,
   share: FaShareNodes,
-  mapSettings: FaGear,
-  mapConfig: FaCompassDrafting,
+  mapSettings: {
+    base: FaGear,
+    configuration: FaCompassDrafting,
+    overlays: TbSquaresSelected,
+    colors: FaPalette,
+  },
   // Trips
   trips: FaSuitcaseRolling,
   tripCategory: PiCirclesFourFill,

@@ -11,23 +11,27 @@ export const defaultSettings: Settings = {
   display: { theme: "system", accent: "blue" },
   accessibility: { singleKeyShortcutsEnabled: true, animationsEnabled: true },
   map: {
-    projection: MAP_CONFIG_OPTIONS.projection[0].value,
-    baseColor: MAP_CONFIG_OPTIONS.baseColor[0].value,
-    borderColor: MAP_CONFIG_OPTIONS.strokeColor[0].value,
-    borderWidth: MAP_CONFIG_OPTIONS.strokeWidth[0].value,
-    showSmallCountryOverlays: false,
-  },
-  colors: {
-    colorHomeCountry: false,
-    colorVisitedCountries: true,
-    colorFutureVisits: false,
-    colorWantToVisitCountries: false,
-    numAtlasColors: 4,
-    palettes: {
-      standard: DEFAULT_COLOR_PALETTES.standard,
-      atlas: DEFAULT_COLOR_PALETTES.atlas,
-      yearly: DEFAULT_COLOR_PALETTES.yearly,
-      cumulative: DEFAULT_COLOR_PALETTES.cumulative,
+    configuration: {
+      projection: MAP_CONFIG_OPTIONS.projection[0].value,
+      baseColor: MAP_CONFIG_OPTIONS.baseColor[0].value,
+      borderColor: MAP_CONFIG_OPTIONS.strokeColor[0].value,
+      borderWidth: MAP_CONFIG_OPTIONS.strokeWidth[0].value,
+    },
+    overlays: {
+      showSmallCountryOverlays: false,
+      showHomeCountry: false,
+      showVisitedCountries: true,
+      showFutureVisits: false,
+      showWantToVisitCountries: false,
+    },
+    colors: {
+      numAtlasColors: 4,
+      palettes: {
+        standard: DEFAULT_COLOR_PALETTES.standard,
+        atlas: DEFAULT_COLOR_PALETTES.atlas,
+        yearly: DEFAULT_COLOR_PALETTES.yearly,
+        cumulative: DEFAULT_COLOR_PALETTES.cumulative,
+      },
     },
   },
 };

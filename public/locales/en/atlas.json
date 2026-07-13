@@ -104,7 +104,7 @@
         "to": "to"
       }
     },
-    "details": {
+    "details": {      
       "status": {
         "home": "Home country",
         "visited": "Visited",
@@ -270,23 +270,33 @@
       "projection": "Projection",
       "baseColor": "Base color",
       "borderColor": "Stroke color",
-      "borderWidth": "Stroke width",
+      "borderWidth": "Stroke width"
+    },
+    "overlays": {
+      "title": "Overlays",
       "showSmallCountryOverlays": "Show small country overlays",
-      "showSmallCountryOverlaysTooltip": "This will display countries with an area smaller than 10,000 km² as circles on the map."
+      "showSmallCountryOverlaysTooltip": "This will display countries with an area smaller than 10,000 km² as circles on the map.",
+      "tracking": {
+        "title": "Tracking Layers",
+        "showHomeCountry": "Show home country",
+        "showVisitedCountries": "Show visited countries",
+        "showFutureVisits": "Show future first visits",
+        "showWantToVisit": "Show 'want to visit' countries"
+      }
     },
     "colors": {
       "title": "Colors",
-      "displayOptions": "Display Options",
-      "showHomeCountry": "Show home country",
-      "showVisitedCountries": "Show visited countries",
-      "showFutureVisits": "Show future first visits",
-      "showWantToVisit": "Show 'want to visit' countries",
-      "numAtlasColors": "Number of atlas colors",
-      "colorPalette": "Color palettes",
-      "standard": "Standard",
-      "atlas": "Atlas",
-      "timelineCumulative": "Timeline (Cumulative)",
-      "timelineYearly": "Timeline (Yearly)"
+      "rules": {
+        "title": "Rules & modifiers",
+        "numAtlasColors": "Number of atlas colors"
+      },
+      "colorPalettes": {
+        "title": "Color Palettes",
+        "standard": "Standard",
+        "atlas": "Atlas",
+        "cumulative": "Timeline (Cumulative)",
+        "yearly": "Timeline (Yearly)"
+      }
     }
   }
 }

@@ -5,6 +5,7 @@ import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
 import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
 import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";
+import { OverlaySettingsGroup } from "./OverlaySettingsGroup";
 
 export function MapSettingsPanel() {
   const { showSettings, closePanel } = useUI();
@@ -24,6 +25,8 @@ export function MapSettingsPanel() {
     >
       <div className="mt-4">
         <ConfigurationSettingsGroup />
+        <Separator className="my-4" />
+        <OverlaySettingsGroup />
         <Separator className="my-4" />
         <ColorsSettingsGroup />
       </div>

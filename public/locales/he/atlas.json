@@ -105,14 +105,6 @@
       }
     },
     "details": {
-      "header": {
-        "centerMap": "מרכז מפה",
-        "centerMapAria": "מרכז את המפה אל המדינה",
-        "viewFull": "צפייה בפרטים מלאים",
-        "viewFullAria": "צפייה בפרטים מלאים",
-        "wikipedia": "ויקיפדיה",
-        "wikipediaAria": "פתח מאמר ויקיפדיה"
-      },
       "status": {
         "home": "מדינת בית",
         "visited": "ביקרתי",
@@ -278,23 +270,33 @@
       "projection": "היטל מפה",
       "baseColor": "צבע בסיס",
       "borderColor": "צבע קו",
-      "borderWidth": "עובי קו",
+      "borderWidth": "עובי קו"
+    },
+    "overlays": {
+      "title": "שכבות על",
       "showSmallCountryOverlays": "הצג שטחים קטנים",
-      "showSmallCountryOverlaysTooltip": "אפשרות זאת תציג מדינות בעלות שטח הקטן מ-10,000 קמ\u0022ר כמעגלים על המפה."
+      "showSmallCountryOverlaysTooltip": "אפשרות זאת תציג מדינות בעלות שטח הקטן מ-10,000 קמ\u0022ר כמעגלים על המפה.",
+      "tracking": {
+        "title": "שכבות מעקב",
+        "showHomeCountry": "הצג מדינה בית",
+        "showVisitedCountries": "הצג מדינות שביקרתי",
+        "showFutureVisits": "הצג ביקורים עתידיים",
+        "showWantToVisit": "הצג מדינות שרוצה לבקר בהן"
+      }
     },
     "colors": {
       "title": "צבעים",
-      "displayOptions": "אפשרויות תצוגה",
-      "showHomeCountry": "הצג מדינה בית",
-      "showVisitedCountries": "הצג מדינות שביקרתי",
-      "showFutureVisits": "הצג ביקורים עתידיים",
-      "showWantToVisit": "הצג מדינות שרוצה לבקר בהן",
-      "numAtlasColors": "מספר צבעים באטלס",
-      "colorPalette": "פלטות צבעים",
-      "standard": "סטנדרטי",
-      "atlas": "אטלס",
-      "timelineCumulative": "ציר זמן (מצטבר)",
-      "timelineYearly": "ציר זמן (שנתי)"
+      "rules": {
+        "title": "Rules & modifiers",
+        "numAtlasColors": "מספר צבעים באטלס"
+      },
+      "colorPalettes": {
+        "title": "פלטות צבעים",
+        "standard": "סטנדרטי",
+        "atlas": "אטלס",
+        "cumulative": "ציר זמן (מצטבר)",
+        "yearly": "ציר זמן (שנתי)"
+      }
     }
   }
 }

@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { useSettings } from "@contexts/SettingsContext";
-import { MAP_CONFIG_OPTIONS, type MapSettings } from "@features/settings";
+import {
+  MAP_CONFIG_OPTIONS,
+  type MapConfigurationSettings,
+} from "@features/settings";
 
 /**
  * Manages map configuration settings.
@@ -9,37 +12,45 @@ import { MAP_CONFIG_OPTIONS, type MapSettings } from "@features/settings";
 export function useMapSettings() {
   const { settings, updateSettings } = useSettings();
 
-  const map = useMemo(() => settings?.map ?? {}, [settings?.map]);
+  const configSettings = useMemo(
+    () => settings?.map?.configuration ?? {},
+    [settings?.map?.configuration],
+  );
 
-  const projection = map.projection ?? MAP_CONFIG_OPTIONS.projection[0].value;
-  const baseColor = map.baseColor ?? MAP_CONFIG_OPTIONS.baseColor[0].value;
+  const projection =
+    configSettings.projection ?? MAP_CONFIG_OPTIONS.projection[0].value;
+  const baseColor =
+    configSettings.baseColor ?? MAP_CONFIG_OPTIONS.baseColor[0].value;
   const borderColor =
-    map.borderColor ?? MAP_CONFIG_OPTIONS.strokeColor[0].value;
+    configSettings.borderColor ?? MAP_CONFIG_OPTIONS.strokeColor[0].value;
   const borderWidth =
-    map.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;
-  const showSmallCountryOverlays = map.showSmallCountryOverlays ?? false;
+    configSettings.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;
 
   // Update functions for map settings
-  const updateMapSetting = (partialNextState: Partial<MapSettings>) => {
+  const updateConfigSetting = (
+    partialNextState: Partial<MapConfigurationSettings>,
+  ) => {
+    if (!settings?.map) return;
+
     updateSettings({
       map: {
-        ...map,
-        ...partialNextState,
+        ...settings.map,
+        configuration: {
+          ...settings.map.configuration,
+          ...partialNextState,
+        },
       },
     });
   };
 
   return {
     projection,
-    setProjection: (v: string) => updateMapSetting({ projection: v }),
+    setProjection: (v: string) => updateConfigSetting({ projection: v }),
     baseColor,
-    setBaseColor: (v: string) => updateMapSetting({ baseColor: v }),
+    setBaseColor: (v: string) => updateConfigSetting({ baseColor: v }),
     borderColor,
-    setBorderColor: (v: string) => updateMapSetting({ borderColor: v }),
+    setBorderColor: (v: string) => updateConfigSetting({ borderColor: v }),
     borderWidth,
-    setBorderWidth: (v: number) => updateMapSetting({ borderWidth: v }),
-    showSmallCountryOverlays,
-    setShowSmallCountryOverlays: (v: boolean) =>
-      updateMapSetting({ showSmallCountryOverlays: v }),
+    setBorderWidth: (v: number) => updateConfigSetting({ borderWidth: v }),
   };
 }

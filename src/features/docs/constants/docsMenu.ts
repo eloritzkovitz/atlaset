@@ -58,7 +58,7 @@ export const DOCS_GROUPS = {
       {
         label: "Map Settings",
         file: "atlas/map-settings.md",
-        icon: ICONS.mapConfig,
+        icon: ICONS.mapSettings.configuration,
         url: "/docs/atlas/map-settings",
       },
       {

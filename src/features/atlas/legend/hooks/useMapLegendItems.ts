@@ -1,6 +1,6 @@
 import { useMapView } from "@contexts/MapViewContext";
 import type { Layer } from "@features/atlas/layers";
-import { useMapColors } from "@features/atlas/settings";
+import { useMapOverlays } from "@features/atlas/settings";
 import { useMapTheme, type ColorMode } from "@features/atlas/shared";
 import type { LegendItem } from "../types";
 
@@ -18,11 +18,11 @@ export function useMapLegendItems(
 ): LegendItem[] {
   const { isReadonly, isEdit } = useMapView();
   const {
-    colorWantToVisitCountries,
-    colorHomeCountry,
-    colorFutureVisits,
-    colorVisitedCountries,
-  } = useMapColors();
+    showWantToVisitCountries,
+    showHomeCountry,
+    showFutureVisits,
+    showVisitedCountries,
+  } = useMapOverlays();
   const {
     HOME_COUNTRY_COLOR,
     VISITED_COUNTRY_COLOR,
@@ -37,16 +37,16 @@ export function useMapLegendItems(
 
   // Calculate legend items for the tracking layer based on user settings and visibility
   const layerLegendItems: LegendItem[] = [
-    ...(colorHomeCountry && canShow
+    ...(showHomeCountry && canShow
       ? [make(HOME_COUNTRY_COLOR, "Home country")]
       : []),
-    ...(colorVisitedCountries && canShow
+    ...(showVisitedCountries && canShow
       ? [make(VISITED_COUNTRY_COLOR, "Visited Countries")]
       : []),
-    ...(colorFutureVisits && canShow
+    ...(showFutureVisits && canShow
       ? [make(FUTURE_VISIT_COUNTRY_COLOR, "Future Visits")]
       : []),
-    ...(colorWantToVisitCountries && canShow
+    ...(showWantToVisitCountries && canShow
       ? [make(SELECTED_COUNTRY_COLOR, "Want to Visit")]
       : []),
     ...layers

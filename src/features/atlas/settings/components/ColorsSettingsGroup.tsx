@@ -1,41 +1,23 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FaPalette } from "react-icons/fa6";
 import {
-  Checkbox,
   CollapsibleHeader,
   DropdownSelectInput,
   NumberInput,
   SectionHeader,
 } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
+import { ICONS } from "@constants/icons";
 import type { ColorMode } from "@features/atlas/shared";
 import { PaletteDots } from "./PaletteDots";
 import { useMapColors } from "../hooks/useMapColors";
 
-const COLOR_MODES: { key: ColorMode; label: string }[] = [
-  { key: "standard", label: "mapSettings.colors.standard" },
-  { key: "atlas", label: "mapSettings.colors.atlas" },
-  { key: "cumulative", label: "mapSettings.colors.timelineCumulative" },
-  { key: "yearly", label: "mapSettings.colors.timelineYearly" },
-];
+const COLOR_MODES: ColorMode[] = ["standard", "atlas", "cumulative", "yearly"];
 
 export function ColorsSettingsGroup() {
   const [expanded, setExpanded] = React.useState(true);
-  const {
-    colorHomeCountry,
-    setColorHomeCountry,
-    colorVisitedCountries,
-    setColorVisitedCountries,
-    colorFutureVisits,
-    setColorFutureVisits,
-    colorWantToVisitCountries,
-    setColorWantToVisitCountries,
-    numAtlasColors,
-    setNumAtlasColors,
-    colorPalettes,
-    setPalette,
-  } = useMapColors();
+  const { numAtlasColors, setNumAtlasColors, colorPalettes, setPalette } =
+    useMapColors();
   const { t } = useTranslation("atlas");
 
   const groupedPaletteOptions = COLOR_PALETTE_GROUPS.map((group) => ({
@@ -54,40 +36,18 @@ export function ColorsSettingsGroup() {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaPalette />}
+        icon={<ICONS.mapSettings.colors />}
         label={t("mapSettings.colors.title")}
         expanded={expanded}
         onToggle={() => setExpanded((v) => !v)}
       />
       {expanded && (
         <div className="space-y-6">
-          {/* Display Options Section */}
+          {/* Rules Section */}
           <section>
-            <SectionHeader title={t("mapSettings.colors.displayOptions")} />
-            <div className="flex flex-col gap-3 mb-2">
-              <Checkbox
-                checked={colorHomeCountry}
-                onChange={setColorHomeCountry}
-                label={t("mapSettings.colors.showHomeCountry")}
-              />
-              <Checkbox
-                checked={colorVisitedCountries}
-                onChange={setColorVisitedCountries}
-                label={t("mapSettings.colors.showVisitedCountries")}
-              />
-              <Checkbox
-                checked={colorFutureVisits}
-                onChange={setColorFutureVisits}
-                label={t("mapSettings.colors.showFutureVisits")}
-              />
-              <Checkbox
-                checked={colorWantToVisitCountries}
-                onChange={setColorWantToVisitCountries}
-                label={t("mapSettings.colors.showWantToVisit")}
-              />
-            </div>
+            <SectionHeader title={t("mapSettings.colors.rules.title")} />
             <div className="flex items-center gap-2">
-              <span>{t("mapSettings.colors.numAtlasColors")}</span>
+              <span>{t("mapSettings.colors.rules.numAtlasColors")}</span>
               <NumberInput
                 label=""
                 value={numAtlasColors}
@@ -100,18 +60,20 @@ export function ColorsSettingsGroup() {
 
           {/* Color Palettes Section */}
           <section>
-            <SectionHeader title={t("mapSettings.colors.colorPalette")} />
+            <SectionHeader
+              title={t("mapSettings.colors.colorPalettes.title")}
+            />
             <div className="mb-2">
               {COLOR_MODES.map((mode) => (
-                <div key={mode.key} className="mb-4">
+                <div key={mode} className="mb-4">
                   <label className="font-medium block mb-1">
-                    {t(mode.label)}
+                    {t(`mapSettings.colors.colorPalettes.${mode}`)}
                   </label>
                   <DropdownSelectInput
                     options={groupedPaletteOptions}
-                    value={colorPalettes[mode.key]}
+                    value={colorPalettes[mode]}
                     onChange={(val: string | string[]) =>
-                      setPalette(mode.key, Array.isArray(val) ? val[0] : val)
+                      setPalette(mode, Array.isArray(val) ? val[0] : val)
                     }
                     className="min-w-[180px]"
                   />
