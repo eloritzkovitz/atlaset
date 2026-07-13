@@ -2,6 +2,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { CountryListModal } from "@features/atlas/countries";
 import type { Layer } from "@features/atlas/layers";
 import { countryListService, type CountryList } from "@features/countries";
+import { logUserActivity, useAuth } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import {
   CountryListsContext,
@@ -9,6 +10,7 @@ import {
 } from "./CountryListsContext";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const {
     visitedCountryCodes,
     wantToVisitCountryCodes,
@@ -114,6 +116,13 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       countryCodes: layer.countries,
       layerId: layer.id,
     });
+
+    await logUserActivity(
+      241,
+      { itemName: layer.name, userName: user!.displayName },
+      user!.uid,
+    );
+
     if (onLinked) onLinked(newListId);
     return newListId;
   };
@@ -162,26 +171,48 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   const handleSave = async (list: CountryList) => {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
+
+    await logUserActivity(241, { itemName: list.name }, user!.uid);
+
     await reloadCountryLists();
     closeModal();
   };
 
   // Updates a list by saving it and reloading all lists
   const handleUpdate = async (list: CountryList) => {
-    // Special handling for the "visited" system list
+    // Prevent updates to system lists, which are managed by the application
     if (isSystemList) {
       return;
     }
 
     await countryListService.save(list);
     await reloadCountryLists();
+
+    await logUserActivity(
+      242,
+      { itemName: list.name, userName: user!.displayName },
+      user!.uid,
+    );
+
     closeModal();
   };
 
   // Deletes a list and clears selection if it was the selected one
   const handleDelete = async (id: string) => {
+    const listToDelete = countryLists.find((l) => l.id === id);
+
     await countryListService.delete(id);
     await reloadCountryLists();
+
+    await logUserActivity(
+      243,
+      {
+        itemName: listToDelete!.name ?? "Unknown List",
+        userName: user!.displayName,
+      },
+      user!.uid,
+    );
+
     if (selectedListId === id) setSelectedListId(null);
     closeModal();
   };

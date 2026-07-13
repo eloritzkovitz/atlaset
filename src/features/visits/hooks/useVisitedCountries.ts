@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTrips } from "@contexts/TripsContext";
-import { useAuth } from "@features/user";
+import { getCountryName, useCountryData } from "@features/countries";
+import { logUserActivity, useAuth } from "@features/user";
 import { countryTrackingService } from "../services/countryTrackingService";
 import {
   computeVisitedCountriesFromTrips,
@@ -15,6 +16,7 @@ import {
  */
 export function useVisitedCountries() {
   const { user } = useAuth();
+  const { countries } = useCountryData();
   const { trips } = useTrips();
   const { t } = useTranslation("common");
 
@@ -23,6 +25,49 @@ export function useVisitedCountries() {
   const [wantToVisitCountryCodes, setWantToVisitCountryCodes] = useState<
     string[]
   >([]);
+
+  // Resolve country name for logging purposes
+  const resolveCountryName = (isoCode: string) => {
+    return getCountryName(isoCode, countries) || isoCode;
+  };
+
+  // Updates tracking lists and logs user activity
+  const updateCountryTracking = async ({
+    isoCode,
+    fieldName,
+    actionCode,
+    listName,
+    operation,
+  }: {
+    isoCode: string;
+    fieldName: "visitedCountryCodes" | "wantToVisitCountryCodes";
+    actionCode: 244 | 245;
+    listName: "Visited Countries" | "Want to Visit";
+    operation: "add" | "remove";
+  }) => {
+    if (!user) return;
+
+    if (operation === "add") {
+      await countryTrackingService.addCountryCode(user.uid, isoCode, fieldName);
+    } else {
+      await countryTrackingService.removeCountryCode(
+        user.uid,
+        isoCode,
+        fieldName,
+      );
+    }
+
+    await logUserActivity(
+      actionCode,
+      {
+        itemName: listName,
+        country: isoCode,
+        countryName: resolveCountryName(isoCode),
+        userName: user.displayName,
+      },
+      user.uid,
+    ).catch(console.error);
+  };
 
   // Compute as fallback
   const computedVisited = useMemo(
@@ -75,71 +120,60 @@ export function useVisitedCountries() {
     setFutureCountryCodes(future);
   }, [user, trips, visitedCountryCodes, computedVisited]);
 
-  // Check if a country is visited
-  function isVisitedCountry(isoCode: string) {
-    return visitedCountryCodes.includes(isoCode);
-  }
-
-  function isFutureVisitCountry(isoCode: string) {
-    return futureCountryCodes.includes(isoCode);
-  }
-
-  // Check if a country is in the user's want-to-visit list
-  function isWantToVisitCountry(isoCode: string) {
-    return wantToVisitCountryCodes.includes(isoCode);
-  }
-
-  // Check if a country has any trip associated with it, regardless of whether it's marked visited in Firestore
-  function isTripBased(isoCode: string) {
-    return computedVisited.includes(isoCode);
-  }
+  // Validation functions to check if a country is in a specific list
+  const isVisitedCountry = (isoCode: string) =>
+    visitedCountryCodes.includes(isoCode);
+  const isFutureVisitCountry = (isoCode: string) =>
+    futureCountryCodes.includes(isoCode);
+  const isWantToVisitCountry = (isoCode: string) =>
+    wantToVisitCountryCodes.includes(isoCode);
+  const isTripBased = (isoCode: string) => computedVisited.includes(isoCode);
 
   // Manually add a country code to the visited list
   async function addManualCountry(isoCode: string) {
-    if (!user) return;
-    if (visitedCountryCodes.includes(isoCode)) return;
-
-    await countryTrackingService.addCountryCode(
-      user.uid,
+    if (isVisitedCountry(isoCode)) return;
+    await updateCountryTracking({
       isoCode,
-      "visitedCountryCodes",
-    );
+      fieldName: "visitedCountryCodes",
+      actionCode: 244,
+      listName: "Visited Countries",
+      operation: "add",
+    });
   }
 
   // Manually remove a country code from the visited list
   async function removeManualCountry(isoCode: string) {
-    if (!user) return;
     if (isTripBased(isoCode)) return;
-
-    await countryTrackingService.removeCountryCode(
-      user.uid,
+    await updateCountryTracking({
       isoCode,
-      "visitedCountryCodes",
-    );
+      fieldName: "visitedCountryCodes",
+      actionCode: 245,
+      listName: "Visited Countries",
+      operation: "remove",
+    });
   }
 
   // Add a country code to the want-to-visit list
   async function addWantToVisitCountry(isoCode: string) {
-    if (!user) return;
-    if (wantToVisitCountryCodes.includes(isoCode)) return;
-    if (isVisitedCountry(isoCode)) return;
-
-    await countryTrackingService.addCountryCode(
-      user.uid,
+    if (isWantToVisitCountry(isoCode) || isVisitedCountry(isoCode)) return;
+    await updateCountryTracking({
       isoCode,
-      "wantToVisitCountryCodes",
-    );
+      fieldName: "wantToVisitCountryCodes",
+      actionCode: 244,
+      listName: "Want to Visit",
+      operation: "add",
+    });
   }
 
   // Remove a country code from the want-to-visit list
   async function removeWantToVisitCountry(isoCode: string) {
-    if (!user) return;
-
-    await countryTrackingService.removeCountryCode(
-      user.uid,
+    await updateCountryTracking({
       isoCode,
-      "wantToVisitCountryCodes",
-    );
+      fieldName: "wantToVisitCountryCodes",
+      actionCode: 245,
+      listName: "Want to Visit",
+      operation: "remove",
+    });
   }
 
   // Get visits for a country

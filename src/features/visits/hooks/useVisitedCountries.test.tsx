@@ -17,10 +17,36 @@ vi.mock("../services/countryTrackingService", () => ({
   },
 }));
 
-let mockUser: { uid: string } | null = { uid: "u1" };
+let mockUser: { uid: string; displayName?: string } | null = {
+  uid: "u1",
+  displayName: "Sarah",
+};
+const mockLogUserActivity = vi.fn().mockResolvedValue(undefined);
+
 vi.mock("@features/user", () => ({
   useAuth: () => ({ user: mockUser }),
+  logUserActivity: (...args: any[]) => mockLogUserActivity(...args),
 }));
+
+vi.mock("@features/countries", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@features/countries")>();
+  return {
+    ...actual,
+    useCountryData: () => ({
+      countries: [
+        { id: "FR", name: "France" },
+        { id: "MX", name: "Mexico" },
+        { id: "CA", name: "Canada" },
+        { id: "JP", name: "Japan" },
+        { id: "BR", name: "Brazil" },
+      ],
+    }),
+    getCountryName: (code: string, countries: any[]) => {
+      const country = countries?.find((c: any) => c.id === code);
+      return country ? country.name : code;
+    },
+  };
+});
 
 let mockTrips = [{ id: "t1", destination: "FR", startDate: "2026-01-01" }];
 vi.mock("@contexts/TripsContext", () => ({
@@ -76,8 +102,10 @@ describe("useVisitedCountries", () => {
     expect(result.current.wantToVisitCountryCodes).toEqual(["JP"]);
     expect(result.current.futureCountryCodes).toEqual(["IT"]);
     expect(result.current.isVisitedCountry("MX")).toBe(true);
-    expect(result.current.isTripBased("FR")).toBe(true);
+    expect(result.current.isFutureVisitCountry("IT")).toBe(true);
+    expect(result.current.isFutureVisitCountry("MX")).toBe(false);
     expect(result.current.isWantToVisitCountry("JP")).toBe(true);
+    expect(result.current.isTripBased("FR")).toBe(true);
   });
 
   it("should handle unauthenticated state cleanly", () => {

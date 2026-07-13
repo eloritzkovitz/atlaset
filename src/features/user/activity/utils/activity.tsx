@@ -119,7 +119,8 @@ function getActivityIconByCode(code: number | string): JSX.Element {
   if (n === 200) return <ICONS.atlas />;
   if (n >= 210 && n <= 219) return <ICONS.layers />;
   if (n >= 220 && n <= 229) return <ICONS.markers />;
-  if (n >= 230 && n <= 239) return <ICONS.map />;
+  if (n >= 230 && n <= 239) return <ICONS.savedMaps />;
+  if (n >= 240 && n <= 249) return <ICONS.countryLists />;
   if (n >= 300 && n <= 309) return <ICONS.quizzes />;
   if (n >= 400 && n <= 415) return <ICONS.trips />;
   return <ICONS.activity />;

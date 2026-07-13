@@ -42,9 +42,13 @@
   "234": "{userName} added '{itemName}' to map '{mapName}'{date}",
   "235": "{userName} edited '{itemName}' in '{mapName}'{date}",
   "236": "{userName} removed '{itemName}' from '{mapName}'{date}",
-  "237": "{userName} added '{itemName}' in '{mapName}'{date}",
-  "238": "{userName} edited '{itemName}' in '{mapName}'{date}",
-  "239": "{userName} removed '{itemName}' from '{mapName}'{date}",
+
+  "240": "{userName} saved country lists{date}",
+  "241": "{userName} created '{itemName}'{date}",
+  "242": "{userName} edited '{itemName}'{date}",
+  "243": "{userName} removed '{itemName}'{date}",
+  "244": "{userName} added '{countryName}' to '{itemName}'{date}",
+  "245": "{userName} removed '{countryName}' from '{itemName}'{date}",
 
   "300": "{userName} has played a quiz{date}",
   "301": "{userName} completed {difficultyWithArticle} {quizType} quiz with a score of {score} in {time}",

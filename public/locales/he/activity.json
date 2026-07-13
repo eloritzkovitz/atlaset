@@ -42,9 +42,13 @@
   "234": "{userName} הוסיף '{itemName}' למפה '{mapName}'{date}",
   "235": "{userName} ערך '{itemName}' ב'{mapName}'{date}",
   "236": "{userName} הסיר '{itemName}' מהמפה '{mapName}'{date}",
-  "237": "{userName} הוסיף '{itemName}' ב'{mapName}'{date}",
-  "238": "{userName} ערך '{itemName}' ב'{mapName}'{date}",
-  "239": "{userName} הסיר '{itemName}' מהמפה '{mapName}'{date}",
+
+  "240": "{userName} שמר רשימות מדינות{date}",
+  "241": "{userName} יצר '{itemName}'{date}",
+  "242": "{userName} ערך '{itemName}'{date}",
+  "243": "{userName} הסיר '{itemName}'{date}",
+  "244": "{userName} הוסיף '{countryName}' ל'{itemName}'{date}",
+  "245": "{userName} הסיר '{countryName}' מ'{itemName}'{date}",
 
   "300": "{userName} שיחק חידון{date}",
   "301": "{userName} השלים {difficultyWithArticle} חידון {quizType} עם ציון של {score} ב{time}",
