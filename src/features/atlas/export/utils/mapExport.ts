@@ -6,13 +6,13 @@ import type { Layer } from "@features/atlas/layers";
 import type { Marker } from "@features/atlas/markers/types";
 import { downloadBlob, downloadCanvas } from "@utils/file";
 import { exportToFile } from "@utils/json";
+import { getExportFilename, isImageFormat } from "./format";
 import type {
   ExportFormat,
   ImageExportOptions,
   ImageFormat,
   SvgExportOptions,
 } from "../types";
-import { isImageFormat } from "./format";
 
 /** Get the dimension of an SVG element, falling back to a default value. */
 const getElementDim = (
@@ -170,10 +170,10 @@ export function exportSvg(
 }
 
 /**
- * Exports the given SVG element as an image file (PNG, JPEG, or WebP).
+ * Exports the given SVG element as an image file.
  * @param svgElement - The SVG element to export.
  * @param filename - The desired filename for the exported image.
- * @param format - The image format to export ("png", "jpeg", or "webp").
+ * @param format - The image format to export.
  * @param scale - The scale factor for the exported image.
  * @param inlineStyles - Whether to inline computed styles into the SVG before export.
  * @param maxDimension - The maximum width or height of the exported image.
@@ -298,11 +298,7 @@ export function exportMap({
   // Handle JSON export first
   if (format === "json") {
     if (jsonData) {
-      exportMapDataAsJson(jsonData, "atlas-data.json");
-    } else {
-      console.warn(
-        "Export format 'json' requested but no data payload was provided.",
-      );
+      exportMapDataAsJson(jsonData, getExportFilename("json"));
     }
     return;
   }
@@ -314,17 +310,19 @@ export function exportMap({
   if (format === "svg") {
     exportSvg(
       currentSvg,
-      "map.svg",
+      getExportFilename("svg"),
       svgOptions.current?.svgInlineStyles,
       svgOptions.current?.includeTitles,
     );
   } else if (isImageFormat(format)) {
     const opts = imageOptions.current;
+    const scale = opts?.scale ?? 1;
+
     exportSvgAsImage(
       currentSvg,
-      `map@${opts?.scale}x.${format === "jpeg" ? "jpg" : format}`,
+      getExportFilename(format, scale),
       format,
-      opts?.scale ?? 3,
+      scale,
       true,
       8192,
       opts?.quality ?? 1,

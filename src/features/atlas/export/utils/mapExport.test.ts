@@ -101,19 +101,6 @@ describe("exportMap Complete Test Suite", () => {
       );
     });
 
-    it("logs a warning statement if JSON format is chosen but payload is missing", () => {
-      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-      exportMap({
-        svgRef: { current: null },
-        format: "json",
-        svgOptions: mockSvgOptions as any,
-        imageOptions: mockImageOptions as any,
-        jsonData: undefined,
-      });
-      expect(warnSpy).toHaveBeenCalled();
-      expect(exportToFileSpy).not.toHaveBeenCalled();
-    });
-
     it("routes SVG format correctly with context options passed along", () => {
       const svgEl = createMockSvg();
       exportMap({
