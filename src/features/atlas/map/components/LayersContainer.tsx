@@ -162,6 +162,7 @@ export function LayersContainer({
                   pressed: finalStyle,
                 }}
                 {...sharedProps}
+                data-export-title={tooltipValue}
               />,
             );
 
@@ -176,6 +177,7 @@ export function LayersContainer({
                   key={`${geo.rsmKey}-overlay`}
                   geo={geo}
                   isoCode={isoA2}
+                  tooltip={tooltipValue as string}
                   geography={geographyData}
                   projection={projection}
                   circleRadius={CIRCLE_RADIUS}

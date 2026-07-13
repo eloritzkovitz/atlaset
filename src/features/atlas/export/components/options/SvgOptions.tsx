@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Checkbox } from "@components";
 
 export function SvgOptions({
@@ -6,7 +7,10 @@ export function SvgOptions({
 }: {
   onOptionsChange: (opts: { svgInlineStyles: boolean }) => void;
 }) {
+  const { t } = useTranslation("atlas");
+
   const [svgInlineStyles, setSvgInlineStyles] = useState(true);
+  const [includeTitles, setIncludeTitles] = useState(true);
 
   // Notify parent of option changes
   useEffect(() => {
@@ -14,11 +18,17 @@ export function SvgOptions({
   }, [svgInlineStyles, onOptionsChange]);
 
   return (
-    <div className="flex items-center gap-2 mb-4">
-      <Checkbox checked={svgInlineStyles} onChange={setSvgInlineStyles} />
-      <span className="whitespace-nowrap">
-        Inline styles
-      </span>
+    <div className="flex flex-col items-start gap-2 mb-4">
+      <Checkbox
+        checked={svgInlineStyles}
+        onChange={setSvgInlineStyles}
+        label={t("mapExport.download.svgOptions.inlineStyles")}
+      />
+      <Checkbox
+        checked={includeTitles}
+        onChange={setIncludeTitles}
+        label={t("mapExport.download.svgOptions.includeTitles")}
+      />
     </div>
   );
 }

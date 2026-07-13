@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { FaCode, FaCopy } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { CollapsibleHeader, InputBox, ActionButton, SectionHeader } from "@components";
+import {
+  CollapsibleHeader,
+  InputBox,
+  ActionButton,
+  SectionHeader,
+} from "@components";
 
 interface EmbedMapSectionProps {
   expanded: boolean;
@@ -36,30 +41,34 @@ export function EmbedMapSection({
   return (
     <CollapsibleHeader
       icon={<FaCode />}
-      label={t("mapExport.embed")}
+      label={t("mapExport.embed.title")}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
-      <SectionHeader title={t("mapExport.embedCode")} />
+      <SectionHeader title={t("mapExport.embed.embedCode")} />
       <div className="flex items-center gap-1 mb-2">
         <InputBox
           value={embedCode}
           readOnly
           className="flex-1 font-mono"
           onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-          aria-label={t("mapExport.embedCode")}
+          aria-label={t("mapExport.embed.embedCode")}
         />
         <ActionButton
           variant="action"
           onClick={handleCopyEmbed}
-          ariaLabel={t("mapExport.copyEmbedCode")}
-          title={embedCopied ? t("mapExport.embedCodeCopied") : t("mapExport.copyEmbedCode")}
+          ariaLabel={t("mapExport.embed.copyEmbedCode")}
+          title={
+            embedCopied
+              ? t("mapExport.embed.embedCodeCopied")
+              : t("mapExport.embed.copyEmbedCode")
+          }
           icon={<FaCopy className="text-xl" />}
           className="bg-transparent !h-10 !w-10 mt-1 rounded-lg"
         />
       </div>
       <span className="text-xs text-muted">
-        {t("mapExport.description")}
+        {t("mapExport.embed.description")}
       </span>
     </CollapsibleHeader>
   );

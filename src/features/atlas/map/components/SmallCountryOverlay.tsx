@@ -6,6 +6,7 @@ import { getCountryCenterAndZoom } from "../utils/projection";
 interface SmallCountryOverlayProps {
   geo: GeographyFeature;
   isoCode: string;
+  tooltip?: string;
   geography: GeoData;
   projection: GeoProjection;
   circleRadius: number;
@@ -17,6 +18,7 @@ interface SmallCountryOverlayProps {
 export function SmallCountryOverlay({
   geo,
   isoCode,
+  tooltip,
   geography,
   projection,
   circleRadius,
@@ -47,6 +49,7 @@ export function SmallCountryOverlay({
         pressed: style,
       }}
       {...sharedProps}
+      data-export-title={tooltip}
     />
   );
 }

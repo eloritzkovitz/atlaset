@@ -40,42 +40,43 @@ export function ExportOptionsSection({
             onChange={() =>
               setIncludeVisitedCountries(!includeVisitedCountries)
             }
-            label={t("mapExport.visitedCountries")}
+            label={t("mapExport.exportOptions.visitedCountries")}
             aria-checked={includeVisitedCountries}
-            aria-label={t("mapExport.visitedCountries")}
+            aria-label={t("mapExport.exportOptions.visitedCountries")}
           />
         )}
         <Checkbox
           checked={includeLayers}
           onChange={() => setIncludeLayers(!includeLayers)}
-          label={t("mapExport.visibleLayers")}
+          label={t("mapExport.exportOptions.visibleLayers")}
           aria-checked={includeLayers}
-          aria-label={t("mapExport.visibleLayers")}
+          aria-label={t("mapExport.exportOptions.visibleLayers")}
         />
         <Checkbox
           checked={includeMarkers}
           onChange={() => setIncludeMarkers(!includeMarkers)}
-          label={t("mapExport.visibleMarkers")}
+          label={t("mapExport.exportOptions.visibleMarkers")}
           aria-checked={includeMarkers}
-          aria-label={t("mapExport.visibleMarkers")}
+          aria-label={t("mapExport.exportOptions.visibleMarkers")}
         />
       </div>
-      <SectionHeader title={t("mapExport.mapDetails")} />
-      <FormField label={t("mapExport.mapName")}>
+
+      <SectionHeader title={t("mapExport.mapDetails.title")} />
+      <FormField label={t("mapExport.mapDetails.mapName")}>
         <input
           type="text"
           value={mapName}
           onChange={(e) => setMapName(e.target.value)}
-          placeholder={t("mapExport.mapNamePlaceholder")}
+          placeholder={t("mapExport.mapDetails.mapNamePlaceholder")}
           maxLength={64}
         />
       </FormField>
-      <FormField label={t("mapExport.yourName")}>
+      <FormField label={t("mapExport.mapDetails.yourName")}>
         <input
           type="text"
           value={sharer}
           onChange={(e) => setSharer(e.target.value)}
-          placeholder={t("mapExport.yourNamePlaceholder")}
+          placeholder={t("mapExport.mapDetails.yourNamePlaceholder")}
           maxLength={32}
         />
       </FormField>

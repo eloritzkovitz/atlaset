@@ -223,29 +223,45 @@
   "mapExport": {
     "title": "Export",
     "options": "Options",
-    "visitedCountries": "Visited countries",
-    "visibleLayers": "All visible layers",
-    "visibleMarkers": "All visible markers",
-    "mapDetails": "Map details (optional)",
-    "mapName": "Map name",
-    "mapNamePlaceholder": "My Shared Map",
-    "yourName": "Your Name",
-    "yourNamePlaceholder": "Your Name",
-    "download": "Download",
-    "format": "Format",
-    "inlineStyles": "inline styles",
-    "downloadImage": "Download Image",
-    "downloadData": "Download Data",
-    "downloadJson": "Download as JSON",
-    "share": "Share",
-    "shareableLink": "Shareable link",
-    "copyLink": "Copy link",
-    "linkCopied": "Link copied to clipboard!",
-    "embed": "Embed",
-    "embedCode": "Embed code",
-    "copyEmbedCode": "Copy embed code",
-    "embedCodeCopied": "Embed code copied to clipboard!",
-    "description": "Embed this map in your website using the code above."
+    "exportOptions": {
+      "visitedCountries": "Visited countries",
+      "visibleLayers": "All visible layers",
+      "visibleMarkers": "All visible markers"
+    },
+    "mapDetails": {
+      "title": "Map details (optional)",
+      "mapName": "Map name",
+      "mapNamePlaceholder": "My Shared Map",
+      "yourName": "Your Name",
+      "yourNamePlaceholder": "Your Name"
+    },
+    "download": {
+      "title": "Download",
+      "format": "Format",
+      "svgOptions": {
+        "inlineStyles": "Inline styles",
+        "includeTitles": "Include titles"
+      },
+      "imageOptions": {
+        "scale": "Scale",
+        "quality": "Quality",
+        "background": "Background color"
+      },
+      "jsonDescription": "Download the map data as JSON"
+    },
+    "share": {
+      "title": "Share",
+      "shareableLink": "Shareable link",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied to clipboard!"
+    },
+    "embed": {
+      "title": "Embed",
+      "embedCode": "Embed code",
+      "copyEmbedCode": "Copy embed code",
+      "embedCodeCopied": "Embed code copied to clipboard!",
+      "description": "Embed this map in your website using the code above."
+    }
   },
   "mapSettings": {
     "title": "Map Settings",

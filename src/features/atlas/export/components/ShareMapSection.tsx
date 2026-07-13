@@ -25,24 +25,28 @@ export function ShareMapSection({
   return (
     <CollapsibleHeader
       icon={<FaShareNodes />}
-      label={t("mapExport.share")}
+      label={t("mapExport.share.title")}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
-      <SectionHeader title={t("mapExport.shareableLink")} />
+      <SectionHeader title={t("mapExport.share.shareableLink")} />
       <div className="flex items-center gap-1 mb-4">
         <InputBox
           value={shareUrl}
           readOnly
           className="flex-1 font-mono"
           onFocus={(e: React.FocusEvent<HTMLInputElement>) => e.target.select()}
-          aria-label={t("mapExport.shareableLink")}
+          aria-label={t("mapExport.share.shareableLink")}
         />
         <ActionButton
           variant="action"
           onClick={copyShareUrl}
-          ariaLabel={t("mapExport.copyLink")}
-          title={copied ? t("mapExport.linkCopied") : t("mapExport.copyLink")}
+          ariaLabel={t("mapExport.share.copyLink")}
+          title={
+            copied
+              ? t("mapExport.share.linkCopied")
+              : t("mapExport.share.copyLink")
+          }
           icon={<FaCopy className="text-xl" />}
           className="bg-transparent !h-10 !w-10 mt-1 rounded-lg"
         />

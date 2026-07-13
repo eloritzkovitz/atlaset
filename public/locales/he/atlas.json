@@ -231,29 +231,45 @@
   "mapExport": {
     "title": "ייצוא",
     "options": "אפשרויות",
-    "visitedCountries": "מדינות שביקרתי",
-    "visibleLayers": "כל השכבות הגלויות",
-    "visibleMarkers": "כל הסימונים הגלויים",
-    "mapDetails": "פרטי מפה (אופציונלי)",
-    "mapName": "שם מפה",
-    "mapNamePlaceholder": "המפה המשותפת שלי",
-    "yourName": "שמך",
-    "yourNamePlaceholder": "שמך",
-    "download": "הורדה",
-    "format": "פורמט",
-    "inlineStyles": "סגנונות פנימיים",
-    "downloadImage": "הורדה כתמונה",
-    "downloadData": "הורדת נתונים",
-    "downloadJson": "הורדה כ-JSON",
-    "share": "שיתוף",
-    "shareableLink": "קישור ניתן לשיתוף",
-    "copyLink": "העתק קישור",
-    "linkCopied": "קישור הועתק ללוח!",
-    "embed": "הטמעה",
-    "embedCode": "קוד הטמעה",
-    "copyEmbedCode": "העתק קוד הטמעה",
-    "embedCodeCopied": "קוד הטמעה הועתק ללוח!",
-    "description": "הטמע את המפה באתרי האינטרנט שלך ved the code above."
+    "exportOptions": {
+      "visitedCountries": "מדינות שביקרתי",
+      "visibleLayers": "כל השכבות הגלויות",
+      "visibleMarkers": "כל הסימונים הגלויים"
+    },
+    "mapDetails": {
+      "title": "פרטי מפה (אופציונלי)",
+      "mapName": "שם מפה",
+      "mapNamePlaceholder": "המפה המשותפת שלי",
+      "yourName": "שמך",
+      "yourNamePlaceholder": "שמך"
+    },
+    "download": {
+      "title": "הורדה",
+      "format": "פורמט",
+      "svgOptions": {
+        "inlineStyles": "הטמעת עיצובים",
+        "includeTitles": "הוספת כותרות"
+      },
+      "imageOptions": {
+        "scale": "קנה מידה",
+        "quality": "איכות",
+        "background": "צבע רקע"
+      },
+      "jsonDescription": "הורדת נתוני המפה כ-JSON"
+    },
+    "share": {
+      "title": "שיתוף",
+      "shareableLink": "קישור ניתן לשיתוף",
+      "copyLink": "העתק קישור",
+      "linkCopied": "קישור הועתק ללוח!"
+    },
+    "embed": {
+      "title": "הטמעה",
+      "embedCode": "קוד הטמעה",
+      "copyEmbedCode": "העתקת קוד הטמעה",
+      "embedCodeCopied": "קוד הטמעה הועתק ללוח!",
+      "description": "הטמע את המפה באתרי האינטרנט שלך על ידי הקוד למעלה."
+    }
   },
   "mapSettings": {
     "title": "הגדרות מפה",
