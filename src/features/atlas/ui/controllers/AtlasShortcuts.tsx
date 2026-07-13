@@ -12,7 +12,7 @@ export function AtlasShortcuts() {
   useKeyHandler(actions.toggleLegend, ["g", "G"], conditions.legend);
   useKeyHandler(actions.toggleLayers, ["l", "L"], conditions.layers);
   useKeyHandler(actions.toggleMarkers, ["m", "M"], conditions.markers);
-  useKeyHandler(actions.toggleColorMode, ["o", "O"], conditions.colorModes);
+  useKeyHandler(actions.toggleAtlasMode, ["a", "A"], conditions.atlasMode);
   useKeyHandler(actions.toggleSettings, ["s", "S"], conditions.settings);
 
   return null;

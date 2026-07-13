@@ -1,6 +1,6 @@
 import { useRef } from "react";
-import { FaMap } from "react-icons/fa6";
 import { PanelListItem, Tooltip } from "@components";
+import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useMapShare } from "@features/atlas/export/hooks/useMapShare";
 import { useTooltipTarget } from "@hooks";
@@ -67,7 +67,7 @@ export function SavedMapPanelItem({
         name={map.name || "Untitled Map"}
         color="#ffffff"
         icon={
-          <FaMap
+          <ICONS.savedMaps
             className="text-xl cursor-pointer"
             {...registerTarget("Map Preview")}
           />

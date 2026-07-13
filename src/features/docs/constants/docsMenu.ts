@@ -76,7 +76,7 @@ export const DOCS_GROUPS = {
       {
         label: "Layers & Markers",
         file: "atlas/layers-markers.md",
-        icon: ICONS.mapData,
+        icon: ICONS.location,
         url: "/docs/atlas/layers-markers",
       },
       {
@@ -88,7 +88,7 @@ export const DOCS_GROUPS = {
       {
         label: "Saved Maps",
         file: "atlas/saved-maps.md",
-        icon: ICONS.saved,
+        icon: ICONS.savedMaps,
         url: "/docs/atlas/saved-maps",
       },
       {

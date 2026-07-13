@@ -110,7 +110,6 @@ export const ICONS = {
   // Atlas
   atlas: FaEarthAmericas,
   map: FaMap,
-  mapData: FaMapLocationDot,
   countries: FaGlobe,
   countryLists: FaListCheck,
   visits: VisitIcon,
@@ -126,6 +125,7 @@ export const ICONS = {
   markers: FaMapPin,
   legend: FaList,
   saved: FaBookmark,
+  savedMaps: FaMapLocationDot,
   atlasMode: FaBookAtlas,
   timeline: FaTimeline,
   export: FaShareFromSquare,

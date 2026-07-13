@@ -105,7 +105,7 @@ export function MapUiContainer({
     return {
       message: msg,
       icon: isEdit ? (
-        <ICONS.map className="text-lg" />
+        <ICONS.savedMaps className="text-lg" />
       ) : (
         <ICONS.share className="text-lg" />
       ),

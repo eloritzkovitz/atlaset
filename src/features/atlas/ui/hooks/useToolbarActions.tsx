@@ -62,7 +62,7 @@ export function useToolbarActions({
     },
     {
       key: "savedmaps",
-      icon: <ICONS.saved className="text-lg" />,
+      icon: <ICONS.savedMaps className="text-lg" />,
       label: t("toolbar.myMaps"),
       onClick: withMenuClose(actions.toggleSavedMaps),
       show: conditions.savedmaps,

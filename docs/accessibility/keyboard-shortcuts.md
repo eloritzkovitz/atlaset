@@ -34,7 +34,7 @@ To open the keyboard shortcuts modal, you can press <kbd>Shift</kbd> + <kbd>?</k
 	<tr><td>Toggle map legend</td><td><kbd>g</kbd></td></tr>
 	<tr><td>Toggle layers</td><td><kbd>l</kbd></td></tr>
 	<tr><td>Toggle markers</td><td><kbd>m</kbd></td></tr>
-	<tr><td>Toggle color modes</td><td><kbd>ם</kbd></td></tr>
+	<tr><td>Toggle atlas mode</td><td><kbd>a<kbd></td></tr>
 	<tr><td>Toggle settings</td><td><kbd>s</kbd></td></tr>
 	<tr><td>Toggle timeline</td><td><kbd>t</kbd></td></tr>
 	<tr><td>Toggle UI</td><td><kbd>u</kbd></td></tr>

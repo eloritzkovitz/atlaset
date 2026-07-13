@@ -57,7 +57,7 @@ export function SavedMapsModal({
       <ModalHeader
         title={
           <>
-            <ICONS.saved />
+            <ICONS.savedMaps />
             {isEditing
               ? t("savedMaps.renameTitle")
               : isReadonly

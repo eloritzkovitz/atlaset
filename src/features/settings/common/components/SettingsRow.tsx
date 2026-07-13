@@ -22,7 +22,7 @@ export function SettingsRow({
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 w-full">
       <div className="text-start max-w-xl">
-        <p className={`${labelClassName} inline`}>
+        <span className={`${labelClassName} inline`}>
           <span>{label}</span>
 
           {tooltip && (
@@ -32,7 +32,7 @@ export function SettingsRow({
               </div>
             </Tooltip>
           )}
-        </p>
+        </span>
 
         {description && <p className={descriptionClassName}>{description}</p>}
       </div>
