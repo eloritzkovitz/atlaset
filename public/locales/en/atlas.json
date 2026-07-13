@@ -10,8 +10,8 @@
     "markers": "Markers",
     "legend": "Legend",
     "myMaps": "My Maps",
-    "colorModes": "Color Modes",
-    "timeline": "Timeline",
+    "atlasMode": "Atlas Mode",
+    "timeline": "Toggle Timeline",
     "export": "Export",
     "download": "Download",
     "mapSettings": "Map Settings",
@@ -104,7 +104,7 @@
         "to": "to"
       }
     },
-    "details": {      
+    "details": {
       "status": {
         "home": "Home country",
         "visited": "Visited",

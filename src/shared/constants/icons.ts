@@ -70,7 +70,6 @@ import {
   FaRegClock,
   FaRegEye,
   FaRegHeart,
-  FaRegMap,
   FaRightFromBracket,
   FaRocket,
   FaRotateLeft,
@@ -111,7 +110,6 @@ export const ICONS = {
   // Atlas
   atlas: FaEarthAmericas,
   map: FaMap,
-  colorModes: FaRegMap,
   mapData: FaMapLocationDot,
   countries: FaGlobe,
   countryLists: FaListCheck,
@@ -128,6 +126,7 @@ export const ICONS = {
   markers: FaMapPin,
   legend: FaList,
   saved: FaBookmark,
+  atlasMode: FaBookAtlas,
   timeline: FaTimeline,
   export: FaShareFromSquare,
   share: FaShareNodes,
@@ -150,7 +149,7 @@ export const ICONS = {
   // Dashboard
   dashboard: DashboardIcon,
   overview: FaHouse,
-  exploration: FaBookAtlas,
+  exploration: FaCompass,
   currencies: FaCoins,
   achievements: FaMedal,
   statistics: FaChartSimple,

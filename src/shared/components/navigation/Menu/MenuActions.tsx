@@ -38,11 +38,7 @@ export function MenuActions({
     <>
       {onView && (
         <>
-          <MenuButton
-            onClick={onView}
-            icon={<ICONS.view className="me-2" />}
-            className="w-full"
-          >
+          <MenuButton onClick={onView} icon={<ICONS.view />} className="w-full">
             {t("actions.view", "View")}
           </MenuButton>
           <Separator className="my-1" />
@@ -51,25 +47,21 @@ export function MenuActions({
       {onDownload && (
         <MenuButton
           onClick={onDownload}
-          icon={<ICONS.download className="me-2" />}
+          icon={<ICONS.download />}
           className="w-full"
         >
           {t("actions.download", "Download")}
         </MenuButton>
       )}
       {onEdit && (
-        <MenuButton
-          onClick={onEdit}
-          icon={<ICONS.edit className="me-2" />}
-          className="w-full"
-        >
+        <MenuButton onClick={onEdit} icon={<ICONS.edit />} className="w-full">
           {t("actions.edit", "Edit")}
         </MenuButton>
       )}
       {onNameChange && (
         <MenuButton
           onClick={handleEdit}
-          icon={<ICONS.rename className="me-2" />}
+          icon={<ICONS.rename />}
           className="w-full"
         >
           {t("actions.rename", "Rename")}
@@ -78,7 +70,7 @@ export function MenuActions({
       {onCenter && (
         <MenuButton
           onClick={onCenter}
-          icon={<ICONS.center className="me-2" />}
+          icon={<ICONS.center />}
           className="w-full"
         >
           {t("actions.center", "Center")}
@@ -87,7 +79,7 @@ export function MenuActions({
       {onDuplicate && (
         <MenuButton
           onClick={onDuplicate}
-          icon={<ICONS.duplicate className="me-2" />}
+          icon={<ICONS.duplicate />}
           className="w-full"
         >
           {t("actions.duplicate", "Duplicate")}
@@ -96,7 +88,7 @@ export function MenuActions({
       {onCreateList && (
         <MenuButton
           onClick={onCreateList}
-          icon={<ICONS.createList className="me-2" />}
+          icon={<ICONS.createList />}
           className="w-full"
         >
           {t("actions.createList", "Create List")}
@@ -104,18 +96,14 @@ export function MenuActions({
       )}
       {(onShare || onCopytoClipboard) && <Separator className="my-1" />}
       {onShare && (
-        <MenuButton
-          onClick={onShare}
-          icon={<ICONS.share className="me-2" />}
-          className="w-full"
-        >
+        <MenuButton onClick={onShare} icon={<ICONS.share />} className="w-full">
           {t("actions.share", "Share")}
         </MenuButton>
       )}
       {onCopytoClipboard && (
         <MenuButton
           onClick={onCopytoClipboard}
-          icon={<ICONS.copyLink className="me-2" />}
+          icon={<ICONS.copyLink />}
           className="w-full"
         >
           {t("actions.copyLink", "Copy Link")}
@@ -126,13 +114,7 @@ export function MenuActions({
           <Separator className="my-1" />
           <MenuButton
             onClick={onRemove}
-            icon={
-              removeDisabled ? (
-                <ICONS.info className="me-2" />
-              ) : (
-                <ICONS.remove className="me-2" />
-              )
-            }
+            icon={removeDisabled ? <ICONS.info /> : <ICONS.remove />}
             className={`w-full !text-danger ${removeDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
             disabled={removeDisabled}
           >

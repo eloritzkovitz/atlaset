@@ -22,17 +22,17 @@ export function ThemeSubmenu({
     {
       id: "device" as ThemeKey,
       label: tSettings("display.theme.device"),
-      icon: <ICONS.theme.device className="text-lg me-2" />,
+      icon: <ICONS.theme.device className="text-lg" />,
     },
     {
       id: "light" as ThemeKey,
       label: tSettings("display.theme.light"),
-      icon: <ICONS.theme.light className="text-lg me-2" />,
+      icon: <ICONS.theme.light className="text-lg" />,
     },
     {
       id: "dark" as ThemeKey,
       label: tSettings("display.theme.dark"),
-      icon: <ICONS.theme.dark className="text-lg me-2" />,
+      icon: <ICONS.theme.dark className="text-lg" />,
     },
   ];
 

@@ -51,13 +51,7 @@ export function CountryListsMenu({
               }}
             >
               <MenuButton
-                icon={
-                  isAlreadyAdded ? (
-                    <ICONS.selected className="me-2" />
-                  ) : (
-                    <ICONS.add className="me-2" />
-                  )
-                }
+                icon={isAlreadyAdded ? <ICONS.selected /> : <ICONS.add />}
                 disabled={isAlreadyAdded}
                 className={`w-full text-sm text-left truncate justify-start ${
                   isAlreadyAdded ? "opacity-50 cursor-not-allowed" : ""
@@ -80,7 +74,7 @@ export function CountryListsMenu({
           }}
         >
           <MenuButton
-            icon={<ICONS.createList className="me-2" />}
+            icon={<ICONS.createList />}
             className="w-full text-sm text-left truncate justify-start font-medium"
           >
             {t("countries.actions.newList", "New list")}

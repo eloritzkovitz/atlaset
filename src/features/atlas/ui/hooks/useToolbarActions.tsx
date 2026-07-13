@@ -25,8 +25,7 @@ export function useToolbarActions({
   setMenuOpen,
 }: ToolbarActionsParams): ToolbarActionItem[] {
   const { t } = useTranslation("atlas");
-  const { actions, conditions, isAtlasActive, isReadonly, isEdit } =
-    useAtlasActions();
+  const { actions, conditions, isReadonly, isEdit } = useAtlasActions();
 
   // Closes the menu (on mobile) and then executes the action
   function withMenuClose(action: () => void) {
@@ -62,13 +61,13 @@ export function useToolbarActions({
       commandId: "atlas.markers",
     },
     {
-      key: "colorModes",
-      icon: <ICONS.colorModes className="text-lg" />,
-      label: t("toolbar.colorModes"),
-      onClick: withMenuClose(actions.toggleColorMode),
-      show: conditions.colorModes,
-      commandId: "atlas.colorModes",
-      separatorAfter: isAtlasActive,
+      key: "savedmaps",
+      icon: <ICONS.saved className="text-lg" />,
+      label: t("toolbar.myMaps"),
+      onClick: withMenuClose(actions.toggleSavedMaps),
+      show: conditions.savedmaps,
+      commandId: "atlas.savedMaps",
+      separatorAfter: true,
     },
     {
       key: "legend",
@@ -77,16 +76,15 @@ export function useToolbarActions({
       onClick: withMenuClose(actions.toggleLegend),
       show: conditions.legend,
       commandId: "atlas.legend",
-      separatorAfter: true,
+      separatorAfter: isEdit,
     },
     {
-      key: "savedmaps",
-      icon: <ICONS.saved className="text-lg" />,
-      label: t("toolbar.myMaps"),
-      onClick: withMenuClose(actions.toggleSavedMaps),
-      show: conditions.savedmaps,
-      commandId: "atlas.savedMaps",
-      separatorAfter: isEdit,
+      key: "atlasMode",
+      icon: <ICONS.atlasMode className="text-lg" />,
+      label: t("toolbar.atlasMode"),
+      onClick: withMenuClose(actions.toggleAtlasMode),
+      show: conditions.atlasMode,
+      commandId: "atlas.atlasMode",
     },
     {
       key: "timeline",
