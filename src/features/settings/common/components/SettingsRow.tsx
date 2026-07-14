@@ -28,7 +28,7 @@ export function SettingsRow({
           {tooltip && (
             <Tooltip content={tooltip} position="top">
               <div className="inline-flex align-middle ms-2 text-muted hover:text-muted-hover transition-colors cursor-help">
-                <ICONS.info />
+                <ICONS.helpTooltip />
               </div>
             </Tooltip>
           )}
