@@ -10,7 +10,7 @@ import {
   deleteDoc,
 } from "firebase/firestore";
 import { getUserCollection, isAuthenticated } from "@utils/firebase";
-import type { UserActivity } from "../../types";
+import type { UserActivity } from "../types";
 
 /** Service for managing user activity data. */
 export const activityService = {

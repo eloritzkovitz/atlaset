@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useAuth } from "@contexts/AuthContext";
-import { useUserActivity, type UserActivity } from "@features/user";
+import { useUserActivity } from "../hooks/useUserActivity";
+import type { UserActivity } from "../types";
 
 // Action code for login activity
 const ACTION_LOGIN = 102;

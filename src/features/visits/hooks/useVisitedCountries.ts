@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useTrips } from "@contexts/TripsContext";
+import { logUserActivity } from "@features/activity";
 import { getCountryName, useCountryData } from "@features/countries";
-import { logUserActivity, useAuth } from "@features/user";
+import { useAuth } from "@features/user";
 import { countryTrackingService } from "../services/countryTrackingService";
 import {
   computeVisitedCountriesFromTrips,

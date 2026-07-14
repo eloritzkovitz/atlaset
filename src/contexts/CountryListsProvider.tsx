@@ -1,8 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { logUserActivity } from "@features/activity";
 import { CountryListModal } from "@features/atlas/countries";
 import type { Layer } from "@features/atlas/layers";
 import { countryListService, type CountryList } from "@features/countries";
-import { logUserActivity, useAuth } from "@features/user";
+import { useAuth } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import {
   CountryListsContext,

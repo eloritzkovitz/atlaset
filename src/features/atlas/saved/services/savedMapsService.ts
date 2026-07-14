@@ -6,8 +6,8 @@ import {
   setDoc,
   deleteDoc,
 } from "firebase/firestore";
-import { logUserActivity } from "@features/user";
 import { db } from "@app/firebase";
+import { logUserActivity } from "@features/activity";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { SavedMap } from "../types";
 

@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { appDb } from "@app/db";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
 } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { markersService } from "./markersService";
-import { logUserActivity } from "../../../../features/user";
 
 vi.mock("@app/db", () => ({
   appDb: {
@@ -22,8 +22,6 @@ vi.mock("@app/db", () => ({
     },
   },
 }));
-
-vi.mock("../../../../features/user", () => ({ logUserActivity: vi.fn() }));
 vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("markersService", () => {
@@ -160,7 +158,7 @@ describe("markersService", () => {
         markers[0],
       );
       expect(mockBatch.commit).toHaveBeenCalled();
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         220,
         { count: 2, userName: "TestUser" },
         "test-user",
@@ -176,7 +174,7 @@ describe("markersService", () => {
           name: "Bar Marker",
         },
       );
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         221,
         { markerId: "bar", itemName: "Bar Marker", userName: "TestUser" },
         "test-user",
@@ -190,7 +188,7 @@ describe("markersService", () => {
           name: "Baz Marker",
         },
       );
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         222,
         { markerId: "baz", itemName: "Baz Marker", userName: "TestUser" },
         "test-user",
@@ -205,7 +203,7 @@ describe("markersService", () => {
       expect(fs.deleteDoc).toHaveBeenCalledWith(
         mockDocRef(mockMarkersCol, "baz"),
       );
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         223,
         { markerId: "baz", itemName: "Baz Marker", userName: "TestUser" },
         "test-user",

@@ -21,11 +21,9 @@ let mockUser: { uid: string; displayName?: string } | null = {
   uid: "u1",
   displayName: "Sarah",
 };
-const mockLogUserActivity = vi.fn().mockResolvedValue(undefined);
 
 vi.mock("@features/user", () => ({
   useAuth: () => ({ user: mockUser }),
-  logUserActivity: (...args: any[]) => mockLogUserActivity(...args),
 }));
 
 vi.mock("@features/countries", async (importOriginal) => {

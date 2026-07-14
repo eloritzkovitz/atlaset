@@ -7,13 +7,13 @@ import {
   getDoc,
 } from "firebase/firestore";
 import { db } from "@app/firebase";
+import { logUserActivity } from "@features/activity";
 import {
   isAuthenticated,
   getUserCollection,
   getCurrentUser,
 } from "@utils/firebase";
 import type { Trip } from "../types";
-import { logUserActivity } from "../../../features/user";
 import { profileService } from "../../user/profile/services/profileService";
 
 /**

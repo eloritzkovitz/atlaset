@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { QueryDocumentSnapshot, type DocumentData } from "firebase/firestore";
 import { activityService } from "../services/activityService";
-import type { UserActivity } from "../../types";
+import type { UserActivity } from "../types";
 
 /**
  * Fetches and manages user activity data.

@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from "react";
+import { logUserActivity } from "@features/activity";
 import {
   layersService,
   useLayerManager,
   type AnyLayer,
 } from "@features/atlas/layers";
-import { logUserActivity, useAuth } from "@features/user";
+import { useAuth } from "@features/user";
 import { LayersContext } from "./LayersContext";
 
 export function LayersProvider({ children }: { children: React.ReactNode }) {

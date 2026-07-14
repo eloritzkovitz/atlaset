@@ -1,14 +1,16 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import { vi } from "vitest";
+import { activityMockTracker } from "@test-utils/activityMocks";
 
 const mockAuth: { user: any } = { user: null };
-const mockActivity: { activity: any[] } = { activity: [] };
 
 vi.mock("@contexts/AuthContext", () => ({
   useAuth: () => mockAuth,
 }));
-vi.mock("@features/user", () => ({
-  useUserActivity: () => mockActivity,
+vi.mock("./useUserActivity", () => ({
+  useUserActivity: () => ({
+    activity: activityMockTracker(), 
+  }),
 }));
 
 import { useLastLogin } from "./useLastLogin";
@@ -26,8 +28,8 @@ function Probe() {
 
 afterEach(() => {
   cleanup();
+  vi.clearAllMocks();
   mockAuth.user = null;
-  mockActivity.activity = [];
 });
 
 const cases: Array<[string, any, any[], string, string, string]> = [
@@ -72,7 +74,7 @@ const cases: Array<[string, any, any[], string, string, string]> = [
 
 test.each(cases)("%s", (_name, user, activityArr, expTs, expMethod, expHas) => {
   mockAuth.user = user;
-  mockActivity.activity = activityArr;
+  (activityMockTracker as any).mockReturnValue(activityArr);
 
   render(<Probe />);
 

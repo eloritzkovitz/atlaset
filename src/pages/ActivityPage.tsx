@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { UserActivitySection } from "@features/user";
+import { UserActivitySection } from "@features/activity";
 import { usePageTitle } from "@hooks";
 
 export default function ActivityPage() {

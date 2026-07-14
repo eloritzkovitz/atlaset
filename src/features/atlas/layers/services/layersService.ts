@@ -8,9 +8,9 @@ import {
 } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
+import { logUserActivity } from "@features/activity";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { AnyLayer } from "../types";
-import { logUserActivity } from "../../../user";
 
 /**
  * Service for managing user layers.

@@ -22,8 +22,6 @@ vi.mock("@app/db", () => ({
     },
   },
 }));
-
-vi.mock("../../../../features/user", () => ({ logUserActivity: vi.fn() }));
 vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("layersService", () => {
@@ -125,7 +123,12 @@ describe("layersService", () => {
         createMockSnapshot([{ id: "x", data: { name: "Layer X" } }]) as any,
       );
       const layers = await layersService.load();
-      expect(fs.collection).toHaveBeenCalledWith({}, "users", "test-user", "layers");
+      expect(fs.collection).toHaveBeenCalledWith(
+        {},
+        "users",
+        "test-user",
+        "layers",
+      );
       expect(layers).toContainEqual(
         expect.objectContaining({ id: "x", name: "Layer X" }),
       );

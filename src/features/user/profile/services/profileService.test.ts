@@ -1,14 +1,13 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import {
   createMockSnapshot,
   createMockDocSnap,
 } from "@test-utils/firestoreMocks";
 import { profileService } from "./profileService";
-import { logUserActivity } from "../../activity/utils/activity";
 
 vi.mock("@app/firebase", () => ({ db: {} }));
-vi.mock("../../activity/utils/activity", () => ({ logUserActivity: vi.fn() }));
 
 describe("profileService", () => {
   let mockTx: { get: any; set: any; update: any; delete: any };
@@ -135,7 +134,7 @@ describe("profileService", () => {
 
       await profileService.editProfile("u1", { displayName: "New Name" });
       expect(fs.updateDoc).toHaveBeenCalled();
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         120,
         expect.any(Object),
         "u1",

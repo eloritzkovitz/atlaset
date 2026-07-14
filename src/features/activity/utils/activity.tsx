@@ -8,7 +8,7 @@ import { addDoc } from "firebase/firestore";
 import { ICONS } from "@constants/icons";
 import { formatTimeSeconds } from "@utils/date";
 import { getUserCollection } from "@utils/firebase";
-import type { ActivityDetails } from "../../types";
+import type { ActivityDetails } from "../types";
 
 /**
  * Logs a user activity event to Firestore.
