@@ -23,7 +23,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   const [countryLists, setCountryLists] = useState<CountryList[]>([]);
   const [currentList, setCurrentList] = useState<CountryList | null>(null);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
-  const [isSystemList, setIsSystemList] = useState(false);
+  const [isTrackingList, setIsTrackingList] = useState(false);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -46,7 +46,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     setModalOpen(false);
     setCurrentList(null);
     setIsEditing(false);
-    setIsSystemList(false);
+    setIsTrackingList(false);
   };
 
   // Opens the modal for adding a new list, optionally pre-filling with country codes
@@ -62,7 +62,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Opens the modal for editing an existing list
   const openEditModal = (listId: string) => {
-    // Special handling for system lists
+    // Special handling for tracking lists
     if (listId === "VISITED_COUNTRIES") {
       setCurrentList({
         id: "VISITED_COUNTRIES",
@@ -70,7 +70,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
         countryCodes: visitedCountryCodes,
       });
       setIsEditing(true);
-      setIsSystemList(true);
+      setIsTrackingList(true);
       setModalOpen(true);
       return;
     }
@@ -82,7 +82,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
         countryCodes: wantToVisitCountryCodes,
       });
       setIsEditing(true);
-      setIsSystemList(true);
+      setIsTrackingList(true);
       setModalOpen(true);
       return;
     }
@@ -92,7 +92,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     if (list) {
       setCurrentList({ ...list });
       setIsEditing(true);
-      setIsSystemList(false);
+      setIsTrackingList(false);
       setModalOpen(true);
     }
   };
@@ -129,7 +129,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Shared form modification pipeline
   const handleModalChange = async (updatedList: CountryList) => {
-    if (isSystemList && updatedList) {
+    if (isTrackingList && updatedList) {
       const currentCodes = currentList?.countryCodes || [];
       const newCodes = updatedList.countryCodes;
 
@@ -180,8 +180,8 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Updates a list by saving it and reloading all lists
   const handleUpdate = async (list: CountryList) => {
-    // Prevent updates to system lists, which are managed by the application
-    if (isSystemList) {
+    // Prevent updates to tracking lists, which are managed by the application
+    if (isTrackingList) {
       return;
     }
 
@@ -239,11 +239,11 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       <CountryListModal
         isOpen={modalOpen}
         isEditing={isEditing}
-        isSystemList={isSystemList}
+        isTrackingList={isTrackingList}
         list={currentList}
         onChange={handleModalChange}
         onSave={isEditing ? handleUpdate : handleSave}
-        onDelete={isSystemList ? undefined : handleDelete}
+        onDelete={isTrackingList ? undefined : handleDelete}
         onClose={closeModal}
       />
     </CountryListsContext.Provider>

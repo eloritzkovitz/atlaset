@@ -80,16 +80,16 @@ export const DOCS_GROUPS = {
         url: "/docs/atlas/layers-markers",
       },
       {
-        label: "Legend",
-        file: "atlas/legend.md",
-        icon: ICONS.legend,
-        url: "/docs/atlas/legend",
-      },
-      {
         label: "Saved Maps",
         file: "atlas/saved-maps.md",
         icon: ICONS.savedMaps,
         url: "/docs/atlas/saved-maps",
+      },
+      {
+        label: "Legend",
+        file: "atlas/legend.md",
+        icon: ICONS.legend,
+        url: "/docs/atlas/legend",
       },
       {
         label: "Timeline",

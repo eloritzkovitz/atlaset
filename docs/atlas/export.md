@@ -11,13 +11,13 @@ Atlaset makes it easy to export your `map data`, share your travels with others 
 
 ### **As an image**
 
-You can download your `map` as an image to share or use in presentations, reports, or social media. To do that, choose your desired format, adjust the settings and select **`Download Image`**.
+You can download your `map` as an image to share or use in presentations, reports, or social media. To do that, choose your desired format, adjust the settings and select **`Download`**.
 
 Supported formats are `PNG`, `SVG`, `JPEG`, `WebP`.
 
-### **As a JSON file**
+### **As a data file**
 
-Download your `layers` and/or `markers` as a `JSON` file for backup or sharing. To do that, select the relevant data to download and select **`Download as JSON`**.
+Download your `layers` and/or `markers` as a `JSON` file for backup or sharing. To do that, select the `JSON` format and adjust your desired data. The export settings at the top affect the data that will be included in the file.
 
 ## **Sharing maps**
 
@@ -41,6 +41,7 @@ Atlaset supports embedding `maps` directly into your website or blog using an HT
 - You control what is included in the shared `map`.
 
 > **Tips:**
+>
 > - Export your `data` regularly for backup.
 > - Use `sharing` and `embedding` to showcase your travels or collaborate with others.
-> - You can import exported `JSON` files back into Atlaset at any time.
+> - You can import exported `JSON` files back into the app at any time!

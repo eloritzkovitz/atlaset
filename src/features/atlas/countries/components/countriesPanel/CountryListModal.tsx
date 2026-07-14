@@ -12,7 +12,7 @@ import { useVisitedCountries } from "@features/visits";
 interface CountryListModalProps {
   isOpen: boolean;
   isEditing: boolean;
-  isSystemList?: boolean;
+  isTrackingList?: boolean;
   list: CountryList | null;
   onChange: (list: CountryList) => void;
   onSave: (list: CountryList) => void;
@@ -23,7 +23,7 @@ interface CountryListModalProps {
 export function CountryListModal({
   isOpen,
   isEditing,
-  isSystemList = false,
+  isTrackingList = false,
   list,
   onChange,
   onSave,
@@ -43,11 +43,11 @@ export function CountryListModal({
   const isLinked = !!list.layerId && isEditing;
 
   // Determine if the list is valid for saving
-  const isValid = isSystemList
+  const isValid = isTrackingList
     ? list.countryCodes.length >= 0
     : list.name.trim() !== "" && list.countryCodes.length > 0;
 
-  // Determine if the list is a system-managed list
+  // Determine if the list is a tracking list
   const isVisitedList = list.id === "VISITED_COUNTRIES";
   const isWantToVisitList = list.id === "WANT_TO_VISIT";
 
@@ -104,7 +104,7 @@ export function CountryListModal({
           <div className="p-4">
             <FormField
               label={t("countries.lists.form.nameLabel")}
-              disabled={isSystemList}
+              disabled={isTrackingList}
             >
               <input
                 type="text"
@@ -123,15 +123,15 @@ export function CountryListModal({
                 // Update the list in the parent component
                 onChange(updatedList);
 
-                // If it's a system list, save the changes immediately
-                if (isSystemList) {
+                // If it's a tracking list, save the changes immediately
+                if (isTrackingList) {
                   onSave(updatedList);
                 }
               }}
               isOpen={countrySelectOpen}
               onOpen={() => setCountrySelectOpen(true)}
               onClose={() => setCountrySelectOpen(false)}
-              isTripBasedCountry={isSystemList ? isTripBased : undefined}
+              isTripBasedCountry={isTrackingList ? isTripBased : undefined}
               isCountryDisabled={handleIsCountryDisabled}
             />
             {isEditing && isLinked && (
@@ -140,17 +140,16 @@ export function CountryListModal({
                 {t("countries.lists.form.linkedWarning")}
               </div>
             )}
-            {isSystemList && (
+            {isTrackingList && (
               <div className="flex px-3 py-2 mb-2 items-center text-danger ">
                 <ICONS.info className="inline me-2" />
-                {t("countries.lists.form.systemListWarning")}
+                {t("countries.lists.form.trackingListWarning")}
               </div>
             )}
             <div className="flex items-center justify-end mt-6">
-              {!isSystemList && (
+              {!isTrackingList && (
                 <ModalActions
                   onCancel={onClose}
-                  onSubmit={() => isValid && onSave(list)}
                   onDelete={
                     isEditing && onDelete ? () => onDelete(list.id) : undefined
                   }

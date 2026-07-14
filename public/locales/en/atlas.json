@@ -60,7 +60,7 @@
         "addTitle": "Add List",
         "nameLabel": "Name:",
         "linkedWarning": "Changes to this list will update all layers linked to it.",
-        "systemListWarning": "Changes to this list are saved automatically to your profile.",
+        "trackingListWarning": "Changes to this list are saved automatically to your profile.",
         "save": "Save Changes",
         "add": "Add List",
         "delete": "Delete List"

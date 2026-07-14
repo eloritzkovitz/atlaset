@@ -12,11 +12,11 @@ You can create and manage your own custom `lists`, which allow quick, dynamic fi
 
 Updating a linked list will also update the relevant content in the layer, allowing for easier management.
 
-## **System Lists**
+## **Tracking Lists**
 
-In addition to the custom `user-made lists`, there are additional `system lists`, tracking your past and future visits.
+In addition to the custom `user-made lists`, there are additional `tracking lists`, tracking your past and future visits.
 
-There are currently two system lists: `Visited` and `Want to Visit`.
+There are currently two tracking lists: `Visited` and `Want to Visit`.
 
 As they are automated, these lists behave differently than user-made lists:
 
