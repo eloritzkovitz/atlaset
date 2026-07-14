@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for visit statistics.
+ * Utility functions for visit statistics.
  */
 
 import type { Country } from "@features/countries/types";

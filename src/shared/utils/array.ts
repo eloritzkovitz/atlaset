@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for array operations.
+ * Utility functions for array operations.
  */
 
 import type { Option } from "@types";

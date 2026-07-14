@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for processing visit and trip data.
+ * Utility functions for processing visit and trip data.
  */
 
 import {

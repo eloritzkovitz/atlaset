@@ -2,11 +2,9 @@ import { vi } from "vitest";
 
 /** Mock tracker for user activity logging. */
 const { activityMockTracker } = vi.hoisted(() => ({
-  activityMockTracker: vi.fn<(...args: any[]) => any>(
-    async (_code: number, _payload: any, _userId: string) => {
-      return Promise.resolve();
-    },
-  ),
+  activityMockTracker: vi.fn<(...args: any[]) => any>(async () => {
+    return Promise.resolve();
+  }),
 }));
 
 /** Mock behavior for user activity logging. */

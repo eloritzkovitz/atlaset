@@ -1,5 +1,5 @@
 /**
- * @file Pagination utility functions
+ * Utility functions for managing Pagination.
  */
 
 /**
@@ -9,7 +9,7 @@
  */
 export function getPageButtons(
   currentPage: number,
-  totalPages: number
+  totalPages: number,
 ): (number | string)[] {
   const windowSize = 2;
   const pages: (number | string)[] = [];

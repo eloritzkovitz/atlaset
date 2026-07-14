@@ -1,5 +1,5 @@
 /**
- * @file Device utilities for user authentication.
+ * Utility functions for device information and session management.
  */
 
 import {
@@ -72,7 +72,7 @@ export async function updateCurrentDevice(userId: string) {
   const q = query(
     devicesCol,
     where("userId", "==", userId),
-    where("sessionId", "==", sessionId)
+    where("sessionId", "==", sessionId),
   );
   const snapshot = await getDocs(q);
   for (const doc of snapshot.docs) {
@@ -91,7 +91,7 @@ export async function removeDevice(userId: string, sessionId?: string) {
   const q = query(
     devicesCol,
     where("userId", "==", userId),
-    where("sessionId", "==", targetSessionId)
+    where("sessionId", "==", targetSessionId),
   );
   const snapshot = await getDocs(q);
   for (const doc of snapshot.docs) {

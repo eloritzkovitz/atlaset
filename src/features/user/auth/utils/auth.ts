@@ -1,5 +1,5 @@
 /**
- * @file Contains utility functions for user authentication providers
+ * Utility functions for user authentication providers.
  */
 
 import type { User, UserInfo } from "firebase/auth";

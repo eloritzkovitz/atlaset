@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for trip data manipulation.
+ * Utility functions for trip data manipulation.
  */
 
 import { extractUniqueValues } from "@utils/array";

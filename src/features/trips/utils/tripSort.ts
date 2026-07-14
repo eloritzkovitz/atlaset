@@ -1,5 +1,5 @@
 /**
- * @file Utilities for sorting trips.
+ * Utility functions for sorting trips.
  */
 
 import type { Country } from "@features/countries";

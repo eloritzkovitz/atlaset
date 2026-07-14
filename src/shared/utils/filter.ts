@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for filter configurations and operations.
+ * Utility functions for filter configurations and operations.
  */
 
 import type { FilterConfig, FilterOption } from "@types";
