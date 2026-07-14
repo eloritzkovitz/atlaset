@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-07-14
+
+- **[feature]** **Atlas | Map:** Added option to show circle overlays above small countries on the map
+- **[breaking]** **Atlas | Map:** Reorganized map settings
+- **[feature]** **Atlas | Export:** Added new option to include titles (tooltips) on SVG maps
+- **[chore]** **Activity:** Added activity logging for country lists
+- **[docs]** **Docs:** Updated documentation for the new/reorganized settings
+- **[bugfix]** **General:** Fixed some UI bugs
+
 ## 2026-07-12
 
 - **[chore]** **Dashboard | Achievements:** Added sort option for progress
@@ -112,7 +121,7 @@
 ## 2026-05-17
 
 - **[feature]** **Dashboard | Countries:** Added separate menu item for countries and sovereignty toggle in toolbar
-- **[bugfix]** **User | Activity:** Fixed time formatting for quiz activity log items
+- **[bugfix]** **Activity:** Fixed time formatting for quiz activity log items
 
 ## 2026-05-16
 
@@ -249,7 +258,7 @@
 
 ## 2026-03-04
 
-- **[chore]** **User | Activity:** Redesigned activity log and updated formatting
+- **[chore]** **Activity:** Redesigned activity log and updated formatting
 
 ## 2026-03-01
 
@@ -273,7 +282,7 @@
 
 - **[feature]** **Dashboard:** Added dashboard overview with information summary
 - **[chore]** **Dashboard:** Updated dashboard menu and navigation
-- **[chore]** **User | Activity:** Moved activity log to dashboard and added another link from the user profile
+- **[chore]** **Activity:** Moved activity log to dashboard and added another link from the user profile
 
 ## 2026-02-17
 
@@ -403,7 +412,7 @@
 - **[feature]** **Atlas | UI** Redesigned map legend
 - **[chore]** **General:** Updated service structures to be consistent
 - **[feature]** **User | Friends:** Users can now add and manage friends
-- **[chore]** **User | Activity:** Updated activity actions to be based on a number value
+- **[chore]** **Activity:** Updated activity actions to be based on a number value
 
 ## 2025-12-23
 

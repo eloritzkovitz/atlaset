@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ActionButton } from "@components";
+import { useTranslation } from "react-i18next";
+import { ActionButton, ColorSelectInput } from "@components";
 import type { ImageFormat } from "../../types";
 
 type ImageOptionsProps = {
@@ -17,6 +18,8 @@ export function ImageOptions({
   scaleOptions,
   onOptionsChange,
 }: ImageOptionsProps) {
+  const { t } = useTranslation("atlas");
+
   const [scale, setScale] = useState(2);
   const [quality, setQuality] = useState(5);
   const qualityFloat = quality * 0.2;
@@ -33,7 +36,9 @@ export function ImageOptions({
 
   return (
     <div>
-      <div className="text-xs text-muted mb-1">Scale</div>
+      <div className="text-xs text-muted mb-1">
+        {t("mapExport.download.imageOptions.scale")}
+      </div>
       <div className="flex gap-2 mb-4">
         {scaleOptions.map((s) => (
           <ActionButton
@@ -54,7 +59,7 @@ export function ImageOptions({
             htmlFor="image-quality-slider"
             className="block text-xs text-muted mb-1"
           >
-            Quality
+            {t("mapExport.download.imageOptions.quality")}
           </label>
           <input
             id="image-quality-slider"
@@ -74,13 +79,11 @@ export function ImageOptions({
       {format === "jpeg" && (
         <div className="mb-2">
           <label className="block text-xs text-muted mb-1">
-            Background Color
+            {t("mapExport.download.imageOptions.background")}
           </label>
-          <input
-            type="color"
+          <ColorSelectInput
             value={backgroundColor}
-            onChange={(e) => setBackgroundColor(e.target.value)}
-            className="w-8 h-8 p-0 border-0"
+            onChange={setBackgroundColor}
           />
         </div>
       )}

@@ -142,7 +142,7 @@ export function useCountryActions({
     viewDashboard: {
       label: t("countries.actions.viewDashboard"),
       ariaLabel: t("countries.actions.viewDashboard"),
-      icon: <ICONS.exploration />,
+      icon: <ICONS.dashboard />,
       url: dashboardUrl,
       onClick: () => {
         if (onCloseMenu) onCloseMenu();

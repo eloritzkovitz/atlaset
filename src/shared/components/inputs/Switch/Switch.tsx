@@ -1,13 +1,19 @@
 import { useLanguage } from "@features/settings";
 
 interface SwitchProps {
+  variant?: "surface" | "input";
   checked: boolean;
   onChange: (checked: boolean) => void;
   disabled?: boolean;
 }
 
 /** Renders a switch component. */
-export function Switch({ checked, onChange, disabled = false }: SwitchProps) {
+export function Switch({
+  variant = "surface",
+  checked,
+  onChange,
+  disabled = false,
+}: SwitchProps) {
   const { isRtl } = useLanguage();
 
   const knobClasses =
@@ -29,7 +35,7 @@ export function Switch({ checked, onChange, disabled = false }: SwitchProps) {
       onClick={() => onChange(!checked)}
       className={`
         relative w-12 h-6 flex items-center rounded-full transition-colors focus:outline-none
-        ${checked ? "bg-primary" : "bg-surface"}
+        ${checked ? "bg-primary" : "bg-" + variant}
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
       `}
     >

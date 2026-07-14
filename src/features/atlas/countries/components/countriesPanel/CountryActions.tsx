@@ -162,7 +162,7 @@ export const CountryActions = forwardRef(function CountryActions(
             key={i}
             onClick={act.onClick}
             onMouseEnter={() => setListMenuOpen(false)}
-            icon={<span className="me-2">{act.icon}</span>}
+            icon={act.icon}
             className="w-full"
           >
             {act.label}
@@ -179,7 +179,7 @@ export const CountryActions = forwardRef(function CountryActions(
         >
           <MenuButton
             {...listButtonHoverHandlers}
-            icon={<ICONS.countryLists className="me-2" />}
+            icon={<ICONS.countryLists />}
             className="w-full flex items-center justify-between"
           >
             {t("countries.actions.addToList", "Add to List")}
@@ -215,7 +215,7 @@ export const CountryActions = forwardRef(function CountryActions(
             onMouseEnter={() => setListMenuOpen(false)}
             ariaLabel={act.ariaLabel}
             icon={
-              <span className={`me-2 ${act.disabled ? "text-muted" : ""}`}>
+              <span className={`${act.disabled ? "text-muted" : ""}`}>
                 {act.icon}
               </span>
             }
@@ -237,7 +237,7 @@ export const CountryActions = forwardRef(function CountryActions(
             onMouseEnter={() => setListMenuOpen(false)}
             url={act.url}
             ariaLabel={act.ariaLabel}
-            icon={<span className="me-2">{act.icon}</span>}
+            icon={act.icon}
             className="w-full"
           >
             {act.label}

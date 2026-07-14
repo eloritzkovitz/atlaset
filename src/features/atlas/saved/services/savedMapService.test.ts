@@ -1,4 +1,5 @@
 import { describe, it, beforeEach, expect, vi } from "vitest";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -7,9 +8,7 @@ import { createMockUser } from "@test-utils/authMocks";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { savedMapsService } from "./savedMapsService";
 import type { SavedMap } from "../types";
-import { logUserActivity } from "../../../../features/user";
 
-vi.mock("../../../../features/user", () => ({ logUserActivity: vi.fn() }));
 vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("savedMapsService", () => {
@@ -67,7 +66,7 @@ describe("savedMapsService", () => {
     it("manages map additions, sets, and deletions cleanly alongside activity logging", async () => {
       await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
       expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), mockMap);
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         231,
         expect.objectContaining({ mapId: mockMap.id }),
         freshUser.uid,
@@ -77,7 +76,7 @@ describe("savedMapsService", () => {
       expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), mockMap, {
         merge: true,
       });
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         232,
         expect.objectContaining({ mapId: mockMap.id }),
         freshUser.uid,
@@ -85,7 +84,7 @@ describe("savedMapsService", () => {
 
       await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
       expect(fs.deleteDoc).toHaveBeenCalled();
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         233,
         expect.objectContaining({ mapId: mockMap.id }),
         freshUser.uid,

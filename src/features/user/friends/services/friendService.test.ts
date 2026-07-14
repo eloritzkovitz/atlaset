@@ -1,14 +1,13 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import {
   createMockSnapshot,
   createMockDocSnap,
 } from "@test-utils/firestoreMocks";
 import { friendService } from "./friendService";
-import { logUserActivity } from "../../activity/utils/activity";
 
 vi.mock("@app/firebase", () => ({ db: {} }));
-vi.mock("../../activity/utils/activity", () => ({ logUserActivity: vi.fn() }));
 
 describe("friendService", () => {
   let mockBatch: { set: any; delete: any; commit: any };
@@ -51,12 +50,12 @@ describe("friendService", () => {
       expect(mockBatch.delete).toHaveBeenCalledTimes(1);
       expect(mockBatch.commit).toHaveBeenCalledTimes(1);
 
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         140,
         { friendId: "userB" },
         "userA",
       );
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         140,
         { friendId: "userA" },
         "userB",

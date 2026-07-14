@@ -2,8 +2,11 @@
  * Utility functions for exporting map SVGs and data.
  */
 
+import type { Layer } from "@features/atlas/layers";
+import type { Marker } from "@features/atlas/markers/types";
 import { downloadBlob, downloadCanvas } from "@utils/file";
 import { exportToFile } from "@utils/json";
+import { getExportFilename, isImageFormat } from "./format";
 import type {
   ExportFormat,
   ImageExportOptions,
@@ -19,11 +22,17 @@ const getElementDim = (
 ) => val?.baseVal?.value || clientVal || fallback;
 
 /**
- * Prepare an SVG clone for export by normalizing attributes and inlining styles.
- * @param original: source SVG element
- * @param inlineStyles: whether to inline computed styles into the clone
+ * Prepares an SVG clone for export by normalizing attributes and inlining styles.
+ * @param original - The original SVG element to clone.
+ * @param inlineStyles - Whether to inline computed styles into the clone.
+ * @param includeTitles - Whether to include title elements for accessibility.
+ * @returns The prepared SVG clone.
  */
-export function prepareSvgClone(original: SVGSVGElement, inlineStyles = true) {
+export function prepareSvgClone(
+  original: SVGSVGElement,
+  inlineStyles = true,
+  includeTitles = true,
+): SVGSVGElement {
   const clone = original.cloneNode(true) as SVGSVGElement;
 
   if (!clone.getAttribute("xmlns")) {
@@ -42,6 +51,23 @@ export function prepareSvgClone(original: SVGSVGElement, inlineStyles = true) {
     )
     .forEach((n) => n.remove());
 
+  // Add <title> elements for accessibility and tooltips if requested
+  if (includeTitles) {
+    clone.querySelectorAll("[data-export-title]").forEach((el) => {
+      const titleText = el.getAttribute("data-export-title");
+      if (titleText) {
+        const titleNode = original.ownerDocument.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "title",
+        );
+        titleNode.textContent = titleText;
+
+        el.appendChild(titleNode);
+      }
+    });
+  }
+
+  // Inline computed styles if requested
   if (inlineStyles) {
     const elements = clone.querySelectorAll<SVGElement>(
       "path, circle, rect, line, polyline, polygon, text, g",
@@ -89,11 +115,11 @@ export function prepareSvgClone(original: SVGSVGElement, inlineStyles = true) {
 }
 
 /**
- * Given a node in a cloned tree, find the corresponding node in the original tree.
- * @param node: node in the cloned tree
- * @param originalRoot: root of the original tree
- * @param cloneRoot: root of the cloned tree
- * @returns corresponding node in the original tree, or null if not found
+ * Finds the corresponding node in the original SVG for a given node in the cloned SVG.
+ * @param node - The node in the cloned SVG.
+ * @param originalRoot - The root of the original SVG.
+ * @param cloneRoot - The root of the cloned SVG.
+ * @returns The corresponding node in the original SVG, or null if not found.
  */
 export function getCorrespondingOriginal(
   node: Element,
@@ -122,18 +148,20 @@ export function getCorrespondingOriginal(
 }
 
 /**
- * Export SVG as normalized SVG file.
- * @param svgElement: source SVG element
- * @param filename: output filename
- * @param inlineStyles: whether to inline computed styles into the clone
+ * Exports the given SVG element as an SVG file.
+ * @param svgElement - The SVG element to export.
+ * @param filename - The desired filename for the exported SVG.
+ * @param inlineStyles - Whether to inline computed styles into the SVG before export.
+ * @param includeTitles - Whether to include title elements for accessibility. *
  */
 export function exportSvg(
   svgElement: SVGSVGElement,
   filename = "map.svg",
   inlineStyles = true,
+  includeTitles = true,
 ) {
   if (!svgElement) return;
-  const clone = prepareSvgClone(svgElement, inlineStyles);
+  const clone = prepareSvgClone(svgElement, inlineStyles, includeTitles);
   const svgString = new XMLSerializer().serializeToString(clone);
   downloadBlob(
     new Blob([svgString], { type: "image/svg+xml;charset=utf-8" }),
@@ -142,15 +170,15 @@ export function exportSvg(
 }
 
 /**
- * Export SVG as high-quality image.
- * @param svgElement: source SVG element
- * @param filename: output filename
- * @param format: image format ("png", "jpeg", "webp")
- * @param scale: integer multiplier (1,2,4...), devicePixelRatio is applied automatically
- * @param inlineStyles: whether to inline computed styles into the clone before rasterizing
- * @param maxDimension: cap for largest canvas side to protect memory (default 8192)
- * @param quality: image quality (0 to 1; ignored for png)
- * @param backgroundColor: background color to apply (default white)
+ * Exports the given SVG element as an image file.
+ * @param svgElement - The SVG element to export.
+ * @param filename - The desired filename for the exported image.
+ * @param format - The image format to export.
+ * @param scale - The scale factor for the exported image.
+ * @param inlineStyles - Whether to inline computed styles into the SVG before export.
+ * @param maxDimension - The maximum width or height of the exported image.
+ * @param quality - The quality of the exported image (for JPEG/WebP).
+ * @param backgroundColor - Optional background color for the exported image.
  */
 export async function exportSvgAsImage(
   svgElement: SVGSVGElement,
@@ -249,34 +277,52 @@ export async function exportSvgAsImage(
 /**
  * Exports the map based on the provided parameters.
  * @param svgRef - Reference to the SVG element to export.
- * @param format - The export format ("svg", "png", "jpeg", "webp").
+ * @param format - The export format ("svg", "png", "jpeg", "webp", "json").
  * @param svgOptions - Options for SVG export.
  * @param imageOptions - Options for image export.
- * @returns
+ * @param jsonData - Optional map data (layers, markers) required if format is "json".
  */
 export function exportMap({
   svgRef,
   format,
   svgOptions,
   imageOptions,
+  jsonData,
 }: {
   svgRef: React.RefObject<SVGSVGElement | null>;
   format: ExportFormat;
   svgOptions: React.RefObject<SvgExportOptions>;
   imageOptions: React.RefObject<ImageExportOptions>;
+  jsonData?: { layers: Layer[]; markers: Marker[] };
 }) {
+  // Handle JSON export first
+  if (format === "json") {
+    if (jsonData) {
+      exportMapDataAsJson(jsonData, getExportFilename("json"));
+    }
+    return;
+  }
+
   const currentSvg = svgRef?.current;
   if (!currentSvg) return;
 
+  // Handle SVG and image exports
   if (format === "svg") {
-    exportSvg(currentSvg, "map.svg", svgOptions.current?.svgInlineStyles);
-  } else {
+    exportSvg(
+      currentSvg,
+      getExportFilename("svg"),
+      svgOptions.current?.svgInlineStyles,
+      svgOptions.current?.includeTitles,
+    );
+  } else if (isImageFormat(format)) {
     const opts = imageOptions.current;
+    const scale = opts?.scale ?? 1;
+
     exportSvgAsImage(
       currentSvg,
-      `map@${opts?.scale}x.${format === "jpeg" ? "jpg" : format}`,
+      getExportFilename(format, scale),
       format,
-      opts?.scale ?? 3,
+      scale,
       true,
       8192,
       opts?.quality ?? 1,

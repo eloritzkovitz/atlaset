@@ -5,7 +5,6 @@ import {
   prepareMesh,
   prepareFeatures,
   createConnectorPath,
-  isString,
 } from "./geography";
 import type { GeographyFeature, Topology } from "../types";
 
@@ -142,14 +141,6 @@ describe("geography utility suite", () => {
       expect(createConnectorPath()).toContain("M0,0 Q");
       expect(createConnectorPath(10, 20, 0.2)).toContain("M0,0 Q");
       expect(createConnectorPath(10, 20, [0.1, 0.3])).toContain("M0,0 Q");
-    });
-  });
-
-  describe("isString", () => {
-    it("accurately screens underlying primitive formats", () => {
-      expect(isString("foo")).toBe(true);
-      expect(isString(123)).toBe(false);
-      expect(isString(null)).toBe(false);
     });
   });
 });

@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
+import { logUserActivity } from "@features/activity";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
 import {
   normalizeLayers,
@@ -10,7 +11,7 @@ import { normalizeMarkers } from "@features/atlas/markers";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { useMapMode } from "@features/atlas/shared";
-import { logUserActivity, useAuth } from "@features/user";
+import { useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {

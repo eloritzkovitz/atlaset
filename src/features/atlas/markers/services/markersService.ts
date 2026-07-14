@@ -8,9 +8,9 @@ import {
 } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
+import { logUserActivity } from "@features/activity";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import type { Marker } from "../types";
-import { logUserActivity } from "../../../../features/user";
 
 /**
  * Service for managing user markers.

@@ -103,11 +103,11 @@ export const keyCommands = [
     labelKey: "shortcuts.actions.atlas.markers",
   },
   {
-    id: "atlas.colorModes",
-    key: "o",
+    id: "atlas.atlasMode",
+    key: "a",
     modifiers: [],
     category: "Atlas",
-    labelKey: "shortcuts.actions.atlas.colorModes",
+    labelKey: "shortcuts.actions.atlas.atlasMode",
   },
   {
     id: "atlas.settings",

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, SearchInput } from "@components";
 import { useAuth } from "@contexts/AuthContext";
@@ -14,8 +14,10 @@ export function SearchDropdown() {
 
   // Dropdown state and refs
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Open dropdown when input is clicked
   const handleInputClick = (e: React.MouseEvent) => {
@@ -27,25 +29,36 @@ export function SearchDropdown() {
   // Close dropdown when clicking outside
   useClickOutside(
     [
-      inputRef as React.RefObject<HTMLElement>,
+      wrapperRef as React.RefObject<HTMLElement>,
       dropdownRef as React.RefObject<HTMLElement>,
     ],
     () => setDropdownOpen(false),
     dropdownOpen,
   );
 
-  // Calculate dropdown position
+  // Determine if SearchContent will render anything
+  const hasContent = !!search.searchTerm || !!search.recentSearches.length;
+
+  // Calculate dropdown position using the custom hook
   const menuStyle = useMenuPosition(
     dropdownOpen,
-    inputRef as React.RefObject<HTMLElement>,
+    wrapperRef as React.RefObject<HTMLElement>,
     dropdownRef as React.RefObject<HTMLElement>,
     42,
     "right",
     "overlay",
-    true,
+    hasContent,
   );
 
-  // Shared search submit handler
+  // Force a re-render when the dropdown opens and has content to ensure proper positioning
+  const [, triggerUpdate] = useState({});
+  useEffect(() => {
+    if (dropdownOpen && hasContent) {
+      const frame = requestAnimationFrame(() => triggerUpdate({}));
+      return () => cancelAnimationFrame(frame);
+    }
+  }, [dropdownOpen, hasContent, search.searchTerm]);
+
   const handleSearchSubmit = (term: string) => {
     if (term) {
       setDropdownOpen(false);
@@ -53,14 +66,11 @@ export function SearchDropdown() {
     }
   };
 
-  // Determine if SearchContent will render anything
-  const hasContent = !!search.searchTerm || !!search.recentSearches.length;
-
   // Don't render if no user
   if (!user) return null;
 
   return (
-    <div className="relative w-full max-w-xs">
+    <div ref={wrapperRef} className="relative w-full max-w-xs">
       <SearchInput
         ref={inputRef}
         value={search.searchTerm}

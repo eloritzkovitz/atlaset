@@ -1,7 +1,9 @@
 import { useEffect, useState, type ReactNode } from "react";
+import { logUserActivity } from "@features/activity";
 import { CountryListModal } from "@features/atlas/countries";
 import type { Layer } from "@features/atlas/layers";
 import { countryListService, type CountryList } from "@features/countries";
+import { useAuth } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
 import {
   CountryListsContext,
@@ -9,6 +11,7 @@ import {
 } from "./CountryListsContext";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
+  const { user } = useAuth();
   const {
     visitedCountryCodes,
     wantToVisitCountryCodes,
@@ -21,7 +24,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   const [countryLists, setCountryLists] = useState<CountryList[]>([]);
   const [currentList, setCurrentList] = useState<CountryList | null>(null);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
-  const [isSystemList, setIsSystemList] = useState(false);
+  const [isTrackingList, setIsTrackingList] = useState(false);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -44,7 +47,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     setModalOpen(false);
     setCurrentList(null);
     setIsEditing(false);
-    setIsSystemList(false);
+    setIsTrackingList(false);
   };
 
   // Opens the modal for adding a new list, optionally pre-filling with country codes
@@ -60,7 +63,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
 
   // Opens the modal for editing an existing list
   const openEditModal = (listId: string) => {
-    // Special handling for system lists
+    // Special handling for tracking lists
     if (listId === "VISITED_COUNTRIES") {
       setCurrentList({
         id: "VISITED_COUNTRIES",
@@ -68,7 +71,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
         countryCodes: visitedCountryCodes,
       });
       setIsEditing(true);
-      setIsSystemList(true);
+      setIsTrackingList(true);
       setModalOpen(true);
       return;
     }
@@ -80,7 +83,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
         countryCodes: wantToVisitCountryCodes,
       });
       setIsEditing(true);
-      setIsSystemList(true);
+      setIsTrackingList(true);
       setModalOpen(true);
       return;
     }
@@ -90,7 +93,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     if (list) {
       setCurrentList({ ...list });
       setIsEditing(true);
-      setIsSystemList(false);
+      setIsTrackingList(false);
       setModalOpen(true);
     }
   };
@@ -114,13 +117,20 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       countryCodes: layer.countries,
       layerId: layer.id,
     });
+
+    await logUserActivity(
+      241,
+      { itemName: layer.name, userName: user!.displayName },
+      user!.uid,
+    );
+
     if (onLinked) onLinked(newListId);
     return newListId;
   };
 
   // Shared form modification pipeline
   const handleModalChange = async (updatedList: CountryList) => {
-    if (isSystemList && updatedList) {
+    if (isTrackingList && updatedList) {
       const currentCodes = currentList?.countryCodes || [];
       const newCodes = updatedList.countryCodes;
 
@@ -162,26 +172,48 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   const handleSave = async (list: CountryList) => {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
+
+    await logUserActivity(241, { itemName: list.name }, user!.uid);
+
     await reloadCountryLists();
     closeModal();
   };
 
   // Updates a list by saving it and reloading all lists
   const handleUpdate = async (list: CountryList) => {
-    // Special handling for the "visited" system list
-    if (isSystemList) {
+    // Prevent updates to tracking lists, which are managed by the application
+    if (isTrackingList) {
       return;
     }
 
     await countryListService.save(list);
     await reloadCountryLists();
+
+    await logUserActivity(
+      242,
+      { itemName: list.name, userName: user!.displayName },
+      user!.uid,
+    );
+
     closeModal();
   };
 
   // Deletes a list and clears selection if it was the selected one
   const handleDelete = async (id: string) => {
+    const listToDelete = countryLists.find((l) => l.id === id);
+
     await countryListService.delete(id);
     await reloadCountryLists();
+
+    await logUserActivity(
+      243,
+      {
+        itemName: listToDelete!.name ?? "Unknown List",
+        userName: user!.displayName,
+      },
+      user!.uid,
+    );
+
     if (selectedListId === id) setSelectedListId(null);
     closeModal();
   };
@@ -208,11 +240,11 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       <CountryListModal
         isOpen={modalOpen}
         isEditing={isEditing}
-        isSystemList={isSystemList}
+        isTrackingList={isTrackingList}
         list={currentList}
         onChange={handleModalChange}
         onSave={isEditing ? handleUpdate : handleSave}
-        onDelete={isSystemList ? undefined : handleDelete}
+        onDelete={isTrackingList ? undefined : handleDelete}
         onClose={closeModal}
       />
     </CountryListsContext.Provider>

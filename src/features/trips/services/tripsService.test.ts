@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { logUserActivity } from "@features/user";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import { createMockUser } from "@test-utils/authMocks";
 import {
   mockAuthControls as auth,
@@ -9,7 +9,6 @@ import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { tripsService } from "./tripsService";
 import { profileService } from "../../user/profile/services/profileService";
 
-vi.mock("@features/user", () => ({ logUserActivity: vi.fn() }));
 vi.mock("@app/firebase", () => ({ db: {} }));
 vi.mock("../../user/profile/services/profileService", () => ({
   profileService: { updateVisitedCountryCodes: vi.fn() },
@@ -79,7 +78,7 @@ describe("tripsService", () => {
 
       await tripsService.save([]);
       expect(fs.setDoc).not.toHaveBeenCalled();
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         410,
         expect.objectContaining({ count: 0 }),
         freshUser.uid,
@@ -239,7 +238,7 @@ describe("tripsService", () => {
       fs.getDocs.mockResolvedValueOnce(createMockSnapshot([]) as any);
 
       await tripsService.remove("del2");
-      expect(logUserActivity).toHaveBeenCalledWith(
+      expect(activityMockTracker).toHaveBeenCalledWith(
         415,
         expect.objectContaining({ itemName: undefined }),
         freshUser.uid,

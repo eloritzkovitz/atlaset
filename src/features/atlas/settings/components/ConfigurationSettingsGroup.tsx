@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FaDraftingCompass } from "react-icons/fa";
 import { CollapsibleHeader, SelectInput } from "@components";
+import { ICONS } from "@constants/icons";
 import { MAP_CONFIG_OPTIONS } from "@features/settings";
 import { useMapSettings } from "../hooks/useMapSettings";
 
@@ -22,7 +22,7 @@ export function ConfigurationSettingsGroup() {
   return (
     <>
       <CollapsibleHeader
-        icon={<FaDraftingCompass />}
+        icon={<ICONS.mapSettings.configuration />}
         label={t("mapSettings.configuration.title")}
         expanded={showMapSettings}
         onToggle={() => setShowMapSettings((v) => !v)}

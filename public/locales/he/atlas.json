@@ -10,8 +10,8 @@
     "markers": "סימונים",
     "legend": "מקרא",
     "myMaps": "המפות שלי",
-    "colorModes": "מצבי צבע",
-    "timeline": "ציר זמן",
+    "atlasMode": "מצב אטלס",
+    "timeline": "מצב ציר זמן",
     "export": "ייצוא",
     "download": "הורד",
     "mapSettings": "הגדרות מפה",
@@ -60,7 +60,7 @@
         "addTitle": "הוסף רשימה",
         "nameLabel": "שם:",
         "linkedWarning": "שינויים ברשימה זו יעדכנו את כל השכבות המקושרות אליה.",
-        "systemListWarning": "שינויים ברשימה זו נשמרים אוטומטית בפרופיל שלך.",
+        "trackingListWarning": "שינויים ברשימה זו נשמרים אוטומטית בפרופיל שלך.",
         "save": "שמירת שינויים",
         "add": "הוסף רשימה",
         "delete": "מחק רשימה"
@@ -105,14 +105,6 @@
       }
     },
     "details": {
-      "header": {
-        "centerMap": "מרכז מפה",
-        "centerMapAria": "מרכז את המפה אל המדינה",
-        "viewFull": "צפייה בפרטים מלאים",
-        "viewFullAria": "צפייה בפרטים מלאים",
-        "wikipedia": "ויקיפדיה",
-        "wikipediaAria": "פתח מאמר ויקיפדיה"
-      },
       "status": {
         "home": "מדינת בית",
         "visited": "ביקרתי",
@@ -231,29 +223,45 @@
   "mapExport": {
     "title": "ייצוא",
     "options": "אפשרויות",
-    "visitedCountries": "מדינות שביקרתי",
-    "visibleLayers": "כל השכבות הגלויות",
-    "visibleMarkers": "כל הסימונים הגלויים",
-    "mapDetails": "פרטי מפה (אופציונלי)",
-    "mapName": "שם מפה",
-    "mapNamePlaceholder": "המפה המשותפת שלי",
-    "yourName": "שמך",
-    "yourNamePlaceholder": "שמך",
-    "download": "הורדה",
-    "format": "פורמט",
-    "inlineStyles": "סגנונות פנימיים",
-    "downloadImage": "הורדה כתמונה",
-    "downloadData": "הורדת נתונים",
-    "downloadJson": "הורדה כ-JSON",
-    "share": "שיתוף",
-    "shareableLink": "קישור ניתן לשיתוף",
-    "copyLink": "העתק קישור",
-    "linkCopied": "קישור הועתק ללוח!",
-    "embed": "הטמעה",
-    "embedCode": "קוד הטמעה",
-    "copyEmbedCode": "העתק קוד הטמעה",
-    "embedCodeCopied": "קוד הטמעה הועתק ללוח!",
-    "description": "הטמע את המפה באתרי האינטרנט שלך ved the code above."
+    "exportOptions": {
+      "visitedCountries": "מדינות שביקרתי",
+      "visibleLayers": "כל השכבות הגלויות",
+      "visibleMarkers": "כל הסימונים הגלויים"
+    },
+    "mapDetails": {
+      "title": "פרטי מפה (אופציונלי)",
+      "mapName": "שם מפה",
+      "mapNamePlaceholder": "המפה המשותפת שלי",
+      "yourName": "שמך",
+      "yourNamePlaceholder": "שמך"
+    },
+    "download": {
+      "title": "הורדה",
+      "format": "פורמט",
+      "svgOptions": {
+        "inlineStyles": "הטמעת עיצובים",
+        "includeTitles": "הוספת כותרות"
+      },
+      "imageOptions": {
+        "scale": "קנה מידה",
+        "quality": "איכות",
+        "background": "צבע רקע"
+      },
+      "jsonDescription": "הורדת נתוני המפה כ-JSON"
+    },
+    "share": {
+      "title": "שיתוף",
+      "shareableLink": "קישור ניתן לשיתוף",
+      "copyLink": "העתק קישור",
+      "linkCopied": "קישור הועתק ללוח!"
+    },
+    "embed": {
+      "title": "הטמעה",
+      "embedCode": "קוד הטמעה",
+      "copyEmbedCode": "העתקת קוד הטמעה",
+      "embedCodeCopied": "קוד הטמעה הועתק ללוח!",
+      "description": "הטמע את המפה באתרי האינטרנט שלך על ידי הקוד למעלה."
+    }
   },
   "mapSettings": {
     "title": "הגדרות מפה",
@@ -264,19 +272,31 @@
       "borderColor": "צבע קו",
       "borderWidth": "עובי קו"
     },
+    "overlays": {
+      "title": "שכבות על",
+      "showSmallCountryOverlays": "הצג שטחים קטנים",
+      "showSmallCountryOverlaysTooltip": "אפשרות זאת תציג מדינות בעלות שטח הקטן מ-10,000 קמ\u0022ר כמעגלים על המפה.",
+      "tracking": {
+        "title": "שכבות מעקב",
+        "showHomeCountry": "הצג מדינה בית",
+        "showVisitedCountries": "הצג מדינות שביקרתי",
+        "showFutureVisits": "הצג ביקורים עתידיים",
+        "showWantToVisit": "הצג מדינות שרוצה לבקר בהן"
+      }
+    },
     "colors": {
       "title": "צבעים",
-      "displayOptions": "אפשרויות תצוגה",
-      "showHomeCountry": "הצג מדינה בית",
-      "showVisitedCountries": "הצג מדינות שביקרתי",
-      "showFutureVisits": "הצג ביקורים עתידיים",
-      "showWantToVisit": "הצג מדינות שרוצה לבקר בהן",
-      "numAtlasColors": "מספר צבעים באטלס",
-      "colorPalette": "פלטות צבעים",
-      "standard": "סטנדרטי",
-      "atlas": "אטלס",
-      "timelineCumulative": "ציר זמן (מצטבר)",
-      "timelineYearly": "ציר זמן (שנתי)"
+      "rules": {
+        "title": "Rules & modifiers",
+        "numAtlasColors": "מספר צבעים באטלס"
+      },
+      "colorPalettes": {
+        "title": "פלטות צבעים",
+        "standard": "סטנדרטי",
+        "atlas": "אטלס",
+        "cumulative": "ציר זמן (מצטבר)",
+        "yearly": "ציר זמן (שנתי)"
+      }
     }
   }
 }

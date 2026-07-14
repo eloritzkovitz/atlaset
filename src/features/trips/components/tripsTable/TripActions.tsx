@@ -167,7 +167,7 @@ export const TripActions = forwardRef(function TripActions(
               handleCloseAll();
               handleViewInCalendar?.(trip);
             }}
-            icon={<ICONS.calendar className="me-2" />}
+            icon={<ICONS.calendar />}
             className="w-full"
           >
             {t("table.actions.viewInCalendar")}
@@ -178,7 +178,7 @@ export const TripActions = forwardRef(function TripActions(
             menuActions.onEdit?.();
             handleCloseAll();
           }}
-          icon={<ICONS.edit className="me-2" />}
+          icon={<ICONS.edit />}
           className="w-full"
         >
           {t("table.actions.editTrip")}
@@ -189,7 +189,7 @@ export const TripActions = forwardRef(function TripActions(
               menuActions.onMarkCompleted?.();
               handleCloseAll();
             }}
-            icon={<ICONS.tripCompleted className="me-2" />}
+            icon={<ICONS.tripCompleted />}
             className="w-full"
           >
             {t("table.actions.markCompleted", "Mark Completed")}
@@ -201,7 +201,7 @@ export const TripActions = forwardRef(function TripActions(
             menuActions.onDuplicate?.();
             handleCloseAll();
           }}
-          icon={<ICONS.duplicate className="me-2" />}
+          icon={<ICONS.duplicate />}
           className="w-full"
         >
           {t("table.actions.duplicate")}
@@ -213,9 +213,9 @@ export const TripActions = forwardRef(function TripActions(
           }}
           icon={
             trip.favorite ? (
-              <ICONS.unfavorite className="me-2 text-muted" />
+              <ICONS.unfavorite className="text-muted" />
             ) : (
-              <ICONS.favorite className="me-2 text-danger" />
+              <ICONS.favorite className="text-danger" />
             )
           }
           className="w-full"
@@ -231,7 +231,7 @@ export const TripActions = forwardRef(function TripActions(
         >
           <MenuButton
             {...rateButtonHoverHandlers}
-            icon={<ICONS.rate className="me-2 text-yellow-400" />}
+            icon={<ICONS.rate className="text-yellow-400" />}
             className="w-full flex items-center justify-between"
           >
             {t("table.actions.rate")}
@@ -263,7 +263,7 @@ export const TripActions = forwardRef(function TripActions(
             menuActions.onDelete?.();
             handleCloseAll();
           }}
-          icon={<ICONS.remove className="me-2" />}
+          icon={<ICONS.remove />}
           className="!text-danger w-full"
         >
           {t("table.actions.deleteTrip")}

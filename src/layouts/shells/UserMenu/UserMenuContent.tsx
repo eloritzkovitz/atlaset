@@ -53,7 +53,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
   const menuItems = [
     {
       label: t("menu.profile"),
-      icon: <ICONS.profile className="text-lg me-2" />,
+      icon: <ICONS.profile className="text-lg" />,
       onClick: () => {
         navigate(`/users/${username}`);
         onClose?.();
@@ -62,7 +62,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     {
       label: t("menu.friends"),
-      icon: <ICONS.friends className="text-lg me-2" />,
+      icon: <ICONS.friends className="text-lg" />,
       onClick: () => {
         toggleFriends();
         onClose?.();
@@ -71,7 +71,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     { separator: true },
     {
       label: t("menu.settings"),
-      icon: <ICONS.settings className="text-lg me-2" />,
+      icon: <ICONS.settings className="text-lg" />,
       onClick: () => {
         navigate("/settings");
         onClose?.();
@@ -80,7 +80,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     {
       label: `${t("menu.appearance.title")}: ${t(`menu.appearance.${theme}`)}`,
-      icon: <ICONS.appearance className="text-lg me-2" />,
+      icon: <ICONS.appearance className="text-lg" />,
       onClick: () => {
         setActiveSubmenu("theme");
       },
@@ -94,7 +94,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     },
     {
       label: `${t("menu.language")}: ${name}`,
-      icon: <ICONS.language className="text-lg me-2" />,
+      icon: <ICONS.language className="text-lg" />,
       onClick: () => {
         setActiveSubmenu("language");
       },
@@ -111,7 +111,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       ? [
           {
             label: t("menu.keyboardShortcuts"),
-            icon: <ICONS.shortcuts className="text-lg me-2" />,
+            icon: <ICONS.shortcuts className="text-lg" />,
             onClick: () => {
               toggleShortcuts();
               onClose?.();
@@ -121,7 +121,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       : []),
     {
       label: t("menu.reportBug"),
-      icon: <ICONS.reportBug className="text-lg me-2" />,
+      icon: <ICONS.reportBug className="text-lg" />,
       onClick: () => {
         window.open(
           "https://github.com/eloritzkovitz/atlaset/issues",
@@ -134,7 +134,7 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
     { separator: true },
     {
       label: t("menu.signOut"),
-      icon: <ICONS.signOut className="text-lg me-2" />,
+      icon: <ICONS.signOut className="text-lg" />,
       onClick: () => {
         onLogout();
         onClose?.();

@@ -3,6 +3,7 @@ export const EXPORT_FORMAT_OPTIONS = [
   { value: "png", label: "PNG" },
   { value: "jpeg", label: "JPEG" },
   { value: "webp", label: "WebP" },
+  { value: "json", label: "JSON" },
 ];
 
 export const PNG_SCALE_OPTIONS = [1, 2, 4, 8, 16];

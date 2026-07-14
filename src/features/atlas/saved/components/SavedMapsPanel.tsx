@@ -25,7 +25,7 @@ export function SavedMapsPanel() {
     <Panel
       title={
         <>
-          <ICONS.saved /> {t("savedMaps.title")}
+          <ICONS.savedMaps /> {t("savedMaps.title")}
         </>
       }
       show={showSavedMaps}

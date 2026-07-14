@@ -2,7 +2,7 @@ import { vi } from "vitest";
 import type { Mock } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useUserActivity } from "../hooks/useUserActivity";
-import type { UserActivity } from "../../types";
+import type { UserActivity } from "../types";
 import { activityService } from "../services/activityService";
 
 vi.mock("../services/activityService");

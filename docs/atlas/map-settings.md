@@ -6,23 +6,32 @@ You can open the map settings panel from the `map toolbar` or by pressing the <k
 
 ## **Projection**
 
-**`Projection`** controls how the globe surface is represented on a two-dimensional plane. In Atlaset, there are three supported projections: `Natural Earth`, `Equal Earth` and `Mercator`. While Mercator is still the most commonly used projection in maps, it distorts regions further from the equator. Therefore, Natural Earth was chosen as the default option, as it provides a more accurate and pleasant display.
+**`Projection`** controls how the globe surface is represented on a two-dimensional plane. In Atlaset, there are three supported projections: `Natural Earth`, `Equal Earth` and `Mercator`.
+
+While `Mercator` is still the most commonly used projection in maps, it distorts regions further from the equator. Therefore, `Natural Earth` was chosen as the default option, as it provides a more accurate and pleasant display.
+
+## **Overlays**
+
+With the `overlays` section, you can toggle various overlays on top of the map:
+
+- **`Show small country overlays`** will show circles on top of small countries (with a land area smaller than 10,000 km²)
+
+### **Tracking layers**
+
+- **`Show home country`** will visually color the user's `home country`. You can set it in the `user settings`.
+- **`Show visited countries`** will color the user's `visited countries`.
+- **`Show upcoming new visits`** will highlight any `upcoming new visits`, complimenting the visited countries layer. It is based on the user's trip data, counting upcoming trips to unvisited countries.
+- **`Show 'want to visit''`** will color the user's `'want to visit' countries`.
+
+By default, all the tracking layer options are disabled. You can enable or disable them by checking or unchecking their respective boxes.
 
 ## **Colors**
 
 With the `colors` section, you can control how countries are visually distinguished on the map:
 
-### **Display options**
+### **Rules & modifiers**
 
-**`Show home country`** will visually color the user's `home country`. You can set it in the `user settings`.
-
-**`Show visited countries`** will color the user's `visited countries`.
-
-**`Show upcoming new visits`** will highlight any `upcoming new visits`, complimenting the visited countries layer. It is based on the user's trip data, counting upcoming trips to unvisited countries.
-
-By default, `Show visited countries` is enabled, while the other two are disabled. You can enable or disable them by checking or unchecking their respective boxes.
-
-**`Number of atlas colors`:** In `Atlas mode`, determines whether countries will be colored based on the four color theorem (default) or five color theorem.
+- **`Number of atlas colors`:** In `Atlas mode`, determines whether countries will be colored based on the four color theorem (default) or five color theorem.
 
 ### **Color palettes**
 

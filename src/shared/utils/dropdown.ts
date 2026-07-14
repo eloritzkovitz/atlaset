@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for dropdowns.
+ * Utility functions for dropdowns.
  */
 
 import type { DropdownOption, Option } from "@types";

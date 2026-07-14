@@ -1,10 +1,10 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
+import { logUserActivity } from "@features/activity";
 import { isAuthenticated, getCurrentUser } from "@utils/firebase";
 import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../../types";
-import { logUserActivity } from "../../../user";
 
 // In-memory dedupe cache to avoid rapid duplicate saves/logs across callers
 let _lastSaved: { key?: string; ts?: number } = {};

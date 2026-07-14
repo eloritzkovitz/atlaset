@@ -30,7 +30,7 @@ export function useAtlasActions() {
     markers: true,
     filters: true,
     export: true,
-    colorModes: !isReadonly && !isEdit && !timelineMode,
+    atlasMode: !isReadonly && !isEdit && !timelineMode,
     legend: !isAtlasActive,
     savedmaps: isAuthenticated(),
     timeline: !isReadonly && !isEdit && isAuthenticated(),
@@ -48,8 +48,8 @@ export function useAtlasActions() {
     toggleLegend: toggleLegend,
     toggleSavedMaps: toggleSavedMaps,
     toggleSettings: toggleSettings,
-    toggleColorMode: () => {
-      if (!conditions.colorModes) return;
+    toggleAtlasMode: () => {
+      if (!conditions.atlasMode) return;
       setColorMode((prev) => (prev === "atlas" ? "standard" : "atlas"));
     },
     toggleTimelineMode: () => {

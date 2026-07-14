@@ -1,6 +1,3 @@
-// Activity Components
-export { UserActivitySection } from "./activity/components/UserActivitySection";
-
 // Auth components
 export { AuthCard } from "./auth/components/AuthCard";
 export { AuthFooter } from "./auth/components/AuthFooter";
@@ -25,9 +22,7 @@ export { useAuth } from "./auth/hooks/useAuth";
 export { useAuthHandlers } from "./auth/hooks/useAuthHandlers";
 export { useFirestoreUsername } from "./profile/hooks/useFirestoreUsername";
 export { useHomeCountry } from "./profile/hooks/useHomeCountry";
-export { useLastLogin } from "./activity/hooks/useLastLogin";
 export { useUserProfile } from "./profile/hooks/useUserProfile";
-export { useUserActivity } from "./activity/hooks/useUserActivity";
 export { useUserDevices } from "./auth/hooks/useUserDevices";
 export { useUserFriendCount } from "./friends/hooks/useUserFriendCount";
 export { useFriendProfiles } from "./friends/hooks/useFriendProfiles";
@@ -44,6 +39,5 @@ export { authService } from "./auth/services/authService";
 export * from "./types";
 
 // Utils
-export { logUserActivity } from "./activity/utils/activity";
 export { isPasswordProvider } from "./auth/utils/auth";
 export { isCurrentSession } from "./auth/utils/device";

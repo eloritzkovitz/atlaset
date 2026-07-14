@@ -11,7 +11,7 @@ import {
   type Unsubscribe,
 } from "firebase/firestore";
 import { db } from "@app/firebase";
-import { logUserActivity } from "../../activity/utils/activity";
+import { logUserActivity } from "@features/activity";
 import type { Friend, FriendRequest } from "../../types";
 
 /**

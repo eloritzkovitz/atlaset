@@ -18,7 +18,7 @@ export function FriendListItemMenuActions({
   const navigate = useNavigate();
   const { user } = useAuth();
   const { t } = useTranslation("user");
-  
+
   return (
     <>
       <MenuButton
@@ -29,7 +29,7 @@ export function FriendListItemMenuActions({
             navigate(`/users/${uid}`);
           }
         }}
-        icon={<FaUser className="me-2" />}
+        icon={<FaUser />}
         className="w-full"
       >
         {t("friends.viewProfile")}
@@ -41,7 +41,7 @@ export function FriendListItemMenuActions({
               friendService.removeFriend(user.uid, uid);
             }
           }}
-          icon={<FaUserMinus className="me-2" />}
+          icon={<FaUserMinus />}
           className="w-full text-danger"
         >
           {t("friends.unfriend")}

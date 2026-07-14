@@ -58,7 +58,7 @@ export const DOCS_GROUPS = {
       {
         label: "Map Settings",
         file: "atlas/map-settings.md",
-        icon: ICONS.mapConfig,
+        icon: ICONS.mapSettings.configuration,
         url: "/docs/atlas/map-settings",
       },
       {
@@ -76,20 +76,20 @@ export const DOCS_GROUPS = {
       {
         label: "Layers & Markers",
         file: "atlas/layers-markers.md",
-        icon: ICONS.mapData,
+        icon: ICONS.location,
         url: "/docs/atlas/layers-markers",
+      },
+      {
+        label: "Saved Maps",
+        file: "atlas/saved-maps.md",
+        icon: ICONS.savedMaps,
+        url: "/docs/atlas/saved-maps",
       },
       {
         label: "Legend",
         file: "atlas/legend.md",
         icon: ICONS.legend,
         url: "/docs/atlas/legend",
-      },
-      {
-        label: "Saved Maps",
-        file: "atlas/saved-maps.md",
-        icon: ICONS.saved,
-        url: "/docs/atlas/saved-maps",
       },
       {
         label: "Timeline",

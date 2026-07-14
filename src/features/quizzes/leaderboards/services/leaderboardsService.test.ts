@@ -8,11 +8,6 @@ import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { leaderboardsService } from "../services/leaderboardsService";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 
-vi.mock("../../../user", () => ({
-  logUserActivity: vi.fn(),
-  __esModule: true,
-}));
-
 vi.mock("@app/firebase", () => ({
   db: {},
   __esModule: true,

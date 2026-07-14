@@ -39,7 +39,7 @@ export function MenuButton({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const baseClass =
-    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ` +
+    `rounded-lg text-left !text-text font-semibold px-2 py-2 flex items-center gap-4 outline-none focus-visible:ring-2 focus-visible:ring-ring-focus ` +
     (active
       ? "bg-primary dark:bg-primary/70 !text-white font-semibold "
       : variant === "sidebar"

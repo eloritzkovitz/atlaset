@@ -1,4 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import { createMockUser } from "@test-utils/authMocks";
 import {
   mockNativeAuthControls as auth,
@@ -7,15 +8,12 @@ import {
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { authService } from "./authService";
 import { checkAndReactivateUser } from "../utils/auth";
-import { logUserActivity } from "../../activity/utils/activity";
 import { friendService } from "../../friends/services/friendService";
 
 vi.mock("@app/firebase", () => ({
   auth: auth.auth,
   db: {},
 }));
-
-vi.mock("../../activity/utils/activity", () => ({ logUserActivity: vi.fn() }));
 vi.mock("../../friends/services/friendService", () => ({
   friendService: { removeFriend: vi.fn() },
 }));
@@ -51,7 +49,7 @@ describe("authService", () => {
   it("signIn handles active accounts", async () => {
     const res = await authService.signIn("test@example.com", "pass");
     expect(res.user.uid).toBe("test-user");
-    expect(logUserActivity).toHaveBeenCalledWith(
+    expect(activityMockTracker).toHaveBeenCalledWith(
       102,
       expect.any(Object),
       "test-user",
@@ -71,7 +69,7 @@ describe("authService", () => {
       expect.any(Object),
       "session",
     );
-    expect(logUserActivity).toHaveBeenCalledWith(
+    expect(activityMockTracker).toHaveBeenCalledWith(
       111,
       expect.any(Object),
       "test-user",
@@ -81,7 +79,7 @@ describe("authService", () => {
   it("signUp creates profile and registers metadata", async () => {
     const res = await authService.signUp("test@example.com", "pass");
     expect(res.username).toBe("mocked_username");
-    expect(logUserActivity).toHaveBeenCalledWith(
+    expect(activityMockTracker).toHaveBeenCalledWith(
       101,
       expect.any(Object),
       "test-user",
@@ -92,13 +90,13 @@ describe("authService", () => {
     await authService.logout();
     expect(auth.signOut).toHaveBeenCalled();
     expect(auth.auth.currentUser).toBeNull();
-    expect(logUserActivity).toHaveBeenCalledWith(103, {}, "test-user");
+    expect(activityMockTracker).toHaveBeenCalledWith(103, {}, "test-user");
   });
 
   it("resetPassword sends reset tracking email", async () => {
     await authService.resetPassword("test@example.com");
     expect(auth.sendPasswordResetEmail).toHaveBeenCalled();
-    expect(logUserActivity).toHaveBeenCalledWith(
+    expect(activityMockTracker).toHaveBeenCalledWith(
       104,
       { email: "test@example.com" },
       "test-user",
@@ -110,7 +108,7 @@ describe("authService", () => {
     expect(auth.updateProfile).toHaveBeenCalledWith(freshUser, {
       displayName: "New",
     });
-    expect(logUserActivity).toHaveBeenCalledWith(
+    expect(activityMockTracker).toHaveBeenCalledWith(
       120,
       expect.any(Object),
       "test-user",
@@ -130,7 +128,7 @@ describe("authService", () => {
       expect.objectContaining({ status: "deactivated" }),
       { merge: true },
     );
-    expect(logUserActivity).toHaveBeenCalledWith(110, {}, "test-user");
+    expect(activityMockTracker).toHaveBeenCalledWith(110, {}, "test-user");
   });
 
   it("deleteAppAccount completely purges subcollections and references", async () => {

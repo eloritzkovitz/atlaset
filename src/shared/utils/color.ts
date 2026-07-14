@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for color manipulation.
+ * Utility functions for color manipulation.
  */
 
 /**

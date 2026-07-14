@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useMapColors } from "@features/atlas/settings";
+import { useMapOverlays } from "@features/atlas/settings";
 import { useMapTheme } from "@features/atlas/shared";
 import { useHomeCountry } from "@features/user";
 import { useVisitedCountries } from "@features/visits";
@@ -26,7 +26,7 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
   const { homeCountry } = useHomeCountry();
   const { visitedCountryCodes, futureCountryCodes, wantToVisitCountryCodes } =
     useVisitedCountries();
-  const colors = useMapColors();
+  const overlays = useMapOverlays();
   const theme = useMapTheme();
 
   return useMemo(() => {
@@ -49,7 +49,7 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
 
     // Handle Visited Toggle Case
     if (filters?.visitedOnly || selectedId === "VISITED_COUNTRIES") {
-      return colors.colorVisitedCountries
+      return overlays.showVisitedCountries
         ? mapCodesToLayer(
             visitedCountryCodes || [],
             theme.VISITED_COUNTRY_COLOR,
@@ -60,7 +60,7 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
 
     // Handle Want-to-visit Toggle Case
     if (filters?.wantToVisitOnly || selectedId === "WANT_TO_VISIT") {
-      return colors.colorWantToVisitCountries
+      return overlays.showWantToVisitCountries
         ? mapCodesToLayer(
             wantToVisitCountryCodes || [],
             theme.SELECTED_COUNTRY_COLOR,
@@ -117,7 +117,7 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
       }
 
       if (
-        colors.colorHomeCountry &&
+        overlays.showHomeCountry &&
         homeCountry &&
         isoCode === homeCountry.toUpperCase()
       ) {
@@ -126,20 +126,20 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
           color: theme.HOME_COUNTRY_COLOR,
           layerId: `${TRACKING_LAYER_ID}-home`,
         });
-      } else if (colors.colorFutureVisits && futureSet.has(isoCode)) {
+      } else if (overlays.showFutureVisits && futureSet.has(isoCode)) {
         items.push({
           isoCode,
           color: theme.FUTURE_VISIT_COUNTRY_COLOR,
           layerId: `${TRACKING_LAYER_ID}-future`,
         });
-      } else if (colors.colorVisitedCountries && visitedSet.has(isoCode)) {
+      } else if (overlays.showVisitedCountries && visitedSet.has(isoCode)) {
         items.push({
           isoCode,
           color: theme.VISITED_COUNTRY_COLOR,
           layerId: `${TRACKING_LAYER_ID}-visited`,
         });
       } else if (
-        colors.colorWantToVisitCountries &&
+        overlays.showWantToVisitCountries &&
         wantToVisitSet.has(isoCode)
       ) {
         items.push({
@@ -161,7 +161,7 @@ export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
     futureCountryCodes,
     wantToVisitCountryCodes,
     homeCountry,
-    colors,
+    overlays,
     theme,
   ]);
 }

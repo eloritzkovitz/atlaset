@@ -1,12 +1,12 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
 import { appDb } from "@app/db";
+import { activityMockTracker } from "@test-utils/activityMocks";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
 } from "@test-utils/firebaseMockRegistry";
 import { settingsService } from "./settingsService";
 import { defaultSettings } from "../constants/defaultSettings";
-import { logUserActivity } from "../../../user";
 
 vi.mock("@app/db", () => ({
   appDb: {
@@ -15,11 +15,6 @@ vi.mock("@app/db", () => ({
       put: vi.fn(),
     },
   },
-  __esModule: true,
-}));
-
-vi.mock("../../../user", () => ({
-  logUserActivity: vi.fn(),
   __esModule: true,
 }));
 
@@ -126,7 +121,7 @@ describe("settingsService", () => {
       await settingsService.save(identicalPayload as any);
 
       expect(fs.setDoc).not.toHaveBeenCalled();
-      expect(logUserActivity).not.toHaveBeenCalled();
+      expect(activityMockTracker).not.toHaveBeenCalled();
     });
   });
 
@@ -191,7 +186,7 @@ describe("settingsService", () => {
       await Promise.all([call1, call2]);
 
       expect(fs.setDoc).toHaveBeenCalledTimes(1);
-      expect(logUserActivity).toHaveBeenCalledTimes(1);
+      expect(activityMockTracker).toHaveBeenCalledTimes(1);
     });
   });
 });

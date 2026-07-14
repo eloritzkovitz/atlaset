@@ -1,5 +1,5 @@
 /**
- * @file Utility functions for trip statistics.
+ * Utility functions for trip statistics.
  */
 
 import type { Trip } from "@features/trips";

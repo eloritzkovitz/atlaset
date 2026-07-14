@@ -10,8 +10,8 @@
     "markers": "Markers",
     "legend": "Legend",
     "myMaps": "My Maps",
-    "colorModes": "Color Modes",
-    "timeline": "Timeline",
+    "atlasMode": "Atlas Mode",
+    "timeline": "Toggle Timeline",
     "export": "Export",
     "download": "Download",
     "mapSettings": "Map Settings",
@@ -60,7 +60,7 @@
         "addTitle": "Add List",
         "nameLabel": "Name:",
         "linkedWarning": "Changes to this list will update all layers linked to it.",
-        "systemListWarning": "Changes to this list are saved automatically to your profile.",
+        "trackingListWarning": "Changes to this list are saved automatically to your profile.",
         "save": "Save Changes",
         "add": "Add List",
         "delete": "Delete List"
@@ -223,29 +223,45 @@
   "mapExport": {
     "title": "Export",
     "options": "Options",
-    "visitedCountries": "Visited countries",
-    "visibleLayers": "All visible layers",
-    "visibleMarkers": "All visible markers",
-    "mapDetails": "Map details (optional)",
-    "mapName": "Map name",
-    "mapNamePlaceholder": "My Shared Map",
-    "yourName": "Your Name",
-    "yourNamePlaceholder": "Your Name",
-    "download": "Download",
-    "format": "Format",
-    "inlineStyles": "inline styles",
-    "downloadImage": "Download Image",
-    "downloadData": "Download Data",
-    "downloadJson": "Download as JSON",
-    "share": "Share",
-    "shareableLink": "Shareable link",
-    "copyLink": "Copy link",
-    "linkCopied": "Link copied to clipboard!",
-    "embed": "Embed",
-    "embedCode": "Embed code",
-    "copyEmbedCode": "Copy embed code",
-    "embedCodeCopied": "Embed code copied to clipboard!",
-    "description": "Embed this map in your website using the code above."
+    "exportOptions": {
+      "visitedCountries": "Visited countries",
+      "visibleLayers": "All visible layers",
+      "visibleMarkers": "All visible markers"
+    },
+    "mapDetails": {
+      "title": "Map details (optional)",
+      "mapName": "Map name",
+      "mapNamePlaceholder": "My Shared Map",
+      "yourName": "Your Name",
+      "yourNamePlaceholder": "Your Name"
+    },
+    "download": {
+      "title": "Download",
+      "format": "Format",
+      "svgOptions": {
+        "inlineStyles": "Inline styles",
+        "includeTitles": "Include titles"
+      },
+      "imageOptions": {
+        "scale": "Scale",
+        "quality": "Quality",
+        "background": "Background color"
+      },
+      "jsonDescription": "Download the map data as JSON"
+    },
+    "share": {
+      "title": "Share",
+      "shareableLink": "Shareable link",
+      "copyLink": "Copy link",
+      "linkCopied": "Link copied to clipboard!"
+    },
+    "embed": {
+      "title": "Embed",
+      "embedCode": "Embed code",
+      "copyEmbedCode": "Copy embed code",
+      "embedCodeCopied": "Embed code copied to clipboard!",
+      "description": "Embed this map in your website using the code above."
+    }
   },
   "mapSettings": {
     "title": "Map Settings",
@@ -256,19 +272,31 @@
       "borderColor": "Stroke color",
       "borderWidth": "Stroke width"
     },
+    "overlays": {
+      "title": "Overlays",
+      "showSmallCountryOverlays": "Show small country overlays",
+      "showSmallCountryOverlaysTooltip": "This will display countries with an area smaller than 10,000 km² as circles on the map.",
+      "tracking": {
+        "title": "Tracking Layers",
+        "showHomeCountry": "Show home country",
+        "showVisitedCountries": "Show visited countries",
+        "showFutureVisits": "Show future first visits",
+        "showWantToVisit": "Show 'want to visit' countries"
+      }
+    },
     "colors": {
       "title": "Colors",
-      "displayOptions": "Display Options",
-      "showHomeCountry": "Show home country",
-      "showVisitedCountries": "Show visited countries",
-      "showFutureVisits": "Show future first visits",
-      "showWantToVisit": "Show 'want to visit' countries",
-      "numAtlasColors": "Number of atlas colors",
-      "colorPalette": "Color palettes",
-      "standard": "Standard",
-      "atlas": "Atlas",
-      "timelineCumulative": "Timeline (Cumulative)",
-      "timelineYearly": "Timeline (Yearly)"
+      "rules": {
+        "title": "Rules & modifiers",
+        "numAtlasColors": "Number of atlas colors"
+      },
+      "colorPalettes": {
+        "title": "Color Palettes",
+        "standard": "Standard",
+        "atlas": "Atlas",
+        "cumulative": "Timeline (Cumulative)",
+        "yearly": "Timeline (Yearly)"
+      }
     }
   }
 }

@@ -2,15 +2,14 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { DirectionalIcon } from "@components";
+import { useAuth } from "@features/user";
 import { useInfiniteScroll } from "@hooks";
 import { UserActivityItem } from "./UserActivityItem";
 import { useUserActivity } from "../hooks/useUserActivity";
-import { useAuth } from "../../auth/hooks/useAuth";
 
 export function UserActivitySection() {
   const { user } = useAuth();
   const navigate = useNavigate();
-
   const { t } = useTranslation("activity");
 
   // Redirect to login if not authenticated

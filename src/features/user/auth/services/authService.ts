@@ -20,11 +20,11 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { auth, db } from "@app/firebase";
-import { logUserActivity } from "../../activity/utils/activity";
-import { friendService } from "../../friends/services/friendService";
-import { profileService } from "../../profile/services/profileService";
+import { logUserActivity } from "@features/activity";
 import { checkAndReactivateUser } from "../utils/auth";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
+import { friendService } from "../../friends/services/friendService";
+import { profileService } from "../../profile/services/profileService";
 
 /**
  * Service for managing user authentication.

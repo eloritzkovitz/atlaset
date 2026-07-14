@@ -1,4 +1,3 @@
-import { FaDownload } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import {
   ActionButton,
@@ -6,6 +5,7 @@ import {
   SectionHeader,
   SelectInput,
 } from "@components";
+import { ICONS } from "@constants/icons";
 import { useLayers } from "@contexts/LayersContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { SvgOptions } from "./options/SvgOptions";
@@ -19,7 +19,8 @@ import type {
   ImageExportOptions,
   SvgExportOptions,
 } from "../types";
-import { exportMap, exportMapDataAsJson } from "../utils/mapExport";
+import { isImageFormat } from "../utils/format";
+import { exportMap } from "../utils/mapExport";
 
 interface DownloadMapSectionProps {
   expanded: boolean;
@@ -44,39 +45,48 @@ export function DownloadMapSection({
   const { markers } = useMarkers();
   const { t } = useTranslation("atlas");
 
-  // Export map as SVG or image
+  // Handle downloading the map as SVG, image or JSON
   const handleExport = () => {
     exportMap({
       svgRef,
       format,
       svgOptions,
       imageOptions,
+      jsonData: { layers, markers },
     });
   };
 
-  // Download map data as JSON
-  const handleDownloadJson = () => {
-    exportMapDataAsJson({ layers, markers }, "atlas-data.json");
-  };
+  const hasOptions = format === "svg" || isImageFormat(format);
+  const isButtonDisabled = format !== "json" && !svgRef?.current;
 
   return (
     <CollapsibleHeader
-      icon={<FaDownload />}
-      label={t("mapExport.download")}
+      icon={<ICONS.download />}
+      label={t("mapExport.download.title")}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
     >
       {/* Format selector */}
-      <SectionHeader title={t("mapExport.format")} className="!-mb-2" />
+      <SectionHeader
+        title={t("mapExport.download.format")}
+        className="!-mb-2"
+      />
       <SelectInput
         label=""
         value={format}
         onChange={(val) => setFormat(val as ExportFormat)}
         options={EXPORT_FORMAT_OPTIONS}
       />
-      {/* Options section header */}
-      <SectionHeader title={t("mapExport.options")} />
-      {/* SVG options */}
+
+      {/* Options section */}
+      <SectionHeader
+        title={
+          hasOptions
+            ? t("mapExport.options")
+            : t("mapExport.download.jsonDescription")
+        }
+      />
+
       {format === "svg" && (
         <SvgOptions
           onOptionsChange={(opts) => {
@@ -84,8 +94,8 @@ export function DownloadMapSection({
           }}
         />
       )}
-      {/* Image options */}
-      {format !== "svg" && (
+
+      {isImageFormat(format) && (
         <ImageOptions
           format={format}
           scaleOptions={PNG_SCALE_OPTIONS}
@@ -94,30 +104,19 @@ export function DownloadMapSection({
           }}
         />
       )}
-      {/* Export button */}
+
       <div className="mt-4">
         <ActionButton
           variant="primary"
           onClick={handleExport}
           className="w-full"
-          aria-label={t("mapExport.download")}
-          disabled={!svgRef?.current}
+          aria-label={t("mapExport.download.title")}
+          disabled={isButtonDisabled}
         >
-          <FaDownload className="inline" />
-          {t("mapExport.downloadImage")}
+          <ICONS.download className="inline" />
+          {t("mapExport.download.title")}
         </ActionButton>
       </div>
-      {/* Download Data section */}
-      <SectionHeader title={t("mapExport.downloadData")} />
-      <ActionButton
-        variant="primary"
-        onClick={handleDownloadJson}
-        className="w-full !bg-info/50 hover:!bg-info-hover/50"
-        aria-label={t("mapExport.downloadJson")}
-      >
-        <FaDownload className="inline" />
-        {t("mapExport.downloadJson")}
-      </ActionButton>
     </CollapsibleHeader>
   );
 }

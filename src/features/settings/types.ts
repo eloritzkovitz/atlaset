@@ -30,25 +30,37 @@ export type AccessibilitySettings = {
   animationsEnabled: boolean;
 };
 
-/** Map-related settings. */
-export type MapSettings = {
+/** Represents map configuration settings. */
+export type MapConfigurationSettings = {
   projection?: string;
   baseColor?: string;
   borderColor?: string;
   borderWidth?: number;
 };
 
-/** Colors-related settings. */
-export type ColorsSettings = {
-  colorHomeCountry: boolean;
-  colorVisitedCountries: boolean;
-  colorFutureVisits: boolean;
-  colorWantToVisitCountries: boolean;
+/** Represents map overlay settings. */
+export type MapOverlaySettings = {
+  showSmallCountryOverlays: boolean;
+  showHomeCountry: boolean;
+  showVisitedCountries: boolean;
+  showFutureVisits: boolean;
+  showWantToVisitCountries: boolean;
+};
+
+/** Represents map color settings. */
+export type MapColorsSettings = {
   numAtlasColors: number;
   palettes: Record<ColorMode, string>;
 };
 
-/** User settings. */
+/** Represents map-related settings. */
+export type MapSettings = {
+  configuration: MapConfigurationSettings;
+  overlays: MapOverlaySettings;
+  colors: MapColorsSettings;
+};
+
+/** Represents the overall settings object. */
 export type Settings = {
   id: string;
   localization: LanguageRegionSettings;
@@ -56,5 +68,4 @@ export type Settings = {
   display: DisplaySettings;
   accessibility: AccessibilitySettings;
   map: MapSettings;
-  colors: ColorsSettings;
 };

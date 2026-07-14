@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { HexColorPicker } from "react-colorful";
-import { FaPalette, FaCopy } from "react-icons/fa6";
 import { ModalHeader } from "@components";
+import { ICONS } from "@constants/icons";
 import { hexToRgba } from "@utils/color";
 import { ActionButton } from "../Button/ActionButton";
 import { ColorDot } from "../../display/ColorDot";
@@ -58,7 +58,7 @@ export function ColorPickerModal({
       <ModalHeader
         title={
           <>
-            <FaPalette />
+            <ICONS.mapSettings.colors />
             Select Color
           </>
         }
@@ -101,7 +101,7 @@ export function ColorPickerModal({
                 title={copied ? "Copied!" : "Copy color value"}
                 titlePosition="top"
                 onClick={handleCopy}
-                icon={<FaCopy size={14} />}
+                icon={<ICONS.duplicate size={14} />}
               />
             </div>
           </div>

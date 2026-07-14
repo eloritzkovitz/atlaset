@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { FaTrash } from "react-icons/fa6";
 import { ActionButton } from "@components";
+import { ICONS } from "@constants/icons";
 import { formatDate } from "@utils/date";
+import type { UserActivity, ActivityDetails } from "../types";
 import { getActivityDescription, getActivityIcon } from "../utils/activity";
-import type { UserActivity, ActivityDetails } from "../../types";
 
 interface UserActivityItemProps {
   activity: UserActivity;
@@ -49,7 +49,7 @@ export const UserActivityItem = React.memo(function UserActivityItem({
         {onDelete && (
           <ActionButton
             className="ms-2 text-danger hover:text-hover"
-            icon={<FaTrash />}
+            icon={<ICONS.remove />}
             ariaLabel={t("ui.deleteActivityTitle")}
             title={t("ui.deleteActivityTitle")}
             onClick={() => onDelete(activity.id)}
