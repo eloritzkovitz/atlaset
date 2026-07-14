@@ -22,7 +22,7 @@ vi.mock("@app/db", () => ({
     },
   },
 }));
-vi.mock("@app/firebase", () => ({ db: {} }));
+vi.mock("@app/firebase", () => ({ db: {}, analytics: {} }));
 
 describe("layersService", () => {
   const mockBatch = {

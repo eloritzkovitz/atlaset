@@ -173,7 +173,11 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
 
-    await logUserActivity(241, { itemName: list.name }, user!.uid);
+    await logUserActivity(
+      241,
+      { itemName: list.name, userName: user!.displayName },
+      user!.uid,
+    );
 
     await reloadCountryLists();
     closeModal();

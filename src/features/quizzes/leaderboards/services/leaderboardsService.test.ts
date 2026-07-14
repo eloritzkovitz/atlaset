@@ -9,6 +9,7 @@ import { leaderboardsService } from "../services/leaderboardsService";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 
 vi.mock("@app/firebase", () => ({
+  analytics: {},
   db: {},
   __esModule: true,
 }));
