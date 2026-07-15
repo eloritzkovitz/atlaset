@@ -1,5 +1,8 @@
 {
   "pageTitle": "Atlas",
+  "map": {
+    "loading": "Loading map..."
+  },
   "toolbar": {
     "openMapActions": "Open map actions",
     "closeMapActions": "Close map actions",

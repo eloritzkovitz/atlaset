@@ -80,7 +80,7 @@ export default function AtlasPage() {
           />
         </div>
       </div>
-      {isLoading && <LoadingSpinner fullScreen message="Loading map..." />}
+      {isLoading && <LoadingSpinner fullScreen message={t("map.loading")} />}
     </>
   );
 }
