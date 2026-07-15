@@ -1,3 +1,4 @@
+import { isSupported, type Analytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
@@ -25,6 +26,23 @@ initializeAppCheck(app, {
   isTokenAutoRefreshEnabled: true,
 });
 
-export const analytics = getAnalytics(app);
+// Initialize Google Analytics if supported
+export let analytics: Analytics | null = null;
+
+if (typeof window !== "undefined") {
+  isSupported()
+    .then((supported) => {
+      if (supported) {
+        analytics = getAnalytics(app);
+      }
+    })
+    .catch((err) => {
+      console.warn(
+        "Google Analytics is not supported in this environment:",
+        err,
+      );
+    });
+}
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);

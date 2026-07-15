@@ -58,7 +58,10 @@ export function logToGoogleAnalytics(
   details: object,
   actionId?: number,
 ) {
+  if (import.meta.env.DEV) return;
+
   if (!analytics) return;
+
   try {
     const safeDetails = sanitizeDetails(details);
     logEvent(analytics, eventName, {

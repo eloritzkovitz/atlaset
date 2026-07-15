@@ -1,26 +1,22 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { analytics } from "@app/firebase";
-import { logEvent } from "firebase/analytics";
-import { sanitizeDetails, logToGoogleAnalytics } from "./analytics";
+import { describe, it, expect, vi, beforeEach, beforeAll } from "vitest";
+import { mockAnalyticsControls as ac } from "@test-utils/firebaseMockRegistry";
 
-const firebaseMock = {
-  analytics: {} as any,
-};
+vi.stubEnv("DEV", "" as unknown as boolean);
 
-vi.mock("firebase/analytics", () => ({
-  logEvent: vi.fn(),
-}));
-
-vi.mock("@app/firebase", () => ({
-  get analytics() {
-    return firebaseMock.analytics;
-  },
-}));
+let sanitizeDetails: typeof import("./analytics").sanitizeDetails;
+let logToGoogleAnalytics: typeof import("./analytics").logToGoogleAnalytics;
 
 describe("analyticsUtils", () => {
+  beforeAll(async () => {
+    vi.resetModules();
+    const utils = await import("./analytics");
+    sanitizeDetails = utils.sanitizeDetails;
+    logToGoogleAnalytics = utils.logToGoogleAnalytics;
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
-    firebaseMock.analytics = {};
+    ac.getAnalytics.mockReturnValue({});
   });
 
   describe("sanitizeDetails", () => {
@@ -99,12 +95,15 @@ describe("analyticsUtils", () => {
   });
 
   describe("logToGoogleAnalytics", () => {
-    it("should not call logEvent if analytics is null/undefined", () => {
-      firebaseMock.analytics = null;
+    it("should not call logEvent if analytics is null/undefined", async () => {
+      vi.resetModules();
+      ac.getAnalytics.mockReturnValue("");
 
-      logToGoogleAnalytics("test_event", { safeData: 123 });
+      const { logToGoogleAnalytics: localLogToGoogleAnalytics } =
+        await import("./analytics");
+      localLogToGoogleAnalytics("test_event", { safeData: 123 });
 
-      expect(logEvent).not.toHaveBeenCalled();
+      expect(ac.logEvent).not.toHaveBeenCalled();
     });
 
     it("should sanitize details and successfully log event with actionId", () => {
@@ -115,25 +114,21 @@ describe("analyticsUtils", () => {
 
       logToGoogleAnalytics("open_map", details, 201);
 
-      expect(logEvent).toHaveBeenCalledTimes(1);
-      expect(logEvent).toHaveBeenCalledWith(
-        analytics,
-        "open_map",
-        expect.objectContaining({
-          mapId: "world_map",
-          action_id: 201,
-        }),
-      );
+      expect(ac.logEvent).toHaveBeenCalledTimes(1);
+      expect(ac.logEvent).toHaveBeenCalledWith(expect.any(Object), "open_map", {
+        action_id: 201,
+        mapId: "world_map",
+      });
 
-      const sentPayload = vi.mocked(logEvent).mock.calls[0][2];
+      const sentPayload = vi.mocked(ac.logEvent).mock.calls[0][2];
       expect(sentPayload?.username).toBeUndefined();
     });
 
     it("should log event without action_id if actionId is omitted", () => {
       logToGoogleAnalytics("simple_event", { someData: true });
 
-      expect(logEvent).toHaveBeenCalledWith(
-        analytics,
+      expect(ac.logEvent).toHaveBeenCalledWith(
+        expect.any(Object),
         "simple_event",
         expect.not.objectContaining({ action_id: expect.anything() }),
       );
@@ -143,7 +138,7 @@ describe("analyticsUtils", () => {
       const consoleSpy = vi
         .spyOn(console, "error")
         .mockImplementation(() => {});
-      vi.mocked(logEvent).mockImplementationOnce(() => {
+      vi.mocked(ac.logEvent).mockImplementationOnce(() => {
         throw new Error("Firebase SDK Crash");
       });
 

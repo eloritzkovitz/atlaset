@@ -20,12 +20,7 @@ export const UserActivityItem = React.memo(function UserActivityItem({
   onDelete,
 }: UserActivityItemProps) {
   const { t } = useTranslation("activity");
-  const details: ActivityDetails =
-    activity.details &&
-    typeof activity.details === "object" &&
-    !Array.isArray(activity.details)
-      ? activity.details
-      : ({} as ActivityDetails);
+  const details: ActivityDetails = activity.details || ({} as ActivityDetails);
 
   // Get the appropriate icon for the activity action
   const Icon = getActivityIcon(activity.action);

@@ -1,17 +1,20 @@
 import { vi } from "vitest";
 import {
+  createAnalyticsMocks,
   createAuthMocks,
   createFirestoreMocks,
   createNativeAuthMocks,
   dbBridge,
 } from "./firestoreMocks";
 
+export const mockAnalyticsControls = createAnalyticsMocks();
 export const mockAuthControls = createAuthMocks();
 export const mockNativeAuthControls = createNativeAuthMocks();
 export const mockFirestoreControls = createFirestoreMocks();
 
 dbBridge.collection = mockFirestoreControls.collection;
 
+// Mock Firebase utilities
 vi.mock("@utils/firebase", () => ({
   isAuthenticated: () => mockAuthControls.isAuthenticated(),
   getCurrentUser: () => mockAuthControls.getCurrentUser(),
@@ -19,6 +22,15 @@ vi.mock("@utils/firebase", () => ({
   __esModule: true,
 }));
 
+// Mock Google Analytics utilities
+vi.mock("firebase/analytics", () => ({
+  getAnalytics: () => mockAnalyticsControls.getAnalytics(),
+  isSupported: () => mockAnalyticsControls.isSupported(),
+  logEvent: (...args: any[]) => mockAnalyticsControls.logEvent(...args),
+  __esModule: true,
+}));
+
+// Mock Firebase Auth utilities
 vi.mock("firebase/auth", () => ({
   getAuth: () => mockNativeAuthControls.getAuth(),
   auth: mockNativeAuthControls.auth,
@@ -37,11 +49,13 @@ vi.mock("firebase/auth", () => ({
   __esModule: true,
 }));
 
+/** Mocks timestamp utilities. */
 export const mockTimestamp = {
   now: vi.fn(() => ({ toMillis: () => 1000 })),
   fromDate: vi.fn((d) => ({ toMillis: () => d.getTime() })),
 };
 
+// Mock Firestore utilities
 vi.mock("firebase/firestore", () => ({
   addDoc: mockFirestoreControls.addDoc,
   arrayRemove: mockFirestoreControls.arrayRemove,
