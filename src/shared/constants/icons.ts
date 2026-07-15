@@ -9,6 +9,7 @@ import {
   FaBug,
   FaCalendar,
   FaCalendarDay,
+  FaChartLine,
   FaChartSimple,
   FaCheck,
   FaChessKnight,
@@ -180,6 +181,7 @@ export const ICONS = {
   shortcuts: FaKeyboard,
   motion: FaClapperboard,
   privacy: FaShieldHalved,
+  analytics: FaChartLine,
   security: FaLock,
   // Misc
   search: FaMagnifyingGlass,

@@ -5,7 +5,6 @@
 import { addDoc } from "firebase/firestore";
 import i18n from "i18next";
 import type { ComponentType, SVGProps } from "react";
-import { analytics } from "@app/firebase";
 import { ICONS } from "@constants/icons";
 import { logToGoogleAnalytics } from "@utils/analytics";
 import { formatTimeSeconds } from "@utils/date";
@@ -32,10 +31,8 @@ export async function logUserActivity(
   });
 
   // Log to Google Analytics if available
-  if (analytics) {
-    const eventName = getEventName(action);
-    logToGoogleAnalytics(eventName, details, action);
-  }
+  const eventName = getEventName(action);
+  logToGoogleAnalytics(eventName, details, action);
 }
 
 /**

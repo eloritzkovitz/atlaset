@@ -125,8 +125,8 @@ describe("migrationService", () => {
         theme: "dark",
         account: {},
         display: {},
+        privacy: {},
         map: {},
-        layers: {},
       });
       vi.spyOn(settingsService, "save").mockResolvedValueOnce(undefined);
 
@@ -149,8 +149,8 @@ describe("migrationService", () => {
         theme: "dark",
         account: {},
         display: {},
+        privacy: {},
         map: {},
-        layers: {},
       });
       expect(appDb.settings.clear).toHaveBeenCalled();
     });

@@ -98,6 +98,23 @@
       "description": "Toggles fluid transitions, gliding layouts, and sliding menus across the platform. Turn off to reduce motion or improve system speed."
     }
   },
+  "privacy": {
+    "title": "Privacy settings",
+    "cookies": {
+      "title": "This site uses cookies",
+      "paragraph1": "We use technologies such as cookies to ensure the functionality of the site and collect anonymous usage information for analytical purposes and improving user experience.",
+      "paragraph2": "By clicking 'Accept', you consent to this data collection. You can change your preference at any time in your Privacy Settings.",
+      "learnMore": "Learn more about our privacy policy",
+      "accept": "Accept",
+      "decline": "Decline",
+      "changePreference": "Change preference"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "consent": "Share anonymous usage data",
+      "description": "Help us improve Atlaset by sending anonymous diagnostics and feature usage statistics. No personal data is ever collected."
+    }
+  },
   "security": {
     "title": "Security information",
     "email": "Email",

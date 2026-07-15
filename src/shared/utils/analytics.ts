@@ -2,8 +2,8 @@
  * Utility functions for analytics logging and sanitization.
  */
 
-import { analytics } from "@app/firebase";
-import { logEvent } from "firebase/analytics";
+import { getAnalytics, logEvent, type Analytics } from "firebase/analytics";
+import { app } from "@app/firebase";
 
 /** List of keys that are considered personally identifiable information (PII) and should be sanitized. */
 const FORBIDDEN_PII_KEYS = [
@@ -19,7 +19,23 @@ const FORBIDDEN_PII_KEYS = [
   "photourl",
 ];
 
+/** Represents a sanitized details record for analytics logging. */
 export type SafeDetailsRecord = { [key: string]: unknown };
+
+// Exported variable to hold the initialized Analytics instance, if available.
+let analytics: Analytics | null = null;
+
+/** Initializes Google Analytics if supported in the current environment. */
+export async function initializeAnalytics(): Promise<void> {
+  const { isSupported } = await import("firebase/analytics");
+  try {
+    if (await isSupported()) {
+      analytics = getAnalytics(app);
+    }
+  } catch (err) {
+    console.warn("Analytics failed to initialize:", err);
+  }
+}
 
 /**
  * Sanitizes the details object for analytics logging by removing sensitive information.
@@ -58,9 +74,7 @@ export function logToGoogleAnalytics(
   details: object,
   actionId?: number,
 ) {
-  if (import.meta.env.DEV) return;
-
-  if (!analytics) return;
+  if (import.meta.env.DEV || !analytics) return;
 
   try {
     const safeDetails = sanitizeDetails(details);
@@ -69,6 +83,6 @@ export function logToGoogleAnalytics(
       ...(actionId !== undefined && { action_id: actionId }),
     });
   } catch (error) {
-    console.error("Failed to log to Google Analytics:", error);
+    console.error("Failed to log:", error);
   }
 }

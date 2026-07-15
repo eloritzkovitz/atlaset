@@ -12,6 +12,7 @@ import {
   AccessibilitySettingsSection,
   AccountSettingsSection,
   DisplaySettingsSection,
+  PrivacySettingsSection,
   SecurityInfoSection,
   SettingsPanelMenu,
 } from "@features/settings";
@@ -24,7 +25,7 @@ const PANEL_COMPONENTS: Record<string, React.ReactNode> = {
   account: <AccountSettingsSection />,
   display: <DisplaySettingsSection />,
   accessibility: <AccessibilitySettingsSection />,
-  privacy: null,
+  privacy: <PrivacySettingsSection />,
   security: <SecurityInfoSection />,
 };
 

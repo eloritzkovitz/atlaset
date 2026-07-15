@@ -53,8 +53,8 @@ export const migrationService = {
       "id" in settings &&
       "account" in settings &&
       "display" in settings &&
-      "map" in settings &&
-      "layers" in settings
+      "privacy" in settings &&
+      "map" in settings
     ) {
       await settingsService.save(settings as Settings);
       await appDb.settings.clear();

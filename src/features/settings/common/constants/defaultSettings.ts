@@ -10,6 +10,7 @@ export const defaultSettings: Settings = {
   },
   display: { theme: "system", accent: "blue" },
   accessibility: { singleKeyShortcutsEnabled: true, animationsEnabled: true },
+  privacy: { analyticsConsent: null },
   map: {
     configuration: {
       projection: MAP_CONFIG_OPTIONS.projection[0].value,

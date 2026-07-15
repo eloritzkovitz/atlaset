@@ -1,8 +1,6 @@
-import { isSupported, type Analytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
 
-const { getAnalytics } = await import("firebase/analytics");
 const { getAuth } = await import("firebase/auth");
 const { getFirestore } = await import("firebase/firestore");
 
@@ -18,31 +16,13 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+export const app = initializeApp(firebaseConfig);
 
 // Initialize App Check for enhanced security
 initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY),
   isTokenAutoRefreshEnabled: true,
 });
-
-// Initialize Google Analytics if supported
-export let analytics: Analytics | null = null;
-
-if (typeof window !== "undefined") {
-  isSupported()
-    .then((supported) => {
-      if (supported) {
-        analytics = getAnalytics(app);
-      }
-    })
-    .catch((err) => {
-      console.warn(
-        "Google Analytics is not supported in this environment:",
-        err,
-      );
-    });
-}
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
