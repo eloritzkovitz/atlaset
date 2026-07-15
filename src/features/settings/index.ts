@@ -25,6 +25,12 @@ export { LanguageSelect } from "./localization/components/LanguageSelect";
 export { mapLanguages } from "./localization/utils/languages";
 export { useLanguage, isRtl } from "./localization/hooks/useLanguage";
 
+// Privacy
+export { CookieConsentModal } from "./privacy/components/CookieConsentModal";
+export { PrivacySettingsSection } from "./privacy/components/PrivacySettingsSection";
+export { useAnalytics } from "./privacy/hooks/useAnalytics";
+export { usePrivacySettings } from "./privacy/hooks/usePrivacySettings";
+
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
 

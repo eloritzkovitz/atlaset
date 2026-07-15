@@ -9,6 +9,13 @@ export const dbBridge = {
   collection: vi.fn(),
 };
 
+// Mock Google Analytics utilities
+export const createAnalyticsMocks = () => ({
+  logEvent: vi.fn(),
+  isSupported: vi.fn(async () => true),
+  getAnalytics: vi.fn(() => ({})),
+});
+
 // Mock authentication utilities
 export const createAuthMocks = () => ({
   isAuthenticated: vi.fn(() => authState.currentUser !== null),

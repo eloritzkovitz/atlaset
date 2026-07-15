@@ -30,6 +30,11 @@ export type AccessibilitySettings = {
   animationsEnabled: boolean;
 };
 
+/** Privacy-related settings. */
+export type PrivacySettings = {
+  analyticsConsent: boolean | null;
+};
+
 /** Represents map configuration settings. */
 export type MapConfigurationSettings = {
   projection?: string;
@@ -67,5 +72,6 @@ export type Settings = {
   sound: SoundSettings;
   display: DisplaySettings;
   accessibility: AccessibilitySettings;
+  privacy: PrivacySettings;
   map: MapSettings;
 };

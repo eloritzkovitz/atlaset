@@ -11,6 +11,7 @@ import { AchievementsProvider } from "@contexts/AchievementsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
+import { CookieConsentModal, useAnalytics } from "@features/settings";
 import { AppLayout, EmbedLayout, PublicLayout } from "@layouts";
 import { AtlasProviders } from "./pages/AtlasProvider";
 import AboutPage from "./pages/AboutPage";
@@ -35,6 +36,8 @@ const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
 function App() {
   const { ready } = useSettings();
 
+  useAnalytics();
+
   // Show splash screen while settings are loading
   if (!ready) {
     return <SplashScreen />;
@@ -45,6 +48,7 @@ function App() {
       <TripsProvider>
         <UIProvider>
           <UIHintProvider>
+            <CookieConsentModal />
             <UIHintContainer />
             <PwaUpdateUiHint />
             <Routes>

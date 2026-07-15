@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-07-15
+
+- **[feature]** **General:** Enabled Google Analytics for monitoring
+- **[feature]** **User | Settings:** Added privacy settings and an option to accept/decline sharing usage data
+
 ## 2026-07-14
 
 - **[feature]** **Atlas | Map:** Added option to show circle overlays above small countries on the map
