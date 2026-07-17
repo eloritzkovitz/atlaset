@@ -12,6 +12,7 @@ import {
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
 import { CountrySelectField, useCountryData } from "@features/countries";
+import { isAuthenticated } from "@utils/firebase";
 import type { Layer } from "../types";
 
 type FilterLabelKey = "all" | "only" | "exclude";
@@ -37,6 +38,7 @@ export function LayerModal({
   const { countryLists } = useCountryLists();
   const { countries } = useCountryData();
   const { t } = useTranslation(["atlas", "common"]);
+
   const [countryModalOpen, setCountryModalOpen] = useState(false);
   const [colorModalOpen, setColorModalOpen] = useState(false);
   const [useList, setUseList] = useState(false);
@@ -153,6 +155,7 @@ export function LayerModal({
                         }
                       }}
                       label={t("layers.form.fromList", "From List:")}
+                      disabled={!isAuthenticated()}
                     />
                     <SelectInput
                       value={selectedListId || ""}
