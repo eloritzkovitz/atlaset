@@ -1,11 +1,36 @@
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
+import { db } from "@app/firebase";
 
-/**
- * Fetch all shared trip IDs for a given user from the 'sharedtrips' collection.
- * Each document should have a 'userId' and a 'tripId' field.
- */
-export async function getSharedTripIds(userId: string): Promise<string[]> {
-  const q = collection(getFirestore(), "users", userId, "sharedTrips");
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map((doc) => doc.id);
-}
+/** Service for managing shared trips. */
+export const sharedTripsService = {
+  /** Fetch all shared trip IDs for a user */
+  async getSharedTripIds(userId: string): Promise<string[]> {
+    const q = collection(db, "users", userId, "sharedTrips");
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map((doc) => doc.id);
+  },
+
+  /** Add a reference for a participant */
+  async addReference(participantUid: string, ownerUid: string, tripId: string) {
+    const sharedRefDoc = doc(
+      collection(db, `users/${participantUid}/sharedTrips`),
+      tripId,
+    );
+    await setDoc(sharedRefDoc, { ownerUid, tripId });
+  },
+
+  /** Remove a reference for a participant */
+  async removeReference(participantUid: string, tripId: string) {
+    const sharedRefDoc = doc(
+      collection(db, `users/${participantUid}/sharedTrips`),
+      tripId,
+    );
+    await deleteDoc(sharedRefDoc);
+  },
+};

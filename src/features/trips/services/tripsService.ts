@@ -13,6 +13,7 @@ import {
   getUserCollection,
   getCurrentUser,
 } from "@utils/firebase";
+import { sharedTripsService } from "./sharedTripsService";
 import type { Trip } from "../types";
 import { profileService } from "../../user/profile/services/profileService";
 
@@ -107,11 +108,11 @@ export const tripsService = {
     // Add shared trip references for participants (excluding owner)
     for (const participantUid of participants) {
       if (participantUid !== user!.uid) {
-        const sharedRefDoc = doc(
-          collection(db, `users/${participantUid}/sharedTrips`),
+        await sharedTripsService.addReference(
+          participantUid,
+          user!.uid,
           trip.id,
         );
-        await setDoc(sharedRefDoc, { ownerUid: user!.uid, tripId: trip.id });
       }
     }
 
@@ -226,21 +227,14 @@ export const tripsService = {
 
     // Add new shared trip references
     for (const participantUid of added) {
-      const sharedRefDoc = doc(
-        collection(db, `users/${participantUid}/sharedTrips`),
-        trip.id,
-      );
-      await setDoc(sharedRefDoc, { ownerUid: user!.uid, tripId: trip.id });
+      await sharedTripsService.addReference(participantUid, user!.uid, trip.id);
     }
 
     // Remove shared trip references for removed participants
     for (const participantUid of removed) {
-      const sharedRefDoc = doc(
-        collection(db, `users/${participantUid}/sharedTrips`),
-        trip.id,
-      );
-      await deleteDoc(sharedRefDoc);
+      await sharedTripsService.removeReference(participantUid, trip.id);
     }
+
     await logUserActivity(
       412,
       {
@@ -272,11 +266,7 @@ export const tripsService = {
       const participants = tripData.participants || [];
       for (const participantUid of participants) {
         if (participantUid !== user!.uid) {
-          const sharedRefDoc = doc(
-            collection(db, `users/${participantUid}/sharedTrips`),
-            id,
-          );
-          await deleteDoc(sharedRefDoc);
+          await sharedTripsService.removeReference(participantUid, id);
         }
       }
     }

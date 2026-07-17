@@ -1,6 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { getAutoTripStatus, tripsService, type Trip } from "@features/trips";
-import { getSharedTripIds } from "@features/trips/services/sharedTripsService";
+import {
+  getAutoTripStatus,
+  sharedTripsService,
+  tripsService,
+  type Trip,
+} from "@features/trips";
 import { useAuth } from "@features/user";
 import { TripsContext } from "./TripsContext";
 
@@ -31,16 +35,16 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     setLoading(true);
-    tripsService.load().then((allTrips) => {
+
+    Promise.all([
+      tripsService.load(),
+      sharedTripsService.getSharedTripIds(user.uid),
+    ]).then(([allTrips, sharedIds]) => {
       if (mounted) {
         loadTrips(allTrips);
+        setSharedTripIds(new Set(sharedIds));
         setLoading(false);
       }
-    });
-
-    // Fetch shared trip IDs for the user
-    getSharedTripIds(user?.uid).then((ids) => {
-      if (mounted) setSharedTripIds(new Set(ids));
     });
 
     return () => {
@@ -58,18 +62,18 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   }
 
-  // Add a trip
+  /** Adds a new trip. */
   async function addTrip(trip: Trip) {
     const tripWithStatus = { ...trip, status: getAutoTripStatus(trip) };
     const savedTrip = await tripsService.add(tripWithStatus);
-    
+
     setTrips((prev) => [
       ...prev,
       { ...savedTrip, status: getAutoTripStatus(savedTrip) },
     ]);
   }
 
-  // Update a trip
+  /** Edits an existing trip. */
   async function editTrip(trip: Trip, forceStatus = false) {
     const updatedTrip = {
       ...trip,
@@ -80,12 +84,12 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     setTrips((prev) => prev.map((t) => (t.id === trip.id ? updatedTrip : t)));
   }
 
-  // Mark trip as completed
+  /** Marks a trip as completed. */
   function markCompleted(trip: Trip) {
     editTrip({ ...trip, status: "completed" }, true);
   }
 
-  // Update trip favorite
+  /** Updates a trip's favorite status. */
   async function updateTripFavorite(tripId: string, favorite: boolean) {
     await tripsService.updateFavorite(tripId, favorite);
     setTrips((prev) =>
@@ -93,7 +97,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   }
 
-  // Update trip rating
+  /** Updates a trip's rating. */
   async function updateTripRating(tripId: string, rating: number | undefined) {
     await tripsService.updateRating(tripId, rating);
     setTrips((prev) =>
@@ -101,13 +105,13 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   }
 
-  // Remove a trip
+  /** Removes a trip. */
   async function removeTrip(id: string) {
     await tripsService.remove(id);
     setTrips((prev) => prev.filter((t) => t.id !== id));
   }
 
-  // Duplicate a trip
+  /** Duplicates a trip. */
   async function duplicateTrip(trip: Trip) {
     const newTrip = {
       ...trip,
@@ -146,7 +150,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     [selectedTrips, sharedTripIds],
   );
 
-  // Select trip handler
+  /** Selects or deselects a trip. */
   function selectTrip(id: string) {
     if (sharedTripIds.has(id)) return;
     setSelectedTripIds((prev) =>
@@ -156,7 +160,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     );
   }
 
-  // Select all handler
+  /** Selects or deselects all trips. */
   function selectAllTrips(filteredIds: string[]) {
     const nonSharedFilteredIds = filteredIds.filter(
       (id) => !sharedTripIds.has(id),
@@ -177,12 +181,12 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  // Bulk duplicate handler
+  /** Handles bulk trip duplication. */
   function handleBulkDuplicate() {
     nonSharedSelectedTrips.forEach((trip) => duplicateTrip(trip));
   }
 
-  // Bulk delete handler
+  /** Handles bulk trip deletion. */
   async function handleBulkDelete() {
     for (const trip of nonSharedSelectedTrips) {
       await removeTrip(trip.id);
