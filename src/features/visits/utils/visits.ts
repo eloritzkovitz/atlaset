@@ -335,8 +335,11 @@ export function getVisitCountStats(trips: Trip[], year: number) {
 }
 
 /**
- * Build a VisitContext from trips. `selectedYear` and `years` influence visit counts; when
- * omitted, the latest detected year (or current year) is used.
+ * Builds a VisitContext object from trips, optionally filtered by a selected year and home country.
+ * @param trips - Array of trips to analyze.
+ * @param selectedYear - Optional year to filter trips.
+ * @param homeCountry - Optional home country code to include in the context.
+ * @returns A VisitContext object containing visited ISO codes, visit maps, and first/last visit dates.
  */
 export function buildVisitContext(
   trips: Trip[],

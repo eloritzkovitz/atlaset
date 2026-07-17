@@ -10,6 +10,14 @@ import { authService } from "./authService";
 import { checkAndReactivateUser } from "../utils/auth";
 import { friendService } from "../../friends/services/friendService";
 
+vi.mock("@app/db", () => ({
+  appDb: {
+    countryLists: { count: vi.fn() },
+    layers: { count: vi.fn() },
+    markers: { count: vi.fn() },
+    settings: { count: vi.fn() },
+  },
+}));
 vi.mock("@app/firebase", () => ({
   auth: auth.auth,
   db: {},

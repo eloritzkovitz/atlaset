@@ -1,4 +1,4 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { logUserActivity } from "@features/activity";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
@@ -15,15 +15,17 @@ import { useAuth } from "@features/user";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
+  const { mapMode, mapId } = useMapMode();
+  const navigate = useNavigate();
+
   const [savedMaps, setSavedMaps] = useState<SavedMap[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
   const [activeSavedMap, setActiveSavedMap] = useState<SavedMap | null>(null);
   const [isSavedMapModalOpen, setSavedMapModalOpen] = useState(false);
 
-  const { user } = useAuth();
-  const { mapMode, mapId } = useMapMode();
-  const navigate = useNavigate();
+  const lastAction = useRef<string | null>(null);
 
   // Layer manager for saved map layers
   const {
@@ -52,6 +54,25 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       const updated = { ...activeSavedMap, layers };
       setActiveSavedMap(updated);
       await savedMapsService.set(updated);
+
+      lastAction.current = null;
+    },
+    onLogAction: async (action, layer) => {
+      if (!user || !activeSavedMap) return;
+
+      lastAction.current = action;
+
+      const logMap = { add: 234, edit: 235, remove: 236, reorder: 237 };
+      await logUserActivity(
+        logMap[action],
+        {
+          layerId: layer.id,
+          itemName: layer.name,
+          mapName: activeSavedMap.name,
+          userName: user.displayName,
+        },
+        user.uid,
+      );
     },
   });
 
@@ -87,7 +108,37 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       setSavedMapMarkers(markers);
       await savedMapsService.set(updated);
     },
+    onLogAction: async (action, marker) => {
+      if (!user || !activeSavedMap) return;
+
+      const logMap = { add: 234, edit: 235, remove: 236, reorder: 237 };
+      await logUserActivity(
+        logMap[action],
+        {
+          markerId: marker.id,
+          itemName: marker.name,
+          mapName: activeSavedMap.name,
+          userName: user.displayName,
+        },
+        user.uid,
+      );
+    },
   });
+
+  // Log user activity for saved map actions
+  const logMapAction = async (action: "add" | "delete", map: SavedMap) => {
+    if (!user) return;
+    const logMap = { add: 231, delete: 233 };
+    await logUserActivity(
+      logMap[action],
+      {
+        mapId: map.id,
+        mapName: map.name,
+        userName: user.displayName,
+      },
+      user.uid,
+    );
+  };
 
   // Reload saved maps
   async function reloadSavedMaps() {
@@ -249,12 +300,21 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   // Save edited or new saved map
   async function saveSavedMap() {
     if (!activeSavedMap) return;
+
+    // Check if this map is being created for the first time
+    const isNew = !savedMaps.some((m) => m.id === activeSavedMap.id);
+
     const mapToSave = {
       ...activeSavedMap,
       markers: Array.isArray(activeSavedMap.markers)
         ? activeSavedMap.markers
         : [],
     };
+
+    if (isNew) {
+      await logMapAction("add", mapToSave);
+    }
+
     await savedMapsService.set(mapToSave);
     closeSavedMapModal();
     await reloadSavedMaps();
@@ -287,6 +347,11 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Delete a saved map
   async function deleteSavedMap(id: string) {
+    const mapToDelete = savedMaps.find((m) => m.id === id);
+    if (mapToDelete) {
+      await logMapAction("delete", mapToDelete);
+    }
+
     await savedMapsService.delete(id);
     await reloadSavedMaps();
   }

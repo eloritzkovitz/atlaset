@@ -5,133 +5,152 @@ import {
 } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { countryListService } from "./countryListService";
+import { appDb } from "@app/db";
+
+vi.mock("@app/db", () => ({
+  appDb: {
+    countryLists: {
+      toArray: vi.fn().mockResolvedValue([]),
+      add: vi.fn().mockResolvedValue(undefined),
+      delete: vi.fn().mockResolvedValue(undefined),
+    },
+  },
+}));
+vi.mock("@app/firebase", () => ({ db: {}, analytics: {} }));
 
 describe("countryListService", () => {
+  const mockBatch = { update: vi.fn(), commit: vi.fn() };
+  const sampleList = { id: "list-1", name: "Favorites", countryCodes: ["FR"] };
+
   beforeEach(() => {
     vi.clearAllMocks();
-    auth.isAuthenticated.mockReturnValue(true);
-  });
-
-  const sampleList = {
-    id: "list-1",
-    name: "Favorites",
-    countryCodes: ["FR", "DE"],
-  };
-
-  describe("load", () => {
-    it("returns an empty array early if the user is unauthenticated", async () => {
-      auth.isAuthenticated.mockReturnValue(false);
-      const res = await countryListService.load();
-      expect(res).toEqual([]);
-      expect(fs.getDocs).not.toHaveBeenCalled();
-    });
-
-    it("fetches and maps documents successfully when authenticated", async () => {
-      fs.getDocs.mockResolvedValue(
-        createMockSnapshot([
-          { id: "list-1", data: { name: "Favorites" } },
-        ]) as any,
-      );
-
-      const res = await countryListService.load();
-      expect(res).toEqual([{ id: "list-1", name: "Favorites" }]);
-    });
+    fs.writeBatch.mockReturnValue(mockBatch as any);
   });
 
   describe("save", () => {
-    it("bails early if the user is unauthenticated", async () => {
+    it("saves to localTable and skips batch in guest mode", async () => {
       auth.isAuthenticated.mockReturnValue(false);
+      const addSpy = vi.spyOn(appDb.countryLists, "add");
       await countryListService.save(sampleList);
-      expect(fs.setDoc).not.toHaveBeenCalled();
+      expect(addSpy).toHaveBeenCalledWith(sampleList);
+      expect(fs.writeBatch).not.toHaveBeenCalled();
     });
 
-    it("persists the list data and syncs flat layer references + nested map layers", async () => {
-      const layersSnapshot = createMockSnapshot([
-        {
-          id: "layer-1",
-          data: { listId: "list-1" },
-          ref: { path: "layer-1-ref" },
-        },
-        { id: "layer-2", data: { listId: "other-list" } },
+    it("persists and cascades batch updates in authenticated mode", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      const layersSnap = createMockSnapshot([
+        { id: "l1", data: { listId: "list-1" }, ref: { path: "l1" } },
       ]);
-
-      const mapsSnapshot = createMockSnapshot([
+      const mapsSnap = createMockSnapshot([
         {
-          id: "map-1",
-          data: {
-            layers: [
-              { listId: "list-1", countries: [] },
-              null,
-              { listId: "unrelated-list", countries: ["US"] },
-            ],
-          },
-          ref: { path: "map-1-ref" },
+          id: "m1",
+          data: { layers: [{ listId: "list-1" }] },
+          ref: { path: "m1" },
         },
-        { id: "map-2", data: { layers: "not-an-array" } },
       ]);
-
       fs.getDocs
-        .mockResolvedValueOnce(layersSnapshot as any)
-        .mockResolvedValueOnce(mapsSnapshot as any);
+        .mockResolvedValueOnce(layersSnap)
+        .mockResolvedValueOnce(mapsSnap);
+
+      await countryListService.save(sampleList);
+      expect(fs.setDoc).toHaveBeenCalled();
+      expect(mockBatch.commit).toHaveBeenCalled();
+    });
+
+    it("does not commit batch if no updates are found", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      fs.getDocs.mockResolvedValue(createMockSnapshot([]));
+      await countryListService.save(sampleList);
+      expect(mockBatch.commit).not.toHaveBeenCalled();
+    });
+
+    it("skips non-array layers in maps", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      const mapsSnap = createMockSnapshot([
+        { id: "m1", data: { layers: "not-an-array" }, ref: { path: "m1" } },
+      ]);
+      fs.getDocs
+        .mockResolvedValueOnce(createMockSnapshot([]))
+        .mockResolvedValueOnce(mapsSnap);
+      await countryListService.save(sampleList);
+      expect(mockBatch.commit).not.toHaveBeenCalled();
+    });
+
+    it("skips updating maps when listId does not match", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      const mapsSnap = createMockSnapshot([
+        {
+          id: "m1",
+          data: { layers: [{ listId: "other-list" }] },
+          ref: { path: "m1" },
+        },
+      ]);
+      fs.getDocs
+        .mockResolvedValueOnce(createMockSnapshot([]))
+        .mockResolvedValueOnce(mapsSnap);
 
       await countryListService.save(sampleList);
 
-      expect(fs.setDoc).toHaveBeenCalled();
-      expect(fs.updateDoc).toHaveBeenCalledWith(
-        { path: "layer-1-ref" } as any,
-        {
-          countries: ["FR", "DE"],
-        },
-      );
-      expect(fs.updateDoc).toHaveBeenCalledWith({ path: "map-1-ref" } as any, {
-        layers: [
-          { listId: "list-1", countries: ["FR", "DE"] },
-          null,
-          { listId: "unrelated-list", countries: ["US"] },
-        ],
-      });
+      expect(mockBatch.update).not.toHaveBeenCalled();
+      expect(mockBatch.commit).not.toHaveBeenCalled();
     });
   });
 
   describe("delete", () => {
-    it("bails early if the user is unauthenticated", async () => {
+    it("deletes locally and skips batch in guest mode", async () => {
       auth.isAuthenticated.mockReturnValue(false);
+      const delSpy = vi.spyOn(appDb.countryLists, "delete");
       await countryListService.delete("list-1");
-      expect(fs.deleteDoc).not.toHaveBeenCalled();
+      expect(delSpy).toHaveBeenCalledWith("list-1");
+      expect(fs.writeBatch).not.toHaveBeenCalled();
     });
 
-    it("nullifies matching flat layers, maps arrays, and calls deleteDoc target", async () => {
-      const layersSnapshot = createMockSnapshot([
+    it("cascades nullification and deletes in authenticated mode", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      const layersSnap = createMockSnapshot([
+        { id: "l1", data: { listId: "list-1" }, ref: { path: "l1" } },
+      ]);
+      const mapsSnap = createMockSnapshot([
         {
-          id: "layer-1",
-          data: { listId: "list-1" },
-          ref: { path: "layer-1-ref" },
+          id: "m1",
+          data: { layers: [{ listId: "list-1" }] },
+          ref: { path: "m1" },
         },
       ]);
-      const mapsSnapshot = createMockSnapshot([
-        {
-          id: "map-1",
-          data: { layers: [{ listId: "list-1" }, { listId: "keep-me" }] },
-          ref: { path: "map-1-ref" },
-        },
-      ]);
-
       fs.getDocs
-        .mockResolvedValueOnce(layersSnapshot as any)
-        .mockResolvedValueOnce(mapsSnapshot as any);
+        .mockResolvedValueOnce(layersSnap)
+        .mockResolvedValueOnce(mapsSnap);
+
+      await countryListService.delete("list-1");
+      expect(mockBatch.commit).toHaveBeenCalled();
+      expect(fs.deleteDoc).toHaveBeenCalled();
+    });
+
+    it("deletes document without committing batch if no references exist", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      fs.getDocs.mockResolvedValue(createMockSnapshot([]));
+      await countryListService.delete("list-1");
+      expect(mockBatch.commit).not.toHaveBeenCalled();
+      expect(fs.deleteDoc).toHaveBeenCalled();
+    });
+
+    it("does not update maps if the listId does not match the deleted ID", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      const mapsSnap = createMockSnapshot([
+        {
+          id: "m1",
+          data: { layers: [{ listId: "different-id" }] },
+          ref: { path: "m1" },
+        },
+      ]);
+      fs.getDocs
+        .mockResolvedValueOnce(createMockSnapshot([]))
+        .mockResolvedValueOnce(mapsSnap);
 
       await countryListService.delete("list-1");
 
-      expect(fs.updateDoc).toHaveBeenCalledWith(
-        { path: "layer-1-ref" } as any,
-        {
-          listId: null,
-        },
-      );
-      expect(fs.updateDoc).toHaveBeenCalledWith({ path: "map-1-ref" } as any, {
-        layers: [{ listId: null }, { listId: "keep-me" }],
-      });
-      expect(fs.deleteDoc).toHaveBeenCalled();
+      expect(mockBatch.update).not.toHaveBeenCalled();
+      expect(mockBatch.commit).not.toHaveBeenCalled();
     });
   });
 });

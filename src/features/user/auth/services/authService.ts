@@ -21,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
+import { migrationService } from "@services/migrationService";
 import { checkAndReactivateUser } from "../utils/auth";
 import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
 import { friendService } from "../../friends/services/friendService";
@@ -38,6 +39,11 @@ export const authService = {
    */
   async signIn(email: string, password: string) {
     const result = await signInWithEmailAndPassword(auth, email, password);
+
+    // Migrate guest data to Firestore if it exists
+    if (await migrationService.hasGuestData()) {
+      await migrationService.migrateGuestDataToFirestore();
+    }
 
     // Check if account is deactivated and reactivate if so
     const reactivated = await checkAndReactivateUser(result.user);
@@ -74,6 +80,11 @@ export const authService = {
       keepLoggedIn ? browserLocalPersistence : browserSessionPersistence,
     );
     const result = await signInWithEmailAndPassword(auth, email, password);
+
+    // Migrate guest data if it exists
+    if (await migrationService.hasGuestData()) {
+      await migrationService.migrateGuestDataToFirestore();
+    }
 
     // Check if account is deactivated and reactivate if so
     const reactivated = await checkAndReactivateUser(result.user);

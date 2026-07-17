@@ -5,6 +5,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     globals: true,
+    setupFiles: ["src/shared/test-utils/firebaseMockRegistry.ts"],
     coverage: {
       provider: "v8",
       reportsDirectory: "./coverage",

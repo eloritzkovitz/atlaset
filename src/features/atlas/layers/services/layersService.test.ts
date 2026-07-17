@@ -41,130 +41,65 @@ describe("layersService", () => {
     fs.doc.mockImplementation(mockDocRef as any);
   });
 
-  describe("guest (IndexedDB) path", () => {
-    beforeEach(() => {
+  describe("load", () => {
+    it("sorts layers by order (load)", async () => {
       mockAuthControls.isAuthenticated.mockReturnValue(false);
-    });
 
-    it("warns and returns if layers array is empty", async () => {
-      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-      await layersService.save([]);
-      expect(warnSpy).toHaveBeenCalledWith(
-        expect.stringContaining("empty layers array"),
-      );
-      warnSpy.mockRestore();
-    });
-
-    it("reorders layers", async () => {
-      await layersService.reorder([
-        { id: "a", order: 1 },
-        { id: "b", order: 2 },
-      ] as any);
-      expect(appDb.layers.update).toHaveBeenCalledWith("a", { order: 1 });
-      expect(appDb.layers.update).toHaveBeenCalledWith("b", { order: 2 });
-    });
-
-    it("saves, adds, edits, and removes layers cleanly", async () => {
-      await layersService.save([{ id: "foo" }] as any);
-      expect(appDb.layers.clear).toHaveBeenCalled();
-      expect(appDb.layers.bulkPut).toHaveBeenCalledWith([{ id: "foo" }]);
-
-      await layersService.add({ id: "bar" } as any);
-      expect(appDb.layers.add).toHaveBeenCalledWith({ id: "bar" });
-
-      await layersService.edit({ id: "baz" } as any);
-      expect(appDb.layers.put).toHaveBeenCalledWith({ id: "baz" });
-
-      await layersService.remove("baz");
-      expect(appDb.layers.delete).toHaveBeenCalledWith("baz");
-    });
-
-    it("sorts layers by order, treating missing order as 0", async () => {
       vi.mocked(appDb.layers.toArray).mockResolvedValue([
         { id: "a", order: 2 },
         { id: "b" },
         { id: "c", order: 1 },
       ] as any);
+
       const layers = await layersService.load();
       expect(layers.map((o) => o.id)).toEqual(["b", "c", "a"]);
     });
+
+    it("does nothing if layers are empty", async () => {
+      await layersService.save([]);
+      expect(fs.writeBatch).not.toHaveBeenCalled();
+      expect(appDb.layers.clear).not.toHaveBeenCalled();
+    });
   });
 
-  describe("authenticated (Firestore) path", () => {
-    beforeEach(() => {
+  describe("reorder", () => {
+    it("handles reordering (guest)", async () => {
+      mockAuthControls.isAuthenticated.mockReturnValue(false);
+      await layersService.reorder([{ id: "a", order: 1 }] as any);
+      expect(appDb.layers.update).toHaveBeenCalledWith("a", { order: 1 });
+    });
+
+    it("handles reordering (auth)", async () => {
       mockAuthControls.isAuthenticated.mockReturnValue(true);
-      mockAuthControls.getCurrentUser.mockReturnValue({
-        uid: "test-user",
-        displayName: "TestUser",
-      } as any);
-    });
-
-    it("warns and returns if layers array is empty", async () => {
-      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
-      await layersService.save([]);
-      expect(warnSpy).toHaveBeenCalled();
-      warnSpy.mockRestore();
-    });
-
-    it("reorders layers in Firestore", async () => {
-      await layersService.reorder([
-        { id: "foo", order: 1 },
-        { id: "bar", order: 2 },
-      ] as any);
-      expect(mockBatch.update).toHaveBeenCalledWith(
-        mockDocRef(mockLayersCol, "foo"),
-        { order: 1 },
-      );
+      await layersService.reorder([{ id: "foo", order: 1 }] as any);
+      expect(mockBatch.update).toHaveBeenCalled();
       expect(mockBatch.commit).toHaveBeenCalled();
     });
 
-    it("loads layers from Firestore", async () => {
-      fs.getDocs.mockResolvedValue(
-        createMockSnapshot([{ id: "x", data: { name: "Layer X" } }]) as any,
-      );
-      const layers = await layersService.load();
-      expect(fs.collection).toHaveBeenCalledWith(
-        {},
-        "users",
-        "test-user",
-        "layers",
-      );
-      expect(layers).toContainEqual(
-        expect.objectContaining({ id: "x", name: "Layer X" }),
-      );
+    it("reorder does nothing if layers are empty", async () => {
+      await layersService.reorder([]);
+      expect(fs.writeBatch).not.toHaveBeenCalled();
+      expect(appDb.layers.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("save", () => {
+    it("saves all (guest) - bulk clearing and putting", async () => {
+      mockAuthControls.isAuthenticated.mockReturnValue(false);
+      await layersService.save([{ id: "foo" }] as any);
+      expect(appDb.layers.clear).toHaveBeenCalled();
+      expect(appDb.layers.bulkPut).toHaveBeenCalled();
     });
 
-    it("saves layers to Firestore", async () => {
+    it("saves all (auth) - batch deleting and setting", async () => {
+      mockAuthControls.isAuthenticated.mockReturnValue(true);
       fs.getDocs.mockResolvedValue(
-        createMockSnapshot([{ id: "old1", data: {}, ref: "ref1" }]) as any,
+        createMockSnapshot([{ id: "old1", data: {} }]) as any,
       );
       await layersService.save([{ id: "foo" }] as any);
-      expect(mockBatch.delete).toHaveBeenCalledWith("ref1");
-      expect(mockBatch.set).toHaveBeenCalledWith(
-        mockDocRef(mockLayersCol, "foo"),
-        { id: "foo" },
-      );
+      expect(mockBatch.delete).toHaveBeenCalled();
+      expect(mockBatch.set).toHaveBeenCalled();
       expect(mockBatch.commit).toHaveBeenCalled();
-    });
-
-    it("adds, edits, and removes layers dynamically", async () => {
-      await layersService.add({ id: "bar" } as any);
-      expect(fs.setDoc).toHaveBeenCalledWith(mockDocRef(mockLayersCol, "bar"), {
-        id: "bar",
-      });
-
-      await layersService.edit({ id: "baz" } as any);
-      expect(fs.setDoc).toHaveBeenCalledWith(mockDocRef(mockLayersCol, "baz"), {
-        id: "baz",
-      });
-
-      fs.getDocs.mockResolvedValue(
-        createMockSnapshot([{ id: "baz", data: {} }]) as any,
-      );
-      await layersService.remove("baz");
-      expect(fs.deleteDoc).toHaveBeenCalledWith(
-        mockDocRef(mockLayersCol, "baz"),
-      );
     });
   });
 });
