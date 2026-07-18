@@ -1,4 +1,5 @@
 export * from "./colors";
+export * from "./device";
 export * from "./filters";
 export * from "./keyboard";
 export * from "./language";

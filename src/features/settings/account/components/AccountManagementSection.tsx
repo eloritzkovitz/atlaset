@@ -26,7 +26,7 @@ export function AccountManagementSection() {
       title: t("account.management.hibernateConfirm.title"),
       message: t("account.management.hibernateConfirm.message"),
       submitLabel: t("account.management.hibernate"),
-      submitIcon: <ICONS.hibernate />,
+      submitIcon: <ICONS.poweroff />,
       onConfirm: () => {
         setModal(null);
         handleHibernate();
@@ -61,7 +61,7 @@ export function AccountManagementSection() {
               onClick={() => setModal("hibernate")}
               ariaLabel={t("account.management.hibernate")}
             >
-              <ICONS.hibernate />
+              <ICONS.poweroff />
               {hibernating
                 ? t("account.management.hibernating")
                 : t("account.management.hibernate")}

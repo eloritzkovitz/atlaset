@@ -1,14 +1,13 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { sessionService } from "./sessionService";
 import { getUserCollection } from "@utils/firebase";
-import {
-  getBrowserSessionInfo,
-  getOrCreateSessionId,
-  clearLocalSession,
-} from "../utils/session";
+import { clearLocalSession } from "../utils/session";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
-import { type DocumentReference, type DocumentData } from "firebase/firestore";
+import {
+  type QuerySnapshot,
+  type QueryDocumentSnapshot,
+} from "firebase/firestore";
 
 vi.mock("../utils/session", () => ({
   getBrowserSessionInfo: vi.fn(() => ({
@@ -16,137 +15,167 @@ vi.mock("../utils/session", () => ({
     language: "en-US",
     screen: "1920x1080",
   })),
-  getOrCreateSessionId: vi.fn(() => "mock-session-id-123"),
+  getOrCreateSessionId: vi.fn(() => "mock-sess-123"),
   clearLocalSession: vi.fn(),
 }));
 
 describe("sessionService", () => {
-  const mockUserId = "user-abc-456";
+  const uid = "user-abc-456";
+  const mockSnap = (docs: any[]) =>
+    ({ empty: docs.length === 0, docs }) as unknown as QuerySnapshot<any>;
+  const mockDoc = (id: string) =>
+    ({
+      ref: { id },
+      id,
+      data: () => ({}),
+    }) as unknown as QueryDocumentSnapshot<any>;
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.restoreAllMocks();
+    vi.stubGlobal("fetch", vi.fn());
+    fs.doc.mockImplementation((_col: any, id: string) => ({ id }));
   });
 
-  describe("fetchUserSessions", () => {
-    it("fetches and transforms document data into an array of user sessions", async () => {
-      const fakeSessionData = {
-        userId: mockUserId,
-        sessionId: "sess-1",
-        lastActive: 1000,
-      };
-      fs.getDocs.mockResolvedValueOnce(
-        createMockSnapshot([{ id: "doc-id-1", data: fakeSessionData }]),
-      );
-
-      const result = await sessionService.fetchUserSessions(mockUserId);
-
-      expect(getUserCollection).toHaveBeenCalledWith("sessions");
-      expect(fs.getDocs).toHaveBeenCalled();
-      expect(result).toEqual([
-        {
-          id: "doc-id-1",
-          userId: mockUserId,
-          sessionId: "sess-1",
-          lastActive: 1000,
-        },
-      ]);
-    });
+  it("fetchUserSessions: maps documents to clean lists", async () => {
+    fs.getDocs.mockResolvedValueOnce(
+      createMockSnapshot([{ id: "d1", data: { userId: uid, lastActive: 1 } }]),
+    );
+    const res = await sessionService.fetchUserSessions(uid);
+    expect(getUserCollection).toHaveBeenCalledWith("sessions");
+    expect(res).toEqual([{ id: "d1", userId: uid, lastActive: 1 }]);
   });
 
   describe("logSession", () => {
-    it("creates a brand new document if an existing session is not found", async () => {
-      fs.getDocs.mockResolvedValueOnce(createMockSnapshot([]));
+    it("creates doc if empty and initializes background enrichment loop", async () => {
+      fs.getDocs.mockResolvedValueOnce(mockSnap([]));
+      fs.addDoc.mockResolvedValueOnce({ id: "new-d" } as any);
+      const spy = vi
+        .spyOn(sessionService, "enrichSessionWithGeoData")
+        .mockResolvedValueOnce();
 
-      await sessionService.logSession(mockUserId);
-
-      expect(getBrowserSessionInfo).toHaveBeenCalled();
-      expect(getOrCreateSessionId).toHaveBeenCalled();
+      await sessionService.logSession(uid);
       expect(fs.addDoc).toHaveBeenCalledWith(
         undefined,
-        expect.objectContaining({
-          userId: mockUserId,
-          sessionId: "mock-session-id-123",
-          userAgent: "mock-browser",
-          lastActive: expect.any(Number),
-        }),
+        expect.objectContaining({ userId: uid, ipAddress: "Loading..." }),
       );
+      expect(spy).toHaveBeenCalledWith("new-d");
+    });
+
+    it("updates target row directly if session exists", async () => {
+      const docInstance = mockDoc("exist-d");
+      fs.getDocs.mockResolvedValueOnce(mockSnap([docInstance]));
+      const spy = vi
+        .spyOn(sessionService, "enrichSessionWithGeoData")
+        .mockResolvedValueOnce();
+
+      await sessionService.logSession(uid);
+      expect(fs.updateDoc).toHaveBeenCalledWith(
+        docInstance.ref,
+        expect.objectContaining({ userId: uid }),
+      );
+      expect(spy).toHaveBeenCalledWith("exist-d");
+    });
+  });
+
+  describe("enrichSessionWithGeoData", () => {
+    const runEnrich = async (ok: boolean, payload: any) => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValueOnce({ ok, json: async () => payload }),
+      );
+      await sessionService.enrichSessionWithGeoData("target-doc-id");
+    };
+
+    it("saves paired city and country formatting", async () => {
+      await runEnrich(true, { ip: "1.1", city: "TLV", country: "IL" });
+      expect(fs.doc).toHaveBeenCalledWith(undefined, "target-doc-id");
+      expect(fs.updateDoc).toHaveBeenCalledWith(
+        { id: "target-doc-id" },
+        { ipAddress: "1.1", location: "TLV, IL" },
+      );
+    });
+
+    it("gracefully falls back to country string if city is absent", async () => {
+      await runEnrich(true, { ip: "1.1", country: "IL" });
+      expect(fs.updateDoc).toHaveBeenCalledWith(
+        { id: "target-doc-id" },
+        { ipAddress: "1.1", location: "IL" },
+      );
+    });
+
+    it("handles missing geo keys gracefully using fallback string values", async () => {
+      await runEnrich(true, {});
+      expect(fs.updateDoc).toHaveBeenCalledWith(
+        { id: "target-doc-id" },
+        { ipAddress: "Unknown IP", location: "Unknown Location" },
+      );
+    });
+
+    it("exits early without updates on network non-ok failures", async () => {
+      await runEnrich(false, null);
       expect(fs.updateDoc).not.toHaveBeenCalled();
     });
 
-    it("updates the current snapshot document if it already exists", async () => {
-      const fakeRef = {} as DocumentReference<DocumentData, DocumentData>;
-      fs.getDocs.mockResolvedValueOnce({
-        empty: false,
-        docs: [{ ref: fakeRef, id: "existing-id", data: () => ({}) }],
-      } as any);
-
-      await sessionService.logSession(mockUserId);
-
-      expect(fs.updateDoc).toHaveBeenCalledWith(
-        fakeRef,
-        expect.objectContaining({
-          userId: mockUserId,
-          sessionId: "mock-session-id-123",
-          lastActive: expect.any(Number),
-        }),
+    it("swallows rejections and safely forwards to terminal console error logs", async () => {
+      const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      vi.stubGlobal("fetch", vi.fn().mockRejectedValueOnce(new Error("Net")));
+      await sessionService.enrichSessionWithGeoData("target-doc-id");
+      expect(errSpy).toHaveBeenCalledWith(
+        "Failed to quietly enrich session metadata:",
+        expect.any(Error),
       );
-      expect(fs.addDoc).not.toHaveBeenCalled();
     });
   });
 
   describe("updateCurrentSession", () => {
-    it("updates the lastActive field for matched live query sessions", async () => {
-      const fakeRef = {} as DocumentReference<DocumentData, DocumentData>;
-      fs.getDocs.mockResolvedValueOnce({
-        empty: false,
-        docs: [{ ref: fakeRef, id: "active-id", data: () => ({}) }],
-      } as any);
-
-      await sessionService.updateCurrentSession(mockUserId);
-
+    it("patches lastActive stamp on matched sessions", async () => {
+      const docInstance = mockDoc("a");
+      fs.getDocs.mockResolvedValueOnce(mockSnap([docInstance]));
+      await sessionService.updateCurrentSession(uid);
       expect(fs.updateDoc).toHaveBeenCalledWith(
-        fakeRef,
+        docInstance.ref,
         expect.objectContaining({ lastActive: expect.any(Number) }),
       );
     });
+
+    it("skips writing updates if the query collection returns an empty matching array", async () => {
+      fs.getDocs.mockResolvedValueOnce(mockSnap([]));
+      await sessionService.updateCurrentSession(uid);
+      expect(fs.updateDoc).not.toHaveBeenCalled();
+    });
+
+    it("catches internal query execution faults and bubbles error stack down", async () => {
+      const errSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      fs.getDocs.mockRejectedValueOnce(new Error("DB"));
+      await sessionService.updateCurrentSession(uid);
+      expect(errSpy).toHaveBeenCalledWith(
+        "Failed to update current session activity:",
+        expect.any(Error),
+      );
+    });
   });
 
-  describe("removeSessionById", () => {
-    it("deletes the targeted collection document directly via ID lookup references", async () => {
-      await sessionService.removeSessionById("target-doc-id");
-
-      expect(fs.doc).toHaveBeenCalledWith(undefined, "target-doc-id");
-      expect(fs.deleteDoc).toHaveBeenCalled();
-    });
+  it("removeSessionById: hits direct collection lookup reference path", async () => {
+    await sessionService.removeSessionById("target");
+    expect(fs.doc).toHaveBeenCalledWith(undefined, "target");
+    expect(fs.deleteDoc).toHaveBeenCalled();
   });
 
   describe("terminateSession", () => {
-    it("deletes matching documents and purges local storage tokens when explicit sessionId is omitted", async () => {
-      const fakeRef = {} as DocumentReference<DocumentData, DocumentData>;
-      fs.getDocs.mockResolvedValueOnce({
-        empty: false,
-        docs: [{ ref: fakeRef, id: "active-id", data: () => ({}) }],
-      } as any);
-
-      await sessionService.terminateSession(mockUserId);
-
-      expect(fs.deleteDoc).toHaveBeenCalledWith(fakeRef);
+    it("destroys matching row and clears storage on current active matches", async () => {
+      const docInstance = mockDoc("a");
+      fs.getDocs.mockResolvedValueOnce(mockSnap([docInstance]));
+      await sessionService.terminateSession(uid);
+      expect(fs.deleteDoc).toHaveBeenCalledWith(docInstance.ref);
       expect(clearLocalSession).toHaveBeenCalled();
     });
 
-    it("deletes matching documents but retains local token flags when targeting a different session identifier", async () => {
-      const fakeRef = {} as DocumentReference<DocumentData, DocumentData>;
-      fs.getDocs.mockResolvedValueOnce({
-        empty: false,
-        docs: [{ ref: fakeRef, id: "remote-id", data: () => ({}) }],
-      } as any);
-
-      await sessionService.terminateSession(
-        mockUserId,
-        "different-session-id-789",
-      );
-
-      expect(fs.deleteDoc).toHaveBeenCalledWith(fakeRef);
+    it("removes database records but protects storage when killing remote layouts", async () => {
+      const docInstance = mockDoc("r");
+      fs.getDocs.mockResolvedValueOnce(mockSnap([docInstance]));
+      await sessionService.terminateSession(uid, "diff-id");
+      expect(fs.deleteDoc).toHaveBeenCalledWith(docInstance.ref);
       expect(clearLocalSession).not.toHaveBeenCalled();
     });
   });

@@ -56,12 +56,49 @@ export const sessionService = {
       sessionId,
     };
 
+    let targetDocId = "";
+
     // If a session document already exists for this browser, update it; otherwise, create a new one
     if (!snapshot.empty) {
       const existingDocRef = snapshot.docs[0].ref;
+      targetDocId = existingDocRef.id;
       await updateDoc(existingDocRef, payload);
     } else {
-      await addDoc(sessionsCol, payload);
+      const newDocRef = await addDoc(sessionsCol, {
+        ...payload,
+        ipAddress: "Loading...",
+        location: "Loading...",
+      });
+      targetDocId = newDocRef.id;
+    }
+
+    // Asynchronously fetch and update IP and Geolocation data without blocking the main flow
+    this.enrichSessionWithGeoData(targetDocId);
+  },
+
+  /** Quietly fetches IP and Geolocation in the background and patches the document. */
+  async enrichSessionWithGeoData(docId: string): Promise<void> {
+    try {
+      const response = await fetch("https://ipwho.is/");
+      if (!response.ok) return;
+
+      const data = await response.json();
+
+      const ipAddress = data.ip || "Unknown IP";
+      const location =
+        data.city && data.country
+          ? `${data.city}, ${data.country}`
+          : data.country || "Unknown Location";
+
+      const sessionsCol = getUserCollection("sessions");
+      const docRef = doc(sessionsCol, docId);
+
+      await updateDoc(docRef, {
+        ipAddress,
+        location,
+      });
+    } catch (error) {
+      console.error("Failed to quietly enrich session metadata:", error);
     }
   },
 
@@ -75,9 +112,16 @@ export const sessionService = {
       where("sessionId", "==", sessionId),
     );
 
-    const snapshot = await getDocs(q);
-    for (const docSnapshot of snapshot.docs) {
-      await updateDoc(docSnapshot.ref, { lastActive: Date.now() });
+    try {
+      const snapshot = await getDocs(q);
+      if (!snapshot.empty) {
+        const docRef = snapshot.docs[0].ref;
+        await updateDoc(docRef, {
+          lastActive: Date.now(),
+        });
+      }
+    } catch (error) {
+      console.error("Failed to update current session activity:", error);
     }
   },
 

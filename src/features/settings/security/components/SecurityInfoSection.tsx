@@ -1,48 +1,18 @@
 import { useTranslation } from "react-i18next";
-import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
-import { ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useLastLogin } from "@features/activity";
-import {
-  authService,
-  isCurrentSession,
-  useUserSessions,
-  type UserSession,
-} from "@features/user";
+import { useUserSessions } from "@features/user";
 import { formatDate } from "@utils/date";
 import { SecurityInfoRow } from "./SecurityInfoRow";
+import { SessionRow } from "./SessionRow";
 
+/** Renders a section with user security information. */
 export function SecurityInfoSection() {
   const { user } = useAuth();
   const { timestamp: lastLoginTimestamp, method: lastLoginMethod } =
     useLastLogin();
   const { t } = useTranslation("settings");
   const { sessions, terminateSession } = useUserSessions(user?.uid);
-
-  // Get device icon based on user agent
-  function getDeviceIcon(session: UserSession) {
-    const ua = session.userAgent || "";
-    if (/mobile/i.test(ua)) return <FaMobile className="me-4" size={64} />;
-    if (/tablet|ipad/i.test(ua)) return <FaTablet className="me-4" size={64} />;
-    return <FaDesktop className="me-4" size={64} />;
-  }
-
-  // Handle device removal
-  async function handleEndSession(session: UserSession) {
-    try {
-      const current = isCurrentSession(session.sessionId);
-
-      // If the session being terminated is the current one, clear local session data
-      await terminateSession(session.id, session.sessionId);
-
-      // If the terminated session was the current one, log out the user
-      if (current) {
-        await authService.logout();
-      }
-    } catch (error) {
-      console.error("Failed to safely terminate session:", error);
-    }
-  }
 
   return (
     <section className="mb-8">
@@ -77,6 +47,7 @@ export function SecurityInfoSection() {
           }
         />
       </ul>
+
       <h2 className="text-2xl font-bold mb-6 mt-8 self-start">
         {t("security.loggedInDevices")}
       </h2>
@@ -88,37 +59,10 @@ export function SecurityInfoSection() {
           />
         ) : (
           sessions.map((session) => (
-            <SecurityInfoRow
+            <SessionRow
               key={session.id}
-              label={
-                <span className="flex items-center">
-                  {getDeviceIcon(session)}
-                  <span className="text">
-                    {session.deviceName ||
-                      session.userAgent ||
-                      t("security.device")}
-                  </span>
-                </span>
-              }
-              value={
-                <div className="flex items-center min-w-[20rem] mx-4">
-                  {session.lastActive
-                    ? t("security.lastActive", {
-                        date: formatDate(session.lastActive, "long"),
-                      })
-                    : t("security.unknown")}
-                  <ActionButton
-                    variant="primary"
-                    className="text-white !rounded-xl"
-                    icon={<FaPowerOff size={18} />}
-                    title={t("security.actions.endSessionTitle")}
-                    ariaLabel={t("security.actions.endSession")}
-                    onClick={() => handleEndSession(session)}
-                  >
-                    {t("security.actions.endSession")}
-                  </ActionButton>
-                </div>
-              }
+              session={session}
+              onTerminate={terminateSession}
             />
           ))
         )}

@@ -1,12 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { authService } from "../services/authService";
 import { sessionService } from "../services/sessionService";
-import type { UserSession } from "../../types";
 import { clearLocalSession, isCurrentSession } from "../utils/session";
+import type { UserSession } from "../../types";
 
-interface UseUserSessionsProps {
+interface UserSessionsProps {
   sessions: UserSession[];
   isLoading: boolean;
-  terminateSession: (id: string, internalSessionId?: string) => Promise<void>;
+  terminateSession: (session: UserSession) => Promise<void>;
 }
 
 /**
@@ -14,7 +15,7 @@ interface UseUserSessionsProps {
  * @param userId - The ID of the user whose sessions are to be tracked.
  * @returns An array of Session objects representing the user's sessions.
  */
-export function useUserSessions(userId?: string): UseUserSessionsProps {
+export function useUserSessions(userId?: string): UserSessionsProps {
   const [sessions, setSessions] = useState<UserSession[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -44,23 +45,57 @@ export function useUserSessions(userId?: string): UseUserSessionsProps {
     };
   }, [userId]);
 
-  // Terminate a specific session by its document ID and optionally its internal session ID
-  const terminateSession = async (id: string, internalSessionId?: string) => {
-    try {
-      // Remove it from Firestore via its document ID
-      await sessionService.removeSessionById(id);
+  // Update the lastActive timestamp for the current session on user activity
+  useEffect(() => {
+    if (!userId) return;
 
-      // If it was the current browser session, clean up local storage matching your service logic
-      if (internalSessionId && isCurrentSession(internalSessionId)) {
-        clearLocalSession();
+    // Keeps track of the last fire timestamp strictly in-memory
+    let lastWriteTime = 0;
+    const THROTTLE_DURATION = 5 * 60 * 1000;
+
+    const triggerActivityUpdate = async () => {
+      const now = Date.now();
+
+      // Only execute the database transaction if the 5-minute window has passed
+      if (now - lastWriteTime > THROTTLE_DURATION) {
+        lastWriteTime = now;
+        await sessionService.updateCurrentSession(userId);
       }
+    };
 
-      // Filter out the terminated session from the UI array state immediately
-      setSessions((prev) => prev.filter((s) => s.id !== id));
+    // Run once immediately when the hook mounts or the user signs in
+    triggerActivityUpdate();
+
+    // Listen to natural user interaction points across the window interface
+    const activityEvents = ["mousedown", "keydown", "touchstart", "scroll"];
+
+    activityEvents.forEach((event) => {
+      window.addEventListener(event, triggerActivityUpdate);
+    });
+
+    return () => {
+      activityEvents.forEach((event) => {
+        window.removeEventListener(event, triggerActivityUpdate);
+      });
+    };
+  }, [userId]);
+
+  // Terminate a specific session by its document ID and optionally its internal session ID
+  const terminateSession = useCallback(async (session: UserSession) => {
+    try {
+      const isCurrent = isCurrentSession(session.sessionId);
+
+      if (isCurrent) {
+        await authService.logout();
+        clearLocalSession();
+      } else {
+        await sessionService.removeSessionById(session.id);
+        setSessions((prev) => prev.filter((s) => s.id !== session.id));
+      }
     } catch (error) {
-      console.error("Failed to terminate session:", error);
+      console.error("Failed to safely terminate session:", error);
     }
-  };
+  }, []);
 
   return { sessions, isLoading, terminateSession };
 }

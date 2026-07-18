@@ -53,6 +53,10 @@ export type UserSession = {
   language: string;
   /** Display resolution dimensions. */
   screen: string;
+  /** IP address. */
+  ipAddress?: string;
+  /** Location. */
+  location?: string;
   /** Epoch timestamp tracking recent interactions. */
   lastActive: number;
   /** Optional user-assigned friendly name. */
