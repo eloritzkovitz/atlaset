@@ -3,7 +3,7 @@ import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
 import { formatDate } from "@utils/date";
 import { getDeviceType, parseUserAgent } from "@utils/device";
-import { isCurrentSession, type UserSession } from "@features/user";
+import { type UserSession } from "@features/user";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 
 interface SessionRowProps {
@@ -15,7 +15,6 @@ interface SessionRowProps {
 export function SessionRow({ session, onTerminate }: SessionRowProps) {
   const { t } = useTranslation("settings");
 
-  const isCurrent = isCurrentSession(session.sessionId);
   const readableDevice = parseUserAgent(session.userAgent || "");
 
   const isOnline = session.lastActive
@@ -34,49 +33,41 @@ export function SessionRow({ session, onTerminate }: SessionRowProps) {
         <div className="flex items-center py-1">
           <DeviceIcon className="text-3xl text-muted me-4" />
           <div className="flex flex-col gap-1">
-            <span className="font-semibold">
-              {session.deviceName || readableDevice}
-            </span>
-
-            <div className="flex items-center gap-2 text-xs">
-              {isCurrent && (
-                <span className="text-success font-medium">This device</span>
-              )}
-              {isCurrent && isOnline && <span className="text-muted">•</span>}
-              {isOnline && (
-                <span className="text-success font-medium">Active now</span>
-              )}
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">
+                {session.deviceName || readableDevice}
+              </span>
             </div>
 
-            {session.ipAddress && (
-              <span className="text-xs text-muted">{session.ipAddress}</span>
-            )}
-            {hasDistinctLocation && (
-              <span className="text-xs text-muted font-medium">
-                {session.location}
+            <div className="flex items-center gap-1.5 text-xs">
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${isOnline ? "bg-success animate-pulse" : "bg-muted"}`}
+              />
+              <span
+                className={isOnline ? "text-success font-medium" : "text-muted"}
+              >
+                {isOnline
+                  ? t("security.activeNow")
+                  : session.lastActive
+                    ? t("security.lastActive", {
+                        date: formatDate(session.lastActive, "long"),
+                      })
+                    : t("security.unknown")}
               </span>
-            )}
+            </div>
+
+            <div className="flex flex-col text-xs text-muted gap-0.5">
+              {session.ipAddress && (
+                <span className="text-muted/80">{session.ipAddress}</span>
+              )}
+              {hasDistinctLocation && <span>{session.location}</span>}
+            </div>
           </div>
         </div>
       }
       value={
-        <div className="flex items-center justify-between gap-6 min-w-[22rem] mx-4">
-          <div className="flex items-center gap-2">
-            {!isCurrent && isOnline && (
-              <span className="w-2 h-2 rounded-full bg-success animate-pulse" />
-            )}
-
-            {!isCurrent && (
-              <span className="text-sm text-muted">
-                {session.lastActive
-                  ? t("security.lastActive", {
-                      date: formatDate(session.lastActive, "long"),
-                    })
-                  : t("security.unknown")}
-              </span>
-            )}
-          </div>
-
+        <div className="flex items-center justify-between gap-6 min-w-[10rem] mx-4">
+          <div />
           <div className="flex pe-2">
             <ActionButton
               className="rounded-full text-danger hover:text-danger-hover"

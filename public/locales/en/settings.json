@@ -128,6 +128,8 @@
     "devicesLabel": "Devices",
     "devicesNone": "No active devices",
     "device": "Device",
+    "currentSession": "This device",
+    "activeNow": "Active now",
     "lastActive": "Last active: {{date}}",
     "actions": {
       "endSession": "End Session",

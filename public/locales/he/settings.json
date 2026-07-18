@@ -128,6 +128,8 @@
     "devicesLabel": "מכשירים",
     "devicesNone": "אין מכשירים פעילים",
     "device": "מכשיר",
+    "currentSession": "מכשיר זה",
+    "activeNow": "פעיל עכשיו",
     "lastActive": "פעיל לאחרונה: {{date}}",
     "actions": {
       "endSession": "סיים את הההפעלה",
