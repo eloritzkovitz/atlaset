@@ -59,7 +59,7 @@ export function EditProfileModal({
       setUsername(fetchedUsername);
       setInitialUsername(fetchedUsername);
     }
-    setIsPasswordUser(!!isPasswordProvider(user));
+    setIsPasswordUser(!!isPasswordProvider(user?.providerData));
   }, [fetchedUsername, user, open]);
 
   // Check username availability

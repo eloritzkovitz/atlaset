@@ -1,4 +1,4 @@
-import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 import {
   getBrowserSessionInfo,
   getOrCreateSessionId,
@@ -6,16 +6,30 @@ import {
   clearLocalSession,
 } from "./session";
 
-const SESSION_KEY = "testSessionId";
-
 describe("session utils", () => {
-  beforeEach(() => {
-    localStorage.clear();
-    vi.restoreAllMocks();
-  });
+  let store: Record<string, string>;
+  const EXPECTED_KEY = "atlaset:sessionId";
 
-  afterEach(() => {
-    vi.unstubAllGlobals();
+  beforeEach(() => {
+    vi.restoreAllMocks();
+    store = {};
+
+    const localStorageMock = {
+      getItem: vi.fn((key: string): string | null => store[key] || null),
+      setItem: vi.fn((key: string, value: string): void => {
+        store[key] = value;
+      }),
+      removeItem: vi.fn((key: string): void => {
+        delete store[key];
+      }),
+      clear: vi.fn(() => {
+        store = {};
+      }),
+      length: 0,
+      key: vi.fn(() => null),
+    };
+
+    vi.stubGlobal("localStorage", localStorageMock);
   });
 
   describe("getBrowserSessionInfo", () => {
@@ -48,19 +62,17 @@ describe("session utils", () => {
         randomUUID: vi.fn(() => mockUuid),
       });
 
-      const spyGet = vi.spyOn(Storage.prototype, "getItem");
-      const spySet = vi.spyOn(Storage.prototype, "setItem");
-
       const id = getOrCreateSessionId();
 
       expect(id).toBe(mockUuid);
-      expect(spyGet).toHaveBeenCalledWith(SESSION_KEY);
-      expect(spySet).toHaveBeenCalledWith(SESSION_KEY, mockUuid);
+      expect(localStorage.getItem).toHaveBeenCalledWith(EXPECTED_KEY);
+      expect(localStorage.setItem).toHaveBeenCalledWith(EXPECTED_KEY, mockUuid);
+      expect(store[EXPECTED_KEY]).toBe(mockUuid);
     });
 
     it("pulls the existing identifier from the local store instead of creating a new one", () => {
       const existingId = "existing-uuid-9999";
-      localStorage.setItem(SESSION_KEY, existingId);
+      store[EXPECTED_KEY] = existingId;
 
       const cryptoSpy = vi.fn();
       vi.stubGlobal("crypto", { randomUUID: cryptoSpy });
@@ -75,13 +87,13 @@ describe("session utils", () => {
   describe("isCurrentSession", () => {
     it("returns true when evaluated against the matching storage string value", () => {
       const targetId = "match-me-1234";
-      localStorage.setItem(SESSION_KEY, targetId);
+      store[EXPECTED_KEY] = targetId;
 
       expect(isCurrentSession(targetId)).toBe(true);
     });
 
     it("returns false when provided an alternate or missing comparison string identifier", () => {
-      localStorage.setItem(SESSION_KEY, "match-me-1234");
+      store[EXPECTED_KEY] = "match-me-1234";
 
       expect(isCurrentSession("mismatched-id-5678")).toBe(false);
       expect(isCurrentSession(undefined)).toBe(false);
@@ -90,13 +102,13 @@ describe("session utils", () => {
 
   describe("clearLocalSession", () => {
     it("purges targeted session keys cleanly from storage namespaces", () => {
-      localStorage.setItem(SESSION_KEY, "temp-token");
-      const spyRemove = vi.spyOn(Storage.prototype, "removeItem");
+      store[EXPECTED_KEY] = "temp-token";
 
       clearLocalSession();
 
-      expect(localStorage.getItem(SESSION_KEY)).toBeNull();
-      expect(spyRemove).toHaveBeenCalledWith(SESSION_KEY);
+      expect(localStorage.removeItem).toHaveBeenCalledWith(EXPECTED_KEY);
+      expect(store[EXPECTED_KEY]).toBeUndefined();
+      expect(localStorage.getItem(EXPECTED_KEY)).toBeNull();
     });
   });
 });
