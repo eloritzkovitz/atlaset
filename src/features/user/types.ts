@@ -9,7 +9,7 @@ export type SocialPlatform =
   | "github"
   | "website";
 
-/** User profile information. */
+/** Represents a user profile. */
 export interface UserProfile {
   /** User ID */
   uid: string;
@@ -39,15 +39,27 @@ export interface UserProfile {
   wantToVisitCountryCodes: string[];
 }
 
-/** Device information associated with a user. */
-export type Device = {
-  userAgent?: string;
-  deviceName?: string;
+/** Represents a user session. */
+export type UserSession = {
+  /** Document ID. */
   id: string;
-  lastActive?: number;
+  /** User ID. */
+  userId: string;
+  /** Session ID. */
+  sessionId: string;
+  /** User agent string. */
+  userAgent: string;
+  /** Browser language preference. */
+  language: string;
+  /** Display resolution dimensions. */
+  screen: string;
+  /** Epoch timestamp tracking recent interactions. */
+  lastActive: number;
+  /** Optional user-assigned friendly name. */
+  deviceName?: string;
 };
 
-/** Friend request information. */
+/** Represents a friend request. */
 export interface FriendRequest {
   /** User ID of the friend request */
   uid: string;
@@ -67,9 +79,7 @@ export interface Friend {
   createdAt: Timestamp;
 }
 
-/**
- * Friend profile information (subset of UserProfile, used for friend lists/search)
- */
+/** Represents a friend's profile information. */
 export type FriendProfile = Pick<
   UserProfile,
   "uid" | "username" | "displayName" | "photoURL"

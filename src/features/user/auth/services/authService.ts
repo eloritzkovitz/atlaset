@@ -16,14 +16,16 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   setDoc,
 } from "firebase/firestore";
 import { auth, db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
 import { migrationService } from "@services/migrationService";
-import { checkAndReactivateUser } from "../utils/auth";
-import { getDeviceInfo, logDevice, removeDevice } from "../utils/device";
+import { sessionService } from "./sessionService";
+import { isUserDeactivated } from "../utils/auth";
+import { getBrowserSessionInfo } from "../utils/session";
 import { friendService } from "../../friends/services/friendService";
 import { profileService } from "../../profile/services/profileService";
 
@@ -46,20 +48,19 @@ export const authService = {
     }
 
     // Check if account is deactivated and reactivate if so
-    const reactivated = await checkAndReactivateUser(result.user);
+    const reactivated = await this.handleReactivation(result.user.uid);
 
-    // Log user activity
     await logUserActivity(
       102,
       {
         method: "email",
         userName: result.user.displayName,
         email: result.user.email,
-        device: getDeviceInfo().userAgent,
+        device: getBrowserSessionInfo().userAgent,
       },
       result.user!.uid,
     );
-    await logDevice(result.user!.uid);
+    await sessionService.logSession(result.user.uid);
 
     return { user: result.user, reactivated };
   },
@@ -87,7 +88,7 @@ export const authService = {
     }
 
     // Check if account is deactivated and reactivate if so
-    const reactivated = await checkAndReactivateUser(result.user);
+    const reactivated = await this.handleReactivation(result.user.uid);
     if (reactivated) {
       await logUserActivity(
         111,
@@ -102,11 +103,11 @@ export const authService = {
         method: keepLoggedIn ? "email_persistent" : "email_session",
         userName: result.user.displayName,
         email: result.user.email,
-        device: getDeviceInfo().userAgent,
+        device: getBrowserSessionInfo().userAgent,
       },
       result.user!.uid,
     );
-    await logDevice(result.user!.uid);
+    await sessionService.logSession(result.user!.uid);
 
     return { user: result.user, reactivated };
   },
@@ -126,17 +127,19 @@ export const authService = {
       photoURL: result.user.photoURL,
       joinDate: result.user.metadata.creationTime,
     });
+
     await logUserActivity(
       101,
       {
         method: "email",
         userName: result.user.displayName,
         email: result.user.email,
-        device: getDeviceInfo().userAgent,
+        device: getBrowserSessionInfo().userAgent,
       },
       result.user!.uid,
     );
-    await logDevice(result.user!.uid);
+
+    await sessionService.logSession(result.user!.uid);
     return { ...result, username };
   },
 
@@ -149,7 +152,7 @@ export const authService = {
     await signOut(auth);
     if (uid) {
       await logUserActivity(103, {}, uid);
-      await removeDevice(uid);
+      await sessionService.terminateSession(uid);
     }
   },
 
@@ -208,11 +211,11 @@ export const authService = {
         method: "google",
         userName: result.user.displayName,
         email: result.user.email,
-        device: getDeviceInfo().userAgent,
+        device: getBrowserSessionInfo().userAgent,
       },
       result.user!.uid,
     );
-    await logDevice(result.user!.uid);
+    await sessionService.logSession(result.user!.uid);
     return result;
   },
 
@@ -221,7 +224,6 @@ export const authService = {
    * @param user - The Firebase User object.
    */
   async deactivateAccount(user: User) {
-    // Mark the user as deactivated in Firestore
     await setDoc(
       doc(db, "users", user.uid),
       { status: "deactivated", deactivatedAt: new Date().toISOString() },
@@ -240,7 +242,6 @@ export const authService = {
     const usersSnap = await getDocs(collection(db, "users"));
     for (const userDoc of usersSnap.docs) {
       if (userDoc.id !== user.uid) {
-        // Remove friendship both ways
         await friendService.removeFriend(userDoc.id, user.uid);
       }
     }
@@ -259,16 +260,18 @@ export const authService = {
     const uid = user.uid;
     const userSubcollections = [
       "activity",
-      "devices",
+      "countryLists",
       "friends",
       "friendRequests",
       "layers",
       "markers",
       "savedMaps",
-      "trips",
-      "sharedTrips",
+      "sessions",
       "settings",
+      "sharedTrips",
+      "trips",
     ];
+
     for (const sub of userSubcollections) {
       const subColRef = collection(db, `users/${uid}/${sub}`);
       const snapshot = await getDocs(subColRef);
@@ -276,9 +279,29 @@ export const authService = {
         await deleteDoc(docSnap.ref);
       }
     }
-    await deleteDoc(doc(db, "users", uid));
 
-    // Delete Firebase Auth user (removes login for this app)
+    // Delete the main user document and Firebase Auth user
+    await deleteDoc(doc(db, "users", uid));
     await deleteUser(user);
+  },
+
+  /**
+   * Reactivates a deactivated user account.
+   * @param uid - The user's unique identifier.
+   * @returns True if the account was reactivated, false otherwise.
+   */
+  async handleReactivation(uid: string): Promise<boolean> {
+    const userDocRef = doc(db, "users", uid);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists() && isUserDeactivated(userDocSnap.data().status)) {
+      await setDoc(
+        userDocRef,
+        { status: "active", reactivatedAt: new Date().toISOString() },
+        { merge: true },
+      );
+      return true;
+    }
+    return false;
   },
 };

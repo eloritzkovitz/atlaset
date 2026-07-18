@@ -23,7 +23,7 @@ export { useAuthHandlers } from "./auth/hooks/useAuthHandlers";
 export { useFirestoreUsername } from "./profile/hooks/useFirestoreUsername";
 export { useHomeCountry } from "./profile/hooks/useHomeCountry";
 export { useUserProfile } from "./profile/hooks/useUserProfile";
-export { useUserDevices } from "./auth/hooks/useUserDevices";
+export { useUserSessions } from "./auth/hooks/useUserSessions";
 export { useUserFriendCount } from "./friends/hooks/useUserFriendCount";
 export { useFriendProfiles } from "./friends/hooks/useFriendProfiles";
 export { useUserFriends } from "./friends/hooks/useUserFriends";
@@ -34,10 +34,11 @@ export * from "./auth/slices/authSlice";
 
 // Services
 export { authService } from "./auth/services/authService";
+export { sessionService } from "./auth/services/sessionService";
 
 // Types
 export * from "./types";
 
 // Utils
 export { isPasswordProvider } from "./auth/utils/auth";
-export { isCurrentSession } from "./auth/utils/device";
+export { isCurrentSession } from "./auth/utils/session";
