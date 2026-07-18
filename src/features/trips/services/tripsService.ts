@@ -12,7 +12,7 @@ import {
   isAuthenticated,
   getUserCollection,
   getCurrentUser,
-} from "@utils/firebase";
+} from "@lib/firebase";
 import { sharedTripsService } from "./sharedTripsService";
 import type { Trip } from "../types";
 import { profileService } from "../../user/profile/services/profileService";

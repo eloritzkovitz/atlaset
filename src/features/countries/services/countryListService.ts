@@ -2,8 +2,8 @@ import { getDocs, writeBatch, collection } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
 import type { Layer } from "@features/atlas/layers";
+import { getCurrentUser, isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
-import { getCurrentUser, isAuthenticated } from "@utils/firebase";
 import type { CountryList } from "../types";
 
 export class CountryListService extends BaseService<

@@ -8,7 +8,7 @@ import {
   orderBy,
   updateDoc,
 } from "firebase/firestore";
-import { getUserCollection } from "@utils/firebase";
+import { getUserCollection } from "@lib/firebase";
 import {
   getBrowserSessionInfo,
   getOrCreateSessionId,

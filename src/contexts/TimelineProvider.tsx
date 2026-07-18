@@ -3,7 +3,7 @@ import { useAudio } from "@contexts/AudioContext";
 import { useTrips } from "@contexts/TripsContext";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { useKeyHandler } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import { useMapView } from "./MapViewContext";
 import { TimelineContext } from "./TimelineContext";
 

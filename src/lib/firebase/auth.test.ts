@@ -1,10 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import * as authModule from "firebase/auth";
 import { createMockUser } from "@test-utils/authMocks";
-import { isAuthenticated, getCurrentUser, getUserCollection } from "./firebase";
-import { mockFirestoreControls } from "@test-utils/firebaseMockRegistry";
+import { isAuthenticated, getCurrentUser } from "./auth";
 
-vi.unmock("@utils/firebase");
+vi.unmock("./firebase");
 vi.mock("firebase/auth", () => ({
   getAuth: vi.fn(),
 }));
@@ -32,21 +31,6 @@ describe("firebase utils", () => {
       currentUser: null,
     } as any);
 
-    expect(() => getUserCollection("markers")).toThrow("Not authenticated");
-  });
-
-  describe("getUserCollection", () => {
-    it("returns a collection if authenticated", () => {
-      vi.mocked(authModule.getAuth).mockReturnValue({
-        currentUser: mockUser,
-      } as any);
-      mockFirestoreControls.collection.mockReturnValue({
-        id: "mockCollection",
-      });
-
-      const result = getUserCollection("markers");
-
-      expect(result).toEqual({ id: "mockCollection" });
-    });
+    expect(isAuthenticated()).toBe(false);
   });
 });

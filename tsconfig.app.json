@@ -28,6 +28,8 @@
       "@hooks/*": ["./src/shared/hooks/*"],
       "@layouts": ["./src/layouts/index.ts"],
       "@layouts/*": ["./src/layouts/*"],
+      "@lib": ["./src/lib/index.ts"],
+      "@lib/*": ["./src/lib/*"],
       "@services": ["./src/shared/services/index.ts"],
       "@services/*": ["./src/shared/services/*"],
       "@test-utils": ["./src/shared/test-utils/index.ts"],

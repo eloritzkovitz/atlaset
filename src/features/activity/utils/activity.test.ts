@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { ICONS } from "@constants/icons";
 import { authState, createMockUser } from "@test-utils/authMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
-import * as firebaseUtils from "@utils/firebase";
+import * as firebaseUtils from "@lib/firebase";
 import * as activityUtils from "./activity";
 import type { CollectionReference, DocumentData } from "firebase/firestore";
 

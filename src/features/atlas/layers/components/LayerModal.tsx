@@ -12,7 +12,7 @@ import {
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@contexts/CountryListsContext";
 import { CountrySelectField, useCountryData } from "@features/countries";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import type { Layer } from "../types";
 
 type FilterLabelKey = "all" | "only" | "exclude";

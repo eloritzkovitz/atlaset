@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { Trip } from "@features/trips";
 import { useKeyHandler, useScreenSize } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import { UIContext } from "./UIContext";
 
 // Map toolbar panel selection

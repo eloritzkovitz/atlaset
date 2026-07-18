@@ -2,7 +2,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import { isAuthenticated, getCurrentUser } from "@lib/firebase";
 import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../../types";
 

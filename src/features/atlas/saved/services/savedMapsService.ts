@@ -1,7 +1,7 @@
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { SavedMap } from "../types";
-import { isAuthenticated } from "@utils/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 
 /** Service for managing saved maps. */
 export class SavedMapsService extends BaseService<SavedMap, undefined> {

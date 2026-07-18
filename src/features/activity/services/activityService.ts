@@ -9,7 +9,7 @@ import {
   doc,
   deleteDoc,
 } from "firebase/firestore";
-import { getUserCollection, isAuthenticated } from "@utils/firebase";
+import { getUserCollection, isAuthenticated } from "@lib/firebase";
 import type { UserActivity } from "../types";
 
 /** Service for managing user activity data. */

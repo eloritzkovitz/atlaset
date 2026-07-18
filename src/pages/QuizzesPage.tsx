@@ -22,7 +22,7 @@ import {
   type LobbyCardItem,
 } from "@features/quizzes";
 import { useFlyTransition, usePageTitle, useUiHint } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 
 // Lazy load leaderboards component
 const Leaderboards = lazy(() =>

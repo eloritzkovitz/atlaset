@@ -1,8 +1,8 @@
 import { writeBatch, doc, getDocs } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
-import { isAuthenticated } from "@utils/firebase";
 import type { Marker } from "../types";
 
 /** Service for managing markers. */

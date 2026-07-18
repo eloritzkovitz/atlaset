@@ -28,7 +28,7 @@ export function useUserProfile({
     if (uid) {
       setLoading(true);
       profileService
-        .getUserProfileByUid(uid)
+        .getProfile(uid)
         .then(setProfile)
         .finally(() => setLoading(false));
     } else if (username) {

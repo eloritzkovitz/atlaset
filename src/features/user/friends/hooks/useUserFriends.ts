@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@app/firebase";
-import { getCurrentUser } from "@utils/firebase";
+import { getCurrentUser } from "@lib/firebase";
 import type { Friend } from "../../types";
 
 /**

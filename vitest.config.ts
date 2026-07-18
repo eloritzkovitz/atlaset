@@ -36,6 +36,7 @@ export default defineConfig({
       "@contexts": path.resolve(__dirname, "src/contexts"),
       "@features": path.resolve(__dirname, "src/features"),
       "@hooks": path.resolve(__dirname, "src/shared/hooks"),
+      "@lib": path.resolve(__dirname, "src/lib"),
       "@services": path.resolve(__dirname, "src/shared/services"),
       "@test-utils": path.resolve(__dirname, "src/shared/test-utils"),
       "@types": path.resolve(__dirname, "src/shared/types"),

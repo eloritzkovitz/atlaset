@@ -4,7 +4,7 @@ import { FaUmbrellaBeach, FaStopwatch } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
 import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import type { Difficulty, GameMode } from "../../types";
 
 interface QuizSettingsProps {

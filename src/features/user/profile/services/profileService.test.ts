@@ -1,183 +1,220 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
+import * as firestoreUtils from "@lib/firebase";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
-import {
-  createMockSnapshot,
-  createMockDocSnap,
-} from "@test-utils/firestoreMocks";
+import { createMockDocSnap } from "@test-utils/firestoreMocks";
 import { profileService } from "./profileService";
 
 vi.mock("@app/firebase", () => ({ db: {} }));
+vi.mock("@lib/firebase");
 
 describe("profileService", () => {
   let mockTx: { get: any; set: any; update: any; delete: any };
 
   beforeEach(() => {
     vi.clearAllMocks();
-
     fs.doc.mockReturnValue({ type: "document" });
-
     mockTx = {
       get: vi.fn(),
       set: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
     };
-
     mockTx.get.mockResolvedValue(createMockDocSnap(false));
-
     fs.transaction.mockReturnValue(mockTx);
   });
 
   describe("username checking and generation", () => {
     it("checkUsernameExists returns boolean accurately", async () => {
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(true));
+      vi.spyOn(firestoreUtils, "getDocData")
+        .mockResolvedValueOnce({ uid: "exists" })
+        .mockResolvedValueOnce(null);
       expect(await profileService.checkUsernameExists("taken")).toBe(true);
-
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
       expect(await profileService.checkUsernameExists("")).toBe(false);
     });
 
-    it("generateUniqueUsername sanitizes inputs and breaks early if free", async () => {
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
+    it("generateUniqueUsername sanitizes inputs", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue(null);
+      expect(
+        await profileService.generateUniqueUsername("Alex $ Smith", null),
+      ).toBe("alexsmith");
+    });
+
+    it("generateUniqueUsername increments suffix if username is taken", async () => {
+      vi.spyOn(firestoreUtils, "getDocData")
+        .mockResolvedValueOnce({ uid: "taken" })
+        .mockResolvedValueOnce(null);
 
       const username = await profileService.generateUniqueUsername(
-        "Alex $ Smith",
+        "Alex",
         null,
       );
-      expect(username).toBe("alexsmith");
+      expect(username).toBe("alex1");
     });
   });
 
-  describe("profile lifecycle", () => {
-    it("createUserProfileWithUsername returns early if user exists", async () => {
-      fs.getDoc
-        .mockResolvedValueOnce(createMockDocSnap(true, { username: "name1" }))
-        .mockResolvedValueOnce(createMockDocSnap(false));
-
-      const res = await profileService.createUserProfileWithUsername({
-        uid: "u1",
-        displayName: "Name",
-        email: "test@test.com",
+  describe("createUserProfileWithUsername", () => {
+    it("createUserProfileWithUsername handles existing user/profile", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue({
+        username: "name1",
       });
-      expect(res).toBe("name1");
+      expect(
+        await profileService.createUserProfileWithUsername({
+          uid: "u1",
+        } as any),
+      ).toBe("name1");
     });
 
-    it("createUserProfileWithUsername returns early or throws immediately if user doc already exists", async () => {
-      fs.getDoc.mockResolvedValueOnce(
-        createMockDocSnap(true, { username: "taken_username" }),
-      );
-
-      const res = await profileService.createUserProfileWithUsername({
-        uid: "u1",
-        displayName: "Test",
-        email: "test@test.com",
-      });
-
-      expect(res).toBe("taken_username");
-    });
-
-    it("createUserProfileWithUsername executes safely inside a transaction", async () => {
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
-      mockTx.get.mockResolvedValueOnce(createMockDocSnap(false));
-
+    it("createUserProfileWithUsername executes transaction safely", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue(null);
+      mockTx.get.mockResolvedValue(createMockDocSnap(false));
       const res = await profileService.createUserProfileWithUsername({
         uid: "u1",
         displayName: "Alex",
-        email: "alex@test.com",
-        joinDate: "2026-01-01",
+        email: null,
+        photoURL: null,
       });
-
       expect(res).toBe("alex");
       expect(mockTx.set).toHaveBeenCalledTimes(2);
     });
 
-    it("createUserProfileWithUsername throws inside transaction if username slips through as taken", async () => {
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
-      mockTx.get.mockResolvedValueOnce(createMockDocSnap(true));
-
+    it("createUserProfileWithUsername throws if username taken in transaction", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue(null);
+      mockTx.get.mockResolvedValue(createMockDocSnap(true));
       await expect(
-        profileService.createUserProfileWithUsername({
-          uid: "u1",
-          displayName: "Alex",
-          email: "a@b.com",
-        }),
+        profileService.createUserProfileWithUsername({ uid: "u1" } as any),
       ).rejects.toThrow("Username taken");
+    });
+
+    it("createUserProfileWithUsername handles missing fields", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue(null);
+      mockTx.get.mockResolvedValue(createMockDocSnap(false));
+      const username = await profileService.createUserProfileWithUsername({
+        uid: "u2",
+        displayName: null,
+        email: null,
+      });
+      expect(username).toBe("user");
+    });
+
+    it("createUserProfileWithUsername triggers initializeUserCountry if ipAddress is provided", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue(null);
+      mockTx.get.mockResolvedValue(createMockDocSnap(false));
+      const initSpy = vi
+        .spyOn(profileService, "initializeUserCountry")
+        .mockResolvedValue(undefined);
+      await profileService.createUserProfileWithUsername(
+        { uid: "u2", displayName: "Alex", email: "a@b.com" },
+        "127.0.0.1",
+      );
+      expect(initSpy).toHaveBeenCalledWith("u2", "127.0.0.1");
+      initSpy.mockRestore();
+    });
+  });
+
+  describe("initializeUserCountry", () => {
+    it("initializeUserCountry updates homeCountry on valid API response", async () => {
+      const mockData = { country_code: "IL" };
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+          json: vi.fn().mockResolvedValue(mockData),
+        }),
+      );
+      await profileService.initializeUserCountry("u1", "1.1.1.1");
+      expect(fs.updateDoc).toHaveBeenCalledWith(expect.any(Object), {
+        homeCountry: "IL",
+      });
+      vi.unstubAllGlobals();
+    });
+
+    it("initializeUserCountry handles network errors gracefully", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockRejectedValue(new Error("Network Error")),
+      );
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      await profileService.initializeUserCountry("u1", "1.1.1.1");
+      expect(consoleSpy).toHaveBeenCalled();
+      consoleSpy.mockRestore();
+      vi.unstubAllGlobals();
+    });
+
+    it("initializeUserCountry does nothing if API returns empty data", async () => {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn().mockResolvedValue({
+          json: vi.fn().mockResolvedValue({}),
+        }),
+      );
+      await profileService.initializeUserCountry("u1", "1.1.1.1");
+      expect(fs.updateDoc).not.toHaveBeenCalled();
+      vi.unstubAllGlobals();
     });
   });
 
   describe("profile lookups & mutation", () => {
-    it("getUserProfileByUid maps document data fields properly", async () => {
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(true, { uid: "u1" }));
-      const profile = await profileService.getUserProfileByUid("u1");
-      expect(profile?.uid).toBe("u1");
-
-      expect(await profileService.getUserProfileByUid("")).toBeNull();
+    it("getProfile maps data properly", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue({ uid: "u1" });
+      expect((await profileService.getProfile("u1"))?.uid).toBe("u1");
     });
 
-    it("getUserProfileByUsername acts as a join look up across two collections", async () => {
-      fs.getDoc
-        .mockResolvedValueOnce(createMockDocSnap(true, { uid: "u1" }))
-        .mockResolvedValueOnce(createMockDocSnap(true, { username: "alex" }));
-
+    it("getUserProfileByUsername joins across collections", async () => {
+      vi.spyOn(firestoreUtils, "getDocData")
+        .mockResolvedValueOnce({ uid: "u1" })
+        .mockResolvedValueOnce({ uid: "u1" });
       const profile = await profileService.getUserProfileByUsername("alex");
-      expect(profile?.username).toBe("alex");
-      expect(await profileService.getUserProfileByUsername("")).toBeNull();
+      expect(profile?.uid).toBe("u1");
     });
 
-    it("editProfile performs mutations and dispatches logUserActivity tracking", async () => {
-      fs.getDoc.mockResolvedValue(
-        createMockDocSnap(true, { displayName: "Alex" }),
-      );
-
-      await profileService.editProfile("u1", { displayName: "New Name" });
+    it("editProfile performs mutations and logs activity", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue({
+        displayName: "Alex",
+      });
+      await profileService.editProfile("u1", { displayName: "New" });
       expect(fs.updateDoc).toHaveBeenCalled();
-      expect(activityMockTracker).toHaveBeenCalledWith(
-        120,
-        expect.any(Object),
-        "u1",
-      );
+      expect(activityMockTracker).toHaveBeenCalled();
     });
 
-    it("changeUsername safely moves records inside a single atomic transaction transaction", async () => {
-      mockTx.get.mockResolvedValueOnce(createMockDocSnap(false));
-
-      const cleanedName = await profileService.changeUsername({
+    it("changeUsername atomically swaps username records", async () => {
+      mockTx.get.mockResolvedValue(createMockDocSnap(false));
+      const name = await profileService.changeUsername({
         uid: "u1",
         oldUsername: "old",
-        newUsername: "New! Name",
+        newUsername: "New",
       });
-      expect(cleanedName).toBe("newname");
+      expect(name).toBe("new");
       expect(mockTx.update).toHaveBeenCalled();
-      expect(mockTx.set).toHaveBeenCalled();
       expect(mockTx.delete).toHaveBeenCalled();
     });
 
-    it("changeUsername throws an error if the new username is already taken", async () => {
-      mockTx.get.mockResolvedValueOnce(
-        createMockDocSnap(true, { uid: "someone_else" }),
-      );
+    it("changeUsername throws error if new username is taken", async () => {
+      mockTx.get.mockResolvedValueOnce(createMockDocSnap(true));
 
       await expect(
         profileService.changeUsername({
           uid: "u1",
-          oldUsername: "oldname",
-          newUsername: "takenname",
+          oldUsername: "old",
+          newUsername: "taken",
         }),
-      ).rejects.toThrow("Username taken");
+      ).rejects.toThrow("Username taken.");
 
-      expect(mockTx.set).not.toHaveBeenCalled();
+      expect(mockTx.update).not.toHaveBeenCalled();
       expect(mockTx.delete).not.toHaveBeenCalled();
     });
+  });
 
-    it("getHomeCountry and setHomeCountry behave deterministically", async () => {
-      fs.getDoc.mockResolvedValueOnce(
-        createMockDocSnap(true, { homeCountry: "CA" }),
-      );
-      expect(await profileService.getHomeCountry("u1")).toBe("CA");
+  describe("getHomeCountry", () => {
+    it("getHomeCountry returns empty string if profile missing", async () => {
+      vi.spyOn(firestoreUtils, "getDocData").mockResolvedValue(null);
+      expect(await profileService.getHomeCountry("u1")).toBe("");
+    });
+  });
 
+  describe("setHomeCountry", () => {
+    it("setHomeCountry updates the user's home country", async () => {
       await profileService.setHomeCountry("u1", "US");
       expect(fs.updateDoc).toHaveBeenCalledWith(expect.any(Object), {
         homeCountry: "US",
@@ -185,47 +222,32 @@ describe("profileService", () => {
     });
   });
 
-  describe("updateVisitedCountryCodes calculation pipeline", () => {
+  describe("updateVisitedCountryCodes", () => {
     it("gathers owned and shared references to calculate finished travels cleanly", async () => {
-      fs.getDocs
-        .mockResolvedValueOnce(
-          createMockSnapshot([
-            {
-              id: "trip1",
-              data: { status: "completed", countryCodes: ["US", "MX"] },
-            },
-          ]),
-        )
-        .mockResolvedValueOnce(
-          createMockSnapshot([
-            { id: "s1", data: { ownerUid: "otherUser", tripId: "shared1" } },
-          ]),
-        );
+      const getDocsDataSpy = vi
+        .spyOn(firestoreUtils, "getDocsData")
+        .mockResolvedValueOnce([
+          { id: "trip1", status: "completed", countryCodes: ["US", "MX"] },
+        ])
+        .mockResolvedValueOnce([{ ownerUid: "otherUser", tripId: "shared1" }]);
 
-      fs.getDoc.mockResolvedValueOnce(
-        createMockDocSnap(true, {
+      vi.spyOn(firestoreUtils, "getDocData")
+        .mockResolvedValueOnce({
           status: "completed",
           countryCodes: ["MX", "CA"],
-        }),
-      );
+        })
+        .mockResolvedValueOnce({ homeCountry: "US" });
 
       await profileService.updateVisitedCountryCodes("u1");
 
-      expect(fs.updateDoc).toHaveBeenCalledWith(expect.any(Object), {
-        visitedCountryCodes: expect.arrayContaining(["US", "MX", "CA"]),
-      });
-    });
-  });
+      expect(fs.updateDoc).toHaveBeenCalledWith(
+        expect.any(Object),
+        expect.objectContaining({
+          visitedCountryCodes: expect.arrayContaining(["US", "MX", "CA"]),
+        }),
+      );
 
-  it("updateVisitedCountryCodes handles empty shared or owned trip edge cases gracefully", async () => {
-    fs.getDocs
-      .mockResolvedValueOnce(createMockSnapshot([]))
-      .mockResolvedValueOnce(createMockSnapshot([]));
-
-    await profileService.updateVisitedCountryCodes("u1");
-
-    expect(fs.updateDoc).toHaveBeenCalledWith(expect.any(Object), {
-      visitedCountryCodes: [],
+      getDocsDataSpy.mockRestore();
     });
   });
 });

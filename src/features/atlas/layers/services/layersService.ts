@@ -1,9 +1,9 @@
 import { doc, getDocs, writeBatch } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { AnyLayer } from "../types";
-import { isAuthenticated } from "@utils/firebase";
 
 /** Service for managing layers. */
 export class LayersService extends BaseService<AnyLayer, typeof appDb.layers> {

@@ -7,7 +7,7 @@ import {
   updateDoc,
   type DocumentData,
 } from "firebase/firestore";
-import { isAuthenticated, getUserCollection } from "@utils/firebase";
+import { isAuthenticated, getUserCollection } from "@lib/firebase";
 
 export interface BaseEntity {
   id: string;

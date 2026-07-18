@@ -15,10 +15,11 @@ export const mockFirestoreControls = createFirestoreMocks();
 dbBridge.collection = mockFirestoreControls.collection;
 
 // Mock Firebase utilities
-vi.mock("@utils/firebase", () => ({
+vi.mock("@lib/firebase", () => ({
   isAuthenticated: () => mockAuthControls.isAuthenticated(),
   getCurrentUser: () => mockAuthControls.getCurrentUser(),
   getUserCollection: mockAuthControls.getUserCollection,
+  logToGoogleAnalytics: vi.fn(),
   __esModule: true,
 }));
 

@@ -1,13 +1,13 @@
-import { vi, describe, it, expect, beforeEach } from "vitest";
-import { sessionService } from "./sessionService";
-import { getUserCollection } from "@utils/firebase";
-import { clearLocalSession } from "../utils/session";
-import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
-import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import {
   type QuerySnapshot,
   type QueryDocumentSnapshot,
 } from "firebase/firestore";
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import { getUserCollection } from "@lib/firebase";
+import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
+import { createMockSnapshot } from "@test-utils/firestoreMocks";
+import { sessionService } from "./sessionService";
+import { clearLocalSession } from "../utils/session";
 
 vi.mock("../utils/session", () => ({
   getBrowserSessionInfo: vi.fn(() => ({
