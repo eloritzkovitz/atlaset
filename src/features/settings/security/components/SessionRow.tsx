@@ -32,7 +32,7 @@ export function SessionRow({ session, onTerminate }: SessionRowProps) {
     <SecurityInfoRow
       label={
         <div className="flex items-center py-1">
-          <DeviceIcon className="text-5xl text-muted me-4" />
+          <DeviceIcon className="text-3xl text-muted me-4" />
           <div className="flex flex-col gap-1">
             <span className="font-semibold">
               {session.deviceName || readableDevice}
@@ -79,8 +79,7 @@ export function SessionRow({ session, onTerminate }: SessionRowProps) {
 
           <div className="flex pe-2">
             <ActionButton
-              variant="action"
-              className="text-danger hover:text-danger-hover"
+              className="rounded-full text-danger hover:text-danger-hover"
               icon={<ICONS.poweroff className="text-lg" />}
               title={t("security.actions.endSessionTitle")}
               ariaLabel={t("security.actions.endSession")}

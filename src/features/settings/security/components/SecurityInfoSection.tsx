@@ -3,6 +3,7 @@ import { useAuth } from "@contexts/AuthContext";
 import { useLastLogin } from "@features/activity";
 import { useUserSessions } from "@features/user";
 import { formatDate } from "@utils/date";
+import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { SessionRow } from "./SessionRow";
 
@@ -43,7 +44,9 @@ export function SecurityInfoSection() {
         <SecurityInfoRow
           label={t("security.lastLoginMethod")}
           value={
-            lastLoginMethod ? String(lastLoginMethod) : t("security.unknown")
+            lastLoginMethod
+              ? capitalize(String(lastLoginMethod))
+              : t("security.unknown")
           }
         />
       </ul>
