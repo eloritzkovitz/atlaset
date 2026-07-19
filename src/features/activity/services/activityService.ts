@@ -6,11 +6,10 @@ import {
   orderBy,
   startAfter,
   query,
+  QueryConstraint,
   QueryDocumentSnapshot,
-  type DocumentData,
-  type QueryConstraint,
 } from "firebase/firestore";
-import { getUserCollection, isAuthenticated } from "@lib/firebase";
+import { getDocsData, getUserCollection, isAuthenticated } from "@lib/firebase";
 import type { UserActivity } from "../types";
 
 /** Service for managing user activity data. */
@@ -24,12 +23,14 @@ export const activityService = {
     after,
     limitCount = 10,
   }: {
-    after?: QueryDocumentSnapshot<DocumentData> | null;
+    after?: QueryDocumentSnapshot<UserActivity> | null;
     limitCount?: number;
   } = {}) {
     if (!isAuthenticated()) throw new Error("Not authenticated");
 
-    const activityCol = getUserCollection("activity");
+    // Use your typed collection helper
+    const activityCol = getUserCollection<UserActivity>("activity");
+
     const constraints: QueryConstraint[] = [orderBy("timestamp", "desc")];
 
     if (after) {
@@ -37,21 +38,16 @@ export const activityService = {
     }
     constraints.push(limit(limitCount));
 
+    // Create the query
     const q = query(activityCol, ...constraints);
+    const activities = await getDocsData<UserActivity>(q);
     const snapshot = await getDocs(q);
 
-    const activities = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-      action: doc.data().action,
-    })) as UserActivity[];
     return {
       activities,
       lastDoc:
         snapshot.docs.length > 0
-          ? (snapshot.docs[
-              snapshot.docs.length - 1
-            ] as QueryDocumentSnapshot<DocumentData>)
+          ? snapshot.docs[snapshot.docs.length - 1]
           : null,
       pageSize: activities.length,
     };
@@ -63,6 +59,6 @@ export const activityService = {
    */
   async deleteActivityById(id: string) {
     if (!isAuthenticated()) throw new Error("Not authenticated");
-    await deleteDoc(doc(getUserCollection("activity"), id));
+    await deleteDoc(doc(getUserCollection<UserActivity>("activity"), id));
   },
 };
