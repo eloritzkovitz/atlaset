@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
-import * as fetchModule from "./fetch";
+import * as fetchModule from "./client";
 import * as envModule from "./env";
 const { fetchWithFallback } = fetchModule;
 

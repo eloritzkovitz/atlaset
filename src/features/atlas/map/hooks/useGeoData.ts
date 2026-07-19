@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { fetchWithFallback } from "@utils/fetch";
+import { fetchWithFallback } from "@lib/api-client";
 import type { GeoData } from "../types";
 
 /**

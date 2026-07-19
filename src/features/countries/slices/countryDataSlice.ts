@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchWithFallback } from "@utils/fetch";
+import { fetchWithFallback } from "@lib/api-client";
 import type { Country, Currency, SovereigntyStatus } from "../types";
 import {
   getAllRegions,

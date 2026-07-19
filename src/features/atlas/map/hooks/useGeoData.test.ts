@@ -1,5 +1,5 @@
 import { renderHook, waitFor } from "@testing-library/react";
-import * as fetchModule from "@utils/fetch";
+import * as fetchModule from "@lib/api-client";
 import { useGeoData } from "./useGeoData";
 
 describe("useGeoData (integration)", () => {

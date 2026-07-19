@@ -27,7 +27,7 @@ export function useCurrencyExchange() {
       try {
         const fetchedRates = await exchangeRateClient.fetchRates();
         setRates(fetchedRates);
-      } catch (err) {
+      } catch {
         setError("Could not load latest exchange rates.");
       } finally {
         setLoading(false);
@@ -58,7 +58,7 @@ export function useCurrencyExchange() {
     try {
       converted = convertCurrency(amount, from, to, rates);
       rate = rates[to] / rates[from];
-    } catch (err) {
+    } catch {
       // Gracefully handled by initial fallbacks
     }
   }
