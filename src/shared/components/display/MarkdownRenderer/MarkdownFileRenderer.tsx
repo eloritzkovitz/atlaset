@@ -1,6 +1,6 @@
 import type { Components } from "react-markdown";
 import { ErrorMessage } from "@components";
-import { useMarkdownRenderer } from "@hooks";
+import { useMarkdown } from "@lib/markdown";
 
 interface MarkdownFileRendererProps {
   content: string;
@@ -15,15 +15,15 @@ export function MarkdownFileRenderer({
   components,
   title,
 }: MarkdownFileRendererProps) {
-  const { ReactMarkdown, remarkGfm, rehypeRaw, rehypePrism } =
-    useMarkdownRenderer();
+  const plugins = useMarkdown();
 
-  // Show error if any
+  // If there's an error, display the error message
   if (error) return <ErrorMessage error={error} />;
 
-  // Wait until everything is loaded
-  if (!content || !ReactMarkdown || !remarkGfm || !rehypeRaw || !rehypePrism)
-    return null;
+  // If content or plugins are not available, return null to avoid rendering
+  if (!content || !plugins) return null;
+
+  const { ReactMarkdown, remarkGfm, rehypeRaw, rehypePrism } = plugins;
 
   return (
     <div className="prose prose-slate dark:prose-invert mx-auto mb-30 w-full max-w-full px-2 sm:px-4 md:px-0 text-sm sm:text-base">

@@ -11,8 +11,9 @@ import {
   navigateToDoc,
   WelcomeDocsSection,
 } from "@features/docs";
-import { useMarkdownFile, usePageTitle } from "@hooks";
+import { usePageTitle } from "@hooks";
 import { SidebarLayout } from "@layouts";
+import { useMarkdownFile } from "@lib/markdown";
 
 export default function DocsPage() {
   const navigate = useNavigate();

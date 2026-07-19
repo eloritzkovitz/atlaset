@@ -1,6 +1,7 @@
 import { MarkdownFileRenderer } from "@components";
 import { getDocsMarkdownComponents } from "@features/docs";
-import { useMarkdownFile, usePageTitle } from "@hooks";
+import { usePageTitle } from "@hooks";
+import { useMarkdownFile } from "@lib/markdown";
 
 export default function PrivacyPolicyPage() {
   const { content, error } = useMarkdownFile("/privacy.md");

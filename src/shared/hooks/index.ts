@@ -28,10 +28,6 @@ export * from "./dom/useScrollVisibility";
 export * from "./input/useKeyHandler";
 export * from "./input/useSwipeNavigation";
 
-// Markdown
-export * from "./markdown/useMarkdownFile";
-export * from "./markdown/useMarkdownRenderer";
-
 // Navigation
 export * from "./navigation/useAutoScrollFocus";
 export * from "./navigation/useListNavigation";
