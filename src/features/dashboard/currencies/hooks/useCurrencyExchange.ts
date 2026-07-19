@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { fetchExchangeRates, convertCurrency } from "../utils/currencyExchange";
-import { getCountryByIsoCode } from "@features/countries";
-import { useCountryData } from "@features/countries";
+import { getCountryByIsoCode, useCountryData } from "@features/countries";
 import { useHomeCountry } from "@features/user";
+import { exchangeRateClient } from "@lib/exchange-rates";
+import { convertCurrency } from "../utils/currency";
 
 /**
  * Manages currency exchange state and logic.
@@ -13,21 +13,35 @@ export function useCurrencyExchange() {
   const [to, setTo] = useState("");
   const [amount, setAmount] = useState(1);
   const [error, setError] = useState<string | null>(null);
-  const [converted, setConverted] = useState<number | null>(null);
-  const [rate, setRate] = useState<number | null>(null);
+  const [rates, setRates] = useState<Record<string, number> | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Get country and currency data
   const { countries, currencies } = useCountryData();
   const { homeCountry } = useHomeCountry();
 
+  // Fetched rates on conversion
+  useEffect(() => {
+    async function loadInitialRates() {
+      setLoading(true);
+      try {
+        const fetchedRates = await exchangeRateClient.fetchRates();
+        setRates(fetchedRates);
+      } catch (err) {
+        setError("Could not load latest exchange rates.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadInitialRates();
+  }, []);
+
   // Set default currencies based on homeCountry and fallback
   useEffect(() => {
-    if (!from && !to && homeCountry) {
+    if (!from && !to && homeCountry && currencies.length > 0) {
       const homeCountryObj = getCountryByIsoCode(homeCountry, { countries });
       const homeCurrency = homeCountryObj?.currency;
 
-      // Fallback to common currencies if home currency not found
       const usd = currencies.find((c) => c.code === "USD")?.code;
       const eur = currencies.find((c) => c.code === "EUR")?.code;
 
@@ -36,47 +50,23 @@ export function useCurrencyExchange() {
     }
   }, [homeCountry, currencies, from, to, countries]);
 
-  // Conversion logic
-  const handleConvert = async () => {
-    setError(null);
-    setLoading(true);
+  // Calculate converted amount and rate if rates are available
+  let converted: number | null = null;
+  let rate: number | null = null;
+
+  if (rates && from && to && rates[from] && rates[to]) {
     try {
-      // Validate inputs
-      if (!from || !to) {
-        setError("Select both currencies.");
-        setLoading(false);
-        return;
-      }
-
-      const fetchedRates = await fetchExchangeRates();
-
-      // Ensure selected currencies are in the fetched rates
-      if (!fetchedRates[from] || !fetchedRates[to]) {
-        setError("Selected currency not available in rates.");
-        setLoading(false);
-        return;
-      }
-
-      // Perform conversion
-      const result = convertCurrency(amount, from, to, fetchedRates);
-      setConverted(result);
-      setRate(fetchedRates[to] / fetchedRates[from]);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message || "Error fetching rates.");
-      } else {
-        setError("Error fetching rates.");
-      }
+      converted = convertCurrency(amount, from, to, rates);
+      rate = rates[to] / rates[from];
+    } catch (err) {
+      // Gracefully handled by initial fallbacks
     }
-    setLoading(false);
-  };
+  }
 
-  // Swap currencies
+  // Swap currencies handler
   const handleSwap = () => {
     setFrom(to);
     setTo(from);
-    setConverted(null);
-    setRate(null);
     setError(null);
   };
 
@@ -91,7 +81,7 @@ export function useCurrencyExchange() {
     converted,
     rate,
     loading,
-    handleConvert,
     handleSwap,
+    isReady: !!rates && !loading,
   };
 }

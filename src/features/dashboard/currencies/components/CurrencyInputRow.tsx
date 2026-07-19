@@ -11,6 +11,7 @@ interface CurrencyInputRowProps {
   readOnly?: boolean;
   inputAriaLabel?: string;
   selectAriaLabel?: string;
+  disabled?: boolean;
 }
 
 export function CurrencyInputRow({
@@ -23,6 +24,7 @@ export function CurrencyInputRow({
   readOnly = false,
   inputAriaLabel,
   selectAriaLabel,
+  disabled = false,
 }: CurrencyInputRowProps) {
   return (
     <div className="flex rounded-xl overflow-hidden border border-input bg-input h-12">
@@ -35,6 +37,7 @@ export function CurrencyInputRow({
           readOnly={readOnly}
           className="w-full text-lg border-none bg-transparent px-3 h-full focus:ring-0"
           aria-label={inputAriaLabel}
+          disabled={disabled}
         />
       </div>
       <div className="h-full w-px bg-muted/40"></div>
@@ -46,6 +49,7 @@ export function CurrencyInputRow({
           placeholder={selectPlaceholder}
           className="w-full border-none bg-transparent px-3 h-full"
           aria-label={selectAriaLabel}
+          disabled={disabled}
         />
       </div>
     </div>
