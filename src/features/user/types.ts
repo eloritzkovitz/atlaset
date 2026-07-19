@@ -1,4 +1,21 @@
-import type { Timestamp } from "firebase/firestore";
+import type { FieldValue, Timestamp } from "firebase/firestore";
+
+/** Represents a user in the Firestore database. */
+export interface FirestoreUser {
+  uid: string;
+  username: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  email: string | null;
+  homeCountry: string | null;
+  biography: string | null;
+  isPublic: boolean;
+  joinDate?: string;
+  visitedCountryCodes: string[];
+  status?: "active" | "deactivated";
+  deactivatedAt?: string;
+  reactivatedAt?: string;
+}
 
 /** Supported social platforms for user profiles. */
 export type SocialPlatform =
@@ -72,7 +89,7 @@ export interface FriendRequest {
   /** User ID of the receiver */
   to: string;
   /** Timestamp when the friend request was created */
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
 }
 
 /** Friend information. */
@@ -80,7 +97,7 @@ export interface Friend {
   /** User ID of the friend */
   uid: string;
   /** Timestamp when the friendship was created */
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
 }
 
 /** Represents a friend's profile information. */

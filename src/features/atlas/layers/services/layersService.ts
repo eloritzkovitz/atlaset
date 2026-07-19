@@ -1,7 +1,7 @@
-import { doc, getDocs, writeBatch } from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
-import { isAuthenticated } from "@lib/firebase";
+import { getDocsData, isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { AnyLayer } from "../types";
 
@@ -22,9 +22,13 @@ export class LayersService extends BaseService<AnyLayer, typeof appDb.layers> {
 
     if (isAuthenticated()) {
       const batch = writeBatch(db);
-      const snapshot = await getDocs(this.getColRef());
-      snapshot.docs.forEach((d) => batch.delete(d.ref));
+      const colRef = this.getColRef();
+
+      const existingLayers = await getDocsData<AnyLayer>(colRef);
+      existingLayers.forEach((l) => batch.delete(doc(colRef, l.id)));
+
       layers.forEach((l) => batch.set(doc(this.getColRef(), l.id), l));
+
       await batch.commit();
     } else {
       await this.localTable.clear();

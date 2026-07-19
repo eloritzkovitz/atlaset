@@ -1,8 +1,12 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { setDoc } from "firebase/firestore";
 import { appDb } from "@app/db";
-import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
-import { isAuthenticated, getCurrentUser } from "@lib/firebase";
+import {
+  getCurrentUser,
+  getDocData,
+  getPaths,
+  isAuthenticated,
+} from "@lib/firebase";
 import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../../types";
 
@@ -21,24 +25,18 @@ export const settingsService = {
   async load(): Promise<Settings> {
     if (isAuthenticated()) {
       const user = getCurrentUser();
-      const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
-      const snapshot = await getDoc(settingsDoc);
-      if (snapshot.exists()) {
-        return { id: "main", ...snapshot.data() } as Settings;
-      } else {
-        return defaultSettings;
-      }
-    } else {
-      const localSettings = await appDb.settings.get("main");
-      if (
-        localSettings &&
-        typeof localSettings === "object" &&
-        "id" in localSettings
-      ) {
-        return localSettings as Settings;
-      }
-      return defaultSettings;
+      const settingsRef = getPaths.settingsDoc(user!.uid);
+
+      const data = await getDocData<Settings>(settingsRef);
+      return data ?? defaultSettings;
     }
+
+    const localSettings = await appDb.settings.get("main");
+    return localSettings &&
+      typeof localSettings === "object" &&
+      "id" in localSettings
+      ? (localSettings as Settings)
+      : defaultSettings;
   },
 
   /**
@@ -49,11 +47,10 @@ export const settingsService = {
     const settingsWithId = { ...settings, id: "main" };
     if (isAuthenticated()) {
       const user = getCurrentUser();
-      const settingsDoc = doc(db, "users", user!.uid, "settings", "main");
+      const settingsRef = getPaths.settingsDoc(user!.uid);
 
       // Create a dedupe key based on the settings data (excluding the id) to avoid duplicate saves
-      const newData = { ...settingsWithId } as Record<string, unknown>;
-      delete newData.id;
+      const newData = { ...settings };
       const dedupeKey = JSON.stringify(newData);
 
       // If an identical save is already in-flight, wait for it to complete instead
@@ -72,28 +69,21 @@ export const settingsService = {
       }
 
       // Check persisted snapshot second to prevent redundant writes
-      const snapshot = await getDoc(settingsDoc);
-      const existingData = snapshot.exists()
-        ? (snapshot.data() as Record<string, unknown>)
-        : null;
-      const samePersisted =
+      const existingData = await getDocData<Settings>(settingsRef);
+      if (
         existingData &&
-        JSON.stringify(existingData) === JSON.stringify(newData);
-      if (samePersisted) return;
+        JSON.stringify(existingData) === JSON.stringify(settingsWithId)
+      )
+        return;
 
       // Create and store the in-flight promise so concurrent callers coalesce
       const op = (async () => {
         try {
           _lastSaved = { key: dedupeKey, ts: Date.now() };
-
-          await setDoc(settingsDoc, settingsWithId);
-
+          await setDoc(settingsRef, settingsWithId);
           await logUserActivity(
             130,
-            {
-              settings: settingsWithId,
-              userName: user!.displayName,
-            },
+            { settings: settingsWithId, userName: user!.displayName },
             user!.uid,
           );
         } finally {

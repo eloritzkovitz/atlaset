@@ -2,12 +2,11 @@ import {
   doc,
   setDoc,
   deleteDoc,
-  getDocs,
   CollectionReference,
   updateDoc,
   type DocumentData,
 } from "firebase/firestore";
-import { isAuthenticated, getUserCollection } from "@lib/firebase";
+import { getDocsData, getUserCollection, isAuthenticated } from "@lib/firebase";
 
 export interface BaseEntity {
   id: string;
@@ -31,15 +30,14 @@ export abstract class BaseService<T extends BaseEntity, TTable> {
   protected abstract readonly localTable?: TTable & LocalTable<T>;
 
   /** Gets the collection reference. */
-  protected getColRef(): CollectionReference {
-    return getUserCollection(this.collectionName);
+  protected getColRef(): CollectionReference<T> {
+    return getUserCollection<T>(this.collectionName);
   }
 
   /** Loads all items from the collection. */
   async load(): Promise<T[]> {
     if (isAuthenticated()) {
-      const snapshot = await getDocs(this.getColRef());
-      return snapshot.docs.map((d) => ({ id: d.id, ...d.data() }) as T);
+      return await getDocsData<T>(this.getColRef());
     }
     return this.localTable ? await this.localTable.toArray() : [];
   }
@@ -47,7 +45,8 @@ export abstract class BaseService<T extends BaseEntity, TTable> {
   /** Adds a new item to the collection. */
   async add(item: T): Promise<void> {
     if (isAuthenticated()) {
-      await setDoc(doc(this.getColRef(), item.id), item);
+      const { id, ...data } = item;
+      await setDoc(doc(this.getColRef(), id), data);
     } else if (this.localTable) {
       await this.localTable.add(item);
     } else {
@@ -58,7 +57,8 @@ export abstract class BaseService<T extends BaseEntity, TTable> {
   /** Updates specific fields of an existing item. */
   async update(id: string, changes: Partial<T>): Promise<void> {
     if (isAuthenticated()) {
-      await updateDoc(doc(this.getColRef(), id), changes as DocumentData);
+      const { ...updateData } = changes as DocumentData;
+      await updateDoc(doc(this.getColRef(), id), updateData as DocumentData);
     } else if (this.localTable) {
       await this.localTable.update(id, changes);
     } else {

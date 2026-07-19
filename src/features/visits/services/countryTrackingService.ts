@@ -1,12 +1,10 @@
 import {
-  doc,
-  getDoc,
   updateDoc,
   onSnapshot,
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-import { db } from "@app/firebase";
+import { getDocData, getPaths } from "@lib/firebase";
 
 export type TrackingField = "visitedCountryCodes" | "wantToVisitCountryCodes";
 
@@ -26,12 +24,8 @@ export const countryTrackingService = {
    * @returns A promise resolving to an array of tracking country ISO codes.
    */
   async getCountryCodes(uid: string, field: TrackingField): Promise<string[]> {
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    if (!userSnap.exists()) return [];
-
-    const data = userSnap.data();
-    return Array.isArray(data[field]) ? data[field] : [];
+    const data = await getDocData<TrackingData>(getPaths.user(uid));
+    return data && Array.isArray(data[field]) ? data[field] : [];
   },
 
   /**
@@ -41,21 +35,14 @@ export const countryTrackingService = {
    * @returns An unsubscribe function to stop listening.
    */
   onTrackingDataChange(uid: string, cb: (data: TrackingData) => void) {
-    const userRef = doc(db, "users", uid);
-
-    return onSnapshot(userRef, (snap) => {
-      if (!snap.exists()) {
-        cb({ visitedCountryCodes: [], wantToVisitCountryCodes: [] });
-        return;
-      }
-
-      const data = snap.data();
+    return onSnapshot(getPaths.user(uid), (snap) => {
+      const data = snap.data() as TrackingData | undefined;
       cb({
-        visitedCountryCodes: Array.isArray(data.visitedCountryCodes)
-          ? data.visitedCountryCodes
+        visitedCountryCodes: Array.isArray(data?.visitedCountryCodes)
+          ? data!.visitedCountryCodes
           : [],
-        wantToVisitCountryCodes: Array.isArray(data.wantToVisitCountryCodes)
-          ? data.wantToVisitCountryCodes
+        wantToVisitCountryCodes: Array.isArray(data?.wantToVisitCountryCodes)
+          ? data!.wantToVisitCountryCodes
           : [],
       });
     });
@@ -68,13 +55,12 @@ export const countryTrackingService = {
    * @param targetField - The tracking field to modify (visited or want-to-visit list).
    */
   async addCountryCode(uid: string, code: string, targetField: TrackingField) {
-    const userRef = doc(db, "users", uid);
     const opposingField: TrackingField =
       targetField === "visitedCountryCodes"
         ? "wantToVisitCountryCodes"
         : "visitedCountryCodes";
 
-    await updateDoc(userRef, {
+    await updateDoc(getPaths.user(uid), {
       [targetField]: arrayUnion(code),
       [opposingField]: arrayRemove(code),
     });
@@ -87,8 +73,7 @@ export const countryTrackingService = {
    * @param field - The tracking field to modify.
    */
   async removeCountryCode(uid: string, code: string, field: TrackingField) {
-    const userRef = doc(db, "users", uid);
-    await updateDoc(userRef, {
+    await updateDoc(getPaths.user(uid), {
       [field]: arrayRemove(code),
     });
   },

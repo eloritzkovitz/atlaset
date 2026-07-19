@@ -56,6 +56,10 @@ export type LeaderboardEntry = {
   maxStreak?: number;
   /** Date of the game entry. */
   date: string;
+  /** The type of the quiz. */
+  type?: QuizType;
+  /** The difficulty level of the quiz. */
+  difficulty?: Difficulty;
 };
 
 /** Represents the leaderboard data structure. */

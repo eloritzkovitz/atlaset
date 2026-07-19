@@ -1,13 +1,14 @@
 import {
-  query,
-  orderBy,
+  deleteDoc,
+  doc,
   getDocs,
   limit,
+  orderBy,
   startAfter,
+  query,
   QueryDocumentSnapshot,
   type DocumentData,
-  doc,
-  deleteDoc,
+  type QueryConstraint,
 } from "firebase/firestore";
 import { getUserCollection, isAuthenticated } from "@lib/firebase";
 import type { UserActivity } from "../types";
@@ -27,19 +28,18 @@ export const activityService = {
     limitCount?: number;
   } = {}) {
     if (!isAuthenticated()) throw new Error("Not authenticated");
+
     const activityCol = getUserCollection("activity");
-    let q;
+    const constraints: QueryConstraint[] = [orderBy("timestamp", "desc")];
+
     if (after) {
-      q = query(
-        activityCol,
-        orderBy("timestamp", "desc"),
-        startAfter(after),
-        limit(limitCount),
-      );
-    } else {
-      q = query(activityCol, orderBy("timestamp", "desc"), limit(limitCount));
+      constraints.push(startAfter(after));
     }
+    constraints.push(limit(limitCount));
+
+    const q = query(activityCol, ...constraints);
     const snapshot = await getDocs(q);
+
     const activities = snapshot.docs.map((doc) => ({
       id: doc.id,
       ...doc.data(),
@@ -63,7 +63,6 @@ export const activityService = {
    */
   async deleteActivityById(id: string) {
     if (!isAuthenticated()) throw new Error("Not authenticated");
-    const activityCol = getUserCollection("activity");
-    await deleteDoc(doc(activityCol, id));
+    await deleteDoc(doc(getUserCollection("activity"), id));
   },
 };

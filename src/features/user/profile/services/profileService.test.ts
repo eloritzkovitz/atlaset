@@ -6,7 +6,6 @@ import { createMockDocSnap } from "@test-utils/firestoreMocks";
 import { profileService } from "./profileService";
 
 vi.mock("@app/firebase", () => ({ db: {} }));
-vi.mock("@lib/firebase");
 
 describe("profileService", () => {
   let mockTx: { get: any; set: any; update: any; delete: any };
@@ -224,23 +223,37 @@ describe("profileService", () => {
 
   describe("updateVisitedCountryCodes", () => {
     it("gathers owned and shared references to calculate finished travels cleanly", async () => {
-      const getDocsDataSpy = vi
-        .spyOn(firestoreUtils, "getDocsData")
-        .mockResolvedValueOnce([
-          { id: "trip1", status: "completed", countryCodes: ["US", "MX"] },
-        ])
-        .mockResolvedValueOnce([{ ownerUid: "otherUser", tripId: "shared1" }]);
+      const getDocsDataSpy = vi.spyOn(firestoreUtils, "getDocsData");
+      const getDocDataSpy = vi.spyOn(firestoreUtils, "getDocData");
+      const updateDocSpy = vi
+        .spyOn(fs, "updateDoc")
+        .mockResolvedValue(undefined as any);
 
-      vi.spyOn(firestoreUtils, "getDocData")
-        .mockResolvedValueOnce({
-          status: "completed",
-          countryCodes: ["MX", "CA"],
-        })
-        .mockResolvedValueOnce({ homeCountry: "US" });
+      const mockOwnedTrips = [
+        { id: "trip1", status: "completed", countryCodes: ["US", "MX"] },
+      ];
+
+      const mockSharedRefs = [
+        { id: "sharedRef1", ownerUid: "otherUser", tripId: "shared1" },
+      ];
+
+      const mockSharedTripDetail = {
+        id: "shared1",
+        status: "completed",
+        countryCodes: ["MX", "CA"],
+      };
+
+      getDocsDataSpy
+        .mockResolvedValueOnce(mockOwnedTrips as any)
+        .mockResolvedValueOnce(mockSharedRefs as any);
+
+      getDocDataSpy
+        .mockResolvedValueOnce(mockSharedTripDetail as any)
+        .mockResolvedValueOnce({ homeCountry: "US" } as any);
 
       await profileService.updateVisitedCountryCodes("u1");
 
-      expect(fs.updateDoc).toHaveBeenCalledWith(
+      expect(updateDocSpy).toHaveBeenCalledWith(
         expect.any(Object),
         expect.objectContaining({
           visitedCountryCodes: expect.arrayContaining(["US", "MX", "CA"]),
@@ -248,6 +261,8 @@ describe("profileService", () => {
       );
 
       getDocsDataSpy.mockRestore();
+      getDocDataSpy.mockRestore();
+      updateDocSpy.mockRestore();
     });
   });
 });

@@ -1,34 +1,14 @@
-import {
-  collection,
-  CollectionReference,
-  doc,
-  runTransaction,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, runTransaction, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
 import type { Trip } from "@features/trips";
 import { computeVisitedCountriesFromTrips } from "@features/visits";
-import { getDocData, getDocsData } from "@lib/firebase";
+import { getDocData, getDocsData, getPaths } from "@lib/firebase";
 import type { UserProfile } from "../../types";
 
 // Normalizes a username by converting to lowercase and removing special characters
 const normalizeUsername = (username: string) =>
   username.toLowerCase().replace(/[^a-z0-9]/g, "");
-
-// Defines paths for Firestore collections and documents related to users and trips
-const getPaths = {
-  user: (uid: string) => doc(db, "users", uid),
-  username: (username: string) => doc(db, "usernames", username),
-  userTrips: (uid: string) =>
-    collection(db, `users/${uid}/trips`) as CollectionReference<Trip>,
-  userSharedTrips: (uid: string) =>
-    collection(db, `users/${uid}/sharedTrips`) as CollectionReference<{
-      ownerUid: string;
-      tripId: string;
-    }>,
-};
 
 /**
  * Service for managing user profiles.
@@ -145,7 +125,7 @@ export const profileService = {
           ? Timestamp.fromDate(new Date(user.joinDate))
           : Timestamp.now(),
         photoURL: user.photoURL || "",
-        bio: "",
+        biography: "",
         isPublic: true,
         homeCountry: "",
         visitedCountryCodes: [],
@@ -184,8 +164,7 @@ export const profileService = {
    * @param updates - An object with the fields to update
    */
   async editProfile(uid: string, updates: Partial<UserProfile>) {
-    const userDocRef = doc(db, "users", uid);
-    await updateDoc(userDocRef, updates);
+    await updateDoc(getPaths.user(uid), updates);
 
     const profile = await this.getProfile(uid);
     await logUserActivity(
@@ -219,7 +198,7 @@ export const profileService = {
     await runTransaction(db, async (transaction) => {
       const newUsernameRef = doc(db, "usernames", cleanUsername);
       const oldUsernameRef = doc(db, "usernames", oldUsername);
-      const userRef = doc(db, "users", uid);
+      const userRef = getPaths.user(uid);
       const usernameSnap = await transaction.get(newUsernameRef);
 
       if (usernameSnap.exists()) {
@@ -258,18 +237,15 @@ export const profileService = {
    * @param uid The user ID.
    */
   async updateVisitedCountryCodes(uid: string) {
-    const ownedTrips = await getDocsData<Trip>(getPaths.userTrips(uid));
-    const sharedRefs = await getDocsData<{ ownerUid: string; tripId: string }>(
-      getPaths.userSharedTrips(uid),
-    );
+    const ownedTrips = await getDocsData(getPaths.sub(uid, "trips"));
+    const sharedRefs = await getDocsData(getPaths.sub(uid, "sharedTrips"));
 
     // Fetch shared trips data
     const sharedTrips = await Promise.all(
-      sharedRefs.map(async (ref) => {
-        return await getDocData<Trip>(
-          doc(db, `users/${ref.ownerUid}/trips`, ref.tripId),
-        );
-      }),
+      sharedRefs.map(
+        async (ref) =>
+          await getDocData(getPaths.subDoc(ref.ownerUid, "trips", ref.tripId)),
+      ),
     );
 
     // Merge owned and shared trips

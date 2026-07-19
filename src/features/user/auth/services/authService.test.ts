@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { type User } from "firebase/auth";
+import { getDocsData, getPaths } from "@lib/firebase";
 import { migrationService } from "@services/migrationService";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { createMockUser } from "@test-utils/authMocks";
@@ -21,25 +22,30 @@ vi.mock("@app/db", () => ({
     settings: { count: vi.fn() },
   },
 }));
+
 vi.mock("@app/firebase", () => ({
   auth: auth.auth,
   db: {},
 }));
+
 vi.mock("@services/migrationService", () => ({
   migrationService: {
     hasGuestData: vi.fn(() => Promise.resolve(false)),
     migrateGuestDataToFirestore: vi.fn(() => Promise.resolve()),
   },
 }));
+
 vi.mock("./sessionService", () => ({
   sessionService: {
     logSession: vi.fn(() => Promise.resolve()),
     terminateSession: vi.fn(() => Promise.resolve()),
   },
 }));
+
 vi.mock("../../friends/services/friendService", () => ({
   friendService: { removeFriend: vi.fn() },
 }));
+
 vi.mock("../../profile/services/profileService", () => ({
   profileService: {
     createUserProfileWithUsername: vi.fn(() =>
@@ -47,10 +53,12 @@ vi.mock("../../profile/services/profileService", () => ({
     ),
   },
 }));
+
 vi.mock("../utils/auth", () => ({
   checkAndReactivateUser: vi.fn(() => Promise.resolve(false)),
   isUserDeactivated: vi.fn(() => false),
 }));
+
 vi.mock("../utils/session", () => ({
   getBrowserSessionInfo: vi.fn(() => ({
     userAgent: "mock-agent",
@@ -69,6 +77,28 @@ describe("authService", () => {
     auth.signInWithEmailAndPassword.mockResolvedValue({ user: freshUser });
     auth.createUserWithEmailAndPassword.mockResolvedValue({ user: freshUser });
     auth.signInWithPopup.mockResolvedValue({ user: freshUser });
+
+    const pathsToWire = [
+      "user",
+      "users",
+      "username",
+      "usernames",
+      "activity",
+      "countryLists",
+      "layers",
+      "markers",
+      "savedMaps",
+      "sessions",
+      "settings",
+    ];
+
+    for (const p of pathsToWire) {
+      if (!(p in getPaths)) {
+        (getPaths as any)[p] = vi.fn((...args: string[]) =>
+          fs.collection({} as any, `mock_path_${p}_${args.join("_")}`),
+        );
+      }
+    }
 
     fs.getDoc.mockResolvedValue({
       exists: () => true,
@@ -179,8 +209,9 @@ describe("authService", () => {
 
   it("deactivateAccount updates flags and kills live sessions", async () => {
     await authService.deactivateAccount(freshUser);
+
     expect(fs.setDoc).toHaveBeenCalledWith(
-      undefined,
+      getPaths.user(freshUser.uid),
       expect.objectContaining({ status: "deactivated" }),
       { merge: true },
     );
@@ -190,6 +221,8 @@ describe("authService", () => {
 
   it("deleteAppAccount completely purges subcollections including sessions, and wipes references", async () => {
     await authService.deleteAppAccount(freshUser);
+
+    expect(getDocsData).toHaveBeenCalledWith(getPaths.users());
     expect(friendService.removeFriend).toHaveBeenCalled();
     expect(fs.deleteDoc).toHaveBeenCalled();
     expect(auth.deleteUser).toHaveBeenCalledWith(freshUser);
@@ -206,7 +239,7 @@ describe("authService", () => {
 
     expect(wasReactivated).toBe(true);
     expect(fs.setDoc).toHaveBeenCalledWith(
-      undefined,
+      getPaths.user("test-user"),
       expect.objectContaining({ status: "active" }),
       { merge: true },
     );

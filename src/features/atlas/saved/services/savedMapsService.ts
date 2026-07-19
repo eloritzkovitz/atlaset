@@ -1,5 +1,5 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { isAuthenticated } from "@lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { getDocData, isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { SavedMap } from "../types";
 
@@ -18,16 +18,15 @@ export class SavedMapsService extends BaseService<SavedMap, undefined> {
   /** Gets a saved map by its ID. */
   async get(id: string): Promise<SavedMap | null> {
     if (!isAuthenticated()) throw new Error("Authentication required");
-    const snapshot = await getDoc(doc(this.getColRef(), id));
-    return snapshot.exists()
-      ? ({ id: snapshot.id, ...snapshot.data() } as SavedMap)
-      : null;
+    const ref = doc(this.getColRef(), id);
+    return await getDocData<SavedMap>(ref);
   }
 
   /** Saves a saved map. */
   async set(map: SavedMap): Promise<void> {
     if (!isAuthenticated()) throw new Error("Authentication required");
-    await setDoc(doc(this.getColRef(), map.id), map, { merge: true });
+    const { id, ...data } = map;
+    return await setDoc(doc(this.getColRef(), id), data, { merge: true });
   }
 }
 

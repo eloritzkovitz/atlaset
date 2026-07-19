@@ -1,10 +1,16 @@
-import { getDocs, writeBatch, collection } from "firebase/firestore";
+import { writeBatch } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
 import type { Layer } from "@features/atlas/layers";
-import { getCurrentUser, isAuthenticated } from "@lib/firebase";
+import {
+  getCurrentUser,
+  getDocsData,
+  getPaths,
+  isAuthenticated,
+} from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { CountryList } from "../types";
+import type { SavedMap } from "@features/atlas/saved";
 
 export class CountryListService extends BaseService<
   CountryList,
@@ -20,32 +26,32 @@ export class CountryListService extends BaseService<
     if (!isAuthenticated()) return;
 
     const user = getCurrentUser();
+    const uid = user!.uid;
     const batch = writeBatch(db);
     let hasUpdates = false;
 
     // Update Layers
-    const layersSnap = await getDocs(
-      collection(db, "users", user!.uid, "layers"),
-    );
-    layersSnap.docs.forEach((d) => {
-      if (d.data().listId === list.id) {
-        batch.update(d.ref, { countries: list.countryCodes });
+    const layers = await getDocsData<Layer>(getPaths.sub(uid, "layers"));
+    layers.forEach((l) => {
+      if (l.listId === list.id) {
+        const layerRef = getPaths.subDoc(uid, "layers", l.id);
+        batch.update(layerRef, { countries: list.countryCodes });
         hasUpdates = true;
       }
     });
 
     // Update Maps
-    const mapsSnap = await getDocs(
-      collection(db, "users", user!.uid, "savedMaps"),
+    const savedMaps = await getDocsData<SavedMap>(
+      getPaths.sub(uid, "savedMaps"),
     );
-    mapsSnap.docs.forEach((d) => {
-      const mapData = d.data();
-      if (Array.isArray(mapData.layers)) {
-        const newLayers = mapData.layers.map((l: Layer) =>
+    savedMaps.forEach((m) => {
+      if (Array.isArray(m.layers)) {
+        const newLayers = m.layers.map((l: Layer) =>
           l?.listId === list.id ? { ...l, countries: list.countryCodes } : l,
         );
-        if (JSON.stringify(mapData.layers) !== JSON.stringify(newLayers)) {
-          batch.update(d.ref, { layers: newLayers });
+        if (JSON.stringify(m.layers) !== JSON.stringify(newLayers)) {
+          const mapRef = getPaths.subDoc(uid, "savedMaps", m.id);
+          batch.update(mapRef, { layers: newLayers });
           hasUpdates = true;
         }
       }
@@ -58,32 +64,32 @@ export class CountryListService extends BaseService<
   async delete(id: string): Promise<void> {
     if (isAuthenticated()) {
       const user = getCurrentUser();
+      const uid = user!.uid;
       const batch = writeBatch(db);
       let hasUpdates = false;
 
       // Clear Layer refs
-      const layersSnap = await getDocs(
-        collection(db, "users", user!.uid, "layers"),
-      );
-      layersSnap.docs.forEach((d) => {
-        if (d.data().listId === id) {
-          batch.update(d.ref, { listId: null });
+      const layers = await getDocsData<Layer>(getPaths.sub(uid, "layers"));
+      layers.forEach((l) => {
+        if (l.listId === id) {
+          const layerRef = getPaths.subDoc(uid, "layers", l.id);
+          batch.update(layerRef, { listId: null });
           hasUpdates = true;
         }
       });
 
       // Clear Map refs
-      const mapsSnap = await getDocs(
-        collection(db, "users", user!.uid, "savedMaps"),
+      const savedMaps = await getDocsData<SavedMap>(
+        getPaths.sub(uid, "savedMaps"),
       );
-      mapsSnap.docs.forEach((d) => {
-        const mapData = d.data();
-        if (Array.isArray(mapData.layers)) {
-          const newLayers = mapData.layers.map((l: Layer) =>
+      savedMaps.forEach((m) => {
+        if (Array.isArray(m.layers)) {
+          const newLayers = m.layers.map((l: Layer) =>
             l?.listId === id ? { ...l, listId: null } : l,
           );
-          if (JSON.stringify(mapData.layers) !== JSON.stringify(newLayers)) {
-            batch.update(d.ref, { layers: newLayers });
+          if (JSON.stringify(m.layers) !== JSON.stringify(newLayers)) {
+            const mapRef = getPaths.subDoc(uid, "savedMaps", m.id);
+            batch.update(mapRef, { layers: newLayers });
             hasUpdates = true;
           }
         }

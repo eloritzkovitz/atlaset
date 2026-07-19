@@ -23,23 +23,24 @@ describe("savedMapsService", () => {
     vi.clearAllMocks();
     auth.getCurrentUser.mockReturnValue(createMockUser());
 
-    fs.collection.mockReturnValue({ id: "mock-col" } as any);
-    fs.doc.mockImplementation((_: any, id: string) => ({ id }) as any);
+    fs.collection.mockReturnValue({ path: "mock-col" } as any);
+    fs.doc.mockReturnValue({ path: "mock-doc" } as any);
   });
 
   describe("authenticated paths", () => {
     beforeEach(() => auth.isAuthenticated.mockReturnValue(true));
 
     it("manages map CRUD operations", async () => {
-      await expect(savedMapsService.add(mockMap)).resolves.not.toThrow();
-      expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), mockMap);
+      const { id, ...data } = mockMap;
+      await savedMapsService.add(mockMap);
+      expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), data);
 
-      await expect(savedMapsService.set(mockMap)).resolves.not.toThrow();
-      expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), mockMap, {
+      await savedMapsService.set(mockMap);
+      expect(fs.setDoc).toHaveBeenCalledWith(expect.anything(), data, {
         merge: true,
       });
 
-      await expect(savedMapsService.delete(mockMap.id)).resolves.not.toThrow();
+      await savedMapsService.delete(mockMap.id);
       expect(fs.deleteDoc).toHaveBeenCalled();
     });
 
@@ -71,9 +72,8 @@ describe("savedMapsService", () => {
   });
 
   describe("unauthenticated error handling", () => {
-    beforeEach(() => auth.isAuthenticated.mockReturnValue(false));
-
     it("blocks service requests if credentials fail", async () => {
+      auth.isAuthenticated.mockReturnValue(false);
       await expect(savedMapsService.set(mockMap)).rejects.toThrow();
       await expect(savedMapsService.add(mockMap)).rejects.toThrow();
       await expect(savedMapsService.get(mockMap.id)).rejects.toThrow();

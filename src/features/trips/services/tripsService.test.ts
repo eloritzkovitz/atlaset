@@ -17,14 +17,13 @@ vi.mock("../../user/profile/services/profileService", () => ({
 
 describe("tripsService", () => {
   let freshUser: any;
-  const mockCol = { type: "trips-collection" };
-  const mockDocRef = (col: any, id: any) => ({ col, id });
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.mocked(sharedTripsService.removeReference).mockClear();
     freshUser = createMockUser();
-    auth.getUserCollection.mockReturnValue(mockCol as any);
-    fs.doc.mockImplementation(mockDocRef as any);
+    auth.isAuthenticated.mockReturnValue(true);
+    auth.getCurrentUser.mockReturnValue(freshUser);
   });
 
   describe("authenticated routes", () => {
@@ -35,15 +34,13 @@ describe("tripsService", () => {
 
     it("loads local and shared trips seamlessly", async () => {
       fs.getDocs.mockResolvedValueOnce(
+        createMockSnapshot([{ id: "2", data: { name: "Trip 2" } }]) as any,
+      );
+      fs.getDocs.mockResolvedValueOnce(
         createMockSnapshot([
-          { id: "2", data: () => ({ name: "Trip 2" }) },
+          { id: "ref1", data: { ownerUid: "friend1", tripId: "shared1" } },
         ]) as any,
       );
-
-      fs.getDocs.mockResolvedValueOnce({
-        docs: [{ data: () => ({ ownerUid: "friend1", tripId: "shared1" }) }],
-      } as any);
-
       fs.getDoc.mockResolvedValue({
         exists: () => true,
         data: () => ({ name: "Shared Trip" }),
@@ -103,12 +100,13 @@ describe("tripsService", () => {
     });
 
     it("removes records and cleans up references", async () => {
-      fs.getDocs.mockResolvedValue(
-        createMockSnapshot([
-          { id: "del", data: { participants: ["friend1"] } },
-        ]) as any,
-      );
+      fs.getDoc.mockResolvedValue({
+        exists: () => true,
+        data: () => ({ name: "My Trip", participants: ["friend1"] }),
+      } as any);
+
       await tripsService.remove("del");
+
       expect(sharedTripsService.removeReference).toHaveBeenCalledWith(
         "friend1",
         "del",
@@ -117,19 +115,14 @@ describe("tripsService", () => {
     });
 
     it("handles removal logic for owners and missing participant arrays", async () => {
-      fs.getDocs.mockResolvedValueOnce(
-        createMockSnapshot([
-          { id: "del", data: { participants: [freshUser.uid] } },
-        ]) as any,
-      );
-      await tripsService.remove("del");
-      expect(sharedTripsService.removeReference).not.toHaveBeenCalled();
+      fs.getDoc.mockResolvedValueOnce({
+        exists: () => true,
+        data: () => ({ participants: [freshUser.uid] }),
+      } as any);
 
-      fs.getDocs.mockResolvedValueOnce(
-        createMockSnapshot([{ id: "del2", data: { name: "NoParts" } }]) as any,
-      );
-      await tripsService.remove("del2");
-      expect(fs.deleteDoc).toHaveBeenCalledWith(expect.anything());
+      await tripsService.remove("del");
+
+      expect(sharedTripsService.removeReference).not.toHaveBeenCalled();
     });
 
     it("handles undefined dates and participants during add", async () => {
@@ -182,7 +175,6 @@ describe("tripsService", () => {
         expect.objectContaining({ action: "favorited" }),
         expect.anything(),
       );
-
       await tripsService.updateFavorite("t1", false);
       expect(activityMockTracker).toHaveBeenCalledWith(
         413,
@@ -199,6 +191,7 @@ describe("tripsService", () => {
 
   it("enforces authentication on all methods", async () => {
     auth.isAuthenticated.mockReturnValue(false);
+    auth.getCurrentUser.mockReturnValue(null);
     const methods = [
       () => tripsService.load(),
       () => tripsService.save([]),

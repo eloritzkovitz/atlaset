@@ -3,25 +3,35 @@
  */
 
 import {
+  collection,
+  CollectionReference,
+  DocumentReference,
   getDoc,
   getDocs,
-  DocumentReference,
-  type DocumentData,
   Query,
-  collection,
+  type DocumentData,
 } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { getCurrentUser } from "./auth";
+
+/**
+ * Gets a typed Firestore collection reference.
+ * @param path The path to the collection.
+ * @returns The Firestore collection reference cast to the specified type T.
+ */
+export function getCollection<T>(path: string): CollectionReference<T> {
+  return collection(db, path) as CollectionReference<T>;
+}
 
 /**
  * Gets a Firestore collection reference for a user's subcollection.
  * @param path The path within the user's collection.
  * @returns The Firestore collection reference for the user's subcollection at the specified path.
  */
-export function getUserCollection(path: string) {
+export function getUserCollection<T>(path: string): CollectionReference<T> {
   const user = getCurrentUser();
   if (!user) throw new Error("Not authenticated");
-  return collection(db, "users", user.uid, path);
+  return collection(db, "users", user.uid, path) as CollectionReference<T>;
 }
 
 /**
@@ -41,10 +51,14 @@ export async function getDocData<T>(
  * @param query - The Firestore query to fetch documents from.
  * @returns A Promise that resolves to an array of document data as type T.
  */
-export async function getDocsData<T>(query: Query<T>): Promise<T[]> {
+export async function getDocsData<T = DocumentData>(
+  ref: CollectionReference<T> | Query<T>,
+): Promise<(T & { id: string })[]> {
+  const query = ref as Query<T>;
   const snapshot = await getDocs(query);
+
   return snapshot.docs.map((doc) => ({
     id: doc.id,
     ...doc.data(),
-  })) as T[];
+  })) as (T & { id: string })[];
 }

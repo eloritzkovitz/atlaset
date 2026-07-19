@@ -12,16 +12,16 @@ import {
   GoogleAuthProvider,
   deleteUser,
 } from "firebase/auth";
-import {
-  collection,
-  deleteDoc,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-} from "firebase/firestore";
-import { auth, db } from "@app/firebase";
+import { deleteDoc, setDoc } from "firebase/firestore";
+import { auth } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
+import type { FirestoreUser } from "@features/user/types";
+import {
+  getDocData,
+  getDocsData,
+  getPaths,
+  type UserSubcollections,
+} from "@lib/firebase";
 import { migrationService } from "@services/migrationService";
 import { sessionService } from "./sessionService";
 import { isUserDeactivated } from "../utils/auth";
@@ -225,7 +225,7 @@ export const authService = {
    */
   async deactivateAccount(user: User) {
     await setDoc(
-      doc(db, "users", user.uid),
+      getPaths.user(user.uid),
       { status: "deactivated", deactivatedAt: new Date().toISOString() },
       { merge: true },
     );
@@ -237,27 +237,27 @@ export const authService = {
    * Deletes the user's app account and all associated data.
    * @param user - The Firebase User object.
    */
+
   async deleteAppAccount(user: User) {
+    const uid = user.uid;
+
     // Remove deleted user from other users' friends lists
-    const usersSnap = await getDocs(collection(db, "users"));
-    for (const userDoc of usersSnap.docs) {
-      if (userDoc.id !== user.uid) {
-        await friendService.removeFriend(userDoc.id, user.uid);
+    const users = await getDocsData(getPaths.users());
+    for (const remoteUser of users) {
+      if (remoteUser.id !== uid) {
+        await friendService.removeFriend(remoteUser.id, uid);
       }
     }
 
     // Remove from usernames collection
-    const usernamesCol = collection(db, "usernames");
-    const usernamesSnap = await getDocs(usernamesCol);
-    for (const docSnap of usernamesSnap.docs) {
-      const data = docSnap.data();
-      if (data.uid === user.uid) {
-        await deleteDoc(docSnap.ref);
+    const usernames = await getDocsData(getPaths.usernames());
+    for (const usernameDoc of usernames) {
+      if (usernameDoc.uid === uid) {
+        await deleteDoc(getPaths.username(usernameDoc.id));
       }
     }
 
     // Delete all Firestore user data client-side
-    const uid = user.uid;
     const userSubcollections = [
       "activity",
       "countryLists",
@@ -273,15 +273,16 @@ export const authService = {
     ];
 
     for (const sub of userSubcollections) {
-      const subColRef = collection(db, `users/${uid}/${sub}`);
-      const snapshot = await getDocs(subColRef);
-      for (const docSnap of snapshot.docs) {
-        await deleteDoc(docSnap.ref);
+      const subKey = sub as keyof UserSubcollections;
+
+      const subColDocs = await getDocsData(getPaths.sub(uid, subKey));
+      for (const docObj of subColDocs) {
+        await deleteDoc(getPaths.subDoc(uid, subKey, docObj.id));
       }
     }
 
     // Delete the main user document and Firebase Auth user
-    await deleteDoc(doc(db, "users", uid));
+    await deleteDoc(getPaths.user(uid));
     await deleteUser(user);
   },
 
@@ -291,10 +292,10 @@ export const authService = {
    * @returns True if the account was reactivated, false otherwise.
    */
   async handleReactivation(uid: string): Promise<boolean> {
-    const userDocRef = doc(db, "users", uid);
-    const userDocSnap = await getDoc(userDocRef);
+    const userDocRef = getPaths.user(uid);
+    const userData = await getDocData<FirestoreUser>(userDocRef);
 
-    if (userDocSnap.exists() && isUserDeactivated(userDocSnap.data().status)) {
+    if (userData && isUserDeactivated(userData.status)) {
       await setDoc(
         userDocRef,
         { status: "active", reactivatedAt: new Date().toISOString() },

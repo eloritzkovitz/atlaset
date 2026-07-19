@@ -1,7 +1,7 @@
-import { writeBatch, doc, getDocs } from "firebase/firestore";
+import { writeBatch, doc } from "firebase/firestore";
 import { appDb } from "@app/db";
 import { db } from "@app/firebase";
-import { isAuthenticated } from "@lib/firebase";
+import { isAuthenticated, getDocsData } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { Marker } from "../types";
 
@@ -22,9 +22,13 @@ export class MarkersService extends BaseService<Marker, typeof appDb.markers> {
 
     if (isAuthenticated()) {
       const batch = writeBatch(db);
-      const snapshot = await getDocs(this.getColRef());
-      snapshot.docs.forEach((d) => batch.delete(d.ref));
-      markers.forEach((m) => batch.set(doc(this.getColRef(), m.id), m));
+      const colRef = this.getColRef();
+
+      const existingMarkers = await getDocsData<Marker>(colRef);
+      existingMarkers.forEach((m) => batch.delete(doc(colRef, m.id)));
+
+      markers.forEach((m) => batch.set(doc(colRef, m.id), m));
+
       await batch.commit();
     } else {
       await this.localTable.clear();
@@ -38,8 +42,10 @@ export class MarkersService extends BaseService<Marker, typeof appDb.markers> {
 
     if (isAuthenticated()) {
       const batch = writeBatch(db);
+      const colRef = this.getColRef();
+
       markers.forEach((m) =>
-        batch.update(doc(this.getColRef(), m.id), { order: m.order }),
+        batch.update(doc(colRef, m.id), { order: m.order }),
       );
       await batch.commit();
     } else {

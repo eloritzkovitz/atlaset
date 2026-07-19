@@ -1,7 +1,12 @@
 import { getDoc, getDocs, collection } from "firebase/firestore";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import * as auth from "./auth";
-import { getDocData, getDocsData, getUserCollection } from "./firestore";
+import {
+  getCollection,
+  getDocData,
+  getDocsData,
+  getUserCollection,
+} from "./firestore";
 
 vi.mock("firebase/firestore");
 vi.mock("./auth");
@@ -9,6 +14,16 @@ vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("firestore utils", () => {
   beforeEach(() => vi.clearAllMocks());
+
+  describe("getCollection", () => {
+    it("returns a collection reference", () => {
+      const path = "testCollection";
+      const colRef = { id: "mockColRef" };
+      vi.mocked(collection).mockReturnValue(colRef as any);
+      const result = getCollection(path);
+      expect(result).toBe(colRef);
+    });
+  });
 
   describe("getUserCollection", () => {
     it("throws if not authenticated", () => {

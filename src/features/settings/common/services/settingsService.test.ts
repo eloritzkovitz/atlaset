@@ -5,7 +5,6 @@ import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
 } from "@test-utils/firebaseMockRegistry";
-import { settingsService } from "./settingsService";
 import { defaultSettings } from "../constants/defaultSettings";
 
 vi.mock("@app/db", () => ({
@@ -24,57 +23,46 @@ vi.mock("@app/firebase", () => ({
 }));
 
 describe("settingsService", () => {
-  const mockDocRef = { type: "firestore-doc-ref" };
+  const payload = { id: "main", theme: "dark", homeCountry: "US" };
+  let settingsService: any;
+  let libFirebase: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    vi.resetModules();
     vi.clearAllMocks();
-    fs.doc.mockReturnValue(mockDocRef as any);
+
+    const module = await import("./settingsService");
+    libFirebase = await import("@lib/firebase");
+    settingsService = module.settingsService;
   });
 
-  describe("guest flow (unauthenticated)", () => {
-    beforeEach(() => {
-      auth.isAuthenticated.mockReturnValue(false);
+  describe("guest flow", () => {
+    beforeEach(() => auth.isAuthenticated.mockReturnValue(false));
+
+    it("handles local table operations cleanly", async () => {
+      vi.mocked(appDb.settings.get)
+        .mockResolvedValueOnce(payload)
+        .mockResolvedValueOnce("invalid" as any);
+
+      expect(await settingsService.load()).toEqual(payload);
+      expect(await settingsService.load()).toEqual(defaultSettings);
     });
 
-    it("loads settings from local db if present", async () => {
-      const dbSettings = { id: "main", homeCountry: "US", theme: "dark" };
-      vi.mocked(appDb.settings.get).mockResolvedValueOnce(dbSettings);
-
-      const result = await settingsService.load();
-
-      expect(result).toEqual(dbSettings);
-      expect(appDb.settings.get).toHaveBeenCalledWith("main");
-    });
-
-    it("returns default settings if local db returns invalid/non-object types", async () => {
-      vi.mocked(appDb.settings.get).mockResolvedValueOnce(
-        "invalid_string_or_no_id" as any,
-      );
-      const result = await settingsService.load();
-      expect(result).toEqual(defaultSettings);
-    });
-
-    it("skips saving to IndexedDB if incoming settings match existing local data", async () => {
-      const currentSettings = { id: "main", theme: "dark" };
-      vi.mocked(appDb.settings.get).mockResolvedValueOnce(currentSettings);
-
-      await settingsService.save(currentSettings as any);
-
-      expect(appDb.settings.put).not.toHaveBeenCalled();
-    });
-
-    it("saves settings directly to local IndexedDB if they changed", async () => {
-      const oldSettings = { id: "main", theme: "dark" };
-      const newSettings = { id: "main", theme: "light" };
-      vi.mocked(appDb.settings.get).mockResolvedValueOnce(oldSettings);
-
-      await settingsService.save(newSettings as any);
-
-      expect(appDb.settings.put).toHaveBeenCalledWith(newSettings);
+    it.each([
+      ["skips saving on identical payload updates", payload, false],
+      [
+        "writes changes into database on differential payloads",
+        { id: "main", theme: "light" },
+        true,
+      ],
+    ])("%s", async (_, targetPayload, shouldWrite) => {
+      vi.mocked(appDb.settings.get).mockResolvedValueOnce(payload);
+      await settingsService.save(targetPayload as any);
+      expect(appDb.settings.put).toHaveBeenCalledTimes(shouldWrite ? 1 : 0);
     });
   });
 
-  describe("cloud syncing flow (authenticated) - Core Branch Coverage", () => {
+  describe("authenticated cloud workflows", () => {
     beforeEach(() => {
       auth.isAuthenticated.mockReturnValue(true);
       auth.getCurrentUser.mockReturnValue({
@@ -83,107 +71,64 @@ describe("settingsService", () => {
       } as any);
     });
 
-    it("loads settings from lifestyle Firestore document if it exists", async () => {
-      const firestoreSettings = { theme: "dark", homeCountry: "GB" };
-      fs.getDoc.mockResolvedValueOnce({
-        exists: () => true,
-        data: () => firestoreSettings,
-      } as any);
+    it("resolves from Firestore storage mapping or defaults out", async () => {
+      vi.mocked(libFirebase.getDocData)
+        .mockResolvedValueOnce(payload)
+        .mockResolvedValueOnce(undefined);
 
-      const result = await settingsService.load();
-
-      expect(fs.doc).toHaveBeenCalledWith(
-        {},
-        "users",
+      expect(await settingsService.load()).toEqual(payload);
+      expect(await settingsService.load()).toEqual(defaultSettings);
+      expect(libFirebase.getPaths.settingsDoc).toHaveBeenCalledWith(
         "test-user",
-        "settings",
-        "main",
       );
-      expect(fs.getDoc).toHaveBeenCalledWith(mockDocRef);
-      expect(result).toEqual({ id: "main", ...firestoreSettings });
     });
 
-    it("falls back to default settings if cloud document does not exist", async () => {
-      fs.getDoc.mockResolvedValueOnce({
-        exists: () => false,
-      } as any);
-      const result = await settingsService.load();
-      expect(result).toEqual(defaultSettings);
-    });
-
-    it("skips write completely if incoming data matches current Firestore persistence", async () => {
-      const identicalPayload = { id: "main", theme: "orange" };
-      fs.getDoc.mockResolvedValueOnce({
-        exists: () => true,
-        data: () => ({ theme: "orange" }),
-      } as any);
-
-      await settingsService.save(identicalPayload as any);
-
+    it("bypasses cloud persistence pipelines when state modifications are redundant", async () => {
+      vi.mocked(libFirebase.getDocData).mockResolvedValueOnce(payload);
+      await settingsService.save(payload as any);
       expect(fs.setDoc).not.toHaveBeenCalled();
       expect(activityMockTracker).not.toHaveBeenCalled();
     });
   });
 
-  describe("cloud syncing flow (authenticated) - Time & Concurrency Deduplication", () => {
+  describe("time & concurrency deduplication filters", () => {
     beforeEach(() => {
       vi.useFakeTimers();
       auth.isAuthenticated.mockReturnValue(true);
-      auth.getCurrentUser.mockReturnValue({
-        uid: "test-user",
-        displayName: "Alex",
-      } as any);
+      auth.getCurrentUser.mockReturnValue({ uid: "test-user" } as any);
     });
+    afterEach(() => vi.useRealTimers());
 
-    afterEach(() => {
-      vi.useRealTimers();
-    });
+    it("throttles high frequency document writing calls sequentially within active frame window", async () => {
+      vi.mocked(libFirebase.getDocData).mockResolvedValue(undefined);
 
-    it("deduplicates fast back-to-back saves within the 5000ms window, but allows them after expiry", async () => {
-      const settingsPayload = { id: "main", theme: "neon" };
-
-      fs.getDoc.mockResolvedValue({ exists: () => false } as any);
-
-      await settingsService.save(settingsPayload as any);
-      expect(fs.setDoc).toHaveBeenCalledTimes(1);
-
-      await settingsService.save(settingsPayload as any);
+      await settingsService.save(payload as any);
+      await settingsService.save(payload as any);
       expect(fs.setDoc).toHaveBeenCalledTimes(1);
 
       vi.advanceTimersByTime(5001);
-
-      await settingsService.save(settingsPayload as any);
+      await settingsService.save(payload as any);
       expect(fs.setDoc).toHaveBeenCalledTimes(2);
     });
 
-    it("coalesces matching concurrent in-flight save operations and registers logs correctly", async () => {
-      const concurrentSettings = { id: "main", theme: "cyberpunk" };
+    it("coalesces overlapping in-flight pipeline invocations gracefully", async () => {
+      let resolveFetch: (v: any) => void = () => {};
+      vi.mocked(libFirebase.getDocData).mockImplementationOnce(
+        () => new Promise((r) => (resolveFetch = r)),
+      );
 
-      let resolveGetDoc: (value: any) => void = () => {};
-      const firstGetDocPromise = new Promise((resolve) => {
-        resolveGetDoc = resolve;
-      });
+      let resolveWrite: (v: void) => void = () => {};
+      fs.setDoc.mockImplementationOnce(
+        () => new Promise((r) => (resolveWrite = r)),
+      );
 
-      fs.getDoc
-        .mockReturnValueOnce(firstGetDocPromise as any)
-        .mockResolvedValue({ exists: () => false } as any);
+      const req1 = settingsService.save(payload as any);
+      resolveFetch(undefined);
+      await vi.advanceTimersByTimeAsync(0);
 
-      let resolveSetDoc: (value: void) => void = () => {};
-      const setDocPromise = new Promise<void>((resolve) => {
-        resolveSetDoc = resolve;
-      });
-      fs.setDoc.mockReturnValueOnce(setDocPromise);
-
-      const call1 = settingsService.save(concurrentSettings as any);
-
-      resolveGetDoc({ exists: () => false });
-
-      await Promise.resolve();
-
-      const call2 = settingsService.save(concurrentSettings as any);
-
-      resolveSetDoc();
-      await Promise.all([call1, call2]);
+      const req2 = settingsService.save(payload as any);
+      resolveWrite();
+      await Promise.all([req1, req2]);
 
       expect(fs.setDoc).toHaveBeenCalledTimes(1);
       expect(activityMockTracker).toHaveBeenCalledTimes(1);
