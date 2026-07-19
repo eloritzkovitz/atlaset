@@ -11,6 +11,7 @@ import {
   type DocumentData,
 } from "firebase/firestore";
 import { getDocsData, getPaths, getUserCollection } from "@lib/firebase";
+import { geoService } from "@lib/geo";
 import {
   getBrowserSessionInfo,
   getOrCreateSessionId,
@@ -73,28 +74,20 @@ export const sessionService = {
     }
 
     // Asynchronously fetch and update IP and Geolocation data without blocking the main flow
-    this.enrichSessionWithGeoData(userId, targetDocId);
+    this.enrichSessionMetadata(userId, targetDocId);
   },
 
-  /** Quietly fetches IP and Geolocation in the background and patches the document. */
-  async enrichSessionWithGeoData(userId: string, docId: string): Promise<void> {
+  /** Enriches a session document with IP and Geolocation data. */
+  async enrichSessionMetadata(userId: string, docId: string): Promise<void> {
     try {
-      const response = await fetch("https://ipwho.is/");
-      if (!response.ok) return;
+      const geoData = await geoService.getGeoData();
 
-      const data = await response.json();
-
-      const ipAddress = data.ip || "Unknown IP";
-      const location =
-        data.city && data.country
-          ? `${data.city}, ${data.country}`
-          : data.country || "Unknown Location";
+      if (!geoData) return;
 
       const docRef = getPaths.subDoc(userId, "sessions", docId);
-
       await updateDoc(docRef, {
-        ipAddress,
-        location,
+        ipAddress: geoData.ipAddress,
+        location: geoData.location,
       });
     } catch (error) {
       console.error("Failed to quietly enrich session metadata:", error);

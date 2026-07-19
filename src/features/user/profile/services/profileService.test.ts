@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import * as firestoreUtils from "@lib/firebase";
+import { geoService } from "@lib/geo";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { createMockDocSnap } from "@test-utils/firestoreMocks";
@@ -113,18 +114,15 @@ describe("profileService", () => {
 
   describe("initializeUserCountry", () => {
     it("initializeUserCountry updates homeCountry on valid API response", async () => {
-      const mockData = { country_code: "IL" };
-      vi.stubGlobal(
-        "fetch",
-        vi.fn().mockResolvedValue({
-          json: vi.fn().mockResolvedValue(mockData),
-        }),
-      );
+      vi.spyOn(geoService, "getGeoData").mockResolvedValueOnce({
+        ipAddress: "1.1.1.1",
+        countryCode: "IL",
+        location: "Israel",
+      });
       await profileService.initializeUserCountry("u1", "1.1.1.1");
       expect(fs.updateDoc).toHaveBeenCalledWith(expect.any(Object), {
         homeCountry: "IL",
       });
-      vi.unstubAllGlobals();
     });
 
     it("initializeUserCountry handles network errors gracefully", async () => {

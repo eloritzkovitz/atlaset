@@ -4,6 +4,7 @@ import { logUserActivity } from "@features/activity";
 import type { Trip } from "@features/trips";
 import { computeVisitedCountriesFromTrips } from "@features/visits";
 import { getDocData, getDocsData, getPaths } from "@lib/firebase";
+import { geoService } from "@lib/geo";
 import type { UserProfile } from "../../types";
 
 // Normalizes a username by converting to lowercase and removing special characters
@@ -59,15 +60,13 @@ export const profileService = {
    * @param uid - The user ID.
    * @param ipAddress - The user's IP address.
    */
-  async initializeUserCountry(uid: string, ipAddress: string) {
+  async initializeUserCountry(uid: string, ipAddress: string): Promise<void> {
     try {
-      const response = await fetch(`https://ipwho.is/${ipAddress}`);
-      const data = await response.json();
+      const geoData = await geoService.getGeoData(ipAddress);
 
-      // If the API returns a valid country code, set it as the user's home country
-      if (data && data.country_code) {
+      if (geoData?.countryCode) {
         const userRef = getPaths.user(uid);
-        await updateDoc(userRef, { homeCountry: data.country_code });
+        await updateDoc(userRef, { homeCountry: geoData.countryCode });
       }
     } catch (error) {
       console.error("Failed to auto-detect country:", error);

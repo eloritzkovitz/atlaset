@@ -4,6 +4,7 @@ import {
 } from "firebase/firestore";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { getDocsData, getPaths, getUserCollection } from "@lib/firebase";
+import { geoService } from "@lib/geo";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { sessionService } from "./sessionService";
 import { clearLocalSession } from "../utils/session";
@@ -58,7 +59,7 @@ describe("sessionService", () => {
       fs.getDocs.mockResolvedValueOnce(mockSnap(docs));
       fs.addDoc.mockResolvedValueOnce({ id: "new-d" } as any);
       const spy = vi
-        .spyOn(sessionService, "enrichSessionWithGeoData")
+        .spyOn(sessionService, "enrichSessionMetadata")
         .mockResolvedValueOnce();
 
       await sessionService.logSession(uid);
@@ -67,13 +68,13 @@ describe("sessionService", () => {
     });
   });
 
-  describe("enrichSessionWithGeoData", () => {
+  describe("enrichSessionMetadata", () => {
     const runEnrich = async (ok: boolean, payload: any) => {
       vi.stubGlobal(
         "fetch",
         vi.fn().mockResolvedValueOnce({ ok, json: async () => payload }),
       );
-      await sessionService.enrichSessionWithGeoData(uid, "target-doc-id");
+      await sessionService.enrichSessionMetadata(uid, "target-doc-id");
     };
 
     it.each([
@@ -114,12 +115,18 @@ describe("sessionService", () => {
     });
 
     it("swallows rejections and safely forwards to terminal console error logs", async () => {
-      vi.stubGlobal("fetch", vi.fn().mockRejectedValueOnce(new Error("Net")));
-      await sessionService.enrichSessionWithGeoData(uid, "target-doc-id");
-      expect(console.error).toHaveBeenCalledWith(
+      vi.spyOn(geoService, "getGeoData").mockRejectedValueOnce(
+        new Error("Net"),
+      );
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+      await sessionService.enrichSessionMetadata("uid", "target-doc-id");
+      expect(consoleSpy).toHaveBeenCalledWith(
         "Failed to quietly enrich session metadata:",
         expect.any(Error),
       );
+      consoleSpy.mockRestore();
     });
   });
 
