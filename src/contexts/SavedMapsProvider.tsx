@@ -7,11 +7,11 @@ import {
   useLayerManager,
   type Layer,
 } from "@features/atlas/layers";
-import { normalizeMarkers } from "@features/atlas/markers";
+import { normalizeMarkers } from "@features/atlas/markers/utils/markers";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { useMapMode } from "@features/atlas/shared";
-import { useAuth } from "@features/user";
+import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {

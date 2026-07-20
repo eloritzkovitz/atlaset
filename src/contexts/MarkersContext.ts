@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { Coordinates } from "@features/atlas/map";
+import type { Coordinates } from "@features/atlas/map/types";
 import type { Marker } from "@features/atlas/markers/types";
 
 export interface MarkersContextType {

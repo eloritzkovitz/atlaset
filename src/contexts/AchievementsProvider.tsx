@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { AchievementsContext } from "./AchievementsContext";
 import type { Achievement } from "@features/dashboard/achievements/types";
 import { fetchWithFallback } from "@lib/api-client";
+import { AchievementsContext } from "./AchievementsContext";
 
 export function AchievementsProvider({
   children,

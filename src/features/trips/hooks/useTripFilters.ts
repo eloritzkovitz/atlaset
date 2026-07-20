@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { createCountryMap, type Country } from "@features/countries";
-import { useHomeCountry } from "@features/user";
+import { useFriendProfiles, useHomeCountry } from "@features/user";
 import type { Trip, TripFilterState } from "../types";
 import {
   isAbroadTrip,
@@ -20,7 +20,6 @@ import {
   getTagDropdownOptions,
   getParticipantsDropdownOptions,
 } from "../utils/tripDropdownOptions";
-import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { filterTrips } from "../utils/tripFilters";
 
 const defaultTripFilterState: TripFilterState = {

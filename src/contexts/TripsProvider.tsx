@@ -1,11 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import {
-  getAutoTripStatus,
-  sharedTripsService,
-  tripsService,
-  type Trip,
-} from "@features/trips";
-import { useAuth } from "@features/user";
+import { sharedTripsService } from "@features/trips/services/sharedTripsService";
+import { tripsService } from "@features/trips/services/tripsService";
+import { getAutoTripStatus } from "@features/trips/utils/trips";
+import type { Trip } from "@features/trips/types";
+import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { TripsContext } from "./TripsContext";
 
 export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
