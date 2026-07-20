@@ -1,10 +1,9 @@
-import { FaXmark } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { useUIHintContext } from "@contexts/UIHintContext";
-import { useLanguage } from "@features/settings";
 
+/** Renders a container for UI hints. */
 export function UIHintContainer() {
   const { hints, removeHint } = useUIHintContext();
-  const { isRtl } = useLanguage();
 
   const topHints = hints.filter((hint) => hint.position !== "bottom");
   const bottomHints = hints.filter((hint) => hint.position === "bottom");
@@ -14,7 +13,7 @@ export function UIHintContainer() {
     if (hintList.length === 0) return null;
     return (
       <div
-        className={`fixed ${positionClass} start-1/2 ${isRtl ? "translate-x-1/2" : "-translate-x-1/2"} z-[1000] flex flex-col gap-2 pointer-events-none`}
+        className={`fixed ${positionClass} left-1/2 -translate-x-1/2 z-[1000] flex flex-col gap-2 pointer-events-none`}
       >
         {hintList.map((hint) => (
           <div
@@ -42,7 +41,7 @@ export function UIHintContainer() {
                 onClick={() => removeHint(hint.id)}
                 aria-label="Dismiss"
               >
-                <FaXmark />
+                <ICONS.close />
               </button>
             )}
           </div>

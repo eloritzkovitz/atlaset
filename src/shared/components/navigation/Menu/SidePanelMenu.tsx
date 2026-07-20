@@ -21,6 +21,7 @@ export interface SidePanelMenuProps {
   onClose?: () => void;
   width?: number;
   showHamburger?: boolean;
+  animationsEnabled?: boolean;
   menuButtonClassName?: string;
 }
 
@@ -37,6 +38,7 @@ export function SidePanelMenu({
   onClose: onCloseProp,
   width = 250,
   showHamburger = true,
+  animationsEnabled = true,
   menuButtonClassName = "w-full px-2 !text-lg font-semibold",
 }: SidePanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
@@ -52,6 +54,7 @@ export function SidePanelMenu({
       width={width}
       className={isMobile ? "!start-0" : undefined}
       onHide={isMobile || isLaptop ? onClose : undefined}
+      animationsEnabled={animationsEnabled}
     >
       <ul className="flex flex-col gap-2 p-1">
         {menuItems.map((item) => (

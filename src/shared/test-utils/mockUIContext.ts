@@ -4,6 +4,7 @@ import type { UIContextType } from "@contexts/UIContext";
 export const mockUIContext: UIContextType = {
   uiVisible: true,
   setUiVisible: vi.fn(),
+  toggleUiVisible: vi.fn(),
   sidebarExpanded: false,
   setSidebarExpanded: vi.fn(),
   openMapToolbarPanel: null,

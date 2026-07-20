@@ -7,7 +7,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { useKeyHandler } from "@hooks";
-import { DEFAULT_MAP_SETTINGS } from "@features/settings";
+import { DEFAULT_MAP_SETTINGS, useAccessibility } from "@features/settings";
 
 interface MapControlsProps {
   zoom: number;
@@ -20,7 +20,9 @@ export function MapControls({
   setZoom,
   visible = true,
 }: MapControlsProps) {
+  const { singleKeyShortcutsEnabled } = useAccessibility();
   const { t } = useTranslation("atlas");
+
   const zoomInInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
   const zoomOutInterval = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -55,18 +57,20 @@ export function MapControls({
   useKeyHandler(
     () => setZoom(Math.min(zoom + 1, DEFAULT_MAP_SETTINGS.maxZoom)),
     ["+", "="],
-    true,
+    { allowSingleKeyShortcuts: singleKeyShortcutsEnabled },
   );
 
   // Zoom out
   useKeyHandler(
     () => setZoom(Math.max(zoom - 1, DEFAULT_MAP_SETTINGS.minZoom)),
     ["-"],
-    true,
+    { allowSingleKeyShortcuts: singleKeyShortcutsEnabled },
   );
 
   // Reset zoom
-  useKeyHandler(() => setZoom(DEFAULT_MAP_SETTINGS.minZoom), ["0"], true);
+  useKeyHandler(() => setZoom(DEFAULT_MAP_SETTINGS.minZoom), ["0"], {
+    allowSingleKeyShortcuts: singleKeyShortcutsEnabled,
+  });
 
   return (
     <div
@@ -107,8 +111,8 @@ export function MapControls({
           title={t("controls.zoomOut")}
           titlePosition="left"
           icon={<FaMinus />}
-          variant="action"         
-          rounded 
+          variant="action"
+          rounded
           className="shadow"
         />
         <ActionButton

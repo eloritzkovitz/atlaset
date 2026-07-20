@@ -1,20 +1,22 @@
 import { render } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
-import { useAccessibility } from "@features/settings";
 import * as keyboardUtils from "@utils/keyboard";
 import { useKeyHandler } from "./useKeyHandler";
-
-vi.mock("@features/settings", () => ({
-  useAccessibility: vi.fn(() => ({ singleKeyShortcutsEnabled: true })),
-}));
 
 function TestComponent({
   onKey,
   keys = ["a"],
   enabled = true,
   modifiers = [],
+  allowSingleKeyShortcuts = true,
+  target,
 }: any) {
-  useKeyHandler(onKey, keys, enabled, modifiers);
+  useKeyHandler(onKey, keys, {
+    enabled,
+    modifiers,
+    allowSingleKeyShortcuts,
+    target,
+  });
   return null;
 }
 
@@ -23,6 +25,8 @@ describe("useKeyHandler Integration", () => {
 
   beforeEach(() => {
     handler.mockClear();
+    vi.spyOn(keyboardUtils, "isRestrictedSingleKey").mockReturnValue(false);
+    vi.spyOn(keyboardUtils, "isTextInputFocused").mockReturnValue(false);
   });
 
   afterEach(() => {
@@ -62,12 +66,15 @@ describe("useKeyHandler Integration", () => {
   });
 
   it("blocks shortcuts if utility classifies key as a restricted single key", () => {
-    vi.mocked(useAccessibility).mockReturnValue({
-      singleKeyShortcutsEnabled: false,
-    } as any);
     vi.spyOn(keyboardUtils, "isRestrictedSingleKey").mockReturnValue(true);
 
-    render(<TestComponent onKey={handler} keys={["a"]} />);
+    render(
+      <TestComponent
+        onKey={handler}
+        keys={["a"]}
+        allowSingleKeyShortcuts={false}
+      />,
+    );
 
     window.dispatchEvent(new KeyboardEvent("keydown", { key: "a" }));
     expect(handler).not.toHaveBeenCalled();

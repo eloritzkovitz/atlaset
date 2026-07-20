@@ -9,6 +9,7 @@ import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import { useEffectiveLayers } from "@features/atlas/layers";
 import { useEffectiveMarkers } from "@features/atlas/markers";
+import { useAccessibility } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
 import { EmbedMapSection } from "./EmbedMapSection";
@@ -28,6 +29,7 @@ export interface MapExportPanelProps {
 }
 
 export function MapExportPanel({ svgRef }: MapExportPanelProps) {
+  const { animationsEnabled } = useAccessibility();
   const { user } = useAuth();
   const { isReadonly } = useMapView();
   const { activeSavedMap } = useSavedMaps();
@@ -108,6 +110,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
       }
       show={showExport}
       onHide={closePanel}
+      animationsEnabled={animationsEnabled}
     >
       <div>
         <ExportOptionsSection

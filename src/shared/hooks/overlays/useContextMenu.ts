@@ -90,13 +90,10 @@ export function useContextMenu({
     handleCloseContext,
     open,
   );
-  useKeyHandler(
-    handleCloseContext,
-    ["Escape"],
-    open,
-    [],
-    combinedIgnoreRefs[0],
-  );
+  useKeyHandler(handleCloseContext, ["Escape"], {
+    enabled: open,
+    target: combinedIgnoreRefs[0],
+  });
 
   // Calculate menu position when open or dependencies change
   useLayoutEffect(() => {

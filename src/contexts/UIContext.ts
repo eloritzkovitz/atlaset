@@ -8,6 +8,7 @@ import type {
 export interface UIContextType {
   uiVisible: boolean;
   setUiVisible: (v: boolean | ((prev: boolean) => boolean)) => void;
+  toggleUiVisible: () => void;
   sidebarExpanded: boolean;
   setSidebarExpanded: (v: boolean) => void;
   openMapToolbarPanel: MapToolbarPanelSelection;

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import type { Trip } from "@features/trips";
-import { useKeyHandler, useScreenSize } from "@hooks";
-import { isAuthenticated } from "@lib/firebase";
+import type { Trip } from "@features/trips/types";
+import { useScreenSize } from "@hooks";
 import { UIContext } from "./UIContext";
 
 // Map toolbar panel selection
@@ -111,18 +110,6 @@ export function UIProvider({ children }: { children: ReactNode }) {
     setShowCalendar(true);
   }
 
-  // Toggle UI visibility with "U"
-  useKeyHandler(toggleUiVisible, ["u", "U"], true);
-
-  // Toggle Friends panel with "N"
-  useKeyHandler(toggleFriends, ["n", "N"], isAuthenticated());
-
-  // Toggle Help panel with "H"
-  useKeyHandler(toggleHelp, ["h", "H"], true);
-
-  // Open Shortcuts modal with "?"
-  useKeyHandler(toggleShortcuts, ["?"], true);
-
   // Effect to open countries panel when menu closes
   useEffect(() => {
     if (
@@ -141,6 +128,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
       value={{
         uiVisible,
         setUiVisible,
+        toggleUiVisible,
         sidebarExpanded,
         setSidebarExpanded,
         openMapToolbarPanel,

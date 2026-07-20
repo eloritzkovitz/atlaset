@@ -1,5 +1,6 @@
 import { Panel } from "@components";
 import { ICONS } from "@constants/icons";
+import { useAccessibility } from "@features/settings";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
 
@@ -9,6 +10,7 @@ interface SearchPanelProps {
 }
 
 export function SearchPanel({ open, onClose }: SearchPanelProps) {
+  const { animationsEnabled } = useAccessibility();
   const search = useSearchController();
 
   return (
@@ -23,6 +25,7 @@ export function SearchPanel({ open, onClose }: SearchPanelProps) {
       }
       className="!z-[10050]"
       showSeparator={false}
+      animationsEnabled={animationsEnabled}
     >
       <SearchContent
         searchTerm={search.searchTerm}

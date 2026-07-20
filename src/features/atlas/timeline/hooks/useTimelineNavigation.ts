@@ -81,7 +81,6 @@ export function useTimelineNavigation() {
       }
     },
     ["ArrowLeft", "ArrowRight", "Home", "End"],
-    true,
   );
 
   // Spacebar play/pause toggle
@@ -91,7 +90,6 @@ export function useTimelineNavigation() {
       setPlaying((p) => !p);
     },
     [" "],
-    true,
   );
 
   // Auto-advance when playing

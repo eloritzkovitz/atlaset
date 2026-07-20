@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { FaEllipsis } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { PAGE_SIZE_OPTIONS } from "@constants/ui";
+import { FaEllipsis } from "react-icons/fa6";
 import { pluralize } from "@utils/string";
+import { PAGE_SIZE_OPTIONS } from "./constants";
 import { getPageButtons } from "./paginationUtils";
 import { PaginationButton } from "./PaginationButton";
 import { ActionButton } from "../../inputs/Button/ActionButton";

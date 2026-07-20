@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useScrollVisibility } from "@hooks";
 import { AppHeader } from "./AppHeader";
 import { AppPanels } from "./AppPanels";
+import { GlobalShortcuts } from "./GlobalShortcuts";
 import { Sidebar } from "./Sidebar/Sidebar";
 
 /** Renders the main application layout. */
@@ -16,6 +17,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="app-layout relative h-screen w-screen bg-bg overflow-x-hidden">
+      <GlobalShortcuts />
       <Sidebar />
       <div className="flex flex-col h-full min-w-0">
         <AppHeader show={showHeader} />

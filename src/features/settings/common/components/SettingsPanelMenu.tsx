@@ -1,6 +1,7 @@
 import { FaGear } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { mapMenuItems, SidePanelMenu } from "@components";
+import { useAccessibility } from "@features/settings";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
 
 interface SettingsPanelMenuProps {
@@ -18,6 +19,7 @@ export function SettingsPanelMenu({
   open,
   onClose,
 }: SettingsPanelMenuProps) {
+  const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("settings");
 
   const menuConfig = (
@@ -42,6 +44,7 @@ export function SettingsPanelMenu({
       open={open}
       onClose={onClose}
       width={250}
+      animationsEnabled={animationsEnabled}
     />
   );
 }

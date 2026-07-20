@@ -73,6 +73,7 @@ export function QuizSettings({
   onCancel,
 }: QuizSettingsProps) {
   const { t } = useTranslation("quizzes");
+
   // Arrow key navigation
   useKeyHandler(
     (e) => {
@@ -90,7 +91,6 @@ export function QuizSettings({
       }
     },
     ["ArrowLeft", "ArrowRight"],
-    true,
   );
 
   const selected = LEVELS.find((l) => l.key === difficulty);

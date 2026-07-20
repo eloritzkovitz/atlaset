@@ -37,7 +37,7 @@ export function ResultMessage({
       if (result !== null) nextFlag();
     },
     ["Enter"],
-    result !== null
+    { enabled: result !== null },
   );
 
   return (
@@ -54,13 +54,16 @@ export function ResultMessage({
         ) : result ? (
           <>
             <FaCheckCircle className="text-success text-2xl animate-bounce" />
-            <span className="text-success font-bold">{t("play.result.correct")}</span>
+            <span className="text-success font-bold">
+              {t("play.result.correct")}
+            </span>
           </>
         ) : (
           <>
             <FaTimesCircle className="text-danger text-2xl animate-shake" />
             <span className="text-danger font-bold">
-              {t("play.result.wrongPrefix")} <b>{answerLabel ?? currentCountry.name}</b>
+              {t("play.result.wrongPrefix")}{" "}
+              <b>{answerLabel ?? currentCountry.name}</b>
             </span>
           </>
         )}
@@ -70,11 +73,7 @@ export function ResultMessage({
         style={{ minHeight: 48 }}
       >
         {result !== null && (
-          <ActionButton
-            onClick={nextFlag}
-            variant="primary"
-            rounded
-          >
+          <ActionButton onClick={nextFlag} variant="primary" rounded>
             {t("play.nextFlag")}
           </ActionButton>
         )}

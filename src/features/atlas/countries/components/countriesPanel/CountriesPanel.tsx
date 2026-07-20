@@ -11,6 +11,7 @@ import {
   useCountryData,
   type Country,
 } from "@features/countries";
+import { useAccessibility } from "@features/settings";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useIncrementalList, useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
@@ -34,8 +35,9 @@ export function CountriesPanel({
   onHover,
   onCountryInfo,
 }: CountriesPanelProps) {
-  const { t } = useTranslation("atlas");
+  const { animationsEnabled } = useAccessibility();
   const { refreshData } = useCountryData();
+  const { t } = useTranslation("atlas");
   const { trips } = useTrips();
   const {
     uiVisible,
@@ -102,7 +104,6 @@ export function CountriesPanel({
         show={uiVisible && showCountries}
         onHide={toggleCountries}
         escEnabled={!showFilters && !selectedCountry}
-        showSeparator={false}
         headerActions={
           <>
             {process.env.NODE_ENV === "development" && (
@@ -131,6 +132,8 @@ export function CountriesPanel({
             />
           </>
         }
+        showSeparator={false}
+        animationsEnabled={animationsEnabled}
       >
         <div className="flex flex-col h-full">
           <CountriesSearchSortBar

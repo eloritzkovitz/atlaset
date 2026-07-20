@@ -4,6 +4,7 @@ import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useCountryData, type Country } from "@features/countries";
 import { CountryDetailsPanel } from "@features/countries/components/countryDetails/CountryDetailsPanel";
+import { useAccessibility } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
@@ -19,6 +20,7 @@ export function CountryDetailsModal({
   isOpen,
   onClose,
 }: CountryDetailsModalProps) {
+  const { singleKeyShortcutsEnabled } = useAccessibility();
   const { countries, currencies } = useCountryData();
   const { centerOnCountry } = useMapView();
   const { showCalendar } = useUI();
@@ -44,7 +46,7 @@ export function CountryDetailsModal({
       centerOnCountry(country?.isoCode || "");
     },
     ["x", "X"],
-    isOpen,
+    { enabled: isOpen, allowSingleKeyShortcuts: singleKeyShortcutsEnabled },
   );
 
   // Update state when modal opens/closes or country prop changes

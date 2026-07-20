@@ -3,6 +3,11 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  /* Branding colors */
+  --color-branding-bg: #2b3990;
+  --color-branding-fg: #262262;
+
+  /* Background colors */
   --color-bg: theme("colors.gray.50");
   --color-bg-atlas: theme("colors.blue.100");
 
@@ -121,6 +126,11 @@
 }
 
 .dark {
+  /* Branding colors */
+  --color-branding-bg: #f1f2f2;
+  --color-branding-fg: #e6e7e8;
+
+  /* Background colors */
   --color-bg: theme("colors.gray.950");
   --color-bg-atlas: theme("colors.blue.950");
 

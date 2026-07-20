@@ -36,21 +36,16 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Toggle Timeline mode with "T"
-  useKeyHandler(
-    () => {
-      handleSetTimelineMode((prev) => !prev);
-      setTimeout(() => {
-        try {
-          window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
-        } catch {
-          void 0;
-        }
-      }, 0);
-    },
-    ["t", "T"],
-    true,
-  );
+  useKeyHandler(() => {
+    handleSetTimelineMode((prev) => !prev);
+    setTimeout(() => {
+      try {
+        window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+      } catch {
+        void 0;
+      }
+    }, 0);
+  }, ["t", "T"]);
 
   // When timeline mode changes, play a sound effect
   useEffect(() => {

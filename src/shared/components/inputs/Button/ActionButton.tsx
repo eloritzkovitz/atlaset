@@ -1,11 +1,10 @@
 import React, { type ReactNode, useState } from "react";
-import { useLanguage } from "@features/settings";
+import type { CommandId } from "@types";
 import {
   InteractiveBase,
   type InteractiveBaseProps,
 } from "../InteractiveBase/InteractiveBase";
 import { Tooltip } from "../../overlay/Tooltip/Tooltip";
-import type { CommandId } from "@types";
 
 interface ActionButtonProps extends Omit<
   InteractiveBaseProps,
@@ -49,7 +48,6 @@ export const ActionButton = React.forwardRef<
     forwardedRef,
   ) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-    const { isRtl } = useLanguage();
 
     const base =
       "flex flex-row items-center justify-center gap-2 font-semibold border-none transition-colors ";
@@ -93,17 +91,8 @@ export const ActionButton = React.forwardRef<
           }}
           {...props}
         >
-          {icon && isRtl ? (
-            <>
-              {children}
-              {icon}
-            </>
-          ) : (
-            <>
-              {icon}
-              {children}
-            </>
-          )}
+          {icon}
+          {children}
         </InteractiveBase>
 
         {title && anchorEl && (

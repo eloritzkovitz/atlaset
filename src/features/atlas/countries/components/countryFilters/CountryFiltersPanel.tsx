@@ -10,7 +10,7 @@ import {
   getAllGeoTypes,
   getAllSovereigntyStatuses,
 } from "@features/countries/utils/countryData";
-import { useLanguage } from "@features/settings";
+import { useAccessibility, useLanguage } from "@features/settings";
 import { useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
@@ -28,6 +28,7 @@ export function CountryFiltersPanel({
   onHide,
   resetFilters,
 }: CountryFiltersPanelProps) {
+  const { animationsEnabled, singleKeyShortcutsEnabled } = useAccessibility();
   const { countries } = useCountryData();
   const {
     selectedRegion,
@@ -65,7 +66,7 @@ export function CountryFiltersPanel({
       resetFilters();
     },
     ["r", "R"],
-    show,
+    { enabled: show, allowSingleKeyShortcuts: singleKeyShortcutsEnabled },
   );
 
   // Responsive check
@@ -94,6 +95,7 @@ export function CountryFiltersPanel({
           />
         </>
       }
+      animationsEnabled={animationsEnabled}
       className={isMobile ? "panel-mobile-fullscreen" : ""}
       style={
         !isMobile

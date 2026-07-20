@@ -1,24 +1,24 @@
 import React, { type ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { useAccessibility, useLanguage } from "@features/settings";
 import { usePanelAnimation, usePanelHide, useScreenSize } from "@hooks";
 import { DialogHeader } from "../DialogHeader/DialogHeader";
 import "./Panel.css";
 
-interface PanelProps {
+export interface PanelProps {
   title: ReactNode;
   children: ReactNode;
   show?: boolean;
+  position?: "left" | "right";
+  width?: number | string;
   onHide?: () => void;
   escEnabled?: boolean;
-  width?: number | string;
-  style?: React.CSSProperties;
-  className?: string;
+  showCloseButton?: boolean;
   headerActions?: ReactNode;
   showSeparator?: boolean;
   scrollable?: boolean;
-  position?: "left" | "right";
-  showCloseButton?: boolean;
+  animationsEnabled?: boolean;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 /** Renders a panel component. */
@@ -26,19 +26,18 @@ export function Panel({
   title,
   children,
   show = true,
+  position = "left",
+  width = DEFAULT_PANEL_WIDTH,
   onHide,
   escEnabled = true,
-  width = DEFAULT_PANEL_WIDTH,
-  style = {},
-  className = "",
+  showCloseButton = true,
   headerActions,
   showSeparator = true,
   scrollable = true,
-  position = "left",
-  showCloseButton = true,
+  animationsEnabled = true,
+  style = {},
+  className = "",
 }: PanelProps) {
-  const { animationsEnabled } = useAccessibility();
-  const { isRtl } = useLanguage();
   const { isMobile } = useScreenSize();
 
   usePanelHide({ show, onHide, escEnabled });
@@ -46,7 +45,6 @@ export function Panel({
   const panelAnimationClass = usePanelAnimation({
     show,
     isMobile,
-    isRtl,
     animationsEnabled,
     position,
   });

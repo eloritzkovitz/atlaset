@@ -131,8 +131,8 @@ export function Modal({
         inert={!isOpen}
         role="dialog"
         className={`modal-backdrop fixed inset-0 z-[9999] ${
-          !disableScroll ? "modal-backdrop-scrollable" : ""
-        }`}
+          position === "center" ? "flex items-center justify-center" : ""
+        } ${!disableScroll ? "modal-backdrop-scrollable" : ""}`}
         style={{ zIndex: backdropZIndex }}
         onClick={
           !disableScroll
@@ -155,14 +155,10 @@ export function Modal({
           }}
           className={
             "group fixed " +
-            (!draggable && position === "center"
-              ? "start-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 "
-              : "") +
             "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
             (isOpen ? "modal-show " : "modal-hide ") +
             (closing ? " modal-closing " : "") +
-            className +
-            " "
+            className
           }
           style={{
             ...(position === "custom" ? style : {}),

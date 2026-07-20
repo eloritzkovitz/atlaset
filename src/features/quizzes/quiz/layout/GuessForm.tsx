@@ -39,7 +39,7 @@ export function GuessForm({
       if (inputRef.current) inputRef.current.focus();
     },
     ["/"],
-    !disabled,
+    { enabled: !disabled },
   );
 
   return (

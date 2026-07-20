@@ -40,7 +40,7 @@ describe("useListNavigation", () => {
       useListNavigation<Item>({
         ...getDefaultProps(),
         ...overrides,
-      })
+      }),
     );
   }
 
@@ -59,7 +59,7 @@ describe("useListNavigation", () => {
       .fn()
       .mockImplementation((id) => (id ? { scrollIntoView: scrollSpy } : null));
     vi.spyOn(document, "getElementById").mockImplementation(
-      getElementByIdSpy as unknown as (id: string) => HTMLElement | null
+      getElementByIdSpy as unknown as (id: string) => HTMLElement | null,
     );
     vi.useFakeTimers();
   });
@@ -156,7 +156,7 @@ describe("useListNavigation", () => {
     expect(useKeyHandler).toHaveBeenCalledWith(
       expect.any(Function),
       ["ArrowDown", "ArrowUp", "Enter", "Home", "End", "PageDown", "PageUp"],
-      false
+      { enabled: false },
     );
   });
 });

@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { FaStar } from "react-icons/fa6";
-import { HalfStar } from "./HalfStar";
 import {
   STAR_SELECTED_COLOR,
   STAR_HOVER_COLOR,
   STAR_UNSELECTED_COLOR,
   STAR_SIZE,
-} from "./star";
+} from "./constants";
+import { HalfStar } from "./HalfStar";
 
 interface StarRatingInputProps {
   value: number | null | undefined;

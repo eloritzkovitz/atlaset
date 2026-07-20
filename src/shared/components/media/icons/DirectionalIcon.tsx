@@ -1,12 +1,11 @@
 import {
-  FaChevronLeft,
   FaChevronRight,
-  FaAnglesLeft,
   FaAnglesRight,
-  FaArrowLeft,
   FaArrowRight,
+  FaChevronLeft,
+  FaAnglesLeft,
+  FaArrowLeft,
 } from "react-icons/fa6";
-import { useLanguage } from "@features/settings";
 
 interface DirectionalIconProps {
   direction?: "prev" | "next";
@@ -15,26 +14,25 @@ interface DirectionalIconProps {
   size?: string | number;
 }
 
+const iconsMap = {
+  chevron: { next: FaChevronRight, prev: FaChevronLeft },
+  angle: { next: FaAnglesRight, prev: FaAnglesLeft },
+  arrow: { next: FaArrowRight, prev: FaArrowLeft },
+} as const;
+
+/** Renders a directional icon based on the specified direction and variant. */
 export function DirectionalIcon({
   direction = "next",
   variant = "chevron",
   className = "",
   size = "1em",
 }: DirectionalIconProps) {
-  const { isRtl } = useLanguage();
+  const Icon = iconsMap[variant][direction];
 
-  // Map variant to corresponding icons
-  const iconsMap = {
-    chevron: [FaChevronLeft, FaChevronRight],
-    angle: [FaAnglesLeft, FaAnglesRight],
-    arrow: [FaArrowLeft, FaArrowRight],
-  } as const;
-
-  const [LeftIcon, RightIcon] = iconsMap[variant];
-
-  const forwardIsLeft = isRtl;
-  const showLeft = direction === "next" ? forwardIsLeft : !forwardIsLeft;
-  const Icon = showLeft ? LeftIcon : RightIcon;
-
-  return <Icon className={className} style={{ fontSize: size }} />;
+  return (
+    <Icon
+      className={`rtl:rotate-180 transition-transform ${className}`}
+      style={{ fontSize: size }}
+    />
+  );
 }

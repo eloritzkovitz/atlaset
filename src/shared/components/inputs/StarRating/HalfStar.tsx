@@ -1,5 +1,5 @@
 import { FaStar } from "react-icons/fa6";
-import { STAR_UNSELECTED_COLOR, STAR_SIZE } from "./star";
+import { STAR_UNSELECTED_COLOR, STAR_SIZE } from "./constants";
 
 interface HalfStarProps {
   size?: number;

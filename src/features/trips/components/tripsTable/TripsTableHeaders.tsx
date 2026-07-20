@@ -2,6 +2,7 @@ import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Checkbox,
+  RATING_OPTIONS,
   SortableFilterHeader,
   StarRatingInput,
   TableDropdownFilter,
@@ -11,7 +12,7 @@ import { CountryWithFlag } from "@features/countries";
 import type { FilterOption, Option } from "@types";
 import { isAllowedOption, isStringOption } from "@utils/dropdown";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
-import { ALL_TRIP_CATEGORIES, RATING_OPTIONS } from "../../constants/trips";
+import { ALL_TRIP_CATEGORIES } from "../../constants/trips";
 import type {
   Trip,
   TripCategory,
