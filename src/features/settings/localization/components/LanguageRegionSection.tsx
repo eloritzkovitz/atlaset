@@ -7,7 +7,7 @@ import {
   CountryWithFlag,
   useCountryData,
 } from "@features/countries";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile/hooks/useHomeCountry";
 import { useDateLocale } from "../hooks/useDateLocale";
 import { useLanguage } from "../hooks/useLanguage";
 import { languageOptions } from "../utils/languages";

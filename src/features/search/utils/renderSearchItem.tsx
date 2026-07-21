@@ -1,6 +1,7 @@
 import type { User } from "firebase/auth";
-import { ICONS } from "@constants/icons";
 import i18n from "i18next";
+
+import { ICONS } from "@constants/icons";
 import {
   CountryFlag,
   defaultRegionIcon,

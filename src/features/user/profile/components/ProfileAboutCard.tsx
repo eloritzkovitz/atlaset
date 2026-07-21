@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaEnvelope } from "react-icons/fa6";
 import { Card, TabButton } from "@components";
-import { type Country } from "@features/countries";
+import { type Country } from "@features/countries/types";
 import { ProfileField } from "./ProfileField";
 import { SocialLinks } from "./SocialLinks";
 import {

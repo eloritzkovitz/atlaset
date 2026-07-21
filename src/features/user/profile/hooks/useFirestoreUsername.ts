@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getDocData, getPaths } from "@lib/firebase";
-import type { FirestoreUser } from "@features/user/types";
+import type { FirestoreUser } from "../../types";
 
 /**
  * Fetches and manages a Firestore username.

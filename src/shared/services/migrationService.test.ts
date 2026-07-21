@@ -31,7 +31,7 @@ vi.mock("../../features/settings/common/services/settingsService", () => ({
 
 import { appDb } from "@app/db";
 import { countryListService } from "@features/countries";
-import { settingsService } from "@features/settings";
+import { settingsService } from "@features/settings/common/services/settingsService";
 import { migrationService } from "./migrationService";
 
 describe("migrationService", () => {

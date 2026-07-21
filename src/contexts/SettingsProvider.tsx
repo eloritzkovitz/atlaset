@@ -15,7 +15,10 @@ import {
 } from "@features/settings/common/slices/settingsSlice";
 import { selectSettingsReady } from "@features/settings/selectors";
 import { applyTheme } from "@features/settings/display/utils/theme";
-import { selectAuthReady, selectAuthUser } from "@features/user";
+import {
+  selectAuthReady,
+  selectAuthUser,
+} from "@features/user/auth/slices/authSlice";
 import { SettingsContext } from "./SettingsContext";
 import type { AppDispatch } from "../store";
 

@@ -15,7 +15,6 @@ import {
 import { deleteDoc, setDoc } from "firebase/firestore";
 import { auth } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
-import type { FirestoreUser } from "@features/user/types";
 import {
   getDocData,
   getDocsData,
@@ -28,6 +27,7 @@ import { isUserDeactivated } from "../utils/auth";
 import { getBrowserSessionInfo } from "../utils/session";
 import { friendService } from "../../friends/services/friendService";
 import { profileService } from "../../profile/services/profileService";
+import type { FirestoreUser } from "../../types";
 
 /**
  * Service for managing user authentication.

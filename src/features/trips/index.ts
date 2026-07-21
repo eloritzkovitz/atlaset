@@ -10,10 +10,6 @@ export * from "./constants/trips";
 export * from "./hooks/useTripFilters";
 export * from "./hooks/useTripModal";
 
-// Services
-export { tripsService } from "./services/tripsService";
-export { sharedTripsService } from "./services/sharedTripsService";
-
 // Types
 export * from "./types";
 

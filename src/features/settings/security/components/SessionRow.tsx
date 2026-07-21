@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
+import { type UserSession } from "@features/user/types";
 import { formatDate } from "@utils/date";
 import { getDeviceType, parseUserAgent } from "@utils/device";
-import { type UserSession } from "@features/user";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 
 interface SessionRowProps {

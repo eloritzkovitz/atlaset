@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Card } from "@components";
-import { LeaderboardTable } from "@features/quizzes";
+import { LeaderboardFilterBar } from "@features/quizzes/leaderboards/components/LeaderboardFilterBar";
+import { LeaderboardTable } from "@features/quizzes/leaderboards/components/LeaderboardTable";
 import type {
   Difficulty,
   LeaderboardEntry,
   QuizType,
 } from "@features/quizzes/types";
-import { LeaderboardFilterBar } from "@features/quizzes/leaderboards/components/LeaderboardFilterBar";
 
 interface BestScoresCardProps {
   scores: LeaderboardEntry[];

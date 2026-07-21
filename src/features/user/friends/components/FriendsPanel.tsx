@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, SearchInput, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility/hooks/useAccessibility";
 import { FriendList } from "./FriendList";
 import { FriendRequestList } from "./FriendRequestList";
 import { useUserFriends } from "../hooks/useUserFriends";

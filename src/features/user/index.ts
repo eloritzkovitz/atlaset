@@ -28,10 +28,6 @@ export { useUserFriendCount } from "./friends/hooks/useUserFriendCount";
 export { useFriendProfiles } from "./friends/hooks/useFriendProfiles";
 export { useUserFriends } from "./friends/hooks/useUserFriends";
 
-// Redux
-export { default as authReducer } from "./auth/slices/authSlice";
-export * from "./auth/slices/authSlice";
-
 // Services
 export { authService } from "./auth/services/authService";
 export { sessionService } from "./auth/services/sessionService";

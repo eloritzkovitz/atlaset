@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@app/store";
 import { getLanguageByCode, LANGUAGES } from "@constants/languages";
-import { useAuth } from "@features/user";
+import { useAuth } from "@contexts/AuthContext";
 import { saveSettings } from "../../common/slices/settingsSlice";
 import type { Settings } from "../../types";
 

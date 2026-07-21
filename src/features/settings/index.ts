@@ -3,7 +3,6 @@ export { defaultSettings } from "./common/constants/defaultSettings";
 export * from "./common/constants/mapSettings";
 export { SETTINGS_MENU } from "./common/constants/settingsMenu";
 export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
-export { settingsService } from "./common/services/settingsService";
 export { SettingsToggle } from "./common/components/SettingsToggle";
 
 // Accessibility
@@ -17,7 +16,6 @@ export { AccountSettingsSection } from "./account/components/AccountSettingsSect
 // Display
 export { DisplaySettingsSection } from "./display/components/DisplaySettingsSection";
 export { useTheme } from "./display/hooks/useTheme";
-export * from "./display/utils/theme";
 
 // Localization
 export { LanguageMenuList } from "./localization/components/LanguageMenuList";
@@ -29,18 +27,12 @@ export { useLanguage, isRtl } from "./localization/hooks/useLanguage";
 export { CookieConsentModal } from "./privacy/components/CookieConsentModal";
 export { PrivacySettingsSection } from "./privacy/components/PrivacySettingsSection";
 export { useAnalytics } from "./privacy/hooks/useAnalytics";
-export { usePrivacySettings } from "./privacy/hooks/usePrivacySettings";
 
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
 
 // Sound
 export { SoundSettingsSection } from "./sound/SoundSettingsSection";
-export { useSoundSettings } from "./sound/useSoundSettings";
-
-// Redux
-export { default as settingsReducer } from "./common/slices/settingsSlice";
-export * from "./common/slices/settingsSlice";
 
 // Types
 export * from "./types";

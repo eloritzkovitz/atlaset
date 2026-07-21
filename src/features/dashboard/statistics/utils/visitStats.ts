@@ -3,7 +3,7 @@
  */
 
 import type { Country } from "@features/countries/types";
-import type { Trip } from "@features/trips";
+import type { Trip } from "@features/trips/types";
 import { getCompletedTrips } from "@features/trips/utils/trips";
 import {
   buildVisitedYearMap,

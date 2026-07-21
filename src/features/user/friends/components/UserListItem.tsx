@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import { ActionButton, PanelListItem } from "@components";
 import { ICONS } from "@constants/icons";
 import { FriendListItemMenuActions } from "./FriendListItemMenuActions";
-import { useUserProfile } from "../../profile/hooks/useUserProfile";
 import { UserInfo } from "../../profile/components/UserInfo";
+import { useUserProfile } from "../../profile/hooks/useUserProfile";
 
 interface UserListItemProps {
   uid: string;

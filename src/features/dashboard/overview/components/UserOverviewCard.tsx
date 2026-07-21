@@ -1,11 +1,8 @@
 import { Link } from "react-router-dom";
 import { Card } from "@components";
 import { useTranslation } from "react-i18next";
-import {
-  UserAvatar,
-  type SerializableUser,
-  type UserProfile,
-} from "@features/user";
+import { UserAvatar, type UserProfile } from "@features/user";
+import type { SerializableUser } from "@features/user/auth/slices/authSlice";
 
 interface UserOverviewCardProps {
   userProfile: UserProfile;

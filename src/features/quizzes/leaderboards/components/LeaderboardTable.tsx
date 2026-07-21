@@ -1,7 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { LeaderboardRowComponent } from "./LeaderboardRow";
 import type { LeaderboardEntry, QuizType, Difficulty } from "../../types";
-import { useTranslation } from "react-i18next";
 
 const TABLE_HEADER_KEYS = [
   { key: "leaderboards.table.headers.rank", align: "left" },

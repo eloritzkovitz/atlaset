@@ -11,11 +11,11 @@ import {
 } from "@components";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { isPasswordProvider } from "@features/user/auth/utils/auth";
 import { SocialLinksField } from "./SocialLinksField";
 import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../../hooks/useUsernameValidation";
 import { profileService } from "../../services/profileService";
+import { isPasswordProvider } from "../../../auth/utils/auth";
 import { type UserProfile, type SocialPlatform } from "../../../types";
 
 interface EditProfileModalProps {

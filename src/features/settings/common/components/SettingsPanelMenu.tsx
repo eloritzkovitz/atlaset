@@ -1,8 +1,8 @@
 import { FaGear } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { mapMenuItems, SidePanelMenu } from "@components";
-import { useAccessibility } from "@features/settings";
 import { SETTINGS_MENU } from "../constants/settingsMenu";
+import { useAccessibility } from "../../accessibility/hooks/useAccessibility";
 
 interface SettingsPanelMenuProps {
   selectedPanel: string;

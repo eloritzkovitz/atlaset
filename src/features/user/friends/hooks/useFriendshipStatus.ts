@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { friendService } from "../services/friendService";
-import type { Friend } from "@features/user";
+import type { Friend } from "../../types";
 
 /**
  * Friendship status between current user and profile user.

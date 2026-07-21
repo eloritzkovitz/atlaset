@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import { TableDropdownFilter } from "@components";
-import type { QuizType, Difficulty } from "@features/quizzes/types";
 import type { DropdownOption } from "@types";
 import {
   TYPE_OPTIONS,
   DIFFICULTY_OPTIONS,
   renderOption,
 } from "../constants/leaderboardOptions";
+import type { QuizType, Difficulty } from "../../types";
 
 interface LeaderboardFilterBarProps {
   mode: QuizType;

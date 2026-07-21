@@ -1,8 +1,8 @@
 import { doc, runTransaction, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
-import type { Trip } from "@features/trips";
-import { computeVisitedCountriesFromTrips } from "@features/visits";
+import type { Trip } from "@features/trips/types";
+import { computeVisitedCountriesFromTrips } from "@features/visits/utils/visits";
 import { getDocData, getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
 import type { UserProfile } from "../../types";
