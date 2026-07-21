@@ -28,10 +28,6 @@ export { useUserFriendCount } from "./friends/hooks/useUserFriendCount";
 export { useFriendProfiles } from "./friends/hooks/useFriendProfiles";
 export { useUserFriends } from "./friends/hooks/useUserFriends";
 
-// Services
-export { authService } from "./auth/services/authService";
-export { sessionService } from "./auth/services/sessionService";
-
 // Types
 export * from "./types";
 

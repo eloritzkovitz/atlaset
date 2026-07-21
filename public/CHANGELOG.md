@@ -1,5 +1,12 @@
 # Changelog
 
+## 2026-07-21
+
+- **[breaking]** **User | Auth:** Updated session management and settings
+- **[feature]** **User | Auth** Added home country assignment based on geolocation during registration and session creation
+- **[chore]** **Dashboard | Currencies:** Redesigned currency exchange
+- **[chore]** **General:** Refactored and improved services and third-party integrations
+
 ## 2026-07-15
 
 - **[feature]** **General:** Enabled Google Analytics for monitoring
