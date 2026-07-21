@@ -5,7 +5,7 @@ import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryFilters } from "@contexts/CountryFiltersContext";
 import { useTimeline } from "@contexts/TimelineContext";
-import { useCountryData } from "@features/countries";
+import { type Country } from "@features/countries";
 import {
   getAllGeoTypes,
   getAllSovereigntyStatuses,
@@ -18,18 +18,27 @@ import { TimelineFilters } from "./TimelineFilters";
 import { useRegionSubregionSelection } from "../../hooks/useRegionSubregionSelection";
 
 interface CountryFiltersPanelProps {
+  countries: Country[];
+  allRegions: string[];
+  allSubregions: string[];
+  subregionsByRegion: Record<string, string[]>;
+  subregionToRegion: Map<string, string>;
   show: boolean;
   onHide: () => void;
   resetFilters: () => void;
 }
 
 export function CountryFiltersPanel({
+  countries,
+  allRegions,
+  allSubregions,
+  subregionsByRegion,
+  subregionToRegion,
   show,
   onHide,
   resetFilters,
 }: CountryFiltersPanelProps) {
   const { animationsEnabled, singleKeyShortcutsEnabled } = useAccessibility();
-  const { countries } = useCountryData();
   const {
     selectedRegion,
     selectedSubregion,
@@ -50,6 +59,8 @@ export function CountryFiltersPanel({
 
   // Subregion options based on selected region
   const { subregionOptions } = useRegionSubregionSelection(
+    allSubregions,
+    subregionsByRegion,
     selectedRegion,
     selectedSubregion,
     setSelectedRegion,
@@ -112,6 +123,8 @@ export function CountryFiltersPanel({
           subregionOptions={subregionOptions}
           geoTypeOptions={geoTypeOptions}
           sovereigntyOptions={sovereigntyOptions}
+          allRegions={allRegions}
+          subregionToRegion={subregionToRegion}
         />
         {visitedOnly && (
           <>

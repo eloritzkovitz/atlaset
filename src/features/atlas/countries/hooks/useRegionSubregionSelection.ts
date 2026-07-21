@@ -1,20 +1,20 @@
 import { useEffect, useMemo } from "react";
-import { useCountryData } from "@features/countries";
 
 /**
  * Manages logic for region and subregion selection.
- *
- * @param selectedRegion The currently selected region
- * @param selectedSubregion The currently selected subregion
- * @param setSelectedRegion Function to set the selected region
+ * @param allSubregions - List of all available subregions
+ * @param subregionsByRegion - Mapping of regions to their corresponding subregions
+ * @param selectedRegion - The currently selected region
+ * @param selectedSubregion - The currently selected subregion
+ * @param setSelectedRegion - Function to set the selected region
  */
 export function useRegionSubregionSelection(
+  allSubregions: string[],
+  subregionsByRegion: Record<string, string[]>,
   selectedRegion: string,
   selectedSubregion: string,
   setSelectedRegion: (region: string) => void,
 ) {
-  const { allSubregions, subregionsByRegion } = useCountryData();
-
   // Dynamic subregion options based on selected region
   const subregionOptions = useMemo(() => {
     if (selectedRegion && selectedRegion !== "") {

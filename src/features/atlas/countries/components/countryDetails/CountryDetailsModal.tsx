@@ -77,6 +77,7 @@ export function CountryDetailsModal({
           <CountryDetailsHeader country={currentCountry} onClose={onClose} />
           <CountryDetailsPanel
             country={currentCountry}
+            countries={countries}
             currencies={currencies}
             categorizedVisits={categorizedVisits}
             resetTabOnClose={true}

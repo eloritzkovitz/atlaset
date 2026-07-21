@@ -13,7 +13,7 @@ import {
 } from "@features/countries";
 import { useAccessibility } from "@features/settings";
 import { buildVisitContext } from "@features/visits/utils/visits";
-import { useIncrementalList, useSort } from "@hooks";
+import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryListView } from "./CountryListView";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
@@ -36,7 +36,13 @@ export function CountriesPanel({
   onCountryInfo,
 }: CountriesPanelProps) {
   const { animationsEnabled } = useAccessibility();
-  const { refreshData } = useCountryData();
+  const {
+    allRegions,
+    allSubregions,
+    subregionsByRegion,
+    subregionToRegion,
+    refreshData,
+  } = useCountryData();
   const { t } = useTranslation("atlas");
   const { trips } = useTrips();
   const {
@@ -85,12 +91,6 @@ export function CountriesPanel({
     resetFilters();
     setSortBy("name-asc");
   };
-
-  // Maintain a visible count for incremental loading of countries
-  const visibleCountries = useIncrementalList(sortedCountries, {
-    initialBatchSize: 15,
-    loadBatchSize: 20,
-  });
 
   return (
     <div className="fixed top-0 start-0 h-screen z-40 group relative">
@@ -148,7 +148,7 @@ export function CountriesPanel({
           <Separator />
           <CountryListView
             key={`${selectedListId}-${sortBy}`}
-            countries={visibleCountries}
+            countries={sortedCountries}
             selectedIsoCode={selectedIsoCode}
             hoveredIsoCode={hoveredIsoCode}
             onSelect={onSelect}
@@ -160,6 +160,11 @@ export function CountriesPanel({
 
       {showCountries && (
         <CountryFiltersPanel
+          countries={filterProps.filteredCountries}
+          allRegions={allRegions}
+          allSubregions={allSubregions}
+          subregionsByRegion={subregionsByRegion}
+          subregionToRegion={subregionToRegion}
           show={showFilters && !selectedCountry}
           onHide={toggleFilters}
           resetFilters={handleResetFilters}

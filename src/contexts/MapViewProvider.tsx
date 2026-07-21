@@ -13,7 +13,7 @@ export interface MapViewProviderProps {
 }
 
 export function MapViewProvider({ children }: MapViewProviderProps) {
-  const { geoData } = useGeoData();
+  const { geoData, geoError, loading } = useGeoData();
   const { mapMode, setMapMode, isReadonly, isEdit, isEmbed } = useMapMode();
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -86,6 +86,8 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
         setColorMode,
         isAtlasActive,
         geoData,
+        geoError,
+        loading,
         dimensions,
         setDimensions,
         zoom,

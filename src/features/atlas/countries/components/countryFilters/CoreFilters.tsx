@@ -5,11 +5,7 @@ import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { useCountryFilters } from "@contexts/CountryFiltersContext";
-import {
-  useCountryData,
-  type GeoType,
-  type SovereigntyStatus,
-} from "@features/countries";
+import { type GeoType, type SovereigntyStatus } from "@features/countries";
 import type { VisitedStatus } from "@features/visits";
 import { coreFiltersConfig } from "../../config/filtersConfig";
 
@@ -20,6 +16,8 @@ interface CoreFiltersProps {
   subregionOptions: string[];
   geoTypeOptions: GeoType[];
   sovereigntyOptions: string[];
+  allRegions: string[];
+  subregionToRegion: Map<string, string>;
 }
 
 export function CoreFilters({
@@ -28,8 +26,9 @@ export function CoreFilters({
   subregionOptions,
   geoTypeOptions,
   sovereigntyOptions,
+  allRegions,
+  subregionToRegion,
 }: CoreFiltersProps) {
-  const { allRegions, subregionToRegion } = useCountryData();
   const {
     selectedRegion,
     setSelectedRegion,

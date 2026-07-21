@@ -4,7 +4,7 @@ import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useCountrySelection } from "@features/atlas/countries";
-import { WorldMap, useGeoData } from "@features/atlas/map";
+import { WorldMap } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import {
   AtlasShortcuts,
@@ -15,10 +15,15 @@ import { useCountryData } from "@features/countries";
 import { usePageTitle } from "@hooks";
 
 export default function AtlasPage() {
-  const { geoError, loading: geoLoading } = useGeoData();
   const { countries, loading: countriesLoading, error } = useCountryData();
   const { loading: layersLoading } = useLayers();
-  const { mapReady, handleMapReady, isEmbed } = useMapView();
+  const {
+    geoError,
+    loading: geoLoading,
+    mapReady,
+    handleMapReady,
+    isEmbed,
+  } = useMapView();
   const { t } = useTranslation("atlas");
 
   const svgRef = useRef<SVGSVGElement>(null);

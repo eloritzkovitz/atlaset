@@ -91,6 +91,7 @@ export function CountryStats({
         />
         <CountryDetailsPanel
           country={selectedCountry}
+          countries={countries}
           currencies={currencies}
           categorizedVisits={categorizedVisits}
           onSelectCountry={setSelectedIsoCode}

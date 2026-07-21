@@ -6,7 +6,6 @@ import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryDetailsContent } from "./CountryDetailsContent";
 import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
-import { useCountryData } from "../../hooks/useCountryData";
 import type { Country, Currency } from "../../types";
 import { getCountryTerritories } from "../../utils/countryData";
 
@@ -14,6 +13,7 @@ type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 
 interface CountryDetailsPanelProps {
   country: Country;
+  countries: Country[];
   currencies: Currency[];
   categorizedVisits: {
     past: Visit[];
@@ -30,6 +30,7 @@ interface CountryDetailsPanelProps {
 
 export function CountryDetailsPanel({
   country,
+  countries,
   currencies,
   categorizedVisits,
   initialTab = "overview",
@@ -48,7 +49,6 @@ export function CountryDetailsPanel({
     visits: t("countries.details.tabs.visits"),
   };
 
-  const { countries } = useCountryData();
   const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
 
   // Reset to overview tab when modal is closed, if resetTabOnClose is true
