@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { friendService } from "../services/friendService";
+import type { Friend } from "../../types";
 
 /**
  * Friendship status between current user and profile user.
@@ -10,7 +11,7 @@ import { friendService } from "../services/friendService";
  */
 export function useFriendshipStatus(
   currentUserId: string | undefined,
-  profileUserId: string | undefined
+  profileUserId: string | undefined,
 ) {
   const [status, setStatus] = useState<"none" | "pending" | "friend">("none");
   const [loading, setLoading] = useState(false);
@@ -25,7 +26,8 @@ export function useFriendshipStatus(
     try {
       // Check if already friends
       const friends = await friendService.getFriends(currentUserId);
-      if (friends.some((f) => f.uid === profileUserId)) {
+      const typedFriends = friends as (Friend & { id: string })[];
+      if (typedFriends.some((f) => f.id === profileUserId)) {
         setStatus("friend");
         setLoading(false);
         return;
@@ -34,7 +36,7 @@ export function useFriendshipStatus(
       // Check if there is a pending outgoing friend request from current user to profile user
       const outgoingRequest = await friendService.getOutgoingFriendRequest(
         profileUserId,
-        currentUserId
+        currentUserId,
       );
 
       if (outgoingRequest) {

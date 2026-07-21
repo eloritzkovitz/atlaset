@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import type { Coordinates, GeoData } from "@features/atlas/map";
-import type { ColorMode, MapMode } from "@features/atlas/shared";
+import type { Coordinates, GeoData } from "@features/atlas/map/types";
+import type { ColorMode, MapMode } from "@features/atlas/shared/types";
 
 export interface MapViewContextType {
   mapMode: MapMode;
@@ -12,8 +12,10 @@ export interface MapViewContextType {
   setColorMode: React.Dispatch<React.SetStateAction<ColorMode>>;
   isAtlasActive: boolean;
   geoData: GeoData | null;
+  geoError: string | null;
+  loading: boolean;
   dimensions: { width: number; height: number };
-  setDimensions: (dims: { width: number; height: number }) => void;  
+  setDimensions: (dims: { width: number; height: number }) => void;
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   center: [number, number];

@@ -1,7 +1,7 @@
 import React from "react";
 import { ICONS } from "@constants/icons";
-import type { QuizType, Difficulty } from "@features/quizzes/types";
 import type { DropdownOption, Option } from "@types";
+import type { QuizType, Difficulty } from "../../types";
 
 // Type options with icons
 export const TYPE_OPTIONS: Array<

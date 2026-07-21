@@ -2,8 +2,6 @@ import {
   collection,
   doc,
   deleteDoc,
-  getDoc,
-  getDocs,
   onSnapshot,
   serverTimestamp,
   setDoc,
@@ -12,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
+import { getDocData, getDocsData, getPaths } from "@lib/firebase";
 import type { Friend, FriendRequest } from "../../types";
 
 /**
@@ -24,7 +23,7 @@ export const friendService = {
    * @param targetUserId - The ID of the user to receive the request.
    */
   async sendFriendRequest(currentUserId: string, targetUserId: string) {
-    const ref = doc(db, `users/${targetUserId}/friendRequests`, currentUserId);
+    const ref = getPaths.friendRequestDoc(targetUserId, currentUserId);
     const data = {
       from: currentUserId,
       to: targetUserId,
@@ -39,29 +38,18 @@ export const friendService = {
    * @param requestUserId - The ID of the user who sent the request.
    */
   async acceptFriendRequest(currentUserId: string, requestUserId: string) {
-    // Add each other as friends
     const batch = writeBatch(db);
-    const myFriendRef = doc(
-      db,
-      `users/${currentUserId}/friends`,
-      requestUserId
-    );
-    const theirFriendRef = doc(
-      db,
-      `users/${requestUserId}/friends`,
-      currentUserId
-    );
-    batch.set(myFriendRef, { createdAt: serverTimestamp() });
-    batch.set(theirFriendRef, { createdAt: serverTimestamp() });
-    // Remove the friend request
-    const reqRef = doc(
-      db,
-      `users/${currentUserId}/friendRequests`,
-      requestUserId
-    );
-    batch.delete(reqRef);
+    batch.set(getPaths.friendDoc(currentUserId, requestUserId), {
+      uid: requestUserId,
+      createdAt: serverTimestamp(),
+    });
+    batch.set(getPaths.friendDoc(requestUserId, currentUserId), {
+      uid: currentUserId,
+      createdAt: serverTimestamp(),
+    });
+    batch.delete(getPaths.friendRequestDoc(currentUserId, requestUserId));
+
     await batch.commit();
-    // Log user activity for both users
     await Promise.all([
       logUserActivity(140, { friendId: requestUserId }, currentUserId),
       logUserActivity(140, { friendId: currentUserId }, requestUserId),
@@ -77,7 +65,7 @@ export const friendService = {
     const reqRef = doc(
       db,
       `users/${currentUserId}/friendRequests`,
-      requestUserId
+      requestUserId,
     );
     await deleteDoc(reqRef);
   },
@@ -92,7 +80,7 @@ export const friendService = {
     const theirFriendRef = doc(
       db,
       `users/${friendUserId}/friends`,
-      currentUserId
+      currentUserId,
     );
     await deleteDoc(myFriendRef);
     await deleteDoc(theirFriendRef);
@@ -104,9 +92,7 @@ export const friendService = {
    * @returns - An array of Friend objects.
    */
   async getFriends(userId: string): Promise<Friend[]> {
-    const friendsCol = collection(db, `users/${userId}/friends`);
-    const snap = await getDocs(friendsCol);
-    return snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as Friend));
+    return await getDocsData<Friend>(getPaths.sub(userId, "friends"));
   },
 
   /**
@@ -115,10 +101,8 @@ export const friendService = {
    * @returns - An array of FriendRequest objects.
    */
   async getFriendRequests(userId: string): Promise<FriendRequest[]> {
-    const reqCol = collection(db, `users/${userId}/friendRequests`);
-    const snap = await getDocs(reqCol);
-    return snap.docs.map(
-      (doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest)
+    return await getDocsData<FriendRequest>(
+      getPaths.sub(userId, "friendRequests"),
     );
   },
 
@@ -130,18 +114,11 @@ export const friendService = {
    */
   async getOutgoingFriendRequest(
     targetUserId: string,
-    currentUserId: string
+    currentUserId: string,
   ): Promise<FriendRequest | null> {
-    const reqDoc = doc(
-      db,
-      `users/${targetUserId}/friendRequests`,
-      currentUserId
+    return await getDocData<FriendRequest>(
+      getPaths.friendRequestDoc(targetUserId, currentUserId),
     );
-    const snap = await getDoc(reqDoc);
-    if (snap.exists()) {
-      return { uid: snap.id, ...snap.data() } as FriendRequest;
-    }
-    return null;
   },
 
   /**
@@ -152,11 +129,11 @@ export const friendService = {
    */
   listenForFriends(
     userId: string,
-    cb: (friends: Friend[]) => void
+    cb: (friends: Friend[]) => void,
   ): Unsubscribe {
     const friendsCol = collection(db, `users/${userId}/friends`);
     return onSnapshot(friendsCol, (snap) => {
-      cb(snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() } as Friend)));
+      cb(snap.docs.map((doc) => ({ uid: doc.id, ...doc.data() }) as Friend));
     });
   },
 
@@ -168,14 +145,14 @@ export const friendService = {
    */
   listenForFriendRequests(
     userId: string,
-    cb: (requests: FriendRequest[]) => void
+    cb: (requests: FriendRequest[]) => void,
   ): Unsubscribe {
     const reqCol = collection(db, `users/${userId}/friendRequests`);
     return onSnapshot(reqCol, (snap) => {
       cb(
         snap.docs.map(
-          (doc) => ({ uid: doc.id, ...doc.data() } as FriendRequest)
-        )
+          (doc) => ({ uid: doc.id, ...doc.data() }) as FriendRequest,
+        ),
       );
     });
   },

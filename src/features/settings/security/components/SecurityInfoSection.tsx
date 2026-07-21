@@ -1,43 +1,19 @@
 import { useTranslation } from "react-i18next";
-import { FaDesktop, FaMobile, FaPowerOff, FaTablet } from "react-icons/fa6";
-import { deleteDoc, doc } from "firebase/firestore";
-import { ActionButton } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useLastLogin } from "@features/activity";
-import {
-  authService,
-  isCurrentSession,
-  useUserDevices,
-  type Device,
-} from "@features/user";
+import { useUserSessions } from "@features/user";
 import { formatDate } from "@utils/date";
-import { getUserCollection } from "@utils/firebase";
+import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
+import { SessionRow } from "./SessionRow";
 
+/** Renders a section with user security information. */
 export function SecurityInfoSection() {
-  const { t } = useTranslation("settings");
   const { user } = useAuth();
-  const devices = useUserDevices(user?.uid);
   const { timestamp: lastLoginTimestamp, method: lastLoginMethod } =
     useLastLogin();
-
-  // Get device icon based on user agent
-  function getDeviceIcon(device: Device) {
-    const ua = device.userAgent || "";
-    if (/mobile/i.test(ua)) return <FaMobile className="me-4" size={64} />;
-    if (/tablet|ipad/i.test(ua)) return <FaTablet className="me-4" size={64} />;
-    return <FaDesktop className="me-4" size={64} />;
-  }
-
-  // Handle device removal
-  async function handleRemoveDevice(deviceId: string, sessionId?: string) {
-    const devicesCol = getUserCollection("devices");
-    await deleteDoc(doc(devicesCol, deviceId));
-    if (isCurrentSession(sessionId)) {
-      await authService.logout();
-      localStorage.removeItem("sessionId");
-    }
-  }
+  const { t } = useTranslation("settings");
+  const { sessions, terminateSession } = useUserSessions(user?.uid);
 
   return (
     <section className="mb-8">
@@ -68,52 +44,28 @@ export function SecurityInfoSection() {
         <SecurityInfoRow
           label={t("security.lastLoginMethod")}
           value={
-            lastLoginMethod ? String(lastLoginMethod) : t("security.unknown")
+            lastLoginMethod
+              ? capitalize(String(lastLoginMethod))
+              : t("security.unknown")
           }
         />
       </ul>
+
       <h2 className="text-2xl font-bold mb-6 mt-8 self-start">
         {t("security.loggedInDevices")}
       </h2>
       <ul className="space-y-4">
-        {devices.length === 0 ? (
+        {sessions.length === 0 ? (
           <SecurityInfoRow
             label={t("security.devicesLabel")}
             value={t("security.devicesNone")}
           />
         ) : (
-          devices.map((device) => (
-            <SecurityInfoRow
-              key={device.id}
-              label={
-                <span className="flex items-center">
-                  {getDeviceIcon(device)}
-                  <span className="text">
-                    {device.deviceName ||
-                      device.userAgent ||
-                      t("security.device")}
-                  </span>
-                </span>
-              }
-              value={
-                <div className="flex items-center min-w-[20rem] mx-4">
-                  {device.lastActive
-                    ? t("security.lastActive", {
-                        date: formatDate(device.lastActive, "long"),
-                      })
-                    : t("security.unknown")}
-                  <ActionButton
-                    variant="primary"
-                    className="text-white !rounded-xl"
-                    icon={<FaPowerOff size={18} />}
-                    title={t("security.actions.endSessionTitle")}
-                    ariaLabel={t("security.actions.endSession")}
-                    onClick={() => handleRemoveDevice(device.id)}
-                  >
-                    {t("security.actions.endSession")}
-                  </ActionButton>
-                </div>
-              }
+          sessions.map((session) => (
+            <SessionRow
+              key={session.id}
+              session={session}
+              onTerminate={terminateSession}
             />
           ))
         )}

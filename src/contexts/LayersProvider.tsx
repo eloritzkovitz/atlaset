@@ -1,21 +1,21 @@
-import { useEffect, useState, useCallback } from "react";
-import { logUserActivity } from "@features/activity";
-import {
-  layersService,
-  useLayerManager,
-  type AnyLayer,
-} from "@features/atlas/layers";
-import { useAuth } from "@features/user";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { logUserActivity } from "@features/activity/utils/activity";
+import { layersService, useLayerManager } from "@features/atlas/layers";
+import type { AnyLayer } from "@features/atlas/layers/types";
+import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { LayersContext } from "./LayersContext";
 
 export function LayersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();
+
   const [layerSelections, setLayerSelections] = useState<
     Record<string, string>
   >({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [initialLayers, setInitialLayers] = useState<AnyLayer[]>([]);
+
+  const lastAction = useRef<string | null>(null);
 
   // Layer manager for layers state and operations
   const {
@@ -41,6 +41,25 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     initialLayers,
     persistLayers: async (updatedLayers) => {
       await layersService.save(updatedLayers);
+
+      if (lastAction.current === null) {
+        if (user)
+          await logUserActivity(210, { count: updatedLayers.length }, user.uid);
+      } else {
+        lastAction.current = null;
+      }
+    },
+    onLogAction: async (action, layer) => {
+      if (!user) return;
+
+      lastAction.current = action;
+
+      const actionCodes = { add: 211, edit: 212, remove: 213, reorder: 214 };
+      await logUserActivity(
+        actionCodes[action],
+        { layerId: layer.id, itemName: layer.name, userName: user.displayName },
+        user.uid,
+      );
     },
   });
 
@@ -76,6 +95,7 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
         {
           layerId: layer.id,
           itemName: layer.name,
+          userName: user?.displayName,
         },
         user!.uid,
       );

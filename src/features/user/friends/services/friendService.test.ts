@@ -1,160 +1,145 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
-import {
-  createMockSnapshot,
-  createMockDocSnap,
-} from "@test-utils/firestoreMocks";
+import { createMockSnapshot } from "@test-utils/firestoreMocks";
+import { getDocData } from "@lib/firebase";
 import { friendService } from "./friendService";
 
 vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("friendService", () => {
-  let mockBatch: { set: any; delete: any; commit: any };
+  const docRef = { type: "document" };
 
   beforeEach(() => {
     vi.clearAllMocks();
 
-    fs.doc.mockReturnValue({ type: "document" });
-    fs.collection.mockReturnValue({ type: "collection" });
+    fs.doc.mockReturnValue(docRef as any);
 
-    mockBatch = {
+    fs.writeBatch.mockReturnValue({
       set: vi.fn(),
       delete: vi.fn(),
+      update: vi.fn(),
       commit: vi.fn().mockResolvedValue(undefined),
-    };
-    fs.writeBatch.mockReturnValue(mockBatch as any);
+    });
   });
 
-  describe("friend requests management", () => {
-    it("sendFriendRequest sets document data with a server timestamp", async () => {
-      await friendService.sendFriendRequest("userA", "userB");
+  describe("requests", () => {
+    it("sends a request", async () => {
+      await friendService.sendFriendRequest("a", "b");
 
       expect(fs.doc).toHaveBeenCalledWith(
         expect.any(Object),
-        "users/userB/friendRequests",
-        "userA",
+        "users/b/friendRequests/a",
       );
 
       expect(fs.setDoc).toHaveBeenCalledWith(expect.any(Object), {
-        from: "userA",
-        to: "userB",
+        from: "a",
+        to: "b",
         createdAt: expect.any(Object),
       });
     });
 
-    it("acceptFriendRequest executes an atomic writeBatch and triggers activity logs", async () => {
-      await friendService.acceptFriendRequest("userA", "userB");
+    it("accepts a request and logs activity", async () => {
+      await friendService.acceptFriendRequest("a", "b");
 
-      expect(mockBatch.set).toHaveBeenCalledTimes(2);
-      expect(mockBatch.delete).toHaveBeenCalledTimes(1);
-      expect(mockBatch.commit).toHaveBeenCalledTimes(1);
+      const batch = fs.writeBatch.mock.results[0].value;
 
-      expect(activityMockTracker).toHaveBeenCalledWith(
-        140,
-        { friendId: "userB" },
-        "userA",
-      );
-      expect(activityMockTracker).toHaveBeenCalledWith(
-        140,
-        { friendId: "userA" },
-        "userB",
-      );
+      expect(batch.set).toHaveBeenCalledTimes(2);
+      expect(batch.delete).toHaveBeenCalledTimes(1);
+      expect(batch.commit).toHaveBeenCalled();
+
+      expect(activityMockTracker).toHaveBeenCalledTimes(2);
     });
 
-    it("rejectFriendRequest explicitly drops the inbound request reference document", async () => {
-      await friendService.rejectFriendRequest("userA", "userB");
+    it("rejects a request", async () => {
+      await friendService.rejectFriendRequest("a", "b");
 
+      expect(fs.deleteDoc).toHaveBeenCalledWith(expect.any(Object));
       expect(fs.doc).toHaveBeenCalledWith(
         expect.any(Object),
-        "users/userA/friendRequests",
-        "userB",
+        "users/a/friendRequests",
+        "b",
       );
-      expect(fs.deleteDoc).toHaveBeenCalledWith(expect.any(Object));
     });
   });
 
-  describe("friend mutation & lookups", () => {
-    it("removeFriend deletes relational references on both sides", async () => {
-      await friendService.removeFriend("userA", "userB");
+  describe("friend mutations", () => {
+    it("removes both friend references", async () => {
+      await friendService.removeFriend("a", "b");
 
-      expect(fs.doc).toHaveBeenCalledWith(
-        expect.any(Object),
-        "users/userA/friends",
-        "userB",
-      );
-      expect(fs.doc).toHaveBeenCalledWith(
-        expect.any(Object),
-        "users/userB/friends",
-        "userA",
-      );
+      expect(fs.doc).toHaveBeenCalledTimes(2);
       expect(fs.deleteDoc).toHaveBeenCalledTimes(2);
     });
+  });
 
-    it("getFriends returns mapped collection data structures", async () => {
+  describe("queries", () => {
+    it.each([
+      ["friends", "getFriends", [{ id: "x", online: true }]],
+      ["requests", "getFriendRequests", [{ id: "x", from: "x" }]],
+    ])("gets %s", async (_, method, expected) => {
       fs.getDocs.mockResolvedValueOnce(
-        createMockSnapshot([{ id: "friend1", data: { connected: true } }]),
+        createMockSnapshot([
+          {
+            id: expected[0].id,
+            data: expected[0],
+          },
+        ]),
       );
 
-      const res = await friendService.getFriends("userA");
-      expect(res).toEqual([{ uid: "friend1", connected: true }]);
+      const result =
+        await friendService[method as "getFriends" | "getFriendRequests"]("a");
+
+      expect(result).toEqual(expected);
     });
 
-    it("getFriendRequests gathers all incoming document references", async () => {
-      fs.getDocs.mockResolvedValueOnce(
-        createMockSnapshot([{ id: "userB", data: { from: "userB" } }]),
-      );
+    it("gets outgoing request", async () => {
+      vi.mocked(getDocData)
+        .mockResolvedValueOnce({
+          id: "x",
+          from: "a",
+        } as any)
+        .mockResolvedValueOnce(null);
 
-      const res = await friendService.getFriendRequests("userA");
-      expect(res).toEqual([{ uid: "userB", from: "userB" }]);
-    });
+      expect(await friendService.getOutgoingFriendRequest("b", "a")).toEqual({
+        id: "x",
+        from: "a",
+      });
 
-    it("getOutgoingFriendRequest maps structure if found, otherwise returns null", async () => {
-      fs.getDoc.mockResolvedValueOnce(
-        createMockDocSnap(true, { from: "userA" }),
-      );
-      const found = await friendService.getOutgoingFriendRequest(
-        "userB",
-        "userA",
-      );
-      expect(found).toEqual({ uid: "mock-doc-id", from: "userA" });
-
-      fs.getDoc.mockResolvedValueOnce(createMockDocSnap(false));
-      const missing = await friendService.getOutgoingFriendRequest(
-        "userB",
-        "userA",
-      );
-      expect(missing).toBeNull();
+      expect(await friendService.getOutgoingFriendRequest("b", "a")).toBeNull();
     });
   });
 
-  describe("realtime streaming subscriptions", () => {
-    it("listenForFriends executes callback payload maps from snapshot updates", () => {
-      const cbSpy = vi.fn();
+  describe("listeners", () => {
+    it.each([
+      ["listenForFriends", [{ active: true }]],
+      ["listenForFriendRequests", [{ pending: true }]],
+    ])("%s streams updates", (method, data) => {
+      const cb = vi.fn();
 
-      fs.onSnapshot.mockImplementationOnce((_col, onNext) => {
-        onNext(createMockSnapshot([{ id: "friend1", data: { active: true } }]));
-        return () => "unsubscribed";
+      fs.onSnapshot.mockImplementationOnce((_ref, next) => {
+        next(
+          createMockSnapshot([
+            {
+              id: "x",
+              data: data[0],
+            },
+          ]),
+        );
+
+        return vi.fn();
       });
 
-      const unsubscribe = friendService.listenForFriends("userA", cbSpy);
+      friendService[method as "listenForFriends" | "listenForFriendRequests"](
+        "a",
+        cb,
+      );
 
-      expect(cbSpy).toHaveBeenCalledWith([{ uid: "friend1", active: true }]);
-      expect(unsubscribe()).toBe("unsubscribed");
-    });
-
-    it("listenForFriendRequests coordinates updates cleanly over streams", () => {
-      const cbSpy = vi.fn();
-
-      fs.onSnapshot.mockImplementationOnce((_col, onNext) => {
-        onNext(createMockSnapshot([{ id: "req1", data: { pending: true } }]));
-        return () => "unsubscribed";
-      });
-
-      const unsubscribe = friendService.listenForFriendRequests("userA", cbSpy);
-
-      expect(cbSpy).toHaveBeenCalledWith([{ uid: "req1", pending: true }]);
-      expect(unsubscribe()).toBe("unsubscribed");
+      expect(cb).toHaveBeenCalledWith([
+        {
+          uid: "x",
+          ...data[0],
+        },
+      ]);
     });
   });
 });

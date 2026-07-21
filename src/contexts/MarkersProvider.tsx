@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { logUserActivity } from "@features/activity/utils/activity";
 import { markersService, useMarkerManager } from "@features/atlas/markers";
 import type { Marker } from "@features/atlas/markers/types";
-import { useAuth } from "@features/user";
+import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { MarkersContext } from "./MarkersContext";
 
 export function MarkersProvider({ children }: { children: React.ReactNode }) {
-  // Fetch markers on mount
   const { user, ready } = useAuth();
+
   const [initialMarkers, setInitialMarkers] = useState<Marker[]>([]);
+
+  const lastAction = React.useRef<string | null>(null);
 
   // Load markers when auth state changes
   useEffect(() => {
@@ -49,6 +52,23 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     initialMarkers,
     persistMarkers: async (updatedMarkers) => {
       await markersService.save(updatedMarkers);
+      lastAction.current = null;
+    },
+    onLogAction: async (action, marker) => {
+      if (!user) return;
+
+      lastAction.current = action;
+
+      const actionCodes = { add: 221, edit: 222, remove: 223, reorder: 224 };
+      await logUserActivity(
+        actionCodes[action],
+        {
+          markerId: marker.id,
+          itemName: marker.name,
+          userName: user.displayName,
+        },
+        user.uid,
+      );
     },
   });
 

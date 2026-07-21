@@ -1,9 +1,10 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FaChevronDown } from "react-icons/fa6";
-import { mapLanguages, useLanguage } from "@features/settings";
 import { useClickOutside } from "@hooks";
 import { LanguageMenuList } from "./LanguageMenuList";
+import { useLanguage } from "../hooks/useLanguage";
+import { mapLanguages } from "../utils/languages";
 
 export function LanguageSelect() {
   const { t } = useTranslation("common");

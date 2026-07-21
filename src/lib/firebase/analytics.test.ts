@@ -1,16 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mockAnalyticsControls as ac } from "@test-utils/firebaseMockRegistry";
 
-vi.mock("firebase/analytics", () => ({
-  getAnalytics: () => ac.getAnalytics(),
-  logEvent: (...args: any[]) => ac.logEvent(...args),
-  isSupported: () => ac.isSupported(),
-}));
-
 vi.stubEnv("DEV", "" as unknown as boolean);
 
 describe("analyticsUtils", () => {
   beforeEach(() => {
+    vi.resetModules();
     vi.clearAllMocks();
     ac.isSupported.mockReturnValue(true as unknown as Promise<boolean>);
   });

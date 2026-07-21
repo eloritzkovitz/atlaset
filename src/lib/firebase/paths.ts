@@ -1,0 +1,59 @@
+import {
+  doc,
+  collection,
+  type CollectionReference,
+  type DocumentReference,
+} from "firebase/firestore";
+import { db } from "@app/firebase";
+
+export interface UserSubcollections {
+  activity: import("@features/activity/types").UserActivity;
+  friends: import("@features/user/types").Friend;
+  friendRequests: import("@features/user/types").FriendRequest;
+  trips: import("@features/trips/types").Trip;
+  sharedTrips: import("@features/trips/types").SharedTrip;
+  settings: import("@features/settings/types").Settings;
+  countryLists: import("@features/countries/types").CountryList;
+  layers: import("@features/atlas/layers/types").Layer;
+  markers: import("@features/atlas/markers/types").Marker;
+  savedMaps: import("@features/atlas/saved/types").SavedMap;
+  sessions: import("@features/user/types").UserSession;
+}
+
+const col = <T>(...segments: string[]) =>
+  collection(db, segments[0], ...segments.slice(1)) as CollectionReference<T>;
+const ref = <T>(...segments: string[]) =>
+  doc(db, segments[0], ...segments.slice(1)) as DocumentReference<T>;
+
+/** Returns the paths for various Firestore collections and documents. */
+export const getPaths = {
+  // User document and collection references
+  user: (uid: string) =>
+    ref<import("@features/user/types").FirestoreUser>("users", uid),
+  users: () => col<import("@features/user/types").FirestoreUser>("users"),
+  username: (name: string) => ref<{ uid: string }>("usernames", name),
+  usernames: () => col<{ uid: string }>("usernames"),
+
+  // Subcollection references
+  sub: <K extends keyof UserSubcollections>(uid: string, subcollection: K) =>
+    col<UserSubcollections[K]>("users", uid, subcollection),
+
+  subDoc: <K extends keyof UserSubcollections>(
+    uid: string,
+    subcollection: K,
+    docId: string,
+  ) => ref<UserSubcollections[K]>("users", uid, subcollection, docId),
+
+  // Specific subcollection document references
+  settingsDoc: (uid: string) =>
+    ref<UserSubcollections["settings"]>("users", uid, "settings", "main"),
+  friendDoc: (uid: string, friendUid: string) =>
+    ref<UserSubcollections["friends"]>("users", uid, "friends", friendUid),
+  friendRequestDoc: (toUid: string, fromUid: string) =>
+    ref<UserSubcollections["friendRequests"]>(
+      "users",
+      toUid,
+      "friendRequests",
+      fromUid,
+    ),
+};

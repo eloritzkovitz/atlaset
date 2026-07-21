@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { authService } from "@features/user";
+import { authService } from "@features/user/auth/services/authService";
 import type { User } from "firebase/auth";
 
 /**

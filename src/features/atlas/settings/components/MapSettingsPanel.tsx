@@ -3,11 +3,13 @@ import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
+import { useAccessibility } from "@features/settings";
 import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
 import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";
 import { OverlaySettingsGroup } from "./OverlaySettingsGroup";
 
 export function MapSettingsPanel() {
+  const { animationsEnabled } = useAccessibility();
   const { showSettings, closePanel } = useUI();
   const { t } = useTranslation("atlas");
 
@@ -22,6 +24,7 @@ export function MapSettingsPanel() {
       show={showSettings}
       width={DEFAULT_PANEL_WIDTH}
       onHide={closePanel}
+      animationsEnabled={animationsEnabled}
     >
       <div className="mt-4">
         <ConfigurationSettingsGroup />

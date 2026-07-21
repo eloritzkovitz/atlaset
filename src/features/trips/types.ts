@@ -38,6 +38,12 @@ export type Trip = {
   tags?: TripTag[];
 };
 
+/** Represents a shared trip reference. */
+export type SharedTrip = {
+  ownerUid: string;
+  tripId: string;
+};
+
 /** Represents a geographical location with region and cities. */
 export type Location = {
   region: string;

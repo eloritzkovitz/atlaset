@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
-import type { Layer } from "@features/atlas/layers";
-import type { CountryList } from "@features/countries";
+import type { Layer } from "@features/atlas/layers/types";
+import type { CountryList } from "@features/countries/types";
 
 export interface CountryListsContextValue {
   countryLists: CountryList[];

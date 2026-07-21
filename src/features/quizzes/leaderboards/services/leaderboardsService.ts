@@ -1,18 +1,22 @@
 import {
-  collection,
+  addDoc,
+  deleteDoc,
   doc,
-  getDoc,
+  limit,
+  orderBy,
   setDoc,
   query,
-  orderBy,
-  limit,
-  getDocs,
   where,
-  deleteDoc,
 } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import {
+  isAuthenticated,
+  getCurrentUser,
+  getDocData,
+  getDocsData,
+  getCollection,
+} from "@lib/firebase";
 import { getArticle } from "@utils/string";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 
@@ -25,67 +29,64 @@ const PLAYER_GAMES_COLLECTION = "playerGames";
 export const leaderboardsService = {
   /**
    * Retrieves the leaderboard for a specific game mode and difficulty.
-   * @param mode - Game mode
-   * @param difficulty - Difficulty level
-   * @returns Leaderboard entries
+   * @param mode - The selected game mode.
+   * @param difficulty - The selected difficulty level.
+   * @returns Leaderboard entries for the specified mode and difficulty, sorted by score and time.
    */
   async getLeaderboard(
     type: QuizType,
     difficulty: Difficulty,
   ): Promise<LeaderboardEntry[]> {
     if (!isAuthenticated()) return [];
+
+    const colRef = getCollection<LeaderboardEntry>(LEADERBOARD_COLLECTION);
+
     const q = query(
-      collection(db, LEADERBOARD_COLLECTION),
+      colRef,
       where("type", "==", type),
       where("difficulty", "==", difficulty),
       orderBy("score", "desc"),
       orderBy("time", "asc"),
       limit(25),
     );
-    const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => doc.data() as LeaderboardEntry);
+
+    return await getDocsData<LeaderboardEntry>(q);
   },
 
   /**
    * Adds a new entry to the leaderboard.
-   * @param mode - Game mode
-   * @param difficulty - Difficulty level
-   * @param entry - New leaderboard entry to add
+   * @param mode - The selected game mode.
+   * @param difficulty - The selected difficulty level.
+   * @param entry - New leaderboard entry to add.
    */
   async addLeaderboardEntry(
     type: QuizType,
     difficulty: Difficulty,
     entry: LeaderboardEntry,
   ) {
-    if (!isAuthenticated()) return;
     const user = getCurrentUser();
-    if (!user) return;
-    if (typeof type === "undefined" || typeof difficulty === "undefined") {
-      throw new Error(
-        "Type and difficulty must be defined for leaderboard entry.",
-      );
-    }
-    const ref = collection(db, LEADERBOARD_COLLECTION);
-    // Add the new entry
-    await setDoc(doc(ref), { ...entry, type, difficulty });
+    if (!isAuthenticated() || !user) return;
+
+    if (!type || !difficulty) throw new Error("Type and difficulty required.");
+
+    const colRef = getCollection<LeaderboardEntry>("leaderboards");
+    await addDoc(colRef, { ...entry, type, difficulty });
+
     // Enforce top 25 limit: fetch all entries for this mode/difficulty, ordered by score/time
     const q = query(
-      ref,
+      colRef,
       where("type", "==", type),
       where("difficulty", "==", difficulty),
       orderBy("score", "desc"),
       orderBy("time", "asc"),
     );
-    const snapshot = await getDocs(q);
-    const docs = snapshot.docs;
-    // Delete entries beyond the top 25
+
+    const docs = await getDocsData<LeaderboardEntry>(q);
     if (docs.length > 25) {
       const toDelete = docs.slice(25);
-      for (const docSnap of toDelete) {
-        await deleteDoc(docSnap.ref);
-      }
+      await Promise.all(toDelete.map((d) => deleteDoc(doc(colRef, d.id))));
     }
-    // Log user activity
+
     const safeDifficulty = difficulty ?? "";
     const difficultyWithArticle = `${getArticle(safeDifficulty)} ${safeDifficulty}`;
     await logUserActivity(
@@ -104,10 +105,10 @@ export const leaderboardsService = {
 
   /**
    * Saves a player's game result to their game history.
-   * @param playerId - ID of the player
-   * @param entry - New leaderboard entry to add
-   * @param maxGames - Maximum number of games to keep
-   * @returns Updated player games data
+   * @param playerId - ID of the player.
+   * @param entry - New leaderboard entry to add.
+   * @param maxGames - Maximum number of games to keep.
+   * @returns Updated player games data.
    */
   async savePlayerGame(
     playerId: string,
@@ -116,30 +117,30 @@ export const leaderboardsService = {
   ) {
     if (!isAuthenticated()) return;
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
-    const docSnap = await getDoc(ref);
-    const games: LeaderboardEntry[] = docSnap.exists()
-      ? docSnap.data().games || []
-      : [];
+    const data = await getDocData<{ games: LeaderboardEntry[] }>(ref);
+
+    const games = data?.games || [];
     games.unshift(entry);
     if (games.length > maxGames) games.length = maxGames;
+
     await setDoc(ref, { games });
   },
 
   /**
    * Retrieves a player's game history.
-   * @param playerId - ID of the player
-   * @param maxGames - Maximum number of games to retrieve
-   * @returns - Player's game history
+   * @param playerId - ID of the player.
+   * @param maxGames - Maximum number of games to retrieve.
+   * @returns Player's game history.
    */
   async getPlayerGames(
     playerId: string,
     maxGames = 10,
   ): Promise<LeaderboardEntry[]> {
     if (!isAuthenticated()) return [];
+
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
-    const docSnap = await getDoc(ref);
-    return docSnap.exists()
-      ? (docSnap.data().games || []).slice(0, maxGames)
-      : [];
+    const data = await getDocData<{ games: LeaderboardEntry[] }>(ref);
+
+    return (data?.games || []).slice(0, maxGames);
   },
 };

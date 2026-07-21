@@ -71,7 +71,7 @@ describe("usePanelHide", () => {
     expect(mockUseKeyHandler).toHaveBeenLastCalledWith(
       expect.any(Function),
       ["Escape"],
-      true,
+      { enabled: true },
     );
     renderHook(() =>
       usePanelHide({ show: true, onHide: () => {}, escEnabled: false }),
@@ -79,7 +79,7 @@ describe("usePanelHide", () => {
     expect(mockUseKeyHandler).toHaveBeenLastCalledWith(
       expect.any(Function),
       ["Escape"],
-      false,
+      { enabled: false },
     );
   });
 

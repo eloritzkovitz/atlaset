@@ -51,6 +51,8 @@
     }
   },
   "currencies": {
+    "pageTitle": "המרת מטבע",
+    "disclaimer": "נתונים על פי Open Exchange Rates",
     "searchPlaceholder": "חיפוש לפי שם או קוד",
     "empty": "מטבע לא נמצא.",
     "viewExchange": "הצגת המרת מטבע",

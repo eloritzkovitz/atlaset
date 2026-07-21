@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchWithFallback } from "@utils/fetch";
-import type { Country, Currency, SovereigntyStatus } from "../types";
+import { fetchWithFallback } from "@lib/api-client";
+import type { Country, SovereigntyStatus } from "../types";
 import {
   getAllRegions,
   getAllSubregions,
@@ -9,7 +9,6 @@ import {
 
 interface CountryDataState {
   countries: Country[];
-  currencies: Currency[];
   allRegions: string[];
   allSubregions: string[];
   allSovereigntyStatuses: SovereigntyStatus[];
@@ -19,7 +18,6 @@ interface CountryDataState {
 
 const initialState: CountryDataState = {
   countries: [],
-  currencies: [],
   allRegions: [],
   allSubregions: [],
   allSovereigntyStatuses: [],
@@ -27,6 +25,7 @@ const initialState: CountryDataState = {
   error: null,
 };
 
+/** Fetches country data asynchronously. */
 export const fetchCountryData = createAsyncThunk(
   "countryData/fetchCountryData",
   async () => {
@@ -37,21 +36,31 @@ export const fetchCountryData = createAsyncThunk(
       "country data",
     );
 
-    // Validate shape: expect an array of countries
+    // Validate that the fetched data is an array of countries
     if (!Array.isArray(countryData)) {
       throw new Error("Failed to load country data");
     }
-    const currenciesArr: Currency[] = [];
+
+    // Type assertion to ensure the data is treated as an array of Country objects
+    const countries = countryData as Country[];
 
     return {
-      countries: countryData as Country[],
-      currencies: currenciesArr,
-      allRegions: getAllRegions(countryData as Country[]),
-      allSubregions: getAllSubregions(countryData as Country[]),
-      allSovereigntyStatuses: getAllSovereigntyStatuses(
-        countryData as Country[],
-      ),
+      countries: countries,
+      allRegions: getAllRegions(countries),
+      allSubregions: getAllSubregions(countries),
+      allSovereigntyStatuses: getAllSovereigntyStatuses(countries),
     };
+  },
+  {
+    // Prevent execution if already loading or already fetched
+    condition: (arg: { force?: boolean } | undefined, { getState }) => {
+      if (arg?.force) return true;
+
+      const { countryData } = getState() as { countryData: CountryDataState };
+      if (countryData.loading || countryData.countries.length > 0) {
+        return false;
+      }
+    },
   },
 );
 
@@ -67,7 +76,6 @@ const countryDataSlice = createSlice({
       })
       .addCase(fetchCountryData.fulfilled, (state, action) => {
         state.countries = action.payload.countries;
-        state.currencies = action.payload.currencies;
         state.allRegions = action.payload.allRegions;
         state.allSubregions = action.payload.allSubregions;
         state.allSovereigntyStatuses = action.payload.allSovereigntyStatuses;

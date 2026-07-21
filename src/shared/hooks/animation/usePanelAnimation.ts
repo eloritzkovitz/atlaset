@@ -3,7 +3,6 @@ import { useMemo } from "react";
 interface UsePanelAnimationOptions {
   show: boolean;
   isMobile: boolean;
-  isRtl: boolean;
   animationsEnabled: boolean;
   position: "left" | "right";
 }
@@ -20,7 +19,6 @@ interface UsePanelAnimationOptions {
 export function usePanelAnimation({
   show,
   isMobile,
-  isRtl,
   animationsEnabled,
   position,
 }: UsePanelAnimationOptions) {
@@ -41,15 +39,14 @@ export function usePanelAnimation({
     }
 
     // Handle desktop view
-    const positionClass = position === "right" ? "end-0" : "start-16";
+    const isLeft = position !== "right";
+    const positionClass = isLeft ? "start-16" : "end-0";
 
     let translateOffset = "";
-    if (!show && animationsEnabled) {
-      if (position !== "right") {
-        translateOffset = isRtl ? "translate-x-full" : "-translate-x-full";
-      } else {
-        translateOffset = isRtl ? "-translate-x-full" : "translate-x-full";
-      }
+    if (animationsEnabled) {
+      translateOffset = isLeft
+        ? "ltr:-translate-x-full rtl:translate-x-full"
+        : "ltr:translate-x-full rtl:-translate-x-full";
     }
 
     // Determine the appropriate visibility class based on show state and accessibility settings
@@ -58,5 +55,5 @@ export function usePanelAnimation({
       : `${translateOffset} opacity-0 pointer-events-none`;
 
     return `fixed bg-surface flex flex-col h-screen top-0 ${positionClass} z-40 ${gpuClass} ${transitionClass} focus:outline-none shadow ${visibilityClass}`;
-  }, [show, isMobile, isRtl, animationsEnabled, position]);
+  }, [show, isMobile, animationsEnabled, position]);
 }

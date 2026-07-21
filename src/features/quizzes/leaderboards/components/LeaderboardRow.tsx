@@ -1,6 +1,6 @@
 import { FaMedal } from "react-icons/fa6";
 import { useAuth } from "@contexts/AuthContext";
-import { UserInfo } from "@features/user";
+import { UserInfo } from "@features/user/profile/components/UserInfo";
 import { formatTimeSeconds, formatDate } from "@utils/date";
 import type { LeaderboardRow } from "../../types";
 

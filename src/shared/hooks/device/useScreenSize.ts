@@ -1,26 +1,66 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { BatteryStatus, DeviceType } from "@types";
 import { useEventListener } from "../dom/useEventListener";
+import { determineDeviceFromHardware } from "../../utils/device";
 import { isWindowDefined } from "../../utils/env";
 
+declare global {
+  interface Navigator {
+    getBattery?: () => Promise<BatteryStatus>;
+  }
+}
+
 /**
- * Determines the current screen size based on a width threshold.
- * Returns an object with boolean flags for isMobile, isLaptop, and isDesktop.
+ * Determines the current screen size and device type based on window dimensions and hardware features.
+ * @returns An object with boolean flags for isMobile, isLaptop, and isDesktop.
  */
 export function useScreenSize() {
-  const [width, setWidth] = useState(() =>
-    isWindowDefined() ? window.innerWidth : 0,
-  );
+  const [dimensions, setDimensions] = useState(() => ({
+    width: isWindowDefined() ? window.innerWidth : 0,
+    height: isWindowDefined() ? window.innerHeight : 0,
+  }));
 
-  // Use useEventListener for resize event
+  const [hasBattery, setHasBattery] = useState(false);
+
+  // Update dimensions on window resize
   useEventListener(
     "resize",
-    () => setWidth(window.innerWidth),
+    () =>
+      setDimensions({ width: window.innerWidth, height: window.innerHeight }),
     isWindowDefined() ? window : undefined,
   );
 
-  const isMobile = width < 768;
-  const isLaptop = width >= 1024 && width < 1280;
-  const isDesktop = width >= 1280;
+  // Check for battery support and determine if the device is likely a laptop
+  useEffect(() => {
+    if (isWindowDefined() && navigator.getBattery) {
+      navigator
+        .getBattery()
+        .then((battery: BatteryStatus) => {
+          const isLikelyLaptop =
+            !battery.charging ||
+            battery.dischargingTime !== Infinity ||
+            battery.level < 1;
+          setHasBattery(isLikelyLaptop);
+        })
+        .catch(() => {});
+    }
+  }, []);
 
-  return { isMobile, isLaptop, isDesktop, width };
+  const hasTouch = isWindowDefined() ? navigator.maxTouchPoints > 0 : false;
+
+  const deviceType: DeviceType = determineDeviceFromHardware({
+    width: dimensions.width,
+    hasBattery,
+    hasTouch,
+  });
+
+  return {
+    width: dimensions.width,
+    isPortrait: dimensions.height > dimensions.width,
+    deviceType,
+    isMobile: deviceType === "mobile",
+    isTablet: deviceType === "tablet",
+    isLaptop: deviceType === "laptop",
+    isDesktop: deviceType === "desktop",
+  };
 }

@@ -20,7 +20,7 @@ export function useFriendProfiles(friendUids: string[]) {
       const profiles: UserProfile[] = [];
       // Fetch each profile sequentially
       for (const uid of friendUids) {
-        const profile = await profileService.getUserProfileByUid(uid);
+        const profile = await profileService.getProfile(uid);
         if (profile) profiles.push(profile);
       }
 

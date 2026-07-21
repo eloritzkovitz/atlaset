@@ -7,15 +7,18 @@ import {
 import { setAppDateLocale } from "@utils/date";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  applyTheme,
   loadSettings,
   saveSettings,
-  resetSettingsThunk,
   selectSettings,
   selectSettingsLoading,
-} from "@features/settings";
+  resetSettingsThunk,
+} from "@features/settings/common/slices/settingsSlice";
 import { selectSettingsReady } from "@features/settings/selectors";
-import { selectAuthReady, selectAuthUser } from "@features/user";
+import { applyTheme } from "@features/settings/display/utils/theme";
+import {
+  selectAuthReady,
+  selectAuthUser,
+} from "@features/user/auth/slices/authSlice";
 import { SettingsContext } from "./SettingsContext";
 import type { AppDispatch } from "../store";
 

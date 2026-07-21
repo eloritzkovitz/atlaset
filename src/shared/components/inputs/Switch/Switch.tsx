@@ -1,5 +1,3 @@
-import { useLanguage } from "@features/settings";
-
 interface SwitchProps {
   variant?: "surface" | "input";
   checked: boolean;
@@ -14,18 +12,6 @@ export function Switch({
   onChange,
   disabled = false,
 }: SwitchProps) {
-  const { isRtl } = useLanguage();
-
-  const knobClasses =
-    "absolute w-5 h-5 bg-text rounded-full transition-transform duration-300 flex items-center justify-center ";
-  const positionClass = isRtl
-    ? checked
-      ? "-translate-x-6"
-      : "translate-x-0"
-    : checked
-      ? "translate-x-6"
-      : "translate-x-0";
-
   return (
     <button
       type="button"
@@ -39,7 +25,12 @@ export function Switch({
         ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
       `}
     >
-      <span className={knobClasses + positionClass} />
+      <span
+        className={`
+          absolute w-5 h-5 bg-text rounded-full transition-transform duration-300 flex items-center justify-center
+          ${checked ? "translate-x-6 rtl:-translate-x-6" : "translate-x-0"}
+        `}
+      />
     </button>
   );
 }

@@ -1,5 +1,5 @@
 /**
- * Utility functions for fetching data.
+ * Utility functions related to environment checks and global objects.
  */
 
 import { resolveBackendUrl } from "./env";

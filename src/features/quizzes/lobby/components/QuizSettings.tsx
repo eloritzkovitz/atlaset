@@ -4,7 +4,7 @@ import { FaUmbrellaBeach, FaStopwatch } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
 import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 import type { Difficulty, GameMode } from "../../types";
 
 interface QuizSettingsProps {
@@ -73,6 +73,7 @@ export function QuizSettings({
   onCancel,
 }: QuizSettingsProps) {
   const { t } = useTranslation("quizzes");
+
   // Arrow key navigation
   useKeyHandler(
     (e) => {
@@ -90,7 +91,6 @@ export function QuizSettings({
       }
     },
     ["ArrowLeft", "ArrowRight"],
-    true,
   );
 
   const selected = LEVELS.find((l) => l.key === difficulty);

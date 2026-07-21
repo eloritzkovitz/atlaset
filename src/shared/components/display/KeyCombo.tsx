@@ -5,10 +5,9 @@ import {
   FaArrowLeft,
   FaArrowRight,
 } from "react-icons/fa6";
-import { useLanguage } from "@features/settings";
 
-// Helper to render keys and modifiers
-function displayKey(key: string, isRtl: boolean) {
+/** Renders a key combination in a visually appealing way, using icons for arrow keys and special symbols for modifier keys. */
+function displayKey(key: string, isRtl = false) {
   switch (key) {
     case "ArrowUp":
       return <FaArrowUp />;
@@ -29,9 +28,12 @@ function displayKey(key: string, isRtl: boolean) {
   }
 }
 
-export function KeyCombo({ keys }: { keys: string[] }) {
-  const { isRtl } = useLanguage();
+interface KeyComboProps {
+  keys: string[];
+  isRtl?: boolean;
+}
 
+export function KeyCombo({ keys, isRtl = false }: KeyComboProps) {
   return (
     <span className="inline-flex gap-2 justify-center" dir="ltr">
       {keys.map((key, i) => (

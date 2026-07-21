@@ -32,7 +32,7 @@ export function usePanelHide({
       }
     },
     ["Escape"],
-    show && escEnabled
+    { enabled: show && escEnabled },
   );
 
   // Hide when UI is hidden

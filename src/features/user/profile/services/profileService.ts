@@ -1,20 +1,29 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  runTransaction,
-  Timestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, runTransaction, Timestamp, updateDoc } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
+import type { Trip } from "@features/trips/types";
+import { computeVisitedCountriesFromTrips } from "@features/visits/utils/visits";
+import { getDocData, getDocsData, getPaths } from "@lib/firebase";
+import { geoService } from "@lib/geo";
 import type { UserProfile } from "../../types";
+
+// Normalizes a username by converting to lowercase and removing special characters
+const normalizeUsername = (username: string) =>
+  username.toLowerCase().replace(/[^a-z0-9]/g, "");
 
 /**
  * Service for managing user profiles.
  */
 export const profileService = {
+  /**
+   * Fetches a user profile by UID.
+   * @param uid - The user ID.
+   * @returns The UserProfile object or null if not found.
+   */
+  async getProfile(uid: string): Promise<UserProfile | null> {
+    return await getDocData<UserProfile>(getPaths.user(uid));
+  },
+
   /**
    * Checks if a username already exists in Firestore.
    * @param username - The username to check.
@@ -22,9 +31,8 @@ export const profileService = {
    */
   async checkUsernameExists(username: string): Promise<boolean> {
     if (!username) return false;
-    const usernameRef = doc(db, "usernames", username);
-    const usernameSnap = await getDoc(usernameRef);
-    return usernameSnap.exists();
+    const data = await getDocData<{ uid: string }>(getPaths.username(username));
+    return !!data;
   },
 
   /**
@@ -37,18 +45,10 @@ export const profileService = {
     displayName: string | null,
     email: string | null,
   ): Promise<string> {
-    const base = displayName
-      ? displayName.toLowerCase().replace(/[^a-z0-9]/g, "")
-      : email
-        ? email
-            .split("@")[0]
-            .toLowerCase()
-            .replace(/[^a-z0-9]/g, "")
-        : "user";
+    const base = normalizeUsername(displayName || email || "user");
     let username = base;
     let suffix = 0;
-    while (true) {
-      if (!(await this.checkUsernameExists(username))) break;
+    while (await this.checkUsernameExists(username)) {
       suffix++;
       username = `${base}${suffix}`;
     }
@@ -56,22 +56,46 @@ export const profileService = {
   },
 
   /**
+   * Automatically initializes the home country for a new user based on location.
+   * @param uid - The user ID.
+   * @param ipAddress - The user's IP address.
+   */
+  async initializeUserCountry(uid: string, ipAddress: string): Promise<void> {
+    try {
+      const geoData = await geoService.getGeoData(ipAddress);
+
+      if (geoData?.countryCode) {
+        const userRef = getPaths.user(uid);
+        await updateDoc(userRef, { homeCountry: geoData.countryCode });
+      }
+    } catch (error) {
+      console.error("Failed to auto-detect country:", error);
+    }
+  },
+
+  /**
    * Creates a user profile in Firestore with a unique username.
-   * @param user - The user object containing uid, displayName, email, etc.
+   * @param user - The user object.
+   * @param ipAddress - Optional IP address for initializing home country.
    * @returns - The generated unique username.
    */
-  async createUserProfileWithUsername(user: {
-    uid: string;
-    displayName: string | null;
-    email: string | null;
-    photoURL?: string | null;
-    joinDate?: string | null;
-  }) {
+  async createUserProfileWithUsername(
+    user: {
+      uid: string;
+      displayName: string | null;
+      email: string | null;
+      photoURL?: string | null;
+      joinDate?: string | null;
+    },
+    ipAddress?: string,
+  ) {
     // Check if user profile already exists
-    const userRef = doc(db, "users", user.uid);
-    const userSnap = await getDoc(userRef);
-    if (userSnap.exists()) {
-      return userSnap.data().username;
+    const userData = await getDocData<{ username: string }>(
+      getPaths.user(user.uid),
+    );
+
+    if (userData) {
+      return userData.username;
     }
 
     // Generate a unique username
@@ -82,12 +106,14 @@ export const profileService = {
 
     // Use a transaction to ensure username uniqueness
     await runTransaction(db, async (transaction) => {
-      const usernameRef = doc(db, "usernames", username);
-      const userRef = doc(db, "users", user.uid);
+      const usernameRef = getPaths.username(username);
+      const userRef = getPaths.user(user.uid);
       const usernameSnap = await transaction.get(usernameRef);
+
       if (usernameSnap.exists()) {
-        throw new Error("Username taken");
+        throw new Error("Username taken.");
       }
+
       transaction.set(usernameRef, { uid: user.uid });
       transaction.set(userRef, {
         uid: user.uid,
@@ -98,26 +124,19 @@ export const profileService = {
           ? Timestamp.fromDate(new Date(user.joinDate))
           : Timestamp.now(),
         photoURL: user.photoURL || "",
-        bio: "",
+        biography: "",
         isPublic: true,
         homeCountry: "",
         visitedCountryCodes: [],
       });
     });
-    return username;
-  },
 
-  /**
-   * Fetches a user profile by UID.
-   * @param uid = The user ID.
-   * @returns = The UserProfile object or null if not found.
-   */
-  async getUserProfileByUid(uid: string): Promise<UserProfile | null> {
-    if (!uid) return null;
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    if (!userSnap.exists()) return null;
-    return userSnap.data() as UserProfile;
+    // Optionally initialize home country based on IP address
+    if (ipAddress) {
+      await this.initializeUserCountry(user.uid, ipAddress);
+    }
+
+    return username;
   },
 
   /**
@@ -128,22 +147,14 @@ export const profileService = {
   async getUserProfileByUsername(
     username: string,
   ): Promise<UserProfile | null> {
-    // Return null if username is empty
     if (!username) return null;
 
-    // 1. Get UID from usernames collection
-    const usernameRef = doc(db, "usernames", username);
-    const usernameSnap = await getDoc(usernameRef);
-    if (!usernameSnap.exists()) return null;
-    const uid = usernameSnap.data().uid;
+    const usernameData = await getDocData<{ uid: string }>(
+      getPaths.username(username),
+    );
+    if (!usernameData) return null;
 
-    // 2. Get user profile from users/{uid}
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    if (!userSnap.exists()) return null;
-
-    // Type assertion is safe if Firestore data matches UserProfile
-    return userSnap.data() as UserProfile;
+    return await this.getProfile(usernameData.uid);
   },
 
   /**
@@ -152,18 +163,9 @@ export const profileService = {
    * @param updates - An object with the fields to update
    */
   async editProfile(uid: string, updates: Partial<UserProfile>) {
-    const userDocRef = doc(db, "users", uid);
-    await updateDoc(userDocRef, updates);
+    await updateDoc(getPaths.user(uid), updates);
 
-    // Fetch username for activity details
-    let username = updates.username;
-    if (!username) {
-      const userSnap = await getDoc(userDocRef);
-      username = userSnap.exists() ? userSnap.data().username : undefined;
-    }
-
-    // Log activity with updated fields and username
-    const profile = await this.getUserProfileByUid(uid);
+    const profile = await this.getProfile(uid);
     await logUserActivity(
       120,
       {
@@ -179,7 +181,7 @@ export const profileService = {
    * @param uid - The user's UID.
    * @param oldUsername - The user's current username.
    * @param newUsername - The desired new username.
-   * @returns - The new username if successful.
+   * @returns The new username if successful.
    */
   async changeUsername({
     uid,
@@ -190,94 +192,71 @@ export const profileService = {
     oldUsername: string;
     newUsername: string;
   }) {
-    // Clean new username
-    const cleanUsername = newUsername.toLowerCase().replace(/[^a-z0-9]/g, "");
+    const cleanUsername = normalizeUsername(newUsername);
+
     await runTransaction(db, async (transaction) => {
       const newUsernameRef = doc(db, "usernames", cleanUsername);
       const oldUsernameRef = doc(db, "usernames", oldUsername);
-      const userRef = doc(db, "users", uid);
+      const userRef = getPaths.user(uid);
       const usernameSnap = await transaction.get(newUsernameRef);
+
       if (usernameSnap.exists()) {
-        throw new Error("Username taken");
+        throw new Error("Username taken.");
       }
-      // Update username field in user doc
+
+      // Update user document and username references atomically
       transaction.update(userRef, { username: cleanUsername });
-      // Create new username doc
       transaction.set(newUsernameRef, { uid });
-      // Delete old username doc
       transaction.delete(oldUsernameRef);
     });
+
     return cleanUsername;
   },
 
   /**
    * Gets home country for a given user ID.
    * @param uid - The user ID.
-   * @returns - The home country as a string.
+   * @returns The home country as a string.
    */
   async getHomeCountry(uid: string): Promise<string> {
-    const userRef = doc(db, "users", uid);
-    const userSnap = await getDoc(userRef);
-    return userSnap.exists() && userSnap.data().homeCountry
-      ? userSnap.data().homeCountry
-      : "";
+    return (await this.getProfile(uid))?.homeCountry || "";
   },
 
-  /** * Sets the home country for a given user ID.
+  /**
+   * Sets the home country for a given user ID.
    * @param uid - The user ID.
-   * @param country - The country to set as home.
+   * @param country The country to set as home.
    */
   async setHomeCountry(uid: string, country: string) {
-    const userRef = doc(db, "users", uid);
-    await updateDoc(userRef, { homeCountry: country });
+    await updateDoc(getPaths.user(uid), { homeCountry: country });
   },
 
   /**
    * Updates the user's visitedCountryCodes based on all completed owned and shared trips.
-   * @param uid - The user ID.
+   * @param uid The user ID.
    */
   async updateVisitedCountryCodes(uid: string) {
-    // Fetch owned trips
-    const tripsCol = collection(db, `users/${uid}/trips`);
-    const ownedSnapshot = await getDocs(tripsCol);
-    const ownedTrips = ownedSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
+    const ownedTrips = await getDocsData(getPaths.sub(uid, "trips"));
+    const sharedRefs = await getDocsData(getPaths.sub(uid, "sharedTrips"));
 
-    // Fetch shared trip references
-    const sharedRefsCol = collection(db, `users/${uid}/sharedTrips`);
-    const sharedRefsSnap = await getDocs(sharedRefsCol);
-    const sharedRefs = sharedRefsSnap.docs.map(
-      (doc) => doc.data() as { ownerUid: string; tripId: string },
+    // Fetch shared trips data
+    const sharedTrips = await Promise.all(
+      sharedRefs.map(
+        async (ref) =>
+          await getDocData(getPaths.subDoc(ref.ownerUid, "trips", ref.tripId)),
+      ),
     );
 
-    // Fetch each shared trip from the owner's collection
-    const sharedTrips = [];
-    for (const ref of sharedRefs) {
-      const ownerTripsCol = collection(db, `users/${ref.ownerUid}/trips`);
-      const tripDoc = await getDoc(doc(ownerTripsCol, ref.tripId));
-      if (tripDoc.exists()) {
-        sharedTrips.push({ id: tripDoc.id, ...tripDoc.data() });
-      }
-    }
-
     // Merge owned and shared trips
-    const allTrips = [...ownedTrips, ...sharedTrips];
-    // Collect all unique country codes from completed trips
-    const visited = new Set();
-    allTrips.forEach((tripDoc) => {
-      const { countryCodes = [], status } = tripDoc as {
-        countryCodes?: string[];
-        status?: string;
-      };
-      if (status === "completed" && Array.isArray(countryCodes)) {
-        countryCodes.forEach((code) => visited.add(code));
-      }
-    });
+    const allTrips = [
+      ...ownedTrips,
+      ...sharedTrips.filter((t): t is Trip => t !== null),
+    ];
+
+    const homeCountry = (await this.getProfile(uid))?.homeCountry;
+    const visited = computeVisitedCountriesFromTrips(allTrips, homeCountry);
 
     // Update the user's profile
-    const userDoc = doc(db, "users", uid);
-    await updateDoc(userDoc, { visitedCountryCodes: Array.from(visited) });
+    await updateDoc(getPaths.user(uid), { visitedCountryCodes: visited });
   },
 };

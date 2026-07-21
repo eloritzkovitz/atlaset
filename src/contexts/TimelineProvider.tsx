@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { useAudio } from "@contexts/AudioContext";
-import { useTrips } from "@contexts/TripsContext";
-import { getLatestYear, getYearsFromTrips } from "@features/visits";
+import {
+  getLatestYear,
+  getYearsFromTrips,
+} from "@features/visits/utils/visits";
 import { useKeyHandler } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
+import { useAudio } from "./AudioContext";
 import { useMapView } from "./MapViewContext";
 import { TimelineContext } from "./TimelineContext";
+import { useTrips } from "./TripsContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -36,21 +39,16 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Toggle Timeline mode with "T"
-  useKeyHandler(
-    () => {
-      handleSetTimelineMode((prev) => !prev);
-      setTimeout(() => {
-        try {
-          window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
-        } catch {
-          void 0;
-        }
-      }, 0);
-    },
-    ["t", "T"],
-    true,
-  );
+  useKeyHandler(() => {
+    handleSetTimelineMode((prev) => !prev);
+    setTimeout(() => {
+      try {
+        window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+      } catch {
+        void 0;
+      }
+    }, 0);
+  }, ["t", "T"]);
 
   // When timeline mode changes, play a sound effect
   useEffect(() => {

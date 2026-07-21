@@ -5,6 +5,10 @@ import type { Marker } from "@features/atlas/markers/types";
 export interface UseMarkerManagerOptions {
   initialMarkers: Marker[];
   persistMarkers: (markers: Marker[]) => Promise<void>;
+  onLogAction?: (
+    action: "add" | "edit" | "remove" | "reorder",
+    marker: Marker,
+  ) => Promise<void>;
 }
 
 /**
@@ -16,6 +20,7 @@ export interface UseMarkerManagerOptions {
 export function useMarkerManager({
   initialMarkers,
   persistMarkers,
+  onLogAction,
 }: UseMarkerManagerOptions) {
   const [markers, setMarkers] = useState<Marker[]>(initialMarkers);
   const [editingMarker, setEditingMarker] = useState<Marker | null>(null);
@@ -51,21 +56,23 @@ export function useMarkerManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialMarkers]);
 
-  // Add marker
+  /** Adds a new marker. */
   async function addMarker(marker: Marker) {
+    if (onLogAction) await onLogAction("add", marker);
     const updated = [...markers, marker];
     setMarkers(updated);
     await persistMarkers(updated);
   }
 
-  // Edit marker
+  /** Edits an existing marker. */
   async function editMarker(marker: Marker) {
+    if (onLogAction) await onLogAction("edit", marker);
     const updated = markers.map((m) => (m.id === marker.id ? marker : m));
     setMarkers(updated);
     await persistMarkers(updated);
   }
 
-  // Rename marker
+  /** Updates the name of an existing marker. */
   async function updateMarkerName(id: string, newName: string) {
     const updated = markers.map((m) =>
       m.id === id ? { ...m, name: newName } : m,
@@ -74,7 +81,7 @@ export function useMarkerManager({
     await persistMarkers(updated);
   }
 
-  // Toggle marker visibility
+  /** Toggles the visibility of a marker. */
   async function toggleMarkerVisibility(id: string) {
     const updated = markers.map((m) =>
       m.id === id ? { ...m, visible: !m.visible } : m,
@@ -83,13 +90,15 @@ export function useMarkerManager({
     await persistMarkers(updated);
   }
 
-  // Reorder markers
+  /** Reorders markers. */
   async function reorderMarkers(newOrder: Marker[]) {
+    if (onLogAction && newOrder.length > 0)
+      await onLogAction("reorder", newOrder[0]);
     setMarkers(newOrder);
     await persistMarkers(newOrder);
   }
 
-  // Duplicate marker
+  /** Duplicates a marker. */
   async function duplicateMarker(id: string) {
     const marker = markers.find((m) => m.id === id);
     if (!marker) return;
@@ -101,14 +110,16 @@ export function useMarkerManager({
     await addMarker(newMarker);
   }
 
-  // Remove marker
+  /** Removes a marker. */
   async function removeMarker(id: string) {
+    const marker = markers.find((m) => m.id === id);
+    if (marker && onLogAction) await onLogAction("remove", marker);
     const updated = markers.filter((m) => m.id !== id);
     setMarkers(updated);
     await persistMarkers(updated);
   }
 
-  // Open add marker modal
+  /** Opens the marker modal in add mode. **/
   function openAddMarker(coords?: Coordinates) {
     setEditingMarker({
       id: crypto.randomUUID(),
@@ -121,13 +132,13 @@ export function useMarkerManager({
     setMarkerModalOpen(true);
   }
 
-  // Open edit marker modal
+  /** Opens the marker modal in edit mode. */
   function openEditMarker(marker: Marker) {
     setEditingMarker({ ...marker });
     setMarkerModalOpen(true);
   }
 
-  // Save marker (add or edit)
+  /** Saves the current marker (add or edit). */
   async function saveMarker() {
     if (!editingMarker) return;
     const exists = markers.some((m) => m.id === editingMarker.id);
@@ -139,7 +150,7 @@ export function useMarkerManager({
     closeMarkerModal();
   }
 
-  // Close marker modal
+  /** Closes the marker modal. */
   function closeMarkerModal() {
     setMarkerModalOpen(false);
     setEditingMarker(null);
@@ -163,7 +174,6 @@ export function useMarkerManager({
     openEditMarker,
     saveMarker,
     closeMarkerModal,
-    // Marker creation state/handlers
     isAddingMarker,
     startAddingMarker,
     handleMapClickForMarker,

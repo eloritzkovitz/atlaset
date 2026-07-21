@@ -1,0 +1,84 @@
+import { useTranslation } from "react-i18next";
+import { ActionButton } from "@components";
+import { ICONS } from "@constants/icons";
+import { type UserSession } from "@features/user/types";
+import { formatDate } from "@utils/date";
+import { getDeviceType, parseUserAgent } from "@utils/device";
+import { SecurityInfoRow } from "./SecurityInfoRow";
+
+interface SessionRowProps {
+  session: UserSession;
+  onTerminate: (session: UserSession) => void;
+}
+
+/** Renders a row for a user session in the security settings. */
+export function SessionRow({ session, onTerminate }: SessionRowProps) {
+  const { t } = useTranslation("settings");
+
+  const readableDevice = parseUserAgent(session.userAgent || "");
+
+  const isOnline = session.lastActive
+    ? Date.now() - new Date(session.lastActive).getTime() < 5 * 60 * 1000
+    : false;
+
+  const deviceType = getDeviceType(session.userAgent);
+  const DeviceIcon = ICONS.device[deviceType];
+
+  const hasDistinctLocation =
+    session.location && session.location !== session.ipAddress;
+
+  return (
+    <SecurityInfoRow
+      label={
+        <div className="flex items-center py-1">
+          <DeviceIcon className="text-3xl text-muted me-4" />
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">
+                {session.deviceName || readableDevice}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-xs">
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${isOnline ? "bg-success animate-pulse" : "bg-muted"}`}
+              />
+              <span
+                className={isOnline ? "text-success font-medium" : "text-muted"}
+              >
+                {isOnline
+                  ? t("security.activeNow")
+                  : session.lastActive
+                    ? t("security.lastActive", {
+                        date: formatDate(session.lastActive, "long"),
+                      })
+                    : t("security.unknown")}
+              </span>
+            </div>
+
+            <div className="flex flex-col text-xs text-muted gap-0.5">
+              {session.ipAddress && (
+                <span className="text-muted/80">{session.ipAddress}</span>
+              )}
+              {hasDistinctLocation && <span>{session.location}</span>}
+            </div>
+          </div>
+        </div>
+      }
+      value={
+        <div className="flex items-center justify-between gap-6 min-w-[10rem] mx-4">
+          <div />
+          <div className="flex pe-2">
+            <ActionButton
+              className="rounded-full text-danger hover:text-danger-hover"
+              icon={<ICONS.poweroff className="text-lg" />}
+              title={t("security.actions.endSessionTitle")}
+              ariaLabel={t("security.actions.endSession")}
+              onClick={() => onTerminate(session)}
+            />
+          </div>
+        </div>
+      }
+    />
+  );
+}

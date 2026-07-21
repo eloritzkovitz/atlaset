@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { SettingsContext } from "@contexts/SettingsContext";
-import { defaultSettings } from "@features/settings";
+import { defaultSettings } from "../../common/constants/defaultSettings";
 
 /**
  * Manages the date locale setting for the app, which controls how dates are formatted.

@@ -24,26 +24,28 @@
 
   "200": "{userName} performed an atlas action{date}",
 
-  "210": "{userName} saved layers{date}",
+  "210": "{userName} updated layers{date}",
   "211": "{userName} added '{itemName}'{date}",
   "212": "{userName} edited '{itemName}'{date}",
   "213": "{userName} removed '{itemName}'{date}",
   "214": "{userName} reordered layers{date}",
 
-  "220": "{userName} saved markers{date}",
+  "220": "{userName} updated markers{date}",
   "221": "{userName} added '{itemName}'{location}{date}",
   "222": "{userName} edited '{itemName}'{location}{date}",
   "223": "{userName} removed '{itemName}'{location}{date}",
+  "224": "{userName} reordered markers{date}",
 
-  "230": "{userName} exported a map{date}",
-  "231": "{userName} saved '{itemName}'{date}",
+  "230": "{userName} updated maps{date}",
+  "231": "{userName} created '{itemName}'{date}",
   "232": "{userName} edited '{itemName}'{date}",
   "233": "{userName} removed '{itemName}'{date}",
   "234": "{userName} added '{itemName}' to map '{mapName}'{date}",
   "235": "{userName} edited '{itemName}' in '{mapName}'{date}",
   "236": "{userName} removed '{itemName}' from '{mapName}'{date}",
+  "237": "{userName} reordered items in '{mapName}'{date}",
 
-  "240": "{userName} saved country lists{date}",
+  "240": "{userName} updated country lists{date}",
   "241": "{userName} created '{itemName}'{date}",
   "242": "{userName} edited '{itemName}'{date}",
   "243": "{userName} removed '{itemName}'{date}",

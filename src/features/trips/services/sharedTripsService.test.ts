@@ -1,55 +1,53 @@
-import { describe, it, expect, vi } from "vitest";
-import { getSharedTripIds } from "./sharedTripsService";
-import * as getDocsModule from "firebase/firestore";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
+import { sharedTripsService } from "./sharedTripsService";
 
-vi.mock("firebase/firestore", () => ({
-  getFirestore: () => ({}),
-  collection: (...args: string[]) => ({ path: args.join("/") }),
-    addDoc: vi.fn(),
-    getDocs: vi.fn(async (_q) => ({
-    docs: [{ id: "trip1" }, { id: "trip2" }, { id: "trip3" }],
-  })),
-}));
+vi.mock("@app/firebase", () => ({ db: {} }));
 
-describe("getSharedTripIds", () => {
-  it("returns shared trip IDs for a user", async () => {
-    const ids = await getSharedTripIds("user123");
-    expect(ids).toEqual(["trip1", "trip2", "trip3"]);
+describe("sharedTripsService", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("returns empty array if no shared trips", async () => {
-    const spy = vi.spyOn(getDocsModule, "getDocs");
-    spy.mockResolvedValueOnce({
-      docs: [],
-      metadata: {
-        hasPendingWrites: false,
-        fromCache: false,
-        isEqual: () => true,
-      },
-      query: {
-        converter: null,
-        type: "query",
-        firestore: {
-          type: "firestore",
-          app: {
-            name: "mock",
-            options: {},
-            automaticDataCollectionEnabled: false,
-          },
-          toJSON: () => ({}),
-        },
-        withConverter: function (_converter: any) {
-          return this as any;
-        },
-      },
-      size: 0,
-      empty: true,
-      forEach: (_cb: any) => {},
-      docChanges: () => [],
-      toJSON: () => ({}),
-    });
-    const ids = await getSharedTripIds("user456");
-    expect(ids).toEqual([]);
-    spy.mockRestore();
+  it("getSharedTripIds targets the correct collection path", async () => {
+    fs.getDocs.mockResolvedValueOnce({
+      docs: [
+        { id: "t1", data: () => ({}) },
+        { id: "t2", data: () => ({}) },
+      ],
+    } as any);
+
+    const ids = await sharedTripsService.getSharedTripIds("u1");
+
+    expect(fs.collection).toHaveBeenCalledWith(
+      expect.anything(),
+      "users/u1/sharedTrips",
+    );
+    expect(ids).toEqual(["t1", "t2"]);
+  });
+
+  it("addReference targets the correct subcollection", async () => {
+    await sharedTripsService.addReference("p1", "o1", "t1");
+
+    expect(fs.collection).toHaveBeenCalledWith(
+      expect.anything(),
+      "users/p1/sharedTrips",
+    );
+    expect(fs.setDoc).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "t1" }),
+      { ownerUid: "o1", tripId: "t1" },
+    );
+  });
+
+  it("removeReference deletes from the correct subcollection", async () => {
+    await sharedTripsService.removeReference("p1", "t1");
+
+    expect(fs.collection).toHaveBeenCalledWith(
+      expect.anything(),
+      "users/p1/sharedTrips",
+    );
+    expect(fs.deleteDoc).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "t1" }),
+    );
   });
 });

@@ -54,7 +54,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         }
       },
       ["/"],
-      true,
     );
 
     // Blur search input when Escape is pressed
@@ -72,7 +71,6 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         }
       },
       ["Escape"],
-      true,
     );
 
     const { t } = useTranslation("common");

@@ -22,7 +22,7 @@ let mockUser: { uid: string; displayName?: string } | null = {
   displayName: "Sarah",
 };
 
-vi.mock("@features/user", () => ({
+vi.mock("@contexts/AuthContext", () => ({
   useAuth: () => ({ user: mockUser }),
 }));
 

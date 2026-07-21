@@ -5,11 +5,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useCountryLists } from "@contexts/CountryListsContext";
-import { useLayers } from "@contexts/LayersContext";
-import { useMapView } from "@contexts/MapViewContext";
-import { useTimeline } from "@contexts/TimelineContext";
-import { useTrips } from "@contexts/TripsContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
   getDefaultLayerSelections,
@@ -28,6 +23,8 @@ import {
 import {
   filterByVisitCount,
   filterByVisitStatus,
+} from "@features/visits/utils/visitFilters";
+import {
   getLatestYear,
   useVisitedCountries,
   useVisitStats,
@@ -35,6 +32,11 @@ import {
 } from "@features/visits";
 import { useDebounce } from "@hooks";
 import { CountryFiltersContext } from "./CountryFiltersContext";
+import { useCountryLists } from "./CountryListsContext";
+import { useLayers } from "./LayersContext";
+import { useMapView } from "./MapViewContext";
+import { useTimeline } from "./TimelineContext";
+import { useTrips } from "./TripsContext";
 
 interface CountryFiltersProviderProps {
   children: ReactNode;

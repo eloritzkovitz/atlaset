@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { KeyCombo } from "@components";
 import type { KeyCommand } from "@types";
+import { useLanguage } from "../../localization/hooks/useLanguage";
 
 interface ShortcutRowProps {
   cmd: KeyCommand;
@@ -8,7 +9,9 @@ interface ShortcutRowProps {
 }
 
 export function ShortcutRow({ cmd, disabled = false }: ShortcutRowProps) {
+  const { isRtl } = useLanguage();
   const { t } = useTranslation("common");
+
   const keys = [...cmd.modifiers, cmd.key];
   const actionLabel = t(cmd.labelKey, "Unknown Action");
 
@@ -24,7 +27,7 @@ export function ShortcutRow({ cmd, disabled = false }: ShortcutRowProps) {
             {actionLabel}
           </span>
           <div className="flex-shrink-0 order-2">
-            <KeyCombo keys={keys} />
+            <KeyCombo keys={keys} isRtl={isRtl} />
           </div>
         </div>
       </td>

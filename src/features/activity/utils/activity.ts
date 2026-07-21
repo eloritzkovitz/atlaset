@@ -6,9 +6,8 @@ import { addDoc } from "firebase/firestore";
 import i18n from "i18next";
 import type { ComponentType, SVGProps } from "react";
 import { ICONS } from "@constants/icons";
-import { logToGoogleAnalytics } from "@utils/analytics";
+import { getUserCollection, logToGoogleAnalytics } from "@lib/firebase";
 import { formatTimeSeconds } from "@utils/date";
-import { getUserCollection } from "@utils/firebase";
 import type { ActivityDetails } from "../types";
 
 /**

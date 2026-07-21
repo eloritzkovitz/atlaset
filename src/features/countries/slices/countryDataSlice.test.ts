@@ -1,6 +1,12 @@
-import { mockCountries } from "@test-utils/mockCountries";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import countryDataReducer, { fetchCountryData } from "./countryDataSlice";
+import { fetchWithFallback } from "@lib/api-client";
+import { mockCountries } from "@test-utils/mockCountries";
 import type { SovereigntyStatus } from "../types";
+
+vi.mock("@lib/api-client", () => ({
+  fetchWithFallback: vi.fn(),
+}));
 
 describe("countryDataSlice reducer", () => {
   it("should return the same state for unknown action", () => {
@@ -17,7 +23,6 @@ describe("countryDataSlice reducer", () => {
           sovereigntyStatus: "independent" as SovereigntyStatus,
         },
       ],
-      currencies: [{ code: "EUR", name: "Euro" }],
       allRegions: ["Europe"],
       allSubregions: ["Western Europe"],
       allSovereigntyStatuses: [],
@@ -25,14 +30,13 @@ describe("countryDataSlice reducer", () => {
       error: null,
     };
     const action = { type: "unknown/action" };
-    const state = countryDataReducer(prevState, action);
+    const state = countryDataReducer(prevState, action as any);
     expect(state).toBe(prevState);
   });
 
   it("should return the initial state", () => {
     expect(countryDataReducer(undefined, { type: "" })).toEqual({
       countries: [],
-      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyStatuses: [],
@@ -43,10 +47,9 @@ describe("countryDataSlice reducer", () => {
 
   it("should handle fetchCountryData.pending", () => {
     const action = { type: fetchCountryData.pending.type };
-    const state = countryDataReducer(undefined, action);
+    const state = countryDataReducer(undefined, action as any);
     expect(state).toEqual({
       countries: [],
-      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyStatuses: [],
@@ -60,22 +63,14 @@ describe("countryDataSlice reducer", () => {
       type: fetchCountryData.fulfilled.type,
       payload: {
         countries: mockCountries,
-        currencies: [
-          { code: "USD", name: "United States Dollar" },
-          { code: "CAD", name: "Canadian Dollar" },
-        ],
         allRegions: ["Americas"],
         allSubregions: ["Northern America"],
         allSovereigntyStatuses: [],
       },
     };
-    const state = countryDataReducer(undefined, action);
+    const state = countryDataReducer(undefined, action as any);
     expect(state).toEqual({
       countries: mockCountries,
-      currencies: [
-        { code: "USD", name: "United States Dollar" },
-        { code: "CAD", name: "Canadian Dollar" },
-      ],
       allRegions: ["Americas"],
       allSubregions: ["Northern America"],
       allSovereigntyStatuses: [],
@@ -89,10 +84,9 @@ describe("countryDataSlice reducer", () => {
       type: fetchCountryData.rejected.type,
       error: { message: "Failed to fetch" },
     };
-    const state = countryDataReducer(undefined, action);
+    const state = countryDataReducer(undefined, action as any);
     expect(state).toEqual({
       countries: [],
-      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyStatuses: [],
@@ -106,10 +100,9 @@ describe("countryDataSlice reducer", () => {
       type: fetchCountryData.rejected.type,
       error: {},
     };
-    const state = countryDataReducer(undefined, action);
+    const state = countryDataReducer(undefined, action as any);
     expect(state).toEqual({
       countries: [],
-      currencies: [],
       allRegions: [],
       allSubregions: [],
       allSovereigntyStatuses: [],
@@ -119,44 +112,112 @@ describe("countryDataSlice reducer", () => {
   });
 });
 
-describe("currency mapping logic", () => {
-  function mapCurrencyData(currencyData: any) {
-    return currencyData && typeof currencyData === "object"
-      ? Object.entries(currencyData).map(([code, name]) => ({
-          code,
-          name: String(name),
-        }))
-      : [];
-  }
-
-  it("maps valid object to array of code/name", () => {
-    const input = { USD: "United States Dollar", EUR: "Euro" };
-    const result = mapCurrencyData(input);
-    expect(result).toEqual([
-      { code: "USD", name: "United States Dollar" },
-      { code: "EUR", name: "Euro" },
-    ]);
+describe("fetchCountryData thunk execution & condition logic (lines 32–60 coverage)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it("casts all names to string", () => {
-    const input = { BTC: 123, ETH: null };
-    const result = mapCurrencyData(input);
-    expect(result).toEqual([
-      { code: "BTC", name: "123" },
-      { code: "ETH", name: "null" },
-    ]);
+  const invokeThunk = (state: any, arg?: { force?: boolean }) => {
+    const dispatch = vi.fn();
+    const getState = () => ({ countryData: state });
+    return fetchCountryData(arg)(dispatch, getState, undefined);
+  };
+
+  it("executes payload creator successfully when data is valid array", async () => {
+    vi.mocked(fetchWithFallback).mockResolvedValueOnce(mockCountries);
+
+    const initialState = {
+      loading: false,
+      countries: [],
+      allRegions: [],
+      allSubregions: [],
+      allSovereigntyStatuses: [],
+      error: null,
+    };
+
+    const result = await invokeThunk(initialState);
+
+    expect(result.type).toBe("countryData/fetchCountryData/fulfilled");
+    expect(fetchWithFallback).toHaveBeenCalledWith(
+      "/data/countries.json",
+      { envVar: "VITE_COUNTRY_DATA_URL" },
+      "country data",
+    );
   });
 
-  it("returns empty array for empty object", () => {
-    const input = {};
-    const result = mapCurrencyData(input);
-    expect(result).toEqual([]);
+  it("throws error when fetched data is not an array", async () => {
+    vi.mocked(fetchWithFallback).mockResolvedValueOnce({ invalid: "data" });
+
+    const initialState = {
+      loading: false,
+      countries: [],
+      allRegions: [],
+      allSubregions: [],
+      allSovereigntyStatuses: [],
+      error: null,
+    };
+
+    const result = await invokeThunk(initialState);
+
+    expect(result.type).toBe("countryData/fetchCountryData/rejected");
+    if (fetchCountryData.rejected.match(result)) {
+      expect(result.error.message).toBe("Failed to load country data");
+    }
   });
 
-  it("returns empty array for non-object input", () => {
-    expect(mapCurrencyData(undefined)).toEqual([]);
-    expect(mapCurrencyData(null)).toEqual([]);
-    expect(mapCurrencyData(42)).toEqual([]);
-    expect(mapCurrencyData("string")).toEqual([]);
+  it("skips execution if already loading", async () => {
+    const state = {
+      loading: true,
+      countries: [],
+      allRegions: [],
+      allSubregions: [],
+      allSovereigntyStatuses: [],
+      error: null,
+    };
+
+    const result = await invokeThunk(state);
+
+    expect(result.type).toBe("countryData/fetchCountryData/rejected");
+    if (fetchCountryData.rejected.match(result)) {
+      expect(result.meta.condition).toBe(true);
+    }
+    expect(fetchWithFallback).not.toHaveBeenCalled();
+  });
+
+  it("skips execution if countries are already present", async () => {
+    const state = {
+      loading: false,
+      countries: mockCountries,
+      allRegions: [],
+      allSubregions: [],
+      allSovereigntyStatuses: [],
+      error: null,
+    };
+
+    const result = await invokeThunk(state);
+
+    expect(result.type).toBe("countryData/fetchCountryData/rejected");
+    if (fetchCountryData.rejected.match(result)) {
+      expect(result.meta.condition).toBe(true);
+    }
+    expect(fetchWithFallback).not.toHaveBeenCalled();
+  });
+
+  it("forces execution when force is true, even if data is already present", async () => {
+    vi.mocked(fetchWithFallback).mockResolvedValueOnce(mockCountries);
+
+    const state = {
+      loading: false,
+      countries: mockCountries,
+      allRegions: [],
+      allSubregions: [],
+      allSovereigntyStatuses: [],
+      error: null,
+    };
+
+    const result = await invokeThunk(state, { force: true });
+
+    expect(result.type).toBe("countryData/fetchCountryData/fulfilled");
+    expect(fetchWithFallback).toHaveBeenCalledTimes(1);
   });
 });

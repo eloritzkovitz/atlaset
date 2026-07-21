@@ -60,6 +60,8 @@
       "dependenciesUsingCurrency": "Dependencies and territories using {{code}}"
     },
     "currencyExchange": {
+      "pageTitle": "Currency Exchange",
+      "disclaimer": "Data via Open Exchange Rates",
       "rateValue": "{{rate}} {{currency}}",
       "from": "From",
       "to": "To",

@@ -39,6 +39,7 @@ export { PasswordField } from "./inputs/FormField/PasswordField";
 export { QualifierSearch } from "./inputs/SearchInput/QualifierSearch";
 export { RadioButton } from "./inputs/RadioButton/RadioButton";
 export { RateMenu } from "./inputs/StarRating/RateMenu";
+export { RATING_OPTIONS } from "./inputs/StarRating/constants";
 export { SearchInput } from "./inputs/SearchInput/SearchInput";
 export {
   SegmentedToggle,
@@ -84,7 +85,7 @@ export { FloatingPortal } from "./overlay/Tooltip/FloatingPortal";
 export { Modal } from "./overlay/Modal/Modal";
 export { ModalActions } from "./overlay/Modal/ModalActions";
 export { ModalHeader } from "./overlay/Modal/ModalHeader";
-export { Panel } from "./overlay/Panel/Panel";
+export { Panel, type PanelProps } from "./overlay/Panel/Panel";
 export { PwaUpdateUiHint } from "./overlay/UiHint/PwaUpdateUiHint";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";
 export { UIHintContainer } from "./overlay/UiHint/UiHintContainer";

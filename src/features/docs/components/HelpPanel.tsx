@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { AppLinks, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
+import { useAccessibility } from "@features/settings";
 import { DocSearchResults } from "./DocSearchResults";
 
 interface HelpPanelProps {
@@ -9,6 +10,7 @@ interface HelpPanelProps {
 }
 
 export function HelpPanel({ open, onClose }: HelpPanelProps) {
+  const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("common");
 
   return (
@@ -23,6 +25,7 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
       }
       className="!z-[10050]"
       showSeparator={false}
+      animationsEnabled={animationsEnabled}
     >
       <div className="flex flex-col h-full">
         <div className="mb-3">

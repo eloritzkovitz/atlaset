@@ -64,7 +64,7 @@ describe("leaderboardsService", () => {
 
   describe("addLeaderboardEntry", () => {
     it("adds a leaderboard entry and enforces top 25 threshold rules", async () => {
-      fs.setDoc.mockResolvedValue(undefined);
+      fs.addDoc.mockResolvedValue(undefined);
       fs.deleteDoc.mockResolvedValue(undefined);
       fs.getDocs.mockResolvedValue(
         createMockSnapshot(snapshotDataInput) as any,
@@ -76,7 +76,7 @@ describe("leaderboardsService", () => {
         mockEntries[0],
       );
 
-      expect(fs.setDoc).toHaveBeenCalled();
+      expect(fs.addDoc).toHaveBeenCalled();
       expect(fs.getDocs).toHaveBeenCalled();
       expect(fs.deleteDoc).toHaveBeenCalledTimes(1);
     });

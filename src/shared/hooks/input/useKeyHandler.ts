@@ -1,5 +1,4 @@
 import { useEffect, useRef } from "react";
-import { useAccessibility } from "@features/settings";
 import type { Key, KeyHandler, Modifier } from "@types";
 import {
   isRestrictedSingleKey,
@@ -7,22 +6,30 @@ import {
   matchModifiers,
 } from "@utils/keyboard";
 
+export interface KeyHandlerOptions {
+  enabled?: boolean;
+  modifiers?: Modifier[];
+  allowSingleKeyShortcuts?: boolean;
+  target?: EventTarget | React.RefObject<EventTarget | null>;
+}
+
 /**
  * Handles keyboard events with optional modifier keys.
  * @param handler - Function to call when a matching key is pressed.
  * @param keys - Array of key names to listen for. Empty array means all keys.
- * @param enabled - If false, disables the handler.
- * @param modifiers - Array of required modifier keys.
- * @param target - Optional specific element or ref to listen to instead of the global window.
+ * @param options - Configuration options.
  */
 export function useKeyHandler(
   handler: KeyHandler,
   keys: Key[] = [],
-  enabled: boolean = true,
-  modifiers: Modifier[] = [],
-  target: EventTarget | React.RefObject<EventTarget | null> = window,
+  options: KeyHandlerOptions = {},
 ) {
-  const { singleKeyShortcutsEnabled } = useAccessibility();
+  const {
+    enabled = true,
+    modifiers = [],
+    allowSingleKeyShortcuts = false,
+    target = window,
+  } = options;
 
   const handlerRef = useRef(handler);
   handlerRef.current = handler;
@@ -43,7 +50,7 @@ export function useKeyHandler(
       });
 
       // If single-character shortcuts are disabled, ignore the event
-      if (isCharacterShortcut && !singleKeyShortcutsEnabled) {
+      if (isCharacterShortcut && !allowSingleKeyShortcuts) {
         return;
       }
 
@@ -65,5 +72,5 @@ export function useKeyHandler(
 
     activeTarget.addEventListener("keydown", handleKeyDown);
     return () => activeTarget.removeEventListener("keydown", handleKeyDown);
-  }, [enabled, keys, modifiers, target, singleKeyShortcutsEnabled]);
+  }, [enabled, keys, modifiers, target, allowSingleKeyShortcuts]);
 }

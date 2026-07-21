@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@app/firebase";
+import { getDocData, getPaths } from "@lib/firebase";
+import type { FirestoreUser } from "../../types";
 
 /**
  * Fetches and manages a Firestore username.
@@ -12,19 +12,21 @@ export function useFirestoreUsername(uid?: string | null) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch username when uid changes
   useEffect(() => {
     if (!uid) {
       setUsername("");
       return;
     }
+
     setLoading(true);
     setError(null);
+
     const fetchUsername = async () => {
       try {
-        const userRef = doc(db, "users", uid);
-        const userSnap = await getDoc(userRef);
-        setUsername(userSnap.exists() ? userSnap.data().username || "" : "");
+        const userRef = getPaths.user(uid);
+        const userData = await getDocData<FirestoreUser>(userRef);
+
+        setUsername(userData?.username || "");
       } catch {
         setError("Failed to fetch username");
         setUsername("");
@@ -32,6 +34,7 @@ export function useFirestoreUsername(uid?: string | null) {
         setLoading(false);
       }
     };
+
     fetchUsername();
   }, [uid]);
 

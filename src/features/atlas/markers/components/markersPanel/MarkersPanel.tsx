@@ -7,6 +7,7 @@ import { useMapView } from "@contexts/MapViewContext";
 import { useMarkers } from "@contexts/MarkersContext";
 import { useUI } from "@contexts/UIContext";
 import { useEffectiveMarkers } from "@features/atlas/markers";
+import { useAccessibility } from "@features/settings";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
 import type { Marker } from "../../types";
@@ -36,6 +37,7 @@ export function MarkersPanel({
   activeSavedMapMarkers,
   handleSavedMapChange,
 }: MarkersPanelProps) {
+  const { animationsEnabled } = useAccessibility();
   const { setCenter, setZoom, isReadonly } = useMapView();
   const {
     updateMarkerName,
@@ -135,6 +137,7 @@ export function MarkersPanel({
             )}
           </>
         }
+        animationsEnabled={animationsEnabled}
       >
         {effectiveMarkers.length === 0 ? (
           <EmptyListMessage message={t("markers.empty")} />

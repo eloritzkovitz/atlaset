@@ -7,6 +7,7 @@ import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useEffectiveLayers } from "@features/atlas/layers";
+import { useAccessibility } from "@features/settings";
 import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
 import type { Layer } from "../types";
@@ -36,6 +37,7 @@ export function LayersPanel({
   activeSavedMapLayers,
   handleSavedMapChange,
 }: LayersPanelProps) {
+  const { animationsEnabled } = useAccessibility();
   const { createListFromLayer } = useCountryLists();
   const { t } = useTranslation("atlas");
   const { showLayers, closePanel } = useUI();
@@ -119,6 +121,7 @@ export function LayersPanel({
           />
         </>
       }
+      animationsEnabled={animationsEnabled}
     >
       <div className="mt-4">
         {!effectiveLayers || effectiveLayers.length === 0 ? (

@@ -1,8 +1,8 @@
 import { configureStore, type ReducersMapObject } from "@reduxjs/toolkit";
-import { countryDataReducer } from "@features/countries";
-import { quizSettingsReducer } from "@features/quizzes";
-import { settingsReducer } from "@features/settings";
-import { authReducer } from "@features/user";
+import countryDataReducer from "@features/countries/slices/countryDataSlice";
+import quizSettingsReducer from "@features/quizzes/quiz/slices/quizSettingsSlice";
+import settingsReducer from "@features/settings/common/slices/settingsSlice";
+import authReducer from "@features/user/auth/slices/authSlice";
 
 const reducers = {
   auth: authReducer,

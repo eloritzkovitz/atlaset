@@ -1,18 +1,8 @@
-import type { Currency } from "@features/countries";
-
-const APP_ID = import.meta.env.VITE_OPENEXCHANGE_APP_ID;
-const API_URL = `https://openexchangerates.org/api/latest.json?app_id=${APP_ID}`;
-
 /**
- * Fetches latest currency exchange rates from Open Exchange Rates API.
- * @returns A promise that resolves to an object mapping currency codes to exchange rates.
+ * Utility functions for currency exchange operations.
  */
-export async function fetchExchangeRates() {
-  const res = await fetch(API_URL);
-  if (!res.ok) throw new Error("Failed to fetch exchange rates");
-  const data = await res.json();
-  return data.rates as Record<string, number>;
-}
+
+import type { Currency } from "@features/countries";
 
 /**
  * Converts an amount from one currency to another using provided exchange rates.

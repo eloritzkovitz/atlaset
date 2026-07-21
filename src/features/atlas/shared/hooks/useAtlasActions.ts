@@ -2,7 +2,7 @@ import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 
 /**
  * Provides actions and conditions for the Atlas toolbar based on the current state of the application.

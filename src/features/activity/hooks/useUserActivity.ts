@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { QueryDocumentSnapshot, type DocumentData } from "firebase/firestore";
+import { QueryDocumentSnapshot } from "firebase/firestore";
 import { activityService } from "../services/activityService";
 import type { UserActivity } from "../types";
 
@@ -12,7 +12,7 @@ export function useUserActivity() {
   const [activity, setActivity] = useState<UserActivity[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastDoc, setLastDoc] =
-    useState<QueryDocumentSnapshot<DocumentData> | null>(null);
+    useState<QueryDocumentSnapshot<UserActivity> | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | Error | null>(null);
 

@@ -1,113 +1,105 @@
-import {
-  collection,
-  doc,
-  getDocs,
-  setDoc,
-  deleteDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { writeBatch } from "firebase/firestore";
+import { appDb } from "@app/db";
 import { db } from "@app/firebase";
-import { isAuthenticated, getCurrentUser } from "@utils/firebase";
+import type { Layer } from "@features/atlas/layers";
+import {
+  getCurrentUser,
+  getDocsData,
+  getPaths,
+  isAuthenticated,
+} from "@lib/firebase";
+import { BaseService } from "@services/BaseService";
 import type { CountryList } from "../types";
+import type { SavedMap } from "@features/atlas/saved";
 
-/**
- * Service for managing user country lists.
- */
-export const countryListService = {
-  /**
-   * Loads all country lists for the current user.
-   * @returns A promise that resolves to an array of CountryList.
-   */
-  async load(): Promise<CountryList[]> {
-    if (!isAuthenticated()) return [];
+export class CountryListService extends BaseService<
+  CountryList,
+  typeof appDb.countryLists
+> {
+  protected readonly collectionName = "countryLists";
+  protected readonly localTable = appDb.countryLists;
+
+  /** Saves the list and cascades updates to layers/maps if authenticated. */
+  async save(list: CountryList): Promise<void> {
+    await super.add(list);
+
+    if (!isAuthenticated()) return;
+
     const user = getCurrentUser();
-    const listsCol = collection(db, "users", user!.uid, "countryLists");
-    const snapshot = await getDocs(listsCol);
-    return snapshot.docs.map(
-      (doc) => ({ id: doc.id, ...doc.data() }) as CountryList,
+    const uid = user!.uid;
+    const batch = writeBatch(db);
+    let hasUpdates = false;
+
+    // Update Layers
+    const layers = await getDocsData<Layer>(getPaths.sub(uid, "layers"));
+    layers.forEach((l) => {
+      if (l.listId === list.id) {
+        const layerRef = getPaths.subDoc(uid, "layers", l.id);
+        batch.update(layerRef, { countries: list.countryCodes });
+        hasUpdates = true;
+      }
+    });
+
+    // Update Maps
+    const savedMaps = await getDocsData<SavedMap>(
+      getPaths.sub(uid, "savedMaps"),
     );
-  },
-
-  /**
-   * Creates or updates a country list for the current user.
-   * @param list - The CountryList to save.
-   */
-  async save(list: CountryList) {
-    if (!isAuthenticated()) return;
-    const user = getCurrentUser();
-    const listRef = doc(db, "users", user!.uid, "countryLists", list.id);
-    await setDoc(listRef, list);
-
-    // Sync all saved map layers that reference this list to update their country codes
-    const layersCol = collection(db, "users", user!.uid, "layers");
-    const layersSnap = await getDocs(layersCol);
-    for (const layerDoc of layersSnap.docs) {
-      const layerData = layerDoc.data();
-      if (layerData.listId === list.id) {
-        await updateDoc(layerDoc.ref, { countries: list.countryCodes });
-      }
-    }
-
-    // Also update any layers inside saved maps that reference this list
-    const mapsCol = collection(db, "users", user!.uid, "savedMaps");
-    const mapsSnap = await getDocs(mapsCol);
-    for (const mapDoc of mapsSnap.docs) {
-      const mapData = mapDoc.data();
-      if (Array.isArray(mapData.layers)) {
-        let changed = false;
-        const newLayers = mapData.layers.map((layer) => {
-          if (layer && layer.listId === list.id) {
-            changed = true;
-            return { ...layer, countries: list.countryCodes };
-          }
-          return layer;
-        });
-        if (changed) {
-          await updateDoc(mapDoc.ref, { layers: newLayers });
+    savedMaps.forEach((m) => {
+      if (Array.isArray(m.layers)) {
+        const newLayers = m.layers.map((l: Layer) =>
+          l?.listId === list.id ? { ...l, countries: list.countryCodes } : l,
+        );
+        if (JSON.stringify(m.layers) !== JSON.stringify(newLayers)) {
+          const mapRef = getPaths.subDoc(uid, "savedMaps", m.id);
+          batch.update(mapRef, { layers: newLayers });
+          hasUpdates = true;
         }
       }
-    }
-  },
+    });
 
-  /**
-   * Deletes a country list for the current user.
-   * @param id - The id of the CountryList to delete.
-   */
-  async delete(id: string) {
-    if (!isAuthenticated()) return;
-    const user = getCurrentUser();
-    // Remove listId from any layers that reference this list
-    const layersCol = collection(db, "users", user!.uid, "layers");
-    const layersSnap = await getDocs(layersCol);
-    for (const layerDoc of layersSnap.docs) {
-      const layerData = layerDoc.data();
-      if (layerData.listId === id) {
-        await updateDoc(layerDoc.ref, { listId: null });
-      }
-    }
+    if (hasUpdates) await batch.commit();
+  }
 
-    // Remove listId from any layers inside saved maps
-    const mapsCol = collection(db, "users", user!.uid, "savedMaps");
-    const mapsSnap = await getDocs(mapsCol);
-    for (const mapDoc of mapsSnap.docs) {
-      const mapData = mapDoc.data();
-      if (Array.isArray(mapData.layers)) {
-        let changed = false;
-        const newLayers = mapData.layers.map((layer) => {
-          if (layer && layer.listId === id) {
-            changed = true;
-            return { ...layer, listId: null };
-          }
-          return layer;
-        });
-        if (changed) {
-          await updateDoc(mapDoc.ref, { layers: newLayers });
+  /** Deletes the list and clears references in layers/maps if authenticated. */
+  async delete(id: string): Promise<void> {
+    if (isAuthenticated()) {
+      const user = getCurrentUser();
+      const uid = user!.uid;
+      const batch = writeBatch(db);
+      let hasUpdates = false;
+
+      // Clear Layer refs
+      const layers = await getDocsData<Layer>(getPaths.sub(uid, "layers"));
+      layers.forEach((l) => {
+        if (l.listId === id) {
+          const layerRef = getPaths.subDoc(uid, "layers", l.id);
+          batch.update(layerRef, { listId: null });
+          hasUpdates = true;
         }
-      }
+      });
+
+      // Clear Map refs
+      const savedMaps = await getDocsData<SavedMap>(
+        getPaths.sub(uid, "savedMaps"),
+      );
+      savedMaps.forEach((m) => {
+        if (Array.isArray(m.layers)) {
+          const newLayers = m.layers.map((l: Layer) =>
+            l?.listId === id ? { ...l, listId: null } : l,
+          );
+          if (JSON.stringify(m.layers) !== JSON.stringify(newLayers)) {
+            const mapRef = getPaths.subDoc(uid, "savedMaps", m.id);
+            batch.update(mapRef, { layers: newLayers });
+            hasUpdates = true;
+          }
+        }
+      });
+
+      if (hasUpdates) await batch.commit();
     }
 
-    // Finally, delete the list
-    const listRef = doc(db, "users", user!.uid, "countryLists", id);
-    await deleteDoc(listRef);
-  },
-};
+    await super.delete(id);
+  }
+}
+
+export const countryListService = new CountryListService();

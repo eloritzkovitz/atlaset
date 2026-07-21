@@ -1,4 +1,21 @@
-import type { Timestamp } from "firebase/firestore";
+import type { FieldValue, Timestamp } from "firebase/firestore";
+
+/** Represents a user in the Firestore database. */
+export interface FirestoreUser {
+  uid: string;
+  username: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  email: string | null;
+  homeCountry: string | null;
+  biography: string | null;
+  isPublic: boolean;
+  joinDate?: string;
+  visitedCountryCodes: string[];
+  status?: "active" | "deactivated";
+  deactivatedAt?: string;
+  reactivatedAt?: string;
+}
 
 /** Supported social platforms for user profiles. */
 export type SocialPlatform =
@@ -9,7 +26,7 @@ export type SocialPlatform =
   | "github"
   | "website";
 
-/** User profile information. */
+/** Represents a user profile. */
 export interface UserProfile {
   /** User ID */
   uid: string;
@@ -39,15 +56,31 @@ export interface UserProfile {
   wantToVisitCountryCodes: string[];
 }
 
-/** Device information associated with a user. */
-export type Device = {
-  userAgent?: string;
-  deviceName?: string;
+/** Represents a user session. */
+export type UserSession = {
+  /** Document ID. */
   id: string;
-  lastActive?: number;
+  /** User ID. */
+  userId: string;
+  /** Session ID. */
+  sessionId: string;
+  /** User agent string. */
+  userAgent: string;
+  /** Browser language preference. */
+  language: string;
+  /** Display resolution dimensions. */
+  screen: string;
+  /** IP address. */
+  ipAddress?: string;
+  /** Location. */
+  location?: string;
+  /** Epoch timestamp tracking recent interactions. */
+  lastActive: number;
+  /** Optional user-assigned friendly name. */
+  deviceName?: string;
 };
 
-/** Friend request information. */
+/** Represents a friend request. */
 export interface FriendRequest {
   /** User ID of the friend request */
   uid: string;
@@ -56,7 +89,7 @@ export interface FriendRequest {
   /** User ID of the receiver */
   to: string;
   /** Timestamp when the friend request was created */
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
 }
 
 /** Friend information. */
@@ -64,12 +97,10 @@ export interface Friend {
   /** User ID of the friend */
   uid: string;
   /** Timestamp when the friendship was created */
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
 }
 
-/**
- * Friend profile information (subset of UserProfile, used for friend lists/search)
- */
+/** Represents a friend's profile information. */
 export type FriendProfile = Pick<
   UserProfile,
   "uid" | "username" | "displayName" | "photoURL"

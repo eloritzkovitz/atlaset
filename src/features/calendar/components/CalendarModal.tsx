@@ -44,7 +44,9 @@ export default function CalendarModal() {
     [view],
   );
 
-  useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], showCalendar);
+  useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], {
+    enabled: showCalendar,
+  });
 
   // Don't render the modal if it's not open
   if (!showCalendar) return null;

@@ -34,14 +34,16 @@
   "221": "{userName} הוסיף '{itemName}'{location}{date}",
   "222": "{userName} ערך '{itemName}'{location}{date}",
   "223": "{userName} הסיר '{itemName}'{location}{date}",
+  "224": "{userName} שינה את סדר הסימונים{date}",
 
-  "230": "{userName} ייצא מפה{date}",
-  "231": "{userName} שמר '{itemName}'{date}",
+  "230": "{userName} עדכן מפה{date}",
+  "231": "{userName} יצר '{itemName}'{date}",
   "232": "{userName} ערך '{itemName}'{date}",
   "233": "{userName} הסיר '{itemName}'{date}",
   "234": "{userName} הוסיף '{itemName}' למפה '{mapName}'{date}",
   "235": "{userName} ערך '{itemName}' ב'{mapName}'{date}",
   "236": "{userName} הסיר '{itemName}' מהמפה '{mapName}'{date}",
+  "237": "{userName} שינה את סדר הפריטים ב'{mapName}'{date}",
 
   "240": "{userName} שמר רשימות מדינות{date}",
   "241": "{userName} יצר '{itemName}'{date}",

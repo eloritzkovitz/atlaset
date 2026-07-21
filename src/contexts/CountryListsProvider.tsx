@@ -1,10 +1,10 @@
 import { useEffect, useState, type ReactNode } from "react";
-import { logUserActivity } from "@features/activity";
+import { logUserActivity } from "@features/activity/utils/activity";
 import { CountryListModal } from "@features/atlas/countries";
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
 import { countryListService, type CountryList } from "@features/countries";
-import { useAuth } from "@features/user";
-import { useVisitedCountries } from "@features/visits";
+import { useAuth } from "@features/user/auth/hooks/useAuth";
+import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import {
   CountryListsContext,
   type CountryListsContextValue,

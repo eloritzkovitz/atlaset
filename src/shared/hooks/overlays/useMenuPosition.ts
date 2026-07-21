@@ -1,5 +1,4 @@
 import { useLayoutEffect, useState } from "react";
-import { useLanguage } from "@features/settings";
 
 /**
  * Calculates and returns the style for a dropdown/menu anchored to a button.
@@ -16,16 +15,20 @@ export function useMenuPosition(
   btnRef: React.RefObject<HTMLElement | null>,
   menuRef: React.RefObject<HTMLElement | null>,
   offset?: number,
-  align?: "left" | "right" | "top",
+  align: "left" | "right" | "top" = "right",
   placement?: "overlay" | "adjacent",
   withWidth: boolean = true,
 ) {
   const [menuStyle, setMenuStyle] = useState<React.CSSProperties>({});
-  const { isRtl } = useLanguage();
 
   // Calculate menu position when open or dependencies change
   useLayoutEffect(() => {
     if (open && btnRef.current && menuRef.current) {
+      // Determine RTL directly from the document
+      const htmlDir = document.documentElement.getAttribute("dir") || document.dir;
+      const bodyDir = document.body.getAttribute("dir") || document.body.dir;
+      const isRtl = htmlDir === "rtl" || bodyDir === "rtl";
+
       const btnRect = btnRef.current.getBoundingClientRect();
       const menuRect = menuRef.current.getBoundingClientRect();
       const spaceBelow = window.innerHeight - btnRect.bottom;
@@ -40,38 +43,38 @@ export function useMenuPosition(
       } else {
         top = btnRect.top + window.scrollY + (offset ?? 0);
 
-        // Calculate horizontal position based on alignment and placement
         if (placement === "overlay") {
-          if (align === "left") {
-            left = btnRect.left - menuRect.width + window.scrollX;
-          } else {
-            left = btnRect.left + window.scrollX;
-          }
+          left =
+            align === "left"
+              ? btnRect.left - menuRect.width + window.scrollX
+              : btnRect.left + window.scrollX;
         } else {
+          // Adjacent placement logic with direct RTL handling
           if (align === "left") {
             left = isRtl
               ? btnRect.right + window.scrollX
               : btnRect.left - menuRect.width + window.scrollX;
           } else {
+            // align === "right"
             left = isRtl
               ? btnRect.left - menuRect.width + window.scrollX
               : btnRect.right + window.scrollX;
           }
         }
 
-        // Flip above if not enough space below
+        // Flip above if space below is insufficient
         if (spaceBelow < menuRect.height && spaceAbove > menuRect.height) {
           top = btnRect.top + window.scrollY - menuRect.height;
         }
       }
 
-      // Set menu style
       const style: React.CSSProperties = {
         position: "absolute",
         top,
         left,
         zIndex: 1000,
       };
+
       if (withWidth) {
         style.width = btnRect.width;
       }
@@ -80,9 +83,8 @@ export function useMenuPosition(
     } else {
       setMenuStyle({});
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, offset, align, withWidth, isRtl]);
+  }, [open, offset, align, placement, withWidth]);
 
   return menuStyle;
 }

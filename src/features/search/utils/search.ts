@@ -1,4 +1,5 @@
-import type { Friend, SerializableUser, UserProfile } from "@features/user";
+import type { SerializableUser } from "@features/user/auth/slices/authSlice";
+import type { Friend, UserProfile } from "@features/user/types";
 
 /**
  * Generates a consistent search results path.

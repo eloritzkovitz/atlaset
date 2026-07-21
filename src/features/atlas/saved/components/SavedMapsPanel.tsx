@@ -4,9 +4,11 @@ import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
 import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useUI } from "@contexts/UIContext";
+import { useAccessibility } from "@features/settings";
 import { SavedMapPanelItem } from "./SavedMapPanelItem";
 
 export function SavedMapsPanel() {
+  const { animationsEnabled } = useAccessibility();
   const {
     savedMaps,
     createNewMap,
@@ -53,6 +55,7 @@ export function SavedMapsPanel() {
           )}
         </>
       }
+      animationsEnabled={animationsEnabled}
     >
       <div className="mt-4">
         {savedMaps.length === 0 ? (

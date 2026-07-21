@@ -13,16 +13,18 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import type { RootState } from "@app/store";
 import {
   getLobbyCards,
-  setDifficulty,
-  setGameMode,
-  setQuizType,
   LobbyCard,
   QuizEntry,
   QuizSettings,
   type LobbyCardItem,
 } from "@features/quizzes";
+import {
+  setDifficulty,
+  setGameMode,
+  setQuizType,
+} from "@features/quizzes/quiz/slices/quizSettingsSlice";
 import { useFlyTransition, usePageTitle, useUiHint } from "@hooks";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 
 // Lazy load leaderboards component
 const Leaderboards = lazy(() =>

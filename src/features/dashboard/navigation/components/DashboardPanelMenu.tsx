@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { DashboardIcon, mapMenuItems, SidePanelMenu } from "@components";
+import { useAccessibility } from "@features/settings";
 import { DASHBOARD_MENU } from "../constants/dashboardMenu";
 
 interface DashboardPanelMenuProps {
@@ -15,6 +16,7 @@ export function DashboardPanelMenu({
   open,
   onClose,
 }: DashboardPanelMenuProps) {
+  const { animationsEnabled } = useAccessibility();
   const { t } = useTranslation("dashboard");
 
   const menuItems = mapMenuItems(
@@ -38,6 +40,7 @@ export function DashboardPanelMenu({
       open={open}
       onClose={onClose}
       width={250}
+      animationsEnabled={animationsEnabled}
     />
   );
 }

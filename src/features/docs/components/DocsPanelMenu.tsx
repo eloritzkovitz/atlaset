@@ -9,6 +9,7 @@ import {
   SubmenuSection,
   DirectionalIcon,
 } from "@components";
+import { useAccessibility } from "@features/settings";
 import { useScreenSize } from "@hooks";
 import { DOCS_GROUPS } from "../constants/docsMenu";
 
@@ -25,6 +26,7 @@ export function DocsPanelMenu({
   open,
   onClose,
 }: DocsPanelMenuProps) {
+  const { animationsEnabled } = useAccessibility();
   const { isMobile } = useScreenSize();
   const navigate = useNavigate();
 
@@ -60,6 +62,7 @@ export function DocsPanelMenu({
       width={340}
       className="!start-0"
       onHide={onClose}
+      animationsEnabled={animationsEnabled}
     >
       {selectedPanel && (
         <div className="flex justify-center mb-2 mt-2">

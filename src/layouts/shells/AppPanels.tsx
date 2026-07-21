@@ -4,7 +4,7 @@ import { HelpPanel } from "@features/docs";
 import { SearchPanel } from "@features/search";
 import { ShortcutsModal } from "@features/settings";
 import { FriendsPanel } from "@features/user";
-import { isAuthenticated } from "@utils/firebase";
+import { isAuthenticated } from "@lib/firebase";
 
 const CalendarModal = React.lazy(
   () => import("@features/calendar/components/CalendarModal"),

@@ -1,10 +1,12 @@
 import { useMemo } from "react";
-import type { Trip } from "@features/trips";
+import type { Trip } from "@features/trips/types";
 import {
   buildVisitedYearMap,
   getVisitCountStats,
   computeVisitCountsFromYearMap,
 } from "../utils/visits";
+
+const EMPTY_ARRAY: string[] = []; // Used to avoid unnecessary array allocations in useMemo dependencies
 
 /**
  * Computes visit-related statistics and maps used by the country filters.
@@ -22,7 +24,7 @@ export function useVisitStats(
   years?: number[],
   isReadonly?: boolean,
   sharedVisitedIsoCodes?: string[] | undefined,
-  manualVisitedCountryCodes: string[] = [],
+  manualVisitedCountryCodes: string[] = EMPTY_ARRAY,
 ) {
   const {
     map: visitedMap,

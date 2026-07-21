@@ -1,26 +1,35 @@
-import { useEffect, useState } from "react";
-import { DEFAULT_NEW_LAYER, type Layer } from "@features/atlas/layers";
+import { useEffect, useRef, useState } from "react";
+import { DEFAULT_NEW_LAYER } from "../constants/layers";
+import type { Layer } from "../types";
 
 export interface UseLayerManagerOptions {
   initialLayers: Layer[];
   persistLayers: (layers: Layer[]) => Promise<void>;
+  onLogAction?: (
+    action: "add" | "edit" | "remove" | "reorder",
+    layer: Layer,
+  ) => Promise<void>;
 }
 
 /**
  * Manages layer state and operations.
  * @param initialLayers - Initial layers to manage.
  * @param persistLayers - Function to persist layer changes.
+ * @param onLogAction - Optional function to log layer actions.
  * @returns Layer management utilities and state.
  */
 export function useLayerManager({
   initialLayers,
   persistLayers,
+  onLogAction,
 }: UseLayerManagerOptions) {
   const [layers, setLayers] = useState<Layer[]>(initialLayers);
   const [editingLayer, setEditingLayer] = useState<Layer | null>(null);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const isEditingLayer =
     !!editingLayer && layers.some((o) => o.id === editingLayer.id);
+
+  const isProcessing = useRef(false);
 
   // Sync layers state with initialLayers prop only on first load
   useEffect(() => {
@@ -30,18 +39,18 @@ export function useLayerManager({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialLayers]);
 
-  // Update layers and persist changes
+  /** Updates the entire layers array and persists changes. */
   async function updateLayers(updated: Layer[]) {
     setLayers(updated);
     await persistLayers(updated);
   }
 
-  // Update a specific layer by id
+  /** Updates a specific layer by id. */
   function mapLayer(id: string, updater: (layer: Layer) => Layer) {
     return layers.map((l) => (l.id === id ? updater(l) : l));
   }
 
-  // Import layers
+  /** Imports new layers. */
   async function importLayers(newLayers: Layer[]) {
     const existingIds = new Set(layers.map((l) => l.id));
     const uniqueNewLayers = newLayers.filter((l) => !existingIds.has(l.id));
@@ -51,32 +60,41 @@ export function useLayerManager({
     return merged;
   }
 
-  // Add layer
+  /** Adds a new layer. */
   async function addLayer(layer: Layer) {
+    if (onLogAction) await onLogAction("add", layer);
     await updateLayers([...layers, layer]);
   }
 
-  // Edit layer
+  /** Edits an existing layer. */
   async function editLayer(layer: Layer) {
-    await updateLayers(mapLayer(layer.id, () => layer));
+    if (onLogAction) await onLogAction("edit", layer);
+    await updateLayers(layers.map((l) => (l.id === layer.id ? layer : l)));
   }
 
-  // Rename layer
+  /** Renames a layer. */
   async function updateLayerName(id: string, newName: string) {
+    const layer = layers.find((l) => l.id === id);
+    if (!layer) return;
+    if (onLogAction) await onLogAction("edit", layer);
     await updateLayers(mapLayer(id, (l) => ({ ...l, name: newName })));
   }
 
-  // Reorder layers
+  /** Reorders layers. */
   async function reorderLayers(newOrder: Layer[]) {
+    if (onLogAction && newOrder.length > 0) {
+      await onLogAction("reorder", newOrder[0]);
+    }
+
     await updateLayers(newOrder);
   }
 
-  // Toggle visibility
+  /** Toggles the visibility of a layer. */
   async function toggleLayerVisibility(id: string) {
     await updateLayers(mapLayer(id, (l) => ({ ...l, visible: !l.visible })));
   }
 
-  // Duplicate layer
+  /** Duplicates a layer. */
   async function duplicateLayer(id: string) {
     const layer = layers.find((l) => l.id === id);
     if (!layer) return;
@@ -88,12 +106,14 @@ export function useLayerManager({
     await addLayer(newLayer);
   }
 
-  // Remove layer
+  /** Removes a layer. */
   async function removeLayer(id: string) {
+    const layer = layers.find((l) => l.id === id);
+    if (layer && onLogAction) await onLogAction("remove", layer);
     await updateLayers(layers.filter((l) => l.id !== id));
   }
 
-  // Open add layer modal
+  /** Opens the layer modal in add mode. */
   function openAddLayer() {
     setEditingLayer({
       ...DEFAULT_NEW_LAYER,
@@ -102,25 +122,35 @@ export function useLayerManager({
     setEditModalOpen(true);
   }
 
-  // Open edit layer modal
+  /** Opens the layer modal in edit mode. */
   function openEditLayer(layer: Layer) {
     setEditingLayer({ ...layer });
     setEditModalOpen(true);
   }
 
-  // Save layer (add or edit)
+  /** Saves the current layer (add or edit). */
   async function saveLayer() {
-    if (!editingLayer) return;
-    const exists = layers.some((o) => o.id === editingLayer.id);
-    if (exists) {
-      await editLayer(editingLayer);
-    } else {
-      await addLayer(editingLayer);
+    if (isProcessing.current) return;
+    isProcessing.current = true;
+
+    const current = editingLayer;
+    if (current) {
+      const exists = layers.some((o) => o.id === current.id);
+
+      if (onLogAction) await onLogAction(exists ? "edit" : "add", current);
+
+      await updateLayers(
+        exists
+          ? layers.map((l) => (l.id === current.id ? current : l))
+          : [...layers, current],
+      );
     }
+
     closeLayerModal();
+    isProcessing.current = false;
   }
 
-  // Close layer modal
+  /** Closes the layer modal. */
   function closeLayerModal() {
     setEditModalOpen(false);
     setEditingLayer(null);

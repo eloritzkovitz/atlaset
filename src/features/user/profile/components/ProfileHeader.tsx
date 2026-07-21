@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { FaPen, FaListUl } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { ActionButton, Card } from "@components";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/localization/hooks/useLanguage";
 import { UserAvatar } from "./UserAvatar";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";

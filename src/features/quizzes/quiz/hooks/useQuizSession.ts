@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { getCurrentUser } from "@lib/firebase";
 import { useAtomicTimer } from "../hooks/useAtomicTimer";
 import { useTickingSound } from "../hooks/useTickingSound";
 import { leaderboardsService } from "../../leaderboards/services/leaderboardsService";
-import { getCurrentUser } from "@utils/firebase";
 import type { QuizType, Difficulty, SessionProps } from "../../types";
 
 type LocalSession = {

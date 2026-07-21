@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { initializeAnalytics, logToGoogleAnalytics } from "@utils/analytics";
+import { initializeAnalytics, logToGoogleAnalytics } from "@lib/firebase";
 import { usePrivacySettings } from "./usePrivacySettings";
 
 /**

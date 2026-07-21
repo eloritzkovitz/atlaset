@@ -101,6 +101,6 @@ export function useListNavigation<T>({
       }
     },
     ["ArrowDown", "ArrowUp", "Enter", "Home", "End", "PageDown", "PageUp"],
-    enabled
+    { enabled: enabled },
   );
 }

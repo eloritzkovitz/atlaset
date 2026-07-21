@@ -1,6 +1,7 @@
 import { MarkdownFileRenderer } from "@components";
 import { changelogMarkdownComponents } from "@features/docs";
-import { useMarkdownFile, usePageTitle } from "@hooks";
+import { usePageTitle } from "@hooks";
+import { useMarkdownFile } from "@lib/markdown";
 
 export default function ChangelogPage() {
   const { content, error } = useMarkdownFile("/CHANGELOG.md");

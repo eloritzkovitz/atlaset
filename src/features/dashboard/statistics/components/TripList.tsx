@@ -1,7 +1,7 @@
 import { Chip } from "@components";
 import { formatDate } from "@utils/date";
 import { CountryFlag, useCountryData } from "@features/countries";
-import type { Trip } from "@features/trips";
+import type { Trip } from "@features/trips/types";
 import { getTripDays } from "@features/trips/utils/trips";
 
 interface TripListProps {

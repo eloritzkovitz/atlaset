@@ -1,5 +1,8 @@
 import type { RootState } from "@app/store";
-import { selectAuthUser, selectAuthReady } from "@features/user";
+import {
+  selectAuthReady,
+  selectAuthUser,
+} from "@features/user/auth/slices/authSlice";
 
 // Returns true if settings are ready for the current user context
 export const selectSettingsReady = (state: RootState) => {

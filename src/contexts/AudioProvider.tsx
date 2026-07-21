@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from "react";
-import { useSoundSettings } from "@features/settings";
+import { useSoundSettings } from "@features/settings/sound/useSoundSettings";
 import { AudioContext } from "./AudioContext";
 
 const soundMap: Record<string, string> = {
@@ -50,7 +50,7 @@ export const AudioProvider: React.FC<{ children: React.ReactNode }> = ({
       audio.currentTime = 0;
       audio.play();
     },
-    [mute, soundEffectsEnabled, soundEffectsVolume]
+    [mute, soundEffectsEnabled, soundEffectsVolume],
   );
 
   // Stop a sound by name (pause and reset)

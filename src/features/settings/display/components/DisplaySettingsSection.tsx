@@ -5,12 +5,12 @@ import { useTooltipTarget } from "@hooks";
 import { ThemePreview } from "./ThemePreview";
 import { useTheme } from "../hooks/useTheme";
 import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsToggle } from "@features/settings/common/components/SettingsToggle";
+import { SettingsToggle } from "../../common/components/SettingsToggle";
 
 export function DisplaySettingsSection() {
   const { theme, preference, setPreference, accent, setAccent } = useTheme();
   const { activeTarget, registerTarget } = useTooltipTarget();
-  const { t } = useTranslation("settings");  
+  const { t } = useTranslation("settings");
 
   const isSystemActive = preference === "system";
 
