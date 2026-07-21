@@ -33,7 +33,7 @@ export function useCountryData() {
 
   // Refresh function to re-fetch data on demand
   const refreshData = () => {
-    dispatch(fetchCountryData());
+    dispatch(fetchCountryData({ force: true }));
   };
 
   const countries = data.countries;
