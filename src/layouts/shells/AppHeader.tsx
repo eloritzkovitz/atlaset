@@ -12,7 +12,7 @@ interface AppHeaderProps {
  * @param show - whether to show the header
  */
 export function AppHeader({ show }: AppHeaderProps) {
-  const { isDesktop } = useScreenSize();
+  const { isMobile } = useScreenSize();
   const { uiVisible } = useUI();
 
   // Don't render if UI is not visible
@@ -29,7 +29,7 @@ export function AppHeader({ show }: AppHeaderProps) {
       `}
     >
       <div className="flex flex-1 justify-end gap-4 h-10">
-        {isDesktop && <SearchDropdown />}
+        {!isMobile && <SearchDropdown />}
         <UserMenu fixed={false} />
       </div>
     </header>

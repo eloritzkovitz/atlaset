@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-22
+
+- **[chore]** **General:** improved responsiveness for smaller screens like laptops
+
 ## 2026-07-21
 
 - **[breaking]** **User | Auth:** Updated session management and settings

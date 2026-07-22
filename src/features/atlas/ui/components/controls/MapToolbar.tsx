@@ -24,7 +24,7 @@ export function MapToolbar({
   children,
 }: MapToolbarProps) {
   const { isRtl } = useLanguage();
-  const { isMobile } = useScreenSize();
+  const { isLaptop, isMobile } = useScreenSize();
   const { uiVisible } = useUI();
   const { t } = useTranslation("atlas");
 
@@ -37,12 +37,12 @@ export function MapToolbar({
   });
 
   // Mobile toolbar
-  if (isMobile) {
+  if (isLaptop || isMobile) {
     return (
       <>
         {/* Floating FAB */}
         <button
-          className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4"
+          className={`fixed ${isLaptop ? "bottom-6" : "bottom-20"} end-4 z-50 bg-action rounded-full p-4`}
           onClick={() => setMenuOpen((open) => !open)}
           aria-label={
             menuOpen
@@ -59,8 +59,7 @@ export function MapToolbar({
         {/* Popover/modal menu */}
         {menuOpen && (
           <div
-            className="fixed end-4 z-[10020] mb-2"
-            style={{ bottom: "135px" }}
+            className={`fixed end-4 z-[10020] mb-2 ${isLaptop ? "bottom-22" : "bottom-36"}`}
           >
             <div
               className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"

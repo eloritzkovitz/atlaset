@@ -2,32 +2,35 @@ import { describe, it, expect } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { usePanelAnimation } from "./usePanelAnimation";
 
+type PanelAnimationProps = Parameters<typeof usePanelAnimation>[0];
+
 describe("usePanelAnimation", () => {
-  const runHook = (props: any) =>
+  const runHook = (props: Partial<PanelAnimationProps> = {}) =>
     renderHook(() =>
       usePanelAnimation({
         show: true,
+        showSidebar: true,
         isMobile: false,
-        isRtl: false,
         animationsEnabled: true,
         position: "left",
         ...props,
       }),
     ).result.current;
 
-  describe("Mobile Configuration Layouts", () => {
-    it("should output standard sliding animation classes when open", () => {
-      const cls = runHook({ isMobile: true, show: true });
-      expect(cls).toContain("transition-all duration-300");
-      expect(cls).toContain("translate-y-0 opacity-100");
+  describe("Mobile Configuration", () => {
+    it("returns correct visible and hidden animation classes", () => {
+      const open = runHook({ isMobile: true, show: true });
+      expect(open).toContain("bottom-0 start-0 end-0 z-50");
+      expect(open).toContain("transition-all duration-300");
+      expect(open).toContain("translate-y-0 opacity-100");
+
+      const closed = runHook({ isMobile: true, show: false });
+      expect(closed).toContain(
+        "translate-y-full opacity-0 pointer-events-none",
+      );
     });
 
-    it("should output standard off-screen sliding translation when closed", () => {
-      const cls = runHook({ isMobile: true, show: false });
-      expect(cls).toContain("translate-y-full opacity-0");
-    });
-
-    it("should strip out spatial offsets and motion classes if animations are disabled", () => {
+    it("respects disabled animations on mobile", () => {
       const cls = runHook({
         isMobile: true,
         show: false,
@@ -39,46 +42,43 @@ describe("usePanelAnimation", () => {
     });
   });
 
-  describe("Desktop Configuration Layouts", () => {
-    it("should align start margin assets properly on open left sidebars", () => {
-      const cls = runHook({ position: "left", show: true });
-      expect(cls).toContain("start-16");
-      expect(cls).toContain("translate-x-0 opacity-100");
-      expect(cls).toContain("will-change-transform");
+  describe("Desktop Configuration", () => {
+    it("handles left position with and without sidebar", () => {
+      const withSidebar = runHook({ position: "left", showSidebar: true });
+      expect(withSidebar).toContain("start-16");
+      expect(withSidebar).toContain("translate-x-0 opacity-100");
+      expect(withSidebar).toContain("will-change-transform");
+
+      const noSidebar = runHook({ position: "left", showSidebar: false });
+      expect(noSidebar).toContain("start-0");
     });
 
-    it("should align end margin assets properly on right overlays", () => {
-      const cls = runHook({ position: "right", show: true });
+    it("handles right position layout", () => {
+      const cls = runHook({ position: "right" });
       expect(cls).toContain("end-0");
     });
 
-    it("should handle directional translation strings dynamically based on RTL direction rules", () => {
-      expect(
-        runHook({ position: "left", show: false, isRtl: false }),
-      ).toContain("-translate-x-full");
-
-      expect(runHook({ position: "left", show: false, isRtl: true })).toContain(
-        "translate-x-full",
+    it("generates correct LTR/RTL CSS variant translation classes when closed", () => {
+      const leftClosed = runHook({ position: "left", show: false });
+      expect(leftClosed).toContain(
+        "ltr:-translate-x-full rtl:translate-x-full",
       );
 
-      expect(
-        runHook({ position: "right", show: false, isRtl: false }),
-      ).toContain("translate-x-full");
-
-      expect(
-        runHook({ position: "right", show: false, isRtl: true }),
-      ).toContain("-translate-x-full");
+      const rightClosed = runHook({ position: "right", show: false });
+      expect(rightClosed).toContain(
+        "ltr:translate-x-full rtl:-translate-x-full",
+      );
     });
 
-    it("should completely remove layout translations if animations are explicitly disabled", () => {
+    it("removes motion classes and transform states when animations are disabled", () => {
       const cls = runHook({
         position: "left",
         show: false,
         animationsEnabled: false,
       });
       expect(cls).toContain("transition-none");
-      expect(cls).not.toContain("translate-x-");
       expect(cls).not.toContain("will-change-transform");
+      expect(cls).not.toContain("translate-x-full");
       expect(cls).toContain("opacity-0 pointer-events-none");
     });
   });

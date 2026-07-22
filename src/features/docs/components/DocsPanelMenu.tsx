@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Branding,
+  DirectionalIcon,
   DrawerPanel,
   mapMenuItems,
   MenuButton,
-  Panel,
+  SidePanelMenu,
   SubmenuSection,
-  DirectionalIcon,
 } from "@components";
 import { useAccessibility } from "@features/settings";
 import { useScreenSize } from "@hooks";
@@ -52,7 +52,7 @@ export function DocsPanelMenu({
 
   // Panel content
   const panelContent = (
-    <Panel
+    <SidePanelMenu
       title={
         <div className="flex items-center gap-2 px-2">
           <Branding size={36} />
@@ -60,9 +60,11 @@ export function DocsPanelMenu({
         </div>
       }
       width={340}
-      className="!start-0"
-      onHide={onClose}
       animationsEnabled={animationsEnabled}
+      menuItems={[]}
+      selectedPanel={selectedPanel || ""}
+      setSelectedPanel={setSelectedPanel}
+      showSidebar={false}
     >
       {selectedPanel && (
         <div className="flex justify-center mb-2 mt-2">
@@ -97,7 +99,7 @@ export function DocsPanelMenu({
           />
         ))}
       </ul>
-    </Panel>
+    </SidePanelMenu>
   );
 
   // Mobile: drawer

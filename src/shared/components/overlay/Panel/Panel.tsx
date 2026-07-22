@@ -13,6 +13,7 @@ export interface PanelProps {
   onHide?: () => void;
   escEnabled?: boolean;
   showCloseButton?: boolean;
+  showSidebar?: boolean;
   headerActions?: ReactNode;
   showSeparator?: boolean;
   scrollable?: boolean;
@@ -33,6 +34,7 @@ export function Panel({
   showCloseButton = true,
   headerActions,
   showSeparator = true,
+  showSidebar = true,
   scrollable = true,
   animationsEnabled = true,
   style = {},
@@ -44,6 +46,7 @@ export function Panel({
 
   const panelAnimationClass = usePanelAnimation({
     show,
+    showSidebar,
     isMobile,
     animationsEnabled,
     position,
@@ -70,7 +73,7 @@ export function Panel({
         {headerActions}
       </DialogHeader>
       <div
-        className={`flex-1 min-h-0 px-4 pb-8${isMobile ? " pb-20" : ""}${
+        className={`flex-1 min-h-0 px-4 pb-8 ${isMobile ? "pb-20" : ""}${
           scrollable ? " overflow-y-auto" : ""
         }`}
       >

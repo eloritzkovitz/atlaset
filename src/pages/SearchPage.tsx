@@ -7,6 +7,7 @@ import { useCountryData } from "@features/countries";
 import { SearchSection, useSearch } from "@features/search";
 import { useUserFriends } from "@features/user";
 import { usePageTitle } from "@hooks";
+import { Container } from "@layouts";
 import { getQueryParam } from "@utils/url";
 
 export default function SearchPage() {
@@ -56,7 +57,7 @@ export default function SearchPage() {
   >("all");
 
   return (
-    <main className="p-4 max-w-6xl mx-auto mt-12">
+    <Container className="mt-12">
       {loading ? (
         <EmptyListMessage message={t("search.searching")} />
       ) : queryParam ? (
@@ -96,6 +97,6 @@ export default function SearchPage() {
           </>
         )
       ) : null}
-    </main>
+    </Container>
   );
 }

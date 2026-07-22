@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useVisitedCountries } from "@features/visits";
+import { Container } from "@layouts";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
@@ -75,7 +76,7 @@ export function AchievementInfo() {
     : "Dependencies and territories";
 
   return (
-    <section className="max-w-6xl mx-auto px-4">
+    <Container>
       <DashboardHeader
         title={achievement.name}
         leading={<AchievementIcon type={achievement.type} locked={false} />}
@@ -137,6 +138,6 @@ export function AchievementInfo() {
           />
         </div>
       )}
-    </section>
+    </Container>
   );
 }

@@ -1,3 +1,4 @@
+import { useTimeline } from "@contexts/TimelineContext";
 import { useAccessibility } from "@features/settings";
 import { useKeyHandler } from "@hooks";
 import { useAtlasActions } from "../../shared/hooks/useAtlasActions";
@@ -6,6 +7,7 @@ import { useAtlasActions } from "../../shared/hooks/useAtlasActions";
 export function AtlasShortcuts() {
   const { singleKeyShortcutsEnabled } = useAccessibility();
   const { actions, conditions: c } = useAtlasActions();
+  const { setTimelineMode } = useTimeline();
 
   // Common options for single-character shortcuts
   const opts = (enabled: boolean) => ({
@@ -22,6 +24,20 @@ export function AtlasShortcuts() {
   useKeyHandler(actions.toggleMarkers, ["m", "M"], opts(c.markers));
   useKeyHandler(actions.toggleAtlasMode, ["a", "A"], opts(c.atlasMode));
   useKeyHandler(actions.toggleSettings, ["s", "S"], opts(c.settings));
+  useKeyHandler(
+    () => {
+      setTimelineMode((prev) => !prev);
+      setTimeout(() => {
+        try {
+          window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
+        } catch {
+          void 0;
+        }
+      }, 0);
+    },
+    ["t", "T"],
+    opts(c.timeline ?? true),
+  );
 
   return null;
 }

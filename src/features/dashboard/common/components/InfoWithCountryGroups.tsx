@@ -110,7 +110,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   };
 
   return (
-    <section className="max-w-6xl mx-auto">
+    <section>
       {showHeader && (
         <DashboardHeader title={title} subtitle={subtitle} onBack={onBack} />
       )}

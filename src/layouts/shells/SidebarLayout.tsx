@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { HamburgerButton } from "@components";
 import { useScreenSize } from "@hooks";
+import { Container } from "./Container";
 
 interface SidebarLayoutProps {
   menu: React.ReactNode;
@@ -9,9 +10,7 @@ interface SidebarLayoutProps {
   contentClassName?: string;
 }
 
-/**
- * A responsive layout for pages with a sidebar menu and hamburger toggle on mobile.
- */
+/** A responsive layout for pages with a sidebar menu and hamburger toggle on mobile. */
 export function SidebarLayout({
   menu,
   children,
@@ -43,14 +42,12 @@ export function SidebarLayout({
           <div className="mb-4" />
         </>
       )}
-      <div className="flex flex-1 flex-col md:flex-row w-full max-w-6xl mx-auto gap-0 md:gap-6 h-full">
+      <div className="flex gap-0 md:gap-6 h-full">
         <div className="flex-shrink-0 flex flex-col justify-start w-full md:w-auto md:h-full">
           {menuWithProps}
         </div>
-        <main
-          className={`flex-1 flex flex-col items-center px-2 md:px-12 py-10 md:py-16 ${contentClassName}`}
-        >
-          {children}
+        <main className={`items-center mx-auto ${contentClassName}`}>
+          <Container className="w-full mt-12">{children}</Container>
         </main>
       </div>
     </div>

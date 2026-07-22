@@ -35,7 +35,7 @@ export function DashboardListGrid<T>({
   }, [items, search, getCode, getName]);
 
   return (
-    <section className="max-w-6xl mx-auto p-4">
+    <>
       {headerActions}
       <div className="flex justify-between items-center mb-4">
         <SearchInput
@@ -87,6 +87,6 @@ export function DashboardListGrid<T>({
           })
         )}
       </ul>
-    </section>
+    </>
   );
 }

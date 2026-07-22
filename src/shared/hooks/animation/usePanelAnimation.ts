@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 interface UsePanelAnimationOptions {
   show: boolean;
+  showSidebar: boolean;
   isMobile: boolean;
   animationsEnabled: boolean;
   position: "left" | "right";
@@ -10,6 +11,7 @@ interface UsePanelAnimationOptions {
 /**
  * Manages panel open/close state with animation support.
  * @param show - Whether the panel is currently shown.
+ * @param showSidebar - Whether the sidebar is currently shown.
  * @param isMobile - Whether the current screen size is mobile.
  * @param isRtl - Whether the current language direction is right-to-left.
  * @param animationsEnabled - Whether animations are enabled in accessibility settings.
@@ -18,6 +20,7 @@ interface UsePanelAnimationOptions {
  */
 export function usePanelAnimation({
   show,
+  showSidebar,
   isMobile,
   animationsEnabled,
   position,
@@ -40,7 +43,11 @@ export function usePanelAnimation({
 
     // Handle desktop view
     const isLeft = position !== "right";
-    const positionClass = isLeft ? "start-16" : "end-0";
+    const positionClass = isLeft
+      ? showSidebar
+        ? "start-16"
+        : "start-0"
+      : "end-0";
 
     let translateOffset = "";
     if (animationsEnabled) {
@@ -55,5 +62,5 @@ export function usePanelAnimation({
       : `${translateOffset} opacity-0 pointer-events-none`;
 
     return `fixed bg-surface flex flex-col h-screen top-0 ${positionClass} z-40 ${gpuClass} ${transitionClass} focus:outline-none shadow ${visibilityClass}`;
-  }, [show, isMobile, animationsEnabled, position]);
+  }, [show, showSidebar, isMobile, animationsEnabled, position]);
 }

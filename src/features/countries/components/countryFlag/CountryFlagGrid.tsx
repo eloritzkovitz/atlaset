@@ -13,6 +13,7 @@ interface CountryFlagGridProps {
   onCountryClick?: (isoCode: string) => void;
 }
 
+/** Renders a grid of country flags. */
 export function CountryFlagGrid({
   countryCodes,
   size = "32",
@@ -36,13 +37,13 @@ export function CountryFlagGrid({
 
   const defaultGridClass =
     size === "64"
-      ? "grid grid-cols-2 md:grid-cols-10 gap-6"
-      : "grid gap-2 justify-items-center items-center max-w-xs mx-auto mb-2";
+      ? "grid grid-cols-2 grid-cols-10 gap-6"
+      : "grid w-full gap-2 justify-center justify-items-center items-center mb-2";
 
-  const defaultGridStyle =
-    size === "32"
-      ? { gridTemplateColumns: `repeat(auto-fit, minmax(36px, 1fr))` }
-      : undefined;
+  const defaultGridStyle = {
+    gridTemplateColumns:
+      size === "32" ? "repeat(auto-fit, minmax(36px, max-content))" : undefined,
+  };
 
   return (
     <ul

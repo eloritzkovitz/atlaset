@@ -3,7 +3,6 @@ import {
   getLatestYear,
   getYearsFromTrips,
 } from "@features/visits/utils/visits";
-import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@lib/firebase";
 import { useAudio } from "./AudioContext";
 import { useMapView } from "./MapViewContext";
@@ -38,17 +37,6 @@ export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
       setColorMode("standard");
     }
   };
-
-  useKeyHandler(() => {
-    handleSetTimelineMode((prev) => !prev);
-    setTimeout(() => {
-      try {
-        window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
-      } catch {
-        void 0;
-      }
-    }, 0);
-  }, ["t", "T"]);
 
   // When timeline mode changes, play a sound effect
   useEffect(() => {

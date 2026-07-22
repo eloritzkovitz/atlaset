@@ -20,6 +20,7 @@ import {
 } from "@features/dashboard";
 import { useAuth } from "@features/user";
 import { usePageTitle, useScreenSize } from "@hooks";
+import { Container } from "@layouts";
 
 export default function DashboardPage() {
   const { ready } = useAuth();
@@ -211,7 +212,7 @@ export default function DashboardPage() {
           />
         </>
       )}
-      <div className="p-4 max-w-6xl mx-auto flex gap-6">
+      <Container>
         {!isMobile && (
           <DashboardPanelMenu
             selectedPanel={menuSelectedPanel}
@@ -243,7 +244,7 @@ export default function DashboardPage() {
             onBack={handleBack}
           />
         </div>
-      </div>
+      </Container>
     </div>
   );
 }

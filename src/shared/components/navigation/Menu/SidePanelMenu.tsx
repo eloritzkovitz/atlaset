@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import {
+  TbLayoutSidebarLeftExpand,
+  TbLayoutSidebarRightExpand,
+} from "react-icons/tb";
+import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useScreenSize } from "@hooks";
 import { MenuButton } from "./MenuButton";
-import { HamburgerButton } from "../../inputs/Button/HamburgerButton";
+import { ActionButton } from "../../inputs/Button/ActionButton";
 import { Panel } from "../../overlay/Panel/Panel";
 import { DrawerPanel } from "../../overlay/Drawer/DrawerPanel";
 
@@ -20,15 +25,15 @@ export interface SidePanelMenuProps {
   open?: boolean;
   onClose?: () => void;
   width?: number;
-  showHamburger?: boolean;
+  collapsed?: boolean;
   animationsEnabled?: boolean;
   menuButtonClassName?: string;
+  isRtl?: boolean;
+  showSidebar?: boolean;
+  children?: React.ReactNode;
 }
 
-/**
- * Generic side panel menu.
- * Handles panel, drawer, and hamburger logic for mobile/desktop.
- */
+/** Generic side panel menu. Handles panel, drawer, and dynamic panel toggle logic for mobile/desktop. */
 export function SidePanelMenu({
   title,
   menuItems,
@@ -37,15 +42,23 @@ export function SidePanelMenu({
   open: openProp,
   onClose: onCloseProp,
   width = 250,
-  showHamburger = true,
+  collapsed = true,
   animationsEnabled = true,
   menuButtonClassName = "w-full px-2 !text-lg font-semibold",
+  isRtl = false,
+  showSidebar = true,
+  children,
 }: SidePanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
   const [localOpen, setLocalOpen] = useState(false);
   const open = openProp !== undefined ? openProp : localOpen;
   const onClose =
     onCloseProp !== undefined ? onCloseProp : () => setLocalOpen(false);
+
+  // Render the appropriate sidebar icon based on RTL and open state
+  const SidebarIcon = isRtl
+    ? TbLayoutSidebarRightExpand
+    : TbLayoutSidebarLeftExpand;
 
   // Panel content
   const panelContent = (
@@ -55,6 +68,7 @@ export function SidePanelMenu({
       className={isMobile ? "!start-0" : undefined}
       onHide={isMobile || isLaptop ? onClose : undefined}
       animationsEnabled={animationsEnabled}
+      showSidebar={showSidebar}
     >
       <ul className="flex flex-col gap-2 p-1">
         {menuItems.map((item) => (
@@ -74,20 +88,29 @@ export function SidePanelMenu({
           </li>
         ))}
       </ul>
+      {children}
     </Panel>
   );
 
-  // Mobile/laptop: show hamburger and drawer
+  // Mobile/laptop: show toggle button and drawer
   if (isMobile || isLaptop) {
     return (
       <>
-        {showHamburger && openProp === undefined && (
-          <HamburgerButton
+        {collapsed && (
+          <ActionButton
+            type="button"
+            icon={<SidebarIcon className="text-3xl text-muted" />}
             onClick={() => setLocalOpen(true)}
-            className="start-18 !top-2.5"
+            className={`fixed top-3.5 ${showSidebar ? "start-18" : "start-2"} z-20`}
+            aria-label="Open Side Panel"
+            title="Open Side Panel"
           />
         )}
-        <DrawerPanel open={!!open} onClose={onClose} width={width + 30}>
+        <DrawerPanel
+          open={!!open}
+          onClose={onClose}
+          width={width + (showSidebar ? DEFAULT_SIDEBAR_WIDTH : 0)}
+        >
           {panelContent}
         </DrawerPanel>
       </>
