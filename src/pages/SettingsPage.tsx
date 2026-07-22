@@ -69,9 +69,9 @@ export default function SettingsPage() {
           canEdit={canEdit}
         />
       }
-      contentClassName="min-h-screen"
+      contentClassName="w-4xl"
     >
-      <div className="w-full max-w-2xl">
+      <div>
         {userLoading || profileLoading ? (
           <div className="animate-pulse space-y-6">
             <div className="h-12 bg-surface-alt rounded-xl mb-4" />

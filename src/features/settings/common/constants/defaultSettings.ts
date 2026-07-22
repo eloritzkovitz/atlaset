@@ -18,6 +18,9 @@ export const defaultSettings: Settings = {
       borderColor: MAP_CONFIG_OPTIONS.strokeColor[0].value,
       borderWidth: MAP_CONFIG_OPTIONS.strokeWidth[0].value,
     },
+    interface: {
+      toolbarOrientation: "horizontal",
+    },
     overlays: {
       showSmallCountryOverlays: false,
       showHomeCountry: false,

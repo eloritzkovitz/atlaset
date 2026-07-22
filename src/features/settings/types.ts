@@ -43,6 +43,11 @@ export type MapConfigurationSettings = {
   borderWidth?: number;
 };
 
+/** Represents map interface and layout settings. */
+export type MapInterfaceSettings = {
+  toolbarOrientation: "horizontal" | "vertical";
+};
+
 /** Represents map overlay settings. */
 export type MapOverlaySettings = {
   showSmallCountryOverlays: boolean;
@@ -61,6 +66,7 @@ export type MapColorsSettings = {
 /** Represents map-related settings. */
 export type MapSettings = {
   configuration: MapConfigurationSettings;
+  interface: MapInterfaceSettings;
   overlays: MapOverlaySettings;
   colors: MapColorsSettings;
 };

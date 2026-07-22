@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   TbLayoutSidebarLeftExpand,
   TbLayoutSidebarRightExpand,
@@ -28,7 +29,6 @@ export interface SidePanelMenuProps {
   collapsed?: boolean;
   animationsEnabled?: boolean;
   menuButtonClassName?: string;
-  isRtl?: boolean;
   showSidebar?: boolean;
   children?: React.ReactNode;
 }
@@ -45,18 +45,21 @@ export function SidePanelMenu({
   collapsed = true,
   animationsEnabled = true,
   menuButtonClassName = "w-full px-2 !text-lg font-semibold",
-  isRtl = false,
   showSidebar = true,
   children,
 }: SidePanelMenuProps) {
   const { isLaptop, isMobile } = useScreenSize();
+  const { t } = useTranslation("common");
+
   const [localOpen, setLocalOpen] = useState(false);
   const open = openProp !== undefined ? openProp : localOpen;
   const onClose =
     onCloseProp !== undefined ? onCloseProp : () => setLocalOpen(false);
 
+  const isRTL = document.documentElement.dir === "rtl";
+
   // Render the appropriate sidebar icon based on RTL and open state
-  const SidebarIcon = isRtl
+  const SidebarIcon = isRTL
     ? TbLayoutSidebarRightExpand
     : TbLayoutSidebarLeftExpand;
 
@@ -102,8 +105,8 @@ export function SidePanelMenu({
             icon={<SidebarIcon className="text-3xl text-muted" />}
             onClick={() => setLocalOpen(true)}
             className={`fixed top-3.5 ${showSidebar ? "start-18" : "start-2"} z-20`}
-            aria-label="Open Side Panel"
-            title="Open Side Panel"
+            aria-label={t("sidePanel.open")}
+            title={t("sidePanel.open")}
           />
         )}
         <DrawerPanel

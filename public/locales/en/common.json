@@ -163,6 +163,10 @@
   "date": {
     "tbd": "TBD"
   },
+  "sidePanel": {
+    "open": "Open menu",
+    "close": "Close menu"
+  },
   "pagination": {
     "showing": "Showing",
     "pageSize": "Page size",

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { FaChevronUp } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { ActionButton, ActionsToolbar, DirectionalIcon } from "@components";
+import {
+  ActionButton,
+  ActionsToolbar,
+  DirectionalIcon,
+  Separator,
+} from "@components";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage } from "@features/settings";
 import { useScreenSize } from "@hooks";
@@ -11,6 +16,7 @@ import { useToolbarActions } from "../../hooks/useToolbarActions";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {
+  orientation: "horizontal" | "vertical";
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   isEmbed?: boolean;
@@ -18,6 +24,7 @@ interface MapToolbarProps {
 }
 
 export function MapToolbar({
+  orientation = "vertical",
   zoom,
   setZoom,
   isEmbed,
@@ -36,13 +43,14 @@ export function MapToolbar({
     setMenuOpen,
   });
 
-  // Mobile toolbar
-  if (isLaptop || isMobile) {
+  const isVertical = orientation === "vertical";
+
+  // Mobile Layout: Floating FAB + Popover
+  if (isMobile) {
     return (
       <>
-        {/* Floating FAB */}
         <button
-          className={`fixed ${isLaptop ? "bottom-6" : "bottom-20"} end-4 z-50 bg-action rounded-full p-4`}
+          className="fixed bottom-20 end-4 z-50 bg-action rounded-full p-4 shadow-lg"
           onClick={() => setMenuOpen((open) => !open)}
           aria-label={
             menuOpen
@@ -56,11 +64,9 @@ export function MapToolbar({
             }`}
           />
         </button>
-        {/* Popover/modal menu */}
+
         {menuOpen && (
-          <div
-            className={`fixed end-4 z-[10020] mb-2 ${isLaptop ? "bottom-22" : "bottom-36"}`}
-          >
+          <div className="fixed end-4 z-[10020] mb-2 bottom-36">
             <div
               className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"
               onClick={(e) => e.stopPropagation()}
@@ -73,23 +79,83 @@ export function MapToolbar({
     );
   }
 
-  // Desktop toolbar
+  // Vertical layout
+  if (isVertical) {
+    return (
+      <div
+        className={`fixed end-4 bottom-8 z-40 flex flex-col items-center gap-2 transition-opacity duration-300 ${
+          uiVisible
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div
+          className={`flex flex-col items-center gap-2 transition-all duration-300 origin-bottom ${
+            visible
+              ? "opacity-100 pointer-events-auto translate-y-0"
+              : "opacity-0 pointer-events-none translate-y-4"
+          }`}
+        >
+          <div className="bg-action/90 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center">
+            <MapControls zoom={zoom} setZoom={setZoom} visible={true} />
+            <Separator orientation="horizontal" className="my-1 w-6" />
+            <div className="flex flex-col items-center gap-1.5">
+              <MapToolbarActions
+                actions={actions}
+                isDesktop={true}
+                orientation="horizontal"
+              >
+                {children}
+              </MapToolbarActions>
+            </div>
+          </div>
+        </div>
+
+        {/* Toggle Button */}
+        {!isEmbed && (
+          <ActionButton
+            onClick={() => setVisible((v) => !v)}
+            ariaLabel={
+              visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
+            }
+            title={
+              visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
+            }
+            titlePosition="left"
+            variant="action"
+            className={`shadow ${!visible ? "opacity-70" : ""}`}
+            icon={
+              <FaChevronUp
+                className={`transition-transform duration-300 ${
+                  visible ? "rotate-180" : "rotate-0"
+                }`}
+              />
+            }
+            rounded
+          />
+        )}
+      </div>
+    );
+  }
+
+  // Horizontal layout
   return (
     <div
       className={`toolbar-container ${
-        isEmbed ? "!end-2 !bottom-0" : "end-0 md:end-4 bottom-8"
+        isEmbed
+          ? "!end-2 !bottom-0"
+          : `end-0 ${isLaptop ? "end-40" : "end-4"} bottom-8`
       } ${
         uiVisible ? "toolbar-container-visible" : "toolbar-container-hidden"
       }`}
     >
-      {/* Zoom controls: vertical slide */}
       <MapControls zoom={zoom} setZoom={setZoom} visible={visible} />
+
       {!isEmbed && (
         <div
-          className="relative flex items-center w-full justify-end"
+          className="relative flex items-center justify-end"
           style={{ height: "40px" }}
         >
-          {/* Toggle button */}
           <ActionButton
             onClick={() => setVisible((v) => !v)}
             ariaLabel={
@@ -110,9 +176,8 @@ export function MapToolbar({
             }
             rounded
           />
-          {/* Actions: horizontal slide */}
           <ActionsToolbar
-            className={`end-10 md:end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 shadow ${
+            className={`end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 shadow ${
               visible
                 ? "opacity-100 pointer-events-auto translate-x-0"
                 : `opacity-0 pointer-events-none ${isRtl ? "-translate-x-10" : "translate-x-10"}`

@@ -80,6 +80,7 @@ import {
   FaShareFromSquare,
   FaShareNodes,
   FaShieldHalved,
+  FaSliders,
   FaSquarePlus,
   FaStar,
   FaSuitcaseRolling,
@@ -140,6 +141,7 @@ export const ICONS = {
   mapSettings: {
     base: FaGear,
     configuration: FaCompassDrafting,
+    interface: FaSliders,
     overlays: TbSquaresSelected,
     colors: FaPalette,
   },

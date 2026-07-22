@@ -4,12 +4,14 @@ import type { ToolbarActionItem } from "../../hooks/useToolbarActions";
 interface MapToolbarActionsProps {
   actions: ToolbarActionItem[];
   isDesktop: boolean;
+  orientation?: "horizontal" | "vertical";
   children?: React.ReactNode;
 }
 
 export function MapToolbarActions({
   actions,
   isDesktop,
+  orientation = "vertical",
   children,
 }: MapToolbarActionsProps) {
   if (isDesktop) {
@@ -32,7 +34,7 @@ export function MapToolbarActions({
             action.separatorAfter ? (
               <Separator
                 key={action.key + "-sep"}
-                orientation="vertical"
+                orientation={orientation}
                 className="mx-2 h-6"
               />
             ) : null,

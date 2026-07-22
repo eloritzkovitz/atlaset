@@ -163,6 +163,10 @@
   "date": {
     "tbd": "טרם"
   },
+  "sidePanel": {
+    "open": "פתח את התפריט",
+    "close": "סגור את התפריט"
+  },
   "pagination": {
     "showing": "מציג",
     "pageSize": "גודל עמוד",

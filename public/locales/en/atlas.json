@@ -275,6 +275,14 @@
       "borderColor": "Stroke color",
       "borderWidth": "Stroke width"
     },
+    "interface": {
+      "title": "Interface",
+      "toolbarOrientation": "Toolbar orientation",
+      "orientations": {
+        "horizontal": "Horizontal",
+        "vertical": "Vertical"
+      }
+    },
     "overlays": {
       "title": "Overlays",
       "showSmallCountryOverlays": "Show small country overlays",

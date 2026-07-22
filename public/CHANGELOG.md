@@ -2,7 +2,8 @@
 
 ## 2026-07-22
 
-- **[chore]** **General:** improved responsiveness for smaller screens like laptops
+- **[chore]** **General:** Improved responsiveness for smaller screens like laptops
+- **[feature]** **Atlas | UI:** Added map toolbar orientation with a new vertical orientation
 
 ## 2026-07-21
 

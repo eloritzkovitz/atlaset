@@ -275,6 +275,14 @@
       "borderColor": "צבע קו",
       "borderWidth": "עובי קו"
     },
+    "interface": {
+      "title": "ממשק משתמש",
+      "toolbarOrientation": "כיוון סרגל הכלים",
+      "orientations": {
+        "horizontal": "אופקי",
+        "vertical": "אנכי"
+      }
+    },
     "overlays": {
       "title": "שכבות על",
       "showSmallCountryOverlays": "הצג שטחים קטנים",
