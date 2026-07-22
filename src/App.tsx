@@ -1,21 +1,16 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import {
-  LoadingSpinner,
-  PwaUpdateUiHint,
-  SplashScreen,
-  UIHintContainer,
-} from "@components";
+import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { useSettings } from "@contexts/SettingsContext";
 import { AchievementsProvider } from "@contexts/AchievementsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
 import { CookieConsentModal, useAnalytics } from "@features/settings";
-import { AppLayout, EmbedLayout, PublicLayout } from "@layouts";
-import { AtlasProviders } from "./pages/AtlasProvider";
+import { AppLayout, PublicLayout } from "@layouts";
 import AboutPage from "./pages/AboutPage";
 import ActivityPage from "./pages/ActivityPage";
+import ChangelogPage from "./pages/ChangelogPage";
 import DashboardPage from "./pages/DashboardPage";
 import DocsPage from "./pages/DocsPage";
 import HomePage from "./pages/HomePage";
@@ -31,7 +26,9 @@ import TripsPage from "./pages/TripsPage";
 import { ProtectedRoute } from "./shared/router/ProtectedRoute";
 
 // Lazy-loaded pages
-const ChangelogPage = lazy(() => import("./pages/ChangelogPage"));
+const AtlasProviders = lazy(() =>
+  import("./pages/AtlasProviders").then((m) => ({ default: m.AtlasProviders })),
+);
 
 function App() {
   const { ready } = useSettings();
@@ -95,32 +92,18 @@ function App() {
               <Route
                 path="/changelog"
                 element={
-                  <Suspense fallback={<LoadingSpinner />}>
-                    <PublicLayout>
-                      <ChangelogPage />
-                    </PublicLayout>
-                  </Suspense>
+                  <PublicLayout>
+                    <ChangelogPage />
+                  </PublicLayout>
                 }
               />
               <Route path="/docs/*" element={<DocsPage />} />
               <Route
                 path="/atlas"
                 element={
-                  window.location.search.includes("embed") ? (
-                    <EmbedLayout
-                      mapCode={
-                        new URLSearchParams(window.location.search).get(
-                          "map",
-                        ) || undefined
-                      }
-                    >
-                      <AtlasProviders />
-                    </EmbedLayout>
-                  ) : (
-                    <AppLayout>
-                      <AtlasProviders />
-                    </AppLayout>
-                  )
+                  <Suspense fallback={<SplashScreen />}>
+                    <AtlasProviders />
+                  </Suspense>
                 }
               />
               <Route

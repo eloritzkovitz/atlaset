@@ -1,5 +1,6 @@
 import { type JSX } from "react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { GitHubButton } from "./GitHubButton";
 
 interface AppLinksProps {
@@ -46,9 +47,9 @@ export function AppLinks({
           return link;
         }
         return (
-          <a key={link.label} href={link.href} className={linkClassName}>
+          <Link key={link.label} to={link.href} className={linkClassName}>
             {link.label}
-          </a>
+          </Link>
         );
       })}
     </div>

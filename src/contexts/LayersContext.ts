@@ -8,7 +8,7 @@ export interface LayersContextType {
   setLayerSelections: React.Dispatch<
     React.SetStateAction<Record<string, string>>
   >;
-  reloadLayers: () => Promise<void>;
+  reloadLayers: () => Promise<AnyLayer[]>;
   importLayers: (newLayers: AnyLayer[]) => Promise<void>;
   addLayer: (layer: AnyLayer) => void;
   editLayer: (layer: AnyLayer) => void;
@@ -18,7 +18,7 @@ export interface LayersContextType {
   duplicateLayer: (id: string) => void;
   removeLayer: (id: string) => void;
   loading: boolean;
-  error: string | null;
+  error: Error | null;
   editingLayer: AnyLayer | null;
   isEditingLayer: boolean;
   isEditModalOpen: boolean;
@@ -30,7 +30,7 @@ export interface LayersContextType {
 }
 
 export const LayersContext = createContext<LayersContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function useLayers() {

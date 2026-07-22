@@ -6,6 +6,7 @@ export * from "./animation/usePanelAnimation";
 export * from "./animation/useValueFlash";
 
 // Data
+export * from "./data/useDataLoader";
 export * from "./data/useIncrementalList";
 export * from "./data/usePagination";
 export * from "./data/useSort";

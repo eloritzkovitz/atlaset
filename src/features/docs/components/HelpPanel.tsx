@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { AppLinks, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAccessibility } from "@features/settings";
@@ -34,9 +35,9 @@ export function HelpPanel({ open, onClose }: HelpPanelProps) {
         </div>
         <div className="text-sm text-muted">
           {t("help.needHelp")}
-          <a href="/docs" className="ms-1 hover:!text-info">
+          <Link to="/docs" className="ms-1 hover:!text-info">
             {t("help.documentation")}
-          </a>
+          </Link>
           .
         </div>
         <AppLinks

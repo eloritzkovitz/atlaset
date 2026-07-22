@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
 import { CountryListModal } from "@features/atlas/countries";
 import type { Layer } from "@features/atlas/layers/types";
@@ -9,6 +9,7 @@ import {
   CountryListsContext,
   type CountryListsContextValue,
 } from "./CountryListsContext";
+import { useDataLoader } from "@hooks";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -21,26 +22,28 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     removeWantToVisitCountry,
   } = useVisitedCountries();
 
-  const [countryLists, setCountryLists] = useState<CountryList[]>([]);
   const [currentList, setCurrentList] = useState<CountryList | null>(null);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
   const [isTrackingList, setIsTrackingList] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Reloads the country lists from the service
-  const reloadCountryLists = async () => {
-    setLoading(true);
-    const lists = await countryListService.load();
-    setCountryLists(lists);
-    setLoading(false);
-  };
+  // Data loader for fetching country lists
+  const fetchCountryLists = useCallback(() => countryListService.load(), []);
+  const {
+    data: loadedLists,
+    loading,
+    reload: reloadCountryLists,
+  } = useDataLoader<CountryList[]>({
+    fetchFn: fetchCountryLists,
+  });
 
-  // Load lists on mount
+  const countryLists = loadedLists ?? [];
+
+  // Initial load
   useEffect(() => {
     reloadCountryLists();
-  }, []);
+  }, [reloadCountryLists]);
 
   // Closes out modal state and completely flushes tracking records
   const closeModal = () => {
@@ -118,11 +121,13 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       layerId: layer.id,
     });
 
-    await logUserActivity(
-      241,
-      { itemName: layer.name, userName: user!.displayName },
-      user!.uid,
-    );
+    if (user?.uid) {
+      await logUserActivity(
+        241,
+        { itemName: layer.name, userName: user.displayName },
+        user.uid,
+      );
+    }
 
     if (onLinked) onLinked(newListId);
     return newListId;
@@ -173,11 +178,13 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
 
-    await logUserActivity(
-      241,
-      { itemName: list.name, userName: user!.displayName },
-      user!.uid,
-    );
+    if (user?.uid) {
+      await logUserActivity(
+        241,
+        { itemName: list.name, userName: user.displayName },
+        user.uid,
+      );
+    }
 
     await reloadCountryLists();
     closeModal();
@@ -193,11 +200,13 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     await countryListService.save(list);
     await reloadCountryLists();
 
-    await logUserActivity(
-      242,
-      { itemName: list.name, userName: user!.displayName },
-      user!.uid,
-    );
+    if (user?.uid) {
+      await logUserActivity(
+        242,
+        { itemName: list.name, userName: user.displayName },
+        user.uid,
+      );
+    }
 
     closeModal();
   };
@@ -209,14 +218,16 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     await countryListService.delete(id);
     await reloadCountryLists();
 
-    await logUserActivity(
-      243,
-      {
-        itemName: listToDelete!.name ?? "Unknown List",
-        userName: user!.displayName,
-      },
-      user!.uid,
-    );
+    if (user?.uid) {
+      await logUserActivity(
+        243,
+        {
+          itemName: listToDelete?.name ?? "Unknown List",
+          userName: user.displayName,
+        },
+        user.uid,
+      );
+    }
 
     if (selectedListId === id) setSelectedListId(null);
     closeModal();

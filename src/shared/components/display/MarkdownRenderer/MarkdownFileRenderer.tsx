@@ -23,6 +23,16 @@ export function MarkdownFileRenderer({
   // If content or plugins are not available, return null to avoid rendering
   if (!content || !plugins) return null;
 
+  if (!plugins) {
+    return (
+      <div className="mx-auto mb-30 w-full max-w-full animate-pulse px-2 sm:px-4 md:px-0">
+        <div className="h-8 w-1/3 rounded bg-surface-alt mb-4" />
+        <div className="h-4 w-full rounded bg-surface-alt mb-2" />
+        <div className="h-4 w-5/6 rounded bg-surface-alt" />
+      </div>
+    );
+  }
+
   const { ReactMarkdown, remarkGfm, rehypeRaw, rehypePrism } = plugins;
 
   return (

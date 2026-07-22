@@ -8,7 +8,7 @@ export interface SavedMapsContextValue {
   savedMaps: SavedMap[];
   loading: boolean;
   error: Error | null;
-  reloadSavedMaps: () => Promise<void>;
+  reloadSavedMaps: () => Promise<SavedMap[]>;
   openSavedMapModal: (map?: SavedMap | null) => void;
   closeSavedMapModal: () => void;
   exitEditMode: () => void;

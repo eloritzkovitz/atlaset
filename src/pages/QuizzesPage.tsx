@@ -1,11 +1,4 @@
-import React, {
-  lazy,
-  Suspense,
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,15 +16,9 @@ import {
   setGameMode,
   setQuizType,
 } from "@features/quizzes/quiz/slices/quizSettingsSlice";
+import { Leaderboards } from "@features/quizzes/leaderboards/components/Leaderboards";
 import { useFlyTransition, usePageTitle, useUiHint } from "@hooks";
 import { isAuthenticated } from "@lib/firebase";
-
-// Lazy load leaderboards component
-const Leaderboards = lazy(() =>
-  import("@features/quizzes/leaderboards/components/Leaderboards").then(
-    (mod) => ({ default: mod.Leaderboards }),
-  ),
-);
 
 export default function QuizzesPage() {
   const location = useLocation();
@@ -211,14 +198,7 @@ export default function QuizzesPage() {
       />
       <Route path="guess-the-flag" element={<QuizEntry />} />
       <Route path="guess-the-capital" element={<QuizEntry />} />
-      <Route
-        path="leaderboards"
-        element={
-          <Suspense>
-            <Leaderboards />
-          </Suspense>
-        }
-      />
+      <Route path="leaderboards" element={<Leaderboards />} />
     </Routes>
   );
 }

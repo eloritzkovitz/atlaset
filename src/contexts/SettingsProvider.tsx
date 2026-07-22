@@ -4,7 +4,6 @@ import {
   useLayoutEffect,
   type PropsWithChildren,
 } from "react";
-import { setAppDateLocale } from "@utils/date";
 import { useSelector, useDispatch } from "react-redux";
 import {
   loadSettings,
@@ -19,25 +18,35 @@ import {
   selectAuthReady,
   selectAuthUser,
 } from "@features/user/auth/slices/authSlice";
+import { setAppDateLocale } from "@utils/date";
 import { SettingsContext } from "./SettingsContext";
 import type { AppDispatch } from "../store";
 
 export function SettingsProvider({ children }: PropsWithChildren<object>) {
   const settings = useSelector(selectSettings);
   const loading = useSelector(selectSettingsLoading);
-  const ready = useSelector(selectSettingsReady);
+  const rawReady = useSelector(selectSettingsReady);
   const authReady = useSelector(selectAuthReady);
   const authUser = useSelector(selectAuthUser);
   const dispatch = useDispatch<AppDispatch>();
 
-  // Load settings when user changes
+  // Track if settings have booted at least once for the current session
+  const hasBooted = useRef(false);
+  if (rawReady) {
+    hasBooted.current = true;
+  }
+  const ready = hasBooted.current || rawReady;
+
+  // Track if settings have been loaded for the current user
   const hasLoadedSettings = useRef<string | null>(null);
   useEffect(() => {
     const userId = authUser?.uid || null;
+
     if (authReady && userId && hasLoadedSettings.current !== userId) {
       dispatch(loadSettings());
       hasLoadedSettings.current = userId;
     }
+
     // If user logs out, reset ref so next login reloads settings
     if (!userId) {
       hasLoadedSettings.current = null;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 import { Modal, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
@@ -15,9 +15,8 @@ import { getNextCalendarDate } from "../utils/navigation";
 export default function CalendarModal() {
   const { trips } = useTrips();
   const { filters, setFilters, filteredTrips } = useTripFilters(trips);
-  const { showCalendar, calendarDate, closeCalendar } = useUI();
+  const { calendarDate, closeCalendar } = useUI();
 
-  // Date navigation state
   const [view, setView] = useState<CalendarView>("month");
   const [date, setDate] = useState<Date>(calendarDate ?? new Date());
 
@@ -25,14 +24,6 @@ export default function CalendarModal() {
   const handleToggleType = (type: TripEventTypeKey) => {
     setFilters((prev) => ({ ...prev, [type]: !prev[type] }));
   };
-
-  // Sync internal date with controlled prop
-  useEffect(() => {
-    if (calendarDate && calendarDate.getTime() !== date.getTime()) {
-      setDate(calendarDate);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [calendarDate]);
 
   // Handler for arrow keys
   const handleArrow = useCallback(
@@ -45,15 +36,12 @@ export default function CalendarModal() {
   );
 
   useKeyHandler(handleArrow, ["ArrowLeft", "ArrowRight"], {
-    enabled: showCalendar,
+    enabled: true,
   });
-
-  // Don't render the modal if it's not open
-  if (!showCalendar) return null;
 
   return ReactDOM.createPortal(
     <Modal
-      isOpen={showCalendar}
+      isOpen={true}
       onClose={closeCalendar}
       className="!min-w-4/5 min-h-[890px] !h-[890px] flex flex-col shadow relative"
       draggable

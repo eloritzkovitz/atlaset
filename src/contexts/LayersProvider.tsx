@@ -4,18 +4,43 @@ import { layersService, useLayerManager } from "@features/atlas/layers";
 import type { AnyLayer } from "@features/atlas/layers/types";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { LayersContext } from "./LayersContext";
+import { useDataLoader } from "@hooks";
 
 export function LayersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();
 
+  const lastAction = useRef<string | null>(null);
+  const loadedUserIdRef = useRef<string | null>(null);
   const [layerSelections, setLayerSelections] = useState<
     Record<string, string>
   >({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [initialLayers, setInitialLayers] = useState<AnyLayer[]>([]);
 
-  const lastAction = useRef<string | null>(null);
+  // Data loader for fetching layers
+  const fetchLayers = useCallback(() => layersService.load(), []);
+  const {
+    data: loadedLayers,
+    loading,
+    error,
+    reload: reloadLayers,
+  } = useDataLoader<AnyLayer[]>({
+    fetchFn: fetchLayers,
+  });
+
+  const initialLayers = loadedLayers ?? [];
+
+  // Auth-aware initial fetch guard
+  useEffect(() => {
+    if (!ready) return;
+
+    if (user?.uid) {
+      if (loadedUserIdRef.current !== user.uid) {
+        loadedUserIdRef.current = user.uid;
+        reloadLayers();
+      }
+    } else {
+      loadedUserIdRef.current = null;
+    }
+  }, [user?.uid, ready, reloadLayers]);
 
   // Layer manager for layers state and operations
   const {
@@ -63,26 +88,11 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  // Reload layers
-  const reloadLayers = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const dbLayers = await layersService.load();
-      setInitialLayers(dbLayers);
-      setLayers(dbLayers);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  }, [setLayers]);
-
   // Load layers when auth state changes
   useEffect(() => {
     if (!ready) return;
     reloadLayers();
-  }, [user, ready, reloadLayers]);
+  }, [user?.uid, ready, reloadLayers]);
 
   // Import layers from JSON
   async function importLayers(newLayers: AnyLayer[]) {
@@ -90,15 +100,17 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     const merged = await _importLayers(newLayers);
     const imported = merged.filter((l) => !before.some((b) => b.id === l.id));
     for (const layer of imported) {
-      await logUserActivity(
-        211,
-        {
-          layerId: layer.id,
-          itemName: layer.name,
-          userName: user?.displayName,
-        },
-        user!.uid,
-      );
+      if (user?.uid) {
+        await logUserActivity(
+          211,
+          {
+            layerId: layer.id,
+            itemName: layer.name,
+            userName: user?.displayName,
+          },
+          user.uid,
+        );
+      }
     }
   }
 

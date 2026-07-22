@@ -7,7 +7,7 @@ export interface CountryListsContextValue {
   loading: boolean;
   selectedListId: string | null;
   setSelectedListId: (id: string | null) => void;
-  reloadCountryLists: () => Promise<void>;
+  reloadCountryLists: () => Promise<CountryList[]>;
   openAddModal: (initialCountryCodes?: string[]) => void;
   openEditModal: (listId: string) => void;
   addList: (list: CountryList) => Promise<void>;

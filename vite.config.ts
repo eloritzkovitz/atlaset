@@ -34,4 +34,18 @@ export default defineConfig({
       "@utils": path.resolve(__dirname, "src/shared/utils"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("node_modules")) {
+            if (id.includes("dexie")) return "vendor-dexie";
+            if (id.includes("@firebase")) return "vendor-firebase";
+            if (id.includes("@eloritzkovitz/atlaset-flags"))
+              return "vendor-flags";
+          }
+        },
+      },
+    },
+  },
 });

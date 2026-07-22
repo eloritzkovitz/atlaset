@@ -1,14 +1,10 @@
 import { useState, useEffect } from "react";
-import type ReactMarkdown from "react-markdown";
-import type remarkGfm from "remark-gfm";
-import type rehypeRaw from "rehype-raw";
-import type rehypePrism from "rehype-prism-plus";
 
 interface MarkdownPlugins {
-  ReactMarkdown: typeof ReactMarkdown;
-  remarkGfm: typeof remarkGfm;
-  rehypeRaw: typeof rehypeRaw;
-  rehypePrism: typeof rehypePrism;
+  ReactMarkdown: typeof import("react-markdown").default;
+  remarkGfm: typeof import("remark-gfm").default;
+  rehypeRaw: typeof import("rehype-raw").default;
+  rehypePrism: typeof import("rehype-prism-plus").default;
 }
 
 /**
@@ -19,19 +15,27 @@ export function useMarkdown() {
   const [plugins, setPlugins] = useState<MarkdownPlugins | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     Promise.all([
       import("react-markdown"),
       import("remark-gfm"),
       import("rehype-raw"),
       import("rehype-prism-plus"),
     ]).then(([rm, gfm, raw, prism]) => {
-      setPlugins({
-        ReactMarkdown: rm.default as typeof ReactMarkdown,
-        remarkGfm: gfm.default as typeof remarkGfm,
-        rehypeRaw: raw.default as typeof rehypeRaw,
-        rehypePrism: prism.default as typeof rehypePrism,
-      });
+      if (isMounted) {
+        setPlugins({
+          ReactMarkdown: rm.default,
+          remarkGfm: gfm.default,
+          rehypeRaw: raw.default,
+          rehypePrism: prism.default,
+        });
+      }
     });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return plugins;

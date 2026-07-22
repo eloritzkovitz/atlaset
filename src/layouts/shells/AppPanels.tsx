@@ -19,6 +19,7 @@ export function AppPanels() {
     toggleSearch,
     showHelp,
     toggleHelp,
+    showCalendar,
   } = useUI();
 
   return (
@@ -29,9 +30,11 @@ export function AppPanels() {
       <SearchPanel open={showSearch} onClose={toggleSearch} />
       <HelpPanel open={showHelp} onClose={toggleHelp} />
       <ShortcutsModal />
-      <Suspense>
-        <CalendarModal />
-      </Suspense>
+      {showCalendar && (
+        <Suspense fallback={null}>
+          <CalendarModal />
+        </Suspense>
+      )}
     </>
   );
 }

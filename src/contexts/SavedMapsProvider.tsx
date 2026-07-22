@@ -1,4 +1,11 @@
-import { useState, useEffect, type ReactNode, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { logUserActivity } from "@features/activity";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
@@ -12,6 +19,7 @@ import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager
 import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { useMapMode } from "@features/atlas/shared";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
+import { useDataLoader } from "@hooks";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
@@ -19,13 +27,28 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const { mapMode, mapId } = useMapMode();
   const navigate = useNavigate();
 
-  const [savedMaps, setSavedMaps] = useState<SavedMap[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
   const [activeSavedMap, setActiveSavedMap] = useState<SavedMap | null>(null);
   const [isSavedMapModalOpen, setSavedMapModalOpen] = useState(false);
-
   const lastAction = useRef<string | null>(null);
+
+  // Data loader for saved maps
+  const fetchSavedMaps = useCallback(() => savedMapsService.load(), []);
+  const {
+    data: loadedMaps,
+    setData: setSavedMaps,
+    loading,
+    error,
+    reload: reloadSavedMaps,
+  } = useDataLoader<SavedMap[]>({
+    fetchFn: fetchSavedMaps,
+  });
+
+  const savedMaps = useMemo(() => loadedMaps ?? [], [loadedMaps]);
+
+  // Initial load
+  useEffect(() => {
+    reloadSavedMaps();
+  }, [reloadSavedMaps]);
 
   // Layer manager for saved map layers
   const {
@@ -58,7 +81,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       lastAction.current = null;
     },
     onLogAction: async (action, layer) => {
-      if (!user || !activeSavedMap) return;
+      if (!user?.uid || !activeSavedMap) return;
 
       lastAction.current = action;
 
@@ -109,7 +132,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       await savedMapsService.set(updated);
     },
     onLogAction: async (action, marker) => {
-      if (!user || !activeSavedMap) return;
+      if (!user?.uid || !activeSavedMap) return;
 
       const logMap = { add: 234, edit: 235, remove: 236, reorder: 237 };
       await logUserActivity(
@@ -127,7 +150,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Log user activity for saved map actions
   const logMapAction = async (action: "add" | "delete", map: SavedMap) => {
-    if (!user) return;
+    if (!user?.uid) return;
     const logMap = { add: 231, delete: 233 };
     await logUserActivity(
       logMap[action],
@@ -139,25 +162,6 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       user.uid,
     );
   };
-
-  // Reload saved maps
-  async function reloadSavedMaps() {
-    setLoading(true);
-    setError(null);
-    try {
-      const maps = await savedMapsService.load();
-      setSavedMaps(maps);
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  // Initial load
-  useEffect(() => {
-    reloadSavedMaps();
-  }, []);
 
   // Sync activeSavedMap layers/markers with layer/marker managers
   useEffect(() => {
@@ -197,7 +201,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Exit edit mode: remove edit/map from URL and clear activeSavedMap
   function exitEditMode() {
-    const params = new URLSearchParams(location.search);
+    const params = new URLSearchParams(window.location.search);
     params.delete("edit");
     params.delete("map");
     navigate(
@@ -256,44 +260,39 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     loadSavedMapForEditing(map.id);
   }
 
-  // Load a saved map for editing
-  async function loadSavedMapForEditing(id: string) {
-    setLoading(true);
-    setError(null);
-    try {
-      const map = await savedMapsService.get(id);
-      if (map) {
-        setActiveSavedMap(map);
-      } else {
-        setError(new Error("Map not found"));
+  // Load a saved map for editing without triggering global fullscreen loaders if already loaded
+  const loadSavedMapForEditing = useCallback(
+    async (id: string) => {
+      const cachedMap = savedMaps.find((m) => m.id === id);
+      if (cachedMap) {
+        setActiveSavedMap(cachedMap);
+        return;
       }
-    } catch (err) {
-      setError(err as Error);
-    } finally {
-      setLoading(false);
-    }
-  }
+      try {
+        const map = await savedMapsService.get(id);
+        if (map) {
+          setActiveSavedMap(map);
+        }
+      } catch (err) {
+        console.error("Failed to load map for editing:", err);
+      }
+    },
+    [savedMaps],
+  );
 
   // Update map name and persist
   async function updateSavedMapName(id: string, newName: string) {
-    // Update local state
     setSavedMaps((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, name: newName } : m)),
+      prev ? prev.map((m) => (m.id === id ? { ...m, name: newName } : m)) : [],
     );
     const mapToUpdate =
       activeSavedMap && activeSavedMap.id === id
         ? { ...activeSavedMap, name: newName }
         : savedMaps.find((m) => m.id === id);
 
-    // Persist updated name
     if (mapToUpdate && mapToUpdate.id) {
       await savedMapsService.set(mapToUpdate);
-
-      // Reload and set activeSavedMap from the new maps
-      const maps = await savedMapsService.load();
-      setSavedMaps(maps);
-      const updated = maps.find((m) => m.id === id);
-      if (updated) setActiveSavedMap({ ...updated });
+      await reloadSavedMaps();
     }
   }
 
@@ -301,7 +300,6 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   async function saveSavedMap() {
     if (!activeSavedMap) return;
 
-    // Check if this map is being created for the first time
     const isNew = !savedMaps.some((m) => m.id === activeSavedMap.id);
 
     const mapToSave = {
@@ -327,7 +325,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     const merged = await _importLayers(layers);
     const imported = merged.filter((l) => !before.some((b) => b.id === l.id));
     for (const layer of imported) {
-      if (user) {
+      if (user?.uid) {
         await logUserActivity(
           234,
           {
