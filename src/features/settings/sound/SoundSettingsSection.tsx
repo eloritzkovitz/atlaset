@@ -49,6 +49,7 @@ export function SoundSettingsSection() {
           </label>
           <input
             id="sound-volume"
+            name="sound-volume"
             type="range"
             min={0}
             max={100}

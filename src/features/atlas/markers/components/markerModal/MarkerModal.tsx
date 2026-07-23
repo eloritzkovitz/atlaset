@@ -71,6 +71,8 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           <FormField label={t("markers.form.name", "Name")}>
             <input
               ref={nameRef}
+              id="marker-name"
+              type="text"
               name="name"
               placeholder={t("markers.form.namePlaceholder", "Marker name")}
               required
@@ -101,6 +103,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           </FormField>
           <FormField label="Description">
             <input
+              id="marker-description"
               name="description"
               placeholder={t(
                 "markers.form.descriptionPlaceholder",

@@ -52,6 +52,8 @@ export function AuthForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <input
+        id="email"
+        name="email"
         type="email"
         placeholder={t("login.emailLabel", "Email")}
         value={email}
@@ -61,6 +63,8 @@ export function AuthForm({
       />
       <span className="block h-1" />
       <PasswordField
+        id="password"
+        name="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder={t("login.passwordLabel", "Password")}

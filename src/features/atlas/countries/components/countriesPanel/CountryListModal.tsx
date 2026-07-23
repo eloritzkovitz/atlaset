@@ -107,6 +107,7 @@ export function CountryListModal({
               disabled={isTrackingList}
             >
               <input
+                id="country-list-name"
                 type="text"
                 name="name"
                 value={list.name}

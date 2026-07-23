@@ -1,29 +1,38 @@
+import { useId } from "react";
+
 interface RadioButtonProps {
+  id?: string;
+  name: string;
   checked: boolean;
   disabled?: boolean;
   onChange: () => void;
-  name: string;
   label?: string;
   className?: string;
 }
 
 /** Renders a styled radio button component. */
 export function RadioButton({
+  id,
+  name,
   checked,
   disabled,
   onChange,
-  name,
   label,
   className = "",
 }: RadioButtonProps) {
+  const generatedId = useId();
+  const inputId = id || generatedId;
+
   return (
     <label
+      htmlFor={inputId}
       className={`inline-flex items-center cursor-pointer relative select-none ${className}`}
       onClick={(e) => e.stopPropagation()}
     >
       <input
-        type="radio"
+        id={inputId}
         name={name}
+        type="radio"
         checked={checked}
         disabled={disabled}
         onChange={onChange}

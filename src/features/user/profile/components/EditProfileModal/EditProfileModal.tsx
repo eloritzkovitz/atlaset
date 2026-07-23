@@ -153,6 +153,8 @@ export function EditProfileModal({
           <SectionHeader title={t("profile.editModal.personalInfo")} />
           <FormField label={t("profile.editModal.username")}>
             <input
+              id="username"
+              name="username"
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -178,6 +180,8 @@ export function EditProfileModal({
           )}
           <FormField label={t("profile.editModal.name")}>
             <input
+              id="display-name"
+              name="display-name"
               type="text"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
@@ -203,6 +207,8 @@ export function EditProfileModal({
           )}
           <FormField label={t("profile.editModal.birthday")}>
             <input
+              id="birthday"
+              name="birthday"
               type="date"
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
@@ -211,6 +217,8 @@ export function EditProfileModal({
           </FormField>
           <FormField label={t("profile.editModal.biography")}>
             <textarea
+              id="biography"
+              name="biography"
               value={biography}
               onChange={(e) => setBiography(e.target.value)}
               placeholder={t("profile.editModal.bioPlaceholder")}

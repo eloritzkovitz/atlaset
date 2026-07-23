@@ -39,6 +39,8 @@ export function DashboardListGrid<T>({
       {headerActions}
       <div className="flex justify-between items-center mb-4">
         <SearchInput
+          id="search-input"
+          name="search-input"
           value={search}
           onChange={setSearch}
           placeholder={searchPlaceholder ?? "Search by name or code"}

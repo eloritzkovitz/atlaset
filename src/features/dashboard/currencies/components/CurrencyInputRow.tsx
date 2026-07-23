@@ -31,6 +31,8 @@ export function CurrencyInputRow({
       <div className="w-1/2 h-full flex items-center">
         <InputBox
           type="number"
+          id="currency-input"
+          name="currency-input"
           value={value}
           min={0}
           onChange={onChange}

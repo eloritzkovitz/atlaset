@@ -33,7 +33,12 @@ export function InterfaceSettingsGroup() {
       />
       {showInterfaceSettings && (
         <div className="flex flex-col gap-2 font-semibold">
-          <label>{t("mapSettings.interface.toolbarOrientation")}</label>
+          <span
+            id="toolbar-orientation-label"
+            className="text-sm font-semibold text-text"
+          >
+            {t("mapSettings.interface.toolbarOrientation")}
+          </span>
 
           <div className="grid grid-cols-2 gap-3">
             {orientations.map((item) => {

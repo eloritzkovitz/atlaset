@@ -116,8 +116,9 @@ export function LayerModal({
             <div className="flex flex-col p-4">
               <FormField label={t("layers.form.name", "Name:")}>
                 <input
-                  type="text"
+                  id="layer-name"
                   name="name"
+                  type="text"
                   value={layer.name}
                   onChange={(e) => onChange({ ...layer, name: e.target.value })}
                   disabled={isListManaged}
@@ -184,6 +185,8 @@ export function LayerModal({
                   key={key}
                 >
                   <input
+                    id={`filter-label-${key}`}
+                    name={`filter-label-${key}`}
                     type="text"
                     value={layer.filterLabels?.[key as FilterLabelKey] || ""}
                     onChange={(e) =>

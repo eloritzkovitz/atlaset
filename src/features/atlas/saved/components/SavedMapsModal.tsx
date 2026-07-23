@@ -76,6 +76,8 @@ export function SavedMapsModal({
           <FormField label={t("savedMaps.nameLabel", "Map Name:")}>
             <input
               ref={nameRef}
+              id="map-name"
+              name="map-name"
               type="text"
               value={name}
               onChange={handleNameChange}

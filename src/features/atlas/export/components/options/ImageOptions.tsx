@@ -63,6 +63,7 @@ export function ImageOptions({
           </label>
           <input
             id="image-quality-slider"
+            name="image-quality-slider"
             type="range"
             min={1}
             max={5}

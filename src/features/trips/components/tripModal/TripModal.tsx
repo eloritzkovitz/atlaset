@@ -149,6 +149,9 @@ export function TripModal({
             <div className="p-4 min-w-0 flex flex-col gap-2 basis-[60%]">
               <FormField label={t("modal.form.name")}>
                 <InputBox
+                  id="trip-name"
+                  name="trip-name"
+                  type="text"
                   value={trip.name}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     onChange({ ...trip, name: e.target.value })
@@ -220,6 +223,8 @@ export function TripModal({
                   {t("modal.form.notesTitle")}
                 </div>
                 <InputBox
+                  id="trip-notes"
+                  name="trip-notes"
                   as="textarea"
                   className="w-full flex-1 min-h-0 resize-none"
                   value={trip.notes}

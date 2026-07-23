@@ -79,6 +79,8 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
         />
       )}
       <input
+        id="import-trips-file"
+        name="import-trips-file"
         type="file"
         accept=".json,.csv"
         ref={fileInputRef}

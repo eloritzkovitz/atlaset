@@ -1,4 +1,8 @@
+import { useId } from "react";
+
 interface CheckboxProps {
+  id?: string;
+  name?: string;
   checked: boolean;
   disabled?: boolean;
   onChange: (checked: boolean) => void;
@@ -9,18 +13,26 @@ interface CheckboxProps {
 
 /** Renders a styled checkbox component. */
 export function Checkbox({
+  id,
+  name,
   checked,
   disabled,
   onChange,
   label,
   color,
 }: CheckboxProps) {
+  const generatedId = useId();
+  const inputId = id || generatedId;
+
   return (
     <label
+      htmlFor={inputId}
       className="inline-flex items-center cursor-pointer relative select-none"
       onClick={(e) => e.stopPropagation()}
     >
       <input
+        id={inputId}
+        name={name || inputId}
         type="checkbox"
         checked={checked}
         disabled={disabled}

@@ -29,6 +29,7 @@ export function SocialLinksField({
             </span>
             <InputBox
               id={`social-${platform}`}
+              name={`social-${platform}`}
               type="url"
               placeholder={`https://${platform}.com/yourprofile`}
               value={socialLinks[platform as SocialPlatform] ?? ""}

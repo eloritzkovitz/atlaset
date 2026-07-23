@@ -62,7 +62,11 @@ export function ExportOptionsSection({
       </div>
 
       <SectionHeader title={t("mapExport.mapDetails.title")} />
-      <FormField label={t("mapExport.mapDetails.mapName")}>
+      <FormField
+        id="map-name"
+        name="map-name"
+        label={t("mapExport.mapDetails.mapName")}
+      >
         <input
           type="text"
           value={mapName}
@@ -71,7 +75,11 @@ export function ExportOptionsSection({
           maxLength={64}
         />
       </FormField>
-      <FormField label={t("mapExport.mapDetails.yourName")}>
+      <FormField
+        id="sharer-name"
+        name="sharer-name"
+        label={t("mapExport.mapDetails.yourName")}
+      >
         <input
           type="text"
           value={sharer}

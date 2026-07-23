@@ -32,6 +32,9 @@ export function ShareMapSection({
       <SectionHeader title={t("mapExport.share.shareableLink")} />
       <div className="flex items-center gap-1 mb-4">
         <InputBox
+          id="shareable-link"
+          name="shareable-link"
+          type="text"
           value={shareUrl}
           readOnly
           className="flex-1 font-mono"

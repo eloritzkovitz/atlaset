@@ -98,6 +98,8 @@ export function LayersPanel({
                 rounded
               />
               <input
+                id="import-layers-file"
+                name="import-layers-file"
                 type="file"
                 accept="application/json"
                 ref={fileInputRef}

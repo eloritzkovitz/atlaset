@@ -113,6 +113,8 @@ export function MarkersPanel({
                   rounded
                 />
                 <input
+                  id="import-markers-file"
+                  name="import-markers-file"
                   type="file"
                   accept="application/json"
                   ref={fileInputRef}

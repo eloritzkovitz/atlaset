@@ -48,6 +48,9 @@ export function EmbedMapSection({
       <SectionHeader title={t("mapExport.embed.embedCode")} />
       <div className="flex items-center gap-1 mb-2">
         <InputBox
+          id="embed-code"
+          name="embed-code"
+          type="text"
           value={embedCode}
           readOnly
           className="flex-1 font-mono"

@@ -1,9 +1,11 @@
-import { useRef, useState, forwardRef } from "react";
+import { useRef, useState, forwardRef, useId } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { useKeyHandler } from "@hooks";
 
 interface SearchInputProps {
+  id?: string;
+  name?: string;
   value: string;
   onChange: (value: string) => void;
   onClick?: (e: React.MouseEvent) => void;
@@ -20,6 +22,8 @@ interface SearchInputProps {
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   (
     {
+      id,
+      name,
       value,
       onChange,
       onClick,
@@ -34,6 +38,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     },
     ref,
   ) => {
+    const generatedId = useId();
+    const inputId = id || generatedId;
+
     const inputRef = useRef<HTMLInputElement | null>(null);
     const overlayRef = useRef<HTMLDivElement | null>(null);
 
@@ -111,7 +118,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         )}
         <input
           ref={ref || inputRef}
-          type="text"
+          id={inputId}
+          name={name || "search"}
+          type="search"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onScroll={(e) => {

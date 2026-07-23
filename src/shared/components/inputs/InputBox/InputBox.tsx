@@ -4,8 +4,7 @@ import "./InputBox.css";
 interface InputBoxProps {
   as?: ComponentType<InputHTMLAttributes<HTMLInputElement>> | string;
   className?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
+  [key: string]: unknown;
   isFilter?: boolean;
   disabled?: boolean;
 }

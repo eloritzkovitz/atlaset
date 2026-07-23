@@ -9,6 +9,8 @@ import { SelectedOptions } from "./SelectedOptions";
 import { InputBox } from "../InputBox/InputBox";
 
 interface DropdownSelectInputProps<T = string> {
+  id?: string;
+  name?: string;
   value: T | T[];
   onChange: (value: T | T[]) => void;
   options: DropdownOption<T>[];
@@ -21,6 +23,8 @@ interface DropdownSelectInputProps<T = string> {
 }
 
 export function DropdownSelectInput<T = string>({
+  id,
+  name,
   value,
   onChange,
   options,
@@ -64,9 +68,11 @@ export function DropdownSelectInput<T = string>({
   return (
     <div className={`relative w-full ${className}`} ref={ref}>
       <InputBox
-        as="button"
         ref={btnRef}
+        id={id}
+        name={name}
         type="button"
+        as="button"
         className="w-full flex items-center text-left disabled:opacity-50 px-2 hover:bg-surface-hover/50"
         onClick={() => {
           if (options.length === 0) return;

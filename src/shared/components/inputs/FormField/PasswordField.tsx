@@ -31,6 +31,8 @@ export function PasswordField({
   const content = (
     <div className={`relative${hideLabel ? " w-full" : ""}`}>
       <input
+        id="password-input"
+        name="password-input"
         type={show ? "text" : "password"}
         className={`w-full pe-10 ${className}`}
         {...inputProps}

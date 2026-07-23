@@ -22,12 +22,15 @@ export function RenameControls({
   return (
     <>
       <input
-        className="font-semibold bg-transparent border-b border-primary focus:outline-none truncate w-full"
+        id="rename-input"
+        name="rename-input"
+        type="text"
         value={value}
         autoFocus
         onChange={onChange}
         onBlur={onBlur}
         onKeyDown={onKeyDown}
+        className="font-semibold bg-transparent border-b border-primary focus:outline-none truncate w-full"
       />
       <ActionButton
         variant="toggle"

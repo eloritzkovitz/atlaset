@@ -9,7 +9,7 @@ export function LegendRow({ color, label, icon }: LegendItem) {
       ) : (
         <>
           <ColorDot color={color} size={24} />
-          <label>{label}</label>
+          <label htmlFor={label}>{label}</label>
         </>
       )}
     </div>

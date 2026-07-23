@@ -66,10 +66,15 @@ export function ColorsSettingsGroup() {
             <div className="mb-2">
               {COLOR_MODES.map((mode) => (
                 <div key={mode} className="mb-4">
-                  <label className="font-medium block mb-1">
+                  <label
+                    htmlFor={`color-palette-${mode}`}
+                    className="font-medium block mb-1"
+                  >
                     {t(`mapSettings.colors.colorPalettes.${mode}`)}
                   </label>
                   <DropdownSelectInput
+                    id={`color-palette-${mode}`}
+                    name={`color-palette-${mode}`}
                     options={groupedPaletteOptions}
                     value={colorPalettes[mode]}
                     onChange={(val: string | string[]) =>

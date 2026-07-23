@@ -47,6 +47,8 @@ export function GuessForm({
       <div className="flex justify-center gap-4 mb-2 items-center">
         <InputBox
           ref={inputRef}
+          id="guess-input"
+          name="guess-input"
           type="text"
           placeholder={t("play.placeholder", placeholder)}
           aria-label={t("play.placeholder", placeholder)}
