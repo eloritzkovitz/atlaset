@@ -71,7 +71,7 @@ export function MapToolbar({
               className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <MapToolbarActions actions={actions} isDesktop={false} />
+              <MapToolbarActions actions={actions} isDesktop={false} orientation={orientation} />
             </div>
           </div>
         )}
@@ -97,7 +97,12 @@ export function MapToolbar({
           }`}
         >
           <div className="bg-action/90 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center">
-            <MapControls zoom={zoom} setZoom={setZoom} visible={true} />
+            <MapControls
+              orientation="vertical"
+              zoom={zoom}
+              setZoom={setZoom}
+              visible={true}
+            />
             <Separator orientation="horizontal" className="my-1 w-6" />
             <div className="flex flex-col items-center gap-1.5">
               <MapToolbarActions
@@ -149,7 +154,12 @@ export function MapToolbar({
         uiVisible ? "toolbar-container-visible" : "toolbar-container-hidden"
       }`}
     >
-      <MapControls zoom={zoom} setZoom={setZoom} visible={visible} />
+      <MapControls
+        orientation="horizontal"
+        zoom={zoom}
+        setZoom={setZoom}
+        visible={visible}
+      />
 
       {!isEmbed && (
         <div

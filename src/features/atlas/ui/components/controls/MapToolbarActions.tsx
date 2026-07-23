@@ -25,7 +25,7 @@ export function MapToolbarActions({
               onClick={action.onClick}
               ariaLabel={action.label}
               title={action.label}
-              titlePosition="top"
+              titlePosition={orientation === "horizontal" ? "left" : "top"}
               icon={action.icon}
               variant="action"
               shortcut={action.commandId}

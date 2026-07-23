@@ -10,12 +10,14 @@ import { useKeyHandler } from "@hooks";
 import { DEFAULT_MAP_SETTINGS, useAccessibility } from "@features/settings";
 
 interface MapControlsProps {
+  orientation?: "vertical" | "horizontal";
   zoom: number;
   setZoom: React.Dispatch<React.SetStateAction<number>>;
   visible?: boolean;
 }
 
 export function MapControls({
+  orientation = "vertical",
   zoom,
   setZoom,
   visible = true,
@@ -96,7 +98,7 @@ export function MapControls({
           icon={<FaPlus />}
           variant="action"
           rounded
-          className="shadow"
+          className={orientation === "horizontal" ? "shadow" : ""}
         />
         <ActionButton
           onClick={() =>
@@ -113,7 +115,7 @@ export function MapControls({
           icon={<FaMinus />}
           variant="action"
           rounded
-          className="shadow"
+          className={orientation === "horizontal" ? "shadow" : ""}
         />
         <ActionButton
           onClick={() => setZoom(DEFAULT_MAP_SETTINGS.minZoom)}
@@ -123,7 +125,7 @@ export function MapControls({
           icon={<FaUpRightAndDownLeftFromCenter />}
           variant="action"
           rounded
-          className="shadow"
+          className={orientation === "horizontal" ? "shadow" : ""}
         />
       </div>
     </div>
