@@ -31,7 +31,7 @@ export function SelectInput({
   return (
     <div className={`my-4 ${className}`}>
       {label && (
-        <label htmlFor={inputId} className="font-bold text-sm text-text">
+        <label htmlFor={inputId} className="font-bold text-text">
           {label}
         </label>
       )}

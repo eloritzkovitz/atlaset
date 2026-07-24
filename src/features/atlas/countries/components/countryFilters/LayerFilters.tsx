@@ -2,17 +2,21 @@ import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
 import { useLayers } from "@contexts/LayersContext";
-import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
+import type { AnyLayer } from "@features/atlas/layers/types";
 import { layerFilterConfig } from "../../config/filtersConfig";
 
 interface LayerFiltersProps {
+  layers: AnyLayer[];
   expanded: boolean;
   onToggle: () => void;
 }
 
-export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
+export function LayerFilters({
+  layers,
+  expanded,
+  onToggle,
+}: LayerFiltersProps) {
   const { layerSelections, setLayerSelections } = useLayers();
-  const effectiveLayers = useEffectiveLayers();
   const { t } = useTranslation("atlas");
 
   return (
@@ -24,7 +28,7 @@ export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
         onToggle={onToggle}
       />
       {expanded &&
-        effectiveLayers.map((layer) => (
+        layers.map((layer) => (
           <SelectInput
             key={layer.id}
             label={
@@ -34,13 +38,13 @@ export function LayerFilters({ expanded, onToggle }: LayerFiltersProps) {
             }
             value={layerFilterConfig.getValue(
               { layerSelections, setLayerSelections },
-              layer
+              layer,
             )}
             onChange={(val) =>
               layerFilterConfig.setValue(
                 { layerSelections, setLayerSelections },
                 String(val),
-                layer
+                layer,
               )
             }
             options={layerFilterConfig.getOptions([layer])}

@@ -61,6 +61,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         }
       },
       ["/"],
+      { allowSingleKeyShortcuts: true },
     );
 
     // Blur search input when Escape is pressed

@@ -133,6 +133,7 @@ export function CountriesPanel({
           </>
         }
         showSeparator={false}
+        showPadding={false}
         animationsEnabled={animationsEnabled}
       >
         <div className="flex flex-col h-full">

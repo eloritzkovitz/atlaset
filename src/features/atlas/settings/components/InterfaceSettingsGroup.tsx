@@ -35,7 +35,7 @@ export function InterfaceSettingsGroup() {
         <div className="flex flex-col gap-2 font-semibold">
           <span
             id="toolbar-orientation-label"
-            className="text-sm font-semibold text-text"
+            className="font-semibold text-text"
           >
             {t("mapSettings.interface.toolbarOrientation")}
           </span>

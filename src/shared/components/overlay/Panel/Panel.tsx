@@ -7,16 +7,17 @@ import "./Panel.css";
 export interface PanelProps {
   title: ReactNode;
   children: ReactNode;
-  show?: boolean;
   position?: "left" | "right";
   width?: number | string;
+  scrollable?: boolean;
+  showSidebar?: boolean;
+  show?: boolean;
   onHide?: () => void;
   escEnabled?: boolean;
   showCloseButton?: boolean;
-  showSidebar?: boolean;
   headerActions?: ReactNode;
   showSeparator?: boolean;
-  scrollable?: boolean;
+  showPadding?: boolean;
   animationsEnabled?: boolean;
   style?: React.CSSProperties;
   className?: string;
@@ -26,16 +27,17 @@ export interface PanelProps {
 export function Panel({
   title,
   children,
-  show = true,
   position = "left",
   width = DEFAULT_PANEL_WIDTH,
+  scrollable = true,
+  showSidebar = true,
+  show = true,
   onHide,
   escEnabled = true,
   showCloseButton = true,
   headerActions,
   showSeparator = true,
-  showSidebar = true,
-  scrollable = true,
+  showPadding = true,
   animationsEnabled = true,
   style = {},
   className = "",
@@ -73,7 +75,7 @@ export function Panel({
         {headerActions}
       </DialogHeader>
       <div
-        className={`flex-1 min-h-0 px-4 ${isMobile ? "pb-20" : ""}${
+        className={`flex-1 min-h-0 px-4 ${isMobile ? "pb-20" : showPadding ? "pb-8" : ""}${
           scrollable ? " overflow-y-auto" : ""
         }`}
       >

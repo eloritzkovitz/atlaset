@@ -5,6 +5,7 @@ import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
 import { useCountryFilters } from "@contexts/CountryFiltersContext";
 import { useTimeline } from "@contexts/TimelineContext";
+import { useEffectiveLayers } from "@features/atlas/layers";
 import { type Country } from "@features/countries";
 import {
   getAllGeoTypes,
@@ -51,6 +52,11 @@ export function CountryFiltersPanel({
   } = useCountryFilters();
   const { timelineMode } = useTimeline();
   const { t } = useTranslation("atlas");
+
+  // Effective layers check to determine if Layer Filters section should exist
+  const effectiveLayers = useEffectiveLayers();
+  const visibleLayers = effectiveLayers?.filter((layer) => layer.visible) ?? [];
+  const hasVisibleLayers = visibleLayers.length > 0;
 
   // Collapsible state for filter groups
   const [showCoreFilters, setShowCoreFilters] = React.useState(true);
@@ -126,10 +132,11 @@ export function CountryFiltersPanel({
           allRegions={allRegions}
           subregionToRegion={subregionToRegion}
         />
-        {visitedOnly && (
+        {!timelineMode && !visitedOnly && hasVisibleLayers && (
           <>
             <Separator className="my-4" />
             <LayerFilters
+              layers={visibleLayers}
               expanded={showLayerFilters}
               onToggle={() => setShowLayerFilters((v) => !v)}
             />
