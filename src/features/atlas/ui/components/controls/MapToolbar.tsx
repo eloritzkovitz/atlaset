@@ -31,17 +31,35 @@ export function MapToolbar({
   children,
 }: MapToolbarProps) {
   const { isRtl } = useLanguage();
-  const { isLaptop, isMobile } = useScreenSize();
+  const { isMobile } = useScreenSize();
   const { uiVisible } = useUI();
   const { t } = useTranslation("atlas");
 
   const [visible, setVisible] = useState(true);
+  const [shouldRender, setShouldRender] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const actions = useToolbarActions({
     isMobile,
     setMenuOpen,
   });
+
+  // Handle toolbar toggle for vertical layout
+  const handleToggle = () => {
+    if (!visible) {
+      setShouldRender(true);
+      requestAnimationFrame(() => setVisible(true));
+    } else {
+      setVisible(false);
+    }
+  };
+
+  // Handle transition end to unmount the toolbar when it is hidden
+  const handleTransitionEnd = () => {
+    if (!visible) {
+      setShouldRender(false);
+    }
+  };
 
   const isVertical = orientation === "vertical";
 
@@ -71,7 +89,11 @@ export function MapToolbar({
               className="bg-action rounded-2xl p-4 w-52 shadow-xl flex flex-col gap-2"
               onClick={(e) => e.stopPropagation()}
             >
-              <MapToolbarActions actions={actions} isDesktop={false} orientation={orientation} />
+              <MapToolbarActions
+                actions={actions}
+                isDesktop={false}
+                orientation={orientation}
+              />
             </div>
           </div>
         )}
@@ -83,32 +105,33 @@ export function MapToolbar({
   if (isVertical) {
     return (
       <div
-        className={`fixed end-4 bottom-8 z-40 flex flex-col items-center gap-2 transition-opacity duration-300 ${
+        className={`fixed end-4 bottom-8 z-40 flex flex-col items-center transition-opacity duration-300 ${
           uiVisible
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
         }`}
       >
         <div
-          className={`flex flex-col items-center gap-2 transition-all duration-300 origin-bottom ${
+          onTransitionEnd={handleTransitionEnd}
+          className={`flex flex-col items-center transition-all duration-300 origin-bottom ${
             visible
               ? "opacity-100 pointer-events-auto translate-y-0"
               : "opacity-0 pointer-events-none translate-y-4"
-          }`}
+          } ${!shouldRender ? "hidden" : ""}`}
         >
           <div className="bg-action/90 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center">
             <MapControls
               orientation="vertical"
               zoom={zoom}
               setZoom={setZoom}
-              visible={true}
+              visible={visible}
             />
             <Separator orientation="horizontal" className="my-1 w-6" />
-            <div className="flex flex-col items-center gap-1.5">
+            <div className="flex flex-col items-center">
               <MapToolbarActions
                 actions={actions}
                 isDesktop={true}
-                orientation="horizontal"
+                orientation="vertical"
               >
                 {children}
               </MapToolbarActions>
@@ -119,7 +142,7 @@ export function MapToolbar({
         {/* Toggle Button */}
         {!isEmbed && (
           <ActionButton
-            onClick={() => setVisible((v) => !v)}
+            onClick={handleToggle}
             ariaLabel={
               visible ? t("toolbar.hideToolbar") : t("toolbar.showToolbar")
             }
@@ -147,9 +170,7 @@ export function MapToolbar({
   return (
     <div
       className={`toolbar-container ${
-        isEmbed
-          ? "!end-2 !bottom-0"
-          : `end-0 ${isLaptop ? "end-40" : "end-4"} bottom-8`
+        isEmbed ? "!end-2 !bottom-0" : `end-4 bottom-8`
       } ${
         uiVisible ? "toolbar-container-visible" : "toolbar-container-hidden"
       }`}
@@ -193,7 +214,11 @@ export function MapToolbar({
                 : `opacity-0 pointer-events-none ${isRtl ? "-translate-x-10" : "translate-x-10"}`
             }`}
           >
-            <MapToolbarActions actions={actions} isDesktop={true}>
+            <MapToolbarActions
+              actions={actions}
+              isDesktop={true}
+              orientation="horizontal"
+            >
               {children}
             </MapToolbarActions>
           </ActionsToolbar>

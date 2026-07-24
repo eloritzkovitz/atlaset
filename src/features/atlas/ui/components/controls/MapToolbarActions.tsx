@@ -25,7 +25,7 @@ export function MapToolbarActions({
               onClick={action.onClick}
               ariaLabel={action.label}
               title={action.label}
-              titlePosition={orientation === "horizontal" ? "left" : "top"}
+              titlePosition={orientation === "vertical" ? "left" : "top"}
               icon={action.icon}
               variant="action"
               shortcut={action.commandId}
@@ -34,7 +34,9 @@ export function MapToolbarActions({
             action.separatorAfter ? (
               <Separator
                 key={action.key + "-sep"}
-                orientation={orientation}
+                orientation={
+                  orientation === "vertical" ? "horizontal" : "vertical"
+                }
                 className="mx-2 h-6"
               />
             ) : null,

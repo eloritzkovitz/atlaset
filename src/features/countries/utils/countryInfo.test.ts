@@ -4,6 +4,7 @@ import {
   getAltNamesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
+  getWikipediaUrl,
 } from "./countryInfo";
 
 vi.mock("@utils/timezone", () => ({
@@ -100,7 +101,10 @@ describe("formatTimezones", () => {
     );
     const result = formatTimezones(["Europe/London", "UTC"]);
     expect(result).toBe("UTC+00:00");
-    expect(timezoneRangeLines).toHaveBeenCalledWith(["Europe/London", "UTC"], " (summer)");
+    expect(timezoneRangeLines).toHaveBeenCalledWith(
+      ["Europe/London", "UTC"],
+      " (summer)",
+    );
   });
 
   it("returns two-line array from timezoneRangeLines for multiple timezones", () => {
@@ -110,5 +114,14 @@ describe("formatTimezones", () => {
     const result = formatTimezones(["America/Los_Angeles", "Europe/Berlin"]);
     expect(Array.isArray(result)).toBe(true);
     expect(result).toEqual(["UTC-08:00", "UTC+02:00"]);
+  });
+});
+
+describe("getWikipediaUrl", () => {
+  it("returns correct Wikipedia URL for a given country name and language", () => {
+    const countryName = "Germany";
+    const lang = "en";
+    const expectedUrl = "https://en.wikipedia.org/wiki/Germany";
+    expect(getWikipediaUrl(countryName, lang)).toBe(expectedUrl);
   });
 });

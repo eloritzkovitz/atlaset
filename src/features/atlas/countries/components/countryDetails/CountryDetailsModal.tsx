@@ -68,12 +68,12 @@ export function CountryDetailsModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] min-h-[680px] sm:p-8 shadow-lg relative"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] h-[85vh] flex flex-col p-4 sm:p-6 md:p-8 shadow-lg relative overflow-hidden"
         containerRef={modalRef}
         disableClose={showCalendar}
         draggable
       >
-        <div className="relative overflow-visible flex flex-col h-full">
+        <div className="relative flex flex-col h-full min-h-0 overflow-hidden">
           <CountryDetailsHeader country={currentCountry} onClose={onClose} />
           <CountryDetailsPanel
             country={currentCountry}
@@ -83,7 +83,7 @@ export function CountryDetailsModal({
             resetTabOnClose={true}
             isOpen={!!isOpen}
             onSelectCountry={handleSelectCountry}
-            className="max-h-[660px]"
+            className="flex-1 min-h-0"
           />
         </div>
       </Modal>

@@ -26,5 +26,6 @@ export * from "./types";
 // Utils
 export * from "./utils/countryData";
 export * from "./utils/countryFilters";
+export * from "./utils/countryInfo";
 export * from "./utils/countrySearch";
 export { sortCountries } from "./utils/countrySort";

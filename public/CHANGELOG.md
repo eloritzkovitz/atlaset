@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-24
+
+- **[bugfix]** **Countries:** Updated country details display and improved responsiveness
+
 ## 2026-07-22
 
 - **[chore]** **General:** Improved responsiveness for smaller screens like laptops

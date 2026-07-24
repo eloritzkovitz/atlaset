@@ -38,7 +38,7 @@ export function CountryDetailsPanel({
   isOpen = true,
   onTabChange,
   onSelectCountry,
-  className,
+  className = "",
 }: CountryDetailsPanelProps) {
   const { t } = useTranslation("atlas");
 
@@ -91,8 +91,8 @@ export function CountryDetailsPanel({
   tabs.push("visits");
 
   return (
-    <>
-      <div className="flex gap-2 mb-4">
+    <div className={`flex flex-col h-full min-h-0 ${className}`}>
+      <div className="flex gap-2 mb-4 shrink-0">
         {tabs.map((tab) => (
           <TabButton
             key={tab}
@@ -103,10 +103,9 @@ export function CountryDetailsPanel({
           </TabButton>
         ))}
       </div>
-      <div
-        className={`relative flex-1 overflow-y-auto mt-4 -mx-2 ${className || ""}`}
-      >
-        <div key={activeTab} className="transition-opacity duration-300 px-4">
+
+      <div className="relative flex-1 min-h-0 overflow-y-auto -mx-2 px-2">
+        <div key={activeTab} className="transition-opacity duration-300">
           {activeTab === "overview" && (
             <CountryDetailsContent
               country={country}
@@ -129,6 +128,6 @@ export function CountryDetailsPanel({
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

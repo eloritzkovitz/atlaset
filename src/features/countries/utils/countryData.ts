@@ -208,14 +208,17 @@ export function getTranscontinentalInfo(
   const additionalRegion = raw.additionalRegion ?? undefined;
   const additionalSubregion = raw.additionalSubregion ?? undefined;
 
+  // Determine the canonical key for the additional region, if applicable
   const additionalRegionKey = additionalRegion
     ? canonicalKey(String(additionalRegion))
     : undefined;
 
+  // Determine the canonical key for the additional subregion, if applicable
   const additionalSubregionKey = additionalSubregion
     ? canonicalKey(String(additionalSubregion))
     : undefined;
 
+  // Determine the region of the additional subregion, if applicable
   let additionalSubregionRegion: string | undefined;
   if (additionalSubregionKey && subregionsByRegion) {
     for (const [regionKey, subArr] of Object.entries(subregionsByRegion)) {
@@ -224,6 +227,11 @@ export function getTranscontinentalInfo(
         break;
       }
     }
+  }
+
+  // If no subregion region was found, but an additional region key exists, use that as a fallback
+  if (!additionalSubregionRegion && additionalRegionKey) {
+    additionalSubregionRegion = additionalRegionKey;
   }
 
   return {

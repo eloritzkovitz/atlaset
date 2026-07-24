@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
-import type { Country } from "@features/countries";
+import { getWikipediaUrl, type Country } from "@features/countries";
 import { getCountryRoute } from "@features/dashboard";
 import { useLanguage } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
@@ -67,9 +67,6 @@ export function useCountryActions({
     country.subregion,
     country.isoCode,
   );
-  const langSubtag = (lang || "en").split("-")[0];
-  const page = country.name.replace(/ /g, "_");
-  const wikipediaUrl = `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(page)}`;
 
   return {
     viewDetails: {
@@ -152,7 +149,7 @@ export function useCountryActions({
       label: t("countries.actions.wikipedia"),
       ariaLabel: t("countries.actions.wikipedia"),
       icon: <FaWikipediaW />,
-      url: wikipediaUrl,
+      url: getWikipediaUrl(country.name, lang),
       onClick: () => {
         if (onCloseMenu) onCloseMenu();
       },
