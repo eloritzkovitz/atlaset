@@ -68,7 +68,7 @@ export function CountryDetailsModal({
       <Modal
         isOpen={isOpen}
         onClose={onClose}
-        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] h-[85vh] flex flex-col p-4 sm:p-6 md:p-8 shadow-lg relative overflow-hidden"
+        className="w-full max-w-lg sm:max-w-xl md:max-w-2xl md:w-[540px] h-[88vh] flex flex-col p-4 sm:p-6 md:p-8 shadow-lg relative overflow-hidden"
         containerRef={modalRef}
         disableClose={showCalendar}
         draggable

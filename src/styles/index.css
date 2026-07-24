@@ -326,6 +326,23 @@ body::-webkit-scrollbar-thumb {
   display: none;
 }
 
+/* Remove default search cancel (X) button across Chrome, Edge, Safari */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Remove default search clear button in Internet Explorer / Edge legacy */
+input[type="search"]::-ms-clear,
+input[type="search"]::-ms-reveal {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
 /* Shadow styles */
 .dark .shadow,
 .dark .shadow-md,
