@@ -96,6 +96,7 @@ export function TripsTableRows({
           <StarRatingInput
             value={typeof trip.rating === "number" ? trip.rating : 0}
             onChange={(rating) => updateTripRating(trip.id, rating)}
+            readOnly={trip.status !== "completed"}
           />
         </TableCell>
 

@@ -12,6 +12,7 @@ export interface UIContextType {
   sidebarExpanded: boolean;
   setSidebarExpanded: (v: boolean) => void;
   openMapToolbarPanel: MapToolbarPanelSelection;
+  setOpenMapToolbarPanel: (v: MapToolbarPanelSelection) => void;
   showCountries: boolean;
   toggleCountries: () => void;
   showFilters: boolean;
@@ -46,7 +47,7 @@ export interface UIContextType {
   calendarDate?: Date;
   handleViewInCalendar: (trip: Trip) => void;
   toggleCalendar: () => void;
-  closeCalendar: () => void;  
+  closeCalendar: () => void;
 }
 
 export const UIContext = createContext<UIContextType | undefined>(undefined);

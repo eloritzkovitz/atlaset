@@ -159,6 +159,30 @@ describe("getActivityDescription", () => {
     expect(itemSegments[1].text).toBe("PlaceY");
   });
 
+  it("renders friendName correctly as a username segment", () => {
+    mockI18nTemplate(140, "{userName} is now friends with {friendName}.");
+    const segments = getSegments(140, {
+      userName: "Alice",
+      friendName: "Bob",
+    });
+
+    const usernameSegments = findSegmentsByType(segments, "username");
+    expect(usernameSegments).toHaveLength(2);
+    expect(usernameSegments[0].text).toBe("Alice");
+    expect(usernameSegments[1].text).toBe("Bob");
+  });
+
+  it("uses fallback 'a friend' for missing friendName", () => {
+    mockI18nTemplate(140, "{userName} is now friends with {friendName}.");
+    const segments = getSegments(140, {
+      userName: "Alice",
+    });
+
+    const usernameSegments = findSegmentsByType(segments, "username");
+    expect(usernameSegments).toHaveLength(2);
+    expect(usernameSegments[1].text).toBe("a friend");
+  });
+
   it("uses default for missing userName", () => {
     const segments = getSegments(101, {});
     const usernameSegments = findSegmentsByType(segments, "username");

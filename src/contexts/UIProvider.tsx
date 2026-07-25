@@ -132,6 +132,7 @@ export function UIProvider({ children }: { children: ReactNode }) {
         sidebarExpanded,
         setSidebarExpanded,
         openMapToolbarPanel,
+        setOpenMapToolbarPanel,
         showCountries,
         toggleCountries,
         showFilters,

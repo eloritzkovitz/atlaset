@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useMapView } from "@contexts/MapViewContext";
 import { useMapSettings } from "@features/atlas/settings";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
@@ -71,6 +71,19 @@ export function WorldMap({
     }
   }, [onReady, geoData, svgRef]);
 
+  // Memoize the projection configuration to avoid unnecessary recalculations
+  const projectionConfig = useMemo(
+    () => ({
+      scale:
+        Math.min(dimensions.width, dimensions.height) /
+        DEFAULT_MAP_SETTINGS.scaleDivisor,
+      center: [0, 0] as [number, number],
+    }),
+    [dimensions.width, dimensions.height],
+  );
+
+  const activeProjection = projection || DEFAULT_MAP_SETTINGS.projection;
+
   return (
     <div
       ref={containerRef}
@@ -89,15 +102,11 @@ export function WorldMap({
         isAddingMarker={isAddingMarker}
       >
         <MapProvider
+          key={activeProjection}
           width={dimensions.width}
           height={dimensions.height}
-          projection={projection || DEFAULT_MAP_SETTINGS.projection}
-          projectionConfig={{
-            scale:
-              Math.min(dimensions.width, dimensions.height) /
-              DEFAULT_MAP_SETTINGS.scaleDivisor,
-            center: [0, 0],
-          }}
+          projection={activeProjection}
+          projectionConfig={projectionConfig}
         >
           <svg
             viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
@@ -127,7 +136,7 @@ export function WorldMap({
                 isAddingMarker={isAddingMarker}
               />
               <MarkersContainer
-                projectionType={projection || DEFAULT_MAP_SETTINGS.projection}
+                projectionType={activeProjection}
                 width={dimensions.width}
                 height={dimensions.height}
                 scaleDivisor={DEFAULT_MAP_SETTINGS.scaleDivisor}

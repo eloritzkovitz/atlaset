@@ -39,6 +39,14 @@ export const MapProvider = ({
   children,
   ...restProps
 }: MapProviderProps) => {
+  // Extract primitive values so useMemo tracks actual config changes rather than object references
+  const scale = projectionConfig.scale;
+  const centerLat = projectionConfig.center?.[0];
+  const centerLng = projectionConfig.center?.[1];
+  const rotate0 = projectionConfig.rotate?.[0];
+  const rotate1 = projectionConfig.rotate?.[1];
+  const rotate2 = projectionConfig.rotate?.[2];
+
   const projMemo = useMemo(() => {
     return makeProjection({
       projectionConfig,
@@ -46,7 +54,17 @@ export const MapProvider = ({
       width,
       height,
     });
-  }, [width, height, projection, projectionConfig]);
+  }, [
+    width,
+    height,
+    projection,
+    scale,
+    centerLat,
+    centerLng,
+    rotate0,
+    rotate1,
+    rotate2,
+  ]);
 
   const value = useMemo<MapContextValue>(() => {
     return {
@@ -63,5 +81,3 @@ export const MapProvider = ({
     </MapContext.Provider>
   );
 };
-
-

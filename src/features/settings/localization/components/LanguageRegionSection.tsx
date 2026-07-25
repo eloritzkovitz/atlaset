@@ -21,18 +21,24 @@ export function LanguageRegionSection() {
   const { current, change } = useLanguage();
   const langOptions = languageOptions(t);
 
-  // Handle language change from select input
-  const handleChange = async (val: string | number) => {
-    change(String(val));
-  };
-
   // Date locale selection
   const [dateLocale, setDateLocale] = useDateLocale();
   const dateOptions = [
-    { label: tSettings("account.languageRegion.dateFormat.auto"), value: "" },
+    {
+      label: tSettings("account.languageRegion.dateFormat.auto"),
+      value: "auto",
+    },
     { label: "DD/MM/YYYY", value: "en-GB" },
     { label: "MM/DD/YYYY", value: "en-US" },
   ];
+
+  // Handle language change
+  const handleLanguageChange = async (val: string | number) => {
+    const selectedLang = String(val);
+    if (selectedLang !== current) {
+      change(selectedLang);
+    }
+  };
 
   // Home country selection
   const { countries } = useCountryData();
@@ -54,7 +60,7 @@ export function LanguageRegionSection() {
           </label>
           <SelectInput
             value={current}
-            onChange={(v) => handleChange(v)}
+            onChange={(v) => handleLanguageChange(v)}
             options={langOptions}
             placeholder={tSettings("account.language.selectAria")}
             className="my-0"
@@ -65,9 +71,9 @@ export function LanguageRegionSection() {
             {tSettings("account.languageRegion.dateFormat.title")}
           </label>
           <SelectInput
-            value={dateLocale ?? ""}
+            value={dateLocale || "auto"}
             onChange={(v) => {
-              const val = v === "" ? null : String(v);
+              const val = v === "auto" ? null : String(v);
               setDateLocale(val);
             }}
             options={dateOptions}

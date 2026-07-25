@@ -7,19 +7,21 @@ interface FriendRequestListProps {
   requests: Array<{ uid: string; from: string }>;
   loading: boolean;
   userUid?: string;
+  currentUserName?: string;
 }
 
 export function FriendRequestList({
   requests,
   loading,
   userUid,
+  currentUserName,
 }: FriendRequestListProps) {
   const { t } = useTranslation("user");
-  
+
   if (loading) {
     return <div>{t("friends.loading")}</div>;
   }
-  
+
   if (requests.length === 0) {
     return <EmptyListMessage message={t("friends.noFriendRequests")} />;
   }
@@ -32,7 +34,13 @@ export function FriendRequestList({
           uid={req.from}
           onAccept={
             userUid
-              ? () => friendService.acceptFriendRequest(userUid, req.from)
+              ? (requestUserName?: string) =>
+                  friendService.acceptFriendRequest(
+                    userUid,
+                    req.from,
+                    currentUserName,
+                    requestUserName,
+                  )
               : undefined
           }
           onReject={

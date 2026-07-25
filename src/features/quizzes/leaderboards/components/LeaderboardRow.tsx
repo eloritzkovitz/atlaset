@@ -1,7 +1,7 @@
 import { FaMedal } from "react-icons/fa6";
-import { useAuth } from "@contexts/AuthContext";
 import { UserInfo } from "@features/user/profile/components/UserInfo";
 import { formatTimeSeconds, formatDate } from "@utils/date";
+import type { UserProfile } from "@features/user/types";
 import type { LeaderboardRow } from "../../types";
 
 interface LeaderboardRowComponentProps {
@@ -13,7 +13,15 @@ export function LeaderboardRowComponent({
   row,
   index,
 }: LeaderboardRowComponentProps) {
-  const { user } = useAuth();
+  const playerProfile: UserProfile = {
+    uid: row.playerId,
+    displayName: row.playerName,
+    username: row.username || "unknown",
+    photoURL: row.photoURL,
+    isPublic: true,
+    visitedCountryCodes: [],
+    wantToVisitCountryCodes: [],
+  };
 
   return (
     <tr
@@ -41,7 +49,7 @@ export function LeaderboardRowComponent({
       </td>
       <td className="px-4 py-2">
         <UserInfo
-          user={user}
+          user={playerProfile}
           showDisplayName={true}
           showUsername={!!row.username}
         />

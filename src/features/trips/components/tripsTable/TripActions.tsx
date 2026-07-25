@@ -206,57 +206,61 @@ export const TripActions = forwardRef(function TripActions(
         >
           {t("table.actions.duplicate")}
         </MenuButton>
-        <MenuButton
-          onClick={() => {
-            menuActions.onFavorite?.();
-            handleCloseAll();
-          }}
-          icon={
-            trip.favorite ? (
-              <ICONS.unfavorite className="text-muted" />
-            ) : (
-              <ICONS.favorite className="text-danger" />
-            )
-          }
-          className="w-full"
-        >
-          {trip.favorite
-            ? t("table.actions.unfavorite")
-            : t("table.actions.favorite")}
-        </MenuButton>
-        <div
-          style={{ display: "inline-block", width: "100%" }}
-          onMouseEnter={() => setRateMenuOpen(true)}
-          onMouseLeave={() => setRateMenuOpen(false)}
-        >
-          <MenuButton
-            {...rateButtonHoverHandlers}
-            icon={<ICONS.rate className="text-yellow-400" />}
-            className="w-full flex items-center justify-between"
-          >
-            {t("table.actions.rate")}
-            <DirectionalIcon direction="next" className="ms-auto" />
-          </MenuButton>
-          {rateMenuOpen && (
-            <RateMenu
-              open={rateMenuOpen}
-              menuStyle={{
-                ...rateMenuStyle,
-                left: rateMenuLeftFinal,
-                top: rateMenuTopFinal,
-                zIndex: 1000,
-                width: 280,
-              }}
-              menuRef={rateMenuRef}
-              hoverHandlers={rateMenuHoverHandlers}
-              onRate={(value) => {
+        {trip.status === "completed" && (
+          <>
+            <MenuButton
+              onClick={() => {
+                menuActions.onFavorite?.();
                 handleCloseAll();
-                if (updateTripRating) updateTripRating(trip.id, value);
               }}
-              onClose={handleCloseAll}
-            />
-          )}
-        </div>
+              icon={
+                trip.favorite ? (
+                  <ICONS.unfavorite className="text-muted" />
+                ) : (
+                  <ICONS.favorite className="text-danger" />
+                )
+              }
+              className="w-full"
+            >
+              {trip.favorite
+                ? t("table.actions.unfavorite")
+                : t("table.actions.favorite")}
+            </MenuButton>
+            <div
+              style={{ display: "inline-block", width: "100%" }}
+              onMouseEnter={() => setRateMenuOpen(true)}
+              onMouseLeave={() => setRateMenuOpen(false)}
+            >
+              <MenuButton
+                {...rateButtonHoverHandlers}
+                icon={<ICONS.rate className="text-yellow-400" />}
+                className="w-full flex items-center justify-between"
+              >
+                {t("table.actions.rate")}
+                <DirectionalIcon direction="next" className="ms-auto" />
+              </MenuButton>
+              {rateMenuOpen && (
+                <RateMenu
+                  open={rateMenuOpen}
+                  menuStyle={{
+                    ...rateMenuStyle,
+                    left: rateMenuLeftFinal,
+                    top: rateMenuTopFinal,
+                    zIndex: 1000,
+                    width: 280,
+                  }}
+                  menuRef={rateMenuRef}
+                  hoverHandlers={rateMenuHoverHandlers}
+                  onRate={(value) => {
+                    handleCloseAll();
+                    if (updateTripRating) updateTripRating(trip.id, value);
+                  }}
+                  onClose={handleCloseAll}
+                />
+              )}
+            </div>
+          </>
+        )}
         <Separator className="my-2" />
         <MenuButton
           onClick={() => {

@@ -4,6 +4,7 @@ export interface ActivityDetails extends Record<string, unknown> {
   location?: string;
   date?: string;
   userName?: string;
+  friendName?: string;
 }
 
 /** User activity log entry. */
