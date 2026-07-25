@@ -20,10 +20,10 @@ export function CountryDetailsHeader({
   });
 
   const displayedActions = [
-    actionsObj.centerMap,
+    actionsObj.toggleWantToVisit,
     actionsObj.viewDashboard,
     actionsObj.wikipedia,
-  ].filter(Boolean);
+  ].filter((action) => Boolean(action) && !action?.disabled);
 
   return (
     <ModalHeader
@@ -35,7 +35,11 @@ export function CountryDetailsHeader({
             className="font-bold text-lg"
           />
           <span className="text-muted text-sm">({country.isoCode})</span>
-          <VisitedStatusIndicator country={country} />
+          <VisitedStatusIndicator
+            country={country}
+            onClick={actionsObj.toggleVisited?.onClick}
+            className="cursor-pointer hover:opacity-80"
+          />
         </span>
       }
       onClose={onClose}
