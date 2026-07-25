@@ -11,6 +11,7 @@ import {
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
+import { useUI } from "@contexts/UIContext";
 import {
   useContextMenu,
   useFloatingHover,
@@ -20,7 +21,6 @@ import {
 } from "@hooks";
 import type { Trip } from "../../types";
 import { canMarkCompleted, hasValidStartDate } from "../../utils/trips";
-import { useUI } from "@contexts/UIContext";
 
 interface TripActionsProps {
   trip: Trip;
@@ -114,7 +114,7 @@ export const TripActions = forwardRef(function TripActions(
       onEdit: () => onEdit(trip),
       onMarkCompleted: () => markCompleted(trip),
       onDuplicate: () => duplicateTrip(trip),
-      onFavorite: () => updateTripFavorite(trip.id, !trip.favorite),
+      onFavorite: () => updateTripFavorite(trip, !trip.favorite),
       onDelete: () => setConfirmOpen(true),
     },
     setOpen,
@@ -253,7 +253,7 @@ export const TripActions = forwardRef(function TripActions(
                   hoverHandlers={rateMenuHoverHandlers}
                   onRate={(value) => {
                     handleCloseAll();
-                    if (updateTripRating) updateTripRating(trip.id, value);
+                    if (updateTripRating) updateTripRating(trip, value);
                   }}
                   onClose={handleCloseAll}
                 />
@@ -284,7 +284,7 @@ export const TripActions = forwardRef(function TripActions(
           }
           onConfirm={() => {
             setConfirmOpen(false);
-            removeTrip(trip?.id ?? "").catch((error) => {
+            removeTrip(trip).catch((error) => {
               console.error("Error deleting trip:", error);
             });
           }}

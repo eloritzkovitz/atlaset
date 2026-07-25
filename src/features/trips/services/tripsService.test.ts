@@ -100,12 +100,13 @@ describe("tripsService", () => {
     });
 
     it("removes records and cleans up references", async () => {
-      fs.getDoc.mockResolvedValue({
-        exists: () => true,
-        data: () => ({ name: "My Trip", participants: ["friend1"] }),
-      } as any);
+      const mockTrip = {
+        id: "del",
+        name: "My Trip",
+        participants: ["friend1"],
+      } as any;
 
-      await tripsService.remove("del");
+      await tripsService.remove(mockTrip);
 
       expect(sharedTripsService.removeReference).toHaveBeenCalledWith(
         "friend1",
@@ -115,12 +116,12 @@ describe("tripsService", () => {
     });
 
     it("handles removal logic for owners and missing participant arrays", async () => {
-      fs.getDoc.mockResolvedValueOnce({
-        exists: () => true,
-        data: () => ({ participants: [freshUser.uid] }),
-      } as any);
+      const mockTrip = {
+        id: "del",
+        participants: [freshUser.uid],
+      } as any;
 
-      await tripsService.remove("del");
+      await tripsService.remove(mockTrip);
 
       expect(sharedTripsService.removeReference).not.toHaveBeenCalled();
     });
@@ -151,16 +152,15 @@ describe("tripsService", () => {
       );
     });
 
-    it("handles non-existent document in edit and remove", async () => {
+    it("handles non-existent document in edit", async () => {
       fs.getDoc.mockResolvedValue({ exists: () => false } as any);
       await tripsService.edit({ id: "t1" } as any);
-      fs.getDocs.mockResolvedValue(createMockSnapshot([]) as any);
-      await tripsService.remove("nonexistent");
-      expect(fs.deleteDoc).toHaveBeenCalled();
+      expect(fs.setDoc).toHaveBeenCalled();
     });
 
     it("handles undefined rating in updateRating", async () => {
-      await tripsService.updateRating("t1", undefined);
+      const mockTrip = { id: "t1", name: "Trip 1" } as any;
+      await tripsService.updateRating(mockTrip, undefined);
       expect(fs.setDoc).toHaveBeenCalledWith(
         expect.anything(),
         { rating: null },
@@ -169,13 +169,14 @@ describe("tripsService", () => {
     });
 
     it("handles both favorited and unfavorited status updates", async () => {
-      await tripsService.updateFavorite("t1", true);
+      const mockTrip = { id: "t1", name: "Trip 1" } as any;
+      await tripsService.updateFavorite(mockTrip, true);
       expect(activityMockTracker).toHaveBeenCalledWith(
         413,
         expect.objectContaining({ action: "favorited" }),
         expect.anything(),
       );
-      await tripsService.updateFavorite("t1", false);
+      await tripsService.updateFavorite(mockTrip, false);
       expect(activityMockTracker).toHaveBeenCalledWith(
         413,
         expect.objectContaining({ action: "unfavorited" }),
@@ -185,21 +186,23 @@ describe("tripsService", () => {
 
     it("throws error for unauthenticated remove", async () => {
       auth.isAuthenticated.mockReturnValue(false);
-      await expect(tripsService.remove("t1")).rejects.toThrow();
+      await expect(tripsService.remove({ id: "t1" } as any)).rejects.toThrow();
     });
   });
 
   it("enforces authentication on all methods", async () => {
     auth.isAuthenticated.mockReturnValue(false);
     auth.getCurrentUser.mockReturnValue(null);
+    const mockTrip = { id: "id" } as any;
+
     const methods = [
       () => tripsService.load(),
       () => tripsService.save([]),
-      () => tripsService.add({} as any),
-      () => tripsService.updateFavorite("id", true),
-      () => tripsService.updateRating("id", 1),
-      () => tripsService.edit({} as any),
-      () => tripsService.remove("id"),
+      () => tripsService.add(mockTrip),
+      () => tripsService.updateFavorite(mockTrip, true),
+      () => tripsService.updateRating(mockTrip, 1),
+      () => tripsService.edit(mockTrip),
+      () => tripsService.remove(mockTrip),
     ];
     for (const method of methods) await expect(method()).rejects.toThrow();
   });

@@ -88,25 +88,25 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   /** Updates a trip's favorite status. */
-  async function updateTripFavorite(tripId: string, favorite: boolean) {
-    await tripsService.updateFavorite(tripId, favorite);
+  async function updateTripFavorite(trip: Trip, favorite: boolean) {
+    await tripsService.updateFavorite(trip, favorite);
     setTrips((prev) =>
-      prev.map((trip) => (trip.id === tripId ? { ...trip, favorite } : trip)),
+      prev.map((t) => (t.id === trip.id ? { ...trip, favorite } : t)),
     );
   }
 
   /** Updates a trip's rating. */
-  async function updateTripRating(tripId: string, rating: number | undefined) {
-    await tripsService.updateRating(tripId, rating);
+  async function updateTripRating(trip: Trip, rating: number | undefined) {
+    await tripsService.updateRating(trip, rating);
     setTrips((prev) =>
-      prev.map((trip) => (trip.id === tripId ? { ...trip, rating } : trip)),
+      prev.map((t) => (t.id === trip.id ? { ...trip, rating } : t)),
     );
   }
 
   /** Removes a trip. */
-  async function removeTrip(id: string) {
-    await tripsService.remove(id);
-    setTrips((prev) => prev.filter((t) => t.id !== id));
+  async function removeTrip(trip: Trip) {
+    await tripsService.remove(trip);
+    setTrips((prev) => prev.filter((t) => t.id !== trip.id));
   }
 
   /** Duplicates a trip. */
@@ -187,7 +187,7 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
   /** Handles bulk trip deletion. */
   async function handleBulkDelete() {
     for (const trip of nonSharedSelectedTrips) {
-      await removeTrip(trip.id);
+      await removeTrip(trip);
     }
     setSelectedTripIds([]);
   }
