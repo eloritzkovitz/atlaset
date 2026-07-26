@@ -121,7 +121,10 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           ref={ref || inputRef}
           id={inputId}
           name={name || "search"}
-          type="search"
+          type="text"
+          role="searchbox"
+          autoComplete="off"
+          autoCorrect="off"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onScroll={(e) => {
