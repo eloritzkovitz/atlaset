@@ -1,18 +1,18 @@
 import type { GeoProjection } from "d3-geo";
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Tooltip } from "@components";
 import { useMapView } from "@contexts/MapViewContext";
-import {
-  getCountryIsoCode,
-  getCountryName,
-  useCountryData,
-} from "@features/countries";
 import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
 } from "@features/atlas/layers";
 import { useMapColors, useMapOverlays } from "@features/atlas/settings";
 import { useMapTheme } from "@features/atlas/shared";
+import {
+  getCountryIsoCode,
+  getCountryName,
+  useCountryData,
+} from "@features/countries";
 import { useTooltipTarget } from "@hooks";
 import { isNumericString } from "@utils/string";
 import { Geographies } from "./Geographies";
@@ -46,9 +46,10 @@ export function LayersContainer({
   onCountryHover,
   isAddingMarker,
 }: LayersContainerProps) {
-  const countryData = useCountryData();
+  const { countries, integralRegionsLookup, sovereignLookup, countryAreaMap } =
+    useCountryData();
   const { numAtlasColors } = useMapColors();
-  const { showSmallCountryOverlays } = useMapOverlays();
+  const { showSmallCountryOverlays, includeIntegralRegions } = useMapOverlays();
   const { geographyStyle } = useMapTheme();
   const { mapMode, isAtlasActive } = useMapView();
   const { activeTarget, registerVirtualTarget, clearTarget } =
@@ -65,24 +66,42 @@ export function LayersContainer({
     enabled: isAtlasActive,
   });
 
-  const highlightedSet = useMemo(
-    () => new Set(highlightedIsoCodes),
-    [highlightedIsoCodes],
+  // Expand an ISO code to include its parent and integral regions if applicable
+  const expandIsoCode = useCallback(
+    (isoCode: string, includeParent = false): Set<string> => {
+      const set = new Set<string>();
+      const upper = isoCode.toUpperCase();
+      const parentIso = includeParent
+        ? sovereignLookup.get(upper) || upper
+        : upper;
+
+      set.add(parentIso);
+
+      // Only include overseas/integral regions if the setting is enabled
+      if (includeIntegralRegions) {
+        integralRegionsLookup
+          .get(parentIso)
+          ?.forEach((region) => set.add(region));
+      }
+
+      return set;
+    },
+    [sovereignLookup, integralRegionsLookup, includeIntegralRegions],
   );
 
-  // Create a lookup map for country areas to determine small countries
-  const countryAreaMap = useMemo(() => {
-    const lookup = new Map<string, number>();
-    const countriesList = countryData?.countries || [];
-
-    countriesList.forEach((c) => {
-      if (c.isoCode) {
-        lookup.set(c.isoCode.toUpperCase(), c.area || 0);
-      }
+  const highlightedSet = useMemo(() => {
+    const set = new Set<string>();
+    highlightedIsoCodes.forEach((code) => {
+      expandIsoCode(code).forEach((c) => set.add(c));
     });
+    return set;
+  }, [highlightedIsoCodes, expandIsoCode]);
 
-    return lookup;
-  }, [countryData?.countries]);
+  const hoveredSet = useMemo(
+    () =>
+      hoveredIsoCode ? expandIsoCode(hoveredIsoCode, true) : new Set<string>(),
+    [hoveredIsoCode, expandIsoCode],
+  );
 
   return (
     <>
@@ -99,25 +118,18 @@ export function LayersContainer({
         }) => {
           const baseLayers: React.ReactNode[] = [];
           const overlayCircles: React.ReactNode[] = [];
-
           const upperSelected = selectedIsoCode?.toUpperCase();
-          const upperHovered = hoveredIsoCode?.toUpperCase();
 
           geographies.forEach((geo) => {
             const isoA2 = getCountryIsoCode(geo.properties);
             if (!isoA2) return;
 
-            const countryName = countryData?.countries
-              ? getCountryName(isoA2, countryData.countries)
-              : undefined;
-            const isIsoNumeric = isNumericString(isoA2);
-            const countryNameIsIso =
-              !!(countryName && isoA2) &&
-              countryName.toUpperCase() === isoA2.toUpperCase();
-
+            const upperIsoA2 = isoA2.toUpperCase();
+            const countryName = getCountryName(isoA2, countries);
+            const isIsoName = countryName.toUpperCase() === upperIsoA2;
             const tooltipValue =
-              !countryName || isIsoNumeric || countryNameIsIso
-                ? geo.properties?.name || isoA2 || ""
+              isNumericString(isoA2) || isIsoName
+                ? geo.properties?.name || isoA2
                 : countryName;
 
             const layers = layerGroups[isoA2] || [];
@@ -129,9 +141,9 @@ export function LayersContainer({
             // Determine the style for the country based on various states
             const finalStyle = resolveCountryStyle({
               geographyStyle,
-              isHighlighted: highlightedSet.has(isoA2),
-              isHovered: !!upperHovered && isoA2 === upperHovered,
-              isSelected: !!upperSelected && isoA2 === upperSelected,
+              isHighlighted: highlightedSet.has(upperIsoA2),
+              isHovered: hoveredSet.has(upperIsoA2),
+              isSelected: !!upperSelected && upperIsoA2 === upperSelected,
               isAtlasActive,
               atlasColor: atlasColorMap[isoA2],
               blendedFill,
@@ -167,7 +179,7 @@ export function LayersContainer({
             );
 
             // Determine if the country is small based on its area and whether to show overlays
-            const countryArea = countryAreaMap.get(isoA2.toUpperCase()) || 0;
+            const countryArea = countryAreaMap.get(upperIsoA2) || 0;
             const isSmallCountry =
               countryArea > 0 && countryArea < SMALL_COUNTRY_AREA_THRESHOLD;
 
@@ -197,7 +209,7 @@ export function LayersContainer({
         }}
       </Geographies>
 
-      {activeTarget && activeTarget.virtualCoords && (
+      {activeTarget?.virtualCoords && (
         <Tooltip
           overrideCoords={activeTarget.virtualCoords}
           content={activeTarget.id}

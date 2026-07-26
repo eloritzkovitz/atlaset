@@ -12,6 +12,7 @@ export function useMapOverlays() {
     return (
       settings?.map?.overlays ?? {
         showSmallCountryOverlays: false,
+        includeIntegralRegions: false,
         showHomeCountry: false,
         showVisitedCountries: false,
         showFutureVisits: false,
@@ -41,6 +42,9 @@ export function useMapOverlays() {
     showSmallCountryOverlays: overlaySettings.showSmallCountryOverlays,
     setShowSmallCountryOverlays: (value: boolean) =>
       updateOverlaySetting({ showSmallCountryOverlays: value }),
+    includeIntegralRegions: overlaySettings.includeIntegralRegions,
+    setIncludeIntegralRegions: (value: boolean) =>
+      updateOverlaySetting({ includeIntegralRegions: value }),
     showHomeCountry: overlaySettings.showHomeCountry,
     setShowHomeCountry: (value: boolean) =>
       updateOverlaySetting({ showHomeCountry: value }),

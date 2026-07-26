@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "@components";
 import type { Visit } from "@features/visits";
@@ -7,7 +7,7 @@ import { CountryDetailsContent } from "./CountryDetailsContent";
 import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
 import type { Country, Currency } from "../../types";
-import { getCountryTerritories } from "../../utils/countryData";
+import { getCountryTerritoryRelations } from "../../utils/countryData";
 
 type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 
@@ -51,44 +51,44 @@ export function CountryDetailsPanel({
 
   const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
 
+  // Determine available tabs based on country relations
+  const territoryRelations = useMemo(
+    () =>
+      country?.isoCode ? getCountryTerritoryRelations(country) : undefined,
+    [country],
+  );
+
+  const currentHasTerritoriesTab = !!territoryRelations?.hasRelations;
+  const currentHasAffiliationsTab = !!(
+    (country?.memberOf && country.memberOf.length > 0) ||
+    country?.unMember
+  );
+
+  const tabs = useMemo(() => {
+    const availableTabs: CountryDetailsTab[] = ["overview"];
+    if (currentHasTerritoriesTab) availableTabs.push("territories");
+    if (currentHasAffiliationsTab) availableTabs.push("affiliations");
+    availableTabs.push("visits");
+    return availableTabs;
+  }, [currentHasTerritoriesTab, currentHasAffiliationsTab]);
+
   // Reset to overview tab when modal is closed, if resetTabOnClose is true
   useEffect(() => {
     if (resetTabOnClose && !isOpen) setActiveTab("overview");
   }, [resetTabOnClose, isOpen]);
 
-  // Reset to overview tab when country changes
+  // Reset active tab if country changes or if current active tab is no longer available
   useEffect(() => {
-    setActiveTab("overview");
-  }, [country?.isoCode]);
+    if (!tabs.includes(activeTab)) {
+      setActiveTab("overview");
+    }
+  }, [country?.isoCode, tabs, activeTab]);
 
   // Handle tab change
   const handleTabChange = (tab: CountryDetailsTab) => {
     setActiveTab(tab);
     onTabChange?.(tab);
   };
-
-  // Determine if the country has territories to show in the Territories tab
-  const getTerritoriesTab = (country: Country) => {
-    try {
-      const rel =
-        country && country.isoCode ? getCountryTerritories(country) : undefined;
-      return rel && rel.hasRelations;
-    } catch {
-      return false;
-    }
-  };
-
-  // Determine which tabs to show based on country data
-  const currentHasTerritoriesTab = getTerritoriesTab(country);
-  const currentHasAffiliationsTab = !!(
-    (country?.memberOf && country.memberOf.length > 0) ||
-    country?.unMember
-  );
-
-  const tabs: CountryDetailsTab[] = ["overview"];
-  if (currentHasTerritoriesTab) tabs.push("territories");
-  if (currentHasAffiliationsTab) tabs.push("affiliations");
-  tabs.push("visits");
 
   return (
     <div className={`flex flex-col h-full min-h-0 ${className}`}>

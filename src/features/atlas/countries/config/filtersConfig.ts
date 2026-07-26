@@ -5,11 +5,18 @@ import { mapOptions } from "@utils/array";
 import { createSelectFilter } from "@utils/filter";
 import { capitalize, capitalizeWords } from "@utils/string";
 
+export const ALL_GEO_TYPES: readonly GeoType[] = [
+  "Coastal",
+  "Landlocked",
+  "Island",
+];
+
 // Predefined sovereignty order for consistent dropdown ordering
-export const SOVEREIGNTY_ORDER: SovereigntyStatus[] = [
+export const SOVEREIGNTY_ORDER: readonly SovereigntyStatus[] = [
   "sovereign",
   "dependency",
   "overseas_region",
+  "special_territory",
   "partially_recognized",
   "disputed",
   "unrecognized",
@@ -79,15 +86,7 @@ export const coreFiltersConfig: CountryFilterConfig<
   createSelectFilter(
     "geoType",
     "atlas:countries.filters.core.geoType",
-    (options) => [
-      allOption,
-      ...mapOptions(
-        (["Coastal", "Landlocked", "Island"] as GeoType[]).filter((type) =>
-          (options as GeoType[] | undefined)?.includes(type),
-        ),
-        capitalize,
-      ),
-    ],
+    () => [allOption, ...mapOptions([...ALL_GEO_TYPES], capitalize)],
     (props) => (props.selectedGeoType === "" ? "all" : props.selectedGeoType),
     (props, val) =>
       props.setSelectedGeoType(val === "all" ? "" : (val as GeoType)),
@@ -95,15 +94,7 @@ export const coreFiltersConfig: CountryFilterConfig<
   createSelectFilter(
     "sovereignty",
     "atlas:countries.filters.core.sovereignty",
-    (options) => [
-      allOption,
-      ...mapOptions(
-        SOVEREIGNTY_ORDER.filter((type) =>
-          (options as SovereigntyStatus[] | undefined)?.includes(type),
-        ),
-        capitalize,
-      ),
-    ],
+    () => [allOption, ...mapOptions([...SOVEREIGNTY_ORDER], capitalize)],
     (props) =>
       props.selectedSovereignty === "" ? "all" : props.selectedSovereignty,
     (props, val) => props.setSelectedSovereignty(val === "all" ? "" : val),

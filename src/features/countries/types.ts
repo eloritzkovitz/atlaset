@@ -83,17 +83,22 @@ export type SovereigntyStatus =
   | "sovereign"
   | "dependency"
   | "overseas_region"
+  | "special_territory"
   | "partially_recognized"
   | "unrecognized"
   | "disputed"
   | "unknown";
 
+export type NonSovereignStatus = Exclude<SovereigntyStatus, "sovereign">;
+
 /** Geographic types for countries. */
 export type GeoType = "Coastal" | "Landlocked" | "Island";
 
+/** Represents a group of territories for a country. */
 export type CountryTerritoriesGroup = {
   codes: string[];
   label?: string;
+  type?: SovereigntyStatus;
 };
 
 export type CountryTerritories = Record<string, CountryTerritoriesGroup>;

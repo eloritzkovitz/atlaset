@@ -63,7 +63,7 @@ export function CountryAffiliationsContent({
     setExpanded((p) => ({ ...p, [key]: !p[key] }));
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto px-4">
       {sections.map(
         (section) =>
           section.data &&

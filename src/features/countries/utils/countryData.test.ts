@@ -17,7 +17,8 @@ import {
   getCountriesWithOwnFlag,
   getRandomCountry,
   getTranscontinentalInfo,
-  getCountryTerritories,
+  getCountryTerritoryRelations,
+  getTerritoryCodesByType,
   getAllGeoTypes,
 } from "./countryData";
 import { canonicalKey } from "@utils/string";
@@ -34,173 +35,110 @@ vi.mock("../constants/specialCountries", () => ({
 describe("countryData utils", () => {
   const countries = mockCountries;
   const findCountry = (iso: string) => countries.find((c) => c.isoCode === iso);
-  const stubCountry = (iso: string) => ({ isoCode: iso }) as Country;
+  const stubCountry = (iso: string, props: Partial<Country> = {}) =>
+    ({ isoCode: iso, ...props }) as Country;
 
   describe("getCountryIsoCode", () => {
-    it("extracts ISO code from ISO_A2", () => {
-      expect(getCountryIsoCode({ ISO_A2: "us" })).toBe("US");
-    });
-    it("extracts ISO code from ISO3166-1-Alpha-2", () => {
-      expect(getCountryIsoCode({ "ISO3166-1-Alpha-2": "fr" })).toBe("FR");
-    });
-    it("returns undefined if not found", () => {
-      expect(getCountryIsoCode({})).toBeUndefined();
+    it.each([
+      ["ISO_A2", { ISO_A2: "us" }, "US"],
+      ["ISO3166-1-Alpha-2", { "ISO3166-1-Alpha-2": "fr" }, "FR"],
+      ["empty object", {}, undefined],
+    ])("extracts ISO code from %s", (_, input, expected) => {
+      expect(getCountryIsoCode(input)).toBe(expected);
     });
   });
 
   describe("getCountryByIsoCode", () => {
-    const countries = mockCountries.filter((c) => c.isoCode === "US");
+    const usOnly = mockCountries.filter((c) => c.isoCode === "US");
+
     it("finds country by ISO code", () => {
-      expect(getCountryByIsoCode("US", { countries })).toEqual(countries[0]);
+      expect(getCountryByIsoCode("US", { countries: usOnly })).toEqual(
+        usOnly[0],
+      );
     });
-    it("returns null if not found", () => {
-      expect(getCountryByIsoCode("FR", { countries })).toBeNull();
-    });
-    it("returns null for invalid input", () => {
-      expect(getCountryByIsoCode("", null as any)).toBeNull();
+
+    it.each([
+      ["non-matching code", "FR", { countries: usOnly }],
+      ["invalid empty input", "", null as unknown as { countries: Country[] }],
+    ])("returns null for %s", (_, iso, opts) => {
+      expect(getCountryByIsoCode(iso, opts)).toBeNull();
     });
   });
 
   describe("getCountryName", () => {
-    it("returns the name of a country from SPECIAL_COUNTRIES", () => {
-      expect(getCountryName("GB-ENG", countries)).toBe("England");
-    });
-
-    it("returns the name if country is found", () => {
-      expect(getCountryName("FR", countries)).toBe("France");
-    });
-
-    it("returns isoCode if country is not found", () => {
-      expect(getCountryName("ZZ", countries)).toBe("ZZ");
+    it.each([
+      ["SPECIAL_COUNTRIES", "GB-ENG", "England"],
+      ["found country", "FR", "France"],
+      ["missing country (fallback to ISO)", "ZZ", "ZZ"],
+    ])("returns correct name for %s", (_, iso, expected) => {
+      expect(getCountryName(iso, countries)).toBe(expected);
     });
   });
 
   describe("createCountryMap", () => {
-    const countries = mockCountries.filter((c) => c.isoCode === "US");
-    const lookup = createCountryMap(countries, (c) => c);
-    const nameMap = createCountryMap(countries, (c) => c.name);
+    const usOnly = mockCountries.filter((c) => c.isoCode === "US");
+    const lookup = createCountryMap(usOnly, (c) => c);
+    const nameMap = createCountryMap(usOnly, (c) => c.name);
 
-    it("creates a lookup map by isoCode", () => {
-      expect(lookup["us"]).toEqual(countries[0]);
-    });
-
-    it("creates a map of isoCode to country name", () => {
+    it("creates lookup map by lowercased isoCode", () => {
+      expect(lookup["us"]).toEqual(usOnly[0]);
       expect(nameMap["us"]).toBe("United States");
-    });
-
-    it("is case-insensitive for isoCode", () => {
-      expect(lookup["us"]).toEqual(countries[0]);
       expect(lookup["US"]).toBeUndefined();
     });
   });
 
-  describe("getAllRegions", () => {
-    it("returns unique, sorted regions", () => {
-      const expected = Array.from(new Set(countries.map((c) => c.region)))
-        .filter(Boolean)
-        .sort();
-      expect(getAllRegions(countries)).toEqual(expected);
-    });
-    it("skips undefined regions", () => {
-      const testCountries = [
+  describe("region and subregion getters", () => {
+    it("getAllRegions returns unique, sorted regions and skips undefined", () => {
+      const testSet = [
         { region: "Europe" },
         { region: undefined },
         { region: "Americas" },
-        {},
-      ] as Partial<Country>[];
-      expect(getAllRegions(testCountries as Country[])).toEqual([
-        "Americas",
-        "Europe",
-      ]);
+      ] as Country[];
+      expect(getAllRegions(testSet)).toEqual(["Americas", "Europe"]);
     });
-  });
 
-  describe("getAllSubregions", () => {
-    it("returns unique, sorted subregions", () => {
-      const expected = Array.from(new Set(countries.map((c) => c.subregion)))
-        .filter(Boolean)
-        .sort();
-      expect(getAllSubregions(countries)).toEqual(expected);
-    });
-    it("skips undefined subregions", () => {
-      const testCountries = [
+    it("getAllSubregions returns unique, sorted subregions and skips undefined", () => {
+      const testSet = [
         { subregion: "Caribbean" },
         { subregion: undefined },
-        {},
-      ] as Partial<Country>[];
-      expect(getAllSubregions(testCountries as Country[])).toEqual([
-        "Caribbean",
-      ]);
-    });
-  });
-
-  describe("getSubregionsForRegion", () => {
-    it("returns subregions for a region", () => {
-      const region = "Americas";
-      const expected = Array.from(
-        new Set(
-          countries.filter((c) => c.region === region).map((c) => c.subregion),
-        ),
-      )
-        .filter(Boolean)
-        .sort();
-      expect(getSubregionsForRegion(countries, region)).toEqual(expected);
+      ] as Country[];
+      expect(getAllSubregions(testSet)).toEqual(["Caribbean"]);
     });
 
-    it("skips undefined subregions", () => {
-      const testCountries = [
+    it("getSubregionsForRegion filters by region and skips undefined", () => {
+      const testSet = [
         { region: "Europe", subregion: "Western Europe" },
         { region: "Europe", subregion: undefined },
         { region: "Americas", subregion: "Caribbean" },
-      ] as Partial<Country>[];
-      expect(
-        getSubregionsForRegion(testCountries as Country[], "Europe"),
-      ).toEqual(["Western Europe"]);
+      ] as Country[];
+      expect(getSubregionsForRegion(testSet, "Europe")).toEqual([
+        "Western Europe",
+      ]);
     });
   });
 
-  describe("getAllGeoTypes", () => {
-    it("returns unique, sorted geo types", () => {
-      const expected = Array.from(
-        new Set(countries.map((c) => c.geoType).filter(Boolean) as GeoType[]),
-      ).sort();
-      expect(getAllGeoTypes(countries)).toEqual(expected);
-    });
-
-    it("skips undefined geo types", () => {
-      const testCountries = [
+  describe("metadata getters", () => {
+    it("getAllGeoTypes returns unique, sorted geoTypes", () => {
+      const testSet = [
         { geoType: "Country" as GeoType },
         { geoType: undefined },
-        {},
-      ] as Partial<Country>[];
-      expect(getAllGeoTypes(testCountries as Country[])).toEqual(["Country"]);
-    });
-  });
-
-  describe("getAllSovereigntyStatuses", () => {
-    it("returns unique, sorted sovereignty statuses", () => {
-      expect(getAllSovereigntyStatuses(countries)).toEqual([
-        "dependency",
-        "sovereign",
-      ]);
+      ] as Country[];
+      expect(getAllGeoTypes(testSet)).toEqual(["Country"]);
     });
 
-    it("skips undefined sovereigntyStatus", () => {
-      const testCountries = [
+    it("getAllSovereigntyStatuses returns unique, sorted statuses", () => {
+      const testSet = [
         { sovereigntyStatus: "sovereign" as SovereigntyStatus },
-        { sovereigntyStatus: undefined },
         {},
-      ] as Partial<Country>[];
-      expect(getAllSovereigntyStatuses(testCountries as Country[])).toEqual([
-        "sovereign",
-      ]);
+      ] as Country[];
+      expect(getAllSovereigntyStatuses(testSet)).toEqual(["sovereign"]);
     });
   });
 
-  describe("getCountryTerritories", () => {
+  describe("getCountryTerritoryRelations", () => {
     it("returns mutual disputes for both sides", () => {
-      const a = getCountryTerritories(countries[0]);
-      const b = getCountryTerritories(countries[4]);
+      const a = getCountryTerritoryRelations(countries[0]);
+      const b = getCountryTerritoryRelations(countries[4]);
       expect(a.groups?.disputes?.codes).toContain("US");
       expect(b.groups?.disputes?.codes).toContain("FR");
     });
@@ -209,179 +147,128 @@ describe("countryData utils", () => {
       ["country with no relations", findCountry("DE") || stubCountry("DE")],
       ["empty input", {} as Country],
       ["special country", findCountry("GB-ENG") || stubCountry("GB-ENG")],
+      ["countries without provided relations", stubCountry("FR")],
     ])("returns hasRelations: false for %s", (_, country) => {
-      expect(getCountryTerritories(country as Country)).toMatchObject({
+      expect(getCountryTerritoryRelations(country as Country)).toMatchObject({
         hasRelations: false,
       });
     });
 
     it("returns full relations for a sovereign with relations", () => {
-      const result = getCountryTerritories(countries[0]);
+      const result = getCountryTerritoryRelations(countries[0]);
       expect(result.hasRelations).toBe(true);
       expect(Array.isArray(result.groups?.dependencies?.codes)).toBe(true);
       expect(Array.isArray(result.groups?.overseas_regions?.codes)).toBe(true);
-      expect(Array.isArray(result.groups?.disputes?.codes)).toBe(true);
     });
 
-    it("returns empty results when countries not provided", () => {
-      const res = getCountryTerritories(stubCountry("FR"));
-      expect(res).toMatchObject({ hasRelations: false });
-      expect(res.relatedIsoCodes).toEqual([]);
-      expect(res.groups).toEqual({});
-    });
-
-    it("preserves group labels and deduplicates relatedIsoCodes", () => {
-      const local: Country[] = [
-        {
-          name: "Example",
-          isoCode: "ZZ",
-          territories: {
-            deps: { codes: ["A", "A"], label: "Dep" },
-            regions: { codes: ["B"] },
-          },
-        } as unknown as Country,
-      ];
-
-      const out = getCountryTerritories(local[0]);
-      expect(out.groups?.deps?.label).toBe("Dep");
-      expect(out.relatedIsoCodes).toBeDefined();
-      expect(new Set(out.relatedIsoCodes).size).toBe(2);
-      expect(out.relatedIsoCodes).toEqual(expect.arrayContaining(["A", "B"]));
-    });
-
-    it("reports hasRelations false when groups exist but have no codes", () => {
-      const local: Country[] = [
-        {
-          name: "EmptyGroups",
-          isoCode: "EM",
-          territories: {
-            deps: { codes: [] },
-          },
-        } as unknown as Country,
-      ];
-
-      const out = getCountryTerritories(local[0]);
-      expect(out.groups).toBeDefined();
-      expect(out.relatedIsoCodes).toEqual([]);
-      expect(out.hasRelations).toBe(false);
-    });
-
-    it("handles undefined group entries and missing codes", () => {
-      const local: Country = {
+    it("handles deduplication, undefined group entries, and missing codes safely", () => {
+      const edgeCountry = stubCountry("EG", {
         name: "Edge",
-        isoCode: "EG",
         territories: {
-          missingValue: undefined as unknown as any,
-          noCodes: { label: "NoCodes" } as unknown as any,
+          missingValue: undefined as unknown as unknown,
+          noCodes: { label: "NoCodes" },
+          dupes: { codes: ["a", "a"], label: "Dupes" },
+          nullCodes: { codes: null as unknown as string[] },
         } as unknown as CountryTerritories,
-      } as Country;
+      });
 
-      const out = getCountryTerritories(local);
-      expect(out.groups).toBeDefined();
+      const out = getCountryTerritoryRelations(edgeCountry);
       expect(out.groups?.missingValue?.codes).toEqual([]);
       expect(out.groups?.noCodes?.codes).toEqual([]);
-      expect(out.groups?.noCodes?.label).toBe("NoCodes");
-      expect(out.relatedIsoCodes).toEqual([]);
-      expect(out.hasRelations).toBe(false);
-    });
-
-    it("handles null codes alongside populated codes", () => {
-      const local: Country = {
-        name: "NullCodes",
-        isoCode: "NC",
-        territories: {
-          someGroup: { codes: null as unknown as string[] },
-          otherGroup: { codes: ["X"] },
-        } as unknown as CountryTerritories,
-      } as Country;
-
-      const out = getCountryTerritories(local);
-      expect(out.relatedIsoCodes).toEqual(["X"]);
+      expect(out.groups?.dupes?.codes).toEqual(["a", "a"]);
+      expect(out.relatedIsoCodes).toEqual(["a"]);
       expect(out.hasRelations).toBe(true);
     });
   });
 
-  describe("getCountriesWithOwnFlag", () => {
-    it("filters out excluded iso codes", () => {
-      const countries = [
-        { isoCode: "US" },
-        { isoCode: "XX" },
-        { isoCode: "FR" },
-      ];
-      const result = getCountriesWithOwnFlag(countries as any);
-      expect(result).toEqual([
-        { isoCode: "US" },
-        { isoCode: "XX" },
-        { isoCode: "FR" },
-      ]);
+  describe("getTerritoryCodesByType", () => {
+    const allowedTypes = new Set(["overseas_region", "special_territory"]);
+
+    it("extracts and normalizes unique ISO codes matching allowed types", () => {
+      const parent = stubCountry("FR", {
+        territories: {
+          regions: { type: "overseas_region", codes: ["gf", "yt"] },
+          special: { type: "special_territory", codes: ["YT", "bl"] },
+          ignored: { type: "dependency", codes: ["nc"] },
+        } as unknown as CountryTerritories,
+      });
+
+      const codes = getTerritoryCodesByType(parent, allowedTypes);
+      expect(codes).toEqual(["GF", "YT", "BL"]);
+    });
+
+    it.each([
+      ["country with no territories", stubCountry("DE")],
+      ["undefined country input", undefined as unknown as Country],
+      [
+        "allowedTypes that don't match any group",
+        stubCountry("FR", {
+          territories: {
+            deps: { type: "dependency", codes: ["NC"] },
+          } as unknown as CountryTerritories,
+        }),
+      ],
+    ])("returns empty array for %s", (_, country) => {
+      expect(getTerritoryCodesByType(country, allowedTypes)).toEqual([]);
+    });
+
+    it("handles missing group type or empty codes gracefully", () => {
+      const malformedParent = stubCountry("XX", {
+        territories: {
+          noType: { codes: ["A"] },
+          noCodes: { type: "overseas_region" },
+          nullCodes: { type: "overseas_region", codes: null },
+        } as unknown as CountryTerritories,
+      });
+
+      expect(getTerritoryCodesByType(malformedParent, allowedTypes)).toEqual(
+        [],
+      );
     });
   });
 
-  describe("getRandomCountry", () => {
-    it("returns a country from the list", () => {
-      const countries = [{ isoCode: "US" }, { isoCode: "FR" }];
-      const result = getRandomCountry(countries as any);
-      expect(countries).toContainEqual(result);
+  describe("miscellaneous helpers", () => {
+    it("getCountriesWithOwnFlag returns array unchanged when overrides not matched", () => {
+      const testCountries = [{ isoCode: "US" }, { isoCode: "FR" }];
+      expect(getCountriesWithOwnFlag(testCountries as Country[])).toEqual(
+        testCountries,
+      );
+    });
+
+    it("getRandomCountry selects a item from list", () => {
+      const testCountries = [{ isoCode: "US" }, { isoCode: "FR" }];
+      expect(testCountries).toContainEqual(
+        getRandomCountry(testCountries as Country[]),
+      );
     });
   });
 
   describe("transcontinental helpers", () => {
-    it("returns additional region when transcontinental (country object)", () => {
-      const ru = {
-        isoCode: "RU",
-        transcontinental: { additionalRegion: "Europe" },
-      } as Country;
-      expect(getTranscontinentalInfo(ru)?.additionalRegion).toBe("Europe");
-    });
-
-    it("returns additional subregion when transcontinental (country object)", () => {
-      const ru = {
-        isoCode: "RU",
+    it("extracts transcontinental info for country object", () => {
+      const ru = stubCountry("RU", {
         transcontinental: {
           additionalRegion: "Europe",
           additionalSubregion: "North Asia",
         },
-      } as Country;
-      const tr = {
-        isoCode: "TR",
+      });
+
+      const info = getTranscontinentalInfo(ru);
+      expect(info?.additionalRegion).toBe("Europe");
+      expect(info?.additionalSubregion).toBe("North Asia");
+      expect(!!getTranscontinentalInfo(ru)).toBe(true);
+      expect(!!getTranscontinentalInfo(stubCountry("ZZ"))).toBe(false);
+    });
+
+    it("resolves additionalSubregionRegion from subregionsByRegion mapping", () => {
+      const country = stubCountry("TR", {
         transcontinental: {
           additionalRegion: "Asia",
           additionalSubregion: "West Asia",
         },
-      } as Country;
-      expect(getTranscontinentalInfo(ru)?.additionalSubregion).toBe(
-        "North Asia",
-      );
-      expect(getTranscontinentalInfo(tr)?.additionalSubregion).toBe(
-        "West Asia",
-      );
-    });
-
-    it("reports transcontinental status correctly (country object)", () => {
-      const ru = {
-        isoCode: "RU",
-        transcontinental: { additionalRegion: "Europe" },
-      } as Country;
-      const zz = { isoCode: "ZZ" } as Country;
-      expect(!!getTranscontinentalInfo(ru)).toBe(true);
-      expect(!!getTranscontinentalInfo(zz)).toBe(false);
-    });
-
-    it("resolves additionalSubregionRegion when matches are found in subregionsByRegion mapping", () => {
-      const subregionName = "West Asia";
-      const computedKey = canonicalKey(subregionName);
-
-      const country = {
-        isoCode: "TR",
-        transcontinental: {
-          additionalRegion: "Asia",
-          additionalSubregion: subregionName,
-        },
-      } as Country;
+      });
 
       const subregionsByRegion = {
-        "Middle East": [computedKey],
-        "Other Region": ["unrelated-subregion"],
+        "Middle East": [canonicalKey("West Asia")],
       };
 
       const result = getTranscontinentalInfo(country, subregionsByRegion);

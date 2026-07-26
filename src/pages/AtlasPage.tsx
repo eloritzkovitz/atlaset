@@ -45,6 +45,13 @@ export default function AtlasPage() {
   } = useCountrySelection(countries);
   const { isAddingMarker } = useMarkerCreation();
 
+  // Ensure the countries panel is open on initial load
+  useEffect(() => {
+    if (!isMobile) {
+      setOpenMapToolbarPanel("countries");
+    }
+  }, [isMobile, setOpenMapToolbarPanel]);
+
   // Derived state
   const isLoading =
     countriesLoading || layersLoading || geoLoading || !mapReady;
@@ -55,13 +62,6 @@ export default function AtlasPage() {
       <ErrorMessage fullScreen error={error || geoError || "Unknown error"} />
     );
   }
-
-  // Ensure the countries panel is open on initial load
-  useEffect(() => {
-    if (!isMobile) {
-      setOpenMapToolbarPanel("countries");
-    }
-  }, [isMobile]);
 
   return (
     <>

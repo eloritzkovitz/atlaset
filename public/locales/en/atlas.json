@@ -287,6 +287,8 @@
       "title": "Overlays",
       "showSmallCountryOverlays": "Show small country overlays",
       "showSmallCountryOverlaysTooltip": "This will display countries with an area smaller than 10,000 km² as circles on the map.",
+      "includeIntegralRegions": "Include integral regions",
+      "includeIntegralRegionsTooltip": "Highlighting or selecting a country will also include its overseas integral regions.",
       "tracking": {
         "title": "Tracking Layers",
         "showHomeCountry": "Show home country",
