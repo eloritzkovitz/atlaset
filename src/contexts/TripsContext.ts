@@ -16,9 +16,9 @@ export interface TripsContextType {
   editTrip: (trip: Trip) => void;
   markCompleted: (trip: Trip) => void;
   duplicateTrip: (trip: Trip) => void;
-  updateTripFavorite: (tripId: string, favorite: boolean) => void;
-  updateTripRating: (tripId: string, rating: number | undefined) => void;
-  removeTrip: (id: string) => Promise<void>;
+  updateTripFavorite: (trip: Trip, favorite: boolean) => void;
+  updateTripRating: (trip: Trip, rating: number | undefined) => void;
+  removeTrip: (trip: Trip) => Promise<void>;
 }
 
 export const TripsContext = createContext<TripsContextType | undefined>(

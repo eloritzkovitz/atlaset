@@ -8,7 +8,6 @@ import { FLAG_OVERRIDES } from "../constants/flagOverrides";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
 import type {
   Country,
-  CountryTerritories,
   CountryTerritoriesGroup,
   GeoType,
   SovereigntyStatus,
@@ -38,10 +37,10 @@ export function getCountryByIsoCode(
   countryData: { countries: Country[] },
 ): Country | null {
   if (!code || !countryData?.countries) return null;
+  const target = code.toLowerCase();
   return (
-    countryData.countries.find(
-      (c) => c.isoCode?.toLowerCase() === code.toLowerCase(),
-    ) || null
+    countryData.countries.find((c) => c.isoCode?.toLowerCase() === target) ??
+    null
   );
 }
 
@@ -50,15 +49,12 @@ export function getCountryByIsoCode(
  * @param countryData - An object containing an array of countries.
  * @returns The name of the country if found, otherwise returns the ISO code.
  */
-export function getCountryName(isoCode: string, countries: Country[]) {
-  // Check SPECIAL_COUNTRIES first
+export function getCountryName(isoCode: string, countries: Country[]): string {
   if (SPECIAL_COUNTRIES[isoCode]?.name) {
     return SPECIAL_COUNTRIES[isoCode].name;
   }
-
-  // Then find in the main countries list
   const country = countries.find((c) => c.isoCode === isoCode);
-  return country ? country.name : isoCode;
+  return country?.name ?? isoCode;
 }
 
 /**
@@ -141,7 +137,7 @@ export function getAllSovereigntyStatuses(
  * @param country - The country object for which to find territories.
  * @returns Relation info: memberOf, groups, relatedIsoCodes and hasRelations.
  */
-export function getCountryTerritories(country: Country): {
+export function getCountryTerritoryRelations(country: Country): {
   memberOf?: Array<{
     prop: string;
     label?: string;
@@ -151,26 +147,48 @@ export function getCountryTerritories(country: Country): {
   relatedIsoCodes?: string[];
   hasRelations?: boolean;
 } {
-  let sovereignGroups: Record<string, CountryTerritoriesGroup> = {};
-  const groups: CountryTerritories | undefined = country?.territories;
-  if (groups) {
-    sovereignGroups = Object.fromEntries(
-      Object.keys(groups).map((prop) => {
-        const raw = groups[prop] as CountryTerritoriesGroup | undefined;
-        return [prop, { codes: raw?.codes ?? [], label: raw?.label }];
-      }),
-    ) as Record<string, CountryTerritoriesGroup>;
+  const rawGroups = country?.territories;
+  if (!rawGroups) {
+    return { groups: {}, relatedIsoCodes: [], hasRelations: false };
   }
 
-  // Related ISO codes are those listed in this country's own groups
-  const relatedIsoCodes = Array.from(
-    new Set(Object.values(sovereignGroups).flatMap((g) => g.codes ?? [])),
+  const groups: Record<string, CountryTerritoriesGroup> = {};
+  const relatedCodesSet = new Set<string>();
+
+  Object.entries(rawGroups).forEach(([prop, group]) => {
+    const codes = group?.codes ?? [];
+    groups[prop] = { codes, label: group?.label };
+    codes.forEach((code) => relatedCodesSet.add(code));
+  });
+
+  const relatedIsoCodes = Array.from(relatedCodesSet);
+
+  return {
+    groups,
+    relatedIsoCodes,
+    hasRelations: relatedIsoCodes.length > 0,
+  };
+}
+
+/**
+ * Extracts unique, uppercase ISO codes for specific territory types.
+ * @param country - The country object containing territories.
+ * @param allowedTypes - A set of allowed territory types to filter by.
+ * @returns An array of unique ISO codes for the specified territory types.
+ */
+export function getTerritoryCodesByType(
+  country: Country,
+  allowedTypes: Set<string>,
+): string[] {
+  if (!country?.territories) return [];
+
+  const matchedCodes = Object.values(country.territories).flatMap((group) =>
+    group?.type && allowedTypes.has(group.type)
+      ? group.codes?.map((code) => code.toUpperCase()) || []
+      : [],
   );
 
-  const hasRelations =
-    Object.keys(sovereignGroups).length > 0 && relatedIsoCodes.length > 0;
-
-  return { groups: sovereignGroups, relatedIsoCodes, hasRelations };
+  return Array.from(new Set(matchedCodes));
 }
 
 /**
@@ -196,6 +214,7 @@ export function getRandomCountry(countries: Country[]) {
 /**
  * Returns the transcontinental metadata object for a country, or null if not present.
  * @param country - The country object to check for transcontinental information.
+ * @param subregionsByRegion - Optional mapping of regions to their subregions for additional context.
  * @returns The TranscontinentalInfo object if present, otherwise null.
  */
 export function getTranscontinentalInfo(

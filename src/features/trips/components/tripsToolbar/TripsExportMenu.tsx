@@ -38,7 +38,7 @@ export function TripsExportMenu({
         icon={<FaFileCsv />}
         className="w-full justify-start"
       >
-        {t("toolbar.exportCSV")}
+        {t("table.toolbar.importExport.exportCSV")}
       </MenuButton>
       <MenuButton
         onClick={() => {
@@ -48,7 +48,7 @@ export function TripsExportMenu({
         icon={<FaFileLines />}
         className="w-full justify-start"
       >
-        {t("toolbar.exportJSON")}
+        {t("table.toolbar.importExport.exportJSON")}
       </MenuButton>
     </Menu>
   );

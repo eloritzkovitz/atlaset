@@ -120,20 +120,21 @@ export const tripsService = {
 
   /**
    * Update the favorite status of a trip.
-   * @param tripId - The ID of the trip to update.
+   * @param trip - The trip object to update.
    * @param favorite - The new favorite status.
    */
-  async updateFavorite(tripId: string, favorite: boolean) {
+  async updateFavorite(trip: Trip, favorite: boolean) {
     if (!isAuthenticated())
       throw new Error("Authentication required to update favorite.");
     const user = getCurrentUser();
     const tripsCol = getUserCollection("trips");
-    const tripRef = doc(tripsCol, tripId);
+    const tripRef = doc(tripsCol, trip.id);
     await setDoc(tripRef, { favorite }, { merge: true });
     await logUserActivity(
       413,
       {
-        tripId,
+        tripId: trip.id,        
+        itemName: trip.name,
         userName: user!.displayName,
         favorite,
         action: favorite ? "favorited" : "unfavorited",
@@ -144,23 +145,23 @@ export const tripsService = {
 
   /**
    * Update the rating of a trip.
-   * @param tripId - The ID of the trip to update.
+   * @param trip - The trip object to update.
    * @param rating - The new rating value.
    */
-  async updateRating(tripId: string, rating: number | undefined) {
+  async updateRating(trip: Trip, rating: number | undefined) {
     const ratingValue = rating === undefined ? null : rating;
     if (!isAuthenticated())
       throw new Error("Authentication required to update rating.");
     const user = getCurrentUser();
     const tripsCol = getUserCollection("trips");
-    const tripRef = doc(tripsCol, tripId);
+    const tripRef = doc(tripsCol, trip.id);
     await setDoc(tripRef, { rating: ratingValue }, { merge: true });
     await logUserActivity(
       414,
       {
-        itemName: tripId,
-        rating: ratingValue,
         userName: user!.displayName,
+        itemName: trip.name,
+        rating: ratingValue,
       },
       user!.uid,
     );
@@ -235,39 +236,37 @@ export const tripsService = {
   },
 
   /**
-   * Removes a trip by ID.
-   * @param id - The ID of the trip to remove.
+   * Removes a trip.
+   * @param trip - The trip object to remove.
    */
-  async remove(id: string) {
+  async remove(trip: Trip) {
     if (!isAuthenticated())
       throw new Error("Authentication required to remove a trip.");
 
     const user = getCurrentUser();
     if (!user) throw new Error("User not found.");
 
-    const tripDocRef = doc(getPaths.sub(user.uid, "trips"), id);
-    const tripData = await getDocData<Trip>(tripDocRef);
+    const tripDocRef = doc(getPaths.sub(user.uid, "trips"), trip.id);
 
     // Remove shared trip references for all participants
-    if (tripData) {
-      const participants = tripData.participants || [];
-      for (const participantUid of participants) {
-        if (participantUid !== user.uid) {
-          await sharedTripsService.removeReference(participantUid, id);
-        }
+    const participants = trip.participants || [];
+    for (const participantUid of participants) {
+      if (participantUid !== user.uid) {
+        await sharedTripsService.removeReference(participantUid, trip.id);
       }
     }
 
     await deleteDoc(tripDocRef);
+
     await logUserActivity(
       415,
       {
-        tripId: id,
-        itemName: tripData?.name,
-        userName: user!.displayName,
+        tripId: trip.id,
+        itemName: trip.name,
+        userName: user.displayName,
       },
-      user!.uid,
+      user.uid,
     );
-    await profileService.updateVisitedCountryCodes(user!.uid);
+    await profileService.updateVisitedCountryCodes(user.uid);
   },
 };

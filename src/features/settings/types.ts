@@ -51,6 +51,7 @@ export type MapInterfaceSettings = {
 /** Represents map overlay settings. */
 export type MapOverlaySettings = {
   showSmallCountryOverlays: boolean;
+  includeIntegralRegions: boolean;
   showHomeCountry: boolean;
   showVisitedCountries: boolean;
   showFutureVisits: boolean;

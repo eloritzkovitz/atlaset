@@ -92,25 +92,24 @@ export function useTripFilters(
   const filteredTrips = useMemo(() => {
     let result = trips ?? [];
 
-    // Apply toggle filters (local, abroad, completed, upcoming, favorite)
+    // Apply toggle filters
     result = result.filter((trip) => {
-      // Location toggles
+      // Location Group (Must match at least one active location toggle)
       const locationMatch =
         (filters.local && isLocalTrip(trip, homeCountry)) ||
         (filters.abroad && isAbroadTrip(trip, homeCountry));
 
-      // Status toggles
+      // Status Group (Must match at least one active status toggle)
       const statusMatch =
         (filters.completed && isCompletedTrip(trip)) ||
         (filters.upcoming &&
           (isUpcomingTrip(trip) || isInProgressTrip(trip))) ||
         (filters.planned && isPlannedTrip(trip));
 
-      // Favorite toggle
-      const favoriteMatch =
-        !filters.favorite || (filters.favorite && trip.favorite === true);
+      // Favorite Group (Modifier: only filters out when turned ON)
+      const favoriteMatch = !filters.favorite || trip.favorite === true;
 
-      // Must match one from each group
+      // Must pass all groups
       return locationMatch && statusMatch && favoriteMatch;
     });
 

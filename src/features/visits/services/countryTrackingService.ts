@@ -6,10 +6,12 @@ import {
 } from "firebase/firestore";
 import { getDocData, getPaths } from "@lib/firebase";
 
-export type TrackingField = "visitedCountryCodes" | "wantToVisitCountryCodes";
+export type TrackingField =
+  | "manualVisitedCountryCodes"
+  | "wantToVisitCountryCodes";
 
 interface TrackingData {
-  visitedCountryCodes: string[];
+  manualVisitedCountryCodes: string[];
   wantToVisitCountryCodes: string[];
 }
 
@@ -38,8 +40,10 @@ export const countryTrackingService = {
     return onSnapshot(getPaths.user(uid), (snap) => {
       const data = snap.data() as TrackingData | undefined;
       cb({
-        visitedCountryCodes: Array.isArray(data?.visitedCountryCodes)
-          ? data!.visitedCountryCodes
+        manualVisitedCountryCodes: Array.isArray(
+          data?.manualVisitedCountryCodes,
+        )
+          ? data!.manualVisitedCountryCodes
           : [],
         wantToVisitCountryCodes: Array.isArray(data?.wantToVisitCountryCodes)
           ? data!.wantToVisitCountryCodes
@@ -56,9 +60,9 @@ export const countryTrackingService = {
    */
   async addCountryCode(uid: string, code: string, targetField: TrackingField) {
     const opposingField: TrackingField =
-      targetField === "visitedCountryCodes"
+      targetField === "manualVisitedCountryCodes"
         ? "wantToVisitCountryCodes"
-        : "visitedCountryCodes";
+        : "manualVisitedCountryCodes";
 
     await updateDoc(getPaths.user(uid), {
       [targetField]: arrayUnion(code),

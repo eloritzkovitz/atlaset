@@ -101,6 +101,7 @@ export function useQuizSession({
         const entry = {
           playerId: user.uid,
           playerName: user.displayName || "Anonymous",
+          photoURL: user.photoURL || "",
           score,
           time:
             typeof duration === "number" && typeof timeLeft === "number"

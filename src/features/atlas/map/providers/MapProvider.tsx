@@ -63,5 +63,3 @@ export const MapProvider = ({
     </MapContext.Provider>
   );
 };
-
-

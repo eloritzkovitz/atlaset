@@ -26,12 +26,16 @@ export function getCollection<T>(path: string): CollectionReference<T> {
 /**
  * Gets a Firestore collection reference for a user's subcollection.
  * @param path The path within the user's collection.
+ * @param uid Optional user ID. If omitted, uses current authenticated user.
  * @returns The Firestore collection reference for the user's subcollection at the specified path.
  */
-export function getUserCollection<T>(path: string): CollectionReference<T> {
-  const user = getCurrentUser();
-  if (!user) throw new Error("Not authenticated");
-  return collection(db, "users", user.uid, path) as CollectionReference<T>;
+export function getUserCollection<T>(
+  path: string,
+  uid?: string,
+): CollectionReference<T> {
+  const targetUid = uid || getCurrentUser()?.uid;
+  if (!targetUid) throw new Error("Not authenticated");
+  return collection(db, "users", targetUid, path) as CollectionReference<T>;
 }
 
 /**

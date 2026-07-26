@@ -9,7 +9,7 @@ import { useUserProfile } from "../../profile/hooks/useUserProfile";
 interface UserListItemProps {
   uid: string;
   profileLink?: boolean;
-  onAccept?: () => void;
+  onAccept?: (displayName?: string) => void;
   onReject?: () => void;
   loading?: boolean;
 }
@@ -39,14 +39,16 @@ export function UserListItem({
     />
   );
 
+  // Determine display name or fallback to username or uid
+  const resolvedDisplayName =
+    userProfile?.displayName || userProfile?.username || uid;
+
   // Name content with display name and username, or skeleton if loading
   const nameContent = loading ? (
     <span className="h-4 w-24 bg-muted rounded-lg animate-pulse" />
   ) : (
     <div className="flex flex-col">
-      <span className="font-semibold">
-        {userProfile?.displayName || userProfile?.username || uid}
-      </span>
+      <span className="font-semibold">{resolvedDisplayName}</span>
       {userProfile?.username && (
         <span className="text-xs text-muted">@{userProfile.username}</span>
       )}
@@ -58,7 +60,7 @@ export function UserListItem({
     <div className="flex gap-1 ms-2">
       {onAccept && (
         <ActionButton
-          onClick={onAccept}
+          onClick={() => onAccept(resolvedDisplayName)}
           title={t("friends.accept")}
           ariaLabel={t("friends.accept")}
           icon={<ICONS.selected />}

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { CountryWithFlag } from "../../components/countryFlag/CountryWithFlag";
 import { useCountryData } from "../../hooks/useCountryData";
-import type { SovereigntyStatus } from "../../types";
+import type { NonSovereignStatus, SovereigntyStatus } from "../../types";
 import { getCountryName } from "../../utils/countryData";
 
 interface SovereigntyBadgeProps {
@@ -12,18 +12,20 @@ interface SovereigntyBadgeProps {
 
 // Map sovereignty types to badge colors
 const badgeColors: Record<SovereigntyStatus, string> = {
-  sovereign: "bg-info/50",
-  dependency: "bg-info/30",
-  overseas_region: "bg-code/50",
+  sovereign: "bg-primary/50",
+  dependency: "bg-info/50",
+  overseas_region: "bg-info/30",
+  special_territory: "bg-info/20",
   partially_recognized: "bg-warning/50",
   unrecognized: "bg-danger/50",
   disputed: "bg-warning/50",
   unknown: "bg-muted/50",
 };
 
-const PREFIX_TYPES = new Set<SovereigntyStatus>([
-  "dependency",
-  "overseas_region",  
+const PREFIX_TYPES = new Set<NonSovereignStatus>([
+  "dependency",  
+  "overseas_region",
+  "special_territory",
   "partially_recognized",
   "disputed",
 ]);
@@ -69,11 +71,9 @@ export function SovereigntyBadge({
       <div
         className={`mb-4 sm:mb-6 text-sm sm:text-base text-center font-semibold rounded-full p-2 sm:px-4 sm:py-2 break-words select-none ${color}`}
       >
-        {PREFIX_TYPES.has(type as SovereigntyStatus) ? (
+        {PREFIX_TYPES.has(type as NonSovereignStatus) ? (
           <>
-            {prefix}
-            {" "}
-            {flag}
+            {prefix} {flag}
           </>
         ) : (
           flag

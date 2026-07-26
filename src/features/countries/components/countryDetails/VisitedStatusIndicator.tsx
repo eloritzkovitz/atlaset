@@ -14,21 +14,21 @@ import type { Country } from "../../types";
 interface VisitedStatusIndicatorProps {
   country: Country;
   className?: string;
+  onClick?: () => void;
 }
 
 export function VisitedStatusIndicator({
   country,
   className = "",
+  onClick,
 }: VisitedStatusIndicatorProps) {
   const { homeCountry } = useHomeCountry();
-  const { isVisitedCountry, isFutureVisitCountry, isWantToVisitCountry } =
-    useVisitedCountries();
+  const { isVisitedCountry, isFutureVisitCountry } = useVisitedCountries();
   const { t } = useTranslation("atlas");
 
   const isHome = homeCountry === country.isoCode;
   const isVisited = isVisitedCountry(country.isoCode);
   const isFuture = isFutureVisitCountry(country.isoCode);
-  const isWantToVisit = isWantToVisitCountry(country.isoCode);
 
   const STATUS_CONFIG = {
     home: {
@@ -49,12 +49,6 @@ export function VisitedStatusIndicator({
       icon: "visited",
       color: VISITED_COLOR,
     },
-    wantToVisit: {
-      tooltipKey: "countries.details.status.wantToVisit",
-      ariaKey: "countries.details.status.wantToVisit",
-      icon: "wantToVisit",
-      color: NOT_VISITED_COLOR,
-    },
     notVisited: {
       tooltipKey: "countries.details.status.notVisited",
       ariaKey: "countries.details.status.notVisited",
@@ -69,20 +63,33 @@ export function VisitedStatusIndicator({
       ? "future"
       : isVisited
         ? "visited"
-        : isWantToVisit
-          ? "wantToVisit"
-          : "notVisited";
+        : "notVisited";
 
   const cfg = STATUS_CONFIG[key];
   const Icon = ICONS.visitStatus[cfg.icon];
 
+  const content = (
+    <Icon
+      className={`w-5 h-5 ${className}`}
+      color={cfg.color}
+      aria-label={t(cfg.ariaKey)}
+    />
+  );
+
   return (
     <Tooltip content={t(cfg.tooltipKey)} position="bottom">
-      <Icon
-        className={`w-5 h-5 ${className}`}
-        color={cfg.color}
-        aria-label={t(cfg.ariaKey)}
-      />
+      {onClick ? (
+        <button
+          type="button"
+          onClick={onClick}
+          className="inline-flex items-center justify-center p-1 rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+          aria-label={t(cfg.ariaKey)}
+        >
+          {content}
+        </button>
+      ) : (
+        content
+      )}
     </Tooltip>
   );
 }

@@ -33,11 +33,18 @@ export const friendService = {
   },
 
   /**
-   * Accepts a friend request.
+   * Accepts a friend request and establishes a friendship between two users.
    * @param currentUserId - The ID of the user accepting the request.
    * @param requestUserId - The ID of the user who sent the request.
+   * @param currentUserName - The name of the user accepting the request.
+   * @param requestUserName - The name of the user who sent the request.
    */
-  async acceptFriendRequest(currentUserId: string, requestUserId: string) {
+  async acceptFriendRequest(
+    currentUserId: string,
+    requestUserId: string,
+    currentUserName?: string,
+    requestUserName?: string,
+  ) {
     const batch = writeBatch(db);
     batch.set(getPaths.friendDoc(currentUserId, requestUserId), {
       uid: requestUserId,
@@ -50,10 +57,26 @@ export const friendService = {
     batch.delete(getPaths.friendRequestDoc(currentUserId, requestUserId));
 
     await batch.commit();
-    await Promise.all([
-      logUserActivity(140, { friendId: requestUserId }, currentUserId),
-      logUserActivity(140, { friendId: currentUserId }, requestUserId),
-    ]);
+
+    await logUserActivity(
+      140,
+      {
+        friendId: requestUserId,
+        userName: currentUserName || "You",
+        friendName: requestUserName || "a friend",
+      },
+      currentUserId,
+    );
+
+    await logUserActivity(
+      140,
+      {
+        friendId: currentUserId,
+        userName: requestUserName || "You",
+        friendName: currentUserName || "a friend",
+      },
+      requestUserId,
+    );
   },
 
   /**

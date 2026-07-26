@@ -287,6 +287,8 @@
       "title": "שכבות על",
       "showSmallCountryOverlays": "הצג שטחים קטנים",
       "showSmallCountryOverlaysTooltip": "אפשרות זאת תציג מדינות בעלות שטח הקטן מ-10,000 קמ\u0022ר כמעגלים על המפה.",
+      "includeIntegralRegions": "הצג מדינות עם שטחים אינטגרליים",
+      "includeIntegralRegionsTooltip": "הדגשה או בחירה של מדינה תכלול גם את האזורים האינטגרליים שלה מעבר לים.",
       "tracking": {
         "title": "שכבות מעקב",
         "showHomeCountry": "הצג מדינת בית",

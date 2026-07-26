@@ -10,6 +10,8 @@ export function OverlaySettingsGroup() {
   const {
     showSmallCountryOverlays,
     setShowSmallCountryOverlays,
+    includeIntegralRegions,
+    setIncludeIntegralRegions,
     showHomeCountry,
     setShowHomeCountry,
     showVisitedCountries,
@@ -40,6 +42,15 @@ export function OverlaySettingsGroup() {
                 )}
                 checked={showSmallCountryOverlays}
                 onChange={(checked) => setShowSmallCountryOverlays(checked)}
+                variant="input"
+              />
+              <SettingsToggle
+                label={t("mapSettings.overlays.includeIntegralRegions")}
+                tooltip={t(
+                  "mapSettings.overlays.includeIntegralRegionsTooltip",
+                )}
+                checked={includeIntegralRegions}
+                onChange={(checked) => setIncludeIntegralRegions(checked)}
                 variant="input"
               />
             </div>

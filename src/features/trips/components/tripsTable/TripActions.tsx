@@ -11,6 +11,7 @@ import {
 } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
+import { useUI } from "@contexts/UIContext";
 import {
   useContextMenu,
   useFloatingHover,
@@ -20,7 +21,6 @@ import {
 } from "@hooks";
 import type { Trip } from "../../types";
 import { canMarkCompleted, hasValidStartDate } from "../../utils/trips";
-import { useUI } from "@contexts/UIContext";
 
 interface TripActionsProps {
   trip: Trip;
@@ -114,7 +114,7 @@ export const TripActions = forwardRef(function TripActions(
       onEdit: () => onEdit(trip),
       onMarkCompleted: () => markCompleted(trip),
       onDuplicate: () => duplicateTrip(trip),
-      onFavorite: () => updateTripFavorite(trip.id, !trip.favorite),
+      onFavorite: () => updateTripFavorite(trip, !trip.favorite),
       onDelete: () => setConfirmOpen(true),
     },
     setOpen,
@@ -206,57 +206,61 @@ export const TripActions = forwardRef(function TripActions(
         >
           {t("table.actions.duplicate")}
         </MenuButton>
-        <MenuButton
-          onClick={() => {
-            menuActions.onFavorite?.();
-            handleCloseAll();
-          }}
-          icon={
-            trip.favorite ? (
-              <ICONS.unfavorite className="text-muted" />
-            ) : (
-              <ICONS.favorite className="text-danger" />
-            )
-          }
-          className="w-full"
-        >
-          {trip.favorite
-            ? t("table.actions.unfavorite")
-            : t("table.actions.favorite")}
-        </MenuButton>
-        <div
-          style={{ display: "inline-block", width: "100%" }}
-          onMouseEnter={() => setRateMenuOpen(true)}
-          onMouseLeave={() => setRateMenuOpen(false)}
-        >
-          <MenuButton
-            {...rateButtonHoverHandlers}
-            icon={<ICONS.rate className="text-yellow-400" />}
-            className="w-full flex items-center justify-between"
-          >
-            {t("table.actions.rate")}
-            <DirectionalIcon direction="next" className="ms-auto" />
-          </MenuButton>
-          {rateMenuOpen && (
-            <RateMenu
-              open={rateMenuOpen}
-              menuStyle={{
-                ...rateMenuStyle,
-                left: rateMenuLeftFinal,
-                top: rateMenuTopFinal,
-                zIndex: 1000,
-                width: 280,
-              }}
-              menuRef={rateMenuRef}
-              hoverHandlers={rateMenuHoverHandlers}
-              onRate={(value) => {
+        {trip.status === "completed" && (
+          <>
+            <MenuButton
+              onClick={() => {
+                menuActions.onFavorite?.();
                 handleCloseAll();
-                if (updateTripRating) updateTripRating(trip.id, value);
               }}
-              onClose={handleCloseAll}
-            />
-          )}
-        </div>
+              icon={
+                trip.favorite ? (
+                  <ICONS.unfavorite className="text-muted" />
+                ) : (
+                  <ICONS.favorite className="text-danger" />
+                )
+              }
+              className="w-full"
+            >
+              {trip.favorite
+                ? t("table.actions.unfavorite")
+                : t("table.actions.favorite")}
+            </MenuButton>
+            <div
+              style={{ display: "inline-block", width: "100%" }}
+              onMouseEnter={() => setRateMenuOpen(true)}
+              onMouseLeave={() => setRateMenuOpen(false)}
+            >
+              <MenuButton
+                {...rateButtonHoverHandlers}
+                icon={<ICONS.rate className="text-yellow-400" />}
+                className="w-full flex items-center justify-between"
+              >
+                {t("table.actions.rate")}
+                <DirectionalIcon direction="next" className="ms-auto" />
+              </MenuButton>
+              {rateMenuOpen && (
+                <RateMenu
+                  open={rateMenuOpen}
+                  menuStyle={{
+                    ...rateMenuStyle,
+                    left: rateMenuLeftFinal,
+                    top: rateMenuTopFinal,
+                    zIndex: 1000,
+                    width: 280,
+                  }}
+                  menuRef={rateMenuRef}
+                  hoverHandlers={rateMenuHoverHandlers}
+                  onRate={(value) => {
+                    handleCloseAll();
+                    if (updateTripRating) updateTripRating(trip, value);
+                  }}
+                  onClose={handleCloseAll}
+                />
+              )}
+            </div>
+          </>
+        )}
         <Separator className="my-2" />
         <MenuButton
           onClick={() => {
@@ -280,7 +284,7 @@ export const TripActions = forwardRef(function TripActions(
           }
           onConfirm={() => {
             setConfirmOpen(false);
-            removeTrip(trip?.id ?? "").catch((error) => {
+            removeTrip(trip).catch((error) => {
               console.error("Error deleting trip:", error);
             });
           }}

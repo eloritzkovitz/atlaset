@@ -1,29 +1,28 @@
 import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
+import { createMockUser, authState } from "@test-utils/authMocks";
 import { useVisitedCountries } from "./useVisitedCountries";
 
 const mockAddCountryCode = vi.fn().mockResolvedValue(undefined);
 const mockRemoveCountryCode = vi.fn().mockResolvedValue(undefined);
-let trackingCallback: (data: any) => void = () => {};
+let trackingCallback: (data: Record<string, unknown>) => void = () => {};
 
 vi.mock("../services/countryTrackingService", () => ({
   countryTrackingService: {
-    onTrackingDataChange: (_uid: string, cb: (data: any) => void) => {
+    onTrackingDataChange: (
+      _uid: string,
+      cb: (data: Record<string, unknown>) => void,
+    ) => {
       trackingCallback = cb;
       return () => {};
     },
-    addCountryCode: (...args: any[]) => mockAddCountryCode(...args),
-    removeCountryCode: (...args: any[]) => mockRemoveCountryCode(...args),
+    addCountryCode: (...args: unknown[]) => mockAddCountryCode(...args),
+    removeCountryCode: (...args: unknown[]) => mockRemoveCountryCode(...args),
   },
 }));
 
-let mockUser: { uid: string; displayName?: string } | null = {
-  uid: "u1",
-  displayName: "Sarah",
-};
-
 vi.mock("@contexts/AuthContext", () => ({
-  useAuth: () => ({ user: mockUser }),
+  useAuth: () => ({ user: authState.currentUser }),
 }));
 
 vi.mock("@features/countries", async (importOriginal) => {
@@ -39,8 +38,11 @@ vi.mock("@features/countries", async (importOriginal) => {
         { id: "BR", name: "Brazil" },
       ],
     }),
-    getCountryName: (code: string, countries: any[]) => {
-      const country = countries?.find((c: any) => c.id === code);
+    getCountryName: (
+      code: string,
+      countries: { id: string; name: string }[],
+    ) => {
+      const country = countries?.find((c) => c.id === code);
       return country ? country.name : code;
     },
   };
@@ -82,7 +84,7 @@ vi.mock("../utils/visits", () => ({
 describe("useVisitedCountries", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUser = { uid: "u1" };
+    authState.currentUser = createMockUser({ uid: "u1", displayName: "Sarah" });
     mockTrips = [{ id: "t1", destination: "FR", startDate: "2026-01-01" }];
   });
 
@@ -91,7 +93,7 @@ describe("useVisitedCountries", () => {
 
     act(() => {
       trackingCallback({
-        visitedCountryCodes: ["MX"],
+        manualVisitedCountryCodes: ["MX"],
         wantToVisitCountryCodes: ["JP"],
       });
     });
@@ -107,7 +109,9 @@ describe("useVisitedCountries", () => {
   });
 
   it("should handle unauthenticated state cleanly", () => {
-    mockUser = null;
+    authState.currentUser = null;
+    mockTrips = [];
+
     const { result } = renderHook(() => useVisitedCountries());
 
     expect(result.current.visitedCountryCodes).toEqual([]);
@@ -119,7 +123,7 @@ describe("useVisitedCountries", () => {
     const { result } = renderHook(() => useVisitedCountries());
     act(() => {
       trackingCallback({
-        visitedCountryCodes: ["MX"],
+        manualVisitedCountryCodes: ["MX"],
         wantToVisitCountryCodes: ["JP"],
       });
     });
@@ -130,7 +134,7 @@ describe("useVisitedCountries", () => {
     expect(mockAddCountryCode).toHaveBeenCalledWith(
       "u1",
       "CA",
-      "visitedCountryCodes",
+      "manualVisitedCountryCodes",
     );
 
     await act(async () => {
@@ -139,7 +143,7 @@ describe("useVisitedCountries", () => {
     expect(mockRemoveCountryCode).toHaveBeenCalledWith(
       "u1",
       "MX",
-      "visitedCountryCodes",
+      "manualVisitedCountryCodes",
     );
 
     await act(async () => {
@@ -165,7 +169,7 @@ describe("useVisitedCountries", () => {
     const { result } = renderHook(() => useVisitedCountries());
     act(() => {
       trackingCallback({
-        visitedCountryCodes: ["MX"],
+        manualVisitedCountryCodes: ["MX"],
         wantToVisitCountryCodes: ["JP"],
       });
     });
@@ -188,7 +192,7 @@ describe("useVisitedCountries", () => {
     expect(mockAddCountryCode).not.toHaveBeenCalled();
     expect(mockRemoveCountryCode).not.toHaveBeenCalled();
 
-    mockUser = null;
+    authState.currentUser = null;
     const { result: unauthResult } = renderHook(() => useVisitedCountries());
     await act(async () => {
       await unauthResult.current.addManualCountry("US");

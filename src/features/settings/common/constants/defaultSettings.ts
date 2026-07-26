@@ -23,6 +23,7 @@ export const defaultSettings: Settings = {
     },
     overlays: {
       showSmallCountryOverlays: false,
+      includeIntegralRegions: false,
       showHomeCountry: false,
       showVisitedCountries: true,
       showFutureVisits: false,

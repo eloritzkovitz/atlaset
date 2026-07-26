@@ -20,12 +20,12 @@ describe("countryTrackingService", () => {
     it("returns array when doc exists and has requested field", async () => {
       fs.getDoc.mockResolvedValue({
         exists: () => true,
-        data: () => ({ visitedCountryCodes: ["US", "CA"] }),
+        data: () => ({ manualVisitedCountryCodes: ["US", "CA"] }),
       } as any);
 
       const codes = await countryTrackingService.getCountryCodes(
         "u1",
-        "visitedCountryCodes",
+        "manualVisitedCountryCodes",
       );
 
       expect(codes).toEqual(["US", "CA"]);
@@ -38,19 +38,19 @@ describe("countryTrackingService", () => {
       expect(
         await countryTrackingService.getCountryCodes(
           "u2",
-          "visitedCountryCodes",
+          "manualVisitedCountryCodes",
         ),
       ).toEqual([]);
 
       fs.getDoc.mockResolvedValue({
         exists: () => true,
-        data: () => ({ visitedCountryCodes: null }),
+        data: () => ({ manualVisitedCountryCodes: null }),
       } as any);
 
       expect(
         await countryTrackingService.getCountryCodes(
           "u2",
-          "visitedCountryCodes",
+          "manualVisitedCountryCodes",
         ),
       ).toEqual([]);
     });
@@ -63,7 +63,7 @@ describe("countryTrackingService", () => {
           cb({
             exists: () => true,
             data: () => ({
-              visitedCountryCodes: ["FR"],
+              manualVisitedCountryCodes: ["FR"],
               wantToVisitCountryCodes: ["JP", "IT"],
             }),
           });
@@ -75,7 +75,7 @@ describe("countryTrackingService", () => {
       const unsub = countryTrackingService.onTrackingDataChange("u3", spy);
 
       expect(spy).toHaveBeenCalledWith({
-        visitedCountryCodes: ["FR"],
+        manualVisitedCountryCodes: ["FR"],
         wantToVisitCountryCodes: ["JP", "IT"],
       });
       expect(typeof unsub).toBe("function");
@@ -96,7 +96,7 @@ describe("countryTrackingService", () => {
       countryTrackingService.onTrackingDataChange("u5", spy);
 
       expect(spy).toHaveBeenCalledWith({
-        visitedCountryCodes: [],
+        manualVisitedCountryCodes: [],
         wantToVisitCountryCodes: [],
       });
     });
@@ -109,11 +109,11 @@ describe("countryTrackingService", () => {
       await countryTrackingService.addCountryCode(
         "u6",
         "MX",
-        "visitedCountryCodes",
+        "manualVisitedCountryCodes",
       );
 
       expect(fs.updateDoc).toHaveBeenCalledWith(MOCK_USER_REF, {
-        visitedCountryCodes: { type: "arrayUnion", val: "MX" },
+        manualVisitedCountryCodes: { type: "arrayUnion", val: "MX" },
         wantToVisitCountryCodes: { type: "arrayRemove", val: "MX" },
       });
     });
@@ -127,7 +127,7 @@ describe("countryTrackingService", () => {
 
       expect(fs.updateDoc).toHaveBeenCalledWith(MOCK_USER_REF, {
         wantToVisitCountryCodes: { type: "arrayUnion", val: "ZAF" },
-        visitedCountryCodes: { type: "arrayRemove", val: "ZAF" },
+        manualVisitedCountryCodes: { type: "arrayRemove", val: "ZAF" },
       });
     });
   });
@@ -139,11 +139,11 @@ describe("countryTrackingService", () => {
       await countryTrackingService.removeCountryCode(
         "u7",
         "MX",
-        "visitedCountryCodes",
+        "manualVisitedCountryCodes",
       );
 
       expect(fs.updateDoc).toHaveBeenCalledWith(MOCK_USER_REF, {
-        visitedCountryCodes: { type: "arrayRemove", val: "MX" },
+        manualVisitedCountryCodes: { type: "arrayRemove", val: "MX" },
       });
     });
   });

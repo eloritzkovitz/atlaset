@@ -21,7 +21,7 @@ export async function logUserActivity(
   details: object,
   uid: string,
 ) {
-  const activityCollection = getUserCollection("activity");
+  const activityCollection = getUserCollection("activity", uid);
   await addDoc(activityCollection, {
     action,
     details,
@@ -66,8 +66,8 @@ export interface DescriptionSegment {
 
 /**
  * Gets a human-readable, full sentence description for a user activity event.
- * @param eventType The event number (as string or number).
- * @param details Optional details about the activity (itemName, location, date, userName, etc).
+ * @param action The event number (as string or number).
+ * @param details Optional details about the activity.
  * @returns A human-readable description of the event.
  */
 export function getActivityDescription(
@@ -80,8 +80,11 @@ export function getActivityDescription(
     lng,
     defaultValue: "{userName} did something.",
   });
+
+  // FIX 2: Added friendName to safeDetails fallbacks
   const safeDetails: Record<string, string> = {
     userName: details?.userName || "You",
+    friendName: details?.friendName || "a friend",
     itemName: details?.itemName || "",
     location: details?.location || "",
     date: details?.date || "",
@@ -95,10 +98,13 @@ export function getActivityDescription(
     ),
   };
 
-  // Replace placeholders, render quoted and username as bold
-  const filled = template.replace(/\{(\w+)\}/g, (_, key) =>
-    key === "userName" ? "__USERNAME__" : (safeDetails[key] ?? ""),
-  );
+  // Replace placeholders, render quoted, username, and friendName
+  const filled = template.replace(/\{(\w+)\}/g, (_, key) => {
+    if (key === "userName" || key === "friendName") {
+      return `__USERNAME_${key}__`;
+    }
+    return safeDetails[key] ?? "";
+  });
 
   // Split by quoted text, preserving quoted and non-quoted segments
   const splitRegex = /'([^']+)'/g;
@@ -121,15 +127,22 @@ export function getActivityDescription(
   }
 
   return segments.flatMap((segment) => {
-    if (segment.type === "text" && segment.text.includes("__USERNAME__")) {
-      return segment.text
-        .split("__USERNAME__")
-        .flatMap((seg, j, arr) => [
-          ...(seg ? [{ text: seg, type: "text" as const }] : []),
-          ...(j < arr.length - 1
-            ? [{ text: safeDetails.userName, type: "username" as const }]
-            : []),
-        ]);
+    if (segment.type === "text") {
+      const userPattern = /__USERNAME_(userName|friendName)__/g;
+      if (userPattern.test(segment.text)) {
+        const parts = segment.text.split(userPattern);
+        const result: DescriptionSegment[] = [];
+        for (let i = 0; i < parts.length; i++) {
+          if (parts[i] === "userName") {
+            result.push({ text: safeDetails.userName, type: "username" });
+          } else if (parts[i] === "friendName") {
+            result.push({ text: safeDetails.friendName, type: "username" });
+          } else if (parts[i]) {
+            result.push({ text: parts[i], type: "text" });
+          }
+        }
+        return result;
+      }
     }
     return [segment];
   });

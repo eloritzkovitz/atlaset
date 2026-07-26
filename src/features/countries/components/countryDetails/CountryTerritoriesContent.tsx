@@ -2,7 +2,10 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { capitalizeWords } from "@utils/string";
 import { CountryListGroup } from "./CountryListGroup";
-import { getCountryName, getCountryTerritories } from "../../utils/countryData";
+import {
+  getCountryName,
+  getCountryTerritoryRelations,
+} from "../../utils/countryData";
 import type { Country } from "../../types";
 
 interface CountryTerritoriesContentProps {
@@ -19,7 +22,9 @@ export function CountryTerritoriesContent({
   const { i18n, t: tCountries } = useTranslation("countries");
 
   const group =
-    country && country.isoCode ? getCountryTerritories(country) : undefined;
+    country && country.isoCode
+      ? getCountryTerritoryRelations(country)
+      : undefined;
 
   // Prepare sections from territories data
   const sections = useMemo(() => {
@@ -75,7 +80,7 @@ export function CountryTerritoriesContent({
   };
 
   return (
-    <div className="flex-1 overflow-y-auto">
+    <div className="flex-1 overflow-y-auto px-4">
       {sections.map(
         (section) =>
           section.data &&

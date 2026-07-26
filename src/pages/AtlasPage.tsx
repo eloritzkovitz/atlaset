@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useLayers } from "@contexts/LayersContext";
 import { useMapView } from "@contexts/MapViewContext";
+import { useUI } from "@contexts/UIContext";
 import { useCountrySelection } from "@features/atlas/countries";
 import { WorldMap } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
@@ -12,7 +13,7 @@ import {
   MapUiContainer,
 } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
-import { usePageTitle } from "@hooks";
+import { usePageTitle, useScreenSize } from "@hooks";
 
 export default function AtlasPage() {
   const { countries, loading: countriesLoading, error } = useCountryData();
@@ -24,7 +25,9 @@ export default function AtlasPage() {
     handleMapReady,
     isEmbed,
   } = useMapView();
+  const { isMobile } = useScreenSize();
   const { t } = useTranslation("atlas");
+  const { setOpenMapToolbarPanel } = useUI();
 
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -41,6 +44,13 @@ export default function AtlasPage() {
     handleCountryHover,
   } = useCountrySelection(countries);
   const { isAddingMarker } = useMarkerCreation();
+
+  // Ensure the countries panel is open on initial load
+  useEffect(() => {
+    if (!isMobile) {
+      setOpenMapToolbarPanel("countries");
+    }
+  }, [isMobile, setOpenMapToolbarPanel]);
 
   // Derived state
   const isLoading =

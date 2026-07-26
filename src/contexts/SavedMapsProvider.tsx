@@ -20,6 +20,7 @@ import { type SavedMap, savedMapsService } from "@features/atlas/saved";
 import { useMapMode } from "@features/atlas/shared";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
+import { getQueryParam } from "@utils/url";
 import { SavedMapsContext } from "./SavedMapsContext";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
@@ -350,7 +351,18 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       await logMapAction("delete", mapToDelete);
     }
 
+    // Check if the map being deleted is currently active in edit mode
+    const currentEditingMapId = getQueryParam("map");
+    const isCurrentlyEditingThisMap =
+      activeSavedMap?.id === id || currentEditingMapId === id;
+
     await savedMapsService.delete(id);
+
+    // If deleting the actively edited map, exit edit mode
+    if (isCurrentlyEditingThisMap) {
+      exitEditMode();
+    }
+
     await reloadSavedMaps();
   }
 

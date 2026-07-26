@@ -8,6 +8,7 @@ export const mockUIContext: UIContextType = {
   sidebarExpanded: false,
   setSidebarExpanded: vi.fn(),
   openMapToolbarPanel: null,
+  setOpenMapToolbarPanel: vi.fn(),
   showCountries: false,
   toggleCountries: vi.fn(),
   showFilters: false,

@@ -52,6 +52,8 @@ export interface UserProfile {
   joinDate?: Timestamp;
   /** List of visited country codes (ISO 3166-1 alpha-2) */
   visitedCountryCodes: string[];
+  /** List of manually added visited country codes (ISO 3166-1 alpha-2) */
+  manualVisitedCountryCodes?: string[];
   /** List of country codes (ISO 3166-1 alpha-2) the user wants to visit */
   wantToVisitCountryCodes: string[];
 }

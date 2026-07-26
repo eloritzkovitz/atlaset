@@ -6,12 +6,16 @@ import type { RootState, AppDispatch } from "@app/store";
 import type { Language } from "@types";
 import { fetchCountryData } from "../slices/countryDataSlice";
 import type { Country, CountryTerritories, Currency } from "../types";
+import { getTerritoryCodesByType } from "../utils/countryData";
 
 type CountryTranslation = Partial<Country>;
 
-// Constants for empty arrays and objects to avoid unnecessary allocations
 const EMPTY_ARRAY: string[] = [];
 const EMPTY_TERRITORIES: CountryTerritories = {} as CountryTerritories;
+const INTEGRAL_TERRITORY_TYPES = new Set([
+  "overseas_region",
+  "special_territory",
+]);
 
 /**
  * Accesses country data from the Redux store and auto-fetches if needed.
@@ -45,6 +49,10 @@ export function useCountryData() {
     const tmpSub: Record<string, Set<string>> = {};
     const langSet = new Set<string>();
 
+    const parentToRegions = new Map<string, string[]>();
+    const childToParent = new Map<string, string>();
+    const areaLookup = new Map<string, number>();
+
     let bundle: Record<string, CountryTranslation> = {};
     try {
       bundle =
@@ -74,6 +82,21 @@ export function useCountryData() {
       };
 
       loc.push(localized);
+
+      // Extract territory lookups & area mapping in the same loop
+      if (iso) {
+        areaLookup.set(iso, localized.area || 0);
+
+        const uniqueTerritoryCodes = getTerritoryCodesByType(
+          localized,
+          INTEGRAL_TERRITORY_TYPES,
+        );
+
+        if (uniqueTerritoryCodes.length > 0) {
+          parentToRegions.set(iso, uniqueTerritoryCodes);
+          uniqueTerritoryCodes.forEach((code) => childToParent.set(code, iso));
+        }
+      }
 
       if (localized.region) {
         regionSet.add(localized.region);
@@ -142,6 +165,9 @@ export function useCountryData() {
       subregionToRegion,
       currencies,
       languages,
+      integralRegionsLookup: parentToRegions,
+      sovereignLookup: childToParent,
+      countryAreaMap: areaLookup,
     };
   }, [countries, currentLanguage, i18n]);
 
