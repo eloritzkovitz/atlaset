@@ -19,6 +19,7 @@ interface InfoWithCountryGroupsProps {
   subtitle?: string;
   onBack?: () => void;
   showHeader?: boolean;
+  actions?: React.ReactNode;
   isoGroups: IsoGroups;
   countries: Country[];
   primaryLabel?: React.ReactNode;
@@ -35,6 +36,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   subtitle,
   onBack,
   showHeader = true,
+  actions,
   isoGroups,
   countries,
   primaryLabel,
@@ -112,7 +114,12 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   return (
     <section>
       {showHeader && (
-        <DashboardHeader title={title} subtitle={subtitle} onBack={onBack} />
+        <DashboardHeader
+          title={title}
+          subtitle={subtitle}
+          actions={actions}
+          onBack={onBack}
+        />
       )}
       {hasAnyGroups && (
         <div className="flex justify-end mb-4">

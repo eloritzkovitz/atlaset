@@ -49,8 +49,7 @@
       "unmarkWantToVisit": "Unmark 'Want to Visit'",
       "visited": "Visited",
       "centerMap": "Center on Map",
-      "viewDashboard": "View in Dashboard",
-      "wikipedia": "View on Wikipedia"
+      "viewDashboard": "View in Dashboard"      
     },
     "searchPlaceholder": "Search countries",
     "lists": {

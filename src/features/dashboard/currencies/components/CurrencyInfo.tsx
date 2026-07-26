@@ -4,6 +4,7 @@ import { type Currency, type Country } from "@features/countries";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 import { useIsoGroups } from "../../common/hooks/useIsoGroups";
 import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
+import { WikipediaButton } from "../../common/components/WikipediaButton";
 
 interface CurrencyInfoProps {
   currency: Currency | undefined;
@@ -34,6 +35,7 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
     <InfoWithCountryGroups
       title={currency.name}
       subtitle={`(${currency.code})`}
+      actions={<WikipediaButton searchTerm={`${currency.name}`} />}
       onBack={handleBack}
       isoGroups={isoGroups}
       primaryLabelKey="currencies.currencyInfo.usingCurrency"

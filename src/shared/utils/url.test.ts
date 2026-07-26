@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { isExternalUrl, getQueryParam } from "./url";
+import { isExternalUrl, getQueryParam, getWikipediaUrl } from "./url";
 
 describe("isExternalUrl", () => {
   it("should return false if url is undefined or empty", () => {
@@ -79,5 +79,14 @@ describe("getQueryParam", () => {
     expect(consoleSpy.mock.calls[0][0]).toContain(
       "Failed to parse URL query parameter for key: query",
     );
+  });
+});
+
+describe("getWikipediaUrl", () => {
+  it("returns correct Wikipedia URL for a given country name and language", () => {
+    const countryName = "Germany";
+    const lang = "en";
+    const expectedUrl = "https://en.wikipedia.org/wiki/Germany";
+    expect(getWikipediaUrl(countryName, lang)).toBe(expectedUrl);
   });
 });

@@ -5,6 +5,7 @@ import type { Language } from "@types";
 import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 import { useIsoGroups } from "../../common/hooks/useIsoGroups";
 import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
+import { WikipediaButton } from "../../common/components/WikipediaButton";
 
 interface LanguageInfoProps {
   language: Language | undefined;
@@ -42,6 +43,7 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
     <InfoWithCountryGroups
       title={languageName}
       subtitle={languageCode ? `(${languageCode})` : undefined}
+      actions={<WikipediaButton searchTerm={`${language.name} language`} />}
       onBack={handleBack}
       isoGroups={isoGroups}
       primaryLabelKey="languages.languageInfo.usingLanguage"

@@ -2,11 +2,12 @@ import { useTranslation } from "react-i18next";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
 import { useMapView } from "@contexts/MapViewContext";
-import { getWikipediaUrl, type Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import { getCountryRoute } from "@features/dashboard";
 import { useLanguage } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
+import { getWikipediaUrl } from "@utils/url";
 
 export interface CountryActionConfig {
   label: string;
@@ -36,9 +37,8 @@ export function useCountryActions({
   onCountryInfo,
   onCloseMenu,
 }: UseCountryActionsProps): Record<string, CountryActionConfig> {
-  const { centerOnCountry } = useMapView();
-  const { t } = useTranslation("atlas");
   const { current: lang } = useLanguage();
+  const { centerOnCountry } = useMapView();
   const {
     isVisitedCountry,
     isTripBased,
@@ -48,6 +48,9 @@ export function useCountryActions({
     addWantToVisitCountry,
     removeWantToVisitCountry,
   } = useVisitedCountries();
+
+  const { t } = useTranslation("atlas");
+  const { t: tCommon } = useTranslation("common");
 
   // If no country is provided, return an empty array of actions
   if (!country) return {};
@@ -148,8 +151,8 @@ export function useCountryActions({
       },
     },
     wikipedia: {
-      label: t("countries.actions.wikipedia"),
-      ariaLabel: t("countries.actions.wikipedia"),
+      label: tCommon("actions.wikipedia"),
+      ariaLabel: tCommon("actions.wikipedia"),
       icon: <FaWikipediaW />,
       url: getWikipediaUrl(country.name, lang),
       onClick: () => {

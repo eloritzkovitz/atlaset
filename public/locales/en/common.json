@@ -61,7 +61,8 @@
     "search": "Search",
     "resetFilters": "Reset filters",
     "notifications": "Notifications",
-    "help": "Help"
+    "help": "Help",
+    "wikipedia": "View on Wikipedia"
   },
   "search": {
     "pageTitle": "Search results for \"{{query}}\"",

@@ -7,7 +7,7 @@ import {
 import { useVisitedCountries } from "@features/visits";
 import { useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
-import { WikipediaButton } from "./WikipediaButton";
+import { WikipediaButton } from "../../common/components/WikipediaButton";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
 
 interface CountryStatsProps {
@@ -91,7 +91,7 @@ export function CountryStats({
           actions={
             <div className="flex items-center gap-2">
               <VisitedStatusIndicator country={selectedCountry} />
-              <WikipediaButton countryName={selectedCountry.name} />
+              <WikipediaButton searchTerm={`${selectedCountry.name}`} />
             </div>
           }
         />

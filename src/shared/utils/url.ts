@@ -40,3 +40,18 @@ export function getQueryParam(
     return fallback;
   }
 }
+
+/**
+ * Generates a localized Wikipedia URL for any query term.
+ * @param query - The entity or topic name.
+ * @param lang - Optional BCP 47 language tag.
+ * @returns The direct Wikipedia article URL in the target language.
+ */
+export function getWikipediaUrl(query: string, lang: string = "en"): string {
+  if (!query) return "";
+
+  const langSubtag = lang.split("-")[0];
+  const page = query.trim().replace(/ /g, "_");
+
+  return `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(page)}`;
+}

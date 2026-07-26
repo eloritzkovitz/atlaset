@@ -78,15 +78,3 @@ export function getAltNamesDisplay(altNames?: string[]) {
   if (!altNames || altNames.length === 0) return "None";
   return altNames.join(", ");
 }
-
-/**
- * Generates the localized Wikipedia article URL for a country.
- * @param countryName - The name of the country.
- * @param lang - Optional language code (e.g., "en", "fr"). Defaults to "en".
- * @returns The URL to the Wikipedia article for the country in the specified language.
- */
-export function getWikipediaUrl(countryName: string, lang?: string): string {
-  const langSubtag = (lang || "en").split("-")[0];
-  const page = countryName.replace(/ /g, "_");
-  return `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(page)}`;
-}

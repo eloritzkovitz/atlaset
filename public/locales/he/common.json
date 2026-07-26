@@ -61,7 +61,8 @@
     "search": "חיפוש",
     "resetFilters": "איפוס מסננים",
     "notifications": "התראות",
-    "help": "עזרה"
+    "help": "עזרה",
+    "wikipedia": "צפייה בוויקיפדיה"
   },
   "search": {
     "pageTitle": "תוצאות חיפוש עבור \"{{query}}\"",

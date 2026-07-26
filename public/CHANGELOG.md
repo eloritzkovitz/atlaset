@@ -4,6 +4,7 @@
 
 - **[feature]** **Atlas | Map:** Added new option to include integral regions (such as overseas regions) when highlighting countries that have such territories
 - **[chore]** **Atlas | Countries:** Replaced center on map with mark 'want to visit' in the country details header and made the visit status icon a button for manually adding visited countries
+- **[feature]** **Dashboard:** Added Wikipedia links to languages and currencies information pages
 - **[bugfix]** **General:** Fixed various display and filtering bugs
 
 ## 2026-07-24
