@@ -5,8 +5,6 @@ import type { UserActivity } from "../types";
 
 /**
  * Fetches and manages user activity data.
- * @param userId - The ID of the user whose activity is to be fetched.
- * @returns An object containing the activity data, loading state, pagination info, and a function to load more data.
  */
 export function useUserActivity() {
   const [activity, setActivity] = useState<UserActivity[]>([]);
@@ -61,10 +59,10 @@ export function useUserActivity() {
   }, [lastDoc, loading, hasMore]);
 
   // Delete activity item by id
-  const deleteActivity = useCallback(async (id: string) => {
+  const deleteActivity = useCallback(async (activityItem: UserActivity) => {
     try {
-      await activityService.deleteActivityById(id);
-      setActivity((prev) => prev.filter((item) => item.id !== id));
+      await activityService.deleteActivity(activityItem);
+      setActivity((prev) => prev.filter((item) => item.id !== activityItem.id));
     } catch (err) {
       setError(err instanceof Error ? err : String(err));
     }

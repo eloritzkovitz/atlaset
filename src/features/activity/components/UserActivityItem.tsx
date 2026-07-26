@@ -8,7 +8,7 @@ import { getActivityDescription, getActivityIcon } from "../utils/activity";
 
 interface UserActivityItemProps {
   activity: UserActivity;
-  onDelete?: (id: string) => void;
+  onDelete?: (activity: UserActivity) => void;
 }
 
 /** Renders a single user activity item.
@@ -76,7 +76,7 @@ export const UserActivityItem = React.memo(function UserActivityItem({
             icon={<ICONS.remove />}
             ariaLabel={t("ui.deleteActivityTitle")}
             title={t("ui.deleteActivityTitle")}
-            onClick={() => onDelete(activity.id)}
+            onClick={() => onDelete(activity)}
             rounded
           />
         )}

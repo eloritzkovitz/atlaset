@@ -1,7 +1,3 @@
-import {
-  type QuerySnapshot,
-  type QueryDocumentSnapshot,
-} from "firebase/firestore";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { getDocsData, getPaths, getUserCollection } from "@lib/firebase";
 import { geoService } from "@lib/geo";
@@ -10,53 +6,47 @@ import { sessionService } from "./sessionService";
 import { clearLocalSession } from "../utils/session";
 
 vi.mock("../utils/session", () => ({
-  getBrowserSessionInfo: vi.fn(() => ({
-    userAgent: "mock-browser",
-    language: "en-US",
-    screen: "1920x1080",
-  })),
-  getOrCreateSessionId: vi.fn(() => "mock-sess-123"),
+  getBrowserSessionInfo: () => ({
+    userAgent: "mock",
+    language: "en",
+    screen: "1x1",
+  }),
+  getOrCreateSessionId: () => "mock-sess-123",
   clearLocalSession: vi.fn(),
 }));
 
 describe("sessionService", () => {
   const uid = "user-abc-456";
-  const mockSnap = (docs: any[]) =>
-    ({ empty: docs.length === 0, docs }) as unknown as QuerySnapshot<any>;
-  const mockDoc = (id: string) =>
-    ({
-      ref: { id },
-      id,
-      data: () => ({}),
-    }) as unknown as QueryDocumentSnapshot<any>;
+  const snap = (docs: any[]) => ({ empty: !docs.length, docs }) as any;
+  const doc = (id: string) => ({ ref: { id }, id, data: () => ({}) }) as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.restoreAllMocks();
     vi.stubGlobal("fetch", vi.fn());
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   it("fetchUserSessions: maps documents to clean lists", async () => {
     vi.mocked(getDocsData).mockResolvedValueOnce([
-      { id: "d1", userId: uid, lastActive: 1 } as any,
+      { id: "d1", userId: uid },
+    ] as any);
+    expect(await sessionService.fetchUserSessions(uid)).toEqual([
+      { id: "d1", userId: uid },
     ]);
-    const res = await sessionService.fetchUserSessions(uid);
     expect(getPaths.sub).toHaveBeenCalledWith(uid, "sessions");
-    expect(res).toEqual([{ id: "d1", userId: uid, lastActive: 1 }]);
   });
 
   describe("logSession", () => {
     it.each([
-      ["creates doc if empty", [], "addDoc", "new-d"],
+      ["creates doc if session missing", [], "addDoc", "new-d"],
       [
-        "updates target row directly if session exists",
-        [mockDoc("exist-d")],
+        "updates doc if session exists",
+        [doc("exist-d")],
         "updateDoc",
         "exist-d",
       ],
     ])("%s", async (_, docs, method, expectedId) => {
-      fs.getDocs.mockResolvedValueOnce(mockSnap(docs));
+      fs.getDocs.mockResolvedValueOnce(snap(docs));
       fs.addDoc.mockResolvedValueOnce({ id: "new-d" } as any);
       const spy = vi
         .spyOn(sessionService, "enrichSessionMetadata")
@@ -69,34 +59,24 @@ describe("sessionService", () => {
   });
 
   describe("enrichSessionMetadata", () => {
-    const runEnrich = async (ok: boolean, payload: any) => {
+    const runEnrich = (ok: boolean, payload: any) => {
       vi.stubGlobal(
         "fetch",
         vi.fn().mockResolvedValueOnce({ ok, json: async () => payload }),
       );
-      await sessionService.enrichSessionMetadata(uid, "target-doc-id");
+      return sessionService.enrichSessionMetadata(uid, "target-doc-id");
     };
 
     it.each([
       [
-        "saves paired city and country formatting",
+        "saves city + country",
         { ip: "1.1", city: "TLV", country: "IL" },
         "1.1",
         "TLV, IL",
       ],
-      [
-        "gracefully falls back to country string if city is absent",
-        { ip: "1.1", country: "IL" },
-        "1.1",
-        "IL",
-      ],
-      [
-        "handles missing geo keys gracefully using fallback string values",
-        {},
-        "Unknown IP",
-        "Unknown Location",
-      ],
-    ])("%s", async (_, payload, ip, loc) => {
+      ["falls back to country only", { ip: "1.1", country: "IL" }, "1.1", "IL"],
+      ["handles missing keys", {}, "Unknown IP", "Unknown Location"],
+    ])("%s", async (_, payload, ipAddress, location) => {
       await runEnrich(true, payload);
       expect(getPaths.subDoc).toHaveBeenCalledWith(
         uid,
@@ -104,49 +84,44 @@ describe("sessionService", () => {
         "target-doc-id",
       );
       expect(fs.updateDoc).toHaveBeenCalledWith(expect.anything(), {
-        ipAddress: ip,
-        location: loc,
+        ipAddress,
+        location,
       });
     });
 
-    it("exits early without updates on network non-ok failures", async () => {
+    it("exits early on network failure", async () => {
       await runEnrich(false, null);
       expect(fs.updateDoc).not.toHaveBeenCalled();
     });
 
-    it("swallows rejections and safely forwards to terminal console error logs", async () => {
+    it("handles rejections quietly", async () => {
       vi.spyOn(geoService, "getGeoData").mockRejectedValueOnce(
         new Error("Net"),
       );
-      const consoleSpy = vi
-        .spyOn(console, "error")
-        .mockImplementation(() => {});
-      await sessionService.enrichSessionMetadata("uid", "target-doc-id");
-      expect(consoleSpy).toHaveBeenCalledWith(
+      await sessionService.enrichSessionMetadata(uid, "target-doc-id");
+      expect(console.error).toHaveBeenCalledWith(
         "Failed to quietly enrich session metadata:",
         expect.any(Error),
       );
-      consoleSpy.mockRestore();
     });
   });
 
   describe("updateCurrentSession", () => {
-    it("patches lastActive stamp on matched sessions", async () => {
-      fs.getDocs.mockResolvedValueOnce(mockSnap([mockDoc("a")]));
+    it("patches lastActive on matched sessions", async () => {
+      fs.getDocs.mockResolvedValueOnce(snap([doc("a")]));
       await sessionService.updateCurrentSession(uid);
-      expect(fs.updateDoc).toHaveBeenCalledWith(
-        expect.anything(),
-        expect.objectContaining({ lastActive: expect.any(Number) }),
-      );
+      expect(fs.updateDoc).toHaveBeenCalledWith(expect.anything(), {
+        lastActive: expect.any(Number),
+      });
     });
 
-    it("skips writing updates if the query collection returns an empty matching array", async () => {
-      fs.getDocs.mockResolvedValueOnce(mockSnap([]));
+    it("skips updates when no session matches", async () => {
+      fs.getDocs.mockResolvedValueOnce(snap([]));
       await sessionService.updateCurrentSession(uid);
       expect(fs.updateDoc).not.toHaveBeenCalled();
     });
 
-    it("catches internal query execution faults and bubbles error stack down", async () => {
+    it("logs DB error on query failure", async () => {
       fs.getDocs.mockRejectedValueOnce(new Error("DB"));
       await sessionService.updateCurrentSession(uid);
       expect(console.error).toHaveBeenCalledWith(
@@ -156,29 +131,25 @@ describe("sessionService", () => {
     });
   });
 
-  it("removeSessionById: hits direct collection lookup reference path", async () => {
-    await sessionService.removeSessionById("target");
+  it("removeSession: deletes target session document", async () => {
+    await sessionService.removeSession({
+      id: "sess-123",
+      userId: uid,
+      sessionId: "abc",
+    } as any);
     expect(getUserCollection).toHaveBeenCalledWith("sessions");
     expect(fs.deleteDoc).toHaveBeenCalled();
   });
 
   describe("terminateSession", () => {
     it.each([
-      [
-        "destroys matching row and clears storage on current active matches",
-        undefined,
-        true,
-      ],
-      [
-        "removes database records but protects storage when killing remote layouts",
-        "diff-id",
-        false,
-      ],
-    ])("%s", async (_, inputId, shouldClear) => {
-      fs.getDocs.mockResolvedValueOnce(mockSnap([mockDoc("a")]));
-      await sessionService.terminateSession(uid, inputId);
+      ["deletes doc & clears storage for current session", undefined, 1],
+      ["deletes doc without clearing storage for remote session", "diff-id", 0],
+    ])("%s", async (_, targetId, clearCount) => {
+      fs.getDocs.mockResolvedValueOnce(snap([doc("a")]));
+      await sessionService.terminateSession(uid, targetId);
       expect(fs.deleteDoc).toHaveBeenCalled();
-      expect(clearLocalSession).toHaveBeenCalledTimes(shouldClear ? 1 : 0);
+      expect(clearLocalSession).toHaveBeenCalledTimes(clearCount);
     });
   });
 });

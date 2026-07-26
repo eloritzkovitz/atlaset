@@ -67,7 +67,8 @@ export abstract class BaseService<T extends BaseEntity, TTable> {
   }
 
   /** Deletes an item from the collection. */
-  async delete(id: string): Promise<void> {
+  async delete(item: T): Promise<void> {
+    const id = item.id;
     if (isAuthenticated()) {
       await deleteDoc(doc(this.getColRef(), id));
     } else if (this.localTable) {

@@ -5,20 +5,19 @@ import {
 } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { activityService } from "./activityService";
+import type { UserActivity } from "../types";
 
 describe("activityService", () => {
   const mockCol = { type: "user-collection-mock" };
   const mockDocRef = { type: "document-reference-mock" };
+  const sampleActivity: UserActivity = {
+    id: "1",
+    action: 120,
+    timestamp: 100,
+  };
 
-  const makeFakeDoc = (id: string, dataObj: object) => ({
-    id,
-    data: () => dataObj,
-    metadata: {} as any,
-    exists: true,
-    get: vi.fn(),
-    toJSON: vi.fn(),
-    ref: {} as any,
-  });
+  const makeFakeDoc = (id: string, dataObj: object) =>
+    ({ id, data: () => dataObj }) as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -27,17 +26,16 @@ describe("activityService", () => {
   });
 
   describe("fetchActivityPage", () => {
-    it("throws a security error if the client profile is unauthenticated", async () => {
+    it("throws error when unauthenticated", async () => {
       auth.isAuthenticated.mockReturnValue(false);
       await expect(activityService.fetchActivityPage()).rejects.toThrow(
         "Not authenticated",
       );
     });
 
-    it("fetches activity entries and correctly maps the structural return values", async () => {
+    it("fetches activity page and returns formatted items", async () => {
       auth.isAuthenticated.mockReturnValue(true);
       const fakeDoc = makeFakeDoc("1", { action: "test" });
-
       fs.getDocs.mockResolvedValue({ docs: [fakeDoc] } as any);
 
       const result = await activityService.fetchActivityPage();
@@ -46,7 +44,7 @@ describe("activityService", () => {
       expect(result.pageSize).toBe(1);
     });
 
-    it("returns an empty set and sets lastDoc to null if the query yields zero items", async () => {
+    it("returns empty set when query yields no results", async () => {
       auth.isAuthenticated.mockReturnValue(true);
       fs.getDocs.mockResolvedValue(createMockSnapshot([]) as any);
 
@@ -56,34 +54,32 @@ describe("activityService", () => {
       expect(result.pageSize).toBe(0);
     });
 
-    it("accepts a document pointer argument to enable subsequent list pagination offsets", async () => {
+    it("supports pagination using startAfter offset doc", async () => {
       auth.isAuthenticated.mockReturnValue(true);
       const targetDoc = makeFakeDoc("2", { action: "next" });
-      const currentOffsetDoc = makeFakeDoc("last", { action: "prev" });
-
       fs.getDocs.mockResolvedValue({ docs: [targetDoc] } as any);
 
       const result = await activityService.fetchActivityPage({
-        after: currentOffsetDoc as any,
+        after: makeFakeDoc("last", { action: "prev" }),
       });
       expect(result.activities).toEqual([{ id: "2", action: "next" }]);
       expect(result.lastDoc).toBe(targetDoc);
     });
   });
 
-  describe("deleteActivityById", () => {
-    it("intercepts removal actions early if the connection is unauthenticated", async () => {
+  describe("deleteActivity", () => {
+    it("throws error when unauthenticated", async () => {
       auth.isAuthenticated.mockReturnValue(false);
-      await expect(activityService.deleteActivityById("1")).rejects.toThrow(
-        "Not authenticated",
-      );
+      await expect(
+        activityService.deleteActivity(sampleActivity),
+      ).rejects.toThrow("Not authenticated");
     });
 
-    it("targets document identifiers accurately and triggers firestore deletion requests", async () => {
+    it("deletes activity document in Firestore using entity id", async () => {
       auth.isAuthenticated.mockReturnValue(true);
       fs.deleteDoc.mockResolvedValue(undefined);
 
-      await activityService.deleteActivityById("1");
+      await activityService.deleteActivity(sampleActivity);
       expect(fs.doc).toHaveBeenCalledWith(mockCol, "1");
       expect(fs.deleteDoc).toHaveBeenCalledWith(mockDocRef);
     });

@@ -61,7 +61,7 @@ export class CountryListService extends BaseService<
   }
 
   /** Deletes the list and clears references in layers/maps if authenticated. */
-  async delete(id: string): Promise<void> {
+  async delete(list: CountryList): Promise<void> {
     if (isAuthenticated()) {
       const user = getCurrentUser();
       const uid = user!.uid;
@@ -71,7 +71,7 @@ export class CountryListService extends BaseService<
       // Clear Layer refs
       const layers = await getDocsData<Layer>(getPaths.sub(uid, "layers"));
       layers.forEach((l) => {
-        if (l.listId === id) {
+        if (l.listId === list.id) {
           const layerRef = getPaths.subDoc(uid, "layers", l.id);
           batch.update(layerRef, { listId: null });
           hasUpdates = true;
@@ -85,7 +85,7 @@ export class CountryListService extends BaseService<
       savedMaps.forEach((m) => {
         if (Array.isArray(m.layers)) {
           const newLayers = m.layers.map((l: Layer) =>
-            l?.listId === id ? { ...l, listId: null } : l,
+            l?.listId === list.id ? { ...l, listId: null } : l,
           );
           if (JSON.stringify(m.layers) !== JSON.stringify(newLayers)) {
             const mapRef = getPaths.subDoc(uid, "savedMaps", m.id);
@@ -98,7 +98,7 @@ export class CountryListService extends BaseService<
       if (hasUpdates) await batch.commit();
     }
 
-    await super.delete(id);
+    await super.delete(list);
   }
 }
 

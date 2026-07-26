@@ -18,7 +18,7 @@ export interface CountryListsContextValue {
   handleModalChange: (updatedList: CountryList) => void;
   handleSave: (list: CountryList) => Promise<void>;
   handleUpdate: (list: CountryList) => Promise<void>;
-  handleDelete: (id: string) => Promise<void>;
+  handleDelete: (list: CountryList) => Promise<void>;
 }
 
 export const CountryListsContext = createContext<

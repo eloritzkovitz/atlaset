@@ -5,11 +5,11 @@ import type { Layer } from "@features/atlas/layers/types";
 import { countryListService, type CountryList } from "@features/countries";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import { useDataLoader } from "@hooks";
 import {
   CountryListsContext,
   type CountryListsContextValue,
 } from "./CountryListsContext";
-import { useDataLoader } from "@hooks";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
@@ -212,10 +212,10 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
   };
 
   // Deletes a list and clears selection if it was the selected one
-  const handleDelete = async (id: string) => {
-    const listToDelete = countryLists.find((l) => l.id === id);
+  const handleDelete = async (list: CountryList) => {
+    const listToDelete = countryLists.find((l) => l.id === list.id);
 
-    await countryListService.delete(id);
+    await countryListService.delete(list);
     await reloadCountryLists();
 
     if (user?.uid) {
@@ -229,7 +229,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       );
     }
 
-    if (selectedListId === id) setSelectedListId(null);
+    if (selectedListId === list.id) setSelectedListId(null);
     closeModal();
   };
 

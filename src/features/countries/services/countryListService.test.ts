@@ -48,7 +48,7 @@ describe("countryListService", () => {
       const delSpy = vi.spyOn(appDb.countryLists, "delete");
 
       await countryListService.save(sampleList);
-      await countryListService.delete("list-1");
+      await countryListService.delete(sampleList);
 
       expect(addSpy).toHaveBeenCalledWith(sampleList);
       expect(delSpy).toHaveBeenCalledWith("list-1");
@@ -66,7 +66,7 @@ describe("countryListService", () => {
 
     it("cascades deletion cleanly to matching layers and maps", async () => {
       setupAuthSnaps([{ listId: "list-1" }], [{ listId: "list-1" }]);
-      await countryListService.delete("list-1");
+      await countryListService.delete(sampleList);
       expect(mockBatch.commit).toHaveBeenCalled();
       expect(fs.deleteDoc).toHaveBeenCalled();
     });
@@ -83,7 +83,7 @@ describe("countryListService", () => {
 
     it("deletes documents without batch processing when references are clear", async () => {
       setupAuthSnaps([], []);
-      await countryListService.delete("list-1");
+      await countryListService.delete(sampleList);
       expect(mockBatch.commit).not.toHaveBeenCalled();
       expect(fs.deleteDoc).toHaveBeenCalled();
     });

@@ -89,7 +89,7 @@ export function useUserSessions(userId?: string): UserSessionsProps {
         await authService.logout();
         clearLocalSession();
       } else {
-        await sessionService.removeSessionById(session.id);
+        await sessionService.removeSession(session);
         setSessions((prev) => prev.filter((s) => s.id !== session.id));
       }
     } catch (error) {

@@ -118,10 +118,10 @@ export const sessionService = {
     }
   },
 
-  /** Removes a specific session document from Firestore by its unique document ID. */
-  async removeSessionById(id: string): Promise<void> {
+  /** Removes a specific session document from Firestore. */
+  async removeSession(session: UserSession): Promise<void> {
     const sessionsCol = getUserCollection("sessions");
-    await deleteDoc(doc(sessionsCol, id));
+    await deleteDoc(doc(sessionsCol, session.id));
   },
 
   /** Terminates an active session matching the provided user ID and unique session token. */

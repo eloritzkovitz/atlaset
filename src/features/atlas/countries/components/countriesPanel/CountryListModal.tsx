@@ -16,7 +16,7 @@ interface CountryListModalProps {
   list: CountryList | null;
   onChange: (list: CountryList) => void;
   onSave: (list: CountryList) => void;
-  onDelete?: (id: string) => void;
+  onDelete?: (list: CountryList) => void;
   onClose: () => void;
 }
 
@@ -152,7 +152,7 @@ export function CountryListModal({
                 <ModalActions
                   onCancel={onClose}
                   onDelete={
-                    isEditing && onDelete ? () => onDelete(list.id) : undefined
+                    isEditing && onDelete ? () => onDelete(list) : undefined
                   }
                   submitType="submit"
                   submitIcon={

@@ -93,13 +93,13 @@ describe("BaseService", () => {
   describe("delete", () => {
     it("deletes from Firestore when authenticated", async () => {
       auth.isAuthenticated.mockReturnValue(true);
-      await service.delete("1");
+      await service.delete({ id: "1" });
       expect(fs.deleteDoc).toHaveBeenCalled();
     });
 
     it("deletes from localTable when not authenticated", async () => {
       auth.isAuthenticated.mockReturnValue(false);
-      await service.delete("1");
+      await service.delete({ id: "1" });
       expect(service["localTable"]!.delete).toHaveBeenCalled();
     });
   });

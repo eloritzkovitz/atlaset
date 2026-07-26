@@ -55,10 +55,12 @@ export const activityService = {
 
   /**
    * Deletes a user activity item by id for the current user.
-   * @param id - The ID of the activity item to delete.
+   * @param activity - The user activity item to delete.
    */
-  async deleteActivityById(id: string) {
+  async deleteActivity(activity: UserActivity) {
     if (!isAuthenticated()) throw new Error("Not authenticated");
-    await deleteDoc(doc(getUserCollection<UserActivity>("activity"), id));
+    await deleteDoc(
+      doc(getUserCollection<UserActivity>("activity"), activity.id),
+    );
   },
 };

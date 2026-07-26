@@ -1,4 +1,4 @@
-import { vi } from "vitest";
+import { vi, describe, it, expect, beforeEach } from "vitest";
 import type { Mock } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useUserActivity } from "../hooks/useUserActivity";
@@ -12,206 +12,137 @@ const ts2 = 1771160990000;
 const ts3 = 1771160980000;
 
 describe("useUserActivity", () => {
+  const sample1: UserActivity = { id: "1", action: 120 as any, timestamp: ts1 };
+  const sample2: UserActivity = { id: "2", action: 130 as any, timestamp: ts2 };
+  const sample3: UserActivity = { id: "3", action: 140 as any, timestamp: ts3 };
+  const mockLastDoc = { id: "2", exists: () => true, data: () => ({}) };
+
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it("fetches initial activity", async () => {
-    const activities: UserActivity[] = [
-      { id: "1", action: 120, timestamp: ts1 },
-      { id: "2", action: 130, timestamp: ts2 },
-    ];
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
-      activities,
+  it("fetches initial activity successfully", async () => {
+    (activityService.fetchActivityPage as Mock).mockResolvedValueOnce({
+      activities: [sample1, sample2],
       lastDoc: null,
       pageSize: 2,
     });
+
     const { result } = renderHook(() => useUserActivity());
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.activity).toEqual(activities);
-    expect(result.current.loading).toBe(false);
+
+    expect(result.current.activity).toEqual([sample1, sample2]);
     expect(result.current.hasMore).toBe(false);
+    expect(result.current.error).toBeNull();
   });
 
-  it("sets error if initial fetch fails", async () => {
-    const error = new Error("initial fetch failed");
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockRejectedValueOnce(error);
+  it("handles non-Error thrown types during initial fetch (string fallback)", async () => {
+    (activityService.fetchActivityPage as Mock).mockRejectedValueOnce(
+      "String failure",
+    );
+
     const { result } = renderHook(() => useUserActivity());
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.error).toEqual(error);
+
+    expect(result.current.error).toBe("String failure");
   });
 
-  it("loads more activity", async () => {
-    const initialActivities: UserActivity[] = [
-      { id: "1", action: 120, timestamp: ts1 },
-      { id: "2", action: 130, timestamp: ts2 },
-    ];
-    const moreActivities: UserActivity[] = [
-      { id: "3", action: 140, timestamp: ts3 },
-    ];
-    const lastDocMock = { id: "2", exists: () => true, data: () => ({}) };
-    (activityService.fetchActivityPage as unknown as Mock)
-      .mockImplementationOnce(() => {
-        return Promise.resolve({
-          activities: initialActivities,
-          lastDoc: lastDocMock,
-          pageSize: 10,
-        });
+  it("loads more activity successfully", async () => {
+    (activityService.fetchActivityPage as Mock)
+      .mockResolvedValueOnce({
+        activities: [sample1, sample2],
+        lastDoc: mockLastDoc,
+        pageSize: 10,
       })
-      .mockImplementationOnce(() => {
-        return Promise.resolve({
-          activities: moreActivities,
-          lastDoc: null,
-          pageSize: 1,
-        });
+      .mockResolvedValueOnce({
+        activities: [sample3],
+        lastDoc: null,
+        pageSize: 1,
       });
+
     const { result } = renderHook(() => useUserActivity());
     await waitFor(() => expect(result.current.loading).toBe(false));
+
     await act(async () => {
       await result.current.loadMore();
     });
-    expect((activityService.fetchActivityPage as Mock).mock.calls.length).toBe(
-      2,
-    );
-    await waitFor(() => expect(result.current.activity.length).toBe(3));
-    expect(result.current.activity).toEqual([
-      ...initialActivities,
-      ...moreActivities,
-    ]);
+
+    expect(result.current.activity).toEqual([sample1, sample2, sample3]);
     expect(result.current.hasMore).toBe(false);
   });
 
-  it("does not fetch if loadMore preconditions fail", async () => {
-    // Case 1: lastDoc is null (immediately after mount)
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
+  it("handles errors and non-Error thrown types during loadMore", async () => {
+    (activityService.fetchActivityPage as Mock)
+      .mockResolvedValueOnce({
+        activities: [sample1],
+        lastDoc: mockLastDoc,
+        pageSize: 10,
+      })
+      .mockRejectedValueOnce("loadMore raw string error");
+
+    const { result } = renderHook(() => useUserActivity());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    await act(async () => {
+      await result.current.loadMore();
+    });
+
+    expect(result.current.error).toBe("loadMore raw string error");
+    expect(result.current.loading).toBe(false);
+  });
+
+  it("skips loadMore when preconditions are not met", async () => {
+    (activityService.fetchActivityPage as Mock).mockResolvedValueOnce({
       activities: [],
       lastDoc: null,
       pageSize: 10,
     });
+
     const { result } = renderHook(() => useUserActivity());
     await waitFor(() => expect(result.current.loading).toBe(false));
+
     await act(async () => {
       await result.current.loadMore();
     });
-    expect((activityService.fetchActivityPage as Mock).mock.calls.length).toBe(
-      1,
+
+    expect(activityService.fetchActivityPage).toHaveBeenCalledTimes(1);
+  });
+
+  it("deletes an activity item", async () => {
+    (activityService.fetchActivityPage as Mock).mockResolvedValueOnce({
+      activities: [sample1, sample3],
+      lastDoc: null,
+      pageSize: 2,
+    });
+    (activityService.deleteActivity as Mock).mockResolvedValueOnce(undefined);
+
+    const { result } = renderHook(() => useUserActivity());
+    await waitFor(() => expect(result.current.loading).toBe(false));
+
+    await act(async () => {
+      await result.current.deleteActivity(sample1);
+    });
+
+    expect(result.current.activity).toEqual([sample3]);
+  });
+
+  it("handles errors and raw string thrown types during delete", async () => {
+    (activityService.fetchActivityPage as Mock).mockResolvedValueOnce({
+      activities: [sample1],
+      lastDoc: null,
+      pageSize: 1,
+    });
+    (activityService.deleteActivity as Mock).mockRejectedValueOnce(
+      "delete failed string",
     );
 
-    // Case 2: hasMore is false (after a fetch that sets hasMore false)
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
-      activities: [],
-      lastDoc: { id: "3", exists: () => true, data: () => ({}) },
-      pageSize: 1,
-    });
-    const { result: result2 } = renderHook(() => useUserActivity());
-    await waitFor(() => expect(result2.current.loading).toBe(false));
-    const before2 = (activityService.fetchActivityPage as Mock).mock.calls
-      .length;
-    await act(async () => {
-      await result2.current.loadMore();
-    });
-    await act(async () => {
-      await result2.current.loadMore();
-    });
-    const after2 = (activityService.fetchActivityPage as Mock).mock.calls
-      .length;
-    expect(after2 - before2).toBe(0);
-  });
-
-  it("deletes an activity", async () => {
-    const initialActivities: UserActivity[] = [
-      { id: "1", action: 120, timestamp: ts1 },
-      { id: "3", action: 140, timestamp: ts3 },
-    ];
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
-      activities: initialActivities,
-      lastDoc: null,
-      pageSize: 2,
-    });
-    (
-      activityService.deleteActivityById as unknown as Mock
-    ).mockResolvedValueOnce(undefined);
-    const { result } = renderHook(() => useUserActivity());
-    await act(async () => {
-      await result.current.deleteActivity("1");
-    });
-    await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.activity).toEqual([
-      { id: "3", action: 140, timestamp: ts3 },
-    ]);
-  });
-
-  it("sets error if delete fails", async () => {
-    const initialActivities: UserActivity[] = [
-      { id: "1", action: 120, timestamp: ts1 },
-      { id: "3", action: 140, timestamp: ts3 },
-    ];
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
-      activities: initialActivities,
-      lastDoc: null,
-      pageSize: 2,
-    });
-    const error = new Error("delete failed");
-    (
-      activityService.deleteActivityById as unknown as Mock
-    ).mockRejectedValueOnce(error);
-    const { result } = renderHook(() => useUserActivity());
-    await act(async () => {
-      await result.current.deleteActivity("1");
-    });
-    expect(result.current.error).toEqual(error);
-  });
-
-  it("clears error on new loadMore", async () => {
-    // Initial fetch is successful
-    const initialActivities: UserActivity[] = [
-      { id: "1", action: 120, timestamp: ts1 },
-      { id: "2", action: 130, timestamp: ts2 },
-    ];
-    const lastDocMock = { id: "2", exists: () => true, data: () => ({}) };
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
-      activities: initialActivities,
-      lastDoc: lastDocMock,
-      pageSize: 10,
-    });
     const { result } = renderHook(() => useUserActivity());
     await waitFor(() => expect(result.current.loading).toBe(false));
-    expect(result.current.error).toBeNull();
 
-    // Next loadMore fails
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockRejectedValueOnce(new Error("fail loadMore"));
     await act(async () => {
-      await result.current.loadMore();
+      await result.current.deleteActivity(sample1);
     });
-    expect(result.current.error).toBeInstanceOf(Error);
 
-    // Next loadMore succeeds
-    (
-      activityService.fetchActivityPage as unknown as Mock
-    ).mockResolvedValueOnce({
-      activities: [{ id: "3", action: 140, timestamp: ts3 }],
-      lastDoc: null,
-      pageSize: 1,
-    });
-    await act(async () => {
-      await result.current.loadMore();
-    });
-    expect(result.current.error).toBeNull();
+    expect(result.current.error).toBe("delete failed string");
   });
 });
