@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { AccountManagementSection } from "./AccountManagementSection";
+import { LanguageRegionSection } from "./LanguageRegionSection";
 import { ProfileSection } from "./ProfileSection";
-import { LanguageRegionSection } from "../../localization/components/LanguageRegionSection";
-import { SoundSettingsSection } from "../../sound/SoundSettingsSection";
+import { SoundSettingsSection } from "./SoundSettingsSection";
 
 export function AccountSettingsSection() {
   const { t } = useTranslation("settings");

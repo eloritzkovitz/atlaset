@@ -14,12 +14,18 @@ export function useDateLocale(): [
 ] {
   const { settings, updateSettings } = useContext(SettingsContext);
   const dateLocale =
-    settings?.localization?.dateLocale ??
-    defaultSettings.localization.dateLocale;
+    settings?.account.languageRegion?.dateLocale ??
+    defaultSettings.account.languageRegion.dateLocale;
 
   const setDateLocale = (loc: string | null) => {
     updateSettings({
-      localization: { ...(settings.localization ?? {}), dateLocale: loc },
+      account: {
+        ...settings.account,
+        languageRegion: {
+          ...(settings.account.languageRegion ?? {}),
+          dateLocale: loc,
+        },
+      },
     });
   };
 

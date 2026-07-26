@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCountryByIsoCode, useCountryData } from "@features/countries";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import { exchangeRateClient } from "@lib/exchange-rates";
 import { convertCurrency } from "../utils/currency";
 

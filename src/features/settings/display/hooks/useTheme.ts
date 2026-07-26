@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSettings } from "@contexts/SettingsContext";
-import type { ThemeKey, AccentKey } from "../../types";
+import type { ThemeKey, AccentKey } from "../types";
 
 /**
  * Manages theme settings, including system preference.

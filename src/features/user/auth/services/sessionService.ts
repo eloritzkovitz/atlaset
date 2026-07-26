@@ -12,12 +12,12 @@ import {
 } from "firebase/firestore";
 import { getDocsData, getPaths, getUserCollection } from "@lib/firebase";
 import { geoService } from "@lib/geo";
+import type { UserSession } from "../types";
 import {
   getBrowserSessionInfo,
   getOrCreateSessionId,
   clearLocalSession,
 } from "../utils/session";
-import type { UserSession } from "../../types";
 
 /** Service for managing session information. */
 export const sessionService = {

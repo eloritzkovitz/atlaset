@@ -2,7 +2,7 @@ import ReactDOM from "react-dom";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Chip, FormField } from "@components";
 import { ICONS } from "@constants/icons";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import { CountrySelectModal } from "./CountrySelectModal";
 import type { Country } from "../../types";
 

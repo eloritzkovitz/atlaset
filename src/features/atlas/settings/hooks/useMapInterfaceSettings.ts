@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSettings } from "@contexts/SettingsContext";
-import { type MapInterfaceSettings } from "@features/settings";
+import { type MapInterfaceSettings } from "../types";
 
 /**
  * Manages map interface settings.

@@ -2,7 +2,7 @@ import type { User } from "firebase/auth";
 import { useTranslation } from "react-i18next";
 import { MenuButton, Separator } from "@components";
 import type { Country } from "@features/countries";
-import type { Friend } from "@features/user";
+import type { Friend } from "@features/user/friends/types";
 import type { SearchResult } from "../types";
 import { renderSearchItem } from "../utils/renderSearchItem";
 import { getSearchRoute } from "../utils/search";

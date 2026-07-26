@@ -5,7 +5,7 @@ import { EmptyListMessage, SegmentedToggle } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
 import { SearchSection, useSearch } from "@features/search";
-import { useUserFriends } from "@features/user";
+import { useUserFriends } from "@features/user/friends";
 import { usePageTitle } from "@hooks";
 import { Container } from "@layouts";
 import { getQueryParam } from "@utils/url";

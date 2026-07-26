@@ -27,7 +27,7 @@ import { isUserDeactivated } from "../utils/auth";
 import { getBrowserSessionInfo } from "../utils/session";
 import { friendService } from "../../friends/services/friendService";
 import { profileService } from "../../profile/services/profileService";
-import type { FirestoreUser } from "../../types";
+import type { FirestoreUser } from "../../profile/types";
 
 /**
  * Service for managing user authentication.

@@ -85,7 +85,7 @@ async function renderUseSearchWithMocks(
     () => authMock ?? { useAuth: () => ({ user: { uid: "1" } }) },
   );
   vi.doMock(
-    "@features/user",
+    "@features/user/friends",
     () =>
       userFriendsMock ?? { useUserFriends: () => ({ friends: staticFriends }) },
   );

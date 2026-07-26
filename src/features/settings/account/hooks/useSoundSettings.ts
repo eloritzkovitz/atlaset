@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { SettingsContext } from "@contexts/SettingsContext";
-import { defaultSettings } from "../common/constants/defaultSettings";
 import type { SoundSettings } from "../types";
+import { defaultSettings } from "../../common/constants/defaultSettings";
 
 /**
  * Manages sound settings.
@@ -11,11 +11,13 @@ export function useSoundSettings(): [
   (settings: Partial<SoundSettings>) => void,
 ] {
   const { settings, updateSettings } = useContext(SettingsContext);
-  const sound = settings.sound || defaultSettings.sound;
+  const sound = settings.account.sound || defaultSettings.account.sound;
 
   // Update only sound settings
   const setSoundSettings = (newSettings: Partial<SoundSettings>) => {
-    updateSettings({ sound: { ...sound, ...newSettings } });
+    updateSettings({
+      account: { ...settings.account, sound: { ...sound, ...newSettings } },
+    });
   };
 
   return [sound, setSoundSettings];

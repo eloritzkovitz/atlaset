@@ -1,6 +1,6 @@
 import type { CSSProperties, JSX } from "react";
 import { ICONS } from "@constants/icons";
-import type { ThemeKey } from "../../types";
+import type { ThemeKey } from "../types";
 
 interface ThemeConfig {
   isDark: boolean;

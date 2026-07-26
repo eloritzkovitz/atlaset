@@ -1,6 +1,6 @@
 import type { User } from "firebase/auth";
 import { UserAvatar } from "./UserAvatar";
-import type { UserProfile } from "../../types";
+import type { UserProfile } from "../types";
 
 interface UserInfoProps {
   user: User | UserProfile | null;

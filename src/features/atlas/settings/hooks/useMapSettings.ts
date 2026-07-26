@@ -1,9 +1,7 @@
 import { useMemo } from "react";
 import { useSettings } from "@contexts/SettingsContext";
-import {
-  MAP_CONFIG_OPTIONS,
-  type MapConfigurationSettings,
-} from "@features/settings";
+import { MAP_CONFIG_OPTIONS } from "@features/settings";
+import type { MapConfigurationSettings } from "../types";
 
 /**
  * Manages map configuration settings.

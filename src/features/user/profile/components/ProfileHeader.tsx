@@ -2,13 +2,13 @@ import { useTranslation } from "react-i18next";
 import { FaPen, FaListUl } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { ActionButton, Card } from "@components";
-import { useLanguage } from "@features/settings/localization/hooks/useLanguage";
+import { useLanguage } from "@features/settings/account/hooks/useLanguage";
 import { UserAvatar } from "./UserAvatar";
+import type { UserProfile } from "../types";
 import { useAuth } from "../../auth/hooks/useAuth";
 import { FriendshipButton } from "../../friends/components/FriendshipButton";
 import { useFriendshipStatus } from "../../friends/hooks/useFriendshipStatus";
 import { friendService } from "../../friends/services/friendService";
-import type { UserProfile } from "../../types";
 
 interface ProfileHeaderProps {
   profile: UserProfile;

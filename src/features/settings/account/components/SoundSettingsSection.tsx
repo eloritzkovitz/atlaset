@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { useDebounce } from "@hooks";
-import { useSoundSettings } from "./useSoundSettings";
-import { SettingsCard } from "../common/components/SettingsCard";
-import { SettingsToggle } from "../common/components/SettingsToggle";
+import { useSoundSettings } from "../hooks/useSoundSettings";
+import { SettingsCard } from "../../common/components/SettingsCard";
+import { SettingsToggle } from "../../common/components/SettingsToggle";
 
 export function SoundSettingsSection() {
   const { t } = useTranslation("settings");

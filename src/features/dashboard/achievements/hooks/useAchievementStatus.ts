@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import type { SortValue } from "@types";
 import { useAchievementFilters } from "./useAchievementFilters";

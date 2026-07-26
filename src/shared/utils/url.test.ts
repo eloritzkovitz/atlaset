@@ -89,4 +89,8 @@ describe("getWikipediaUrl", () => {
     const expectedUrl = "https://en.wikipedia.org/wiki/Germany";
     expect(getWikipediaUrl(countryName, lang)).toBe(expectedUrl);
   });
+
+  it("returns empty string if query is empty", () => {
+    expect(getWikipediaUrl("", "en")).toBe("");
+  });
 });

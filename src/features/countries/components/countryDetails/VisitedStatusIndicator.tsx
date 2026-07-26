@@ -7,7 +7,7 @@ import {
   VISITED_COLOR,
 } from "@constants/colors";
 import { ICONS } from "@constants/icons";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import type { Country } from "../../types";
 

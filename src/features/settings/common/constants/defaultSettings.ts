@@ -3,10 +3,12 @@ import type { Settings } from "../../types";
 
 export const defaultSettings: Settings = {
   id: "main",
-  localization: { dateLocale: "", language: "en" },
-  sound: {
-    soundEffectsEnabled: true,
-    soundEffectsVolume: 0.5,
+  account: {
+    languageRegion: { dateLocale: "auto", language: "en" },
+    sound: {
+      soundEffectsEnabled: true,
+      soundEffectsVolume: 0.5,
+    },
   },
   display: { theme: "system", accent: "blue" },
   accessibility: { singleKeyShortcutsEnabled: true, animationsEnabled: true },

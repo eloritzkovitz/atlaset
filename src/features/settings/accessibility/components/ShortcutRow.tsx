@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { KeyCombo } from "@components";
 import type { KeyCommand } from "@types";
-import { useLanguage } from "../../localization/hooks/useLanguage";
+import { useLanguage } from "../../account/hooks/useLanguage";
 
 interface ShortcutRowProps {
   cmd: KeyCommand;

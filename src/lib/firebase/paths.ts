@@ -8,8 +8,8 @@ import { db } from "@app/firebase";
 
 export interface UserSubcollections {
   activity: import("@features/activity/types").UserActivity;
-  friends: import("@features/user/types").Friend;
-  friendRequests: import("@features/user/types").FriendRequest;
+  friends: import("@features/user/friends/types").Friend;
+  friendRequests: import("@features/user/friends/types").FriendRequest;
   trips: import("@features/trips/types").Trip;
   sharedTrips: import("@features/trips/types").SharedTrip;
   settings: import("@features/settings/types").Settings;
@@ -17,7 +17,7 @@ export interface UserSubcollections {
   layers: import("@features/atlas/layers/types").Layer;
   markers: import("@features/atlas/markers/types").Marker;
   savedMaps: import("@features/atlas/saved/types").SavedMap;
-  sessions: import("@features/user/types").UserSession;
+  sessions: import("@features/user/auth/types").UserSession;
 }
 
 const col = <T>(...segments: string[]) =>
@@ -29,8 +29,9 @@ const ref = <T>(...segments: string[]) =>
 export const getPaths = {
   // User document and collection references
   user: (uid: string) =>
-    ref<import("@features/user/types").FirestoreUser>("users", uid),
-  users: () => col<import("@features/user/types").FirestoreUser>("users"),
+    ref<import("@features/user/profile/types").FirestoreUser>("users", uid),
+  users: () =>
+    col<import("@features/user/profile/types").FirestoreUser>("users"),
   username: (name: string) => ref<{ uid: string }>("usernames", name),
   usernames: () => col<{ uid: string }>("usernames"),
 

@@ -5,7 +5,7 @@ import type { Trip } from "@features/trips/types";
 import { computeVisitedCountriesFromTrips } from "@features/visits/utils/visits";
 import { getDocData, getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
-import type { UserProfile } from "../../types";
+import type { UserProfile } from "../types";
 
 // Normalizes a username by converting to lowercase and removing special characters
 const normalizeUsername = (username: string) =>

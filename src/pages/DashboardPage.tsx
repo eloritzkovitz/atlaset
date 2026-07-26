@@ -18,7 +18,7 @@ import {
   useDashboardNavigation,
   useDashboardCountriesFilters,
 } from "@features/dashboard";
-import { useAuth } from "@features/user";
+import { useAuth } from "@features/user/auth";
 import { usePageTitle, useScreenSize } from "@hooks";
 import { Container } from "@layouts";
 

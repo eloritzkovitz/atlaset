@@ -1,4 +1,4 @@
-import type { FriendProfile } from "../../types";
+import type { FriendProfile } from "../types";
 
 /**
  * Filters the given list of friend profiles based on the search query.

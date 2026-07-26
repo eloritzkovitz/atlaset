@@ -1,7 +1,7 @@
 import { SectionHeader } from "@components";
 import { useTranslation } from "react-i18next";
 import { FriendList } from "../../friends/components/FriendList";
-import type { UserProfile } from "../../types";
+import type { UserProfile } from "../types";
 
 interface FriendsListSectionProps {
   loading: boolean;

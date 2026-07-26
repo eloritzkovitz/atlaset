@@ -3,7 +3,7 @@ import { useUI } from "@contexts/UIContext";
 import { HelpPanel } from "@features/docs";
 import { SearchPanel } from "@features/search";
 import { ShortcutsModal } from "@features/settings";
-import { FriendsPanel } from "@features/user";
+import { FriendsPanel } from "@features/user/friends";
 import { isAuthenticated } from "@lib/firebase";
 
 const CalendarModal = React.lazy(

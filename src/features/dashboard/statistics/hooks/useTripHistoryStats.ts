@@ -1,7 +1,7 @@
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData, type Country } from "@features/countries";
 import { getCompletedTrips, getAbroadTrips } from "@features/trips/utils/trips";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import { getFirstAndLastTrip, getRecentTrips } from "../utils/tripStats";
 import { getMostVisitedCountries } from "../utils/visitStats";
 

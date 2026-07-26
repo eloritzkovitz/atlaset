@@ -1,6 +1,6 @@
 import type { User } from "firebase/auth";
 import { FaCircleUser } from "react-icons/fa6";
-import type { UserProfile } from "../../types";
+import type { UserProfile } from "../types";
 
 interface UserAvatarProps {
   user: User | UserProfile | null;

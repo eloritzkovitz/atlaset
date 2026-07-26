@@ -1,7 +1,7 @@
 import { FaMedal } from "react-icons/fa6";
 import { UserInfo } from "@features/user/profile/components/UserInfo";
 import { formatTimeSeconds, formatDate } from "@utils/date";
-import type { UserProfile } from "@features/user/types";
+import type { UserProfile } from "@features/user/profile/types";
 import type { LeaderboardRow } from "../../types";
 
 interface LeaderboardRowComponentProps {

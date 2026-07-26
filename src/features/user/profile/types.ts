@@ -1,4 +1,4 @@
-import type { FieldValue, Timestamp } from "firebase/firestore";
+import type { Timestamp } from "firebase/firestore";
 
 /** Represents a user in the Firestore database. */
 export interface FirestoreUser {
@@ -57,53 +57,3 @@ export interface UserProfile {
   /** List of country codes (ISO 3166-1 alpha-2) the user wants to visit */
   wantToVisitCountryCodes: string[];
 }
-
-/** Represents a user session. */
-export type UserSession = {
-  /** Document ID. */
-  id: string;
-  /** User ID. */
-  userId: string;
-  /** Session ID. */
-  sessionId: string;
-  /** User agent string. */
-  userAgent: string;
-  /** Browser language preference. */
-  language: string;
-  /** Display resolution dimensions. */
-  screen: string;
-  /** IP address. */
-  ipAddress?: string;
-  /** Location. */
-  location?: string;
-  /** Epoch timestamp tracking recent interactions. */
-  lastActive: number;
-  /** Optional user-assigned friendly name. */
-  deviceName?: string;
-};
-
-/** Represents a friend request. */
-export interface FriendRequest {
-  /** User ID of the friend request */
-  uid: string;
-  /** User ID of the sender */
-  from: string;
-  /** User ID of the receiver */
-  to: string;
-  /** Timestamp when the friend request was created */
-  createdAt: Timestamp | FieldValue;
-}
-
-/** Friend information. */
-export interface Friend {
-  /** User ID of the friend */
-  uid: string;
-  /** Timestamp when the friendship was created */
-  createdAt: Timestamp | FieldValue;
-}
-
-/** Represents a friend's profile information. */
-export type FriendProfile = Pick<
-  UserProfile,
-  "uid" | "username" | "displayName" | "photoURL"
->;

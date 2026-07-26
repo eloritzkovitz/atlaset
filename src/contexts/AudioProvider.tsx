@@ -1,5 +1,5 @@
 import React, { useRef, useCallback } from "react";
-import { useSoundSettings } from "@features/settings/sound/useSoundSettings";
+import { useSoundSettings } from "@features/settings/account/hooks/useSoundSettings";
 import { AudioContext } from "./AudioContext";
 
 const soundMap: Record<string, string> = {

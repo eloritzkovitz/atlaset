@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { profileService } from "../../profile/services/profileService";
-import type { UserProfile } from "../../types";
+import type { UserProfile } from "../../profile/types";
 
 /**
  * Fetches full user profiles for a list of friend UIDs.

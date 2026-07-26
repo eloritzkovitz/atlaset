@@ -10,6 +10,11 @@ import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes";
 import {
+  useUserFriendCount,
+  useFriendProfiles,
+  useUserFriends,
+} from "@features/user/friends";
+import {
   BestScoresCard,
   EditProfileModal,
   FriendsListSection,
@@ -17,10 +22,7 @@ import {
   ProfileCountriesCard,
   ProfileHeader,
   useUserProfile,
-  useUserFriendCount,
-  useFriendProfiles,
-  useUserFriends,
-} from "@features/user";
+} from "@features/user/profile";
 import { usePageTitle } from "@hooks";
 import { AppPanels } from "@layouts/shells/AppPanels";
 import { formatFirestoreDate } from "@utils/date";

@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { SettingsContext } from "@contexts/SettingsContext";
 import { useLocalStorageState } from "@hooks";
 import { defaultSettings } from "../../common/constants/defaultSettings";
-import type { PrivacySettings } from "../../types";
+import type { PrivacySettings } from "../types";
 
 const GUEST_ANALYTICS_KEY = "atlaset:guest_analytics_consent";
 

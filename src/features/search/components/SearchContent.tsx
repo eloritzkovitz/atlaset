@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { SearchInput, EmptyListMessage } from "@components";
 import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
-import { useUserFriends } from "@features/user";
+import { useUserFriends } from "@features/user/friends";
 import { useDebounce } from "@hooks";
 import { RecentSearchesList } from "./RecentSearchesList";
 import { SearchResultsList } from "./SearchResultsList";

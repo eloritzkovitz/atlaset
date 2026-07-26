@@ -7,7 +7,7 @@ import {
   getAbroadTrips,
   getTripDays,
 } from "@features/trips/utils/trips";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import { findLongestTrip, findShortestTrip } from "../utils/tripStats";
 
 export function useTripsStats() {

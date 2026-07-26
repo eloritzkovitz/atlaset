@@ -4,7 +4,7 @@ import {
   AuthFooter,
   AuthForm,
   useAuthHandlers,
-} from "@features/user";
+} from "@features/user/auth";
 import { usePageTitle } from "@hooks";
 
 export default function SignupPage() {

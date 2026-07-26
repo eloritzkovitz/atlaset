@@ -1,6 +1,6 @@
 import type { User } from "firebase/auth";
 import type { Country } from "@features/countries";
-import type { Friend } from "@features/user";
+import type { Friend } from "@features/user/friends/types";
 import type { SearchResult } from "../types";
 import { renderSearchItem } from "../utils/renderSearchItem";
 

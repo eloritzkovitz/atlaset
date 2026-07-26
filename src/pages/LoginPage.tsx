@@ -6,7 +6,7 @@ import {
   AuthFooter,
   AuthForm,
   useAuthHandlers,
-} from "@features/user";
+} from "@features/user/auth";
 import { useUiHint, usePageTitle } from "@hooks";
 
 export default function LoginPage() {

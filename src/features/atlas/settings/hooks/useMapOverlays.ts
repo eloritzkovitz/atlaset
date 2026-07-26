@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSettings } from "@contexts/SettingsContext";
-import type { MapOverlaySettings } from "@features/settings";
+import type { MapOverlaySettings } from "../types";
 
 /**
  * Manages toggleable visibility layers and overlays on the map.

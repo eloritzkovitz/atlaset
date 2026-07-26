@@ -6,7 +6,7 @@ import { ICONS } from "@constants/icons";
 import { useAuth } from "@contexts/AuthContext";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage } from "@features/settings";
-import { useAuthHandlers } from "@features/user";
+import { useAuthHandlers } from "@features/user/auth";
 import { useModalAnimation, useScreenSize } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";

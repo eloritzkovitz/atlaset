@@ -1,7 +1,7 @@
 import type { User } from "firebase/auth";
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
-import { UserAvatar } from "@features/user";
+import { UserAvatar } from "@features/user/profile";
 
 interface UserAvatarButtonProps {
   user: User | null;

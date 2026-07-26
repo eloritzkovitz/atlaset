@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { profileService } from "../services/profileService";
-import type { UserProfile } from "../../types";
+import type { UserProfile } from "../types";
 
 /**
  * Manages fetching user profile by uid or username.

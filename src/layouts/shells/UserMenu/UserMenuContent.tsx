@@ -6,7 +6,7 @@ import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage, useTheme } from "@features/settings";
-import { useFirestoreUsername, UserInfo } from "@features/user";
+import { useFirestoreUsername, UserInfo } from "@features/user/profile";
 import { useScreenSize } from "@hooks";
 import { LanguageSubmenu } from "./LanguageSubmenu";
 import { ThemeSubmenu } from "./ThemeSubmenu";

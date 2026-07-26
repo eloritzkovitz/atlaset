@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { MenuButton, RadioButton } from "@components";
 import { ICONS } from "@constants/icons";
-import type { ThemeKey } from "@features/settings";
+import type { ThemeKey } from "@features/settings/display/types";
 import { UserSubmenuHeader } from "./UserSubmenuHeader";
 
 interface ThemeSubmenuProps {

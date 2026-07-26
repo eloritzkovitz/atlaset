@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { friendService } from "../services/friendService";
-import type { FriendRequest } from "../../types";
+import type { FriendRequest } from "../types";
 
 /**
  * Fetches and manages friend requests for a user.

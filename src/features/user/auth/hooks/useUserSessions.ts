@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { authService } from "../services/authService";
 import { sessionService } from "../services/sessionService";
 import { clearLocalSession, isCurrentSession } from "../utils/session";
-import type { UserSession } from "../../types";
+import type { UserSession } from "../types";
 
 interface UserSessionsProps {
   sessions: UserSession[];

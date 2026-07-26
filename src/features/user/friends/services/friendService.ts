@@ -11,7 +11,7 @@ import {
 import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
 import { getDocData, getDocsData, getPaths } from "@lib/firebase";
-import type { Friend, FriendRequest } from "../../types";
+import type { Friend, FriendRequest } from "../types";
 
 /**
  * Service for managing user friends and friend requests.

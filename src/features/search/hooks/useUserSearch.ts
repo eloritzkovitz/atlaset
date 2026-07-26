@@ -8,7 +8,7 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { db } from "@app/firebase";
-import type { UserProfile } from "@features/user";
+import type { UserProfile } from "@features/user/profile/types";
 import type { UserSearchResult } from "../types";
 
 /**

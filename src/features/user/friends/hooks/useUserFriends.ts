@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@app/firebase";
 import { getCurrentUser } from "@lib/firebase";
-import type { Friend } from "../../types";
+import type { Friend } from "../types";
 
 /**
  * Fetches the friends list for any user by uid, with real-time updates.

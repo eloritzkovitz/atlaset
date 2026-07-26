@@ -12,16 +12,15 @@ export { useAccessibility } from "./accessibility/hooks/useAccessibility";
 
 // Account
 export { AccountSettingsSection } from "./account/components/AccountSettingsSection";
+export { LanguageMenuList } from "./account/components/LanguageMenuList";
+export { LanguageSelect } from "./account/components/LanguageSelect";
+export { mapLanguages } from "./account/utils/languages";
+export { SoundSettingsSection } from "./account/components/SoundSettingsSection";
+export { useLanguage, isRtl } from "./account/hooks/useLanguage";
 
 // Display
 export { DisplaySettingsSection } from "./display/components/DisplaySettingsSection";
 export { useTheme } from "./display/hooks/useTheme";
-
-// Localization
-export { LanguageMenuList } from "./localization/components/LanguageMenuList";
-export { LanguageSelect } from "./localization/components/LanguageSelect";
-export { mapLanguages } from "./localization/utils/languages";
-export { useLanguage, isRtl } from "./localization/hooks/useLanguage";
 
 // Privacy
 export { CookieConsentModal } from "./privacy/components/CookieConsentModal";
@@ -30,9 +29,6 @@ export { useAnalytics } from "./privacy/hooks/useAnalytics";
 
 // Security
 export { SecurityInfoSection } from "./security/components/SecurityInfoSection";
-
-// Sound
-export { SoundSettingsSection } from "./sound/SoundSettingsSection";
 
 // Types
 export * from "./types";

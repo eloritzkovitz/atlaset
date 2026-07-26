@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { EmptyListMessage } from "@components";
 import { UserListItem } from "./UserListItem";
 import { useFriendSearch } from "../hooks/useFriendSearch";
-import type { FriendProfile } from "../../types";
+import type { FriendProfile } from "../types";
 
 interface FriendListProps {
   profiles: FriendProfile[];

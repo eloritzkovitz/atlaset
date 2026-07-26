@@ -3,8 +3,8 @@ import { useSettings } from "@contexts/SettingsContext";
 import type { ColorMode } from "@features/atlas/shared";
 import {
   DEFAULT_COLOR_PALETTES,
-  type MapColorsSettings,
 } from "@features/settings";
+import type { MapColorsSettings } from "../types";
 
 /**
  * Manages color and palette configuration settings for the map.

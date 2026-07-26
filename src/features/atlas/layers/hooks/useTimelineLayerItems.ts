@@ -5,7 +5,7 @@ import {
   useMapTheme,
   type ColorMode,
 } from "@features/atlas/shared";
-import { useHomeCountry } from "@features/user";
+import { useHomeCountry } from "@features/user/profile";
 import {
   getVisitedCountriesForYear,
   getVisitedCountriesUpToYear,

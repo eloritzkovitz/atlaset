@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { friendService } from "../services/friendService";
-import type { Friend } from "../../types";
+import type { Friend } from "../types";
 
 /**
  * Friendship status between current user and profile user.
- * @returns { status, loading, refresh }
- * - status: "none" | "pending" | "friend"
- * - loading: boolean
- * - refresh: function to re-check status
+ * @param currentUserId - The ID of the current user.
+ * @param profileUserId - The ID of the profile user.
+ * @returns An object containing the friendship status, loading state, and a refresh function.
  */
 export function useFriendshipStatus(
   currentUserId: string | undefined,

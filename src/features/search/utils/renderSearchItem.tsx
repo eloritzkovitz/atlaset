@@ -10,7 +10,8 @@ import {
   type Country,
 } from "@features/countries";
 import { getCountryRoute } from "@features/dashboard";
-import { UserAvatar, type Friend } from "@features/user";
+import { UserAvatar } from "@features/user/profile";
+import { type Friend } from "@features/user/friends/types";
 import { getUserLabel } from "./search";
 import { SearchItem } from "../components/SearchItem";
 import { type SearchResult } from "../types";

@@ -17,7 +17,7 @@ import {
   SettingsPanelMenu,
 } from "@features/settings";
 import { SETTINGS_MENU } from "@features/settings/common/constants/settingsMenu";
-import { EditProfileModal, useUserProfile } from "@features/user";
+import { EditProfileModal, useUserProfile } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
 import { SidebarLayout } from "@layouts";
 
