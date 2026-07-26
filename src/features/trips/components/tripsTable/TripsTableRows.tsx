@@ -95,7 +95,7 @@ export function TripsTableRows({
         <TableCell rowSpan={rowSpan}>
           <StarRatingInput
             value={typeof trip.rating === "number" ? trip.rating : 0}
-            onChange={(rating) => updateTripRating(trip.id, rating)}
+            onChange={(rating) => updateTripRating(trip, rating)}
             readOnly={trip.status !== "completed"}
           />
         </TableCell>
