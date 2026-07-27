@@ -1,18 +1,14 @@
-import { useContext } from "react";
-import { SettingsContext } from "@contexts/SettingsContext";
 import { defaultSettings } from "../../common/constants/defaultSettings";
+import { useSettings } from "../../common/hooks/useSettings";
 
 /**
- * Manages the date locale setting for the app, which controls how dates are formatted.
- * @returns A tuple of [dateLocale, setDateLocale] where:
- * - `dateLocale` is the current date locale string (e.g. "en-GB", "en-US") or null/undefined for default.
- * - `setDateLocale` is a function to update the date locale, accepting a string or null to reset to default.
+ * Manages the date locale setting for the application.
  */
 export function useDateLocale(): [
   string | null | undefined,
   (loc: string | null) => void,
 ] {
-  const { settings, updateSettings } = useContext(SettingsContext);
+  const { settings, updateSettings } = useSettings();
   const dateLocale =
     settings?.account.languageRegion?.dateLocale ??
     defaultSettings.account.languageRegion.dateLocale;

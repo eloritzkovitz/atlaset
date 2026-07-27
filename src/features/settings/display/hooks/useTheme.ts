@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSettings } from "@contexts/SettingsContext";
 import type { ThemeKey, AccentKey } from "../types";
+import { useSettings } from "../../common/hooks/useSettings";
 
 /**
  * Manages theme settings, including system preference.
- * @returns Current theme, user preference, and functions to update them.
  */
 export function useTheme() {
   const { settings, updateSettings } = useSettings();

@@ -1,12 +1,15 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
-import { useSettings } from "@contexts/SettingsContext";
 import { AchievementsProvider } from "@contexts/AchievementsProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { CookieConsentModal, useAnalytics } from "@features/settings";
+import {
+  CookieConsentModal,
+  useAnalytics,
+  useSettings,
+} from "@features/settings";
 import { AppLayout, PublicLayout } from "@layouts";
 import AboutPage from "./pages/AboutPage";
 import ActivityPage from "./pages/ActivityPage";

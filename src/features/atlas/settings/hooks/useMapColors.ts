@@ -1,9 +1,6 @@
 import { useMemo } from "react";
-import { useSettings } from "@contexts/SettingsContext";
 import type { ColorMode } from "@features/atlas/shared";
-import {
-  DEFAULT_COLOR_PALETTES,
-} from "@features/settings";
+import { DEFAULT_COLOR_PALETTES, useSettings } from "@features/settings";
 import type { MapColorsSettings } from "../types";
 
 /**
@@ -23,7 +20,7 @@ export function useMapColors() {
     [layerColors.palettes],
   );
 
-  // Update nested color settings safely without wiping out siblings (configuration/overlays)
+  // Updates the map color settings with the provided partial state.
   const updateColorSetting = (partialNextState: Partial<MapColorsSettings>) => {
     if (!settings?.map) return;
 

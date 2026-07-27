@@ -1,6 +1,5 @@
 import { useMemo } from "react";
-import { useSettings } from "@contexts/SettingsContext";
-import { MAP_CONFIG_OPTIONS } from "@features/settings";
+import { MAP_CONFIG_OPTIONS, useSettings } from "@features/settings";
 import type { MapConfigurationSettings } from "../types";
 
 /**
@@ -24,7 +23,7 @@ export function useMapSettings() {
   const borderWidth =
     configSettings.borderWidth ?? MAP_CONFIG_OPTIONS.strokeWidth[0].value;
 
-  // Update functions for map settings
+  /** Updates the map's configuration settings. */
   const updateConfigSetting = (
     partialNextState: Partial<MapConfigurationSettings>,
   ) => {

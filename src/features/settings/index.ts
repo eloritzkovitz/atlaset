@@ -4,6 +4,7 @@ export * from "./common/constants/mapSettings";
 export { SETTINGS_MENU } from "./common/constants/settingsMenu";
 export { SettingsPanelMenu } from "./common/components/SettingsPanelMenu";
 export { SettingsToggle } from "./common/components/SettingsToggle";
+export { useSettings } from "./common/hooks/useSettings";
 
 // Accessibility
 export { AccessibilitySettingsSection } from "./accessibility/components/AccessibilitySettingsSection";

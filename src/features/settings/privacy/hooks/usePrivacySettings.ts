@@ -1,8 +1,7 @@
-import { useContext } from "react";
-import { SettingsContext } from "@contexts/SettingsContext";
 import { useLocalStorageState } from "@hooks";
-import { defaultSettings } from "../../common/constants/defaultSettings";
 import type { PrivacySettings } from "../types";
+import { defaultSettings } from "../../common/constants/defaultSettings";
+import { useSettings } from "../../common/hooks/useSettings";
 
 const GUEST_ANALYTICS_KEY = "atlaset:guest_analytics_consent";
 
@@ -13,7 +12,7 @@ export function usePrivacySettings(): [
   PrivacySettings,
   (settings: Partial<PrivacySettings>) => void,
 ] {
-  const { settings, updateSettings } = useContext(SettingsContext);
+  const { settings, updateSettings } = useSettings();
 
   const [guestConsent, setGuestConsent] = useLocalStorageState<boolean | null>(
     GUEST_ANALYTICS_KEY,
