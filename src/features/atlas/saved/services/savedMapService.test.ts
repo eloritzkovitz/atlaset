@@ -8,8 +8,6 @@ import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { savedMapsService } from "./savedMapsService";
 import type { SavedMap } from "../types";
 
-vi.mock("@app/firebase", () => ({ db: {} }));
-
 describe("savedMapsService", () => {
   const mockMap: SavedMap = {
     id: "map1",

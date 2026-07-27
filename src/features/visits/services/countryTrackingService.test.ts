@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { countryTrackingService } from "./countryTrackingService";
 
-vi.mock("@app/firebase", () => ({ db: {} }));
-
 describe("countryTrackingService", () => {
   const MOCK_USER_REF = { path: "users/u1" };
 

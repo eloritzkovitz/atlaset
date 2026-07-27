@@ -14,18 +14,13 @@ import { sessionService } from "./sessionService";
 import { friendService } from "../../friends/services/friendService";
 import { isUserDeactivated } from "../utils/auth";
 
-vi.mock("@app/db", () => ({
+vi.mock("@lib/db", () => ({
   appDb: {
     countryLists: { count: vi.fn() },
     layers: { count: vi.fn() },
     markers: { count: vi.fn() },
     settings: { count: vi.fn() },
   },
-}));
-
-vi.mock("@app/firebase", () => ({
-  auth: auth.auth,
-  db: {},
 }));
 
 vi.mock("@services/migrationService", () => ({

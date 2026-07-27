@@ -64,7 +64,7 @@ vi.mock("firebase/auth", () => ({
 
 vi.mock("./firebase", async () => {
   const actual =
-    await vi.importActual<typeof import("@app/firebase")>("./firebase");
+    await vi.importActual<typeof import("@lib/firebase")>("./firebase");
   return {
     ...actual,
     getCurrentUser: vi.fn(() => mockUser),

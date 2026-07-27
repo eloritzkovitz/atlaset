@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "@app/firebase";
+import { auth } from "@lib/firebase";
 import { authService } from "@features/user/auth/services/authService";
 import type { SerializableUser } from "@features/user/auth/types";
 

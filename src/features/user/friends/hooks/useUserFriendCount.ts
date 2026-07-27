@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@app/firebase";
+import { db } from "@lib/firebase";
 
 /**
  * Fetches the number of friends for any user by uid, with real-time updates.

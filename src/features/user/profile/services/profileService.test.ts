@@ -6,8 +6,6 @@ import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { createMockDocSnap } from "@test-utils/firestoreMocks";
 import { profileService } from "./profileService";
 
-vi.mock("@app/firebase", () => ({ db: {} }));
-
 describe("profileService", () => {
   let mockTx: { get: any; set: any; update: any; delete: any };
 

@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { initializeAppCheck, ReCaptchaV3Provider } from "firebase/app-check";
-
-const { getAuth } = await import("firebase/auth");
-const { getFirestore } = await import("firebase/firestore");
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 
 // Firebase configuration
 const firebaseConfig = {

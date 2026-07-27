@@ -13,9 +13,9 @@ import {
   deleteUser,
 } from "firebase/auth";
 import { deleteDoc, setDoc } from "firebase/firestore";
-import { auth } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
 import {
+  auth,
   getDocData,
   getDocsData,
   getPaths,

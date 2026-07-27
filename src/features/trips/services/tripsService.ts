@@ -1,13 +1,13 @@
 import { doc, setDoc, deleteDoc } from "firebase/firestore";
-import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
 import {
-  isAuthenticated,
+  db,
   getUserCollection,
   getCurrentUser,
   getPaths,
   getDocsData,
   getDocData,
+  isAuthenticated,
 } from "@lib/firebase";
 import { sharedTripsService } from "./sharedTripsService";
 import type { SharedTrip, Trip } from "../types";
@@ -133,7 +133,7 @@ export const tripsService = {
     await logUserActivity(
       413,
       {
-        tripId: trip.id,        
+        tripId: trip.id,
         itemName: trip.name,
         userName: user!.displayName,
         favorite,

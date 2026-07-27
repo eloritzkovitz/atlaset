@@ -1,7 +1,6 @@
 import { doc, writeBatch } from "firebase/firestore";
-import { appDb } from "@app/db";
-import { db } from "@app/firebase";
-import { getDocsData, isAuthenticated } from "@lib/firebase";
+import { appDb } from "@lib/db";
+import { db, getDocsData, isAuthenticated } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { AnyLayer } from "../types";
 

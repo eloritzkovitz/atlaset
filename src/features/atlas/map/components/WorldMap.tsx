@@ -44,12 +44,20 @@ export function WorldMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const measuredDimensions = useContainerDimensions(containerRef);
 
-  // Update map dimensions when the measured dimensions change
+  // Update map dimensions when measured dimensions are available
   useEffect(() => {
     if (measuredDimensions.width > 0 && measuredDimensions.height > 0) {
       setDimensions(measuredDimensions);
     }
   }, [measuredDimensions, setDimensions]);
+
+  // Safe dimensions for SVG attributes & projections
+  const mapWidth =
+    dimensions.width > 0 ? dimensions.width : measuredDimensions.width || 800;
+  const mapHeight =
+    dimensions.height > 0
+      ? dimensions.height
+      : measuredDimensions.height || 600;
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
@@ -58,28 +66,20 @@ export function WorldMap({
   // Handle map event for mouse move or click
   const handleMapEvent = useMapEventHandler();
 
-  // Call onReady when map is ready
+  // Call onReady when map data is loaded
   useEffect(() => {
-    if (
-      onReady &&
-      geoData &&
-      svgRef &&
-      typeof svgRef !== "function" &&
-      svgRef.current
-    ) {
+    if (onReady && geoData) {
       onReady();
     }
-  }, [onReady, geoData, svgRef]);
+  }, [onReady, geoData]);
 
-  // Memoize the projection configuration to avoid unnecessary recalculations
+  // Memoize projection configuration using safe non-zero dimensions
   const projectionConfig = useMemo(
     () => ({
-      scale:
-        Math.min(dimensions.width, dimensions.height) /
-        DEFAULT_MAP_SETTINGS.scaleDivisor,
+      scale: Math.min(mapWidth, mapHeight) / DEFAULT_MAP_SETTINGS.scaleDivisor,
       center: [0, 0] as [number, number],
     }),
-    [dimensions.width, dimensions.height],
+    [mapWidth, mapHeight],
   );
 
   const activeProjection = projection || DEFAULT_MAP_SETTINGS.projection;
@@ -96,23 +96,23 @@ export function WorldMap({
     >
       <MapSvgContainer
         ref={svgRef}
-        width={dimensions.width}
-        height={dimensions.height}
-        className="map-container"
+        width={mapWidth}
+        height={mapHeight}
+        className="map-container w-full h-full"
         isAddingMarker={isAddingMarker}
       >
         <MapProvider
-          key={activeProjection}
-          width={dimensions.width}
-          height={dimensions.height}
+          key={`${activeProjection}-${mapWidth}-${mapHeight}`}
+          width={mapWidth}
+          height={mapHeight}
           projection={activeProjection}
           projectionConfig={projectionConfig}
         >
           <svg
-            viewBox={`0 0 ${dimensions.width} ${dimensions.height}`}
-            width={dimensions.width}
-            height={dimensions.height}
-            className="rsm-svg"
+            viewBox={`0 0 ${mapWidth} ${mapHeight}`}
+            width="100%"
+            height="100%"
+            className="rsm-svg w-full h-full block"
             onMouseMove={handleMapEvent}
             onClick={handleMapEvent}
             ref={svgRef}
@@ -137,8 +137,8 @@ export function WorldMap({
               />
               <MarkersContainer
                 projectionType={activeProjection}
-                width={dimensions.width}
-                height={dimensions.height}
+                width={mapWidth}
+                height={mapHeight}
                 scaleDivisor={DEFAULT_MAP_SETTINGS.scaleDivisor}
                 zoom={zoom}
               />

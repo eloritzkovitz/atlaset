@@ -10,7 +10,9 @@ import {
 
 vi.mock("firebase/firestore");
 vi.mock("./auth");
-vi.mock("@app/firebase", () => ({ db: {} }));
+vi.mock("./config", () => ({
+  db: {},
+}));
 
 describe("firestore utils", () => {
   beforeEach(() => vi.clearAllMocks());

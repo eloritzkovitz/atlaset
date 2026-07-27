@@ -8,7 +8,7 @@ import {
   writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
-import { db } from "@app/firebase";
+import { db } from "@lib/firebase";
 import { logUserActivity } from "@features/activity";
 import { getDocData, getDocsData, getPaths } from "@lib/firebase";
 import type { Friend, FriendRequest } from "../types";

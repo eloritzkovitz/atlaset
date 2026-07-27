@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-import { achievementsApi } from "@features/dashboard/achievements/api/achievementsApi";
+import { mapApi } from "@features/atlas/map/api/mapApi";
 import { countriesApi } from "@features/countries/api/countriesApi";
+import { achievementsApi } from "@features/dashboard/achievements/api/achievementsApi";
 import quizSettingsReducer from "@features/quizzes/quiz/slices/quizSettingsSlice";
 import settingsReducer from "@features/settings/common/slices/settingsSlice";
 import authReducer from "@features/user/auth/slices/authSlice";
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   quizSettings: quizSettingsReducer,
   [achievementsApi.reducerPath]: achievementsApi.reducer,
   [countriesApi.reducerPath]: countriesApi.reducer,
+  [mapApi.reducerPath]: mapApi.reducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
@@ -53,6 +55,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       achievementsApi.middleware,
       countriesApi.middleware,
+      mapApi.middleware,
     ),
 });
 

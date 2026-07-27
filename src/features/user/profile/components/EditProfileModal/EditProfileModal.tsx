@@ -1,7 +1,7 @@
 import { updateProfile, updatePassword } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { useEffect, useState, type SubmitEvent } from "react";
-import { auth } from "@app/firebase";
+import { auth } from "@lib/firebase";
 import {
   ActionButton,
   FormField,

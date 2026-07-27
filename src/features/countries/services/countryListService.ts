@@ -1,8 +1,8 @@
 import { writeBatch } from "firebase/firestore";
-import { appDb } from "@app/db";
-import { db } from "@app/firebase";
 import type { Layer } from "@features/atlas/layers";
+import { appDb } from "@lib/db";
 import {
+  db,
   getCurrentUser,
   getDocsData,
   getPaths,

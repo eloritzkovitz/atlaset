@@ -8,14 +8,14 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import { db } from "@app/firebase";
 import { logUserActivity } from "@features/activity";
 import {
-  isAuthenticated,
+  db,
+  getCollection,
   getCurrentUser,
   getDocData,
   getDocsData,
-  getCollection,
+  isAuthenticated,
 } from "@lib/firebase";
 import { getArticle } from "@utils/string";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
