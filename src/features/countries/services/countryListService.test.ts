@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { appDb } from "@app/db";
+import { appDb } from "@lib/db";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -7,7 +7,7 @@ import {
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { countryListService } from "./countryListService";
 
-vi.mock("@app/db", () => ({
+vi.mock("@lib/db", () => ({
   appDb: {
     countryLists: {
       toArray: vi.fn().mockResolvedValue([]),
@@ -16,7 +16,6 @@ vi.mock("@app/db", () => ({
     },
   },
 }));
-vi.mock("@app/firebase", () => ({ db: {}, analytics: {} }));
 
 describe("countryListService", () => {
   const mockBatch = { update: vi.fn(), commit: vi.fn() };

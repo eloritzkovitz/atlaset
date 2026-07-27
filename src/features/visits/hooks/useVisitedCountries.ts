@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@contexts/AuthContext";
 import { useTrips } from "@contexts/TripsContext";
 import { logUserActivity } from "@features/activity";
 import { getCountryName, useCountryData } from "@features/countries";
+import { useAuth } from "@features/user/auth";
 import {
   countryTrackingService,
   type TrackingField,

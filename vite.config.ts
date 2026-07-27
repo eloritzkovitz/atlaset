@@ -17,9 +17,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@app/db": path.resolve(__dirname, "src/db"),
-      "@app/firebase": path.resolve(__dirname, "src/firebase"),
-      "@app/store": path.resolve(__dirname, "src/store"),
+      "@app": path.resolve(__dirname, "src/app"),
       "@components": path.resolve(__dirname, "src/shared/components"),
       "@config": path.resolve(__dirname, "src/shared/config"),
       "@constants": path.resolve(__dirname, "src/shared/constants"),

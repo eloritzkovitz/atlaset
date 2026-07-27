@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-07-27
+
+- **[chore]** **General:** Fully migrated auth and settings state to Redux, and countries, geo data and achievements to RTK Query
+
 ## 2026-07-26
 
 - **[feature]** **Atlas | Map:** Added new option to include integral regions (such as overseas regions) when highlighting countries that have such territories

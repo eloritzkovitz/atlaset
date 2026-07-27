@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@contexts/AuthContext";
 import { getSubregionsForRegion, useCountryData } from "@features/countries";
+import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { useUserSearch } from "../hooks/useUserSearch";
 import type { SearchResult, UserSearchResult } from "../types";

@@ -7,7 +7,7 @@ import { MarkersProvider } from "@contexts/MarkersProvider";
 import { SavedMapsProvider } from "@contexts/SavedMapsProvider";
 import { TimelineProvider } from "@contexts/TimelineProvider";
 import { AppLayout, EmbedLayout } from "@layouts";
-import AtlasPage from "./AtlasPage";
+import AtlasPage from "../../../../pages/AtlasPage";
 
 export function AtlasProviders() {
   const [searchParams] = useSearchParams();

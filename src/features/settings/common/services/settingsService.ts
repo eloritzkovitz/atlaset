@@ -1,5 +1,5 @@
 import { setDoc } from "firebase/firestore";
-import { appDb } from "@app/db";
+import { appDb } from "@lib/db";
 import { logUserActivity } from "@features/activity/utils/activity";
 import {
   getCurrentUser,

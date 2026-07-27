@@ -3,73 +3,83 @@ import { useNavigate } from "react-router-dom";
 import { authService } from "../services/authService";
 
 /**
- * Provides authentication handlers for sign-up, sign-in, Google sign-in, and logout.
- * @returns An object containing error state and handler functions for authentication.
+ * Provides authentication handlers.
  */
 export function useAuthHandlers() {
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Email/Password Sign-Up handler
-  const handleSignUp = async (email: string, password: string) => {
-    setError("");
-    await authService.signUp(email, password);
-    navigate("/");
-  };
-
-  // Email/Password Sign-In handler
-  const handleSignIn = async (email: string, password: string) => {
-    setError("");
-    const result = await authService.signIn(email, password);
+  /** Handles post-authentication success actions, such as navigation and session storage updates. */
+  const handlePostAuthSuccess = (result?: { reactivated?: boolean }) => {
     if (result?.reactivated) {
       sessionStorage.setItem("reactivated", "1");
     }
     navigate("/");
   };
 
-  // Email/Password Sign-In handler with persistence option
-  const handleSignInWithPersistence = async (
+  /** Executes an authentication action with loading and error handling. */
+  const executeAuthAction = async <T>(
+    action: () => Promise<T>,
+  ): Promise<T | undefined> => {
+    setError("");
+    setIsLoading(true);
+    try {
+      return await action();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError(message);
+      return undefined;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  /** Handles sign-up requests. */
+  const handleSignUp = async (email: string, password: string) => {
+    const res = await executeAuthAction(() =>
+      authService.signUp(email, password),
+    );
+    if (res) navigate("/");
+  };
+
+  /** Handles email/password sign-in requests. */
+  const handleSignIn = async (
     email: string,
     password: string,
-    keepLoggedIn: boolean
+    keepLoggedIn = false,
   ) => {
-    setError("");
-    const result = await authService.signInWithPersistence(
-      email,
-      password,
-      keepLoggedIn
+    const result = await executeAuthAction(() =>
+      authService.signIn(email, password, keepLoggedIn),
     );
-    if (result?.reactivated) {
-      sessionStorage.setItem("reactivated", "1");
-    }
-    navigate("/");
+    if (result) handlePostAuthSuccess(result);
   };
 
-  // Forgot Password handler
+  /** Handles forgot password requests. */
   const handleForgotPassword = async (email: string) => {
-    setError("");
-    await authService.resetPassword(email);
+    await executeAuthAction(() => authService.resetPassword(email));
   };
 
-  // Google Sign-In handler
+  /** Handles Google sign-in requests. */
   const handleGoogleSignIn = async () => {
-    setError("");
-    await authService.signInWithGoogle();
-    navigate("/");
+    const result = await executeAuthAction(() =>
+      authService.signInWithGoogle(),
+    );
+    if (result) handlePostAuthSuccess(result);
   };
 
-  // Logout handler
+  /** Handles logout requests. */
   const handleLogout = async () => {
-    await authService.logout();
-    navigate("/");
+    const res = await executeAuthAction(() => authService.logout());
+    if (res !== undefined) navigate("/");
   };
 
   return {
     error,
     setError,
+    isLoading,
     handleSignUp,
     handleSignIn,
-    handleSignInWithPersistence,
     handleForgotPassword,
     handleGoogleSignIn,
     handleLogout,

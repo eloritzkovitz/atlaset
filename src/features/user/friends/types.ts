@@ -18,7 +18,7 @@ export interface Friend {
   /** User ID of the friend */
   uid: string;
   /** Timestamp when the friendship was created */
-  createdAt: Timestamp | FieldValue;
+  createdAt: Timestamp | FieldValue | string;
 }
 
 /** Represents a friend's profile information. */

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSettings } from "@contexts/SettingsContext";
+import { useSettings } from "@features/settings";
 import { type MapInterfaceSettings } from "../types";
 
 /**
@@ -16,7 +16,7 @@ export function useMapInterfaceSettings() {
 
   const toolbarOrientation = interfaceSettings.toolbarOrientation ?? "vertical";
 
-  // Update function for map interface settings
+  /** Updates the map interface settings. */
   const updateInterfaceSetting = (
     partialNextState: Partial<MapInterfaceSettings>,
   ) => {

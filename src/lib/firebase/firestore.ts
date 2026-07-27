@@ -11,8 +11,8 @@ import {
   Query,
   type DocumentData,
 } from "firebase/firestore";
-import { db } from "@app/firebase";
 import { getCurrentUser } from "./auth";
+import { db } from "./config";
 
 /**
  * Gets a typed Firestore collection reference.

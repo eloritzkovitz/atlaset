@@ -81,7 +81,7 @@ async function renderUseSearchWithMocks(
       },
   );
   vi.doMock(
-    "@contexts/AuthContext",
+    "@features/user/auth",
     () => authMock ?? { useAuth: () => ({ user: { uid: "1" } }) },
   );
   vi.doMock(

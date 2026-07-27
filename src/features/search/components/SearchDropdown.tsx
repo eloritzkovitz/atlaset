@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, SearchInput } from "@components";
-import { useAuth } from "@contexts/AuthContext";
+import { useAuth } from "@features/user/auth";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";

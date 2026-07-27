@@ -2,8 +2,6 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { sharedTripsService } from "./sharedTripsService";
 
-vi.mock("@app/firebase", () => ({ db: {} }));
-
 describe("sharedTripsService", () => {
   beforeEach(() => {
     vi.clearAllMocks();

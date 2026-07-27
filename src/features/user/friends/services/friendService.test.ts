@@ -5,8 +5,6 @@ import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { getDocData } from "@lib/firebase";
 import { friendService } from "./friendService";
 
-vi.mock("@app/firebase", () => ({ db: {} }));
-
 describe("friendService", () => {
   const docRef = { type: "document" };
 

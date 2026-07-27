@@ -11,7 +11,6 @@ import {
   SortSelect,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAchievements } from "@contexts/AchievementsContext";
 import { useIncrementalList, useLocalStorageState } from "@hooks";
 import type { SortValue } from "@types";
 import { AchievementCard } from "./AchievementCard";
@@ -38,7 +37,6 @@ const statusOptions = [
 ];
 
 export function AchievementsGrid() {
-  const { achievements, loading, error } = useAchievements();
   const navigate = useNavigate();
 
   const [search, setSearch] = useState("");
@@ -48,8 +46,10 @@ export function AchievementsGrid() {
     SortValue<AchievementSortKey>
   >("atlaset:dashboard_achievements_sort", "id-asc");
 
-  // Get achievement status and merged achievements based on user data and filters
   const {
+    achievements,
+    isLoading,
+    error,
     mergedAchievements,
     sortedAchievements,
     achievementStatusMap,
@@ -79,7 +79,7 @@ export function AchievementsGrid() {
   };
 
   // handle conditional rendering
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="p-4 flex justify-center items-center">
         <LoadingSpinner message="Loading achievements..." />

@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { appDb } from "@app/db";
+import { appDb } from "@lib/db";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import {
   mockAuthControls as auth,
@@ -7,18 +7,13 @@ import {
 } from "@test-utils/firebaseMockRegistry";
 import { defaultSettings } from "../constants/defaultSettings";
 
-vi.mock("@app/db", () => ({
+vi.mock("@lib/db", () => ({
   appDb: {
     settings: {
       get: vi.fn(),
       put: vi.fn(),
     },
   },
-  __esModule: true,
-}));
-
-vi.mock("@app/firebase", () => ({
-  db: {},
   __esModule: true,
 }));
 

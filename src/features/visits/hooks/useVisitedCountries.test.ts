@@ -21,7 +21,7 @@ vi.mock("../services/countryTrackingService", () => ({
   },
 }));
 
-vi.mock("@contexts/AuthContext", () => ({
+vi.mock("@features/user/auth", () => ({
   useAuth: () => ({ user: authState.currentUser }),
 }));
 

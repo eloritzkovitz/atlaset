@@ -104,7 +104,7 @@ export function CountryDetailsPanel({
         ))}
       </div>
 
-      <div className="relative flex-1 min-h-0 overflow-y-auto -mx-2 px-2">
+      <div className="relative flex-1 min-h-0 overflow-y-auto px-2">
         <div key={activeTab} className="transition-opacity duration-300">
           {activeTab === "overview" && (
             <CountryDetailsContent

@@ -1,8 +1,8 @@
 import { useSelector } from "react-redux";
+import type { RootState } from "@app/store";
 import { QuizFactory } from "./QuizFactory";
 import { quizPropsMap } from "../config/quizPropsMap";
 import { getSessionProps } from "../utils/quizUtils";
-import type { RootState } from "../../../../store";
 
 export function QuizEntry() {
   const quizType = useSelector(

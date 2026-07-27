@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSettings } from "@contexts/SettingsContext";
+import { useSettings } from "@features/settings";
 import type { MapOverlaySettings } from "../types";
 
 /**
@@ -21,7 +21,7 @@ export function useMapOverlays() {
     );
   }, [settings?.map?.overlays]);
 
-  // Handles updating the deeply nested state safely
+  /** Updates the map's overlay settings. */
   const updateOverlaySetting = (
     partialNextState: Partial<MapOverlaySettings>,
   ) => {

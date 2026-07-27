@@ -1,14 +1,10 @@
 import { useMemo } from "react";
-import { useAuth } from "@contexts/AuthContext";
+import { useAuth } from "@features/user/auth";
 import { useUserActivity } from "../hooks/useUserActivity";
 import type { UserActivity } from "../types";
 
-// Action code for login activity
-const ACTION_LOGIN = 102;
-
 /**
  * Resolves the last login timestamp and method for the current user.
- * Returns { timestamp, method, activity } where activity is the raw activity entry (if any).
  */
 export function useLastLogin() {
   const { user } = useAuth();
@@ -16,17 +12,18 @@ export function useLastLogin() {
 
   // Find the most recent login activity to extract last login details
   const last = useMemo(
-    () => activity.find((a) => a.action === ACTION_LOGIN) ?? null,
+    () => activity.find((a) => a.action === 102) ?? null,
     [activity],
   );
 
-  // Resolve display values with sensible fallbacks: activity -> auth metadata -> null
-  const timestamp = last?.timestamp ?? user?.metadata?.lastSignInTime ?? null;
+  // Resolve display values with sensible fallbacks
+  const timestamp = last?.timestamp ?? user?.lastSignInTime ?? null;
+
   const method =
     (last &&
       last.details &&
       (last.details as Record<string, unknown>).method) ||
-    user?.providerData?.[0]?.providerId ||
+    user?.providerId ||
     null;
 
   return { timestamp, method, activity: last as UserActivity | null };

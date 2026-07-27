@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "@app/firebase";
+import { db } from "@lib/firebase";
 import { getCurrentUser } from "@lib/firebase";
 import type { Friend } from "../types";
 

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { AppLinks, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { RecentActivitySection } from "@features/activity";
 import { useCountryData } from "@features/countries";
@@ -10,6 +9,7 @@ import { useHomeCountry, useUserProfile } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
+import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi";
 import { isCompleted } from "../../achievements/utils/achievements";
 import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 
@@ -28,7 +28,8 @@ export function OverviewGrid() {
   const { totalCountries, visitedCountries } = useExplorationStats(countries);
 
   // Get achievements data and calculate completed achievements
-  const { achievements, loading: achievementsLoading } = useAchievements();
+  const { data: achievements, isLoading: achievementsLoading } =
+    useGetAchievementsQuery();
   const achievementsCount = achievements?.length ?? 0;
   const completedCount =
     achievements?.filter((a) =>

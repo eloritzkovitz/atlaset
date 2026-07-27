@@ -1,5 +1,5 @@
-import type { User } from "firebase/auth";
 import type { Country } from "@features/countries";
+import type { SerializableUser } from "@features/user/auth/types";
 import type { Friend } from "@features/user/friends/types";
 import type { SearchResult } from "../types";
 import { renderSearchItem } from "../utils/renderSearchItem";
@@ -7,7 +7,7 @@ import { renderSearchItem } from "../utils/renderSearchItem";
 interface SearchSectionProps {
   title: string;
   items: SearchResult[];
-  currentUser: User | null;
+  currentUser: SerializableUser | null;
   friendList: Friend[];
   countries: Country[];
 }

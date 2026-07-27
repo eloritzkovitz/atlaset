@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import { LoadingSpinner } from "@components";
-import { useAuth } from "@contexts/AuthContext";
 import { CallToActionSection } from "@features/home/CallToActionSection";
 import { FeaturesSection } from "@features/home/FeaturesSection";
 import { HeroSection } from "@features/home/HeroSection";
+import { useAuth } from "@features/user/auth";
 import { usePageTitle } from "@hooks";
 
 export default function HomePage() {

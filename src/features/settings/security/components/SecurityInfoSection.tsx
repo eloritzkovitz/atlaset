@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useAuth } from "@contexts/AuthContext";
 import { useLastLogin } from "@features/activity";
-import { useUserSessions } from "@features/user/auth";
+import { useAuth, useUserSessions } from "@features/user/auth";
 import { formatDate } from "@utils/date";
 import { capitalize } from "@utils/string";
 import { SecurityInfoRow } from "./SecurityInfoRow";
@@ -28,8 +27,8 @@ export function SecurityInfoSection() {
         <SecurityInfoRow
           label={t("security.accountCreated")}
           value={
-            user?.metadata?.creationTime
-              ? formatDate(user.metadata.creationTime, "long")
+            user?.createdAt
+              ? formatDate(user.createdAt, "long")
               : t("security.unknown")
           }
         />

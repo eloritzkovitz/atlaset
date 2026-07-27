@@ -1,13 +1,9 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { Provider } from "react-redux";
-import configureStore from "redux-mock-store";
-import { thunk } from "redux-thunk";
 import { renderHook, act } from "@testing-library/react";
 import { useCountryData } from "./useCountryData";
-import * as countrySlice from "../slices/countryDataSlice";
+import * as countriesApiModule from "../api/countriesApi";
 import type { Country, CountryTerritories } from "../types";
 
-const mockStore = configureStore([thunk as unknown as any]);
 let shouldCrashBundle = false;
 
 vi.mock("react-i18next", () => {
@@ -41,56 +37,51 @@ vi.mock("i18next", () => ({
   },
 }));
 
+vi.mock("../api/countriesApi", () => ({
+  useGetRawCountriesQuery: vi.fn(),
+}));
+
 describe("useCountryData", () => {
-  let store: ReturnType<typeof mockStore>;
+  const mockRefetch = vi.fn();
 
   beforeEach(() => {
     vi.restoreAllMocks();
     shouldCrashBundle = false;
-    store = mockStore({
-      countryData: { countries: [], loading: false, error: null },
-    });
+    mockRefetch.mockReset();
   });
 
-  const wrapper =
-    (s = store) =>
-    ({ children }: { children: any }) =>
-      Provider({ store: s, children });
+  it("returns query states and handles refresh correctly", () => {
+    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
+      data: undefined,
+      isLoading: true,
+      isFetching: false,
+      error: undefined,
+      refetch: mockRefetch,
+    } as any);
 
-  it("dispatches fetch on mount when empty, skips when loaded, handles refresh", () => {
-    const spy = vi
-      .spyOn(countrySlice, "fetchCountryData")
-      .mockReturnValue({ type: "fetch" } as any);
+    const { result } = renderHook(() => useCountryData());
 
-    const { result } = renderHook(() => useCountryData(), {
-      wrapper: wrapper(),
-    });
-    expect(spy).toHaveBeenCalled();
-
-    const loadedStore = mockStore({
-      countryData: { countries: [{ isoCode: "US" }], loading: false },
-    });
-    renderHook(() => useCountryData(), { wrapper: wrapper(loadedStore) });
-    expect(loadedStore.getActions()).toEqual([]);
+    expect(result.current.loading).toBe(true);
 
     act(() => result.current.refreshData());
-    expect(store.getActions().length).toBeGreaterThan(0);
+    expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 
   it("handles translation crashes and maps languages", () => {
     shouldCrashBundle = true;
-    const crashStore = mockStore({
-      countryData: {
-        loading: true,
-        countries: [
-          { isoCode: "US", languages: ["eng", "fra"], region: "Americas" },
-        ],
-      },
-    });
 
-    const { result } = renderHook(() => useCountryData(), {
-      wrapper: wrapper(crashStore),
-    });
+    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
+      data: [
+        { isoCode: "US", languages: ["eng", "fra"], region: "Americas" },
+      ] as Country[],
+      isLoading: false,
+      isFetching: false,
+      error: undefined,
+      refetch: mockRefetch,
+    } as any);
+
+    const { result } = renderHook(() => useCountryData());
+
     expect(result.current.countries[0].capital).toBe("");
     expect(result.current.languages["eng"]).toEqual({
       code: "eng",
@@ -99,27 +90,26 @@ describe("useCountryData", () => {
   });
 
   it("maps country areas, integral regions, sovereigns, subregions, and currencies", () => {
-    const populatedStore = mockStore({
-      countryData: {
-        loading: false,
-        countries: [
-          {
-            isoCode: "US",
-            area: 9833520,
-            region: "Americas",
-            subregion: "Northern America",
-            currency: "EUR",
-            territories: {
-              regions: { type: "overseas_region", codes: ["PR"] },
-            } as unknown as CountryTerritories,
-          },
-        ] as Partial<Country>[],
-      },
-    });
+    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
+      data: [
+        {
+          isoCode: "US",
+          area: 9833520,
+          region: "Americas",
+          subregion: "Northern America",
+          currency: "EUR",
+          territories: {
+            regions: { type: "overseas_region", codes: ["PR"] },
+          } as unknown as CountryTerritories,
+        },
+      ] as Country[],
+      isLoading: false,
+      isFetching: false,
+      error: undefined,
+      refetch: mockRefetch,
+    } as any);
 
-    const { result } = renderHook(() => useCountryData(), {
-      wrapper: wrapper(populatedStore),
-    });
+    const { result } = renderHook(() => useCountryData());
 
     expect(result.current.countryAreaMap.get("US")).toBe(9833520);
     expect(result.current.integralRegionsLookup.get("US")).toEqual(["PR"]);

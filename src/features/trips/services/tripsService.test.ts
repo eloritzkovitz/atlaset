@@ -9,7 +9,6 @@ import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { tripsService } from "./tripsService";
 import { sharedTripsService } from "./sharedTripsService";
 
-vi.mock("@app/firebase", () => ({ db: {} }));
 vi.mock("./sharedTripsService");
 vi.mock("../../user/profile/services/profileService", () => ({
   profileService: { updateVisitedCountryCodes: vi.fn() },

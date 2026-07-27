@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { appDb } from "@app/db";
+import { appDb } from "@lib/db";
 import {
   mockAuthControls as auth,
   mockFirestoreControls as fs,
@@ -7,7 +7,7 @@ import {
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { markersService } from "./markersService";
 
-vi.mock("@app/db", () => ({
+vi.mock("@lib/db", () => ({
   appDb: {
     markers: {
       count: vi.fn(),
@@ -22,7 +22,6 @@ vi.mock("@app/db", () => ({
     },
   },
 }));
-vi.mock("@app/firebase", () => ({ db: {} }));
 
 describe("markersService", () => {
   const mockBatch = {

@@ -133,7 +133,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     return newListId;
   };
 
-  // Shared form modification pipeline
+  // Handles changes to the current list in the modal, including tracking list modifications
   const handleModalChange = async (updatedList: CountryList) => {
     if (isTrackingList && updatedList) {
       const currentCodes = currentList?.countryCodes || [];

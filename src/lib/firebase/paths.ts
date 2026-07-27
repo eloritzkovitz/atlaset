@@ -4,7 +4,7 @@ import {
   type CollectionReference,
   type DocumentReference,
 } from "firebase/firestore";
-import { db } from "@app/firebase";
+import { db } from "@lib/firebase";
 
 export interface UserSubcollections {
   activity: import("@features/activity/types").UserActivity;

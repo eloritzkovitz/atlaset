@@ -14,7 +14,7 @@ export interface AchievementFilters {
   statusFilter: string;
   search: string;
   sortBy: string;
-  achievements: Achievement[] | null;
+  achievements: Achievement[] | undefined;
   countries: Country[];
   visited: { isVisitedCountry: (iso: string) => boolean };
   trips: Trip[];

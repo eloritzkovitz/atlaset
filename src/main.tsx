@@ -3,13 +3,10 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { AudioProvider } from "@contexts/AudioProvider";
-import { AuthProvider } from "@contexts/AuthProvider";
-import { SettingsProvider } from "@contexts/SettingsProvider";
 import { isRtl } from "@features/settings";
-import App from "./App";
-import "./i18n";
-import { store } from "./store";
+import "@lib/i18n";
+import App from "./app/App";
+import { store } from "./app/store";
 import "./styles/index.css";
 import "./styles/markdown.css";
 
@@ -35,9 +32,6 @@ if (import.meta.env.PROD && "serviceWorker" in navigator) {
   });
 }
 
-// eslint-disable-next-line react-refresh/only-export-components
-const Router = BrowserRouter;
-
 // Set initial document direction based on current language
 const setDocDirection = (lang: string) => {
   try {
@@ -54,15 +48,9 @@ setDocDirection(i18n.language || "en");
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <Router>
-        <AuthProvider>
-          <SettingsProvider>
-            <AudioProvider>
-              <App />
-            </AudioProvider>
-          </SettingsProvider>
-        </AuthProvider>
-      </Router>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </Provider>
   </StrictMode>,
 );

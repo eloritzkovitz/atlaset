@@ -3,7 +3,7 @@
  */
 
 import { getAnalytics, logEvent, type Analytics } from "firebase/analytics";
-import { app } from "@app/firebase";
+import { app } from "./config";
 
 /** List of keys that are considered personally identifiable information (PII) and should be sanitized. */
 const FORBIDDEN_PII_KEYS = [

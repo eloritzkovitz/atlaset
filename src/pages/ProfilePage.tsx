@@ -6,9 +6,9 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes";
+import { useAuth } from "@features/user/auth";
 import {
   useUserFriendCount,
   useFriendProfiles,

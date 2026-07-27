@@ -1,3 +1,4 @@
+import { describe, it, expect } from "vitest";
 import {
   getSearchRoute,
   getUserLabel,
@@ -5,15 +6,8 @@ import {
   rankAndMap,
 } from "./search";
 
-const mockTimestamp = {
-  seconds: 0,
-  nanoseconds: 0,
-  toDate: () => new Date(),
-  toMillis: () => 0,
-  isEqual: () => true,
-  toJSON: () => ({ seconds: 0, nanoseconds: 0, type: "Timestamp" }),
-  valueOf: () => "mock-timestamp",
-};
+const mockCreatedAt = "2024-01-01T00:00:00Z";
+
 const makeProfile = (uid: string) => ({
   uid,
   username: `user${uid}`,
@@ -24,10 +18,16 @@ const makeProfile = (uid: string) => ({
   emailVerified: true,
   phoneNumber: "1234567890",
   providerId: "provider1",
-  visitedCountryCodes: [],
-  wantToVisitCountryCodes: [],
+  createdAt: mockCreatedAt,
+  lastSignInTime: mockCreatedAt,
 });
-const makeFriend = (uid: string) => ({ uid, createdAt: mockTimestamp });
+
+// Simple, serializable friend mock matching the updated user model
+const makeFriend = (uid: string) => ({
+  uid,
+  createdAt: mockCreatedAt,
+});
+
 const currentUser = makeProfile("1");
 const friendList = [makeFriend("2"), makeFriend("3")];
 

@@ -1,19 +1,29 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth } from "@lib/firebase";
 import { authService } from "@features/user/auth/services/authService";
-import type { User } from "firebase/auth";
+import type { SerializableUser } from "@features/user/auth/types";
 
 /**
  * Manages account management actions such as hibernation and deletion.
- * @param user - The currently authenticated user.
+ * @param user - The currently authenticated serializable user.
  * @returns State and handlers for account management actions.
  */
-export function useAccountManagement(user: User | null) {
+export function useAccountManagement(user: SerializableUser | null) {
   const [hibernating, setHibernating] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  // Helper to safely get the current SDK user instance
+  const getFirebaseUser = () => {
+    const firebaseUser = auth.currentUser;
+    if (!user || !firebaseUser) {
+      throw new Error("No authenticated user found.");
+    }
+    return firebaseUser;
+  };
 
   // Handle account deactivation (hibernate)
   const handleHibernate = async () => {
@@ -21,8 +31,8 @@ export function useAccountManagement(user: User | null) {
     setError(null);
     setSuccess(null);
     try {
-      if (!user) throw new Error("No authenticated user found.");
-      await authService.deactivateAccount(user);
+      const firebaseUser = getFirebaseUser();
+      await authService.deactivateAccount(firebaseUser);
       setSuccess("Account hibernated. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (e: unknown) {
@@ -38,8 +48,8 @@ export function useAccountManagement(user: User | null) {
     setError(null);
     setSuccess(null);
     try {
-      if (!user) throw new Error("No authenticated user found.");
-      await authService.deleteAppAccount(user);
+      const firebaseUser = getFirebaseUser();
+      await authService.deleteAppAccount(firebaseUser);
       setSuccess("Account deleted. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (e: unknown) {

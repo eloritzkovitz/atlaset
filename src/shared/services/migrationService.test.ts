@@ -14,7 +14,7 @@ const { mockDb } = vi.hoisted(() => ({
   },
 }));
 
-vi.mock("@app/db", () => ({ appDb: mockDb }));
+vi.mock("@lib/db", () => ({ appDb: mockDb }));
 
 vi.mock("../../features/countries/services/countryListService", () => ({
   countryListService: { add: vi.fn() },
@@ -29,7 +29,7 @@ vi.mock("../../features/settings/common/services/settingsService", () => ({
   settingsService: { save: vi.fn() },
 }));
 
-import { appDb } from "@app/db";
+import { appDb } from "@lib/db";
 import { countryListService } from "@features/countries";
 import { settingsService } from "@features/settings/common/services/settingsService";
 import { migrationService } from "./migrationService";

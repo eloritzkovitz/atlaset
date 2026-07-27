@@ -14,18 +14,13 @@ import { sessionService } from "./sessionService";
 import { friendService } from "../../friends/services/friendService";
 import { isUserDeactivated } from "../utils/auth";
 
-vi.mock("@app/db", () => ({
+vi.mock("@lib/db", () => ({
   appDb: {
     countryLists: { count: vi.fn() },
     layers: { count: vi.fn() },
     markers: { count: vi.fn() },
     settings: { count: vi.fn() },
   },
-}));
-
-vi.mock("@app/firebase", () => ({
-  auth: auth.auth,
-  db: {},
 }));
 
 vi.mock("@services/migrationService", () => ({
@@ -110,7 +105,39 @@ describe("authService", () => {
     );
   });
 
-  it("signIn handles active accounts, migrates guest data if present, and records the active browser session", async () => {
+  it("handlePostSignIn logs activity code 111 when account is reactivated", async () => {
+    vi.spyOn(authService, "handleReactivation").mockResolvedValueOnce(true);
+
+    await authService.handlePostSignIn(freshUser, "email");
+
+    expect(activityMockTracker).toHaveBeenCalledWith(
+      111,
+      { userName: freshUser.displayName, email: freshUser.email },
+      "test-user",
+    );
+
+    expect(activityMockTracker).toHaveBeenCalledWith(
+      102,
+      expect.any(Object),
+      "test-user",
+    );
+  });
+
+  it("signIn handles local vs session persistence correctly", async () => {
+    await authService.signIn("test@example.com", "pass", false);
+    expect(auth.setPersistence).toHaveBeenCalledWith(
+      expect.any(Object),
+      "session",
+    );
+
+    await authService.signIn("test@example.com", "pass", true);
+    expect(auth.setPersistence).toHaveBeenCalledWith(
+      expect.any(Object),
+      "local",
+    );
+  });
+
+  it("signIn runs post-sign-in handlers", async () => {
     vi.mocked(migrationService.hasGuestData).mockResolvedValueOnce(true);
 
     const res = await authService.signIn("test@example.com", "pass");
@@ -123,40 +150,6 @@ describe("authService", () => {
       "test-user",
     );
     expect(sessionService.logSession).toHaveBeenCalledWith("test-user");
-  });
-
-  it("signInWithPersistence toggles local vs session states and triggers session logging along with migration", async () => {
-    vi.mocked(migrationService.hasGuestData).mockResolvedValueOnce(true);
-
-    await authService.signInWithPersistence("test@example.com", "pass", true);
-    expect(auth.setPersistence).toHaveBeenCalledWith(
-      expect.any(Object),
-      "local",
-    );
-    expect(migrationService.migrateGuestDataToFirestore).toHaveBeenCalled();
-    expect(sessionService.logSession).toHaveBeenCalledWith("test-user");
-
-    fs.getDoc.mockResolvedValueOnce({
-      exists: () => true,
-      data: () => ({ status: "deactivated" }),
-    });
-    vi.mocked(isUserDeactivated).mockReturnValueOnce(true);
-    vi.mocked(migrationService.hasGuestData).mockResolvedValueOnce(false);
-
-    await authService.signInWithPersistence("test@example.com", "pass", false);
-    expect(auth.setPersistence).toHaveBeenCalledWith(
-      expect.any(Object),
-      "session",
-    );
-    expect(migrationService.migrateGuestDataToFirestore).toHaveBeenCalledTimes(
-      1,
-    );
-    expect(activityMockTracker).toHaveBeenCalledWith(
-      111,
-      expect.any(Object),
-      "test-user",
-    );
-    expect(sessionService.logSession).toHaveBeenCalledTimes(2);
   });
 
   it("signUp creates profile, registers metadata, and initializes a session entry", async () => {
@@ -200,7 +193,7 @@ describe("authService", () => {
     );
   });
 
-  it("signInWithGoogle registers implicit user profiles and connects session pipeline", async () => {
+  it("signInWithGoogle registers implicit user profiles and logs session", async () => {
     const res = await authService.signInWithGoogle();
     expect(res.user.uid).toBe("test-user");
     expect(auth.signInWithPopup).toHaveBeenCalled();
@@ -228,7 +221,7 @@ describe("authService", () => {
     expect(auth.deleteUser).toHaveBeenCalledWith(freshUser);
   });
 
-  it("handleReactivation runs database changes and returns true if user status is deactivated", async () => {
+  it("handleReactivation updates database status when user is deactivated", async () => {
     fs.getDoc.mockResolvedValueOnce({
       exists: () => true,
       data: () => ({ status: "deactivated" }),
@@ -245,7 +238,7 @@ describe("authService", () => {
     );
   });
 
-  it("handleReactivation skips updates and returns false if user status is already active", async () => {
+  it("handleReactivation skips database updates when user is already active", async () => {
     fs.getDoc.mockResolvedValueOnce({
       exists: () => true,
       data: () => ({ status: "active" }),

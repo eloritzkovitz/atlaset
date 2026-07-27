@@ -24,6 +24,7 @@ vi.spyOn(mockFirestoreControls, "doc").mockImplementation(((
 
 // Mock Firebase utilities
 vi.mock("@lib/firebase", () => ({
+  auth: mockNativeAuthControls.auth,
   isAuthenticated: () => mockAuthControls.isAuthenticated(),
   getCurrentUser: () => mockAuthControls.getCurrentUser(),
   getCollection: () => mockFirestoreControls.collection,

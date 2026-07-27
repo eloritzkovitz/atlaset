@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useSettings } from "@contexts/SettingsContext";
+import { useSettings } from "../../common/hooks/useSettings";
 
 /**
  * Manages user accessibility preferences.
- * @returns Accessibility states and utility functions to update them.
  */
 export function useAccessibility() {
   const { settings, updateSettings } = useSettings();

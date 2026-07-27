@@ -1,13 +1,13 @@
 import { useRef } from "react";
 import { PanelListItem, Tooltip } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAuth } from "@contexts/AuthContext";
 import { useMapShare } from "@features/atlas/export/hooks/useMapShare";
+import { exportMapDataAsJson } from "@features/atlas/export/utils/mapExport";
+import { encodeMapData } from "@features/atlas/export/utils/mapShare";
+import { useAuth } from "@features/user/auth";
 import { useTooltipTarget } from "@hooks";
 import { MapPreview } from "./MapPreview";
 import type { SavedMap } from "../types";
-import { encodeMapData } from "@features/atlas/export/utils/mapShare";
-import { exportMapDataAsJson } from "@features/atlas/export/utils/mapExport";
 
 interface SavedMapPanelItemProps {
   map: SavedMap;

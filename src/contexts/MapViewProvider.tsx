@@ -1,9 +1,12 @@
-import { type ReactNode, useState, useEffect, useCallback } from "react";
 import {
-  getCountryCenterAndZoom,
-  useGeoData,
-  type Coordinates,
-} from "@features/atlas/map";
+  type ReactNode,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
+import { getCountryCenterAndZoom, type Coordinates } from "@features/atlas/map";
+import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
 import { useMapMode, type ColorMode } from "@features/atlas/shared";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
@@ -13,10 +16,19 @@ export interface MapViewProviderProps {
 }
 
 export function MapViewProvider({ children }: MapViewProviderProps) {
-  const { geoData, geoError, loading } = useGeoData();
+  const { data: geoData, error, isLoading: loading } = useGetGeoDataQuery();
   const { mapMode, setMapMode, isReadonly, isEdit, isEmbed } = useMapMode();
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  // Determine geoError based on the error object from the query
+  const geoError = error
+    ? "status" in error
+      ? "error" in error && typeof error.error === "string"
+        ? error.error
+        : `Request failed with status ${error.status}`
+      : (error.message ?? "Failed to load map data")
+    : null;
 
   // Color mode state
   const [colorMode, setColorMode] = useState<ColorMode>("standard");
@@ -74,34 +86,61 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
     [],
   );
 
+  const contextValue = useMemo(
+    () => ({
+      mapMode,
+      setMapMode,
+      isReadonly,
+      isEdit,
+      isEmbed,
+      colorMode,
+      setColorMode,
+      isAtlasActive,
+      geoData: geoData ?? null,
+      geoError,
+      loading,
+      dimensions,
+      setDimensions,
+      zoom,
+      setZoom,
+      center,
+      selectedCoords,
+      setSelectedCoords,
+      setCenter,
+      handleMoveEnd,
+      centerOnCountry,
+      mapReady,
+      handleMapReady,
+    }),
+    [
+      mapMode,
+      setMapMode,
+      isReadonly,
+      isEdit,
+      isEmbed,
+      colorMode,
+      setColorMode,
+      isAtlasActive,
+      geoData,
+      geoError,
+      loading,
+      dimensions,
+      setDimensions,
+      zoom,
+      setZoom,
+      center,
+      selectedCoords,
+      setSelectedCoords,
+      setCenter,
+      handleMoveEnd,
+      centerOnCountry,
+      mapReady,
+      handleMapReady,
+    ],
+  );
+
   return (
-    <MapViewContext.Provider
-      value={{
-        mapMode,
-        setMapMode,
-        isReadonly,
-        isEdit,
-        isEmbed,
-        colorMode,
-        setColorMode,
-        isAtlasActive,
-        geoData,
-        geoError,
-        loading,
-        dimensions,
-        setDimensions,
-        zoom,
-        setZoom,
-        center,
-        selectedCoords,
-        setSelectedCoords,
-        setCenter,
-        handleMoveEnd,
-        centerOnCountry,
-        mapReady,
-        handleMapReady,
-      }}
-    >
+    <MapViewContext.Provider value={contextValue}>
       {children}
     </MapViewContext.Provider>
   );
