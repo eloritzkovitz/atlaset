@@ -40,7 +40,7 @@ describe("savedMapsService", () => {
         merge: true,
       });
 
-      await savedMapsService.delete(mockMap.id);
+      await savedMapsService.delete(mockMap);
       expect(fs.deleteDoc).toHaveBeenCalled();
     });
 
@@ -77,7 +77,7 @@ describe("savedMapsService", () => {
       await expect(savedMapsService.set(mockMap)).rejects.toThrow();
       await expect(savedMapsService.add(mockMap)).rejects.toThrow();
       await expect(savedMapsService.get(mockMap.id)).rejects.toThrow();
-      await expect(savedMapsService.delete(mockMap.id)).rejects.toThrow();
+      await expect(savedMapsService.delete(mockMap)).rejects.toThrow();
       await expect(savedMapsService.load()).rejects.toThrow();
     });
   });

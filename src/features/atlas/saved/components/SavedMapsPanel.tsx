@@ -77,7 +77,7 @@ export function SavedMapsPanel() {
                   }
                 }}
                 onDuplicate={() => duplicateSavedMap(map)}
-                onRemove={() => deleteSavedMap(map.id)}
+                onRemove={() => deleteSavedMap(map)}
                 showRemove={true}
               />
             ))}

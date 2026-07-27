@@ -345,8 +345,8 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   }
 
   // Delete a saved map
-  async function deleteSavedMap(id: string) {
-    const mapToDelete = savedMaps.find((m) => m.id === id);
+  async function deleteSavedMap(map: SavedMap) {
+    const mapToDelete = savedMaps.find((m) => m.id === map.id);
     if (mapToDelete) {
       await logMapAction("delete", mapToDelete);
     }
@@ -354,9 +354,9 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     // Check if the map being deleted is currently active in edit mode
     const currentEditingMapId = getQueryParam("map");
     const isCurrentlyEditingThisMap =
-      activeSavedMap?.id === id || currentEditingMapId === id;
+      activeSavedMap?.id === map.id || currentEditingMapId === map.id;
 
-    await savedMapsService.delete(id);
+    await savedMapsService.delete(map);
 
     // If deleting the actively edited map, exit edit mode
     if (isCurrentlyEditingThisMap) {

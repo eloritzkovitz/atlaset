@@ -21,7 +21,7 @@ export interface SavedMapsContextValue {
   saveSavedMap: () => Promise<void>;
   isSavedMapModalOpen: boolean;
   activeSavedMap: SavedMap | null;
-  deleteSavedMap: (id: string) => Promise<void>;
+  deleteSavedMap: (map: SavedMap) => Promise<void>;
   // Layers
   addLayer: (layer: Layer) => void;
   updateLayerName: (id: string, newName: string) => void;
