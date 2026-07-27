@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAuth } from "@contexts/AuthContext";
+import { useAuth } from "@features/user/auth";
 import { useAccountManagement } from "../hooks/useAccountManagement";
 import { SettingsCard } from "../../common/components/SettingsCard";
 import { SettingsRow } from "../../common/components/SettingsRow";

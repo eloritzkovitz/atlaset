@@ -1,6 +1,4 @@
-import type { User } from "firebase/auth";
 import i18n from "i18next";
-
 import { ICONS } from "@constants/icons";
 import {
   CountryFlag,
@@ -11,6 +9,7 @@ import {
 } from "@features/countries";
 import { getCountryRoute } from "@features/dashboard";
 import { UserAvatar } from "@features/user/profile";
+import type { SerializableUser } from "@features/user/auth/types";
 import { type Friend } from "@features/user/friends/types";
 import { getUserLabel } from "./search";
 import { SearchItem } from "../components/SearchItem";
@@ -18,7 +17,7 @@ import { type SearchResult } from "../types";
 
 interface RenderSearchItemOptions {
   setDropdownOpen: (open: boolean) => void;
-  currentUser: User | null;
+  currentUser: SerializableUser | null;
   friendList: Friend[];
   countries: Country[];
 }

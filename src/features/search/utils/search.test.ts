@@ -5,6 +5,8 @@ import {
   rankAndMap,
 } from "./search";
 
+const mockCreatedAt = new Date().toISOString();
+
 const mockTimestamp = {
   seconds: 0,
   nanoseconds: 0,
@@ -24,8 +26,7 @@ const makeProfile = (uid: string) => ({
   emailVerified: true,
   phoneNumber: "1234567890",
   providerId: "provider1",
-  visitedCountryCodes: [],
-  wantToVisitCountryCodes: [],
+  createdAt: mockCreatedAt,
 });
 const makeFriend = (uid: string) => ({ uid, createdAt: mockTimestamp });
 const currentUser = makeProfile("1");

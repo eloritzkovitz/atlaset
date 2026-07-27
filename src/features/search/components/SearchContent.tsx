@@ -1,8 +1,8 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { SearchInput, EmptyListMessage } from "@components";
-import { useAuth } from "@contexts/AuthContext";
 import { useCountryData } from "@features/countries";
+import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { useDebounce } from "@hooks";
 import { RecentSearchesList } from "./RecentSearchesList";

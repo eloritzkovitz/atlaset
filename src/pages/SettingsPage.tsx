@@ -7,7 +7,6 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
-import { useAuth } from "@contexts/AuthContext";
 import {
   AccessibilitySettingsSection,
   AccountSettingsSection,
@@ -17,6 +16,7 @@ import {
   SettingsPanelMenu,
 } from "@features/settings";
 import { SETTINGS_MENU } from "@features/settings/common/constants/settingsMenu";
+import { useAuth } from "@features/user/auth";
 import { EditProfileModal, useUserProfile } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
 import { SidebarLayout } from "@layouts";
@@ -50,7 +50,7 @@ export default function SettingsPage() {
   usePageTitle(pageTitle);
 
   // Only allow editing for email/password users
-  const canEdit = user?.providerData?.[0]?.providerId === "password";
+  const canEdit = user?.providerId === "password";
 
   // Handle menu navigation
   function handlePanelChange(panelKey: string) {

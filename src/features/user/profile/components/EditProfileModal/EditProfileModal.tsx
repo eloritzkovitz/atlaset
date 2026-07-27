@@ -1,6 +1,7 @@
-import { updateProfile, updatePassword, type User } from "firebase/auth";
+import { updateProfile, updatePassword } from "firebase/auth";
 import { Timestamp } from "firebase/firestore";
 import { useEffect, useState, type SubmitEvent } from "react";
+import { auth } from "@app/firebase";
 import {
   ActionButton,
   FormField,
@@ -16,10 +17,10 @@ import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../../hooks/useUsernameValidation";
 import { profileService } from "../../services/profileService";
 import { type UserProfile, type SocialPlatform } from "../../types";
-import { isPasswordProvider } from "../../../auth/utils/auth";
+import type { SerializableUser } from "../../../auth/types";
 
 interface EditProfileModalProps {
-  user: User | null;
+  user: SerializableUser | null;
   profile: UserProfile | null;
   open: boolean;
   onClose: () => void;
@@ -59,7 +60,7 @@ export function EditProfileModal({
       setUsername(fetchedUsername);
       setInitialUsername(fetchedUsername);
     }
-    setIsPasswordUser(!!isPasswordProvider(user?.providerData));
+    setIsPasswordUser(user?.providerId === "password");
   }, [fetchedUsername, user, open]);
 
   // Check username availability
@@ -113,14 +114,17 @@ export function EditProfileModal({
         });
       }
 
-      // Update displayName in Firebase Auth if changed
-      if (user && displayName !== user.displayName) {
-        await updateProfile(user, { displayName });
-      }
+      const firebaseCurrentUser = auth.currentUser;
 
-      // Update password if provided
-      if (user && password) {
-        await updatePassword(user, password);
+      // Update displayName in Firebase Auth if changed
+      if (firebaseCurrentUser) {
+        if (displayName !== user?.displayName) {
+          await updateProfile(firebaseCurrentUser, { displayName });
+        }
+
+        if (password) {
+          await updatePassword(firebaseCurrentUser, password);
+        }
       }
 
       setSuccess(t("profile.editModal.success"));

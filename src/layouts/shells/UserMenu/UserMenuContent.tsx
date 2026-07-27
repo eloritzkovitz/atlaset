@@ -1,4 +1,3 @@
-import type { User } from "firebase/auth";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -6,13 +5,14 @@ import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage, useTheme } from "@features/settings";
+import type { SerializableUser } from "@features/user/auth/types";
 import { useFirestoreUsername, UserInfo } from "@features/user/profile";
 import { useScreenSize } from "@hooks";
 import { LanguageSubmenu } from "./LanguageSubmenu";
 import { ThemeSubmenu } from "./ThemeSubmenu";
 
 interface UserMenuProps {
-  user: User | null;
+  user: SerializableUser | null;
   onLogout: () => void;
   onClose?: () => void;
 }

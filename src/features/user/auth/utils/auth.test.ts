@@ -1,13 +1,67 @@
+import type { User } from "firebase/auth";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   isPasswordProvider,
   isUserDeactivated,
+  toSerializableUser,
   type MinimalProviderData,
 } from "./auth";
 
 describe("auth utils", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+  });
+
+  describe("toSerializableUser", () => {
+    it("transforms a complex Firebase User into a clean serializable object", () => {
+      const mockFirebaseUser = {
+        uid: "user_123",
+        email: "test@example.com",
+        displayName: "Alex Developer",
+        photoURL: "https://example.com/avatar.png",
+        emailVerified: true,
+        phoneNumber: null,
+        providerId: "password",
+        metadata: {
+          creationTime: "2024-01-01T00:00:00Z",
+          lastSignInTime: "2024-01-02T00:00:00Z",
+        },
+        getIdToken: () => Promise.resolve("token_abc"),
+      } as unknown as User;
+
+      const result = toSerializableUser(mockFirebaseUser);
+
+      expect(result).toEqual({
+        uid: "user_123",
+        email: "test@example.com",
+        displayName: "Alex Developer",
+        photoURL: "https://example.com/avatar.png",
+        emailVerified: true,
+        phoneNumber: null,
+        providerId: "password",
+        createdAt: "2024-01-01T00:00:00Z",
+        lastSignInTime: "2024-01-02T00:00:00Z",
+      });
+      expect(result).not.toHaveProperty("getIdToken");
+    });
+
+    it("handles missing user or optional metadata fallback cleanly", () => {
+      expect(toSerializableUser(null)).toBeNull();
+
+      const mockUserNoMeta = {
+        uid: "123",
+        email: null,
+        displayName: null,
+        photoURL: null,
+        emailVerified: false,
+        phoneNumber: null,
+        providerId: null,
+        metadata: {},
+      } as unknown as User;
+
+      expect(toSerializableUser(mockUserNoMeta)?.createdAt).toBeNull();
+      expect(toSerializableUser(mockUserNoMeta)?.lastSignInTime).toBeNull();
+    });
   });
 
   describe("isPasswordProvider", () => {

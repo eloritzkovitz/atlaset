@@ -4,9 +4,9 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import { AudioProvider } from "@contexts/AudioProvider";
-import { AuthProvider } from "@contexts/AuthProvider";
 import { SettingsProvider } from "@contexts/SettingsProvider";
 import { isRtl } from "@features/settings";
+import { AuthListener } from "@features/user/auth/components/AuthListener";
 import App from "./App";
 import "./i18n";
 import { store } from "./store";
@@ -55,13 +55,12 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <Router>
-        <AuthProvider>
-          <SettingsProvider>
-            <AudioProvider>
-              <App />
-            </AudioProvider>
-          </SettingsProvider>
-        </AuthProvider>
+        <AuthListener />
+        <SettingsProvider>
+          <AudioProvider>
+            <App />
+          </AudioProvider>
+        </SettingsProvider>
       </Router>
     </Provider>
   </StrictMode>,

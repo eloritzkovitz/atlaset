@@ -1,10 +1,10 @@
-import type { User } from "firebase/auth";
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
+import type { SerializableUser } from "@features/user/auth/types";
 import { UserAvatar } from "@features/user/profile";
 
 interface UserAvatarButtonProps {
-  user: User | null;
+  user: SerializableUser | null;
   onClick: () => void;
 }
 

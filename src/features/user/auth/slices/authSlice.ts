@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { type User } from "firebase/auth";
 import type { RootState } from "@app/store";
 import type { SerializableUser } from "../types";
 
@@ -14,20 +13,6 @@ const initialState: AuthState = {
   loading: true,
   ready: false,
 };
-
-// Helper to extract only serializable fields from Firebase User
-export function toSerializableUser(user: User | null): SerializableUser | null {
-  if (!user) return null;
-  return {
-    uid: user.uid,
-    email: user.email,
-    displayName: user.displayName,
-    photoURL: user.photoURL,
-    emailVerified: user.emailVerified,
-    phoneNumber: user.phoneNumber,
-    providerId: user.providerId,
-  };
-}
 
 const authSlice = createSlice({
   name: "auth",

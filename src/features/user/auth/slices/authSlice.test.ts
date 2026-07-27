@@ -1,54 +1,23 @@
 import { describe, it, expect } from "vitest";
-import { type User } from "firebase/auth";
+import type { RootState } from "@app/store";
 import authReducer, {
   setUser,
   setLoading,
   setReady,
-  toSerializableUser,
+  selectAuthReady,
+  selectAuthUser,
   type AuthState,
 } from "./authSlice";
 import type { SerializableUser } from "../types";
 
-describe("authSlice utilities", () => {
-  it("transforms a complex Firebase User into a clean serializable object", () => {
-    const mockFirebaseUser = {
-      uid: "user_123",
-      email: "test@example.com",
-      displayName: "Alex Developer",
-      photoURL: "https://example.com/avatar.png",
-      emailVerified: true,
-      phoneNumber: null,
-      providerId: "password",
-      getIdToken: () => Promise.resolve("token_abc"),
-    } as unknown as User;
-
-    const result = toSerializableUser(mockFirebaseUser);
-
-    expect(result).toEqual({
-      uid: "user_123",
-      email: "test@example.com",
-      displayName: "Alex Developer",
-      photoURL: "https://example.com/avatar.png",
-      emailVerified: true,
-      phoneNumber: null,
-      providerId: "password",
-    });
-    expect(result).not.toHaveProperty("getIdToken");
-  });
-
-  it("returns null cleanly if toSerializableUser receives no user", () => {
-    expect(toSerializableUser(null)).toBeNull();
-  });
-});
-
-describe("authSlice reducers", () => {
+describe("authSlice reducers & selectors", () => {
   const baseState: AuthState = {
     user: null,
     loading: true,
     ready: false,
   };
 
-  it("updates user state properties accurately via setUser", () => {
+  it("updates state via reducers and resolves selectors accurately", () => {
     const mockUser: SerializableUser = {
       uid: "user_123",
       email: "test@example.com",
@@ -57,19 +26,18 @@ describe("authSlice reducers", () => {
       emailVerified: false,
       phoneNumber: null,
       providerId: "google.com",
+      createdAt: "2024-01-01T00:00:00Z",
+      lastSignInTime: "2024-01-02T00:00:00Z",
     };
 
-    const nextState = authReducer(baseState, setUser(mockUser));
-    expect(nextState.user).toEqual(mockUser);
-  });
+    let state = authReducer(baseState, setUser(mockUser));
+    state = authReducer(state, setLoading(false));
+    state = authReducer(state, setReady(true));
 
-  it("updates interface loading tracking properties accurately via setLoading", () => {
-    const nextState = authReducer(baseState, setLoading(false));
-    expect(nextState.loading).toBe(false);
-  });
+    expect(state).toEqual({ user: mockUser, loading: false, ready: true });
 
-  it("updates subsystem initialization states accurately via setReady", () => {
-    const nextState = authReducer(baseState, setReady(true));
-    expect(nextState.ready).toBe(true);
+    const rootState = { auth: state } as RootState;
+    expect(selectAuthUser(rootState)).toEqual(mockUser);
+    expect(selectAuthReady(rootState)).toBe(true);
   });
 });

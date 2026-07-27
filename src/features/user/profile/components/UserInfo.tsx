@@ -1,9 +1,9 @@
-import type { User } from "firebase/auth";
+import type { SerializableUser } from "@features/user/auth/types";
 import { UserAvatar } from "./UserAvatar";
 import type { UserProfile } from "../types";
 
 interface UserInfoProps {
-  user: User | UserProfile | null;
+  user: SerializableUser | UserProfile | null;
   avatarSize?: number;
   showDisplayName?: boolean;
   showEmail?: boolean;

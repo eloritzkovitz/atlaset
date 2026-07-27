@@ -7,6 +7,8 @@ export interface SerializableUser {
   emailVerified: boolean;
   phoneNumber: string | null;
   providerId: string;
+  createdAt: string | null;
+  lastSignInTime: string | null;
 }
 
 /** Represents a user session. */

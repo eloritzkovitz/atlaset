@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaUser, FaPencil } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
-import { useAuth } from "@contexts/AuthContext";
+import { useAuth } from "@features/user/auth";
 import { EditProfileModal, useUserProfile } from "@features/user/profile";
 import { SettingsCard } from "../../common/components/SettingsCard";
 import { SettingsRow } from "../../common/components/SettingsRow";

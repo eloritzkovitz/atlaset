@@ -1,9 +1,9 @@
-import type { User } from "firebase/auth";
 import { FaCircleUser } from "react-icons/fa6";
+import type { SerializableUser } from "@features/user/auth/types";
 import type { UserProfile } from "../types";
 
 interface UserAvatarProps {
-  user: User | UserProfile | null;
+  user: SerializableUser | UserProfile | null;
   size?: number;
   className?: string;
 }
@@ -18,7 +18,10 @@ export function UserAvatar({
     <img
       src={user.photoURL}
       alt="User avatar"
-      onError={(e) => { e.currentTarget.onerror = null; e.currentTarget.src = "/images/default-profile.png"; }}
+      onError={(e) => {
+        e.currentTarget.onerror = null;
+        e.currentTarget.src = "/images/default-profile.png";
+      }}
       className={`rounded-full object-cover ${sizeClass} ${className}`}
       style={{ width: size, height: size }}
     />
