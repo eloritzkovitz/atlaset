@@ -1,55 +1,59 @@
-import { configureStore, type ReducersMapObject } from "@reduxjs/toolkit";
-import countryDataReducer from "@features/countries/slices/countryDataSlice";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import { achievementsApi } from "@features/dashboard/achievements/api/achievementsApi";
+import { countriesApi } from "@features/countries/api/countriesApi";
 import quizSettingsReducer from "@features/quizzes/quiz/slices/quizSettingsSlice";
 import settingsReducer from "@features/settings/common/slices/settingsSlice";
 import authReducer from "@features/user/auth/slices/authSlice";
 
-const reducers = {
+const rootReducer = combineReducers({
   auth: authReducer,
-  countryData: countryDataReducer,
   settings: settingsReducer,
   quizSettings: quizSettingsReducer,
-} as const;
+  [achievementsApi.reducerPath]: achievementsApi.reducer,
+  [countriesApi.reducerPath]: countriesApi.reducer,
+});
 
-type ReducersMap = typeof reducers;
-export type RootState = {
-  [K in keyof ReducersMap]: ReturnType<ReducersMap[K]>;
-};
+export type RootState = ReturnType<typeof rootReducer>;
 
-// Load preloaded state from localStorage for theme, with fallback to reducers' initial state
-const getPreloadedState = (): RootState | undefined => {
+// Load preloaded state from localStorage if available
+const getPreloadedState = (): Partial<RootState> | undefined => {
   try {
-    const base = {
-      auth: reducers.auth(undefined, { type: "" }),
-      countryData: reducers.countryData(undefined, { type: "" }),
-      settings: reducers.settings(undefined, { type: "" }),
-      quizSettings: reducers.quizSettings(undefined, { type: "" }),
-    } as RootState;
-
-    const t =
+    const theme =
       typeof localStorage !== "undefined"
         ? localStorage.getItem("atlaset.theme")
         : null;
-    if (t === "light" || t === "dark" || t === "system") {
+
+    if (theme === "light" || theme === "dark" || theme === "system") {
+      const initialSettingsState = settingsReducer(undefined, { type: "" });
+
       return {
-        ...base,
         settings: {
-          ...base.settings,
+          ...initialSettingsState,
           settings: {
-            ...base.settings.settings,
-            display: { ...(base.settings.settings.display ?? {}), theme: t },
+            ...initialSettingsState.settings,
+            display: {
+              ...initialSettingsState.settings?.display,
+              theme,
+            },
           },
         },
       };
     }
-    return base;
   } catch {
-    return undefined;
+    // Fall back to reducer defaults if localStorage read fails
   }
+  return undefined;
 };
 
-export const store = configureStore<RootState>({
-  reducer: reducers as ReducersMapObject<RootState>,
+/** Configures the Redux store. */
+export const store = configureStore({
+  reducer: rootReducer,
   preloadedState: getPreloadedState(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(
+      achievementsApi.middleware,
+      countriesApi.middleware,
+    ),
 });
+
 export type AppDispatch = typeof store.dispatch;

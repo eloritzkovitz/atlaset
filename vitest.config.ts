@@ -14,6 +14,7 @@ export default defineConfig({
         "src/contexts/**",
         "src/shared/test-utils/**",
         "src/shared/types/**",
+        "**/api/**",
         "**/components/**",
         "**/config/**",
         "**/constants/**",

@@ -1,10 +1,8 @@
 import i18next from "i18next";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "@app/store";
 import type { Language } from "@types";
-import { fetchCountryData } from "../slices/countryDataSlice";
+import { useGetRawCountriesQuery } from "../api/countriesApi";
 import type { Country, CountryTerritories, Currency } from "../types";
 import { getTerritoryCodesByType } from "../utils/countryData";
 
@@ -18,29 +16,21 @@ const INTEGRAL_TERRITORY_TYPES = new Set([
 ]);
 
 /**
- * Accesses country data from the Redux store and auto-fetches if needed.
- * Provides a refreshData function to manually reload.
+ * Fetches and processes country data, applying translations and extracting metadata.
  */
 export function useCountryData() {
-  const dispatch: AppDispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.countryData);
+  const {
+    data: rawCountries,
+    isLoading,
+    isFetching,
+    error,
+    refetch,
+  } = useGetRawCountriesQuery();
   const { i18n } = useTranslation("countries");
 
   const currentLanguage = i18n.language || i18next.language || "en";
 
-  // Fetch data on first use if not already loading or loaded
-  useEffect(() => {
-    if (!data.loading && data.countries.length === 0 && !data.error) {
-      dispatch(fetchCountryData());
-    }
-  }, [dispatch, data.loading, data.countries.length, data.error]);
-
-  // Refresh function to re-fetch data on demand
-  const refreshData = () => {
-    dispatch(fetchCountryData({ force: true }));
-  };
-
-  const countries = data.countries;
+  const countries = useMemo(() => rawCountries || [], [rawCountries]);
 
   const processedData = useMemo(() => {
     const loc: Country[] = [];
@@ -126,14 +116,18 @@ export function useCountryData() {
     const allRegions = Array.from(regionSet).sort();
     const subregionsByRegion: Record<string, string[]> = {};
     const subregionToRegion = new Map<string, string>();
+    const allSubregionsSet = new Set<string>(); // 1. Collect all subregions
 
     for (const [region, subSet] of Object.entries(tmpSub)) {
       const sortedSubs = Array.from(subSet).sort();
       subregionsByRegion[region] = sortedSubs;
       for (let s = 0; s < sortedSubs.length; s++) {
         subregionToRegion.set(sortedSubs[s], region);
+        allSubregionsSet.add(sortedSubs[s]);
       }
     }
+
+    const allSubregions = Array.from(allSubregionsSet).sort();
 
     // Map currency codes to localized names and user counts
     const currencies: Currency[] = Array.from(currencyMap.keys()).map(
@@ -161,6 +155,7 @@ export function useCountryData() {
     return {
       countries: loc,
       allRegions,
+      allSubregions,
       subregionsByRegion,
       subregionToRegion,
       currencies,
@@ -172,8 +167,10 @@ export function useCountryData() {
   }, [countries, currentLanguage, i18n]);
 
   return {
-    ...data,
+    loading: isLoading,
+    isFetching,
+    error,
     ...processedData,
-    refreshData,
+    refreshData: refetch,
   };
 }

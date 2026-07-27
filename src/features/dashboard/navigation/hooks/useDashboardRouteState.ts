@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import { useCountryData } from "@features/countries";
-import { useAchievements } from "@contexts/AchievementsContext";
+import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi";
 
 /**
  * Manages dashboard route state.
@@ -9,7 +9,7 @@ import { useAchievements } from "@contexts/AchievementsContext";
  */
 export function useDashboardRouteState() {
   const { countries, currencies, languages } = useCountryData();
-  const { achievements } = useAchievements();
+  const { data: achievements } = useGetAchievementsQuery();
   const location = useLocation();
 
   // Extract panel and parameters from URL

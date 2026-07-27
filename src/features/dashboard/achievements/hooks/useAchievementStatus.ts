@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { useAchievements } from "@contexts/AchievementsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useHomeCountry } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import type { SortValue } from "@types";
 import { useAchievementFilters } from "./useAchievementFilters";
+import { useGetAchievementsQuery } from "../api/achievementsApi";
 import type { AchievementSortKey } from "../types";
 
 interface UseAchievementStatusProps {
@@ -29,7 +29,7 @@ export function useAchievementStatus({
   search = "",
   sortBy = "id-asc",
 }: UseAchievementStatusProps = {}) {
-  const { achievements } = useAchievements();
+  const { data: achievements, isLoading, error } = useGetAchievementsQuery();
   const { countries } = useCountryData();
   const visited = useVisitedCountries();
   const { trips } = useTrips();
@@ -49,11 +49,23 @@ export function useAchievementStatus({
 
   return useMemo(() => {
     return {
+      achievements,
+      isLoading,
+      error,
       ...filterResult,
       countries,
       visited,
       trips,
       homeCountry,
     };
-  }, [filterResult, countries, visited, trips, homeCountry]);
+  }, [
+    achievements,
+    isLoading,
+    error,
+    filterResult,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+  ]);
 }
