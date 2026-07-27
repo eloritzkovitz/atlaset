@@ -29,86 +29,58 @@ import { friendService } from "../../friends/services/friendService";
 import { profileService } from "../../profile/services/profileService";
 import type { FirestoreUser } from "../../profile/types";
 
+/** Internal helper for constructing standard user activity payloads */
+const createActivityMeta = (user: User, method: string) => ({
+  method,
+  userName: user.displayName,
+  email: user.email,
+  device: getBrowserSessionInfo().userAgent,
+});
+
 /**
  * Service for managing user authentication.
  */
 export const authService = {
   /**
-   * Signs in a user with email and password.
-   * @param email - The user's email address.
-   * @param password - The user's password.
-   * @returns The signed-in user and reactivation status.
+   * Handles post-sign-in operations, including guest data migration, reactivation checks, activity logging, and session logging.
    */
-  async signIn(email: string, password: string) {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-
-    // Migrate guest data to Firestore if it exists
+  async handlePostSignIn(user: User, method: string) {
     if (await migrationService.hasGuestData()) {
       await migrationService.migrateGuestDataToFirestore();
     }
 
-    // Check if account is deactivated and reactivate if so
-    const reactivated = await this.handleReactivation(result.user.uid);
+    const reactivated = await this.handleReactivation(user.uid);
+    if (reactivated) {
+      await logUserActivity(
+        111,
+        { userName: user.displayName, email: user.email },
+        user.uid,
+      );
+    }
 
-    await logUserActivity(
-      102,
-      {
-        method: "email",
-        userName: result.user.displayName,
-        email: result.user.email,
-        device: getBrowserSessionInfo().userAgent,
-      },
-      result.user!.uid,
-    );
-    await sessionService.logSession(result.user.uid);
+    await logUserActivity(102, createActivityMeta(user, method), user.uid);
+    await sessionService.logSession(user.uid);
 
-    return { user: result.user, reactivated };
+    return reactivated;
   },
 
-  /** * Signs in a user with email and password, with persistence option.
+  /**
+   * Signs in a user with email and password, with optional session persistence.
    * @param email - The user's email address.
    * @param password - The user's password.
-   * @param keepLoggedIn - Whether to keep the user logged in across sessions.
+   * @param keepLoggedIn - If true, keeps user logged in across browser restarts. Defaults to false.
    * @returns The signed-in user and reactivation status.
    */
-  async signInWithPersistence(
-    email: string,
-    password: string,
-    keepLoggedIn: boolean,
-  ) {
+  async signIn(email: string, password: string, keepLoggedIn = false) {
     await setPersistence(
       auth,
       keepLoggedIn ? browserLocalPersistence : browserSessionPersistence,
     );
+
     const result = await signInWithEmailAndPassword(auth, email, password);
+    const method = keepLoggedIn ? "email_persistent" : "email";
 
-    // Migrate guest data if it exists
-    if (await migrationService.hasGuestData()) {
-      await migrationService.migrateGuestDataToFirestore();
-    }
-
-    // Check if account is deactivated and reactivate if so
-    const reactivated = await this.handleReactivation(result.user.uid);
-    if (reactivated) {
-      await logUserActivity(
-        111,
-        { userName: result.user.displayName, email: result.user.email },
-        result.user.uid,
-      );
-    }
-
-    await logUserActivity(
-      102,
-      {
-        method: keepLoggedIn ? "email_persistent" : "email_session",
-        userName: result.user.displayName,
-        email: result.user.email,
-        device: getBrowserSessionInfo().userAgent,
-      },
-      result.user!.uid,
-    );
-    await sessionService.logSession(result.user!.uid);
-
+    const reactivated = await this.handlePostSignIn(result.user, method);
     return { user: result.user, reactivated };
   },
 
@@ -130,13 +102,8 @@ export const authService = {
 
     await logUserActivity(
       101,
-      {
-        method: "email",
-        userName: result.user.displayName,
-        email: result.user.email,
-        device: getBrowserSessionInfo().userAgent,
-      },
-      result.user!.uid,
+      createActivityMeta(result.user, "email"),
+      result.user.uid,
     );
 
     await sessionService.logSession(result.user!.uid);
@@ -205,18 +172,9 @@ export const authService = {
       photoURL: result.user.photoURL,
     });
 
-    await logUserActivity(
-      102,
-      {
-        method: "google",
-        userName: result.user.displayName,
-        email: result.user.email,
-        device: getBrowserSessionInfo().userAgent,
-      },
-      result.user!.uid,
-    );
-    await sessionService.logSession(result.user!.uid);
-    return result;
+    const reactivated = await this.handlePostSignIn(result.user, "google");
+
+    return { user: result.user, reactivated };
   },
 
   /**

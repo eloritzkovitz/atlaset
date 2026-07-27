@@ -1,22 +1,5 @@
 import type { Timestamp } from "firebase/firestore";
 
-/** Represents a user in the Firestore database. */
-export interface FirestoreUser {
-  uid: string;
-  username: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  email: string | null;
-  homeCountry: string | null;
-  biography: string | null;
-  isPublic: boolean;
-  joinDate?: string;
-  visitedCountryCodes: string[];
-  status?: "active" | "deactivated";
-  deactivatedAt?: string;
-  reactivatedAt?: string;
-}
-
 /** Supported social platforms for user profiles. */
 export type SocialPlatform =
   | "x"
@@ -51,9 +34,16 @@ export interface UserProfile {
   /** Account creation date */
   joinDate?: Timestamp;
   /** List of visited country codes (ISO 3166-1 alpha-2) */
-  visitedCountryCodes: string[];
+  visitedCountryCodes?: string[];
   /** List of manually added visited country codes (ISO 3166-1 alpha-2) */
   manualVisitedCountryCodes?: string[];
   /** List of country codes (ISO 3166-1 alpha-2) the user wants to visit */
-  wantToVisitCountryCodes: string[];
+  wantToVisitCountryCodes?: string[];
+}
+
+/** Represents a user in the Firestore database. */
+export interface FirestoreUser extends UserProfile {
+  status?: "active" | "deactivated";
+  deactivatedAt?: string;
+  reactivatedAt?: string;
 }

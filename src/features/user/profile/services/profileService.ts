@@ -124,10 +124,7 @@ export const profileService = {
           ? Timestamp.fromDate(new Date(user.joinDate))
           : Timestamp.now(),
         photoURL: user.photoURL || "",
-        biography: "",
         isPublic: true,
-        homeCountry: "",
-        visitedCountryCodes: [],
       });
     });
 

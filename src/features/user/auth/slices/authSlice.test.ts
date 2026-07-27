@@ -6,8 +6,8 @@ import authReducer, {
   setReady,
   toSerializableUser,
   type AuthState,
-  type SerializableUser,
 } from "./authSlice";
+import type { SerializableUser } from "../types";
 
 describe("authSlice utilities", () => {
   it("transforms a complex Firebase User into a clean serializable object", () => {

@@ -1,3 +1,14 @@
+/** Represents a user for serialization purposes, containing only serializable fields from the Firebase User object. */
+export interface SerializableUser {
+  uid: string;
+  email: string | null;
+  displayName: string | null;
+  photoURL: string | null;
+  emailVerified: boolean;
+  phoneNumber: string | null;
+  providerId: string;
+}
+
 /** Represents a user session. */
 export type UserSession = {
   /** Document ID. */

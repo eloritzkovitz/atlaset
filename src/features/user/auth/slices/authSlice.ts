@@ -1,20 +1,7 @@
-import {
-  createSlice,
-  type PayloadAction,
-} from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type User } from "firebase/auth";
-import type { RootState } from "../../../../store";
-
-// Only store serializable user fields in Redux
-export interface SerializableUser {
-  uid: string;
-  email: string | null;
-  displayName: string | null;
-  photoURL: string | null;
-  emailVerified: boolean;
-  phoneNumber: string | null;
-  providerId: string;
-}
+import type { RootState } from "@app/store";
+import type { SerializableUser } from "../types";
 
 export interface AuthState {
   user: SerializableUser | null;

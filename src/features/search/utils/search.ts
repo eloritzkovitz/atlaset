@@ -1,4 +1,4 @@
-import type { SerializableUser } from "@features/user/auth/slices/authSlice";
+import type { SerializableUser } from "@features/user/auth/types";
 import type { Friend } from "@features/user/friends/types";
 import type { UserProfile } from "@features/user/profile/types";
 
