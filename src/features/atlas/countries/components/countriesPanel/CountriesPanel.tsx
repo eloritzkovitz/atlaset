@@ -2,8 +2,6 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useCountryFilters } from "@contexts/CountryFiltersContext";
-import { useCountryLists } from "@contexts/CountryListsContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
 import {
@@ -17,6 +15,8 @@ import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";
 import { CountryListView } from "./CountryListView";
 import { CountryFiltersPanel } from "../countryFilters/CountryFiltersPanel";
+import { useCountryFilters } from "../../context/CountryFiltersContext";
+import { useCountryLists } from "../../context/CountryListsContext";
 
 interface CountriesPanelProps {
   selectedIsoCode: string | null;

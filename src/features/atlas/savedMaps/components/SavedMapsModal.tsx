@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FormField, Modal, ModalActions, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
+import { useMapView } from "@features/atlas/map";
 import type { SavedMap } from "../types";
 
 interface SavedMapsModalProps {

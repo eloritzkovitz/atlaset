@@ -25,7 +25,7 @@ import TripsPage from "../pages/TripsPage";
 import { ProtectedRoute } from "../shared/router/ProtectedRoute";
 
 const AtlasProviders = lazy(() =>
-  import("@features/atlas/shared/providers/AtlasProviders").then((m) => ({
+  import("@features/atlas/core/providers/AtlasProviders").then((m) => ({
     default: m.AtlasProviders,
   })),
 );

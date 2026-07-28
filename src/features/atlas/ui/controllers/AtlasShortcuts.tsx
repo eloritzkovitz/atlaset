@@ -1,7 +1,7 @@
-import { useTimeline } from "@contexts/TimelineContext";
+import { useTimeline } from "@features/atlas/timeline";
 import { useAccessibility } from "@features/settings";
 import { useKeyHandler } from "@hooks";
-import { useAtlasActions } from "../../shared/hooks/useAtlasActions";
+import { useAtlasActions } from "../../core/hooks/useAtlasActions";
 
 /** Handles keyboard shortcuts specific to the Atlas page/UI. */
 export function AtlasShortcuts() {

@@ -1,4 +1,4 @@
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
 import { type GeoType, type SovereigntyStatus } from "@features/countries";
 import type { FilterConfig, FilterOption } from "@types";
 import { mapOptions } from "@utils/array";

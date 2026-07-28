@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
-import { layersService, useLayerManager } from "@features/atlas/layers";
-import type { AnyLayer } from "@features/atlas/layers/types";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
-import { LayersContext } from "./LayersContext";
 import { useDataLoader } from "@hooks";
+import { LayersContext } from "./LayersContext";
+import { useLayerManager } from "../hooks/useLayerManager";
+import { layersService } from "../services/layersService";
+import type { AnyLayer } from "../types";
 
 export function LayersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();

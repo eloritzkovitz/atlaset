@@ -1,7 +1,7 @@
-import { useMapView } from "@contexts/MapViewContext";
-import { useMarkers } from "@contexts/MarkersContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useEventListener } from "@hooks/dom/useEventListener";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
+import { useEventListener } from "@hooks";
+import { useMarkers } from "../context/MarkersContext";
 
 /**
  * Manages marker creation state and handlers.

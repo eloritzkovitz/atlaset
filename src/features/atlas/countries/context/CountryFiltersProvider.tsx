@@ -5,11 +5,15 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useTrips } from "@contexts/TripsContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
   getDefaultLayerSelections,
   useEffectiveLayers,
 } from "@features/atlas/layers";
+import { useLayers } from "@features/atlas/layers/context/LayersContext";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useTimeline } from "@features/atlas/timeline/context/TimelineContext";
 import {
   createSovereigntyFilter,
   applyQualifierSearch,
@@ -33,10 +37,6 @@ import {
 import { useDebounce } from "@hooks";
 import { CountryFiltersContext } from "./CountryFiltersContext";
 import { useCountryLists } from "./CountryListsContext";
-import { useLayers } from "./LayersContext";
-import { useMapView } from "./MapViewContext";
-import { useTimeline } from "./TimelineContext";
-import { useTrips } from "./TripsContext";
 
 interface CountryFiltersProviderProps {
   children: ReactNode;

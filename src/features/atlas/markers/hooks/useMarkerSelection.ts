@@ -1,4 +1,4 @@
-import { useMarkers } from "@contexts/MarkersContext";
+import { useMarkers } from "../context/MarkersContext";
 
 /**
  * Manages marker selection state and handlers.

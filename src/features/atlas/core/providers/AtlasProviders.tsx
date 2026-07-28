@@ -1,12 +1,12 @@
 import { useSearchParams } from "react-router-dom";
-import { CountryFiltersProvider } from "@contexts/CountryFiltersProvider";
-import { CountryListsProvider } from "@contexts/CountryListsProvider";
-import { LayersProvider } from "@contexts/LayersProvider";
-import { MapViewProvider } from "@contexts/MapViewProvider";
-import { MarkersProvider } from "@contexts/MarkersProvider";
-import { SavedMapsProvider } from "@contexts/SavedMapsProvider";
-import { TimelineProvider } from "@contexts/TimelineProvider";
 import { AppLayout, EmbedLayout } from "@layouts";
+import { CountryFiltersProvider } from "../../countries/context/CountryFiltersProvider";
+import { CountryListsProvider } from "../../countries/context/CountryListsProvider";
+import { LayersProvider } from "../../layers/context/LayersProvider";
+import { MapViewProvider } from "../../map/context/MapViewProvider";
+import { MarkersProvider } from "../../markers/context/MarkersProvider";
+import { SavedMapsProvider } from "../../savedMaps/context/SavedMapsProvider";
+import { TimelineProvider } from "../../timeline/context/TimelineProvider";
 import AtlasPage from "../../../../pages/AtlasPage";
 
 export function AtlasProviders() {

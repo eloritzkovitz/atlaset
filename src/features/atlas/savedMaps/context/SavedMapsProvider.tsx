@@ -8,6 +8,7 @@ import {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { logUserActivity } from "@features/activity";
+import { useMapMode } from "@features/atlas/core";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
 import {
   normalizeLayers,
@@ -16,12 +17,12 @@ import {
 } from "@features/atlas/layers";
 import { normalizeMarkers } from "@features/atlas/markers/utils/markers";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
-import { type SavedMap, savedMapsService } from "@features/atlas/saved";
-import { useMapMode } from "@features/atlas/shared";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
 import { getQueryParam } from "@utils/url";
 import { SavedMapsContext } from "./SavedMapsContext";
+import { savedMapsService } from "../services/savedMapsService";
+import { type SavedMap } from "../types";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();

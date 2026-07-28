@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { getVisitedCountriesForYear } from "@features/visits";
+import { useTimeline } from "../context/TimelineContext";
 
 /**
  * Highlights countries visited in the selected timeline year.

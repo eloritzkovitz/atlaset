@@ -10,7 +10,7 @@ import {
 } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { CountryList } from "../types";
-import type { SavedMap } from "@features/atlas/saved";
+import type { SavedMap } from "@features/atlas/savedMaps";
 
 export class CountryListService extends BaseService<
   CountryList,

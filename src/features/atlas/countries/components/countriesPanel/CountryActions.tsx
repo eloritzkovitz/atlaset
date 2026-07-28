@@ -2,7 +2,6 @@ import { forwardRef, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useCountryLists } from "@contexts/CountryListsContext";
 import type { Country } from "@features/countries";
 import {
   useContextMenu,
@@ -11,6 +10,7 @@ import {
   useMenuPosition,
 } from "@hooks";
 import { CountryListsMenu } from "./CountryListsMenu";
+import { useCountryLists } from "../../context/CountryListsContext";
 import { useCountryActions } from "../../hooks/useCountryActions";
 
 interface CountryActionsProps {

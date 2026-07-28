@@ -1,19 +1,22 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
+import { useEffectiveLayers } from "@features/atlas/layers";
 import {
   MapLegendModal,
   useMapLegendItems,
   type LegendItem,
 } from "@features/atlas/legend";
+import { useMapView } from "@features/atlas/map";
+import { useSavedMaps } from "@features/atlas/savedMaps";
 import { useMapInterfaceSettings } from "@features/atlas/settings";
-import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
+import {
+  TimelineBar,
+  TimelineNavigator,
+  useTimeline,
+} from "@features/atlas/timeline";
 import { useScreenSize, useUiHint } from "@hooks";
 import { MapToolbar } from "../components/controls/MapToolbar";
 import { MapFooter } from "../components/footer/MapFooter";

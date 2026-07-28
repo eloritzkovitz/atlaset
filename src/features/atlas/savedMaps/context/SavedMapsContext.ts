@@ -2,7 +2,7 @@ import { createContext, useContext } from "react";
 import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
 import type { Coordinates } from "@features/atlas/map";
-import type { SavedMap } from "@features/atlas/saved";
+import type { SavedMap } from "@features/atlas/savedMaps";
 
 export interface SavedMapsContextValue {
   savedMaps: SavedMap[];

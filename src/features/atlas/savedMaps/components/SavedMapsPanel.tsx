@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useUI } from "@contexts/UIContext";
+import { useMapView } from "@features/atlas/map";
 import { useAccessibility } from "@features/settings";
 import { SavedMapPanelItem } from "./SavedMapPanelItem";
+import { useSavedMaps } from "../context/SavedMapsContext";
 
 export function SavedMapsPanel() {
   const { animationsEnabled } = useAccessibility();

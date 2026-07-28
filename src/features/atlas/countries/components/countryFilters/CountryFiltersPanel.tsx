@@ -3,9 +3,8 @@ import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH, DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
-import { useCountryFilters } from "@contexts/CountryFiltersContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useEffectiveLayers } from "@features/atlas/layers";
+import { useTimeline } from "@features/atlas/timeline";
 import { type Country } from "@features/countries";
 import {
   getAllGeoTypes,
@@ -16,6 +15,7 @@ import { useKeyHandler, useScreenSize } from "@hooks";
 import { CoreFilters } from "./CoreFilters";
 import { LayerFilters } from "./LayerFilters";
 import { TimelineFilters } from "./TimelineFilters";
+import { useCountryFilters } from "../../context/CountryFiltersContext";
 import { useRegionSubregionSelection } from "../../hooks/useRegionSubregionSelection";
 
 interface CountryFiltersPanelProps {

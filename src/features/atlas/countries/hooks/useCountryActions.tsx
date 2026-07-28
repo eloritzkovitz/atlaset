@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
+import { useMapView } from "@features/atlas/map";
 import type { Country } from "@features/countries/types";
 import { getCountryRoute } from "@features/dashboard";
 import { useLanguage } from "@features/settings";

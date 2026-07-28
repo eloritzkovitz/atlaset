@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
 
 /**

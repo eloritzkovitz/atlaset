@@ -1,17 +1,19 @@
-import { useMarkers } from "@contexts/MarkersContext";
-import { useMapView } from "@contexts/MapViewContext";
-import { useLayers } from "@contexts/LayersContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
 import { MapExportPanel } from "@features/atlas/export";
-import { LayerModal, LayersPanel } from "@features/atlas/layers";
+import { LayerModal, LayersPanel, useLayers } from "@features/atlas/layers";
+import { useMapView } from "@features/atlas/map";
 import {
   MarkerDetailsModal,
   MarkerModal,
   MarkersPanel,
   useMarkerCreation,
+  useMarkers,
 } from "@features/atlas/markers";
-import { SavedMapsModal, SavedMapsPanel } from "@features/atlas/saved";
+import {
+  SavedMapsModal,
+  SavedMapsPanel,
+  useSavedMaps,
+} from "@features/atlas/savedMaps";
 import { MapSettingsPanel } from "@features/atlas/settings";
 import type { Country } from "@features/countries";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";

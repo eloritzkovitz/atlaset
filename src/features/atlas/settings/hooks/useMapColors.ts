@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { ColorMode } from "@features/atlas/shared";
+import type { ColorMode } from "@features/atlas/core";
 import { DEFAULT_COLOR_PALETTES, useSettings } from "@features/settings";
 import type { MapColorsSettings } from "../types";
 

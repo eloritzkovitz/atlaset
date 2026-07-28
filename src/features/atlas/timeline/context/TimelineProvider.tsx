@@ -1,13 +1,10 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import {
-  getLatestYear,
-  getYearsFromTrips,
-} from "@features/visits/utils/visits";
+import { useAudio } from "@contexts/AudioContext";
+import { useTrips } from "@contexts/TripsContext";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { isAuthenticated } from "@lib/firebase";
-import { useAudio } from "./AudioContext";
-import { useMapView } from "./MapViewContext";
 import { TimelineContext } from "./TimelineContext";
-import { useTrips } from "./TripsContext";
 
 export const TimelineProvider: React.FC<{ children: React.ReactNode }> = ({
   children,

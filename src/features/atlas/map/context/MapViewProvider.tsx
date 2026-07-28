@@ -7,7 +7,7 @@ import {
 } from "react";
 import { getCountryCenterAndZoom, type Coordinates } from "@features/atlas/map";
 import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
-import { useMapMode, type ColorMode } from "@features/atlas/shared";
+import { useMapMode, type ColorMode } from "@features/atlas/core";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
 

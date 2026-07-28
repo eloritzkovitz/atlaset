@@ -1,8 +1,8 @@
-import { useMapView } from "@contexts/MapViewContext";
-import { useMarkers } from "@contexts/MarkersContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
+import { useMarkers } from "@features/atlas/markers";
+import { useSavedMaps } from "@features/atlas/savedMaps";
 import { useMapSettings } from "@features/atlas/settings";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
+import { useMapView } from "../context/MapViewContext";
 import { getGeoCoordsFromMouseEvent } from "../utils/projection";
 
 /**

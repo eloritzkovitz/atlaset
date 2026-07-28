@@ -1,6 +1,8 @@
-import { useMarkers } from "@contexts/MarkersContext";
-import { useEffectiveMarkers } from "@features/atlas/markers/hooks/useEffectiveMarkers";
-import { Marker } from "@features/atlas/markers";
+import {
+  Marker,
+  useEffectiveMarkers,
+  useMarkers,
+} from "@features/atlas/markers";
 import { getProjection } from "../utils/projection";
 
 interface MarkersContainerProps {

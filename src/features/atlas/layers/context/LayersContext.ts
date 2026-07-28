@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import type { AnyLayer } from "@features/atlas/layers/types";
+import type { AnyLayer } from "../types";
 
 export interface LayersContextType {
   layers: AnyLayer[];

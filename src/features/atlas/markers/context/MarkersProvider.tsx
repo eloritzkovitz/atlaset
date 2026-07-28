@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
-import { markersService, useMarkerManager } from "@features/atlas/markers";
-import type { Marker } from "@features/atlas/markers/types";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { MarkersContext } from "./MarkersContext";
+import { useMarkerManager } from "../hooks/useMarkerManager";
+import { markersService } from "../services/markersService";
+import type { Marker } from "../types";
 
 export function MarkersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();

@@ -1,21 +1,21 @@
 import { useMemo } from "react";
-import { useCountryFilters } from "@contexts/CountryFiltersContext";
-import { useLayers } from "@contexts/LayersContext";
-import { useMapView } from "@contexts/MapViewContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useTimeline } from "@contexts/TimelineContext";
-import { useCountryLists } from "@contexts/CountryListsContext";
+import { type MapMode } from "@features/atlas/core";
+import { useCountryFilters } from "@features/atlas/countries/context/CountryFiltersContext";
+import { useCountryLists } from "@features/atlas/countries/context/CountryListsContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
   isTimelineLayer,
+  useLayers,
   useTimelineLayerItems,
   useTrackingLayerItems,
   getLayerItems,
   normalizeLayers,
   type TimelineLayer,
 } from "@features/atlas/layers";
-import { type MapMode } from "@features/atlas/shared";
+import { useSavedMaps } from "@features/atlas/savedMaps";
+import { useTimeline } from "@features/atlas/timeline";
 import { useVisitedCountries } from "@features/visits";
+import { useMapView } from "../context/MapViewContext";
 
 /**
  * Returns map layer items based on map mode and active global sidebar triggers.

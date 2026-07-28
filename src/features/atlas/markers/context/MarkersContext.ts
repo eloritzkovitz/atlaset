@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import type { Coordinates } from "@features/atlas/map/types";
-import type { Marker } from "@features/atlas/markers/types";
+import type { Marker } from "../types";
 
 export interface MarkersContextType {
   markers: Marker[];
@@ -13,7 +13,7 @@ export interface MarkersContextType {
   updateMarkerName: (id: string, newName: string) => void;
   toggleMarkerVisibility: (id: string) => void;
   duplicateMarker: (id: string) => void;
-  reorderMarkers: (newOrder: Marker[]) => void;  
+  reorderMarkers: (newOrder: Marker[]) => void;
   removeMarker: (id: string) => void;
   editingMarker: Marker | null;
   setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;
@@ -28,12 +28,14 @@ export interface MarkersContextType {
   detailsModalPosition: { top: number; left: number } | null;
   showMarkerDetails: (
     marker: Marker,
-    coords?: { top: number; left: number }
+    coords?: { top: number; left: number },
   ) => void;
   closeMarkerDetails: () => void;
 }
 
-export const MarkersContext = createContext<MarkersContextType | undefined>(undefined);
+export const MarkersContext = createContext<MarkersContextType | undefined>(
+  undefined,
+);
 
 export function useMarkers() {
   const context = useContext(MarkersContext);

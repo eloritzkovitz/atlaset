@@ -1,8 +1,8 @@
-import { useMarkers } from "@contexts/MarkersContext";
-import { useMapView } from "@contexts/MapViewContext";
-import { useSharedMapInfo } from "@features/atlas/export";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useMemo } from "react";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
+import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
+import { useMarkers } from "../context/MarkersContext";
 import type { Marker } from "../types";
 
 /**

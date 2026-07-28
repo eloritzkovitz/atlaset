@@ -1,6 +1,9 @@
 // Components
 export { WorldMap } from "./components/WorldMap";
 
+// Context
+export { MapViewContext, useMapView } from "./context/MapViewContext";
+
 // Types
 export type { Coordinates, GeoData } from "./types";
 

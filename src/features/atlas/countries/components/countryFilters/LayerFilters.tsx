@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
-import { useLayers } from "@contexts/LayersContext";
+import { useLayers } from "@features/atlas/layers";
 import type { AnyLayer } from "@features/atlas/layers/types";
 import { layerFilterConfig } from "../../config/filtersConfig";
 

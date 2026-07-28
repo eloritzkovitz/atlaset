@@ -1,7 +1,7 @@
-import { useLayers } from "@contexts/LayersContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useMapView } from "@contexts/MapViewContext";
 import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
+import { useLayers } from "../context/LayersContext";
 
 /**
  * Returns the effective layers based on the map view mode.
@@ -18,7 +18,7 @@ export function useEffectiveLayers() {
   if (isEdit && activeSavedMap && Array.isArray(activeSavedMap.layers)) {
     return activeSavedMap.layers;
   }
-  
+
   // In readonly mode, use shared layers if available
   if (isReadonly && sharedLayers) {
     return sharedLayers;

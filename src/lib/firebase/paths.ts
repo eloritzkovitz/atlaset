@@ -16,7 +16,7 @@ export interface UserSubcollections {
   countryLists: import("@features/countries/types").CountryList;
   layers: import("@features/atlas/layers/types").Layer;
   markers: import("@features/atlas/markers/types").Marker;
-  savedMaps: import("@features/atlas/saved/types").SavedMap;
+  savedMaps: import("@features/atlas/savedMaps/types").SavedMap;
   sessions: import("@features/user/auth/types").UserSession;
 }
 

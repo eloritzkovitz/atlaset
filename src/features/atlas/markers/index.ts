@@ -4,6 +4,9 @@ export { MarkerDetailsModal } from "./components/markerDetails/MarkerDetailsModa
 export { MarkerModal } from "./components/markerModal/MarkerModal";
 export { MarkersPanel } from "./components/markersPanel/MarkersPanel";
 
+// Context
+export { MarkersContext, useMarkers } from "./context/MarkersContext";
+
 // Hooks
 export { useEffectiveMarkers } from "./hooks/useEffectiveMarkers";
 export { useMarkerCreation } from "./hooks/useMarkerCreation";

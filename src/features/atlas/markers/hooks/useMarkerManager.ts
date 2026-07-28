@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import type { Coordinates } from "@features/atlas/map";
-import type { Marker } from "@features/atlas/markers/types";
+import type { Coordinates } from "@features/atlas/map/types";
+import type { Marker } from "../types";
 
 export interface UseMarkerManagerOptions {
   initialMarkers: Marker[];

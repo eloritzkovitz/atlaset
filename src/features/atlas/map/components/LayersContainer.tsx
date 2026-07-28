@@ -1,13 +1,12 @@
 import type { GeoProjection } from "d3-geo";
 import { useCallback, useMemo } from "react";
 import { Tooltip } from "@components";
-import { useMapView } from "@contexts/MapViewContext";
+import { useMapTheme } from "@features/atlas/core";
 import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
 } from "@features/atlas/layers";
 import { useMapColors, useMapOverlays } from "@features/atlas/settings";
-import { useMapTheme } from "@features/atlas/shared";
 import {
   getCountryIsoCode,
   getCountryName,
@@ -18,6 +17,7 @@ import { isNumericString } from "@utils/string";
 import { Geographies } from "./Geographies";
 import { Geography } from "./Geography";
 import { SmallCountryOverlay } from "./SmallCountryOverlay";
+import { useMapView } from "../context/MapViewContext";
 import { useAtlasColoring } from "../hooks/useAtlasColoring";
 import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData, GeographyFeature } from "../types";

@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { useUI } from "@contexts/UIContext";
-import { useSharedMapInfo } from "@features/atlas/export";
 import { useEffectiveLayers } from "@features/atlas/layers";
+import { useMapView } from "@features/atlas/map";
 import { useEffectiveMarkers } from "@features/atlas/markers";
+import { useSavedMaps } from "@features/atlas/savedMaps";
 import { useAccessibility } from "@features/settings";
 import { useAuth } from "@features/user/auth";
 import { useVisitedCountries } from "@features/visits";
@@ -16,6 +15,7 @@ import { EmbedMapSection } from "./EmbedMapSection";
 import { ExportOptionsSection } from "./ExportOptionsSection";
 import { ShareMapSection } from "./ShareMapSection";
 import { useExportData } from "../hooks/useExportData";
+import { useSharedMapInfo } from "../hooks/useSharedMapInfo";
 import type {
   ExportFormat,
   ImageExportOptions,

@@ -3,7 +3,7 @@ import { DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { keyCommands } from "@constants/keyCommands";
 import type { CommandId } from "@types";
-import { useAtlasActions } from "../../shared/hooks/useAtlasActions";
+import { useAtlasActions } from "../../core/hooks/useAtlasActions";
 
 export interface ToolbarActionsParams {
   isMobile: boolean;

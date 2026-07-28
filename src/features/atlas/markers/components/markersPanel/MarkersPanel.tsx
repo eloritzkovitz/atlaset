@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { useMapView } from "@contexts/MapViewContext";
-import { useMarkers } from "@contexts/MarkersContext";
 import { useUI } from "@contexts/UIContext";
-import { useEffectiveMarkers } from "@features/atlas/markers";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useAccessibility } from "@features/settings";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
+import { useEffectiveMarkers } from "../../hooks/useEffectiveMarkers";
+import { useMarkers } from "../../context/MarkersContext";
 import type { Marker } from "../../types";
 import {
   exportMarkersToFile,

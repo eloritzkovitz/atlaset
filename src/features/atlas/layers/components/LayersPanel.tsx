@@ -2,14 +2,14 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
-import { useCountryLists } from "@contexts/CountryListsContext";
-import { useLayers } from "@contexts/LayersContext";
-import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
-import { useEffectiveLayers } from "@features/atlas/layers";
+import { useCountryLists } from "@features/atlas/countries/context/CountryListsContext";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useAccessibility } from "@features/settings";
 import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
+import { useLayers } from "../context/LayersContext";
+import { useEffectiveLayers } from "../hooks/useEffectiveLayers";
 import type { Layer } from "../types";
 import { importLayersFromFile, exportLayersToFile } from "../utils/layerIO";
 

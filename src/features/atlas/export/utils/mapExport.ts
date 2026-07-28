@@ -2,7 +2,7 @@
  * Utility functions for exporting map SVGs and data.
  */
 
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
 import { downloadBlob, downloadCanvas } from "@utils/file";
 import { exportToFile } from "@utils/json";

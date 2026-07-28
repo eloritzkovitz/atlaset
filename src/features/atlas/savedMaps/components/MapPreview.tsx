@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import * as d3 from "d3-geo";
-import { useMapView } from "@contexts/MapViewContext";
 import {
   groupLayerItemsByIsoCode,
   getBlendedLayerColor,
 } from "@features/atlas/layers";
+import { useMapView } from "@features/atlas/map";
 import { useMapSettings } from "@features/atlas/settings";
 import { getCountryIsoCode } from "@features/countries";
 import type { SavedMap } from "../types";
