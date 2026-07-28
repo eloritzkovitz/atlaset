@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
@@ -27,7 +27,7 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     fetchFn: fetchLayers,
   });
 
-  const initialLayers = loadedLayers ?? [];
+  const initialLayers = useMemo(() => loadedLayers ?? [], [loadedLayers]);
 
   // Auth-aware initial fetch guard
   useEffect(() => {
@@ -44,26 +44,7 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
   }, [user?.uid, ready, reloadLayers]);
 
   // Layer manager for layers state and operations
-  const {
-    layers,
-    setLayers,
-    editingLayer,
-    setEditingLayer,
-    isEditingLayer,
-    isEditModalOpen,
-    importLayers: _importLayers,
-    addLayer,
-    editLayer,
-    updateLayerName,
-    reorderLayers,
-    toggleLayerVisibility,
-    duplicateLayer,
-    removeLayer,
-    openAddLayer,
-    openEditLayer,
-    saveLayer,
-    closeLayerModal,
-  } = useLayerManager({
+  const layerManager = useLayerManager({
     initialLayers,
     persistLayers: async (updatedLayers) => {
       await layersService.save(updatedLayers);
@@ -89,58 +70,21 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  // Load layers when auth state changes
-  useEffect(() => {
-    if (!ready) return;
-    reloadLayers();
-  }, [user?.uid, ready, reloadLayers]);
-
-  // Import layers from JSON
+  /** Imports new layers. */
   async function importLayers(newLayers: AnyLayer[]) {
-    const before = layers;
-    const merged = await _importLayers(newLayers);
-    const imported = merged.filter((l) => !before.some((b) => b.id === l.id));
-    for (const layer of imported) {
-      if (user?.uid) {
-        await logUserActivity(
-          211,
-          {
-            layerId: layer.id,
-            itemName: layer.name,
-            userName: user?.displayName,
-          },
-          user.uid,
-        );
-      }
-    }
+    await layerManager.importLayers(newLayers);
   }
 
   return (
     <LayersContext.Provider
       value={{
-        layers,
-        setLayers,
+        ...layerManager,
         layerSelections,
         setLayerSelections,
         reloadLayers,
         importLayers,
-        addLayer,
-        editLayer,
-        updateLayerName,
-        reorderLayers,
-        toggleLayerVisibility,
-        duplicateLayer,
-        removeLayer,
         loading,
         error,
-        editingLayer,
-        isEditingLayer,
-        isEditModalOpen,
-        openAddLayer,
-        openEditLayer,
-        saveLayer,
-        closeLayerModal,
-        setEditingLayer,
       }}
     >
       {children}

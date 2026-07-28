@@ -1,6 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  useMemo,
+} from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
+import { useDataLoader } from "@hooks";
 import { MarkersContext } from "./MarkersContext";
 import { useMarkerManager } from "../hooks/useMarkerManager";
 import { markersService } from "../services/markersService";
@@ -8,48 +15,35 @@ import type { Marker } from "../types";
 
 export function MarkersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();
+  const lastAction = useRef<string | null>(null);
+  const loadedUserIdRef = useRef<string | null>(null);
 
-  const [initialMarkers, setInitialMarkers] = useState<Marker[]>([]);
+  // Data loader for fetching markers
+  const fetchMarkers = useCallback(() => markersService.load(), []);
+  const { data: loadedMarkers, reload: reloadMarkers } = useDataLoader<
+    Marker[]
+  >({
+    fetchFn: fetchMarkers,
+  });
 
-  const lastAction = React.useRef<string | null>(null);
+  const initialMarkers = useMemo(() => loadedMarkers ?? [], [loadedMarkers]);
 
-  // Load markers when auth state changes
+  // Auth-aware initial fetch guard
   useEffect(() => {
-    let mounted = true;
     if (!ready) return;
-    if (user) {
-      markersService.load().then((dbMarkers) => {
-        if (mounted) setInitialMarkers(dbMarkers);
-      });
+
+    if (user?.uid) {
+      if (loadedUserIdRef.current !== user.uid) {
+        loadedUserIdRef.current = user.uid;
+        reloadMarkers();
+      }
+    } else {
+      loadedUserIdRef.current = null;
     }
-    return () => {
-      mounted = false;
-    };
-  }, [user, ready]);
+  }, [user?.uid, ready, reloadMarkers]);
 
   // Marker manager for markers state and operations
-  const {
-    markers,
-    editingMarker,
-    setEditingMarker,
-    isEditingMarker,
-    isMarkerModalOpen,
-    addMarker,
-    editMarker,
-    updateMarkerName,
-    toggleMarkerVisibility,
-    duplicateMarker,
-    reorderMarkers,
-    removeMarker,
-    openAddMarker,
-    openEditMarker,
-    saveMarker,
-    closeMarkerModal,
-    isAddingMarker,
-    startAddingMarker,
-    handleMapClickForMarker,
-    cancelMarkerCreation,
-  } = useMarkerManager({
+  const markerManager = useMarkerManager({
     initialMarkers,
     persistMarkers: async (updatedMarkers) => {
       await markersService.save(updatedMarkers);
@@ -57,9 +51,7 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     },
     onLogAction: async (action, marker) => {
       if (!user) return;
-
       lastAction.current = action;
-
       const actionCodes = { add: 221, edit: 222, remove: 223, reorder: 224 };
       await logUserActivity(
         actionCodes[action],
@@ -73,7 +65,6 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  // Selection state
   const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [detailsModalPosition, setDetailsModalPosition] = useState<{
@@ -81,7 +72,7 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     left: number;
   } | null>(null);
 
-  // Show marker details modal
+  /** Shows details for a specific marker. */
   function showMarkerDetails(
     marker: Marker,
     position?: { top: number; left: number },
@@ -91,7 +82,7 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     setDetailsModalPosition(position ?? null);
   }
 
-  // Close marker details modal
+  /** Closes the marker details modal. */
   function closeMarkerDetails() {
     setDetailsModalOpen(false);
     setSelectedMarker(null);
@@ -101,26 +92,8 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
   return (
     <MarkersContext.Provider
       value={{
-        markers,
-        editingMarker,
-        setEditingMarker,
-        isEditingMarker,
-        isMarkerModalOpen,
-        addMarker,
-        editMarker,
-        updateMarkerName,
-        toggleMarkerVisibility,
-        duplicateMarker,
-        reorderMarkers,
-        removeMarker,
-        openAddMarker,
-        openEditMarker,
-        saveMarker,
-        closeMarkerModal,
-        isAddingMarker,
-        startAddingMarker,
-        handleMapClickForMarker,
-        cancelMarkerCreation,
+        ...markerManager,
+        reloadMarkers,
         selectedMarker,
         detailsModalOpen,
         detailsModalPosition,

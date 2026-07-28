@@ -5,7 +5,7 @@ import {
   ToolbarSelectButton,
   DirectionalIcon,
 } from "@components";
-import type { ColorMode } from "@features/atlas/core";
+import type { ColorMode } from "@features/atlas/core/types";
 import { useMapView } from "@features/atlas/map";
 import { useLanguage } from "@features/settings";
 import { useTimeline } from "../../context/TimelineContext";

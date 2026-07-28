@@ -58,10 +58,32 @@ describe("markersService", () => {
   });
 
   describe("save", () => {
-    it("returns early if markers are empty or undefined", async () => {
-      await markersService.save([]);
+    it("returns early if markers is undefined", async () => {
+      await markersService.save(undefined as any);
       expect(fs.writeBatch).not.toHaveBeenCalled();
       expect(appDb.markers.clear).not.toHaveBeenCalled();
+    });
+
+    it("clears existing markers when passed an empty array (auth - Firestore batch)", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
+      fs.getDocs.mockResolvedValue(
+        createMockSnapshot([{ id: "o1", data: {} }]) as any,
+      );
+
+      await markersService.save([]);
+
+      expect(fs.writeBatch).toHaveBeenCalled();
+      expect(mockBatch.delete).toHaveBeenCalled();
+      expect(mockBatch.commit).toHaveBeenCalled();
+    });
+
+    it("clears localTable when passed an empty array (guest - IndexedDB)", async () => {
+      auth.isAuthenticated.mockReturnValue(false);
+
+      await markersService.save([]);
+
+      expect(appDb.markers.clear).toHaveBeenCalled();
+      expect(appDb.markers.bulkPut).not.toHaveBeenCalled();
     });
 
     it("saves all markers (auth - Firestore batch)", async () => {
@@ -77,7 +99,7 @@ describe("markersService", () => {
       auth.isAuthenticated.mockReturnValue(false);
       await markersService.save([{ id: "foo" }] as any);
       expect(appDb.markers.clear).toHaveBeenCalled();
-      expect(appDb.markers.bulkPut).toHaveBeenCalled();
+      expect(appDb.markers.bulkPut).toHaveBeenCalledWith([{ id: "foo" }]);
     });
   });
 

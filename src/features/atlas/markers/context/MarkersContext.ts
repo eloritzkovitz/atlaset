@@ -1,28 +1,9 @@
 import { createContext, useContext } from "react";
-import type { Coordinates } from "@features/atlas/map/types";
+import type { useMarkerManager } from "../hooks/useMarkerManager";
 import type { Marker } from "../types";
 
-export interface MarkersContextType {
-  markers: Marker[];
-  isAddingMarker: boolean;
-  startAddingMarker: () => void;
-  handleMapClickForMarker: (coords: Coordinates) => void;
-  cancelMarkerCreation: () => void;
-  addMarker: (marker: Marker) => void;
-  editMarker: (updated: Marker) => void;
-  updateMarkerName: (id: string, newName: string) => void;
-  toggleMarkerVisibility: (id: string) => void;
-  duplicateMarker: (id: string) => void;
-  reorderMarkers: (newOrder: Marker[]) => void;
-  removeMarker: (id: string) => void;
-  editingMarker: Marker | null;
-  setEditingMarker: React.Dispatch<React.SetStateAction<Marker | null>>;
-  isEditingMarker: boolean;
-  isMarkerModalOpen: boolean;
-  openAddMarker: (coords?: Coordinates) => void;
-  openEditMarker: (marker: Marker) => void;
-  saveMarker: () => void;
-  closeMarkerModal: () => void;
+export type MarkersContextType = ReturnType<typeof useMarkerManager> & {
+  reloadMarkers: () => Promise<Marker[]>;
   selectedMarker: Marker | null;
   detailsModalOpen: boolean;
   detailsModalPosition: { top: number; left: number } | null;
@@ -31,7 +12,7 @@ export interface MarkersContextType {
     coords?: { top: number; left: number },
   ) => void;
   closeMarkerDetails: () => void;
-}
+};
 
 export const MarkersContext = createContext<MarkersContextType | undefined>(
   undefined,

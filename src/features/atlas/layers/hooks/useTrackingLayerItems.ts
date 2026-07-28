@@ -1,9 +1,9 @@
 import { useMemo } from "react";
-import { useMapOverlays } from "@features/atlas/settings";
 import { useMapTheme } from "@features/atlas/core";
+import { useMapOverlays } from "@features/atlas/settings";
+import { type Country, type CountryList } from "@features/countries";
 import { useHomeCountry } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
-import { type Country, type CountryList } from "@features/countries";
 import type { LayerItem } from "../types";
 
 const TRACKING_LAYER_ID = "tracking";

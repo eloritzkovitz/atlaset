@@ -1,5 +1,6 @@
 import { writeBatch } from "firebase/firestore";
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
+import type { SavedMap } from "@features/atlas/savedMaps/types";
 import { appDb } from "@lib/db";
 import {
   db,
@@ -10,7 +11,6 @@ import {
 } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { CountryList } from "../types";
-import type { SavedMap } from "@features/atlas/savedMaps";
 
 export class CountryListService extends BaseService<
   CountryList,

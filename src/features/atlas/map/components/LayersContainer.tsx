@@ -1,7 +1,7 @@
 import type { GeoProjection } from "d3-geo";
 import { useCallback, useMemo } from "react";
 import { Tooltip } from "@components";
-import { useMapTheme } from "@features/atlas/core";
+import { useActiveLayerItems, useMapTheme } from "@features/atlas/core";
 import {
   getBlendedLayerColor,
   groupLayerItemsByIsoCode,
@@ -19,7 +19,6 @@ import { Geography } from "./Geography";
 import { SmallCountryOverlay } from "./SmallCountryOverlay";
 import { useMapView } from "../context/MapViewContext";
 import { useAtlasColoring } from "../hooks/useAtlasColoring";
-import { useMapLayerItems } from "../hooks/useMapLayerItems";
 import type { GeoData, GeographyFeature } from "../types";
 import { resolveCountryStyle } from "../utils/style";
 
@@ -55,7 +54,7 @@ export function LayersContainer({
   const { activeTarget, registerVirtualTarget, clearTarget } =
     useTooltipTarget();
 
-  const layerItems = useMapLayerItems(mapMode);
+  const layerItems = useActiveLayerItems(mapMode);
   const layerGroups = useMemo(
     () => groupLayerItemsByIsoCode(layerItems),
     [layerItems],

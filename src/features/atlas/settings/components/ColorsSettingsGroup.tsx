@@ -8,7 +8,7 @@ import {
 } from "@components";
 import { COLOR_PALETTE_GROUPS } from "@constants/colorPalettes";
 import { ICONS } from "@constants/icons";
-import type { ColorMode } from "@features/atlas/core";
+import type { ColorMode } from "@features/atlas/core/types";
 import { PaletteDots } from "./PaletteDots";
 import { useMapColors } from "../hooks/useMapColors";
 

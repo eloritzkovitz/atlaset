@@ -1,8 +1,7 @@
 import { createContext, useContext } from "react";
-import type { Layer } from "@features/atlas/layers/types";
-import type { Marker } from "@features/atlas/markers/types";
-import type { Coordinates } from "@features/atlas/map";
-import type { SavedMap } from "@features/atlas/savedMaps";
+import type { useLayerManager } from "@features/atlas/layers/hooks/useLayerManager";
+import type { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
+import type { SavedMap } from "../types";
 
 export interface SavedMapsContextValue {
   savedMaps: SavedMap[];
@@ -22,46 +21,8 @@ export interface SavedMapsContextValue {
   isSavedMapModalOpen: boolean;
   activeSavedMap: SavedMap | null;
   deleteSavedMap: (map: SavedMap) => Promise<void>;
-  // Layers
-  addLayer: (layer: Layer) => void;
-  updateLayerName: (id: string, newName: string) => void;
-  importLayers: (layers: Layer[]) => void;
-  editLayer: (layer: Layer) => void;
-  reorderLayers: (layers: Layer[]) => void;
-  toggleLayerVisibility: (layerId: string) => void;
-  duplicateLayer: (layerId: string) => void;
-  removeLayer: (layerId: string) => void;
-  isEditingSavedMapLayer: boolean;
-  activeSavedMapLayer: Layer | null;
-  setActiveSavedMapLayer: (layer: Layer | null) => void;
-  isEditSavedMapLayerModalOpen: boolean;
-  openAddLayer: () => void;
-  openEditLayer: (layer: Layer) => void;
-  closeLayerModal: () => void;
-  saveSavedMapLayer: () => void;
-  // Markers
-  savedMapMarkers: Marker[];
-  setSavedMapMarkers: (markers: Marker[]) => void;
-  activeSavedMapMarker: Marker | null;
-  setActiveSavedMapMarker: (marker: Marker | null) => void;
-  isEditingSavedMapMarker: boolean;
-  isEditSavedMapMarkerModalOpen: boolean;
-  addMarker: (marker: Marker) => Promise<void>;
-  editMarker: (marker: Marker) => Promise<void>;
-  updateMarkerName: (id: string, newName: string) => Promise<void>;
-  reorderMarkers: (markers: Marker[]) => Promise<void>;
-  toggleMarkerVisibility: (id: string) => Promise<void>;
-  duplicateMarker: (id: string) => Promise<void>;
-  removeMarker: (id: string) => Promise<void>;
-  openAddMarker: (coords?: Coordinates) => void;
-  openEditMarker: (marker: Marker) => void;
-  saveSavedMapMarker: () => Promise<void>;
-  closeMarkerModal: () => void;
-  // Marker creation state/handlers for saved maps
-  isAddingMarker: boolean;
-  startAddingMarker: () => void;
-  handleMapClickForMarker: (coords: Coordinates) => void;
-  cancelMarkerCreation: () => void;
+  layers: ReturnType<typeof useLayerManager>;
+  markers: ReturnType<typeof useMarkerManager>;
 }
 
 export const SavedMapsContext = createContext<

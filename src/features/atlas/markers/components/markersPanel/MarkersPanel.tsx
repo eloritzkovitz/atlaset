@@ -24,7 +24,6 @@ interface MarkersPanelProps {
   handleSavedMapChange?: {
     updateMarkerName: (id: string, newName: string) => void;
     toggleMarkerVisibility: (id: string) => void;
-    duplicateMarker: (id: string) => void;
     reorderMarkers: (markers: Marker[]) => void;
     removeMarker: (id: string) => void;
   };
@@ -42,7 +41,6 @@ export function MarkersPanel({
   const {
     updateMarkerName,
     toggleMarkerVisibility,
-    duplicateMarker,
     reorderMarkers,
     removeMarker,
   } = useMarkers();
@@ -180,13 +178,6 @@ export function MarkersPanel({
                             )
                         : (newName: string) =>
                             updateMarkerName(marker.id, newName)
-                      : undefined
-                  }
-                  onDuplicate={
-                    !isReadonly
-                      ? isEditingSavedMap
-                        ? () => handleSavedMapChange?.duplicateMarker(marker.id)
-                        : () => duplicateMarker(marker.id)
                       : undefined
                   }
                   onRemove={

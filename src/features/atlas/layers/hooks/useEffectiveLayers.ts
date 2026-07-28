@@ -1,27 +1,16 @@
-import { useSharedMapInfo } from "@features/atlas/export/hooks/useSharedMapInfo";
-import { useMapView } from "@features/atlas/map/context/MapViewContext";
-import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
+import { useEffectiveMapData } from "@features/atlas/core";
 import { useLayers } from "../context/LayersContext";
+import type { Layer } from "../types";
 
 /**
  * Returns the effective layers based on the map view mode.
- * In readonly mode, shared layers are returned if available.
- * @returns Array of effective layers.
  */
-export function useEffectiveLayers() {
+export function useEffectiveLayers(): Layer[] {
   const { layers } = useLayers();
-  const { isEdit, isReadonly } = useMapView();
-  const { activeSavedMap } = useSavedMaps();
-  const { layers: sharedLayers } = useSharedMapInfo();
 
-  // In edit mode, use activeSavedMap.layers if available
-  if (isEdit && activeSavedMap && Array.isArray(activeSavedMap.layers)) {
-    return activeSavedMap.layers;
-  }
-
-  // In readonly mode, use shared layers if available
-  if (isReadonly && sharedLayers) {
-    return sharedLayers;
-  }
-  return layers;
+  return useEffectiveMapData({
+    local: layers,
+    saved: (activeMap) => activeMap?.layers,
+    shared: (sharedInfo) => sharedInfo.layers,
+  });
 }

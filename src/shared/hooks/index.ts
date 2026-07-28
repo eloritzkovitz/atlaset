@@ -7,6 +7,7 @@ export * from "./animation/useValueFlash";
 
 // Data
 export * from "./data/useDataLoader";
+export * from "./data/useEntityCollection";
 export * from "./data/useIncrementalList";
 export * from "./data/usePagination";
 export * from "./data/useSort";

@@ -5,11 +5,13 @@ import {
   useCallback,
   useMemo,
 } from "react";
-import { getCountryCenterAndZoom, type Coordinates } from "@features/atlas/map";
-import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
-import { useMapMode, type ColorMode } from "@features/atlas/core";
+import { useMapMode } from "@features/atlas/core/hooks/useMapMode";
+import type { ColorMode } from "@features/atlas/core/types";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
+import { useGetGeoDataQuery } from "../api/mapApi";
+import type { Coordinates } from "../types";
+import { getCountryCenterAndZoom } from "../utils/projection";
 
 export interface MapViewProviderProps {
   children: ReactNode;

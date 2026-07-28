@@ -11,7 +11,7 @@ export function useMarkerCreation() {
   const { isEdit } = useMapView();
   const main = useMarkers();
   const saved = useSavedMaps();
-  const ctx = isEdit ? saved : main;
+  const ctx = isEdit ? saved.markers : main;
   const { isAddingMarker, cancelMarkerCreation } = ctx;
 
   // Handle Escape key to cancel marker creation using useEventListener

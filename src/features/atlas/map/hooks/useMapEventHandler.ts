@@ -15,7 +15,8 @@ export function useMapEventHandler() {
   const markerContext = useMarkers();
   const savedMapsContext = useSavedMaps();
 
-  const activeMarkerManager = isEdit ? savedMapsContext : markerContext;
+  // Select the appropriate marker manager sub-object based on edit mode
+  const activeMarkerManager = isEdit ? savedMapsContext.markers : markerContext;
   const { isAddingMarker, handleMapClickForMarker } = activeMarkerManager;
 
   return (event: React.MouseEvent<SVGSVGElement>) => {

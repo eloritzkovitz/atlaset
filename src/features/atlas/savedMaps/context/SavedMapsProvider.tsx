@@ -20,7 +20,10 @@ import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
 import { getQueryParam } from "@utils/url";
-import { SavedMapsContext } from "./SavedMapsContext";
+import {
+  SavedMapsContext,
+  type SavedMapsContextValue,
+} from "./SavedMapsContext";
 import { savedMapsService } from "../services/savedMapsService";
 import { type SavedMap } from "../types";
 
@@ -53,26 +56,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   }, [reloadSavedMaps]);
 
   // Layer manager for saved map layers
-  const {
-    layers: savedMapLayers,
-    setLayers: setSavedMapLayers,
-    editingLayer: activeSavedMapLayer,
-    setEditingLayer: setActiveSavedMapLayer,
-    isEditingLayer: isEditingSavedMapLayer,
-    isEditModalOpen: isEditSavedMapLayerModalOpen,
-    addLayer,
-    editLayer,
-    updateLayerName,
-    reorderLayers,
-    toggleLayerVisibility,
-    duplicateLayer,
-    removeLayer,
-    openAddLayer,
-    openEditLayer,
-    saveLayer: saveSavedMapLayer,
-    closeLayerModal,
-    importLayers: _importLayers,
-  } = useLayerManager({
+  const layerManager = useLayerManager({
     initialLayers: activeSavedMap?.layers ?? [],
     persistLayers: async (layers) => {
       if (!activeSavedMap) return;
@@ -102,35 +86,13 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   });
 
   // Marker manager for saved map markers
-  const {
-    markers: savedMapMarkers,
-    setMarkers: setSavedMapMarkers,
-    editingMarker: activeSavedMapMarker,
-    setEditingMarker: setActiveSavedMapMarker,
-    isEditingMarker: isEditingSavedMapMarker,
-    isMarkerModalOpen: isEditSavedMapMarkerModalOpen,
-    addMarker,
-    editMarker,
-    updateMarkerName,
-    reorderMarkers,
-    toggleMarkerVisibility,
-    duplicateMarker,
-    removeMarker,
-    openAddMarker,
-    openEditMarker,
-    saveMarker: saveSavedMapMarker,
-    closeMarkerModal,
-    isAddingMarker,
-    startAddingMarker,
-    handleMapClickForMarker,
-    cancelMarkerCreation,
-  } = useMarkerManager({
+  const markerManager = useMarkerManager({
     initialMarkers: activeSavedMap?.markers ?? [],
     persistMarkers: async (markers) => {
       if (!activeSavedMap) return;
       const updated = { ...activeSavedMap, markers };
       setActiveSavedMap(updated);
-      setSavedMapMarkers(markers);
+      markerManager.setMarkers(markers);
       await savedMapsService.set(updated);
     },
     onLogAction: async (action, marker) => {
@@ -150,6 +112,32 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
+  // Handle importing layers into the active saved map
+  const handleImportLayers = async (layers: Layer[]) => {
+    if (!activeSavedMap) return [];
+    const before = layerManager.layers;
+    const merged = await layerManager.importLayers(layers);
+    const imported = merged.filter((l) => !before.some((b) => b.id === l.id));
+    for (const layer of imported) {
+      if (user?.uid) {
+        await logUserActivity(
+          234,
+          {
+            layerId: layer.id,
+            itemName: layer.name,
+            mapName: activeSavedMap.name,
+          },
+          user.uid,
+        );
+      }
+    }
+    const updated = { ...activeSavedMap, layers: merged };
+    setActiveSavedMap(updated);
+    await savedMapsService.set(updated);
+    await reloadSavedMaps();
+    return merged;
+  };
+
   // Log user activity for saved map actions
   const logMapAction = async (action: "add" | "delete", map: SavedMap) => {
     if (!user?.uid) return;
@@ -168,10 +156,11 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   // Sync activeSavedMap layers/markers with layer/marker managers
   useEffect(() => {
     if (activeSavedMap) {
-      setSavedMapLayers(activeSavedMap.layers ?? []);
-      setSavedMapMarkers(activeSavedMap.markers ?? []);
+      layerManager.setLayers(activeSavedMap.layers ?? []);
+      markerManager.setMarkers(activeSavedMap.markers ?? []);
     }
-  }, [activeSavedMap, setSavedMapLayers, setSavedMapMarkers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeSavedMap]);
 
   // Watch mapMode and mapId from hook and load/clear activeSavedMap accordingly
   useEffect(() => {
@@ -195,7 +184,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   function closeSavedMapModal() {
     setSavedMapModalOpen(false);
     setTimeout(() => {
-      if (!isEditSavedMapLayerModalOpen) {
+      if (!layerManager.isEditModalOpen) {
         setActiveSavedMap(null);
       }
     }, 0);
@@ -210,7 +199,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`,
     );
     setActiveSavedMap(null);
-    setSavedMapLayers([]);
+    layerManager.setLayers([]);
   }
 
   // Create a new map
@@ -320,31 +309,6 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     await reloadSavedMaps();
   }
 
-  // Import layers into the editing saved map
-  async function importLayers(layers: Layer[]) {
-    if (!activeSavedMap) return;
-    const before = savedMapLayers;
-    const merged = await _importLayers(layers);
-    const imported = merged.filter((l) => !before.some((b) => b.id === l.id));
-    for (const layer of imported) {
-      if (user?.uid) {
-        await logUserActivity(
-          234,
-          {
-            layerId: layer.id,
-            itemName: layer.name,
-            mapName: activeSavedMap.name,
-          },
-          user.uid,
-        );
-      }
-    }
-    const updated = { ...activeSavedMap, layers: merged };
-    setActiveSavedMap(updated);
-    await savedMapsService.set(updated);
-    await reloadSavedMaps();
-  }
-
   // Delete a saved map
   async function deleteSavedMap(map: SavedMap) {
     const mapToDelete = savedMaps.find((m) => m.id === map.id);
@@ -367,68 +331,33 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     await reloadSavedMaps();
   }
 
+  const value: SavedMapsContextValue = {
+    savedMaps,
+    loading,
+    error,
+    reloadSavedMaps,
+    createNewMap,
+    duplicateSavedMap,
+    saveCurrentMap,
+    viewSavedMap,
+    loadSavedMapForEditing,
+    isSavedMapModalOpen,
+    activeSavedMap,
+    openSavedMapModal,
+    closeSavedMapModal,
+    saveSavedMap,
+    deleteSavedMap,
+    updateSavedMapName,
+    exitEditMode,
+    layers: {
+      ...layerManager,
+      importLayers: handleImportLayers,
+    },
+    markers: markerManager,
+  };
+
   return (
-    <SavedMapsContext.Provider
-      value={{
-        savedMaps,
-        loading,
-        error,
-        reloadSavedMaps,
-        createNewMap,
-        duplicateSavedMap,
-        saveCurrentMap,
-        viewSavedMap,
-        loadSavedMapForEditing,
-        isSavedMapModalOpen,
-        activeSavedMap,
-        openSavedMapModal,
-        closeSavedMapModal,
-        saveSavedMap,
-        deleteSavedMap,
-        updateSavedMapName,
-        updateLayerName,
-        // Layers
-        saveSavedMapLayer,
-        addLayer,
-        importLayers,
-        editLayer,
-        duplicateLayer,
-        removeLayer,
-        reorderLayers,
-        toggleLayerVisibility,
-        isEditingSavedMapLayer,
-        activeSavedMapLayer,
-        setActiveSavedMapLayer,
-        isEditSavedMapLayerModalOpen,
-        openAddLayer,
-        openEditLayer,
-        closeLayerModal,
-        // Markers
-        savedMapMarkers,
-        setSavedMapMarkers,
-        activeSavedMapMarker,
-        setActiveSavedMapMarker,
-        isEditingSavedMapMarker,
-        isEditSavedMapMarkerModalOpen,
-        addMarker,
-        editMarker,
-        updateMarkerName,
-        reorderMarkers,
-        toggleMarkerVisibility,
-        duplicateMarker,
-        removeMarker,
-        openAddMarker,
-        openEditMarker,
-        saveSavedMapMarker,
-        closeMarkerModal,
-        // Marker creation state/handlers
-        isAddingMarker,
-        startAddingMarker,
-        handleMapClickForMarker,
-        cancelMarkerCreation,
-        exitEditMode,
-      }}
-    >
+    <SavedMapsContext.Provider value={value}>
       {children}
     </SavedMapsContext.Provider>
   );
