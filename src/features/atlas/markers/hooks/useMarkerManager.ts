@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { Coordinates } from "@features/atlas/map/types";
 import { useEntityCollection } from "@hooks";
 import type { Marker } from "../types";
+import { DEFAULT_NEW_MARKER } from "../constants/markers";
 
 export interface UseMarkerManagerOptions {
   initialMarkers: Marker[];
@@ -48,21 +48,29 @@ export function useMarkerManager({
   }
 
   /** Handles map click events for adding a new marker. */
-  function handleMapClickForMarker(coords: Coordinates) {
+  function handleCountryClickForMarker(isoCode: string, countryName: string) {
     if (!isAddingMarker) return;
-    openAddMarker(coords);
+
+    // Check if country already has a marker
+    const existing = collection.items.find(
+      (m) => m.isoCode.toUpperCase() === isoCode.toUpperCase(),
+    );
+
+    // If a marker already exists for this country, do not add a new one
+    if (existing) return;
+
+    openAddMarker(isoCode, countryName);
     setIsAddingMarker(false);
   }
 
   /** Opens the modal for adding a new marker. */
-  function openAddMarker(coords?: Coordinates) {
+  function openAddMarker(isoCode: string = "", countryName: string = "") {
+    const formattedIso = isoCode.toUpperCase();
     setEditingMarker({
+      ...DEFAULT_NEW_MARKER,
       id: crypto.randomUUID(),
-      name: "",
-      color: "#e53e3e",
-      description: "",
-      coordinates: coords || [0, 0],
-      visible: true,
+      isoCode: formattedIso,
+      name: countryName || formattedIso,
     });
     setMarkerModalOpen(true);
   }
@@ -110,7 +118,7 @@ export function useMarkerManager({
     saveMarker,
     isAddingMarker,
     startAddingMarker,
-    handleMapClickForMarker,
+    handleCountryClickForMarker,
     cancelMarkerCreation,
   };
 }

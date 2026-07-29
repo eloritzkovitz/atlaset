@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 /** Represents an entity in the collection. */
 export interface Entity {
   id: string;
+  order?: number;
   visible?: boolean;
 }
 
@@ -31,7 +32,6 @@ export function useEntityCollection<T extends Entity>({
 }: UseEntityCollectionOptions<T>) {
   const [items, setItems] = useState<T[]>(initialItems);
   const itemsRef = useRef<T[]>(items);
-  const isProcessing = useRef(false);
 
   itemsRef.current = items;
 
@@ -57,65 +57,53 @@ export function useEntityCollection<T extends Entity>({
 
   /** Adds a new item. */
   async function addItem(newItem: T) {
-    if (isProcessing.current) return;
-    isProcessing.current = true;
-    try {
-      const currentItems = itemsRef.current;
-      const nextItems = [...currentItems, newItem];
-      if (onLogAction) await onLogAction("add", newItem);
-      await applyChange(nextItems);
-    } finally {
-      isProcessing.current = false;
-    }
+    const currentItems = itemsRef.current;
+    const itemWithOrder = {
+      ...newItem,
+      order: newItem.order ?? currentItems.length,
+    };
+
+    const nextItems = [...currentItems, itemWithOrder];
+
+    if (onLogAction) await onLogAction("add", itemWithOrder);
+    await applyChange(nextItems);
   }
 
   /** Edits an existing item. */
   async function updateItem(updatedItem: T) {
-    if (isProcessing.current) return;
-    isProcessing.current = true;
-    try {
-      const currentItems = itemsRef.current;
-      const nextItems = currentItems.map((item) =>
-        item.id === updatedItem.id ? updatedItem : item,
-      );
-      if (onLogAction) await onLogAction("edit", updatedItem);
-      await applyChange(nextItems);
-    } finally {
-      isProcessing.current = false;
-    }
+    const currentItems = itemsRef.current;
+    const nextItems = currentItems.map((item) =>
+      item.id === updatedItem.id ? updatedItem : item,
+    );
+
+    if (onLogAction) await onLogAction("edit", updatedItem);
+    await applyChange(nextItems);
   }
 
-  /** Removes an item by ID. Returns early if target ID is not found. */
+  /** Removes an item by ID. */
   async function removeItem(id: string) {
-    if (isProcessing.current) return;
-
-    // Check target FIRST before locking
     const currentItems = itemsRef.current;
     const target = currentItems.find((item) => item.id === id);
     if (!target) return;
 
-    isProcessing.current = true;
-    try {
-      const nextItems = currentItems.filter((item) => item.id !== id);
-      if (onLogAction) await onLogAction("remove", target);
-      await applyChange(nextItems);
-    } finally {
-      isProcessing.current = false;
-    }
+    const nextItems = currentItems.filter((item) => item.id !== id);
+
+    if (onLogAction) await onLogAction("remove", target);
+    await applyChange(nextItems);
   }
 
   /** Reorders the collection. */
   async function reorderItems(newOrder: T[]) {
-    if (isProcessing.current) return;
-    isProcessing.current = true;
-    try {
-      if (onLogAction && newOrder.length > 0) {
-        await onLogAction("reorder", newOrder[0]);
-      }
-      await applyChange(newOrder);
-    } finally {
-      isProcessing.current = false;
+    const indexedOrder = newOrder.map((item, index) => ({
+      ...item,
+      order: index,
+    }));
+
+    if (onLogAction && indexedOrder.length > 0) {
+      await onLogAction("reorder", indexedOrder[0]);
     }
+
+    await applyChange(indexedOrder);
   }
 
   /** Updates the name of an item. */

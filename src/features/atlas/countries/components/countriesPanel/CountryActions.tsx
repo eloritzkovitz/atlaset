@@ -119,6 +119,9 @@ export const CountryActions = forwardRef(function CountryActions(
     ...(actionsObj.toggleWantToVisit?.disabled
       ? []
       : [{ id: "wantToVisit", ...actionsObj.toggleWantToVisit }]),
+    ...(actionsObj.markerAction
+      ? [{ id: "marker", ...actionsObj.markerAction }]
+      : []),
   ];
   const resourceSection = [
     actionsObj.viewDashboard,

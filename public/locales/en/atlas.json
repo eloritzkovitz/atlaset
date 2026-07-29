@@ -48,8 +48,10 @@
       "markWantToVisit": "Mark 'Want to Visit'",
       "unmarkWantToVisit": "Unmark 'Want to Visit'",
       "visited": "Visited",
+      "addMarker": "Add Marker",
+      "editMarker": "Edit Marker",
       "centerMap": "Center on Map",
-      "viewDashboard": "View in Dashboard"      
+      "viewDashboard": "View in Dashboard"
     },
     "searchPlaceholder": "Search countries",
     "lists": {
@@ -168,7 +170,7 @@
     "saveChanges": "Save Changes"
   },
   "markers": {
-    "hint": "Click on the map to add a marker.",
+    "hint": "Click on the map to add a marker. Press Escape to cancel.",
     "title": "Markers",
     "add": "Add Marker",
     "import": "Import Markers",
@@ -181,10 +183,10 @@
       "name": "Name",
       "namePlaceholder": "Marker name",
       "color": "Color",
-      "description": "Description",
-      "descriptionPlaceholder": "Description (optional)"
+      "notes": "Notes",
+      "notesPlaceholder": "Add your notes here..."
     },
-    "noDescription": "No description provided.",
+    "noNotes": "No notes provided.",
     "locationLabel": "Location:",
     "saveChanges": "Save Changes"
   },

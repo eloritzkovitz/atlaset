@@ -57,66 +57,55 @@ describe("useEntityCollection", () => {
       useEntityCollection({ initialItems: [item1], persistItems, onLogAction }),
     );
 
+    const item2WithOrder = { ...item2, order: 1 };
+
     await act(async () => {
       await result.current.addItem(item2);
     });
-    expect(result.current.items).toEqual([item1, item2]);
-    expect(onLogAction).toHaveBeenLastCalledWith("add", item2);
-    expect(persistItems).toHaveBeenLastCalledWith([item1, item2]);
+    expect(result.current.items).toEqual([item1, item2WithOrder]);
+    expect(onLogAction).toHaveBeenLastCalledWith("add", item2WithOrder);
+    expect(persistItems).toHaveBeenLastCalledWith([item1, item2WithOrder]);
 
     const updated = { id: "1", name: "Updated 1" };
     await act(async () => {
       await result.current.updateItem(updated);
     });
-    expect(result.current.items).toEqual([updated, item2]);
+    expect(result.current.items).toEqual([updated, item2WithOrder]);
     expect(onLogAction).toHaveBeenLastCalledWith("edit", updated);
 
-    await act(async () => {
-      await result.current.reorderItems([item2, updated]);
-    });
-    expect(result.current.items).toEqual([item2, updated]);
-    expect(onLogAction).toHaveBeenLastCalledWith("reorder", item2);
+    const item2Reordered = { ...item2WithOrder, order: 0 };
+    const updatedReordered = { ...updated, order: 1 };
 
+    await act(async () => {
+      await result.current.reorderItems([item2WithOrder, updated]);
+    });
+    expect(result.current.items).toEqual([item2Reordered, updatedReordered]);
+    expect(onLogAction).toHaveBeenLastCalledWith("reorder", item2Reordered);
+
+    const renamed1 = { ...updatedReordered, name: "Renamed 1" };
     await act(async () => {
       await result.current.updateItemName("1", "Renamed 1");
     });
-    expect(result.current.items).toEqual([
-      item2,
-      { ...updated, name: "Renamed 1" },
-    ]);
-    expect(onLogAction).toHaveBeenLastCalledWith("edit", {
-      ...updated,
-      name: "Renamed 1",
-    });
+    expect(result.current.items).toEqual([item2Reordered, renamed1]);
+    expect(onLogAction).toHaveBeenLastCalledWith("edit", renamed1);
 
+    const visible1 = { ...renamed1, visible: true };
     await act(async () => {
       await result.current.toggleItemVisibility("1");
     });
-    expect(result.current.items).toEqual([
-      item2,
-      { ...updated, name: "Renamed 1", visible: true },
-    ]);
-    expect(onLogAction).toHaveBeenLastCalledWith("edit", {
-      ...updated,
-      name: "Renamed 1",
-      visible: true,
-    });
+    expect(result.current.items).toEqual([item2Reordered, visible1]);
+    expect(onLogAction).toHaveBeenLastCalledWith("edit", visible1);
 
     await act(async () => {
       await result.current.removeItem("missing_id");
     });
-    expect(result.current.items).toEqual([
-      item2,
-      { ...updated, name: "Renamed 1", visible: true },
-    ]);
+    expect(result.current.items).toEqual([item2Reordered, visible1]);
 
     await act(async () => {
       await result.current.removeItem("2");
     });
-    expect(result.current.items).toEqual([
-      { ...updated, name: "Renamed 1", visible: true },
-    ]);
-    expect(onLogAction).toHaveBeenLastCalledWith("remove", item2);
+    expect(result.current.items).toEqual([visible1]);
+    expect(onLogAction).toHaveBeenLastCalledWith("remove", item2Reordered);
   });
 
   test("supports operating without onLogAction callback", async () => {

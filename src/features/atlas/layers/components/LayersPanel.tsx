@@ -39,31 +39,23 @@ export function LayersPanel({
 }: LayersPanelProps) {
   const { animationsEnabled } = useAccessibility();
   const { createListFromLayer } = useCountryLists();
+  const effectiveLayersFromContext = useEffectiveLayers();
+  const globalLayerActions = useLayers();
+  const { isReadonly } = useMapView();
   const { t } = useTranslation("atlas");
   const { showLayers, closePanel } = useUI();
-  const {
-    layers,
-    importLayers,
-    editLayer,
-    updateLayerName,
-    reorderLayers,
-    toggleLayerVisibility,
-    duplicateLayer,
-    removeLayer,
-  } = useLayers();
-  const effectiveLayersFromContext = useEffectiveLayers();
+
   const effectiveLayers = activeSavedMapLayers ?? effectiveLayersFromContext;
   const isEditingSavedMap = !!activeSavedMapLayers && !!handleSavedMapChange;
 
-  const { isReadonly } = useMapView();
+  // Resolve actions object (Saved Map vs Global Context)
+  const actions = isEditingSavedMap
+    ? handleSavedMapChange!
+    : globalLayerActions;
 
   // Drag state
-  const dragLayers = isEditingSavedMap ? activeSavedMapLayers! : layers;
-  const dragReorder = isEditingSavedMap
-    ? handleSavedMapChange?.reorderLayers
-    : reorderLayers;
   const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
-    useDragReorder(dragLayers, dragReorder);
+    useDragReorder(effectiveLayers, actions.reorderLayers);
 
   // File input reference for importing layers
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -103,13 +95,7 @@ export function LayersPanel({
                 type="file"
                 accept="application/json"
                 ref={fileInputRef}
-                onChange={(e) => {
-                  if (isEditingSavedMap && handleSavedMapChange) {
-                    importLayersFromFile(e, handleSavedMapChange.importLayers);
-                  } else {
-                    importLayersFromFile(e, importLayers);
-                  }
-                }}
+                onChange={(e) => importLayersFromFile(e, actions.importLayers)}
                 style={{ display: "none" }}
               />
             </>
@@ -136,53 +122,34 @@ export function LayersPanel({
                 layer={layer}
                 onToggleVisibility={
                   !isReadonly
-                    ? isEditingSavedMap
-                      ? handleSavedMapChange?.toggleLayerVisibility
-                      : toggleLayerVisibility
+                    ? () => actions.toggleLayerVisibility(layer.id)
                     : undefined
                 }
                 onDownload={
                   !isReadonly ? () => exportLayersToFile(layer) : undefined
                 }
-                onEdit={!isReadonly ? onEditLayer : undefined}
+                onEdit={!isReadonly ? () => onEditLayer(layer) : undefined}
                 onNameChange={
                   !isReadonly
-                    ? isEditingSavedMap
-                      ? (newName) =>
-                          handleSavedMapChange?.updateLayerName(
-                            layer.id,
-                            newName,
-                          )
-                      : (newName) => updateLayerName(layer.id, newName)
+                    ? (newName) => actions.updateLayerName(layer.id, newName)
                     : undefined
                 }
                 onDuplicate={
                   !isReadonly
-                    ? isEditingSavedMap
-                      ? () => handleSavedMapChange?.duplicateLayer(layer.id)
-                      : () => duplicateLayer(layer.id)
+                    ? () => actions.duplicateLayer(layer.id)
                     : undefined
                 }
                 onCreateList={
                   !isReadonly
                     ? async () => {
                         await createListFromLayer(layer, (newListId) => {
-                          const update = { ...layer, listId: newListId };
-                          if (isEditingSavedMap && handleSavedMapChange) {
-                            handleSavedMapChange.editLayer(update);
-                          } else {
-                            editLayer(update);
-                          }
+                          actions.editLayer({ ...layer, listId: newListId });
                         });
                       }
                     : undefined
                 }
                 onRemove={
-                  !isReadonly
-                    ? isEditingSavedMap
-                      ? handleSavedMapChange?.removeLayer
-                      : removeLayer
-                    : undefined
+                  !isReadonly ? () => actions.removeLayer(layer.id) : undefined
                 }
                 dragged={draggedIndex === index}
                 onDragStart={

@@ -47,9 +47,9 @@ export function SavedMapPanelItem({
           .filter((m) => m.visible !== false)
           .map((m) => ({
             name: m.name,
-            coordinates: m.coordinates,
+            isoCode: m.isoCode,
             color: m.color,
-            description: m.description,
+            notes: m.notes,
           }))
       : [],
     mapName: map.name,

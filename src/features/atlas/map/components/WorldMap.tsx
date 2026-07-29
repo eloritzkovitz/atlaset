@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo } from "react";
+import { useMarkerCreation } from "@features/atlas/markers";
 import { useMapSettings } from "@features/atlas/settings";
 import { useHighlightYearlyCountries } from "@features/atlas/timeline";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
-import { useContainerDimensions } from "@hooks";
 import { LayersContainer } from "./LayersContainer";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapView } from "../context/MapViewContext";
-import { useMapEventHandler } from "../hooks/useMapEventHandler";
+import { useMapDimensions } from "../hooks/useMapDimensions";
 import { MapProvider } from "../providers/MapProvider";
 
 export interface WorldMapProps {
@@ -21,6 +21,7 @@ export interface WorldMapProps {
   isAddingMarker: boolean;
 }
 
+/** Renders a world map with interactive features. */
 export function WorldMap({
   onCountryClick,
   onCountryHover,
@@ -30,41 +31,16 @@ export function WorldMap({
   svgRef,
   isAddingMarker,
 }: WorldMapProps) {
+  const { containerRef, mapWidth, mapHeight } = useMapDimensions();
   const { projection } = useMapSettings();
-  const {
-    colorMode,
-    geoData,
-    dimensions,
-    setDimensions,
-    zoom,
-    center,
-    handleMoveEnd,
-  } = useMapView();
+  const { colorMode, geoData, zoom, center, handleMoveEnd } = useMapView();
 
-  const containerRef = useRef<HTMLDivElement>(null);
-  const measuredDimensions = useContainerDimensions(containerRef);
-
-  // Update map dimensions when measured dimensions are available
-  useEffect(() => {
-    if (measuredDimensions.width > 0 && measuredDimensions.height > 0) {
-      setDimensions(measuredDimensions);
-    }
-  }, [measuredDimensions, setDimensions]);
-
-  // Safe dimensions for SVG attributes & projections
-  const mapWidth =
-    dimensions.width > 0 ? dimensions.width : measuredDimensions.width || 800;
-  const mapHeight =
-    dimensions.height > 0
-      ? dimensions.height
-      : measuredDimensions.height || 600;
+  // Handle country clicks, either for adding a marker or for normal interaction
+  const { handleCountryClick } = useMarkerCreation({ onCountryClick });
 
   // Get highlighted countries for the current timeline year
   const [highlightedIsoCodes, highlightDirection] =
     useHighlightYearlyCountries();
-
-  // Handle map event for mouse move or click
-  const handleMapEvent = useMapEventHandler();
 
   // Call onReady when map data is loaded
   useEffect(() => {
@@ -73,7 +49,6 @@ export function WorldMap({
     }
   }, [onReady, geoData]);
 
-  // Memoize projection configuration using safe non-zero dimensions
   const projectionConfig = useMemo(
     () => ({
       scale: Math.min(mapWidth, mapHeight) / DEFAULT_MAP_SETTINGS.scaleDivisor,
@@ -112,9 +87,7 @@ export function WorldMap({
             viewBox={`0 0 ${mapWidth} ${mapHeight}`}
             width="100%"
             height="100%"
-            className="rsm-svg w-full h-full block"
-            onMouseMove={handleMapEvent}
-            onClick={handleMapEvent}
+            className={`rsm-svg w-full h-full block ${isAddingMarker ? "cursor-crosshair" : ""}`}
             ref={svgRef}
           >
             <ZoomableGroup
@@ -131,17 +104,11 @@ export function WorldMap({
                 highlightedIsoCodes={
                   highlightDirection === "asc" ? highlightedIsoCodes : []
                 }
-                onCountryClick={onCountryClick}
+                onCountryClick={handleCountryClick}
                 onCountryHover={onCountryHover}
                 isAddingMarker={isAddingMarker}
               />
-              <MarkersContainer
-                projectionType={activeProjection}
-                width={mapWidth}
-                height={mapHeight}
-                scaleDivisor={DEFAULT_MAP_SETTINGS.scaleDivisor}
-                zoom={zoom}
-              />
+              <MarkersContainer zoom={zoom} />
             </ZoomableGroup>
           </svg>
         </MapProvider>

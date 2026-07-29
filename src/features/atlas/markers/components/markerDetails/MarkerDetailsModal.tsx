@@ -68,8 +68,7 @@ function MarkerDetailsContent({
         }
       />
       <div className="mb-4 text-muted">
-        {marker.description ||
-          t("markers.noDescription", "No description provided.")}
+        {marker.notes || t("markers.noNotes", "No notes provided.")}
       </div>
     </div>
   );

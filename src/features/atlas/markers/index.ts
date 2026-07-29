@@ -1,5 +1,5 @@
 // Components
-export { Marker } from "./components/Marker";
+export { MarkerPin } from "./components/MarkerPin";
 export { MarkerDetailsModal } from "./components/markerDetails/MarkerDetailsModal";
 export { MarkerModal } from "./components/markerModal/MarkerModal";
 export { MarkersPanel } from "./components/markersPanel/MarkersPanel";
@@ -17,7 +17,7 @@ export { useMarkerSelection } from "./hooks/useMarkerSelection";
 export { markersService } from "./services/markersService";
 
 // Types
-export { type Marker as MarkerType } from "./types";
+export * from "./types";
 
 // Utils
 export { normalizeMarkers } from "./utils/markers";

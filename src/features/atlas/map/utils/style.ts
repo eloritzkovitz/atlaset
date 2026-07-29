@@ -10,6 +10,7 @@ interface ResolveStyleArgs {
   isAtlasActive: boolean;
   atlasColor?: string;
   blendedFill?: string | null;
+  isAddingMarker?: boolean;
 }
 
 /**
@@ -21,6 +22,7 @@ interface ResolveStyleArgs {
  * @param isAtlasActive - Whether the atlas mode is active.
  * @param atlasColor - The color to use when the atlas mode is active.
  * @param blendedFill - The blended fill color to use if provided.
+ * @param isAddingMarker - Whether the user is currently adding a marker.
  * @returns The resolved style for the country.
  */
 export function resolveCountryStyle({
@@ -31,6 +33,7 @@ export function resolveCountryStyle({
   isAtlasActive,
   atlasColor,
   blendedFill,
+  isAddingMarker,
 }: ResolveStyleArgs) {
   let fill = geographyStyle.default.fill;
 
@@ -44,5 +47,8 @@ export function resolveCountryStyle({
     fill = blendedFill;
   }
 
-  return { ...geographyStyle.default, fill };
+  // Determine cursor based on whether user is in marker creation mode
+  const cursor = isAddingMarker ? "crosshair" : "pointer";
+
+  return { ...geographyStyle.default, fill, cursor };
 }

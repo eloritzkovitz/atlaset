@@ -2,9 +2,6 @@
 export { LayerModal } from "./components/LayerModal";
 export { LayersPanel } from "./components/LayersPanel";
 
-// Constants
-export { VISITED_LAYER_ID, DEFAULT_NEW_LAYER } from "./constants/layers";
-
 // Context
 export { LayersContext, useLayers } from "./context/LayersContext";
 

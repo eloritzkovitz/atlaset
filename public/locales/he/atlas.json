@@ -47,6 +47,8 @@
       "unmarkVisited": "הסרה מרשימת הביקורים",
       "markWantToVisit": "סימון 'רוצה לבקר'",
       "unmarkWantToVisit": "הסרה מרשימת 'רוצה לבקר'",
+      "addMarker": "הוסף סימון",
+      "editMarker": "ערוך סימון",
       "visited": "ביקרתי",
       "centerMap": "מרכוז על המפה",
       "viewDashboard": "צפייה בלוח הבקרה"
@@ -174,17 +176,17 @@
     "export": "ייצא סימונים",
     "close": "סגור לוח סימונים",
     "empty": "עדיין אין סימונים.",
-    "hint": "לחץ על המפה כדי להוסיף סימון.",
+    "hint": "לחץ על המפה כדי להוסיף סימון. לחץ Escape כדי לבטל.",
     "editTitle": "ערוך סימון",
     "addTitle": "הוסף סימון",
     "form": {
       "name": "שם",
       "namePlaceholder": "שם הסימון",
       "color": "צבע",
-      "description": "תיאור",
-      "descriptionPlaceholder": "תיאור (אופציונלי)"
+      "notes": "הערות",
+      "notesPlaceholder": "הוסף את ההערות שלך כאן..."
     },
-    "noDescription": "לא סופק תיאור.",
+    "noNotes": "ללא הערות.",
     "locationLabel": "מיקום:",
     "saveChanges": "שמירת שינויים"
   },

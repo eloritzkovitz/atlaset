@@ -14,6 +14,7 @@ describe("resolveCountryStyle", () => {
     isHovered: false,
     isSelected: false,
     isAtlasActive: false,
+    isAddingMarker: false,
   };
 
   it("should return the default fill style by default", () => {
@@ -54,5 +55,13 @@ describe("resolveCountryStyle", () => {
       isHovered: true,
     });
     expect(result.fill).toBe("#ff0000");
+  });
+
+  it("should change cursor style when isAddingMarker is true", () => {
+    const result = resolveCountryStyle({
+      ...defaultArgs,
+      isAddingMarker: true,
+    });
+    expect(result.cursor).toBe("crosshair");
   });
 });

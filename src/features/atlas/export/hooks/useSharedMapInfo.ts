@@ -1,13 +1,13 @@
 import { useMemo } from "react";
 import { decodeMapData } from "../utils/mapShare";
 import { normalizeLayers, type Layer } from "@features/atlas/layers";
-import { normalizeMarkers, type MarkerType } from "@features/atlas/markers";
+import { normalizeMarkers, type Marker } from "@features/atlas/markers";
 
 export interface SharedMapInfo {
   mapName?: string;
   sharer?: string;
   layers?: Layer[];
-  markers?: MarkerType[];
+  markers?: Marker[];
   [key: string]: unknown;
 }
 

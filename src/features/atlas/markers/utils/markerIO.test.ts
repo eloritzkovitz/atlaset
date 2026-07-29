@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import type { Coordinates } from "@features/atlas/map/types";
 import {
   importMarkersFromFile,
   parseAndNormalizeMarkers,
   serializeMarkers,
   exportMarkersToFile,
 } from "./markerIO";
+import type { Marker } from "../types";
 
 describe("markerIO utils", () => {
   beforeEach(() => {
@@ -28,20 +28,51 @@ describe("markerIO utils", () => {
   const sampleMarker = {
     id: "1",
     name: "Marker",
-    coordinates: [1, 2] as Coordinates,
+    isoCode: "US",
+    color: "#ffffff",
     visible: true,
     order: 1,
   };
 
   describe("importMarkersFromFile", () => {
-    it("assigns id if missing", () => {
+    it("assigns id if missing", async () => {
       const importMarkers = vi.fn();
       const rawData = { ...sampleMarker, id: undefined };
       mockFileReaderResult(JSON.stringify([rawData]));
 
-      importMarkersFromFile(createMockEvent([new Blob()]), importMarkers);
+      importMarkersFromFile(createMockEvent([new Blob()]), [], importMarkers);
 
       expect(importMarkers.mock.calls[0][0][0].id).toBeDefined();
+    });
+
+    it("filters out duplicates based on existing isoCodes and appends new markers", () => {
+      const importMarkers = vi.fn();
+      const existingMarkers: Marker[] = [
+        { ...sampleMarker, id: "1", isoCode: "US", order: 0 },
+        { ...sampleMarker, id: "2", isoCode: "FR", order: 1 },
+      ];
+
+      const importedFileContent = [
+        { ...sampleMarker, id: "3", isoCode: "US" },
+        { ...sampleMarker, id: "4", isoCode: "CA" },
+        { ...sampleMarker, id: "5", isoCode: "CA" },
+        { ...sampleMarker, id: "6", isoCode: "DE" },
+      ];
+
+      mockFileReaderResult(JSON.stringify(importedFileContent));
+
+      importMarkersFromFile(
+        createMockEvent([new Blob()]),
+        existingMarkers,
+        importMarkers,
+      );
+
+      const result = importMarkers.mock.calls[0][0];
+
+      expect(result).toHaveLength(4);
+      expect(result.map((m: Marker) => m.order)).toEqual([0, 1, 2, 3]);
+      expect(result[2].isoCode).toBe("CA");
+      expect(result[3].isoCode).toBe("DE");
     });
   });
 
@@ -56,7 +87,9 @@ describe("markerIO utils", () => {
     });
 
     it("serializes collections stripping out volatile runtime configurations", () => {
-      const expectedOutput = [{ name: "Marker", coordinates: [1, 2] }];
+      const expectedOutput = [
+        { name: "Marker", isoCode: "US", color: "#ffffff" },
+      ];
       const format = (data: any) => JSON.stringify(data, null, 2);
 
       expect(serializeMarkers(sampleMarker)).toBe(format(expectedOutput));
