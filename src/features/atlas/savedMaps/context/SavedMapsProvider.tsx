@@ -28,13 +28,14 @@ import { savedMapsService } from "../services/savedMapsService";
 import { type SavedMap } from "../types";
 
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+  const { user, ready } = useAuth();
   const { mapMode, mapId } = useMapMode();
   const navigate = useNavigate();
 
   const [activeSavedMap, setActiveSavedMap] = useState<SavedMap | null>(null);
   const [isSavedMapModalOpen, setSavedMapModalOpen] = useState(false);
   const lastAction = useRef<string | null>(null);
+  const loadedUserIdRef = useRef<string | null>(null);
 
   // Data loader for saved maps
   const fetchSavedMaps = useCallback(() => savedMapsService.load(), []);
@@ -50,10 +51,20 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   const savedMaps = useMemo(() => loadedMaps ?? [], [loadedMaps]);
 
-  // Initial load
+  // Auth-aware initial fetch guard
   useEffect(() => {
-    reloadSavedMaps();
-  }, [reloadSavedMaps]);
+    if (!ready) return;
+
+    if (user?.uid) {
+      if (loadedUserIdRef.current !== user.uid) {
+        loadedUserIdRef.current = user.uid;
+        reloadSavedMaps();
+      }
+    } else {
+      loadedUserIdRef.current = null;
+      setSavedMaps([]);
+    }
+  }, [user?.uid, ready, reloadSavedMaps, setSavedMaps]);
 
   // Layer manager for saved map layers
   const layerManager = useLayerManager({

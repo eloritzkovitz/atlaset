@@ -27,7 +27,7 @@
     "resetView": "Reset view"
   },
   "footer": {
-    "countriesExplored": "Countries explored",
+    "countriesExplored": "Countries explored {{visited}}/{{total}} ({{percent}}%)",
     "sovereignOnlyTooltip": "World coverage: Sovereign states",
     "allCountriesTooltip": "World coverage: All territories",
     "zoomTooltip": "Zoom level: {{zoom}}x"

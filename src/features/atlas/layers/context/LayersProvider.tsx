@@ -20,6 +20,7 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
   const fetchLayers = useCallback(() => layersService.load(), []);
   const {
     data: loadedLayers,
+    setData: setLayers,
     loading,
     error,
     reload: reloadLayers,
@@ -40,8 +41,9 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
       }
     } else {
       loadedUserIdRef.current = null;
+      setLayers([]);
     }
-  }, [user?.uid, ready, reloadLayers]);
+  }, [user?.uid, ready, reloadLayers, setLayers]);
 
   // Layer manager for layers state and operations
   const layerManager = useLayerManager({

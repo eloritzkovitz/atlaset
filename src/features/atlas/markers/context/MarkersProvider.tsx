@@ -20,9 +20,11 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
 
   // Data loader for fetching markers
   const fetchMarkers = useCallback(() => markersService.load(), []);
-  const { data: loadedMarkers, reload: reloadMarkers } = useDataLoader<
-    Marker[]
-  >({
+  const {
+    data: loadedMarkers,
+    setData: setMarkers,
+    reload: reloadMarkers,
+  } = useDataLoader<Marker[]>({
     fetchFn: fetchMarkers,
   });
 
@@ -39,8 +41,9 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
       }
     } else {
       loadedUserIdRef.current = null;
+      setMarkers([]);
     }
-  }, [user?.uid, ready, reloadMarkers]);
+  }, [user?.uid, ready, reloadMarkers, setMarkers]);
 
   // Marker manager for markers state and operations
   const markerManager = useMarkerManager({

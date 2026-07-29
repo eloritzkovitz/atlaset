@@ -67,4 +67,64 @@ describe("useDataLoader", () => {
 
     expect(result.current.data).toBe("manual update");
   });
+
+  it("executes onSuccess and onError when provided", async () => {
+    const onSuccess = vi.fn();
+    const onError = vi.fn();
+
+    const { result: successResult } = renderHook(() =>
+      useDataLoader({
+        fetchFn: async () => "success data",
+        onSuccess,
+      }),
+    );
+
+    await act(async () => {
+      await successResult.current.reload();
+    });
+    expect(onSuccess).toHaveBeenCalledWith("success data");
+
+    const testError = new Error("failed");
+    const { result: errorResult } = renderHook(() =>
+      useDataLoader({
+        fetchFn: async () => {
+          throw testError;
+        },
+        onError,
+      }),
+    );
+
+    await act(async () => {
+      await expect(errorResult.current.reload()).rejects.toThrow(testError);
+    });
+    expect(onError).toHaveBeenCalledWith(testError);
+  });
+
+  it("handles reload cleanly without onSuccess or onError callbacks", async () => {
+    const { result: successResult } = renderHook(() =>
+      useDataLoader({
+        fetchFn: async () => "no callback",
+      }),
+    );
+
+    await act(async () => {
+      await successResult.current.reload();
+    });
+    expect(successResult.current.data).toBe("no callback");
+
+    const { result: errorResult } = renderHook(() =>
+      useDataLoader({
+        fetchFn: async () => {
+          throw new Error("no callback error");
+        },
+      }),
+    );
+
+    await act(async () => {
+      await expect(errorResult.current.reload()).rejects.toThrow(
+        "no callback error",
+      );
+    });
+    expect(errorResult.current.error?.message).toBe("no callback error");
+  });
 });
