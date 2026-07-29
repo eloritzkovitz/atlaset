@@ -54,19 +54,19 @@ You can open the `layers panel` from the `map toolbar` or by pressing the <kbd>L
 
 ## **Markers**
 
-`Markers` are custom points you can add to your map. `Markers` are placed on the map by clicking on a location.
+`Markers` are custom pins placed on the map by clicking on a `country`. Each `country` can have up to one `marker` at a time.
 
 You can open the `markers panel` from the `map toolbar` or by pressing the <kbd>M</kbd> key.
 
 #### Marker JSON Fields
 
-| Field         | Type              | Description                                                         |
-| ------------- | ----------------- | ------------------------------------------------------------------- |
-| `id`          | `string`          | Unique identifier for the marker (_optional_, generated if missing) |
-| `name`        | `string`          | Display name for the mmearker (_optional_)                          |
-| `coordinates` | `[number,number]` | Longitude and latitude as numbers (e.g., `[34.8, 32.1]`)            |
-| `color`       | `string`          | Marker color in hex or RGBA format (_optional_)                     |
-| `description` | `string`          | Additional information about the marker (_optional_)                |
+| Field     | Type     | Description                                                         |
+| --------- | -------- | ------------------------------------------------------------------- |
+| `id`      | `string` | Unique identifier for the marker (_optional_, generated if missing) |
+| `name`    | `string` | Display name for the mmearker (_optional_)                          |
+| `isoCode` | `string` | The ISO 3166-1 code of the country                                  |
+| `color`   | `string` | Marker color in hex or RGBA format (_optional_)                     |
+| `notes`   | `string` | Additional information about the marker (_optional_)                |
 
 ### **Adding markers**
 
