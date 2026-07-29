@@ -26,6 +26,12 @@
     "zoomOut": "Zoom out",
     "resetView": "Reset view"
   },
+  "footer": {
+    "countriesExplored": "Countries explored",
+    "sovereignOnlyTooltip": "World coverage: Sovereign states",
+    "allCountriesTooltip": "World coverage: All territories",
+    "zoomTooltip": "Zoom level: {{zoom}}x"
+  },
   "shared": {
     "viewingPrefix": "Viewing",
     "byPrefix": "by",

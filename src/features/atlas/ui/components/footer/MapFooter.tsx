@@ -1,51 +1,82 @@
-import React from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BrandCopyright, GitHubButton, Tooltip } from "@components";
-import { getScaleBarLabel, type Coordinates } from "@features/atlas/map";
+import { useCountryData } from "@features/countries";
+import { useExplorationStats } from "@features/dashboard/exploration/hooks/useExplorationStats";
 
 interface MapFooterProps {
   zoom: number;
-  coords: Coordinates | null;
-  latitude: number;
-  barPx?: number;
 }
 
-export const MapFooter: React.FC<MapFooterProps> = ({
-  zoom,
-  coords,
-  latitude,
-  barPx = 100,
-}) => {
+export const MapFooter: React.FC<MapFooterProps> = ({ zoom }) => {
+  const [sovereignOnly, setSovereignOnly] = useState(false);
+  const { countries } = useCountryData();
+  const { totalCountries, visitedCountries } = useExplorationStats(
+    countries,
+    sovereignOnly,
+  );
+  const { t } = useTranslation("atlas");
+
+  // Calculate the percentage of visited countries
+  const coveragePercent =
+    totalCountries > 0
+      ? ((visitedCountries / totalCountries) * 100).toFixed(1)
+      : "0.0";
+
+  // Handler to toggle the sovereignOnly state
+  const handleToggleSovereign = () => {
+    setSovereignOnly((prev) => !prev);
+  };
+
   return (
     <footer
-      className="bg-surface-alt/50 rounded-t-lg fixed end-6 bottom-0 z-50 text-muted px-4 py-0.5 text-xs min-w-[220px] select-none flex items-center justify-between gap-4"
+      className="fixed bottom-0 end-6 z-50 flex min-w-[220px] select-none items-center justify-between gap-4 rounded-t-lg bg-surface-alt/50 px-4 py-0.5 text-xs text-muted"
       aria-label="Map footer"
     >
       <div className="flex items-center gap-2">
         <BrandCopyright className="text-xs" logoSize={16} />
         <GitHubButton className="ms-3 !text-muted" />
       </div>
-      <span>
-        <Tooltip content={`Zoom: x${zoom.toFixed(1)}`} position="top">
-          <span className="me-2">{`x${zoom.toFixed(1)}`}</span>
+
+      <div className="flex items-center gap-4">
+        <Tooltip
+          content={
+            sovereignOnly
+              ? t(
+                  "footer.sovereignOnlyTooltip",
+                  "World coverage: Sovereign states",
+                )
+              : t(
+                  "footer.allCountriesTooltip",
+                  "World coverage: All territories",
+                )
+          }
+          position="top"
+        >
+          <button
+            type="button"
+            onClick={handleToggleSovereign}
+            className="font-medium text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded px-1"
+          >
+            {t(
+              "footer.countriesExplored",
+              "Countries explored: {{visited}}/{{total}} ({{percent}}%)",
+              {
+                visited: visitedCountries,
+                total: totalCountries,
+                percent: coveragePercent,
+              },
+            )}
+          </button>
         </Tooltip>
-        {coords ? (
-          <Tooltip content={`Latitude, Longitude`} position="top">
-            <span>{`${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}`}</span>
-          </Tooltip>
-        ) : (
-          <span className="opacity-50">—</span>
-        )}
-      </span>
-      <div className="flex items-center gap-2">
-        <div
-          className="h-1 bg-muted/50 rounded"
-          style={{ width: barPx }}
-          aria-hidden="true"
-        />
-        <Tooltip content="Scale bar" position="top">
-          <span className="text-xs" aria-label="Scale bar">
-            {getScaleBarLabel(zoom, latitude, barPx)}
-          </span>
+
+        <Tooltip
+          content={t("footer.zoomTooltip", "Zoom level: {{zoom}}x", {
+            zoom: zoom.toFixed(1),
+          })}
+          position="top"
+        >
+          <span className="text-muted">{zoom.toFixed(1)}x</span>
         </Tooltip>
       </div>
     </footer>

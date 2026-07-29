@@ -151,44 +151,6 @@ export function getSvgCoordsFromTransform(
   return [w / 2 - (xOffset + t.x) / t.k, h / 2 - (yOffset + t.y) / t.k];
 }
 
-/** Converts mouse event coordinates to geographical coordinates.
- * @param event - The mouse event on the SVG element.
- * @param projectionType - The projection name (e.g., "mercator", "naturalEarth1", "equirectangular").
- * @param width - SVG/map width.
- * @param height - SVG/map height.
- * @param scaleDivisor - Scale divisor for projection.
- * @param zoom - Zoom level.
- * @param center - Center coordinates [longitude, latitude].
- * @param getProjectionFn - Function to get the projection (default is the local getProjection function).
- * @returns The [longitude, latitude] coordinates corresponding to the mouse event, or null if conversion fails.
- */
-export function getGeoCoordsFromMouseEvent(
-  event: React.MouseEvent<SVGSVGElement>,
-  projectionType: string,
-  width: number,
-  height: number,
-  scaleDivisor: number,
-  zoom: number,
-  center: Coordinates,
-  getProjectionFn: typeof getProjection = getProjection,
-): Coordinates | null {
-  const svg = event.currentTarget;
-  const rect = svg.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  const y = event.clientY - rect.top;
-
-  const proj = getProjectionFn(
-    projectionType,
-    width,
-    height,
-    scaleDivisor,
-    zoom,
-    center,
-  );
-  const result = proj?.invert?.([x, y]) ?? null;
-  return result ? [result[1], result[0]] : null;
-}
-
 /**
  * Gets the centroid of a GeoJSON feature.
  * @param feature - The GeoJSON feature.
@@ -235,46 +197,4 @@ export function getCountryCenterAndZoom(
   const zoom = Math.max(6, 18 - maxDiff * 40);
 
   return { center: centroid, zoom };
-}
-
-/**
- * Calculates the map scale bar label based on zoom level and latitude.
- * @param zoom - The current zoom level.
- * @param latitude - The latitude for scale calculation.
- * @param barPx - The pixel length of the scale bar (default is 100).
- * @returns A string representing the scale bar label (e.g., "500 m", "2.5 km").
- */
-export function getScaleBarLabel(
-  zoom: number,
-  latitude: number,
-  barPx: number = 100,
-): string {
-  if (
-    typeof latitude !== "number" ||
-    isNaN(latitude) ||
-    Math.abs(latitude) > 90
-  )
-    return "—";
-  const metersPerPixel =
-    (156543.03392 * Math.cos((latitude * Math.PI) / 180)) / Math.pow(2, zoom);
-  const distance = metersPerPixel * barPx;
-  if (!isFinite(distance) || isNaN(distance)) return "—";
-
-  // Round to 1, 2, or 5 × 10^n
-  const pow10 = Math.pow(10, Math.floor(Math.log10(distance)));
-  let rounded;
-  if (distance / pow10 < 2) {
-    rounded = pow10;
-  } else if (distance / pow10 < 5) {
-    rounded = 2 * pow10;
-  } else {
-    rounded = 5 * pow10;
-  }
-
-  // Return in meters or kilometers
-  if (rounded >= 1000) {
-    return `${(rounded / 1000).toFixed(rounded >= 10000 ? 0 : 1)} km`;
-  } else {
-    return `${rounded} m`;
-  }
 }

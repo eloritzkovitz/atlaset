@@ -26,6 +26,12 @@
     "zoomOut": "הקטן",
     "resetView": "אתחול תצוגה"
   },
+  "footer": {
+    "countriesExplored": "מדינות שחקרתי",
+    "allCountriesTooltip": "כיסוי עולמי: כל הטריטוריות",
+    "sovereignOnlyTooltip": "כיסוי עולמי: מדינות ריבוניות",
+    "zoomTooltip": "רמת זום: {{zoom}}x"
+  },
   "shared": {
     "viewingPrefix": "צופה ב־",
     "byPrefix": "על־ידי",

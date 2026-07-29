@@ -4,10 +4,8 @@ import * as projectionModule from "./projection";
 import {
   makeProjection,
   getProjection,
-  getGeoCoordsFromMouseEvent,
   getFeatureCentroid,
   getCountryCenterAndZoom,
-  getScaleBarLabel,
 } from "./projection";
 
 describe("makeProjection", () => {
@@ -101,41 +99,6 @@ describe("getProjection", () => {
   });
 });
 
-describe("getGeoCoordsFromMouseEvent", () => {
-  it("converts map coordinates or returns null if invert is unavailable", () => {
-    const svg = {
-      getBoundingClientRect: () => ({ left: 100, top: 50 }),
-    } as any;
-    const event = { currentTarget: svg, clientX: 150, clientY: 70 } as any;
-
-    const projWithInvert = Object.assign(() => {}, { invert: () => [10, 20] });
-    expect(
-      getGeoCoordsFromMouseEvent(
-        event,
-        "m",
-        80,
-        40,
-        2,
-        1,
-        [0, 0],
-        () => projWithInvert as any,
-      ),
-    ).toEqual([20, 10]);
-    expect(
-      getGeoCoordsFromMouseEvent(
-        event,
-        "m",
-        80,
-        40,
-        2,
-        1,
-        [0, 0],
-        () => ({}) as any,
-      ),
-    ).toBeNull();
-  });
-});
-
 describe("getSvgCoordsFromTransform", () => {
   it("calculates exact inverse spatial conversions", () => {
     const coords = projectionModule.getSvgCoordsFromTransform(800, 400, {
@@ -192,21 +155,5 @@ describe("getCountryCenterAndZoom", () => {
         mockBounds as any,
       ),
     ).toBeDefined();
-  });
-});
-
-describe("getScaleBarLabel", () => {
-  it("returns standard placeholders for fallback boundaries", () => {
-    expect(getScaleBarLabel(10, NaN)).toBe("—");
-    expect(getScaleBarLabel(10, 95)).toBe("—");
-    expect(getScaleBarLabel(10, 0, Infinity)).toBe("—");
-  });
-
-  it("covers all internal math rounding thresholds and scaling transformations", () => {
-    expect(getScaleBarLabel(20, 0, 10)).toBe("1 m");
-    expect(getScaleBarLabel(10, 0, 2)).toBe("200 m");
-    expect(getScaleBarLabel(10, 0, 4)).toBe("500 m");
-    expect(getScaleBarLabel(10, 0, 20)).toBe("2.0 km");
-    expect(getScaleBarLabel(0, 0, 500)).toBe("50000 km");
   });
 });

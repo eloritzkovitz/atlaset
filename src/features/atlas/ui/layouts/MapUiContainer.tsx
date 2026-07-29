@@ -32,16 +32,8 @@ export function MapUiContainer({
 }: MapUiContainerProps) {
   const effectiveLayers = useEffectiveLayers();
   const { toolbarOrientation } = useMapInterfaceSettings();
-  const {
-    isReadonly,
-    isEdit,
-    colorMode,
-    isAtlasActive,
-    zoom,
-    setZoom,
-    center,
-    selectedCoords,
-  } = useMapView();
+  const { isReadonly, isEdit, colorMode, isAtlasActive, zoom, setZoom } =
+    useMapView();
   const { isLaptop } = useScreenSize();
   const { timelineMode } = useTimeline();
   const { uiVisible, openUserPanel, showLegend, closeLegend } = useUI();
@@ -146,11 +138,7 @@ export function MapUiContainer({
           />
           {!isEmbed && (
             <>
-              <MapFooter
-                zoom={zoom}
-                coords={selectedCoords}
-                latitude={center[1]}
-              />
+              <MapFooter zoom={zoom} />
               {!isAtlasActive && (
                 <MapLegendModal
                   open={showLegend}
