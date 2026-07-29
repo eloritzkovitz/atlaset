@@ -8,6 +8,11 @@ import {
   ModalHeader,
 } from "@components";
 import { ICONS } from "@constants/icons";
+import {
+  CountrySelectField,
+  getCountryName,
+  useCountryData,
+} from "@features/countries";
 import type { Marker } from "../../types";
 
 interface MarkerModalProps {
@@ -27,9 +32,12 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
   isOpen,
   isEditing,
 }) => {
+  const { countries } = useCountryData();
+  const { t } = useTranslation(["atlas", "common"]);
+
   const nameRef = useRef<HTMLInputElement>(null);
   const [colorModalOpen, setColorModalOpen] = useState(false);
-  const { t } = useTranslation(["atlas", "common"]);
+  const [countrySelectOpen, setCountrySelectOpen] = useState(false);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -38,16 +46,35 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
     }
   }, [isOpen]);
 
-  // Don't render if no marker (for edit)
+  // Don't render if no marker
   if (!isOpen || !marker) return null;
+
+  const currentCountryCodes = marker.isoCode ? [marker.isoCode] : [];
+
+  // Handle country change
+  const handleCountryChange = (codes: string[]) => {
+    const selectedCode = codes[codes.length - 1] || "";
+
+    const previousName = getCountryName(marker.isoCode, countries);
+    const shouldUpdateName =
+      !marker.name || marker.name.trim() === "" || marker.name === previousName;
+
+    onChange({
+      ...marker,
+      isoCode: selectedCode,
+      name: shouldUpdateName
+        ? getCountryName(selectedCode, countries)
+        : marker.name,
+    });
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
       position="center"
-      className="modal min-w-[900px] max-w-[1200px] max-h-[90vh]"
-      disableClose={colorModalOpen}
+      className="modal w-[600px] max-h-[90vh]"
+      disableClose={colorModalOpen || countrySelectOpen}
       draggable
     >
       <ModalHeader
@@ -67,7 +94,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
           onSave();
         }}
       >
-        <div className="p-2">
+        <div className="p-2 space-y-4">
           <FormField label={t("markers.form.name", "Name")}>
             <input
               ref={nameRef}
@@ -79,53 +106,51 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
               value={marker?.name || ""}
               onChange={(e) =>
                 onChange({
-                  ...marker!,
+                  ...marker,
                   name: e.target.value,
-                  coordinates: marker?.coordinates || [0, 0],
                 })
               }
               autoFocus
             />
           </FormField>
-          <FormField label="Color">
+
+          <CountrySelectField
+            label={t("markers.form.country", "Country")}
+            countryCodes={currentCountryCodes}
+            countries={countries}
+            onChange={handleCountryChange}
+            isOpen={countrySelectOpen}
+            onOpen={() => setCountrySelectOpen(true)}
+            onClose={() => setCountrySelectOpen(false)}
+          />
+
+          <FormField label={t("markers.form.color", "Color")}>
             <ColorSelectInput
-              value={marker.color || "#e53e3e"}
-              onChange={(color) =>
-                onChange({
-                  ...marker,
-                  color,
-                  coordinates: marker?.coordinates || [0, 0],
-                })
-              }
+              value={marker.color}
+              onChange={(color: string) => onChange({ ...marker, color })}
               onModalOpenChange={setColorModalOpen}
               disabled={false}
             />
           </FormField>
-          <FormField label="Description">
+
+          <FormField label="Notes">
             <input
-              id="marker-description"
-              name="description"
+              id="marker-notes"
+              name="notes"
               placeholder={t(
-                "markers.form.descriptionPlaceholder",
-                "Description (optional)",
+                "markers.form.notesPlaceholder",
+                "Notes (optional)",
               )}
-              value={marker?.description || ""}
+              value={marker?.notes || ""}
               onChange={(e) =>
                 onChange({
-                  ...marker!,
-                  description: e.target.value,
-                  coordinates: marker?.coordinates || [0, 0],
+                  ...marker,
+                  notes: e.target.value,
                 })
               }
             />
           </FormField>
-          {marker && !isEditing && (
-            <div className="text-xs text-muted">
-              {t("markers.locationLabel", "Location:")}{" "}
-              {marker.coordinates[0].toFixed(4)},{" "}
-              {marker.coordinates[1].toFixed(4)}
-            </div>
-          )}
+
           <div className="flex justify-end gap-2 mt-4">
             <ModalActions
               onCancel={onClose}

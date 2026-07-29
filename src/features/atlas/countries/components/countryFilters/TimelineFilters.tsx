@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { FaTimeline } from "react-icons/fa6";
 import { CollapsibleHeader, NumberInput, SelectInput } from "@components";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
+import { useTimeline } from "@features/atlas/timeline";
 import { getVisitedCountriesUpToYear } from "@features/visits";
 import { clamp } from "@utils/number";
 import { timelineFiltersConfig } from "../../config/filtersConfig";

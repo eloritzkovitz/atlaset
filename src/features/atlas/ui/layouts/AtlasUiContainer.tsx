@@ -1,17 +1,19 @@
-import { useMarkers } from "@contexts/MarkersContext";
-import { useMapView } from "@contexts/MapViewContext";
-import { useLayers } from "@contexts/LayersContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
 import { MapExportPanel } from "@features/atlas/export";
-import { LayerModal, LayersPanel } from "@features/atlas/layers";
+import { LayerModal, LayersPanel, useLayers } from "@features/atlas/layers";
+import { useMapView } from "@features/atlas/map";
 import {
   MarkerDetailsModal,
   MarkerModal,
   MarkersPanel,
   useMarkerCreation,
+  useMarkers,
 } from "@features/atlas/markers";
-import { SavedMapsModal, SavedMapsPanel } from "@features/atlas/saved";
+import {
+  SavedMapsModal,
+  SavedMapsPanel,
+  useSavedMaps,
+} from "@features/atlas/savedMaps";
 import { MapSettingsPanel } from "@features/atlas/settings";
 import type { Country } from "@features/countries";
 import { useUiToggleHint } from "../hooks/useUiToggleHint";
@@ -43,6 +45,10 @@ export function AtlasUiContainer({
 
   useUiToggleHint();
 
+  // Select active sub-managers based on view mode
+  const activeMarkers = isEdit ? savedMaps.markers : mainMarkers;
+  const activeLayers = isEdit ? savedMaps.layers : layers;
+
   return (
     <>
       <CountriesPanel
@@ -55,34 +61,28 @@ export function AtlasUiContainer({
       />
       <MarkersPanel
         onAddMarker={startAddingMarker}
-        onEditMarker={
-          isEdit ? savedMaps.openEditMarker : mainMarkers.openEditMarker
-        }
+        onEditMarker={activeMarkers.openEditMarker}
         activeSavedMapMarkers={
           isEdit && savedMaps.activeSavedMap
-            ? savedMaps.savedMapMarkers
+            ? savedMaps.markers.markers
             : undefined
         }
         handleSavedMapChange={
           isEdit
             ? {
-                updateMarkerName: savedMaps.updateMarkerName,
-                toggleMarkerVisibility: savedMaps.toggleMarkerVisibility,
-                reorderMarkers: savedMaps.reorderMarkers,
-                duplicateMarker: savedMaps.duplicateMarker,
-                removeMarker: savedMaps.removeMarker,
+                updateMarkerName: savedMaps.markers.updateMarkerName,
+                toggleMarkerVisibility:
+                  savedMaps.markers.toggleMarkerVisibility,
+                reorderMarkers: savedMaps.markers.reorderMarkers,
+                removeMarker: savedMaps.markers.removeMarker,
               }
             : undefined
         }
       />
       <LayersPanel
-        onEditLayer={isEdit ? savedMaps.openEditLayer : layers.openEditLayer}
-        onAddLayer={isEdit ? savedMaps.openAddLayer : layers.openAddLayer}
-        layerModalOpen={
-          isEdit
-            ? savedMaps.isEditSavedMapLayerModalOpen
-            : layers.isEditModalOpen
-        }
+        onEditLayer={activeLayers.openEditLayer}
+        onAddLayer={activeLayers.openAddLayer}
+        layerModalOpen={activeLayers.isEditModalOpen}
         activeSavedMapLayers={
           isEdit && savedMaps.activeSavedMap
             ? savedMaps.activeSavedMap.layers
@@ -91,14 +91,14 @@ export function AtlasUiContainer({
         handleSavedMapChange={
           isEdit
             ? {
-                addLayer: savedMaps.addLayer,
-                updateLayerName: savedMaps.updateLayerName,
-                editLayer: savedMaps.editLayer,
-                importLayers: savedMaps.importLayers,
-                reorderLayers: savedMaps.reorderLayers,
-                toggleLayerVisibility: savedMaps.toggleLayerVisibility,
-                duplicateLayer: savedMaps.duplicateLayer,
-                removeLayer: savedMaps.removeLayer,
+                addLayer: savedMaps.layers.addLayer,
+                updateLayerName: savedMaps.layers.updateLayerName,
+                editLayer: savedMaps.layers.editLayer,
+                importLayers: savedMaps.layers.importLayers,
+                reorderLayers: savedMaps.layers.reorderLayers,
+                toggleLayerVisibility: savedMaps.layers.toggleLayerVisibility,
+                duplicateLayer: savedMaps.layers.duplicateLayer,
+                removeLayer: savedMaps.layers.removeLayer,
               }
             : undefined
         }
@@ -113,44 +113,20 @@ export function AtlasUiContainer({
         onClose={() => setSelectedCountry(null)}
       />
       <MarkerDetailsModal
-        isOpen={
-          isEdit
-            ? savedMaps.isEditSavedMapMarkerModalOpen
-            : mainMarkers.detailsModalOpen
-        }
-        marker={
-          isEdit ? savedMaps.activeSavedMapMarker : mainMarkers.selectedMarker
-        }
+        isOpen={isEdit ? false : mainMarkers.detailsModalOpen}
+        marker={isEdit ? null : mainMarkers.selectedMarker}
         position={isEdit ? null : (mainMarkers.detailsModalPosition ?? null)}
-        onClose={() =>
-          isEdit
-            ? savedMaps.closeMarkerModal()
-            : mainMarkers.closeMarkerDetails()
-        }
+        onClose={mainMarkers.closeMarkerDetails}
       />
       <MarkerModal
-        isOpen={
-          isEdit
-            ? savedMaps.isEditSavedMapMarkerModalOpen
-            : mainMarkers.isMarkerModalOpen
-        }
-        isEditing={
-          isEdit
-            ? savedMaps.isEditingSavedMapMarker
-            : mainMarkers.isEditingMarker
-        }
-        marker={
-          isEdit ? savedMaps.activeSavedMapMarker : mainMarkers.editingMarker
-        }
-        onChange={
-          isEdit
-            ? savedMaps.setActiveSavedMapMarker
-            : mainMarkers.setEditingMarker
-        }
-        onSave={isEdit ? savedMaps.saveSavedMapMarker : mainMarkers.saveMarker}
+        isOpen={activeMarkers.isMarkerModalOpen}
+        isEditing={activeMarkers.isEditingMarker}
+        marker={activeMarkers.editingMarker}
+        onChange={activeMarkers.setEditingMarker}
+        onSave={activeMarkers.saveMarker}
         onClose={() => {
           if (isEdit) {
-            savedMaps.closeMarkerModal();
+            savedMaps.markers.closeMarkerModal();
           } else {
             mainMarkers.closeMarkerModal();
             cancelMarkerCreation();
@@ -158,20 +134,12 @@ export function AtlasUiContainer({
         }}
       />
       <LayerModal
-        isOpen={
-          isEdit
-            ? savedMaps.isEditSavedMapLayerModalOpen
-            : layers.isEditModalOpen
-        }
-        isEditing={
-          isEdit ? savedMaps.isEditingSavedMapLayer : layers.isEditingLayer
-        }
-        layer={isEdit ? savedMaps.activeSavedMapLayer : layers.editingLayer}
-        onChange={
-          isEdit ? savedMaps.setActiveSavedMapLayer : layers.setEditingLayer
-        }
-        onSave={isEdit ? savedMaps.saveSavedMapLayer : layers.saveLayer}
-        onClose={isEdit ? savedMaps.closeLayerModal : layers.closeLayerModal}
+        isOpen={activeLayers.isEditModalOpen}
+        isEditing={activeLayers.isEditingLayer}
+        layer={activeLayers.editingLayer}
+        onChange={activeLayers.setEditingLayer}
+        onSave={activeLayers.saveLayer}
+        onClose={activeLayers.closeLayerModal}
       />
       <SavedMapsModal
         isOpen={savedMaps.isSavedMapModalOpen}

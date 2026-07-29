@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@components";
-import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useCountryData, type Country } from "@features/countries";
 import { CountryDetailsPanel } from "@features/countries/components/countryDetails/CountryDetailsPanel";
 import { useAccessibility } from "@features/settings";

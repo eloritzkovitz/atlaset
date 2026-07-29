@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Checkbox, FormField, SectionHeader } from "@components";
-import { useMapView } from "@contexts/MapViewContext";
+import { useMapView } from "@features/atlas/map";
 
 interface ExportOptionsSectionProps {
   includeVisitedCountries: boolean;

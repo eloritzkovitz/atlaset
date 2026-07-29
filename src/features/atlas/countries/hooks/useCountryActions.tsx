@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
 import type { Country } from "@features/countries/types";
 import { getCountryRoute } from "@features/dashboard";
 import { useLanguage } from "@features/settings";
@@ -39,6 +40,7 @@ export function useCountryActions({
 }: UseCountryActionsProps): Record<string, CountryActionConfig> {
   const { current: lang } = useLanguage();
   const { centerOnCountry } = useMapView();
+  const { markers, openAddMarker, openEditMarker } = useMarkerCreation();
   const {
     isVisitedCountry,
     isTripBased,
@@ -58,6 +60,10 @@ export function useCountryActions({
   const visited = isVisitedCountry(country.isoCode);
   const tripBased = isTripBased(country.isoCode);
   const wantToVisitListed = isWantToVisitCountry(country.isoCode);
+
+  // Check if the country already has a marker
+  const existingMarker = markers?.find((m) => m.isoCode === country.isoCode);
+  const hasMarker = !!existingMarker;
 
   // Wrap actions to ensure the menu closes before executing the action
   const closeMenuAndCall = createCloseMenuAndCall((openState) => {
@@ -89,6 +95,24 @@ export function useCountryActions({
       onClick: () => {
         closeMenuAndCall(() => {
           centerOnCountry(country.isoCode);
+        });
+      },
+    },
+    markerAction: {
+      label: hasMarker
+        ? t("countries.actions.editMarker", "Edit Marker")
+        : t("countries.actions.addMarker", "Add Marker"),
+      ariaLabel: hasMarker
+        ? t("countries.actions.editMarker", "Edit Marker")
+        : t("countries.actions.addMarker", "Add Marker"),
+      icon: hasMarker ? <ICONS.edit /> : <ICONS.markers />,
+      onClick: () => {
+        closeMenuAndCall(() => {
+          if (hasMarker && existingMarker) {
+            openEditMarker(existingMarker);
+          } else {
+            openAddMarker(country.isoCode, country.name);
+          }
         });
       },
     },

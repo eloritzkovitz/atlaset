@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ErrorMessage, LoadingSpinner } from "@components";
-import { useLayers } from "@contexts/LayersContext";
-import { useMapView } from "@contexts/MapViewContext";
 import { useUI } from "@contexts/UIContext";
 import { useCountrySelection } from "@features/atlas/countries";
-import { WorldMap } from "@features/atlas/map";
+import { useLayers } from "@features/atlas/layers";
+import { useMapView, WorldMap } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
 import {
   AtlasShortcuts,

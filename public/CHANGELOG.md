@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-07-29
+
+- **[feature]** **Atlas | Markers:** Redesigned markers and updated creation and placement so that they depend on countries
+- **[chore]** **Atlas | UI:** Replaced content in the map footer to show world exploration statistics
+- **[chore]** **Atlas:** Reorganized atlas features and updated entity management
+
 ## 2026-07-27
 
 - **[chore]** **General:** Fully migrated auth and settings state to Redux, and countries, geo data and achievements to RTK Query

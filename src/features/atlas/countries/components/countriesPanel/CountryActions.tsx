@@ -2,7 +2,6 @@ import { forwardRef, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useCountryLists } from "@contexts/CountryListsContext";
 import type { Country } from "@features/countries";
 import {
   useContextMenu,
@@ -11,6 +10,7 @@ import {
   useMenuPosition,
 } from "@hooks";
 import { CountryListsMenu } from "./CountryListsMenu";
+import { useCountryLists } from "../../context/CountryListsContext";
 import { useCountryActions } from "../../hooks/useCountryActions";
 
 interface CountryActionsProps {
@@ -85,7 +85,7 @@ export const CountryActions = forwardRef(function CountryActions(
       ? listMenuStyle.left
       : 0;
   const finalCalculatedTop = contextCoords
-    ? contextCoords.y + 55
+    ? contextCoords.y + (addToListRowRef.current?.offsetTop ?? 120)
     : rowTopCoordinate;
   const { left: listMenuLeftFinal, top: listMenuTopFinal } =
     useFloatingMenuPosition(
@@ -119,6 +119,9 @@ export const CountryActions = forwardRef(function CountryActions(
     ...(actionsObj.toggleWantToVisit?.disabled
       ? []
       : [{ id: "wantToVisit", ...actionsObj.toggleWantToVisit }]),
+    ...(actionsObj.markerAction
+      ? [{ id: "marker", ...actionsObj.markerAction }]
+      : []),
   ];
   const resourceSection = [
     actionsObj.viewDashboard,
@@ -171,6 +174,27 @@ export const CountryActions = forwardRef(function CountryActions(
 
         <Separator className="my-2" />
 
+        {trackingSection.map((act) => (
+          <MenuButton
+            key={act.id}
+            url={act.url}
+            onClick={act.onClick}
+            onMouseEnter={() => setListMenuOpen(false)}
+            ariaLabel={act.ariaLabel}
+            icon={
+              <span className={`${act.disabled ? "text-muted" : ""}`}>
+                {act.icon}
+              </span>
+            }
+            className="w-full"
+            disabled={act.disabled}
+          >
+            <span className={act.disabled ? "text-muted" : ""}>
+              {act.label}
+            </span>
+          </MenuButton>
+        ))}
+
         <div
           ref={addToListRowRef}
           style={{ display: "inline-block", width: "100%" }}
@@ -206,27 +230,6 @@ export const CountryActions = forwardRef(function CountryActions(
             />
           )}
         </div>
-
-        {trackingSection.map((act) => (
-          <MenuButton
-            key={act.id}
-            url={act.url}
-            onClick={act.onClick}
-            onMouseEnter={() => setListMenuOpen(false)}
-            ariaLabel={act.ariaLabel}
-            icon={
-              <span className={`${act.disabled ? "text-muted" : ""}`}>
-                {act.icon}
-              </span>
-            }
-            className="w-full"
-            disabled={act.disabled}
-          >
-            <span className={act.disabled ? "text-muted" : ""}>
-              {act.label}
-            </span>
-          </MenuButton>
-        ))}
 
         <Separator className="my-2" />
 

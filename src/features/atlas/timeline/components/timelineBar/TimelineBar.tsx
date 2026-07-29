@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useLanguage } from "@features/settings";
@@ -11,6 +10,7 @@ import {
   YEAR_MARKER_MIN_WIDTH,
   MAX_COUNTRIES_BEFORE_EXPAND,
 } from "../../constants/timeline";
+import { useTimeline } from "../../context/TimelineContext";
 
 export function TimelineBar() {
   const { countries } = useCountryData();

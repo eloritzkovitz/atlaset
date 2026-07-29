@@ -17,7 +17,7 @@ export class MarkersService extends BaseService<Marker, typeof appDb.markers> {
 
   /** Saves all markers, replacing existing ones. */
   async save(markers: Marker[]): Promise<void> {
-    if (!markers || markers.length === 0) return;
+    if (!markers) return;
 
     if (isAuthenticated()) {
       const batch = writeBatch(db);
@@ -29,9 +29,11 @@ export class MarkersService extends BaseService<Marker, typeof appDb.markers> {
       markers.forEach((m) => batch.set(doc(colRef, m.id), m));
 
       await batch.commit();
-    } else {
+    } else if (this.localTable) {
       await this.localTable.clear();
-      await this.localTable.bulkPut(markers);
+      if (markers.length > 0) {
+        await this.localTable.bulkPut(markers);
+      }
     }
   }
 

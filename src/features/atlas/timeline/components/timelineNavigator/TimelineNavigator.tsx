@@ -5,10 +5,10 @@ import {
   ToolbarSelectButton,
   DirectionalIcon,
 } from "@components";
-import { useMapView } from "@contexts/MapViewContext";
-import { useTimeline } from "@contexts/TimelineContext";
-import type { ColorMode } from "@features/atlas/shared";
+import type { ColorMode } from "@features/atlas/core/types";
+import { useMapView } from "@features/atlas/map";
 import { useLanguage } from "@features/settings";
+import { useTimeline } from "../../context/TimelineContext";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 
 export function TimelineNavigator() {

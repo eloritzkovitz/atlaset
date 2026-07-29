@@ -1,19 +1,22 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@contexts/MapViewContext";
-import { useTimeline } from "@contexts/TimelineContext";
 import { useUI } from "@contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useEffectiveLayers } from "@features/atlas/layers/hooks/useEffectiveLayers";
+import { useEffectiveLayers } from "@features/atlas/layers";
 import {
   MapLegendModal,
   useMapLegendItems,
   type LegendItem,
 } from "@features/atlas/legend";
+import { useMapView } from "@features/atlas/map";
+import { useSavedMaps } from "@features/atlas/savedMaps";
 import { useMapInterfaceSettings } from "@features/atlas/settings";
-import { TimelineBar, TimelineNavigator } from "@features/atlas/timeline";
+import {
+  TimelineBar,
+  TimelineNavigator,
+  useTimeline,
+} from "@features/atlas/timeline";
 import { useScreenSize, useUiHint } from "@hooks";
 import { MapToolbar } from "../components/controls/MapToolbar";
 import { MapFooter } from "../components/footer/MapFooter";
@@ -29,16 +32,8 @@ export function MapUiContainer({
 }: MapUiContainerProps) {
   const effectiveLayers = useEffectiveLayers();
   const { toolbarOrientation } = useMapInterfaceSettings();
-  const {
-    isReadonly,
-    isEdit,
-    colorMode,
-    isAtlasActive,
-    zoom,
-    setZoom,
-    center,
-    selectedCoords,
-  } = useMapView();
+  const { isReadonly, isEdit, colorMode, isAtlasActive, zoom, setZoom } =
+    useMapView();
   const { isLaptop } = useScreenSize();
   const { timelineMode } = useTimeline();
   const { uiVisible, openUserPanel, showLegend, closeLegend } = useUI();
@@ -143,11 +138,7 @@ export function MapUiContainer({
           />
           {!isEmbed && (
             <>
-              <MapFooter
-                zoom={zoom}
-                coords={selectedCoords}
-                latitude={center[1]}
-              />
+              <MapFooter zoom={zoom} />
               {!isAtlasActive && (
                 <MapLegendModal
                   open={showLegend}

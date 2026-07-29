@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { DEFAULT_VISITED_LAYER } from "@features/atlas/layers/constants/layers";
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
 
 /**
@@ -46,9 +46,9 @@ export function useExportData({
           .filter((m) => m.visible !== false)
           .map((m) => ({
             name: m.name,
-            coordinates: m.coordinates,
+            isoCode: m.isoCode,
             color: m.color,
-            description: m.description,
+            notes: m.notes,
           }))
       : [];
   }, [markers]);

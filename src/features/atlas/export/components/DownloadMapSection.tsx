@@ -6,8 +6,8 @@ import {
   SelectInput,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { useLayers } from "@contexts/LayersContext";
-import { useMarkers } from "@contexts/MarkersContext";
+import { useLayers } from "@features/atlas/layers";
+import { useMarkers } from "@features/atlas/markers";
 import { SvgOptions } from "./options/SvgOptions";
 import { ImageOptions } from "./options/ImageOptions";
 import {

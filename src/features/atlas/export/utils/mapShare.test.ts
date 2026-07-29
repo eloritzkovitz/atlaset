@@ -25,8 +25,8 @@ describe("mapShare encode/decode", () => {
     const d3 = {
       layers: [{ name: "L", color: "#fff", countries: ["FR"] }],
       markers: [
-        { name: "A", coordinates: [2, 1] as [number, number] },
-        { coordinates: [4, 3] as [number, number] },
+        { name: "A", isoCode: "US", visible: true, order: 1 },
+        { name: "B", isoCode: "CA", visible: true, order: 2 },
       ],
     };
     const r3 = decodeMapData(encodeMapData(d3));
@@ -34,15 +34,15 @@ describe("mapShare encode/decode", () => {
     expect(r3.markers).toEqual([
       {
         name: "A",
-        coordinates: [2, 1],
+        isoCode: "US",
         color: undefined,
-        description: undefined,
+        notes: undefined,
       },
       {
-        name: undefined,
-        coordinates: [4, 3],
+        name: "B",
+        isoCode: "CA",
         color: undefined,
-        description: undefined,
+        notes: undefined,
       },
     ]);
   });
@@ -64,7 +64,7 @@ describe("mapShare encode/decode", () => {
 
     const dChars = {
       layers: [{ name: "L|:;=", color: "#fff", countries: ["FR"] }],
-      markers: [{ name: "A|,;= %", coordinates: [2, 1] as [number, number] }],
+      markers: [{ name: "A|,;= %", isoCode: "US", visible: true, order: 1 }],
       mapName: "M|=;ap",
       sharer: "Sh|=;arer",
     };

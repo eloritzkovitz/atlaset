@@ -9,17 +9,16 @@ export function normalizeMarkers(
   markers: (Marker | unknown | undefined)[] | undefined,
 ): Marker[] | undefined {
   if (!Array.isArray(markers)) return undefined;
+
   return markers.map((m, idx) => {
     const marker = (m ?? {}) as Partial<Marker>;
+
     return {
       id: typeof marker.id === "string" ? marker.id : `shared-marker-${idx}`,
       name: typeof marker.name === "string" ? marker.name : `Marker ${idx + 1}`,
-      coordinates:
-        Array.isArray(marker.coordinates) && marker.coordinates.length === 2
-          ? (marker.coordinates as [number, number])
-          : [0, 0],
-      color: typeof marker.color === "string" ? marker.color : undefined,
-      description: marker.description,
+      isoCode: typeof marker.isoCode === "string" ? marker.isoCode : "",
+      color: typeof marker.color === "string" ? marker.color : "",
+      notes: typeof marker.notes === "string" ? marker.notes : "",
       visible: typeof marker.visible === "boolean" ? marker.visible : true,
     };
   });

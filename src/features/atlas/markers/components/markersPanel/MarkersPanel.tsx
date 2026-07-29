@@ -3,13 +3,14 @@ import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { useMapView } from "@contexts/MapViewContext";
-import { useMarkers } from "@contexts/MarkersContext";
 import { useUI } from "@contexts/UIContext";
-import { useEffectiveMarkers } from "@features/atlas/markers";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { getCountryCenterAndZoom } from "@features/atlas/map/utils/projection";
 import { useAccessibility } from "@features/settings";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
+import { useEffectiveMarkers } from "../../hooks/useEffectiveMarkers";
+import { useMarkers } from "../../context/MarkersContext";
 import type { Marker } from "../../types";
 import {
   exportMarkersToFile,
@@ -24,7 +25,6 @@ interface MarkersPanelProps {
   handleSavedMapChange?: {
     updateMarkerName: (id: string, newName: string) => void;
     toggleMarkerVisibility: (id: string) => void;
-    duplicateMarker: (id: string) => void;
     reorderMarkers: (markers: Marker[]) => void;
     removeMarker: (id: string) => void;
   };
@@ -38,18 +38,17 @@ export function MarkersPanel({
   handleSavedMapChange,
 }: MarkersPanelProps) {
   const { animationsEnabled } = useAccessibility();
-  const { setCenter, setZoom, isReadonly } = useMapView();
-  const {
-    updateMarkerName,
-    toggleMarkerVisibility,
-    duplicateMarker,
-    reorderMarkers,
-    removeMarker,
-  } = useMarkers();
+  const { setCenter, setZoom, isReadonly, geoData } = useMapView();
+  const globalMarkerActions = useMarkers();
   const { showMarkers, closePanel } = useUI();
   const effectiveMarkersFromContext = useEffectiveMarkers();
   const effectiveMarkers = activeSavedMapMarkers ?? effectiveMarkersFromContext;
   const isEditingSavedMap = !!activeSavedMapMarkers && !!handleSavedMapChange;
+
+  // Resolve actions object (Saved Map vs Global Context)
+  const actions = isEditingSavedMap
+    ? handleSavedMapChange!
+    : globalMarkerActions;
 
   // Drag state
   const dragMarkers = isEditingSavedMap
@@ -57,25 +56,22 @@ export function MarkersPanel({
     : effectiveMarkers;
   const dragReorder = isEditingSavedMap
     ? handleSavedMapChange?.reorderMarkers
-    : reorderMarkers;
+    : globalMarkerActions.reorderMarkers;
   const { draggedIndex, handleDragStart, handleDragOver, handleDragEnd } =
     useDragReorder(dragMarkers, dragReorder);
 
   // Center map on a marker
-  const centerOnMarker = (marker: Marker, zoomLevel: number = 20) => {
-    setCenter([marker.coordinates[0], marker.coordinates[1]]);
-    setZoom(zoomLevel);
-    // If a marker is provided, show its details
-    if (onMarkerDetails && "id" in marker) {
-      onMarkerDetails(marker);
+  const handleCenterOnMarker = (marker: Marker, zoomLevel: number = 2) => {
+    if (geoData && marker.isoCode) {
+      const countryData = getCountryCenterAndZoom(geoData, marker.isoCode);
+      if (countryData?.center) {
+        setCenter(countryData.center);
+        setZoom(zoomLevel);
+      }
     }
-  };
 
-  // Center map on a marker by its ID
-  const centerOnMarkerById = (markerId: string, zoomLevel: number = 20) => {
-    const marker = effectiveMarkers.find((m) => m.id === markerId);
-    if (marker) {
-      centerOnMarker(marker, zoomLevel);
+    if (onMarkerDetails) {
+      onMarkerDetails(marker);
     }
   };
 
@@ -121,9 +117,8 @@ export function MarkersPanel({
                   onChange={(e) =>
                     importMarkersFromFile(
                       e,
-                      isEditingSavedMap && handleSavedMapChange
-                        ? handleSavedMapChange.reorderMarkers
-                        : reorderMarkers,
+                      effectiveMarkers,
+                      actions.reorderMarkers,
                     )
                   }
                   style={{ display: "none" }}
@@ -151,49 +146,25 @@ export function MarkersPanel({
                   key={marker.id}
                   marker={marker}
                   idx={idx}
-                  onCenter={() => centerOnMarkerById(marker.id)}
+                  onCenter={() => handleCenterOnMarker(marker)}
                   onToggleVisibility={
                     !isReadonly
-                      ? isEditingSavedMap
-                        ? () =>
-                            handleSavedMapChange?.toggleMarkerVisibility(
-                              marker.id,
-                            )
-                        : () => toggleMarkerVisibility(marker.id)
+                      ? () => actions.toggleMarkerVisibility(marker.id)
                       : undefined
                   }
                   onDownload={
-                    !isReadonly
-                      ? () => {
-                          exportMarkersToFile(marker);
-                        }
-                      : undefined
+                    !isReadonly ? () => exportMarkersToFile(marker) : undefined
                   }
                   onEdit={!isReadonly ? () => onEditMarker(marker) : undefined}
                   onNameChange={
                     !isReadonly
-                      ? isEditingSavedMap
-                        ? (newName: string) =>
-                            handleSavedMapChange?.updateMarkerName(
-                              marker.id,
-                              newName,
-                            )
-                        : (newName: string) =>
-                            updateMarkerName(marker.id, newName)
-                      : undefined
-                  }
-                  onDuplicate={
-                    !isReadonly
-                      ? isEditingSavedMap
-                        ? () => handleSavedMapChange?.duplicateMarker(marker.id)
-                        : () => duplicateMarker(marker.id)
+                      ? (newName: string) =>
+                          actions.updateMarkerName(marker.id, newName)
                       : undefined
                   }
                   onRemove={
                     !isReadonly
-                      ? isEditingSavedMap
-                        ? () => handleSavedMapChange?.removeMarker(marker.id)
-                        : () => removeMarker(marker.id)
+                      ? () => actions.removeMarker(marker.id)
                       : undefined
                   }
                   draggedIndex={!isReadonly ? draggedIndex : undefined}

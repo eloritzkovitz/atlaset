@@ -11,9 +11,9 @@ export function encodeMapData(mapData: {
   layers: { name: string; color: string; countries: string[] }[];
   markers?: Array<{
     name?: string;
-    coordinates: [number, number];
+    isoCode?: string;
     color?: string;
-    description?: string;
+    notes?: string;
   }>;
   mapName?: string;
   sharer?: string;
@@ -36,10 +36,9 @@ export function encodeMapData(mapData: {
       .map((m) =>
         [
           encodeURIComponent(m.name ?? ""),
-          Array.isArray(m.coordinates) ? m.coordinates[0] : "",
-          Array.isArray(m.coordinates) ? m.coordinates[1] : "",
+          encodeURIComponent(m.isoCode ?? ""),
           encodeURIComponent(m.color ?? ""),
-          encodeURIComponent(m.description ?? ""),
+          encodeURIComponent(m.notes ?? ""),
         ].join(","),
       )
       .join("|");
@@ -65,9 +64,9 @@ export function decodeMapData(code: string): {
   layers: { name: string; color: string; countries: string[] }[];
   markers?: Array<{
     name?: string;
-    coordinates: [number, number];
+    isoCode?: string;
     color?: string;
-    description?: string;
+    notes?: string;
   }>;
   mapName?: string;
   sharer?: string;
@@ -101,21 +100,19 @@ export function decodeMapData(code: string): {
     let markers:
       | Array<{
           name?: string;
-          coordinates: [number, number];
+          isoCode?: string;
           color?: string;
-          description?: string;
+          notes?: string;
         }>
       | undefined = undefined;
     if (markerPart && markerPart.length > 0) {
       markers = markerPart.split("|").map((markerStr) => {
-        const [name, lng, lat, color, description] = markerStr.split(",");
+        const [name, isoCode, color, notes] = markerStr.split(",");
         return {
           name: decodeURIComponent(name) || undefined,
-          coordinates: [Number(lng), Number(lat)] as [number, number],
+          isoCode: decodeURIComponent(isoCode) || undefined,
           color: color ? decodeURIComponent(color) : undefined,
-          description: description
-            ? decodeURIComponent(description)
-            : undefined,
+          notes: notes ? decodeURIComponent(notes) : undefined,
         };
       });
     }
@@ -125,9 +122,9 @@ export function decodeMapData(code: string): {
       layers: { name: string; color: string; countries: string[] }[];
       markers?: Array<{
         name?: string;
-        coordinates: [number, number];
+        isoCode?: string;
         color?: string;
-        description?: string;
+        notes?: string;
       }>;
       mapName?: string;
       sharer?: string;
@@ -138,7 +135,7 @@ export function decodeMapData(code: string): {
     return result;
   } catch {
     return { layers: [] };
-  }  
+  }
 }
 
 /**

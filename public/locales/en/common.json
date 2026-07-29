@@ -52,11 +52,13 @@
     "view": "View",
     "download": "Download",
     "rename": "Rename",
-    "center": "Center",
+    "center": "Center on map",
     "duplicate": "Duplicate",
     "createList": "Create List",
     "share": "Share",
+    "copy": "Copy",
     "copyLink": "Copy Link",
+    "copied": "Copied!",
     "cannotDelete": "Cannot delete",
     "search": "Search",
     "resetFilters": "Reset filters",
@@ -163,6 +165,10 @@
   },
   "date": {
     "tbd": "TBD"
+  },
+  "color": {
+    "toggleRGBA": "Toggle between RGBA and HEX",
+    "toggleHEX": "Toggle between HEX and RGBA"
   },
   "sidePanel": {
     "open": "Open menu",

@@ -2,13 +2,13 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, SegmentedToggle, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTimeline } from "@contexts/TimelineContext";
+import { useTimeline } from "@features/atlas/timeline";
 import { CountrySortSelect, type CountryList } from "@features/countries";
 import { SUPPORTED_MODIFIERS } from "@features/countries/constants/modifierConfig";
 import { SUPPORTED_QUALIFIERS } from "@features/countries/constants/qualifierConfig";
 import { useDragScroll } from "@hooks";
-import { useCountryFilters } from "@contexts/CountryFiltersContext";
 import type { SortValue } from "@types";
+import { useCountryFilters } from "../../context/CountryFiltersContext";
 
 interface CountriesSearchSortBarProps {
   sortBy: SortValue<string>;

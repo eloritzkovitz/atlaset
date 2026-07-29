@@ -37,16 +37,40 @@ function normalizeMarker(o: Record<string, unknown>): Marker {
 
 /**
  * Import one or more markers from a JSON file input event.
- * @param event The file input change event.
- * @param importMarkers Callback with array of markers.
+ * @param event - The file input change event.
+ * @param existingMarkers - The array of existing markers.
+ * @param importMarkers - Callback with array of markers.
  */
 export function importMarkersFromFile(
   event: React.ChangeEvent<HTMLInputElement>,
+  existingMarkers: Marker[],
   importMarkers: (markers: Marker[]) => void,
 ) {
   importFromFile<Marker>(
     event,
-    (json) => parseAndNormalizeMarkers(json),
+    (json) => {
+      const parsed = parseAndNormalizeMarkers(json);
+
+      // Filter out duplicates based on isoCode, keeping existing markers and adding new unique ones
+      const existingIsoCodes = new Set(
+        existingMarkers
+          .map((m) => m.isoCode)
+          .filter((code): code is string => Boolean(code)),
+      );
+
+      // Filter out new markers that have an isoCode already present in existing markers
+      const uniqueNewMarkers = parsed.filter((marker) => {
+        if (existingIsoCodes.has(marker.isoCode)) return false;
+        existingIsoCodes.add(marker.isoCode);
+        return true;
+      });
+
+      // Merge existing markers with unique new markers and assign order based on their position in the combined array
+      return [...existingMarkers, ...uniqueNewMarkers].map((marker, index) => ({
+        ...marker,
+        order: index,
+      }));
+    },
     importMarkers,
   );
 }

@@ -18,14 +18,20 @@ export function useDataLoader<T>({
   onSuccess,
   onError,
 }: UseDataLoaderOptions<T>) {
-  const [data, setData] = useState<T | null>(null);
+  const [data, setDataState] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   const hasInitialLoaded = useRef(false);
 
+  // Sets the data state and marks loading as false
+  const setData = useCallback((value: React.SetStateAction<T | null>) => {
+    setDataState(value);
+    setLoading(false);
+  }, []);
+
+  // Reloads the data by calling the fetch function and updating state accordingly
   const reload = useCallback(async () => {
-    // Only show full loading spinner on initial cold fetch
     if (!hasInitialLoaded.current) {
       setLoading(true);
     }
@@ -33,7 +39,7 @@ export function useDataLoader<T>({
 
     try {
       const result = await fetchFn();
-      setData(result);
+      setDataState(result);
       if (onSuccess) onSuccess(result);
       hasInitialLoaded.current = true;
       return result;

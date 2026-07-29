@@ -1,4 +1,4 @@
-import type { ColorMode } from "../shared/types";
+import type { ColorMode } from "../core/types";
 
 /** Represents map configuration settings. */
 export type MapConfigurationSettings = {

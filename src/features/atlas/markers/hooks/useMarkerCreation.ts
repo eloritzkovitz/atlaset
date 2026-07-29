@@ -1,20 +1,34 @@
-import { useMapView } from "@contexts/MapViewContext";
-import { useMarkers } from "@contexts/MarkersContext";
-import { useSavedMaps } from "@contexts/SavedMapsContext";
-import { useEventListener } from "@hooks/dom/useEventListener";
+import { useCallback } from "react";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
+import { getCountryName } from "@features/countries/utils/countryData";
+import { useCountryData } from "@features/countries/hooks/useCountryData";
+import { useEventListener } from "@hooks";
+import { useMarkers } from "../context/MarkersContext";
+
+interface UseMarkerCreationProps {
+  onCountryClick?: (isoCode: string | null) => void;
+}
 
 /**
- * Manages marker creation state and handlers.
+ * Manages marker creation state and interactions with the map.
+ * @param onCountryClick - Optional callback for handling country clicks when not adding a marker.
  * @returns An object containing marker creation state and handlers.
  */
-export function useMarkerCreation() {
+export function useMarkerCreation({
+  onCountryClick,
+}: UseMarkerCreationProps = {}) {
+  const { countries } = useCountryData();
   const { isEdit } = useMapView();
+
   const main = useMarkers();
   const saved = useSavedMaps();
-  const ctx = isEdit ? saved : main;
-  const { isAddingMarker, cancelMarkerCreation } = ctx;
+  const ctx = isEdit ? saved.markers : main;
 
-  // Handle Escape key to cancel marker creation using useEventListener
+  const { isAddingMarker, cancelMarkerCreation, handleCountryClickForMarker } =
+    ctx;
+
+  // Handle Escape key to cancel marker creation
   useEventListener(
     "keydown",
     (e: KeyboardEvent) => {
@@ -25,10 +39,31 @@ export function useMarkerCreation() {
     window,
   );
 
+  // Handle country clicks depending on active mode
+  const handleCountryClick = useCallback(
+    (isoCode: string | null, e?: React.MouseEvent) => {
+      if (isAddingMarker) {
+        e?.stopPropagation();
+        if (isoCode) {
+          handleCountryClickForMarker?.(
+            isoCode,
+            getCountryName(isoCode, countries),
+          );
+        }
+      } else if (isoCode && onCountryClick) {
+        onCountryClick(isoCode);
+      }
+    },
+    [isAddingMarker, handleCountryClickForMarker, countries, onCountryClick],
+  );
+
   return {
-    isAddingMarker: ctx.isAddingMarker,
+    markers: ctx.markers,
+    isAddingMarker,
     startAddingMarker: ctx.startAddingMarker,
-    handleMapClickForMarker: ctx.handleMapClickForMarker,
-    cancelMarkerCreation: ctx.cancelMarkerCreation,
+    openAddMarker: ctx.openAddMarker,
+    openEditMarker: ctx.openEditMarker,
+    cancelMarkerCreation,
+    handleCountryClick,
   };
 }

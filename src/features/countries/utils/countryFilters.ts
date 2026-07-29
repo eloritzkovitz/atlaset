@@ -2,7 +2,7 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Layer } from "@features/atlas/layers";
+import type { Layer } from "@features/atlas/layers/types";
 import type { VisitContext } from "@features/visits/types";
 import { filterBySearch } from "@utils/filter";
 import { compareNumeric, parseComparator } from "@utils/number";
