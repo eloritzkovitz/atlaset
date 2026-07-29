@@ -73,7 +73,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
       position="center"
-      className="modal min-w-[500px] max-w-[800px] max-h-[90vh]"
+      className="modal w-[600px] max-h-[90vh]"
       disableClose={colorModalOpen || countrySelectOpen}
       draggable
     >

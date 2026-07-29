@@ -67,7 +67,7 @@ function MarkerDetailsContent({
           </span>
         }
       />
-      <div className="mb-4 text-muted">
+      <div className="p-4 text-muted">
         {marker.notes || t("markers.noNotes", "No notes provided.")}
       </div>
     </div>

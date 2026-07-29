@@ -56,7 +56,9 @@
     "duplicate": "שכפול",
     "createList": "יצירת רשימה",
     "share": "שיתוף",
+    "copy": "העתקה",
     "copyLink": "העתקת קישור",
+    "copied": "הועתק!",
     "cannotDelete": "לא ניתן למחוק",
     "search": "חיפוש",
     "resetFilters": "איפוס מסננים",
@@ -163,6 +165,10 @@
   },
   "date": {
     "tbd": "טרם"
+  },
+  "color": {
+    "toggleRGBA": "החלפה בין RGBA ל-HEX",
+    "toggleHEX": "החלפה בין HEX ל-RGBA"
   },
   "sidePanel": {
     "open": "פתח את התפריט",
