@@ -69,7 +69,7 @@ export function useLanguage() {
     change(next.code);
   }, [current, change]);
 
-  const name = useMemo(() => t(`languages.${current}`), [t, current]);
+  const name = useMemo(() => t(`domain.languages.${current}`), [t, current]);
   const isRtlVal = useMemo(() => isRtl(current), [current]);
 
   // Apply language and direction to document

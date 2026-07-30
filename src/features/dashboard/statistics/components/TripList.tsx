@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
 import { Chip } from "@components";
-import { formatDate } from "@utils/date";
 import { CountryFlag, useCountryData } from "@features/countries";
 import type { Trip } from "@features/trips/types";
 import { getTripDays } from "@features/trips/utils/trips";
+import { formatDate } from "@utils/date";
 
 interface TripListProps {
   trips: Trip[];
@@ -19,6 +20,7 @@ export function TripList({
   showDuration = false,
 }: TripListProps) {
   const { countries } = useCountryData();
+  const { t } = useTranslation("dashboard");
 
   // Handle empty state
   if (!trips || trips.length === 0) {
@@ -51,7 +53,10 @@ export function TripList({
             })}
             <span className="font-semibold text-base">{trip.name}</span>
             {showDuration && trip.startDate && trip.endDate && (
-              <span className="text-muted">| {getTripDays(trip)} days</span>
+              <span className="text-muted">
+                | {getTripDays(trip)}{" "}
+                {t("statistics.overview.days", { defaultValue: "days" })}
+              </span>
             )}
             <span className="flex-1" />
             <span className="text-muted text-right min-w-[6.5rem]">

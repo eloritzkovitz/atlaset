@@ -56,10 +56,10 @@ export function SidePanelMenu({
   const onClose =
     onCloseProp !== undefined ? onCloseProp : () => setLocalOpen(false);
 
-  const isRTL = document.documentElement.dir === "rtl";
+  const isRtl = document.documentElement.dir === "rtl";
 
   // Render the appropriate sidebar icon based on RTL and open state
-  const SidebarIcon = isRTL
+  const SidebarIcon = isRtl
     ? TbLayoutSidebarRightExpand
     : TbLayoutSidebarLeftExpand;
 

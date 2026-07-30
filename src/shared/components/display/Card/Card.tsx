@@ -30,7 +30,7 @@ export function Card({
   const isInteractive = !!onClick && !loading;
 
   const baseClass = [
-    "bg-surface dark:bg-surface-alt rounded-2xl shadow-sm p-5 text-left w-full block",
+    "bg-surface dark:bg-surface-alt rounded-2xl shadow-sm p-5 text-start w-full block",
     isInteractive
       ? "cursor-pointer transition hover:shadow-lg select-none"
       : "",

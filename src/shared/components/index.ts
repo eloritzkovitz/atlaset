@@ -39,7 +39,7 @@ export { PasswordField } from "./inputs/FormField/PasswordField";
 export { QualifierSearch } from "./inputs/SearchInput/QualifierSearch";
 export { RadioButton } from "./inputs/RadioButton/RadioButton";
 export { RateMenu } from "./inputs/StarRating/RateMenu";
-export { RATING_OPTIONS } from "./inputs/StarRating/constants";
+export { getRatingOptions } from "./inputs/StarRating/utils";
 export { SearchInput } from "./inputs/SearchInput/SearchInput";
 export {
   SegmentedToggle,

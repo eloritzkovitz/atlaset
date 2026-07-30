@@ -27,7 +27,7 @@
     "resetView": "אתחול תצוגה"
   },
   "footer": {
-    "countriesExplored": "מדינות שביקרתי: {{visited}}/{{total}} ({{percent}}%)",
+    "countriesExplored": "מדינות שביקרתי בהן: {{visited}}/{{total}} ({{percent}}%)",
     "allCountriesTooltip": "כיסוי עולמי: כל הטריטוריות",
     "sovereignOnlyTooltip": "כיסוי עולמי: מדינות ריבוניות",
     "zoomTooltip": "רמת זום: {{zoom}}x"
@@ -234,7 +234,7 @@
     "title": "ייצוא",
     "options": "אפשרויות",
     "exportOptions": {
-      "visitedCountries": "מדינות שביקרתי",
+      "visitedCountries": "מדינות שביקרתי בהן",
       "visibleLayers": "כל השכבות הגלויות",
       "visibleMarkers": "כל הסימונים הגלויים"
     },

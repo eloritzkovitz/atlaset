@@ -56,6 +56,15 @@ export function Tooltip({
     setStyle({});
   }, []);
 
+  const isRtl = document.documentElement.dir === "rtl";
+
+  const effectivePosition = (() => {
+    if (!isRtl) return position;
+    if (position === "left") return "right";
+    if (position === "right") return "left";
+    return position;
+  })();
+
   // Update tooltip position when overrideCoords changes
   useLayoutEffect(() => {
     if (overrideCoords) setCoords(overrideCoords);
@@ -72,7 +81,7 @@ export function Tooltip({
       left = 0;
 
     const activeCoords =
-      overrideCoords || (position === "cursor" ? coords : null);
+      overrideCoords || (effectivePosition === "cursor" ? coords : null);
 
     if (activeCoords) {
       top = activeCoords.y + 12;
@@ -80,15 +89,15 @@ export function Tooltip({
     } else if (activeAnchor) {
       const anchor = activeAnchor.getBoundingClientRect();
       top =
-        position === "top"
+        effectivePosition === "top"
           ? anchor.top - tooltip.height - gap
-          : position === "bottom"
+          : effectivePosition === "bottom"
             ? anchor.bottom + gap
             : anchor.top + anchor.height / 2 - tooltip.height / 2;
       left =
-        position === "left"
+        effectivePosition === "left"
           ? anchor.left - tooltip.width - gap
-          : position === "right"
+          : effectivePosition === "right"
             ? anchor.right + gap
             : anchor.left + anchor.width / 2 - tooltip.width / 2;
     }
@@ -100,7 +109,14 @@ export function Tooltip({
       zIndex: 10050,
       pointerEvents: "none",
     });
-  }, [visible, position, coords, overrideCoords, target, activeAnchor]);
+  }, [
+    visible,
+    effectivePosition,
+    coords,
+    overrideCoords,
+    target,
+    activeAnchor,
+  ]);
 
   const getHandlers = useCallback(
     (childProps: Record<string, unknown> = {}) => {
@@ -164,14 +180,14 @@ export function Tooltip({
           </span>
         )}
 
-        {(!overrideCoords || target) && position !== "cursor" && (
+        {(!overrideCoords || target) && effectivePosition !== "cursor" && (
           <div
             className={`absolute border-[4px] border-transparent pointer-events-none
-            ${position === "top" ? "top-full left-1/2 -translate-x-1/2 border-t-black" : ""}
-            ${position === "bottom" ? "bottom-full left-1/2 -translate-x-1/2 border-b-black" : ""}
-            ${position === "left" ? "left-full top-1/2 -translate-y-1/2 border-l-black" : ""}
-            ${position === "right" ? "right-full top-1/2 -translate-y-1/2 border-r-black" : ""}
-          `}
+            ${effectivePosition === "top" ? "top-full left-1/2 -translate-x-1/2 border-t-black" : ""}
+            ${effectivePosition === "bottom" ? "bottom-full left-1/2 -translate-x-1/2 border-b-black" : ""}
+            ${effectivePosition === "left" ? "left-full top-1/2 -translate-y-1/2 border-l-black" : ""}
+            ${effectivePosition === "right" ? "right-full top-1/2 -translate-y-1/2 border-r-black" : ""}
+            `}
           />
         )}
       </span>,

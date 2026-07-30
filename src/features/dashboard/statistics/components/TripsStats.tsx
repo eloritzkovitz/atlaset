@@ -224,8 +224,10 @@ export function TripsStats() {
       <Card
         icon={FaClock}
         iconClass="text-indigo-600"
-        title={t("statistics.longest.title", { defaultValue: "Longest trip" })}
-        subtitle={t("statistics.longest.subtitle", {
+        title={t("statistics.overview.longest.title", {
+          defaultValue: "Longest trip",
+        })}
+        subtitle={t("statistics.overview.longest.subtitle", {
           defaultValue: "Your trip with the most days abroad",
         })}
       >
@@ -267,7 +269,7 @@ export function TripsStats() {
       >
         <div className="text-4xl font-extrabold text-yellow-400 mb-1">
           {averageTripDuration
-            ? `${averageTripDuration.toFixed(1)} ${t("statistics.days", { defaultValue: "days" })}`
+            ? `${averageTripDuration.toFixed(1)} ${t("statistics.overview.days", { defaultValue: "days" })}`
             : "—"}
         </div>
       </Card>

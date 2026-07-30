@@ -69,10 +69,10 @@ export function TripsTableRows({
     >
       <>
         {/* Select */}
-        <TableCell rowSpan={rowSpan} className="relative pl-5">
+        <TableCell rowSpan={rowSpan} className="relative ps-5">
           <div
             className={`
-              absolute left-0 top-0 bottom-0 w-1
+              absolute start-0 top-0 bottom-0 w-1
               ${trip.status === "planned" ? "bg-status-planned" : ""}
               ${trip.status === "upcoming" ? "bg-status-upcoming" : ""}
               ${trip.status === "in-progress" ? "bg-status-inprogress" : ""}

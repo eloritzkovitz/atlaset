@@ -1,6 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Card } from "@components";
-import { useTranslation } from "react-i18next";
 import { UserAvatar, type UserProfile } from "@features/user/profile";
 import type { SerializableUser } from "@features/user/auth/types";
 
@@ -32,7 +32,7 @@ export function UserOverviewCard({
           <div className="text-3xl font-semibold">
             {user?.displayName || t("overview.user", { defaultValue: "User" })}
           </div>
-          <div className="text-lg text-muted">
+          <div className="text-start text-lg text-muted">
             {t("overview.welcomeBack", { defaultValue: "Welcome back!" })}
           </div>
         </div>

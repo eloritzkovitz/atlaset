@@ -139,7 +139,8 @@
       "last": {
         "title": "Last trip",
         "subtitle": "Your most recent trip"
-      }
+      },
+      "visits": "visits"
     },
     "months": {
       "title": "Trips by Month",

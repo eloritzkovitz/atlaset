@@ -34,7 +34,10 @@ export function TripHistory() {
                   isoCode={country.isoCode}
                   name={country.name}
                 />
-                <span className="text-xs text-muted">({maxCount} times)</span>
+                <span className="text-xs text-muted">
+                  ({maxCount}{" "}
+                  {t("statistics.history.visits", { defaultValue: "visits" })})
+                </span>
               </Chip>
             ))
           ) : (

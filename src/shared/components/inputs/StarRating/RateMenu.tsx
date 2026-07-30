@@ -1,6 +1,8 @@
-import { Menu, MenuButton } from "@components";
-import { RATING_ACTION_OPTIONS } from "./constants";
+import { useTranslation } from "react-i18next";
 import { StarRatingInput } from "./StarRatingInput";
+import { getRatingActionOptions } from "./utils";
+import { Menu } from "../../navigation/Menu/Menu";
+import { MenuButton } from "../../navigation/Menu/MenuButton";
 
 interface RateMenuProps {
   open: boolean;
@@ -19,6 +21,9 @@ export function RateMenu({
   onRate,
   onClose,
 }: RateMenuProps) {
+  const { t } = useTranslation("common");
+  const options = getRatingActionOptions(t);
+
   return (
     <Menu
       open={open}
@@ -28,7 +33,7 @@ export function RateMenu({
       onClose={onClose}
     >
       <div {...hoverHandlers}>
-        {RATING_ACTION_OPTIONS.map((opt) => (
+        {options.map((opt) => (
           <MenuButton
             key={String(opt.value) + "-rate"}
             onPointerDown={() => {

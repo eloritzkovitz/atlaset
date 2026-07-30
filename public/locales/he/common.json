@@ -121,6 +121,12 @@
       "title": "מיין",
       "tooltip": "מיין לפי: {{key}} ({{dir}})"
     },
+    "starRating": {
+      "all": "כל הדירוגים",
+      "none": "ללא דירוג",
+      "star_one": "{{count}} כוכב",
+      "star_other": "{{count}} כוכבים"
+    },
     "viewMode": {
       "grid": "תצוגת רשת",
       "list": "תצוגת רשימה"

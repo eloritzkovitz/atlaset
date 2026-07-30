@@ -2,7 +2,7 @@ import type { JSX } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Checkbox,
-  RATING_OPTIONS,
+  getRatingOptions,
   SortableFilterHeader,
   StarRatingInput,
   TableDropdownFilter,
@@ -53,11 +53,12 @@ export function TripsTableHeaders({
 }: TripsTableHeadersProps) {
   const { isAllSelected, selectAllTrips } = useTrips();
   const { t } = useTranslation("trips");
+  const { t: tCommon } = useTranslation("common");
 
   return (
     <thead>
       <tr>
-        <TableHeader colKey="select" unsortable className="relative pl-5">
+        <TableHeader colKey="select" unsortable className="relative ps-5">
           <Checkbox
             checked={isAllSelected(trips)}
             onChange={() => selectAllTrips(trips.map((t) => t.id))}
@@ -85,16 +86,14 @@ export function TripsTableHeaders({
               <TableDropdownFilter<number>
                 value={typeof filters.rating === "number" ? filters.rating : []}
                 onChange={(v) => updateFilter("rating", v)}
-                options={RATING_OPTIONS}
+                options={getRatingOptions(tCommon)}
                 placeholder={t("table.placeholders.allRatings")}
                 renderOption={(opt) =>
                   "value" in opt ? (
                     <span className="flex items-center gap-2">
-                      {opt.value === -1 ? (
-                        <span />
-                      ) : (
+                      {opt.value > -1 ? (
                         <StarRatingInput value={opt.value} readOnly />
-                      )}
+                      ) : null}
                       <span className="text-xs text-muted">{opt.label}</span>
                     </span>
                   ) : null
