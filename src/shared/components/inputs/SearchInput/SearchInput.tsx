@@ -165,7 +165,9 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             }
           }}
           placeholder={placeholder}
-          aria-label={placeholder || t("search.placeholder", "Search")}
+          aria-label={
+            placeholder || t("components.search.placeholder", "Search")
+          }
           className={`w-full ${showIcon === false ? "ps-3" : "ps-10"} pe-10 py-2 bg-input rounded-full border border-none text-base outline-none focus:outline-none focus:ring-0 ${className}`}
           style={{
             ...(style || {}),
@@ -179,8 +181,8 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
         {showClear && value.length > 0 && (
           <button
             type="button"
-            aria-label={`${t("search.clear", "Clear")} ${t("search.placeholder", "Search")}`}
-            title={`${t("search.clear", "Clear")} ${t("search.placeholder", "Search")}`}
+            aria-label={`${t("components.search.clear", "Clear")} ${t("components.search.placeholder", "Search")}`}
+            title={`${t("components.search.clear", "Clear")} ${t("components.search.placeholder", "Search")}`}
             onClick={() => {
               if (onClear) {
                 onClear();

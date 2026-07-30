@@ -175,7 +175,7 @@ export function useVisitedCountries() {
   function getCountryVisits(isoCode: string) {
     return getVisitsForCountry(trips, isoCode).map(
       ({ yearRange, tripName, tripId }) => ({
-        yearRange: yearRange ?? t("date.tbd"),
+        yearRange: yearRange ?? t("formatting.date.tbd"),
         tripName,
         tripId,
       }),
@@ -191,7 +191,7 @@ export function useVisitedCountries() {
       v: ReturnType<typeof getVisitsForCountry>[number],
     ) => ({
       ...v,
-      yearRange: v.yearRange ?? t("date.tbd"),
+      yearRange: v.yearRange ?? t("formatting.date.tbd"),
     });
 
     return {

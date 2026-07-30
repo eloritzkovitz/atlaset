@@ -43,7 +43,7 @@ export function DocSearchResults({
               ))}
             </ul>
           ) : (
-            <EmptyListMessage message={t("search.noResults")} />
+            <EmptyListMessage message={t("components.search.noResults")} />
           )}
         </div>
       ) : (

@@ -105,8 +105,8 @@ export function SidePanelMenu({
             icon={<SidebarIcon className="text-3xl text-muted" />}
             onClick={() => setLocalOpen(true)}
             className={`fixed top-3.5 ${showSidebar ? "start-18" : "start-2"} z-20`}
-            aria-label={t("sidePanel.open")}
-            title={t("sidePanel.open")}
+            aria-label={t("actions.openMenu", "Open menu")}
+            title={t("actions.openMenu", "Open menu")}
           />
         )}
         <DrawerPanel

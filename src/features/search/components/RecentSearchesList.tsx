@@ -16,19 +16,22 @@ export function RecentSearchesList({
   onClear,
 }: RecentSearchesListProps) {
   const { t } = useTranslation();
-  
+
   return (
     <div>
       <div className="flex items-center">
-        <SectionHeader title={t("search.recent")} className="ms-2 flex-1" />
+        <SectionHeader
+          title={t("components.search.recent")}
+          className="ms-2 flex-1"
+        />
         <ActionButton
           variant="secondary"
-          ariaLabel={t("search.clearAll")}
+          ariaLabel={t("components.search.clearAll")}
           onClick={onClear}
           className="text-muted !text-sm !p-1 mt-2 me-1"
           rounded
         >
-          {t("search.clear")}
+          {t("components.search.clear")}
         </ActionButton>
       </div>
       <ul className="text-left">

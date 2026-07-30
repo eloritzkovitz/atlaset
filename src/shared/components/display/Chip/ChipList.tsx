@@ -73,7 +73,7 @@ export function ChipList<T>({
           position="bottom"
         >
           <Chip className={`text-xs font-medium ${moreColorClass}`}>
-            {t("chip.more", { count: items.length - limit })}
+            {t("components.chip.more", { count: items.length - limit })}
           </Chip>
         </Tooltip>
       )}

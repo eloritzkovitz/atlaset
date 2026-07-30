@@ -1,42 +1,42 @@
 {
   "appName": "Atlaset",
-  "sidebar": {
-    "expand": "Expand sidebar",
-    "collapse": "Collapse sidebar",
-    "atlas": "Atlas",
-    "trips": "My Trips",
-    "dashboard": "Dashboard",
-    "quizzes": "Quizzes",
-    "settings": "Settings"
-  },
-  "menu": {
-    "notifications": "Notifications",
-    "help": "Help",
-    "account": "Account",
-    "profile": "Profile",
-    "friends": "Friends",
-    "reportBug": "Report a bug",
-    "keyboardShortcuts": "Keyboard Shortcuts",
-    "settings": "Settings",
-    "appearance": {
-      "title": "Appearance",
-      "device": "Device",
-      "dark": "Dark",
-      "light": "Light"
+
+  "navigation": {
+    "sidebar": {
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar",
+      "atlas": "Atlas",
+      "trips": "My Trips",
+      "dashboard": "Dashboard",
+      "quizzes": "Quizzes",
+      "settings": "Settings"
     },
-    "language": "Language",
-    "signOut": "Sign out"
+    "menu": {
+      "notifications": "Notifications",
+      "help": "Help",
+      "account": "Account",
+      "profile": "Profile",
+      "friends": "Friends",
+      "reportBug": "Report a bug",
+      "keyboardShortcuts": "Keyboard Shortcuts",
+      "settings": "Settings",
+      "appearance": {
+        "title": "Appearance",
+        "device": "Device",
+        "dark": "Dark",
+        "light": "Light"
+      },
+      "language": "Language",
+      "signOut": "Sign out"
+    },
+    "links": {
+      "about": "About",
+      "changelog": "Changelog",
+      "privacy": "Privacy Policy",
+      "docs": "Docs"
+    }
   },
-  "links": {
-    "about": "About",
-    "changelog": "Changelog",
-    "privacy": "Privacy Policy",
-    "docs": "Docs"
-  },
-  "pwa": {
-    "updateAvailable": "A new version is available.",
-    "updateNow": "Update now"
-  },
+
   "actions": {
     "add": "Add",
     "edit": "Edit",
@@ -47,6 +47,7 @@
     "close": "Close",
     "show": "Show",
     "showMore": "Show more",
+    "openMenu": "Open menu",
     "hide": "Hide",
     "moreActions": "More actions",
     "view": "View",
@@ -66,36 +67,88 @@
     "help": "Help",
     "wikipedia": "View on Wikipedia"
   },
-  "search": {
-    "pageTitle": "Search results for \"{{query}}\"",
-    "placeholder": "Search",
-    "recent": "Recent Searches",
-    "clear": "Clear",
-    "clearAll": "Clear All",
-    "searching": "Searching...",
-    "seeAll": "See all results",
-    "noResults": "No results found.",
-    "sections": {
+
+  "feedback": {
+    "delete": {
+      "confirmTitle": "Delete item?",
+      "confirmMessage": "Are you sure you want to delete <1>{{name}}</1>?"
+    },
+    "pwa": {
+      "updateAvailable": "A new version is available.",
+      "updateNow": "Update now"
+    }
+  },
+
+  "components": {
+    "chip": {
+      "more": "+{{count}} more",
+      "moreTooltipPrefix": "More items:\n"
+    },
+    "colorPicker": {
+      "select": "Select Color",
+      "toggleRGBA": "Toggle between RGBA and HEX",
+      "toggleHEX": "Toggle between HEX and RGBA"
+    },
+    "filter": {
+      "all": "All",
+      "includeOnly": "Include Only",
+      "exclude": "Exclude"
+    },
+    "pagination": {
+      "showing": "Showing",
+      "pageSize": "Page size",
+      "selectPageSize": "Select page size",
+      "of": "of",
+      "back": "Back",
+      "next": "Next",
+      "prevAria": "Previous page",
+      "nextAria": "Next page"
+    },
+    "search": {
+      "pageTitle": "Search results for \"{{query}}\"",
+      "placeholder": "Search",
+      "recent": "Recent Searches",
+      "clear": "Clear",
+      "clearAll": "Clear All",
+      "searching": "Searching...",
+      "seeAll": "See all results",
+      "noResults": "No results found."
+    },
+    "sort": {
+      "direction": "Direction",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "title": "Sort",
+      "tooltip": "Sort by: {{key}} ({{dir}})"
+    },
+    "viewMode": {
+      "grid": "Grid View",
+      "list": "List View"
+    }
+  },
+
+  "domain": {
+    "categories": {
       "all": "All",
       "people": "People",
       "countries": "Countries",
       "currencies": "Currencies",
       "regions": "Regions",
       "subregions": "Subregions"
+    },
+    "languages": {
+      "en": "English",
+      "he": "עברית"
     }
   },
-  "filter": {
-    "all": "All",
-    "includeOnly": "Include Only",
-    "exclude": "Exclude"
+
+  "formatting": {
+    "empty": "—",
+    "date": {
+      "tbd": "TBD"
+    }
   },
-  "sort": {
-    "direction": "Direction",
-    "ascending": "Ascending",
-    "descending": "Descending",
-    "title": "Sort",
-    "tooltip": "Sort by: {{key}} ({{dir}})"
-  },
+
   "shortcuts": {
     "title": "Keyboard Shortcuts",
     "categories": {
@@ -153,45 +206,15 @@
       }
     }
   },
+
   "help": {
     "title": "Help",
     "searchPlaceholder": "Search help",
     "needHelp": "Need help? Access guides, tips and developer info in the full",
     "documentation": "documentation"
   },
-  "languages": {
-    "en": "English",
-    "he": "עברית"
-  },
+
   "date": {
     "tbd": "TBD"
-  },
-  "color": {
-    "select": "Select Color",
-    "toggleRGBA": "Toggle between RGBA and HEX",
-    "toggleHEX": "Toggle between HEX and RGBA"
-  },
-  "sidePanel": {
-    "open": "Open menu",
-    "close": "Close menu"
-  },
-  "pagination": {
-    "showing": "Showing",
-    "pageSize": "Page size",
-    "selectPageSize": "Select page size",
-    "of": "of",
-    "back": "Back",
-    "next": "Next",
-    "prevAria": "Previous page",
-    "nextAria": "Next page"
-  },
-  "viewMode": {
-    "grid": "Grid View",
-    "list": "List View"
-  },
-  "empty": "—",
-  "chip": {
-    "more": "+{{count}} more",
-    "moreTooltipPrefix": "More items:\n"
   }
 }

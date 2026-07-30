@@ -139,15 +139,17 @@ export const layerFilterConfig: FilterConfig<Layer, LayerFilterProps, string> =
       return [
         {
           value: "all",
-          label: layer?.filterLabels?.all ?? "common:filter.all",
+          label: layer?.filterLabels?.all ?? "common:components.filter.all",
         },
         {
           value: "only",
-          label: layer?.filterLabels?.only ?? "common:filter.includeOnly",
+          label:
+            layer?.filterLabels?.only ?? "common:components.filter.includeOnly",
         },
         {
           value: "exclude",
-          label: layer?.filterLabels?.exclude ?? "common:filter.exclude",
+          label:
+            layer?.filterLabels?.exclude ?? "common:components.filter.exclude",
         },
       ];
     },

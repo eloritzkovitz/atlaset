@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
 import {
   useContextMenu,
@@ -241,19 +241,22 @@ export function PanelListItem({
       {confirmOpen && onRemove && (
         <ConfirmModal
           isOpen={confirmOpen}
-          title={"Delete item?"}
+          title={t("feedback.delete.confirmTitle")}
           message={
-            <span>
-              Are you sure you want to delete <strong>{name}</strong>?
-            </span>
+            <Trans
+              i18nKey="feedback.delete.confirmMessage"
+              ns="common"
+              values={{ name: nameString }}
+              components={[<span key="0" />, <strong key="1" />]}
+            />
           }
           onConfirm={() => {
             setConfirmOpen(false);
             onRemove();
           }}
           onCancel={() => setConfirmOpen(false)}
-          submitLabel="Delete"
-          cancelLabel="Cancel"
+          submitLabel={t("actions.delete")}
+          cancelLabel={t("actions.cancel")}
         />
       )}
     </>

@@ -33,7 +33,7 @@ export function SearchContent({
   hideInput = false,
 }: SearchContentProps) {
   const debouncedSearchTerm = useDebounce(searchTerm, 100);
-  const { results, loading } = useSearch(debouncedSearchTerm);  
+  const { results, loading } = useSearch(debouncedSearchTerm);
   const { t } = useTranslation();
 
   // Get current user and friends for result ranking and display
@@ -45,7 +45,7 @@ export function SearchContent({
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   // Handle search term changes
-  const handleChange = (val: string) => setSearchTerm(val);  
+  const handleChange = (val: string) => setSearchTerm(val);
 
   return (
     <div className={`flex flex-col h-full ${containerClassName}`}>
@@ -68,10 +68,10 @@ export function SearchContent({
       )}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <EmptyListMessage message={t("search.loading")} />
+          <EmptyListMessage message={t("components.search.loading")} />
         ) : searchTerm ? (
           results.length === 0 ? (
-            <EmptyListMessage message={t("search.noResults")} />
+            <EmptyListMessage message={t("components.search.noResults")} />
           ) : (
             <SearchResultsList
               results={results}

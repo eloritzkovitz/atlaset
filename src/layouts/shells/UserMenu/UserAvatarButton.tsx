@@ -15,8 +15,8 @@ export function UserAvatarButton({ user, onClick }: UserAvatarButtonProps) {
     <ActionButton
       className="w-9 h-9 rounded-full flex items-center justify-center focus:outline-none hover:bg-transparent bg-transparent"
       onClick={onClick}
-      aria-label={t("menu.account")}
-      title={t("menu.account")}
+      aria-label={t("navigation.menu.account")}
+      title={t("navigation.menu.account")}
     >
       <UserAvatar user={user} size={36} />
     </ActionButton>

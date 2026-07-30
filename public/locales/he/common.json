@@ -1,42 +1,42 @@
 {
   "appName": "Atlaset",
-  "sidebar": {
-    "expand": "הרחב סרגל צד",
-    "collapse": "כווץ סרגל צד",
-    "atlas": "אטלס",
-    "trips": "הטיולים שלי",
-    "dashboard": "לוח בקרה",
-    "quizzes": "חידונים",
-    "settings": "הגדרות"
-  },
-  "menu": {
-    "notifications": "התראות",
-    "help": "עזרה",
-    "account": "חשבון",
-    "profile": "פרופיל",
-    "friends": "חברים",
-    "reportBug": "דווח על באג",
-    "keyboardShortcuts": "קיצורי מקלדת",
-    "settings": "הגדרות",
-    "appearance": {
-      "title": "מראה",
-      "device": "של המכשיר",
-      "dark": "כהה",
-      "light": "בהירה"
+
+  "navigation": {
+    "sidebar": {
+      "expand": "הרחב סרגל צד",
+      "collapse": "כווץ סרגל צד",
+      "atlas": "אטלס",
+      "trips": "הטיולים שלי",
+      "dashboard": "לוח בקרה",
+      "quizzes": "חידונים",
+      "settings": "הגדרות"
     },
-    "language": "שפה",
-    "signOut": "התנתק"
+    "menu": {
+      "notifications": "התראות",
+      "help": "עזרה",
+      "account": "חשבון",
+      "profile": "פרופיל",
+      "friends": "חברים",
+      "reportBug": "דווח על באג",
+      "keyboardShortcuts": "קיצורי מקלדת",
+      "settings": "הגדרות",
+      "appearance": {
+        "title": "מראה",
+        "device": "של המכשיר",
+        "dark": "כהה",
+        "light": "בהירה"
+      },
+      "language": "שפה",
+      "signOut": "התנתק"
+    },
+    "links": {
+      "about": "אודות",
+      "changelog": "יומן שינויים",
+      "privacy": "מדיניות פרטיות",
+      "docs": "מסמכים"
+    }
   },
-  "links": {
-    "about": "אודות",
-    "changelog": "יומן שינויים",
-    "privacy": "מדיניות פרטיות",
-    "docs": "מסמכים"
-  },
-  "pwa": {
-    "updateAvailable": "קיימת גרסה חדשה.",
-    "updateNow": "עדכן עכשיו"
-  },
+
   "actions": {
     "add": "הוספה",
     "edit": "עריכה",
@@ -47,6 +47,7 @@
     "close": "סגירה",
     "show": "הצגה",
     "showMore": "הצגת עוד",
+    "openMenu": "פתיחת תפריט",
     "hide": "הסתרה",
     "moreActions": "פעולות נוספות",
     "view": "צפייה",
@@ -66,36 +67,88 @@
     "help": "עזרה",
     "wikipedia": "צפייה בוויקיפדיה"
   },
-  "search": {
-    "pageTitle": "תוצאות חיפוש עבור \"{{query}}\"",
-    "placeholder": "חיפוש",
-    "recent": "חיפושים אחרונים",
-    "clear": "נקה",
-    "clearAll": "נקה הכל",
-    "searching": "מחפש...",
-    "seeAll": "צפייה בכל התוצאות",
-    "noResults": "לא נמצאו תוצאות.",
-    "sections": {
+
+  "feedback": {
+    "delete": {
+      "confirmTitle": "למחוק פריט זה?",
+      "confirmMessage": "האם אתה בטוח שברצונך למחוק <1>{{name}}</1>?"
+    },
+    "pwa": {
+      "updateAvailable": "קיימת גרסה חדשה.",
+      "updateNow": "עדכן עכשיו"
+    }
+  },
+
+  "components": {
+    "chip": {
+      "more": "עוד {{count}}",
+      "moreTooltipPrefix": "פריטים נוספים:\n"
+    },
+    "colorPicker": {
+      "select": "בחירת צבע",
+      "toggleRGBA": "החלפה בין RGBA ל-HEX",
+      "toggleHEX": "החלפה בין HEX ל-RGBA"
+    },
+    "filter": {
+      "all": "הכל",
+      "includeOnly": "כלול רק",
+      "exclude": "הכל מלבד"
+    },
+    "pagination": {
+      "showing": "מציג",
+      "pageSize": "גודל עמוד",
+      "selectPageSize": "בחר גודל עמוד",
+      "of": "מתוך",
+      "back": "הקודם",
+      "next": "הבא",
+      "prevAria": "העמוד הקודם",
+      "nextAria": "העמוד הבא"
+    },
+    "search": {
+      "pageTitle": "תוצאות חיפוש עבור \"{{query}}\"",
+      "placeholder": "חיפוש",
+      "recent": "חיפושים אחרונים",
+      "clear": "נקה",
+      "clearAll": "נקה הכל",
+      "searching": "מחפש...",
+      "seeAll": "צפייה בכל התוצאות",
+      "noResults": "לא נמצאו תוצאות."
+    },
+    "sort": {
+      "direction": "כיוון",
+      "ascending": "עולה",
+      "descending": "יורד",
+      "title": "מיין",
+      "tooltip": "מיין לפי: {{key}} ({{dir}})"
+    },
+    "viewMode": {
+      "grid": "תצוגת רשת",
+      "list": "תצוגת רשימה"
+    }
+  },
+
+  "domain": {
+    "categories": {
       "all": "הכל",
       "people": "אנשים",
       "countries": "מדינות",
       "currencies": "מטבעות",
       "regions": "יבשות",
       "subregions": "אזורים גיאוגרפיים"
+    },
+    "languages": {
+      "en": "אנגלית",
+      "he": "עברית"
     }
   },
-  "filter": {
-    "all": "הכל",
-    "includeOnly": "כלול רק",
-    "exclude": "הכל מלבד"
+
+  "formatting": {
+    "empty": "—",
+    "date": {
+      "tbd": "טרם"
+    }
   },
-  "sort": {
-    "direction": "כיוון",
-    "ascending": "עולה",
-    "descending": "יורד",
-    "title": "מיין",
-    "tooltip": "מיין לפי: {{key}} ({{dir}})"
-  },
+
   "shortcuts": {
     "title": "קיצורי מקלדת",
     "categories": {
@@ -153,45 +206,11 @@
       }
     }
   },
+
   "help": {
     "title": "עזרה",
     "searchPlaceholder": "חיפוש עזרה",
     "needHelp": "צריך עזרה? גש למדריכים, טיפים ומידע למפתחים ב",
     "documentation": "דוקומנטציה"
-  },
-  "languages": {
-    "en": "אנגלית",
-    "he": "עברית"
-  },
-  "date": {
-    "tbd": "טרם"
-  },
-  "color": {
-    "select": "בחירת צבע",
-    "toggleRGBA": "החלפה בין RGBA ל-HEX",
-    "toggleHEX": "החלפה בין HEX ל-RGBA"
-  },
-  "sidePanel": {
-    "open": "פתח את התפריט",
-    "close": "סגור את התפריט"
-  },
-  "pagination": {
-    "showing": "מציג",
-    "pageSize": "גודל עמוד",
-    "selectPageSize": "בחר גודל עמוד",
-    "of": "מתוך",
-    "back": "הקודם",
-    "next": "הבא",
-    "prevAria": "העמוד הקודם",
-    "nextAria": "העמוד הבא"
-  },
-  "viewMode": {
-    "grid": "תצוגת רשת",
-    "list": "תצוגת רשימה"
-  },
-  "empty": "—",
-  "chip": {
-    "more": "עוד {{count}}",
-    "moreTooltipPrefix": "פריטים נוספים:\n"
   }
 }

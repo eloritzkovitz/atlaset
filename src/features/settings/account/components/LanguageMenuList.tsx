@@ -22,7 +22,7 @@ export function LanguageMenuList({
         <MenuButton
           key={l.code}
           onClick={() => onSelect(l.code)}
-          ariaLabel={t("menu.language.selectAria")}
+          ariaLabel={t("navigation.menu.language.selectAria")}
           className={`w-full text-start py-2 px-3 flex items-center justify-between ${
             l.code === current ? "font-semibold" : ""
           }`}

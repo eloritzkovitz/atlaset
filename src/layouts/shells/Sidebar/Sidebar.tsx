@@ -30,7 +30,9 @@ export function Sidebar() {
     ? DEFAULT_SIDEBAR_EXPANDED_WIDTH
     : DEFAULT_SIDEBAR_WIDTH;
   const toggleLabel = t(
-    sidebarExpanded ? "sidebar.collapse" : "sidebar.expand",
+    sidebarExpanded
+      ? "navigation.sidebar.collapse"
+      : "navigation.sidebar.expand",
   );
 
   return (

@@ -44,11 +44,11 @@ export function SearchResultsList({
           <li>
             <MenuButton
               url={getSearchRoute(searchTerm)}
-              ariaLabel={t("search.seeAll")}
+              ariaLabel={t("components.search.seeAll")}
               onClick={() => onSearchSubmit(searchTerm)}
               className="w-full justify-center"
             >
-              {t("search.seeAll")}
+              {t("components.search.seeAll")}
             </MenuButton>
           </li>
         </>

@@ -38,12 +38,15 @@ export function ThemeSubmenu({
 
   return (
     <>
-      <UserSubmenuHeader title={t("menu.appearance.title")} onBack={onBack} />
+      <UserSubmenuHeader
+        title={t("navigation.menu.appearance.title")}
+        onBack={onBack}
+      />
 
       <div
         className="flex flex-col w-full"
         role="radiogroup"
-        aria-label={t("menu.appearance.title")}
+        aria-label={t("navigation.menu.appearance.title")}
       >
         {themeOptions.map((opt) => {
           const isSelected = currentTheme === opt.id;

@@ -21,33 +21,35 @@ export default function SearchPage() {
   const { results, loading } = useSearch(queryParam);
 
   usePageTitle(
-    queryParam ? t("search.pageTitle", { query: queryParam }) : undefined,
+    queryParam
+      ? t("components.search.pageTitle", { query: queryParam })
+      : undefined,
   );
 
   const sections = [
     {
       key: "people" as const,
-      title: t("search.sections.people"),
+      title: t("domain.categories.people"),
       items: results.filter((item) => item.type === "user"),
     },
     {
       key: "countries" as const,
-      title: t("search.sections.countries"),
+      title: t("domain.categories.countries"),
       items: results.filter((item) => item.type === "country"),
     },
     {
       key: "currencies" as const,
-      title: t("search.sections.currencies"),
+      title: t("domain.categories.currencies"),
       items: results.filter((item) => item.type === "currency"),
     },
     {
       key: "regions" as const,
-      title: t("search.sections.regions"),
+      title: t("domain.categories.regions"),
       items: results.filter((item) => item.type === "region"),
     },
     {
       key: "subregions" as const,
-      title: t("search.sections.subregions"),
+      title: t("domain.categories.subregions"),
       items: results.filter((item) => item.type === "subregion"),
     },
   ];
@@ -59,17 +61,17 @@ export default function SearchPage() {
   return (
     <Container className="mt-12">
       {loading ? (
-        <EmptyListMessage message={t("search.searching")} />
+        <EmptyListMessage message={t("components.search.searching")} />
       ) : queryParam ? (
         results.length === 0 ? (
-          <EmptyListMessage message={t("search.noResults")} />
+          <EmptyListMessage message={t("components.search.noResults")} />
         ) : (
           <>
             <SegmentedToggle
               value={activeSection}
               onChange={setActiveSection}
               options={[
-                { value: "all", label: t("search.sections.all") },
+                { value: "all", label: t("domain.categories.all") },
                 ...sections.map((section) => ({
                   value: section.key,
                   label: section.title,

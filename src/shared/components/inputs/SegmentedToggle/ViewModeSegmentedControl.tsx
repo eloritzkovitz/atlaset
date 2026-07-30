@@ -19,13 +19,13 @@ export function ViewModeSegmentedControl({
   const modesConfig = [
     {
       id: "grid" as ViewMode,
-      label: t("viewMode.grid", "Grid View"),
+      label: t("components.viewMode.grid", "Grid View"),
       Icon: ICONS.viewMode.grid,
       roundingClass: "rounded-s-full",
     },
     {
       id: "list" as ViewMode,
-      label: t("viewMode.list", "List View"),
+      label: t("components.viewMode.list", "List View"),
       Icon: ICONS.viewMode.list,
       roundingClass: "rounded-e-full",
     },

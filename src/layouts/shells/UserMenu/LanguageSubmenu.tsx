@@ -22,7 +22,10 @@ export function LanguageSubmenu({ onBack }: LanguageSubmenuProps) {
 
   return (
     <>
-      <UserSubmenuHeader title={t("menu.language")} onBack={onBack} />
+      <UserSubmenuHeader
+        title={t("navigation.menu.language")}
+        onBack={onBack}
+      />
 
       <div className="max-h-64 overflow-auto p-1">
         <LanguageMenuList languages={languages} onSelect={handleSelect} />

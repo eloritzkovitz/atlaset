@@ -31,14 +31,17 @@ export function SortSelect<K extends string>({
   const menuRef = useRef<HTMLDivElement>(null);
 
   const dirGroup: OptionGroup<SortDirection> = {
-    label: t("common:sort.direction", "Direction"),
+    label: t("components.sort.direction", "Direction"),
     options: getDirectionOptions(t) as Option<SortDirection>[],
   };
 
   // Normalize keyGroup to ensure it has a label
   const normalizedKeyGroup: OptionGroup<K> = Array.isArray(keyGroup)
-    ? { label: t("common:sort.title", "Sort"), options: keyGroup }
-    : { ...keyGroup, label: keyGroup.label ?? t("common:sort.title", "Sort") };
+    ? { label: t("components.sort.title", "Sort"), options: keyGroup }
+    : {
+        ...keyGroup,
+        label: keyGroup.label ?? t("components.sort.title", "Sort"),
+      };
 
   // Split the value into key and direction
   const [sortKey, sortDirection] = value.split("-") as [K, SortDirection];

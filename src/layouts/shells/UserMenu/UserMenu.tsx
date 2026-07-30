@@ -57,7 +57,7 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
       {isMobile && (
         <>
           <ActionButton
-            title={t("menu.search")}
+            title={t("navigation.menu.search")}
             onClick={() => {
               toggleSearch();
             }}
@@ -67,14 +67,14 @@ export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {
         </>
       )}
       <ActionButton
-        title={t("menu.notifications")}
+        title={t("navigation.menu.notifications")}
         onClick={() => {}}
         icon={<ICONS.notifications className="text-xl" />}
         aria-pressed={false}
         rounded
       />
       <ActionButton
-        title={t("menu.help")}
+        title={t("navigation.menu.help")}
         onClick={() => {
           toggleHelp();
         }}

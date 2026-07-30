@@ -51,7 +51,7 @@ export function Pagination({
       {/* Left: Showing X */}
       <div className="absolute start-0 flex items-center gap-4 ps-4 h-full">
         <span className="text-muted whitespace-nowrap flex items-center gap-1">
-          {t("pagination.showing")}
+          {t("components.pagination.showing")}
           {onPageSizeChange ? (
             <>
               <div className="w-[65px] mx-2">
@@ -62,15 +62,15 @@ export function Pagination({
                     value: opt,
                     label: opt.toString(),
                   }))}
-                  placeholder={t("pagination.pageSize")}
-                  aria-label={t("pagination.selectPageSize")}
+                  placeholder={t("components.pagination.pageSize")}
+                  aria-label={t("components.pagination.selectPageSize")}
                 />
               </div>
-              {t("pagination.of")} {totalCount} {renderedItemLabel}
+              {t("components.pagination.of")} {totalCount} {renderedItemLabel}
             </>
           ) : (
             <>
-              {showingCount} {t("pagination.of")} {totalCount}{" "}
+              {showingCount} {t("components.pagination.of")} {totalCount}{" "}
               {renderedItemLabel}
             </>
           )}
@@ -83,7 +83,7 @@ export function Pagination({
             variant="secondary"
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            ariaLabel={t("pagination.prevAria")}
+            ariaLabel={t("components.pagination.prevAria")}
             className="min-h-[2.5rem] text-base"
           >
             <span
@@ -97,7 +97,9 @@ export function Pagination({
                 direction="prev"
                 className="text-xs align-middle mt-0.5 me-1"
               />
-              <span className="align-middle">{t("pagination.back")}</span>
+              <span className="align-middle">
+                {t("components.pagination.back")}
+              </span>
             </span>
           </ActionButton>
           {pages.map((page, idx) =>
@@ -124,7 +126,7 @@ export function Pagination({
             variant="secondary"
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            ariaLabel={t("pagination.nextAria")}
+            ariaLabel={t("components.pagination.nextAria")}
             className="min-h-[2.5rem] text-base"
           >
             <span
@@ -133,7 +135,9 @@ export function Pagination({
               }`}
               style={{ lineHeight: 1 }}
             >
-              <span className="align-middle">{t("pagination.next")}</span>
+              <span className="align-middle">
+                {t("components.pagination.next")}
+              </span>
               <DirectionalIcon
                 variant="chevron"
                 direction="next"

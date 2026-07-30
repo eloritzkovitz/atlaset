@@ -11,10 +11,10 @@ export function PwaUpdateUiHint() {
       ? {
           message: (
             <>
-              {t("pwa.updateAvailable", "A new version is available.")}
+              {t("feedback.pwa.updateAvailable", "A new version is available.")}
               {""}
               <button className="underline" onClick={updateServiceWorker}>
-                {t("pwa.updateNow", "Update now")}
+                {t("feedback.pwa.updateNow", "Update now")}
               </button>
             </>
           ),

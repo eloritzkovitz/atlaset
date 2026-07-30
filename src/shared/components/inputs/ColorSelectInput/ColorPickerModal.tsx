@@ -62,7 +62,7 @@ export function ColorPickerModal({
         title={
           <>
             <ICONS.mapSettings.colors />
-            {t("color.select")}
+            {t("components.colorPicker.select")}
           </>
         }
       />
@@ -87,7 +87,9 @@ export function ColorPickerModal({
             <div className="flex items-center gap-1">
               <Tooltip
                 content={
-                  showRgba ? t("color.toggleRGBA") : t("color.toggleHEX")
+                  showRgba
+                    ? t("components.colorPicker.toggleRGBA")
+                    : t("components.colorPicker.toggleHEX")
                 }
                 position="top"
               >

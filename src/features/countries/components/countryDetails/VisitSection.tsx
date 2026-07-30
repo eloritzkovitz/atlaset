@@ -38,7 +38,7 @@ export function VisitSection({
               onClick={() => visit.tripId && onVisitClick?.(visit.tripId)}
             >
               <span className="font-semibold">
-                {visit.yearRange || t("date.tbd")}
+                {visit.yearRange || t("formatting.date.tbd")}
               </span>
               {visit.tripName && (
                 <span className="text-muted tracking-wide select-none ms-2">

@@ -127,7 +127,9 @@ export function CoreFilters({
             const options = (baseOptions ?? []).map((o: FilterOption) => ({
               ...o,
               label:
-                o.value === "all" ? tCommon("filter.all") : translateLabel(o),
+                o.value === "all"
+                  ? tCommon("components.filter.all")
+                  : translateLabel(o),
             }));
 
             const disabled =

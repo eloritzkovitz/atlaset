@@ -81,7 +81,7 @@ export function SearchDropdown() {
             handleSearchSubmit(search.searchTerm);
           }
         }}
-        placeholder={t("search.placeholder")}
+        placeholder={t("components.search.placeholder")}
         showClear={false}
       />
       {dropdownOpen && hasContent && (

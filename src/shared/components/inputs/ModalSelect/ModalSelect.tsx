@@ -102,13 +102,15 @@ export function ModalSelect<T>({
           <SearchInput
             value={currentSearchValue}
             onChange={handleSearchChange}
-            placeholder={t("search.placeholder")}
+            placeholder={t("components.search.placeholder")}
           />
         )}
 
         <div className="bg-input h-64 max-h-[50vh] overflow-y-auto rounded px-2 py-1">
           {sortedItems.length === 0 ? (
-            <EmptyListMessage message={emptyMessage || t("search.noResults")} />
+            <EmptyListMessage
+              message={emptyMessage || t("components.search.noResults")}
+            />
           ) : (
             sortedItems.map((item) => {
               const value = getItemValue(item);

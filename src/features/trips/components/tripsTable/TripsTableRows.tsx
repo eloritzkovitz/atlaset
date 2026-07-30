@@ -57,6 +57,8 @@ export function TripsTableRows({
     }
   };
 
+  const tbdLabel = t("formatting.date.tbd");
+
   return (
     <tr
       className={[
@@ -109,18 +111,16 @@ export function TripsTableRows({
 
         {/* Dates */}
         <TableCell rowSpan={rowSpan}>
-          {trip.startDate
-            ? new Date(trip.startDate).getFullYear()
-            : t("date.tbd")}
+          {trip.startDate ? new Date(trip.startDate).getFullYear() : tbdLabel}
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          {trip.startDate ? formatDate(trip.startDate) : t("date.tbd")}
+          {trip.startDate ? formatDate(trip.startDate) : tbdLabel}
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          {trip.endDate ? formatDate(trip.endDate) : t("date.tbd")}
+          {trip.endDate ? formatDate(trip.endDate) : tbdLabel}
         </TableCell>
         <TableCell rowSpan={rowSpan}>
-          {trip.startDate && trip.endDate ? trip.fullDays : t("date.tbd")}
+          {trip.startDate && trip.endDate ? trip.fullDays : tbdLabel}
         </TableCell>
 
         {/* Participants */}

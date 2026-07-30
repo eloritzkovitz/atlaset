@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 /**
  * Manages DOM event listeners.
@@ -23,12 +23,26 @@ export function useEventListener<T extends Event = Event>(
     savedHandler.current = handler;
   }, [handler]);
 
+  const eventNamesKey = Array.isArray(eventName)
+    ? eventName.join(",")
+    : eventName;
+
+  const optionsKey =
+    typeof options === "object" && options !== null
+      ? JSON.stringify(options)
+      : options;
+
+  const eventNames = useMemo(
+    () => (Array.isArray(eventName) ? eventName : [eventName]),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [eventNamesKey],
+  );
+
   // Manage event listener subscription and cleanup
   useEffect(() => {
     const targetElement = element ?? window;
     if (!targetElement || !targetElement.addEventListener) return;
 
-    const eventNames = Array.isArray(eventName) ? eventName : [eventName];
     const eventListener: EventListener = (event) =>
       savedHandler.current(event as T);
 
@@ -41,9 +55,5 @@ export function useEventListener<T extends Event = Event>(
         targetElement.removeEventListener(name, eventListener, options);
       });
     };
-  }, [
-    Array.isArray(eventName) ? eventName.join(",") : eventName,
-    element,
-    JSON.stringify(options),
-  ]);
+  }, [element, eventNames, options, optionsKey]);
 }

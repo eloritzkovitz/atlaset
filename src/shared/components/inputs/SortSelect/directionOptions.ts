@@ -9,12 +9,14 @@ import type { TFunction } from "i18next";
 export const getDirectionOptions = (t?: TFunction) => [
   {
     value: "asc",
-    label: t ? t("common:sort.ascending", "Ascending") : "Ascending",
+    label: t ? t("common:components.sort.ascending", "Ascending") : "Ascending",
     icon: FaArrowUp,
   },
   {
     value: "desc",
-    label: t ? t("common:sort.descending", "Descending") : "Descending",
+    label: t
+      ? t("common:components.sort.descending", "Descending")
+      : "Descending",
     icon: FaArrowDown,
   },
 ];

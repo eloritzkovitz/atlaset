@@ -22,10 +22,15 @@ export function AppLinks({
   const { t } = useTranslation("common");
 
   const links = [
-    { href: "/about", label: t("links.about", "About") },
-    { href: "/changelog", label: t("links.changelog", "Changelog") },
-    { href: "/privacy", label: t("links.privacy", "Privacy Policy") },
-    showDocs ? { href: "/docs", label: t("links.docs", "Docs") } : undefined,
+    { href: "/about", label: t("navigation.links.about", "About") },
+    { href: "/changelog", label: t("navigation.links.changelog", "Changelog") },
+    {
+      href: "/privacy",
+      label: t("navigation.links.privacy", "Privacy Policy"),
+    },
+    showDocs
+      ? { href: "/docs", label: t("navigation.links.docs", "Docs") }
+      : undefined,
     showGitHub ? (
       <GitHubButton key="github" className={linkClassName} />
     ) : undefined,
