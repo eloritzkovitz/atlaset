@@ -167,6 +167,7 @@
     "tbd": "טרם"
   },
   "color": {
+    "select": "בחירת צבע",
     "toggleRGBA": "החלפה בין RGBA ל-HEX",
     "toggleHEX": "החלפה בין HEX ל-RGBA"
   },

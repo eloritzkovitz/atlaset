@@ -1,14 +1,18 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useEventListener } from "@hooks";
 import { authService } from "../services/authService";
 import { sessionService } from "../services/sessionService";
-import { clearLocalSession, isCurrentSession } from "../utils/session";
 import type { UserSession } from "../types";
+import { clearLocalSession, isCurrentSession } from "../utils/session";
 
 interface UserSessionsProps {
   sessions: UserSession[];
   isLoading: boolean;
   terminateSession: (session: UserSession) => Promise<void>;
 }
+
+const THROTTLE_DURATION = 5 * 60 * 1000;
+const ACTIVITY_EVENTS = ["mousedown", "keydown", "touchstart", "scroll"];
 
 /**
  * Manages the state of user sessions for a given user ID.
@@ -45,42 +49,33 @@ export function useUserSessions(userId?: string): UserSessionsProps {
     };
   }, [userId]);
 
-  // Update the lastActive timestamp for the current session on user activity
-  useEffect(() => {
+  // Throttle session activity updates to avoid excessive writes
+  const lastWriteTime = useRef(0);
+
+  // Handle user activity events to update the last active timestamp
+  const handleActivity = useCallback(() => {
     if (!userId) return;
 
-    // Keeps track of the last fire timestamp strictly in-memory
-    let lastWriteTime = 0;
-    const THROTTLE_DURATION = 5 * 60 * 1000;
-
-    const triggerActivityUpdate = async () => {
-      const now = Date.now();
-
-      // Only execute the database transaction if the 5-minute window has passed
-      if (now - lastWriteTime > THROTTLE_DURATION) {
-        lastWriteTime = now;
-        await sessionService.updateCurrentSession(userId);
-      }
-    };
-
-    // Run once immediately when the hook mounts or the user signs in
-    triggerActivityUpdate();
-
-    // Listen to natural user interaction points across the window interface
-    const activityEvents = ["mousedown", "keydown", "touchstart", "scroll"];
-
-    activityEvents.forEach((event) => {
-      window.addEventListener(event, triggerActivityUpdate);
-    });
-
-    return () => {
-      activityEvents.forEach((event) => {
-        window.removeEventListener(event, triggerActivityUpdate);
+    const now = Date.now();
+    if (now - lastWriteTime.current > THROTTLE_DURATION) {
+      lastWriteTime.current = now;
+      sessionService.updateCurrentSession(userId).catch((err) => {
+        console.error("Failed to update session activity:", err);
       });
-    };
+    }
   }, [userId]);
 
-  // Terminate a specific session by its document ID and optionally its internal session ID
+  // Update session activity on mount and when userId changes
+  useEffect(() => {
+    if (userId) {
+      handleActivity();
+    }
+  }, [userId, handleActivity]);
+
+  // Attach event listeners for user activity events
+  useEventListener(ACTIVITY_EVENTS, handleActivity, window, { passive: true });
+
+  // Terminate a session, either by logging out the current session or removing another session
   const terminateSession = useCallback(async (session: UserSession) => {
     try {
       const isCurrent = isCurrentSession(session.sessionId);

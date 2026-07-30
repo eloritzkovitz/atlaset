@@ -1,32 +1,49 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 
 /**
  * Manages DOM event listeners.
- * @param target - element or window (default: window)
- * @param event - event name (e.g., 'scroll', 'resize', 'click')
- * @param handler - event handler function
- * @param options - event listener options
+ * @param target - The target element to attach the event listener to. Defaults to `window` if not provided.
+ * @param event - The name of the event to listen for.
+ * @param handler - The function to call when the event is triggered.
+ * @param options - Optional options for the event listener, such as `capture`, `once`, and `passive`.
  */
 export function useEventListener<T extends Event = Event>(
-  event: string,
+  eventName: string | string[],
   handler: (event: T) => void,
-  target?: EventTarget | null,
-  options?: AddEventListenerOptions,
+  element?: EventTarget | null,
+  options?: boolean | AddEventListenerOptions,
 ) {
   const savedHandler = useRef(handler);
 
-  // Update ref if handler changes
-  useEffect(() => {
+  const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+  // Sync ref before paint so events never hit a stale closure
+  useIsomorphicLayoutEffect(() => {
     savedHandler.current = handler;
   }, [handler]);
 
-  // Add event listener on mount and clean up on unmount
+  // Manage event listener subscription and cleanup
   useEffect(() => {
-    const tgt = (target ?? window) as EventTarget;
-    const eventListener = (event: Event) => savedHandler.current(event as T);
-    tgt.addEventListener(event, eventListener, options);
+    const targetElement = element ?? window;
+    if (!targetElement || !targetElement.addEventListener) return;
+
+    const eventNames = Array.isArray(eventName) ? eventName : [eventName];
+    const eventListener: EventListener = (event) =>
+      savedHandler.current(event as T);
+
+    eventNames.forEach((name) => {
+      targetElement.addEventListener(name, eventListener, options);
+    });
+
     return () => {
-      tgt.removeEventListener(event, eventListener, options);
+      eventNames.forEach((name) => {
+        targetElement.removeEventListener(name, eventListener, options);
+      });
     };
-  }, [event, target, options]);
+  }, [
+    Array.isArray(eventName) ? eventName.join(",") : eventName,
+    element,
+    JSON.stringify(options),
+  ]);
 }

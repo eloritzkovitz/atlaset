@@ -167,6 +167,7 @@
     "tbd": "TBD"
   },
   "color": {
+    "select": "Select Color",
     "toggleRGBA": "Toggle between RGBA and HEX",
     "toggleHEX": "Toggle between HEX and RGBA"
   },

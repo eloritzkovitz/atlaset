@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { HexColorPicker } from "react-colorful";
+import { useTranslation } from "react-i18next";
 import { ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { hexToRgba } from "@utils/color";
@@ -62,7 +62,7 @@ export function ColorPickerModal({
         title={
           <>
             <ICONS.mapSettings.colors />
-            Select Color
+            {t("color.select")}
           </>
         }
       />

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { ColorPickerModal } from "./ColorPickerModal";
 import { ActionButton } from "../Button/ActionButton";
@@ -19,6 +20,8 @@ export function ColorSelectInput({
   disabled = false,
   className = "",
 }: ColorSelectInputProps) {
+  const { t } = useTranslation("common");
+
   const [modalOpen, setModalOpen] = useState(false);
 
   // Notify parent when modal open state changes
@@ -40,7 +43,7 @@ export function ColorSelectInput({
         disabled={disabled}
         icon={<ICONS.edit className="inline" />}
       >
-        Edit
+        {t("actions.edit")}
       </ActionButton>
       <ColorPickerModal
         isOpen={modalOpen}

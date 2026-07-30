@@ -1,88 +1,66 @@
 import { useEffect, useState } from "react";
+import { useEventListener } from "@hooks";
 import type { ThemeKey, AccentKey } from "../types";
+import { applyTheme, resolveTheme } from "../utils/theme";
 import { useSettings } from "../../common/hooks/useSettings";
 
 /**
- * Manages theme settings, including system preference.
+ *  Manages theme-related state and logic.
  */
 export function useTheme() {
   const { settings, updateSettings } = useSettings();
 
-  const initial: ThemeKey = (settings.display?.theme ?? "dark") as ThemeKey;
-  const initialAccent = (settings.display?.accent ?? "blue") as AccentKey;
-  const [preference, setPreference] = useState<ThemeKey>(initial);
-  const [theme, setThemeState] = useState<ThemeKey>(() =>
-    initial === "system" && typeof window !== "undefined" && window.matchMedia
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : (initial as ThemeKey),
+  const preference = (settings.display?.theme ?? "dark") as ThemeKey;
+  const accent = (settings.display?.accent ?? "blue") as AccentKey;
+
+  // Track real-time resolved theme (dark vs light) for UI logic
+  const [resolvedTheme, setResolvedTheme] = useState<"dark" | "light">(() =>
+    resolveTheme(preference),
   );
 
-  // Sync preference with settings on load and when it changes
+  // Apply theme on initial load and whenever preference or accent changes
   useEffect(() => {
-    setPreference((settings.display?.theme ?? "dark") as ThemeKey);
-  }, [settings.display?.theme]);
+    applyTheme(settings.display);
+    setResolvedTheme(resolveTheme(preference));
+  }, [preference, accent, settings.display]);
 
-  // Listen to system theme changes if preference is "system"
-  useEffect(() => {
-    if (preference === "system") {
-      if (typeof window === "undefined" || !window.matchMedia) return;
-      const mq = window.matchMedia("(prefers-color-scheme: dark)");
-      const handler = (e: MediaQueryListEvent) =>
-        setThemeState(e.matches ? "dark" : "light");
-      setThemeState(mq.matches ? "dark" : "light");
-      mq.addEventListener("change", handler);
-      return () => mq.removeEventListener("change", handler);
-    }
-    setThemeState(preference as ThemeKey);
-  }, [preference]);
+  const mediaQuery =
+    preference === "system" &&
+    typeof window !== "undefined" &&
+    window.matchMedia
+      ? window.matchMedia("(prefers-color-scheme: dark)")
+      : null;
 
-  // Update theme in settings when preference changes
-  const setTheme = (p: ThemeKey) => {
-    setPreference(p);
-    updateSettings({ display: { ...(settings.display ?? {}), theme: p } });
+  // Listen for changes in system theme preference if 'system' is selected
+  useEventListener(
+    "change",
+    (e: MediaQueryListEvent) => {
+      const activeTheme = e.matches ? "dark" : "light";
+      setResolvedTheme(activeTheme);
+      applyTheme({ ...settings.display, theme: "system" });
+    },
+    mediaQuery,
+  );
+
+  /** Updates the theme preference. */
+  const setTheme = (newTheme: ThemeKey) => {
+    updateSettings({
+      display: { ...(settings.display ?? {}), theme: newTheme },
+    });
   };
 
-  // Accent selection
-  const [accent, setAccentState] =
-    useState<typeof initialAccent>(initialAccent);
-
-  useEffect(() => {
-    setAccentState((settings.display?.accent ?? "blue") as AccentKey);
-  }, [settings.display?.accent]);
-
-  const setAccent = (a: typeof initialAccent) => {
-    setAccentState(a);
-    updateSettings({ display: { ...(settings.display ?? {}), accent: a } });
+  /** Updates the accent color. */
+  const setAccent = (newAccent: AccentKey) => {
+    updateSettings({
+      display: { ...(settings.display ?? {}), accent: newAccent },
+    });
   };
-
-  // Apply accent to CSS variables so the UI updates immediately.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const root = document.documentElement;
-
-    const srcVarBase = `--color-accent-${accent}`;
-
-    if (accent === "blue") {
-      root.style.setProperty("--color-primary", "var(--color-primary-default)");
-    } else {
-      root.style.setProperty("--color-primary", `var(${srcVarBase})`);
-    }
-
-    // Update hover/active to follow the accent tokens
-    root.style.setProperty("--color-primary-hover", `var(${srcVarBase}-hover)`);
-    root.style.setProperty(
-      "--color-primary-active",
-      `var(${srcVarBase}-active)`,
-    );
-  }, [accent]);
 
   return {
-    theme,
+    theme: resolvedTheme,
     preference,
+    setTheme,
     setPreference: setTheme,
-    setTheme: setTheme as (t: ThemeKey) => void,
     accent,
     setAccent,
   };
