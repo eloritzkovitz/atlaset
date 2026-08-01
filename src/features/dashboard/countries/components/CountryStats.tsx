@@ -3,9 +3,10 @@ import {
   CountryFlag,
   VisitedStatusIndicator,
   useCountryData,
+  type CountryDetailsTab,
 } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
-import { useScreenSize } from "@hooks";
+import { useQueryParam, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
 import { WikipediaButton } from "../../common/components/WikipediaButton";
 import { DashboardHeader } from "../../navigation/components/DashboardHeader";
@@ -47,6 +48,12 @@ export function CountryStats({
   const { visitedCountryCodes, getCountryVisitsCategorized } =
     useVisitedCountries();
   const { isMobile } = useScreenSize();
+
+  // Synchronize the current tab with the URL search parameter "tab"
+  const [currentTab, handleTabChange] = useQueryParam<CountryDetailsTab>(
+    "tab",
+    "overview",
+  );
 
   // Region props shared between overview and section views
   const regionProps = {
@@ -100,6 +107,8 @@ export function CountryStats({
           countries={countries}
           currencies={currencies}
           categorizedVisits={categorizedVisits}
+          activeTab={currentTab}
+          onTabChange={handleTabChange}
           onSelectCountry={setSelectedIsoCode}
           className="text-lg"
         />

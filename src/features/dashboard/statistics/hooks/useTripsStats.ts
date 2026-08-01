@@ -1,4 +1,10 @@
+import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
+import {
+  createCountryMap,
+  useCountryData,
+  type Country,
+} from "@features/countries";
 import {
   getCompletedTrips,
   getUpcomingTrips,
@@ -6,60 +12,109 @@ import {
   getLocalTrips,
   getAbroadTrips,
   getTripDays,
+  isInProgressTrip,
+  isCompletedTrip,
+  getCancelledTrips,
 } from "@features/trips/utils/trips";
+import {
+  buildVisitedYearMap,
+  computeVisitCountsFromYearMap,
+} from "@features/visits/utils/visits";
 import { useHomeCountry } from "@features/user/profile";
-import { findLongestTrip, findShortestTrip } from "../utils/tripStats";
+import {
+  findLongestTrip,
+  findShortestTrip,
+  getFirstAndLastTrip,
+  getRecentTrips,
+} from "../utils/tripStats";
+import { getMostVisitedCountries } from "../utils/visitStats";
 
+export interface VisitedCountryData {
+  country: Country;
+  visitCount: number;
+}
+
+/**
+ * Computes and returns trip statistics.
+ */
 export function useTripsStats() {
+  const { countries } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const { trips } = useTrips();
 
-  // Trip counts
-  const totalTrips = trips.length;
-  const localTrips = getLocalTrips(trips, homeCountry);
-  const abroadTrips = getAbroadTrips(trips, homeCountry);
-  const completedTrips = getCompletedTrips(trips);
-  const completedAbroadTrips = getAbroadTrips(completedTrips, homeCountry);
-  const upcomingTrips = getUpcomingTrips(trips);
-  const plannedTrips = getPlannedTrips(trips);
+  return useMemo(() => {
+    const countryMap = createCountryMap(countries, (c) => c);
+    const getCountry = (code: string) => countryMap[code.toLowerCase()];
 
-  // Only consider valid, completed abroad trips with valid dates and positive duration
-  const now = Date.now();
-  const validAbroadTrips = abroadTrips.filter((trip) => {
-    return (
-      trip.status === "completed" &&
-      typeof trip.startDate === "string" &&
-      typeof trip.endDate === "string" &&
-      !!trip.startDate &&
-      !!trip.endDate &&
-      new Date(trip.endDate).getTime() > new Date(trip.startDate).getTime() &&
-      new Date(trip.endDate).getTime() < now
+    // Trip statistics
+    const totalTrips = trips.length;
+    const localTrips = getLocalTrips(trips, homeCountry);
+    const abroadTrips = getAbroadTrips(trips, homeCountry);
+    const completedTrips = getCompletedTrips(trips);
+    const completedAbroadTrips = getAbroadTrips(completedTrips, homeCountry);
+    const inProgressTrips = trips.filter(isInProgressTrip);
+    const upcomingTrips = getUpcomingTrips(trips);
+    const plannedTrips = getPlannedTrips(trips);
+    const cancelledTrips = getCancelledTrips(trips);
+
+    // Country visit statistics
+    const yearMap = buildVisitedYearMap(completedAbroadTrips);
+    const visitCounts = computeVisitCountsFromYearMap(yearMap, 9999);
+
+    const { codes: mostVisitedCountryCodes, maxCount } =
+      getMostVisitedCountries(completedAbroadTrips, homeCountry);
+
+    const mostVisitedCountries = mostVisitedCountryCodes
+      .map(getCountry)
+      .filter((c): c is Country => Boolean(c));
+
+    const visitedCountriesRanking: VisitedCountryData[] = Object.entries(
+      visitCounts,
+    )
+      .map(([code, count]) => {
+        const country = getCountry(code);
+        return country ? { country, visitCount: count } : null;
+      })
+      .filter((item): item is VisitedCountryData => Boolean(item))
+      .sort((a, b) => b.visitCount - a.visitCount);
+
+    // Trip duration statisticsf
+    const validAbroadTrips = abroadTrips.filter((trip) =>
+      isCompletedTrip(trip),
     );
-  });
 
-  // Get longest and shortest trip objects based on valid abroad trips
-  const longestTrip = findLongestTrip(validAbroadTrips);
-  const shortestTrip = findShortestTrip(validAbroadTrips);
+    const longestTrip = findLongestTrip(validAbroadTrips);
+    const shortestTrip = findShortestTrip(validAbroadTrips);
 
-  // Calculate trip durations (in days)
-  const tripDurations = trips.map(getTripDays).filter((d) => d > 0);
+    const tripDurations = trips.map(getTripDays).filter((d) => d > 0);
+    const totalDaysTraveling = tripDurations.reduce((sum, d) => sum + d, 0);
+    const averageTripDuration = tripDurations.length
+      ? totalDaysTraveling / tripDurations.length
+      : 0;
 
-  const totalDaysTraveling = tripDurations.reduce((sum, d) => sum + d, 0);
-  const averageTripDuration = tripDurations.length
-    ? totalDaysTraveling / tripDurations.length
-    : 0;
+    const { firstTrip, lastTrip } = getFirstAndLastTrip(trips);
+    const recentTrips = getRecentTrips(trips, 3);
 
-  return {
-    totalTrips,
-    localTrips,
-    abroadTrips,
-    completedTrips,
-    completedAbroadTrips,
-    upcomingTrips,
-    plannedTrips,
-    longestTrip,
-    shortestTrip,
-    averageTripDuration,
-    totalDaysTraveling,
-  };
+    return {
+      totalTrips,
+      localTrips,
+      abroadTrips,
+      completedTrips,
+      completedAbroadTrips,
+      inProgressTrips,
+      upcomingTrips,
+      plannedTrips,
+      cancelledTrips,
+      mostVisitedCountries,
+      maxCount,
+      visitedCountriesRanking,
+      longestTrip,
+      shortestTrip,
+      averageTripDuration,
+      totalDaysTraveling,
+      firstTrip,
+      lastTrip,
+      recentTrips,
+    };
+  }, [trips, countries, homeCountry]);
 }

@@ -1,6 +1,8 @@
 import { ICONS } from "@constants/icons";
 import {
   ABROAD_TRIP_COLOR,
+  CANCELLED_COLOR,
+  IN_PROGRESS_COLOR,
   LOCAL_TRIP_COLOR,
   PLANNED_VISIT_COLOR,
   UPCOMING_VISIT_COLOR,
@@ -111,13 +113,23 @@ export const TRIP_TYPE_COLOR_CLASSES = [
 export const TRIP_STATUS_COLORS = [
   PLANNED_VISIT_COLOR,
   UPCOMING_VISIT_COLOR,
+  IN_PROGRESS_COLOR,
   VISITED_COLOR,
+  CANCELLED_COLOR,
 ];
-export const TRIP_STATUS_LABELS = ["Planned", "Upcoming", "Completed"];
+export const TRIP_STATUS_LABELS = [
+  "Planned",
+  "Upcoming",
+  "In Progress",
+  "Completed",
+  "Cancelled",
+];
 export const TRIP_STATUS_ICONS = [
   ICONS.tripPlanned,
   ICONS.tripUpcoming,
+  ICONS.tripInProgress,
   ICONS.tripCompleted,
+  ICONS.tripCancelled,
 ];
 export const TRIP_STATUS_COLOR_CLASSES: Record<TripStatus, string> = {
   planned: "bg-status-planned/90 hover:bg-status-planned",

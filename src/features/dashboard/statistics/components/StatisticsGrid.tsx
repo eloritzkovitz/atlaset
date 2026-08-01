@@ -1,23 +1,24 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SegmentedToggle } from "@components";
-import { TripsStats } from "./TripsStats";
-import { TripHistory } from "./TripHistory";
-import { TripsByMonth } from "./TripsByMonth";
-import { TripsByYear } from "./TripsByYear";
+import { useQueryParam } from "@hooks";
+import { TripCategories } from "./TripCategories";
+import { TripDestinations } from "./TripDestinations";
+import { TripTrends } from "./TripTrends";
+import { TripsOverview } from "./TripsOverview";
 
 const VIEWS = [
   { value: "overview", label: "Overview" },
-  { value: "history", label: "History" },
-  { value: "monthly", label: "Monthly" },
-  { value: "yearly", label: "Yearly" },
+  { value: "visits", label: "Visits" },
+  { value: "categories", label: "Categories" },
+  { value: "trends", label: "Trends" },
 ] as const;
 
 type ViewType = (typeof VIEWS)[number]["value"];
 
 export function StatisticsGrid() {
   const { t } = useTranslation("dashboard");
-  const [view, setView] = useState<ViewType>("overview");
+
+  const [view, setView] = useQueryParam<ViewType>("view", "overview");
 
   return (
     <div>
@@ -31,10 +32,10 @@ export function StatisticsGrid() {
         className="mb-4 mt-2"
       />
       <div>
-        {view === "overview" && <TripsStats />}
-        {view === "history" && <TripHistory />}
-        {view === "monthly" && <TripsByMonth />}
-        {view === "yearly" && <TripsByYear />}
+        {view === "overview" && <TripsOverview />}
+        {view === "visits" && <TripDestinations />}
+        {view === "categories" && <TripCategories />}
+        {view === "trends" && <TripTrends />}
       </div>
     </div>
   );

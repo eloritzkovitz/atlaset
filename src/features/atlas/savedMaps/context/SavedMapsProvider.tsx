@@ -6,7 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { logUserActivity } from "@features/activity";
 import { useMapMode } from "@features/atlas/core";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
@@ -30,7 +30,7 @@ import { type SavedMap } from "../types";
 export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const { user, ready } = useAuth();
   const { mapMode, mapId } = useMapMode();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const [activeSavedMap, setActiveSavedMap] = useState<SavedMap | null>(null);
   const [isSavedMapModalOpen, setSavedMapModalOpen] = useState(false);
@@ -203,12 +203,13 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Exit edit mode: remove edit/map from URL and clear activeSavedMap
   function exitEditMode() {
-    const params = new URLSearchParams(window.location.search);
-    params.delete("edit");
-    params.delete("map");
-    navigate(
-      `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}`,
-    );
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.delete("edit");
+      next.delete("map");
+      return next;
+    });
+
     setActiveSavedMap(null);
     layerManager.setLayers([]);
   }
@@ -240,8 +241,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // Save current map from URL
   function saveCurrentMap() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get("map");
+    const code = searchParams.get("map");
     if (!code) return;
     const exportData = decodeMapData(code);
     openSavedMapModal({
@@ -255,10 +255,13 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
   // View a saved map by updating the URL and loading it for editing
   function viewSavedMap(map: SavedMap) {
-    const params = new URLSearchParams(window.location.search);
-    params.set("map", map.id);
-    params.set("edit", "true");
-    navigate(`${window.location.pathname}?${params.toString()}`);
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      next.set("map", map.id);
+      next.set("edit", "true");
+      return next;
+    });
+
     loadSavedMapForEditing(map.id);
   }
 

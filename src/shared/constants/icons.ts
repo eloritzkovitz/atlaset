@@ -1,6 +1,7 @@
 import { BsGrid } from "react-icons/bs";
 import {
   FaArrowsRotate,
+  FaBan,
   FaBell,
   FaBinoculars,
   FaBookAtlas,
@@ -42,6 +43,7 @@ import {
   FaGlobe,
   FaHatWizard,
   FaHeart,
+  FaHourglassStart,
   FaHouse,
   FaKeyboard,
   FaLandmark,
@@ -153,7 +155,9 @@ export const ICONS = {
   tripAbroad: FaPlane,
   tripPlanned: FaClipboardList,
   tripUpcoming: FaCalendarDay,
+  tripInProgress: FaHourglassStart,
   tripCompleted: FaCheck,
+  tripCancelled: FaBan,
   tripFilters: FaPercent,
   // Dashboard
   dashboard: DashboardIcon,

@@ -7,6 +7,7 @@ import { useCountryData } from "@features/countries";
 import { useAuth } from "@features/user/auth";
 import { useHomeCountry, useUserProfile } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
+import { useAnimatedNumber } from "@hooks";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
 import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi";
@@ -36,12 +37,17 @@ export function OverviewGrid() {
       isCompleted(a, countries, visited, trips, homeCountry),
     ).length ?? 0;
 
+  const animatedVisitedCountries = useAnimatedNumber(visitedCountries, 30);
+  const animatedCompletedCount = useAnimatedNumber(completedCount, 30);
+
   const stats = [
     {
       label: t("overview.stats.countriesExplored", {
         defaultValue: "Countries Explored",
       }),
-      value: countriesLoading ? "..." : `${visitedCountries}/${totalCountries}`,
+      value: countriesLoading
+        ? "..."
+        : `${animatedVisitedCountries}/${totalCountries}`,
       icon: <ICONS.exploration className="text-5xl text-info" />,
       link: "/dashboard/exploration",
     },
@@ -49,7 +55,7 @@ export function OverviewGrid() {
       label: t("overview.stats.achievements", { defaultValue: "Achievements" }),
       value: achievementsLoading
         ? "..."
-        : `${completedCount}/${achievementsCount}`,
+        : `${animatedCompletedCount}/${achievementsCount}`,
       icon: <ICONS.achievements className="text-5xl text-warning" />,
       link: "/dashboard/achievements",
     },
@@ -76,13 +82,11 @@ export function OverviewGrid() {
 
   return (
     <div className="mt-8">
-      {userProfile && !userProfileLoading && (
-        <UserOverviewCard
-          userProfile={userProfile}
-          user={user}
-          loading={userProfileLoading}
-        />
-      )}
+      <UserOverviewCard
+        userProfile={userProfile}
+        user={user}
+        loading={userProfileLoading}
+      />
       <h2 className="text-3xl font-bold mb-6">
         {t("overview.stats.heading", {
           name: firstName,

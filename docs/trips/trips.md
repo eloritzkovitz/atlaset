@@ -15,6 +15,7 @@ In Atlaset, `trips` let you record, organize and analyze your travels. Each `tri
 | `endDate`      | `string`   | End date of the `trip` (`ISO 8601` format, optional for tentative trips)                  |
 | `participants` | `string[]` | _(optional)_ UIDs of `participants` in the `trip`                                         |
 | `category`     | `string`   | _(optional)_ Category for the `trip`. Must be one of the supported categories. See below. |
+| `status`       | `string`   | _(optional)_ The trip's current status. Must be one of the supported statuses. See below. |
 | `tags`         | `string[]` | _(optional)_ Tags for the `trip`. Each must be one of the supported tags. See below.      |
 | `notes`        | `string`   | _(optional)_ Notes                                                                        |
 
@@ -25,12 +26,17 @@ If a `trip` has no `startDate` or `endDate`, it is considered _tentative_. In th
 ### **Trip status**
 
 A `trip`'s `status` is based on `startDate` and is calculated according to the following guidelines:
+
 - **Planned**: A future `tentative trip`, which has no `startDate` or `endDate`.
 - **Upcoming**: A future `trip`, which has valid `startDate` and `endDate`.
 - **In Progress**: A `trip` that is currently ongoing.
 - **Completed**: A `trip` that has already ended.
 
-> `Status` is not stored in the database and is only shown in the UI.
+The user can also manually control a trip's status:
+
+- Trips can be manually marked as `completed` if their start date has already passed or is today.
+- Trips can be manually marked as `cancelled` and archived if they were `planned` or `upcoming`.
+- In the case that a cancelled trip is restored, you can restore it - the trip's status will be calculated automatically.
 
 ### **Participants**
 

@@ -14,6 +14,7 @@
         "planned": "Planned",
         "upcoming": "Upcoming",
         "completed": "Completed",
+        "cancelled": "Cancelled",
         "favorites": "Favorites",       
         "filtersToggle": "Toggle {{label}}"
       },

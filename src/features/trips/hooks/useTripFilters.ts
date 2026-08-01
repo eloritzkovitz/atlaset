@@ -6,6 +6,7 @@ import { useHomeCountry } from "@features/user/profile";
 import type { Trip, TripFilterState } from "../types";
 import {
   isAbroadTrip,
+  isCancelledTrip,
   isCompletedTrip,
   isInProgressTrip,
   isLocalTrip,
@@ -34,9 +35,10 @@ const defaultTripFilterState: TripFilterState = {
   tags: [],
   local: true,
   abroad: true,
-  completed: true,
-  upcoming: true,
   planned: true,
+  upcoming: true,
+  completed: true,
+  cancelled: true,
   favorite: false,
 };
 
@@ -105,7 +107,8 @@ export function useTripFilters(
         (filters.completed && isCompletedTrip(trip)) ||
         (filters.upcoming &&
           (isUpcomingTrip(trip) || isInProgressTrip(trip))) ||
-        (filters.planned && isPlannedTrip(trip));
+        (filters.planned && isPlannedTrip(trip)) ||
+        (filters.cancelled && isCancelledTrip(trip));
 
       // Favorite Group (Modifier: only filters out when turned ON)
       const favoriteMatch = !filters.favorite || trip.favorite === true;

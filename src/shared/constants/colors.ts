@@ -14,8 +14,10 @@ export const MAP_STROKE_COLOR_DARK = "#222";
 // Trip/visit-related colors
 export const HOME_COUNTRY_COLOR = "#00dbbe";
 export const VISITED_COLOR = "#4ade80";
+export const IN_PROGRESS_COLOR = "#80b132";
 export const UPCOMING_VISIT_COLOR = "#fde047";
 export const PLANNED_VISIT_COLOR = "#f59e42";
+export const CANCELLED_COLOR = "#b23b3b";
 export const NOT_VISITED_COLOR = "#d1d5db";
 
 export const LOCAL_TRIP_COLOR = "#22d3ee";

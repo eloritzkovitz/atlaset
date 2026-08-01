@@ -6,10 +6,8 @@ import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryDetailsContent } from "./CountryDetailsContent";
 import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
-import type { Country, Currency } from "../../types";
+import type { Country, CountryDetailsTab, Currency } from "../../types";
 import { getCountryTerritoryRelations } from "../../utils/countryData";
-
-type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
 
 interface CountryDetailsPanelProps {
   country: Country;
@@ -21,6 +19,7 @@ interface CountryDetailsPanelProps {
     tentative: Visit[];
   };
   initialTab?: CountryDetailsTab;
+  activeTab?: CountryDetailsTab;
   resetTabOnClose?: boolean;
   isOpen?: boolean;
   onTabChange?: (tab: CountryDetailsTab) => void;
@@ -34,6 +33,7 @@ export function CountryDetailsPanel({
   currencies,
   categorizedVisits,
   initialTab = "overview",
+  activeTab: externalActiveTab,
   resetTabOnClose = false,
   isOpen = true,
   onTabChange,
@@ -49,7 +49,9 @@ export function CountryDetailsPanel({
     visits: t("countries.details.tabs.visits"),
   };
 
-  const [activeTab, setActiveTab] = useState<CountryDetailsTab>(initialTab);
+  const [internalTab, setInternalTab] = useState<CountryDetailsTab>(initialTab);
+
+  const activeTab = externalActiveTab ?? internalTab;
 
   // Determine available tabs based on country relations
   const territoryRelations = useMemo(
@@ -74,19 +76,27 @@ export function CountryDetailsPanel({
 
   // Reset to overview tab when modal is closed, if resetTabOnClose is true
   useEffect(() => {
-    if (resetTabOnClose && !isOpen) setActiveTab("overview");
+    if (resetTabOnClose && !isOpen) {
+      setInternalTab("overview");
+    }
   }, [resetTabOnClose, isOpen]);
 
   // Reset active tab if country changes or if current active tab is no longer available
   useEffect(() => {
     if (!tabs.includes(activeTab)) {
-      setActiveTab("overview");
+      if (externalActiveTab) {
+        onTabChange?.("overview");
+      } else {
+        setInternalTab("overview");
+      }
     }
-  }, [country?.isoCode, tabs, activeTab]);
+  }, [country?.isoCode, tabs, activeTab, externalActiveTab, onTabChange]);
 
   // Handle tab change
   const handleTabChange = (tab: CountryDetailsTab) => {
-    setActiveTab(tab);
+    if (externalActiveTab === undefined) {
+      setInternalTab(tab);
+    }
     onTabChange?.(tab);
   };
 

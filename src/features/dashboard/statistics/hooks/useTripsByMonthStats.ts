@@ -1,78 +1,88 @@
+import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { isAbroadTrip } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user/profile";
 import { formatMonthValues } from "@utils/date";
+import { MONTH_COLORS } from "../constants/statistics";
 
 /**
  * Provides statistics of trips by month.
- * @returns Trips by month data.
  */
 export function useTripsByMonthStats(monthNames: unknown) {
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
 
-  // Normalize monthNames to a safe string[] (use shared helper)
-  const months = formatMonthValues(monthNames);
+  return useMemo(() => {
+    const months = formatMonthValues(monthNames);
 
-  // Initialize monthStats for all months
-  const monthStats: Record<string, { local: number; abroad: number }> = {};
-  months.forEach((name) => {
-    monthStats[name] = { local: 0, abroad: 0 };
-  });
+    // Initialize monthStats for all months
+    const monthStats: Record<string, { local: number; abroad: number }> = {};
+    months.forEach((name) => {
+      monthStats[name] = { local: 0, abroad: 0 };
+    });
 
-  // Collect trips by month
-  trips.forEach((trip) => {
-    if (trip.startDate) {
-      const date = new Date(trip.startDate);
-      if (!isNaN(date.getTime())) {
-        const month = date.getMonth();
-        const monthName = months[month];
-        if (!monthName) return;
-        if (!monthStats[monthName])
-          monthStats[monthName] = { local: 0, abroad: 0 };
-        if (isAbroadTrip(trip, homeCountry)) {
-          monthStats[monthName].abroad += 1;
-        } else {
-          monthStats[monthName].local += 1;
+    // Collect trips by month
+    trips.forEach((trip) => {
+      if (trip.startDate) {
+        const date = new Date(trip.startDate);
+        if (!isNaN(date.getTime())) {
+          const month = date.getMonth();
+          const monthName = months[month];
+          if (!monthName) return;
+
+          if (isAbroadTrip(trip, homeCountry)) {
+            monthStats[monthName].abroad += 1;
+          } else {
+            monthStats[monthName].local += 1;
+          }
         }
       }
-    }
-  });
+    });
 
-  // Prepare data for all months
-  const allMonths = months;
-  const tripsByMonthData = allMonths.map((name) => {
-    const stats = monthStats[name] || { local: 0, abroad: 0 };
+    // Calculate total trips across all months
+    const totalTripsForMonth = Object.values(monthStats).reduce(
+      (sum, m) => sum + m.local + m.abroad,
+      0,
+    );
+
+    // Prepare full dataset with colors & percentages
+    const allMonthsData = months.map((name, idx) => {
+      const stats = monthStats[name] || { local: 0, abroad: 0 };
+      const total = stats.local + stats.abroad;
+      return {
+        name,
+        local: stats.local,
+        abroad: stats.abroad,
+        total,
+        percentage:
+          totalTripsForMonth > 0 ? (total / totalTripsForMonth) * 100 : 0,
+        color: MONTH_COLORS[idx % MONTH_COLORS.length],
+      };
+    });
+
+    // Find most popular month (only if total > 0)
+    const mostPopularMonth =
+      totalTripsForMonth > 0
+        ? allMonthsData.reduce(
+            (max, curr) => (curr.total > max.total ? curr : max),
+            allMonthsData[0],
+          )
+        : null;
+
+    // Find least popular month (only if total > 0)
+    const leastPopularMonth =
+      totalTripsForMonth > 0
+        ? allMonthsData.reduce(
+            (min, curr) => (curr.total < min.total ? curr : min),
+            allMonthsData[0],
+          )
+        : null;
+
     return {
-      name,
-      local: stats.local,
-      abroad: stats.abroad,
-      total: stats.local + stats.abroad,
+      allMonthsData,
+      mostPopularMonth,
+      leastPopularMonth,
+      totalTripsForMonth,
     };
-  });
-
-  // Find most popular month
-  const mostPopularMonth = tripsByMonthData.reduce(
-    (max, curr) => (curr.total > (max?.total ?? 0) ? curr : max),
-    null as (typeof tripsByMonthData)[0] | null,
-  );
-
-  // Find least popular month
-  const leastPopularMonth = tripsByMonthData.reduce(
-    (min, curr) => (curr.total < (min?.total ?? Infinity) ? curr : min),
-    null as (typeof tripsByMonthData)[0] | null,
-  );
-
-  // Total trips for percentage
-  const totalTripsForMonth = tripsByMonthData.reduce(
-    (sum, m) => sum + m.total,
-    0,
-  );
-
-  return {
-    tripsByMonthData,
-    mostPopularMonth,
-    leastPopularMonth,
-    totalTripsForMonth,
-  };
+  }, [trips, homeCountry, monthNames]);
 }
