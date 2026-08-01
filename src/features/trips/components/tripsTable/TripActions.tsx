@@ -20,7 +20,12 @@ import {
   useMenuPosition,
 } from "@hooks";
 import type { Trip } from "../../types";
-import { canMarkCompleted, hasValidStartDate } from "../../utils/trips";
+import {
+  canMarkCancelled,
+  canMarkCompleted,
+  canRestore,
+  hasValidStartDate,
+} from "../../utils/trips";
 
 interface TripActionsProps {
   trip: Trip;
@@ -35,6 +40,8 @@ export const TripActions = forwardRef(function TripActions(
   const {
     sharedTripIds,
     markCompleted,
+    markCancelled,
+    restoreTrip,
     duplicateTrip,
     updateTripFavorite,
     updateTripRating,
@@ -113,6 +120,8 @@ export const TripActions = forwardRef(function TripActions(
     {
       onEdit: () => onEdit(trip),
       onMarkCompleted: () => markCompleted(trip),
+      onMarkCancelled: () => markCancelled(trip),
+      onRestore: () => restoreTrip(trip),
       onDuplicate: () => duplicateTrip(trip),
       onFavorite: () => updateTripFavorite(trip, !trip.favorite),
       onDelete: () => setConfirmOpen(true),
@@ -193,6 +202,30 @@ export const TripActions = forwardRef(function TripActions(
             className="w-full"
           >
             {t("table.actions.markCompleted", "Mark Completed")}
+          </MenuButton>
+        )}
+        {canMarkCancelled(trip) && (
+          <MenuButton
+            onClick={() => {
+              markCancelled(trip);
+              handleCloseAll();
+            }}
+            icon={<ICONS.tripCancelled />}
+            className="w-full"
+          >
+            {t("table.actions.markCancelled", "Mark Cancelled")}
+          </MenuButton>
+        )}
+        {canRestore(trip) && (
+          <MenuButton
+            onClick={() => {
+              menuActions.onRestore?.();
+              handleCloseAll();
+            }}
+            icon={<ICONS.refresh />}
+            className="w-full"
+          >
+            {t("table.actions.restoreTrip", "Restore Trip")}
           </MenuButton>
         )}
         <Separator className="my-2" />

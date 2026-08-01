@@ -30,14 +30,16 @@ export function ToolbarFilters({
   const toggleLocal = () => setFilters({ ...filters, local: !filters.local });
   const toggleAbroad = () =>
     setFilters({ ...filters, abroad: !filters.abroad });
-  const toggleCompleted = () =>
-    setFilters({ ...filters, completed: !filters.completed });
-  const toggleUpcoming = () =>
-    setFilters({ ...filters, upcoming: !filters.upcoming });
-  const toggleFavorite = () =>
-    setFilters({ ...filters, favorite: !filters.favorite });
   const togglePlanned = () =>
     setFilters({ ...filters, planned: !filters.planned });
+  const toggleUpcoming = () =>
+    setFilters({ ...filters, upcoming: !filters.upcoming });
+  const toggleCancelled = () =>
+    setFilters({ ...filters, cancelled: !filters.cancelled });
+  const toggleCompleted = () =>
+    setFilters({ ...filters, completed: !filters.completed });
+  const toggleFavorite = () =>
+    setFilters({ ...filters, favorite: !filters.favorite });
 
   const filterToggles: ToolbarToggleOption[] = [
     {
@@ -106,6 +108,19 @@ export function ToolbarFilters({
       onClick: toggleCompleted,
     },
     {
+      value: "cancelled",
+      icon: <ICONS.tripCancelled />,
+      label: t("table.toolbar.filters.cancelled"),
+      ariaLabel: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.cancelled"),
+      }),
+      title: t("table.toolbar.filters.filtersToggle", {
+        label: t("table.toolbar.filters.cancelled"),
+      }),
+      checked: filters.cancelled,
+      onClick: toggleCancelled,
+    },
+    {
       value: "favorite",
       icon: <ICONS.favorite />,
       label: t("table.toolbar.filters.favorites"),
@@ -117,7 +132,7 @@ export function ToolbarFilters({
       }),
       checked: filters.favorite,
       onClick: toggleFavorite,
-    },    
+    },
   ];
 
   return (

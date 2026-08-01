@@ -42,6 +42,9 @@ export function getTripDays(trip: Trip): number {
  * @returns The automatic status of the trip.
  */
 export function getAutoTripStatus(trip: Trip): TripStatus {
+  // If the trip is explicitly marked as cancelled, return cancelled
+  if (isCancelledTrip(trip)) return "cancelled";
+
   // If the trip has no valid start date, consider it planned
   if (!hasValidStartDate(trip)) return "planned";
 
@@ -124,6 +127,15 @@ export function isInProgressTrip(trip: Trip): boolean {
 }
 
 /**
+ * Determines if a trip is cancelled.
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip is cancelled, false otherwise.
+ */
+export function isCancelledTrip(trip: Trip): boolean {
+  return trip.status === "cancelled";
+}
+
+/**
  * Gets a filtered list of local trips.
  * @param trips - Array of trips to analyze.
  * @param homeCountry - The home country code to determine local trips.
@@ -171,13 +183,28 @@ export function getCompletedTrips(trips: Trip[]): Trip[] {
 }
 
 /**
+ * Gets a filtered list of cancelled trips.
+ * @param trips - Array of trips to analyze.
+ * @returns An array of cancelled trips.
+ */
+export function getCancelledTrips(trips: Trip[]): Trip[] {
+  return trips.filter((trip) => isCancelledTrip(trip));
+}
+
+/**
  * Determines if a trip can be marked as completed based on its start date and current status.
  * @param trip - The trip object to evaluate.
  * @returns True if the trip can be marked as completed, false otherwise.
  */
 export function canMarkCompleted(trip: Trip): boolean {
-  // If there's no valid start date or the trip is already completed, return false
-  if (!hasValidStartDate(trip) || trip.status === "completed") return false;
+  // If there's no valid start date, the trip is already completed or the trip is cancelled, return false
+  if (
+    !hasValidStartDate(trip) ||
+    trip.status === "completed" ||
+    isCancelledTrip(trip)
+  ) {
+    return false;
+  }
 
   // Check if the start date is in the past or today
   const today = new Date();
@@ -185,4 +212,23 @@ export function canMarkCompleted(trip: Trip): boolean {
   const start = new Date(trip.startDate!);
 
   return start <= today;
+}
+
+/**
+ * Determines if a trip can be marked as cancelled based on its current status.
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip can be marked as cancelled, false otherwise.
+ */
+export function canMarkCancelled(trip: Trip): boolean {
+  if (trip.status === "completed" || trip.status === "cancelled") return false;
+  return true;
+}
+
+/**
+ * Determines if a trip can be restored.
+ * @param trip - The trip object to evaluate.
+ * @returns True if the trip is currently cancelled.
+ */
+export function canRestore(trip: Trip): boolean {
+  return trip.status === "cancelled";
 }

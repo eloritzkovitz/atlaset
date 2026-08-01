@@ -15,6 +15,8 @@ export interface TripsContextType {
   addTrip: (trip: Trip) => void;
   editTrip: (trip: Trip) => void;
   markCompleted: (trip: Trip) => void;
+  markCancelled: (trip: Trip) => void;
+  restoreTrip: (trip: Trip) => void;
   duplicateTrip: (trip: Trip) => void;
   updateTripFavorite: (trip: Trip, favorite: boolean) => void;
   updateTripRating: (trip: Trip, rating: number | undefined) => void;

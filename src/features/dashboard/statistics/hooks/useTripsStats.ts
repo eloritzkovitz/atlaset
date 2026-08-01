@@ -14,6 +14,7 @@ import {
   getTripDays,
   isInProgressTrip,
   isCompletedTrip,
+  getCancelledTrips,
 } from "@features/trips/utils/trips";
 import {
   buildVisitedYearMap,
@@ -54,7 +55,7 @@ export function useTripsStats() {
     const inProgressTrips = trips.filter(isInProgressTrip);
     const upcomingTrips = getUpcomingTrips(trips);
     const plannedTrips = getPlannedTrips(trips);
-    const cancelledTrips = trips.filter((trip) => trip.status === "cancelled");
+    const cancelledTrips = getCancelledTrips(trips);
 
     // Country visit statistics
     const yearMap = buildVisitedYearMap(completedAbroadTrips);

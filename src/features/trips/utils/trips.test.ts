@@ -7,273 +7,258 @@ import {
   isCompletedTrip,
   isUpcomingTrip,
   isPlannedTrip,
+  isCancelledTrip,
   getLocalTrips,
   getAbroadTrips,
   getUpcomingTrips,
   getPlannedTrips,
   getCompletedTrips,
+  getCancelledTrips,
   getAutoTripStatus,
   canMarkCompleted,
+  canMarkCancelled,
+  canRestore,
 } from "./trips";
 import type { Trip } from "../types";
 
 const now = new Date();
-const tomorrow = new Date(now.getTime() + 86400000);
+const baseTrip = mockTrips[0];
 
 describe("trips utils", () => {
   describe("hasValidStartDate", () => {
-    it("returns false if startDate is missing", () => {
-      expect(hasValidStartDate(mockTrips[4])).toBe(false);
-    });
-
-    it("returns false if startDate is empty string", () => {
-      const trip: Trip = { ...mockTrips[0], startDate: "" };
-      expect(hasValidStartDate(trip)).toBe(false);
-    });
-
-    it("returns false if startDate is invalid", () => {
-      const trip: Trip = { ...mockTrips[0], startDate: "not-a-date" };
-      expect(hasValidStartDate(trip)).toBe(false);
-    });
-
-    it("returns true if startDate is valid", () => {
-      expect(hasValidStartDate(mockTrips[0])).toBe(true);
+    test.each([
+      ["missing", mockTrips[4], false],
+      ["empty string", { ...baseTrip, startDate: "" }, false],
+      ["invalid format", { ...baseTrip, startDate: "not-a-date" }, false],
+      ["valid date", baseTrip, true],
+    ])("returns %s for startDate (%p -> %p)", (_, trip, expected) => {
+      expect(hasValidStartDate(trip as Trip)).toBe(expected);
     });
   });
 
   describe("getTripDays", () => {
     it("returns correct number of days (inclusive)", () => {
-      const trip = {
-        ...mockTrips[0],
-        startDate: "2023-01-01",
-        endDate: "2023-01-03",
-      };
-      expect(getTripDays(trip)).toBe(3);
+      expect(
+        getTripDays({
+          ...baseTrip,
+          startDate: "2023-01-01",
+          endDate: "2023-01-03",
+        }),
+      ).toBe(3);
     });
 
-    it("returns 0 if startDate is invalid", () => {
-      const trip = {
-        ...mockTrips[0],
-        startDate: "not-a-date",
-        endDate: "2023-01-03",
-      };
-      expect(getTripDays(trip)).toBe(0);
-    });
-
-    it("returns 0 if endDate is invalid", () => {
-      const trip = {
-        ...mockTrips[0],
-        startDate: "2023-01-01",
-        endDate: "not-a-date",
-      };
-      expect(getTripDays(trip)).toBe(0);
+    test.each([
+      ["invalid startDate", "not-a-date", "2023-01-03"],
+      ["invalid endDate", "2023-01-01", "not-a-date"],
+    ])("returns 0 for %s", (_, startDate, endDate) => {
+      expect(getTripDays({ ...baseTrip, startDate, endDate })).toBe(0);
     });
   });
 
   describe("getAutoTripStatus", () => {
+    it("returns cancelled if trip is explicitly marked as cancelled", () => {
+      const cancelledTrip: Trip = {
+        ...baseTrip,
+        status: "cancelled",
+        startDate: "2026-01-01",
+      };
+      expect(getAutoTripStatus(cancelledTrip)).toBe("cancelled");
+    });
+
     it("returns upcoming if now < start", () => {
       expect(getAutoTripStatus(mockTrips[2])).toBe("upcoming");
     });
 
     it("returns in-progress if now between start and end", () => {
-      const trip = {
-        ...mockTrips[0],
-        startDate: now.toISOString(),
-        endDate: tomorrow.toISOString(),
-      };
-      expect(getAutoTripStatus(trip)).toBe("in-progress");
+      const tomorrow = new Date(now.getTime() + 86400000);
+      expect(
+        getAutoTripStatus({
+          ...baseTrip,
+          startDate: now.toISOString(),
+          endDate: tomorrow.toISOString(),
+        }),
+      ).toBe("in-progress");
     });
 
     it("returns planned if startDate is invalid", () => {
       expect(getAutoTripStatus(mockTrips[4])).toBe("planned");
     });
 
-    it("returns planned as a fallback when a trip is active, has started, but has no end date", () => {
+    it("returns planned as fallback when active trip has no endDate", () => {
       const yesterday = new Date(now.getTime() - 86400000).toISOString();
-
-      const tripWithoutEndDate: Trip = {
-        ...mockTrips[0],
-        status: "in-progress",
-        startDate: yesterday,
-        endDate: undefined,
-      };
-      expect(getAutoTripStatus(tripWithoutEndDate)).toBe("planned");
-    });
-
-    it("returns trip.status directly if it is explicitly provided", () => {
-      const tripWithExplicitStatus = {
-        ...mockTrips[0],
-        startDate: "2026-01-01",
-        status: "completed" as const,
-      };
-      expect(getAutoTripStatus(tripWithExplicitStatus)).toBe("completed");
+      expect(
+        getAutoTripStatus({
+          ...baseTrip,
+          status: "in-progress",
+          startDate: yesterday,
+          endDate: undefined,
+        }),
+      ).toBe("planned");
     });
   });
 
-  describe("isLocalTrip", () => {
-    it("returns true if all codes match home country", () => {
-      expect(isLocalTrip(mockTrips[0], "US")).toBe(true);
-    });
-
-    it("returns false if any code does not match", () => {
-      expect(isLocalTrip(mockTrips[1], "US")).toBe(false);
-    });
-
-    it("returns false if countryCodes is empty", () => {
-      const trip: Trip = { ...mockTrips[0], countryCodes: [] };
-      expect(isLocalTrip(trip, "US")).toBe(false);
+  describe("isLocalTrip / isAbroadTrip", () => {
+    test.each([
+      [isLocalTrip, mockTrips[0], "US", true],
+      [isLocalTrip, mockTrips[1], "US", false],
+      [isLocalTrip, { ...baseTrip, countryCodes: [] }, "US", false],
+      [isAbroadTrip, mockTrips[1], "US", true],
+      [isAbroadTrip, mockTrips[0], "US", false],
+      [isAbroadTrip, { ...baseTrip, countryCodes: [] }, "US", false],
+    ])("%s returns %p", (fn, trip, country, expected) => {
+      expect(fn(trip as Trip, country)).toBe(expected);
     });
   });
 
-  describe("isAbroadTrip", () => {
-    it("returns true if any code does not match home country", () => {
-      expect(isAbroadTrip(mockTrips[1], "US")).toBe(true);
+  describe("status predicate checks", () => {
+    it("isCancelledTrip", () => {
+      expect(isCancelledTrip({ ...baseTrip, status: "cancelled" })).toBe(true);
+      expect(isCancelledTrip(baseTrip)).toBe(false);
     });
 
-    it("returns false if all codes match home country", () => {
-      expect(isAbroadTrip(mockTrips[0], "US")).toBe(false);
-    });
-
-    it("returns false if countryCodes is empty", () => {
-      const trip: Trip = { ...mockTrips[0], countryCodes: [] };
-      expect(isAbroadTrip(trip, "US")).toBe(false);
-    });
-  });
-
-  describe("isCompletedTrip", () => {
-    it("returns true if status is completed", () => {
+    it("isCompletedTrip", () => {
       expect(isCompletedTrip(mockTrips[0])).toBe(true);
-    });
-
-    it("returns false otherwise", () => {
       expect(isCompletedTrip(mockTrips[2])).toBe(false);
     });
-  });
 
-  describe("isUpcomingTrip", () => {
-    it("returns true if status is auto-calculated as upcoming", () => {
+    it("isUpcomingTrip", () => {
       expect(isUpcomingTrip(mockTrips[2])).toBe(true);
-    });
-
-    it("returns false if startDate is in the past", () => {
       expect(isUpcomingTrip(mockTrips[0])).toBe(false);
-    });
-
-    it("returns false if startDate is invalid or missing", () => {
       expect(isUpcomingTrip(mockTrips[4])).toBe(false);
+      expect(isUpcomingTrip({ ...mockTrips[2], status: "cancelled" })).toBe(
+        false,
+      );
     });
-  });
 
-  describe("isPlannedTrip", () => {
-    it("returns true if startDate is missing", () => {
+    it("isPlannedTrip", () => {
       expect(isPlannedTrip(mockTrips[4])).toBe(true);
-    });
-
-    it("returns false if trip matches alternative temporal statuses (upcoming or past)", () => {
       expect(isPlannedTrip(mockTrips[0])).toBe(false);
       expect(isPlannedTrip(mockTrips[2])).toBe(false);
-    });    
-  });
-
-  describe("getLocalTrips", () => {
-    it("filters only local trips", () => {
-      const result = getLocalTrips(mockTrips, "US");
-      expect(result).toEqual([mockTrips[0]]);
+      expect(isPlannedTrip({ ...mockTrips[4], status: "cancelled" })).toBe(
+        false,
+      );
     });
   });
 
-  describe("getAbroadTrips", () => {
-    it("filters only abroad trips", () => {
-      const result = getAbroadTrips(mockTrips, "US");
-      expect(result).toEqual([
+  describe("filtered trips getters", () => {
+    it("getLocalTrips", () => {
+      expect(getLocalTrips(mockTrips, "US")).toEqual([mockTrips[0]]);
+    });
+
+    it("getAbroadTrips", () => {
+      expect(getAbroadTrips(mockTrips, "US")).toEqual([
         mockTrips[1],
         mockTrips[2],
         mockTrips[3],
         mockTrips[4],
       ]);
     });
-  });
 
-  describe("getUpcomingTrips", () => {
-    it("filters only upcoming trips", () => {
+    it("getUpcomingTrips", () => {
       const result = getUpcomingTrips(mockTrips);
       expect(result).toContain(mockTrips[2]);
       expect(result).not.toContain(mockTrips[4]);
     });
-  });
 
-  describe("getPlannedTrips", () => {
-    it("filters only planned trips", () => {
+    it("getPlannedTrips", () => {
       const result = getPlannedTrips(mockTrips);
       expect(result).toContain(mockTrips[4]);
       expect(result).not.toContain(mockTrips[2]);
     });
-  });
 
-  describe("getCompletedTrips", () => {
-    it("filters only completed trips", () => {
+    it("getCompletedTrips", () => {
       expect(getCompletedTrips(mockTrips)).toEqual([
         mockTrips[0],
         mockTrips[1],
         mockTrips[3],
       ]);
     });
+
+    it("getCancelledTrips", () => {
+      const cancelledTrip: Trip = { ...baseTrip, status: "cancelled" };
+      expect(getCancelledTrips([baseTrip, cancelledTrip])).toEqual([
+        cancelledTrip,
+      ]);
+    });
   });
 
   describe("canMarkCompleted", () => {
-    it("returns false if the trip status is already completed", () => {
-      const trip: Trip = {
-        ...mockTrips[0],
-        status: "completed",
-        startDate: "2023-01-01",
-      };
-      expect(canMarkCompleted(trip)).toBe(false);
-    });
-
-    it("returns false if the trip does not have a valid start date", () => {
-      const datelessTrip: Trip = {
-        ...mockTrips[0],
-        status: "planned",
-        startDate: "",
-      };
-      const invalidDateTrip: Trip = {
-        ...mockTrips[0],
-        status: "planned",
-        startDate: "not-a-date",
-      };
-
-      expect(canMarkCompleted(datelessTrip)).toBe(false);
-      expect(canMarkCompleted(invalidDateTrip)).toBe(false);
-    });
-
-    it("returns false if the trip start date is in the future", () => {
+    it("returns false if completed, cancelled, dateless, invalid, or future", () => {
       const futureDate = new Date(now.getTime() + 5 * 86400000).toISOString();
-      const futureTrip: Trip = {
-        ...mockTrips[0],
-        status: "in-progress",
-        startDate: futureDate,
-      };
-      expect(canMarkCompleted(futureTrip)).toBe(false);
+      expect(
+        canMarkCompleted({
+          ...baseTrip,
+          status: "completed",
+          startDate: "2023-01-01",
+        }),
+      ).toBe(false);
+      expect(
+        canMarkCompleted({
+          ...baseTrip,
+          status: "cancelled",
+          startDate: "2023-01-01",
+        }),
+      ).toBe(false);
+      expect(
+        canMarkCompleted({ ...baseTrip, status: "planned", startDate: "" }),
+      ).toBe(false);
+      expect(
+        canMarkCompleted({
+          ...baseTrip,
+          status: "planned",
+          startDate: "not-a-date",
+        }),
+      ).toBe(false);
+      expect(
+        canMarkCompleted({
+          ...baseTrip,
+          status: "in-progress",
+          startDate: futureDate,
+        }),
+      ).toBe(false);
     });
 
-    it("returns true if the trip has started or is in the past and is not completed yet", () => {
-      const pastTrip: Trip = {
-        ...mockTrips[0],
-        status: "in-progress",
-        startDate: "2023-01-01",
-      };
+    it("returns true if started/past and not completed or cancelled", () => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
-      const todayMidnight = new Date();
-      todayMidnight.setHours(0, 0, 0, 0);
+      expect(
+        canMarkCompleted({
+          ...baseTrip,
+          status: "in-progress",
+          startDate: "2023-01-01",
+        }),
+      ).toBe(true);
+      expect(
+        canMarkCompleted({
+          ...baseTrip,
+          status: "in-progress",
+          startDate: today.toISOString(),
+        }),
+      ).toBe(true);
+    });
+  });
 
-      const currentTrip: Trip = {
-        ...mockTrips[0],
-        status: "in-progress",
-        startDate: todayMidnight.toISOString(),
-      };
+  describe("canMarkCancelled & canRestore", () => {
+    test.each([
+      ["completed", false],
+      ["cancelled", false],
+      ["in-progress", true],
+      ["planned", true],
+    ])("canMarkCancelled returns %p for status %s", (status, expected) => {
+      expect(
+        canMarkCancelled({ ...baseTrip, status: status as Trip["status"] }),
+      ).toBe(expected);
+    });
 
-      expect(canMarkCompleted(pastTrip)).toBe(true);
-      expect(canMarkCompleted(currentTrip)).toBe(true);
+    test.each([
+      ["completed", false],
+      ["in-progress", false],
+      ["cancelled", true],
+    ])("canRestore returns %p for status %s", (status, expected) => {
+      expect(
+        canRestore({ ...baseTrip, status: status as Trip["status"] }),
+      ).toBe(expected);
     });
   });
 });

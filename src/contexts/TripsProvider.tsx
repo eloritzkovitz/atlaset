@@ -87,6 +87,17 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
     editTrip({ ...trip, status: "completed" }, true);
   }
 
+  /** Marks a trip as cancelled. */
+  function markCancelled(trip: Trip) {
+    editTrip({ ...trip, status: "cancelled" }, true);
+  }
+
+  /** Restores a trip. */
+  function restoreTrip(trip: Trip) {
+    const autoStatus = getAutoTripStatus({ ...trip, status: undefined });
+    editTrip({ ...trip, status: autoStatus }, true);
+  }
+
   /** Updates a trip's favorite status. */
   async function updateTripFavorite(trip: Trip, favorite: boolean) {
     await tripsService.updateFavorite(trip, favorite);
@@ -208,6 +219,8 @@ export const TripsProvider: React.FC<{ children: React.ReactNode }> = ({
         addTrip,
         editTrip,
         markCompleted,
+        markCancelled,
+        restoreTrip,
         duplicateTrip,
         updateTripFavorite,
         updateTripRating,

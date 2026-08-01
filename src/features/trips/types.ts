@@ -95,5 +95,6 @@ export type TripFilterState = TripFilters & {
   completed: boolean;
   upcoming: boolean;
   planned: boolean;
+  cancelled: boolean;
   favorite: boolean;
 };

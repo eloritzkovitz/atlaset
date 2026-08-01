@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-01
+
+- **[feature]** **Dashboard | Statistics:** Redesigned statistics sections, reorganized tabs and added new information
+- **[feature]** **Trips:** Added an option to mark trips as cancelled and restore them
+- **[chore]** **General:** Added URL params for some interactive tabs and views
+
 ## 2026-07-29
 
 - **[feature]** **Atlas | Markers:** Redesigned markers and updated creation and placement so that they depend on countries

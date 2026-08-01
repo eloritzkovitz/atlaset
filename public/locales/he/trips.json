@@ -14,6 +14,7 @@
         "planned": "מתוכנן",
         "upcoming": "קרבות",
         "completed": "הושלם",
+        "cancelled": "בוטל",
         "favorites": "מועדפים",
         "filtersToggle": "הצג/הסתר {{label}}"
       },
