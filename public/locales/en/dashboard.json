@@ -85,26 +85,38 @@
   "statistics": {
     "views": {
       "overview": "Overview",
-      "history": "History",
-      "monthly": "Monthly",
-      "yearly": "Yearly"
+      "visits": "Visits",
+      "categories": "Categories",
+      "trends": "Trends"
     },
     "overview": {
-      "title": "Trip Overview",
-      "subtitle": "Summary of all your recorded trips",
-      "totalTrips": "Total Trips",
-      "pieToggle": {
-        "type": "Type",
-        "status": "Status"
+      "totalTrips": "Total trips",
+      "totalDays": {
+        "title": "Total days traveling",
+        "subtitle": "Sum of all trip durations"
       },
-      "breakdown": {
-        "title": "Trip Breakdown",
-        "subtitle": {
-          "type": "Distribution of trips (local and abroad)",
-          "status": "Distribution of trip statuses"
-        }
+      "average": {
+        "title": "Average trip duration",
+        "subtitle": "Average days per trip"
       },
-      "loadingChart": "Loading chart...",
+      "recent": {
+        "title": "Recent trips",
+        "subtitle": "Your last 3 recorded trips"
+      },
+      "tripOverview": {
+        "title": "Trip overview",
+        "subtitle": "Summary of all your recorded trips",
+        "byStatus": "By Status",
+        "byType": "By Type"
+      },
+      "mostVisited": {
+        "title": "Most visited countries",
+        "subtitle": "The countries you have visited the most"
+      },
+      "first": {
+        "title": "First trip",
+        "subtitle": "Your earliest recorded trip"
+      },
       "longest": {
         "title": "Longest trip",
         "subtitle": "Your trip with the most days abroad"
@@ -113,24 +125,22 @@
         "title": "Shortest trip",
         "subtitle": "Your shortest abroad trip"
       },
-      "average": {
-        "title": "Average trip duration",
-        "subtitle": "Average days per trip"
-      },
-      "totalDays": {
-        "title": "Total days traveling",
-        "subtitle": "Sum of all trip durations"
-      },
-      "days": "days"
+      "days": "days",
+      "visits": "visits"
     },
-    "history": {
-      "mostVisited": {
-        "title": "Most visited countries",
-        "subtitle": "Based on completed abroad trips"
+    "visits": {
+      "title": "Most visited countries",
+      "subtitle": "Ranked by visit count based on completed abroad trips",
+      "empty": "No data available."
+    },
+    "categories": {
+      "type": {
+        "title": "Trip type breakdown",
+        "subtitle": "Distribution of trips (local and abroad)"
       },
-      "recent": {
-        "title": "Recent trips",
-        "subtitle": "Your last 3 recorded trips"
+      "status": {
+        "title": "Trip status breakdown",
+        "subtitle": "Distribution of trip statuses"
       },
       "first": {
         "title": "First trip",
@@ -139,31 +149,44 @@
       "last": {
         "title": "Last trip",
         "subtitle": "Your most recent trip"
-      },
-      "visits": "visits"
+      }
     },
-    "months": {
-      "title": "Trips by Month",
-      "noData": "No trip data available.",
-      "columns": {
-        "name": "Month",
-        "total": "Total",
-        "percentage": "Percentage"
+    "trends": {
+      "yearly": {
+        "title": "Yearly trends",
+        "chart": {
+          "title": "Trips by year",
+          "toggle": { "both": "Both" }
+        },
+        "table": {
+          "title": "Yearly trip breakdown",
+          "columns": { "year": "Year", "total": "Total" }
+        }
       },
-      "mostPopular": {
-        "title": "Most Popular Month"
-      },
-      "leastPopular": {
-        "title": "Least Popular Month"
-      },
-      "breakdownTitle": "Monthly Trip Breakdown",
-      "trips": "trips"
+      "monthly": {
+        "title": "Monthly trends",
+        "chart": {
+          "title": "Trips by month",
+          "toggle": { "both": "Both" }
+        },
+        "table": {
+          "title": "Monthly trip breakdown",
+          "columns": {
+            "month": "Month",
+            "total": "Total",
+            "percentage": "Percentage"
+          }
+        },
+        "mostPopular": {
+          "title": "Most popular month"
+        },
+        "leastPopular": {
+          "title": "Least popular month"
+        },
+        "trips": "trips"
+      }
     },
-    "year": {
-      "title": "Trips by Year",
-      "breakdownTitle": "Yearly Trip Breakdown",
-      "toggle": { "both": "Both" },
-      "columns": { "year": "Year", "total": "Total" }
-    }
+    "loading": "Loading data...",
+    "noData": "No trip data available."
   }
 }
