@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   useParams,
@@ -29,18 +29,29 @@ import { formatFirestoreDate } from "@utils/date";
 
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();
-  const location = useLocation();
-  const navigate = useNavigate();
   const { username } = useParams();
-  const { t } = useTranslation("user");
   const [profileRefreshKey, setProfileRefreshKey] = useState(0);
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
     username,
     refreshKey: profileRefreshKey,
   });
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { t } = useTranslation("user");
+
   const [editOpen, setEditOpen] = useState(false);
   const friendsOpen = location.pathname.endsWith("/friends");
   const bestScores = useUserLeaderboardScores(profileUser?.uid);
+
+  // Compute all visited country codes for the profile user, combining manual and trip-based codes
+  const allVisitedCountryCodes = useMemo(() => {
+    if (!profileUser) return [];
+    const manual = profileUser.manualVisitedCountryCodes || [];
+    const tripBased = profileUser.visitedCountryCodes || [];
+
+    return Array.from(new Set([...manual, ...tripBased]));
+  }, [profileUser]);
 
   // Set the page title to the profile user's displayName if available
   usePageTitle(
@@ -140,7 +151,7 @@ export default function ProfilePage() {
                       }
                     />
                     <ProfileCountriesCard
-                      countryCodes={profileUser.visitedCountryCodes || []}
+                      countryCodes={allVisitedCountryCodes || []}
                       type="visited"
                     />
                     <ProfileCountriesCard
