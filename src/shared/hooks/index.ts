@@ -33,6 +33,7 @@ export * from "./input/useSwipeNavigation";
 // Navigation
 export * from "./navigation/useAutoScrollFocus";
 export * from "./navigation/useListNavigation";
+export * from "./navigation/useQueryParam";
 
 // Overlays
 export * from "./overlays/useContextMenu";

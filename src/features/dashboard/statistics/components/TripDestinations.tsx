@@ -1,13 +1,27 @@
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { FaFlag } from "react-icons/fa6";
 import { Card, EmptyListMessage } from "@components";
 import { CountryWithFlag } from "@features/countries";
 import { useTripsStats } from "../hooks/useTripsStats";
+import { getCountryRoute } from "../../navigation/utils/dashboardNavigation";
 
 export function TripDestinations() {
   const { t } = useTranslation("dashboard");
-
+  const navigate = useNavigate();
   const { visitedCountriesRanking } = useTripsStats();
+
+  // Handler for clicking on a country in the visited countries ranking
+  const handleCountryClick = (
+    country: (typeof visitedCountriesRanking)[number]["country"],
+  ) => {
+    const route = getCountryRoute(
+      country.region,
+      country.subregion,
+      country.isoCode,
+    );
+    navigate(`${route}?tab=visits`);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -26,7 +40,8 @@ export function TripDestinations() {
             visitedCountriesRanking.map(({ country, visitCount }, idx) => (
               <div
                 key={country.isoCode}
-                className="bg-surface border-border flex items-center justify-between rounded-lg px-3 py-2 text-sm"
+                onClick={() => handleCountryClick(country)}
+                className="bg-surface border-border hover:bg-surface-hover flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm transition select-none"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-muted w-4 text-xs font-semibold">

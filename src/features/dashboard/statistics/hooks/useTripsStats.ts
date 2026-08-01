@@ -1,6 +1,10 @@
 import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
-import { useCountryData, type Country } from "@features/countries";
+import {
+  createCountryMap,
+  useCountryData,
+  type Country,
+} from "@features/countries";
 import {
   getCompletedTrips,
   getUpcomingTrips,
@@ -38,14 +42,8 @@ export function useTripsStats() {
   const { trips } = useTrips();
 
   return useMemo(() => {
-    // Create a mapping of country codes to country objects for quick lookup
-    const countryByCode = new Map<string, Country>();
-    for (const c of countries) {
-      if (c.isoCode) {
-        countryByCode.set(c.isoCode.toLowerCase(), c);
-      }
-    }
-    const getCountry = (code: string) => countryByCode.get(code.toLowerCase());
+    const countryMap = createCountryMap(countries, (c) => c);
+    const getCountry = (code: string) => countryMap[code.toLowerCase()];
 
     // Trip statistics
     const totalTrips = trips.length;

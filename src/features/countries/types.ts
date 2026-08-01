@@ -149,3 +149,5 @@ export type CountryFilterOptions = {
   layerCountries?: string[];
   modifiers?: CountryModifiers;
 };
+
+export type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
