@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "@components";
-import type { Visit } from "@features/visits";
+import type { CategorizedVisits } from "@features/visits/types";
 import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryDetailsContent } from "./CountryDetailsContent";
 import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
@@ -13,11 +13,7 @@ interface CountryDetailsPanelProps {
   country: Country;
   countries: Country[];
   currencies: Currency[];
-  categorizedVisits: {
-    past: Visit[];
-    upcoming: Visit[];
-    tentative: Visit[];
-  };
+  categorizedVisits: CategorizedVisits;
   initialTab?: CountryDetailsTab;
   activeTab?: CountryDetailsTab;
   resetTabOnClose?: boolean;

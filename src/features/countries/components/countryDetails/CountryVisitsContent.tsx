@@ -2,15 +2,11 @@ import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
-import type { Visit } from "@features/visits";
+import type { CategorizedVisits } from "@features/visits/types";
 import { VisitSection } from "./VisitSection";
 
 interface CountryVisitsContentProps {
-  visits: {
-    past: Visit[];
-    upcoming: Visit[];
-    tentative: Visit[];
-  };
+  visits: CategorizedVisits;
 }
 
 export function CountryVisitsContent({ visits }: CountryVisitsContentProps) {
@@ -32,12 +28,14 @@ export function CountryVisitsContent({ visits }: CountryVisitsContentProps) {
         title={t("countries.details.visits.planned")}
         count={visits.tentative.length}
         visits={visits.tentative}
+        status="planned"
       />
       <VisitSection
         icon={<ICONS.tripUpcoming />}
         title={t("countries.details.visits.upcoming")}
         count={visits.upcoming.length}
         visits={visits.upcoming}
+        status="upcoming"
         onVisitClick={handleVisitChipClick}
       />
       <VisitSection
@@ -45,6 +43,7 @@ export function CountryVisitsContent({ visits }: CountryVisitsContentProps) {
         title={t("countries.details.visits.completed")}
         count={visits.past.length}
         visits={visits.past}
+        status="completed"
         onVisitClick={handleVisitChipClick}
       />
     </div>

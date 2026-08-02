@@ -1,8 +1,14 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { FaFlag, FaMedal } from "react-icons/fa6";
-import { Chip, Table, Tooltip, type TableColumn } from "@components";
+import { useNavigate } from "react-router-dom";
+import {
+  Chip,
+  DirectionalIcon,
+  Table,
+  Tooltip,
+  type TableColumn,
+} from "@components";
 import { CountryWithFlag } from "@features/countries";
 import { VISITED_COUNTRIES_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsStats } from "../hooks/useTripsStats";
@@ -69,10 +75,31 @@ export function TripDestinations() {
       ),
     };
 
-    return translateColumns(VISITED_COUNTRIES_TABLE_COLUMNS, t).map((col) => ({
+    const baseColumns = translateColumns(
+      VISITED_COUNTRIES_TABLE_COLUMNS,
+      t,
+    ).map((col) => ({
       ...col,
       render: renders[col.key as string] || col.render,
     }));
+
+    return [
+      ...baseColumns,
+      {
+        key: "navigation" as keyof VisitedCountryRankRow,
+        label: "",
+        sortable: false,
+        render: () => (
+          <div className="flex justify-end pr-2 text-muted/50 group-hover:text-foreground transition-all group-hover:translate-x-0.5">
+            <DirectionalIcon
+              variant="chevron"
+              direction="next"
+              className="w-3.5 h-3.5"
+            />
+          </div>
+        ),
+      },
+    ];
   }, [t]);
 
   // Handle row click to navigate to the country details page

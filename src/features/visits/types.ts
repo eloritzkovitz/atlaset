@@ -8,9 +8,7 @@ export type Visit = {
 /** Represents the visited status filter for countries. */
 export type VisitedStatus = "visited" | "not_visited" | "want_to_visit" | "any";
 
-/**
- * Aggregates visit-derived data for quick access in UI components and utilities.
- */
+/** Aggregates visit-derived data for quick access in UI components and utilities. */
 export type VisitContext = {
   visitedIsoCodes: string[];
   visitedMap: Record<string, number>;
@@ -18,4 +16,11 @@ export type VisitContext = {
   firstVisitMap?: Record<string, Date>;
   lastVisitMap?: Record<string, Date>;
   wantToVisitIsoCodes?: string[];
+};
+
+/** Represents a categorized list of visits. */
+export type CategorizedVisits = {
+  past: Visit[];
+  upcoming: Visit[];
+  tentative: Visit[];
 };
