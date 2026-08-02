@@ -26,18 +26,26 @@ export function MonthlyTrendsSection() {
     totalTripsForMonth,
   } = useTripsByMonthStats(monthLongNames);
 
+  // Format the months data to include the month index for table rendering
+  const formattedMonthsData = useMemo(() => {
+    return allMonthsData.map((d, index) => ({
+      ...d,
+      monthIndex: index,
+    }));
+  }, [allMonthsData]);
+
   const monthColumns = useMemo(
     () => translateColumns(MONTH_TABLE_COLUMNS, t),
     [t],
   );
 
   const monthCounts = useMemo(
-    () => allMonthsData.map((d) => d.total),
-    [allMonthsData],
+    () => formattedMonthsData.map((d) => d.total),
+    [formattedMonthsData],
   );
   const monthColors = useMemo(
-    () => allMonthsData.map((d) => d.color),
-    [allMonthsData],
+    () => formattedMonthsData.map((d) => d.color),
+    [formattedMonthsData],
   );
 
   return (
@@ -58,13 +66,13 @@ export function MonthlyTrendsSection() {
         >
           {monthShortNames.length > 0 ? (
             <div
-              className={`mt-4 flex flex-col sm:flex-row items-center justify-center ${
-                isLaptop ? "gap-10" : "gap-16"
+              className={`mt-4 flex flex-col sm:flex-row items-center justify-end pe-4 ${
+                isLaptop ? "gap-10" : "gap-30"
               } min-h-[220px]`}
             >
               <div
-                className={`flex flex-col items-center justify-center w-full ${
-                  isLaptop ? "sm:max-w-[280px]" : "max-w-[320px]"
+                className={`flex flex-col items-center justify-end w-full ${
+                  isLaptop ? "sm:max-w-[280px]" : "max-w-[360px]"
                 }`}
               >
                 <Suspense
@@ -82,13 +90,13 @@ export function MonthlyTrendsSection() {
                     colors={monthColors}
                     hoveredIdx={hoveredMonthIdx}
                     setHoveredIdx={setHoveredMonthIdx}
-                    size={isLaptop ? 280 : 340}
+                    size={isLaptop ? 280 : 400}
                   />
                 </Suspense>
               </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-1 gap-1.5 justify-center w-full sm:w-auto">
-                {allMonthsData.map((d, idx) => (
+                {formattedMonthsData.map((d, idx) => (
                   <PieLegendCard
                     key={d.name}
                     label={monthShortNames[idx] ?? d.name}
@@ -126,7 +134,10 @@ export function MonthlyTrendsSection() {
               {mostPopularMonth && (
                 <span className="text-muted font-normal text-sm ms-2">
                   ({mostPopularMonth.total}{" "}
-                  {t("statistics.trends.monthly.trips", { defaultValue: "trips" })},{" "}
+                  {t("statistics.trends.monthly.trips", {
+                    defaultValue: "trips",
+                  })}
+                  ,{" "}
                   {totalTripsForMonth > 0
                     ? `${Math.round(mostPopularMonth.percentage)}%`
                     : "0%"}
@@ -146,7 +157,10 @@ export function MonthlyTrendsSection() {
               {leastPopularMonth && (
                 <span className="text-muted font-normal text-sm ms-2">
                   ({leastPopularMonth.total}{" "}
-                  {t("statistics.trends.monthly.trips", { defaultValue: "trips" })},{" "}
+                  {t("statistics.trends.monthly.trips", {
+                    defaultValue: "trips",
+                  })}
+                  ,{" "}
                   {totalTripsForMonth > 0
                     ? `${Math.round(leastPopularMonth.percentage)}%`
                     : "0%"}
@@ -158,15 +172,18 @@ export function MonthlyTrendsSection() {
         </div>
       </div>
 
-      <Card
-        title={t("statistics.trends.monthly.table.title", {
-          defaultValue: "Monthly trip breakdown",
-        })}
-      >
-        <div className="overflow-x-auto">
-          <Table columns={monthColumns} data={allMonthsData} />
-        </div>
-      </Card>
+      <Table
+        columns={monthColumns}
+        data={formattedMonthsData}
+        striped
+        showExport
+        exportFilename="monthly-trends.csv"
+        cardProps={{
+          title: t("statistics.trends.monthly.table.title", {
+            defaultValue: "Monthly trip breakdown",
+          }),
+        }}
+      />
     </section>
   );
 }

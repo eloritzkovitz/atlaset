@@ -1,6 +1,45 @@
 import type { TableColumn } from "@components";
 import { ICONS } from "@constants/icons";
-import type { MonthRow, YearRow } from "../types";
+import type { MonthRow, VisitedCountryRankRow, YearRow } from "../types";
+
+export const VISITED_COUNTRIES_TABLE_COLUMNS: TableColumn<VisitedCountryRankRow>[] =
+  [
+    {
+      key: "rank",
+      label: "#",
+      labelKey: "statistics.visits.table.columns.rank",
+      iconClass: "text-muted",
+      sortable: true,
+      exportValue: (row) => row.rank,
+    },
+    {
+      key: "country",
+      label: "Country",
+      labelKey: "statistics.visits.table.columns.country",
+      iconClass: "text-orange-400",
+      sortable: true,
+      sortValue: (row) => row.country.name,
+      exportValue: (row) => row.country.name,
+    },
+    {
+      key: "visitCount",
+      label: "Visits",
+      labelKey: "statistics.visits.table.columns.visits",
+      iconClass: "text-blue-400",
+      sortable: true,
+      render: (row) => row.visitCount.toLocaleString(),
+      exportValue: (row) => row.visitCount,
+    },
+    {
+      key: "years",
+      label: "Years",
+      labelKey: "statistics.visits.table.columns.years",
+      iconClass: "text-green-400",
+      sortable: false,
+      render: (row) => row.years.join(", "),
+      exportValue: (row) => row.years.join(", "),
+    },
+  ];
 
 export const MONTH_COLORS = [
   "#22d3ee",
@@ -19,11 +58,13 @@ export const MONTH_COLORS = [
 
 export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
   {
-    key: "name",
+    key: "monthIndex",
     label: "Month",
     labelKey: "statistics.trends.monthly.table.columns.month",
     icon: ICONS.tripUpcoming,
     sortable: true,
+    render: (row) => row.name,
+    exportValue: (row) => row.name,
   },
   {
     key: "local",
@@ -33,6 +74,7 @@ export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
     iconClass: "text-green-400",
     sortable: true,
     render: (row) => row.local.toLocaleString(),
+    exportValue: (row) => row.local,
   },
   {
     key: "abroad",
@@ -42,6 +84,7 @@ export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
     iconClass: "text-purple-400",
     sortable: true,
     render: (row) => row.abroad.toLocaleString(),
+    exportValue: (row) => row.abroad,
   },
   {
     key: "total",
@@ -51,6 +94,7 @@ export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
     iconClass: "text-blue-400",
     sortable: true,
     render: (row) => row.total.toLocaleString(),
+    exportValue: (row) => row.total,
   },
   {
     key: "percentage",
@@ -60,6 +104,7 @@ export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
     iconClass: "text-yellow-400",
     sortable: true,
     render: (row) => `${row.percentage.toFixed(1)}%`,
+    exportValue: (row) => Number(row.percentage.toFixed(1)),
   },
 ];
 
@@ -72,6 +117,7 @@ export const YEAR_TABLE_COLUMNS: TableColumn<YearRow>[] = [
     iconClass: "text-gray-400",
     sortable: true,
     render: (row) => row.year.toString(),
+    exportValue: (row) => row.year,
   },
   {
     key: "local",
@@ -81,6 +127,7 @@ export const YEAR_TABLE_COLUMNS: TableColumn<YearRow>[] = [
     iconClass: "text-green-400",
     sortable: true,
     render: (row) => row.local.toLocaleString(),
+    exportValue: (row) => row.local,
   },
   {
     key: "abroad",
@@ -90,6 +137,7 @@ export const YEAR_TABLE_COLUMNS: TableColumn<YearRow>[] = [
     icon: ICONS.tripAbroad,
     sortable: true,
     render: (row) => row.abroad.toLocaleString(),
+    exportValue: (row) => row.abroad,
   },
   {
     key: "total",
@@ -99,5 +147,6 @@ export const YEAR_TABLE_COLUMNS: TableColumn<YearRow>[] = [
     iconClass: "text-blue-400",
     sortable: true,
     render: (row) => row.total.toLocaleString(),
+    exportValue: (row) => row.total,
   },
 ];

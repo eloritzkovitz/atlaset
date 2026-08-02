@@ -32,17 +32,11 @@ export function LeaderboardRowComponent({
     >
       <td className="px-4 py-2 font-bold">
         {index === 0 ? (
-          <FaMedal
-            className="text-yellow-400 drop-shadow-sm"
-            title="1st Place"
-          />
+          <FaMedal className="text-yellow-400 drop-shadow-sm" />
         ) : index === 1 ? (
-          <FaMedal className="text-gray-400 drop-shadow-sm" title="2nd Place" />
+          <FaMedal className="text-slate-300 drop-shadow-sm" />
         ) : index === 2 ? (
-          <FaMedal
-            className="text-orange-500 drop-shadow-sm"
-            title="3rd Place"
-          />
+          <FaMedal className="text-amber-600 drop-shadow-sm" />
         ) : (
           row.rank
         )}

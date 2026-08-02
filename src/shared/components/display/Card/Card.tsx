@@ -12,6 +12,7 @@ interface CardProps {
   loading?: boolean;
   skeletonLines?: number;
   onClick?: () => void;
+  actions?: React.ReactNode;
 }
 
 export function Card({
@@ -26,6 +27,7 @@ export function Card({
   loading = false,
   skeletonLines = 3,
   onClick,
+  actions,
 }: CardProps) {
   const isInteractive = !!onClick && !loading;
 
@@ -82,19 +84,27 @@ export function Card({
 
   return (
     <Component {...sharedProps} {...interactiveProps}>
-      {(title || Icon) && (
-        <div className="flex items-center gap-3 mb-3">
-          {Icon && <Icon className={`text-2xl shrink-0 ${iconClass}`} />}
-          <div>
-            {title && (
-              <div className="font-semibold text-lg leading-tight text-foreground">
-                {title}
-              </div>
+      {(title || Icon || actions) && (
+        <div className="flex items-start justify-between gap-4 mb-3">
+          <div className="flex items-start gap-3">
+            {Icon && (
+              <Icon className={`text-2xl shrink-0 mt-0.5 ${iconClass}`} />
             )}
-            {subtitle && (
-              <div className="text-xs text-muted mt-0.5">{subtitle}</div>
-            )}
+            <div>
+              {title && (
+                <div className="font-semibold text-lg leading-tight text-foreground">
+                  {title}
+                </div>
+              )}
+              {subtitle && (
+                <div className="text-xs text-muted mt-0.5">{subtitle}</div>
+              )}
+            </div>
           </div>
+
+          {actions && (
+            <div className="flex items-center gap-2 shrink-0">{actions}</div>
+          )}
         </div>
       )}
 

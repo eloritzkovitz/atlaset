@@ -16,11 +16,10 @@ import {
   isCompletedTrip,
   getCancelledTrips,
 } from "@features/trips/utils/trips";
-import {
-  buildVisitedYearMap,
-  computeVisitCountsFromYearMap,
-} from "@features/visits/utils/visits";
 import { useHomeCountry } from "@features/user/profile";
+import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import type { Visit } from "@features/visits/types";
+import type { VisitedCountryRankRow } from "../types";
 import {
   findLongestTrip,
   findShortestTrip,
@@ -29,11 +28,6 @@ import {
 } from "../utils/tripStats";
 import { getMostVisitedCountries } from "../utils/visitStats";
 
-export interface VisitedCountryData {
-  country: Country;
-  visitCount: number;
-}
-
 /**
  * Computes and returns trip statistics.
  */
@@ -41,6 +35,8 @@ export function useTripsStats() {
   const { countries } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const { trips } = useTrips();
+  const { visitedCountryCodes, getCountryVisitsCategorized } =
+    useVisitedCountries();
 
   return useMemo(() => {
     const countryMap = createCountryMap(countries, (c) => c);
@@ -57,10 +53,7 @@ export function useTripsStats() {
     const plannedTrips = getPlannedTrips(trips);
     const cancelledTrips = getCancelledTrips(trips);
 
-    // Country visit statistics
-    const yearMap = buildVisitedYearMap(completedAbroadTrips);
-    const visitCounts = computeVisitCountsFromYearMap(yearMap, 9999);
-
+    // Most visited countries
     const { codes: mostVisitedCountryCodes, maxCount } =
       getMostVisitedCountries(completedAbroadTrips, homeCountry);
 
@@ -68,17 +61,45 @@ export function useTripsStats() {
       .map(getCountry)
       .filter((c): c is Country => Boolean(c));
 
-    const visitedCountriesRanking: VisitedCountryData[] = Object.entries(
-      visitCounts,
-    )
-      .map(([code, count]) => {
+    // Visited countries ranking
+    const visitedCountriesRanking: VisitedCountryRankRow[] = visitedCountryCodes
+      .map((code) => {
         const country = getCountry(code);
-        return country ? { country, visitCount: count } : null;
+        if (!country) return null;
+
+        const { past } = getCountryVisitsCategorized(code);
+        if (past.length === 0) return null;
+
+        const tripsByYear: Record<number, Visit[]> = {};
+
+        past.forEach((visit) => {
+          if (!visit.startDate) return;
+          const year = new Date(visit.startDate).getFullYear();
+
+          if (!tripsByYear[year]) tripsByYear[year] = [];
+
+          tripsByYear[year].push({
+            yearRange: visit.yearRange || String(year),
+            tripName: visit.tripName || "Trip",
+            tripId: visit.tripId,
+          });
+        });
+
+        const years = Object.keys(tripsByYear)
+          .map(Number)
+          .sort((a, b) => b - a);
+
+        return {
+          country,
+          visitCount: past.length,
+          years,
+          tripsByYear,
+        };
       })
-      .filter((item): item is VisitedCountryData => Boolean(item))
+      .filter((item): item is VisitedCountryRankRow => item !== null)
       .sort((a, b) => b.visitCount - a.visitCount);
 
-    // Trip duration statisticsf
+    // Trip duration statistics
     const validAbroadTrips = abroadTrips.filter((trip) =>
       isCompletedTrip(trip),
     );
@@ -116,5 +137,11 @@ export function useTripsStats() {
       lastTrip,
       recentTrips,
     };
-  }, [trips, countries, homeCountry]);
+  }, [
+    trips,
+    countries,
+    homeCountry,
+    visitedCountryCodes,
+    getCountryVisitsCategorized,
+  ]);
 }

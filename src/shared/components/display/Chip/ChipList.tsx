@@ -47,12 +47,10 @@ export function ChipList<T>({
           content={items
             .slice(limit)
             .map((item) => {
-              // Use the getTooltipLabel function if provided
               if (getTooltipLabel) {
                 return getTooltipLabel(item);
               }
 
-              // Otherwise, try to extract a label from the item or fallback to string representation
               if (typeof item === "object" && item !== null) {
                 if (
                   "label" in item &&
@@ -70,7 +68,6 @@ export function ChipList<T>({
               return String(item);
             })
             .join("\n")}
-          position="bottom"
         >
           <Chip className={`text-xs font-medium ${moreColorClass}`}>
             {t("components.chip.more", { count: items.length - limit })}

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-02
+
+- **[feature]** **Dashboard | Statistics:** Updated tables with better design and actions for copying and exporting data
+- **[feature]** **Dashboard | Statistics:** Expanded country visit ranking with years and details
+
 ## 2026-08-01
 
 - **[feature]** **Dashboard | Statistics:** Redesigned statistics sections, reorganized tabs and added new information

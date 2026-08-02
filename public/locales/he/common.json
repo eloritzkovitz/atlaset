@@ -59,10 +59,12 @@
     "share": "שיתוף",
     "copy": "העתקה",
     "copyLink": "העתקת קישור",
+    "copyToClipboard": "העתקה ללוח",
     "copied": "הועתק!",
     "cannotDelete": "לא ניתן למחוק",
     "search": "חיפוש",
     "resetFilters": "איפוס מסננים",
+    "resetSort": "איפוס מיון",
     "notifications": "התראות",
     "help": "עזרה",
     "wikipedia": "צפייה בוויקיפדיה"
@@ -126,6 +128,10 @@
       "none": "ללא דירוג",
       "star_one": "{{count}} כוכב",
       "star_other": "{{count}} כוכבים"
+    },
+    "table": {
+      "exportCSV": "ייצוא CSV",
+      "emptyMessage": "אין נתונים זמינים."
     },
     "viewMode": {
       "grid": "תצוגת רשת",

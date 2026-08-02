@@ -113,19 +113,33 @@ describe("tripsIO utils", () => {
     });
 
     it("generates csv text stripping out the ID column and triggers a simulated click", () => {
-      const click = vi.fn();
-      vi.spyOn(document, "createElement").mockReturnValue({
-        set href(_: any) {},
-        set download(_: any) {},
-        click,
-      } as any);
+      const mockAnchor = {
+        setAttribute: vi.fn(),
+        click: vi.fn(),
+      } as unknown as HTMLAnchorElement;
+
+      vi.spyOn(document, "createElement").mockImplementation(
+        (tagName: string) => {
+          if (tagName === "a") return mockAnchor;
+          return document.createElement(tagName);
+        },
+      );
+
+      vi.spyOn(document.body, "appendChild").mockImplementation((node) => node);
+      vi.spyOn(document.body, "removeChild").mockImplementation((node) => node);
+
       window.URL.createObjectURL = vi.fn(() => "blob:url");
       window.URL.revokeObjectURL = vi.fn();
 
       exportTripsToCSV([sampleTrip]);
 
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
-      expect(click).toHaveBeenCalled();
+      expect(mockAnchor.setAttribute).toHaveBeenCalledWith("href", "blob:url");
+      expect(mockAnchor.setAttribute).toHaveBeenCalledWith(
+        "download",
+        "trips.csv",
+      );
+      expect(mockAnchor.click).toHaveBeenCalled();
+      expect(document.body.removeChild).toHaveBeenCalledWith(mockAnchor);
       expect(window.URL.revokeObjectURL).toHaveBeenCalledWith("blob:url");
     });
   });

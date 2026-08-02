@@ -131,7 +131,13 @@
     "visits": {
       "title": "Most visited countries",
       "subtitle": "Ranked by visit count based on completed abroad trips",
-      "empty": "No data available."
+      "table": {
+        "columns": {
+          "country": "Country",
+          "visits": "Visits",
+          "years": "Years"
+        }
+      }
     },
     "categories": {
       "type": {

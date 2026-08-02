@@ -1,67 +1,108 @@
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { FaFlag } from "react-icons/fa6";
-import { Card, EmptyListMessage } from "@components";
+import { FaFlag, FaMedal } from "react-icons/fa6";
+import { Chip, Table, Tooltip, type TableColumn } from "@components";
 import { CountryWithFlag } from "@features/countries";
+import { VISITED_COUNTRIES_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsStats } from "../hooks/useTripsStats";
+import type { VisitedCountryRankRow } from "../types";
+import { translateColumns } from "../utils/columns";
 import { getCountryRoute } from "../../navigation/utils/dashboardNavigation";
+
+const MEDAL_CONFIG: Record<number, string> = {
+  1: "text-yellow-400",
+  2: "text-slate-300",
+  3: "text-amber-600",
+};
 
 export function TripDestinations() {
   const { t } = useTranslation("dashboard");
   const navigate = useNavigate();
   const { visitedCountriesRanking } = useTripsStats();
 
-  // Handler for clicking on a country in the visited countries ranking
-  const handleCountryClick = (
-    country: (typeof visitedCountriesRanking)[number]["country"],
-  ) => {
+  const tableData: VisitedCountryRankRow[] = useMemo(
+    () =>
+      visitedCountriesRanking.map((item, idx) => ({ ...item, rank: idx + 1 })),
+    [visitedCountriesRanking],
+  );
+
+  const columns: TableColumn<VisitedCountryRankRow>[] = useMemo(() => {
+    const renders: Record<
+      string,
+      (row: VisitedCountryRankRow) => React.ReactNode
+    > = {
+      rank: (row) => {
+        const medalColor = MEDAL_CONFIG[row.rank];
+        return medalColor ? (
+          <div className={`flex items-center gap-1.5 font-bold ${medalColor}`}>
+            <FaMedal className="w-4 h-4 drop-shadow-sm" />
+            <span className="text-xs font-semibold pl-1">#{row.rank}</span>
+          </div>
+        ) : (
+          <span className="text-muted text-xs font-semibold pl-6">
+            #{row.rank}
+          </span>
+        );
+      },
+      country: (row) => (
+        <CountryWithFlag
+          isoCode={row.country.isoCode}
+          name={row.country.name}
+        />
+      ),
+      years: (row) => (
+        <div className="flex flex-wrap gap-1.5">
+          {row.years.map((year) => {
+            const yearVisits = row.tripsByYear?.[year] || [];
+            const tooltipText = yearVisits.map((v) => v.tripName).join("\n");
+
+            return (
+              <Tooltip key={year} content={tooltipText} position="top">
+                <Chip className="bg-muted/25 text-xs font-semibold cursor-help transition-colors hover:bg-muted/40">
+                  {year}
+                </Chip>
+              </Tooltip>
+            );
+          })}
+        </div>
+      ),
+    };
+
+    return translateColumns(VISITED_COUNTRIES_TABLE_COLUMNS, t).map((col) => ({
+      ...col,
+      render: renders[col.key as string] || col.render,
+    }));
+  }, [t]);
+
+  // Handle row click to navigate to the country details page
+  const handleCountryClick = (row: VisitedCountryRankRow) => {
     const route = getCountryRoute(
-      country.region,
-      country.subregion,
-      country.isoCode,
+      row.country.region,
+      row.country.subregion,
+      row.country.isoCode,
     );
     navigate(`${route}?tab=visits`);
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <Card
-        icon={FaFlag}
-        iconClass="text-orange-500"
-        title={t("statistics.visits.title", {
+    <Table
+      columns={columns}
+      data={tableData}
+      onRowClick={handleCountryClick}
+      striped
+      showExport
+      exportFilename="most-visited-countries.csv"
+      cardProps={{
+        icon: FaFlag,
+        iconClass: "text-orange-500",
+        title: t("statistics.visits.title", {
           defaultValue: "Most visited countries",
-        })}
-        subtitle={t("statistics.visits.subtitle", {
+        }),
+        subtitle: t("statistics.visits.subtitle", {
           defaultValue: "Ranked by visit count based on completed abroad trips",
-        })}
-      >
-        <div className="mt-4 flex flex-col gap-2 overflow-y-auto">
-          {visitedCountriesRanking.length > 0 ? (
-            visitedCountriesRanking.map(({ country, visitCount }, idx) => (
-              <div
-                key={country.isoCode}
-                onClick={() => handleCountryClick(country)}
-                className="bg-surface border-border hover:bg-surface-hover flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-sm transition select-none"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-muted w-4 text-xs font-semibold">
-                    #{idx + 1}
-                  </span>
-                  <CountryWithFlag
-                    isoCode={country.isoCode}
-                    name={country.name}
-                  />
-                </div>
-                <span className="text-muted text-xs font-medium">
-                  {visitCount}
-                </span>
-              </div>
-            ))
-          ) : (
-            <EmptyListMessage message={t("statistics.visits.empty")} />
-          )}
-        </div>
-      </Card>
-    </div>
+        }),
+      }}
+    />
   );
 }

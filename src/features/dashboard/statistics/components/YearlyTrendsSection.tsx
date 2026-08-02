@@ -107,15 +107,18 @@ export function YearlyTrendsSection() {
         </div>
       </Card>
 
-      <Card
-        title={t("statistics.trends.yearly.table.title", {
-          defaultValue: "Yearly trip breakdown",
-        })}
-      >
-        <div className="overflow-x-auto">
-          <Table columns={filteredYearColumns} data={tripsByYearData} />
-        </div>
-      </Card>
+      <Table
+        columns={filteredYearColumns}
+        data={tripsByYearData}
+        striped
+        showExport
+        exportFilename="yearly-trends.csv"
+        cardProps={{
+          title: t("statistics.trends.yearly.table.title", {
+            defaultValue: "Yearly trip breakdown",
+          }),
+        }}
+      />
     </section>
   );
 }

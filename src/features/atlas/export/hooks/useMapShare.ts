@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react";
+import { copyToClipboard } from "@utils/clipboard";
 import { getSharedMapUrl } from "../utils/mapShare";
 
 /**
@@ -14,11 +15,11 @@ export function useMapShare(code: string) {
 
   // Copy handler
   const copyShareUrl = useCallback(async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
+    const success = await copyToClipboard(shareUrl);
+    if (success) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1200);
-    } catch {
+    } else {
       setCopied(false);
     }
   }, [shareUrl]);

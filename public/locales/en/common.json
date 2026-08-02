@@ -55,14 +55,16 @@
     "rename": "Rename",
     "center": "Center on map",
     "duplicate": "Duplicate",
-    "createList": "Create List",
+    "createList": "Create list",
     "share": "Share",
     "copy": "Copy",
-    "copyLink": "Copy Link",
+    "copyLink": "Copy link",
+    "copyToClipboard": "Copy to clipboard",
     "copied": "Copied!",
     "cannotDelete": "Cannot delete",
     "search": "Search",
     "resetFilters": "Reset filters",
+    "resetSort": "Reset sorting",
     "notifications": "Notifications",
     "help": "Help",
     "wikipedia": "View on Wikipedia"
@@ -126,6 +128,11 @@
       "none": "No rating",
       "star_one": "{{count}} star",
       "star_other": "{{count}} stars"
+    },
+    "table": {
+      "resetSort": "Reset sorting",
+      "exportCSV": "Export CSV",
+      "emptyMessage": "No data available."
     },
     "viewMode": {
       "grid": "Grid View",

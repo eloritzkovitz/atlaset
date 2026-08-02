@@ -3,6 +3,7 @@
  */
 
 import Papa from "papaparse";
+import { exportToCSV, type CSVColumn } from "@utils/csv";
 import { exportToFile } from "@utils/json";
 import type { Trip } from "../types";
 
@@ -48,24 +49,17 @@ export async function importTripsFromFile(
 export function exportTripsToCSV(trips: Trip[]) {
   if (!trips.length) return;
 
-  const headers = Object.keys(trips[0])
-    .filter((key) => key !== "id")
-    .join(",");
-  const rows = trips.map((trip) =>
-    Object.entries(trip)
-      .filter(([key]) => key !== "id")
-      .map(([val]) => `"${String(val).replace(/"/g, '""')}"`)
-      .join(","),
+  // Extract all keys from the first object excluding 'id'
+  const keys = (Object.keys(trips[0]) as (keyof Trip)[]).filter(
+    (key) => key !== "id",
   );
 
-  const csv = [headers, ...rows].join("\n");
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "trips.csv";
-  a.click();
-  URL.revokeObjectURL(url);
+  const columns: CSVColumn<Trip>[] = keys.map((key) => ({
+    header: key as string,
+    accessor: key,
+  }));
+
+  exportToCSV(trips, columns, "trips.csv");
 }
 
 /**
