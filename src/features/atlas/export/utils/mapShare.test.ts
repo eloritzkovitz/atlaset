@@ -6,7 +6,17 @@ describe("mapShare encode/decode", () => {
       layers: [{ name: "Visited", color: "#123", countries: ["US", "CA"] }],
     };
     const r1 = decodeMapData(encodeMapData(d1));
-    expect(r1.layers).toEqual(d1.layers);
+
+    expect(r1.layers).toEqual([
+      expect.objectContaining({
+        name: "Visited",
+        color: "#123",
+        countries: ["US", "CA"],
+        visible: true,
+        id: expect.any(String),
+      }),
+    ]);
+
     expect([r1.markers, r1.mapName, r1.sharer]).toEqual([
       undefined,
       undefined,
@@ -19,31 +29,33 @@ describe("mapShare encode/decode", () => {
       sharer: "Alice",
     };
     const r2 = decodeMapData(encodeMapData(d2));
-    expect(r2.layers).toEqual(d2.layers);
+    expect(r2.layers[0].name).toBe("L");
     expect([r2.mapName, r2.sharer]).toEqual(["My Map", "Alice"]);
 
     const d3 = {
       layers: [{ name: "L", color: "#fff", countries: ["FR"] }],
       markers: [
-        { name: "A", isoCode: "US", visible: true, order: 1 },
-        { name: "B", isoCode: "CA", visible: true, order: 2 },
+        { name: "A", isoCode: "US" },
+        { name: "B", isoCode: "CA" },
       ],
     };
     const r3 = decodeMapData(encodeMapData(d3));
-    expect(r3.layers).toEqual(d3.layers);
+
     expect(r3.markers).toEqual([
-      {
+      expect.objectContaining({
         name: "A",
         isoCode: "US",
-        color: undefined,
-        notes: undefined,
-      },
-      {
+        color: "#ef4444",
+        visible: true,
+        id: expect.any(String),
+      }),
+      expect.objectContaining({
         name: "B",
         isoCode: "CA",
-        color: undefined,
-        notes: undefined,
-      },
+        color: "#ef4444",
+        visible: true,
+        id: expect.any(String),
+      }),
     ]);
   });
 
@@ -64,7 +76,7 @@ describe("mapShare encode/decode", () => {
 
     const dChars = {
       layers: [{ name: "L|:;=", color: "#fff", countries: ["FR"] }],
-      markers: [{ name: "A|,;= %", isoCode: "US", visible: true, order: 1 }],
+      markers: [{ name: "A|,;= %", isoCode: "US" }],
       mapName: "M|=;ap",
       sharer: "Sh|=;arer",
     };

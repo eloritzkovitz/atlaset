@@ -1,3 +1,6 @@
+import type { Layer } from "../layers/types";
+import type { Marker } from "../markers/types";
+
 /** Image formats for export. */
 export type ImageFormat = "png" | "jpeg" | "webp";
 
@@ -16,3 +19,28 @@ export type ImageExportOptions = {
   quality: number;
   backgroundColor?: string;
 };
+
+/** Represents shared data for the map. */
+export interface SharedMapData {
+  layers: Array<{
+    name: string;
+    color: string;
+    countries: string[];
+  }>;
+  markers?: Array<{
+    name?: string;
+    isoCode?: string;
+    color?: string;
+    notes?: string;
+  }>;
+  mapName?: string;
+  sharer?: string;
+}
+
+/** Represents decoded data for the map. */
+export interface DecodedMapData {
+  layers: Layer[];
+  markers?: Marker[];
+  mapName?: string;
+  sharer?: string;
+}

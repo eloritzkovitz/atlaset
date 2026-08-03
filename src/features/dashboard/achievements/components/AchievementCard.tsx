@@ -38,9 +38,6 @@ export function AchievementCard({
   allAchievements,
   onClick,
 }: AchievementCardProps) {
-  // Defensive criteria default
-  const criteria = achievement.criteria || {};
-
   // Tier metadata
   const { tierObj, tierStatus, tierCount } = getCurrentTier(
     achievement,
@@ -59,8 +56,13 @@ export function AchievementCard({
     if (typeof tierCount === "number" && achievement.countries) {
       return { countries: achievement.countries.slice(0, tierCount) };
     }
-    return tierObj?.criteria || criteria;
-  }, [achievement.countries, criteria, tierCount, tierObj?.criteria]);
+    return tierObj?.criteria || achievement.criteria || {};
+  }, [
+    achievement.countries,
+    achievement.criteria,
+    tierCount,
+    tierObj?.criteria,
+  ]);
 
   // Progress Label using Options Object pattern
   const progressLabel = useAchievementProgressLabel(

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { exportToCSV, type CSVColumn } from "./csv";
-import * as fileUtils from "./file";
+import * as fileUtils from "./download";
 
 describe("exportToCSV", () => {
   let downloadBlobSpy: any;

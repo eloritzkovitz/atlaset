@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { downloadBlob, downloadCanvas } from "./file";
+import { downloadBlob, downloadCanvas } from "./download";
 
 describe("downloadBlob", () => {
   let originalCreateElement: typeof document.createElement;

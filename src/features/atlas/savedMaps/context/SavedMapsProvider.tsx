@@ -15,7 +15,7 @@ import {
   useLayerManager,
   type Layer,
 } from "@features/atlas/layers";
-import { normalizeMarkers } from "@features/atlas/markers/utils/markers";
+import { normalizeMarkers } from "@features/atlas/markers/utils/marker";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";

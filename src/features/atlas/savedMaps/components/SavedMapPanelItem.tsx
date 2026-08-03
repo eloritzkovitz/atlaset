@@ -2,10 +2,10 @@ import { useRef } from "react";
 import { PanelListItem, Tooltip } from "@components";
 import { ICONS } from "@constants/icons";
 import { useMapShare } from "@features/atlas/export/hooks/useMapShare";
-import { exportMapDataAsJson } from "@features/atlas/export/utils/mapExport";
 import { encodeMapData } from "@features/atlas/export/utils/mapShare";
 import { useAuth } from "@features/user/auth";
 import { useTooltipTarget } from "@hooks";
+import { exportToFile } from "@utils";
 import { MapPreview } from "./MapPreview";
 import type { SavedMap } from "../types";
 
@@ -58,7 +58,7 @@ export function SavedMapPanelItem({
   const { copyShareUrl } = useMapShare(code);
 
   const handleDownload = () => {
-    exportMapDataAsJson(map);
+    exportToFile(map);
   };
 
   return (

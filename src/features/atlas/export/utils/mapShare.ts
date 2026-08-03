@@ -2,22 +2,16 @@
  * Utilities to encode and decode map data for sharing via URL parameters.
  */
 
+import type { Layer } from "@features/atlas/layers/types";
+import type { Marker } from "@features/atlas/markers/types";
+import type { DecodedMapData, SharedMapData } from "../types";
+
 /**
  * Encode map data as a base64 string.
  * @param mapData Object with layers and optional markers, mapName, and sharer
  * @returns Base64 encoded string
  */
-export function encodeMapData(mapData: {
-  layers: { name: string; color: string; countries: string[] }[];
-  markers?: Array<{
-    name?: string;
-    isoCode?: string;
-    color?: string;
-    notes?: string;
-  }>;
-  mapName?: string;
-  sharer?: string;
-}): string {
+export function encodeMapData(mapData: SharedMapData): string {
   // Serialize layers
   const layerStrings = mapData.layers
     .map((l) =>
@@ -60,78 +54,62 @@ export function encodeMapData(mapData: {
  * @param code Base64 encoded string
  * @returns Object with layers and optional markers
  */
-export function decodeMapData(code: string): {
-  layers: { name: string; color: string; countries: string[] }[];
-  markers?: Array<{
-    name?: string;
-    isoCode?: string;
-    color?: string;
-    notes?: string;
-  }>;
-  mapName?: string;
-  sharer?: string;
-} {
+export function decodeMapData(code: string): DecodedMapData {
   try {
     const decoded = atob(code);
     const parts = decoded.split("||");
 
-    // Extract data parts
     const mapName = parts[0] ? decodeURIComponent(parts[0]) : undefined;
     const sharer = parts[1] ? decodeURIComponent(parts[1]) : undefined;
     const layerPart = parts[2] || "";
     const markerPart = parts[3] || "";
 
     // Layers
-    const layers = layerPart
+    const layers: Layer[] = layerPart
       .split(";")
       .map((layerStr) => {
         const [name, color, countriesStr] = layerStr.split(":");
         return {
+          id: crypto.randomUUID(),
           name: name ? decodeURIComponent(name) : "",
-          color: color ? decodeURIComponent(color) : "",
+          color: color ? decodeURIComponent(color) : "#3b82f6",
           countries: countriesStr
             ? countriesStr.split(",").filter(Boolean).map(decodeURIComponent)
             : [],
+          visible: true,
         };
       })
       .filter((l) => l.name);
 
     // Markers
-    let markers:
-      | Array<{
-          name?: string;
-          isoCode?: string;
-          color?: string;
-          notes?: string;
-        }>
-      | undefined = undefined;
-    if (markerPart && markerPart.length > 0) {
-      markers = markerPart.split("|").map((markerStr) => {
+    let markers: Marker[] | undefined = undefined;
+
+    if (markerPart) {
+      markers = markerPart.split("|").flatMap((markerStr) => {
         const [name, isoCode, color, notes] = markerStr.split(",");
-        return {
-          name: decodeURIComponent(name) || undefined,
-          isoCode: decodeURIComponent(isoCode) || undefined,
-          color: color ? decodeURIComponent(color) : undefined,
-          notes: notes ? decodeURIComponent(notes) : undefined,
-        };
+        const decodedIso = isoCode ? decodeURIComponent(isoCode) : "";
+
+        // Skip invalid markers safely in a single pass
+        if (!decodedIso) return [];
+
+        return [
+          {
+            id: crypto.randomUUID(),
+            name: name ? decodeURIComponent(name) : "",
+            isoCode: decodedIso,
+            color: color ? decodeURIComponent(color) : "#ef4444",
+            notes: notes ? decodeURIComponent(notes) : undefined,
+            visible: true,
+          },
+        ];
       });
     }
 
-    // Construct result
-    const result: {
-      layers: { name: string; color: string; countries: string[] }[];
-      markers?: Array<{
-        name?: string;
-        isoCode?: string;
-        color?: string;
-        notes?: string;
-      }>;
-      mapName?: string;
-      sharer?: string;
-    } = { layers };
-    if (markers) result.markers = markers;
+    const result: DecodedMapData = { layers };
+    if (markers?.length) result.markers = markers;
     if (mapName) result.mapName = mapName;
     if (sharer) result.sharer = sharer;
+
     return result;
   } catch {
     return { layers: [] };

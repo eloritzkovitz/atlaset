@@ -2,7 +2,7 @@
  * Utility functions for working with CSV data.
  */
 
-import { downloadBlob } from "./file";
+import { downloadBlob } from "./download";
 
 /** Represents a column in the CSV output. */
 export interface CSVColumn<T> {

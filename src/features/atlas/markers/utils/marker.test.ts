@@ -1,4 +1,4 @@
-import { normalizeMarkers } from "./markers";
+import { normalizeMarkers } from "./marker";
 
 describe("normalizeMarkers", () => {
   it("returns undefined for non-array input", () => {

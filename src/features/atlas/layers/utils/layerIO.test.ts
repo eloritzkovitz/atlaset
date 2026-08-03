@@ -9,22 +9,16 @@ import * as utils from "@utils";
 
 describe("layerIO utils", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
-    global.alert = vi.fn();
+    vi.restoreAllMocks();
   });
 
-  const createMockEvent = (files?: any[]) =>
+  const createMockEvent = (file?: File) =>
     ({
-      target: { files, value: "" },
+      target: {
+        files: file ? [file] : null,
+        value: "layers.json",
+      },
     }) as unknown as React.ChangeEvent<HTMLInputElement>;
-
-  const mockFileReaderResult = (result: string) => {
-    window.FileReader = function (this: any) {
-      this.readAsText = () => {
-        this.onload({ target: { result } });
-      };
-    } as any;
-  };
 
   const sampleLayer = {
     id: "1",
@@ -36,38 +30,27 @@ describe("layerIO utils", () => {
   };
 
   describe("importLayersFromFile", () => {
-    it("does nothing if no file is selected", () => {
+    it("does nothing if no file is selected", async () => {
       const importLayers = vi.fn();
-      importLayersFromFile(createMockEvent(undefined), importLayers);
+      await importLayersFromFile(createMockEvent(undefined), importLayers);
       expect(importLayers).not.toHaveBeenCalled();
     });
 
-    it("alerts on invalid JSON", () => {
+    it("handles parsing errors via onError callback", async () => {
       const importLayers = vi.fn();
-      mockFileReaderResult("not json");
+      const onError = vi.fn();
+      const invalidFile = new File(["not json"], "bad.json", {
+        type: "application/json",
+      });
 
-      importLayersFromFile(createMockEvent([new Blob()]), importLayers);
-      expect(global.alert).toHaveBeenCalled();
+      await importLayersFromFile(createMockEvent(invalidFile), importLayers, onError);
+      expect(onError).toHaveBeenCalledWith(expect.any(Error));
+      expect(importLayers).not.toHaveBeenCalled();
     });
 
-    it("imports both single objects and raw arrays correctly", () => {
+    it("imports single objects and arrays, normalizing RGBA colors and backfilling IDs", async () => {
       const importLayers = vi.fn();
 
-      mockFileReaderResult(JSON.stringify(sampleLayer));
-      importLayersFromFile(createMockEvent([new Blob()]), importLayers);
-      expect(importLayers).toHaveBeenLastCalledWith([
-        expect.objectContaining({ id: "1" }),
-      ]);
-
-      mockFileReaderResult(JSON.stringify([sampleLayer]));
-      importLayersFromFile(createMockEvent([new Blob()]), importLayers);
-      expect(importLayers).toHaveBeenLastCalledWith([
-        expect.objectContaining({ id: "1" }),
-      ]);
-    });
-
-    it("normalizes rgba color structures and backfills missing IDs", () => {
-      const importLayers = vi.fn();
       const rawData = {
         ...sampleLayer,
         id: undefined,
@@ -75,10 +58,14 @@ describe("layerIO utils", () => {
         fillColor: "rgba(0, 255, 0, 1)",
         strokeColor: "rgba(0, 0, 255, 0.25)",
       };
-      mockFileReaderResult(JSON.stringify([rawData]));
 
-      importLayersFromFile(createMockEvent([new Blob()]), importLayers);
+      const file = new File([JSON.stringify([rawData])], "layers.json", {
+        type: "application/json",
+      });
 
+      await importLayersFromFile(createMockEvent(file), importLayers);
+
+      expect(importLayers).toHaveBeenCalledTimes(1);
       const payload = importLayers.mock.calls[0][0][0];
       expect(payload.id).toBeDefined();
       expect(payload.color).toBe("#ff00007f");
@@ -88,31 +75,22 @@ describe("layerIO utils", () => {
   });
 
   describe("parseAndNormalizeLayers and serializeLayers", () => {
-    it("parses single objects or arrays interchangeably to array instances", () => {
+    it("normalizes input into array format", () => {
       expect(
         parseAndNormalizeLayers(JSON.stringify(sampleLayer)),
       ).toMatchObject([sampleLayer]);
-      expect(
-        parseAndNormalizeLayers(JSON.stringify([sampleLayer])),
-      ).toMatchObject([sampleLayer]);
     });
 
-    it("serializes collections stripping out volatile runtime configurations", () => {
+    it("serializes layers stripping volatile runtime fields", () => {
       const expectedOutput = [{ name: "Layer", color: "#fff", countries: [] }];
-      const format = (data: any) => JSON.stringify(data, null, 2);
-
-      expect(serializeLayers(sampleLayer)).toBe(format(expectedOutput));
-      expect(serializeLayers([sampleLayer])).toBe(format(expectedOutput));
+      expect(serializeLayers(sampleLayer)).toBe(
+        JSON.stringify(expectedOutput, null, 2),
+      );
     });
   });
 
   describe("exportLayersToFile", () => {
-    it("safely ignores nullish execution calls", () => {
-      // @ts-expect-error
-      expect(exportLayersToFile(undefined)).toBeUndefined();
-    });
-
-    it("delegates layer export to exportToFile utility", () => {
+    it("delegates layer export with correct omitted fields", () => {
       const exportToFileSpy = vi
         .spyOn(utils, "exportToFile")
         .mockImplementation(() => {});

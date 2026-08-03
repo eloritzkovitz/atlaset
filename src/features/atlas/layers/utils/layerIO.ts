@@ -30,30 +30,26 @@ export function serializeLayers(layers: Layer | Layer[]): string {
  * Normalize a single layer object.
  * @param o - The object to normalize.
  * @returns A normalized Layer object.
- * - Converts rgba colors to hex.
- * - Ensures an id is present (generates one if missing).
  */
 function normalizeLayer(o: Record<string, unknown>): Layer {
-  const normalizeColor = (color: unknown) => {
-    if (typeof color === "string" && color.startsWith("rgba")) {
-      return rgbaToHex(color);
+  const normalized = { ...o };
+
+  // Convert any RGBA color strings to hex format for consistency
+  const colorKeys = ["color", "fillColor", "strokeColor"] as const;
+  for (const key of colorKeys) {
+    if (
+      typeof normalized[key] === "string" &&
+      (normalized[key] as string).startsWith("rgba")
+    ) {
+      normalized[key] = rgbaToHex(normalized[key] as string);
     }
-    return color;
-  };
-  const normalized: Record<string, unknown> = { ...o };
-  if ("color" in normalized && typeof normalized.color === "string") {
-    normalized.color = normalizeColor(normalized.color);
   }
-  if ("fillColor" in normalized && typeof normalized.fillColor === "string") {
-    normalized.fillColor = normalizeColor(normalized.fillColor);
+
+  // Ensure the layer has a unique ID
+  if (!normalized.id) {
+    normalized.id = crypto.randomUUID();
   }
-  if (
-    "strokeColor" in normalized &&
-    typeof normalized.strokeColor === "string"
-  ) {
-    normalized.strokeColor = normalizeColor(normalized.strokeColor);
-  }
-  if (!normalized.id) normalized.id = crypto.randomUUID();
+
   return normalized as Layer;
 }
 
@@ -61,15 +57,18 @@ function normalizeLayer(o: Record<string, unknown>): Layer {
  * Import one or more layers from a JSON file input event.
  * @param event - The file input change event.
  * @param importLayers - Callback with array of layers.
+ * @param onError - Optional error callback.
  */
 export function importLayersFromFile(
   event: React.ChangeEvent<HTMLInputElement>,
   importLayers: (layers: Layer[]) => void,
+  onError?: (error: Error) => void,
 ) {
-  importFromFile<Layer>(
+  return importFromFile<Layer>(
     event,
-    (json) => parseAndNormalizeLayers(json),
+    parseAndNormalizeLayers,
     importLayers,
+    onError,
   );
 }
 

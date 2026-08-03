@@ -4,7 +4,15 @@
 
 import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
-import { downloadBlob, downloadCanvas, exportToFile } from "@utils";
+import {
+  calculateScaledDimensions,
+  downloadBlob,
+  downloadCanvas,
+  exportToFile,
+  getElementDim,
+  prepareSvgClone,
+  svgToBlob,
+} from "@utils";
 import { getExportFilename, isImageFormat } from "./format";
 import type {
   ExportFormat,
@@ -12,139 +20,6 @@ import type {
   ImageFormat,
   SvgExportOptions,
 } from "../types";
-
-/** Get the dimension of an SVG element, falling back to a default value. */
-const getElementDim = (
-  val: SVGAnimatedLength | undefined,
-  clientVal: number,
-  fallback: number,
-) => val?.baseVal?.value || clientVal || fallback;
-
-/**
- * Prepares an SVG clone for export by normalizing attributes and inlining styles.
- * @param original - The original SVG element to clone.
- * @param inlineStyles - Whether to inline computed styles into the clone.
- * @param includeTitles - Whether to include title elements for accessibility.
- * @returns The prepared SVG clone.
- */
-export function prepareSvgClone(
-  original: SVGSVGElement,
-  inlineStyles = true,
-  includeTitles = true,
-): SVGSVGElement {
-  const clone = original.cloneNode(true) as SVGSVGElement;
-
-  if (!clone.getAttribute("xmlns")) {
-    clone.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-  }
-
-  if (!clone.getAttribute("viewBox")) {
-    const w = getElementDim(original.width, original.clientWidth, 1200);
-    const h = getElementDim(original.height, original.clientHeight, 800);
-    clone.setAttribute("viewBox", `0 0 ${w} ${h}`);
-  }
-
-  clone
-    .querySelectorAll(
-      "rect[data-export-ignore], rect.background, rect[data-background]",
-    )
-    .forEach((n) => n.remove());
-
-  // Add <title> elements for accessibility and tooltips if requested
-  if (includeTitles) {
-    clone.querySelectorAll("[data-export-title]").forEach((el) => {
-      const titleText = el.getAttribute("data-export-title");
-      if (titleText) {
-        const titleNode = original.ownerDocument.createElementNS(
-          "http://www.w3.org/2000/svg",
-          "title",
-        );
-        titleNode.textContent = titleText;
-
-        el.appendChild(titleNode);
-      }
-    });
-  }
-
-  // Inline computed styles if requested
-  if (inlineStyles) {
-    const elements = clone.querySelectorAll<SVGElement>(
-      "path, circle, rect, line, polyline, polygon, text, g",
-    );
-    const ownerDoc = original.ownerDocument || document;
-    const styleProps = [
-      "fill",
-      "stroke",
-      "stroke-width",
-      "opacity",
-      "fill-opacity",
-      "stroke-opacity",
-      "font-family",
-      "font-size",
-      "text-anchor",
-      "font-weight",
-      "vector-effect",
-    ];
-
-    elements.forEach((el) => {
-      try {
-        const orig = getCorrespondingOriginal(el, original, clone);
-        const cs = orig
-          ? ownerDoc.defaultView?.getComputedStyle(orig as Element)
-          : null;
-        if (!cs) return;
-
-        const inline = styleProps.reduce((acc, p) => {
-          const v = cs.getPropertyValue(p);
-          return v ? [...acc, `${p}:${v}`] : acc;
-        }, [] as string[]);
-
-        const existing = el.getAttribute("style");
-        el.setAttribute(
-          "style",
-          existing ? `${existing};${inline.join(";")}` : inline.join(";"),
-        );
-      } catch {
-        // ignore elements we can't compute
-      }
-    });
-  }
-
-  return clone;
-}
-
-/**
- * Finds the corresponding node in the original SVG for a given node in the cloned SVG.
- * @param node - The node in the cloned SVG.
- * @param originalRoot - The root of the original SVG.
- * @param cloneRoot - The root of the cloned SVG.
- * @returns The corresponding node in the original SVG, or null if not found.
- */
-export function getCorrespondingOriginal(
-  node: Element,
-  originalRoot: Element,
-  cloneRoot: Element,
-): Element | null {
-  const path: number[] = [];
-  let current: Element | null = node;
-
-  while (current && current !== cloneRoot) {
-    if (!current.parentNode) return null;
-    const parent = current.parentNode as Element;
-    const idx = Array.prototype.indexOf.call(parent.children, current);
-    if (idx === -1) return null;
-    path.unshift(idx);
-    current = parent;
-  }
-  if (current !== cloneRoot) return null;
-
-  let original = originalRoot;
-  for (const idx of path) {
-    if (!original.children?.[idx]) return null;
-    original = original.children[idx];
-  }
-  return original;
-}
 
 /**
  * Exports the given SVG element as an SVG file.
@@ -161,11 +36,7 @@ export function exportSvg(
 ) {
   if (!svgElement) return;
   const clone = prepareSvgClone(svgElement, inlineStyles, includeTitles);
-  const svgString = new XMLSerializer().serializeToString(clone);
-  downloadBlob(
-    new Blob([svgString], { type: "image/svg+xml;charset=utf-8" }),
-    filename,
-  );
+  downloadBlob(svgToBlob(clone), filename);
 }
 
 /**
@@ -210,19 +81,13 @@ export async function exportSvgAsImage(
     vh = getElementDim(clone.height, clone.clientHeight, 800);
   }
 
-  const DPR = window.devicePixelRatio || 1;
-  let canvasW = Math.round(vw * DPR * scale);
-  let canvasH = Math.round(vh * DPR * scale);
-
-  const maxSide = Math.max(canvasW, canvasH);
-  if (maxSide > maxDimension) {
-    const factor = maxDimension / maxSide;
-    canvasW = Math.round(canvasW * factor);
-    canvasH = Math.round(canvasH * factor);
-    console.warn(
-      `Export capped to ${maxDimension}px max side; output scaled by ${factor.toFixed(2)}`,
-    );
-  }
+  // Pure sizing math handled by shared utility
+  const { width: canvasW, height: canvasH } = calculateScaledDimensions({
+    width: vw,
+    height: vh,
+    scale,
+    maxDimension,
+  });
 
   const canvas = document.createElement("canvas");
   canvas.width = canvasW;
@@ -234,7 +99,6 @@ export async function exportSvgAsImage(
     if (ctx.imageSmoothingQuality) ctx.imageSmoothingQuality = "high";
     ctx.clearRect(0, 0, canvasW, canvasH);
 
-    // Unified solid background layer deployment block
     if (format === "jpeg" || backgroundColor) {
       ctx.save();
       ctx.fillStyle = backgroundColor || "#fff";
@@ -297,7 +161,7 @@ export function exportMap({
   // Handle JSON export first
   if (format === "json") {
     if (jsonData) {
-      exportMapDataAsJson(jsonData, getExportFilename("json"));
+      exportToFile(jsonData, getExportFilename("json"));
     }
     return;
   }
@@ -328,16 +192,4 @@ export function exportMap({
       opts?.backgroundColor,
     );
   }
-}
-
-/**
- * Exports map data (layers, markers) as a JSON file.
- * @param data - The data to serialize and download.
- * @param filename - The filename for the download.
- */
-export function exportMapDataAsJson(
-  data: object | object[],
-  filename = "atlas-export.json",
-) {
-  exportToFile(data, filename);
 }

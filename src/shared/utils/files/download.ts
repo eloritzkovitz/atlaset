@@ -1,12 +1,12 @@
 /**
- * Utility functions for file operations.
+ * Utility functions for download operations.
  */
 
 /**
  * Triggers a download for a given Blob object by creating a temporary anchor element and simulating a click.
- * @param blob: Blob object to download.
- * @param filename: Name of the file to be downloaded.
- * @param isJson: If true, delays the removal of the anchor element and revocation of the object URL to ensure proper download of JSON files.
+ * @param blob - Blob object to download.
+ * @param filename - Name of the file to be downloaded.
+ * @param isJson - If true, delays the removal of the anchor element and revocation of the object URL to ensure proper download of JSON files.
  */
 export function downloadBlob(blob: Blob, filename: string, isJson = false) {
   const url = URL.createObjectURL(blob);
@@ -36,10 +36,10 @@ export function downloadBlob(blob: Blob, filename: string, isJson = false) {
 
 /**
  * Triggers a download for a canvas element as an image file.
- * @param canvas: HTMLCanvasElement to download.
- * @param filename: Name of the file to be downloaded.
- * @param format: Image format for the download.
- * @param quality: Optional quality parameter for image formats that support it. Should be a number between 0 and 1.
+ * @param canvas - HTMLCanvasElement to download.
+ * @param filename - Name of the file to be downloaded.
+ * @param format - Image format for the download.
+ * @param quality - Optional quality parameter for image formats that support it. Should be a number between 0 and 1.
  * @returns Promise that resolves when the download is triggered.
  */
 export function downloadCanvas(

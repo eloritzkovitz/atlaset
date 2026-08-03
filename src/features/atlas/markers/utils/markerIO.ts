@@ -19,8 +19,7 @@ export function parseAndNormalizeMarkers(jsonOrObj: string | object): Marker[] {
 }
 
 /**
- * Serialize one or more markers to a pretty JSON string (always as an array in JSON).
- * Omits 'id', 'order', and 'visible' from each marker.
+ * Serialize one or more markers to a pretty JSON string.
  */
 export function serializeMarkers(markers: Marker | Marker[]): string {
   return serializeItems<Marker>(markers, ["id", "order", "visible"]);
@@ -30,8 +29,10 @@ export function serializeMarkers(markers: Marker | Marker[]): string {
  * Normalize a single marker object.
  */
 function normalizeMarker(o: Record<string, unknown>): Marker {
-  const normalized: Record<string, unknown> = { ...o };
-  if (!normalized.id) normalized.id = crypto.randomUUID();
+  const normalized = { ...o };
+  if (!normalized.id) {
+    normalized.id = crypto.randomUUID();
+  }
   return normalized as Marker;
 }
 
@@ -39,39 +40,49 @@ function normalizeMarker(o: Record<string, unknown>): Marker {
  * Import one or more markers from a JSON file input event.
  * @param event - The file input change event.
  * @param existingMarkers - The array of existing markers.
- * @param importMarkers - Callback with array of markers.
+ * @param importMarkers - Callback with array of merged markers.
+ * @param onError - Optional callback triggered on JSON parsing error.
  */
 export function importMarkersFromFile(
   event: React.ChangeEvent<HTMLInputElement>,
   existingMarkers: Marker[],
   importMarkers: (markers: Marker[]) => void,
+  onError?: (error: Error) => void,
 ) {
-  importFromFile<Marker>(
+  return importFromFile<Marker>(
     event,
     (json) => {
       const parsed = parseAndNormalizeMarkers(json);
 
-      // Filter out duplicates based on isoCode, keeping existing markers and adding new unique ones
+      // Create a set of existing ISO codes for quick lookup
       const existingIsoCodes = new Set(
         existingMarkers
           .map((m) => m.isoCode)
           .filter((code): code is string => Boolean(code)),
       );
 
-      // Filter out new markers that have an isoCode already present in existing markers
+      // Track unique ISO codes within the imported batch to avoid duplicate incoming entries
+      const seenImportedCodes = new Set<string>();
+
       const uniqueNewMarkers = parsed.filter((marker) => {
-        if (existingIsoCodes.has(marker.isoCode)) return false;
-        existingIsoCodes.add(marker.isoCode);
+        if (
+          !marker.isoCode ||
+          existingIsoCodes.has(marker.isoCode) ||
+          seenImportedCodes.has(marker.isoCode)
+        ) {
+          return false;
+        }
+        seenImportedCodes.add(marker.isoCode);
         return true;
       });
 
-      // Merge existing markers with unique new markers and assign order based on their position in the combined array
       return [...existingMarkers, ...uniqueNewMarkers].map((marker, index) => ({
         ...marker,
         order: index,
       }));
     },
     importMarkers,
+    onError,
   );
 }
 
@@ -84,5 +95,6 @@ export function exportMarkersToFile(
   markers: Marker | Marker[],
   filename?: string,
 ) {
+  if (!markers) return;
   exportToFile<Marker>(markers, filename, ["id", "order", "visible"], "marker");
 }

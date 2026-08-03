@@ -12,9 +12,11 @@ export * from "./collections/sort";
 export * from "./date/date";
 export * from "./date/timezone";
 
+export * from "./files/canvas";
 export * from "./files/csv";
-export * from "./files/file";
+export * from "./files/download";
 export * from "./files/json";
+export * from "./files/svg";
 
 export * from "./primitives/array";
 export * from "./primitives/number";

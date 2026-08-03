@@ -20,4 +20,4 @@ export { markersService } from "./services/markersService";
 export * from "./types";
 
 // Utils
-export { normalizeMarkers } from "./utils/markers";
+export { normalizeMarkers } from "./utils/marker";

@@ -2,7 +2,7 @@
  * Utilities for parsing, normalizing, importing, and exporting JSON data.
  */
 
-import { downloadBlob } from "./file";
+import { downloadBlob } from "./download";
 
 /**
  * Parse and normalize one or more items from JSON string or object.
@@ -16,10 +16,9 @@ export function parseAndNormalize<T extends Record<string, unknown>>(
 ): T[] {
   const obj = typeof jsonOrObj === "string" ? JSON.parse(jsonOrObj) : jsonOrObj;
   if (Array.isArray(obj)) {
-    return obj.map(normalizeFn);
-  } else {
-    return [normalizeFn(obj as Record<string, unknown>)];
+    return obj.map((item) => normalizeFn(item as Record<string, unknown>));
   }
+  return [normalizeFn(obj as Record<string, unknown>)];
 }
 
 /**
@@ -29,13 +28,13 @@ export function parseAndNormalize<T extends Record<string, unknown>>(
  */
 export function serializeItems<T extends Record<string, unknown>>(
   items: T | T[],
-  omitFields: string[] = [],
+  omitFields: (keyof T | string)[] = [],
 ): string {
   const arr = Array.isArray(items) ? items : [items];
   const cleaned = arr.map((item) => {
     const rest: Record<string, unknown> = { ...item };
     for (const field of omitFields) {
-      delete rest[field];
+      delete rest[field as string];
     }
     return rest;
   });
@@ -48,24 +47,29 @@ export function serializeItems<T extends Record<string, unknown>>(
  * @param parseFn - Function to parse and normalize items.
  * @param callback - Callback with array of items.
  */
-export function importFromFile<T extends Record<string, unknown>>(
+export async function importFromFile<T extends Record<string, unknown>>(
   event: React.ChangeEvent<HTMLInputElement>,
   parseFn: (json: string) => T[],
   callback: (items: T[]) => void,
-) {
+  onError?: (error: Error) => void,
+): Promise<void> {
   const file = event.target.files?.[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (e: ProgressEvent<FileReader>) => {
-    try {
-      const items = parseFn(e.target?.result as string);
-      callback(items);
-    } catch (err) {
-      alert((err as Error)?.message || "Failed to import. Invalid JSON.");
+
+  try {
+    const text = await file.text();
+    const items = parseFn(text);
+    callback(items);
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error("Invalid JSON file.");
+    if (onError) {
+      onError(error);
+    } else {
+      console.error("importFromFile error:", error);
     }
-  };
-  reader.readAsText(file);
-  event.target.value = "";
+  } finally {
+    event.target.value = "";
+  }
 }
 
 /**
@@ -75,15 +79,17 @@ export function importFromFile<T extends Record<string, unknown>>(
  * @param omitFields - Fields to omit from each item.
  * @param defaultName - Default name if filename not provided.
  */
-export function exportToFile<T extends object & { name?: unknown }>(
+export function exportToFile<
+  T extends Record<string, unknown> & { name?: unknown },
+>(
   items: T | T[],
   filename?: string,
   omitFields: (keyof T | string)[] = [],
   defaultName = "items",
-) {
+): void {
   if (!items) return;
   const arr = Array.isArray(items) ? items : [items];
-  const pretty = serializeItems(items, omitFields as string[]);
+  const pretty = serializeItems(arr, omitFields);
   const blob = new Blob([pretty], { type: "application/json" });
 
   const downloadName =

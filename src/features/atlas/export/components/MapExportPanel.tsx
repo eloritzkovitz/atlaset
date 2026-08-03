@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
@@ -82,23 +82,36 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
     if (!sharer && user?.displayName) {
       setSharer(user.displayName);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.displayName]);
+  }, [user?.displayName, sharer]);
 
   // Encode map data into shareable code
-  const code = encodeMapData({
-    layers: [
+  const code = useMemo(() => {
+    const layers = [
       ...(includeLayers ? layersToShare : []),
       ...(!activeSavedMap &&
       includeVisitedCountries &&
       visitedCountriesLayer.countries.length > 0
         ? [visitedCountriesLayer]
         : []),
-    ],
-    mapName: effectiveMapName.trim() || undefined,
-    sharer: sharer.trim() || undefined,
-    markers: markersToShare,
-  });
+    ];
+
+    return encodeMapData({
+      layers,
+      mapName: effectiveMapName.trim() || undefined,
+      sharer: sharer.trim() || undefined,
+      markers: includeMarkers ? markersToShare : [],
+    });
+  }, [
+    includeLayers,
+    layersToShare,
+    activeSavedMap,
+    includeVisitedCountries,
+    visitedCountriesLayer,
+    effectiveMapName,
+    sharer,
+    includeMarkers,
+    markersToShare,
+  ]);
 
   return (
     <Panel
