@@ -48,7 +48,9 @@ export function exportToCSV<T>(
   );
 
   const csvContent = [headers, ...rows].join("\n");
-  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["\uFEFF" + csvContent], {
+    type: "text/csv;charset=utf-8;",
+  });
 
   const finalFilename = filename.endsWith(".csv")
     ? filename

@@ -63,7 +63,7 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 ### Frontend
 
 - **React & TypeScript** — Modern, strongly-typed UI development
-- **Redux Toolkit** — Predictable state management
+- **Redux Toolkit (with RTK Query)** — Predictable state management and robust API fetching/caching
 - **Vite** — Fast build tool and development server
 - **Tailwind CSS** — Utility-first CSS framework for responsive, modern design
 - **i18next & react-i18next** — Internationalization support
