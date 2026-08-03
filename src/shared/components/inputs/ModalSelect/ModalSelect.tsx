@@ -8,7 +8,7 @@ import {
   ModalHeader,
   SearchInput,
 } from "@components";
-import { filterBySearch } from "@utils/filter";
+import { filterBySearch } from "@utils";
 
 interface ModalSelectProps<T> {
   isOpen: boolean;

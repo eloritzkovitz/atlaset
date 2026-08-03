@@ -2,8 +2,7 @@
  * Utility functions for handling country data.
  */
 
-import { extractUniqueSorted } from "@utils/array";
-import { canonicalKey } from "@utils/string";
+import { canonicalKey, extractUniqueSorted } from "@utils";
 import { FLAG_OVERRIDES } from "../constants/flagOverrides";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
 import type {

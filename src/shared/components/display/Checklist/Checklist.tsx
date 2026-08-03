@@ -1,6 +1,6 @@
 import React from "react";
 import { ICONS } from "@constants/icons";
-import { capitalize } from "@utils/string";
+import { capitalize } from "@utils";
 
 export interface ChecklistItem {
   label: string;

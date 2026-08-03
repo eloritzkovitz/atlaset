@@ -1,21 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect } from "vitest";
 import {
   formatTimezones,
   getAltNamesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
 } from "./countryInfo";
-
-vi.mock("@utils/timezone", () => ({
-  timezoneOffsets: vi.fn(),
-  timezoneRangeLines: vi.fn(),
-}));
-
-import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
-
-beforeEach(() => {
-  vi.resetAllMocks();
-});
 
 describe("getLanguagesDisplay", () => {
   it("returns comma-separated string", () => {
@@ -75,43 +64,32 @@ describe("formatTimezones", () => {
     expect(formatTimezones(undefined)).toBe("—");
   });
 
-  it("returns single offset string when timezoneOffsets returns one offset", () => {
-    (timezoneOffsets as unknown as ReturnType<typeof vi.fn>).mockReturnValue([
-      "UTC+02:00",
-    ]);
-    const result = formatTimezones(["Europe/Berlin"]);
-    expect(result).toBe("UTC+02:00");
-    expect(timezoneOffsets).toHaveBeenCalledWith("Europe/Berlin", " (summer)");
-  });
-
-  it("returns two-line array when timezoneOffsets returns two offsets (DST)", () => {
-    (timezoneOffsets as unknown as ReturnType<typeof vi.fn>).mockReturnValue([
-      "UTC+01:00",
-      "UTC+02:00",
-    ]);
-    const result = formatTimezones(["Europe/Berlin"]);
-    expect(Array.isArray(result)).toBe(true);
-    expect(result).toEqual(["UTC+01:00", "UTC+02:00"]);
-  });
-
-  it("returns single line from timezoneRangeLines for multiple timezones", () => {
-    (timezoneRangeLines as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      ["UTC+00:00"],
-    );
-    const result = formatTimezones(["Europe/London", "UTC"]);
+  it("formats single timezone without DST as a single string", () => {
+    const result = formatTimezones(["UTC"]);
     expect(result).toBe("UTC+00:00");
-    expect(timezoneRangeLines).toHaveBeenCalledWith(
-      ["Europe/London", "UTC"],
-      " (summer)",
-    );
   });
 
-  it("returns two-line array from timezoneRangeLines for multiple timezones", () => {
-    (timezoneRangeLines as unknown as ReturnType<typeof vi.fn>).mockReturnValue(
-      ["UTC-08:00", "UTC+02:00"],
-    );
-    const result = formatTimezones(["America/Los_Angeles", "Europe/Berlin"]);
+  it("formats single timezone with DST as a two-element array (hits line 64)", () => {
+    const result = formatTimezones(["Europe/Berlin"]);
     expect(Array.isArray(result)).toBe(true);
-    expect(result).toEqual(["UTC-08:00", "UTC+02:00"]);
+    expect(result).toHaveLength(2);
+  });
+
+  it("uses custom translation function for summer label (hits line 57)", () => {
+    const mockT = vi.fn(() => "été");
+    const result = formatTimezones(["Europe/Paris"], mockT);
+
+    expect(mockT).toHaveBeenCalledWith("countries.details.overview.summer");
+    expect(JSON.stringify(result)).toContain("été");
+  });
+
+  it("returns a single line for multiple timezones that collapse into one range line (hits line 68)", () => {
+    const result = formatTimezones(["UTC", "Atlantic/Reykjavik"]);
+    expect(typeof result).toBe("string");
+  });
+
+  it("returns a two-element array for multiple timezones spanning DST ranges", () => {
+    const result = formatTimezones(["Europe/London", "America/New_York"]);
+    expect(Array.isArray(result)).toBe(true);
   });
 });

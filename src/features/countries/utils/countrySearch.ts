@@ -3,8 +3,7 @@
  */
 
 import type { VisitContext } from "@features/visits";
-import { suggestByPrefix } from "@utils/search";
-import { timezoneOffsets } from "@utils/timezone";
+import { suggestByPrefix, timezoneOffsets } from "@utils";
 import { getTranscontinentalInfo } from "./countryData";
 import {
   COUNTRY_QUALIFIER_MAP,

@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import ReactDOM from "react-dom";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import type { DropdownOption } from "@types";
-import { flattenOptions } from "@utils/dropdown";
+import { flattenOptions } from "@utils";
 import { DropdownChevron } from "./DropdownChevron";
 import { DropdownOptions } from "./DropdownOptions";
 import { SelectedOptions } from "./SelectedOptions";

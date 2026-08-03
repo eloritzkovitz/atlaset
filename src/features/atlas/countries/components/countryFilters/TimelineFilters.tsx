@@ -4,7 +4,7 @@ import { CollapsibleHeader, NumberInput, SelectInput } from "@components";
 import { useTrips } from "@contexts/TripsContext";
 import { useTimeline } from "@features/atlas/timeline";
 import { getVisitedCountriesUpToYear } from "@features/visits";
-import { clamp } from "@utils/number";
+import { clamp } from "@utils";
 import { timelineFiltersConfig } from "../../config/filtersConfig";
 
 interface TimelineFiltersProps {

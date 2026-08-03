@@ -1,5 +1,6 @@
 import type { TableColumn } from "@components";
 import { ICONS } from "@constants/icons";
+import { formatPercent } from "@utils";
 import type { MonthRow, VisitedCountryRankRow, YearRow } from "../types";
 
 export const VISITED_COUNTRIES_TABLE_COLUMNS: TableColumn<VisitedCountryRankRow>[] =
@@ -103,8 +104,8 @@ export const MONTH_TABLE_COLUMNS: TableColumn<MonthRow>[] = [
     icon: ICONS.tripFilters,
     iconClass: "text-yellow-400",
     sortable: true,
-    render: (row) => `${row.percentage.toFixed(1)}%`,
-    exportValue: (row) => Number(row.percentage.toFixed(1)),
+    render: (row) => formatPercent(row.percentage / 100, { decimals: 1 }),
+    exportValue: (row) => Number(row.percentage.toFixed(2)),
   },
 ];
 

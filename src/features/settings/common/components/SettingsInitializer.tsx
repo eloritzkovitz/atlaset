@@ -10,7 +10,7 @@ import {
   selectAuthReady,
   selectAuthUser,
 } from "@features/user/auth/slices/authSlice";
-import { setAppDateLocale } from "@utils/date";
+import { setAppDateLocale } from "@utils";
 import { loadSettings, selectSettings } from "../slices/settingsSlice";
 import { applyTheme } from "../../display/utils/theme";
 

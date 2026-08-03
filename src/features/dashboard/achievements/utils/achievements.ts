@@ -11,8 +11,9 @@ import {
   type Trip,
 } from "@features/trips";
 import { buildVisitContext } from "@features/visits";
-import type { Achievement, AchievementStatus, Criteria } from "../types";
+import { formatFraction } from "@utils";
 import { getAchievementCountries } from "./achievementFilters";
+import type { Achievement, AchievementStatus, Criteria } from "../types";
 
 /**
  * Get the count of visited countries for the achievement
@@ -222,6 +223,7 @@ export function getProgress(
   visited: { isVisitedCountry: (iso: string) => boolean },
   trips?: Trip[],
   homeCountry?: string,
+  showPercent = false,
 ) {
   const { current, total } = getProgressMetrics(
     achievement,
@@ -230,7 +232,10 @@ export function getProgress(
     trips,
     homeCountry,
   );
-  return total ? `${current}/${total}` : "";
+
+  if (!total) return "";
+
+  return formatFraction(current, total, { showPercent });
 }
 
 /**

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { useDebounce } from "@hooks";
+import { formatPercent } from "@utils";
 import { useSoundSettings } from "../hooks/useSoundSettings";
 import { SettingsCard } from "../../common/components/SettingsCard";
 import { SettingsToggle } from "../../common/components/SettingsToggle";
@@ -59,7 +60,7 @@ export function SoundSettingsSection() {
             className="flex-1"
           />
           <span className="settings-value w-10 text-right">
-            {Math.round(localVolume * 100)}%
+            {formatPercent(localVolume, 1)}
           </span>
         </div>
       </div>

@@ -8,7 +8,7 @@ import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { usePageTitle } from "@hooks";
 import { Container } from "@layouts";
-import { getQueryParam } from "@utils/url";
+import { getQueryParam } from "@utils";
 
 export default function SearchPage() {
   const { user: currentUser } = useAuth();

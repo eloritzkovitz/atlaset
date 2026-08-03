@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useTrips } from "@contexts/TripsContext";
 import { isAbroadTrip } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user/profile";
-import { formatMonthValues } from "@utils/date";
+import { formatMonthValues } from "@utils";
 import { MONTH_COLORS } from "../constants/statistics";
 
 /**

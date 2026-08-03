@@ -3,7 +3,7 @@ import { HexColorPicker } from "react-colorful";
 import { useTranslation } from "react-i18next";
 import { ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
-import { hexToRgba } from "@utils/color";
+import { hexToRgba } from "@utils";
 import { ActionButton } from "../Button/ActionButton";
 import { ColorDot } from "../../display/ColorDot";
 import { Modal } from "../../overlay/Modal/Modal";

@@ -1,4 +1,5 @@
 import React from "react";
+import { formatPercent } from "@utils";
 
 interface PieLegendCardProps {
   label: string;
@@ -19,42 +20,32 @@ export const PieLegendCard: React.FC<PieLegendCardProps> = ({
   onMouseLeave,
   direction = "vertical",
 }) => {
-  if (direction === "horizontal") {
-    return (
-      <div
-        className={`flex flex-row items-center gap-2 bg-surface px-3 py-2 rounded-lg shadow-sm transition ${
-          isActive ? "scale-105 ring-2 ring-teal-400 z-10" : "hover:scale-105"
-        }`}
-        style={{ zIndex: isActive ? 1 : 0 }}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      >
-        <div
-          className="w-4 h-4 rounded-full"
-          style={{ backgroundColor: color }}
-        ></div>
-        <span className="text-sm font-medium">{label}</span>
-        <span className="text-xs text-text">{percentage.toFixed(1)}%</span>
-      </div>
-    );
-  }
+  const isHorizontal = direction === "horizontal";
+  const formattedPercent = formatPercent(percentage / 100, { decimals: 1 });
 
-  // vertical (default)
   return (
     <div
-      className={`flex flex-col items-center bg-surface p-4 rounded-lg shadow-sm transition ${
-        isActive ? "scale-110 ring-2 ring-teal-400 z-10" : "hover:scale-105"
+      className={`flex bg-surface rounded-lg shadow-sm transition ${
+        isHorizontal
+          ? "flex-row items-center gap-2 px-3 py-2"
+          : "flex-col items-center p-4"
+      } ${
+        isActive
+          ? `${isHorizontal ? "scale-105" : "scale-110"} ring-2 ring-teal-400 z-10`
+          : "hover:scale-105"
       }`}
       style={{ zIndex: isActive ? 1 : 0 }}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       <div
-        className="w-8 h-8 rounded-full"
+        className={`rounded-full ${isHorizontal ? "w-4 h-4" : "w-8 h-8"}`}
         style={{ backgroundColor: color }}
-      ></div>
-      <p className="text-sm font-medium mt-2">{label}</p>
-      <p className="text-xs text-text">{percentage.toFixed(1)}%</p>
+      />
+      <span className={`text-sm font-medium ${isHorizontal ? "" : "mt-2"}`}>
+        {label}
+      </span>
+      <span className="text-xs text-text">{formattedPercent}</span>
     </div>
   );
 };

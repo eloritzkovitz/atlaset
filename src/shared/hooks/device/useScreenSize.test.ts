@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest";
-import * as env from "../../utils/env";
+import * as env from "@utils";
 import * as eventHook from "../dom/useEventListener";
 import { useScreenSize } from "./useScreenSize";
 

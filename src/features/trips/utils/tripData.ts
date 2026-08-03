@@ -2,7 +2,7 @@
  * Utility functions for trip data manipulation.
  */
 
-import { extractUniqueValues } from "@utils/array";
+import { extractUniqueValues } from "@utils";
 import type { Trip } from "../types";
 
 /**

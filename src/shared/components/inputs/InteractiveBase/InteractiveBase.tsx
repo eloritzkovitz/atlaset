@@ -1,6 +1,6 @@
 import React, { type ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { isExternalUrl } from "@utils/url";
+import { isExternalUrl } from "@utils";
 
 export interface InteractiveBaseProps {
   url?: string;

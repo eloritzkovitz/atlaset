@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useMemo, type ReactNode } from "react";
-import { canonicalKey } from "@utils/string";
+import { canonicalKey } from "@utils";
 import type { Country, Currency } from "../../types";
 import { getTranscontinentalInfo } from "../../utils/countryData";
 import { useCountryData } from "../../hooks/useCountryData";

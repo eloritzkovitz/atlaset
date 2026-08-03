@@ -4,8 +4,7 @@
 
 import { getAutoTripStatus, isCompletedTrip } from "@features/trips";
 import type { Trip, TripStatus } from "@features/trips/types";
-import { extractUniqueValues } from "@utils/array";
-import { getYear, getYearNumber } from "@utils/date";
+import { extractUniqueValues, getYear, getYearNumber } from "@utils";
 import type { VisitContext } from "../types";
 
 /**

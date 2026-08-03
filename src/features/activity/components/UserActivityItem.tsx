@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { formatDate } from "@utils/date";
+import { formatDate } from "@utils";
 import type { UserActivity, ActivityDetails } from "../types";
 import { getActivityDescription, getActivityIcon } from "../utils/activity";
 

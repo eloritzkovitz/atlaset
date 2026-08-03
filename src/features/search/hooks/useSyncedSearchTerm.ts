@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { getQueryParam } from "@utils/url";
+import { getQueryParam } from "@utils";
 
 /**
  * Syncs a search term state with the query param in the URL.

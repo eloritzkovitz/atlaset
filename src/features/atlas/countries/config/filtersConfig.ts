@@ -1,9 +1,12 @@
 import type { Layer } from "@features/atlas/layers/types";
 import { type GeoType, type SovereigntyStatus } from "@features/countries";
 import type { FilterConfig, FilterOption } from "@types";
-import { mapOptions } from "@utils/array";
-import { createSelectFilter } from "@utils/filter";
-import { capitalize, capitalizeWords } from "@utils/string";
+import {
+  capitalize,
+  capitalizeWords,
+  createSelectFilter,
+  mapOptions,
+} from "@utils";
 
 export const ALL_GEO_TYPES: readonly GeoType[] = [
   "Coastal",

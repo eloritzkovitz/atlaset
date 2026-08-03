@@ -8,6 +8,7 @@ import {
   type Chart as ChartJS,
   type TooltipItem,
 } from "chart.js";
+import { formatPercent } from "@utils";
 
 // Register required elements for pie/doughnut charts
 Chart.register(ArcElement, Tooltip, Legend);
@@ -40,8 +41,8 @@ export const PieChart: React.FC<PieChartProps> = ({
     datasets: [
       {
         data,
-        backgroundColor: colors,   
-        borderColor: "transparent",     
+        backgroundColor: colors,
+        borderColor: "transparent",
         borderWidth: 0,
         hoverOffset: 32,
       },
@@ -61,8 +62,8 @@ export const PieChart: React.FC<PieChartProps> = ({
           label: function (context: TooltipItem<"pie">) {
             const label = context.label || "";
             const value = context.parsed as number;
-            const percent = total ? ((value / total) * 100).toFixed(1) : 0;
-            return [`\u2B24 ${label}`, `${percent}%`];
+            const percent = formatPercent(value, total, { decimals: 1 });
+            return [`\u2B24 ${label}`, percent];
           },
           labelTextColor: function (context: TooltipItem<"pie">) {
             const dataset = context.dataset;

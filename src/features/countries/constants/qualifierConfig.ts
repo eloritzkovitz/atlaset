@@ -1,7 +1,7 @@
 /**
  * Shared qualifier and sort configuration for countries.
  */
-import { keysOf } from "@utils/object";
+import { keysOf } from "@utils";
 import type { CountryQualifierConfig } from "../types";
 
 export const COUNTRY_QUALIFIER_MAP: Record<string, CountryQualifierConfig> = {

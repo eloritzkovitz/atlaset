@@ -8,6 +8,7 @@ import { useAuth } from "@features/user/auth";
 import { useHomeCountry, useUserProfile } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import { useAnimatedNumber } from "@hooks";
+import { formatFraction } from "@utils";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
 import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi";
@@ -47,7 +48,7 @@ export function OverviewGrid() {
       }),
       value: countriesLoading
         ? "..."
-        : `${animatedVisitedCountries}/${totalCountries}`,
+        : formatFraction(animatedVisitedCountries, totalCountries),
       icon: <ICONS.exploration className="text-5xl text-info" />,
       link: "/dashboard/exploration",
     },
@@ -55,7 +56,7 @@ export function OverviewGrid() {
       label: t("overview.stats.achievements", { defaultValue: "Achievements" }),
       value: achievementsLoading
         ? "..."
-        : `${animatedCompletedCount}/${achievementsCount}`,
+        : formatFraction(animatedCompletedCount, achievementsCount),
       icon: <ICONS.achievements className="text-5xl text-warning" />,
       link: "/dashboard/achievements",
     },

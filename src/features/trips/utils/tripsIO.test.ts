@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import Papa from "papaparse";
-import * as jsonUtils from "@utils/json";
+import * as jsonUtils from "@utils";
 import {
   importTripsFromFile,
   exportTripsToCSV,
@@ -107,40 +107,26 @@ describe("tripsIO utils", () => {
 
   describe("exportTripsToCSV", () => {
     it("safely bails if trips collection is empty", () => {
-      const spy = vi.spyOn(document, "createElement");
+      const exportCSVSpy = vi
+        .spyOn(jsonUtils, "exportToCSV")
+        .mockImplementation(() => {});
+
       exportTripsToCSV([]);
-      expect(spy).not.toHaveBeenCalled();
+      expect(exportCSVSpy).not.toHaveBeenCalled();
     });
 
-    it("generates csv text stripping out the ID column and triggers a simulated click", () => {
-      const mockAnchor = {
-        setAttribute: vi.fn(),
-        click: vi.fn(),
-      } as unknown as HTMLAnchorElement;
-
-      vi.spyOn(document, "createElement").mockImplementation(
-        (tagName: string) => {
-          if (tagName === "a") return mockAnchor;
-          return document.createElement(tagName);
-        },
-      );
-
-      vi.spyOn(document.body, "appendChild").mockImplementation((node) => node);
-      vi.spyOn(document.body, "removeChild").mockImplementation((node) => node);
-
-      window.URL.createObjectURL = vi.fn(() => "blob:url");
-      window.URL.revokeObjectURL = vi.fn();
+    it("delegates csv generation and download orchestration", () => {
+      const exportCSVSpy = vi
+        .spyOn(jsonUtils, "exportToCSV")
+        .mockImplementation(() => {});
 
       exportTripsToCSV([sampleTrip]);
 
-      expect(mockAnchor.setAttribute).toHaveBeenCalledWith("href", "blob:url");
-      expect(mockAnchor.setAttribute).toHaveBeenCalledWith(
-        "download",
+      expect(exportCSVSpy).toHaveBeenCalledWith(
+        [sampleTrip],
+        expect.any(Array),
         "trips.csv",
       );
-      expect(mockAnchor.click).toHaveBeenCalled();
-      expect(document.body.removeChild).toHaveBeenCalledWith(mockAnchor);
-      expect(window.URL.revokeObjectURL).toHaveBeenCalledWith("blob:url");
     });
   });
 

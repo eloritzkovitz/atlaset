@@ -4,8 +4,7 @@
 
 import type { Layer } from "@features/atlas/layers/types";
 import type { Marker } from "@features/atlas/markers/types";
-import { downloadBlob, downloadCanvas } from "@utils/file";
-import { exportToFile } from "@utils/json";
+import { downloadBlob, downloadCanvas, exportToFile } from "@utils";
 import { getExportFilename, isImageFormat } from "./format";
 import type {
   ExportFormat,

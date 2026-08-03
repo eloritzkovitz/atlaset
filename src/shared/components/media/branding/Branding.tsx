@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { isWindowDefined } from "@utils/env";
+import { isWindowDefined } from "@utils";
 
 interface BrandingProps {
   title?: string;

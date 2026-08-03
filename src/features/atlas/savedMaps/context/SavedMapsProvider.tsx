@@ -19,7 +19,7 @@ import { normalizeMarkers } from "@features/atlas/markers/utils/markers";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
-import { getQueryParam } from "@utils/url";
+import { getQueryParam } from "@utils";
 import {
   SavedMapsContext,
   type SavedMapsContextValue,

@@ -13,7 +13,7 @@ import {
   type Trip,
 } from "@features/trips";
 import { useHomeCountry } from "@features/user/profile";
-import { darkenHexColor } from "@utils/color";
+import { darkenHexColor } from "@utils";
 import { CalendarToolbar } from "./CalendarToolbar";
 import { type CalendarView, type TripEvent } from "../types";
 import { getNextCalendarDate } from "../utils/navigation";

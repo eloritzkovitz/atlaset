@@ -7,39 +7,20 @@ import {
   exportSvgAsImage,
   exportMapDataAsJson,
 } from "./mapExport";
-import * as fileUtils from "@utils/file";
-import * as jsonUtils from "@utils/json";
-
-vi.mock("@utils/file", () => ({
-  downloadBlob: vi.fn(),
-  downloadCanvas: vi.fn(),
-}));
-
-vi.mock("@utils/json", () => ({
-  exportToFile: vi.fn(),
-}));
+import * as utils from "@utils";
 
 describe("exportMap Complete Test Suite", () => {
-  let downloadBlobSpy: any;
-  let downloadCanvasSpy: any;
-  let exportToFileSpy: any;
-
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
 
-    downloadBlobSpy = vi
-      .spyOn(fileUtils, "downloadBlob")
-      .mockImplementation(() => {});
-    downloadCanvasSpy = vi
-      .spyOn(fileUtils, "downloadCanvas")
-      .mockImplementation(() => Promise.resolve());
-    exportToFileSpy = vi
-      .spyOn(jsonUtils, "exportToFile")
-      .mockImplementation(() => {});
+    vi.spyOn(utils, "downloadBlob").mockImplementation(() => {});
+    vi.spyOn(utils, "downloadCanvas").mockImplementation(() =>
+      Promise.resolve(),
+    );
+    vi.spyOn(utils, "exportToFile").mockImplementation(() => {});
   });
 
   afterEach(() => {
-    vi.clearAllMocks();
     vi.restoreAllMocks();
   });
 
@@ -84,7 +65,7 @@ describe("exportMap Complete Test Suite", () => {
         svgOptions: mockSvgOptions as any,
         imageOptions: mockImageOptions as any,
       });
-      expect(downloadBlobSpy).not.toHaveBeenCalled();
+      expect(utils.downloadBlob).not.toHaveBeenCalled();
     });
 
     it("routes JSON format immediately and completely skips the SVG ref check", () => {
@@ -95,7 +76,7 @@ describe("exportMap Complete Test Suite", () => {
         imageOptions: mockImageOptions as any,
         jsonData: mockJsonData,
       });
-      expect(exportToFileSpy).toHaveBeenCalledWith(
+      expect(utils.exportToFile).toHaveBeenCalledWith(
         mockJsonData,
         "atlas-data.json",
       );
@@ -109,8 +90,8 @@ describe("exportMap Complete Test Suite", () => {
         svgOptions: mockSvgOptions as any,
         imageOptions: mockImageOptions as any,
       });
-      expect(downloadBlobSpy).toHaveBeenCalled();
-      expect(downloadBlobSpy.mock.calls[0][1]).toBe("map.svg");
+      expect(utils.downloadBlob).toHaveBeenCalled();
+      expect(vi.mocked(utils.downloadBlob).mock.calls[0][1]).toBe("map.svg");
     });
   });
 
@@ -134,13 +115,12 @@ describe("exportMap Complete Test Suite", () => {
         getPropertyValue: (prop: string) =>
           prop === "fill" ? "rgb(0, 0, 0)" : "",
       };
-      const getComputedStyleSpy = vi
-        .spyOn(window, "getComputedStyle")
-        .mockImplementation(() => styleStub as any);
+      vi.spyOn(window, "getComputedStyle").mockImplementation(
+        () => styleStub as any,
+      );
 
       const clone = prepareSvgClone(svg, true, true);
       expect(clone).toBeDefined();
-      getComputedStyleSpy.mockRestore();
     });
 
     it("covers structural exit breaks inside getCorrespondingOriginal node tracking loop", () => {
@@ -179,7 +159,7 @@ describe("exportMap Complete Test Suite", () => {
       svg.setAttribute("viewBox", "invalid_string_data");
 
       exportSvgAsImage(svg, "test.png", "png", 1, false);
-      expect(downloadCanvasSpy).not.toHaveBeenCalled();
+      expect(utils.downloadCanvas).not.toHaveBeenCalled();
     });
 
     it("triggers image resolution downscale compression ceilings if sizes cross bounds", async () => {
@@ -190,7 +170,6 @@ describe("exportMap Complete Test Suite", () => {
 
       exportSvgAsImage(svg, "test-capped.png", "png", 3, false, 2000);
       expect(warnSpy).toHaveBeenCalled();
-      warnSpy.mockRestore();
     });
 
     it.each([
@@ -202,20 +181,18 @@ describe("exportMap Complete Test Suite", () => {
       async (imgFormat, scaleValue) => {
         const mockDrawImage = vi.fn();
 
-        const getContextSpy = vi
-          .spyOn(HTMLCanvasElement.prototype, "getContext")
-          .mockImplementation(
-            () =>
-              ({
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: "high",
-                clearRect: vi.fn(),
-                save: vi.fn(),
-                fillRect: vi.fn(),
-                restore: vi.fn(),
-                drawImage: mockDrawImage,
-              }) as any,
-          );
+        vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+          () =>
+            ({
+              imageSmoothingEnabled: true,
+              imageSmoothingQuality: "high",
+              clearRect: vi.fn(),
+              save: vi.fn(),
+              fillRect: vi.fn(),
+              restore: vi.fn(),
+              drawImage: mockDrawImage,
+            }) as any,
+        );
 
         const srcPropDesc = Object.getOwnPropertyDescriptor(
           window.Image.prototype,
@@ -247,12 +224,11 @@ describe("exportMap Complete Test Suite", () => {
         });
 
         expect(mockDrawImage).toHaveBeenCalled();
-        expect(downloadCanvasSpy).toHaveBeenCalled();
+        expect(utils.downloadCanvas).toHaveBeenCalled();
 
         if (srcPropDesc) {
           Object.defineProperty(window.Image.prototype, "src", srcPropDesc);
         }
-        getContextSpy.mockRestore();
       },
     );
 
@@ -263,16 +239,14 @@ describe("exportMap Complete Test Suite", () => {
         "src",
       );
 
-      const getContextSpy = vi
-        .spyOn(HTMLCanvasElement.prototype, "getContext")
-        .mockImplementation(
-          () =>
-            ({
-              imageSmoothingEnabled: true,
-              clearRect: vi.fn(),
-              drawImage: vi.fn(),
-            }) as any,
-        );
+      vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+        () =>
+          ({
+            imageSmoothingEnabled: true,
+            clearRect: vi.fn(),
+            drawImage: vi.fn(),
+          }) as any,
+      );
 
       Object.defineProperty(window.Image.prototype, "src", {
         set() {
@@ -291,8 +265,6 @@ describe("exportMap Complete Test Suite", () => {
       if (srcPropDesc) {
         Object.defineProperty(window.Image.prototype, "src", srcPropDesc);
       }
-      getContextSpy.mockRestore();
-      errorSpy.mockRestore();
     });
   });
 
@@ -303,18 +275,16 @@ describe("exportMap Complete Test Suite", () => {
       "src",
     );
 
-    const getContextSpy = vi
-      .spyOn(HTMLCanvasElement.prototype, "getContext")
-      .mockImplementation(
-        () =>
-          ({
-            imageSmoothingEnabled: true,
-            clearRect: vi.fn(),
-            drawImage: () => {
-              throw new Error("Canvas pipeline execution corruption failure");
-            },
-          }) as any,
-      );
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockImplementation(
+      () =>
+        ({
+          imageSmoothingEnabled: true,
+          clearRect: vi.fn(),
+          drawImage: () => {
+            throw new Error("Canvas pipeline execution corruption failure");
+          },
+        }) as any,
+    );
 
     Object.defineProperty(window.Image.prototype, "src", {
       set() {
@@ -333,14 +303,12 @@ describe("exportMap Complete Test Suite", () => {
     if (srcPropDesc) {
       Object.defineProperty(window.Image.prototype, "src", srcPropDesc);
     }
-    getContextSpy.mockRestore();
-    errorSpy.mockRestore();
   });
 
   describe("exportMapDataAsJson", () => {
     it("handles fallback default argument values", () => {
       exportMapDataAsJson(mockJsonData);
-      expect(exportToFileSpy).toHaveBeenCalledWith(
+      expect(utils.exportToFile).toHaveBeenCalledWith(
         mockJsonData,
         "atlas-export.json",
       );

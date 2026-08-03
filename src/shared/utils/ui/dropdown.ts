@@ -3,7 +3,7 @@
  */
 
 import type { DropdownOption, Option } from "@types";
-import { capitalizeWords } from "@utils/string";
+import { capitalizeWords } from "../primitives/string";
 
 /**
  * Type guard to check if a dropdown option is a plain option with a value in the allowed list.

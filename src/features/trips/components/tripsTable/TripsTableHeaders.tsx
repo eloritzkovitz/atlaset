@@ -10,7 +10,7 @@ import {
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
 import type { FilterOption, Option } from "@types";
-import { isAllowedOption, isStringOption } from "@utils/dropdown";
+import { isAllowedOption, isStringOption } from "@utils";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import { ALL_TRIP_CATEGORIES } from "../../constants/trips";
 import type {

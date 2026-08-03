@@ -1,5 +1,5 @@
 import type { TFunction } from "i18next";
-import { canonicalKey } from "@utils/string";
+import { canonicalKey } from "@utils";
 
 /** Translate a region label when the region appears in the map; otherwise return raw. */
 export function translateRegionLabel(

@@ -9,7 +9,7 @@ import {
 } from "@features/countries";
 import type { Trip } from "@features/trips/types";
 import { getTripDays } from "@features/trips/utils/trips";
-import { formatDate } from "@utils/date";
+import { formatDate } from "@utils";
 
 interface TripListProps {
   trips: Trip[];

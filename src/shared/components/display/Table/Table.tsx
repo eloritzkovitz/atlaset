@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSort } from "@hooks";
 import type { SortKey } from "@types";
-import { sortItems } from "@utils/sort";
+import { sortItems } from "@utils";
 import { SortableFilterHeader } from "./SortableFilterHeader";
 import { TableToolbar } from "./TableToolbar";
 import { getNextSortState, renderCellValue, getRowKey } from "./utils";

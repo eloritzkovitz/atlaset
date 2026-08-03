@@ -3,13 +3,13 @@
  */
 
 import type { Layer } from "../types";
-import { rgbaToHex } from "@utils/color";
 import {
-  parseAndNormalize,
-  serializeItems,
-  importFromFile,
   exportToFile,
-} from "@utils/json";
+  importFromFile,
+  parseAndNormalize,
+  rgbaToHex,
+  serializeItems,
+} from "@utils";
 
 /**
  * Parse and normalize one or more layers from JSON string or object.

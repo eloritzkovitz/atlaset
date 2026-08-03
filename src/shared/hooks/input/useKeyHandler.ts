@@ -4,7 +4,7 @@ import {
   isRestrictedSingleKey,
   isTextInputFocused,
   matchModifiers,
-} from "@utils/keyboard";
+} from "@utils";
 
 export interface KeyHandlerOptions {
   enabled?: boolean;

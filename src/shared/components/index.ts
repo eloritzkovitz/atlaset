@@ -10,6 +10,7 @@ export { getBaseMarkdownComponents } from "./display/MarkdownRenderer/MarkdownCo
 export { MarkdownFileRenderer } from "./display/MarkdownRenderer/MarkdownFileRenderer";
 export { PanelListItem } from "./display/PanelListItem/PanelListItem";
 export { PieLegendCard } from "./display/PieChart/PieLegendCard";
+export { RankBadge } from "./display/RankBadge";
 export { SectionHeader } from "./display/SectionHeader";
 export { SortableFilterHeader } from "./display/Table/SortableFilterHeader";
 export { Table, type TableColumn } from "./display/Table/Table";

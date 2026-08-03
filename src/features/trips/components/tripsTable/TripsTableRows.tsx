@@ -4,7 +4,7 @@ import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { createCountryMap, type Country } from "@features/countries";
-import { formatDate } from "@utils/date";
+import { formatDate } from "@utils";
 import { TripActions } from "./TripActions";
 import { CategoriesList } from "../common/CategoriesList";
 import { TripCountriesList } from "../common/TripCountriesList";

@@ -1,5 +1,8 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
+import type { KeyCommand } from "@types";
 import {
+  formatKeyCommand,
+  formatShortcut,
   isRestrictedSingleKey,
   isTextInputFocused,
   matchModifiers,
@@ -182,6 +185,45 @@ describe("keyboard utils", () => {
     it("should ignore unrequired modifiers being active", () => {
       const event = createMockEvent({ ctrlKey: true, shiftKey: true });
       expect(matchModifiers(event, ["Ctrl"])).toBe(true);
+    });
+  });
+
+  describe("formatShortcut", () => {
+    it.each([
+      [null, ""],
+      [undefined, ""],
+      ["nonexistent.id" as any, ""],
+      ["shortcuts.show", "Shift+?"],
+    ])("formatShortcut(%p) -> '%s'", (id, expected) => {
+      expect(formatShortcut(id)).toBe(expected);
+    });
+  });
+
+  describe("formatKeyCommand", () => {
+    const defaultCmd = {
+      id: "test-id" as any,
+      category: "General",
+      labelKey: "test",
+    };
+
+    it.each([
+      [
+        { ...defaultCmd, key: "a", modifiers: ["Meta", "Shift"] },
+        "Cmd+Shift+A",
+      ],
+      [{ ...defaultCmd, key: "k", modifiers: ["Option" as any] }, "Option+K"],
+      [{ ...defaultCmd, key: " ", modifiers: [] }, "Space"],
+      [{ ...defaultCmd, key: "ArrowUp", modifiers: [] }, "Up"],
+      [{ ...defaultCmd, key: "ArrowDown", modifiers: [] }, "Down"],
+      [{ ...defaultCmd, key: "ArrowLeft", modifiers: [] }, "Left"],
+      [{ ...defaultCmd, key: "ArrowRight", modifiers: [] }, "Right"],
+      [{ ...defaultCmd, key: "Esc", modifiers: [] }, "Esc"],
+      [
+        { ...defaultCmd, key: "z", modifiers: ["Ctrl", "Shift"] },
+        "Ctrl+Shift+Z",
+      ],
+    ])("formats command correctly", (cmd, expected) => {
+      expect(formatKeyCommand(cmd as KeyCommand)).toBe(expected);
     });
   });
 });

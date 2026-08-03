@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card, ActionButton } from "@components";
 import { useAudio } from "@contexts/AudioContext";
 import { useAnimatedNumber } from "@hooks";
-import { formatTimeSeconds } from "@utils/date";
+import { formatPercent, formatTimeSeconds } from "@utils";
 
 export interface GameOverCardProps {
   type?: "gameover" | "complete";
@@ -28,19 +28,21 @@ export function GameOverCard({
   const navigate = useNavigate();
   const handleReturn = onReturn || (() => navigate("/quizzes"));
 
-  // Determine if it's a completed quiz
   const isComplete = type === "complete";
 
-  // Animated numbers for score, streak, time using hook with duration
   const animatedScore = useAnimatedNumber(score ?? 0, 640);
   const animatedStreak = useAnimatedNumber(streak ?? 0, 640);
   const animatedTime = useAnimatedNumber(timeUsed ?? 0, 640);
 
-  // Calculate success percentage if possible
-  let percent: number | null = null;
-  if (typeof score === "number" && typeof maxQuestions === "number" && maxQuestions > 0) {
-    percent = Math.round((score / maxQuestions) * 100);
-  }
+  // Validate inputs for percentage calculations
+  const hasValidScore =
+    typeof score === "number" &&
+    typeof maxQuestions === "number" &&
+    maxQuestions > 0;
+
+  const percent = hasValidScore
+    ? Math.round((score / maxQuestions) * 100)
+    : null;
 
   // Play sound on mount based on result
   useEffect(() => {
@@ -49,15 +51,12 @@ export function GameOverCard({
         play("perfect");
       } else if (percent !== null && percent >= 80) {
         play("good");
-      } else if (percent !== null && percent >= 40) {
-        play("aww");
       } else {
         play("aww");
       }
     } else {
       play("lose");
     }
-    // Only run on mount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -65,6 +64,7 @@ export function GameOverCard({
   let resultHeading = "";
   let resultMessage = "";
   let headingColor = "text-success";
+
   if (percent !== null) {
     if (percent === 100) {
       resultHeading = "Perfect!";
@@ -108,8 +108,10 @@ export function GameOverCard({
             {isComplete
               ? resultMessage || "You completed the quiz! Well done!"
               : "Better luck next time!"}
-            {percent !== null && (
-              <div className="text-base text-muted mt-2">Success rate: {percent}%</div>
+            {hasValidScore && (
+              <div className="text-base text-muted mt-2">
+                Success rate: {formatPercent(score, maxQuestions)}
+              </div>
             )}
           </div>
           {isComplete && (

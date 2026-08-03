@@ -3,8 +3,7 @@
  */
 
 import Papa from "papaparse";
-import { exportToCSV, type CSVColumn } from "@utils/csv";
-import { exportToFile } from "@utils/json";
+import { exportToCSV, exportToFile, type CSVColumn } from "@utils";
 import type { Trip } from "../types";
 
 /**

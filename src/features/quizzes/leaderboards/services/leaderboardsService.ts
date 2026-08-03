@@ -17,7 +17,7 @@ import {
   getDocsData,
   isAuthenticated,
 } from "@lib/firebase";
-import { getArticle } from "@utils/string";
+import { getArticle } from "@utils";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 
 const LEADERBOARD_COLLECTION = "leaderboards";

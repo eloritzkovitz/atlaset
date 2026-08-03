@@ -1,5 +1,5 @@
 import type { DropdownOption } from "@types";
-import { flattenOptions } from "@utils/dropdown";
+import { flattenOptions } from "@utils";
 import { ChipList } from "../../display/Chip/ChipList";
 
 interface SelectedOptionsProps<T> {

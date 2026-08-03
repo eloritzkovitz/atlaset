@@ -1,6 +1,6 @@
 import React from "react";
 import { getBaseMarkdownComponents } from "@components";
-import { hasStringChildren } from "@utils/string";
+import { hasStringChildren } from "@utils";
 
 export const changelogMarkdownComponents = getBaseMarkdownComponents({
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (

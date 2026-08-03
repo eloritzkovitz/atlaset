@@ -5,8 +5,7 @@
 import type { TFunction } from "i18next";
 import type { VisitContext } from "@features/visits";
 import type { SortDirection, SortValue } from "@types";
-import { sortItems } from "@utils/sort";
-import { normalizeString } from "@utils/string";
+import { normalizeString, sortItems } from "@utils";
 import type { Country } from "../types";
 
 /** Sort keys for countries. */

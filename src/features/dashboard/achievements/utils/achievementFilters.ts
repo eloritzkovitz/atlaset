@@ -7,7 +7,7 @@ import {
   type Country,
   type CountryFilterOptions,
 } from "@features/countries";
-import { parseComparator } from "@utils/number";
+import { parseComparator } from "@utils";
 import type { Achievement, Criteria } from "../types";
 
 // Set of non-selector keys that should be ignored when extracting selectors from criteria

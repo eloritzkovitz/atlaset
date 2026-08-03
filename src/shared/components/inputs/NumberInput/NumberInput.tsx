@@ -1,5 +1,5 @@
 import { useId } from "react";
-import { clamp } from "@utils/number";
+import { clamp } from "@utils";
 import { ArrowButton } from "./ArrowButton";
 import { InputBox } from "../InputBox/InputBox";
 import "./NumberInput.css";

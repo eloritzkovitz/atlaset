@@ -3,7 +3,7 @@
  */
 
 import type { FilterConfig, FilterOption } from "@types";
-import { normalizeString } from "./string";
+import { normalizeString } from "../primitives/string";
 
 /**
  * Creates a select filter configuration object.

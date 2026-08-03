@@ -7,7 +7,7 @@ import i18n from "i18next";
 import type { ComponentType, SVGProps } from "react";
 import { ICONS } from "@constants/icons";
 import { getUserCollection, logToGoogleAnalytics } from "@lib/firebase";
-import { formatTimeSeconds } from "@utils/date";
+import { formatTimeSeconds } from "@utils";
 import type { ActivityDetails } from "../types";
 
 /**

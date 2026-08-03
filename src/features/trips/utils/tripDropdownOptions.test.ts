@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import type { TFunction } from "i18next";
 import {
   getCountryDropdownOptions,
@@ -8,22 +8,6 @@ import {
   getStatusDropdownOptions,
   getTagDropdownOptions,
 } from "./tripDropdownOptions";
-
-vi.mock("@utils/array", () => ({
-  extractUniqueValues: (arr: any[], fn: Function, fallback: any) => {
-    if (arr && arr.length > 0) {
-      arr.forEach((item) => fn(item));
-    }
-    return fallback;
-  },
-}));
-vi.mock("@utils/dropdown", () => ({
-  toDropdownOptions: (arr: any[], valFn: Function, labFn?: Function) =>
-    arr.map((item) => ({
-      value: valFn(item),
-      label: labFn ? labFn(item) : item,
-    })),
-}));
 
 const mockT = ((_key: string, defaultValue: string) =>
   defaultValue) as TFunction;
@@ -61,11 +45,6 @@ describe("Trip Filter Dropdown Utilities", () => {
     ]);
   });
 
-  it("getCategoryDropdownOptions transforms raw strings cleanly", () => {
-    const result = getCategoryDropdownOptions([], mockT);
-    expect(result).toContainEqual({ value: "roadtrip", label: "Roadtrip" });
-  });
-
   it("getStatusDropdownOptions includes an empty default 'All' placeholder option", () => {
     const result = getStatusDropdownOptions(mockT);
     expect(result[0]).toEqual({ value: "", label: "All Statuses" });
@@ -76,7 +55,9 @@ describe("Trip Filter Dropdown Utilities", () => {
   });
 
   it("getTagDropdownOptions transforms tag strings with words capitalized", () => {
-    const result = getTagDropdownOptions([], mockT);
+    const dummyTrips = [{ tags: ["national-park"] }] as any;
+    const result = getTagDropdownOptions(dummyTrips, mockT);
+
     expect(result).toContainEqual({
       value: "national-park",
       label: "National Park",
@@ -88,15 +69,5 @@ describe("Trip Filter Dropdown Utilities", () => {
     const result = getCategoryDropdownOptions(dummyTrips, mockT);
 
     expect(result).toContainEqual({ value: "roadtrip", label: "Roadtrip" });
-  });
-
-  it("getTagDropdownOptions transforms tag strings with words capitalized with explicit translation function", () => {
-    const dummyTrips = [{ tags: ["national-park"] }] as any;
-    const result = getTagDropdownOptions(dummyTrips, mockT);
-
-    expect(result).toContainEqual({
-      value: "national-park",
-      label: "National Park",
-    });
   });
 });

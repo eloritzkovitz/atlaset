@@ -1,38 +1,14 @@
 /**
- * Number utility functions
+ * Utility functions for comparing numeric values and parsing comparator strings.
  */
 
 import type { Operator } from "@types";
 
 /**
- * Format a percentage as a string (e.g. 75%).
- * @param x - Numerator
- * @param y - Denominator
- * @returns Percentage string
- */
-export function percent(x: number, y: number): string {
-  return y === 0 ? "0%" : `${Math.round((x / y) * 100)}%`;
-}
-
-/**
- * Clamp a number between min and max.
- * @param value - The number to clamp
- * @param min - Minimum value
- * @param max - Maximum value
- * @returns The clamped number
- */
-export function clamp(value: number, min?: number, max?: number): number {
-  return Math.max(
-    min ?? Number.MIN_SAFE_INTEGER,
-    Math.min(max ?? Number.MAX_SAFE_INTEGER, value),
-  );
-}
-
-/**
  * Parses a comparator string into an operator and a numeric value.
- * @param input - The comparator string to parse
- * @param pattern - Optional regex pattern for the numeric value (default: "\\d+")
- * @returns An object with the operator and numeric value, or null if parsing fails
+ * @param input - The comparator string to parse.
+ * @param pattern - Optional regex pattern for the numeric value (default: "\\d+").
+ * @returns An object with the operator and numeric value, or null if parsing fails.
  */
 export function parseComparator(
   input: string,
@@ -55,13 +31,12 @@ export function parseYearComparator(
 }
 
 /**
- * Compares two numeric values based on a comparator operator.
- * Supports `~` for approximate comparisons.
- * @param op - The comparator operator
- * @param a - The first number
- * @param b - The second number
+ * Compares two numeric values based on a comparator operator. Supports `~` for approximate comparisons.
+ * @param op - The comparator operator.
+ * @param a - The first number.
+ * @param b - The second number.
  * @param tolerance - Optional tolerance for `~`. Defaults to 0.05.
- * @returns The result of the comparison
+ * @returns The result of the comparison.
  */
 export function compareNumeric(
   op: Operator,
@@ -78,7 +53,7 @@ export function compareNumeric(
       return a >= b;
     case "<=":
       return a <= b;
-    case "~": {      
+    case "~": {
       const frac = typeof tolerance === "number" ? tolerance : 0.05;
       const scale = Math.max(Math.abs(a), Math.abs(b));
       const allowed = scale < 1 ? frac : frac * scale;

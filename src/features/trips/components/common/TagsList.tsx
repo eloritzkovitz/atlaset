@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ChipList } from "@components";
-import { capitalizeWords } from "@utils/string";
+import { capitalizeWords } from "@utils";
 import type { TripTag } from "../../types";
 
 interface TagsListProps {

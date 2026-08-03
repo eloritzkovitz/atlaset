@@ -1,5 +1,4 @@
 import { describe, it, expect } from "vitest";
-import type { KeyCommand } from "@types";
 import {
   capitalize,
   capitalizeWords,
@@ -10,8 +9,6 @@ import {
   slugify,
   isNumericString,
   hasStringChildren,
-  formatShortcut,
-  formatKeyCommand,
 } from "./string";
 
 describe("string utils", () => {
@@ -94,44 +91,5 @@ describe("string utils", () => {
     [null, false],
   ])("hasStringChildren(%p) -> %p", (input, expected) => {
     expect(hasStringChildren(input)).toBe(expected);
-  });
-
-  describe("formatShortcut", () => {
-    it.each([
-      [null, ""],
-      [undefined, ""],
-      ["nonexistent.id" as any, ""],
-      ["shortcuts.show", "Shift+?"],
-    ])("formatShortcut(%p) -> '%s'", (id, expected) => {
-      expect(formatShortcut(id)).toBe(expected);
-    });
-  });
-
-  describe("formatKeyCommand", () => {
-    const defaultCmd = {
-      id: "test-id" as any,
-      category: "General",
-      labelKey: "test",
-    };
-
-    it.each([
-      [
-        { ...defaultCmd, key: "a", modifiers: ["Meta", "Shift"] },
-        "Cmd+Shift+A",
-      ],
-      [{ ...defaultCmd, key: "k", modifiers: ["Option" as any] }, "Option+K"],
-      [{ ...defaultCmd, key: " ", modifiers: [] }, "Space"],
-      [{ ...defaultCmd, key: "ArrowUp", modifiers: [] }, "Up"],
-      [{ ...defaultCmd, key: "ArrowDown", modifiers: [] }, "Down"],
-      [{ ...defaultCmd, key: "ArrowLeft", modifiers: [] }, "Left"],
-      [{ ...defaultCmd, key: "ArrowRight", modifiers: [] }, "Right"],
-      [{ ...defaultCmd, key: "Esc", modifiers: [] }, "Esc"],
-      [
-        { ...defaultCmd, key: "z", modifiers: ["Ctrl", "Shift"] },
-        "Ctrl+Shift+Z",
-      ],
-    ])("formats command correctly", (cmd, expected) => {
-      expect(formatKeyCommand(cmd as KeyCommand)).toBe(expected);
-    });
   });
 });

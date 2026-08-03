@@ -21,7 +21,7 @@ import {
   getTerritoryCodesByType,
   getAllGeoTypes,
 } from "./countryData";
-import { canonicalKey } from "@utils/string";
+import { canonicalKey } from "@utils";
 
 vi.mock("../constants/flagOverrides", () => ({
   FLAG_OVERRIDES: ["YY"],

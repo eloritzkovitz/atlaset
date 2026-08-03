@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { BrandCopyright, GitHubButton, Tooltip } from "@components";
 import { useCountryData } from "@features/countries";
 import { useExplorationStats } from "@features/dashboard/exploration/hooks/useExplorationStats";
+import { formatPercent } from "@utils";
 
 interface MapFooterProps {
   zoom: number;
@@ -17,13 +18,10 @@ export const MapFooter: React.FC<MapFooterProps> = ({ zoom }) => {
   );
   const { t } = useTranslation("atlas");
 
-  // Calculate the percentage of visited countries
-  const coveragePercent =
-    totalCountries > 0
-      ? ((visitedCountries / totalCountries) * 100).toFixed(1)
-      : "0.0";
+  const coveragePercent = formatPercent(visitedCountries, totalCountries, {
+    decimals: 1,
+  });
 
-  // Handler to toggle the sovereignOnly state
   const handleToggleSovereign = () => {
     setSovereignOnly((prev) => !prev);
   };
@@ -60,7 +58,7 @@ export const MapFooter: React.FC<MapFooterProps> = ({ zoom }) => {
           >
             {t(
               "footer.countriesExplored",
-              "Countries explored: {{visited}}/{{total}} ({{percent}}%)",
+              "Countries explored: {{visited}}/{{total}} ({{percent}})",
               {
                 visited: visitedCountries,
                 total: totalCountries,

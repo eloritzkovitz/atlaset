@@ -5,7 +5,7 @@ import {
   getCountriesWithOwnFlag,
   type Country,
 } from "@features/countries";
-import { normalizeString } from "@utils/string";
+import { normalizeString } from "@utils";
 import { filterByProperty } from "../utils/quizUtils";
 import { createQuizProps } from "../utils/quizPropsFactory";
 import type { Difficulty } from "../../types";

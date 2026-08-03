@@ -1,4 +1,5 @@
 import { mockCountries } from "@test-utils/mockCountries";
+import * as searchUtils from "@utils";
 import {
   filterCountries,
   getFilteredIsoCodes,
@@ -7,7 +8,6 @@ import {
   filterCountriesByQualifier,
   applyQualifierSearch,
 } from "./countryFilters";
-import * as searchUtils from "@utils/search";
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;

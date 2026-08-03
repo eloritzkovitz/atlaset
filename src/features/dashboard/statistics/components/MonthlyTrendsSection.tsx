@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { FaCrown } from "react-icons/fa6";
 import { Card, Chip, PieLegendCard, Table } from "@components";
 import { useScreenSize } from "@hooks";
-import { getMonthsShort, getMonthsLong } from "@utils/date";
+import { formatPercent, getMonthsShort, getMonthsLong } from "@utils";
 import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
 import { translateColumns } from "../utils/columns";
@@ -139,8 +139,8 @@ export function MonthlyTrendsSection() {
                   })}
                   ,{" "}
                   {totalTripsForMonth > 0
-                    ? `${Math.round(mostPopularMonth.percentage)}%`
-                    : "0%"}
+                    ? formatPercent(mostPopularMonth.percentage / 100)
+                    : formatPercent(0, 1)}
                   )
                 </span>
               )}
@@ -162,8 +162,8 @@ export function MonthlyTrendsSection() {
                   })}
                   ,{" "}
                   {totalTripsForMonth > 0
-                    ? `${Math.round(leastPopularMonth.percentage)}%`
-                    : "0%"}
+                    ? formatPercent(leastPopularMonth.percentage / 100)
+                    : formatPercent(0, 1)}
                   )
                 </span>
               )}

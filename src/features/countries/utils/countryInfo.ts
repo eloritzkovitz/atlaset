@@ -3,7 +3,7 @@
  */
 
 import type { Language } from "@types";
-import { timezoneOffsets, timezoneRangeLines } from "@utils/timezone";
+import { timezoneOffsets, timezoneRangeLines } from "@utils";
 import type { Currency } from "../types";
 
 /** Gets a formatted string for a currency based on its code.

@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import * as utils from "@utils";
 import {
   importMarkersFromFile,
   parseAndNormalizeMarkers,
@@ -9,7 +10,7 @@ import type { Marker } from "../types";
 
 describe("markerIO utils", () => {
   beforeEach(() => {
-    vi.clearAllMocks();
+    vi.restoreAllMocks();
   });
 
   const createMockEvent = (files?: any[]) =>
@@ -18,14 +19,18 @@ describe("markerIO utils", () => {
     }) as unknown as React.ChangeEvent<HTMLInputElement>;
 
   const mockFileReaderResult = (result: string) => {
-    window.FileReader = function (this: any) {
-      this.readAsText = () => {
-        this.onload({ target: { result } });
-      };
-    } as any;
+    vi.spyOn(FileReader.prototype, "readAsText").mockImplementation(function (
+      this: FileReader,
+    ) {
+      if (this.onload) {
+        this.onload({
+          target: { result },
+        } as ProgressEvent<FileReader>);
+      }
+    });
   };
 
-  const sampleMarker = {
+  const sampleMarker: Marker = {
     id: "1",
     name: "Marker",
     isoCode: "US",
@@ -99,26 +104,23 @@ describe("markerIO utils", () => {
 
   describe("exportMarkersToFile", () => {
     it("safely ignores nullish execution calls", () => {
-      // @ts-expect-error
+      // @ts-expect-error testing runtime defensive check
       expect(exportMarkersToFile(undefined)).toBeUndefined();
     });
 
-    it("creates a download link and triggers click", () => {
-      const click = vi.fn();
-      vi.spyOn(document, "createElement").mockReturnValue({
-        set href(_: any) {},
-        set download(_: any) {},
-        click,
-      } as any);
-
-      window.URL.createObjectURL = vi.fn(() => "blob:url");
-      window.URL.revokeObjectURL = vi.fn();
+    it("creates a download link and triggers exportToFile", () => {
+      const exportToFileSpy = vi
+        .spyOn(utils, "exportToFile")
+        .mockImplementation(() => {});
 
       exportMarkersToFile([sampleMarker]);
 
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
-      expect(click).toHaveBeenCalled();
-      expect(window.URL.revokeObjectURL).toHaveBeenCalledWith("blob:url");
+      expect(exportToFileSpy).toHaveBeenCalledWith(
+        [sampleMarker],
+        undefined,
+        ["id", "order", "visible"],
+        "marker",
+      );
     });
   });
 });

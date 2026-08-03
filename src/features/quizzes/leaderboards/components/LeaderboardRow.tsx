@@ -1,6 +1,7 @@
-import { FaMedal } from "react-icons/fa6";
+import { useMemo } from "react";
+import { RankBadge } from "@components";
 import { UserInfo } from "@features/user/profile/components/UserInfo";
-import { formatTimeSeconds, formatDate } from "@utils/date";
+import { formatDate, formatTimeSeconds } from "@utils";
 import type { UserProfile } from "@features/user/profile/types";
 import type { LeaderboardRow } from "../../types";
 
@@ -13,38 +14,33 @@ export function LeaderboardRowComponent({
   row,
   index,
 }: LeaderboardRowComponentProps) {
-  const playerProfile: UserProfile = {
-    uid: row.playerId,
-    displayName: row.playerName,
-    username: row.username || "unknown",
-    photoURL: row.photoURL,
-    isPublic: true,
-    visitedCountryCodes: [],
-    wantToVisitCountryCodes: [],
-  };
+  const playerProfile: UserProfile = useMemo(
+    () => ({
+      uid: row.playerId,
+      displayName: row.playerName,
+      username: row.username || "unknown",
+      photoURL: row.photoURL,
+      isPublic: true,
+      visitedCountryCodes: [],
+      wantToVisitCountryCodes: [],
+    }),
+    [row.playerId, row.playerName, row.username, row.photoURL],
+  );
 
   return (
     <tr
-      key={row.playerName + row.rank}
+      key={`${row.playerId}-${row.rank}`}
       className={`hover:bg-base-200 transition ${
         index % 2 === 0 ? "bg-base-100" : "bg-base-300"
       }`}
     >
       <td className="px-4 py-2 font-bold">
-        {index === 0 ? (
-          <FaMedal className="text-yellow-400 drop-shadow-sm" />
-        ) : index === 1 ? (
-          <FaMedal className="text-slate-300 drop-shadow-sm" />
-        ) : index === 2 ? (
-          <FaMedal className="text-amber-600 drop-shadow-sm" />
-        ) : (
-          row.rank
-        )}
+        <RankBadge rank={row.rank} />
       </td>
       <td className="px-4 py-2">
         <UserInfo
           user={playerProfile}
-          showDisplayName={true}
+          showDisplayName
           showUsername={!!row.username}
         />
       </td>

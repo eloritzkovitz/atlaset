@@ -8,7 +8,7 @@ import { getCountryRoute } from "@features/dashboard";
 import { useLanguage } from "@features/settings";
 import { useVisitedCountries } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
-import { getWikipediaUrl } from "@utils/url";
+import { getWikipediaUrl } from "@utils";
 
 export interface CountryActionConfig {
   label: string;

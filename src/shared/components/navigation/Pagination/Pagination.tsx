@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { FaEllipsis } from "react-icons/fa6";
-import { pluralize } from "@utils/string";
+import { pluralize } from "@utils";
 import { PAGE_SIZE_OPTIONS } from "./constants";
 import { getPageButtons } from "./paginationUtils";
 import { PaginationButton } from "./PaginationButton";

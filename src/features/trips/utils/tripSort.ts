@@ -4,7 +4,7 @@
 
 import type { Country } from "@features/countries";
 import { createCountryMap } from "@features/countries/utils/countryData";
-import { sortItems } from "@utils/sort";
+import { sortItems } from "@utils";
 import type { Trip, TripSortBy } from "../types";
 
 /**

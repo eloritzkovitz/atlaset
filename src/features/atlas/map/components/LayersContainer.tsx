@@ -13,7 +13,7 @@ import {
   useCountryData,
 } from "@features/countries";
 import { useTooltipTarget } from "@hooks";
-import { isNumericString } from "@utils/string";
+import { isNumericString } from "@utils";
 import { Geographies } from "./Geographies";
 import { Geography } from "./Geography";
 import { SmallCountryOverlay } from "./SmallCountryOverlay";

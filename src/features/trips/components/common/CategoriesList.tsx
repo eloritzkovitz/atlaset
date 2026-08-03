@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { ChipList } from "@components";
-import { capitalizeWords } from "@utils/string";
+import { capitalizeWords } from "@utils";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import type { TripCategory } from "../../types";
 

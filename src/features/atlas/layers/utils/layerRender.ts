@@ -1,7 +1,7 @@
 /**
  * Utilities for layer rendering.
  */
-import { blendColors } from "@utils/color";
+import { blendColors } from "@utils";
 import type { Layer, LayerItem } from "../types";
 
 /**

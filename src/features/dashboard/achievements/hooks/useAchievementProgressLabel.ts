@@ -1,7 +1,16 @@
 import { useMemo } from "react";
 import type { Country } from "@features/countries";
+import type { Trip } from "@features/trips/types";
+import { formatFraction } from "@utils";
 import { getProgress } from "../utils/achievements";
 import type { Achievement } from "../types";
+
+export interface AchievementProgressLabelOptions {
+  trips?: Trip[];
+  homeCountry?: string;
+  achievementStatusMap?: Record<string, boolean>;
+  showPercent?: boolean;
+}
 
 /**
  * Generates a progress label for an achievement card.
@@ -17,10 +26,18 @@ export function useAchievementProgressLabel(
   achievement: Achievement,
   countries: Country[],
   visited: { isVisitedCountry: (iso: string) => boolean },
-  achievementStatusMap?: Record<string, boolean>,
+  options: AchievementProgressLabelOptions = {},
 ) {
+  const {
+    trips,
+    homeCountry,
+    achievementStatusMap,
+    showPercent = false,
+  } = options;
+
   return useMemo(() => {
     const criteria = achievement.criteria || {};
+
     // Dependency-only achievements
     if (
       achievement.requires &&
@@ -32,15 +49,33 @@ export function useAchievementProgressLabel(
       const completedCount = achievement.requires.filter(
         (reqId) => achievementStatusMap[reqId],
       ).length;
-      return `${completedCount}/${achievement.requires.length}`;
+
+      return formatFraction(completedCount, achievement.requires.length, {
+        showPercent,
+      });
     }
 
-    // Criterias that do not have a progress label
+    // Criteria that do not have a progress label
     if (achievement.type === "trips") {
       return "";
     }
 
     // Default
-    return String(getProgress(achievement, countries, visited));
-  }, [achievement, countries, visited, achievementStatusMap]);
+    return getProgress(
+      achievement,
+      countries,
+      visited,
+      trips,
+      homeCountry,
+      showPercent,
+    );
+  }, [
+    achievement,
+    countries,
+    visited,
+    trips,
+    homeCountry,
+    achievementStatusMap,
+    showPercent,
+  ]);
 }

@@ -7,7 +7,7 @@ import {
   serializeItems,
   importFromFile,
   exportToFile,
-} from "@utils/json";
+} from "@utils";
 import type { Marker } from "../types";
 
 /**

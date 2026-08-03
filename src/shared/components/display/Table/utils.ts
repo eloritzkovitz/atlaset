@@ -1,7 +1,7 @@
-import { exportToCSV, type CSVColumn } from "@utils/csv";
-import type { TableColumn } from "./Table";
 import React from "react";
 import type { SortKey } from "@types";
+import { exportToCSV, type CSVColumn } from "@utils";
+import type { TableColumn } from "./Table";
 
 /**
  * Resolves a React key for a given row item.

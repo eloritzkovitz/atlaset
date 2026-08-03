@@ -5,6 +5,7 @@ import {
   parseAndNormalizeLayers,
   serializeLayers,
 } from "./layerIO";
+import * as utils from "@utils";
 
 describe("layerIO utils", () => {
   beforeEach(() => {
@@ -111,22 +112,19 @@ describe("layerIO utils", () => {
       expect(exportLayersToFile(undefined)).toBeUndefined();
     });
 
-    it("generates virtual download anchor elements and dispatches click commands", () => {
-      const click = vi.fn();
-      vi.spyOn(document, "createElement").mockReturnValue({
-        set href(_: any) {},
-        set download(_: any) {},
-        click,
-      } as any);
-
-      window.URL.createObjectURL = vi.fn(() => "blob:url");
-      window.URL.revokeObjectURL = vi.fn();
+    it("delegates layer export to exportToFile utility", () => {
+      const exportToFileSpy = vi
+        .spyOn(utils, "exportToFile")
+        .mockImplementation(() => {});
 
       exportLayersToFile([sampleLayer]);
 
-      expect(window.URL.createObjectURL).toHaveBeenCalled();
-      expect(click).toHaveBeenCalled();
-      expect(window.URL.revokeObjectURL).toHaveBeenCalledWith("blob:url");
+      expect(exportToFileSpy).toHaveBeenCalledWith(
+        [sampleLayer],
+        undefined,
+        ["id", "order", "visible", "listId"],
+        "layer",
+      );
     });
   });
 });

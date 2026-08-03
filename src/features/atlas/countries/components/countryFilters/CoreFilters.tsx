@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
-import { canonicalKey } from "@utils/string";
+import { canonicalKey } from "@utils";
 import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";

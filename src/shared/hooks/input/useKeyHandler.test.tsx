@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
-import * as keyboardUtils from "@utils/keyboard";
+import * as keyboardUtils from "@utils";
 import { useKeyHandler } from "./useKeyHandler";
 
 function TestComponent({

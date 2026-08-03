@@ -2,6 +2,8 @@
  * Utilities for parsing, normalizing, importing, and exporting JSON data.
  */
 
+import { downloadBlob } from "./file";
+
 /**
  * Parse and normalize one or more items from JSON string or object.
  * @param jsonOrObj - JSON string or object.
@@ -83,16 +85,12 @@ export function exportToFile<T extends object & { name?: unknown }>(
   const arr = Array.isArray(items) ? items : [items];
   const pretty = serializeItems(items, omitFields as string[]);
   const blob = new Blob([pretty], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
 
-  a.download =
+  const downloadName =
     filename ||
     (arr.length === 1
       ? `${String(arr[0]?.name || defaultName)}.json`
       : `${defaultName}s.json`);
 
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadBlob(blob, downloadName, true);
 }

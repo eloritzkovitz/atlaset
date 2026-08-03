@@ -25,7 +25,7 @@ import {
 } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
 import { AppPanels } from "@layouts/shells/AppPanels";
-import { formatFirestoreDate } from "@utils/date";
+import { formatFirestoreDate } from "@utils";
 
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();

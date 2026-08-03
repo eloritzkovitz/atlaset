@@ -13,7 +13,7 @@ import {
   compareNumeric,
   parseComparator,
   parseYearComparator,
-} from "@utils/number";
+} from "@utils";
 import { getTranscontinentalInfo } from "./countryData";
 import type {
   Country,

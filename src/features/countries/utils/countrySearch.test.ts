@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import type { VisitContext } from "@features/visits";
 import { mockCountries } from "@test-utils/mockCountries";
 import {
@@ -8,24 +8,6 @@ import {
   qualifierSuggestionProvider,
 } from "./countrySearch";
 import { SUPPORTED_QUALIFIERS } from "../constants/qualifierConfig";
-
-vi.mock("@utils/timezone", () => ({
-  timezoneOffsets: (tz: string) => {
-    switch (tz) {
-      case "Europe/Paris":
-      case "Europe/Berlin":
-        return ["UTC+01:00", "UTC+02:00 (summer)"];
-      case "America/Guadeloupe":
-      case "America/Toronto":
-      case "America/New_York":
-        return ["UTC-05:00", "UTC-04:00 (summer)"];
-      case "Asia/Tokyo":
-        return ["UTC+09:00"];
-      default:
-        return ["UTC+00:00"];
-    }
-  },
-}));
 
 describe("countrySearch utils", () => {
   const countries = mockCountries;
@@ -173,7 +155,7 @@ describe("countrySearch utils", () => {
       expect(deSummer).toContain("UTC+02:00");
 
       const gpWinter = getQualifierTokens(gp, "timezones");
-      expect(gpWinter).toContain("UTC-05:00");
+      expect(gpWinter).toContain("UTC-04:00");
       const gpSummer = getQualifierTokens(gp, "timezones", { dst: true });
       expect(gpSummer).toContain("UTC-04:00");
 

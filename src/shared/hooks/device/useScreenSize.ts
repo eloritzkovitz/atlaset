@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import type { BatteryStatus, DeviceType } from "@types";
 import { useEventListener } from "../dom/useEventListener";
-import { determineDeviceFromHardware } from "../../utils/device";
-import { isWindowDefined } from "../../utils/env";
+import { determineDeviceFromHardware, isWindowDefined } from "@utils";
 
 declare global {
   interface Navigator {

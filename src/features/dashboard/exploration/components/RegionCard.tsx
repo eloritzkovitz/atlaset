@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Card } from "@components";
 import { regionIcons, defaultRegionIcon } from "@features/countries";
 import { useAnimatedNumber } from "@hooks";
-import { percent } from "@utils/number";
+import { formatFraction } from "@utils";
 import { RegionButton } from "./RegionButton";
 import { SubregionStatsRow } from "./SubregionStatsRow";
 import { translateRegionLabel } from "../utils/translation";
@@ -39,10 +39,9 @@ export function RegionCard({
           <RegionButton
             icon={regionIcons[region] || defaultRegionIcon}
             label={translateRegionLabel(region, tCountries, tDashboard)}
-            stats={`${animatedVisited}/${total} (${percent(
-              animatedVisited,
-              total,
-            )})`}
+            stats={formatFraction(animatedVisited, total, {
+              showPercent: true,
+            })}
             onClick={onRegionClick}
             className="mb-2 text-2xl"
             labelClassName="text-2xl"

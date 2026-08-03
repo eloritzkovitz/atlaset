@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ActionButton } from "@components";
 import { useLanguage } from "@features/settings";
-import { getWikipediaUrl } from "@utils/url";
+import { getWikipediaUrl } from "@utils";
 
 interface WikipediaButtonProps {
   searchTerm?: string;

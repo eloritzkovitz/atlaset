@@ -4,9 +4,13 @@
 
 import type { Layer } from "@features/atlas/layers/types";
 import type { VisitContext } from "@features/visits/types";
-import { filterBySearch } from "@utils/filter";
-import { compareNumeric, parseComparator } from "@utils/number";
-import { matchesToken, parseQualifierSearch } from "@utils/search";
+import {
+  compareNumeric,
+  filterBySearch,
+  matchesToken,
+  parseComparator,
+  parseQualifierSearch,
+} from "@utils";
 import {
   applyModifiersToCountry,
   ensureModifiers,

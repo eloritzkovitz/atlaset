@@ -21,7 +21,7 @@ import {
 } from "@features/countries";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
-import { canonicalKey } from "@utils/string";
+import { canonicalKey } from "@utils";
 import { ToggleButton } from "./ToggleButton";
 
 interface CountrySectionProps {

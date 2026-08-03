@@ -6,9 +6,11 @@ import i18next from "i18next";
 import type { TFunction } from "i18next";
 import type { Country } from "@features/countries/types";
 import type { UserProfile } from "@features/user/profile/types";
-import { extractUniqueValues } from "@utils/array";
-import { toDropdownOptions } from "@utils/dropdown";
-import { capitalizeWords } from "@utils/string";
+import {
+  capitalizeWords,
+  extractUniqueValues,
+  toDropdownOptions,
+} from "@utils";
 import {
   ALL_TRIP_CATEGORIES,
   ALL_TRIP_STATUSES,

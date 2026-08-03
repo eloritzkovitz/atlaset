@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useLastLogin } from "@features/activity";
 import { useAuth, useUserSessions } from "@features/user/auth";
-import { formatDate } from "@utils/date";
-import { capitalize } from "@utils/string";
+import { capitalize, formatDate } from "@utils";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { SessionRow } from "./SessionRow";
 

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { capitalizeWords } from "@utils/string";
+import { capitalizeWords } from "@utils";
 import { CountryListGroup } from "./CountryListGroup";
 import {
   getCountryName,

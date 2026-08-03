@@ -9,7 +9,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import type { CommandId, Point } from "@types";
-import { formatShortcut } from "@utils/string";
+import { formatShortcut } from "@utils";
 
 export interface TooltipProps {
   content: ReactNode;

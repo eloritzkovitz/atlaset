@@ -1,27 +1,14 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { exportToCSV, type CSVColumn } from "./csv";
+import * as fileUtils from "./file";
 
 describe("exportToCSV", () => {
-  let mockAnchor: HTMLAnchorElement;
+  let downloadBlobSpy: any;
 
   beforeEach(() => {
-    mockAnchor = {
-      setAttribute: vi.fn(),
-      click: vi.fn(),
-    } as unknown as HTMLAnchorElement;
-
-    vi.spyOn(document, "createElement").mockImplementation(
-      (tagName: string) => {
-        if (tagName === "a") return mockAnchor;
-        return document.createElement(tagName);
-      },
-    );
-
-    vi.spyOn(document.body, "appendChild").mockImplementation((node) => node);
-    vi.spyOn(document.body, "removeChild").mockImplementation((node) => node);
-
-    global.URL.createObjectURL = vi.fn().mockReturnValue("blob:mock-url");
-    global.URL.revokeObjectURL = vi.fn();
+    downloadBlobSpy = vi
+      .spyOn(fileUtils, "downloadBlob")
+      .mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -30,7 +17,7 @@ describe("exportToCSV", () => {
 
   it("should return early when data array is empty", () => {
     exportToCSV([], []);
-    expect(document.createElement).not.toHaveBeenCalled();
+    expect(downloadBlobSpy).not.toHaveBeenCalled();
   });
 
   it("should process key and function accessors, handle nullish values, and escape quotes", () => {
@@ -53,13 +40,12 @@ describe("exportToCSV", () => {
 
     exportToCSV(data, columns, "my-export");
 
-    expect(mockAnchor.setAttribute).toHaveBeenCalledWith(
-      "download",
-      "my-export.csv",
-    );
-    expect(mockAnchor.click).toHaveBeenCalled();
-    expect(document.body.removeChild).toHaveBeenCalledWith(mockAnchor);
-    expect(URL.revokeObjectURL).toHaveBeenCalledWith("blob:mock-url");
+    expect(downloadBlobSpy).toHaveBeenCalledTimes(1);
+    const [blob, filename] = downloadBlobSpy.mock.calls[0];
+
+    expect(filename).toBe("my-export.csv");
+    expect(blob).toBeInstanceOf(Blob);
+    expect(blob.type).toBe("text/csv;charset=utf-8;");
   });
 
   it("should retain existing .csv extension when provided", () => {
@@ -70,8 +56,8 @@ describe("exportToCSV", () => {
 
     exportToCSV(data, columns, "custom.csv");
 
-    expect(mockAnchor.setAttribute).toHaveBeenCalledWith(
-      "download",
+    expect(downloadBlobSpy).toHaveBeenCalledWith(
+      expect.any(Blob),
       "custom.csv",
     );
   });

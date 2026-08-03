@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react";
+import { isWindowDefined } from "@utils";
 import { useEventListener } from "../dom/useEventListener";
-import { isWindowDefined } from "../../utils/env";
 
 /**
  * Detects PWA updates via service worker events.
