@@ -9,10 +9,7 @@ import { useUiHint } from "@hooks";
 export function useUiToggleHint() {
   const { uiVisible } = useUI();
 
-  // Refs and state to track previous visibility and hint
   const prevUiVisible = useRef(uiVisible);
-
-  // Hint state
   const [hint, setHint] = useState<null | {
     message: JSX.Element;
     icon: JSX.Element;
@@ -39,7 +36,6 @@ export function useUiToggleHint() {
     prevUiVisible.current = uiVisible;
   }, [uiVisible]);
 
-  // Use the useUiHint hook to display the hint
   useUiHint(hint, 4000, { key: `toggle-ui-${hintKey}` });
 
   // Clear hint after 4 seconds

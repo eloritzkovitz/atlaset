@@ -24,7 +24,6 @@ export default defineConfig({
       "@contexts": path.resolve(import.meta.dirname, "src/contexts"),
       "@features": path.resolve(import.meta.dirname, "src/features"),
       "@hooks": path.resolve(import.meta.dirname, "src/shared/hooks"),
-      "@layouts": path.resolve(import.meta.dirname, "src/layouts"),
       "@lib": path.resolve(import.meta.dirname, "src/lib"),
       "@services": path.resolve(import.meta.dirname, "src/shared/services"),
       "@test-utils": path.resolve(import.meta.dirname, "src/shared/test-utils"),

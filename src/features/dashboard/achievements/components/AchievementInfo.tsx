@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { Container } from "@components";
 import { useVisitedCountries } from "@features/visits";
-import { Container } from "@layouts";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";

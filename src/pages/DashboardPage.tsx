@@ -3,9 +3,10 @@ import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import {
   Breadcrumbs,
+  Container,
   ErrorMessage,
-  LoadingSpinner,
   HamburgerButton,
+  LoadingSpinner,
 } from "@components";
 import { useCountryData } from "@features/countries";
 import {
@@ -20,7 +21,6 @@ import {
 } from "@features/dashboard";
 import { useAuth } from "@features/user/auth";
 import { usePageTitle, useScreenSize } from "@hooks";
-import { Container } from "@layouts";
 
 export default function DashboardPage() {
   const { ready } = useAuth();

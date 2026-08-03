@@ -18,8 +18,8 @@ import {
   useTimeline,
 } from "@features/atlas/timeline";
 import { useScreenSize, useUiHint } from "@hooks";
-import { MapToolbar } from "../components/controls/MapToolbar";
-import { MapFooter } from "../components/footer/MapFooter";
+import { MapFooter } from "../footer/MapFooter";
+import { MapToolbar } from "../toolbar/MapToolbar";
 
 interface MapUiContainerProps {
   isAddingMarker?: boolean;

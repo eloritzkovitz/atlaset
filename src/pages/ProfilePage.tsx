@@ -6,6 +6,7 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
+import { AppPanels } from "@app";
 import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes";
 import { useAuth } from "@features/user/auth";
@@ -24,7 +25,6 @@ import {
   useUserProfile,
 } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
-import { AppPanels } from "@layouts/shells/AppPanels";
 import { formatFirestoreDate } from "@utils";
 
 export default function ProfilePage() {

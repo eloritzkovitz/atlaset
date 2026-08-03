@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
+import { Container } from "@components";
 import { UserActivitySection } from "@features/activity";
 import { usePageTitle } from "@hooks";
-import { Container } from "@layouts";
 
 export default function ActivityPage() {
   const { t } = useTranslation("activity");

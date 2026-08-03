@@ -1,5 +1,5 @@
 import { ActionButton, MenuButton, Separator } from "@components";
-import type { ToolbarActionItem } from "../../hooks/useToolbarActions";
+import type { ToolbarActionItem } from "./useToolbarActions";
 
 interface MapToolbarActionsProps {
   actions: ToolbarActionItem[];

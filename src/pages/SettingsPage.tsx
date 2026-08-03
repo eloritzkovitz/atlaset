@@ -7,6 +7,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { SidebarLayout } from "@app";
 import {
   AccessibilitySettingsSection,
   AccountSettingsSection,
@@ -19,7 +20,6 @@ import { SETTINGS_MENU } from "@features/settings/common/constants/settingsMenu"
 import { useAuth } from "@features/user/auth";
 import { EditProfileModal, useUserProfile } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
-import { SidebarLayout } from "@layouts";
 
 const PANEL_COMPONENTS: Record<string, React.ReactNode> = {
   account: <AccountSettingsSection />,

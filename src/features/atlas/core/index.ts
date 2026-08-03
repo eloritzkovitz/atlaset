@@ -1,8 +1,8 @@
 export { useActiveLayerItems } from "./hooks/useActiveLayerItems";
+export { useAtlasShortcuts } from "./hooks/useAtlasShortcuts";
 export { useEffectiveMapData } from "./hooks/useEffectiveMapData";
-export { useMapTheme } from "./hooks/useMapTheme";
 export { useMapMode } from "./hooks/useMapMode";
-
-export * from "./types";
+export { useMapTheme } from "./hooks/useMapTheme";
+export { useUiToggleHint } from "./hooks/useUiToggleHint";
 
 export * from "./utils/mapColors";

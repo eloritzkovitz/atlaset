@@ -1,13 +1,13 @@
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import {
   FaPlus,
   FaMinus,
   FaUpRightAndDownLeftFromCenter,
 } from "react-icons/fa6";
-import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
-import { useKeyHandler } from "@hooks";
 import { DEFAULT_MAP_SETTINGS, useAccessibility } from "@features/settings";
+import { useKeyHandler } from "@hooks";
 
 interface MapControlsProps {
   orientation?: "vertical" | "horizontal";

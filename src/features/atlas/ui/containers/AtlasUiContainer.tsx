@@ -1,3 +1,4 @@
+import { useUiToggleHint } from "@features/atlas/core";
 import { CountryDetailsModal, CountriesPanel } from "@features/atlas/countries";
 import { MapExportPanel } from "@features/atlas/export";
 import { LayerModal, LayersPanel, useLayers } from "@features/atlas/layers";
@@ -16,7 +17,6 @@ import {
 } from "@features/atlas/savedMaps";
 import { MapSettingsPanel } from "@features/atlas/settings";
 import type { Country } from "@features/countries";
-import { useUiToggleHint } from "../hooks/useUiToggleHint";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;

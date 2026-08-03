@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { EmptyListMessage, SegmentedToggle } from "@components";
+import { Container, EmptyListMessage, SegmentedToggle } from "@components";
 import { useCountryData } from "@features/countries";
 import { SearchSection, useSearch } from "@features/search";
 import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { usePageTitle } from "@hooks";
-import { Container } from "@layouts";
 import { getQueryParam } from "@utils";
 
 export default function SearchPage() {

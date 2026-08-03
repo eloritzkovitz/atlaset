@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { SidebarLayout } from "@app";
 import { MarkdownFileRenderer } from "@components";
 import {
   DOCS_PATH,
@@ -12,7 +13,6 @@ import {
   WelcomeDocsSection,
 } from "@features/docs";
 import { usePageTitle } from "@hooks";
-import { SidebarLayout } from "@layouts";
 import { useMarkdownFile } from "@lib/markdown";
 
 export default function DocsPage() {

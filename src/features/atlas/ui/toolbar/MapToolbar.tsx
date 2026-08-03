@@ -12,7 +12,7 @@ import { useLanguage } from "@features/settings";
 import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";
-import { useToolbarActions } from "../../hooks/useToolbarActions";
+import { useToolbarActions } from "./useToolbarActions";
 import "./MapToolbar.css";
 
 interface MapToolbarProps {

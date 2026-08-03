@@ -6,7 +6,7 @@ import {
   useAnalytics,
   useSettings,
 } from "@features/settings";
-import { AppLayout, PublicLayout } from "@layouts";
+import { AppLayout } from "./layouts/app/AppLayout";
 import AboutPage from "../pages/AboutPage";
 import ActivityPage from "../pages/ActivityPage";
 import ChangelogPage from "../pages/ChangelogPage";
@@ -23,6 +23,7 @@ import SettingsPage from "../pages/SettingsPage";
 import SignupPage from "../pages/SignupPage";
 import TripsPage from "../pages/TripsPage";
 import { ProtectedRoute } from "../shared/router/ProtectedRoute";
+import { PublicLayout } from "./layouts/public/PublicLayout";
 
 const AtlasProviders = lazy(() =>
   import("@features/atlas/core/providers/AtlasProviders").then((m) => ({
@@ -30,8 +31,8 @@ const AtlasProviders = lazy(() =>
   })),
 );
 
-/** Main application content component. */
-export function AppContent() {
+/** Main application routes component. */
+export function AppRoutes() {
   const { ready } = useSettings();
 
   useAnalytics();

@@ -26,13 +26,13 @@ export function parseAndNormalize<T extends Record<string, unknown>>(
  * @param items - Array or single item.
  * @param omitFields - Fields to omit from each item.
  */
-export function serializeItems<T extends Record<string, unknown>>(
+export function serializeItems<T extends object>(
   items: T | T[],
   omitFields: (keyof T | string)[] = [],
 ): string {
   const arr = Array.isArray(items) ? items : [items];
   const cleaned = arr.map((item) => {
-    const rest: Record<string, unknown> = { ...item };
+    const rest = { ...item } as Record<string, unknown>;
     for (const field of omitFields) {
       delete rest[field as string];
     }
@@ -79,9 +79,7 @@ export async function importFromFile<T extends Record<string, unknown>>(
  * @param omitFields - Fields to omit from each item.
  * @param defaultName - Default name if filename not provided.
  */
-export function exportToFile<
-  T extends Record<string, unknown> & { name?: unknown },
->(
+export function exportToFile<T extends object & { name?: unknown }>(
   items: T | T[],
   filename?: string,
   omitFields: (keyof T | string)[] = [],

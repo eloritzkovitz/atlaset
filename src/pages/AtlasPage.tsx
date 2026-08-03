@@ -2,15 +2,12 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useUI } from "@contexts/UIContext";
+import { useAtlasShortcuts } from "@features/atlas/core";
 import { useCountrySelection } from "@features/atlas/countries";
 import { useLayers } from "@features/atlas/layers";
 import { useMapView, WorldMap } from "@features/atlas/map";
 import { useMarkerCreation } from "@features/atlas/markers";
-import {
-  AtlasShortcuts,
-  AtlasUiContainer,
-  MapUiContainer,
-} from "@features/atlas/ui";
+import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
 import { usePageTitle, useScreenSize } from "@hooks";
 
@@ -31,6 +28,8 @@ export default function AtlasPage() {
   const svgRef = useRef<SVGSVGElement>(null);
 
   usePageTitle(t("pageTitle", "Atlas"));
+
+  useAtlasShortcuts();
 
   const {
     selectedIsoCode,
@@ -66,18 +65,15 @@ export default function AtlasPage() {
     <>
       <div className="flex h-screen relative">
         {!isLoading && !isEmbed && (
-          <>
-            <AtlasShortcuts />
-            <AtlasUiContainer
-              svgRef={svgRef}
-              selectedIsoCode={selectedIsoCode}
-              setSelectedIsoCode={setSelectedIsoCode}
-              hoveredIsoCode={hoveredIsoCode}
-              setHoveredIsoCode={setHoveredIsoCode}
-              selectedCountry={selectedCountry}
-              setSelectedCountry={setSelectedCountry}
-            />
-          </>
+          <AtlasUiContainer
+            svgRef={svgRef}
+            selectedIsoCode={selectedIsoCode}
+            setSelectedIsoCode={setSelectedIsoCode}
+            hoveredIsoCode={hoveredIsoCode}
+            setHoveredIsoCode={setHoveredIsoCode}
+            selectedCountry={selectedCountry}
+            setSelectedCountry={setSelectedCountry}
+          />
         )}
         <div className="flex-2 flex flex-col items-stretch justify-stretch relative h-screen min-h-0">
           {!isLoading && (

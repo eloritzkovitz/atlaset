@@ -1,10 +1,10 @@
 import { useTimeline } from "@features/atlas/timeline";
 import { useAccessibility } from "@features/settings";
 import { useKeyHandler } from "@hooks";
-import { useAtlasActions } from "../../core/hooks/useAtlasActions";
+import { useAtlasActions } from "./useAtlasActions";
 
-/** Handles keyboard shortcuts specific to the Atlas page/UI. */
-export function AtlasShortcuts() {
+/** Handles keyboard shortcuts specific to the Atlas. */
+export function useAtlasShortcuts() {
   const { singleKeyShortcutsEnabled } = useAccessibility();
   const { actions, conditions: c } = useAtlasActions();
   const { setTimelineMode } = useTimeline();
@@ -38,6 +38,4 @@ export function AtlasShortcuts() {
     ["t", "T"],
     opts(c.timeline ?? true),
   );
-
-  return null;
 }

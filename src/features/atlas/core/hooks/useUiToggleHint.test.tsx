@@ -45,54 +45,43 @@ describe("useUiToggleHint", () => {
 
   it("toggles from visible to hidden", () => {
     renderWithState(true);
-
     act(() => {
       setUiVisible((v) => !v);
     });
-
     expect(visibleState).toBe(false);
   });
 
   it("toggles from hidden to visible", () => {
     renderWithState(false);
-
     act(() => {
       setUiVisible((v) => !v);
     });
-
     expect(visibleState).toBe(true);
   });
 
   it("does not toggle when typing in input", () => {
     renderWithState(true);
-
     const input = document.createElement("input");
     document.body.appendChild(input);
     input.focus();
-
     Object.defineProperty(document, "activeElement", {
       configurable: true,
       get: () => input,
     });
-
     act(() => {
       input.dispatchEvent(
         new window.KeyboardEvent("keydown", { key: "u", bubbles: true }),
       );
     });
-
     expect(visibleState).toBe(true);
-
     document.body.removeChild(input);
   });
 
   it("does not toggle on irrelevant key", () => {
     renderWithState(true);
-
     act(() => {
       window.dispatchEvent(new KeyboardEvent("keydown", { key: "x" }));
     });
-
     expect(visibleState).toBe(true);
   });
 });

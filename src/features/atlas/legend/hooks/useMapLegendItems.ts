@@ -1,4 +1,5 @@
-import { useMapTheme, type ColorMode } from "@features/atlas/core";
+import { useMapTheme } from "@features/atlas/core";
+import type { ColorMode } from "@features/atlas/core/types";
 import type { Layer } from "@features/atlas/layers/types";
 import { useMapView } from "@features/atlas/map";
 import { useMapOverlays } from "@features/atlas/settings";

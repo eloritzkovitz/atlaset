@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { AppLayout, EmbedLayout } from "@layouts";
+import { AppLayout, EmbedLayout } from "@app";
 import { CountryFiltersProvider } from "../../countries/context/CountryFiltersProvider";
 import { CountryListsProvider } from "../../countries/context/CountryListsProvider";
 import { LayersProvider } from "../../layers/context/LayersProvider";

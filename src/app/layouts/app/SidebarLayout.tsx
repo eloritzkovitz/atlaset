@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { HamburgerButton } from "@components";
+import { Container, HamburgerButton } from "@components";
 import { useScreenSize } from "@hooks";
-import { Container } from "./Container";
 
 interface SidebarLayoutProps {
   menu: React.ReactNode;

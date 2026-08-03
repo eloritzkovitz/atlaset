@@ -61,6 +61,7 @@ export { DashboardIcon } from "./media/icons/DashboardIcon";
 export { DirectionalIcon } from "./media/icons/DirectionalIcon";
 
 // Layout components
+export { Container } from "./layout/Container";
 export { Separator } from "./layout/Separator";
 
 // Navigation components
