@@ -64,6 +64,10 @@ export function useTripsStats() {
     // Visited countries ranking
     const visitedCountriesRanking: VisitedCountryRankRow[] = visitedCountryCodes
       .map((code) => {
+        if (homeCountry && code.toLowerCase() === homeCountry.toLowerCase()) {
+          return null;
+        }
+        
         const country = getCountry(code);
         if (!country) return null;
 
