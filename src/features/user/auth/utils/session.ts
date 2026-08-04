@@ -2,6 +2,12 @@
  * Utility functions for device information and session management.
  */
 
+import {
+  getCachedValue,
+  removeCachedValue,
+  setCachedValue,
+} from "@utils/browser/storage";
+
 const SESSION_KEY = "atlaset:sessionId";
 
 /**
@@ -20,12 +26,18 @@ export function getBrowserSessionInfo() {
  * Gets or creates a unique session ID for the current browser session.
  * @returns The session ID.
  */
-export function getOrCreateSessionId() {
-  let sessionId = localStorage.getItem(SESSION_KEY);
+export function getOrCreateSessionId(): string {
+  let sessionId = getCachedValue<string | null>(SESSION_KEY, null);
+
   if (!sessionId) {
-    sessionId = crypto.randomUUID();
-    localStorage.setItem(SESSION_KEY, sessionId);
+    sessionId =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : Math.random().toString(36).substring(2);
+
+    setCachedValue(SESSION_KEY, sessionId);
   }
+
   return sessionId;
 }
 
@@ -34,13 +46,13 @@ export function getOrCreateSessionId() {
  * @param sessionId - The session ID to check.
  * @returns True if it matches the current session.
  */
-export function isCurrentSession(sessionId?: string) {
-  return sessionId === getOrCreateSessionId();
+export function isCurrentSession(sessionId?: string): boolean {
+  return Boolean(sessionId && sessionId === getOrCreateSessionId());
 }
 
 /**
  * Destroys the local browser session cache token.
  */
 export function clearLocalSession(): void {
-  localStorage.removeItem(SESSION_KEY);
+  removeCachedValue(SESSION_KEY);
 }

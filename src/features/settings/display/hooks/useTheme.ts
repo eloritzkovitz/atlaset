@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState, useMemo } from "react";
 import { useEventListener } from "@hooks";
+import { getCachedValue, setCachedValue } from "@utils";
 import type { ThemeKey, AccentKey } from "../types";
-import { applyTheme, resolveTheme } from "../utils/theme";
+import { applyTheme, THEME_CACHE_KEY, ACCENT_CACHE_KEY } from "../utils/theme";
 import { useSettings } from "../../common/hooks/useSettings";
 
 /**
@@ -10,37 +11,45 @@ import { useSettings } from "../../common/hooks/useSettings";
 export function useTheme() {
   const { settings, updateSettings } = useSettings();
 
-  const preference = (settings.display?.theme ?? "dark") as ThemeKey;
-  const accent = (settings.display?.accent ?? "blue") as AccentKey;
+  const preference = (settings.display?.theme ??
+    getCachedValue<ThemeKey>(THEME_CACHE_KEY, "dark")) as ThemeKey;
+  const accent = (settings.display?.accent ??
+    getCachedValue<AccentKey>(ACCENT_CACHE_KEY, "blue")) as AccentKey;
 
-  // Track real-time resolved theme (dark vs light) for UI logic
-  const [resolvedTheme, setResolvedTheme] = useState<"dark" | "light">(() =>
-    resolveTheme(preference),
+  const [systemTheme, setSystemTheme] = useState<"dark" | "light">(() =>
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light",
   );
 
-  // Apply theme on initial load and whenever preference or accent changes
-  useEffect(() => {
-    applyTheme(settings.display);
-    setResolvedTheme(resolveTheme(preference));
-  }, [preference, accent, settings.display]);
+  const resolvedTheme = preference === "system" ? systemTheme : preference;
 
-  const mediaQuery =
-    preference === "system" &&
-    typeof window !== "undefined" &&
-    window.matchMedia
-      ? window.matchMedia("(prefers-color-scheme: dark)")
-      : null;
+  const mediaQuery = useMemo(() => {
+    if (preference !== "system" || typeof window === "undefined") return null;
+    return window.matchMedia("(prefers-color-scheme: dark)");
+  }, [preference]);
 
-  // Listen for changes in system theme preference if 'system' is selected
+  // Listen for changes in system theme preference
   useEventListener(
     "change",
     (e: MediaQueryListEvent) => {
-      const activeTheme = e.matches ? "dark" : "light";
-      setResolvedTheme(activeTheme);
-      applyTheme({ ...settings.display, theme: "system" });
+      setSystemTheme(e.matches ? "dark" : "light");
     },
     mediaQuery,
   );
+
+  // Apply theme whenever preference or accent changes
+  useLayoutEffect(() => {
+    applyTheme({
+      ...(settings.display ?? {}),
+      theme: preference,
+      accent,
+    });
+
+    setCachedValue(THEME_CACHE_KEY, preference);
+    setCachedValue(ACCENT_CACHE_KEY, accent);
+  }, [preference, accent, resolvedTheme]);
 
   /** Updates the theme preference. */
   const setTheme = (newTheme: ThemeKey) => {

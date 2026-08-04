@@ -3,8 +3,14 @@ import { mapApi } from "@features/atlas/map/api/mapApi";
 import { countriesApi } from "@features/countries/api/countriesApi";
 import { achievementsApi } from "@features/dashboard/achievements/api/achievementsApi";
 import quizSettingsReducer from "@features/quizzes/quiz/slices/quizSettingsSlice";
+import type { AccentKey, ThemeKey } from "@features/settings/display/types";
+import {
+  ACCENT_CACHE_KEY,
+  THEME_CACHE_KEY,
+} from "@features/settings/display/utils/theme";
 import settingsReducer from "@features/settings/common/slices/settingsSlice";
 import authReducer from "@features/user/auth/slices/authSlice";
+import { getCachedValue } from "@utils";
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -17,15 +23,13 @@ const rootReducer = combineReducers({
 
 export type RootState = ReturnType<typeof rootReducer>;
 
-// Load preloaded state from localStorage if available
+// Load preloaded display settings from cache
 const getPreloadedState = (): Partial<RootState> | undefined => {
   try {
-    const theme =
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem("atlaset.theme")
-        : null;
+    const theme = getCachedValue<ThemeKey | null>(THEME_CACHE_KEY, null);
+    const accent = getCachedValue<AccentKey | null>(ACCENT_CACHE_KEY, null);
 
-    if (theme === "light" || theme === "dark" || theme === "system") {
+    if (theme || accent) {
       const initialSettingsState = settingsReducer(undefined, { type: "" });
 
       return {
@@ -35,14 +39,15 @@ const getPreloadedState = (): Partial<RootState> | undefined => {
             ...initialSettingsState.settings,
             display: {
               ...initialSettingsState.settings?.display,
-              theme,
+              ...(theme ? { theme } : {}),
+              ...(accent ? { accent } : {}),
             },
           },
         },
       };
     }
   } catch {
-    // Fall back to reducer defaults if localStorage read fails
+    // Fall back to reducer defaults
   }
   return undefined;
 };

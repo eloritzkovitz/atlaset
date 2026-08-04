@@ -2,6 +2,7 @@ export * from "./browser/clipboard";
 export * from "./browser/device";
 export * from "./browser/env";
 export * from "./browser/keyboard";
+export * from "./browser/storage";
 export * from "./browser/url";
 
 export * from "./collections/compare";

@@ -2,7 +2,11 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { PwaUpdateUiHint, SplashScreen, UIHintContainer } from "@components";
 import { AtlasProviders } from "@features/atlas/core/providers/AtlasProviders";
-import { CookieConsentModal, useAnalytics } from "@features/settings";
+import {
+  CookieConsentModal,
+  useAnalytics,
+  useSettings,
+} from "@features/settings";
 import { SettingsRoutes } from "@features/settings/common/routes/SettingsRoutes";
 import { GuestRoute } from "./GuestRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
@@ -26,7 +30,14 @@ const TripsPage = lazy(() => import("../../pages/TripsPage"));
 
 /** Main application routes component. */
 export function AppRoutes() {
+  const { ready } = useSettings();
+
   useAnalytics();
+
+  // Show splash screen while settings are loading
+  if (!ready) {
+    return <SplashScreen />;
+  }
 
   return (
     <>
