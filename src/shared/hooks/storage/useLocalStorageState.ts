@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { getCachedValue, setCachedValue } from "@utils";
 
 /**
  * Manages state that is persisted in localStorage.
@@ -10,23 +9,25 @@ import { getCachedValue, setCachedValue } from "@utils";
 export function useLocalStorageState<T>(
   key: string,
   defaultValue: T,
-): [T, (val: T | ((prevState: T) => T)) => void] {
-  const [state, setState] = useState<T>(() =>
-    getCachedValue<T>(key, defaultValue),
-  );
+): [T, (val: T) => void] {
+  const [state, setState] = useState<T>(() => {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved ? JSON.parse(saved) : defaultValue;
+    } catch {
+      return defaultValue;
+    }
+  });
 
   /** Updates the state and persists the value to localStorage. */
   const setPersistentState = useCallback(
-    (value: T | ((prevState: T) => T)) => {
-      setState((prevState) => {
-        const nextState =
-          typeof value === "function"
-            ? (value as (prevState: T) => T)(prevState)
-            : value;
-
-        setCachedValue(key, nextState);
-        return nextState;
-      });
+    (value: T) => {
+      setState(value);
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (error) {
+        console.warn(`Error setting localStorage key "${key}":`, error);
+      }
     },
     [key],
   );
