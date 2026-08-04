@@ -1,34 +1,46 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { type Currency, type Country } from "@features/countries";
-import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
-import { useIsoGroups } from "../../common/hooks/useIsoGroups";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { type Country, type Currency } from "@features/countries";
+import { getQueryParam } from "@utils";
 import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../common/components/WikipediaButton";
+import { useIsoGroups } from "../../common/hooks/useIsoGroups";
+import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 
 interface CurrencyInfoProps {
-  currency: Currency | undefined;
+  currencies: Currency[];
   countries: Country[];
 }
 
 export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
-  currency,
+  currencies,
   countries,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { code: routeCode } = useParams<{ code?: string }>();
+
+  // Resolve code via route param or fallback query string
+  const code = routeCode || getQueryParam("code", "", location.search);
+  const currency = currencies.find((c) => c.code === code);
+
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
     "",
     "",
   );
+
   const isoGroups = useIsoGroups(countries, (c) =>
     currency ? c.currency === currency.code : false,
   );
 
-  // Redirect if currency not found
+  // Redirect to currencies list if currency not found
   useEffect(() => {
-    if (!currency) navigate("/dashboard/currencies");
-  }, [currency, navigate]);
+    if (!currency && currencies.length > 0) {
+      navigate("/dashboard/currencies", { replace: true });
+    }
+  }, [currency, currencies, navigate]);
+
   if (!currency) return null;
 
   return (

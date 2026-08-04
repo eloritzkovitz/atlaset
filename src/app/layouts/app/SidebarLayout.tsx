@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 import { Container, HamburgerButton } from "@components";
 import { useScreenSize } from "@hooks";
 
 interface SidebarLayoutProps {
   menu: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
   contentClassName?: string;
 }
@@ -19,7 +20,6 @@ export function SidebarLayout({
   const { isMobile } = useScreenSize();
   const [panelOpen, setPanelOpen] = useState(false);
 
-  // If the menu is a valid React element, clone it with additional props for mobile behavior
   const menuWithProps =
     isMobile && React.isValidElement(menu)
       ? React.cloneElement(
@@ -46,7 +46,9 @@ export function SidebarLayout({
           {menuWithProps}
         </div>
         <main className={`items-center mx-auto ${contentClassName}`}>
-          <Container className="w-full mt-12">{children}</Container>
+          <Container className="w-full mt-12">
+            {children ?? <Outlet />}
+          </Container>
         </main>
       </div>
     </div>

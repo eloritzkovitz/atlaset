@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { SidebarLayout } from "@app";
+import { SidebarLayout } from "@app/layouts/app/SidebarLayout"
 import { MarkdownFileRenderer } from "@components";
 import {
   DOCS_PATH,

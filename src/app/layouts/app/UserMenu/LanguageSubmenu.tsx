@@ -1,9 +1,7 @@
 import { useTranslation } from "react-i18next";
-import {
-  LanguageMenuList,
-  mapLanguages,
-  useLanguage,
-} from "@features/settings";
+import { LanguageMenuList } from "@features/settings/account/components/LanguageMenuList";
+import { useLanguage } from "@features/settings/account/hooks/useLanguage";
+import { mapLanguages } from "@features/settings/account/utils/languages";
 import { UserSubmenuHeader } from "./UserSubmenuHeader";
 
 interface LanguageSubmenuProps {

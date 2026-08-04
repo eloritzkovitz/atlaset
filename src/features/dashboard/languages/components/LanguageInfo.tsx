@@ -1,22 +1,30 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import type { Country } from "@features/countries";
 import type { Language } from "@types";
-import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
-import { useIsoGroups } from "../../common/hooks/useIsoGroups";
+import { getQueryParam } from "@utils";
 import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../common/components/WikipediaButton";
+import { useIsoGroups } from "../../common/hooks/useIsoGroups";
+import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
 
 interface LanguageInfoProps {
-  language: Language | undefined;
+  languages: Language[];
   countries: Country[];
 }
 
 export const LanguageInfo: React.FC<LanguageInfoProps> = ({
-  language,
+  languages,
   countries,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { code: routeCode } = useParams<{ code?: string }>();
+
+  // Resolve code via route param or fallback query string
+  const code = routeCode || getQueryParam("code", "", location.search);
+  const language = languages.find((l) => l.code === code);
+
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
     "",
@@ -34,9 +42,13 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       : false,
   );
 
+  // Redirect to languages list if language not found
   useEffect(() => {
-    if (!language) navigate("/dashboard/languages");
-  }, [language, navigate]);
+    if (!language && languages.length > 0) {
+      navigate("/dashboard/languages", { replace: true });
+    }
+  }, [language, languages, navigate]);
+
   if (!language) return null;
 
   return (

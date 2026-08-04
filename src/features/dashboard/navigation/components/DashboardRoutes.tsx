@@ -57,6 +57,7 @@ export function DashboardRoutes({
     countries,
     selectedSovereignOnly,
   );
+
   const countryStatsBaseProps = {
     setSelectedRegion,
     setSelectedSubregion,
@@ -77,6 +78,7 @@ export function DashboardRoutes({
     <Routes>
       <Route path="overview" element={<OverviewGrid />} />
       <Route path="" element={<Navigate to="overview" replace />} />
+
       <Route
         path="exploration"
         element={
@@ -93,6 +95,7 @@ export function DashboardRoutes({
           />
         }
       />
+
       <Route
         path="countries"
         element={<Navigate to="/dashboard/countries/all" replace />}
@@ -102,10 +105,10 @@ export function DashboardRoutes({
         element={
           <CountryStats
             {...countryStatsBaseProps}
-            selectedRegion={"all"}
-            selectedSubregion={""}
+            selectedRegion="all"
+            selectedSubregion=""
             search={search}
-            selectedIsoCode={""}
+            selectedIsoCode=""
             selectedShowSovereignOnly={selectedSovereignOnly}
             onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
@@ -129,44 +132,32 @@ export function DashboardRoutes({
           />
         }
       />
+
       <Route
         path="currencies/exchange"
         element={<CurrencyExchangeWidget currencies={currencies} />}
       />
       <Route
-        path="currencies/"
+        path="currencies"
         element={<CurrenciesGrid currencies={currencies} />}
       />
       <Route
         path="currencies/:code"
-        element={
-          <CurrencyInfo
-            currency={currencies.find(
-              (c) =>
-                c.code === (window.location.pathname.split("/").pop() || ""),
-            )}
-            countries={countries}
-          />
-        }
+        element={<CurrencyInfo currencies={currencies} countries={countries} />}
       />
+
       <Route
-        path="languages/"
+        path="languages"
         element={<LanguagesGrid languages={languages} />}
       />
       <Route
         path="languages/:code"
-        element={
-          <LanguageInfo
-            language={languages.find(
-              (l) =>
-                l.code === (window.location.pathname.split("/").pop() || ""),
-            )}
-            countries={countries}
-          />
-        }
+        element={<LanguageInfo languages={languages} countries={countries} />}
       />
+
       <Route path="achievements" element={<AchievementsGrid />} />
       <Route path="achievements/:achievementId" element={<AchievementInfo />} />
+
       <Route path="statistics/*" element={<StatisticsGrid />} />
     </Routes>
   );

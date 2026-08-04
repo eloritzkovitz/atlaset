@@ -2,7 +2,7 @@ import React, { Suspense } from "react";
 import { useUI } from "@contexts/UIContext";
 import { HelpPanel } from "@features/docs";
 import { SearchPanel } from "@features/search";
-import { ShortcutsModal } from "@features/settings";
+import { ShortcutsModal } from "@features/settings/accessibility/components/ShortcutsModal";
 import { FriendsPanel } from "@features/user/friends";
 import { isAuthenticated } from "@lib/firebase";
 

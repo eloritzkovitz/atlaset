@@ -1,15 +1,18 @@
-import { useCallback, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
 import ReactDOM from "react-dom";
-import { Modal, ModalHeader } from "@components";
+import { LoadingSpinner, Modal, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { useUI } from "@contexts/UIContext";
 import { useTripFilters } from "@features/trips/hooks/useTripFilters";
 import { useKeyHandler } from "@hooks";
 import { AppCalendar } from "./AppCalendar";
-import { CalendarSidePanel } from "./CalendarSidePanel";
 import { type CalendarView, type TripEventTypeKey } from "../types";
 import { getNextCalendarDate } from "../utils/navigation";
+
+const CalendarSidePanel = lazy(() =>
+  import("./CalendarSidePanel").then((m) => ({ default: m.CalendarSidePanel })),
+);
 
 /** Renders the calendar modal. */
 export default function CalendarModal() {
@@ -57,12 +60,14 @@ export default function CalendarModal() {
         }
       />
       <div className="flex flex-row w-full h-full">
-        <CalendarSidePanel
-          date={date}
-          setDate={setDate}
-          filters={filters}
-          onToggleType={handleToggleType}
-        />
+        <Suspense fallback={<LoadingSpinner />}>
+          <CalendarSidePanel
+            date={date}
+            setDate={setDate}
+            filters={filters}
+            onToggleType={handleToggleType}
+          />
+        </Suspense>
         <div className="flex flex-col flex-1 min-w-0">
           <AppCalendar
             trips={filteredTrips}

@@ -6,7 +6,6 @@ import {
   useLocation,
   Navigate,
 } from "react-router-dom";
-import { AppPanels } from "@app";
 import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes";
 import { useAuth } from "@features/user/auth";
@@ -179,7 +178,6 @@ export default function ProfilePage() {
           onSave={() => setProfileRefreshKey((k) => k + 1)}
         />
       )}
-      <AppPanels />
     </>
   );
 }

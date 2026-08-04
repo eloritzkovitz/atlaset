@@ -1,9 +1,10 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 import { PublicFooter } from "./PublicFooter";
 import { PublicHeader } from "./PublicHeader";
 
 interface PublicLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   showAuthButtons?: boolean;
   footer?: React.ReactNode;
 }
@@ -17,7 +18,7 @@ export function PublicLayout({
     <div className="public-layout flex flex-col min-h-screen h-screen w-screen bg-bg overflow-x-hidden">
       <PublicHeader showAuthButtons={showAuthButtons} />
       <main className="flex-1 flex flex-col items-center justify-center pb-16 sm:pb-0">
-        {children}
+        {children || <Outlet />}
       </main>
       <PublicFooter>{footer}</PublicFooter>
     </div>

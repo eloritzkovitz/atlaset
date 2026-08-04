@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import {
   Breadcrumbs,
   Container,
@@ -23,6 +23,7 @@ import { useAuth } from "@features/user/auth";
 import { usePageTitle, useScreenSize } from "@hooks";
 
 export default function DashboardPage() {
+  const location = useLocation();
   const { ready } = useAuth();
   const {
     countries,
@@ -111,7 +112,7 @@ export default function DashboardPage() {
   const isCurrencyPanel = safePanel.startsWith("currencies");
   const isAchievementPanel = safePanel.startsWith("achievements");
 
-  // Determine the left part of the page title based on the current panel and filters
+  // Determine page titles
   const getCountryPanelTitle = (): string => {
     if (safePanel === "exploration") {
       return tDashboard("exploration.worldTitle");
@@ -143,7 +144,6 @@ export default function DashboardPage() {
       : tDashboard("menu.title");
   };
 
-  // Determine the page title based on the current panel and filters
   const getPageTitleLabel = (): string => {
     if (isCountryPanel) return getCountryPanelTitle();
     if (isCurrencyPanel && selectedCurrency?.name) return selectedCurrency.name;
@@ -194,7 +194,7 @@ export default function DashboardPage() {
     return <LoadingSpinner fullScreen message="Loading dashboard..." />;
   if (error) return <ErrorMessage fullScreen error={error} />;
 
-  // Redirect early if at /dashboard
+  // Redirect early if at base path /dashboard
   if (location.pathname === "/dashboard") {
     return <Navigate to="/dashboard/overview" replace />;
   }
