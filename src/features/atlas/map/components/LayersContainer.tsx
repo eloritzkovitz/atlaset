@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import { Tooltip } from "@components";
 import { useActiveLayerItems, useMapTheme } from "@features/atlas/core";
 import {
-  getBlendedLayerColor,
+  getTopmostLayerColor,
   groupLayerItemsByIsoCode,
 } from "@features/atlas/layers";
 import { useMapColors, useMapOverlays } from "@features/atlas/settings";
@@ -128,7 +128,7 @@ export function LayersContainer({
                 : countryName;
 
             const layers = layerGroups[isoA2] || [];
-            const blendedFill = getBlendedLayerColor(
+            const blendedFill = getTopmostLayerColor(
               layers,
               geographyStyle.default.fill,
             );

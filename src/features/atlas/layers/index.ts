@@ -26,5 +26,5 @@ export {
 export {
   getLayerItems,
   groupLayerItemsByIsoCode,
-  getBlendedLayerColor,
+  getTopmostLayerColor,
 } from "./utils/layerRender";

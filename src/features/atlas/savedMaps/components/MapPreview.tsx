@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import * as d3 from "d3-geo";
 import {
   groupLayerItemsByIsoCode,
-  getBlendedLayerColor,
+  getTopmostLayerColor,
 } from "@features/atlas/layers";
 import { useMapView } from "@features/atlas/map";
 import { useMapSettings } from "@features/atlas/settings";
@@ -68,7 +68,7 @@ export function MapPreview({ map }: { map: SavedMap }) {
             const layers = isoA2 ? layerGroups[isoA2.toUpperCase()] : undefined;
 
             const fill = layers
-              ? getBlendedLayerColor(layers, baseColor)
+              ? getTopmostLayerColor(layers, baseColor)
               : baseColor;
 
             return (

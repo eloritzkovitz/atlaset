@@ -2,7 +2,7 @@ import { mockLayers } from "@test-utils/mockLayers";
 import {
   getLayerItems,
   groupLayerItemsByIsoCode,
-  getBlendedLayerColor,
+  getTopmostLayerColor,
 } from "./layerRender";
 
 describe("layerRender utils", () => {
@@ -47,35 +47,31 @@ describe("layerRender utils", () => {
     });
   });
 
-  describe("getBlendedLayerColor", () => {
+  describe("getTopmostLayerColor", () => {
     it("returns fallback color if layers is empty", () => {
-      expect(getBlendedLayerColor([], "#fff")).toBe("#fff");
-      expect(getBlendedLayerColor(undefined, "#abc")).toBe("#abc");
+      expect(getTopmostLayerColor([], "#fff")).toBe("#fff");
+      expect(getTopmostLayerColor(undefined, "#abc")).toBe("#abc");
     });
 
-    it("returns the only layer color if one present", () => {
+    it("returns the only layer color if one is present", () => {
       const layers = [{ isoCode: "US", color: "#789", layerId: "other" }];
-      expect(getBlendedLayerColor(layers, "#fff")).toBe("#789");
+      expect(getTopmostLayerColor(layers, "#fff")).toBe("#789");
     });
 
-    it("blends colors if multiple layers", () => {
+    it("returns the topmost (last) layer color when multiple layers exist", () => {
       const layers = [
         { isoCode: "US", color: "#ff0000", layerId: "a" },
         { isoCode: "US", color: "#0000ff", layerId: "b" },
       ];
-      const blended = getBlendedLayerColor(layers);
-      expect(typeof blended).toBe("string");
-      expect(blended).toBeDefined();
-      expect(blended).not.toBe("#ff0000");
-      expect(blended).not.toBe("#0000ff");
+      expect(getTopmostLayerColor(layers)).toBe("#0000ff");
     });
 
-    it("ignores layers with missing/empty color", () => {
+    it("ignores layers with missing or empty color", () => {
       const layers = [
         { isoCode: "US", color: "", layerId: "a" },
         { isoCode: "US", color: undefined, layerId: "b" },
       ] as any;
-      expect(getBlendedLayerColor(layers, "#fff")).toBe("#fff");
+      expect(getTopmostLayerColor(layers, "#fff")).toBe("#fff");
     });
   });
 });

@@ -1,13 +1,13 @@
 /**
  * Utilities for layer rendering.
  */
-import { blendColors } from "@utils";
+
 import type { Layer, LayerItem } from "../types";
 
 /**
  * Gets layer items from a layer definition.
  * @param layer - The layer definition containing countries, color, and name.
- * @returns Array of layer items with isoCode and color.
+ * @returns Array of layer items with isoCode, color, and layerId.
  */
 export function getLayerItems(layer: Layer): LayerItem[] {
   return layer.countries.map((isoCode) => ({
@@ -17,7 +17,8 @@ export function getLayerItems(layer: Layer): LayerItem[] {
   }));
 }
 
-/** Groups layer items by isoCode for blending/stacking.
+/**
+ * Groups layer items by isoCode for layer selection/stacking.
  * @param layerItems - The list of layer items.
  * @returns A record mapping isoCodes to their layer items.
  */
@@ -32,24 +33,22 @@ export function groupLayerItemsByIsoCode(layerItems: LayerItem[] = []) {
   return layerGroups;
 }
 
-/** Returns a blended color for a list of layer items.
- * If no layer colors, returns the fallback color.
- * @param layerItems - The layer items for a country.
- * @param fallbackColor - The color to return if no layers.
- * @returns The blended color or fallback color.
+/**
+ * Gets the topmost layer color for a given set of layer items.
+ * @param layerItems - The list of layer items.
+ * @param fallbackColor - The fallback color to use if no layers are present.
+ * @returns The color of the topmost layer or the fallback color.
  */
-export function getBlendedLayerColor(
+export function getTopmostLayerColor(
   layerItems: LayerItem[] = [],
   fallbackColor?: string,
 ) {
-  // Blend or pick the top-most layer
   const layerColors = layerItems
     .map((o) => o.color)
     .filter((c): c is string => typeof c === "string" && c.length > 0);
 
   if (layerColors.length === 0) return fallbackColor;
-  if (layerColors.length === 1) return layerColors[0];
 
-  // preserve stacking order by reversing
-  return blendColors([...layerColors].reverse());
+  // The last item in the array represents the topmost layer on the stack
+  return layerColors[layerColors.length - 1];
 }

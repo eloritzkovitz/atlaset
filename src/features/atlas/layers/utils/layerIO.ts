@@ -7,7 +7,6 @@ import {
   exportToFile,
   importFromFile,
   parseAndNormalize,
-  rgbaToHex,
   serializeItems,
 } from "@utils";
 
@@ -34,14 +33,11 @@ export function serializeLayers(layers: Layer | Layer[]): string {
 function normalizeLayer(o: Record<string, unknown>): Layer {
   const normalized = { ...o };
 
-  // Convert any RGBA color strings to hex format for consistency
+  // Ensure color properties are valid string values
   const colorKeys = ["color", "fillColor", "strokeColor"] as const;
   for (const key of colorKeys) {
-    if (
-      typeof normalized[key] === "string" &&
-      (normalized[key] as string).startsWith("rgba")
-    ) {
-      normalized[key] = rgbaToHex(normalized[key] as string);
+    if (typeof normalized[key] === "string") {
+      normalized[key] = (normalized[key] as string).trim();
     }
   }
 

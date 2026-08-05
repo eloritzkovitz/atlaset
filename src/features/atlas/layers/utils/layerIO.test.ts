@@ -43,18 +43,22 @@ describe("layerIO utils", () => {
         type: "application/json",
       });
 
-      await importLayersFromFile(createMockEvent(invalidFile), importLayers, onError);
+      await importLayersFromFile(
+        createMockEvent(invalidFile),
+        importLayers,
+        onError,
+      );
       expect(onError).toHaveBeenCalledWith(expect.any(Error));
       expect(importLayers).not.toHaveBeenCalled();
     });
 
-    it("imports single objects and arrays, normalizing RGBA colors and backfilling IDs", async () => {
+    it("imports single objects and arrays, trimming colors and backfilling IDs", async () => {
       const importLayers = vi.fn();
 
       const rawData = {
         ...sampleLayer,
         id: undefined,
-        color: "rgba(255, 0, 0, 0.5)",
+        color: " rgba(255, 0, 0, 0.5) ",
         fillColor: "rgba(0, 255, 0, 1)",
         strokeColor: "rgba(0, 0, 255, 0.25)",
       };
@@ -68,9 +72,9 @@ describe("layerIO utils", () => {
       expect(importLayers).toHaveBeenCalledTimes(1);
       const payload = importLayers.mock.calls[0][0][0];
       expect(payload.id).toBeDefined();
-      expect(payload.color).toBe("#ff00007f");
-      expect(payload.fillColor).toBe("#00ff00ff");
-      expect(payload.strokeColor).toBe("#0000ff3f");
+      expect(payload.color).toBe("rgba(255, 0, 0, 0.5)");
+      expect(payload.fillColor).toBe("rgba(0, 255, 0, 1)");
+      expect(payload.strokeColor).toBe("rgba(0, 0, 255, 0.25)");
     });
   });
 
