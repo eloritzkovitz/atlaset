@@ -78,11 +78,54 @@ describe("settingsService", () => {
       );
     });
 
-    it("bypasses cloud persistence pipelines when state modifications are redundant", async () => {
-      vi.mocked(libFirebase.getDocData).mockResolvedValueOnce(payload);
+    it("executes atomic batch writes when saving settings", async () => {
       await settingsService.save(payload as any);
-      expect(fs.setDoc).not.toHaveBeenCalled();
-      expect(activityMockTracker).not.toHaveBeenCalled();
+
+      expect(fs.batchSet).toHaveBeenCalledWith(
+        libFirebase.getPaths.settingsDoc("test-user"),
+        payload,
+        { merge: true },
+      );
+      expect(fs.batchCommit).toHaveBeenCalledTimes(1);
+      expect(activityMockTracker).toHaveBeenCalledWith(
+        130,
+        { settings: payload, userName: "Alex" },
+        "test-user",
+      );
+    });
+
+    it("synchronizes user profile privacy fields when settings.privacy is provided", async () => {
+      const payloadWithPrivacy = {
+        ...payload,
+        privacy: {
+          isPublicProfile: false,
+          allowSearchIndexing: true,
+        },
+      };
+
+      await settingsService.save(payloadWithPrivacy as any);
+
+      expect(fs.batchSet).toHaveBeenCalledWith(
+        libFirebase.getPaths.settingsDoc("test-user"),
+        payloadWithPrivacy,
+        { merge: true },
+      );
+      expect(fs.batchUpdate).toHaveBeenCalledWith(
+        libFirebase.getPaths.user("test-user"),
+        {
+          isPublic: false,
+          isSearchIndexingAllowed: true,
+        },
+      );
+      expect(fs.batchCommit).toHaveBeenCalledTimes(1);
+    });
+
+    it("omits profile document updates when privacy settings are absent", async () => {
+      await settingsService.save(payload as any);
+
+      expect(fs.batchSet).toHaveBeenCalledTimes(1);
+      expect(fs.batchUpdate).not.toHaveBeenCalled();
+      expect(fs.batchCommit).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -92,40 +135,34 @@ describe("settingsService", () => {
       auth.isAuthenticated.mockReturnValue(true);
       auth.getCurrentUser.mockReturnValue({ uid: "test-user" } as any);
     });
+
     afterEach(() => vi.useRealTimers());
 
     it("throttles high frequency document writing calls sequentially within active frame window", async () => {
-      vi.mocked(libFirebase.getDocData).mockResolvedValue(undefined);
-
       await settingsService.save(payload as any);
       await settingsService.save(payload as any);
-      expect(fs.setDoc).toHaveBeenCalledTimes(1);
+      expect(fs.batchCommit).toHaveBeenCalledTimes(1);
 
       vi.advanceTimersByTime(5001);
       await settingsService.save(payload as any);
-      expect(fs.setDoc).toHaveBeenCalledTimes(2);
+      expect(fs.batchCommit).toHaveBeenCalledTimes(2);
     });
 
     it("coalesces overlapping in-flight pipeline invocations gracefully", async () => {
-      let resolveFetch: (v: any) => void = () => {};
-      vi.mocked(libFirebase.getDocData).mockImplementationOnce(
-        () => new Promise((r) => (resolveFetch = r)),
-      );
-
       let resolveWrite: (v: void) => void = () => {};
-      fs.setDoc.mockImplementationOnce(
+      fs.batchCommit.mockImplementationOnce(
         () => new Promise((r) => (resolveWrite = r)),
       );
 
       const req1 = settingsService.save(payload as any);
-      resolveFetch(undefined);
       await vi.advanceTimersByTimeAsync(0);
 
       const req2 = settingsService.save(payload as any);
+
       resolveWrite();
       await Promise.all([req1, req2]);
 
-      expect(fs.setDoc).toHaveBeenCalledTimes(1);
+      expect(fs.batchCommit).toHaveBeenCalledTimes(1);
       expect(activityMockTracker).toHaveBeenCalledTimes(1);
     });
   });

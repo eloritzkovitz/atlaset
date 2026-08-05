@@ -101,9 +101,10 @@
         "maxStreak": "Max Streak",
         "time": "Time",
         "date": "Date"
-      },
+      },      
       "noScores": "No scores found.",
-      "authRequired": "You must be signed in to view leaderboards."
+      "authRequired": "You must be signed in to view leaderboards.",
+      "anonymousPlayer": "Anonymous Player"
     }
   }
 }

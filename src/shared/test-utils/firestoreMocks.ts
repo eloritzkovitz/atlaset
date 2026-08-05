@@ -49,38 +49,48 @@ export const createNativeAuthMocks = () => ({
 });
 
 // Mock Firestore utilities
-export const createFirestoreMocks = () => ({
-  addDoc: vi.fn(),
-  arrayRemove: vi.fn(),
-  arrayUnion: vi.fn(),
-  collection: vi.fn(),
-  deleteDoc: vi.fn(),
-  doc: vi.fn(),
-  getDoc: vi.fn(),
-  getDocs: vi.fn(),
-  getFirestore: vi.fn(),
-  limit: vi.fn(),
-  onSnapshot: vi.fn(),
-  orderBy: vi.fn(),
-  query: vi.fn(),
-  serverTimestamp: vi.fn(() => ({ toMillis: () => Date.now() })),
-  setDoc: vi.fn(),
-  startAfter: vi.fn(),
-  transaction: vi.fn(() => ({
-    get: vi.fn(),
-    set: vi.fn(),
-    update: vi.fn(),
-    delete: vi.fn(),
-  })),
-  updateDoc: vi.fn(),
-  where: vi.fn(),
-  writeBatch: vi.fn(() => ({
-    commit: vi.fn(),
-    delete: vi.fn(),
-    set: vi.fn(),
-    update: vi.fn(),
-  })),
-});
+export const createFirestoreMocks = () => {
+  const batchCommit = vi.fn().mockResolvedValue(undefined);
+  const batchSet = vi.fn();
+  const batchUpdate = vi.fn();
+  const deleteDoc = vi.fn();
+
+  return {
+    addDoc: vi.fn(),
+    arrayRemove: vi.fn(),
+    arrayUnion: vi.fn(),
+    batchCommit,
+    batchSet,
+    batchUpdate,
+    collection: vi.fn(),
+    deleteDoc,
+    doc: vi.fn(),
+    getDoc: vi.fn(),
+    getDocs: vi.fn(),
+    getFirestore: vi.fn(),
+    limit: vi.fn(),
+    onSnapshot: vi.fn(),
+    orderBy: vi.fn(),
+    query: vi.fn(),
+    serverTimestamp: vi.fn(() => ({ toMillis: () => Date.now() })),
+    setDoc: vi.fn(),
+    startAfter: vi.fn(),
+    transaction: vi.fn(() => ({
+      get: vi.fn(),
+      set: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+    })),
+    updateDoc: vi.fn(),
+    where: vi.fn(),
+    writeBatch: vi.fn(() => ({
+      set: (...args: any[]) => batchSet(...args),
+      update: (...args: any[]) => batchUpdate(...args),
+      delete: (...args: any[]) => deleteDoc(...args),
+      commit: (...args: any[]) => batchCommit(...args),
+    })),
+  };
+};
 
 /**
  * Creates a mock database object with specified methods.

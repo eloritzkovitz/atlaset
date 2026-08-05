@@ -1,16 +1,15 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { LeaderboardRowComponent } from "./LeaderboardRow";
-import type { LeaderboardEntry, QuizType, Difficulty } from "../../types";
-
-const TABLE_HEADER_KEYS = [
-  { key: "leaderboards.table.headers.rank", align: "left" },
-  { key: "leaderboards.table.headers.player", align: "left" },
-  { key: "leaderboards.table.headers.score", align: "right" },
-  { key: "leaderboards.table.headers.maxStreak", align: "right" },
-  { key: "leaderboards.table.headers.time", align: "right" },
-  { key: "leaderboards.table.headers.date", align: "right" },
-];
+import { Table, type TableColumn, RankBadge } from "@components";
+import { UserInfo } from "@features/user/profile/components/UserInfo";
+import type { UserProfile } from "@features/user/profile/types";
+import { formatDate, formatTimeSeconds } from "@utils";
+import type {
+  LeaderboardEntry,
+  LeaderboardRow,
+  QuizType,
+  Difficulty,
+} from "../../types";
 
 interface LeaderboardTableProps {
   entries?: LeaderboardEntry[];
@@ -21,57 +20,92 @@ interface LeaderboardTableProps {
 
 export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
   entries,
+  maxEntries,
 }) => {
-  const { t, i18n } = useTranslation("quizzes");
-  const isRtl = i18n.dir() === "rtl";
-  const rankedData = (entries ?? []).map((row, i) => ({
-    ...row,
-    rank: i + 1,
-  }));
+  const { t } = useTranslation(["quizzes", "common"]);
+
+  const rankedData: LeaderboardRow[] = useMemo(() => {
+    const list = entries ?? [];
+    const sliced = maxEntries ? list.slice(0, maxEntries) : list;
+    return sliced.map((row, i) => ({
+      ...row,
+      rank: i + 1,
+    }));
+  }, [entries, maxEntries]);
+
+  const columns: TableColumn<LeaderboardRow>[] = useMemo(
+    () => [
+      {
+        key: "rank",
+        label: "#",
+        className: "text-center w-12",
+        sortable: false,
+        render: (row) => <RankBadge rank={row.rank} />,
+      },
+      {
+        key: "playerName",
+        label: t("leaderboards.table.headers.player"),
+        className: "text-start w-full",
+        sortable: true,
+        sortValue: (row) => row.playerName.toLowerCase(),
+        render: (row) => {
+          const isAnonymous = !row.playerId;
+          const playerProfile: UserProfile = {
+            uid: row.playerId,
+            displayName: row.playerName,
+            username: row.username || "unknown",
+            photoURL: row.photoURL,
+            isPublic: !isAnonymous,
+            visitedCountryCodes: [],
+            wantToVisitCountryCodes: [],
+          };
+
+          return (
+            <UserInfo
+              user={playerProfile}
+              showDisplayName
+              showUsername={false}
+            />
+          );
+        },
+      },
+      {
+        key: "score",
+        label: t("leaderboards.table.headers.score"),
+        className: "text-end font-semibold whitespace-nowrap px-4",
+        sortable: true,
+        render: (row) => row.score,
+      },
+      {
+        key: "maxStreak",
+        label: t("leaderboards.table.headers.maxStreak"),
+        className: "text-end whitespace-nowrap px-4",
+        sortable: true,
+        sortValue: (row) => row.maxStreak ?? 0,
+        render: (row) => row.maxStreak ?? "-",
+      },
+      {
+        key: "time",
+        label: t("leaderboards.table.headers.time"),
+        className: "text-end whitespace-nowrap px-4",
+        sortable: true,
+        render: (row) => formatTimeSeconds(row.time),
+      },
+      {
+        key: "date",
+        label: t("leaderboards.table.headers.date"),
+        className: "text-end whitespace-nowrap px-4",
+        sortable: true,
+        sortValue: (row) => new Date(row.date).getTime(),
+        render: (row) => formatDate(row.date, "long"),
+      },
+    ],
+    [t],
+  );
 
   return (
-    <div className="overflow-x-auto">
-      <h2 className="text-2xl font-semibold mb-4">
-        {t("lobby.cards.leaderboards.title")}
-      </h2>
-      <table className="min-w-full table-auto border-separate border-spacing-y-2">
-        <thead>
-          <tr className="bg-base-200">
-            {TABLE_HEADER_KEYS.map((header) => {
-              const align = isRtl
-                ? header.align === "left"
-                  ? "right"
-                  : "left"
-                : header.align;
-              return (
-                <th
-                  key={header.key}
-                  className={`px-4 py-2 text-${align} text-lg font-semibold`}
-                >
-                  {t(header.key)}
-                </th>
-              );
-            })}
-          </tr>
-        </thead>
-        <tbody>
-          {rankedData.length === 0 ? (
-            <tr>
-              <td colSpan={6} className="text-center text-muted py-4">
-                {t("leaderboards.table.noScores")}
-              </td>
-            </tr>
-          ) : (
-            rankedData.map((row, i) => (
-              <LeaderboardRowComponent
-                key={row.playerName + row.rank}
-                row={row}
-                index={i}
-              />
-            ))
-          )}
-        </tbody>
-      </table>
+    <div className="w-full">
+      <Table<LeaderboardRow> columns={columns} data={rankedData} striped />
     </div>
   );
 };

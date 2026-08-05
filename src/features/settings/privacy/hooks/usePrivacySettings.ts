@@ -10,7 +10,7 @@ const GUEST_ANALYTICS_KEY = "atlaset:guest_analytics_consent";
  */
 export function usePrivacySettings(): [
   PrivacySettings,
-  (settings: Partial<PrivacySettings>) => void,
+  (newSettings: Partial<PrivacySettings>) => Promise<void>,
 ] {
   const { settings, updateSettings } = useSettings();
 
@@ -19,21 +19,42 @@ export function usePrivacySettings(): [
     null,
   );
 
-  // Determine the effective analytics consent based on user settings and guest consent
   const contextConsent = settings?.privacy?.analyticsConsent;
   const effectiveConsent = contextConsent ?? guestConsent;
 
   const privacy: PrivacySettings = {
-    ...(settings.privacy || defaultSettings.privacy || {}),
     analyticsConsent: effectiveConsent,
+    isPublicProfile:
+      settings?.privacy?.isPublicProfile ??
+      defaultSettings.privacy?.isPublicProfile ??
+      true,
+    allowSearchIndexing:
+      settings?.privacy?.allowSearchIndexing ??
+      defaultSettings.privacy?.allowSearchIndexing ??
+      true,
   };
 
-  const setPrivacySettings = (newSettings: Partial<PrivacySettings>) => {
+  const setPrivacySettings = async (newSettings: Partial<PrivacySettings>) => {
     if (newSettings.analyticsConsent !== undefined) {
       setGuestConsent(newSettings.analyticsConsent);
     }
 
-    updateSettings({ privacy: { ...privacy, ...newSettings } });
+    // Determine target public profile state
+    const nextIsPublic = newSettings.isPublicProfile ?? privacy.isPublicProfile;
+
+    // Enforce business rule: Public profiles are always discoverable in search
+    const nextAllowSearchIndexing = nextIsPublic
+      ? true
+      : (newSettings.allowSearchIndexing ?? privacy.allowSearchIndexing);
+
+    const updatedPrivacy: PrivacySettings = {
+      ...privacy,
+      ...newSettings,
+      isPublicProfile: nextIsPublic,
+      allowSearchIndexing: nextAllowSearchIndexing,
+    };
+
+    await updateSettings({ privacy: updatedPrivacy });
   };
 
   return [privacy, setPrivacySettings];

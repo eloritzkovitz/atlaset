@@ -100,6 +100,17 @@
   },
   "privacy": {
     "title": "Privacy settings",
+    "visibility": {
+      "title": "Visibility",
+      "showProfile": {
+        "label": "Show my profile to others",
+        "description": "Controls whether your profile information is visible to other users. If disabled, only friends will see your profile."
+      },
+      "searchIndexing": {
+        "label": "Allow search indexing",
+        "description": "Allows your data to be indexed for search. If disabled, your data will not appear in search results."
+      }
+    },
     "cookies": {
       "title": "This site uses cookies",
       "paragraph1": "We use technologies such as cookies to ensure the functionality of the site and collect anonymous usage information for analytical purposes and improving user experience.",

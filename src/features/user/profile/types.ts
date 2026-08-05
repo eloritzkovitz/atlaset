@@ -31,6 +31,8 @@ export interface UserProfile {
   socialLinks?: Partial<Record<SocialPlatform, string>>;
   /** Whether the profile is public */
   isPublic: boolean;
+  /** Whether search indexing is allowed */
+  isSearchIndexingAllowed?: boolean;
   /** Account creation date */
   joinDate?: Timestamp;
   /** List of visited country codes (ISO 3166-1 alpha-2) */

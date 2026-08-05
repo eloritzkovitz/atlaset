@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import {
   useContextMenu,
   useMenuActions,
@@ -123,7 +123,7 @@ export function PanelListItem({
       ariaLabel: visible ? t("actions.hide") : t("actions.show"),
       title: visible ? t("actions.hide") : t("actions.show"),
       className: `${visible ? "text-muted" : "text-muted/50"} hover:text-muted-hover`,
-      icon: visible ? <FaEye /> : <FaEyeSlash />,
+      icon: visible ? <ICONS.show /> : <ICONS.hide />,
     },
   ].filter(Boolean);
 
@@ -219,7 +219,7 @@ export function PanelListItem({
               }}
               ariaLabel={t("actions.moreActions")}
               title={t("actions.moreActions")}
-              icon={<FaEllipsisVertical />}
+              icon={<ICONS.more />}
               rounded
             />
             <Menu

@@ -1,7 +1,9 @@
-import { setDoc } from "firebase/firestore";
-import { appDb } from "@lib/db";
+import { writeBatch } from "firebase/firestore";
 import { logUserActivity } from "@features/activity/utils/activity";
+import type { UserProfile } from "@features/user/profile/types";
+import { appDb } from "@lib/db";
 import {
+  db,
   getCurrentUser,
   getDocData,
   getPaths,
@@ -13,6 +15,15 @@ import type { Settings } from "../../types";
 // In-memory dedupe cache to avoid rapid duplicate saves/logs across callers
 let _lastSaved: { key?: string; ts?: number } = {};
 const _inFlightSaves: Record<string, Promise<void> | undefined> = {};
+
+/** Checks if a save operation is a duplicate within the threshold window. */
+function isRecentDuplicate(dedupeKey: string, thresholdMs = 5000): boolean {
+  return (
+    _lastSaved.key === dedupeKey &&
+    !!_lastSaved.ts &&
+    Date.now() - _lastSaved.ts < thresholdMs
+  );
+}
 
 /**
  * Service for managing user settings.
@@ -43,64 +54,74 @@ export const settingsService = {
    * Saves user settings to Firestore or IndexedDB.
    * @param settings - The settings object to save.
    */
-  async save(settings: Settings) {
+  async save(settings: Settings): Promise<void> {
     const settingsWithId = { ...settings, id: "main" };
-    if (isAuthenticated()) {
-      const user = getCurrentUser();
-      const settingsRef = getPaths.settingsDoc(user!.uid);
 
-      // Create a dedupe key based on the settings data (excluding the id) to avoid duplicate saves
-      const newData = { ...settings };
-      const dedupeKey = JSON.stringify(newData);
-
-      // If an identical save is already in-flight, wait for it to complete instead
-      if (_inFlightSaves[dedupeKey]) {
-        await _inFlightSaves[dedupeKey];
-        return;
-      }
-
-      // If the last save was identical and recent, skip this save to avoid rapid duplicates
-      if (
-        _lastSaved.key === dedupeKey &&
-        _lastSaved.ts &&
-        Date.now() - _lastSaved.ts < 5000
-      ) {
-        return;
-      }
-
-      // Check persisted snapshot second to prevent redundant writes
-      const existingData = await getDocData<Settings>(settingsRef);
-      if (
-        existingData &&
-        JSON.stringify(existingData) === JSON.stringify(settingsWithId)
-      )
-        return;
-
-      // Create and store the in-flight promise so concurrent callers coalesce
-      const op = (async () => {
-        try {
-          _lastSaved = { key: dedupeKey, ts: Date.now() };
-          await setDoc(settingsRef, settingsWithId);
-          await logUserActivity(
-            130,
-            { settings: settingsWithId, userName: user!.displayName },
-            user!.uid,
-          );
-        } finally {
-          delete _inFlightSaves[dedupeKey];
-        }
-      })();
-
-      _inFlightSaves[dedupeKey] = op;
-      await op;
-    } else {
+    if (!isAuthenticated()) {
       const existing = await appDb.settings.get("main");
       if (
         existing &&
         JSON.stringify(existing) === JSON.stringify(settingsWithId)
-      )
+      ) {
         return;
+      }
       await appDb.settings.put(settingsWithId);
+      return;
     }
+
+    const user = getCurrentUser();
+    const dedupeKey = JSON.stringify(settings);
+
+    if (_inFlightSaves[dedupeKey]) {
+      await _inFlightSaves[dedupeKey];
+      return;
+    }
+
+    if (isRecentDuplicate(dedupeKey)) {
+      return;
+    }
+
+    // Create and store the in-flight promise so concurrent callers coalesce
+    const op = (async () => {
+      try {
+        _lastSaved = { key: dedupeKey, ts: Date.now() };
+
+        const batch = writeBatch(db);
+        const settingsRef = getPaths.settingsDoc(user!.uid);
+
+        batch.set(settingsRef, settingsWithId, { merge: true });
+
+        // Update user profile privacy fields if they exist in the settings
+        if (settings.privacy) {
+          const userRef = getPaths.user(user!.uid);
+          const userUpdates: Partial<UserProfile> = {};
+
+          if (settings.privacy.isPublicProfile !== undefined) {
+            userUpdates.isPublic = settings.privacy.isPublicProfile;
+          }
+          if (settings.privacy.allowSearchIndexing !== undefined) {
+            userUpdates.isSearchIndexingAllowed =
+              settings.privacy.allowSearchIndexing;
+          }
+
+          if (Object.keys(userUpdates).length > 0) {
+            batch.update(userRef, userUpdates);
+          }
+        }
+
+        await batch.commit();
+
+        await logUserActivity(
+          130,
+          { settings: settingsWithId, userName: user!.displayName },
+          user!.uid,
+        );
+      } finally {
+        delete _inFlightSaves[dedupeKey];
+      }
+    })();
+
+    _inFlightSaves[dedupeKey] = op;
+    await op;
   },
 };

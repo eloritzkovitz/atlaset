@@ -1,5 +1,5 @@
 import { useState, type InputHTMLAttributes } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { FormField } from "./FormField";
 
 interface PasswordFieldProps extends Omit<
@@ -44,7 +44,7 @@ export function PasswordField({
         tabIndex={-1}
         aria-label={show ? "Hide password" : "Show password"}
       >
-        {show ? <FaEyeSlash /> : <FaEye />}
+        {show ? <ICONS.hide /> : <ICONS.show />}
       </button>
       {status && <div className="mt-1 text-xs text-danger">{status}</div>}
     </div>

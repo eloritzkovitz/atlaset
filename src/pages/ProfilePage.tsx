@@ -7,9 +7,9 @@ import {
   Route,
   useNavigate,
 } from "react-router-dom";
-import { EmptyListMessage } from "@components";
+import { Card, EmptyListMessage } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useUserFriendCount } from "@features/user/friends";
+import { useFriendshipStatus, useUserFriendCount } from "@features/user/friends";
 import {
   EditProfileModal,
   ProfileAboutTab,
@@ -35,9 +35,18 @@ export default function ProfilePage() {
     refreshKey: profileRefreshKey,
   });
 
-  const isLoading = authLoading || profileLoading;
+  const { status: friendshipStatus, loading: friendshipLoading } =
+    useFriendshipStatus(currentUser?.uid, profileUser?.uid);
+
+  const isLoading = authLoading || profileLoading || friendshipLoading;
   const canEdit = Boolean(
     currentUser && profileUser && currentUser.uid === profileUser.uid,
+  );
+  const isPrivateProfileRestricted = Boolean(
+    profileUser &&
+      !profileUser.isPublic &&
+      !canEdit &&
+      friendshipStatus !== "friend",
   );
 
   // Page Title
@@ -74,25 +83,35 @@ export default function ProfilePage() {
                   }
                 />
 
-                {/* Tab Navigation */}
-                <ProfileTabNav profileUser={profileUser} />
+                {isPrivateProfileRestricted ? (
+                  <Card>
+                    <p className="text-center text-muted py-4">
+                      {t("profile.private", "This profile is private.")}
+                    </p>
+                  </Card>
+                ) : (
+                  <>
+                    {/* Tab Navigation */}
+                    <ProfileTabNav profileUser={profileUser} />
 
-                {/* Sub-Routes */}
-                <Routes>
-                  <Route
-                    index
-                    element={
-                      <ProfileAboutTab
-                        profileUser={profileUser}
-                        canEdit={canEdit}
+                    {/* Sub-Routes */}
+                    <Routes>
+                      <Route
+                        index
+                        element={
+                          <ProfileAboutTab
+                            profileUser={profileUser}
+                            canEdit={canEdit}
+                          />
+                        }
                       />
-                    }
-                  />
-                  <Route
-                    path="friends"
-                    element={<ProfileFriendsTab profileUser={profileUser} />}
-                  />
-                </Routes>
+                      <Route
+                        path="friends"
+                        element={<ProfileFriendsTab profileUser={profileUser} />}
+                      />
+                    </Routes>
+                  </>
+                )}
               </>
             ) : (
               <EmptyListMessage message={t("profile.notFound")} />
