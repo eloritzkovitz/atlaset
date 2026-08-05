@@ -1,7 +1,7 @@
 import { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-import { ActionButton, AuthButtons, Menu } from "@components";
+import { ActionButton, Menu } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useLanguage } from "@features/settings";
@@ -9,6 +9,7 @@ import { useAuth, useAuthHandlers } from "@features/user/auth";
 import { useModalAnimation, useScreenSize } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuContent } from "./UserMenuContent";
+import { AuthButtons } from "../AuthButtons";
 
 /** Renders the user menu. */
 export function UserMenu({ fixed = true }: { fixed?: boolean } = {}) {

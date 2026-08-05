@@ -66,10 +66,7 @@ export { Separator } from "./layout/Separator";
 
 // Navigation components
 export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
-export { AppLinks } from "./navigation/AppLinks";
-export { AuthButtons } from "./navigation/AuthButtons";
 export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
-export { GitHubButton } from "./navigation/GitHubButton";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
 export { SidePanelMenu } from "./navigation/Menu/SidePanelMenu";

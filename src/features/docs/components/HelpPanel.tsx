@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { AppLinks, Panel, Separator } from "@components";
+import { AppLinks } from "@app/layouts/app/footer/AppLinks";
+import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAccessibility } from "@features/settings";
 import { DocSearchResults } from "./DocSearchResults";

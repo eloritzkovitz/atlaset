@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BrandCopyright, GitHubButton, Tooltip } from "@components";
+import { GitHubButton } from "@app/layouts/app/footer/GitHubButton";
+import { BrandCopyright, Tooltip } from "@components";
 import { useCountryData } from "@features/countries";
 import { useExplorationStats } from "@features/dashboard/exploration/hooks/useExplorationStats";
 import { formatPercent } from "@utils";

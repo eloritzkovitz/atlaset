@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { AppLinks, DirectionalIcon } from "@components";
+import { AppLinks } from "@app/layouts/app/footer/AppLinks";
+import { DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
 import { useTrips } from "@contexts/TripsContext";
 import { RecentActivitySection } from "@features/activity";

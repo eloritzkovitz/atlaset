@@ -1,4 +1,5 @@
-import { AuthButtons, BrandingWithLabel } from "@components";
+import { BrandingWithLabel } from "@components";
+import { AuthButtons } from "../app/header/AuthButtons";
 
 interface PublicHeaderProps {
   showAuthButtons?: boolean;
