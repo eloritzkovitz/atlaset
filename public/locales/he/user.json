@@ -32,6 +32,10 @@
       "showFriendsList": "הצגת רשימת חברים",
       "backToProfile": "חזרה לפרופיל"
     },
+    "tabs": {
+      "about": "אודות",
+      "friends": "חברים"
+    },
     "editModal": {
       "title": "ערוך פרופיל",
       "personalInfo": "פרטים אישיים",
@@ -65,13 +69,19 @@
         "title": "פרטי קשר",
         "email": "דוא\"ל",
         "noEmailProvided": "אין דוא\"ל"
-      }
+      },
+      "notSpecified": "לא צויין"
     },
-    "notSpecified": "לא צויין",
-    "visitedCountries": "מדינות שביקרתי ({{count}})",
-    "noVisitedCountries": "עדיין לא ביקרת במדינות.",
-    "wantToVisitCountries": "מדינות שאני רוצה לבקר ({{count}})",
-    "noWantToVisitCountries": "עדיין אין מדינות ברשימת המדינות שאני רוצה לבקר.",
-    "bestScores": "התוצאות הטובות ביותר"
+    "friends": {
+      "title": "חברים",
+      "loading": "טוען חברים..."
+    },
+    "tracking": {
+      "visitedCountries": "מדינות שביקרתי ({{count}})",
+      "wantToVisitCountries": "מדינות שאני רוצה לבקר ({{count}})",
+      "noCountries": "לא נמצאו מדינות."
+    },
+    "bestScores": "התוצאות הטובות ביותר",
+    "notFound": "המשתמש לא נמצא."
   }
 }

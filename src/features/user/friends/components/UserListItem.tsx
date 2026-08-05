@@ -84,6 +84,7 @@ export function UserListItem({
   return (
     <PanelListItem
       color={"transparent"}
+      variant="border"
       icon={icon}
       name={
         profileLink ? (

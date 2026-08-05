@@ -32,6 +32,10 @@
       "showFriendsList": "Show friends list",
       "backToProfile": "Back to Profile"
     },
+    "tabs": {
+      "about": "About",
+      "friends": "Friends"
+    },
     "editModal": {
       "title": "Edit Profile",
       "personalInfo": "Personal Information",
@@ -65,13 +69,19 @@
         "title": "Contact Info",
         "email": "Email",
         "noEmailProvided": "No email provided"
-      }
+      },
+      "notSpecified": "Not specified"
     },
-    "notSpecified": "Not specified",
-    "visitedCountries": "Visited Countries ({{count}})",
-    "noVisitedCountries": "No countries visited yet.",
-    "wantToVisitCountries": "Want to Visit ({{count}})",
-    "noWantToVisitCountries": "No countries in your want-to-visit list yet.",
-    "bestScores": "Best Quiz Scores"
+    "friends": {
+      "title": "Friends",
+      "loading": "Loading friends..."
+    },
+    "tracking": {
+      "visitedCountries": "Visited Countries ({{count}})",
+      "wantToVisitCountries": "Want to Visit ({{count}})",
+      "noCountries": "No countries found."
+    },
+    "bestScores": "Best Quiz Scores",
+    "notFound": "User not found."
   }
 }

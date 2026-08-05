@@ -1,99 +1,53 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   useParams,
-  useNavigate,
-  useLocation,
   Navigate,
+  Routes,
+  Route,
+  useNavigate,
 } from "react-router-dom";
-import { useCountryData } from "@features/countries";
-import { useUserLeaderboardScores } from "@features/quizzes";
+import { EmptyListMessage } from "@components";
 import { useAuth } from "@features/user/auth";
+import { useUserFriendCount } from "@features/user/friends";
 import {
-  useUserFriendCount,
-  useFriendProfiles,
-  useUserFriends,
-} from "@features/user/friends";
-import {
-  BestScoresCard,
   EditProfileModal,
-  FriendsListSection,
-  ProfileAboutCard,
-  ProfileCountriesCard,
+  ProfileAboutTab,
+  ProfileFriendsTab,
   ProfileHeader,
+  ProfileTabNav,
   useUserProfile,
 } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
-import { formatFirestoreDate } from "@utils";
 
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const { username } = useParams();
+  const { t } = useTranslation("user");
+
   const [profileRefreshKey, setProfileRefreshKey] = useState(0);
+  const [editOpen, setEditOpen] = useState(false);
+
+  // Fetch Profile User
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
     username,
     refreshKey: profileRefreshKey,
   });
 
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { t } = useTranslation("user");
-
-  const [editOpen, setEditOpen] = useState(false);
-  const friendsOpen = location.pathname.endsWith("/friends");
-  const bestScores = useUserLeaderboardScores(profileUser?.uid);
-
-  // Compute all visited country codes for the profile user, combining manual and trip-based codes
-  const allVisitedCountryCodes = useMemo(() => {
-    if (!profileUser) return [];
-    const manual = profileUser.manualVisitedCountryCodes || [];
-    const tripBased = profileUser.visitedCountryCodes || [];
-
-    return Array.from(new Set([...manual, ...tripBased]));
-  }, [profileUser]);
-
-  // Set the page title to the profile user's displayName if available
-  usePageTitle(
-    profileUser && profileUser.displayName
-      ? `${profileUser.displayName}`
-      : "Profile",
+  const isLoading = authLoading || profileLoading;
+  const canEdit = Boolean(
+    currentUser && profileUser && currentUser.uid === profileUser.uid,
   );
 
-  // Determine if this is the current user's own profile
-  const canEdit = currentUser && currentUser.uid === profileUser?.uid;
+  // Page Title
+  usePageTitle(profileUser?.displayName || "Profile");
 
-  // Get country data for the user's home country
-  const { countries } = useCountryData();
-  const selectedCountry = profileUser
-    ? (countries.find((c) => c.isoCode === profileUser.homeCountry) ?? null)
-    : null;
-
-  // Get friend count and friend profiles for the profile user
+  // Friend Count
   const { count: friendCount } = useUserFriendCount(profileUser?.uid);
-  const { friends: friendObjs } = useUserFriends(
-    friendsOpen && profileUser?.uid ? profileUser.uid : undefined,
-  );
-  const friendUids = friendObjs.map((f) => f.uid);
-  const { profiles: friendProfiles, loading: loadingFriendProfiles } =
-    useFriendProfiles(friendUids);
-
-  // When opening the modal, just navigate
-  const handleOpenFriends = () => {
-    if (!profileUser?.uid) return;
-    navigate(`/users/${profileUser.username}/friends`, { replace: false });
-  };
-
-  // Handle closing the modal by navigating back to the main profile route
-  const handleCloseFriends = () => {
-    navigate(`/users/${profileUser?.username}`);
-  };
-
-  // Show loading state while fetching auth and profile data
-  if (!profileUser && !(authLoading || profileLoading))
-    return <div>User not found</div>;
 
   // Redirect to login if not authenticated
-  if (!currentUser) {
+  if (!currentUser && !authLoading) {
     return <Navigate to="/login" replace />;
   }
 
@@ -101,75 +55,54 @@ export default function ProfilePage() {
     <>
       <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0 mt-12">
         <div className="flex flex-col gap-6 items-center">
-          <div className="w-full max-w-4xl">
-            {authLoading || profileLoading ? (
+          <div className="w-full max-w-4xl space-y-6">
+            {isLoading ? (
               <div className="animate-pulse space-y-6">
                 <div className="h-32 bg-surface-alt rounded-xl mb-4" />
                 <div className="h-20 bg-surface-alt rounded-xl" />
               </div>
             ) : profileUser ? (
               <>
+                {/* Header */}
                 <ProfileHeader
                   profile={profileUser}
-                  canEdit={!!canEdit}
+                  canEdit={canEdit}
                   onEdit={() => setEditOpen(true)}
                   friendCount={friendCount}
-                  onFriendCountClick={handleOpenFriends}
+                  onFriendCountClick={() =>
+                    navigate(`/users/${profileUser.username}/friends`)
+                  }
                 />
-                {friendsOpen ? (
-                  <FriendsListSection
-                    loading={loadingFriendProfiles}
-                    profiles={friendProfiles}
-                    onBack={handleCloseFriends}
+
+                {/* Tab Navigation */}
+                <ProfileTabNav profileUser={profileUser} />
+
+                {/* Sub-Routes */}
+                <Routes>
+                  <Route
+                    index
+                    element={
+                      <ProfileAboutTab
+                        profileUser={profileUser}
+                        canEdit={canEdit}
+                      />
+                    }
                   />
-                ) : (
-                  <>
-                    <ProfileAboutCard
-                      displayEmail={
-                        profileUser.email ??
-                        t("profile.about.personalDetails.noEmailProvided")
-                      }
-                      selectedCountry={selectedCountry}
-                      displayBirthday={
-                        formatFirestoreDate(profileUser.birthday) ??
-                        t("profile.about.personalDetails.notSpecified")
-                      }
-                      displayJoinDate={
-                        formatFirestoreDate(profileUser.joinDate) ??
-                        t("profile.about.personalDetails.notSpecified")
-                      }
-                      displayBiography={
-                        profileUser.biography ??
-                        t("profile.about.personalDetails.noBiographyProvided")
-                      }
-                      displaySocialLinks={
-                        profileUser.socialLinks &&
-                        Object.keys(profileUser.socialLinks).length > 0
-                          ? profileUser.socialLinks
-                          : null
-                      }
-                    />
-                    <ProfileCountriesCard
-                      countryCodes={allVisitedCountryCodes || []}
-                      type="visited"
-                    />
-                    <ProfileCountriesCard
-                      countryCodes={profileUser.wantToVisitCountryCodes || []}
-                      type="wantToVisit"
-                    />
-                    {bestScores.length > 0 && (
-                      <BestScoresCard scores={bestScores} />
-                    )}
-                  </>
-                )}
+                  <Route
+                    path="friends"
+                    element={<ProfileFriendsTab profileUser={profileUser} />}
+                  />
+                </Routes>
               </>
             ) : (
-              <div>User not found</div>
+              <EmptyListMessage message={t("profile.notFound")} />
             )}
           </div>
         </div>
       </main>
-      {canEdit && (
+
+      {/* Edit Profile Modal */}
+      {canEdit && profileUser && (
         <EditProfileModal
           user={currentUser}
           profile={profileUser}

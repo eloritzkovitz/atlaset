@@ -1,10 +1,9 @@
 // Components
-export { BestScoresCard } from "./components/BestScoresCard";
 export { EditProfileModal } from "./components/EditProfileModal/EditProfileModal";
-export { FriendsListSection } from "./components/FriendsListSection";
-export { ProfileAboutCard } from "./components/ProfileAboutCard";
-export { ProfileCountriesCard } from "./components/ProfileCountriesCard";
 export { ProfileHeader } from "./components/ProfileHeader";
+export { ProfileAboutTab } from "./components/ProfileAboutTab";
+export { ProfileFriendsTab } from "./components/ProfileFriendsTab";
+export { ProfileTabNav } from "./components/ProfileTabNav";
 export { UserAvatar } from "./components/UserAvatar";
 export { UserInfo } from "./components/UserInfo";
 

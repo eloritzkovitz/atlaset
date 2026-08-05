@@ -11,7 +11,7 @@ import {
 } from "../config/profileSections";
 
 interface ProfileAboutCardProps {
-  displayEmail: string;
+  displayEmail: string | null;
   selectedCountry: Country | null;
   displayBirthday: string;
   displayJoinDate: string;
@@ -44,7 +44,7 @@ export function ProfileAboutCard({
   const localizedSections = sections.map((s) => ({
     ...s,
     label: t(s.label),
-    content: s.content ?? t("profile.notSpecified"),
+    content: s.content ?? t("profile.about.notSpecified"),
   }));
 
   return (
