@@ -8,6 +8,7 @@ interface SettingsToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
   variant?: "surface" | "input";
+  disabled?: boolean;
 }
 
 export function SettingsToggle({
@@ -17,6 +18,7 @@ export function SettingsToggle({
   checked,
   onChange,
   variant = "surface",
+  disabled = false,
 }: SettingsToggleProps) {
   return (
     <SettingsRow
@@ -24,7 +26,12 @@ export function SettingsToggle({
       description={description}
       tooltip={tooltip}
       control={
-        <Switch variant={variant} checked={checked} onChange={onChange} />
+        <Switch
+          variant={variant}
+          checked={checked}
+          onChange={onChange}
+          disabled={disabled}
+        />
       }
     />
   );

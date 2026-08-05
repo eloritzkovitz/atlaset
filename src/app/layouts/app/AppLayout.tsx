@@ -1,9 +1,9 @@
 import React, { useRef } from "react";
 import { Outlet } from "react-router-dom";
 import { useScrollVisibility } from "@hooks";
-import { AppHeader } from "./AppHeader";
 import { AppPanels } from "./AppPanels";
 import { GlobalShortcuts } from "./GlobalShortcuts";
+import { AppHeader } from "./header/AppHeader";
 import { Sidebar } from "./Sidebar/Sidebar";
 
 interface AppLayoutProps {

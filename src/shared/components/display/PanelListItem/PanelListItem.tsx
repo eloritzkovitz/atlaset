@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { FaEye, FaEyeSlash, FaEllipsisVertical } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import {
   useContextMenu,
   useMenuActions,
@@ -17,6 +17,7 @@ import { ConfirmModal } from "../../overlay/Modal/ConfirmModal";
 
 interface PanelListItemProps {
   color: string;
+  variant?: "default" | "border";
   icon?: ReactNode;
   name: ReactNode;
   onView?: () => void;
@@ -42,6 +43,7 @@ interface PanelListItemProps {
 
 export function PanelListItem({
   color,
+  variant = "default",
   icon,
   name,
   onView,
@@ -121,7 +123,7 @@ export function PanelListItem({
       ariaLabel: visible ? t("actions.hide") : t("actions.show"),
       title: visible ? t("actions.hide") : t("actions.show"),
       className: `${visible ? "text-muted" : "text-muted/50"} hover:text-muted-hover`,
-      icon: visible ? <FaEye /> : <FaEyeSlash />,
+      icon: visible ? <ICONS.show /> : <ICONS.hide />,
     },
   ].filter(Boolean);
 
@@ -145,11 +147,14 @@ export function PanelListItem({
     handleCloseContext,
   );
 
+  const baseClass = "bg-input/50 hover:bg-input-hover/50";
+  const borderClass = "border border-border hover:bg-input-hover/50";
+
   return (
     <>
       <li
         id="panel-list-item"
-        className={`mb-4 flex items-center bg-surface-alt rounded-lg px-3 py-2 ${
+        className={`mb-4 flex items-center ${variant === "border" ? borderClass : baseClass} rounded-lg px-3 py-2 ${
           dragged ? "ring-dashed" : ""
         } ${onView ? "cursor-pointer transition" : ""}`}
         draggable={onDragStart ? true : false}
@@ -214,7 +219,7 @@ export function PanelListItem({
               }}
               ariaLabel={t("actions.moreActions")}
               title={t("actions.moreActions")}
-              icon={<FaEllipsisVertical />}
+              icon={<ICONS.more />}
               rounded
             />
             <Menu

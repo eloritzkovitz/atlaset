@@ -18,12 +18,8 @@ export function ProfileCountriesCard({
   // Determine i18n localization paths based on type
   const headingKey =
     type === "visited"
-      ? "profile.visitedCountries"
-      : "profile.wantToVisitCountries";
-  const emptyMessageKey =
-    type === "visited"
-      ? "profile.noVisitedCountries"
-      : "profile.noWantToVisitCountries";
+      ? "profile.tracking.visitedCountries"
+      : "profile.tracking.wantToVisitCountries";
 
   return (
     <Card className="mt-6">
@@ -32,7 +28,7 @@ export function ProfileCountriesCard({
       </h2>
 
       {countryCodes.length === 0 ? (
-        <EmptyListMessage message={t(emptyMessageKey)} />
+        <EmptyListMessage message={t("profile.tracking.noCountries")} />
       ) : (
         <CountryFlagGrid countryCodes={countryCodes} size="64" />
       )}

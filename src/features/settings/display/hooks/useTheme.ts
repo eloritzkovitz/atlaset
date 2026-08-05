@@ -49,7 +49,7 @@ export function useTheme() {
 
     setCachedValue(THEME_CACHE_KEY, preference);
     setCachedValue(ACCENT_CACHE_KEY, accent);
-  }, [preference, accent, resolvedTheme]);
+  }, [preference, accent, resolvedTheme, settings.display]);
 
   /** Updates the theme preference. */
   const setTheme = (newTheme: ThemeKey) => {

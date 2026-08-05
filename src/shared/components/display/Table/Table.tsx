@@ -14,6 +14,7 @@ export interface TableColumn<T> {
   key: SortKey<T>;
   label: string;
   labelKey?: string;
+  className?: string;
   icon?: React.ElementType;
   iconClass?: string;
   render?: (row: T) => React.ReactNode;
@@ -121,7 +122,9 @@ export function Table<T>({
             {columns.map((col) => (
               <th
                 key={col.key as string}
-                className="py-2 text-start font-semibold"
+                className={`py-2 px-3 font-semibold ${
+                  col.className || "text-start"
+                }`}
               >
                 {col.sortable ? (
                   <SortableFilterHeader<T>
@@ -168,7 +171,9 @@ export function Table<T>({
                 {columns.map((col) => (
                   <td
                     key={col.key as string}
-                    className={`ps-2 py-2 ${rowBg} first:rounded-l-xl last:rounded-r-xl transition-colors`}
+                    className={`py-2 px-3 ${rowBg} first:rounded-l-xl last:rounded-r-xl transition-colors ${
+                      col.className || "text-start"
+                    }`}
                   >
                     {col.render
                       ? col.render(row)

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-05
+
+- **[feature]** **Settings | Privacy:** Added options to control profile visibility and search indexing
+- **[chore]** **Quizzes | Leaderboards:** Redesigned leaderboards and updated info to support private profile records as anonymous
+
 ## 2026-08-02
 
 - **[feature]** **Dashboard | Statistics:** Updated tables with better design and actions for copying and exporting data

@@ -49,8 +49,8 @@ export function useUserSearch(
     );
 
     // Fetch both username and displayName matches
-    Promise.all([getDocs(usernameQ), getDocs(displayNameQ)]).then(
-      ([usernameSnap, displayNameSnap]) => {
+    Promise.all([getDocs(usernameQ), getDocs(displayNameQ)])
+      .then(([usernameSnap, displayNameSnap]) => {
         const users = [
           ...usernameSnap.docs.map((doc) => ({
             uid: doc.id,
@@ -61,18 +61,23 @@ export function useUserSearch(
             ...(doc.data() as Omit<UserProfile, "uid">),
           })),
         ];
+
         const uniqueUsers: UserSearchResult[] = Array.from(
           new Map(users.map((u) => [u.uid, u])).values(),
-        ).map((u) => ({
-          ...u,
-          isCurrentUser: currentUserId ? u.uid === currentUserId : false,
-          isFriend: friendIds.includes(u.uid),
-          type: "user",
-        }));
+        )
+          .filter((u) => u.isSearchIndexingAllowed !== false)
+          .map((u) => ({
+            ...u,
+            isCurrentUser: currentUserId ? u.uid === currentUserId : false,
+            isFriend: friendIds.includes(u.uid),
+            type: "user",
+          }));
+
         setResults(uniqueUsers);
+      })
+      .finally(() => {
         setLoading(false);
-      },
-    );
+      });
   }, [searchTerm, currentUserId, friendIds]);
 
   return { results, loading };

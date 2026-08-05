@@ -14,22 +14,24 @@ export function LeaderboardRowComponent({
   row,
   index,
 }: LeaderboardRowComponentProps) {
+  const isAnonymous = !row.playerId;
+
   const playerProfile: UserProfile = useMemo(
     () => ({
       uid: row.playerId,
       displayName: row.playerName,
       username: row.username || "unknown",
       photoURL: row.photoURL,
-      isPublic: true,
+      isPublic: !isAnonymous,
       visitedCountryCodes: [],
       wantToVisitCountryCodes: [],
     }),
-    [row.playerId, row.playerName, row.username, row.photoURL],
+    [row.playerId, row.playerName, row.username, row.photoURL, isAnonymous],
   );
 
   return (
     <tr
-      key={`${row.playerId}-${row.rank}`}
+      key={`${row.playerId || "anon"}-${row.rank}`}
       className={`hover:bg-base-200 transition ${
         index % 2 === 0 ? "bg-base-100" : "bg-base-300"
       }`}
@@ -41,7 +43,6 @@ export function LeaderboardRowComponent({
         <UserInfo
           user={playerProfile}
           showDisplayName
-          showUsername={!!row.username}
         />
       </td>
       <td className="px-4 py-2 text-right">{row.score}</td>

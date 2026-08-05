@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type JSX } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa6";
+import { ICONS } from "@constants/icons";
 import { useUI } from "@contexts/UIContext";
 import { useUiHint } from "@hooks";
 
@@ -23,13 +23,13 @@ export function useUiToggleHint() {
         setHintKey((k) => k + 1);
         setHint({
           message: <>UI hidden. Press U to show the UI.</>,
-          icon: <FaEyeSlash className="text-lg" />,
+          icon: <ICONS.hide className="text-lg" />,
         });
       } else if (!prevUiVisible.current && uiVisible) {
         setHintKey((k) => k + 1);
         setHint({
           message: <>UI shown. Press U to hide the UI.</>,
-          icon: <FaEye className="text-lg" />,
+          icon: <ICONS.show className="text-lg" />,
         });
       }
     }

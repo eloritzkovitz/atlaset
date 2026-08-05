@@ -8,6 +8,11 @@ export function PrivacySettingsSection() {
   const [privacy, setPrivacySettings] = usePrivacySettings();
   const { t } = useTranslation("settings");
 
+  // Handle profile visibility toggle
+  const handleProfileVisibilityChange = (checked: boolean) => {
+    setPrivacySettings({ isPublicProfile: checked });
+  };
+
   // Handle analytics consent toggle
   const handleAnalyticsConsentChange = (checked: boolean) => {
     setPrivacySettings({ analyticsConsent: checked });
@@ -18,7 +23,29 @@ export function PrivacySettingsSection() {
       <h2 className="text-2xl font-bold mb-6 self-start">
         {t("privacy.title")}
       </h2>
-      <SettingsCard title={t("privacy.analytics.title")} icon={<ICONS.analytics />}>
+      <SettingsCard title={t("privacy.visibility.title")} icon={<ICONS.show />}>
+        <div className="flex flex-col gap-6">
+          <SettingsToggle
+            label={t("privacy.visibility.showProfile.label")}
+            description={t("privacy.visibility.showProfile.description")}
+            checked={!!privacy.isPublicProfile}
+            onChange={handleProfileVisibilityChange}
+          />
+          <SettingsToggle
+            label={t("privacy.visibility.searchIndexing.label")}
+            description={t("privacy.visibility.searchIndexing.description")}
+            checked={!!privacy.allowSearchIndexing}
+            onChange={(checked) =>
+              setPrivacySettings({ allowSearchIndexing: checked })
+            }
+            disabled={privacy.isPublicProfile}
+          />
+        </div>
+      </SettingsCard>
+      <SettingsCard
+        title={t("privacy.analytics.title")}
+        icon={<ICONS.analytics />}
+      >
         <div className="flex flex-col gap-6">
           <SettingsToggle
             label={t("privacy.analytics.consent")}
