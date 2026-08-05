@@ -45,11 +45,8 @@ export function useLeaderboardData(type: QuizType, difficulty: Difficulty) {
       const processedEntries = topEntries.map((entry) => {
         const userProfile = profileMap.get(entry.playerId);
 
-        // Check for privacy setting (supports both naming variants)
-        const isSearchIndexingAllowed =
-          userProfile?.isSearchIndexingAllowed ?? true;
-
-        if (!isSearchIndexingAllowed || !userProfile) {
+        // If the entry has no playerId, treat it as anonymous
+        if (!entry.playerId) {
           return {
             ...entry,
             playerName: t("leaderboards.table.anonymousPlayer"),
@@ -59,11 +56,12 @@ export function useLeaderboardData(type: QuizType, difficulty: Difficulty) {
           };
         }
 
+        // Merge latest user profile info with the entry info
         return {
           ...entry,
-          playerName: userProfile.displayName || entry.playerName,
-          username: userProfile.username || entry.username,
-          photoURL: userProfile.photoURL || entry.photoURL,
+          playerName: userProfile?.displayName || entry.playerName,
+          username: userProfile?.username || entry.username,
+          photoURL: userProfile?.photoURL || entry.photoURL,
         };
       });
 
