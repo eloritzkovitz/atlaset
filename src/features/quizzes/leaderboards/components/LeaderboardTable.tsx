@@ -38,14 +38,14 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
       {
         key: "rank",
         label: "#",
-        className: "text-center w-12",
+        className: "text-center",
         sortable: false,
         render: (row) => <RankBadge rank={row.rank} />,
       },
       {
         key: "playerName",
         label: t("leaderboards.table.headers.player"),
-        className: "text-start w-full",
+        className: "text-start",
         sortable: true,
         sortValue: (row) => row.playerName.toLowerCase(),
         render: (row) => {
@@ -56,8 +56,6 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
             username: row.username || "unknown",
             photoURL: row.photoURL,
             isPublic: !isAnonymous,
-            visitedCountryCodes: [],
-            wantToVisitCountryCodes: [],
           };
 
           return (
@@ -103,9 +101,5 @@ export const LeaderboardTable: React.FC<LeaderboardTableProps> = ({
     [t],
   );
 
-  return (
-    <div className="w-full">
-      <Table<LeaderboardRow> columns={columns} data={rankedData} striped />
-    </div>
-  );
+  return <Table<LeaderboardRow> columns={columns} data={rankedData} striped />;
 };

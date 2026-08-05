@@ -71,6 +71,7 @@ export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
 export { SidePanelMenu } from "./navigation/Menu/SidePanelMenu";
 export { SubmenuSection } from "./navigation/Menu/SubmenuSection";
+export { PageHeader } from "./navigation/PageHeader";
 export { Pagination } from "./navigation/Pagination/Pagination";
 export { ToolbarSelectButton } from "./navigation/Toolbar/ToolbarSelectButton";
 export { ToolbarToggleGroup } from "./navigation/Toolbar/ToolbarToggleGroup";

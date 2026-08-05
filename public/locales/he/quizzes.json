@@ -93,6 +93,7 @@
     "flag": "לא נמצאו מדינות עם דגל משלהן."
   },
   "leaderboards": {
+    "title": "לוח תוצאות",
     "table": {
       "headers": {
         "rank": "#",

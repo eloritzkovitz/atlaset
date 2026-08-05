@@ -9,7 +9,10 @@ import {
 } from "react-router-dom";
 import { Card, EmptyListMessage } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useFriendshipStatus, useUserFriendCount } from "@features/user/friends";
+import {
+  useFriendshipStatus,
+  useUserFriendCount,
+} from "@features/user/friends";
 import {
   EditProfileModal,
   ProfileAboutTab,
@@ -44,10 +47,11 @@ export default function ProfilePage() {
   );
   const isPrivateProfileRestricted = Boolean(
     profileUser &&
-      !profileUser.isPublic &&
-      !canEdit &&
-      friendshipStatus !== "friend",
+    !profileUser.isPublic &&
+    !canEdit &&
+    friendshipStatus !== "friend",
   );
+  const isIndexingAllowed = profileUser?.isSearchIndexingAllowed ?? true;
 
   // Page Title
   usePageTitle(profileUser?.displayName || "Profile");
@@ -55,9 +59,28 @@ export default function ProfilePage() {
   // Friend Count
   const { count: friendCount } = useUserFriendCount(profileUser?.uid);
 
-  // Redirect to login if not authenticated
-  if (!currentUser && !authLoading) {
+  // Handle loading state
+  if (isLoading) {
+    return (
+      <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0 mt-12">
+        <div className="flex flex-col gap-6 items-center">
+          <div className="w-full max-w-4xl space-y-6 animate-pulse">
+            <div className="h-32 bg-surface-alt rounded-xl mb-4" />
+            <div className="h-20 bg-surface-alt rounded-xl" />
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Redirect if user is not logged in or profile is private and user cannot edit
+  if (!currentUser) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Redirect if profile is private and user cannot edit or view
+  if (profileUser && !isIndexingAllowed && !canEdit) {
+    return <Navigate to="/" replace />;
   }
 
   return (
@@ -65,12 +88,7 @@ export default function ProfilePage() {
       <main className="flex-1 p-4 md:p-8 overflow-auto min-h-0 mt-12">
         <div className="flex flex-col gap-6 items-center">
           <div className="w-full max-w-4xl space-y-6">
-            {isLoading ? (
-              <div className="animate-pulse space-y-6">
-                <div className="h-32 bg-surface-alt rounded-xl mb-4" />
-                <div className="h-20 bg-surface-alt rounded-xl" />
-              </div>
-            ) : profileUser ? (
+            {profileUser ? (
               <>
                 {/* Header */}
                 <ProfileHeader
@@ -107,7 +125,9 @@ export default function ProfilePage() {
                       />
                       <Route
                         path="friends"
-                        element={<ProfileFriendsTab profileUser={profileUser} />}
+                        element={
+                          <ProfileFriendsTab profileUser={profileUser} />
+                        }
                       />
                     </Routes>
                   </>
