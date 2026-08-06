@@ -26,6 +26,14 @@ export const CurrenciesGrid: React.FC<CurrenciesGridProps> = ({
           align="right"
         />
       }
+      headers={{
+        codeLabel: t("currencies.columns.code", {
+          defaultValue: "Currency code",
+        }),
+        nameLabel: t("currencies.columns.name", {
+          defaultValue: "Currency name",
+        }),
+      }}
       searchPlaceholder={t("currencies.searchPlaceholder", {
         defaultValue: "Search by name or code",
       })}

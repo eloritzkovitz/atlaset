@@ -32,6 +32,12 @@ export const DASHBOARD_MENU = [
     url: "/dashboard/currencies",
   },
   {
+    key: "timezones",
+    label: "Timezones",
+    icon: ICONS.timezones,
+    url: "/dashboard/timezones",
+  },
+  {
     key: "achievements",
     label: "Achievements",
     icon: ICONS.achievements,

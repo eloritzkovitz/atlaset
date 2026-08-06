@@ -16,6 +16,14 @@ export const LanguagesGrid: React.FC<LanguagesGridProps> = ({ languages }) => {
       getCode={(l) => l.code}
       getName={(l) => l.name ?? l.nativeName ?? l.code}
       toLink={(l) => `/dashboard/languages/${l.code}`}
+      headers={{
+        codeLabel: t("languages.columns.code", {
+          defaultValue: "Language code",
+        }),
+        nameLabel: t("languages.columns.name", {
+          defaultValue: "Language name",
+        }),
+      }}
       searchPlaceholder={t("languages.searchPlaceholder", {
         defaultValue: "Search by name or code",
       })}

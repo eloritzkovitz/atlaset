@@ -1,4 +1,4 @@
-import type { VisitedStatus } from "@features/visits";
+import type { VisitedStatus } from "@features/visits/types";
 import type { Operator } from "@types";
 
 /** Represents a country with various attributes. */
@@ -78,6 +78,21 @@ export type Currency = {
   name: string;
 };
 
+/** Represents the usage of a timezone by a country. */
+export interface CountryTimezoneUsage {
+  isoCode: string;
+  countryName: string;
+  isDst: boolean;
+}
+
+/** Represents a timezone. */
+export interface Timezone {
+  code: string;
+  offsetMinutes: number;
+  countriesCount: number;
+  countries: CountryTimezoneUsage[];
+}
+
 /** Sovereignty statuses for countries. */
 export type SovereigntyStatus =
   | "sovereign"
@@ -150,4 +165,8 @@ export type CountryFilterOptions = {
   modifiers?: CountryModifiers;
 };
 
-export type CountryDetailsTab = "overview" | "territories" | "affiliations" | "visits";
+export type CountryDetailsTab =
+  | "overview"
+  | "territories"
+  | "affiliations"
+  | "visits";

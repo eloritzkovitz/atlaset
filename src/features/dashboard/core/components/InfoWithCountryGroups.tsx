@@ -9,9 +9,18 @@ import {
 import { useViewMode } from "@hooks";
 import { DashboardHeader } from "./DashboardHeader";
 
-interface IsoGroups {
+export interface IsoGroups {
   sovereignIsoCodes: string[];
   dependencyIsoCodes: string[];
+}
+
+export interface CountryGroupSection {
+  id?: string;
+  isoGroups: IsoGroups;
+  primaryLabel?: React.ReactNode;
+  dependencyLabel?: React.ReactNode;
+  primaryLabelKey?: string;
+  dependencyLabelKey?: string;
 }
 
 interface InfoWithCountryGroupsProps {
@@ -20,12 +29,8 @@ interface InfoWithCountryGroupsProps {
   onBack?: () => void;
   showHeader?: boolean;
   actions?: React.ReactNode;
-  isoGroups: IsoGroups;
+  groups: CountryGroupSection[];
   countries: Country[];
-  primaryLabel?: React.ReactNode;
-  dependencyLabel?: React.ReactNode;
-  primaryLabelKey?: string;
-  dependencyLabelKey?: string;
   labelArgs?: Record<string, unknown>;
   onSelectCountry?: (iso: string) => void;
   visited?: (iso: string) => boolean;
@@ -37,47 +42,47 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   onBack,
   showHeader = true,
   actions,
-  isoGroups,
+  groups,
   countries,
-  primaryLabel,
-  dependencyLabel,
-  primaryLabelKey,
-  dependencyLabelKey,
   labelArgs,
   onSelectCountry,
   visited,
 }) => {
   const { t } = useTranslation("dashboard");
-  const [expandedSovereign, setExpandedSovereign] = useState(true);
-  const [expandedDependencies, setExpandedDependencies] = useState(true);
   const { viewMode, setViewMode } = useViewMode("list");
 
-  const hasAnyGroups =
-    isoGroups.sovereignIsoCodes.length > 0 ||
-    isoGroups.dependencyIsoCodes.length > 0;
-  const shouldRenderGrid = viewMode === "grid";
-  const resolvedPrimaryLabel =
-    primaryLabel ??
-    String(
-      t(primaryLabelKey ?? "menu.countries", {
-        ...labelArgs,
-      }),
-    );
-  const resolvedDependencyLabel =
-    dependencyLabel ??
-    String(
-      t(dependencyLabelKey ?? "menu.countries", {
-        ...labelArgs,
-      }),
-    );
+  // Track expanded/collapsed state per group using section index keys
+  const [expandedStates, setExpandedStates] = useState<Record<string, boolean>>(
+    {},
+  );
 
+  const isExpanded = (key: string) => expandedStates[key] ?? true;
+
+  // Toggle the expanded/collapsed state for a specific group
+  const toggleExpanded = (key: string) => {
+    setExpandedStates((prev) => ({
+      ...prev,
+      [key]: !isExpanded(key),
+    }));
+  };
+
+  // Determine if any groups have countries to display
+  const hasAnyGroups = groups.some(
+    (g) =>
+      g.isoGroups.sovereignIsoCodes.length > 0 ||
+      g.isoGroups.dependencyIsoCodes.length > 0,
+  );
+
+  const shouldRenderGrid = viewMode === "grid";
+
+  // Renders a group of countries based on the view mode
   const renderGroup = (
     label: React.ReactNode,
     isoCodes: string[],
     expanded: boolean,
     onToggle: () => void,
   ) => {
-    if (isoCodes.length === 0) return null;
+    if (!isoCodes || isoCodes.length === 0 || !label) return null;
 
     if (!shouldRenderGrid) {
       return (
@@ -130,19 +135,40 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
         </div>
       )}
 
-      {renderGroup(
-        resolvedPrimaryLabel,
-        isoGroups.sovereignIsoCodes,
-        expandedSovereign,
-        () => setExpandedSovereign((p) => !p),
-      )}
+      {groups.map((section, idx) => {
+        const primaryKey = `section-${idx}-primary`;
+        const depKey = `section-${idx}-dependency`;
 
-      {renderGroup(
-        resolvedDependencyLabel,
-        isoGroups.dependencyIsoCodes,
-        expandedDependencies,
-        () => setExpandedDependencies((p) => !p),
-      )}
+        const resolvedPrimaryLabel =
+          section.primaryLabel ??
+          (section.primaryLabelKey
+            ? String(t(section.primaryLabelKey, { ...labelArgs }))
+            : String(t("menu.countries", { ...labelArgs })));
+
+        const resolvedDependencyLabel =
+          section.dependencyLabel ??
+          (section.dependencyLabelKey
+            ? String(t(section.dependencyLabelKey, { ...labelArgs }))
+            : String(t("menu.countries", { ...labelArgs })));
+
+        return (
+          <React.Fragment key={section.id ?? `section-${idx}`}>
+            {renderGroup(
+              resolvedPrimaryLabel,
+              section.isoGroups.sovereignIsoCodes,
+              isExpanded(primaryKey),
+              () => toggleExpanded(primaryKey),
+            )}
+
+            {renderGroup(
+              resolvedDependencyLabel,
+              section.isoGroups.dependencyIsoCodes,
+              isExpanded(depKey),
+              () => toggleExpanded(depKey),
+            )}
+          </React.Fragment>
+        );
+      })}
     </section>
   );
 };

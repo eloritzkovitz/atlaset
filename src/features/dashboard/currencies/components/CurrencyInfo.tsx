@@ -49,12 +49,17 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       subtitle={`(${currency.code})`}
       actions={<WikipediaButton searchTerm={`${currency.name}`} />}
       onBack={handleBack}
-      isoGroups={isoGroups}
-      primaryLabelKey="currencies.currencyInfo.usingCurrency"
-      dependencyLabelKey="currencies.currencyInfo.dependenciesUsingCurrency"
       labelArgs={{ code: currency.code }}
       onSelectCountry={handleCountrySelect}
       countries={countries}
+      groups={[
+        {
+          isoGroups,
+          primaryLabelKey: "currencies.currencyInfo.usingCurrency",
+          dependencyLabelKey:
+            "currencies.currencyInfo.dependenciesUsingCurrency",
+        },
+      ]}
     />
   );
 };

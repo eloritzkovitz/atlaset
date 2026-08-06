@@ -1,40 +1,45 @@
-import { vi, describe, it, expect, beforeEach } from "vitest";
-import { renderHook, act } from "@testing-library/react";
-import { useCountryData } from "./useCountryData";
+import { act, renderHook } from "@testing-library/react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as countriesApiModule from "../api/countriesApi";
-import type { Country, CountryTerritories } from "../types";
+import type { Country, Timezone } from "../types";
+import { processLocalizedCountries } from "../utils/countryLocalization";
+import { buildTimezonesFromCountries } from "../utils/timezoneData";
+import { useCountryData } from "./useCountryData";
 
-let shouldCrashBundle = false;
+let mockLanguage: string | undefined = "en";
+let mockI18nextLanguage: string | undefined = "fr";
 
-vi.mock("react-i18next", () => {
-  const mockI18n = {
-    t: (k: string, opts?: { defaultValue?: string }) =>
-      k === "currencies:EUR" ? "Euro" : (opts?.defaultValue ?? k),
-    language: "en",
-    getResourceBundle: () => {
-      if (shouldCrashBundle) throw new Error("Bundle error");
-      return {
-        US: {
-          name: "United States Localized",
-          territories: {
-            special: { type: "special_territory", codes: ["PR"] },
-          } as unknown as CountryTerritories,
-        },
-      };
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    i18n: {
+      get language() {
+        return mockLanguage;
+      },
+      t: (key: string, opts?: { defaultValue?: string }) => {
+        if (key === "currencies:EUR") return "Euro";
+        if (key === "currencies:NUM") return 100 as unknown as string;
+        if (key === "languages:eng") return "English";
+        return opts?.defaultValue ?? key;
+      },
+      exists: (key: string) => key === "languages:eng",
     },
-    exists: (k: string) => k === "languages:eng",
-  };
-  return { useTranslation: () => ({ t: mockI18n.t, i18n: mockI18n }) };
-});
+  }),
+}));
 
 vi.mock("i18next", () => ({
   default: {
-    language: "en",
-    getResourceBundle: () => {
-      if (shouldCrashBundle) throw new Error();
-      return {};
+    get language() {
+      return mockI18nextLanguage;
     },
   },
+}));
+
+vi.mock("../utils/countryLocalization", () => ({
+  processLocalizedCountries: vi.fn(),
+}));
+
+vi.mock("../utils/timezoneData", () => ({
+  buildTimezonesFromCountries: vi.fn(),
 }));
 
 vi.mock("../api/countriesApi", () => ({
@@ -43,80 +48,113 @@ vi.mock("../api/countriesApi", () => ({
 
 describe("useCountryData", () => {
   const mockRefetch = vi.fn();
+  const mockLocalizedCountries = [{ isoCode: "US" }] as Country[];
+  const mockTimezones = [] as Timezone[];
+
+  const mockProcessResult = {
+    localizedCountries: mockLocalizedCountries,
+    parentToRegions: new Map([["US", ["PR"]]]),
+    childToParent: new Map([["PR", "US"]]),
+    areaLookup: new Map([["US", 9833520]]),
+    currencyMap: new Map([
+      ["EUR", {}],
+      ["NUM", {}],
+    ]),
+    regionSet: new Set(["Americas", "Europe"]),
+    tmpSub: {
+      Americas: new Set(["Northern America"]),
+      Europe: new Set(["Western Europe"]),
+    },
+    langSet: new Set(["eng", "fra"]),
+  };
+
+  const setupQueryMock = (data: Country[] | undefined, isLoading = false) => {
+    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
+      data,
+      isLoading,
+      isFetching: isLoading,
+      error: isLoading ? { message: "Error" } : undefined,
+      refetch: mockRefetch,
+    } as any);
+  };
 
   beforeEach(() => {
     vi.restoreAllMocks();
-    shouldCrashBundle = false;
-    mockRefetch.mockReset();
+    mockLanguage = "en";
+    mockI18nextLanguage = "fr";
+    vi.mocked(processLocalizedCountries).mockReturnValue(
+      mockProcessResult as any,
+    );
+    vi.mocked(buildTimezonesFromCountries).mockReturnValue(mockTimezones);
   });
 
-  it("returns query states and handles refresh correctly", () => {
-    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
-      data: undefined,
-      isLoading: true,
-      isFetching: false,
-      error: undefined,
-      refetch: mockRefetch,
-    } as any);
-
+  it("handles query states and refetch delegation", () => {
+    setupQueryMock(undefined, true);
     const { result } = renderHook(() => useCountryData());
 
     expect(result.current.loading).toBe(true);
+    expect(result.current.error).toEqual({ message: "Error" });
 
     act(() => result.current.refreshData());
     expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 
-  it("handles translation crashes and maps languages", () => {
-    shouldCrashBundle = true;
-
-    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
-      data: [
-        { isoCode: "US", languages: ["eng", "fra"], region: "Americas" },
-      ] as Country[],
-      isLoading: false,
-      isFetching: false,
-      error: undefined,
-      refetch: mockRefetch,
-    } as any);
+  it("processes countries, maps subregions/currencies/languages, and delegates timezones", () => {
+    const rawCountries = [{ isoCode: "US" }] as Country[];
+    setupQueryMock(rawCountries);
 
     const { result } = renderHook(() => useCountryData());
 
-    expect(result.current.countries[0].capital).toBe("");
-    expect(result.current.languages["eng"]).toEqual({
-      code: "eng",
-      name: "eng",
+    expect(result.current.allRegions).toEqual(["Americas", "Europe"]);
+    expect(result.current.allSubregions).toEqual([
+      "Northern America",
+      "Western Europe",
+    ]);
+    expect(result.current.subregionsByRegion).toEqual({
+      Americas: ["Northern America"],
+      Europe: ["Western Europe"],
     });
-  });
-
-  it("maps country areas, integral regions, sovereigns, subregions, and currencies", () => {
-    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
-      data: [
-        {
-          isoCode: "US",
-          area: 9833520,
-          region: "Americas",
-          subregion: "Northern America",
-          currency: "EUR",
-          territories: {
-            regions: { type: "overseas_region", codes: ["PR"] },
-          } as unknown as CountryTerritories,
-        },
-      ] as Country[],
-      isLoading: false,
-      isFetching: false,
-      error: undefined,
-      refetch: mockRefetch,
-    } as any);
-
-    const { result } = renderHook(() => useCountryData());
-
-    expect(result.current.countryAreaMap.get("US")).toBe(9833520);
-    expect(result.current.integralRegionsLookup.get("US")).toEqual(["PR"]);
-    expect(result.current.sovereignLookup.get("PR")).toBe("US");
     expect(result.current.subregionToRegion.get("Northern America")).toBe(
       "Americas",
     );
-    expect(result.current.currencies).toEqual([{ code: "EUR", name: "Euro" }]);
+
+    expect(result.current.currencies).toEqual([
+      { code: "EUR", name: "Euro" },
+      { code: "NUM", name: "100" },
+    ]);
+    expect(result.current.languages).toEqual({
+      eng: { code: "eng", name: "English" },
+      fra: { code: "fra", name: "fra" },
+    });
+
+    expect(processLocalizedCountries).toHaveBeenCalledWith(
+      rawCountries,
+      "en",
+      expect.anything(),
+    );
+    expect(buildTimezonesFromCountries).toHaveBeenCalledWith(
+      mockLocalizedCountries,
+    );
+    expect(result.current.timezones).toBe(mockTimezones);
+  });
+
+  it("handles fallback language order (i18n.language -> i18next -> 'en') and empty data", () => {
+    setupQueryMock(undefined);
+
+    mockLanguage = undefined;
+    const { rerender } = renderHook(() => useCountryData());
+    expect(processLocalizedCountries).toHaveBeenCalledWith(
+      [],
+      "fr",
+      expect.anything(),
+    );
+
+    mockI18nextLanguage = undefined;
+    rerender();
+    expect(processLocalizedCountries).toHaveBeenCalledWith(
+      [],
+      "en",
+      expect.anything(),
+    );
   });
 });

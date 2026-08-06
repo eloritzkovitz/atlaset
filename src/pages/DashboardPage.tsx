@@ -29,6 +29,7 @@ export default function DashboardPage() {
     countries,
     currencies,
     languages: languagesMap,
+    timezones,
     loading,
     error,
     subregionToRegion,
@@ -57,6 +58,7 @@ export default function DashboardPage() {
     selectedCountry,
     selectedLanguage,
     selectedCurrency,
+    selectedTimezone,
     selectedAchievement,
   } = useDashboardRouteState();
 
@@ -81,6 +83,7 @@ export default function DashboardPage() {
     selectedSubregion,
     selectedLanguage,
     selectedCurrency,
+    selectedTimezone,
     selectedAchievement,
   });
 
@@ -228,6 +231,7 @@ export default function DashboardPage() {
             countries={countries}
             currencies={currencies}
             languages={languages}
+            timezones={timezones}
             selectedRegion={selectedRegion || ""}
             setSelectedRegion={handleRegionSelect}
             selectedSubregion={selectedSubregion || ""}

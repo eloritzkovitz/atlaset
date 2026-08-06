@@ -1,13 +1,13 @@
 import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SearchInput, EmptyListMessage } from "@components";
-import { useLanguage } from "@features/settings";
 
 interface DashboardListGridProps<T> {
   items: T[];
   getCode: (item: T) => string;
   getName: (item: T) => string;
   toLink?: (item: T) => string;
+  headers?: { codeLabel?: string; nameLabel?: string };
   headerActions?: React.ReactNode;
   searchPlaceholder?: string;
   emptyMessage?: string;
@@ -18,20 +18,20 @@ export function DashboardListGrid<T>({
   getCode,
   getName,
   toLink,
+  headers,
   headerActions,
-  searchPlaceholder,
-  emptyMessage,
+  searchPlaceholder = "Search by name or code",
+  emptyMessage = "No items found.",
 }: DashboardListGridProps<T>) {
   const [search, setSearch] = useState("");
-  const { isRtl } = useLanguage();
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
-    return items.filter((it) => {
-      const code = getCode(it) || "";
-      const name = getName(it) || "";
-      return name.toLowerCase().includes(q) || code.toLowerCase().includes(q);
-    });
+    return items.filter(
+      (it) =>
+        (getName(it) || "").toLowerCase().includes(q) ||
+        (getCode(it) || "").toLowerCase().includes(q),
+    );
   }, [items, search, getCode, getName]);
 
   return (
@@ -43,52 +43,52 @@ export function DashboardListGrid<T>({
           name="search-input"
           value={search}
           onChange={setSearch}
-          placeholder={searchPlaceholder ?? "Search by name or code"}
+          placeholder={searchPlaceholder}
         />
       </div>
 
-      <ul className="divide-y divide-input bg-surface-alt rounded shadow mt-4">
-        {filtered.length === 0 ? (
-          <div className="p-4">
-            <EmptyListMessage message={emptyMessage ?? "No items found."} />
+      <div className="bg-surface-alt rounded-xl shadow mt-4 overflow-hidden">
+        {headers && (
+          <div className="flex justify-between items-center px-4 py-4 border-b border-input text-xs uppercase text-muted font-semibold tracking-wider rtl:flex-row-reverse">
+            <span className="text-start">{headers.codeLabel}</span>
+            <span className="text-end">{headers.nameLabel}</span>
           </div>
-        ) : (
-          filtered.map((item) => {
-            const code = getCode(item);
-            const name = getName(item);
-            const link = toLink ? toLink(item) : undefined;
-            const content = (
-              <div
-                className={`grid ${isRtl ? "grid-cols-[1fr_100px]" : "grid-cols-[100px_1fr]"} items-center p-4 hover:bg-surface-hover transition rounded focus:outline-none focus:ring-2 focus:ring-primary`}
-              >
-                {isRtl ? (
-                  <>
-                    <span className="text-right">{name}</span>
-                    <span className="font-semibold text-lg ps-14">{code}</span>
-                  </>
-                ) : (
-                  <>
-                    <span className="font-semibold text-lg pe-4">{code}</span>
-                    <span className="text-left">{name}</span>
-                  </>
-                )}
-              </div>
-            );
-
-            return (
-              <li key={code}>
-                {link ? (
-                  <Link to={link} className="block">
-                    {content}
-                  </Link>
-                ) : (
-                  content
-                )}
-              </li>
-            );
-          })
         )}
-      </ul>
+
+        <ul className="divide-y divide-input">
+          {filtered.length === 0 ? (
+            <div className="p-4">
+              <EmptyListMessage message={emptyMessage} />
+            </div>
+          ) : (
+            filtered.map((item) => {
+              const code = getCode(item);
+              const link = toLink?.(item);
+
+              const inner = (
+                <div className="flex justify-between items-center p-4 hover:bg-surface-hover transition focus:outline-none focus:ring-2 focus:ring-primary rtl:flex-row-reverse">
+                  <span className="font-semibold text-lg">{code}</span>
+                  <span className="text-end font-mono text-muted">
+                    {getName(item)}
+                  </span>
+                </div>
+              );
+
+              return (
+                <li key={code}>
+                  {link ? (
+                    <Link to={link} className="block">
+                      {inner}
+                    </Link>
+                  ) : (
+                    inner
+                  )}
+                </li>
+              );
+            })
+          )}
+        </ul>
+      </div>
     </>
   );
 }

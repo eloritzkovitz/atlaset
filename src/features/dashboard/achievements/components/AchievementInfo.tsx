@@ -129,12 +129,16 @@ export function AchievementInfo() {
           <InfoWithCountryGroups
             title={achievement.name}
             showHeader={false}
-            isoGroups={isoGroups}
             countries={countries}
-            primaryLabel={primaryGroupLabel}
-            dependencyLabel={dependencyGroupLabel}
             onSelectCountry={handleCountrySelect}
             visited={isVisitedCountry}
+            groups={[
+              {
+                isoGroups,
+                primaryLabel: primaryGroupLabel,
+                dependencyLabel: dependencyGroupLabel,
+              },
+            ]}
           />
         </div>
       )}

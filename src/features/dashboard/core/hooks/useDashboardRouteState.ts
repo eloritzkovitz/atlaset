@@ -8,7 +8,7 @@ import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi"
  * Extracts selected panel, region, subregion, and entities from the current URL.
  */
 export function useDashboardRouteState() {
-  const { countries, currencies, languages } = useCountryData();
+  const { countries, currencies, languages, timezones } = useCountryData();
   const { data: achievements } = useGetAchievementsQuery();
   const location = useLocation();
 
@@ -63,6 +63,16 @@ export function useDashboardRouteState() {
       ? currencies?.find((cur) => cur.code === entityParam)
       : null;
 
+  // Timezone
+  const timezoneCodeParam =
+    root === "timezones" && entityParam
+      ? decodeURIComponent(entityParam)
+      : null;
+
+  const selectedTimezone = timezoneCodeParam
+    ? timezones?.find((tz) => tz.code === timezoneCodeParam) || null
+    : null;
+
   // Achievement
   const achievementIdParam = root === "achievements" ? entityParam : null;
   const selectedAchievement = achievementIdParam
@@ -78,6 +88,7 @@ export function useDashboardRouteState() {
     selectedCountry,
     selectedLanguage,
     selectedCurrency,
+    selectedTimezone,
     achievementIdParam,
     selectedAchievement,
   };

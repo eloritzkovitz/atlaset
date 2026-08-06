@@ -70,6 +70,7 @@ export function getDashboardBreadcrumbs(
   selectedCountry: string | null,
   selectedLanguage: string | null,
   selectedCurrency: string | null,
+  selectedTimezone: string | null,
   selectedAchievement: string | null,
 ): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
@@ -96,6 +97,7 @@ export function getDashboardBreadcrumbs(
   > = [
     ["languages", selectedLanguage, "language"],
     ["currencies", selectedCurrency, "currency"],
+    ["timezones", selectedTimezone, "timezone"],
     ["achievements", selectedAchievement, "achievement"],
   ];
 
@@ -111,12 +113,21 @@ export function getDashboardBreadcrumbs(
   return crumbs;
 }
 
-/** Safely extracts a string name from an object, returning null if the object is null or has no valid name.
- * @param obj - The object from which to extract the name.
- * @returns The name string if present, otherwise null.
+type ExtractableName =
+  | { name?: string; code?: string }
+  | string
+  | null
+  | undefined;
+
+/**
+ * Extracts a name or code from an object or string for breadcrumb labeling.
+ * @param obj - The object or string to extract the name from.
+ * @returns The extracted name or code, or null if not available.
  */
-function extractName(obj: { name?: string } | null | undefined): string | null {
-  return obj && typeof obj.name === "string" && obj.name ? obj.name : null;
+function extractName(obj: ExtractableName): string | null {
+  if (typeof obj === "string") return obj;
+  if (!obj) return null;
+  return obj.name || obj.code || null;
 }
 
 /**
@@ -129,6 +140,7 @@ export function getDashboardMeta({
   selectedCountry,
   selectedLanguage,
   selectedCurrency,
+  selectedTimezone,
   selectedAchievement,
 }: {
   selectedPanel: string | undefined;
@@ -137,6 +149,11 @@ export function getDashboardMeta({
   selectedCountry: { name?: string } | null | undefined;
   selectedLanguage: { name?: string } | null | undefined;
   selectedCurrency: { name?: string } | null | undefined;
+  selectedTimezone:
+    | { name?: string; code?: string }
+    | string
+    | null
+    | undefined;
   selectedAchievement: { name?: string } | null | undefined;
 }) {
   return {
@@ -147,6 +164,7 @@ export function getDashboardMeta({
       extractName(selectedCountry),
       extractName(selectedLanguage),
       extractName(selectedCurrency),
+      extractName(selectedTimezone),
       extractName(selectedAchievement),
     ),
   };

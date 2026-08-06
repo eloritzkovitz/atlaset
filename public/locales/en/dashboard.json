@@ -8,6 +8,7 @@
     "exploration": "Exploration",
     "languages": "Languages",
     "currencies": "Currencies",
+    "timezones": "Timezones",
     "achievements": "Achievements",
     "statistics": "Statistics"
   },
@@ -42,6 +43,10 @@
     "hideTranscontinental": "Hide transcontinental countries"
   },
   "languages": {
+    "columns": {
+      "code": "Language code",
+      "name": "Language name"
+    },
     "searchPlaceholder": "Search by name or code",
     "empty": "Language not found.",
     "viewLanguage": "View language details",
@@ -51,6 +56,10 @@
     }
   },
   "currencies": {
+    "columns": {
+      "code": "Currency code",
+      "name": "Currency name"
+    },
     "searchPlaceholder": "Search by name or code",
     "empty": "Currency not found.",
     "viewExchange": "View currency exchange",
@@ -80,6 +89,21 @@
       "convert": "Convert",
       "converting": "Converting...",
       "errorPrefix": "Error:"
+    }
+  },
+  "timezones": {
+    "columns": {
+      "offset": "UTC offset",
+      "currentTime": "Current time"
+    },
+    "searchPlaceholder": "Search by UTC offset",
+    "empty": "Timezone not found.",
+    "viewTimezone": "View timezone details",
+    "timezoneInfo": {
+      "usingStandardTime": "Countries using {{code}} as standard time",
+      "dependenciesUsingStandardTime": "Dependencies and territories using {{code}} as standard time",
+      "usingDST": "Countries using {{code}} as daylight saving time",
+      "dependenciesUsingDST": "Dependencies and territories using {{code}} as daylight saving time"
     }
   },
   "statistics": {

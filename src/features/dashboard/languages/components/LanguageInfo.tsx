@@ -57,12 +57,17 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       subtitle={languageCode ? `(${languageCode})` : undefined}
       actions={<WikipediaButton searchTerm={`${language.name} language`} />}
       onBack={handleBack}
-      isoGroups={isoGroups}
-      primaryLabelKey="languages.languageInfo.usingLanguage"
-      dependencyLabelKey="languages.languageInfo.dependenciesUsingLanguage"
       labelArgs={{ name: languageName }}
       onSelectCountry={handleCountrySelect}
       countries={countries}
+      groups={[
+        {
+          isoGroups,
+          primaryLabelKey: "languages.languageInfo.usingLanguage",
+          dependencyLabelKey:
+            "languages.languageInfo.dependenciesUsingLanguage",
+        },
+      ]}
     />
   );
 };
