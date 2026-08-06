@@ -46,7 +46,7 @@ function minutesToOffset(m: number): string {
  * @param tz - The timezone identifier to get offsets for.
  * @returns An object containing the January and July offsets as strings, as well as their corresponding minute values for easier comparison.
  */
-function getYearOffsets(tz: string): {
+export function getYearOffsets(tz: string): {
   offJan: string;
   offJul: string;
   janMin: number;
@@ -69,12 +69,34 @@ function getYearOffsets(tz: string): {
  * Return an array of offsets for a timezone. If the zone has no DST, returns a single entry like `UTC+01:00`.
  * If it has two offsets, returns both of them with winter first.
  */
-export function timezoneOffsets(tz: string, summerLabel = " (summer)"): string[] {
+export function timezoneOffsets(
+  tz: string,
+  summerLabel = " (summer)",
+): string[] {
   const { offJan, offJul, janMin, julMin } = getYearOffsets(tz);
   if (offJan === offJul) return [`UTC${offJan}`];
   const winter = janMin <= julMin ? offJan : offJul;
   const summer = janMin <= julMin ? offJul : offJan;
   return [`UTC${winter}`, `UTC${summer}${summerLabel}`];
+}
+
+/**
+ * Calculates and formats the current local time for a given offset in minutes.
+ * @param offsetMinutes - The offset in minutes (e.g., 120 for UTC+02:00)
+ * @returns Formatted time string, e.g., "14:24:05"
+ */
+export function getCurrentTimeFromOffset(offsetMinutes: number): string {
+  const now = new Date();
+  // Get current UTC time in milliseconds and add the timezone offset in milliseconds
+  const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+  const localDate = new Date(utcMs + offsetMinutes * 60000);
+
+  return localDate.toLocaleTimeString("default", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
 }
 
 /**
@@ -100,7 +122,10 @@ export function timezoneRangeForZones(tzList: string[]): string {
  * Return one or two lines for a timezone range. First line is the winter range,
  * second line (optional) is the summer range with a `(summer)` suffix if it differs.
  */
-export function timezoneRangeLines(tzList: string[], summerLabel = " (summer)"): string[] {
+export function timezoneRangeLines(
+  tzList: string[],
+  summerLabel = " (summer)",
+): string[] {
   const winters: number[] = [];
   const summers: number[] = [];
   for (const tz of tzList) {
@@ -128,4 +153,26 @@ export function timezoneRangeLines(tzList: string[], summerLabel = " (summer)"):
       : `UTC${minutesToOffset(minS)} to UTC${minutesToOffset(maxS)}`;
   if (winterLine === summerLine) return [winterLine];
   return [winterLine, `${summerLine}${summerLabel}`];
+}
+
+/**
+ * Normalizes timezone offset strings to a consistent "UTC±HH:MM" format. *
+ * @param code - The raw timezone string to normalize.
+ * @returns The uppercase, normalized timezone string.
+ */
+export function normalizeTzCode(code?: string | null): string {
+  if (!code) return "";
+  const trimmed = code.trim();
+  const match = trimmed.match(
+    /^(?:UTC|Z)?\s*([+-])?\s*(\d{1,2})?(?::(\d{2}))?/i,
+  );
+
+  if (!match || match[0] === "") return trimmed;
+  if (trimmed.toUpperCase() === "Z") return "UTC+00:00";
+
+  const sign = match[1] ?? "+";
+  const hours = (match[2] ?? "00").padStart(2, "0");
+  const minutes = match[3] ?? "00";
+
+  return `UTC${sign}${hours}:${minutes}`;
 }

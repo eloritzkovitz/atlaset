@@ -164,6 +164,12 @@ export const DOCS_GROUPS = {
         url: "/docs/dashboard/currencies",
       },
       {
+        label: "Timezones",
+        file: "dashboard/timezones.md",
+        icon: ICONS.timezones,
+        url: "/docs/dashboard/timezones",
+      },
+      {
         label: "Achievements",
         file: "dashboard/achievements.md",
         icon: ICONS.achievements,

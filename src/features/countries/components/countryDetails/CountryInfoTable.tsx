@@ -5,11 +5,11 @@ import type { Country, Currency } from "../../types";
 import { getTranscontinentalInfo } from "../../utils/countryData";
 import { useCountryData } from "../../hooks/useCountryData";
 import {
-  formatTimezones,
   getAltNamesDisplay,
   getCurrencyDisplay,
   getLanguagesDisplay,
 } from "../../utils/countryInfo";
+import { formatTimezones } from "../../utils/timezoneData";
 
 interface CountryInfoTableProps {
   country: Country;

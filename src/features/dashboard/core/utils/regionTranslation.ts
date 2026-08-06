@@ -1,3 +1,7 @@
+/**
+ * Utility functions for translating region and subregion labels in the dashboard.
+ */
+
 import type { TFunction } from "i18next";
 import { canonicalKey } from "@utils";
 

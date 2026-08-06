@@ -166,6 +166,7 @@ export const ICONS = {
   overview: FaHouse,
   exploration: FaCompass,
   currencies: FaCoins,
+  timezones: FaClock,
   achievements: FaMedal,
   statistics: FaChartSimple,
   // Quizzes

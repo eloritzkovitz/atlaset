@@ -7,7 +7,7 @@ import {
   regionIcons,
   type Country,
 } from "@features/countries";
-import { getCountryRoute } from "@features/dashboard";
+import { getCountryRoute } from "@features/dashboard/core";
 import { UserAvatar } from "@features/user/profile";
 import type { SerializableUser } from "@features/user/auth/types";
 import { type Friend } from "@features/user/friends/types";

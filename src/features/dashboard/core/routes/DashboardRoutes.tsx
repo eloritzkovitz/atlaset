@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import type { Country, Currency } from "@features/countries";
+import type { Country, Currency, Timezone } from "@features/countries";
 import type { Language } from "@types";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
 import { AchievementInfo } from "../../achievements/components/AchievementInfo";
@@ -13,11 +13,14 @@ import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
 import { OverviewGrid } from "../../overview/components/OverviewGrid";
 import { StatisticsGrid } from "../../statistics/components/StatisticsGrid";
+import { TimezonesGrid } from "@features/dashboard/timezones/components/TimezonesGrid";
+import { TimezoneInfo } from "@features/dashboard/timezones/components/TimezoneInfo";
 
 interface DashboardRoutesProps {
   countries: Country[];
   currencies: Currency[];
   languages: Language[];
+  timezones: Timezone[];
   selectedRegion: string;
   setSelectedRegion: (region: string) => void;
   selectedSubregion: string;
@@ -38,6 +41,7 @@ export function DashboardRoutes({
   countries,
   currencies,
   languages,
+  timezones,
   selectedRegion,
   setSelectedRegion,
   selectedSubregion,
@@ -153,6 +157,16 @@ export function DashboardRoutes({
       <Route
         path="languages/:code"
         element={<LanguageInfo languages={languages} countries={countries} />}
+      />
+
+      <Route
+        path="timezones"
+        element={<TimezonesGrid timezones={timezones} />}
+      />
+
+      <Route
+        path="timezones/:code"
+        element={<TimezoneInfo timezones={timezones} countries={countries} />}
       />
 
       <Route path="achievements" element={<AchievementsGrid />} />

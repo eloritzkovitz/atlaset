@@ -26,7 +26,7 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
   languages: [
     { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
     { labelKey: "menu.languages", label: "Languages", key: "languages" },
-  ],  
+  ],
   currencies: [
     { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
     { labelKey: "menu.currencies", label: "Currencies", key: "currencies" },
@@ -39,6 +39,10 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
       label: "Currency Exchange",
       key: "currencies/exchange",
     },
+  ],
+  timezones: [
+    { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },
+    { labelKey: "menu.timezones", label: "Timezones", key: "timezones" },
   ],
   achievements: [
     { labelKey: "menu.title", label: "Dashboard", key: "dashboard" },

@@ -25,12 +25,45 @@ vi.mock("date-fns-tz", () => ({
 }));
 
 import {
+  getCurrentTimeFromOffset,
+  normalizeTzCode,
   timezoneOffsets,
   timezoneRangeForZones,
   timezoneRangeLines,
 } from "./timezone";
 
 describe("timezone utils", () => {
+  describe("getCurrentTimeFromOffset", () => {
+    beforeEach(() => {
+      vi.useFakeTimers();
+      vi.setSystemTime(new Date(Date.UTC(2026, 0, 1, 12, 0, 0)));
+    });
+
+    afterEach(() => {
+      vi.useRealTimers();
+    });
+
+    it.each([
+      [0, "12:00:00"],
+      [120, "14:00:00"],
+      [-300, "07:00:00"],
+      [330, "17:30:00"],
+      [-210, "08:30:00"],
+      [840, "02:00:00"],
+    ])(
+      "calculates local time for offset %i minutes -> %s",
+      (offset, expected) => {
+        expect(getCurrentTimeFromOffset(offset)).toBe(expected);
+      },
+    );
+
+    it("updates output as time progresses", () => {
+      expect(getCurrentTimeFromOffset(120)).toBe("14:00:00");
+      vi.advanceTimersByTime(45000);
+      expect(getCurrentTimeFromOffset(120)).toBe("14:00:45");
+    });
+  });
+
   describe("timezoneOffsets", () => {
     it.each([
       ["NoDst", ["UTC+09:00"]],
@@ -78,6 +111,73 @@ describe("timezone utils", () => {
       [["South"], ["UTC+10:00", "UTC+11:00 (summer)"]],
     ])("splits structural line data for %p -> %p", (tzList, expected) => {
       expect(timezoneRangeLines(tzList)).toEqual(expected);
+    });
+  });
+
+  describe("normalizeTzCode", () => {
+    describe("Standard UTC offset patterns", () => {
+      it.each([
+        ["UTC+02:00", "UTC+02:00"],
+        ["UTC-05:00", "UTC-05:00"],
+        ["UTC+00:00", "UTC+00:00"],
+        ["UTC-00:00", "UTC-00:00"],
+        ["UTC+05:30", "UTC+05:30"],
+        ["UTC+12:45", "UTC+12:45"],
+      ])("returns intact standard offset for %s -> %s", (input, expected) => {
+        expect(normalizeTzCode(input)).toBe(expected);
+      });
+    });
+
+    describe("Stripping suffixes (e.g., summer/DST tags)", () => {
+      it.each([
+        ["UTC+02:00 (summer)", "UTC+02:00"],
+        ["UTC-05:00 (summer)", "UTC-05:00"],
+        ["UTC+00:00 (summer)", "UTC+00:00"],
+        ["UTC+03:00 (DST)", "UTC+03:00"],
+        ["UTC+01:00 Daylight Saving Time", "UTC+01:00"],
+      ])("strips suffix from %s -> %s", (input, expected) => {
+        expect(normalizeTzCode(input)).toBe(expected);
+      });
+    });
+
+    describe("Formating non-padded numbers & loose spacing", () => {
+      it.each([
+        ["UTC+2", "UTC+02:00"],
+        ["UTC-5", "UTC-05:00"],
+        ["+2", "UTC+02:00"],
+        ["-5:00", "UTC-05:00"],
+        ["utc+02:00", "UTC+02:00"],
+        ["  UTC+02:00  ", "UTC+02:00"],
+        ["UTC + 2:00", "UTC+02:00"],
+      ])("formats loosely formatted inputs %s -> %s", (input, expected) => {
+        expect(normalizeTzCode(input)).toBe(expected);
+      });
+    });
+
+    describe("Zulu time handling", () => {
+      it.each([
+        ["Z", "UTC+00:00"],
+        ["z", "UTC+00:00"],
+        ["  Z  ", "UTC+00:00"],
+      ])("normalizes Zulu time %s -> %s", (input, expected) => {
+        expect(normalizeTzCode(input)).toBe(expected);
+      });
+    });
+
+    describe("Edge cases & invalid inputs", () => {
+      it.each([
+        ["", ""],
+        ["   ", ""],
+        ["EST", "EST"],
+        ["InvalidTimezone", "InvalidTimezone"],
+      ])("handles missing or non-matching string '%s'", (input, expected) => {
+        expect(normalizeTzCode(input)).toBe(expected);
+      });
+
+      it("handles null and undefined safely", () => {
+        expect(normalizeTzCode(null)).toBe("");
+        expect(normalizeTzCode(undefined)).toBe("");
+      });
     });
   });
 });
