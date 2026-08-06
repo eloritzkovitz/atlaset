@@ -44,3 +44,7 @@ export const DASHBOARD_MENU = [
     url: "/dashboard/statistics",
   },
 ];
+
+export const DASHBOARD_URLS = Object.fromEntries(
+  DASHBOARD_MENU.map((item) => [item.key, item.url]),
+) as Record<(typeof DASHBOARD_MENU)[number]["key"], string>;

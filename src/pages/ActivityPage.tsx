@@ -32,7 +32,10 @@ export default function ActivityPage() {
 
   return (
     <Container className="mt-12">
-      <PageHeader title={t("activityLog", "Activity Log")} fallbackPath="/" />
+      <PageHeader
+        title={t("ui.activityLog", "Activity Log")}
+        fallbackPath="/"
+      />
       {loading && isEmpty ? (
         <div className="text-muted">{t("ui.loading")}</div>
       ) : isEmpty ? (

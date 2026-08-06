@@ -1,9 +1,35 @@
 /**
- * Utilities for dashboard navigation.
+ * Utilities for handling dashboard navigation.
  */
 
 import type { Crumb } from "@components";
 import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
+
+/**
+ * Parses dashboard paths into normalized panel types and raw route segments.
+ * @param pathname - The current URL pathname.
+ * @returns An object containing the root, sub, parts, selectedPanel, and menuSelectedPanel.
+ */
+export function parseDashboardPath(pathname: string) {
+  const parts = pathname.replace(/^\/dashboard\/?/, "").split("/");
+  const root = parts[0] || "countries";
+  const sub = parts[1];
+
+  let selectedPanel = root;
+  if (root === "countries" && ["exploration", "all"].includes(sub)) {
+    selectedPanel = `${root}/${sub}`;
+  } else if (root === "currencies" && sub === "exchange") {
+    selectedPanel = "currencies/exchange";
+  }
+
+  const menuSelectedPanel = selectedPanel.startsWith("countries")
+    ? "countries"
+    : selectedPanel.startsWith("currencies")
+      ? "currencies"
+      : selectedPanel;
+
+  return { root, sub, parts, selectedPanel, menuSelectedPanel };
+}
 
 /**
  * Generates a dashboard URL path for countries, regions, or subregions.
@@ -28,14 +54,14 @@ export function getCountryRoute(
 }
 
 /**
- * Generate breadcrumbs for the dashboard based on navigation state
- * @param selectedPanel - Currently selected dashboard panel
- * @param selectedRegion - Currently selected region
- * @param selectedSubregion - Currently selected subregion
- * @param selectedCountry - Currently selected country
- * @param selectedCurrency - Currently selected currency
- * @param selectedAchievement - Currently selected achievement
- * @returns Array of breadcrumb objects
+ * Generates breadcrumbs for the dashboard based on the current navigation state.
+ * @param selectedPanel - Currently selected dashboard panel.
+ * @param selectedRegion - Currently selected region.
+ * @param selectedSubregion - Currently selected subregion.
+ * @param selectedCountry - Currently selected country.
+ * @param selectedCurrency - Currently selected currency.
+ * @param selectedAchievement - Currently selected achievement.
+ * @returns Array of breadcrumb objects.
  */
 export function getDashboardBreadcrumbs(
   selectedPanel: string,
@@ -48,6 +74,7 @@ export function getDashboardBreadcrumbs(
 ): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
 
+  // Countries hierarchy
   if (selectedPanel === "countries" || selectedPanel.startsWith("countries/")) {
     if (selectedRegion) {
       crumbs.push({
@@ -62,37 +89,25 @@ export function getDashboardBreadcrumbs(
       crumbs.push({ label: selectedCountry, key: "country" });
     }
   }
-  if (
-    (selectedPanel === "languages" || selectedPanel.startsWith("languages/")) &&
-    selectedLanguage &&
-    selectedLanguage
-  ) {
-    crumbs.push({
-      label: selectedLanguage,
-      key: `language:${selectedLanguage}`,
-    });
+
+  // Dynamic entities (languages, currencies, achievements)
+  const dynamicEntities: Array<
+    [prefix: string, value: string | null, key: string]
+  > = [
+    ["languages", selectedLanguage, "language"],
+    ["currencies", selectedCurrency, "currency"],
+    ["achievements", selectedAchievement, "achievement"],
+  ];
+
+  for (const [prefix, value, key] of dynamicEntities) {
+    if (
+      (selectedPanel === prefix || selectedPanel.startsWith(`${prefix}/`)) &&
+      value
+    ) {
+      crumbs.push({ label: value, key: `${key}:${value}` });
+    }
   }
-  if (
-    (selectedPanel === "currencies" ||
-      selectedPanel.startsWith("currencies/")) &&
-    selectedCurrency &&
-    selectedCurrency
-  ) {
-    crumbs.push({
-      label: selectedCurrency,
-      key: `currency:${selectedCurrency}`,
-    });
-  }
-  if (
-    selectedPanel === "achievements" &&
-    selectedAchievement &&
-    selectedAchievement
-  ) {
-    crumbs.push({
-      label: selectedAchievement,
-      key: `achievement:${selectedAchievement}`,
-    });
-  }
+
   return crumbs;
 }
 
@@ -105,13 +120,13 @@ function extractName(obj: { name?: string } | null | undefined): string | null {
 }
 
 /**
- * Returns both the dashboard page title and breadcrumbs based on navigation state
+ * Returns both the dashboard page title and breadcrumbs based on navigation state.
  */
 export function getDashboardMeta({
   selectedPanel,
-  selectedCountry,
   selectedRegion,
   selectedSubregion,
+  selectedCountry,
   selectedLanguage,
   selectedCurrency,
   selectedAchievement,
@@ -120,27 +135,19 @@ export function getDashboardMeta({
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
   selectedCountry: { name?: string } | null | undefined;
-  selectedLanguage: { name: string } | null | undefined;
-  selectedCurrency: { name: string } | null | undefined;
-  selectedAchievement: { name: string } | null | undefined;
+  selectedLanguage: { name?: string } | null | undefined;
+  selectedCurrency: { name?: string } | null | undefined;
+  selectedAchievement: { name?: string } | null | undefined;
 }) {
-  const safePanel = selectedPanel ?? "";
-  const safeRegion = selectedRegion ?? null;
-  const safeSubregion = selectedSubregion ?? null;
-  const countryName = extractName(selectedCountry);
-  const languageName = extractName(selectedLanguage);
-  const currencyName = extractName(selectedCurrency);
-  const achievementName = extractName(selectedAchievement);
-
-  const breadcrumbs = getDashboardBreadcrumbs(
-    safePanel,
-    safeRegion,
-    safeSubregion,
-    countryName,
-    languageName,
-    currencyName,
-    achievementName,
-  );
-
-  return { breadcrumbs };
+  return {
+    breadcrumbs: getDashboardBreadcrumbs(
+      selectedPanel ?? "",
+      selectedRegion ?? null,
+      selectedSubregion ?? null,
+      extractName(selectedCountry),
+      extractName(selectedLanguage),
+      extractName(selectedCurrency),
+      extractName(selectedAchievement),
+    ),
+  };
 }

@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import type { Country } from "@features/countries";
+import { DASHBOARD_URLS } from "../constants/dashboardMenu";
 import { getCountryRoute } from "../utils/dashboardNavigation";
 
 /**
@@ -16,37 +17,40 @@ export function useDashboardNavigation(
 ) {
   const navigate = useNavigate();
 
-  // Navigation handlers
   const handlePanelChange = (panel: string) => navigate(`/dashboard/${panel}`);
   const handleRegionSelect = (region: string) =>
     navigate(getCountryRoute(region));
   const handleSubregionSelect = (region: string, subregion: string) =>
     navigate(getCountryRoute(region, subregion));
+
+  // Handle country selection by navigating to the corresponding country route or defaulting to the countries panel
   const handleCountrySelect = (isoCode: string | null) => {
-    if (!isoCode) return navigate(`/dashboard/countries`);
+    if (!isoCode) return navigate(DASHBOARD_URLS.countries);
 
     const country = countries?.find((c) => c.isoCode === isoCode);
-
-    if (country)
+    if (country) {
       navigate(
         getCountryRoute(country.region, country.subregion, country.isoCode),
       );
+    }
   };
-  const handleShowAllCountries = () => navigate(`/dashboard/countries/all`);
+
+  const handleShowAllCountries = () => navigate(DASHBOARD_URLS.countries);
   const handleBack = () => navigate(-1);
 
-  // Breadcrumb actions mapping
+  // Breadcrumb actions mapping powered directly by menu constants
   const crumbActions: Record<string, () => void> = {
-    dashboard: () => navigate(`/dashboard/overview`),
-    countries: () => navigate(`/dashboard/countries/all`),
+    dashboard: () => navigate(DASHBOARD_URLS.overview),
+    countries: () => navigate(DASHBOARD_URLS.countries),
+    currencies: () => navigate(DASHBOARD_URLS.currencies),
     region: () => navigate(getCountryRoute(selectedRegion)),
     subregion: () =>
       navigate(getCountryRoute(selectedRegion, selectedSubregion)),
     country: () => {},
-    "currencies/exchange": () => navigate(`/dashboard/currencies/exchange`),
+    "currencies/exchange": () => navigate("/dashboard/currencies/exchange"),
   };
 
-  // Crumb click handler
+  // Handle breadcrumb click by executing the corresponding action or defaulting to panel change
   const handleCrumbClick = (key: string) => {
     const action = crumbActions[key] ?? (() => handlePanelChange(key));
     action();

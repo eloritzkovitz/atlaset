@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { DirectionalIcon } from "@components";
+import { SectionLink } from "@components";
 import { UserActivityItem } from "./UserActivityItem";
 import { useUserActivity } from "../hooks/useUserActivity";
 
@@ -11,14 +10,7 @@ export function RecentActivitySection({ limit = 5 }: { limit?: number }) {
 
   return (
     <div className="mt-10">
-      <Link
-        to="/activity"
-        className="flex items-center text-xl font-semibold mb-4 gap-2 focus:outline-none"
-        aria-label={t("ui.viewFull")}
-      >
-        <span>{t("ui.title")}</span>
-        <DirectionalIcon direction="next" className="text-base" />
-      </Link>
+      <SectionLink to="/activity" label={t("ui.title")} align="left" />
       {activityLoading && recentActivity.length === 0 ? (
         <div className="text-muted">{t("ui.loading")}</div>
       ) : recentActivity.length === 0 ? (

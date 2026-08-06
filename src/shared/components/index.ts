@@ -69,6 +69,7 @@ export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
 export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
+export { SectionLink } from "./navigation/SectionLink";
 export { SidePanelMenu } from "./navigation/Menu/SidePanelMenu";
 export { SubmenuSection } from "./navigation/Menu/SubmenuSection";
 export { PageHeader } from "./navigation/PageHeader";
