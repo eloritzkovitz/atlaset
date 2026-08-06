@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-06
+
+- **[feature]** **Dashboard | Timezones:** Added new section with timezones and details
+
 ## 2026-08-05
 
 - **[feature]** **Settings | Privacy:** Added options to control profile visibility and search indexing

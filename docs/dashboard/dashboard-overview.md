@@ -7,6 +7,7 @@ The **`Dashboard`** is your personal hub, providing a comprehensive overview of 
 - **`Activity`:** See a complete log of your activity across the application.
 - **`Exploration`:** See a detailed view of your world exploration.
 - **`Currencies`:** See detailed information about currencies or use the currency exchange.
+- **`Timezones`:** See detailed information about timezones.
 - **`Achievements`:** Track your personal travel with milestones and goals.
 - **`Statistics`:** Provides insights and analytics about your travel history.
 
@@ -14,5 +15,6 @@ The **`Dashboard`** is your personal hub, providing a comprehensive overview of 
 
 [Exploration](/docs/dashboard/exploration.md)  
 [Currencies](/docs/dashboard/currencies.md)  
+[Timezones](/docs/dashboard/timezones.md)  
 [Achievements](/docs/dashboard/achievements.md)  
 [Statistics](/docs/dashboard/statistics.md)
