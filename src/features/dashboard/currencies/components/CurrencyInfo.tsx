@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { type Country, type Currency } from "@features/countries";
 import { getQueryParam } from "@utils";
-import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
-import { WikipediaButton } from "../../common/components/WikipediaButton";
-import { useIsoGroups } from "../../common/hooks/useIsoGroups";
-import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
+import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
+import { WikipediaButton } from "../../core/components/WikipediaButton";
+import { useDashboardNavigation } from "../../core/hooks/useDashboardNavigation";
+import { useIsoGroups } from "../../core/hooks/useIsoGroups";
 
 interface CurrencyInfoProps {
   currencies: Currency[];

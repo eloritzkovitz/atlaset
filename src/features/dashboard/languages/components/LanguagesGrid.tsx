@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import type { Language } from "@types";
-import { DashboardListGrid } from "../../common/components/DashboardListGrid";
+import { DashboardListGrid } from "../../core/components/DashboardListGrid";
 
 interface LanguagesGridProps {
   languages: Language[];

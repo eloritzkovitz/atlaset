@@ -5,8 +5,8 @@ import { useAnimatedNumber } from "@hooks";
 import { formatFraction } from "@utils";
 import { RegionButton } from "./RegionButton";
 import { SubregionStatsRow } from "./SubregionStatsRow";
-import { translateRegionLabel } from "../utils/translation";
 import type { SubregionStat } from "../types";
+import { translateRegionLabel } from "../../core/utils/regionTranslation";
 
 interface RegionCardProps {
   region: string;

@@ -7,11 +7,11 @@ import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import type { Achievement } from "../types";
 import { getAchievementCountries } from "../utils/achievementFilters";
 import { getCurrentTier } from "../utils/achievementsTiers";
-import { InfoWithCountryGroups } from "../../common/components/InfoWithCountryGroups";
-import { useIsoGroups } from "../../common/hooks/useIsoGroups";
-import { DashboardHeader } from "../../navigation/components/DashboardHeader";
-import { useDashboardNavigation } from "../../navigation/hooks/useDashboardNavigation";
-import { getCountryRoute } from "../../navigation/utils/dashboardNavigation";
+import { DashboardHeader } from "../../core/components/DashboardHeader";
+import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
+import { useDashboardNavigation } from "../../core/hooks/useDashboardNavigation";
+import { useIsoGroups } from "../../core/hooks/useIsoGroups";
+import { getCountryRoute } from "../../core/utils/dashboardNavigation";
 
 export function AchievementInfo() {
   const { achievementId } = useParams();

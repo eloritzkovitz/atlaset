@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 
 /**
  * Splits countries into sovereign and dependency groups based on a matching function.

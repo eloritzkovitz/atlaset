@@ -7,7 +7,7 @@ import {
   type Country,
 } from "@features/countries";
 import { useViewMode } from "@hooks";
-import { DashboardHeader } from "../../navigation/components/DashboardHeader";
+import { DashboardHeader } from "./DashboardHeader";
 
 interface IsoGroups {
   sovereignIsoCodes: string[];

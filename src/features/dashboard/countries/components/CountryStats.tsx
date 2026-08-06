@@ -8,8 +8,8 @@ import {
 import { useVisitedCountries } from "@features/visits";
 import { useQueryParam, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
-import { WikipediaButton } from "../../common/components/WikipediaButton";
-import { DashboardHeader } from "../../navigation/components/DashboardHeader";
+import { DashboardHeader } from "../../core/components/DashboardHeader";
+import { WikipediaButton } from "../../core/components/WikipediaButton";
 
 interface CountryStatsProps {
   selectedRegion?: string;

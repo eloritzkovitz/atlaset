@@ -9,6 +9,7 @@ import {
   LoadingSpinner,
 } from "@components";
 import { useCountryData } from "@features/countries";
+import { useDashboardCountriesFilters } from "@features/dashboard/countries";
 import {
   DashboardPanelMenu,
   DashboardRoutes,
@@ -17,8 +18,7 @@ import {
   translateSubregionLabel,
   useDashboardRouteState,
   useDashboardNavigation,
-  useDashboardCountriesFilters,
-} from "@features/dashboard";
+} from "@features/dashboard/core";
 import { useAuth } from "@features/user/auth";
 import { usePageTitle, useScreenSize } from "@hooks";
 
