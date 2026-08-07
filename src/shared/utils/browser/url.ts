@@ -14,18 +14,27 @@ export function isExternalUrl(url?: string): boolean {
 }
 
 /**
- * Generates a localized Wikipedia URL for any query term.
- * @param query - The entity or topic name.
- * @param lang - Optional BCP 47 language tag.
- * @returns The direct Wikipedia article URL in the target language.
+ * Extracts the trailing path segment or domain name from a URL for display purposes.
+ * @param url - The URL string to parse.
+ * @returns The last path segment, domain hostname, or original URL if invalid/empty.
  */
-export function getWikipediaUrl(query: string, lang: string = "en"): string {
-  if (!query) return "";
+export function getUrlDisplayPath(url?: string): string | undefined {
+  const cleaned = url?.trim();
+  if (!cleaned) return "";
 
-  const langSubtag = lang.split("-")[0];
-  const page = query.trim().replace(/ /g, "_");
+  try {
+    const parsed = new URL(
+      cleaned.startsWith("http") ? cleaned : `https://${cleaned}`,
+    );
+    const segments = parsed.pathname.split("/").filter(Boolean);
 
-  return `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(page)}`;
+    if (segments.length > 0) {
+      return segments[segments.length - 1];
+    }
+    return parsed.hostname.replace(/^www\./, "");
+  } catch {
+    return url;
+  }
 }
 
 /**
@@ -54,4 +63,19 @@ export function getQueryParam(
     console.error(`Failed to parse URL query parameter for key: ${key}`, error);
     return fallback;
   }
+}
+
+/**
+ * Generates a localized Wikipedia URL for any query term.
+ * @param query - The entity or topic name.
+ * @param lang - Optional BCP 47 language tag.
+ * @returns The direct Wikipedia article URL in the target language.
+ */
+export function getWikipediaUrl(query: string, lang: string = "en"): string {
+  if (!query) return "";
+
+  const langSubtag = lang.split("-")[0];
+  const page = query.trim().replace(/ /g, "_");
+
+  return `https://${langSubtag}.wikipedia.org/wiki/${encodeURIComponent(page)}`;
 }

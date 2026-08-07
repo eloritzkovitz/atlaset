@@ -14,11 +14,11 @@ import {
   useUserFriendCount,
 } from "@features/user/friends";
 import { usePageTitle } from "@hooks";
-import { EditProfileModal } from "../components/EditProfileModal/EditProfileModal";
-import { ProfileAboutTab } from "../components/ProfileAboutTab";
-import { ProfileFriendsTab } from "../components/ProfileFriendsTab";
+import { EditProfileModal } from "../components/modal/EditProfileModal";
 import { ProfileHeader } from "../components/ProfileHeader";
-import { ProfileTabNav } from "../components/ProfileTabNav";
+import { ProfileAboutTab } from "../components/tabs/ProfileAboutTab/ProfileAboutTab";
+import { ProfileFriendsTab } from "../components/tabs/ProfileFriendsTab";
+import { ProfileTabNav } from "../components//tabs/ProfileTabNav";
 import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function ProfilePage() {

@@ -54,6 +54,24 @@ export const leaderboardsService = {
   },
 
   /**
+   * Retrieves all top leaderboard entries for a specific player across all modes/difficulties.
+   * @param userId - ID of the player.
+   * @returns Array of leaderboard entries belonging to the user.
+   */
+  async getUserScores(userId: string): Promise<LeaderboardEntry[]> {
+    if (!isAuthenticated() || !userId) return [];
+
+    const colRef = getCollection<LeaderboardEntry>(LEADERBOARD_COLLECTION);
+    const q = query(
+      colRef,
+      where("playerId", "==", userId),
+      orderBy("score", "desc"),
+    );
+
+    return await getDocsData<LeaderboardEntry>(q);
+  },
+
+  /**
    * Adds a new entry to the leaderboard.
    * @param mode - The selected game mode.
    * @param difficulty - The selected difficulty level.

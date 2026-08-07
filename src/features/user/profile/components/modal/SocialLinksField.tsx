@@ -1,7 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { FormField, InputBox } from "@components";
-import { getPlatformIcon, platformOrder } from "../../config/socialLinks";
-import type { SocialPlatform } from "../../types";
+import { SocialIcon } from "../social/SocialIcon";
+import {
+  PLATFORM_ORDER,
+  type SocialPlatform,
+} from "../../constants/socialPlatforms";
 
 interface SocialLinksFieldProps {
   socialLinks: Partial<Record<SocialPlatform, string>>;
@@ -17,24 +20,26 @@ export function SocialLinksField({
   return (
     <FormField label={t("profile.editModal.socialLinks")}>
       <div className="flex flex-col gap-2">
-        {platformOrder.map((platform) => (
+        {PLATFORM_ORDER.map((platform) => (
           <div key={platform} className="flex items-center gap-2">
             <span
               className="w-8 flex justify-center items-center"
               title={platform}
               aria-label={platform}
             >
-              {getPlatformIcon(platform) ??
-                platform.charAt(0).toUpperCase() + platform.slice(1)}
+              <SocialIcon
+                platform={platform}
+                fallback={platform.charAt(0).toUpperCase() + platform.slice(1)}
+              />
             </span>
             <InputBox
               id={`social-${platform}`}
               name={`social-${platform}`}
               type="url"
               placeholder={`https://${platform}.com/yourprofile`}
-              value={socialLinks[platform as SocialPlatform] ?? ""}
+              value={socialLinks[platform] ?? ""}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                onChange(platform as SocialPlatform, e.target.value)
+                onChange(platform, e.target.value)
               }
             />
           </div>

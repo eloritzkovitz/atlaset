@@ -7,7 +7,7 @@ import {
   getAutoTripStatus,
   isCompletedTrip,
 } from "@features/trips/utils/trips";
-import { extractUniqueValues, getYear, getYearNumber } from "@utils";
+import { extractUniqueValues, getYear } from "@utils";
 import type { VisitContext } from "../types";
 
 /**
@@ -187,8 +187,8 @@ export function getVisitedCountriesForYear(
   return collectCountryCodes(
     trips,
     (trip) => {
-      const start = getYearNumber(trip.startDate);
-      const end = getYearNumber(trip.endDate) ?? start;
+      const start = getYear(trip.startDate);
+      const end = getYear(trip.endDate) ?? start;
       return (
         start !== undefined && end !== undefined && year >= start && year <= end
       );
@@ -214,7 +214,7 @@ export function getVisitedCountriesUpToYear(
   const counts: Record<string, number> = {};
 
   trips.forEach((trip) => {
-    const end = getYearNumber(trip.endDate);
+    const end = getYear(trip.endDate);
     if (
       end !== undefined &&
       end <= year &&

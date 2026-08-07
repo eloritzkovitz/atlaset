@@ -1,65 +1,65 @@
-import { Filter } from "bad-words";
 import { useEffect, useState } from "react";
-import forbiddenUsernames from "../constants/forbiddenUsernames.json";
 import { profileService } from "../services/profileService";
+import type { UsernameValidationStatus } from "../types";
+import { isUsernameFormatValid } from "../utils/username";
 
-// Regex pattern for valid usernames: alphanumeric and underscores, 3-20 characterss
-const usernamePattern = /^[a-zA-Z0-9_]{3,20}$/;
-
-// Helper for UI: label and color for each status
-const statusLabel: Record<typeof status, { label: string; color: string }> = {
-  idle: { label: "", color: "" },
-  checking: { label: "Checking...", color: "gray" },
-  available: { label: "Available", color: "green" },
-  taken: {
-    label: "Username already taken. Please choose a different name.",
-    color: "red",
-  },
-  invalid: {
-    label: "Username not allowed. Please choose a different name.",
-    color: "red",
-  },
+const STATUS_TRANSLATION_KEYS: Record<UsernameValidationStatus, string> = {
+  idle: "",
+  checking: "username.status.checking",
+  available: "username.status.available",
+  taken: "username.status.taken",
+  invalid: "username.status.invalid",
 };
 
 /**
  * Validates a username's availability and format.
  * @param username - The username to validate.
- * @param currentUsername - The current username of the user (if any).
- * @returns Validation status: "idle", "checking", "available", "taken" or "invalid".
+ * @param currentUsername - The user's current username (optional).
+ * @returns An object containing the validation status and a translation key.
  */
 export function useUsernameValidation(
   username: string,
-  currentUsername?: string
+  currentUsername?: string,
 ) {
-  const [status, setStatus] = useState<
-    "idle" | "checking" | "available" | "taken" | "invalid"
-  >("idle");
+  const [status, setStatus] = useState<UsernameValidationStatus>("idle");
 
-  // Validate username on change
+  // Effect to validate the username whenever it changes
   useEffect(() => {
     if (!username || username === currentUsername) {
       setStatus("idle");
       return;
     }
-    if (
-      !usernamePattern.test(username) ||
-      forbiddenUsernames.includes(username.toLowerCase())
-    ) {
+
+    // Check if the username format is valid
+    if (!isUsernameFormatValid(username)) {
       setStatus("invalid");
       return;
     }
-    const filter = new Filter();
-    if (username && filter.isProfane(username)) {
-      setStatus("invalid");
-      return;
-    }
+
+    let isCancelled = false;
     setStatus("checking");
+
     const timeout = setTimeout(async () => {
-      const exists = await profileService.checkUsernameExists(username);
-      setStatus(exists ? "taken" : "available");
+      try {
+        const exists = await profileService.checkUsernameExists(username);
+        if (!isCancelled) {
+          setStatus(exists ? "taken" : "available");
+        }
+      } catch {
+        if (!isCancelled) {
+          setStatus("idle");
+        }
+      }
     }, 500);
-    return () => clearTimeout(timeout);
+
+    return () => {
+      isCancelled = true;
+      clearTimeout(timeout);
+    };
   }, [username, currentUsername]);
 
-  return { status, ...statusLabel[status] };
+  return {
+    status,
+    translationKey: STATUS_TRANSLATION_KEYS[status],
+  };
 }

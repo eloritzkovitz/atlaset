@@ -3,10 +3,10 @@ import { useTranslation } from "react-i18next";
 import { useCountryData } from "@features/countries";
 import { useUserLeaderboardScores } from "@features/quizzes/leaderboards/hooks/useUserLeaderboardScores";
 import { formatFirestoreDate } from "@utils";
+import { BestScoresCard } from "./BestScoresCard";
 import { ProfileAboutCard } from "./ProfileAboutCard";
 import { ProfileCountriesCard } from "./ProfileCountriesCard";
-import { BestScoresCard } from "./BestScoresCard";
-import type { UserProfile } from "../types";
+import type { UserProfile } from "../../../types";
 
 interface ProfileAboutTabProps {
   profileUser: UserProfile;

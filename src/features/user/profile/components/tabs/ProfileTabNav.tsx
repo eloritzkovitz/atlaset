@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "@components";
-import type { UserProfile } from "../types";
+import type { UserProfile } from "../../types";
 
 interface ProfileTabNavProps {
   profileUser: UserProfile;

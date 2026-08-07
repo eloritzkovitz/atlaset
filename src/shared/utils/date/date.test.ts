@@ -1,9 +1,11 @@
 import i18n from "i18next";
+import { Timestamp } from "firebase/firestore";
 import {
   formatDate,
   formatFirestoreDate,
+  formatToInputDate,
+  parseInputDateToTimestamp,
   getYear,
-  getYearNumber,
   getCurrentYear,
   getTimestamp,
   formatTimeSeconds,
@@ -63,8 +65,8 @@ describe("formatDate", () => {
     },
   );
 
-  it("throws on invalid date evaluation", () => {
-    expect(() => formatDate("not-a-date")).toThrow();
+  it("handles invalid date strings gracefully", () => {
+    expect(formatDate("not-a-date")).toBe("");
   });
 });
 
@@ -94,6 +96,39 @@ describe("formatFirestoreDate", () => {
     const finalExpected =
       expected === "DYNAMIC_EXPECTED" ? getExpectedFallback() : expected;
     expect(formatFirestoreDate(input)).toBe(finalExpected);
+  });
+});
+
+describe("HTML Date Input Utilities", () => {
+  const fakeTimestamp = { toDate: () => new Date("2023-01-15T00:00:00Z") };
+  const nativeDate = new Date("2023-01-15T00:00:00Z");
+
+  it.each([
+    [undefined, ""],
+    [null, ""],
+    ["", ""],
+    ["invalid-date", ""],
+    [fakeTimestamp, "2023-01-15"],
+    [nativeDate, "2023-01-15"],
+    ["2023-01-15", "2023-01-15"],
+    [1673740800000, "2023-01-15"],
+  ])("formatToInputDate(%p) -> %p", (input, expected) => {
+    expect(formatToInputDate(input)).toBe(expected);
+  });
+
+  it.each([
+    [undefined, undefined],
+    ["", undefined],
+    ["invalid-date", undefined],
+    ["2023-01-15", Timestamp.fromDate(new Date("2023-01-15"))],
+  ])("parseInputDateToTimestamp(%p) -> %p", (input, expected) => {
+    const result = parseInputDateToTimestamp(input);
+    if (!expected) {
+      expect(result).toBeUndefined();
+    } else {
+      expect(typeof result?.toMillis).toBe("function");
+      expect(result?.toMillis()).toBe(expected.toMillis());
+    }
   });
 });
 
@@ -127,20 +162,15 @@ describe("setAppDateLocale", () => {
 
 describe("Year Extraction Utilities", () => {
   it.each([
-    [getYear, undefined, undefined],
-    [getYear, "", undefined],
-    [getYear, "2023-01-15", "2023"],
-    [getYear, "not-a-date", undefined],
-    [getYearNumber, undefined, undefined],
-    [getYearNumber, "", undefined],
-    [getYearNumber, "2023-01-15", 2023],
-    [getYearNumber, "not-a-date", undefined],
-  ])(
-    "evaluates year utility helper on %p -> %p",
-    (utilityFn, input, expected) => {
-      expect(utilityFn(input as string)).toBe(expected as any);
-    },
-  );
+    [undefined, undefined],
+    ["", undefined],
+    ["2023-01-15", 2023],
+    [new Date("2023-01-15"), 2023],
+    [1673740800000, 2023],
+    ["not-a-date", undefined],
+  ])("evaluates getYear(%p) -> %p", (input, expected) => {
+    expect(getYear(input as any)).toBe(expected);
+  });
 
   it("resolves getCurrentYear matching system runtime", () => {
     expect(getCurrentYear()).toBe(new Date().getFullYear());

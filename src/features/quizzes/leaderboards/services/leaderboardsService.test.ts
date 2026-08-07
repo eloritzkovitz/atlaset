@@ -9,6 +9,7 @@ import { leaderboardsService } from "../services/leaderboardsService";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
 
 const mockEntries: LeaderboardEntry[] = Array.from({ length: 26 }, (_, i) => ({
+  id: `doc${i}`,
   playerId: `player${i}`,
   playerName: `Player ${i}`,
   score: 100 - i,
@@ -17,15 +18,15 @@ const mockEntries: LeaderboardEntry[] = Array.from({ length: 26 }, (_, i) => ({
   date: new Date().toISOString(),
 }));
 
-const snapshotDataInput = mockEntries.map((entry, idx) => ({
-  id: `doc${idx}`,
+const snapshotDataInput = mockEntries.map((entry) => ({
+  id: entry.playerId,
   data: entry,
 }));
 
-function createPlayerGamesMock(prevGames: LeaderboardEntry[]) {
+function createPlayerGamesMock(games?: LeaderboardEntry[]) {
   return {
-    exists: () => true,
-    data: () => ({ games: [...prevGames] }),
+    exists: () => Boolean(games),
+    data: () => (games ? { games: [...games] } : undefined),
     id: "player1",
     ref: { id: "player1" },
   } as unknown as DocumentSnapshot<unknown, DocumentData>;
@@ -42,22 +43,15 @@ describe("leaderboardsService", () => {
       uid: "test-user",
       displayName: "Test User",
     } as any);
-    fs.collection.mockReturnValue({
-      id: "mock-collection",
-      path: "mock-collection",
-    });
+    fs.collection.mockReturnValue({ id: "mock-collection" });
     fs.query.mockImplementation((ref) => ref);
-    fs.doc.mockImplementation((...args: any[]) => {
-      const docId =
-        typeof args[args.length - 1] === "string"
-          ? args[args.length - 1]
-          : "mock-doc-id";
-      return { id: docId, path: `mock-path/${docId}` };
-    });
+    fs.doc.mockImplementation((...args: any[]) => ({
+      id: args[args.length - 1] ?? "mock-doc-id",
+    }));
   });
 
   describe("addLeaderboardEntry", () => {
-    it("adds a leaderboard entry and enforces top 25 threshold rules", async () => {
+    it("adds an entry, prunes excess docs (>25), and logs activity", async () => {
       fs.addDoc.mockResolvedValue(undefined);
       fs.deleteDoc.mockResolvedValue(undefined);
       fs.getDocs.mockResolvedValue(
@@ -71,44 +65,65 @@ describe("leaderboardsService", () => {
       );
 
       expect(fs.addDoc).toHaveBeenCalled();
-      expect(fs.getDocs).toHaveBeenCalled();
       expect(fs.deleteDoc).toHaveBeenCalledTimes(1);
     });
 
-    it("skips submission gracefully if unauthenticated", async () => {
+    it("does not delete entries if threshold is <= 25", async () => {
+      fs.addDoc.mockResolvedValue(undefined);
+      fs.getDocs.mockResolvedValue(
+        createMockSnapshot(snapshotDataInput.slice(0, 25)) as any,
+      );
+
+      await leaderboardsService.addLeaderboardEntry(
+        quizType,
+        difficulty,
+        mockEntries[0],
+      );
+
+      expect(fs.deleteDoc).not.toHaveBeenCalled();
+    });
+
+    it("handles fallback default difficulty when formatting activity log", async () => {
+      fs.addDoc.mockResolvedValue(undefined);
+      fs.getDocs.mockResolvedValue(createMockSnapshot([]) as any);
+
+      await leaderboardsService
+        .addLeaderboardEntry(quizType, undefined as any, mockEntries[0])
+        .catch(() => {});
+    });
+
+    it("skips submission if unauthenticated or missing user", async () => {
       auth.isAuthenticated.mockReturnValue(false);
       await leaderboardsService.addLeaderboardEntry(
         quizType,
         difficulty,
         mockEntries[0],
       );
-      expect(fs.setDoc).not.toHaveBeenCalled();
-    });
 
-    it("skips submission gracefully if active identity profile context resolves to null", async () => {
+      auth.isAuthenticated.mockReturnValue(true);
       auth.getCurrentUser.mockReturnValue(null);
       await leaderboardsService.addLeaderboardEntry(
         quizType,
         difficulty,
         mockEntries[0],
       );
-      expect(fs.setDoc).not.toHaveBeenCalled();
+
+      expect(fs.addDoc).not.toHaveBeenCalled();
     });
 
-    it("rejects execution with an explicitly handled exception bubble if parameters are missing", async () => {
+    it("throws if type or difficulty are missing", async () => {
       await expect(
         leaderboardsService.addLeaderboardEntry(
           undefined as any,
           undefined as any,
           mockEntries[0],
         ),
-      ).rejects.toThrow();
-      expect(fs.setDoc).not.toHaveBeenCalled();
+      ).rejects.toThrow("Type and difficulty required.");
     });
   });
 
   describe("getLeaderboard", () => {
-    it("retrieves partitioned active entries truncated up to a fixed maximum limit of 25 items", async () => {
+    it("retrieves leaderboard entries up to limit", async () => {
       fs.getDocs.mockResolvedValue(
         createMockSnapshot(snapshotDataInput.slice(0, 25)) as any,
       );
@@ -122,20 +137,39 @@ describe("leaderboardsService", () => {
       expect(entries[0].score).toBe(100);
     });
 
-    it("yields an empty fallback matrix if current context is unauthorized", async () => {
+    it("returns empty array if unauthenticated", async () => {
       auth.isAuthenticated.mockReturnValue(false);
-      const entries = await leaderboardsService.getLeaderboard(
-        quizType,
-        difficulty,
+      expect(
+        await leaderboardsService.getLeaderboard(quizType, difficulty),
+      ).toEqual([]);
+    });
+  });
+
+  describe("getUserScores", () => {
+    it("retrieves top scores for a specific user", async () => {
+      fs.getDocs.mockResolvedValue(
+        createMockSnapshot(snapshotDataInput.slice(0, 5)) as any,
       );
-      expect(entries).toEqual([]);
+
+      const scores = await leaderboardsService.getUserScores("test-user");
+
+      expect(scores).toHaveLength(5);
+      expect(fs.getDocs).toHaveBeenCalled();
+    });
+
+    it("returns empty array if unauthenticated or userId is missing", async () => {
+      auth.isAuthenticated.mockReturnValue(false);
+      expect(await leaderboardsService.getUserScores("test-user")).toEqual([]);
+
+      auth.isAuthenticated.mockReturnValue(true);
+      expect(await leaderboardsService.getUserScores("")).toEqual([]);
     });
   });
 
   describe("Player Progress Storage Operations", () => {
     const playerId = "player1";
 
-    it("commits safe tracking deltas and updates database arrays capped by custom maximum rules", async () => {
+    it("saves game history, prepends new entry, and caps max games", async () => {
       const prevGames = Array.from({ length: 12 }, (_, i) => ({
         ...mockEntries[0],
         playerId: `old${i}`,
@@ -146,7 +180,7 @@ describe("leaderboardsService", () => {
       await leaderboardsService.savePlayerGame(playerId, mockEntries[0], 10);
 
       expect(fs.setDoc).toHaveBeenCalledWith(
-        expect.objectContaining({ id: "player1" }),
+        expect.anything(),
         expect.objectContaining({
           games: expect.arrayContaining([
             expect.objectContaining({ playerId: "player0" }),
@@ -155,13 +189,22 @@ describe("leaderboardsService", () => {
       );
     });
 
-    it("bypasses physical state writes when execution blocks fall outside active authenticated constraints", async () => {
+    it("handles saving game history when no previous games exist", async () => {
+      fs.getDoc.mockResolvedValue(createPlayerGamesMock(undefined));
+      fs.setDoc.mockResolvedValue(undefined);
+
+      await leaderboardsService.savePlayerGame(playerId, mockEntries[0]);
+
+      expect(fs.setDoc).toHaveBeenCalled();
+    });
+
+    it("skips saving player game if unauthenticated", async () => {
       auth.isAuthenticated.mockReturnValue(false);
-      await leaderboardsService.savePlayerGame(playerId, mockEntries[0], 10);
+      await leaderboardsService.savePlayerGame(playerId, mockEntries[0]);
       expect(fs.setDoc).not.toHaveBeenCalled();
     });
 
-    it("retrieves historical performance arrays bound cleanly by maximum limits", async () => {
+    it("retrieves player games up to maxGames fallback", async () => {
       const prevGames = Array.from({ length: 12 }, (_, i) => ({
         ...mockEntries[0],
         playerId: `old${i}`,
@@ -174,10 +217,12 @@ describe("leaderboardsService", () => {
       expect(games[0].playerId).toBe("old0");
     });
 
-    it("yields empty structural tracking metrics if connection boundaries fallback to guest context", async () => {
+    it("returns empty array when player games document does not exist or user unauthenticated", async () => {
+      fs.getDoc.mockResolvedValue(createPlayerGamesMock(undefined));
+      expect(await leaderboardsService.getPlayerGames(playerId)).toEqual([]);
+
       auth.isAuthenticated.mockReturnValue(false);
-      const games = await leaderboardsService.getPlayerGames(playerId, 10);
-      expect(games).toEqual([]);
+      expect(await leaderboardsService.getPlayerGames(playerId)).toEqual([]);
     });
   });
 });

@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Card, LoadingSpinner } from "@components";
-import { FriendList } from "../../friends/components/FriendList";
-import type { UserProfile } from "../types";
 import { useUserFriends } from "@features/user/friends/hooks/useUserFriends";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
+import { FriendList } from "../../../friends/components/FriendList";
+import type { UserProfile } from "../../types";
 
 interface ProfileFriendsTabProps {
   profileUser: UserProfile;

@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
-import {
-  TYPE_OPTIONS,
-  DIFFICULTY_OPTIONS,
-} from "../constants/leaderboardOptions";
 import { leaderboardsService } from "../services/leaderboardsService";
-import type { LeaderboardEntry, QuizType, Difficulty } from "../../types";
+import type { LeaderboardEntry } from "../../types";
 
 /**
  * Fetches leaderboard entries for a given user.
@@ -14,21 +10,31 @@ import type { LeaderboardEntry, QuizType, Difficulty } from "../../types";
 export function useUserLeaderboardScores(userId?: string) {
   const [scores, setScores] = useState<LeaderboardEntry[]>([]);
 
+  // Fetch user leaderboard scores when the userId changes
   useEffect(() => {
-    if (!userId) return;
-    (async () => {
-      const results = await Promise.all(
-        (TYPE_OPTIONS as { value: QuizType }[])
-          .map((typeOpt) =>
-            (DIFFICULTY_OPTIONS as { value: Difficulty }[]).map((diffOpt) =>
-              leaderboardsService.getLeaderboard(typeOpt.value, diffOpt.value),
-            ),
-          )
-          .flat(),
-      );
-      const allEntries = results.flat();
-      setScores(allEntries.filter((e) => e.playerId === userId));
-    })();
+    if (!userId) {
+      setScores([]);
+      return;
+    }
+
+    let isCancelled = false;
+
+    async function fetchUserScores() {
+      try {
+        const results = await leaderboardsService.getUserScores(userId ?? "");
+        if (!isCancelled) {
+          setScores(results);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user leaderboard scores:", error);
+      }
+    }
+
+    fetchUserScores();
+
+    return () => {
+      isCancelled = true;
+    };
   }, [userId]);
 
   return scores;

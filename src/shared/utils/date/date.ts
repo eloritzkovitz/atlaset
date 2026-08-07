@@ -2,6 +2,7 @@
  * Utility functions for date and time manipulation and formatting.
  */
 
+import { Timestamp } from "firebase/firestore";
 import i18n from "i18next";
 import type { TFunction } from "i18next";
 
@@ -26,6 +27,9 @@ export function formatDate(
 ): string {
   if (!date) return "";
   const d = date instanceof Date ? date : new Date(date as string);
+
+  // Guard against invalid dates
+  if (isNaN(d.getTime())) return "";
 
   // Determine the locale to use for formatting
   const lang = [
@@ -75,14 +79,50 @@ export function formatFirestoreDate(
 }
 
 /**
- * Gets the year as a string from a date string.
- * @param date - The date string to extract the year from.
- * @returns The year as a string, or undefined if the date is not provided.
+ * Formats a Firestore Timestamp, Date, or string into a YYYY-MM-DD string for HTML date inputs.
+ * @param date - The date to format, which can be a Firestore Timestamp, Date object, or string.
+ * @returns A string in the format YYYY-MM-DD suitable for HTML date inputs, or an empty string if the input is invalid.
  */
-export function getYear(date?: string): string | undefined {
+export function formatToInputDate(date: unknown): string {
+  if (!date) return "";
+
+  let d: Date | null = null;
+  if (
+    typeof date === "object" &&
+    typeof (date as { toDate?: unknown }).toDate === "function"
+  ) {
+    d = (date as { toDate: () => Date }).toDate();
+  } else if (date instanceof Date) {
+    d = date;
+  } else {
+    d = new Date(date as string | number);
+  }
+
+  return d && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : "";
+}
+
+/**
+ * Converts an HTML date input string (YYYY-MM-DD) or Date object into a Firestore Timestamp.
+ * @param dateStr - The date string from an HTML input or a Date object.
+ * @returns A Firestore Timestamp representing the date, or undefined if the input is invalid.
+ */
+export function parseInputDateToTimestamp(
+  dateStr?: string,
+): Timestamp | undefined {
+  if (!dateStr) return undefined;
+  const dateObj = new Date(dateStr);
+  return !isNaN(dateObj.getTime()) ? Timestamp.fromDate(dateObj) : undefined;
+}
+
+/**
+ * Gets the year as a number from a date string.
+ * @param date - The date string to extract the year from.
+ * @returns The year as a number, or undefined if the date is not provided.
+ */
+export function getYear(date?: string): number | undefined {
   if (!date) return undefined;
   const d = new Date(date);
-  return isNaN(d.getTime()) ? undefined : d.getFullYear().toString();
+  return isNaN(d.getTime()) ? undefined : d.getFullYear();
 }
 
 /**
@@ -94,17 +134,6 @@ export function getCurrentYear(): number {
 }
 
 /**
- * Gets the year number from a date string.
- * @param date - The date string to extract the year from.
- * @returns The year as a number, or undefined if the date is not provided.
- */
-export function getYearNumber(date?: string): number | undefined {
-  if (!date) return undefined;
-  const d = new Date(date);
-  return isNaN(d.getTime()) ? undefined : d.getFullYear();
-}
-
-/**
  * Converts a timestamp (string, number, or Date) to a number representing milliseconds since epoch.
  * @param ts - The timestamp to convert.
  * @returns The timestamp as a number.
@@ -112,7 +141,6 @@ export function getYearNumber(date?: string): number | undefined {
 export function getTimestamp(ts: string | number | Date): number {
   if (typeof ts === "number") return ts;
   if (ts instanceof Date) return ts.getTime();
-  // Assume string
   return new Date(ts).getTime();
 }
 

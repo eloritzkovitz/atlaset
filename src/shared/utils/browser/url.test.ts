@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { isExternalUrl, getQueryParam, getWikipediaUrl } from "./url";
+import {
+  getQueryParam,
+  getUrlDisplayPath,
+  getWikipediaUrl,
+  isExternalUrl,
+} from "./url";
 
 describe("isExternalUrl", () => {
   it("should return false if url is undefined or empty", () => {
@@ -23,6 +28,38 @@ describe("isExternalUrl", () => {
     expect(isExternalUrl("profile/edit")).toBe(false);
     expect(isExternalUrl("#main-content")).toBe(false);
     expect(isExternalUrl("?query=test")).toBe(false);
+  });
+});
+
+describe("getUrlDisplayPath", () => {
+  it("extracts the last path segment from full or partial URLs", () => {
+    expect(getUrlDisplayPath("https://example.com/path/to/resource")).toBe(
+      "resource",
+    );
+    expect(getUrlDisplayPath("example.com/user/profile/")).toBe("profile");
+  });
+
+  it("strips query params and hashes, returning only the last path segment", () => {
+    expect(
+      getUrlDisplayPath("https://example.com/posts/123?ref=feed#comments"),
+    ).toBe("123");
+  });
+
+  it("returns the cleaned hostname when no path segments exist", () => {
+    expect(getUrlDisplayPath("https://www.example.com")).toBe("example.com");
+    expect(getUrlDisplayPath("  www.domain.org/  ")).toBe("domain.org");
+  });
+
+  it("returns an empty string for empty or missing inputs", () => {
+    expect(getUrlDisplayPath()).toBe("");
+    expect(getUrlDisplayPath("   ")).toBe("");
+  });
+
+  it("returns raw string fallback when URL constructor throws an error", () => {
+    expect(getUrlDisplayPath("http://")).toBe("http://");
+    expect(getUrlDisplayPath("https://:invalid-port")).toBe(
+      "https://:invalid-port",
+    );
   });
 });
 

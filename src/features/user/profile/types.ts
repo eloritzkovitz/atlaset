@@ -49,3 +49,11 @@ export interface FirestoreUser extends UserProfile {
   deactivatedAt?: string;
   reactivatedAt?: string;
 }
+
+/** Represents the validation status of a username. */
+export type UsernameValidationStatus =
+  | "idle"
+  | "checking"
+  | "available"
+  | "taken"
+  | "invalid";

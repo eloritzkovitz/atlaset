@@ -1,7 +1,6 @@
 import { updateProfile, updatePassword } from "firebase/auth";
-import { Timestamp } from "firebase/firestore";
 import { useEffect, useState, type SubmitEvent } from "react";
-import { auth } from "@lib/firebase";
+import { useTranslation } from "react-i18next";
 import {
   ActionButton,
   FormField,
@@ -10,14 +9,23 @@ import {
   PasswordField,
   SectionHeader,
 } from "@components";
-import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
+import { auth } from "@lib/firebase";
+import { formatToInputDate, parseInputDateToTimestamp } from "@utils";
 import { SocialLinksField } from "./SocialLinksField";
 import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../../hooks/useUsernameValidation";
 import { profileService } from "../../services/profileService";
 import { type UserProfile, type SocialPlatform } from "../../types";
 import type { SerializableUser } from "../../../auth/types";
+
+const STATUS_COLOR_CLASSES = {
+  idle: "",
+  checking: "text-muted",
+  available: "text-success",
+  taken: "text-danger",
+  invalid: "text-danger",
+} as const;
 
 interface EditProfileModalProps {
   user: SerializableUser | null;
@@ -44,9 +52,7 @@ export function EditProfileModal({
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [birthday, setBirthday] = useState<string>(
-    profile?.birthday instanceof Timestamp
-      ? profile.birthday.toDate().toISOString().slice(0, 10)
-      : "",
+    formatToInputDate(profile?.birthday),
   );
   const [socialLinks, setSocialLinks] = useState<
     Partial<Record<SocialPlatform, string>>
@@ -64,21 +70,23 @@ export function EditProfileModal({
   }, [fetchedUsername, user, open]);
 
   // Check username availability
-  const { status, label, color } = useUsernameValidation(
+  const { status, translationKey } = useUsernameValidation(
     username,
     profile?.username,
   );
+
+  // Determine label and color based on validation status
+  const isUsernameInvalid =
+    username !== initialUsername &&
+    (status === "invalid" || status === "taken" || status === "checking");
 
   // Handle saving profile changes
   const handleSave = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    // Block if username changed and not valid
-    if (
-      username !== initialUsername &&
-      (status === "invalid" || status === "taken" || status === "checking")
-    ) {
+
+    if (isUsernameInvalid) {
       setError(t("profile.editModal.usernameInvalid"));
       return;
     }
@@ -99,17 +107,10 @@ export function EditProfileModal({
 
       // Update profile fields in Firestore
       if (user) {
-        let birthdayValue: Timestamp | undefined = undefined;
-        if (birthday) {
-          const dateObj = new Date(birthday);
-          if (!isNaN(dateObj.getTime())) {
-            birthdayValue = Timestamp.fromDate(dateObj);
-          }
-        }
         await profileService.editProfile(user.uid, {
           displayName,
           biography,
-          birthday: birthdayValue,
+          birthday: parseInputDateToTimestamp(birthday),
           socialLinks,
         });
       }
@@ -165,23 +166,18 @@ export function EditProfileModal({
               required
             />
           </FormField>
-          {label && (
+
+          {translationKey && (
             <div
               data-testid="username-status"
-              className={
-                `mt-1 text-sm font-medium w-full block break-words whitespace-pre-line ` +
-                (color === "green"
-                  ? "text-success "
-                  : color === "red"
-                    ? "text-danger "
-                    : color === "yellow"
-                      ? "text-warning "
-                      : "")
-              }
+              className={`mt-1 text-sm font-medium w-full block break-words whitespace-pre-line ${
+                STATUS_COLOR_CLASSES[status]
+              }`}
             >
-              {label}
+              {t(translationKey)}
             </div>
           )}
+
           <FormField label={t("profile.editModal.name")}>
             <input
               id="display-name"
@@ -192,6 +188,7 @@ export function EditProfileModal({
               disabled={!isPasswordUser}
             />
           </FormField>
+
           {isPasswordUser && (
             <>
               <PasswordField
@@ -209,6 +206,7 @@ export function EditProfileModal({
               />
             </>
           )}
+
           <FormField label={t("profile.editModal.birthday")}>
             <input
               id="birthday"
@@ -219,6 +217,7 @@ export function EditProfileModal({
               required={false}
             />
           </FormField>
+
           <FormField label={t("profile.editModal.biography")}>
             <textarea
               id="biography"
@@ -230,6 +229,7 @@ export function EditProfileModal({
               maxLength={500}
             />
           </FormField>
+
           <SectionHeader title={t("profile.editModal.contactInfo")} />
           <SocialLinksField
             socialLinks={socialLinks}
@@ -237,6 +237,7 @@ export function EditProfileModal({
               setSocialLinks((prev) => ({ ...prev, [platform]: value }))
             }
           />
+
           {error && <div className="text-danger">{error}</div>}
           {success && <div className="text-success">{success}</div>}
           <div className="flex gap-4 justify-end mt-6">
