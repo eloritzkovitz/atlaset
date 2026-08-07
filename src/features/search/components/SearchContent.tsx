@@ -5,8 +5,8 @@ import { useCountryData } from "@features/countries";
 import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { useDebounce } from "@hooks";
-import { RecentSearchesList } from "./RecentSearchesList";
-import { SearchResultsList } from "./SearchResultsList";
+import { RecentSearchesList } from "./recent/RecentSearchesList";
+import { SearchResultsList } from "./results/SearchResultsList";
 import { useSearch } from "../hooks/useSearch";
 
 interface SearchContentProps {

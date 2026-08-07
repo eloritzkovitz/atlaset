@@ -102,7 +102,6 @@ export function ModalSelect<T>({
           <SearchInput
             value={currentSearchValue}
             onChange={handleSearchChange}
-            placeholder={t("components.search.placeholder")}
           />
         )}
 

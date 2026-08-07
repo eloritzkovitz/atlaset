@@ -1,6 +1,10 @@
+import type { Country } from "@features/countries/types";
+import { getCountryName } from "@features/countries/utils/countryData";
 import type { SerializableUser } from "@features/user/auth/types";
 import type { Friend } from "@features/user/friends/types";
 import type { UserProfile } from "@features/user/profile/types";
+import i18n from "@lib/i18n/config";
+import type { SearchResult } from "../types";
 
 /**
  * Generates a consistent search results path.
@@ -9,6 +13,30 @@ import type { UserProfile } from "@features/user/profile/types";
  */
 export function getSearchRoute(term: string): string {
   return `/search?query=${encodeURIComponent(term.trim())}`;
+}
+
+/**
+ * Renders a search result item based on its type (user, country, currency, region, or subregion).
+ * @param item - The search result item to render.
+ * @param countries - The list of all countries for looking up sovereign names.
+ * @returns A JSX element representing the search result item.
+ */
+export function getCountryLabel(item: Country, countries: Country[]): string {
+  if (
+    item.sovereigntyStatus === "dependency" ||
+    item.sovereigntyStatus === "overseas_region"
+  ) {
+    const sovereignName = getCountryName(
+      item.sovereignState || "Unknown",
+      countries,
+    );
+    if (sovereignName) {
+      return i18n.t(`countries:labels.${item.sovereigntyStatus}_of`, {
+        sovereign: sovereignName,
+      });
+    }
+  }
+  return i18n.t("countries:labels.country", { defaultValue: "Country" });
 }
 
 /**
@@ -29,6 +57,28 @@ export function getUserLabel(
     return "Friend";
   }
   return "";
+}
+
+/**
+ * Returns a unique key for a search result based on its type and properties.
+ * @param item - The search result item to generate a key for.
+ * @returns A string representing the unique key for the search result.
+ */
+export function getSearchResultKey(item: SearchResult): string {
+  switch (item.type) {
+    case "user":
+      return item.uid;
+    case "country":
+      return item.isoCode || item.name;
+    case "currency":
+      return item.code;
+    case "region":
+      return item.region;
+    case "subregion":
+      return `${item.region}-${item.subregion}`;
+    default:
+      return JSON.stringify(item);
+  }
 }
 
 /**

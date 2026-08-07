@@ -7,7 +7,7 @@ import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { usePageTitle } from "@hooks";
 import { getQueryParam } from "@utils";
-import { SearchSection } from "../components/SearchSection";
+import { SearchSection } from "../components/results/SearchSection";
 import { useSearch } from "../hooks/useSearch";
 
 export default function SearchPage() {

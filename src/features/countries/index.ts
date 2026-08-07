@@ -9,16 +9,14 @@ export { CountryListGroup } from "./components/countryDetails/CountryListGroup";
 export { CountrySelectField } from "./components/countrySelect/CountrySelectField";
 export { CountrySelectModal } from "./components/countrySelect/CountrySelectModal";
 export { CountrySortSelect } from "./components/countrySort/CountrySortSelect";
+export { RegionIcon } from "./components/RegionIcon";
 export { VisitedStatusIndicator } from "./components/countryDetails/VisitedStatusIndicator";
-
-// Constants
-export { regionIcons, defaultRegionIcon } from "./constants/regionIcons";
 
 // Hooks
 export { useCountryData } from "./hooks/useCountryData";
 
 // Services
-export { countryListService } from "./services/countryListService";
+export { countryListService } from "../atlas/countries/services/countryListService";
 
 // Types
 export * from "./types";

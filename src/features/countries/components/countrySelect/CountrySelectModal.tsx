@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ModalSelect, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
-import { useVisitedCountries } from "@features/visits";
+import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { filterBySearch, parseQualifierSearch } from "@utils";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import { SUPPORTED_MODIFIERS } from "../../constants/modifierConfig";
@@ -97,7 +97,7 @@ export function CountrySelectModal({
           onChange={searchProps.onChange}
           qualifiers={SUPPORTED_QUALIFIERS}
           modifiers={SUPPORTED_MODIFIERS}
-          placeholder={t("common:search.placeholder")}
+          placeholder={t("atlas:countries.searchPlaceholder")}
         />
       )}
       renderItem={(country) => (

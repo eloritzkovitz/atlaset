@@ -3,9 +3,9 @@ import { MenuButton, Separator } from "@components";
 import type { Country } from "@features/countries/types";
 import type { SerializableUser } from "@features/user/auth/types";
 import type { Friend } from "@features/user/friends/types";
-import type { SearchResult } from "../types";
-import { renderSearchItem } from "../utils/renderSearchItem";
-import { getSearchRoute } from "../utils/search";
+import { SearchResultItem } from "./SearchResultItem";
+import type { SearchResult } from "../../types";
+import { getSearchResultKey, getSearchRoute } from "../../utils/search";
 
 interface SearchResultsListProps {
   results: SearchResult[];
@@ -30,14 +30,16 @@ export function SearchResultsList({
 
   return (
     <ul className="text-left">
-      {results.slice(0, 8).map((item) =>
-        renderSearchItem(item, {
-          setDropdownOpen,
-          currentUser,
-          friendList,
-          countries,
-        }),
-      )}
+      {results.slice(0, 8).map((item) => (
+        <SearchResultItem
+          key={getSearchResultKey(item)}
+          item={item}
+          currentUser={currentUser}
+          friendList={friendList}
+          countries={countries}
+          onSelect={() => setDropdownOpen(false)}
+        />
+      ))}
       {results.length > 8 && (
         <>
           <Separator className="my-1" />

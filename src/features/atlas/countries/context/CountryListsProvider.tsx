@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, type ReactNode } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
 import type { Layer } from "@features/atlas/layers/types";
-import { countryListService, type CountryList } from "@features/countries";
+import { countryListService } from "@features/countries";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
 import { useDataLoader } from "@hooks";
@@ -10,6 +10,7 @@ import {
   type CountryListsContextValue,
 } from "./CountryListsContext";
 import { CountryListModal } from "../components/countriesPanel/CountryListModal";
+import type { CountryList } from "../types";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();

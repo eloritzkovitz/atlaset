@@ -118,14 +118,6 @@ export type CountryTerritoriesGroup = {
 
 export type CountryTerritories = Record<string, CountryTerritoriesGroup>;
 
-/** Represents a list of countries. */
-export type CountryList = {
-  id: string;
-  name: string;
-  countryCodes: string[];
-  layerId?: string | null;
-};
-
 /** Represents a key for a country qualifier search. */
 export type CountryQualifierKey =
   | keyof Country

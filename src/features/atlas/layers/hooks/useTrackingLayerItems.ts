@@ -1,7 +1,8 @@
 import { useMemo } from "react";
+import type { CountryList } from "@features/atlas/countries/types";
 import { useMapTheme } from "@features/atlas/core";
 import { useMapOverlays } from "@features/atlas/settings";
-import { type Country, type CountryList } from "@features/countries/types";
+import { type Country } from "@features/countries/types";
 import { useHomeCountry } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import type { LayerItem } from "../types";

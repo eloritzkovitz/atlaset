@@ -1,6 +1,6 @@
 import { MenuButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { getSearchRoute } from "../utils/search";
+import { getSearchRoute } from "../../utils/search";
 
 interface RecentSearchItemProps {
   term: string;

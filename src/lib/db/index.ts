@@ -1,5 +1,5 @@
 import Dexie, { type Table } from "dexie";
-import type { CountryList } from "@features/countries/types";
+import type { CountryList } from "@features/atlas/countries/types";
 import type { Layer } from "@features/atlas/layers";
 import type { Marker } from "@features/atlas/markers/types";
 

@@ -13,7 +13,7 @@ export interface UserSubcollections {
   trips: import("@features/trips/types").Trip;
   sharedTrips: import("@features/trips/types").SharedTrip;
   settings: import("@features/settings/types").Settings;
-  countryLists: import("@features/countries/types").CountryList;
+  countryLists: import("@features/atlas/countries/types").CountryList;
   layers: import("@features/atlas/layers/types").Layer;
   markers: import("@features/atlas/markers/types").Marker;
   savedMaps: import("@features/atlas/savedMaps/types").SavedMap;

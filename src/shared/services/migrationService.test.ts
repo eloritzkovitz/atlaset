@@ -16,16 +16,16 @@ const { mockDb } = vi.hoisted(() => ({
 
 vi.mock("@lib/db", () => ({ appDb: mockDb }));
 
-vi.mock("../../features/countries/services/countryListService", () => ({
+vi.mock("@features/atlas/countries/services/countryListService", () => ({
   countryListService: { add: vi.fn() },
 }));
-vi.mock("../../features/atlas/layers/services/layersService", () => ({
+vi.mock("@features/atlas/layers/services/layersService", () => ({
   layersService: { add: vi.fn() },
 }));
-vi.mock("../../features/atlas/markers/services/markersService", () => ({
+vi.mock("@features/atlas/markers/services/markersService", () => ({
   markersService: { add: vi.fn() },
 }));
-vi.mock("../../features/settings/core/services/settingsService", () => ({
+vi.mock("@features/settings/core/services/settingsService", () => ({
   settingsService: { save: vi.fn() },
 }));
 

@@ -2,12 +2,9 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FormField, Modal, ModalActions, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
-import {
-  CountrySelectField,
-  useCountryData,
-  type CountryList,
-} from "@features/countries";
+import { CountrySelectField, useCountryData } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
+import type { CountryList } from "../../types";
 
 interface CountryListModalProps {
   isOpen: boolean;
