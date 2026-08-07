@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import { DASHBOARD_URLS } from "../../core/constants/dashboardMenu";
 import { getCountryRoute } from "../utils/dashboardNavigation";
 

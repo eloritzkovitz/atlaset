@@ -3,7 +3,7 @@
  */
 
 import type { TFunction } from "i18next";
-import type { VisitContext } from "@features/visits";
+import type { VisitContext } from "@features/visits/types";
 import type { SortDirection, SortValue } from "@types";
 import { normalizeString, sortItems } from "@utils";
 import type { Country } from "../types";

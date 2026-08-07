@@ -11,7 +11,7 @@ import { useHomeCountry } from "@features/user/profile/hooks/useHomeCountry";
 import { useDateLocale } from "../hooks/useDateLocale";
 import { useLanguage } from "../hooks/useLanguage";
 import { languageOptions } from "../utils/languages";
-import { SettingsCard } from "../../common/components/SettingsCard";
+import { SettingsCard } from "../../core/components/SettingsCard";
 
 export function LanguageRegionSection() {
   const { t: tSettings } = useTranslation("settings");

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 
 /**
  * Manages country selection and hover states.

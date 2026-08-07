@@ -13,15 +13,13 @@ import {
   useFriendshipStatus,
   useUserFriendCount,
 } from "@features/user/friends";
-import {
-  EditProfileModal,
-  ProfileAboutTab,
-  ProfileFriendsTab,
-  ProfileHeader,
-  ProfileTabNav,
-  useUserProfile,
-} from "@features/user/profile";
 import { usePageTitle } from "@hooks";
+import { EditProfileModal } from "../components/EditProfileModal/EditProfileModal";
+import { ProfileAboutTab } from "../components/ProfileAboutTab";
+import { ProfileFriendsTab } from "../components/ProfileFriendsTab";
+import { ProfileHeader } from "../components/ProfileHeader";
+import { ProfileTabNav } from "../components/ProfileTabNav";
+import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();

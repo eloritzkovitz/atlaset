@@ -1,5 +1,4 @@
 // Components
-export { DashboardPanelMenu } from "./components/DashboardPanelMenu";
 export { DashboardHeader } from "./components/DashboardHeader";
 export { DashboardListGrid } from "./components/DashboardListGrid";
 

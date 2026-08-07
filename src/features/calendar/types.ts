@@ -1,4 +1,4 @@
-import type { Trip } from "@features/trips";
+import type { Trip } from "@features/trips/types";
 
 /** Represents a calendar view. */
 export type CalendarView = "day" | "week" | "month";

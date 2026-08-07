@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Checklist } from "@components";
 import { CountryFlagGrid, type Country } from "@features/countries";
-import type { Trip } from "@features/trips";
+import type { Trip } from "@features/trips/types";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementProgressChip } from "./AchievementProgressChip";
 import { AchievementStatusChip } from "./AchievementStatusChip";

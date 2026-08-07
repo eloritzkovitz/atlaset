@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { useAuth } from "@features/user/auth";
 import { EditProfileModal, useUserProfile } from "@features/user/profile";
-import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsRow } from "../../common/components/SettingsRow";
+import { SettingsCard } from "../../core/components/SettingsCard";
+import { SettingsRow } from "../../core/components/SettingsRow";
 
 export function ProfileSection() {
   const { user } = useAuth();

@@ -11,12 +11,12 @@ import {
   FaSuitcaseRolling,
 } from "react-icons/fa6";
 import { Card, Chip, SectionHeader } from "@components";
+import { CountryWithFlag } from "@features/countries";
 import { useAnimatedNumber } from "@hooks";
 import { TripList } from "./TripList";
 import { TripTypeChip } from "./TripTypeChip";
 import { useTripCategoryData } from "../hooks/useTripCategoryData";
 import { useTripsStats } from "../hooks/useTripsStats";
-import { CountryWithFlag } from "@features/countries";
 
 export function TripsOverview() {
   const { t } = useTranslation("dashboard");

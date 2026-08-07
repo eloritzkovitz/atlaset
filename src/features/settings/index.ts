@@ -1,9 +1,9 @@
 // Common
-export { defaultSettings } from "./common/constants/defaultSettings";
-export * from "./common/constants/mapSettings";
-export { SETTINGS_MENU } from "./common/constants/settingsMenu";
-export { SettingsToggle } from "./common/components/SettingsToggle";
-export { useSettings } from "./common/hooks/useSettings";
+export { defaultSettings } from "./core/constants/defaultSettings";
+export * from "./core/constants/mapSettings";
+export { SETTINGS_MENU } from "./core/constants/settingsMenu";
+export { SettingsToggle } from "./core/components/SettingsToggle";
+export { useSettings } from "./core/hooks/useSettings";
 
 // Accessibility
 export { useAccessibility } from "./accessibility/hooks/useAccessibility";
@@ -15,5 +15,4 @@ export { useLanguage, isRtl } from "./account/hooks/useLanguage";
 export { useTheme } from "./display/hooks/useTheme";
 
 // Privacy
-export { CookieConsentModal } from "./privacy/components/CookieConsentModal";
 export { useAnalytics } from "./privacy/hooks/useAnalytics";

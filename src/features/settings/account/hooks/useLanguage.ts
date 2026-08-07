@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import type { AppDispatch } from "@app/store";
 import { getLanguageByCode, LANGUAGES } from "@constants/languages";
 import { useAuth } from "@features/user/auth";
-import { saveSettings } from "../../common/slices/settingsSlice";
+import { saveSettings } from "../../core/slices/settingsSlice";
 import type { Settings } from "../../types";
 
 /**

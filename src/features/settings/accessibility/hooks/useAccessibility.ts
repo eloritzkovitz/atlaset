@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSettings } from "../../common/hooks/useSettings";
+import { useSettings } from "../../core/hooks/useSettings";
 
 /**
  * Manages user accessibility preferences.

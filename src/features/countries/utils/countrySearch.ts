@@ -2,7 +2,7 @@
  * Utility functions for searching and filtering countries based on their properties.
  */
 
-import type { VisitContext } from "@features/visits";
+import type { VisitContext } from "@features/visits/types";
 import { suggestByPrefix, timezoneOffsets } from "@utils";
 import { getTranscontinentalInfo } from "./countryData";
 import {

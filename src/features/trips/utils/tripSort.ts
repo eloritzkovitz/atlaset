@@ -2,7 +2,7 @@
  * Utility functions for sorting trips.
  */
 
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import { createCountryMap } from "@features/countries/utils/countryData";
 import { sortItems } from "@utils";
 import type { Trip, TripSortBy } from "../types";

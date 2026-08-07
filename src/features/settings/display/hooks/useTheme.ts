@@ -3,7 +3,7 @@ import { useEventListener } from "@hooks";
 import { getCachedValue, setCachedValue } from "@utils";
 import type { ThemeKey, AccentKey } from "../types";
 import { applyTheme, THEME_CACHE_KEY, ACCENT_CACHE_KEY } from "../utils/theme";
-import { useSettings } from "../../common/hooks/useSettings";
+import { useSettings } from "../../core/hooks/useSettings";
 
 /**
  *  Manages theme-related state and logic.

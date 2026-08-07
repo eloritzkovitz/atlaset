@@ -2,7 +2,7 @@
  * Utility functions for quiz components.
  */
 
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import type { Difficulty, GameMode } from "../../types";
 
 /**

@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useAccessibility } from "../hooks/useAccessibility";
-import { SettingsToggle } from "../../common/components/SettingsToggle";
+import { SettingsToggle } from "../../core/components/SettingsToggle";
 
 export function ShortcutsToggle() {
   const { t } = useTranslation("settings");

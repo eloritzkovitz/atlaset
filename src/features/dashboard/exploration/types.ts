@@ -1,4 +1,4 @@
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 
 /** Represents a region's statistics.*/
 export interface RegionStat {

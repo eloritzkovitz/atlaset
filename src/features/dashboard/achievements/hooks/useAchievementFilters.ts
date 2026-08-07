@@ -1,13 +1,13 @@
 import { useMemo } from "react";
+import type { Country } from "@features/countries/types";
+import type { Trip } from "@features/trips/types";
+import type { Achievement } from "../types";
 import {
   getAchievementStatus,
   isCompleted,
   getMergedAchievements,
   getGlobalAchievementProgress,
 } from "../utils/achievements";
-import type { Country } from "@features/countries";
-import type { Trip } from "@features/trips";
-import type { Achievement } from "../types";
 
 export interface AchievementFilters {
   typeFilter: string;

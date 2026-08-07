@@ -1,5 +1,5 @@
-import { defaultSettings } from "../../common/constants/defaultSettings";
-import { useSettings } from "../../common/hooks/useSettings";
+import { defaultSettings } from "../../core/constants/defaultSettings";
+import { useSettings } from "../../core/hooks/useSettings";
 
 /**
  * Manages the date locale setting for the application.

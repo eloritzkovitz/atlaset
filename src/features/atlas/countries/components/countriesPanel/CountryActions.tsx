@@ -2,7 +2,7 @@ import { forwardRef, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { DirectionalIcon, Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import {
   useContextMenu,
   useFloatingHover,

@@ -2,14 +2,15 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useUI } from "@contexts/UIContext";
-import { useAtlasShortcuts } from "@features/atlas/core";
-import { useCountrySelection } from "@features/atlas/countries";
-import { useLayers } from "@features/atlas/layers";
-import { useMapView, WorldMap } from "@features/atlas/map";
-import { useMarkerCreation } from "@features/atlas/markers";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
 import { usePageTitle, useScreenSize } from "@hooks";
+import { useAtlasShortcuts } from "../hooks/useAtlasShortcuts";
+import { useCountrySelection } from "../../countries/hooks/useCountrySelection";
+import { useLayers } from "../../layers/context/LayersContext";
+import { useMapView } from "../../map/context/MapViewContext";
+import { WorldMap } from "../../map/components/WorldMap";
+import { useMarkerCreation } from "../../markers/hooks/useMarkerCreation";
 
 export default function AtlasPage() {
   const { countries, loading: countriesLoading, error } = useCountryData();

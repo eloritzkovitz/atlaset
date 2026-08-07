@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import type { Country, Timezone } from "@features/countries";
+import type { Country, Timezone } from "@features/countries/types";
 import { getQueryParam, normalizeTzCode } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../core/components/WikipediaButton";

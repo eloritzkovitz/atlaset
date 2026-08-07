@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { ShortcutsToggle } from "./ShortcutsToggle";
-import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsToggle } from "../../common/components/SettingsToggle";
+import { SettingsCard } from "../../core/components/SettingsCard";
+import { SettingsToggle } from "../../core/components/SettingsToggle";
 import { useAccessibility } from "../hooks/useAccessibility";
 
 export function AccessibilitySettingsSection() {

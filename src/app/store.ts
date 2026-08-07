@@ -2,13 +2,13 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { mapApi } from "@features/atlas/map/api/mapApi";
 import { countriesApi } from "@features/countries/api/countriesApi";
 import { achievementsApi } from "@features/dashboard/achievements/api/achievementsApi";
-import quizSettingsReducer from "@features/quizzes/quiz/slices/quizSettingsSlice";
+import quizSettingsReducer from "@features/quizzes/core/slices/quizSettingsSlice";
 import type { AccentKey, ThemeKey } from "@features/settings/display/types";
 import {
   ACCENT_CACHE_KEY,
   THEME_CACHE_KEY,
 } from "@features/settings/display/utils/theme";
-import settingsReducer from "@features/settings/common/slices/settingsSlice";
+import settingsReducer from "@features/settings/core/slices/settingsSlice";
 import authReducer from "@features/user/auth/slices/authSlice";
 import { getCachedValue } from "@utils";
 

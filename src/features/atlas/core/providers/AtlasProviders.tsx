@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { AppLayout, EmbedLayout } from "@app";
+import AtlasPage from "../pages/AtlasPage";
 import { CountryFiltersProvider } from "../../countries/context/CountryFiltersProvider";
 import { CountryListsProvider } from "../../countries/context/CountryListsProvider";
 import { LayersProvider } from "../../layers/context/LayersProvider";
@@ -7,7 +8,6 @@ import { MapViewProvider } from "../../map/context/MapViewProvider";
 import { MarkersProvider } from "../../markers/context/MarkersProvider";
 import { SavedMapsProvider } from "../../savedMaps/context/SavedMapsProvider";
 import { TimelineProvider } from "../../timeline/context/TimelineProvider";
-import AtlasPage from "../../../../pages/AtlasPage";
 
 export function AtlasProviders() {
   const [searchParams] = useSearchParams();

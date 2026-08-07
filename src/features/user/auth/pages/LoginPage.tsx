@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCircleCheck } from "react-icons/fa6";
-import {
-  AuthCard,
-  AuthFooter,
-  AuthForm,
-  useAuthHandlers,
-} from "@features/user/auth";
 import { useUiHint, usePageTitle } from "@hooks";
+import { AuthCard } from "../components/AuthCard";
+import { AuthFooter } from "../components/AuthFooter";
+import { AuthForm } from "../components/AuthForm";
+import { useAuthHandlers } from "../hooks/useAuthHandlers";
 
 export default function LoginPage() {
   const { error, handleSignIn, handleGoogleSignIn, handleForgotPassword } =

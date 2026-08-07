@@ -3,7 +3,7 @@ import type { BaseEntity, BaseService, LocalTable } from "./BaseService";
 import { countryListService } from "../../features/countries/services/countryListService";
 import { layersService } from "../../features/atlas/layers/services/layersService";
 import { markersService } from "../../features/atlas/markers/services/markersService";
-import { settingsService } from "../../features/settings/common/services/settingsService";
+import { settingsService } from "../../features/settings/core/services/settingsService";
 import type { Settings } from "../../features/settings/types";
 
 /** Migrates data from a local table to a Firestore service. */

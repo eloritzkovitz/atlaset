@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import { ActionButton } from "@components";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import { useTranslation } from "react-i18next";
 import { useKeyHandler } from "@hooks";
 import "./ResultMessage.css";

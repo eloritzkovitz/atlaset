@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { createCountryMap, type Country } from "@features/countries";
-import { useFriendProfiles } from "@features/user/friends";
+import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { useHomeCountry } from "@features/user/profile";
 import type { Trip, TripFilterState } from "../types";
 import {

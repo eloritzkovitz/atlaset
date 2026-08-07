@@ -4,8 +4,8 @@ import { ICONS } from "@constants/icons";
 import { useDebounce } from "@hooks";
 import { formatPercent } from "@utils";
 import { useSoundSettings } from "../hooks/useSoundSettings";
-import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsToggle } from "../../common/components/SettingsToggle";
+import { SettingsCard } from "../../core/components/SettingsCard";
+import { SettingsToggle } from "../../core/components/SettingsToggle";
 
 export function SoundSettingsSection() {
   const { t } = useTranslation("settings");

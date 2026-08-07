@@ -3,11 +3,12 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { Container, EmptyListMessage, SegmentedToggle } from "@components";
 import { useCountryData } from "@features/countries";
-import { SearchSection, useSearch } from "@features/search";
 import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends";
 import { usePageTitle } from "@hooks";
 import { getQueryParam } from "@utils";
+import { SearchSection } from "../components/SearchSection";
+import { useSearch } from "../hooks/useSearch";
 
 export default function SearchPage() {
   const { user: currentUser } = useAuth();

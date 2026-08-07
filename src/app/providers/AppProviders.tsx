@@ -3,7 +3,7 @@ import { AudioProvider } from "@contexts/AudioProvider";
 import { TripsProvider } from "@contexts/TripsProvider";
 import { UIProvider } from "@contexts/UIProvider";
 import { UIHintProvider } from "@contexts/UIHintProvider";
-import { SettingsInitializer } from "@features/settings/common/components/SettingsInitializer";
+import { SettingsInitializer } from "@features/settings/core/components/SettingsInitializer";
 import { AuthListener } from "@features/user/auth/components/AuthListener";
 
 interface AppProvidersProps {

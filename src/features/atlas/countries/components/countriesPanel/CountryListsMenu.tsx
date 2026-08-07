@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Menu, MenuButton, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import type { CountryList } from "@features/countries";
+import type { CountryList } from "@features/countries/types";
 
 interface CountryListsMenuProps {
   countryLists: CountryList[];

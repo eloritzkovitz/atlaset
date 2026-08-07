@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { MenuButton, Separator } from "@components";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import type { SerializableUser } from "@features/user/auth/types";
 import type { Friend } from "@features/user/friends/types";
 import type { SearchResult } from "../types";

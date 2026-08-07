@@ -5,7 +5,7 @@ import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
 import { type GeoType, type SovereigntyStatus } from "@features/countries";
-import type { VisitedStatus } from "@features/visits";
+import type { VisitedStatus } from "@features/visits/types";
 import { coreFiltersConfig } from "../../config/filtersConfig";
 import { useCountryFilters } from "../../context/CountryFiltersContext";
 

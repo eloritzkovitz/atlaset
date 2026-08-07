@@ -1,11 +1,9 @@
 import { useTranslation } from "react-i18next";
-import {
-  AuthCard,
-  AuthFooter,
-  AuthForm,
-  useAuthHandlers,
-} from "@features/user/auth";
 import { usePageTitle } from "@hooks";
+import { AuthCard } from "../components/AuthCard";
+import { AuthFooter } from "../components/AuthFooter";
+import { AuthForm } from "../components/AuthForm";
+import { useAuthHandlers } from "../hooks/useAuthHandlers";
 
 export default function SignupPage() {
   const { error, handleSignUp, handleGoogleSignIn } = useAuthHandlers();

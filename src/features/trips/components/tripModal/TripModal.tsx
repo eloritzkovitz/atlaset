@@ -17,7 +17,8 @@ import {
   useCountryData,
   type Country,
 } from "@features/countries";
-import { useFriendProfiles, useUserFriends } from "@features/user/friends";
+import { useUserFriends } from "@features/user/friends/hooks/useUserFriends";
+import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { CategoriesSection } from "./CategoriesSection";
 import { CategorySelectModal } from "./CategorySelectModal";
 import { CountriesSection } from "./CountriesSection";

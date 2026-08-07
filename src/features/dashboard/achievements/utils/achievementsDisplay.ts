@@ -1,4 +1,4 @@
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import { getAchievementCountries } from "./achievementFilters";
 import type { Achievement, Criteria } from "../types";
 

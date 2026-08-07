@@ -10,7 +10,7 @@ import {
   TRIP_TYPE_COLORS,
   TRIP_TYPE_ICONS,
   TRIP_TYPE_LABELS,
-} from "@features/trips";
+} from "@features/trips/constants/trips";
 import { useTripsStats } from "./useTripsStats";
 
 export interface TripCategoryItem {

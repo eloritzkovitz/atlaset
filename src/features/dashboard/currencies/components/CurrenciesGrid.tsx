@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { SectionLink } from "@components";
-import type { Currency } from "@features/countries";
+import type { Currency } from "@features/countries/types";
 import { DashboardListGrid } from "../../core/components/DashboardListGrid";
 
 interface CurrenciesGridProps {

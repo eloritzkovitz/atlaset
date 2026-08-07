@@ -1,7 +1,7 @@
 import { useLocalStorageState } from "@hooks";
 import type { PrivacySettings } from "../types";
-import { defaultSettings } from "../../common/constants/defaultSettings";
-import { useSettings } from "../../common/hooks/useSettings";
+import { defaultSettings } from "../../core/constants/defaultSettings";
+import { useSettings } from "../../core/hooks/useSettings";
 
 const GUEST_ANALYTICS_KEY = "atlaset:guest_analytics_consent";
 

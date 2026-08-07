@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import { usePrivacySettings } from "../hooks/usePrivacySettings";
-import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsToggle } from "../../common/components/SettingsToggle";
+import { SettingsCard } from "../../core/components/SettingsCard";
+import { SettingsToggle } from "../../core/components/SettingsToggle";
 
 export function PrivacySettingsSection() {
   const [privacy, setPrivacySettings] = usePrivacySettings();

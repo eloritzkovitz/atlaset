@@ -2,8 +2,8 @@
  * Utility functions for handling tiered achievements.
  */
 
-import type { Country } from "@features/countries";
-import type { Trip } from "@features/trips";
+import type { Country } from "@features/countries/types";
+import type { Trip } from "@features/trips/types";
 import { getAchievementStatus } from "./achievements";
 import type { Achievement, AchievementStatus, Tier } from "../types";
 

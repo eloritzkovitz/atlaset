@@ -25,13 +25,13 @@ vi.mock("../../features/atlas/layers/services/layersService", () => ({
 vi.mock("../../features/atlas/markers/services/markersService", () => ({
   markersService: { add: vi.fn() },
 }));
-vi.mock("../../features/settings/common/services/settingsService", () => ({
+vi.mock("../../features/settings/core/services/settingsService", () => ({
   settingsService: { save: vi.fn() },
 }));
 
 import { appDb } from "@lib/db";
 import { countryListService } from "@features/countries";
-import { settingsService } from "@features/settings/common/services/settingsService";
+import { settingsService } from "@features/settings/core/services/settingsService";
 import { migrationService } from "./migrationService";
 
 describe("migrationService", () => {

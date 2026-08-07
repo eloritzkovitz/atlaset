@@ -1,5 +1,5 @@
 import { Navigate, Route, Routes } from "react-router-dom";
-import type { Country, Currency, Timezone } from "@features/countries";
+import type { Country, Currency, Timezone } from "@features/countries/types";
 import type { Language } from "@types";
 import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
 import { AchievementInfo } from "../../achievements/components/AchievementInfo";

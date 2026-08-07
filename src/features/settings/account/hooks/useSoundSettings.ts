@@ -1,6 +1,6 @@
 import type { SoundSettings } from "../types";
-import { defaultSettings } from "../../common/constants/defaultSettings";
-import { useSettings } from "../../common/hooks/useSettings";
+import { defaultSettings } from "../../core/constants/defaultSettings";
+import { useSettings } from "../../core/hooks/useSettings";
 
 /**
  * Manages sound settings in the application.

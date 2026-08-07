@@ -1,10 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
+import SettingsPage from "../pages/SettingsPage";
 import { AccountSettingsSection } from "../../account/components/AccountSettingsSection";
 import { DisplaySettingsSection } from "../../display/components/DisplaySettingsSection";
 import { AccessibilitySettingsSection } from "../../accessibility/components/AccessibilitySettingsSection";
 import { PrivacySettingsSection } from "../../privacy/components/PrivacySettingsSection";
 import { SecurityInfoSection } from "../../security/components/SecurityInfoSection";
-import SettingsPage from "../../../../pages/SettingsPage";
 
 export function SettingsRoutes() {
   return (

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type { VisitContext } from "@features/visits";
+import type { VisitContext } from "@features/visits/types";
 import { mockCountries } from "@test-utils/mockCountries";
 import {
   resolveQualifierConfig,

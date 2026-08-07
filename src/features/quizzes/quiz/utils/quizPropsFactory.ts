@@ -1,4 +1,4 @@
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import type { Difficulty } from "../../types";
 import { filterByDifficulty, getNextRandomCountry } from "./quizUtils";
 

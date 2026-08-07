@@ -10,17 +10,17 @@ import {
 } from "@components";
 import { useCountryData } from "@features/countries";
 import { useDashboardCountriesFilters } from "@features/dashboard/countries";
-import {
-  DashboardPanelMenu,
-  DashboardRoutes,
-  getDashboardMeta,
-  translateRegionLabel,
-  translateSubregionLabel,
-  useDashboardRouteState,
-  useDashboardNavigation,
-} from "@features/dashboard/core";
 import { useAuth } from "@features/user/auth";
 import { usePageTitle, useScreenSize } from "@hooks";
+import { DashboardPanelMenu } from "../components/DashboardPanelMenu";
+import { useDashboardNavigation } from "../hooks/useDashboardNavigation";
+import { useDashboardRouteState } from "../hooks/useDashboardRouteState";
+import { DashboardRoutes } from "../routes/DashboardRoutes";
+import { getDashboardMeta } from "../utils/dashboardNavigation";
+import {
+  translateRegionLabel,
+  translateSubregionLabel,
+} from "../utils/regionTranslation";
 
 export default function DashboardPage() {
   const location = useLocation();

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useCountryData } from "@features/countries";
-import { useUserLeaderboardScores } from "@features/quizzes";
+import { useUserLeaderboardScores } from "@features/quizzes/leaderboards/hooks/useUserLeaderboardScores";
 import { formatFirestoreDate } from "@utils";
 import { ProfileAboutCard } from "./ProfileAboutCard";
 import { ProfileCountriesCard } from "./ProfileCountriesCard";

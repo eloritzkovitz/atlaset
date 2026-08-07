@@ -31,7 +31,7 @@ vi.mock("@features/user/auth", () => ({
   useAuth: () => useAuthMock(),
 }));
 
-vi.mock("../../common/slices/settingsSlice", () => ({
+vi.mock("../../core/slices/settingsSlice", () => ({
   saveSettings: vi.fn((payload: any) => ({ type: "SAVE_SETTINGS", payload })),
   selectSettings: () => ({ localization: { language: "en" } }),
 }));
@@ -42,7 +42,7 @@ import { useSelector } from "react-redux";
 import {
   saveSettings,
   selectSettings,
-} from "../../common/slices/settingsSlice";
+} from "../../core/slices/settingsSlice";
 import { selectSettingsReady } from "../../selectors";
 import { isRtl } from "./useLanguage";
 import { setupDefaultReduxMocks } from "@test-utils/reduxMocks";

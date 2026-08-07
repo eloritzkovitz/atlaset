@@ -16,7 +16,7 @@ import {
   useSavedMaps,
 } from "@features/atlas/savedMaps";
 import { MapSettingsPanel } from "@features/atlas/settings";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 
 interface AtlasUiContainerProps {
   svgRef: React.RefObject<SVGSVGElement | null>;

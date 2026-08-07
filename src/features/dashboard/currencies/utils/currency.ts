@@ -2,7 +2,7 @@
  * Utility functions for currency exchange operations.
  */
 
-import type { Currency } from "@features/countries";
+import type { Currency } from "@features/countries/types";
 
 /**
  * Converts an amount from one currency to another using provided exchange rates.

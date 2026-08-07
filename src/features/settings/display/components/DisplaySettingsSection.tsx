@@ -4,8 +4,8 @@ import { ColorDot, SectionHeader, Tooltip } from "@components";
 import { useTooltipTarget } from "@hooks";
 import { ThemePreview } from "./ThemePreview";
 import { useTheme } from "../hooks/useTheme";
-import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsToggle } from "../../common/components/SettingsToggle";
+import { SettingsCard } from "../../core/components/SettingsCard";
+import { SettingsToggle } from "../../core/components/SettingsToggle";
 
 export function DisplaySettingsSection() {
   const { theme, preference, setPreference, accent, setAccent } = useTheme();

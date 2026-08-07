@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { SplashScreen } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useSettings } from "@features/settings/common/hooks/useSettings";
+import { useSettings } from "@features/settings/core/hooks/useSettings";
 
 interface GuestRouteProps {
   redirectTo?: string;

@@ -1,9 +1,9 @@
 import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach, afterEach } from "vitest";
 import { useTheme } from "./useTheme";
-import { useSettings } from "../../common/hooks/useSettings";
+import { useSettings } from "../../core/hooks/useSettings";
 
-vi.mock("../../common/hooks/useSettings", () => ({
+vi.mock("../../core/hooks/useSettings", () => ({
   useSettings: vi.fn(),
 }));
 

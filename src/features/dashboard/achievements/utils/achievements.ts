@@ -2,7 +2,7 @@
  * Utility functions for handling achievements.
  */
 
-import { type Country } from "@features/countries";
+import { type Country } from "@features/countries/types";
 import {
   getLocalTrips,
   getAbroadTrips,

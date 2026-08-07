@@ -2,8 +2,11 @@
  * Utility functions for processing visit and trip data.
  */
 
-import { getAutoTripStatus, isCompletedTrip } from "@features/trips";
 import type { Trip, TripStatus } from "@features/trips/types";
+import {
+  getAutoTripStatus,
+  isCompletedTrip,
+} from "@features/trips/utils/trips";
 import { extractUniqueValues, getYear, getYearNumber } from "@utils";
 import type { VisitContext } from "../types";
 

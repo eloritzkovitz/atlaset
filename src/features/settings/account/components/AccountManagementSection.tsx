@@ -4,8 +4,8 @@ import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
 import { useAuth } from "@features/user/auth";
 import { useAccountManagement } from "../hooks/useAccountManagement";
-import { SettingsCard } from "../../common/components/SettingsCard";
-import { SettingsRow } from "../../common/components/SettingsRow";
+import { SettingsCard } from "../../core/components/SettingsCard";
+import { SettingsRow } from "../../core/components/SettingsRow";
 
 export function AccountManagementSection() {
   const { user } = useAuth();

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FaRightLeft } from "react-icons/fa6";
 import { ActionButton, Card } from "@components";
-import { type Currency } from "@features/countries";
+import { type Currency } from "@features/countries/types";
 import { usePageTitle } from "@hooks";
 import { CurrencyInputRow } from "./CurrencyInputRow";
 import { useCurrencyExchange } from "../hooks/useCurrencyExchange";

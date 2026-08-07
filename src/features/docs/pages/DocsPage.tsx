@@ -1,19 +1,15 @@
 import { useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { SidebarLayout } from "@app/layouts/app/SidebarLayout"
+import { SidebarLayout } from "@app/layouts/app/SidebarLayout";
 import { MarkdownFileRenderer } from "@components";
-import {
-  DOCS_PATH,
-  DocsNotFound,
-  DocsPanelMenu,
-  getDocBySlug,
-  getDocsMarkdownComponents,
-  getSlugFromPath,
-  navigateToDoc,
-  WelcomeDocsSection,
-} from "@features/docs";
 import { usePageTitle } from "@hooks";
 import { useMarkdownFile } from "@lib/markdown";
+import { getDocsMarkdownComponents } from "../components/DocsMarkdownComponents";
+import { DocsNotFound } from "../components/DocsNotFound";
+import { DocsPanelMenu } from "../components/DocsPanelMenu";
+import { WelcomeDocsSection } from "../components/WelcomeSection";
+import { DOCS_PATH } from "../constants/docsMenu";
+import { getDocBySlug, getSlugFromPath, navigateToDoc } from "../utils/docs";
 
 export default function DocsPage() {
   const navigate = useNavigate();

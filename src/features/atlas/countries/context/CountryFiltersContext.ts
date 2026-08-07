@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import type { Country, GeoType, SovereigntyStatus } from "@features/countries";
-import type { VisitedStatus } from "@features/visits";
+import type { VisitedStatus } from "@features/visits/types";
 
 export interface CountryFiltersContextType {
   search: string;

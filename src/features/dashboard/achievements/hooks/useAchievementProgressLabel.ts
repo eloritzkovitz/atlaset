@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import type { Trip } from "@features/trips/types";
 import { formatFraction } from "@utils";
 import { getProgress } from "../utils/achievements";

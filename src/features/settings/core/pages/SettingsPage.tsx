@@ -1,19 +1,17 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { SidebarLayout } from "@app/layouts/app/SidebarLayout";
-import { SettingsPanelMenu } from "@features/settings/common/components/SettingsPanelMenu";
-import { SETTINGS_MENU } from "@features/settings/common/constants/settingsMenu";
 import { useAuth } from "@features/user/auth";
-import { EditProfileModal, useUserProfile } from "@features/user/profile";
+import { useUserProfile } from "@features/user/profile";
 import { usePageTitle } from "@hooks";
+import { SettingsPanelMenu } from "../components/SettingsPanelMenu";
+import { SETTINGS_MENU } from "../constants/settingsMenu";
 
 export default function SettingsPage() {
   const { user, loading: userLoading } = useAuth();
-  const { profile, loading: profileLoading } = useUserProfile({
+  const { loading: profileLoading } = useUserProfile({
     uid: user?.uid,
   });
-  const [editOpen, setEditOpen] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,12 +56,6 @@ export default function SettingsPage() {
           <Outlet />
         )}
       </div>
-      <EditProfileModal
-        user={user}
-        profile={profile}
-        open={editOpen}
-        onClose={() => setEditOpen(false)}
-      />
     </SidebarLayout>
   );
 }
