@@ -6,7 +6,7 @@ import {
   DEFAULT_SIDEBAR_EXPANDED_WIDTH,
 } from "@constants/ui";
 import { useUI } from "@contexts/UIContext";
-import { usePanelHide } from "@hooks";
+import { useDismiss } from "@hooks";
 import { NAV_LINKS, SETTINGS_LINK } from "./navLinks";
 import { SidebarMenuLink } from "./SidebarMenuLink";
 
@@ -14,8 +14,7 @@ export function Sidebar() {
   const { uiVisible, sidebarExpanded, setSidebarExpanded } = useUI();
   const { t } = useTranslation("common");
 
-  // Handle sidebar hide on outside click or escape key
-  usePanelHide({
+  useDismiss({
     show: sidebarExpanded,
     onHide: () => setSidebarExpanded(false),
     isModal: false,

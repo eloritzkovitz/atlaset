@@ -13,7 +13,7 @@ import {
   useFriendshipStatus,
   useUserFriendCount,
 } from "@features/user/friends";
-import { usePageTitle } from "@hooks";
+import { useDisclosure, usePageTitle } from "@hooks";
 import { EditProfileModal } from "../components/modal/EditProfileModal";
 import { ProfileHeader } from "../components/ProfileHeader";
 import { ProfileAboutTab } from "../components/tabs/ProfileAboutTab/ProfileAboutTab";
@@ -28,7 +28,7 @@ export default function ProfilePage() {
   const { t } = useTranslation("user");
 
   const [profileRefreshKey, setProfileRefreshKey] = useState(0);
-  const [editOpen, setEditOpen] = useState(false);
+  const editModal = useDisclosure();
 
   // Fetch Profile User
   const { profile: profileUser, loading: profileLoading } = useUserProfile({
@@ -92,7 +92,7 @@ export default function ProfilePage() {
                 <ProfileHeader
                   profile={profileUser}
                   canEdit={canEdit}
-                  onEdit={() => setEditOpen(true)}
+                  onEdit={() => editModal.open()}
                   friendCount={friendCount}
                   onFriendCountClick={() =>
                     navigate(`/users/${profileUser.username}/friends`)
@@ -143,8 +143,8 @@ export default function ProfilePage() {
         <EditProfileModal
           user={currentUser}
           profile={profileUser}
-          open={editOpen}
-          onClose={() => setEditOpen(false)}
+          open={editModal.isOpen}
+          onClose={editModal.close}
           onSave={() => setProfileRefreshKey((k) => k + 1)}
         />
       )}

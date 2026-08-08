@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ColorSelectInput,
@@ -13,6 +13,7 @@ import {
   getCountryName,
   useCountryData,
 } from "@features/countries";
+import { useDisclosure } from "@hooks";
 import type { Marker } from "../../types";
 
 interface MarkerModalProps {
@@ -35,9 +36,10 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
   const { countries } = useCountryData();
   const { t } = useTranslation(["atlas", "common"]);
 
+  const colorModal = useDisclosure();
+  const countrySelect = useDisclosure();
+
   const nameRef = useRef<HTMLInputElement>(null);
-  const [colorModalOpen, setColorModalOpen] = useState(false);
-  const [countrySelectOpen, setCountrySelectOpen] = useState(false);
 
   // Focus the name input when the modal opens
   useEffect(() => {
@@ -74,7 +76,7 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
       onClose={onClose}
       position="center"
       className="modal w-[600px] max-h-[90vh]"
-      disableClose={colorModalOpen || countrySelectOpen}
+      disableClose={colorModal.isOpen || countrySelect.isOpen}
       draggable
     >
       <ModalHeader
@@ -119,16 +121,16 @@ export const MarkerModal: React.FC<MarkerModalProps> = ({
             countryCodes={currentCountryCodes}
             countries={countries}
             onChange={handleCountryChange}
-            isOpen={countrySelectOpen}
-            onOpen={() => setCountrySelectOpen(true)}
-            onClose={() => setCountrySelectOpen(false)}
+            isOpen={countrySelect.isOpen}
+            onOpen={countrySelect.open}
+            onClose={countrySelect.close}
           />
 
           <FormField label={t("markers.form.color", "Color")}>
             <ColorSelectInput
               value={marker.color}
               onChange={(color: string) => onChange({ ...marker, color })}
-              onModalOpenChange={setColorModalOpen}
+              onModalOpenChange={colorModal.setIsOpen}
               disabled={false}
             />
           </FormField>

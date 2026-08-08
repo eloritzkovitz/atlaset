@@ -1,9 +1,10 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import {
   useContextMenu,
+  useDisclosure,
   useMenuActions,
   useMenuPosition,
   useRenameControls,
@@ -82,8 +83,8 @@ export function PanelListItem({
     handleKeyDown,
   } = useRenameControls({ name: nameString, onNameChange });
 
-  // Confirmation modal state
-  const [confirmOpen, setConfirmOpen] = useState(false);
+  // Confirm modal state for delete confirmation
+  const confirmModal = useDisclosure();
 
   // Context menu state and handlers
   const {
@@ -140,7 +141,7 @@ export function PanelListItem({
       onCreateList,
       onRemove: onRemove
         ? () => {
-            if (!removeDisabled) setConfirmOpen(true);
+            if (!removeDisabled) confirmModal.open();
           }
         : undefined,
     },
@@ -243,9 +244,9 @@ export function PanelListItem({
           </div>
         )}
       </li>
-      {confirmOpen && onRemove && (
+      {confirmModal.isOpen && onRemove && (
         <ConfirmModal
-          isOpen={confirmOpen}
+          isOpen={confirmModal.isOpen}
           title={t("feedback.delete.confirmTitle")}
           message={
             <Trans
@@ -256,10 +257,10 @@ export function PanelListItem({
             />
           }
           onConfirm={() => {
-            setConfirmOpen(false);
+            confirmModal.close();
             onRemove();
           }}
-          onCancel={() => setConfirmOpen(false)}
+          onCancel={confirmModal.close}
           submitLabel={t("actions.delete")}
           cancelLabel={t("actions.cancel")}
         />

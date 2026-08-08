@@ -25,16 +25,7 @@ export function useAtlasShortcuts() {
   useKeyHandler(actions.toggleAtlasMode, ["a", "A"], opts(c.atlasMode));
   useKeyHandler(actions.toggleSettings, ["s", "S"], opts(c.settings));
   useKeyHandler(
-    () => {
-      setTimelineMode((prev) => !prev);
-      setTimeout(() => {
-        try {
-          window.dispatchEvent(new Event("pointerdown", { bubbles: true }));
-        } catch {
-          void 0;
-        }
-      }, 0);
-    },
+    () => setTimelineMode((prev) => !prev),
     ["t", "T"],
     opts(c.timeline ?? true),
   );

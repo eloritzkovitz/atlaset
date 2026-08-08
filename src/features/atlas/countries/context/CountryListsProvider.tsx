@@ -1,10 +1,10 @@
-import { useEffect, useState, useCallback, type ReactNode } from "react";
+import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
 import type { Layer } from "@features/atlas/layers/types";
 import { countryListService } from "@features/countries";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
-import { useDataLoader } from "@hooks";
+import { useDataLoader, useDisclosure } from "@hooks";
 import {
   CountryListsContext,
   type CountryListsContextValue,
@@ -23,11 +23,20 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     removeWantToVisitCountry,
   } = useVisitedCountries();
 
-  const [currentList, setCurrentList] = useState<CountryList | null>(null);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
-  const [isTrackingList, setIsTrackingList] = useState(false);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+
+  // Modal state for managing the country list modal
+  const modal = useDisclosure<{
+    list: CountryList;
+    isEditing: boolean;
+  }>();
+
+  // Determine the current list and its state
+  const currentList = modal.data?.list ?? null;
+  const isEditing = modal.data?.isEditing ?? false;
+  const isTrackingList =
+    currentList?.id === "VISITED_COUNTRIES" ||
+    currentList?.id === "WANT_TO_VISIT";
 
   // Data loader for fetching country lists
   const fetchCountryLists = useCallback(() => countryListService.load(), []);
@@ -46,70 +55,61 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     reloadCountryLists();
   }, [reloadCountryLists]);
 
-  // Closes out modal state and completely flushes tracking records
-  const closeModal = () => {
-    setModalOpen(false);
-    setCurrentList(null);
-    setIsEditing(false);
-    setIsTrackingList(false);
-  };
-
-  // Opens the modal for adding a new list, optionally pre-filling with country codes
+  // Opens modal for creating a new list
   const openAddModal = (initialCountryCodes: string[] = []) => {
-    setCurrentList({
-      id: crypto.randomUUID(),
-      name: "",
-      countryCodes: initialCountryCodes,
+    modal.open({
+      isEditing: false,
+      list: {
+        id: crypto.randomUUID(),
+        name: "",
+        countryCodes: initialCountryCodes,
+      },
     });
-    setIsEditing(false);
-    setModalOpen(true);
   };
 
-  // Opens the modal for editing an existing list
+  // Opens modal for editing an existing list
   const openEditModal = (listId: string) => {
-    // Special handling for tracking lists
     if (listId === "VISITED_COUNTRIES") {
-      setCurrentList({
-        id: "VISITED_COUNTRIES",
-        name: "Visited Countries",
-        countryCodes: visitedCountryCodes,
+      modal.open({
+        isEditing: true,
+        list: {
+          id: "VISITED_COUNTRIES",
+          name: "Visited Countries",
+          countryCodes: visitedCountryCodes,
+        },
       });
-      setIsEditing(true);
-      setIsTrackingList(true);
-      setModalOpen(true);
       return;
     }
 
     if (listId === "WANT_TO_VISIT") {
-      setCurrentList({
-        id: "WANT_TO_VISIT",
-        name: "Want to Visit",
-        countryCodes: wantToVisitCountryCodes,
+      modal.open({
+        isEditing: true,
+        list: {
+          id: "WANT_TO_VISIT",
+          name: "Want to Visit",
+          countryCodes: wantToVisitCountryCodes,
+        },
       });
-      setIsEditing(true);
-      setIsTrackingList(true);
-      setModalOpen(true);
       return;
     }
 
-    // Standard handling for user-defined lists
     const list = countryLists.find((l) => l.id === listId);
     if (list) {
-      setCurrentList({ ...list });
-      setIsEditing(true);
-      setIsTrackingList(false);
-      setModalOpen(true);
+      modal.open({
+        isEditing: true,
+        list: { ...list },
+      });
     }
   };
 
-  // Adds a new list and reloads all lists
+  // Adds a new list and reloads
   const addList = async (list: CountryList) => {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
     await reloadCountryLists();
   };
 
-  // Creates a new country list from a layer and returns the new list id
+  // Creates list from layer
   const createListFromLayer = async (
     layer: Layer,
     onLinked?: (listId: string) => void,
@@ -134,47 +134,37 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     return newListId;
   };
 
-  // Handles changes to the current list in the modal, including tracking list modifications
+  // Handles real-time modal updates
   const handleModalChange = async (updatedList: CountryList) => {
-    if (isTrackingList && updatedList) {
-      const currentCodes = currentList?.countryCodes || [];
+    if (isTrackingList && updatedList && currentList) {
+      const currentCodes = currentList.countryCodes || [];
       const newCodes = updatedList.countryCodes;
 
       const added = newCodes.find((code) => !currentCodes.includes(code));
       const removed = currentCodes.find((code) => !newCodes.includes(code));
 
-      // Determine if this modal instance belongs to the Want to Visit List
-      const isWantToVisitList = updatedList.id === "WANT_TO_VISIT";
-
-      if (isWantToVisitList) {
-        // Process Want to Visit List modifications
-        if (added) {
-          await addWantToVisitCountry(added);
-        } else if (removed) {
-          await removeWantToVisitCountry(removed);
-        }
+      if (updatedList.id === "WANT_TO_VISIT") {
+        if (added) await addWantToVisitCountry(added);
+        else if (removed) await removeWantToVisitCountry(removed);
       } else {
-        // Process Visited Countries modifications
-        if (added) {
-          await addManualCountry(added);
-        } else if (removed) {
-          await removeManualCountry(removed);
-        }
+        if (added) await addManualCountry(added);
+        else if (removed) await removeManualCountry(removed);
       }
 
-      // Update local state display layout inside the open modal
-      setCurrentList({
-        ...updatedList,
-        countryCodes: newCodes,
+      modal.setData({
+        isEditing: true,
+        list: { ...updatedList, countryCodes: newCodes },
       });
       return;
     }
 
-    // Standard custom list processing path
-    setCurrentList(updatedList);
+    modal.setData({
+      isEditing,
+      list: updatedList,
+    });
   };
 
-  // Adds or saves a list and reloads all lists
+  // Saves a new list
   const handleSave = async (list: CountryList) => {
     const withId = { ...list, id: list.id ?? crypto.randomUUID() };
     await countryListService.save(withId);
@@ -188,15 +178,12 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     }
 
     await reloadCountryLists();
-    closeModal();
+    modal.close();
   };
 
-  // Updates a list by saving it and reloading all lists
+  // Updates an existing list
   const handleUpdate = async (list: CountryList) => {
-    // Prevent updates to tracking lists, which are managed by the application
-    if (isTrackingList) {
-      return;
-    }
+    if (isTrackingList) return;
 
     await countryListService.save(list);
     await reloadCountryLists();
@@ -209,10 +196,10 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
       );
     }
 
-    closeModal();
+    modal.close();
   };
 
-  // Deletes a list and clears selection if it was the selected one
+  // Deletes a list
   const handleDelete = async (list: CountryList) => {
     const listToDelete = countryLists.find((l) => l.id === list.id);
 
@@ -231,7 +218,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     }
 
     if (selectedListId === list.id) setSelectedListId(null);
-    closeModal();
+    modal.close();
   };
 
   const value: CountryListsContextValue = {
@@ -254,14 +241,14 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     <CountryListsContext.Provider value={value}>
       {children}
       <CountryListModal
-        isOpen={modalOpen}
+        isOpen={modal.isOpen}
         isEditing={isEditing}
         isTrackingList={isTrackingList}
         list={currentList}
         onChange={handleModalChange}
         onSave={isEditing ? handleUpdate : handleSave}
         onDelete={isTrackingList ? undefined : handleDelete}
-        onClose={closeModal}
+        onClose={modal.close}
       />
     </CountryListsContext.Provider>
   );

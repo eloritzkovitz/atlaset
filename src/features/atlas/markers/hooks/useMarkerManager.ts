@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useEntityCollection } from "@hooks";
+import { useDisclosure, useEntityCollection } from "@hooks";
 import type { Marker } from "../types";
 import { DEFAULT_NEW_MARKER } from "../constants/markers";
 
@@ -29,13 +29,12 @@ export function useMarkerManager({
     onLogAction,
   });
 
-  const [editingMarker, setEditingMarker] = useState<Marker | null>(null);
-  const [isMarkerModalOpen, setMarkerModalOpen] = useState(false);
+  const modal = useDisclosure<Marker>();
   const [isAddingMarker, setIsAddingMarker] = useState(false);
 
   /** Determines if a marker is currently being edited. */
   const isEditingMarker =
-    !!editingMarker && collection.items.some((m) => m.id === editingMarker.id);
+    !!modal.data && collection.items.some((m) => m.id === modal.data?.id);
 
   /** Initiates the process of adding a new marker. */
   function startAddingMarker() {
@@ -66,37 +65,29 @@ export function useMarkerManager({
   /** Opens the modal for adding a new marker. */
   function openAddMarker(isoCode: string = "", countryName: string = "") {
     const formattedIso = isoCode.toUpperCase();
-    setEditingMarker({
+    modal.open({
       ...DEFAULT_NEW_MARKER,
       id: crypto.randomUUID(),
       isoCode: formattedIso,
       name: countryName || formattedIso,
     });
-    setMarkerModalOpen(true);
   }
 
   /** Opens the modal for editing an existing marker. */
   function openEditMarker(marker: Marker) {
-    setEditingMarker({ ...marker });
-    setMarkerModalOpen(true);
-  }
-
-  /** Closes the marker modal. */
-  function closeMarkerModal() {
-    setMarkerModalOpen(false);
-    setEditingMarker(null);
+    modal.open({ ...marker });
   }
 
   /** Saves the current marker from the modal. */
   async function saveMarker() {
-    if (!editingMarker) return;
-    const exists = collection.items.some((m) => m.id === editingMarker.id);
+    if (!modal.data) return;
+    const exists = collection.items.some((m) => m.id === modal.data?.id);
     if (exists) {
-      await collection.updateItem(editingMarker);
+      await collection.updateItem(modal.data);
     } else {
-      await collection.addItem(editingMarker);
+      await collection.addItem(modal.data);
     }
-    closeMarkerModal();
+    modal.close();
   }
 
   return {
@@ -108,13 +99,13 @@ export function useMarkerManager({
     reorderMarkers: collection.reorderItems,
     updateMarkerName: collection.updateItemName,
     toggleMarkerVisibility: collection.toggleItemVisibility,
-    editingMarker,
-    setEditingMarker,
+    editingMarker: modal.data,
+    setEditingMarker: modal.setData,
     isEditingMarker,
-    isMarkerModalOpen,
+    isMarkerModalOpen: modal.isOpen,
     openAddMarker,
     openEditMarker,
-    closeMarkerModal,
+    closeMarkerModal: modal.close,
     saveMarker,
     isAddingMarker,
     startAddingMarker,

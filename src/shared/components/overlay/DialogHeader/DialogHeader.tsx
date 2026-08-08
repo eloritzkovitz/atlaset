@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { ICONS } from "@constants/icons";
-import { Separator } from "../../layout/Separator";
-import { ActionButton } from "../../inputs/Button/ActionButton";
 import { useTranslation } from "react-i18next";
+import { ICONS } from "@constants/icons";
+import { ActionButton } from "../../inputs/Button/ActionButton";
+import { Separator } from "../../layout/Separator";
 
 interface DialogHeaderProps {
   title: ReactNode;

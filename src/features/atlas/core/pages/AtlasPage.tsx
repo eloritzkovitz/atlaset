@@ -24,7 +24,7 @@ export default function AtlasPage() {
   } = useMapView();
   const { isMobile } = useScreenSize();
   const { t } = useTranslation("atlas");
-  const { setOpenMapToolbarPanel } = useUI();
+  const { setOpenMapToolbarPanel, setOpenUserPanel } = useUI();
 
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -48,8 +48,9 @@ export default function AtlasPage() {
   useEffect(() => {
     if (!isMobile) {
       setOpenMapToolbarPanel("countries");
+      setOpenUserPanel(null);
     }
-  }, [isMobile, setOpenMapToolbarPanel]);
+  }, [isMobile, setOpenMapToolbarPanel, setOpenUserPanel]);
 
   // Derived state
   const isLoading =

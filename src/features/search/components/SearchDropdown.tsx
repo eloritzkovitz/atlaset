@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, SearchInput } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useClickOutside, useMenuPosition } from "@hooks";
+import { useClickOutside, useDisclosure, useMenuPosition } from "@hooks";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
 
@@ -12,8 +12,7 @@ export function SearchDropdown() {
   const search = useSearchController();
   const { t } = useTranslation();
 
-  // Dropdown state and refs
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdown = useDisclosure();
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -22,7 +21,7 @@ export function SearchDropdown() {
   // Open dropdown when input is clicked
   const handleInputClick = (e: React.MouseEvent) => {
     if (e.button === 0) {
-      setDropdownOpen(true);
+      dropdown.open();
     }
   };
 
@@ -32,8 +31,8 @@ export function SearchDropdown() {
       wrapperRef as React.RefObject<HTMLElement>,
       dropdownRef as React.RefObject<HTMLElement>,
     ],
-    () => setDropdownOpen(false),
-    dropdownOpen,
+    dropdown.close,
+    dropdown.isOpen,
   );
 
   // Determine if SearchContent will render anything
@@ -41,7 +40,7 @@ export function SearchDropdown() {
 
   // Calculate dropdown position using the custom hook
   const menuStyle = useMenuPosition(
-    dropdownOpen,
+    dropdown.isOpen,
     wrapperRef as React.RefObject<HTMLElement>,
     dropdownRef as React.RefObject<HTMLElement>,
     42,
@@ -53,15 +52,15 @@ export function SearchDropdown() {
   // Force a re-render when the dropdown opens and has content to ensure proper positioning
   const [, triggerUpdate] = useState({});
   useEffect(() => {
-    if (dropdownOpen && hasContent) {
+    if (dropdown.isOpen && hasContent) {
       const frame = requestAnimationFrame(() => triggerUpdate({}));
       return () => cancelAnimationFrame(frame);
     }
-  }, [dropdownOpen, hasContent, search.searchTerm]);
+  }, [dropdown.isOpen, hasContent, search.searchTerm]);
 
   const handleSearchSubmit = (term: string) => {
     if (term) {
-      setDropdownOpen(false);
+      dropdown.close();
       search.handleSearchSubmit(term);
     }
   };
@@ -84,10 +83,10 @@ export function SearchDropdown() {
         placeholder={t("components.search.placeholder")}
         showClear={false}
       />
-      {dropdownOpen && hasContent && (
+      {dropdown.isOpen && hasContent && (
         <Menu
-          open={dropdownOpen}
-          onClose={() => setDropdownOpen(false)}
+          open={dropdown.isOpen}
+          onClose={dropdown.close}
           containerRef={dropdownRef}
           disableScroll
           style={menuStyle}

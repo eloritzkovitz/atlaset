@@ -12,6 +12,7 @@ import {
 import { ICONS } from "@constants/icons";
 import { useCountryLists } from "@features/atlas/countries/context/CountryListsContext";
 import { CountrySelectField, useCountryData } from "@features/countries";
+import { useDisclosure } from "@hooks";
 import { isAuthenticated } from "@lib/firebase";
 import type { Layer } from "../types";
 
@@ -39,8 +40,9 @@ export function LayerModal({
   const { countries } = useCountryData();
   const { t } = useTranslation(["atlas", "common"]);
 
-  const [countryModalOpen, setCountryModalOpen] = useState(false);
-  const [colorModalOpen, setColorModalOpen] = useState(false);
+  const countryModal = useDisclosure();
+  const colorModal = useDisclosure();
+
   const [useList, setUseList] = useState(false);
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
 
@@ -78,7 +80,7 @@ export function LayerModal({
 
   // Handle modal close
   const handleClose = () => {
-    if (!colorModalOpen && !countryModalOpen) {
+    if (!colorModal.isOpen && !countryModal.isOpen) {
       onClose();
     }
   };
@@ -89,7 +91,7 @@ export function LayerModal({
         isOpen={isOpen}
         onClose={handleClose}
         className="rounded-xl shadow-2xl !min-w-[900px] max-h-[90vh] flex flex-col"
-        disableClose={countryModalOpen || colorModalOpen}
+        disableClose={countryModal.isOpen || colorModal.isOpen}
         draggable
       >
         <div className="flex-shrink-0">
@@ -128,7 +130,7 @@ export function LayerModal({
                 <ColorSelectInput
                   value={layer.color}
                   onChange={(color: string) => onChange({ ...layer, color })}
-                  onModalOpenChange={setColorModalOpen}
+                  onModalOpenChange={colorModal.setIsOpen}
                 />
               </FormField>
               <CountrySelectField
@@ -137,9 +139,9 @@ export function LayerModal({
                 onChange={(newCodes) =>
                   onChange({ ...layer, countries: newCodes })
                 }
-                isOpen={countryModalOpen}
-                onOpen={() => setCountryModalOpen(true)}
-                onClose={() => setCountryModalOpen(false)}
+                isOpen={countryModal.isOpen}
+                onOpen={countryModal.open}
+                onClose={countryModal.close}
                 disabled={isListManaged}
               />
               {!isEditing && (

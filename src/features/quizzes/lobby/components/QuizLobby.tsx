@@ -4,7 +4,12 @@ import { FaCircleXmark } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { RootState } from "@app/store";
-import { useFlyTransition, usePageTitle, useUiHint } from "@hooks";
+import {
+  useDisclosure,
+  useFlyTransition,
+  usePageTitle,
+  useUiHint,
+} from "@hooks";
 import { isAuthenticated } from "@lib/firebase";
 import { LobbyCard } from "./LobbyCard";
 import { QuizSettings } from "./QuizSettings";
@@ -33,11 +38,8 @@ export function QuizLobby() {
   const match = cards.find((card) => location.pathname.endsWith(card.route));
   usePageTitle(match ? match.title : t("pageTitle", "Quizzes"));
 
-  // UI state
-  const [settingsOpen, setSettingsOpen] = useState<null | {
-    route: string;
-    key: string;
-  }>(null);
+  // Modal state for quiz settings
+  const settingsModal = useDisclosure<{ route: string; key: string }>();
   const [showSettings, setShowSettings] = useState(false);
 
   // Redux
@@ -54,8 +56,9 @@ export function QuizLobby() {
     hide: triggerFlyOut,
   } = useFlyTransition({ duration: 500, initialVisible: true });
 
+  // Settings fly/fly-back transition
   useEffect(() => {
-    if (settingsOpen) {
+    if (settingsModal.isOpen) {
       setShowSettings(false);
       triggerFlyOut();
       const timer = setTimeout(() => setShowSettings(true), 500);
@@ -65,7 +68,7 @@ export function QuizLobby() {
       const timer = setTimeout(() => triggerFlyIn(), 10);
       return () => clearTimeout(timer);
     }
-  }, [settingsOpen, triggerFlyOut, triggerFlyIn]);
+  }, [settingsModal.isOpen, triggerFlyOut, triggerFlyIn]);
 
   // Auth Hint Toast
   const [leaderboardHint, setLeaderboardHint] = useState<null | {
@@ -120,9 +123,9 @@ export function QuizLobby() {
         return;
       }
 
-      setSettingsOpen({ route: card.route, key: card.key });
+      settingsModal.open({ route: card.route, key: card.key });
     },
-    [navigate, showAuthHint],
+    [navigate, showAuthHint, settingsModal],
   );
 
   return (
@@ -152,7 +155,7 @@ export function QuizLobby() {
         </div>
       )}
 
-      {showSettings && settingsOpen && (
+      {showSettings && settingsModal.data && (
         <div className="absolute inset-0 flex items-center justify-center z-10">
           <div className="animate-fly-in">
             <QuizSettings
@@ -161,11 +164,13 @@ export function QuizLobby() {
               gameMode={gameMode}
               setGameMode={(value) => dispatch(setGameMode(value))}
               onStart={() => {
-                dispatch(setQuizType(settingsOpen.key as "flag" | "capital"));
-                navigate(settingsOpen.route);
-                setSettingsOpen(null);
+                dispatch(
+                  setQuizType(settingsModal.data!.key as "flag" | "capital"),
+                );
+                navigate(settingsModal.data!.route);
+                settingsModal.close();
               }}
-              onCancel={() => setSettingsOpen(null)}
+              onCancel={settingsModal.close}
             />
           </div>
         </div>

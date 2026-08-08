@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { DirectionalIcon, SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
@@ -8,6 +7,7 @@ import {
   useCountryData,
 } from "@features/countries";
 import { useHomeCountry } from "@features/user/profile/hooks/useHomeCountry";
+import { useDisclosure } from "@hooks";
 import { useDateLocale } from "../hooks/useDateLocale";
 import { useLanguage } from "../hooks/useLanguage";
 import { languageOptions } from "../utils/languages";
@@ -43,7 +43,8 @@ export function LanguageRegionSection() {
   // Home country selection
   const { countries } = useCountryData();
   const { homeCountry, setHomeCountry } = useHomeCountry();
-  const [modalOpen, setModalOpen] = useState(false);
+
+  const countryModal = useDisclosure();
 
   // Find the currently selected country object
   const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
@@ -90,7 +91,7 @@ export function LanguageRegionSection() {
           <button
             type="button"
             className="settings-select-btn bg-input hover:bg-input-hover flex items-center gap-3 px-3 py-2 rounded-lg transition w-full"
-            onClick={() => setModalOpen(true)}
+            onClick={() => countryModal.open()}
             aria-label={tSettings(
               "account.languageRegion.homeCountry.selectAria",
             )}
@@ -110,16 +111,16 @@ export function LanguageRegionSection() {
         </div>
 
         <CountrySelectModal
-          isOpen={modalOpen}
+          isOpen={countryModal.isOpen}
           selected={[homeCountry]}
           options={countries}
           onChange={(newCountries) => {
             if (newCountries.length > 0) {
               setHomeCountry(newCountries[0]);
-              setModalOpen(false);
+              countryModal.close();
             }
           }}
-          onClose={() => setModalOpen(false)}
+          onClose={() => countryModal.close()}
           multiple={false}
         />
       </div>

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import {
   TbLayoutSidebarLeftExpand,
   TbLayoutSidebarRightExpand,
 } from "react-icons/tb";
 import { DEFAULT_SIDEBAR_WIDTH } from "@constants/ui";
-import { useScreenSize } from "@hooks";
+import { useDisclosure, useScreenSize } from "@hooks";
 import { MenuButton } from "./MenuButton";
 import { ActionButton } from "../../inputs/Button/ActionButton";
 import { Panel } from "../../overlay/Panel/Panel";
@@ -51,10 +51,11 @@ export function SidePanelMenu({
   const { isLaptop, isMobile } = useScreenSize();
   const { t } = useTranslation("common");
 
-  const [localOpen, setLocalOpen] = useState(false);
-  const open = openProp !== undefined ? openProp : localOpen;
-  const onClose =
-    onCloseProp !== undefined ? onCloseProp : () => setLocalOpen(false);
+  const modal = useDisclosure();
+
+  // Support controlled mode (props passed) or uncontrolled mode (internal modal state)
+  const isOpen = openProp !== undefined ? openProp : modal.isOpen;
+  const handleClose = onCloseProp ?? modal.close;
 
   const isRtl = document.documentElement.dir === "rtl";
 
@@ -69,7 +70,7 @@ export function SidePanelMenu({
       title={title}
       width={width}
       className={isMobile ? "!start-0" : undefined}
-      onHide={isMobile || isLaptop ? onClose : undefined}
+      onHide={isMobile || isLaptop ? handleClose : undefined}
       animationsEnabled={animationsEnabled}
       showSidebar={showSidebar}
     >
@@ -83,7 +84,7 @@ export function SidePanelMenu({
               className={menuButtonClassName}
               onClick={() => {
                 setSelectedPanel(item.key);
-                if (isMobile && onClose) onClose();
+                if (isMobile) handleClose();
               }}
             >
               {item.label}
@@ -103,15 +104,15 @@ export function SidePanelMenu({
           <ActionButton
             type="button"
             icon={<SidebarIcon className="text-3xl text-muted" />}
-            onClick={() => setLocalOpen(true)}
+            onClick={() => modal.open()}
             className={`fixed top-3.5 ${showSidebar ? "start-18" : "start-2"} z-20`}
             aria-label={t("actions.openMenu", "Open menu")}
             title={t("actions.openMenu", "Open menu")}
           />
         )}
         <DrawerPanel
-          open={!!open}
-          onClose={onClose}
+          open={isOpen}
+          onClose={handleClose}
           width={width + (showSidebar ? DEFAULT_SIDEBAR_WIDTH : 0)}
         >
           {panelContent}

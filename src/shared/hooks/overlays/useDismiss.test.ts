@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
-import { usePanelHide } from "./usePanelHide";
+import { useDismiss } from "./useDismiss";
 import { mockUIContext } from "@test-utils/mockUIContext";
 
 vi.mock("@contexts/UIContext", () => ({
@@ -16,7 +16,7 @@ import { useKeyHandler } from "../input/useKeyHandler";
 const mockUseUI = vi.mocked(useUI);
 const mockUseKeyHandler = vi.mocked(useKeyHandler);
 
-describe("usePanelHide", () => {
+describe("useDismiss", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -33,7 +33,7 @@ describe("usePanelHide", () => {
       escapeHandler = handler as unknown as (e: KeyboardEvent) => void;
     });
     const onHide = vi.fn();
-    renderHook(() => usePanelHide({ show, onHide, escEnabled, isModal }));
+    renderHook(() => useDismiss({ show, onHide, escEnabled, isModal }));
     return { onHide, escapeHandler };
   }
 
@@ -42,7 +42,7 @@ describe("usePanelHide", () => {
     mockUseUI.mockImplementation(() => ({ ...mockUIContext, uiVisible }));
     const onHide = vi.fn();
     const { rerender } = renderHook(
-      ({ show }) => usePanelHide({ show, onHide }),
+      ({ show }) => useDismiss({ show, onHide }),
       { initialProps: { show: true, onHide } },
     );
     uiVisible = false;
@@ -55,7 +55,7 @@ describe("usePanelHide", () => {
     mockUseUI.mockImplementation(() => ({ ...mockUIContext, uiVisible }));
     const onHide = vi.fn();
     const { rerender } = renderHook(
-      ({ show }) => usePanelHide({ show, onHide }),
+      ({ show }) => useDismiss({ show, onHide }),
       { initialProps: { show: false, onHide } },
     );
     uiVisible = false;
@@ -66,7 +66,7 @@ describe("usePanelHide", () => {
   it("registers useKeyHandler with correct args for escEnabled true/false", () => {
     mockUseUI.mockReturnValue({ ...mockUIContext, uiVisible: true });
     renderHook(() =>
-      usePanelHide({ show: true, onHide: () => {}, escEnabled: true }),
+      useDismiss({ show: true, onHide: () => {}, escEnabled: true }),
     );
     expect(mockUseKeyHandler).toHaveBeenLastCalledWith(
       expect.any(Function),
@@ -74,7 +74,7 @@ describe("usePanelHide", () => {
       { enabled: true },
     );
     renderHook(() =>
-      usePanelHide({ show: true, onHide: () => {}, escEnabled: false }),
+      useDismiss({ show: true, onHide: () => {}, escEnabled: false }),
     );
     expect(mockUseKeyHandler).toHaveBeenLastCalledWith(
       expect.any(Function),

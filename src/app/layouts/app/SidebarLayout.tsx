@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { Outlet } from "react-router-dom";
 import { Container, HamburgerButton } from "@components";
-import { useScreenSize } from "@hooks";
+import { useDisclosure, useScreenSize } from "@hooks";
 
 interface SidebarLayoutProps {
   menu: React.ReactNode;
@@ -18,15 +18,16 @@ export function SidebarLayout({
   contentClassName = "",
 }: SidebarLayoutProps) {
   const { isMobile } = useScreenSize();
-  const [panelOpen, setPanelOpen] = useState(false);
+
+  const panelMenu = useDisclosure();
 
   const menuWithProps =
     isMobile && React.isValidElement(menu)
       ? React.cloneElement(
           menu as React.ReactElement<Record<string, unknown>>,
           {
-            open: panelOpen,
-            onClose: () => setPanelOpen(false),
+            open: panelMenu.isOpen,
+            onClose: () => panelMenu.close(),
           },
         )
       : menu;
@@ -37,7 +38,7 @@ export function SidebarLayout({
     >
       {isMobile && (
         <>
-          <HamburgerButton onClick={() => setPanelOpen(true)} />
+          <HamburgerButton onClick={() => panelMenu.open()} />
           <div className="mb-4" />
         </>
       )}

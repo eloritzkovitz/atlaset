@@ -1,4 +1,5 @@
-import ReactDOM from "react-dom";
+import { useMemo, useCallback } from "react";
+import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Chip, FormField } from "@components";
 import { ICONS } from "@constants/icons";
@@ -36,25 +37,37 @@ export function CountrySelectField({
   const labelText = label ?? t("countries.select.label");
 
   // Map codes to countries and sort alphabetically
-  const selectedCountries = countries
-    .filter((country) => countryCodes.includes(country.isoCode))
-    .sort((a, b) => a.name.localeCompare(b.name));
+  const selectedCountries = useMemo(() => {
+    if (!countryCodes.length || !countries.length) return [];
+
+    const codeSet = new Set(countryCodes);
+    return countries
+      .filter((country) => codeSet.has(country.isoCode))
+      .sort((a, b) => a.name.localeCompare(b.name));
+  }, [countryCodes, countries]);
 
   // Handle changes from the modal, ensuring trip-based countries remain selected
-  const handleModalChange = (incomingCodes: string[]) => {
-    if (!isTripBasedCountry) {
-      onChange(incomingCodes);
-      return;
-    }
+  const handleModalChange = useCallback(
+    (incomingCodes: string[]) => {
+      if (!isTripBasedCountry) {
+        onChange(incomingCodes);
+        return;
+      }
 
-    // Identify all currently selected codes that are system-locked by trip parameters
-    const lockedCodes = countryCodes.filter((code) => isTripBasedCountry(code));
+      // Identify all currently selected codes that are system-locked by trip parameters
+      const lockedCodes = countryCodes.filter((code) =>
+        isTripBasedCountry(code),
+      );
 
-    // Combine the user selection with locked codes, ensuring no duplicates exist
-    const mergedCodes = Array.from(new Set([...incomingCodes, ...lockedCodes]));
+      // Combine the user selection with locked codes, ensuring no duplicates exist
+      const mergedCodes = Array.from(
+        new Set([...incomingCodes, ...lockedCodes]),
+      );
 
-    onChange(mergedCodes);
-  };
+      onChange(mergedCodes);
+    },
+    [countryCodes, isTripBasedCountry, onChange],
+  );
 
   return (
     <>
@@ -66,7 +79,6 @@ export function CountrySelectField({
             </span>
           ) : (
             selectedCountries.map((country) => {
-              // Determine if the country is a trip-based visit and if it can be removed
               const isLockedVisit = !!isTripBasedCountry?.(country.isoCode);
               const canRemove = !disabled && !isLockedVisit;
 
@@ -100,13 +112,14 @@ export function CountrySelectField({
               onClick={onOpen}
               disabled={disabled}
             >
-              {<ICONS.edit className="inline" />} {t("common:actions.edit")}
+              <ICONS.edit className="inline" /> {t("common:actions.edit")}
             </ActionButton>
           )}
         </div>
       </FormField>
+      
       {isOpen &&
-        ReactDOM.createPortal(
+        createPortal(
           <CountrySelectModal
             isOpen={isOpen}
             selected={countryCodes}

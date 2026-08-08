@@ -10,7 +10,7 @@ import { useUI } from "@contexts/UIContext";
 import {
   useBodyScrollLock,
   useClickOutside,
-  usePanelHide,
+  useDismiss,
   usePointerDrag,
 } from "@hooks";
 import { ModalHeader } from "./ModalHeader";
@@ -66,8 +66,7 @@ export function Modal({
     return () => setModalOpen(false);
   }, [isOpen, setModalOpen]);
 
-  // Handle panel hide logic
-  usePanelHide({
+  useDismiss({
     show: isOpen,
     onHide: onClose,
     isModal: true,

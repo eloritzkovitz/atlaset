@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useCallback } from "react";
 import { useTrips } from "@contexts/TripsContext";
+import { useDisclosure } from "@hooks";
 import type { Trip } from "../types";
 
 const emptyTrip: Trip = {
@@ -19,40 +20,45 @@ const emptyTrip: Trip = {
 export function useTripModal() {
   const { addTrip, editTrip, trips } = useTrips();
 
-  const [trip, setTrip] = useState<Trip | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const modal = useDisclosure<Trip>();
 
-  // Add trip
-  function handleAdd() {
-    setTrip({ ...emptyTrip });
-    setModalOpen(true);
-  }
+  // Add a trip
+  const handleAdd = useCallback(() => {
+    modal.open({ ...emptyTrip });
+  }, [modal]);
 
-  // Edit trip
-  function handleEdit(selectedTrip: Trip) {
-    setTrip({ ...selectedTrip });
-    setModalOpen(true);
-  }
+  // Edit a trip
+  const handleEdit = useCallback(
+    (selectedTrip: Trip) => {
+      modal.open({ ...selectedTrip });
+    },
+    [modal],
+  );
 
-  // Save trip (add or edit)
-  async function handleSave() {
+  // Save a trip (either add or edit)
+  const handleSave = useCallback(async () => {
+    const trip = modal.data;
     if (!trip) return;
-    if (!trip.id) {
-      const newTrip = { ...trip, id: crypto.randomUUID() };
-      addTrip(newTrip);
-    } else if (trips.some((t) => t.id === trip.id)) {
+
+    // Check if ID exists in trips context or if it's a new trip
+    const isExisting = Boolean(trip.id) && trips.some((t) => t.id === trip.id);
+
+    if (isExisting) {
       editTrip(trip);
+    } else {
+      addTrip({ ...trip, id: crypto.randomUUID() });
     }
-    setModalOpen(false);
-  }
+
+    modal.close();
+  }, [modal, trips, addTrip, editTrip]);
 
   return {
-    trip,
-    setTrip,
-    modalOpen,
-    setModalOpen,
+    isOpen: modal.isOpen,
+    trip: modal.data,
+    setTrip: modal.setData,
     handleAdd,
     handleEdit,
     handleSave,
+    onClose: modal.close,
   };
 }

@@ -19,6 +19,7 @@ import {
 } from "@features/countries";
 import { useUserFriends } from "@features/user/friends/hooks/useUserFriends";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
+import { useDisclosure } from "@hooks";
 import { CategoriesSection } from "./CategoriesSection";
 import { CategorySelectModal } from "./CategorySelectModal";
 import { CountriesSection } from "./CountriesSection";
@@ -53,11 +54,11 @@ export function TripModal({
   const { friends } = useUserFriends();
   const { categoryOptions, tagOptions } = useTripFilters();
 
-  // Modal open states for sub-modals
-  const [countryModalOpen, setCountryModalOpen] = useState(false);
-  const [participantModalOpen, setParticipantModalOpen] = useState(false);
-  const [categoryModalOpen, setCategoryModalOpen] = useState(false);
-  const [tagModalOpen, setTagModalOpen] = useState(false);
+  // Modal states for the various selection modals
+  const countryModal = useDisclosure(false);
+  const participantModal = useDisclosure(false);
+  const categoryModal = useDisclosure(false);
+  const tagModal = useDisclosure(false);
 
   // Tentative state
   const [isTentative, setIsTentative] = useState(
@@ -122,10 +123,10 @@ export function TripModal({
         onClose={onClose}
         className="w-[900px] h-[92vh] flex flex-col shadow"
         disableClose={
-          countryModalOpen ||
-          participantModalOpen ||
-          categoryModalOpen ||
-          tagModalOpen
+          countryModal.isOpen ||
+          participantModal.isOpen ||
+          categoryModal.isOpen ||
+          tagModal.isOpen
         }
         draggable
       >
@@ -236,13 +237,14 @@ export function TripModal({
                 />
               </div>
             </div>
+
             {/* Right: Selectable sections */}
             <div className="flex flex-col min-w-0 p-4 gap-2 basis-[40%]">
               <CountriesSection
                 selectedCountries={selectedCountries
                   .filter((c): c is Country => c !== null)
                   .map(({ isoCode, name }) => ({ isoCode, name }))}
-                onEdit={() => setCountryModalOpen(true)}
+                onEdit={countryModal.open}
                 onRemove={(isoCode) =>
                   onChange({
                     ...trip,
@@ -254,7 +256,7 @@ export function TripModal({
               />
               <ParticipantsSection
                 selectedParticipants={selectedParticipantProfiles}
-                onEdit={() => setParticipantModalOpen(true)}
+                onEdit={participantModal.open}
                 onRemove={(uid) =>
                   onChange({
                     ...trip,
@@ -266,7 +268,7 @@ export function TripModal({
               />
               <CategoriesSection
                 selectedCategories={trip.categories || []}
-                onEdit={() => setCategoryModalOpen(true)}
+                onEdit={categoryModal.open}
                 onRemove={(category) =>
                   onChange({
                     ...trip,
@@ -278,9 +280,7 @@ export function TripModal({
               />
               <TagsSection
                 selectedTags={trip.tags || []}
-                onEdit={() => {
-                  setTagModalOpen(true);
-                }}
+                onEdit={tagModal.open}
                 onRemove={(tag) =>
                   onChange({
                     ...trip,
@@ -290,6 +290,7 @@ export function TripModal({
               />
             </div>
           </div>
+
           {/* Actions */}
           <div className="w-full flex justify-end px-6 pb-4">
             <ModalActions
@@ -311,38 +312,39 @@ export function TripModal({
           </div>
         </form>
       </Modal>
+
       <CountrySelectModal
-        isOpen={countryModalOpen}
+        isOpen={countryModal.isOpen}
         selected={trip.countryCodes}
         options={countries}
-        onClose={() => setCountryModalOpen(false)}
+        onClose={countryModal.close}
         onChange={(newCodes) => {
           onChange({ ...trip, countryCodes: newCodes });
         }}
       />
       <ParticipantSelectModal
-        isOpen={participantModalOpen}
+        isOpen={participantModal.isOpen}
         selected={trip.participants || []}
         options={participantOptions}
-        onClose={() => setParticipantModalOpen(false)}
+        onClose={participantModal.close}
         onChange={(newParticipants) => {
           onChange({ ...trip, participants: newParticipants });
         }}
       />
       <CategorySelectModal
-        isOpen={categoryModalOpen}
+        isOpen={categoryModal.isOpen}
         selected={trip.categories || []}
         options={formattedCategoryOptions}
-        onClose={() => setCategoryModalOpen(false)}
+        onClose={categoryModal.close}
         onChange={(newCategories) => {
           onChange({ ...trip, categories: newCategories as TripCategory[] });
         }}
       />
       <TagSelectModal
-        isOpen={tagModalOpen}
+        isOpen={tagModal.isOpen}
         selected={trip.tags || []}
         options={formattedTagOptions}
-        onClose={() => setTagModalOpen(false)}
+        onClose={tagModal.close}
         onChange={(newTags) => {
           onChange({ ...trip, tags: newTags as TripTag[] });
         }}

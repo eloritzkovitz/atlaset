@@ -28,6 +28,7 @@ export interface UIContextType {
   showSettings: boolean;
   toggleSettings: () => void;
   openUserPanel: UserPanelSelection;
+  setOpenUserPanel: (v: UserPanelSelection) => void;
   showFriends: boolean;
   toggleFriends: () => void;
   showSearch: boolean;

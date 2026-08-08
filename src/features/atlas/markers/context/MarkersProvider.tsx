@@ -1,17 +1,16 @@
-import React, {
-  useState,
-  useEffect,
-  useCallback,
-  useRef,
-  useMemo,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { logUserActivity } from "@features/activity/utils/activity";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
-import { useDataLoader } from "@hooks";
+import { useDataLoader, useDisclosure } from "@hooks";
 import { MarkersContext } from "./MarkersContext";
 import { useMarkerManager } from "../hooks/useMarkerManager";
 import { markersService } from "../services/markersService";
 import type { Marker } from "../types";
+
+interface MarkerDetailsPayload {
+  marker: Marker;
+  position?: { top: number; left: number };
+}
 
 export function MarkersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();
@@ -68,28 +67,19 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     },
   });
 
-  const [selectedMarker, setSelectedMarker] = useState<Marker | null>(null);
-  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
-  const [detailsModalPosition, setDetailsModalPosition] = useState<{
-    top: number;
-    left: number;
-  } | null>(null);
+  const detailsModal = useDisclosure<MarkerDetailsPayload>();
 
   /** Shows details for a specific marker. */
   function showMarkerDetails(
     marker: Marker,
     position?: { top: number; left: number },
   ) {
-    setSelectedMarker(marker);
-    setDetailsModalOpen(true);
-    setDetailsModalPosition(position ?? null);
+    detailsModal.open({ marker, position });
   }
 
   /** Closes the marker details modal. */
   function closeMarkerDetails() {
-    setDetailsModalOpen(false);
-    setSelectedMarker(null);
-    setDetailsModalPosition(null);
+    detailsModal.close();
   }
 
   return (
@@ -97,9 +87,9 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
       value={{
         ...markerManager,
         reloadMarkers,
-        selectedMarker,
-        detailsModalOpen,
-        detailsModalPosition,
+        selectedMarker: detailsModal.data?.marker ?? null,
+        detailsModalOpen: detailsModal.isOpen,
+        detailsModalPosition: detailsModal.data?.position ?? null,
         showMarkerDetails,
         closeMarkerDetails,
       }}

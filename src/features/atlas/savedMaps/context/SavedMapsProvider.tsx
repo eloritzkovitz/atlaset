@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type ReactNode,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { logUserActivity } from "@features/activity";
 import { useMapMode } from "@features/atlas/core";
@@ -18,7 +11,7 @@ import {
 import { normalizeMarkers } from "@features/atlas/markers/utils/marker";
 import { useMarkerManager } from "@features/atlas/markers/hooks/useMarkerManager";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
-import { useDataLoader } from "@hooks";
+import { useDataLoader, useDisclosure } from "@hooks";
 import { getQueryParam } from "@utils";
 import {
   SavedMapsContext,
@@ -32,8 +25,9 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   const { mapMode, mapId } = useMapMode();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const [activeSavedMap, setActiveSavedMap] = useState<SavedMap | null>(null);
-  const [isSavedMapModalOpen, setSavedMapModalOpen] = useState(false);
+  const mapModal = useDisclosure<SavedMap>();
+  const activeSavedMap = mapModal.data;
+
   const lastAction = useRef<string | null>(null);
   const loadedUserIdRef = useRef<string | null>(null);
 
@@ -72,7 +66,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     persistLayers: async (layers) => {
       if (!activeSavedMap) return;
       const updated = { ...activeSavedMap, layers };
-      setActiveSavedMap(updated);
+      mapModal.setData(updated);
       await savedMapsService.set(updated);
 
       lastAction.current = null;
@@ -102,7 +96,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     persistMarkers: async (markers) => {
       if (!activeSavedMap) return;
       const updated = { ...activeSavedMap, markers };
-      setActiveSavedMap(updated);
+      mapModal.setData(updated);
       markerManager.setMarkers(markers);
       await savedMapsService.set(updated);
     },
@@ -143,7 +137,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       }
     }
     const updated = { ...activeSavedMap, layers: merged };
-    setActiveSavedMap(updated);
+    mapModal.setData(updated);
     await savedMapsService.set(updated);
     await reloadSavedMaps();
     return merged;
@@ -180,25 +174,19 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
         loadSavedMapForEditing(mapId);
       }
     } else {
-      if (activeSavedMap) setActiveSavedMap(null);
+      if (activeSavedMap) mapModal.setData(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mapMode, mapId]);
 
   // Open saved map modal
   function openSavedMapModal(map: SavedMap | null = null) {
-    setActiveSavedMap(map);
-    setSavedMapModalOpen(true);
+    mapModal.open(map ?? undefined);
   }
 
   // Close saved map modal
   function closeSavedMapModal() {
-    setSavedMapModalOpen(false);
-    setTimeout(() => {
-      if (!layerManager.isEditModalOpen) {
-        setActiveSavedMap(null);
-      }
-    }, 0);
+    mapModal.close();
   }
 
   // Exit edit mode: remove edit/map from URL and clear activeSavedMap
@@ -210,7 +198,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
       return next;
     });
 
-    setActiveSavedMap(null);
+    mapModal.setData(null);
     layerManager.setLayers([]);
   }
 
@@ -270,19 +258,19 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     async (id: string) => {
       const cachedMap = savedMaps.find((m) => m.id === id);
       if (cachedMap) {
-        setActiveSavedMap(cachedMap);
+        mapModal.setData(cachedMap);
         return;
       }
       try {
         const map = await savedMapsService.get(id);
         if (map) {
-          setActiveSavedMap(map);
+          mapModal.setData(map);
         }
       } catch (err) {
         console.error("Failed to load map for editing:", err);
       }
     },
-    [savedMaps],
+    [savedMaps, mapModal],
   );
 
   // Update map name and persist
@@ -355,7 +343,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     saveCurrentMap,
     viewSavedMap,
     loadSavedMapForEditing,
-    isSavedMapModalOpen,
+    isSavedMapModalOpen: mapModal.isOpen,
     activeSavedMap,
     openSavedMapModal,
     closeSavedMapModal,

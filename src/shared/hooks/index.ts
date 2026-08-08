@@ -37,11 +37,12 @@ export * from "./navigation/useQueryParam";
 
 // Overlays
 export * from "./overlays/useContextMenu";
+export * from "./overlays/useDisclosure";
+export * from "./overlays/useDismiss";
 export * from "./overlays/useFloatingHover";
 export * from "./overlays/useFloatingMenuPosition";
 export * from "./overlays/useMenuActions";
 export * from "./overlays/useMenuPosition";
-export * from "./overlays/usePanelHide";
 export * from "./overlays/useTooltipTarget";
 export * from "./overlays/useUiHint";
 

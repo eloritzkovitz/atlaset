@@ -1,10 +1,10 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FormField, Modal, ModalActions, ModalHeader } from "@components";
 import { ICONS } from "@constants/icons";
 import { CountrySelectField, useCountryData } from "@features/countries";
 import { useVisitedCountries } from "@features/visits";
 import type { CountryList } from "../../types";
+import { useDisclosure } from "@hooks";
 
 interface CountryListModalProps {
   isOpen: boolean;
@@ -29,9 +29,9 @@ export function CountryListModal({
 }: CountryListModalProps) {
   const { countries } = useCountryData();
   const { isTripBased, isVisitedCountry } = useVisitedCountries();
-
-  const [countrySelectOpen, setCountrySelectOpen] = useState(false);
   const { t } = useTranslation("atlas");
+
+  const countrySelect = useDisclosure();
 
   // Don't render the modal if no list is being edited
   if (!list) return null;
@@ -60,7 +60,7 @@ export function CountryListModal({
 
   // Handle modal close
   const handleClose = () => {
-    if (!countrySelectOpen) {
+    if (!countrySelect.isOpen) {
       onClose();
     }
   };
@@ -71,7 +71,7 @@ export function CountryListModal({
         isOpen={isOpen}
         onClose={handleClose}
         className="rounded-xl shadow-2xl !min-w-[900px] max-h-[95vh] overflow-y-auto"
-        disableClose={countrySelectOpen}
+        disableClose={countrySelect.isOpen}
         draggable
       >
         <ModalHeader
@@ -126,9 +126,9 @@ export function CountryListModal({
                   onSave(updatedList);
                 }
               }}
-              isOpen={countrySelectOpen}
-              onOpen={() => setCountrySelectOpen(true)}
-              onClose={() => setCountrySelectOpen(false)}
+              isOpen={countrySelect.isOpen}
+              onOpen={countrySelect.open}
+              onClose={countrySelect.close}
               isTripBasedCountry={isTrackingList ? isTripBased : undefined}
               isCountryDisabled={handleIsCountryDisabled}
             />

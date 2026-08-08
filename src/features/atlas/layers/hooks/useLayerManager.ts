@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useEntityCollection } from "@hooks";
+import { useDisclosure, useEntityCollection } from "@hooks";
 import { DEFAULT_NEW_LAYER } from "../constants/layers";
 import type { Layer } from "../types";
 
@@ -30,11 +29,10 @@ export function useLayerManager({
     onLogAction,
   });
 
-  const [editingLayer, setEditingLayer] = useState<Layer | null>(null);
-  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const modal = useDisclosure<Layer>();
 
   const isEditingLayer =
-    !!editingLayer && collection.items.some((o) => o.id === editingLayer.id);
+    !!modal.data && collection.items.some((o) => o.id === modal.data?.id);
 
   /** Imports new layers. */
   async function importLayers(newLayers: Layer[]) {
@@ -63,37 +61,29 @@ export function useLayerManager({
 
   /** Opens modal for creating a new layer. */
   function openAddLayer() {
-    setEditingLayer({
+    modal.open({
       ...DEFAULT_NEW_LAYER,
       id: crypto.randomUUID(),
     });
-    setEditModalOpen(true);
   }
 
   /** Opens modal for editing an existing layer. */
   function openEditLayer(layer: Layer) {
-    setEditingLayer({ ...layer });
-    setEditModalOpen(true);
-  }
-
-  /** Closes the layer modal. */
-  function closeLayerModal() {
-    setEditModalOpen(false);
-    setEditingLayer(null);
+    modal.open({ ...layer });
   }
 
   /** Saves the current layer from the modal. */
   async function saveLayer() {
-    if (!editingLayer) return;
+    if (!modal.data) return;
 
-    const exists = collection.items.some((o) => o.id === editingLayer.id);
+    const exists = collection.items.some((o) => o.id === modal.data?.id);
     if (exists) {
-      await collection.updateItem(editingLayer);
+      await collection.updateItem(modal.data);
     } else {
-      await collection.addItem(editingLayer);
+      await collection.addItem(modal.data);
     }
 
-    closeLayerModal();
+    modal.close();
   }
 
   return {
@@ -107,13 +97,13 @@ export function useLayerManager({
     toggleLayerVisibility: collection.toggleItemVisibility,
     duplicateLayer,
     importLayers,
-    editingLayer,
-    setEditingLayer,
+    editingLayer: modal.data,
+    setEditingLayer: modal.setData,
     isEditingLayer,
-    isEditModalOpen,
+    isEditModalOpen: modal.isOpen,
     openAddLayer,
     openEditLayer,
-    closeLayerModal,
+    closeLayerModal: modal.close,
     saveLayer,
   };
 }

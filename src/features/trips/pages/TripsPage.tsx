@@ -57,15 +57,8 @@ export default function TripsPage() {
     initialPageSize: 20,
   });
 
-  const {
-    trip,
-    setTrip,
-    modalOpen,
-    setModalOpen,
-    handleAdd,
-    handleEdit,
-    handleSave,
-  } = useTripModal();
+  const { isOpen, trip, setTrip, handleAdd, handleEdit, handleSave, onClose } =
+    useTripModal();
 
   // Update filter handler
   const handleUpdateFilter = (key: string, value: unknown) => {
@@ -96,11 +89,11 @@ export default function TripsPage() {
       <div className="flex-1 w-full mx-auto flex flex-col">
         <TripModal
           key={trip?.id ?? "new-trip"}
-          isOpen={modalOpen}
+          isOpen={isOpen}
           trip={trip}
           onChange={setTrip}
           onSave={handleSave}
-          onClose={() => setModalOpen(false)}
+          onClose={onClose}
           isEditing={!!trip && !!trip.id}
         />
         {loading ? (

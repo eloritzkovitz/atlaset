@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ModalSelect, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
@@ -44,9 +44,11 @@ export function CountrySelectModal({
     }
   }, [isOpen]);
 
-  // Filter options by search
-  const parsed = parseQualifierSearch(search);
-  const filteredOptions = ((): Country[] => {
+  const filteredOptions = useMemo(() => {
+    if (!isOpen) return [];
+
+    const parsed = parseQualifierSearch(search);
+
     if (parsed) {
       return applyQualifierSearch(
         options,
@@ -63,7 +65,7 @@ export function CountrySelectModal({
     return filterBySearch(options, search, (country) =>
       buildSearchString(country),
     );
-  })();
+  }, [isOpen, search, options, visitedCountryCodes, wantToVisitCountryCodes]);
 
   return (
     <ModalSelect<Country>

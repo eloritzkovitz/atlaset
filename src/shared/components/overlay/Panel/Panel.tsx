@@ -1,6 +1,6 @@
 import React, { type ReactNode } from "react";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { usePanelAnimation, usePanelHide, useScreenSize } from "@hooks";
+import { useDismiss, usePanelAnimation, useScreenSize } from "@hooks";
 import { DialogHeader } from "../DialogHeader/DialogHeader";
 import "./Panel.css";
 
@@ -44,7 +44,7 @@ export function Panel({
 }: PanelProps) {
   const { isMobile } = useScreenSize();
 
-  usePanelHide({ show, onHide, escEnabled });
+  useDismiss({ show, onHide, escEnabled });
 
   const panelAnimationClass = usePanelAnimation({
     show,

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useLocation } from "react-router-dom";
 import {
@@ -11,7 +11,7 @@ import {
 import { useCountryData } from "@features/countries";
 import { useDashboardCountriesFilters } from "@features/dashboard/countries";
 import { useAuth } from "@features/user/auth";
-import { usePageTitle, useScreenSize } from "@hooks";
+import { useDisclosure, usePageTitle, useScreenSize } from "@hooks";
 import { DashboardPanelMenu } from "../components/DashboardPanelMenu";
 import { useDashboardNavigation } from "../hooks/useDashboardNavigation";
 import { useDashboardRouteState } from "../hooks/useDashboardRouteState";
@@ -38,7 +38,7 @@ export default function DashboardPage() {
   const { t: tDashboard } = useTranslation("dashboard");
   const { t: tCountries } = useTranslation("countries");
 
-  const [panelOpen, setPanelOpen] = useState(false);
+  const panelMenu = useDisclosure();
 
   const languages = useMemo(() => {
     if (!languagesMap) return [];
@@ -206,10 +206,10 @@ export default function DashboardPage() {
     <div className="min-h-screen relative">
       {isMobile && (
         <>
-          <HamburgerButton onClick={() => setPanelOpen(true)} />
+          <HamburgerButton onClick={() => panelMenu.open()} />
           <DashboardPanelMenu
-            open={panelOpen}
-            onClose={() => setPanelOpen(false)}
+            open={panelMenu.isOpen}
+            onClose={() => panelMenu.close()}
             selectedPanel={menuSelectedPanel}
             setSelectedPanel={handlePanelChange}
           />
