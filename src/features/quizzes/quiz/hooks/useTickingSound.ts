@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useAudio } from "@contexts/AudioContext";
+import { useAudio } from "@app/contexts/AudioContext";
 
 /**
  * Plays ticking sound when timer is active and time is left.

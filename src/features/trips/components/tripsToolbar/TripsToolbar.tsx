@@ -7,7 +7,7 @@ import {
   Separator,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { ToolbarActions } from "./ToolbarActions";
 import { ToolbarFilters } from "./ToolbarFilters";
 import { ToolbarImportExport } from "./ToolbarImportExport";

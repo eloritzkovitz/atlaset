@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react";
-import { useUIHintContext } from "@contexts/UIHintContext";
+import { useUIHintContext } from "@app/contexts/UIHintContext";
 
 interface UiHintOptions {
   style?: React.CSSProperties;

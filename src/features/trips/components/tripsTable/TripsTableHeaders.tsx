@@ -13,6 +13,7 @@ import type { FilterOption, Option } from "@types";
 import { isAllowedOption, isStringOption } from "@utils";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
 import { ALL_TRIP_CATEGORIES } from "../../constants/trips";
+import { useTrips } from "../../context/TripsContext";
 import type {
   Trip,
   TripCategory,
@@ -20,7 +21,6 @@ import type {
   TripSortBy,
   TripSortByKey,
 } from "../../types";
-import { useTrips } from "@contexts/TripsContext";
 
 interface TripsTableHeadersProps {
   trips: Trip[];

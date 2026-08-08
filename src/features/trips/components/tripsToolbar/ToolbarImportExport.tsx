@@ -2,9 +2,9 @@ import React, { useRef } from "react";
 import { useTranslation, Trans } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTrips } from "@contexts/TripsContext";
 import { useClickOutside, useMenuPosition } from "@hooks";
 import { TripsExportMenu } from "./TripsExportMenu";
+import { useTrips } from "../../context/TripsContext";
 import { useTripIO } from "../../hooks/useTripsIO";
 import type { Trip } from "../../types";
 

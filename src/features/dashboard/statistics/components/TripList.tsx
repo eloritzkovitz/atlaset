@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Chip, EmptyListMessage } from "@components";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import {
   CountryFlag,
   createCountryMap,

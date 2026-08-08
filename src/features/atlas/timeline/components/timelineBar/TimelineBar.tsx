@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { useLanguage } from "@features/settings";
+import { useTrips } from "@features/trips";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import { TimelineDot } from "./TimelineDot";
 import { VisitedCountryNames } from "./VisitedCountryNames";

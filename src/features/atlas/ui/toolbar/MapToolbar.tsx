@@ -7,7 +7,7 @@ import {
   DirectionalIcon,
   Separator,
 } from "@components";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useLanguage } from "@features/settings";
 import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";

@@ -1,5 +1,5 @@
 import { ICONS } from "@constants/icons";
-import { useUIHintContext } from "@contexts/UIHintContext";
+import { useUIHintContext } from "@app/contexts/UIHintContext";
 
 /** Renders a container for UI hints. */
 export function UIHintContainer() {

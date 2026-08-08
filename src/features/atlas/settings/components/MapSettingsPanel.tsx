@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useAccessibility } from "@features/settings";
 import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
 import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";

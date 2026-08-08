@@ -5,7 +5,7 @@ import {
   DEFAULT_SIDEBAR_WIDTH,
   DEFAULT_SIDEBAR_EXPANDED_WIDTH,
 } from "@constants/ui";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useDismiss } from "@hooks";
 import { NAV_LINKS, SETTINGS_LINK } from "./navLinks";
 import { SidebarMenuLink } from "./SidebarMenuLink";

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import { ActionButton, Menu } from "@components";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useLanguage } from "@features/settings";
 import { useAuth, useAuthHandlers } from "@features/user/auth";
 import { useModalAnimation, useScreenSize } from "@hooks";

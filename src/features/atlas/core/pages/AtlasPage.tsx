@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ErrorMessage, LoadingSpinner } from "@components";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
 import { usePageTitle, useScreenSize } from "@hooks";

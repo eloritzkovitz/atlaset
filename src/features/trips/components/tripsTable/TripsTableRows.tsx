@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTrips } from "@contexts/TripsContext";
 import { createCountryMap, type Country } from "@features/countries";
 import { formatDate } from "@utils";
 import { TripActions } from "./TripActions";
@@ -11,6 +10,7 @@ import { TripCountriesList } from "../common/TripCountriesList";
 import { ParticipantsList } from "../common/ParticipantsList";
 import { TagsList } from "../common/TagsList";
 import { TripStatusChip } from "../common/TripStatusChip";
+import { useTrips } from "../../context/TripsContext";
 import type { Trip } from "../../types";
 
 interface TripsTableRowsProps {

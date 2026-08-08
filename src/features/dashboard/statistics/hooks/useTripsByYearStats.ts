@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useTrips } from "@contexts/TripsContext";
+import { useTrips } from "@features/trips";
 import { isAbroadTrip } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user/profile/hooks/useHomeCountry";
 

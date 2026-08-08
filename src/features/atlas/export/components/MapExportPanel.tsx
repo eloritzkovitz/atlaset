@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useEffectiveLayers } from "@features/atlas/layers";
 import { useMapView } from "@features/atlas/map";
 import { useEffectiveMarkers } from "@features/atlas/markers";

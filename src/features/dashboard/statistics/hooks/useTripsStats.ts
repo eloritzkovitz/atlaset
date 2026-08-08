@@ -1,10 +1,10 @@
 import { useMemo } from "react";
-import { useTrips } from "@contexts/TripsContext";
 import {
   createCountryMap,
   useCountryData,
   type Country,
 } from "@features/countries";
+import { useTrips } from "@features/trips";
 import {
   getCompletedTrips,
   getUpcomingTrips,

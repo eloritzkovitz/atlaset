@@ -1,4 +1,4 @@
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { SearchDropdown } from "@features/search/components/SearchDropdown";
 import { useScreenSize } from "@hooks";
 import { UserMenu } from "./UserMenu/UserMenu";

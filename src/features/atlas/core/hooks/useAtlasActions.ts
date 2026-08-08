@@ -1,4 +1,4 @@
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { isAuthenticated } from "@lib/firebase";
 import { useMapView } from "../../map/context/MapViewContext";
 import { useSavedMaps } from "../../savedMaps/context/SavedMapsContext";

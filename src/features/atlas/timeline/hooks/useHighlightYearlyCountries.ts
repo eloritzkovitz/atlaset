@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useTrips } from "@contexts/TripsContext";
+import { useTrips } from "@features/trips";
 import { getVisitedCountriesForYear } from "@features/visits";
 import { useTimeline } from "../context/TimelineContext";
 

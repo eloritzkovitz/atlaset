@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
+import { useTrips } from "@features/trips";
 import { useHomeCountry } from "@features/user/profile";
 import { useVisitedCountries } from "@features/visits";
 import type { SortValue } from "@types";

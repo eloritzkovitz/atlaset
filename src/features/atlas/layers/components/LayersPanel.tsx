@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useCountryLists } from "@features/atlas/countries/context/CountryListsContext";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useAccessibility } from "@features/settings";

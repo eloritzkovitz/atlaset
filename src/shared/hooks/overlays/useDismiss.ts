@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useKeyHandler } from "../input/useKeyHandler";
 
 interface UseDismissOptions {

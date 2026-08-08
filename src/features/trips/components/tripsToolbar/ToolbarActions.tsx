@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTrips } from "@contexts/TripsContext";
+import { useTrips } from "../../context/TripsContext";
 
 interface ToolbarActionsProps {
   onAddTrip?: () => void;

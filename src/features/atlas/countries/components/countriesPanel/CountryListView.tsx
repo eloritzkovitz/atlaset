@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { useTrips } from "@contexts/TripsContext";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import {
   useHighlightYearlyCountries,
   useTimeline,
 } from "@features/atlas/timeline";
 import { CountryDisplayPanel, type Country } from "@features/countries";
+import { useTrips } from "@features/trips/context/TripsContext";
 import { useVisitStats } from "@features/visits";
 import { useListNavigation } from "@hooks";
 import { CountryActions } from "./CountryActions";

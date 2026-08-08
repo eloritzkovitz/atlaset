@@ -5,7 +5,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { useTrips } from "@contexts/TripsContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
   getDefaultLayerSelections,
@@ -24,6 +23,7 @@ import {
   type SovereigntyStatus,
   type GeoType,
 } from "@features/countries";
+import { useTrips } from "@features/trips";
 import {
   filterByVisitCount,
   filterByVisitStatus,

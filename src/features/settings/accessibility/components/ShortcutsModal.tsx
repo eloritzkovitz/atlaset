@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Modal, ModalHeader, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { categoryColumns, keyCommands } from "@constants/keyCommands";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import type { KeyCommand } from "@types";
 import { canonicalKey, isRestrictedSingleKey } from "@utils";
 import { ShortcutRow } from "./ShortcutRow";

@@ -1,5 +1,5 @@
 import { vi } from "vitest";
-import type { UIContextType } from "@contexts/UIContext";
+import type { UIContextType } from "@app/contexts/UIContext";
 
 export const mockUIContext: UIContextType = {
   uiVisible: true,

@@ -1,4 +1,4 @@
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useAccessibility } from "@features/settings";
 import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@lib/firebase";

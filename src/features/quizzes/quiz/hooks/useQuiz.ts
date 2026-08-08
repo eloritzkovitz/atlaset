@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAudio } from "@contexts/AudioContext";
+import { useAudio } from "@app/contexts/AudioContext";
 
 /**
  * Generic quiz logic hook for reusability across different quiz types.

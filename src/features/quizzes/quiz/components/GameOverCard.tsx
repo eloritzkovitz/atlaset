@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, ActionButton } from "@components";
-import { useAudio } from "@contexts/AudioContext";
+import { useAudio } from "@app/contexts/AudioContext";
 import { useAnimatedNumber } from "@hooks";
 import { formatPercent, formatTimeSeconds } from "@utils";
 

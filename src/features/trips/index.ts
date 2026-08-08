@@ -1,9 +1,8 @@
 // Constants
 export * from "./constants/trips";
 
-// Hooks
-export * from "./hooks/useTripFilters";
-export * from "./hooks/useTripModal";
+// Context
+export { TripsContext, useTrips } from "./context/TripsContext";
 
 // Types
 export * from "./types";

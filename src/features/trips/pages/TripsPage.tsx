@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LoadingSpinner } from "@components";
-import { useTrips } from "@contexts/TripsContext";
 import { useCountryData } from "@features/countries";
 import { usePageTitle, useScreenSize, useTablePagination } from "@hooks";
 import { TripModal } from "../components/tripModal/TripModal";
 import { TripsTable } from "../components/tripsTable/TripsTable";
 import { TripsToolbar } from "../components/tripsToolbar/TripsToolbar";
+import { useTrips } from "../context/TripsContext";
 import { useTripFilters } from "../hooks/useTripFilters";
 import { useTripModal } from "../hooks/useTripModal";
 import type { TripFilterState, TripSortBy } from "../types";

@@ -49,7 +49,7 @@ vi.mock("@features/countries", async (importOriginal) => {
 });
 
 let mockTrips = [{ id: "t1", destination: "FR", startDate: "2026-01-01" }];
-vi.mock("@contexts/TripsContext", () => ({
+vi.mock("@features/trips/context/TripsContext", () => ({
   useTrips: () => ({ trips: mockTrips }),
 }));
 

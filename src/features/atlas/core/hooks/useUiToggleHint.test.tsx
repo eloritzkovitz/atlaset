@@ -1,6 +1,6 @@
 import { act } from "@testing-library/react";
 import React, { useState } from "react";
-import { UIContext } from "@contexts/UIContext";
+import { UIContext } from "@app/contexts/UIContext";
 import "@test-utils/settingsMocks";
 import { mockUIContext } from "@test-utils/mockUIContext";
 import { renderWithUiHintProviders, setupFakeTimers } from "@test-utils/uiHint";

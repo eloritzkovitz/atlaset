@@ -6,7 +6,7 @@ import React, {
   type ReactElement,
 } from "react";
 import ReactDOM from "react-dom";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import {
   useBodyScrollLock,
   useClickOutside,

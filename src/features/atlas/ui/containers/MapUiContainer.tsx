@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import { useEffectiveLayers } from "@features/atlas/layers";
 import {

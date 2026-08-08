@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { HelpPanel } from "@features/docs";
 import { SearchPanel } from "@features/search";
 import { ShortcutsModal } from "@features/settings/accessibility/components/ShortcutsModal";

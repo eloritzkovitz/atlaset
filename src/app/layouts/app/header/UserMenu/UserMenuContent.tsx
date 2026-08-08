@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { MenuButton, Separator, DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useLanguage, useTheme } from "@features/settings";
 import type { SerializableUser } from "@features/user/auth/types";
 import { useFirestoreUsername, UserInfo } from "@features/user/profile";

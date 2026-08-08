@@ -10,8 +10,7 @@ import {
   ConfirmModal,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTrips } from "@contexts/TripsContext";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import {
   useContextMenu,
   useDisclosure,
@@ -20,6 +19,7 @@ import {
   useMenuActions,
   useMenuPosition,
 } from "@hooks";
+import { useTrips } from "../../context/TripsContext";
 import type { Trip } from "../../types";
 import {
   canMarkCancelled,

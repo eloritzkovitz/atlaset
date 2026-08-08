@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react";
-import { useAudio } from "@contexts/AudioContext";
-import { useTrips } from "@contexts/TripsContext";
+import { useAudio } from "@app/contexts/AudioContext";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useTrips } from "@features/trips";
 import { getLatestYear, getYearsFromTrips } from "@features/visits";
 import { isAuthenticated } from "@lib/firebase";
 import { TimelineContext } from "./TimelineContext";

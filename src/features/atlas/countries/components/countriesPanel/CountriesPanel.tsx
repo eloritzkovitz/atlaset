@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useTrips } from "@contexts/TripsContext";
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import {
   sortCountries,
   useCountryData,
   type Country,
 } from "@features/countries";
 import { useAccessibility } from "@features/settings";
+import { useTrips } from "@features/trips/context/TripsContext";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
 import { CountriesSearchSortBar } from "./CountriesSearchSortBar";

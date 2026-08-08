@@ -2,12 +2,9 @@ import { useState, useMemo } from "react";
 import { Calendar, dateFnsLocalizer, type View } from "react-big-calendar";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { enUS } from "date-fns/locale/en-US";
-import {
-  TRIP_TYPE_COLORS,
-  isLocalTrip,
-  isUpcomingTrip,
-  type Trip,
-} from "@features/trips";
+import { TRIP_TYPE_COLORS } from "@features/trips/constants/trips";
+import type { Trip } from "@features/trips/types";
+import { isLocalTrip, isUpcomingTrip } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user/profile";
 import { darkenHexColor } from "@utils";
 import { CalendarToolbar } from "./CalendarToolbar";

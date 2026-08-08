@@ -3,14 +3,14 @@ import { vi } from "vitest";
 import { useDismiss } from "./useDismiss";
 import { mockUIContext } from "@test-utils/mockUIContext";
 
-vi.mock("@contexts/UIContext", () => ({
+vi.mock("@app/contexts/UIContext", () => ({
   useUI: vi.fn(),
 }));
 vi.mock("../input/useKeyHandler", () => ({
   useKeyHandler: vi.fn(),
 }));
 
-import { useUI } from "@contexts/UIContext";
+import { useUI } from "@app/contexts/UIContext";
 import { useKeyHandler } from "../input/useKeyHandler";
 
 const mockUseUI = vi.mocked(useUI);

@@ -1,6 +1,6 @@
 import { useCallback } from "react";
-import { useTrips } from "@contexts/TripsContext";
 import { useDisclosure } from "@hooks";
+import { useTrips } from "../context/TripsContext";
 import type { Trip } from "../types";
 
 const emptyTrip: Trip = {
