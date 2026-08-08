@@ -24,6 +24,7 @@ export const mockUIContext: UIContextType = {
   showSettings: false,
   toggleSettings: vi.fn(),
   openUserPanel: null,
+  setOpenUserPanel: vi.fn(),
   showFriends: false,
   toggleFriends: vi.fn(),
   showSearch: false,

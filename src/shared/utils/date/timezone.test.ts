@@ -1,31 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
-
-vi.mock("date-fns-tz", () => ({
-  format: (date: Date, _fmt: string, opts: { timeZone: string }) => {
-    const tz = opts.timeZone;
-    const month = date.getUTCMonth();
-    const map: Record<string, { jan: string; jul: string }> = {
-      NoDst: { jan: "+09:00", jul: "+09:00" },
-      "Europe/Paris": { jan: "+01:00", jul: "+02:00" },
-      "Europe/Berlin": { jan: "+01:00", jul: "+02:00" },
-      "Europe/Helsinki": { jan: "+02:00", jul: "+03:00" },
-      South: { jan: "+11:00", jul: "+10:00" },
-      HalfHour: { jan: "+05:30", jul: "+05:30" },
-      SmallMin: { jan: "+05:03", jul: "+05:03" },
-      NegMin: { jan: "-00:05", jul: "-00:05" },
-      GMTZ: { jan: "Z", jul: "Z" },
-      West: { jan: "-05:00", jul: "-04:00" },
-      Default: { jan: "+00:00", jul: "+00:00" },
-      MissingHr: { jan: "+", jul: "+" },
-      MissingMin: { jan: "+12", jul: "+12" },
-    };
-    const entry = map[tz] ?? map["Default"];
-    return month === 0 ? entry.jan : entry.jul;
-  },
-}));
-
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
+  clearYearOffsetsCache,
   getCurrentTimeFromOffset,
+  getYearOffsets,
   normalizeTzCode,
   timezoneOffsets,
   timezoneRangeForZones,
@@ -33,6 +10,41 @@ import {
 } from "./timezone";
 
 describe("timezone utils", () => {
+  describe("getYearOffsets", () => {
+    it("computes jan/jul string offsets and numerical minute equivalents", () => {
+      expect(getYearOffsets("Europe/Paris")).toEqual({
+        offJan: "+01:00",
+        offJul: "+02:00",
+        janMin: 60,
+        julMin: 120,
+      });
+    });
+
+    it("falls back to UTC offset (+00:00) when given an invalid or throwing timezone", () => {
+      const res = getYearOffsets("Invalid/Timezone_Name");
+      expect(res).toEqual({
+        offJan: "+00:00",
+        offJul: "+00:00",
+        janMin: 0,
+        julMin: 0,
+      });
+    });
+
+    it("uses in-memory cache on subsequent calls for the same timezone", () => {
+      const firstCall = getYearOffsets("Europe/Berlin");
+      const secondCall = getYearOffsets("Europe/Berlin");
+      expect(secondCall).toBe(firstCall);
+    });
+
+    it("clears the cache when clearYearOffsetsCache is called", () => {
+      const initial = getYearOffsets("Europe/Madrid");
+      clearYearOffsetsCache();
+      const recomputed = getYearOffsets("Europe/Madrid");
+      expect(recomputed).toEqual(initial);
+      expect(recomputed).not.toBe(initial);
+    });
+  });
+
   describe("getCurrentTimeFromOffset", () => {
     beforeEach(() => {
       vi.useFakeTimers();
@@ -59,19 +71,19 @@ describe("timezone utils", () => {
 
     it("updates output as time progresses", () => {
       expect(getCurrentTimeFromOffset(120)).toBe("14:00:00");
-      vi.advanceTimersByTime(45000);
+      vi.advanceTimersByTime(45_000);
       expect(getCurrentTimeFromOffset(120)).toBe("14:00:45");
     });
   });
 
   describe("timezoneOffsets", () => {
     it.each([
-      ["NoDst", ["UTC+09:00"]],
+      ["Asia/Tokyo", ["UTC+09:00"]],
       ["Europe/Paris", ["UTC+01:00", "UTC+02:00 (summer)"]],
-      ["GMTZ", ["UTC+00:00"]],
-      ["West", ["UTC-05:00", "UTC-04:00 (summer)"]],
-      ["South", ["UTC+10:00", "UTC+11:00 (summer)"]],
-      ["HalfHour", ["UTC+05:30"]],
+      ["UTC", ["UTC+00:00"]],
+      ["America/New_York", ["UTC-05:00", "UTC-04:00 (summer)"]],
+      ["Australia/Sydney", ["UTC+10:00", "UTC+11:00 (summer)"]],
+      ["Asia/Kolkata", ["UTC+05:30"]],
     ])("calculates offsets for %s -> %p", (tz, expected) => {
       expect(timezoneOffsets(tz)).toEqual(expected);
     });
@@ -79,14 +91,10 @@ describe("timezone utils", () => {
 
   describe("timezoneRangeForZones", () => {
     it.each([
-      [["NoDst", "Default"], "UTC+00:00 to UTC+09:00"],
+      [["Asia/Tokyo", "UTC"], "UTC+00:00 to UTC+09:00"],
       [[], "—"],
-      [["NoDst"], "UTC+09:00"],
+      [["Asia/Tokyo"], "UTC+09:00"],
       [["Europe/Paris", "Europe/Helsinki"], "UTC+01:00 to UTC+03:00"],
-      [["SmallMin"], "UTC+05:03"],
-      [["NegMin"], "UTC-00:05"],
-      [["MissingHr"], "UTC+00:00"],
-      [["MissingMin"], "UTC+12:00"],
     ])(
       "determines flat string layout range for %p -> %s",
       (tzList, expected) => {
@@ -98,7 +106,7 @@ describe("timezone utils", () => {
   describe("timezoneRangeLines", () => {
     it.each([
       [[], ["—"]],
-      [["NoDst", "Default"], ["UTC+00:00 to UTC+09:00"]],
+      [["Asia/Tokyo", "UTC"], ["UTC+00:00 to UTC+09:00"]],
       [
         ["Europe/Paris", "Europe/Helsinki"],
         ["UTC+01:00 to UTC+02:00", "UTC+02:00 to UTC+03:00 (summer)"],
@@ -108,7 +116,7 @@ describe("timezone utils", () => {
         ["Europe/Paris", "Europe/Berlin"],
         ["UTC+01:00", "UTC+02:00 (summer)"],
       ],
-      [["South"], ["UTC+10:00", "UTC+11:00 (summer)"]],
+      [["Australia/Sydney"], ["UTC+10:00", "UTC+11:00 (summer)"]],
     ])("splits structural line data for %p -> %p", (tzList, expected) => {
       expect(timezoneRangeLines(tzList)).toEqual(expected);
     });
@@ -177,6 +185,20 @@ describe("timezone utils", () => {
       it("handles null and undefined safely", () => {
         expect(normalizeTzCode(null)).toBe("");
         expect(normalizeTzCode(undefined)).toBe("");
+      });
+
+      describe("Regex fallback branches (missing sign and missing hours)", () => {
+        it("defaults sign to '+' when omitted in loose offset format", () => {
+          expect(normalizeTzCode("2:00")).toBe("UTC+02:00");
+        });
+
+        it("defaults hours to '00' when hour digits are omitted", () => {
+          expect(normalizeTzCode("+:30")).toBe("UTC+00:30");
+        });
+
+        it("defaults sign to '+' and pads single digit hour", () => {
+          expect(normalizeTzCode("5")).toBe("UTC+05:00");
+        });
       });
     });
   });

@@ -2,7 +2,18 @@
  * Utility functions for handling timezones.
  */
 
-import { format } from "date-fns-tz";
+// Cache for storing previously computed year offsets for timezones to improve performance
+const yearOffsetsCache = new Map<
+  string,
+  { offJan: string; offJul: string; janMin: number; julMin: number }
+>();
+
+/**
+ * Clears the in-memory year offsets cache. Useful for test isolation.
+ */
+export function clearYearOffsetsCache(): void {
+  yearOffsetsCache.clear();
+}
 
 /**
  * Normalizes a timezone offset string, converting "Z" to "+00:00".
@@ -42,6 +53,30 @@ function minutesToOffset(m: number): string {
 }
 
 /**
+ * Calculates the timezone offset for a given date and timezone.
+ * @param date - The date for which to calculate the offset.
+ * @param timeZone - The timezone identifier (e.g., "America/New_York").
+ * @returns A string representing the timezone offset in "+HH:MM" or "-HH:MM" format.
+ * If the timezone is invalid, returns "+00:00".
+ */
+function getOffsetForDate(date: Date, timeZone: string): string {
+  try {
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      timeZoneName: "longOffset",
+    });
+    const parts = formatter.formatToParts(date);
+    const tzPart = parts.find((p) => p.type === "timeZoneName")?.value;
+    if (tzPart && tzPart.startsWith("GMT")) {
+      return tzPart.replace("GMT", "");
+    }
+  } catch {
+    // Fallback if timezone string is invalid
+  }
+  return "+00:00";
+}
+
+/**
  * Gets the January and July offsets for a given timezone, which can be used to determine if the timezone observes DST and what the offsets are.
  * @param tz - The timezone identifier to get offsets for.
  * @returns An object containing the January and July offsets as strings, as well as their corresponding minute values for easier comparison.
@@ -52,17 +87,27 @@ export function getYearOffsets(tz: string): {
   janMin: number;
   julMin: number;
 } {
+  // Check if the offsets for the given timezone are already cached to avoid redundant calculations
+  const cached = yearOffsetsCache.get(tz);
+  if (cached) return cached;
+
+  // Get the current year to calculate offsets for January and July
   const year = new Date().getUTCFullYear();
   const jan = new Date(Date.UTC(year, 0, 1));
   const jul = new Date(Date.UTC(year, 6, 1));
-  const offJan = normalizeOffset(format(jan, "XXX", { timeZone: tz }));
-  const offJul = normalizeOffset(format(jul, "XXX", { timeZone: tz }));
-  return {
+
+  const offJan = normalizeOffset(getOffsetForDate(jan, tz));
+  const offJul = normalizeOffset(getOffsetForDate(jul, tz));
+
+  const result = {
     offJan,
     offJul,
     janMin: offsetToMinutes(offJan),
     julMin: offsetToMinutes(offJul),
   };
+
+  yearOffsetsCache.set(tz, result);
+  return result;
 }
 
 /**
