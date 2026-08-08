@@ -6,7 +6,7 @@ import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
 import { useLanguage, useTheme } from "@features/settings";
 import type { SerializableUser } from "@features/user/auth/types";
-import { useFirestoreUsername, UserInfo } from "@features/user/profile";
+import { UserInfo, useUserProfile } from "@features/user/profile";
 import { useScreenSize } from "@hooks";
 import { LanguageSubmenu } from "./LanguageSubmenu";
 import { ThemeSubmenu } from "./ThemeSubmenu";
@@ -21,9 +21,9 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
   const navigate = useNavigate();
   const { name } = useLanguage();
   const { isMobile } = useScreenSize();
-  const { username } = useFirestoreUsername(user?.uid);
   const { theme, setTheme } = useTheme();
   const { toggleFriends, toggleShortcuts } = useUI();
+  const { profile } = useUserProfile({ uid: user?.uid ?? undefined });
 
   const { t } = useTranslation("common");
 
@@ -55,10 +55,10 @@ export function UserMenuContent({ user, onLogout, onClose }: UserMenuProps) {
       label: t("navigation.menu.profile"),
       icon: <ICONS.profile className="text-lg" />,
       onClick: () => {
-        navigate(`/users/${username}`);
+        navigate(`/users/${profile?.username}`);
         onClose?.();
       },
-      url: `/users/${username}`,
+      url: `/users/${profile?.username}`,
     },
     {
       label: t("navigation.menu.friends"),

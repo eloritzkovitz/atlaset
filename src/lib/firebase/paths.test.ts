@@ -12,7 +12,7 @@ vi.mock("firebase/firestore", () => {
   };
 });
 
-vi.mock("@lib/firebase", () => ({
+vi.mock("./config", () => ({
   db: {},
 }));
 

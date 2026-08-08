@@ -13,7 +13,6 @@ import { ICONS } from "@constants/icons";
 import { auth } from "@lib/firebase";
 import { formatToInputDate, parseInputDateToTimestamp } from "@utils";
 import { SocialLinksField } from "./SocialLinksField";
-import { useFirestoreUsername } from "../../hooks/useFirestoreUsername";
 import { useUsernameValidation } from "../../hooks/useUsernameValidation";
 import { profileService } from "../../services/profileService";
 import { type UserProfile, type SocialPlatform } from "../../types";
@@ -43,11 +42,11 @@ export function EditProfileModal({
   onSave,
 }: EditProfileModalProps) {
   const { t } = useTranslation("user");
+  
   const [biography, setBiography] = useState(profile?.biography ?? "");
   const [displayName, setDisplayName] = useState(user?.displayName || "");
   const [username, setUsername] = useState(profile?.username || "");
   const [initialUsername, setInitialUsername] = useState("");
-  const { username: fetchedUsername } = useFirestoreUsername(user?.uid);
   const [isPasswordUser, setIsPasswordUser] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -60,14 +59,24 @@ export function EditProfileModal({
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Populate initial form values when modal opens
+  // Initialize form fields when modal opens
   useEffect(() => {
-    if (fetchedUsername) {
-      setUsername(fetchedUsername);
-      setInitialUsername(fetchedUsername);
+    if (open) {
+      const currentUsername = profile?.username || "";
+      setUsername(currentUsername);
+      setInitialUsername(currentUsername);
+      setBiography(profile?.biography ?? "");
+      setDisplayName(user?.displayName || "");
+      setBirthday(formatToInputDate(profile?.birthday));
+      setSocialLinks(profile?.socialLinks ?? {});
+      setIsPasswordUser(user?.providerId === "password");
+
+      setPassword("");
+      setConfirmPassword("");
+      setError("");
+      setSuccess("");
     }
-    setIsPasswordUser(user?.providerId === "password");
-  }, [fetchedUsername, user, open]);
+  }, [open, profile, user]);
 
   // Check username availability
   const { status, translationKey } = useUsernameValidation(
