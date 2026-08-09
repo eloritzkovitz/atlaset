@@ -7,26 +7,35 @@ import type { FriendProfile } from "../types";
 interface FriendListProps {
   profiles: FriendProfile[];
   search: string;
+  isMutualOnly?: boolean;
 }
 
-export function FriendList({ profiles, search }: FriendListProps) {
+export function FriendList({
+  profiles,
+  search,
+  isMutualOnly = false,
+}: FriendListProps) {
   const { t } = useTranslation("user");
   const filtered = useFriendSearch(profiles, search);
 
   if (profiles.length === 0 && !search) {
-    return <EmptyListMessage message={t("friends.noFriendsYet")} />;
+    const emptyMessage = isMutualOnly
+      ? t("friends.empty.noMutualFriends")
+      : t("friends.empty.noFriendsYet");
+
+    return <EmptyListMessage message={emptyMessage} />;
   }
 
   if (filtered.length === 0) {
-    return <EmptyListMessage message={t("friends.noFriendsFound")} />;
+    return <EmptyListMessage message={t("friends.empty.noFriendsFound")} />;
   }
 
   return (
-    <ul>
+    <ul className="space-y-2">
       {filtered.map((profile) => (
-        <div className="mb-2" key={profile.uid}>
+        <li key={profile.uid}>
           <UserListItem uid={profile.uid} />
-        </div>
+        </li>
       ))}
     </ul>
   );

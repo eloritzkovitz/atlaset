@@ -39,7 +39,9 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
       title={
         <span className="flex items-center gap-2">
           {showRequests ? <ICONS.friendRequests /> : <ICONS.friends />}
-          {showRequests ? t("friends.friendRequests") : t("friends.friends")}
+          {showRequests
+            ? t("friends.panel.requests")
+            : t("friends.panel.friends")}
         </span>
       }
       headerActions={
@@ -48,11 +50,13 @@ export function FriendsPanel({ open, onClose }: FriendsPanelProps) {
             onClick={() => setShowRequests((prev) => !prev)}
             ariaLabel={
               showRequests
-                ? t("friends.showFriends")
-                : t("friends.showRequests")
+                ? t("friends.panel.friends")
+                : t("friends.panel.requests")
             }
             title={
-              showRequests ? t("friends.friends") : t("friends.friendRequests")
+              showRequests
+                ? t("friends.panel.friends")
+                : t("friends.panel.requests")
             }
             icon={showRequests ? <ICONS.friends /> : <ICONS.friendRequests />}
             rounded

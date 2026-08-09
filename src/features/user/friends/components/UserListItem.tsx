@@ -61,8 +61,8 @@ export function UserListItem({
       {onAccept && (
         <ActionButton
           onClick={() => onAccept(resolvedDisplayName)}
-          title={t("friends.accept")}
-          ariaLabel={t("friends.accept")}
+          title={t("friends.actions.accept")}
+          ariaLabel={t("friends.actions.accept")}
           icon={<ICONS.selected />}
           className="text-success"
           rounded
@@ -71,8 +71,8 @@ export function UserListItem({
       {onReject && (
         <ActionButton
           onClick={onReject}
-          title={t("friends.reject")}
-          ariaLabel={t("friends.reject")}
+          title={t("friends.actions.reject")}
+          ariaLabel={t("friends.actions.reject")}
           icon={<ICONS.close />}
           className="text-danger"
           rounded

@@ -15,7 +15,9 @@ interface ProfileHeaderProps {
   canEdit?: boolean;
   onEdit?: () => void;
   friendCount?: number;
+  mutualFriendCount?: number;
   onFriendCountClick?: () => void;
+  onMutualCountClick?: () => void;
 }
 
 export function ProfileHeader({
@@ -23,7 +25,9 @@ export function ProfileHeader({
   canEdit,
   onEdit,
   friendCount,
+  mutualFriendCount,
   onFriendCountClick,
+  onMutualCountClick,
 }: ProfileHeaderProps) {
   const { user: currentUser } = useAuth();
   const { t } = useTranslation("user");
@@ -101,29 +105,46 @@ export function ProfileHeader({
           >
             @{profile.username}
           </div>
-          <div
-            className={`flex w-full items-center gap-2 font-semibold text-muted text-base mt-1`}
-          >
-            <div className={`font-semibold text-muted text-base`}>
-              {typeof friendCount === "number" ? (
+
+          <div className="flex items-center gap-2 mt-1">
+            {typeof friendCount === "number" ? (
+              <div className="flex items-center gap-2 text-base font-semibold text-muted">
+                {/* Total Friends */}
                 <button
                   type="button"
                   className="hover:underline focus:outline-none"
                   onClick={onFriendCountClick}
-                  tabIndex={0}
-                  aria-label={t("profile.header.showFriendsList")}
                   disabled={!onFriendCountClick}
+                  aria-label={t("profile.header.showFriendsList")}
                 >
-                  {friendCount}{" "}
-                  {friendCount === 1
-                    ? t("friends.friend")
-                    : t("friends.friends")}
+                  {t("friends.counts.friend", { count: friendCount })}
                 </button>
-              ) : (
-                t("friends.loading")
-              )}
-            </div>
+
+                {/* Mutual Friends */}
+                {!canEdit &&
+                  typeof mutualFriendCount === "number" &&
+                  mutualFriendCount > 0 && (
+                    <>
+                      <span className="text-muted">•</span>
+                      <button
+                        type="button"
+                        onClick={onMutualCountClick}
+                        className="text-sm text-muted/80 hover:underline hover:text-foreground transition-colors"
+                      >
+                        {t("friends.counts.mutualFriend", {
+                          count: mutualFriendCount,
+                        })}
+                      </button>
+                    </>
+                  )}
+              </div>
+            ) : (
+              <span className="text-base text-muted">
+                {t("friends.status.loading")}
+              </span>
+            )}
           </div>
+
           {/* Activity Log Button */}
           {canEdit && (
             <div className="flex flex-col items-end -mt-12">

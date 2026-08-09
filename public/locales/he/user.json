@@ -1,29 +1,47 @@
 {
   "friends": {
-    "you": "אתה",
-    "friend": "חבר",
-    "noFriendsYet": "עדיין אין חברים.",
-    "noFriendsFound": "לא נמצאו חברים.",
-    "noFriendRequests": "אין בקשות חברות.",
-    "loading": "טוען...",
-    "addFriend": "הוספת חבר",
-    "adding": "מוסיף...",
-    "pending": "ממתין",
-    "withdrawRequest": "משוך בקשה",
-    "withdraw": "משוך",
-    "withdrawConfirmTitle": "משיכת בקשת חברות",
-    "withdrawConfirmMessage": "האם אתה בטוח שברצונך למשוך את בקשת החברות?",
-    "unfriend": "הסרת חבר",
-    "unfriendConfirmTitle": "הסר חבר",
-    "unfriendConfirmMessage": "האם אתה בטוח שברצונך להסיר חבר זה?",
-    "friendRequests": "בקשות חברות",
-    "friends": "חברים",
+    "counts": {
+      "friend_one": "חבר אחד",
+      "friend_two": "שני חברים",
+      "friend_other": "{{count}} חברים",
+      "mutualFriend_one": "אחד משותף",
+      "mutualFriend_other": "{{count}} משותפים"
+    },
     "searchPlaceholder": "חיפוש חברים",
-    "viewProfile": "צפייה בפרופיל",
-    "accept": "קבל",
-    "reject": "דחה",
-    "showFriends": "הצג חברים",
-    "showRequests": "הצג בקשות"
+    "loading": "טוען...",
+    "status": {
+      "you": "אתה",
+      "friend": "חבר",
+      "adding": "מוסיף...",
+      "pending": "בתהליך"
+    },
+    "empty": {
+      "noFriendsYet": "עדיין אין חברים.",
+      "noFriendsFound": "לא נמצאו חברים.",
+      "noFriendRequests": "אין בקשות חברות.",
+      "noMutualFriends": "אין חברים משותפים."
+    },
+    "actions": {
+      "viewProfile": "צפייה בפרופיל",
+      "addFriend": "הוספת חבר",
+      "accept": "קבל",
+      "reject": "דחה",
+      "withdraw": "משוך",
+      "withdrawRequest": "משוך בקשה",
+      "withdrawConfirmTitle": "משיכת בקשת חברות",
+      "withdrawConfirmMessage": "האם אתה בטוח שברצונך למשוך את בקשת החברות?",
+      "unfriend": "הסרת חבר",
+      "unfriendConfirmTitle": "הסר חבר",
+      "unfriendConfirmMessage": "האם אתה בטוח שברצונך להסיר חבר זה?"
+    },
+    "panel": {
+      "friends": "חברים",
+      "requests": "בקשות חברות"
+    },
+    "tabs": {
+      "all": "כל החברים",
+      "mutual": "חברים משותפים"
+    }
   },
   "profile": {
     "header": {

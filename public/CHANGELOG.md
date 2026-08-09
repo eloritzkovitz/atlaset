@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-09
+
+- **[feature]** **User | Profile:** Added mutual friends count and tab under profile friends
+
 ## 2026-08-06
 
 - **[feature]** **Dashboard | Timezones:** Added new section with timezones and details

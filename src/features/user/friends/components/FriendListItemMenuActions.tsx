@@ -32,7 +32,7 @@ export function FriendListItemMenuActions({
         icon={<FaUser />}
         className="w-full"
       >
-        {t("friends.viewProfile")}
+        {t("friends.actions.viewProfile")}
       </MenuButton>
       {user && user.uid !== uid && (
         <MenuButton
@@ -44,7 +44,7 @@ export function FriendListItemMenuActions({
           icon={<FaUserMinus />}
           className="w-full text-danger"
         >
-          {t("friends.unfriend")}
+          {t("friends.actions.unfriend")}
         </MenuButton>
       )}
     </>

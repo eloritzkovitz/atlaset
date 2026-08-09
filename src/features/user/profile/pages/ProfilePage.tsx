@@ -9,10 +9,7 @@ import {
 } from "react-router-dom";
 import { Card, EmptyListMessage } from "@components";
 import { useAuth } from "@features/user/auth";
-import {
-  useFriendshipStatus,
-  useUserFriendCount,
-} from "@features/user/friends";
+import { useFriendshipStatus, useUserFriends } from "@features/user/friends";
 import { useDisclosure, usePageTitle } from "@hooks";
 import { EditProfileModal } from "../components/modal/EditProfileModal";
 import { ProfileHeader } from "../components/ProfileHeader";
@@ -20,6 +17,7 @@ import { ProfileAboutTab } from "../components/tabs/ProfileAboutTab/ProfileAbout
 import { ProfileFriendsTab } from "../components/tabs/ProfileFriendsTab";
 import { ProfileTabNav } from "../components//tabs/ProfileTabNav";
 import { useUserProfile } from "../hooks/useUserProfile";
+import { useMutualFriends } from "@features/user/friends/hooks/useMutualFriends";
 
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();
@@ -55,7 +53,11 @@ export default function ProfilePage() {
   usePageTitle(profileUser?.displayName || "Profile");
 
   // Friend Count
-  const { count: friendCount } = useUserFriendCount(profileUser?.uid);
+  const { count: friendCount } = useUserFriends(profileUser?.uid);
+  const { mutualCount: mutualFriendCount } = useMutualFriends(
+    currentUser?.uid,
+    profileUser?.uid,
+  );
 
   // Handle loading state
   if (isLoading) {
@@ -94,8 +96,14 @@ export default function ProfilePage() {
                   canEdit={canEdit}
                   onEdit={() => editModal.open()}
                   friendCount={friendCount}
+                  mutualFriendCount={mutualFriendCount}
                   onFriendCountClick={() =>
                     navigate(`/users/${profileUser.username}/friends`)
+                  }
+                  onMutualCountClick={() =>
+                    navigate(
+                      `/users/${profileUser.username}/friends?tab=mutual`,
+                    )
                   }
                 />
 

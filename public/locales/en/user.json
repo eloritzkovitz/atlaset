@@ -1,29 +1,46 @@
 {
   "friends": {
-    "you": "You",
-    "friend": "Friend",
-    "noFriendsYet": "No friends yet.",
-    "noFriendsFound": "No friends found.",
-    "noFriendRequests": "No friend requests.",
-    "loading": "Loading...",
-    "addFriend": "Add Friend",
-    "adding": "Adding...",
-    "pending": "Pending",
-    "withdrawRequest": "Withdraw Request",
-    "withdraw": "Withdraw",
-    "withdrawConfirmTitle": "Withdraw friend request",
-    "withdrawConfirmMessage": "Are you sure you want to withdraw your friend request?",
-    "unfriend": "Unfriend",
-    "unfriendConfirmTitle": "Unfriend",
-    "unfriendConfirmMessage": "Are you sure you want to unfriend this person?",
-    "friendRequests": "Friend Requests",
-    "friends": "Friends",
+    "counts": {
+      "friend_one": "{{count}} friend",
+      "friend_other": "{{count}} friends",
+      "mutualFriend_one": "{{count}} mutual",
+      "mutualFriend_other": "{{count}} mutual"
+    },
     "searchPlaceholder": "Search friends",
-    "viewProfile": "View Profile",
-    "accept": "Accept",
-    "reject": "Reject",
-    "showFriends": "Show Friends",
-    "showRequests": "Show Requests"
+    "loading": "Loading...",
+    "status": {
+      "you": "You",
+      "friend": "Friend",
+      "adding": "Adding...",
+      "pending": "Pending"
+    },
+    "empty": {
+      "noFriendsYet": "No friends yet.",
+      "noFriendsFound": "No friends found.",
+      "noFriendRequests": "No friend requests.",
+      "noMutualFriends": "No mutual friends."
+    },
+    "actions": {
+      "viewProfile": "View Profile",
+      "addFriend": "Add Friend",
+      "accept": "Accept",
+      "reject": "Reject",
+      "withdraw": "Withdraw",
+      "withdrawRequest": "Withdraw Request",
+      "withdrawConfirmTitle": "Withdraw friend request",
+      "withdrawConfirmMessage": "Are you sure you want to withdraw your friend request?",
+      "unfriend": "Remove friend",
+      "unfriendConfirmTitle": "Remove friend",
+      "unfriendConfirmMessage": "Are you sure you want to remove this person from your friends?"
+    },
+    "panel": {
+      "friends": "Friends",
+      "requests": "Friend requests"
+    },
+    "tabs": {
+      "all": "All friends",
+      "mutual": "Mutual friends"
+    }
   },
   "profile": {
     "header": {

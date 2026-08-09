@@ -19,11 +19,11 @@ export function FriendRequestList({
   const { t } = useTranslation("user");
 
   if (loading) {
-    return <div>{t("friends.loading")}</div>;
+    return <div>{t("friends.status.loading")}</div>;
   }
 
   if (requests.length === 0) {
-    return <EmptyListMessage message={t("friends.noFriendRequests")} />;
+    return <EmptyListMessage message={t("friends.empty.noFriendRequests")} />;
   }
 
   return (
