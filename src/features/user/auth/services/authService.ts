@@ -21,7 +21,6 @@ import {
   getPaths,
   type UserSubcollections,
 } from "@lib/firebase";
-import { migrationService } from "@services/migrationService";
 import { sessionService } from "./sessionService";
 import { isUserDeactivated } from "../utils/auth";
 import { getBrowserSessionInfo } from "../utils/session";
@@ -45,10 +44,6 @@ export const authService = {
    * Handles post-sign-in operations, including guest data migration, reactivation checks, activity logging, and session logging.
    */
   async handlePostSignIn(user: User, method: string) {
-    if (await migrationService.hasGuestData()) {
-      await migrationService.migrateGuestDataToFirestore();
-    }
-
     const reactivated = await this.handleReactivation(user.uid);
     if (reactivated) {
       await logUserActivity(

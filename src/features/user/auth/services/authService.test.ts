@@ -1,7 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { type User } from "firebase/auth";
 import { getDocsData, getPaths } from "@lib/firebase";
-import { migrationService } from "@services/migrationService";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { createMockUser } from "@test-utils/authMocks";
 import {
@@ -20,13 +19,6 @@ vi.mock("@lib/db", () => ({
     layers: { count: vi.fn() },
     markers: { count: vi.fn() },
     settings: { count: vi.fn() },
-  },
-}));
-
-vi.mock("@services/migrationService", () => ({
-  migrationService: {
-    hasGuestData: vi.fn(() => Promise.resolve(false)),
-    migrateGuestDataToFirestore: vi.fn(() => Promise.resolve()),
   },
 }));
 
@@ -138,12 +130,9 @@ describe("authService", () => {
   });
 
   it("signIn runs post-sign-in handlers", async () => {
-    vi.mocked(migrationService.hasGuestData).mockResolvedValueOnce(true);
-
     const res = await authService.signIn("test@example.com", "pass");
 
     expect(res.user.uid).toBe("test-user");
-    expect(migrationService.migrateGuestDataToFirestore).toHaveBeenCalled();
     expect(activityMockTracker).toHaveBeenCalledWith(
       102,
       expect.any(Object),
