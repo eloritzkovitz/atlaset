@@ -2,7 +2,6 @@ import {
   addDoc,
   getDocs,
   deleteDoc,
-  doc,
   query,
   where,
   orderBy,
@@ -10,27 +9,20 @@ import {
   type WithFieldValue,
   type DocumentData,
 } from "firebase/firestore";
-import { getDocsData, getPaths, getUserCollection } from "@lib/firebase";
+import { getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
 import type { UserSession } from "../types";
-import {
-  getBrowserSessionInfo,
-  getOrCreateSessionId,
-  clearLocalSession,
-} from "../utils/session";
+import { getBrowserSessionInfo, getOrCreateSessionId } from "../utils/session";
 
 /** Service for managing session information. */
 export const sessionService = {
   /** Fetches all tracked sessions for a given user ordered by activity. */
   async fetchUserSessions(userId: string): Promise<UserSession[]> {
     const sessionsCol = getPaths.sub(userId, "sessions");
-    const q = query(
-      sessionsCol,
-      where("userId", "==", userId),
-      orderBy("lastActive", "desc"),
-    );
 
-    return await getDocsData<UserSession>(q);
+    const q = query(sessionsCol, orderBy("lastActive", "desc"));
+
+    return getDocsData<UserSession>(q);
   },
 
   /** Registers a new session in Firestore. */
@@ -39,12 +31,7 @@ export const sessionService = {
     const sessionId = getOrCreateSessionId();
     const sessionsCol = getPaths.sub(userId, "sessions");
 
-    // Check if this browser already has a session document registered for this user
-    const q = query(
-      sessionsCol,
-      where("userId", "==", userId),
-      where("sessionId", "==", sessionId),
-    );
+    const q = query(sessionsCol, where("sessionId", "==", sessionId));
 
     const snapshot = await getDocs(q);
 
@@ -97,13 +84,9 @@ export const sessionService = {
   /** Updates the last active timestamp of the current browser session. */
   async updateCurrentSession(userId: string): Promise<void> {
     const sessionId = getOrCreateSessionId();
-
     const sessionsCol = getPaths.sub(userId, "sessions");
-    const q = query(
-      sessionsCol,
-      where("userId", "==", userId),
-      where("sessionId", "==", sessionId),
-    );
+
+    const q = query(sessionsCol, where("sessionId", "==", sessionId));
 
     try {
       const snapshot = await getDocs(q);
@@ -118,29 +101,24 @@ export const sessionService = {
     }
   },
 
-  /** Removes a specific session document from Firestore. */
-  async removeSession(session: UserSession): Promise<void> {
-    const sessionsCol = getUserCollection("sessions");
-    await deleteDoc(doc(sessionsCol, session.id));
+  /** Terminates a session by deleting the corresponding document in Firestore. */
+  async terminateSession(userId: string, sessionDocId: string): Promise<void> {
+    const docRef = getPaths.subDoc(userId, "sessions", sessionDocId);
+
+    await deleteDoc(docRef);
   },
 
-  /** Terminates an active session matching the provided user ID and unique session token. */
-  async terminateSession(userId: string, sessionId?: string): Promise<void> {
-    const targetSessionId = sessionId || getOrCreateSessionId();
+  /** Terminates the current browser's tracked session. */
+  async terminateCurrentSession(userId: string): Promise<void> {
+    const sessionId = getOrCreateSessionId();
     const sessionsCol = getPaths.sub(userId, "sessions");
-    const q = query(
-      sessionsCol,
-      where("userId", "==", userId),
-      where("sessionId", "==", targetSessionId),
-    );
+
+    const q = query(sessionsCol, where("sessionId", "==", sessionId));
 
     const snapshot = await getDocs(q);
-    for (const docSnapshot of snapshot.docs) {
-      await deleteDoc(docSnapshot.ref);
-    }
 
-    if (!sessionId || sessionId === getOrCreateSessionId()) {
-      clearLocalSession();
-    }
+    await Promise.all(
+      snapshot.docs.map((docSnapshot) => deleteDoc(docSnapshot.ref)),
+    );
   },
 };

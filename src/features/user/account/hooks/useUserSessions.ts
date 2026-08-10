@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useEventListener } from "@hooks";
-import { authService } from "../services/authService";
 import { sessionService } from "../services/sessionService";
 import type { UserSession } from "../types";
-import { clearLocalSession, isCurrentSession } from "../utils/session";
+import { isCurrentSession } from "../utils/session";
+import { authService } from "../../auth/services/authService";
 
 interface UserSessionsProps {
   sessions: UserSession[];
@@ -76,21 +76,26 @@ export function useUserSessions(userId?: string): UserSessionsProps {
   useEventListener(ACTIVITY_EVENTS, handleActivity, window, { passive: true });
 
   // Terminate a session, either by logging out the current session or removing another session
-  const terminateSession = useCallback(async (session: UserSession) => {
-    try {
-      const isCurrent = isCurrentSession(session.sessionId);
+  const terminateSession = useCallback(
+    async (session: UserSession) => {
+      if (!userId) return;
 
-      if (isCurrent) {
-        await authService.logout();
-        clearLocalSession();
-      } else {
-        await sessionService.removeSession(session);
-        setSessions((prev) => prev.filter((s) => s.id !== session.id));
+      try {
+        const isCurrent = isCurrentSession(session.sessionId);
+
+        if (isCurrent) {
+          await authService.logout();
+        } else {
+          await sessionService.terminateSession(userId, session.id);
+
+          setSessions((prev) => prev.filter((s) => s.id !== session.id));
+        }
+      } catch (error) {
+        console.error("Failed to safely terminate session:", error);
       }
-    } catch (error) {
-      console.error("Failed to safely terminate session:", error);
-    }
-  }, []);
+    },
+    [userId],
+  );
 
   return { sessions, isLoading, terminateSession };
 }

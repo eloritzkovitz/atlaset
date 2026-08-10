@@ -4,7 +4,7 @@ import { ActionButton } from "@components";
 import { useMigration } from "../hooks/useMigration";
 
 export function MigrationModal() {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation("common");
 
   const {
     shouldPrompt,
@@ -22,23 +22,12 @@ export function MigrationModal() {
       <div className="flex flex-col p-5 md:p-6 bg-surface rounded-xl shadow-lg gap-8">
         <div className="flex flex-col gap-2 max-w-prose">
           <h2 className="text-xl md:text-2xl font-bold leading-snug text-start mb-2">
-            {t("migration.title", "Guest Data Found")}
+            {t("migration.title")}
           </h2>
 
           <div className="space-y-4 text-start text-sm md:text-base text-muted leading-relaxed">
-            <p>
-              {t(
-                "migration.paragraph1",
-                "We found saved lists, maps, or markers created while using Atlaset as a guest.",
-              )}
-            </p>
-
-            <p>
-              {t(
-                "migration.paragraph2",
-                "Would you like to merge this data into your account or discard it and start fresh?",
-              )}
-            </p>
+            <p>{t("migration.paragraph1")}</p>
+            <p>{t("migration.paragraph2")}</p>
           </div>
 
           {migrationError && (
@@ -56,17 +45,16 @@ export function MigrationModal() {
             onClick={handleConfirmMigration}
           >
             {isMigrating
-              ? t("migration.mergingButton", "Merging...")
-              : t("migration.mergeButton", "Merge to Account")}
+              ? t("migration.mergingButton")
+              : t("migration.mergeButton")}
           </ActionButton>
-
           <ActionButton
             variant="secondary"
             className="min-w-[120px] !rounded-full !bg-input hover:!bg-input-hover"
             disabled={isMigrating}
             onClick={handleDiscardMigration}
           >
-            {t("migration.discardButton", "Discard Local Data")}
+            {t("migration.discardButton")}
           </ActionButton>
         </div>
       </div>

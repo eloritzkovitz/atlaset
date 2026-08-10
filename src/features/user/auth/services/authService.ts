@@ -13,10 +13,13 @@ import {
 } from "firebase/auth";
 import { logUserActivity } from "@features/activity";
 import { auth } from "@lib/firebase";
-import { sessionService } from "./sessionService";
 import type { AuthMethod } from "../types";
-import { getBrowserSessionInfo } from "../utils/session";
 import { accountService } from "../../account/services/accountService";
+import { sessionService } from "../../account/services/sessionService";
+import {
+  clearLocalSession,
+  getBrowserSessionInfo,
+} from "../../account/utils/session";
 import { profileService } from "../../profile/services/profileService";
 
 /** Internal helper for constructing standard user activity payloads */
@@ -101,13 +104,17 @@ export const authService = {
   /**
    * Logs out the current user.
    */
-  async logout() {
+  async logout(): Promise<void> {
     const user = auth.currentUser;
+
     if (user) {
       const uid = user.uid;
+
       await logUserActivity(103, {}, uid);
-      await sessionService.terminateSession(uid);
+      await sessionService.terminateCurrentSession(uid);
     }
+
+    clearLocalSession();
     await signOut(auth);
   },
 
@@ -142,7 +149,7 @@ export const authService = {
       },
       user.uid,
     );
-  },  
+  },
 
   /**
    * Handles post-sign-in tasks, including reactivation checks, activity logging, and session logging.

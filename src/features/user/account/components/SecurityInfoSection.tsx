@@ -1,9 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { useLastLogin } from "@features/activity";
-import { useAuth, useUserSessions } from "@features/user/auth";
+import { useAuth } from "@features/user/auth";
 import { capitalize, formatDate } from "@utils";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { SessionRow } from "./SessionRow";
+import { useUserSessions } from "../hooks/useUserSessions";
 
 /** Renders a section with user security information. */
 export function SecurityInfoSection() {
