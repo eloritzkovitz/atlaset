@@ -1,4 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { usePwaUpdate } from "./usePwaUpdate";
 
 class MockBroadcastChannel {
@@ -27,112 +28,123 @@ class MockBroadcastChannel {
 }
 
 describe("usePwaUpdate", () => {
+  let mockSw: EventTarget & { getRegistration: ReturnType<typeof vi.fn> };
+
   beforeEach(() => {
-    (window as any).location = { reload: vitest.fn() };
+    vi.useFakeTimers();
+    (window as any).location = { reload: vi.fn() };
     (global as any).BroadcastChannel = MockBroadcastChannel;
-    (window as any).navigator = (window as any).navigator || {};
-    (window as any).navigator.serviceWorker = new EventTarget();
+
+    mockSw = Object.assign(new EventTarget(), {
+      getRegistration: vi.fn().mockResolvedValue(null),
+    });
+
+    Object.defineProperty(window, "navigator", {
+      value: { ...window.navigator, onLine: true, serviceWorker: mockSw },
+      writable: true,
+      configurable: true,
+    });
   });
 
   afterEach(() => {
-    try {
-      delete (global as any).BroadcastChannel;
-      MockBroadcastChannel.instances = [];
-    } catch {
-      // ignore cleanup errors
-    }
+    vi.useRealTimers();
+    delete (global as any).BroadcastChannel;
+    MockBroadcastChannel.instances = [];
   });
 
-  it("should set needRefresh and activate waiting worker on update", () => {
-    const waitingWorker = {
-      postMessage: vitest.fn((msg: any) => {
+  const dispatchSWUpdate = (waiting?: any, delay = 2500) => {
+    if (delay > 0) act(() => vi.advanceTimersByTime(delay));
+    act(() => {
+      window.dispatchEvent(
+        new CustomEvent("swUpdated", { detail: { waiting } }),
+      );
+    });
+  };
+
+  it("silently activates waiting worker on initial load or pre-mount registration", async () => {
+    const worker1 = { postMessage: vi.fn() };
+    const worker2 = { postMessage: vi.fn() };
+
+    mockSw.getRegistration.mockResolvedValueOnce({ waiting: worker1 });
+    renderHook(() => usePwaUpdate());
+    await act(async () => await Promise.resolve());
+    expect(worker1.postMessage).toHaveBeenCalledWith({ type: "SKIP_WAITING" });
+
+    const { result } = renderHook(() => usePwaUpdate());
+    dispatchSWUpdate(worker2, 0);
+    expect(result.current.needRefresh).toBe(false);
+    expect(worker2.postMessage).toHaveBeenCalledWith({ type: "SKIP_WAITING" });
+  });
+
+  it("handles active session updates and worker execution", () => {
+    const worker = {
+      postMessage: vi.fn((msg) => {
         if (msg?.type === "SKIP_WAITING") {
-          (window as any).navigator.serviceWorker.dispatchEvent(
-            new Event("controllerchange"),
-          );
+          mockSw.dispatchEvent(new Event("controllerchange"));
         }
       }),
     };
 
     const { result } = renderHook(() => usePwaUpdate());
-
-    act(() => {
-      const event = new CustomEvent("swUpdated", {
-        detail: { waiting: waitingWorker },
-      });
-      window.dispatchEvent(event);
-    });
+    dispatchSWUpdate(worker);
 
     expect(result.current.needRefresh).toBe(true);
 
-    act(() => {
-      result.current.updateServiceWorker();
-    });
-
-    expect(waitingWorker.postMessage).toHaveBeenCalledWith({
-      type: "SKIP_WAITING",
-    });
+    act(() => result.current.updateServiceWorker());
+    expect(worker.postMessage).toHaveBeenCalledWith({ type: "SKIP_WAITING" });
     expect(window.location.reload).toHaveBeenCalled();
   });
 
-  it("should reload if no waiting worker", () => {
-    const { result } = renderHook(() => usePwaUpdate());
-
-    act(() => {
-      result.current.updateServiceWorker();
+  it("handles offline state and online event recovery", () => {
+    Object.defineProperty(window.navigator, "onLine", {
+      value: false,
+      configurable: true,
     });
 
-    expect(window.location.reload).toHaveBeenCalled();
-  });
-
-  it("should set needRefresh even if BroadcastChannel isn't available", () => {
-    (global as any).BroadcastChannel = class {
-      constructor() {
-        throw new Error("BC unavailable");
-      }
-    };
-
     const { result } = renderHook(() => usePwaUpdate());
+    dispatchSWUpdate({ postMessage: vi.fn() });
 
-    act(() => {
-      const event = new CustomEvent("swUpdated", { detail: {} });
-      window.dispatchEvent(event);
+    expect(result.current.needRefresh).toBe(false);
+
+    Object.defineProperty(window.navigator, "onLine", {
+      value: true,
+      configurable: true,
     });
+    act(() => window.dispatchEvent(new Event("online")));
 
     expect(result.current.needRefresh).toBe(true);
   });
 
-  it("should reload when receiving reload-now from BroadcastChannel", () => {
-    renderHook(() => usePwaUpdate());
-    const bc = new (global as any).BroadcastChannel("sw-update");
-    act(() => {
-      bc.postMessage({ type: "reload-now" });
-    });
-
-    expect(window.location.reload).toHaveBeenCalled();
-  });
-
-  it("should fallback to reload when waiting worker postMessage throws", () => {
-    const waitingWorker = {
-      postMessage: vitest.fn(() => {
-        throw new Error("postMessage failed");
+  it("handles fallback and error states", () => {
+    const throwingWorker = {
+      postMessage: vi.fn(() => {
+        throw new Error("fail");
       }),
     };
+    const { result: r1 } = renderHook(() => usePwaUpdate());
+    dispatchSWUpdate(throwingWorker);
+    act(() => r1.current.updateServiceWorker());
+    expect(window.location.reload).toHaveBeenCalled();
 
-    const { result } = renderHook(() => usePwaUpdate());
+    const { result: r2 } = renderHook(() => usePwaUpdate());
+    act(() => r2.current.updateServiceWorker());
+    expect(window.location.reload).toHaveBeenCalled();
 
-    act(() => {
-      const event = new CustomEvent("swUpdated", {
-        detail: { waiting: waitingWorker },
-      });
-      window.dispatchEvent(event);
-    });
+    (global as any).BroadcastChannel = class {
+      constructor() {
+        throw new Error("BC disabled");
+      }
+    };
+    const { result: r3 } = renderHook(() => usePwaUpdate());
+    dispatchSWUpdate();
+    expect(r3.current.needRefresh).toBe(true);
+  });
 
-    act(() => {
-      result.current.updateServiceWorker();
-    });
+  it("responds to cross-tab BroadcastChannel messages", () => {
+    renderHook(() => usePwaUpdate());
+    const bc = new MockBroadcastChannel();
 
-    expect(waitingWorker.postMessage).toHaveBeenCalled();
+    act(() => bc.postMessage({ type: "reload-now" }));
     expect(window.location.reload).toHaveBeenCalled();
   });
 });
