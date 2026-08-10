@@ -60,6 +60,20 @@ export function SearchResultItem({
       icon = <ICONS.currencies className="2xl" />;
       break;
 
+    case "language":
+      url = `/dashboard/languages/${item.code}`;
+      displayName = `${item.name} (${item.code})`;
+      label = i18n.t("countries:labels.language");
+      icon = <ICONS.language className="2xl" />;
+      break;
+
+    case "timezone":
+      url = `/dashboard/timezones/${item.code}`;
+      displayName = item.code.toUpperCase();
+      label = i18n.t("countries:labels.timezone");
+      icon = <ICONS.timezones className="2xl" />;
+      break;
+
     case "region":
     case "subregion": {
       const isSub = item.type === "subregion";

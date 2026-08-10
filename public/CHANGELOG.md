@@ -4,6 +4,7 @@
 
 - **[feature]** **Migration:** Reworked migration logic so that it shows a notice before migrating
 - **[bugfix]** **General:** Fixed a bug that did not clear some entity data after signing out
+- **[chore]** **Search:** Languages and timezones are now searchable in the global search
 
 ## 2026-08-09
 

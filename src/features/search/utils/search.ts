@@ -71,7 +71,7 @@ export function getSearchResultKey(item: SearchResult): string {
     case "country":
       return item.isoCode || item.name;
     case "currency":
-      return item.code;
+      return item.code || item.name;
     case "region":
       return item.region;
     case "subregion":

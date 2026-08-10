@@ -31,8 +31,15 @@ export function useSearch(searchTerm: string) {
     currentUserId,
     friendIds,
   );
-  const { countries, currencies, allRegions } = useCountryData();
+  const { countries, currencies, languages, timezones, allRegions } =
+    useCountryData();
   const { t } = useTranslation("countries");
+
+  const languageList = useMemo(
+    () =>
+      Array.isArray(languages) ? languages : Object.values(languages || {}),
+    [languages],
+  );
 
   // Combine and rank results whenever search term or source data changes
   useEffect(() => {
@@ -65,9 +72,25 @@ export function useSearch(searchTerm: string) {
     // Currencies
     const mappedCurrencies = rankAndMap(
       currencies || [],
-      (c) => c.name,
+      (c) => `${c.name} ${c.code}`,
       searchTerm,
       (c) => ({ ...c, type: "currency" as const }),
+    );
+
+    // Languages
+    const mappedLanguages = rankAndMap(
+      languageList,
+      (l) => `${l.name} ${l.code}`,
+      searchTerm,
+      (l) => ({ ...l, type: "language" as const }),
+    );
+
+    // Timezones
+    const mappedTimezones = rankAndMap(
+      timezones || [],
+      (tz) => tz.code,
+      searchTerm,
+      (tz) => ({ ...tz, type: "timezone" as const }),
     );
 
     // Regions
@@ -104,11 +127,23 @@ export function useSearch(searchTerm: string) {
       ...rankedUsers,
       ...mappedCountries,
       ...mappedCurrencies,
+      ...mappedLanguages,
+      ...mappedTimezones,
       ...mappedRegions,
       ...mappedSubregions,
     ]);
     setLoading(false);
-  }, [searchTerm, userResults, countries, currencies, allRegions, t]);
+  }, [
+    searchTerm,
+    userResults,
+    countries,
+    currencies,
+    languages,
+    languageList,
+    timezones,
+    allRegions,
+    t,
+  ]);
 
   return { results, loading };
 }

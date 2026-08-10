@@ -1,25 +1,28 @@
+import type { Country, Currency, Timezone } from "@features/countries/types";
 import type { UserProfile } from "@features/user/profile/types";
-import type { Country } from "@features/countries/types";
+import type { Language } from "@types";
 
-/** Represents a search result for a user. */
+/** Represents the type of a search result. */
+export type SearchResultType =
+  | "user"
+  | "country"
+  | "currency"
+  | "language"
+  | "timezone"
+  | "region"
+  | "subregion";
+
 export type UserSearchResult = UserProfile & { type: "user" };
-
-/** Represents a search result for a country. */
 export type CountrySearchResult = Country & { type: "country" };
+export type CurrencySearchResult = Currency & { type: "currency" };
+export type LanguageSearchResult = Language & { type: "language" };
+export type TimezoneSearchResult = Timezone & { type: "timezone" };
 
-export type CurrencySearchResult = {
-  type: "currency";
-  code: string;
-  name: string;
-};
-
-/** Represents a search result for a region. */
 export type RegionSearchResult = {
   type: "region";
   region: string;
 };
 
-/** Represents a search result for a subregion. */
 export type SubregionSearchResult = {
   type: "subregion";
   region: string;
@@ -31,5 +34,7 @@ export type SearchResult =
   | UserSearchResult
   | CountrySearchResult
   | CurrencySearchResult
+  | LanguageSearchResult
+  | TimezoneSearchResult
   | RegionSearchResult
   | SubregionSearchResult;
