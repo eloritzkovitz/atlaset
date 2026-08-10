@@ -3,6 +3,7 @@
  */
 
 import type { User } from "firebase/auth";
+import { auth } from "@lib/firebase/config";
 import type { SerializableUser } from "../types";
 
 export interface MinimalProviderData {
@@ -15,7 +16,7 @@ export interface MinimalProviderData {
  * @returns A serializable user object or null if the user is null.
  */
 export function toSerializableUser(user: User | null): SerializableUser | null {
-  if (!user) return null;  
+  if (!user) return null;
   return {
     uid: user.uid,
     email: user.email,
@@ -41,8 +42,15 @@ export function isPasswordProvider(
 }
 
 /**
- * Validates if a given user is deactivated.
+ * Ensures a Firebase user is authenticated and throws an error if missing.
+ * @param userState - The current serializable user state.
+ * @returns The authenticated Firebase User object.
+ * @throws Error if no authenticated user is found.
  */
-export function isUserDeactivated(status: string | undefined | null): boolean {
-  return status === "deactivated";
+export function requireCurrentUser(userState?: SerializableUser | null) {
+  const currentUser = auth.currentUser;
+  if (!currentUser || userState === null) {
+    throw new Error("No authenticated user found.");
+  }
+  return currentUser;
 }

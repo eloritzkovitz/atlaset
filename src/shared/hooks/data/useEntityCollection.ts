@@ -42,9 +42,7 @@ export function useEntityCollection<T extends Entity>({
   useEffect(() => {
     if (initialKeys !== prevKeysRef.current) {
       prevKeysRef.current = initialKeys;
-      if (initialItems.length > 0) {
-        setItems(initialItems);
-      }
+      setItems(initialItems);
     }
   }, [initialKeys, initialItems]);
 

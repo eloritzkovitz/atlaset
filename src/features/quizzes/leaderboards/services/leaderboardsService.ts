@@ -15,7 +15,6 @@ import {
   getCurrentUser,
   getDocData,
   getDocsData,
-  isAuthenticated,
 } from "@lib/firebase";
 import { getArticle } from "@utils";
 import type { Difficulty, LeaderboardEntry, QuizType } from "../../types";
@@ -37,7 +36,8 @@ export const leaderboardsService = {
     type: QuizType,
     difficulty: Difficulty,
   ): Promise<LeaderboardEntry[]> {
-    if (!isAuthenticated()) return [];
+    const user = getCurrentUser();
+    if (!user) return [];
 
     const colRef = getCollection<LeaderboardEntry>(LEADERBOARD_COLLECTION);
 
@@ -59,7 +59,8 @@ export const leaderboardsService = {
    * @returns Array of leaderboard entries belonging to the user.
    */
   async getUserScores(userId: string): Promise<LeaderboardEntry[]> {
-    if (!isAuthenticated() || !userId) return [];
+    const user = getCurrentUser();
+    if (!user || !userId) return [];
 
     const colRef = getCollection<LeaderboardEntry>(LEADERBOARD_COLLECTION);
     const q = query(
@@ -83,7 +84,7 @@ export const leaderboardsService = {
     entry: LeaderboardEntry,
   ) {
     const user = getCurrentUser();
-    if (!isAuthenticated() || !user) return;
+    if (!user) return;
 
     if (!type || !difficulty) throw new Error("Type and difficulty required.");
 
@@ -133,7 +134,9 @@ export const leaderboardsService = {
     entry: LeaderboardEntry,
     maxGames = 10,
   ) {
-    if (!isAuthenticated()) return;
+    const user = getCurrentUser();
+    if (!user) return;
+
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
     const data = await getDocData<{ games: LeaderboardEntry[] }>(ref);
 
@@ -154,7 +157,8 @@ export const leaderboardsService = {
     playerId: string,
     maxGames = 10,
   ): Promise<LeaderboardEntry[]> {
-    if (!isAuthenticated()) return [];
+    const user = getCurrentUser();
+    if (!user) return [];
 
     const ref = doc(db, PLAYER_GAMES_COLLECTION, playerId);
     const data = await getDocData<{ games: LeaderboardEntry[] }>(ref);

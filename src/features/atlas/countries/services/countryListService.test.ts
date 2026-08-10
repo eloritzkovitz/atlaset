@@ -13,6 +13,7 @@ vi.mock("@lib/db", () => ({
       toArray: vi.fn().mockResolvedValue([]),
       add: vi.fn().mockResolvedValue(undefined),
       delete: vi.fn().mockResolvedValue(undefined),
+      put: vi.fn().mockResolvedValue(undefined),
     },
   },
 }));
@@ -43,6 +44,8 @@ describe("countryListService", () => {
   describe("guest mode", () => {
     it("handles local synchronization only", async () => {
       auth.isAuthenticated.mockReturnValue(false);
+      auth.getCurrentUser.mockReturnValue(null);
+
       const addSpy = vi.spyOn(appDb.countryLists, "add");
       const delSpy = vi.spyOn(appDb.countryLists, "delete");
 

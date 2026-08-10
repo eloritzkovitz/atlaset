@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ActionButton, ConfirmModal } from "@components";
 import { ICONS } from "@constants/icons";
+import { useAccountManagement } from "@features/user/account/hooks/useAccountManagement";
 import { useAuth } from "@features/user/auth";
-import { useAccountManagement } from "../hooks/useAccountManagement";
 import { SettingsCard } from "../../core/components/SettingsCard";
 import { SettingsRow } from "../../core/components/SettingsRow";
 

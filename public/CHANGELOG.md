@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-10
+
+- **[feature]** **Migration:** Reworked migration logic so that it shows a notice before migrating
+- **[bugfix]** **General:** Fixed a bug that did not clear some entity data after signing out
+
 ## 2026-08-09
 
 - **[feature]** **User | Profile:** Added mutual friends count and tab under profile friends

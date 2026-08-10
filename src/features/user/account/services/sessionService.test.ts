@@ -1,9 +1,9 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { getDocsData, getPaths, getUserCollection } from "@lib/firebase";
+import { getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { sessionService } from "./sessionService";
-import { clearLocalSession } from "../utils/session";
+import { getOrCreateSessionId } from "../utils/session";
 
 vi.mock("../utils/session", () => ({
   getBrowserSessionInfo: () => ({
@@ -11,7 +11,7 @@ vi.mock("../utils/session", () => ({
     language: "en",
     screen: "1x1",
   }),
-  getOrCreateSessionId: () => "mock-sess-123",
+  getOrCreateSessionId: vi.fn(() => "mock-sess-123"),
   clearLocalSession: vi.fn(),
 }));
 
@@ -131,25 +131,41 @@ describe("sessionService", () => {
     });
   });
 
-  it("removeSession: deletes target session document", async () => {
-    await sessionService.removeSession({
-      id: "sess-123",
-      userId: uid,
-      sessionId: "abc",
-    } as any);
-    expect(getUserCollection).toHaveBeenCalledWith("sessions");
-    expect(fs.deleteDoc).toHaveBeenCalled();
+  describe("terminateSession", () => {
+    it("deletes a session document directly by docId", async () => {
+      const mockDocId = "doc-789";
+
+      await sessionService.terminateSession(uid, mockDocId);
+
+      expect(getPaths.subDoc).toHaveBeenCalledWith(uid, "sessions", mockDocId);
+      expect(fs.deleteDoc).toHaveBeenCalledWith(expect.anything());
+    });
   });
 
-  describe("terminateSession", () => {
-    it.each([
-      ["deletes doc & clears storage for current session", undefined, 1],
-      ["deletes doc without clearing storage for remote session", "diff-id", 0],
-    ])("%s", async (_, targetId, clearCount) => {
-      fs.getDocs.mockResolvedValueOnce(snap([doc("a")]));
-      await sessionService.terminateSession(uid, targetId);
-      expect(fs.deleteDoc).toHaveBeenCalled();
-      expect(clearLocalSession).toHaveBeenCalledTimes(clearCount);
+  describe("terminateCurrentSession", () => {
+    it("queries matching session by current sessionId and deletes all matching docs", async () => {
+      const mockDoc1 = doc("doc-1");
+      const mockDoc2 = doc("doc-2");
+
+      fs.getDocs.mockResolvedValueOnce(snap([mockDoc1, mockDoc2]));
+
+      await sessionService.terminateCurrentSession(uid);
+
+      expect(getOrCreateSessionId).toHaveBeenCalled();
+      expect(getPaths.sub).toHaveBeenCalledWith(uid, "sessions");
+      expect(fs.getDocs).toHaveBeenCalled();
+      expect(fs.deleteDoc).toHaveBeenCalledTimes(2);
+      expect(fs.deleteDoc).toHaveBeenNthCalledWith(1, mockDoc1.ref);
+      expect(fs.deleteDoc).toHaveBeenNthCalledWith(2, mockDoc2.ref);
+    });
+
+    it("handles cases gracefully when no matching session document exists", async () => {
+      fs.getDocs.mockResolvedValueOnce(snap([]));
+
+      await sessionService.terminateCurrentSession(uid);
+
+      expect(fs.getDocs).toHaveBeenCalled();
+      expect(fs.deleteDoc).not.toHaveBeenCalled();
     });
   });
 });

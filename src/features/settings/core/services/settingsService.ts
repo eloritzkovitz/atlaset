@@ -2,13 +2,7 @@ import { writeBatch } from "firebase/firestore";
 import { logUserActivity } from "@features/activity/utils/activity";
 import type { UserProfile } from "@features/user/profile/types";
 import { appDb } from "@lib/db";
-import {
-  db,
-  getCurrentUser,
-  getDocData,
-  getPaths,
-  isAuthenticated,
-} from "@lib/firebase";
+import { db, getCurrentUser, getDocData, getPaths } from "@lib/firebase";
 import { defaultSettings } from "../constants/defaultSettings";
 import type { Settings } from "../../types";
 
@@ -34,10 +28,10 @@ export const settingsService = {
    * @returns - The user settings object.
    */
   async load(): Promise<Settings> {
-    if (isAuthenticated()) {
-      const user = getCurrentUser();
-      const settingsRef = getPaths.settingsDoc(user!.uid);
+    const user = getCurrentUser();
 
+    if (user) {
+      const settingsRef = getPaths.settingsDoc(user.uid);
       const data = await getDocData<Settings>(settingsRef);
       return data ?? defaultSettings;
     }
@@ -56,8 +50,9 @@ export const settingsService = {
    */
   async save(settings: Settings): Promise<void> {
     const settingsWithId = { ...settings, id: "main" };
+    const user = getCurrentUser();
 
-    if (!isAuthenticated()) {
+    if (!user) {
       const existing = await appDb.settings.get("main");
       if (
         existing &&
@@ -69,7 +64,6 @@ export const settingsService = {
       return;
     }
 
-    const user = getCurrentUser();
     const dedupeKey = JSON.stringify(settings);
 
     if (_inFlightSaves[dedupeKey]) {
@@ -87,13 +81,13 @@ export const settingsService = {
         _lastSaved = { key: dedupeKey, ts: Date.now() };
 
         const batch = writeBatch(db);
-        const settingsRef = getPaths.settingsDoc(user!.uid);
+        const settingsRef = getPaths.settingsDoc(user.uid);
 
         batch.set(settingsRef, settingsWithId, { merge: true });
 
         // Update user profile privacy fields if they exist in the settings
         if (settings.privacy) {
-          const userRef = getPaths.user(user!.uid);
+          const userRef = getPaths.user(user.uid);
           const userUpdates: Partial<UserProfile> = {};
 
           if (settings.privacy.isPublicProfile !== undefined) {
@@ -113,8 +107,8 @@ export const settingsService = {
 
         await logUserActivity(
           130,
-          { settings: settingsWithId, userName: user!.displayName },
-          user!.uid,
+          { settings: settingsWithId, userName: user.displayName },
+          user.uid,
         );
       } finally {
         delete _inFlightSaves[dedupeKey];

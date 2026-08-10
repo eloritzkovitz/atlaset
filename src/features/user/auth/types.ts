@@ -1,3 +1,6 @@
+/** Represents the authentication method used. */
+export type AuthMethod = "email" | "email_persistent" | "google";
+
 /** Represents a user for serialization purposes, containing only serializable fields from the Firebase User object. */
 export interface SerializableUser {
   uid: string;
@@ -10,27 +13,3 @@ export interface SerializableUser {
   createdAt: string | null;
   lastSignInTime: string | null;
 }
-
-/** Represents a user session. */
-export type UserSession = {
-  /** Document ID. */
-  id: string;
-  /** User ID. */
-  userId: string;
-  /** Session ID. */
-  sessionId: string;
-  /** User agent string. */
-  userAgent: string;
-  /** Browser language preference. */
-  language: string;
-  /** Display resolution dimensions. */
-  screen: string;
-  /** IP address. */
-  ipAddress?: string;
-  /** Location. */
-  location?: string;
-  /** Epoch timestamp tracking recent interactions. */
-  lastActive: number;
-  /** Optional user-assigned friendly name. */
-  deviceName?: string;
-};

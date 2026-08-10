@@ -7,7 +7,6 @@ import {
   getPaths,
   getDocsData,
   getDocData,
-  isAuthenticated,
 } from "@lib/firebase";
 import { sharedTripsService } from "./sharedTripsService";
 import type { SharedTrip, Trip } from "../types";
@@ -51,9 +50,9 @@ export const tripsService = {
    * @param trips - The array of trip objects to save.
    */
   async save(trips: Trip[]) {
-    if (!isAuthenticated())
-      throw new Error("Authentication required to save trips.");
     const user = getCurrentUser();
+    if (!user) throw new Error("Authentication required to save trips.");
+
     const tripsCol = getUserCollection("trips");
     for (const trip of trips) {
       await setDoc(doc(tripsCol, trip.id), trip);
@@ -62,9 +61,9 @@ export const tripsService = {
       410,
       {
         count: trips.length,
-        userName: user!.displayName,
+        userName: user.displayName,
       },
-      user!.uid,
+      user.uid,
     );
   },
 
@@ -73,16 +72,15 @@ export const tripsService = {
    * @param trip - The trip object to add.
    */
   async add(trip: Trip): Promise<Trip> {
-    if (!isAuthenticated())
-      throw new Error("Authentication required to add a trip.");
     const user = getCurrentUser();
+    if (!user) throw new Error("Authentication required to add a trip.");
 
     // Ensure owner is always in participants
     const participants = Array.isArray(trip.participants)
       ? [...trip.participants]
       : [];
-    if (!participants.includes(user!.uid)) {
-      participants.push(user!.uid);
+    if (!participants.includes(user.uid)) {
+      participants.push(user.uid);
     }
     const tripForFirestore = {
       ...trip,
@@ -95,10 +93,10 @@ export const tripsService = {
 
     // Add shared trip references for participants (excluding owner)
     for (const participantUid of participants) {
-      if (participantUid !== user!.uid) {
+      if (participantUid !== user.uid) {
         await sharedTripsService.addReference(
           participantUid,
-          user!.uid,
+          user.uid,
           trip.id,
         );
       }
@@ -109,11 +107,11 @@ export const tripsService = {
       {
         tripId: trip.id,
         itemName: trip.name,
-        userName: user!.displayName,
+        userName: user.displayName,
       },
-      user!.uid,
+      user.uid,
     );
-    await profileService.updateVisitedCountryCodes(user!.uid);
+    await profileService.updateVisitedCountryCodes(user.uid);
 
     return tripForFirestore as Trip;
   },
@@ -124,9 +122,9 @@ export const tripsService = {
    * @param favorite - The new favorite status.
    */
   async updateFavorite(trip: Trip, favorite: boolean) {
-    if (!isAuthenticated())
-      throw new Error("Authentication required to update favorite.");
     const user = getCurrentUser();
+    if (!user) throw new Error("Authentication required to update favorite.");
+
     const tripsCol = getUserCollection("trips");
     const tripRef = doc(tripsCol, trip.id);
     await setDoc(tripRef, { favorite }, { merge: true });
@@ -135,11 +133,11 @@ export const tripsService = {
       {
         tripId: trip.id,
         itemName: trip.name,
-        userName: user!.displayName,
+        userName: user.displayName,
         favorite,
         action: favorite ? "favorited" : "unfavorited",
       },
-      user!.uid,
+      user.uid,
     );
   },
 
@@ -149,21 +147,21 @@ export const tripsService = {
    * @param rating - The new rating value.
    */
   async updateRating(trip: Trip, rating: number | undefined) {
-    const ratingValue = rating === undefined ? null : rating;
-    if (!isAuthenticated())
-      throw new Error("Authentication required to update rating.");
     const user = getCurrentUser();
+    if (!user) throw new Error("Authentication required to update rating.");
+
+    const ratingValue = rating === undefined ? null : rating;
     const tripsCol = getUserCollection("trips");
     const tripRef = doc(tripsCol, trip.id);
     await setDoc(tripRef, { rating: ratingValue }, { merge: true });
     await logUserActivity(
       414,
       {
-        userName: user!.displayName,
+        userName: user.displayName,
         itemName: trip.name,
         rating: ratingValue,
       },
-      user!.uid,
+      user.uid,
     );
   },
 
@@ -172,11 +170,8 @@ export const tripsService = {
    * @param trip - The trip object with updated data.
    */
   async edit(trip: Trip) {
-    if (!isAuthenticated())
-      throw new Error("Authentication required to edit a trip.");
-
     const user = getCurrentUser();
-    if (!user) throw new Error("User not found.");
+    if (!user) throw new Error("Authentication required to edit a trip.");
 
     // Ensure owner is always in participants
     const participants = Array.isArray(trip.participants)
@@ -207,15 +202,15 @@ export const tripsService = {
     // Update shared trip references for participants
     const newParticipants = participants;
     const added = newParticipants.filter(
-      (uid) => uid !== user!.uid && !prevParticipants.includes(uid),
+      (uid) => uid !== user.uid && !prevParticipants.includes(uid),
     );
     const removed = prevParticipants.filter(
-      (uid) => uid !== user!.uid && !newParticipants.includes(uid),
+      (uid) => uid !== user.uid && !newParticipants.includes(uid),
     );
 
     // Add new shared trip references
     for (const participantUid of added) {
-      await sharedTripsService.addReference(participantUid, user!.uid, trip.id);
+      await sharedTripsService.addReference(participantUid, user.uid, trip.id);
     }
 
     // Remove shared trip references for removed participants
@@ -228,11 +223,11 @@ export const tripsService = {
       {
         tripId: trip.id,
         itemName: trip.name,
-        userName: user!.displayName,
+        userName: user.displayName,
       },
-      user!.uid,
+      user.uid,
     );
-    await profileService.updateVisitedCountryCodes(user!.uid);
+    await profileService.updateVisitedCountryCodes(user.uid);
   },
 
   /**
@@ -240,11 +235,8 @@ export const tripsService = {
    * @param trip - The trip object to remove.
    */
   async remove(trip: Trip) {
-    if (!isAuthenticated())
-      throw new Error("Authentication required to remove a trip.");
-
     const user = getCurrentUser();
-    if (!user) throw new Error("User not found.");
+    if (!user) throw new Error("Authentication required to edit a trip.");
 
     const tripDocRef = doc(getPaths.sub(user.uid, "trips"), trip.id);
 

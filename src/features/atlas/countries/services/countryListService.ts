@@ -2,13 +2,7 @@ import { writeBatch } from "firebase/firestore";
 import type { Layer } from "@features/atlas/layers/types";
 import type { SavedMap } from "@features/atlas/savedMaps/types";
 import { appDb } from "@lib/db";
-import {
-  db,
-  getCurrentUser,
-  getDocsData,
-  getPaths,
-  isAuthenticated,
-} from "@lib/firebase";
+import { db, getCurrentUser, getDocsData, getPaths } from "@lib/firebase";
 import { BaseService } from "@services/BaseService";
 import type { CountryList } from "../types";
 
@@ -23,10 +17,10 @@ export class CountryListService extends BaseService<
   async save(list: CountryList): Promise<void> {
     await super.add(list);
 
-    if (!isAuthenticated()) return;
-
     const user = getCurrentUser();
-    const uid = user!.uid;
+    if (!user) return;
+
+    const uid = user.uid;
     const batch = writeBatch(db);
     let hasUpdates = false;
 
@@ -62,9 +56,10 @@ export class CountryListService extends BaseService<
 
   /** Deletes the list and clears references in layers/maps if authenticated. */
   async delete(list: CountryList): Promise<void> {
-    if (isAuthenticated()) {
-      const user = getCurrentUser();
-      const uid = user!.uid;
+    const user = getCurrentUser();
+
+    if (user) {
+      const uid = user.uid;
       const batch = writeBatch(db);
       let hasUpdates = false;
 

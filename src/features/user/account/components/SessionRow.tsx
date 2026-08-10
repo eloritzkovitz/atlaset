@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { type UserSession } from "@features/user/auth/types";
+import { type UserSession } from "@features/user/account/types";
 import { formatDate, getDeviceType, parseUserAgent } from "@utils";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 
