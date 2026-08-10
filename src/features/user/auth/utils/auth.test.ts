@@ -1,11 +1,18 @@
 import type { User } from "firebase/auth";
 import { describe, it, expect, beforeEach, vi } from "vitest";
+import { auth } from "@lib/firebase/config";
 import {
   isPasswordProvider,
-  isUserDeactivated,
+  requireCurrentUser,
   toSerializableUser,
   type MinimalProviderData,
 } from "./auth";
+
+vi.mock("@lib/firebase/config", () => ({
+  auth: {
+    currentUser: null,
+  },
+}));
 
 describe("auth utils", () => {
   beforeEach(() => {
@@ -83,22 +90,52 @@ describe("auth utils", () => {
     });
   });
 
-  describe("isUserDeactivated", () => {
-    it("returns true if the status flag is exactly 'deactivated'", () => {
-      expect(isUserDeactivated("deactivated")).toBe(true);
+  describe("requireCurrentUser", () => {
+    const mockUser = {
+      uid: "user_123",
+      email: "test@example.com",
+    } as User;
+
+    const mockSerializableUser = {
+      uid: "user_123",
+      email: "test@example.com",
+      displayName: null,
+      photoURL: null,
+      emailVerified: true,
+      phoneNumber: null,
+      providerId: "password",
+      createdAt: null,
+      lastSignInTime: null,
+    };
+
+    it("returns the SDK user when authenticated and no userState is provided", () => {
+      (auth as { currentUser: User | null }).currentUser = mockUser;
+
+      const result = requireCurrentUser();
+      expect(result).toBe(mockUser);
     });
 
-    it("returns false if the status flag is 'active'", () => {
-      expect(isUserDeactivated("active")).toBe(false);
+    it("returns the SDK user when both SDK user and valid userState exist", () => {
+      (auth as { currentUser: User | null }).currentUser = mockUser;
+
+      const result = requireCurrentUser(mockSerializableUser);
+      expect(result).toBe(mockUser);
     });
 
-    it("handles an empty string safely", () => {
-      expect(isUserDeactivated("")).toBe(false);
+    it("throws an error if SDK currentUser is missing", () => {
+      (auth as { currentUser: User | null }).currentUser = null;
+
+      expect(() => requireCurrentUser(mockSerializableUser)).toThrow(
+        "No authenticated user found.",
+      );
     });
 
-    it("handles null or undefined status flags safely", () => {
-      expect(isUserDeactivated(null)).toBe(false);
-      expect(isUserDeactivated(undefined)).toBe(false);
+    it("throws an error if userState is explicitly null despite SDK user existing", () => {
+      (auth as { currentUser: User | null }).currentUser = mockUser;
+
+      expect(() => requireCurrentUser(null)).toThrow(
+        "No authenticated user found.",
+      );
     });
   });
 });

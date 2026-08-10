@@ -8,17 +8,31 @@ import { db } from "./config";
 
 export interface UserSubcollections {
   activity: import("@features/activity/types").UserActivity;
+  countryLists: import("@features/atlas/countries/types").CountryList;
   friends: import("@features/user/friends/types").Friend;
   friendRequests: import("@features/user/friends/types").FriendRequest;
-  trips: import("@features/trips/types").Trip;
-  sharedTrips: import("@features/trips/types").SharedTrip;
-  settings: import("@features/settings/types").Settings;
-  countryLists: import("@features/atlas/countries/types").CountryList;
   layers: import("@features/atlas/layers/types").Layer;
   markers: import("@features/atlas/markers/types").Marker;
   savedMaps: import("@features/atlas/savedMaps/types").SavedMap;
   sessions: import("@features/user/auth/types").UserSession;
+  settings: import("@features/settings/types").Settings;
+  sharedTrips: import("@features/trips/types").SharedTrip;
+  trips: import("@features/trips/types").Trip;
 }
+
+export const USER_SUBCOLLECTIONS: readonly (keyof UserSubcollections)[] = [
+  "activity",
+  "countryLists",
+  "friends",
+  "friendRequests",
+  "layers",
+  "markers",
+  "savedMaps",
+  "sessions",
+  "settings",
+  "sharedTrips",
+  "trips",
+];
 
 const col = <T>(...segments: string[]) =>
   collection(db, segments[0], ...segments.slice(1)) as CollectionReference<T>;

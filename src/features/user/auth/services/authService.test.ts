@@ -1,6 +1,5 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { type User } from "firebase/auth";
-import { getDocsData, getPaths } from "@lib/firebase";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { createMockUser } from "@test-utils/authMocks";
 import {
@@ -10,8 +9,7 @@ import {
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
 import { authService } from "./authService";
 import { sessionService } from "./sessionService";
-import { friendService } from "../../friends/services/friendService";
-import { isUserDeactivated } from "../utils/auth";
+import { accountService } from "../../account/services/accountService";
 
 vi.mock("@lib/db", () => ({
   appDb: {
@@ -65,28 +63,6 @@ describe("authService", () => {
     auth.createUserWithEmailAndPassword.mockResolvedValue({ user: freshUser });
     auth.signInWithPopup.mockResolvedValue({ user: freshUser });
 
-    const pathsToWire = [
-      "user",
-      "users",
-      "username",
-      "usernames",
-      "activity",
-      "countryLists",
-      "layers",
-      "markers",
-      "savedMaps",
-      "sessions",
-      "settings",
-    ];
-
-    for (const p of pathsToWire) {
-      if (!(p in getPaths)) {
-        (getPaths as any)[p] = vi.fn((...args: string[]) =>
-          fs.collection({} as any, `mock_path_${p}_${args.join("_")}`),
-        );
-      }
-    }
-
     fs.getDoc.mockResolvedValue({
       exists: () => true,
       data: () => ({ status: "active" }),
@@ -97,10 +73,10 @@ describe("authService", () => {
     );
   });
 
-  it("handlePostSignIn logs activity code 111 when account is reactivated", async () => {
-    vi.spyOn(authService, "handleReactivation").mockResolvedValueOnce(true);
+  it("completeSignIn logs activity code 111 when account is reactivated", async () => {
+    vi.spyOn(accountService, "reactivateAccount").mockResolvedValueOnce(true);
 
-    await authService.handlePostSignIn(freshUser, "email");
+    await authService.completeSignIn(freshUser, "email");
 
     expect(activityMockTracker).toHaveBeenCalledWith(
       111,
@@ -187,56 +163,5 @@ describe("authService", () => {
     expect(res.user.uid).toBe("test-user");
     expect(auth.signInWithPopup).toHaveBeenCalled();
     expect(sessionService.logSession).toHaveBeenCalledWith("test-user");
-  });
-
-  it("deactivateAccount updates flags and kills live sessions", async () => {
-    await authService.deactivateAccount(freshUser);
-
-    expect(fs.setDoc).toHaveBeenCalledWith(
-      getPaths.user(freshUser.uid),
-      expect.objectContaining({ status: "deactivated" }),
-      { merge: true },
-    );
-    expect(activityMockTracker).toHaveBeenCalledWith(110, {}, "test-user");
-    expect(sessionService.terminateSession).toHaveBeenCalledWith("test-user");
-  });
-
-  it("deleteAppAccount completely purges subcollections including sessions, and wipes references", async () => {
-    await authService.deleteAppAccount(freshUser);
-
-    expect(getDocsData).toHaveBeenCalledWith(getPaths.users());
-    expect(friendService.removeFriend).toHaveBeenCalled();
-    expect(fs.deleteDoc).toHaveBeenCalled();
-    expect(auth.deleteUser).toHaveBeenCalledWith(freshUser);
-  });
-
-  it("handleReactivation updates database status when user is deactivated", async () => {
-    fs.getDoc.mockResolvedValueOnce({
-      exists: () => true,
-      data: () => ({ status: "deactivated" }),
-    });
-    vi.mocked(isUserDeactivated).mockReturnValueOnce(true);
-
-    const wasReactivated = await authService.handleReactivation("test-user");
-
-    expect(wasReactivated).toBe(true);
-    expect(fs.setDoc).toHaveBeenCalledWith(
-      getPaths.user("test-user"),
-      expect.objectContaining({ status: "active" }),
-      { merge: true },
-    );
-  });
-
-  it("handleReactivation skips database updates when user is already active", async () => {
-    fs.getDoc.mockResolvedValueOnce({
-      exists: () => true,
-      data: () => ({ status: "active" }),
-    });
-    vi.mocked(isUserDeactivated).mockReturnValueOnce(false);
-
-    const wasReactivated = await authService.handleReactivation("test-user");
-
-    expect(wasReactivated).toBe(false);
-    expect(fs.setDoc).not.toHaveBeenCalled();
   });
 });

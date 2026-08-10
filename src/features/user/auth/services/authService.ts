@@ -10,26 +10,17 @@ import {
   type User,
   signInWithPopup,
   GoogleAuthProvider,
-  deleteUser,
 } from "firebase/auth";
-import { deleteDoc, setDoc } from "firebase/firestore";
 import { logUserActivity } from "@features/activity";
-import {
-  auth,
-  getDocData,
-  getDocsData,
-  getPaths,
-  type UserSubcollections,
-} from "@lib/firebase";
+import { auth } from "@lib/firebase";
 import { sessionService } from "./sessionService";
-import { isUserDeactivated } from "../utils/auth";
+import type { AuthMethod } from "../types";
 import { getBrowserSessionInfo } from "../utils/session";
-import { friendService } from "../../friends/services/friendService";
+import { accountService } from "../../account/services/accountService";
 import { profileService } from "../../profile/services/profileService";
-import type { FirestoreUser } from "../../profile/types";
 
 /** Internal helper for constructing standard user activity payloads */
-const createActivityMeta = (user: User, method: string) => ({
+const createAuthActivityMeta = (user: User, method: AuthMethod) => ({
   method,
   userName: user.displayName,
   email: user.email,
@@ -40,25 +31,6 @@ const createActivityMeta = (user: User, method: string) => ({
  * Service for managing user authentication.
  */
 export const authService = {
-  /**
-   * Handles post-sign-in operations, including guest data migration, reactivation checks, activity logging, and session logging.
-   */
-  async handlePostSignIn(user: User, method: string) {
-    const reactivated = await this.handleReactivation(user.uid);
-    if (reactivated) {
-      await logUserActivity(
-        111,
-        { userName: user.displayName, email: user.email },
-        user.uid,
-      );
-    }
-
-    await logUserActivity(102, createActivityMeta(user, method), user.uid);
-    await sessionService.logSession(user.uid);
-
-    return reactivated;
-  },
-
   /**
    * Signs in a user with email and password, with optional session persistence.
    * @param email - The user's email address.
@@ -75,7 +47,28 @@ export const authService = {
     const result = await signInWithEmailAndPassword(auth, email, password);
     const method = keepLoggedIn ? "email_persistent" : "email";
 
-    const reactivated = await this.handlePostSignIn(result.user, method);
+    const reactivated = await this.completeSignIn(result.user, method);
+    return { user: result.user, reactivated };
+  },
+
+  /**
+   * Signs in a user with Google OAuth.
+   * @returns The result of the sign-in operation.
+   */
+  async signInWithGoogle() {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+
+    // Create Firestore profile and username if not already present
+    await profileService.createUserProfileWithUsername({
+      uid: result.user.uid,
+      displayName: result.user.displayName,
+      email: result.user.email,
+      photoURL: result.user.photoURL,
+    });
+
+    const reactivated = await this.completeSignIn(result.user, "google");
+
     return { user: result.user, reactivated };
   },
 
@@ -97,11 +90,11 @@ export const authService = {
 
     await logUserActivity(
       101,
-      createActivityMeta(result.user, "email"),
+      createAuthActivityMeta(result.user, "email"),
       result.user.uid,
     );
 
-    await sessionService.logSession(result.user!.uid);
+    await sessionService.logSession(result.user.uid);
     return { ...result, username };
   },
 
@@ -110,12 +103,12 @@ export const authService = {
    */
   async logout() {
     const user = auth.currentUser;
-    const uid = user?.uid;
-    await signOut(auth);
-    if (uid) {
+    if (user) {
+      const uid = user.uid;
       await logUserActivity(103, {}, uid);
       await sessionService.terminateSession(uid);
     }
+    await signOut(auth);
   },
 
   /**
@@ -149,113 +142,27 @@ export const authService = {
       },
       user.uid,
     );
-  },
+  },  
 
   /**
-   * Signs in a user with Google OAuth.
-   * @returns The result of the sign-in operation.
-   */
-  async signInWithGoogle() {
-    const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-
-    // Create Firestore profile and username if not already present
-    await profileService.createUserProfileWithUsername({
-      uid: result.user.uid,
-      displayName: result.user.displayName,
-      email: result.user.email,
-      photoURL: result.user.photoURL,
-    });
-
-    const reactivated = await this.handlePostSignIn(result.user, "google");
-
-    return { user: result.user, reactivated };
-  },
-
-  /**
-   * Deactivates the user's account.
-   * @param user - The Firebase User object.
-   */
-  async deactivateAccount(user: User) {
-    await setDoc(
-      getPaths.user(user.uid),
-      { status: "deactivated", deactivatedAt: new Date().toISOString() },
-      { merge: true },
-    );
-    await logUserActivity(110, {}, user.uid);
-    await this.logout();
-  },
-
-  /**
-   * Deletes the user's app account and all associated data.
-   * @param user - The Firebase User object.
-   */
-
-  async deleteAppAccount(user: User) {
-    const uid = user.uid;
-
-    // Remove deleted user from other users' friends lists
-    const users = await getDocsData(getPaths.users());
-    for (const remoteUser of users) {
-      if (remoteUser.id !== uid) {
-        await friendService.removeFriend(remoteUser.id, uid);
-      }
-    }
-
-    // Remove from usernames collection
-    const usernames = await getDocsData(getPaths.usernames());
-    for (const usernameDoc of usernames) {
-      if (usernameDoc.uid === uid) {
-        await deleteDoc(getPaths.username(usernameDoc.id));
-      }
-    }
-
-    // Delete all Firestore user data client-side
-    const userSubcollections = [
-      "activity",
-      "countryLists",
-      "friends",
-      "friendRequests",
-      "layers",
-      "markers",
-      "savedMaps",
-      "sessions",
-      "settings",
-      "sharedTrips",
-      "trips",
-    ];
-
-    for (const sub of userSubcollections) {
-      const subKey = sub as keyof UserSubcollections;
-
-      const subColDocs = await getDocsData(getPaths.sub(uid, subKey));
-      for (const docObj of subColDocs) {
-        await deleteDoc(getPaths.subDoc(uid, subKey, docObj.id));
-      }
-    }
-
-    // Delete the main user document and Firebase Auth user
-    await deleteDoc(getPaths.user(uid));
-    await deleteUser(user);
-  },
-
-  /**
-   * Reactivates a deactivated user account.
-   * @param uid - The user's unique identifier.
+   * Handles post-sign-in tasks, including reactivation checks, activity logging, and session logging.
+   * @param user - The signed-in Firebase User object.
+   * @param method - The authentication method used.
    * @returns True if the account was reactivated, false otherwise.
    */
-  async handleReactivation(uid: string): Promise<boolean> {
-    const userDocRef = getPaths.user(uid);
-    const userData = await getDocData<FirestoreUser>(userDocRef);
-
-    if (userData && isUserDeactivated(userData.status)) {
-      await setDoc(
-        userDocRef,
-        { status: "active", reactivatedAt: new Date().toISOString() },
-        { merge: true },
+  async completeSignIn(user: User, method: AuthMethod) {
+    const reactivated = await accountService.reactivateAccount(user.uid);
+    if (reactivated) {
+      await logUserActivity(
+        111,
+        { userName: user.displayName, email: user.email },
+        user.uid,
       );
-      return true;
     }
-    return false;
+
+    await logUserActivity(102, createAuthActivityMeta(user, method), user.uid);
+    await sessionService.logSession(user.uid);
+
+    return reactivated;
   },
 };

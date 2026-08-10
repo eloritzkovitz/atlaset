@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "@lib/firebase";
-import { authService } from "@features/user/auth/services/authService";
-import type { SerializableUser } from "@features/user/auth/types";
+import { accountService } from "../services/accountService";
+import { authService } from "../../auth/services/authService";
+import type { SerializableUser } from "../../auth/types";
+import { requireCurrentUser } from "../../auth/utils/auth";
 
 /**
  * Manages account management actions such as hibernation and deletion.
@@ -16,23 +17,15 @@ export function useAccountManagement(user: SerializableUser | null) {
   const [success, setSuccess] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  // Helper to safely get the current SDK user instance
-  const getFirebaseUser = () => {
-    const firebaseUser = auth.currentUser;
-    if (!user || !firebaseUser) {
-      throw new Error("No authenticated user found.");
-    }
-    return firebaseUser;
-  };
-
   // Handle account deactivation (hibernate)
   const handleHibernate = async () => {
     setHibernating(true);
     setError(null);
     setSuccess(null);
     try {
-      const firebaseUser = getFirebaseUser();
-      await authService.deactivateAccount(firebaseUser);
+      const firebaseUser = requireCurrentUser(user);
+      await accountService.deactivateAccount(firebaseUser.uid);
+      await authService.logout();
       setSuccess("Account hibernated. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (e: unknown) {
@@ -48,8 +41,8 @@ export function useAccountManagement(user: SerializableUser | null) {
     setError(null);
     setSuccess(null);
     try {
-      const firebaseUser = getFirebaseUser();
-      await authService.deleteAppAccount(firebaseUser);
+      const firebaseUser = requireCurrentUser(user);
+      await accountService.deleteAccount(firebaseUser);
       setSuccess("Account deleted. Redirecting...");
       setTimeout(() => navigate("/login"), 1500);
     } catch (e: unknown) {
