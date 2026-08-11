@@ -1,16 +1,16 @@
 import { useState } from "react";
 
-export function useRegisterSW(_options?: any) {
+export function useRegisterSW() {
   const [needRefresh, setNeedRefresh] = useState(false);
-  const updateServiceWorker = (_reloadPage?: boolean) => {};
+  const updateServiceWorker = () => {};
 
   return {
     needRefresh: [needRefresh, setNeedRefresh] as const,
-    offlineReady: [false, (_val: boolean) => {}] as const,
+    offlineReady: [false, () => {}] as const,
     updateServiceWorker,
   };
 }
 
 export function registerSW() {
-  return (_reloadPage?: boolean) => Promise.resolve();
+  return () => Promise.resolve();
 }
