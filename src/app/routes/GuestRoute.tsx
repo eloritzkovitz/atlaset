@@ -1,5 +1,4 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { SplashScreen } from "@components";
 import { useAuth } from "@features/user/auth";
 
 interface GuestRouteProps {
@@ -12,12 +11,7 @@ export function GuestRoute({
   redirectTo = "/atlas",
   children,
 }: GuestRouteProps) {
-  const { user, loading, ready } = useAuth();
-
-  // Show splash screen while auth state is being determined
-  if (!ready || loading) {
-    return <SplashScreen />;
-  }
+  const { user } = useAuth();
 
   // Redirect authenticated users to the specified route
   if (user) {

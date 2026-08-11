@@ -1,23 +1,23 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { SplashScreen } from "@components";
+import { LoadingSpinner } from "@components";
 import { AtlasProviders } from "@features/atlas/core/providers/AtlasProviders";
-import { useAnalytics, useSettings } from "@features/settings";
+import { useAnalytics } from "@features/settings";
 import { SettingsRoutes } from "@features/settings/core/routes/SettingsRoutes";
 import { GuestRoute } from "./GuestRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { AppLayout } from "../layouts/app/AppLayout";
 import { PublicLayout } from "../layouts/public/PublicLayout";
-import AboutPage from "../../features/public/pages/AboutPage";
-import ActivityPage from "../../features/activity/pages/ActivityPage";
-import ChangelogPage from "../../features/public/pages/ChangelogPage";
-import HomePage from "../../features/public/pages/HomePage";
-import LoginPage from "../../features/user/auth/pages/LoginPage";
-import NotFoundPage from "../../features/public/pages/NotFoundPage";
-import PrivacyPolicyPage from "../../features/public/pages/PrivacyPolicyPage";
-import ProfilePage from "../../features/user/profile/pages/ProfilePage";
-import SearchPage from "../../features/search/pages/SearchPage";
-import SignupPage from "../../features/user/auth/pages/SignupPage";
+import AboutPage from "@features/public/pages/AboutPage";
+import ActivityPage from "@features/activity/pages/ActivityPage";
+import ChangelogPage from "@features/public/pages/ChangelogPage";
+import HomePage from "@features/public/pages/HomePage";
+import LoginPage from "@features/user/auth/pages/LoginPage";
+import NotFoundPage from "@features/public/pages/NotFoundPage";
+import PrivacyPolicyPage from "@features/public/pages/PrivacyPolicyPage";
+import ProfilePage from "@features/user/profile/pages/ProfilePage";
+import SearchPage from "@features/search/pages/SearchPage";
+import SignupPage from "@features/user/auth/pages/SignupPage";
 
 const DocsPage = lazy(() => import("@features/docs/pages/DocsPage"));
 const DashboardPage = lazy(
@@ -30,17 +30,10 @@ const TripsPage = lazy(() => import("@features/trips/pages/TripsPage"));
 
 /** Main application routes component. */
 export function AppRoutes() {
-  const { ready } = useSettings();
-
   useAnalytics();
 
-  // Show splash screen while settings are loading
-  if (!ready) {
-    return <SplashScreen />;
-  }
-
   return (
-    <Suspense fallback={<SplashScreen />}>
+    <Suspense fallback={<LoadingSpinner />}>
       <Routes>
         {/* Guest-only routes (redirect signed-in users to /atlas) */}
         <Route element={<GuestRoute redirectTo="/atlas" />}>

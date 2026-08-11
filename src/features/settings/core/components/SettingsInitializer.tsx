@@ -1,9 +1,4 @@
-import {
-  useEffect,
-  useRef,
-  useLayoutEffect,
-  type PropsWithChildren,
-} from "react";
+import { useEffect, useRef, type PropsWithChildren } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import type { AppDispatch } from "@app/store";
 import {
@@ -12,7 +7,6 @@ import {
 } from "@features/user/auth/slices/authSlice";
 import { setAppDateLocale } from "@utils";
 import { loadSettings, selectSettings } from "../slices/settingsSlice";
-import { applyTheme } from "../../display/utils/theme";
 
 /** Initializes the settings for the application. */
 export function SettingsInitializer({ children }: PropsWithChildren) {
@@ -36,11 +30,6 @@ export function SettingsInitializer({ children }: PropsWithChildren) {
       hasLoadedSettings.current = null;
     }
   }, [authReady, authUser, dispatch]);
-
-  // Apply theme class before DOM paint
-  useLayoutEffect(() => {
-    applyTheme(settings.display);
-  }, [settings.display]);
 
   // Sync date locale
   useEffect(() => {
