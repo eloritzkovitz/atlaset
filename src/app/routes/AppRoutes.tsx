@@ -58,7 +58,6 @@ export function AppRoutes() {
           <Route path="/about" element={<AboutPage />} />
           <Route path="/privacy" element={<PrivacyPolicyPage />} />
           <Route path="/changelog" element={<ChangelogPage />} />
-          <Route path="*" element={<NotFoundPage />} />
         </Route>
 
         {/* Protected application routes */}
@@ -79,6 +78,16 @@ export function AppRoutes() {
         </Route>
         <Route path="/docs/*" element={<DocsPage />} />
         <Route path="/atlas" element={<AtlasProviders />} />
+
+        {/* Catch-all route */}
+        <Route
+          path="*"
+          element={
+            <PublicLayout>
+              <NotFoundPage />
+            </PublicLayout>
+          }
+        />
       </Routes>
     </Suspense>
   );

@@ -1,7 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { SplashScreen } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useSettings } from "@features/settings/core/hooks/useSettings";
 
 interface GuestRouteProps {
   redirectTo?: string;
@@ -14,21 +13,15 @@ export function GuestRoute({
   children,
 }: GuestRouteProps) {
   const { user, loading, ready } = useAuth();
-  const { ready: settingsReady } = useSettings();
 
   // Show splash screen while auth state is being determined
-  if (!ready || loading || !settingsReady) {
+  if (!ready || loading) {
     return <SplashScreen />;
   }
 
   // Redirect authenticated users to the specified route
   if (user) {
-    return (
-      <>
-        <SplashScreen />
-        <Navigate to={redirectTo} replace />
-      </>
-    );
+    return <Navigate to={redirectTo} replace />;
   }
 
   return children ? <>{children}</> : <Outlet />;
