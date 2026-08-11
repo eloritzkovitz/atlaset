@@ -1,6 +1,15 @@
 {
   "headers": [
     {
+      "source": "/sw.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
+      ]
+    },
+    {
       "source": "/index.html",
       "headers": [
         {
@@ -10,16 +19,7 @@
       ]
     },
     {
-      "source": "/(.*)\\.(js|css)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "no-cache, must-revalidate"
-        }
-      ]
-    },   
-    {
-      "source": "/(.*)\\.(woff2|woff|ttf|eot|svg|png|jpg|jpeg|gif|webp|ico)",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -37,7 +37,7 @@
       ]
     },
     {
-      "source": "/(assets|flags|icons|images|sounds)/(.*)",
+      "source": "/(flags|icons|images|sounds)/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -47,7 +47,8 @@
     }
   ],
   "rewrites": [
-    { "source": "/atlas", "destination": "/" },
-    { "source": "/atlas/(.*)", "destination": "/" }
+    { "source": "/atlas", "destination": "/index.html" },
+    { "source": "/atlas/(.*)", "destination": "/index.html" },
+    { "source": "/:path*", "destination": "/index.html" }
   ]
 }

@@ -1,118 +1,69 @@
-import { useState, useCallback, useEffect, useRef } from "react";
-import { isWindowDefined } from "@utils";
-import { useEventListener } from "../dom/useEventListener";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRegisterSW } from "virtual:pwa-register/react";
 
 /**
  * Detects PWA updates via service worker events.
  * @returns Object with needRefresh flag and updateServiceWorker function
  */
 export function usePwaUpdate() {
-  const [needRefresh, setNeedRefresh] = useState(false);
-  const waitingRef = useRef<ServiceWorker | null>(null);
+  const [needRefreshState, setNeedRefreshState] = useState(false);
   const bcRef = useRef<BroadcastChannel | null>(null);
 
-  // Track initial mount time to distinguish startup updates from active session updates
-  const isInitialLoadRef = useRef(true);
+  const {
+    needRefresh: [pwaNeedRefresh],
+    updateServiceWorker: pwaUpdateServiceWorker,
+  } = useRegisterSW({
+    onRegisteredSW(
+      _swUrl: string | undefined,
+      registration: ServiceWorkerRegistration | undefined,
+    ) {
+      if (registration) {
+        setInterval(
+          () => {
+            registration.update();
+          },
+          15 * 60 * 1000,
+        );
+      }
+    },
+    onRegisterError(error: unknown) {
+      console.error("SW registration error", error);
+    },
+  });
 
-  // Mark initial load finished shortly after mount
+  // Sync state with Workbox & Online status
   useEffect(() => {
-    const timer = setTimeout(() => {
-      isInitialLoadRef.current = false;
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    if (pwaNeedRefresh && navigator.onLine) {
+      setNeedRefreshState(true);
+      try {
+        bcRef.current?.postMessage({ type: "update-available" });
+      } catch {
+        // ignore
+      }
+    }
+  }, [pwaNeedRefresh]);
 
-  // Initialize BroadcastChannel
+  // Setup BroadcastChannel for cross-tab communication
   useEffect(() => {
-    if (!isWindowDefined()) return;
     try {
       bcRef.current = new BroadcastChannel("sw-update");
     } catch {
       bcRef.current = null;
     }
-    return () => {
-      try {
-        bcRef.current?.close();
-      } catch {
-        // ignore close errors
-      }
-      bcRef.current = null;
-    };
-  }, []);
 
-  // Silent update trigger helper
-  const activateSilently = useCallback((worker: ServiceWorker) => {
-    try {
-      worker.postMessage({ type: "SKIP_WAITING" });
-    } catch {
-      // ignore
-    }
-  }, []);
-
-  // On initial load, check if there's a waiting service worker and activate it silently
-  useEffect(() => {
-    if (!isWindowDefined() || !("serviceWorker" in navigator)) return;
-
-    navigator.serviceWorker.getRegistration().then((reg) => {
-      if (reg?.waiting) {
-        activateSilently(reg.waiting);
-      }
-    });
-  }, [activateSilently]);
-
-  // Handle the "swUpdated" custom event
-  const onSWUpdate = useCallback(
-    (event: Event) => {
-      const customEvent = event as CustomEvent<{ waiting?: ServiceWorker }>;
-      const w = customEvent.detail?.waiting || null;
-      waitingRef.current = w;
-
-      if (isInitialLoadRef.current) {
-        if (w) activateSilently(w);
-        return;
-      }
-
-      if (navigator.onLine) {
-        setNeedRefresh(true);
-        try {
-          bcRef.current?.postMessage({ type: "update-available" });
-        } catch {
-          // ignore postMessage failures
-        }
-      }
-    },
-    [activateSilently],
-  );
-
-  useEventListener(
-    "swUpdated",
-    onSWUpdate,
-    isWindowDefined() ? window : undefined,
-  );
-
-  // Listen for online recovery & cross-tab messages
-  useEffect(() => {
     const bc = bcRef.current;
 
     const handleMessage = (ev: MessageEvent) => {
       if (ev.data?.type === "update-available" && navigator.onLine) {
-        setNeedRefresh(true);
+        setNeedRefreshState(true);
       }
       if (ev.data?.type === "reload-now") {
         window.location.reload();
       }
     };
 
-    // If device comes back online and an update was waiting, show prompt now
-    const handleOnline = () => {
-      if (waitingRef.current && !isInitialLoadRef.current) {
-        setNeedRefresh(true);
-      }
-    };
-
     try {
       bc?.addEventListener("message", handleMessage);
-      window.addEventListener("online", handleOnline);
     } catch {
       // ignore
     }
@@ -120,52 +71,26 @@ export function usePwaUpdate() {
     return () => {
       try {
         bc?.removeEventListener("message", handleMessage);
-        window.removeEventListener("online", handleOnline);
+        bc?.close();
       } catch {
         // ignore
       }
+      bcRef.current = null;
     };
   }, []);
 
-  // Trigger service worker update on user action
+  // Update trigger that alerts all open tabs to reload
   const updateServiceWorker = useCallback(() => {
-    const bc = bcRef.current;
-    const w = waitingRef.current;
-
-    if (w && "serviceWorker" in navigator) {
-      const onControllerChange = () => {
-        try {
-          bc?.postMessage({ type: "reload-now" });
-        } catch {
-          // ignore
-        }
-        window.location.reload();
-      };
-
-      try {
-        navigator.serviceWorker.addEventListener(
-          "controllerchange",
-          onControllerChange,
-          { once: true },
-        );
-      } catch {
-        // ignore
-      }
-
-      try {
-        w.postMessage({ type: "SKIP_WAITING" });
-      } catch {
-        window.location.reload();
-      }
-    } else {
-      try {
-        bc?.postMessage({ type: "reload-now" });
-      } catch {
-        // ignore
-      }
-      window.location.reload();
+    try {
+      bcRef.current?.postMessage({ type: "reload-now" });
+    } catch {
+      // ignore
     }
-  }, []);
+    pwaUpdateServiceWorker(true);
+  }, [pwaUpdateServiceWorker]);
 
-  return { needRefresh, updateServiceWorker };
+  return {
+    needRefresh: needRefreshState,
+    updateServiceWorker,
+  };
 }

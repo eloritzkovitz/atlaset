@@ -10,28 +10,6 @@ import { store } from "./app/store";
 import "./styles/index.css";
 import "./styles/markdown.css";
 
-// Register service worker for PWA update detection
-if (import.meta.env.PROD && "serviceWorker" in navigator) {
-  import("virtual:pwa-register").then(({ registerSW }) => {
-    registerSW({
-      onNeedRefresh() {
-        // Notify the app only when a waiting service worker actually exists
-        navigator.serviceWorker
-          .getRegistration()
-          .then((reg) => {
-            const waiting = reg?.waiting || null;
-            if (waiting) {
-              window.dispatchEvent(
-                new CustomEvent("swUpdated", { detail: { waiting } }),
-              );
-            }
-          })
-          .catch(() => {});
-      },
-    });
-  });
-}
-
 // Set initial document direction based on current language
 const setDocDirection = (lang: string) => {
   try {

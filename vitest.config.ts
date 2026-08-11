@@ -14,8 +14,8 @@ export default defineConfig({
         "src/shared/test-utils/**",
         "src/shared/types/**",
         "**/api/**",
-        "**/components/**",        
-        "**/config/**",        
+        "**/components/**",
+        "**/config/**",
         "**/constants/**",
         "**/context/**",
         "**/contexts/**",
@@ -42,6 +42,10 @@ export default defineConfig({
       "@types": path.resolve(import.meta.dirname, "src/shared/types"),
       "@utils": path.resolve(import.meta.dirname, "src/shared/utils"),
       "virtual:pwa-register/react": path.resolve(
+        import.meta.dirname,
+        "src/shared/test-utils/mockPwa.ts",
+      ),
+      "virtual:pwa-register": path.resolve(
         import.meta.dirname,
         "src/shared/test-utils/mockPwa.ts",
       ),

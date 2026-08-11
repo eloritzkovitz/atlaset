@@ -12,6 +12,17 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: "prompt",
+      includeAssets: ["favicon.ico", "apple-touch-icon.png", "masked-icon.svg"],
+      workbox: {
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        skipWaiting: true,
+        dontCacheBustURLsMatching: /\.[a-f0-9]{8}\./,
+        maximumFileSizeToCacheInBytes: 4 * 1024 * 1024,
+      },
+      devOptions: {
+        enabled: false,
+      },
     }),
     ...(process.env.ANALYZE ? [visualizer({ open: true })] : []),
   ],
