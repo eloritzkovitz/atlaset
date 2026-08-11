@@ -11,6 +11,7 @@ import {
 } from "firebase/firestore";
 import { getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
+import { isLocalhost } from "@utils";
 import type { UserSession } from "../types";
 import { getBrowserSessionInfo, getOrCreateSessionId } from "../utils/session";
 
@@ -35,6 +36,8 @@ export const sessionService = {
 
     const snapshot = await getDocs(q);
 
+    const isLocal = isLocalhost();
+
     const payload = {
       ...sessionInfo,
       lastActive: Date.now(),
@@ -53,8 +56,8 @@ export const sessionService = {
     } else {
       const newDocRef = await addDoc(sessionsCol, {
         ...payload,
-        ipAddress: "Loading...",
-        location: "Loading...",
+        ipAddress: isLocal ? "127.0.0.1" : "Loading...",
+        location: isLocal ? "localhost" : "Loading...",
       } as WithFieldValue<DocumentData>);
 
       targetDocId = newDocRef.id;
@@ -67,11 +70,21 @@ export const sessionService = {
   /** Enriches a session document with IP and Geolocation data. */
   async enrichSessionMetadata(userId: string, docId: string): Promise<void> {
     try {
-      const geoData = await geoService.getGeoData();
+      const docRef = getPaths.subDoc(userId, "sessions", docId);
 
+      // If running on localhost, set IP and location to localhost values
+      if (isLocalhost()) {
+        await updateDoc(docRef, {
+          ipAddress: "127.0.0.1",
+          location: "localhost",
+        });
+        return;
+      }
+
+      // Fetch geolocation data from the geoService
+      const geoData = await geoService.getGeoData();
       if (!geoData) return;
 
-      const docRef = getPaths.subDoc(userId, "sessions", docId);
       await updateDoc(docRef, {
         ipAddress: geoData.ipAddress,
         location: geoData.location,

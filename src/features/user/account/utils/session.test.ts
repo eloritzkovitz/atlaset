@@ -4,7 +4,9 @@ import {
   getOrCreateSessionId,
   isCurrentSession,
   clearLocalSession,
+  isDevSession,
 } from "./session";
+import type { UserSession } from "../types";
 
 describe("session utils", () => {
   const EXPECTED_KEY = "atlaset:sessionId";
@@ -28,6 +30,7 @@ describe("session utils", () => {
         userAgent: "TestAgent",
         language: "en-US",
         screen: "1920x1080",
+        isLocalhost: window.location.hostname === "localhost",
       });
     });
   });
@@ -70,6 +73,35 @@ describe("session utils", () => {
       expect(isCurrentSession(activeId)).toBe(true);
       expect(isCurrentSession("wrong-id")).toBe(false);
       expect(isCurrentSession(undefined)).toBe(false);
+    });
+  });
+
+  describe("isDevSession", () => {
+    const createMockSession = (
+      overrides: Partial<UserSession> = {},
+    ): UserSession =>
+      ({
+        id: "sess-1",
+        userId: "user-1",
+        sessionId: "sid-1",
+        userAgent: "Mozilla/5.0",
+        language: "en-US",
+        screen: "1920x1080",
+        lastActive: Date.now(),
+        ...overrides,
+      }) as UserSession;
+
+    it.each([
+      [{ location: "localhost" }, true],
+      [{ location: "127.0.0.1" }, true],
+      [{ location: "app.local" }, true],
+      [{ ipAddress: "127.0.0.1" }, true],
+      [{ ipAddress: "::1" }, true],
+      [{ ipAddress: "192.168.1.10" }, true],
+      [{ location: "Tel Aviv, Israel", ipAddress: "82.102.1.1" }, false],
+      [{}, false],
+    ])("evaluates session %j correctly", (overrides, expected) => {
+      expect(isDevSession(createMockSession(overrides))).toBe(expected);
     });
   });
 

@@ -1,9 +1,14 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { getDocsData, getPaths } from "@lib/firebase";
 import { geoService } from "@lib/geo";
+import { isLocalhost } from "@utils";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { sessionService } from "./sessionService";
 import { getOrCreateSessionId } from "../utils/session";
+
+vi.mock("@utils", () => ({
+  isLocalhost: vi.fn(),
+}));
 
 vi.mock("../utils/session", () => ({
   getBrowserSessionInfo: () => ({
@@ -17,12 +22,11 @@ vi.mock("../utils/session", () => ({
 
 describe("sessionService", () => {
   const uid = "user-abc-456";
-  const snap = (docs: any[]) => ({ empty: !docs.length, docs }) as any;
+  const snap = (docs: unknown[]) => ({ empty: !docs.length, docs }) as any;
   const doc = (id: string) => ({ ref: { id }, id, data: () => ({}) }) as any;
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.stubGlobal("fetch", vi.fn());
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
@@ -30,6 +34,7 @@ describe("sessionService", () => {
     vi.mocked(getDocsData).mockResolvedValueOnce([
       { id: "d1", userId: uid },
     ] as any);
+
     expect(await sessionService.fetchUserSessions(uid)).toEqual([
       { id: "d1", userId: uid },
     ]);
@@ -38,67 +43,116 @@ describe("sessionService", () => {
 
   describe("logSession", () => {
     it.each([
-      ["creates doc if session missing", [], "addDoc", "new-d"],
+      [
+        "creates doc if session missing (localhost)",
+        [],
+        "addDoc",
+        "new-d",
+        true,
+        "localhost",
+        "127.0.0.1",
+      ],
+      [
+        "creates doc if session missing (remote)",
+        [],
+        "addDoc",
+        "new-d",
+        false,
+        "Loading...",
+        "Loading...",
+      ],
       [
         "updates doc if session exists",
         [doc("exist-d")],
         "updateDoc",
         "exist-d",
+        false,
+        undefined,
+        undefined,
       ],
-    ])("%s", async (_, docs, method, expectedId) => {
-      fs.getDocs.mockResolvedValueOnce(snap(docs));
-      fs.addDoc.mockResolvedValueOnce({ id: "new-d" } as any);
-      const spy = vi
-        .spyOn(sessionService, "enrichSessionMetadata")
-        .mockResolvedValueOnce();
+    ])(
+      "%s",
+      async (_, docs, method, expectedId, isLocal, expectedLoc, expectedIp) => {
+        vi.mocked(isLocalhost).mockReturnValue(isLocal);
+        vi.mocked(getPaths.sub).mockReturnValue("mocked-sessions-col" as any);
+        fs.getDocs.mockResolvedValueOnce(snap(docs));
+        fs.addDoc.mockResolvedValueOnce({ id: "new-d" } as any);
 
-      await sessionService.logSession(uid);
-      expect((fs as any)[method]).toHaveBeenCalled();
-      expect(spy).toHaveBeenCalledWith(uid, expectedId);
-    });
+        const spy = vi
+          .spyOn(sessionService, "enrichSessionMetadata")
+          .mockResolvedValueOnce();
+
+        await sessionService.logSession(uid);
+
+        if (method === "addDoc") {
+          expect(fs.addDoc).toHaveBeenCalledWith(
+            "mocked-sessions-col",
+            expect.objectContaining({
+              location: expectedLoc,
+              ipAddress: expectedIp,
+            }),
+          );
+        } else {
+          expect(fs.updateDoc).toHaveBeenCalled();
+        }
+
+        expect(spy).toHaveBeenCalledWith(uid, expectedId);
+      },
+    );
   });
 
   describe("enrichSessionMetadata", () => {
-    const runEnrich = (ok: boolean, payload: any) => {
-      vi.stubGlobal(
-        "fetch",
-        vi.fn().mockResolvedValueOnce({ ok, json: async () => payload }),
-      );
-      return sessionService.enrichSessionMetadata(uid, "target-doc-id");
-    };
+    it("sets localhost metadata directly when running on localhost", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(true);
+      const getGeoSpy = vi.spyOn(geoService, "getGeoData");
 
-    it.each([
-      [
-        "saves city + country",
-        { ip: "1.1", city: "TLV", country: "IL" },
-        "1.1",
-        "TLV, IL",
-      ],
-      ["falls back to country only", { ip: "1.1", country: "IL" }, "1.1", "IL"],
-      ["handles missing keys", {}, "Unknown IP", "Unknown Location"],
-    ])("%s", async (_, payload, ipAddress, location) => {
-      await runEnrich(true, payload);
+      await sessionService.enrichSessionMetadata(uid, "target-doc-id");
+
       expect(getPaths.subDoc).toHaveBeenCalledWith(
         uid,
         "sessions",
         "target-doc-id",
       );
       expect(fs.updateDoc).toHaveBeenCalledWith(expect.anything(), {
-        ipAddress,
-        location,
+        ipAddress: "127.0.0.1",
+        location: "localhost",
+      });
+      expect(getGeoSpy).not.toHaveBeenCalled();
+    });
+
+    it("fetches and updates metadata from geoService when not on localhost", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(false);
+      vi.spyOn(geoService, "getGeoData").mockResolvedValueOnce({
+        ipAddress: "1.1.1.1",
+        location: "TLV, IL",
+        countryCode: "IL",
+      });
+
+      await sessionService.enrichSessionMetadata(uid, "target-doc-id");
+
+      expect(fs.updateDoc).toHaveBeenCalledWith(expect.anything(), {
+        ipAddress: "1.1.1.1",
+        location: "TLV, IL",
       });
     });
 
-    it("exits early on network failure", async () => {
-      await runEnrich(false, null);
+    it("exits early if geoData returns null", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(false);
+      vi.spyOn(geoService, "getGeoData").mockResolvedValueOnce(null);
+
+      await sessionService.enrichSessionMetadata(uid, "target-doc-id");
+
       expect(fs.updateDoc).not.toHaveBeenCalled();
     });
 
     it("handles rejections quietly", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(false);
       vi.spyOn(geoService, "getGeoData").mockRejectedValueOnce(
         new Error("Net"),
       );
+
       await sessionService.enrichSessionMetadata(uid, "target-doc-id");
+
       expect(console.error).toHaveBeenCalledWith(
         "Failed to quietly enrich session metadata:",
         expect.any(Error),
@@ -109,7 +163,9 @@ describe("sessionService", () => {
   describe("updateCurrentSession", () => {
     it("patches lastActive on matched sessions", async () => {
       fs.getDocs.mockResolvedValueOnce(snap([doc("a")]));
+
       await sessionService.updateCurrentSession(uid);
+
       expect(fs.updateDoc).toHaveBeenCalledWith(expect.anything(), {
         lastActive: expect.any(Number),
       });
@@ -117,13 +173,17 @@ describe("sessionService", () => {
 
     it("skips updates when no session matches", async () => {
       fs.getDocs.mockResolvedValueOnce(snap([]));
+
       await sessionService.updateCurrentSession(uid);
+
       expect(fs.updateDoc).not.toHaveBeenCalled();
     });
 
     it("logs DB error on query failure", async () => {
       fs.getDocs.mockRejectedValueOnce(new Error("DB"));
+
       await sessionService.updateCurrentSession(uid);
+
       expect(console.error).toHaveBeenCalledWith(
         "Failed to update current session activity:",
         expect.any(Error),

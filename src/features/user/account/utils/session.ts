@@ -7,6 +7,8 @@ import {
   removeCachedValue,
   setCachedValue,
 } from "@utils/browser/storage";
+import type { UserSession } from "../types";
+import { isLocalhost } from "@utils/browser/env";
 
 const SESSION_KEY = "atlaset:sessionId";
 
@@ -15,10 +17,17 @@ const SESSION_KEY = "atlaset:sessionId";
  * @returns An object containing session information.
  */
 export function getBrowserSessionInfo() {
+  const isLocalhost =
+    typeof window !== "undefined" &&
+    (window.location.hostname === "localhost" ||
+      window.location.hostname === "127.0.0.1" ||
+      window.location.hostname === "[::1]");
+
   return {
     userAgent: navigator.userAgent,
     language: navigator.language,
     screen: `${window.screen.width}x${window.screen.height}`,
+    isLocalhost,
   };
 }
 
@@ -48,6 +57,17 @@ export function getOrCreateSessionId(): string {
  */
 export function isCurrentSession(sessionId?: string): boolean {
   return Boolean(sessionId && sessionId === getOrCreateSessionId());
+}
+
+/**
+ * Determines if the given session is a development session based on its IP address or location.
+ * @param session - The user session to check.
+ * @returns True if it is a development session, false otherwise.
+ */
+export function isDevSession(session: UserSession): boolean {
+  const { ipAddress = "", location = "" } = session;
+
+  return isLocalhost(location) || isLocalhost(ipAddress);
 }
 
 /**

@@ -4,6 +4,7 @@ import { ICONS } from "@constants/icons";
 import { type UserSession } from "@features/user/account/types";
 import { formatDate, getDeviceType, parseUserAgent } from "@utils";
 import { SecurityInfoRow } from "./SecurityInfoRow";
+import { isDevSession } from "../utils/session";
 
 interface SessionRowProps {
   session: UserSession;
@@ -36,6 +37,11 @@ export function SessionRow({ session, onTerminate }: SessionRowProps) {
               <span className="font-semibold">
                 {session.deviceName || readableDevice}
               </span>
+              {isDevSession(session) && (
+                <span className="px-1.5 py-0.5 text-[10px] font-mono font-medium rounded bg-amber-500/10 text-amber-500 border border-amber-500/20">
+                  DEV
+                </span>
+              )}
             </div>
 
             <div className="flex items-center gap-1.5 text-xs">

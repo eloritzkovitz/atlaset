@@ -5,6 +5,7 @@ import { capitalize, formatDate } from "@utils";
 import { SecurityInfoRow } from "./SecurityInfoRow";
 import { SessionRow } from "./SessionRow";
 import { useUserSessions } from "../hooks/useUserSessions";
+import { isDevSession } from "../utils/session";
 
 /** Renders a section with user security information. */
 export function SecurityInfoSection() {
@@ -13,6 +14,14 @@ export function SecurityInfoSection() {
     useLastLogin();
   const { t } = useTranslation("settings");
   const { sessions, terminateSession } = useUserSessions(user?.uid);
+
+  // Filter out development sessions in production, but show all sessions in development
+  const visibleSessions = sessions.filter((session) => {
+    if (import.meta.env.PROD) {
+      return !isDevSession(session);
+    }
+    return true;
+  });
 
   return (
     <section className="mb-8">
@@ -54,13 +63,13 @@ export function SecurityInfoSection() {
         {t("security.loggedInDevices")}
       </h2>
       <ul className="space-y-4">
-        {sessions.length === 0 ? (
+        {visibleSessions.length === 0 ? (
           <SecurityInfoRow
             label={t("security.devicesLabel")}
             value={t("security.devicesNone")}
           />
         ) : (
-          sessions.map((session) => (
+          visibleSessions.map((session) => (
             <SessionRow
               key={session.id}
               session={session}
