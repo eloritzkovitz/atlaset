@@ -8,7 +8,12 @@
  * @returns An array containing [red, green, blue, alpha] values.
  */
 export function parseRgba(color: string): [number, number, number, number] {
-  if (!color || typeof color !== "string" || color === "transparent" || color === "none") {
+  if (
+    !color ||
+    typeof color !== "string" ||
+    color === "transparent" ||
+    color === "none"
+  ) {
     return [0, 0, 0, 0];
   }
 
@@ -17,7 +22,10 @@ export function parseRgba(color: string): [number, number, number, number] {
   // Hex parsing
   if (trimmed.startsWith("#")) {
     const hex = trimmed.slice(1);
-    let r = 0, g = 0, b = 0, a = 1;
+    let r: number;
+    let g: number;
+    let b: number;
+    let a = 1;
 
     if (hex.length === 3) {
       r = parseInt(hex[0] + hex[0], 16);
@@ -45,7 +53,11 @@ export function parseRgba(color: string): [number, number, number, number] {
 
   // RGB / RGBA parsing
   const nums = trimmed.match(/[\d.]+/g)?.map(Number);
-  if (nums && nums.length >= 3 && !nums.slice(0, 3).some((n) => Number.isNaN(n))) {
+  if (
+    nums &&
+    nums.length >= 3 &&
+    !nums.slice(0, 3).some((n) => Number.isNaN(n))
+  ) {
     return [nums[0], nums[1], nums[2], nums[3] ?? 1];
   }
 

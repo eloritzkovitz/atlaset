@@ -19,6 +19,7 @@ export function FloatingPortal({
   const [style, setStyle] = useState<React.CSSProperties>({ display: "none" });
   const portalRef = useRef<HTMLDivElement>(null);
 
+  // Update the position of the portal whenever the anchor element or its position changes
   useLayoutEffect(() => {
     if (!anchorEl || !portalRef.current) {
       setStyle({ display: "none" });
@@ -26,10 +27,13 @@ export function FloatingPortal({
     }
     const anchorRect = anchorEl.getBoundingClientRect();
     const tooltipRect = portalRef.current.getBoundingClientRect();
-    let top = 0,
-      left = 0;
+
+    let top: number;
+    let left: number;
+
     const realGap = gap ?? 6;
-    let transform = undefined;
+    let transform: string | undefined;
+
     if (position === "top") {
       top = anchorRect.top - tooltipRect.height - realGap;
       if (centerX) {
@@ -54,14 +58,17 @@ export function FloatingPortal({
       top = anchorRect.top + anchorRect.height / 2 - tooltipRect.height / 2;
       left = anchorRect.right + realGap;
     }
+
     // Prevent horizontal clipping always
     const maxLeft = window.innerWidth - tooltipRect.width - 4;
     left = Math.max(4, Math.min(left, maxLeft));
+
     // Only prevent vertical clipping for non-top positions
     if (position !== "top") {
       const maxTop = window.innerHeight - tooltipRect.height - 4;
       top = Math.max(4, Math.min(top, maxTop));
     }
+
     setStyle({
       position: "fixed",
       top,
@@ -77,6 +84,6 @@ export function FloatingPortal({
     <div ref={portalRef} style={style}>
       {children}
     </div>,
-    document.body
+    document.body,
   );
 }

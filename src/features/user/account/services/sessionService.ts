@@ -33,9 +33,7 @@ export const sessionService = {
     const sessionsCol = getPaths.sub(userId, "sessions");
 
     const q = query(sessionsCol, where("sessionId", "==", sessionId));
-
     const snapshot = await getDocs(q);
-
     const isLocal = isLocalhost();
 
     const payload = {
@@ -45,7 +43,7 @@ export const sessionService = {
       sessionId,
     };
 
-    let targetDocId = "";
+    let targetDocId: string;
 
     // If a session document already exists for this browser, update it; otherwise, create a new one
     if (!snapshot.empty) {

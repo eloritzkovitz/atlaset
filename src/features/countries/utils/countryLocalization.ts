@@ -26,6 +26,29 @@ export interface LocalizedCountriesResult {
 }
 
 /**
+ * Fetches the resource bundle for countries based on the provided language and i18n instance.
+ * @param language - The language code for which to fetch the resource bundle.
+ * @param i18nInstance - Optional i18n instance to use for fetching the resource bundle.
+ * @returns A record containing country translations, or an empty object if not found.
+ */
+export function getCountryResourceBundle(
+  language?: string,
+  i18nInstance?: I18nInstance,
+): Record<string, Partial<Country>> {
+  const lng = language || i18nInstance?.language || i18next.language || "en";
+
+  try {
+    return (
+      i18nInstance?.getResourceBundle?.(lng, "countries") ??
+      i18next.getResourceBundle(lng, "countries") ??
+      {}
+    );
+  } catch {
+    return {};
+  }
+}
+
+/**
  * Processes and localizes country data based on the current language and i18n instance.
  * @param countries - The array of country objects to process.
  * @param currentLanguage - The current language code.
@@ -47,15 +70,7 @@ export function processLocalizedCountries(
   const childToParent = new Map<string, string>();
   const areaLookup = new Map<string, number>();
 
-  let bundle: Record<string, Partial<Country>> = {};
-  try {
-    bundle =
-      i18n.getResourceBundle?.(currentLanguage, "countries") ||
-      i18next.getResourceBundle(currentLanguage, "countries") ||
-      {};
-  } catch {
-    bundle = {};
-  }
+  const bundle = getCountryResourceBundle(currentLanguage, i18n);
 
   for (let i = 0; i < countries.length; i++) {
     const c = countries[i];

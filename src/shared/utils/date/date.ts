@@ -86,7 +86,7 @@ export function formatFirestoreDate(
 export function formatToInputDate(date: unknown): string {
   if (!date) return "";
 
-  let d: Date | null = null;
+  let d: Date;
   if (
     typeof date === "object" &&
     typeof (date as { toDate?: unknown }).toDate === "function"

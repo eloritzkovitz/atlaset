@@ -23,7 +23,7 @@ export function useAnalytics() {
         page_title: document.title,
       });
     }
-  }, [analyticsConsent, location]);
+  }, [analyticsConsent]);
 
   /** Tracks events only if consent is given. */
   const trackEvent = useCallback(

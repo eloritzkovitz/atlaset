@@ -1,10 +1,10 @@
-import i18next from "i18next";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage } from "@components";
 import { CountryListRow } from "../countryDisplay/CountryListRow";
 import { SPECIAL_COUNTRIES } from "../../constants/specialCountries";
 import { type Country } from "../../types";
+import { getCountryResourceBundle } from "../../utils/countryLocalization";
 
 interface CountryListGroupProps {
   label: React.ReactNode;
@@ -35,16 +35,7 @@ export const CountryListGroup: React.FC<CountryListGroupProps> = ({
 
       const special = SPECIAL_COUNTRIES[iso];
       if (special) {
-        let bundle: Record<string, Partial<Country>> = {};
-        try {
-          const lng = i18n.language || i18next.language || "en";
-          bundle =
-            i18n.getResourceBundle?.(lng, "countries") ||
-            i18next.getResourceBundle(lng, "countries") ||
-            {};
-        } catch {
-          bundle = {};
-        }
+        const bundle = getCountryResourceBundle(i18n.language, i18n);
         const trans = bundle[iso] ?? {};
         return {
           isoCode: iso,
