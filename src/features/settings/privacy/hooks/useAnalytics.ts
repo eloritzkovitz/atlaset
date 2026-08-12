@@ -15,6 +15,16 @@ export function useAnalytics() {
     }
   }, [analyticsConsent]);
 
+  // Explicitly track page views on SPA route changes
+  useEffect(() => {
+    if (analyticsConsent === true) {
+      logToGoogleAnalytics("page_view", {
+        page_path: location.pathname + location.search,
+        page_title: document.title,
+      });
+    }
+  }, [analyticsConsent, location]);
+
   /** Tracks events only if consent is given. */
   const trackEvent = useCallback(
     (

@@ -1,12 +1,12 @@
 import { useEffect, type ReactNode } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SplashScreen, PwaUpdateUiHint, UIHintContainer } from "@components";
 import { MigrationModal } from "@features/migration/components/MigrationModal";
 import { CookieConsentModal } from "@features/settings/privacy/components/CookieConsentModal";
-import { useSettings } from "@features/settings";
+import { useAnalytics, useSettings } from "@features/settings";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { AppProviders } from "./providers/AppProviders";
 import { AppRoutes } from "./routes/AppRoutes";
-import { useLocation, useNavigate } from "react-router-dom";
 
 interface AppBootstrapProps {
   children: ReactNode;
@@ -24,6 +24,9 @@ export function AppBootstrap({ children }: AppBootstrapProps) {
   const settingsBooting = Boolean(user) && !settingsReady;
   const needsInitialRedirect =
     !authBooting && Boolean(user) && location.pathname === "/";
+
+  // Initialize analytics tracking
+  useAnalytics();
 
   // Redirect to /atlas if the user is logged in and on the root path
   useEffect(() => {

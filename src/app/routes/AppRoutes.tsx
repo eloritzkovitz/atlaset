@@ -2,7 +2,6 @@ import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
 import { LoadingSpinner } from "@components";
 import { AtlasProviders } from "@features/atlas/core/providers/AtlasProviders";
-import { useAnalytics } from "@features/settings";
 import { SettingsRoutes } from "@features/settings/core/routes/SettingsRoutes";
 import { GuestRoute } from "./GuestRoute";
 import { ProtectedRoute } from "./ProtectedRoute";
@@ -30,8 +29,6 @@ const TripsPage = lazy(() => import("@features/trips/pages/TripsPage"));
 
 /** Main application routes component. */
 export function AppRoutes() {
-  useAnalytics();
-
   return (
     <Suspense fallback={<LoadingSpinner />}>
       <Routes>

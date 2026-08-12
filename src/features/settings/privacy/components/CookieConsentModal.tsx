@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { ActionButton } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useAnalytics } from "../hooks/useAnalytics";
 import { usePrivacySettings } from "../hooks/usePrivacySettings";
 
 export function CookieConsentModal() {
@@ -14,9 +13,6 @@ export function CookieConsentModal() {
   const { t } = useTranslation("settings");
 
   const [isReadyToShow, setIsReadyToShow] = useState(false);
-
-  // Initialize analytics if consent is given
-  useAnalytics();
 
   // Show the banner after a delay if consent is not yet given or rejected
   useEffect(() => {
