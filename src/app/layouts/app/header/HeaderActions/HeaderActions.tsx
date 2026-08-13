@@ -35,7 +35,8 @@ export function HeaderActions({ fixed = true }: { fixed?: boolean } = {}) {
   useEffect(() => {
     if (isOpen) closeModal();
     if (notificationsOpen) setNotificationsOpen(false);
-  }, [location.pathname, isOpen, notificationsOpen, closeModal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   // Don't render the user menu on mobile if on the trips page
   if (isMobile && isTripsPage) return null;

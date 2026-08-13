@@ -5,7 +5,6 @@ import React, {
   type ReactNode,
   type ReactElement,
 } from "react";
-import ReactDOM from "react-dom";
 import { useUI } from "@app/contexts/UIContext";
 import {
   useBodyScrollLock,
@@ -14,6 +13,7 @@ import {
   usePointerDrag,
 } from "@hooks";
 import { ModalHeader } from "./ModalHeader";
+import { OverlayPortal } from "../OverlayPortal/OverlayPortal";
 import "./Modal.css";
 
 interface ModalProps {
@@ -128,62 +128,63 @@ export function Modal({
     return child;
   });
 
-  return ReactDOM.createPortal(
-    <>
-      <div
-        aria-modal="true"
-        inert={!isOpen}
-        role="dialog"
-        className={`modal-backdrop fixed inset-0 z-[9999] ${
-          position === "center" ? "flex items-center justify-center" : ""
-        } ${!disableScroll ? "modal-backdrop-scrollable" : ""}`}
-        style={{ zIndex: backdropZIndex }}
-        onClick={
-          !disableScroll
-            ? () => {
-                if (!disableClose && !dragging) {
-                  onClose();
-                }
-              }
-            : undefined
-        }
-      >
+  return (
+    <OverlayPortal>
+      <>
         <div
-          ref={(element) => {
-            setContainerRef(element);
-
-            if (draggable && setModalDomRef) {
-              setModalDomRef(element);
-            }
-          }}
-          className={
-            "group fixed " +
-            "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
-            (isOpen ? "modal-show " : "modal-hide ") +
-            (closing ? " modal-closing " : "") +
-            className
+          aria-modal="true"
+          inert={!isOpen}
+          role="dialog"
+          className={`modal-backdrop fixed inset-0 z-[9999] ${
+            position === "center" ? "flex items-center justify-center" : ""
+          } ${!disableScroll ? "modal-backdrop-scrollable" : ""}`}
+          style={{ zIndex: backdropZIndex }}
+          onClick={
+            !disableScroll
+              ? () => {
+                  if (!disableClose && !dragging) {
+                    onClose();
+                  }
+                }
+              : undefined
           }
-          style={{
-            ...(position === "custom" ? style : {}),
-            zIndex: containerZIndex,
-            ...modalStyle,
-            cursor: draggable ? (dragging ? "grabbing" : "auto") : undefined,
-            userSelect: draggable ? "none" : undefined,
-          }}
-          onClick={(e) => e.stopPropagation()}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          onPointerDown={draggable ? handlePointerDown : undefined}
         >
-          {processedChildren}
-        </div>
-      </div>
+          <div
+            ref={(element) => {
+              setContainerRef(element);
 
-      {isOpen &&
-        floatingChildren &&
-        isValidElement(floatingChildren) &&
-        floatingChildren}
-    </>,
-    document.body,
+              if (draggable && setModalDomRef) {
+                setModalDomRef(element);
+              }
+            }}
+            className={
+              "group fixed " +
+              "modal max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl px-4 sm:px-6 py-4 " +
+              (isOpen ? "modal-show " : "modal-hide ") +
+              (closing ? " modal-closing " : "") +
+              className
+            }
+            style={{
+              ...(position === "custom" ? style : {}),
+              zIndex: containerZIndex,
+              ...modalStyle,
+              cursor: draggable ? (dragging ? "grabbing" : "auto") : undefined,
+              userSelect: draggable ? "none" : undefined,
+            }}
+            onClick={(e) => e.stopPropagation()}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            onPointerDown={draggable ? handlePointerDown : undefined}
+          >
+            {processedChildren}
+          </div>
+        </div>
+
+        {isOpen &&
+          floatingChildren &&
+          isValidElement(floatingChildren) &&
+          floatingChildren}
+      </>
+    </OverlayPortal>
   );
 }

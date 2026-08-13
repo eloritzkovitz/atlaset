@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import {
   autoUpdate,
   offset,
@@ -35,24 +35,8 @@ export function DropdownMenu({
 }: DropdownMenuProps) {
   const isVisible = isOpen && enabled;
 
-  const [referenceElement, setReferenceElement] = useState<HTMLElement | null>(
-    null,
-  );
-
-  // Update reference element when the dropdown is visible or the triggerRef changes
-  useLayoutEffect(() => {
-    if (isVisible) {
-      setReferenceElement(triggerRef.current);
-    } else {
-      setReferenceElement(null);
-    }
-  }, [isVisible, triggerRef]);
-
   const { refs, floatingStyles } = useFloating({
     open: isVisible && floating,
-    elements: {
-      reference: referenceElement,
-    },
     placement,
     strategy: "fixed",
     transform: false,
@@ -60,25 +44,29 @@ export function DropdownMenu({
     whileElementsMounted: autoUpdate,
   });
 
-  // Handle outside click to close the dropdown
+  // Update the reference element for the floating UI when the menu is open
+  useLayoutEffect(() => {
+    if (!floating) return;
+
+    refs.setReference(triggerRef.current);
+
+    return () => {
+      refs.setReference(null);
+    };
+  }, [floating, triggerRef, refs]);
+
   useClickOutside([triggerRef, refs.floating], onClose, isVisible);
 
-  // Don't render anything if the dropdown is not visible
-  if (!isVisible) {
-    return null;
-  }
-
-  const positionStyle =
-    floating && referenceElement ? floatingStyles : undefined;
+  // Don't render the menu if it's not visible
+  if (!isVisible) return null;
 
   return (
     <Menu
-      open={isVisible}
-      onClose={onClose}
+      open
       containerRef={floating ? refs.setFloating : undefined}
       disableScroll
       style={{
-        ...positionStyle,
+        ...(floating ? floatingStyles : {}),
         ...style,
       }}
       className={className}

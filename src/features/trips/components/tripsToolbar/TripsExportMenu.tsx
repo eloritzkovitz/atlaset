@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Menu, MenuButton } from "@components";
 import { FaFileCsv, FaFileLines } from "react-icons/fa6";
+import { Menu, MenuButton } from "@components";
 
 interface TripsExportMenuProps {
   open: boolean;
@@ -21,14 +21,16 @@ export function TripsExportMenu({
   containerRef,
 }: TripsExportMenuProps) {
   const { t } = useTranslation("trips");
+
+  if (!open) return null;
+
   return (
     <Menu
       open={open}
-      onClose={onClose}
       className="export-menu !p-2 mt-6"
       style={style}
       containerRef={containerRef}
-      disableScroll={true}
+      disableScroll
     >
       <MenuButton
         onClick={() => {
@@ -40,6 +42,7 @@ export function TripsExportMenu({
       >
         {t("table.toolbar.importExport.exportCSV")}
       </MenuButton>
+
       <MenuButton
         onClick={() => {
           onExportJSON();

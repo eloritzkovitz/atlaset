@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { FaChevronDown } from "react-icons/fa6";
-import { useMenuPosition } from "@hooks";
+import { useMenuPosition, useClickOutside } from "@hooks";
 import { Menu } from "../Menu/Menu";
 import { MenuButton } from "../Menu/MenuButton";
 import { ActionButton } from "../../inputs/Button/ActionButton";
@@ -22,10 +22,11 @@ export function ToolbarSelectButton<T extends string | number>({
   width = "150px",
 }: ToolbarSelectButtonProps<T>) {
   const [open, setOpen] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
+
   const btnRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Get the button's position for menu placement
   const menuStyle = useMenuPosition(
     open,
     btnRef,
@@ -36,13 +37,13 @@ export function ToolbarSelectButton<T extends string | number>({
     false,
   );
 
+  useClickOutside([btnRef, menuRef], () => setOpen(false), open);
+
   // Toggle menu open state
   const handleButtonClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent bubbling to document/click-away
+    e.stopPropagation();
     setOpen((prev) => !prev);
   };
-
-  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
     <>
@@ -59,14 +60,12 @@ export function ToolbarSelectButton<T extends string | number>({
         <span className="truncate flex-1 text-start ps-3 pe-8">
           {options.find((o) => o.value === value)?.label}
         </span>
-        <span
-          className={
-            "absolute top-1/2 end-2 -translate-y-1/2 pointer-events-none"
-          }
-        >
+
+        <span className="absolute top-1/2 end-2 -translate-y-1/2 pointer-events-none">
           <FaChevronDown />
         </span>
       </ActionButton>
+
       {showTooltip && btnRef.current && (
         <FloatingPortal
           anchorEl={btnRef.current}
@@ -82,12 +81,11 @@ export function ToolbarSelectButton<T extends string | number>({
           </span>
         </FloatingPortal>
       )}
+
       <Menu
         open={open}
-        onClose={() => setOpen(false)}
         style={menuStyle}
         containerRef={menuRef}
-        extraRefs={[btnRef]}
         className="bg-input rounded shadow max-h-[20vh] overflow-y-auto"
       >
         <ul>
@@ -96,7 +94,7 @@ export function ToolbarSelectButton<T extends string | number>({
               <MenuButton
                 active={opt.value === value}
                 onClick={() => {
-                  onChange(opt.value as T);
+                  onChange(opt.value);
                   setOpen(false);
                 }}
                 className="w-full"

@@ -29,12 +29,7 @@ export function CountryListsMenu({
   const { t } = useTranslation();
 
   return (
-    <Menu
-      open={open}
-      style={menuStyle}
-      containerRef={menuRef}
-      onClose={onClose}
-    >
+    <Menu open={open} style={menuStyle} containerRef={menuRef}>
       <div {...hoverHandlers} className="p-1">
         {countryLists.map((list: CountryList) => {
           const isAlreadyAdded = list.countryCodes.includes(selectedIsoCode);
@@ -44,8 +39,10 @@ export function CountryListsMenu({
               key={list.id}
               onPointerDown={(e) => {
                 if (isAlreadyAdded) return;
+
                 e.preventDefault();
                 e.stopPropagation();
+
                 onAddCountryToList(list.id);
                 onClose();
               }}
@@ -69,6 +66,7 @@ export function CountryListsMenu({
           onPointerDown={(e) => {
             e.preventDefault();
             e.stopPropagation();
+
             onCreateNewList();
             onClose();
           }}

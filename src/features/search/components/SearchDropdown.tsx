@@ -2,7 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Menu, SearchInput } from "@components";
 import { useAuth } from "@features/user/auth";
-import { useClickOutside, useDisclosure, useMenuPosition } from "@hooks";
+import {
+  useBodyScrollLock,
+  useClickOutside,
+  useDisclosure,
+  useMenuPosition,
+} from "@hooks";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
 
@@ -18,20 +23,19 @@ export function SearchDropdown() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Open dropdown when input is clicked
+  useBodyScrollLock(dropdown.isOpen);
+
   const handleInputClick = (e: React.MouseEvent) => {
     if (e.button === 0) {
       dropdown.open();
     }
   };
 
-  // Close dropdown when clicking outside
   useClickOutside([wrapperRef, dropdownRef], dropdown.close, dropdown.isOpen);
 
   // Determine if SearchContent will render anything
   const hasContent = !!search.searchTerm || !!search.recentSearches.length;
 
-  // Calculate dropdown position using the custom hook
   const menuStyle = useMenuPosition(
     dropdown.isOpen,
     wrapperRef,
@@ -42,8 +46,8 @@ export function SearchDropdown() {
     hasContent,
   );
 
-  // Force a re-render when the dropdown opens and has content to ensure proper positioning
   const [, triggerUpdate] = useState({});
+
   useEffect(() => {
     if (dropdown.isOpen && hasContent) {
       const frame = requestAnimationFrame(() => triggerUpdate({}));
@@ -76,12 +80,11 @@ export function SearchDropdown() {
         placeholder={t("components.search.placeholder")}
         showClear={false}
       />
+
       {dropdown.isOpen && hasContent && (
         <Menu
           open={dropdown.isOpen}
-          onClose={dropdown.close}
           containerRef={dropdownRef}
-          disableScroll
           style={menuStyle}
         >
           <SearchContent
