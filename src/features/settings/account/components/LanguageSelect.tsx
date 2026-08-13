@@ -13,11 +13,7 @@ export function LanguageSelect() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Close when clicking outside the menu
-  useClickOutside(
-    [containerRef as React.RefObject<HTMLElement>],
-    () => setIsOpen(false),
-    isOpen,
-  );
+  useClickOutside([containerRef], () => setIsOpen(false), isOpen);
 
   const languages = mapLanguages(t);
   const currentLanguage = languages.find((l) => l.code === current);

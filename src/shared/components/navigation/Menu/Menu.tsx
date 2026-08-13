@@ -1,4 +1,4 @@
-import type { ReactNode, CSSProperties } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import { Modal } from "../../overlay/Modal/Modal";
 
 interface MenuProps {
@@ -9,7 +9,7 @@ interface MenuProps {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
-  containerRef?: React.RefObject<HTMLDivElement | null>;
+  containerRef?: Ref<HTMLDivElement>;
   disableScroll?: boolean;
   extraRefs?: React.RefObject<HTMLElement | null>[];
 }

@@ -31,7 +31,7 @@ interface ModalProps {
   containerZIndex?: number;
   backdropZIndex?: number;
   style?: React.CSSProperties;
-  containerRef?: React.RefObject<HTMLDivElement | null>;
+  containerRef?: React.Ref<HTMLDivElement>;
   extraRefs?: React.RefObject<HTMLElement | null>[];
   draggable?: boolean;
 }
@@ -57,12 +57,22 @@ export function Modal({
   draggable = false,
 }: ModalProps) {
   const { setModalOpen } = useUI();
-  const internalRef = useRef<HTMLDivElement>(null);
-  const modalRef = containerRef ?? internalRef;
+  const internalRef = useRef<HTMLDivElement | null>(null);
+
+  const setContainerRef = (element: HTMLDivElement | null) => {
+    internalRef.current = element;
+
+    if (typeof containerRef === "function") {
+      containerRef(element);
+    } else if (containerRef) {
+      containerRef.current = element;
+    }
+  };
 
   // Set modal open state for UI context
   useEffect(() => {
     setModalOpen(isOpen);
+
     return () => setModalOpen(false);
   }, [isOpen, setModalOpen]);
 
@@ -90,13 +100,7 @@ export function Modal({
   };
 
   // Close modal on outside click
-  useClickOutside(
-    [
-      modalRef as React.RefObject<HTMLElement>,
-      ...(extraRefs?.map((ref) => ref as React.RefObject<HTMLElement>) ?? []),
-    ],
-    handleOutsideClose,
-  );
+  useClickOutside([internalRef, ...extraRefs], handleOutsideClose);
 
   // Disable background scroll when modal is open
   useBodyScrollLock(disableScroll && isOpen);
@@ -120,6 +124,7 @@ export function Modal({
         onClose: headerElement.props.onClose ?? onClose,
       });
     }
+
     return child;
   });
 
@@ -136,20 +141,19 @@ export function Modal({
         onClick={
           !disableScroll
             ? () => {
-                if (!disableClose && !dragging) onClose();
+                if (!disableClose && !dragging) {
+                  onClose();
+                }
               }
             : undefined
         }
       >
         <div
-          ref={(el) => {
-            if (modalRef) {
-              (
-                modalRef as React.MutableRefObject<HTMLDivElement | null>
-              ).current = el;
-            }
+          ref={(element) => {
+            setContainerRef(element);
+
             if (draggable && setModalDomRef) {
-              setModalDomRef(el);
+              setModalDomRef(element);
             }
           }}
           className={
@@ -174,6 +178,7 @@ export function Modal({
           {processedChildren}
         </div>
       </div>
+
       {isOpen &&
         floatingChildren &&
         isValidElement(floatingChildren) &&

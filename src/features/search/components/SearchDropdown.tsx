@@ -26,14 +26,7 @@ export function SearchDropdown() {
   };
 
   // Close dropdown when clicking outside
-  useClickOutside(
-    [
-      wrapperRef as React.RefObject<HTMLElement>,
-      dropdownRef as React.RefObject<HTMLElement>,
-    ],
-    dropdown.close,
-    dropdown.isOpen,
-  );
+  useClickOutside([wrapperRef, dropdownRef], dropdown.close, dropdown.isOpen);
 
   // Determine if SearchContent will render anything
   const hasContent = !!search.searchTerm || !!search.recentSearches.length;
@@ -41,8 +34,8 @@ export function SearchDropdown() {
   // Calculate dropdown position using the custom hook
   const menuStyle = useMenuPosition(
     dropdown.isOpen,
-    wrapperRef as React.RefObject<HTMLElement>,
-    dropdownRef as React.RefObject<HTMLElement>,
+    wrapperRef,
+    dropdownRef,
     42,
     "right",
     "overlay",

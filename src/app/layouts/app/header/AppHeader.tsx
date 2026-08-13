@@ -1,7 +1,7 @@
 import { useUI } from "@app/contexts/UIContext";
 import { SearchDropdown } from "@features/search/components/SearchDropdown";
 import { useScreenSize } from "@hooks";
-import { UserMenu } from "./UserMenu/UserMenu";
+import { HeaderActions } from "./HeaderActions/HeaderActions";
 
 interface AppHeaderProps {
   show: boolean;
@@ -30,7 +30,7 @@ export function AppHeader({ show }: AppHeaderProps) {
     >
       <div className="flex flex-1 justify-end gap-4 h-10">
         {!isMobile && <SearchDropdown />}
-        <UserMenu fixed={false} />
+        <HeaderActions fixed={false} />
       </div>
     </header>
   );

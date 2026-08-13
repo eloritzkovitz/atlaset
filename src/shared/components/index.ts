@@ -67,6 +67,7 @@ export { Separator } from "./layout/Separator";
 // Navigation components
 export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
 export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
+export { DropdownMenu } from "./navigation/Menu/DropdownMenu";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
 export { SectionLink } from "./navigation/SectionLink";

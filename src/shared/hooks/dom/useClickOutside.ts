@@ -14,8 +14,8 @@ type UseClickOutsideOptions = {
  * @param enabled - Whether the hook is enabled
  * @param options - Options to enable/disable specific event types
  */
-export function useClickOutside<T extends HTMLElement>(
-  refs: React.RefObject<T>[],
+export function useClickOutside(
+  refs: React.RefObject<HTMLElement | null>[],
   onOutside: () => void,
   enabled = true,
   options: UseClickOutsideOptions = { click: true, escape: true },

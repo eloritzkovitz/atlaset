@@ -52,14 +52,7 @@ export function DropdownSelectInput<T = string>({
   );
 
   // Close dropdown on outside click
-  useClickOutside(
-    [
-      ref as React.RefObject<HTMLElement>,
-      menuRef as React.RefObject<HTMLElement>,
-    ],
-    () => setOpen(false),
-    open,
-  );
+  useClickOutside([ref, menuRef], () => setOpen(false), open);
 
   // For multi-select, value is T[]
   const isSelected = (val: T) =>
