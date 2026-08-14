@@ -2,6 +2,7 @@ import { useLayoutEffect } from "react";
 import {
   autoUpdate,
   offset,
+  size,
   useFloating,
   type Placement,
 } from "@floating-ui/react";
@@ -17,6 +18,7 @@ export interface DropdownMenuProps {
   floating?: boolean;
   placement?: Placement;
   offset?: number;
+  matchTriggerWidth?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -30,6 +32,7 @@ export function DropdownMenu({
   floating = true,
   placement = "bottom-end",
   offset: offsetDistance = 8,
+  matchTriggerWidth = false,
   className = "z-50 p-2",
   style,
 }: DropdownMenuProps) {
@@ -40,7 +43,18 @@ export function DropdownMenu({
     placement,
     strategy: "fixed",
     transform: false,
-    middleware: [offset(offsetDistance)],
+    middleware: [
+      offset(offsetDistance),
+      ...(matchTriggerWidth
+        ? [
+            size({
+              apply({ rects, elements }) {
+                elements.floating.style.width = `${rects.reference.width}px`;
+              },
+            }),
+          ]
+        : []),
+    ],
     whileElementsMounted: autoUpdate,
   });
 

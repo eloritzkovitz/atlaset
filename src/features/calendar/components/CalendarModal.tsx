@@ -1,6 +1,5 @@
 import { lazy, Suspense, useCallback, useState } from "react";
-import ReactDOM from "react-dom";
-import { LoadingSpinner, Modal, ModalHeader } from "@components";
+import { LoadingSpinner, Modal, ModalHeader, OverlayPortal } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
 import { useTrips } from "@features/trips/context/TripsContext";
@@ -42,43 +41,44 @@ export default function CalendarModal() {
     enabled: true,
   });
 
-  return ReactDOM.createPortal(
-    <Modal
-      isOpen={true}
-      onClose={closeCalendar}
-      className="!min-w-4/5 min-h-[890px] !h-[890px] flex flex-col shadow relative"
-      draggable
-      containerZIndex={10060}
-      backdropZIndex={10059}
-    >
-      <ModalHeader
-        title={
-          <>
-            <ICONS.calendar />
-            Calendar
-          </>
-        }
-      />
-      <div className="flex flex-row w-full h-full">
-        <Suspense fallback={<LoadingSpinner />}>
-          <CalendarSidePanel
-            date={date}
-            setDate={setDate}
-            filters={filters}
-            onToggleType={handleToggleType}
-          />
-        </Suspense>
-        <div className="flex flex-col flex-1 min-w-0">
-          <AppCalendar
-            trips={filteredTrips}
-            view={view}
-            date={date}
-            onViewChange={setView}
-            onDateChange={setDate}
-          />
+  return (
+    <OverlayPortal>
+      <Modal
+        isOpen={true}
+        onClose={closeCalendar}
+        className="!min-w-4/5 min-h-[890px] !h-[890px] flex flex-col shadow relative"
+        draggable
+        containerZIndex={10060}
+        backdropZIndex={10059}
+      >
+        <ModalHeader
+          title={
+            <>
+              <ICONS.calendar />
+              Calendar
+            </>
+          }
+        />
+        <div className="flex flex-row w-full h-full">
+          <Suspense fallback={<LoadingSpinner />}>
+            <CalendarSidePanel
+              date={date}
+              setDate={setDate}
+              filters={filters}
+              onToggleType={handleToggleType}
+            />
+          </Suspense>
+          <div className="flex flex-col flex-1 min-w-0">
+            <AppCalendar
+              trips={filteredTrips}
+              view={view}
+              date={date}
+              onViewChange={setView}
+              onDateChange={setDate}
+            />
+          </div>
         </div>
-      </div>
-    </Modal>,
-    document.body,
+      </Modal>
+    </OverlayPortal>
   );
 }

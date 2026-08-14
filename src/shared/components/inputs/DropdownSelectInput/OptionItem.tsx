@@ -3,12 +3,14 @@ import { Checkbox } from "../Checkbox/Checkbox";
 
 interface OptionItemProps<T> {
   opt: Option<T>;
-  isSelected: (val: T) => boolean;
+  isSelected: (value: T) => boolean;
   isMulti: boolean;
   value: T | T[];
-  onChange: (v: T | T[]) => void;
-  setOpen: (v: boolean) => void;
-  renderOption?: (opt: Option<T>) => React.ReactNode;
+  onChange: (value: T | T[]) => void;
+  setOpen: (open: boolean) => void;
+  renderOption?: (option: Option<T>) => React.ReactNode;
+  active?: boolean;
+  onHover?: () => void;
 }
 
 export function OptionItem<T>({
@@ -19,36 +21,44 @@ export function OptionItem<T>({
   onChange,
   setOpen,
   renderOption,
+  active = false,
+  onHover,
 }: OptionItemProps<T>) {
-  // Toggle handler
   function handleToggle() {
     if (isMulti && Array.isArray(value)) {
-      if (value.includes(opt.value)) {
-        onChange(value.filter((v) => v !== opt.value));
-      } else {
-        onChange([...value, opt.value]);
-      }
-    } else {
-      onChange(opt.value);
-      setOpen(false);
+      onChange(
+        value.includes(opt.value)
+          ? value.filter((v) => v !== opt.value)
+          : [...value, opt.value],
+      );
+      return;
     }
+
+    onChange(opt.value);
+    setOpen(false);
   }
 
   return (
-    <div
-      className={`flex items-center gap-2 px-2 py-1 hover:bg-primary-hover cursor-pointer rounded ${
-        isSelected(opt.value) ? "bg-primary font-semibold" : ""
-      }`}
+    <button
+      id={`dropdown-option-${String(opt.value)}`}
+      type="button"
+      role="option"
+      aria-selected={isSelected(opt.value)}
+      className={`w-full flex items-center gap-2 px-2 py-1 text-start rounded ${
+        active ? "bg-primary-hover" : ""
+      } ${isSelected(opt.value) ? "bg-primary font-semibold" : ""}`}
+      onMouseEnter={onHover}
       onClick={handleToggle}
     >
       {isMulti && Array.isArray(value) && (
         <Checkbox
           checked={value.includes(opt.value)}
-          onChange={handleToggle}
-          onClick={(e) => e.stopPropagation()}
+          onChange={() => {}}
+          aria-hidden
         />
-      )}     
+      )}
+
       {renderOption ? renderOption(opt) : opt.label}
-    </div>
+    </button>
   );
 }

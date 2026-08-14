@@ -4,12 +4,14 @@ import { OptionItem } from "./OptionItem";
 
 interface DropdownOptionsProps<T> {
   options: DropdownOption<T>[];
-  isSelected: (val: T) => boolean;
+  isSelected: (value: T) => boolean;
   isMulti: boolean;
   value: T | T[];
   onChange: (value: T | T[]) => void;
   setOpen: (open: boolean) => void;
-  renderOption?: (opt: DropdownOption<T>) => React.ReactNode;
+  renderOption?: (option: DropdownOption<T>) => React.ReactNode;
+  activeIndex: number;
+  onActiveChange: (index: number) => void;
 }
 
 export function DropdownOptions<T>({
@@ -20,41 +22,60 @@ export function DropdownOptions<T>({
   onChange,
   setOpen,
   renderOption,
+  activeIndex,
+  onActiveChange,
 }: DropdownOptionsProps<T>) {
+  let optionIndex = 0;
+
   return (
     <>
-      {options.map((optOrGroup) =>
-        "options" in optOrGroup ? (
-          <div key={optOrGroup.label}>
-            <div className="px-3 py-1 text-muted text-xs font-semibold uppercase">
-              {optOrGroup.label}
+      {options.map((item) => {
+        if ("options" in item) {
+          return (
+            <div key={item.label}>
+              <div className="px-3 py-1 text-muted text-xs font-semibold uppercase">
+                {item.label}
+              </div>
+
+              {item.options.map((option) => {
+                const index = optionIndex++;
+
+                return (
+                  <OptionItem
+                    key={String(option.value)}
+                    opt={option}
+                    isSelected={isSelected}
+                    isMulti={isMulti}
+                    value={value}
+                    onChange={onChange}
+                    setOpen={setOpen}
+                    renderOption={renderOption}
+                    active={index === activeIndex}
+                    onHover={() => onActiveChange(index)}
+                  />
+                );
+              })}
             </div>
-            {optOrGroup.options.map((opt) => (
-              <OptionItem
-                key={String(opt.value)}
-                opt={opt}
-                isSelected={isSelected}
-                isMulti={isMulti}
-                value={value}
-                onChange={onChange}
-                setOpen={setOpen}
-                renderOption={renderOption}
-              />
-            ))}
-          </div>
-        ) : (
+          );
+        }
+
+        const index = optionIndex++;
+
+        return (
           <OptionItem
-            key={String(optOrGroup.value)}
-            opt={optOrGroup}
+            key={String(item.value)}
+            opt={item}
             isSelected={isSelected}
             isMulti={isMulti}
             value={value}
             onChange={onChange}
             setOpen={setOpen}
             renderOption={renderOption}
+            active={index === activeIndex}
+            onHover={() => onActiveChange(index)}
           />
-        )
-      )}
+        );
+      })}
     </>
   );
 }

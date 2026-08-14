@@ -87,6 +87,7 @@ export { FloatingPortal } from "./overlay/Tooltip/FloatingPortal";
 export { Modal } from "./overlay/Modal/Modal";
 export { ModalActions } from "./overlay/Modal/ModalActions";
 export { ModalHeader } from "./overlay/Modal/ModalHeader";
+export { OverlayPortal } from "./overlay/OverlayPortal/OverlayPortal";
 export { Panel, type PanelProps } from "./overlay/Panel/Panel";
 export { PwaUpdateUiHint } from "./overlay/UiHint/PwaUpdateUiHint";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";
