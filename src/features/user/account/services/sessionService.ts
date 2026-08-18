@@ -26,6 +26,21 @@ export const sessionService = {
     return getDocsData<UserSession>(q);
   },
 
+  /** Retrieves the IP address of the current browser session. */
+  async getCurrentIpAddress(): Promise<string | undefined> {
+    if (isLocalhost()) {
+      return "127.0.0.1";
+    }
+
+    try {
+      const geoData = await geoService.getGeoData();
+      return geoData?.ipAddress;
+    } catch (error) {
+      console.error("Failed to get current IP address:", error);
+      return undefined;
+    }
+  },
+
   /** Registers a new session in Firestore. */
   async logSession(userId: string): Promise<void> {
     const sessionInfo = getBrowserSessionInfo();

@@ -1,4 +1,4 @@
-import { doc, runTransaction, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, runTransaction, updateDoc } from "firebase/firestore";
 import { logUserActivity } from "@features/activity";
 import type { Trip } from "@features/trips/types";
 import { computeVisitedCountriesFromTrips } from "@features/visits/utils/visits";
@@ -73,69 +73,6 @@ export const profileService = {
   },
 
   /**
-   * Creates a user profile in Firestore with a unique username.
-   * @param user - The user object.
-   * @param ipAddress - Optional IP address for initializing home country.
-   * @returns - The generated unique username.
-   */
-  async createUserProfileWithUsername(
-    user: {
-      uid: string;
-      displayName: string | null;
-      email: string | null;
-      photoURL?: string | null;
-      joinDate?: string | null;
-    },
-    ipAddress?: string,
-  ) {
-    // Check if user profile already exists
-    const userData = await getDocData<{ username: string }>(
-      getPaths.user(user.uid),
-    );
-
-    if (userData) {
-      return userData.username;
-    }
-
-    // Generate a unique username
-    const username = await this.generateUniqueUsername(
-      user.displayName,
-      user.email,
-    );
-
-    // Use a transaction to ensure username uniqueness
-    await runTransaction(db, async (transaction) => {
-      const usernameRef = getPaths.username(username);
-      const userRef = getPaths.user(user.uid);
-      const usernameSnap = await transaction.get(usernameRef);
-
-      if (usernameSnap.exists()) {
-        throw new Error("Username taken.");
-      }
-
-      transaction.set(usernameRef, { uid: user.uid });
-      transaction.set(userRef, {
-        uid: user.uid,
-        username,
-        displayName: user.displayName || "",
-        email: user.email || "",
-        joinDate: user.joinDate
-          ? Timestamp.fromDate(new Date(user.joinDate))
-          : Timestamp.now(),
-        photoURL: user.photoURL || "",
-        isPublic: true,
-      });
-    });
-
-    // Optionally initialize home country based on IP address
-    if (ipAddress) {
-      await this.initializeUserCountry(user.uid, ipAddress);
-    }
-
-    return username;
-  },
-
-  /**
    * Fetches a user profile by username.
    * @param username - The username.
    * @returns - The UserProfile object or null if not found.
@@ -166,7 +103,7 @@ export const profileService = {
       120,
       {
         updatedFields: Object.keys(updates),
-        userName: profile?.displayName || "",
+        userName: profile?.displayName,
       },
       uid,
     );
@@ -197,7 +134,7 @@ export const profileService = {
       const usernameSnap = await transaction.get(newUsernameRef);
 
       if (usernameSnap.exists()) {
-        throw new Error("Username taken.");
+        throw new Error("USERNAME_TAKEN");
       }
 
       // Update user document and username references atomically

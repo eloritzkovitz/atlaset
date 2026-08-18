@@ -158,6 +158,15 @@
     "empty": "—",
     "date": {
       "tbd": "טרם"
+    },
+    "timeAgo": {
+      "justNow": "עכשיו",
+      "minutes_one": "לפני {{count}}ח",
+      "minutes_other": "לפני {{count}}ד",
+      "hours_one": "לפני {{count}}ש",
+      "hours_other": "לפני {{count}}ש",
+      "days_one": "לפני {{count}}י",
+      "days_other": "לפני {{count}}י"
     }
   },
 

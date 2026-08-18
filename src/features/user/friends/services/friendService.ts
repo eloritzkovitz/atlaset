@@ -8,6 +8,7 @@ import {
   writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
+import { ACTIONS } from "@constants/actions";
 import { db } from "@lib/firebase";
 import { logUserActivity } from "@features/activity";
 import { getDocData, getDocsData, getPaths } from "@lib/firebase";
@@ -59,7 +60,7 @@ export const friendService = {
     await batch.commit();
 
     await logUserActivity(
-      140,
+      ACTIONS.FRIENDSHIP_ESTABLISHED,
       {
         friendId: requestUserId,
         userName: currentUserName || "You",
@@ -69,7 +70,7 @@ export const friendService = {
     );
 
     await logUserActivity(
-      140,
+      ACTIONS.FRIEND_REQUEST_ACCEPTED,
       {
         friendId: currentUserId,
         userName: requestUserName || "You",

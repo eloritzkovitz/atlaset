@@ -8,19 +8,20 @@
     "deleteActivityTitle": "Delete activity",
     "goBack": "Go back"
   },
+  
   "101": "{userName} created an account{date}",
-  "102": "{userName} signed in{date}",
-  "103": "{userName} signed out{date}",
+  "102": "{userName} deactivated their account{date}",
+  "103": "{userName} reactivated their account{date}",
+
   "104": "{userName} requested a password reset{date}",
 
-  "110": "{userName} deactivated their account{date}",
-  "111": "{userName} reactivated their account{date}",
+  "110": "{userName} signed in{date}",
 
   "120": "{userName} updated their profile{date}",
 
   "130": "{userName} updated settings{date}",
 
-  "140": "{userName} is now friends with {friendName}{date}",
+  "142": "{userName} is now friends with {friendName}{date}",
 
   "200": "{userName} performed an atlas action{date}",
 

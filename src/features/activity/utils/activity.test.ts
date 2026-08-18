@@ -160,8 +160,8 @@ describe("getActivityDescription", () => {
   });
 
   it("renders friendName correctly as a username segment", () => {
-    mockI18nTemplate(140, "{userName} is now friends with {friendName}.");
-    const segments = getSegments(140, {
+    mockI18nTemplate(142, "{userName} is now friends with {friendName}.");
+    const segments = getSegments(142, {
       userName: "Alice",
       friendName: "Bob",
     });
@@ -173,8 +173,8 @@ describe("getActivityDescription", () => {
   });
 
   it("uses fallback 'a friend' for missing friendName", () => {
-    mockI18nTemplate(140, "{userName} is now friends with {friendName}.");
-    const segments = getSegments(140, {
+    mockI18nTemplate(142, "{userName} is now friends with {friendName}.");
+    const segments = getSegments(142, {
       userName: "Alice",
     });
 
@@ -232,7 +232,7 @@ describe("getActivityDescription", () => {
 
 describe("getActivityIcon", () => {
   const cases: Array<[number[], keyof typeof ICONS]> = [
-    [[101, 102, 103, 104, 110, 111], "account"],
+    [[101, 102, 103, 110, 112], "account"],
     [[120], "profile"],
     [[130], "settings"],
     [[140], "friends"],

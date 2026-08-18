@@ -5,6 +5,7 @@
 import { addDoc } from "firebase/firestore";
 import i18n from "i18next";
 import type { ComponentType, SVGProps } from "react";
+import type { Action } from "@constants/actions";
 import { ICONS } from "@constants/icons";
 import { getUserCollection, logToGoogleAnalytics } from "@lib/firebase";
 import { formatTimeSeconds } from "@utils";
@@ -17,7 +18,7 @@ import type { ActivityDetails } from "../types";
  * @param uid The user ID for whom the activity is logged.
  */
 export async function logUserActivity(
-  action: number,
+  action: Action,
   details: object,
   uid: string,
 ) {

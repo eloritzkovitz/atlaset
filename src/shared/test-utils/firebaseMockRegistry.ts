@@ -47,10 +47,21 @@ vi.mock("@lib/firebase", () => ({
       return { id: d.id, ...data };
     });
   }),
+
+  USER_SUBCOLLECTIONS: [
+    "activity",
+    "friends",
+    "friendRequests",
+    "notifications",
+  ],
+
   getPaths: {
     user: vi.fn((uid) => mockFirestoreControls.doc({} as any, `users/${uid}`)),
     username: vi.fn((username) =>
       mockFirestoreControls.doc({} as any, `usernames/${username}`),
+    ),
+    usernames: vi.fn(() =>
+      mockFirestoreControls.collection({} as any, "usernames"),
     ),
     sub: vi.fn((uid, sub) =>
       mockFirestoreControls.collection({} as any, `users/${uid}/${sub}`),
@@ -71,7 +82,9 @@ vi.mock("@lib/firebase", () => ({
       ),
     ),
   },
+
   db: {},
+
   __esModule: true,
 }));
 
@@ -102,38 +115,39 @@ vi.mock("firebase/auth", () => ({
   __esModule: true,
 }));
 
-/** Mocks timestamp utilities. */
-export const mockTimestamp = {
-  now: vi.fn(() => ({ toMillis: () => 1000 })),
-  fromDate: vi.fn((d) => ({ toMillis: () => d.getTime() })),
-};
-
 // Mock Firestore utilities
-vi.mock("firebase/firestore", () => ({
-  addDoc: mockFirestoreControls.addDoc,
-  arrayRemove: mockFirestoreControls.arrayRemove,
-  arrayUnion: mockFirestoreControls.arrayUnion,
-  batchCommit: mockFirestoreControls.batchCommit,
-  batchSet: mockFirestoreControls.batchSet,
-  batchUpdate: mockFirestoreControls.batchUpdate,
-  collection: mockFirestoreControls.collection,
-  deleteDoc: mockFirestoreControls.deleteDoc,
-  doc: mockFirestoreControls.doc,
-  getDoc: mockFirestoreControls.getDoc,
-  getDocs: mockFirestoreControls.getDocs,
-  getFirestore: mockFirestoreControls.getFirestore,
-  limit: mockFirestoreControls.limit,
-  onSnapshot: mockFirestoreControls.onSnapshot,
-  orderBy: mockFirestoreControls.orderBy,
-  query: mockFirestoreControls.query,
-  runTransaction: vi.fn((_db, cb) => cb(mockFirestoreControls.transaction())),
-  serverTimestamp: mockFirestoreControls.serverTimestamp,
-  setDoc: mockFirestoreControls.setDoc,
-  startAfter: mockFirestoreControls.startAfter,
-  transaction: mockFirestoreControls.transaction,
-  updateDoc: mockFirestoreControls.updateDoc,
-  where: mockFirestoreControls.where,
-  writeBatch: () => mockFirestoreControls.writeBatch(),
-  Timestamp: mockTimestamp,
-  __esModule: true,
-}));
+vi.mock("firebase/firestore", async () => {
+  const actual =
+    await vi.importActual<typeof import("firebase/firestore")>(
+      "firebase/firestore",
+    );
+
+  return {
+    ...actual,
+    addDoc: mockFirestoreControls.addDoc,
+    arrayRemove: mockFirestoreControls.arrayRemove,
+    arrayUnion: mockFirestoreControls.arrayUnion,
+    batchCommit: mockFirestoreControls.batchCommit,
+    batchSet: mockFirestoreControls.batchSet,
+    batchUpdate: mockFirestoreControls.batchUpdate,
+    collection: mockFirestoreControls.collection,
+    deleteDoc: mockFirestoreControls.deleteDoc,
+    doc: mockFirestoreControls.doc,
+    getDoc: mockFirestoreControls.getDoc,
+    getDocs: mockFirestoreControls.getDocs,
+    getFirestore: mockFirestoreControls.getFirestore,
+    limit: mockFirestoreControls.limit,
+    onSnapshot: mockFirestoreControls.onSnapshot,
+    orderBy: mockFirestoreControls.orderBy,
+    query: mockFirestoreControls.query,
+    runTransaction: mockFirestoreControls.runTransaction,
+    serverTimestamp: mockFirestoreControls.serverTimestamp,
+    setDoc: mockFirestoreControls.setDoc,
+    startAfter: mockFirestoreControls.startAfter,
+    transaction: mockFirestoreControls.transaction,
+    updateDoc: mockFirestoreControls.updateDoc,
+    where: mockFirestoreControls.where,
+    writeBatch: () => mockFirestoreControls.writeBatch(),
+    __esModule: true,
+  };
+});

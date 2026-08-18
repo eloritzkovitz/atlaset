@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { ACTIONS } from "@constants/actions";
 import { useAuth } from "@features/user/auth";
 import { useUserActivity } from "../hooks/useUserActivity";
 import type { UserActivity } from "../types";
@@ -12,7 +13,7 @@ export function useLastLogin() {
 
   // Find the most recent login activity to extract last login details
   const last = useMemo(
-    () => activity.find((a) => a.action === 102) ?? null,
+    () => activity.find((a) => a.action === ACTIONS.SIGNED_IN) ?? null,
     [activity],
   );
 

@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
+import { ACTIONS } from "@constants/actions";
 import { logUserActivity } from "@features/activity/utils/activity";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
@@ -53,7 +54,11 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
 
       if (lastAction.current === null) {
         if (user)
-          await logUserActivity(210, { count: updatedLayers.length }, user.uid);
+          await logUserActivity(
+            ACTIONS.LAYERS_UPDATED,
+            { count: updatedLayers.length },
+            user.uid,
+          );
       } else {
         lastAction.current = null;
       }
@@ -63,7 +68,12 @@ export function LayersProvider({ children }: { children: React.ReactNode }) {
 
       lastAction.current = action;
 
-      const actionCodes = { add: 211, edit: 212, remove: 213, reorder: 214 };
+      const actionCodes = {
+        add: ACTIONS.LAYER_ADDED,
+        edit: ACTIONS.LAYER_EDITED,
+        remove: ACTIONS.LAYER_REMOVED,
+        reorder: ACTIONS.LAYERS_REORDERED,
+      };
       await logUserActivity(
         actionCodes[action],
         { layerId: layer.id, itemName: layer.name, userName: user.displayName },
