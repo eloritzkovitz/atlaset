@@ -80,6 +80,7 @@ export { ToolbarToggleGroup } from "./navigation/Toolbar/ToolbarToggleGroup";
 export * from "./navigation/Menu/menuUtils";
 
 // Overlay components
+export { Backdrop } from "./overlay/Backdrop/Backdrop";
 export { ConfirmModal } from "./overlay/Modal/ConfirmModal";
 export { DialogHeader } from "./overlay/DialogHeader/DialogHeader";
 export { DrawerPanel } from "./overlay/Drawer/DrawerPanel";

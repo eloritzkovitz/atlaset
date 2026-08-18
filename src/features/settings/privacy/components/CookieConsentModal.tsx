@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
-import { ActionButton } from "@components";
+import { ActionButton, Backdrop } from "@components";
 import { useAuth } from "@features/user/auth";
 import { usePrivacySettings } from "../hooks/usePrivacySettings";
 
@@ -32,10 +32,7 @@ export function CookieConsentModal() {
 
   return createPortal(
     <>
-      <div
-        className="fixed inset-0 bg-black/40 z-[11000] pointer-events-auto"
-        aria-hidden="true"
-      />
+      <Backdrop className="z-[11000] pointer-events-auto" />
 
       <div className="fixed top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2 z-[11001] w-[calc(100%-2rem)] max-w-[600px] pointer-events-auto">
         <div className="flex flex-col p-5 md:p-6 bg-surface rounded-xl shadow-lg gap-10">
