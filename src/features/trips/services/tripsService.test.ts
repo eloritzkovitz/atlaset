@@ -140,6 +140,7 @@ describe("tripsService", () => {
         },
         details: {
           actorName: freshUser.displayName ?? "",
+          itemId: "t1",          
           itemName: "Trip",
         },
       });
@@ -200,6 +201,7 @@ describe("tripsService", () => {
           action: ACTIONS.TRIP_PARTICIPANT_ADDED,
           details: {
             actorName: freshUser.displayName ?? "",
+            itemId: "t1",
             itemName: "Trip",
           },
         }),
@@ -211,6 +213,7 @@ describe("tripsService", () => {
           action: ACTIONS.TRIP_PARTICIPANT_REMOVED,
           details: {
             actorName: freshUser.displayName ?? "",
+            itemId: "t1",
             itemName: "Trip",
           },
         }),
@@ -306,7 +309,8 @@ describe("tripsService", () => {
           action: ACTIONS.TRIP_PARTICIPANT_REMOVED,
           details: {
             actorName: freshUser.displayName ?? "",
-            itemName: "My Trip",
+            itemId: "del",
+            itemName: "My Trip",            
           },
         }),
       );

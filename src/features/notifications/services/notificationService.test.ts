@@ -1,6 +1,20 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { notificationService } from "./notificationService";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
+
+vi.mock("@lib/firebase", () => ({
+  db: {},
+  getPaths: {
+    sub: vi.fn((uid: string, collection: string) => ({
+      id: `users/${uid}/${collection}`,
+      type: "collection",
+    })),
+    subDoc: vi.fn((uid: string, collection: string, docId: string) => ({
+      id: `users/${uid}/${collection}/${docId}`,
+      type: "document",
+    })),
+  },
+}));
 
 describe("notificationService", () => {
   beforeEach(() => {
@@ -22,18 +36,18 @@ describe("notificationService", () => {
         },
       });
 
-      expect(fs.addDoc).toHaveBeenCalledWith(undefined, {
-        id: "00000000-0000-0000-0000-000000000001",
-        action: 101,
-        actor: {
-          uid: "a",
-          displayName: "Alex",
-          photoURL: "alex.jpg",
-        },
-        recipientId: "b",
-        read: false,
-        createdAt: expect.anything(),
-      });
+      expect(fs.addDoc).toHaveBeenCalledWith(
+        expect.objectContaining({
+          id: "users/b/notifications",
+          type: "collection",
+        }),
+        expect.objectContaining({
+          action: 101,
+          recipientId: "b",
+          read: false,
+          createdAt: expect.anything(),
+        }),
+      );
     });
 
     it("does not notify the actor", async () => {
@@ -57,7 +71,6 @@ describe("notificationService", () => {
       expect(fs.updateDoc).toHaveBeenCalledWith(
         expect.objectContaining({
           id: "users/a/notifications/notification-1",
-          type: "document",
         }),
         { read: true },
       );
@@ -79,25 +92,20 @@ describe("notificationService", () => {
       ]);
 
       expect(batch.update).toHaveBeenCalledTimes(2);
-
       expect(batch.update).toHaveBeenNthCalledWith(
         1,
         expect.objectContaining({
           id: "users/a/notifications/notification-1",
-          type: "document",
         }),
         { read: true },
       );
-
       expect(batch.update).toHaveBeenNthCalledWith(
         2,
         expect.objectContaining({
           id: "users/a/notifications/notification-2",
-          type: "document",
         }),
         { read: true },
       );
-
       expect(batch.commit).toHaveBeenCalled();
     });
 

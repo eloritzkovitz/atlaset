@@ -36,7 +36,10 @@ export const useNotifications = (recipientId: string | undefined) => {
     const unsubscribe = onSnapshot(
       notificationsQuery,
       (snapshot) => {
-        const items = snapshot.docs.map((snapshotDoc) => snapshotDoc.data());
+        const items = snapshot.docs.map((snapshotDoc) => ({
+          ...snapshotDoc.data(),
+          id: snapshotDoc.id,
+        }));
 
         setNotifications(items);
         setLoading(false);
@@ -62,7 +65,7 @@ export const useNotifications = (recipientId: string | undefined) => {
     await notificationService.markAsRead(recipientId, notificationId);
   };
 
-  // Marks all notifications as read for the current recipient
+   // Marks all notifications as read for the current recipient
   const markAllAsRead = async () => {
     if (!recipientId) return;
 

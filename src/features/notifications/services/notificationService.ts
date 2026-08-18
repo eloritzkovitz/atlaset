@@ -18,10 +18,7 @@ export const notificationService = {
 
     const notificationsRef = getPaths.sub(recipientId, "notifications");
 
-    const id = crypto.randomUUID();
-
     await addDoc(notificationsRef, {
-      id,
       ...input,
       recipientId,
       read: false,

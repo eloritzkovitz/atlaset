@@ -13,7 +13,10 @@ export interface UserSubcollections {
   friendRequests: import("@features/user/friends/types").FriendRequest;
   layers: import("@features/atlas/layers/types").Layer;
   markers: import("@features/atlas/markers/types").Marker;
-  notifications: import("@features/notifications/types").AppNotification;
+  notifications: Omit<
+    import("@features/notifications/types").AppNotification,
+    "id"
+  >;
   savedMaps: import("@features/atlas/savedMaps/types").SavedMap;
   sessions: import("@features/user/account/types").UserSession;
   settings: import("@features/settings/types").Settings;

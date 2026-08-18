@@ -17,7 +17,7 @@ export function NotificationsDropdown({
 }: NotificationsDropdownProps) {
   const { user } = useAuth();
   const { isMobile } = useScreenSize();
-  const { notifications, loading, markAsRead } = useNotifications(user?.uid);
+  const { notifications, loading } = useNotifications(user?.uid);
 
   if (!user) return null;
 
@@ -40,11 +40,7 @@ export function NotificationsDropdown({
       className={className}
       style={style}
     >
-      <NotificationsContent
-        notifications={notifications}
-        loading={loading}
-        onMarkAsRead={markAsRead}
-      />
+      <NotificationsContent notifications={notifications} loading={loading} />
     </DropdownMenu>
   );
 }

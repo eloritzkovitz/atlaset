@@ -11,6 +11,7 @@ export type NotificationActor = {
 /** Represents the details for customizing a notification message. */
 export type NotificationDetails = {
   actorName?: string;
+  itemId?: string;
   itemName?: string;
 };
 

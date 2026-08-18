@@ -1,19 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { EmptyListMessage, SectionHeader } from "@components";
-import type { AppNotification } from "../types";
 import { NotificationsList } from "./NotificationsList";
+import type { AppNotification } from "../types";
 
 interface NotificationsContentProps {
   notifications: AppNotification[];
   loading: boolean;
-  onMarkAsRead: (id: string) => void;
   containerClassName?: string;
 }
 
 export function NotificationsContent({
   notifications,
   loading,
-  onMarkAsRead,
   containerClassName = "",
 }: NotificationsContentProps) {
   const { t } = useTranslation("notifications");
@@ -30,10 +28,7 @@ export function NotificationsContent({
         ) : notifications.length === 0 ? (
           <EmptyListMessage message={t("ui.empty", "No notifications")} />
         ) : (
-          <NotificationsList
-            notifications={notifications}
-            onMarkAsRead={onMarkAsRead}
-          />
+          <NotificationsList notifications={notifications} />
         )}
       </div>
     </div>

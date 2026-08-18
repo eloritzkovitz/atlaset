@@ -30,6 +30,7 @@ const sendParticipantNotification = async (
     },
     details: {
       actorName: user.displayName ?? "",
+      itemId: trip.id,
       itemName: trip.name,
     },
   });
