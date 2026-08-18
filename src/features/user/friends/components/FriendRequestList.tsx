@@ -14,7 +14,6 @@ export function FriendRequestList({
   requests,
   loading,
   userUid,
-  currentUserName,
 }: FriendRequestListProps) {
   const { t } = useTranslation("user");
 
@@ -38,7 +37,6 @@ export function FriendRequestList({
                   friendService.acceptFriendRequest(
                     userUid,
                     req.from,
-                    currentUserName,
                     requestUserName,
                   )
               : undefined

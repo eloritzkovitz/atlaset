@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { logUserActivity } from "@features/activity/utils/activity";
+import { logUserActivity } from "@features/activity";
 import type { Layer } from "@features/atlas/layers/types";
 import { countryListService } from "@features/countries";
 import { useAuth } from "@features/user/auth/hooks/useAuth";

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback, useRef, useMemo } from "react";
 import { ACTIONS } from "@constants/actions";
-import { logUserActivity } from "@features/activity/utils/activity";
+import { logUserActivity } from "@features/activity";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader } from "@hooks";
 import { LayersContext } from "./LayersContext";

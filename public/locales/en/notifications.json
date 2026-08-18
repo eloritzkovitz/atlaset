@@ -1,0 +1,14 @@
+{
+  "ui": {
+    "title": "Notifications",
+    "empty": "No notifications"
+  },
+  
+  "defaultMessage": "You have a new notification",
+
+  "141": "{{actorName}} has sent you a friend request",
+  "142": "{{actorName}} has accepted your friend request",
+
+  "420": "{{actorName}} has added you as a participant in {{itemName}}",
+  "421": "{{actorName}} has removed you as a participant in {{itemName}}"
+}

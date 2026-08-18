@@ -1,5 +1,5 @@
 import { writeBatch } from "firebase/firestore";
-import { logUserActivity } from "@features/activity/utils/activity";
+import { logUserActivity } from "@features/activity";
 import type { UserProfile } from "@features/user/profile/types";
 import { appDb } from "@lib/db";
 import { db, getCurrentUser, getDocData, getPaths } from "@lib/firebase";

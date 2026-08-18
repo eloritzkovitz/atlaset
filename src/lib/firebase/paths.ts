@@ -13,6 +13,7 @@ export interface UserSubcollections {
   friendRequests: import("@features/user/friends/types").FriendRequest;
   layers: import("@features/atlas/layers/types").Layer;
   markers: import("@features/atlas/markers/types").Marker;
+  notifications: import("@features/notifications/types").AppNotification;
   savedMaps: import("@features/atlas/savedMaps/types").SavedMap;
   sessions: import("@features/user/account/types").UserSession;
   settings: import("@features/settings/types").Settings;
@@ -27,6 +28,7 @@ export const USER_SUBCOLLECTIONS: readonly (keyof UserSubcollections)[] = [
   "friendRequests",
   "layers",
   "markers",
+  "notifications",
   "savedMaps",
   "sessions",
   "settings",

@@ -1,23 +1,26 @@
 import type { FieldValue, Timestamp } from "firebase/firestore";
 import type { UserProfile } from "../profile/types";
 
-/** Represents a friend request. */
-export interface FriendRequest {
-  /** User ID of the friend request */
-  uid: string;
-  /** User ID of the sender */
+/** Firestore data for a friend request. */
+export interface FriendRequestData {
+  /** User ID of the sender. */
   from: string;
-  /** User ID of the receiver */
+  /** User ID of the receiver. */
   to: string;
-  /** Timestamp when the friend request was created */
+  /** Timestamp when the friend request was created. */
   createdAt: Timestamp | FieldValue;
 }
 
-/** Friend information. */
-export interface Friend {
-  /** User ID of the friend */
+/** Represents a friend request. */
+export interface FriendRequest extends FriendRequestData {
   uid: string;
-  /** Timestamp when the friendship was created */
+}
+
+/** Represents a friend. */
+export interface Friend {
+  /** User ID of the friend. */
+  uid: string;
+  /** Timestamp when the friendship was created. */
   createdAt: Timestamp | FieldValue | string;
 }
 

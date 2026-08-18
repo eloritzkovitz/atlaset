@@ -72,7 +72,7 @@ export interface DescriptionSegment {
  * @returns A human-readable description of the event.
  */
 export function getActivityDescription(
-  action: number | string,
+  action: Action,
   details?: ActivityDetails,
 ) {
   const lng = i18n.language || "en";
@@ -82,7 +82,7 @@ export function getActivityDescription(
     defaultValue: "{userName} did something.",
   });
 
-  // FIX 2: Added friendName to safeDetails fallbacks
+  // Prepare a safe details object with default values for missing fields
   const safeDetails: Record<string, string> = {
     userName: details?.userName || "You",
     friendName: details?.friendName || "a friend",

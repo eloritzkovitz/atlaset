@@ -44,6 +44,7 @@ describe("getPaths Path Factory Utilities (Dynamic Version)", () => {
       | "countryLists"
       | "layers"
       | "markers"
+      | "notifications"
       | "savedMaps"
       | "sessions"
     > = [
@@ -56,6 +57,7 @@ describe("getPaths Path Factory Utilities (Dynamic Version)", () => {
       "countryLists",
       "layers",
       "markers",
+      "notifications",
       "savedMaps",
       "sessions",
     ];

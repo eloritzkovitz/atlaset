@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { ACTIONS, type Action } from "@constants/actions";
 import { ICONS } from "@constants/icons";
 import { authState, createMockUser } from "@test-utils/authMocks";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
@@ -19,10 +20,7 @@ function mockI18nTemplate(key: number | string, template: string) {
   });
 }
 
-function getSegments(
-  action: number | string,
-  details?: Record<string, unknown>,
-) {
+function getSegments(action: Action, details?: Record<string, unknown>) {
   return activityUtils.getActivityDescription(action, details as any);
 }
 
@@ -191,14 +189,24 @@ describe("getActivityDescription", () => {
   });
 
   it("returns fallback for unknown event", () => {
-    const segments = getSegments(8888, { userName: "Bob" });
+    const unknownAction = 8888 as Action;
+    const segments = getSegments(unknownAction, {
+      userName: "Bob",
+    });
+
     expect(hasSegmentText(segments, "Bob")).toBeTruthy();
     expect(hasSegmentText(segments, "did something.")).toBeTruthy();
   });
 
   it("returns empty string for unknown placeholder", () => {
-    mockI18nTemplate(0, "{userName} did {unknownKey}.");
-    const segments = getSegments(0, { userName: "Eve" });
+    mockI18nTemplate(
+      ACTIONS.FRIEND_REQUEST_SENT,
+      "{userName} did {unknownKey}.",
+    );
+
+    const segments = getSegments(ACTIONS.FRIEND_REQUEST_SENT, {
+      userName: "Eve",
+    });
 
     expect(hasSegmentText(segments, "Eve")).toBeTruthy();
     expect(hasSegmentText(segments, "did ")).toBeTruthy();
@@ -220,8 +228,12 @@ describe("getActivityDescription", () => {
   });
 
   it("keeps manual custom key-values intact", () => {
-    mockI18nTemplate(999, "{userName} triggered action on {customKey}.");
-    const segments = getSegments(999, {
+    mockI18nTemplate(
+      ACTIONS.FRIEND_REQUEST_SENT,
+      "{userName} triggered action on {customKey}.",
+    );
+
+    const segments = getSegments(ACTIONS.FRIEND_REQUEST_SENT, {
       userName: "Dave",
       customKey: "MySpecialValue",
     });
