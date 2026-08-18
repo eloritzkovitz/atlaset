@@ -11,6 +11,29 @@ import {
 import { sharedTripsService } from "./sharedTripsService";
 import type { SharedTrip, Trip } from "../types";
 import { profileService } from "../../user/profile/services/profileService";
+import { ACTIONS, type Action } from "@constants/actions";
+import { notificationService } from "@features/notifications/services/notificationService";
+
+// Sends a notification to a participant about a trip action.
+const sendParticipantNotification = async (
+  participantUid: string,
+  action: Action,
+  user: NonNullable<ReturnType<typeof getCurrentUser>>,
+  trip: Trip,
+) => {
+  await notificationService.send(participantUid, {
+    action,
+    actor: {
+      uid: user.uid,
+      displayName: user.displayName ?? "",
+      photoURL: user.photoURL ?? "",
+    },
+    details: {
+      actorName: user.displayName ?? "",
+      itemName: trip.name,
+    },
+  });
+};
 
 /**
  * Service for managing user trips.
@@ -98,6 +121,13 @@ export const tripsService = {
           participantUid,
           user.uid,
           trip.id,
+        );
+
+        await sendParticipantNotification(
+          participantUid,
+          ACTIONS.TRIP_PARTICIPANT_ADDED,
+          user,
+          trip,
         );
       }
     }
@@ -211,11 +241,25 @@ export const tripsService = {
     // Add new shared trip references
     for (const participantUid of added) {
       await sharedTripsService.addReference(participantUid, user.uid, trip.id);
+
+      await sendParticipantNotification(
+        participantUid,
+        ACTIONS.TRIP_PARTICIPANT_ADDED,
+        user,
+        trip,
+      );
     }
 
     // Remove shared trip references for removed participants
     for (const participantUid of removed) {
       await sharedTripsService.removeReference(participantUid, trip.id);
+
+      await sendParticipantNotification(
+        participantUid,
+        ACTIONS.TRIP_PARTICIPANT_REMOVED,
+        user,
+        trip,
+      );
     }
 
     await logUserActivity(
@@ -245,6 +289,13 @@ export const tripsService = {
     for (const participantUid of participants) {
       if (participantUid !== user.uid) {
         await sharedTripsService.removeReference(participantUid, trip.id);
+
+        await sendParticipantNotification(
+          participantUid,
+          ACTIONS.TRIP_PARTICIPANT_REMOVED,
+          user,
+          trip,
+        );
       }
     }
 
