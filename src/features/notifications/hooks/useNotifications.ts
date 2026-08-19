@@ -1,15 +1,32 @@
 import { useEffect, useState } from "react";
-import { query, orderBy, onSnapshot } from "firebase/firestore";
+import {
+  query,
+  orderBy,
+  onSnapshot,
+  limit,
+  QueryConstraint,
+} from "firebase/firestore";
 import { getPaths } from "@lib/firebase";
 import type { AppNotification } from "../types";
 import { notificationService } from "../services/notificationService";
 
+interface UseNotificationsOptions {
+  limit?: number;
+}
+
 /**
  * Manages notifications for a specific recipient in real-time.
  * @param recipientId - The ID of the recipient for whom to fetch notifications.
+ * @param options - Optional configuration for the notification query.
+ * @param options.limit - Maximum number of notifications to fetch.
  * @returns Notifications, unread count, loading/error state, and read actions.
  */
-export const useNotifications = (recipientId: string | undefined) => {
+export const useNotifications = (
+  recipientId: string | undefined,
+  options: UseNotificationsOptions = {},
+) => {
+  const { limit: notificationLimit } = options;
+
   const [notifications, setNotifications] = useState<AppNotification[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
@@ -28,10 +45,13 @@ export const useNotifications = (recipientId: string | undefined) => {
 
     const notificationsRef = getPaths.sub(recipientId, "notifications");
 
-    const notificationsQuery = query(
-      notificationsRef,
-      orderBy("createdAt", "desc"),
-    );
+    const queryConstraints: QueryConstraint[] = [orderBy("createdAt", "desc")];
+
+    if (notificationLimit !== undefined) {
+      queryConstraints.push(limit(notificationLimit));
+    }
+
+    const notificationsQuery = query(notificationsRef, ...queryConstraints);
 
     const unsubscribe = onSnapshot(
       notificationsQuery,
@@ -52,7 +72,7 @@ export const useNotifications = (recipientId: string | undefined) => {
     );
 
     return unsubscribe;
-  }, [recipientId]);
+  }, [recipientId, notificationLimit]);
 
   const unreadCount = notifications.filter(
     (notification) => !notification.read,
@@ -65,7 +85,7 @@ export const useNotifications = (recipientId: string | undefined) => {
     await notificationService.markAsRead(recipientId, notificationId);
   };
 
-   // Marks all notifications as read for the current recipient
+  // Marks all notifications as read for the current recipient
   const markAllAsRead = async () => {
     if (!recipientId) return;
 

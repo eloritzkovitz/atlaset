@@ -17,13 +17,13 @@ export function NotificationsDropdown({
 }: NotificationsDropdownProps) {
   const { user } = useAuth();
   const { isMobile } = useScreenSize();
-  const { notifications, loading } = useNotifications(user?.uid);
+  const { notifications, loading } = useNotifications(user?.uid, { limit: 3 });
 
   if (!user) return null;
 
   const className = isMobile
     ? "fixed inset-x-0 bottom-0 z-50 w-full max-w-full rounded-t-2xl p-4 bg-surface shadow-lg"
-    : "z-50 p-2 w-[350px]";
+    : "z-50 p-2 w-[350px] h-[380px]";
 
   const style: React.CSSProperties | undefined = isMobile
     ? {

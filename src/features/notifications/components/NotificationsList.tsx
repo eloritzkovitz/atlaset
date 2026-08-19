@@ -11,7 +11,7 @@ export function NotificationsList({ notifications }: NotificationsListProps) {
   }
 
   return (
-    <ul className="divide-y divide-gray-100 dark:divide-gray-800">
+    <ul>
       {notifications.map((item) => (
         <NotificationItem key={item.id} notification={item} />
       ))}

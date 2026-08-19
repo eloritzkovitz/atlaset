@@ -17,12 +17,13 @@ export function NotificationsContent({
   const { t } = useTranslation("notifications");
 
   return (
-    <div className={`flex flex-col h-full ${containerClassName}`}>
+    <div className={`flex h-full flex-col ${containerClassName}`}>
       <SectionHeader
         title={t("ui.title", "Notifications")}
-        className="ms-2 flex-1"
+        className="ms-2 shrink-0"
       />
-      <div className="flex-1 overflow-y-auto">
+
+      <div className="min-h-0 flex-1 overflow-y-auto">
         {loading ? (
           <EmptyListMessage message={t("common:loading", "Loading...")} />
         ) : notifications.length === 0 ? (
