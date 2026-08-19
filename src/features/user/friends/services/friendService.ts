@@ -8,10 +8,17 @@ import {
   writeBatch,
   type Unsubscribe,
 } from "firebase/firestore";
-import { db } from "@lib/firebase";
+import { ACTIONS } from "@constants/actions";
 import { logUserActivity } from "@features/activity";
-import { getDocData, getDocsData, getPaths } from "@lib/firebase";
-import type { Friend, FriendRequest } from "../types";
+import { notificationService } from "@features/notifications/services/notificationService";
+import {
+  db,
+  getCurrentUser,
+  getDocData,
+  getDocsData,
+  getPaths,
+} from "@lib/firebase";
+import type { Friend, FriendRequest, FriendRequestData } from "../types";
 
 /**
  * Service for managing user friends and friend requests.
@@ -24,27 +31,41 @@ export const friendService = {
    */
   async sendFriendRequest(currentUserId: string, targetUserId: string) {
     const ref = getPaths.friendRequestDoc(targetUserId, currentUserId);
-    const data = {
+
+    const data: FriendRequestData = {
       from: currentUserId,
       to: targetUserId,
       createdAt: serverTimestamp(),
     };
+
     await setDoc(ref, data);
+
+    const currentUser = getCurrentUser();
+
+    // Send a notification to the target user about the friend request
+    await notificationService.send(targetUserId, {
+      action: ACTIONS.FRIEND_REQUEST_SENT,
+      actor: {
+        uid: currentUserId,
+        displayName: currentUser?.displayName ?? "",
+        photoURL: currentUser?.photoURL ?? "",
+      },
+    });
   },
 
   /**
    * Accepts a friend request and establishes a friendship between two users.
    * @param currentUserId - The ID of the user accepting the request.
    * @param requestUserId - The ID of the user who sent the request.
-   * @param currentUserName - The name of the user accepting the request.
    * @param requestUserName - The name of the user who sent the request.
    */
   async acceptFriendRequest(
     currentUserId: string,
     requestUserId: string,
-    currentUserName?: string,
     requestUserName?: string,
   ) {
+    const currentUser = getCurrentUser();
+
     const batch = writeBatch(db);
     batch.set(getPaths.friendDoc(currentUserId, requestUserId), {
       uid: requestUserId,
@@ -58,25 +79,37 @@ export const friendService = {
 
     await batch.commit();
 
+    // Log user activity for the current user
     await logUserActivity(
-      140,
+      ACTIONS.FRIENDSHIP_ESTABLISHED,
       {
         friendId: requestUserId,
-        userName: currentUserName || "You",
-        friendName: requestUserName || "a friend",
+        userName: currentUser?.displayName ?? "",
+        friendName: requestUserName ?? "",
       },
       currentUserId,
     );
 
+    // Log user activity for the request user
     await logUserActivity(
-      140,
+      ACTIONS.FRIENDSHIP_ESTABLISHED,
       {
         friendId: currentUserId,
-        userName: requestUserName || "You",
-        friendName: currentUserName || "a friend",
+        userName: requestUserName ?? "",
+        friendName: currentUser?.displayName ?? "",
       },
       requestUserId,
     );
+
+    // Send a notification to the request user about the acceptance
+    await notificationService.send(requestUserId, {
+      action: ACTIONS.FRIEND_REQUEST_ACCEPTED,
+      actor: {
+        uid: currentUserId,
+        displayName: currentUser?.displayName ?? "",
+        photoURL: currentUser?.photoURL ?? "",
+      },
+    });
   },
 
   /**

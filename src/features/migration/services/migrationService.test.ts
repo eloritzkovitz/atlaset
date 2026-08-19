@@ -1,4 +1,3 @@
-// src/features/migration/services/migrationService.test.ts
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { migrationService } from "./migrationService";
 import { countryListService } from "@features/atlas/countries/services/countryListService";
@@ -8,7 +7,6 @@ import { settingsService } from "@features/settings/core/services/settingsServic
 import { appDb } from "@lib/db";
 import { getDocData, getPaths } from "@lib/firebase";
 
-// --- Mocks Setup ---
 vi.mock("@features/atlas/countries/services/countryListService", () => ({
   countryListService: { add: vi.fn() },
 }));
@@ -29,7 +27,6 @@ vi.mock("@lib/firebase", () => ({
   },
 }));
 
-// Define mock factory inline to avoid hoisting scope errors
 vi.mock("@lib/db", () => {
   const createMockTable = () => ({
     count: vi.fn(),
@@ -53,7 +50,6 @@ describe("migrationService", () => {
     vi.clearAllMocks();
   });
 
-  // --- hasLocalData ---
   describe("hasLocalData", () => {
     it("returns true when any table has counts greater than 0", async () => {
       vi.mocked(appDb.countryLists.count).mockResolvedValue(0);
@@ -76,7 +72,6 @@ describe("migrationService", () => {
     });
   });
 
-  // --- clearLocalData ---
   describe("clearLocalData", () => {
     it("clears all four Dexie tables", async () => {
       await migrationService.clearLocalData();
@@ -88,7 +83,6 @@ describe("migrationService", () => {
     });
   });
 
-  // --- migrate ---
   describe("migrate", () => {
     const userId = "user-123";
 
@@ -107,7 +101,6 @@ describe("migrationService", () => {
       expect(markersService.add).not.toHaveBeenCalled();
       expect(settingsService.save).not.toHaveBeenCalled();
 
-      // migrateTable early-returns when empty, so clear() is only called once via clearLocalData()
       expect(appDb.countryLists.clear).toHaveBeenCalledTimes(1);
       expect(appDb.settings.clear).toHaveBeenCalledTimes(1);
     });

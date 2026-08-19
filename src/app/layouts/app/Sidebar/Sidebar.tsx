@@ -1,6 +1,6 @@
 import { FaBars } from "react-icons/fa6";
 import { useTranslation } from "react-i18next";
-import { ActionButton, Branding } from "@components";
+import { ActionButton, Backdrop, Branding } from "@components";
 import {
   DEFAULT_SIDEBAR_WIDTH,
   DEFAULT_SIDEBAR_EXPANDED_WIDTH,
@@ -28,6 +28,7 @@ export function Sidebar() {
   const sidebarWidth = sidebarExpanded
     ? DEFAULT_SIDEBAR_EXPANDED_WIDTH
     : DEFAULT_SIDEBAR_WIDTH;
+
   const toggleLabel = t(
     sidebarExpanded
       ? "navigation.sidebar.collapse"
@@ -36,17 +37,21 @@ export function Sidebar() {
 
   return (
     <>
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar backdrop */}
       {sidebarExpanded && (
-        <div
-          className="fixed inset-0 bg-black opacity-20 z-[9999]"
+        <Backdrop
+          className="z-[9999] bg-black/20"
           onClick={() => setSidebarExpanded(false)}
         />
       )}
 
+      {/* Desktop sidebar */}
       <aside
-        className="hidden md:block fixed top-0 start-0 justify-center h-screen z-[10000] bg-sidebar transition-all duration-200 px-1"
-        style={{ width: sidebarWidth, minWidth: sidebarWidth }}
+        className="hidden md:block fixed top-0 start-0 h-screen z-[10000] bg-sidebar px-1 overflow-hidden transition-[width] duration-200 ease-in-out"
+        style={{
+          width: sidebarWidth,
+          minWidth: sidebarWidth,
+        }}
       >
         {/* Header */}
         <div className="flex items-center h-14 mt-1">
@@ -54,20 +59,23 @@ export function Sidebar() {
             onClick={() => setSidebarExpanded(!sidebarExpanded)}
             aria-label={toggleLabel}
             title={toggleLabel}
-            className="flex h-10 w-10 ms-1 hover:bg-sidebar-btn-hover transition"
+            className="flex h-10 w-10 ms-1 shrink-0 hover:bg-sidebar-btn-hover transition"
             icon={<FaBars className="text-text text-2xl" />}
             rounded
           />
-          {sidebarExpanded && (
-            <div className="flex items-center gap-2 px-2 animate-fade-in">
-              <Branding size={36} />
-              <span className="font-bold text-2xl">Atlaset</span>
-            </div>
-          )}
+
+          <div
+            className={`flex items-center gap-2 px-2 whitespace-nowrap transition-opacity duration-150 ${
+              sidebarExpanded ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <Branding size={36} />
+            <span className="font-bold text-2xl">Atlaset</span>
+          </div>
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className="flex flex-col gap-2 mt-2">
+        <nav className={`flex flex-col gap-2 mt-2 ${sidebarExpanded ? "px-1" : ""}`}>
           {NAV_LINKS.map((link) => (
             <SidebarMenuLink
               key={link.to}
@@ -78,7 +86,7 @@ export function Sidebar() {
         </nav>
 
         {/* Settings Footer */}
-        <div className="absolute bottom-2 start-0 w-full px-1">
+        <div className={`absolute bottom-2 w-full ${sidebarExpanded ? "px-1" : ""}`}>
           <SidebarMenuLink {...SETTINGS_LINK} expanded={sidebarExpanded} />
         </div>
       </aside>

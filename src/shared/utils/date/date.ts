@@ -14,6 +14,34 @@ export function setAppDateLocale(locale?: string | null) {
 }
 
 /**
+ * Converts various date representations (string, number, Date, or Firestore Timestamp) into a JavaScript Date object.
+ * @param date - The date to convert, which can be a string, number, Date object, or Firestore Timestamp.
+ * @returns A JavaScript Date object if the input is valid; otherwise, undefined.
+ */
+function toDate(date: unknown): Date | undefined {
+  if (!date) return undefined;
+
+  if (
+    typeof date === "object" &&
+    date !== null &&
+    typeof (date as { toDate?: unknown }).toDate === "function"
+  ) {
+    return (date as { toDate: () => Date }).toDate();
+  }
+
+  if (date instanceof Date) {
+    return date;
+  }
+
+  if (typeof date === "string" || typeof date === "number") {
+    const parsed = new Date(date);
+    return !isNaN(parsed.getTime()) ? parsed : undefined;
+  }
+
+  return undefined;
+}
+
+/**
  * Formats a date into a localized string based on provided options and locale.
  * @param date - The date to format, which can be a string, number, or Date object.
  * @param options - Optional Intl.DateTimeFormatOptions to customize the output format.
@@ -25,11 +53,8 @@ export function formatDate(
   options?: Intl.DateTimeFormatOptions | "long",
   locale?: string,
 ): string {
-  if (!date) return "";
-  const d = date instanceof Date ? date : new Date(date as string);
-
-  // Guard against invalid dates
-  if (isNaN(d.getTime())) return "";
+  const d = toDate(date);
+  if (!d) return "";
 
   // Determine the locale to use for formatting
   const lang = [
@@ -65,17 +90,9 @@ export function formatFirestoreDate(
   date: unknown,
   options?: Intl.DateTimeFormatOptions,
 ): string {
-  if (
-    date &&
-    typeof date === "object" &&
-    date !== null &&
-    typeof (date as { toDate?: unknown }).toDate === "function"
-  ) {
-    return formatDate((date as { toDate: () => Date }).toDate(), options);
-  } else if (typeof date === "string" && date) {
-    return formatDate(date, options);
-  }
-  return "Unknown";
+  const parsedDate = toDate(date);
+
+  return parsedDate ? formatDate(parsedDate, options) : "Unknown";
 }
 
 /**
@@ -84,21 +101,42 @@ export function formatFirestoreDate(
  * @returns A string in the format YYYY-MM-DD suitable for HTML date inputs, or an empty string if the input is invalid.
  */
 export function formatToInputDate(date: unknown): string {
-  if (!date) return "";
+  const parsedDate = toDate(date);
+  return parsedDate ? parsedDate.toISOString().slice(0, 10) : "";
+}
 
-  let d: Date;
-  if (
-    typeof date === "object" &&
-    typeof (date as { toDate?: unknown }).toDate === "function"
-  ) {
-    d = (date as { toDate: () => Date }).toDate();
-  } else if (date instanceof Date) {
-    d = date;
-  } else {
-    d = new Date(date as string | number);
+/**
+ * Formats a date as a relative time string.
+ * @param date - A Firestore Timestamp, Date, string, or number.
+ * @param t - The translation function from i18next for localization.
+ * @returns A relative time string.
+ */
+export function formatTimeAgo(date: unknown, t: TFunction): string {
+  const parsedDate = toDate(date);
+  if (!parsedDate) return "";
+
+  const seconds = Math.floor((Date.now() - parsedDate.getTime()) / 1000);
+
+  if (seconds < 60) {
+    return t("formatting.timeAgo.justNow");
   }
 
-  return d && !isNaN(d.getTime()) ? d.toISOString().slice(0, 10) : "";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return t("formatting.timeAgo.minutes", { count: minutes });
+  }
+
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) {
+    return t("formatting.timeAgo.hours", { count: hours });
+  }
+
+  const days = Math.floor(hours / 24);
+  if (days < 7) {
+    return t("formatting.timeAgo.days", { count: days });
+  }
+
+  return formatFirestoreDate(date);
 }
 
 /**
@@ -120,9 +158,7 @@ export function parseInputDateToTimestamp(
  * @returns The year as a number, or undefined if the date is not provided.
  */
 export function getYear(date?: string): number | undefined {
-  if (!date) return undefined;
-  const d = new Date(date);
-  return isNaN(d.getTime()) ? undefined : d.getFullYear();
+  return toDate(date)?.getFullYear();
 }
 
 /**
@@ -145,7 +181,9 @@ export function getTimestamp(ts: string | number | Date): number {
 }
 
 /**
- * Formats a number of seconds as mm:ss
+ * Formats a number of seconds as mm:ss.
+ * @param seconds - The number of seconds to format.
+ * @returns A string in the format mm:ss, or "-" if the input is not a valid number.
  */
 export function formatTimeSeconds(seconds?: number): string {
   if (typeof seconds !== "number" || isNaN(seconds)) return "-";

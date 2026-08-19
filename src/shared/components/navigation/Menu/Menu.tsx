@@ -1,46 +1,55 @@
-import type { ReactNode, CSSProperties } from "react";
-import { Modal } from "../../overlay/Modal/Modal";
+import type { CSSProperties, ReactNode, Ref } from "react";
+import { useBodyScrollLock } from "@hooks";
+import { OverlayPortal } from "../../overlay/OverlayPortal/OverlayPortal";
+import "./Menu.css";
 
 interface MenuProps {
   open: boolean;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
-  onClose: () => void;
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
-  containerRef?: React.RefObject<HTMLDivElement | null>;
+  containerRef?: Ref<HTMLDivElement>;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
   disableScroll?: boolean;
-  extraRefs?: React.RefObject<HTMLElement | null>[];
 }
 
 export function Menu({
   open,
-  onMouseEnter,
-  onMouseLeave,
-  onClose,
   children,
   className = "",
   style,
   containerRef,
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
   disableScroll = false,
-  extraRefs = [],
 }: MenuProps) {
+  useBodyScrollLock(open && disableScroll);
+
+  if (!open) return null;
+
   return (
-    <Modal
-      isOpen={open}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
-      onClose={onClose}
-      disableClose={false}
-      disableScroll={disableScroll}
-      position="custom"
-      className={`menu !bg-surface-alt shadow-lg rounded z-50 !p-2 ${className}`}
-      style={style}
-      containerRef={containerRef}
-      extraRefs={extraRefs}
-    >
-      {children}
-    </Modal>
+    <OverlayPortal>
+      {disableScroll && (
+        <div
+          className="fixed inset-0 z-40"
+          onWheel={(e) => e.preventDefault()}
+          onTouchMove={(e) => e.preventDefault()}
+        />
+      )}
+
+      <div
+        ref={containerRef}
+        className={`menu fixed z-50 rounded-xl bg-surface-alt p-2 shadow-lg ${className}`}
+        style={style}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
+        onClick={onClick}
+      >
+        {children}
+      </div>
+    </OverlayPortal>
   );
 }

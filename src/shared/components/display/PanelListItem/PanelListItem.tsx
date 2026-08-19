@@ -1,8 +1,9 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { DragEvent, ReactNode } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
 import {
+  useClickOutside,
   useContextMenu,
   useDisclosure,
   useMenuActions,
@@ -70,8 +71,8 @@ export function PanelListItem({
   const btnRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation("common");
 
-  // Rename controls state and handlers
   const nameString = typeof name === "string" ? name : "";
+
   const {
     isEditing,
     editName,
@@ -81,12 +82,13 @@ export function PanelListItem({
     handleCancel,
     handleBlur,
     handleKeyDown,
-  } = useRenameControls({ name: nameString, onNameChange });
+  } = useRenameControls({
+    name: nameString,
+    onNameChange,
+  });
 
-  // Confirm modal state for delete confirmation
   const confirmModal = useDisclosure();
 
-  // Context menu state and handlers
   const {
     open: menuOpen,
     setOpen: setMenuOpen,
@@ -99,6 +101,7 @@ export function PanelListItem({
     disabled: isEditing,
     ignoreRefs: [btnRef],
   });
+
   const baseMenuStyle = useMenuPosition(
     menuOpen,
     btnRef,
@@ -108,27 +111,37 @@ export function PanelListItem({
     "adjacent",
     false,
   );
+
   const dynamicMenuStyle: React.CSSProperties =
     contextMenuStyle.position === "fixed"
       ? contextMenuStyle
-      : { ...baseMenuStyle, zIndex: 10100 };
+      : {
+          ...baseMenuStyle,
+          zIndex: 10100,
+        };
 
   // Close menu when renaming
-  if (isEditing && menuOpen) setMenuOpen(false);
+  useEffect(() => {
+    if (isEditing && menuOpen) {
+      setMenuOpen(false);
+    }
+  }, [isEditing, menuOpen, setMenuOpen]);
 
-  // Action configs for quick actions
+  useClickOutside([btnRef, menuRef], handleCloseContext, menuOpen);
+
   const quickActions = [
     onToggleVisibility && {
       variant: "toggle" as const,
       onClick: onToggleVisibility,
       ariaLabel: visible ? t("actions.hide") : t("actions.show"),
       title: visible ? t("actions.hide") : t("actions.show"),
-      className: `${visible ? "text-muted" : "text-muted/50"} hover:text-muted-hover`,
+      className: `${
+        visible ? "text-muted" : "text-muted/50"
+      } hover:text-muted-hover`,
       icon: visible ? <ICONS.show /> : <ICONS.hide />,
     },
   ].filter(Boolean);
 
-  // Generic menu actions config using useMenuActions
   const menuActions = useMenuActions(
     {
       onView,
@@ -141,7 +154,9 @@ export function PanelListItem({
       onCreateList,
       onRemove: onRemove
         ? () => {
-            if (!removeDisabled) confirmModal.open();
+            if (!removeDisabled) {
+              confirmModal.open();
+            }
           }
         : undefined,
     },
@@ -155,10 +170,12 @@ export function PanelListItem({
     <>
       <li
         id="panel-list-item"
-        className={`mb-4 flex items-center ${variant === "border" ? borderClass : baseClass} rounded-lg px-3 py-2 ${
+        className={`mb-4 flex items-center ${
+          variant === "border" ? borderClass : baseClass
+        } rounded-lg px-3 py-2 ${
           dragged ? "ring-dashed" : ""
         } ${onView ? "cursor-pointer transition" : ""}`}
-        draggable={onDragStart ? true : false}
+        draggable={!!onDragStart}
         onDragStart={onDragStart}
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
@@ -175,20 +192,19 @@ export function PanelListItem({
         onClick={
           !isEditing && onView
             ? (e) => {
-                // Prevent menu or other actions from triggering view
                 const target = e.target as HTMLElement;
-                if (
-                  target &&
-                  target.closest &&
-                  target.closest(".panel-listitem-menu")
-                )
+
+                if (target?.closest?.(".panel-listitem-menu")) {
                   return;
+                }
+
                 onView();
               }
             : undefined
         }
       >
         {!icon ? <ColorDot color={color} size={22} /> : icon}
+
         <div className="flex-1 ms-2 flex items-center">
           {isEditing ? (
             <RenameControls
@@ -207,10 +223,13 @@ export function PanelListItem({
               {name}
             </strong>
           )}
+
           {children}
         </div>
+
         {!isEditing &&
           quickActions.map((action, i) => <ActionButton key={i} {...action} />)}
+
         {!isEditing && (
           <div ref={btnRef} style={{ position: "relative" }}>
             <ActionButton
@@ -223,13 +242,13 @@ export function PanelListItem({
               icon={<ICONS.more />}
               rounded
             />
+
             <Menu
               open={menuOpen}
-              onClose={handleCloseContext}
               className="panel-listitem-menu !p-2 !z-[10100]"
               style={dynamicMenuStyle}
               containerRef={menuRef as React.RefObject<HTMLDivElement>}
-              disableScroll={true}
+              disableScroll
             >
               {menuContent ? (
                 menuContent
@@ -244,6 +263,7 @@ export function PanelListItem({
           </div>
         )}
       </li>
+
       {confirmModal.isOpen && onRemove && (
         <ConfirmModal
           isOpen={confirmModal.isOpen}

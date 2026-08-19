@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { logUserActivity } from "@features/activity/utils/activity";
+import { ACTIONS } from "@constants/actions";
+import { logUserActivity } from "@features/activity";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useDataLoader, useDisclosure } from "@hooks";
 import { MarkersContext } from "./MarkersContext";
@@ -54,7 +55,12 @@ export function MarkersProvider({ children }: { children: React.ReactNode }) {
     onLogAction: async (action, marker) => {
       if (!user) return;
       lastAction.current = action;
-      const actionCodes = { add: 221, edit: 222, remove: 223, reorder: 224 };
+      const actionCodes = {
+        add: ACTIONS.MARKER_ADDED,
+        edit: ACTIONS.MARKER_EDITED,
+        remove: ACTIONS.MARKER_REMOVED,
+        reorder: ACTIONS.MARKERS_REORDERED,
+      };
       await logUserActivity(
         actionCodes[action],
         {

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { useSwipeNavigation } from "@hooks";
+import { Backdrop } from "../Backdrop/Backdrop";
 
 interface DrawerPanelProps {
   open: boolean;
@@ -24,9 +25,7 @@ export function DrawerPanel({
 
   return (
     <>
-      {open && (
-        <div className="fixed inset-0 z-40 bg-black/40" onClick={onClose} />
-      )}
+      {open && <Backdrop className="z-40" onClick={onClose} />}
 
       <div
         className={`

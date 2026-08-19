@@ -5,6 +5,7 @@
 import { addDoc } from "firebase/firestore";
 import i18n from "i18next";
 import type { ComponentType, SVGProps } from "react";
+import type { Action } from "@constants/actions";
 import { ICONS } from "@constants/icons";
 import { getUserCollection, logToGoogleAnalytics } from "@lib/firebase";
 import { formatTimeSeconds } from "@utils";
@@ -17,7 +18,7 @@ import type { ActivityDetails } from "../types";
  * @param uid The user ID for whom the activity is logged.
  */
 export async function logUserActivity(
-  action: number,
+  action: Action,
   details: object,
   uid: string,
 ) {
@@ -71,7 +72,7 @@ export interface DescriptionSegment {
  * @returns A human-readable description of the event.
  */
 export function getActivityDescription(
-  action: number | string,
+  action: Action,
   details?: ActivityDetails,
 ) {
   const lng = i18n.language || "en";
@@ -81,7 +82,7 @@ export function getActivityDescription(
     defaultValue: "{userName} did something.",
   });
 
-  // FIX 2: Added friendName to safeDetails fallbacks
+  // Prepare a safe details object with default values for missing fields
   const safeDetails: Record<string, string> = {
     userName: details?.userName || "You",
     friendName: details?.friendName || "a friend",

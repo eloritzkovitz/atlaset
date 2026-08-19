@@ -32,7 +32,7 @@ const cases: Array<
     },
     [
       {
-        action: 102,
+        action: 110,
         timestamp: "2024-02-02T00:00:00Z",
         details: { method: "email" },
       },
@@ -47,7 +47,7 @@ const cases: Array<
       lastSignInTime: "2024-01-01T00:00:00Z",
       providerId: "github.com",
     },
-    [{ action: 102, timestamp: "2024-03-03T00:00:00Z", details: {} }],
+    [{ action: 110, timestamp: "2024-03-03T00:00:00Z", details: {} }],
     "2024-03-03T00:00:00Z",
     "github.com",
     true,

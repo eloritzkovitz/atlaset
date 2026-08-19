@@ -1,0 +1,83 @@
+/**
+ * Application-wide action identifiers.
+ * These are persisted in Firestore and used as translation keys.
+ */
+export const ACTIONS = {
+  // Account
+  ACCOUNT_CREATED: 101,
+  ACCOUNT_DEACTIVATED: 102,
+  ACCOUNT_REACTIVATED: 103,
+
+  // Authentication
+  SIGNED_IN: 110,
+  SIGNED_OUT: 111,
+  PASSWORD_RESET_REQUESTED: 112,
+  PASSWORD_CHANGED: 113,
+
+  // Profile
+  PROFILE_UPDATED: 120,
+
+  // Settings
+  SETTINGS_UPDATED: 130,
+
+  // Friends
+  FRIEND_REQUEST_SENT: 140,
+  FRIEND_REQUEST_ACCEPTED: 141,
+  FRIENDSHIP_ESTABLISHED: 142,
+
+  // Atlas
+  ATLAS_ACTION: 200,
+
+  // Layers
+  LAYERS_UPDATED: 210,
+  LAYER_ADDED: 211,
+  LAYER_EDITED: 212,
+  LAYER_REMOVED: 213,
+  LAYERS_REORDERED: 214,
+
+  // Markers
+  MARKERS_UPDATED: 220,
+  MARKER_ADDED: 221,
+  MARKER_EDITED: 222,
+  MARKER_REMOVED: 223,
+  MARKERS_REORDERED: 224,
+
+  // Maps
+  MAPS_UPDATED: 230,
+  MAP_CREATED: 231,
+  MAP_EDITED: 232,
+  MAP_REMOVED: 233,
+  MAP_ITEM_ADDED: 234,
+  MAP_ITEM_EDITED: 235,
+  MAP_ITEM_REMOVED: 236,
+  MAP_ITEMS_REORDERED: 237,
+
+  // Country lists
+  COUNTRY_LISTS_UPDATED: 240,
+  COUNTRY_LIST_CREATED: 241,
+  COUNTRY_LIST_EDITED: 242,
+  COUNTRY_LIST_REMOVED: 243,
+  COUNTRY_ADDED_TO_LIST: 244,
+  COUNTRY_REMOVED_FROM_LIST: 245,
+
+  // Quizzes
+  QUIZ_PLAYED: 300,
+  QUIZ_COMPLETED: 301,
+  LEADERBOARD_ENTERED: 302,
+
+  // Trips
+  TRIPS_ACTION: 400,
+  TRIPS_SAVED: 410,
+  TRIP_ADDED: 411,
+  TRIP_EDITED: 412,
+  TRIP_ACTION: 413,
+  TRIP_RATED: 414,
+  TRIP_REMOVED: 415,
+
+  // Trip notifications
+  TRIP_PARTICIPANT_ADDED: 420,
+  TRIP_PARTICIPANT_REMOVED: 421,
+} as const;
+
+/** Represents an application-wide action identifier. */
+export type Action = (typeof ACTIONS)[keyof typeof ACTIONS];

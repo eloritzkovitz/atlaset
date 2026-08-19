@@ -67,6 +67,7 @@ export { Separator } from "./layout/Separator";
 // Navigation components
 export { ActionsToolbar } from "./navigation/Toolbar/ActionsToolbar";
 export { Breadcrumbs, type Crumb } from "./navigation/Breadcrumbs/Breadcrumbs";
+export { DropdownMenu } from "./navigation/Menu/DropdownMenu";
 export { Menu } from "./navigation/Menu/Menu";
 export { MenuButton } from "./navigation/Menu/MenuButton";
 export { SectionLink } from "./navigation/SectionLink";
@@ -79,6 +80,7 @@ export { ToolbarToggleGroup } from "./navigation/Toolbar/ToolbarToggleGroup";
 export * from "./navigation/Menu/menuUtils";
 
 // Overlay components
+export { Backdrop } from "./overlay/Backdrop/Backdrop";
 export { ConfirmModal } from "./overlay/Modal/ConfirmModal";
 export { DialogHeader } from "./overlay/DialogHeader/DialogHeader";
 export { DrawerPanel } from "./overlay/Drawer/DrawerPanel";
@@ -86,6 +88,7 @@ export { FloatingPortal } from "./overlay/Tooltip/FloatingPortal";
 export { Modal } from "./overlay/Modal/Modal";
 export { ModalActions } from "./overlay/Modal/ModalActions";
 export { ModalHeader } from "./overlay/Modal/ModalHeader";
+export { OverlayPortal } from "./overlay/OverlayPortal/OverlayPortal";
 export { Panel, type PanelProps } from "./overlay/Panel/Panel";
 export { PwaUpdateUiHint } from "./overlay/UiHint/PwaUpdateUiHint";
 export { Tooltip } from "./overlay/Tooltip/Tooltip";

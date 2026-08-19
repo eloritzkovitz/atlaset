@@ -8,7 +8,7 @@ import {
   FaXmark,
 } from "react-icons/fa6";
 import { ConfirmModal, Menu, MenuButton } from "@components";
-import { useMenuPosition } from "@hooks";
+import { useClickOutside, useMenuPosition } from "@hooks";
 
 interface FriendshipButtonProps {
   friendStatus: "none" | "pending" | "friend";
@@ -45,6 +45,8 @@ export function FriendshipButton({
     false,
   );
 
+  useClickOutside([btnRef, menuRef], () => setShowMenu(false), showMenu);
+
   // Add friend button
   if (friendStatus === "none") {
     return (
@@ -62,7 +64,6 @@ export function FriendshipButton({
 
   const isPending = friendStatus === "pending";
 
-  // Configure button and menu based on friendship status
   const config = isPending
     ? {
         buttonClass: "bg-surface hover:bg-surface-hover",
@@ -104,12 +105,7 @@ export function FriendshipButton({
           {config.label}
         </button>
 
-        <Menu
-          open={showMenu}
-          onClose={() => setShowMenu(false)}
-          containerRef={containerRef}
-          style={menuStyle}
-        >
+        <Menu open={showMenu} containerRef={containerRef} style={menuStyle}>
           <div ref={menuRef}>
             <MenuButton
               icon={config.menuIcon}
@@ -123,7 +119,6 @@ export function FriendshipButton({
         </Menu>
       </div>
 
-      {/* Confirmation Modal handling */}
       <ConfirmModal
         isOpen={activeModal === "withdraw"}
         title={t("friends.actions.withdrawConfirmTitle")}

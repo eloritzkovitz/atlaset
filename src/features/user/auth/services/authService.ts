@@ -1,15 +1,14 @@
 import {
-  setPersistence,
   browserLocalPersistence,
   browserSessionPersistence,
-  signInWithEmailAndPassword,
-  signOut,
   createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  updateProfile,
-  type User,
-  signInWithPopup,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
+  setPersistence,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  type User,
 } from "firebase/auth";
 import { logUserActivity } from "@features/activity";
 import { auth } from "@lib/firebase";
@@ -20,7 +19,6 @@ import {
   clearLocalSession,
   getBrowserSessionInfo,
 } from "../../account/utils/session";
-import { profileService } from "../../profile/services/profileService";
 
 /** Internal helper for constructing standard user activity payloads */
 const createAuthActivityMeta = (user: User, method: AuthMethod) => ({
@@ -56,19 +54,22 @@ export const authService = {
 
   /**
    * Signs in a user with Google OAuth.
-   * @returns The result of the sign-in operation.
    */
   async signInWithGoogle() {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(auth, provider);
+    const ipAddress = await sessionService.getCurrentIpAddress();
 
     // Create Firestore profile and username if not already present
-    await profileService.createUserProfileWithUsername({
-      uid: result.user.uid,
-      displayName: result.user.displayName,
-      email: result.user.email,
-      photoURL: result.user.photoURL,
-    });
+    await accountService.ensureAccount(
+      {
+        uid: result.user.uid,
+        displayName: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL,
+      },
+      ipAddress,
+    );
 
     const reactivated = await this.completeSignIn(result.user, "google");
 
@@ -83,13 +84,18 @@ export const authService = {
    */
   async signUp(email: string, password: string) {
     const result = await createUserWithEmailAndPassword(auth, email, password);
-    const username = await profileService.createUserProfileWithUsername({
-      uid: result.user.uid,
-      displayName: result.user.displayName,
-      email: result.user.email,
-      photoURL: result.user.photoURL,
-      joinDate: result.user.metadata.creationTime,
-    });
+    const ipAddress = await sessionService.getCurrentIpAddress();
+
+    const username = await accountService.createAccount(
+      {
+        uid: result.user.uid,
+        displayName: result.user.displayName,
+        email: result.user.email,
+        photoURL: result.user.photoURL,
+        joinDate: result.user.metadata.creationTime,
+      },
+      ipAddress,
+    );
 
     await logUserActivity(
       101,
@@ -109,8 +115,6 @@ export const authService = {
 
     if (user) {
       const uid = user.uid;
-
-      await logUserActivity(103, {}, uid);
       await sessionService.terminateCurrentSession(uid);
     }
 
@@ -126,29 +130,8 @@ export const authService = {
     await sendPasswordResetEmail(auth, email);
     const uid = auth.currentUser?.uid;
     if (uid) {
-      await logUserActivity(104, { email }, uid);
+      await logUserActivity(112, { email }, uid);
     }
-  },
-
-  /**
-   * Updates the user's profile information.
-   * @param user - The Firebase User object.
-   * @param data - An object containing the profile fields to update.
-   */
-  async updateUserProfile(
-    user: User,
-    data: { displayName?: string; photoURL?: string },
-  ) {
-    await updateProfile(user, data);
-    await logUserActivity(
-      120,
-      {
-        ...data,
-        userName: data.displayName,
-        email: user.email,
-      },
-      user.uid,
-    );
   },
 
   /**
@@ -161,13 +144,13 @@ export const authService = {
     const reactivated = await accountService.reactivateAccount(user.uid);
     if (reactivated) {
       await logUserActivity(
-        111,
+        103,
         { userName: user.displayName, email: user.email },
         user.uid,
       );
     }
 
-    await logUserActivity(102, createAuthActivityMeta(user, method), user.uid);
+    await logUserActivity(110, createAuthActivityMeta(user, method), user.uid);
     await sessionService.logSession(user.uid);
 
     return reactivated;

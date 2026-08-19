@@ -1,28 +1,43 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
-import { activityMockTracker } from "@test-utils/activityMocks";
+import { ACTIONS } from "@constants/actions";
+import * as firebaseUtils from "@lib/firebase";
 import { mockFirestoreControls as fs } from "@test-utils/firebaseMockRegistry";
 import { createMockSnapshot } from "@test-utils/firestoreMocks";
-import { getDocData } from "@lib/firebase";
 import { friendService } from "./friendService";
 
-describe("friendService", () => {
-  const docRef = { type: "document" };
+const { activityMockTracker, notificationSendMock } = vi.hoisted(() => ({
+  activityMockTracker: vi.fn(),
+  notificationSendMock: vi.fn(),
+}));
 
+vi.mock("@features/activity", () => ({
+  logUserActivity: activityMockTracker,
+}));
+
+vi.mock("@features/notifications/services/notificationService", () => ({
+  notificationService: { send: notificationSendMock },
+}));
+
+describe("friendService", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    fs.doc.mockReturnValue(docRef as any);
-
+    fs.doc.mockReturnValue({ type: "document" } as any);
     fs.writeBatch.mockReturnValue({
       set: vi.fn(),
       delete: vi.fn(),
-      update: vi.fn(),
       commit: vi.fn().mockResolvedValue(undefined),
-    });
+    } as any);
+
+    vi.spyOn(firebaseUtils, "getCurrentUser").mockReturnValue({
+      uid: "a",
+      displayName: "Alex",
+      photoURL: "https://example.com/alex.jpg",
+    } as any);
   });
 
   describe("requests", () => {
-    it("sends a request", async () => {
+    it("sends a request and notification", async () => {
       await friendService.sendFriendRequest("a", "b");
 
       expect(fs.doc).toHaveBeenCalledWith(
@@ -35,10 +50,44 @@ describe("friendService", () => {
         to: "b",
         createdAt: expect.any(Object),
       });
+
+      expect(notificationSendMock).toHaveBeenCalledWith("b", {
+        action: ACTIONS.FRIEND_REQUEST_SENT,
+        actor: {
+          uid: "a",
+          displayName: "Alex",
+          photoURL: "https://example.com/alex.jpg",
+        },
+      });
+    });
+
+    it("sends a request with missing user details", async () => {
+      vi.spyOn(firebaseUtils, "getCurrentUser").mockReturnValue({
+        uid: "a",
+        displayName: null,
+        photoURL: null,
+      } as any);
+
+      await friendService.sendFriendRequest("a", "b");
+
+      expect(fs.setDoc).toHaveBeenCalledWith(expect.any(Object), {
+        from: "a",
+        to: "b",
+        createdAt: expect.any(Object),
+      });
+
+      expect(notificationSendMock).toHaveBeenCalledWith("b", {
+        action: ACTIONS.FRIEND_REQUEST_SENT,
+        actor: {
+          uid: "a",
+          displayName: "",
+          photoURL: "",
+        },
+      });
     });
 
     it("accepts a request and logs activity", async () => {
-      await friendService.acceptFriendRequest("a", "b");
+      await friendService.acceptFriendRequest("a", "b", "Bob");
 
       const batch = fs.writeBatch.mock.results[0].value;
 
@@ -46,7 +95,53 @@ describe("friendService", () => {
       expect(batch.delete).toHaveBeenCalledTimes(1);
       expect(batch.commit).toHaveBeenCalled();
 
-      expect(activityMockTracker).toHaveBeenCalledTimes(2);
+      expect(activityMockTracker).toHaveBeenNthCalledWith(
+        1,
+        ACTIONS.FRIENDSHIP_ESTABLISHED,
+        { friendId: "b", userName: "Alex", friendName: "Bob" },
+        "a",
+      );
+      expect(activityMockTracker).toHaveBeenNthCalledWith(
+        2,
+        ACTIONS.FRIENDSHIP_ESTABLISHED,
+        { friendId: "a", userName: "Bob", friendName: "Alex" },
+        "b",
+      );
+      expect(notificationSendMock).toHaveBeenCalledWith("b", {
+        action: ACTIONS.FRIEND_REQUEST_ACCEPTED,
+        actor: {
+          uid: "a",
+          displayName: "Alex",
+          photoURL: "https://example.com/alex.jpg",
+        },
+      });
+    });
+
+    it("handles missing user details", async () => {
+      vi.spyOn(firebaseUtils, "getCurrentUser").mockReturnValue({
+        uid: "a",
+        displayName: null,
+        photoURL: null,
+      } as any);
+
+      await friendService.acceptFriendRequest("a", "b");
+
+      expect(activityMockTracker).toHaveBeenNthCalledWith(
+        1,
+        ACTIONS.FRIENDSHIP_ESTABLISHED,
+        { friendId: "b", userName: "", friendName: "" },
+        "a",
+      );
+      expect(activityMockTracker).toHaveBeenNthCalledWith(
+        2,
+        ACTIONS.FRIENDSHIP_ESTABLISHED,
+        { friendId: "a", userName: "", friendName: "" },
+        "b",
+      );
+      expect(notificationSendMock).toHaveBeenCalledWith("b", {
+        action: ACTIONS.FRIEND_REQUEST_ACCEPTED,
+        actor: { uid: "a", displayName: "", photoURL: "" },
+      });
     });
 
     it("rejects a request", async () => {
@@ -61,69 +156,60 @@ describe("friendService", () => {
     });
   });
 
-  describe("friend mutations", () => {
-    it("removes both friend references", async () => {
-      await friendService.removeFriend("a", "b");
+  it("removes both friend references", async () => {
+    await friendService.removeFriend("a", "b");
 
-      expect(fs.doc).toHaveBeenCalledTimes(2);
-      expect(fs.deleteDoc).toHaveBeenCalledTimes(2);
-    });
+    expect(fs.doc).toHaveBeenNthCalledWith(
+      1,
+      expect.any(Object),
+      "users/a/friends",
+      "b",
+    );
+    expect(fs.doc).toHaveBeenNthCalledWith(
+      2,
+      expect.any(Object),
+      "users/b/friends",
+      "a",
+    );
+    expect(fs.deleteDoc).toHaveBeenCalledTimes(2);
   });
 
   describe("queries", () => {
     it.each([
-      ["friends", "getFriends", [{ id: "x", online: true }]],
-      ["requests", "getFriendRequests", [{ id: "x", from: "x" }]],
-    ])("gets %s", async (_, method, expected) => {
+      ["getFriends", [{ id: "x", online: true }]],
+      ["getFriendRequests", [{ id: "x", from: "x" }]],
+    ])("gets %s", async (method, expected) => {
       fs.getDocs.mockResolvedValueOnce(
-        createMockSnapshot([
-          {
-            id: expected[0].id,
-            data: expected[0],
-          },
-        ]),
+        createMockSnapshot([{ id: "x", data: expected[0] }]),
       );
 
-      const result =
-        await friendService[method as "getFriends" | "getFriendRequests"]("a");
-
-      expect(result).toEqual(expected);
+      expect(
+        await friendService[method as "getFriends" | "getFriendRequests"]("a"),
+      ).toEqual(expected);
     });
 
     it("gets outgoing request", async () => {
-      vi.mocked(getDocData)
-        .mockResolvedValueOnce({
-          id: "x",
-          from: "a",
-        } as any)
+      vi.spyOn(firebaseUtils, "getDocData")
+        .mockResolvedValueOnce({ id: "x", from: "a" } as any)
         .mockResolvedValueOnce(null);
 
       expect(await friendService.getOutgoingFriendRequest("b", "a")).toEqual({
         id: "x",
         from: "a",
       });
-
       expect(await friendService.getOutgoingFriendRequest("b", "a")).toBeNull();
     });
   });
 
   describe("listeners", () => {
     it.each([
-      ["listenForFriends", [{ active: true }]],
-      ["listenForFriendRequests", [{ pending: true }]],
+      ["listenForFriends", { active: true }],
+      ["listenForFriendRequests", { pending: true }],
     ])("%s streams updates", (method, data) => {
       const cb = vi.fn();
 
       fs.onSnapshot.mockImplementationOnce((_ref, next) => {
-        next(
-          createMockSnapshot([
-            {
-              id: "x",
-              data: data[0],
-            },
-          ]),
-        );
-
+        next(createMockSnapshot([{ id: "x", data }]));
         return vi.fn();
       });
 
@@ -132,12 +218,7 @@ describe("friendService", () => {
         cb,
       );
 
-      expect(cb).toHaveBeenCalledWith([
-        {
-          uid: "x",
-          ...data[0],
-        },
-      ]);
+      expect(cb).toHaveBeenCalledWith([{ uid: "x", ...data }]);
     });
   });
 });

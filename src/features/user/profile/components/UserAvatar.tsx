@@ -1,9 +1,11 @@
 import { FaCircleUser } from "react-icons/fa6";
-import type { SerializableUser } from "@features/user/auth/types";
-import type { UserProfile } from "../types";
+
+export interface AvatarUser {
+  photoURL?: string | null;
+}
 
 interface UserAvatarProps {
-  user: SerializableUser | UserProfile | null;
+  user: AvatarUser | null;
   size?: number;
   className?: string;
 }
@@ -14,7 +16,8 @@ export function UserAvatar({
   className = "",
 }: UserAvatarProps) {
   const sizeClass = `w-[${size}px] h-[${size}px]`;
-  return user && user.photoURL ? (
+
+  return user?.photoURL ? (
     <img
       src={user.photoURL}
       alt="User avatar"

@@ -1,3 +1,5 @@
+import type { Action } from "@constants/actions";
+
 /** Activity details associated with a user activity. */
 export interface ActivityDetails extends Record<string, unknown> {
   itemName?: string;
@@ -10,7 +12,7 @@ export interface ActivityDetails extends Record<string, unknown> {
 /** User activity log entry. */
 export interface UserActivity {
   id: string;
-  action: number;
+  action: Action;
   timestamp: number | string | Date;
   details?: ActivityDetails;
 }

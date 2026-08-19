@@ -41,6 +41,32 @@ describe("sessionService", () => {
     expect(getPaths.sub).toHaveBeenCalledWith(uid, "sessions");
   });
 
+  describe("getCurrentIpAddress", () => {
+    it("returns localhost IP when running on localhost", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(true);
+      expect(await sessionService.getCurrentIpAddress()).toBe("127.0.0.1");
+    });
+
+    it("returns IP address from geoService when not on localhost", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(false);
+      vi.spyOn(geoService, "getGeoData").mockResolvedValueOnce({
+        ipAddress: "1.1.1.1",
+        location: "TLV, IL",
+        countryCode: "IL",
+      });
+
+      expect(await sessionService.getCurrentIpAddress()).toBe("1.1.1.1");
+    });
+
+    it("returns undefined if geoService fails", async () => {
+      vi.mocked(isLocalhost).mockReturnValue(false);
+      vi.spyOn(geoService, "getGeoData").mockRejectedValueOnce(
+        new Error("Network error"),
+      );
+      expect(await sessionService.getCurrentIpAddress()).toBeUndefined();
+    });
+  });
+
   describe("logSession", () => {
     it.each([
       [

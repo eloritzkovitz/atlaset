@@ -8,19 +8,20 @@
     "deleteActivityTitle": "מחק פעילות",
     "goBack": "חזרה"
   },
+
   "101": "{userName} יצר חשבון{date}",
-  "102": "{userName} נכנס{date}",
-  "103": "{userName} התנתק{date}",
+  "102": "{userName} השבית את חשבונו{date}",
+  "103": "{userName} הפעיל מחדש את חשבונו{date}",
+
   "104": "{userName} ביקש איפוס סיסמה{date}",
 
-  "110": "{userName} השבית את חשבונו{date}",
-  "111": "{userName} הפעיל מחדש את חשבונו{date}",
+  "110": "{userName} נכנס{date}",
 
   "120": "{userName} עדכן את הפרופיל{date}",
 
   "130": "{userName} עדכן את ההגדרות{date}",
 
-  "140": "{userName} התיידד עם {friendName}{date}",
+  "142": "{userName} עכשיו חבר של {friendName}{date}",
 
   "200": "{userName} ביצע פעולה באטלס{date}",
 

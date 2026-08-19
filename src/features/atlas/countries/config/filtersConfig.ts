@@ -44,7 +44,7 @@ export type CountryFilterConfig<T = string, P = unknown> = FilterConfig<
 // "All" option constant (translation key)
 const allOption: FilterOption = {
   value: "all",
-  label: "common:filter.all",
+  label: "common:components.filter.all",
 };
 
 interface CountryFilterProps {
@@ -107,7 +107,7 @@ export const coreFiltersConfig: CountryFilterConfig<
     label: "atlas:countries.filters.core.visitStatus",
     type: "select",
     getOptions: () => [
-      { value: "any", label: "common:filter.all" },
+      { value: "any", label: "common:components.filter.all" },
       {
         value: "visited",
         label: "atlas:countries.filters.core.visited",

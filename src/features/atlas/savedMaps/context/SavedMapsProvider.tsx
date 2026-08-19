@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
+import { ACTIONS } from "@constants/actions";
 import { logUserActivity } from "@features/activity";
 import { useMapMode } from "@features/atlas/core";
 import { decodeMapData } from "@features/atlas/export/utils/mapShare";
@@ -76,7 +77,12 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
 
       lastAction.current = action;
 
-      const logMap = { add: 234, edit: 235, remove: 236, reorder: 237 };
+      const logMap = {
+        add: ACTIONS.MAP_ITEM_ADDED,
+        edit: ACTIONS.MAP_ITEM_EDITED,
+        remove: ACTIONS.MAP_ITEM_REMOVED,
+        reorder: ACTIONS.MAP_ITEMS_REORDERED,
+      };
       await logUserActivity(
         logMap[action],
         {
@@ -103,7 +109,12 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     onLogAction: async (action, marker) => {
       if (!user?.uid || !activeSavedMap) return;
 
-      const logMap = { add: 234, edit: 235, remove: 236, reorder: 237 };
+      const logMap = {
+        add: ACTIONS.MAP_ITEM_ADDED,
+        edit: ACTIONS.MAP_ITEM_EDITED,
+        remove: ACTIONS.MAP_ITEM_REMOVED,
+        reorder: ACTIONS.MAP_ITEMS_REORDERED,
+      };
       await logUserActivity(
         logMap[action],
         {
@@ -126,7 +137,7 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
     for (const layer of imported) {
       if (user?.uid) {
         await logUserActivity(
-          234,
+          ACTIONS.MAP_ITEM_ADDED,
           {
             layerId: layer.id,
             itemName: layer.name,
@@ -146,7 +157,10 @@ export const SavedMapsProvider = ({ children }: { children: ReactNode }) => {
   // Log user activity for saved map actions
   const logMapAction = async (action: "add" | "delete", map: SavedMap) => {
     if (!user?.uid) return;
-    const logMap = { add: 231, delete: 233 };
+    const logMap = {
+      add: ACTIONS.MAP_ITEM_ADDED,
+      delete: ACTIONS.MAP_ITEM_REMOVED,
+    };
     await logUserActivity(
       logMap[action],
       {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-19
+
+- **[feature]** **Notifications:** Added notifications for various actions and appropriate UI
+- **[chore]** **General:** Updated application action configuration for usage in both activities and notification
+- **[chore]** **General:** Updated some components and UI elements
+
 ## 2026-08-10
 
 - **[feature]** **Migration:** Reworked migration logic so that it shows a notice before migrating

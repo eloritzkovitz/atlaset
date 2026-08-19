@@ -85,11 +85,7 @@ export function useContextMenu({
   const combinedIgnoreRefs = [menuRef, ...ignoreRefs];
 
   // Close menu on outside click or Escape key press
-  useClickOutside(
-    combinedIgnoreRefs as React.RefObject<HTMLElement>[],
-    handleCloseContext,
-    open,
-  );
+  useClickOutside(combinedIgnoreRefs, handleCloseContext, open);
   useKeyHandler(handleCloseContext, ["Escape"], {
     enabled: open,
     target: combinedIgnoreRefs[0],

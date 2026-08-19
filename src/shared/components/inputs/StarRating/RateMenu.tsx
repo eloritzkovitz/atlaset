@@ -24,13 +24,15 @@ export function RateMenu({
   const { t } = useTranslation("common");
   const options = getRatingActionOptions(t);
 
+  // Don't render the menu if it's not open
+  if (!open) return null;
+
   return (
     <Menu
-      open={open}
+      open
       className="rate-menu w-full"
       style={menuStyle}
       containerRef={menuRef}
-      onClose={onClose}
     >
       <div {...hoverHandlers}>
         {options.map((opt) => (

@@ -56,13 +56,11 @@ export const TripActions = forwardRef(function TripActions(
   const btnRef = useRef<HTMLDivElement>(null);
   const rateMenuRef = useRef<HTMLDivElement>(null);
 
-  // Hover handlers for the rate submenu
   const {
     hoverHandlers: rateMenuHoverHandlers,
     floatingHandlers: rateButtonHoverHandlers,
   } = useFloatingHover(true, 150);
 
-  // Context menu management
   const {
     open,
     setOpen,
@@ -76,6 +74,12 @@ export const TripActions = forwardRef(function TripActions(
     ignoreRefs: [btnRef, rateMenuRef],
     onClose: () => rateMenu.close(),
   });
+
+  const handleCloseAll = () => {
+    handleCloseContext();
+    rateMenu.close();
+  };
+
   const baseMenuStyle = useMenuPosition(
     open,
     btnRef,
@@ -94,15 +98,19 @@ export const TripActions = forwardRef(function TripActions(
     "adjacent",
     false,
   );
+
   const dynamicMenuStyle: React.CSSProperties =
     contextMenuStyle.position === "fixed"
       ? contextMenuStyle
-      : { ...baseMenuStyle, zIndex: 1000 };
+      : {
+          ...baseMenuStyle,
+          zIndex: 1000,
+        };
 
-  // Calculate rate menu left position to prevent overflow
   const rateMenuLeft =
     (typeof rateMenuStyle.left === "number" ? rateMenuStyle.left : 0) +
     (menuRef.current?.offsetWidth ?? 180);
+
   const { left: rateMenuLeftFinal, top: rateMenuTopFinal } =
     useFloatingMenuPosition(
       menuRef,
@@ -113,10 +121,8 @@ export const TripActions = forwardRef(function TripActions(
       contextCoords ? contextCoords.y : (rateMenuStyle.top as number),
     );
 
-  // Check if trip is shared
   const isShared = sharedTripIds?.has(trip.id);
 
-  // Menu actions
   const menuActions = useMenuActions(
     {
       onEdit: () => onEdit(trip),
@@ -129,12 +135,6 @@ export const TripActions = forwardRef(function TripActions(
     },
     setOpen,
   );
-
-  // Unified global close handler for all menus
-  const handleCloseAll = () => {
-    handleCloseContext();
-    rateMenu.close();
-  };
 
   if (isShared) {
     return (
@@ -163,13 +163,13 @@ export const TripActions = forwardRef(function TripActions(
           rounded
         />
       </div>
+
       <Menu
         open={open}
-        onClose={handleCloseAll}
         className="trips-actions-menu !p-2"
         style={dynamicMenuStyle}
         containerRef={menuRef as React.RefObject<HTMLDivElement>}
-        disableScroll={true}
+        disableScroll
       >
         {hasValidStartDate(trip) && (
           <MenuButton
@@ -183,6 +183,7 @@ export const TripActions = forwardRef(function TripActions(
             {t("table.actions.viewInCalendar")}
           </MenuButton>
         )}
+
         <MenuButton
           onClick={() => {
             menuActions.onEdit?.();
@@ -193,6 +194,7 @@ export const TripActions = forwardRef(function TripActions(
         >
           {t("table.actions.editTrip")}
         </MenuButton>
+
         {canMarkCompleted(trip) && (
           <MenuButton
             onClick={() => {
@@ -205,6 +207,7 @@ export const TripActions = forwardRef(function TripActions(
             {t("table.actions.markCompleted", "Mark Completed")}
           </MenuButton>
         )}
+
         {canMarkCancelled(trip) && (
           <MenuButton
             onClick={() => {
@@ -217,6 +220,7 @@ export const TripActions = forwardRef(function TripActions(
             {t("table.actions.markCancelled", "Mark Cancelled")}
           </MenuButton>
         )}
+
         {canRestore(trip) && (
           <MenuButton
             onClick={() => {
@@ -229,7 +233,9 @@ export const TripActions = forwardRef(function TripActions(
             {t("table.actions.restoreTrip", "Restore Trip")}
           </MenuButton>
         )}
+
         <Separator className="my-2" />
+
         <MenuButton
           onClick={() => {
             menuActions.onDuplicate?.();
@@ -240,6 +246,7 @@ export const TripActions = forwardRef(function TripActions(
         >
           {t("table.actions.duplicate")}
         </MenuButton>
+
         {trip.status === "completed" && (
           <>
             <MenuButton
@@ -260,6 +267,7 @@ export const TripActions = forwardRef(function TripActions(
                 ? t("table.actions.unfavorite")
                 : t("table.actions.favorite")}
             </MenuButton>
+
             <div
               style={{ display: "inline-block", width: "100%" }}
               onMouseEnter={() => rateMenu.open()}
@@ -273,6 +281,7 @@ export const TripActions = forwardRef(function TripActions(
                 {t("table.actions.rate")}
                 <DirectionalIcon direction="next" className="ms-auto" />
               </MenuButton>
+
               {rateMenu.isOpen && (
                 <RateMenu
                   open={rateMenu.isOpen}
@@ -287,7 +296,10 @@ export const TripActions = forwardRef(function TripActions(
                   hoverHandlers={rateMenuHoverHandlers}
                   onRate={(value) => {
                     handleCloseAll();
-                    if (updateTripRating) updateTripRating(trip, value);
+
+                    if (updateTripRating) {
+                      updateTripRating(trip, value);
+                    }
                   }}
                   onClose={handleCloseAll}
                 />
@@ -295,7 +307,9 @@ export const TripActions = forwardRef(function TripActions(
             </div>
           </>
         )}
+
         <Separator className="my-2" />
+
         <MenuButton
           onClick={() => {
             menuActions.onDelete?.();
@@ -307,10 +321,11 @@ export const TripActions = forwardRef(function TripActions(
           {t("table.actions.deleteTrip")}
         </MenuButton>
       </Menu>
+
       {confirmModal.isOpen && !!removeTrip && (
         <ConfirmModal
           isOpen={confirmModal.isOpen}
-          title={"Delete item?"}
+          title="Delete item?"
           message={
             <span>
               Are you sure you want to delete <strong>{trip?.name}</strong>?

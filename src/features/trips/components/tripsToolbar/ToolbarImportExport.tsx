@@ -26,10 +26,7 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
 
   // Close export menu on outside click
   useClickOutside(
-    [
-      menuRef as React.RefObject<HTMLElement>,
-      exportBtnRef as React.RefObject<HTMLElement>,
-    ],
+    [menuRef, exportBtnRef],
     () => setShowExportMenu(false),
     showExportMenu,
   );
@@ -63,7 +60,10 @@ export function ToolbarImportExport({ trips }: ToolbarImportExportProps) {
         <ConfirmModal
           title={t("table.toolbar.importExport.importConfirmTitle")}
           message={
-            <Trans i18nKey="table.toolbar.importExport.importConfirmMessage" ns="trips">
+            <Trans
+              i18nKey="table.toolbar.importExport.importConfirmMessage"
+              ns="trips"
+            >
               Importing will <b>add</b> trips to your current list. Existing
               trips will not be overwritten.
             </Trans>

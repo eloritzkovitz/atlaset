@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { type User } from "firebase/auth";
+import { ACTIONS } from "@constants/actions";
 import { activityMockTracker } from "@test-utils/activityMocks";
 import { createMockUser } from "@test-utils/authMocks";
 import {
@@ -22,6 +23,7 @@ vi.mock("@lib/db", () => ({
 
 vi.mock("../../account/services/sessionService", () => ({
   sessionService: {
+    getCurrentIpAddress: vi.fn(() => Promise.resolve()),
     logSession: vi.fn(() => Promise.resolve()),
     terminateCurrentSession: vi.fn(() => Promise.resolve()),
   },
@@ -29,6 +31,8 @@ vi.mock("../../account/services/sessionService", () => ({
 
 vi.mock("../../account/services/accountService", () => ({
   accountService: {
+    createAccount: vi.fn(() => Promise.resolve("mocked_username")),
+    ensureAccount: vi.fn(() => Promise.resolve()),
     reactivateAccount: vi.fn(() => Promise.resolve(false)),
   },
 }));
@@ -80,26 +84,6 @@ describe("authService", () => {
     );
   });
 
-  describe("completeSignIn", () => {
-    it("logs activity code 111 when account is reactivated", async () => {
-      vi.mocked(accountService.reactivateAccount).mockResolvedValueOnce(true);
-
-      const result = await authService.completeSignIn(freshUser, "email");
-
-      expect(result).toBe(true);
-      expect(activityMockTracker).toHaveBeenCalledWith(
-        111,
-        { userName: freshUser.displayName, email: freshUser.email },
-        "test-user",
-      );
-      expect(activityMockTracker).toHaveBeenCalledWith(
-        102,
-        expect.any(Object),
-        "test-user",
-      );
-    });
-  });
-
   describe("signIn", () => {
     it("handles local vs session persistence correctly", async () => {
       await authService.signIn("test@example.com", "pass", false);
@@ -120,10 +104,19 @@ describe("authService", () => {
 
       expect(res.user.uid).toBe("test-user");
       expect(activityMockTracker).toHaveBeenCalledWith(
-        102,
+        ACTIONS.SIGNED_IN,
         expect.any(Object),
         "test-user",
       );
+      expect(sessionService.logSession).toHaveBeenCalledWith("test-user");
+    });
+  });
+
+  describe("signInWithGoogle", () => {
+    it("registers implicit user profiles and logs session", async () => {
+      const res = await authService.signInWithGoogle();
+      expect(res.user.uid).toBe("test-user");
+      expect(auth.signInWithPopup).toHaveBeenCalled();
       expect(sessionService.logSession).toHaveBeenCalledWith("test-user");
     });
   });
@@ -133,7 +126,7 @@ describe("authService", () => {
       const res = await authService.signUp("test@example.com", "pass");
       expect(res.username).toBe("mocked_username");
       expect(activityMockTracker).toHaveBeenCalledWith(
-        101,
+        ACTIONS.ACCOUNT_CREATED,
         expect.any(Object),
         "test-user",
       );
@@ -145,7 +138,6 @@ describe("authService", () => {
     it("completely tears down state and terminates active session tracker records when user is logged in", async () => {
       await authService.logout();
       expect(auth.signOut).toHaveBeenCalled();
-      expect(activityMockTracker).toHaveBeenCalledWith(103, {}, "test-user");
       expect(sessionService.terminateCurrentSession).toHaveBeenCalledWith(
         "test-user",
       );
@@ -167,33 +159,36 @@ describe("authService", () => {
       await authService.resetPassword("test@example.com");
       expect(auth.sendPasswordResetEmail).toHaveBeenCalled();
       expect(activityMockTracker).toHaveBeenCalledWith(
-        104,
+        ACTIONS.PASSWORD_RESET_REQUESTED,
         { email: "test@example.com" },
         "test-user",
       );
     });
-  });
 
-  describe("updateUserProfile", () => {
-    it("patches auth records and logs change", async () => {
-      await authService.updateUserProfile(freshUser, { displayName: "New" });
-      expect(auth.updateProfile).toHaveBeenCalledWith(freshUser, {
-        displayName: "New",
-      });
-      expect(activityMockTracker).toHaveBeenCalledWith(
-        120,
-        expect.any(Object),
-        "test-user",
-      );
+    it("does not log activity if auth.currentUser is null", async () => {
+      auth.auth.currentUser = null;
+      await authService.resetPassword("test@example.com");
+      expect(activityMockTracker).not.toHaveBeenCalled();
     });
   });
 
-  describe("signInWithGoogle", () => {
-    it("registers implicit user profiles and logs session", async () => {
-      const res = await authService.signInWithGoogle();
-      expect(res.user.uid).toBe("test-user");
-      expect(auth.signInWithPopup).toHaveBeenCalled();
-      expect(sessionService.logSession).toHaveBeenCalledWith("test-user");
+  describe("completeSignIn", () => {
+    it("logs activity when account is reactivated", async () => {
+      vi.mocked(accountService.reactivateAccount).mockResolvedValueOnce(true);
+
+      const result = await authService.completeSignIn(freshUser, "email");
+
+      expect(result).toBe(true);
+      expect(activityMockTracker).toHaveBeenCalledWith(
+        ACTIONS.ACCOUNT_REACTIVATED,
+        { userName: freshUser.displayName, email: freshUser.email },
+        "test-user",
+      );
+      expect(activityMockTracker).toHaveBeenCalledWith(
+        ACTIONS.SIGNED_IN,
+        expect.any(Object),
+        "test-user",
+      );
     });
   });
 });

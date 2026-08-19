@@ -55,6 +55,18 @@ export const createFirestoreMocks = () => {
   const batchUpdate = vi.fn();
   const deleteDoc = vi.fn();
 
+  const transactionGet = vi.fn();
+  const transactionSet = vi.fn();
+  const transactionUpdate = vi.fn();
+  const transactionDelete = vi.fn();
+
+  const transaction = {
+    get: transactionGet,
+    set: transactionSet,
+    update: transactionUpdate,
+    delete: transactionDelete,
+  };
+
   return {
     addDoc: vi.fn(),
     arrayRemove: vi.fn(),
@@ -72,6 +84,9 @@ export const createFirestoreMocks = () => {
     onSnapshot: vi.fn(),
     orderBy: vi.fn(),
     query: vi.fn(),
+    runTransaction: vi.fn(async (_db, callback) => {
+      return callback(transaction);
+    }),
     serverTimestamp: vi.fn(() => ({ toMillis: () => Date.now() })),
     setDoc: vi.fn(),
     startAfter: vi.fn(),

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { PiArrowsDownUpBold } from "react-icons/pi";
 import { useTranslation } from "react-i18next";
 import { ICONS } from "@constants/icons";
-import { useMenuPosition, useModalAnimation } from "@hooks";
+import { useClickOutside, useMenuPosition, useModalAnimation } from "@hooks";
 import type { Option, OptionGroup, SortDirection, SortValue } from "@types";
 import { getDirectionOptions } from "./directionOptions";
 import { ActionButton } from "../Button/ActionButton";
@@ -35,19 +35,22 @@ export function SortSelect<K extends string>({
     options: getDirectionOptions(t) as Option<SortDirection>[],
   };
 
-  // Normalize keyGroup to ensure it has a label
   const normalizedKeyGroup: OptionGroup<K> = Array.isArray(keyGroup)
-    ? { label: t("components.sort.title", "Sort"), options: keyGroup }
+    ? {
+        label: t("components.sort.title", "Sort"),
+        options: keyGroup,
+      }
     : {
         ...keyGroup,
         label: keyGroup.label ?? t("components.sort.title", "Sort"),
       };
 
-  // Split the value into key and direction
   const [sortKey, sortDirection] = value.split("-") as [K, SortDirection];
+
   const selectedKeyOption = normalizedKeyGroup.options.find(
     (o) => o.value === sortKey,
   );
+
   const selectedDirOption = dirGroup.options.find(
     (o) => o.value === sortDirection,
   );
@@ -62,7 +65,8 @@ export function SortSelect<K extends string>({
     false,
   );
 
-  // Render a group of options (either key or direction) with a section header
+  useClickOutside([btnRef, menuRef], closeModal, isOpen);
+
   const renderOptionGroup = <V extends string>(
     group: OptionGroup<V>,
     selected: V,
@@ -71,6 +75,7 @@ export function SortSelect<K extends string>({
   ) => (
     <>
       <SectionHeader title={group.label} className="ms-1 -my-4" />
+
       {group.options.map((opt: Option<V>) => (
         <div key={opt.value}>
           <OptionItem
@@ -80,6 +85,7 @@ export function SortSelect<K extends string>({
             value={selected}
             onChange={(v) => {
               const newVal = Array.isArray(v) ? v[0] : v;
+
               handleChange(newVal);
               closeModal();
             }}
@@ -95,6 +101,7 @@ export function SortSelect<K extends string>({
                 ) : (
                   <span className="w-4 inline-block" />
                 )}
+
                 <span>{o.label}</span>
               </span>
             )}
@@ -130,24 +137,23 @@ export function SortSelect<K extends string>({
           rounded
         />
       </div>
+
       {showLabel && (
         <span className="ms-2 text-sm text-muted">
           {selectedKeyOption?.label}
         </span>
       )}
+
       {(isOpen || closing) && (
-        <Menu
-          open={isOpen}
-          onClose={closeModal}
-          style={menuStyle}
-          containerRef={menuRef}
-        >
+        <Menu open={isOpen} style={menuStyle} containerRef={menuRef}>
           <div className="-mt-2">
             {renderOptionGroup(normalizedKeyGroup, sortKey, (newKey) =>
               onChange(`${newKey}-${sortDirection}` as SortValue<K>),
             )}
           </div>
+
           <Separator className="mt-2" />
+
           {renderOptionGroup(
             dirGroup,
             sortDirection,

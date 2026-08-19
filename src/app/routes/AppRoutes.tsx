@@ -1,6 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
-import { LoadingSpinner } from "@components";
+import { SplashScreen } from "@components";
 import { AtlasProviders } from "@features/atlas/core/providers/AtlasProviders";
 import { SettingsRoutes } from "@features/settings/core/routes/SettingsRoutes";
 import { GuestRoute } from "./GuestRoute";
@@ -30,7 +30,7 @@ const TripsPage = lazy(() => import("@features/trips/pages/TripsPage"));
 /** Main application routes component. */
 export function AppRoutes() {
   return (
-    <Suspense fallback={<LoadingSpinner />}>
+    <Suspense fallback={<SplashScreen />}>
       <Routes>
         {/* Guest-only routes (redirect signed-in users to /atlas) */}
         <Route element={<GuestRoute redirectTo="/atlas" />}>

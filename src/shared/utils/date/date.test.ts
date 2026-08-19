@@ -1,9 +1,9 @@
 import i18n from "i18next";
-import { Timestamp } from "firebase/firestore";
 import {
   formatDate,
   formatFirestoreDate,
   formatToInputDate,
+  formatTimeAgo,
   parseInputDateToTimestamp,
   getYear,
   getCurrentYear,
@@ -24,10 +24,29 @@ describe("formatDate", () => {
   it.each([
     [undefined, undefined, ""],
     ["", undefined, ""],
+    ["invalid", undefined, ""],
     [
       "2023-01-15",
       "en-US",
       new Intl.DateTimeFormat("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date("2023-01-15")),
+    ],
+    [
+      new Date("2023-01-15"),
+      undefined,
+      new Intl.DateTimeFormat(defaultLocale, {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }).format(new Date("2023-01-15")),
+    ],
+    [
+      1673740800000,
+      undefined,
+      new Intl.DateTimeFormat(defaultLocale, {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
@@ -53,159 +72,226 @@ describe("formatDate", () => {
         year: "numeric",
       }).format(new Date("2023-01-15")),
     ],
-  ])(
-    "formats input %p with options/locale %p to expect %p",
-    (date, mix, expected) => {
-      const opts =
-        mix === "long" || (mix && typeof mix === "object") ? mix : undefined;
-      const locale =
-        typeof mix === "string" && mix !== "long" ? mix : undefined;
+  ])("formats %p with %p", (date, options, expected) => {
+    const locale =
+      typeof options === "string" && options !== "long" ? options : undefined;
 
-      expect(formatDate(date as any, opts as any, locale)).toBe(expected);
-    },
-  );
+    const opts =
+      options === "long" || typeof options === "object" ? options : undefined;
 
-  it("handles invalid date strings gracefully", () => {
-    expect(formatDate("not-a-date")).toBe("");
+    expect(formatDate(date as any, opts as any, locale)).toBe(expected);
   });
 });
 
 describe("formatFirestoreDate", () => {
-  const fakeTimestamp = { toDate: () => new Date("2023-01-15T00:00:00Z") };
-
-  const getExpectedFallback = () => {
-    const defaultLocale =
-      i18n?.language ||
-      (typeof navigator !== "undefined" && navigator.language) ||
-      "en-GB";
-    return new Intl.DateTimeFormat(defaultLocale, {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    }).format(new Date("2023-01-15"));
+  const timestamp = {
+    toDate: () => new Date("2023-01-15T00:00:00Z"),
   };
 
   it.each([
-    [fakeTimestamp, "DYNAMIC_EXPECTED"],
-    ["2023-01-15", "DYNAMIC_EXPECTED"],
-    [undefined, "Unknown"],
-    [null, "Unknown"],
-    [{}, "Unknown"],
-    ["", "Unknown"],
-  ])("processes firestore raw state %p", (input, expected) => {
-    const finalExpected =
-      expected === "DYNAMIC_EXPECTED" ? getExpectedFallback() : expected;
-    expect(formatFirestoreDate(input)).toBe(finalExpected);
+    [timestamp],
+    ["2023-01-15"],
+    [new Date("2023-01-15")],
+    [1673740800000],
+  ])("formats %p", (input) => {
+    expect(formatFirestoreDate(input)).toBe(formatDate("2023-01-15"));
   });
+
+  it.each([undefined, null, {}, "", false])(
+    "returns Unknown for %p",
+    (input) => {
+      expect(formatFirestoreDate(input)).toBe("Unknown");
+    },
+  );
 });
 
-describe("HTML Date Input Utilities", () => {
-  const fakeTimestamp = { toDate: () => new Date("2023-01-15T00:00:00Z") };
-  const nativeDate = new Date("2023-01-15T00:00:00Z");
+describe("formatToInputDate", () => {
+  const timestamp = {
+    toDate: () => new Date("2023-01-15T00:00:00Z"),
+  };
 
   it.each([
     [undefined, ""],
     [null, ""],
     ["", ""],
-    ["invalid-date", ""],
-    [fakeTimestamp, "2023-01-15"],
-    [nativeDate, "2023-01-15"],
+    ["invalid", ""],
+    [{}, ""],
+    [false, ""],
+    [timestamp, "2023-01-15"],
+    [new Date("2023-01-15"), "2023-01-15"],
     ["2023-01-15", "2023-01-15"],
     [1673740800000, "2023-01-15"],
-  ])("formatToInputDate(%p) -> %p", (input, expected) => {
+  ])("formats %p -> %p", (input, expected) => {
     expect(formatToInputDate(input)).toBe(expected);
+  });
+});
+
+describe("formatTimeAgo", () => {
+  const t = ((key: string, options?: { count?: number }) => {
+    if (key.endsWith("justNow")) return "just now";
+    if (key.endsWith("minutes")) return `${options?.count}m ago`;
+    if (key.endsWith("hours")) return `${options?.count}h ago`;
+    if (key.endsWith("days")) return `${options?.count}d ago`;
+    return key;
+  }) as any;
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2023-01-15T12:00:00Z"));
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it.each([
+    [new Date("2023-01-15T11:59:30Z"), "just now"],
+    ["2023-01-15T11:59:00Z", "1m ago"],
+    ["2023-01-15T11:30:00Z", "30m ago"],
+    ["2023-01-15T11:00:00Z", "1h ago"],
+    ["2023-01-15T00:00:00Z", "12h ago"],
+    ["2023-01-14T12:00:00Z", "1d ago"],
+    ["2023-01-09T12:00:00Z", "6d ago"],
+  ])("formats %p as %p", (date, expected) => {
+    expect(formatTimeAgo(date, t)).toBe(expected);
+  });
+
+  it("falls back to a formatted date after 7 days", () => {
+    const date = "2023-01-01T12:00:00Z";
+
+    expect(formatTimeAgo(date, t)).toBe(formatFirestoreDate(date));
+  });
+
+  it("supports Firestore timestamps", () => {
+    const timestamp = {
+      toDate: () => new Date("2023-01-15T11:59:30Z"),
+    };
+
+    expect(formatTimeAgo(timestamp, t)).toBe("just now");
+  });
+
+  it.each([undefined, null, "", {}, false])(
+    "returns empty string for invalid input %p",
+    (date) => {
+      expect(formatTimeAgo(date, t)).toBe("");
+    },
+  );
+
+  it("returns empty string for an invalid date string", () => {
+    expect(formatTimeAgo("invalid", t)).toBe("");
+  });
+});
+
+describe("parseInputDateToTimestamp", () => {
+  it.each([
     [undefined, undefined],
     ["", undefined],
-    ["invalid-date", undefined],
-    ["2023-01-15", Timestamp.fromDate(new Date("2023-01-15"))],
-  ])("parseInputDateToTimestamp(%p) -> %p", (input, expected) => {
-    const result = parseInputDateToTimestamp(input);
-    if (!expected) {
-      expect(result).toBeUndefined();
-    } else {
-      expect(typeof result?.toMillis).toBe("function");
-      expect(result?.toMillis()).toBe(expected.toMillis());
-    }
+    ["invalid", undefined],
+  ])("returns undefined for %p", (input, expected) => {
+    expect(parseInputDateToTimestamp(input)).toBe(expected);
+  });
+
+  it("converts a valid date", () => {
+    const result = parseInputDateToTimestamp("2023-01-15");
+
+    expect(typeof result?.toMillis).toBe("function");
+    expect(result?.toMillis()).toBe(new Date("2023-01-15").getTime());
+  });
+});
+
+describe("getYear", () => {
+  it.each([
+    [undefined, undefined],
+    ["", undefined],
+    ["invalid", undefined],
+    ["2023-01-15", 2023],
+    [new Date("2023-01-15"), 2023],
+    [1673740800000, 2023],
+  ])("gets year from %p", (input, expected) => {
+    expect(getYear(input as any)).toBe(expected);
+  });
+});
+
+describe("getCurrentYear", () => {
+  it("returns the current year", () => {
+    expect(getCurrentYear()).toBe(new Date().getFullYear());
+  });
+});
+
+describe("getTimestamp", () => {
+  const date = new Date("2021-06-30T00:00:00Z");
+
+  it.each([
+    [1625078400000, 1625078400000],
+    [date, date.getTime()],
+    ["2021-06-30T00:00:00Z", date.getTime()],
+  ])("converts %p", (input, expected) => {
+    expect(getTimestamp(input as any)).toBe(expected);
+  });
+
+  it("returns NaN for invalid dates", () => {
+    expect(getTimestamp("invalid")).toBeNaN();
+  });
+});
+
+describe("formatTimeSeconds", () => {
+  it.each([
+    [undefined, "-"],
+    [NaN, "-"],
+    [45, "0:45"],
+    [125, "2:05"],
+    [0, "0:00"],
+  ])("formats %p -> %p", (input, expected) => {
+    expect(formatTimeSeconds(input as any)).toBe(expected);
   });
 });
 
 describe("setAppDateLocale", () => {
   afterEach(() => setAppDateLocale(undefined));
 
-  it("applies the app-wide locale when none is provided", () => {
+  it("uses the app locale", () => {
     setAppDateLocale("en-US");
+
     const expected = new Intl.DateTimeFormat("en-US", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     }).format(new Date("2023-01-15"));
+
     expect(formatDate("2023-01-15")).toBe(expected);
   });
 
-  it("clearing the app locale falls back to defaults", () => {
+  it("falls back when the app locale is cleared", () => {
     setAppDateLocale(null);
-    const defaultLocale =
+
+    const locale =
       i18n?.language ||
       (typeof navigator !== "undefined" && navigator.language) ||
       "en-GB";
-    const expected = new Intl.DateTimeFormat(defaultLocale, {
+
+    const expected = new Intl.DateTimeFormat(locale, {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
     }).format(new Date("2023-01-15"));
+
     expect(formatDate("2023-01-15")).toBe(expected);
   });
-});
 
-describe("Year Extraction Utilities", () => {
-  it.each([
-    [undefined, undefined],
-    ["", undefined],
-    ["2023-01-15", 2023],
-    [new Date("2023-01-15"), 2023],
-    [1673740800000, 2023],
-    ["not-a-date", undefined],
-  ])("evaluates getYear(%p) -> %p", (input, expected) => {
-    expect(getYear(input as any)).toBe(expected);
-  });
+  it("prefers an explicitly supplied locale", () => {
+    setAppDateLocale("en-US");
 
-  it("resolves getCurrentYear matching system runtime", () => {
-    expect(getCurrentYear()).toBe(new Date().getFullYear());
+    const expected = new Intl.DateTimeFormat("de-DE", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    }).format(new Date("2023-01-15"));
+
+    expect(formatDate("2023-01-15", undefined, "de-DE")).toBe(expected);
   });
 });
 
-describe("getTimestamp & formatTimeSeconds", () => {
-  const sampleDate = new Date("2021-06-30T00:00:00Z");
-
-  it.each([
-    [getTimestamp, 1625078400000, 1625078400000],
-    [getTimestamp, sampleDate, sampleDate.getTime()],
-    [
-      getTimestamp,
-      "2021-06-30T00:00:00Z",
-      new Date("2021-06-30T00:00:00Z").getTime(),
-    ],
-    [formatTimeSeconds, undefined, "-"],
-    [formatTimeSeconds, NaN, "-"],
-    [formatTimeSeconds, 45, "0:45"],
-    [formatTimeSeconds, 125, "2:05"],
-    [formatTimeSeconds, 0, "0:00"],
-  ])(
-    "computes standard math parsing properties",
-    (utilityFn, input, expected) => {
-      expect(utilityFn(input as any)).toBe(expected as any);
-    },
-  );
-
-  it("resolves NaN string conversions cleanly", () => {
-    expect(getTimestamp("not-a-date")).toBeNaN();
-  });
-});
-
-describe("i18n Month Transformation Pipeline", () => {
+describe("formatMonthValues", () => {
   it.each([
     [
       ["Jan", "Feb", "Mar"],
@@ -213,22 +299,30 @@ describe("i18n Month Transformation Pipeline", () => {
     ],
     [{ "0": "Jan", "1": "Feb" }, ["Jan", "Feb"]],
     [{ a: "Alpha", b: "Beta" }, ["Alpha", "Beta"]],
+    [{ "2": "Mar", "0": "Jan", "1": "Feb" }, ["Jan", "Feb", "Mar"]],
     [undefined, []],
     [null, []],
     ["string", []],
-  ])("normalizes translation structure input %p -> %j", (input, expected) => {
+    [{}, []],
+  ])("normalizes %p", (input, expected) => {
     expect(formatMonthValues(input)).toEqual(expected);
   });
 
+  it("limits results to 12 months", () => {
+    expect(
+      formatMonthValues(Array.from({ length: 15 }, (_, i) => i)),
+    ).toHaveLength(12);
+  });
+});
+
+describe("month helpers", () => {
   it.each([
     [getMonthsShort, "months.short", ["J", "F", "M"]],
     [getMonthsLong, "months.long", ["January", "February"]],
-  ])(
-    "delegates translation namespaces using hook reference configurations",
-    (utilityFn, targetNamespace, returnedValue) => {
-      const mockT = (key: string) =>
-        key === targetNamespace ? returnedValue : [];
-      expect(utilityFn(mockT as any)).toEqual(formatMonthValues(returnedValue));
-    },
-  );
+  ])("gets translated months", (fn, key, value) => {
+    const t = ((requestedKey: string) =>
+      requestedKey === key ? value : []) as any;
+
+    expect(fn(t)).toEqual(formatMonthValues(value));
+  });
 });

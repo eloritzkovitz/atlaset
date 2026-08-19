@@ -20,6 +20,6 @@ export const mockActivityBehavior = (
 
 export { activityMockTracker };
 
-vi.mock("@features/activity/utils/activity", () => ({
+vi.mock("@features/activity", () => ({
   logUserActivity: activityMockTracker,
 }));
