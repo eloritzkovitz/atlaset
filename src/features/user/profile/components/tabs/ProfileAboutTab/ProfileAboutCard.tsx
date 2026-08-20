@@ -73,10 +73,7 @@ export function ProfileAboutCard({
             <div className="flex items-center gap-3">
               <FaLocationDot />
               {selectedCountry ? (
-                <CountryWithFlag
-                  isoCode={selectedCountry.isoCode}
-                  name={selectedCountry.name}
-                />
+                <CountryWithFlag country={selectedCountry} />
               ) : (
                 <span>{notSpecified}</span>
               )}

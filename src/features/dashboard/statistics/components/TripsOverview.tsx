@@ -175,10 +175,7 @@ export function TripsOverview() {
                   key={country.isoCode}
                   className="flex items-center gap-2 px-3 py-2 bg-surface"
                 >
-                  <CountryWithFlag
-                    isoCode={country.isoCode}
-                    name={country.name}
-                  />
+                  <CountryWithFlag country={country} />
                   <span className="text-xs text-muted">
                     ({maxCount}{" "}
                     {t("statistics.overview.visits", {

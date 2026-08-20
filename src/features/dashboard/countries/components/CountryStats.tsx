@@ -3,8 +3,8 @@ import {
   CountryFlag,
   VisitedStatusIndicator,
   useCountryData,
-  type CountryDetailsTab,
 } from "@features/countries";
+import type { CountryDetailsTab } from "@features/countries/types";
 import { useCountryTracking } from "@features/visits";
 import { useQueryParam, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";

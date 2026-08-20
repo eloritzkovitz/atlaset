@@ -1,8 +1,8 @@
 import { useCallback } from "react";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useSavedMaps } from "@features/atlas/savedMaps/context/SavedMapsContext";
-import { getCountryName } from "@features/countries/utils/countryData";
-import { useCountryData } from "@features/countries/hooks/useCountryData";
+import { getCountryName } from "@features/countries/core/utils/countryData";
+import { useCountryData } from "@features/countries/core/hooks/useCountryData";
 import { useEventListener } from "@hooks";
 import { useMarkers } from "../context/MarkersContext";
 

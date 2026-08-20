@@ -1,5 +1,5 @@
 import type { Country } from "@features/countries/types";
-import { getCountryName } from "@features/countries/utils/countryData";
+import { getCountryName } from "@features/countries/core/utils/countryData";
 import type { SerializableUser } from "@features/user/auth/types";
 import type { Friend } from "@features/user/friends/types";
 import type { UserProfile } from "@features/user/profile/types";

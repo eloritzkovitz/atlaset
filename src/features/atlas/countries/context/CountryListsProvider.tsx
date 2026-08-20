@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { logUserActivity } from "@features/activity";
 import type { Layer } from "@features/atlas/layers/types";
-import { countryListService } from "@features/countries";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
 import { useDataLoader, useDisclosure } from "@hooks";
@@ -10,6 +9,7 @@ import {
   type CountryListsContextValue,
 } from "./CountryListsContext";
 import { CountryListModal } from "../components/countriesPanel/CountryListModal";
+import { countryListService } from "../services/countryListService";
 import type { CountryList } from "../types";
 
 export function CountryListsProvider({ children }: { children: ReactNode }) {

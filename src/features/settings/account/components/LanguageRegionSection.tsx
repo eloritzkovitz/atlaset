@@ -97,10 +97,7 @@ export function LanguageRegionSection() {
             )}
           >
             {selectedCountry ? (
-              <CountryWithFlag
-                isoCode={selectedCountry.isoCode}
-                name={selectedCountry.name}
-              />
+              <CountryWithFlag country={selectedCountry} />
             ) : (
               <span className="opacity-50">
                 {tSettings("account.languageRegion.homeCountry.none")}

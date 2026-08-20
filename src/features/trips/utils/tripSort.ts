@@ -3,7 +3,7 @@
  */
 
 import type { Country } from "@features/countries/types";
-import { createCountryMap } from "@features/countries/utils/countryData";
+import { createCountryMap } from "@features/countries/core/utils/countryData";
 import { sortItems } from "@utils";
 import type { Trip, TripSortBy } from "../types";
 

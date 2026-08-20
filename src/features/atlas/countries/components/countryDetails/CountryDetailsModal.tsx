@@ -3,7 +3,7 @@ import { Modal } from "@components";
 import { useUI } from "@app/contexts/UIContext";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useCountryData, type Country } from "@features/countries";
-import { CountryDetailsPanel } from "@features/countries/components/countryDetails/CountryDetailsPanel";
+import { CountryDetailsPanel } from "@features/countries/details/components/CountryDetailsPanel";
 import { useAccessibility } from "@features/settings";
 import { useCountryTracking } from "@features/visits";
 import { useKeyHandler } from "@hooks";

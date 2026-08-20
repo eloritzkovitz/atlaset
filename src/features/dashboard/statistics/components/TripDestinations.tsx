@@ -34,12 +34,7 @@ export function TripDestinations() {
       (row: VisitedCountryRankRow) => React.ReactNode
     > = {
       rank: (row) => <RankBadge rank={row.rank} showPaddingWhenNoMedal />,
-      country: (row) => (
-        <CountryWithFlag
-          isoCode={row.country.isoCode}
-          name={row.country.name}
-        />
-      ),
+      country: (row) => <CountryWithFlag country={row.country} />,
       years: (row) => (
         <div className="flex flex-wrap gap-1.5">
           {row.years.map((year) => (

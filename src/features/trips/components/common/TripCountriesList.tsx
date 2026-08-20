@@ -27,7 +27,7 @@ export function TripCountriesList({
         )}
         {countries.map((country) => (
           <span key={country.isoCode} className="flex items-center py-0.5">
-            <CountryWithFlag isoCode={country.isoCode} name={country.name} />
+            <CountryWithFlag country={country} />
             {removable && (
               <button
                 type="button"

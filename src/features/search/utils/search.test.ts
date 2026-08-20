@@ -22,7 +22,7 @@ vi.mock("@lib/i18n/config", () => ({
   },
 }));
 
-vi.mock("@features/countries/utils/countryData", () => ({
+vi.mock("@features/countries/core/utils/countryData", () => ({
   getCountryName: (code: string) => (code === "FR" ? "France" : null),
 }));
 

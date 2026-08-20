@@ -2,11 +2,8 @@
  * Utility functions for filtering and processing achievements in the dashboard.
  */
 
-import {
-  applyQualifierSearch,
-  type Country,
-  type CountryFilterOptions,
-} from "@features/countries";
+import { applyQualifierSearch } from "@features/countries";
+import type { Country, CountryFilterOptions } from "@features/countries/types";
 import { parseComparator } from "@utils";
 import type { Achievement, Criteria } from "../types";
 

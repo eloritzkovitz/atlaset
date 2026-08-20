@@ -126,8 +126,10 @@ export function TripsTableHeaders({
                   "name" in opt.country &&
                   typeof opt.country.name === "string" ? (
                     <CountryWithFlag
-                      isoCode={opt.value}
-                      name={opt.country.name}
+                      country={{
+                        isoCode: opt.value,
+                        name: opt.country.name,
+                      }}
                     />
                   ) : "label" in opt ? (
                     opt.label

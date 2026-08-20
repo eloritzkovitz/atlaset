@@ -21,6 +21,7 @@ export default defineConfig({
         "**/contexts/**",
         "**/layout/**",
         "**/providers/**",
+        "**/types/**",
         "**/types.ts",
         "**/index.ts",
         "**/*.json",

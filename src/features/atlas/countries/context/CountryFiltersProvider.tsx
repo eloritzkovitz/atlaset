@@ -16,15 +16,19 @@ import { useTimeline } from "@features/atlas/timeline/context/TimelineContext";
 import {
   applyQualifierSearch,
   createSovereigntyFilter,
-  filterByVisitCount,
-  filterByVisitStatus,
   getCountryCounts,
   getFilteredIsoCodes,
   useCountryData,
-  type CountryFilterOptions,
-  type SovereigntyStatus,
-  type GeoType,
 } from "@features/countries";
+import {
+  filterByVisitCount,
+  filterByVisitStatus,
+} from "@features/countries/browse/utils/visitFilters";
+import type {
+  CountryFilterOptions,
+  GeoType,
+  SovereigntyStatus,
+} from "@features/countries/types";
 import { useTrips } from "@features/trips";
 import {
   getLatestYear,
