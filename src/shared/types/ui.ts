@@ -13,5 +13,6 @@ export type ToolbarToggleOption = {
   titlePosition?: "top";
   checked: boolean;
   disabled?: boolean;
+  rounded?: boolean;
   onClick: () => void;
 };

@@ -1,5 +1,5 @@
 import type { Layer } from "@features/atlas/layers/types";
-import { type GeoType, type SovereigntyStatus } from "@features/countries";
+import type { GeoType, SovereigntyStatus } from "@features/countries/types";
 import type { FilterConfig, FilterOption } from "@types";
 import {
   capitalize,

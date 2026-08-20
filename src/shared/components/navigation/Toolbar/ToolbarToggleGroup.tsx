@@ -1,13 +1,17 @@
 import type { ToolbarToggleOption } from "@types";
 import { ActionButton } from "../../inputs/Button/ActionButton";
 
+interface ToolbarToggleGroupProps {
+  options: ToolbarToggleOption[];
+  className?: string;
+}
+
 export function ToolbarToggleGroup({
   options,
-}: {
-  options: ToolbarToggleOption[];
-}) {
+  className,
+}: ToolbarToggleGroupProps) {
   return (
-    <div className="flex items-center">
+    <div className={`flex items-center ${className}`}>
       {options.map((opt) => (
         <ActionButton
           key={opt.value}
@@ -19,6 +23,7 @@ export function ToolbarToggleGroup({
           active={!!opt.checked}
           icon={opt.icon}
           disabled={opt.disabled}
+          rounded={opt.rounded}
         />
       ))}
     </div>

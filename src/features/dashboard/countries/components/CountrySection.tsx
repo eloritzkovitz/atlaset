@@ -6,6 +6,7 @@ import {
   ActionButton,
   SearchInput,
   SelectInput,
+  ToolbarToggleGroup,
   ViewModeSegmentedControl,
 } from "@components";
 import { ICONS } from "@constants/icons";
@@ -22,7 +23,6 @@ import {
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
 import { canonicalKey } from "@utils";
-import { ToggleButton } from "./ToggleButton";
 
 interface CountrySectionProps {
   countries: Country[];
@@ -273,71 +273,97 @@ export function CountrySection({
                 variant="toggle"
                 rounded
               />
-              <ToggleButton
-                on={!!selectedShowSovereignOnly}
-                onClick={handleSovereignToggle}
-                ariaLabelOn={tDashboard(
-                  "exploration.showAllCountries",
-                  "Show all countries",
-                )}
-                ariaLabelOff={tDashboard(
-                  "exploration.showSovereignOnly",
-                  "Show sovereign only",
-                )}
-                titleOn={tDashboard(
-                  "exploration.showAllCountries",
-                  "Show all countries",
-                )}
-                titleOff={tDashboard(
-                  "exploration.showSovereignOnly",
-                  "Show Sovereign Only",
-                )}
-                iconOn={<FaFlag />}
-                iconOff={<FaFlag className="text-muted" />}
-              />
-              <ToggleButton
-                on={showVisitedOnly}
-                onClick={handleVisitedToggle}
-                ariaLabelOn={tDashboard(
-                  "exploration.showAllCountries",
-                  "Show All Countries",
-                )}
-                ariaLabelOff={tDashboard(
-                  "exploration.showVisitedOnly",
-                  "Show Visited Only",
-                )}
-                titleOn={tDashboard(
-                  "exploration.showAllCountries",
-                  "Show All Countries",
-                )}
-                titleOff={tDashboard(
-                  "exploration.showVisitedOnly",
-                  "Show Visited Only",
-                )}
-                iconOn={<ICONS.visitStatus.visited />}
-                iconOff={<ICONS.visitStatus.visited className="text-muted" />}
-              />
-              <ToggleButton
-                on={showTranscontinental}
-                onClick={handleTranscontinentalToggle}
-                ariaLabelOn={tDashboard(
-                  "exploration.hideTranscontinental",
-                  "Hide transcontinental countries",
-                )}
-                ariaLabelOff={tDashboard(
-                  "exploration.showTranscontinental",
-                  "Show transcontinental countries",
-                )}
-                titleOn={tDashboard(
-                  "exploration.hideTranscontinental",
-                  "Hide transcontinental countries",
-                )}
-                titleOff={tDashboard(
-                  "exploration.showTranscontinental",
-                  "Show transcontinental countries",
-                )}
-                iconOn={<PiGlobeStandFill className="text-lg" />}
-                iconOff={<PiGlobeStandFill className="text-lg text-muted" />}
+              <ToolbarToggleGroup
+                options={[
+                  {
+                    value: "sovereign",
+                    icon: <FaFlag />,
+                    label: tDashboard(
+                      "exploration.showSovereignOnly",
+                      "Show Sovereign Only",
+                    ),
+                    ariaLabel: selectedShowSovereignOnly
+                      ? tDashboard(
+                          "exploration.showAllCountries",
+                          "Show all countries",
+                        )
+                      : tDashboard(
+                          "exploration.showSovereignOnly",
+                          "Show sovereign only",
+                        ),
+                    title: selectedShowSovereignOnly
+                      ? tDashboard(
+                          "exploration.showAllCountries",
+                          "Show all countries",
+                        )
+                      : tDashboard(
+                          "exploration.showSovereignOnly",
+                          "Show Sovereign Only",
+                        ),
+                    checked: !!selectedShowSovereignOnly,
+                    rounded: true,
+                    onClick: handleSovereignToggle,
+                  },
+                  {
+                    value: "visited",
+                    icon: <ICONS.visitStatus.visited />,
+                    label: tDashboard(
+                      "exploration.showVisitedOnly",
+                      "Show Visited Only",
+                    ),
+                    ariaLabel: showVisitedOnly
+                      ? tDashboard(
+                          "exploration.showAllCountries",
+                          "Show All Countries",
+                        )
+                      : tDashboard(
+                          "exploration.showVisitedOnly",
+                          "Show Visited Only",
+                        ),
+                    title: showVisitedOnly
+                      ? tDashboard(
+                          "exploration.showAllCountries",
+                          "Show All Countries",
+                        )
+                      : tDashboard(
+                          "exploration.showVisitedOnly",
+                          "Show Visited Only",
+                        ),
+                    checked: showVisitedOnly,
+                    rounded: true,
+                    onClick: handleVisitedToggle,
+                  },
+                  {
+                    value: "transcontinental",
+                    icon: <PiGlobeStandFill className="text-lg" />,
+                    label: tDashboard(
+                      "exploration.showTranscontinental",
+                      "Show transcontinental countries",
+                    ),
+                    ariaLabel: showTranscontinental
+                      ? tDashboard(
+                          "exploration.hideTranscontinental",
+                          "Hide transcontinental countries",
+                        )
+                      : tDashboard(
+                          "exploration.showTranscontinental",
+                          "Show transcontinental countries",
+                        ),
+                    title: showTranscontinental
+                      ? tDashboard(
+                          "exploration.hideTranscontinental",
+                          "Hide transcontinental countries",
+                        )
+                      : tDashboard(
+                          "exploration.showTranscontinental",
+                          "Show transcontinental countries",
+                        ),
+                    checked: showTranscontinental,
+                    rounded: true,
+                    onClick: handleTranscontinentalToggle,
+                  },
+                ]}
+                className="gap-2"
               />
               <ViewModeSegmentedControl
                 viewMode={viewMode}
