@@ -5,7 +5,7 @@ import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useCountryData, type Country } from "@features/countries";
 import { CountryDetailsPanel } from "@features/countries/components/countryDetails/CountryDetailsPanel";
 import { useAccessibility } from "@features/settings";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";
 
@@ -28,7 +28,7 @@ export function CountryDetailsModal({
   const [currentCountry, setCurrentCountry] = useState<Country | null>(country);
 
   // Get visit context functions from the visited countries hook
-  const { getCountryVisitsCategorized } = useVisitedCountries();
+  const { getCountryVisitsCategorized } = useCountryTracking();
   const categorizedVisits = useMemo(
     () =>
       country

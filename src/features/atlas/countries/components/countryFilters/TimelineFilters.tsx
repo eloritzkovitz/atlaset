@@ -3,7 +3,7 @@ import { FaTimeline } from "react-icons/fa6";
 import { CollapsibleHeader, NumberInput, SelectInput } from "@components";
 import { useTimeline } from "@features/atlas/timeline";
 import { useTrips } from "@features/trips";
-import { getVisitedCountriesUpToYear } from "@features/visits";
+import { getVisitCountStats } from "@features/visits";
 import { clamp } from "@utils";
 import { timelineFiltersConfig } from "../../config/filtersConfig";
 
@@ -28,19 +28,10 @@ export function TimelineFilters({
   const { trips } = useTrips();
   const { t } = useTranslation("atlas");
 
-  // Get the visit count map for the selected year
-  const visitCountMap = getVisitedCountriesUpToYear(
+  const { min: minPossible, max: maxPossible } = getVisitCountStats(
     trips,
     selectedYear,
-    undefined,
   );
-
-  // Get all visit counts as an array
-  const visitCounts = Object.values(visitCountMap);
-
-  // Compute min and max (default to 1 if no visits)
-  const minPossible = visitCounts.length > 0 ? Math.min(...visitCounts) : 1;
-  const maxPossible = visitCounts.length > 0 ? Math.max(...visitCounts) : 1;
 
   return (
     <>

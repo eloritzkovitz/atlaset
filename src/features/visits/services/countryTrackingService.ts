@@ -5,15 +5,7 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { getDocData, getPaths } from "@lib/firebase";
-
-export type TrackingField =
-  | "manualVisitedCountryCodes"
-  | "wantToVisitCountryCodes";
-
-interface TrackingData {
-  manualVisitedCountryCodes: string[];
-  wantToVisitCountryCodes: string[];
-}
+import type { CountryTrackingData, CountryTrackingField } from "../types";
 
 /**
  * Service for managing tracking countries of users.
@@ -25,8 +17,11 @@ export const countryTrackingService = {
    * @param field - The tracking field to retrieve (visited or want-to-visit list).
    * @returns A promise resolving to an array of tracking country ISO codes.
    */
-  async getCountryCodes(uid: string, field: TrackingField): Promise<string[]> {
-    const data = await getDocData<TrackingData>(getPaths.user(uid));
+  async getCountryCodes(
+    uid: string,
+    field: CountryTrackingField,
+  ): Promise<string[]> {
+    const data = await getDocData<CountryTrackingData>(getPaths.user(uid));
     return data && Array.isArray(data[field]) ? data[field] : [];
   },
 
@@ -36,9 +31,9 @@ export const countryTrackingService = {
    * @param cb - Callback receiving the tracking data whenever it changes.
    * @returns An unsubscribe function to stop listening.
    */
-  onTrackingDataChange(uid: string, cb: (data: TrackingData) => void) {
+  onTrackingDataChange(uid: string, cb: (data: CountryTrackingData) => void) {
     return onSnapshot(getPaths.user(uid), (snap) => {
-      const data = snap.data() as TrackingData | undefined;
+      const data = snap.data() as CountryTrackingData | undefined;
       cb({
         manualVisitedCountryCodes: Array.isArray(
           data?.manualVisitedCountryCodes,
@@ -58,8 +53,12 @@ export const countryTrackingService = {
    * @param code - The country ISO code to add.
    * @param targetField - The tracking field to modify (visited or want-to-visit list).
    */
-  async addCountryCode(uid: string, code: string, targetField: TrackingField) {
-    const opposingField: TrackingField =
+  async addCountryCode(
+    uid: string,
+    code: string,
+    targetField: CountryTrackingField,
+  ) {
+    const opposingField: CountryTrackingField =
       targetField === "manualVisitedCountryCodes"
         ? "wantToVisitCountryCodes"
         : "manualVisitedCountryCodes";
@@ -76,7 +75,11 @@ export const countryTrackingService = {
    * @param code - The country ISO code to remove.
    * @param field - The tracking field to modify.
    */
-  async removeCountryCode(uid: string, code: string, field: TrackingField) {
+  async removeCountryCode(
+    uid: string,
+    code: string,
+    field: CountryTrackingField,
+  ) {
     await updateDoc(getPaths.user(uid), {
       [field]: arrayRemove(code),
     });

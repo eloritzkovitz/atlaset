@@ -1,8 +1,10 @@
 /** Represents a visit to a country. */
 export type Visit = {
-  yearRange: string;
+  yearRange: string | null;
   tripName?: string;
-  tripId?: string;
+  tripId: string;
+  startDate?: string;
+  endDate?: string;
 };
 
 /** Represents the visited status filter for countries. */
@@ -23,4 +25,15 @@ export type CategorizedVisits = {
   past: Visit[];
   upcoming: Visit[];
   tentative: Visit[];
+};
+
+/** Represents a country tracking field. */
+export type CountryTrackingField =
+  | "manualVisitedCountryCodes"
+  | "wantToVisitCountryCodes";
+
+/** Represents persisted country tracking data. */
+export type CountryTrackingData = {
+  manualVisitedCountryCodes: string[];
+  wantToVisitCountryCodes: string[];
 };

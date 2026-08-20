@@ -9,7 +9,7 @@ import { useEffectiveMarkers } from "@features/atlas/markers";
 import { useSavedMaps } from "@features/atlas/savedMaps";
 import { useAccessibility } from "@features/settings";
 import { useAuth } from "@features/user/auth";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";
 import { EmbedMapSection } from "./EmbedMapSection";
 import { ExportOptionsSection } from "./ExportOptionsSection";
@@ -35,7 +35,7 @@ export function MapExportPanel({ svgRef }: MapExportPanelProps) {
   const { activeSavedMap } = useSavedMaps();
   const sharedMapInfo = useSharedMapInfo() || {};
   const { showExport, closePanel } = useUI();
-  const { visitedCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes } = useCountryTracking();
   const allLayers = useEffectiveLayers();
   const markers = useEffectiveMarkers();
   const { t } = useTranslation("atlas");

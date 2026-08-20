@@ -4,7 +4,7 @@ import { useMapTheme } from "@features/atlas/core";
 import { useMapOverlays } from "@features/atlas/settings";
 import { type Country } from "@features/countries/types";
 import { useHomeCountry } from "@features/user/profile";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import type { LayerItem } from "../types";
 
 const TRACKING_LAYER_ID = "tracking";
@@ -26,7 +26,7 @@ interface UseTrackingLayerItemsFilters {
 export function useTrackingLayerItems(filters?: UseTrackingLayerItemsFilters) {
   const { homeCountry } = useHomeCountry();
   const { visitedCountryCodes, futureCountryCodes, wantToVisitCountryCodes } =
-    useVisitedCountries();
+    useCountryTracking();
   const overlays = useMapOverlays();
   const theme = useMapTheme();
 

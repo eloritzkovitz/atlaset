@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ModalSelect, QualifierSearch } from "@components";
 import { ICONS } from "@constants/icons";
-import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
 import { filterBySearch, parseQualifierSearch } from "@utils";
 import { CountryWithFlag } from "../countryFlag/CountryWithFlag";
 import { SUPPORTED_MODIFIERS } from "../../constants/modifierConfig";
@@ -34,8 +34,7 @@ export function CountrySelectModal({
 }: CountrySelectModalProps) {
   const [search, setSearch] = useState("");
   const { t } = useTranslation(["atlas", "common"]);
-  const { visitedCountryCodes, wantToVisitCountryCodes } =
-    useVisitedCountries();
+  const { visitedCountryCodes, wantToVisitCountryCodes } = useCountryTracking();
 
   // Reset search when modal opens
   useEffect(() => {

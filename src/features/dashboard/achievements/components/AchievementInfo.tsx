@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Container } from "@components";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
@@ -20,7 +20,7 @@ export function AchievementInfo() {
   const achievement = mergedAchievements.find(
     (a) => String(a.id) === achievementId,
   );
-  const { isVisitedCountry } = useVisitedCountries();
+  const { isVisitedCountry } = useCountryTracking();
   const { handleCountrySelect, handleBack } = useDashboardNavigation(
     countries,
     "",
@@ -36,7 +36,7 @@ export function AchievementInfo() {
     const { tierObj } = getCurrentTier(
       achievement,
       countries,
-      { isVisitedCountry },
+      isVisitedCountry,
       undefined,
       undefined,
     );

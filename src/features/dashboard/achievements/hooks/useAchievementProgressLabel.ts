@@ -25,7 +25,7 @@ export interface AchievementProgressLabelOptions {
 export function useAchievementProgressLabel(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (iso: string) => boolean,
   options: AchievementProgressLabelOptions = {},
 ) {
   const {
@@ -64,7 +64,7 @@ export function useAchievementProgressLabel(
     return getProgress(
       achievement,
       countries,
-      visited,
+      isVisitedCountry,
       trips,
       homeCountry,
       showPercent,
@@ -72,7 +72,7 @@ export function useAchievementProgressLabel(
   }, [
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
     achievementStatusMap,

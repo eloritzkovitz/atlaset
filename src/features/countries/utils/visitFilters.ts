@@ -1,5 +1,9 @@
-import type { Country } from "@features/countries/types";
-import type { VisitedStatus } from "../types";
+/**
+ * Utility functions for filtering and processing visit data.
+ */
+
+import type { VisitedStatus } from "@features/visits/types";
+import type { Country } from "../types";
 
 /**
  * Filters countries by visited status.

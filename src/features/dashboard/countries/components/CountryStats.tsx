@@ -5,7 +5,7 @@ import {
   useCountryData,
   type CountryDetailsTab,
 } from "@features/countries";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import { useQueryParam, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
 import { DashboardHeader } from "../../core/components/DashboardHeader";
@@ -46,7 +46,7 @@ export function CountryStats({
 }: CountryStatsProps) {
   const { countries, currencies } = useCountryData();
   const { visitedCountryCodes, getCountryVisitsCategorized } =
-    useVisitedCountries();
+    useCountryTracking();
   const { isMobile } = useScreenSize();
 
   // Synchronize the current tab with the URL search parameter "tab"

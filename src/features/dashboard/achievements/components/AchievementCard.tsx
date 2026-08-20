@@ -14,7 +14,7 @@ import { getTier, getCurrentTier } from "../utils/achievementsTiers";
 interface AchievementCardProps {
   achievement: Achievement;
   countries: Country[];
-  visited: { isVisitedCountry: (iso: string) => boolean };
+  isVisitedCountry: (iso: string) => boolean;
   trips?: Trip[];
   homeCountry?: string;
   achievementStatusMap?: Record<string, boolean>;
@@ -31,7 +31,7 @@ const STATUS_BG_CLASSES: Record<AchievementStatus, string> = {
 export function AchievementCard({
   achievement,
   countries,
-  visited,
+  isVisitedCountry,
   trips,
   homeCountry,
   achievementStatusMap,
@@ -42,7 +42,7 @@ export function AchievementCard({
   const { tierObj, tierStatus, tierCount } = getCurrentTier(
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   );
@@ -64,15 +64,13 @@ export function AchievementCard({
     tierObj?.criteria,
   ]);
 
-  // Progress Label using Options Object pattern
   const progressLabel = useAchievementProgressLabel(
     { ...achievement, criteria: displayCriteria },
     countries,
-    visited,
+    isVisitedCountry,
     { trips, homeCountry, achievementStatusMap },
   );
 
-  // Flag grid target countries
   const flagCountries = useMemo(
     () =>
       getDisplayFlagCountries(
@@ -84,7 +82,6 @@ export function AchievementCard({
     [achievement, displayCriteria, countries, tierCount],
   );
 
-  // Checklist Items: Requirement dependencies
   const requirementChecklist = useMemo(() => {
     if (
       !achievement.requires?.length ||
@@ -100,20 +97,18 @@ export function AchievementCard({
     });
   }, [achievement.requires, achievementStatusMap, allAchievements]);
 
-  // Checklist Items: Regions
   const regionChecklist = useMemo(() => {
     if (!displayCriteria.regions || !Array.isArray(displayCriteria.regions)) {
       return null;
     }
     return displayCriteria.regions.map((region: string) => {
       const visitedAny = countries.some(
-        (c) => c.region === region && visited.isVisitedCountry(c.isoCode),
+        (c) => c.region === region && isVisitedCountry(c.isoCode),
       );
       return { label: region, completed: visitedAny };
     });
-  }, [displayCriteria.regions, countries, visited]);
+  }, [displayCriteria.regions, countries, isVisitedCountry]);
 
-  // Tier Chip Metadata Mapping
   const mappedTiers = useMemo(() => {
     if (!achievement.tiers) return undefined;
     return achievement.tiers.map((t, idx) => ({
@@ -171,7 +166,7 @@ export function AchievementCard({
           <CountryFlagGrid
             countryCodes={flagCountries.map((c) => c.isoCode)}
             size="32"
-            isHighlighted={(isoCode) => visited.isVisitedCountry(isoCode)}
+            isHighlighted={(isoCode) => isVisitedCountry(isoCode)}
           />
         </>
       )}

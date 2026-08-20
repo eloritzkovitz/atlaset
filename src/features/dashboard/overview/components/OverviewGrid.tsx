@@ -7,7 +7,7 @@ import { useCountryData } from "@features/countries";
 import { useTrips } from "@features/trips";
 import { useAuth } from "@features/user/auth";
 import { useHomeCountry, useUserProfile } from "@features/user/profile";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import { useAnimatedNumber } from "@hooks";
 import { formatFraction } from "@utils";
 import { StatsGrid } from "./StatsGrid";
@@ -27,7 +27,7 @@ export function OverviewGrid() {
   const { t } = useTranslation("dashboard");
 
   // Get visited countries and exploration stats
-  const visited = useVisitedCountries();
+  const { isVisitedCountry } = useCountryTracking();
   const { totalCountries, visitedCountries } = useExplorationStats(countries);
 
   // Get achievements data and calculate completed achievements
@@ -36,7 +36,7 @@ export function OverviewGrid() {
   const achievementsCount = achievements?.length ?? 0;
   const completedCount =
     achievements?.filter((a) =>
-      isCompleted(a, countries, visited, trips, homeCountry),
+      isCompleted(a, countries, isVisitedCountry, trips, homeCountry),
     ).length ?? 0;
 
   const animatedVisitedCountries = useAnimatedNumber(visitedCountries, 30);

@@ -29,7 +29,7 @@ export function getTier(achievement: Achievement): number | undefined {
 export function getCurrentTier(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (iso: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
 ): {
@@ -43,7 +43,7 @@ export function getCurrentTier(
   let tierStatus: AchievementStatus = getAchievementStatus(
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   );
@@ -63,7 +63,7 @@ export function getCurrentTier(
         getAchievementStatus(
           tierAch,
           countries,
-          visited,
+          isVisitedCountry,
           trips,
           homeCountry,
         ) === "completed";
@@ -83,7 +83,7 @@ export function getCurrentTier(
     tierStatus = getAchievementStatus(
       tierAch,
       countries,
-      visited,
+      isVisitedCountry,
       trips,
       homeCountry,
     );

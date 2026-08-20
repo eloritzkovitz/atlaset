@@ -12,7 +12,7 @@ import {
 } from "@features/atlas/layers";
 import { useMapView } from "@features/atlas/map";
 import { useTimeline } from "@features/atlas/timeline";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import type { MapMode } from "../types";
 
 /**
@@ -27,7 +27,7 @@ export function useActiveLayerItems(mode: MapMode = "view") {
   const effectiveLayers = useEffectiveLayers();
   const { colorMode } = useMapView();
   const { timelineMode, selectedYear } = useTimeline();
-  const { visitedCountryCodes } = useVisitedCountries();
+  const { visitedCountryCodes } = useCountryTracking();
 
   // Get the layer items that are shared between edit and readonly modes
   const sharedOrEditItems = useMemo(() => {

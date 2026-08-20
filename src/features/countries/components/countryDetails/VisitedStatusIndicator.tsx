@@ -8,8 +8,31 @@ import {
 } from "@constants/colors";
 import { ICONS } from "@constants/icons";
 import { useHomeCountry } from "@features/user/profile";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import type { Country } from "../../types";
+
+const STATUS_CONFIG = {
+  home: {
+    translationKey: "countries.details.status.home",
+    icon: "home",
+    color: HOME_COUNTRY_COLOR,
+  },
+  future: {
+    translationKey: "countries.details.status.future",
+    icon: "future",
+    color: PLANNED_VISIT_COLOR,
+  },
+  visited: {
+    translationKey: "countries.details.status.visited",
+    icon: "visited",
+    color: VISITED_COLOR,
+  },
+  notVisited: {
+    translationKey: "countries.details.status.notVisited",
+    icon: "notVisited",
+    color: NOT_VISITED_COLOR,
+  },
+} as const;
 
 interface VisitedStatusIndicatorProps {
   country: Country;
@@ -23,41 +46,14 @@ export function VisitedStatusIndicator({
   onClick,
 }: VisitedStatusIndicatorProps) {
   const { homeCountry } = useHomeCountry();
-  const { isVisitedCountry, isFutureVisitCountry } = useVisitedCountries();
+  const { isVisitedCountry, isFutureVisitCountry } = useCountryTracking();
   const { t } = useTranslation("atlas");
 
   const isHome = homeCountry === country.isoCode;
   const isVisited = isVisitedCountry(country.isoCode);
   const isFuture = isFutureVisitCountry(country.isoCode);
 
-  const STATUS_CONFIG = {
-    home: {
-      tooltipKey: "countries.details.status.home",
-      ariaKey: "countries.details.status.home",
-      icon: "home",
-      color: HOME_COUNTRY_COLOR,
-    },
-    future: {
-      tooltipKey: "countries.details.status.future",
-      ariaKey: "countries.details.status.future",
-      icon: "future",
-      color: PLANNED_VISIT_COLOR,
-    },
-    visited: {
-      tooltipKey: "countries.details.status.visited",
-      ariaKey: "countries.details.status.visited",
-      icon: "visited",
-      color: VISITED_COLOR,
-    },
-    notVisited: {
-      tooltipKey: "countries.details.status.notVisited",
-      ariaKey: "countries.details.status.notVisited",
-      icon: "notVisited",
-      color: NOT_VISITED_COLOR,
-    },
-  } as const;
-
-  const key: keyof typeof STATUS_CONFIG = isHome
+  const status = isHome
     ? "home"
     : isFuture
       ? "future"
@@ -65,25 +61,26 @@ export function VisitedStatusIndicator({
         ? "visited"
         : "notVisited";
 
-  const cfg = STATUS_CONFIG[key];
+  const cfg = STATUS_CONFIG[status];
   const Icon = ICONS.visitStatus[cfg.icon];
+  const label = t(cfg.translationKey);
 
   const content = (
     <Icon
       className={`w-5 h-5 ${className}`}
       color={cfg.color}
-      aria-label={t(cfg.ariaKey)}
+      aria-label={label}
     />
   );
 
   return (
-    <Tooltip content={t(cfg.tooltipKey)} position="bottom">
+    <Tooltip content={label} position="bottom">
       {onClick ? (
         <button
           type="button"
           onClick={onClick}
-          className="inline-flex items-center justify-center p-1 rounded-full transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
-          aria-label={t(cfg.ariaKey)}
+          className="inline-flex items-center justify-center rounded-full p-1 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary cursor-pointer"
+          aria-label={label}
         >
           {content}
         </button>

@@ -14,8 +14,10 @@ import { useLayers } from "@features/atlas/layers/context/LayersContext";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { useTimeline } from "@features/atlas/timeline/context/TimelineContext";
 import {
-  createSovereigntyFilter,
   applyQualifierSearch,
+  createSovereigntyFilter,
+  filterByVisitCount,
+  filterByVisitStatus,
   getCountryCounts,
   getFilteredIsoCodes,
   useCountryData,
@@ -25,12 +27,8 @@ import {
 } from "@features/countries";
 import { useTrips } from "@features/trips";
 import {
-  filterByVisitCount,
-  filterByVisitStatus,
-} from "@features/visits/utils/visitFilters";
-import {
   getLatestYear,
-  useVisitedCountries,
+  useCountryTracking,
   useVisitStats,
   type VisitedStatus,
 } from "@features/visits";
@@ -52,8 +50,7 @@ export function CountryFiltersProvider({
   const { trips } = useTrips();
   const { isReadonly } = useMapView();
   const sharedMapInfo = useSharedMapInfo();
-  const { visitedCountryCodes, wantToVisitCountryCodes } =
-    useVisitedCountries();
+  const { visitedCountryCodes, wantToVisitCountryCodes } = useCountryTracking();
   const { timelineMode, years, selectedYear, setSelectedYear } = useTimeline();
 
   const [search, setSearch] = useState("");

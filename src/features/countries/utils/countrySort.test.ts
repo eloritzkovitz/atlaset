@@ -2,7 +2,7 @@ import { mockCountries } from "@test-utils/mockCountries";
 import { mockTrips } from "@test-utils/mockTrips";
 import { getCountrySortOptions, sortCountries } from "./countrySort";
 import {
-  getVisitedCountriesUpToYear,
+  getVisitCountsUpToYear,
   buildVisitContext,
 } from "@features/visits/utils/visits";
 import type { Country, SovereigntyStatus } from "../types";
@@ -26,7 +26,7 @@ describe("countrySort utils", () => {
   }
 
   function getCounts(trips: any) {
-    return getVisitedCountriesUpToYear(trips, new Date().getFullYear());
+    return getVisitCountsUpToYear(trips, new Date().getFullYear());
   }
 
   function assertNonIncreasing(arr: number[]) {

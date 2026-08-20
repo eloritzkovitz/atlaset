@@ -1,5 +1,5 @@
 // Hooks
-export { useVisitedCountries } from "./hooks/useVisitedCountries";
+export { useCountryTracking } from "./hooks/useCountryTracking";
 export { useVisitStats } from "./hooks/useVisitStats";
 
 // Types

@@ -60,8 +60,7 @@ export function useVisitStats(
       return false;
     };
 
-    // If we have a defined set of prior years, check for any overlap.
-    // Otherwise, just check if there's any year less than the selected year.
+    // Iterate through the visitedYearMap to find countries with visits in prior years
     for (const [iso, yearSet] of Object.entries(visitedYearMap)) {
       if (!yearSet || yearSet.size === 0) continue;
       const priorMatch = prior

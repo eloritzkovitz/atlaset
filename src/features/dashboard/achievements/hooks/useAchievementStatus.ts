@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useCountryData } from "@features/countries";
 import { useTrips } from "@features/trips";
 import { useHomeCountry } from "@features/user/profile";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import type { SortValue } from "@types";
 import { useAchievementFilters } from "./useAchievementFilters";
 import { useGetAchievementsQuery } from "../api/achievementsApi";
@@ -31,7 +31,7 @@ export function useAchievementStatus({
 }: UseAchievementStatusProps = {}) {
   const { data: achievements, isLoading, error } = useGetAchievementsQuery();
   const { countries } = useCountryData();
-  const visited = useVisitedCountries();
+  const { isVisitedCountry } = useCountryTracking();
   const { trips } = useTrips();
   const { homeCountry } = useHomeCountry();
 
@@ -42,7 +42,7 @@ export function useAchievementStatus({
     sortBy,
     achievements,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   });
@@ -54,7 +54,7 @@ export function useAchievementStatus({
       error,
       ...filterResult,
       countries,
-      visited,
+      isVisitedCountry,
       trips,
       homeCountry,
     };
@@ -64,7 +64,7 @@ export function useAchievementStatus({
     error,
     filterResult,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   ]);

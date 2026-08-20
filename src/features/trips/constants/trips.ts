@@ -117,6 +117,8 @@ export const TRIP_STATUS_COLORS = [
   VISITED_COLOR,
   CANCELLED_COLOR,
 ];
+
+
 export const TRIP_STATUS_LABELS = [
   "Planned",
   "Upcoming",
@@ -124,6 +126,8 @@ export const TRIP_STATUS_LABELS = [
   "Completed",
   "Cancelled",
 ];
+
+
 export const TRIP_STATUS_ICONS = [
   ICONS.tripPlanned,
   ICONS.tripUpcoming,
@@ -131,6 +135,8 @@ export const TRIP_STATUS_ICONS = [
   ICONS.tripCompleted,
   ICONS.tripCancelled,
 ];
+
+
 export const TRIP_STATUS_COLOR_CLASSES: Record<TripStatus, string> = {
   planned: "bg-status-planned/90 hover:bg-status-planned",
   upcoming: "bg-status-upcoming/90 hover:bg-status-upcoming",
@@ -138,3 +144,9 @@ export const TRIP_STATUS_COLOR_CLASSES: Record<TripStatus, string> = {
   completed: "bg-status-completed/90 hover:bg-status-completed",
   cancelled: "bg-status-cancelled/90 hover:bg-status-cancelled",
 };
+
+export const FUTURE_TRIP_STATUSES: TripStatus[] = [
+  "in-progress",
+  "upcoming",
+  "planned",
+];

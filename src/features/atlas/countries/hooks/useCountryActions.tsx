@@ -6,7 +6,7 @@ import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreati
 import type { Country } from "@features/countries/types";
 import { getCountryRoute } from "@features/dashboard/core";
 import { useLanguage } from "@features/settings";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
 import { getWikipediaUrl } from "@utils";
 
@@ -49,7 +49,7 @@ export function useCountryActions({
     removeManualCountry,
     addWantToVisitCountry,
     removeWantToVisitCountry,
-  } = useVisitedCountries();
+  } = useCountryTracking();
 
   const { t } = useTranslation("atlas");
   const { t: tCommon } = useTranslation("common");

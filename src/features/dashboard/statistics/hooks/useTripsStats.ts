@@ -17,7 +17,7 @@ import {
   getCancelledTrips,
 } from "@features/trips/utils/trips";
 import { useHomeCountry } from "@features/user/profile";
-import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
 import type { Visit } from "@features/visits/types";
 import type { VisitedCountryRankRow } from "../types";
 import {
@@ -36,7 +36,7 @@ export function useTripsStats() {
   const { homeCountry } = useHomeCountry();
   const { trips } = useTrips();
   const { visitedCountryCodes, getCountryVisitsCategorized } =
-    useVisitedCountries();
+    useCountryTracking();
 
   return useMemo(() => {
     const countryMap = createCountryMap(countries, (c) => c);
@@ -67,7 +67,7 @@ export function useTripsStats() {
         if (homeCountry && code.toLowerCase() === homeCountry.toLowerCase()) {
           return null;
         }
-        
+
         const country = getCountry(code);
         if (!country) return null;
 

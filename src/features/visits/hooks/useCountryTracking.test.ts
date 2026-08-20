@@ -1,7 +1,7 @@
 import { renderHook, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { createMockUser, authState } from "@test-utils/authMocks";
-import { useVisitedCountries } from "./useVisitedCountries";
+import { useCountryTracking } from "./useCountryTracking";
 
 const mockAddCountryCode = vi.fn().mockResolvedValue(undefined);
 const mockRemoveCountryCode = vi.fn().mockResolvedValue(undefined);
@@ -53,35 +53,40 @@ vi.mock("@features/trips/context/TripsContext", () => ({
   useTrips: () => ({ trips: mockTrips }),
 }));
 
-vi.mock("../utils/visits", () => ({
-  computeVisitedCountriesFromTrips: () => ["FR"],
-  getFutureVisitCountries: () => ["IT", "FR"],
-  getVisitsForCountry: () => [
-    {
-      tripId: "t1",
-      tripName: "Trip",
-      yearRange: "2026",
-      startDate: "2026-01-01",
-      endDate: "2026-01-10",
-    },
-    {
-      tripId: "t2",
-      tripName: "Future",
-      yearRange: "2027",
-      startDate: "2027-01-01",
-      endDate: "2027-01-10",
-    },
-    {
-      tripId: "t3",
-      tripName: "Draft",
-      yearRange: "None",
-      startDate: null,
-      endDate: null,
-    },
-  ],
-}));
+vi.mock("../utils/visits", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../utils/visits")>();
 
-describe("useVisitedCountries", () => {
+  return {
+    ...actual,
+    computeVisitedCountriesFromTrips: () => ["FR"],
+    getFutureVisitCountries: () => ["IT", "FR"],
+    getVisitsForCountry: () => [
+      {
+        tripId: "t1",
+        tripName: "Trip",
+        yearRange: "2026",
+        startDate: "2026-01-01",
+        endDate: "2026-01-10",
+      },
+      {
+        tripId: "t2",
+        tripName: "Future",
+        yearRange: "2027",
+        startDate: "2027-01-01",
+        endDate: "2027-01-10",
+      },
+      {
+        tripId: "t3",
+        tripName: "Draft",
+        yearRange: "None",
+        startDate: null,
+        endDate: null,
+      },
+    ],
+  };
+});
+
+describe("useCountryTracking", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     authState.currentUser = createMockUser({ uid: "u1", displayName: "Sarah" });
@@ -89,7 +94,7 @@ describe("useVisitedCountries", () => {
   });
 
   it("should initialize with values and handle real-time sync fallbacks", () => {
-    const { result } = renderHook(() => useVisitedCountries());
+    const { result } = renderHook(() => useCountryTracking());
 
     act(() => {
       trackingCallback({
@@ -112,7 +117,7 @@ describe("useVisitedCountries", () => {
     authState.currentUser = null;
     mockTrips = [];
 
-    const { result } = renderHook(() => useVisitedCountries());
+    const { result } = renderHook(() => useCountryTracking());
 
     expect(result.current.visitedCountryCodes).toEqual([]);
     expect(result.current.wantToVisitCountryCodes).toEqual([]);
@@ -120,7 +125,7 @@ describe("useVisitedCountries", () => {
   });
 
   it("should successfully trigger mutations if rules pass", async () => {
-    const { result } = renderHook(() => useVisitedCountries());
+    const { result } = renderHook(() => useCountryTracking());
     act(() => {
       trackingCallback({
         manualVisitedCountryCodes: ["MX"],
@@ -166,7 +171,7 @@ describe("useVisitedCountries", () => {
   });
 
   it("should block mutations based on user presence and domain safety guard rails", async () => {
-    const { result } = renderHook(() => useVisitedCountries());
+    const { result } = renderHook(() => useCountryTracking());
     act(() => {
       trackingCallback({
         manualVisitedCountryCodes: ["MX"],
@@ -193,7 +198,7 @@ describe("useVisitedCountries", () => {
     expect(mockRemoveCountryCode).not.toHaveBeenCalled();
 
     authState.currentUser = null;
-    const { result: unauthResult } = renderHook(() => useVisitedCountries());
+    const { result: unauthResult } = renderHook(() => useCountryTracking());
     await act(async () => {
       await unauthResult.current.addManualCountry("US");
       await unauthResult.current.removeManualCountry("US");
@@ -207,7 +212,7 @@ describe("useVisitedCountries", () => {
   it("should extract and correctly categorize structured visit metrics", () => {
     vi.useFakeTimers().setSystemTime(new Date("2026-06-01"));
 
-    const { result } = renderHook(() => useVisitedCountries());
+    const { result } = renderHook(() => useCountryTracking());
 
     expect(result.current.getCountryVisits("FR")).toHaveLength(3);
 

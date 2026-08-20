@@ -5,7 +5,7 @@ import { useTrips } from "@features/trips";
 import { useHomeCountry } from "@features/user/profile";
 import {
   getVisitedCountriesForYear,
-  getVisitedCountriesUpToYear,
+  getVisitCountsUpToYear,
   getNextUpcomingTripYearByCountry,
 } from "@features/visits";
 import type { TimelineLayer } from "../types";
@@ -28,12 +28,12 @@ export function useTimelineLayerItems(
 
   // Compute timeline layer items based on visit data and selected year
   return useMemo(() => {
-    const snapshotCountries = getVisitedCountriesUpToYear(
+    const visitCounts = getVisitCountsUpToYear(
       trips,
       selectedYear,
       homeCountry,
     );
-    const snapshotCountriesPrev = getVisitedCountriesUpToYear(
+    const previousVisitCounts = getVisitCountsUpToYear(
       trips,
       selectedYear - 1,
       homeCountry,
@@ -57,8 +57,8 @@ export function useTimelineLayerItems(
     // Generate timeline layer items for each active layer and country code
     return activeLayers.flatMap((layer) =>
       allCountryCodes.map((isoCode) => {
-        const count = snapshotCountries[isoCode] || 0;
-        const countPrev = snapshotCountriesPrev[isoCode] || 0;
+        const count = visitCounts[isoCode] || 0;
+        const countPrev = previousVisitCounts[isoCode] || 0;
         const isHome = homeCountry === isoCode;
 
         // Determine if the country is new or a revisit this year

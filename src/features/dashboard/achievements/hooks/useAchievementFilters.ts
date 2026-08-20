@@ -16,7 +16,7 @@ export interface AchievementFilters {
   sortBy: string;
   achievements: Achievement[] | undefined;
   countries: Country[];
-  visited: { isVisitedCountry: (iso: string) => boolean };
+  isVisitedCountry: (isoCode: string) => boolean;
   trips: Trip[];
   homeCountry: string;
 }
@@ -28,7 +28,7 @@ export function useAchievementFilters({
   sortBy,
   achievements,
   countries,
-  visited,
+  isVisitedCountry,
   trips,
   homeCountry,
 }: AchievementFilters) {
@@ -38,11 +38,11 @@ export function useAchievementFilters({
     return getMergedAchievements(
       achievements,
       countries,
-      visited,
+      isVisitedCountry,
       trips,
       homeCountry,
     );
-  }, [achievements, countries, visited, trips, homeCountry]);
+  }, [achievements, countries, isVisitedCountry, trips, homeCountry]);
 
   // Filter and sort achievements based on current filters and search query
   const sortedAchievements = useMemo<Achievement[]>(() => {
@@ -55,8 +55,13 @@ export function useAchievementFilters({
     if (statusFilter !== "all") {
       filtered = filtered.filter(
         (a) =>
-          getAchievementStatus(a, countries, visited, trips, homeCountry) ===
-          statusFilter,
+          getAchievementStatus(
+            a,
+            countries,
+            isVisitedCountry,
+            trips,
+            homeCountry,
+          ) === statusFilter,
       );
     }
     if (search.trim()) {
@@ -81,14 +86,14 @@ export function useAchievementFilters({
         const progressA = getGlobalAchievementProgress(
           a,
           countries,
-          visited,
+          isVisitedCountry,
           trips,
           homeCountry,
         );
         const progressB = getGlobalAchievementProgress(
           b,
           countries,
-          visited,
+          isVisitedCountry,
           trips,
           homeCountry,
         );
@@ -112,7 +117,7 @@ export function useAchievementFilters({
     search,
     sortBy,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   ]);
@@ -122,10 +127,16 @@ export function useAchievementFilters({
     if (!achievements) return {};
     const map: Record<string, boolean> = {};
     for (const ach of achievements) {
-      map[ach.id] = isCompleted(ach, countries, visited, trips, homeCountry);
+      map[ach.id] = isCompleted(
+        ach,
+        countries,
+        isVisitedCountry,
+        trips,
+        homeCountry,
+      );
     }
     return map;
-  }, [achievements, countries, visited, trips, homeCountry]);
+  }, [achievements, countries, isVisitedCountry, trips, homeCountry]);
 
   return {
     mergedAchievements,

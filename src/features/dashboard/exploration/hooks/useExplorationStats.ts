@@ -3,7 +3,7 @@ import {
   getSubregionsForRegion,
   type Country,
 } from "@features/countries";
-import { useVisitedCountries } from "@features/visits";
+import { useCountryTracking } from "@features/visits";
 import type { RegionStat, SubregionStat } from "../types";
 import { countVisited } from "../../statistics/utils/visitStats";
 
@@ -16,7 +16,7 @@ export function useExplorationStats(
   countries: Country[],
   sovereignOnly = false,
 ) {
-  const { isVisitedCountry, visitedCountryCodes } = useVisitedCountries();
+  const { isVisitedCountry, visitedCountryCodes } = useCountryTracking();
   const effectiveCountries = sovereignOnly
     ? countries.filter((c) => c.sovereigntyStatus === "sovereign")
     : countries;

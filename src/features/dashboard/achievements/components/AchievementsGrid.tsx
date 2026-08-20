@@ -54,7 +54,7 @@ export function AchievementsGrid() {
     sortedAchievements,
     achievementStatusMap,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   } = useAchievementStatus({
@@ -162,7 +162,7 @@ export function AchievementsGrid() {
               key={achievement.id}
               achievement={achievement}
               countries={countries}
-              visited={visited}
+              isVisitedCountry={isVisitedCountry}
               trips={trips}
               homeCountry={homeCountry}
               achievementStatusMap={achievementStatusMap}

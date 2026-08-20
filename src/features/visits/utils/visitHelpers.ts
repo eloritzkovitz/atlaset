@@ -1,5 +1,5 @@
 /**
- * Visit-related helper utilities extracted for reuse and testing.
+ * Utility functions for handling visit-related logic.
  */
 
 // Get the first visit year for a country based on visit context, checking both firstVisitMap and visitedYearMap

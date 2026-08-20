@@ -3,7 +3,7 @@ import { logUserActivity } from "@features/activity";
 import type { Layer } from "@features/atlas/layers/types";
 import { countryListService } from "@features/countries";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
-import { useVisitedCountries } from "@features/visits/hooks/useVisitedCountries";
+import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
 import { useDataLoader, useDisclosure } from "@hooks";
 import {
   CountryListsContext,
@@ -21,7 +21,7 @@ export function CountryListsProvider({ children }: { children: ReactNode }) {
     removeManualCountry,
     addWantToVisitCountry,
     removeWantToVisitCountry,
-  } = useVisitedCountries();
+  } = useCountryTracking();
 
   const [selectedListId, setSelectedListId] = useState<string | null>(null);
 

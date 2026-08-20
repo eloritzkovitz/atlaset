@@ -1,24 +1,23 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ACTIONS } from "@constants/actions";
 import { logUserActivity } from "@features/activity";
 import { getCountryName, useCountryData } from "@features/countries";
 import { useTrips } from "@features/trips/context/TripsContext";
 import { useAuth } from "@features/user/auth";
+import { countryTrackingService } from "../services/countryTrackingService";
+import type { CountryTrackingField, Visit } from "../types";
 import {
-  countryTrackingService,
-  type TrackingField,
-} from "../services/countryTrackingService";
-import {
+  categorizeVisits,
   computeVisitedCountriesFromTrips,
   getFutureVisitCountries,
   getVisitsForCountry,
 } from "../utils/visits";
 
 /**
- * Manages visited countries for the current user.
- * @returns Visited country codes and related utility functions.
+ * Manages country tracking state and operations.
  */
-export function useVisitedCountries() {
+export function useCountryTracking() {
   const { user } = useAuth();
   const { countries } = useCountryData();
   const { trips } = useTrips();
@@ -58,17 +57,23 @@ export function useVisitedCountries() {
   const updateCountryTracking = async ({
     isoCode,
     fieldName,
-    actionCode,
-    listName,
     operation,
   }: {
     isoCode: string;
-    fieldName: TrackingField;
-    actionCode: 244 | 245;
-    listName: "Visited Countries" | "Want to Visit";
+    fieldName: CountryTrackingField;
     operation: "add" | "remove";
   }) => {
     if (!user) return;
+
+    const actionCode =
+      operation === "add"
+        ? ACTIONS.COUNTRY_ADDED_TO_LIST
+        : ACTIONS.COUNTRY_REMOVED_FROM_LIST;
+
+    const listName =
+      fieldName === "manualVisitedCountryCodes"
+        ? "Visited Countries"
+        : "Want to Visit";
 
     if (operation === "add") {
       await countryTrackingService.addCountryCode(user.uid, isoCode, fieldName);
@@ -124,84 +129,64 @@ export function useVisitedCountries() {
     wantToVisitCountryCodes.includes(isoCode);
   const isTripBased = (isoCode: string) => tripVisitedCodes.includes(isoCode);
 
-  // Manually add a country code to the visited list
+  /** Manually adds a country code to the visited list. */
   async function addManualCountry(isoCode: string) {
     if (isManualVisitedCountry(isoCode)) return;
     await updateCountryTracking({
       isoCode,
       fieldName: "manualVisitedCountryCodes",
-      actionCode: 244,
-      listName: "Visited Countries",
       operation: "add",
     });
   }
 
-  // Manually remove a country code from the visited list
+  /** Removes a country code from the visited list. */
   async function removeManualCountry(isoCode: string) {
     if (!isManualVisitedCountry(isoCode)) return;
     await updateCountryTracking({
       isoCode,
       fieldName: "manualVisitedCountryCodes",
-      actionCode: 245,
-      listName: "Visited Countries",
       operation: "remove",
     });
   }
 
-  // Add a country code to the want-to-visit list
+  /** Adds a country code to the want-to-visit list. */
   async function addWantToVisitCountry(isoCode: string) {
     if (isWantToVisitCountry(isoCode) || isVisitedCountry(isoCode)) return;
     await updateCountryTracking({
       isoCode,
       fieldName: "wantToVisitCountryCodes",
-      actionCode: 244,
-      listName: "Want to Visit",
       operation: "add",
     });
   }
 
-  // Remove a country code from the want-to-visit list
+  /** Removes a country code from the want-to-visit list. */
   async function removeWantToVisitCountry(isoCode: string) {
     await updateCountryTracking({
       isoCode,
       fieldName: "wantToVisitCountryCodes",
-      actionCode: 245,
-      listName: "Want to Visit",
       operation: "remove",
     });
   }
 
-  // Get visits for a country
+  /** Localizes a visit for display. */
+  const localizeVisit = (visit: Visit) => ({
+    ...visit,
+    yearRange: visit.yearRange ?? t("formatting.date.tbd"),
+  });
+
+  /** Gets all visits for a specific country. */
   function getCountryVisits(isoCode: string) {
-    return getVisitsForCountry(trips, isoCode).map(
-      ({ yearRange, tripName, tripId }) => ({
-        yearRange: yearRange ?? t("formatting.date.tbd"),
-        tripName,
-        tripId,
-      }),
-    );
+    return getVisitsForCountry(trips, isoCode).map(localizeVisit);
   }
 
-  // Get categorized visits for a country
+  /** Gets categorized visits for a specific country. */
   function getCountryVisitsCategorized(isoCode: string) {
-    const now = new Date();
-    const visits = getVisitsForCountry(trips, isoCode);
-
-    const localizeVisit = (
-      v: ReturnType<typeof getVisitsForCountry>[number],
-    ) => ({
-      ...v,
-      yearRange: v.yearRange ?? t("formatting.date.tbd"),
-    });
+    const categorized = categorizeVisits(getVisitsForCountry(trips, isoCode));
 
     return {
-      past: visits
-        .filter((v) => v.endDate && new Date(v.endDate) < now)
-        .map(localizeVisit),
-      upcoming: visits
-        .filter((v) => v.startDate && new Date(v.startDate) >= now)
-        .map(localizeVisit),
-      tentative: visits.filter((v) => !v.startDate).map(localizeVisit),
+      past: categorized.past.map(localizeVisit),
+      upcoming: categorized.upcoming.map(localizeVisit),
+      tentative: categorized.tentative.map(localizeVisit),
     };
   }
 

@@ -16,16 +16,16 @@ import { getAchievementCountries } from "./achievementFilters";
 import type { Achievement, AchievementStatus, Criteria } from "../types";
 
 /**
- * Get the count of visited countries for the achievement
- * @param achievement - The achievement object
- * @param countries - List of all countries
- * @param visited - Visited countries utility
- * @returns Number of visited countries relevant to the achievement
+ * Get the count of visited countries for the achievement.
+ * @param achievement - The achievement object.
+ * @param countries - List of all countries.
+ * @param isVisitedCountry - Function to check if a country is visited.
+ * @returns Number of visited countries relevant to the achievement.
  */
 export function getVisitedCount(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   tierCount?: number,
   trips?: Trip[],
   homeCountry?: string,
@@ -45,14 +45,14 @@ export function getVisitedCount(
     typeof tierCount === "number"
       ? filteredAchCountries.slice(0, tierCount)
       : filteredAchCountries;
-  return list.filter((c) => visited.isVisitedCountry(c.isoCode)).length;
+  return list.filter((c) => isVisitedCountry(c.isoCode)).length;
 }
 
 /**
- * Get the total count of countries for the achievement
- * @param achievement - The achievement object
- * @param countries - List of all countries
- * @returns Total number of countries relevant to the achievement
+ * Get the total count of countries for the achievement.
+ * @param achievement - The achievement object.
+ * @param countries - List of all countries.
+ * @returns Total number of countries relevant to the achievement.
  */
 export function getTotalCount(
   achievement: Achievement,
@@ -77,13 +77,13 @@ export function getTotalCount(
  * Gets the progress counts for region-based achievements.
  * @param criteria - The achievement criteria
  * @param countries - List of all countries
- * @param visited - Optional utility to check if a country has been visited
+ * @param isVisitedCountry - Function to check if a country is visited
  * @returns - Object containing completed and required counts, or null if not region-based
  */
 export function getRegionProgressCounts(
   criteria: Criteria,
   countries: Country[],
-  visited?: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
 ) {
   const rawRegions = (criteria as Record<string, unknown>).regions;
   const regionsArr: string[] =
@@ -96,11 +96,7 @@ export function getRegionProgressCounts(
 
   const completed = regionsArr.reduce((acc, region) => {
     const hasVisitedCountry = countries.some((c) =>
-      c.region === region
-        ? visited
-          ? visited.isVisitedCountry(c.isoCode)
-          : true
-        : false,
+      c.region === region ? isVisitedCountry(c.isoCode) : false,
     );
     return acc + (hasVisitedCountry ? 1 : 0);
   }, 0);
@@ -118,7 +114,7 @@ export function getRegionProgressCounts(
  * Calculates the progress metrics for an achievement, including current and total counts.
  * @param achievement - The achievement object.
  * @param countries - List of all countries.
- * @param visited - Visited countries utility.
+ * @param isVisitedCountry - Function to check if a country is visited.
  * @param trips - Optional array of user trips.
  * @param homeCountry - Optional home country ISO code.
  * @returns Object containing current and total counts for the achievement progress.
@@ -126,14 +122,18 @@ export function getRegionProgressCounts(
 function getProgressMetrics(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
 ) {
   const criteria = achievement.criteria || {};
 
   // Calculate progress for region-based achievements
-  const regionCounts = getRegionProgressCounts(criteria, countries, visited);
+  const regionCounts = getRegionProgressCounts(
+    criteria,
+    countries,
+    isVisitedCountry,
+  );
   if (regionCounts) {
     return { current: regionCounts.completed, total: regionCounts.required };
   }
@@ -192,7 +192,7 @@ function getProgressMetrics(
   const visitedCount = getVisitedCount(
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     undefined,
     trips,
     homeCountry,
@@ -214,13 +214,13 @@ function getProgressMetrics(
  * Gets the progress string for an achievement.
  * @param achievement - The achievement object
  * @param countries - List of all countries
- * @param visited - Visited countries utility
+ * @param isVisitedCountry - Function to check if a country is visited
  * @returns Progress string in the format "visited/total"
  */
 export function getProgress(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
   showPercent = false,
@@ -228,7 +228,7 @@ export function getProgress(
   const { current, total } = getProgressMetrics(
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   );
@@ -240,22 +240,22 @@ export function getProgress(
 
 /**
  * Gets the progress fraction for an achievement.
- * @param achievement - The achievement object
- * @param countries - List of all countries
- * @param visited - Visited countries utility
- * @returns Progress fraction between 0 and 1
+ * @param achievement - The achievement object.
+ * @param countries - List of all countries.
+ * @param isVisitedCountry - Function to check if a country is visited.
+ * @returns Progress fraction between 0 and 1.
  */
 export function getProgressFraction(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
 ) {
   const { current, total } = getProgressMetrics(
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   );
@@ -278,18 +278,18 @@ export function areRequirementsCompleted(
 
 /**
  * Determines if the achievement is completed, including dependency requirements.
- * @param achievement - The achievement object
- * @param countries - List of all countries
- * @param visited - Visited countries utility
- * @param trips - Array of user trips
- * @param homeCountry - The user's home country
- * @param achievementStatusMap - Map of achievementId to completion status (for dependency achievements)
- * @returns True if the achievement is completed, false otherwise
+ * @param achievement - The achievement object.
+ * @param countries - List of all countries.
+ * @param isVisitedCountry - Function to check if a country is visited.
+ * @param trips - Array of user trips.
+ * @param homeCountry - The user's home country.
+ * @param achievementStatusMap - Map of achievementId to completion status.
+ * @returns True if the achievement is completed, false otherwise.
  */
 export function isCompleted(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
   achievementStatusMap?: Record<string, boolean>,
@@ -304,7 +304,7 @@ export function isCompleted(
   const { current, total } = getProgressMetrics(
     achievement,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   );
@@ -315,20 +315,26 @@ export function isCompleted(
  * Gets the achievement status
  * @param achievement - The achievement object
  * @param countries - List of all countries
- * @param visited - Visited countries utility
+ * @param isVisitedCountry - Function to check if a country is visited
  * @returns "locked", "progress", or "completed" based on achievement status
  */
 export function getAchievementStatus(
   achievement: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
 ): AchievementStatus {
-  if (isCompleted(achievement, countries, visited, trips, homeCountry))
+  if (isCompleted(achievement, countries, isVisitedCountry, trips, homeCountry))
     return "completed";
   if (
-    getProgressFraction(achievement, countries, visited, trips, homeCountry) > 0
+    getProgressFraction(
+      achievement,
+      countries,
+      isVisitedCountry,
+      trips,
+      homeCountry,
+    ) > 0
   )
     return "progress";
   return "locked";
@@ -338,7 +344,7 @@ export function getAchievementStatus(
  * Finds the active tier for a set of tiered achievements based on completion status.
  * @param tiers - The array of tiered achievements.
  * @param countries - List of all countries.
- * @param visited - Visited countries utility.
+ * @param isVisitedCountry - Function to check if a country is visited.
  * @param trips - Optional array of user trips.
  * @param homeCountry - Optional home country ISO code.
  * @returns The active tier achievement, or null if no tiers are provided.
@@ -346,7 +352,7 @@ export function getAchievementStatus(
 function findActiveTier(
   tiers: Achievement[],
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
 ): Achievement | null {
@@ -359,7 +365,7 @@ function findActiveTier(
   const reversedIdx = [...sorted]
     .reverse()
     .findIndex((ach) =>
-      isCompleted(ach, countries, visited, trips, homeCountry),
+      isCompleted(ach, countries, isVisitedCountry, trips, homeCountry),
     );
   const highestCompletedIdx =
     reversedIdx === -1 ? -1 : sorted.length - 1 - reversedIdx;
@@ -402,7 +408,7 @@ function getSiblingTiers(
  * Merges achievements to show only relevant tiered achievements and calculates progress
  * @param achievements - List of all achievements
  * @param countries - List of all countries
- * @param visited - Visited countries utility
+ * @param isVisitedCountry - Function to check if a country is visited
  * @param trips - Array of user trips
  * @param homeCountry - The user's home country
  * @returns Array of merged achievements with their progress metrics
@@ -410,7 +416,7 @@ function getSiblingTiers(
 export function getMergedAchievements(
   achievements: Achievement[],
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
 ): Achievement[] {
@@ -438,7 +444,7 @@ export function getMergedAchievements(
   const activeWorld = findActiveTier(
     worldTiers,
     countries,
-    visited,
+    isVisitedCountry,
     trips,
     homeCountry,
   );
@@ -448,7 +454,7 @@ export function getMergedAchievements(
     const activeRegion = findActiveTier(
       tiers,
       countries,
-      visited,
+      isVisitedCountry,
       trips,
       homeCountry,
     );
@@ -457,7 +463,13 @@ export function getMergedAchievements(
 
   return merged.map((ach) => ({
     ...ach,
-    progress: getProgressFraction(ach, countries, visited, trips, homeCountry),
+    progress: getProgressFraction(
+      ach,
+      countries,
+      isVisitedCountry,
+      trips,
+      homeCountry,
+    ),
   }));
 }
 
@@ -465,7 +477,7 @@ export function getMergedAchievements(
  * Calculates the global progress of an achievement, considering all tiers and their completion status.
  * @param ach - The achievement object
  * @param countries - List of all countries
- * @param visited - Visited countries utility
+ * @param isVisitedCountry - Function to check if a country is visited
  * @param trips - Optional array of user trips
  * @param homeCountry - Optional home country ISO code
  * @returns A normalized decimal number between 0 and 1
@@ -473,7 +485,7 @@ export function getMergedAchievements(
 export function getGlobalAchievementProgress(
   ach: Achievement,
   countries: Country[],
-  visited: { isVisitedCountry: (iso: string) => boolean },
+  isVisitedCountry: (isoCode: string) => boolean,
   trips?: Trip[],
   homeCountry?: string,
   allAchievements?: Achievement[],
@@ -482,7 +494,7 @@ export function getGlobalAchievementProgress(
   if (siblingTiers.length === 0) return ach.progress ?? 0;
 
   const completedCount = siblingTiers.filter((tier) =>
-    isCompleted(tier, countries, visited, trips, homeCountry),
+    isCompleted(tier, countries, isVisitedCountry, trips, homeCountry),
   ).length;
   return completedCount / siblingTiers.length;
 }
