@@ -104,7 +104,6 @@ export function CountrySelectModal({
       renderItem={(country) => (
         <CountryWithFlag
           country={country}
-          visited={visitedCountryCodes.includes(country.isoCode)}
           className="me-2"
         />
       )}

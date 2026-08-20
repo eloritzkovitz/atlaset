@@ -33,9 +33,7 @@ export function FriendList({
   return (
     <ul className="space-y-2">
       {filtered.map((profile) => (
-        <li key={profile.uid}>
-          <UserListItem uid={profile.uid} />
-        </li>
+        <UserListItem key={profile.uid} uid={profile.uid} />
       ))}
     </ul>
   );
