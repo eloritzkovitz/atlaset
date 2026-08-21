@@ -129,7 +129,6 @@ export function AchievementInfo() {
           <InfoWithCountryGroups
             title={achievement.name}
             showHeader={false}
-            countries={countries}
             onSelectCountry={handleCountrySelect}
             visited={isVisitedCountry}
             groups={[

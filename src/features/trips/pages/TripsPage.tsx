@@ -13,7 +13,7 @@ import type { TripFilterState, TripSortBy } from "../types";
 import { sortTrips } from "../utils/tripSort";
 
 export default function TripsPage() {
-  const countryData = useCountryData();
+  const { countries } = useCountryData();
   const { isMobile } = useScreenSize();
   const { trips, loading } = useTrips();
   const { t } = useTranslation("trips");
@@ -35,13 +35,9 @@ export default function TripsPage() {
     categoryOptions,
     statusOptions,
     tagOptions,
-  } = useTripFilters(trips, countryData, undefined, globalSearch);
+  } = useTripFilters(trips, undefined, globalSearch);
 
-  const sortedTrips = sortTrips(
-    filteredTrips,
-    countryData?.countries ?? [],
-    sortBy,
-  );
+  const sortedTrips = sortTrips(filteredTrips, countries ?? [], sortBy);
 
   const {
     currentPage,

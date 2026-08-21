@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { createCountryMap, type Country } from "@features/countries";
+import { useCountryData } from "@features/countries/core/hooks/useCountryData";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { useHomeCountry } from "@features/user/profile";
 import type { Trip, TripFilterState } from "../types";
@@ -23,6 +23,7 @@ import {
   getParticipantsDropdownOptions,
 } from "../utils/tripDropdownOptions";
 import { filterTrips } from "../utils/tripFilters";
+import { isStringOption } from "@utils/ui/dropdown";
 
 const defaultTripFilterState: TripFilterState = {
   name: "",
@@ -45,32 +46,20 @@ const defaultTripFilterState: TripFilterState = {
 /**
  * Manages trip filtering logic and state.
  * @param trips List of trips to filter
- * @param countryData Country data for filtering
  * @param initialFilters Initial filter state
  * @param globalSearch Global search string
  * @returns Filtered trips and filter state handlers
  */
 export function useTripFilters(
   trips?: Trip[],
-  countryData?: { countries: Country[] },
   initialFilters?: Partial<TripFilterState>,
   globalSearch?: string,
 ) {
+  const { countries, countryByIsoCode } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const { t } = useTranslation("trips");
 
-  // Ensure trips and countries are defined
   const tripList = useMemo(() => trips ?? [], [trips]);
-  const countryList = useMemo(
-    () => countryData?.countries ?? [],
-    [countryData],
-  );
-
-  // Build country name map for fast lookups
-  const countryMap = useMemo(
-    () => createCountryMap(countryList, (c) => c),
-    [countryList],
-  );
 
   // Unified filter state
   const [filters, setFilters] = useState<TripFilterState>({
@@ -125,13 +114,13 @@ export function useTripFilters(
       const search = globalSearch.toLowerCase();
       result = result.filter((trip) => {
         const countryNames = (trip.countryCodes ?? [])
-          .map((code) => countryMap[code.toLowerCase()]?.name)
+          .map((code) => countryByIsoCode[code]?.name)
           .filter(Boolean)
           .map((name) => name.toLowerCase());
 
         return (
           trip.name?.toLowerCase().includes(search) ||
-          trip.countryCodes?.some((c) => c.toLowerCase().includes(search)) ||
+          trip.countryCodes?.some((c) => c.includes(search)) ||
           countryNames.some((name) => name.includes(search)) ||
           (trip.tags ?? []).some((tag) => tag.toLowerCase().includes(search)) ||
           (trip.categories ?? []).some((cat) =>
@@ -141,7 +130,7 @@ export function useTripFilters(
       });
     }
     return result;
-  }, [trips, filters, globalSearch, countryMap, homeCountry]);
+  }, [trips, filters, globalSearch, countryByIsoCode, homeCountry]);
 
   // Country options
   const usedCountryCodes = useMemo(
@@ -149,16 +138,20 @@ export function useTripFilters(
     [tripList],
   );
   const rawCountryOptions = getCountryDropdownOptions(
-    countryList,
+    countries,
     usedCountryCodes,
   );
   const countryOptions = useMemo(
     () =>
       rawCountryOptions.map((opt) => {
-        const country = countryMap[opt.value.toLowerCase()];
-        return opt.value ? { ...opt, country } : opt;
+        if (!isStringOption(opt)) return opt;
+
+        return {
+          ...opt,
+          country: countryByIsoCode[opt.value],
+        };
       }),
-    [rawCountryOptions, countryMap],
+    [rawCountryOptions, countryByIsoCode],
   );
 
   // Year options

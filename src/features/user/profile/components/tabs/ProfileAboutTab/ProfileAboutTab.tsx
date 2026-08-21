@@ -19,12 +19,11 @@ export function ProfileAboutTab({
 }: ProfileAboutTabProps) {
   const { t } = useTranslation("user");
 
-  // Country Data & Visited Codes Calculation
-  const { countries } = useCountryData();
-  const selectedCountry = useMemo(
-    () => countries.find((c) => c.isoCode === profileUser.homeCountry) ?? null,
-    [countries, profileUser.homeCountry],
-  );
+  // Get the selected country based on the user's home country code
+  const { countryByIsoCode } = useCountryData();
+  const selectedCountry = profileUser.homeCountry
+    ? (countryByIsoCode[profileUser.homeCountry] ?? null)
+    : null;
 
   const allVisitedCountryCodes = useMemo(() => {
     const manual = profileUser.manualVisitedCountryCodes || [];

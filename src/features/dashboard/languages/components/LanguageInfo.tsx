@@ -59,7 +59,6 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       onBack={handleBack}
       labelArgs={{ name: languageName }}
       onSelectCountry={handleCountrySelect}
-      countries={countries}
       groups={[
         {
           isoGroups,

@@ -1,9 +1,5 @@
 import { useMemo } from "react";
-import {
-  createCountryMap,
-  useCountryData,
-  type Country,
-} from "@features/countries";
+import { useCountryData } from "@features/countries";
 import { useTrips } from "@features/trips";
 import {
   getCompletedTrips,
@@ -32,16 +28,13 @@ import { getMostVisitedCountries } from "../utils/visitStats";
  * Computes and returns trip statistics.
  */
 export function useTripsStats() {
-  const { countries } = useCountryData();
+  const { countryByIsoCode } = useCountryData();
   const { homeCountry } = useHomeCountry();
   const { trips } = useTrips();
   const { visitedCountryCodes, getCountryVisitsCategorized } =
     useCountryTracking();
 
   return useMemo(() => {
-    const countryMap = createCountryMap(countries, (c) => c);
-    const getCountry = (code: string) => countryMap[code.toLowerCase()];
-
     // Trip statistics
     const totalTrips = trips.length;
     const localTrips = getLocalTrips(trips, homeCountry);
@@ -58,17 +51,17 @@ export function useTripsStats() {
       getMostVisitedCountries(completedAbroadTrips, homeCountry);
 
     const mostVisitedCountries = mostVisitedCountryCodes
-      .map(getCountry)
-      .filter((c): c is Country => Boolean(c));
+      .map((code) => countryByIsoCode[code])
+      .filter((country): country is NonNullable<typeof country> =>
+        Boolean(country),
+      );
 
     // Visited countries ranking
     const visitedCountriesRanking: VisitedCountryRankRow[] = visitedCountryCodes
       .map((code) => {
-        if (homeCountry && code.toLowerCase() === homeCountry.toLowerCase()) {
-          return null;
-        }
+        if (homeCountry && code === homeCountry) return null;
 
-        const country = getCountry(code);
+        const country = countryByIsoCode[code];
         if (!country) return null;
 
         const { past } = getCountryVisitsCategorized(code);
@@ -143,7 +136,7 @@ export function useTripsStats() {
     };
   }, [
     trips,
-    countries,
+    countryByIsoCode,
     homeCountry,
     visitedCountryCodes,
     getCountryVisitsCategorized,

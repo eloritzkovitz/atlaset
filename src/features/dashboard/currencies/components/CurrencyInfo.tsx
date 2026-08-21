@@ -51,7 +51,6 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       onBack={handleBack}
       labelArgs={{ code: currency.code }}
       onSelectCountry={handleCountrySelect}
-      countries={countries}
       groups={[
         {
           isoGroups,

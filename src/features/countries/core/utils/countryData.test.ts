@@ -80,10 +80,10 @@ describe("countryData utils", () => {
     const lookup = createCountryMap(usOnly, (c) => c);
     const nameMap = createCountryMap(usOnly, (c) => c.name);
 
-    it("creates lookup map by lowercased isoCode", () => {
-      expect(lookup["us"]).toEqual(usOnly[0]);
-      expect(nameMap["us"]).toBe("United States");
-      expect(lookup["US"]).toBeUndefined();
+    it("creates lookup map by isoCode", () => {
+      expect(lookup["US"]).toEqual(usOnly[0]);
+      expect(nameMap["US"]).toBe("United States");
+      expect(lookup["us"]).toBeUndefined();
     });
   });
 

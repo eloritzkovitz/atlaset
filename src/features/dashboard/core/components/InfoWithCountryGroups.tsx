@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, ViewModeSegmentedControl } from "@components";
-import {
-  CountryFlagGrid,
-  CountryListGroup,
-  type Country,
-} from "@features/countries";
+import { CountryFlagGrid, CountryListGroup } from "@features/countries";
 import { useViewMode } from "@hooks";
 import { DashboardHeader } from "./DashboardHeader";
 
@@ -30,7 +26,6 @@ interface InfoWithCountryGroupsProps {
   showHeader?: boolean;
   actions?: React.ReactNode;
   groups: CountryGroupSection[];
-  countries: Country[];
   labelArgs?: Record<string, unknown>;
   onSelectCountry?: (iso: string) => void;
   visited?: (iso: string) => boolean;
@@ -43,7 +38,6 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   showHeader = true,
   actions,
   groups,
-  countries,
   labelArgs,
   onSelectCountry,
   visited,
@@ -89,7 +83,6 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
         <CountryListGroup
           label={label}
           isoCodes={isoCodes}
-          countries={countries}
           visited={visited}
           expanded={expanded}
           onToggle={onToggle}

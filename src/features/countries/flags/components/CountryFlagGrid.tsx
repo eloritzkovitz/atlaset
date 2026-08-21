@@ -3,6 +3,7 @@ import { Tooltip } from "@components";
 import { CountryFlag } from "./CountryFlag";
 import type { FlagSize } from "../types";
 import { useCountryData } from "../../core/hooks/useCountryData";
+import type { Country } from "../../types";
 import "./CountryFlagGrid.css";
 
 interface CountryFlagGridProps {
@@ -21,7 +22,7 @@ export function CountryFlagGrid({
   isHighlighted,
   onCountryClick,
 }: CountryFlagGridProps) {
-  const { countries } = useCountryData();
+  const { countryByIsoCode } = useCountryData();
 
   const [activeTarget, setActiveTarget] = useState<{
     id: string;
@@ -29,11 +30,11 @@ export function CountryFlagGrid({
   } | null>(null);
 
   const sortedCountries = useMemo(() => {
-    const codeSet = new Set(countryCodes);
-    return countries
-      .filter((c) => codeSet.has(c.isoCode))
+    return countryCodes
+      .map((code) => countryByIsoCode[code])
+      .filter((country): country is Country => Boolean(country))
       .sort((a, b) => a.name.localeCompare(b.name));
-  }, [countries, countryCodes]);
+  }, [countryCodes, countryByIsoCode]);
 
   const defaultGridClass =
     size === "64"

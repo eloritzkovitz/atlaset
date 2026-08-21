@@ -44,18 +44,16 @@ export function CountryStats({
   onResetFilters,
   onBack,
 }: CountryStatsProps) {
-  const { countries, currencies } = useCountryData();
+  const { countries, countryByIsoCode, currencies } = useCountryData();
   const { visitedCountryCodes, getCountryVisitsCategorized } =
     useCountryTracking();
   const { isMobile } = useScreenSize();
 
-  // Synchronize the current tab with the URL search parameter "tab"
   const [currentTab, handleTabChange] = useQueryParam<CountryDetailsTab>(
     "tab",
     "overview",
   );
 
-  // Region props shared between overview and section views
   const regionProps = {
     selectedRegion: selectedRegion ?? "",
     setSelectedRegion,
@@ -67,10 +65,10 @@ export function CountryStats({
     setSelectedIsoCode,
   };
 
-  // Find selected country details
-  const selectedCountry = countries.find((c) => c.isoCode === selectedIsoCode);
+  const selectedCountry = selectedIsoCode
+    ? (countryByIsoCode[selectedIsoCode] ?? null)
+    : null;
 
-  // Get categorized visits for selected country
   const categorizedVisits = selectedCountry
     ? getCountryVisitsCategorized(selectedCountry.isoCode)
     : { past: [], upcoming: [], tentative: [] };
@@ -104,7 +102,6 @@ export function CountryStats({
         />
         <CountryDetailsPanel
           country={selectedCountry}
-          countries={countries}
           currencies={currencies}
           categorizedVisits={categorizedVisits}
           activeTab={currentTab}

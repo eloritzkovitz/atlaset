@@ -17,7 +17,7 @@ import type { Trip, TripSortBy } from "../types";
 export function sortTrips(
   trips: Trip[],
   countries: Country[],
-  sortBy: TripSortBy
+  sortBy: TripSortBy,
 ): Trip[] {
   const [key, direction] = sortBy.split("-");
   const asc = direction !== "desc";
@@ -35,14 +35,14 @@ export function sortTrips(
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => t.name || "",
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "rating":
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => t.rating || 0,
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "countries":
@@ -50,17 +50,17 @@ export function sortTrips(
         nonTentative,
         (t) =>
           t.countryCodes
-            .map((code) => countryNameMap[code.toLowerCase()] || "")
+            .map((code) => countryNameMap[code] || "")
             .filter(Boolean)
             .join(", "),
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "year":
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => (t.startDate ? new Date(t.startDate).getFullYear() : 0),
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "startDate":
@@ -86,28 +86,28 @@ export function sortTrips(
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => t.fullDays || 0,
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "categories":
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => (t.categories ? t.categories.join(",") : ""),
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "status":
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => t.status || "",
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     case "tags":
       sortedNonTentative = sortItems(
         nonTentative,
         (t) => (t.tags ? t.tags.join(",") : ""),
-        asc ? "asc" : "desc"
+        asc ? "asc" : "desc",
       );
       break;
     default:

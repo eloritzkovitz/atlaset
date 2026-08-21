@@ -12,7 +12,6 @@ import type { Country, Currency } from "../../types";
 
 interface CountryDetailsPanelProps {
   country: Country;
-  countries: Country[];
   currencies: Currency[];
   categorizedVisits: CategorizedVisits;
   initialTab?: CountryDetailsTab;
@@ -26,7 +25,6 @@ interface CountryDetailsPanelProps {
 
 export function CountryDetailsPanel({
   country,
-  countries,
   currencies,
   categorizedVisits,
   initialTab = "overview",
@@ -123,7 +121,6 @@ export function CountryDetailsPanel({
           {activeTab === "territories" && currentHasTerritoriesTab && (
             <CountryTerritoriesContent
               country={country}
-              countries={countries}
               onSelectCountry={onSelectCountry}
             />
           )}

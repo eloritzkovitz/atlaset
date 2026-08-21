@@ -1,12 +1,7 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Chip, EmptyListMessage } from "@components";
 import { useUI } from "@app/contexts/UIContext";
-import {
-  CountryFlag,
-  createCountryMap,
-  useCountryData,
-} from "@features/countries";
+import { CountryFlag, useCountryData } from "@features/countries";
 import type { Trip } from "@features/trips/types";
 import { getTripDays } from "@features/trips/utils/trips";
 import { formatDate } from "@utils";
@@ -25,14 +20,9 @@ export function TripList({
   className = "",
   showDuration = false,
 }: TripListProps) {
-  const { countries } = useCountryData();
+  const { countryByIsoCode } = useCountryData();
   const { t } = useTranslation("dashboard");
   const { handleViewInCalendar } = useUI();
-
-  const countryMap = useMemo(
-    () => createCountryMap(countries, (c) => c),
-    [countries],
-  );
 
   // Handle empty state
   if (!trips || trips.length === 0) {
@@ -63,7 +53,7 @@ export function TripList({
               }`}
             >
               {trip.countryCodes.slice(0, maxFlags).map((code) => {
-                const country = countryMap[code.toLowerCase()];
+                const country = countryByIsoCode[code];
                 return country ? (
                   <CountryFlag
                     key={code}

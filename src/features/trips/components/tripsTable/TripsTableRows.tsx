@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Checkbox, StarRatingInput, TableCell } from "@components";
 import { ICONS } from "@constants/icons";
-import { createCountryMap, type Country } from "@features/countries";
+import type { Country } from "@features/countries/types";
 import { formatDate } from "@utils";
 import { TripActions } from "./TripActions";
 import { CategoriesList } from "../common/CategoriesList";
@@ -16,27 +16,29 @@ import type { Trip } from "../../types";
 interface TripsTableRowsProps {
   trip: Trip;
   tripIdx: number;
-  countryData: { countries: Country[] };
+  countryByIsoCode: { [isoCode: string]: Country };
   onEdit: (trip: Trip) => void;
 }
 
 export function TripsTableRows({
   trip,
   tripIdx,
-  countryData,
+  countryByIsoCode,
   onEdit,
 }: TripsTableRowsProps) {
   const { updateTripRating, selectedTripIds, selectTrip } = useTrips();
   const { t } = useTranslation("common");
 
   const rowSpan = trip.countryCodes?.length || 1;
-  const countryLookup = createCountryMap(countryData.countries, (c) => c);
 
   // Map and sort countries for consistent display order
   const mappedCountries = (trip.countryCodes ?? []).map((code) => {
-    const country =
-      code && countryLookup ? countryLookup[code.toLowerCase()] : null;
-    return { isoCode: code, name: country?.name ?? code };
+    const country = countryByIsoCode[code];
+
+    return {
+      isoCode: code,
+      name: country?.name ?? code,
+    };
   });
 
   // Sort countries alphabetically by name

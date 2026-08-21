@@ -55,7 +55,7 @@ export function TripsTable({
   sortBy,
   onSort,
 }: TripsTableProps) {
-  const countryData = useCountryData();
+  const { countryByIsoCode } = useCountryData();
   const { isMobile } = useScreenSize();
   const { t } = useTranslation("trips");
 
@@ -118,6 +118,7 @@ export function TripsTable({
           filters={filters}
           updateFilter={updateFilter}
           countryOptions={countryOptions}
+          countryByIsoCode={countryByIsoCode}
           yearOptions={yearOptions}
           categoryOptions={categoryOptions}
           statusOptions={statusOptions}
@@ -131,7 +132,7 @@ export function TripsTable({
               key={trip.id}
               trip={trip}
               tripIdx={tripIdx}
-              countryData={countryData}
+              countryByIsoCode={countryByIsoCode}
               onEdit={onEdit}
             />
           </tbody>

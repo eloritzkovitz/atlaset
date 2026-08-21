@@ -3,6 +3,7 @@
 ## 2026-08-21
 
 - **[chore]** **Countries:** Improved filtering configuration and performance
+- **[chore]** **Countries:** Optimized country lookup
 
 ## 2026-08-19
 

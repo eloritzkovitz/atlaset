@@ -2,23 +2,20 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { capitalizeWords } from "@utils";
 import { CountryListGroup } from "./CountryListGroup";
-import {
-  getCountryName,
-  getCountryTerritoryRelations,
-} from "../../core/utils/countryData";
+import { useCountryData } from "../../core/hooks/useCountryData";
+import { getCountryTerritoryRelations } from "../../core/utils/countryData";
 import type { Country } from "../../types";
 
 interface CountryTerritoriesContentProps {
   country: Country;
-  countries: Country[];
   onSelectCountry?: (isoCode: string) => void;
 }
 
 export function CountryTerritoriesContent({
   country,
-  countries,
   onSelectCountry,
 }: CountryTerritoriesContentProps) {
+  const { countryByIsoCode } = useCountryData();
   const { i18n, t: tCountries } = useTranslation("countries");
 
   const group =
@@ -29,11 +26,13 @@ export function CountryTerritoriesContent({
   // Prepare sections from territories data
   const sections = useMemo(() => {
     const sortByName = (arr: string[]) =>
-      arr.slice().sort((a, b) => {
-        const nameA = getCountryName(a, countries) || "";
-        const nameB = getCountryName(b, countries) || "";
-        return nameA.localeCompare(nameB);
-      });
+      arr
+        .slice()
+        .sort((a, b) =>
+          (countryByIsoCode[a]?.name ?? a).localeCompare(
+            countryByIsoCode[b]?.name ?? b,
+          ),
+        );
 
     // If no group or empty territories, return empty sections
     if (!group) return [];
@@ -61,7 +60,7 @@ export function CountryTerritoriesContent({
     }
 
     return [];
-  }, [group, countries, country.isoCode, i18n, tCountries]);
+  }, [group, countryByIsoCode, country.isoCode, i18n, tCountries]);
 
   // Expanded state for each section
   const [expanded, setExpanded] = useState(() =>
@@ -89,7 +88,6 @@ export function CountryTerritoriesContent({
               key={section.key}
               label={section.label}
               isoCodes={section.data}
-              countries={countries}
               expanded={expanded[section.key]}
               onToggle={() => handleToggle(section.key)}
               onSelectCountry={onSelectCountry}

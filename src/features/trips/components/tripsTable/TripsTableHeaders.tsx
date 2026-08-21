@@ -8,7 +8,7 @@ import {
   TableDropdownFilter,
   TableHeader,
 } from "@components";
-import { CountryWithFlag } from "@features/countries";
+import { CountryWithFlag, type Country } from "@features/countries";
 import type { FilterOption, Option } from "@types";
 import { isAllowedOption, isStringOption } from "@utils";
 import { TRIP_CATEGORY_ICONS } from "../../constants/tripCategoryIcons";
@@ -29,6 +29,7 @@ interface TripsTableHeadersProps {
   filters: TripFilters;
   updateFilter: (key: string, value: unknown) => void;
   countryOptions: FilterOption[];
+  countryByIsoCode: { [isoCode: string]: Country };
   yearOptions: FilterOption[];
   participantsOptions: Option<string, string>[];
   categoryOptions: FilterOption[];
@@ -44,6 +45,7 @@ export function TripsTableHeaders({
   filters,
   updateFilter,
   countryOptions,
+  countryByIsoCode,
   yearOptions,
   participantsOptions,
   categoryOptions,
@@ -118,23 +120,17 @@ export function TripsTableHeaders({
                 options={countryOptions.filter(isStringOption)}
                 placeholder={t("table.placeholders.allCountries")}
                 isMulti
-                renderOption={(opt) =>
-                  "country" in opt &&
-                  "value" in opt &&
-                  opt.country &&
-                  typeof opt.country === "object" &&
-                  "name" in opt.country &&
-                  typeof opt.country.name === "string" ? (
-                    <CountryWithFlag
-                      country={{
-                        isoCode: opt.value,
-                        name: opt.country.name,
-                      }}
-                    />
-                  ) : "label" in opt ? (
+                renderOption={(opt) => {
+                  if (!("value" in opt)) return opt.label;
+
+                  const country = countryByIsoCode[opt.value];
+
+                  return country ? (
+                    <CountryWithFlag country={country} />
+                  ) : (
                     opt.label
-                  ) : null
-                }
+                  );
+                }}
               />
             }
           />

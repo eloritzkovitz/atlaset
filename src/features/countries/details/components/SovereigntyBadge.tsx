@@ -35,7 +35,7 @@ export function SovereigntyBadge({
   sovereignState,
   onSelectCountry,
 }: SovereigntyBadgeProps) {
-  const { countries } = useCountryData();
+  const { countries, countryByIsoCode } = useCountryData();
   const { t } = useTranslation("countries");
 
   // If no type is provided, don't render anything
@@ -49,9 +49,7 @@ export function SovereigntyBadge({
   });
 
   if (sovereignState) {
-    const sovereignCountry = countries.find(
-      (c) => c.isoCode === sovereignState,
-    ) || {
+    const sovereignCountry = countryByIsoCode[sovereignState] || {
       isoCode: sovereignState,
       name: getCountryName(sovereignState, countries),
     };

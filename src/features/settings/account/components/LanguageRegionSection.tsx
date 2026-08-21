@@ -17,11 +17,9 @@ export function LanguageRegionSection() {
   const { t: tSettings } = useTranslation("settings");
   const { t } = useTranslation("common");
 
-  // Language selection
   const { current, change } = useLanguage();
   const langOptions = languageOptions(t);
 
-  // Date locale selection
   const [dateLocale, setDateLocale] = useDateLocale();
   const dateOptions = [
     {
@@ -41,13 +39,15 @@ export function LanguageRegionSection() {
   };
 
   // Home country selection
-  const { countries } = useCountryData();
+  const { countries, countryByIsoCode } = useCountryData();
   const { homeCountry, setHomeCountry } = useHomeCountry();
 
   const countryModal = useDisclosure();
 
   // Find the currently selected country object
-  const selectedCountry = countries.find((c) => c.isoCode === homeCountry);
+  const selectedCountry = homeCountry
+    ? (countryByIsoCode[homeCountry] ?? null)
+    : null;
 
   return (
     <SettingsCard

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useCountryData } from "@features/countries";
 import { useLanguage } from "@features/settings";
 import { useTrips } from "@features/trips";
@@ -13,7 +13,7 @@ import {
 import { useTimeline } from "../../context/TimelineContext";
 
 export function TimelineBar() {
-  const { countries } = useCountryData();
+  const { countryByIsoCode } = useCountryData();
   const { trips } = useTrips();
   const { years, selectedYear, setSelectedYear } = useTimeline();
   const [expandedYear, setExpandedYear] = useState<number | null>(null);
@@ -29,10 +29,12 @@ export function TimelineBar() {
   // Calculate how much padding is needed on each side
   let padStart = 0;
   let padEnd = 0;
+
   if (start < 0) {
     padStart = -start;
     start = 0;
   }
+
   if (end > total) {
     padEnd = end - total;
     end = total;
@@ -47,9 +49,25 @@ export function TimelineBar() {
     ...Array(padEnd).fill(null),
   ];
 
+  const visitedCountriesByYear = useMemo(() => {
+    return new Map(
+      years.map((year) => {
+        const codes = getVisitedCountriesForYear(trips, year) ?? [];
+
+        const names = codes
+          .map((code) => countryByIsoCode[code]?.name)
+          .filter((name): name is string => Boolean(name));
+
+        return [year, names];
+      }),
+    );
+  }, [years, trips, countryByIsoCode]);
+
   return (
     <div
-      className={`absolute bottom-16 start-1/2 transform ${isRtl ? "translate-x-1/2" : "-translate-x-1/2"} z-20 px-4 py-2 flex items-center gap-2`}
+      className={`absolute bottom-16 start-1/2 transform ${
+        isRtl ? "translate-x-1/2" : "-translate-x-1/2"
+      } z-20 px-4 py-2 flex items-center gap-2`}
     >
       {/* Timeline line */}
       <div
@@ -58,23 +76,15 @@ export function TimelineBar() {
       />
 
       {/* Year markers */}
-      <div
-        className={
-          "absolute flex bottom-3 justify-center gap-4 relative select-none"
-        }
-      >
+      <div className="absolute flex bottom-3 justify-center gap-4 relative select-none">
         {paddedYears.map((year, idx) => {
-          if (year === null)
+          if (year === null) {
             return (
               <span key={idx} style={{ minWidth: YEAR_MARKER_MIN_WIDTH }} />
             );
+          }
 
-          // Get visited countries for the year
-          const visitedIsoCodes =
-            getVisitedCountriesForYear(trips, year, undefined) || [];
-          const visited = visitedIsoCodes
-            .map((code) => countries.find((c) => c.isoCode === code)?.name)
-            .filter(Boolean) as string[];
+          const visited = visitedCountriesByYear.get(year) ?? [];
 
           // Determine if the current year is expanded
           const isExpanded = expandedYear === year;
@@ -93,6 +103,7 @@ export function TimelineBar() {
                 onExpand={() => setExpandedYear(year)}
                 onCollapse={() => setExpandedYear(null)}
               />
+
               {/* Year number */}
               <span
                 className={`bg-bg/50 rounded-full mb-1 px-2 ${
@@ -103,6 +114,7 @@ export function TimelineBar() {
               >
                 {year}
               </span>
+
               <TimelineDot
                 selected={year === selectedYear}
                 onClick={() => setSelectedYear(year)}

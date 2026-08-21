@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import type { Language } from "@types";
 import { useGetRawCountriesQuery } from "../api/countriesApi";
+import { createCountryMap } from "../utils/countryData";
 import { processLocalizedCountries } from "../utils/countryLocalization";
 import { buildTimezonesFromCountries } from "../utils/timezoneData";
 import type { Currency, Timezone } from "../../types";
@@ -22,10 +23,10 @@ export function useCountryData() {
 
   const currentLanguage = i18n.language || i18next.language || "en";
 
-  const countries = useMemo(() => rawCountries || [], [rawCountries]);
-
   // Process and localize country data based on the current language and i18n instance
   const processedData = useMemo(() => {
+    const countries = rawCountries || [];
+
     const {
       localizedCountries,
       parentToRegions,
@@ -36,6 +37,12 @@ export function useCountryData() {
       tmpSub,
       langSet,
     } = processLocalizedCountries(countries, currentLanguage, i18n);
+
+    // Create a map of countries by their ISO codes for quick lookup
+    const countryByIsoCode = createCountryMap(
+      localizedCountries,
+      (country) => country,
+    );
 
     const allRegions = Array.from(regionSet).sort();
     const subregionsByRegion: Record<string, string[]> = {};
@@ -83,6 +90,7 @@ export function useCountryData() {
 
     return {
       countries: localizedCountries,
+      countryByIsoCode,
       allRegions,
       allSubregions,
       subregionsByRegion,
@@ -94,7 +102,7 @@ export function useCountryData() {
       sovereignLookup: childToParent,
       countryAreaMap: areaLookup,
     };
-  }, [countries, currentLanguage, i18n]);
+  }, [rawCountries, currentLanguage, i18n]);
 
   return {
     loading: isLoading,

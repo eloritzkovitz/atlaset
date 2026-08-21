@@ -21,7 +21,7 @@ export function CountryDetailsModal({
   onClose,
 }: CountryDetailsModalProps) {
   const { singleKeyShortcutsEnabled } = useAccessibility();
-  const { countries, currencies } = useCountryData();
+  const { countryByIsoCode, currencies } = useCountryData();
   const { centerOnCountry } = useMapView();
   const { showCalendar } = useUI();
 
@@ -56,8 +56,8 @@ export function CountryDetailsModal({
 
   // Handler to change country
   const handleSelectCountry = (isoCode: string) => {
-    const found = countries.find((c) => c.isoCode === isoCode);
-    if (found) setCurrentCountry(found);
+    const country = countryByIsoCode[isoCode];
+    if (country) setCurrentCountry(country);
   };
 
   // Do not render if no country is selected
@@ -77,7 +77,6 @@ export function CountryDetailsModal({
           <CountryDetailsHeader country={currentCountry} onClose={onClose} />
           <CountryDetailsPanel
             country={currentCountry}
-            countries={countries}
             currencies={currencies}
             categorizedVisits={categorizedVisits}
             resetTabOnClose={true}

@@ -69,7 +69,7 @@ describe("useCountryData", () => {
   };
 
   const setupQueryMock = (data: Country[] | undefined, isLoading = false) => {
-    vi.spyOn(countriesApiModule, "useGetRawCountriesQuery").mockReturnValue({
+    vi.mocked(countriesApiModule.useGetRawCountriesQuery).mockReturnValue({
       data,
       isLoading,
       isFetching: isLoading,
@@ -79,41 +79,62 @@ describe("useCountryData", () => {
   };
 
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
+
     mockLanguage = "en";
     mockI18nextLanguage = "fr";
+
     vi.mocked(processLocalizedCountries).mockReturnValue(
       mockProcessResult as any,
     );
+
     vi.mocked(buildTimezonesFromCountries).mockReturnValue(mockTimezones);
   });
 
   it("handles query states and refetch delegation", () => {
     setupQueryMock(undefined, true);
+
     const { result } = renderHook(() => useCountryData());
 
     expect(result.current.loading).toBe(true);
     expect(result.current.error).toEqual({ message: "Error" });
 
+    expect(processLocalizedCountries).toHaveBeenCalledWith(
+      [],
+      "en",
+      expect.anything(),
+    );
+
     act(() => result.current.refreshData());
+
     expect(mockRefetch).toHaveBeenCalledTimes(1);
   });
 
-  it("processes countries, maps subregions/currencies/languages, and delegates timezones", () => {
+  it("processes countries and builds derived country data", () => {
     const rawCountries = [{ isoCode: "US" }] as Country[];
+
     setupQueryMock(rawCountries);
 
     const { result } = renderHook(() => useCountryData());
 
+    expect(result.current.countries).toBe(mockLocalizedCountries);
+
+    expect(result.current.countryByIsoCode).toEqual({
+      US: mockLocalizedCountries[0],
+    });
+
     expect(result.current.allRegions).toEqual(["Americas", "Europe"]);
+
     expect(result.current.allSubregions).toEqual([
       "Northern America",
       "Western Europe",
     ]);
+
     expect(result.current.subregionsByRegion).toEqual({
       Americas: ["Northern America"],
       Europe: ["Western Europe"],
     });
+
     expect(result.current.subregionToRegion.get("Northern America")).toBe(
       "Americas",
     );
@@ -122,6 +143,7 @@ describe("useCountryData", () => {
       { code: "EUR", name: "Euro" },
       { code: "NUM", name: "100" },
     ]);
+
     expect(result.current.languages).toEqual({
       eng: { code: "eng", name: "English" },
       fra: { code: "fra", name: "fra" },
@@ -132,17 +154,21 @@ describe("useCountryData", () => {
       "en",
       expect.anything(),
     );
+
     expect(buildTimezonesFromCountries).toHaveBeenCalledWith(
       mockLocalizedCountries,
     );
+
     expect(result.current.timezones).toBe(mockTimezones);
   });
 
-  it("handles fallback language order (i18n.language -> i18next -> 'en') and empty data", () => {
+  it("falls back from i18n language to i18next language and then English", () => {
     setupQueryMock(undefined);
 
     mockLanguage = undefined;
-    const { rerender } = renderHook(() => useCountryData());
+
+    const { result, rerender } = renderHook(() => useCountryData());
+
     expect(processLocalizedCountries).toHaveBeenCalledWith(
       [],
       "fr",
@@ -150,11 +176,19 @@ describe("useCountryData", () => {
     );
 
     mockI18nextLanguage = undefined;
+
     rerender();
+
     expect(processLocalizedCountries).toHaveBeenCalledWith(
       [],
       "en",
       expect.anything(),
     );
+
+    expect(result.current.countries).toBe(mockLocalizedCountries);
+
+    expect(result.current.countryByIsoCode).toEqual({
+      US: mockLocalizedCountries[0],
+    });
   });
 });

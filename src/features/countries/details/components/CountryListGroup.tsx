@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, EmptyListMessage } from "@components";
 import { CountryListRow } from "../../browse/components/CountryListRow";
 import { SPECIAL_COUNTRIES } from "../../core/constants/specialCountries";
+import { useCountryData } from "../../core/hooks/useCountryData";
 import { getCountryResourceBundle } from "../../core/utils/countryLocalization";
 import { type Country } from "../../types";
 
 interface CountryListGroupProps {
   label: React.ReactNode;
   isoCodes: string[];
-  countries: Country[];
   visited?: (iso: string) => boolean;
   expanded: boolean;
   onToggle: () => void;
@@ -19,33 +19,36 @@ interface CountryListGroupProps {
 export const CountryListGroup: React.FC<CountryListGroupProps> = ({
   label,
   isoCodes,
-  countries,
   visited,
   expanded,
   onToggle,
   onSelectCountry,
 }) => {
+  const { countryByIsoCode } = useCountryData();
   const { i18n } = useTranslation();
 
-  // Map isoCodes to country objects and sort by name
   const sortedCountries = isoCodes
     .map((iso) => {
-      const found = countries.find((c) => c.isoCode === iso);
+      const found = countryByIsoCode[iso];
+
       if (found) return found;
 
       const special = SPECIAL_COUNTRIES[iso];
+
       if (special) {
         const bundle = getCountryResourceBundle(i18n.language, i18n);
         const trans = bundle[iso] ?? {};
+
         return {
           isoCode: iso,
           name: trans.name ?? special.name,
         } as Country;
       }
+
       return undefined;
     })
-    .filter(Boolean)
-    .sort((a, b) => a!.name.localeCompare(b!.name));
+    .filter((country): country is Country => Boolean(country))
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <CollapsibleHeader

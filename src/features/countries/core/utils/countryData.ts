@@ -36,11 +36,8 @@ export function getCountryByIsoCode(
   countryData: { countries: Country[] },
 ): Country | null {
   if (!code || !countryData?.countries) return null;
-  const target = code.toLowerCase();
-  return (
-    countryData.countries.find((c) => c.isoCode?.toLowerCase() === target) ??
-    null
-  );
+
+  return countryData.countries.find((c) => c.isoCode === code) ?? null;
 }
 
 /** Returns the name of a country based on its ISO code.
@@ -66,9 +63,7 @@ export function createCountryMap<T>(
   countries: Country[],
   valueFn: (c: Country) => T,
 ): Record<string, T> {
-  return Object.fromEntries(
-    countries.map((c) => [c.isoCode.toLowerCase(), valueFn(c)]),
-  );
+  return Object.fromEntries(countries.map((c) => [c.isoCode, valueFn(c)]));
 }
 
 /**

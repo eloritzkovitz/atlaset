@@ -90,7 +90,6 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
       title={timezone.code}
       actions={<WikipediaButton searchTerm={`${timezone.code}`} />}
       onBack={handleBack}
-      countries={countries}
       onSelectCountry={handleCountrySelect}
       labelArgs={{ code: timezone.code }}
       groups={[
