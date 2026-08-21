@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Modal } from "@components";
 import { useUI } from "@app/contexts/UIContext";
-import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
 import { useCountryData, type Country } from "@features/countries";
 import { CountryDetailsPanel } from "@features/countries/details/components/CountryDetailsPanel";
 import { useAccessibility } from "@features/settings";
@@ -22,7 +22,7 @@ export function CountryDetailsModal({
 }: CountryDetailsModalProps) {
   const { singleKeyShortcutsEnabled } = useAccessibility();
   const { countryByIsoCode, currencies } = useCountryData();
-  const { centerOnCountry } = useMapView();
+  const centerOnCountry = useCenterOnCountry();
   const { showCalendar } = useUI();
 
   const [currentCountry, setCurrentCountry] = useState<Country | null>(country);

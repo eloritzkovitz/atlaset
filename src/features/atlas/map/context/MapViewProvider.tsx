@@ -9,28 +9,16 @@ import { useMapMode } from "@features/atlas/core/hooks/useMapMode";
 import type { ColorMode } from "@features/atlas/core/types";
 import { DEFAULT_MAP_SETTINGS } from "@features/settings";
 import { MapViewContext } from "./MapViewContext";
-import { useGetGeoDataQuery } from "../api/mapApi";
 import type { Coordinates } from "../types";
-import { getCountryCenterAndZoom } from "../utils/projection";
 
 export interface MapViewProviderProps {
   children: ReactNode;
 }
 
 export function MapViewProvider({ children }: MapViewProviderProps) {
-  const { data: geoData, error, isLoading: loading } = useGetGeoDataQuery();
   const { mapMode, setMapMode, isReadonly, isEdit, isEmbed } = useMapMode();
 
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-
-  // Determine geoError based on the error object from the query
-  const geoError = error
-    ? "status" in error
-      ? "error" in error && typeof error.error === "string"
-        ? error.error
-        : `Request failed with status ${error.status}`
-      : (error.message ?? "Failed to load map data")
-    : null;
 
   // Color mode state
   const [colorMode, setColorMode] = useState<ColorMode>("standard");
@@ -55,19 +43,6 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
       setCenter([0, 0]);
     }
   }, [zoom, center]);
-
-  // Center map on a specific country by its ISO code
-  const centerOnCountry = useCallback(
-    (isoCode: string) => {
-      if (!geoData) return;
-      const result = getCountryCenterAndZoom(geoData, isoCode);
-      if (result) {
-        setCenter(result.center);
-        setZoom(result.zoom);
-      }
-    },
-    [geoData],
-  );
 
   // Handler for map move end
   const handleMoveEnd = useCallback(
@@ -98,9 +73,6 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
       colorMode,
       setColorMode,
       isAtlasActive,
-      geoData: geoData ?? null,
-      geoError,
-      loading,
       dimensions,
       setDimensions,
       zoom,
@@ -110,7 +82,6 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
       setSelectedCoords,
       setCenter,
       handleMoveEnd,
-      centerOnCountry,
       mapReady,
       handleMapReady,
     }),
@@ -123,9 +94,6 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
       colorMode,
       setColorMode,
       isAtlasActive,
-      geoData,
-      geoError,
-      loading,
       dimensions,
       setDimensions,
       zoom,
@@ -135,7 +103,6 @@ export function MapViewProvider({ children }: MapViewProviderProps) {
       setSelectedCoords,
       setCenter,
       handleMoveEnd,
-      centerOnCountry,
       mapReady,
       handleMapReady,
     ],

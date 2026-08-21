@@ -5,7 +5,7 @@ import {
   useMarkers,
 } from "@features/atlas/markers";
 import type { Point } from "@types";
-import { useMapView } from "../context/MapViewContext";
+import { useGetGeoDataQuery } from "../api/mapApi";
 import { useMapContext } from "../providers/MapContext";
 import { getCountryCenterAndZoom } from "../utils/projection";
 
@@ -18,9 +18,9 @@ export function MarkersContainer({
   zoom = 1,
   projection: propsProjection,
 }: MarkersContainerProps) {
-  const { showMarkerDetails } = useMarkers();
   const markers = useEffectiveMarkers();
-  const { geoData } = useMapView();
+  const { data: geoData } = useGetGeoDataQuery();
+  const { showMarkerDetails } = useMarkers();
 
   // Retrieve the actual callable D3 projection function from context
   const mapContext = useMapContext();

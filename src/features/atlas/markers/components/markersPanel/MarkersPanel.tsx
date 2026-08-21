@@ -4,6 +4,7 @@ import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@app/contexts/UIContext";
+import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { getCountryCenterAndZoom } from "@features/atlas/map/utils/projection";
 import { useAccessibility } from "@features/settings";
@@ -38,7 +39,8 @@ export function MarkersPanel({
   handleSavedMapChange,
 }: MarkersPanelProps) {
   const { animationsEnabled } = useAccessibility();
-  const { setCenter, setZoom, isReadonly, geoData } = useMapView();
+  const { data: geoData } = useGetGeoDataQuery();
+  const { setCenter, setZoom, isReadonly } = useMapView();
   const globalMarkerActions = useMarkers();
   const { showMarkers, closePanel } = useUI();
   const effectiveMarkersFromContext = useEffectiveMarkers();

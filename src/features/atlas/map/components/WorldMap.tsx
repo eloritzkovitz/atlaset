@@ -10,6 +10,7 @@ import { ZoomableGroup } from "./ZoomableGroup";
 import { useMapView } from "../context/MapViewContext";
 import { useMapDimensions } from "../hooks/useMapDimensions";
 import { MapProvider } from "../providers/MapProvider";
+import { useGetGeoDataQuery } from "../api/mapApi";
 
 export interface WorldMapProps {
   onCountryClick: (countryIsoCode: string | null) => void;
@@ -31,9 +32,10 @@ export function WorldMap({
   svgRef,
   isAddingMarker,
 }: WorldMapProps) {
+  const { data: geoData } = useGetGeoDataQuery();
   const { containerRef, mapWidth, mapHeight } = useMapDimensions();
   const { projection } = useMapSettings();
-  const { colorMode, geoData, zoom, center, handleMoveEnd } = useMapView();
+  const { colorMode, zoom, center, handleMoveEnd } = useMapView();
 
   // Handle country clicks, either for adding a marker or for normal interaction
   const { handleCountryClick } = useMarkerCreation({ onCountryClick });
@@ -58,6 +60,8 @@ export function WorldMap({
   );
 
   const activeProjection = projection || DEFAULT_MAP_SETTINGS.projection;
+
+  if (!geoData) return null;
 
   return (
     <div

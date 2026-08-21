@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FaWikipediaW } from "react-icons/fa6";
 import { ICONS } from "@constants/icons";
-import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
 import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
 import type { Country } from "@features/countries/types";
 import { getCountryRoute } from "@features/dashboard/core";
@@ -39,7 +39,7 @@ export function useCountryActions({
   onCloseMenu,
 }: UseCountryActionsProps): Record<string, CountryActionConfig> {
   const { current: lang } = useLanguage();
-  const { centerOnCountry } = useMapView();
+  const centerOnCountry = useCenterOnCountry();
   const { markers, openAddMarker, openEditMarker } = useMarkerCreation();
   const {
     isVisitedCountry,

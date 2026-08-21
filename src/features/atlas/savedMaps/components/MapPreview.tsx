@@ -4,7 +4,7 @@ import {
   groupLayerItemsByIsoCode,
   getTopmostLayerColor,
 } from "@features/atlas/layers";
-import { useMapView } from "@features/atlas/map";
+import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
 import { useMapSettings } from "@features/atlas/settings";
 import { getCountryIsoCode } from "@features/countries";
 import type { SavedMap } from "../types";
@@ -14,7 +14,7 @@ import type { SavedMap } from "../types";
  */
 export function MapPreview({ map }: { map: SavedMap }) {
   const { baseColor } = useMapSettings();
-  const { geoData } = useMapView();
+  const { data: geoData } = useGetGeoDataQuery();
 
   const layerItems = useMemo(() => {
     if (!map?.layers) return [];

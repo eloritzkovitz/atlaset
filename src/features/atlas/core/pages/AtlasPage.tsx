@@ -11,17 +11,13 @@ import { useLayers } from "../../layers/context/LayersContext";
 import { useMapView } from "../../map/context/MapViewContext";
 import { WorldMap } from "../../map/components/WorldMap";
 import { useMarkerCreation } from "../../markers/hooks/useMarkerCreation";
+import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
 
 export default function AtlasPage() {
   const { countries, loading: countriesLoading, error } = useCountryData();
+  const { isLoading: geoLoading, error: geoError } = useGetGeoDataQuery();
   const { loading: layersLoading } = useLayers();
-  const {
-    geoError,
-    loading: geoLoading,
-    mapReady,
-    handleMapReady,
-    isEmbed,
-  } = useMapView();
+  const { mapReady, handleMapReady, isEmbed } = useMapView();
   const { isMobile } = useScreenSize();
   const { t } = useTranslation("atlas");
   const { setOpenMapToolbarPanel, setOpenUserPanel } = useUI();
