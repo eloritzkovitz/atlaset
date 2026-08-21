@@ -1,18 +1,18 @@
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
-import { canonicalKey } from "@utils";
-import type { FilterOption } from "@types";
 import { FaShapes } from "react-icons/fa6";
 import { CollapsibleHeader, SelectInput } from "@components";
-import { type GeoType, type SovereigntyStatus } from "@features/countries";
+import type { GeoType, SovereigntyStatus } from "@features/countries/types";
 import type { VisitedStatus } from "@features/visits/types";
-import { coreFiltersConfig } from "../../config/filtersConfig";
+import type { FilterOption } from "@types";
+import { canonicalKey } from "@utils";
+import { coreFiltersConfig } from "../../config/coreFilters";
 import { useCountryFilters } from "../../context/CountryFiltersContext";
+import type { CountryFilterKey } from "../../types";
 
 interface CoreFiltersProps {
   expanded: boolean;
   onToggle: () => void;
-  handleRegionChange?: (region: string) => void;
   subregionOptions: string[];
   geoTypeOptions: GeoType[];
   sovereigntyOptions: string[];
@@ -43,11 +43,84 @@ export function CoreFilters({
     sovereignOnly,
     visitedOnly,
   } = useCountryFilters();
+
   const { t } = useTranslation("countries");
   const { t: tCommon } = useTranslation("common");
 
-  // Normalizes a string key for translation lookup
-  const normalizeKey = (raw?: string) => canonicalKey(String(raw ?? ""));
+  const values = {
+    region: selectedRegion,
+    subregion: selectedSubregion,
+    geoType: selectedGeoType,
+    sovereignty: selectedSovereignty,
+    visited: selectedVisited,
+  };
+
+  // Get the options source based on the filter key
+  const getOptionsSource = (key: CountryFilterKey) => {
+    switch (key) {
+      case "region":
+        return allRegions;
+      case "subregion":
+        return subregionOptions;
+      case "geoType":
+        return geoTypeOptions;
+      case "sovereignty":
+        return sovereigntyOptions;
+      case "visited":
+        return undefined;
+      default:
+        return undefined;
+    }
+  };
+
+  // Set the value for a specific filter key
+  const setValue = (key: CountryFilterKey, value: string) => {
+    switch (key) {
+      case "region":
+        setSelectedRegion(value);
+        setSelectedSubregion("");
+        break;
+      case "subregion":
+        setSelectedSubregion(value);
+        break;
+      case "geoType":
+        setSelectedGeoType(value as GeoType | "");
+        break;
+      case "sovereignty":
+        setSelectedSovereignty(value as SovereigntyStatus | "");
+        break;
+      case "visited":
+        setSelectedVisited(value as VisitedStatus);
+        break;
+    }
+  };
+
+  // Translate the label for a given filter option based on its key
+  const translateLabel = (key: CountryFilterKey, option: FilterOption) => {
+    const value = String(option.value);
+    const label = String(option.label);
+
+    switch (key) {
+      case "region":
+        return t(`regions.${value}`, { defaultValue: label });
+
+      case "subregion": {
+        const regionKey = selectedRegion || subregionToRegion.get(value) || "";
+
+        return regionKey
+          ? t(`subregions.${regionKey}.${canonicalKey(value)}`, {
+              defaultValue: label,
+            })
+          : label;
+      }
+
+      case "sovereignty":
+        return t(`sovereignty.${value}`, { defaultValue: label });
+
+      default:
+        return i18next.t(label, { defaultValue: label });
+    }
+  };
 
   return (
     <>
@@ -57,111 +130,50 @@ export function CoreFilters({
         expanded={expanded}
         onToggle={onToggle}
       />
-      {expanded && (
-        <>
-          {coreFiltersConfig.map((filter) => {
-            const key = filter.key as string;
 
-            const valueMap: Record<string, unknown> = {
-              region: selectedRegion,
-              subregion: selectedSubregion,
-              geoType: selectedGeoType,
-              sovereignty: selectedSovereignty,
-              visited: selectedVisited,
-            };
+      {expanded &&
+        coreFiltersConfig.map((filter) => {
+          const key = filter.key;
+          const value = values[key];
 
-            const setterMap: Record<string, (v: string) => void> = {
-              region: (v: string) => {
-                setSelectedRegion(String(v));
-                setSelectedSubregion("");
-              },
-              subregion: (v: string) => setSelectedSubregion(String(v)),
-              geoType: (v: string) =>
-                setSelectedGeoType(
-                  (v as unknown) === "all" ? "" : (v as GeoType),
-                ),
-              sovereignty: (v: string) =>
-                setSelectedSovereignty(
-                  (v as unknown) === "all" ? "" : (v as SovereigntyStatus),
-                ),
-              visited: (v: string) => setSelectedVisited(v as VisitedStatus),
-            };
+          const baseOptions = filter.getOptions(getOptionsSource(key));
 
-            const optionsSource: Record<string, unknown[]> = {
-              region: allRegions,
-              subregion: subregionOptions,
-              geoType: geoTypeOptions,
-              sovereignty: sovereigntyOptions,
-            };
+          const options = (baseOptions ?? []).map((option) => ({
+            ...option,
+            label:
+              option.value === "all"
+                ? tCommon("components.filter.all")
+                : translateLabel(key, option),
+          }));
 
-            const baseOptions = filter.getOptions(
-              optionsSource[key] as string[],
-            );
+          const disabled =
+            (key === "sovereignty" && sovereignOnly) ||
+            (key === "visited" && visitedOnly);
 
-            const translateLabel = (opt: FilterOption) => {
-              if (key === "region") {
-                return t(`regions.${String(opt.value)}`, {
-                  defaultValue: String(opt.label),
-                });
-              }
-              if (key === "subregion") {
-                const sk = String(opt.value);
-                const regionKey =
-                  selectedRegion || subregionToRegion.get(sk) || "";
-                const normalized = normalizeKey(sk);
-                return regionKey
-                  ? t(`subregions.${regionKey}.${normalized}`, {
-                      defaultValue: String(opt.label),
+          const selectValue =
+            value === "" || value === undefined ? "all" : String(value);
+
+          return (
+            <SelectInput
+              key={key}
+              label={
+                typeof filter.label === "function"
+                  ? filter.label(selectValue)
+                  : i18next.t(String(filter.label), {
+                      defaultValue: String(filter.label),
                     })
-                  : String(opt.label);
               }
-              if (key === "sovereignty") {
-                return t(`sovereignty.${String(opt.value)}`, {
-                  defaultValue: String(opt.label),
-                });
-              }
-              return i18next.t(String(opt.label), {
-                defaultValue: String(opt.label),
-              });
-            };
-            const options = (baseOptions ?? []).map((o: FilterOption) => ({
-              ...o,
-              label:
-                o.value === "all"
-                  ? tCommon("components.filter.all")
-                  : translateLabel(o),
-            }));
-
-            const disabled =
-              (key === "sovereignty" && sovereignOnly) ||
-              (key === "visited" && visitedOnly);
-            const setValue = setterMap[key];
-            const value = valueMap[key];
-            const selectValue =
-              value === "" || value === undefined ? "all" : String(value);
-
-            return setValue ? (
-              <SelectInput
-                key={key}
-                label={
-                  typeof filter.label === "function"
-                    ? filter.label(selectValue ?? "")
-                    : i18next.t(String(filter.label), {
-                        defaultValue: String(filter.label),
-                      })
+              value={selectValue}
+              onChange={(value) => {
+                if (!disabled) {
+                  setValue(key, value === "all" ? "" : String(value));
                 }
-                value={selectValue ?? "all"}
-                onChange={(val) => {
-                  if (disabled) return;
-                  setValue(val === "all" ? "" : String(val));
-                }}
-                options={options ?? []}
-                disabled={disabled}
-              />
-            ) : null;
-          })}
-        </>
-      )}
+              }}
+              options={options}
+              disabled={disabled}
+            />
+          );
+        })}
     </>
   );
 }

@@ -2,7 +2,6 @@
  * Utility functions for filtering countries based on various criteria.
  */
 
-import type { Layer } from "@features/atlas/layers/types";
 import type { VisitContext } from "@features/visits/types";
 import {
   compareNumeric,
@@ -201,32 +200,6 @@ export function filterCountriesByQualifier(
       return matchesToken(t, searchValue, { match: mods.match });
     });
   });
-}
-
-/**
- * Filters ISO codes based on layer selections.
- * @param countries - List of all countries.
- * @param layers - List of all layers.
- * @param layerSelections - Current layer selections.
- * @returns Filtered list of ISO codes.
- */
-export function getFilteredIsoCodes(
-  countries: Country[],
-  layers: Layer[],
-  layerSelections: Record<string, string>,
-) {
-  const base = countries.map((c) => c.isoCode);
-
-  return layers.reduce((accIsoCodes, layer) => {
-    const selection = layerSelections[layer.id] || "all";
-    if (selection === "only") {
-      return accIsoCodes.filter((iso) => layer.countries.includes(iso));
-    }
-    if (selection === "exclude") {
-      return accIsoCodes.filter((iso) => !layer.countries.includes(iso));
-    }
-    return accIsoCodes; // "all"
-  }, base as string[]);
 }
 
 /**

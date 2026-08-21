@@ -1,18 +1,16 @@
 import { mockCountries } from "@test-utils/mockCountries";
 import * as searchUtils from "@utils";
 import {
-  filterCountries,
-  getFilteredIsoCodes,
-  getCountryCounts,
-  createSovereigntyFilter,
-  filterCountriesByQualifier,
   applyQualifierSearch,
+  createSovereigntyFilter,
+  filterCountries,
+  filterCountriesByQualifier,
+  getCountryCounts,
 } from "./countryFilters";
 
 describe("countryFilters utils", () => {
   const countries = mockCountries;
 
-  // Helper function to apply qualifier filter with visit context and modifiers for testing
   const fq = (
     qualifier: string,
     value: string,
@@ -404,36 +402,6 @@ describe("countryFilters utils", () => {
         { FR: 1 },
       );
       expect(res).toEqual([countries[0]]);
-    });
-  });
-
-  describe("getFilteredIsoCodes", () => {
-    const layers = [
-      { id: "o1", countries: ["FR", "DE"] },
-      { id: "o2", countries: ["GP"] },
-    ];
-    const allIsoCodes = mockCountries.map((c) => c.isoCode);
-
-    it("returns all iso codes if layers are 'all'", () => {
-      expect(
-        getFilteredIsoCodes(countries, layers as any, {
-          o1: "all",
-          o2: "all",
-        }),
-      ).toEqual(allIsoCodes);
-    });
-
-    it("filters to only layer countries if 'only'", () => {
-      expect(
-        getFilteredIsoCodes(countries, layers as any, { o1: "only" }),
-      ).toEqual(["FR", "DE"]);
-    });
-
-    it("excludes layer countries if 'exclude'", () => {
-      const expected = allIsoCodes.filter((code) => code !== "GP");
-      expect(
-        getFilteredIsoCodes(countries, layers as any, { o2: "exclude" }),
-      ).toEqual(expected);
     });
   });
 

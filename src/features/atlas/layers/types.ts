@@ -40,3 +40,6 @@ export type LayerItem = {
   layerId: string;
   style?: React.CSSProperties;
 };
+
+/** Represents the selected values for each layer filter. */
+export type LayerSelections = Record<string, string>;

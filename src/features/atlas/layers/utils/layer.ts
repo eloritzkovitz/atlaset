@@ -2,7 +2,7 @@
  * Utility functions for managing layers.
  */
 
-import type { AnyLayer, Layer, TimelineLayer } from "../types";
+import type { AnyLayer, Layer, LayerSelections, TimelineLayer } from "../types";
 
 /**
  * Type guard to check if an layer is a TimelineLayer.
@@ -11,21 +11,6 @@ import type { AnyLayer, Layer, TimelineLayer } from "../types";
  */
 export function isTimelineLayer(layer: AnyLayer): layer is TimelineLayer {
   return (layer as TimelineLayer).timelineEnabled === true;
-}
-
-/**
- * Generates default layer selections mapping each layer ID to "all".
- * @param layers- The array of layers.
- * @returns A record mapping layer IDs to the string "all".
- */
-export function getDefaultLayerSelections(layers: AnyLayer[]) {
-  return layers.reduce(
-    (acc, layer) => {
-      acc[layer.id] = "all";
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
 }
 
 /**
@@ -64,4 +49,40 @@ export function normalizeLayers(
           : [],
     };
   });
+}
+
+/**
+ * Generates default layer selections mapping each layer ID to "all".
+ * @param layers- The array of layers.
+ * @returns A record mapping layer IDs to the string "all".
+ */
+export function getDefaultLayerSelections(layers: AnyLayer[]) {
+  return layers.reduce((acc, layer) => {
+    acc[layer.id] = "all";
+    return acc;
+  }, {} as LayerSelections);
+}
+
+/**
+ * Filters ISO codes based on layer selections.
+ * @param isoCodes - List of all ISO codes.
+ * @param layers - List of all layers.
+ * @param layerSelections - Current layer selections.
+ * @returns Filtered list of ISO codes.
+ */
+export function getLayerFilteredIsoCodes(
+  isoCodes: string[],
+  layers: Layer[],
+  layerSelections: LayerSelections,
+) {
+  return layers.reduce((accIsoCodes, layer) => {
+    const selection = layerSelections[layer.id] || "all";
+    if (selection === "only") {
+      return accIsoCodes.filter((iso) => layer.countries.includes(iso));
+    }
+    if (selection === "exclude") {
+      return accIsoCodes.filter((iso) => !layer.countries.includes(iso));
+    }
+    return accIsoCodes;
+  }, isoCodes as string[]);
 }

@@ -1,6 +1,8 @@
+import { mockCountries } from "@test-utils/mockCountries";
 import { mockLayers, mockTimelineLayer } from "@test-utils/mockLayers";
 import {
   getDefaultLayerSelections,
+  getLayerFilteredIsoCodes,
   isTimelineLayer,
   normalizeLayers,
 } from "./layer";
@@ -13,18 +15,6 @@ describe("layer utils", () => {
 
     it("isTimelineLayer returns false for non-TimelineLayer", () => {
       expect(isTimelineLayer(mockLayers[0])).toBe(false);
-    });
-  });
-
-  describe("getDefaultLayerSelections", () => {
-    it("returns an object mapping each layer id to 'all'", () => {
-      const layers = [{ id: "a" }, { id: "b" }, { id: "c" }] as any[];
-      const result = getDefaultLayerSelections(layers);
-      expect(result).toEqual({ a: "all", b: "all", c: "all" });
-    });
-
-    it("returns an empty object for an empty layers array", () => {
-      expect(getDefaultLayerSelections([])).toEqual({});
     });
   });
 
@@ -65,6 +55,54 @@ describe("layer utils", () => {
       expect(typeof result?.[1].id).toBe("string");
       expect(result?.[1].id.length).toBeGreaterThan(0);
       expect(result?.[2].id).toBe("bar");
+    });
+  });
+
+  describe("getDefaultLayerSelections", () => {
+    it("returns an object mapping each layer id to 'all'", () => {
+      const layers = [{ id: "a" }, { id: "b" }, { id: "c" }] as any[];
+      const result = getDefaultLayerSelections(layers);
+      expect(result).toEqual({ a: "all", b: "all", c: "all" });
+    });
+
+    it("returns an empty object for an empty layers array", () => {
+      expect(getDefaultLayerSelections([])).toEqual({});
+    });
+  });
+
+  describe("getLayerFilteredIsoCodes", () => {
+    const layers = [
+      { id: "o1", countries: ["FR", "DE"] },
+      { id: "o2", countries: ["GP"] },
+    ];
+
+    const isoCodes = mockCountries.map((country) => country.isoCode);
+
+    it("returns all iso codes if layers are 'all'", () => {
+      expect(
+        getLayerFilteredIsoCodes(isoCodes, layers as any, {
+          o1: "all",
+          o2: "all",
+        }),
+      ).toEqual(isoCodes);
+    });
+
+    it("filters to only layer countries if 'only'", () => {
+      expect(
+        getLayerFilteredIsoCodes(isoCodes, layers as any, {
+          o1: "only",
+        }),
+      ).toEqual(["FR", "DE"]);
+    });
+
+    it("excludes layer countries if 'exclude'", () => {
+      const expected = isoCodes.filter((code) => code !== "GP");
+
+      expect(
+        getLayerFilteredIsoCodes(isoCodes, layers as any, {
+          o2: "exclude",
+        }),
+      ).toEqual(expected);
     });
   });
 });

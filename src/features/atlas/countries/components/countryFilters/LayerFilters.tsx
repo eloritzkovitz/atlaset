@@ -3,7 +3,7 @@ import { CollapsibleHeader, SelectInput } from "@components";
 import { ICONS } from "@constants/icons";
 import { useLayers } from "@features/atlas/layers";
 import type { AnyLayer } from "@features/atlas/layers/types";
-import { layerFilterConfig } from "../../config/filtersConfig";
+import { layerFiltersConfig } from "../../config/layerFilters";
 
 interface LayerFiltersProps {
   layers: AnyLayer[];
@@ -32,22 +32,22 @@ export function LayerFilters({
           <SelectInput
             key={layer.id}
             label={
-              typeof layerFilterConfig.label === "function"
-                ? t(layerFilterConfig.label(layer))
-                : t(layerFilterConfig.label)
+              typeof layerFiltersConfig.label === "function"
+                ? t(layerFiltersConfig.label(layer))
+                : t(layerFiltersConfig.label)
             }
-            value={layerFilterConfig.getValue(
+            value={layerFiltersConfig.getValue(
               { layerSelections, setLayerSelections },
               layer,
             )}
             onChange={(val) =>
-              layerFilterConfig.setValue(
+              layerFiltersConfig.setValue(
                 { layerSelections, setLayerSelections },
                 String(val),
                 layer,
               )
             }
-            options={layerFilterConfig.getOptions([layer])}
+            options={layerFiltersConfig.getOptions([layer])}
           />
         ))}
     </>

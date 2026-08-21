@@ -18,11 +18,7 @@ export { layersService } from "./services/layersService";
 export * from "./types";
 
 // Utils
-export {
-  isTimelineLayer,
-  getDefaultLayerSelections,
-  normalizeLayers,
-} from "./utils/layer";
+export * from "./utils/layer";
 export {
   getLayerItems,
   groupLayerItemsByIsoCode,

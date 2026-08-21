@@ -5,7 +5,7 @@ import { useTimeline } from "@features/atlas/timeline";
 import { useTrips } from "@features/trips";
 import { getVisitCountStats } from "@features/visits";
 import { clamp } from "@utils";
-import { timelineFiltersConfig } from "../../config/filtersConfig";
+import { timelineFiltersConfig } from "../../config/timelineFilters";
 
 interface TimelineFiltersProps {
   expanded: boolean;

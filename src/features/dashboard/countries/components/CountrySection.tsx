@@ -10,7 +10,6 @@ import {
   ViewModeSegmentedControl,
 } from "@components";
 import { ICONS } from "@constants/icons";
-import { coreFiltersConfig } from "@features/atlas/countries/config/filtersConfig";
 import {
   CountryDisplayPanel,
   CountrySortSelect,
@@ -18,10 +17,10 @@ import {
   sortCountries,
   useCountryData,
   type Country,
-  type GeoType,
 } from "@features/countries";
 import { buildVisitContext } from "@features/visits/utils/visits";
 import { useSort } from "@hooks";
+import type { ViewMode } from "@types";
 import { canonicalKey } from "@utils";
 
 interface CountrySectionProps {
@@ -36,10 +35,10 @@ interface CountrySectionProps {
   selectedShowSovereignOnly?: boolean;
   search: string;
   setSearch: (search: string) => void;
-  initialView?: "grid" | "list";
+  initialView?: ViewMode;
   className?: string;
   onAllCountries?: () => void;
-  onShowSovereignOnly?: (v: boolean) => void;
+  onShowSovereignOnly?: (value: boolean) => void;
   onSubregionChange?: (region: string, subregion: string) => void;
   resetFilters?: () => void;
 }
@@ -63,108 +62,94 @@ export function CountrySection({
   onSubregionChange,
   resetFilters,
 }: CountrySectionProps) {
+  const { subregionsByRegion, subregionToRegion } = useCountryData();
   const { t: tAtlas } = useTranslation("atlas");
   const { t: tCommon } = useTranslation("common");
   const { t: tCountries } = useTranslation("countries");
   const { t: tDashboard } = useTranslation("dashboard");
 
-  const normalizedRegion =
-    !selectedRegion || selectedRegion === "all" ? undefined : selectedRegion;
-  const normalizedSubregion =
-    !selectedSubregion || selectedSubregion === "all"
-      ? undefined
-      : selectedSubregion;
-  const [viewMode, setViewMode] = useState<"grid" | "list">(initialView);
+  const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
   const [showTranscontinental, setShowTranscontinental] = useState(false);
 
-  // Generate options for region and subregion filters
-  const regionSelectFilter = coreFiltersConfig.find((f) => f.key === "region")!;
-  const subregionSelectFilter = coreFiltersConfig.find(
-    (f) => f.key === "subregion",
-  )!;
+  const normalizedRegion =
+    selectedRegion && selectedRegion !== "all" ? selectedRegion : undefined;
 
-  // Get subregions for the currently selected region
-  const { subregionsByRegion, subregionToRegion } = useCountryData();
+  const normalizedSubregion =
+    selectedSubregion && selectedSubregion !== "all"
+      ? selectedSubregion
+      : undefined;
+
+  // Get unique regions from both the region mapping and country data
   const uniqueRegions = Array.from(
     new Set([
       ...Object.keys(subregionsByRegion),
-      ...countries.map((c) => c.region).filter(Boolean),
+      ...countries.map((country) => country.region).filter(Boolean),
     ]),
   ).sort();
+
+  // Get subregions for the currently selected region
   const uniqueSubregions =
     selectedRegion && selectedRegion !== "all"
       ? (subregionsByRegion[selectedRegion] ?? [])
       : [];
 
-  // Generate options using filter config functions and translate labels
-  const regionBaseOptions = regionSelectFilter.getOptions(uniqueRegions) ?? [];
-  const subregionBaseOptions =
-    subregionSelectFilter.getOptions(uniqueSubregions) ?? [];
+  const regionOptions = [
+    {
+      value: "all",
+      label: tCountries("labels.region", "Region"),
+    },
+    ...uniqueRegions.map((region) => ({
+      value: region,
+      label: tCountries(`regions.${region}`, {
+        defaultValue: region,
+      }),
+    })),
+  ];
 
-  const regionOptions = regionBaseOptions.map((o) => ({
-    ...o,
-    label:
-      o.value === "all"
-        ? tCountries("labels.region", "Region")
-        : tCountries(`regions.${String(o.value)}`, {
-            defaultValue: String(o.label),
-          }),
-  }));
+  const subregionOptions = [
+    {
+      value: "all",
+      label: tCountries("labels.subregion", "Subregion"),
+    },
+    ...uniqueSubregions.map((subregion) => {
+      const regionKey =
+        selectedRegion || subregionToRegion.get(subregion) || "";
+      const normalized = canonicalKey(subregion);
 
-  const subregionOptions = subregionBaseOptions.map((o) => {
-    const sk = String(o.value);
-    const regionKey = selectedRegion || subregionToRegion.get(sk) || "";
-    const normalized = canonicalKey(sk);
-    return {
-      ...o,
-      label:
-        o.value === "all"
-          ? tCountries("labels.subregion", "Subregion")
-          : regionKey
-            ? tCountries(`subregions.${regionKey}.${normalized}`, {
-                defaultValue: String(o.label),
-              })
-            : String(o.label),
-    };
-  });
-
-  // Shared filter props for select filters
-  const filterProps = {
-    selectedRegion,
-    setSelectedRegion,
-    selectedSubregion,
-    setSelectedSubregion,
-    selectedSovereignty: "",
-    setSelectedSovereignty: () => {},
-    selectedGeoType: "" as GeoType | "",
-    setSelectedGeoType: (() => {}) as (v: GeoType | "") => void,
-    selectedVisited: "any",
-    setSelectedVisited: () => {},
-  };
+      return {
+        value: subregion,
+        label: regionKey
+          ? tCountries(`subregions.${regionKey}.${normalized}`, {
+              defaultValue: subregion,
+            })
+          : subregion,
+      };
+    }),
+  ];
 
   // Handler to reset all filters and route to all countries
   function handleResetFilters() {
-    if (resetFilters) resetFilters();
+    resetFilters?.();
     setSortBy("name-asc");
-    if (onAllCountries) onAllCountries();
+    onAllCountries?.();
   }
 
-  // Handler to toggle sovereign only filter
-  const handleSovereignToggle = () => {
-    if (onShowSovereignOnly) onShowSovereignOnly(!selectedShowSovereignOnly);
-  };
+  // Handler to toggle sovereign-only filter
+  const handleSovereignToggle = () =>
+    onShowSovereignOnly?.(!selectedShowSovereignOnly);
 
-  // Handler to toggle visited/all
+  // Handler to toggle visited/all.
   const handleVisitedToggle = () => {
     setShowVisitedOnly((prev) => !prev);
   };
 
+  // Handler to toggle transcontinental countries
   const handleTranscontinentalToggle = () => {
-    setShowTranscontinental((s) => !s);
+    setShowTranscontinental((prev) => !prev);
   };
 
-  // Filter countries based on search and visited toggle
+  // Filter countries based on search and selected filters
   const filtered = useMemo(
     () =>
       filterCountries(countries, {
@@ -188,12 +173,13 @@ export function CountrySection({
   const filteredVisited = useMemo(
     () =>
       showVisitedOnly
-        ? filtered.filter((c) => visitedCountryCodes.includes(c.isoCode))
+        ? filtered.filter((country) =>
+            visitedCountryCodes.includes(country.isoCode),
+          )
         : filtered,
     [filtered, showVisitedOnly, visitedCountryCodes],
   );
 
-  // Sort state
   const {
     sortBy,
     setSortBy,
@@ -218,34 +204,42 @@ export function CountrySection({
               )}
               className="mt-1 rounded-xl"
             />
+
             <div className="flex flex-row gap-2 w-full">
               <SelectInput
-                value={regionSelectFilter.getValue(filterProps) ?? ""}
-                onChange={(val) => {
-                  if (val === "all") {
+                value={selectedRegion || "all"}
+                onChange={(value) => {
+                  const region = String(value);
+
+                  if (region === "all") {
                     setSelectedRegion("all");
                     setSelectedSubregion("");
-                    if (onAllCountries) onAllCountries();
+                    onAllCountries?.();
                   } else {
-                    regionSelectFilter.setValue(filterProps, val as string);
+                    setSelectedRegion(region);
                     setSelectedSubregion("all");
                   }
                 }}
                 options={regionOptions}
                 className="min-w-[110px]"
               />
+
               <SelectInput
-                value={subregionSelectFilter.getValue(filterProps) ?? ""}
-                onChange={(val) => {
-                  if (val === "all" || val === "") {
+                value={selectedSubregion || "all"}
+                onChange={(value) => {
+                  const subregion = String(value);
+
+                  if (subregion === "all" || subregion === "") {
                     setSelectedSubregion("");
+
                     if (onSubregionChange && selectedRegion) {
                       onSubregionChange(selectedRegion, "");
                     }
                   } else {
-                    subregionSelectFilter.setValue(filterProps, val as string);
-                    if (onSubregionChange && selectedRegion && val) {
-                      onSubregionChange(selectedRegion, val as string);
+                    setSelectedSubregion(subregion);
+
+                    if (onSubregionChange && selectedRegion) {
+                      onSubregionChange(selectedRegion, subregion);
                     }
                   }
                 }}
@@ -255,51 +249,36 @@ export function CountrySection({
               />
             </div>
           </div>
+
           <div className="flex flex-row mt-1 gap-2">
             <CountrySortSelect
               value={sortBy}
-              onChange={(v: string) => setSortBy(v as typeof sortBy)}
+              onChange={(value: string) => setSortBy(value as typeof sortBy)}
               visitedOnly={undefined}
             />
+
             <div className="flex flex-row gap-2 ms-auto items-center justify-end">
               <ActionButton
                 onClick={handleResetFilters}
-                ariaLabel={tDashboard(
-                  "exploration.resetFilters",
-                  "Reset Filters",
-                )}
-                title={tCommon("actions.resetFilters", "Reset Filters")}
+                ariaLabel={tDashboard("exploration.resetFilters")}
+                title={tCommon("actions.resetFilters")}
                 icon={<ICONS.reset />}
                 variant="toggle"
                 rounded
               />
+
               <ToolbarToggleGroup
                 options={[
                   {
                     value: "sovereign",
                     icon: <FaFlag />,
-                    label: tDashboard(
-                      "exploration.showSovereignOnly",
-                      "Show Sovereign Only",
-                    ),
+                    label: tDashboard("exploration.showSovereignOnly"),
                     ariaLabel: selectedShowSovereignOnly
-                      ? tDashboard(
-                          "exploration.showAllCountries",
-                          "Show all countries",
-                        )
-                      : tDashboard(
-                          "exploration.showSovereignOnly",
-                          "Show sovereign only",
-                        ),
+                      ? tDashboard("exploration.showAllCountries")
+                      : tDashboard("exploration.showSovereignOnly"),
                     title: selectedShowSovereignOnly
-                      ? tDashboard(
-                          "exploration.showAllCountries",
-                          "Show all countries",
-                        )
-                      : tDashboard(
-                          "exploration.showSovereignOnly",
-                          "Show Sovereign Only",
-                        ),
+                      ? tDashboard("exploration.showAllCountries")
+                      : tDashboard("exploration.showSovereignOnly"),
                     checked: !!selectedShowSovereignOnly,
                     rounded: true,
                     onClick: handleSovereignToggle,
@@ -307,28 +286,13 @@ export function CountrySection({
                   {
                     value: "visited",
                     icon: <ICONS.visitStatus.visited />,
-                    label: tDashboard(
-                      "exploration.showVisitedOnly",
-                      "Show Visited Only",
-                    ),
+                    label: tDashboard("exploration.showVisitedOnly"),
                     ariaLabel: showVisitedOnly
-                      ? tDashboard(
-                          "exploration.showAllCountries",
-                          "Show All Countries",
-                        )
-                      : tDashboard(
-                          "exploration.showVisitedOnly",
-                          "Show Visited Only",
-                        ),
+                      ? tDashboard("exploration.showAllCountries")
+                      : tDashboard("exploration.showVisitedOnly"),
                     title: showVisitedOnly
-                      ? tDashboard(
-                          "exploration.showAllCountries",
-                          "Show All Countries",
-                        )
-                      : tDashboard(
-                          "exploration.showVisitedOnly",
-                          "Show Visited Only",
-                        ),
+                      ? tDashboard("exploration.showAllCountries")
+                      : tDashboard("exploration.showVisitedOnly"),
                     checked: showVisitedOnly,
                     rounded: true,
                     onClick: handleVisitedToggle,
@@ -336,28 +300,13 @@ export function CountrySection({
                   {
                     value: "transcontinental",
                     icon: <PiGlobeStandFill className="text-lg" />,
-                    label: tDashboard(
-                      "exploration.showTranscontinental",
-                      "Show transcontinental countries",
-                    ),
+                    label: tDashboard("exploration.showTranscontinental"),
                     ariaLabel: showTranscontinental
-                      ? tDashboard(
-                          "exploration.hideTranscontinental",
-                          "Hide transcontinental countries",
-                        )
-                      : tDashboard(
-                          "exploration.showTranscontinental",
-                          "Show transcontinental countries",
-                        ),
+                      ? tDashboard("exploration.hideTranscontinental")
+                      : tDashboard("exploration.showTranscontinental"),
                     title: showTranscontinental
-                      ? tDashboard(
-                          "exploration.hideTranscontinental",
-                          "Hide transcontinental countries",
-                        )
-                      : tDashboard(
-                          "exploration.showTranscontinental",
-                          "Show transcontinental countries",
-                        ),
+                      ? tDashboard("exploration.hideTranscontinental")
+                      : tDashboard("exploration.showTranscontinental"),
                     checked: showTranscontinental,
                     rounded: true,
                     onClick: handleTranscontinentalToggle,
@@ -365,6 +314,7 @@ export function CountrySection({
                 ]}
                 className="gap-2"
               />
+
               <ViewModeSegmentedControl
                 viewMode={viewMode}
                 onChange={setViewMode}
@@ -373,11 +323,12 @@ export function CountrySection({
           </div>
         </div>
       </div>
+
       <CountryDisplayPanel
         countries={sortedCountries}
         visitedCountryCodes={visitedCountryCodes}
         view={viewMode}
-        showFlags={true}
+        showFlags
         showBadges={false}
         selectedIsoCode={selectedIsoCode}
         onCountryInfo={(country) => setSelectedIsoCode(country.isoCode)}

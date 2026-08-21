@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-21
+
+- **[chore]** **Countries:** Improved filtering configuration and performance
+
 ## 2026-08-19
 
 - **[feature]** **Notifications:** Added notifications for various actions and appropriate UI

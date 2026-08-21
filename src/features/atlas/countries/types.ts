@@ -5,3 +5,11 @@ export type CountryList = {
   countryCodes: string[];
   layerId?: string | null;
 };
+
+/** Filter keys for countries. */
+export type CountryFilterKey =
+  | "region"
+  | "subregion"
+  | "geoType"
+  | "sovereignty"
+  | "visited";

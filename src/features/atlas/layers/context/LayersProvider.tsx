@@ -6,16 +6,14 @@ import { useDataLoader } from "@hooks";
 import { LayersContext } from "./LayersContext";
 import { useLayerManager } from "../hooks/useLayerManager";
 import { layersService } from "../services/layersService";
-import type { AnyLayer } from "../types";
+import type { AnyLayer, LayerSelections } from "../types";
 
 export function LayersProvider({ children }: { children: React.ReactNode }) {
   const { user, ready } = useAuth();
 
   const lastAction = useRef<string | null>(null);
   const loadedUserIdRef = useRef<string | null>(null);
-  const [layerSelections, setLayerSelections] = useState<
-    Record<string, string>
-  >({});
+  const [layerSelections, setLayerSelections] = useState<LayerSelections>({});
 
   // Data loader for fetching layers
   const fetchLayers = useCallback(() => layersService.load(), []);

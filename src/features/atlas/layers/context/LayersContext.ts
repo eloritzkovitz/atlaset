@@ -1,13 +1,11 @@
 import { createContext, useContext } from "react";
-import type { AnyLayer } from "../types";
+import type { AnyLayer, LayerSelections } from "../types";
 
 export interface LayersContextType {
   layers: AnyLayer[];
   setLayers: React.Dispatch<React.SetStateAction<AnyLayer[]>>;
-  layerSelections: Record<string, string>;
-  setLayerSelections: React.Dispatch<
-    React.SetStateAction<Record<string, string>>
-  >;
+  layerSelections: LayerSelections;
+  setLayerSelections: React.Dispatch<React.SetStateAction<LayerSelections>>;
   reloadLayers: () => Promise<AnyLayer[]>;
   importLayers: (newLayers: AnyLayer[]) => Promise<void>;
   addLayer: (layer: AnyLayer) => void;

@@ -8,6 +8,7 @@ import {
 import { useSharedMapInfo } from "@features/atlas/export";
 import {
   getDefaultLayerSelections,
+  getLayerFilteredIsoCodes,
   useEffectiveLayers,
 } from "@features/atlas/layers";
 import { useLayers } from "@features/atlas/layers/context/LayersContext";
@@ -17,7 +18,6 @@ import {
   applyQualifierSearch,
   createSovereigntyFilter,
   getCountryCounts,
-  getFilteredIsoCodes,
   useCountryData,
 } from "@features/countries";
 import {
@@ -189,7 +189,12 @@ export function CountryFiltersProvider({
 
   // With layers applied, including visited filter
   const filteredIsoCodes = useMemo(
-    () => getFilteredIsoCodes(countries, layers, layerSelections),
+    () =>
+      getLayerFilteredIsoCodes(
+        countries.map((country) => country.isoCode),
+        layers,
+        layerSelections,
+      ),
     [countries, layers, layerSelections],
   );
 
