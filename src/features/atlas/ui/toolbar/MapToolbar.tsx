@@ -170,9 +170,13 @@ export function MapToolbar({
   return (
     <div
       className={`toolbar-container ${
-        isEmbed ? "!end-2 !bottom-0" : `end-4 bottom-8`
+        isEmbed ? "!end-2 !bottom-0" : "end-4 bottom-8"
       } ${
-        uiVisible ? "toolbar-container-visible" : "toolbar-container-hidden"
+        uiVisible
+          ? "toolbar-container-visible"
+          : isRtl
+            ? "toolbar-container-hidden toolbar-container-hidden-rtl"
+            : "toolbar-container-hidden toolbar-container-hidden-ltr"
       }`}
     >
       <MapControls
@@ -207,11 +211,14 @@ export function MapToolbar({
             }
             rounded
           />
+
           <ActionsToolbar
             className={`end-14 bg-action rounded-full px-2 transition-all duration-300 gap-1 shadow ${
               visible
                 ? "opacity-100 pointer-events-auto translate-x-0"
-                : `opacity-0 pointer-events-none ${isRtl ? "-translate-x-10" : "translate-x-10"}`
+                : `opacity-0 pointer-events-none ${
+                    isRtl ? "-translate-x-10" : "translate-x-10"
+                  }`
             }`}
           >
             <MapToolbarActions

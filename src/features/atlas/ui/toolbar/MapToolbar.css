@@ -3,14 +3,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 .toolbar-container {
-  @apply absolute z-[101] flex flex-col items-end transition-transform transition-opacity duration-300;
+  @apply fixed z-[101] flex flex-col items-end transition-transform transition-opacity duration-300;
 }
 
-.toolbar-container-hidden {
-  transform: translateX(400px);
-  opacity: 0;
-  pointer-events: none;
-}
+/* UI visibility */
 
 .toolbar-container-visible {
   transform: translateX(0);
@@ -18,34 +14,38 @@
   pointer-events: auto;
 }
 
+.toolbar-container-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toolbar-container-hidden-ltr {
+  transform: translateX(100%);
+}
+
+.toolbar-container-hidden-rtl {
+  transform: translateX(-100%);
+}
+
 /* Zoom controls */
 
 .toolbar-zoom-controls {
-  @apply transition-transform transition-opacity duration-300 mb-3;
+  @apply mb-3 transition-transform transition-opacity duration-300;
 }
 
 .toolbar-zoom-controls-hidden {
-  @apply opacity-0 pointer-events-none translate-y-10;
+  @apply translate-y-10 opacity-0 pointer-events-none;
 }
 
 .toolbar-zoom-controls-visible {
-  @apply opacity-100 pointer-events-auto translate-y-0;
+  @apply translate-y-0 opacity-100 pointer-events-auto;
 }
 
 /* Mobile styles */
 
 @media (orientation: portrait) {
   .toolbar-container {
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 60px;
-    top: auto;
-    width: 100vw;
-    height: 56px;
-    flex-direction: row !important;
-    align-items: center;
-    justify-content: center;
+    @apply fixed left-0 right-0 bottom-[60px] top-auto h-14 w-screen flex-row items-center justify-center;
     z-index: 10020;
   }
 

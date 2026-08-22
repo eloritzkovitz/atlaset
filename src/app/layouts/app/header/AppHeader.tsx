@@ -15,20 +15,18 @@ export function AppHeader({ show }: AppHeaderProps) {
   const { isMobile } = useScreenSize();
   const { uiVisible } = useUI();
 
-  // Don't render if UI is not visible
-  if (!uiVisible) return null;
-
   return (
     <header
-      className={`absolute transition-transform duration-300 z-30 w-auto flex items-center end-6
+      className={`absolute z-30 flex w-auto items-center end-6
+        transition-transform duration-300
         ${
-          show
-            ? "top-4 translate-y-0 opacity-100"
-            : "top-0 -translate-y-[calc(100%+1rem)] opacity-0 pointer-events-none"
+          !uiVisible || !show
+            ? "top-0 -translate-y-[calc(100%+1rem)] opacity-0 pointer-events-none"
+            : "top-4 translate-y-0 opacity-100"
         }
       `}
     >
-      <div className="flex flex-1 justify-end gap-4 h-10">
+      <div className="flex h-10 flex-1 justify-end gap-4">
         {!isMobile && <SearchDropdown />}
         <HeaderActions fixed={false} />
       </div>

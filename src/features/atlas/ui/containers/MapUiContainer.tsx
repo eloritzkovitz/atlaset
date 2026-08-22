@@ -4,11 +4,6 @@ import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
 import { useSharedMapInfo } from "@features/atlas/export";
 import { useEffectiveLayers } from "@features/atlas/layers";
-import {
-  MapLegendModal,
-  useMapLegendItems,
-  type LegendItem,
-} from "@features/atlas/legend";
 import { useMapView } from "@features/atlas/map";
 import { useSavedMaps } from "@features/atlas/savedMaps";
 import { useMapInterfaceSettings } from "@features/atlas/settings";
@@ -19,6 +14,9 @@ import {
 } from "@features/atlas/timeline";
 import { useScreenSize, useUiHint } from "@hooks";
 import { MapFooter } from "../footer/MapFooter";
+import { MapLegendModal } from "../legend/MapLegendModal";
+import type { LegendItem } from "../legend/types";
+import { useMapLegendItems } from "../legend/useMapLegendItems";
 import { MapToolbar } from "../toolbar/MapToolbar";
 
 interface MapUiContainerProps {
@@ -114,20 +112,18 @@ export function MapUiContainer({
   useUiHint(timelineHint, 0, { key: "timeline", dismissable: true });
   useUiHint(sharedHint, 0, { key: "shared-map", dismissable: true });
 
-  // Don't render UI if not visible
-  if (!uiVisible) return null;
-
   const effectiveToolbarOrientation =
     isLaptop && timelineMode ? "vertical" : toolbarOrientation;
 
   return (
     <>
-      {timelineMode && !isEmbed && !isEdit && (
+      {timelineMode && !isEmbed && !isEdit && uiVisible && (
         <>
           <TimelineBar />
           <TimelineNavigator />
         </>
       )}
+
       {!openUserPanel && (
         <>
           <MapToolbar
@@ -136,10 +132,12 @@ export function MapUiContainer({
             setZoom={setZoom}
             isEmbed={isEmbed}
           />
+
           {!isEmbed && (
             <>
               <MapFooter zoom={zoom} />
-              {!isAtlasActive && (
+
+              {uiVisible && !isAtlasActive && (
                 <MapLegendModal
                   open={showLegend}
                   onClose={closeLegend}

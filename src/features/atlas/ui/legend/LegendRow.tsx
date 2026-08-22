@@ -1,5 +1,5 @@
 import { ColorDot } from "@components";
-import type { LegendItem } from "../types";
+import type { LegendItem } from "./types";
 
 export function LegendRow({ color, label, icon }: LegendItem) {
   return (

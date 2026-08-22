@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useUI } from "@app/contexts/UIContext";
 import { GitHubButton } from "@app/layouts/app/footer/GitHubButton";
 import { BrandCopyright, Tooltip } from "@components";
 import { useCountryData } from "@features/countries";
@@ -10,26 +11,26 @@ interface MapFooterProps {
   zoom: number;
 }
 
-export const MapFooter: React.FC<MapFooterProps> = ({ zoom }) => {
-  const [sovereignOnly, setSovereignOnly] = useState(false);
+export function MapFooter({ zoom }: MapFooterProps) {
   const { countries } = useCountryData();
+  const { t } = useTranslation("atlas");
+  const { uiVisible } = useUI();
+
+  const [sovereignOnly, setSovereignOnly] = useState(false);
+
   const { totalCountries, visitedCountries } = useExplorationStats(
     countries,
     sovereignOnly,
   );
-  const { t } = useTranslation("atlas");
 
   const coveragePercent = formatPercent(visitedCountries, totalCountries, {
     decimals: 1,
   });
 
-  const handleToggleSovereign = () => {
-    setSovereignOnly((prev) => !prev);
-  };
-
   return (
     <footer
-      className="fixed bottom-0 end-6 z-50 flex min-w-[220px] select-none items-center justify-between gap-4 rounded-t-lg bg-surface-alt/50 px-4 py-0.5 text-xs text-muted"
+      className={`fixed bottom-0 end-6 z-50 flex min-w-[220px] select-none items-center justify-between gap-4 rounded-t-lg bg-surface-alt/50 px-4 py-0.5 text-xs text-muted transition-transform duration-300
+      ${uiVisible ? "translate-y-0" : "translate-y-full"}`}
       aria-label="Map footer"
     >
       <div className="flex items-center gap-2">
@@ -54,7 +55,7 @@ export const MapFooter: React.FC<MapFooterProps> = ({ zoom }) => {
         >
           <button
             type="button"
-            onClick={handleToggleSovereign}
+            onClick={() => setSovereignOnly((prev) => !prev)}
             className="font-medium text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded px-1"
           >
             {t(
@@ -80,4 +81,4 @@ export const MapFooter: React.FC<MapFooterProps> = ({ zoom }) => {
       </div>
     </footer>
   );
-};
+}

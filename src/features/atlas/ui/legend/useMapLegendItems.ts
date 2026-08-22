@@ -4,7 +4,7 @@ import type { ColorMode } from "@features/atlas/core/types";
 import type { Layer } from "@features/atlas/layers/types";
 import { useMapView } from "@features/atlas/map";
 import { useMapOverlays } from "@features/atlas/settings";
-import type { LegendItem } from "../types";
+import type { LegendItem } from "./types";
 
 /**
  * Generates legend items for the map based on current layers and modes.

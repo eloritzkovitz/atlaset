@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Modal, ModalHeader } from "@components";
 import { LegendRow } from "./LegendRow";
-import type { LegendItem } from "../types";
+import type { LegendItem } from "./types";
 
 interface MapLegendModalProps {
   open: boolean;
