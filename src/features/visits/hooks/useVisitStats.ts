@@ -2,9 +2,9 @@ import { useMemo } from "react";
 import type { Trip } from "@features/trips/types";
 import {
   buildVisitedYearMap,
-  getVisitCountStats,
   computeVisitCountsFromYearMap,
 } from "../utils/visits";
+import { getVisitCountStats } from "../utils/visitStats";
 
 const EMPTY_ARRAY: string[] = []; // Used to avoid unnecessary array allocations in useMemo dependencies
 

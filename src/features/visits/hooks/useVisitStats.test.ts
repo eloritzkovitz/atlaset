@@ -4,16 +4,18 @@ import { mockTrips } from "@test-utils/mockTrips";
 import { useVisitStats } from "./useVisitStats";
 
 vi.mock("../utils/visits", () => ({
-  getVisitCountStats: vi.fn(),
   buildVisitedYearMap: vi.fn(),
   computeVisitCountsFromYearMap: vi.fn(),
 }));
+vi.mock("../utils/visitStats", () => ({
+  getVisitCountStats: vi.fn(),
+}));
 
 import {
-  getVisitCountStats,
   buildVisitedYearMap,
   computeVisitCountsFromYearMap,
 } from "../utils/visits";
+import { getVisitCountStats } from "../utils/visitStats";
 
 describe("useVisitStats", () => {
   beforeEach(() => {

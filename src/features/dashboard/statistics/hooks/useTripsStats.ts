@@ -12,17 +12,17 @@ import {
   isCompletedTrip,
   getCancelledTrips,
 } from "@features/trips/utils/trips";
-import { useHomeCountry } from "@features/user/profile";
-import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
-import type { Visit } from "@features/visits/types";
-import type { VisitedCountryRankRow } from "../types";
 import {
   findLongestTrip,
   findShortestTrip,
   getFirstAndLastTrip,
   getRecentTrips,
-} from "../utils/tripStats";
-import { getMostVisitedCountries } from "../utils/visitStats";
+} from "@features/trips/utils/tripStats";
+import { useHomeCountry } from "@features/user/profile";
+import { useCountryTracking } from "@features/visits/hooks/useCountryTracking";
+import { getMostVisitedCountries } from "@features/visits/utils/visitStats";
+import type { Visit } from "@features/visits/types";
+import type { VisitedCountryRankRow } from "../types";
 
 /**
  * Computes and returns trip statistics.

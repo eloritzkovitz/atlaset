@@ -1,12 +1,17 @@
 import { useState, useMemo, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { FaCrown } from "react-icons/fa6";
-import { Card, Chip, PieLegendCard, Table } from "@components";
+import {
+  Card,
+  Chip,
+  PieLegendCard,
+  Table,
+  translateColumns,
+} from "@components";
 import { useScreenSize } from "@hooks";
 import { formatPercent, getMonthsShort, getMonthsLong } from "@utils";
 import { MONTH_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByMonthStats } from "../hooks/useTripsByMonthStats";
-import { translateColumns } from "../utils/columns";
 
 const PieChart = lazy(() => import("@components/display/PieChart/PieChart"));
 

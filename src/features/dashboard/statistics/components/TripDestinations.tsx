@@ -7,6 +7,7 @@ import {
   DirectionalIcon,
   RankBadge,
   Table,
+  translateColumns,
   Tooltip,
   type TableColumn,
 } from "@components";
@@ -14,7 +15,6 @@ import { CountryWithFlag } from "@features/countries";
 import { VISITED_COUNTRIES_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsStats } from "../hooks/useTripsStats";
 import type { VisitedCountryRankRow } from "../types";
-import { translateColumns } from "../utils/columns";
 import { getCountryRoute } from "../../core/utils/dashboardNavigation";
 
 export function TripDestinations() {

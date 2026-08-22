@@ -331,17 +331,6 @@ export function computeVisitCountsFromYearMap(
   return counts;
 }
 
-export function getVisitCountStats(trips: Trip[], year: number) {
-  const map = getVisitCountsUpToYear(trips, year);
-  const counts = Object.values(map);
-
-  return {
-    map,
-    min: counts.length > 0 ? Math.min(...counts) : 1,
-    max: counts.length > 0 ? Math.max(...counts) : 1,
-  };
-}
-
 /**
  * Builds a VisitContext object from trips, optionally filtered by a selected year and home country.
  * @param trips - Array of trips to analyze.

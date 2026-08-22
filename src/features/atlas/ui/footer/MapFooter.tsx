@@ -4,7 +4,7 @@ import { useUI } from "@app/contexts/UIContext";
 import { GitHubButton } from "@app/layouts/app/footer/GitHubButton";
 import { BrandCopyright, Tooltip } from "@components";
 import { useCountryData } from "@features/countries";
-import { useExplorationStats } from "@features/dashboard/exploration/hooks/useExplorationStats";
+import { useCountryCoverage } from "@features/visits/hooks/useCountryCoverage";
 import { formatPercent } from "@utils";
 
 interface MapFooterProps {
@@ -18,7 +18,7 @@ export function MapFooter({ zoom }: MapFooterProps) {
 
   const [sovereignOnly, setSovereignOnly] = useState(false);
 
-  const { totalCountries, visitedCountries } = useExplorationStats(
+  const { totalCountries, visitedCountries } = useCountryCoverage(
     countries,
     sovereignOnly,
   );

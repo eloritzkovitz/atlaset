@@ -6,7 +6,6 @@ import {
   getFutureVisitCountries,
   getVisitedCountriesForYear,
   getVisitCountsUpToYear,
-  getVisitCountStats,
   getVisitsForCountry,
   categorizeVisits,
   getFirstVisitDateByCountry,
@@ -154,42 +153,6 @@ describe("visits utils", () => {
       ];
 
       expect(getVisitCountsUpToYear(trips as any, 2023)).toEqual({});
-    });
-  });
-
-  describe("getVisitCountStats", () => {
-    it("returns visit map and min/max counts", () => {
-      const trips = [
-        {
-          ...mockTrips[0],
-          endDate: "2022-01-01",
-          countryCodes: ["US", "CA"],
-        },
-        {
-          ...mockTrips[1],
-          endDate: "2022-06-01",
-          countryCodes: ["US"],
-        },
-        {
-          ...mockTrips[1],
-          endDate: "2023-01-01",
-          countryCodes: ["FR"],
-        },
-      ];
-
-      expect(getVisitCountStats(trips, 2023)).toEqual({
-        map: { US: 2, CA: 1, FR: 1 },
-        min: 1,
-        max: 2,
-      });
-    });
-
-    it("defaults min and max to 1 when there are no visits", () => {
-      expect(getVisitCountStats([], 2022)).toEqual({
-        map: {},
-        min: 1,
-        max: 1,
-      });
     });
   });
 

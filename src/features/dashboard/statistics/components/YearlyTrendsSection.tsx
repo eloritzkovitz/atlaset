@@ -4,6 +4,7 @@ import {
   Card,
   SegmentedToggle,
   Table,
+  translateColumns,
   type SegmentedToggleOption,
 } from "@components";
 import {
@@ -13,7 +14,6 @@ import {
 } from "@features/trips/constants/trips";
 import { YEAR_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsByYearStats } from "../hooks/useTripsByYearStats";
-import { translateColumns } from "../utils/columns";
 
 const TripsBarChart = lazy(() => import("./TripsByYearBarChart"));
 

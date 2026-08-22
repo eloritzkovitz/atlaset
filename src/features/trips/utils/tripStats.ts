@@ -2,8 +2,8 @@
  * Utility functions for trip statistics.
  */
 
-import type { Trip } from "@features/trips/types";
-import { getTripDays } from "@features/trips/utils/trips";
+import { getTripDays } from "./trips";
+import type { Trip } from "../types";
 
 /**
  * Finds the trip with the min or max duration, and/or returns the duration.

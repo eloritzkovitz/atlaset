@@ -17,6 +17,7 @@ export { Table, type TableColumn } from "./display/Table/Table";
 export { TableCell } from "./display/Table/TableCell";
 export { TableDropdownFilter } from "./display/Table/TableDropdownFilter";
 export { TableHeader } from "./display/Table/TableHeader";
+export { translateColumns } from "./display/Table/utils";
 
 // Feedback components
 export { EmptyListMessage } from "./feedback/EmptyListMessage";
