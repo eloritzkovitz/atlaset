@@ -197,7 +197,28 @@
     "saveChanges": "Save Changes"
   },
   "legend": {
-    "title": "Legend"
+    "title": "Legend",
+    "homeCountry": "Home country",
+    "notVisited": "Not visited",
+    "tracking": {
+      "visitedCountries": "Visited Countries",
+      "futureVisits": "Future Visits",
+      "wantToVisit": "Want to Visit"
+    },
+    "cumulative": {
+      "fivePlusVisits": "5+ visits",
+      "fourVisits": "4 visits",
+      "threeVisits": "3 visits",
+      "twoVisits": "2 visits",
+      "oneVisit": "1 visit"
+    },
+    "yearly": {
+      "upcomingFirstVisit": "Upcoming first visit",
+      "upcomingRevisit": "Upcoming revisit",
+      "firstVisitThisYear": "First visit this year",
+      "revisitThisYear": "Revisit this year",
+      "visitedPreviousYears": "Visited in previous years"
+    }
   },
   "savedMaps": {
     "title": "My Maps",

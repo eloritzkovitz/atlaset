@@ -7,10 +7,10 @@ import { LayersContainer } from "./LayersContainer";
 import { MapSvgContainer } from "./MapSvgContainer";
 import { MarkersContainer } from "./MarkersContainer";
 import { ZoomableGroup } from "./ZoomableGroup";
+import { useGetGeoDataQuery } from "../api/mapApi";
 import { useMapView } from "../context/MapViewContext";
 import { useMapDimensions } from "../hooks/useMapDimensions";
 import { MapProvider } from "../providers/MapProvider";
-import { useGetGeoDataQuery } from "../api/mapApi";
 
 export interface WorldMapProps {
   onCountryClick: (countryIsoCode: string | null) => void;

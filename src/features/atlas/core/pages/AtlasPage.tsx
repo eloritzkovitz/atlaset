@@ -2,16 +2,16 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ErrorMessage, LoadingSpinner } from "@components";
 import { useUI } from "@app/contexts/UIContext";
+import { useCountrySelection } from "@features/atlas/countries/hooks/useCountrySelection";
+import { useLayers } from "@features/atlas/layers/context/LayersContext";
+import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
+import { useMapView } from "@features/atlas/map/context/MapViewContext";
+import { WorldMap } from "@features/atlas/map/components/WorldMap";
+import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
 import { AtlasUiContainer, MapUiContainer } from "@features/atlas/ui";
 import { useCountryData } from "@features/countries";
 import { usePageTitle, useScreenSize } from "@hooks";
 import { useAtlasShortcuts } from "../hooks/useAtlasShortcuts";
-import { useCountrySelection } from "../../countries/hooks/useCountrySelection";
-import { useLayers } from "../../layers/context/LayersContext";
-import { useMapView } from "../../map/context/MapViewContext";
-import { WorldMap } from "../../map/components/WorldMap";
-import { useMarkerCreation } from "../../markers/hooks/useMarkerCreation";
-import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
 
 export default function AtlasPage() {
   const { countries, loading: countriesLoading, error } = useCountryData();

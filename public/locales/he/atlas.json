@@ -197,7 +197,28 @@
     "saveChanges": "שמירת שינויים"
   },
   "legend": {
-    "title": "מקרא"
+    "title": "מקרא",
+    "homeCountry": "מדינת מגורים",
+    "notVisited": "לא ביקרתי",
+    "tracking": {
+      "visitedCountries": "מדינות שביקרתי בהן",
+      "futureVisits": "ביקורים עתידיים",
+      "wantToVisit": "רוצה לבקר"
+    },
+    "cumulative": {
+      "fivePlusVisits": "5+ ביקורים",
+      "fourVisits": "4 ביקורים",
+      "threeVisits": "3 ביקורים",
+      "twoVisits": "2 ביקורים",
+      "oneVisit": "ביקור אחד"
+    },
+    "yearly": {
+      "upcomingFirstVisit": "ביקור ראשון עתידי",
+      "upcomingRevisit": "ביקור חוזר עתידי",
+      "firstVisitThisYear": "ביקור ראשון השנה",
+      "revisitThisYear": "ביקור חוזר השנה",
+      "visitedPreviousYears": "ביקרתי בשנים קודמות"
+    }
   },
   "savedMaps": {
     "title": "המפות שלי",

@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Modal } from "@components";
 import { useUI } from "@app/contexts/UIContext";
+import { Modal } from "@components";
 import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
-import { useCountryData, type Country } from "@features/countries";
-import { CountryDetailsPanel } from "@features/countries/details/components/CountryDetailsPanel";
+import {
+  CountryDetailsPanel,
+  useCountryData,
+  type Country,
+} from "@features/countries";
 import { useAccessibility } from "@features/settings";
 import { useCountryTracking } from "@features/visits";
 import { useKeyHandler } from "@hooks";
