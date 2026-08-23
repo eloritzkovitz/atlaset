@@ -1,6 +1,6 @@
 import { type ReactNode } from "react";
 import { MenuButton } from "@components";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 
 interface SearchItemProps<T> {
   item: T;

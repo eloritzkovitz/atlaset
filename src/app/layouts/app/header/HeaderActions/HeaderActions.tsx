@@ -1,14 +1,14 @@
 import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
+import { useUI } from "@app/contexts/UIContext";
 import { ActionButton } from "@components";
 import { ICONS } from "@constants/icons";
-import { useUI } from "@app/contexts/UIContext";
 import {
   NotificationsDropdown,
   useNotifications,
 } from "@features/notifications";
-import { useAuth } from "@features/user/auth";
+import { useAuth } from "@features/user/auth/hooks/useAuth";
 import { useModalAnimation, useScreenSize } from "@hooks";
 import { UserAvatarButton } from "./UserAvatarButton";
 import { UserMenuDropdown } from "./UserMenuDropdown";

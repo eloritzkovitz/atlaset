@@ -1,4 +1,4 @@
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { ExpandCollapseButton } from "./ExpandCollapseButton";
 import { MAX_COUNTRIES_BEFORE_EXPAND } from "../../constants/timeline";
 

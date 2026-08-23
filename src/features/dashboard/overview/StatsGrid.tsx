@@ -23,10 +23,7 @@ export function StatsGrid({ stats }: StatsGridProps) {
           className="group rounded-xl outline:none focus:outline-none focus-visible:ring-2 focus-visible:ring-ring-focus"
           aria-label={`Go to ${stat.label}`}
         >
-          <Card
-            className="cursor-pointer w-full h-full min-h-[220px] min-w-0 flex flex-col items-center justify-between p-6 sm:p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 transition"
-            ariaLabel={`Go to ${stat.label}`}
-          >
+          <Card className="cursor-pointer w-full h-full min-h-[220px] min-w-0 flex flex-col items-center justify-between p-6 sm:p-8 rounded-xl shadow-lg text-center font-sans hover:bg-primary/50 hover:scale-105 transition">
             {stat.icon}
             <div className="mt-4 text-xl font-semibold">{stat.label}</div>
             <div className="mt-2 text-2xl font-bold text-muted">

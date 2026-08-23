@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { isRtl } from "@features/settings";
+import { isRtl } from "@features/settings/account";
 import "@lib/i18n";
 import App from "./app/App";
 import { store } from "./app/store";

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { AppLinks } from "@app/layouts/app/footer/AppLinks";
 import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { DocSearchResults } from "./DocSearchResults";
 
 interface HelpPanelProps {

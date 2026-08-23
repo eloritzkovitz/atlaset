@@ -5,7 +5,7 @@ import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry
 import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
 import type { Country } from "@features/countries/types";
 import { getCountryRoute } from "@features/dashboard/core";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { useCountryTracking } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
 import { getWikipediaUrl } from "@utils";

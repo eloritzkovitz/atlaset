@@ -3,7 +3,7 @@ import { Panel, Separator } from "@components";
 import { ICONS } from "@constants/icons";
 import { DEFAULT_PANEL_WIDTH } from "@constants/ui";
 import { useUI } from "@app/contexts/UIContext";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { ColorsSettingsGroup } from "./ColorsSettingsGroup";
 import { ConfigurationSettingsGroup } from "./ConfigurationSettingsGroup";
 import { InterfaceSettingsGroup } from "./InterfaceSettingsGroup";

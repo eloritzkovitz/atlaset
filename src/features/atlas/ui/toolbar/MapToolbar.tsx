@@ -8,7 +8,7 @@ import {
   Separator,
 } from "@components";
 import { useUI } from "@app/contexts/UIContext";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { useScreenSize } from "@hooks";
 import { MapControls } from "./MapControls";
 import { MapToolbarActions } from "./MapToolbarActions";

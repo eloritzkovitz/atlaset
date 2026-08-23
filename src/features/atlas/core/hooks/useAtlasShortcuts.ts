@@ -1,5 +1,5 @@
 import { useTimeline } from "@features/atlas/timeline";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useKeyHandler } from "@hooks";
 import { useAtlasActions } from "./useAtlasActions";
 

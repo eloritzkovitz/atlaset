@@ -1,6 +1,6 @@
 import { useMemo, useCallback, useState, useEffect } from "react";
 import { useAudio } from "@app/contexts/AudioContext";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { useKeyHandler } from "@hooks";
 import { useTimeline } from "../context/TimelineContext";
 

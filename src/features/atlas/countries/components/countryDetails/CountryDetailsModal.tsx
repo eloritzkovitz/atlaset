@@ -7,7 +7,7 @@ import {
   useCountryData,
   type Country,
 } from "@features/countries";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useCountryTracking } from "@features/visits";
 import { useKeyHandler } from "@hooks";
 import { CountryDetailsHeader } from "./CountryDetailsHeader";

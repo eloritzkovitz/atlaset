@@ -1,5 +1,5 @@
 import { useUI } from "@app/contexts/UIContext";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useKeyHandler } from "@hooks";
 import { isAuthenticated } from "@lib/firebase";
 

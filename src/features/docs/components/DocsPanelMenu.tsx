@@ -9,7 +9,7 @@ import {
   SidePanelMenu,
   SubmenuSection,
 } from "@components";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useScreenSize } from "@hooks";
 import { DOCS_GROUPS } from "../constants/docsMenu";
 

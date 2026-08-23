@@ -8,39 +8,37 @@ import { useTrips } from "@features/trips";
 import { useAuth } from "@features/user/auth";
 import { useHomeCountry, useUserProfile } from "@features/user/profile";
 import { useCountryTracking } from "@features/visits";
-import { useAnimatedNumber } from "@hooks";
 import { formatFraction } from "@utils";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
-import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi";
-import { isCompleted } from "../../achievements/utils/achievements";
-import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
+import { useGetAchievementsQuery } from "../achievements/api/achievementsApi";
+import { getCompletedAchievementsCount } from "../achievements/utils/achievementStatus";
+import { useExplorationStats } from "../exploration/hooks/useExplorationStats";
 
 export function OverviewGrid() {
   const { user } = useAuth();
+  const { countries, loading: countriesLoading } = useCountryData();
+  const { isVisitedCountry } = useCountryTracking();
+  const { totalCountries, visitedCountries } = useExplorationStats(countries);
+  const { homeCountry, loading: homeCountryLoading } = useHomeCountry();
+  const { trips } = useTrips();
   const { profile: userProfile, loading: userProfileLoading } = useUserProfile({
     uid: user?.uid,
   });
-  const { countries, loading: countriesLoading } = useCountryData();
-  const { trips } = useTrips();
-  const { homeCountry } = useHomeCountry();
   const { t } = useTranslation("dashboard");
 
-  // Get visited countries and exploration stats
-  const { isVisitedCountry } = useCountryTracking();
-  const { totalCountries, visitedCountries } = useExplorationStats(countries);
-
-  // Get achievements data and calculate completed achievements
   const { data: achievements, isLoading: achievementsLoading } =
     useGetAchievementsQuery();
   const achievementsCount = achievements?.length ?? 0;
-  const completedCount =
-    achievements?.filter((a) =>
-      isCompleted(a, countries, isVisitedCountry, trips, homeCountry),
-    ).length ?? 0;
-
-  const animatedVisitedCountries = useAnimatedNumber(visitedCountries, 30);
-  const animatedCompletedCount = useAnimatedNumber(completedCount, 30);
+  const completedCount = homeCountryLoading
+    ? 0
+    : getCompletedAchievementsCount(
+        achievements,
+        countries,
+        isVisitedCountry,
+        trips,
+        homeCountry,
+      );
 
   const stats = [
     {
@@ -49,15 +47,16 @@ export function OverviewGrid() {
       }),
       value: countriesLoading
         ? "..."
-        : formatFraction(animatedVisitedCountries, totalCountries),
+        : formatFraction(visitedCountries, totalCountries),
       icon: <ICONS.exploration className="text-5xl text-info" />,
       link: "/dashboard/exploration",
     },
     {
       label: t("overview.stats.achievements", { defaultValue: "Achievements" }),
-      value: achievementsLoading
-        ? "..."
-        : formatFraction(animatedCompletedCount, achievementsCount),
+      value:
+        achievementsLoading || homeCountryLoading
+          ? "..."
+          : formatFraction(completedCount, achievementsCount),
       icon: <ICONS.achievements className="text-5xl text-warning" />,
       link: "/dashboard/achievements",
     },

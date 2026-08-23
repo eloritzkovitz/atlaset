@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { DashboardIcon, mapMenuItems, SidePanelMenu } from "@components";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { DASHBOARD_MENU } from "../constants/dashboardMenu";
 
 interface DashboardPanelMenuProps {

@@ -8,8 +8,8 @@ import { AchievementStatusChip } from "./AchievementStatusChip";
 import { AchievementTierChip } from "./AchievementTierChip";
 import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
 import type { Achievement, AchievementStatus } from "../types";
-import { getDisplayFlagCountries } from "../utils/achievementsDisplay";
-import { getTier, getCurrentTier } from "../utils/achievementsTiers";
+import { getDisplayFlagCountries } from "../utils/achievementDisplay";
+import { getTier, getCurrentTier } from "../utils/achievementTiers";
 
 interface AchievementCardProps {
   achievement: Achievement;

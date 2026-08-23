@@ -1,6 +1,6 @@
 import { DropdownMenu } from "@components";
 import { useAuth, useAuthHandlers } from "@features/user/auth";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { useScreenSize } from "@hooks";
 import { UserMenuContent } from "./UserMenuContent";
 

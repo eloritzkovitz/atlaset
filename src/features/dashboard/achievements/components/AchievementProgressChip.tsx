@@ -1,5 +1,5 @@
 import { Chip } from "@components";
-import { formatProgressChip } from "../utils/achievementsDisplay";
+import { formatProgressChip } from "../utils/achievementDisplay";
 
 interface AchievementProgressChipProps {
   label: string;

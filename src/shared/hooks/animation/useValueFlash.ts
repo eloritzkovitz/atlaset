@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 
 /**
  * Animates a flash effect on a value when it changes, indicating an increase or decrease.

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useCountryData } from "@features/countries";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { useTrips } from "@features/trips";
 import { getVisitedCountriesForYear } from "@features/visits/utils/visits";
 import { TimelineDot } from "./TimelineDot";

@@ -1,6 +1,3 @@
-// Components
-export { FriendsPanel } from "./components/FriendsPanel";
-
 // Hooks
 export { useFriendProfiles } from "./hooks/useFriendProfiles";
 export { useFriendshipStatus } from "./hooks/useFriendshipStatus";

@@ -1,6 +1,6 @@
 import { Panel } from "@components";
 import { ICONS } from "@constants/icons";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { SearchContent } from "./SearchContent";
 import { useSearchController } from "../hooks/useSearchController";
 

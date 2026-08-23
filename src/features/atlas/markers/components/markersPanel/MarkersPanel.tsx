@@ -7,7 +7,7 @@ import { useUI } from "@app/contexts/UIContext";
 import { useGetGeoDataQuery } from "@features/atlas/map/api/mapApi";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
 import { getCountryCenterAndZoom } from "@features/atlas/map/utils/projection";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useDragReorder } from "@hooks";
 import { MarkersPanelItem } from "./MarkersPanelItem";
 import { useEffectiveMarkers } from "../../hooks/useEffectiveMarkers";

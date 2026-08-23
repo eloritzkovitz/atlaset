@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Card } from "@components";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useValueFlash } from "@hooks";
 import { shouldTriggerTimerFlash } from "../../utils/quizTimer";
 import "./Scoreboard.css";

@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import "../../../styles/animations.css";
 
 export interface FlyTransitionOptions {

@@ -11,7 +11,7 @@ import { ExplorationOverviewGrid } from "../../exploration/components/Exploratio
 import { useExplorationStats } from "../../exploration/hooks/useExplorationStats";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
-import { OverviewGrid } from "../../overview/components/OverviewGrid";
+import { OverviewGrid } from "../../overview/OverviewGrid";
 import { StatisticsGrid } from "../../statistics/components/StatisticsGrid";
 import { TimezonesGrid } from "@features/dashboard/timezones/components/TimezonesGrid";
 import { TimezoneInfo } from "@features/dashboard/timezones/components/TimezoneInfo";

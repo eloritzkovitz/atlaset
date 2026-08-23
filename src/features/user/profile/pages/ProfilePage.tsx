@@ -10,14 +10,14 @@ import {
 import { Card, EmptyListMessage } from "@components";
 import { useAuth } from "@features/user/auth";
 import { useFriendshipStatus, useUserFriends } from "@features/user/friends";
+import { useMutualFriends } from "@features/user/friends/hooks/useMutualFriends";
 import { useDisclosure, usePageTitle } from "@hooks";
 import { EditProfileModal } from "../components/modal/EditProfileModal";
 import { ProfileHeader } from "../components/ProfileHeader";
 import { ProfileAboutTab } from "../components/tabs/ProfileAboutTab/ProfileAboutTab";
 import { ProfileFriendsTab } from "../components/tabs/ProfileFriendsTab";
-import { ProfileTabNav } from "../components//tabs/ProfileTabNav";
+import { ProfileTabNav } from "../components/tabs/ProfileTabNav";
 import { useUserProfile } from "../hooks/useUserProfile";
-import { useMutualFriends } from "@features/user/friends/hooks/useMutualFriends";
 
 export default function ProfilePage() {
   const { user: currentUser, loading: authLoading } = useAuth();

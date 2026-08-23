@@ -3,7 +3,7 @@ import { ActionButton, EmptyListMessage, Panel } from "@components";
 import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
 import { useMapView } from "@features/atlas/map";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { SavedMapPanelItem } from "./SavedMapPanelItem";
 import { useSavedMaps } from "../context/SavedMapsContext";
 

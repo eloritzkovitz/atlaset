@@ -7,7 +7,7 @@ import { useEffectiveLayers } from "@features/atlas/layers";
 import { useMapView } from "@features/atlas/map";
 import { useEffectiveMarkers } from "@features/atlas/markers";
 import { useSavedMaps } from "@features/atlas/savedMaps";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useAuth } from "@features/user/auth";
 import { useCountryTracking } from "@features/visits";
 import { DownloadMapSection } from "./DownloadMapSection";

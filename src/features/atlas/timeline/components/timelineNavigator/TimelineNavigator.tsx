@@ -7,7 +7,7 @@ import {
 } from "@components";
 import type { ColorMode } from "@features/atlas/core/types";
 import { useMapView } from "@features/atlas/map";
-import { useLanguage } from "@features/settings";
+import { useLanguage } from "@features/settings/account";
 import { useTimeline } from "../../context/TimelineContext";
 import { useTimelineNavigation } from "../../hooks/useTimelineNavigation";
 

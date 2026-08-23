@@ -6,7 +6,8 @@ import {
   FaUpRightAndDownLeftFromCenter,
 } from "react-icons/fa6";
 import { ActionButton } from "@components";
-import { DEFAULT_MAP_SETTINGS, useAccessibility } from "@features/settings";
+import { DEFAULT_MAP_SETTINGS } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useKeyHandler } from "@hooks";
 
 interface MapControlsProps {

@@ -6,7 +6,7 @@ import { AchievementListGroup } from "./AchievementListGroup";
 import { useAchievementStatus } from "../hooks/useAchievementStatus";
 import type { Achievement } from "../types";
 import { getAchievementCountries } from "../utils/achievementFilters";
-import { getCurrentTier } from "../utils/achievementsTiers";
+import { getCurrentTier } from "../utils/achievementTiers";
 import { DashboardHeader } from "../../core/components/DashboardHeader";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { useDashboardNavigation } from "../../core/hooks/useDashboardNavigation";

@@ -9,32 +9,43 @@ import { useAuth } from "../../auth/hooks/useAuth";
 export function useHomeCountry() {
   const { user } = useAuth();
   const [homeCountry, setHomeCountryState] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // Fetch home country from Firestore on user change
   useEffect(() => {
     if (!user) {
       setHomeCountryState("");
+      setLoading(false);
       return;
     }
+
     const fetchHomeCountry = async () => {
-      const country = await profileService.getHomeCountry(user.uid);
-      setHomeCountryState(country);
+      setLoading(true);
+
+      try {
+        const country = await profileService.getHomeCountry(user.uid);
+        setHomeCountryState(country);
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchHomeCountry();
   }, [user]);
 
-  // Setter to update home country in Firestore
+  // Set home country for the current user
   const setHomeCountry = useCallback(
     async (country: string) => {
       if (!user) return;
+
       await profileService.setHomeCountry(user.uid, country);
       setHomeCountryState(country);
     },
-    [user]
+    [user],
   );
 
   return {
     homeCountry,
+    loading,
     setHomeCountry,
   };
 }

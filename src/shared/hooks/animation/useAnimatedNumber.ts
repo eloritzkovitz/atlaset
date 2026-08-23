@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 
 /**
  * Animates a number from 0 to target over the specified duration.

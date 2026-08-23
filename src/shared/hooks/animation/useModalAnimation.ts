@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 
 /**
  * Manages modal open/close state with animation support.

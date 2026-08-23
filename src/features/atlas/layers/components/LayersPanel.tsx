@@ -5,7 +5,7 @@ import { ICONS } from "@constants/icons";
 import { useUI } from "@app/contexts/UIContext";
 import { useCountryLists } from "@features/atlas/countries/context/CountryListsContext";
 import { useMapView } from "@features/atlas/map/context/MapViewContext";
-import { useAccessibility } from "@features/settings";
+import { useAccessibility } from "@features/settings/accessibility";
 import { useDragReorder } from "@hooks";
 import { LayerPanelItem } from "./LayerPanelItem";
 import { useLayers } from "../context/LayersContext";

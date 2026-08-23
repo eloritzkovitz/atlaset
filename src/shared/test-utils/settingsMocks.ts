@@ -44,13 +44,11 @@ export const mockAnimationsEnabled = (enabled: boolean) => {
   });
 };
 
-vi.mock("@features/settings", () => ({
+vi.mock("@features/settings/accessibility", () => ({
   useAccessibility: accessibilityMockTracker,
-  useLanguage: languageMockTracker,
-  isRtl: () => languageMockTracker().isRtl,
 }));
 
-vi.mock("@features/settings/localization/hooks/useLanguage", () => ({
+vi.mock("@features/settings/account", () => ({
   useLanguage: languageMockTracker,
   isRtl: () => languageMockTracker().isRtl,
 }));

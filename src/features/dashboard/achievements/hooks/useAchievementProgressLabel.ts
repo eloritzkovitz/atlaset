@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import type { Country } from "@features/countries/types";
 import type { Trip } from "@features/trips/types";
 import { formatFraction } from "@utils";
-import { getProgress } from "../utils/achievements";
 import type { Achievement } from "../types";
+import { getProgress } from "../utils/achievementProgress";
 
 export interface AchievementProgressLabelOptions {
   trips?: Trip[];
