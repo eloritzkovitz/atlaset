@@ -1,15 +1,19 @@
 import { useMemo } from "react";
 import { Checklist } from "@components";
+import {
+  getDisplayFlagCountries,
+  getProgress,
+  getTier,
+  getCurrentTier,
+  type Achievement,
+  type AchievementStatus,
+} from "@features/achievements";
 import { CountryFlagGrid, type Country } from "@features/countries";
 import type { Trip } from "@features/trips/types";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementProgressChip } from "./AchievementProgressChip";
 import { AchievementStatusChip } from "./AchievementStatusChip";
 import { AchievementTierChip } from "./AchievementTierChip";
-import { useAchievementProgressLabel } from "../hooks/useAchievementProgressLabel";
-import type { Achievement, AchievementStatus } from "../types";
-import { getDisplayFlagCountries } from "../utils/achievementDisplay";
-import { getTier, getCurrentTier } from "../utils/achievementTiers";
 
 interface AchievementCardProps {
   achievement: Achievement;
@@ -64,11 +68,13 @@ export function AchievementCard({
     tierObj?.criteria,
   ]);
 
-  const progressLabel = useAchievementProgressLabel(
+  const progressLabel = getProgress(
     { ...achievement, criteria: displayCriteria },
     countries,
     isVisitedCountry,
-    { trips, homeCountry, achievementStatusMap },
+    trips,
+    homeCountry,
+    achievementStatusMap,
   );
 
   const flagCountries = useMemo(

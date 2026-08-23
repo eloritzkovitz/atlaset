@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
+import { useGetAchievementsQuery } from "@features/achievements";
 import { useCountryData } from "@features/countries";
 import { parseDashboardPath } from "../utils/dashboardNavigation";
-import { useGetAchievementsQuery } from "../../achievements/api/achievementsApi";
 
 /**
  * Manages dashboard route state.

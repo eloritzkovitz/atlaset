@@ -1,8 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { Country, Currency, Timezone } from "@features/countries/types";
 import type { Language } from "@types";
-import { AchievementsGrid } from "../../achievements/components/AchievementsGrid";
-import { AchievementInfo } from "../../achievements/components/AchievementInfo";
+import { AchievementsGrid } from "../../achievements/AchievementsGrid";
+import { AchievementInfo } from "../../achievements/AchievementInfo";
 import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";

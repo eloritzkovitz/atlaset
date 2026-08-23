@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { MenuButton } from "@components";
 import { ICONS } from "@constants/icons";
-import type { Achievement } from "../types";
+import type { Achievement } from "@features/achievements/types";
 
 interface AchievementListGroupProps {
   achievements: Achievement[];

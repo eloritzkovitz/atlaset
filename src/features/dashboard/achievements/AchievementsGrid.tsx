@@ -11,11 +11,13 @@ import {
   SortSelect,
 } from "@components";
 import { ICONS } from "@constants/icons";
+import {
+  type AchievementSortKey,
+  useAchievementStatus,
+} from "@features/achievements";
 import { useIncrementalList, useLocalStorageState } from "@hooks";
 import type { SortValue } from "@types";
 import { AchievementCard } from "./AchievementCard";
-import { useAchievementStatus } from "../hooks/useAchievementStatus";
-import type { AchievementSortKey } from "../types";
 
 const typeOptions = [
   { value: "all", label: "All" },

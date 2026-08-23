@@ -1,6 +1,6 @@
 import React from "react";
 import { Chip } from "@components";
-import type { AchievementStatus } from "../types";
+import type { AchievementStatus } from "@features/achievements/types";
 
 interface AchievementStatusChipProps {
   status: AchievementStatus;

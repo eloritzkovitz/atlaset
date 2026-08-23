@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { mapApi } from "@features/atlas/map/api/mapApi";
 import { countriesApi } from "@features/countries/core/api/countriesApi";
-import { achievementsApi } from "@features/dashboard/achievements/api/achievementsApi";
+import { achievementsApi } from "@features/achievements/api/achievementsApi";
 import quizSettingsReducer from "@features/quizzes/core/slices/quizSettingsSlice";
 import type { AccentKey, ThemeKey } from "@features/settings/display/types";
 import {

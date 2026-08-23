@@ -1,17 +1,19 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { Container } from "@components";
+import {
+  getAchievementCountries,
+  getCurrentTier,
+  useAchievementStatus,
+} from "@features/achievements";
+import type { Achievement } from "@features/achievements/types";
 import { useCountryTracking } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
-import { useAchievementStatus } from "../hooks/useAchievementStatus";
-import type { Achievement } from "../types";
-import { getAchievementCountries } from "../utils/achievementFilters";
-import { getCurrentTier } from "../utils/achievementTiers";
-import { DashboardHeader } from "../../core/components/DashboardHeader";
-import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
-import { useDashboardNavigation } from "../../core/hooks/useDashboardNavigation";
-import { useIsoGroups } from "../../core/hooks/useIsoGroups";
-import { getCountryRoute } from "../../core/utils/dashboardNavigation";
+import { DashboardHeader } from "../core/components/DashboardHeader";
+import { InfoWithCountryGroups } from "../core/components/InfoWithCountryGroups";
+import { useDashboardNavigation } from "../core/hooks/useDashboardNavigation";
+import { useIsoGroups } from "../core/hooks/useIsoGroups";
+import { getCountryRoute } from "../core/utils/dashboardNavigation";
 
 export function AchievementInfo() {
   const { achievementId } = useParams();

@@ -8,7 +8,7 @@ import {
   FaSuitcaseRolling,
   FaTrophy,
 } from "react-icons/fa6";
-import type { Achievement } from "../types";
+import type { Achievement } from "@features/achievements/types";
 
 interface AchievementIconProps {
   type: Achievement["type"];
