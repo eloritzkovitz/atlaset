@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "@features/user/auth";
 import { migrationService } from "../services/migrationService";
 import type { MigrationStatus } from "../types";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 /**
  * Manages the local-data migration workflow.

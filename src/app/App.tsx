@@ -1,11 +1,11 @@
 import { useEffect, type ReactNode } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SplashScreen, PwaUpdateUiHint, UIHintContainer } from "@components";
-import { MigrationModal } from "@features/migration/components/MigrationModal";
 import { CookieConsentModal } from "@features/settings/privacy/components/CookieConsentModal";
 import { useSettings } from "@features/settings";
 import { useAnalytics } from "@features/settings/privacy/hooks/useAnalytics";
 import { useAuth } from "@features/user/auth/hooks/useAuth";
+import { MigrationModal } from "@features/user/migration/components/MigrationModal";
 import { AppProviders } from "./providers/AppProviders";
 import { AppRoutes } from "./routes/AppRoutes";
 
