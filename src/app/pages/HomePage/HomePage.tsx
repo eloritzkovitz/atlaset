@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { usePageTitle } from "@hooks";
-import { CallToActionSection } from "../components/CallToActionSection";
-import { FeaturesSection } from "../components/FeaturesSection";
-import { HeroSection } from "../components/HeroSection";
+import { CallToActionSection } from "./CallToActionSection";
+import { FeaturesSection } from "./FeaturesSection";
+import { HeroSection } from "./HeroSection";
 
 export default function HomePage() {
   const { t } = useTranslation("home");
