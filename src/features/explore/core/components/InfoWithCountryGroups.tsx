@@ -42,7 +42,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   onSelectCountry,
   visited,
 }) => {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
   const { viewMode, setViewMode } = useViewMode("list");
 
   // Track expanded/collapsed state per group using section index keys

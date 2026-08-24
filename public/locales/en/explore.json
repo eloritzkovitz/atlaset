@@ -1,0 +1,94 @@
+{
+  "menu": {
+    "title": "Explore",
+    "countries": "Countries",
+    "allCountries": "All Countries",
+    "currencyExchange": "Currency Exchange",
+    "overview": "Overview",
+    "languages": "Languages",
+    "currencies": "Currencies",
+    "timezones": "Timezones"
+  },
+  "countries": {
+    "toggles": {
+      "all": "All Countries",
+      "sovereign": "Sovereign Only"
+    },
+    "sortBy": {
+      "alphabetical": "Alphabetical",
+      "progress": "Progress"
+    },
+    "worldTitle": "World Exploration",
+    "allTitle": "All Countries",
+    "showAllCountries": "Show all countries",
+    "showSovereignOnly": "Show sovereign only",
+    "ofCountriesVisited": "of countries visited",
+    "showVisitedOnly": "Show Visited Only",
+    "showTranscontinental": "Show transcontinental countries",
+    "hideTranscontinental": "Hide transcontinental countries"
+  },
+  "languages": {
+    "columns": {
+      "code": "Language code",
+      "name": "Language name"
+    },
+    "searchPlaceholder": "Search by name or code",
+    "empty": "Language not found.",
+    "viewLanguage": "View language details",
+    "languageInfo": {
+      "usingLanguage": "Countries where {{name}} is spoken",
+      "dependenciesUsingLanguage": "Dependencies and territories where {{name}} is spoken"
+    }
+  },
+  "currencies": {
+    "columns": {
+      "code": "Currency code",
+      "name": "Currency name"
+    },
+    "searchPlaceholder": "Search by name or code",
+    "empty": "Currency not found.",
+    "viewExchange": "View currency exchange",
+    "exchangeHeader": "1 {{currency}} equals",
+    "currencyInfo": {
+      "usingCurrency": "Countries using {{code}}",
+      "dependenciesUsingCurrency": "Dependencies and territories using {{code}}"
+    },
+    "currencyExchange": {
+      "pageTitle": "Currency Exchange",
+      "disclaimer": "Data via Open Exchange Rates",
+      "rateValue": "{{rate}} {{currency}}",
+      "from": "From",
+      "to": "To",
+      "input": {
+        "amountToConvert": "Amount to convert",
+        "convertedAmount": "Converted amount"
+      },
+      "select": {
+        "from": "From currency",
+        "to": "To currency"
+      },
+      "swap": {
+        "ariaLabel": "Swap currencies",
+        "title": "Swap"
+      },
+      "convert": "Convert",
+      "converting": "Converting...",
+      "errorPrefix": "Error:"
+    }
+  },
+  "timezones": {
+    "columns": {
+      "offset": "UTC offset",
+      "currentTime": "Current time"
+    },
+    "searchPlaceholder": "Search by UTC offset",
+    "empty": "Timezone not found.",
+    "viewTimezone": "View timezone details",
+    "timezoneInfo": {
+      "usingStandardTime": "Countries using {{code}} as standard time",
+      "dependenciesUsingStandardTime": "Dependencies and territories using {{code}} as standard time",
+      "usingDST": "Countries using {{code}} as daylight saving time",
+      "dependenciesUsingDST": "Dependencies and territories using {{code}} as daylight saving time"
+    }
+  }
+}

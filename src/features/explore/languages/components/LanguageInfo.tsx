@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { groupCountryIsoCodes } from "@features/countries";
 import type { Country } from "@features/countries/types";
 import type { Language } from "@types";
 import { getQueryParam } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
-import { useDashboardNavigation } from "../../core/hooks/useDashboardNavigation";
-import { useIsoGroups } from "../../core/hooks/useIsoGroups";
+import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
 interface LanguageInfoProps {
   languages: Language[];
@@ -25,7 +25,7 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
   const code = routeCode || getQueryParam("code", "", location.search);
   const language = languages.find((l) => l.code === code);
 
-  const { handleCountrySelect, handleBack } = useDashboardNavigation(
+  const { handleCountrySelect, handleBack } = useExploreNavigation(
     countries,
     "",
     "",
@@ -36,16 +36,17 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
     language?.nativeName ??
     languageCode) as string;
 
-  const isoGroups = useIsoGroups(countries, (c) =>
+  const isoGroups = groupCountryIsoCodes(countries, (country) =>
     languageCode
-      ? Array.isArray(c.languages) && c.languages.includes(languageCode)
+      ? Array.isArray(country.languages) &&
+        country.languages.includes(languageCode)
       : false,
   );
 
   // Redirect to languages list if language not found
   useEffect(() => {
     if (!language && languages.length > 0) {
-      navigate("/dashboard/languages", { replace: true });
+      navigate("/explore/languages", { replace: true });
     }
   }, [language, languages, navigate]);
 

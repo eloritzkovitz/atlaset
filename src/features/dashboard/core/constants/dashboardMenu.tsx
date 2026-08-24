@@ -12,31 +12,7 @@ export const DASHBOARD_MENU = [
     label: "Exploration",
     icon: ICONS.exploration,
     url: "/dashboard/exploration",
-  },
-  {
-    key: "countries",
-    label: "Countries",
-    icon: ICONS.countries,
-    url: "/dashboard/countries/all",
-  },
-  {
-    key: "languages",
-    label: "Languages",
-    icon: ICONS.language,
-    url: "/dashboard/languages",
-  },
-  {
-    key: "currencies",
-    label: "Currencies",
-    icon: ICONS.currencies,
-    url: "/dashboard/currencies",
-  },
-  {
-    key: "timezones",
-    label: "Timezones",
-    icon: ICONS.timezones,
-    url: "/dashboard/timezones",
-  },
+  }, 
   {
     key: "achievements",
     label: "Achievements",

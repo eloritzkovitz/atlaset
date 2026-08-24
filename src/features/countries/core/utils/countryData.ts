@@ -256,3 +256,32 @@ export function getTranscontinentalInfo(
     additionalSubregionRegion,
   };
 }
+
+/**
+ * Groups countries into sovereign and dependency ISO codes based on a matching function.
+ * @param countries - Array of country objects to group.
+ * @param matches - Function that determines if a country belongs to the group based on criteria.
+ * @returns An object containing arrays of sovereign and dependency ISO codes.
+ */
+export function groupCountryIsoCodes(
+  countries: Country[],
+  matches: (country: Country) => boolean,
+) {
+  const sovereignIsoCodes: string[] = [];
+  const dependencyIsoCodes: string[] = [];
+
+  for (const country of countries) {
+    if (!matches(country)) continue;
+
+    if (
+      country.sovereigntyStatus === "sovereign" ||
+      country.sovereigntyStatus === "partially_recognized"
+    ) {
+      sovereignIsoCodes.push(country.isoCode);
+    } else {
+      dependencyIsoCodes.push(country.isoCode);
+    }
+  }
+
+  return { sovereignIsoCodes, dependencyIsoCodes };
+}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { Timezone } from "@features/countries/types";
 import { getCurrentTimeFromOffset } from "@utils";
-import { DashboardListGrid } from "../../core/components/DashboardListGrid";
+import { ExploreListGrid } from "../../core/components/ExploreListGrid";
 
 interface TimezonesGridProps {
   timezones: Timezone[];
@@ -18,11 +18,11 @@ export const TimezonesGrid: React.FC<TimezonesGridProps> = ({ timezones }) => {
   }, []);
 
   return (
-    <DashboardListGrid
+    <ExploreListGrid
       items={timezones}
       getCode={(item) => item.code}
       getName={(item) => getCurrentTimeFromOffset(item.offsetMinutes)}
-      toLink={(item) => `/dashboard/timezones/${encodeURIComponent(item.code)}`}
+      toLink={(item) => `/explore/timezones/${encodeURIComponent(item.code)}`}
       headers={{
         codeLabel: t("timezones.columns.offset", {
           defaultValue: "UTC offset",

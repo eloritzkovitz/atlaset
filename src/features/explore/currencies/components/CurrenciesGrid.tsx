@@ -2,7 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { SectionLink } from "@components";
 import type { Currency } from "@features/countries/types";
-import { DashboardListGrid } from "../../core/components/DashboardListGrid";
+import { ExploreListGrid } from "../../core/components/ExploreListGrid";
 
 interface CurrenciesGridProps {
   currencies: Currency[];
@@ -14,14 +14,14 @@ export const CurrenciesGrid: React.FC<CurrenciesGridProps> = ({
   const { t } = useTranslation("dashboard");
 
   return (
-    <DashboardListGrid
+    <ExploreListGrid
       items={currencies}
       getCode={(c) => c.code}
       getName={(c) => c.name}
-      toLink={(c) => `/dashboard/currencies/${c.code}`}
+      toLink={(c) => `/explore/currencies/${c.code}`}
       headerActions={
         <SectionLink
-          to="/dashboard/currencies/exchange"
+          to="/explore/currencies/exchange"
           label="Currency Exchange"
           align="right"
         />

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Navigate, useLocation } from "react-router-dom";
 import {
@@ -12,35 +12,54 @@ import { useCountryData } from "@features/countries";
 import { useExploreCountriesFilters } from "@features/explore/countries/hooks/useExploreCountriesFilters";
 import { useAuth } from "@features/user/auth";
 import { useDisclosure, usePageTitle, useScreenSize } from "@hooks";
-import { DashboardPanelMenu } from "../components/DashboardPanelMenu";
-import { useDashboardNavigation } from "../hooks/useDashboardNavigation";
-import { useDashboardRouteState } from "../hooks/useDashboardRouteState";
-import { DashboardRoutes } from "../routes/DashboardRoutes";
-import { getDashboardMeta } from "../utils/dashboardNavigation";
+import { ExplorePanelMenu } from "../components/ExplorePanelMenu";
+import { useExploreNavigation } from "../hooks/useExploreNavigation";
+import { useExploreRouteState } from "../hooks/useExploreRouteState";
+import { ExploreRoutes } from "../routes/ExploreRoutes";
+import { getExploreBreadcrumbs } from "../utils/exploreNavigation";
 import {
   translateRegionLabel,
   translateSubregionLabel,
-} from "@features/explore/core/utils/regionTranslation";
+} from "../utils/regionTranslation";
 
-export default function DashboardPage() {
+export default function ExplorePage() {
   const location = useLocation();
   const { ready } = useAuth();
-  const { countries, loading, error, subregionToRegion } = useCountryData();
+  const {
+    countries,
+    currencies,
+    languages: languagesMap,
+    timezones,
+    loading,
+    error,
+    subregionToRegion,
+  } = useCountryData();
   const { isMobile } = useScreenSize();
-  const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tExplore } = useTranslation("explore");
   const { t: tCountries } = useTranslation("countries");
 
   const panelMenu = useDisclosure();
 
-  // Dashboard route state
+  const languages = useMemo(() => {
+    if (!languagesMap) return [];
+    return Object.values(languagesMap).map((l) => ({
+      ...l,
+      nativeName: l.nativeName ?? l.name ?? l.code,
+    }));
+  }, [languagesMap]);
+
+  // Explore route state
   const {
     selectedPanel,
     menuSelectedPanel,
     selectedRegion: routeSelectedRegion,
     selectedSubregion: routeSelectedSubregion,
+    selectedIsoCode,
     selectedCountry,
-    selectedAchievement,
-  } = useDashboardRouteState();
+    selectedLanguage,
+    selectedCurrency,
+    selectedTimezone,
+  } = useExploreRouteState();
 
   // Countries filter state
   const {
@@ -48,24 +67,28 @@ export default function DashboardPage() {
     setSelectedRegion,
     selectedSubregion,
     setSelectedSubregion,
+    search,
+    setSearch,
     selectedSovereignOnly,
     setSelectedSovereignOnly,
+    resetFilters,
   } = useExploreCountriesFilters();
 
-  // Build dashboard meta (title and breadcrumbs)
-  const { breadcrumbs } = getDashboardMeta({
-    selectedPanel,
-    selectedCountry,
+  const breadcrumbs = getExploreBreadcrumbs({
+    selectedPanel: selectedPanel ?? "",
+    selectedCountry: selectedCountry?.name ?? null,
     selectedRegion,
     selectedSubregion,
-    selectedAchievement,
+    selectedLanguage: selectedLanguage?.name ?? null,
+    selectedCurrency: selectedCurrency?.name ?? null,
+    selectedTimezone: selectedTimezone?.code ?? null,
   });
 
   const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
     const raw = crumb.label ?? crumb.key ?? "";
-    if (crumb.labelKey) return tDashboard(crumb.labelKey);
+    if (crumb.labelKey) return tExplore(crumb.labelKey);
     if (crumb.key === "region")
-      return translateRegionLabel(raw, tCountries, tDashboard);
+      return translateRegionLabel(raw, tCountries, tExplore);
     if (crumb.key === "subregion")
       return translateSubregionLabel(
         raw,
@@ -85,36 +108,40 @@ export default function DashboardPage() {
   const safePanel = selectedPanel ?? "";
   const isCountryPanel =
     safePanel.startsWith("countries") ||
-    ["countries", "countries/all", "exploration"].includes(safePanel);
-  const isAchievementPanel = safePanel.startsWith("achievements");
+    ["countries", "countries/all"].includes(safePanel);
+  const isCurrencyPanel = safePanel.startsWith("currencies");
 
   // Determine page titles
   const getCountryPanelTitle = (): string => {
-    if (safePanel === "exploration") {
-      return tDashboard("exploration.worldTitle");
-    }
-
     if (routeSelectedRegion === "all" || safePanel === "countries/all") {
-      return tDashboard("exploration.allTitle");
+      return tExplore("countries.allTitle");
     }
 
     if (selectedCountry?.name) {
       return selectedCountry.name;
     }
 
-    return safePanel
-      ? tDashboard(`menu.${safePanel}`)
-      : tDashboard("menu.title");
+    if (routeSelectedSubregion && routeSelectedSubregion !== "all") {
+      return translateSubregionLabel(
+        routeSelectedSubregion,
+        subregionToRegion,
+        selectedRegion ?? undefined,
+        tCountries,
+      );
+    }
+
+    if (routeSelectedRegion && routeSelectedRegion !== "all") {
+      return translateRegionLabel(routeSelectedRegion, tCountries, tExplore);
+    }
+
+    return safePanel ? tExplore(`menu.${safePanel}`) : tExplore("menu.title");
   };
 
   const getPageTitleLabel = (): string => {
     if (isCountryPanel) return getCountryPanelTitle();
-    if (isAchievementPanel && selectedAchievement?.name)
-      return selectedAchievement.name;
+    if (isCurrencyPanel && selectedCurrency?.name) return selectedCurrency.name;
 
-    return safePanel
-      ? tDashboard(`menu.${safePanel}`)
-      : tDashboard("menu.title");
+    return safePanel ? tExplore(`menu.${safePanel}`) : tExplore("menu.title");
   };
 
   usePageTitle(getPageTitleLabel());
@@ -138,26 +165,26 @@ export default function DashboardPage() {
 
   // Navigation handlers
   const {
-    handlePanelChange,
+    navigateToPanel,
     handleRegionSelect,
     handleSubregionSelect,
     handleCountrySelect,
     handleShowAllCountries,
     handleCrumbClick,
-  } = useDashboardNavigation(
+    handleBack,
+  } = useExploreNavigation(
     countries,
     selectedRegion ?? "all",
     selectedSubregion ?? "",
   );
 
   // Loading and error states
-  if (loading || !ready)
-    return <LoadingSpinner fullScreen message="Loading dashboard..." />;
+  if (loading || !ready) return <LoadingSpinner fullScreen />;
   if (error) return <ErrorMessage fullScreen error={error} />;
 
-  // Redirect early if at base path /dashboard
-  if (location.pathname === "/dashboard") {
-    return <Navigate to="/dashboard/overview" replace />;
+  // Redirect early if at base path /explore
+  if (location.pathname === "/explore") {
+    return <Navigate to="/explore/countries/all" replace />;
   }
 
   return (
@@ -165,19 +192,19 @@ export default function DashboardPage() {
       {isMobile && (
         <>
           <HamburgerButton onClick={() => panelMenu.open()} />
-          <DashboardPanelMenu
+          <ExplorePanelMenu
             open={panelMenu.isOpen}
             onClose={() => panelMenu.close()}
             selectedPanel={menuSelectedPanel}
-            setSelectedPanel={handlePanelChange}
+            setSelectedPanel={navigateToPanel}
           />
         </>
       )}
       <Container>
         {!isMobile && (
-          <DashboardPanelMenu
+          <ExplorePanelMenu
             selectedPanel={menuSelectedPanel}
-            setSelectedPanel={handlePanelChange}
+            setSelectedPanel={navigateToPanel}
           />
         )}
         <div className="flex-1 mt-12 min-w-0">
@@ -185,15 +212,25 @@ export default function DashboardPage() {
             crumbs={translatedBreadcrumbs}
             onCrumbClick={handleCrumbClick}
           />
-          <DashboardRoutes
+          <ExploreRoutes
             countries={countries}
+            currencies={currencies}
+            languages={languages}
+            timezones={timezones}
+            selectedRegion={selectedRegion || ""}
             setSelectedRegion={handleRegionSelect}
+            selectedSubregion={selectedSubregion || ""}
             setSelectedSubregion={setSelectedSubregion}
+            search={search}
+            setSearch={setSearch}
             selectedSovereignOnly={selectedSovereignOnly}
             setSelectedSovereignOnly={setSelectedSovereignOnly}
+            selectedIsoCode={selectedIsoCode || ""}
             setSelectedIsoCode={handleCountrySelect}
             onShowAllCountries={handleShowAllCountries}
             onSubregionChange={handleSubregionSelect}
+            onResetFilters={resetFilters}
+            onBack={handleBack}
           />
         </div>
       </Container>

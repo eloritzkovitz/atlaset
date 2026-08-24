@@ -32,28 +32,6 @@ export function parseDashboardPath(pathname: string) {
 }
 
 /**
- * Generates a dashboard URL path for countries, regions, or subregions.
- * @param region - The region of the country.
- * @param subregion - The subregion of the country.
- * @param isoCode - The ISO code of the country.
- * @returns A string representing the route to the country details page.
- */
-export function getCountryRoute(
-  region?: string,
-  subregion?: string,
-  isoCode?: string,
-): string {
-  const r = region ? encodeURIComponent(region.toLowerCase()) : "all";
-  const s = subregion ? encodeURIComponent(subregion.toLowerCase()) : "all";
-
-  if (isoCode) return `/dashboard/countries/${r}/${s}/${isoCode}`;
-  if (subregion) return `/dashboard/countries/${r}/${s}`;
-  if (region) return `/dashboard/countries/${r}`;
-
-  return `/dashboard/countries/all`;
-}
-
-/**
  * Generates breadcrumbs for the dashboard based on the current navigation state.
  * @param selectedPanel - Currently selected dashboard panel.
  * @param selectedRegion - Currently selected region.
@@ -68,9 +46,6 @@ export function getDashboardBreadcrumbs(
   selectedRegion: string | null,
   selectedSubregion: string | null,
   selectedCountry: string | null,
-  selectedLanguage: string | null,
-  selectedCurrency: string | null,
-  selectedTimezone: string | null,
   selectedAchievement: string | null,
 ): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
@@ -94,12 +69,7 @@ export function getDashboardBreadcrumbs(
   // Dynamic entities (languages, currencies, achievements)
   const dynamicEntities: Array<
     [prefix: string, value: string | null, key: string]
-  > = [
-    ["languages", selectedLanguage, "language"],
-    ["currencies", selectedCurrency, "currency"],
-    ["timezones", selectedTimezone, "timezone"],
-    ["achievements", selectedAchievement, "achievement"],
-  ];
+  > = [["achievements", selectedAchievement, "achievement"]];
 
   for (const [prefix, value, key] of dynamicEntities) {
     if (
@@ -138,22 +108,12 @@ export function getDashboardMeta({
   selectedRegion,
   selectedSubregion,
   selectedCountry,
-  selectedLanguage,
-  selectedCurrency,
-  selectedTimezone,
   selectedAchievement,
 }: {
   selectedPanel: string | undefined;
   selectedRegion: string | null | undefined;
   selectedSubregion: string | null | undefined;
   selectedCountry: { name?: string } | null | undefined;
-  selectedLanguage: { name?: string } | null | undefined;
-  selectedCurrency: { name?: string } | null | undefined;
-  selectedTimezone:
-    | { name?: string; code?: string }
-    | string
-    | null
-    | undefined;
   selectedAchievement: { name?: string } | null | undefined;
 }) {
   return {
@@ -162,9 +122,6 @@ export function getDashboardMeta({
       selectedRegion ?? null,
       selectedSubregion ?? null,
       extractName(selectedCountry),
-      extractName(selectedLanguage),
-      extractName(selectedCurrency),
-      extractName(selectedTimezone),
       extractName(selectedAchievement),
     ),
   };

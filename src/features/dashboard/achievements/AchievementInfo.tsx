@@ -6,14 +6,14 @@ import {
   useAchievementStatus,
 } from "@features/achievements";
 import type { Achievement } from "@features/achievements/types";
+import { groupCountryIsoCodes } from "@features/countries";
 import { useCountryTracking } from "@features/visits";
+import { DashboardHeader } from "@features/explore/core/components/DashboardHeader";
+import { InfoWithCountryGroups } from "@features/explore/core/components/InfoWithCountryGroups";
+import { useExploreNavigation } from "@features/explore/core/hooks/useExploreNavigation";
+import { getCountryRoute } from "@features/explore/core/utils/exploreNavigation";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
-import { DashboardHeader } from "../core/components/DashboardHeader";
-import { InfoWithCountryGroups } from "../core/components/InfoWithCountryGroups";
-import { useDashboardNavigation } from "../core/hooks/useDashboardNavigation";
-import { useIsoGroups } from "../core/hooks/useIsoGroups";
-import { getCountryRoute } from "../core/utils/dashboardNavigation";
 
 export function AchievementInfo() {
   const { achievementId } = useParams();
@@ -23,7 +23,7 @@ export function AchievementInfo() {
     (a) => String(a.id) === achievementId,
   );
   const { isVisitedCountry } = useCountryTracking();
-  const { handleCountrySelect, handleBack } = useDashboardNavigation(
+  const { handleCountrySelect, handleBack } = useExploreNavigation(
     countries,
     "",
     "",
@@ -62,7 +62,7 @@ export function AchievementInfo() {
     }
   }
 
-  const isoGroups = useIsoGroups(achCountries, () => true);
+  const isoGroups = groupCountryIsoCodes(achCountries, () => true);
   const hasCountries =
     isoGroups.sovereignIsoCodes.length > 0 ||
     isoGroups.dependencyIsoCodes.length > 0;

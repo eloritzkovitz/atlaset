@@ -4,7 +4,7 @@ import { useAnimatedNumber } from "@hooks";
 import { formatFraction } from "@utils";
 import { RegionButton } from "./RegionButton";
 import type { SubregionStat } from "../types";
-import { translateSubregionLabel } from "../../core/utils/regionTranslation";
+import { translateSubregionLabel } from "@features/explore/core/utils/regionTranslation";
 
 interface SubregionStatsRowProps {
   subregion: SubregionStat;

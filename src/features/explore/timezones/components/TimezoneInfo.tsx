@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { groupCountryIsoCodes } from "@features/countries";
 import type { Country, Timezone } from "@features/countries/types";
 import { getQueryParam, normalizeTzCode } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
-import { useDashboardNavigation } from "../../core/hooks/useDashboardNavigation";
-import { useIsoGroups } from "../../core/hooks/useIsoGroups";
+import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
 interface TimezoneInfoProps {
   timezones: Timezone[];
@@ -34,7 +34,7 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
     [timezones, code],
   );
 
-  const { handleCountrySelect, handleBack } = useDashboardNavigation(
+  const { handleCountrySelect, handleBack } = useExploreNavigation(
     countries,
     "",
     "",
@@ -59,27 +59,30 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
   }, [timezone]);
 
   // Standard Time IsoGroups (Sovereign & Dependencies)
-  const standardIsoGroups = useIsoGroups(countries, (c) => {
+  const standardIsoGroups = groupCountryIsoCodes(countries, (country) => {
     if (!timezone) return false;
 
     if (standardIsoSet.size > 0 || dstIsoSet.size > 0) {
-      return standardIsoSet.has(c.isoCode);
+      return standardIsoSet.has(country.isoCode);
     }
 
     const targetCode = normalizeTzCode(timezone.code);
-    return (c.timezones ?? []).some((tz) => normalizeTzCode(tz) === targetCode);
+
+    return (country.timezones ?? []).some(
+      (tz) => normalizeTzCode(tz) === targetCode,
+    );
   });
 
   // DST IsoGroups (Sovereign & Dependencies)
-  const dstIsoGroups = useIsoGroups(countries, (c) => {
-    if (!timezone) return false;
-    return dstIsoSet.has(c.isoCode);
-  });
+  const dstIsoGroups = groupCountryIsoCodes(
+    countries,
+    (country) => timezone != null && dstIsoSet.has(country.isoCode),
+  );
 
   // Redirect if timezone not found
   useEffect(() => {
     if (!timezone && timezones.length > 0) {
-      navigate("/dashboard/timezones", { replace: true });
+      navigate("/explore/timezones", { replace: true });
     }
   }, [timezone, timezones, navigate]);
 

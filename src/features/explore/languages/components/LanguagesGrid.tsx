@@ -1,7 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import type { Language } from "@types";
-import { DashboardListGrid } from "../../core/components/DashboardListGrid";
+import { ExploreListGrid } from "../../core/components/ExploreListGrid";
 
 interface LanguagesGridProps {
   languages: Language[];
@@ -11,11 +11,11 @@ export const LanguagesGrid: React.FC<LanguagesGridProps> = ({ languages }) => {
   const { t } = useTranslation("dashboard");
 
   return (
-    <DashboardListGrid
+    <ExploreListGrid
       items={languages}
       getCode={(l) => l.code}
       getName={(l) => l.name ?? l.nativeName ?? l.code}
-      toLink={(l) => `/dashboard/languages/${l.code}`}
+      toLink={(l) => `/explore/languages/${l.code}`}
       headers={{
         codeLabel: t("languages.columns.code", {
           defaultValue: "Language code",

@@ -3,7 +3,7 @@ import { useState } from "react";
 /**
  * Manages filter state for the dashboard countries pages.
  */
-export function useDashboardCountriesFilters() {
+export function useExploreCountriesFilters() {
   const [search, setSearch] = useState("");
   const [selectedRegion, setSelectedRegion] = useState("");
   const [selectedSubregion, setSelectedSubregion] = useState("");

@@ -22,6 +22,9 @@ const DocsPage = lazy(() => import("@features/docs/pages/DocsPage"));
 const DashboardPage = lazy(
   () => import("@features/dashboard/core/pages/DashboardPage"),
 );
+const ExplorePage = lazy(
+  () => import("@features/explore/core/pages/ExplorePage"),
+);
 const QuizzesPage = lazy(
   () => import("@features/quizzes/core/pages/QuizzesPage"),
 );
@@ -53,6 +56,7 @@ export function AppRoutes() {
         {/* Protected application routes */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AppLayout />}>
+            <Route path="/explore/*" element={<ExplorePage />} />
             <Route path="/dashboard/*" element={<DashboardPage />} />
             <Route path="/trips" element={<TripsPage />} />
             <Route path="/settings/*" element={<SettingsRoutes />} />

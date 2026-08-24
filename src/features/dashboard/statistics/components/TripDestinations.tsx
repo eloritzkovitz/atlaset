@@ -12,10 +12,10 @@ import {
   type TableColumn,
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
+import { getCountryRoute } from "@features/explore";
 import { VISITED_COUNTRIES_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsStats } from "../hooks/useTripsStats";
 import type { VisitedCountryRankRow } from "../types";
-import { getCountryRoute } from "../../core/utils/dashboardNavigation";
 
 export function TripDestinations() {
   const { t } = useTranslation("dashboard");

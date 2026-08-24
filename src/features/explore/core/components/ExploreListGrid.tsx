@@ -2,7 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { SearchInput, EmptyListMessage } from "@components";
 
-interface DashboardListGridProps<T> {
+interface ExploreListGridProps<T> {
   items: T[];
   getCode: (item: T) => string;
   getName: (item: T) => string;
@@ -13,7 +13,7 @@ interface DashboardListGridProps<T> {
   emptyMessage?: string;
 }
 
-export function DashboardListGrid<T>({
+export function ExploreListGrid<T>({
   items,
   getCode,
   getName,
@@ -22,7 +22,7 @@ export function DashboardListGrid<T>({
   headerActions,
   searchPlaceholder = "Search by name or code",
   emptyMessage = "No items found.",
-}: DashboardListGridProps<T>) {
+}: ExploreListGridProps<T>) {
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(() => {

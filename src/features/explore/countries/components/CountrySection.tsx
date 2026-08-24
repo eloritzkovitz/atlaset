@@ -66,7 +66,7 @@ export function CountrySection({
   const { t: tAtlas } = useTranslation("atlas");
   const { t: tCommon } = useTranslation("common");
   const { t: tCountries } = useTranslation("countries");
-  const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tExplore } = useTranslation("explore");
 
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [showVisitedOnly, setShowVisitedOnly] = useState(false);
@@ -260,7 +260,7 @@ export function CountrySection({
             <div className="flex flex-row gap-2 ms-auto items-center justify-end">
               <ActionButton
                 onClick={handleResetFilters}
-                ariaLabel={tDashboard("exploration.resetFilters")}
+                ariaLabel={tExplore("countries.resetFilters")}
                 title={tCommon("actions.resetFilters")}
                 icon={<ICONS.reset />}
                 variant="toggle"
@@ -272,13 +272,13 @@ export function CountrySection({
                   {
                     value: "sovereign",
                     icon: <FaFlag />,
-                    label: tDashboard("exploration.showSovereignOnly"),
+                    label: tExplore("countries.showSovereignOnly"),
                     ariaLabel: selectedShowSovereignOnly
-                      ? tDashboard("exploration.showAllCountries")
-                      : tDashboard("exploration.showSovereignOnly"),
+                      ? tExplore("countries.showAllCountries")
+                      : tExplore("countries.showSovereignOnly"),
                     title: selectedShowSovereignOnly
-                      ? tDashboard("exploration.showAllCountries")
-                      : tDashboard("exploration.showSovereignOnly"),
+                      ? tExplore("countries.showAllCountries")
+                      : tExplore("countries.showSovereignOnly"),
                     checked: !!selectedShowSovereignOnly,
                     rounded: true,
                     onClick: handleSovereignToggle,
@@ -286,13 +286,13 @@ export function CountrySection({
                   {
                     value: "visited",
                     icon: <ICONS.visitStatus.visited />,
-                    label: tDashboard("exploration.showVisitedOnly"),
+                    label: tExplore("countries.showVisitedOnly"),
                     ariaLabel: showVisitedOnly
-                      ? tDashboard("exploration.showAllCountries")
-                      : tDashboard("exploration.showVisitedOnly"),
+                      ? tExplore("countries.showAllCountries")
+                      : tExplore("countries.showVisitedOnly"),
                     title: showVisitedOnly
-                      ? tDashboard("exploration.showAllCountries")
-                      : tDashboard("exploration.showVisitedOnly"),
+                      ? tExplore("countries.showAllCountries")
+                      : tExplore("countries.showVisitedOnly"),
                     checked: showVisitedOnly,
                     rounded: true,
                     onClick: handleVisitedToggle,
@@ -300,13 +300,13 @@ export function CountrySection({
                   {
                     value: "transcontinental",
                     icon: <PiGlobeStandFill className="text-lg" />,
-                    label: tDashboard("exploration.showTranscontinental"),
+                    label: tExplore("countries.showTranscontinental"),
                     ariaLabel: showTranscontinental
-                      ? tDashboard("exploration.hideTranscontinental")
-                      : tDashboard("exploration.showTranscontinental"),
+                      ? tExplore("countries.hideTranscontinental")
+                      : tExplore("countries.showTranscontinental"),
                     title: showTranscontinental
-                      ? tDashboard("exploration.hideTranscontinental")
-                      : tDashboard("exploration.showTranscontinental"),
+                      ? tExplore("countries.hideTranscontinental")
+                      : tExplore("countries.showTranscontinental"),
                     checked: showTranscontinental,
                     rounded: true,
                     onClick: handleTranscontinentalToggle,

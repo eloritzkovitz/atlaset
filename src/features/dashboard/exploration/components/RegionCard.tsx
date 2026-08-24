@@ -6,7 +6,7 @@ import { formatFraction } from "@utils";
 import { RegionButton } from "./RegionButton";
 import { SubregionStatsRow } from "./SubregionStatsRow";
 import type { SubregionStat } from "../types";
-import { translateRegionLabel } from "../../core/utils/regionTranslation";
+import { translateRegionLabel } from "@features/explore/core/utils/regionTranslation";
 
 interface RegionCardProps {
   region: string;
