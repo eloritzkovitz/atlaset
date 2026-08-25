@@ -7,22 +7,23 @@ import { parseExplorePath } from "../utils/exploreNavigation";
  * Extracts selected panel, region, subregion, and entities from the current URL.
  */
 export function useExploreRouteState() {
-  const { countries, currencies, languages, timezones } = useCountryData();
+  const { countries, countryByIsoCode, currencies, languages, timezones } =
+    useCountryData();
   const location = useLocation();
 
-  const { root, sub, parts, selectedPanel, menuSelectedPanel } =
+  const { panel, entity, parts, selectedPanel, menuSelectedPanel } =
     parseExplorePath(location.pathname);
 
   // Determine if the current route is a country route
   const isCountryRoute =
-    root === "countries" && !["exploration", "all"].includes(sub);
+    panel === "countries" && !["exploration", "all"].includes(entity);
   const [rawRegion, rawSubregion, selectedIsoCode] = isCountryRoute
     ? parts.slice(1, 4).map((p) => (p ? decodeURIComponent(p) : null))
     : [null, null, null];
 
   // Derive matched country first
   const selectedCountry = selectedIsoCode
-    ? countries?.find((c) => c.isoCode === selectedIsoCode)
+    ? countryByIsoCode[selectedIsoCode]
     : null;
 
   // Derive region & subregion names (prefer exact match from found country, else search list)
@@ -41,35 +42,31 @@ export function useExploreRouteState() {
       rawSubregion
     : null;
 
-  // Determine the entity parameter based on the selected panel and root
-  const entityParam =
-    root === selectedPanel || selectedPanel.startsWith(`${root}/`) ? sub : null;
+  // Determine the entity for the current route based on the selected panel
+  const routeEntity =
+    panel === selectedPanel || selectedPanel.startsWith(`${panel}/`)
+      ? entity
+      : null;
 
   // Language
-  let selectedLanguage = null;
-  if (root === "languages" && entityParam) {
-    if (Array.isArray(languages)) {
-      selectedLanguage = languages.find((l) => l.code === entityParam) || null;
-    } else if (languages && typeof languages === "object") {
-      selectedLanguage = languages[entityParam] || null;
-    }
-  }
+  const selectedLanguage =
+    panel === "languages" && routeEntity
+      ? (languages[routeEntity] ?? null)
+      : null;
 
   // Currency
   const selectedCurrency =
-    root === "currencies" && entityParam
-      ? currencies?.find((cur) => cur.code === entityParam)
+    panel === "currencies" && routeEntity
+      ? (currencies.find((currency) => currency.code === routeEntity) ?? null)
       : null;
 
   // Timezone
-  const timezoneCodeParam =
-    root === "timezones" && entityParam
-      ? decodeURIComponent(entityParam)
+  const selectedTimezone =
+    panel === "timezones" && routeEntity
+      ? (timezones.find(
+          (timezone) => timezone.code === decodeURIComponent(routeEntity),
+        ) ?? null)
       : null;
-
-  const selectedTimezone = timezoneCodeParam
-    ? timezones?.find((tz) => tz.code === timezoneCodeParam) || null
-    : null;
 
   return {
     selectedPanel,

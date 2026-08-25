@@ -34,11 +34,7 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
     [timezones, code],
   );
 
-  const { handleCountrySelect, handleBack } = useExploreNavigation(
-    countries,
-    "",
-    "",
-  );
+  const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
 
   // Partition ISO codes into Standard Time vs DST sets
   const { standardIsoSet, dstIsoSet } = useMemo(() => {
@@ -92,8 +88,8 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
     <InfoWithCountryGroups
       title={timezone.code}
       actions={<WikipediaButton searchTerm={`${timezone.code}`} />}
-      onBack={handleBack}
-      onSelectCountry={handleCountrySelect}
+      onBack={navigateBack}
+      onSelectCountry={navigateToCountry}
       labelArgs={{ code: timezone.code }}
       groups={[
         {

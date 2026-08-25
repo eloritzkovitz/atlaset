@@ -8,7 +8,7 @@ import type { CountryDetailsTab } from "@features/countries/types";
 import { useCountryTracking } from "@features/visits";
 import { useQueryParam, useScreenSize } from "@hooks";
 import { CountrySection } from "./CountrySection";
-import { DashboardHeader } from "../../core/components/DashboardHeader";
+import { ExploreHeader } from "../../core/components/ExploreHeader";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
 
 interface CountryStatsProps {
@@ -77,7 +77,7 @@ export function CountryStats({
   if (selectedCountry) {
     return (
       <div>
-        <DashboardHeader
+        <ExploreHeader
           title={selectedCountry.name}
           subtitle={`(${selectedCountry.isoCode})`}
           onBack={onBack}

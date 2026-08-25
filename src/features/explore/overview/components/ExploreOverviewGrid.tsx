@@ -10,7 +10,7 @@ import type { RegionStat } from "../types";
 
 type ExplorationSortKey = "name" | "progress";
 
-interface ExplorationOverviewGridProps {
+interface ExploreOverviewGridProps {
   visitedCountries: number;
   totalCountries: number;
   regionStats: RegionStat[];
@@ -22,7 +22,7 @@ interface ExplorationOverviewGridProps {
   onShowAllCountries: () => void;
 }
 
-export function ExplorationOverviewGrid({
+export function ExploreOverviewGrid({
   visitedCountries,
   totalCountries,
   regionStats,
@@ -32,7 +32,7 @@ export function ExplorationOverviewGrid({
   setSelectedSubregion,
   onSubregionChange,
   onShowAllCountries,
-}: ExplorationOverviewGridProps) {
+}: ExploreOverviewGridProps) {
   const { countries, loading: countriesLoading } = useCountryData();
   const { t } = useTranslation("dashboard");
 

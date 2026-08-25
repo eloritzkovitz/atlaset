@@ -25,11 +25,7 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
   const code = routeCode || getQueryParam("code", "", location.search);
   const language = languages.find((l) => l.code === code);
 
-  const { handleCountrySelect, handleBack } = useExploreNavigation(
-    countries,
-    "",
-    "",
-  );
+  const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
 
   const languageCode = language?.code;
   const languageName = (language?.name ??
@@ -57,9 +53,9 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       title={languageName}
       subtitle={languageCode ? `(${languageCode})` : undefined}
       actions={<WikipediaButton searchTerm={`${language.name} language`} />}
-      onBack={handleBack}
+      onBack={navigateBack}
       labelArgs={{ name: languageName }}
-      onSelectCountry={handleCountrySelect}
+      onSelectCountry={navigateToCountry}
       groups={[
         {
           isoGroups,

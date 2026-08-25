@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { CollapsibleHeader, ViewModeSegmentedControl } from "@components";
 import { CountryFlagGrid, CountryListGroup } from "@features/countries";
 import { useViewMode } from "@hooks";
-import { DashboardHeader } from "./DashboardHeader";
+import { ExploreHeader } from "./ExploreHeader";
 
 export interface IsoGroups {
   sovereignIsoCodes: string[];
@@ -112,7 +112,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   return (
     <section>
       {showHeader && (
-        <DashboardHeader
+        <ExploreHeader
           title={title}
           subtitle={subtitle}
           actions={actions}

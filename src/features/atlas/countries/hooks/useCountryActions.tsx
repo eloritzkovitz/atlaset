@@ -4,7 +4,7 @@ import { ICONS } from "@constants/icons";
 import { useCenterOnCountry } from "@features/atlas/map/hooks/useCenterOnCountry";
 import { useMarkerCreation } from "@features/atlas/markers/hooks/useMarkerCreation";
 import type { Country } from "@features/countries/types";
-import { getCountryRoute } from "@features/explore";
+import { getCountriesRoute } from "@features/explore";
 import { useLanguage } from "@features/settings/account";
 import { useCountryTracking } from "@features/visits";
 import { createCloseMenuAndCall } from "@hooks";
@@ -71,7 +71,7 @@ export function useCountryActions({
   });
 
   // Construct URLs
-  const dashboardUrl = getCountryRoute(
+  const dashboardUrl = getCountriesRoute(
     country.region,
     country.subregion,
     country.isoCode,

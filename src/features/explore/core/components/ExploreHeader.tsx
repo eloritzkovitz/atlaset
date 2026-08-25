@@ -2,7 +2,7 @@ import React from "react";
 import { DirectionalIcon } from "@components";
 import { useScreenSize } from "@hooks";
 
-interface DashboardHeaderProps {
+interface ExploreHeaderProps {
   title: string;
   subtitle?: string;
   leading?: React.ReactNode;
@@ -10,13 +10,13 @@ interface DashboardHeaderProps {
   onBack?: () => void;
 }
 
-export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
+export function ExploreHeader({
   title,
   subtitle,
   leading,
   actions,
   onBack,
-}) => {
+}: ExploreHeaderProps) {
   const { isMobile } = useScreenSize();
   return (
     <span className="flex items-center gap-4 mb-4">
@@ -44,4 +44,4 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       {actions && <span className="flex items-center">{actions}</span>}
     </span>
   );
-};
+}

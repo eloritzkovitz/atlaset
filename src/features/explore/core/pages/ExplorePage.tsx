@@ -9,7 +9,6 @@ import {
   LoadingSpinner,
 } from "@components";
 import { useCountryData } from "@features/countries";
-import { useExploreCountriesFilters } from "@features/explore/countries/hooks/useExploreCountriesFilters";
 import { useAuth } from "@features/user/auth";
 import { useDisclosure, usePageTitle, useScreenSize } from "@hooks";
 import { ExplorePanelMenu } from "../components/ExplorePanelMenu";
@@ -21,6 +20,7 @@ import {
   translateRegionLabel,
   translateSubregionLabel,
 } from "../utils/regionTranslation";
+import { useExploreCountriesFilters } from "../../countries/hooks/useExploreCountriesFilters";
 
 export default function ExplorePage() {
   const location = useLocation();
@@ -166,12 +166,12 @@ export default function ExplorePage() {
   // Navigation handlers
   const {
     navigateToPanel,
-    handleRegionSelect,
-    handleSubregionSelect,
-    handleCountrySelect,
-    handleShowAllCountries,
+    navigateToRegion,
+    navigateToSubregion,
+    navigateToCountry,
+    navigateToAllCountries,
     handleCrumbClick,
-    handleBack,
+    navigateBack,
   } = useExploreNavigation(
     countries,
     selectedRegion ?? "all",
@@ -184,7 +184,7 @@ export default function ExplorePage() {
 
   // Redirect early if at base path /explore
   if (location.pathname === "/explore") {
-    return <Navigate to="/explore/countries/all" replace />;
+    return <Navigate to="/explore/overview" replace />;
   }
 
   return (
@@ -218,7 +218,7 @@ export default function ExplorePage() {
             languages={languages}
             timezones={timezones}
             selectedRegion={selectedRegion || ""}
-            setSelectedRegion={handleRegionSelect}
+            setSelectedRegion={navigateToRegion}
             selectedSubregion={selectedSubregion || ""}
             setSelectedSubregion={setSelectedSubregion}
             search={search}
@@ -226,11 +226,11 @@ export default function ExplorePage() {
             selectedSovereignOnly={selectedSovereignOnly}
             setSelectedSovereignOnly={setSelectedSovereignOnly}
             selectedIsoCode={selectedIsoCode || ""}
-            setSelectedIsoCode={handleCountrySelect}
-            onShowAllCountries={handleShowAllCountries}
-            onSubregionChange={handleSubregionSelect}
+            setSelectedIsoCode={navigateToCountry}
+            onShowAllCountries={navigateToAllCountries}
+            onSubregionChange={navigateToSubregion}
             onResetFilters={resetFilters}
-            onBack={handleBack}
+            onBack={navigateBack}
           />
         </div>
       </Container>

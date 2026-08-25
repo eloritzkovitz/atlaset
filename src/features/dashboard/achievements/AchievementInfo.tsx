@@ -7,11 +7,13 @@ import {
 } from "@features/achievements";
 import type { Achievement } from "@features/achievements/types";
 import { groupCountryIsoCodes } from "@features/countries";
+import {
+  ExploreHeader,
+  getCountriesRoute,
+  InfoWithCountryGroups,
+  useExploreNavigation,
+} from "@features/explore";
 import { useCountryTracking } from "@features/visits";
-import { DashboardHeader } from "@features/explore/core/components/DashboardHeader";
-import { InfoWithCountryGroups } from "@features/explore/core/components/InfoWithCountryGroups";
-import { useExploreNavigation } from "@features/explore/core/hooks/useExploreNavigation";
-import { getCountryRoute } from "@features/explore/core/utils/exploreNavigation";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
 
@@ -23,11 +25,7 @@ export function AchievementInfo() {
     (a) => String(a.id) === achievementId,
   );
   const { isVisitedCountry } = useCountryTracking();
-  const { handleCountrySelect, handleBack } = useExploreNavigation(
-    countries,
-    "",
-    "",
-  );
+  const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
   const navigate = useNavigate();
 
   let achCountries: typeof countries = [];
@@ -79,10 +77,10 @@ export function AchievementInfo() {
 
   return (
     <Container>
-      <DashboardHeader
+      <ExploreHeader
         title={achievement.name}
         leading={<AchievementIcon type={achievement.type} locked={false} />}
-        onBack={handleBack}
+        onBack={navigateBack}
       />
       <div className="mb-4 text-muted text-base">{achievement.description}</div>
 
@@ -121,7 +119,7 @@ export function AchievementInfo() {
               ]),
             )}
             onAchievementClick={(region) => {
-              navigate(getCountryRoute(region));
+              navigate(getCountriesRoute(region));
             }}
           />
         )}
@@ -131,7 +129,7 @@ export function AchievementInfo() {
           <InfoWithCountryGroups
             title={achievement.name}
             showHeader={false}
-            onSelectCountry={handleCountrySelect}
+            onSelectCountry={navigateToCountry}
             visited={isVisitedCountry}
             groups={[
               {

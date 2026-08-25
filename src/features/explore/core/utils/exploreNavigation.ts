@@ -12,13 +12,15 @@ import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
  */
 export function parseExplorePath(pathname: string) {
   const parts = pathname.replace(/^\/explore\/?/, "").split("/");
-  const root = parts[0] || "countries";
-  const sub = parts[1];
 
-  let selectedPanel = root;
-  if (root === "countries" && ["exploration", "all"].includes(sub)) {
-    selectedPanel = `${root}/${sub}`;
-  } else if (root === "currencies" && sub === "exchange") {
+  const panel = parts[0] || "countries";
+  const entity = parts[1];
+
+  let selectedPanel = panel;
+
+  if (panel === "countries" && ["exploration", "all"].includes(entity)) {
+    selectedPanel = `${panel}/${entity}`;
+  } else if (panel === "currencies" && entity === "exchange") {
     selectedPanel = "currencies/exchange";
   }
 
@@ -28,17 +30,23 @@ export function parseExplorePath(pathname: string) {
       ? "currencies"
       : selectedPanel;
 
-  return { root, sub, parts, selectedPanel, menuSelectedPanel };
+  return {
+    panel,
+    entity,
+    parts,
+    selectedPanel,
+    menuSelectedPanel,
+  };
 }
 
 /**
- * Generates a URL path for countries, regions, or subregions.
+ * Generates a URL path for the countries display based on the provided region, subregion and ISO code.
  * @param region - The region of the country.
  * @param subregion - The subregion of the country.
  * @param isoCode - The ISO code of the country.
  * @returns A string representing the route to the country details page.
  */
-export function getCountryRoute(
+export function getCountriesRoute(
   region?: string,
   subregion?: string,
   isoCode?: string,
@@ -55,12 +63,12 @@ export function getCountryRoute(
 
 interface ExploreBreadcrumbOptions {
   selectedPanel: string;
-  selectedRegion?: string | null;
-  selectedSubregion?: string | null;
-  selectedCountry?: string | null;
-  selectedLanguage?: string | null;
-  selectedCurrency?: string | null;
-  selectedTimezone?: string | null;
+  selectedRegion: string | null;
+  selectedSubregion: string | null;
+  selectedCountry: string | null;
+  selectedLanguage: string | null;
+  selectedCurrency: string | null;
+  selectedTimezone: string | null;
 }
 
 /**
@@ -116,7 +124,6 @@ export function getExploreBreadcrumbs({
     { prefix: "timezones", value: selectedTimezone, key: "timezone" },
   ];
 
-  // Add dynamic entity breadcrumbs if they exist
   for (const { prefix, value, key } of dynamicEntities) {
     if (
       (selectedPanel === prefix || selectedPanel.startsWith(`${prefix}/`)) &&

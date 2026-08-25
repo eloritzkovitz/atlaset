@@ -24,11 +24,7 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
   const code = routeCode || getQueryParam("code", "", location.search);
   const currency = currencies.find((c) => c.code === code);
 
-  const { handleCountrySelect, handleBack } = useExploreNavigation(
-    countries,
-    "",
-    "",
-  );
+  const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
 
   const isoGroups = groupCountryIsoCodes(
     countries,
@@ -49,9 +45,9 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       title={currency.name}
       subtitle={`(${currency.code})`}
       actions={<WikipediaButton searchTerm={`${currency.name}`} />}
-      onBack={handleBack}
+      onBack={navigateBack}
       labelArgs={{ code: currency.code }}
-      onSelectCountry={handleCountrySelect}
+      onSelectCountry={navigateToCountry}
       groups={[
         {
           isoGroups,

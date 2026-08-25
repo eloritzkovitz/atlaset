@@ -2,7 +2,10 @@ import { useTranslation } from "react-i18next";
 import { AppLinks } from "@app/layouts/app/footer/AppLinks";
 import { DirectionalIcon } from "@components";
 import { ICONS } from "@constants/icons";
-import { getCompletedAchievementsCount, useGetAchievementsQuery } from "@features/achievements";
+import {
+  getCompletedAchievementsCount,
+  useGetAchievementsQuery,
+} from "@features/achievements";
 import { RecentActivitySection } from "@features/activity";
 import { useCountryData } from "@features/countries";
 import { useTrips } from "@features/trips";
@@ -12,7 +15,7 @@ import { useCountryTracking } from "@features/visits";
 import { formatFraction } from "@utils";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
-import { useExplorationStats } from "../exploration/hooks/useExplorationStats";
+import { useExplorationStats } from "../../explore/overview/hooks/useExplorationStats";
 
 export function OverviewGrid() {
   const { user } = useAuth();
@@ -48,7 +51,7 @@ export function OverviewGrid() {
         ? "..."
         : formatFraction(visitedCountries, totalCountries),
       icon: <ICONS.exploration className="text-5xl text-info" />,
-      link: "/dashboard/exploration",
+      link: "/explore/overview",
     },
     {
       label: t("overview.stats.achievements", { defaultValue: "Achievements" }),

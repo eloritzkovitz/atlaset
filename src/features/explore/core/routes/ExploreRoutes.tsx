@@ -7,6 +7,8 @@ import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
+import { ExploreOverviewGrid } from "../../overview/components/ExploreOverviewGrid";
+import { useExplorationStats } from "../../overview/hooks/useExplorationStats";
 import { TimezonesGrid } from "../../timezones/components/TimezonesGrid";
 import { TimezoneInfo } from "../../timezones/components/TimezoneInfo";
 
@@ -60,6 +62,11 @@ export function ExploreRoutes({
     onResetFilters,
   };
 
+  const { totalCountries, visitedCountries, regionStats } = useExplorationStats(
+    countries,
+    selectedSovereignOnly,
+  );
+
   // Subregion selection handler
   const handleSubregionChange = (region: string, subregion: string) => {
     setSelectedRegion(region);
@@ -69,6 +76,24 @@ export function ExploreRoutes({
 
   return (
     <Routes>
+      <Route
+        path="overview"
+        element={
+          <ExploreOverviewGrid
+            visitedCountries={visitedCountries}
+            totalCountries={totalCountries}
+            regionStats={regionStats}
+            selectedShowSovereignOnly={selectedSovereignOnly}
+            setSelectedShowSovereignOnly={setSelectedSovereignOnly}
+            setSelectedRegion={setSelectedRegion}
+            setSelectedSubregion={setSelectedSubregion}
+            onSubregionChange={handleSubregionChange}
+            onShowAllCountries={onShowAllCountries}
+          />
+        }
+      />
+      <Route path="" element={<Navigate to="overview" replace />} />
+
       <Route
         path="countries"
         element={<Navigate to="/explore/countries/all" replace />}
@@ -132,7 +157,6 @@ export function ExploreRoutes({
         path="timezones"
         element={<TimezonesGrid timezones={timezones} />}
       />
-
       <Route
         path="timezones/:code"
         element={<TimezoneInfo timezones={timezones} countries={countries} />}

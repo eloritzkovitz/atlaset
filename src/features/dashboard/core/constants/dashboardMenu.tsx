@@ -8,12 +8,6 @@ export const DASHBOARD_MENU = [
     url: "/dashboard/overview",
   },
   {
-    key: "exploration",
-    label: "Exploration",
-    icon: ICONS.exploration,
-    url: "/dashboard/exploration",
-  }, 
-  {
     key: "achievements",
     label: "Achievements",
     icon: ICONS.achievements,

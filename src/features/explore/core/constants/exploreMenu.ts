@@ -2,6 +2,12 @@ import { ICONS } from "@constants/icons";
 
 export const EXPLORE_MENU = [
   {
+    key: "overview",
+    label: "Overview",
+    icon: ICONS.overview,
+    url: "/explore/overview",
+  },
+  {
     key: "countries",
     label: "Countries",
     icon: ICONS.countries,

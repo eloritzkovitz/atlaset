@@ -1,54 +1,61 @@
 import { useNavigate } from "react-router-dom";
 import type { Country } from "@features/countries/types";
-import { getCountryRoute } from "../utils/exploreNavigation";
+import { getCountriesRoute } from "../utils/exploreNavigation";
 import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
 
 /**
  * Manages explore navigation state and handlers.
  * @param countries - List of countries.
- * @param selectedRegion - Currently selected region.
- * @param selectedSubregion - Currently selected subregion.
+ * @param selectedRegion - Optional currently selected region.
+ * @param selectedSubregion - Optional currently selected subregion.
  * @returns Navigation state and handlers.
  */
 export function useExploreNavigation(
   countries: Country[],
-  selectedRegion: string,
-  selectedSubregion: string,
+  selectedRegion?: string,
+  selectedSubregion?: string,
 ) {
   const navigate = useNavigate();
 
   const navigateToPanel = (panel: string) => navigate(`/explore/${panel}`);
-  const handleRegionSelect = (region: string) =>
-    navigate(getCountryRoute(region));
-  const handleSubregionSelect = (region: string, subregion: string) =>
-    navigate(getCountryRoute(region, subregion));
 
-  // Handle country selection by navigating to the corresponding country route or defaulting to the countries panel
-  const handleCountrySelect = (isoCode: string | null) => {
+  const navigateToRegion = (region: string) =>
+    navigate(getCountriesRoute(region));
+
+  const navigateToSubregion = (region: string, subregion: string) =>
+    navigate(getCountriesRoute(region, subregion));
+
+  const navigateToCountry = (isoCode: string | null) => {
     if (!isoCode) return navigate(EXPLORE_URLS.countries);
 
-    const country = countries?.find((c) => c.isoCode === isoCode);
+    const country = countries.find((c) => c.isoCode === isoCode);
     if (country) {
       navigate(
-        getCountryRoute(country.region, country.subregion, country.isoCode),
+        getCountriesRoute(country.region, country.subregion, country.isoCode),
       );
     }
   };
 
-  const handleShowAllCountries = () => navigate(EXPLORE_URLS.countries);
-  const handleBack = () => navigate(-1);
-
-  const crumbActions: Record<string, () => void> = {
-    countries: () => navigate(EXPLORE_URLS.countries),
-    currencies: () => navigate(EXPLORE_URLS.currencies),
-    region: () => navigate(getCountryRoute(selectedRegion)),
-    subregion: () =>
-      navigate(getCountryRoute(selectedRegion, selectedSubregion)),
-    country: () => {},
-    "currencies/exchange": () => navigate("/explore/currencies/exchange"),
+  const navigateToAllCountries = () => {
+    navigate(EXPLORE_URLS.countries);
   };
 
-  // Handle breadcrumb click by executing the corresponding action or defaulting to panel change
+  const navigateBack = () => navigate(-1);
+
+  const crumbActions: Record<string, () => void> = {
+    explore: () => navigate(EXPLORE_URLS.overview),
+    countries: () => navigate(EXPLORE_URLS.countries),
+    region: () => navigate(getCountriesRoute(selectedRegion)),
+    subregion: () =>
+      navigate(getCountriesRoute(selectedRegion, selectedSubregion)),
+    country: () => {},
+    languages: () => navigate(EXPLORE_URLS.languages),
+    currencies: () => navigate(EXPLORE_URLS.currencies),
+    "currencies/exchange": () => navigate("/explore/currencies/exchange"),
+    timezones: () => navigate(EXPLORE_URLS.timezones),
+  };
+
+  // Handle crumb click by executing the corresponding action or navigating to the panel
   const handleCrumbClick = (key: string) => {
     const action = crumbActions[key] ?? (() => navigateToPanel(key));
     action();
@@ -56,11 +63,11 @@ export function useExploreNavigation(
 
   return {
     navigateToPanel,
-    handleRegionSelect,
-    handleSubregionSelect,
-    handleCountrySelect,
-    handleShowAllCountries,
+    navigateToRegion,
+    navigateToSubregion,
+    navigateToCountry,
+    navigateToAllCountries,
     handleCrumbClick,
-    handleBack,
+    navigateBack,
   };
 }
