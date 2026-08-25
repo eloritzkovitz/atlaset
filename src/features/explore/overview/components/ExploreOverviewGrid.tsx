@@ -38,7 +38,7 @@ export function ExploreOverviewGrid({
 
   const [sortValue, setSortValue] = useLocalStorageState<
     SortValue<ExplorationSortKey>
-  >("atlaset:dashboard_exploration_sort", "name-asc");
+  >("atlaset:world_exploration_sort", "name-asc");
 
   // Compute loading state with a slight delay to prevent flickering
   const loading = useDelayedLoading(

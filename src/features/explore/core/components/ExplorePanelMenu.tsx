@@ -32,7 +32,7 @@ export function ExplorePanelMenu({
       title={
         <>
           <ICONS.explore className="me-1" />
-          {t("menu.title", { defaultValue: "Dashboard" })}
+          {t("menu.title", "Explore")}
         </>
       }
       menuItems={menuItems}

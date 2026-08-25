@@ -11,7 +11,7 @@ interface CurrenciesGridProps {
 export const CurrenciesGrid: React.FC<CurrenciesGridProps> = ({
   currencies,
 }) => {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
 
   return (
     <ExploreListGrid

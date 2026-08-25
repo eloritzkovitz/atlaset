@@ -9,7 +9,7 @@ interface TimezonesGridProps {
 }
 
 export const TimezonesGrid: React.FC<TimezonesGridProps> = ({ timezones }) => {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
   const [, setTick] = useState(0);
 
   useEffect(() => {

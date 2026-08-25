@@ -8,7 +8,7 @@ interface LanguagesGridProps {
 }
 
 export const LanguagesGrid: React.FC<LanguagesGridProps> = ({ languages }) => {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
 
   return (
     <ExploreListGrid

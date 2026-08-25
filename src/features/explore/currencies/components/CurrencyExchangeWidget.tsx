@@ -14,7 +14,7 @@ interface CurrencyExchangeWidgetProps {
 export function CurrencyExchangeWidget({
   currencies,
 }: CurrencyExchangeWidgetProps) {
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
 
   usePageTitle(t("currencies.currencyExchange.pageTitle", "Currency Exchange"));
 

@@ -1,5 +1,5 @@
 /**
- * Utility functions for translating region and subregion labels in the dashboard.
+ * Utility functions for translating region and subregion labels.
  */
 
 import type { TFunction } from "i18next";

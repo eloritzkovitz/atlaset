@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 /**
- * Manages filter state for the dashboard countries pages.
+ * Manages filter state for the Explore Countries page.
  */
 export function useExploreCountriesFilters() {
   const [search, setSearch] = useState("");
