@@ -164,7 +164,7 @@ export const ICONS = {
   // Dashboard
   dashboard: DashboardIcon,
   overview: FaHouse,
-  exploration: FaCompass,
+  explore: FaCompass,
   currencies: FaCoins,
   timezones: FaClock,
   achievements: FaMedal,

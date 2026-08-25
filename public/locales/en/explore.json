@@ -9,7 +9,7 @@
     "currencies": "Currencies",
     "timezones": "Timezones"
   },
-  "countries": {
+  "overview": {
     "toggles": {
       "all": "All Countries",
       "sovereign": "Sovereign Only"
@@ -22,7 +22,9 @@
     "allTitle": "All Countries",
     "showAllCountries": "Show all countries",
     "showSovereignOnly": "Show sovereign only",
-    "ofCountriesVisited": "of countries visited",
+    "ofCountriesVisited": "of countries visited"
+  },
+  "countries": {
     "showVisitedOnly": "Show Visited Only",
     "showTranscontinental": "Show transcontinental countries",
     "hideTranscontinental": "Hide transcontinental countries"

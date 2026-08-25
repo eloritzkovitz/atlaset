@@ -130,7 +130,7 @@ export const CountryActions = forwardRef(function CountryActions(
   ];
 
   const resourceSection = [
-    actionsObj.viewDashboard,
+    actionsObj.exploreCountry,
     actionsObj.wikipedia,
   ].filter(Boolean);
 

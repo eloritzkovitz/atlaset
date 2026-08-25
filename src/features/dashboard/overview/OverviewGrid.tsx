@@ -50,7 +50,7 @@ export function OverviewGrid() {
       value: countriesLoading
         ? "..."
         : formatFraction(visitedCountries, totalCountries),
-      icon: <ICONS.exploration className="text-5xl text-info" />,
+      icon: <ICONS.explore className="text-5xl text-info" />,
       link: "/explore/overview",
     },
     {

@@ -30,7 +30,7 @@ export function RegionCard({
 }: RegionCardProps) {
   const animatedVisited = useAnimatedNumber(visited, 640);
   const { t: tCountries } = useTranslation("countries");
-  const { t: tDashboard } = useTranslation("dashboard");
+  const { t: tExplore } = useTranslation("explore");
 
   return (
     <Card loading={loading} skeletonLines={6}>
@@ -38,7 +38,7 @@ export function RegionCard({
         <>
           <RegionButton
             icon={<RegionIcon region={region} />}
-            label={translateRegionLabel(region, tCountries, tDashboard)}
+            label={translateRegionLabel(region, tCountries, tExplore)}
             stats={formatFraction(animatedVisited, total, {
               showPercent: true,
             })}

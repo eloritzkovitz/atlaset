@@ -1,14 +1,7 @@
 {
   "menu": {
     "title": "לוח בקרה",
-    "countries": "מדינות",
-    "allCountries": "הכל",
-    "currencyExchange": "המרת מטבע",
     "overview": "סקירה",
-    "exploration": "מדינות",
-    "languages": "שפות",
-    "currencies": "מטבעות",
-    "timezones": "אזורי זמן",
     "achievements": "הישגים",
     "statistics": "סטטיסטיקה"
   },
@@ -22,88 +15,6 @@
       "achievements": "הישגים",
       "statistics": "סטטיסטיקה",
       "view": "צפייה"
-    }
-  },
-  "exploration": {
-    "toggles": {
-      "all": "כל המדינות",
-      "sovereign": "ריבוניות בלבד"
-    },
-    "sortBy": {
-      "alphabetical": "אלפביתי",
-      "progress": "התקדמות"
-    },
-    "worldTitle": "חקר העולם",
-    "allTitle": "כל המדינות",
-    "showAllCountries": "הצג את כל המדינות",
-    "showSovereignOnly": "הצג רק מדינות ריבוניות",
-    "ofCountriesVisited": "מהמדינות שביקרתי בהן",
-    "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
-    "showTranscontinental": "הצג מדינות חוצות יבשות",
-    "hideTranscontinental": "הסתר מדינות חוצות יבשות"
-  },
-  "languages": {
-    "columns": {
-      "code": "קוד שפה",
-      "name": "שם השפה"
-    },
-    "searchPlaceholder": "חיפוש לפי שם או קוד",
-    "empty": "שפה לא נמצאה.",
-    "viewLanguage": "הצגת פרטי שפה",
-    "languageInfo": {
-      "usingLanguage": "מדינות שבהן מדוברת {{name}}",
-      "dependenciesUsingLanguage": "טריטוריות שבהן מדוברת {{name}}"
-    }
-  },
-  "currencies": {
-    "columns": {
-      "code": "קוד מטבע",
-      "name": "שם המטבע"
-    },
-    "pageTitle": "המרת מטבע",
-    "disclaimer": "נתונים על פי Open Exchange Rates",
-    "searchPlaceholder": "חיפוש לפי שם או קוד",
-    "empty": "מטבע לא נמצא.",
-    "viewExchange": "הצגת המרת מטבע",
-    "currencyInfo": {
-      "usingCurrency": "מדינות שמשתמשות ב {{code}}",
-      "dependenciesUsingCurrency": "טריטוריות שמשתמשות ב {{code}}"
-    },
-    "currencyExchange": {
-      "exchangeHeader": "1 {{currency}} שווה",
-      "rateValue": "{{rate}} {{currency}}",
-      "from": "מ",
-      "to": "אל",
-      "input": {
-        "amountToConvert": "סכום להמרה",
-        "convertedAmount": "סכום מומר"
-      },
-      "select": {
-        "from": "מטבע מוצא",
-        "to": "מטבע יעד"
-      },
-      "swap": {
-        "ariaLabel": "החלף מטבעות",
-        "title": "החלפה"
-      },
-      "convert": "המרה",
-      "converting": "ממיר...",
-      "errorPrefix": "שגיאה:"
-    }
-  },
-  "timezones": {
-    "columns": {
-      "offset": "הפרש UTC",
-      "currentTime": "זמן נוכחי"
-    },
-    "searchPlaceholder": "חיפוש לפי הפרש UTC",
-    "empty": "אזור זמן לא נמצא.",
-    "viewTimezone": "הצגת פרטי אזור זמן",
-    "timezoneInfo": {
-      "usingStandardTime": "מדינות שמשתמשות ב {{code}} כאזור זמן סטנדרטי",
-      "dependenciesUsingStandardTime": "טריטוריות שמשתמשות ב {{code}} כאזור זמן סטנדרטי",
-      "usingDST": "מדינות שמשתמשות ב {{code}} כאזור זמן קיץ",
-      "dependenciesUsingDST": "טריטוריות שמשתמשות ב {{code}} כאזור זמן קיץ"
     }
   },
   "statistics": {

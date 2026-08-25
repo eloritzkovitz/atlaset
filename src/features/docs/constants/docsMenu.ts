@@ -148,7 +148,7 @@ export const DOCS_GROUPS = {
       {
         label: "Exploration",
         file: "dashboard/exploration.md",
-        icon: ICONS.exploration,
+        icon: ICONS.explore,
         url: "/docs/dashboard/exploration",
       },
       {

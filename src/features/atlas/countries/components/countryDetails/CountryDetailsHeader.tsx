@@ -21,7 +21,7 @@ export function CountryDetailsHeader({
 
   const displayedActions = [
     actionsObj.toggleWantToVisit,
-    actionsObj.viewDashboard,
+    actionsObj.exploreCountry,
     actionsObj.wikipedia,
   ].filter((action) => Boolean(action) && !action?.disabled);
 

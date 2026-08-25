@@ -10,7 +10,7 @@ export const NAV_LINKS = [
   },
   {
     to: "/explore",
-    icon: <ICONS.exploration className="text-2xl" />,
+    icon: <ICONS.explore className="text-2xl" />,
     labelKey: "navigation.sidebar.explore",
     label: "Explore",
     end: false,

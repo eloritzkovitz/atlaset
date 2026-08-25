@@ -71,7 +71,7 @@ export function useCountryActions({
   });
 
   // Construct URLs
-  const dashboardUrl = getCountriesRoute(
+  const exploreUrl = getCountriesRoute(
     country.region,
     country.subregion,
     country.isoCode,
@@ -165,11 +165,11 @@ export function useCountryActions({
         });
       },
     },
-    viewDashboard: {
-      label: t("countries.actions.viewDashboard"),
-      ariaLabel: t("countries.actions.viewDashboard"),
-      icon: <ICONS.dashboard />,
-      url: dashboardUrl,
+    exploreCountry: {
+      label: t("countries.actions.exploreCountry"),
+      ariaLabel: t("countries.actions.exploreCountry"),
+      icon: <ICONS.explore />,
+      url: exploreUrl,
       onClick: () => {
         if (onCloseMenu) onCloseMenu();
       },

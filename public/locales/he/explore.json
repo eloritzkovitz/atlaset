@@ -1,6 +1,6 @@
 {
   "menu": {
-    "title": "לוח בקרה",
+    "title": "עיון",
     "countries": "מדינות",
     "allCountries": "הכל",
     "currencyExchange": "המרת מטבע",
@@ -8,7 +8,7 @@
     "currencies": "מטבעות",
     "timezones": "אזורי זמן"
   },
-  "countries": {
+  "overview": {
     "toggles": {
       "all": "כל המדינות",
       "sovereign": "ריבוניות בלבד"
@@ -21,7 +21,9 @@
     "allTitle": "כל המדינות",
     "showAllCountries": "הצג את כל המדינות",
     "showSovereignOnly": "הצג רק מדינות ריבוניות",
-    "ofCountriesVisited": "מהמדינות שביקרתי בהן",
+    "ofCountriesVisited": "מהמדינות שביקרתי בהן"
+  },
+  "countries": {
     "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
     "showTranscontinental": "הצג מדינות חוצות יבשות",
     "hideTranscontinental": "הסתר מדינות חוצות יבשות"

@@ -9,10 +9,10 @@ import { canonicalKey } from "@utils";
 export function translateRegionLabel(
   region: string,
   tCountries: TFunction,
-  tDashboard: TFunction,
+  tExplore: TFunction,
 ) {
   if (!region) return region;
-  if (region === "All Countries") return tDashboard("menu.allCountries");
+  if (region === "All Countries") return tExplore("menu.allCountries");
   return tCountries(`regions.${canonicalKey(region)}`, {
     defaultValue: region,
   });

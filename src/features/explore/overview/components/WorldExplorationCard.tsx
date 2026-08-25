@@ -18,7 +18,7 @@ export function WorldExplorationCard({
   onShowAllCountries,
 }: WorldExplorationCardProps) {
   const animatedVisited = useAnimatedNumber(visited, 640);
-  const { t: tDashboard } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
 
   const formattedPercent = formatPercent(animatedVisited, total);
   const progressWidth = total > 0 ? (animatedVisited / total) * 100 : 0;
@@ -29,15 +29,12 @@ export function WorldExplorationCard({
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
-      aria-label={tDashboard(
-        "exploration.showAllCountries",
-        "Show all countries",
-      )}
+      aria-label={t("overview.showAllCountries", "Show all countries")}
     >
       {!loading && (
         <>
           <div className="text-2xl font-semibold mb-2">
-            {tDashboard("exploration.worldTitle", "World Exploration")}
+            {t("overview.worldTitle", "World Exploration")}
           </div>
           <div className="text-5xl font-bold text-primary mb-2">
             <span dir="ltr">
@@ -46,8 +43,9 @@ export function WorldExplorationCard({
           </div>
           <div className="text-lg text-muted">
             {formattedPercent}{" "}
-            {tDashboard(
-              "exploration.ofCountriesVisited",
+            {t(
+              "overview.ofCountriesVisited",
+
               "of countries visited",
             )}
           </div>

@@ -31,7 +31,7 @@ export function ExplorePanelMenu({
     <SidePanelMenu
       title={
         <>
-          <ICONS.exploration className="me-1" />
+          <ICONS.explore className="me-1" />
           {t("menu.title", { defaultValue: "Dashboard" })}
         </>
       }

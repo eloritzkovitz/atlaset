@@ -34,7 +34,7 @@ export function ExploreOverviewGrid({
   onShowAllCountries,
 }: ExploreOverviewGridProps) {
   const { countries, loading: countriesLoading } = useCountryData();
-  const { t } = useTranslation("dashboard");
+  const { t } = useTranslation("explore");
 
   const [sortValue, setSortValue] = useLocalStorageState<
     SortValue<ExplorationSortKey>
@@ -76,11 +76,11 @@ export function ExploreOverviewGrid({
           options={[
             {
               value: "all",
-              label: t("exploration.toggles.all", "All Countries"),
+              label: t("overview.toggles.all", "All Countries"),
             },
             {
               value: "sovereign",
-              label: t("exploration.toggles.sovereign", "Sovereign Only"),
+              label: t("overview.toggles.sovereign", "Sovereign Only"),
             },
           ]}
           onChange={(v) => setSelectedShowSovereignOnly(v === "sovereign")}
@@ -93,11 +93,11 @@ export function ExploreOverviewGrid({
           keyGroup={[
             {
               value: "name",
-              label: t("exploration.sortBy.alphabetical", "Alphabetical"),
+              label: t("overview.sortBy.alphabetical", "Alphabetical"),
             },
             {
               value: "progress",
-              label: t("exploration.sortBy.progress", "Progress"),
+              label: t("overview.sortBy.progress", "Progress"),
             },
           ]}
           showLabel
