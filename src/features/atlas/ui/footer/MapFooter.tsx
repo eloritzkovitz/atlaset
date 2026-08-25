@@ -59,8 +59,8 @@ export function MapFooter({ zoom }: MapFooterProps) {
             className="font-medium text-muted transition-colors hover:text-text focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary rounded px-1"
           >
             {t(
-              "footer.countriesExplored",
-              "Countries explored: {{visited}}/{{total}} ({{percent}})",
+              "footer.countriesVisited",
+              "Countries visited: {{visited}}/{{total}} ({{percent}})",
               {
                 visited: visitedCountries,
                 total: totalCountries,

@@ -11,7 +11,7 @@
     "welcomeBack": "Welcome back!",
     "stats": {
       "heading": "{{name}}'s Overview",
-      "countriesExplored": "Countries Explored",
+      "countriesVisited": "Countries Visited",
       "achievements": "Achievements",
       "statistics": "Statistics",
       "view": "View"

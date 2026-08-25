@@ -44,8 +44,8 @@ export function OverviewGrid() {
 
   const stats = [
     {
-      label: t("overview.stats.countriesExplored", {
-        defaultValue: "Countries Explored",
+      label: t("overview.stats.countriesVisited", {
+        defaultValue: "Countries Visited",
       }),
       value: countriesLoading
         ? "..."
