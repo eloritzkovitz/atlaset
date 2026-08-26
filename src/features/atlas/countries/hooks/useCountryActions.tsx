@@ -165,9 +165,9 @@ export function useCountryActions({
         });
       },
     },
-    exploreCountry: {
-      label: t("countries.actions.exploreCountry"),
-      ariaLabel: t("countries.actions.exploreCountry"),
+    explore: {
+      label: tCommon("actions.explore"),
+      ariaLabel: tCommon("actions.explore"),
       icon: <ICONS.explore />,
       url: exploreUrl,
       onClick: () => {

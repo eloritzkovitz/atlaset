@@ -129,10 +129,9 @@ export const CountryActions = forwardRef(function CountryActions(
       : []),
   ];
 
-  const resourceSection = [
-    actionsObj.exploreCountry,
-    actionsObj.wikipedia,
-  ].filter(Boolean);
+  const resourceSection = [actionsObj.explore, actionsObj.wikipedia].filter(
+    Boolean,
+  );
 
   // Add a country to a list from the menu
   const handleAddCountryToList = async (listId: string) => {
