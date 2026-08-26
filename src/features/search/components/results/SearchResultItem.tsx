@@ -1,7 +1,7 @@
 import i18n from "i18next";
 import { ICONS } from "@constants/icons";
 import { CountryFlag, RegionIcon, type Country } from "@features/countries";
-import { getCountryRoute } from "@features/dashboard/core";
+import { getCountriesRoute } from "@features/explore";
 import { UserAvatar } from "@features/user/profile";
 import type { SerializableUser } from "@features/user/auth/types";
 import { type Friend } from "@features/user/friends/types";
@@ -38,7 +38,7 @@ export function SearchResultItem({
       break;
 
     case "country":
-      url = getCountryRoute(item.region, item.subregion, item.isoCode);
+      url = getCountriesRoute(item.region, item.subregion, item.isoCode);
       displayName = item.name;
       label = getCountryLabel(item, countries);
       icon = (
@@ -54,21 +54,21 @@ export function SearchResultItem({
       break;
 
     case "currency":
-      url = `/dashboard/currencies/${item.code}`;
+      url = `/explore/currencies/${item.code}`;
       displayName = `${item.name} (${item.code})`;
       label = i18n.t("countries:labels.currency");
       icon = <ICONS.currencies className="2xl" />;
       break;
 
     case "language":
-      url = `/dashboard/languages/${item.code}`;
+      url = `/explore/languages/${item.code}`;
       displayName = `${item.name} (${item.code})`;
       label = i18n.t("countries:labels.language");
       icon = <ICONS.language className="2xl" />;
       break;
 
     case "timezone":
-      url = `/dashboard/timezones/${item.code}`;
+      url = `/explore/timezones/${item.code}`;
       displayName = item.code.toUpperCase();
       label = i18n.t("countries:labels.timezone");
       icon = <ICONS.timezones className="2xl" />;
@@ -79,7 +79,11 @@ export function SearchResultItem({
       const isSub = item.type === "subregion";
       const regKey = item.region;
 
-      url = getCountryRoute(regKey, isSub ? item.subregion : undefined);
+      url = getCountriesRoute(
+        regKey,
+        isSub ? item.subregion : undefined,
+        undefined,
+      );
       displayName = i18n.t(
         `countries:${isSub ? "subregions" : "regions"}.${regKey}${isSub ? `.${item.subregion}` : ""}`,
         {

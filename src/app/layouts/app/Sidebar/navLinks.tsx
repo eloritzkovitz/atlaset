@@ -1,6 +1,6 @@
 import { ICONS } from "@constants/icons";
 
-export const NAV_LINKS = [
+export const PRIMARY_LINKS = [
   {
     to: "/atlas",
     icon: <ICONS.atlas className="text-2xl" />,
@@ -9,17 +9,17 @@ export const NAV_LINKS = [
     end: true,
   },
   {
+    to: "/explore",
+    icon: <ICONS.explore className="text-2xl" />,
+    labelKey: "navigation.sidebar.explore",
+    label: "Explore",
+    end: false,
+  },
+  {
     to: "/trips",
     icon: <ICONS.trips className="text-2xl" />,
     labelKey: "navigation.sidebar.trips",
     label: "My Trips",
-    end: false,
-  },
-  {
-    to: "/dashboard",
-    icon: <ICONS.dashboard className="text-2xl" />,
-    labelKey: "navigation.sidebar.dashboard",
-    label: "Dashboard",
     end: false,
   },
   {
@@ -31,10 +31,19 @@ export const NAV_LINKS = [
   },
 ];
 
-export const SETTINGS_LINK = {
-  to: "/settings",
-  icon: <ICONS.settings className="text-2xl" />,
-  labelKey: "navigation.sidebar.settings",
-  label: "Settings",
-  end: false,
-};
+export const SECONDARY_LINKS = [
+  {
+    to: "/dashboard",
+    icon: <ICONS.dashboard className="text-2xl" />,
+    labelKey: "navigation.sidebar.dashboard",
+    label: "Dashboard",
+    end: false,
+  },
+  {
+    to: "/settings",
+    icon: <ICONS.settings className="text-2xl" />,
+    labelKey: "navigation.sidebar.settings",
+    label: "Settings",
+    end: false,
+  },
+];

@@ -105,6 +105,51 @@ export const DOCS_GROUPS = {
       },
     ],
   },
+  explore: {
+    header: {
+      label: "Explore",
+      file: null,
+      icon: ICONS.explore,
+    },
+    items: [
+      {
+        label: "Overview",
+        file: "explore/explore-overview.md",
+        icon: ICONS.explore,
+        url: "/docs/explore/explore-overview",
+      },
+      {
+        label: "World Exploration",
+        file: "explore/exploration.md",
+        icon: ICONS.progress,
+        url: "/docs/explore/exploration",
+      },
+      {
+        label: "Languages",
+        file: "explore/languages.md",
+        icon: ICONS.language,
+        url: "/docs/explore/languages",
+      },
+      {
+        label: "Currencies",
+        file: "explore/currencies.md",
+        icon: ICONS.currencies,
+        url: "/docs/explore/currencies",
+      },
+      {
+        label: "Timezones",
+        file: "explore/timezones.md",
+        icon: ICONS.timezones,
+        url: "/docs/explore/timezones",
+      },
+      {
+        label: "Achievements",
+        file: "explore/achievements.md",
+        icon: ICONS.achievements,
+        url: "/docs/explore/achievements",
+      },
+    ],
+  },
   trips: {
     header: {
       label: "Trips",
@@ -131,58 +176,7 @@ export const DOCS_GROUPS = {
         url: "/docs/trips/calendar",
       },
     ],
-  },
-  dashboard: {
-    header: {
-      label: "Dashboard",
-      file: null,
-      icon: ICONS.dashboard,
-    },
-    items: [
-      {
-        label: "Overview",
-        file: "dashboard/dashboard-overview.md",
-        icon: ICONS.dashboard,
-        url: "/docs/dashboard/dashboard-overview",
-      },
-      {
-        label: "Exploration",
-        file: "dashboard/exploration.md",
-        icon: ICONS.exploration,
-        url: "/docs/dashboard/exploration",
-      },
-      {
-        label: "Languages",
-        file: "dashboard/languages.md",
-        icon: ICONS.language,
-        url: "/docs/dashboard/languages",
-      },
-      {
-        label: "Currencies",
-        file: "dashboard/currencies.md",
-        icon: ICONS.currencies,
-        url: "/docs/dashboard/currencies",
-      },
-      {
-        label: "Timezones",
-        file: "dashboard/timezones.md",
-        icon: ICONS.timezones,
-        url: "/docs/dashboard/timezones",
-      },
-      {
-        label: "Achievements",
-        file: "dashboard/achievements.md",
-        icon: ICONS.achievements,
-        url: "/docs/dashboard/achievements",
-      },
-      {
-        label: "Statistics",
-        file: "dashboard/statistics.md",
-        icon: ICONS.statistics,
-        url: "/docs/dashboard/statistics",
-      },
-    ],
-  },
+  },  
   quizzes: {
     header: {
       label: "Quizzes",
@@ -207,6 +201,27 @@ export const DOCS_GROUPS = {
         file: "quizzes/leaderboards.md",
         icon: ICONS.leaderboards,
         url: "/docs/quizzes/leaderboards",
+      },
+    ],
+  },
+  dashboard: {
+    header: {
+      label: "Dashboard",
+      file: null,
+      icon: ICONS.dashboard,
+    },
+    items: [
+      {
+        label: "Overview",
+        file: "dashboard/dashboard-overview.md",
+        icon: ICONS.dashboard,
+        url: "/docs/dashboard/dashboard-overview",
+      },
+      {
+        label: "Statistics",
+        file: "dashboard/statistics.md",
+        icon: ICONS.statistics,
+        url: "/docs/dashboard/statistics",
       },
     ],
   },
@@ -274,9 +289,10 @@ export const DOCS_GROUPS = {
 export const DOCS = [
   ...DOCS_GROUPS.getStarted.items,
   ...DOCS_GROUPS.atlas.items,
-  ...DOCS_GROUPS.trips.items,
-  ...DOCS_GROUPS.dashboard.items,
+  ...DOCS_GROUPS.explore.items,
+  ...DOCS_GROUPS.trips.items,  
   ...DOCS_GROUPS.quizzes.items,
+  ...DOCS_GROUPS.dashboard.items,
   ...DOCS_GROUPS.account.items,
   ...DOCS_GROUPS.accessibility.items,
   ...DOCS_GROUPS.forDevelopers.items,

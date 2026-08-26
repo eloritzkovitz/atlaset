@@ -27,7 +27,7 @@
     "resetView": "Reset view"
   },
   "footer": {
-    "countriesExplored": "Countries explored: {{visited}}/{{total}} ({{percent}})",
+    "countriesVisited": "Countries visited: {{visited}}/{{total}} ({{percent}})",
     "sovereignOnlyTooltip": "World coverage: Sovereign states",
     "allCountriesTooltip": "World coverage: All territories",
     "zoomTooltip": "Zoom level: {{zoom}}x"
@@ -56,8 +56,7 @@
       "visited": "Visited",
       "addMarker": "Add Marker",
       "editMarker": "Edit Marker",
-      "centerMap": "Center on Map",
-      "viewDashboard": "View in Dashboard"
+      "centerMap": "Center on Map"
     },
     "searchPlaceholder": "Search countries",
     "lists": {

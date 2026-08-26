@@ -7,7 +7,7 @@ import {
 } from "@constants/ui";
 import { useUI } from "@app/contexts/UIContext";
 import { useDismiss } from "@hooks";
-import { NAV_LINKS, SETTINGS_LINK } from "./navLinks";
+import { PRIMARY_LINKS, SECONDARY_LINKS } from "./navLinks";
 import { SidebarMenuLink } from "./SidebarMenuLink";
 
 export function Sidebar() {
@@ -75,8 +75,10 @@ export function Sidebar() {
         </div>
 
         {/* Desktop Navigation Links */}
-        <nav className={`flex flex-col gap-2 mt-2 ${sidebarExpanded ? "px-1" : ""}`}>
-          {NAV_LINKS.map((link) => (
+        <nav
+          className={`flex flex-col gap-2 mt-2 ${sidebarExpanded ? "px-1" : ""}`}
+        >
+          {PRIMARY_LINKS.map((link) => (
             <SidebarMenuLink
               key={link.to}
               {...link}
@@ -86,14 +88,22 @@ export function Sidebar() {
         </nav>
 
         {/* Settings Footer */}
-        <div className={`absolute bottom-2 w-full ${sidebarExpanded ? "px-1" : ""}`}>
-          <SidebarMenuLink {...SETTINGS_LINK} expanded={sidebarExpanded} />
+        <div
+          className={`flex flex-col absolute bottom-2 gap-2 w-full ${sidebarExpanded ? "px-1" : ""}`}
+        >
+          {SECONDARY_LINKS.map((link) => (
+            <SidebarMenuLink
+              key={link.to}
+              {...link}
+              expanded={sidebarExpanded}
+            />
+          ))}
         </div>
       </aside>
 
       {/* Mobile bottom navigation bar */}
       <nav className="fixed bottom-0 start-0 end-0 z-[10000] bg-sidebar border-t border-gray-700 flex justify-around items-center h-16 md:hidden">
-        {NAV_LINKS.map((link) => (
+        {PRIMARY_LINKS.map((link) => (
           <SidebarMenuLink key={link.to} {...link} expanded={false} />
         ))}
       </nav>

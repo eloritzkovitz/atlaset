@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-08-26
+
+- **[feature]** **Explore:** Separated browsable data from the dashboard
+- **[chore]** **Dashboard:** Removed menu and updated navigation
+- **[chore]** **General:** Reordered the sidebar items and updated some icons
+
 ## 2026-08-21
 
 - **[chore]** **Countries:** Improved filtering configuration and performance
@@ -13,7 +19,7 @@
 
 ## 2026-08-10
 
-- **[feature]** **Migration:** Reworked migration logic so that it shows a notice before migrating
+- **[feature]** **User | Migration:** Reworked migration logic so that it shows a notice before migrating
 - **[bugfix]** **General:** Fixed a bug that did not clear some entity data after signing out
 - **[chore]** **Search:** Languages and timezones are now searchable in the global search
 

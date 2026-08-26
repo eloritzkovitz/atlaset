@@ -12,10 +12,10 @@ import {
   type TableColumn,
 } from "@components";
 import { CountryWithFlag } from "@features/countries";
+import { getCountriesRoute } from "@features/explore";
 import { VISITED_COUNTRIES_TABLE_COLUMNS } from "../constants/statistics";
 import { useTripsStats } from "../hooks/useTripsStats";
 import type { VisitedCountryRankRow } from "../types";
-import { getCountryRoute } from "../../core/utils/dashboardNavigation";
 
 export function TripDestinations() {
   const { t } = useTranslation("dashboard");
@@ -78,7 +78,7 @@ export function TripDestinations() {
 
   // Handle row click to navigate to the country details page
   const handleCountryClick = (row: VisitedCountryRankRow) => {
-    const route = getCountryRoute(
+    const route = getCountriesRoute(
       row.country.region,
       row.country.subregion,
       row.country.isoCode,
