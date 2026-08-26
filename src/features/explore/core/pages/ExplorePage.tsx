@@ -59,6 +59,7 @@ export default function ExplorePage() {
     selectedLanguage,
     selectedCurrency,
     selectedTimezone,
+    selectedAchievement,
   } = useExploreRouteState();
 
   // Countries filter state
@@ -82,6 +83,7 @@ export default function ExplorePage() {
     selectedLanguage: selectedLanguage?.name ?? null,
     selectedCurrency: selectedCurrency?.name ?? null,
     selectedTimezone: selectedTimezone?.code ?? null,
+    selectedAchievement: selectedAchievement?.name ?? null,
   });
 
   const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {

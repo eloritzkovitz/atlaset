@@ -1,6 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { Country, Currency, Timezone } from "@features/countries/types";
 import type { Language } from "@types";
+import { AchievementsGrid } from "../../achievements/AchievementsGrid";
+import { AchievementInfo } from "../../achievements/AchievementInfo";
 import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
@@ -161,6 +163,9 @@ export function ExploreRoutes({
         path="timezones/:code"
         element={<TimezoneInfo timezones={timezones} countries={countries} />}
       />
+
+      <Route path="achievements" element={<AchievementsGrid />} />
+      <Route path="achievements/:achievementId" element={<AchievementInfo />} />
     </Routes>
   );
 }

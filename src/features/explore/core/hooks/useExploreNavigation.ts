@@ -53,6 +53,7 @@ export function useExploreNavigation(
     currencies: () => navigate(EXPLORE_URLS.currencies),
     "currencies/exchange": () => navigate("/explore/currencies/exchange"),
     timezones: () => navigate(EXPLORE_URLS.timezones),
+    achievements: () => navigate(EXPLORE_URLS.achievements),
   };
 
   // Handle crumb click by executing the corresponding action or navigating to the panel

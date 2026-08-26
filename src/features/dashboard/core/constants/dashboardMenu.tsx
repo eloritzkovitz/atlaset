@@ -6,13 +6,7 @@ export const DASHBOARD_MENU = [
     label: "Overview",
     icon: ICONS.overview,
     url: "/dashboard/overview",
-  },
-  {
-    key: "achievements",
-    label: "Achievements",
-    icon: ICONS.achievements,
-    url: "/dashboard/achievements",
-  },
+  },  
   {
     key: "statistics",
     label: "Statistics",

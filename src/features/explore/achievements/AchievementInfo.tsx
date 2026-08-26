@@ -7,15 +7,13 @@ import {
 } from "@features/achievements";
 import type { Achievement } from "@features/achievements/types";
 import { groupCountryIsoCodes } from "@features/countries";
-import {
-  ExploreHeader,
-  getCountriesRoute,
-  InfoWithCountryGroups,
-  useExploreNavigation,
-} from "@features/explore";
 import { useCountryTracking } from "@features/visits";
 import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
+import { ExploreHeader } from "../core/components/ExploreHeader";
+import { InfoWithCountryGroups } from "../core/components/InfoWithCountryGroups";
+import { useExploreNavigation } from "../core/hooks/useExploreNavigation";
+import { getCountriesRoute } from "../core/utils/exploreNavigation";
 
 export function AchievementInfo() {
   const { achievementId } = useParams();

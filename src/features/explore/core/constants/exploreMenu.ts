@@ -31,6 +31,12 @@ export const EXPLORE_MENU = [
     icon: ICONS.timezones,
     url: "/explore/timezones",
   },
+  {
+    key: "achievements",
+    label: "Achievements",
+    icon: ICONS.achievements,
+    url: "/explore/achievements",
+  },
 ];
 
 export const EXPLORE_URLS = Object.fromEntries(

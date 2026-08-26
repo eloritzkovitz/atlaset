@@ -4,10 +4,11 @@
     "progress": "Progress",
     "countries": "Countries",
     "allCountries": "All Countries",
-    "currencyExchange": "Currency Exchange",    
+    "currencyExchange": "Currency Exchange",
     "languages": "Languages",
     "currencies": "Currencies",
-    "timezones": "Timezones"
+    "timezones": "Timezones",
+    "achievements": "Achievements"
   },
   "progress": {
     "toggles": {

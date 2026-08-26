@@ -14,7 +14,6 @@ export function useDashboardNavigation() {
   const handleCrumbClick = (key: string) => {
     const crumbActions: Record<string, () => void> = {
       dashboard: () => navigate(DASHBOARD_URLS.overview),
-      achievements: () => navigate(DASHBOARD_URLS.achievements),
       statistics: () => navigate(DASHBOARD_URLS.statistics),
     };
 

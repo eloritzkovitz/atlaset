@@ -26,33 +26,17 @@ export function parseDashboardPath(pathname: string) {
   };
 }
 
-interface DashboardBreadcrumbOptions {
-  selectedPanel: string;
-  selectedAchievement?: string | null;
-}
-
 /**
  * Generates breadcrumbs for the dashboard based on the current navigation state.
  * @param selectedPanel - Currently selected dashboard panel.
- * @param selectedAchievement - Currently selected achievement.
  * @returns Array of breadcrumb objects.
  */
 export function getDashboardBreadcrumbs({
   selectedPanel,
-  selectedAchievement,
-}: DashboardBreadcrumbOptions): Crumb[] {
+}: {
+  selectedPanel: string;
+}): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] ?? [])];
-
-  if (
-    (selectedPanel === "achievements" ||
-      selectedPanel.startsWith("achievements/")) &&
-    selectedAchievement
-  ) {
-    crumbs.push({
-      label: selectedAchievement,
-      key: `achievement:${selectedAchievement}`,
-    });
-  }
 
   return crumbs;
 }

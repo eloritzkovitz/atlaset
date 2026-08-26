@@ -69,6 +69,7 @@ interface ExploreBreadcrumbOptions {
   selectedLanguage: string | null;
   selectedCurrency: string | null;
   selectedTimezone: string | null;
+  selectedAchievement: string | null;
 }
 
 /**
@@ -80,6 +81,7 @@ interface ExploreBreadcrumbOptions {
  * @param selectedCurrency - Currently selected currency.
  * @param selectedLanguage - Currently selected language.
  * @param selectedTimezone - Currently selected timezone.
+ * @param selectedAchievement - Currently selected achievement.
  * @returns Array of breadcrumb objects.
  */
 export function getExploreBreadcrumbs({
@@ -90,6 +92,7 @@ export function getExploreBreadcrumbs({
   selectedLanguage,
   selectedCurrency,
   selectedTimezone,
+  selectedAchievement,
 }: ExploreBreadcrumbOptions): Crumb[] {
   const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
 
@@ -117,11 +120,12 @@ export function getExploreBreadcrumbs({
     }
   }
 
-  // Add dynamic entity breadcrumbs for languages, currencies, and timezones
+  // Add dynamic entity breadcrumbs
   const dynamicEntities = [
     { prefix: "languages", value: selectedLanguage, key: "language" },
     { prefix: "currencies", value: selectedCurrency, key: "currency" },
     { prefix: "timezones", value: selectedTimezone, key: "timezone" },
+    { prefix: "achievements", value: selectedAchievement, key: "achievement" },
   ];
 
   for (const { prefix, value, key } of dynamicEntities) {

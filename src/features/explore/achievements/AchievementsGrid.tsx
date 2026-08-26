@@ -46,7 +46,7 @@ export function AchievementsGrid() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useLocalStorageState<
     SortValue<AchievementSortKey>
-  >("atlaset:dashboard_achievements_sort", "id-asc");
+  >("atlaset:achievements_sort", "id-asc");
 
   const {
     achievements,
@@ -170,7 +170,7 @@ export function AchievementsGrid() {
               achievementStatusMap={achievementStatusMap}
               allAchievements={mergedAchievements}
               onClick={() =>
-                navigate(`/dashboard/achievements/${achievement.id}`)
+                navigate(`/explore/achievements/${achievement.id}`)
               }
             />
           );

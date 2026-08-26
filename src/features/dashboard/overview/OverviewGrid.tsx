@@ -60,7 +60,7 @@ export function OverviewGrid() {
           ? "..."
           : formatFraction(completedCount, achievementsCount),
       icon: <ICONS.achievements className="text-5xl text-warning" />,
-      link: "/dashboard/achievements",
+      link: "/explore/achievements",
     },
     {
       label: t("overview.stats.statistics", { defaultValue: "Statistics" }),

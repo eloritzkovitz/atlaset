@@ -39,4 +39,12 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { labelKey: "menu.title", label: "Explore", key: "explore" },
     { labelKey: "menu.timezones", label: "Timezones", key: "timezones" },
   ],
+  achievements: [
+    { labelKey: "menu.title", label: "Explore", key: "explore" },
+    {
+      labelKey: "menu.achievements",
+      label: "Achievements",
+      key: "achievements",
+    },
+  ],
 };

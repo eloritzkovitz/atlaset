@@ -22,12 +22,10 @@ export default function DashboardPage() {
 
   const panelMenu = useDisclosure();
 
-  const { selectedPanel, menuSelectedPanel, selectedAchievement } =
-    useDashboardRouteState();
+  const { selectedPanel, menuSelectedPanel } = useDashboardRouteState();
 
   const breadcrumbs = getDashboardBreadcrumbs({
     selectedPanel,
-    selectedAchievement: selectedAchievement?.name ?? null,
   });
 
   const translatedBreadcrumbs = breadcrumbs.map((crumb) => ({
@@ -37,14 +35,9 @@ export default function DashboardPage() {
       : (crumb.label ?? crumb.key ?? ""),
   }));
 
-  const isAchievementPanel = selectedPanel?.startsWith("achievements");
-
-  const pageTitle =
-    isAchievementPanel && selectedAchievement?.name
-      ? selectedAchievement.name
-      : selectedPanel
-        ? tDashboard(`menu.${selectedPanel}`)
-        : tDashboard("menu.title");
+  const pageTitle = selectedPanel
+    ? tDashboard(`menu.${selectedPanel}`)
+    : tDashboard("menu.title");
 
   usePageTitle(pageTitle);
 

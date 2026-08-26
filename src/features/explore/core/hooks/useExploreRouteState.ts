@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { useGetAchievementsQuery } from "@features/achievements/api/achievementsApi";
 import { useCountryData } from "@features/countries";
 import { parseExplorePath } from "../utils/exploreNavigation";
 
@@ -7,6 +8,7 @@ import { parseExplorePath } from "../utils/exploreNavigation";
  * Extracts selected panel, region, subregion, and entities from the current URL.
  */
 export function useExploreRouteState() {
+  const { data: achievements } = useGetAchievementsQuery();
   const { countries, countryByIsoCode, currencies, languages, timezones } =
     useCountryData();
   const location = useLocation();
@@ -68,6 +70,12 @@ export function useExploreRouteState() {
         ) ?? null)
       : null;
 
+  // Achievement
+  const selectedAchievement =
+    menuSelectedPanel === "achievements" && routeEntity
+      ? (achievements?.find((a) => a.id === routeEntity) ?? null)
+      : null;
+
   return {
     selectedPanel,
     menuSelectedPanel,
@@ -78,5 +86,6 @@ export function useExploreRouteState() {
     selectedLanguage,
     selectedCurrency,
     selectedTimezone,
+    selectedAchievement,
   };
 }
