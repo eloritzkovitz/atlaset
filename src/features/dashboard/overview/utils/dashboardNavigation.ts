@@ -3,12 +3,12 @@
  */
 
 import type { Crumb } from "@components";
-import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
+import { DASHBOARD_BREADCRUMBS } from "../constants/dashboard";
 
 /**
- * Parses dashboard paths into normalized panel types and raw route segments.
+ * Parses dashboard paths into normalized sections and entity IDs.
  * @param pathname - The current URL pathname.
- * @returns An object containing the root, sub, parts, selectedPanel, and menuSelectedPanel.
+ * @returns An object containing the section and entityId.
  */
 export function parseDashboardPath(pathname: string) {
   const parts = pathname
@@ -16,12 +16,11 @@ export function parseDashboardPath(pathname: string) {
     .split("/")
     .filter(Boolean);
 
-  const panel = parts[0] || "overview";
+  const section = parts[0] || "overview";
   const entityId = parts[1] ?? null;
 
   return {
-    selectedPanel: entityId ? `${panel}/${entityId}` : panel,
-    menuSelectedPanel: panel,
+    section,
     entityId,
   };
 }
@@ -32,11 +31,11 @@ export function parseDashboardPath(pathname: string) {
  * @returns Array of breadcrumb objects.
  */
 export function getDashboardBreadcrumbs({
-  selectedPanel,
+  section,
 }: {
-  selectedPanel: string;
+  section: string;
 }): Crumb[] {
-  const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] ?? [])];
+  const crumbs = [...(DASHBOARD_BREADCRUMBS[section] ?? [])];
 
   return crumbs;
 }

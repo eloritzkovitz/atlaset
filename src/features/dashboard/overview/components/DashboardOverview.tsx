@@ -17,7 +17,7 @@ import { formatFraction } from "@utils";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
 
-export function OverviewGrid() {
+export function DashboardOverview() {
   const { user } = useAuth();
   const { countries, loading: countriesLoading } = useCountryData();
   const { isVisitedCountry } = useCountryTracking();
@@ -51,7 +51,7 @@ export function OverviewGrid() {
         ? "..."
         : formatFraction(visitedCountries, totalCountries),
       icon: <ICONS.explore className="text-5xl text-info" />,
-      link: "/explore/overview",
+      link: "/explore/progress",
     },
     {
       label: t("overview.stats.achievements", { defaultValue: "Achievements" }),

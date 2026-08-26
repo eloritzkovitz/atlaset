@@ -20,7 +20,7 @@ import SignupPage from "@features/user/auth/pages/SignupPage";
 
 const DocsPage = lazy(() => import("@features/docs/pages/DocsPage"));
 const DashboardPage = lazy(
-  () => import("@features/dashboard/core/pages/DashboardPage"),
+  () => import("@features/dashboard/overview/pages/DashboardPage"),
 );
 const ExplorePage = lazy(
   () => import("@features/explore/core/pages/ExplorePage"),
