@@ -10,7 +10,7 @@ import type { RegionStat } from "../types";
 
 type ExplorationSortKey = "name" | "progress";
 
-interface ExploreOverviewGridProps {
+interface ExploreProgressGridProps {
   visitedCountries: number;
   totalCountries: number;
   regionStats: RegionStat[];
@@ -22,7 +22,7 @@ interface ExploreOverviewGridProps {
   onShowAllCountries: () => void;
 }
 
-export function ExploreOverviewGrid({
+export function ExploreProgressGrid({
   visitedCountries,
   totalCountries,
   regionStats,
@@ -32,7 +32,7 @@ export function ExploreOverviewGrid({
   setSelectedSubregion,
   onSubregionChange,
   onShowAllCountries,
-}: ExploreOverviewGridProps) {
+}: ExploreProgressGridProps) {
   const { countries, loading: countriesLoading } = useCountryData();
   const { t } = useTranslation("explore");
 
@@ -76,11 +76,11 @@ export function ExploreOverviewGrid({
           options={[
             {
               value: "all",
-              label: t("overview.toggles.all", "All Countries"),
+              label: t("progress.toggles.all", "All Countries"),
             },
             {
               value: "sovereign",
-              label: t("overview.toggles.sovereign", "Sovereign Only"),
+              label: t("progress.toggles.sovereign", "Sovereign Only"),
             },
           ]}
           onChange={(v) => setSelectedShowSovereignOnly(v === "sovereign")}
@@ -93,11 +93,11 @@ export function ExploreOverviewGrid({
           keyGroup={[
             {
               value: "name",
-              label: t("overview.sortBy.alphabetical", "Alphabetical"),
+              label: t("progress.sortBy.alphabetical", "Alphabetical"),
             },
             {
               value: "progress",
-              label: t("overview.sortBy.progress", "Progress"),
+              label: t("progress.sortBy.progress", "Progress"),
             },
           ]}
           showLabel

@@ -1,15 +1,15 @@
 {
   "menu": {
     "title": "Explore",
+    "progress": "Progress",
     "countries": "Countries",
     "allCountries": "All Countries",
-    "currencyExchange": "Currency Exchange",
-    "overview": "Overview",
+    "currencyExchange": "Currency Exchange",    
     "languages": "Languages",
     "currencies": "Currencies",
     "timezones": "Timezones"
   },
-  "overview": {
+  "progress": {
     "toggles": {
       "all": "All Countries",
       "sovereign": "Sovereign Only"

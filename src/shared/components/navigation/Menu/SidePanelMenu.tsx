@@ -74,7 +74,7 @@ export function SidePanelMenu({
       animationsEnabled={animationsEnabled}
       showSidebar={showSidebar}
     >
-      <ul className="flex flex-col gap-2 p-1">
+      <ul className="flex flex-col gap-2 p-1 -mx-2">
         {menuItems.map((item) => (
           <li key={item.key}>
             <MenuButton

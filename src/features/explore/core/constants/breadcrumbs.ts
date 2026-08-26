@@ -1,9 +1,9 @@
 import type { Crumb } from "@components";
 
 export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
-  overview: [
+  progress: [
     { labelKey: "menu.title", label: "Explore", key: "explore" },
-    { labelKey: "menu.overview", label: "Overview", key: "overview" },
+    { labelKey: "menu.progress", label: "Progress", key: "progress" },
   ],
   countries: [
     { labelKey: "menu.title", label: "Explore", key: "explore" },

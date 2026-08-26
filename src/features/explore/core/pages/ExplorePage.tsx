@@ -184,7 +184,7 @@ export default function ExplorePage() {
 
   // Redirect early if at base path /explore
   if (location.pathname === "/explore") {
-    return <Navigate to="/explore/overview" replace />;
+    return <Navigate to="/explore/progress" replace />;
   }
 
   return (

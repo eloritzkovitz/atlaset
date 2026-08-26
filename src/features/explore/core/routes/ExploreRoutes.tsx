@@ -1,14 +1,14 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { Country, Currency, Timezone } from "@features/countries/types";
 import type { Language } from "@types";
-import { CountryStats } from "../../../explore/countries/components/CountryStats";
+import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
-import { ExploreOverviewGrid } from "../../overview/components/ExploreOverviewGrid";
-import { useExplorationStats } from "../../overview/hooks/useExplorationStats";
+import { ExploreProgressGrid } from "../../progress/components/ExploreProgressGrid";
+import { useExplorationStats } from "../../progress/hooks/useExplorationStats";
 import { TimezonesGrid } from "../../timezones/components/TimezonesGrid";
 import { TimezoneInfo } from "../../timezones/components/TimezoneInfo";
 
@@ -77,9 +77,9 @@ export function ExploreRoutes({
   return (
     <Routes>
       <Route
-        path="overview"
+        path="progress"
         element={
-          <ExploreOverviewGrid
+          <ExploreProgressGrid
             visitedCountries={visitedCountries}
             totalCountries={totalCountries}
             regionStats={regionStats}
@@ -92,7 +92,7 @@ export function ExploreRoutes({
           />
         }
       />
-      <Route path="" element={<Navigate to="overview" replace />} />
+      <Route path="" element={<Navigate to="progress" replace />} />
 
       <Route
         path="countries"

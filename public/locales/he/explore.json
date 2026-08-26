@@ -1,6 +1,7 @@
 {
   "menu": {
     "title": "עיון",
+    "progress": "התקדמות",
     "countries": "מדינות",
     "allCountries": "הכל",
     "currencyExchange": "המרת מטבע",
@@ -8,7 +9,7 @@
     "currencies": "מטבעות",
     "timezones": "אזורי זמן"
   },
-  "overview": {
+  "progress": {
     "toggles": {
       "all": "כל המדינות",
       "sovereign": "ריבוניות בלבד"

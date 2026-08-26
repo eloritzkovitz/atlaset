@@ -2,6 +2,7 @@ import { BsGrid } from "react-icons/bs";
 import {
   FaArrowsRotate,
   FaBan,
+  FaBarsProgress,
   FaBell,
   FaBinoculars,
   FaBookAtlas,
@@ -149,6 +150,11 @@ export const ICONS = {
     overlays: TbSquaresSelected,
     colors: FaPalette,
   },
+  // Explore
+  explore: FaCompass,
+  progress: FaBarsProgress,
+  currencies: FaCoins,
+  timezones: FaClock,
   // Trips
   trips: FaSuitcaseRolling,
   tripCategory: PiCirclesFourFill,
@@ -164,9 +170,6 @@ export const ICONS = {
   // Dashboard
   dashboard: DashboardIcon,
   overview: FaHouse,
-  explore: FaCompass,
-  currencies: FaCoins,
-  timezones: FaClock,
   achievements: FaMedal,
   statistics: FaChartSimple,
   // Quizzes

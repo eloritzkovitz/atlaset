@@ -75,7 +75,7 @@ export function Panel({
         {headerActions}
       </DialogHeader>
       <div
-        className={`flex-1 min-h-0 px-2 ${isMobile ? "pb-20" : showPadding ? "pb-8" : ""}${
+        className={`flex-1 min-h-0 px-4 ${isMobile ? "pb-20" : showPadding ? "pb-8" : ""}${
           scrollable ? " overflow-y-auto" : ""
         }`}
       >

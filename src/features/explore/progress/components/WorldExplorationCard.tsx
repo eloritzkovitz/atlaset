@@ -29,12 +29,12 @@ export function WorldExplorationCard({
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
-      aria-label={t("overview.showAllCountries", "Show all countries")}
+      aria-label={t("progress.showAllCountries", "Show all countries")}
     >
       {!loading && (
         <>
           <div className="text-2xl font-semibold mb-2">
-            {t("overview.worldTitle", "World Exploration")}
+            {t("progress.worldTitle", "World Exploration")}
           </div>
           <div className="text-5xl font-bold text-primary mb-2">
             <span dir="ltr">
@@ -44,7 +44,7 @@ export function WorldExplorationCard({
           <div className="text-lg text-muted">
             {formattedPercent}{" "}
             {t(
-              "overview.ofCountriesVisited",
+              "progress.ofCountriesVisited",
 
               "of countries visited",
             )}

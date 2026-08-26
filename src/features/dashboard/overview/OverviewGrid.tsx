@@ -8,6 +8,7 @@ import {
 } from "@features/achievements";
 import { RecentActivitySection } from "@features/activity";
 import { useCountryData } from "@features/countries";
+import { useExplorationStats } from "@features/explore";
 import { useTrips } from "@features/trips";
 import { useAuth } from "@features/user/auth";
 import { useHomeCountry, useUserProfile } from "@features/user/profile";
@@ -15,7 +16,6 @@ import { useCountryTracking } from "@features/visits";
 import { formatFraction } from "@utils";
 import { StatsGrid } from "./StatsGrid";
 import { UserOverviewCard } from "./UserOverviewCard";
-import { useExplorationStats } from "../../explore/overview/hooks/useExplorationStats";
 
 export function OverviewGrid() {
   const { user } = useAuth();
