@@ -19,10 +19,14 @@ export function BestScoresCard({ scores }: BestScoresCardProps) {
   const [mode, setMode] = useState<QuizType>("flag");
   const [difficulty, setDifficulty] = useState<Difficulty>("easy");
 
-  // Filter scores for the selected mode and difficulty, then sort by score descending and take top 3
-  const filteredScores = scores
-    .filter((e) => e.type === mode && e.difficulty === difficulty)
-    .sort((a, b) => b.score - a.score)
+  const filteredScores = [...scores]
+    .filter((entry) => entry.type === mode && entry.difficulty === difficulty)
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        (b.maxStreak ?? 0) - (a.maxStreak ?? 0) ||
+        (a.time ?? Infinity) - (b.time ?? Infinity),
+    )
     .slice(0, 3)
     .map((entry) => ({
       ...entry,
@@ -34,12 +38,14 @@ export function BestScoresCard({ scores }: BestScoresCardProps) {
   return (
     <Card className="mt-6 w-full p-6 rounded-xl shadow-lg font-sans">
       <h2 className="text-xl font-bold mb-2">{t("profile.bestScores")}</h2>
+
       <LeaderboardFilterBar
         mode={mode}
         setMode={setMode}
         difficulty={difficulty}
         setDifficulty={setDifficulty}
       />
+
       <LeaderboardTable entries={filteredScores} maxEntries={3} />
     </Card>
   );
