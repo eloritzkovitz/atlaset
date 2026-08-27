@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-08-27
+
+- **[feature]** **User | Profile:** Added new visits tab with option to compare visited countries with other users
+
 ## 2026-08-26
 
 - **[feature]** **Explore:** Separated browsable data from the dashboard

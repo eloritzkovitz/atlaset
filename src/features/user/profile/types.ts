@@ -57,3 +57,17 @@ export type UsernameValidationStatus =
   | "available"
   | "taken"
   | "invalid";
+
+/** Represents the comparison of two users' country tracking data. */
+export type CountryTrackingComparison = {
+  visited: {
+    shared: string[];
+    currentUser: string[];
+    otherUser: string[];
+  };
+  wantToVisit: {
+    shared: string[];
+    currentUser: string[];
+    otherUser: string[];
+  };
+};

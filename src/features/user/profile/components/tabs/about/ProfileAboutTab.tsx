@@ -5,7 +5,7 @@ import { useUserLeaderboardScores } from "@features/quizzes/leaderboards/hooks/u
 import { formatFirestoreDate } from "@utils";
 import { BestScoresCard } from "./BestScoresCard";
 import { ProfileAboutCard } from "./ProfileAboutCard";
-import { ProfileCountriesCard } from "./ProfileCountriesCard";
+import { ProfileTravelSummaryCard } from "./ProfileTravelSummaryCard";
 import type { UserProfile } from "../../../types";
 
 interface ProfileAboutTabProps {
@@ -63,14 +63,10 @@ export function ProfileAboutTab({
         }
       />
 
-      <ProfileCountriesCard
-        countryCodes={allVisitedCountryCodes}
-        type="visited"
-      />
-
-      <ProfileCountriesCard
-        countryCodes={profileUser.wantToVisitCountryCodes || []}
-        type="wantToVisit"
+      <ProfileTravelSummaryCard
+        username={profileUser.username}
+        visitedCountryCodes={allVisitedCountryCodes}
+        wantToVisitCountryCodes={profileUser.wantToVisitCountryCodes ?? []}
       />
 
       {bestScores.length > 0 && <BestScoresCard scores={bestScores} />}

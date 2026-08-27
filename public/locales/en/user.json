@@ -51,7 +51,8 @@
     },
     "tabs": {
       "about": "About",
-      "friends": "Friends"
+      "friends": "Friends",
+      "visits": "Visits"
     },
     "editModal": {
       "title": "Edit Profile",
@@ -93,10 +94,30 @@
       "title": "Friends",
       "loading": "Loading friends..."
     },
-    "tracking": {
-      "visitedCountries": "Visited Countries ({{count}})",
-      "wantToVisitCountries": "Want to Visit ({{count}})",
-      "noCountries": "No countries found."
+    "travel": {
+      "title": "Travel Summary",
+      "visited": "Countries visited",
+      "wantToVisit": "Want to visit"
+    },
+    "visits": {
+      "tabs": {
+        "visited": "Visited",
+        "wantToVisit": "Want to Visit",
+        "compare": "Compare"
+      },
+      "noCountries": "No countries yet.",
+      "compare": {
+        "title": "Comparing with {{name}}",
+        "loading": "Comparing...",
+        "youVisited": "You visited",
+        "inCommon": "In common",
+        "theyVisited": "{{name}} visited",
+        "filters": {
+          "both": "Both",
+          "currentUser": "Only me",
+          "otherUser": "Only {{name}}"
+        }
+      }
     },
     "bestScores": "Best Quiz Scores",
     "private": "This profile is private.",

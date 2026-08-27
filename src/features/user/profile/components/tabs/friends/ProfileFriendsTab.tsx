@@ -6,8 +6,8 @@ import { useAuth } from "@features/user/auth";
 import { useUserFriends } from "@features/user/friends/hooks/useUserFriends";
 import { useFriendProfiles } from "@features/user/friends/hooks/useFriendProfiles";
 import { useMutualFriends } from "@features/user/friends/hooks/useMutualFriends";
-import type { UserProfile } from "../../types";
-import { FriendList } from "../../../friends/components/FriendList";
+import type { UserProfile } from "../../../types";
+import { FriendList } from "../../../../friends/components/FriendList";
 
 interface ProfileFriendsTabProps {
   profileUser: UserProfile;

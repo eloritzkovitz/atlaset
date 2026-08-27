@@ -52,7 +52,8 @@
     },
     "tabs": {
       "about": "אודות",
-      "friends": "חברים"
+      "friends": "חברים",
+      "visits": "ביקורים"
     },
     "editModal": {
       "title": "ערוך פרופיל",
@@ -94,10 +95,30 @@
       "title": "חברים",
       "loading": "טוען חברים..."
     },
-    "tracking": {
-      "visitedCountries": "מדינות שביקרתי ({{count}})",
-      "wantToVisitCountries": "מדינות שאני רוצה לבקר ({{count}})",
-      "noCountries": "לא נמצאו מדינות."
+    "travel": {
+      "title": "תקציר מסע",
+      "visited": "מדינות שביקרתי",
+      "wantToVisit": "רוצה לבקר"
+    },
+    "visits": {
+      "tabs": {
+        "visited": "ביקרתי",
+        "wantToVisit": "רוצה לבקר",
+        "compare": "השוואה"
+      },
+      "noCountries": "עדיין אין מדינות.",
+      "compare": {
+        "title": "השוואה עם {{name}}",
+        "loading": "משווה...",
+        "youVisited": "ביקרתי",
+        "inCommon": "במשותף",
+        "theyVisited": "{{name}} ביקר/ה",
+        "filters": {
+          "both": "במשותף",
+          "currentUser": "רק אני",
+          "otherUser": "רק {{name}}"
+        }
+      }
     },
     "bestScores": "התוצאות הטובות ביותר",
     "private": "הפרופיל הזה פרטי.",

@@ -14,9 +14,11 @@ import { useMutualFriends } from "@features/user/friends/hooks/useMutualFriends"
 import { useDisclosure, usePageTitle } from "@hooks";
 import { EditProfileModal } from "../components/modal/EditProfileModal";
 import { ProfileHeader } from "../components/ProfileHeader";
-import { ProfileAboutTab } from "../components/tabs/ProfileAboutTab/ProfileAboutTab";
-import { ProfileFriendsTab } from "../components/tabs/ProfileFriendsTab";
+import { ProfileAboutTab } from "../components/tabs/about/ProfileAboutTab";
+import { ProfileFriendsTab } from "../components/tabs/friends/ProfileFriendsTab";
 import { ProfileTabNav } from "../components/tabs/ProfileTabNav";
+import { ProfileVisitsTab } from "../components/tabs/visits/ProfileVisitsTab";
+import { ProfileCountryComparison } from "../components/tabs/visits/ProfileCountryComparison";
 import { useUserProfile } from "../hooks/useUserProfile";
 
 export default function ProfilePage() {
@@ -135,6 +137,18 @@ export default function ProfilePage() {
                           <ProfileFriendsTab profileUser={profileUser} />
                         }
                       />
+                      <Route path="visits">
+                        <Route
+                          index
+                          element={
+                            <ProfileVisitsTab profileUser={profileUser} />
+                          }
+                        />
+                        <Route
+                          path="compare"
+                          element={<ProfileCountryComparison />}
+                        />
+                      </Route>
                     </Routes>
                   </>
                 )}
