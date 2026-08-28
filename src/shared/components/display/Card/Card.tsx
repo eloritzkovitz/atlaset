@@ -49,6 +49,7 @@ export function Card({
   };
 
   const Component = isInteractive ? "button" : "div";
+
   const interactiveProps = isInteractive
     ? { onClick, type: "button" as const }
     : {};
@@ -59,6 +60,7 @@ export function Card({
         {(title || Icon) && (
           <div className="flex items-center gap-3 mb-4">
             {Icon && <div className="w-8 h-8 bg-input rounded-full shrink-0" />}
+
             <div className="w-full">
               <div className="h-5 w-32 bg-input rounded mb-2" />
               {subtitle && <div className="h-3 w-20 bg-input rounded" />}
@@ -85,25 +87,31 @@ export function Card({
   return (
     <Component {...sharedProps} {...interactiveProps}>
       {(title || Icon || actions) && (
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <div className="flex items-start gap-3">
-            {Icon && (
-              <Icon className={`text-2xl shrink-0 mt-0.5 ${iconClass}`} />
-            )}
-            <div>
-              {title && (
-                <div className="font-semibold text-lg leading-tight text-foreground">
-                  {title}
-                </div>
+        <div className="relative mb-3">
+          <div className={actions ? "pe-10" : ""}>
+            <div className="flex items-start gap-3">
+              {Icon && (
+                <Icon className={`text-2xl shrink-0 mt-0.5 ${iconClass}`} />
               )}
-              {subtitle && (
-                <div className="text-xs text-muted mt-0.5">{subtitle}</div>
-              )}
+
+              <div>
+                {title && (
+                  <div className="font-semibold text-lg leading-tight text-foreground">
+                    {title}
+                  </div>
+                )}
+
+                {subtitle && (
+                  <div className="text-xs text-muted mt-0.5">{subtitle}</div>
+                )}
+              </div>
             </div>
           </div>
 
           {actions && (
-            <div className="flex items-center gap-2 shrink-0">{actions}</div>
+            <div className="absolute end-0 top-0 flex items-center gap-2 shrink-0">
+              {actions}
+            </div>
           )}
         </div>
       )}

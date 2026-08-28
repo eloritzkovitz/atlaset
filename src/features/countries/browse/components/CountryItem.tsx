@@ -1,7 +1,6 @@
-import { useScreenSize } from "@hooks";
 import type { ViewMode } from "@types";
+import { CountryDisplay } from "./CountryDisplay";
 import { CountryListRow } from "./CountryListRow";
-import { CountryFlag } from "../../flags/components/CountryFlag";
 import type { FlagRatio, FlagSize } from "../../flags/types";
 import type { Country } from "../../types";
 
@@ -40,8 +39,6 @@ export function CountryItem({
   onContextMenu,
   view,
 }: CountryItemProps) {
-  const { isMobile } = useScreenSize();
-
   // Determine if the country is visited or highlighted based on the provided props
   const isVisited =
     showAllAsVisited || visitedCountryCodes.includes(country.isoCode);
@@ -78,24 +75,12 @@ export function CountryItem({
       `}
     >
       {showFlags ? (
-        <div className="flex flex-col items-center w-[128px] h-[140px]">
-          <div className="flex items-center justify-center w-full h-20">
-            <CountryFlag
-              flag={{
-                isoCode: country.isoCode,
-                sovereignState: country.sovereignState,
-                ratio: flagRatio || "original",
-                size: flagSize || (isMobile ? "32" : "64"),
-              }}
-              className="max-w-full max-h-[96px] object-contain transition-transform duration-200 group-hover:scale-110"
-            />
-          </div>
-          <div className="w-full flex items-end justify-center mt-4">
-            <span className="w-full block text-center break-words min-h-[20px]">
-              {country.name}
-            </span>
-          </div>
-        </div>
+        <CountryDisplay
+          country={country}
+          flagRatio={flagRatio}
+          flagSize={flagSize}
+          hoverable={true}
+        />
       ) : (
         <span className="text-xs sm:text-sm">{country.name}</span>
       )}

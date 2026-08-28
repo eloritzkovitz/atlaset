@@ -1,6 +1,5 @@
 /**
  * Prebuild script to fetch necessary data before building the project.
- * Runs fetch-flags.js, fetch-country-data.js, and fetch-geodata.js sequentially.
  */
 
 import { execSync } from "child_process";
@@ -24,6 +23,7 @@ runScript("scripts/data/fetch-country-data.js");
 runScript("scripts/data/fetch-flags.js");
 runScript("scripts/data/fetch-geodata.js");
 runScript("scripts/data/fetch-achievements.js");
+runScript("scripts/data/fetch-country-facts.js");
 runScript("scripts/data/fetch-locales.js");
 runScript("scripts/build/copy-docs-to-public.js");
 

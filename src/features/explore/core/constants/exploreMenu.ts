@@ -8,6 +8,12 @@ export const EXPLORE_MENU = [
     url: "/explore/progress",
   },
   {
+    key: "discover",
+    label: "Discover",
+    icon: ICONS.discover,
+    url: "/explore/discover",
+  },
+  {
     key: "countries",
     label: "Countries",
     icon: ICONS.countries,

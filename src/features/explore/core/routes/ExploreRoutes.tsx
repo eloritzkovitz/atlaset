@@ -7,6 +7,7 @@ import { CountryStats } from "../../countries/components/CountryStats";
 import { CurrencyExchangeWidget } from "../../currencies/components/CurrencyExchangeWidget";
 import { CurrenciesGrid } from "../../currencies/components/CurrenciesGrid";
 import { CurrencyInfo } from "../../currencies/components/CurrencyInfo";
+import { ExploreDiscoverGrid } from "../../discover/components/ExploreDiscoverGrid";
 import { LanguagesGrid } from "../../languages/components/LanguagesGrid";
 import { LanguageInfo } from "../../languages/components/LanguageInfo";
 import { ExploreProgressGrid } from "../../progress/components/ExploreProgressGrid";
@@ -95,6 +96,8 @@ export function ExploreRoutes({
         }
       />
       <Route path="" element={<Navigate to="progress" replace />} />
+
+      <Route path="discover" element={<ExploreDiscoverGrid />} />
 
       <Route
         path="countries"

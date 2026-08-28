@@ -2,6 +2,7 @@
   "menu": {
     "title": "עיון",
     "progress": "התקדמות",
+    "discover": "גילוי",
     "countries": "מדינות",
     "allCountries": "הכל",
     "currencyExchange": "המרת מטבע",
@@ -10,6 +11,7 @@
     "timezones": "אזורי זמן",
     "achievements": "הישגים"
   },
+
   "progress": {
     "toggles": {
       "all": "כל המדינות",
@@ -23,6 +25,26 @@
     "allTitle": "כל המדינות",
     "ofCountriesVisited": "מהמדינות שביקרתי בהן {{percent}}"
   },
+
+  "discover": {
+    "countryOfTheDay": {
+      "title": "המדינה היומית"
+    },
+    "country": {
+      "open": "עיון ב {{country}}"
+    },
+    "random": {
+      "title": "מדינה אקראית",
+      "description": "מצא מקום לא צפוי!",
+      "surpriseMe": "הפתע אותי!",
+      "randomize": "ארגן בסדר אקראי"
+    },
+    "didYouKnow": {
+      "title": "האם ידעת?",
+      "description": "גלו עובדות מעניינות על מדינות ברחבי העולם."
+    }
+  },
+
   "countries": {
     "showAllCountries": "הצג את כל המדינות",
     "showSovereignOnly": "הצג רק מדינות ריבוניות",
@@ -30,6 +52,7 @@
     "showTranscontinental": "הצג מדינות חוצות יבשות",
     "hideTranscontinental": "הסתר מדינות חוצות יבשות"
   },
+
   "languages": {
     "columns": {
       "code": "קוד שפה",
@@ -43,6 +66,7 @@
       "dependenciesUsingLanguage": "טריטוריות שבהן מדוברת {{name}}"
     }
   },
+
   "currencies": {
     "columns": {
       "code": "קוד מטבע",
@@ -79,6 +103,7 @@
       "errorPrefix": "שגיאה:"
     }
   },
+
   "timezones": {
     "columns": {
       "offset": "הפרש UTC",

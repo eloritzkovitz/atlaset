@@ -2,6 +2,7 @@
   "menu": {
     "title": "Explore",
     "progress": "Progress",
+    "discover": "Discover",
     "countries": "Countries",
     "allCountries": "All Countries",
     "currencyExchange": "Currency Exchange",
@@ -10,6 +11,7 @@
     "timezones": "Timezones",
     "achievements": "Achievements"
   },
+
   "progress": {
     "toggles": {
       "all": "All Countries",
@@ -23,6 +25,26 @@
     "allTitle": "All Countries",
     "ofCountriesVisited": "{{percent}} of countries visited"
   },
+
+  "discover": {
+    "countryOfTheDay": {
+      "title": "Country of the Day"
+    },
+    "country": {
+      "open": "Explore {{country}}"
+    },
+    "random": {
+      "title": "Random Country",
+      "description": "Find somewhere unexpected!",
+      "surpriseMe": "Surprise me!",
+      "randomize": "Randomize"
+    },
+    "didYouKnow": {
+      "title": "Did you know?",
+      "description": "Discover interesting facts about countries around the world."
+    }
+  },
+
   "countries": {
     "showAllCountries": "Show all countries",
     "showSovereignOnly": "Show sovereign only",
@@ -30,6 +52,7 @@
     "showTranscontinental": "Show transcontinental countries",
     "hideTranscontinental": "Hide transcontinental countries"
   },
+
   "languages": {
     "columns": {
       "code": "Language code",
@@ -43,6 +66,7 @@
       "dependenciesUsingLanguage": "Dependencies and territories where {{name}} is spoken"
     }
   },
+
   "currencies": {
     "columns": {
       "code": "Currency code",
@@ -79,6 +103,7 @@
       "errorPrefix": "Error:"
     }
   },
+
   "timezones": {
     "columns": {
       "offset": "UTC offset",

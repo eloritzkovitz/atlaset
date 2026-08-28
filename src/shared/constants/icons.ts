@@ -56,6 +56,7 @@ import {
   FaLaptopCode,
   FaLayerGroup,
   FaLeaf,
+  FaLightbulb,
   FaLink,
   FaList,
   FaListCheck,
@@ -86,6 +87,7 @@ import {
   FaShareFromSquare,
   FaShareNodes,
   FaShieldHalved,
+  FaShuffle,
   FaSliders,
   FaSquarePlus,
   FaStar,
@@ -104,7 +106,7 @@ import {
   FaVolumeHigh,
   FaXmark,
 } from "react-icons/fa6";
-import { IoAccessibility, IoLanguage } from "react-icons/io5";
+import { IoAccessibility, IoLanguage, IoTelescope } from "react-icons/io5";
 import { PiCirclesFourFill } from "react-icons/pi";
 import { TbSquaresSelected } from "react-icons/tb";
 import { DashboardIcon } from "../components/media/icons/DashboardIcon";
@@ -154,6 +156,8 @@ export const ICONS = {
   // Explore
   explore: FaBinoculars,
   progress: FaBarsProgress,
+  discover: IoTelescope,
+  didYouKnow: FaLightbulb,
   currencies: FaCoins,
   timezones: FaClock,
   // Trips
@@ -243,6 +247,7 @@ export const ICONS = {
   remove: FaTrash,
   reset: FaRotateLeft,
   refresh: FaArrowsRotate,
+  shuffle: FaShuffle,
   poweroff: FaPowerOff,
   close: FaXmark,
   selected: FaCheck,
