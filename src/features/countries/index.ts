@@ -24,3 +24,4 @@ export * from "./details/utils/countryInfo";
 export { CountryFlag } from "./flags/components/CountryFlag";
 export { CountryFlagGrid } from "./flags/components/CountryFlagGrid";
 export { CountryWithFlag } from "./flags/components/CountryWithFlag";
+export * from "./flags/utils/flags";

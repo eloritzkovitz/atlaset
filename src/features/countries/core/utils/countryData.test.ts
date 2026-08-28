@@ -9,12 +9,12 @@ import {
   getAllSubregions,
   getSubregionsForRegion,
   getAllSovereigntyStatuses,
-  getCountriesWithOwnFlag,
   getRandomCountry,
   getTranscontinentalInfo,
   getCountryTerritoryRelations,
   getTerritoryCodesByType,
   getAllGeoTypes,
+  groupCountryIsoCodes,
 } from "./countryData";
 import type {
   Country,
@@ -84,6 +84,48 @@ describe("countryData utils", () => {
       expect(lookup["US"]).toEqual(usOnly[0]);
       expect(nameMap["US"]).toBe("United States");
       expect(lookup["us"]).toBeUndefined();
+    });
+  });
+
+  describe("getRandomCountry", () => {
+    it("getRandomCountry selects a item from list", () => {
+      const testCountries = [{ isoCode: "US" }, { isoCode: "FR" }];
+      expect(testCountries).toContainEqual(
+        getRandomCountry(testCountries as Country[]),
+      );
+    });
+
+    it("returns undefined for empty array", () => {
+      expect(getRandomCountry([])).toBeUndefined();
+    });
+  });
+
+  describe("groupCountryIsoCodes", () => {
+    it("groups countries into sovereign and dependency ISO codes", () => {
+      const testCountries = [
+        { isoCode: "US", sovereigntyStatus: "sovereign" as SovereigntyStatus },
+        { isoCode: "PR", sovereigntyStatus: "dependency" as SovereigntyStatus },
+        { isoCode: "FR", sovereigntyStatus: "sovereign" as SovereigntyStatus },
+      ] as Country[];
+      const { sovereignIsoCodes, dependencyIsoCodes } = groupCountryIsoCodes(
+        testCountries,
+        () => true,
+      );
+      expect(sovereignIsoCodes).toEqual(["US", "FR"]);
+      expect(dependencyIsoCodes).toEqual(["PR"]);
+    });
+
+    it("returns empty arrays when no countries match", () => {
+      const testCountries = [
+        { isoCode: "US", sovereigntyStatus: "sovereign" as SovereigntyStatus },
+        { isoCode: "PR", sovereigntyStatus: "dependency" as SovereigntyStatus },
+      ] as Country[];
+      const { sovereignIsoCodes, dependencyIsoCodes } = groupCountryIsoCodes(
+        testCountries,
+        () => false,
+      );
+      expect(sovereignIsoCodes).toEqual([]);
+      expect(dependencyIsoCodes).toEqual([]);
     });
   });
 
@@ -223,22 +265,6 @@ describe("countryData utils", () => {
 
       expect(getTerritoryCodesByType(malformedParent, allowedTypes)).toEqual(
         [],
-      );
-    });
-  });
-
-  describe("miscellaneous helpers", () => {
-    it("getCountriesWithOwnFlag returns array unchanged when overrides not matched", () => {
-      const testCountries = [{ isoCode: "US" }, { isoCode: "FR" }];
-      expect(getCountriesWithOwnFlag(testCountries as Country[])).toEqual(
-        testCountries,
-      );
-    });
-
-    it("getRandomCountry selects a item from list", () => {
-      const testCountries = [{ isoCode: "US" }, { isoCode: "FR" }];
-      expect(testCountries).toContainEqual(
-        getRandomCountry(testCountries as Country[]),
       );
     });
   });

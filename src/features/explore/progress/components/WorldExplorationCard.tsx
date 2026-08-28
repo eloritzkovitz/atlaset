@@ -20,7 +20,9 @@ export function WorldExplorationCard({
   const animatedVisited = useAnimatedNumber(visited, 640);
   const { t } = useTranslation("explore");
 
-  const formattedPercent = formatPercent(animatedVisited, total);
+  const formattedPercent = formatPercent(animatedVisited, total, {
+    decimals: 1,
+  });
   const progressWidth = total > 0 ? (animatedVisited / total) * 100 : 0;
 
   return (
@@ -29,7 +31,7 @@ export function WorldExplorationCard({
       loading={loading}
       skeletonLines={3}
       onClick={onShowAllCountries}
-      aria-label={t("progress.showAllCountries", "Show all countries")}
+      aria-label={t("countries.showAllCountries", "Show all countries")}
     >
       {!loading && (
         <>
@@ -42,11 +44,10 @@ export function WorldExplorationCard({
             </span>
           </div>
           <div className="text-lg text-muted">
-            {formattedPercent}{" "}
             {t(
               "progress.ofCountriesVisited",
-
-              "of countries visited",
+              "{{percent}} of countries visited",
+              { percent: formattedPercent },
             )}
           </div>
           <div className="w-full mt-4">

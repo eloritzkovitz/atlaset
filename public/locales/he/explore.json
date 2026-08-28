@@ -21,11 +21,11 @@
     },
     "worldTitle": "חקר העולם",
     "allTitle": "כל המדינות",
-    "showAllCountries": "הצג את כל המדינות",
-    "showSovereignOnly": "הצג רק מדינות ריבוניות",
-    "ofCountriesVisited": "מהמדינות שביקרתי בהן"
+    "ofCountriesVisited": "מהמדינות שביקרתי בהן {{percent}}"
   },
   "countries": {
+    "showAllCountries": "הצג את כל המדינות",
+    "showSovereignOnly": "הצג רק מדינות ריבוניות",
     "showVisitedOnly": "הצג רק מדינות שביקרתי בהן",
     "showTranscontinental": "הצג מדינות חוצות יבשות",
     "hideTranscontinental": "הסתר מדינות חוצות יבשות"

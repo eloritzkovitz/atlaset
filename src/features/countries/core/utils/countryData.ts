@@ -4,7 +4,6 @@
 
 import { canonicalKey, extractUniqueSorted } from "@utils";
 import { SPECIAL_COUNTRIES } from "../constants/specialCountries";
-import { FLAG_OVERRIDES } from "../../flags/constants/flagOverrides";
 import type {
   Country,
   CountryTerritoriesGroup,
@@ -64,6 +63,46 @@ export function createCountryMap<T>(
   valueFn: (c: Country) => T,
 ): Record<string, T> {
   return Object.fromEntries(countries.map((c) => [c.isoCode, valueFn(c)]));
+}
+
+/**
+ * Gets a random country from the provided list.
+ * @param countries - Array of country objects.
+ * @returns A random country object from the array.
+ */
+export function getRandomCountry(countries: Country[]) {
+  if (countries.length === 0) return undefined;
+
+  return countries[Math.floor(Math.random() * countries.length)];
+}
+
+/**
+ * Groups countries into sovereign and dependency ISO codes based on a matching function.
+ * @param countries - Array of country objects to group.
+ * @param matches - Function that determines if a country belongs to the group based on criteria.
+ * @returns An object containing arrays of sovereign and dependency ISO codes.
+ */
+export function groupCountryIsoCodes(
+  countries: Country[],
+  matches: (country: Country) => boolean,
+) {
+  const sovereignIsoCodes: string[] = [];
+  const dependencyIsoCodes: string[] = [];
+
+  for (const country of countries) {
+    if (!matches(country)) continue;
+
+    if (
+      country.sovereigntyStatus === "sovereign" ||
+      country.sovereigntyStatus === "partially_recognized"
+    ) {
+      sovereignIsoCodes.push(country.isoCode);
+    } else {
+      dependencyIsoCodes.push(country.isoCode);
+    }
+  }
+
+  return { sovereignIsoCodes, dependencyIsoCodes };
 }
 
 /**
@@ -186,26 +225,6 @@ export function getTerritoryCodesByType(
 }
 
 /**
- * Returns countries whose flag matches their own ISO code and is not empty.
- * @param countries - Array of country objects to filter.
- * @returns Array of countries that have their own flag.
- */
-export function getCountriesWithOwnFlag(countries: Country[]): Country[] {
-  return countries.filter(
-    (country) => !FLAG_OVERRIDES.includes(country.isoCode),
-  );
-}
-
-/**
- * Gets a random country from the provided list.
- * @param countries - Array of country objects.
- * @returns A random country object from the array.
- */
-export function getRandomCountry(countries: Country[]) {
-  return countries[Math.floor(Math.random() * countries.length)];
-}
-
-/**
  * Returns the transcontinental metadata object for a country, or null if not present.
  * @param country - The country object to check for transcontinental information.
  * @param subregionsByRegion - Optional mapping of regions to their subregions for additional context.
@@ -255,33 +274,4 @@ export function getTranscontinentalInfo(
     additionalSubregionKey,
     additionalSubregionRegion,
   };
-}
-
-/**
- * Groups countries into sovereign and dependency ISO codes based on a matching function.
- * @param countries - Array of country objects to group.
- * @param matches - Function that determines if a country belongs to the group based on criteria.
- * @returns An object containing arrays of sovereign and dependency ISO codes.
- */
-export function groupCountryIsoCodes(
-  countries: Country[],
-  matches: (country: Country) => boolean,
-) {
-  const sovereignIsoCodes: string[] = [];
-  const dependencyIsoCodes: string[] = [];
-
-  for (const country of countries) {
-    if (!matches(country)) continue;
-
-    if (
-      country.sovereigntyStatus === "sovereign" ||
-      country.sovereigntyStatus === "partially_recognized"
-    ) {
-      sovereignIsoCodes.push(country.isoCode);
-    } else {
-      dependencyIsoCodes.push(country.isoCode);
-    }
-  }
-
-  return { sovereignIsoCodes, dependencyIsoCodes };
 }

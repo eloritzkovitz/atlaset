@@ -43,7 +43,7 @@ export function useExploreNavigation(
   const navigateBack = () => navigate(-1);
 
   const crumbActions: Record<string, () => void> = {
-    explore: () => navigate(EXPLORE_URLS.overview),
+    explore: () => navigate(EXPLORE_URLS.progress),
     countries: () => navigate(EXPLORE_URLS.countries),
     region: () => navigate(getCountriesRoute(selectedRegion)),
     subregion: () =>

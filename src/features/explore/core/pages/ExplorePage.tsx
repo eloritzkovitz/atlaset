@@ -116,7 +116,7 @@ export default function ExplorePage() {
   // Determine page titles
   const getCountryPanelTitle = (): string => {
     if (routeSelectedRegion === "all" || safePanel === "countries/all") {
-      return tExplore("countries.allTitle");
+      return tExplore("progress.allTitle");
     }
 
     if (selectedCountry?.name) {
