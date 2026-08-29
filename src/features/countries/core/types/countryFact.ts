@@ -2,6 +2,17 @@
 export type CountryFact = {
   id: string;
   countryCodes: string[];
-  category: string;
+  category: CountryFactCategory;
   description: string;
 };
+
+export type CountryFactCategory =
+  | "geography"
+  | "history"
+  | "culture"
+  | "agriculture"
+  | "economy"
+  | "politics"
+  | "science"
+  | "sports"
+  | "miscellaneous";

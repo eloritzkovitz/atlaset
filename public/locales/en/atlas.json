@@ -123,6 +123,7 @@
       },
       "tabs": {
         "overview": "Overview",
+        "facts": "Facts",
         "territories": "Territories & Claims",
         "affiliations": "Affiliations",
         "visits": "Visits"

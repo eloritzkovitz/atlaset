@@ -30,7 +30,7 @@ export function ExploreDiscoverGrid() {
       return [];
     }
 
-    return [...facts].sort(() => Math.random() - 0.5).slice(0, 3);
+    return [...facts].sort(() => Math.random() - 0.5).slice(0, 5);
   }, [facts]);
 
   return (
