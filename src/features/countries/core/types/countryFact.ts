@@ -7,12 +7,15 @@ export type CountryFact = {
 };
 
 export type CountryFactCategory =
+  | "agriculture"
+  | "archaeology"
+  | "architecture"
+  | "culture"
+  | "economy"
   | "geography"
   | "history"
-  | "culture"
-  | "agriculture"
-  | "economy"
+  | "miscellaneous"
   | "politics"
   | "science"
   | "sports"
-  | "miscellaneous";
+  | "technology";
