@@ -2,8 +2,10 @@ import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { TabButton } from "@components";
 import type { CategorizedVisits } from "@features/visits/types";
+import { useGetCountryFactsQuery } from "@features/countries";
 import { CountryAffiliationsContent } from "./CountryAffiliationsContent";
 import { CountryDetailsContent } from "./CountryDetailsContent";
+import { CountryFactsContent } from "./CountryFactsContent";
 import { CountryTerritoriesContent } from "./CountryTerritoriesContent";
 import { CountryVisitsContent } from "./CountryVisitsContent";
 import type { CountryDetailsTab } from "../types";
@@ -35,20 +37,29 @@ export function CountryDetailsPanel({
   onSelectCountry,
   className = "",
 }: CountryDetailsPanelProps) {
+  const { data: facts = [], isLoading: factsLoading } =
+    useGetCountryFactsQuery();
   const { t } = useTranslation("atlas");
-
-  const tabLabels: Record<CountryDetailsTab, string> = {
-    overview: t("countries.details.tabs.overview"),
-    territories: t("countries.details.tabs.territories"),
-    affiliations: t("countries.details.tabs.affiliations"),
-    visits: t("countries.details.tabs.visits"),
-  };
 
   const [internalTab, setInternalTab] = useState<CountryDetailsTab>(initialTab);
 
   const activeTab = externalActiveTab ?? internalTab;
 
-  // Determine available tabs based on country relations
+  const tabLabels: Record<CountryDetailsTab, string> = {
+    overview: t("countries.details.tabs.overview"),
+    facts: t("countries.details.tabs.facts"),
+    territories: t("countries.details.tabs.territories"),
+    affiliations: t("countries.details.tabs.affiliations"),
+    visits: t("countries.details.tabs.visits"),
+  };
+
+  const countryFacts = useMemo(
+    () => facts.filter((fact) => fact.countryCodes.includes(country.isoCode)),
+    [facts, country.isoCode],
+  );
+
+  const currentHasFactsTab = !factsLoading && countryFacts.length > 0;
+
   const territoryRelations = useMemo(
     () =>
       country?.isoCode ? getCountryTerritoryRelations(country) : undefined,
@@ -56,6 +67,7 @@ export function CountryDetailsPanel({
   );
 
   const currentHasTerritoriesTab = !!territoryRelations?.hasRelations;
+
   const currentHasAffiliationsTab = !!(
     (country?.memberOf && country.memberOf.length > 0) ||
     country?.unMember
@@ -63,11 +75,13 @@ export function CountryDetailsPanel({
 
   const tabs = useMemo(() => {
     const availableTabs: CountryDetailsTab[] = ["overview"];
+    if (currentHasFactsTab) availableTabs.push("facts");
     if (currentHasTerritoriesTab) availableTabs.push("territories");
     if (currentHasAffiliationsTab) availableTabs.push("affiliations");
     availableTabs.push("visits");
+
     return availableTabs;
-  }, [currentHasTerritoriesTab, currentHasAffiliationsTab]);
+  }, [currentHasFactsTab, currentHasTerritoriesTab, currentHasAffiliationsTab]);
 
   // Reset to overview tab when modal is closed, if resetTabOnClose is true
   useEffect(() => {
@@ -92,6 +106,7 @@ export function CountryDetailsPanel({
     if (externalActiveTab === undefined) {
       setInternalTab(tab);
     }
+
     onTabChange?.(tab);
   };
 
@@ -118,15 +133,22 @@ export function CountryDetailsPanel({
               onSelectCountry={onSelectCountry}
             />
           )}
+
+          {activeTab === "facts" && (
+            <CountryFactsContent facts={countryFacts} />
+          )}
+
           {activeTab === "territories" && currentHasTerritoriesTab && (
             <CountryTerritoriesContent
               country={country}
               onSelectCountry={onSelectCountry}
             />
           )}
+
           {activeTab === "affiliations" && currentHasAffiliationsTab && (
             <CountryAffiliationsContent country={country} />
           )}
+
           {activeTab === "visits" && (
             <CountryVisitsContent visits={categorizedVisits} />
           )}

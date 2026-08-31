@@ -1,10 +1,12 @@
 // Core
 export { RegionIcon } from "./core/components/RegionIcon";
 export { useCountryData } from "./core/hooks/useCountryData";
+export { useGetCountryFactsQuery } from "./core/api/countryFactsApi";
 export * from "./core/types/country";
 export * from "./core/utils/countryData";
 
 // Browse
+export { CountryDisplay } from "./browse/components/CountryDisplay";
 export { CountryDisplayPanel } from "./browse/components/CountryDisplayPanel";
 export { CountrySelectField } from "./browse/components/CountrySelectField";
 export { CountrySelectModal } from "./browse/components/CountrySelectModal";

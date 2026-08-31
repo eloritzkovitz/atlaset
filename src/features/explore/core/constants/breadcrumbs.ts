@@ -5,6 +5,10 @@ export const PANEL_BREADCRUMBS: Record<string, Crumb[]> = {
     { labelKey: "menu.title", label: "Explore", key: "explore" },
     { labelKey: "menu.progress", label: "Progress", key: "progress" },
   ],
+  discover: [
+    { labelKey: "menu.title", label: "Explore", key: "explore" },
+    { labelKey: "menu.discover", label: "Discover", key: "discover" },
+  ],
   countries: [
     { labelKey: "menu.title", label: "Explore", key: "explore" },
     { labelKey: "menu.countries", label: "Countries", key: "countries" },

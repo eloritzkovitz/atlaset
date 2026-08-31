@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { mapApi } from "@features/atlas/map/api/mapApi";
-import { countriesApi } from "@features/countries/core/api/countriesApi";
 import { achievementsApi } from "@features/achievements/api/achievementsApi";
+import { countriesApi } from "@features/countries/core/api/countriesApi";
+import { countryFactsApi } from "@features/countries/core/api/countryFactsApi";
 import quizSettingsReducer from "@features/quizzes/core/slices/quizSettingsSlice";
 import type { AccentKey, ThemeKey } from "@features/settings/display/types";
 import {
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   quizSettings: quizSettingsReducer,
   [achievementsApi.reducerPath]: achievementsApi.reducer,
   [countriesApi.reducerPath]: countriesApi.reducer,
+  [countryFactsApi.reducerPath]: countryFactsApi.reducer,
   [mapApi.reducerPath]: mapApi.reducer,
 });
 
@@ -60,6 +62,7 @@ export const store = configureStore({
     getDefaultMiddleware().concat(
       achievementsApi.middleware,
       countriesApi.middleware,
+      countryFactsApi.middleware,
       mapApi.middleware,
     ),
 });

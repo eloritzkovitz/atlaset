@@ -69,13 +69,14 @@ export function LayersContainer({
     (isoCode: string, includeParent = false): Set<string> => {
       const set = new Set<string>();
       const upper = isoCode.toUpperCase();
+
       const parentIso = includeParent
         ? sovereignLookup.get(upper) || upper
         : upper;
 
       set.add(parentIso);
 
-      // Only include overseas/integral regions if the setting is enabled
+      // Add integral regions if the option is enabled
       if (includeIntegralRegions) {
         integralRegionsLookup
           .get(parentIso)
@@ -96,8 +97,7 @@ export function LayersContainer({
   }, [highlightedIsoCodes, expandIsoCode]);
 
   const hoveredSet = useMemo(
-    () =>
-      hoveredIsoCode ? expandIsoCode(hoveredIsoCode, true) : new Set<string>(),
+    () => (hoveredIsoCode ? expandIsoCode(hoveredIsoCode) : new Set<string>()),
     [hoveredIsoCode, expandIsoCode],
   );
 
