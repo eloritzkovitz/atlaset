@@ -1,5 +1,10 @@
 # Changelog
 
+## 2026-08-31
+
+- **[feature]** **Countries:** Added country facts
+- **[feature]** **Explore:** Added new discover section showing random countries and facts
+
 ## 2026-08-27
 
 - **[feature]** **User | Profile:** Added new visits tab with option to compare visited countries with other users
