@@ -39,11 +39,31 @@ export const ALL_SORT_KEY_OPTIONS: CountrySortOption[] = [
   { value: "lastVisit", label: "Last visit time", mode: "visited" },
 ];
 
+const ENGLISH_ARTICLE_COUNTRIES = new Set(["BS", "GM"]);
+
 /**
- * Sorts countries based on the specified key and direction (e.g. "name-asc").
+ * Gets the sort name for a country, removing the English article "The" if present for certain countries.
+ * @param country - The country object to get the sort name for.
+ * @returns The normalized sort name for the country.
+ */
+function getCountrySortName(country: Country): string {
+  const name = normalizeString(country.name);
+
+  if (
+    ENGLISH_ARTICLE_COUNTRIES.has(country.isoCode.toUpperCase()) &&
+    /^the\s+/i.test(name)
+  ) {
+    return name.replace(/^the\s+/i, "");
+  }
+
+  return name;
+}
+
+/**
+ * Sorts countries based on the specified key and direction.
  * @param countries - The list of countries to sort.
- * @param sortBy - The key and direction to sort by (e.g. "name-asc").
- * @param trips - The list of trips for visit-based sorts.
+ * @param sortBy - The key and direction to sort by.
+ * @param visitContext - The context containing visit information for visit-based sorts.
  * @returns The sorted list of countries.
  */
 export function sortCountries(
@@ -58,7 +78,7 @@ export function sortCountries(
 
   // Define accessors for each sort key, including visit-based keys that use the visitContext
   const accessors: Record<CountrySortByKey, (c: Country) => string | number> = {
-    name: (c) => normalizeString(c.name),
+    name: getCountrySortName,
     isoCode: (c) => c.isoCode || "",
     area: (c) => c.area ?? 0,
     population: (c) => c.population ?? 0,

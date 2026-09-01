@@ -9,17 +9,20 @@ import type { Country, SovereigntyStatus } from "../../types";
 
 describe("countrySort utils", () => {
   const countries = mockCountries;
+  const visitContext = buildVisitContext(mockTrips);
 
-  function getSortedByField(field: keyof Country, asc = true) {
+  function sortByField(field: keyof Country, asc = true): string[] {
     return [...countries]
       .sort((a, b) => {
         const av = (a as any)[field];
         const bv = (b as any)[field];
+
         if (typeof av === "string" || typeof bv === "string") {
           return asc
             ? String(av || "").localeCompare(String(bv || ""))
             : String(bv || "").localeCompare(String(av || ""));
         }
+
         return asc ? (av ?? 0) - (bv ?? 0) : (bv ?? 0) - (av ?? 0);
       })
       .map((c) => c.isoCode);
@@ -29,38 +32,38 @@ describe("countrySort utils", () => {
     return getVisitCountsUpToYear(trips, new Date().getFullYear());
   }
 
-  function assertNonIncreasing(arr: number[]) {
-    for (let i = 1; i < arr.length; i++) {
-      expect(arr[i - 1]).toBeGreaterThanOrEqual(arr[i]);
-    }
-  }
-
-  function assertNonDecreasing(arr: number[]) {
-    for (let i = 1; i < arr.length; i++) {
-      expect(arr[i - 1]).toBeLessThanOrEqual(arr[i]);
+  function expectSortedNumbers(values: number[], direction: "asc" | "desc") {
+    for (let i = 1; i < values.length; i++) {
+      if (direction === "asc") {
+        expect(values[i - 1]).toBeLessThanOrEqual(values[i]);
+      } else {
+        expect(values[i - 1]).toBeGreaterThanOrEqual(values[i]);
+      }
     }
   }
 
   const simpleCases: Array<{
     key: keyof Country;
-    valuesAreNames?: boolean;
+    stringField?: boolean;
   }> = [
-    { key: "name", valuesAreNames: true },
-    { key: "isoCode", valuesAreNames: true },
+    { key: "name", stringField: true },
+    { key: "isoCode", stringField: true },
     { key: "area" },
     { key: "population" },
   ];
 
-  simpleCases.forEach(({ key, valuesAreNames }) => {
-    ["asc", "desc"].forEach((dir) => {
-      const asc = dir === "asc";
+  simpleCases.forEach(({ key, stringField }) => {
+    ["asc", "desc"].forEach((direction) => {
+      const asc = direction === "asc";
+
       it(`sorts by ${String(key)} ${asc ? "ascending" : "descending"}`, () => {
         const sorted = sortCountries(
           countries,
-          `${String(key)}-${dir}` as any,
-          buildVisitContext(mockTrips),
+          `${String(key)}-${direction}` as any,
+          visitContext,
         );
-        if (valuesAreNames) {
+
+        if (stringField) {
           const expected = [...countries]
             .sort((a, b) => {
               const av = String((a as any)[key] || "");
@@ -71,11 +74,74 @@ describe("countrySort utils", () => {
 
           expect(sorted.map((c) => (c as any)[key])).toEqual(expected);
         } else {
-          expect(sorted.map((c) => c.isoCode)).toEqual(
-            getSortedByField(key, asc),
-          );
+          expect(sorted.map((c) => c.isoCode)).toEqual(sortByField(key, asc));
         }
       });
+    });
+  });
+
+  describe("name sorting", () => {
+    it("sorts The Bahamas under B and The Gambia under G", () => {
+      const arr = [
+        {
+          name: "The Bahamas",
+          isoCode: "BS",
+        },
+        {
+          name: "The Gambia",
+          isoCode: "GM",
+        },
+        {
+          name: "Albania",
+          isoCode: "AL",
+        },
+        {
+          name: "France",
+          isoCode: "FR",
+        },
+      ] as Country[];
+
+      const sorted = sortCountries(arr, "name-asc", visitContext);
+
+      expect(sorted.map((c) => c.isoCode)).toEqual(["AL", "BS", "FR", "GM"]);
+    });
+
+    it("only ignores The for BS and GM", () => {
+      const arr = [
+        {
+          name: "The Example",
+          isoCode: "XX",
+        },
+        {
+          name: "The Bahamas",
+          isoCode: "BS",
+        },
+        {
+          name: "The Gambia",
+          isoCode: "GM",
+        },
+      ] as Country[];
+
+      const sorted = sortCountries(arr, "name-asc", visitContext);
+
+      expect(sorted.map((c) => c.isoCode)).toEqual(["BS", "GM", "XX"]);
+    });
+
+    it("handles The case-insensitively for BS and GM", () => {
+      const arr = [
+        {
+          name: "THE BAHAMAS",
+          isoCode: "BS",
+        },
+        {
+          name: "the gambia",
+          isoCode: "GM",
+        },
+      ] as Country[];
+
+      const sorted = sortCountries(arr, "name-asc", visitContext);
+
+      expect(sorted.map((c) => c.isoCode)).toEqual(["BS", "GM"]);
     });
   });
 
@@ -100,89 +166,58 @@ describe("countrySort utils", () => {
       },
     ] as unknown as Country[];
 
-    const sorted = sortCountries(
-      arr,
-      "isoCode-asc",
-      buildVisitContext(mockTrips),
-    );
-    expect(sorted.length).toBe(2);
-    expect(sorted[0].name).toBe("NoISO");
+    const sorted = sortCountries(arr, "isoCode-asc", visitContext);
+
+    expect(sorted.map((c) => c.name)).toEqual(["NoISO", "HasISO"]);
   });
 
-  it("treats missing area as 0 when sorting", () => {
-    const arr: Country[] = [
-      {
-        name: "NoArea",
-        isoCode: "AA",
-        region: "X",
-        subregion: "Y",
-        sovereigntyStatus: "sovereign" as SovereigntyStatus,
-        callingCode: "+0",
-        iso3Code: "NOA",
-      },
-      {
-        name: "HasArea",
-        isoCode: "BB",
-        area: 10,
-        region: "X",
-        subregion: "Y",
-        sovereigntyStatus: "sovereign" as SovereigntyStatus,
-        callingCode: "+0",
-        iso3Code: "HAF",
-      },
-    ];
+  it.each([
+    ["area", "AA", "BB", "NoArea", "HasArea"],
+    ["population", "CC", "DD", "NoPop", "HasPop"],
+  ] as const)(
+    "treats missing %s as 0 when sorting",
+    (key, firstCode, secondCode, firstName, secondName) => {
+      const value = key === "area" ? 10 : 100;
 
-    const asc = sortCountries(arr, "area-asc", buildVisitContext(mockTrips));
-    expect(asc.map((c) => c.isoCode)).toEqual(["AA", "BB"]);
+      const arr = [
+        {
+          name: firstName,
+          isoCode: firstCode,
+          region: "X",
+          subregion: "Y",
+          sovereigntyStatus: "sovereign" as SovereigntyStatus,
+          callingCode: "+0",
+          iso3Code: firstCode,
+        },
+        {
+          name: secondName,
+          isoCode: secondCode,
+          [key]: value,
+          region: "X",
+          subregion: "Y",
+          sovereigntyStatus: "sovereign" as SovereigntyStatus,
+          callingCode: "+0",
+          iso3Code: secondCode,
+        },
+      ] as Country[];
 
-    const desc = sortCountries(arr, "area-desc", buildVisitContext(mockTrips));
-    expect(desc.map((c) => c.isoCode)).toEqual(["BB", "AA"]);
-  });
+      expect(
+        sortCountries(arr, `${key}-asc` as any, visitContext).map(
+          (c) => c.isoCode,
+        ),
+      ).toEqual([firstCode, secondCode]);
 
-  it("treats missing population as 0 when sorting", () => {
-    const arr: Country[] = [
-      {
-        name: "NoPop",
-        isoCode: "CC",
-        region: "X",
-        subregion: "Y",
-        sovereigntyStatus: "sovereign" as SovereigntyStatus,
-        callingCode: "+0",
-        iso3Code: "NOP",
-      },
-      {
-        name: "HasPop",
-        isoCode: "DD",
-        population: 100,
-        region: "X",
-        subregion: "Y",
-        sovereigntyStatus: "sovereign" as SovereigntyStatus,
-        callingCode: "+0",
-        iso3Code: "HAP",
-      },
-    ];
-
-    const asc = sortCountries(
-      arr,
-      "population-asc",
-      buildVisitContext(mockTrips),
-    );
-    expect(asc.map((c) => c.isoCode)).toEqual(["CC", "DD"]);
-
-    const desc = sortCountries(
-      arr,
-      "population-desc",
-      buildVisitContext(mockTrips),
-    );
-    expect(desc.map((c) => c.isoCode)).toEqual(["DD", "CC"]);
-  });
+      expect(
+        sortCountries(arr, `${key}-desc` as any, visitContext).map(
+          (c) => c.isoCode,
+        ),
+      ).toEqual([secondCode, firstCode]);
+    },
+  );
 
   it("sorts by first visit ascending", () => {
-    const sorted = sortCountries(
-      countries,
-      "firstVisit-asc",
-      buildVisitContext(mockTrips),
-    );
+    const sorted = sortCountries(countries, "firstVisit-asc", visitContext);
+
     expect(sorted.map((c) => c.isoCode)).toEqual([
       "GP",
       "CA",
@@ -193,29 +228,15 @@ describe("countrySort utils", () => {
     ]);
   });
 
-  it("sorts by visit count descending", () => {
+  it.each(["asc", "desc"] as const)("sorts by visit count %s", (direction) => {
     const sorted = sortCountries(
       countries,
-      "visitCount-desc",
-      buildVisitContext(mockTrips),
+      `visitCount-${direction}`,
+      visitContext,
     );
-    const counts = getCounts(mockTrips);
-    const sortedCounts = sorted.map((c) => counts[c.isoCode] ?? 0);
-    assertNonIncreasing(sortedCounts);
-    expect(sorted.map((c) => c.isoCode).sort()).toEqual(
-      countries.map((c) => c.isoCode).sort(),
-    );
-  });
+    const counts = sorted.map((c) => getCounts(mockTrips)[c.isoCode] ?? 0);
 
-  it("sorts by visit count ascending", () => {
-    const sorted = sortCountries(
-      countries,
-      "visitCount-asc",
-      buildVisitContext(mockTrips),
-    );
-    const counts = getCounts(mockTrips);
-    const sortedCounts = sorted.map((c) => counts[c.isoCode] ?? 0);
-    assertNonDecreasing(sortedCounts);
+    expectSortedNumbers(counts, direction);
     expect(sorted.map((c) => c.isoCode).sort()).toEqual(
       countries.map((c) => c.isoCode).sort(),
     );
@@ -241,7 +262,7 @@ describe("countrySort utils", () => {
       },
     ];
 
-    const arr: Country[] = [
+    const arr = [
       {
         name: "A",
         isoCode: "AA",
@@ -260,88 +281,47 @@ describe("countrySort utils", () => {
         callingCode: "+2",
         iso3Code: "BBB",
       },
-    ];
+    ] as Country[];
 
     const sorted = sortCountries(
       arr,
       "visitCount-desc",
       buildVisitContext(trips as any),
     );
+
     expect(sorted[0].isoCode).toBe("AA");
   });
 
-  it("sorts by first visit descending", () => {
-    const sorted = sortCountries(
-      countries,
-      "firstVisit-desc",
-      buildVisitContext(mockTrips),
-    );
-    expect(sorted.length).toBe(countries.length);
-    expect(sorted[0].isoCode).toBeDefined();
-  });
+  it.each(["firstVisit-desc", "lastVisit-asc", "lastVisit-desc"] as const)(
+    "sorts by %s",
+    (sortBy) => {
+      const sorted = sortCountries(countries, sortBy, visitContext);
 
-  it("sorts by last visit ascending", () => {
-    const sorted = sortCountries(
-      countries,
-      "lastVisit-asc",
-      buildVisitContext(mockTrips),
-    );
-    expect(sorted.length).toBe(countries.length);
-    expect(sorted[0].isoCode).toBeDefined();
-  });
+      expect(sorted).toHaveLength(countries.length);
+      expect(sorted[0].isoCode).toBeDefined();
+    },
+  );
 
-  it("sorts by last visit descending", () => {
-    const sorted = sortCountries(
-      countries,
-      "lastVisit-desc",
-      buildVisitContext(mockTrips),
-    );
-    expect(sorted.length).toBe(countries.length);
-    expect(sorted[0].isoCode).toBeDefined();
-  });
+  it("returns the original order for an invalid sort key", () => {
+    const arr = [
+      { name: "Same", isoCode: "AAA" },
+      { name: "Same", isoCode: "AAA" },
+    ] as Country[];
 
-  it("calls the default case in sortCountries (return 0)", () => {
-    const countryA: Country = {
-      name: "Same",
-      isoCode: "AAA",
-      region: "X",
-      subregion: "Y",
-      sovereigntyStatus: "sovereign" as SovereigntyStatus,
-      callingCode: "+1",
-      iso3Code: "AAA",
-    };
-    const countryB: Country = {
-      name: "Same",
-      isoCode: "AAA",
-      region: "X",
-      subregion: "Y",
-      sovereigntyStatus: "sovereign" as SovereigntyStatus,
-      callingCode: "+1",
-      iso3Code: "AAA",
-    };
-
-    const arr: Country[] = [countryA, countryB];
-    const expectedOrder = [...arr];
-    const result = sortCountries(
-      arr,
-      "not-a-sort" as any,
-      buildVisitContext(mockTrips),
-    );
-
-    expect(result).toEqual(expectedOrder);
+    expect(sortCountries(arr, "not-a-sort" as any, visitContext)).toEqual(arr);
   });
 
   describe("getCountrySortOptions", () => {
-    it("returns basic sort options when visitedOnly is false or undefined", () => {
-      const results = getCountrySortOptions(false);
-      const optionValues = results[0].options.map((opt) => opt.value);
-      expect(optionValues).toEqual(["name", "isoCode", "area", "population"]);
+    it("returns basic options when visitedOnly is false", () => {
+      expect(
+        getCountrySortOptions(false)[0].options.map((opt) => opt.value),
+      ).toEqual(["name", "isoCode", "area", "population"]);
     });
 
-    it("returns all sort options when visitedOnly is true", () => {
-      const results = getCountrySortOptions(true);
-      const optionValues = results[0].options.map((opt) => opt.value);
-      expect(optionValues).toEqual([
+    it("returns all options when visitedOnly is true", () => {
+      expect(
+        getCountrySortOptions(true)[0].options.map((opt) => opt.value),
+      ).toEqual([
         "name",
         "isoCode",
         "area",
