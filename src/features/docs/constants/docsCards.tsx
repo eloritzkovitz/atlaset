@@ -8,7 +8,7 @@ export const DOCS_CARDS = [
     file: "get-started/get-started.md",
   },
   {
-    icon: <ICONS.profile className="text-5xl mb-4 text-code" />,
+    icon: <ICONS.profile className="text-5xl mb-4 text-muted" />,
     title: "Account & Profile",
     description: "Manage your account settings and personalize your profile.",
     file: "get-started/account-profile.md",
@@ -20,19 +20,19 @@ export const DOCS_CARDS = [
     file: "atlas/atlas-overview.md",
   },
   {
-    icon: <ICONS.trips className="text-5xl mb-4 text-primary" />,
+    icon: <ICONS.explore className="text-5xl mb-4 text-warning" />,
+    title: "Explore",
+    description: "Discover new places and learn about the world.",
+    file: "explore/explore-overview.md",
+  },
+  {
+    icon: <ICONS.trips className="text-5xl mb-4 text-status-planned" />,
     title: "Trips",
     description: "Plan, track and relive your journeys and adventures.",
     file: "trips/trips.md",
-  },
+  },  
   {
-    icon: <ICONS.dashboard className="text-5xl mb-4 text-warning" />,
-    title: "Dashboard",
-    description: "View your stats and achievements.",
-    file: "dashboard/dashboard-overview.md",
-  },
-  {
-    icon: <ICONS.quizzes className="text-5xl mb-4 text-muted" />,
+    icon: <ICONS.quizzes className="text-5xl mb-4 text-type-abroad" />,
     title: "Quizzes",
     description: "Test your knowledge of the world.",
     file: "quizzes/quizzes.md",

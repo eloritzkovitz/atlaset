@@ -119,10 +119,16 @@ export const DOCS_GROUPS = {
         url: "/docs/explore/explore-overview",
       },
       {
-        label: "World Exploration",
-        file: "explore/exploration.md",
+        label: "Progress",
+        file: "explore/progress.md",
         icon: ICONS.progress,
-        url: "/docs/explore/exploration",
+        url: "/docs/explore/progress",
+      },
+      {
+        label: "Discover",
+        file: "explore/discover.md",
+        icon: ICONS.discover,
+        url: "/docs/explore/discover",
       },
       {
         label: "Languages",

@@ -28,22 +28,26 @@ Atlaset is a modern, interactive country explorer and travel tracker built with 
 - **Share maps:** Instantly share your maps via s a special URL
 - **Embed maps:** Embed maps directly into your website using a customized HTML iframe.
 
+### **Explore**
+
+- **Progress:** Track your personal world exploration progress by country and region
+- **Discover:** Explore countries and learn about languages, currencies, timezones and other aspects of the world
+- **Achievements:** Earn personal achievements as you explore the world and interact with the application
+
 ### **Trips**
 
 - **Trip management:** Plan, track and recall your travels with flexible trip records
 - **Calendar:** View your trips and events in the calendar
-
-### **Dashboard**
-
-- **Exploration:** Track your exploration of the world
-- **Achievements:** Earn personal achievements as you explore the world and interact with the application
-- **Statistics:** View and analyze your visits and travels with interactive statistics
 
 ### **Quizzes**
 
 - **Competitive quizzes:** Timed challenges to test your speed and accuracy against the clock
 - **Progress tracking:** See your scores, streaks and improvements over time
 - **Leaderboards:** Compare your results with other users and climb the ranks
+
+### **Dashboard**
+
+- **Statistics:** View and analyze your visits and travels with interactive statistics
 
 ### **User Experience**
 

@@ -1,10 +1,13 @@
 # Explore overview
 
-The **`Explore`** feature provides views for browsing country data and milestones.
+The **`Explore`** lets you explore the world in an interactive way. You can either track your own exploration progress, or browse data for new information about countries or other aspects of the world.  
+
+Data can be browsed, searched and filtered freely, viewed in `grid mode` or `list mode` for convenience. 
 
 ## **Key features**
 
-- **`World Exploration`:** See a detailed view of your world exploration.
+- **`Progress`:** Track your world exploration.
+- **`Discover`:** Learn more about countries and various aspects of the world.
 - **`Countries`:** See detailed information about countries.
 - **`Languages`:** See detailed information about languages.
 - **`Currencies`:** See detailed information about currencies or use the currency exchange.
@@ -13,7 +16,8 @@ The **`Explore`** feature provides views for browsing country data and milestone
 
 ## **Learn more**
 
-[World Exploration](/docs/explore/exploration.md)  
+[Progress](/docs/explore/progress.md)  
+[Discover](/docs/explore/discover.md)  
 [Languages](/docs/explore/languages.md)  
 [Currencies](/docs/explore/currencies.md)  
 [Timezones](/docs/explore/timezones.md)  
