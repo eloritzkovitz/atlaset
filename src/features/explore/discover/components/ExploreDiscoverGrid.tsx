@@ -5,7 +5,7 @@ import { useDelayedLoading } from "@hooks";
 import { DiscoverCountryCard } from "./DiscoverCountryCard";
 import { DiscoverRandomCountryCard } from "./DiscoverRandomCountryCard";
 import { DiscoverFactCard } from "./DiscoverFactCard";
-import { getDailyCountry } from "../utils/discover";
+import { getDailyCountry, getDailyFacts } from "../utils/discover";
 
 /**
  * Displays the main Discover content.
@@ -24,14 +24,7 @@ export function ExploreDiscoverGrid() {
   );
 
   const dailyCountry = useMemo(() => getDailyCountry(countries), [countries]);
-
-  const randomFacts = useMemo(() => {
-    if (!facts.length) {
-      return [];
-    }
-
-    return [...facts].sort(() => Math.random() - 0.5).slice(0, 5);
-  }, [facts]);
+  const dailyFacts = useMemo(() => getDailyFacts(facts), [facts]);
 
   return (
     <div className="space-y-8">
@@ -50,7 +43,7 @@ export function ExploreDiscoverGrid() {
           <DiscoverRandomCountryCard countries={countries} loading={loading} />
 
           <div className="lg:col-span-2">
-            <DiscoverFactCard facts={randomFacts} loading={loading} />
+            <DiscoverFactCard facts={dailyFacts} loading={loading} />
           </div>
         </div>
       </section>
