@@ -1,13 +1,21 @@
-import React from "react";
-import { DirectionalIcon } from "@components";
+import type { ReactNode } from "react";
+import { ActionButton, DirectionalIcon } from "@components";
 import { useScreenSize } from "@hooks";
+import {
+  NavigationButton,
+  type ExploreHeaderNavigationItem,
+} from "./NavigationButton";
 
 interface ExploreHeaderProps {
   title: string;
   subtitle?: string;
-  leading?: React.ReactNode;
-  actions?: React.ReactNode;
+  leading?: ReactNode;
+  actions?: ReactNode;
   onBack?: () => void;
+  navigation?: {
+    previous?: ExploreHeaderNavigationItem;
+    next?: ExploreHeaderNavigationItem;
+  };
 }
 
 export function ExploreHeader({
@@ -16,32 +24,77 @@ export function ExploreHeader({
   leading,
   actions,
   onBack,
+  navigation,
 }: ExploreHeaderProps) {
   const { isMobile } = useScreenSize();
+
   return (
-    <span className="flex items-center gap-4 mb-4">
-      {onBack && (
-        <button
-          onClick={onBack}
-          className="flex items-center gap-2 hover:text-muted"
-        >
-          <DirectionalIcon
-            direction="prev"
-            variant="arrow"
-            className="text-xl"
+    <div className="mb-4">
+      {navigation && (
+        <div className="mb-4 flex items-center justify-between">
+          {navigation.previous ? (
+            <NavigationButton
+              item={navigation.previous}
+              direction="prev"
+              isMobile={isMobile}
+            />
+          ) : (
+            <div />
+          )}
+
+          {navigation.next ? (
+            <NavigationButton
+              item={navigation.next}
+              direction="next"
+              isMobile={isMobile}
+            />
+          ) : (
+            <div />
+          )}
+        </div>
+      )}
+
+      <div className="flex items-center gap-4">
+        {onBack && (
+          <ActionButton
+            variant="custom"
+            onClick={onBack}
+            ariaLabel="Back"
+            className="p-0"
+            icon={
+              <DirectionalIcon
+                direction="prev"
+                variant="chevron"
+                className="text-xl"
+              />
+            }
           />
-        </button>
-      )}
-      {leading && <span className="flex items-center">{leading}</span>}
-      <h1 className={`!text-${isMobile ? "2xl" : "4xl mb-4"} font-bold`}>
-        {title}
-      </h1>
-      {subtitle && (
-        <span className={`text-${isMobile ? "sm" : "2xl mb-2"} text-muted`}>
-          {subtitle}
-        </span>
-      )}
-      {actions && <span className="flex items-center">{actions}</span>}
-    </span>
+        )}
+
+        {leading && <div className="flex items-center">{leading}</div>}
+
+        <div className="flex min-w-0 items-baseline gap-2">
+          <h1
+            className={
+              isMobile ? "!text-2xl font-bold" : "!text-4xl font-bold mb-4"
+            }
+          >
+            {title}
+          </h1>
+
+          {subtitle && (
+            <span
+              className={
+                isMobile ? "text-sm text-muted" : "text-2xl text-muted mb-2"
+              }
+            >
+              {subtitle}
+            </span>
+          )}
+        </div>
+
+        {actions && <div className="flex items-center">{actions}</div>}
+      </div>
+    </div>
   );
 }

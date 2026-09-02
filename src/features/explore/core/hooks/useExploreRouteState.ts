@@ -16,9 +16,8 @@ export function useExploreRouteState() {
   const { panel, entity, parts, selectedPanel, menuSelectedPanel } =
     parseExplorePath(location.pathname);
 
-  // Determine if the current route is a country route
-  const isCountryRoute =
-    panel === "countries" && !["exploration", "all"].includes(entity);
+  const isCountryRoute = panel === "countries";
+
   const [rawRegion, rawSubregion, selectedIsoCode] = isCountryRoute
     ? parts.slice(1, 4).map((p) => (p ? decodeURIComponent(p) : null))
     : [null, null, null];
@@ -28,13 +27,15 @@ export function useExploreRouteState() {
     ? countryByIsoCode[selectedIsoCode]
     : null;
 
-  // Derive region & subregion names (prefer exact match from found country, else search list)
-  const selectedRegion = rawRegion
-    ? selectedCountry?.region ||
-      countries?.find((c) => c.region.toLowerCase() === rawRegion.toLowerCase())
-        ?.region ||
-      rawRegion
-    : null;
+  // Derive matched region and subregion based on the selected country or raw values
+  const selectedRegion =
+    rawRegion && rawRegion !== "all"
+      ? selectedCountry?.region ||
+        countries?.find(
+          (c) => c.region.toLowerCase() === rawRegion.toLowerCase(),
+        )?.region ||
+        rawRegion
+      : null;
 
   const selectedSubregion = rawSubregion
     ? selectedCountry?.subregion ||
@@ -44,25 +45,22 @@ export function useExploreRouteState() {
       rawSubregion
     : null;
 
-  // Determine the entity for the current route based on the selected panel
+   // Determine the entity for the current route based on the selected panel
   const routeEntity =
     panel === selectedPanel || selectedPanel.startsWith(`${panel}/`)
       ? entity
       : null;
 
-  // Language
   const selectedLanguage =
     panel === "languages" && routeEntity
       ? (languages[routeEntity] ?? null)
       : null;
 
-  // Currency
   const selectedCurrency =
     panel === "currencies" && routeEntity
       ? (currencies.find((currency) => currency.code === routeEntity) ?? null)
       : null;
 
-  // Timezone
   const selectedTimezone =
     panel === "timezones" && routeEntity
       ? (timezones.find(
@@ -70,7 +68,6 @@ export function useExploreRouteState() {
         ) ?? null)
       : null;
 
-  // Achievement
   const selectedAchievement =
     menuSelectedPanel === "achievements" && routeEntity
       ? (achievements?.find((a) => a.id === routeEntity) ?? null)

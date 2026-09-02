@@ -5,18 +5,12 @@ import { CountryFlagGrid, CountryListGroup } from "@features/countries";
 import { useViewMode } from "@hooks";
 import { ExploreHeader } from "./ExploreHeader";
 
-export interface IsoGroups {
-  sovereignIsoCodes: string[];
-  dependencyIsoCodes: string[];
-}
-
 export interface CountryGroupSection {
   id?: string;
-  isoGroups: IsoGroups;
-  primaryLabel?: React.ReactNode;
-  dependencyLabel?: React.ReactNode;
-  primaryLabelKey?: string;
-  dependencyLabelKey?: string;
+  isoCodes: string[];
+  navigationCountryIsoCodes?: string[];
+  label?: React.ReactNode;
+  labelKey?: string;
 }
 
 interface InfoWithCountryGroupsProps {
@@ -27,7 +21,7 @@ interface InfoWithCountryGroupsProps {
   actions?: React.ReactNode;
   groups: CountryGroupSection[];
   labelArgs?: Record<string, unknown>;
-  onSelectCountry?: (iso: string) => void;
+  onSelectCountry?: (iso: string, navigationCountryIsoCodes?: string[]) => void;
   visited?: (iso: string) => boolean;
 }
 
@@ -61,11 +55,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
   };
 
   // Determine if any groups have countries to display
-  const hasAnyGroups = groups.some(
-    (g) =>
-      g.isoGroups.sovereignIsoCodes.length > 0 ||
-      g.isoGroups.dependencyIsoCodes.length > 0,
-  );
+  const hasAnyGroups = groups.some((g) => g.isoCodes.length > 0);
 
   const shouldRenderGrid = viewMode === "grid";
 
@@ -75,6 +65,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
     isoCodes: string[],
     expanded: boolean,
     onToggle: () => void,
+    navigationCountryIsoCodes?: string[],
   ) => {
     if (!isoCodes || isoCodes.length === 0 || !label) return null;
 
@@ -86,7 +77,9 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
           visited={visited}
           expanded={expanded}
           onToggle={onToggle}
-          onSelectCountry={onSelectCountry}
+          onSelectCountry={(iso) =>
+            onSelectCountry?.(iso, navigationCountryIsoCodes)
+          }
         />
       );
     }
@@ -103,7 +96,9 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
           countryCodes={isoCodes}
           size="64"
           isHighlighted={visited}
-          onCountryClick={onSelectCountry}
+          onCountryClick={(iso) =>
+            onSelectCountry?.(iso, navigationCountryIsoCodes)
+          }
         />
       </CollapsibleHeader>
     );
@@ -119,6 +114,7 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
           onBack={onBack}
         />
       )}
+
       {hasAnyGroups && (
         <div className="flex justify-end mb-4">
           <ViewModeSegmentedControl
@@ -129,35 +125,22 @@ export const InfoWithCountryGroups: React.FC<InfoWithCountryGroupsProps> = ({
       )}
 
       {groups.map((section, idx) => {
-        const primaryKey = `section-${idx}-primary`;
-        const depKey = `section-${idx}-dependency`;
+        const groupKey = `section-${idx}`;
 
-        const resolvedPrimaryLabel =
-          section.primaryLabel ??
-          (section.primaryLabelKey
-            ? String(t(section.primaryLabelKey, { ...labelArgs }))
-            : String(t("menu.countries", { ...labelArgs })));
-
-        const resolvedDependencyLabel =
-          section.dependencyLabel ??
-          (section.dependencyLabelKey
-            ? String(t(section.dependencyLabelKey, { ...labelArgs }))
+        const resolvedLabel =
+          section.label ??
+          (section.labelKey
+            ? String(t(section.labelKey, { ...labelArgs }))
             : String(t("menu.countries", { ...labelArgs })));
 
         return (
-          <React.Fragment key={section.id ?? `section-${idx}`}>
+          <React.Fragment key={section.id ?? groupKey}>
             {renderGroup(
-              resolvedPrimaryLabel,
-              section.isoGroups.sovereignIsoCodes,
-              isExpanded(primaryKey),
-              () => toggleExpanded(primaryKey),
-            )}
-
-            {renderGroup(
-              resolvedDependencyLabel,
-              section.isoGroups.dependencyIsoCodes,
-              isExpanded(depKey),
-              () => toggleExpanded(depKey),
+              resolvedLabel,
+              section.isoCodes,
+              isExpanded(groupKey),
+              () => toggleExpanded(groupKey),
+              section.navigationCountryIsoCodes,
             )}
           </React.Fragment>
         );

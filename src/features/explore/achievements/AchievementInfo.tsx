@@ -12,6 +12,7 @@ import { AchievementIcon } from "./AchievementIcon";
 import { AchievementListGroup } from "./AchievementListGroup";
 import { ExploreHeader } from "../core/components/ExploreHeader";
 import { InfoWithCountryGroups } from "../core/components/InfoWithCountryGroups";
+import { EXPLORE_URLS } from "../core/constants/exploreMenu";
 import { useExploreNavigation } from "../core/hooks/useExploreNavigation";
 import { getCountriesRoute } from "../core/utils/exploreNavigation";
 
@@ -43,8 +44,9 @@ export function AchievementInfo() {
 
     // Prefer `regions` array; take the first entry if present
     region =
-      Array.isArray(displayCriteria?.regions) && displayCriteria.regions!.length
-        ? displayCriteria.regions![0]
+      Array.isArray(displayCriteria?.regions) &&
+      displayCriteria!.regions!.length
+        ? displayCriteria!.regions![0]
         : undefined;
 
     if (region) {
@@ -78,7 +80,7 @@ export function AchievementInfo() {
       <ExploreHeader
         title={achievement.name}
         leading={<AchievementIcon type={achievement.type} locked={false} />}
-        onBack={navigateBack}
+        onBack={() => navigateBack(EXPLORE_URLS.achievements)}
       />
       <div className="mb-4 text-muted text-base">{achievement.description}</div>
 
@@ -127,13 +129,24 @@ export function AchievementInfo() {
           <InfoWithCountryGroups
             title={achievement.name}
             showHeader={false}
-            onSelectCountry={navigateToCountry}
+            onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
+              navigateToCountry(isoCode, navigationCountryIsoCodes, {
+                section: "achievements",
+                label: achievement.name,
+                key: `achievement:${achievement.id}`,
+              })
+            }
             visited={isVisitedCountry}
             groups={[
               {
-                isoGroups,
-                primaryLabel: primaryGroupLabel,
-                dependencyLabel: dependencyGroupLabel,
+                isoCodes: isoGroups.sovereignIsoCodes,
+                navigationCountryIsoCodes: isoGroups.sovereignIsoCodes,
+                label: primaryGroupLabel,
+              },
+              {
+                isoCodes: isoGroups.dependencyIsoCodes,
+                navigationCountryIsoCodes: isoGroups.dependencyIsoCodes,
+                label: dependencyGroupLabel,
               },
             ]}
           />

@@ -6,6 +6,7 @@ import type { Language } from "@types";
 import { getQueryParam } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
+import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
 interface LanguageInfoProps {
@@ -53,15 +54,25 @@ export const LanguageInfo: React.FC<LanguageInfoProps> = ({
       title={languageName}
       subtitle={languageCode ? `(${languageCode})` : undefined}
       actions={<WikipediaButton searchTerm={`${language.name} language`} />}
-      onBack={navigateBack}
+      onBack={() => navigateBack(EXPLORE_URLS.languages)}
       labelArgs={{ name: languageName }}
-      onSelectCountry={navigateToCountry}
+      onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
+        navigateToCountry(isoCode, navigationCountryIsoCodes, {
+          section: "languages",
+          label: languageName,
+          key: `language:${languageCode}`,
+        })
+      }
       groups={[
         {
-          isoGroups,
-          primaryLabelKey: "languages.languageInfo.usingLanguage",
-          dependencyLabelKey:
-            "languages.languageInfo.dependenciesUsingLanguage",
+          isoCodes: isoGroups.sovereignIsoCodes,
+          navigationCountryIsoCodes: isoGroups.sovereignIsoCodes,
+          labelKey: "languages.languageInfo.usingLanguage",
+        },
+        {
+          isoCodes: isoGroups.dependencyIsoCodes,
+          navigationCountryIsoCodes: isoGroups.dependencyIsoCodes,
+          labelKey: "languages.languageInfo.dependenciesUsingLanguage",
         },
       ]}
     />

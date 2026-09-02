@@ -5,6 +5,7 @@ import { type Country, type Currency } from "@features/countries/types";
 import { getQueryParam } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
+import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
 interface CurrencyInfoProps {
@@ -24,12 +25,12 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
   const code = routeCode || getQueryParam("code", "", location.search);
   const currency = currencies.find((c) => c.code === code);
 
-  const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
-
   const isoGroups = groupCountryIsoCodes(
     countries,
     (country) => currency?.code === country.currency,
   );
+
+  const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
 
   // Redirect to currencies list if currency not found
   useEffect(() => {
@@ -45,15 +46,25 @@ export const CurrencyInfo: React.FC<CurrencyInfoProps> = ({
       title={currency.name}
       subtitle={`(${currency.code})`}
       actions={<WikipediaButton searchTerm={`${currency.name}`} />}
-      onBack={navigateBack}
+      onBack={() => navigateBack(EXPLORE_URLS.currencies)}
       labelArgs={{ code: currency.code }}
-      onSelectCountry={navigateToCountry}
+      onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
+        navigateToCountry(isoCode, navigationCountryIsoCodes, {
+          section: "currencies",
+          label: `${currency.name} (${currency.code})`,
+          key: `currency:${currency.code}`,
+        })
+      }
       groups={[
         {
-          isoGroups,
-          primaryLabelKey: "currencies.currencyInfo.usingCurrency",
-          dependencyLabelKey:
-            "currencies.currencyInfo.dependenciesUsingCurrency",
+          isoCodes: isoGroups.sovereignIsoCodes,
+          navigationCountryIsoCodes: isoGroups.sovereignIsoCodes,
+          labelKey: "currencies.currencyInfo.usingCurrency",
+        },
+        {
+          isoCodes: isoGroups.dependencyIsoCodes,
+          navigationCountryIsoCodes: isoGroups.dependencyIsoCodes,
+          labelKey: "currencies.currencyInfo.dependenciesUsingCurrency",
         },
       ]}
     />

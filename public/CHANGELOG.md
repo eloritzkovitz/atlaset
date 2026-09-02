@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-02
+
+- **[feature]** **Explore | Countries:** Added item navigation inside country pages for quicker list navigation
+
 ## 2026-08-31
 
 - **[feature]** **Countries:** Added country facts

@@ -4,6 +4,14 @@
 
 import type { Crumb } from "@components";
 import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
+import type { ExploreBreadcrumbOptions } from "../types";
+
+const contextualCrumbRoutes: Record<string, string> = {
+  currency: "/explore/currencies",
+  language: "/explore/languages",
+  timezone: "/explore/timezones",
+  achievement: "/explore/achievements",
+};
 
 /**
  * Parses explore paths into normalized panel types and raw route segments.
@@ -11,14 +19,13 @@ import { PANEL_BREADCRUMBS } from "../constants/breadcrumbs";
  * @returns An object containing the root, sub, parts, selectedPanel, and menuSelectedPanel.
  */
 export function parseExplorePath(pathname: string) {
-  const parts = pathname.replace(/^\/explore\/?/, "").split("/");
-
+  const parts = pathname.replace(/^\/?explore\/?/, "").split("/");
   const panel = parts[0] || "countries";
   const entity = parts[1];
 
   let selectedPanel = panel;
 
-  if (panel === "countries" && ["exploration", "all"].includes(entity)) {
+  if (panel === "countries" && ["all"].includes(entity)) {
     selectedPanel = `${panel}/${entity}`;
   } else if (panel === "currencies" && entity === "exchange") {
     selectedPanel = "currencies/exchange";
@@ -61,15 +68,18 @@ export function getCountriesRoute(
   return `/explore/countries/all`;
 }
 
-interface ExploreBreadcrumbOptions {
-  selectedPanel: string;
-  selectedRegion: string | null;
-  selectedSubregion: string | null;
-  selectedCountry: string | null;
-  selectedLanguage: string | null;
-  selectedCurrency: string | null;
-  selectedTimezone: string | null;
-  selectedAchievement: string | null;
+/**
+ * Generates a contextual route based on the provided key.
+ * @param key - A string in the format of "type:value" where type is one of the contextualCrumbRoutes keys.
+ * @returns A string representing the contextual route or undefined if the type is not recognized.
+ */
+export function getContextualRoute(key: string) {
+  const [type, ...valueParts] = key.split(":");
+  const baseRoute = contextualCrumbRoutes[type];
+
+  return baseRoute
+    ? `${baseRoute}/${encodeURIComponent(valueParts.join(":"))}`
+    : undefined;
 }
 
 /**
@@ -78,10 +88,11 @@ interface ExploreBreadcrumbOptions {
  * @param selectedRegion - Currently selected region.
  * @param selectedSubregion - Currently selected subregion.
  * @param selectedCountry - Currently selected country.
- * @param selectedCurrency - Currently selected currency.
  * @param selectedLanguage - Currently selected language.
+ * @param selectedCurrency - Currently selected currency.
  * @param selectedTimezone - Currently selected timezone.
  * @param selectedAchievement - Currently selected achievement.
+ * @param countryNavigationOrigin - Origin of contextual country navigation.
  * @returns Array of breadcrumb objects.
  */
 export function getExploreBreadcrumbs({
@@ -93,11 +104,22 @@ export function getExploreBreadcrumbs({
   selectedCurrency,
   selectedTimezone,
   selectedAchievement,
+  countryNavigationOrigin,
 }: ExploreBreadcrumbOptions): Crumb[] {
-  const crumbs = [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
+  const isCountryPanel =
+    selectedPanel === "countries" || selectedPanel.startsWith("countries/");
 
-  // Add region and subregion breadcrumbs for the countries panel
-  if (selectedPanel === "countries" || selectedPanel.startsWith("countries/")) {
+  const isContextualCountryNavigation =
+    isCountryPanel &&
+    countryNavigationOrigin &&
+    countryNavigationOrigin.section !== "countries";
+
+  const crumbs = isContextualCountryNavigation
+    ? [...(PANEL_BREADCRUMBS[countryNavigationOrigin.section] || [])]
+    : [...(PANEL_BREADCRUMBS[selectedPanel] || [])];
+
+  // Add region and subregion breadcrumbs for normal countries navigation
+  if (isCountryPanel && !isContextualCountryNavigation) {
     if (selectedRegion) {
       crumbs.push({
         label: selectedRegion === "all" ? "All Countries" : selectedRegion,
@@ -111,6 +133,21 @@ export function getExploreBreadcrumbs({
         key: "subregion",
       });
     }
+
+    if (selectedCountry) {
+      crumbs.push({
+        label: selectedCountry,
+        key: "country",
+      });
+    }
+  }
+
+  // Add the originating entity and country for contextual country navigation
+  if (isContextualCountryNavigation) {
+    crumbs.push({
+      label: countryNavigationOrigin.label,
+      key: countryNavigationOrigin.key,
+    });
 
     if (selectedCountry) {
       crumbs.push({

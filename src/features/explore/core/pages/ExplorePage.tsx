@@ -48,7 +48,6 @@ export default function ExplorePage() {
     }));
   }, [languagesMap]);
 
-  // Explore route state
   const {
     selectedPanel,
     menuSelectedPanel,
@@ -62,7 +61,6 @@ export default function ExplorePage() {
     selectedAchievement,
   } = useExploreRouteState();
 
-  // Countries filter state
   const {
     selectedRegion,
     setSelectedRegion,
@@ -75,15 +73,34 @@ export default function ExplorePage() {
     resetFilters,
   } = useExploreCountriesFilters();
 
+  const {
+    countryNavigationScope,
+    countryNavigationOrigin,
+    navigateToSection,
+    navigateToRegion,
+    navigateToSubregion,
+    navigateToCountry,
+    navigateToAllCountries,
+    handleCrumbClick,
+    navigateBack,
+  } = useExploreNavigation(
+    countries,
+    routeSelectedRegion ?? "all",
+    routeSelectedSubregion ?? "",
+  );
+
   const breadcrumbs = getExploreBreadcrumbs({
     selectedPanel: selectedPanel ?? "",
     selectedCountry: selectedCountry?.name ?? null,
     selectedRegion,
     selectedSubregion,
     selectedLanguage: selectedLanguage?.name ?? null,
-    selectedCurrency: selectedCurrency?.name ?? null,
+    selectedCurrency: selectedCurrency
+      ? `${selectedCurrency.name} (${selectedCurrency.code})`
+      : null,
     selectedTimezone: selectedTimezone?.code ?? null,
     selectedAchievement: selectedAchievement?.name ?? null,
+    countryNavigationOrigin,
   });
 
   const resolveCrumbLabel = (crumb: (typeof breadcrumbs)[number]) => {
@@ -165,21 +182,6 @@ export default function ExplorePage() {
     setSelectedSubregion,
   ]);
 
-  // Navigation handlers
-  const {
-    navigateToPanel,
-    navigateToRegion,
-    navigateToSubregion,
-    navigateToCountry,
-    navigateToAllCountries,
-    handleCrumbClick,
-    navigateBack,
-  } = useExploreNavigation(
-    countries,
-    selectedRegion ?? "all",
-    selectedSubregion ?? "",
-  );
-
   // Loading and error states
   if (loading || !ready) return <LoadingSpinner fullScreen />;
   if (error) return <ErrorMessage fullScreen error={error} />;
@@ -198,7 +200,7 @@ export default function ExplorePage() {
             open={panelMenu.isOpen}
             onClose={() => panelMenu.close()}
             selectedPanel={menuSelectedPanel}
-            setSelectedPanel={navigateToPanel}
+            setSelectedPanel={navigateToSection}
           />
         </>
       )}
@@ -206,7 +208,7 @@ export default function ExplorePage() {
         {!isMobile && (
           <ExplorePanelMenu
             selectedPanel={menuSelectedPanel}
-            setSelectedPanel={navigateToPanel}
+            setSelectedPanel={navigateToSection}
           />
         )}
         <div className="flex-1 mt-12 min-w-0">
@@ -233,6 +235,7 @@ export default function ExplorePage() {
             onSubregionChange={navigateToSubregion}
             onResetFilters={resetFilters}
             onBack={navigateBack}
+            countryNavigationScope={countryNavigationScope}
           />
         </div>
       </Container>

@@ -5,6 +5,7 @@ import type { Country, Timezone } from "@features/countries/types";
 import { getQueryParam, normalizeTzCode } from "@utils";
 import { InfoWithCountryGroups } from "../../core/components/InfoWithCountryGroups";
 import { WikipediaButton } from "../../core/components/WikipediaButton";
+import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
 import { useExploreNavigation } from "../../core/hooks/useExploreNavigation";
 
 interface TimezoneInfoProps {
@@ -20,7 +21,6 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
   const location = useLocation();
   const { code: routeCode } = useParams<{ code?: string }>();
 
-  // Determine the timezone code to display
   const code = useMemo(() => {
     const raw = routeCode || getQueryParam("code", "", location.search);
     return raw ? decodeURIComponent(raw) : "";
@@ -36,46 +36,42 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
 
   const { navigateToCountry, navigateBack } = useExploreNavigation(countries);
 
-  // Partition ISO codes into Standard Time vs DST sets
-  const { standardIsoSet, dstIsoSet } = useMemo(() => {
-    const standard = new Set<string>();
-    const dst = new Set<string>();
-
-    if (timezone?.countries) {
-      for (const c of timezone.countries) {
-        if (c.isDst) {
-          dst.add(c.isoCode);
-        } else {
-          standard.add(c.isoCode);
-        }
-      }
-    }
-
-    return { standardIsoSet: standard, dstIsoSet: dst };
-  }, [timezone]);
-
-  // Standard Time IsoGroups (Sovereign & Dependencies)
-  const standardIsoGroups = groupCountryIsoCodes(countries, (country) => {
-    if (!timezone) return false;
-
-    if (standardIsoSet.size > 0 || dstIsoSet.size > 0) {
-      return standardIsoSet.has(country.isoCode);
-    }
-
-    const targetCode = normalizeTzCode(timezone.code);
-
-    return (country.timezones ?? []).some(
-      (tz) => normalizeTzCode(tz) === targetCode,
-    );
-  });
-
-  // DST IsoGroups (Sovereign & Dependencies)
-  const dstIsoGroups = groupCountryIsoCodes(
-    countries,
-    (country) => timezone != null && dstIsoSet.has(country.isoCode),
+  const standardCountryIsoCodes = useMemo(
+    () =>
+      new Set(
+        timezone?.countries
+          .filter((country) => !country.isDst)
+          .map((country) => country.isoCode) ?? [],
+      ),
+    [timezone],
   );
 
-  // Redirect if timezone not found
+  const dstCountryIsoCodes = useMemo(
+    () =>
+      new Set(
+        timezone?.countries
+          .filter((country) => country.isDst)
+          .map((country) => country.isoCode) ?? [],
+      ),
+    [timezone],
+  );
+
+  const standardIsoGroups = useMemo(
+    () =>
+      groupCountryIsoCodes(countries, (country) =>
+        standardCountryIsoCodes.has(country.isoCode),
+      ),
+    [countries, standardCountryIsoCodes],
+  );
+
+  const dstIsoGroups = useMemo(
+    () =>
+      groupCountryIsoCodes(countries, (country) =>
+        dstCountryIsoCodes.has(country.isoCode),
+      ),
+    [countries, dstCountryIsoCodes],
+  );
+
   useEffect(() => {
     if (!timezone && timezones.length > 0) {
       navigate("/explore/timezones", { replace: true });
@@ -88,20 +84,35 @@ export const TimezoneInfo: React.FC<TimezoneInfoProps> = ({
     <InfoWithCountryGroups
       title={timezone.code}
       actions={<WikipediaButton searchTerm={`${timezone.code}`} />}
-      onBack={navigateBack}
-      onSelectCountry={navigateToCountry}
+      onBack={() => navigateBack(EXPLORE_URLS.timezones)}
       labelArgs={{ code: timezone.code }}
+      onSelectCountry={(isoCode, navigationCountryIsoCodes) =>
+        navigateToCountry(isoCode, navigationCountryIsoCodes, {
+          section: "timezones",
+          label: timezone.code,
+          key: `timezone:${timezone.code}`,
+        })
+      }
       groups={[
         {
-          isoGroups: standardIsoGroups,
-          primaryLabelKey: "timezones.timezoneInfo.usingStandardTime",
-          dependencyLabelKey:
-            "timezones.timezoneInfo.dependenciesUsingStandardTime",
+          isoCodes: standardIsoGroups.sovereignIsoCodes,
+          navigationCountryIsoCodes: standardIsoGroups.sovereignIsoCodes,
+          labelKey: "timezones.timezoneInfo.usingStandardTime",
         },
         {
-          isoGroups: dstIsoGroups,
-          primaryLabelKey: "timezones.timezoneInfo.usingDST",
-          dependencyLabelKey: "timezones.timezoneInfo.dependenciesUsingDST",
+          isoCodes: standardIsoGroups.dependencyIsoCodes,
+          navigationCountryIsoCodes: standardIsoGroups.dependencyIsoCodes,
+          labelKey: "timezones.timezoneInfo.dependenciesUsingStandardTime",
+        },
+        {
+          isoCodes: dstIsoGroups.sovereignIsoCodes,
+          navigationCountryIsoCodes: dstIsoGroups.sovereignIsoCodes,
+          labelKey: "timezones.timezoneInfo.usingDST",
+        },
+        {
+          isoCodes: dstIsoGroups.dependencyIsoCodes,
+          navigationCountryIsoCodes: dstIsoGroups.dependencyIsoCodes,
+          labelKey: "timezones.timezoneInfo.dependenciesUsingDST",
         },
       ]}
     />

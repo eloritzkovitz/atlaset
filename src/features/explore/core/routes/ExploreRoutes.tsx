@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import type { Country, Currency, Timezone } from "@features/countries/types";
 import type { Language } from "@types";
+import type { CountryNavigationScope } from "../types";
 import { AchievementsGrid } from "../../achievements/AchievementsGrid";
 import { AchievementInfo } from "../../achievements/AchievementInfo";
 import { CountryStats } from "../../countries/components/CountryStats";
@@ -34,6 +35,7 @@ interface ExploreRoutesProps {
   onSubregionChange: (region: string, subregion: string) => void;
   onResetFilters: () => void;
   onBack: () => void;
+  countryNavigationScope: CountryNavigationScope;
 }
 
 export function ExploreRoutes({
@@ -55,6 +57,7 @@ export function ExploreRoutes({
   onSubregionChange,
   onResetFilters,
   onBack,
+  countryNavigationScope,
 }: ExploreRoutesProps) {
   const countryStatsBaseProps = {
     setSelectedRegion,
@@ -70,7 +73,6 @@ export function ExploreRoutes({
     selectedSovereignOnly,
   );
 
-  // Subregion selection handler
   const handleSubregionChange = (region: string, subregion: string) => {
     setSelectedRegion(region);
     setSelectedSubregion(subregion);
@@ -116,6 +118,7 @@ export function ExploreRoutes({
             onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
             onBack={undefined}
+            countryNavigationScope={countryNavigationScope}
           />
         }
       />
@@ -132,6 +135,7 @@ export function ExploreRoutes({
             onShowSovereignOnly={setSelectedSovereignOnly}
             onSubregionChange={handleSubregionChange}
             onBack={onBack}
+            countryNavigationScope={countryNavigationScope}
           />
         }
       />

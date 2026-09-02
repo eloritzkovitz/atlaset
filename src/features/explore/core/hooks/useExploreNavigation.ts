@@ -1,7 +1,17 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { Country } from "@features/countries/types";
-import { getCountriesRoute } from "../utils/exploreNavigation";
+import type { CountryNavigationOrigin, CountryNavigationScope } from "../types";
+import {
+  getContextualRoute,
+  getCountriesRoute,
+} from "../utils/exploreNavigation";
 import { EXPLORE_URLS } from "../../core/constants/exploreMenu";
+
+interface CountryNavigationState {
+  countryNavigationScope?: CountryNavigationScope;
+  navigationCountryIsoCodes?: string[];
+  countryNavigationOrigin?: CountryNavigationOrigin;
+}
 
 /**
  * Manages explore navigation state and handlers.
@@ -16,8 +26,24 @@ export function useExploreNavigation(
   selectedSubregion?: string,
 ) {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const navigateToPanel = (panel: string) => navigate(`/explore/${panel}`);
+  const navigationState = location.state as CountryNavigationState | null;
+
+  const countryNavigationScope: CountryNavigationScope =
+    navigationState?.countryNavigationScope ??
+    (selectedSubregion
+      ? "subregion"
+      : selectedRegion && selectedRegion !== "all"
+        ? "region"
+        : "all");
+
+  const navigationCountryIsoCodes = navigationState?.navigationCountryIsoCodes;
+
+  const countryNavigationOrigin = navigationState?.countryNavigationOrigin;
+
+  const navigateToSection = (section: string) =>
+    navigate(`/explore/${section}`);
 
   const navigateToRegion = (region: string) =>
     navigate(getCountriesRoute(region));
@@ -25,22 +51,65 @@ export function useExploreNavigation(
   const navigateToSubregion = (region: string, subregion: string) =>
     navigate(getCountriesRoute(region, subregion));
 
-  const navigateToCountry = (isoCode: string | null) => {
-    if (!isoCode) return navigate(EXPLORE_URLS.countries);
+  const navigateToCountry = (
+    isoCode: string | null,
+    countryIsoCodes?: string[],
+    origin?: CountryNavigationOrigin,
+  ) => {
+    if (!isoCode) {
+      navigate(EXPLORE_URLS.countries);
+      return;
+    }
 
     const country = countries.find((c) => c.isoCode === isoCode);
-    if (country) {
-      navigate(
-        getCountriesRoute(country.region, country.subregion, country.isoCode),
-      );
-    }
+
+    if (!country) return;
+
+    navigate(
+      getCountriesRoute(country.region, country.subregion, country.isoCode),
+      {
+        state: {
+          countryNavigationScope,
+          navigationCountryIsoCodes:
+            countryIsoCodes ?? navigationCountryIsoCodes,
+          countryNavigationOrigin:
+            origin ?? navigationState?.countryNavigationOrigin,
+        } satisfies CountryNavigationState,
+      },
+    );
   };
 
   const navigateToAllCountries = () => {
     navigate(EXPLORE_URLS.countries);
   };
 
-  const navigateBack = () => navigate(-1);
+  const navigateBack = (route?: string) => {
+    if (typeof route === "string") {
+      navigate(route);
+      return;
+    }
+
+    const contextualRoute = countryNavigationOrigin
+      ? getContextualRoute(countryNavigationOrigin.key)
+      : undefined;
+
+    if (contextualRoute) {
+      navigate(contextualRoute);
+      return;
+    }
+
+    if (countryNavigationScope === "subregion") {
+      navigate(getCountriesRoute(selectedRegion, selectedSubregion));
+      return;
+    }
+
+    if (countryNavigationScope === "region") {
+      navigate(getCountriesRoute(selectedRegion));
+      return;
+    }
+
+    navigate(EXPLORE_URLS.countries);
+  };
 
   const crumbActions: Record<string, () => void> = {
     explore: () => navigate(EXPLORE_URLS.progress),
@@ -56,14 +125,23 @@ export function useExploreNavigation(
     achievements: () => navigate(EXPLORE_URLS.achievements),
   };
 
-  // Handle crumb click by executing the corresponding action or navigating to the panel
   const handleCrumbClick = (key: string) => {
-    const action = crumbActions[key] ?? (() => navigateToPanel(key));
+    const contextualRoute = getContextualRoute(key);
+
+    if (contextualRoute) {
+      navigate(contextualRoute);
+      return;
+    }
+
+    const action = crumbActions[key] ?? (() => navigateToSection(key));
     action();
   };
 
   return {
-    navigateToPanel,
+    countryNavigationScope,
+    navigationCountryIsoCodes,
+    countryNavigationOrigin,
+    navigateToSection,
     navigateToRegion,
     navigateToSubregion,
     navigateToCountry,
